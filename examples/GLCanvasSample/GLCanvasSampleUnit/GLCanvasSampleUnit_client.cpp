@@ -2,6 +2,7 @@
 #include <orbsvcs/CosNamingC.h>
 #include "GLCanvasSampleUnit_i.h"
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
+#include <iostream>
 
 //This Unit_client act as the executive's client 
 //This Unit is also the Unit servant for the executive' Unit client
@@ -20,7 +21,7 @@ int main (int argc, char* argv[])
       return 1;
    }
   
-   std::string UNITNAME = "GLCanvasSampleUnitPlugin";
+   std::string UNITNAME = "GLCanvasSample";
 
    try 
    {

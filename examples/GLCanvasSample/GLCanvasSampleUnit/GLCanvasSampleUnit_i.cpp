@@ -1,4 +1,6 @@
 #include "GLCanvasSampleUnit_i.h"
+#include "string_ops.h"
+#include <iostream>
 
 // Implementation skeleton constructor
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
@@ -6,6 +8,7 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
 {
   UnitName_=name;
   return_state = 0;
+  area = 0;
 }
   
 // Implementation skeleton destructor
@@ -22,12 +25,31 @@ void Body_Unit_i::StartCalc (
   ))
   {
     // Add your implementation here
+    if ( type == 0 )
+    {
+      area = 0.5 * ( 3.14159 * radius * radius );
+      obtype = "Circle";
+    }
+    else if ( type == 1 )
+    {
+      area = length * width;
+      obtype = "Rectangle";
+    }
 
-    std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage(id_,msg.c_str());
-      // Do nothing right now.
-      // Add code to change cooling properties later
+   //Now write out the results
+	Package p;
+	const char* result;
+	bool rv;
+	p.SetPackName("result");
+	p.SetSysId("result.xml");
+	p.intfs.clear();
+	p.intfs.resize(1); //each port has its own package
+	p.intfs[0].setString("Object Type",obtype);
+	p.intfs[0].setString("Area",to_string(area));
+	result = p.Save(rv);
+	return_state = 1;
+	executive_->SetModuleResult(id_, result); //this marks the end the execution
+
   }
   
 void Body_Unit_i::StopCalc (
@@ -123,11 +145,10 @@ void Body_Unit_i::SetParams (
     p.SetSysId("gui.xml");
     p.Load(param, strlen(param));
     //Now make use of p.intfs to get your GUI vars out
-    //eff = p.intfs[0].getDouble("eff");
-    //pressure_out = p.intfs[0].getDouble("pressure_out");
-    //pressure_change = p.intfs[0].getDouble("pressure_change");
-    //case_type = p.intfs[0].getInt("case_type");
-    
+    radius = p.intfs[0].getDouble("radius");
+    length = p.intfs[0].getDouble("length");
+    width = p.intfs[0].getDouble("width");
+    type = p.intfs[0].getInt("type");   
   }
   
 void Body_Unit_i::SetID (

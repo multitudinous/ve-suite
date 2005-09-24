@@ -30,11 +30,13 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   void error(std::string msg);
   void warning(std::string msg);
 
-  double eff;
-  double pressure_out;
-  double pressure_change;
-  long case_type;
-  
+  double radius;
+  double length;
+  double width;
+  long type;
+
+  double area;
+  string obtype;
   
  public:
 
