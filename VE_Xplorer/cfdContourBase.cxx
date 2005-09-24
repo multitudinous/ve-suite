@@ -129,7 +129,8 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       normals->SetFeatureAngle( 130.0f );
       normals->GetOutput()->ReleaseDataFlagOn(); 
       normals->ComputePointNormalsOn();
-      normals->ComputeCellNormalsOn();
+      //normals->ComputeCellNormalsOn();
+      normals->FlipNormalsOn();
       this->mapper->SetInput( normals->GetOutput() );
       mapper->ImmediateModeRenderingOn(); 
    }
@@ -148,7 +149,8 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       normals->SetFeatureAngle( 130.0f );
       normals->GetOutput()->ReleaseDataFlagOn(); 
       normals->ComputePointNormalsOn();
-      normals->ComputeCellNormalsOn();
+      //normals->ComputeCellNormalsOn();
+      normals->FlipNormalsOn();
       this->mapper->SetInput( normals->GetOutput() );
       mapper->ImmediateModeRenderingOn();
    }
@@ -164,7 +166,8 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       normals->SetFeatureAngle( 130.0f );
       normals->GetOutput()->ReleaseDataFlagOn(); 
       normals->ComputePointNormalsOn();
-      normals->ComputeCellNormalsOn();
+      //normals->ComputeCellNormalsOn();
+      normals->FlipNormalsOn();
       this->mapper->SetInput( this->normals->GetOutput() );
       mapper->ImmediateModeRenderingOn();    
    }

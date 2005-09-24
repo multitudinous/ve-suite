@@ -92,7 +92,10 @@ void cfdMomentums::Update( void )
       this->mapper->Update();//can this go???
       vtkActor* temp = vtkActor::New();
       temp->SetMapper( this->mapper );
-      temp->GetProperty()->SetSpecularPower( 20.0f );
+      //temp->GetProperty()->SetSpecularPower( 100.0f );
+      //temp->GetProperty()->SetSpecular( 100.0f );
+      //temp->GetProperty()->SetDiffuse( 100.0f );
+      //temp->GetProperty()->SetAmbient( 100.0f );
       geodes.push_back( new VE_SceneGraph::cfdGeode() );
       geodes.back()->TranslateTocfdGeode( temp );
       temp->Delete();

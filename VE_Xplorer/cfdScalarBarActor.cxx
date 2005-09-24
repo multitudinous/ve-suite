@@ -51,6 +51,10 @@
 #include <vtkVectorText.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkCamera.h>
+#include <vtkCubeAxesActor2D.h>
+#include <vtkTextProperty.h>
+
 #include "VE_Xplorer/cfdDebug.h"
 
 #include <fstream>
@@ -69,6 +73,7 @@ cfdScalarBarActor::cfdScalarBarActor( char* param, VE_SceneGraph::cfdGroup* root
    _param = param;
    _rootNode = rootNode;
    _activeDataSet = NULL;
+   cubeAxesGeode = 0;
    _readParam = new cfdReadParam();
    // Initialize the all the variables
    this->SetPosition( -5.0f, 6.0f, 0.0f );
@@ -580,6 +585,38 @@ void cfdScalarBarActor::RefreshScalarBar()
    this->scalarBar->SetName("Scalar Bar");
    this->_rootNode->AddChild( this->scalarBar );
    //this->worldDCS->addChild( this->scalarBarActor->getpfDCS() );
+
+   // Test code for the cubeaxesactor
+   /*vtkCamera* camera = vtkCamera::New();
+   camera->SetClippingRange( 1.60187, 1000.0f );
+   camera->SetFocalPoint( 0, 0, 0 );
+   camera->SetPosition( 0.0f, -10.0f, 10.0f );
+   camera->SetViewUp( 0, 0, 1.0f);
+
+   vtkTextProperty* tprop = vtkTextProperty::New();
+   tprop->SetColor( 1, 1, 1 );
+   tprop->ShadowOn();
+
+   vtkCubeAxesActor2D* cubeAxes = vtkCubeAxesActor2D::New();
+   cubeAxes->SetInput( this->_activeDataSet->GetDataSet() );
+   cubeAxes->SetCamera( camera );
+   cubeAxes->SetLabelFormat( "%6.4g" );
+   cubeAxes->SetFlyModeToOuterEdges();
+   cubeAxes->SetFontFactor( 0.8 );
+   cubeAxes->SetAxisTitleTextProperty( tprop );
+   cubeAxes->SetAxisLabelTextProperty( tprop );
+
+   vtkActor* tempActor = vtkActor::SafeDownCast( cubeAxes );
+   
+   if ( cubeAxesGeode )
+   {
+      this->scalarBar->RemoveChild( cubeAxesGeode ); 
+      delete cubeAxesGeode;
+   }
+
+   cubeAxesGeode = new cfdGeode();
+   cubeAxesGeode->TranslateTocfdGeode( tempActor );
+   this->scalarBar->AddChild( cubeAxesGeode );*/
 }
 
 void cfdScalarBarActor::SetActiveDataSet( cfdDataSet* input )
