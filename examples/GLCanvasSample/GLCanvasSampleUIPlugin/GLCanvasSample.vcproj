@@ -87,8 +87,8 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=""
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile=".\Debug/GLCanvasSample.pch"
 				AssemblerListingLocation="$(OutDir)"
 				ObjectFile="$(OutDir)"
 				ProgramDataBaseFileName="$(OutDir)"
@@ -100,8 +100,8 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GUIPlugin_d.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib"
-				OutputFile="..\GUIPlugins\win32\GLCanvasSample_d.dll"
+				AdditionalDependencies="GUIPlugin_d.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib opengl32.lib GlU32.Lib wxmsw26d_gl.lib"
+				OutputFile="..\GUIPlugins\GLCanvasSample_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(VE_SUITE_HOME)\lib\win32;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
@@ -146,6 +146,15 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
+				RelativePath=".\GL_Engine.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\GLCanvasSample.cpp">
 			</File>
 			<File
@@ -162,6 +171,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
+				RelativePath=".\GL_Engine.h">
+			</File>
+			<File
 				RelativePath=".\GLCanvasSample.h">
 			</File>
 			<File
@@ -176,5 +188,3 @@
 	<Globals>
 	</Globals>
 </VisualStudioProject>
-
-
