@@ -117,7 +117,6 @@ public:
    // Create the scalar bar and convert it into pfGeode
    void Execute();
 
-   // 
    VE_SceneGraph::cfdDCS * GetcfdDCS( void);
 
 private:
@@ -148,5 +147,6 @@ private:
    cfdReadParam* _readParam;
    double realOpacity;
 };
+
 }
 #endif

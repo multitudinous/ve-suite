@@ -90,6 +90,7 @@ namespace VE_Xplorer
          void RemoveModel( cfdModel* );
          cfdModel* GetActiveModel( void );
          int GetNumberOfModels( void );
+         cfdScalarBarActor* GetScalarBar(void);
          void ReadNNumberOfDataSets(  char*, char* );
 
          //texture manager access

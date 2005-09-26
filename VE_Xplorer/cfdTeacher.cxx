@@ -44,6 +44,9 @@
 #include "VE_Xplorer/cfdWriteTraverser.h"
 #include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/cfdScalarBarActor.h"
+#include "VE_Xplorer/cfdModelHandler.h"
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -255,9 +258,18 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       vprDEBUG(vesDBG,0) << "scene stored as " << pfb_filename
                              << std::endl << vprDEBUG_FLUSH;
 
+      
+
+
+
       // store the world DCS matrix..
       if ( _worldDCS )
       {
+         
+         cfdGroup* tempGroup = new cfdGroup();
+                  
+         tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
+         
          gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
          //temporarily reset the world DCS matrix to the identity
@@ -269,9 +281,12 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
          //float scaleUnity[ 3 ];
          //scaleUnity[ 0 ] = scaleUnity[ 1 ] = scaleUnity[ 2 ] = 1.0f;
          //this->_worldDCS->SetScaleArray( scaleUnity );
-      
-         writePFBFile(this->_worldDCS,(char*)pfb_filename);
+         tempGroup->AddChild(_worldDCS);
+         writePFBFile(tempGroup,(char*)pfb_filename);
 
+         tempGroup->RemoveChild(_worldDCS);
+         tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
+         delete tempGroup;
          /*float* scaleArray = this->_worldDCS->GetScaleArray();
          float tempScale = 1.0f / scaleArray[ 0 ];
          gmtl::Matrix44f scaleMat;
