@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) //This is a Cheezy wizard. take a mod.def as in
       GenCode_Unit();
       //generate vcproj for Unit at this spot
       GenCode_Graphical_Plugin();
-	  GenVcProj_Graphical_Plugin( argv[1] );
+      GenVcProj_Graphical_Plugin( argv[1] );
     }
 }
 /////////////////////////////////////////////////////
@@ -145,8 +145,10 @@ void GenCode_Unit()
       pos = bufferString.find( "Template" );
       if ( pos != string::npos )
       {
-	 counter++;
-	 bufferString.replace( pos, 8, unitName );
+         counter++;
+         if ( counter == 2 ) bufferString.replace( pos, 8, MOD_name );
+         else bufferString.replace( pos, 8, unitName );
+         
       }
       outUnitFile<<bufferString<<endl;
       bufferString.clear();
