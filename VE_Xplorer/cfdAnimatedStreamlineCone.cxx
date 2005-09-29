@@ -82,8 +82,7 @@ cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
 
 void cfdAnimatedStreamlineCone::SetPolyDataSource( vtkPolyData *input )
 {
-   if (input != NULL)
-       this->polyData->DeepCopy( input );
+   this->polyData->DeepCopy( input );
 }
 
 void cfdAnimatedStreamlineCone::Update( void )
