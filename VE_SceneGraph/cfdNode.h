@@ -36,12 +36,14 @@
 
 #ifdef _PERFORMER
 class pfNode;
+class pfLightModel;
 class pfFog;
 #elif _OSG
 namespace osg 
 { 
    class Fog; 
    class Node;
+   class LightModel;
 }
 #include <osg/ref_ptr>
 #elif _OPENSG
@@ -81,13 +83,16 @@ namespace VE_SceneGraph
    protected:
 #ifdef _PERFORMER
          pfNode* _node;
+         pfLightModel* lightModel;
 #elif _OSG
          osg::ref_ptr<osg::Node> _node;
+         osg::ref_ptr<osg::LightModel> lightModel;
 #elif _OPENSG
 #endif
          float op;
          float stlColor[ 3 ];
          int color;
+         bool twosidedlighting;
    };
 }
 #endif

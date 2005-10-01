@@ -34,6 +34,9 @@
 #include "VE_SceneGraph/cfdSwitch.h"
 #include "VE_SceneGraph/cfdGeode.h"
 #include <iostream>
+#include <sstream>
+#include <string>
+#include <fstream>
 #include "VE_Xplorer/cfdDebug.h"
 //#include <cstdlib>
 
@@ -77,6 +80,7 @@
 #include <osg/Depth>
 #include <osg/LOD>
 #include <osg/ShadeModel>
+#include <osg/LightModel>
 #elif _OPENSG
 #endif
 
@@ -94,9 +98,11 @@ cfdNode::cfdNode()
    op = 1.0f;
    stlColor[ 1 ] = stlColor[ 1 ] = stlColor[ 0 ] = -1;
    color = 0;
+   twosidedlighting = false;
 
 #ifdef _PERFORMER
    this->_node = 0;
+   this->lightModel = 0;
 #elif _OSG
    //_node = 0;//new osg::Node();
 #elif _OPENSG
@@ -195,10 +201,29 @@ osg::Node* cfdNode::GetRawNode(void)
 /////////////////////////////////////////
 void cfdNode::LoadFile( char* filename )
 {
+   std::ostringstream filestring;
+   filestring << filename;
+   if ( strstr( filestring.str().c_str(), ".stl") || strstr( filestring.str().c_str(), ".stla") )
+   {
+      twosidedlighting = true;
+   }
+
 #ifdef _PERFORMER
-   this->_node = pfdLoadFile( filename );  
+   this->_node = pfdLoadFile( filename ); 
+   if ( twosidedlighting )
+   {
+      lightModel = new pfLightModel();
+      lightModel->setLocal( PF_ON );
+      lightModel->setTwoSide( PF_ON );
+   }
+
 #elif _OSG
    _node = osgDB::readNodeFile(filename);
+   if ( twosidedlighting )
+   {
+      lightModel = new osg::LightModel;
+      lightModel->setTwoSided(true);
+   }
       
       
 #elif _OPENSG
@@ -352,6 +377,15 @@ ushort *ilist=0;
                                    << std::endl << vprDEBUG_FLUSH;
             if ( testMat != NULL )
             {
+               if ( twosidedlighting )
+               {
+                  testMat->setSide( PFMTL_BOTH );
+                  geostate->setAttr( PFSTATE_FRONTMTL, testMat );				
+                  geostate->setAttr( PFSTATE_BACKMTL, testMat );
+                  geostate->setAttr( PFSTATE_LIGHTMODEL, lightModel );
+                  vprDEBUG(vesDBG,3) << "Two-Sided Lighting Has Been Turned ON : " <<  
+                                       std::endl << vprDEBUG_FLUSH;
+               }
                vprDEBUG(vesDBG,3) << "Setting Front Material : " << op 
                                       << std::endl << vprDEBUG_FLUSH;
                vprDEBUG(vesDBG,3) << " Color Flag : " << color
@@ -575,6 +609,13 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          {
             material->setAlpha(osg::Material::FRONT_AND_BACK,op);
          }
+
+         if ( twosidedlighting )
+         {
+            geostate->setAttributeAndModes(lightModel.get(), osg::StateAttribute::ON);
+            vprDEBUG(vesDBG,3) << "Two-Sided Lighting Has Been Turned ON : " <<  
+                                 std::endl << vprDEBUG_FLUSH;
+         }
          osg::Vec4Array* curColors = 0;
          
          if(color == 1){
@@ -615,6 +656,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
              geostate->setRenderBinDetails(99,std::string("DepthSortedBin"));
              geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
          }
+
          geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
          geostate->setAttributeAndModes(shade.get(),osg::StateAttribute::ON);
          //geostate->setAttributeAndModes(depth.get(),osg::StateAttribute::ON);
