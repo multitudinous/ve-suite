@@ -1,6 +1,8 @@
 #ifndef UNIT_I_H_
 #define UNIT_I_H_
 
+#include <Afx.h>
+#include "ExcelWrapper.h"
 #include "moduleS.h"
 #include "package.h" //so it can use the xerces stuff
 #if !defined (ACE_LACKS_PRAGMA_ONCE)
@@ -22,18 +24,21 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   std::string status_;
   std::string data_;
 
+  ExcelWrapper* Wrapper;
+
  protected:
   Body::Executive_var executive_;
   int return_state;
   void error(std::string msg);
   void warning(std::string msg);
 
-  double eff;
-  double pressure_out;
-  double pressure_change;
-  long case_type;
+  double airtempin;
+  double perc_theor_error;
+  double adiabaticflametemp;
+  long closesheets;
+  bool excelRunning;
   
-  
+  char* _paramHack;
  public:
 
 virtual void StartCalc (

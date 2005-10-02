@@ -1,4 +1,5 @@
 #include "AdiabaticFlameTempUnit_i.h"
+#include "string_ops.h"
 #include <iostream>
 using namespace std;
 
@@ -8,6 +9,8 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
 {
   UnitName_=name;
   return_state = 0;
+  _paramHack = NULL;
+  excelRunning = false;
 }
   
 // Implementation skeleton destructor
@@ -24,12 +27,49 @@ void Body_Unit_i::StartCalc (
   ))
   {
     // Add your implementation here
+    const char* airtempcalc;
+    const char* result;
+    Package p;
+	 bool rv;
+    airtempcalc = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
 
-    std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage(id_,msg.c_str());
-      // Do nothing right now.
-      // Add code to change cooling properties later
+    if (string(airtempcalc)=="")
+    {
+	   error("AdiabaticFlameTemp: Missing input.");
+	   return;
+    }
+
+    p.SetSysId("airtemp_in.xml");
+    p.Load(airtempcalc, strlen(airtempcalc));
+    airtempin = p.intfs[0].getDouble("airtempin");
+
+    if ( !excelRunning && closesheets != 1 )
+	 {
+		Wrapper = new ExcelWrapper();
+		Wrapper->loadExcel();
+		excelRunning = true;
+	 }
+
+    Wrapper->updateSheet(perc_theor_error,airtempin);
+	 Wrapper->getAnswers();
+	 double adiabaticflametemp = Wrapper->adiabaticflametemp;
+
+	 if ( excelRunning && closesheets == 1 )
+	 {
+	 	delete Wrapper;
+		excelRunning = false;
+	 }
+
+
+	 
+	 p.SetPackName("result");
+	 p.SetSysId("result.xml");
+	 p.intfs.clear();
+	 p.intfs.resize(1); //each port has its own package
+	 p.intfs[0].setString("adiabaticflametemp",to_string(adiabaticflametemp));
+	 result = p.Save(rv);
+	 return_state = 1;
+	 executive_->SetModuleResult(id_, result); //this marks the end the execution
   }
   
 void Body_Unit_i::StopCalc (
@@ -125,10 +165,8 @@ void Body_Unit_i::SetParams (
     p.SetSysId("gui.xml");
     p.Load(param, strlen(param));
     //Now make use of p.intfs to get your GUI vars out
-    //eff = p.intfs[0].getDouble("eff");
-    //pressure_out = p.intfs[0].getDouble("pressure_out");
-    //pressure_change = p.intfs[0].getDouble("pressure_change");
-    //case_type = p.intfs[0].getInt("case_type");
+    perc_theor_error = p.intfs[0].getDouble("perc_theor_error");
+    closesheets = p.intfs[0].getInt("closesheets");
     
   }
   

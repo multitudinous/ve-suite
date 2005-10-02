@@ -1,0 +1,14 @@
+REGEDIT
+; This .REG file may be used by your SETUP program.
+;   If a SETUP program is not available, the entries below will be
+;   registered in your InitInstance automatically with a call to
+;   CWinApp::RegisterShellFileTypes and COleObjectFactory::UpdateRegistryAll.
+
+HKEY_CLASSES_ROOT\AdiabaticFlameTempUnit.Application = AdiabaticFlameTempUnit Application
+HKEY_CLASSES_ROOT\AdiabaticFlameTempUnit.Application\CLSID = {458DEF56-B4F7-4F57-838E-7E40C7D9C6BE}
+
+HKEY_CLASSES_ROOT\CLSID\{458DEF56-B4F7-4F57-838E-7E40C7D9C6BE} = AdiabaticFlameTempUnit Application
+HKEY_CLASSES_ROOT\CLSID\{458DEF56-B4F7-4F57-838E-7E40C7D9C6BE}\ProgId = AdiabaticFlameTempUnit.Application
+
+
+HKEY_CLASSES_ROOT\CLSID\{458DEF56-B4F7-4F57-838E-7E40C7D9C6BE}\LocalServer32 = AdiabaticFlameTempUnit.EXE

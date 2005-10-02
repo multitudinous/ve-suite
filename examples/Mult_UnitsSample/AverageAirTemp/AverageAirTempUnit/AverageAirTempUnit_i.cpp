@@ -1,4 +1,5 @@
 #include "AverageAirTempUnit_i.h"
+#include "string_ops.h"
 #include <iostream>
 using namespace std;
 
@@ -8,6 +9,8 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
 {
   UnitName_=name;
   return_state = 0;
+  _paramHack = NULL;
+  excelRunning = false;
 }
   
 // Implementation skeleton destructor
@@ -24,12 +27,39 @@ void Body_Unit_i::StartCalc (
   ))
   {
     // Add your implementation here
+    if ( !excelRunning && closesheets != 1 )
+	 {
+		Wrapper = new ExcelWrapper();
+		Wrapper->loadExcel();
+		excelRunning = true;
+	 }
 
-    std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage(id_,msg.c_str());
-      // Do nothing right now.
-      // Add code to change cooling properties later
+    Wrapper->updateSheet(intakediam, airvel, intaketemp, airinlettemp, intakelength);
+	 Wrapper->getAnswers();
+	 double airexittemp = Wrapper->airexittemp;
+
+	 if ( excelRunning && closesheets == 1 )
+	 {
+	 	delete Wrapper;
+		excelRunning = false;
+	 }
+
+
+	 Package p;
+	 const char* result;
+    const char* outport;
+	 bool rv;
+
+    p.intfs.resize(1);
+    p.intfs[0].setString("airtempin",to_string(airexittemp));
+    p.SetPackName("ExportData");
+    p.SetSysId("test.xml");
+    outport = p.Save(rv);
+    executive_->SetExportData(id_, 0, outport);
+
+	 p.intfs.clear();
+	 result = p.Save(rv);
+	 executive_->SetModuleResult(id_, result); //this marks the end the execution
   }
   
 void Body_Unit_i::StopCalc (
@@ -125,10 +155,12 @@ void Body_Unit_i::SetParams (
     p.SetSysId("gui.xml");
     p.Load(param, strlen(param));
     //Now make use of p.intfs to get your GUI vars out
-    //eff = p.intfs[0].getDouble("eff");
-    //pressure_out = p.intfs[0].getDouble("pressure_out");
-    //pressure_change = p.intfs[0].getDouble("pressure_change");
-    //case_type = p.intfs[0].getInt("case_type");
+    intakediam = p.intfs[0].getDouble("intakediam");
+    airvel = p.intfs[0].getDouble("airvel");
+    intaketemp = p.intfs[0].getDouble("intaketemp");
+    airinlettemp = p.intfs[0].getDouble("airinlettemp");
+    intakelength = p.intfs[0].getDouble("intakelength");
+    closesheets = p.intfs[0].getInt("closesheets");
     
   }
   
