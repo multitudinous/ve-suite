@@ -65,7 +65,7 @@ endif
 SRCS=\
    $(PLUGIN).cxx
 
-APP_NAME= ../Plugins/$(CFDHOSTTYPE)/lib$(PLUGIN)$(EXEC_TAG)$(OSG)$(PATENTED_TAG).so
+APP_NAME= ../../Plugins/$(CFDHOSTTYPE)/lib$(PLUGIN)$(EXEC_TAG)$(OSG)$(PATENTED_TAG).so
 # object files are being stored in a system-dependent directory so that builds
 # for multiple platforms may be maintained simultaneously.
 

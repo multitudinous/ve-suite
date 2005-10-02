@@ -62,7 +62,7 @@ using namespace VE_SceneGraph;
 // Constructor
 VEAverageAirTempGraphicalPlugin::VEAverageAirTempGraphicalPlugin( void ) : cfdVEBaseClass()
 {
-  _objectName ="AverageAirTempGraphicalPlugin"; // Needs to match plugin name
+  _objectName ="AverageAirTemp"; // Needs to match plugin name
    //_onSceneGraph = false;
    _param = NULL;
 }
@@ -78,7 +78,7 @@ void VEAverageAirTempGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   strcpy( this->_param, "./Plugins/AverageAirTempGraphicalPlugin.param");
+   strcpy( this->_param, "./Plugins/vrxpr.param");
    //cout << _param << endl;
    CreateObjects();
 }

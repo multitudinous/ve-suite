@@ -62,7 +62,7 @@ using namespace VE_SceneGraph;
 // Constructor
 VEAdiabaticFlameTempGraphicalPlugin::VEAdiabaticFlameTempGraphicalPlugin( void ) : cfdVEBaseClass()
 {
-  _objectName ="AdiabaticFlameTempGraphicalPlugin"; // Needs to match plugin name
+  _objectName ="AdiabaticFlameTemp"; // Needs to match plugin name
    //_onSceneGraph = false;
    _param = NULL;
 }
@@ -77,8 +77,8 @@ VEAdiabaticFlameTempGraphicalPlugin::~VEAdiabaticFlameTempGraphicalPlugin( void 
 void VEAdiabaticFlameTempGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   this->_param = new char[100];
-   strcpy( this->_param, "./Plugins/AdiabaticFlameTempGraphicalPlugin.param");
+   //this->_param = new char[100];
+   //strcpy( this->_param, "./Plugins/AdiabaticFlameTempGraphicalPlugin.param");
    //cout << _param << endl;
    CreateObjects();
 }
