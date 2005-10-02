@@ -78,7 +78,7 @@ void VETemplate::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   strcpy( this->_param, "./Plugins/Template.param");
+   strcpy( this->_param, "./Plugins/VETemplate.param");
    //cout << _param << endl;
    CreateObjects();
 }
