@@ -62,7 +62,7 @@ using namespace VE_SceneGraph;
 // Constructor
 VETemplate::VETemplate( void ) : cfdVEBaseClass()
 {
-  _objectName ="VETemplate"; // Needs to match plugin name
+  _objectName ="Template"; // Needs to match plugin name
    //_onSceneGraph = false;
    _param = NULL;
 }
@@ -78,7 +78,7 @@ void VETemplate::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   strcpy( this->_param, "./Plugins/VETemplate.param");
+   strcpy( this->_param, "./VETemplate.param");
    //cout << _param << endl;
    CreateObjects();
 }

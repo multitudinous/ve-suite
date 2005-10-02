@@ -219,21 +219,24 @@ void GenCode_Graphical_Plugin()
    graphicalPluginFiles.clear();
    graphicalPluginFiles.open( "../../VETEMPLATE.cpp" );
    outGraphicalPlugin.open( (ve + graphicalPluginName+".cpp").c_str() );
+   counter = 0;
    while ( !graphicalPluginFiles.eof() )
-   {   
+   {
       //store each line in the buffer       
       graphicalPluginFiles.getline( buffer, BUFFER_MAX, '\n' );       
       bufferString += buffer;
       //now find the position of the word "Template"
       for ( int ct=0;ct<2;ct++ )
       {
-      pos = bufferString.find( "Template" );
-      if ( pos !=string::npos )
-      {
-	 counter++;
-	 bufferString.replace( pos, 8, graphicalPluginName );
-      }
-      pos = 0;
+         pos = bufferString.find( "Template" );
+         if ( pos !=string::npos )
+         {
+            counter++;
+            if ( counter == 4 ) bufferString.replace( pos, 8, MOD_name );
+            else bufferString.replace( pos, 8, graphicalPluginName );
+         }
+         
+         pos = 0;
       }
       outGraphicalPlugin<<bufferString<<endl;
       bufferString.clear();
