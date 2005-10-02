@@ -12,6 +12,26 @@ AverageAirTemp
   RegistVar("intaketemp", &intaketemp);
   RegistVar("airinlettemp", &airinlettemp);
   RegistVar("intakelength", &intakelength);
+  RegistVar("closesheets", &closesheets);
+
+  intakediam = 0;
+  airvel = 0;
+  intaketemp = 0;
+  airinlettemp = 0;
+  intakelength = 0;
+
+  wxString icon_file="Icons/Aver_Air_Temp_Mod.GIF";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]= wxPoint(0,0);
+  poly[1]= wxPoint(icon_w,0);
+  poly[2]= wxPoint(icon_w,icon_h);
+  poly[3]= wxPoint(0,icon_h);
 }
 
 
@@ -59,7 +79,7 @@ void AverageAirTemp::GetIPorts(POLY &iports)
 /////////////////////////////////////////////////////////////////////////////
 int AverageAirTemp::GetNumOports()
 {
-  int result=0;
+  int result=1;
   //Your code
   return result;
 }
@@ -67,13 +87,14 @@ int AverageAirTemp::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void AverageAirTemp::GetOPorts(POLY &oports)
 {
-    
+  oports[0]=wxPoint(icon_w*40/43,icon_h*21/41); 
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void AverageAirTemp::DrawIcon(wxDC* dc)
 {
   //Your implementation
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -87,7 +108,8 @@ UIDialog* AverageAirTemp::UI(wxWindow* parent)
      &airvel,
      &intaketemp,
      &airinlettemp,
-     &intakelength);
+     &intakelength,
+     &closesheets);
       
   return dlg;
 }
@@ -95,14 +117,14 @@ UIDialog* AverageAirTemp::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString AverageAirTemp::GetName()
 {
-  wxString result="NEW_MOD"; //your name
+  wxString result="SampleApps_MultipleUnit_AverAirTemp"; //your name
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 wxString AverageAirTemp::GetDesc()
 {
-  wxString result="None"; //your description
+  wxString result="Average Air Temp Module"; //your description
 
   return result;
 }

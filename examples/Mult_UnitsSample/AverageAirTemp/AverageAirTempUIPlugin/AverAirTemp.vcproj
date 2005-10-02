@@ -101,7 +101,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="GUIPlugin_d.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib"
-				OutputFile="..\GUIPlugins\win32\AverAirTemp_d.dll"
+				OutputFile="..\..\GUIPlugins\AverAirTemp_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(VE_SUITE_HOME)\lib\win32;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
@@ -146,10 +146,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
-				RelativePath=".\AverAirTemp.cpp">
-			</File>
-			<File
-				RelativePath=".\AverAirTemp_UI_Dialog.cpp">
+				RelativePath=".\AverageAirTemp.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -157,15 +154,18 @@
 						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\AverageAirTemp_UI_Dialog.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
-				RelativePath=".\AverAirTemp.h">
+				RelativePath=".\AverageAirTemp.h">
 			</File>
 			<File
-				RelativePath=".\AverAirTemp_UI_Dialog.h">
+				RelativePath=".\AverageAirTemp_UI_Dialog.h">
 			</File>
 		</Filter>
 		<Filter
@@ -176,5 +176,3 @@
 	<Globals>
 	</Globals>
 </VisualStudioProject>
-
-
