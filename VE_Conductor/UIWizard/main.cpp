@@ -187,8 +187,8 @@ void GenCode_Graphical_Plugin()
       pos = bufferString.find( "Template" );
       if ( pos !=string::npos )
       {
-	 counter++;
-	 bufferString.replace( pos, 8, graphicalPluginName );
+         counter++;
+         bufferString.replace( pos, 8, MOD_name );
       }
       outGraphicalPlugin<<bufferString<<endl;
       bufferString.clear();
