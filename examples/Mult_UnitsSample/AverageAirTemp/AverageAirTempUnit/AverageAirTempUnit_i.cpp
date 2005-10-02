@@ -1,5 +1,6 @@
 #include "AverageAirTempUnit_i.h"
 #include "string_ops.h"
+#include "interface.h"
 #include <iostream>
 using namespace std;
 
@@ -10,6 +11,12 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   UnitName_=name;
   return_state = 0;
   _paramHack = NULL;
+  intakediam = 6;
+  airvel = 1;
+  intaketemp = 800;
+  airinlettemp = 400;
+  intakelength = 20;
+  closesheets = 0;
   excelRunning = false;
 }
   
@@ -51,7 +58,8 @@ void Body_Unit_i::StartCalc (
 	 bool rv;
 
     p.intfs.resize(1);
-    p.intfs[0].setString("airtempin",to_string(airexittemp));
+
+    p.intfs[0].setDouble("airexittemp",airexittemp);
     p.SetPackName("ExportData");
     p.SetSysId("test.xml");
     outport = p.Save(rv);

@@ -10,6 +10,10 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   UnitName_=name;
   return_state = 0;
   _paramHack = NULL;
+  airtempin = 0;
+  perc_theor_error = 500;
+  adiabaticflametemp;
+  closesheets = 0;
   excelRunning = false;
 }
   
@@ -29,8 +33,12 @@ void Body_Unit_i::StartCalc (
     // Add your implementation here
     const char* airtempcalc;
     const char* result;
+    bool ok = true;
     Package p;
 	 bool rv;
+
+    fflush(NULL);
+
     airtempcalc = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
 
     if (string(airtempcalc)=="")
@@ -39,9 +47,9 @@ void Body_Unit_i::StartCalc (
 	   return;
     }
 
-    p.SetSysId("airtemp_in.xml");
+    p.SetSysId("gas_in.xml");
     p.Load(airtempcalc, strlen(airtempcalc));
-    airtempin = p.intfs[0].getDouble("airtempin");
+    airtempin = p.intfs[0].getDouble("airexittemp", &ok);
 
     if ( !excelRunning && closesheets != 1 )
 	 {
@@ -59,9 +67,7 @@ void Body_Unit_i::StartCalc (
 	 	delete Wrapper;
 		excelRunning = false;
 	 }
-
-
-	 
+ 
 	 p.SetPackName("result");
 	 p.SetSysId("result.xml");
 	 p.intfs.clear();
