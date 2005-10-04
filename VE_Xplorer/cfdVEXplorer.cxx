@@ -40,6 +40,7 @@
    #include <omniORB4/CORBA.h>
 #endif
 #include <iostream>
+#include <vpr/System.h>
 
 #include "VE_Xplorer/cfdThread.h"
 using namespace VE_Xplorer;
@@ -104,6 +105,7 @@ int main(int argc, char* argv[])
       //orb->run();
       while ( appWrapper->JugglerIsRunning() )
       {
+         vpr::System::msleep( 500 );  // one-second delay
          if ( orb->work_pending() )
          {
             orb->perform_work();

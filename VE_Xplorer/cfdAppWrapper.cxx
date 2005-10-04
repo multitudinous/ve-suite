@@ -36,6 +36,7 @@
 #include "VE_Xplorer/cfdVjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>
+#include <vpr/System.h>
 
 #include <iostream>
 
