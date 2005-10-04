@@ -62,12 +62,7 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-ifeq (${CFDUNAME},Darwin)
-   APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_UtilLib.dylib
-else
-   APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_UtilLib.so
-endif
-
+APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_UtilLib.so
 #OBJDIR is the place that the object files are stored.
 OBJDIR= $(CFDHOSTTYPE)_VE_UtilLib
 
@@ -97,12 +92,7 @@ DEBUG_APP?= TRUE
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
 EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
-ifeq (${CFDUNAME},Darwin)
-   EXTRA_LDFLAGS+= -dynamiclib
-else
-   EXTRA_LDFLAGS+= -shared
-endif
-
+EXTRA_LIBS+= -shared
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
 else
@@ -127,4 +117,4 @@ ${APP_NAME}: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
 
 # in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
-CLEAN_FILES+= $(APP_NAME) $(OBJDIR)/* $(DEPDIR)/*
+CLEAN_FILES+= $(APP_NAME) $(OBJDIR)/* 
