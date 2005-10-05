@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
       //orb->run();
       while ( appWrapper->JugglerIsRunning() )
       {
-         vpr::System::msleep( 500 );  // one-second delay
+         vpr::System::msleep( 10 );  // one-second delay
          if ( orb->work_pending() )
          {
             orb->perform_work();
