@@ -657,6 +657,7 @@ void UI_DatasetPanel::_buildDataSets( void )
          delete [] thisDataScalarNames;                     
          delete [] thisDataVectorNames;                     
       }
+      ((UI_Frame*)GetParent())->_tabs->setActiveDataset( 0 );
       // Need to add in same functionality for vectors as is done for scalars   
    } 
 }
@@ -667,11 +668,24 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
 ///////////////////////////////////////////////////////////////////////////////////////////
    minGroup->Detach(minLabel);
    minGroup->Detach(_minPercentSlider);
+
+   minGroupwspin->Detach(minGroup);
+   minGroupwspin->Detach(_minSpinner);
+
    maxGroup->Detach(maxLabel);
    maxGroup->Detach(_maxPercentSlider);
+
+   maxGroupwspin->Detach(maxGroup);
+   maxGroupwspin->Detach(_maxSpinner);
+
+   scalgroupmin->Detach(minGroupwspin);
+   scalgroupmax->Detach(maxGroupwspin);
+
+   sRangeBoxSizer->Detach(scalgroupmin);
+   sRangeBoxSizer->Detach(scalgroupspacer);
+   sRangeBoxSizer->Detach(scalgroupmax);
    sRangeBoxSizer->Detach(_scalarRangeBox);
-   sRangeBoxSizer->Detach(minGroup); 
-   sRangeBoxSizer->Detach(maxGroup);
+
    _col1->Detach(_RBoxScroll);
    _col2->Detach(_ScalarScroll);
    _colcombine1_2->Detach(_col1);
@@ -706,6 +720,8 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    delete _minPercentSlider; 
    delete _maxPercentSlider; 
    delete _dataHeadingBox;
+   delete _maxSpinner;
+   delete _minSpinner;
 
    ////////////////////////////////////////////
    ////////////////////////////////////////////
@@ -714,8 +730,8 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    _buildDataSets();
    _buildPanel(); 
 
-   if ( !_DataSets.empty() )
-	  _setScalars(_DataSets[0]);
+//   if ( !_DataSets.empty() )
+//	  _setScalars(_DataSets[0]);
 
 }
 

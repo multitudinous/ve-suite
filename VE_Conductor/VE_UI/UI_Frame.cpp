@@ -235,9 +235,6 @@ UI_Frame::~UI_Frame()
 
 void UI_Frame::OnChangeModel( void )
 {
-   _datasetPanel->_rebuildDataSets( activeModIndex );
-   _tabs->DeleteAllPages();   
-   _tabs->rebuildTabPages( activeModIndex );
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
    std::cout << " Act Mod Index : "<<activeModIndex<< std::endl;
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
@@ -251,6 +248,10 @@ void UI_Frame::OnChangeModel( void )
                      "Communication Failure", wxOK | wxICON_INFORMATION );
    }
  
+   _datasetPanel->_rebuildDataSets( activeModIndex );
+   _tabs->DeleteAllPages();   
+   _tabs->rebuildTabPages( activeModIndex );
+
    //Refresh();
    // Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
    static bool test = false;
