@@ -331,7 +331,7 @@ void GeometryDataBuffer::DeleteGeomInfosFromCurrentList(std::vector<int> items)
 
    for(unsigned int i=0; i<items.size();i++)
    {
-    _geominfopackagelist.erase(_geominfopackagelist.begin()+items[i]);      
+    _geominfopackagelist.erase(_geominfopackagelist.begin()+i);      
    }
 
    if(_geominfopackagelist.size()==0)
