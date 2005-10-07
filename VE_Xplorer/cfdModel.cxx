@@ -404,7 +404,7 @@ void cfdModel::addGeomdataset(const std::string& geomfilename)
 ///////////////////////////////////////////
 void cfdModel::delGeomdataset(int DelIndex)
 {
-   delete (mGeomDataSets[DelIndex]);
+   //delete (mGeomDataSets[DelIndex]);
    this->mGeomDataSets.erase(this->mGeomDataSets.begin() + DelIndex);
 }
 ///////////////////////////////////////////////////
