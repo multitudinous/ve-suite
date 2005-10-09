@@ -237,7 +237,7 @@ int cfdGroup::GetNumChildren( void )
    return numChildren;
 }
 ////////////////////////////////////
-void cfdGroup::SetName( char* name )
+void cfdGroup::SetName( std::string name )
 {
    const std::string test(name);
 #ifdef _OPENSG
@@ -251,7 +251,7 @@ void cfdGroup::SetName( char* name )
 #endif
 }
 //////////////////////////////////////
-const char* cfdGroup::GetName( void )
+const std::string cfdGroup::GetName( void )
 {
 #ifdef _OPENSG
    return 0;

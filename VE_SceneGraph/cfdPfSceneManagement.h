@@ -52,7 +52,7 @@ namespace VE_SceneGraph
    class VE_SCENEGRAPH_EXPORTS cfdPfSceneManagement //: public vpr::Singleton< cfdPfSceneManagement >
    {
       public:
-         void Initialize( char * );
+         void Initialize( std::string );
          void CleanUp( void );
          void InitScene( void );
       
@@ -69,7 +69,7 @@ namespace VE_SceneGraph
          vprSingletonHeader( cfdPfSceneManagement );   
       
          //std::string    param;
-         char* _param;
+         std::string _param;
          cfdGroup* rootNode;  
          cfdDCS* worldDCS;
 #ifdef _PERFORMER

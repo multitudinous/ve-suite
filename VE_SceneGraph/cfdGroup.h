@@ -64,7 +64,7 @@ namespace VE_SceneGraph{
          virtual cfdNode* GetChild( int );
          virtual int  GetNumChildren( void );
 
-         virtual void SetName( char* );
+         virtual void SetName( std::string );
          virtual int ReplaceChild( cfdNode*, cfdNode* );
 
          virtual cfdNode* Clone( int );
@@ -76,7 +76,7 @@ namespace VE_SceneGraph{
 #elif _OPENSG
 #endif
 
-         virtual const char* GetName( void );
+         virtual const std::string GetName( void );
       protected:
 #ifdef _PERFORMER
          pfGroup* _group;

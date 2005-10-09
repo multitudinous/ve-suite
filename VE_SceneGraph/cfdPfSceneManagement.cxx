@@ -63,7 +63,7 @@ vprSingletonImp(cfdPfSceneManagement );
 
 cfdPfSceneManagement::cfdPfSceneManagement( void )
 {
-   this->_param = 0;
+   this->_param.erase();// = 0;
    this->rootNode = 0;
    this->worldDCS = 0;
 #ifdef _PERFORMER
@@ -73,7 +73,7 @@ cfdPfSceneManagement::cfdPfSceneManagement( void )
 #endif
 }
 
-void cfdPfSceneManagement::Initialize( char* param )
+void cfdPfSceneManagement::Initialize( std::string param )
 {
    _param = param;
 }

@@ -199,17 +199,19 @@ osg::Node* cfdNode::GetRawNode(void)
 /////////////////////////////////////////
 //load scene from file                 //
 /////////////////////////////////////////
-void cfdNode::LoadFile( char* filename )
+void cfdNode::LoadFile( std::string filename )
 {
-   std::ostringstream filestring;
-   filestring << filename;
-   if ( strstr( filestring.str().c_str(), ".stl") || strstr( filestring.str().c_str(), ".stla") )
+   //std::ostringstream filestring;
+   //filestring << filename;
+   //if ( strstr( filestring.str().c_str(), ".stl") || strstr( filestring.str().c_str(), ".stla") )
+   if ( strstr( filename.c_str(), ".stl") || strstr( filename.c_str(), ".stla") )
+
    {
       twosidedlighting = true;
    }
 
 #ifdef _PERFORMER
-   this->_node = pfdLoadFile( filename ); 
+   this->_node = pfdLoadFile( filename.c_str() ); 
    if ( twosidedlighting )
    {
       lightModel = new pfLightModel();
@@ -235,7 +237,7 @@ void cfdNode::LoadFile( char* filename )
 #elif _OSG
    if(_node.valid()){
 #endif
-      _node->setName(filename);
+      _node->setName(filename.c_str());
    }
 }
 ////////////////////////////////////

@@ -552,7 +552,7 @@ int cfdDCS::GetNumChildren( void )
    return numChildren;
 }
 //////////////////////////////////////
-const char* cfdDCS::GetName( void )
+const std::string cfdDCS::GetName( void )
 {
 #ifdef _OPENSG
    return 0;
@@ -564,7 +564,7 @@ const char* cfdDCS::GetName( void )
 #endif
 }
 ////////////////////////////////////
-void cfdDCS::SetName( char* name )
+void cfdDCS::SetName( std::string name )
 {
    const std::string test(name);
 #ifdef _OPENSG

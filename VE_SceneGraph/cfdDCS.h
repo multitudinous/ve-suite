@@ -82,8 +82,8 @@ public:
    int AddChild(cfdNode* child);
    void InsertChild(int index,cfdNode* child);
    int GetNumChildren();
-   const char* GetName();
-   void SetName(char* name);
+   const std::string GetName();
+   void SetName(std::string name);
    int ReplaceChild(cfdNode* oldChild, cfdNode* newChild);
 
 

@@ -33,6 +33,8 @@
 #define CFD_NODE_H
 
 #include "VE_SceneGraph/cfdSceneNode.h"
+#include <string>
+
 
 #ifdef _PERFORMER
 class pfNode;
@@ -78,7 +80,7 @@ namespace VE_SceneGraph
 #elif _OPENSG
 #endif
          void SetNodeProperties( int, float, float* );
-         void LoadFile( char* );
+         void LoadFile( std::string );
          cfdNode* Clone( int );
    protected:
 #ifdef _PERFORMER
