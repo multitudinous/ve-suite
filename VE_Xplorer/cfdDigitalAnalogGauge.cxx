@@ -272,7 +272,7 @@ void cfdDigitalAnalogGauge::DefineCircleActor()
 {
    int numPts = 72;
    double Center[ 3 ];
-   Center[0] = 0.0; Center[1] = 0.0; Center[2] = 0.0;
+   Center[0] = 0.0; Center[1] = 0.1; Center[2] = 0.0;
 
    vtkPolyData *output = vtkPolyData::New();
 
@@ -501,8 +501,7 @@ void cfdDigitalAnalogGauge::UpdateMovingArrowInRange( double value )
    vprDEBUG(vesDBG,2) << "middleOfRange: " << middleOfRange << std::endl << vprDEBUG_FLUSH; 
    double normalizedValue = value - middleOfRange;
    double angle = normalizedValue * slope;
-   vprDEBUG(vesDBG
-,2) << "angle: " << angle << std::endl << vprDEBUG_FLUSH; 
+   vprDEBUG(vesDBG,2) << "angle: " << angle << std::endl << vprDEBUG_FLUSH; 
 
    // verify limits...
    if      ( angle < -arrowLimitAngle ) angle = -arrowLimitAngle;
@@ -535,7 +534,7 @@ void cfdDigitalAnalogGauge::DefineGaugeTextActor()
    //std::cout << "center: " << center[ 0 ] << "\t" << center[ 1 ] << "\t" << center[ 2 ] << std::endl;
    labelTransform->Translate(
          -center[ 0 ] / labelScale,
-         -( this->circleRadius + 4.0 *  ( labelScale / 2.0 ) ) / labelScale,
+         1.3 -( this->circleRadius + 4.0 *  ( labelScale / 2.0 ) ) / labelScale,
          0.0 );
    labelTransform->Delete();
 
