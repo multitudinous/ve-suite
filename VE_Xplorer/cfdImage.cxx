@@ -54,7 +54,7 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
 
-cfdImage::cfdImage( char* param )
+cfdImage::cfdImage( std::string param )
 {
    this->bmpReader = NULL;
    this->imgReader = NULL;
@@ -71,10 +71,10 @@ cfdImage::cfdImage( char* param )
    if ( bmpOrientation == -1 )
       return;
 
-   char * extension = fileIO::getExtension( bmpFileName );
+   std::string extension = fileIO::getExtension( bmpFileName );
    vprDEBUG(vesDBG, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
 
-   if ( !strcmp(extension,"bmp") || !strcmp(extension,"BMP") )
+   if ( !(extension == "bmp") || !(extension == "BMP") )
    {
       vprDEBUG(vesDBG, 1) << "found bmp\n" << vprDEBUG_FLUSH;
       // Kevin Kenney: The images represent 13.2-in x 13.8-in. plane of the
@@ -83,7 +83,7 @@ cfdImage::cfdImage( char* param )
       // lower left at origin
 
       this->bmpReader = vtkBMPReader::New();
-      this->bmpReader->SetFileName( bmpFileName );
+      this->bmpReader->SetFileName( bmpFileName.c_str() );
       this->bmpReader->Update();
 
       this->plane = vtkPlaneSource::New();
@@ -145,7 +145,7 @@ cfdImage::cfdImage( char* param )
 
 // This should work generally with any vtkImageData
 
-cfdImage::cfdImage ( char * filename, int resx, int resy, int dim, double *origin, double *spacing )
+cfdImage::cfdImage ( std::string filename, int resx, int resy, int dim, double *origin, double *spacing )
 {
    this->bmpReader = NULL;
    this->imgReader = NULL;
@@ -153,10 +153,10 @@ cfdImage::cfdImage ( char * filename, int resx, int resy, int dim, double *origi
    this->mapper = NULL;
    this->texture = NULL;
 
-   char * extension = fileIO::getExtension( filename );
+   std::string extension = fileIO::getExtension( filename );
    vprDEBUG(vesDBG, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
 
-   if ( !strcmp(extension,"lic") || !strcmp(extension,"LIC") )
+   if ( !(extension == "lic") || !(extension == "LIC") )
    {
      // ImageReader
 
@@ -170,7 +170,7 @@ cfdImage::cfdImage ( char * filename, int resx, int resy, int dim, double *origi
      this->imgReader->SetDataOrigin(origin);
      this->imgReader->SetDataScalarTypeToUnsignedChar();
      this->imgReader->SetNumberOfScalarComponents(4);
-     this->imgReader->SetFileName(filename);
+     this->imgReader->SetFileName(filename.c_str());
      this->imgReader->Update();
 
      // Plane
@@ -261,7 +261,7 @@ void cfdImage::CreateObjects( void )
    int numObjects;
    char textLine[ 256 ];
    std::ifstream input;
-   input.open( this->_param );
+   input.open( this->_param.c_str() );
    input >> numObjects; 
    input.getline( textLine, 256 );   //skip past remainder of line
 

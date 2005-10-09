@@ -91,7 +91,7 @@ cfdModelHandler::cfdModelHandler( void )
 {
    vprDEBUG(vesDBG,2) << "cfdModelHandler constructor"
                           << std::endl << vprDEBUG_FLUSH;
-   _param = 0;
+   _param.erase();//_param = 0;
    
    this->activeDataset  = 0;
    this->_scalarBar     = 0;
@@ -107,7 +107,7 @@ cfdModelHandler::cfdModelHandler( void )
 #endif
 }
 
-void cfdModelHandler::Initialize( char* param )
+void cfdModelHandler::Initialize( std::string param )
 {
    _param = param;
    _readParam = new cfdReadParam();
@@ -403,7 +403,7 @@ void cfdModelHandler::InitScene( void )
       // set first scalar active
       activeDataset->SetActiveScalar( 0 );
    
-      strcpy( oldDatasetName, activeDataset->GetFileName() );
+      oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
       vprDEBUG(vesDBG,1) << "cfdModelHandler: Setting active dataset to " 
                << activeDataset->GetFileName() << " , " 
                << oldDatasetName << std::endl << vprDEBUG_FLUSH;
@@ -482,12 +482,12 @@ void cfdModelHandler::PreFrameUpdate( void )
 
          // make sure that the user did not just hit same dataset button
          // (or change scalar since that is routed through here too)
-         if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
+         if ( oldDatasetName == activeDataset->GetFileName() )//if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
          {
             vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate  setting dataset as newly activated" 
                                 << std::endl << vprDEBUG_FLUSH;
             activeDataset->SetNewlyActivated();
-            strcpy( oldDatasetName, activeDataset->GetFileName() );
+            oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
          }
 
          // update scalar bar for possible new scalar name
@@ -556,7 +556,8 @@ void cfdModelHandler::PreFrameUpdate( void )
             // therefore we must find the parent besides worldDCS
             // because for search child we only search the immediate children
             // maybe come up with better functionality later
-            if (  !strcmp( _activeModel->GetCfdDCS()->GetName(), "cfdVEBaseClass" ) )
+            //if (  !strcmp( _activeModel->GetCfdDCS()->GetName(), "cfdVEBaseClass" ) )
+            if ( _activeModel->GetCfdDCS()->GetName().compare( "cfdVEBaseClass" ) )
             {
                parent = _activeModel->GetCfdDCS();
             }
@@ -760,7 +761,7 @@ void cfdModelHandler::CreateObjects( void )
 #endif
 #endif
    std::ifstream input;
-   input.open( this->_param );
+   input.open( this->_param.c_str() );
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
@@ -816,15 +817,15 @@ void cfdModelHandler::CreateObjects( void )
             exit( 1 );
          }
 
-         char * precomputedDataSliceDir = _readParam->readDirName( input, "precomputedDataSliceDir" );
+         std::string precomputedDataSliceDir = _readParam->readDirName( input, "precomputedDataSliceDir" );
          _modelList.at( 0 )->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( precomputedDataSliceDir );
-         delete [] precomputedDataSliceDir;
-         precomputedDataSliceDir = NULL;
+         //delete [] precomputedDataSliceDir;
+         precomputedDataSliceDir.erase();//precomputedDataSliceDir = NULL;
 
-         char * precomputedSurfaceDir = _readParam->readDirName( input, "precomputedSurfaceDir" );
+         std::string precomputedSurfaceDir = _readParam->readDirName( input, "precomputedSurfaceDir" );
          _modelList.at( 0 )->GetCfdDataSet( -1 )->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
-         delete [] precomputedSurfaceDir;
-         precomputedSurfaceDir = NULL;
+         //delete [] precomputedSurfaceDir;
+         precomputedSurfaceDir.erase();//precomputedSurfaceDir = NULL;
 
          this->LoadSurfaceFiles( _modelList.at( 0 )->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
       }
@@ -1042,9 +1043,9 @@ void cfdModelHandler::CreateObjects( void )
    
 }  
 
-void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
+void cfdModelHandler::LoadSurfaceFiles( std::string precomputedSurfaceDir )
 {
-   if ( precomputedSurfaceDir == NULL )
+   if ( precomputedSurfaceDir.empty() )// == NULL )
    {
       vprDEBUG(vesDBG,1) << "precomputedSurfaceDir == NULL" 
                              << std::endl << vprDEBUG_FLUSH;
@@ -1076,11 +1077,11 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
                std::cout << dir_itr->leaf() << "\n";
                if ( strstr( dir_itr->leaf().c_str(), ".vtk") )
                {
-                  char* pathAndFileName = new char[strlen(dir_path.leaf().c_str() )+
-                                          strlen(dir_itr->leaf().c_str())+2];
-                  strcpy(pathAndFileName,dir_path.leaf().c_str());
-                  strcat(pathAndFileName,"/");
-                  strcat(pathAndFileName,dir_itr->leaf().c_str());
+                  std::string pathAndFileName;// = new char[strlen(dir_path.leaf().c_str() )+
+                  //                        strlen(dir_itr->leaf().c_str())+2];
+                  pathAndFileName.assign( dir_path.leaf().c_str() );//strcpy(pathAndFileName,dir_path.leaf().c_str());
+                  pathAndFileName.append( "/" );//strcat(pathAndFileName,"/");
+                  pathAndFileName.append( dir_itr->leaf().c_str() );//strcat(pathAndFileName,dir_itr->leaf().c_str());
 
                   vprDEBUG(vesDBG,0) << "\tsurface file = " << pathAndFileName
                                          << std::endl << vprDEBUG_FLUSH;
@@ -1123,23 +1124,23 @@ vtkPolyData* cfdModelHandler::GetArrow( void )
    return this->arrow;
 }
 
-void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputedDir )
+void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string preComputedDir )
 {
-   std::vector< char* > frameFileNames;
-   std::vector< char* > frameDirNames;
+   std::vector< std::string > frameFileNames;
+   std::vector< std::string > frameDirNames;
    int numFiles = 0;
    // count the files and record the name of each file
    int numDir = 0;
-   char *cwd;
+   std::string cwd;
 #ifndef WIN32
-   if ((cwd = getcwd(NULL, 100)) == NULL)
+   if ((cwd = getcwd(NULL, 100)).empty() )// == NULL)
    {
       std::cerr << "Couldn't get the current working directory!" << std::endl;
       exit( 1 );
    }
 
    // open the directory
-   DIR* dir = opendir( directory );
+   DIR* dir = opendir( directory.c_str() );
    direct* file = 0;
 
    // change into this directory so that vtk can find the files
@@ -1152,11 +1153,11 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
       //assume all vtk files in this directory are part of the sequence
       if(strstr(file->d_name, ".vtk"))
       {
-         char * pathAndFileName = new char[
-                     strlen(directory) + strlen(file->d_name) + 2 ];
-         strcpy( pathAndFileName, directory);
-         strcat(pathAndFileName, "/");
-         strcat(pathAndFileName, file->d_name);
+         std::string pathAndFileName;//char * pathAndFileName = new char[
+         //            strlen(directory) + strlen(file->d_name) + 2 ];
+         pathAndFileName.assign( directory );//strcpy( pathAndFileName, directory);
+         pathAndFileName.append( "/" );//strcat(pathAndFileName, "/");
+         pathAndFileName.append( file->d_name );//strcat(pathAndFileName, file->d_name);
  
          frameFileNames.push_back( pathAndFileName );
          vprDEBUG(vesDBG, 1) << " pathAndFileName : " 
@@ -1167,16 +1168,16 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    };
    //chdir( cwd );
    closedir( dir ); //close the directory
-   dir = opendir( cwd );
+   dir = opendir( cwd.c_str() );
    
    while( (file = readdir(dir)) != NULL )
    {
       //std::cout << file->d_name << " : " << preComputedDir<< " : " << /*file->ino_t << " : " << file->off_t << */std::endl;
       //assume all vtk files in this directory are part of the sequence
-      if(strstr(file->d_name, preComputedDir))
+      if(strstr(file->d_name, preComputedDir.c_str()))//if(file->d_name.find(preComputedDir))
       {
-         char * pathAndFileName = new char[ strlen(file->d_name) + 1 ];
-         strcpy( pathAndFileName, file->d_name);
+         std::string pathAndFileName;//char * pathAndFileName = new char[ strlen(file->d_name) + 1 ];
+         pathAndFileName.assign( file->d_name );//strcpy( pathAndFileName, file->d_name);
  
          frameDirNames.push_back( pathAndFileName );
          vprDEBUG(vesDBG, 1) << " pathAndFileName : " 
@@ -1223,11 +1224,11 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
          //assume all vtk files in this directory are part of the sequence
          if(strstr(fileData.cFileName, ".vtk"))
          {
-            char* pathAndFileName = new char[
-                  strlen(directoryPath) + strlen(fileData.cFileName) + 2 ];
-            strcpy(pathAndFileName,directoryPath);
-            strcat(pathAndFileName,"/");
-            strcat(pathAndFileName,fileData.cFileName);
+            std::string pathAndFileName;//char* pathAndFileName = new char[
+            //      strlen(directoryPath) + strlen(fileData.cFileName) + 2 ];
+            pathAndFileName.assign( directoryPath );//strcpy(pathAndFileName,directoryPath);
+            pathAndFileName.append( "/" );//strcat(pathAndFileName,"/");
+            pathAndFileName.append( fileData.cFileName );//strcat(pathAndFileName,fileData.cFileName);
 
             frameFileNames.push_back( pathAndFileName );
             
@@ -1274,11 +1275,11 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
          //assume all vtk files in this directory are part of the sequence
          if(strstr(fileData.cFileName,preComputedDir ))
          {
-            char* pathAndFileName = new char[
-                  strlen(cwd) + strlen(fileData.cFileName) + 2 ];
-            strcpy(pathAndFileName,cwd);
-            strcat(pathAndFileName,"/");
-            strcat(pathAndFileName,fileData.cFileName);
+            std::string pathAndFileName;// = new char[
+            //      strlen(cwd) + strlen(fileData.cFileName) + 2 ];
+            pathAndFileName.assign( cwd );//strcpy(pathAndFileName,cwd);
+            pathAndFileName.append( "/" );//strcat(pathAndFileName,"/");
+            pathAndFileName.append( fileData.cFileName );//strcat(pathAndFileName,fileData.cFileName);
 
             frameDirNames.push_back( pathAndFileName );
             

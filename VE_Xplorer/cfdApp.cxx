@@ -110,7 +110,7 @@ cfdApp::cfdApp( void )
 : vrj::OsgApp( vrj::Kernel::instance() )
 #endif
 {
-   filein_name = 0;
+   filein_name.erase();// = 0;
 #ifdef _TAO
    this->executive = 0;
 #endif
@@ -128,7 +128,7 @@ cfdApp::cfdApp( void )
 
 void cfdApp::exit()
 {
-   delete [] filein_name;
+   //delete [] filein_name;
    VE_SceneGraph::cfdPfSceneManagement::instance()->CleanUp();
    cfdModelHandler::instance()->CleanUp();
    cfdEnvironmentHandler::instance()->CleanUp();
@@ -288,17 +288,17 @@ void cfdApp::initScene( void )
 
    //_corbaManager = new CorbaManager();
    vprDEBUG(vesDBG,0) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
-   filein_name = new char [ 256 ];
+   //filein_name = new char [ 256 ];
    do
    {
       std::cout << "|   Enter VE_Xplorer parameter filename: ";
       std::cin >> filein_name;
-      if ( ! fileIO::isFileReadable( this->filein_name ) )
+      if ( ! fileIO::isFileReadable( filein_name ) )
       {
-         std::cerr << "\n\"" << this->filein_name << "\" is not readable." << std::endl;
+         std::cerr << "\n\"" << filein_name << "\" is not readable." << std::endl;
       }
    }
-   while ( ! fileIO::isFileReadable( this->filein_name ) );
+   while ( ! fileIO::isFileReadable( filein_name ) );
 
    //std::cout << "filein_name: " << this->filein_name << std::endl;
 
@@ -474,7 +474,7 @@ void cfdApp::captureWebImage()
    std::cout << "Copying frame buffer "<< webImageWidth 
                << " " << webImageHeight << "......." << std::endl;
    captureNextFrameForWeb=false;      //we're not going to capture next time around
-   webImagePixelArray=new char[webImageHeight*webImageWidth*3];      //create an array to store the data
+   std::string webImagePixelArray; //=new char[webImageHeight*webImageWidth*3];      //create an array to store the data
    glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);   //copy from the framebuffer
    readyToWriteWebImage=true;      
 }

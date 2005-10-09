@@ -38,40 +38,39 @@
 
 namespace VE_Util
 {
-   class VE_UTIL_EXPORTS fileIO
-   { 
-      public:
-         fileIO();
-         ~fileIO();
-         static int isFileReadable( const char * const filename );
-         static int isFileWritable( char *filename );
-         static int DirectoryExists( char * dirName );
-         static int isDirWritable( const std::string& dirname );
-         static const char * getWritableDir( );
-         static char * getFilenameFromDefault( char* fileContents,
-                                            char* defaultName );
-         static char * getReadableFileFromDefault( 
-                                         char* stringDescribingfileContents, 
-                                         const char* const defaultName );
-         static char * getWritableFile( char* defaultName );
-         static int readNByteBlockFromFile( void *ptr, const unsigned int nByte,
-                                         const unsigned int num, FILE *stream, 
-                                         const bool endian_flip = 1 );
-         static void processCommandLineArgs( int argc, char *argv[], char verb[],
-               char * & inFileName, char * & outFileName );
-         static char * getExtension( char * filename );
-         static void readToFileEnd( FILE *inputFile );
-         static void StripTrailingSpaces( char line [] );
-         static char * StripLeadingSpaces( char line [] );
-         static int extractIntegerBeforeExtension( char filename [] );
-         static void IdentifyTagAssignValue(char *TagName, char *TagValue);
-         static void getTagAndValue(char *textline, char *TagName, char *TagValue);
- 
-         static int getIntegerBetween( const int min, const int max );
+class VE_UTIL_EXPORTS fileIO
+{ 
+public:
+   fileIO();
+   ~fileIO();
+   static int isFileReadable( const std::string filename );
+   static int isFileWritable(  std::string filename );
+   static int DirectoryExists( std::string dirName );
+   static int isDirWritable( const std::string dirname );
+   static const std::string getWritableDir( void );
+   static std::string getFilenameFromDefault( std::string, std::string );
+   static std::string getReadableFileFromDefault( 
+                                   std::string stringDescribingfileContents, 
+                                   const std::string defaultName );
+   static std::string getWritableFile( std::string defaultName );
+   static int readNByteBlockFromFile( void *ptr, const unsigned int nByte,
+                                   const unsigned int num, FILE *stream, 
+                                   const bool endian_flip = 1 );
+   static void processCommandLineArgs( int argc, char *argv[], char verb[],
+         std::string & inFileName, std::string & outFileName );
+   static std::string getExtension( std::string filename );
+   static void readToFileEnd( FILE *inputFile );
+   static void StripTrailingSpaces( std::string line );
+   static std::string StripLeadingSpaces( std::string line );
+   static int extractIntegerBeforeExtension( std::string filename );
+   static void IdentifyTagAssignValue(std::string TagName, std::string TagValue);
+   static void getTagAndValue(std::string textline, std::string TagName,  std::string TagValue);
 
-         static char * GetFile( char [], char [] );
-         static int ExtractIntegerFromString( char filename [] );
-         static int ExtractIntegerBeforeExtension( char filename [] );
-   };
+   static int getIntegerBetween( const int min, const int max );
+
+   static std::string GetFile( std::string, std::string );
+   static int ExtractIntegerFromString( std::string filename );
+   static int ExtractIntegerBeforeExtension( std::string filename );
+};
 }
 #endif

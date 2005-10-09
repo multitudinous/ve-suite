@@ -91,7 +91,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
       dirStringStream << directory << "/" << this->typeLabel << "_Cont" << i << ".vtk";
       std::string dirString = dirStringStream.str();
       //planeFileName = (char*)dirString.c_str();
-       if ( ! fileIO::isFileReadable( (char*)dirString.c_str() ) )
+       if ( ! fileIO::isFileReadable( (std::string)dirString.c_str() ) )
        {
            this->numPlanes = i;
            vprDEBUG(vesDBG,0) << "\t\tFound " << this->numPlanes 

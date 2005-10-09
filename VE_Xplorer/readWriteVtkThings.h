@@ -39,9 +39,9 @@ namespace VE_Util
 {
    VE_UTIL_EXPORTS void printWhatItIs( vtkDataSet * readerOutput );
 
-   VE_UTIL_EXPORTS vtkDataSet * readVtkThing( char * vtkFilename, int printFlag = 0 );  //default is not to print information
+   VE_UTIL_EXPORTS vtkDataSet * readVtkThing( std::string vtkFilename, int printFlag = 0 );  //default is not to print information
 
-   VE_UTIL_EXPORTS bool writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag = 0 );// default is to print ascii file
+   VE_UTIL_EXPORTS bool writeVtkThing( vtkDataSet * vtkThing, std::string vtkFilename, int binaryFlag = 0 );// default is to print ascii file
 
    VE_UTIL_EXPORTS void printBounds( double bounds[6] );
 }

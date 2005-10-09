@@ -65,7 +65,7 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-cfdScalarBarActor::cfdScalarBarActor( char* param, VE_SceneGraph::cfdGroup* rootNode )
+cfdScalarBarActor::cfdScalarBarActor( std::string param, VE_SceneGraph::cfdGroup* rootNode )
 {
    vprDEBUG(vesDBG,2) << "constructing cfdScalarBarActor" 
                           << std::endl << vprDEBUG_FLUSH;
@@ -381,7 +381,7 @@ void cfdScalarBarActor::Execute()
    }
    
    // creating the numerical labels on the scalar bar legend
-   char** labelText = new char * [ this->numTextLabels ];
+   std::vector< std::string > labelText; //char** labelText = new char * [ this->numTextLabels ];
    /*for ( i = 0; i < this->numTextLabels; i ++ )
    {
       labelText[i] = new char[20];  // enough space for a formatted number
@@ -425,7 +425,7 @@ void cfdScalarBarActor::Execute()
          dirStringStream << std::setprecision( 0 ) << this->range[0] + (float)i*labelIncrement;
 
       std::string dirString = dirStringStream.str();
-      labelText[i] = (char*)dirString.c_str();
+      labelText.push_back(std::string(dirString));//labelText[i] = (char*)dirString.c_str();
 
       labelTransform->Identity();
       labelTransform->RotateZ( this->zrot );
@@ -435,7 +435,7 @@ void cfdScalarBarActor::Execute()
       float labelScale = this->height / 15.0;
       labelTransform->Scale( labelScale, labelScale, labelScale );
 
-      labelScalar[i]->SetText( labelText[i] );
+      labelScalar[i]->SetText( labelText[i].c_str() );
 
       labelFilter->SetTransform( labelTransform );
 
@@ -630,7 +630,7 @@ void cfdScalarBarActor::CreateObjects( void )
    char text[ 256 ];
    char textLine[ 256 ];
    std::ifstream input;
-   input.open( _param );
+   input.open( _param.c_str() );
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 

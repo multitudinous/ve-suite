@@ -33,6 +33,7 @@
 #ifndef CFD_SOUNDHANDLER
 #define CFD_SOUNDHANDLER
 
+#include <string>
 #include <vector>
 #include "VE_Xplorer/cfdGlobalBase.h"
 
@@ -48,7 +49,7 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdSoundHandler : public cfdGlobalBase
 {
 public:
-   cfdSoundHandler( char* );
+   cfdSoundHandler( std::string );
    ~cfdSoundHandler();
 
    // Used to read parameter file and configure objects
@@ -63,10 +64,10 @@ public:
    virtual void UpdateCommand();
 
    int GetNumberOfSounds( void );
-   char* GetSoundFilename( int );
+   std::string GetSoundFilename( int );
    std::vector< cfdSound* > GetSounds( void );
 private:
-   char* _param;
+   std::string _param;
    cfdReadParam* _readParam;
    std::vector< cfdSound* > sounds;
    //cfdCommandArray* commandArray;

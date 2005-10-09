@@ -81,15 +81,15 @@ cfdFILE::cfdFILE( fileInfo *geomFile, VE_SceneGraph::cfdDCS *worldDCS  )
    }*/
 }
 
-cfdFILE::cfdFILE( char* geomFile, VE_SceneGraph::cfdDCS* worldDCS  )
+cfdFILE::cfdFILE( std::string geomFile, VE_SceneGraph::cfdDCS* worldDCS  )
 {
    // Need to fix this and move some code to cfdNode
    // Leave some code here no more cfdFileInfo
 
    this->DCS = new VE_SceneGraph::cfdDCS();
    this->node = new VE_SceneGraph::cfdNode();  
-   this->node->LoadFile( geomFile );
-   strcpy( fileName, geomFile );
+   this->node->LoadFile( geomFile.c_str() );
+   fileName.assign( geomFile );//strcpy( fileName, geomFile );
    this->DCS->AddChild( this->node );
    worldDCS->AddChild( this->DCS );
 #ifdef _PERFORMER
@@ -99,7 +99,7 @@ cfdFILE::cfdFILE( char* geomFile, VE_SceneGraph::cfdDCS* worldDCS  )
 #endif
 }
 
-cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
+cfdFILE::cfdFILE( float opVal, float stlColor[3], std::string filename  )
 {
 // this constructor is used by cfdFrame
    vprDEBUG(vesDBG,1) 
@@ -151,7 +151,7 @@ cfdFILE::~cfdFILE()
    //delete fog;
 }
 
-char* cfdFILE::GetFilename( void )
+std::string cfdFILE::GetFilename( void )
 {
    return fileName;
 }

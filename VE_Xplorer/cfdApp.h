@@ -172,7 +172,7 @@ class cfdApp: public vrj::OsgApp
       int   lastFrame;
    private:
       vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
-      char * filein_name;
+      std::string filein_name;
 	   double time_since_start;
 	   //web interface stuff for writing the image file
 	   //to be viewed over the web
@@ -184,7 +184,7 @@ class cfdApp: public vrj::OsgApp
 	   int webImageWidth;
 	   int webImageHeight;
 	   vpr::Thread* writeWebImageFileThread;			//thread in which we write to the file
-	   char* webImagePixelArray;
+	   std::string webImagePixelArray;
 	   void writeWebImageFile(void*);
 	   void captureWebImage();
 	   double timeOfLastCapture;

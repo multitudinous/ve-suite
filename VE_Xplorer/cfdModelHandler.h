@@ -75,7 +75,7 @@ namespace VE_Xplorer
          ~cfdModelHandler( void ){ ; }// Never gets called, don't implement
          vprSingletonHeader( cfdModelHandler );   
       public:
-         void Initialize( char* );
+         void Initialize( std::string );
          void CleanUp( void );
          void InitScene( void );
          void PreFrameUpdate( void );
@@ -83,15 +83,19 @@ namespace VE_Xplorer
 
          void SetCommandArray( cfdCommandArray* );
          void CreateObjects( void );      
-         void LoadSurfaceFiles( char* );
+         void LoadSurfaceFiles( std::string );
          vtkPolyData* GetArrow( void );
          cfdModel* GetModel( int );
          void AddModel( cfdModel* );
          void RemoveModel( cfdModel* );
          cfdModel* GetActiveModel( void );
          int GetNumberOfModels( void );
+
+         void ReadNNumberOfDataSets(  std::string, std::string );
+
          cfdScalarBarActor* GetScalarBar(void);
-         void ReadNNumberOfDataSets(  char*, char* );
+         //void ReadNNumberOfDataSets(  char*, char* );
+
 
          //texture manager access
    #ifdef _OSG
@@ -103,7 +107,7 @@ namespace VE_Xplorer
       protected:
          vtkPolyData* _GetArrowPolyData();
       private:
-         char* _param;
+         std::string _param;
          cfdDataSet* activeDataset;
          cfdCommandArray* commandArray;
          cfdReadParam* _readParam;
@@ -119,7 +123,7 @@ namespace VE_Xplorer
          vtkPolyData* arrow;
          std::vector< cfdModel* > _modelList;
          // Used to store data for multi-dataset functions
-         char oldDatasetName[256];
+         std::string oldDatasetName;//[256];
    };
 }
 #endif

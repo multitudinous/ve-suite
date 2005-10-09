@@ -63,8 +63,8 @@ class VE_XPLORER_EXPORTS cfdFILE
 {
 public:
    cfdFILE( fileInfo*, VE_SceneGraph::cfdDCS* );
-   cfdFILE( char*, VE_SceneGraph::cfdDCS* );
-   cfdFILE( float, float [ 3 ], char * );
+   cfdFILE( std::string, VE_SceneGraph::cfdDCS* );
+   cfdFILE( float, float [ 3 ], std::string );
 
    ~cfdFILE();
 
@@ -81,7 +81,7 @@ public:
    float getOpacity();
    void setFog(double dist);
 
-   char* GetFilename( void );
+   std::string GetFilename( void );
    //pfLightModel *matLight;
    //pfMaterial *fmaterial;
    //pfMaterial *bmaterial;
@@ -94,7 +94,7 @@ public:
    int transparent;
    float stlColor [ 3 ];
    //char* fileName;
-   char fileName[512];
+   std::string fileName;//[512];
 
    void SetRGBAColorArray( double* );
    void GetColorArray( void );

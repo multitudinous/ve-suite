@@ -66,10 +66,10 @@ cfdVectorBase::cfdVectorBase()
    tfilter = vtkThresholdPoints::New();
    this->filter = vtkGeometryFilter::New();
    this->filter->SetInput( this->glyph->GetOutput() );
-   filter->GetOutput()->ReleaseDataFlagOn();
+//   filter->GetOutput()->ReleaseDataFlagOn();
 
-   this->tris = vtkTriangleFilter::New();
-   this->strip = vtkStripper::New();
+//   this->tris = vtkTriangleFilter::New();
+//   this->strip = vtkStripper::New();
 
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
@@ -103,11 +103,11 @@ cfdVectorBase::~cfdVectorBase()
    this->filter->Delete();
    this->filter = 0;
 
-   this->tris->Delete();
-   this->tris = 0;
+//   this->tris->Delete();
+//   this->tris = 0;
    
-   this->strip->Delete();
-   this->strip = 0;
+//   this->strip->Delete();
+//   this->strip = 0;
    
    
    this->mapper->Delete();

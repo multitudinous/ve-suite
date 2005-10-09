@@ -56,11 +56,11 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdAnimatedImage : public cfdObjects
    {
       public:
-         cfdAnimatedImage( char *basename, int frames,
+         cfdAnimatedImage( std::string basename, int frames,
                     int ex_x, int ex_y, int dim, 
                     double *origin, double *spacing );
 
-         cfdAnimatedImage( char* );
+         cfdAnimatedImage( std::string );
   
          ~cfdAnimatedImage();
   
@@ -88,7 +88,8 @@ namespace VE_Xplorer
          float imageScale[ 3 ];
          float imageTrans[ 3 ];
          float imageRot[ 3 ];
-         char* _param;
+         std::string _param;
+         //std::string _param
          cfdReadParam* _readParam;
          //int _which_frame;
    };

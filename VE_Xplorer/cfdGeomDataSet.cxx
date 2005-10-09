@@ -101,7 +101,7 @@ cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, VE_SceneGraph::cfdDCS *model
 
 }
 //////////////////////////////////////////////////////////////////////////////////
-cfdGeomDataSet::cfdGeomDataSet( float opVal, float stlColor[3], char *filename  )
+cfdGeomDataSet::cfdGeomDataSet( float opVal, float stlColor[3], std::string filename  )
 {
    //node = pfdLoadFile( filename );  // pfNode
    //node->ref();

@@ -54,7 +54,7 @@ using namespace VE_Xplorer;
 cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser()
 :VE_SceneGraph::cfdRawNodeTraverser()
 {
-   _fName = 0;
+   _fName.erase();// = 0;
    _toPfb = 0;
    _preFunc = _swapSequenceNodes;
 #ifdef _PERFORMER
@@ -66,13 +66,13 @@ cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser()
 cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(const cfdRawNodeWriteTraverser& cfdWT)
 :VE_SceneGraph::cfdRawNodeTraverser(cfdWT)
 {
-   _fName = 0;
+   _fName.erase();// = 0;
    _toPfb = 0;
 
    _preFunc = cfdWT._preFunc;
    
-   _fName = new char[strlen(cfdWT._fName)+1];
-   strcpy(_fName,cfdWT._fName);
+   //_fName = new char[strlen(cfdWT._fName)+1];
+   _fName.assign(cfdWT._fName);//( strcpy(_fName,cfdWT._fName);
 #ifdef _PERFORMER
    unsigned int nSequences = cfdWT._sequenceList.size();
    for(unsigned int i = 0; i < nSequences; i++){
@@ -84,10 +84,10 @@ cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(const cfdRawNodeWriteTraverse
 #endif
 }
 ///////////////////////////////////////////////////
-cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(char* outFile)
+cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(std::string outFile)
 :VE_SceneGraph::cfdRawNodeTraverser()
 {
-   _fName = 0;
+   _fName.erase();// = 0;
    _toPfb = 0;
    setOutputFileName(outFile);
 #ifdef _PERFORMER
@@ -99,9 +99,9 @@ cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(char* outFile)
 ///////////////////////////////////////
 cfdRawNodeWriteTraverser::~cfdRawNodeWriteTraverser()
 {
-   if(_fName){
-      delete [] _fName;
-      _fName = 0;
+   if(_fName.c_str()){
+      //delete [] _fName;
+      _fName.erase();// = 0;
    }
 #ifdef _PERFORMER
    if(_sequenceList.size()){
@@ -118,8 +118,8 @@ cfdRawNodeWriteTraverser& cfdRawNodeWriteTraverser::operator=(const cfdRawNodeWr
       this->VE_SceneGraph::cfdRawNodeTraverser::operator =(rhs);
       
       //copy our new name
-      _fName = new char[strlen(rhs._fName)+1];
-      strcpy(_fName,rhs._fName);
+      //_fName = new char[strlen(rhs._fName)+1];
+      _fName.assign(rhs._fName);//strcpy(_fName,rhs._fName);
 #ifdef _PERFORMER
       if(_sequenceList.size())
       {
@@ -165,14 +165,14 @@ void cfdRawNodeWriteTraverser::setPreNodeTraverseCallback(
 ////////////////////////////////////////////////////////
 //set the output file name                            //
 ////////////////////////////////////////////////////////
-void cfdRawNodeWriteTraverser::setOutputFileName(char* outFile)
+void cfdRawNodeWriteTraverser::setOutputFileName(std::string outFile)
 {
-   if(_fName){
-      delete [] _fName;
-      _fName = 0;
+   if(_fName.c_str()){
+      //delete [] _fName;
+      _fName.erase();// = 0;
    }
-   _fName = new char[strlen(outFile)+1];
-   strcpy(_fName,outFile);
+   //_fName = new char[strlen(outFile)+1];
+   _fName.assign(outFile);//strcpy(_fName,outFile);
 }
 ////////////////////////////////////////////////////////////////////
 void cfdRawNodeWriteTraverser::setNode(VE_SceneGraph::cfdNode* root)
@@ -301,11 +301,11 @@ void cfdRawNodeWriteTraverser::writeFile()
 {
 
 #ifdef _PERFORMER
-   if(_fName && _root){
+   if(_fName.c_str() && _root){
       //swap out cfdsequence nodes
       _traverseNode(_root);
       //store file as pfb file
-      pfdStoreFile(_root,_fName);
+      pfdStoreFile(_root,_fName.c_str());
       //replace raw Sequence nodes
       setCallback(0);
       _traverseNode(_root);

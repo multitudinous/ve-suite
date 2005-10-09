@@ -103,11 +103,11 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
                {
                   if ( strstr( dir_itr->leaf().c_str(), ".pfb") || strstr( dir_itr->leaf().c_str(), ".ive") )
                   {
-                     char* pathAndFileName = new char[strlen(dir_path.leaf().c_str() )+
-                                                      strlen(dir_itr->leaf().c_str())+2];
-                     strcpy(pathAndFileName,dir_path.leaf().c_str()); 
-                     strcat(pathAndFileName,"/");
-                     strcat(pathAndFileName,dir_itr->leaf().c_str());
+                     std::string pathAndFileName;// = new char[strlen(dir_path.leaf().c_str() )+
+                     //                                 strlen(dir_itr->leaf().c_str())+2];
+                     pathAndFileName.assign( dir_path.leaf().c_str()); //strcpy(pathAndFileName,dir_path.leaf().c_str()); 
+                     pathAndFileName.append( "/" );//strcat(pathAndFileName,"/");
+                     pathAndFileName.append( dir_itr->leaf().c_str() );//strcat(pathAndFileName,dir_itr->leaf().c_str());
 
                      std::ostringstream filenameStream;
                      filenameStream << "./" << pathAndFileName;
@@ -142,7 +142,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
    for (int i=0; i<this->numFiles; i++)
    {
       this->node[ i ] = new VE_SceneGraph::cfdNode();
-	   this->node[ i ]->LoadFile( (char*)this->pfbFileNames[ i ].c_str() );
+	   this->node[ i ]->LoadFile( (std::string)this->pfbFileNames[ i ].c_str() );
    }
 }
 
@@ -175,11 +175,11 @@ int cfdTeacher::getNumberOfFiles()
    return this->numFiles;
 }
 
-char * cfdTeacher::getFileName( int i )
+std::string cfdTeacher::getFileName( int i )
 {
    if ( i >= 0 && i < this->numFiles )
    {
-	   return (char*)this->pfbFileNames[i].c_str();
+	   return (std::string)this->pfbFileNames[i].c_str();
    }
    else
    {
@@ -244,7 +244,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 	   }
 
       // Generate a .pfb filename...
-      const char* pfb_filename;
+      std::string pfb_filename;
       std::ostringstream dirStringStream;
       dirStringStream << this->directory << "/stored_scene_" 
 #ifdef _PERFORMER
@@ -281,8 +281,11 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
          //float scaleUnity[ 3 ];
          //scaleUnity[ 0 ] = scaleUnity[ 1 ] = scaleUnity[ 2 ] = 1.0f;
          //this->_worldDCS->SetScaleArray( scaleUnity );
+      
+        
          tempGroup->AddChild(_worldDCS);
-         writePFBFile(tempGroup,(char*)pfb_filename);
+         writePFBFile(this->_worldDCS,(std::string)pfb_filename.c_str());
+
 
          tempGroup->RemoveChild(_worldDCS);
          tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
@@ -300,7 +303,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       else
       {
          writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(),
-                    (char*)pfb_filename);
+                    (std::string)pfb_filename);
       }
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
@@ -323,7 +326,7 @@ void cfdTeacher::UpdateCommand()
 }
 // Need to fix later
 
-void cfdTeacher::writePFBFile( VE_SceneGraph::cfdNode* graph,char* fileName)
+void cfdTeacher::writePFBFile( VE_SceneGraph::cfdNode* graph,std::string fileName)
 {
    
    VE_Xplorer::cfdRawNodeWriteTraverser cfdWT(fileName);

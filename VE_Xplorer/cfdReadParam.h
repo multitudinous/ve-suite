@@ -102,13 +102,13 @@ namespace VE_Xplorer
          void CreateNewDataSet();
          int GetNumberOfDataSets();
          VE_Xplorer::cfdDataSet * GetDataSet( int i );
-         VE_Xplorer::cfdDataSet * GetDataSetWithName( const char * );
+         VE_Xplorer::cfdDataSet * GetDataSetWithName( const std::string );
 
          int  convertDecimalToBinary( long );
          void convertBinaryToDecimal( int );
          void convertBinaryToArray( int, int );
 
-         char * readDirName( std::ifstream &inFile, char * description );
+         std::string readDirName( std::ifstream &inFile, std::string description );
          int readID( std::ifstream &inFile );
 
          float worldScale[ 3 ];

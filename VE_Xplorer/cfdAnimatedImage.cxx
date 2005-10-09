@@ -49,7 +49,7 @@ using namespace VE_SceneGraph;
 
 // Fix need to add the new style read param to this class
 // tak code out of cfdReadPAram to this function
-cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
+cfdAnimatedImage::cfdAnimatedImage( std::string basename, int frames,
                                     int ex_x, int ex_y, int dim,
                                     double *origin, double *spacing )
 {
@@ -79,7 +79,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
    this->_dcs = new VE_SceneGraph::cfdDCS();
 }
 
-cfdAnimatedImage::cfdAnimatedImage( char* param )
+cfdAnimatedImage::cfdAnimatedImage( std::string param )
 {
    unsigned int i;
    //char* filename;//[250];
@@ -166,7 +166,7 @@ void cfdAnimatedImage::CreateObjects( void )
    int numObjects;
    char textLine[ 256 ];
    std::ifstream input;
-   input.open( this->_param );
+   input.open( this->_param.c_str() );
    input >> numObjects; 
    input.getline( textLine, 256 );   //skip past remainder of line
 

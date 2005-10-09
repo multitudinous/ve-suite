@@ -184,7 +184,7 @@ int cfdVEPluginLoader::GetNumberOfPlugins( void )
    return plugins.size();
 }
 
-cfdVEBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
+cfdVEBaseClass* cfdVEPluginLoader::CreateObject( std::string _objname )
 {
    int selectPlugin = -1;
 

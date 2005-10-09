@@ -83,10 +83,10 @@ void VE_Util::printBounds( double bounds[6] )
              << "\tz-max = \t" << bounds[5] << std::endl;
 }
 
-vtkDataSet * VE_Util::readVtkThing( char * vtkFilename, int printFlag )
+vtkDataSet * VE_Util::readVtkThing( std::string vtkFilename, int printFlag )
 {
    cfdVTKFileHandler fileReader;
-   vtkDataSet* temp = fileReader.GetDataSetFromFile(vtkFilename);
+   vtkDataSet* temp = fileReader.GetDataSetFromFile(vtkFilename.c_str());
    if ( printFlag )
    {
       double bounds[6];
@@ -97,7 +97,7 @@ vtkDataSet * VE_Util::readVtkThing( char * vtkFilename, int printFlag )
    return temp;
 }
 
-bool VE_Util::writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag )
+bool VE_Util::writeVtkThing( vtkDataSet * vtkThing, std::string vtkFilename, int binaryFlag )
 {
    cfdVTKFileHandler fileWriter;
    if(!binaryFlag) 

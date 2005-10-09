@@ -65,13 +65,13 @@ using namespace VE_SceneGraph;
 //////////////////////////////////////////////////////////////////////
 
 cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS, 
-                                     cfdNavigate* nav, char* param )
+                                     cfdNavigate* nav, std::string param )
 {
    flyThroughList.clear();
    thisQuatCam = NULL;
    _worldDCS = NULL;
    _nav = NULL;
-   _param = NULL;
+   _param.empty();// = NULL;
    t = 0.0f;
    numQuatCams = 0;
    numPointsInFlyThrough = 0;
@@ -118,7 +118,7 @@ void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldD
 }
 
 
-void cfdQuatCamHandler::WriteToFile(char* fileName)
+void cfdQuatCamHandler::WriteToFile(std::string fileName)
 {
    if ( onMasterNode )
    {
@@ -134,7 +134,7 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
 	      std::cout << "...so we made it for you..." << std::endl;
 	   }
 
-      std::ofstream inFile( fileName, std::ios::out );
+      std::ofstream inFile( fileName.c_str(), std::ios::out );
 
       if ( fileIO::isFileReadable( fileName ) )
       {  
@@ -196,7 +196,7 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
    }
 }
 
-void cfdQuatCamHandler::LoadFromFile( char* fileName)
+void cfdQuatCamHandler::LoadFromFile( std::string fileName)
 {
    // this is for cluster mode so that the master has a chance to write
    // the quat cam file and then one frame later all the slaves will
@@ -235,7 +235,7 @@ void cfdQuatCamHandler::LoadFromFile( char* fileName)
       flyThroughList.clear();
    }
    
-   std::ifstream inFile( fileName, std::ios::in ); 
+   std::ifstream inFile( fileName.c_str(), std::ios::in ); 
 
    if ( fileIO::isFileReadable( fileName ) )
    { 
@@ -302,8 +302,8 @@ void cfdQuatCamHandler::LoadFromFile( char* fileName)
    
    else 
    {
-      std::ofstream newFile( fileName, std::ios::out ); 
-      newFile.open( fileName, std::ios::out );
+     std::ofstream newFile( fileName.c_str(), std::ios::out ); 
+     newFile.open( fileName.c_str(), std::ios::out );
       newFile.close();
    }
        

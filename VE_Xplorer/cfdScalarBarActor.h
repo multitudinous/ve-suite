@@ -32,6 +32,8 @@
 #ifndef CFD_SCALAR_BAR_ACTOR_H
 #define CFD_SCALAR_BAR_ACTOR_H
 
+#include <string>
+#include <vector>
 #include "VE_Xplorer/cfdGlobalBase.h"
 //#include <string>
 
@@ -58,11 +60,11 @@ namespace VE_Xplorer
 */
 namespace VE_Xplorer
 {
-class VE_XPLORER_EXPORTS cfdScalarBarActor : public cfdGlobalBase
-{
-public:
-   cfdScalarBarActor( char*, VE_SceneGraph::cfdGroup* );
-   ~cfdScalarBarActor();
+   class VE_XPLORER_EXPORTS cfdScalarBarActor : public cfdGlobalBase
+   {
+      public:
+         cfdScalarBarActor( std::string, VE_SceneGraph::cfdGroup* );
+         ~cfdScalarBarActor();
 
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
@@ -138,7 +140,7 @@ private:
 
    VE_SceneGraph::cfdDCS*  scalarBar;
    VE_SceneGraph::cfdGroup* _rootNode;
-   char* _param;
+   std::string _param;
    cfdDataSet* _activeDataSet;
    float scalarBarPos[ 3 ];
    float scalarBarZRot;

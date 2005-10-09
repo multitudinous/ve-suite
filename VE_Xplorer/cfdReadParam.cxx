@@ -137,13 +137,13 @@ cfdDataSet * cfdReadParam::GetDataSet( int i )
       return NULL;
 }
 
-cfdDataSet * cfdReadParam::GetDataSetWithName( const char * vtkFilename )
+cfdDataSet * cfdReadParam::GetDataSetWithName( const std::string vtkFilename )
 {
    int numDataSets = this->GetNumberOfDataSets();
    for ( int i = 0; i < numDataSets; i++ )
    {
       //std::cout << this->GetDataSet( i )->GetFileName() << std::endl;
-      if ( ! strcmp(this->GetDataSet( i )->GetFileName(),vtkFilename) )
+      if( vtkFilename.compare(this->GetDataSet( i )->GetFileName()) != 0 )//if ( ! strcmp(this->GetDataSet( i )->GetFileName(),vtkFilename.c_str()) )
       {
          return this->GetDataSet( i );
          break;
@@ -152,9 +152,9 @@ cfdDataSet * cfdReadParam::GetDataSetWithName( const char * vtkFilename )
    return NULL;
 }
 
-char * cfdReadParam::readDirName( std::ifstream &inFile, char * description )
+std::string cfdReadParam::readDirName( std::ifstream &inFile, std::string description )
 {
-   char * dirName = new char [ 256 ];
+   std::string dirName;// = new char [ 256 ];
    inFile >> dirName;
 
    char textLine[ 256 ];
@@ -170,8 +170,8 @@ char * cfdReadParam::readDirName( std::ifstream &inFile, char * description )
       vprDEBUG(vesDBG,0) << " " << description << " \""
                              << dirName << "\" does not exist"
                              << std::endl << vprDEBUG_FLUSH;
-      delete [] dirName;
-      dirName = NULL;
+      //delete [] dirName;
+      dirName.empty();// = NULL;
    }
    return dirName;
 }

@@ -60,11 +60,11 @@ namespace VE_Xplorer
       public:
          cfdRawNodeWriteTraverser();
          cfdRawNodeWriteTraverser(const cfdRawNodeWriteTraverser& cfdWT);
-         cfdRawNodeWriteTraverser(char* outFile);
+         cfdRawNodeWriteTraverser(std::string outFile);
          ~cfdRawNodeWriteTraverser();
 
          //set the output file name
-         void setOutputFileName(char* outFile);
+         void setOutputFileName(std::string outFile);
 
          //write out the pfbFile
          void writeFile();
@@ -90,7 +90,7 @@ namespace VE_Xplorer
          friend void _activateSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* cfdNT,
                                     pfNode* node);
 #endif
-         char* _fName;
+         std::string _fName;
          int _toPfb;
 
       public:      

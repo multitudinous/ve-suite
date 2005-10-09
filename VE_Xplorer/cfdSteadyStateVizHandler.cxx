@@ -126,10 +126,10 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    this->texturesActive = false;
    this->transientActors = true;
    this->vjTh[0] = 0;
-   _param = 0;
+   _param.erase();// = 0;
 }
 
-void cfdSteadyStateVizHandler::Initialize( char* param )
+void cfdSteadyStateVizHandler::Initialize( std::string param )
 {
    _param = param;
    nav = cfdEnvironmentHandler::instance()->GetNavigate();
@@ -683,7 +683,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          // Initiate the animated Images.
          //
          std::cout << "| 39.b Initializing............................. Animated Images |" << std::endl;
-         this->animImg = new cfdAnimatedImage( _param );
+        this->animImg = new cfdAnimatedImage( _param.c_str() );
          this->animImg->SetObjectType( ANIMATED_IMAGES );
          this->dataList.push_back( this->animImg);  
       }

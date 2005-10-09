@@ -45,7 +45,7 @@
 using namespace VE_Xplorer;
 using namespace VE_Util;
 
-cfdSoundHandler::cfdSoundHandler( char* param )
+cfdSoundHandler::cfdSoundHandler( std::string param )
 {
    _param = param;
    this->_readParam = new cfdReadParam();
@@ -88,7 +88,7 @@ int cfdSoundHandler::GetNumberOfSounds( void )
    return this->sounds.size();
 }
 
-char* cfdSoundHandler::GetSoundFilename( int i )
+std::string cfdSoundHandler::GetSoundFilename( int i )
 {
    // used to generate a list of sounds on the gui
    vprDEBUG(vesDBG,0) << "\treturning \"" << this->sounds[ i ]->soundName
@@ -150,7 +150,7 @@ void cfdSoundHandler::CreateObjects( void )
 {
    // open the parameter filer and read the number of objects...
    std::ifstream input;
-   input.open( this->_param );
+   input.open( this->_param.c_str() );
 
    int numObjects;
    input >> numObjects; 

@@ -80,8 +80,8 @@ cfdDataSet::cfdDataSet( )
    this->activeVector = -1;
    this->numScalars = 0;
    this->numVectors = 0;
-   this->scalarName = NULL;
-   this->vectorName = NULL;
+   this->scalarName.empty();// = NULL;
+   this->vectorName.empty();// = NULL;
    this->x_planes = NULL;
    this->y_planes = NULL;
    this->z_planes = NULL;
@@ -92,9 +92,9 @@ cfdDataSet::cfdDataSet( )
    this->definedRange[ 0 ] = 0;
    this->definedRange[ 0 ] = 0;
    this->isNewlyActivated = 0;
-   this->fileName = NULL;
-   this->precomputedDataSliceDir = NULL;
-   this->precomputedSurfaceDir = NULL;
+   this->fileName.empty();// = NULL;
+   this->precomputedDataSliceDir.empty();// = NULL;
+   this->precomputedSurfaceDir.empty();// = NULL;
    // precomputed data that descends from a flowdata.vtk should
    // automatically have the same color mapping as the "parent" 
    // By default, the dataset is assumed to have no parent, that is,
@@ -138,12 +138,7 @@ cfdDataSet::~cfdDataSet()
 
    if ( this->numScalars > 0 )
    {
-      for ( i=0; i<this->numScalars; i++ )
-      {
-         delete [] scalarName[i];
-      }
-      delete [] this->scalarName;
-      this->scalarName = NULL;
+      scalarName.clear();
 
       for ( i=0; i<this->numScalars; i++ )
       {
@@ -158,12 +153,7 @@ cfdDataSet::~cfdDataSet()
 
    if ( this->numVectors > 0 )
    {
-      for ( i=0; i<this->numVectors; i++ )
-      {
-         delete [] this->vectorName[i];
-      }
-      delete [] this->vectorName;
-      this->vectorName = NULL;
+      vectorName.clear();
 
       delete [] this->vectorMagRange;
       this->vectorMagRange = NULL;
@@ -193,16 +183,16 @@ cfdDataSet::~cfdDataSet()
                               << std::endl << vprDEBUG_FLUSH;
    }
   
-   if ( this->precomputedDataSliceDir != NULL )
+   if ( this->precomputedDataSliceDir.c_str() != NULL )
    {
-      delete [] this->precomputedDataSliceDir;
-      this->precomputedDataSliceDir = NULL;
+      precomputedDataSliceDir.erase();//delete [] this->precomputedDataSliceDir;
+      precomputedDataSliceDir.empty();//this->precomputedDataSliceDir = NULL;
    }
 
-   if ( this->precomputedSurfaceDir != NULL )
+   if ( this->precomputedSurfaceDir.c_str() != NULL )
    {
-      delete [] this->precomputedSurfaceDir;
-      this->precomputedSurfaceDir = NULL;
+      precomputedSurfaceDir.erase();//      delete [] this->precomputedSurfaceDir;
+      precomputedSurfaceDir.empty();//      this->precomputedSurfaceDir = NULL;
    }
 
    if ( this->dataSet != NULL )
@@ -211,12 +201,12 @@ cfdDataSet::~cfdDataSet()
       this->dataSet = NULL;
    }
 
-   if ( this->fileName != NULL )
+   if ( this->fileName.c_str() != NULL )
    {
       vprDEBUG(vesDBG,2) << "deleting filename " << this->fileName
                              << std::endl << vprDEBUG_FLUSH;
-      delete [] this->fileName;
-      this->fileName = NULL;
+      fileName.erase();//delete [] this->fileName;
+      fileName.empty();//this->fileName = NULL;
    }
  
    if ( _vtkFHndlr )
@@ -464,7 +454,7 @@ int cfdDataSet::GetNoOfDataForProcs()
 }
 #endif
 
-void cfdDataSet::LoadData( const char* filename )
+void cfdDataSet::LoadData( const std::string filename )
 {
    this->SetFileName( filename );
    this->LoadData();
@@ -739,16 +729,16 @@ void cfdDataSet::LoadData()
    // Compute the geometrical properties of the mesh
    this->UpdatePropertiesForNewMesh();
 
-   if ( this->GetPrecomputedDataSliceDir() )
+   if ( this->GetPrecomputedDataSliceDir().c_str() )
    {   
       double bounds[ 6 ];
       this->GetDataSet()->GetBounds( bounds );
 
       vprDEBUG(vesDBG,0) << "\tLoading precomputed planes from " 
            << this->GetPrecomputedDataSliceDir() << std::endl << vprDEBUG_FLUSH;
-      this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir(), bounds );
-      this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir(), bounds );
-      this->z_planes = new cfdPlanes( 2, this->GetPrecomputedDataSliceDir(), bounds );
+      this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir().c_str(), bounds );
+      this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir().c_str(), bounds );
+      this->z_planes = new cfdPlanes( 2, this->GetPrecomputedDataSliceDir().c_str(), bounds );
    }
 
    // count the number of scalars and store names and ranges...
@@ -827,10 +817,11 @@ int cfdDataSet::CountNumberOfParameters( const int numComponents )
    return numParameters;
 }
 
-char ** cfdDataSet::GetParameterNames( const int numComponents, 
+std::vector<std::string> cfdDataSet::GetParameterNames( const int numComponents, 
                                        const int numParameters )
 {
-   char ** name = new char * [numParameters];
+   //char ** name = new char * [numParameters];
+   std::vector<std::string> name;
    int ii = 0;
 
    for ( int i=0; i < this->numPtDataArrays; i++ )
@@ -848,8 +839,9 @@ char ** cfdDataSet::GetParameterNames( const int numComponents,
          continue; 
       }
 
-      name[ii] = new char [ strlen( array->GetName() ) + 1 ];
-      strcpy( name[ii], array->GetName() );
+      //name[ii] = new char [ strlen( array->GetName() ) + 1 ];
+      //strcpy( name[ii], array->GetName() );
+      name.push_back( std::string( array->GetName() ));
       ii++;
    }
    return name;
@@ -943,7 +935,7 @@ void cfdDataSet::SetActiveScalar( int scalar )
    }
 
    this->GetDataSet()->GetPointData()->SetActiveScalars( 
-                                     this->scalarName[ this->activeScalar ] );
+                                     this->scalarName[ this->activeScalar ].c_str() );
 
    vprDEBUG(vesDBG,1) << "\tSetActiveScalar: Active scalar is \""
         << this->GetDataSet()->GetPointData()->GetScalars()->GetName()
@@ -963,13 +955,13 @@ void cfdDataSet::SetActiveScalar( int scalar )
       {
          this->GetPrecomputedSlices( i )->GetPlanesData()
              ->GetPointData()->SetActiveScalars( 
-                                 this->scalarName[ this->activeScalar ] );
+                                 this->scalarName[ this->activeScalar ].c_str() );
 
          for (int j=0; j<numPlanes; j++)
          {
             this->GetPrecomputedSlices( i )->GetPlane( j )
                 ->GetPointData()->SetActiveScalars( 
-                                 this->scalarName[ this->activeScalar ] );
+                                 this->scalarName[ this->activeScalar ].c_str() );
          }
       }
    }
@@ -1061,7 +1053,7 @@ void cfdDataSet::SetActiveVector( int vector )
    }
 
    this->GetDataSet()->GetPointData()->SetActiveVectors( 
-                                  this->vectorName[ this->activeVector ] );
+                                  this->vectorName[ this->activeVector ].c_str() );
 
    for (int i=0; i<3; i++)
    {
@@ -1077,13 +1069,13 @@ void cfdDataSet::SetActiveVector( int vector )
       {
          this->GetPrecomputedSlices( i )->GetPlanesData()
              ->GetPointData()->SetActiveVectors( 
-                                 this->vectorName[ this->activeVector ] );
+                                 this->vectorName[ this->activeVector ].c_str() );
 
          for (int j=0; j<numPlanes; j++)
          {
             this->GetPrecomputedSlices( i )->GetPlane( j )
                 ->GetPointData()->SetActiveVectors( 
-                                 this->vectorName[ this->activeVector ] );
+                                 this->vectorName[ this->activeVector ].c_str() );
          }
       }
    }
@@ -1210,15 +1202,15 @@ void cfdDataSet::ResetScalarBarRange( int min, int max )
    this->lut->Build();
 }
 
-void cfdDataSet::SetFileName( const char * newName )
+void cfdDataSet::SetFileName( const std::string newName )
 {
-   if ( this->fileName )
+   if ( this->fileName.c_str() )
    {
-      delete [] this->fileName;
+      fileName.erase();//delete [] this->fileName;
    }
 
-   this->fileName = new char [strlen(newName)+1];  
-   strcpy( this->fileName, newName );
+   //this->fileName = new char [strlen(newName)+1];  
+   fileName.assign( newName );//strcpy( this->fileName, newName );
 }
 
 void cfdDataSet::SetFileName_OnFly(int datasetindex)
@@ -1228,58 +1220,65 @@ void cfdDataSet::SetFileName_OnFly(int datasetindex)
    file_name<<"NewlyLoadedDataSet_"<<datasetindex<<".vtk";
    currentVtkFileName = file_name.str();
    
-   const char * newName;
+   //const std::string newName;
+   std::string newName;
+   newName.assign(currentVtkFileName);
 
-   newName = currentVtkFileName.c_str();
-
-   this->SetFileName ( newName );
+   this->SetFileName ( newName.c_str() );
 }
 
-char * cfdDataSet::GetFileName()
+/*char* cfdDataSet::GetFileName()
 {
-   return this->fileName;
+  return this->fileName.c_str();
+}*/
+
+std::string cfdDataSet::GetFileName()
+{
+  return this->fileName;
 }
 
-void cfdDataSet::SetPrecomputedDataSliceDir( const char * newName )
+void cfdDataSet::SetPrecomputedDataSliceDir( const std::string newName )
 {
-   if ( this->precomputedDataSliceDir )
+   if ( this->precomputedDataSliceDir.c_str() )
    {
-      delete [] this->precomputedDataSliceDir;
+      precomputedDataSliceDir.erase();//delete [] this->precomputedDataSliceDir;
    }
 
-   if ( newName == NULL )
+   //if ( newName == NULL )
+   if ( newName.empty() )
    {
-      this->precomputedDataSliceDir = NULL;
+      precomputedDataSliceDir.empty();//this->precomputedDataSliceDir = NULL;
       return;
    }
 
-   this->precomputedDataSliceDir = new char [strlen(newName)+1];  
-   strcpy( this->precomputedDataSliceDir, newName );
+   //this->precomputedDataSliceDir = new char [strlen(newName)+1];  
+   precomputedDataSliceDir.assign( newName );//strcpy( this->precomputedDataSliceDir, newName );
 }
 
-char * cfdDataSet::GetPrecomputedDataSliceDir()
+std::string cfdDataSet::GetPrecomputedDataSliceDir()
 {
    return this->precomputedDataSliceDir;
 }
 
-void cfdDataSet::SetPrecomputedSurfaceDir( const char * newName )
+void cfdDataSet::SetPrecomputedSurfaceDir( const std::string newName )
 {
-   if ( this->precomputedSurfaceDir )
+   if ( this->precomputedSurfaceDir.c_str() )
    {
-      delete [] this->precomputedSurfaceDir;
+      precomputedSurfaceDir.erase();//delete [] this->precomputedSurfaceDir;
    }
 
-   if ( newName == NULL )
+   //if ( newName == NULL )
+   if ( newName.empty() )
    {
-      this->precomputedSurfaceDir = NULL;
+      this->precomputedSurfaceDir.empty();// = NULL;
       return;
    }
 
-   this->precomputedSurfaceDir = new char [strlen(newName)+1];  
-   strcpy( this->precomputedSurfaceDir, newName );
+   //this->precomputedSurfaceDir = new char [strlen(newName)+1];  
+   precomputedSurfaceDir.assign( newName );//strcpy( this->precomputedSurfaceDir, newName );
 }
 
-char * cfdDataSet::GetPrecomputedSurfaceDir()
+std::string cfdDataSet::GetPrecomputedSurfaceDir()
 {
    return this->precomputedSurfaceDir;
 }
@@ -1328,7 +1327,7 @@ int cfdDataSet::GetNumberOfScalars()
    return this->numScalars;
 }
 
-char * cfdDataSet::GetScalarName( int i )
+std::string cfdDataSet::GetScalarName( int i )
 {
    if ( 0 <= i && i < this->numScalars )
    {
@@ -1347,7 +1346,7 @@ int cfdDataSet::GetNumberOfVectors()
    return this->numVectors;
 }
 
-char * cfdDataSet::GetVectorName( int i )
+std::string cfdDataSet::GetVectorName( int i )
 {
    if ( 0 <= i && i < this->numVectors )
    {

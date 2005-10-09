@@ -67,7 +67,7 @@ namespace VE_Xplorer
    {
       public:
          //Constructors
-         cfdQuatCamHandler( VE_SceneGraph::cfdDCS*, cfdNavigate*, char* );
+         cfdQuatCamHandler( VE_SceneGraph::cfdDCS*, cfdNavigate*, std::string );
       
          //Destructor
          ~cfdQuatCamHandler();
@@ -82,9 +82,9 @@ namespace VE_Xplorer
    
          void LoadData(double*, VE_SceneGraph::cfdDCS*);
 
-         void WriteToFile(char*);
+         void WriteToFile(std::string);
 
-         void LoadFromFile(char*);
+         void LoadFromFile(std::string);
 
          void Relocate(VE_SceneGraph::cfdDCS* worldDCS, cfdNavigate* nav); 
 
@@ -132,9 +132,9 @@ namespace VE_Xplorer
          VE_SceneGraph::cfdDCS* _worldDCS;
          cfdNavigate* _nav;
          cfdReadParam* _readParam;
-         char*       _param;
+         std::string   _param;
          float t;
-         char* quatCamFileName;
+         std::string quatCamFileName;
          std::string quatCamDirName;
          std::vector<cfdQuatCam*> QuatCams;
          int run;

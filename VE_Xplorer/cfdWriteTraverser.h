@@ -59,11 +59,11 @@ namespace VE_Xplorer
       public:
          cfdWriteTraverser();
          cfdWriteTraverser(const cfdWriteTraverser& cfdWT);
-         cfdWriteTraverser(char* outFile);
+         cfdWriteTraverser(std::string outFile);
          ~cfdWriteTraverser();
 
          //set the output file name
-         void setOutputFileName(char* outFile);
+         void setOutputFileName(std::string outFile);
 
          //write out the pfbFile
          void writePfbFile();
@@ -86,7 +86,7 @@ namespace VE_Xplorer
          friend void _turnOnSequence(VE_SceneGraph::cfdNodeTraverser* ,VE_SceneGraph::cfdNode* );
          friend void _activateSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
                                         VE_SceneGraph::cfdNode* node);
-         char* _fName;
+         std::string _fName;
          int _toPfb;
 
       public:      

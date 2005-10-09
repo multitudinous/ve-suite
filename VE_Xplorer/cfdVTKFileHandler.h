@@ -4,6 +4,7 @@ class vtkXMLFileReadTester;
 class vtkDataSet;
 
 #include "VE_Installer/include/VEConfig.h"
+#include <string>
 
 namespace VE_Util
 {
@@ -17,13 +18,13 @@ namespace VE_Util
          enum OutFileType{CFD_XML,VTK_CLASSIC};
          enum OutFileMode{CFD_ASCII=0,CFD_BINARY};
 
-         void SetInputFileName(char* inFile);
-         void SetOutputFileName(char* oFile);
+         void SetInputFileName(std::string inFile);
+         void SetOutputFileName(std::string oFile);
          void SetVTKOutFileType(OutFileType type);
          void SetOutFileWriteMode(OutFileMode mode);
 
-         vtkDataSet* GetDataSetFromFile(char* vtkFileName);
-         bool WriteDataSet(vtkDataSet* dataSet,char* outFileName);
+         vtkDataSet* GetDataSetFromFile(std::string vtkFileName);
+         bool WriteDataSet(vtkDataSet* dataSet,std::string outFileName);
 
          cfdVTKFileHandler& operator=(const cfdVTKFileHandler& fh);
       protected:
@@ -33,13 +34,13 @@ namespace VE_Util
          void  _getXMLPolyData();
          void _readClassicVTKFile();
          void _writeClassicVTKFile( vtkDataSet * vtkThing, 
-                            char * vtkFilename, int binaryFlag = 0 );
+                            std::string vtkFilename, int binaryFlag = 0 );
 
          OutFileType _outFileType;
          OutFileMode _outFileMode;
 
-         char* _inFileName;
-         char* _outFileName;
+         std::string _inFileName;
+         std::string _outFileName;
          vtkXMLFileReadTester* _xmlTester;   
          vtkDataSet* _dataSet;
    };

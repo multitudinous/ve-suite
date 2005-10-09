@@ -64,12 +64,12 @@ namespace VE_Xplorer
 
          // in future, multi-threaded apps will make a copy of VjObs_i commandArray
          virtual void UpdateCommand();
-         void writePFBFile( VE_SceneGraph::cfdNode* graph,char* fileName);
+         void writePFBFile( VE_SceneGraph::cfdNode* graph,std::string fileName);
 
          VE_SceneGraph::cfdDCS* GetcfdDCS( );
          VE_SceneGraph::cfdNode* getpfNode( int );
          int getNumberOfFiles();
-         char * getFileName( int i );
+         std::string getFileName( int i );
 
       private:
          VE_SceneGraph::cfdDCS* DCS;

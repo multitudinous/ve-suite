@@ -68,7 +68,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _soundHandler  = 0;
    _camHandler    = 0;
    cursor         = 0;
-   _param         = 0;
+   _param.erase();//         = 0;
    _commandArray  = 0;
    _readParam     = 0;
    arrow          = 0;
@@ -88,11 +88,11 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 #endif // _OSG
 #endif // VE_PATENTED
    _readParam = 0;
-   _param = 0;
+   _param.erase();// = 0;
 
 }
 
-void cfdEnvironmentHandler::Initialize( char* param )
+void cfdEnvironmentHandler::Initialize( std::string param )
 {
    _param = param;
    vprDEBUG(vesDBG,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
@@ -216,13 +216,13 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    std::cout << "|  9. Initializing..................................... cfdQuatCams |" << std::endl;
    this->_camHandler = new cfdQuatCamHandler( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(),
-                                          this->nav, _param );
+                                          this->nav, _param.c_str() );
 
    //
    // Initiate quatcam
    //
    std::cout << "| 10. Initializing................................... Sound Handler |" << std::endl;
-   this->_soundHandler = new cfdSoundHandler( _param );
+   this->_soundHandler = new cfdSoundHandler( _param.c_str() );
 
    //
    // Initiate the Performer Stored Binary objects.
@@ -306,7 +306,7 @@ void cfdEnvironmentHandler::CreateObjects( void )
    int numObjects;
    char text[ 256 ];
    std::ifstream input;
-   input.open( this->_param );
+   input.open( this->_param.c_str() );
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 

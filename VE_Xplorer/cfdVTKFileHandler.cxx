@@ -28,8 +28,8 @@ cfdVTKFileHandler::cfdVTKFileHandler()
    _outFileType = CFD_XML;
    _outFileMode = CFD_BINARY;
 
-   _inFileName = 0;
-   _outFileName = 0;
+   //_inFileName = 0;
+   //_outFileName = 0;
    _xmlTester = 0;   
    _dataSet = 0;
 }
@@ -39,11 +39,16 @@ cfdVTKFileHandler::cfdVTKFileHandler(const cfdVTKFileHandler& fh)
    _outFileType = fh._outFileType;
    _outFileMode = fh._outFileMode;
 
-   _inFileName = new char[strlen(fh._inFileName)+1];
-   _outFileName = new char[strlen(fh._outFileName)+1];
+   //_inFileName = new char[strlen(fh._inFileName)+1];
+   //_outFileName = new char[strlen(fh._outFileName)+1];
 
-   strcpy(_inFileName,fh._inFileName);
-   strcpy(_outFileName,fh._outFileName);
+   //strcpy(_inFileName,fh._inFileName);
+   //strcpy(_outFileName,fh._outFileName);
+   std::string _inFileName;
+   std::string _outFileName;
+
+   _inFileName.assign( fh._inFileName );
+   _outFileName.assign( fh._outFileName );
 
    _xmlTester = vtkXMLFileReadTester::New();
    _xmlTester = fh._xmlTester;
@@ -58,13 +63,16 @@ cfdVTKFileHandler::~cfdVTKFileHandler()
       _xmlTester->Delete();
    }
    
-   if(_inFileName){
-      delete []_inFileName;
-      _inFileName = 0;
+   if(_inFileName.c_str()){
+      //delete []_inFileName;
+      //_inFileName = 0;
+      _inFileName.erase();
+      
    }
-   if(_outFileName){
-      delete []_outFileName;
-      _outFileName = 0;
+   if(_outFileName.c_str()){
+      //delete []_outFileName;
+      //_outFileName = 0;
+      _outFileName.erase();
    }
 }
 ////////////////////////////////////////////////////////////
@@ -78,47 +86,49 @@ void cfdVTKFileHandler::SetOutFileWriteMode(OutFileMode mode)
    _outFileMode = mode;
 }
 //////////////////////////////////////////////////////
-void cfdVTKFileHandler::SetInputFileName(char* inFile)
+void cfdVTKFileHandler::SetInputFileName(std::string inFile)
 {
-   if(!inFile)
+   if( inFile.empty() )
       return;
 
-   if(_inFileName){
-      delete [] _inFileName;
-      _inFileName = 0;
+   if(_inFileName.c_str()){
+      //delete [] _inFileName;
+      //_inFileName = 0;
+      _inFileName.erase();
    }
 
-   _inFileName = new char[strlen(inFile)+1];
-
-   strcpy(_inFileName, inFile);
+   //_inFileName = new char[strlen(inFile)+1];
+   //strcpy(_inFileName, inFile);
+   _inFileName.assign( inFile );
 }
 //////////////////////////////////////////////////////
-void cfdVTKFileHandler::SetOutputFileName(char* oFile)
+void cfdVTKFileHandler::SetOutputFileName(std::string oFile)
 {
-   if(!oFile)
+   if( oFile.empty() )
       return;
 
-   if(_outFileName){
-      delete [] _outFileName;
-      _outFileName = 0;
+   if(_outFileName.c_str()){
+      //delete [] _outFileName;
+      //_outFileName = 0;
+      _outFileName.erase();
    }
 
-   _outFileName = new char[strlen(oFile)+1];
-
-   strcpy(_outFileName, oFile);
+   //_outFileName = new char[strlen(oFile)+1];
+   //strcpy(_outFileName, oFile);
+   _outFileName.assign( oFile );
 }
 ////////////////////////////////////////////////////////////////////
-vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(char* vtkFileName)
+vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
 {
    std::cout<<"Loading: "<<vtkFileName<<std::endl;
-   if(!vtkFileName)
+   if ( vtkFileName.empty() )
       return 0;
    SetInputFileName(vtkFileName);
    std::cout<<"Creating xml tester..."<<std::endl;
    if(!_xmlTester){
       _xmlTester = vtkXMLFileReadTester::New();
    }
-   _xmlTester->SetFileName(vtkFileName);
+   _xmlTester->SetFileName(vtkFileName.c_str());
 
    std::cout<<"Checking file type..."<<std::endl;
    if(_xmlTester->TestReadFile()){
@@ -146,11 +156,11 @@ vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(char* vtkFileName)
 /////////////////////////////////////////////
 void cfdVTKFileHandler::_readClassicVTKFile()
 {
-   if(!_inFileName)
+   if(!_inFileName.c_str())
       return;
 
    vtkDataSetReader *genericReader = vtkDataSetReader::New();
-   genericReader->SetFileName( _inFileName );
+   genericReader->SetFileName( _inFileName.c_str() );
    _dataSet = genericReader->GetOutput();
    if (!_dataSet)
    {
@@ -160,7 +170,7 @@ void cfdVTKFileHandler::_readClassicVTKFile()
 
       // try with the vtkXMLUnstructuredGridReader...
       vtkXMLUnstructuredGridReader *ugr = vtkXMLUnstructuredGridReader::New();
-      ugr->SetFileName( _inFileName );
+      ugr->SetFileName( _inFileName.c_str() );
       ugr->Update();
       _dataSet = vtkUnstructuredGrid::New();
       _dataSet->DeepCopy( ugr->GetOutput() );
@@ -214,7 +224,7 @@ void cfdVTKFileHandler::_getXMLUGrid()
 {
    vtkXMLUnstructuredGridReader* ugReader
 	   = vtkXMLUnstructuredGridReader::New();   
-   ugReader->SetFileName(_inFileName);
+   ugReader->SetFileName(_inFileName.c_str());
    ugReader->Update();
    _dataSet = vtkUnstructuredGrid::New();
    _dataSet->ShallowCopy(ugReader->GetOutput());
@@ -225,7 +235,7 @@ void cfdVTKFileHandler::_getXMLSGrid()
 {
    vtkXMLStructuredGridReader* sgReader
 	   = vtkXMLStructuredGridReader::New();   
-   sgReader->SetFileName(_inFileName);
+   sgReader->SetFileName(_inFileName.c_str());
    sgReader->Update();
    _dataSet = vtkStructuredGrid::New();
    _dataSet->ShallowCopy(sgReader->GetOutput());
@@ -236,7 +246,7 @@ void cfdVTKFileHandler::_getXMLRGrid()
 {
    vtkXMLRectilinearGridReader* rgReader
 	   = vtkXMLRectilinearGridReader::New();   
-   rgReader->SetFileName(_inFileName);
+   rgReader->SetFileName(_inFileName.c_str());
    rgReader->Update();
    _dataSet = vtkRectilinearGrid::New();
    _dataSet->ShallowCopy(rgReader->GetOutput());
@@ -247,21 +257,21 @@ void cfdVTKFileHandler::_getXMLPolyData()
 {
    vtkXMLPolyDataReader* pdReader
 	   = vtkXMLPolyDataReader::New();   
-   pdReader->SetFileName(_inFileName);
+   pdReader->SetFileName(_inFileName.c_str());
    pdReader->Update();
    _dataSet = vtkPolyData::New();
    _dataSet->ShallowCopy(pdReader->GetOutput());
    pdReader->Delete();
 }
 ///////////////////////////////////////////////////////////////////////////
-bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,char* outFileName)
+bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,std::string outFileName)
 {
-   if(!outFileName)
+   if( outFileName.empty() )
       return false;
 
    if(_outFileType == CFD_XML){
       vtkXMLDataSetWriter* xmlWriter = vtkXMLDataSetWriter::New();
-      xmlWriter->SetFileName(outFileName);
+      xmlWriter->SetFileName(outFileName.c_str());
       xmlWriter->SetInput(dataSet);
       if(xmlWriter->Write()){
          return true;
@@ -276,7 +286,7 @@ bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,char* outFileName)
 }
 ////////////////////////////////////////////////////////////////////////
 void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataSet * vtkThing, 
-                            char * vtkFilename, int binaryFlag)
+                            std::string vtkFilename, int binaryFlag)
 {
     if ( vtkThing == NULL )
    {
@@ -301,7 +311,7 @@ void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataSet * vtkThing,
       vtkUnstructuredGridWriter *writer = vtkUnstructuredGridWriter::New();
       //writer->SetInput( (vtkUnstructuredGrid *)vtkThing );
       writer->SetInput( uGrid );
-      writer->SetFileName( vtkFilename );
+      writer->SetFileName( vtkFilename.c_str() );
       if (binaryFlag)
       {
          writer->SetFileTypeToBinary();
@@ -325,7 +335,7 @@ void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataSet * vtkThing,
       writer->SetInput( sGrid );
       //writer->SetInput( (vtkStructuredGrid *)vtkThing );    //core dumped
       //writer->SetInput( vtkThing );                         //won't compile
-      writer->SetFileName( vtkFilename );
+      writer->SetFileName( vtkFilename.c_str() );
       if (binaryFlag) 
       {
          writer->SetFileTypeToBinary();
@@ -339,7 +349,7 @@ void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataSet * vtkThing,
       std::cout << "a vtkRectilinearGrid... " << std::flush;
       vtkRectilinearGridWriter *writer = vtkRectilinearGridWriter::New();
       writer->SetInput( (vtkRectilinearGrid*)vtkThing );
-      writer->SetFileName( vtkFilename );
+      writer->SetFileName( vtkFilename.c_str() );
       if (binaryFlag)
       {
          writer->SetFileTypeToBinary();
@@ -352,7 +362,7 @@ void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataSet * vtkThing,
       std::cout << "a vtkPolyData... " << std::flush;
       vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
       writer->SetInput( (vtkPolyData*)vtkThing );
-      writer->SetFileName( vtkFilename );
+      writer->SetFileName( vtkFilename.c_str() );
       if (binaryFlag) 
       {
          writer->SetFileTypeToBinary();
@@ -376,19 +386,24 @@ cfdVTKFileHandler& cfdVTKFileHandler::operator=(const cfdVTKFileHandler& fh)
       _outFileType = fh._outFileType;
       _outFileMode = fh._outFileMode;
 
-      if(_inFileName){
-         delete [] _inFileName;
-	       _inFileName = 0;
+      if(_inFileName.c_str()){
+         //delete [] _inFileName;
+	      // _inFileName = 0;
+         _inFileName.erase();
       }
-      if(_outFileName){
-         delete [] _outFileName;
-	       _outFileName = 0;
+      if(_outFileName.c_str()){
+         //delete [] _outFileName;
+	      // _outFileName = 0;
+         _outFileName.erase();
       }
-      _inFileName = new char[strlen(fh._inFileName)+1];
-      _outFileName = new char[strlen(fh._outFileName)+1];
+      //_inFileName = new char[strlen(fh._inFileName)+1];
+      //_outFileName = new char[strlen(fh._outFileName)+1];
 
-      strcpy(_inFileName,fh._inFileName);
-      strcpy(_outFileName,fh._outFileName);
+      //strcpy(_inFileName,fh._inFileName);
+      //strcpy(_outFileName,fh._outFileName);
+
+      _inFileName.assign( fh._inFileName );
+      _outFileName.assign( fh._outFileName );
 
       _xmlTester = fh._xmlTester;   
       _dataSet = fh._dataSet;

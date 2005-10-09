@@ -103,7 +103,7 @@ public:
 
    cfdModel* GetCFDModel( void );
 
-   void LoadSurfaceFiles( char* );
+   void LoadSurfaceFiles( std::string );
 
    bool OnSceneGraph( void ){return _onSceneGraph;}
 
@@ -118,7 +118,7 @@ public:
    virtual void SetGeomInterface ( Interface& );
    Interface GetGeomInterface();
 
-   void SetModuleResults( const char* );
+   void SetModuleResults( const std::string );
 
    void SetObjectName( std::string );
    virtual void CreateCustomVizFeature( int );
@@ -135,7 +135,7 @@ private:
 
    std::string _objectDescription;
 
-   char* _network;
+   std::string _network;
 
 protected:
    void CreateObjects( void );
@@ -165,7 +165,7 @@ protected:
    cfdModel* _model;
    cfdReadParam* _readParam;
 
-   char* _param;
+   std::string _param;
 
    bool _onSceneGraph;
 

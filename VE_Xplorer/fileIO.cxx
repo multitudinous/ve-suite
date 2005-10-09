@@ -51,9 +51,9 @@ fileIO::~fileIO( )
 {
 }
 
-int fileIO::isFileReadable( const char * const filename )
+int fileIO::isFileReadable( const std::string filename )
 {
-   std::ifstream fileIn( filename, std::ios::in ); 
+   std::ifstream fileIn( filename.c_str(), std::ios::in ); 
    if ( ! fileIn )
    {
       return 0;
@@ -62,7 +62,7 @@ int fileIO::isFileReadable( const char * const filename )
    return 1;
 }
 
-int fileIO::isFileWritable( char *filename )
+int fileIO::isFileWritable( std::string filename )
 {
    // This will not compile due to a bug in vapor.  Uncomment this when the
    // bug is resolved.
@@ -77,9 +77,11 @@ int fileIO::isFileWritable( char *filename )
    return 1;
 }
 
-int fileIO::DirectoryExists( char * dirName )
+int fileIO::DirectoryExists( std::string dirName )
 {
+   dirName.empty();
    fs::path pathName( dirName, fs::native );
+   //fs::path pathName( dirName.c_str, fs::native );
    if ( ! fs::exists( pathName ) )
    {
       std::cout << "\nDirectory not found: "
@@ -89,7 +91,7 @@ int fileIO::DirectoryExists( char * dirName )
    return 1;
 }
 
-int fileIO::isDirWritable( const std::string& dirname )
+int fileIO::isDirWritable( const std::string dirname )
 {
    fs::path file_name( dirname, fs::native );
    file_name = fs::complete("testing.txt", file_name );
@@ -106,7 +108,7 @@ int fileIO::isDirWritable( const std::string& dirname )
    return static_cast<int>(result);
 }
 
-const char * fileIO::getWritableDir( )
+const std::string fileIO::getWritableDir()
 {
    std::string dir_name;
    do
@@ -121,10 +123,10 @@ const char * fileIO::getWritableDir( )
       std::cerr << "\nERROR: Can't write to \"" << dir_name
                 << "\" directory" << std::endl;
    } while( 1 );
-   return dir_name.c_str();
+   return dir_name;
 }
 
-char * fileIO::getFilenameFromDefault( char* fileContents, char* defaultName )
+std::string fileIO::getFilenameFromDefault( std::string fileContents, std::string defaultName )
 {
 /*
    std::cout << "\nThe default name for " << fileContents << " is \"" 
@@ -134,7 +136,7 @@ char * fileIO::getFilenameFromDefault( char* fileContents, char* defaultName )
    int answer = 1;
 
    // if supplied with a default name, ask if it is OK...
-   if ( strcmp(defaultName,"") )
+   if ( defaultName != "" )
    {
       std::cout << "\nThe default name for " << fileContents 
                 << " is \"" << defaultName << "\"" << std::endl;
@@ -143,36 +145,37 @@ char * fileIO::getFilenameFromDefault( char* fileContents, char* defaultName )
       answer = getIntegerBetween( 0, 1 );
    }
 
-   char * fileName = NULL;
+   std::string fileName;
    if ( answer == 1 )
    {
-      char tempName [1024];
+      //char tempName [1024];
       std::cout << "Enter filename for " << fileContents << ": ";
-      std::cin >> tempName;
+      std::cin >> fileName;
       std::cin.ignore();
-      fileName = new char[ strlen(tempName) + 1 ];
-      strcpy( fileName, tempName );
+      //fileName = new char[ strlen(tempName) + 1 ];
+      //strcpy( fileName, tempName );
    }
    else
    {
-      fileName = new char[ strlen(defaultName)+1 ];
-      strcpy( fileName, defaultName );
+      fileName = defaultName;
    }
 
    return fileName;
 }
 
-char * fileIO::getReadableFileFromDefault( char* stringDescribingfileContents,
-                                           const char* const defaultName )
+std::string fileIO::getReadableFileFromDefault( std::string stringDescribingfileContents,
+                                           const std::string defaultName )
 {
     // initialize return name with default name, and if not readable set to null
-    char validDefaultName [ 256 ];
+    std::string validDefaultName;
     if ( ! isFileReadable( defaultName ) )
-       strcpy( validDefaultName, "" );
+       validDefaultName = "";
+       //strcpy( validDefaultName, "" );
     else
-       strcpy( validDefaultName, defaultName );
+       validDefaultName.assign( defaultName );
+      //strcpy( validDefaultName, defaultName );
 
-    char * filename;
+    std::string filename;
     do
     {
         filename = getFilenameFromDefault( stringDescribingfileContents,
@@ -182,18 +185,19 @@ char * fileIO::getReadableFileFromDefault( char* stringDescribingfileContents,
         {
             std::cerr << "\n\"" << filename << "\" is not readable."
                       << std::endl;
-            delete [] filename; 
-            filename = NULL;
+            //delete [] filename;
+            //filename = NULL;
         }
     }
-    while ( ! filename );
-
+    //while ( ! filename );
+    while ( ! filename.empty() );
+    
     return filename;
 }
 
-char * fileIO::getWritableFile( char* defaultName )
+std::string fileIO::getWritableFile( std::string defaultName )
 {
-    char* filename;
+    std::string filename;
 /*
     // initialize return name with default name, and if not writable set to null
     // commented out because this will leave a small empty file if user doesn't accept the default
@@ -207,11 +211,12 @@ char * fileIO::getWritableFile( char* defaultName )
         if( ! isFileWritable(filename) )
         {
             std::cerr << "\n\"" << filename << "\" is not writable." << std::endl;
-            delete [] filename; 
-            filename = NULL;
+            //delete [] filename;
+            //filename = NULL;
         }
     }
-    while ( ! filename );
+    //while ( ! filename );
+    while ( ! filename.empty() );
 
     return filename;
 }
@@ -227,7 +232,7 @@ int fileIO::readNByteBlockFromFile( void *ptr, const unsigned int nByte,
 
     if ( endian_flip )
     {
-        char * buf = new char [nByte];
+        char * buf = new char [nByte]; 
         for(unsigned int i=0; i < num*nByte; i += nByte)
         {
             for(unsigned int j=0; j<nByte; j++)
@@ -240,30 +245,36 @@ int fileIO::readNByteBlockFromFile( void *ptr, const unsigned int nByte,
     return 0;  //success
 }
 
+//void fileIO::processCommandLineArgs( int argc, char *argv[], char verb[],
+//                                     char * & inFileName, char * & outFileName )
 void fileIO::processCommandLineArgs( int argc, char *argv[], char verb[],
-                                     char * & inFileName, char * & outFileName )
+                                     std::string & inFileName, std::string & outFileName )
 {
    if (argc > 1)
    {
-      inFileName = new char [ strlen(argv[1])+1 ];
-      strcpy( inFileName, argv[1] );
+      //inFileName = new char [ strlen(argv[1])+1 ];
+      //strcpy( inFileName, argv[1] );
+      inFileName.assign( argv[1] );
 
       if (argc > 2)
       {
-         outFileName = new char [ strlen(argv[2])+1 ];
-         strcpy( outFileName, argv[2] );
+         //outFileName = new char [ strlen(argv[2])+1 ];
+         //strcpy( outFileName, argv[2] );
+         outFileName.assign( argv[2] );
       }
       else
       {
-         if ( outFileName == NULL )
+         if ( outFileName.empty() )
             outFileName = fileIO::getWritableFile( "outFile.vtk" );
          else
          {
-            char * defaultName = new char [ strlen(outFileName)+1 ];
-            strcpy( defaultName, outFileName );
-            delete [] outFileName;
+            //char * defaultName = new char [ strlen(outFileName)+1 ];
+            //strcpy( defaultName, outFileName );
+            //delete [] outFileName;
+            std::string defaultName;
+            defaultName.assign( outFileName );
             outFileName = fileIO::getWritableFile( defaultName );
-            delete [] defaultName;
+            //delete [] defaultName;
          }
       }
 
@@ -285,8 +296,8 @@ void fileIO::processCommandLineArgs( int argc, char *argv[], char verb[],
 
       if (response == 'q' || response == 'Q')
       {
-         inFileName = NULL;
-         outFileName = NULL;
+         inFileName.erase();
+         outFileName.erase();
          return;
       }
 
@@ -299,20 +310,21 @@ void fileIO::processCommandLineArgs( int argc, char *argv[], char verb[],
    if (argc == 1)  // then get filenames from user...
    {
       char phrase [] = {"input"};
-      char * tempText = new char [ strlen(phrase)+1 ];
-      strcpy( tempText, phrase );
+      std::string tempText;
+      tempText.assign( phrase );
       inFileName = fileIO::getReadableFileFromDefault( tempText, "inFile.vtk" );
       outFileName = fileIO::getWritableFile( "outFile.vtk" );
-      delete [] tempText;
+      //delete [] tempText;
    }
 }
 
-char * fileIO::getExtension( char * filename )
+std::string fileIO::getExtension( std::string filename )
 {
-   int len = strlen( filename );
+   //int len = strlen( filename );
+   int len = filename.size();
    //std::cout << "len = " << len << std::endl;
    int i, foundPeriod = 0;
-   char * extension = NULL;
+   std::string extension;
    for(i=len-1; i >= 0; i-- )
    {
       //std::cout << "filename[" << i << "] = " << filename[i] << std::endl;
@@ -328,10 +340,14 @@ char * fileIO::getExtension( char * filename )
    if ( foundPeriod )
    {
       //std::cout << "filename[i] " << filename[i] << std::endl;
-      len = strlen( &filename[i] );
+      //len = strlen( &filename[i] );
+      len = filename.at(i);
       //std::cout << "len = " << len << std::endl;
-      extension = new char [len];
-      strcpy( extension, &filename[i] );
+      //extension = new char [len];
+      //extension.size() = len; 
+      //strcpy( extension, &filename[i] );
+      extension.assign( &filename.at(i) );
+      
       //std::cout << "extension = \"" << extension << "\"" << std::endl;
    }
 
@@ -354,27 +370,30 @@ void fileIO::readToFileEnd( FILE *inputFile )
    }
 }
 
-void fileIO::StripTrailingSpaces( char line [] )
+void fileIO::StripTrailingSpaces( std::string line )
 { 
    //std::cout << "strlen(line) = " << strlen(line) << std::endl;
-   for (int i = strlen(line) - 1; i >= 0; i--)
+   //for (int i = strlen(line) - 1; i >= 0; i--)
+   for (int i = line.size() - 1; i >= 0; i--)
    {
       if (line[i] != ' ' ) break;
       line[i] = '\0';
    }
 }
 
-char * fileIO::StripLeadingSpaces( char line [] )
+std::string fileIO::StripLeadingSpaces( std::string line )
 { 
    //std::cout << "StripLeadingSpaces has \"" << line << "\"" << std::endl;
-   char * shortLine;
+   std::string shortLine;
    //std::cout << "strlen(line) = " << strlen(line) << std::endl;
-   for (int i =  0; i < (int)strlen(line); i++ )
+   //for (int i =  0; i < (int)strlen(line); i++ )
+   for (int i =  0; i < (int)line.size(); i++ )
    {
       if (line[i] != ' ' )
       {
-         shortLine = new char [ strlen(line) - i ];
-         strcpy( shortLine, &line[i] );
+         //shortLine = new char [ strlen(line) - i ];
+         //strcpy( shortLine, &line[i] );
+         shortLine.assign( &line[i] );
          //std::cout << "1 returning \"" << shortLine << "\"" << std::endl;
          return shortLine;
       }
@@ -385,10 +404,10 @@ char * fileIO::StripLeadingSpaces( char line [] )
    return shortLine;
 }
 
-int fileIO::extractIntegerBeforeExtension( char filename [] )
+int fileIO::extractIntegerBeforeExtension( std::string filename )
 {
-   char * changeable_filename = new char [ strlen(filename)+1 ];
-   strcpy( changeable_filename, filename );
+   char * changeable_filename = new char [ strlen( filename.c_str() )+1 ];
+   strcpy( changeable_filename, filename.c_str() );
 
    // last token will be the extension
    // secondLastToken will be the integer counter
@@ -410,10 +429,10 @@ int fileIO::extractIntegerBeforeExtension( char filename [] )
    return atoi(secondLastToken);
 }
 
-int fileIO::ExtractIntegerFromString( char filename [] )
+int fileIO::ExtractIntegerFromString( std::string filename )
 {
-   char * changeable_filename = new char [ strlen(filename)+1 ];
-   strcpy( changeable_filename, filename );
+   char * changeable_filename = new char [ strlen( filename.c_str() )+1 ];
+   strcpy( changeable_filename, filename.c_str() );
 
    // last token will be the extension
    // secondLastToken will be the integer counter
@@ -434,7 +453,7 @@ int fileIO::ExtractIntegerFromString( char filename [] )
    return atoi(lastToken);
 }
 
-void fileIO::getTagAndValue(char *textline, char *TagName, char *TagValue)
+void fileIO::getTagAndValue(std::string textline, std::string TagName, std::string TagValue)
 {
    //pre: param file must have TAGNAME=TAGVALUE on each line, TAGVALUE cannot
    //     have any spaces in it
@@ -443,6 +462,7 @@ void fileIO::getTagAndValue(char *textline, char *TagName, char *TagValue)
    int i = 0;
    int j = 0;
    
+   //while(textline[i] != '=')
    while(textline[i] != '=')
    {
       TagName[j++] = textline[i++];
@@ -453,16 +473,17 @@ void fileIO::getTagAndValue(char *textline, char *TagName, char *TagValue)
    i++;
    while(textline[i]  >= 33 && textline[i] <= 126)
    {
-      TagValue[j++]  = textline[i++];
+      TagValue[j++] = textline[i++];
    }
    TagValue[j] = '\0';
 
    return;
 }
 
-void fileIO::IdentifyTagAssignValue(char *TagName, char *TagValue )
+void fileIO::IdentifyTagAssignValue(std::string TagName, std::string TagValue )
 {
-   if (strcmp("STARVRT", TagName)==0)
+   //if (strcmp("STARVRT", TagName)==0)
+   if (TagName == "STARVRT")
    {
       std::cout << "Yes " << TagValue << std::endl;
    } else {
@@ -536,8 +557,8 @@ int fileIO::getIntegerBetween( const int min, const int max )
       else
       {
          StripTrailingSpaces( string );
-         char * shortString = StripLeadingSpaces( string );
-         strcpy( string, shortString );
+         std::string shortString = StripLeadingSpaces( string );
+         shortString.assign( string );
          if (!strcmp( string, "" ) )   // if all spaces
             index = 0;                 // force a new loop
          else if (!strcmp( string, "-" ) )   // if only neg sign
@@ -555,24 +576,29 @@ int fileIO::getIntegerBetween( const int min, const int max )
    return value;
 }
 
-char * fileIO::GetFile( char fileKeyword[], char fileLocation[] )
+std::string fileIO::GetFile( std::string fileKeyword, std::string fileLocation )
 {
-   char * file = new char [100];
+   //char * file = new char [100];
+   std::string file;
    file[0] = '\0';
 
-   char* path = getenv("VE_SUITE_HOME");
+   //char* path = getenv("VE_SUITE_HOME");
+   std::string path("VE_SUITE_HOME");
    //std::cout << "path is \"" << path << "\"" << std::endl;
-   if(path != NULL)
+   //if(path != NULL)
+   if( !path.empty() )
    {
-      strcpy( file, path );
-      strcat( file, fileLocation );
+      //strcpy( file, path );
+      path.assign( file );
+      //strcat( file, fileLocation );\
+      path.append( fileLocation );
       //delete [] path;
    }
    else
    {
       std::cerr << "ERROR: environment variable VE_SUITE_HOME is not defined"
                 << std::endl;
-      delete [] file;
+      //delete [] file;
       return NULL; 
    }
 
@@ -580,7 +606,7 @@ char * fileIO::GetFile( char fileKeyword[], char fileLocation[] )
    {
       std::cerr << "ERROR: Can't read the " << fileKeyword 
                 << " file named \"" << file << "\"" << std::endl;
-      delete [] file;
+      //delete [] file;
       return NULL; 
    }
    else

@@ -131,7 +131,7 @@ namespace VE_Xplorer
       
          VE_Xplorer::cfdDataSet* GetCfdDataSet( int );
          unsigned int GetNumberOfCfdDataSets( void );
-         char* GetCfdDataSetFileName( int );
+         std::string GetCfdDataSetFileName( int );
          void CreateCfdDataSet( void );
          int GetKeyForCfdDataSet( cfdDataSet* );
          VE_Xplorer::cfdDataSet* GetActiveDataSet( void );
@@ -139,8 +139,8 @@ namespace VE_Xplorer
 
          VE_Xplorer::cfdFILE* GetGeomDataSet( int );
          unsigned int GetNumberOfGeomDataSets( void );
-         char* GetGeomFileName( int );
-         void CreateGeomDataSet( char* );
+         std::string GetGeomFileName( int );
+         void CreateGeomDataSet( std::string );
 
          VE_SceneGraph::cfdNode* GetCfdNode( void );
          VE_SceneGraph::cfdDCS* GetCfdDCS( void );
@@ -151,7 +151,7 @@ namespace VE_Xplorer
          void SetActiveTextureDataSet( VE_TextureBased::cfdTextureDataSet* tDS);
          void CreateTextureDataSet();
          void AddDataSetToTextureDataSet(unsigned int index,
-                               char* textureDescriptionFile);
+                               std::string textureDescriptionFile);
          unsigned int GetNumberOfTextureDataSets();
          VE_TextureBased::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
          VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet();
@@ -165,9 +165,9 @@ namespace VE_Xplorer
 public:   
    void ActiveLoadingThread();
    void GetDataFromUnit(void* unused);
-   const char* MakeSurfaceFile(vtkDataSet*,int);
+   const std::string MakeSurfaceFile(vtkDataSet*,int);
    void DynamicLoadingData(vtkUnstructuredGrid*, int, float*, float*, float*);
-   void DynamicLoadingGeom(char*, float*, float*, float*, float*, int, int);
+   void DynamicLoadingGeom(std::string, float*, float*, float*, float*, int, int);
    void AddVTKDataSet(vtkDataSet* );
    std::vector<vtkDataSet* >GetWaitingDataList();
  
@@ -175,7 +175,7 @@ public:
          vpr::Thread *loadDataTh;
          vpr::Mutex mValueLock;
          std::vector<vtkDataSet* > waitingdatalist; 
-         char* currentsurfacefilename;
+         std::string currentsurfacefilename;
          bool mirrorDataFlag;
 
       private:

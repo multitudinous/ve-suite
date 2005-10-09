@@ -230,14 +230,14 @@ void cfdModel::CreateTextureDataSet()
 }
 /////////////////////////////////////////////////////////////////
 void cfdModel::AddDataSetToTextureDataSet(unsigned int index,
-                                     char* textureDescriptionFile)
+                                     std::string textureDescriptionFile)
 {
    mTextureDataSets.at(index)->CreateTextureManager(textureDescriptionFile);
 }
 #endif
 #endif
 //////////////////////////////////////////////////
-void cfdModel::CreateGeomDataSet( char* filename )
+void cfdModel::CreateGeomDataSet( std::string filename )
 {
    mGeomDataSets.push_back( new cfdFILE( filename, _worldDCS ) );
 }
@@ -520,7 +520,7 @@ void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex
    
 }
 
-void cfdModel::DynamicLoadingGeom(char* surfacefilename, float* scale, 
+void cfdModel::DynamicLoadingGeom(std::string surfacefilename, float* scale, 
                float* trans, float* rotate, float* stlColor, int color, int transFlag)
 {  
    //float scale[3], trans[3], rotate[3];   // pfDCS stuff
@@ -685,7 +685,7 @@ void cfdModel::GetDataFromUnit(void* unused)
       // in the activate custom viz function when necessary 
       this->DynamicLoadingData(ugrid,i,scale,trans,rotate);
       std::cout<<"[DBG]...AFTER LOAD DATA ****************************************"<<std::endl;
-      this->currentsurfacefilename =(char*)(this->MakeSurfaceFile(ugrid, i));
+      this->currentsurfacefilename =(std::string)(this->MakeSurfaceFile(ugrid, i));
 
       std::cout<<"[DBG]...current surface file is "<<currentsurfacefilename<<std::endl;
       //currentsurfacefilename ="NewlyLoadedDataSet_1.stl";
@@ -710,16 +710,16 @@ void cfdModel::ActiveLoadingThread()
    this->loadDataTh = new vpr::Thread( loadDataFunc );
 }
 
-const char* cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
+const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
 {
    std::ostringstream file_name;
    std::string currentStlFileName = "NewlyLoadedDataSet_000.stl";
    file_name<<"NewlyLoadedDataSet_"<<datasetindex<<".stl";
    currentStlFileName = file_name.str();
 
-   const char * newStlName;
+   std::string newStlName;
 
-   newStlName = currentStlFileName.c_str();
+   newStlName = currentStlFileName;
 
    vtkPolyData * surface = NULL;
    std::cout<<"[DBG]... after readVtkThing"<<std::endl;
@@ -737,7 +737,7 @@ const char* cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
    std::cout.flush();
    vtkSTLWriter *writer = vtkSTLWriter::New();
    writer->SetInput( tFilter->GetOutput() );
-   writer->SetFileName( newStlName );
+   writer->SetFileName( newStlName.c_str() );
    writer->SetFileTypeToBinary();
    writer->Write();
    writer->Delete();

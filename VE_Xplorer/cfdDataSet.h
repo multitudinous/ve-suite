@@ -35,6 +35,8 @@
 #ifdef USE_OMP
 #define MAX_DATA 20
 #endif
+#include <string>
+#include <vector>
 
 class vtkLookupTable;
 class vtkPolyData;
@@ -77,7 +79,7 @@ namespace VE_Xplorer
 
          // Initialize the number of data to load and parallel process.
          // By default, use the octree table.
-         void LoadData( const char* fileName );
+         void LoadData( const std::string fileName );
          void LoadData(vtkUnstructuredGrid*,int);
          void LoadData();
   
@@ -149,15 +151,15 @@ namespace VE_Xplorer
 
          void ResetScalarBarRange( int min, int max );
 
-         void SetFileName( const char * filename );
+         void SetFileName( const std::string filename );
          void SetFileName_OnFly(int);
-         char * GetFileName();
+         std::string GetFileName();
 
-         void SetPrecomputedDataSliceDir( const char * newDir );
-         char * GetPrecomputedDataSliceDir();
+         void SetPrecomputedDataSliceDir( const std::string newDir );
+         std::string GetPrecomputedDataSliceDir();
 
-         void SetPrecomputedSurfaceDir( const char * newDir );
-         char * GetPrecomputedSurfaceDir();
+         void SetPrecomputedSurfaceDir( const std::string newDir );
+         std::string GetPrecomputedSurfaceDir();
 
          cfdPlanes * GetPrecomputedXSlices();
          cfdPlanes * GetPrecomputedYSlices();
@@ -179,10 +181,10 @@ namespace VE_Xplorer
          int IsNewlyActivated();
 
          int GetNumberOfScalars();
-         char * GetScalarName( int );
+         std::string GetScalarName( int );
 
          int GetNumberOfVectors();
-         char * GetVectorName( int );
+         std::string GetVectorName( int );
 
          cfdDataSet * GetParent();
          void SetParent( cfdDataSet * );
@@ -223,7 +225,7 @@ namespace VE_Xplorer
          int isNewlyActivated;
 
          int CountNumberOfParameters( const int numComponents );
-         char** GetParameterNames( const int numComponents, const int numParameters );
+         std::vector<std::string> GetParameterNames( const int numComponents, const int numParameters );
 
          double* range;          // Range of scalar.
    
@@ -249,9 +251,9 @@ namespace VE_Xplorer
          int activeScalar;
          int activeVector;
 
-         char* fileName;
-         char* precomputedDataSliceDir;
-         char* precomputedSurfaceDir;
+         std::string fileName;
+         std::string precomputedDataSliceDir;
+         std::string precomputedSurfaceDir;
 
          cfdPlanes* x_planes;
          cfdPlanes* y_planes;
@@ -262,8 +264,8 @@ namespace VE_Xplorer
          int numPtDataArrays;
          int numScalars;
          int numVectors;
-         char** scalarName;
-         char** vectorName;
+         std::vector< std::string > scalarName;
+         std::vector< std::string > vectorName;
 
          VE_SceneGraph::cfdDCS* dcs;
          VE_SceneGraph::cfdTempAnimation* animation;

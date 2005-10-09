@@ -51,9 +51,9 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdImage : public cfdObjects
    {
       public:
-         cfdImage( char* );
+         cfdImage( std::string );
 
-         cfdImage( char * filename, int ex_x, int ex_y, int dim,
+         cfdImage( std::string filename, int ex_x, int ex_y, int dim,
              double *origin, double *spacing );
 
          ~cfdImage( );
@@ -80,10 +80,11 @@ namespace VE_Xplorer
          vtkPlaneSource *plane;
          vtkPolyDataMapper *mapper;
          vtkTexture *texture;
-         char  bmpFileName[ 100 ];
+         //char  bmpFileName[ 100 ];
+         std::string bmpFileName;
          double bmpPosition[ 3 ];
          int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
-         char* _param;
+         std::string _param;
          VE_Xplorer::cfdReadParam* _readParam;
    };
 }

@@ -296,7 +296,7 @@ void cfdExecutive::GetNetwork( void )
 */
    // Get buffer value from Body_UI implementation
    std::string temp( ui_i->GetNetworkString() );
-   const char* network = temp.c_str();
+   const std::string network = temp;
    vprDEBUG(vesDBG,2) << "|\tNetwork String : " << network 
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -304,7 +304,7 @@ void cfdExecutive::GetNetwork( void )
 // This code taken from Executive_i.cpp
    Package p;
    p.SetSysId("temp.xml");
-   p.Load(network, strlen(network));
+   p.Load(network.c_str(), strlen(network.c_str()));
   
    _network->clear();
    _id_map.clear();
@@ -377,7 +377,7 @@ void cfdExecutive::GetOutput( std::string name )
 
 void cfdExecutive::GetPort (std::string name)
 {
-   char* pt_str = 0;
+   std::string pt_str = 0;
       
    CORBA::Long mod_id  = (CORBA::Long)_name_map[name];
    CORBA::Long port_id = 0;
@@ -398,7 +398,7 @@ void cfdExecutive::GetPort (std::string name)
   
    _pt_map[mod_id] = intf;
   
-   delete pt_str;
+   //delete pt_str;
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -423,10 +423,10 @@ void cfdExecutive::GetEverything( void )
          {
             // if a new module is on the id map but not on the plugins map
             // create it...
-            cfdVEBaseClass* temp = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
+            cfdVEBaseClass* temp = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (std::string)iter->second ) );
             if ( temp != NULL )
             {
-               _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
+               _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (std::string)iter->second ) );
                // When we create the _plugin map here we will do the following
                _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
                _plugins[ iter->first ]->AddSelfToSG();

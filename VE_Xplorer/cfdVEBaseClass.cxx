@@ -65,7 +65,7 @@ using namespace VE_Util;
 cfdVEBaseClass::cfdVEBaseClass( void ) 
 {
    _onSceneGraph = false;
-   _network = NULL;
+   _network.empty();//s = NULL;
 }
 
 /*cfdVEBaseClass::cfdVEBaseClass( cfdDCS* veworldDCS )
@@ -271,18 +271,18 @@ bool cfdVEBaseClass::HasGeomInterface()
 }
 // Set the results for a particluar module so that we can use them for custom 
 // viz features
-void cfdVEBaseClass::SetModuleResults( const char* network )
+void cfdVEBaseClass::SetModuleResults( const std::string network )
 {
-   if ( network == NULL )
+   if ( network.empty() )// == NULL )
    {
       std::cout << " No results for " << _objectName << std::endl;
    }
    else
    {
-      if ( _network != NULL )
-         delete _network;
-      _network = new char[ strlen( network ) + 1 ];
-      strcpy( _network, network );
+      if ( _network.empty() )// != NULL )
+         //delete _network;
+      //_network = new char[ strlen( network ) + 1 ];
+      _network.assign( network );//strcpy( _network, network );
    }
   
    /*try {
@@ -297,11 +297,11 @@ void cfdVEBaseClass::SetModuleResults( const char* network )
 
    Package p;
    p.SetSysId("veresult.xml");
-   p.Load(_network, strlen(_network));
+   p.Load(_network.c_str(), strlen(_network.c_str()));
 
    this->UnPackResult(&p.intfs[0]);
-   delete _network;
-   _network = NULL;
+   //delete _network;
+   _network.erase();// = NULL;
 }
 
 // Viz feature for the devloper to define
@@ -465,7 +465,7 @@ void cfdVEBaseClass::CreateObjects( void )
    char textLine[ 256 ];
 
    std::ifstream input;
-   input.open( this->_param );
+   input.open( this->_param.c_str() );
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
@@ -518,15 +518,15 @@ void cfdVEBaseClass::CreateObjects( void )
             exit(1);
          }
 
-         char * precomputedDataSliceDir = _readParam->readDirName( input, "precomputedDataSliceDir" );
+         std::string precomputedDataSliceDir = _readParam->readDirName( input, "precomputedDataSliceDir" );
          _model->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( precomputedDataSliceDir );
-         delete [] precomputedDataSliceDir;
-         precomputedDataSliceDir = NULL;
+         //delete [] precomputedDataSliceDir;
+         precomputedDataSliceDir.erase();// = NULL;
 
-         char * precomputedSurfaceDir = _readParam->readDirName( input, "precomputedSurfaceDir" );
+         std::string precomputedSurfaceDir = _readParam->readDirName( input, "precomputedSurfaceDir" );
          _model->GetCfdDataSet( -1 )->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
-         delete [] precomputedSurfaceDir;
-         precomputedSurfaceDir = NULL;
+         //delete [] precomputedSurfaceDir;
+         precomputedSurfaceDir.erase();// = NULL;
 
          std::cout << "|   Loading data for file " 
                   << _model->GetCfdDataSet( -1 )->GetFileName()
@@ -608,9 +608,9 @@ void cfdVEBaseClass::CreateObjects( void )
    }
 }
 
-void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
+void cfdVEBaseClass::LoadSurfaceFiles( std::string precomputedSurfaceDir )
 {
-   if ( precomputedSurfaceDir == NULL )
+   if ( precomputedSurfaceDir.empty() )// == NULL )
    {
       vprDEBUG(vesDBG,1) << "precomputedSurfaceDir == NULL" 
                              << std::endl << vprDEBUG_FLUSH;
@@ -709,11 +709,11 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
                if ( strstr( dir_itr->leaf().c_str(), ".vtk") )
                {
                   //path_found = *dir_itr;
-         char* pathAndFileName = new char[strlen(dir_path.leaf().c_str() )+
-                                          strlen(dir_itr->leaf().c_str())+2];
-         strcpy(pathAndFileName,dir_path.leaf().c_str());
-         strcat(pathAndFileName,"/");
-         strcat(pathAndFileName,dir_itr->leaf().c_str());
+         std::string pathAndFileName;// = new char[strlen(dir_path.leaf().c_str() )+
+         //                                 strlen(dir_itr->leaf().c_str())+2];
+         pathAndFileName.assign( dir_path.leaf().c_str() );//strcpy(pathAndFileName,dir_path.leaf().c_str());
+         pathAndFileName.append( "/" );//strcat(pathAndFileName,"/");
+         pathAndFileName.append( dir_itr->leaf().c_str() );//strcat(pathAndFileName,dir_itr->leaf().c_str());
 
             vprDEBUG(vesDBG,0) << "\tsurface file = " << pathAndFileName
                                    << std::endl << vprDEBUG_FLUSH;

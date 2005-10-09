@@ -37,6 +37,7 @@
 #elif _OSG
 #elif _OPENSG
 #endif
+#include <string>
 namespace VE_SceneGraph
 {
    class cfdGeode;
@@ -50,7 +51,7 @@ namespace VE_Xplorer
       public:
          cfdTextOutput();   //constructor
          ~cfdTextOutput();  //destructor
-         VE_SceneGraph::cfdDCS *add_text(char *text_input);
+         VE_SceneGraph::cfdDCS *add_text(std::string text_input);
     
       private:
          VE_SceneGraph::cfdDCS*   dcs;

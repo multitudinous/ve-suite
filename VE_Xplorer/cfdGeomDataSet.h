@@ -67,7 +67,7 @@ namespace VE_Xplorer
       public:
          cfdGeomDataSet(fileInfo *geomfile, VE_SceneGraph::cfdDCS *);
 
-         cfdGeomDataSet( float, float [ 3 ], char * );
+         cfdGeomDataSet( float, float [ 3 ], std::string );
          ~cfdGeomDataSet( );
 
          /*!

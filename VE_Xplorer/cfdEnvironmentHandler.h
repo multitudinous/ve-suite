@@ -74,7 +74,7 @@ namespace VE_Xplorer
          vprSingletonHeader( cfdEnvironmentHandler );   
 
       public:
-         void Initialize( char * );
+         void Initialize( std::string );
          void CleanUp( void );
          void InitScene( void );
          void PreFrameUpdate( void );
@@ -106,7 +106,7 @@ namespace VE_Xplorer
 #endif // VE_PATENTED
 #endif //_OSG
          cfdCursor* cursor;
-         char* _param;
+         std::string _param;
          cfdCommandArray* _commandArray;
          cfdReadParam* _readParam;
          // cur_box will eventually be used to define bounding box

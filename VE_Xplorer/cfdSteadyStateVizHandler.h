@@ -89,7 +89,7 @@ namespace VE_Xplorer
          vprSingletonHeader( cfdSteadyStateVizHandler );   
    
       public:
-         void Initialize( char * );
+         void Initialize( std::string );
          void CleanUp( void );
          void InitScene( void );
          void PreFrameUpdate( void );
@@ -145,7 +145,7 @@ namespace VE_Xplorer
          std::vector< cfdObjects* > dataList;
          std::vector< cfdGlobalBase* > commandList;
 
-         char* _param;
+         std::string _param;
          bool actorsAreReady;
          bool computeActorsAndGeodes;
          bool changeGeometry;

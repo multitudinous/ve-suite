@@ -67,7 +67,7 @@ public:
    //char* GetPluginName(int);
    int GetNumberOfPlugins();
 
-   cfdVEBaseClass* CreateObject( char* ); 
+   cfdVEBaseClass* CreateObject( std::string ); 
 
 //private:
    std::vector<cfdVEBaseClass*> plugins;

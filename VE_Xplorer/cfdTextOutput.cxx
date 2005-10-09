@@ -71,7 +71,7 @@ cfdTextOutput::~cfdTextOutput()
 #endif
 } 
 
-VE_SceneGraph::cfdDCS *cfdTextOutput::add_text(char * text_input)
+VE_SceneGraph::cfdDCS *cfdTextOutput::add_text(std::string text_input)
 {
    if ( dcs )
    {
@@ -107,7 +107,7 @@ VE_SceneGraph::cfdDCS *cfdTextOutput::add_text(char * text_input)
    str->setFont(fnt);
    str->setMode(PFSTR_JUSTIFY, PFSTR_MIDDLE);
    str->setColor(0.8f,0.8f,0.0f,1.0f);
-   str->setString(text_input);
+   str->setString(text_input.c_str());
    str->flatten();
    //str->getGState();
    text->addString(str);
