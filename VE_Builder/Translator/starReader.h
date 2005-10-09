@@ -32,13 +32,14 @@
 #ifndef STARREADER_H
 #define STARREADER_H
 #include <vector>
+#include <string>
 
 class vtkUnstructuredGrid;
 
 class starReader
 {
    public:
-      starReader( char * paramFile );
+      starReader( std::string paramFile );
       ~starReader( void );
 
       void SetDebugLevel( int );
@@ -48,22 +49,22 @@ class starReader
       int     GetScaleIndex( void );
       float   GetScaleFactor( void );
       int     GetWriteOption( void );
-      char  * GetVTKFileName( void );
+      std::string GetVTKFileName( void );
 
       void  ReadParameterFile( void );
       vtkUnstructuredGrid * GetUnsGrid();
 
    private:
-      char  paramFileName[100];
+      std::string paramFileName;//[100];
       char  starCellFileName[100];
       char  starVertFileName[100];
       char  starUsrFileName[100];
       char  vtkFileName[100];
       char  textline[256];
       int   numScalars;
-      std::vector< char * > scalarName;
+      std::vector< std::string > scalarName;
       int   numVectors;
-      std::vector< char * > vectorName;
+      std::vector< std::string > vectorName;
       int   debug;
       int   writeOption;
       float rotations[ 3 ];

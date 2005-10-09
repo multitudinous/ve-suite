@@ -49,7 +49,7 @@
 
 using namespace VE_Util;
 
-void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
+void writeVtkGeomToStl( vtkDataSet * dataset, std::string filename )
 {
    vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
    vtkGeometryFilter *gFilter = NULL;
@@ -69,7 +69,7 @@ void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
    std::cout.flush();
    vtkSTLWriter *writer = vtkSTLWriter::New();
       writer->SetInput( tFilter->GetOutput() );
-      writer->SetFileName( filename );
+      writer->SetFileName( filename.c_str() );
       writer->SetFileTypeToBinary();
       writer->Write();
       writer->Delete();
@@ -85,12 +85,12 @@ int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name and an output file,
    // set them up.  Otherwise, get them from the user...
-	char *inFileName = NULL;
-   char *outFileName = new char [20];
-   strcpy( outFileName, "surface.vtk" );  //default name
+	std::string inFileName;// = NULL;
+   std::string outFileName;// = new char [20];
+   outFileName.assign( "surface.vtk" );//strcpy(outFileName, "surface.vtk" );  //default name
    fileIO::processCommandLineArgs( argc, argv, 
                   "make a surface from the data in", inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
 
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
 
@@ -153,11 +153,11 @@ int main( int argc, char *argv[] )
       surface = cfdGrid2Surface( dataset, deciVal );
 
       int answer;
-      char * extension = fileIO::getExtension( outFileName );
+      std::string extension = fileIO::getExtension( outFileName );
 
-      if ( !strcmp(extension,"stl") || !strcmp(extension,"STL") )
+      if ( !extension.compare("stl") || !extension.compare("STL") )//!strcmp(extension,"stl") || !strcmp(extension,"STL") )
          answer = 1;
-      else if ( !strcmp(extension,"vtk") || !strcmp(extension,"VTK") )
+      else if ( !extension.compare("vtk") || !extension.compare("VTK") )//( !strcmp(extension,"vtk") || !strcmp(extension,"VTK") )
          answer = 0;
       else
       {
@@ -166,7 +166,7 @@ int main( int argc, char *argv[] )
          answer = fileIO::getIntegerBetween( 0, 1 );
       }
 
-      delete [] extension;    extension = NULL;
+      //delete [] extension;    extension = NULL;
 
       if ( answer == 0 )
          writeVtkThing( surface, outFileName, 1 );   //1 is for binary
@@ -180,8 +180,8 @@ int main( int argc, char *argv[] )
    //clean up
    surface->Delete();
    dataset->Delete();
-   delete [] inFileName;    inFileName = NULL;
-   delete [] outFileName;   outFileName = NULL;
+   //delete [] inFileName;    inFileName = NULL;
+   //delete [] outFileName;   outFileName = NULL;
 
    std::cout << "\ndone\n";
    return 0;

@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkPoints.h>
@@ -42,7 +43,7 @@
 
 // for info on avs format...
 // http://www.ncsa.uiuc.edu/Divisions/Communities/CSM/courses/csm-02/avs-ucd/format.html
-vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
+vtkUnstructuredGrid * avsReader( std::string fluentAVSFileName, int debug )
 {
    vtkUnstructuredGrid * uGrid = NULL;
 
@@ -50,7 +51,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
       std::cout << "AVS input file is " << fluentAVSFileName << std::endl;
 
    std::fstream fvert;
-   fvert.open( fluentAVSFileName, std::ios::in );
+   fvert.open( fluentAVSFileName.c_str(), std::ios::in );
 
    if ( !fvert.is_open() )
    {

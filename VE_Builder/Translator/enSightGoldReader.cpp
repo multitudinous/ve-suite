@@ -54,11 +54,11 @@ enSightGoldReader::~enSightGoldReader( void )
       cell2point->Delete();
 }
 
-vtkUnstructuredGrid* enSightGoldReader::GetUnstructuredGrid( char* caseFileName, int debug )
+vtkUnstructuredGrid* enSightGoldReader::GetUnstructuredGrid( std::string caseFileName, int debug )
 {
    reader = vtkGenericEnSightReader::New();
    //reader->DebugOn();
-   reader->SetCaseFileName( caseFileName );
+   reader->SetCaseFileName( caseFileName.c_str() );
    reader->Update();
    
    // Convert vtkEnSightGoldReader cell centered data to point data
@@ -89,7 +89,7 @@ vtkUnstructuredGrid* enSightGoldReader::GetUnstructuredGrid( char* caseFileName,
          vtkFloatArray** scalarsFromVector;
          
          scalarsFromVector = new vtkFloatArray* [ numComponents+1 ];
-         name = (char*) finalUGrid->GetPointData()->GetArray(i)->GetName();
+         name = (std::string) finalUGrid->GetPointData()->GetArray(i)->GetName();
          numOfTuples = finalUGrid->GetPointData()->GetArray(i)->GetNumberOfTuples();
          if ( debug ) std::cout<<" Name :" << name <<std::endl
                                <<" Number of Tuples :"<< numOfTuples <<std::endl;

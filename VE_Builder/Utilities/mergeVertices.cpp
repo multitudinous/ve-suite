@@ -44,10 +44,10 @@ int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name and an output file set them up.
    // Otherwise, get them from the user...
-   char *inFileName = NULL;
-   char *outFileName = NULL;
+   std::string inFileName;// = NULL;
+   std::string outFileName;// = NULL;
    fileIO::processCommandLineArgs( argc, argv, "merge cell vertices in", inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
 
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
 
@@ -78,14 +78,14 @@ int main( int argc, char *argv[] )
    {
       std::cout <<"\nERROR - can only merge points for vtkUnstructuredGrids" << std::endl;
       dataset->Delete();
-      delete [] inFileName;   inFileName = NULL;
-      delete [] outFileName;  outFileName = NULL;
+      //delete [] inFileName;   inFileName = NULL;
+      //delete [] outFileName;  outFileName = NULL;
       return 1;
    }
 
    dataset->Delete();
-   delete [] inFileName;   inFileName = NULL;
-   delete [] outFileName;  outFileName = NULL;
+   //delete [] inFileName;   inFileName = NULL;
+   //delete [] outFileName;  outFileName = NULL;
 
    return 0;
 }

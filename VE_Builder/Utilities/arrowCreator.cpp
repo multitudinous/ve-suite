@@ -43,11 +43,11 @@ using namespace VE_Util;
 int main( int argc, char *argv[] )
 {    
    // If it is on command line, get output file name...
-   char * outFileName = 0;
+   std::string outFileName;// = 0;
    if (argc > 1)
    {
-      outFileName = new char [100];
-      strcpy( outFileName, argv[1]);
+      //outFileName = new char [100];
+      outFileName.assign( argv[1] );//strcpy( outFileName, argv[1]);
    }
    else outFileName = fileIO::getWritableFile( "newArrow.vtk" );
 
@@ -124,7 +124,7 @@ int main( int argc, char *argv[] )
    std::cout.flush();
    vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
    writer->SetInput( arrow->GetPolyData() );
-   writer->SetFileName( outFileName );
+   writer->SetFileName( outFileName.c_str() );
    //writer->SetFileTypeToBinary();
    writer->Write();
    writer->Delete();

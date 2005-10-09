@@ -72,23 +72,23 @@ int main( int argc, char *argv[] )
    myid = 0;
 #endif   
 
-   char * postFname = NULL;
-   char * postDataDir = NULL;
+   std::string postFname;// = NULL;
+   std::string postDataDir;// = NULL;
 
    if ( myid == 0 )
    {
       int arg = 1;
       if ( argc > arg )
       {
-         postFname = new char [ strlen(argv[ arg ])+1 ];
-         strcpy( postFname, argv[ arg ] );
+         //postFname = new char [ strlen(argv[ arg ])+1 ];
+         postFname.assign( argv[ arg ] );//strcpy( postFname, argv[ arg ] );
          ++arg;
          
          if ( ! fileIO::isFileReadable( postFname ) )
          {
             std::cerr << "\nERROR: Can't read file \"" << postFname
                       << "\" " << std::endl;
-            delete [] postFname;
+            //delete [] postFname;
             postFname = fileIO::getReadableFileFromDefault( 
                            "the input vtk data file", "./flowdata.vtk" );
          }
@@ -101,27 +101,27 @@ int main( int argc, char *argv[] )
 
       if ( argc > arg )
       {
-         postDataDir = new char [ strlen(argv[ arg ])+1 ];
-         strcpy( postDataDir, argv[ arg ] );
+         //postDataDir = new char [ strlen(argv[ arg ])+1 ];
+         postDataDir.assign( argv[ arg ] );//strcpy( postDataDir, argv[ arg ] );
          arg++;
 
          if ( ! fileIO::isDirWritable( postDataDir ) )
          {
             std::cerr << "\nERROR: Can't write to \"" << postDataDir
                       << "\" directory" << std::endl;
-            delete [] postDataDir;
-            const char* tmp = fileIO::getWritableDir();
-            postDataDir = new char [strlen(tmp)+1];
-            strcpy( postDataDir, tmp );
+            //delete [] postDataDir;
+            std::string tmp = fileIO::getWritableDir();
+            //postDataDir = new char [strlen(tmp)+1];
+            postDataDir.assign( tmp );//strcpy( postDataDir, tmp );
          }
       }
       else
       {
          std::cout << "\nA directory is needed to hold precomputed data"
                    << std::endl;
-         const char* tmp = fileIO::getWritableDir();
-         postDataDir = new char [strlen(tmp)+1];
-         strcpy( postDataDir, tmp );
+         std::string tmp = fileIO::getWritableDir();
+         //postDataDir = new char [strlen(tmp)+1];
+         postDataDir.assign( tmp );//strcpy( postDataDir, tmp );
       }
 
       if ( argc > arg )
@@ -172,7 +172,7 @@ int main( int argc, char *argv[] )
          }
          else
          {
-            strcpy( surfFname, postDataDir );
+            strcpy( surfFname, postDataDir.c_str() );
             strcat( surfFname, "/surface.vtk" );
          }
          std::cout << "Will write to file " << surfFname << std::endl;
@@ -415,7 +415,7 @@ int main( int argc, char *argv[] )
             //std::cout << "Number of isosurfaces = " << isoNum << std::endl;
             //std::cout << "Output to " << postDataDir << " directory" << std::endl;
             isosurfaceVtkOutput *isoOutput = new isosurfaceVtkOutput;
-            isoOutput->writeIsosurface( dataSet, postDataDir, 
+            isoOutput->writeIsosurface( dataSet, postDataDir.c_str(), 
                                         isoNum, isoMin, isoMax );
          }
       }
@@ -451,14 +451,14 @@ int main( int argc, char *argv[] )
                                         multiPlaneOption, number );
          }
       }
-      delete [] postDataDir;
+      //delete [] postDataDir;
    }
    else
    {
       std::cerr << "Error!!!! No cells in " << postFname << std::endl; 
    }
    dataSet->Delete();
-   delete [] postFname; 
+   //delete [] postFname; 
 #ifdef _MPI
    MPI_Finalize();
 #endif

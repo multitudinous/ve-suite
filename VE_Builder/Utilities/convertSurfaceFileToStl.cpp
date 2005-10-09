@@ -44,11 +44,11 @@ int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name and an output file set them up.
    // Otherwise, get them from the user...
-   char *inFileName = NULL;
-   char *outFileName = new char [20];
-   strcpy( outFileName, "surface.stl" );  //default name
+   std::string inFileName;// = NULL;
+   std::string outFileName;// = new char [20];
+   outFileName.assign( "surface.stl" );//strcpy( outFileName, "surface.stl" );  //default name
    fileIO::processCommandLineArgs( argc, argv, "convert geometry to STL format in", inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
 
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
 
@@ -63,7 +63,7 @@ int main( int argc, char *argv[] )
    std::cout.flush();
    vtkSTLWriter *writer = vtkSTLWriter::New();
       writer->SetInput( tFilter->GetOutput() );
-      writer->SetFileName( outFileName );
+      writer->SetFileName( outFileName.c_str() );
       writer->SetFileTypeToBinary();
       writer->Write();
       writer->Delete();
@@ -72,8 +72,8 @@ int main( int argc, char *argv[] )
    cFilter->Delete();
    tFilter->Delete();
    dataset->Delete();
-   delete [] inFileName;   inFileName = NULL;
-   delete [] outFileName;  outFileName = NULL;
+   inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+   outFileName.erase();//delete [] outFileName;  outFileName = NULL;
 
    return 0;
 }

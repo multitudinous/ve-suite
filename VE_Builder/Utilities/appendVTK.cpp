@@ -44,25 +44,25 @@ using namespace VE_Util;
 int main( int argc, char *argv[] )
 {    
     // Read in a file containing an unstructured grid...
-	char * inFileName1 = 0;
-	char * inFileName2 = 0;
-	char * outFileName = 0;
+	std::string inFileName1;// = 0;
+	std::string inFileName2;// = 0;
+	std::string outFileName;// = 0;
     if (argc > 1)
     {
-        inFileName1 = new char [100];
-        strcpy( inFileName1, argv[1]);
+        //inFileName1 = new char [100];
+        inFileName1.assign( argv[1] );//strcpy( inFileName1, argv[1]);
 
         if (argc > 2)
         {
-            inFileName2 = new char [100];
-            strcpy( inFileName2, argv[2]);
+            //inFileName2 = new char [100];
+            inFileName2.assign( argv[2] );//strcpy( inFileName2, argv[2]);
         }
         else inFileName2 = fileIO::getReadableFileFromDefault( "the file to be appended", "inFile.vtk" );
 
         if (argc > 3)
         {
-            outFileName = new char [100];
-            strcpy( outFileName, argv[3]);
+            //outFileName = new char [100];
+            outFileName.assign( argv[3] );//strcpy( outFileName, argv[3]);
         }
         else outFileName = fileIO::getWritableFile( "outFile.vtk" );
 
@@ -137,9 +137,9 @@ int main( int argc, char *argv[] )
    tFilter->Delete();
    aFilter->Delete();
    t->Delete();
-   delete [] inFileName1;  inFileName1 = NULL;
-   delete [] inFileName2;  inFileName2 = NULL;
-   delete [] outFileName;  outFileName = NULL;
+   //delete [] inFileName1;  inFileName1 = NULL;
+   //delete [] inFileName2;  inFileName2 = NULL;
+   //delete [] outFileName;  outFileName = NULL;
    dataset1->Delete();
    dataset2->Delete();
 

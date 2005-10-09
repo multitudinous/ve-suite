@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
+#include <vector>
 
 #include <vtkRectilinearGrid.h>
 #include <vtkStructuredGrid.h>   // s-grids allow blanking - rect grids don't
@@ -41,13 +42,13 @@
 #include "VE_Builder/Translator/gridConversion.h"
 using namespace VE_Util;
 
-vtkStructuredGrid * reiReader( char * reiFileName, int debug )
+vtkStructuredGrid * reiReader( std::string reiFileName, int debug )
 {
    vtkStructuredGrid * sGrid = NULL;
 
    FILE *s1;
    // open db file
-   if((s1=fopen(reiFileName,"r"))==NULL)
+   if((s1=fopen(reiFileName.c_str(),"r"))==NULL)
    {
       std::cerr << "ERROR: can't open file \"" << reiFileName << "\", so exiting" << std::endl;
       return sGrid;
@@ -162,7 +163,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    fseek(s1,8L,SEEK_CUR);
    for (i=0;i<numScalars;i++)
    {
-      if (parameterNames[i]==NULL)
+      if (parameterNames[i]==NULL)//.empty())//==NULL)
       {
          std::cerr << "ERROR: can't get memory for parameterNames, so exiting" << std::endl;
          return sGrid;
@@ -176,7 +177,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    fseek(s1,8L,SEEK_CUR);
    for (i=0;i<numVectors;i++)
    {
-      if (parameterNames[numScalars+i]==NULL)
+      if (parameterNames[numScalars+i]==NULL)//.empty())//==NULL)
       {
          std::cerr << "ERROR: can't get memory for parameterNames, so exiting" << std::endl;
          return sGrid;
@@ -405,8 +406,8 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    std::cout << std::endl;
 
    //delete parameterNames
-   for (i=0; i < numParameters; i++) delete parameterNames[i];
-   delete [] parameterNames;      parameterNames = 0;
+   //for (i=0; i < numParameters; i++) delete parameterNames[i];
+   delete [] parameterNames;      parameterNames = 0;//parameterNames.clear();//delete [] parameterNames;      parameterNames = 0;
 
    // Add selected scalar and vector quantities to the pointdata array
    letUsersAddParamsToField( numParameters, parameterData, sGrid->GetPointData() );

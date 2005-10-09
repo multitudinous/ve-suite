@@ -234,11 +234,11 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
 int main( int argc, char *argv[] )
 {
    // Possibly read in an input vtk file name and an output file...
-   char *inFileName = NULL;
-   char *outFileName = NULL;
+   std::string inFileName;// = NULL;
+   std::string outFileName;// = NULL;
    fileIO::processCommandLineArgs( argc, argv, "cut external cells from",
                                    inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
 
    // read the data set ("1" means print info to screen)
    vtkDataSet * dataset = readVtkThing( inFileName, 1 );
@@ -351,8 +351,8 @@ int main( int argc, char *argv[] )
       {
          std::cerr <<"\nERROR - can only currently delete cells from "
               << "vtkUnstructuredGrids or vtkPolyData" << std::endl;
-         delete [] inFileName;   inFileName = NULL;
-         delete [] outFileName;  outFileName = NULL;
+         inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+         outFileName.erase();//delete [] outFileName;  outFileName = NULL;
          dataset->Delete();
          exit(1);
       }
@@ -368,8 +368,8 @@ int main( int argc, char *argv[] )
       gFilter->Delete();
    }
 
-   delete [] inFileName;   inFileName = NULL;
-   delete [] outFileName;  outFileName = NULL;
+   inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+   outFileName.erase();//delete [] outFileName;  outFileName = NULL;
    //std::cout << "now to delete dataset..." << std::endl;
    dataset->Delete();
    return 0;

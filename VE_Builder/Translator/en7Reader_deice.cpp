@@ -92,13 +92,13 @@ void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
 }
 
 
-vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, int number, int debug )
+vtkUnstructuredGrid * en7Reader( std::string caseFileName, vtkTransform * transform, int number, int debug )
 {
    vtkUnstructuredGrid * uGrid = NULL;
 
   std::cout << "caseFileName = \"" << caseFileName << "\"" <<std::endl;
 
-   char * extension = VE_Util::fileIO::getExtension( caseFileName );
+   std::string extension = VE_Util::fileIO::getExtension( caseFileName );
    //cout << "extension = \"" << extension << "\"" <<std::endl;
    if ( strcmp(extension,"case") && strcmp(extension,"CASE") && 
         strcmp(extension,"cas") && strcmp(extension,"encas") )
@@ -107,7 +107,7 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
       delete [] extension;
       return uGrid;
    }
-   delete [] extension;
+   //delete [] extension;
 
    int i;
 

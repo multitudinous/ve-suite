@@ -50,20 +50,20 @@ public:
   isosurfaceVtkOutput() { }
   ~isosurfaceVtkOutput() { }
 
-  void writeIsosurface( vtkDataSet *unsGrid, char * postDataDir,
+  void writeIsosurface( vtkDataSet *unsGrid, std::string postDataDir,
        int numContours = 20, float rangeStart = -0.1, float rangeEnd = -0.1 );
 
 };
 
 void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
-        char * postDataDir, int numContours, float rangeStart, float rangeEnd )
+        std::string postDataDir, int numContours, float rangeStart, float rangeEnd )
 {
    activateScalar( unsGrid );
 
    // remove other point data from the isosurface...
    unsigned long len = strlen( unsGrid->GetPointData()->GetScalars()->GetName() );
-   char * scalarName = new char [len+1];
-   strcpy( scalarName, unsGrid->GetPointData()->GetScalars()->GetName() );
+   std::string scalarName;// = new char [len+1];
+   scalarName.assign(  unsGrid->GetPointData()->GetScalars()->GetName() );//strcpy( scalarName, unsGrid->GetPointData()->GetScalars()->GetName() );
    //std::cout << "scalarName = " << scalarName << std::endl;
 
    int numPDArrays = unsGrid->GetPointData()->GetNumberOfArrays();
@@ -72,7 +72,7 @@ void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
    int k = 0;
    for (int i=0; i < numPDArrays; i++)
    {
-      if ( strcmp( unsGrid->GetPointData()->GetArray(k)->GetName(), scalarName ) )
+      if ( scalarName.compare(unsGrid->GetPointData()->GetArray(k)->GetName()) == 0 )//strcmp( unsGrid->GetPointData()->GetArray(k)->GetName(), scalarName ) )
       {
          //std::cout << "removing array " << unsGrid->GetPointData()->GetArray(k)->GetName() << std::endl;
          unsGrid->GetPointData()->RemoveArray( 
@@ -82,7 +82,7 @@ void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
          k++;
    }
 
-   delete [] scalarName;
+   //delete [] scalarName;
 
    if ( rangeStart == rangeEnd )
    {

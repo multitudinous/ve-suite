@@ -44,9 +44,9 @@
 
 using namespace VE_Util;
 
-starReader::starReader( char * paramFile )
+starReader::starReader( std::string paramFile )
 {
-   strcpy( this->paramFileName, paramFile );
+   this->paramFileName.assign( paramFile );//strcpy( this->paramFileName, paramFile );
 
    this->debug = 0;
 
@@ -67,16 +67,16 @@ starReader::~starReader( void )
 {
    if ( this->numScalars > 0 )
    {
-      for ( int i = 0; i < this->numScalars; i++ )
-         delete [] this->scalarName[ i ];
+      //for ( int i = 0; i < this->numScalars; i++ )
+      //   delete [] this->scalarName[ i ];
 
       this->scalarName.clear();
    }
 
    if ( this->numVectors > 0 )
    {
-      for ( int i = 0; i < this->numVectors; i++ )
-         delete [] this->vectorName[ i ];
+      //for ( int i = 0; i < this->numVectors; i++ )
+      //   delete [] this->vectorName[ i ];
 
       this->vectorName.clear();
    }
@@ -786,7 +786,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
       vec = vtkFloatArray::New();
       vec->SetNumberOfComponents(3);
-      vec->SetName( this->vectorName[ 0 ] );
+      vec->SetName( this->vectorName[ 0 ].c_str() );
       vec->SetNumberOfTuples( maxOrigVertexId-vShift+1 );
    }
 
@@ -806,7 +806,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    {
       scalarData[ i ] = vtkFloatArray::New();
       scalarData[ i ]->SetNumberOfComponents( 1 );
-      scalarData[ i ]->SetName( this->scalarName[ i ] );
+      scalarData[ i ]->SetName( this->scalarName[ i ].c_str() );
       scalarData[ i ]->SetNumberOfTuples( maxOrigVertexId-vShift+1 );
    }
    
@@ -945,7 +945,7 @@ void starReader::ReadParameterFile( void )
    this->numScalars = 0;
 
    std::fstream StarParamFile;
-   StarParamFile.open( this->paramFileName, std::ios::in );
+   StarParamFile.open( this->paramFileName.c_str(), std::ios::in );
 
    char tagName[ 50 ];
    char tagValue[ 50 ];
@@ -981,8 +981,8 @@ void starReader::ReadParameterFile( void )
       }
       else if (strcmp("VECTORNAME", tagName)==0) 
       {
-         char * newSpace = new char[ strlen(tagValue)+1 ];
-         strcpy(newSpace,tagValue);
+         std::string newSpace;// = new char[ strlen(tagValue)+1 ];
+         newSpace.assign( tagValue );//strcpy(newSpace,tagValue);
          this->vectorName.push_back( newSpace );
          if ( this->debug )
             std::cout << "vectorName[" << this->numVectors << "] = " 
@@ -997,8 +997,8 @@ void starReader::ReadParameterFile( void )
       }
       else if (strcmp("SCALARNAME", tagName)==0)
       {
-         char * newSpace = new char[ strlen(tagValue)+1 ];
-         strcpy(newSpace,tagValue);
+         std::string newSpace;// = new char[ strlen(tagValue)+1 ];
+         newSpace.assign( tagValue );//strcpy(newSpace,tagValue);
          this->scalarName.push_back( newSpace );
          if ( this->debug )
             std::cout << "scalarName[" << this->numScalars << "] = " 
@@ -1123,7 +1123,7 @@ float starReader::GetScaleFactor( void )
    return this->scaleFactor;
 }
 
-char *starReader::GetVTKFileName( void )
+std::string starReader::GetVTKFileName( void )
 {
    return this->vtkFileName;
 }

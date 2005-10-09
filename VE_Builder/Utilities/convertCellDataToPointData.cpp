@@ -45,12 +45,12 @@ int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name and an output file,
    // set them up.  Otherwise, get them from the user...
-	char *inFileName = NULL;
-	char *outFileName = NULL;
+	std::string inFileName;// = NULL;
+	std::string outFileName;//std::string = NULL;
    fileIO::processCommandLineArgs( argc, argv,
                                    "convert cell-centered data file", 
                                    inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
 
    int printInfoToScreen = 0; // "1" means print info to screen
    vtkDataSet * dataset = readVtkThing( inFileName, printInfoToScreen );
@@ -71,8 +71,8 @@ int main( int argc, char *argv[] )
       std::cout << "There are no cell-centered data arrays to convert!" << std::endl;
 
    dataset->Delete();
-   delete [] inFileName;   inFileName = NULL;
-   delete [] outFileName;  outFileName = NULL;
+   inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+   outFileName.erase();//delete [] outFileName;  outFileName = NULL;
 
    return 0;
 }

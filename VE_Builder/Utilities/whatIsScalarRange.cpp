@@ -44,11 +44,11 @@ int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name, then use it.
    // Otherwise, get it from the user...
-   char *inFileName;
+   std::string inFileName;
    if ( argc > 1 )
    {
-      inFileName = new char [ strlen(argv[ 1 ])+1 ];
-      strcpy( inFileName, argv[ 1 ] );
+      //inFileName = new char [ strlen(argv[ 1 ])+1 ];
+      inFileName.assign( argv[ 1 ] );//strcpy( inFileName, argv[ 1 ] );
    }
    else  // then get filename from user...
    {
@@ -97,7 +97,7 @@ int main( int argc, char *argv[] )
    std::cout << std::endl;
 
    dataset->Delete();
-   delete [] inFileName;   inFileName = NULL;
+   //delete [] inFileName;   inFileName = NULL;
 
    return 0;
 }

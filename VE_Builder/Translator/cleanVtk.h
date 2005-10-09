@@ -32,6 +32,7 @@
 #ifndef CLEAN_VTK_H
 #define CLEAN_VTK_H
 #include "VE_Installer/include/VEConfig.h"
+#include <string>
 
 class vtkPointSet;
 
@@ -39,6 +40,6 @@ namespace VE_Util
 {
    // function declarations
    VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet * );
-   VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet *, char * vtkFileName );
+   VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet *, std::string vtkFileName );
 }
 #endif

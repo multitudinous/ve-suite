@@ -95,22 +95,24 @@ void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
 }
 
 
-vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, int number, int debug )
+vtkUnstructuredGrid * en7Reader( std::string caseFileName, vtkTransform * transform, int number, int debug )
 {
    vtkUnstructuredGrid * uGrid = NULL;
 
    std::cout << "caseFileName = \"" << caseFileName << "\"" << std::endl;
 
-   char * extension = fileIO::getExtension( caseFileName );
+   std::string extension = fileIO::getExtension( caseFileName );
    //std::cout << "extension = \"" << extension << "\"" << std::endl;
-   if ( strcmp(extension,"case") && strcmp(extension,"CASE") && 
-        strcmp(extension,"cas") && strcmp(extension,"encas") )
+   //if ( strcmp(extension,"case") && strcmp(extension,"CASE") && 
+   //     strcmp(extension,"cas") && strcmp(extension,"encas") )
+   if ( extension.compare("case") && extension.compare("CASE") &&
+        extension.compare("cas") && extension.compare("encas") )
    {
       std::cout << "\nERROR: filename extension must be \"case\" or \"CASE\" or \"cas\" or \"encas\"\n" << std::endl;
-      delete [] extension;
+      //delete [] extension;
       return uGrid;
    }
-   delete [] extension;
+   //delete [] extension;
 
    int i;
 
@@ -118,7 +120,7 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
    //vtkGenericEnSightReader * reader = vtkGenericEnSightReader::New();
    //vtkEnSightFortranBinaryReader * reader = vtkEnSightFortranBinaryReader::New();
       //reader->DebugOn();
-      reader->SetCaseFileName( caseFileName );
+      reader->SetCaseFileName( caseFileName.c_str() );
       reader->Update();
 
    int numOutputs = reader->GetNumberOfOutputs();
@@ -192,7 +194,7 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
          dirStringStream << "deice_" << std::setw(3) << timeStep << ".vtk";
          std::cout << "currentFilename = \"" << dirStringStream.str() << "\"" << std::endl;
 
-         writeVtkThing( transFilter->GetOutput(), (char*)dirStringStream.str().c_str(), 1 ); //0=ascii
+         writeVtkThing( transFilter->GetOutput(), (std::string)dirStringStream.str().c_str(), 1 ); //0=ascii
          surface->Delete();
          uGrid->Delete();
          uGrid = NULL;

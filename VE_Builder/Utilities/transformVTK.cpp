@@ -45,16 +45,16 @@ using namespace VE_Util;
 int main( int argc, char *argv[] )
 {    
    // Possibly read in an input vtk file name and an output file...
-	char *inFileName = NULL;
-	char *outFileName = NULL;
+	std::string inFileName;// = NULL;
+	std::string outFileName;// = NULL;
    fileIO::processCommandLineArgs( argc, argv, "transform file", inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
 
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
    if ( ! dataset->IsA("vtkPointSet") )
    { 
-      delete [] inFileName;   inFileName = NULL;
-      delete [] outFileName;  outFileName = NULL;
+      inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+      outFileName.erase();//delete [] outFileName;  outFileName = NULL;
       return 1;
    }
 
@@ -118,8 +118,8 @@ int main( int argc, char *argv[] )
 
    transFilter->Delete();
    aTransform->Delete();
-   delete [] inFileName;   inFileName = NULL;
-   delete [] outFileName;  outFileName = NULL;
+   inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+   outFileName.erase();//delete [] outFileName;  outFileName = NULL;
    dataset->Delete();
    return 0;
 }

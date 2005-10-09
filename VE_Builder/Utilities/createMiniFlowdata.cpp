@@ -47,23 +47,23 @@ int main( int argc, char *argv[] )
 {    
    // Possibly read in an input vtk file name and an output file...
    // there is no default input file name...
-	char * inFileName = NULL;
+	std::string inFileName;// = NULL;
 
    // there is a default output file name...
-	char * outFileName = new char [ strlen("miniFlowdata.vtk")+1 ];
-   strcpy( outFileName, "miniFlowdata.vtk" );
+	std::string outFileName;// = new char [ strlen("miniFlowdata.vtk")+1 ];
+   outFileName.assign( "miniFlowdata.vtk" );//strcpy( outFileName, "miniFlowdata.vtk" );
 
    fileIO::processCommandLineArgs( argc, argv,
                                    "create a mini flowdata.vtk file from",
                                    inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
 
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
    if ( ! dataset->IsA("vtkUnstructuredGrid") )
    { 
       std::cerr << "ERROR: This function requires an unstructured grid" << std::endl;
-      delete [] inFileName;   inFileName = NULL;
-      delete [] outFileName;  outFileName = NULL;
+      //delete [] inFileName;   inFileName = NULL;
+      //delete [] outFileName;  outFileName = NULL;
       return 1;
    }
 
@@ -202,8 +202,8 @@ int main( int argc, char *argv[] )
    {
       data[ i ]->Delete();
    }
-   delete [] inFileName;   inFileName = NULL;
-   delete [] outFileName;  outFileName = NULL;
+   //delete [] inFileName;   inFileName = NULL;
+   //delete [] outFileName;  outFileName = NULL;
 
    return 0;
 }

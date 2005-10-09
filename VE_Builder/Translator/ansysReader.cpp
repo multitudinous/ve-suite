@@ -61,13 +61,13 @@
 #endif
 using namespace VE_Util;
 
-ansysReader::ansysReader( char * input )
+ansysReader::ansysReader( std::string input )
 {
    ansysFileName = input;
    std::cout << "\nOpening file \"" << ansysFileName << "\"" << std::endl;
 
    // open file
-   if((this->s1=fopen(ansysFileName,"r"))==NULL)
+   if((this->s1=fopen(ansysFileName.c_str(),"r"))==NULL)
    {
       std::cerr << "ERROR: can't open file \"" << ansysFileName
            << "\", so exiting" << std::endl;
@@ -147,13 +147,13 @@ ansysReader::ansysReader( char * input )
    char tempText [ 256 ];
    std::cout << "\nWhat are the units for displacement (in,mm,m,etc.): " << std::endl;
    std::cin >> tempText;
-   this->displacementUnits = new char [ strlen(tempText)+1 ];
-   strcpy(this->displacementUnits,tempText);
+   //this->displacementUnits = new char [ strlen(tempText)+1 ];
+   displacementUnits.assign( tempText );//strcpy(this->displacementUnits,tempText);
 
    std::cout << "\nWhat are the units for stress (MPa,psi,etc): " << std::endl;
    std::cin >> tempText;
-   this->stressUnits = new char [ strlen(tempText)+1 ];
-   strcpy(this->stressUnits,tempText);
+   //this->stressUnits = new char [ strlen(tempText)+1 ];
+   stressUnits.assign( tempText );//strcpy(this->stressUnits,tempText);
 
 /*
    // Test code that reads all blocks in the rst file
@@ -301,8 +301,8 @@ ansysReader::~ansysReader()
       this->numCornerNodesInElement = NULL;
    }
 
-   delete [] this->displacementUnits;
-   delete [] this->stressUnits;
+   //delete [] this->displacementUnits;
+   //delete [] this->stressUnits;
 
    if ( this->pointerToMidPlaneNode )
       this->pointerToMidPlaneNode->Delete();
@@ -2330,14 +2330,14 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
    // Because the ansys vertices are one-based, increase the arrays by one
    std::ostringstream dirStringStream;
    dirStringStream << "displacement " << this->currentDataSetSolution << " " << this->displacementUnits;
-   parameterData[ 0 ]->SetName( (char*)dirStringStream.str().c_str() );
+   parameterData[ 0 ]->SetName( dirStringStream.str().c_str() );
    parameterData[ 0 ]->SetNumberOfComponents( 3 );
    parameterData[ 0 ]->SetNumberOfTuples( this->ndnod + 1 );   // note: +1
    dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "displacement mag " << this->currentDataSetSolution << " " << this->displacementUnits;
-   parameterData[ 1 ]->SetName( (char*)dirStringStream.str().c_str() );
+   parameterData[ 1 ]->SetName( dirStringStream.str().c_str() );
    parameterData[ 1 ]->SetNumberOfComponents( 1 );
    parameterData[ 1 ]->SetNumberOfTuples( this->ndnod + 1 );   // note: +1
    dirStringStream.str("");
@@ -2504,32 +2504,32 @@ void ansysReader::AttachStressToGrid()
 
    std::ostringstream dirStringStream;  
    dirStringStream << "fg max prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
-   parameterData[ 0 ]->SetName( (char*)dirStringStream.str().c_str() );
+   parameterData[ 0 ]->SetName( dirStringStream.str().c_str() );
    dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "fg min prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
-   parameterData[ 1 ]->SetName( (char*)dirStringStream.str().c_str() );
+   parameterData[ 1 ]->SetName( dirStringStream.str().c_str() );
    dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "fg von Mises stress " << this->currentDataSetSolution << " " << this->stressUnits;
-   parameterData[ 2 ]->SetName( (char*)dirStringStream.str().c_str() );
+   parameterData[ 2 ]->SetName( dirStringStream.str().c_str() );
    dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "pg max prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
-   parameterData[ 3 ]->SetName( (char*)dirStringStream.str().c_str() );
+   parameterData[ 3 ]->SetName( dirStringStream.str().c_str() );
    dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "pg min prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
-   parameterData[ 4 ]->SetName( (char*)dirStringStream.str().c_str() );
+   parameterData[ 4 ]->SetName( dirStringStream.str().c_str() );
    dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "pg von Mises stress " << this->currentDataSetSolution << " " << this->stressUnits;
-   parameterData[ 5 ]->SetName( (char*)dirStringStream.str().c_str() );
+   parameterData[ 5 ]->SetName( dirStringStream.str().c_str() );
    dirStringStream.str("");
    dirStringStream.clear();
 

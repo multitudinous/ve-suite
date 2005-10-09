@@ -354,7 +354,7 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid )
    delete [] isNeededPoint;
 }
 
-void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName )
+void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, std::string vtkFileName )
 {
    if ( grid == NULL )
    {
@@ -364,7 +364,7 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName
 
    int debug = 0;   // 0=no debug output, 1=some debug output, 2=more debug output
    std::fstream rpt;
-   rpt.open( vtkFileName, std::ios::out ); 
+   rpt.open( vtkFileName.c_str(), std::ios::out ); 
 
    std::cout << "Writing to " << vtkFileName << "..." << std::endl;
 
@@ -539,10 +539,10 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName
          int numComponents = dataArray->GetNumberOfComponents();
          if ( numComponents > 1 )
          {
-            const char * name = dataArray->GetName();
+            std::string name = dataArray->GetName();
 
             // only NORMALS won't be written in field data
-            if ( strcmp(name,"NORMALS") )
+            if ( name.compare("NORMALS") == 0 )// strcmp(name,"NORMALS") )
                continue;
    /* 
             //in vtk, transforming can cause loss of name...
@@ -580,15 +580,15 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName
       {
          counter = 0;
          vtkDataArray * dataArray = grid->GetPointData()->GetArray( i );
-         const char * name = dataArray->GetName();
+         std::string name = dataArray->GetName();
          int numComponents = dataArray->GetNumberOfComponents();
 
          // NORMALS won't be written in field data
-         if ( ! strcmp(name,"NORMALS") )
+         if ( name.compare("NORMALS") != 0 )// !strcmp(name,"NORMALS") )
             continue;
 
          //in vtk, transforming can cause loss of name...
-         if ( ! strcmp(name,"") )
+         if ( name.compare("") != 0 ) //! strcmp(name,"") )
          {
             rpt << "lost_name "  << numComponents
                 << " " << numNeededVertices << " float" << std::endl;

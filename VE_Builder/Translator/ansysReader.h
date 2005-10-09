@@ -43,7 +43,7 @@ class vtkDoubleArray;
 class ansysReader
 {
    public:
-      ansysReader( char * );
+      ansysReader( std::string );
 
       ~ansysReader();
 
@@ -91,7 +91,7 @@ class ansysReader
       void StoreNodalStessesForThisElement( int32 elemIndex, int64 ptrElement_i );
       double * GetIntersectionPoint( double n1[ 3 ], double n2[ 3 ],
                                      double p1[ 3 ], double p2[ 3 ] );
-      char * ansysFileName;
+      std::string ansysFileName;
       FILE *s1;
       bool endian_flip;
       int32 integerPosition;
@@ -157,8 +157,8 @@ class ansysReader
       vtkDoubleArray * summedPowerGraphicsVonMisesStress;
       vtkIntArray * numContributingFullGraphicsElements;
       vtkIntArray * numContributingPowerGraphicsElements;
-      char * displacementUnits;
-      char * stressUnits;
+      std::string displacementUnits;
+      std::string stressUnits;
       vtkUnstructuredGrid * ugrid;
       vtkIntArray * pointerToMidPlaneNode;
       int32 int32MaximumFileLength;

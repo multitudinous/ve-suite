@@ -46,16 +46,16 @@
 #include <vtkAppendPolyData.h>   // used with transient data to concatenate many planes into one polydata object
 //#include "VE_Xplorer/readWriteVtkThings.h"
 
-multiPlaneVtkOutput::multiPlaneVtkOutput( char * dirname )
+multiPlaneVtkOutput::multiPlaneVtkOutput( std::string dirname )
 {
-   unsigned long len = strlen(dirname);
-   postDataDir = new char [len+1];
-   strcpy( postDataDir, dirname );
+   //unsigned long len = strlen(dirname);
+   std::string postDataDir;// = new char [len+1];
+   postDataDir.assign( dirname );//strcpy( postDataDir, dirname );
 }
 
 multiPlaneVtkOutput::~multiPlaneVtkOutput()
 {
-   delete [] postDataDir;
+   //delete [] postDataDir;
 }
 
 void multiPlaneVtkOutput::writeMultiPlanes( vtkDataSet *unsGrid,
@@ -283,7 +283,7 @@ std::cout << zmin << " : " << zmax << std::endl;
 }
 
 void multiPlaneVtkOutput::readParamFileandWriteMultiPlanes( vtkDataSet *unsGrid,
-                                                            char *paramFile,
+                                                            std::string paramFile,
                                                             int multiPlaneOption,
                                                             int transientFileNumber )
 {
@@ -291,7 +291,7 @@ void multiPlaneVtkOutput::readParamFileandWriteMultiPlanes( vtkDataSet *unsGrid,
    float Cut;
    int   numCut;
 
-   std::ifstream inFile( paramFile, std::ios::in );
+   std::ifstream inFile( paramFile.c_str(), std::ios::in );
 
    this->unsData = unsGrid;
 

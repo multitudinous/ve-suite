@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
+#include <vector> 
 
 #include "VE_Xplorer/fileIO.h"
 #include "VE_Xplorer/readWriteVtkThings.h"
@@ -46,12 +47,12 @@ void removeVtkPointData( vtkDataSet * dataSet )
    std::cout << "numPDArrays = " << numPDArrays << std::endl;
    if ( numPDArrays )
    {
-      char **names = new char * [numPDArrays];
+      std::vector< std::string > names;//char **names = new char * [numPDArrays];
       for (int i=0; i < numPDArrays; i++)
       {
          int len = strlen( dataSet->GetPointData()->GetArray(i)->GetName() );
-         names[i] = new char [len+1];
-         strcpy( names[i], dataSet->GetPointData()->GetArray(i)->GetName() );
+         //names[i] = new char [len+1];
+         names.push_back(dataSet->GetPointData()->GetArray(i)->GetName());//strcpy( names[i], dataSet->GetPointData()->GetArray(i)->GetName() );
          //std::cout << "names[i] = " <<  names[i] << std::endl;
       }
 
@@ -68,16 +69,16 @@ void removeVtkPointData( vtkDataSet * dataSet )
          // go to next scalar if anything other than n/N was input...
          if (response != 'n' && response != 'N') continue;
 
-         dataSet->GetPointData()->RemoveArray( names[i] );
+         dataSet->GetPointData()->RemoveArray( names[i].c_str() );
       }
 
       for (int i=0; i < numPDArrays; i++)
       {
-         delete [] names[i];
-         names[i] = NULL;
+         //delete [] names[i];
+         //names[i] = NULL;
       }
-      delete [] names;
-      names = NULL;
+      names.clear();//delete [] names;
+      //names = NULL;
    }
    return;
 }
@@ -86,10 +87,10 @@ int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name and an output file set them up.
    // Otherwise, get them from the user...
-	char *inFileName = NULL;
-	char *outFileName = NULL;
+	std::string inFileName;// = NULL;
+	std::string outFileName;// = NULL;
    fileIO::processCommandLineArgs( argc, argv, "remove point data parameters from", inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
 
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
 

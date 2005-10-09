@@ -63,15 +63,15 @@
 using namespace VE_Util;
 using namespace VE_Xplorer;
 
-void viewWhatsInFile( char * vtkFilename, const float shrinkFactor );
+void viewWhatsInFile( std::string vtkFilename, const float shrinkFactor );
 vtkActor * getActorFromDataSet( vtkDataSet * dataset );
-vtkActor * getActorFromFile( char * vtkFilename );
+vtkActor * getActorFromFile( std::string vtkFilename );
 
 int main( const int argc, char *argv[] )
 {  
 
    int i;
-	char * vtkFilename = NULL;
+	std::string vtkFilename;// = NULL;
    float shrinkFactor = 1.0;
    if (argc == 1)  // Process a single vtk file that will be obtained from the user...
    {
@@ -100,13 +100,13 @@ int main( const int argc, char *argv[] )
        vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
            iren->SetRenderWindow( renWin );
 
-       vtkFilename = new char [100];
+       //vtkFilename = new char [100];
 
        int numActors = argc - 1;
        vtkActor ** actor = new vtkActor* [numActors];
        for ( i=0; i<numActors; i++ )
        {
-           strcpy( vtkFilename, argv[i+1]);
+           vtkFilename.assign(argv[i+1]);//strcpy( vtkFilename, argv[i+1]);
            actor[i] = getActorFromFile( vtkFilename );
            if (actor[i] == NULL) continue;
 
@@ -204,12 +204,12 @@ int main( const int argc, char *argv[] )
        iren->Delete();
    }
 
-   delete [] vtkFilename;
+   //delete [] vtkFilename;
 
 	return 0;
 }
 
-void viewWhatsInFile( char * vtkFilename, const float shrinkFactor )
+void viewWhatsInFile( std::string vtkFilename, const float shrinkFactor )
 {
    //std::cout << "viewWhatsInFile" << std::endl;
    //
@@ -367,16 +367,16 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
 }
 
 
-vtkActor * getActorFromFile( char * vtkFilename )
+vtkActor * getActorFromFile( std::string vtkFilename )
 {
    //std::cout << "getActorFromFile" << std::endl;
    vtkActor *actor = NULL;
 
-   char * extension = fileIO::getExtension( vtkFilename );
+   std::string extension = fileIO::getExtension( vtkFilename );
    //std::cout << "vtkFilename = \"" << vtkFilename << "\"" << std::endl;
    //std::cout << "extension = \"" << extension << "\"" << std::endl;
 
-   if ( !strcmp(extension,"bmp") || !strcmp(extension,"BMP") )
+   if ( !extension.compare("bmp") || !extension.compare("BMP") )//!strcmp(extension,"bmp") || !strcmp(extension,"BMP") )
    {
       /*
       delete [] extension;
@@ -386,19 +386,19 @@ vtkActor * getActorFromFile( char * vtkFilename )
       std::cout<<"Bmp's not supported by cfdImage!!!"<<std::endl;
 
    }
-   else if ( !strcmp(extension,"stl") || !strcmp(extension,"STL") )
+   else if ( !extension.compare("stl") || !extension.compare("STL") )//( !strcmp(extension,"stl") || !strcmp(extension,"STL") )
    {
       vtkSTLReader * reader = vtkSTLReader::New();
       //reader->DebugOn();
-      reader->SetFileName( vtkFilename );
+      reader->SetFileName( vtkFilename.c_str() );
       reader->Update();
       actor = getActorFromDataSet( reader->GetOutput() );
       reader->Delete();
-      delete [] extension;
+      extension.erase();//delete [] extension;
       return actor;
    }
    else
-      delete [] extension;
+      extension.erase();//delete [] extension;
 
    vtkDataSet * dataset = readVtkThing( vtkFilename, 1 ); // "1" means print info to screen
 

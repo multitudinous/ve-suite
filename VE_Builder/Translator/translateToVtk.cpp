@@ -32,6 +32,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
+#include <string>
 
 #include <vtkPointSet.h>
 #include <vtkStructuredGrid.h>
@@ -56,15 +57,15 @@
 using namespace VE_Util;
 
 // function declarations
-extern vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug );
-extern vtkStructuredGrid * reiReader( char * reiFileName, int debug );
-extern vtkUnstructuredGrid * en7Reader( char * caseFileName, 
+extern vtkUnstructuredGrid * avsReader( std::string fluentAVSFileName, int debug );
+extern vtkStructuredGrid * reiReader( std::string reiFileName, int debug );
+extern vtkUnstructuredGrid * en7Reader( std::string caseFileName, 
                             vtkTransform * transform, int number, int debug );
 
 // AVL FIRE/SWIFT data translator
-extern vtkUnstructuredGrid * fireReader( char * geomFile, char * dataFile, int debug );
+extern vtkUnstructuredGrid * fireReader( std::string geomFile, std::string dataFile, int debug );
 
-extern vtkUnstructuredGrid * mfixReader( char * mfixFileName, 
+extern vtkUnstructuredGrid * mfixReader( std::string mfixFileName, 
                   int nx, int ny, int nz, 
                   int retainEveryNthFrame, vtkTransform * transform, int debug );
 
@@ -80,7 +81,7 @@ starReader     *star;
 ansysReader * reader = NULL;
 tecplotReader * _tecPlotReader = NULL;
 
-char * preprocess( int argc, char *argv[], 
+std::string preprocess( int argc, char *argv[], 
                    int type, vtkTransform *aTransform, int & number ) 
 {
    int B_fname = 0;
@@ -105,7 +106,7 @@ char * preprocess( int argc, char *argv[],
 #ifdef SJK_TEST
       // set the fluent and star-cd defaults...
       char fullname [256];
-      char* path = getenv("VE_SUITE_HOME");
+      std::string path = getenv("VE_SUITE_HOME");
       //cout << "path is \"" << path << "\"" <<std::endl;
       if(path != NULL)
       {
@@ -244,12 +245,12 @@ char * preprocess( int argc, char *argv[],
          }
          else if (type == 2)    // star-cd input
          {
-           char * paramFile = fileIO::getReadableFileFromDefault( 
+           std::string paramFile = fileIO::getReadableFileFromDefault( 
                                             "the parameter file", "star.param" );
-           star = new starReader( paramFile );
+           star = new starReader( paramFile.c_str() );
            star->ReadParameterFile();
            star->SetDebugLevel( debug );
-           delete [] paramFile;
+           //delete [] paramFile;
          }
          else if (type == 3)    // rei input
          {
@@ -481,7 +482,7 @@ char * preprocess( int argc, char *argv[],
 // rotations.  Solution: use the rotation/translation settings in the
 // VE_Suite parameter file.
    
-   char * vtkFileName = NULL;
+   std::string vtkFileName;// = NULL;
 
 #ifndef SJK_TEST
    if ( argc > arg )
@@ -489,8 +490,10 @@ char * preprocess( int argc, char *argv[],
       number = fileIO::extractIntegerBeforeExtension( infilename );
       std::ostringstream dirStringStream;
       dirStringStream << "flowdata_" << number << ".vtk";
-      vtkFileName = new char [ strlen( dirStringStream.str().c_str() ) + 1 ];
-      strcpy( vtkFileName, dirStringStream.str().c_str() );
+      //vtkFileName = new char [ strlen( dirStringStream.str().c_str() ) + 1 ];
+      //strcpy( vtkFileName, dirStringStream.str().c_str() );
+      //std::string vtkFileName;
+      vtkFileName.assign( dirStringStream.str() );
       arg++;
    }
    else
@@ -499,12 +502,14 @@ char * preprocess( int argc, char *argv[],
       if ( type != 2 )
       {
          // Set the output filename
-         vtkFileName = fileIO::getWritableFile( "flowdata.vtk" );
+         //std::string vtkFileName;
+         vtkFileName.assign( fileIO::getWritableFile( "flowdata.vtk" ));
          number = -1;
       }
       else if ( type == 2 )
       {
-         vtkFileName = star->GetVTKFileName();
+         //std::string vtkFileName;
+         vtkFileName.assign(star->GetVTKFileName());
       }
    }
 
@@ -548,13 +553,13 @@ int main( int argc, char *argv[] )
 
    // Get preprocess settings (CFD filenames, factors) ...
    int number;
-   char * vtkFileName = NULL;
-   vtkTransform *aTransform = NULL;
+   std::string vtkFileName;// = NULL;
+   vtkTransform *aTransform;// = NULL;
    if ( (cfdType != 6) && (cfdType != 8) && (cfdType != 10) )
    {
       aTransform = vtkTransform::New();
       vtkFileName = preprocess( argc, argv, cfdType, aTransform, number );
-      if ( vtkFileName == NULL ) 
+      if ( vtkFileName.empty() );// == NULL ) 
          return 1;
    }
 
@@ -773,7 +778,7 @@ int main( int argc, char *argv[] )
       dumpVerticesNotUsedByCells( transformedPointset, vtkFileName );
    }
 
-   delete [] vtkFileName;
+   //delete [] vtkFileName;
    transformedPointset->Delete();
 
    if ( plot3d != NULL )

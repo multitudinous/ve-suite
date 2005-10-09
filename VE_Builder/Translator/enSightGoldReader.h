@@ -32,6 +32,8 @@
 #ifndef ENSIGHTGOLDREADER_H
 #define ENSIGHTGOLDREADER_H
 
+#include <string>
+
 class vtkGenericEnSightReader;
 class vtkCellDataToPointData;
 class vtkUnstructuredGrid;
@@ -44,7 +46,7 @@ class enSightGoldReader
       ~enSightGoldReader( void );
    
       // Simple translator that implements vtk's EnSightGoldReader
-      vtkUnstructuredGrid* GetUnstructuredGrid( char*, int );
+      vtkUnstructuredGrid* GetUnstructuredGrid( std::string, int );
 
    private:
       vtkGenericEnSightReader*   reader;

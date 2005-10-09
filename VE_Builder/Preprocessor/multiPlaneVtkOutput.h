@@ -32,6 +32,7 @@
 #ifndef MULTIPLANEVTKOUTPUT_H
 #define MULTIPLANEVTKOUTPUT_H
 
+#include <string>
 //class vtkUnstructuredGrid;
 class vtkDataSet;
 class vtkPolyData;
@@ -39,7 +40,7 @@ class vtkPolyData;
 class multiPlaneVtkOutput
 {
  public:
-   multiPlaneVtkOutput( char * dirname );
+   multiPlaneVtkOutput( std::string dirname );
 
    ~multiPlaneVtkOutput( );
 
@@ -56,7 +57,7 @@ class multiPlaneVtkOutput
                           int numProcs = 1 );
 
    void readParamFileandWriteMultiPlanes( vtkDataSet *, 
-                                          char *, 
+                                          std::string, 
                                           int multiPlaneOption = 0,
                                           int transientFileNumber = 0 );
 
@@ -69,7 +70,7 @@ class multiPlaneVtkOutput
 
    vtkDataSet *unsData;
 
-   char * postDataDir;
+   std::string postDataDir;
 };
 
 #endif

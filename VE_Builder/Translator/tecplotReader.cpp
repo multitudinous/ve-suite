@@ -40,13 +40,13 @@ void tecplotReader::allocateVariables()
       parameterData[ i ]->SetNumberOfTuples( 2*nX*nY );
    }
 }
-vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
+vtkUnstructuredGrid* tecplotReader::tecplotToVTK( std::string inFileName, int debug )
 {
    int numChars;
    numChars = 0;
    char tempChar; //temporary storage for character data
    //check existence of file
-   fileI.open( inFileName );
+   fileI.open( inFileName.c_str() );
    if ( fileI == NULL )
    {
       std::cout<<"Input file does not exist :"<<std::endl;

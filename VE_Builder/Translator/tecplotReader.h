@@ -45,6 +45,6 @@ class tecplotReader
    public:
          tecplotReader();
          ~tecplotReader();
-         vtkUnstructuredGrid* tecplotToVTK( char* inFileName, int debug );
+         vtkUnstructuredGrid* tecplotToVTK( std::string inFileName, int debug );
 };
 #endif //TECPLOTREADER_H

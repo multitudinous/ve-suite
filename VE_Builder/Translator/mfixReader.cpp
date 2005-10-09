@@ -45,7 +45,7 @@
 #include "VE_Xplorer/readWriteVtkThings.h"
 using namespace VE_Util;
 
-vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
+vtkUnstructuredGrid * mfixReader( std::string mfixFileName, int nx, int ny, int nz,
                                   int retainEveryNthFrame, vtkTransform * transform, int debug )
 {
 //debug = 1;
@@ -54,13 +54,13 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
    if ( debug ) std::cout << "mfix input file is " << mfixFileName << std::endl;
 
    FILE *inFile;
-   if((inFile=fopen(mfixFileName,"r"))==NULL)
+   if((inFile=fopen(mfixFileName.c_str(),"r"))==NULL)
    {
       std::cout << "ERROR: can't open file \"" << mfixFileName << "\", so exiting" << std::endl;
       return uGrid;
    }
 
-   char * ext = NULL;
+   std::string ext;// = NULL;
    ext = fileIO::getExtension( mfixFileName );
    if ( debug ) std::cout << "ext = " << ext << std::endl;
 
@@ -246,7 +246,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
    vtkFloatArray **dataArray = NULL;
    int numArrays = 0;
    int numComponents = 0;
-   if      ( !strcmp(ext,"SP1") )           // Void Fraction
+   if      ( !ext.compare("SP1") )//strcmp(ext,"SP1") )           // Void Fraction
    {
       numArrays = 1;
       numComponents = (int)( floatnumComponents + 0.5 ) / numArrays;
@@ -259,7 +259,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       }
       dataArray[0]->SetName("void_fraction");
    }
-   else if ( !strcmp(ext,"SP2") )           // Gas Pressure, solids pressure
+   else if ( !ext.compare("SP2") )//strcmp(ext,"SP2") )           // Gas Pressure, solids pressure
    {
       numArrays = 2;
       numComponents = (int)( floatnumComponents + 0.5 ) / numArrays;
@@ -273,7 +273,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       dataArray[0]->SetName("gas_pressure");
       dataArray[1]->SetName("solids_pressure");
    }
-   else if ( !strcmp(ext,"SP3") )          // Gas Velocity (U_g, V_g, W_g)
+   else if ( !ext.compare("SP3") )//strcmp(ext,"SP3") )          // Gas Velocity (U_g, V_g, W_g)
    {
       numArrays = 1;
       numComponents = (int)( floatnumComponents + 0.5 ) / numArrays;
@@ -286,7 +286,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       }
       dataArray[0]->SetName("gas_velocity");
    }
-   else if ( !strcmp(ext,"SP4") )          // Solid Velocity (U_s, V_s, W_s)
+   else if ( !ext.compare("SP4") )//strcmp(ext,"SP4") )          // Solid Velocity (U_s, V_s, W_s)
    {
       numArrays = 1;
       numComponents = (int)( floatnumComponents + 0.5 ) / numArrays;
@@ -299,7 +299,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       }
       dataArray[0]->SetName("solid_velocity");
    }
-   else if ( !strcmp(ext,"SP5") )           // Solid density
+   else if ( !ext.compare("SP5") )//strcmp(ext,"SP5") )           // Solid density
    {
       numArrays = 1;
       numComponents = (int)( floatnumComponents + 0.5 ) / numArrays;
@@ -312,7 +312,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       }
       dataArray[0]->SetName("solid_density");
    }
-   else if ( !strcmp(ext,"SP6") )          // Gas and Solids temperature (T_g, T_s1, T_s2)
+   else if ( !ext.compare("SP6") )//strcmp(ext,"SP6") )          // Gas and Solids temperature (T_g, T_s1, T_s2)
    {
       numArrays = 3;
       numComponents = (int)( floatnumComponents + 0.5 ) / numArrays;
@@ -327,7 +327,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       dataArray[1]->SetName("solid_1_temp");
       dataArray[2]->SetName("solid_2_temp");
    }
-   else if ( !strcmp(ext,"SP7") )                // Gas and Solids mass fractions (X_g, X_s)
+   else if ( !ext.compare("SP7") )//strcmp(ext,"SP7") )                // Gas and Solids mass fractions (X_g, X_s)
    {
       numArrays = 2;
       numComponents = (int)( floatnumComponents + 0.5 ) / numArrays;
@@ -341,7 +341,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       dataArray[0]->SetName("gas_mass_fraction");
       dataArray[1]->SetName("solids_mass_fraction");
    }
-   else if ( !strcmp(ext,"SP8") )         // Granular temperature
+   else if ( !ext.compare("SP8") )//strcmp(ext,"SP8") )         // Granular temperature
    {
       numArrays = 1;
       numComponents = (int)( floatnumComponents + 0.5 ) / numArrays;
@@ -548,7 +548,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       // write a vtk file
       std::ostringstream dirStringStream;
       dirStringStream << "ugrid_" << ext << "_" << writtenTimeStep << ".vtk";
-      writeVtkThing( transFilter->GetOutput(), (char*)dirStringStream.str().c_str(), 0 );   //0=ascii
+      writeVtkThing( transFilter->GetOutput(), (std::string)dirStringStream.str().c_str(), 0 );   //0=ascii
       uGrid->Delete();
 
 //      for ( i=0; i<numArrays; i++)
@@ -574,7 +574,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
 
    delete [] rawData;      rawData = NULL;
    delete [] scalarData;   scalarData = NULL;
-   delete [] ext;
+   //delete [] ext;
 
    std::cout << "returning uGrid = NULL" << std::endl;
    uGrid = NULL;

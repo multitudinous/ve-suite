@@ -62,11 +62,11 @@ enum DataTypes
 
 int TestString( std::string &, std::string & ,int &);
 int ExitReader( void );
-vtkUnstructuredGrid * fireReader( char * geomFile, char * dataFile, int debug )
+vtkUnstructuredGrid * fireReader( std::string geomFile, std::string dataFile, int debug )
 {
    vtkUnstructuredGrid * uGrid = NULL;
    
-   std::ifstream geomIn( geomFile, std::ios::in ); 
+   std::ifstream geomIn( geomFile.c_str(), std::ios::in ); 
  
    if ( geomIn == NULL )
    {
@@ -234,7 +234,7 @@ vtkUnstructuredGrid * fireReader( char * geomFile, char * dataFile, int debug )
   std::cout << "\nReading solution data...\n";
   std::cout.flush();
   
-   std::ifstream dataIn( dataFile, std::ios::in ); 
+   std::ifstream dataIn( dataFile.c_str(), std::ios::in ); 
 
    int numVectors;
    int numScalars;

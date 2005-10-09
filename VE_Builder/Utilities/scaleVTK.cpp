@@ -49,11 +49,11 @@ int main( int argc, char *argv[] )
 
    // If the command line contains an input vtk file name and an output file,
    // set them up.  Otherwise, get them from the user...
-	char *inFileName = NULL;
-	char *outFileName = NULL;
+	std::string inFileName;// = NULL;
+	std::string outFileName;// = NULL;
    fileIO::processCommandLineArgs( argc, argv, 
                "scale geometry AND vector data in", inFileName, outFileName );
-   if ( ! inFileName ) return 1;
+   if ( ! inFileName.c_str() ) return 1;
    int arg = 3;
 
    vtkDataSet * dataset = readVtkThing( inFileName, printInfoToScreen );
@@ -170,14 +170,14 @@ int main( int argc, char *argv[] )
    {
       std::cout <<"\nERROR - can only scale vtkPointSets" << std::endl;
       dataset->Delete();
-      delete [] inFileName;   inFileName = NULL;
-      delete [] outFileName;  outFileName = NULL;
+      inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+      outFileName.erase();//delete [] outFileName;  outFileName = NULL;
       return 1;
    }
 
    dataset->Delete();
-   delete [] inFileName;   inFileName = NULL;
-   delete [] outFileName;  outFileName = NULL;
+   inFileName.erase();//delete [] inFileName;   inFileName = NULL;
+   outFileName.erase();//delete [] outFileName;  outFileName = NULL;
 
    return 0;
 }
