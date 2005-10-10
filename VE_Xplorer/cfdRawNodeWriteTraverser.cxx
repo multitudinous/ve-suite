@@ -311,7 +311,7 @@ void cfdRawNodeWriteTraverser::writeFile()
       _traverseNode(_root);
       _sequenceIndex = 0;
 #elif _OSG
-   if(_fName && _root.get()){
+   if(_fName.c_str() && _root.get()){
       _traverseNode(_root.get());
       //this may not work
       osgDB::writeNodeFile(*_root.get(),_fName);
