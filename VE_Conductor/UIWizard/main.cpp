@@ -424,7 +424,7 @@ void GenCode_UI_Plugin()
       {
 	//Let print out the member variables;
 	for (i=0; i<Double_name.size(); i++)
-	  fprintf(f_h, "  double %s;\n", Double_name[i].c_str());
+      fprintf(f_h, "  double %s;\n", Double_name[i].c_str());
 	for (i=0; i<String_name.size(); i++)
 	  fprintf(f_h, "  std::string %s;\n", String_name[i].c_str());
 	for (i=0; i<Int_name.size(); i++)
@@ -468,11 +468,17 @@ void GenCode_UI_Plugin()
 	fprintf(f_cpp, "{\n");
 	//Let print out the Register of member variables;
 	for (i=0; i<Double_name.size(); i++)
-	  fprintf(f_cpp, "  RegistVar(\"%s\", &%s);\n", Double_name[i].c_str(), Double_name[i].c_str());
+   {
+      fprintf(f_cpp, "  RegistVar(\"%s\", &%s);\n", Double_name[i].c_str(), Double_name[i].c_str());
+      fprintf(f_cpp, "  \%s = 0.0f;\n", Double_name[i].c_str() );
+   }
 	for (i=0; i<String_name.size(); i++)
 	  fprintf(f_cpp, "  RegistVar(\"%s\", &%s);\n", String_name[i].c_str(), String_name[i].c_str());
 	for (i=0; i<Int_name.size(); i++)
-	  fprintf(f_cpp, "  RegistVar(\"%s\", &%s);\n", Int_name[i].c_str(), Int_name[i].c_str());
+   {
+      fprintf(f_cpp, "  RegistVar(\"%s\", &%s);\n", Int_name[i].c_str(), Int_name[i].c_str());
+      fprintf(f_cpp, "  \%s = 0;\n", Int_name[i].c_str() );
+   }
 	for (i=0; i<Double1D_name.size(); i++)
 	  fprintf(f_cpp, "  RegistVar(\"%s\", &%s);\n", Double1D_name[i].c_str(), Double1D_name[i].c_str());
 	for (i=0; i<String1D_name.size(); i++)
