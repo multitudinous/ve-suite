@@ -1194,14 +1194,19 @@ void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string
    WIN32_FIND_DATA fileData;
 
    //get the current working directory
-   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL){
+   //if ((cwd.c_str() = _getcwd(buffer, _MAX_PATH)) == NULL){
+   if (_getcwd(buffer, _MAX_PATH) == NULL){
       std::cerr << "Couldn't get the current working directory!" << std::endl;
       return;
+   }
+   else 
+   {
+      cwd = _getcwd(buffer, _MAX_PATH);
    }
    
    // Get the proper directory path for transient files
    //sprintf(directoryPath, "%s\\*", directory);
-   strcpy(directoryPath,directory);
+   strcpy(directoryPath,directory.c_str());
    
    //change to directory
    _chdir(directoryPath);
@@ -1248,13 +1253,13 @@ void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string
       }
    }
    FindClose( hList );
-   _chdir( cwd );
+   _chdir( cwd.c_str() );
    char tempDir[1024];
-   strcpy(tempDir,cwd);
+   strcpy(tempDir,cwd.c_str());
    strcat(tempDir,"/");
-   strcat(tempDir,preComputedDir);
+   strcat(tempDir,preComputedDir.c_str());
    char tempName[1024];
-   strcpy(tempName,preComputedDir);
+   strcpy(tempName,preComputedDir.c_str());
    strcat(tempName,"*");
    //get the first file
    hList2 = FindFirstFile(tempName, &fileData);
@@ -1273,7 +1278,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string
       {
          //add the file name to our data list
          //assume all vtk files in this directory are part of the sequence
-         if(strstr(fileData.cFileName,preComputedDir ))
+         if(strstr(fileData.cFileName,preComputedDir.c_str() ))
          {
             std::string pathAndFileName;// = new char[
             //      strlen(cwd) + strlen(fileData.cFileName) + 2 ];

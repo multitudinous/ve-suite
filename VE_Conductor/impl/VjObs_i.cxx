@@ -139,7 +139,7 @@ void VjObs_i::CreateDatasetInfo( void )
             for ( CORBA::ULong j=0; j < numDatasets; j++ )
             {
                (*_models)[ i ].dataVector[ j ].datasetname = CORBA::string_dup( 
-                          temp->GetCfdDataSet( j )->GetFileName() );
+                          temp->GetCfdDataSet( j )->GetFileName().c_str() );
                vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << (*_models)[ i ].dataVector[ j ].datasetname
                              << std::endl << vprDEBUG_FLUSH;
 
@@ -154,7 +154,7 @@ void VjObs_i::CreateDatasetInfo( void )
                {
                   //Set scalar name
                   (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarnames = CORBA::string_dup(
-                    temp->GetCfdDataSet( j )->GetScalarName( k ) );
+                    temp->GetCfdDataSet( j )->GetScalarName( k ).c_str() );
                   // Then get scalar range for a particular scalar
                   temp->GetCfdDataSet( j )->SetActiveScalar( (int)k );
                   double* range = temp->GetCfdDataSet( j )->GetRange();
@@ -176,7 +176,7 @@ void VjObs_i::CreateDatasetInfo( void )
                for (CORBA::ULong k=0; k < (unsigned int)num_vectors; k++ )
                {
                   (*_models)[ i ].dataVector[ j ].vectornames[ k ] = CORBA::string_dup(
-                    temp->GetCfdDataSet( j )->GetVectorName( k ) );
+                    temp->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
                   vprDEBUG(vprDBG_ALL,1) << "\tvec_name : " << (*_models)[ i ].dataVector[ j ].vectornames[ k ]
                                 << std::endl << vprDEBUG_FLUSH;
                }
@@ -199,7 +199,7 @@ void VjObs_i::CreateDatasetInfo( void )
                         << j << " ) = " << temp->GetGeomDataSet( j )->GetFilename() 
                         << std::endl << vprDEBUG_FLUSH;
                   (*_models)[ i ].geometrynames[ j ] = CORBA::string_dup(
-                                  temp->GetGeomDataSet( j )->GetFilename() );
+                                  temp->GetGeomDataSet( j )->GetFilename().c_str() );
             }
          }
       }
@@ -225,7 +225,7 @@ void VjObs_i::CreateTeacherInfo( void )
       for(CORBA::ULong i = 0; i < (unsigned int)numTeacherArrays; i++)
       {
          this->teacher_name[ i ] = CORBA::string_dup(
-                                        cfdEnvironmentHandler::instance()->GetTeacher()->getFileName( i ) );
+                                        cfdEnvironmentHandler::instance()->GetTeacher()->getFileName( i ).c_str() );
       }
    }
 }
@@ -833,7 +833,7 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
       for ( CORBA::ULong i = 0; i < numberOfSounds; i++)
       {
          this->sound_names[ i ] = CORBA::string_dup( 
-                     cfdEnvironmentHandler::instance()->GetSoundHandler()->GetSoundFilename( i ) );
+                     cfdEnvironmentHandler::instance()->GetSoundHandler()->GetSoundFilename( i ).c_str() );
       }
    }
    else
