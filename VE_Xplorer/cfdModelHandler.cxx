@@ -1194,14 +1194,11 @@ void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string
    WIN32_FIND_DATA fileData;
 
    //get the current working directory
-   //if ((cwd.c_str() = _getcwd(buffer, _MAX_PATH)) == NULL){
-   if (_getcwd(buffer, _MAX_PATH) == NULL){
+   cwd = _getcwd(buffer, _MAX_PATH);
+   if ( cwd.empty() )
+   {
       std::cerr << "Couldn't get the current working directory!" << std::endl;
       return;
-   }
-   else 
-   {
-      cwd = _getcwd(buffer, _MAX_PATH);
    }
    
    // Get the proper directory path for transient files
