@@ -1,13 +1,6 @@
-
-#ifdef WIN32
-#pragma warning(disable : 4786)
-#pragma warning(disable : 4101)
-#pragma warning(disable : 4503)
-#pragma warning(disable : 4251)
-#endif
-
 #include "GLCanvasSample.h"
 #include "GLCanvasSample_UI_Dialog.h"
+#include "sampleglcanvas.xpm"
 
 IMPLEMENT_DYNAMIC_CLASS(GLCanvasSample, REI_Plugin)
 
@@ -20,8 +13,7 @@ GLCanvasSample
   RegistVar("width", &width);
   RegistVar("type", &type);
 
-	wxString icon_file="Icons/sampleglcanvas.GIF";
-  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  wxImage my_img( sampleglcanvas_xpm );
   icon_w = my_img.GetWidth();
   icon_h = my_img.GetHeight();
   my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));

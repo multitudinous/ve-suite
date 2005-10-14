@@ -1,5 +1,9 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLCanvasSample_GUI", "GLCanvasSample.vcproj", "{0D29C965-1C45-4EB3-8421-302A1D2F4548}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLCanvasSample_GUI", "GLCanvasSampleUIPlugin\GLCanvasSample.vcproj", "{0D29C965-1C45-4EB3-8421-302A1D2F4548}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLCanvasSampleUnit", "GLCanvasSampleUnit\GLCanvasSampleUnit.vcproj", "{DB38F0AB-B670-421C-9368-F629F0088A13}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -13,6 +17,10 @@ Global
 		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Debug.Build.0 = Debug|Win32
 		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Release.ActiveCfg = Release|Win32
 		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Release.Build.0 = Release|Win32
+		{DB38F0AB-B670-421C-9368-F629F0088A13}.Debug.ActiveCfg = Debug|Win32
+		{DB38F0AB-B670-421C-9368-F629F0088A13}.Debug.Build.0 = Debug|Win32
+		{DB38F0AB-B670-421C-9368-F629F0088A13}.Release.ActiveCfg = Release|Win32
+		{DB38F0AB-B670-421C-9368-F629F0088A13}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
