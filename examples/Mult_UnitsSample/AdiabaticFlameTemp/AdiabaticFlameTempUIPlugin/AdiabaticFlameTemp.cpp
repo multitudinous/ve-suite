@@ -1,5 +1,6 @@
 #include "AdiabaticFlameTemp.h"
 #include "AdiabaticFlameTemp_UI_Dialog.h"
+#include "Adiab_Flame_Temp_Mod.xpm"
 
 IMPLEMENT_DYNAMIC_CLASS(AdiabaticFlameTemp, REI_Plugin)
 
@@ -12,8 +13,7 @@ AdiabaticFlameTemp
 
    perc_theor_error = 0;
 
-   wxString icon_file="Icons/Adiab_Flame_Temp_Mod.GIF";
-   wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+   wxImage my_img( Adiab_Flame_Temp_Mod_xpm );
    icon_w = my_img.GetWidth();
    icon_h = my_img.GetHeight();
    my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));

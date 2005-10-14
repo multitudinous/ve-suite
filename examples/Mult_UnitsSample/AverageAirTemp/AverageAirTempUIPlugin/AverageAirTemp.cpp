@@ -1,5 +1,6 @@
 #include "AverageAirTemp.h"
 #include "AverageAirTemp_UI_Dialog.h"
+#include "Aver_Air_Temp_Mod.xpm"
 
 IMPLEMENT_DYNAMIC_CLASS(AverageAirTemp, REI_Plugin)
 
@@ -20,8 +21,7 @@ AverageAirTemp
   airinlettemp = 0;
   intakelength = 0;
 
-  wxString icon_file="Icons/Aver_Air_Temp_Mod.GIF";
-  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  wxImage my_img( Aver_Air_Temp_Mod_xpm );
   icon_w = my_img.GetWidth();
   icon_h = my_img.GetHeight();
   my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
