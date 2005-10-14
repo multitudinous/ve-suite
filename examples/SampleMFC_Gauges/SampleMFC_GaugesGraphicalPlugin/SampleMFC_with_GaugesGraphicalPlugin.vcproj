@@ -102,7 +102,7 @@
 				Description="IDL Compiler"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="VE_ConductorLib_d.lib GraphicalPlugin_tao_osg_d.lib VE_XplorerLib_tao_pf_d.lib VE_SceneGraph_pf_d.lib vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
+				AdditionalDependencies="VE_ConductorLib_d.lib GraphicalPlugin_tao_pf_d.lib VE_XplorerLib_tao_pf_d.lib VE_SceneGraph_pf_d.lib vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
 				ShowProgress="0"
 				OutputFile="..\Plugins\win32\SampleMFC_with_GaugesGraphicalPlugin_tao_pf_d.dll"
 				LinkIncremental="1"
