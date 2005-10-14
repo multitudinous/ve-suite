@@ -1,0 +1,5 @@
+1                    // the number of objects to follow
+0                    // OPTIONAL world DCS settings
+   1 1 1             // Scale values
+   0 0 0             // Translation values
+   0 0 0            // Rotation values (Z-X-Y format)

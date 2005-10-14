@@ -64,22 +64,20 @@ VEAverageAirTempGraphicalPlugin::VEAverageAirTempGraphicalPlugin( void ) : cfdVE
 {
   _objectName ="AverageAirTemp"; // Needs to match plugin name
    //_onSceneGraph = false;
-   _param = NULL;
+   _param.clear();
 }
 
 // Destructor
 VEAverageAirTempGraphicalPlugin::~VEAverageAirTempGraphicalPlugin( void )
 {
-   if ( _param )
-      delete [] _param;
+   if ( !_param.empty() )
+      _param.clear();
 }
 
 void VEAverageAirTempGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   this->_param = new char[100];
-   strcpy( this->_param, "./Plugins/vrxpr.param");
-   //cout << _param << endl;
+   _param.assign( "./Plugins/nogeom.param" );
    CreateObjects();
 }
 

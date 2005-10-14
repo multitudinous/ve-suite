@@ -64,22 +64,20 @@ VEAdiabaticFlameTempGraphicalPlugin::VEAdiabaticFlameTempGraphicalPlugin( void )
 {
   _objectName ="AdiabaticFlameTemp"; // Needs to match plugin name
    //_onSceneGraph = false;
-   _param = NULL;
+   _param.clear();
 }
 
 // Destructor
 VEAdiabaticFlameTempGraphicalPlugin::~VEAdiabaticFlameTempGraphicalPlugin( void )
 {
-   if ( _param )
-      delete [] _param;
+   if ( !_param.empty() )
+      _param.clear();
 }
 
 void VEAdiabaticFlameTempGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   //this->_param = new char[100];
-   //strcpy( this->_param, "./Plugins/AdiabaticFlameTempGraphicalPlugin.param");
-   //cout << _param << endl;
+   _param.assign( "./Plugins/vrxpr.param" );
    CreateObjects();
 }
 
