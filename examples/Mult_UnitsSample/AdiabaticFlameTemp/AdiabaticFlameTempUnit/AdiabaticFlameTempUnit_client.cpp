@@ -56,39 +56,27 @@ BOOL CAdiabaticFlameTempApp::InitInstance()
       exit(1);
    }
 
-   int argc;
+   int argc = 1;
    char** argv;
-   // Look at inherited string to see if commandline args were supplied
-   if ( m_lpCmdLine[0] == _T('\0') )
-   {
-      //AfxMessageBox("No Commandline args: using localhost");
-      // If commandline has no arguments use localhost as the default...
-      argc = 3;
-      argv = new char*[ argc ];
-      argv[ 0 ] = "project";
-      argv[ 1 ] = "-ORBInitRef";
-      argv[ 2 ] = "NameService=corbaloc:iiop:localhost:1234/NameService";
-   }
-   else
-   {
-      //AfxMessageBox("Will use commandline args to determine machine and port number");
-      // use commandline arguments for machine and port number...
-      argc = 3;
-      argv = new char*[ argc ];
-      argv[ 0 ] = "project";
+   std::vector< char* > cmdargs;
 
-      char * pch = strtok (m_lpCmdLine," "); // separate words by spaces
-      int i = 1;
-      while (pch != NULL)
-      {
-         argv[ i ] = new char [ strlen(pch)+1 ];
-         strcpy( argv[ i ], pch );
-         //AfxMessageBox(argv[ i ]);
-         pch = strtok (NULL, " ");
-         i++;
-      }
-      if ( i != 3 )
-         exit(1);
+   char* pch = strtok( m_lpCmdLine, " " ); // separate words by spaces
+
+   cmdargs.push_back( "project" );
+
+   while ( pch != NULL )
+   {     
+      cmdargs.push_back( pch );
+      pch = strtok( NULL, " " );
+      argc++;
+   }
+
+   argv = new char*[ argc ];
+
+   for ( int i=0; i<argc; i++ )
+   {
+      argv[ i ] = new char [ strlen( cmdargs.at( i ) ) + 1 ];
+      strcpy( argv[ i ], cmdargs.at( i ) );
    }
 
    std::string UNITNAME = "AdiabaticFlameTemp";

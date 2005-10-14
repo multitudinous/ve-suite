@@ -36,6 +36,6 @@ public:
 	CRange oRange;
 	LPDISPATCH lpDisp;
 
-	const char* fileName;
+	char* fileName;
 	double airexittemp;
 };

@@ -1,7 +1,8 @@
 REM Specify the environment variables
-call ..\VE_Suite\VE_Installer\setup.bat
+call ..\..\VE_Installer\setup.bat
 
 cd C:\TSVEG\VE_Suite\examples\Mult_UnitsSample\units
 
-AdiabaticFlameTempUnit.exe -ORBInitRef NameService=corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService
+start AdiabaticFlameTempUnit.exe -ORBInitRef NameService=corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService
+start AverageAirTempUnit.exe -ORBInitRef NameService=corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService
 cmd

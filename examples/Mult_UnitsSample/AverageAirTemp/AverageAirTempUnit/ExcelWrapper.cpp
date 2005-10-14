@@ -1,13 +1,25 @@
 #include "StdAfx.h"
 #include "ExcelWrapper.h"
+#include <direct.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 ExcelWrapper::ExcelWrapper(void)
 {
 	airexittemp = 0.0;
 
-	fileName = new const char;
+	fileName = new char [ 256 ];
 	
-	fileName = "C:\\TSVEG\\VE_Suite\\examples\\Mult_UnitsSample\\AverageAirTemp\\AverageAirTempUnit\\AverageAirTemp.xls";
+	//fileName = "C:\\TSVEG\\VE_Suite\\examples\\Mult_UnitsSample\\AverageAirTemp\\AverageAirTempUnit\\AverageAirTemp.xls";
+
+   char buffer[_MAX_PATH];
+
+    //get the current working directory
+    _getcwd(buffer, _MAX_PATH);
+    std::string filenameString = std::string( buffer ) + std::string( "\\AverageAirTemp.xls" );
+    strcpy( this->fileName, filenameString.c_str() );
 }
 
 ExcelWrapper::~ExcelWrapper(void)
