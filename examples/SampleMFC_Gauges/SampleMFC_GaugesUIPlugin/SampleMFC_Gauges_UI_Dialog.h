@@ -3,6 +3,7 @@
 #include "VE_Conductor/Framework/UIDialog.h"
 #include <vector>
 #include <string>
+#include <wx/wx.h>
 
 using namespace std;
 

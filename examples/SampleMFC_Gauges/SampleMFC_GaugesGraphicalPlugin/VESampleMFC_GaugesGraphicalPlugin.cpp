@@ -65,23 +65,21 @@ VESampleMFC_GaugesGraphicalPlugin::VESampleMFC_GaugesGraphicalPlugin( void ) : c
 {
   _objectName ="SampleMFC_Gauges"; // Needs to match plugin name
    //_onSceneGraph = false;
-   _param = NULL;
+  _param.clear();
 }
 
 // Destructor
 VESampleMFC_GaugesGraphicalPlugin::~VESampleMFC_GaugesGraphicalPlugin( void )
 {
-   if ( _param )
-      delete [] _param;
+   if ( !_param.empty() )
+      _param.clear();
 }
 
 void VESampleMFC_GaugesGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 {
    int gauge_type = 1;
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   this->_param = new char[100];
-   strcpy( this->_param, "./Plugins/vrxpr.param");
-   //cout << _param << endl;
+   _param.assign( "./Plugins/vrxpr.param" );
    cfdGroup* rootNode = (cfdGroup*)(veworldDCS->GetParent( 0 ));
    gauge = new cfdDigitalAnalogGauge( rootNode );
    gauge->SetGaugeName( "Sample MFC Display" );

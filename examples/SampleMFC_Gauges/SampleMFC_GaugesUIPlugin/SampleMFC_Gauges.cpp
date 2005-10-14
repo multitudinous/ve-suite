@@ -1,13 +1,6 @@
-
-#ifdef WIN32
-#pragma warning(disable : 4786)
-#pragma warning(disable : 4101)
-#pragma warning(disable : 4503)
-#pragma warning(disable : 4251)
-#endif
-
 #include "SampleMFC_Gauges.h"
 #include "SampleMFC_Gauges_UI_Dialog.h"
+#include "samplemfcgauge.xpm"
 
 IMPLEMENT_DYNAMIC_CLASS(SampleMFC_Gauges, REI_Plugin)
 
@@ -21,8 +14,7 @@ SampleMFC_Gauges
 	RegistVar("int2", &int2);
   RegistVar("dbllist", &dbllist);
 
-  wxString icon_file="Icons/samplemfcgauge.GIF";
-  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  wxImage my_img( samplemfcgauge_xpm );
   icon_w = my_img.GetWidth();
   icon_h = my_img.GetHeight();
   my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));

@@ -1,5 +1,10 @@
 #include "StdAfx.h"
 #include "ExcelWrapper.h"
+#include <direct.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 ExcelWrapper::ExcelWrapper(void)
 {
@@ -7,9 +12,14 @@ ExcelWrapper::ExcelWrapper(void)
 	calc2 = 0.0;
 	calc3 = 0.0;
 
-	fileName = new const char;
+   fileName = new char [ 256 ];
 	
-	fileName = "C:\\TSVEG\\CAS\\sampleapps\\SampleMFC_Gauges\\SampleMFC_GaugesUnit\\SampleMFC.xls";
+   char buffer[_MAX_PATH];
+
+    //get the current working directory
+    _getcwd(buffer, _MAX_PATH);
+    std::string filenameString = std::string( buffer ) + std::string( "\\SampleMFC.xls" );
+    strcpy( this->fileName, filenameString.c_str() );
 }
 
 ExcelWrapper::~ExcelWrapper(void)

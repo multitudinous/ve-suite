@@ -87,7 +87,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
-				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;WXUSINGDLL;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE"
+				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;WXUSINGDLL;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VE_USER_PLUGIN_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -102,9 +102,9 @@
 				Description="IDL Compiler"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="VE_ConductorLib_d.lib GraphicalPlugin_tao_osg_d.lib vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
+				AdditionalDependencies="VE_ConductorLib_d.lib GraphicalPlugin_tao_osg_d.lib VE_XplorerLib_tao_pf_d.lib VE_SceneGraph_pf_d.lib vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
 				ShowProgress="0"
-				OutputFile="..\Plugin\win32\SampleMFC_with_GaugesGraphicalPlugin_tao_pf_d.dll"
+				OutputFile="..\Plugins\win32\SampleMFC_with_GaugesGraphicalPlugin_tao_pf_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
@@ -152,7 +152,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\include&quot;;./;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;;&quot;$(VE_SUITE_HOME)&quot;"
-				PreprocessorDefinitions="_DEBUG;_OSG;VTK44;WIN32;_CONSOLE;_WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;_TAO"
+				PreprocessorDefinitions="_DEBUG;_OSG;VTK44;WIN32;_CONSOLE;_WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;_TAO;VE_USER_PLUGIN_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -169,9 +169,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="VE_ConductorLib_d.lib GraphicalPlugin_tao_osg_d.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib wxmsw26d_core.lib wxbase26d.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib"
+				AdditionalDependencies="VE_ConductorLib_d.lib GraphicalPlugin_tao_osg_d.lib VE_XplorerLib_tao_osg_d.lib VE_SceneGraph_osg_d.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB406_rtd.lib omnithread31_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib wxmsw26d_core.lib wxbase26d.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib"
 				ShowProgress="0"
-				OutputFile="..\Plugin\win32\SampleMFC_with_GaugesGraphicalPlugin_tao_osg_d.dll"
+				OutputFile="..\Plugins\win32\SampleMFC_with_GaugesGraphicalPlugin_tao_osg_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
@@ -214,14 +214,14 @@
 			Name="src"
 			Filter=".cpp">
 			<File
-				RelativePath=".\VESampleMFC_with_GaugesGraphicalPlugin.cpp">
+				RelativePath=".\VESampleMFC_GaugesGraphicalPlugin.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="headers"
 			Filter=".h">
 			<File
-				RelativePath=".\VESampleMFC_with_GaugesGraphicalPlugin.h">
+				RelativePath=".\VESampleMFC_GaugesGraphicalPlugin.h">
 			</File>
 		</Filter>
 		<Filter
@@ -232,4 +232,3 @@
 	<Globals>
 	</Globals>
 </VisualStudioProject>
-
