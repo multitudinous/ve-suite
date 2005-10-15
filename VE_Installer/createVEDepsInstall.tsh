@@ -96,6 +96,14 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
    cp -RD ${VJ_DEPS_DIR}/lib32/* ./vrJuggler-2.0.1/lib32/.
    cp -RD ${VJ_DEPS_DIR}/bin ./vrJuggler-2.0.1
+else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
+   echo "Copying Juggler from:" ${VJ_BASE_DIR}
+   cp -Rd ${VJ_BASE_DIR}/lib64 ./vrJuggler-2.0.1/lib
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.0.1
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.0.1
+   echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
+   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggler-2.0.1
+   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggler-2.0.1
 else
    echo "Copying Juggler from:" ${VJ_BASE_DIR}
    cp -Rd ${VJ_BASE_DIR}/lib ./vrJuggler-2.0.1
@@ -130,6 +138,8 @@ endif
 echo "Copying ACE from:" ${ACE_HOME}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp -RD ${ACE_HOME}/IRIX32/lib/* ./bin
+else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
+   cp -Rd ${ACE_HOME}/Linux64/lib/* ./bin
 else 
    cp -Rd ${ACE_HOME}/Linux/lib/* ./bin
 endif
@@ -140,6 +150,11 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp -RD ${TAO_HOME}/IRIX32/lib/* ./bin
    cp -RD ${TAO_HOME}/IRIX32/bin/NameService ./bin
    cp -RD ${TAO_HOME}/IRIX32/bin/Naming_Service ./bin
+else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
+   cp -Rd ${TAO_HOME}/Linux64/lib/* ./bin
+   cp -Rd ${TAO_HOME}/Linux64/bin/NameService ./bin
+   cp -Rd ${TAO_HOME}/Linux64/bin/Naming_Service ./bin
+   cp -Rd ${ACE_HOME}/Linux64/lib/* ./bin
 else 
    cp -Rd ${TAO_HOME}/Linux/lib/* ./bin
    cp -Rd ${TAO_HOME}/Linux/bin/NameService ./bin
@@ -151,10 +166,15 @@ echo "Copying OSG from: " ${OSG_HOME}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp ${OSG_HOME}/lib32/*.so ./bin
    cp ${OSG_HOME}/lib32/osgPlugins/*.so ./bin
+else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
+   cp ${OSG_HOME}/lib64/*.so ./bin
+   cp ${OSG_HOME}/lib64/osgPlugins/*.so ./bin
+   cp ${OSG_HOME}/lib/*.so ./bin
 else 
    cp ${OSG_HOME}/lib/*.so ./bin
    cp ${OSG_HOME}/lib/osgPlugins/*.so ./bin
 endif
+
 echo "Creating tar.gz file..."
 #write the tar file in the install directory
 cd ${VE_TEMP_DEPS_INST_DIR}
