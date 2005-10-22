@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/UIDialog.h"
+//#include <wx/window.h>
 
 UIDialog::UIDialog(wxWindow* parent, int id, wxString title)
   :wxDialog(parent, id, title)

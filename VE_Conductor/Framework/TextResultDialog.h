@@ -37,6 +37,7 @@
 
 class wxButton;
 class TexTable;
+//class wxString;
 
 class VE_GUIPLUGINS_EXPORTS TextResultDialog : public UIDialog
 {

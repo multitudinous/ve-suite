@@ -33,7 +33,6 @@
 #define UIDIALOG_H
 
 #include <wx/dialog.h>
-#include <wx/notebook.h>
 #include <wx/string.h>
 
 class wxWindow;

@@ -32,7 +32,12 @@
 #ifndef FINANCIALDIALOG_H
 #define FINANCIALDIALOG_H
 
-#include <wx/wx.h>
+#include <wx/dialog.h>
+#include <wx/string.h>
+
+class wxRadioButton;
+class wxTextCtrl;
+class wxButton;
 
 enum 
 {

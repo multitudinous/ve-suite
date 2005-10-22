@@ -41,6 +41,8 @@
 #include "VE_Conductor/Framework/TexTable.h"
 #include "VE_Conductor/Framework/GeometryDataBuffer.h"
 
+#include <wx/dc.h>
+
 IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxObject )
 
 /////////////////////////////////////////////////////////////////////////////
