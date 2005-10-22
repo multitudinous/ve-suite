@@ -98,7 +98,7 @@ srcdir= .
 # turn off dependencies for idl stuff, make clean
 NO_DEPEND= YES
 
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 
 # One of these must be uncommented.
@@ -106,7 +106,7 @@ DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
-EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
+#EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
 EXTRA_LIBS+= -shared
 
