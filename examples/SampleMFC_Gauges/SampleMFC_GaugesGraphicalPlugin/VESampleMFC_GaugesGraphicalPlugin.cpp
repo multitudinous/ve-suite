@@ -83,7 +83,8 @@ void VESampleMFC_GaugesGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
    cfdGroup* rootNode = (cfdGroup*)(veworldDCS->GetParent( 0 ));
    gauge = new cfdDigitalAnalogGauge( rootNode );
    gauge->SetGaugeName( "Sample MFC Display" );
-	gauge->SetPosition( -17.0f, -19.0f, 23.0f );
+	//gauge->SetPosition( -17.0f, -19.0f, 23.0f );
+   gauge->SetPosition( -5.0f, -20.0f, 20.0f );
 	gauge->SetOrientation( 0.0, 90.0, 0.0 );
 	gauge->SetDigitalPrecision( 3 );
 	gauge->Display(gauge_type );

@@ -37,8 +37,8 @@ Global
 		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.Release.Build.0 = Release|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Debug.ActiveCfg = osg_tao_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Debug.Build.0 = osg_tao_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_dbg.ActiveCfg = pf_tao_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_dbg.Build.0 = pf_tao_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_dbg.ActiveCfg = osg_tao_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_dbg.Build.0 = osg_tao_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.pf_tao_dbg.ActiveCfg = osg_tao_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.pf_tao_dbg.Build.0 = osg_tao_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release.ActiveCfg = Release|Win32
