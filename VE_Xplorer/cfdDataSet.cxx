@@ -953,9 +953,11 @@ void cfdDataSet::SetActiveScalar( int scalar )
 
       if ( numPlanes > 0 )
       {
-         this->GetPrecomputedSlices( i )->GetPlanesData()
+
+         /*this->GetPrecomputedSlices( i )->GetPlanesData()
              ->GetPointData()->SetActiveScalars( 
                                  this->scalarName[ this->activeScalar ].c_str() );
+         */
 
          for (int j=0; j<numPlanes; j++)
          {
@@ -1067,10 +1069,10 @@ void cfdDataSet::SetActiveVector( int vector )
 
       if ( numPlanes > 0 )
       {
-         this->GetPrecomputedSlices( i )->GetPlanesData()
+         /*this->GetPrecomputedSlices( i )->GetPlanesData()
              ->GetPointData()->SetActiveVectors( 
                                  this->vectorName[ this->activeVector ].c_str() );
-
+         */
          for (int j=0; j<numPlanes; j++)
          {
             this->GetPrecomputedSlices( i )->GetPlane( j )

@@ -36,6 +36,11 @@
 
 class vtkWarpVector;
 
+namespace VE_Xplorer
+{
+   class cfdPlanes;
+}
+
 //! VTK momentums renderer.
 /*!
   A class that generates warped contour plots on multiple planes of data.
@@ -61,6 +66,7 @@ namespace VE_Xplorer
          int xyz;
   
          vtkWarpVector * warper;
+         cfdPlanes* planes;
    };
 }
 #endif

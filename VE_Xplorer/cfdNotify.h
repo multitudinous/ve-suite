@@ -4,5 +4,7 @@
 
 void notifyHandler( pfNotifyData* data )
 {
-   std::cout << data->emsg << std::endl;
+   std::cout << data->severity << std::endl;
+   std::cout << "\t" << data->emsg << std::endl;
+   std::cout << data->pferrno << std::endl;
 }

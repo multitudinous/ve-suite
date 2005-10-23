@@ -34,6 +34,11 @@
 
 #include "VE_Xplorer/cfdVectorBase.h"
 
+namespace VE_Xplorer
+{
+   class cfdPlanes;
+}
+
 // A class that generates multiple planes of vector plots.
 namespace VE_Xplorer
 {
@@ -49,6 +54,7 @@ public:
 
 private:
    int xyz;
+         cfdPlanes* planes;
 };
 }
 #endif

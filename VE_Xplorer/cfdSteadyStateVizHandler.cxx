@@ -385,16 +385,13 @@ void cfdSteadyStateVizHandler::InitScene( void )
    {
       {
          int postData = 0;
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices() != NULL &&
-               cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetNumberOfPlanes() > 0 )
             postData += 1;
 
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices() != NULL &&
-               cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetNumberOfPlanes() > 0 )
             postData += 2;
 
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices() != NULL &&
-               cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetNumberOfPlanes() > 0 )
             postData += 4;
       
          commandArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, postData );
@@ -535,8 +532,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset x contour lines.
       //
-      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices() != NULL &&
-           cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetNumberOfPlanes() > 0 )
       {
          std::cout << "| 28. Initializing....................Multiple X-planes of Contours |" << std::endl;
          this->x_contours = new cfdContours( 0 );
@@ -548,8 +544,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset y contour lines.
       //
-      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices() != NULL &&
-           cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetNumberOfPlanes() > 0 )
       {
          std::cout << "| 29. Initializing....................Multiple Y-planes of Contours |" << std::endl;
          this->y_contours = new cfdContours( 1 );
@@ -561,8 +556,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset z contour lines.
       //
-      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices() != NULL &&
-           cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetNumberOfPlanes() > 0 )
       {
          std::cout << "| 30. Initializing....................Multiple Z-planes of Contours |" << std::endl;
          this->z_contours = new cfdContours( 2 );
@@ -579,8 +573,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset x momentums.
          //
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices() != NULL &&
-              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetNumberOfPlanes() > 0 )
          {
             std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -593,8 +586,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset y momentums.
          //
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices() != NULL &&
-              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetNumberOfPlanes() > 0 )
          {
             std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -607,8 +599,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset z momentums.
          //
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices() != NULL &&
-              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetNumberOfPlanes() > 0 )
          {
             std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -625,8 +616,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset x vectors.
          //
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices() != NULL &&
-              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetNumberOfPlanes() > 0 )
          {
             std::cout << "| 34. Initializing.........Multiple X-planes of Precomputed Vectors |" << std::endl;
             this->x_vectors = new cfdVectors( 0 );
@@ -638,8 +628,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset y vectors.
          //
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices() != NULL &&
-              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetNumberOfPlanes() > 0 )
          {
             std::cout << "| 35. Initializing.........Multiple Y-planes of Precomputed Vectors |" << std::endl;
             this->y_vectors = new cfdVectors( 1 );
@@ -651,8 +640,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset z vectors.
          //
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices() != NULL &&
-              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetNumberOfPlanes() > 0 )
          {
             std::cout << "| 36. Initializing.........Multiple Z-planes of Precomputed Vectors |" << std::endl;
             this->z_vectors = new cfdVectors( 2 );

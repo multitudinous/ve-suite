@@ -34,6 +34,13 @@
 
 #include "cfdContourBase.h"
 
+#include <string>
+
+namespace VE_Xplorer
+{
+   class cfdPlanes;
+}
+
 // A class that generates contour plots on multiple planes of data.
 namespace VE_Xplorer
 {
@@ -45,7 +52,7 @@ namespace VE_Xplorer
          ~cfdContours();
 
          virtual void Update( void );
-
+         
       private:
          int xyz;
    };

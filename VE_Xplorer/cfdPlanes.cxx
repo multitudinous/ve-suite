@@ -79,11 +79,8 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
    vprDEBUG(vesDBG,1) << "directory: \"" << directory << "\"" 
                            << std::endl << vprDEBUG_FLUSH;
 
-   int i;
-   //char* planeFileName;
-
    // count the total number of cut planes
-   for ( i=0; 1; i++ )
+   for ( int i=0; 1; i++ )
    {
       //sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory, 
       //          this->typeLabel, i );
@@ -109,7 +106,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
    this->append = new vtkPolyData* [ this->numPlanes ];
    this->sliceLocation = new float [ this->numPlanes ];
    vtkPolyDataReader * planeReader;
-   for ( i = 0; i < this->numPlanes; i++ )
+   for ( int i = 0; i < this->numPlanes; i++ )
    {
       //sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory,
       //         this->typeLabel, i );
@@ -119,7 +116,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
       //planeFileName = (char*)dirString.c_str();
 
       planeReader = vtkPolyDataReader::New();
-      planeReader->SetFileName( (char*)dirString.c_str() );
+      planeReader->SetFileName( dirString.c_str() );//(char*)dirString.c_str() );
       planeReader->Update();
 
       // look at POINTS to see what coordinate that the plane goes through
@@ -141,8 +138,8 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
 
    // Set all planes to be selected and concatenate them all into one
    // polyData object called collectivePolyData
-   this->SetAllPlanesSelected();
-   this->ConcatenateSelectedPlanes();
+   //this->SetAllPlanesSelected();
+   //this->ConcatenateSelectedPlanes();
 
    // create a cutting plane object from the bounds of the original dataset
    // to use when the user wants a close-enough plane
@@ -269,7 +266,6 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
       {
          continue;
       }
-
       appendPolyData->AddInput( append[ i ] );
    }
 

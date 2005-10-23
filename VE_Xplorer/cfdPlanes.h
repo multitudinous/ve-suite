@@ -54,6 +54,7 @@ namespace VE_Xplorer
          // Initialize the VTK objects and pipeline.
          // xyz: 0 = x plane cuts, 1 = y plane cuts, and 2 = z plane cuts.
          cfdPlanes( const int xyz, const char directory[], const double bounds[ 6 ] );
+         cfdPlanes();
 
          ~cfdPlanes();
 
@@ -75,6 +76,7 @@ namespace VE_Xplorer
          int numPlanes;  // Total number of precomputed planes found in the direcory
          int type;       // Direction of cuts. 0=x planes, 1=y planes, 2=z planes.
          char typeLabel; // 'X', 'Y', or 'Z'
+
 
          cfdCuttingPlane *cuttingPlane;
          //vtkTriangleFilter *tFilter;

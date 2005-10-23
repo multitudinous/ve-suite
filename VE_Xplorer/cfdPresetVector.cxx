@@ -79,6 +79,7 @@ void cfdPresetVector::Update( void )
 
    if ( this->usePreCalcData )
    {
+
       vtkPolyData * preCalcData = this->GetActiveDataSet()
                               ->GetPrecomputedSlices( this->xyz )
                               ->GetClosestPlane( this->requestedValue );
@@ -154,9 +155,26 @@ void cfdPresetVector::Update( void )
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new VE_SceneGraph::cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( temp );
+   //geodes.push_back( new VE_SceneGraph::cfdGeode() );
+   //geodes.back()->TranslateTocfdGeode( temp );
+   //temp->Delete();
+   //this->updateFlag = true;
+
+   try
+   {
+      VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
+      tempGeode->TranslateTocfdGeode( temp );
+      geodes.push_back( tempGeode ); 
+      this->updateFlag = true;
+   }
+   catch( std::bad_alloc )
+   {
+      mapper->Delete();
+      mapper = vtkPolyDataMapper::New();
+      vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdPresetVectors " 
+                           << std::endl << vprDEBUG_FLUSH;
+   }
+   //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
    temp->Delete();
-   this->updateFlag = true;
 }
 

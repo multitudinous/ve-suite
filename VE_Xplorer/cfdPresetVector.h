@@ -64,7 +64,6 @@ namespace VE_Xplorer
       private:
          int xyz;
          int numSteps;
-
          vtkCutter *cutter;
 
          cfdCuttingPlane * cuttingPlane;

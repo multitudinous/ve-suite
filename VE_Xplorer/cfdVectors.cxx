@@ -47,6 +47,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkPolyDataWriter.h>
+#include <vtkPointData.h>
 
 #include "VE_Xplorer/cfdDebug.h"
 
@@ -73,6 +74,11 @@ void cfdVectors::Update( void )
 
    if ( this->mapper && this->cursorType == CUBE )
    { 
+      
+     // this->planes = new cfdPlanes();
+     // this->planes->SetAllPlanesSelected();
+     // this->planes->ConcatenateSelectedPlanes();
+
       double bd[6];
       this->GetActiveDataSet()->GetDataSet()->GetBounds( bd );
       vprDEBUG(vesDBG, 0) <<"d1:"<<bd[0]<<"d2:"<<bd[1]<<"d3:"<<bd[2]
@@ -122,6 +128,19 @@ void cfdVectors::Update( void )
    //make sure that there are planesData and that the cursorType is correct...
    else if ( this->mapper && this->cursorType == NONE )
    {
+      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
+      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
+
+      std::string vectorName = this->GetActiveDataSet()->
+                                 GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
+      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+            ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
+
+      std::string scalarName = this->GetActiveDataSet()->
+                                 GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
+      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+               ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
+
       // get every nth point from the dataSet data
       this->ptmask->SetInput( this->GetActiveDataSet()
                        ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
@@ -148,19 +167,37 @@ void cfdVectors::Update( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
+     // this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+
       //this->mapper->Update();  //sgent
    }
    else
    {
       this->updateFlag = false;
    }
-
+   
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new VE_SceneGraph::cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( temp );
+   //geodes.push_back( new VE_SceneGraph::cfdGeode() );
+   //geodes.back()->TranslateTocfdGeode( temp );
+   //temp->Delete();
+   //this->updateFlag = true;
+   try
+   {
+      VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
+      tempGeode->TranslateTocfdGeode( temp );
+      geodes.push_back( tempGeode ); 
+      this->updateFlag = true;
+   }
+   catch( std::bad_alloc )
+   {
+      mapper->Delete();
+      mapper = vtkPolyDataMapper::New();
+      vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdVectors " 
+                           << std::endl << vprDEBUG_FLUSH;
+   }
+   this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
    temp->Delete();
-   this->updateFlag = true;
 }
 
