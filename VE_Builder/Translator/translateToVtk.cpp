@@ -559,7 +559,7 @@ int main( int argc, char *argv[] )
    {
       aTransform = vtkTransform::New();
       vtkFileName = preprocess( argc, argv, cfdType, aTransform, number );
-      if ( vtkFileName.empty() );// == NULL ) 
+      if ( vtkFileName.empty() )
          return 1;
    }
 

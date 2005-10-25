@@ -215,8 +215,7 @@ std::string fileIO::getWritableFile( std::string defaultName )
             //filename = NULL;
         }
     }
-    //while ( ! filename );
-    while ( ! filename.empty() );
+    while ( filename.empty() );
 
     return filename;
 }
@@ -590,7 +589,7 @@ std::string fileIO::GetFile( std::string fileKeyword, std::string fileLocation )
    {
       //strcpy( file, path );
       path.assign( file );
-      //strcat( file, fileLocation );\
+      //strcat( file, fileLocation );
       path.append( fileLocation );
       //delete [] path;
    }
