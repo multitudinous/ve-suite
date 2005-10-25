@@ -32,7 +32,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
+#include <string>
 #include <vtkUnstructuredGrid.h>
 #include <vtkPoints.h>
 #include <vtkFloatArray.h>  // this code requires VTK4
