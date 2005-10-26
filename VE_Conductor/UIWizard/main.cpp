@@ -4,8 +4,11 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
+#ifdef WIN32
+#include <direct.h>
+#else
 #include <unistd.h>
-
+#endif
 using namespace std;
 
 const int BUFFER_MAX = 1024;
@@ -63,8 +66,13 @@ void GenCode_Unit()
    string bufferString;
    unitName = MOD_name + "Unit";
    //cout<<"UNIT NAME :"<<unitName<<endl;
+#ifdef WIN32
+   _mkdir( unitName.c_str());
+   _chdir( unitName.c_str() );
+#else
    mkdir( unitName.c_str(), S_IRWXU|S_IRWXG );
    chdir( unitName.c_str() );
+#endif
    outUnitFile.open( "Makefile" );
    //generate Makefile for Unit
    ifstream inUnitFile;
@@ -172,8 +180,13 @@ void GenCode_Graphical_Plugin()
    string bufferString;
    graphicalPluginName = MOD_name + "GraphicalPlugin";
    //cout<<"UNIT NAME :"<<graphicalPluginName<<endl;
+#ifdef WIN32
+   _mkdir( graphicalPluginName.c_str());
+   _chdir( graphicalPluginName.c_str());
+#else
    mkdir( graphicalPluginName.c_str(), S_IRWXU|S_IRWXG );
    chdir( graphicalPluginName.c_str() );
+#endif
    outGraphicalPlugin.open( "Makefile" );
    //generate Makefile for Graphical plugin
    ifstream graphicalPluginFiles;
@@ -347,11 +360,17 @@ void GenCode_UI_Plugin()
 
   printf("Make new directory %s\n", MOD_name.c_str());
 
-  
+#ifdef WIN32
+  _mkdir(MOD_name.c_str());
+  _chdir(MOD_name.c_str());
+  _mkdir(UI_Plugin.c_str());
+  _chdir(UI_Plugin.c_str());
+#else
   mkdir(MOD_name.c_str(), S_IRWXU|S_IRWXG);
   chdir(MOD_name.c_str());
   mkdir(UI_Plugin.c_str(), S_IRWXU|S_IRWXG);
   chdir(UI_Plugin.c_str());
+#endif
   //no more file copies
   //system("cp ../Makefile.incl ./");
   //system("cp ../interface.h ./");
