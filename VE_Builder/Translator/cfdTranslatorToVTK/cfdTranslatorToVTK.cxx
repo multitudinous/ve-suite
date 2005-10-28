@@ -67,6 +67,11 @@ void cfdTranslatorToVTK::SetNumberOfFoundFiles(unsigned int nFilesFound)
 {
    _nFoundFiles = nFilesFound;
 }
+////////////////////////////////////////////////////////////////
+std::string cfdTranslatorToVTK::GetFile(unsigned int fileNumber)
+{
+   return _infileNames.at(fileNumber);
+}
 //////////////////////////////////////////////////   
 std::string cfdTranslatorToVTK::GetFileExtension()
 {
@@ -165,6 +170,12 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
          toVTK->SetOutputDirectory(outDir);
       }
    }
+}
+/////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
+{
+   _infileNames.push_back(singleFile);
+   _nFoundFiles = _infileNames.size();
 }
 /////////////////////////////////////////////////////////////////////////////////
 bool cfdTranslatorToVTK::PreTranslateCallback::_extractOptionFromCmdLine(int argc,

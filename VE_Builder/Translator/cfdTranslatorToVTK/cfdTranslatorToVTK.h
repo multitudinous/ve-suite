@@ -66,6 +66,7 @@ public:
    void SetPostTranslateCallback(PostTranslateCallback* postTCbk);
    void SetTranslateCallback(TranslateCallback* tCbk);
 
+   void AddFoundFile(std::string singleFile);
    /////////////////////////////////////////
    //main translation calling method      //
    //Basically makes the following calls: //
