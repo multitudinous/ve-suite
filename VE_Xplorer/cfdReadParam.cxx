@@ -171,7 +171,8 @@ std::string cfdReadParam::readDirName( std::ifstream &inFile, std::string descri
                              << dirName << "\" does not exist"
                              << std::endl << vprDEBUG_FLUSH;
       //delete [] dirName;
-      dirName.empty();// = NULL;
+      //dirName.empty();// = NULL;
+      dirName.erase();
    }
    return dirName;
 }
