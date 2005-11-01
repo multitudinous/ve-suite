@@ -126,6 +126,15 @@ public:
    virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
    bool HasGeomInterface();
 
+   class LivePreframeCallback{
+      public:
+         LivePreframeCallback(){};
+         virtual ~LivePreframeCallback(){};
+         virtual void LivePreframeUpdateFromPlugin(cfdVEBaseClass* plugin) = 0;
+      protected:
+   };
+   LivePreframeCallback* GetLivePreframeCallback();
+   void SetLivePreframeCallback(LivePreframeCallback* lpfcbk);
 private:
    // This needs to be vector of geometry nodes
    //cfdModuleGeometry*  geometryNode;
@@ -182,6 +191,8 @@ protected:
       
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;
+
+   LivePreframeCallback* _livePreFrameCbk;
 };
 }
 
