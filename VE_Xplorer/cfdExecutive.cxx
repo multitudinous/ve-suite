@@ -640,24 +640,7 @@ void cfdExecutive::PreFrameUpdate( void )
          }
       }
    }
-   std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-   std::cout<<"Looping over plugins in preframe update!"<<std::endl;
-   for ( foundPlugin = _plugins.begin(); foundPlugin != _plugins.end(); ++foundPlugin )
-   {
-      std::cout<<"Found plugins!"<<std::endl;
-      //if active model is the plugin's model...
-      if ( cfdModelHandler::instance()->GetActiveModel() == foundPlugin->second->GetCFDModel() )
-      {
-         std::cout<<"Checking for LivePreframeCallback"<<std::endl;
-         cfdVEBaseClass::LivePreframeCallback* lpfcbk = 0;
-         lpfcbk = foundPlugin->second->GetLivePreframeCallback();
-         if(lpfcbk)
-         {
-            std::cout<<"Found LivePreframeCallback."<<std::endl;
-            lpfcbk->LivePreframeUpdateFromPlugin(foundPlugin->second);
-         }
-      }
-   }
+  
 }
 
 void cfdExecutive::SetCalculationsFlag( bool x )

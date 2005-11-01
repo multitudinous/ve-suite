@@ -66,7 +66,6 @@ cfdVEBaseClass::cfdVEBaseClass( void )
 {
    _onSceneGraph = false;
    _network.empty();//s = NULL;
-   _livePreFrameCbk = 0;
 }
 
 /*cfdVEBaseClass::cfdVEBaseClass( cfdDCS* veworldDCS )
@@ -86,11 +85,6 @@ cfdVEBaseClass::cfdVEBaseClass( void )
 cfdVEBaseClass::~cfdVEBaseClass( void )
 {
    //delete this->dataRepresentation;
-   if(_livePreFrameCbk)
-   {
-      delete _livePreFrameCbk;
-      _livePreFrameCbk = 0;
-   }
 }
 
 void cfdVEBaseClass::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
@@ -911,15 +905,5 @@ void cfdVEBaseClass::RegistVar(std::string vname, std::vector<std::string> *var)
 VE_SceneGraph::cfdDCS* cfdVEBaseClass::GetWorldDCS()
 {
    return this->worldDCS;
-}
-////////////////////////////////////////////////////////////////////////////////
-cfdVEBaseClass::LivePreframeCallback* cfdVEBaseClass::GetLivePreframeCallback()
-{
-   return _livePreFrameCbk;
-}
-///////////////////////////////////////////////////////////////////////////////////
-void VE_Xplorer::cfdVEBaseClass::SetLivePreframeCallback(cfdVEBaseClass::LivePreframeCallback* lnpfbk)
-{
-   _livePreFrameCbk = lnpfbk;
 }
 
