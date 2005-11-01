@@ -68,8 +68,8 @@ cfdVectorBase::cfdVectorBase()
    this->filter->SetInput( this->glyph->GetOutput() );
 //   filter->GetOutput()->ReleaseDataFlagOn();
 
-//   this->tris = vtkTriangleFilter::New();
-//   this->strip = vtkStripper::New();
+   this->tris = vtkTriangleFilter::New();
+   this->strip = vtkStripper::New();
 
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
@@ -103,11 +103,11 @@ cfdVectorBase::~cfdVectorBase()
    this->filter->Delete();
    this->filter = 0;
 
-//   this->tris->Delete();
-//   this->tris = 0;
+   this->tris->Delete();
+   this->tris = 0;
    
-//   this->strip->Delete();
-//   this->strip = 0;
+   this->strip->Delete();
+   this->strip = 0;
    
    
    this->mapper->Delete();
@@ -212,7 +212,10 @@ void cfdVectorBase::SetGlyphWithThreshold()
       tfilter->ThresholdBetween( _vectorThreshHoldValues[ 0 ],
                                  _vectorThreshHoldValues[ 1 ] );
       //tfilter->Update();
-      this->glyph->SetInput( tfilter->GetOutput());
+      this->tris->SetInput(this->tfilter->GetOutput());
+      this->strip->SetInput(this->tris->GetOutput());
+      this->glyph->SetInput(this->strip->GetOutput());
+      //this->glyph->SetInput( tfilter->GetOutput());
    }
    else if ( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
    {
@@ -222,7 +225,10 @@ void cfdVectorBase::SetGlyphWithThreshold()
       tfilter->SetInput( this->ptmask->GetOutput() );
       tfilter->ThresholdByUpper( _vectorThreshHoldValues[ 0 ] );
       //tfilter->Update();
-      this->glyph->SetInput( tfilter->GetOutput());
+      this->tris->SetInput(this->tfilter->GetOutput());
+      this->strip->SetInput(this->tris->GetOutput());
+      this->glyph->SetInput( this->strip->GetOutput());
+      //this->glyph->SetInput( tfilter->GetOutput());
    }
    else if ( _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
    {
@@ -232,7 +238,10 @@ void cfdVectorBase::SetGlyphWithThreshold()
       tfilter->SetInput( this->ptmask->GetOutput() );
       tfilter->ThresholdByLower( _vectorThreshHoldValues[ 1 ] );
       //tfilter->Update();
-      this->glyph->SetInput( tfilter->GetOutput());
+      this->tris->SetInput(this->tfilter->GetOutput());
+      this->strip->SetInput(this->tris->GetOutput());
+      this->glyph->SetInput(this->strip->GetOutput());
+      //this->glyph->SetInput( tfilter->GetOutput());
    }
    else
    {
@@ -296,7 +305,10 @@ void cfdVectorBase::SetGlyphWithThreshold()
 
 void cfdVectorBase::SetGlyphAttributes()
 {
-   this->glyph->SetSource( this->GetActiveDataSet()->GetArrow() );
+   this->tris->SetInput(this->GetActiveDataSet()->GetArrow());
+   this->strip->SetInput(this->tris->GetOutput());
+   this->glyph->SetSource(strip->GetOutput());
+   //this->glyph->SetSource( this->GetActiveDataSet()->GetArrow() );
    this->glyph->SetVectorModeToUseVector();
    //this->glyph->DebugOn();
 
