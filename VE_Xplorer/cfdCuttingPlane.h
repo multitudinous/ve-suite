@@ -31,12 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CUTTING_PLANE
 #define CFD_CUTTING_PLANE
-
+#include "VE_Installer/include/VEConfig.h"
 class vtkPlane;
 
 namespace VE_Xplorer
 {
-   class cfdCuttingPlane
+   class VE_XPLORER_EXPORTS cfdCuttingPlane
    {
       public:
          cfdCuttingPlane( const double bounds[6], const int xyz, 

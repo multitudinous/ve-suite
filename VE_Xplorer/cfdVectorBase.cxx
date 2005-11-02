@@ -305,10 +305,7 @@ void cfdVectorBase::SetGlyphWithThreshold()
 
 void cfdVectorBase::SetGlyphAttributes()
 {
-   this->tris->SetInput(this->GetActiveDataSet()->GetArrow());
-   this->strip->SetInput(this->tris->GetOutput());
-   this->glyph->SetSource(strip->GetOutput());
-   //this->glyph->SetSource( this->GetActiveDataSet()->GetArrow() );
+   this->glyph->SetSource( this->GetActiveDataSet()->GetArrow() );
    this->glyph->SetVectorModeToUseVector();
    //this->glyph->DebugOn();
 
