@@ -48,7 +48,7 @@ namespace VE_TextureBased
 #include "VE_TextureBased/cfdOSGShaderManager.h"
 #include "VE_TextureBased/cfdUpdateableOSGTexture1d.h"
 
-
+#include <string>
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdOSGTransferShaderManager

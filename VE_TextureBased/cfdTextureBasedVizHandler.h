@@ -34,7 +34,7 @@
 #ifdef VE_PATENTED
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
-
+#include <string>
 namespace VE_SceneGraph
 {
    class cfdDCS;
@@ -74,7 +74,7 @@ namespace VE_TextureBased
       public:
          void PreFrameUpdate( void );
          void CleanUp( void );
-         void SetParameterFile(char* paramFile);
+         void SetParameterFile(std::string paramFile);
          void SetCommandArray( VE_Xplorer::cfdCommandArray* cmdArray);
          void SetWorldDCS( VE_SceneGraph::cfdDCS* dcs);
          void SetParentNode( VE_SceneGraph::cfdGroup* parent);
@@ -100,7 +100,7 @@ namespace VE_TextureBased
          void _updateScalarVisHandler();
          void _updateVectorVisHandler();
 
-         char* _paramFile;
+         std::string _paramFile;
          VE_Xplorer::cfdCommandArray* _cmdArray;
          VE_SceneGraph::cfdDCS* _worldDCS;
          VE_Xplorer::cfdNavigate* _nav;

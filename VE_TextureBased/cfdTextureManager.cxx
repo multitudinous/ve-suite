@@ -170,10 +170,10 @@ unsigned int cfdTextureManager::getNextFrame()
 /////////////////////////////////////////////////////////////////////
 //add a vector field from a file                                   //
 /////////////////////////////////////////////////////////////////////
-void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
+void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
 {
    double tempMag[6] = {0,0,0,0,0,0};
-   std::ifstream fin(textureFile);
+   std::ifstream fin(textureFile.c_str());
 
 
    //std::ifstream fileIn(textureFile, std::ios::in);

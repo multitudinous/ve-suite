@@ -90,7 +90,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _bbox = new osg::BoundingBox();
    _isCreated = false;
    _useShaders = false;
-   _shaderDirectory = 0;
+   _shaderDirectory = '\0';
    _volShaderIsActive =  false;
    _transferShaderIsActive = false;
 }
@@ -115,11 +115,8 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _image = rhs._image;
    _isCreated = rhs._isCreated;
 
-   
    _noShaderGroup =  rhs._noShaderGroup;
-   
-   _shaderDirectory = new char[strlen(rhs._shaderDirectory)+1];
-   strcpy(_shaderDirectory,rhs._shaderDirectory);
+   _shaderDirectory = rhs._shaderDirectory;
 
 }
 //////////////////////////////////////////////////
@@ -131,10 +128,9 @@ cfdVolumeVisualization::~cfdVolumeVisualization()
       _utCbk = 0;
    }*/
 
-   if ( _shaderDirectory )
+   if ( !_shaderDirectory.empty() )
    {
-      delete [] _shaderDirectory;
-      _shaderDirectory = 0;
+      _shaderDirectory.clear();
    }
    
    if ( _bbox )
@@ -149,14 +145,10 @@ void cfdVolumeVisualization::SetState(osg::State* state)
    _state = state;
 }
 //////////////////////////////////////////////////////////////
-void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
+void cfdVolumeVisualization::SetShaderDirectory(std::string shadDir)
 {
-   if(_shaderDirectory){
-      delete [] _shaderDirectory;
-      _shaderDirectory = 0;
-   }
-   _shaderDirectory = new char[strlen(shadDir)+1];
-   strcpy(_shaderDirectory,shadDir);
+   _shaderDirectory = shadDir;
+   
 }
 /////////////////////////////////////////////////////////////////
 unsigned int cfdVolumeVisualization::GetCurrentTransientTexture()
@@ -779,14 +771,8 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
    
       _image = rhs._image;
       _isCreated = rhs._isCreated;
-      if(_shaderDirectory){
-         delete [] _shaderDirectory;
-         _shaderDirectory = 0;
-      }
-      _shaderDirectory = new char[strlen(rhs._shaderDirectory)+1];
-      strcpy(_shaderDirectory,rhs._shaderDirectory);
-
       
+      _shaderDirectory = rhs._shaderDirectory;
       _noShaderGroup =  rhs._noShaderGroup;
 
    }

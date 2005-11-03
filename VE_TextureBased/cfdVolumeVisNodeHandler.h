@@ -62,8 +62,8 @@ namespace VE_TextureBased
          void SetTextureScale(float* scale,bool isInverted = true);
          void SetTextureManager(cfdTextureManager* tm);
          void SetBoundingBox(float* bbox);
-         void SetBoundingBoxName(char*name);
-         void SetDecoratorName(char* name);
+         void SetBoundingBoxName(std::string name);
+         void SetDecoratorName(std::string name);
          bool IsThisActive();
          virtual void Init();
    

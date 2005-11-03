@@ -71,7 +71,7 @@ using namespace VE_Xplorer;
 //////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 {
-   _paramFile = 0;
+   _paramFile = '\0';
    _cmdArray = 0;
    _worldDCS = 0;
    _nav = 0;
@@ -92,10 +92,9 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 ///////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::CleanUp( void )
 {
-   if ( _paramFile )
+   if ( !_paramFile.empty() )
    {
-      delete [] _paramFile;
-      _paramFile = 0;
+      _paramFile.clear();
    }
 
    if ( _cmdArray )
@@ -332,14 +331,9 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    _updateGraph();
 }
 ///////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetParameterFile(char* paramFile)
+void cfdTextureBasedVizHandler::SetParameterFile(std::string paramFile)
 {
-   if(_paramFile){
-      delete [] _paramFile;
-      _paramFile = 0;
-   }
-   _paramFile = new char[strlen(paramFile)+1];
-   strcpy(_paramFile,paramFile);
+   _paramFile = paramFile;
 }
 //////////////////////////////////////////////////////////
 cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()

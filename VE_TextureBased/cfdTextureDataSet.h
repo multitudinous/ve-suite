@@ -53,7 +53,7 @@ namespace VE_TextureBased
          void SetName(std::string name);
          void SetTextureManager(cfdTextureManager* tm);
 
-         const char* GetName();
+         std::string GetName();
          cfdTextureManager* GetTextureManager();
          TextureDataInfo& operator=(const TextureDataInfo& tdi);
       protected:
@@ -68,21 +68,21 @@ namespace VE_TextureBased
 
          enum DataType {SCALAR,VECTOR};
 
-         void SetActiveScalar(const char* name);
-         void SetActiveVector(const char* name);
-         void SetFileName(char* name);
-         void CreateTextureManager(const char* textureDescriptionFile);
-         void AddScalarTextureManager( cfdTextureManager*, const char* );
-         void AddVectorTextureManager( cfdTextureManager*, const char* );
+         void SetActiveScalar(std::string name);
+         void SetActiveVector(std::string name);
+         void SetFileName(std::string name);
+         void CreateTextureManager(std::string textureDescriptionFile);
+         void AddScalarTextureManager( cfdTextureManager*, std::string );
+         void AddVectorTextureManager( cfdTextureManager*, std::string);
 
-         int FindVector(const char* name);
-         int FindScalar(const char* name);
+         int FindVector(std::string name);
+         int FindScalar(std::string name);
 
          unsigned int NumberOfScalars();
          unsigned int NumberOfVectors();
 
-         const char* ScalarName(unsigned int index);
-         const char* VectorName(unsigned int index);
+         std::string ScalarName(unsigned int index);
+         std::string VectorName(unsigned int index);
    
          DataType ActiveDataType();
 
@@ -92,7 +92,7 @@ namespace VE_TextureBased
          DataType _activeDataType;
          unsigned int _nScalars;
          unsigned int _nVectors;
-         char* _fileName;
+         std::string _fileName;
          cfdVolumeVisualization* _volVisNode;
          cfdTextureManager* _activeTM;
 

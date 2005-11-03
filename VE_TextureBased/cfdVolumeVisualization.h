@@ -73,7 +73,7 @@ namespace VE_TextureBased
 #include "VE_TextureBased/cfdUpdateableOSGTexture1d.h"
 
 #include "VE_Installer/include/VEConfig.h"
-
+#include <string>
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisualization{
@@ -97,7 +97,7 @@ namespace VE_TextureBased
       void SetPlayMode(VisMode mode);
       void SetSliceAlpha(float alpha = .5);
       void SetVeboseFlag(bool flag);
-      void SetShaderDirectory(char* shadDir);
+      void SetShaderDirectory(std::string shadDir);
 #ifdef _OSG
       void TranslateCenterBy(float* translate);
       void SetStateSet(osg::StateSet* ss);
@@ -148,7 +148,7 @@ namespace VE_TextureBased
       void _buildAxisDependentGeometry();
       void _buildSlices();
 
-      char* _shaderDirectory;
+      std::string _shaderDirectory;
       cfdTextureManager* _tm;
       osg::Vec3 _center;
       float _transRatio[3];

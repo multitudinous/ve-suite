@@ -40,6 +40,7 @@
 //#include <gl/gl.h>
 #include <iostream>
 #include <vector>
+#include <string>
 struct ScalarRange
 {
    float range[2];
@@ -58,7 +59,7 @@ namespace VE_TextureBased
          enum PlayMode{PLAY,STOP,STEP};
 
          //add a vector field from a file
-         void addFieldTextureFromFile(char* textureFile);
+         void addFieldTextureFromFile(std::string textureFile);
 
          void setPlayMode(PlayMode mode){_mode = mode;}
          //forwardBackward == -1 backward

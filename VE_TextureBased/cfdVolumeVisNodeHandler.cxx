@@ -236,16 +236,16 @@ bool cfdVolumeVisNodeHandler::IsThisActive()
    return false;
 }
 ////////////////////////////////////////////////////////////
-void cfdVolumeVisNodeHandler::SetBoundingBoxName(char* name)
+void cfdVolumeVisNodeHandler::SetBoundingBoxName(std::string name)
 {
-   if(name && _bboxSwitch.valid()){
+   if((!name.empty()) && _bboxSwitch.valid()){
       _bboxSwitch->setName(name);
    }
 }
 ////////////////////////////////////////////////////////////
-void cfdVolumeVisNodeHandler::SetDecoratorName(char* name)
+void cfdVolumeVisNodeHandler::SetDecoratorName(std::string name)
 {
-   if(name && _decoratorGroup.valid()){
+   if((!name.empty()) && _decoratorGroup.valid()){
       _decoratorGroup->setName(name);
    }
 }

@@ -71,9 +71,9 @@ void TextureDataInfo::SetTextureManager(cfdTextureManager* tm)
    _tm = tm;
 }
 //////////////////////////////////////
-const char* TextureDataInfo::GetName()
+std::string TextureDataInfo::GetName()
 {
-   return _name.c_str();
+   return _name;
 }
 ///////////////////////////////////////////////////////
 cfdTextureManager* TextureDataInfo::GetTextureManager()
@@ -98,7 +98,7 @@ TextureDataInfo& TextureDataInfo::operator=(const TextureDataInfo& tdi)
 //////////////////////////////////////
 cfdTextureDataSet::cfdTextureDataSet()
 {
-   _fileName = 0;
+   _fileName = '\0';
    _volVisNode = new cfdVolumeVisualization();
    _nScalars = 0;
    _nVectors = 0;
@@ -110,9 +110,8 @@ cfdTextureDataSet::cfdTextureDataSet()
 ///////////////////////////////////////
 cfdTextureDataSet::~cfdTextureDataSet()
 {
-   if(_fileName){
-      delete [] _fileName;
-      _fileName = 0;
+   if(!_fileName.empty()){
+      _fileName.clear();
    }
    if(_volVisNode){
       delete _volVisNode;
@@ -131,7 +130,7 @@ cfdTextureDataSet::~cfdTextureDataSet()
    _vectors.clear();
 }
 //////////////////////////////////////////////////////////
-void cfdTextureDataSet::SetActiveScalar(const char* name)
+void cfdTextureDataSet::SetActiveScalar(std::string name)
 {
    int whichScalar = FindScalar(name);
    if( whichScalar >= 0)
@@ -141,7 +140,7 @@ void cfdTextureDataSet::SetActiveScalar(const char* name)
    }
 }
 //////////////////////////////////////////////////////////
-void cfdTextureDataSet::SetActiveVector(const char* name)
+void cfdTextureDataSet::SetActiveVector(std::string name)
 {
    int whichVector = FindVector(name);
    if( whichVector >= 0)
@@ -150,15 +149,10 @@ void cfdTextureDataSet::SetActiveVector(const char* name)
       _activeDataType = VECTOR;
    }
 }
-///////////////////////////////////////////////
-void cfdTextureDataSet::SetFileName(char* name)
+/////////////////////////////////////////////////////
+void cfdTextureDataSet::SetFileName(std::string name)
 {
-   if(_fileName){
-      delete [] _fileName;
-      _fileName = 0;
-   }
-   _fileName = new char[strlen(name)+1];
-   strcpy(_fileName,name);
+   _fileName = name;
 }
 /////////////////////////////////////////////////
 unsigned int cfdTextureDataSet::NumberOfScalars()
@@ -196,21 +190,21 @@ cfdTextureManager* cfdTextureDataSet::GetActiveTextureManager()
    return 0;
 }
 //////////////////////////////////////////////////////////////
-const char* cfdTextureDataSet::ScalarName(unsigned int index)
+std::string cfdTextureDataSet::ScalarName(unsigned int index)
 {
    return _scalarNames.at(index).c_str();
 }
 /////////////////////////////////////////////////////////////
-const char* cfdTextureDataSet::VectorName(unsigned int index)
+std::string cfdTextureDataSet::VectorName(unsigned int index)
 {
    return _vectorNames.at(index).c_str();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdTextureDataSet::CreateTextureManager(const char* textureDescriptionFile)
+void cfdTextureDataSet::CreateTextureManager(std::string textureDescriptionFile)
 {
    cfdTextureManager* tm = new cfdTextureManager();
    tm->SetUseShaders(true);
-   std::ifstream fin( textureDescriptionFile );   
+   std::ifstream fin( textureDescriptionFile.c_str() );   
    char name[256];
    
    if ( fin.is_open() )
@@ -235,11 +229,11 @@ void cfdTextureDataSet::CreateTextureManager(const char* textureDescriptionFile)
       
       if( tm->GetDataType(0) == cfdTextureManager::SCALAR )
       {
-         AddScalarTextureManager( tm, tempName.c_str() );
+         AddScalarTextureManager( tm, tempName );
       }
       else
       {
-         AddVectorTextureManager( tm, tempName.c_str() );
+         AddVectorTextureManager( tm, tempName );
       }
    }
    else
@@ -251,33 +245,33 @@ void cfdTextureDataSet::CreateTextureManager(const char* textureDescriptionFile)
 }
 /////////////////////////////////////////////////////////////////////
 void cfdTextureDataSet::AddScalarTextureManager(cfdTextureManager* tm,
-                                           const char* scalarName)
+                                           std::string scalarName)
 {
    TextureDataInfo* td = new TextureDataInfo();
-   td->SetName(std::string(scalarName));
+   td->SetName(scalarName);
    td->SetTextureManager(tm);
    _scalars.push_back(td);
    _nScalars = _scalars.size(); 
    _activeTM = tm;
-   _scalarNames.push_back(std::string(scalarName));
+   _scalarNames.push_back(scalarName);
 }
 /////////////////////////////////////////////////////////////////////
 void cfdTextureDataSet::AddVectorTextureManager(cfdTextureManager* tm,
-                                           const char* vectorName)
+                                           std::string vectorName)
 {
    TextureDataInfo* td = new TextureDataInfo();
-   td->SetName(std::string(vectorName));
+   td->SetName(vectorName);
    td->SetTextureManager(tm);
    _vectors.push_back(td);
    _nVectors = _vectors.size();
-   _vectorNames.push_back(std::string(vectorName));
+   _vectorNames.push_back(vectorName);
 }
 ///////////////////////////////////////////////////
-int cfdTextureDataSet::FindScalar(const char* name)
+int cfdTextureDataSet::FindScalar(std::string name)
 {
    for(unsigned int i = 0; i < _nScalars; i++)
    {
-      if(strstr(_scalars.at(i)->GetName(),name))
+      if(strstr(_scalars.at(i)->GetName().c_str(),name.c_str()))
       {
          return i;
       }
@@ -285,11 +279,11 @@ int cfdTextureDataSet::FindScalar(const char* name)
    return -1;
 }
 ///////////////////////////////////////////////////
-int cfdTextureDataSet::FindVector(const char* name)
+int cfdTextureDataSet::FindVector(std::string name)
 {
    for(unsigned int i = 0; i < _nVectors; i++)
    {
-      if(strstr(_vectors.at(i)->GetName(),name))
+      if(strstr(_vectors.at(i)->GetName().c_str(),name.c_str()))
       {
          return i;
       }

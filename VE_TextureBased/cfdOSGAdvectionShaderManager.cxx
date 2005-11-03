@@ -321,12 +321,6 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Uniform> wW = new osg::Uniform("weightW",osg::Vec3f(.2,.2,.2));
    osg::ref_ptr<osg::Uniform> wV = new osg::Uniform("weightV",osg::Vec3f(.8,.8,.8));
  
-   /*char* fullPath = _createShaderPathForFile("fragAdvect.glsl");
-   if(!fullPath)
-   {
-      return;
-   }*/
-   //osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(fullPath,true);
    osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromInline(advectionFragSource,true);
    
 

@@ -39,7 +39,7 @@ namespace osg
    class Shader;
 }
 #include "VE_Installer/include/VEConfig.h"
-
+#include <string>
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdOSGShaderManager{
@@ -50,7 +50,7 @@ namespace VE_TextureBased
 
       virtual void Init() = 0;
 
-      void SetShaderDirectory(char* dir);
+      void SetShaderDirectory(std::string dir);
       void SetBounds(float* bounds);
       void UseCG(bool useCG = false);
 
@@ -60,7 +60,7 @@ namespace VE_TextureBased
    protected:
       virtual cfdOSGShaderManager& operator=(const cfdOSGShaderManager& sm);
 
-      virtual char* _createShaderPathForFile(char* shaderFile);
+      virtual char* _createShaderPathForFile(std::string shaderFile);
       //////////////////
       //GLSL interface//
       //////////////////
@@ -78,7 +78,7 @@ namespace VE_TextureBased
       osg::ref_ptr<osg::Shader> _fshader;
 
       osg::ref_ptr<osg::StateSet> _ss;
-      char* _shaderDirectory;
+      std::string _shaderDirectory;
       unsigned int _tUnit;
       float* _bounds;
       bool _useGLSL;

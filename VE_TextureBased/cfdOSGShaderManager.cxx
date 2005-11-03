@@ -46,7 +46,7 @@ using namespace VE_TextureBased;
 //////////////////////////////////////////
 cfdOSGShaderManager::cfdOSGShaderManager()
 {
-   _shaderDirectory = 0;
+   _shaderDirectory = '\0';
    _bounds = 0;
    _tUnit =0;
    _useGLSL = true;
@@ -65,6 +65,10 @@ cfdOSGShaderManager::cfdOSGShaderManager(const cfdOSGShaderManager& sm)
 ///////////////////////////////////////////
 cfdOSGShaderManager::~cfdOSGShaderManager()
 {
+   if(!_shaderDirectory.empty())
+   {
+      _shaderDirectory.clear();
+   }
    if(_bounds){
       delete [] _bounds;
       _bounds = 0;
@@ -144,23 +148,18 @@ osg::StateSet* cfdOSGShaderManager::GetShaderStateSet()
    return 0;
 }
 ///////////////////////////////////////////////////////////
-void cfdOSGShaderManager::SetShaderDirectory(char* shadDir)
+void cfdOSGShaderManager::SetShaderDirectory(std::string shadDir)
 {
-   if(_shaderDirectory){
-      delete [] _shaderDirectory;
-      _shaderDirectory = 0;
-   }
-   _shaderDirectory = new char[strlen(shadDir)+1];
-   strcpy(_shaderDirectory,shadDir);
+   _shaderDirectory = shadDir;
 }
 
 ////////////////////////////////////////////////////////////////////
-char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
+char* cfdOSGShaderManager::_createShaderPathForFile(std::string shaderFile)
 {
    char tempDirectory[1024];
    char* charDirectory = new char[1024];
    std::ostringstream directory;
-   if(_shaderDirectory){
+   if(!_shaderDirectory.empty()){
       //strcpy(tempDirectory,_shaderDirectory);
       directory<<_shaderDirectory;
    }else{
