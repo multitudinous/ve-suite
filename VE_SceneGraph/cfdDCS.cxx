@@ -355,7 +355,7 @@ void cfdDCS::SetMat( Matrix44f& input )
    // Add functionality to get scale from pfmatrix
    // by taking the length of each of the column vectors
 #elif _OSG
-   if(_dcs.valid())
+   if ( _dcs.valid() )
    {
       if ( _udcb )
       {
