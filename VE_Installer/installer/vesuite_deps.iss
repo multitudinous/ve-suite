@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.0.9.0_Dependencies"
-#define MyAppVerName "VE_Suite.0.9.0_Dependencies"
-#define MyAppPublisher "Complex Systems Virtual Engineering Group"
+#define MyAppName "VE_Suite.0.9.3_Dependencies"
+#define MyAppVerName "VE_Suite.0.9.3_Dependencies"
+#define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
 
@@ -167,8 +167,9 @@ Source: {#OSGHOME}\bin\osgdb_pfbd.dll; DestDir: {app}\bin; Components: osg; Flag
 Source: {#OSGHOME}\bin\osgSimd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#OSGHOME}\bin\osgTextd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#COINHOME}\bin\coin2d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler2.0.1; Flags: ignoreversion recursesubdirs; Components: juggler
-
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
