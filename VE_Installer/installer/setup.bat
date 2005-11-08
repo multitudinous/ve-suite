@@ -7,7 +7,7 @@ REM For example, if you installed in C:\Program Files\VE_Suite.0.9.0
 REM you must set VE_INSTALL_DIR in the following manner:
 REM set VE_INSTALL_DIR=C:\PROGRA~1\VE_Suite.0.9.0
 
-set VE_INSTALL_DIR=C:\VE_Suite.0.9.0
+set VE_INSTALL_DIR=C:\VE_Suite.0.9.3
 
 REM the directory containing datasets
 set VE_WORKING_DIR=%VE_INSTALL_DIR%\exampleDatasets
@@ -16,7 +16,7 @@ REM the directory containing user defined plugins
 set VE_USER_PLUGIN_DIR=.\
 
 REM VE-Suite pre-complied dependencies
-set VE_DEPS_DIR=C:\VE_Suite.0.9.0_Dependencies
+set VE_DEPS_DIR=C:\VE_Suite.0.9.3_Dependencies
 
 REM vrJuggler  
 REM These are setup for using VE-Suite dependency install's location
@@ -27,14 +27,16 @@ set VJ_DEPS_DIR=%VE_DEPS_DIR%\vrjuggler2.0.1
 REM used for cluster apps
 REM set VEXMASTER=localhost
 
-REM these can be used to point to user built dependencies
-REM set OSGHOME=C:\OpenSceneGraph
-REM set VTK_HOME=C:\VTK_Install
-REM set WX_HOME=C:\devEnv\externalAPIs\wxWidgets-2.6.0
-REM set ACE_ROOT=C:\ACE_wrappers
-REM set XERCESCROOT=C:\devEnv\externalAPIs\xerces-c-src_2_6_0
-REM set WX_ROOT=C:\devEnv\externalAPIs\wxWidgets-2.6.0
-REM set TAO_ROOT=C:\ACE_wrappers\TAO
+REM these can be used to build against if user installed header and libs
+REM set OSGHOME=%VE_DEPS_DIR%
+REM set VTK_HOME=%VE_DEPS_DIR%
+REM set WX_HOME=%VE_DEPS_DIR%
+REM set ACE_ROOT=%VE_DEPS_DIR%
+REM set XERCESCROOT=%VE_DEPS_DIR%
+REM set WX_ROOT=%VE_DEPS_DIR%
+REM set TAO_ROOT=%VE_DEPS_DIR%
+REM
+REM set VE_SUITE_HOME=%VE_INSTALL_DIR%
 
 set TAO_MACHINE=localhost
 set TAO_PORT=1237

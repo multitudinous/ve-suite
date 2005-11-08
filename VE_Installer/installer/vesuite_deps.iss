@@ -7,7 +7,6 @@
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
-
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}
@@ -29,7 +28,25 @@ WizardImageStretch=false
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
+[Types]
+Name: full; Description: Full installation
+Name: custom; Description: Custom installation; Flags: iscustom
 
+
+Name: full; Description: All pre-compiled dependencies
+Name: vexpf; Description: VE-Xplorer-PF (Performer based)
+Name: vexosg; Description: VE-Xplorer-OSG (OpenSceneGraph based)
+Name: vecns; Description: VE-Conductor(GUI) and Name Server
+Name: custom; Description: Custom; Flags: iscustom
+
+[Components]
+Name: depsbuildenv; Description: Headers and Libs; Types: custom full
+Name: vtk; Description: Visualiztion ToolKit; Types: custom vexosg vexpf full
+Name: acetao; Description: ACE/TAO; Types: vecns vexosg vexpf full custom
+Name: wxwidgets; Description: wxWidgets 2.6.1; Types: custom vecns full
+Name: xercesc; Description: Xerces-C++; Types: custom vecns vexosg vexpf full
+Name: osg; Description: OpenSceneGraph; Types: custom vexosg full
+Name: juggler; Description: vrJuggler; Types: custom vexosg vexpf full
 [Files]
 Source: {#VTKHOME}\bin\vtkzlib.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
 Source: {#VTKHOME}\bin\vtkCommon.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
@@ -170,20 +187,24 @@ Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: i
 Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#COINHOME}\bin\coin2d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler2.0.1; Flags: ignoreversion recursesubdirs; Components: juggler
+Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#OSGHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion recursesubdirs; Components: depsbuildenv
+Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion recursesubdirs; Components: depsbuildenv
+Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#OSGHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv; Attribs: readonly
+Source: {#XERCESHOME}\Build\Win32\VC7\Debug\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\ace\*.h; DestDir: {app}\include\ace; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\ace\aced.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\TAO\tao\TAOd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\TAO\orbsvcs\orbsvcs\TAO_CosNamingd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\TAO\tao\BiDir_GIOP\TAO_BiDirGIOPd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\TAO\tao\PortableServer\TAO_PortableServerd.lib; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv; DestDir: {app}\lib\win32
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-
-[Components]
-Name: vtk; Description: Visualiztion ToolKit; Types: custom vexosg vexpf full
-Name: acetao; Description: ACE/TAO; Types: vecns vexosg vexpf full custom
-Name: wxwidgets; Description: wxWidgets 2.6.1; Types: custom vecns full
-Name: xercesc; Description: Xerces-C++; Types: custom vecns vexosg vexpf full
-Name: osg; Description: OpenSceneGraph; Types: custom vexosg full
-Name: juggler; Description: vrJuggler; Types: custom vexosg vexpf full
-[Types]
-Name: full; Description: All pre-compiled dependencies
-Name: vexpf; Description: VE-Xplorer-PF (Performer based)
-Name: vexosg; Description: VE-Xplorer-OSG (OpenSceneGraph based)
-Name: vecns; Description: VE-Conductor(GUI) and Name Server
-Name: custom; Description: Custom; Flags: iscustom

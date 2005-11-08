@@ -53,6 +53,7 @@ Name: vexplorer\osgvep; Description: OSG VE-Patented Graphics; Types: full
 ;Name: vexplorer\osgcluster; Description: OSG Cluster Graphics; Types: full
 Name: vexplorer\osgvepcluster; Description: OSG VE-Patented Cluster Graphics; Types: full
 Name: veconductor; Description: VE-Conductor (GUI); Types: full
+Name: vebuildenv; Description: Headers and Libs; Types: full
 Name: examples; Description: Example datasets; Types: full
 [Registry]
 
@@ -111,6 +112,16 @@ Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {ap
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: vexplorer\osgvepcluster
 Source: {#VEHOME}\bin\win32\WinClientd.exe.manifest; DestDir: {app}\bin
 ;Source: {#VEHOME}\examples\Model\*; DestDir: {app}\examplePlugins; Flags: overwritereadonly recursesubdirs uninsremovereadonly
+Source: {#VEHOME}\VE_CE\*.h; DestDir: {app}\include\VE_CE; Attribs: readonly; Flags: replacesameversion uninsremovereadonly; Components: vebuildenv
+Source: {#VEHOME}\VE_Conductor\Framework\*.h; DestDir: {app}\include\VE_Conductor\Framework; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEHOME}\VE_Conductor\impl\*.h; DestDir: {app}\include\VE_Conductor\impl; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEHOME}\VE_Conductor\VE_UI\*.h; DestDir: {app}\include\VE_Conductor\VE_UI; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEHOME}\VE_SceneGraph\*.h; DestDir: {app}\include\VE_SceneGraph; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEHOME}\VE_Xplorer\*.h; DestDir: {app}\include\VE_Xplorer; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEHOME}\VEOpen\skel\*; DestDir: {app}\include\VEOpen\skel; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEHOME}\VE_Installer\include\VEConfig.h; DestDir: {app}\include\VE_Installer\include; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer\pf vexplorer nameserver
+Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 [Icons]
 Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
