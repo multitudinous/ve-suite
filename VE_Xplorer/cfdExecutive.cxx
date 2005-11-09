@@ -426,7 +426,7 @@ void cfdExecutive::GetEverything( void )
             cfdVEBaseClass* temp = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (std::string)iter->second ) );
             if ( temp != NULL )
             {
-               _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (std::string)iter->second ) );
+               _plugins[ iter->first ] = temp;//(cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (std::string)iter->second ) );
                // When we create the _plugin map here we will do the following
                _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
                _plugins[ iter->first ]->AddSelfToSG();
@@ -437,7 +437,7 @@ void cfdExecutive::GetEverything( void )
                _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
                _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
-               vprDEBUG(vesDBG,1) << "Module results: " << this->_exec->GetModuleResult( iter->first )
+               vprDEBUG(vesDBG,1) << "|\tModule results: " << this->_exec->GetModuleResult( iter->first )
                                       << std::endl << vprDEBUG_FLUSH;
                vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                                       << " ]-> " << iter->second 

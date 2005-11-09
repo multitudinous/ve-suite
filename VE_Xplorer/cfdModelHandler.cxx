@@ -556,8 +556,8 @@ void cfdModelHandler::PreFrameUpdate( void )
             // therefore we must find the parent besides worldDCS
             // because for search child we only search the immediate children
             // maybe come up with better functionality later
-            //if (  !strcmp( _activeModel->GetCfdDCS()->GetName(), "cfdVEBaseClass" ) )
-            if ( _activeModel->GetCfdDCS()->GetName().compare( "cfdVEBaseClass" ) )
+            //if (  !strcmp( _activeModel->GetCfdDCS()->GetName().c_str(), "cfdVEBaseClass" ) )
+            if ( !_activeModel->GetCfdDCS()->GetName().compare( "cfdVEBaseClass" ) )
             {
                parent = _activeModel->GetCfdDCS();
             }

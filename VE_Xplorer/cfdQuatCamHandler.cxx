@@ -88,7 +88,6 @@ cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS,
    pointCounter = 0;
    movementIntervalCalc = 0.01;
    frameTimer = new vpr::Timer();
-   //this->frameTimer->startTiming();
    movementSpeed = 10.0f;
    lastCommandId = 0;
    currentFrame = 0;
@@ -335,54 +334,7 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
    {
       activecam = false;
       t = 0.0f;
-   } 
-
-/*
-#ifdef _CLUSTER
-   // t is set by vjobs in cluster mode
-   // so we just use it and don't increment it
-   float temp = t;
-#else
-   float temp = this->GetQuatCamIncrementor();
-#endif
-
-   if ( setcam )
-   {
-      QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
-      std::cout<<"IN SETCAM!!!!!!!!!!!!!!!!!!!"<<std::endl;
-      setcam = false;
-         std::cout<<"setcam IS NOW FALSE"<<std::endl; 
-   }
-
-   QuatCams.at( cam_id )->MoveCam( t );
-   QuatCams.at( cam_id )->UpdateTrans( nav );
-   QuatCams.at( cam_id )->UpdateRotation( worldDCS );*/
-
-   /*if ( temp == 1.0f )
-   {
-      activecam = false;
-   }*/
-
-   /*if ( ( temp < 1.0f ) && ( temp < ( 1.0f - movementIntervalCalc ) ) )
-   {
-      //t += movementIntervalCalc;
-      QuatCams.at( cam_id )->MoveCam( temp );
-      QuatCams.at( cam_id )->UpdateTrans( nav );
-      QuatCams.at( cam_id )->UpdateRotation( worldDCS );
-   }
-   else if ( ( temp < 1.0f ) && ( temp >= ( 1.0f - movementIntervalCalc ) ) )
-   {
-      //t += ( 1.0f - t );
-      //temp = 1.0f;
-      QuatCams.at( cam_id )->MoveCam( temp );
-      QuatCams.at( cam_id )->UpdateTrans( nav );
-      QuatCams.at( cam_id )->UpdateRotation( worldDCS );
-   }
-   else
-   {
-      activecam = false;
-      //t = 0.0f;
-   }  */   
+   }   
 }
 
 void cfdQuatCamHandler::RemoveViewPt( void )
@@ -447,20 +399,6 @@ void cfdQuatCamHandler::AddNewFlythrough( void )
 bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
    bool flag = false;
-   /*if ( lastCommandId == LOAD_NEW_VIEWPT || 
-         lastCommandId == REMOVE_SELECTED_VIEWPT ||
-         lastCommandId == ADD_NEW_POINT_TO_FLYTHROUGH ||
-         lastCommandId == INSERT_NEW_POINT_IN_FLYTHROUGH ||
-         lastCommandId == REMOVE_POINT_FROM_FLYTHROUGH ||
-         lastCommandId == DELETE_ENTIRE_FLYTHROUGH ||
-         lastCommandId == ADD_NEW_FLYTHROUGH && writeFrame == ( currentFrame - 1 )
-      )
-   {
-      std::cout<<"writeFrame"<<writeFrame<<std::endl;
-      std::cout<<"currentFrame"<<currentFrame<<std::endl;
-      this->LoadFromFile( this->quatCamFileName );
-   }*/
-
 
 #ifdef _CLUSTER
    if ( writeFrame == currentFrame - 1 )
