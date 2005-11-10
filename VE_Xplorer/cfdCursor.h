@@ -123,7 +123,7 @@ public:
    double* GetCursorLocation( void );
    double* GetCursorLocalLocation( void );
    double* ReturnLocalLocationVector( void );
-
+   void GetLocalLocationVector( void );
 private:
 
    // Move the cursor methods
@@ -215,8 +215,6 @@ private:
 
    // last plane direction
    int last_cursor_type;
-
-   void GetLocalLocationVector( void );
 
    VE_SceneGraph::cfdDCS * activeDataSetDCS;
 
