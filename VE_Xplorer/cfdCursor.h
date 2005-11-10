@@ -122,6 +122,8 @@ public:
    int GetCursorID( void );
    double* GetCursorLocation( void );
    double* GetCursorLocalLocation( void );
+   double* ReturnLocalLocationVector( void );
+
 private:
 
    // Move the cursor methods

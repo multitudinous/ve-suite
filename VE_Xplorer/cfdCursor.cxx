@@ -800,6 +800,11 @@ void cfdCursor::GetLocalLocationVector( void )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
+double* cfdCursor::ReturnLocalLocationVector( void )
+{
+   return this->localLocation;
+}
+
 void cfdCursor::SetActiveDataSetDCS( VE_SceneGraph::cfdDCS* myDCS )
 {
    this->activeDataSetDCS = myDCS;
