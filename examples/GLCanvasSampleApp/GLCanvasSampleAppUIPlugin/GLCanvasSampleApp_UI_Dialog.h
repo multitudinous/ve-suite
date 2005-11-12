@@ -1,8 +1,19 @@
 #ifndef GLCanvasSampleApp_UI_DIALOG_H
 #define GLCanvasSampleApp_UI_DIALOG_H
 #include "VE_Conductor/Framework/UIDialog.h"
+#include "GL_Engine.h"
+#include <wx/glcanvas.h>
+#include <gl/glut.h>
 #include <vector>
 #include <string>
+
+using namespace std;
+
+enum {
+  GEOM_SHAPE_RADIOBOX,
+	DESIGN_BUTTON,
+	RESET_BUTTON
+};
 
 class GLCanvasSampleApp_UI_Dialog : public UIDialog
 {
@@ -21,10 +32,20 @@ class GLCanvasSampleApp_UI_Dialog : public UIDialog
       virtual bool TransferDataFromWindow();
       virtual bool TransferDataToWindow();
       virtual void Lock(bool l); 
-   protected:
+
+      void _onGeomMethod(wxCommandEvent& event);
+		void _onActCanvas(wxCommandEvent& event);
+		void _onResetCanvas(wxCommandEvent& event);
+
+  // protected:
       //UI widgets variables
-  
-   public:
+   wxRadioBox* _selgeomRBox;
+   wxButton*   _updateButton;
+	wxButton*   _resetButton;
+	wxButton*   _designButton;
+	GL_Engine*  _designCanvas;
+
+public:
   double* p_radius;
   double* p_length;
   double* p_width;
@@ -32,6 +53,8 @@ class GLCanvasSampleApp_UI_Dialog : public UIDialog
   double* p_ycoord;
   long* p_type;
       //GUI Variables
+
+  		DECLARE_EVENT_TABLE();
 };
 
 #endif
