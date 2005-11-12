@@ -3,7 +3,7 @@
 
 #include "VE_Conductor/Framework/UIDialog.h"
 #include <wx/glcanvas.h>
-#include <gl/glut.h>
+#include <GL/glut.h>
 #include <wx/image.h>
 #include <wx/wx.h>
 

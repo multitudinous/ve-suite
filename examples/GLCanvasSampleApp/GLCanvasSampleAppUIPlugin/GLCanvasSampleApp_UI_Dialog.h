@@ -3,7 +3,7 @@
 #include "VE_Conductor/Framework/UIDialog.h"
 #include "GL_Engine.h"
 #include <wx/glcanvas.h>
-#include <gl/glut.h>
+#include <GL/glut.h>
 #include <vector>
 #include <string>
 
