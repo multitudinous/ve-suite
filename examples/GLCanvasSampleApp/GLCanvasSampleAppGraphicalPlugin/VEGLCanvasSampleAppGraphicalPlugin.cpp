@@ -64,22 +64,69 @@ VEGLCanvasSampleAppGraphicalPlugin::VEGLCanvasSampleAppGraphicalPlugin( void ) :
 {
   _objectName ="GLCanvasSampleApp"; // Needs to match plugin name
    //_onSceneGraph = false;
-   _param = NULL;
+   _geode = NULL;
+   _param.clear();
 }
 
 // Destructor
 VEGLCanvasSampleAppGraphicalPlugin::~VEGLCanvasSampleAppGraphicalPlugin( void )
 {
-   if ( _param )
-      delete [] _param;
+   if ( !_param.empty() )
+      _param.clear();
+   if ( _geode != NULL )
+      delete _geode
 }
 
 void VEGLCanvasSampleAppGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   this->_param = new char[100];
-   strcpy( this->_param, "./VEGLCanvasSampleAppGraphicalPlugin.param");
-   //cout << _param << endl;
+   _param.assign( "./VEGLCanvasSampleAppGraphicalPlugin.param");
    CreateObjects();
+}
+
+void VEOPPDmod::CreateCustomVizFeature( int input )
+{
+   xcoord = myInterface.getDouble("xcoord");
+   ycoord = myInterface.getDouble("ycoord");
+
+
+   vtkSphereSource*    sphereSrc      = vtkSphereSource::New();
+   vtkPolyDataNormals* sphereNorm     = vtkPolyDataNormals::New();
+   vtkPolyDataMapper*  sphereMapper   = vtkPolyDataMapper::New();
+   vtkActor*           sphereActor    = vtkActor::New();
+
+
+   ///////////////////////////////////////////////
+   cout << " sphere stuff " << endl;
+   sphereSrc->SetRadius( radius );
+   sphereSrc->SetEndPhi( 90 );
+
+   sphereSrc->SetCenter( 0, 0, 0 );
+   sphereSrc->Update();
+
+   sphereNorm->SetInput( sphereSrc->GetOutput() );
+   sphereNorm->Update();
+
+   sphereMapper->SetInput( sphereNorm->GetOutput() );
+   sphereMapper->Update();
+
+   sphereActor->SetMapper( sphereMapper );
+   sphereActor->GetProperty()->SetColor( 0.0, 0.0, 0.8 );
+   sphereActor->GetProperty()->SetOpacity( 0.5 );
+   sphereActor->GetProperty()->SetInterpolationToPhong();
+   // Can also set opacity
+
+   //GetWorldDCS()->RemoveChild( _geode );
+
+   _geode = new cfdGeode();
+
+   _geode->TranslateTocfdGeode( sphereActor );
+
+   sphereSrc->Delete();
+   sphereNorm->Delete();
+   sphereMapper->Delete();
+   sphereActor->Delete();
+
+   GetWorldDCS()->AddChild( _geode );
 }
 

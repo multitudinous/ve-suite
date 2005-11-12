@@ -49,6 +49,9 @@ public:
 
    virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
 private:
+   VE_SceneGraph::cfdGeode* _geode;
+   double xcoord;
+   double ycoord;
 };
 extern "C"
 {
