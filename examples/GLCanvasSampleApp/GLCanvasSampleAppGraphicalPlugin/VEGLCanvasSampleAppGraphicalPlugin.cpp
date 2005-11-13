@@ -43,6 +43,7 @@
 #include "VE_Xplorer/cfdCursor.h"
 
 #include <fstream>
+#include <sstream>
 //#include <cstdlib>
 #include <string>
 #include <map>
@@ -80,7 +81,7 @@ VEGLCanvasSampleAppGraphicalPlugin::~VEGLCanvasSampleAppGraphicalPlugin( void )
 void VEGLCanvasSampleAppGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   _param.assign( "./VEGLCanvasSampleAppGraphicalPlugin.param");
+   //_param.assign( "./VEGLCanvasSampleAppGraphicalPlugin.param");
    CreateObjects();
 }
 
@@ -128,5 +129,15 @@ void VEOPPDmod::CreateCustomVizFeature( int input )
    sphereActor->Delete();
 
    GetWorldDCS()->AddChild( _geode );
+
+   std::ostringstream geomFileStream;
+   geomFileStream << "./Plugins/Cube.stl";
+   _model->CreateGeomDataSet( geomFileStream.str() );
+   _model->GetGeomDataSet(-1)->GetDCS()->SetScaleArray( scale );
+   _model->GetGeomDataSet(-1)->GetDCS()->SetTranslationArray( trans );
+   _model->GetGeomDataSet(-1)->GetDCS()->SetRotationArray(rotate);
+   _model->GetGeomDataSet(-1)->SetFILEProperties(color, transFlag, stlColor);
+   _model->GetGeomDataSet(-1)->setOpac(1.0f);
+
 }
 
