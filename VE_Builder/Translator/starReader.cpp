@@ -43,6 +43,7 @@
 #include "VE_Xplorer/fileIO.h"        // for "getTagAndValue"
 
 using namespace VE_Util;
+using std::istringstream;
 
 starReader::starReader( std::string paramFile )
 {
@@ -60,7 +61,7 @@ starReader::starReader( std::string paramFile )
    this->numScalars = 0;
    this->numVectors = 0;
    this->writeOption = 0;  // default is to let vtk write the file
-   strcpy(this->vtkFileName,"starFlowdata.vtk");
+   this->vtkFileName.assign( "starFlowdata.vtk" );
 }
 
 starReader::~starReader( void )
@@ -91,7 +92,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 {
    vtkUnstructuredGrid * uGrid = NULL;
 
-   FILE * fvertices = fopen( this->starVertFileName, "r" );
+   FILE * fvertices = fopen( this->starVertFileName.c_str(), "r" );
 
    if ( fvertices == NULL )
    {
@@ -155,7 +156,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    // now for the cell data...
    std::cout << "\nReading cell data from " << this->starCellFileName << std::endl;
 
-   FILE * fcells = fopen( this->starCellFileName, "r" );
+   FILE * fcells = fopen( this->starCellFileName.c_str(), "r" );
    if ( fcells == NULL )
    {
       std::cerr <<"\nError - Cannot open the designated cell file: "
@@ -767,7 +768,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    float * data = new float [ numColumns ];
    
-   std::ifstream fsolns( this->starUsrFileName, std::ios::in );
+   std::ifstream fsolns( this->starUsrFileName.c_str(), std::ios::in );
    if ( fsolns == NULL )
    {
        std::cerr <<"\nError - Cannot open the designated solution file: " 
@@ -947,39 +948,43 @@ void starReader::ReadParameterFile( void )
    std::fstream StarParamFile;
    StarParamFile.open( this->paramFileName.c_str(), std::ios::in );
 
-   char tagName[ 50 ];
-   char tagValue[ 50 ];
+   std::string tagName;//char tagName[ 50 ];//   
+   std::string tagValue;//char tagValue[ 50 ];//   
    int  scaleIndexSpecified = 0;
    int  scaleFactorSpecified = 0;
   
    while( 1 )
    {
       StarParamFile.getline(textline,256);
+
       if ( StarParamFile.eof() )
       {
          break;
       }
-      fileIO::getTagAndValue(textline, tagName, tagValue);
-      
+      tagName.clear();
+      tagValue.clear();
+
+      fileIO::getTagAndValue( textline, tagName, tagValue);
+
       if ( this->debug )
       {
          std::cout << "textline = " << textline << std::endl;
          std::cout << "tagValue = " << tagValue << std::endl;
       }
-   
-      if (strcmp("STARVRT", tagName)==0)
+
+      if( tagName.compare( "STARVRT" )==0 )
       {
-         strcpy(this->starVertFileName,tagValue);
+         this->starVertFileName.assign( tagValue );
       }
-      else if (strcmp("STARCEL", tagName)==0)
+      else if( tagName.compare( "STARCEL" )==0 )
       {
-         strcpy(this->starCellFileName,tagValue);
+         this->starCellFileName.assign( tagValue );
       }
-      else if (strcmp("STARUSR", tagName)==0)
+      else if( tagName.compare( "STARUSR" )==0 )
       {
-         strcpy(this->starUsrFileName,tagValue);
+         this->starUsrFileName.assign( tagValue );
       }
-      else if (strcmp("VECTORNAME", tagName)==0) 
+      else if( tagName.compare( "VECTORNAME" )==0 ) 
       {
          std::string newSpace;// = new char[ strlen(tagValue)+1 ];
          newSpace.assign( tagValue );//strcpy(newSpace,tagValue);
@@ -995,7 +1000,7 @@ void starReader::ReadParameterFile( void )
             exit ( 1 );
          }
       }
-      else if (strcmp("SCALARNAME", tagName)==0)
+      else if( tagName.compare( "SCALARNAME" )==0 )
       {
          std::string newSpace;// = new char[ strlen(tagValue)+1 ];
          newSpace.assign( tagValue );//strcpy(newSpace,tagValue);
@@ -1005,7 +1010,7 @@ void starReader::ReadParameterFile( void )
                  << this->scalarName[ this->numScalars ] << std::endl;
          this->numScalars++;
       }
-      else if ( strcmp("SCALEINDEX", tagName)==0 )
+      else if( tagName.compare( "SCALEINDEX" )==0 )
       {
          scaleIndexSpecified = 1;
          // uses the integer indices defined in translateToVtk.cpp
@@ -1013,49 +1018,49 @@ void starReader::ReadParameterFile( void )
          // The use of SCALEINDEX=0 is not necessary as it is the default
          // The use of SCALEINDEX=1 needs SCALEFACTOR to be set (or
          // scale factor defaults to 1)
-         this->scaleIndex = atoi( tagValue );
+  //       this->scaleIndex = atoi( tagValue );
          if ( this->debug )
             std::cout << "scale selection = " << this->scaleIndex << std::endl;
       }
-      else if ( strcmp("SCALEFACTOR", tagName)==0 )
+      else if( tagName.compare( "SCALEFACTOR" )==0 )
       {
          scaleFactorSpecified = 1;
          // the use of this option implies that SCALEINDEX=1 (Custom scaling)
-         this->scaleFactor = atof( tagValue );            
+         this->scaleFactor = atof( tagValue.c_str() );            
          if ( this->debug )
             std::cout << "scale factor = " << this->scaleFactor << std::endl;
       }
-      else if ( strcmp("OUTPUTFILENAME", tagName)==0 )
+      else if( tagName.compare( "OUTPUTFILENAME" )==0 )
       {
-         strcpy(this->vtkFileName,tagValue);
+         this->vtkFileName.assign( tagValue );
       }
-      else if ( strcmp("ROTATEX", tagName)==0 )
+      else if( tagName.compare( "ROTATEX" )==0 )
       {
-         this->rotations[ 0 ] = atof( tagValue );
+         this->rotations[ 0 ] = atof( tagValue.c_str() );
       }
-      else if ( strcmp("ROTATEY", tagName)==0 )
+      else if( tagName.compare( "ROTATEY" )==0 )
       {
-         this->rotations[ 1 ] = atof( tagValue );
+         this->rotations[ 1 ] = atof( tagValue.c_str() );
       }
-      else if ( strcmp("ROTATEZ", tagName)==0 )
+      else if( tagName.compare( "ROTATEZ" )==0 )
       {
-         this->rotations[ 2 ] = atof( tagValue );
+         this->rotations[ 2 ] = atof( tagValue.c_str() );
       }
-      else if ( strcmp( "TRANSLATEX", tagName)==0 )
+      else if( tagName.compare( "TRANSLATEX" )==0 )
       {
-         this->translations[ 0 ] = atof( tagValue );
+         this->translations[ 0 ] = atof( tagValue.c_str() );
       }
-      else if ( strcmp( "TRANSLATEY", tagName)==0 )
+      else if( tagName.compare( "TRANSLATEY" )==0 )
       {
-         this->translations[ 1 ] = atof( tagValue );
+         this->translations[ 1 ] = atof( tagValue.c_str() );
       }
-      else if ( strcmp( "TRANSLATEZ", tagName)==0 )
+      else if( tagName.compare( "TRANSLATEZ" )==0 )
       {
-         this->translations[ 2 ] = atof( tagValue );
+         this->translations[ 2 ] = atof( tagValue.c_str() );
       }
-      else if ( strcmp( "WRITEOPTION", tagName)==0 )
+      else if( tagName.compare( "WRITEOPTION" )==0 )
       {
-         this->writeOption = atoi( tagValue );
+         this->writeOption = atoi( tagValue.c_str() );
       }
       else
       {

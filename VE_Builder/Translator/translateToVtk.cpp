@@ -241,16 +241,21 @@ std::string preprocess( int argc, char *argv[],
                 std::cin >> infilename;
                 std::cin.ignore();
             }
-            while ( ! fileIO::isFileReadable( infilename ) );
+            while ( !fileIO::isFileReadable( infilename ) );
          }
          else if (type == 2)    // star-cd input
          {
            std::string paramFile = fileIO::getReadableFileFromDefault( 
                                             "the parameter file", "star.param" );
-           star = new starReader( paramFile.c_str() );
+
+           star = new starReader( paramFile );//star = new starReader( paramFile.c_str() );
+
            star->ReadParameterFile();
+
            star->SetDebugLevel( debug );
+
            //delete [] paramFile;
+
          }
          else if (type == 3)    // rei input
          {

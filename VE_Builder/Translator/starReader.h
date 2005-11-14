@@ -55,12 +55,12 @@ class starReader
       vtkUnstructuredGrid * GetUnsGrid();
 
    private:
-      std::string paramFileName;//[100];
-      char  starCellFileName[100];
-      char  starVertFileName[100];
-      char  starUsrFileName[100];
-      char  vtkFileName[100];
-      char  textline[256];
+      std::string paramFileName;
+      std::string starCellFileName;
+      std::string starVertFileName;
+      std::string starUsrFileName;
+      std::string vtkFileName;
+      char  textline[256];//std::string textline;//
       int   numScalars;
       std::vector< std::string > scalarName;
       int   numVectors;

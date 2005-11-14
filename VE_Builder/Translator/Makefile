@@ -16,7 +16,6 @@ SRCS=\
    reiReader.cpp \
    en7Reader.cpp \
    mfixReader.cpp \
-   fileIO.cxx \
    converter.cpp \
    gridConversion.cpp \
    viewCells.cpp \
