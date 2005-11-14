@@ -703,9 +703,60 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
  ///////////////////////////////////////////////////////////
  void cfdNode::TravNodeFog(osg::Node* node_1, osg::Fog* fog)
  {
+   if(!node_1)return;
+	int i  = 0;
+	int num = 0;
+   osg::ref_ptr<osg::Group> tempGroup = new osg::Group;
+
+ 	// If the node_1 is a geode...
+   if(!strcmp(node_1->className(),"Geode")){
+      osg::ref_ptr<osg::Drawable> geoset = NULL;
+      osg::ref_ptr<osg::Geode> geode = dynamic_cast<osg::Geode*>(node_1);
+      osg::ref_ptr<osg::StateSet> geostate = NULL;
+
+      // Grab each of its geosets
+      num = geode->getNumDrawables();
+
+      //std::cout << "HERE IT IS " << num << std::endl;
+      for (i=0; i < num; i++){
+         geoset = geode->getDrawable(i) ;
+#ifdef _DEBUG
+         assert( geoset.get() != NULL && "geoset is null" );
+#endif
+         // Apply the material to the geostate and disable texturing
+         geostate = geoset->getOrCreateStateSet();
+
+         geostate->setAttribute( fog, osg::StateAttribute::ON );
+         geostate->setMode( GL_FOG, osg::StateAttribute::ON );
+
+         geoset->setStateSet(geostate.get());
+      }
+   }else  if(node_1->isSameKindAs(tempGroup.get())){
+      num = ((osg::Group*)node_1)->getNumChildren();
+      vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
+                                << std::endl << vprDEBUG_FLUSH;
+      for (i = 0; i < num; i++){
+         this->TravNodeFog(((osg::Group*)node_1)->getChild(i), fog) ;     
+      }
+   }else if(!strcmp(node_1->className(),"LOD")){
+      num = ((osg::LOD*)node_1)->getNumChildren();
+      vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
+                                << std::endl << vprDEBUG_FLUSH;
+      for (i = 0; i < num; i++){
+         this->TravNodeFog(((osg::LOD*)node_1)->getChild(i), fog) ;
+           
+      }
+   }else if(!strcmp(node_1->className(),"MatrixTransform")){
+       num = ((osg::MatrixTransform*)node_1)->getNumChildren();
+      vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
+                                << std::endl << vprDEBUG_FLUSH;
+      for (i = 0; i < num; i++){
+         this->TravNodeFog(((osg::MatrixTransform*)node_1)->getChild(i), fog) ;
+           
+      }
+   }
  }
 #elif _OPENSG
-
 #endif
 }
 
