@@ -170,10 +170,8 @@ std::string fileIO::getReadableFileFromDefault( std::string stringDescribingfile
     std::string validDefaultName;
     if ( ! isFileReadable( defaultName ) )
        validDefaultName = "";
-       //strcpy( validDefaultName, "" );
     else
        validDefaultName.assign( defaultName );
-      //strcpy( validDefaultName, defaultName );
 
     std::string filename;
     do
@@ -185,13 +183,10 @@ std::string fileIO::getReadableFileFromDefault( std::string stringDescribingfile
         {
             std::cerr << "\n\"" << filename << "\" is not readable."
                       << std::endl;
-            //delete [] filename;
-            //filename = NULL;
         }
     }
-    //while ( ! filename );
-    while ( ! filename.empty() );
-    
+    while ( filename.empty() );
+
     return filename;
 }
 
@@ -452,7 +447,7 @@ int fileIO::ExtractIntegerFromString( std::string filename )
    return atoi(lastToken);
 }
 
-void fileIO::getTagAndValue(std::string textline, std::string TagName, std::string TagValue)
+void fileIO::getTagAndValue(std::string textline, std::string& TagName, std::string& TagValue)
 {
    //pre: param file must have TAGNAME=TAGVALUE on each line, TAGVALUE cannot
    //     have any spaces in it
@@ -460,22 +455,21 @@ void fileIO::getTagAndValue(std::string textline, std::string TagName, std::stri
    //post: none
    int i = 0;
    int j = 0;
-   
+
    //while(textline[i] != '=')
    while(textline[i] != '=')
    {
-      TagName[j++] = textline[i++];
+      TagName.push_back( textline[i++] );
    }
-   TagName[j] = '\0';
+   //TagName[j] = '\0';
 
    j = 0;
    i++;
    while(textline[i]  >= 33 && textline[i] <= 126)
    {
-      TagValue[j++] = textline[i++];
+      TagValue.push_back( textline[i++] );
    }
-   TagValue[j] = '\0';
-
+   //TagValue[j] = '\0';
    return;
 }
 
@@ -505,7 +499,8 @@ int fileIO::getIntegerBetween( const int min, const int max )
       int finishedNumber = 0;
       std::cout << "Enter value : ";
       std::cout.flush();
-      while(1) {
+      while(1) 
+      {
          char c = std::cin.get();
          //std::cout << "(int)c = " << (int)c << std::endl;
          if ( c == '\n' ) // ENTER key pressed ( c == 10 works too )

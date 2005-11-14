@@ -64,7 +64,7 @@ public:
    static std::string StripLeadingSpaces( std::string line );
    static int extractIntegerBeforeExtension( std::string filename );
    static void IdentifyTagAssignValue(std::string TagName, std::string TagValue);
-   static void getTagAndValue(std::string textline, std::string TagName,  std::string TagValue);
+   static void getTagAndValue(std::string textline, std::string& TagName,  std::string& TagValue);
 
    static int getIntegerBetween( const int min, const int max );
 
