@@ -214,7 +214,14 @@ void cfdFILE::setFog(double dist)
    fog->setFogType(PFFOG_PIX_EXP2);
    this->node->pfTravNodeFog( this->node->GetRawNode(), fog );
 #elif _OSG
-   node->TravNodeFog(node->GetRawNode(),fog);
+   fog->setMode( osg::Fog::EXP2 );
+   fog->setDensity( 1 / ( dist / 2 ) );
+   fog->setColor( osg::Vec4( 0.5f, 0.5f, 0.5f, 0.0f ) );
+   //fog->setStart( 0.0f );
+   //fog->setStart( dist + 100 );
+   //fog->setEnd( dist + 200 );
+   //fog->setFogCoordinateSource( );
+   this->node->TravNodeFog( this->node->GetRawNode(), fog );
 #endif
 }
 
