@@ -119,7 +119,8 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Debug/VTK/Linux-RHEL_4
-   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.1/Linux-RHEL_4
+#   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.1/Linux-RHEL_4
+   setenv WX_HOME /home/users/mccdo/wxWindows/wxGTK-2.6.2/install-rhel_4
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-linux-rhel4-i686
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-linux-rhel4-i686-deps
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
@@ -128,7 +129,6 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
-   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/share/OpenSceneGraph/bin
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
@@ -144,7 +144,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    endif
 
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
-   setenv JDK_HOME /usr/java/j2sdk1.4.2_03
+   setenv JDK_HOME /usr/java/jdk1.5.0_04
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-SuSE92
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux-SuSE93
@@ -173,8 +173,8 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK4.4/Linux64-SuSE92
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.0/Linux64-SuSE92
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux-SuSE93_64
-   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux-SuSE93_64
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-linux-suse93-x86_64
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps//vrjuggler-2.0.1-linux-suse93-x86_64-deps
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux64-SuSE92
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
@@ -192,6 +192,34 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
       setenv PATH ${ACE_HOME}/bin:${ACE_HOME}/Linux64/bin:${TAO_HOME}/Linux64/bin:${PATH}
 
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Linux64-SuSE92
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
+   else
+      setenv PYTHONPATH ${VJ_DEPS_DIR}/lib/python2.2/site-packages
+   endif
+
+else if ( ${CFDHOSTTYPE} =~ SUSE_10.*_i* ) then
+   setenv JDK_HOME /usr/java/j2sdk1.4.2_03
+   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK4.4/Linux-SuSE_10
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/Linux-SuSE_10
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux-SuSE_10
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux-SuSE_10
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-SuSE_10
+   setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
+
+   setenv LD_LIBRARY_PATH ${WX_HOME}/lib:${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VJ_DEPS_DIR}/lib
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CORONA_HOME}/lib:${HOME}/usr/lib
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
+
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE_TAO/Linux-SuSE_10
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/lib
+      setenv PATH ${TAO_HOME}/bin:${PATH}
+
+      setenv PATH ${TAO_HOME}/bin:${PATH}
+
+      setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Linux-SuSE_10
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
    else
       setenv PYTHONPATH ${VJ_DEPS_DIR}/lib/python2.2/site-packages
@@ -258,6 +286,7 @@ setenv PATH ${WX_HOME}/bin:${PATH}
 #setenv PATH ${JDK_HOME}/bin:${PATH}
 if ( $?OSG_HOME ) then
    setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
+   setenv OSG_FILE_PATH ${OSG_HOME}/share/OpenSceneGraph-Data
 endif
 
 #echo ""
