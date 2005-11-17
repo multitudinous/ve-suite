@@ -77,7 +77,7 @@ UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
 
    _modelData = _model;
    _activeModIndex = activeMod;
-   debugIO = true;
+   debugIO = false
    cId = -1;
    cIso_value = 0;
    cTimesteps = 0;
@@ -93,75 +93,67 @@ UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
 
 void UI_Tabs::getData()
 {
-   cGeo_state = 0;
-   cIso_value = 0;
-   cTimesteps = 0;
-   cMin = 0;
-   cMax = 1;
-   cSc = 0;
-
    _visPage = 0;
    _vectorPage = 0;
    _streamlinePage = 0;
    _navPage = 0;
-   //std::cout<<"Act Mod Index3: "<<_activeModIndex<<std::endl;
+
    try
    {
-   num_geo = _modelData->GetNumberOfGeomFiles(_activeModIndex);
-   std::cout << "geo number: " << num_geo << std::endl;
+      num_geo = _modelData->GetNumberOfGeomFiles(_activeModIndex);
+      std::cout << "geo number: " << num_geo << std::endl;
 
-   geoNameArray = VjObs::scalar_p( *_modelData->GetGeomFilenames(_activeModIndex) );
-   geomFileSettings = _modelData->GetGeometryFileSettings( _activeModIndex );
+      geoNameArray = VjObs::scalar_p( *_modelData->GetGeomFilenames(_activeModIndex) );
+      geomFileSettings = _modelData->GetGeometryFileSettings( _activeModIndex );
 
-   // Get Number of Sound Files
-   if ( !CORBA::is_nil( server_ref ) )
-   {
+      // Get Number of Sound Files
+      if ( !CORBA::is_nil( server_ref ) )
+      {
       num_sounds = server_ref->GetNumberOfSounds();
-   }
-   else
-   {
+      }
+      else
+      {
       num_sounds = 0;
-   }
+      }
 
-   std::cout << "number of sound files: " << num_sounds << std::endl;
-   if( num_sounds > 0 ){
+      std::cout << "number of sound files: " << num_sounds << std::endl;
+      if( num_sounds > 0 ){
       soundNameArray = server_ref->GetSoundNameArray();
-   }
+      }
 
-   // Get Number of Teacher Files
-   if ( !CORBA::is_nil( server_ref ) )
-   {
+      // Get Number of Teacher Files
+      if ( !CORBA::is_nil( server_ref ) )
+      {
       num_teacher = server_ref->get_teacher_num();
-   }
-   else
-   {
+      }
+      else
+      {
       num_teacher = 0;
-   }
-   
-   std::cout << "teacher number: "
-               << num_teacher << std::endl;
-   if( num_teacher > 0 ) 
-   {
+      }
+
+      std::cout << "teacher number: "
+              << num_teacher << std::endl;
+      if( num_teacher > 0 ) 
+      {
       teacher_attrib = server_ref->get_teacher_name();
-   }
-   cTeacher_state = 0;
+      }
+      cTeacher_state = 0;
 
-   cPre_state = 0;
+      cPre_state = 0;
 
-   if ( !CORBA::is_nil( server_ref ) )
-   {
+      if ( !CORBA::is_nil( server_ref ) )
+      {
       num_viewlocs = server_ref->getIsoValue();
-   }
-   std::cout << "number of viewing locations: "<< num_viewlocs << std::endl;
-   
+      }
+      std::cout << "number of viewing locations: "<< num_viewlocs << std::endl;
 
-   if ( !CORBA::is_nil( server_ref ) )
-   {
+
+      if ( !CORBA::is_nil( server_ref ) )
+      {
       flyThroughArray = server_ref->getDouble2D( "getFlythroughData" );
+      }
+      std::cout << "number of flythroughs: "<< flyThroughArray->length() << std::endl;
    }
-   std::cout << "number of flythroughs: "<< flyThroughArray->length() << std::endl;
-   }
-
    catch ( ... )
    {
       wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
