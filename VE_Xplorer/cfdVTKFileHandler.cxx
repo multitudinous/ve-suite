@@ -263,7 +263,7 @@ void cfdVTKFileHandler::_getXMLPolyData()
    _dataSet->ShallowCopy(pdReader->GetOutput());
    pdReader->Delete();
 }
-///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,std::string outFileName)
 {
    if( outFileName.empty() )
@@ -273,6 +273,8 @@ bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,std::string outFileName
       vtkXMLDataSetWriter* xmlWriter = vtkXMLDataSetWriter::New();
       xmlWriter->SetFileName(outFileName.c_str());
       xmlWriter->SetInput(dataSet);
+      if(_outFileMode == CFD_ASCII)
+         xmlWriter->SetDataModeToAscii();
       if(xmlWriter->Write()){
          return true;
       }else{
