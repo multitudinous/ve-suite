@@ -9,7 +9,7 @@ Visualization ToolKit (VTK) 4.4 -- Open Source data handling/visualization API.
 xerces-C++ 2.6.0 -- C++ xml parser.
 ACE/TAO 5.4/1.4 -- CORBA implementation.
 OpenSceneGraph 0.9.9 -- SceneGraph handling.
-vrJuggler 2.0.0 -- graphics device handling
+vrJuggler 2.0.1 -- graphics device handling
 ===============================================================================
 NOTES:
 - If your install paths contains spaces you MUST use the "DOS 8 character
