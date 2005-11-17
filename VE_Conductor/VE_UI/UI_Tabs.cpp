@@ -77,7 +77,7 @@ UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
 
    _modelData = _model;
    _activeModIndex = activeMod;
-   debugIO = false;
+   debugIO = true;
    cId = -1;
    cIso_value = 0;
    cTimesteps = 0;
@@ -97,7 +97,7 @@ void UI_Tabs::getData()
    cIso_value = 0;
    cTimesteps = 0;
    cMin = 0;
-   cMax = 0;
+   cMax = 1;
    cSc = 0;
 
    _visPage = 0;
