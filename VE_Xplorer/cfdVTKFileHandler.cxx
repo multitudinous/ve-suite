@@ -276,8 +276,10 @@ bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,std::string outFileName
       if(_outFileMode == CFD_ASCII)
          xmlWriter->SetDataModeToAscii();
       if(xmlWriter->Write()){
+         xmlWriter->Delete();
          return true;
       }else{
+         xmlWriter->Delete();
          return false;
       }
    }else{
