@@ -49,7 +49,6 @@
 multiPlaneVtkOutput::multiPlaneVtkOutput( std::string dirname )
 {
    //unsigned long len = strlen(dirname);
-   std::string postDataDir;// = new char [len+1];
    postDataDir.assign( dirname );//strcpy( postDataDir, dirname );
 }
 
