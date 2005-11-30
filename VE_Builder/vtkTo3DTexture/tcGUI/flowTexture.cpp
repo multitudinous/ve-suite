@@ -189,18 +189,55 @@ void FlowTexture::writeFlowTexture(char* file,
       std::cout<<"Couldn't write to directory: "<<file<<std::endl;
       return;
    }
-   if(_pointData.size()){
+   
+   /*std::string vtkFileName( file );
+   vtkFileName.append( ".vti" );
+   double bbox[ 6 ];
+   for ( unsigned int i = 0; i < 6; ++i )
+      bbox[ i ] = _bbox[ i ];
+   */
+
+   if ( _pointData.size() )
+   {
+      /*vtkImageData* flowImage = vtkImageData::New();
+      flowImage->SetOrigin( bbox[ 0 ], bbox[ 2 ], bbox[ 4 ] );
+      flowImage->SetDimensions( _dims[ 0 ], _dims[ 1 ], _dims[ 2 ] );
+
+      // Create delta
+      double delta[3] = {0,0,0};
+      //delta x
+      delta[0] = fabs( (bbox[1] - bbox[0])/(_dims[0]-1) );
+      //delta y
+      delta[1] = fabs( (bbox[3] - bbox[2])/(_dims[1]-1) );
+      //delta z
+      delta[2] = fabs( (bbox[5] - bbox[4])/(_dims[2]-1) );
+      flowImage->SetSpacing( delta[0], delta[1], delta[2] );
+      */
+
+      // setup container for scalar data
+      //vtkFloatArray* flowData = vtkFloatArray::New();
+      //flowData->SetName( "name" );
+
       //scalar or vector data
-      if(_pointData.at(0).type() == FlowPointData::SCALAR){
+      if ( _pointData.at(0).type() == FlowPointData::SCALAR )
+      {
          fout<<"s"<<std::endl;
-      }else{
-         fout<<"v"<<std::endl;
+         //flowData->SetNumberOfComponents( 1 );
       }
-      if(!_dims[2])_dims[2] = 1;
+      else
+      {
+         fout<<"v"<<std::endl;
+         //flowData->SetNumberOfComponents( 4 );
+      }
+
+      if(!_dims[2])
+         _dims[2] = 1;
 
       //range of the data values
-      if(!dataRange)fout<<"0 0"<<std::endl;
-      else fout<<dataRange[0]<<" "<<dataRange[1]<<std::endl;
+      if ( !dataRange )
+         fout<<"0 0"<<std::endl;
+      else 
+         fout<<dataRange[0]<<" "<<dataRange[1]<<std::endl;
       
       //bounding box
       fout<<_bbox[0]<<" "<<_bbox[1]<<" ";
@@ -211,18 +248,40 @@ void FlowTexture::writeFlowTexture(char* file,
       fout<<_dims[0]<<" "<<_dims[1]<<" "<<_dims[2]<<std::endl;
 
       //loop through and quantize the data
-      for(int k = 0; k < _dims[2]; k++){
-         for(int j = 0; j < _dims[1]; j++){
-            for(int i = 0; i < _dims[0]; i++){
-            
-               pixelNum = k*(_dims[0]*_dims[1])
-		          + _dims[0]*j + i;
+      for(int k = 0; k < _dims[2]; k++)
+      {
+         for(int j = 0; j < _dims[1]; j++)
+         {
+            for(int i = 0; i < _dims[0]; i++)
+            {
+               pixelNum = k*(_dims[0]*_dims[1]) + _dims[0]*j + i;
                fout<<_pointData[pixelNum];
-               
+               /*if ( _pointData.at(0).type() == FlowPointData::SCALAR )
+               {
+                  flowData->SetTuple1( pixelNum, _pointData[ pixelNum ].data( 0 ) );
+               }
+               else
+               {
+                  double data[ 4 ];
+                  for ( unsigned int i = 0; i < 4; ++i )
+                     data[ i ] = _pointData[ pixelNum ].data( i );
+
+                  flowData->SetTuple( pixelNum, data );
+               }*/
             }
             fout<<std::endl;
          }
       }
+      /*flowImage->GetPointData()->AddArray( flowData );
+      vtkXMLImageDataWriter* writer = vtkXMLImageDataWriter::New();
+      writer->SetInput( flowImage );
+      writer->SetDataModeToBinary();
+      writer->SetFileName( vtkFileName.c_str() );
+      writer->Write();
+
+      writer->Delete();
+      flowImage->Delete();
+      flowData->Delete();*/
    }
 }
 ////////////////////////////////////////////////////
