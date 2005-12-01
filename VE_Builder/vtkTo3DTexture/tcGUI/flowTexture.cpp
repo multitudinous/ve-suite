@@ -1,7 +1,11 @@
 #include "flowTexture.h"
 #include <iostream>
 #include <fstream>
-#include <vtkZLibDataCompressor.h>
+//#include <vtkZLibDataCompressor.h>
+#include <vtkImageData.h>
+#include <vtkXMLImageDataWriter.h>
+#include <vtkFloatArray.h>
+#include <vtkPointData.h>
 
 //////////////////////////////
 //FlowPointData class       //
@@ -252,7 +256,7 @@ void FlowTexture::writeFlowTexture(char* file, std::string scalarName)
       vtkXMLImageDataWriter* writer = vtkXMLImageDataWriter::New();
       writer->SetInput( flowImage );
       writer->SetDataModeToBinary();
-      writer->SetFileName( vtkFileName.c_str() );
+      writer->SetFileName( file );
       writer->Write();
 
       writer->Delete();

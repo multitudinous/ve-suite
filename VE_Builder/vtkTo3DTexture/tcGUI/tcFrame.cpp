@@ -299,7 +299,8 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
                   _numFiles,this,
                   wxPD_AUTO_HIDE|wxPD_SMOOTH|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME);
    //process the files
-   for(int i = 0; i < _numFiles; i++){
+   for(int i = 0; i < _numFiles; i++)
+   {
       _currentFile = i;
       statusMsg = wxString("Translating ") + _gridFiles[i];
       UpdateStatus(statusMsg);
@@ -307,14 +308,14 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       _translator->reset();
       _translator->setOutputDirectory((char*)_outputDir.c_str());
       //sprintf(oname,"_%d",i);
-	  std::ostringstream dirStringStream;
-	  dirStringStream << "_" << i;
-	  std::string dirString = dirStringStream.str();
-	  //oname = (char*)dirString.c_str();
+      std::ostringstream dirStringStream;
+      dirStringStream << "_" << i;
+      std::string dirString = dirStringStream.str();
+      //oname = (char*)dirString.c_str();
       _translator->createDataSetFromFile(_gridFiles[i].c_str());
       _translator->setOutputResolution(_resolution[0],
-                                   _resolution[1],
-                                   _resolution[2]);
+                                       _resolution[1],
+                                       _resolution[2]);
       _translator->setVelocityFileName((char*)dirString.c_str());
       _translator->createTextures();
    }
