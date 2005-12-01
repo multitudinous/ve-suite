@@ -179,28 +179,21 @@ FlowPointData& FlowTexture::pixelData(int col,
 //an ascii file it is an rgba file                //
 //w/ float data                                   //
 ////////////////////////////////////////////////////
-void FlowTexture::writeFlowTexture(char* file,
-                               double* dataRange,
-                               float* velMinMax)
+void FlowTexture::writeFlowTexture(char* file, std::string scalarName)
 {
    int pixelNum = 0;
-   std::ofstream fout(file,std::ios::out);
-   if(!fout.is_open()){
-      std::cout<<"Couldn't write to directory: "<<file<<std::endl;
-      return;
-   }
-   
-   /*std::string vtkFileName( file );
-   vtkFileName.append( ".vti" );
    double bbox[ 6 ];
    for ( unsigned int i = 0; i < 6; ++i )
+   {
       bbox[ i ] = _bbox[ i ];
-   */
+   }
 
    if ( _pointData.size() )
    {
-      /*vtkImageData* flowImage = vtkImageData::New();
+      vtkImageData* flowImage = vtkImageData::New();
+      // used to determine texture size
       flowImage->SetOrigin( bbox[ 0 ], bbox[ 2 ], bbox[ 4 ] );
+      //texture dimensions
       flowImage->SetDimensions( _dims[ 0 ], _dims[ 1 ], _dims[ 2 ] );
 
       // Create delta
@@ -211,41 +204,26 @@ void FlowTexture::writeFlowTexture(char* file,
       delta[1] = fabs( (bbox[3] - bbox[2])/(_dims[1]-1) );
       //delta z
       delta[2] = fabs( (bbox[5] - bbox[4])/(_dims[2]-1) );
+      // used to determine texture size
       flowImage->SetSpacing( delta[0], delta[1], delta[2] );
-      */
+      
 
       // setup container for scalar data
-      //vtkFloatArray* flowData = vtkFloatArray::New();
-      //flowData->SetName( "name" );
+      vtkFloatArray* flowData = vtkFloatArray::New();
+      flowData->SetName( "name" );
 
       //scalar or vector data
       if ( _pointData.at(0).type() == FlowPointData::SCALAR )
       {
-         fout<<"s"<<std::endl;
-         //flowData->SetNumberOfComponents( 1 );
+         flowData->SetNumberOfComponents( 1 );
       }
       else
       {
-         fout<<"v"<<std::endl;
-         //flowData->SetNumberOfComponents( 4 );
+         flowData->SetNumberOfComponents( 4 );
       }
 
       if(!_dims[2])
          _dims[2] = 1;
-
-      //range of the data values
-      if ( !dataRange )
-         fout<<"0 0"<<std::endl;
-      else 
-         fout<<dataRange[0]<<" "<<dataRange[1]<<std::endl;
-      
-      //bounding box
-      fout<<_bbox[0]<<" "<<_bbox[1]<<" ";
-      fout<<_bbox[2]<<" "<<_bbox[3]<<" ";
-      fout<<_bbox[4]<<" "<<_bbox[5]<<std::endl;
-
-      //texture dimensions
-      fout<<_dims[0]<<" "<<_dims[1]<<" "<<_dims[2]<<std::endl;
 
       //loop through and quantize the data
       for(int k = 0; k < _dims[2]; k++)
@@ -255,8 +233,7 @@ void FlowTexture::writeFlowTexture(char* file,
             for(int i = 0; i < _dims[0]; i++)
             {
                pixelNum = k*(_dims[0]*_dims[1]) + _dims[0]*j + i;
-               fout<<_pointData[pixelNum];
-               /*if ( _pointData.at(0).type() == FlowPointData::SCALAR )
+               if ( _pointData.at(0).type() == FlowPointData::SCALAR )
                {
                   flowData->SetTuple1( pixelNum, _pointData[ pixelNum ].data( 0 ) );
                }
@@ -267,12 +244,11 @@ void FlowTexture::writeFlowTexture(char* file,
                      data[ i ] = _pointData[ pixelNum ].data( i );
 
                   flowData->SetTuple( pixelNum, data );
-               }*/
+               }
             }
-            fout<<std::endl;
          }
       }
-      /*flowImage->GetPointData()->AddArray( flowData );
+      flowImage->GetPointData()->AddArray( flowData );
       vtkXMLImageDataWriter* writer = vtkXMLImageDataWriter::New();
       writer->SetInput( flowImage );
       writer->SetDataModeToBinary();
@@ -281,86 +257,8 @@ void FlowTexture::writeFlowTexture(char* file,
 
       writer->Delete();
       flowImage->Delete();
-      flowData->Delete();*/
+      flowData->Delete();
    }
-}
-////////////////////////////////////////////////////
-void FlowTexture::CreatFlowTextureBuffer(char* file,
-                               double* dataRange,
-                               float* velMinMax)
-{
-   int pixelNum = 0;
-   std::ofstream fout(file,std::ios::out|std::ios::binary);
-   if(!fout.is_open()){
-      std::cout<<"Couldn't write to directory: "<<file<<std::endl;
-      return;
-   }
-   std::ostringstream dataBuffer;
-   if(_pointData.size())
-   {
-      //scalar or vector data
-      if(_pointData.at(0).type() == FlowPointData::SCALAR)
-      {
-         dataBuffer<<"s"<<std::endl;
-      }
-      else
-      {
-         dataBuffer<<"v"<<std::endl;
-      }
-      
-      if(!_dims[2])
-         _dims[2] = 1;
-
-      //range of the data values
-      if(!dataRange)
-         dataBuffer<<"0 0"<<std::endl;
-      else 
-         dataBuffer<<dataRange[0]<<" "<<dataRange[1]<<std::endl;
-      
-      //bounding box
-      dataBuffer<<_bbox[0]<<" "<<_bbox[1]<<" ";
-      dataBuffer<<_bbox[2]<<" "<<_bbox[3]<<" ";
-      dataBuffer<<_bbox[4]<<" "<<_bbox[5]<<std::endl;
-
-      //texture dimensions
-      dataBuffer<<_dims[0]<<" "<<_dims[1]<<" "<<_dims[2]<<std::endl;
-
-      //loop through and quantize the data
-      for(int k = 0; k < _dims[2]; k++)
-      {
-         for(int j = 0; j < _dims[1]; j++)
-         {
-            for(int i = 0; i < _dims[0]; i++)
-            {
-               pixelNum = k*(_dims[0]*_dims[1])
-		          + _dims[0]*j + i;
-               dataBuffer<<_pointData[pixelNum];
-               
-            }
-            dataBuffer<<std::endl;
-         }
-      }
-   }
-   // do data compressor
-   // Compress the data
-   vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
-   unsigned char* compressed_data;
-   const unsigned char* uncompressed_data;
-   std::string tempBuf( dataBuffer.str() );
-   uncompressed_data = reinterpret_cast< const unsigned char* >( tempBuf.c_str() );
-   unsigned long grid_data_length2 = strlen(tempBuf.c_str());
-   //unsigned long grid_data_length3 = tempBuf.size();
-
-   unsigned long nlen = compressor->GetMaximumCompressionSpace(grid_data_length2);
-   compressed_data = new unsigned char[ nlen ];
-   unsigned long rlen = compressor->Compress(uncompressed_data, grid_data_length2, compressed_data, nlen);
-
-   fout << rlen << " " << grid_data_length2 << std::endl;
-   fout.write( reinterpret_cast< const char* >( compressed_data ), rlen);
-   fout.close();
-   compressor->Delete();
-   compressor = 0;
-   delete [] compressed_data;
 }
 
 ////////////////////////////////////

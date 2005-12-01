@@ -853,7 +853,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    wxString relativePath("./vectors/");
    relativePath += wxString(_vectorNames[whichVector]);
    relativePath += _vFileName;
-   relativePath += ".rgb";
+   relativePath += ".vti";
 
    wxString tdFileName(_outputDir);
    tdFileName += "/";
@@ -887,7 +887,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
       strcat(posName,"flow");
    }
 
-   strcat(posName,".rgb");
+   strcat(posName,".vti");
    //textureDescriptionFile.Write(wxString(posName));
    textureDescriptionFile.Write(relativePath);
    textureDescriptionFile.Write('\n');
@@ -897,8 +897,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    velRange[1] = _vectorRanges.at(whichVector)[1];
    wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(posName);
    _updateTranslationStatus(msg.c_str());
-   _velocity.at(0).writeFlowTexture(posName,velRange);
-   //_velocity.at(0).CreatFlowTextureBuffer(posName,velRange);
+   _velocity.at(0).writeFlowTexture(posName, std::string( _vectorNames[whichVector] ) );
 }
 ///////////////////////////////////////////
 void VTKDataToTexture::writeScalarTexture(int whichScalar)
@@ -926,7 +925,7 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    wxString relativePath("./scalars/");
    relativePath += wxString(_scalarNames[whichScalar]);
    relativePath += _vFileName;
-   relativePath += ".rgb";
+   relativePath += ".vti";
 
    wxString tdFileName(_outputDir);
    tdFileName += "/";
@@ -957,7 +956,7 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    }else{
       strcat(name,"scalar");
    }
-   strcat(name,".rgb");
+   strcat(name,".vti");
    //textureDescriptionFile.Write(wxString(name));
    textureDescriptionFile.Write(relativePath);
    textureDescriptionFile.Write('\n');
@@ -968,7 +967,6 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    scalarRange[1] = _scalarRanges.at(whichScalar)[1];
    wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(name);
    _updateTranslationStatus(msg.c_str());
-   _curScalar.at(0).writeFlowTexture(name,scalarRange);  
-   //_curScalar.at(0).CreatFlowTextureBuffer(name,scalarRange);  
+   _curScalar.at(0).writeFlowTexture(name, std::string( _scalarNames[whichScalar] ) );  
 }
 	

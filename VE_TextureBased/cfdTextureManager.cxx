@@ -175,12 +175,10 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
    double tempMag[6] = {0,0,0,0,0,0};
    std::ifstream fin(textureFile.c_str());
 
-
-   //std::ifstream fileIn(textureFile, std::ios::in);
-   //if ( fileIn.is_open() )
    if ( fin.is_open() )
    {
-      /*vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
+      fin.close();
+      vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
       reader->SetFileName( textureFile.c_str() );
       
       vtkImageData* flowImage = reader->GetOutput();
@@ -190,20 +188,16 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
 
       vtkFloatArray* flowData = flowImage->GetPointData->GetArray( 1 );
-      */
-      char type[16];
+      
       DataType curType;
       //read the file type
-      fin>>type;
-      if(!strcmp(type,"s"))
-      //if ( flowData->GetNumberOfComponents() == 1 )
+      if ( flowData->GetNumberOfComponents() == 1 )
       {
          //scalar
          _types.push_back(SCALAR);
          curType = SCALAR;
       }
-      else if(!strcmp(type,"v"))
-      //else if ( flowData->GetNumberOfComponents() == 4 )
+      else if ( flowData->GetNumberOfComponents() == 4 )
       {
          //vector file
          _types.push_back(VECTOR);
@@ -211,18 +205,17 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
       else
       {
-         std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : There are too many components in this texture " << std::endl;
+         std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile :" << 
+                        " There are too many components in this texture " << std::endl;
       }
       
 
       //data range(magnitude) for scalars
       //ignore this value for vectors
       ScalarRange newRange;
-      fin>>newRange.range[0];
-      fin>>newRange.range[1];
-      //double* range = flowData->GetRange();
-      //newRange.range[0] = range[ 0 ];
-      //newRange.range[1] = range[ 1 ];
+      double* range = flowData->GetRange();
+      newRange.range[0] = range[ 0 ];
+      newRange.range[1] = range[ 1 ];
      
       _ranges.push_back(newRange);
       _range[0] = newRange.range[0];
@@ -231,12 +224,11 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       _transientRange[0] = (_range[0] < _transientRange[0])?_range[0]:_transientRange[0];
       _transientRange[1] = (_range[1] > _transientRange[1])?_range[1]:_transientRange[1];
       //bounding box
-      fin>>_bbox[0]>>_bbox[1]>>_bbox[2]>>_bbox[3]>>_bbox[4]>>_bbox[5];
-      /*double* bbox = flowData->GetBounds(); 
+      double* bbox = flowData->GetBounds(); 
       for ( unsigned int i = 0; i < 6; ++i )
       {
          _bbox[ i ] = bbox[ i ];
-      }*/
+      }
 
       if ( !_resolution )
       {
@@ -244,8 +236,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
 
       //the dimensions  
-      fin>>_resolution[0]>>_resolution[1]>>_resolution[2];
-      //flowImage->GetDimensions( &_resolution );
+      flowImage->GetDimensions( &_resolution );
 
       if ( !_resolution[2] ) 
       {
@@ -262,27 +253,16 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       if(curType == VECTOR)
       {
          pixels = new unsigned char[nPixels*4];
-         for(int p = 0; p < nPixels; p++){
-            fin >> R;// >> G >> B >> A;
-            pixels[p*4   ] = (unsigned char)R;
-            fin>>G;
-            pixels[p*4 + 1] = (unsigned char)G;
-            fin>>B;
-            pixels[p*4 + 2] = (unsigned char)B;
-            fin>>A;
-            alpha = (A -_range[0])*invSRange;
-            pixels[p*4 + 3] = (unsigned char)(alpha*255);
-         }
-         /*for(int p = 0; p < nPixels; p++)
+         for(int p = 0; p < nPixels; p++)
          {
             double* rawData = flowData->GetTuple4( p );
-            pixels[p*4   ]  = static_cast< unsigned char>( rawData[ 0 ] );
-            pixels[p*4 + 1] = static_cast< unsigned char>( rawData[ 1 ] );
-            pixels[p*4 + 2] = static_cast< unsigned char>( rawData[ 2 ] );
+            pixels[p*4   ]  = static_cast< unsigned char >( rawData[ 0 ] );
+            pixels[p*4 + 1] = static_cast< unsigned char >( rawData[ 1 ] );
+            pixels[p*4 + 2] = static_cast< unsigned char >( rawData[ 2 ] );
             A = static_cast< unsigned char>( rawData[ 3 ] );
             alpha = (A -_range[0])*invSRange;
             pixels[p*4 + 3] = (unsigned char)(alpha*255);
-         }*/
+         }
       }
       else if(curType == SCALAR)
       {
@@ -299,8 +279,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
 
          for(int p = 0; p < nPixels; p++)
          {
-            fin>>scalarValue;
-            //scalarValue = flowData->GetTuple1( p );
+            scalarValue = flowData->GetTuple1( p );
             
             alpha = (scalarValue-_range[0])*invSRange;
             if(_useShaders)
@@ -331,7 +310,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
       //add the field
       _dataFields.push_back(pixels);
-      //reader->Delete();
+      reader->Delete();
    }
    else
    {
