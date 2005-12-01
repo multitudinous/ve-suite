@@ -180,63 +180,49 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
    //if ( fileIn.is_open() )
    if ( fin.is_open() )
    {
-/*      unsigned long l,m, rlen, grid_data_length2;
-      fileIn >> rlen >> grid_data_length2;
-      l = fileIn.tellg();
-      fileIn.seekg (0, std::ios::end);
-      m = fileIn.tellg();
-      //fileIn.close();
+      /*vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
+      reader->SetFileName( textureFile.c_str() );
+      
+      vtkImageData* flowImage = reader->GetOutput();
+      if ( flowImage->GetPointData()->GetNumberOfArrays() > 1 )
+      {
+         std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : There are too many scalars in this texture " << std::endl;
+      }
 
-      //fileIn.open(textureFile, std::ios::in);
-      //fileIn >> rlen >> grid_data_length2;
-
-      char* tempCharBuf = new char[ (m-(l+1)) ];
-      // get pointer to associated buffer object
-      std::filebuf *pbuf;
-      pbuf=fileIn.rdbuf();
-      pbuf->pubseekpos(l+1,ios::in);
-
-      // get file data  
-      pbuf->sgetn(tempCharBuf,rlen);
-
-      fileIn.close();
-   
-      // uncompress the data
-      const unsigned char* compressed_data_Array = reinterpret_cast< const unsigned char* >( tempCharBuf );
-      unsigned char* ucbuffer = new unsigned char[ grid_data_length2 ];
-      vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
-      rlen = compressor->Uncompress(compressed_data_Array, rlen, ucbuffer, grid_data_length2);
-
-      delete [] tempCharBuf;
-
-      // Create buffer for the code below to opperate one
-      std::string buffer( reinterpret_cast< const char* >( ucbuffer ) );
-      delete [] ucbuffer;
-
-      std::istringstream fin( buffer );
-
-      compressor->Delete();
-      compressor = 0;
-*/
+      vtkFloatArray* flowData = flowImage->GetPointData->GetArray( 1 );
+      */
       char type[16];
       DataType curType;
       //read the file type
       fin>>type;
-      if(!strcmp(type,"s")){
+      if(!strcmp(type,"s"))
+      //if ( flowData->GetNumberOfComponents() == 1 )
+      {
          //scalar
          _types.push_back(SCALAR);
          curType = SCALAR;
-      }else if(!strcmp(type,"v")){
+      }
+      else if(!strcmp(type,"v"))
+      //else if ( flowData->GetNumberOfComponents() == 4 )
+      {
          //vector file
          _types.push_back(VECTOR);
          curType = VECTOR;
       }
+      else
+      {
+         std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : There are too many components in this texture " << std::endl;
+      }
+      
 
       //data range(magnitude) for scalars
       //ignore this value for vectors
       ScalarRange newRange;
       fin>>newRange.range[0];
       fin>>newRange.range[1];
+      //double* range = flowData->GetRange();
+      //newRange.range[0] = range[ 0 ];
+      //newRange.range[1] = range[ 1 ];
      
       _ranges.push_back(newRange);
       _range[0] = newRange.range[0];
@@ -246,7 +232,12 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       _transientRange[1] = (_range[1] > _transientRange[1])?_range[1]:_transientRange[1];
       //bounding box
       fin>>_bbox[0]>>_bbox[1]>>_bbox[2]>>_bbox[3]>>_bbox[4]>>_bbox[5];
-      
+      /*double* bbox = flowData->GetBounds(); 
+      for ( unsigned int i = 0; i < 6; ++i )
+      {
+         _bbox[ i ] = bbox[ i ];
+      }*/
+
       if ( !_resolution )
       {
          _resolution = new int[3];
@@ -254,6 +245,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
 
       //the dimensions  
       fin>>_resolution[0]>>_resolution[1]>>_resolution[2];
+      //flowImage->GetDimensions( &_resolution );
 
       if ( !_resolution[2] ) 
       {
@@ -267,8 +259,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       unsigned char* pixels = 0;
       float invSRange = 1.0/(_range[1]-_range[0]);
 
-      //   for(int p = 0; p < nPixels; p++)
-      //         double scalar = grid->GetPointData()->GetScalars( "scalar_name" )->GetTuple1( num );
       if(curType == VECTOR)
       {
          pixels = new unsigned char[nPixels*4];
@@ -283,6 +273,16 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
             alpha = (A -_range[0])*invSRange;
             pixels[p*4 + 3] = (unsigned char)(alpha*255);
          }
+         /*for(int p = 0; p < nPixels; p++)
+         {
+            double* rawData = flowData->GetTuple4( p );
+            pixels[p*4   ]  = static_cast< unsigned char>( rawData[ 0 ] );
+            pixels[p*4 + 1] = static_cast< unsigned char>( rawData[ 1 ] );
+            pixels[p*4 + 2] = static_cast< unsigned char>( rawData[ 2 ] );
+            A = static_cast< unsigned char>( rawData[ 3 ] );
+            alpha = (A -_range[0])*invSRange;
+            pixels[p*4 + 3] = (unsigned char)(alpha*255);
+         }*/
       }
       else if(curType == SCALAR)
       {
@@ -300,6 +300,8 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          for(int p = 0; p < nPixels; p++)
          {
             fin>>scalarValue;
+            //scalarValue = flowData->GetTuple1( p );
+            
             alpha = (scalarValue-_range[0])*invSRange;
             if(_useShaders)
             {
@@ -329,6 +331,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
       //add the field
       _dataFields.push_back(pixels);
+      //reader->Delete();
    }
    else
    {
