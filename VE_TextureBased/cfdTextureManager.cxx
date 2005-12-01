@@ -32,7 +32,12 @@
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureManager.h"
 #include <fstream>
-#include <vtkZLibDataCompressor.h>
+//#include <vtkZLibDataCompressor.h>
+#include <vtkImageData.h>
+#include <vtkXMLImageDataReader.h>
+#include <vtkFloatArray.h>
+//#include <vtkDataArray.h>
+#include <vtkPointData.h>
 #include <sstream>
 
 using namespace VE_TextureBased;
@@ -187,7 +192,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : There are too many scalars in this texture " << std::endl;
       }
 
-      vtkFloatArray* flowData = flowImage->GetPointData->GetArray( 1 );
+      vtkFloatArray* flowData = dynamic_cast< vtkFloatArray* >( flowImage->GetPointData()->GetArray( 1 ) );
       
       DataType curType;
       //read the file type
@@ -208,7 +213,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile :" << 
                         " There are too many components in this texture " << std::endl;
       }
-      
 
       //data range(magnitude) for scalars
       //ignore this value for vectors
@@ -224,7 +228,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       _transientRange[0] = (_range[0] < _transientRange[0])?_range[0]:_transientRange[0];
       _transientRange[1] = (_range[1] > _transientRange[1])?_range[1]:_transientRange[1];
       //bounding box
-      double* bbox = flowData->GetBounds(); 
+      double* bbox = flowImage->GetBounds(); 
       for ( unsigned int i = 0; i < 6; ++i )
       {
          _bbox[ i ] = bbox[ i ];
@@ -236,7 +240,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
 
       //the dimensions  
-      flowImage->GetDimensions( &_resolution );
+      flowImage->GetDimensions( &*_resolution );
 
       if ( !_resolution[2] ) 
       {
