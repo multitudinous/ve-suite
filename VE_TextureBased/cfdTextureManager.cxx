@@ -192,7 +192,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : There are too many scalars in this texture " << std::endl;
       }
 
-      vtkFloatArray* flowData = dynamic_cast< vtkFloatArray* >( flowImage->GetPointData()->GetArray( 1 ) );
+      vtkFloatArray* flowData = dynamic_cast< vtkFloatArray* >( flowImage->GetPointData()->GetArray( 0 ) );
       
       DataType curType;
       //read the file type
