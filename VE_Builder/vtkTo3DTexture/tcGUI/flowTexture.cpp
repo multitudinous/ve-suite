@@ -214,7 +214,7 @@ void FlowTexture::writeFlowTexture(char* file, std::string scalarName)
 
       // setup container for scalar data
       vtkFloatArray* flowData = vtkFloatArray::New();
-      flowData->SetName( "name" );
+      flowData->SetName( scalarName.c_str() );
 
       //scalar or vector data
       if ( _pointData.at(0).type() == FlowPointData::SCALAR )
@@ -228,6 +228,8 @@ void FlowTexture::writeFlowTexture(char* file, std::string scalarName)
 
       if(!_dims[2])
          _dims[2] = 1;
+   
+      flowData->SetNumberOfTuples( _dims[0]*_dims[1]*_dims[2] );
 
       //loop through and quantize the data
       for(int k = 0; k < _dims[2]; k++)
