@@ -185,6 +185,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       fin.close();
       vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
       reader->SetFileName( textureFile.c_str() );
+      reader->Update();
       
       vtkImageData* flowImage = reader->GetOutput();
       if ( flowImage->GetPointData()->GetNumberOfArrays() > 1 )
