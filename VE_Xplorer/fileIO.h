@@ -34,6 +34,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <vector>
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Util
@@ -71,6 +72,7 @@ public:
    static std::string GetFile( std::string, std::string );
    static int ExtractIntegerFromString( std::string filename );
    static int ExtractIntegerBeforeExtension( std::string filename );
+   static std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::string extension);
 };
 }
 #endif

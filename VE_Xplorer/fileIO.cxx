@@ -610,4 +610,42 @@ std::string fileIO::GetFile( std::string fileKeyword, std::string fileLocation )
    
    return file;
 }
+////////////////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::string extension)
+{
+   boost::filesystem::path dir_path( dir.c_str() );
+   std::vector<std::string> filesInDir;
+   try
+   {
+      if ( boost::filesystem::is_directory( dir_path ) )
+      {
+         boost::filesystem::directory_iterator end_iter;
+         for ( boost::filesystem::directory_iterator dir_itr( dir_path );
+               dir_itr != end_iter; ++dir_itr )
+         {
+            try
+            {
+               if ( strstr( dir_itr->leaf().c_str(), extension.c_str()) )
+               {
+                  std::string pathAndFileName;
+                  pathAndFileName.assign( dir_path.leaf().c_str());  
+                  pathAndFileName.append( "/" );
+                  pathAndFileName.append( dir_itr->leaf().c_str() );
 
+
+                  filesInDir.push_back( pathAndFileName );
+               }
+            }
+            catch ( const std::exception& ex )
+            {
+	            std::cout << ex.what() << std::endl;
+            }
+         }
+      }
+   }
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;
+ 	}
+   return filesInDir;
+}
