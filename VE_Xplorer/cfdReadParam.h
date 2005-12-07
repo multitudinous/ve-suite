@@ -52,85 +52,85 @@ namespace VE_SceneGraph
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdReadParam : public cfdGlobalBase
-   {
-      public:
-         cfdReadParam();
-         ~cfdReadParam();
+class VE_XPLORER_EXPORTS cfdReadParam : public cfdGlobalBase
+{
+public:
+   cfdReadParam();
+   ~cfdReadParam();
 
-         // compare VjObs_i commandArray with its child's value
-         virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray );
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray );
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand();
-         // Continues to read parameter file based on the current object type
-         void ContinueRead( std::ifstream &, unsigned int );
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+   // Continues to read parameter file based on the current object type
+   void ContinueRead( std::ifstream &, unsigned int );
 
-         int   numGeoms;
-         int   bmpFile;
-         char  bmpFileName[ 100 ];
-         char  quatCamFileName[ 100 ];
-         double bmpPosition[ 3 ];
-         int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
-         float isoScale;
-         float delta;
-         char  textLine[ 256 ];
-         int   *guiVal;
-         float diameter;
+   int   numGeoms;
+   int   bmpFile;
+   char  bmpFileName[ 100 ];
+   char  quatCamFileName[ 100 ];
+   double bmpPosition[ 3 ];
+   int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
+   float isoScale;
+   float delta;
+   char  textLine[ 256 ];
+   int   *guiVal;
+   float diameter;
 
-         float scalarBarPos[ 3 ];
-         float scalarBarZRot;
-         float scalarBarH;
-         float scalarBarW;
+   float scalarBarPos[ 3 ];
+   float scalarBarZRot;
+   float scalarBarH;
+   float scalarBarW;
 
-         //BY YANG for ANIMATED IMG
-         char basename[256];
-         int frames;
-         int ex_x, ex_y;
-         int dim;
-         double origin[3];
-         double spacing[3];
-      
-         //END of YANG
+   //BY YANG for ANIMATED IMG
+   char basename[256];
+   int frames;
+   int ex_x, ex_y;
+   int dim;
+   double origin[3];
+   double spacing[3];
 
-         // IHCC Model - should be deleted at a later date
-         bool ihccModel;
-         bool changeGeometry;
-   
-         std::vector< VE_Xplorer::fileInfo * > files;
+   //END of YANG
 
-         void CreateNewDataSet();
-         int GetNumberOfDataSets();
-         VE_Xplorer::cfdDataSet * GetDataSet( int i );
-         VE_Xplorer::cfdDataSet * GetDataSetWithName( const std::string );
+   // IHCC Model - should be deleted at a later date
+   bool ihccModel;
+   bool changeGeometry;
 
-         int  convertDecimalToBinary( long );
-         void convertBinaryToDecimal( int );
-         void convertBinaryToArray( int, int );
+   std::vector< VE_Xplorer::fileInfo * > files;
 
-         std::string readDirName( std::ifstream &inFile, std::string description );
-         int readID( std::ifstream &inFile );
+   void CreateNewDataSet();
+   int GetNumberOfDataSets();
+   VE_Xplorer::cfdDataSet * GetDataSet( int i );
+   VE_Xplorer::cfdDataSet * GetDataSetWithName( const std::string );
 
-         float worldScale[ 3 ];
-         float worldTrans[ 3 ];
-         float worldRot[ 3 ];
+   int  convertDecimalToBinary( double );
+   void convertBinaryToDecimal( int );
+   void convertBinaryToArray( int, int );
 
-         float imageScale[ 3 ];
-         float imageTrans[ 3 ];
-         float imageRot[ 3 ];
+   std::string readDirName( std::ifstream &inFile, std::string description );
+   int readID( std::ifstream &inFile );
 
-         VE_SceneGraph::cfdDCS* dashBoardDCS;
-         std::string dashboardFilename;
+   float worldScale[ 3 ];
+   float worldTrans[ 3 ];
+   float worldRot[ 3 ];
 
-         static void read_pf_DCS_parameters( std::ifstream &inFile,
-                     float*, float*, float* );
+   float imageScale[ 3 ];
+   float imageTrans[ 3 ];
+   float imageRot[ 3 ];
 
-         static void SkipModuleBlock( std::ifstream &inFile, int );
+   VE_SceneGraph::cfdDCS* dashBoardDCS;
+   std::string dashboardFilename;
 
-      private:
-         std::vector< VE_Xplorer::cfdDataSet * > dataSets;
-         std::vector< int > testBin;
-         //void LoadSurfaceFiles( char * dir );
-   };
+   static void read_pf_DCS_parameters( std::ifstream &inFile,
+               float*, float*, float* );
+
+   static void SkipModuleBlock( std::ifstream &inFile, int );
+
+private:
+   std::vector< VE_Xplorer::cfdDataSet * > dataSets;
+   std::vector< double > testBin;
+   //void LoadSurfaceFiles( char * dir );
+};
 }
 #endif

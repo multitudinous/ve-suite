@@ -371,16 +371,18 @@ void cfdReadParam::param_read( std::ifstream &inFile )
                           << std::endl << vprDEBUG_FLUSH;
 }
 */
-int cfdReadParam::convertDecimalToBinary( long number) 
+int cfdReadParam::convertDecimalToBinary( double number) 
 {
    vprDEBUG(vesDBG,1) << " Number = " << number
                           << std::endl << vprDEBUG_FLUSH;
    testBin.clear();
-   long int n = number;
-   while (n > 0) 
+   double n = number;
+   while (n > 1) 
    {
-      testBin.push_back( n%2 );
-      n = n/2;
+      double rem = fmod( n, static_cast< double >( 2 ) );
+      testBin.push_back( rem );
+      //std::cout <<  testBin.back() << std::endl;
+      n = floor( n/2 );
    }
    // converts decimal to binary but binary number is backwards
    // Number gets converted to forward in function below
@@ -406,7 +408,7 @@ void cfdReadParam::convertBinaryToArray( int gui, int size )
 
    for ( int i = 0; i < size; i++ ) 
    {      
-      guiVal[ i] = testBin[ i ];
+      guiVal[ i] = static_cast< int >( testBin[ i ] );
       vprDEBUG(vesDBG,2) << "Binary number : " << guiVal[ i] << std::endl << vprDEBUG_FLUSH;
    }
 }

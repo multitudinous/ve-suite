@@ -534,7 +534,7 @@ void cfdModelHandler::PreFrameUpdate( void )
             << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
             << std::endl << vprDEBUG_FLUSH;
 
-         long int test = this->_readParam->convertDecimalToBinary( (long)
+         long int test = this->_readParam->convertDecimalToBinary( 
                         commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
 
          vprDEBUG(vesDBG,1) << " Return from conversion : " << test
