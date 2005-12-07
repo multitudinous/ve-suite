@@ -172,7 +172,7 @@ public:
    int   cMin;
    int   cMax;
    long  cId;
-   long  cGeo_state;
+   double  cGeo_state;
    short cPostdata_state;
    bool  cPre_state;
    short cTimesteps;

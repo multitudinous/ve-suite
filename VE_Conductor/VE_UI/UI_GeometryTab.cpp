@@ -230,7 +230,7 @@ void UI_GeometryTab::_onUpdate( wxCommandEvent& WXUNUSED(event) )
    {
       if ( _geometryCBox->IsChecked( i ) )
       {
-         ((UI_Tabs *)_parent)->cGeo_state += (int)pow( 2.0f, (float)i );
+         ((UI_Tabs *)_parent)->cGeo_state += pow( 2.0f, (float)i );
          (*((UI_Tabs*)_parent)->geomFileSettings.at( i )) = 1;
       }
       else

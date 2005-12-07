@@ -583,7 +583,7 @@ void UI_Tabs::sendDataArrayToServer( void )
    clientInfoArray[ 3 ] = (double)cSc;
    clientInfoArray[ 4 ] = (double)cMin;
    clientInfoArray[ 5 ] = (double)cMax;
-   clientInfoArray[ 6 ] = (double)cGeo_state;
+   clientInfoArray[ 6 ] = cGeo_state;
    clientInfoArray[ 7 ] = (double)cPre_state;
    clientInfoArray[ 8 ] = (double)cTeacher_state;
    
