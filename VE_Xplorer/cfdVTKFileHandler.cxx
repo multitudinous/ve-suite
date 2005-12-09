@@ -124,25 +124,22 @@ vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
    if ( vtkFileName.empty() )
       return 0;
    SetInputFileName(vtkFileName);
-   std::cout<<"Creating xml tester..."<<std::endl;
+
    if(!_xmlTester){
       _xmlTester = vtkXMLFileReadTester::New();
    }
    _xmlTester->SetFileName(vtkFileName.c_str());
 
-   std::cout<<"Checking file type..."<<std::endl;
+   std::cout<<"cfdVTKFileHandler::Checking file type...";
    if(_xmlTester->TestReadFile()){
-      std::cout<<"XML VTK file"<<std::endl;
-      std::cout<<"File type: "<<_xmlTester->GetFileDataType()<<std::endl;
+      std::cout<<" XML ";
+      std::cout<< _xmlTester->GetFileDataType()<<std::endl;
       //process xml file
       if(!strcmp(_xmlTester->GetFileDataType(),"UnstructuredGrid")){
-         std::cout<<"============Unstructured grid==========="<<std::endl;
          _getXMLUGrid();
       }else if(!strcmp(_xmlTester->GetFileDataType(),"StructuredGrid")){
-         std::cout<<"============Structured grid==========="<<std::endl;
          _getXMLSGrid();
       }else if(!strcmp(_xmlTester->GetFileDataType(),"RectilinearGrid")){
-         std::cout<<"============Rectilinear grid==========="<<std::endl;
          _getXMLRGrid();
       }else if(!strcmp(_xmlTester->GetFileDataType(),"PolyData")){
          _getXMLPolyData();
@@ -178,17 +175,17 @@ void cfdVTKFileHandler::_readClassicVTKFile()
    }
    else
    {
-
       int dataObjectType = genericReader->GetOutput()->GetDataObjectType();
       if ( dataObjectType == VTK_UNSTRUCTURED_GRID )
       {
-
+         std::cout<<"Unstructured Grid..."<<std::endl;
          _dataSet = vtkUnstructuredGrid::New();
          _dataSet->ShallowCopy( genericReader->GetUnstructuredGridOutput() );
          genericReader->Delete();
       }
       else if ( dataObjectType == VTK_STRUCTURED_GRID )
       {
+         std::cout<<"Structured Grid..."<<std::endl;
          // Because of a vtk BUG involving structured grid deep copy,
          // the follow code is not working...
          /*_dataSet = vtkStructuredGrid::New();
@@ -199,14 +196,14 @@ void cfdVTKFileHandler::_readClassicVTKFile()
       }
       else if ( dataObjectType == VTK_RECTILINEAR_GRID )
       {
-
+         std::cout<<"Rectilinear Grid..."<<std::endl;
          _dataSet = vtkRectilinearGrid::New();
          _dataSet->ShallowCopy( genericReader->GetRectilinearGridOutput() );
          genericReader->Delete();
       }
       else if ( dataObjectType == VTK_POLY_DATA )
       {
-
+         std::cout<<"PolyData..."<<std::endl;
          _dataSet = vtkPolyData::New();
          _dataSet->ShallowCopy( genericReader->GetPolyDataOutput() );
          genericReader->Delete();
