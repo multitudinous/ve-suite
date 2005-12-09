@@ -49,75 +49,78 @@ struct ScalarRange
 
 namespace VE_TextureBased
 {
-   class  VE_TEXTURE_BASED_EXPORTS cfdTextureManager{
-      public:
-         cfdTextureManager();
-         cfdTextureManager(const cfdTextureManager& tm);
-         ~cfdTextureManager();
+class  VE_TEXTURE_BASED_EXPORTS cfdTextureManager{
+public:
+   cfdTextureManager();
+   cfdTextureManager(const cfdTextureManager& tm);
+   ~cfdTextureManager();
 
-         enum DataType{SCALAR,VECTOR};
-         enum PlayMode{PLAY,STOP,STEP};
+   enum DataType{SCALAR,VECTOR};
+   enum PlayMode{PLAY,STOP,STEP};
 
-         //add a vector field from a file
-         void addFieldTextureFromFile(std::string textureFile);
+   //add a vector field from a file
+   void addFieldTextureFromFile(std::string textureFile);
 
-         void setPlayMode(PlayMode mode){_mode = mode;}
-         //forwardBackward == -1 backward
-         //forwardBackward == 1 forward
-         void setDirection(int forwardBackward);
+   void setPlayMode(PlayMode mode){_mode = mode;}
+   //forwardBackward == -1 backward
+   //forwardBackward == 1 forward
+   void setDirection(int forwardBackward);
 
-         //set the current frame
-         void SetCurrentFrame(unsigned int whichFrame);
+   //set the current frame
+   void SetCurrentFrame(unsigned int whichFrame);
 
-         //set the flag for using shaders
-         void SetUseShaders(bool useShaders);
+   //set the flag for using shaders
+   void SetUseShaders(bool useShaders);
 
-         //get the flag
-         bool UseShaders(){return _useShaders;}
+   //get the flag
+   bool UseShaders(){return _useShaders;}
 
-         float* getBoundingBox(){return _bbox;}
-         int timeToUpdate(double curTime,double delay);
+   float* getBoundingBox(){return _bbox;}
+   int timeToUpdate(double curTime,double delay);
 
-         //get the vector field at a given timestep
-         unsigned char* dataField(int timeStep){return _dataFields.at(timeStep);}
-   
-         //get the next vector field
-         unsigned char* getNextField(/*int plusNeg*/);
-         unsigned int getNextFrame();
-         //get the number of vector fields
-         int numberOfFields(){return _dataFields.size();}
+   //get the vector field at a given timestep
+   unsigned char* dataField(int timeStep){return _dataFields.at(timeStep);}
 
-         //the resolution of the fields
-         int* fieldResolution(){return _resolution;}
+   //get the next vector field
+   unsigned char* getNextField(/*int plusNeg*/);
+   unsigned int getNextFrame();
+   //get the number of vector fields
+   int numberOfFields(){return _dataFields.size();}
 
-         //the current frame
-         unsigned int GetCurrentFrame();
+   //the resolution of the fields
+   int* fieldResolution(){return _resolution;}
 
-         PlayMode getPlayMode(){return _mode;}
-         //the data ranges
-         ScalarRange dataRange(int index){return _ranges.at(index);}
+   //the current frame
+   unsigned int GetCurrentFrame();
 
-         float* transientRange(){return _transientRange;}
+   PlayMode getPlayMode(){return _mode;}
+   //the data ranges
+   ScalarRange dataRange(int index){return _ranges.at(index);}
 
-         DataType GetDataType(int whichField){return _types.at(whichField);}
+   float* transientRange(){return _transientRange;}
 
-         //equal operator
-         cfdTextureManager& operator=(const cfdTextureManager& tm); 
-      protected:
-         bool _useShaders;
-         int _curField;
-         int* _resolution;
-         std::vector<DataType> _types;
-         float _bbox[6];
-         float _range[2];
-         float _transientRange[2];
+   DataType GetDataType(int whichField){return _types.at(whichField);}
 
-         std::vector<ScalarRange> _ranges;
-         std::vector<unsigned char*> _dataFields;
-         double _prevTime;
-         int _direction;
-         PlayMode _mode; 
-   };
+   //equal operator
+   cfdTextureManager& operator=(const cfdTextureManager& tm);
+
+   std::string GetDataName( void ); 
+protected:
+   bool _useShaders;
+   int _curField;
+   int* _resolution;
+   std::vector<DataType> _types;
+   float _bbox[6];
+   float _range[2];
+   float _transientRange[2];
+
+   std::vector<ScalarRange> _ranges;
+   std::vector<unsigned char*> _dataFields;
+   double _prevTime;
+   int _direction;
+   PlayMode _mode;
+   std::string dataName;
+};
 }
 #endif
 #endif //_BIV_TEXTURE_MANAGER_H_

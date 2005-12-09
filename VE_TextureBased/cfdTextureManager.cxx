@@ -194,7 +194,8 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
 
       vtkFloatArray* flowData = dynamic_cast< vtkFloatArray* >( flowImage->GetPointData()->GetArray( 0 ) );
-      
+      dataName = flowData->GetName();
+
       DataType curType;
       //read the file type
       if ( flowData->GetNumberOfComponents() == 1 )
@@ -384,6 +385,12 @@ void cfdTextureManager::setDirection(int forwardBackward)
 {
    _direction = forwardBackward;
 }
+/////////////////////////////////////////////////////////
+std::string cfdTextureManager::GetDataName( void )
+{
+   return dataName;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 //equal operator                                                          //
 ////////////////////////////////////////////////////////////////////////////

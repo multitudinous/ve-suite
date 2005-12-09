@@ -45,65 +45,67 @@ namespace VE_TextureBased
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_TextureBased
 {
-   class VE_TEXTURE_BASED_EXPORTS TextureDataInfo{
-      public:
-         TextureDataInfo();
-         TextureDataInfo(const TextureDataInfo& tdi);
-         ~TextureDataInfo();
-         void SetName(std::string name);
-         void SetTextureManager(cfdTextureManager* tm);
+class VE_TEXTURE_BASED_EXPORTS TextureDataInfo
+{
+public:
+   TextureDataInfo();
+   TextureDataInfo(const TextureDataInfo& tdi);
+   ~TextureDataInfo();
+   void SetName(std::string name);
+   void SetTextureManager(cfdTextureManager* tm);
 
-         std::string GetName();
-         cfdTextureManager* GetTextureManager();
-         TextureDataInfo& operator=(const TextureDataInfo& tdi);
-      protected:
-         std::string _name;
-         cfdTextureManager* _tm;
-   };
+   std::string GetName();
+   cfdTextureManager* GetTextureManager();
+   TextureDataInfo& operator=(const TextureDataInfo& tdi);
+protected:
+   std::string _name;
+   cfdTextureManager* _tm;
+};
 
-   class VE_TEXTURE_BASED_EXPORTS cfdTextureDataSet{
-      public:
-         cfdTextureDataSet();
-         virtual ~cfdTextureDataSet();
+class VE_TEXTURE_BASED_EXPORTS cfdTextureDataSet
+{
+public:
+   cfdTextureDataSet();
+   virtual ~cfdTextureDataSet();
 
-         enum DataType {SCALAR,VECTOR};
+   enum DataType {SCALAR,VECTOR};
 
-         void SetActiveScalar(std::string name);
-         void SetActiveVector(std::string name);
-         void SetFileName(std::string name);
-         void CreateTextureManager(std::string textureDescriptionFile);
-         void AddScalarTextureManager( cfdTextureManager*, std::string );
-         void AddVectorTextureManager( cfdTextureManager*, std::string);
+   void SetActiveScalar(std::string name);
+   void SetActiveVector(std::string name);
+   void SetFileName(std::string name);
+   void CreateTextureManager(std::string textureDescriptionFile);
+   void AddScalarTextureManager( cfdTextureManager* );
+   void AddVectorTextureManager( cfdTextureManager* );
 
-         int FindVector(std::string name);
-         int FindScalar(std::string name);
+   int FindVector(std::string name);
+   int FindScalar(std::string name);
 
-         unsigned int NumberOfScalars();
-         unsigned int NumberOfVectors();
+   unsigned int NumberOfScalars();
+   unsigned int NumberOfVectors();
 
-         std::string ScalarName(unsigned int index);
-         std::string VectorName(unsigned int index);
-   
-         DataType ActiveDataType();
+   std::string ScalarName(unsigned int index);
+   std::string VectorName(unsigned int index);
 
-         cfdTextureManager* GetActiveTextureManager();
-         cfdVolumeVisualization* GetVolumeVisNode();
-      protected:
-         DataType _activeDataType;
-         unsigned int _nScalars;
-         unsigned int _nVectors;
-         std::string _fileName;
-         cfdVolumeVisualization* _volVisNode;
-         cfdTextureManager* _activeTM;
+   DataType ActiveDataType();
 
-         typedef std::vector<TextureDataInfo*> TextureDataList;
+   cfdTextureManager* GetActiveTextureManager();
+   cfdVolumeVisualization* GetVolumeVisNode();
+protected:
+   DataType _activeDataType;
+   unsigned int _nScalars;
+   unsigned int _nVectors;
+   std::string _fileName;
+   cfdVolumeVisualization* _volVisNode;
+   cfdTextureManager* _activeTM;
 
-         std::vector<std::string> _scalarNames;
-         std::vector<std::string> _vectorNames;
+   typedef std::vector<TextureDataInfo*> TextureDataList;
 
-         TextureDataList _scalars;
-         TextureDataList _vectors;
-   };
+   std::vector<std::string> _scalarNames;
+   std::vector<std::string> _vectorNames;
+
+   TextureDataList _scalars;
+   TextureDataList _vectors;
+};
 }
 #endif
 #endif

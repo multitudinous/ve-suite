@@ -34,8 +34,15 @@
 #include "VE_TextureBased/cfdTextureDataSet.h"
 #include "VE_TextureBased/cfdVolumeVisualization.h"
 #include "VE_TextureBased/cfdTextureManager.h"
+
+#include "VE_Xplorer/fileIO.h"
+
 #include <iostream>
 #include <fstream>
+
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+
 using namespace VE_TextureBased;
 //////////////////////////////////
 //Constructor                   //
@@ -204,67 +211,59 @@ void cfdTextureDataSet::CreateTextureManager(std::string textureDescriptionFile)
 {
    cfdTextureManager* tm = new cfdTextureManager();
    tm->SetUseShaders(true);
-   std::ifstream fin( textureDescriptionFile.c_str() );   
-   char name[256];
-   
-   if ( fin.is_open() )
-   {       
-      std::cout << "Reading texture description file: " 
-                  << textureDescriptionFile << std::endl;
-      int numFiles = 0;      
-      fin >> numFiles;      
-      std::string tempName;
-      std::getline( fin, tempName );
-      std::getline( fin, tempName );
-      std::cout <<"|\tScalar Name To Match VTK Dataset : "
-                << tempName << std::endl;
-      for(int i = 0; i < numFiles; i++)
-      {         
-         std::cout << "Loading texture time step file: " << i << std::endl;         
-         fin >> name;         
-         tm->addFieldTextureFromFile(name);      
-      }
 
-      std::cout << "Finished reading texture description file." << std::endl;
-      
-      if( tm->GetDataType(0) == cfdTextureManager::SCALAR )
-      {
-         AddScalarTextureManager( tm, tempName );
-      }
-      else
-      {
-         AddVectorTextureManager( tm, tempName );
-      }
+   boost::filesystem::path scalarPath( textureDescriptionFile );
+   try
+   {
+      boost::filesystem::is_directory( scalarPath );
+   }
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;
+      return;   
+	}
+   
+   std::cout << "|\tReading texture description file: " 
+               << textureDescriptionFile << std::endl;
+
+   std::vector< std::string > files = VE_Util::fileIO::GetFilesInDirectory( textureDescriptionFile,std::string( "vti" ) );
+   for ( size_t i = 0; i < files.size(); ++i )
+   {         
+      std::cout << "|\tLoading texture time step file: " << i << " " << files.at(i) << std::endl;         
+      tm->addFieldTextureFromFile( files.at(i) );      
+   }
+
+   std::cout << "|\tFinished reading texture description file." << std::endl;
+   
+   if( tm->GetDataType(0) == cfdTextureManager::SCALAR )
+   {
+      AddScalarTextureManager( tm );
    }
    else
    {
-      std::cout << "Couldn't open file in cfd3DTextureBasedModel::CreateTextureManager!" << std::endl;
-      std::cout<<textureDescriptionFile<<std::endl;
-      return;
+      AddVectorTextureManager( tm );
    }
 }
 /////////////////////////////////////////////////////////////////////
-void cfdTextureDataSet::AddScalarTextureManager(cfdTextureManager* tm,
-                                           std::string scalarName)
+void cfdTextureDataSet::AddScalarTextureManager( cfdTextureManager* tm )
 {
    TextureDataInfo* td = new TextureDataInfo();
-   td->SetName(scalarName);
+   td->SetName( tm->GetDataName() );
    td->SetTextureManager(tm);
    _scalars.push_back(td);
    _nScalars = _scalars.size(); 
    _activeTM = tm;
-   _scalarNames.push_back(scalarName);
+   _scalarNames.push_back( tm->GetDataName() );
 }
 /////////////////////////////////////////////////////////////////////
-void cfdTextureDataSet::AddVectorTextureManager(cfdTextureManager* tm,
-                                           std::string vectorName)
+void cfdTextureDataSet::AddVectorTextureManager( cfdTextureManager* tm )
 {
    TextureDataInfo* td = new TextureDataInfo();
-   td->SetName(vectorName);
+   td->SetName( tm->GetDataName() );
    td->SetTextureManager(tm);
    _vectors.push_back(td);
    _nVectors = _vectors.size();
-   _vectorNames.push_back(vectorName);
+   _vectorNames.push_back( tm->GetDataName() );
 }
 ///////////////////////////////////////////////////
 int cfdTextureDataSet::FindScalar(std::string name)

@@ -48,6 +48,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_SceneGraph", "VE_SceneGr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_TextureBased", "VE_TextureBased\VE_TextureBased.vcproj", "{398FF31C-58CE-4A0A-A288-BC3917FC9200}"
 	ProjectSection(ProjectDependencies) = postProject
+		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_UtilLib", "VE_Xplorer\VE_UtilLib.vcproj", "{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}"

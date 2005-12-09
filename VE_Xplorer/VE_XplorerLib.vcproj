@@ -428,6 +428,9 @@
 			Name="headers"
 			Filter=".h">
 			<File
+				RelativePath=".\cfdDataSet.h">
+			</File>
+			<File
 				RelativePath=".\cfdDebug.h">
 			</File>
 			<File
