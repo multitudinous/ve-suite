@@ -46,6 +46,8 @@ public:
    void SetOutputDirectory(const char* outDirectory);
    void SetTextureResolution(int x, int y, int z);
    void BatchTranslation();
+
+   void SetMPIVariables( int, int );
    
 protected:
    GridType _type;
@@ -92,6 +94,9 @@ protected:
    void _onResolutionCallback(wxCommandEvent& event);
    void _onNumFilesCallback(wxSpinEvent& event);
    void _onGridTypeCallback(wxCommandEvent& event);
+private:
+   int numProcessors;
+   int rank;
 
    DECLARE_EVENT_TABLE()
 };

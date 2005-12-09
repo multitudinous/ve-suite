@@ -17,6 +17,9 @@ protected:
    TCFrame* _frame;
    bool _isBatch;
    bool _translateFromCmdLine();
+private:
+   int p;
+   int rank;
 };
 DECLARE_APP(TCApp)
  

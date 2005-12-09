@@ -170,7 +170,8 @@ FlowPointData& FlowTexture::pixelData(int col,
 	                               int row,
                                   int depth)
 {
-   if(!_dims[0]||!_dims[1]){
+   if ( !_dims[0] || !_dims[1] )
+   {
       std::cout<<"Invalid texture dimensions!!"<<std::endl;
       std::cout<<_dims[0]<<" "<<_dims[1]<<" "<<_dims[2]<<std::endl;
    }
@@ -183,7 +184,7 @@ FlowPointData& FlowTexture::pixelData(int col,
 //an ascii file it is an rgba file                //
 //w/ float data                                   //
 ////////////////////////////////////////////////////
-void FlowTexture::writeFlowTexture(char* file, std::string scalarName)
+void FlowTexture::writeFlowTexture( std::string fileName, std::string scalarName)
 {
    int pixelNum = 0;
    double bbox[ 6 ];
@@ -258,7 +259,7 @@ void FlowTexture::writeFlowTexture(char* file, std::string scalarName)
       vtkXMLImageDataWriter* writer = vtkXMLImageDataWriter::New();
       writer->SetInput( flowImage );
       writer->SetDataModeToBinary();
-      writer->SetFileName( file );
+      writer->SetFileName( fileName.c_str() );
       writer->Write();
 
       writer->Delete();

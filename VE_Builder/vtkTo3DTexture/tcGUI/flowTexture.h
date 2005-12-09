@@ -123,7 +123,7 @@ public:
    //write out the flow texture data to
    //an ascii file
    //it is an rgba file w/ float data
-   void writeFlowTexture(char* file, std::string );
+   void writeFlowTexture( std::string, std::string );
 
    float* boundingBox(){return _bbox;}
 

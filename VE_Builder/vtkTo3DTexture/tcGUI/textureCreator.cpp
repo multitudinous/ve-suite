@@ -23,6 +23,10 @@
 #include "textureCreator.h"
 #include "tcFrame.h"
 #include "VE_Xplorer/readWriteVtkThings.h"
+
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
+
 ////////////////////////////////////
 //Constructor                     // 
 ////////////////////////////////////
@@ -250,19 +254,19 @@ void VTKDataToTexture::setOutputDirectory(const char* outDir)
 //////////////////////////////////////////////////////////////////
 //create a dataset from a file                                  //
 //////////////////////////////////////////////////////////////////
-void VTKDataToTexture::createDataSetFromFile(const char* filename)
+void VTKDataToTexture::createDataSetFromFile(const std::string filename)
 {
    wxString msg = wxString("Reading Dataset: ") + wxString(filename);
    _updateTranslationStatus(msg.c_str());
    //_confirmFileType(filename);
-   vtkDataSet* tmpDSet = VE_Util::readVtkThing((char*)filename);
+   vtkDataSet* tmpDSet = VE_Util::readVtkThing(filename);
 
    //get the info about the data in the data set
    _nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
    if(!_nPtDataArrays){
-      std::cout<<"Warning!!!"<<std::endl;
+      /*std::cout<<"Warning!!!"<<std::endl;
       std::cout<<"No point data found!"<<std::endl;
-      std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+      std::cout<<"Attempting to convert cell data to point data."<<std::endl;*/
 
       if(!_dataConvertCellToPoint)
          _dataConvertCellToPoint = vtkCellDataToPointData::New();
@@ -300,7 +304,7 @@ void VTKDataToTexture::createTextures()
    //check for a dataset
    if(!_dataSet){
       if(_vFileName){
-         createDataSetFromFile(_vFileName);
+         createDataSetFromFile(std::string( _vFileName ) );
       }else{
          std::cout<<"No dataset available to";
          std::cout<<" create a texture!!"<<std::endl;
@@ -406,7 +410,7 @@ void VTKDataToTexture::_createValidityTexture()
    delta[1] = fabs((bbox[3] - bbox[2])/(_resolution[1]-1));
    //delta z
    delta[2] = fabs((bbox[5] - bbox[4])/(_resolution[2]-1));
-   std::cout<<"Delta: "<<delta[0]<<" "<<delta[1]<<" "<<delta[2]<<std::endl;
+   //std::cout<<"Delta: "<<delta[0]<<" "<<delta[1]<<" "<<delta[2]<<std::endl;
 
    //double deltaDist = sqrt(delta[0]*delta[0] + delta[1]*delta[1]+delta[2]*delta[2]);
    //the bottom corner of the bbox/texture
@@ -829,16 +833,22 @@ char ** VTKDataToTexture::getParameterNames( const int numComponents,
 ////////////////////////////////////////////////////////////
 void VTKDataToTexture::writeVelocityTexture(int whichVector)
 {
+   std::string nameString;
+   //char posName[1024];
 
-   char posName[1024];
-
-   if(_outputDir){
-      strcpy(posName,_outputDir);
-   }else{
-      strcpy(posName,"./");
+   if ( _outputDir )
+   {
+      //strcpy(posName,_outputDir);
+      nameString = _outputDir;
    }
-   strcat(posName,"/vectors/");
-#ifdef WIN32
+   else
+   {
+      //strcpy(posName,"./");
+      nameString = "./";
+   }
+   //strcat(posName,"/vectors/");
+   nameString.append( "/vectors/" );
+/*#ifdef WIN32
    //check to see if the directory exists
    if( _mkdir( posName ) == 0 ){
       std::cout<<"Created directory: "<<posName<<std::endl;
@@ -847,10 +857,40 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
       std::cout<<"Directory: "<<posName<<" exists."<<std::endl;
       std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
    }
-#endif
-   strcat(posName,_vectorNames[whichVector]);
+#endif*/
+   boost::filesystem::path vectorPath( nameString );
+   try
+   {
+      boost::filesystem::is_directory( vectorPath );
+   }
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;
+      boost::filesystem::create_directory( vectorPath );
+	   std::cout << "...so we made it for you..." << std::endl;
+	}
+
+   //strcat(posName,_vectorNames[whichVector]);
+   nameString.append( _vectorNames[whichVector] );
+
+   boost::filesystem::path vectorNamePath( nameString );
+   try
+   {
+      boost::filesystem::is_directory( vectorNamePath );
+   }
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;
+      boost::filesystem::create_directory( vectorNamePath );
+	   std::cout << "...so we made it for you..." << std::endl;
+	}
+
+   nameString.append( "/" );
+   nameString.append( _vectorNames[whichVector] );
+
+   //strcat(posName,_vectorNames[whichVector]);
    
-   wxString relativePath("./vectors/");
+   /*wxString relativePath("./vectors/");
    relativePath += wxString(_vectorNames[whichVector]);
    relativePath += _vFileName;
    relativePath += ".vti";
@@ -880,61 +920,102 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    }else{
       textureDescriptionFile.Open(tdFileName,wxFile::write_append);
    }
-   
-   if(_vFileName){
-      strcat(posName,_vFileName);
-   }else{
-      strcat(posName,"flow");
-   }
-
-   strcat(posName,".vti");
    //textureDescriptionFile.Write(wxString(posName));
    textureDescriptionFile.Write(relativePath);
    textureDescriptionFile.Write('\n');
    textureDescriptionFile.Close();
+   */
+   if ( _vFileName )
+   {
+      //strcat(posName,_vFileName);
+      nameString.append( _vFileName );
+   }
+   else
+   {
+      //strcat(posName,"flow");
+      nameString.append( "flow" );
+   }
+
+   //strcat(posName,".vti");
+   nameString.append( ".vti" );
+
    double velRange[2] = {0,0};
    velRange[0] = _vectorRanges.at(whichVector)[0];
    velRange[1] = _vectorRanges.at(whichVector)[1];
-   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(posName);
+   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(nameString);
    _updateTranslationStatus(msg.c_str());
-   _velocity.at(0).writeFlowTexture(posName, std::string( _vectorNames[whichVector] ) );
+   _velocity.at(0).writeFlowTexture( nameString, std::string( _vectorNames[whichVector] ) );
 }
 ///////////////////////////////////////////
 void VTKDataToTexture::writeScalarTexture(int whichScalar)
 {
-   char name[1024]; 
-
-   if(_outputDir){
-      strcpy(name,_outputDir);
-   }else{
-      strcpy(name,"./");
+   //char name[1024]; 
+   std::string nameString;
+   if ( _outputDir )
+   {
+      //strcpy(name,_outputDir);
+      nameString = _outputDir;
    }
-   strcat(name,"/scalars/");
-#ifdef WIN32
+   else
+   {
+      //strcpy(name,"./");
+      nameString = "./";
+   }
+   //strcat(name,"/scalars/");
+   nameString.append( "/scalars/" );
+/*#ifdef WIN32
    //check to see if the directory exists
-   if( _mkdir( name) == 0 ){
-      std::cout<<"Created directory: "<<name<<std::endl;
+   if( _mkdir( nameString.c_str() ) == 0 ){
+      std::cout<<"Created directory: "<<nameString<<std::endl;
       std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
    }else{
-      std::cout<<"Directory: "<<name<<" exists."<<std::endl;
+      std::cout<<"Directory: "<<nameString<<" exists."<<std::endl;
       std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
    }
-#endif
-   strcat(name,_scalarNames[whichScalar]);
+#endif*/
+   boost::filesystem::path scalarPath( nameString );
+   try
+   {
+      boost::filesystem::is_directory( scalarPath );
+   }
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;
+      boost::filesystem::create_directory( scalarPath );
+	   std::cout << "...so we made it for you..." << std::endl;
+	}
 
-   wxString relativePath("./scalars/");
-   relativePath += wxString(_scalarNames[whichScalar]);
-   relativePath += _vFileName;
-   relativePath += ".vti";
+   //strcat(name,_scalarNames[whichScalar]);
+   nameString.append( _scalarNames[whichScalar] );
 
-   wxString tdFileName(_outputDir);
-   tdFileName += "/";
-   tdFileName += wxString(_scalarNames[whichScalar]);
-   tdFileName += ".txt";
-   wxFile textureDescriptionFile;
+   boost::filesystem::path scalarNamePath( nameString );
+   try
+   {
+      boost::filesystem::is_directory( scalarNamePath );
+   }
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;
+      boost::filesystem::create_directory( scalarNamePath );
+	   std::cout << "...so we made it for you..." << std::endl;
+	}
+
+   nameString.append( "/" );
+   nameString.append( _scalarNames[whichScalar] );
+   
+   //wxString relativePath("./scalars/");
+   //relativePath += wxString(_scalarNames[whichScalar]);
+   //relativePath += _vFileName;
+   //relativePath += ".vti";
+
+   //wxString tdFileName(_outputDir);
+   //tdFileName += "/";
+   //tdFileName += wxString(_scalarNames[whichScalar]);
+   //tdFileName += ".txt";
+   //wxFile textureDescriptionFile;
    //need to write the number of files and the
    //name of the internal search property
-   if(!textureDescriptionFile.Exists(tdFileName)){
+   /*if(!textureDescriptionFile.Exists(tdFileName)){
       wxString stringForScalars;
       stringForScalars.Printf("%d",_parent->GetNumberOfTimeSteps());
       textureDescriptionFile.Open(tdFileName,wxFile::write);
@@ -951,22 +1032,29 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    }else{
       textureDescriptionFile.Open(tdFileName,wxFile::write_append);
    }
-   if(_vFileName){
-      strcat(name,_vFileName);
-   }else{
-      strcat(name,"scalar");
-   }
-   strcat(name,".vti");
    //textureDescriptionFile.Write(wxString(name));
    textureDescriptionFile.Write(relativePath);
    textureDescriptionFile.Write('\n');
    textureDescriptionFile.Close();
+   */
+   if ( _vFileName )
+   {
+      //strcat(name,_vFileName);
+      nameString.append( _vFileName );
+   }
+   else
+   {
+      //strcat(name,"scalar");
+      nameString.append( "scalar" );
+   }
+   //strcat(name,".vti");
+   nameString.append( ".vti" );
 
    double scalarRange[2] = {0,0};
    scalarRange[0] = _scalarRanges.at(whichScalar)[0];
    scalarRange[1] = _scalarRanges.at(whichScalar)[1];
-   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(name);
-   _updateTranslationStatus(msg.c_str());
-   _curScalar.at(0).writeFlowTexture(name, std::string( _scalarNames[whichScalar] ) );  
+   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(nameString.c_str());
+   _updateTranslationStatus( msg.c_str() );
+   _curScalar.at(0).writeFlowTexture( nameString, std::string( _scalarNames[whichScalar] ) );  
 }
 	

@@ -4,6 +4,7 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <cmath>
 BEGIN_EVENT_TABLE(TCFrame,wxFrame)
@@ -61,6 +62,9 @@ TCFrame::TCFrame(wxWindow* parent,
    _translator = new VTKDataToTexture();
    _translator->setParentGUI(this);
    _currentFile = 0;
+
+   rank = -1;
+   numProcessors = -1;
    _buildGUI();
 
 }
@@ -261,6 +265,12 @@ void TCFrame::UpdateStatus(const char* statusString)
    GetStatusBar()->SetStatusText(wxString(statusString));
 }
 /////////////////////////////////////////////////////////
+void TCFrame::SetMPIVariables( int iRank, int inumProcessors )
+{
+   rank = iRank;
+   numProcessors = inumProcessors;
+}
+/////////////////////////////////////////////////////////
 //event callbacks                                      //
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -309,7 +319,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       _translator->setOutputDirectory((char*)_outputDir.c_str());
       //sprintf(oname,"_%d",i);
       std::ostringstream dirStringStream;
-      dirStringStream << "_" << i;
+      dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << i;
       std::string dirString = dirStringStream.str();
       //oname = (char*)dirString.c_str();
       _translator->createDataSetFromFile(_gridFiles[i].c_str());
@@ -488,19 +498,20 @@ void TCFrame::BatchTranslation()
 {
    _translator->setBatchOn();
    //process the files
-   //char* oname;
-   for(int i = 0; i < _numFiles; i++){
+   //for ( int i = 0; i < _numFiles; ++i )
+   for ( int i = rank; i < _numFiles; i += numProcessors )
+   {
       _translator->reset();
       _translator->setOutputDirectory((char*)_outputDir.c_str());
-      //sprintf(oname,"_%d",i);
-	  std::ostringstream dirStringStream;
-	  dirStringStream << "_" << i;
-	  std::string dirString = dirStringStream.str();
-	  //oname = (char*)dirString.c_str();
-      _translator->createDataSetFromFile(_gridFiles[i].c_str());
+
+      std::ostringstream dirStringStream;
+      dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << i;
+      std::string dirString = dirStringStream.str();
+      std::string tempString( _gridFiles[ i ].c_str() );   
+      _translator->createDataSetFromFile( tempString );
       _translator->setOutputResolution(_resolution[0],
-                                   _resolution[1],
-                                   _resolution[2]);
+                                _resolution[1],
+                                _resolution[2]);
       _translator->setVelocityFileName((char*)dirString.c_str());
       _translator->createTextures();
    }

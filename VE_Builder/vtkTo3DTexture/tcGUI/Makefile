@@ -19,14 +19,18 @@ OBJDIR= $(CFDHOSTTYPE)
 DEPDIR= $(CFDHOSTTYPE)
 
 NO_DEPEND= YES
+MPI_APP=TRUE
 
 # One of these must be uncommented.
 DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
-EXTRA_CFLAGS+= 
+EXTRA_CXXFLAGS+= -I$(VJ_DEPS_DIR)/include
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_UtilLib
-
+#if ( $(MPI_APP)==TRUE )
+#EXTRA_LIBS+= -lmpi
+#CXX = mpiCC
+#endif
 
 LINKALL_ON= -all
 LINKALL_OFF=

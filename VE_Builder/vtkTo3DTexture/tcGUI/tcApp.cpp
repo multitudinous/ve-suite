@@ -1,5 +1,8 @@
 #include "tcApp.h"
 #include <wx/cmdline.h>
+//#include <mpi.h>
+#include <cassert>
+
 IMPLEMENT_APP(TCApp)
 
 //////////////////////////////
@@ -8,6 +11,14 @@ IMPLEMENT_APP(TCApp)
 bool TCApp::OnInit()
 {
    wxApp::OnInit();
+   int ierror;
+   p = 1;
+   rank = 0;
+  /* // Initialize MPI
+   ierror = MPI_Init( &(wxGetApp().argc), &(wxGetApp().argv) );
+   ierror = MPI_Comm_size( MPI_COMM_WORLD, &p  );
+   ierror = MPI_Comm_rank( MPI_COMM_WORLD, &rank );
+   */
    //Create the main window
    if(_isBatch){
       return (_translateFromCmdLine()); 
@@ -20,6 +31,7 @@ bool TCApp::OnInit()
        _frame->GetSize(& width, & height);
        _frame->SetSize(-1, -1, width, height);
 #endif
+      _frame->SetMPIVariables( rank, p );
       //display the UI
       _frame->Show();
       return TRUE;
@@ -39,6 +51,15 @@ void TCApp::OnInitCmdLine(wxCmdLineParser& parser)
       return;
    }
    _isBatch = true;
+   int ierror;
+   p = 1;
+   rank = 0;
+  /* // Initialize MPI
+   ierror = MPI_Init( &(wxGetApp().argc), &(wxGetApp().argv) );
+   ierror = MPI_Comm_size( MPI_COMM_WORLD, &p  );
+   ierror = MPI_Comm_rank( MPI_COMM_WORLD, &rank );
+   */
+
    static const wxCmdLineEntryDesc cmdLineOpts[] = 
    {
       { wxCMD_LINE_SWITCH, _T("v"), _T("verbose"), _T("be verbose") },
@@ -82,6 +103,7 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
    if(_isBatch){
       _frame = new TCFrame(0,-1,wxT("Texture Creator"));
+      _frame->SetMPIVariables( rank, p );
       wxApp::OnCmdLineParsed(parser);
       //set all the options on the translator
       wxString inputDir("./");

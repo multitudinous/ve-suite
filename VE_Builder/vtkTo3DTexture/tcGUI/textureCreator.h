@@ -7,6 +7,8 @@
 #include <vtkRectilinearGridReader.h>
 #include <vtkCellLocator.h>
 #include "flowTexture.h"
+#include <string>
+
 class TCFrame;
 class vtkCellDataToPointData;
 
@@ -57,7 +59,7 @@ public:
    void setDataset(vtkDataSet* dSet){_dataSet = dSet;}
 
    //create a dataset from a file
-   void createDataSetFromFile(const char* filename);
+   void createDataSetFromFile(const std::string filename);
   
    //create the textures for this data set
    void createTextures();
