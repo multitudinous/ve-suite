@@ -256,7 +256,7 @@ void VTKDataToTexture::setOutputDirectory(const char* outDir)
 //////////////////////////////////////////////////////////////////
 void VTKDataToTexture::createDataSetFromFile(const std::string filename)
 {
-   wxString msg = wxString("Reading Dataset: ") + wxString(filename);
+   wxString msg = wxString("Reading Dataset: ") + wxString(filename.c_str());
    _updateTranslationStatus(msg.c_str());
    //_confirmFileType(filename);
    vtkDataSet* tmpDSet = VE_Util::readVtkThing(filename);
@@ -942,7 +942,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    double velRange[2] = {0,0};
    velRange[0] = _vectorRanges.at(whichVector)[0];
    velRange[1] = _vectorRanges.at(whichVector)[1];
-   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(nameString);
+   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(nameString.c_str());
    _updateTranslationStatus(msg.c_str());
    _velocity.at(0).writeFlowTexture( nameString, std::string( _vectorNames[whichVector] ) );
 }
