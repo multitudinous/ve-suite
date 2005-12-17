@@ -34,7 +34,7 @@
 
 #include "VE_Conductor/Framework/interface.h"
 #include <vector>
-#include "moduleS.h"
+#include "VE_Open/skel/moduleS.h"
 
 class Module;
 class Connection;

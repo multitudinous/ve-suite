@@ -86,11 +86,11 @@ cfdDataSet::cfdDataSet( )
    this->y_planes = NULL;
    this->z_planes = NULL;
    this->range = new double [ 2 ];
-   this->range[ 0 ] = 0;
-   this->range[ 1 ] = 0;
+   this->range[ 0 ] = 0.0f;
+   this->range[ 1 ] = 1.0f;
    this->definedRange = new double [ 2 ];
-   this->definedRange[ 0 ] = 0;
-   this->definedRange[ 0 ] = 0;
+   this->definedRange[ 0 ] = 0.0f;
+   this->definedRange[ 0 ] = 1.0f;
    this->isNewlyActivated = 0;
    this->fileName.empty();// = NULL;
    this->precomputedDataSliceDir.empty();// = NULL;

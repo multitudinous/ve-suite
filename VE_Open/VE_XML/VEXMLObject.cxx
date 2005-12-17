@@ -1,5 +1,4 @@
-#include "VE_XML/VEXMLObject.h"
-//#include <cstdlib>//is this bad???What's the new header for including these?
+#include "VE_Open/VE_XML/VEXMLObject.h"
 #include <sstream>
 #include <iomanip>
 XERCES_CPP_NAMESPACE_USE

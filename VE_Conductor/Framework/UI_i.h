@@ -32,12 +32,8 @@
 #ifndef UI_I_H_
 #define UI_I_H_
 
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-
 //#include "Frame.h"
-#include "moduleS.h"
+#include "VE_Open/skel/moduleS.h"
 #include <iostream>
 #include <string>
 

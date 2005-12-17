@@ -40,12 +40,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-//#ifdef WIN32
-//#include <winsock2.h>
-//#endif
-//#include <wx/thread.h>
 #include <ace/Task.h>
-#include "moduleS.h"
+#include "VE_Open/skel/moduleS.h"
 #include <string>
 #include <wx/menu.h>
 

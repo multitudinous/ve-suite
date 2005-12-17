@@ -62,60 +62,60 @@ class vtkPolyData;
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
-   {
-      private:
-         // Required so that vpr::Singleton can instantiate this class.
-         //friend class vpr::Singleton< cfdEnvironmentHandler >;
-         //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
-         //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
-         cfdEnvironmentHandler( void );
-         ~cfdEnvironmentHandler( void ){ ; }// Never gets called, don't implement
-         vprSingletonHeader( cfdEnvironmentHandler );   
+class VE_XPLORER_EXPORTS cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
+{
+private:
+   // Required so that vpr::Singleton can instantiate this class.
+   //friend class vpr::Singleton< cfdEnvironmentHandler >;
+   //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
+   //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
+   cfdEnvironmentHandler( void );
+   ~cfdEnvironmentHandler( void ){ ; }// Never gets called, don't implement
+   vprSingletonHeader( cfdEnvironmentHandler );   
 
-      public:
-         void Initialize( std::string );
-         void CleanUp( void );
-         void InitScene( void );
-         void PreFrameUpdate( void );
-         void SetCommandArray( cfdCommandArray* );
-         void CreateObjects( void );
+public:
+   void Initialize( std::string );
+   void CleanUp( void );
+   void InitScene( void );
+   void PreFrameUpdate( void );
+   void SetCommandArray( cfdCommandArray* );
+   void CreateObjects( void );
 
-         cfdNavigate* GetNavigate( void );
-         cfdCursor* GetCursor( void );
-         cfdSoundHandler* GetSoundHandler( void );
-         cfdTeacher* GetTeacher( void );
-         cfdQuatCamHandler* GetQuatCamHandler( void );
+   cfdNavigate* GetNavigate( void );
+   cfdCursor* GetCursor( void );
+   cfdSoundHandler* GetSoundHandler( void );
+   cfdTeacher* GetTeacher( void );
+   cfdQuatCamHandler* GetQuatCamHandler( void );
 
 #ifdef _OSG 
 #ifdef VE_PATENTED 
-         void ActivateGeometryPicking();
-         void DeactivateGeometryPicking();
+   void ActivateGeometryPicking();
+   void DeactivateGeometryPicking();
 #endif // VE_PATENTED
 #endif //_OSG 
-      private:
-         cfdNavigate* nav;
-         cfdTeacher* _teacher;
-         cfdSoundHandler* _soundHandler;
-         cfdQuatCamHandler* _camHandler;
+private:
+   cfdNavigate* nav;
+   cfdTeacher* _teacher;
+   cfdSoundHandler* _soundHandler;
+   cfdQuatCamHandler* _camHandler;
 
 #ifdef _OSG 
 #ifdef VE_PATENTED 
-	      cfdObjectHandler* objectHandler;
-         bool _activeGeomPicking;
+   cfdObjectHandler* objectHandler;
+   bool _activeGeomPicking;
 #endif // VE_PATENTED
 #endif //_OSG
-         cfdCursor* cursor;
-         std::string _param;
-         cfdCommandArray* _commandArray;
-         cfdReadParam* _readParam;
-         // cur_box will eventually be used to define bounding box
-         // for data interagation
-         double cur_box[6];
-         vtkPolyData * arrow;
-         float worldScale[ 3 ];
-         float worldTrans[ 3 ];
-         float worldRot[ 3 ];
-   };
+   cfdCursor* cursor;
+   std::string _param;
+   cfdCommandArray* _commandArray;
+   cfdReadParam* _readParam;
+   // cur_box will eventually be used to define bounding box
+   // for data interagation
+   double cur_box[6];
+   vtkPolyData * arrow;
+   float worldScale[ 3 ];
+   float worldTrans[ 3 ];
+   float worldRot[ 3 ];
+};
 }
 #endif

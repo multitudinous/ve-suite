@@ -32,12 +32,12 @@
 #ifndef EXECUTIVE_I_H_
 #define EXECUTIVE_I_H_
 
-#include "Execute_Thread.h"
+#include "VE_CE/Execute_Thread.h"
 
-#include "Network_Exec.h"
-#include "Scheduler.h"
+#include "VE_CE/Network_Exec.h"
+#include "VE_CE/Scheduler.h"
 
-#include "moduleS.h"
+#include "VE_Open/skel/moduleS.h"
 #include "VE_Conductor/Framework/package.h"
 #include <string>
 #include <vector>

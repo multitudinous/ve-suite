@@ -31,10 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_DESIGNPAR_TAB_H_
 #define _VE_UI_DESIGNPAR_TAB_H_
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-
 #include <wx/panel.h>
 #include <wx/notebook.h>
 
@@ -43,7 +39,8 @@ class wxButton;
 class wxSizer;
 class wxStaticText;
 
-enum DESGINPAR_TAB_IDS{
+enum DESGINPAR_TAB_IDS
+{
    DESIGNPAR_UPDATE_BUTTON
 };
 

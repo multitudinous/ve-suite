@@ -31,11 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef UI_MODELDATA_H
 #define UI_MODELDATA_H
-
 #ifdef _TAO
-#include "VjObsC.h"
+#include "VE_Open/skel/VjObsC.h"
 #else
-#include "VjObs.h"
+#include "VE_Open/skel/VjObs.h"
 #endif
 
 class wxString;

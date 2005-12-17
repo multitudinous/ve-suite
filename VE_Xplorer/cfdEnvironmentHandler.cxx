@@ -95,7 +95,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 void cfdEnvironmentHandler::Initialize( std::string param )
 {
    _param = param;
-   vprDEBUG(vesDBG,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << "|\tcfdApp::init" << std::endl << vprDEBUG_FLUSH;
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    this->nav = new cfdNavigate();
    _readParam = new cfdReadParam();
@@ -174,14 +174,13 @@ cfdQuatCamHandler* cfdEnvironmentHandler::GetQuatCamHandler( void )
 {
    return _camHandler;
 }
-
 ////////////////////////////////////////
 void cfdEnvironmentHandler::InitScene( void )
 {
    std::cout << "| ***************************************************************** |" << std::endl;
    // Needs to be set by the gui fix later
    this->nav->Initialize( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
-   //this->nav->SetWorldLocation( this->nav->worldTrans );
+   this->nav->SetInitialWorldPosition( this->worldTrans, this->worldRot, this->worldScale );
 
    VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetScaleArray( this->worldScale );
 
@@ -209,7 +208,7 @@ void cfdEnvironmentHandler::InitScene( void )
    this->cursor = new cfdCursor( this->arrow, 
                              VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(), 
                              VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode() );
-   this->cursor->Initialize( this->nav->GetCursorLocation(),this->nav->GetDirection() );
+   this->cursor->Initialize( this->nav->GetCursorLocation(), this->nav->GetDirection() );
 
    //
    // Initiate quatcam
@@ -240,9 +239,8 @@ void cfdEnvironmentHandler::InitScene( void )
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
-   // Update Navigation variables
-   
-   vprDEBUG(vesDBG,3) << "\t 1. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
+   // Update Navigation variables   
+   vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
 #ifdef VE_PATENTED
 #ifdef _OSG
@@ -250,17 +248,9 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 #endif //_OSG
 #endif //VE_PATENTED
 
-   if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RESET_NAVIGATION_POSITION )         
-   {
-      for ( unsigned int i = 0; i < 3; i++ )
-	   {
-         this->nav->worldTrans[ i ] = worldTrans[ i ];
-	   }
-	   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationArray( worldRot );
-   }
 #ifdef _OSG
 #ifdef VE_PATENTED
-   else if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == GEOMETRY_PICKING ) 
+   if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == GEOMETRY_PICKING ) 
    {
       if(_commandArray->GetCommandValue( cfdCommandArray::CFD_SC))
       {
@@ -273,10 +263,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    }
 #endif
 #endif
-   else if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ROTATE_ABOUT_HEAD )         
-   {
-      this->nav->SetHeadRotationFlag( static_cast< int >( _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) ) );
-   }
 
    this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
                         (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );

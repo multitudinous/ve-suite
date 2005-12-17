@@ -31,9 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLUGIN_BASE_H
 #define PLUGIN_BASE_H
-#ifdef WIN32
-#include <winsock2.h>
-#endif
 
 #include "VE_Conductor/Framework/interface.h"
 #define ICON 20000

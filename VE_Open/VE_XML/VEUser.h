@@ -10,9 +10,11 @@ namespace VE_XML{
 #include <iostream>
 
 #include "VE_Installer/include/VEConfig.h"
-#include "VE_XML/VEXMLObject.h"
-namespace VE_XML{
-class VE_XML_EXPORTS VEUser : public VEXMLObject{
+#include "VE_Open/VE_XML/VEXMLObject.h"
+namespace VE_XML
+{
+class VE_XML_EXPORTS VEUser : public VEXMLObject
+{
 public:
    VEUser(DOMDocument* rootDoc);
    virtual ~VEUser();

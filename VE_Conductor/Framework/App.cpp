@@ -29,9 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "App.h"
-#include "Frame.h"
-#include "package.h"
+#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/package.h"
+
 IMPLEMENT_APP(REIApp);
 
 bool REIApp::OnInit()
@@ -52,8 +53,8 @@ bool REIApp::OnInit()
 
 
   SetAppName("VE-Conductor");
-   
-  mainFrame= new AppFrame((wxFrame*) NULL, 1023, "VE-Conductor");
+  // this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+  mainFrame= new AppFrame(NULL, 1023, "VE-Conductor");
  
   // Problem with generic wxNotebook implementation whereby it doesn't size
   // properly unless you set the size again

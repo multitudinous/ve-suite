@@ -1,11 +1,12 @@
-#include "VE_XML/VEParameterBlock.h"
-using namespace VE_XML;
-#include "VE_XML/VETransform.h"
-#include "VE_XML/VEDataValuePair.h"
-
+#include "VE_Open/VE_XML/VEParameterBlock.h"
+#include "VE_Open/VE_XML/VETransform.h"
+#include "VE_Open/VE_XML/VEDataValuePair.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
+
+using namespace VE_XML;
+
 ////////////////////////////////////////////////////
 VEParameterBlock::VEParameterBlock(DOMDocument* rootDoc,unsigned int id)
 :VEXMLObject(rootDoc)

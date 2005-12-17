@@ -77,12 +77,16 @@ interface VjObs
    //short get_geo_num();
    short get_teacher_num();
    //short get_postdata();
-   string get_perf();
+   //string get_perf();
    //short get_timesteps();
    
-   void SetClientInfoFlag( in short value );   
-   void SetClientInfoData( in obj_pd o);   
-   obj_pd GetClientInfoData();   
+   // transfer data to explorer
+   void SetClientInfoFlag( in short value );
+   void SetClientInfoData( in obj_pd o);
+   obj_pd GetClientInfoData();
+
+   // write xerces string
+   void SetCommandString( in string input );
 
    // Used For Sound Files
    short GetNumberOfSounds();
@@ -95,37 +99,37 @@ interface VjObs
    //void setNumGeoArrays(in short value);
    //short getNumGeoArrays();
 
-   void setIsoValue(in long value);
+   //void setIsoValue(in long value);
    long getIsoValue();
 
    void setSc(in long value);
-   long getSc();
+   //long getSc();
 
-   void setMin(in long value);
-   long getMin();
+   //void setMin(in long value);
+   //long getMin();
 
-   void setMax(in long value);
-   long getMax();
+   //void setMax(in long value);
+   //long getMax();
 
-   void setId(in long value);
-   long getId();
+   //void setId(in long value);
+   //long getId();
 
-   void setGeoState(in long value);
-   long getGeoState();
+   //void setGeoState(in long value);
+   //long getGeoState();
 
-   void setPostdataState(in short value);
+   //void setPostdataState(in short value);
    short getPostdataState();
 
-   void setPreState(in short value);
-   short getPreState();
+   //void setPreState(in short value);
+   //short getPreState();
 
-   void setTimesteps(in short value);
+   //void setTimesteps(in short value);
    short getTimesteps();
 
-   void setNumTeacherArrays(in short value);
-   short getNumTeacherArrays();
+   //void setNumTeacherArrays(in short value);
+   //short getNumTeacherArrays();
 
-   void setTeacherState(in short value);
-   short getTeacherState();
+   //void setTeacherState(in short value);
+   //short getTeacherState();
    
 };

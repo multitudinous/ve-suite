@@ -29,14 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/VE_UI/UI_ViewLocTab.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_ViewLocTab.h"
 #include "VE_Xplorer/cfdEnum.h"
+
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <wx/utils.h>
 
+#include <wx/utils.h>
 #include <wx/button.h>
 #include <wx/combobox.h>
 #include <wx/listbox.h>

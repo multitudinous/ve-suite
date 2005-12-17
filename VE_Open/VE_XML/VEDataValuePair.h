@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "VE_Installer/include/VEConfig.h"
-#include "VE_XML/VEXMLObject.h"
+#include "VE_Open/VE_XML/VEXMLObject.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>

@@ -31,10 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_TOP_FRAME_H_
 #define _VE_UI_TOP_FRAME_H_
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-
 class UI_Frame;
 
 class UI_TopFrame: public wxFrame{

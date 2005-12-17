@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "Network_Exec.h"
-#include "Scheduler.h"
+#include "VE_CE/Network_Exec.h"
+#include "VE_CE/Scheduler.h"
 #include "VE_Conductor/Framework/string_ops.h"
 
 #include <iostream>

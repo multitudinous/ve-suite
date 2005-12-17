@@ -31,21 +31,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_TABS_H_
 #define _VE_UI_TABS_H_
-#ifdef WIN32
-#include <winsock2.h>
+#ifdef _TAO
+#include "VE_Open/skel/VjObsC.h"
+#else
+#include "VE_Open/skel/VjObs.h"
 #endif
 
 #include <wx/notebook.h>
 
 class wxWindow;
 class wxString;
-
-#ifdef _TAO
-#include "VjObsC.h"
-#else
-#include "VjObs.h"
-#endif
-
 
 #include <string>
 #include <vector>

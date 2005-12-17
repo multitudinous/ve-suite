@@ -1,8 +1,7 @@
-#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
-#include <iostream>
 #include "VE_Conductor/Framework/transientIcons/play.xpm"
 #include "VE_Conductor/Framework/transientIcons/next.xpm"
 #include "VE_Conductor/Framework/transientIcons/prev.xpm"
@@ -11,6 +10,7 @@
 #include <wx/sizer.h>
 #include <wx/window.h>
 
+#include <iostream>
 
 BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_BUTTON(PLAY_BUTTON, UI_TransientDialog::_onPlay)

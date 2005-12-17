@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/VE_UI/UI_ModSelPanel.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
+#include "VE_Conductor/VE_UI/UI_ModSelPanel.h"
 #include "VE_Conductor/VE_UI/UI_ModelData.h"
 #include <iostream>
 

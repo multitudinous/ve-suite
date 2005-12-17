@@ -29,10 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/VE_UI/UI_StreamTab.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_StreamTab.h"
 #include "VE_Conductor/VE_UI/UI_TransientDialog.h"
-
 #include "VE_Xplorer/cfdEnum.h"
 
 #include <wx/slider.h>

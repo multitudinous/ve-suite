@@ -31,10 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef REIAPP_H
 #define REIAPP_H
-
-#ifdef WIN32
-#include <winsock2.h>
-#endif
 #include <wx/app.h>
 
 class AppFrame;

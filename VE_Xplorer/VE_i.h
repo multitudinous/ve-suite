@@ -33,10 +33,7 @@
 #ifndef VE_I_H_
 #define VE_I_H_
 
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-#include "VEOpen/skel/moduleS.h"
+#include "VE_Open/skel/moduleS.h"
 #include <string>
 #include <vector>
 #include <vpr/Sync/Mutex.h>
@@ -47,28 +44,28 @@
 
 namespace VE_Xplorer
 {
-   //Class Body_UI_i
-   class  Body_UI_i : public virtual POA_Body::UI
-   {
-      public:
-         //Constructor 
-         Body_UI_i (Body::Executive_ptr exec, std::string name);
-  
-         //Destructor 
-         virtual ~Body_UI_i (void);
-  
-         std::string UIName_;
-         std::string GetNetworkString( void );
-         std::string GetStatusString( void );
-         bool GetNetworkFlag( void );
+//Class Body_UI_i
+class  Body_UI_i : public virtual POA_Body::UI
+{
+public:
+   //Constructor 
+   Body_UI_i (Body::Executive_ptr exec, std::string name);
 
-      protected:
-         Body::Executive_var executive_;
-         std::vector< std::string > networkStringBuffer;
-         std::vector< std::string > statusStringBuffer;
-         vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
-         vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
-         void SetNetworkString( char* );
+   //Destructor 
+   virtual ~Body_UI_i (void);
+
+   std::string UIName_;
+   std::string GetNetworkString( void );
+   std::string GetStatusString( void );
+   bool GetNetworkFlag( void );
+
+protected:
+   Body::Executive_var executive_;
+   std::vector< std::string > networkStringBuffer;
+   std::vector< std::string > statusStringBuffer;
+   vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
+   vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
+   void SetNetworkString( char* );
 
    virtual void UpdateNetwork (
       const char * network
@@ -117,6 +114,6 @@ namespace VE_Xplorer
     CORBA::SystemException
     , Error::EUnknown
    ));
-   };
+};
 }
 #endif

@@ -29,18 +29,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "Avail_Modules.h"
-#include "StringParse.h"
-#include "VE_Conductor/Framework/PluginLoader.h"
 #include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/Avail_Modules.h"
+#include "VE_Conductor/Framework/StringParse.h"
+#include "VE_Conductor/Framework/PluginLoader.h"
 #include "VE_Conductor/Framework/Plugin_base.h"
 
-#include "icon1.xpm"
-#include "icon2.xpm"
-#include "icon3.xpm"
-#include "icon4.xpm"
-#include "icon5.xpm"
+#include "VE_Conductor/Framework/icon1.xpm"
+#include "VE_Conductor/Framework/icon2.xpm"
+#include "VE_Conductor/Framework/icon3.xpm"
+#include "VE_Conductor/Framework/icon4.xpm"
+#include "VE_Conductor/Framework/icon5.xpm"
 
+#ifdef WIN32
+#include <shellapi.h>
+#endif
 
 BEGIN_EVENT_TABLE(Avail_Modules, wxTreeCtrl)
   EVT_TREE_ITEM_RIGHT_CLICK(TREE_CTRL, Avail_Modules::OnItemRightClick)

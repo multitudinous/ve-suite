@@ -41,6 +41,12 @@ namespace VE_SceneGraph
 {
    class cfdDCS;
 }
+
+namespace VE_XML
+{
+   class VECommand;
+}
+
 //! Navigation tracker
 /*!
   A class to track the wand location, object translation,
@@ -123,6 +129,11 @@ public:
    float* GetWorldRotation();
 
    void SetHeadRotationFlag( int );
+
+   // New function for testing the new VECommand structure
+   void SetVECommand( VE_XML::VECommand* veCommand );
+   // accessor to set initial world position
+   void SetInitialWorldPosition( float* translate, float* rotate, float* scale );
 private:
    /*!
    Update wand location.
@@ -205,6 +216,12 @@ private:
    float rotationStepSize;
 
    int rotationFlag;
+
+   // class used to store xml command
+   VE_XML::VECommand* command;
+   // data storage for initial world dcs location
+   float initialTranslate[ 3 ];
+   float initialRotate[ 3 ];
 };
 }
 #endif

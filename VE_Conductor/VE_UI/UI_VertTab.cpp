@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/VE_UI/UI_VertTab.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_VertTab.h"
 #include "VE_Xplorer/cfdEnum.h"
 
 #include <wx/radiobox.h>

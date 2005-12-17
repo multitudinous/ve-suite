@@ -29,10 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/VE_UI/UI_DataSetPanel.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_DataSetPanel.h"
 #include "VE_Xplorer/cfdEnum.h"
-#include <iostream>
 #include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/VE_UI/UI_ModelData.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
@@ -45,6 +44,7 @@
 #include <wx/slider.h>
 #include <wx/combobox.h>
 
+#include <iostream>
 
 UI_Scalars::UI_Scalars(wxString* scalarName)
 {

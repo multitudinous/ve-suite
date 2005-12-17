@@ -31,11 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef NETWORK_H
 #define NETWORK_H
-#ifdef WIN32
-#include <winsock2.h>
-#endif
+#include "VE_Open/skel/moduleC.h"
 
-//#include <wx/wx.h>
+#include "VE_Conductor/Framework/Plugin_base.h"
 
 #include <wx/event.h>
 #include <wx/scrolwin.h>
@@ -45,9 +43,6 @@
 #include <vector>
 #include <map>
 #include <iostream>
-#include "moduleC.h"
-
-#include "VE_Conductor/Framework/Plugin_base.h"
 class GlobalParamDialog;
 
 enum 

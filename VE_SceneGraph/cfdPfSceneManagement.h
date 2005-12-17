@@ -49,35 +49,34 @@ class pfLightSource;
 
 namespace VE_SceneGraph
 {
-   class VE_SCENEGRAPH_EXPORTS cfdPfSceneManagement //: public vpr::Singleton< cfdPfSceneManagement >
-   {
-      public:
-         void Initialize( std::string );
-         void CleanUp( void );
-         void InitScene( void );
-      
-         cfdGroup* GetRootNode( void );
-         cfdDCS*   GetWorldDCS( void );
+class VE_SCENEGRAPH_EXPORTS cfdPfSceneManagement //: public vpr::Singleton< cfdPfSceneManagement >
+{
+public:
+   void Initialize( std::string );
+   void CleanUp( void );
+   void InitScene( void );
 
-      private:
-         // Required so that vpr::Singleton can instantiate this class.
-         //friend class vpr::Singleton< cfdPfSceneManagement >;
-         //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
-         //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
-         cfdPfSceneManagement( void );
-         ~cfdPfSceneManagement(){ ; } // Never gets called, don't implement
-         vprSingletonHeader( cfdPfSceneManagement );   
-      
-         //std::string    param;
-         std::string _param;
-         cfdGroup* rootNode;  
-         cfdDCS* worldDCS;
+   cfdGroup* GetRootNode( void );
+   cfdDCS*   GetWorldDCS( void );
+
+private:
+   // Required so that vpr::Singleton can instantiate this class.
+   //friend class vpr::Singleton< cfdPfSceneManagement >;
+   //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
+   //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
+   cfdPfSceneManagement( void );
+   ~cfdPfSceneManagement(){ ; } // Never gets called, don't implement
+   vprSingletonHeader( cfdPfSceneManagement );   
+
+   //std::string    param;
+   std::string _param;
+   cfdGroup* rootNode;  
+   cfdDCS* worldDCS;
 #ifdef _PERFORMER
-         pfLightModel*  sunModel;
-         pfLightSource* sun;
-         pfLightSource* lit;
+   pfLightModel*  sunModel;
+   pfLightSource* sun;
+   pfLightSource* lit;
 #endif
-   };
+};
 }
-
 #endif

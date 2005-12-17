@@ -31,8 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_FRAME_H_
 #define _VE_UI_FRAME_H_
-#ifdef WIN32
-#include <winsock2.h>
+#ifdef _TAO
+#include "VE_Open/skel/VjObsC.h"
+#else
+#include "VE_Open/skel/VjObs.h"
 #endif
 
 #include <wx/panel.h>
@@ -47,12 +49,6 @@ class UI_DatasetPanel;
 class UI_Tabs;
 class UI_ModSelPanel;
 class UI_ModelData;
-
-#ifdef _TAO
-#include "VjObsC.h"
-#else
-#include "VjObs.h"
-#endif
 
 ////////////////////////////////////////////////////
 //This is the class that is the frame.            //

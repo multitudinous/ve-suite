@@ -31,9 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef AVAIL_MODULES_H
 #define AVAIL_MODULES_H
-#ifdef WIN32
-#include <winsock2.h>
-#endif
 #include <wx/wx.h>
 #include <vector>
 #include <wx/image.h>

@@ -33,13 +33,12 @@
 #define _VJOBS_I_H_
 
 #ifdef _TAO
-#include "VEOpen/skel/VjObsS.h"
+#include "VE_Open/skel/VjObsS.h"
 #else
-#include "VEOpen/skel/VjObs.h"
+#include "VE_Open/skel/VjObs.h"
 #endif
 
 #include <vpr/Sync/Mutex.h>
-#include "VE_Xplorer/cfdCommandArray.h"
 
 #ifdef _CLUSTER
 #include <cluster/ClusterManager.h>
@@ -53,8 +52,18 @@
 namespace VE_Xplorer
 {
    class cfdModelHandler;
+   class cfdCommandArray;
 }
 
+namespace VE_Conductor
+{
+   class DOMDocumentManager;
+}
+
+namespace VE_XML
+{
+    class VECommand;
+}
 #include <vector>
 
 namespace VE_Xplorer
@@ -64,54 +73,7 @@ class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
 {
 public:
    
-   VjObs_i()
-   {
-      this->numOfClientInfo = 9;
-      //int temp=0;
-      //this->setClients( 0 );
-      _cfdArray = new cfdCommandArray();
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
-      _bufferArray = new cfdCommandArray();
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
-      //orb=CORBA::ORB_init(temp,0,"omniORB4");
-      /*for(temp=0;temp<25;temp++)
-      {
-         client_list[temp]=0;
-      }*/
-      // allocate enough space
-	   //geo_name       = new VjObs::scalar_p(50);
-	   //geo_name->length(50);
-	   //scl_name       = new VjObs::scalar_p(50);
-	   //scl_name->length(50);
-	   teacher_name   = new VjObs::scalar_p(50);
-	   teacher_name->length(50);
-	   //dataset_names  = new VjObs::scalar_p(50);
-	   //dataset_names->length(50);
-	   sound_names    = new VjObs::scalar_p(50);
-	   sound_names->length(50);
-
-	   //dataset_types  = new VjObs::obj_p(50);
-	   //dataset_types->length(50);
-	   //num_scalars_per_dataset = new VjObs::obj_p(50);
-	   //num_scalars_per_dataset->length(50);
-	   //num_vectors_per_dataset = new VjObs::obj_p( 50 );
-	   //num_vectors_per_dataset->length(50);
-	   //vec_name = new VjObs::scalar_p( 50 );
-	   //vec_name->length( 50 );
-      // This array is used in place of the call backs
-      // to the client because the communication didn't
-      // seem to work. There are 9 entries becuase that
-      // how many variables are synchronized during an
-      // update call in VjObs_i
-	   clientInfoObserverDataArray = new VjObs::obj_pd(50);
-	   clientInfoObserverDataArray->length(50);
-	   clientInfoObserverDataArray->length( this->numOfClientInfo );
-	   clientInfoObserverDataArray->length(50);
-      this->_unusedNewData = false;
-      _models = NULL;
-      time_since_start = 0.0f;
-      frameNumber = 0;
-   }
+   VjObs_i();
    virtual ~VjObs_i(){;}
    
    void CreateGeometryInfo( void );
@@ -141,7 +103,7 @@ public:
    //cfdApp. So they are actually direct function calls to the cfdApp.
    short get_teacher_num() throw (CORBA::SystemException);//{return this->get_teacher_num();}; //*
    //short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
-   char* get_perf() throw (CORBA::SystemException);
+   //char* get_perf() throw (CORBA::SystemException);
 
    short GetNumberOfSounds() throw (CORBA::SystemException);
    VjObs::scalar_p* GetSoundNameArray() throw (CORBA::SystemException);
@@ -165,7 +127,7 @@ public:
    //cfdApp. So they are actually direct function calls to the cfdApp.
    //short get_geo_num();//{return this->get_geo_num();}; //*
    short get_teacher_num();//{return this->get_teacher_num();}; //*
-   char* get_perf();
+   //char* get_perf();
 
    CORBA::Short GetNumberOfSounds();
    VjObs::scalar_p* GetSoundNameArray();
@@ -197,7 +159,7 @@ protected:
 
    VjObs::obj_pd_var clientInfoObserverDataArray;
    int numOfClientInfo;
-   bool _unusedNewData;
+   //bool _unusedNewData;
    float time_since_start;
    float quatCamIncrement;
    long frameNumber;
@@ -206,77 +168,16 @@ protected:
 
    VjObs::double2DArray* getDouble2D( const char* input ) throw (CORBA::SystemException);
 
-   virtual void setIsoValue( CORBA::Long value) throw (CORBA::SystemException);
+   void SetCommandString( const char* value) throw (CORBA::SystemException);
+
+   //virtual void setIsoValue( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);
 
    void setSc( CORBA::Long value) throw (CORBA::SystemException);
-   CORBA::Long getSc( void ) throw (CORBA::SystemException);
 
-   void setMin( CORBA::Long value) throw (CORBA::SystemException);
-   CORBA::Long getMin( void ) throw (CORBA::SystemException);
-
-   void setMax( CORBA::Long value) throw (CORBA::SystemException);
-   CORBA::Long getMax( void ) throw (CORBA::SystemException);
-
-   void setId( CORBA::Long value) throw (CORBA::SystemException);
-   CORBA::Long getId( void ) throw (CORBA::SystemException);
-
-   void setGeoState( CORBA::Long value) throw (CORBA::SystemException);
-   CORBA::Long getGeoState( void ) throw (CORBA::SystemException);
-
-   void setPostdataState( short value) throw (CORBA::SystemException);
    short getPostdataState( void ) throw (CORBA::SystemException);
 
-   void setPreState( short value) throw (CORBA::SystemException);
-   short getPreState( void ) throw (CORBA::SystemException);
-
-   void setTimesteps( short value) throw (CORBA::SystemException);
    short getTimesteps( void ) throw (CORBA::SystemException);
-
-   void setNumTeacherArrays( short value) throw (CORBA::SystemException);
-   short getNumTeacherArrays( void ) throw (CORBA::SystemException);
-
-   void setTeacherState( short value) throw (CORBA::SystemException);
-   short getTeacherState( void ) throw (CORBA::SystemException);
-#else   
-   /**
-    * Sets this subject's internal value.
-    */
-   //void setNumGeoArrays(CORBA::Short value);
-   //CORBA::Short getNumGeoArrays( void );
-
-   void setIsoValue(CORBA::Long value);
-   CORBA::Long getIsoValue( void );
-
-   double setSc(CORBA::Long value);
-   CORBA::Long getSc( double );
-
-   void setMin(CORBA::Long value);
-   CORBA::Long getMin( void );
-
-   void setMax(CORBA::Long value);
-   CORBA::Long getMax( void );
-
-   void setId(CORBA::Long value);
-   CORBA::Long getId( void );
-
-   void setGeoState(CORBA::Long value);
-   CORBA::Long getGeoState( void );
-
-   void setPostdataState(CORBA::Short value);
-   CORBA::Short getPostdataState( void );
-
-   void setPreState(CORBA::Short value);
-   CORBA::Short getPreState( void );
-
-   void setTimesteps(CORBA::Short value);
-   CORBA::Short getTimesteps( void );
-
-   void setNumTeacherArrays(CORBA::Short value);
-   CORBA::Short getNumTeacherArrays( void );
-
-   void setTeacherState(CORBA::Short value);
-   CORBA::Short getTeacherState( void );
 #endif
    vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
 
@@ -299,6 +200,9 @@ protected:
    short mGetClientInfo;
    double mShort_data_array[ 9 ];
 
+   VE_Conductor::DOMDocumentManager* domManager;
+   std::vector< VE_XML::VECommand* > commandVectorQueue;
+   VE_XML::VECommand* bufferCommand;
    cfdCommandArray* _bufferArray;
 #ifdef _CLUSTER
    // Cluster Stuff for the above state variables

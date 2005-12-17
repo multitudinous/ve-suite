@@ -482,8 +482,8 @@ void UI_Tabs::createTabPages()
    AddPage( _visPage, _T("Visualization"), true); 
 
    //Navigation page
-   _navPage = new UI_NavigationTab(this);
-   AddPage( _navPage, _T("Navigation"), false );
+   //_navPage = new UI_NavigationTab(this);
+   //AddPage( _navPage, _T("Navigation"), false );
 
    //Viewing Locations page
    _viewlocPage = new UI_ViewLocTab(this);

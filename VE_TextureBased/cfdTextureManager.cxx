@@ -71,9 +71,10 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
    {
       _ranges.clear();
    }
-   int nFields = tm._dataFields.size();
+   size_t nFields = tm._dataFields.size();
    
-   for(int i = 0; i < nFields; i++){
+   for ( size_t i = 0; i < nFields; i++ )
+   {
       _dataFields.push_back(tm._dataFields[i]);   
       _types.push_back(tm._types.at(i));
       _ranges.push_back(tm._ranges.at(i));
@@ -103,9 +104,10 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
 /////////////////////////////////
 cfdTextureManager::~cfdTextureManager()
 {
-   if(_dataFields.size()){
-      unsigned int nFields = _dataFields.size();
-      for(unsigned int i = 0; i < nFields; i++)
+   if(_dataFields.size() > 0 )
+   {
+      size_t nFields = _dataFields.size();
+      for( size_t i = 0; i < nFields; i++)
       {
          if(_dataFields.at(i))
          {
@@ -149,7 +151,7 @@ unsigned int cfdTextureManager::GetCurrentFrame()
 //////////////////////////////////////////////
 unsigned int cfdTextureManager::getNextFrame()
 {
-   int numFields = _dataFields.size();
+   size_t numFields = _dataFields.size();
    //now update the current field
    if(_direction == 1){
       //haven't reached the end yet
@@ -167,7 +169,7 @@ unsigned int cfdTextureManager::getNextFrame()
       }else if(_curField == 0){
          //we're at the end so we need to
          //return the beginning
-         _curField = numFields-1;
+         _curField = static_cast< int >( numFields-1 );
       }
    }
    return _curField;
@@ -335,7 +337,7 @@ unsigned char* cfdTextureManager::getNextField(/*int plusNeg*/)
    //positive
    //if(!plusNeg)dir = -1;
 
-   int numFields = _dataFields.size();
+   size_t numFields = _dataFields.size();
    //now update the current field
    if(_direction == 1){
       //haven't reached the end yet
@@ -353,7 +355,7 @@ unsigned char* cfdTextureManager::getNextField(/*int plusNeg*/)
       }else if(_curField == 0){
          //we're at the end so we need to
          //return the beginning
-         _curField = numFields-1;
+         _curField = static_cast< int >( numFields-1 );
       }
    }
 
@@ -368,7 +370,7 @@ unsigned char* cfdTextureManager::getNextField(/*int plusNeg*/)
 //////////////////////////////////////////////////////////////
 int cfdTextureManager::timeToUpdate(double curTime,double delay)
 {
-   int numFields = _dataFields.size();
+   size_t numFields = _dataFields.size();
 
    if ( (numFields > 1) && _mode == PLAY  )
    {
@@ -407,9 +409,9 @@ cfdTextureManager& cfdTextureManager::operator=(const cfdTextureManager& tm)
       {
          _ranges.clear();
       }
-      int nFields = tm._dataFields.size();
+      size_t nFields = tm._dataFields.size();
    
-      for(int i = 0; i < nFields; i++){
+      for(size_t i = 0; i < nFields; i++){
          _dataFields.push_back(tm._dataFields.at(i));
          _types.push_back(tm._types.at(i));
          _ranges.push_back(tm._ranges.at(i));

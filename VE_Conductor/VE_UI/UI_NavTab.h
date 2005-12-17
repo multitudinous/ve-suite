@@ -31,11 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_NAV_H_
 #define _VE_UI_NAV_H_
-
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-
 #include <wx/image.h>
 #include <wx/notebook.h>
 #include <wx/bmpbuttn.h>

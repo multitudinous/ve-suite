@@ -55,8 +55,6 @@
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
-//IMPLEMENT_DYNAMIC_CLASS( VE_Xplorer::cfdVEBaseClass, wxObject )
-
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;

@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "Executive_i.h"
+#include "VE_CE/Executive_i.h"
 
 #include <ace/Task.h>
 #include <ace/OS.h>
-#include "Execute_Thread.h"
+#include "VE_CE/Execute_Thread.h"
 
 #include <iostream>
 

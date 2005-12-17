@@ -1,5 +1,5 @@
-#include "VE_XML/VEStateInfo.h"
-#include "VE_XML/VECommand.h"
+#include "VE_Open/VE_XML/VEStateInfo.h"
+#include "VE_Open/VE_XML/VECommand.h"
 
 using namespace VE_XML;
 

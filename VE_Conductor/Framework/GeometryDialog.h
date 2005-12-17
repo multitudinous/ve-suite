@@ -31,10 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef GEOMETRY_DIALOG
 #define GEOMETRY_DIALOG
-
-#ifdef WIN32
-#include <winsock2.h>
-#endif
 #include <wx/dialog.h>
 #include <wx/statbox.h>
 

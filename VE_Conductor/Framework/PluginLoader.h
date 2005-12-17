@@ -31,9 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLUGINLOADER_H
 #define PLUGINLOADER_H
-#ifdef WIN32
-#include <winsock2.h>
-#endif
 
 #include <vector>
 #include <wx/string.h>

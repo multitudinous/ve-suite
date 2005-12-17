@@ -1,5 +1,5 @@
-#include "VE_XML/VECommand.h"
-#include "VE_XML/VEDataValuePair.h"
+#include "VE_Open/VE_XML/VECommand.h"
+#include "VE_Open/VE_XML/VEDataValuePair.h"
 #include <iostream>
 using namespace VE_XML;
 //////////////////////

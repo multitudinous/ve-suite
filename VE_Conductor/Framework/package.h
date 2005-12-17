@@ -93,13 +93,9 @@ protected:
    std::string packname; //The package name, goes to the name attrib of the element package
    std::string system_id; //The file name of the xml file or a fake filename used for parsing the memory buffer input source
 
-#ifdef WIN32
-   void FillIntfs( xercesc_2_6::DOMDocument *doc );
-   xercesc_2_6::DOMDocument* BuildFromIntfs();
-#else
    void FillIntfs( DOMDocument *doc );
    DOMDocument* BuildFromIntfs();
-#endif // WIN32
+
 public:
 //private:
    std::vector<Interface> intfs; //The vector of the interfaces packed in this package.

@@ -1,5 +1,5 @@
-#include "VE_XML/VETransform.h"
-#include "VE_XML/VEFloatArray.h"
+#include "VE_Open/VE_XML/VETransform.h"
+#include "VE_Open/VE_XML/VEFloatArray.h"
 
 using namespace VE_XML;
 //////////////////////////

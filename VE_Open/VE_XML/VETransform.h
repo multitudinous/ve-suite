@@ -2,7 +2,7 @@
 #define _XML_VE_TRANSFORM_H_
 #include <string>
 #include "VE_Installer/include/VEConfig.h"
-#include "VE_XML/VEXMLObject.h"
+#include "VE_Open/VE_XML/VEXMLObject.h"
 
 #include <xercesc/dom/DOM.hpp>
 

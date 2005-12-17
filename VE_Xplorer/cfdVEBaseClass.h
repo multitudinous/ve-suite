@@ -56,7 +56,7 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass // Inherit from wxBase class to enable string instantiation
+class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass
 {
 public:
    cfdVEBaseClass( void );

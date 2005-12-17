@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include "VE_Installer/include/VEConfig.h"
-#include "VE_XML/VEXMLObject.h"
+#include "VE_Open/VE_XML/VEXMLObject.h"
 namespace VE_XML
 {
    class VECommand;

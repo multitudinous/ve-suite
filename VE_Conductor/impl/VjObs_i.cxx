@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/impl/VjObs_i.h"
+#include "VE_Conductor/Framework/DOMDocumentManager.h"
 
 #include "VE_Xplorer/cfdTeacher.h"
 #include "VE_Xplorer/cfdQuatCamHandler.h"
@@ -41,7 +42,13 @@
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+
 #include "VE_SceneGraph/cfdTempAnimation.h"
+
+#include "VE_Open/VE_XML/VECommand.h"
+#include "VE_Open/VE_XML/VEDataValuePair.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -59,6 +66,59 @@ using namespace VE_TextureBased;
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+using namespace VE_XML;
+using namespace VE_Conductor;
+
+VjObs_i::VjObs_i()
+{
+   this->numOfClientInfo = 9;
+   //int temp=0;
+   //this->setClients( 0 );
+   _cfdArray = new cfdCommandArray();
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
+   _bufferArray = new cfdCommandArray();
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
+   //orb=CORBA::ORB_init(temp,0,"omniORB4");
+   /*for(temp=0;temp<25;temp++)
+   {
+      client_list[temp]=0;
+   }*/
+   // allocate enough space
+   //geo_name       = new VjObs::scalar_p(50);
+   //geo_name->length(50);
+   //scl_name       = new VjObs::scalar_p(50);
+   //scl_name->length(50);
+   teacher_name   = new VjObs::scalar_p(50);
+   teacher_name->length(50);
+   //dataset_names  = new VjObs::scalar_p(50);
+   //dataset_names->length(50);
+   sound_names    = new VjObs::scalar_p(50);
+   sound_names->length(50);
+
+   //dataset_types  = new VjObs::obj_p(50);
+   //dataset_types->length(50);
+   //num_scalars_per_dataset = new VjObs::obj_p(50);
+   //num_scalars_per_dataset->length(50);
+   //num_vectors_per_dataset = new VjObs::obj_p( 50 );
+   //num_vectors_per_dataset->length(50);
+   //vec_name = new VjObs::scalar_p( 50 );
+   //vec_name->length( 50 );
+   // This array is used in place of the call backs
+   // to the client because the communication didn't
+   // seem to work. There are 9 entries becuase that
+   // how many variables are synchronized during an
+   // update call in VjObs_i
+   clientInfoObserverDataArray = new VjObs::obj_pd(50);
+   clientInfoObserverDataArray->length(50);
+   clientInfoObserverDataArray->length( this->numOfClientInfo );
+   clientInfoObserverDataArray->length(50);
+   //this->_unusedNewData = false;
+   _models = NULL;
+   time_since_start = 0.0f;
+   frameNumber = 0;
+   bufferCommand = new VECommand( NULL );
+   domManager = new DOMDocumentManager();
+}
 
 void VjObs_i::InitCluster( void )
 {
@@ -231,18 +291,6 @@ void VjObs_i::CreateTeacherInfo( void )
 }
 
 /////////////////////////////////////////////////////////////
-/*void VjObs_i::CreateFlythroughInfo( void )
-{
-   if ( ! cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getFlyThroughs().empty() )
-   {
-      mNumFlyThroughs = cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getFlyThroughs().size();
-      for (CORBA::ULong i = 0; i < mNumFlyThroughs; i++)
-      {
-         this->flyThroughList.push_back(cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getFlyThroughs().at(i));
-      }
-   }   
-}*/
-
 
 #ifdef _TAO
 VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
@@ -324,34 +372,6 @@ VjObs::scalar_p* VjObs_i::get_teacher_name()
 }
 
 #ifdef _TAO
-char* VjObs_i::get_perf()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else    
-char* VjObs_i::get_perf()
-#endif
-{
-   return CORBA::string_dup("abc");
-}
-
-#ifdef _TAO
-void VjObs_i::setIsoValue(const CORBA::Long value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setIsoValue(CORBA::Long value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, value );
-}
-
-#ifdef _TAO
 CORBA::Long VjObs_i::getIsoValue()
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -384,161 +404,6 @@ void VjObs_i::setSc(CORBA::Long value)
 }
 
 #ifdef _TAO
-CORBA::Long VjObs_i::getSc()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Long VjObs_i::getSc()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
-}
-
-#ifdef _TAO
-void VjObs_i::setMin(const CORBA::Long value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setMin(CORBA::Long value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_MIN, value );
-}
-
-#ifdef _TAO
-CORBA::Long VjObs_i::getMin()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Long VjObs_i::getMin()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
-}
-
-#ifdef _TAO
-void VjObs_i::setMax(const CORBA::Long value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setMax(CORBA::Long value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_MAX, value );
-}
-
-#ifdef _TAO
-CORBA::Long VjObs_i::getMax()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Long VjObs_i::getMax()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
-}
-
-#ifdef _TAO
-void VjObs_i::setId(const CORBA::Long value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setId(CORBA::Long value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, value );
-}
-
-#ifdef _TAO
-CORBA::Long VjObs_i::getId()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Long VjObs_i::getId()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
-}
-
-#ifdef _TAO
-void VjObs_i::setGeoState(const CORBA::Long value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setGeoState(CORBA::Long value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, value );
-}
-
-#ifdef _TAO
-CORBA::Long VjObs_i::getGeoState()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Long VjObs_i::getGeoState()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
-}
-
-#ifdef _TAO
-void VjObs_i::setPostdataState(const short value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setPostdataState(CORBA::Short value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, value );
-}
-
-#ifdef _TAO
 short VjObs_i::getPostdataState()
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -555,53 +420,6 @@ CORBA::Short VjObs_i::getPostdataState()
 }
 
 #ifdef _TAO
-void VjObs_i::setPreState(const short value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setPreState(CORBA::Short value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, value );
-}
-
-#ifdef _TAO
-short VjObs_i::getPreState()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::getPreState()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
-}
-
-#ifdef _TAO
-void VjObs_i::setTimesteps(const short value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setTimesteps(CORBA::Short value)
-#endif
-{
-   vprDEBUG(vprDBG_ALL, 2)
-      << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, value );
-}
-
-#ifdef _TAO
 short VjObs_i::getTimesteps()
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -614,68 +432,6 @@ CORBA::Short VjObs_i::getTimesteps()
    //vprDEBUG(vprDBG_ALL, 2)
    //   << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
    return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
-}
-
-#ifdef _TAO
-void VjObs_i::setNumTeacherArrays(const short value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setNumTeacherArrays(CORBA::Short value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mNumTeacherArrays = value;
-}
-
-#ifdef _TAO
-short VjObs_i::getNumTeacherArrays()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::getNumTeacherArrays()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return cfdEnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
-}
-
-#ifdef _TAO
-void VjObs_i::setTeacherState(const short value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setTeacherState(CORBA::Short value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, value );
-}
-
-#ifdef _TAO
-short VjObs_i::getTeacherState()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::getTeacherState()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
 }
 
 // These functions are called from the java side
@@ -697,7 +453,7 @@ CORBA::Short VjObs_i::get_teacher_num()
 
 void VjObs_i::GetCfdStateVariables( void )
 {
-
+   // Called in post frame to get next command out to all the cfdobjects
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    (*_cfdArray) = (*_bufferArray);
    
@@ -743,7 +499,7 @@ void VjObs_i::GetCfdStateVariables( void )
    }
    //this->_unusedNewData    = false;
 #else
-   this->_unusedNewData    = false;
+   //this->_unusedNewData    = false;
 #endif
 }
 
@@ -789,7 +545,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
          cfdEnvironmentHandler::instance()->GetQuatCamHandler()->SetQuatCamIncrementor( this->mStates->clusterQuatCamIncrement );
       }
    }
-   this->_unusedNewData    = false;
+   //this->_unusedNewData    = false;
 #endif
 }
 
@@ -935,6 +691,7 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
 void VjObs_i::PreFrameUpdate( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   // If the data is transient command data
    if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
             == TRANSIENT_VIS_ACTIVE )
    {
@@ -943,9 +700,11 @@ void VjObs_i::PreFrameUpdate( void )
       return;
    }
 
+   // Jsut reinitialize the cfdid to null essentially
    if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) != GUI_NAV )
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
 
+   // Populate the buffer array with the next command queue command
    if ( !commandQueue.empty() && !cfdSteadyStateVizHandler::instance()->TransientGeodesIsBusy() )
    {
       std::vector< cfdCommandArray* >::iterator iter;
@@ -953,6 +712,21 @@ void VjObs_i::PreFrameUpdate( void )
       (*_bufferArray) = (*(*iter));
       delete commandQueue.at( 0 );
       commandQueue.erase( iter );
+   }
+
+   // Just reinitialize the cfdid to null essentially if it is NOT GUI_NAV
+   if ( bufferCommand->GetDataValuePair( 0 )->GetDataName().compare( "GUI_NAV" ) )
+      bufferCommand->SetCommandName( "wait" );
+
+   // New xml command queue
+   if ( !commandVectorQueue.empty() )
+   {
+      std::vector< VECommand* >::iterator iter;
+      iter = commandVectorQueue.begin();
+      (*bufferCommand) = (*(*iter));
+      delete commandVectorQueue.at( 0 );
+      commandVectorQueue.erase( iter );
+      cfdEnvironmentHandler::instance()->GetNavigate()->SetVECommand( bufferCommand );
    }
 }
 
@@ -1000,6 +774,33 @@ void VjObs_i::CreateCommandQueue( void )
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
 }
 
+#ifdef _TAO
+void VjObs_i::SetCommandString( const char* value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::SetCommandString( const char* value)
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+
+   std::string commandString( value );
+   domManager->Load( commandString );
+   DOMDocument* commandDoc = domManager->GetCommandDocument();
+
+   // Get a list of all the command elements
+   DOMNodeList* subElements = commandDoc->getDocumentElement()->getElementsByTagName( xercesString("vecommand") );
+   unsigned int numCommands = subElements->getLength();
+   // now lets create a list of them
+   for ( unsigned int i = 0; i < numCommands; ++i )
+   {
+      commandVectorQueue.push_back( new VECommand( commandDoc ) );
+      commandVectorQueue.back()->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
+   }
+   // I am pretty sure we now need to release some memory for the domdocument
+   domManager->UnLoadParser();
+}
 
 // Frame sync variables used by osg only at this point
 float VjObs_i::GetSetAppTime( float x )

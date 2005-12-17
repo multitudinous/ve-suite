@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/VE_UI/UI_TransTab.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"//remember to add trans tab callbacks to UI_Tabs.h
+#include "VE_Conductor/VE_UI/UI_TransTab.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
 

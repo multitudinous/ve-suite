@@ -85,7 +85,7 @@ public:
    unsigned char* getNextField(/*int plusNeg*/);
    unsigned int getNextFrame();
    //get the number of vector fields
-   int numberOfFields(){return _dataFields.size();}
+   int numberOfFields(){return static_cast< int >( _dataFields.size() );}
 
    //the resolution of the fields
    int* fieldResolution(){return _resolution;}

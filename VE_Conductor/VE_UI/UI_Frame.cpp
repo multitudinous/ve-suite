@@ -29,25 +29,23 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-#include "VE_Conductor/VE_UI/UI_Frame.h"
-#include <iostream>
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/VE_UI/UI_DataSetPanel.h"
 #include "VE_Conductor/VE_UI/UI_ModSelPanel.h"
 #include "VE_Conductor/VE_UI/UI_ModelData.h"
 #include "VE_Conductor/VE_UI/UI_App.h"
+#include "VE_Xplorer/cfdEnum.h"
+
+#ifdef _TAO
+#include <orbsvcs/CosNamingC.h>
+#include "VE_Open/skel/VjObsS.h"
+#endif
+
+#include <iostream>
 
 #include <wx/string.h>
 #include <wx/msgdlg.h>
-
-#ifdef _TAO
-#include "VjObsS.h"
-#include <orbsvcs/CosNamingC.h>
-#else
-#include "VjObs.h"
-#endif
-#include "VE_Xplorer/cfdEnum.h"
 
 ////////////////////////////////////////////////////
 //Constructor                                     //

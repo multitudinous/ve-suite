@@ -31,10 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef UI_ADVECTION_PANEL_H
 #define UI_ADVECTION_PANEL_H
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-
 #include <wx/panel.h>
 class wxCheckBox;
 class wxStaticBox;

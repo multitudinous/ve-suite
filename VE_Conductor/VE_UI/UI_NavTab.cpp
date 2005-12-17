@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/VE_UI/UI_NavTab.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_NavTab.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
 #include "VE_Conductor/Framework/Nav_Bitmaps/x_left.xpm"

@@ -31,9 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef APP_FRAME_H
 #define APP_FRAME_H
-#ifdef WIN32
- #include <winsock2.h>
-#endif
+
+#include "VE_Open/skel/moduleC.h"
+#include "VE_Open/skel/VjObsC.h"
+#include <orbsvcs/CosNamingC.h>
+#include "VE_Conductor/Framework/UI_i.h"
 
 #include <wx/frame.h>
 #include <wx/icon.h>
@@ -42,10 +44,6 @@
 #include <wx/sizer.h>
 #include <wx/config.h> 
 #include <wx/splitter.h>
-#include "moduleC.h"
-#include "VjObsC.h"
-#include <orbsvcs/CosNamingC.h>
-#include "UI_i.h"
 
 const wxString LOCATION = _T("Framesize");
 const wxString LOCATION_X = _T("LocationX");
@@ -77,7 +75,9 @@ enum {
   v21ID_SWEET,
   v21ID_CO_DISPOSAL,
   MYLOG,
-  v21ID_HELP
+  v21ID_HELP,
+   XPLORER_NAVIGATION,
+   XPLORER_VIEWPOINTS
 };
 
 class OrbThread;
@@ -86,24 +86,31 @@ class Avail_Modules;
 class UI_Tabs;
 class UI_Frame;
 class Network;
+class NavigationPane;
+class CORBAServiceList;
+
+namespace VE_Conductor
+{
+   class DOMDocumentManager;
+}
 
 class AppFrame : public wxFrame
 {
-   public:
+public:
   
-      AppFrame() {};
-      AppFrame(wxWindow* parent, wxWindowID id, const wxString& title);
-      void OnClose (wxCloseEvent &);
-      void FrameClose(wxCommandEvent&  );
+   AppFrame(){;}
+   AppFrame(wxWindow* parent, wxWindowID id, const wxString& title);
+   void OnClose( wxCloseEvent& event );
+   void FrameClose( wxCommandEvent& event );
 
-  wxSplitterWindow * wx_log_splitter;
-  wxSplitterWindow * wx_ve_splitter;
-  wxSplitterWindow * wx_nw_splitter;
+  wxSplitterWindow* wx_log_splitter;
+  wxSplitterWindow* wx_ve_splitter;
+  wxSplitterWindow* wx_nw_splitter;
   wxMenuBar* menubar;
   wxToolBar* toolbar;
   wxIcon* icon;
   
-  wxTextCtrl *logwindow;
+  wxTextCtrl* logwindow;
   Avail_Modules* av_modules;
   Network* network;
   
@@ -121,7 +128,9 @@ class AppFrame : public wxFrame
   wxMenu *run_menu;
   wxMenu *edit_menu;
   wxMenu *help_menu;
-  wxMenu *config_menu;
+   wxMenu* xplorerMenu;
+
+  //wxMenu *config_menu;
   
   PEThread* pelog;
 
@@ -169,17 +178,23 @@ class AppFrame : public wxFrame
   void LoadREIBase(wxCommandEvent &event);
   void LoadREISour(wxCommandEvent &event);
   void New(wxCommandEvent &event);
+
+   // Controls for VE-Xplorer
+   // These are the callbacks for the pull down menu
+   void LaunchNavigationPane(wxCommandEvent& event);
+   void LaunchViewpointsPane(wxCommandEvent& event);
+
   bool init_orb_naming();
   void CreateVETab();
   void OnUpdateUIPop(wxUpdateUIEvent& event);
   
   wxBoxSizer *sizerTab;
 
-  DECLARE_EVENT_TABLE()
+private:
+   NavigationPane* navPane;
+   CORBAServiceList* serviceList;
+   VE_Conductor::DOMDocumentManager* domManager;
+
+   DECLARE_EVENT_TABLE()
 };
-
-
 #endif
-
-
-//How's the scheduler's going to use

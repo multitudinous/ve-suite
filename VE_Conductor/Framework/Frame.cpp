@@ -42,6 +42,9 @@
 #include "VE_Conductor/Framework/TexTable.h"
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
+#include "VE_Conductor/Framework/NavigationPane.h"
+#include "VE_Conductor/Framework/DOMDocumentManager.h"
+
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/Framework/Network.h"
@@ -54,8 +57,14 @@
 #include <sstream>
 #include <iomanip>
 
+#ifdef WIN32
+#include <shellapi.h>
+#endif
+
+using namespace VE_Conductor;
+
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
-  EVT_CLOSE(AppFrame::OnClose)
+EVT_CLOSE(AppFrame::OnClose)
   EVT_MENU(v21ID_ZOOMIN, AppFrame::ZoomIn)
   EVT_MENU(v21ID_ZOOMOUT, AppFrame::ZoomOut)
   EVT_MENU(wxID_SAVE, AppFrame::Save)
@@ -77,6 +86,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
   EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 
+  EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
+  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
+
 //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
 //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
 //  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
@@ -94,9 +106,12 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   wx_ve_splitter->SetMinimumPaneSize( 20 );
   wx_nw_splitter = new wxSplitterWindow(wx_ve_splitter, -1);
   wx_nw_splitter->SetMinimumPaneSize( 20 );
+   xplorerMenu = 0;
   
   //LogWindow
   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+
+   this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
 
   // VE Tabs
   //m_tabs = ( UI_Tabs*) NULL;
@@ -116,7 +131,9 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   SetStatusText("VE-Conductor Status");
   
   pelog = NULL;
+   navPane = 0;
   //  menubar = 
+   domManager = new DOMDocumentManager();
 }
 
 void AppFrame::CreateVETab()
@@ -226,6 +243,8 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       orb->destroy();
    }
   
+   delete domManager;
+
    StoreFrameSize(GetRect(), NULL);
    Destroy();
 }
@@ -243,6 +262,8 @@ void AppFrame::CreateMenu()
   run_menu = new wxMenu;
   edit_menu = new wxMenu;
   help_menu = new wxMenu;
+   xplorerMenu = new wxMenu();
+
 //  config_menu = new wxMenu;
 
   file_menu->Append(wxID_NEW, _("&New\tCtrl+N"));
@@ -308,6 +329,8 @@ void AppFrame::CreateMenu()
   //help_menu->Enable(v21ID_HELP, false);
   help_menu->Enable(wxID_ABOUT, false);
 
+   xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
+   xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
 //  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
 //  config_menu->Append(v21ID_REI_BASE, _("Base Quench (REI)"));
@@ -324,6 +347,7 @@ void AppFrame::CreateMenu()
   menubar->Append(con_menu, _("&Connection"));
   menubar->Append(run_menu, _("&Execution"));
   menubar->Append(help_menu, _("&Help"));
+  menubar->Append( xplorerMenu, _("&VE-Xplorer") );
 
   SetMenuBar(menubar);
 }
@@ -1000,8 +1024,33 @@ void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
   
    ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
 }
-
+///////////////////////////////////////////////////////////////////
 void AppFrame::CloseVE()
 {
-
+   ;
 }
+///////////////////////////////////////////////////////////////////
+void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
+{
+   if ( navPane == 0 )
+   {
+      // create pane and set appropriate vars
+      navPane = new NavigationPane( vjobs.in(), domManager );
+      // set pointer to corba object for comm
+      // navPane->SetCommInstance( vjobs.in() );
+      // Set DOMDocument
+      // navPane->SetDOMManager( domManager );
+   }
+   // now show it
+   navPane->Show();
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
+{
+   //if ( viewpointsPane == 0 )
+   {
+      // create pane and set appropriate vars
+   }
+   // now show it
+}
+

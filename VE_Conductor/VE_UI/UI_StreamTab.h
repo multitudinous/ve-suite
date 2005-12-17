@@ -31,10 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_STREAMLINE_TAB_H_
 #define _VE_UI_STREAMLINE_TAB_H_
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-
 #include <wx/notebook.h>
 #include <wx/scrolwin.h>
 #include <wx/stattext.h>
