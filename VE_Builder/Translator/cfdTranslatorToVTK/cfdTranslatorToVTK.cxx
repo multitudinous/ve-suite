@@ -103,7 +103,7 @@ bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
    //just in case the Preprocess didn't set this
    if(!_nFoundFiles && _infileNames.size())
    {
-      _nFoundFiles = _infileNames.size();
+      _nFoundFiles = static_cast< int >( _infileNames.size() );
    }
 
    std::bitset<16> status;
@@ -175,7 +175,7 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
 void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
 {
    _infileNames.push_back(singleFile);
-   _nFoundFiles = _infileNames.size();
+   _nFoundFiles = static_cast< int >( _infileNames.size() );
 }
 /////////////////////////////////////////////////////////////////////////////////
 bool cfdTranslatorToVTK::PreTranslateCallback::_extractOptionFromCmdLine(int argc,

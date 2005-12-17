@@ -1,10 +1,6 @@
 #ifndef _TC_APP_H_
 #define _TC_APP_H_
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-
-#include "wx/wx.h"
+#include <wx/wx.h>
 #include "tcFrame.h"
 
 //The main application  

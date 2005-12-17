@@ -1,11 +1,7 @@
 #ifndef _TC_FRAME_H_
 #define _TC_FRAME_H_
-/*#ifdef WIN32
-#include <winsock2.h>
-#endif*/
-
-#include "wx/wx.h"
-#include "wx/spinctrl.h"
+#include <wx/wx.h>
+#include <wx/spinctrl.h>
 #include <wx/progdlg.h>
 #include "textureCreator.h"
 
