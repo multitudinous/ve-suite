@@ -87,6 +87,7 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;VE_CONDUCTOR_LIBRARY;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation=""
@@ -95,7 +96,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
-				CompileAs="0"/>
+				CompileAs="2"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -146,6 +147,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
+				RelativePath=".\Framework\DOMDocumentManager.cxx">
+			</File>
+			<File
 				RelativePath=".\Framework\GeometryDataBuffer.cpp">
 			</File>
 			<File
@@ -174,10 +178,16 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
+				RelativePath=".\Framework\DOMDocumentManager.h">
+			</File>
+			<File
 				RelativePath=".\Framework\GeometryDataBuffer.h">
 			</File>
 			<File
 				RelativePath=".\Framework\interface.h">
+			</File>
+			<File
+				RelativePath=".\Framework\package.h">
 			</File>
 		</Filter>
 		<Filter

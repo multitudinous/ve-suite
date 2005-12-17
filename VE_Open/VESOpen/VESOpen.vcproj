@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="VEOpen"
+	Name="VE_Open"
 	ProjectGUID="{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -77,8 +77,8 @@
 				Name="VCCustomBuildTool"
 				Description="IDL Compiler"
 				CommandLine="echo C++ stubs. . .
-$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VEOpen/skel -GI $(VE_SUITE_HOME)/VEOpen/idl/module.idl
-$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VEOpen/skel -GI $(VE_SUITE_HOME)/VEOpen/idl/VjObs.idl
+$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl
+$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl
 echo Done.
 "
 				AdditionalDependencies="module.idl;VjObs.idl"

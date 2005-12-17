@@ -80,7 +80,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -94,7 +94,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
-				CompileAs="0"/>
+				CompileAs="2"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -103,7 +103,7 @@
 				OutputFile="$(OutDir)/WinServerd.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/WinServer.pdb"
 				SubSystem="1"
@@ -201,10 +201,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleC.cpp">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleS.cpp">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.cpp">
 			</File>
 			<File
 				RelativePath="Network_Exec.cpp">
@@ -257,10 +257,10 @@
 				RelativePath="Executive_i.h">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleC.h">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleC.h">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleS.h">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.h">
 			</File>
 			<File
 				RelativePath="Network_Exec.h">

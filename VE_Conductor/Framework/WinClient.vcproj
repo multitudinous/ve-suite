@@ -84,7 +84,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO"
 				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="3"
@@ -98,9 +98,8 @@
 				BrowseInformation="1"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
-				CompileAs="0"
-				DisableSpecificWarnings="4541"
-				ForcedIncludeFiles="$(XERCESCROOT)\src\xercesc\dom\DOM.hpp;$(XERCESCROOT)\src\xercesc\dom\DOMDocument.hpp"
+				CompileAs="2"
+				ForcedIncludeFiles=""
 				ShowIncludes="FALSE"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -110,7 +109,7 @@
 				OutputFile="$(OutDir)/WinClientd.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/WinClient.pdb"
 				SubSystem="2"
@@ -232,10 +231,13 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleC.cpp">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleS.cpp">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.cpp">
+			</File>
+			<File
+				RelativePath=".\NavigationPane.cxx">
 			</File>
 			<File
 				RelativePath="Network.cpp">
@@ -369,7 +371,8 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32">
+					Name="dbg|Win32"
+					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -512,10 +515,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\VjObsC.cpp">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\VjObsC.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\VjObsS.cpp">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\VjObsS.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -535,6 +538,9 @@
 			</File>
 			<File
 				RelativePath="GlobalParamDialog.h">
+			</File>
+			<File
+				RelativePath=".\NavigationPane.h">
 			</File>
 			<File
 				RelativePath="Network.h">
