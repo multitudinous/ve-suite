@@ -628,9 +628,9 @@ std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::strin
                if ( strstr( dir_itr->leaf().c_str(), extension.c_str()) )
                {
                   std::string pathAndFileName;
-                  pathAndFileName.assign( dir_path.leaf().c_str());  
+                  pathAndFileName.assign( dir_path.string() );  
                   pathAndFileName.append( "/" );
-                  pathAndFileName.append( dir_itr->leaf().c_str() );
+                  pathAndFileName.append( dir_itr->leaf() );
 
 
                   filesInDir.push_back( pathAndFileName );

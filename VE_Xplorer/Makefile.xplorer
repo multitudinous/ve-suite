@@ -44,15 +44,12 @@ else
 endif
 
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/impl \
-                        $(VE_SUITE_HOME)/VEOpen/skel \
+                        $(VE_SUITE_HOME)/VE_Open/skel \
                         $(VE_SUITE_HOME)/VE_Conductor/Framework \
                         $(VE_SUITE_HOME)/VE_CE
 
 EXTRA_INCLUDES+= \
-               -I$(VE_SUITE_HOME)/VE_Conductor/impl \
-               -I$(VE_SUITE_HOME)/VEOpen/skel \
-               -I$(VE_SUITE_HOME)/VE_Conductor/Framework \
-               -I$(VE_SUITE_HOME)/VE_CE
+               -I$(VE_SUITE_HOME)
 
 ifeq ($(TAO_BUILD), TRUE)
    include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
@@ -105,6 +102,7 @@ EXTRA_LIBS+= -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_TextureBasedLib$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_ConductorLib
+EXTRA_LIBS+= -lVE_XMLLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk

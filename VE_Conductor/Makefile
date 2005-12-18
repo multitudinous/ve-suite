@@ -5,7 +5,7 @@ VE_SUITE_HOME?= ../
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WinClient
 
 VE_UI_HOME = ${VE_SUITE_HOME}/VE_Conductor/VE_UI
-IDL_HOME = ${VE_SUITE_HOME}/VEOpen
+IDL_HOME = ${VE_SUITE_HOME}/VE_Open
 
 all:
 	$(MAKE) -f Makefile.conductorlib
@@ -23,6 +23,7 @@ SRCS=\
    moduleC.cpp \
    moduleS.cpp \
    Network.cpp \
+   NavigationPane.cxx \
    OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
@@ -39,7 +40,6 @@ SRCS=\
    UI_SoundsTab.cpp \
    UI_GeometryTab.cpp \
    UI_TeacherTab.cpp \
-   UI_NavTab.cpp  \
    UI_TransTab.cpp \
    UI_TransientDialog.cxx \
    UI_VertTab.cpp \
@@ -72,7 +72,7 @@ EXTRA_DEFS+=
 
 EXTRA_LDFLAGS+= -Wl,-E #-ldl -lrt -lc 
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
-EXTRA_LIBS+= -lGUIPluginLib -lm -lpthread 
+EXTRA_LIBS+= -lGUIPluginLib -lVE_XMLLib -lm -lpthread 
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
@@ -95,10 +95,6 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
-EXTRA_INCLUDES+= -I$(VE_UI_HOME) \
-                  -I$(IDL_HOME)/skel \
-                  -I$(VE_SUITE_HOME)/VE_Builder/Utilities/gui 
-EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)/VE_Conductor/Framework
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
 # -----------------------------------------------------------------------------

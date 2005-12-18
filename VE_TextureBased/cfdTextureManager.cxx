@@ -398,13 +398,18 @@ std::string cfdTextureManager::GetDataName( void )
 ////////////////////////////////////////////////////////////////////////////
 cfdTextureManager& cfdTextureManager::operator=(const cfdTextureManager& tm)
 {
-   if(this != &tm){
-      if(_dataFields.size()){
+   if(this != &tm)
+   {
+      if ( _dataFields.size() )
+      {
          _dataFields.clear();
       }
-      if(_types.size()){
+
+      if ( _types.size() )
+      {
          _types.clear();
       }
+
       if(_ranges.size())
       {
          _ranges.clear();
