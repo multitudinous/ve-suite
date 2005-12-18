@@ -1,8 +1,9 @@
 #include "tcApp.h"
 #include <wx/cmdline.h>
-//#include <mpi.h>
 #include <cassert>
-
+#ifdef USE_MPI
+#include <mpi.h>
+#endif
 IMPLEMENT_APP(TCApp)
 
 //////////////////////////////
@@ -51,15 +52,15 @@ void TCApp::OnInitCmdLine(wxCmdLineParser& parser)
       return;
    }
    _isBatch = true;
-   int ierror;
    p = 1;
    rank = 0;
-  /* // Initialize MPI
+#ifdef USE_MPI
+   // Initialize MPI
+   int ierror;
    ierror = MPI_Init( &(wxGetApp().argc), &(wxGetApp().argv) );
    ierror = MPI_Comm_size( MPI_COMM_WORLD, &p  );
    ierror = MPI_Comm_rank( MPI_COMM_WORLD, &rank );
-   */
-
+#endif
    static const wxCmdLineEntryDesc cmdLineOpts[] = 
    {
       { wxCMD_LINE_SWITCH, _T("v"), _T("verbose"), _T("be verbose") },

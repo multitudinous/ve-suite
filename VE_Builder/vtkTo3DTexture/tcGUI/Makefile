@@ -1,5 +1,9 @@
 # Create the OS-dependent directory name
-APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/vtkTo3DTexture
+ifeq ($(MPI_APP), TRUE)
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/vtkTo3DTextureMPI
+else
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/vtkTo3DTexture
+endif
 
 all:
 	$(MAKE) NO_DEPEND=0 cxx
@@ -15,8 +19,13 @@ SRCS=\
    textureCreator.cpp
 
 # Specify the OS-dependent directory name for object files and depends
-OBJDIR= $(CFDHOSTTYPE)
-DEPDIR= $(CFDHOSTTYPE)
+ifeq ($(MPI_APP), TRUE)
+   OBJDIR= $(CFDHOSTTYPE)_MPI
+   DEPDIR= $(CFDHOSTTYPE)_MPI
+else
+   OBJDIR= $(CFDHOSTTYPE)
+   DEPDIR= $(CFDHOSTTYPE)
+endif
 
 NO_DEPEND= YES
 MPI_APP=TRUE
@@ -27,10 +36,11 @@ DEBUG_APP?= TRUE
 
 EXTRA_CXXFLAGS+= -I$(VJ_DEPS_DIR)/include
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_UtilLib
-#if ( $(MPI_APP)==TRUE )
-#EXTRA_LIBS+= -lmpi
-#CXX = mpiCC
-#endif
+ifeq ($(MPI_APP), TRUE)
+   EXTRA_LIBS+= -lmpi
+   EXTRA_CXXFLAGS+= -DUSE_MPI
+   CXX = mpiCC
+endif
 
 LINKALL_ON= -all
 LINKALL_OFF=
