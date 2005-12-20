@@ -1,4 +1,5 @@
 # Create the OS-dependent directory name
+MPI_APP = FALSE
 ifeq ($(MPI_APP), TRUE)
    APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/vtkTo3DTextureMPI
 else
@@ -28,7 +29,6 @@ else
 endif
 
 NO_DEPEND= YES
-MPI_APP=TRUE
 
 # One of these must be uncommented.
 DEBUG_APP?= TRUE

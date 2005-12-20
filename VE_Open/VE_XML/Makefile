@@ -51,7 +51,7 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
 #DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
-#include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
@@ -78,8 +78,8 @@ DEPDIR= $(OBJDIR)
 srcdir= .
 
 ifeq (${CFDUNAME},Darwin)
-include $(VE_SUITE_HOME)/VE_Installer/dzr.ves.mac.lib.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.mac.lib.mk
 else
-include $(VE_SUITE_HOME)/VE_Installer/dzr.ves.linux.lib.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.linux.lib.mk
 endif
 
