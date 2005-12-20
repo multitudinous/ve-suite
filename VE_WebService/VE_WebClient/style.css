@@ -1,0 +1,48 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+	color: #000000;
+	background-color: #FFFFFF;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+ a.uninstall:link {
+	font-weight: bold;
+	color: #CC0000;
+}
+ a.uninstall:visited {
+	font-weight: bold;
+	color: #CC0000;
+}
+ a.uninstall:hover {
+	text-decoration: underline;
+	font-weight: bold;
+	color: #CC0000;
+}
+a:link {
+	text-decoration: none;
+	font-weight: bold;
+	color: #000066;
+}
+a:visited {
+	text-decoration: none;
+	font-weight: bold;
+	color: #000066;
+}
+a:hover {
+	text-decoration: underline;
+	font-weight: bold;
+	color: #000066;
+}
+a:active {
+	text-decoration: underline;
+	font-weight: bold;
+	color: #000066;
+}
+h1 {
+	color: #000066;
+}
+h2 {
+	color: #000000;
+}
