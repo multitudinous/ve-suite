@@ -176,7 +176,7 @@ public:
    void OnRotStepSlider( wxScrollEvent& event);
    void OnResetNavPosition( wxCommandEvent& event );
    void OnHeadCheck( wxCommandEvent& event );
-   //void SetCommInstance( VjObs_ptr veEngine );
+   void SetCommInstance( VjObs_ptr veEngine );
    //void SetDOMManager( VE_Conductor::DOMDocumentManager* domManagerIn );
    void SendCommandsToXplorer( void );
 

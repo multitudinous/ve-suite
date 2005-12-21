@@ -55,7 +55,7 @@
 #include <wx/button.h>
 #include <wx/window.h>
 #include <wx/sizer.h>
-
+#include <wx/msgdlg.h>
 #include <iostream>
 
 using namespace VE_Conductor;
@@ -496,6 +496,11 @@ void NavigationPane::OnHeadCheck( wxCommandEvent& WXUNUSED(event) )
    SendCommandsToXplorer();
 }
 ////////////////////////////////////////////////////////
+void NavigationPane::SetCommInstance( VjObs_ptr veEngine )
+{
+   xplorerPtr = veEngine;
+}
+////////////////////////////////////////////////////////
 void NavigationPane::SendCommandsToXplorer( void )
 {
    // Now need to construct domdocument and populate it with the new vecommand
@@ -518,8 +523,17 @@ void NavigationPane::SendCommandsToXplorer( void )
 
    if ( !CORBA::is_nil( xplorerPtr ) && !commandData.empty() )
    {
-      // CORBA releases the allocated memory so we do not have to
-      xplorerPtr->SetCommandString( tempDoc );
+      try
+      {
+         // CORBA releases the allocated memory so we do not have to
+         xplorerPtr->SetCommandString( tempDoc );
+      }
+      catch ( ... )
+      {
+         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         delete [] tempDoc;
+      }
    }
    else
    {
@@ -527,5 +541,4 @@ void NavigationPane::SendCommandsToXplorer( void )
    }
    //Clean up memory
    delete veCommand;
-   //delete dataValuePair;
 }

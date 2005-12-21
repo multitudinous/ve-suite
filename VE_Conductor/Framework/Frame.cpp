@@ -244,6 +244,7 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
    }
   
    delete domManager;
+   navPane->Destroy();
 
    StoreFrameSize(GetRect(), NULL);
    Destroy();
@@ -1036,10 +1037,13 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
    {
       // create pane and set appropriate vars
       navPane = new NavigationPane( vjobs.in(), domManager );
-      // set pointer to corba object for comm
-      // navPane->SetCommInstance( vjobs.in() );
       // Set DOMDocument
       // navPane->SetDOMManager( domManager );
+   }
+   else
+   {
+      // set pointer to corba object for comm
+      navPane->SetCommInstance( vjobs.in() );
    }
    // now show it
    navPane->Show();
