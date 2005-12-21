@@ -516,7 +516,7 @@ void NavigationPane::SendCommandsToXplorer( void )
    char* tempDoc = new char[ commandData.size() + 1 ];
    tempDoc = CORBA::string_dup( commandData.c_str() );
 
-   if ( !CORBA::is_nil( xplorerPtr ) )
+   if ( !CORBA::is_nil( xplorerPtr ) && !commandData.empty() )
    {
       // CORBA releases the allocated memory so we do not have to
       xplorerPtr->SetCommandString( tempDoc );

@@ -72,6 +72,8 @@ cfdNavigate::cfdNavigate( )
    flyThrough[1].init("Path_2");
    flyThrough[2].init("Path_3");
    flyThrough[3].init("Path_4");
+
+   command = 0;
 }
 
 cfdNavigate::~cfdNavigate( )
@@ -265,9 +267,23 @@ void cfdNavigate::updateNavigationFromGUI()
    this->worldRot[ 1 ] = tempWorldRot[ 1 ];
    this->worldRot[ 2 ] = tempWorldRot[ 2 ];
    
-   std::string commanType = command->GetCommandName();
+   // This is NOT how we should do things
+   // Command should allowed to be null but because we always
+   // have to have a command due to our command structure
+   // this hack must be in here
+   // This should be changed once our complete command structure is
+   // in place
+   std::string commandType;
+   if ( command )
+   {
+      commandType = command->GetCommandName();
+   }
+   else
+   {
+      commandType = "wait";
+   }
 
-   if ( !commanType.compare( "Navigation_Data" ) )
+   if ( !commandType.compare( "Navigation_Data" ) )
    {
       VE_XML::VEDataValuePair* commandData = command->GetDataValuePair( 0 );
       this->cfdIso_value = commandData->GetDataValue();

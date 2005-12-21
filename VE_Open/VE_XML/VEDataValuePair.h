@@ -28,6 +28,9 @@ public:
    //TRANSFORM == a vetransform
    VEDataValuePair(DOMDocument* rootDoc,std::string type=std::string("STRING"));
    virtual ~VEDataValuePair();
+   VEDataValuePair( const VEDataValuePair& );
+   //equal operator
+   VEDataValuePair& operator= ( const VEDataValuePair& );
    
    // This is the name of the datavaluepair that is encoded on the xml data type
    void SetDataName(std::string name);

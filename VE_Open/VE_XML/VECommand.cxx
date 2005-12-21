@@ -10,6 +10,7 @@ VECommand::VECommand(DOMDocument* rootDoc)
 {
    _cmdName =  '\0';
    _nDataValuePairs = 0;
+   _dataValuePairs.clear();
 }
 ///////////////////////
 VECommand::~VECommand()
@@ -22,6 +23,40 @@ VECommand::~VECommand()
       }
       _dataValuePairs.clear();
    }
+}
+///////////////////////////////////////////
+VECommand::VECommand( const VECommand& input )
+:VEXMLObject(input)
+{
+   _cmdName =  input._cmdName;
+   _nDataValuePairs = input._nDataValuePairs;
+   for ( unsigned int i = 0; i < input._nDataValuePairs; ++i )
+   {
+      _dataValuePairs.push_back( new VEDataValuePair( (*(input._dataValuePairs.at(i))) ) );
+   }
+}
+/////////////////////////////////////////////////////
+VECommand& VECommand::operator=( const VECommand& input)
+{
+   if ( this != &input )
+   {
+      //biv-- make sure to call the parent =
+      VEXMLObject::operator =(input);
+      _cmdName =  input._cmdName;
+
+      for(unsigned int i = 0; i < _nDataValuePairs; i++)
+      {
+         delete _dataValuePairs.at(i);
+      }
+      _dataValuePairs.clear();
+
+      _nDataValuePairs = input._nDataValuePairs;
+      for ( unsigned int i = 0; i < input._nDataValuePairs; ++i )
+      {
+         _dataValuePairs.push_back( new VEDataValuePair( (*(input._dataValuePairs.at(i))) ) );
+      }
+   }
+   return *this;
 }
 ///////////////////////////////////////////////////////////////////////////
 void VECommand::AddDataValuePair(VE_XML::VEDataValuePair* commandValuePair)
@@ -49,7 +84,7 @@ void VECommand::_updateVEElement( std::string input )
 ////////////////////////////////////
 void VECommand::_updateCommandName()
 {
-   DOMElement* cmdNameElement = _rootDocument->createElement(xercesString("name"));
+   DOMElement* cmdNameElement = _rootDocument->createElement(xercesString("command"));
    DOMText* cmdName = _rootDocument->createTextNode(xercesString(_cmdName.c_str()));
    cmdNameElement->appendChild(cmdName);
    _veElement->appendChild(cmdNameElement);
@@ -66,19 +101,21 @@ void VECommand::_updateDataValuePairs()
 /////////////////////////////////////////////////////////
 void VECommand::SetObjectFromXMLData(DOMNode* xmlInput)
 {
-   
    DOMElement* currentElement = 0;
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE){
+   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+   {
       currentElement = dynamic_cast<DOMElement*>(xmlInput);
    }
-   if(currentElement){
+   
+   if(currentElement)
+   {
       //break down the element
       {
          //get variables by tags
          DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("command"));
       
          //should only be the name of the command
-         DOMElement* name = dynamic_cast<DOMElement*>(subElements->item(0));
+         DOMElement* name = dynamic_cast< DOMElement* >( subElements->item(0) );
          if(name)
          {
             ExtractCmdNameFromElement(name);
@@ -103,9 +140,10 @@ void VECommand::SetObjectFromXMLData(DOMNode* xmlInput)
             _dataValuePairs.clear();
          }
          //read in new data value pairs
-         for(unsigned int i = 0; i < nDVPairsIn; i++){
+         for(unsigned int i = 0; i < nDVPairsIn; i++)
+         {
             DOMElement* dvPairIn = dynamic_cast<DOMElement*>(subElements->item(i));
-            if(dvPairIn)
+            if( dvPairIn )
             {
                VE_XML::VEDataValuePair* veDvp = new VE_XML::VEDataValuePair(_rootDocument);
                veDvp->SetObjectFromXMLData(dvPairIn);
@@ -120,7 +158,7 @@ void VECommand::SetObjectFromXMLData(DOMNode* xmlInput)
 /////////////////////////////////////////////////////////////////////
 void VECommand::ExtractCmdNameFromElement(DOMElement* commandElement)
 {
-   _cmdName = std::string(XMLString::transcode(commandElement->getNodeValue()));
+   _cmdName = ExtractDataStringFromSimpleElement( commandElement );
 }
 ///////////////////////////////////////
 std::string VECommand::GetCommandName()

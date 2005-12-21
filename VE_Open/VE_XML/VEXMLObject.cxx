@@ -98,10 +98,14 @@ const XMLCh* VEXMLObject::VEStr::unicodeForm() const
 ///////////////////////////////////////////////////////////////////////////
 std::string VEXMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)
 {
-   return std::string(XMLString::transcode(element->getNodeValue()));
+   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
+   std::string tmp = XMLString::transcode( rawText->getData() );
+   return tmp;
 }
 //////////////////////////////////////////////////////////////////////////
 double VEXMLObject::ExtractDataNumberFromSimpleElement(DOMElement* element)
 {
-   return atof(std::string(XMLString::transcode(element->getNodeValue())).c_str());
+   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
+   std::string tmp = XMLString::transcode( rawText->getData() );
+   return atof( tmp.c_str() );
 }

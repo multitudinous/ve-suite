@@ -117,6 +117,8 @@ VjObs_i::VjObs_i()
    time_since_start = 0.0f;
    frameNumber = 0;
    bufferCommand = new VECommand( NULL );
+   bufferCommand->AddDataValuePair( new VEDataValuePair( NULL ) );
+   bufferCommand->SetCommandName( "wait" );
    domManager = new DOMDocumentManager();
 }
 
@@ -727,6 +729,7 @@ void VjObs_i::PreFrameUpdate( void )
       delete commandVectorQueue.at( 0 );
       commandVectorQueue.erase( iter );
       cfdEnvironmentHandler::instance()->GetNavigate()->SetVECommand( bufferCommand );
+      //std::cout << " command name " << bufferCommand->GetCommandName() << std::endl;
    }
 }
 
@@ -787,6 +790,7 @@ void VjObs_i::SetCommandString( const char* value)
 
    std::string commandString( value );
    domManager->Load( commandString );
+   //std::cout << commandString << std::endl;
    DOMDocument* commandDoc = domManager->GetCommandDocument();
 
    // Get a list of all the command elements
@@ -795,8 +799,9 @@ void VjObs_i::SetCommandString( const char* value)
    // now lets create a list of them
    for ( unsigned int i = 0; i < numCommands; ++i )
    {
-      commandVectorQueue.push_back( new VECommand( commandDoc ) );
-      commandVectorQueue.back()->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
+      VECommand* temp = new VECommand( commandDoc );
+      temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
+      commandVectorQueue.push_back( temp );
    }
    // I am pretty sure we now need to release some memory for the domdocument
    domManager->UnLoadParser();

@@ -33,6 +33,35 @@ VEDataValuePair::~VEDataValuePair()
       _dataTransform = 0;
    }
 }
+///////////////////////////////////////////
+VEDataValuePair::VEDataValuePair( const VEDataValuePair& input )
+:VEXMLObject(input)
+{
+   _dataType = input._dataType;
+   _dataName = input._dataName;
+
+   _dataValue = input._dataValue;
+   _dataArray = input._dataArray;
+   _dataString = input._dataString;
+   _dataTransform = input._dataTransform;
+}
+/////////////////////////////////////////////////////
+VEDataValuePair& VEDataValuePair::operator=( const VEDataValuePair& input)
+{
+   if ( this != &input )
+   {
+      //biv-- make sure to call the parent =
+      VEXMLObject::operator =(input);
+      _dataType = input._dataType;
+      _dataName = input._dataName;
+
+      _dataValue = input._dataValue;
+      _dataArray = input._dataArray;
+      _dataString = input._dataString;
+      _dataTransform = input._dataTransform;
+   }
+   return *this;
+}
 ////////////////////////////////////////////
 void VEDataValuePair::SetDataType(std::string type)
 {
@@ -240,15 +269,16 @@ VE_XML::VETransform* VEDataValuePair::GetDataTransform()
 void VEDataValuePair::SetObjectFromXMLData(DOMNode* element)
 {
    DOMElement* currentElement = 0;
-   if(element->getNodeType() == DOMNode::ELEMENT_NODE){
+   if(element->getNodeType() == DOMNode::ELEMENT_NODE)
+   {
       currentElement = dynamic_cast<DOMElement*>(element);
    }
 
-   if(currentElement){
+   if(currentElement)
+   {
       {
          //get variables by tags
          DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("dataName"));
-      
          //should only be the name of the command
          DOMElement* dataName = dynamic_cast<DOMElement*>(subElements->item(0));
          if(dataName)
@@ -256,11 +286,13 @@ void VEDataValuePair::SetObjectFromXMLData(DOMNode* element)
             _dataName = ExtractDataStringFromSimpleElement(dataName);
          }
       }
+
       //get the choice element
       {
          //get variables by tags
          DOMNodeList* subElements = 0;
-         if(currentElement->getElementsByTagName(xercesString("dataValueString"))){
+         if(currentElement->getElementsByTagName(xercesString("dataValueString"))->getLength() )
+         {
             subElements = currentElement->getElementsByTagName(xercesString("dataValueString"));
 
             DOMElement* dataValueStringName = dynamic_cast<DOMElement*>(subElements->item(0));
@@ -269,20 +301,22 @@ void VEDataValuePair::SetObjectFromXMLData(DOMNode* element)
                _dataName = ExtractDataStringFromSimpleElement(dataValueStringName);
                SetDataType(std::string("STRING"));
             }
-         }else if(currentElement->getElementsByTagName(xercesString("dataValueNum"))){
+         }
+         else if(currentElement->getElementsByTagName(xercesString("dataValueNum"))->getLength() )
+         {
             //get variables by tags
             DOMNodeList* subElements = 0;
-            if(currentElement->getElementsByTagName(xercesString("dataValueNum"))){
-               subElements = currentElement->getElementsByTagName(xercesString("dataValueNum"));
+            subElements = currentElement->getElementsByTagName(xercesString("dataValueNum"));
 
-               DOMElement* dataValueNum = dynamic_cast<DOMElement*>(subElements->item(0));
-               if(dataValueNum)
-               {
-                  _dataValue  = ExtractDataNumberFromSimpleElement(dataValueNum);
-                  SetDataType(std::string("FLOAT"));
-               }
+            DOMElement* dataValueNum = dynamic_cast<DOMElement*>(subElements->item(0));
+            if(dataValueNum)
+            {
+               _dataValue  = ExtractDataNumberFromSimpleElement(dataValueNum);
+               SetDataType(std::string("FLOAT"));
             }
-         }else if(currentElement->getElementsByTagName(xercesString("dataArray"))){
+         }
+         else if(currentElement->getElementsByTagName(xercesString("dataArray"))->getLength() )
+         {
             subElements = currentElement->getElementsByTagName(xercesString("dataArray"));
             if(_dataArray)
             {
@@ -291,9 +325,10 @@ void VEDataValuePair::SetObjectFromXMLData(DOMNode* element)
             }
             _dataArray = new VE_XML::VEFloatArray(_rootDocument);
             _dataArray->SetObjectFromXMLData(subElements->item(0));
-             SetDataType(std::string("FARRAY"));
-
-         }else if(currentElement->getElementsByTagName(xercesString("dataTransform"))){
+            SetDataType(std::string("FARRAY"));
+         }
+         else if(currentElement->getElementsByTagName(xercesString("dataTransform"))->getLength() )
+         {
             subElements = currentElement->getElementsByTagName(xercesString("dataTransform"));
             if(_dataTransform)
             {
@@ -302,7 +337,7 @@ void VEDataValuePair::SetObjectFromXMLData(DOMNode* element)
             }
             _dataTransform = new VE_XML::VETransform(_rootDocument);
             _dataTransform->SetObjectFromXMLData(subElements->item(0));
-             SetDataType(std::string("TRANSFORM"));
+            SetDataType(std::string("TRANSFORM"));
          }
       }
    }

@@ -22,6 +22,9 @@ public:
 
    VECommand(DOMDocument* rootDoc);
    virtual ~VECommand();
+   VECommand( const VECommand& );
+   //equal operator
+   VECommand& operator= ( const VECommand& );
    
    //The name of the command to execute
    void SetCommandName( std::string name );
