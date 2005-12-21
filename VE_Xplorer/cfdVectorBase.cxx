@@ -328,9 +328,17 @@ float cfdVectorBase::GetVectorScaleFactor()
    // this->GetVectorScale() is obtained from gui, -100 < vectorScale < 100
    // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
    // convert range to -2.5 < x < 2.5, and compute the exponent...
+
+/*
    float range = 2.5;
    float scaleFactor = exp( this->GetVectorScale() / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetMeanCellLength();
+*/
+
+   float range = 2.5;
+   float scaleFactor = (exp( this->GetVectorScale() / ( 100.0 / range ) )) * (1.0f/10.0f); 
+
+
 
    vprDEBUG(vesDBG, 1) << " scaleFactor = " << scaleFactor 
                            << std::endl << vprDEBUG_FLUSH;

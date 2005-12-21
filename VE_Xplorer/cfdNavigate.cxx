@@ -303,11 +303,14 @@ void cfdNavigate::updateNavigationFromGUI()
       }
       else if ( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )         
       {
-         this->translationStepSize = cfdIso_value * (0.25f/50.0f);
+         //this->translationStepSize = cfdIso_value * (0.25f/50.0f);
+         this->translationStepSize = (1.0f/750.0f) * powf(cfdIso_value, 2.2f);   
       }
+
       else if ( !newCommand.compare( "CHANGE_ROTATION_STEP_SIZE" ) )         
       {
-         this->rotationStepSize = cfdIso_value * (1.0f/50.0f);
+         //this->rotationStepSize = cfdIso_value * (1.0f/50.0f);
+         this->rotationStepSize = (1.0f/750.0f) * powf(cfdIso_value, 2.2f);
       }
       else if ( !newCommand.compare( "GUI_NAV" ) )
       {

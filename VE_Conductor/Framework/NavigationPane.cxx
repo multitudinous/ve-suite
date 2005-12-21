@@ -237,12 +237,12 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    picSizer->Add(coordpic,1,wxALIGN_CENTER_HORIZONTAL);
 
    // add step size sliders
-   translationStepSize = new wxSlider(this, TRANS_STEP_SLIDER,50,1,100,
+   translationStepSize = new wxSlider(this, TRANS_STEP_SLIDER,20,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS);
-   rotationStepSize = new wxSlider(this, ROT_STEP_SLIDER,50,1,100,
+   rotationStepSize = new wxSlider(this, ROT_STEP_SLIDER,20,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
