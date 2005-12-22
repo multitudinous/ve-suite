@@ -334,9 +334,9 @@ float cfdVectorBase::GetVectorScaleFactor()
    float scaleFactor = exp( this->GetVectorScale() / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetMeanCellLength();
 */
-
+   // This scale returns a range of ~ 0.024' -> 0.75'
    float range = 2.5;
-   float scaleFactor = (exp( this->GetVectorScale() / ( 100.0 / range ) )) * (1.0f/10.0f); 
+   float scaleFactor = ( exp( this->GetVectorScale() / ( 100.0 / range ) ) ) * 0.30f; 
 
 
 

@@ -303,14 +303,16 @@ void cfdNavigate::updateNavigationFromGUI()
       }
       else if ( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )         
       {
-         //this->translationStepSize = cfdIso_value * (0.25f/50.0f);
-         this->translationStepSize = (1.0f/750.0f) * powf(cfdIso_value, 2.2f);   
+         // This equation returns a range of ~ 0.01' -> 220'
+         // the equation is 1/100 * e ^ ( x / 10 ) where 1 < x < 100
+         this->translationStepSize = 0.01f * exp( cfdIso_value*0.10f );   
       }
 
       else if ( !newCommand.compare( "CHANGE_ROTATION_STEP_SIZE" ) )         
       {
-         //this->rotationStepSize = cfdIso_value * (1.0f/50.0f);
-         this->rotationStepSize = (1.0f/750.0f) * powf(cfdIso_value, 2.2f);
+         // This equation returns a range of ~ 0.00029' -> 1.586' NOTE: These are in degrees
+         // This equation is 1 / 750 * ( x / 2 ) ^ 2.2 where 1 < x < 50 
+         this->rotationStepSize = (0.001333f) * powf( (cfdIso_value * 0.5f), 2.2f);
       }
       else if ( !newCommand.compare( "GUI_NAV" ) )
       {
