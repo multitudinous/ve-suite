@@ -52,6 +52,7 @@
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <wx/splash.h>
+#include <wx/utils.h>
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
 #include <sstream>
@@ -113,26 +114,26 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
 
-  // VE Tabs
-  //m_tabs = ( UI_Tabs*) NULL;
-  m_frame = 0;
-  is_orb_init= false;
-  p_ui_i=NULL;	
-  av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
-  network = new Network(wx_nw_splitter, -1 );
-  av_modules->SetNetwork(network);
-	
-  wx_log_splitter->SplitHorizontally(wx_ve_splitter, logwindow, -100);
-  wx_nw_splitter->SplitVertically(av_modules, network, 140);
-  wx_ve_splitter->Initialize(wx_nw_splitter);
-  SetSize(DetermineFrameSize(NULL));
-  CreateMenu();
-  CreateStatusBar();
-  SetStatusText("VE-Conductor Status");
-  
-  pelog = NULL;
+   // VE Tabs
+   //m_tabs = ( UI_Tabs*) NULL;
+   m_frame = 0;
+   is_orb_init= false;
+   p_ui_i=NULL;	
+   av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
+   network = new Network(wx_nw_splitter, -1 );
+   av_modules->SetNetwork(network);
+
+   wx_log_splitter->SplitHorizontally(wx_ve_splitter, logwindow, -100);
+   wx_nw_splitter->SplitVertically(av_modules, network, 140);
+   wx_ve_splitter->Initialize(wx_nw_splitter);
+   SetSize(DetermineFrameSize(NULL));
+   CreateMenu();
+   CreateStatusBar();
+   SetStatusText("VE-Conductor Status");
+
+   pelog = NULL;
    navPane = 0;
-  //  menubar = 
+   //  menubar = 
    domManager = new DOMDocumentManager();
 }
 
@@ -237,14 +238,20 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 	   //{
 	   // UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
 	   //naming_context->unbind(UIname);
-	   if ( !CORBA::is_nil( poa.in() ) )
-	      poa->destroy (1, 1);
+	   //if ( !CORBA::is_nil( poa.in() ) )
+	   //   poa->destroy (1, 1);
 	   //}
-      orb->destroy();
+      //orb->destroy();
    }
   
    delete domManager;
-   navPane->Destroy();
+   domManager = 0;
+   
+   if ( navPane )
+   {
+      navPane->Destroy();
+      navPane = 0;
+   }
 
    StoreFrameSize(GetRect(), NULL);
    Destroy();
@@ -332,6 +339,8 @@ void AppFrame::CreateMenu()
 
    xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
    xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
+   xplorerMenu->Enable( XPLORER_NAVIGATION, false);
+   xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
 //  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
 //  config_menu->Append(v21ID_REI_BASE, _("Base Quench (REI)"));
@@ -817,6 +826,8 @@ void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
    {
       Log("Can't find executive or UI registration error\n");
    }
+   ::wxMilliSleep( 2500 );
+   delete splash;
 }
   
 void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
@@ -862,6 +873,8 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
       //Create the VE Tab
       con_menu->Enable(v21ID_CONNECT_VE, false);
       con_menu->Enable(v21ID_DISCONNECT_VE, true);
+      xplorerMenu->Enable( XPLORER_NAVIGATION, true);
+      xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
    } 
    catch (CORBA::Exception &) 
    {
@@ -870,6 +883,8 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
    }
   
    CreateVETab();
+   ::wxMilliSleep( 2500 );
+   delete splash;
    Log("Connected to VE server.\n");
 }
 
@@ -964,36 +979,44 @@ void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
 
 void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 {
-  //try {
-  /*CosNaming::Name name(1);
-    
-    name.length(1);
-    name[0].id   = (const char*) "Master";
-    name[0].kind = (const char*) "VE_Xplorer";
-    
-    try
-    {
-    //vprDEBUG(vprDBG_ALL,0) 
-    //<< "naming_context->unbind for CORBA Object  " 
-    //<< std::endl << vprDEBUG_FLUSH;
-    naming_context->unbind( name );
-    //naming_context->destroy();
-    }
-    catch( CosNaming::NamingContext::InvalidName& )
-    {
-    std::cerr << "Invalid name for CORBA Object  " << std::endl;
-    }
-    catch(CosNaming::NamingContext::NotFound& ex)
-    {
-    std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
-    }*/
-  wx_ve_splitter->Unsplit(m_frame);
-  sizerTab->Detach(m_frame);
-  delete m_frame;
-  m_frame = NULL;
-  con_menu->Enable(v21ID_CONNECT_VE, true);
-  con_menu->Enable(v21ID_DISCONNECT_VE, false);
-  Log("Disconnect VE suceeded.\n");
+   //try {
+   /*CosNaming::Name name(1);
+
+   name.length(1);
+   name[0].id   = (const char*) "Master";
+   name[0].kind = (const char*) "VE_Xplorer";
+
+   try
+   {
+   //vprDEBUG(vprDBG_ALL,0) 
+   //<< "naming_context->unbind for CORBA Object  " 
+   //<< std::endl << vprDEBUG_FLUSH;
+   naming_context->unbind( name );
+   //naming_context->destroy();
+   }
+   catch( CosNaming::NamingContext::InvalidName& )
+   {
+   std::cerr << "Invalid name for CORBA Object  " << std::endl;
+   }
+   catch(CosNaming::NamingContext::NotFound& ex)
+   {
+   std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
+   }*/
+   wx_ve_splitter->Unsplit(m_frame);
+   sizerTab->Detach(m_frame);
+   delete m_frame;
+   m_frame = NULL;
+   con_menu->Enable(v21ID_CONNECT_VE, true);
+   con_menu->Enable(v21ID_DISCONNECT_VE, false);
+   xplorerMenu->Enable( XPLORER_NAVIGATION, false);
+   xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
+
+   if ( navPane )
+   {
+      navPane->Close( false );
+   }
+
+   Log("Disconnect VE suceeded.\n");
   //}catch (CORBA::Exception &) {
   
   //Log("Disconnect VE failed.\n");

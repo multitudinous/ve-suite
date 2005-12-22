@@ -237,16 +237,15 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    picSizer->Add(coordpic,1,wxALIGN_CENTER_HORIZONTAL);
 
    // add step size sliders
+   // See notes in cfdNavigate to see what the scalar bars actually map to
    translationStepSize = new wxSlider(this, TRANS_STEP_SLIDER,20,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS);
-   rotationStepSize = new wxSlider(this, ROT_STEP_SLIDER,20,1,100,
+                                wxSL_AUTOTICKS );
+   rotationStepSize = new wxSlider(this, ROT_STEP_SLIDER,10,1,50,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS );
+                                wxSL_AUTOTICKS );
    
    //the labels for the sliders 
    wxStaticText* transStepSizeLabel = new wxStaticText(this,-1,wxT("Translation Step Size"));
