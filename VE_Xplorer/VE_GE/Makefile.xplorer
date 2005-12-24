@@ -139,8 +139,8 @@ default: all
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 all:
 	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
-	$(MAKE) -f Makefile.xplorer NO_DEPEND=0 cxx
-	$(MAKE) -f Makefile.xplorer $(APP_NAME)
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
 
 srcdir= .
 

@@ -30,7 +30,12 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-DIRS= ${VE_SUITE_HOME}/VE_Xplorer 
+DIRS= ${VE_SUITE_HOME}/VE_Xplorer/VE_Util \
+   ${VE_SUITE_HOME}/VE_SceneGraph \
+   ${VE_SUITE_HOME}/VE_TextureBased \
+   ${VE_SUITE_HOME}/VE_Xplorer/VE_XplorerHandlers \
+   ${VE_SUITE_HOME}/VE_Xplorer/VE_GraphicalPlugin \
+   ${VE_SUITE_HOME}/VE_Xplorer/VE_GE
 
 # -----------------------------------------------------------------------------
 # Build targets.
@@ -39,21 +44,25 @@ default: all
 
 all: $(DIRS)
 
-${VE_SUITE_HOME}/VE_Xplorer::
-	$(MAKE) -f Makefile.utillib
-	cd ${VE_SUITE_HOME}/VE_SceneGraph && $(MAKE) -f Makefile.scenegraphlib
-	cd ${VE_SUITE_HOME}/VE_TextureBased && $(MAKE) -f Makefile.texturebasedlib
-	$(MAKE) -f Makefile.xplorerlib
-	$(MAKE) -f Makefile.graphicalpluginlib
-	$(MAKE) -f Makefile.xplorer
+${VE_SUITE_HOME}/VE_Xplorer/VE_Util \
+${VE_SUITE_HOME}/VE_SceneGraph \
+${VE_SUITE_HOME}/VE_TextureBased \
+${VE_SUITE_HOME}/VE_Xplorer/VE_XplorerHandlers \
+${VE_SUITE_HOME}/VE_Xplorer/VE_GraphicalPlugin \
+${VE_SUITE_HOME}/VE_Xplorer/VE_GE::
+	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	$(MAKE) -f Makefile.utillib clean
-	cd ${VE_SUITE_HOME}/VE_SceneGraph && $(MAKE) -f Makefile.scenegraphlib clean
-	cd ${VE_SUITE_HOME}/VE_TextureBased && $(MAKE) -f Makefile.texturebasedlib clean
-	$(MAKE) -f Makefile.xplorerlib clean
-	$(MAKE) -f Makefile.graphicalpluginlib clean
-	$(MAKE) -f Makefile.xplorer clean
+	@for dir in $(DIRS) ; do		\
+            cd $$dir && $(MAKE) clean ;		\
+            cd .. ;				\
+        done
+
+cleandepend:
+	@for dir in $(DIRS) ; do		\
+            cd $$dir && $(MAKE) cleandepend ;		\
+            cd .. ;				\
+        done

@@ -29,21 +29,12 @@
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
-#
-#
-#_______________________________CUSTOM OPTIONS__________________________________
-#
-# CLUSTER_APP now is defined as TRUE or FALSE from the setup script
-#_______________________________________________________________________________
-
 CFDUNAME = $(shell uname)
-
 # IRIX needs these flags
 ifeq (${CFDUNAME},IRIX64)
    EXTRA_CXXFLAGS+= -D_IRIX
    EXTRA_LIBS+= -L/usr/freeware/lib32
 endif
-
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
@@ -53,68 +44,37 @@ SRCS=\
    cleanVtk.cpp \
    fileIO.cxx \
    readWriteVtkThings.cxx
+
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
+#EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
 
+#EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
+#DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
+$(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
+
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_UtilLib.so
+PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_UtilLib
+
 #OBJDIR is the place that the object files are stored.
 OBJDIR= $(CFDHOSTTYPE)_VE_UtilLib
 
 #DEPDIR is the place that the dependency files are stored.
 DEPDIR= $(CFDHOSTTYPE)_VE_UtilLib
 
-default: all
+#BUILD_TYPE=	dbg
 
-# Create the OS-dependent directory for the executable. If the dir exists, 
-# 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
-all:
-	mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
-	$(MAKE) -f Makefile.utillib NO_DEPEND=0 cxx
-	$(MAKE) -f Makefile.utillib $(APP_NAME)
+srcdir= ..
 
-srcdir= .
-
-# turn off dependencies for idl stuff, make clean
-NO_DEPEND= YES
-
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-
-# One of these must be uncommented.
-DEBUG_APP?= TRUE
-#OPTIM_APP?= TRUE
-
-#EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
-EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
-
-EXTRA_LIBS+= -shared
-ifeq (${CFDHOSTTYPE},IRIX64)
-   # For ANSI std headers
+ifeq (${CFDUNAME},Darwin)
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.mac.lib.mk
 else
-   EXTRA_LDFLAGS+= -fPIC
-   EXTRA_CXXFLAGS+= -fPIC
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.linux.lib.mk
 endif
 
-LINKALL_ON= -all
-LINKALL_OFF=
-
-STATIC_ON= @APP_LINK_STATIC_ON@
-STATIC_OFF= @APP_LINK_STATIC_OFF@
-
-CXX_GEN_DIR= .
-
-# -----------------------------------------------------------------------------
-# Application build targets.
-# -----------------------------------------------------------------------------
-cxx: $(OBJS)
-
-${APP_NAME}: $(OBJS)
-	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
-
-# in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
-CLEAN_FILES+= $(APP_NAME) $(OBJDIR)/* 
