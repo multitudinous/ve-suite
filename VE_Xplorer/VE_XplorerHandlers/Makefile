@@ -127,7 +127,7 @@ endif
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG).so
+PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 #OBJDIR is the place that the object files are stored.
 OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)

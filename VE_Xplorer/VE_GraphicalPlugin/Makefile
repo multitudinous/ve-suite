@@ -65,7 +65,7 @@ $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG).so
+PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 # object files are being stored in a system-dependent directory so that builds
 # for multiple platforms may be maintained simultaneously.
 
