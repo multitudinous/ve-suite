@@ -2,10 +2,9 @@
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/translateToVtk
 
 all:
-	cd $(VE_SUITE_HOME)/VE_Xplorer && $(MAKE) -f Makefile.utillib
+	cd $(VE_SUITE_HOME)/VE_Xplorer/VE_Util && $(MAKE)
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
-#	-$(MAKE) install
 
 srcdir= .
 
