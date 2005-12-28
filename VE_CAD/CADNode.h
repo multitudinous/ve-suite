@@ -42,7 +42,7 @@ public:
 
    ///Set the transform for this node.
    ///\param transform The transform of this node.
-   void SetParent(VE_XML::VETransform* transform);
+   void SetTransform(VE_XML::VETransform* transform);
 
    ///Set the material for this node.
    ///\param material The material of this node.

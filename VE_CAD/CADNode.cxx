@@ -2,12 +2,13 @@
 #include "VE_CAD/CADAssembly.h"
 #include "VE_CAD/CADMaterial.h"
 XERCES_CPP_NAMESPACE_USE
+using namespace VE_CAD;
 //////////////////////////////////
 ///Constructor                  //
 //////////////////////////////////
 CADNode::CADNode(DOMDocument* rootDoc,
                  std::string name)
-:VE_XML::VEXMLObject(rootDoc);
+:VE_XML::VEXMLObject(rootDoc)
 {
    _name = name;
    _parent = 0;

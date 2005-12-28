@@ -1,5 +1,6 @@
 #include "VE_CAD/CADAssembly.h"
 XERCES_CPP_NAMESPACE_USE
+using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////
 CADAssembly::CADAssembly(DOMDocument* rootDocument,std::string name)
 :VE_CAD::CADNode(rootDocument,name)
