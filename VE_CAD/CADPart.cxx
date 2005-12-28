@@ -25,7 +25,7 @@ std::string CADPart::GetCADFileName()
 {
    return _cadFileName;
 }
-////////////////////////////////
-void CADPart::_updateVEElement()
+/////////////////////////////////////////////////
+void CADPart::_updateVEElement(std::string input)
 {
 }

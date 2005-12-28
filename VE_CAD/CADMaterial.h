@@ -4,6 +4,7 @@
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_XML/VEXMLObject.h"
 #include <xercesc/dom/DOM.hpp>
+#include <string>
 
 /*!\file CADMaterial.h
  * CADMaterial API
@@ -39,8 +40,12 @@ public:
    void SetAmbientComponent(float* ambient);
 
    ///Set the specular reflection component
-   ///\param specular "reflective" property
-   void SetSpecularComponent(float specular);
+   ///\param specular RGBA specular property
+   void SetSpecularComponent(float* specular);
+
+   ///Set the "shininess" of this material
+   ///\param shininess value
+   void SetShininess(float shine);
 
    ///Get the diffuse property
    std::vector<float> GetDiffuse();
@@ -49,15 +54,18 @@ public:
    ///Get the ambient property
    std::vector<float> GetAmbient();
    ///Get the specular property
-   float GetSpecular();
+   std::vector<float> GetSpecular();
+   ///Get the shininess property
+   flaot GetShininess();
 protected:	
    ///Internally update the XML data for the material.
-   virtual void _updateVEElement();
+   ///\param input The new XML data for the material.
+   virtual void _updateVEElement(std::string input);
    std::vector<float> _kDiffuse;///< Diffuse component
    std::vector<float> _kEmission;///< Emmisive component
    std::vector<float> _ambient;///< Ambient component
-   float _specular;///< specular component
-   std::string _materialName;///<The name of this material.
+   std::vector<float> _specular;///< specular component
+   float _shininess;
 };
 }
 #endif CAD_MATERIAL_H

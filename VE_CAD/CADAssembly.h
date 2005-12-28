@@ -42,7 +42,8 @@ public:
    VE_CAD::CADNode* GetChild(unsigned int whichChild);
 protected:
    ///Internally update the XML data for this node.
-   virtual void _updateVEElement();
+   ///\param input The XML element data.
+   virtual void _updateVEElement(std::string input);
    unsigned int _nChildren; ///<number of children in this assembly
    ///\typedef ChildList
    /// A vector of CADNodes

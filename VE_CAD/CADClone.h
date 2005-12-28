@@ -2,6 +2,7 @@
 #define _CAD_CLONE_H_
 #include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
+#include <string>
 /*!\file CADClone.h
   CADNode API
   */
@@ -22,7 +23,8 @@ public:
 
 protected:
    ///Internally update the XML data for this node;
-   virtual void _updateVEElement();
+   ///\param input The new XML data for this element;
+   virtual void _updateVEElement(std::string input);
    VE_CAD::CADNode* _originalNode;///< The node that is instanced
 };
 }

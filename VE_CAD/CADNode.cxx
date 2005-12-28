@@ -79,3 +79,8 @@ VE_CAD::CADMaterial* CADNode::GetMaterial()
 {
    return _material;
 }
+/////////////////////////////////////////////////
+void CADNode::_updateVEElement(std::string input)
+{
+   //how is this going to work???
+}

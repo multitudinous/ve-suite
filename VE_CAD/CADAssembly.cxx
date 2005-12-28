@@ -37,8 +37,8 @@ VE_CAD::CADNode* CADAssembly::GetChild(unsigned int whichChild)
 {
    return _children.at(whichChild);
 }
-////////////////////////////////////
-void CADAssembly::_updateVEElement()
+/////////////////////////////////////////////////////
+void CADAssembly::_updateVEElement(std::string input)
 {
    //this is going to be "nutty"
 }

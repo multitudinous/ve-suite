@@ -61,7 +61,8 @@ public:
    VE_CAD::CADMaterial* GetMaterial();
 protected:
    ///Internally update the XML data for this element.
-   virtual void _updateVEElement();
+   ///\param input The XML element information
+   virtual void _updateVEElement(std::string input);
    VE_XML::VETransform* _transform; ///< Transform for the node.
    VE_CAD::CADMaterial* _material; ///< Material for this node.
    VE_CAD::CADAssembly* _parent;  ///< Parent node.

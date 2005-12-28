@@ -33,7 +33,8 @@ public:
 
 protected:
    ///Internally update the XML data for this node.
-   virtual void _updateVEElement();
+   ///\param input The XML data for this element.
+   virtual void _updateVEElement(std::string input);
    std::string _cadFileName; ///<The name of the CAD file on disk
 };
 }

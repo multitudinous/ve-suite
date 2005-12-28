@@ -10,7 +10,8 @@ CADMaterial::CADMaterial(DOMDocument* rootDocument,std::string name)
    _kDiffuse.assign(4,1.0f);
    _kEmission.assign(4,1.0f);
    _ambient.assign(4,1.0f);
-   _specular = 50.0;
+   _specular.assign(4,1.0f)
+   _shininess = 50.0;
 }
 ///////////////////////////
 //Destructor             //
@@ -46,9 +47,23 @@ void CADMaterial::SetAmbientComponent(float* ambient)
    _ambient.push_back(ambient[3]);
 }
 //////////////////////////////////////////////////////
-void CADMaterial::SetSpecularComponent(float specular)
+void CADMaterial::SetSpecularComponent(float* specular)
 {
-   _specular = specular;
+   _specular.clear();
+   _specular.push_back(specular[0]);
+   _specular.push_back(specular[1]);
+   _specular.push_back(specular[2]);
+   _specular.push_back(specular[3]);
+}
+///////////////////////////////////////////////
+void CADMaterial::SetShininess(float shininess)
+{
+   _shininess = shininess;
+}
+/////////////////////////////////
+float CADMaterial::GetShininess()
+{
+   return _shininess;
 }
 ////////////////////////////////////////////
 std::vector<float> CADMaterial::GetDiffuse()
@@ -65,12 +80,12 @@ std::vector<float> CADMaterial::GetAmbient()
 {
    return _ambient;
 }
-////////////////////////////////
-float CADMaterial::GetSpecular()
+/////////////////////////////////////////////
+std::vector<float> CADMaterial::GetSpecular()
 {
    return _specular;
 }
-////////////////////////////////////
-void CADMaterial::_updateVEElement()
+/////////////////////////////////////////////////////
+void CADMaterial::_updateVEElement(std::string input)
 {
 }

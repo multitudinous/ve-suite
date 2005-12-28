@@ -16,7 +16,7 @@ CADClone::CADClone(DOMDocument* rootDocument,std::string name,
 CADClone::~CADClone()
 {
 }
-/////////////////////////////////
-void CADClone::_updateVEElement()
+//////////////////////////////////////////////////
+void CADClone::_updateVEElement(std::string input)
 {
 }
