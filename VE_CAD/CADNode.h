@@ -1,9 +1,11 @@
 #ifndef _CAD_NODE_H_
 #define _CAD_NODE_H_
 
-#include <VE_XML/VEXMLObject.h>
-#include <string>
+#include "VE_XML/VEXMLObject.h"
 #include "VE_Installer/include/VEConfig.h"
+#include <xercesc/dom/DOM.hpp>
+#include <string>
+
 /*!\file CADNode.h
   CADNode API
   */
@@ -18,14 +20,16 @@
 namespace VE_XML{
    class VETransform;
 }
+XERCES_CPP_NAMESPACE_USE
 namespace VE_CAD{
 class CADAssembly;
 class CADMaterial;
-
 class VE_CAD_EXPORTS CADNode: public VEXMLObject{
 public:
    ///Constructor
-   CADNode(std::string name=std::string("CADGeometry"));
+   ///\param rootDocument The xerces document for this node.
+   ///\param name The name of this node.
+   CADNode(DOMDocument* rootDocument,std::string name);
    virtual ~CADNode();
 
    ///Set the name of the node in the hierachy.

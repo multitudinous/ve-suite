@@ -1,5 +1,6 @@
 #ifndef _CAD_CLONE_H_
 #define _CAD_CLONE_H_
+#include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
 /*!\file CADClone.h
   CADNode API
@@ -8,12 +9,15 @@
  * This class is the base class for representing
  * the hierarchy of a CAD structure.
  */
-
+XERCES_CPP_NAMESPACE_USE
 namespace VE_CAD{
 class VE_CAD_EXPORTS CADClone:public VE_CAD::CADNode{
 public:
    ///Constructor
-   CADClone(std::string name,VE_CAD::CADNode* originalNode);
+   ///\param rootDocument The root XML document for this node.
+   ///\param name The name of this node.
+   ///\param originalNode The node we are going to clone.
+   CADClone(DOMDocument* rootDocument,std::string name,VE_CAD::CADNode* originalNode);
    virtual ~CADClone();
 
 protected:

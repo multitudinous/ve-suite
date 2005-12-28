@@ -7,16 +7,19 @@
 /*!\class VE_CAD::CADPart 
  * Class to represent a part file (the actual CAD geometry)
  */
+#include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
 #include <VE_CAD/CADNode.h>
 #include <string>
 
+XERCES_CPP_NAMESPACE_USE
 namespace VE_CAD{
 class VE_CAD_EXPORTS CADPart: public VE_CAD::CADNode{
 public:
-   ///\param name The name of the part
    ///Constructor
-   CADPart(std::string name=std::string("Part"));
+   ///\param rootDocument The root XML document 
+   ///\param name The name of the part
+   CADPart(DOMDocument* rootDocument,std::string name=std::string("Part"));
 
    ///Destructor
    virtual ~CADPart();

@@ -1,5 +1,6 @@
 #ifndef _CAD_ASSEMBLY_H_
 #define _CAD_ASSEMBLY_H_
+#include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
 #include <VE_CAD/CADNode.h>
 #include <string>
@@ -13,12 +14,14 @@
  * There isn't an actual geometry that is represented here but instead
  * this is more of an organization node.
  */
+XERCES_CPP_NAMESPACE_USE
 namespace VE_CAD{
 class VE_CAD_EXPORTS CADAssembly: public VE_CAD::CADNode{
 public:
    ///Constructor
-   ///\param name Name of the assembly
-   CADAssembly(std::string name=std::string("Assembly"));
+   ///\param rootDocument The root XML document of this assembly.
+   ///\param name Name of the assembly.
+   CADAssembly(DOMDocument* rootDocument,std::string name=std::string("Assembly"));
    virtual ~CADAssembly();
 
    ///Add a child to this assembly
