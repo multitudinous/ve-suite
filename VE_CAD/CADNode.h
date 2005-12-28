@@ -28,37 +28,39 @@ public:
    CADNode(std::string name=std::string("CADGeometry"));
    virtual ~CADNode();
 
-   ///Set the name of the node in the hierachy
-   ///\param name The name to set for this node
+   ///Set the name of the node in the hierachy.
+   ///\param name The name to set for this node.
    void SetNodeName(std::string name);
 
-   ///Set the parent for this node
-   ///\param parent The parent of this node
+   ///Set the parent for this node.
+   ///\param parent The parent of this node.
    void SetParent(VE_CAD::CADAssembly* parent);
 
-   ///Set the transform for this node
-   ///\param transform The transform of this node
+   ///Set the transform for this node.
+   ///\param transform The transform of this node.
    void SetParent(VE_XML::VETransform* transform);
 
-   ///Set the material for this node
-   ///\param material The material of this node
+   ///Set the material for this node.
+   ///\param material The material of this node.
    void SetMaterial(VE_CAD::CADMaterial* material);
 
-   ///Get the name of this CAD node
+   ///Get the name of this CAD node.
    std::string GetNodeName();
 
-   ///Get the parent of this CAD node
+   ///Get the parent of this CAD node.
    VE_CAD::CADAssembly* GetParent();
 
-   ///Get the transform of this CAD node
+   ///Get the transform of this CAD node.
    VE_XML::Transform* GetTransform();
 
    ///Get the material of this CAD node
    VE_CAD::CADMaterial* GetMaterial();
 protected:
-   VE_XML::VETransform* _transform; ///< Transform for the node
-   VE_CAD::CADMaterial* _material; ///< Material for this node
-   VE_CAD::CADAssembly* _parent;  ///< Parent node
+   ///Internally update the XML data for this element.
+   virtual void _updateVEElement();
+   VE_XML::VETransform* _transform; ///< Transform for the node.
+   VE_CAD::CADMaterial* _material; ///< Material for this node.
+   VE_CAD::CADAssembly* _parent;  ///< Parent node.
 };
 }
 #endif// _CAD_NODE_H_

@@ -29,6 +29,8 @@ public:
    std::string GetCADFileName();
 
 protected:
+   ///Internally update the XML data for this node.
+   virtual void _updateVEElement();
    std::string _cadFileName; ///<The name of the CAD file on disk
 };
 }

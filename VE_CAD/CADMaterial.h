@@ -44,6 +44,8 @@ public:
    ///Get the specular property
    float GetSpecular();
 protected:	
+   ///Internally update the XML data for the material.
+   virtual void _updateVEElement();
    std::vector<float> _kDiffuse;///< Diffuse component
    std::vector<float> _kEmission;///< Emmisive component
    std::vector<float> _ambient;///< Ambient component
