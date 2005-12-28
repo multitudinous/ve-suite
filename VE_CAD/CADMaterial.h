@@ -44,7 +44,7 @@ public:
    void SetSpecularComponent(float* specular);
 
    ///Set the "shininess" of this material
-   ///\param shininess value
+   ///\param shine value
    void SetShininess(float shine);
 
    ///Get the diffuse property
@@ -64,8 +64,8 @@ protected:
    std::vector<float> _kDiffuse;///< Diffuse component
    std::vector<float> _kEmission;///< Emmisive component
    std::vector<float> _ambient;///< Ambient component
-   std::vector<float> _specular;///< specular component
-   float _shininess;
+   std::vector<float> _specular;///< Specular component
+   float _shininess;///< Shininess of the material
 };
 }
 #endif CAD_MATERIAL_H
