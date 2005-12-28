@@ -9,7 +9,7 @@
  */
 #include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
-#include <VE_CAD/CADNode.h>
+#include "VE_Open/VE_XML/VE_CAD/CADNode.h"
 #include <string>
 
 XERCES_CPP_NAMESPACE_USE
@@ -28,10 +28,21 @@ public:
    ///Set the name of the CAD file this node represents
    void SetCADFileName(std::string cadFileName);
 
+   ///Set the object from XML data
+   ///\param xmlNode Node to set this object from
+   virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+
    ///Get the name of the CAD file this node represents
    std::string GetCADFileName();
 
+   ///Copy constructor
+   CADPart(const CADPart& rhs);
+
+   ///Equal operator
+   CADPart& operator=(const CADPart& rhs);
 protected:
+   
+
    ///Internally update the XML data for this node.
    ///\param input The XML data for this element.
    virtual void _updateVEElement(std::string input);

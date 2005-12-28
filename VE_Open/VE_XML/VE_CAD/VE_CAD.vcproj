@@ -20,8 +20,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\..&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_CAD"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_CAD_LIBRARY"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib"
-				OutputFile="$(OutDir)/VE_CAD_.dll"
+				AdditionalDependencies="xerces-c_2d.lib VE_XML_d.lib"
+				OutputFile="$(OutDir)/VE_CAD_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Debug"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/VE_CAD_d.pdb"
 				SubSystem="2"
@@ -73,7 +73,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\..&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_CAD"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_CAD_LIBRARY"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
@@ -84,10 +84,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib"
+				AdditionalDependencies="xerces-c_2.lib VE_XML.lib"
 				OutputFile="$(OutDir)/VE_CAD.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Release"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -123,11 +123,41 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath=".\CADAssembly.cxx">
+			</File>
+			<File
+				RelativePath=".\CADClone.cxx">
+			</File>
+			<File
+				RelativePath=".\CADMaterial.cxx">
+			</File>
+			<File
+				RelativePath=".\CADNode.cxx">
+			</File>
+			<File
+				RelativePath=".\CADPart.cxx">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\CADAssembly.h">
+			</File>
+			<File
+				RelativePath=".\CADClone.h">
+			</File>
+			<File
+				RelativePath=".\CADMaterial.h">
+			</File>
+			<File
+				RelativePath=".\CADNode.h">
+			</File>
+			<File
+				RelativePath=".\CADPart.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

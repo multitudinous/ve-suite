@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/vesuite_installs/verg.xsd"/> 
+   <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/vesuite_installs/verg.xsd" />
    <xs:complexType name="CADNode">
       <xs:sequence>
          <xs:element name="parent" type="CADAssembly" maxOccurs="1" minOccurs="0" />
@@ -47,7 +47,8 @@
          <xs:element name="kDiffuse" type="veFloatArray" maxOccurs="1" minOccurs="0" />
          <xs:element name="kAmbient" type="veFloatArray" maxOccurs="1" minOccurs="0" />
          <xs:element name="kEmissive" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-         <xs:element name="specular" type="xs:float" maxOccurs="1" minOccurs="0" />
+         <xs:element name="specular" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+         <xs:element name="shininess" type="xs:float" />
       </xs:sequence>
    </xs:complexType>
 </xs:schema>

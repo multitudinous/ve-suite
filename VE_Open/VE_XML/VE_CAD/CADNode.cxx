@@ -1,6 +1,6 @@
-#include "VE_XML/VETransform.h"
-#include "VE_CAD/CADAssembly.h"
-#include "VE_CAD/CADMaterial.h"
+#include "VE_Open/VE_XML/VETransform.h"
+#include "VE_Open/VE_XML/VE_CAD/CADAssembly.h"
+#include "VE_Open/VE_XML/VE_CAD/CADMaterial.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_CAD;
 //////////////////////////////////
@@ -47,7 +47,7 @@ void CADNode::SetTransform(VE_XML::VETransform* transform)
       delete _transform;
       _transform = 0;
    }
-   _transform = new VE_XML::VETransform(transform);
+   _transform = new VE_XML::VETransform(*transform);
 }
 ////////////////////////////////////////////////////////
 void CADNode::SetMaterial(VE_CAD::CADMaterial* material)
@@ -57,7 +57,7 @@ void CADNode::SetMaterial(VE_CAD::CADMaterial* material)
       delete _material;
       _material = 0;
    }
-   _material = new CADMaterial(material);
+   _material = new CADMaterial(*material);
 }
 //////////////////////////////////
 std::string CADNode::GetNodeName()
@@ -70,7 +70,7 @@ VE_CAD::CADAssembly* CADNode::GetParent()
    return _parent;
 }
 //////////////////////////////////////////
-VE_XML::Transform* CADNode::GetTransform()
+VE_XML::VETransform* CADNode::GetTransform()
 {
    return _transform;
 }
@@ -83,4 +83,39 @@ VE_CAD::CADMaterial* CADNode::GetMaterial()
 void CADNode::_updateVEElement(std::string input)
 {
    //how is this going to work???
+}
+/////////////////////////////////////////////////////
+void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
+{
+}
+/////////////////////////////////////
+CADNode::CADNode(const CADNode& rhs)
+:VE_XML::VEXMLObject(rhs)
+{
+   _transform = new VE_XML::VETransform(*rhs._transform);
+   _material = new VE_CAD::CADMaterial(*rhs._material);
+   _parent = rhs._parent;
+   _name = rhs._name;
+}
+////////////////////////////////////////////////
+CADNode& CADNode::operator=(const CADNode& rhs)
+{
+   if ( this != &rhs )
+   {
+      if(_transform)
+      {
+         delete _transform;
+         _transform = 0;
+      }
+      _transform = new VE_XML::VETransform(*rhs._transform);
+      if(_material)
+      {
+         delete _material;
+         _material = 0;
+      }
+      _material = new VE_CAD::CADMaterial(*rhs._material);
+      _parent = rhs._parent;
+      _name = rhs._name;
+   }
+   return *this;
 }

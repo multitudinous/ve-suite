@@ -2,9 +2,10 @@
 #define CAD_MATERIAL_H
 
 #include "VE_Installer/include/VEConfig.h"
-#include "VE_XML/VEXMLObject.h"
+#include "VE_Open/VE_XML/VEXMLObject.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
+#include <vector>
 
 /*!\file CADMaterial.h
  * CADMaterial API
@@ -18,7 +19,7 @@ namespace VE_XML{
    class VEFloatArray;
 };
 namespace VE_CAD{
-class VE_CAD_EXPORTS CADMaterial: public VEXMLObject{
+   class VE_CAD_EXPORTS CADMaterial: public VE_XML::VEXMLObject{
 public:
    ///Constructor
    ///\param rootDocument The root XML document of this material.
@@ -47,24 +48,49 @@ public:
    ///\param shine value
    void SetShininess(float shine);
 
+   ///Set the name of this material.
+   ///\param name The name of the material.
+   void SetMaterialName(std::string name);
+
+   ///Set the object from XML data
+   ///\param xmlNode Node to set this object from
+   virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+
    ///Get the diffuse property
    std::vector<float> GetDiffuse();
+
    ///Get the emissive property
    std::vector<float> GetEmissive();
+
    ///Get the ambient property
    std::vector<float> GetAmbient();
+
    ///Get the specular property
    std::vector<float> GetSpecular();
+  
    ///Get the shininess property
-   flaot GetShininess();
+   float GetShininess();
+
+   ///Get the material name.
+   std::string GetMaterialName();
+   
+   ///Copy constructor
+   CADMaterial(const CADMaterial& rhs);
+
+   ///Equal operator
+   CADMaterial& operator=(const CADMaterial& rhs);
 protected:	
+   
+
    ///Internally update the XML data for the material.
    ///\param input The new XML data for the material.
    virtual void _updateVEElement(std::string input);
-   std::vector<float> _kDiffuse;///< Diffuse component
-   std::vector<float> _kEmission;///< Emmisive component
-   std::vector<float> _ambient;///< Ambient component
-   std::vector<float> _specular;///< Specular component
+
+   std::vector<float> _kDiffuse;///< Diffuse component.
+   std::vector<float> _kEmissive;///< Emmisive component.
+   std::vector<float> _ambient;///< Ambient component.
+   std::vector<float> _specular;///< Specular component.
+   std::string _materialName;///< Name of this Material node.
    float _shininess;///< Shininess of the material
 };
 }

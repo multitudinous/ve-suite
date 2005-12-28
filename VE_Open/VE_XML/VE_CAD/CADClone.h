@@ -2,6 +2,7 @@
 #define _CAD_CLONE_H_
 #include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
+#include <VE_Open/VE_XML/VE_CAD/CADNode.h>
 #include <string>
 /*!\file CADClone.h
   CADNode API
@@ -21,7 +22,18 @@ public:
    CADClone(DOMDocument* rootDocument,std::string name,VE_CAD::CADNode* originalNode);
    virtual ~CADClone();
 
+   ///Set the object from XML data
+   ///\param xmlNode Node to set this object from
+   virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+ 
+   ///Copy constructor
+   CADClone(const CADClone& rhs);
+
+   ///Equal operator
+   CADClone& operator=(const CADClone& rhs);
 protected:
+  
+
    ///Internally update the XML data for this node;
    ///\param input The new XML data for this element;
    virtual void _updateVEElement(std::string input);
