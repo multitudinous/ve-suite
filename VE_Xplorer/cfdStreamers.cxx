@@ -322,41 +322,20 @@ void cfdStreamers::SetIntegrationDirection( int value )
 
 void cfdStreamers::SetPropagationTime( int value )
 {
-
-/*   this->propagationTime = (float)value * 
+   this->propagationTime = (float)value * 
                   ( 100.0f * this->GetActiveDataSet()->GetMaxTime() / 20.0f );
-*/
-   //the propagation time is set to go from 0.1 to 10 when the slider goes from 1 to 100
-   // This equation returns a range of 0.1 -> 10 
-   // This equation is 0.10 * x where 1 < x < 100 
-   this->propagationTime = (float)value * (0.10f);
 }
 
 void cfdStreamers::SetIntegrationStepLength( int value )
 {
-
-/*
    this->integrationStepLength = (float)value * ( 0.050f )/50.0f;
-*/
-   //the integration step length is set from 0.001 to 5 for values from 1 to 5000 
-   // This equation returns a range of 0.1 -> 10 
-   // This equation is 0.0010 * x where 1 < x < 5000 
-   this->integrationStepLength = (float)value * ( 0.0010f );
-
 }
 
 void cfdStreamers::SetStepLength( int value )
 {
-
-/*
    this->stepLength = (float)value * ((this->GetActiveDataSet()
                                            ->GetMeanCellLength()/30.0f) /50.0f); // 
-*/
-   //the step length is set from 0.001 to 5 for slider values from 1 to 5000
-   // This equation returns a range of 0.1 -> 10 
-   // This equation is 0.0010 * x where 1 < x < 5000 
-   this->stepLength = (float)value  * ( 0.0010f );
-    
+   
 }
 
 bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
