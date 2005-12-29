@@ -91,6 +91,12 @@ VEXMLObject::VEStr::~VEStr()
 {
    XMLString::release(&fUnicodeForm);
 }
+/////////////////////////////////////////////////////////////////////////////////////////////
+DOMElement* VEXMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,
+                                  unsigned int itemNumber)
+{
+   return dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(itemNumber));
+}
 ////////////////////////////////////////////////////
 const XMLCh* VEXMLObject::VEStr::unicodeForm() const
 {

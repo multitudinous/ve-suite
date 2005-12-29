@@ -14,6 +14,7 @@ CADNode::CADNode(DOMDocument* rootDoc,
    _parent = 0;
    _transform = new VE_XML::VETransform(_rootDocument); 
    _material = new VE_CAD::CADMaterial(_rootDocument); 
+   _type = std::string("Node");
 }
 ///////////////////
 ///Destructor    //
@@ -60,6 +61,11 @@ void CADNode::SetMaterial(VE_CAD::CADMaterial* material)
    _material = new CADMaterial(*material);
 }
 //////////////////////////////////
+std::string CADNode::GetNodeType()
+{
+   return _type;
+}
+//////////////////////////////////
 std::string CADNode::GetNodeName()
 {
    return _name;
@@ -89,9 +95,11 @@ void CADNode::_updateVEElement(std::string input)
    }
 
    _updateNodeName();
+   
    _veElement->appendChild( _parent->GetXMLData("parent") );
    _veElement->appendChild( _material->GetXMLData("material") );
    _veElement->appendChild( _transform->GetXMLData("transform") );
+   _updateNodeType();
 }
 ///////////////////////////////
 void CADNode::_updateNodeName()
@@ -100,6 +108,14 @@ void CADNode::_updateNodeName()
    DOMText* nodeName = _rootDocument->createTextNode(xercesString(_name.c_str()));
    nodeNameElement->appendChild(nodeName);
    _veElement->appendChild(nodeNameElement);
+}
+///////////////////////////////
+void CADNode::_updateNodeType()
+{
+   DOMElement* nodeTypeElement = _rootDocument->createElement(xercesString("type"));
+   DOMText* nodeType = _rootDocument->createTextNode(xercesString(_type));
+   nodeTypeElement->appendChild(nodeType);
+   _veElement->appendChild(nodeTypeElement);
 }
 /////////////////////////////////////////////////////
 void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
@@ -118,19 +134,23 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
          if(currentElement->hasChildNodes())
          {
             //Is there a better way to do this
-            DOMElement* nameNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("name"))->item(0));
+            DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
             if(nameNode)
             {
               _name = ExtractDataStringFromSimpleElement( nameNode );
             }
-
-            DOMElement* parentNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("parent"))->item(0));
+            DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
+            if(nameNode)
+            {
+              _name = ExtractDataStringFromSimpleElement( nameNode );
+            }
+            DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
             _parent->SetObjectFromXMLData(parentNode);
 
-            DOMElement* materialNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("material"))->item(0));
+            DOMElement* materialNode = GetSubElement(currentElement,std::string("material"),0);
             _material->SetObjectFromXMLData(materialNode);
 
-            DOMElement* transformNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("transform"))->item(0));
+            DOMElement* transformNode = GetSubElement(currentElement,std::string("transform"),0);
             _transform->SetObjectFromXMLData(transformNode);
 
          }

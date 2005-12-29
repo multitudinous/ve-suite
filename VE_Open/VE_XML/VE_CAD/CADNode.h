@@ -36,6 +36,8 @@ public:
    CADNode(DOMDocument* rootDocument,std::string name);
    virtual ~CADNode();
 
+   
+
    ///Set the name of the node in the hierachy.
    ///\param name The name to set for this node.
    void SetNodeName(std::string name);
@@ -55,6 +57,10 @@ public:
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+
+   ///Get the node type. 
+   ///Valid types currently are Node,Assembly,Part and Clone
+   std::string GetNodeType();
 
    ///Get the name of this CAD node.
    std::string GetNodeName();
@@ -83,10 +89,14 @@ protected:
    ///Internally update the name of the node in XML.
    void _updateNodeName();
 
+   ///Internally update the type of the node in XML.
+   void _updateNodeType();
+
    VE_XML::VETransform* _transform; ///< Transform for the node.
    VE_CAD::CADMaterial* _material; ///< Material for this node.
    VE_CAD::CADAssembly* _parent;  ///< Parent node.
    std::string _name;///< The name of this node.
+   std::string _type;///< The type of node;
 };
 }
 #endif// _CAD_NODE_H_

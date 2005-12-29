@@ -34,10 +34,12 @@ public:
 
    ///\param node The pointer of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails
+   ///\todo This function is NOT implemented yet and will ALWAYS return false!!!
    bool RemoveChild(VE_CAD::CADNode* node);
 
    ///\param whichChild The index of the node to remove from this assembly
-   ///Remove child from the assembly returns true for success false if fails
+   ///Remove child from the assembly returns true for success false if fails 
+   ///\todo This function is NOT implemented yet and will ALWAYS return false!!!
    bool RemoveChild(unsigned int whichChild); 
 
    ///Get the number of children of this assembly

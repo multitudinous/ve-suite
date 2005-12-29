@@ -8,6 +8,7 @@ CADPart::CADPart(DOMDocument* rootDocument,std::string name)
 :VE_CAD::CADNode(rootDocument,name)
 {
    _cadFileName = std::string("CADFile");
+   _type = std::string("Part");
 }
 ///////////////////
 //Destructor     //
@@ -45,7 +46,7 @@ void CADPart::_updateVEElement(std::string input)
 /////////////////////////////////////////////////////
 void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
 {
- DOMElement* currentElement = 0;
+   DOMElement* currentElement = 0;
 
    if(xmlNode->getNodeType() == DOMNode::ELEMENT_NODE)
    {

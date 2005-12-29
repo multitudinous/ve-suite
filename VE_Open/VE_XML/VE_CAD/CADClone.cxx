@@ -9,6 +9,7 @@ CADClone::CADClone(DOMDocument* rootDocument,std::string name,
 :VE_CAD::CADNode(rootDocument,name)
 {
    _originalNode = originalNode;
+   _type = std::string("Clone");
 }
 /////////////////////
 //Destructor       //
@@ -47,7 +48,7 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
       {
          if(currentElement->hasChildNodes())
          {
-            DOMElement* originalNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("originalNode"))->item(0));
+            DOMElement* originalNode = GetSubElement(currentElement,std::string("originalNode"),0);
             _originalNode->SetObjectFromXMLData(originalNode);
          }
       }

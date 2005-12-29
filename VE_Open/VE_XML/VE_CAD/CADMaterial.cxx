@@ -150,12 +150,12 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
       if ( currentElement->hasChildNodes() )
       {
          // do we need to delete the old one or does xerces handle this???
-         _kDiffuse->SetObjectFromXMLData(currentElement->getElementsByTagName(xercesString("kDiffuse"))->item(0));
-         _kEmissive->SetObjectFromXMLData(currentElement->getElementsByTagName(xercesString("kEmissive"))->item(0));
-         _ambient->SetObjectFromXMLData(currentElement->getElementsByTagName(xercesString("ambient"))->item(0));
-         _specular->SetObjectFromXMLData(currentElement->getElementsByTagName(xercesString("specular"))->item(0));
-         _shininess = ExtractDataNumberFromSimpleElement(dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("shininess"))->item(0)));
-         _materialName = ExtractDataStringFromSimpleElement(dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("name"))->item(0)));
+         _kDiffuse->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kDiffuse"),0));
+         _kEmissive->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kEmissive"),0));
+         _ambient->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kAmbient"),0));
+         _specular->SetObjectFromXMLData(GetSubElement(currentElement,std::string("specular"),0));
+         _shininess = ExtractDataNumberFromSimpleElement(GetSubElement(currentElement,std::string("shininess"),0));
+         _materialName = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("name"),0));
       }
    }
 }

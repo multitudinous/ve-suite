@@ -19,7 +19,7 @@ public:
    ///\param rootDocument The root XML document for this node.
    ///\param name The name of this node.
    ///\param originalNode The node we are going to clone.
-   CADClone(DOMDocument* rootDocument,std::string name,VE_CAD::CADNode* originalNode);
+   CADClone(DOMDocument* rootDocument,std::string name=std::string("Clone"),VE_CAD::CADNode* originalNode=0);
    virtual ~CADClone();
 
    ///Set the object from XML data

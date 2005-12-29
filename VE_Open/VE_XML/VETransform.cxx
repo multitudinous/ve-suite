@@ -161,14 +161,25 @@ void VETransform::_updateVEElement( std::string input )
 //////////////////////////////////////////////////////////////
 void VETransform::SetObjectFromXMLData( DOMNode* xmlInput )
 {
+   DOMElement* currentElement = 0;
+
    if ( xmlInput->hasChildNodes() )
    {
-      // do we need to delete the old one or does xerces handle this???
-      _nChildren = 3;
+      if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+      {
+         currentElement = dynamic_cast<DOMElement*>(xmlInput);
+      }
+   
+      if(currentElement)
+      {
+   
+         // do we need to delete the old one or does xerces handle this???
+         _nChildren = 3;
 
-      translationArray->SetObjectFromXMLData( xmlInput );
-      scaleArray->SetObjectFromXMLData( xmlInput );
-      rotationArray->SetObjectFromXMLData( xmlInput );
+         translationArray->SetObjectFromXMLData( currentElement->getElementsByTagName(xercesString("translation"))->item(0) );
+         scaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName(xercesString("scale"))->item(0) );
+         rotationArray->SetObjectFromXMLData( currentElement->getElementsByTagName(xercesString("rotation"))->item(0) );
+      }
    }
    else
    {

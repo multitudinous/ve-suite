@@ -25,9 +25,19 @@ public:
    virtual void SetObjectFromXMLData( DOMNode* )=0;
    DOMElement* GetXMLData( std::string ); 
 
-   //utility functions for reading data from an element
-   std::string ExtractDataStringFromSimpleElement( DOMElement* );
-   double ExtractDataNumberFromSimpleElement( DOMElement* );
+   ///utility functions for reading data from an element
+   ///\param element Element to extract string from.
+   std::string ExtractDataStringFromSimpleElement( DOMElement* element );
+   
+   ///utility functions for reading data from an element
+   ///\param element Element to extract double from.
+   double ExtractDataNumberFromSimpleElement( DOMElement* element);
+   
+   ///utility functions for extracting subElement itemIndex from a complex element.
+   ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
+   ///\param subElementTagName The subelement tagname to extract from baseElement.
+   ///\param itemIndex The index of the subElement to extract from the complex element.
+   DOMElement* GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex);
    // ---------------------------------------------------------------------------
    //  This is a simple class that lets us do easy (though not terribly efficient)
    //  trancoding of char* data to XMLCh data. --taken from xerces examples
