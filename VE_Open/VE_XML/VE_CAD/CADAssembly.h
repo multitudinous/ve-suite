@@ -57,7 +57,11 @@ protected:
    ///Internally update the XML data for this node.
    ///\param input The XML element data.
    virtual void _updateVEElement(std::string input);
-   unsigned int _nChildren; ///<number of children in this assembly
+
+   ///Update the child nodes of this assembly
+   void _updateChildren();
+  
+   unsigned int _numChildren; ///<number of children in this assembly
    ///\typedef ChildList
    /// A vector of CADNodes
    typedef std::vector<VE_CAD::CADNode*> ChildList; 

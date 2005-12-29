@@ -83,10 +83,59 @@ VE_CAD::CADMaterial* CADNode::GetMaterial()
 void CADNode::_updateVEElement(std::string input)
 {
    //how is this going to work???
+   if(!_veElement)
+   {
+      _veElement = _rootDocument->createElement(xercesString("CADNode"));
+   }
+
+   _updateNodeName();
+   _veElement->appendChild( _parent->GetXMLData("parent") );
+   _veElement->appendChild( _material->GetXMLData("material") );
+   _veElement->appendChild( _transform->GetXMLData("transform") );
+}
+///////////////////////////////
+void CADNode::_updateNodeName()
+{
+   DOMElement* nodeNameElement = _rootDocument->createElement(xercesString("name"));
+   DOMText* nodeName = _rootDocument->createTextNode(xercesString(_name.c_str()));
+   nodeNameElement->appendChild(nodeName);
+   _veElement->appendChild(nodeNameElement);
 }
 /////////////////////////////////////////////////////
 void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
 {
+   DOMElement* currentElement = 0;
+
+   if(xmlNode->getNodeType() == DOMNode::ELEMENT_NODE)
+   {
+      currentElement = dynamic_cast<DOMElement*>(xmlNode);
+   }
+   
+   if(currentElement)
+   {
+      //break down the element
+      {
+         if(currentElement->hasChildNodes())
+         {
+            //Is there a better way to do this
+            DOMElement* nameNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("name"))->item(0));
+            if(nameNode)
+            {
+              _name = ExtractDataStringFromSimpleElement( nameNode );
+            }
+
+            DOMElement* parentNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("parent"))->item(0));
+            _parent->SetObjectFromXMLData(parentNode);
+
+            DOMElement* materialNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("material"))->item(0));
+            _material->SetObjectFromXMLData(materialNode);
+
+            DOMElement* transformNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("transform"))->item(0));
+            _transform->SetObjectFromXMLData(transformNode);
+
+         }
+      }
+   }
 }
 /////////////////////////////////////
 CADNode::CADNode(const CADNode& rhs)

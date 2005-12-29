@@ -14,6 +14,7 @@
          <xs:extension base="CADNode">
             <xs:sequence>
                <xs:element name="children" type="CADChildList" maxOccurs="unbounded" />
+               <xs:element name="numChildren" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" default="0" />
             </xs:sequence>
          </xs:extension>
       </xs:complexContent>
@@ -39,7 +40,6 @@
    <xs:complexType name="CADChildList">
       <xs:sequence>
          <xs:element name="child" type="CADNode" maxOccurs="unbounded" minOccurs="0" />
-         <xs:element name="numChildren" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" default="0" />
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="CADMaterial">

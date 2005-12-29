@@ -19,10 +19,40 @@ CADClone::~CADClone()
 //////////////////////////////////////////////////
 void CADClone::_updateVEElement(std::string input)
 {
+   //How is this going to work???
+   //Get the base elements from CADNode
+   VE_CAD::CADNode::_updateVEElement("CADClone");
+
+   //add the extra stuff
+   _veElement->appendChild(_originalNode->GetXMLData("originalNode"));
+   
 }
 /////////////////////////////////////////////////////
 void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
 {
+   
+   DOMElement* currentElement = 0;
+
+   if(xmlNode->getNodeType() == DOMNode::ELEMENT_NODE)
+   {
+      currentElement = dynamic_cast<DOMElement*>(xmlNode);
+   }
+   
+   if(currentElement)
+   {
+      //populate the base elements in node
+      VE_CAD::CADNode::SetObjectFromXMLData(xmlNode);
+
+      //break down the element
+      {
+         if(currentElement->hasChildNodes())
+         {
+
+            DOMElement* originalNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("originalNode"))->item(0));
+            _originalNode->SetObjectFromXMLData(originalNode);
+         }
+      }
+   }
 }
 ///////////////////////////////////////
 CADClone::CADClone(const CADClone& rhs)

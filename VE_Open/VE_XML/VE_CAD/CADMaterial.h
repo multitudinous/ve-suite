@@ -30,19 +30,19 @@ public:
 
    ///Set the diffuse component
    ///\param diffuse RGBA diffuse property
-   void SetDiffuseComponent(float* diffuse);
+   void SetDiffuseComponent(VE_XML::VEFloatArray* diffuse);
 
    ///Set the emissive component
    ///\param emissive RGBA emissive property
-   void SetEmissiveComponent(float* emissive);
+   void SetEmissiveComponent(VE_XML::VEFloatArray* emissive);
 
    ///Set the ambient component
    ///\param ambient RGBA ambient property
-   void SetAmbientComponent(float* ambient);
+   void SetAmbientComponent(VE_XML::VEFloatArray* ambient);
 
    ///Set the specular reflection component
    ///\param specular RGBA specular property
-   void SetSpecularComponent(float* specular);
+   void SetSpecularComponent(VE_XML::VEFloatArray* specular);
 
    ///Set the "shininess" of this material
    ///\param shine value
@@ -57,16 +57,16 @@ public:
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
 
    ///Get the diffuse property
-   std::vector<float> GetDiffuse();
+   VE_XML::VEFloatArray* GetDiffuse();
 
    ///Get the emissive property
-   std::vector<float> GetEmissive();
+   VE_XML::VEFloatArray* GetEmissive();
 
    ///Get the ambient property
-   std::vector<float> GetAmbient();
+   VE_XML::VEFloatArray* GetAmbient();
 
    ///Get the specular property
-   std::vector<float> GetSpecular();
+   VE_XML::VEFloatArray* GetSpecular();
   
    ///Get the shininess property
    float GetShininess();
@@ -86,10 +86,16 @@ protected:
    ///\param input The new XML data for the material.
    virtual void _updateVEElement(std::string input);
 
-   std::vector<float> _kDiffuse;///< Diffuse component.
-   std::vector<float> _kEmissive;///< Emmisive component.
-   std::vector<float> _ambient;///< Ambient component.
-   std::vector<float> _specular;///< Specular component.
+   ///Internally update the XML data for the material shininess.
+   void _updateShininess();
+
+   ///Internally update the XML data for the material color properties.
+   void _updateColorProperties();
+
+   VE_XML::VEFloatArray* _kDiffuse;///< Diffuse component.
+   VE_XML::VEFloatArray* _kEmissive;///< Emmisive component.
+   VE_XML::VEFloatArray* _ambient;///< Ambient component.
+   VE_XML::VEFloatArray* _specular;///< Specular component.
    std::string _materialName;///< Name of this Material node.
    float _shininess;///< Shininess of the material
 };
