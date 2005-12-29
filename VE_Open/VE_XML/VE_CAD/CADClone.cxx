@@ -47,7 +47,6 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
       {
          if(currentElement->hasChildNodes())
          {
-
             DOMElement* originalNode = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("originalNode"))->item(0));
             _originalNode->SetObjectFromXMLData(originalNode);
          }

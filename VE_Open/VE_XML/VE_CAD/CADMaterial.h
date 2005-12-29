@@ -69,7 +69,7 @@ public:
    VE_XML::VEFloatArray* GetSpecular();
   
    ///Get the shininess property
-   float GetShininess();
+   double GetShininess();
 
    ///Get the material name.
    std::string GetMaterialName();
@@ -92,12 +92,15 @@ protected:
    ///Internally update the XML data for the material color properties.
    void _updateColorProperties();
 
+   ///Internally update the XML data for the material name.
+   void _updateMaterialName();
+
    VE_XML::VEFloatArray* _kDiffuse;///< Diffuse component.
    VE_XML::VEFloatArray* _kEmissive;///< Emmisive component.
    VE_XML::VEFloatArray* _ambient;///< Ambient component.
    VE_XML::VEFloatArray* _specular;///< Specular component.
    std::string _materialName;///< Name of this Material node.
-   float _shininess;///< Shininess of the material
+   double _shininess;///< Shininess of the material
 };
 }
 #endif CAD_MATERIAL_H

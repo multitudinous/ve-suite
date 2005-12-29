@@ -78,7 +78,7 @@ void CADMaterial::SetShininess(float shininess)
    _shininess = shininess;
 }
 /////////////////////////////////
-float CADMaterial::GetShininess()
+double CADMaterial::GetShininess()
 {
    return _shininess;
 }
@@ -102,8 +102,17 @@ VE_XML::VEFloatArray* CADMaterial::GetSpecular()
 {
    return _specular;
 }
-/////////////////////////////////////////////////////
-void CADMaterial::_udpateShininess(std::string input)
+///////////////////////////////////////
+void CADMaterial::_updateMaterialName()
+{
+   DOMElement* nameElement  = _rootDocument->createElement( xercesString("name") );
+   _veElement->appendChild( nameElement );      
+   
+   DOMText* materialName = _rootDocument->createTextNode( xercesString( _materialName ) );
+   nameElement->appendChild( materialName );
+}
+////////////////////////////////////
+void CADMaterial::_updateShininess()
 {
    DOMElement* shineElement  = _rootDocument->createElement( xercesString("shininess") );
    _veElement->appendChild( shineElement );      
@@ -111,8 +120,8 @@ void CADMaterial::_udpateShininess(std::string input)
    DOMText* shininess = _rootDocument->createTextNode( xercesString( _shininess ) );
    shineElement->appendChild( shininess );
 }
-/////////////////////////////////////////////////////
-void CADMaterial::_updateColorProperties(std::string input)
+//////////////////////////////////////////
+void CADMaterial::_updateColorProperties()
 {
    _veElement->appendChild( _kDiffuse->GetXMLData("kDiffuse"));      
    _veElement->appendChild( _kEmissive->GetXMLData("kEmissive"));      
@@ -122,20 +131,32 @@ void CADMaterial::_updateColorProperties(std::string input)
 /////////////////////////////////////////////////////
 void CADMaterial::_updateVEElement(std::string input)
 {
-   VE_CAD::CADNode::_updateVEElement("CADMaterial");
    _updateColorProperties();
    _updateShininess();
+   _updateMaterialName();
 }
 /////////////////////////////////////////////////////
 void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
 {
-   if ( xmlNode->hasChildNodes() )
+   DOMElement* currentElement = 0;
+
+   if(xmlNode->getNodeType() == DOMNode::ELEMENT_NODE)
    {
-      // do we need to delete the old one or does xerces handle this???
-      _kDiffuse->SetObjectFromXMLData( xmlNode );
-      _kEmissive->SetObjectFromXMLData( xmlNode );
-      _ambient->SetObjectFromXMLData( xmlNode );
-      _specular->SetObjectFromXMLData(xmlNode);
+      currentElement = dynamic_cast<DOMElement*>(xmlNode);
+   }
+   
+   if(currentElement)
+   {
+      if ( currentElement->hasChildNodes() )
+      {
+         // do we need to delete the old one or does xerces handle this???
+         _kDiffuse->SetObjectFromXMLData(currentElement->getElementsByTagName(xercesString("kDiffuse"))->item(0));
+         _kEmissive->SetObjectFromXMLData(currentElement->getElementsByTagName(xercesString("kEmissive"))->item(0));
+         _ambient->SetObjectFromXMLData(currentElement->getElementsByTagName(xercesString("ambient"))->item(0));
+         _specular->SetObjectFromXMLData(currentElement->getElementsByTagName(xercesString("specular"))->item(0));
+         _shininess = ExtractDataNumberFromSimpleElement(dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("shininess"))->item(0)));
+         _materialName = ExtractDataStringFromSimpleElement(dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("name"))->item(0)));
+      }
    }
 }
 ////////////////////////////////////////////////

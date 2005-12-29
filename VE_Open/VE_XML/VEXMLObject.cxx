@@ -49,6 +49,7 @@ void VEXMLObject::_clearAllChildrenFromElement()
 {
    if ( _veElement )
    {
+      _nChildren = _veElement->getChildNodes()->getLength();
       for(unsigned int i = _nChildren - 1; i > -1; i--)
       {
          _veElement->removeChild(_veElement->getChildNodes()->item(i));

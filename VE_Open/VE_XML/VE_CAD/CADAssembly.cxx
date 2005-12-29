@@ -59,7 +59,6 @@ void CADAssembly::_updateChildren()
       childList->appendChild( _children.at( i )->GetXMLData("child") );
    }
    _veElement->appendChild(childList);
-
 }
 /////////////////////////////////////////////////////
 void CADAssembly::_updateVEElement(std::string input)

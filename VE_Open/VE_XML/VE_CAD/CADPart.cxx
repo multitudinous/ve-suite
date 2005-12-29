@@ -25,13 +25,47 @@ std::string CADPart::GetCADFileName()
 {
    return _cadFileName;
 }
+//////////////////////////////////
+void CADPart::_updateCADFileName()
+{
+   DOMElement* nameElement  = _rootDocument->createElement( xercesString("filename") );
+   _veElement->appendChild( nameElement );      
+   
+   DOMText* fileName = _rootDocument->createTextNode( xercesString( _cadFileName ) );
+   nameElement->appendChild( fileName  );
+}
 /////////////////////////////////////////////////
 void CADPart::_updateVEElement(std::string input)
 {
+   //How is this going to work???
+   //Get the base elements from CADNode
+   VE_CAD::CADNode::_updateVEElement("CADPart");
+   _updateCADFileName();
 }
 /////////////////////////////////////////////////////
 void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
 {
+ DOMElement* currentElement = 0;
+
+   if(xmlNode->getNodeType() == DOMNode::ELEMENT_NODE)
+   {
+      currentElement = dynamic_cast<DOMElement*>(xmlNode);
+   }
+   
+   if(currentElement)
+   {
+      //populate the base elements in node
+      VE_CAD::CADNode::SetObjectFromXMLData(xmlNode);
+
+      //break down the element
+      {
+         if(currentElement->hasChildNodes())
+         {
+            DOMElement* fileNameElement = dynamic_cast<DOMElement*>(currentElement->getElementsByTagName(xercesString("fileName"))->item(0));
+            _cadFileName = ExtractDataStringFromSimpleElement(fileNameElement);
+         }
+      }
+   }
 }
 /////////////////////////////////////
 CADPart::CADPart(const CADPart& rhs)
