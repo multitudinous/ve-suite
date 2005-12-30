@@ -80,8 +80,8 @@ default: all
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 all:
 	mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
-	$(MAKE) -f Makefile.conductorlib NO_DEPEND=0 cxx
-	$(MAKE) -f Makefile.conductorlib $(APP_NAME)
+	$(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/Network/Makefile.conductorlib NO_DEPEND=0 cxx
+	$(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/Network/Makefile.conductorlib $(APP_NAME)
 
 srcdir= .
 

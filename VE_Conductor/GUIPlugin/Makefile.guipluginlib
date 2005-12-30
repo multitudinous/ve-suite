@@ -90,8 +90,8 @@ default: all
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 all:
 	mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
-	$(MAKE) -f Makefile.guipluginlib NO_DEPEND=0 cxx
-	$(MAKE) -f Makefile.guipluginlib $(APP_NAME)
+	$(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/GUIPlugin/Makefile.guipluginlib NO_DEPEND=0 cxx
+	$(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/GUIPlugin/Makefile.guipluginlib $(APP_NAME)
 
 srcdir= .
 

@@ -8,8 +8,8 @@ VE_UI_HOME = ${VE_SUITE_HOME}/VE_Conductor/VE_UI
 IDL_HOME = ${VE_SUITE_HOME}/VE_Open
 
 all:
-	$(MAKE) -f Makefile.conductorlib
-	$(MAKE) -f Makefile.guipluginlib
+	$(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/Network/Makefile.conductorlib
+	$(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/GUIPlugin/Makefile.guipluginlib
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
 #	-$(MAKE) install
@@ -112,4 +112,4 @@ ${APP_NAME}: $(OBJS)
 #	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
 #	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
 
-CLEAN_FILES+= $(APP_NAME) && $(MAKE) -f Makefile.conductorlib clean && $(MAKE) -f Makefile.guipluginlib clean
+CLEAN_FILES+= $(APP_NAME) && $(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/Network/Makefile.conductorlib clean && $(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/GUIPlugin/Makefile.guipluginlib clean
