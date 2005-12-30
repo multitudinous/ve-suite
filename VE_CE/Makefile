@@ -7,7 +7,7 @@ APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/Exe_server
 srcdir= .
 
 all:
-	cd $(VE_SUITE_HOME)/VE_Conductor && $(MAKE) -f Makefile.conductorlib
+	cd $(VE_SUITE_HOME)/VE_Conductor && $(MAKE) -f $(VE_SUITE_HOME)/VE_Conductor/Network/Makefile.conductorlib
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
 
