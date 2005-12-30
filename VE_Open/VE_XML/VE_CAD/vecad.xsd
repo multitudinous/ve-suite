@@ -53,9 +53,4 @@
          <xs:element name="name" type="xs:string" />
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="CADDocument">
-      <xs:sequence>
-         <xs:element name="rootNode" type="CADNode" maxOccurs="1" minOccurs="0" />
-      </xs:sequence>
-   </xs:complexType>
 </xs:schema>
