@@ -65,7 +65,9 @@ cxx: $(OBJS)
 ${APP_NAME}: $(OBJS)
 	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
-
+ifeq ($(CFDHOSTTYPE), Darwin)
+	$(shell wx-config --rezflags ) $(APP_NAME)
+endif
 #install:
 
 CLEAN_FILES+= $(APP_NAME)

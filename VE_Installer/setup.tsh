@@ -82,7 +82,7 @@ setenv VPR_DEBUG_DISALLOW_CATEGORIES
 setenv NO_RTRC_PLUGIN TRUE
 setenv NO_PERF_PLUGIN TRUE
 setenv OSG_THREAD_SAFE_REF_UNREF 1
-#setenv OSGNOTIFYLEVEL DEBUG_INFO
+setenv OSGNOTIFYLEVEL DEBUG_INFO
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 
@@ -222,7 +222,7 @@ else if ( ${CFDHOSTTYPE} == "SunOS" ) then
 else if ( ${CFDHOSTTYPE} == "Darwin" ) then
    setenv JDK_HOME /usr/java
    setenv VTK_BASE_DIR /home/users/mccdo/VTK/VTK-4.4.2/install-powermac
-   setenv WX_HOME /home/users/mccdo/wxWindows/wxMac-2.6.1/install-mac
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxMac-2.6.2
    setenv VJ_BASE_DIR /usr/local
    setenv VJ_DEPS_DIR /usr/local/vrjuggler-deps
    setenv OSG_HOME /home/users/mccdo/OSG/install-powermac
@@ -234,11 +234,12 @@ else if ( ${CFDHOSTTYPE} == "Darwin" ) then
    setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv ACE_HOME /home/users/mccdo/ACE_TAO/Mac_Build/install-powermac
-      setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${ACE_HOME}/lib
-      setenv PATH ${ACE_HOME}/bin:${PATH}
+      setenv TAO_HOME /home/users/mccdo/ACE_TAO/Mac_Build/install-powermac
+      setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${TAO_HOME}/lib
+      setenv PATH ${TAO_HOME}/bin:${PATH}
 
-      setenv XERCESCROOT /sw
+      #setenv XERCESCROOT /sw
+      setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Darwin
       setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${XERCESCROOT}/lib
    endif
 

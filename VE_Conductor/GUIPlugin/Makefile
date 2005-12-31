@@ -24,72 +24,58 @@
 #
 # -----------------------------------------------------------------
 # File:          $RCSfile: Makefile,v $
-# Date modified: $Date: 2005-06-11 15:04:41 -0500 (Sat, 11 Jun 2005) $
-# Version:       $Rev: 2404 $
+# Date modified: $Date: 2005-06-27 02:00:28 -0500 (Mon, 27 Jun 2005) $
+# Version:       $Rev: 2519 $
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
-
 CFDUNAME = $(shell uname)
-ifeq ($(SCENE_GRAPH), OSG)
-   OSG = _osg
-else
-   OSG = _pf
-endif
-
-ifeq ($(TAO_BUILD), TRUE)
-   include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
-   EXEC_TAG = _tao
-endif
-
-# for osg and patented stuff
-ifeq ($(VE_PATENTED), TRUE)
-   EXTRA_CXXFLAGS+= -DVE_PATENTED
-   PATENTED_TAG = _vep
-endif
-
-# IRIX needs these flags
-ifeq (${CFDUNAME},IRIX64)
-   EXTRA_CXXFLAGS+= -D_IRIX
-   EXTRA_LIBS+= -L/usr/freeware/lib32
-endif
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   cfdVEBaseClass.cxx
+   FinancialDialog.cpp \
+	ListTable.cpp \
+   Plugin_base.cpp \
+   GlobalParamDialog.cpp \
+   Geometry.cpp \
+   GeometryDialog.cpp \
+	GeometryDataManager.cpp \
+   PortDialog.cpp \
+   ResultPanel.cpp \
+   StringParse.cpp \
+   SummaryResultDialog.cpp \
+   TexTable.cpp \
+   TextResultDialog.cpp \
+   UIDialog.cpp
 
+			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Xplorer
-DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_SceneGraphLib$(OSG) -lVE_XplorerLib$(EXEC_TAG)$(OSG)
-DSO_PLUGIN_DEPS+= -lVE_UtilLib -lVE_ConductorLib
+#EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
+#EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
+
+#EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
+#DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
+
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
+
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
-# object files are being stored in a system-dependent directory so that builds
-# for multiple platforms may be maintained simultaneously.
-
+PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libGUIPluginLib
 #OBJDIR is the place that the object files are stored.
-OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+OBJDIR= $(CFDHOSTTYPE)_GUIPluginLib
 
 #DEPDIR is the place that the dependency files are stored.
-DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
-
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vpr.mk
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.gmtl.mk
-
-ifeq ($(SCENE_GRAPH), OSG)
-   include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.osg.mk
-else
-   include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.pf.mk
-endif
+DEPDIR= $(CFDHOSTTYPE)_GUIPluginLib
 
 #BUILD_TYPE=	dbg
 
-srcdir= ..
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework
+srcdir= .
+DSO_PLUGIN_DEPS+= -L${VE_SUITE_HOME}/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 
 ifeq (${CFDUNAME},Darwin)
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.mac.lib.mk

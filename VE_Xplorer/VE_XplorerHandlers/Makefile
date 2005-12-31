@@ -107,9 +107,8 @@ SRCS=\
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
-
-#EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
-#DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib -lVE_SceneGraphLib$(OSG) -lVE_UtilLib
+DSO_PLUGIN_DEPS+= $(shell vrjuggler-config vrj --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
@@ -117,6 +116,8 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vpr.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.gmtl.mk
+#include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.gadget.mk
+
 
 ifeq ($(SCENE_GRAPH), OSG)
    include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.osg.mk

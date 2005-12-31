@@ -32,8 +32,9 @@
 #include "VE_Conductor/Framework/PluginLoader.h"
 #include "VE_Conductor/Framework/Plugin_base.h"
 
-#include <wx/image.h>
+#include <wx/hash.h>
 #include <wx/dynload.h>
+#include <wx/image.h>
 #include <wx/log.h>
 #include <wx/dir.h>
 #include <wx/filename.h>

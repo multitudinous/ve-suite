@@ -22,3 +22,5 @@ else
    endif
 
 endif
+
+DSO_PLUGIN_DEPS+= $(EXTRA_LIBS)

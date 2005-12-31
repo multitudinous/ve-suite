@@ -5,3 +5,5 @@ CFDUNAME = $(shell uname)
 ifeq (${CFDUNAME},IRIX64)
 EXTRA_LIBS+= -L/usr/freeware/lib32 
 endif
+
+DSO_PLUGIN_DEPS+= $(EXTRA_LIBS)

@@ -45,7 +45,9 @@
 #include "VE_SceneGraph/cfdGroup.h"
 
 #ifndef WIN32
+#ifdef _PERFORMER
 #include <malloc.h>
+#endif
 #include <sys/types.h>
 //biv--check here if build/run problems occur
 //#include <Performer/pfdb/pfiv.h>
