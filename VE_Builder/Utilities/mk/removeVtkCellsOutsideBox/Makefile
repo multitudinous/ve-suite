@@ -9,9 +9,6 @@ all:
 srcdir= ../../
 
 SRCS=\
-   fileIO.cxx \
-   readWriteVtkThings.cxx \
-   cfdVTKFileHandler.cxx \
    cleanVtk.cpp \
    removeVtkCellsOutsideBox.cpp 
 
@@ -33,6 +30,8 @@ EXTRA_DEFS+=
 
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer \
                  -I$(VE_SUITE_HOME)/VE_Builder/Translator
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) 
+EXTRA_LIBS+= -lVE_UtilLib
 
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
 #EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
@@ -45,10 +44,11 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 EXTRA_LIBS+=
 
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
 
 vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer $(VE_SUITE_HOME)/VE_Builder/Translator
 vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Translator

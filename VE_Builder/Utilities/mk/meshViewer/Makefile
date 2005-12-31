@@ -62,7 +62,6 @@ EXTRA_LIBS+= -lVE_UtilLib
 EXTRA_PATH_FOR_SOURCES+=$(VE_SUITE_HOME)/VE_Builder/Translator
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 
