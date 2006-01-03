@@ -32,6 +32,8 @@
 ////////////////////////////////////
 VTKDataToTexture::VTKDataToTexture()
 {
+   _recreateValidityBetweenTimeSteps = false;
+   _madeValidityStructure = false;
    _isBatch = false;
    _curPt = 0;
    _nPtDataArrays = 0;
@@ -214,6 +216,16 @@ void VTKDataToTexture::setUnstructuredGrid()
    _isSGrid = false;
    _isRGrid = false;
 }
+/////////////////////////////////////////////////////
+void VTKDataToTexture::TurnOnDynamicGridResampling()
+{
+   _recreateValidityBetweenTimeSteps = true;
+}
+/////////////////////////////////////////////////////
+void VTKDataToTexture::TurnOffDynamicGridResampling()
+{
+   _recreateValidityBetweenTimeSteps = false;
+}
 ///////////////////////////////////////////////////////////
 //set the file name                                      //
 //example:                                               //
@@ -341,7 +353,11 @@ void VTKDataToTexture::createTextures()
 
    msg = wxString("Sampling valid domain. . .");
    _updateTranslationStatus(msg.c_str());
-   _createValidityTexture();
+  
+   //by default, _recreateValidityBetweenTimeSteps is false
+   if(!_madeValidityStructure || _recreateValidityBetweenTimeSteps){
+      _createValidityTexture();
+   }
 
    msg = wxString("Processing scalars. . .");
    _updateTranslationStatus(msg.c_str());
@@ -473,6 +489,7 @@ void VTKDataToTexture::_createValidityTexture()
         }
    }
    cell->Delete();
+   _madeValidityStructure = true;
 }
 /////////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)

@@ -82,6 +82,11 @@ public:
    void setBatchOn(){_isBatch = true;}
    void setBatchOff(){_isBatch = false;}
 
+   ///For transient datasets, tell the translator whether or not
+   ///we need to recalculate where valid grid samples are located
+   void TurnOnDynamicGridResampling();
+   void TurnOffDynamicGridResampling();
+
    //get the min and max of the velocity magnitude
    //float minVelocityMagnitude(){return _minMagVel;}
    //float maxVelocityMagnitude(){return _maxMagVel;}
@@ -91,6 +96,8 @@ public:
    //equal operator
    VTKDataToTexture& operator=(const VTKDataToTexture& rhs);
 protected:
+   bool _recreateValidityBetweenTimeSteps;
+   bool _madeValidityStructure;
    bool _isBatch;
    bool _isRGrid;
    bool _isUGrid;
