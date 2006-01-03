@@ -190,7 +190,7 @@ void VTKDataToTexture::reset()
    _vectorRanges.clear();
   
    _nPtDataArrays = 0;
-   if(_validPt.size()){
+   if(_validPt.size() && _recreateValidityBetweenTimeSteps){
       _validPt.clear();
    }
    
@@ -351,11 +351,11 @@ void VTKDataToTexture::createTextures()
 
    _cleanUpFileNames();
 
-   msg = wxString("Sampling valid domain. . .");
-   _updateTranslationStatus(msg.c_str());
   
    //by default, _recreateValidityBetweenTimeSteps is false
    if(!_madeValidityStructure || _recreateValidityBetweenTimeSteps){
+      msg = wxString("Sampling valid domain. . .");
+      _updateTranslationStatus(msg.c_str());
       _createValidityTexture();
    }
 
