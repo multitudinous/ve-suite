@@ -5,6 +5,9 @@
 #include <wx/progdlg.h>
 #include "textureCreator.h"
 
+#include <vector>
+#include <string>
+
 enum TCFrameIDs{
    TRANSLATE_BUTTON,
    INPUT_TEXT_BOX,
@@ -60,6 +63,7 @@ protected:
    wxDirDialog* _dirDialog;
    
    wxArrayString _gridFiles;
+   std::vector< std::string > gridFiles;
 
    wxButton* _browseInputDir;
    wxButton* _browseOutputDir;

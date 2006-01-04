@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <sstream>
 #include <cmath>
+#include "VE_Xplorer/fileIO.h"
+
 BEGIN_EVENT_TABLE(TCFrame,wxFrame)
    EVT_BUTTON(TRANSLATE_BUTTON,TCFrame::_onTranslateCallback)
    EVT_BUTTON(INPUT_BROWSE,TCFrame::_onBrowseCallback)
@@ -304,6 +306,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    UpdateStatus("Translating to 3D texture files. . .");
    //char* oname;
    wxString statusMsg = "";
+
    _fileProgress = new wxProgressDialog(wxString("Translation Progress"),
                   " ", 
                   _numFiles,this,
@@ -432,36 +435,49 @@ void TCFrame::_onBrowseCallback(wxCommandEvent& event )
 ////////////////////////////////////////////////////////
 void TCFrame::SetInputDirectory(const char* inDirectory)
 {
-   if(inDirectory){
-      if(!_gridFiles.IsEmpty()){
-         _gridFiles.Clear();
-      }
+   if(inDirectory)
+   {
+     if ( !_gridFiles.IsEmpty() )
+     {
+        _gridFiles.Clear();
+     }
      _numFiles = 0;
 
      wxDir inputFileDirectory;
      inputFileDirectory.Open(wxString(inDirectory));
 
-     if(inputFileDirectory.IsOpened()){
+     if(inputFileDirectory.IsOpened())
+     {
         _inputDir = wxT(inDirectory);
         wxString path;
         wxFileName filename;
         wxString fullPath;
+        /*
         bool cont = inputFileDirectory.GetFirst(&path);
-        while ( cont ){
+        while ( cont )
+        {
            fullPath = wxString(_inputDir) + wxString("/") +path;
            filename.Assign(fullPath);
-           if(filename.HasExt()){
+           if(filename.HasExt())
+           {
               if(filename.GetExt()==wxString("vtk")||
-                 filename.GetExt()==wxString("vtu")){
+                 filename.GetExt()==wxString("vtu") )
+              {
                  _gridFiles.Add(fullPath);
               }
            }
            cont = inputFileDirectory.GetNext(&path);
-        }
-      }else{
+        }*/
+        gridFiles = VE_Util::fileIO::GetFilesInDirectory( inDirectory, "vtu" );
+        if ( gridFiles.size() == 0 )
+           gridFiles = VE_Util::fileIO::GetFilesInDirectory( inDirectory, "vtk" );
+      }
+      else
+      {
         std::cout<<"Couldn't open directory: "<<inDirectory<<std::endl;
       }
-      _numFiles = _gridFiles.GetCount();
+      //_numFiles = _gridFiles.GetCount();
+      _numFiles = gridFiles.size();
    }
 }
 //////////////////////////////////////////////////////////
@@ -507,7 +523,8 @@ void TCFrame::BatchTranslation()
       std::ostringstream dirStringStream;
       dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << i;
       std::string dirString = dirStringStream.str();
-      std::string tempString( _gridFiles[ i ].c_str() );   
+      //std::string tempString( _gridFiles[ i ].c_str() );   
+      std::string tempString = gridFiles.at( i );   
       _translator->createDataSetFromFile( tempString );
       _translator->setOutputResolution(_resolution[0],
                                 _resolution[1],
