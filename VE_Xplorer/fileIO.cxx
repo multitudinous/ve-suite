@@ -38,6 +38,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <list>
 
 namespace fs = boost::filesystem;
 
@@ -614,7 +615,7 @@ std::string fileIO::GetFile( std::string fileKeyword, std::string fileLocation )
 std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::string extension)
 {
    boost::filesystem::path dir_path( dir.c_str() );
-   std::vector<std::string> filesInDir;
+   std::list< std::string > filesInDir;
    try
    {
       if ( boost::filesystem::is_directory( dir_path ) )
@@ -647,5 +648,14 @@ std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::strin
 	{
 	   std::cout << ex.what() << std::endl;
  	}
-   return filesInDir;
+   filesInDir.sort();
+
+   std::vector< std::string > filesList;
+   std::list< std::string >::iterator iter;
+   for ( iter = filesInDir.begin(); iter != filesInDir.end(); ++iter )
+   {
+      filesList.push_back( *iter );
+   }
+   
+   return filesList;
 }
