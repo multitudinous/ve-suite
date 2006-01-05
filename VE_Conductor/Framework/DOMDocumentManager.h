@@ -30,11 +30,34 @@ public:
    void Load( const std::string inputCommand );
    void UnLoadParser( void );
 
+   ///Turn on the parsing of an XML file.
+   void SetParseXMLFileOn();
+
+   ///Turn on the parsing of an XML string.
+   void SetParseXMLStringOn();
+
+   ///Turn on the writing of an XML file.
+   void SetWriteXMLFileOn();
+
+   ///Turn on  the writing of an XML string
+   void SetWriteXMLStringOn();
+
    // Functions used to create a document and then return it in a std::string
    std::string WriteAndReleaseCommandDocument( void );
    void CreateCommandDocument( void );
 
 private:
+    ///Read an input file.
+   ///\param xmlFile The XML filename.
+   void _readInputFile(std::string xmlFile);
+
+   ///Read an input string.
+   ///\param xmlString The XML filename.
+   void _readInputString(std::string xmlString);
+
+   bool parseXMLFile;///<Should we parse an XML file or string.
+   bool writeXMLFile;///<Should we write an XML file or string.
+
    // This is the document used ot send commands to Xplorer
    DOMDocument* commandDocument;
    // This is the document used to send parameter file info
