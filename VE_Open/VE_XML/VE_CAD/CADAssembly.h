@@ -65,9 +65,9 @@ protected:
   
    unsigned int _numChildren; ///<number of children in this assembly
    ///\typedef ChildList
-   /// A vector of CADNodes
+   /// A vector of VE_CAD::CADNode s
    typedef std::vector<VE_CAD::CADNode*> ChildList; 
-   ChildList _children; ///<a list of the children
+   ChildList _children; ///<A list of the children
 };
 }
 #endif// _CAD_ASSEMBLY_H_

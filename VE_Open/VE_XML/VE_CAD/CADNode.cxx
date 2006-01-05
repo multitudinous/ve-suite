@@ -6,7 +6,7 @@ using namespace VE_CAD;
 //////////////////////////////////
 ///Constructor                  //
 //////////////////////////////////
-CADNode::CADNode(DOMDocument* rootDoc,
+CADNode::CADNode(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,
                std::string name)
 :VE_XML::VEXMLObject(rootDoc)
 {
