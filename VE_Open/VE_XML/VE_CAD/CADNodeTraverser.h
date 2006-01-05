@@ -73,24 +73,27 @@ namespace VE_CAD{
             ///This is the function to override to do something to a node
             ///before (pre) or after (post) encountering a CADNode in the graph.
             ///\param cadNodeTraverser The CADNodeTraverser that is doing the traversing.
-            ///\param node The VE_CAD::CADNode that is currently being encountered.
-	         virtual void Apply(CADNodeTraverser* cadNodeTraverser,VE_CAD::CADNode* node)=0;
+            ///\param node The CADNode that is currently being encountered.
+	         virtual void Apply(CADNodeTraverser* cadNodeTraverser,CADNode* node)=0;
          protected:
       };
       ///TraversalStatus The status of the traverser.
-      enum TraversalStatus{CONT,SKIP,STOP};
+      enum TraversalStatus{CONT,///<Continue traversing.
+                         SKIP,///<Skip traversing this CADNode.
+                         STOP///<Stop traversal of the graph.
+                         };
 
       ///Set the pre node traverse callback
       ///\param func The pre-traverse callback function.
-      virtual void SetPreNodeTraverseCallback(CADNodeTraverser::CADNodeTraverseCallback* func);
+      virtual void SetPreNodeTraverseCallback(CADNodeTraverseCallback* func);
 
       ///Set the post node traverse callback
       ///\param func The post-traverse callback function.
-      virtual void SetPostNodeTraverseCallback(CADNodeTraverser::CADNodeTraverseCallback* func);
+      virtual void SetPostNodeTraverseCallback(CADNodeTraverseCallback* func);
 
       ///Set the node to traverse
       ///\param root The root node to traverse.
-      void SetRootNode(VE_CAD::CADNode* root);
+      void SetRootNode(CADNode* root);
 
       ///Set the traversal status.
       ///\param ts The new traversal status.
@@ -108,10 +111,10 @@ namespace VE_CAD{
 
       ///Recurse the nodes internally.
       ///\param currentNode The node currently being traversed.
-      virtual void _traverseNode(VE_CAD::CADNode* currentNode);
+      virtual void _traverseNode(CADNode* currentNode);
 
       TraversalStatus _ts;///<The status of the traverser.
-      VE_CAD::CADNode* _root;///<The root node to traverse.
+      CADNode* _root;///<The root node to traverse.
       CADNodeTraverser::CADNodeTraverseCallback* _preFunc;///<The pre traverse callback.
       CADNodeTraverser::CADNodeTraverseCallback* _postFunc;///<The post node traverse callback.
    };
