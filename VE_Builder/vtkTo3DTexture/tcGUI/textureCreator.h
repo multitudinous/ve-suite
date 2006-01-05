@@ -56,7 +56,7 @@ public:
    void setOutputDirectory(const char* outDir);
 
    //set the dataset for this converter
-   void setDataset(vtkDataSet* dSet){_dataSet = dSet;}
+   void setDataset(vtkDataSet* dSet);
 
    //create a dataset from a file
    void createDataSetFromFile(const std::string filename);

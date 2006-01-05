@@ -14,6 +14,8 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkStructuredGrid.h>
 #include <vtkCellDataToPointData.h>
+#include <vtkProbeFilter.h>
+#include <vtkPoints.h>
 #include <iostream>
 #include <cmath>
 
@@ -155,6 +157,11 @@ VTKDataToTexture::~VTKDataToTexture()
    if(_validPt.size()){
       _validPt.clear();
    }
+   if(_dataSet)
+   {
+      _dataSet->Delete();
+      _dataSet = 0;
+   }
 }
 ///////////////////////////////
 void VTKDataToTexture::reInit()
@@ -193,7 +200,82 @@ void VTKDataToTexture::reset()
    if(_validPt.size() && _recreateValidityBetweenTimeSteps){
       _validPt.clear();
    }
+   if(_dataSet)
+   {
+      _dataSet->Delete();
+      _dataSet = 0;
+   }
    
+}
+///////////////////////////////////////////////////
+void VTKDataToTexture::setDataset(vtkDataSet* dSet)
+{
+   _dataSet = dSet;
+   return;
+
+   //this is really slow....
+   /*if(!_dataSet)
+   {
+      _dataSet = vtkStructuredGrid::New();
+   }
+
+   vtkProbeFilter* probeFilter = vtkProbeFilter::New();
+   //probeFilter->DebugOn();
+
+   vtkStructuredGrid* tempGrid = vtkStructuredGrid::New();
+   vtkPoints* tempPoints = vtkPoints::New();
+   tempPoints->Allocate(_resolution[0]*_resolution[1]*_resolution[2]);
+      
+   double bbox[6] = {0,0,0,0,0,0};
+   dSet->GetBounds(bbox);
+
+   float delta[3] = {0,0,0};
+   //delta x
+   delta[0] = fabs((bbox[1] - bbox[0])/(_resolution[0]-1));
+   //delta y
+   delta[1] = fabs((bbox[3] - bbox[2])/(_resolution[1]-1));
+   //delta z
+   delta[2] = fabs((bbox[5] - bbox[4])/(_resolution[2]-1));
+
+   //the bottom corner of the bbox/texture
+   double origin[3] ={0,0,0};
+   origin[0] = bbox[0];
+   origin[1] = bbox[2];
+   origin[2] = bbox[4];
+   
+   unsigned int kOffset = 0;
+   unsigned int jOffset = 0;
+   double pt[3] = {0,0,0};
+   for ( int k=0; k < _resolution[2]; k++)
+   {
+      pt[2] = k*delta[2] + origin[2];
+      kOffset = k * _resolution[0] * _resolution[1];
+      for (int j=0; j<_resolution[1]; j++) 
+      {
+         jOffset = j * _resolution[0];
+         pt[1] = j*delta[1] + origin[1];
+             
+         for ( int i=0; i<_resolution[0]; i++) 
+         {
+            pt[0] = i*delta[0] + origin[0];
+            tempPoints->InsertPoint((i + jOffset + kOffset),pt);
+         }
+      }
+   }
+   tempGrid->SetDimensions(_resolution);
+   tempGrid->SetPoints(tempPoints);
+   tempGrid->Update();
+
+   probeFilter->SetInput(tempGrid);
+   probeFilter->SetSource(dSet);
+   probeFilter->Update();
+   
+   _dataSet->DeepCopy(probeFilter->GetStructuredGridOutput());
+   _dataSet->Update();
+
+   tempPoints->Delete();
+   tempGrid->Delete();
+   probeFilter->Delete();*/
 }
 ///////////////////////////////////////////
 void VTKDataToTexture::setRectilinearGrid()
@@ -286,6 +368,10 @@ void VTKDataToTexture::createDataSetFromFile(const std::string filename)
       _dataConvertCellToPoint->PassCellDataOff();
       _dataConvertCellToPoint->Update();
       setDataset(_dataConvertCellToPoint->GetOutput());
+      if(tmpDSet)
+      {
+         tmpDSet->Delete();
+      }
    }else{
      setDataset(tmpDSet);
    }
