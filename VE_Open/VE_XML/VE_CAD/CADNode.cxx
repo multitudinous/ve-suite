@@ -7,7 +7,7 @@ using namespace VE_CAD;
 ///Constructor                  //
 //////////////////////////////////
 CADNode::CADNode(DOMDocument* rootDoc,
-                 std::string name)
+               std::string name)
 :VE_XML::VEXMLObject(rootDoc)
 {
    _name = name;
@@ -121,9 +121,10 @@ void CADNode::_updateNodeType()
 void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
 {
    DOMElement* currentElement = 0;
-
+   const XMLCh* name;
    if(xmlNode->getNodeType() == DOMNode::ELEMENT_NODE)
    {
+      name = xmlNode->getNodeName();
       currentElement = dynamic_cast<DOMElement*>(xmlNode);
    }
    
@@ -140,12 +141,13 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
               _name = ExtractDataStringFromSimpleElement( nameNode );
             }
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
-            if(nameNode)
+            if(typeNode)
             {
-              _name = ExtractDataStringFromSimpleElement( nameNode );
+              _type = ExtractDataStringFromSimpleElement( typeNode );
             }
             DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
-            _parent->SetObjectFromXMLData(parentNode);
+            if(_parent)
+               _parent->SetObjectFromXMLData(parentNode);
 
             DOMElement* materialNode = GetSubElement(currentElement,std::string("material"),0);
             _material->SetObjectFromXMLData(materialNode);

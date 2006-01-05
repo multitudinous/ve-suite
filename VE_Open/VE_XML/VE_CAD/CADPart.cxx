@@ -56,7 +56,7 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
    if(currentElement)
    {
       //populate the base elements in node
-      VE_CAD::CADNode::SetObjectFromXMLData(xmlNode);
+      VE_CAD::CADNode::SetObjectFromXMLData(currentElement);
 
       //break down the element
       {

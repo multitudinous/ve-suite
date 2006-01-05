@@ -74,7 +74,7 @@ void CADAssembly::_updateVEElement(std::string input)
 {
    //this is going to be "nutty"
    //Get the base elements from CADNode
-   VE_CAD::CADNode::_updateVEElement("CADClone");
+   VE_CAD::CADNode::_updateVEElement("CADAssembly");
    _updateChildren();
 }
 /////////////////////////////////////////////////////
@@ -93,11 +93,13 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
       VE_CAD::CADNode::SetObjectFromXMLData(xmlNode);
 
       //clear out the current list of children
-      for(unsigned int i = _numChildren -1; i >=0; i--)
-      {
-         delete _children.at(i);
+      if(_numChildren){
+         for(unsigned int i = _numChildren -1; i >=0; i--)
+         {
+            delete _children.at(i);
+         }
+         _children.clear();
       }
-      _children.clear();
       //get the new number of children
       {
           DOMElement* nChildrenElement = GetSubElement(currentElement,std::string("numChildren"),0);
@@ -106,9 +108,12 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
       //populate the childList
       {
          DOMNodeList* childList = currentElement->getElementsByTagName(xercesString("children"));
+         DOMElement* childListElement = dynamic_cast<DOMElement*>(childList->item(0));
+         DOMNodeList* childrenNodes = childListElement->getElementsByTagName(xercesString("child"));
+         //DOMElement* cadNode = dynamic_cast<DOMElement*>(childList->item(0));
          for(unsigned int i = 0; i < _numChildren; i++)
          {
-            DOMElement* cadNode = dynamic_cast<DOMElement*>(childList->item(i));
+            DOMElement* cadNode = dynamic_cast<DOMElement*>(childrenNodes->item(i));
             DOMElement* nodeType = GetSubElement(cadNode,std::string("type"),0);
             if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
             {

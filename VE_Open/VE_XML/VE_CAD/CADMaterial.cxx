@@ -135,7 +135,7 @@ void CADMaterial::_updateVEElement(std::string input)
    _updateShininess();
    _updateMaterialName();
 }
-/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
 {
    DOMElement* currentElement = 0;
