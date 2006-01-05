@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema targetNamespace="http://tempuri.org/XMLSchema.xsd" elementFormDefault="qualified"
+	xmlns="http://tempuri.org/XMLSchema.xsd" xmlns:mstns="http://tempuri.org/XMLSchema.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/vesuite_installs/verg.xsd" />
+	<xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/vesuite_installs/vecad.xsd" />
+	<xs:complexType name="vePort">
+		<xs:sequence>
+			<xs:element name="number" type="xs:unsignedInt" />
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="dataFlow" type="xs:string" />
+			<xs:element name="portLocation" type="vePoint" />
+			<xs:element name="portData" type="veDataValuePair" maxOccurs="unbounded" minOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="veLink">
+		<xs:sequence>
+			<xs:element name="fromPort" type="veDataValuePair" />
+			<xs:element name="toPort" type="veDataValuePair" />
+			<xs:element name="linkPoints" type="vePoint" minOccurs="2" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="veNetwork">
+		<xs:sequence>
+			<xs:element name="link" type="veLink" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="vePoint">
+		<xs:sequence>
+			<xs:element name="xLocation" type="xs:unsignedInt" />
+			<xs:element name="yLocation" type="xs:unsignedInt" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="veModel">
+		<xs:sequence>
+			<xs:element name="ports" type="vePort" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="iconLocation" type="vePoint" maxOccurs="1" minOccurs="1" />
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1" />
+			<xs:element name="ID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" />
+			<xs:element name="icon" type="xs:string" maxOccurs="1" minOccurs="1" />
+			<xs:element name="results" type="veDataValuePair" maxOccurs="unbounded" minOccurs="0" />
+			<xs:element name="inputs" type="veDataValuePair" maxOccurs="unbounded" minOccurs="0" />
+			<xs:element name="informationPackets" type="veParameterBlock" maxOccurs="unbounded" minOccurs="0" />
+			<xs:choice>
+				<xs:element name="geometryPart" type="CADPart" maxOccurs="1" minOccurs="1" />
+				<xs:element name="cadPartAssembly" type="CADAssembly" maxOccurs="1" minOccurs="1" />
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

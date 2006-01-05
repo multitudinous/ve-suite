@@ -1,65 +1,101 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
-   <!--vecommand element type-->
-   <xs:complexType name="vecommand">
-      <xs:sequence>
-         <xs:element name="command" type="xs:string" />
-         <xs:element name="parameter" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" />
-      </xs:sequence>
-   </xs:complexType>
-   <!--vedataValuePair element-->
-   <xs:complexType name="veDataValuePair">
-      <xs:sequence>
-         <xs:element name="dataName" type="xs:string" />
-         <xs:choice>
-            <xs:element name="dataValueNum" type="xs:float" />
-            <xs:element name="dataValueString" type="xs:string" />
-            <xs:element name="dataArray" type="veFloatArray" />
-            <xs:element name="dataTransform" type="veTransform" />
-         </xs:choice>
-      </xs:sequence>
-   </xs:complexType>
-   <!--veUser-->
-   <xs:complexType name="veUser">
-      <xs:sequence>
-         <xs:element name="userStatus" type="veControlStatus" />
-         <xs:element name="stateInfo" type="veStateInfo" maxOccurs="1" minOccurs="1" />
-         <xs:element name="userID" type="xs:string" />
-      </xs:sequence>
-   </xs:complexType>
-   <!--state information-->
-   <!--may need to expand or create an extention of this-->
-   <xs:complexType name="veStateInfo">
-      <xs:sequence>
-         <xs:element name="command" type="vecommand" minOccurs="1" maxOccurs="unbounded" />
-      </xs:sequence>
-   </xs:complexType>
-   <!--a type for arrays of 1-4 elements-->
-   <xs:complexType name="veFloatArray">
-      <xs:sequence>
-         <xs:element name="value" type="xs:float" minOccurs="2" maxOccurs="4" />
-      </xs:sequence>
-   </xs:complexType>
-   <!--veControlStatus, master or slave-->
-   <xs:simpleType name="veControlStatus">
-      <xs:restriction base="xs:string">
-         <xs:enumeration value="master" />
-         <xs:enumeration value="slave" />
-      </xs:restriction>
-   </xs:simpleType>
-   <!--veTransform-->
-   <xs:complexType name="veTransform">
-      <xs:sequence>
-         <xs:element name="translation" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-         <xs:element name="scale" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-         <xs:element name="rotation" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-      </xs:sequence>
-   </xs:complexType>
-   <xs:complexType name="veParameterBlock">
-      <xs:sequence>
-         <xs:element name="blockID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" />
-         <xs:element name="transform" type="veTransform" minOccurs="0" maxOccurs="1" />
-         <xs:element name="properties" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" />
-      </xs:sequence>
-   </xs:complexType>
+	<!--vecommand element type-->
+	<xs:complexType name="vecommand">
+		<xs:sequence>
+			<xs:element name="command" type="xs:string" />
+			<xs:element name="parameter" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<!--vedataValuePair element-->
+	<xs:complexType name="veDataValuePair">
+		<xs:sequence>
+			<xs:element name="dataName" type="xs:string" maxOccurs="1" minOccurs="1" />
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:element name="dataValueNum" type="xs:float" />
+				<xs:element name="dataValueString" type="xs:string" />
+				<xs:element name="dataArray" type="veFloatArray" />
+				<xs:element name="dataTransform" type="veTransform" />
+				<xs:element name="data1DDoubleArray" type="ve1DDoubleArray" />
+				<xs:element name="data2DDoubleArray" type="ve2DDoubleArray" />
+				<xs:element name="data3DDoubleArray" type="ve3DDoubleArray" />
+				<xs:element name="data1DStringArray" type="ve1DStringArray" />
+				<xs:element name="data2DStringArray" type="ve2DStringArray" />
+				<xs:element name="data3DStringArray" type="ve3DStringArray" />
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!--veUser-->
+	<xs:complexType name="veUser">
+		<xs:sequence>
+			<xs:element name="userStatus" type="veControlStatus" />
+			<xs:element name="stateInfo" type="veStateInfo" maxOccurs="1" minOccurs="1" />
+			<xs:element name="userID" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<!--state information-->
+	<!--may need to expand or create an extention of this-->
+	<xs:complexType name="veStateInfo">
+		<xs:sequence>
+			<xs:element name="command" type="vecommand" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<!--a type for arrays of 1-4 elements-->
+	<xs:complexType name="veFloatArray">
+		<xs:sequence>
+			<xs:element name="value" type="xs:float" minOccurs="2" maxOccurs="4" />
+		</xs:sequence>
+	</xs:complexType>
+	<!--veControlStatus, master or slave-->
+	<xs:simpleType name="veControlStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="master" />
+			<xs:enumeration value="slave" />
+		</xs:restriction>
+	</xs:simpleType>
+	<!--veTransform-->
+	<xs:complexType name="veTransform">
+		<xs:sequence>
+			<xs:element name="translation" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+			<xs:element name="scale" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+			<xs:element name="rotation" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="veParameterBlock">
+		<xs:sequence>
+			<xs:element name="blockID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" />
+			<xs:element name="transform" type="veTransform" minOccurs="0" maxOccurs="1" />
+			<xs:element name="properties" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ve1DStringArray">
+		<xs:sequence>
+			<xs:element name="data" type="xs:string" minOccurs="2" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ve1DDoubleArray">
+		<xs:sequence>
+			<xs:element name="data" type="xs:decimal" minOccurs="2" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ve2DDoubleArray">
+		<xs:sequence>
+			<xs:element name="index2" type="ve1DDoubleArray" minOccurs="2" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ve3DDoubleArray">
+		<xs:sequence>
+			<xs:element name="index3" type="ve2DDoubleArray" maxOccurs="unbounded" minOccurs="2" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ve2DStringArray">
+		<xs:sequence>
+			<xs:element name="index2" type="ve1DStringArray" minOccurs="2" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ve3DStringArray">
+		<xs:sequence>
+			<xs:element name="index3" type="ve2DStringArray" maxOccurs="unbounded" minOccurs="2" />
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>
