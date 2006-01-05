@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib"
+				AdditionalDependencies="xerces-c_2d.lib VE_ConductorLib_d.lib"
 				OutputFile="$(OutDir)/VE_XML_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Debug"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/VE_XML.pdb"
 				SubSystem="2"
@@ -147,6 +147,9 @@
 			<File
 				RelativePath=".\VEXMLObject.cxx">
 			</File>
+			<File
+				RelativePath=".\XMLReader.cxx">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -175,6 +178,9 @@
 			</File>
 			<File
 				RelativePath=".\VEXMLObject.h">
+			</File>
+			<File
+				RelativePath=".\XMLReader.h">
 			</File>
 		</Filter>
 		<Filter

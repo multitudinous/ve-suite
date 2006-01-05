@@ -25,7 +25,7 @@ namespace VE_XML
 class VE_XML_EXPORTS VEXMLObject
 {
 public:
-   VEXMLObject( DOMDocument* );
+   VEXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* );
    virtual ~VEXMLObject(){;}
    VEXMLObject( const VEXMLObject& );
    //equal operator
@@ -79,7 +79,7 @@ protected:
    void _clearAllChildrenFromElement();
    bool _needsUpdate;
    DOMElement* _veElement;
-   DOMDocument* _rootDocument;
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* _rootDocument;
    unsigned int _nChildren;
 };
 #define xercesString(str) VE_XML::VEXMLObject::VEStr(str).unicodeForm()

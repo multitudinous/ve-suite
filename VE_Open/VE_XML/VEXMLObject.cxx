@@ -5,7 +5,7 @@ XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_XML;
 //////////////////////////
-VEXMLObject::VEXMLObject(DOMDocument* rootDoc)
+VEXMLObject::VEXMLObject(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc)
 {
    _veElement = 0;
    _needsUpdate = false;
