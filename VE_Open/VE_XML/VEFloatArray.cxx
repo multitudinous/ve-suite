@@ -109,15 +109,21 @@ void VEFloatArray::SetObjectFromXMLData(DOMNode* xmlInput)
    //we can adjust this to be larger if needed. Also it
    //has to be at least 2 elements according to the schema
    //_nElements = xerces->();
-   if ( xmlInput->hasChildNodes() )
+   DOMElement* currentElement = 0;
+   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
    {
+      currentElement = dynamic_cast<DOMElement*>(xmlInput);
+   }
+   
+   if(currentElement)
+   {   
       _array.clear();
       
       // do we need to delete the old one or does xerces handle this???
-      _nElements = xmlInput->getChildNodes()->getLength();
-
-      DOMNodeList* nodeList = xmlInput->getChildNodes();
+      //_nElements = xmlInput->getChildNodes()->getLength();
+      DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("value"));
       XMLSize_t numNodes = nodeList->getLength();
+      _nElements = numNodes;
       if ( ( minIndex > numNodes ) && ( maxIndex < numNodes ) )
       {
          std::cerr << " ERROR : VEFloatArray::SetObjectFromXMLData :" << 
@@ -131,7 +137,7 @@ void VEFloatArray::SetObjectFromXMLData(DOMNode* xmlInput)
       for ( XMLSize_t i = 0; i < numNodes; ++i )
       {
          //We know this about the node so we can cast it...
-         DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i ) );
+         DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
          std::string stringVal( XMLString::transcode( temp->getData() ) );
          _array.push_back( std::atof( stringVal.c_str() ) );
       }

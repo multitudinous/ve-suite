@@ -8,8 +8,17 @@
 #include <string>
 
 #include "VE_Installer/include/VEConfig.h"
+/*!\file VEXMLObject.h
+  Base XML API
+  */
+/*!\class VE_XML::VEXMLObject
+ * This class is the base class for representing
+ * XML objects.
+ */
+/*!\namespace VE_XML
+ * Contains nodes for creating/managing a XML Objects.
+ */
 XERCES_CPP_NAMESPACE_USE
-//using namespace xercesc_2_6;
 
 namespace VE_XML
 {
@@ -73,6 +82,6 @@ protected:
    DOMDocument* _rootDocument;
    unsigned int _nChildren;
 };
-#define xercesString(str) VEXMLObject::VEStr(str).unicodeForm()
+#define xercesString(str) VE_XML::VEXMLObject::VEStr(str).unicodeForm()
 }
 #endif// _VE_XML_OBJECT_H_
