@@ -72,7 +72,8 @@ cfdStreamers::cfdStreamers( void )
    this->propagationTime = -1;
    this->integrationStepLength = -1;
    this->stepLength = -1;
-   this->lineDiameter = 0.0f;
+//   this->lineDiameter = 0.0f;
+   this->lineDiameter = 1.0f;
    arrowDiameter = 1;
    streamArrows = 0;
    pointSource = 0;
@@ -206,11 +207,11 @@ aa Assign Normals NORMALS POINT_DATA
    writer->SetFileName( "teststreamers.vtk" );
    writer->Write();*/
 /*
-   this->tubeFilter->SetInput( this->stream->GetOutput() );
-   tubeFilter->GetOutput()->ReleaseDataFlagOn();
+   this->tubeFilter->SetInput( this->stream->GetOutput() ); 
+   tubeFilter->GetOutput()->ReleaseDataFlagOn();            
 */
    //this->filter = vtkGeometryFilter::New();
-   //this->filter->SetInput( this->tubeFilter->GetOutput() );
+//   this->filter->SetInput( this->tubeFilter->GetOutput() );  
 
    //vtkTriangleFilter *tris = vtkTriangleFilter::New();
    //vtkStripper *strip = vtkStripper::New();
@@ -230,7 +231,7 @@ aa Assign Normals NORMALS POINT_DATA
       cones->GetOutput()->ReleaseDataFlagOn();
 
       append = vtkAppendPolyData::New();
-      //append->AddInput( tubeFilter->GetOutput() );
+//      append->AddInput( tubeFilter->GetOutput() );  
       append->AddInput( stream->GetOutput() );
       append->AddInput( cones->GetOutput() );
       append->GetOutput()->ReleaseDataFlagOn();
@@ -259,7 +260,7 @@ aa Assign Normals NORMALS POINT_DATA
       strip->SetInput(tris->GetOutput());
       strip->GetOutput()->ReleaseDataFlagOn();*/
 
-      //this->mapper->SetInput( tubeFilter->GetOutput() );
+//      this->mapper->SetInput( tubeFilter->GetOutput() );   
       this->mapper->SetInput( stream->GetOutput() );
    }
 
@@ -410,12 +411,13 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       streamArrows = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       return true;
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )
+   else if ((( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )) || ((commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )))
    {
       vprDEBUG(vesDBG,0) << " STREAMLINE_DIAMETER\t" 
                               << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
                               << std::endl << vprDEBUG_FLUSH;
-         
+
+/*     
       // diameter is obtained from gui, -100 < vectorScale < 100
       // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
       // convert range to -2.5 < x < 2.5, and compute the exponent...
@@ -432,9 +434,28 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
                              << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
       arrowDiameter = localLineDiameter * 4.0f;
       return true;
+*/
+      int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      // this is to convert 1 to 50 on the GUI  to approx from 1 to 28 pixels
+      //vector arrows and seed points are in feet
+     // this->lineDiameter = exp(diameter*0.06666f);
+      this->lineDiameter = 0.25 * diameter;
+
+      vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
+                             << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
+
+      //this will make the arrows on the streamlines twice the diameter
+      arrowDiameter = lineDiameter * 2.0f;
+      return true;
+
    }
+
+//this last statement is redundant; taken care of by the preceeding else statement
+/*
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
    {
+
+
       // diameter is obtained from gui, -100 < vectorScale < 100
       // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
       // convert range to -2.5 < x < 2.5, and compute the exponent...
@@ -444,7 +465,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
                        this->GetActiveDataSet()->GetLength()*0.001f;
       return true;
    }
-   
+*/
    return flag;
 }
 

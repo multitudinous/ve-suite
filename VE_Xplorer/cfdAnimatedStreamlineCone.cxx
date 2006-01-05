@@ -277,8 +277,14 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
       // convert range to -2.5 < x < 2.5, and compute the exponent...
       float range = 2.5f;
       int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+/*
       this->particleDiameter = 8.0f * (exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f);
+*/
+      // this is to convert 1 to 50 on the GUI  to approx from 1 to 28 pixels
+      //vector arrows and seed points are in feet
+//     this->particleDiameter =0.1f * exp(diameter*0.10f);
+      this->particleDiameter = ( diameter + 5 ) * 0.01f;
 
          vprDEBUG(vesDBG,1) << "\tNew Particle Diameter : " 
                              << this->particleDiameter << std::endl << vprDEBUG_FLUSH;
@@ -315,8 +321,18 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
       // convert range to -2.5 < x < 2.5, and compute the exponent...
       float range = 2.5f;
       int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+
+/*
       particleDiameter = 8.0f * exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f;
+
+*/
+      // this is to convert 1 to 50 on the GUI  to approx from 1 to 28 pixels
+      //vector arrows and seed points are in feet
+//      this->particleDiameter =0.1f * exp(diameter*0.10f);
+      this->particleDiameter = ( diameter + 5 ) * 0.01f;
+
+
       return true;
    }
 

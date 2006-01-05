@@ -898,8 +898,15 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 			float combineScale[ 3 ];
 			combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
 
-			this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
-			sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
+         //this controls the size of the plane for the seed points
+         //the range on the GUI is from 1 to 100
+         //	this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
+			this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.0025 * _activeDataSet->GetLength() ); 
+
+         //this controls the size of the sphere seed points
+         //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
+			//sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
+			sphereRadius = (commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) + 5 ) * 0.01f;
 		}
       }
    }
