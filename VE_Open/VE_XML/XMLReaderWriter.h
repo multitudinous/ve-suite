@@ -1,13 +1,12 @@
-#ifndef XML_FILE_READER_H
-#define XML_FILE_READER_H
+#ifndef XML_READER_WRITER_H
+#define XML_READER_WRITER_H
 
-/*!\file XMLReader.h
-  XMLReader API
+/*!\file XMLReaderWriter.h
+  XMLReaderWriter API
   */
 
-/*!\class XMLReader
- *Abstract class to set things up for reading VE-Suite XML files .
- *Returns a scene node representing the file read in.
+/*!\class XMLReaderWriter
+ *Abstract class to set things up for reading/writing VE-Suite XML files .
  * This class is the base class for representing
  * the hierarchy of a CAD structure.
  */
@@ -23,13 +22,13 @@ namespace VE_Conductor
 XERCES_CPP_NAMESPACE_USE
 
 namespace VE_XML{
-class VE_XML_EXPORTS XMLReader{
+class VE_XML_EXPORTS XMLReaderWriter{
 public:
    ///Default Constructor
-   XMLReader();
+   XMLReaderWriter();
    
    ///Destructor
-   virtual ~XMLReader();
+   virtual ~XMLReaderWriter();
 
    ///Read an input XML string of type.
    ///\param xmlString The input XML string.
@@ -69,4 +68,4 @@ protected:
    VE_Conductor::DOMDocumentManager* _domDocumentManager;///<The XML document manager.
 };
 }
-#endif// XML_FILE_READER_H
+#endif// XML_READER_WRITER_H

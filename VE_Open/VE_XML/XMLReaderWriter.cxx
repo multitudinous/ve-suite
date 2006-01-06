@@ -1,17 +1,17 @@
-#include "VE_Open/VE_XML/XMLReader.h"
+#include "VE_Open/VE_XML/XMLReaderWriter.h"
 #include "VE_Conductor/Framework/DOMDocumentManager.h"
 #include <iostream>
 using namespace VE_XML;
 //////////////////////////////
 //Constructor               //
 //////////////////////////////
-XMLReader::XMLReader()
+XMLReaderWriter::XMLReaderWriter()
 {
    _domDocumentManager = 0;
    _standAloneDDM = false;
 }
 ///////////////////////
-XMLReader::~XMLReader()
+XMLReaderWriter::~XMLReaderWriter()
 {
    if(_domDocumentManager)
    {
@@ -25,7 +25,7 @@ XMLReader::~XMLReader()
    
 }
 /////////////////////////////////////////////////
-void XMLReader::UseStandaloneDOMDocumentManager()
+void XMLReaderWriter::UseStandaloneDOMDocumentManager()
 {
    if(!_domDocumentManager)
    {
@@ -34,7 +34,7 @@ void XMLReader::UseStandaloneDOMDocumentManager()
    }
 }
 //////////////////////////////
-void XMLReader::WriteToFile()
+void XMLReaderWriter::WriteToFile()
 {
    if(_domDocumentManager)
    {
@@ -42,7 +42,7 @@ void XMLReader::WriteToFile()
    }
 }
 //////////////////////////////
-void XMLReader::WriteToString()
+void XMLReaderWriter::WriteToString()
 {
    if(_domDocumentManager)
    {
@@ -50,7 +50,7 @@ void XMLReader::WriteToString()
    }
 }
 //////////////////////////////
-void XMLReader::ReadFromFile()
+void XMLReaderWriter::ReadFromFile()
 {
    if(_domDocumentManager)
    {
@@ -58,7 +58,7 @@ void XMLReader::ReadFromFile()
    }
 }
 //////////////////////////////
-void XMLReader::ReadFromString()
+void XMLReaderWriter::ReadFromString()
 {
    if(_domDocumentManager)
    {
@@ -66,18 +66,18 @@ void XMLReader::ReadFromString()
    }
 }
 //////////////////////////////////////////////////////////////////////////////////
-void XMLReader::SetDOMDocumentManager(VE_Conductor::DOMDocumentManager* ddManager)
+void XMLReaderWriter::SetDOMDocumentManager(VE_Conductor::DOMDocumentManager* ddManager)
 {
    _domDocumentManager = ddManager;
    _standAloneDDM = false;
 }
 ////////////////////////////////////////////////////////////////////   
-VE_Conductor::DOMDocumentManager* XMLReader::GetDOMDocumentManager()
+VE_Conductor::DOMDocumentManager* XMLReaderWriter::GetDOMDocumentManager()
 {
    return _domDocumentManager;
 }
 ////////////////////////////////////////////////
-void XMLReader::ReadXMLData(std::string xmlData)
+void XMLReaderWriter::ReadXMLData(std::string xmlData)
 {
    _domDocumentManager->Load( xmlData );
    //_domDocumentManager->WriteAndReleaseCommandDocument();
