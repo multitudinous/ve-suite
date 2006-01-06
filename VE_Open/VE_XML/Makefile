@@ -41,7 +41,8 @@ SRCS=\
    VEStateInfo.cxx\
    VETransform.cxx\
    VEUser.cxx\
-   VEXMLObject.cxx
+   VEXMLObject.cxx\
+   XMLReader.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

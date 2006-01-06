@@ -64,7 +64,7 @@ protected:
    ///Internal function to populate the appropriate structures from the file
    ///read in.
    ///\param rootDocument The document representing the input XML structure.
-   virtual void _populateStructureFromDocument(xercesc_2_6::DOMDocument* rootDocument)=0;
+   virtual void _populateStructureFromDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)=0;
 
    VE_Conductor::DOMDocumentManager* _domDocumentManager;///<The XML document manager.
 };
