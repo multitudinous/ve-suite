@@ -45,7 +45,19 @@ void CADXMLReaderWriter::_populateStructureFromDocument(XERCES_CPP_NAMESPACE_QUA
    unsigned int nAssemblies = assemblies->getLength();
    if(nAssemblies)
    {
-      _rootNode = new VE_CAD::CADAssembly(rootDocument);
+      if(_rootNode)
+      {
+         if(_rootNode->GetNodeType() != std::string("Assembly"))
+         {
+            delete _rootNode;
+            _rootNode = 0;
+            _rootNode = new VE_CAD::CADAssembly(rootDocument);
+         }else{
+            _rootNode->SetOwnerDocument(rootDocument);
+         }
+      }else{
+         _rootNode = new VE_CAD::CADAssembly(rootDocument);
+      }
       _rootNode->SetObjectFromXMLData(assemblies->item(0));
    }
    else
@@ -55,9 +67,22 @@ void CADXMLReaderWriter::_populateStructureFromDocument(XERCES_CPP_NAMESPACE_QUA
       unsigned int nParts = parts->getLength();
       if(nParts)
       {
+         
          //probably should create an assembly and then add all the parts but
-         ///assuming there is only one part file for now
-         _rootNode = new VE_CAD::CADPart(rootDocument);
+         //assuming there is only one part file for now
+         if(_rootNode)
+         {
+            if(_rootNode->GetNodeType() != std::string("Part"))
+            {
+               delete _rootNode;
+               _rootNode = 0;
+               _rootNode = new VE_CAD::CADPart(rootDocument);
+            }else{
+              _rootNode->SetOwnerDocument(rootDocument);
+            }
+         }else{
+            _rootNode = new VE_CAD::CADPart(rootDocument);
+         }
          _rootNode->SetObjectFromXMLData(parts->item(0)); 
       }
    }

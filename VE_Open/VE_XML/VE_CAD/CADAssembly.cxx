@@ -16,7 +16,7 @@ CADAssembly::CADAssembly(DOMDocument* rootDocument,std::string name)
 ///////////////////////////
 CADAssembly::~CADAssembly()
 {
-   for(unsigned int i = _numChildren -1; i >=0; i--)
+   for(int i = _numChildren -1; i >=0; i--)
    {
       delete _children.at(i);
    }
@@ -94,7 +94,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
 
       //clear out the current list of children
       if(_numChildren){
-         for(unsigned int i = _numChildren -1; i >=0; i--)
+         for(int i = _numChildren -1; i >=0; i--)
          {
             delete _children.at(i);
          }
