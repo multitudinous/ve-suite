@@ -26,11 +26,14 @@ class VE_XML_EXPORTS VEXMLObject
 {
 public:
    VEXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* );
-   virtual ~VEXMLObject(){;}
+   virtual ~VEXMLObject();
    VEXMLObject( const VEXMLObject& );
    //equal operator
    VEXMLObject& operator= ( const VEXMLObject& );
    
+   ///Set the DOMDocument this object belongs to.
+   void SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner);
+
    virtual void SetObjectFromXMLData( DOMNode* )=0;
    DOMElement* GetXMLData( std::string ); 
 

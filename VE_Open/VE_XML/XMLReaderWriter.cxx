@@ -83,10 +83,12 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData)
    //override this in derived classes
    _populateStructureFromDocument(_domDocumentManager->GetCommandDocument());
 }
-////////////////////////////////////////
-void XMLReaderWriter::WriteXMLDocument()
+///////////////////////////////////////////////////////////
+void XMLReaderWriter::WriteXMLDocument(std::string xmlData)
 {
    if(_domDocumentManager){
+      _domDocumentManager->SetOuputXMLFile(xmlData);
       _domDocumentManager->WriteAndReleaseCommandDocument();
+      _domDocumentManager->UnLoadParser();
    }
 }

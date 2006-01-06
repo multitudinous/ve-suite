@@ -32,6 +32,19 @@ VEXMLObject& VEXMLObject::operator=( const VEXMLObject& input)
    }
    return *this;
 }
+////////////////////////////
+VEXMLObject::~VEXMLObject()
+{
+   if(_veElement)
+   {
+      _veElement->release();
+   }
+}
+//////////////////////////////////////////////////////
+void VEXMLObject::SetOwnerDocument(DOMDocument* owner)
+{
+   _rootDocument = owner;
+}
 /////////////////////////////////////
 DOMElement* VEXMLObject::GetXMLData( std::string input )
 {

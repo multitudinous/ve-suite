@@ -31,12 +31,12 @@ public:
    virtual ~XMLReaderWriter();
 
    ///Read an input XML string of type.
-   ///\param xmlString The input XML string.
-   ///\param iType The input XML type.
+   ///\param xmlData The input XML type.
    virtual void ReadXMLData(std::string xmlData);
 
    ///Write the current XML document
-   virtual void WriteXMLDocument();
+   ///\param xmlData The XML document to write to.
+   virtual void WriteXMLDocument(std::string xmlData);
 
    ///Set the Active DOMDocumentManager
    void SetDOMDocumentManager(VE_Conductor::DOMDocumentManager* ddManager);
