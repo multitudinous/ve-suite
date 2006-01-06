@@ -76,11 +76,17 @@ VE_Conductor::DOMDocumentManager* XMLReaderWriter::GetDOMDocumentManager()
 {
    return _domDocumentManager;
 }
-////////////////////////////////////////////////
+//////////////////////////////////////////////////////
 void XMLReaderWriter::ReadXMLData(std::string xmlData)
 {
    _domDocumentManager->Load( xmlData );
-   //_domDocumentManager->WriteAndReleaseCommandDocument();
    //override this in derived classes
    _populateStructureFromDocument(_domDocumentManager->GetCommandDocument());
+}
+////////////////////////////////////////
+void XMLReaderWriter::WriteXMLDocument()
+{
+   if(_domDocumentManager){
+      _domDocumentManager->WriteAndReleaseCommandDocument();
+   }
 }

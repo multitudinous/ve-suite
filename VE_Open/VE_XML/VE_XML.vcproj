@@ -148,7 +148,7 @@
 				RelativePath=".\VEXMLObject.cxx">
 			</File>
 			<File
-				RelativePath=".\XMLReader.cxx">
+				RelativePath=".\XMLReaderWriter.cxx">
 			</File>
 		</Filter>
 		<Filter
@@ -180,7 +180,7 @@
 				RelativePath=".\VEXMLObject.h">
 			</File>
 			<File
-				RelativePath=".\XMLReader.h">
+				RelativePath=".\XMLReaderWriter.h">
 			</File>
 		</Filter>
 		<Filter

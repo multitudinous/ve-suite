@@ -1,5 +1,5 @@
 #include <iostream>
-#include "VE_Open/VE_XML/VE_CAD/CADXMLReader.h"
+#include "VE_Open/VE_XML/VE_CAD/CADXMLReaderWriter.h"
 #include "VE_Open/VE_XML/VE_CAD/CADNode.h"
 #include "VE_Open/VE_XML/VE_CAD/CADPart.h"
 #include "VE_Open/VE_XML/VE_CAD/CADAssembly.h"
@@ -9,19 +9,19 @@ using namespace VE_CAD;
 //////////////////////////////
 //Constructor               //
 //////////////////////////////
-CADXMLReader::CADXMLReader()
-:VE_XML::XMLReader()
+CADXMLReaderWriter::CADXMLReaderWriter()
+:VE_XML::XMLReaderWriter()
 {
    _rootNode = 0;
 }
 //////////////////////////////////////////////////
-CADXMLReader::CADXMLReader(const CADXMLReader& fr)
-:VE_XML::XMLReader(fr)
+CADXMLReaderWriter::CADXMLReaderWriter(const CADXMLReaderWriter& fr)
+:VE_XML::XMLReaderWriter(fr)
 {
    _rootNode = new VE_CAD::CADNode(*fr._rootNode);
 }
 /////////////////////////////
-CADXMLReader::~CADXMLReader()
+CADXMLReaderWriter::~CADXMLReaderWriter()
 {
   
    if(_rootNode)
@@ -31,12 +31,12 @@ CADXMLReader::~CADXMLReader()
    }
 }
 ////////////////////////////////////////////
-VE_CAD::CADNode* CADXMLReader::GetRootNode()
+VE_CAD::CADNode* CADXMLReaderWriter::GetRootNode()
 {
    return _rootNode;
 }
 ////////////////////////////////////////////////////////////////////////////
-void CADXMLReader::_populateStructureFromDocument((XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
+void CADXMLReaderWriter::_populateStructureFromDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
 {
 
    //Get the first element and check it's type
@@ -63,10 +63,10 @@ void CADXMLReader::_populateStructureFromDocument((XERCES_CPP_NAMESPACE_QUALIFIE
    }
 }
 //////////////////////////////////////////////////////////////
-CADXMLReader& CADXMLReader::operator=(const CADXMLReader& rhs)
+CADXMLReaderWriter& CADXMLReaderWriter::operator=(const CADXMLReaderWriter& rhs)
 {
    if(&rhs != this){
-      XMLReader::operator=(rhs);
+      XMLReaderWriter::operator=(rhs);
       if(_rootNode)
       {
          delete _rootNode;

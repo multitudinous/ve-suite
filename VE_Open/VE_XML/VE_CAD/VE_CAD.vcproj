@@ -142,7 +142,7 @@
 				RelativePath=".\CADPart.cxx">
 			</File>
 			<File
-				RelativePath=".\CADXMLReader.cxx">
+				RelativePath=".\CADXMLReaderWriter.cxx">
 			</File>
 		</Filter>
 		<Filter
@@ -168,7 +168,7 @@
 				RelativePath=".\CADPart.h">
 			</File>
 			<File
-				RelativePath=".\CADXMLReader.h">
+				RelativePath=".\CADXMLReaderWriter.h">
 			</File>
 		</Filter>
 		<Filter

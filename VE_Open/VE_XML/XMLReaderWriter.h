@@ -35,6 +35,9 @@ public:
    ///\param iType The input XML type.
    virtual void ReadXMLData(std::string xmlData);
 
+   ///Write the current XML document
+   virtual void WriteXMLDocument();
+
    ///Set the Active DOMDocumentManager
    void SetDOMDocumentManager(VE_Conductor::DOMDocumentManager* ddManager);
 
@@ -60,6 +63,7 @@ public:
 protected:
 
    bool _standAloneDDM;///<Tells Reader whether it is using it's on DDM or one was passed in.
+
    ///Internal function to populate the appropriate structures from the file
    ///read in.
    ///\param rootDocument The document representing the input XML structure.

@@ -1,14 +1,14 @@
 #ifndef CAD_XML_FILE_READER_H
 #define CAD_XML_FILE_READER_H
 
-/*!\file CADXMLReader.h
-  CADXMLReader API
+/*!\file CADXMLReaderWriter.h
+  CADXMLReaderWriter API
   */
 
-/*!\class VE_CAD::CADXMLReader
+/*!\class VE_CAD::CADXMLReaderWriter
  * Class to read in a CAD XML file.
  */
-#include "VE_Open/VE_XML/XMLReader.h"
+#include "VE_Open/VE_XML/XMLReaderWriter.h"
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_CAD
 {
@@ -16,22 +16,22 @@ namespace VE_CAD
 }
 XERCES_CPP_NAMESPACE_USE
 namespace VE_CAD{
-   class VE_CAD_EXPORTS CADXMLReader: public VE_XML::XMLReader{
+   class VE_CAD_EXPORTS CADXMLReaderWriter: public VE_XML::XMLReaderWriter{
 public:
    ///Default Constructor
-   CADXMLReader();
+   CADXMLReaderWriter();
    
    ///Copy Constructor
-   CADXMLReader(const CADXMLReader& fr);
+   CADXMLReaderWriter(const CADXMLReaderWriter& fr);
 
    ///Destructor
-   virtual ~CADXMLReader();
+   virtual ~CADXMLReaderWriter();
 
    ///Get the root node of the CAD Hierarchy
    VE_CAD::CADNode* GetRootNode();
 
    ///Equal Operator
-   CADXMLReader& operator=(const CADXMLReader& rhs);
+   CADXMLReaderWriter& operator=(const CADXMLReaderWriter& rhs);
 protected:
    ///Internal function to populate the appropriate structures from the file
    ///read in.
