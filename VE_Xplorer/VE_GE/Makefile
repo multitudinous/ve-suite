@@ -106,7 +106,7 @@ EXTRA_LIBS+= -lVE_ConductorLib
 EXTRA_LIBS+= -lVE_XMLLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
+#include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
