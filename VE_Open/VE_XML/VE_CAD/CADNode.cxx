@@ -36,7 +36,7 @@ void CADNode::SetNodeName(std::string name)
    _name = name;
 }
 ////////////////////////////////////////////////////
-void CADNode::SetParent(VE_CAD::CADAssembly* parent)
+void CADNode::SetParent(VE_CAD::CADNode* parent)
 {
    _parent = parent;
 }
@@ -71,7 +71,7 @@ std::string CADNode::GetNodeName()
    return _name;
 }
 /////////////////////////////////////////
-VE_CAD::CADAssembly* CADNode::GetParent()
+VE_CAD::CADNode* CADNode::GetParent()
 {
    return _parent;
 }

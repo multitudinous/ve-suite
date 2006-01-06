@@ -103,15 +103,15 @@ void CADNodeTraverser::Traverse()
       return; 
    }
 }
-///////////////////////////////////////////////////////////////////
-//depth first recursion of a node/scene graph                    //
-///////////////////////////////////////////////////////////////////
-void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode)
+///////////////////////////////////////////////////////////////////////////////////////////
+//depth first recursion of a node/scene graph                                            //
+///////////////////////////////////////////////////////////////////////////////////////////
+void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,VE_CAD::CADNode* currentParent)
 {
    int nChildren = 0;
    //the pre-callback
    if(_preFunc){
-      _preFunc->Apply(this,cNode);
+      _preFunc->Apply(this,cNode,currentParent);
       if(_ts == SKIP ||
         _ts == STOP)
       {
@@ -121,20 +121,23 @@ void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode)
       }
    }
    //these are the only CADNode types (so far) 
-   //that have children so we must traverse the childnodes!!!!
+   //that have children so we must traverse the child nodes!!!!
    if(cNode->GetNodeType() == std::string("Assembly")){
       VE_CAD::CADAssembly* assembly = dynamic_cast<VE_CAD::CADAssembly*>(cNode);
       unsigned int nChildren = assembly->GetNumberOfChildren();
       //recurse the children of this node
       for(unsigned int i = 0; i < nChildren; i++)
       {
-        _traverseNode(assembly->GetChild(i));
+        _traverseNode(assembly->GetChild(i),assembly);
       }
+   }else{
+      //set the parent of the part or clone
+      cNode->SetParent(currentParent);
    }
    
    //the post-callback
    if(_postFunc){
-      _postFunc->Apply(this,cNode);
+      _postFunc->Apply(this,cNode,currentParent);
    }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////

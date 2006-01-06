@@ -44,7 +44,7 @@ public:
 
    ///Set the parent for this node.
    ///\param parent The parent of this node.
-   void SetParent(VE_CAD::CADAssembly* parent);
+   void SetParent(VE_CAD::CADNode* parent);
 
    ///Set the transform for this node.
    ///\param transform The transform of this node.
@@ -66,7 +66,7 @@ public:
    std::string GetNodeName();
 
    ///Get the parent of this CAD node.
-   VE_CAD::CADAssembly* GetParent();
+   VE_CAD::CADNode* GetParent();
 
    ///Get the transform of this CAD node.
    VE_XML::VETransform* GetTransform();
@@ -94,7 +94,7 @@ protected:
 
    VE_XML::VETransform* _transform; ///< Transform for the node.
    VE_CAD::CADMaterial* _material; ///< Material for this node.
-   VE_CAD::CADAssembly* _parent;  ///< Parent node.
+   VE_CAD::CADNode* _parent;  ///< Parent node.
    std::string _name;///< The name of this node.
    std::string _type;///< The type of node;
 };

@@ -36,7 +36,7 @@ VE_CAD::CADNode* CADXMLReader::GetRootNode()
    return _rootNode;
 }
 ////////////////////////////////////////////////////////////////////////////
-void CADXMLReader::_populateStructureFromDocument(xercesc_2_6::DOMDocument* rootDocument)
+void CADXMLReader::_populateStructureFromDocument(DOMDocument* rootDocument)
 {
 
    //Get the first element and check it's type
