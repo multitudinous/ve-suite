@@ -141,23 +141,34 @@ VTKDataToTexture::~VTKDataToTexture()
       delete [] _outputDir;
       _outputDir = 0;
    }
-   if(_dataConvertCellToPoint)
-      _dataConvertCellToPoint->Delete(); 
+   
    _velocity.clear();
    _curScalar.clear();
    _scalarRanges.clear();
    _vectorRanges.clear();
-   if(_usgrid){
+   
+   if ( _usgrid )
+   {
       _usgrid->Delete();
    }
-   if(_rgrid)
+   
+   if ( _rgrid )
       _rgrid->Delete();
+   
    if(_sgrid)
       _sgrid->Delete();
-   if(_validPt.size()){
+   
+   if ( _validPt.size() )
+   {
       _validPt.clear();
    }
-   if(_dataSet)
+   
+   if ( _dataConvertCellToPoint )
+   {
+      _dataConvertCellToPoint->Delete(); 
+      _dataConvertCellToPoint = 0;
+   }
+   else if ( _dataSet )
    {
       _dataSet->Delete();
       _dataSet = 0;
@@ -200,7 +211,13 @@ void VTKDataToTexture::reset()
    if(_validPt.size() && _recreateValidityBetweenTimeSteps){
       _validPt.clear();
    }
-   if(_dataSet)
+
+   if ( _dataConvertCellToPoint )
+   {
+      _dataConvertCellToPoint->Delete(); 
+      _dataConvertCellToPoint = 0;
+   }   
+   else if ( _dataSet )
    {
       _dataSet->Delete();
       _dataSet = 0;
@@ -362,17 +379,16 @@ void VTKDataToTexture::createDataSetFromFile(const std::string filename)
       std::cout<<"No point data found!"<<std::endl;
       std::cout<<"Attempting to convert cell data to point data."<<std::endl;*/
 
-      if(!_dataConvertCellToPoint)
+      if ( !_dataConvertCellToPoint )
          _dataConvertCellToPoint = vtkCellDataToPointData::New();
       _dataConvertCellToPoint->SetInput( tmpDSet);
       _dataConvertCellToPoint->PassCellDataOff();
       _dataConvertCellToPoint->Update();
       setDataset(_dataConvertCellToPoint->GetOutput());
-      if(tmpDSet)
-      {
-         tmpDSet->Delete();
-      }
-   }else{
+      tmpDSet->Delete();
+   }
+   else
+   {
      setDataset(tmpDSet);
    }
 }
@@ -896,10 +912,10 @@ int VTKDataToTexture::countNumberOfParameters( const int numComponents )
    return numParameters;
 }
 /////////////////////////////////////////////////////////////////////
-char ** VTKDataToTexture::getParameterNames( const int numComponents, 
+char** VTKDataToTexture::getParameterNames( const int numComponents, 
                                        const int numParameters )
 {
-   char ** name = new char * [numParameters];
+   char** name = new char * [numParameters];
    int ii = 0;
 
    for ( int i=0; i < _nPtDataArrays; i++ )
