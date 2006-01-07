@@ -387,8 +387,10 @@ void TCFrame::_chooseDirectory(int style, int browseID)
    }
    wxDir inputFileDirectory;
    //get the input from the user 
-   if (_dirDialog->ShowModal() == wxID_OK){
-      if(browseID == INPUT_BROWSE){
+   if ( _dirDialog->ShowModal() == wxID_OK )
+   {
+      if ( browseID == INPUT_BROWSE)
+      {
          _gridFiles.Clear();
          _numFiles = 0;
          _inputDir = wxT(_dirDialog->GetPath().c_str());
@@ -397,27 +399,18 @@ void TCFrame::_chooseDirectory(int style, int browseID)
          _outputDir = wxT(_inputDir.c_str());
 
          inputFileDirectory.Open(wxString(_inputDir));
-         if(inputFileDirectory.IsOpened()){
-            wxString path;
-            wxFileName filename;
-            wxString fullPath;
-            bool cont = inputFileDirectory.GetFirst(&path);
-            while ( cont ){
-               fullPath = wxString(_inputDir) + wxString("/") +path;
-               filename.Assign(fullPath);
-               if(filename.HasExt()){
-                  if(filename.GetExt()==wxString("vtk")||
-                    filename.GetExt()==wxString("vtu")){
-                     _gridFiles.Add(fullPath);
-                  }
-               }
-               cont = inputFileDirectory.GetNext(&path);
-            }
-            _numFiles = _gridFiles.GetCount();
+         if ( inputFileDirectory.IsOpened() )
+         {
+           gridFiles = VE_Util::fileIO::GetFilesInDirectory( _inputDir.c_str(), "vtu" );
+           if ( gridFiles.size() == 0 )
+              gridFiles = VE_Util::fileIO::GetFilesInDirectory( _inputDir.c_str(), "vtk" );
          }
+         _numFiles = gridFiles.size();
          //set the text in the text box
          _inputDirBox->SetValue(_inputDir);
-      }else{
+      }
+      else
+      {
          _outputDir = wxT(_dirDialog->GetPath().c_str());
          _outputDirBox->SetValue(_outputDir);
       }
@@ -437,37 +430,19 @@ void TCFrame::SetInputDirectory(const char* inDirectory)
 {
    if(inDirectory)
    {
-     if ( !_gridFiles.IsEmpty() )
-     {
+      if ( !_gridFiles.IsEmpty() )
+      {
         _gridFiles.Clear();
-     }
-     _numFiles = 0;
+      }
+      _numFiles = 0;
 
-     wxDir inputFileDirectory;
-     inputFileDirectory.Open(wxString(inDirectory));
+      wxDir inputFileDirectory;
+      inputFileDirectory.Open( wxString(inDirectory) );
 
-     if(inputFileDirectory.IsOpened())
-     {
+      if ( inputFileDirectory.IsOpened() )
+      {
         _inputDir = wxT(inDirectory);
-        wxString path;
-        wxFileName filename;
-        wxString fullPath;
-        /*
-        bool cont = inputFileDirectory.GetFirst(&path);
-        while ( cont )
-        {
-           fullPath = wxString(_inputDir) + wxString("/") +path;
-           filename.Assign(fullPath);
-           if(filename.HasExt())
-           {
-              if(filename.GetExt()==wxString("vtk")||
-                 filename.GetExt()==wxString("vtu") )
-              {
-                 _gridFiles.Add(fullPath);
-              }
-           }
-           cont = inputFileDirectory.GetNext(&path);
-        }*/
+
         gridFiles = VE_Util::fileIO::GetFilesInDirectory( inDirectory, "vtu" );
         if ( gridFiles.size() == 0 )
            gridFiles = VE_Util::fileIO::GetFilesInDirectory( inDirectory, "vtk" );
@@ -476,7 +451,6 @@ void TCFrame::SetInputDirectory(const char* inDirectory)
       {
         std::cout<<"Couldn't open directory: "<<inDirectory<<std::endl;
       }
-      //_numFiles = _gridFiles.GetCount();
       _numFiles = gridFiles.size();
    }
 }

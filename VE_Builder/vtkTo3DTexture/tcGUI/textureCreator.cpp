@@ -659,7 +659,6 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    } 
    //cleanup?
    cell->Delete();
-    
 }
 ///////////////////////////////////////////
 char* VTKDataToTexture::_cleanUpFileNames()
@@ -953,30 +952,17 @@ char** VTKDataToTexture::getParameterNames( const int numComponents,
 void VTKDataToTexture::writeVelocityTexture(int whichVector)
 {
    std::string nameString;
-   //char posName[1024];
 
    if ( _outputDir )
    {
-      //strcpy(posName,_outputDir);
       nameString = _outputDir;
    }
    else
    {
-      //strcpy(posName,"./");
       nameString = "./";
    }
-   //strcat(posName,"/vectors/");
    nameString.append( "/vectors/" );
-/*#ifdef WIN32
-   //check to see if the directory exists
-   if( _mkdir( posName ) == 0 ){
-      std::cout<<"Created directory: "<<posName<<std::endl;
-      std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
-   }else{
-      std::cout<<"Directory: "<<posName<<" exists."<<std::endl;
-      std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
-   }
-#endif*/
+
    boost::filesystem::path vectorPath( nameString );
    try
    {
@@ -989,7 +975,6 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
 	   std::cout << "...so we made it for you..." << std::endl;
 	}
 
-   //strcat(posName,_vectorNames[whichVector]);
    nameString.append( _vectorNames[whichVector] );
 
    boost::filesystem::path vectorNamePath( nameString );
@@ -1007,55 +992,14 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    nameString.append( "/" );
    nameString.append( _vectorNames[whichVector] );
 
-   //strcat(posName,_vectorNames[whichVector]);
-   
-   /*wxString relativePath("./vectors/");
-   relativePath += wxString(_vectorNames[whichVector]);
-   relativePath += _vFileName;
-   relativePath += ".vti";
-
-   wxString tdFileName(_outputDir);
-   tdFileName += "/";
-   tdFileName += wxString(_vectorNames[whichVector]);
-   tdFileName += ".txt";
-
-   wxFile textureDescriptionFile;
-   //need to write the number of files and the
-   //name of the internal search property
-   if(!textureDescriptionFile.Exists(tdFileName)){
-      wxString stringForNVectors;
-      stringForNVectors.Printf("%d",_parent->GetNumberOfTimeSteps());
-      textureDescriptionFile.Open(tdFileName,wxFile::write);
-      textureDescriptionFile.Write(stringForNVectors);
-      textureDescriptionFile.Write('\n');
-      textureDescriptionFile.Write(wxString(_vectorNames[whichVector]));
-      textureDescriptionFile.Write('\n');
-      _initTranslation = false;
-   }else if(_initTranslation){
-      std::cout<<"Initial translation!!"<<std::endl;
-      //overwrite the file
-      textureDescriptionFile.Open(tdFileName,wxFile::write);
-      _initTranslation = false;
-   }else{
-      textureDescriptionFile.Open(tdFileName,wxFile::write_append);
-   }
-   //textureDescriptionFile.Write(wxString(posName));
-   textureDescriptionFile.Write(relativePath);
-   textureDescriptionFile.Write('\n');
-   textureDescriptionFile.Close();
-   */
    if ( _vFileName )
    {
-      //strcat(posName,_vFileName);
       nameString.append( _vFileName );
    }
    else
    {
-      //strcat(posName,"flow");
       nameString.append( "flow" );
    }
-
-   //strcat(posName,".vti");
    nameString.append( ".vti" );
 
    double velRange[2] = {0,0};
@@ -1068,30 +1012,17 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
 ///////////////////////////////////////////
 void VTKDataToTexture::writeScalarTexture(int whichScalar)
 {
-   //char name[1024]; 
    std::string nameString;
    if ( _outputDir )
    {
-      //strcpy(name,_outputDir);
       nameString = _outputDir;
    }
    else
    {
-      //strcpy(name,"./");
       nameString = "./";
    }
-   //strcat(name,"/scalars/");
    nameString.append( "/scalars/" );
-/*#ifdef WIN32
-   //check to see if the directory exists
-   if( _mkdir( nameString.c_str() ) == 0 ){
-      std::cout<<"Created directory: "<<nameString<<std::endl;
-      std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
-   }else{
-      std::cout<<"Directory: "<<nameString<<" exists."<<std::endl;
-      std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
-   }
-#endif*/
+
    boost::filesystem::path scalarPath( nameString );
    try
    {
@@ -1104,7 +1035,6 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
 	   std::cout << "...so we made it for you..." << std::endl;
 	}
 
-   //strcat(name,_scalarNames[whichScalar]);
    nameString.append( _scalarNames[whichScalar] );
 
    boost::filesystem::path scalarNamePath( nameString );
@@ -1122,51 +1052,14 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    nameString.append( "/" );
    nameString.append( _scalarNames[whichScalar] );
    
-   //wxString relativePath("./scalars/");
-   //relativePath += wxString(_scalarNames[whichScalar]);
-   //relativePath += _vFileName;
-   //relativePath += ".vti";
-
-   //wxString tdFileName(_outputDir);
-   //tdFileName += "/";
-   //tdFileName += wxString(_scalarNames[whichScalar]);
-   //tdFileName += ".txt";
-   //wxFile textureDescriptionFile;
-   //need to write the number of files and the
-   //name of the internal search property
-   /*if(!textureDescriptionFile.Exists(tdFileName)){
-      wxString stringForScalars;
-      stringForScalars.Printf("%d",_parent->GetNumberOfTimeSteps());
-      textureDescriptionFile.Open(tdFileName,wxFile::write);
-      textureDescriptionFile.Write(stringForScalars);
-      textureDescriptionFile.Write('\n');
-      textureDescriptionFile.Write(wxString(_scalarNames[whichScalar]));
-      textureDescriptionFile.Write('\n');
-      _initTranslation = false;
-   }else if(_initTranslation){
-      std::cout<<"Initial translation!!"<<std::endl;
-      //overwrite the file
-      textureDescriptionFile.Open(tdFileName,wxFile::write);
-      _initTranslation = false;
-   }else{
-      textureDescriptionFile.Open(tdFileName,wxFile::write_append);
-   }
-   //textureDescriptionFile.Write(wxString(name));
-   textureDescriptionFile.Write(relativePath);
-   textureDescriptionFile.Write('\n');
-   textureDescriptionFile.Close();
-   */
    if ( _vFileName )
    {
-      //strcat(name,_vFileName);
       nameString.append( _vFileName );
    }
    else
    {
-      //strcat(name,"scalar");
       nameString.append( "scalar" );
    }
-   //strcat(name,".vti");
    nameString.append( ".vti" );
 
    double scalarRange[2] = {0,0};
