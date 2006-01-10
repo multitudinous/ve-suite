@@ -1,7 +1,7 @@
 ################### ace_tao-specific Makefile ###################
 CFDUNAME = $(shell uname)
 ifeq (${CFDUNAME},Linux)
-CFDPLATFORM = $(shell uname -i)
+CFDPLATFORM = $(shell uname -m)
 else
 CFDPLATFORM = $(shell uname)
 endif

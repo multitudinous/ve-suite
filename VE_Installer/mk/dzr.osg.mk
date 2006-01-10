@@ -3,7 +3,7 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 EXTRA_INCLUDES+= -I$(OSG_HOME)/include
 CFDUNAME = $(shell uname)
 ifeq (${CFDUNAME},Linux)
-   CFDPLATFORM = $(shell uname -i)
+   CFDPLATFORM = $(shell uname -m)
 else
    CFDPLATFORM = $(shell uname)
 endif
