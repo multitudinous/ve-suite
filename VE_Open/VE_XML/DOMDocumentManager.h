@@ -73,6 +73,12 @@ public:
 
    ///Turn on  the writing of an XML string
    void SetWriteXMLStringOn();
+   
+   ///Set the output file to write the XML document to.
+   ///\param xmlOutputFile The full path and name to write the XML document to.
+   void SetOuputXMLFile(std::string xmlOutputFile);
+
+   std::string outputXMLFile;///<The output XML file to write.
 
    // Functions used to create a document and then return it in a std::string
    std::string WriteAndReleaseCommandDocument( void );

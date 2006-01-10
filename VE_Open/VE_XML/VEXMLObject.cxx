@@ -161,3 +161,8 @@ double VEXMLObject::ExtractDataNumberFromSimpleElement(DOMElement* element)
    std::string tmp = XMLString::transcode( rawText->getData() );
    return atof( tmp.c_str() );
 }
+///////////////////////////////////////////
+DOMDocument* VEXMLObject::GetRootDocument()
+{
+   return _rootDocument;
+}

@@ -57,6 +57,7 @@ DOMDocumentManager::DOMDocumentManager( void )
    modulesDocument = 0;
    parseXMLFile = false;
    writeXMLFile = false;
+   outputXMLFile = std::string("./output.veg");
 }
 //////////////////////////////////////////////////////
 DOMDocumentManager::~DOMDocumentManager( void )
@@ -85,6 +86,11 @@ void DOMDocumentManager::SetParseXMLFileOn()
 void DOMDocumentManager::SetParseXMLStringOn()
 {
    parseXMLFile = false;
+}
+///////////////////////////////////////////////////////////////////
+void DOMDocumentManager::SetOuputXMLFile(std::string xmlOutputFile)
+{
+   outputXMLFile = xmlOutputFile;
 }
 ////////////////////////////////////////////////////////////////
 void DOMDocumentManager::_readInputString(std::string xmlString)
@@ -230,11 +236,9 @@ std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
    {
       if(writeXMLFile)
       {
-         std::cout<<"ERROR!!!"<<std::endl;
-         std::cout<<"Writing out file from DOMDocumentManager not implemented yet!!"<<std::endl;
-         //this will need to be modified to take a string passed in as the filename to write out
-         //LocalFileFormatTarget outputXML(std::string("C:/testCADOut.xml").c_str());
-         //theSerializer->writeNode(&outputXML,*commandDocument);
+         //take a string passed in as the filename to write out   
+         LocalFileFormatTarget outputXML(outputXMLFile.c_str());
+         theSerializer->writeNode(&outputXML,*commandDocument);
       }
       else
       {

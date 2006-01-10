@@ -69,6 +69,9 @@ public:
    virtual void SetObjectFromXMLData( DOMNode* )=0;
    DOMElement* GetXMLData( std::string ); 
 
+   ///Return the root document of this element.
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* GetRootDocument();
+
    ///utility functions for reading data from an element
    ///\param element Element to extract string from.
    std::string ExtractDataStringFromSimpleElement( DOMElement* element );
