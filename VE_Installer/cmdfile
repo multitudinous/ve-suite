@@ -1,0 +1,8 @@
+# if the file has a header block then replace lines 3 through 7...
+3,7c\
+ \* VE-Suite is (C) Copyright 1998-2004 by Iowa State University\
+ \*\
+ \* Original Development Team:\
+ \*   - ISU's Thermal Systems Virtual Engineering Group,\
+ \*     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden\
+ \*   - Reaction Engineering International, www.reaction-eng.com
