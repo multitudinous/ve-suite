@@ -89,7 +89,7 @@ class Network;
 class NavigationPane;
 class CORBAServiceList;
 
-namespace VE_Conductor
+namespace VE_XML
 {
    class DOMDocumentManager;
 }
@@ -193,7 +193,7 @@ public:
 private:
    NavigationPane* navPane;
    CORBAServiceList* serviceList;
-   VE_Conductor::DOMDocumentManager* domManager;
+   VE_XML::DOMDocumentManager* domManager;
 
    DECLARE_EVENT_TABLE()
 };

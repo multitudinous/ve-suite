@@ -55,14 +55,10 @@ namespace VE_Xplorer
    class cfdCommandArray;
 }
 
-namespace VE_Conductor
-{
-   class DOMDocumentManager;
-}
-
 namespace VE_XML
 {
-    class VECommand;
+   class DOMDocumentManager;
+   class VECommand;
 }
 #include <vector>
 
@@ -200,7 +196,7 @@ protected:
    short mGetClientInfo;
    double mShort_data_array[ 9 ];
 
-   VE_Conductor::DOMDocumentManager* domManager;
+   VE_XML::DOMDocumentManager* domManager;
    std::vector< VE_XML::VECommand* > commandVectorQueue;
    VE_XML::VECommand* bufferCommand;
    cfdCommandArray* _bufferArray;

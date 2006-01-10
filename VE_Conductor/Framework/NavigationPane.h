@@ -56,10 +56,6 @@ class wxSizer;
 namespace VE_XML
 {
    class VECommand;
-}
-
-namespace VE_Conductor
-{
    class DOMDocumentManager;
 }
 
@@ -155,7 +151,7 @@ protected:
 class NavigationPane : public wxDialog 
 {
 public:
-   NavigationPane( VjObs_ptr veEngine, VE_Conductor::DOMDocumentManager* domManagerIn );
+   NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
    virtual ~NavigationPane(){;}
 
    //turn off the navigation flag
@@ -177,7 +173,7 @@ public:
    void OnResetNavPosition( wxCommandEvent& event );
    void OnHeadCheck( wxCommandEvent& event );
    void SetCommInstance( VjObs_ptr veEngine );
-   //void SetDOMManager( VE_Conductor::DOMDocumentManager* domManagerIn );
+   //void SetDOMManager( VE_XML::DOMDocumentManager* domManagerIn );
    void SendCommandsToXplorer( void );
 
 protected:
@@ -187,7 +183,7 @@ protected:
    VjObs_ptr xplorerPtr;
    int cId, cIso_value;
    DOMDocument* doc;
-   VE_Conductor::DOMDocumentManager* domManager;
+   VE_XML::DOMDocumentManager* domManager;
    std::string dataValueName;
 
    DECLARE_EVENT_TABLE()

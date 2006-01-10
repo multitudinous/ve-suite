@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/NavigationPane.h"
-#include "VE_Conductor/Framework/DOMDocumentManager.h"
+#include "VE_Open/VE_XML/DOMDocumentManager.h"
 #include "VE_Open/VE_XML/VEDataValuePair.h"
 #include "VE_Open/VE_XML/VECommand.h"
 #include "VE_Xplorer/cfdEnum.h"
@@ -58,7 +58,7 @@
 #include <wx/msgdlg.h>
 #include <iostream>
 
-using namespace VE_Conductor;
+
 
 BEGIN_EVENT_TABLE(UI_NavigateScroll, wxScrolledWindow)
 END_EVENT_TABLE()
@@ -352,7 +352,7 @@ BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////  
-NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_Conductor::DOMDocumentManager* domManagerIn )
+NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
 :wxDialog(NULL,-1, wxString("Navigation Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/impl/VjObs_i.h"
-#include "VE_Conductor/Framework/DOMDocumentManager.h"
+#include "VE_Open/VE_XML/DOMDocumentManager.h"
 
 #include "VE_Xplorer/cfdTeacher.h"
 #include "VE_Xplorer/cfdQuatCamHandler.h"
@@ -67,7 +67,6 @@ using namespace VE_TextureBased;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_XML;
-using namespace VE_Conductor;
 
 VjObs_i::VjObs_i()
 {

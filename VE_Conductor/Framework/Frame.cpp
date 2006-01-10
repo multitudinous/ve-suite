@@ -43,7 +43,7 @@
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
-#include "VE_Conductor/Framework/DOMDocumentManager.h"
+#include "VE_Open/VE_XML/DOMDocumentManager.h"
 
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
@@ -61,8 +61,6 @@
 #ifdef WIN32
 #include <shellapi.h>
 #endif
-
-using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 EVT_CLOSE(AppFrame::OnClose)
@@ -134,7 +132,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    pelog = NULL;
    navPane = 0;
    //  menubar = 
-   domManager = new DOMDocumentManager();
+   domManager = new VE_XML::DOMDocumentManager();
 }
 
 void AppFrame::CreateVETab()
