@@ -177,6 +177,12 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
 				RelativePath=".\vecad.xsd">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCXMLDataGeneratorTool"/>
+				</FileConfiguration>
 				<File
 					RelativePath=".\vecad.h">
 				</File>
