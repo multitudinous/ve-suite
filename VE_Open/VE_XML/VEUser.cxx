@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: VEUser.cxx,v $
- * Date modified: $Date: 2005-08-24 19:07:18 -0500 (Wed, 24 Aug 2005) $
- * Version:       $Rev: 2970 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
