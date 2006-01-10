@@ -36,9 +36,7 @@ SRCS=\
    interface.cpp \
    package.cpp \
    string_ops.cpp \
-   GeometryDataBuffer.cpp\
-   DOMDocumentManager.cpp 
-
+   GeometryDataBuffer.cpp
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include

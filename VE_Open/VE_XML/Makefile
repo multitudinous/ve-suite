@@ -42,7 +42,8 @@ SRCS=\
    VETransform.cxx\
    VEUser.cxx\
    VEXMLObject.cxx\
-   XMLReaderWriter.cxx
+   XMLReaderWriter.cxx\
+   DOMDocumentManager.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
