@@ -67,10 +67,6 @@ VEXMLObject& VEXMLObject::operator=( const VEXMLObject& input)
 ////////////////////////////
 VEXMLObject::~VEXMLObject()
 {
-   if(_veElement)
-   {
-      _veElement->release();
-   }
 }
 //////////////////////////////////////////////////////
 void VEXMLObject::SetOwnerDocument(DOMDocument* owner)
