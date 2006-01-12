@@ -57,6 +57,7 @@ CADAssembly::~CADAssembly()
 void CADAssembly::AddChild(VE_CAD::CADNode* node)
 {
    _children.push_back(node);
+   node->SetParent(this);
    _numChildren = static_cast< unsigned int >(_children.size());
 }
 ////////////////////////////////////////////////////

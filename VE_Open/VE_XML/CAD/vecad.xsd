@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
-	<xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/vesuite_installs/verg.xsd" />
-	<xs:complexType name="CADNode">
-		<xs:sequence>
-			<xs:element name="parent" type="CADAssembly" maxOccurs="1" minOccurs="0" />
-			<xs:element name="transform" type="veTransform" minOccurs="1" maxOccurs="1" />
-			<xs:element name="material" type="CADMaterial" minOccurs="0" maxOccurs="1" />
-			<xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" default="Assembly" />
-			<xs:element name="type" type="xs:string" />
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="CADAssembly">
-		<xs:complexContent>
-			<xs:extension base="CADNode">
-				<xs:sequence>
-					<xs:element name="children" type="CADChildList" maxOccurs="unbounded" />
-					<xs:element name="numChildren" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" default="0" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="CADPart">
-		<xs:complexContent>
-			<xs:extension base="CADNode">
-				<xs:sequence>
-					<xs:element name="fileName" type="xs:string" maxOccurs="1" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="CADClone">
-		<xs:complexContent>
-			<xs:extension base="CADNode">
-				<xs:sequence>
-					<xs:element name="instance" type="CADNode" maxOccurs="1" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="CADChildList">
-		<xs:sequence>
-			<xs:element name="child" type="CADNode" maxOccurs="unbounded" minOccurs="0" />
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="CADMaterial">
-		<xs:sequence>
-			<xs:element name="kDiffuse" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-			<xs:element name="kAmbient" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-			<xs:element name="kEmissive" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-			<xs:element name="specular" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-			<xs:element name="shininess" type="xs:float" />
-			<xs:element name="name" type="xs:string" />
-		</xs:sequence>
-	</xs:complexType>
+   <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/vesuite_installs/verg.xsd" />
+   <xs:complexType name="CADNode">
+      <xs:sequence>
+         <xs:element name="parent" type="CADAssembly" maxOccurs="1" minOccurs="0" />
+         <xs:element name="transform" type="veTransform" minOccurs="1" maxOccurs="1" />
+         <xs:element name="material" type="CADMaterial" minOccurs="0" maxOccurs="1" />
+         <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" default="Assembly" />
+         <xs:element name="type" type="xs:string" />
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="CADAssembly">
+      <xs:complexContent>
+         <xs:extension base="CADNode">
+            <xs:sequence>
+               <xs:element name="children" type="CADChildList" maxOccurs="unbounded" />
+               <xs:element name="numChildren" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" default="0" />
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="CADPart">
+      <xs:complexContent>
+         <xs:extension base="CADNode">
+            <xs:sequence>
+               <xs:element name="fileName" type="xs:string" maxOccurs="1" />
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="CADClone">
+      <xs:complexContent>
+         <xs:extension base="CADNode">
+            <xs:sequence>
+               <xs:element name="instance" type="CADNode" maxOccurs="1" />
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="CADChildList">
+      <xs:sequence>
+         <xs:element name="child" type="CADNode" maxOccurs="unbounded" minOccurs="0" />
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="CADMaterial">
+      <xs:sequence>
+         <xs:element name="kDiffuse" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+         <xs:element name="kAmbient" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+         <xs:element name="kEmissive" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+         <xs:element name="specular" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+         <xs:element name="shininess" type="xs:float" />
+         <xs:element name="materialName" type="xs:string" />
+         <xs:element name="face" type="xs:string" />
+         <xs:element name="colorMode" type="xs:string" />
+      </xs:sequence>
+   </xs:complexType>
 </xs:schema>

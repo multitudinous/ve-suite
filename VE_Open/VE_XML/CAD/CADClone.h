@@ -56,6 +56,9 @@ public:
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+
+   ///Get the original node.
+   VE_CAD::CADNode* GetOriginalNode();
  
    ///Copy constructor
    CADClone(const CADClone& rhs);

@@ -87,6 +87,22 @@ public:
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
 
+   ///Set the face that this material applies to.
+   ///\param faceToApplyTo The face that this material applies to.
+   void SetFace(std::string faceToApplyTo);
+
+   ///Set the color mode.
+   ///Valid options are:
+   ///Ambient
+   ///Diffuse
+   ///Specular
+   ///Emission
+   ///Ambient_and_Diffuse
+   ///Off            
+   ///\param colorMode The color mode of this material.
+   void SetColorMode(std::string colorMode);
+   
+   
    ///Get the diffuse property
    VE_XML::VEFloatArray* GetDiffuse();
 
@@ -104,6 +120,12 @@ public:
 
    ///Get the material name.
    std::string GetMaterialName();
+
+   ///Get the face that this material applies to.
+   std::string GetFace();
+
+   ///Get the color mode.
+   std::string GetColorMode();
    
    ///Copy constructor
    CADMaterial(const CADMaterial& rhs);
@@ -126,12 +148,20 @@ protected:
    ///Internally update the XML data for the material name.
    void _updateMaterialName();
 
+   ///Internally update the XML data for the material face.
+   void _updateMaterialFace();
+
+   ///Internally update the XML data for the material color mode.
+   void _updateColorMode();
+
    VE_XML::VEFloatArray* _kDiffuse;///< Diffuse component.
    VE_XML::VEFloatArray* _kEmissive;///< Emmisive component.
    VE_XML::VEFloatArray* _ambient;///< Ambient component.
    VE_XML::VEFloatArray* _specular;///< Specular component.
    std::string _materialName;///< Name of this Material node.
    double _shininess;///< Shininess of the material
+   std::string _colorMode;///< Color mode of this material
+   std::string _face;///< Face that this material is applied to.
 };
 }
 #endif CAD_MATERIAL_H

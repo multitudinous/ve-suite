@@ -75,7 +75,7 @@ namespace VE_CAD{
             ///\param cadNodeTraverser The CADNodeTraverser that is doing the traversing.
             ///\param node The CADNode that is currently being encountered.
             ///\param currentParent The CADNode that is the parent of the node being encountered.
-	    virtual void Apply(CADNodeTraverser* cadNodeTraverser,CADNode* node,CADNode* currentParent=0)=0;
+	    virtual void Apply(CADNodeTraverser* cadNodeTraverser,CADNode* node,void* currentParent=0)=0;
          protected:
       };
       ///TraversalStatus The status of the traverser.
@@ -113,7 +113,7 @@ namespace VE_CAD{
       ///Recurse the nodes internally.
       ///\param currentNode The node currently being traversed.
       ///\param currentParent The CADNode that is the parent of the node being encountered.
-      virtual void _traverseNode(CADNode* currentNode,CADNode* currentParent=0);
+      virtual void _traverseNode(CADNode* currentNode,void* currentParent=0);
 
       TraversalStatus _ts;///<The status of the traverser.
       CADNode* _root;///<The root node to traverse.

@@ -79,7 +79,7 @@ void CADNodeTraverser::SetRootNode(VE_CAD::CADNode* root)
 void CADNodeTraverser::Traverse()
 {
    if(_root){
-      //the pre-callback
+      //_level = 0;
       if(_preFunc){
          _preFunc->Apply(this,_root);
          if(_ts == SKIP ||
@@ -106,12 +106,12 @@ void CADNodeTraverser::Traverse()
 ///////////////////////////////////////////////////////////////////////////////////////////
 //depth first recursion of a node/scene graph                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////
-void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,VE_CAD::CADNode* currentParent)
+void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,void* currentParent)
 {
    int nChildren = 0;
    //the pre-callback
    if(_preFunc){
-      _preFunc->Apply(this,cNode,currentParent);
+      _preFunc->Apply(this,cNode);
       if(_ts == SKIP ||
         _ts == STOP)
       {
@@ -130,14 +130,11 @@ void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,VE_CAD::CADNode* cur
       {
         _traverseNode(assembly->GetChild(i),assembly);
       }
-   }else{
-      //set the parent of the part or clone
-      cNode->SetParent(currentParent);
    }
    
    //the post-callback
    if(_postFunc){
-      _postFunc->Apply(this,cNode,currentParent);
+      _postFunc->Apply(this,cNode);
    }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////

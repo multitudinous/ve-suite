@@ -30,6 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/VE_XML/CAD/CADClone.h"
+#include "VE_Open/VE_XML/CAD/CADPart.h"
+#include "VE_Open/VE_XML/CAD/CADAssembly.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_CAD;
 //////////////////////////////////////////////////////////////////
@@ -47,6 +49,11 @@ CADClone::CADClone(DOMDocument* rootDocument,std::string name,
 /////////////////////
 CADClone::~CADClone()
 {
+   if(_originalNode)
+   {
+      delete _originalNode;
+      _originalNode = 0;
+   }
 }
 //////////////////////////////////////////////////
 void CADClone::_updateVEElement(std::string input)
@@ -58,6 +65,11 @@ void CADClone::_updateVEElement(std::string input)
    //add the extra stuff
    _veElement->appendChild(_originalNode->GetXMLData("originalNode"));
    
+}
+///////////////////////////////////////////
+VE_CAD::CADNode* CADClone::GetOriginalNode()
+{
+   return _originalNode;
 }
 /////////////////////////////////////////////////////
 void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
@@ -80,6 +92,21 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
          if(currentElement->hasChildNodes())
          {
             DOMElement* originalNode = GetSubElement(currentElement,std::string("originalNode"),0);
+            DOMElement* nodeType = GetSubElement(originalNode,std::string("type"),0);
+            if(_originalNode)
+            {
+               delete _originalNode;
+               _originalNode = 0;
+            }
+            if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
+            {
+               //this is an Assembly
+               _originalNode = new VE_CAD::CADAssembly(_rootDocument);
+               
+            }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
+               //this is a Part
+               _originalNode = new VE_CAD::CADPart(_rootDocument);
+            }
             _originalNode->SetObjectFromXMLData(originalNode);
          }
       }

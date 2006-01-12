@@ -55,7 +55,10 @@ CADMaterial::CADMaterial(DOMDocument* rootDocument,std::string name)
    _specular->SetArray(temp);
    _shininess = 50.0;
    _materialName = name;
-   _nChildren = 5;
+   _nChildren = 7;
+   
+   _colorMode = std::string("Ambient_and_Diffuse");
+   _face = std::string("Front_and_Back");
 }
 ///////////////////////////
 //Destructor             //
@@ -83,6 +86,16 @@ CADMaterial::~CADMaterial()
       _specular = 0;
    }
 }
+////////////////////////////////////////////////////
+void CADMaterial::SetFace(std::string faceToApplyTo)
+{
+   _face = faceToApplyTo;
+}
+////////////////////////////////////////////////////
+void CADMaterial::SetColorMode(std::string colorMode)
+{
+   _colorMode = colorMode;
+}   
 /////////////////////////////////////////////////////
 void CADMaterial::SetDiffuseComponent(VE_XML::VEFloatArray* diffuse)
 {
@@ -107,6 +120,16 @@ void CADMaterial::SetSpecularComponent(VE_XML::VEFloatArray* specular)
 void CADMaterial::SetShininess(float shininess)
 {
    _shininess = shininess;
+}
+///////////////////////////////////
+std::string CADMaterial::GetFace()
+{
+   return _face;
+}
+///////////////////////////////////////
+std::string CADMaterial::GetColorMode()
+{
+   return _colorMode;
 }
 /////////////////////////////////
 double CADMaterial::GetShininess()
@@ -133,10 +156,15 @@ VE_XML::VEFloatArray* CADMaterial::GetSpecular()
 {
    return _specular;
 }
+//////////////////////////////////////////
+std::string CADMaterial::GetMaterialName()
+{
+   return _materialName;
+}
 ///////////////////////////////////////
 void CADMaterial::_updateMaterialName()
 {
-   DOMElement* nameElement  = _rootDocument->createElement( xercesString("name") );
+   DOMElement* nameElement  = _rootDocument->createElement( xercesString("materialName") );
    _veElement->appendChild( nameElement );      
    
    DOMText* materialName = _rootDocument->createTextNode( xercesString( _materialName ) );
@@ -165,6 +193,26 @@ void CADMaterial::_updateVEElement(std::string input)
    _updateColorProperties();
    _updateShininess();
    _updateMaterialName();
+   _updateMaterialFace();
+   _updateColorMode();
+}
+////////////////////////////////////////
+void CADMaterial::_updateMaterialFace()
+{
+   DOMElement* faceElement = _rootDocument->createElement( xercesString("face") );
+   _veElement->appendChild( faceElement );      
+   
+   DOMText* faceName = _rootDocument->createTextNode( xercesString( _face ) );
+   faceElement->appendChild( faceName );
+}
+////////////////////////////////////
+void CADMaterial::_updateColorMode()
+{
+   DOMElement* cModeElement = _rootDocument->createElement( xercesString("colorMode") );
+   _veElement->appendChild( cModeElement );      
+   
+   DOMText* cMode = _rootDocument->createTextNode( xercesString( _face ) );
+   cModeElement  ->appendChild( cMode );
 }
 /////////////////////////////////////////////////////////
 void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
@@ -186,7 +234,9 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
          _ambient->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kAmbient"),0));
          _specular->SetObjectFromXMLData(GetSubElement(currentElement,std::string("specular"),0));
          _shininess = ExtractDataNumberFromSimpleElement(GetSubElement(currentElement,std::string("shininess"),0));
-         _materialName = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("name"),0));
+         _materialName = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("materialName"),0));
+         _face = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("face"),0));
+         _colorMode= ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("colorMode"),0));
       }
    }
 }
@@ -232,6 +282,8 @@ CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
       _specular = new VE_XML::VEFloatArray(*rhs._specular);
       _shininess = rhs._shininess;
       _materialName = rhs._materialName;
+      _colorMode = rhs._colorMode;
+      _face = rhs._face;
    }
    return *this;
 }
