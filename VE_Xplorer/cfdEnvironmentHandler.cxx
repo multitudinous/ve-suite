@@ -260,6 +260,17 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
       {
          this->objectHandler->DeactivateGeometryPicking();
       }
+      /*
+      std::string stereo( "stereo" );
+      std::string view( "view" );
+      std::string display( "VE-Suite *** www.vesuite.org ***" );
+      jccl::ConfigElementPtr stereElementPtr = jccl::ConfigManager::instance()->getActiveConfig()->get( display );
+      jccl::ConfigManager::instance()->removeActive( display );
+      std::cout << stereElementPtr.setProperty(  stereo, 0, true ) << std::endl;
+      std::cout << stereElementPtr.setProperty(  view, 0, "Left Eye" ) << std::endl;
+      jccl::ConfigManager::instance()->addActive( stereElementPtr );
+      std::cout << jccl::ConfigManager::instance()->attemptReconfiguration() << std::endl;
+      */
    }
 #endif
 #endif
