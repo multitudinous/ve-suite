@@ -195,6 +195,12 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
 				RelativePath=".\verg.xsd">
+				<FileConfiguration
+					Name="dbg|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCXMLDataGeneratorTool"/>
+				</FileConfiguration>
 				<File
 					RelativePath=".\verg.xsx">
 				</File>

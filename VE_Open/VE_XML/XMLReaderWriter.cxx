@@ -81,7 +81,7 @@ void XMLReaderWriter::WriteToString()
       _domDocumentManager->SetWriteXMLStringOn();
    }
 }
-//////////////////////////////
+////////////////////////////////////
 void XMLReaderWriter::ReadFromFile()
 {
    if(_domDocumentManager)
@@ -89,7 +89,7 @@ void XMLReaderWriter::ReadFromFile()
       _domDocumentManager->SetParseXMLFileOn();
    }
 }
-//////////////////////////////
+//////////////////////////////////////
 void XMLReaderWriter::ReadFromString()
 {
    if(_domDocumentManager)
@@ -114,6 +114,7 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData)
    _domDocumentManager->Load( xmlData );
    //override this in derived classes
    _populateStructureFromDocument(_domDocumentManager->GetCommandDocument());
+   _domDocumentManager->UnLoadParser();
 }
 ///////////////////////////////////////////////////////////
 void XMLReaderWriter::WriteXMLDocument(std::string xmlData)
