@@ -101,7 +101,7 @@ public:
    {
    public:
       ///Constructor
-      VEStr( const char* const input);
+      VEStr( const char* const toTranscode);
       ///Constructor
       VEStr( int input);
       ///Constructor

@@ -37,7 +37,7 @@
   XMLReaderWriter API
   */
 
-/*!\class XMLReaderWriter
+/*!\class VE_XML::XMLReaderWriter
  *Abstract class to set things up for reading/writing VE-Suite XML files .
  * This class is the base class for representing
  * the hierarchy of a CAD structure.

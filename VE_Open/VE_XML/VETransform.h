@@ -35,7 +35,7 @@
 /*!\file VETransform.h
   Transform data
   */
-/*!\class VE_XML::VETransfrom
+/*!\class VE_XML::VETransform
  * This class manages transform information. It contains 3
  * information in 3 VEFloatArray s which represent
  * Rotation,Scale and Translation.

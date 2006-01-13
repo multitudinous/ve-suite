@@ -35,7 +35,7 @@
 /*!\file DOMDocumentManager.h
   Handler for DOMDocuments
   */
-/*!\class VE_XML::DOMDocuementManager
+/*!\class VE_XML::DOMDocumentManager
  *This class manages the main documents for VE-Open.
  */
 #include "VE_Installer/include/VEConfig.h"

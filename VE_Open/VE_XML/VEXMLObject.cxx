@@ -69,7 +69,7 @@ VEXMLObject::~VEXMLObject()
 {
 }
 //////////////////////////////////////////////////////
-void VEXMLObject::SetOwnerDocument(DOMDocument* owner)
+void VEXMLObject::SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner)
 {
    _rootDocument = owner;
 }
