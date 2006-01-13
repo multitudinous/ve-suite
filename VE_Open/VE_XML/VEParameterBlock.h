@@ -32,7 +32,7 @@
 
 #ifndef _XML_VE_PARAMETER_BLOCK_H_
 #define _XML_VE_PARAMETER_BLOCK_H_
-/*!\file VEParmeterBlock.h
+/*!\file VEParameterBlock.h
   Parameter Block Information API
   */
 /*!\class VE_XML::VEParameterBlock

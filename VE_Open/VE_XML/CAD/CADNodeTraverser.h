@@ -62,7 +62,7 @@ namespace VE_CAD{
       /*!\class VE_CAD::CADNodeTraverser::CADNodeTraverseCallback
        * Class that defines pre/post CADNode traversal tasks.
        */
-      class CADNodeTraverseCallback{
+      class VE_CAD_EXPORTS CADNodeTraverseCallback{
          public:
             ///Constructor
             CADNodeTraverseCallback(){;}

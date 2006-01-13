@@ -95,8 +95,9 @@ public:
    ///\param xmlOutputFile The full path and name to write the XML document to.
    void SetOuputXMLFile(std::string xmlOutputFile);
 
-   // Functions used to create a document and then return it in a std::string
+   /// Functions used to create a document and then return it in a std::string
    std::string WriteAndReleaseCommandDocument( void );
+   ///Create the command document.
    void CreateCommandDocument( void );
 
 private:

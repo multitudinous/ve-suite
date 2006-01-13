@@ -64,7 +64,7 @@ public:
    virtual ~VETransform();
    ///Copy Constructor
    VETransform( const VETransform& );
-   //equal operator
+   ///equal operator
    VETransform& operator= ( const VETransform& );
 
    /*

@@ -76,16 +76,16 @@ public:
    //Kinda a HACK!!!
    void UseStandaloneDOMDocumentManager();
 
-   //Work around for the conflict when exposing the DOMDocumentManager
+   ///Work around for the conflict when exposing the DOMDocumentManager
    void ReadFromFile();
 
-   //Work around for the conflict when exposing the DOMDocumentManager
+   ///Work around for the conflict when exposing the DOMDocumentManager
    void ReadFromString();
 
-   //Work around for the conflict when exposing the DOMDocumentManager
+   ///Work around for the conflict when exposing the DOMDocumentManager
    void WriteToFile();
 
-   //Work around for the conflict when exposing the DOMDocumentManager
+   ///Work around for the conflict when exposing the DOMDocumentManager
    void WriteToString();
    
    ///Get the active DOMDocumentManager.  

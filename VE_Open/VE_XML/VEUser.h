@@ -62,7 +62,9 @@ public:
    ///Valid status
    ///MASTER == controlling changes of the main graphics state
    ///SLAVE == observing changes of the main graphics state
-   ///\typedef VEControlStatus
+   /*\fn typedef VEControlStatus 
+    *The control status of the user.
+    */
    typedef std::string VEControlStatus;
    
    ///Set the users ID

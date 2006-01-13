@@ -36,7 +36,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_XML;
-//////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 VEXMLObject::VEXMLObject(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc)
 {
    _veElement = 0;
@@ -44,7 +44,7 @@ VEXMLObject::VEXMLObject(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc)
    _rootDocument = rootDoc; 
    _nChildren = 0;
 }
-///////////////////////////////////////////
+///////////////////////////////////////////////////
 VEXMLObject::VEXMLObject( const VEXMLObject& input )
 {
    _veElement = input._veElement;
@@ -52,7 +52,7 @@ VEXMLObject::VEXMLObject( const VEXMLObject& input )
    _rootDocument = input._rootDocument; 
    _nChildren = input._nChildren;
 }
-/////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 VEXMLObject& VEXMLObject::operator=( const VEXMLObject& input)
 {
    if ( this != &input )
@@ -68,12 +68,12 @@ VEXMLObject& VEXMLObject::operator=( const VEXMLObject& input)
 VEXMLObject::~VEXMLObject()
 {
 }
-//////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 void VEXMLObject::SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner)
 {
    _rootDocument = owner;
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////
 DOMElement* VEXMLObject::GetXMLData( std::string input )
 {
    //Make sure old data is cleared from the xerces side of the element
@@ -97,19 +97,19 @@ void VEXMLObject::_clearAllChildrenFromElement()
       }
    }
 }
-///////////////////////////////////////////
-VEXMLObject::VEStr::VEStr(const char* const toTranscode)
+////////////////////////////////////////////////////////
+VE_XML::VEXMLObject::VEStr::VEStr(const char* const toTranscode)
 {
    // Call the private transcoding method
    fUnicodeForm = XMLString::transcode(toTranscode);
 }
-///////////////////////////////////////////
+//////////////////////////////////////////////
 VEXMLObject::VEStr::VEStr( std::string input )
 {
    // Call the private transcoding method
    fUnicodeForm = XMLString::transcode( input.c_str() );
 }
-///////////////////////////////////////////
+//////////////////////////////////////
 VEXMLObject::VEStr::VEStr( int input )
 {
    std::ostringstream dirStringStream;
@@ -143,7 +143,7 @@ const XMLCh* VEXMLObject::VEStr::unicodeForm() const
 {
    return fUnicodeForm;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string VEXMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)
 {
    DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
