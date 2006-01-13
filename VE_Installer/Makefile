@@ -32,7 +32,7 @@
 
 DIRS= ${VE_SUITE_HOME}/VE_Open \
       ${VE_SUITE_HOME}/VE_Open/VE_XML \
-      ${VE_SUITE_HOME}/VE_Open/VE_XML/VE_CAD \
+      ${VE_SUITE_HOME}/VE_Open/VE_XML/CAD \
       ${VE_SUITE_HOME}/VE_Conductor/Network \
       ${VE_SUITE_HOME}/VE_CE \
       ${VE_SUITE_HOME}/VE_Conductor \
@@ -52,7 +52,7 @@ all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Open \
 ${VE_SUITE_HOME}/VE_Open/VE_XML \
-${VE_SUITE_HOME}/VE_Open/VE_XML/VE_CAD \
+${VE_SUITE_HOME}/VE_Open/VE_XML/CAD \
 ${VE_SUITE_HOME}/VE_Conductor/Network \
 ${VE_SUITE_HOME}/VE_CE \
 ${VE_SUITE_HOME}/VE_Conductor \
