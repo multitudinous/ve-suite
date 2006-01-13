@@ -63,17 +63,17 @@ public:
    virtual ~VEXMLObject();
    ///Copy Construstor
    VEXMLObject( const VEXMLObject& );
-   //equal operator
+   ///equal operator
    VEXMLObject& operator= ( const VEXMLObject& );
    
    ///Set the DOMDocument this object belongs to.
    void SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner);
 
    ///Populate the VEXMLObject data from an XML element.
-   virtual void SetObjectFromXMLData( DOMNode* )=0;
+   virtual void SetObjectFromXMLData( DOMNode* xmlInput )=0;
 
    ///Get an XML element from the current data in the string.
-   DOMElement* GetXMLData( std::string ); 
+   DOMElement* GetXMLData( std::string tagName); 
 
    ///Return the root document of this element.
    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* GetRootDocument();
@@ -101,13 +101,13 @@ public:
    {
    public:
       ///Constructor
-      VEStr( const char* const );
+      VEStr( const char* const input);
       ///Constructor
-      VEStr( int );
+      VEStr( int input);
       ///Constructor
-      VEStr( double );
+      VEStr( double input);
       ///Constructor
-      VEStr( std::string );
+      VEStr( std::string input);
 
       ///Destructor
       virtual ~VEStr();
@@ -137,6 +137,7 @@ protected:
    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* _rootDocument;///<The owning document for this element.
    unsigned int _nChildren;///<The number of childern for this element.
 };
+///Utility function to convert strings to Xerces compatible strings
 #define xercesString(str) VE_XML::VEXMLObject::VEStr(str).unicodeForm()
 }
 #endif// _VE_XML_OBJECT_H_

@@ -32,7 +32,12 @@
 
 #ifndef _XML_VE_USER_H_
 #define _XML_VE_USER_H_
-
+/*!\file VEUser.h
+  User description.
+  */
+/*!\class VE_XML::VEUser
+ * This class manages information describing a user.
+ */
 namespace VE_XML{
    class VEStateInfo;
 }
@@ -48,28 +53,46 @@ namespace VE_XML
 class VE_XML_EXPORTS VEUser : public VEXMLObject
 {
 public:
+   ///Constructor
+   ///\param rootDoc The owning DOMDocument.
    VEUser(DOMDocument* rootDoc);
+   ///Destructor
    virtual ~VEUser();
-   //Valid status
-   //MASTER == controlling changes of the main graphics state
-   //SLAVE == observing changes of the main graphics state
+   ///The control status of this user
+   ///Valid status
+   ///MASTER == controlling changes of the main graphics state
+   ///SLAVE == observing changes of the main graphics state
+   ///\typedef VEControlStatus
    typedef std::string VEControlStatus;
    
+   ///Set the users ID
+   ///\param id String to uniquely identify the user
    void SetUserId(std::string id);
+   ///Set the control status of the user
+   ///\param cs The control status.
    void SetControlStatus(VEControlStatus cs);
+   ///Set the state information for this user
+   ///\param userState The VEStateInfo for this user.
    void SetStateInfo(VE_XML::VEStateInfo* userState);
 
+   ///Return the user id
    std::string GetUserId();
+   ///Return the VEControlStatus of this user
    VEControlStatus GetControlStatus();
+   ///Return the VEStateInfo for this user.
    VE_XML::VEStateInfo* GetUserStateInfo();
 
+   ///Set the data for this object from an XML element
+   ///\param xmlInput The input XML element
   virtual void SetObjectFromXMLData(DOMNode* xmlInput);   
 
 protected:
-   virtual void _updateVEElement( std::string );
-   std::string _userId;
-   VE_XML::VEStateInfo* _stateInfo;
-   VEControlStatus _controlStatus;
+   ///Internally update this element
+   ///\param tagName The tagName for this element.
+   virtual void _updateVEElement( std::string tagName );
+   std::string _userId;///<The users unique identification
+   VE_XML::VEStateInfo* _stateInfo;///<The VEStateInfo for this user.
+   VEControlStatus _controlStatus;///<The VEControlStatus of this user.
 };
 }
 #endif// _XML_VE_USER_H_

@@ -32,7 +32,12 @@
 
 #ifndef _XML_VE_FLOAT_ARRAY_H_
 #define _XML_VE_FLOAT_ARRAY_H_
-
+/*!\file VEFloatArray.h
+  Float Array API
+  */
+/*!\class VE_XML::VEFloatArray
+ *This class basically manages a vector of floats. 
+ */
 #include <vector>
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/VE_XML/VEXMLObject.h"
@@ -45,27 +50,46 @@ namespace VE_XML
 class VE_XML_EXPORTS VEFloatArray : public VEXMLObject
 {
 public:
+   ///Constructor
+   ///\param rootDoc The owning DOMDocument.
+   ///\param nElements The length of the float array.
    VEFloatArray(DOMDocument* rootDoc,unsigned int nElements=3);
+   ///Destructor
    virtual ~VEFloatArray();
+   ///Copy Constructor
    VEFloatArray( const VEFloatArray& );
-   //equal operator
+   ///equal operator
    VEFloatArray& operator= ( const VEFloatArray& );
 
-   void AddElementToArray( double );
-   void SetArray( std::vector<double> );
+   ///Add a new element to the end of this array
+   ///\param newValue The new value to add.
+   void AddElementToArray( double newValue);
+   ///Set this array from an input vector
+   ///\param newArrayValues The new values to set to this array.
+   void SetArray( std::vector<double> newArrayValues);
 
-   double GetElement( unsigned int );
+   ///Get a specific element
+   ///\param index The index of the element to return
+   double GetElement( unsigned int index);
+
+   ///Get the internal array.
    std::vector<double> GetArray( void );
-   virtual void SetObjectFromXMLData( DOMNode* ); 
+   
+   ///Populate the VEXMLObject data from an XML element.
+   ///\param inputXML The input data.
+   virtual void SetObjectFromXMLData( DOMNode* inputXML ); 
    
 protected:
-   virtual void _updateVEElement( std::string );
-   unsigned int _nElements;
-   std::vector<double> _array;
+   
+   ///Internally update the data.
+   ///\param tagName The tag name of this element.
+   virtual void _updateVEElement( std::string tagName);
+   unsigned int _nElements;///<Length of this float array.
+   std::vector<double> _array;///<Raw data.
 
 private:
-   XMLSize_t minIndex;
-   XMLSize_t maxIndex;
+   XMLSize_t minIndex;///<Mininum size of the array.
+   XMLSize_t maxIndex;///<Maximum size of the array.
 };
 }
 #endif// _XML_VE_FLOAT_ARRAY_H_

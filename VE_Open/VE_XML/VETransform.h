@@ -32,6 +32,14 @@
 
 #ifndef _XML_VE_TRANSFORM_H_
 #define _XML_VE_TRANSFORM_H_
+/*!\file VETransform.h
+  Transform data
+  */
+/*!\class VE_XML::VETransfrom
+ * This class manages transform information. It contains 3
+ * information in 3 VEFloatArray s which represent
+ * Rotation,Scale and Translation.
+ */
 #include <string>
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/VE_XML/VEXMLObject.h"
@@ -49,8 +57,12 @@ namespace VE_XML
 class VE_XML_EXPORTS VETransform : public VEXMLObject
 {
 public:
+   ///Constructor
+   ///\param rootDoc The owning DOMDocument.
    VETransform( DOMDocument* rootDoc );
+   ///Destructor
    virtual ~VETransform();
+   ///Copy Constructor
    VETransform( const VETransform& );
    //equal operator
    VETransform& operator= ( const VETransform& );
@@ -62,8 +74,9 @@ public:
    void SetRotation( float* );
    */
    
-   //create the transform from xml input
-   virtual void SetObjectFromXMLData( DOMNode* );
+   ///Create the transform from xml input
+   ///\param xmlInput The input XML data.
+   virtual void SetObjectFromXMLData( DOMNode* xmlInput );
    
    
    /*
@@ -72,30 +85,37 @@ public:
    float* GetRotation( void );
    */
 
-   // Get float for translations
+   /// Get float for translations
    VEFloatArray* GetTranslationArray( void );
-   // Get float for scale
+   /// Get float for scale
    VEFloatArray* GetScaleArray( void );
-   // Get float for rotation
+   /// Get float for rotation
    VEFloatArray* GetRotationArray( void );
     
-   // Set float for translations
-   void SetTranslationArray( VEFloatArray* );
+   /// Set float for translations
+   ///\param translation The VEFloatArray holding translation.
+   void SetTranslationArray( VEFloatArray* translation);
+
    // Set float for scale
-   void SetScaleArray( VEFloatArray* );
+   ///\param scale The VEFloatArray holding scale.
+   void SetScaleArray( VEFloatArray* scale );
+   
    // Set float for rotation
-   void SetRotationArray( VEFloatArray* );
+   ///\param rotation The VEFloatArray holding rotation.
+   void SetRotationArray( VEFloatArray* rotation);
     
 protected:
-   virtual void _updateVEElement( std::string );
+   ///Internally update the XML data.
+   ///\param tagName The tag name for this element.
+   virtual void _updateVEElement( std::string tagName );
    /*
    float* _translation;
    float* _scale;
    float* _rotation;
    */
-   VEFloatArray* translationArray;
-   VEFloatArray* scaleArray;
-   VEFloatArray* rotationArray;
+   VEFloatArray* translationArray;///<The VEFloatArray holding translation information.
+   VEFloatArray* scaleArray;///<The VEFloatArray holding scale information.
+   VEFloatArray* rotationArray;///<The VEFloatArray holding rotation information.
 };
 }
 #endif// _XML_VE_TRANSFORM_H_

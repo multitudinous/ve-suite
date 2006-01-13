@@ -32,7 +32,13 @@
 
 #ifndef _XML_VE_COMMAND_H_
 #define _XML_VE_COMMAND_H_
-
+/*!\file VECommand.h
+  *XML Command API
+  */
+/*!\class VE_XML::VECommand
+ * This class contains commands that are sent from VE-Conductor
+ * and interpretted in VE-Xplorer.
+ */
 #include <string>
 #include <vector>
 #include "VE_Installer/include/VEConfig.h"
@@ -52,38 +58,57 @@ namespace VE_XML
 class VE_XML_EXPORTS VECommand : public VEXMLObject
 {
 public:
-
+   ///Constructor
    VECommand(DOMDocument* rootDoc);
+   ///Destructor
    virtual ~VECommand();
+   ///Copy Constructor
    VECommand( const VECommand& );
-   //equal operator
+   ///equal operator
    VECommand& operator= ( const VECommand& );
    
-   //The name of the command to execute
+   ///Set the name of the command.
+   ///\param name The name of the command to execute.
    void SetCommandName( std::string name );
 
+   ///Add a data value pair for the command.
+   ///\param commandValuePair The data value pair representing command information.
    void AddDataValuePair(VE_XML::VEDataValuePair* commandValuePair);
 
+   ///Utility function to extract a command name from an element.
+   ///\param commandElement The command element.
    void ExtractCmdNameFromElement(DOMElement* commandElement);
 
-   
-   //set the data from an string representing the xml
+   ///Populate the VECommand data from an XML element.
+   ///\param xmlInput The element to populate the command data from.
    virtual void SetObjectFromXMLData(DOMNode* xmlInput);
    
+   ///Return the name of this command.
    std::string GetCommandName();
 
+   ///Get a specific VEDataValuePair by name.
+   ///\param dataValueName The name of the VEDataValuePair to search for.
    VE_XML::VEDataValuePair* GetDataValuePair(std::string dataValueName);
+   
+   ///Get a VEDataValuePair at the index.
+   ///\param index The index of the VEDataValuePair to return.
    VE_XML::VEDataValuePair* GetDataValuePair(unsigned int index);
 
+   ///Return the number of VEDataValuePair s in this command.
    unsigned int GetNumberOfDataValuePairs();
 
 protected:
-   void _updateVEElement( std::string );
+   ///Internally update the command element.
+   ///\param tagName The tagName of this element
+   void _updateVEElement( std::string tagName);
+   ///Internally update the command name from the input XML data.
    void _updateCommandName( void );
+   ///Internally update the VEDataValuePair s from the input XML data.
    void _updateDataValuePairs( void );
-   unsigned int _nDataValuePairs;
-   std::string _cmdName;
-   std::vector< VE_XML::VEDataValuePair* > _dataValuePairs;  
+
+   unsigned int _nDataValuePairs;///<The number of VEDataValuePair s in this command.
+   std::string _cmdName;///<The name of this command.
+   std::vector< VE_XML::VEDataValuePair* > _dataValuePairs;///<The list of VEDataValuePair s in this command.  
 };
 }
 #endif// _XML_VE_COMMAND_H_

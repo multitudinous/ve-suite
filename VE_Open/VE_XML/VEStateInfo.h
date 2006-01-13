@@ -32,6 +32,13 @@
 
 #ifndef _XML_VE_STATE_INFO_H_
 #define _XML_VE_STATE_INFO_H_
+/*!\file VEStateInfo.h
+  State Information API
+  */
+/*!\class VE_XML::VEStateInfo
+ * This class is used to hold state information which is essentially a list
+ * of VECommand s.
+ */
 #include <vector>
 #include <string>
 #include "VE_Installer/include/VEConfig.h"
@@ -47,22 +54,38 @@ namespace VE_XML
 namespace VE_XML{
 class VE_XML_EXPORTS VEStateInfo : public VEXMLObject{
 public:
+   ///Constructor 
+   ///\param rootDoc The owning DOMDocument.
    VEStateInfo(DOMDocument* rootDoc);
+   ///Destructor
    virtual ~VEStateInfo();
-
+   
+   ///Add new state information.
+   ///\param state The new state to add which is held in a VECommand object.
    void AddState(VE_XML::VECommand* state);
+
+   ///Clear all current state information.
    void ClearState();
    
-   //set the data from an string representing the xml
+   ///Set the data from an string representing the xml
+   ///\param xmlInput The input xml data.
    virtual void SetObjectFromXMLData(DOMNode* xmlInput);
 
+   ///Get a state based on the name.
+   ///\param name The name of the state to search for
    VE_XML::VECommand* GetState(std::string name);
+   ///Get the state based on an index
+   ///\param index The index to search for.
    VE_XML::VECommand* GetState(unsigned int index);
 
 protected:
-	virtual void _updateVEElement( std::string );
+   ///Internally update the XML data.
+   ///\param tagName The tag name to use for this element.
+	virtual void _updateVEElement( std::string tagName );
+   ///Internally update the VECommand list.
    void _updateCommands();
-   std::vector<VE_XML::VECommand*> _stateInfo;
+
+   std::vector<VE_XML::VECommand*> _stateInfo;///<The VECommand list holding state information.
 };
 }
 #endif// _XML_VE_STATE_INFO_H_

@@ -32,6 +32,12 @@
 
 #ifndef DOMDOCUMENT_MANAGER
 #define DOMDOCUMENT_MANAGER
+/*!\file DOMDocumentManager.h
+  Handler for DOMDocuments
+  */
+/*!\class VE_XML::DOMDocuementManager
+ *This class manages the main documents for VE-Open.
+ */
 #include "VE_Installer/include/VEConfig.h"
 
 #include <xercesc/dom/DOM.hpp>
@@ -45,21 +51,32 @@ namespace VE_XML
 class VE_XML_EXPORTS DOMDocumentManager
 {
 public: 
+   ///Constructor
    DOMDocumentManager( void );
+   ///Destructor
    ~DOMDocumentManager( void );
 
-   // Runs the intialization routines for xerces
+   /// Runs the intialization routines for xerces
    void InitializeXerces( void );
 
-   // Writes the document that is passed in and returns a string
+   /// Writes the document that is passed in and returns a string
    std::string WriteDocumentToString( DOMDocument* document );
 
-   // Get the respective documents for each portion of VE-Suite
+   /// Get the command document
    DOMDocument* GetCommandDocument( void );
+
+   /// Get the parameter document
+   ///\todo This is not implemented yet
    DOMDocument* GetParameterDocument( void );
+
+   /// Get the modules document
+   ///\todo This is not implemented yet
    DOMDocument* GetModulesDocument( void );
 
+   ///Load an XML tree from a string or a file. 
+   ///\param inputCommand Can be a string in memory of the tree or point to a file on disk.
    void Load( const std::string inputCommand );
+   ///Unload memory created by the parser.
    void UnLoadParser( void );
 
    ///Turn on the parsing of an XML file.
@@ -78,14 +95,14 @@ public:
    ///\param xmlOutputFile The full path and name to write the XML document to.
    void SetOuputXMLFile(std::string xmlOutputFile);
 
-   std::string outputXMLFile;///<The output XML file to write.
-
    // Functions used to create a document and then return it in a std::string
    std::string WriteAndReleaseCommandDocument( void );
    void CreateCommandDocument( void );
 
 private:
-    ///Read an input file.
+    std::string outputXMLFile;///<The output XML file to write.
+
+   ///Read an input file.
    ///\param xmlFile The XML filename.
    void _readInputFile(std::string xmlFile);
 
@@ -96,17 +113,15 @@ private:
    bool parseXMLFile;///<Should we parse an XML file or string.
    bool writeXMLFile;///<Should we write an XML file or string.
 
-   // This is the document used ot send commands to Xplorer
-   DOMDocument* commandDocument;
-   // This is the document used to send parameter file info
-   // to Xplorer
-   DOMDocument* parameterDocument;
-   // This is the current nt file sent to the CE and is
-   // constructed by Conductor
-   DOMDocument* modulesDocument;
+   
+   DOMDocument* commandDocument;///< This is the document used ot send commands to Xplorer
+   
+   DOMDocument* parameterDocument;///< This is the document used to send parameter file info to Xplorer
 
-   XercesDOMParser* parser;
-   ErrorHandler* errHandler;
+   DOMDocument* modulesDocument;///< This is the current Network file sent to the CE and is constructed by Conductor
+
+   XercesDOMParser* parser;///<The DOMParser
+   ErrorHandler* errHandler;///<The error handler for the parser.
 };
 }
 #endif
