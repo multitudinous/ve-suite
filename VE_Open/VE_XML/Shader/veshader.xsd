@@ -11,7 +11,8 @@
    <xs:complexType name="Shader">
       <xs:sequence>
          <xs:element name="type" type="xs:string" />
-         <xs:element name="uniform" type="Uniform" maxOccurs="unbounded" />
+         <xs:element name="uniform" type="Uniform" maxOccurs="unbounded" minOccurs="0" />
+         <xs:element name="shaderCode" type="xs:string" />
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="Program">
