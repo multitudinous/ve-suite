@@ -53,72 +53,86 @@ void Network::clear ()
   _connections.clear();
 }
 
-int Network::parse (Interface* intf)
+int Network::parse( Interface* intf )
 {
-  int num;
-  long int temp;
-  unsigned int i, pos;
+   int num;
+   long int temp;
+   unsigned int i, pos;
 
-  std::string temps;
-  std::vector<std::string> vars;
+   std::string temps;
+   std::vector<std::string> vars;
 
-  vars = intf->getStrings();
-  for (i=0; i<vars.size(); i++) {
-    intf->getVal(vars[i], temps);
-    if ((pos=vars[i].find("modCls_"))!=string::npos) {
-      num =atoi(vars[i].substr(pos+7, 4).c_str());
-      add_module(num, temps);
-    }
-  }
+   vars = intf->getStrings();
+   for (i=0; i<vars.size(); i++) 
+   {
+      intf->getVal(vars[i], temps);
+      if ( vars[i].find("modCls_") != string::npos ) 
+      {
+         pos=vars[i].find("modCls_");
+         num =atoi(vars[i].substr(pos+7, 4).c_str());
+         add_module(num, temps);
+      }
+   }
 
-  std::set<int> links;
-  std::map<int, int> FrMod, ToMod, FrPort, ToPort;
+   std::set<int> links;
+   std::map<int, int> FrMod, ToMod, FrPort, ToPort;
 
-  vars = intf->getInts();
-  for (i=0; i<vars.size(); i++) {
-    
-    intf->getVal(vars[i], temp);
-    
-    if ((pos=vars[i].find("ln_FrMod_"))!=string::npos) {
-      num = atoi(vars[i].substr(pos+9, 4).c_str());
-      FrMod[num] = temp;
-      links.insert(num);
-    }
-    else if ((pos=vars[i].find("ln_ToMod_"))!=string::npos) {
-      num = atoi(vars[i].substr(pos+9, 4).c_str());
-      ToMod[num] = temp;
-      links.insert(num);
-    }
-    else if ((pos=vars[i].find("ln_FrPort_"))!=string::npos) {
-      num = atoi(vars[i].substr(pos+10, 4).c_str());
-      FrPort[num] = temp;; 
-      links.insert(num);
-    }
-    else if ((pos=vars[i].find("ln_ToPort_"))!=string::npos) {
-      num = atoi(vars[i].substr(pos+10, 4).c_str());
-      ToPort[num] = temp;
-      links.insert(num);
-    }
-  }
+   vars = intf->getInts();
+   for (i=0; i<vars.size(); i++) 
+   {
+      intf->getVal(vars[i], temp);
 
-  if(intf->getInt("Module_size") != (int)_module_ptrs.size()) {
-    cerr << "Inconsistent Modules In Network\n";
-    return 0;
-  }
-  if(intf->getInt("Link_size")   != (int)links.size()) {
-    cerr << "Inconsistent Links In Network\n";
-    return 0;
-  }
+      if ( vars[i].find("ln_FrMod_") != string::npos ) 
+      {
+         pos=vars[i].find("ln_FrMod_",0,9);
+         num = atoi(vars[i].substr(pos+9, 4).c_str());
+         FrMod[num] = temp;
+         links.insert(num);
+      }
+      else if ( vars[i].find("ln_ToMod_") != string::npos ) 
+      {
+         pos=vars[i].find("ln_ToMod_");
+         num = atoi(vars[i].substr(pos+9, 4).c_str());
+         ToMod[num] = temp;
+         links.insert(num);
+      }
+      else if ( vars[i].find("ln_FrPort_") != string::npos ) 
+      {
+         pos=vars[i].find("ln_FrPort_");
+         num = atoi(vars[i].substr(pos+10, 4).c_str());
+         FrPort[num] = temp;; 
+         links.insert(num);
+      }
+      else if ( vars[i].find("ln_ToPort_") != string::npos ) 
+      {
+         pos=vars[i].find("ln_ToPort_");
+         num = atoi(vars[i].substr(pos+10, 4).c_str());
+         ToPort[num] = temp;
+         links.insert(num);
+      }
+   }
 
-  std::set<int>::iterator iter;
-  for(iter=links.begin(); iter!=links.end(); iter++) {
+   if(intf->getInt("Module_size") != (int)_module_ptrs.size()) 
+   {
+      cerr << "Inconsistent Modules In Network\n";
+      return 0;
+   }
+  
+   if(intf->getInt("Link_size")   != (int)links.size()) 
+   {
+      cerr << "Inconsistent Links In Network\n";
+      return 0;
+   }
+
+   std::set<int>::iterator iter;
+   for(iter=links.begin(); iter!=links.end(); iter++) {
 
     if(FrMod.find(*iter)==FrMod.end()  || ToMod.find(*iter)==FrMod.end()   ||
        FrPort.find(*iter)==FrMod.end() || ToPort.find(*iter)==FrMod.end()) {
       cerr << "Bad link found\n";
       return  0;
     }
-    
+
     Connection* cn = new Connection(*iter);
     _connections.push_back(cn);
 
@@ -127,9 +141,9 @@ int Network::parse (Interface* intf)
       cerr << "Error adding ports\n";
       return 0;
     }
-  }
-  
-  return 1;
+   }
+
+   return 1;
 }
 
 int Network::addIPort (int m, int p, Connection* c)

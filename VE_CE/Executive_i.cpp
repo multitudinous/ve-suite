@@ -507,42 +507,45 @@ void Body_Executive_i::SetNetwork (
    // data. In this statement the global data that that 
    // is sent gets stripped out because there is no 
    // mechanism to handle it yet.
-   if ( iter!=p.intfs.end() && _network->parse(&(*iter)) ) 
+   if ( iter!=p.intfs.end() ) 
    {
-      _network_intf = *iter; //_network_intf is the first block of the network xml.
-      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      if ( _network->parse( &(*iter) ) )
       {
-         //if ( iter->_type == 1 ) // this block is for inputs not geom
+         _network_intf = *iter; //_network_intf is the first block of the network xml.
+         for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
          {
-            if(iter->_category==1 && iter->_type == 1 &&_network->setInput(iter->_id, &(*iter))) 
+            //if ( iter->_type == 1 ) // this block is for inputs not geom
             {
-	            _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-               _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-               _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-               _network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
-               _network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
-            }
-            else if(iter->_category==1 && iter->_type == 2 &&_network->setGeomInput(iter->_id, &(*iter)))
-            {
-               std::cout<<"The current module has geom info "<<std::endl;
-            }
-            else
-            {
-               std::cerr << "Unable to set id# " << iter->_id << "'s inputs" << std::endl;
+               if(iter->_category==1 && iter->_type == 1 &&_network->setInput(iter->_id, &(*iter))) 
+               {
+	               _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+                  _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+                  _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+                  _network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
+                  _network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
+               }
+               else if(iter->_category==1 && iter->_type == 2 &&_network->setGeomInput(iter->_id, &(*iter)))
+               {
+                  std::cout<<"The current module has geom info "<<std::endl;
+               }
+               else
+               {
+                  std::cerr << "Unable to set id# " << iter->_id << "'s inputs" << std::endl;
+               }
             }
          }
-      }
 
-      _mutex.release();
-      if(!_scheduler->schedule(0))
-      {
-         ClientMessage("Error in Schedule\n");
-         return;
-      }
-      else 
-      {
-         ClientMessage("Successfully Scheduled Network\n");
-         _scheduler->print_schedule();
+         _mutex.release();
+         if(!_scheduler->schedule(0))
+         {
+            ClientMessage("Error in Schedule\n");
+            return;
+         }
+         else 
+         {
+            ClientMessage("Successfully Scheduled Network\n");
+            _scheduler->print_schedule();
+         }
       }
    } 
    else 
