@@ -31,10 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
+
 #include <fstream>
 //#include <vtkZLibDataCompressor.h>
 #include <vtkImageData.h>
-#include <vtkXMLImageDataReader.h>
+//#include <vtkXMLImageDataReader.h>
 #include <vtkFloatArray.h>
 //#include <vtkDataArray.h>
 #include <vtkPointData.h>
@@ -185,11 +187,8 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
    if ( fin.is_open() )
    {
       fin.close();
-      vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
-      reader->SetFileName( textureFile.c_str() );
-      reader->Update();
       
-      vtkImageData* flowImage = reader->GetOutput();
+      vtkImageData* flowImage = dynamic_cast< vtkImageData* >( VE_Util::readVtkThing( textureFile, 0 ) );
       if ( flowImage->GetPointData()->GetNumberOfArrays() > 1 )
       {
          std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : There are too many scalars in this texture " << std::endl;
@@ -318,7 +317,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
       //add the field
       _dataFields.push_back(pixels);
-      reader->Delete();
+      flowImage->Delete();
    }
    else
    {

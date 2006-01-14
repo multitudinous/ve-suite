@@ -30,11 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "flowTexture.h"
+
+#include "VE_Xplorer/readWriteVtkThings.h"
+
 #include <iostream>
 #include <fstream>
 //#include <vtkZLibDataCompressor.h>
 #include <vtkImageData.h>
-#include <vtkXMLImageDataWriter.h>
+//#include <vtkXMLImageDataWriter.h>
 #include <vtkFloatArray.h>
 #include <vtkPointData.h>
 
@@ -287,13 +290,8 @@ void FlowTexture::writeFlowTexture( std::string fileName, std::string scalarName
          }
       }
       flowImage->GetPointData()->AddArray( flowData );
-      vtkXMLImageDataWriter* writer = vtkXMLImageDataWriter::New();
-      writer->SetInput( flowImage );
-      writer->SetDataModeToBinary();
-      writer->SetFileName( fileName.c_str() );
-      writer->Write();
+      VE_Util::writeVtkThing( flowImage, fileName, 1 );
 
-      writer->Delete();
       flowImage->Delete();
       flowData->Delete();
    }

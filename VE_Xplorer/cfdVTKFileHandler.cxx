@@ -4,6 +4,8 @@
 #include <vtkXMLUnstructuredGridReader.h>
 #include <vtkXMLStructuredGridReader.h>
 #include <vtkXMLRectilinearGridReader.h>
+#include <vtkXMLImageDataReader.h>
+#include <vtkImageData.h>
 #include <vtkPolyDataReader.h>
 #include <vtkDataSetReader.h>
 #include <vtkStructuredGrid.h>
@@ -138,14 +140,26 @@ vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
       //process xml file
       if(!strcmp(_xmlTester->GetFileDataType(),"UnstructuredGrid")){
          _getXMLUGrid();
-      }else if(!strcmp(_xmlTester->GetFileDataType(),"StructuredGrid")){
+      }
+      else if(!strcmp(_xmlTester->GetFileDataType(),"StructuredGrid"))
+      {
          _getXMLSGrid();
-      }else if(!strcmp(_xmlTester->GetFileDataType(),"RectilinearGrid")){
+      }
+      else if(!strcmp(_xmlTester->GetFileDataType(),"RectilinearGrid"))
+      {
          _getXMLRGrid();
-      }else if(!strcmp(_xmlTester->GetFileDataType(),"PolyData")){
+      }
+      else if(!strcmp(_xmlTester->GetFileDataType(),"PolyData"))
+      {
          _getXMLPolyData();
       }
-   }else{
+      else if ( !strcmp( _xmlTester->GetFileDataType(), "ImageData" ) )
+      {
+         GetXMLImageData();
+      }
+   }
+   else
+   {
       //this is a "classic" style vtk file
       _readClassicVTKFile();   
    }
@@ -262,26 +276,43 @@ void cfdVTKFileHandler::_getXMLPolyData()
    _dataSet->ShallowCopy(pdReader->GetOutput());
    pdReader->Delete();
 }
+////////////////////////////////////////////////
+void cfdVTKFileHandler::GetXMLImageData( void )
+{
+   vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
+   reader->SetFileName( _inFileName.c_str() );
+   reader->Update();
+   _dataSet = vtkImageData::New();
+   _dataSet->ShallowCopy( reader->GetOutput() );
+   reader->Delete();
+}
 /////////////////////////////////////////////////////////////////////////////////
 bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,std::string outFileName)
 {
    if( outFileName.empty() )
       return false;
 
-   if(_outFileType == CFD_XML){
+   if ( _outFileType == CFD_XML )
+   {
       vtkXMLDataSetWriter* xmlWriter = vtkXMLDataSetWriter::New();
       xmlWriter->SetFileName(outFileName.c_str());
       xmlWriter->SetInput(dataSet);
-      if(_outFileMode == CFD_ASCII)
+      if ( _outFileMode == CFD_ASCII )
          xmlWriter->SetDataModeToAscii();
-      if(xmlWriter->Write()){
+      
+      if ( xmlWriter->Write())
+      {
          xmlWriter->Delete();
          return true;
-      }else{
+      }
+      else
+      {
          xmlWriter->Delete();
          return false;
       }
-   }else{
+   }
+   else
+   {
       _writeClassicVTKFile(dataSet,outFileName,_outFileMode);
       return true;
    }
