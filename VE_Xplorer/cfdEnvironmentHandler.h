@@ -45,6 +45,7 @@ namespace VE_Xplorer
    class cfdTeacher;
    class cfdSoundHandler;
    class cfdQuatCamHandler;
+   class cfdDisplaySettings;
 #ifdef VE_PATENTED
 #ifdef _OSG
    class cfdObjectHandler;
@@ -81,11 +82,18 @@ public:
    void SetCommandArray( cfdCommandArray* );
    void CreateObjects( void );
 
+   ///Accessor for cfdNavigate
    cfdNavigate* GetNavigate( void );
+   ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
+   ///Accessor for cfdSoundHandler
    cfdSoundHandler* GetSoundHandler( void );
+   ///Accessor for cfdTeacher
    cfdTeacher* GetTeacher( void );
+   ///Accessor for cfdQuatCamHandler
    cfdQuatCamHandler* GetQuatCamHandler( void );
+   ///Accessor for cfdDisplaySettings
+   cfdDisplaySettings* GetDisplaySettings( void );
 
 #ifdef _OSG 
 #ifdef VE_PATENTED 
@@ -116,6 +124,8 @@ private:
    float worldScale[ 3 ];
    float worldTrans[ 3 ];
    float worldRot[ 3 ];
+   ///<The class used to change juggler configuration settings during runtime
+   cfdDisplaySettings* displaySettings;
 };
 }
 #endif

@@ -44,6 +44,8 @@
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Open/VE_XML/DOMDocumentManager.h"
+#include "VE_Open/VE_XML/VECommand.h"
+#include "VE_Open/VE_XML/VEDataValuePair.h"
 
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
@@ -87,6 +89,7 @@ EVT_CLOSE(AppFrame::OnClose)
 
   EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
   EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
+  EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
 
 //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
 //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
@@ -269,7 +272,7 @@ void AppFrame::CreateMenu()
   edit_menu = new wxMenu;
   help_menu = new wxMenu;
    xplorerMenu = new wxMenu();
-
+   xplorerJugglerMenu = new wxMenu();
 //  config_menu = new wxMenu;
 
   file_menu->Append(wxID_NEW, _("&New\tCtrl+N"));
@@ -335,10 +338,18 @@ void AppFrame::CreateMenu()
   //help_menu->Enable(v21ID_HELP, false);
   help_menu->Enable(wxID_ABOUT, false);
 
+   xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
+   xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
+   xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
+   xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
+
    xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
    xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
+   xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    xplorerMenu->Enable( XPLORER_NAVIGATION, false);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
+   xplorerMenu->Enable( JUGGLER_SETTINGS, false);
+
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
 //  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
 //  config_menu->Append(v21ID_REI_BASE, _("Base Quench (REI)"));
@@ -873,6 +884,7 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
       con_menu->Enable(v21ID_DISCONNECT_VE, true);
       xplorerMenu->Enable( XPLORER_NAVIGATION, true);
       xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
+      xplorerMenu->Enable( JUGGLER_SETTINGS, true);
    } 
    catch (CORBA::Exception &) 
    {
@@ -1008,6 +1020,7 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
    con_menu->Enable(v21ID_DISCONNECT_VE, false);
    xplorerMenu->Enable( XPLORER_NAVIGATION, false);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
+   xplorerMenu->Enable( JUGGLER_SETTINGS, false);
 
    if ( navPane )
    {
@@ -1077,5 +1090,47 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
       // create pane and set appropriate vars
    }
    // now show it
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
+{
+   // Now need to construct domdocument and populate it with the new vecommand
+   domManager->CreateCommandDocument();
+   DOMDocument* doc = domManager->GetCommandDocument();
+
+   // Create the command and data value pairs
+   VE_XML::VEDataValuePair* dataValuePair = new VE_XML::VEDataValuePair( doc, std::string("FLOAT") );
+   dataValuePair->SetDataName( "Stereo" );
+   dataValuePair->SetDataValue( 1 );
+   VE_XML::VECommand* veCommand = new VE_XML::VECommand( doc );
+   veCommand->SetCommandName( std::string("Juggler_Display_Data") );
+   veCommand->AddDataValuePair( dataValuePair );
+   doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );
+
+   // New need to destroy document and send it
+   std::string commandData = domManager->WriteAndReleaseCommandDocument();
+   char* tempDoc = new char[ commandData.size() + 1 ];
+   tempDoc = CORBA::string_dup( commandData.c_str() );
+
+   if ( !CORBA::is_nil( vjobs ) && !commandData.empty() )
+   {
+      try
+      {
+         // CORBA releases the allocated memory so we do not have to
+         vjobs->SetCommandString( tempDoc );
+      }
+      catch ( ... )
+      {
+         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         delete [] tempDoc;
+      }
+   }
+   else
+   {
+      delete [] tempDoc;
+   }
+   //Clean up memory
+   delete veCommand;
 }
 

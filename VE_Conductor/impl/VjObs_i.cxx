@@ -43,6 +43,7 @@
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdDisplaySettings.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 
 #include "VE_SceneGraph/cfdTempAnimation.h"
@@ -728,6 +729,7 @@ void VjObs_i::PreFrameUpdate( void )
       delete commandVectorQueue.at( 0 );
       commandVectorQueue.erase( iter );
       cfdEnvironmentHandler::instance()->GetNavigate()->SetVECommand( bufferCommand );
+      cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
       //std::cout << " command name " << bufferCommand->GetCommandName() << std::endl;
    }
 }

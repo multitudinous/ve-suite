@@ -37,33 +37,44 @@ namespace VE_Xplorer
    class cfdCommandArray;
 }
 
+namespace VE_XML
+{
+   class VECommand;
+}
+
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdGlobalBase
-   {
-      public:
-         cfdGlobalBase();
-         virtual ~cfdGlobalBase ();
-         //copy constructor
-         cfdGlobalBase( const cfdGlobalBase& ){;}
+class VE_XPLORER_EXPORTS cfdGlobalBase
+{
+public:
+   cfdGlobalBase();
+   virtual ~cfdGlobalBase ();
+   ///copy constructor
+   cfdGlobalBase( const cfdGlobalBase& ){;}
 
-         // this abstract base class declares some pure virtual int functions to be
-         // specified in concrete implementations
+   ///this abstract base class declares some pure virtual int functions to be
+   ///specified in concrete implementations
 
-         // compare VjObs_i commandArray with its child's value
-         virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ) = 0;
+   ///compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ) = 0;
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand() = 0;
+   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand() = 0;
 
-      protected:
+   ///Accessor to set the VECommand to be used in any class within Xplorer
+   ///\param command holds the current command to be executed
+   void SetVECommand( VE_XML::VECommand* command );
+protected:
 
-         // cfdApp side variables declared in VjObs_i.h
-         VE_Xplorer::cfdCommandArray * _cfdCommandArray;
+   ///<cfdApp side variables declared in VjObs_i.h
+   VE_Xplorer::cfdCommandArray* _cfdCommandArray;
 
-      private:
-   };
+   ///<cfdApp side variables declared in VjObs_i.h
+   VE_XML::VECommand* veCommand;
+
+private:
+};
 }
 #endif

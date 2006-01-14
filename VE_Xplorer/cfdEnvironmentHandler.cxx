@@ -47,14 +47,12 @@
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/cfdDisplaySettings.h"
 
 #ifdef _OSG
 #include "VE_Xplorer/cfdObjectHandler.h"
 #endif
 
-#include <jccl/RTRC/ConfigManager.h>
-#include <jccl/Config/ConfigElement.h>
-#include <vpr/System.h>
 #include <fstream>
 #include <cstdlib>
 
@@ -75,7 +73,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _commandArray  = 0;
    _readParam     = 0;
    arrow          = 0;
-
+   displaySettings = 0;
    for ( unsigned int i = 0; i < 3; i++ )
    {
       worldScale[ i ] = 1.0f;
@@ -100,6 +98,7 @@ void cfdEnvironmentHandler::Initialize( std::string param )
    _param = param;
    vprDEBUG(vesDBG,1) << "|\tcfdApp::init" << std::endl << vprDEBUG_FLUSH;
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
+   displaySettings = new cfdDisplaySettings();
    this->nav = new cfdNavigate();
    _readParam = new cfdReadParam();
    this->arrow = cfdModelHandler::instance()->GetArrow();
@@ -156,26 +155,43 @@ void cfdEnvironmentHandler::CleanUp( void )
         << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
       delete this->_teacher;
    }
+
+   delete displaySettings;
 }
 /////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
 }
-
+/////////////////////////////////////////////////////////////////////
 cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
 {
    return _soundHandler;
 }
-
+/////////////////////////////////////////////////////////////////////
 cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
 {
    return _teacher;
 }
-
+/////////////////////////////////////////////////////////////////////
 cfdQuatCamHandler* cfdEnvironmentHandler::GetQuatCamHandler( void )
 {
    return _camHandler;
+}
+/////////////////////////////////////////////////////////////////////
+cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
+{
+   return displaySettings;
+}
+/////////////////////////////////////////////////////////////////////
+cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
+{
+   return this->nav;
+}
+/////////////////////////////////////////////////////////////////////
+cfdCursor* cfdEnvironmentHandler::GetCursor( void )
+{
+   return this->cursor;
 }
 ////////////////////////////////////////
 void cfdEnvironmentHandler::InitScene( void )
@@ -263,42 +279,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
       {
          this->objectHandler->DeactivateGeometryPicking();
       }
-      /*
-      jccl::Configuration* oldCfg = jccl::ConfigManager::instance()->getActiveConfig();
-      std::vector< jccl::ConfigElementPtr > elements;
-      oldCfg->getByType( "display_window", elements );
-      //std::cout << " node 1" << std::endl;
-      //elements.at(0)->getNode()->save( std::cout );
-      std::vector< jccl::Configuration* > configurations;
-
-      for ( size_t i = 0; i < elements.size(); ++i )
-      {
-         {
-            jccl::Configuration* tempCfg = new jccl::Configuration();
-            cppdom::NodePtr nodePtr;
-            tempCfg->createConfigurationNode( nodePtr );
-            cppdom::NodePtr displayNode = elements.at(i)->getNode();
-            nodePtr->getChild( "elements" )->addChild( displayNode );
-            cppdom::NodePtr elementsNode = nodePtr->getChild( "elements" );
-            std::cout << " reconfig " << tempCfg->loadFromElementNode( elementsNode ) << std::endl;
-            jccl::ConfigManager::instance()->addConfigurationRemovals( tempCfg );
-            delete tempCfg;
-         }
-
-         elements.at(i)->setProperty(  "size", 1, 512 );
-         
-         {
-            configurations.push_back( new jccl::Configuration() );
-            cppdom::NodePtr nodePtr;
-            configurations.back()->createConfigurationNode( nodePtr );
-            cppdom::NodePtr displayNode = elements.at(i)->getNode();
-            nodePtr->getChild( "elements" )->addChild( displayNode );
-            cppdom::NodePtr elementsNode = nodePtr->getChild( "elements" );
-            std::cout << " reconfig " << tempCfg->loadFromElementNode( elementsNode ) << std::endl;
-            jccl::ConfigManager::instance()->addConfigurationAdditions( configurations.back() );
-         }
-      }
-      */
    }
 #endif
 #endif
@@ -323,6 +303,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    _camHandler->CheckCommandId( _commandArray );
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
+   displaySettings->CheckCommandId( _commandArray );
    _camHandler->PreFrameUpdate();   
 }
 
@@ -363,14 +344,4 @@ void cfdEnvironmentHandler::CreateObjects( void )
          _readParam->ContinueRead( input, id );
       }
    }
-}
-
-cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
-{
-   return this->nav;
-}
-
-cfdCursor* cfdEnvironmentHandler::GetCursor( void )
-{
-   return this->cursor;
 }

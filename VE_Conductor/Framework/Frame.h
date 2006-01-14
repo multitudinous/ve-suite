@@ -51,33 +51,37 @@ const wxString LOCATION_Y = _T("LocationY");
 const wxString LOCATION_W = _T("LocationW");
 const wxString LOCATION_H = _T("LocationH");
 
-enum {
-  v21ID_CONNECT,
-  v21ID_CONNECT_VE,
-  v21ID_SUBMIT,
-  v21ID_LOAD, 
-  v21ID_DISCONNECT,
-  v21ID_DISCONNECT_VE, 
-  v21ID_UNDO, 
-  v21ID_REDO, 
-  v21ID_ZOOMIN, 
-  v21ID_ZOOMOUT,
-  v21ID_START_CALC, 
-  v21ID_STOP_CALC,
-  v21ID_PAUSE_CALC,
-  v21ID_RESUME_CALC, 
-  v21ID_VIEW_RESULT,
-  v21ID_GLOBAL_PARAM,
-  v21ID_BASE,
-  v21ID_SOUR,
-  v21ID_REI_BASE,
-  v21ID_REI_SOUR,
-  v21ID_SWEET,
-  v21ID_CO_DISPOSAL,
-  MYLOG,
-  v21ID_HELP,
+enum 
+{
+   v21ID_CONNECT,
+   v21ID_CONNECT_VE,
+   v21ID_SUBMIT,
+   v21ID_LOAD, 
+   v21ID_DISCONNECT,
+   v21ID_DISCONNECT_VE, 
+   v21ID_UNDO, 
+   v21ID_REDO, 
+   v21ID_ZOOMIN, 
+   v21ID_ZOOMOUT,
+   v21ID_START_CALC, 
+   v21ID_STOP_CALC,
+   v21ID_PAUSE_CALC,
+   v21ID_RESUME_CALC, 
+   v21ID_VIEW_RESULT,
+   v21ID_GLOBAL_PARAM,
+   v21ID_BASE,
+   v21ID_SOUR,
+   v21ID_REI_BASE,
+   v21ID_REI_SOUR,
+   v21ID_SWEET,
+   v21ID_CO_DISPOSAL,
+   MYLOG,
+   v21ID_HELP,
    XPLORER_NAVIGATION,
-   XPLORER_VIEWPOINTS
+   XPLORER_VIEWPOINTS,
+   JUGGLER_STEREO,
+   JUGGLER_MONO, 
+   JUGGLER_SETTINGS
 };
 
 class OrbThread;
@@ -129,6 +133,7 @@ public:
   wxMenu *edit_menu;
   wxMenu *help_menu;
    wxMenu* xplorerMenu;
+   wxMenu* xplorerJugglerMenu;
 
   //wxMenu *config_menu;
   
@@ -183,6 +188,8 @@ public:
    // These are the callbacks for the pull down menu
    void LaunchNavigationPane(wxCommandEvent& event);
    void LaunchViewpointsPane(wxCommandEvent& event);
+
+   void JugglerSettings( wxCommandEvent& event );
 
   bool init_orb_naming();
   void CreateVETab();

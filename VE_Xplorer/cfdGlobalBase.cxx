@@ -31,16 +31,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/cfdGlobalBase.h"
+#include "VE_Open/VE_XML/VECommand.h"
 
 #include <iostream>
 
 using namespace VE_Xplorer;
+using namespace VE_XML;
 
 cfdGlobalBase::cfdGlobalBase()
 { 
+   veCommand = 0;
    //std::cout << "cfdGlobalBase constructor" << std::endl;
 }
 
-cfdGlobalBase::~cfdGlobalBase ()
+cfdGlobalBase::~cfdGlobalBase()
 {
+}
+void cfdGlobalBase::SetVECommand( VE_XML::VECommand* command )
+{
+   veCommand = command;
 }
