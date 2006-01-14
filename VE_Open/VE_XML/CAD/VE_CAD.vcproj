@@ -12,7 +12,7 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
+			Name="dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory=".\VE_CAD\$(ConfigurationName)"
 			ConfigurationType="2"
@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib VE_XML_d.lib"
+				AdditionalDependencies="xerces-c_2d.lib"
 				OutputFile="$(OutDir)/VE_CAD_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
@@ -178,7 +178,7 @@
 			<File
 				RelativePath=".\vecad.xsd">
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="dbg|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCXMLDataGeneratorTool"/>

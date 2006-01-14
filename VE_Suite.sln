@@ -199,6 +199,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_XML", "VE_Open\VE_XML\VE
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_CAD", "VE_Open\VE_XML\CAD\VE_CAD.vcproj", "{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA1} = {E8FE9A1C-3985-407A-9648-FF2C2D025EA1}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Builder_Tools = Builder_Tools
@@ -612,6 +617,20 @@ Global
 		{E8FE9A1C-3985-407A-9648-FF2C2D025EA1}.tao_osg_vep_dbg.Build.0 = dbg|Win32
 		{E8FE9A1C-3985-407A-9648-FF2C2D025EA1}.tao_pf_dbg.ActiveCfg = dbg|Win32
 		{E8FE9A1C-3985-407A-9648-FF2C2D025EA1}.tao_pf_dbg.Build.0 = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.Builder_Tools.ActiveCfg = Release|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.Builder_Tools.Build.0 = Release|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.Debug.ActiveCfg = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.Debug.Build.0 = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.Release.ActiveCfg = Release|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.Release.Build.0 = Release|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.tao_osg_dbg.ActiveCfg = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.tao_osg_dbg.Build.0 = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.tao_osg_vep_cluster_dbg.ActiveCfg = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.tao_osg_vep_cluster_dbg.Build.0 = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.tao_osg_vep_dbg.ActiveCfg = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.tao_osg_vep_dbg.Build.0 = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.tao_pf_dbg.ActiveCfg = dbg|Win32
+		{E8FE9A1C-3985-407A-9648-FF2C2D025EA2}.tao_pf_dbg.Build.0 = dbg|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
