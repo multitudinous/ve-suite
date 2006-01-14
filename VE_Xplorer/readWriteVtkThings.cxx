@@ -86,7 +86,7 @@ void VE_Util::printBounds( double bounds[6] )
 vtkDataSet * VE_Util::readVtkThing( std::string vtkFilename, int printFlag )
 {
    cfdVTKFileHandler fileReader;
-   vtkDataSet* temp = fileReader.GetDataSetFromFile(vtkFilename.c_str());
+   vtkDataSet* temp = fileReader.GetDataSetFromFile(vtkFilename);
    if ( printFlag )
    {
       double bounds[6];

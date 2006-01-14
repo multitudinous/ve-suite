@@ -123,7 +123,8 @@ vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
    std::cout<<"Loading: "<<vtkFileName<<std::endl;
    if ( vtkFileName.empty() )
       return 0;
-   SetInputFileName(vtkFileName);
+   //SetInputFileName(vtkFileName);
+   _inFileName = vtkFileName;
 
    if(!_xmlTester){
       _xmlTester = vtkXMLFileReadTester::New();
@@ -224,7 +225,8 @@ void cfdVTKFileHandler::_getXMLUGrid()
    ugReader->SetFileName(_inFileName.c_str());
    ugReader->Update();
    _dataSet = vtkUnstructuredGrid::New();
-   _dataSet->ShallowCopy(ugReader->GetOutput());
+   //_dataSet->ShallowCopy(ugReader->GetOutput());
+   _dataSet->DeepCopy(ugReader->GetOutput());
    ugReader->Delete();
 }
 //////////////////////////////////////
