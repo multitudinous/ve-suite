@@ -52,6 +52,9 @@
 #include "VE_Xplorer/cfdObjectHandler.h"
 #endif
 
+#include <jccl/RTRC/ConfigManager.h>
+#include <jccl/Config/ConfigElement.h>
+#include <vpr/System.h>
 #include <fstream>
 #include <cstdlib>
 
@@ -261,15 +264,40 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
          this->objectHandler->DeactivateGeometryPicking();
       }
       /*
-      std::string stereo( "stereo" );
-      std::string view( "view" );
-      std::string display( "VE-Suite *** www.vesuite.org ***" );
-      jccl::ConfigElementPtr stereElementPtr = jccl::ConfigManager::instance()->getActiveConfig()->get( display );
-      jccl::ConfigManager::instance()->removeActive( display );
-      std::cout << stereElementPtr.setProperty(  stereo, 0, true ) << std::endl;
-      std::cout << stereElementPtr.setProperty(  view, 0, "Left Eye" ) << std::endl;
-      jccl::ConfigManager::instance()->addActive( stereElementPtr );
-      std::cout << jccl::ConfigManager::instance()->attemptReconfiguration() << std::endl;
+      jccl::Configuration* oldCfg = jccl::ConfigManager::instance()->getActiveConfig();
+      std::vector< jccl::ConfigElementPtr > elements;
+      oldCfg->getByType( "display_window", elements );
+      //std::cout << " node 1" << std::endl;
+      //elements.at(0)->getNode()->save( std::cout );
+      std::vector< jccl::Configuration* > configurations;
+
+      for ( size_t i = 0; i < elements.size(); ++i )
+      {
+         {
+            jccl::Configuration* tempCfg = new jccl::Configuration();
+            cppdom::NodePtr nodePtr;
+            tempCfg->createConfigurationNode( nodePtr );
+            cppdom::NodePtr displayNode = elements.at(i)->getNode();
+            nodePtr->getChild( "elements" )->addChild( displayNode );
+            cppdom::NodePtr elementsNode = nodePtr->getChild( "elements" );
+            std::cout << " reconfig " << tempCfg->loadFromElementNode( elementsNode ) << std::endl;
+            jccl::ConfigManager::instance()->addConfigurationRemovals( tempCfg );
+            delete tempCfg;
+         }
+
+         elements.at(i)->setProperty(  "size", 1, 512 );
+         
+         {
+            configurations.push_back( new jccl::Configuration() );
+            cppdom::NodePtr nodePtr;
+            configurations.back()->createConfigurationNode( nodePtr );
+            cppdom::NodePtr displayNode = elements.at(i)->getNode();
+            nodePtr->getChild( "elements" )->addChild( displayNode );
+            cppdom::NodePtr elementsNode = nodePtr->getChild( "elements" );
+            std::cout << " reconfig " << tempCfg->loadFromElementNode( elementsNode ) << std::endl;
+            jccl::ConfigManager::instance()->addConfigurationAdditions( configurations.back() );
+         }
+      }
       */
    }
 #endif
