@@ -39,7 +39,6 @@
  * Class to represent a part file (the actual CAD geometry)
  */
 #include <xercesc/dom/DOM.hpp>
-#include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/VE_XML/CAD/CADNode.h"
 #include <string>
 

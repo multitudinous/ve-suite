@@ -32,7 +32,6 @@
 #ifndef _CAD_CLONE_H_
 #define _CAD_CLONE_H_
 #include <xercesc/dom/DOM.hpp>
-#include "VE_Installer/include/VEConfig.h"
 #include <VE_Open/VE_XML/CAD/CADNode.h>
 #include <string>
 /*!\file CADClone.h

@@ -37,7 +37,7 @@ XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_XML;
 /////////////////////////////////////////////////////////////////////////////
-VEXMLObject::VEXMLObject(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc)
+VEXMLObject::VEXMLObject( DOMDocument* rootDoc)
 {
    _veElement = 0;
    _needsUpdate = false;
@@ -69,7 +69,7 @@ VEXMLObject::~VEXMLObject()
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void VEXMLObject::SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner)
+void VEXMLObject::SetOwnerDocument( DOMDocument* owner)
 {
    _rootDocument = owner;
 }

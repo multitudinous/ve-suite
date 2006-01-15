@@ -31,8 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CAD_MATERIAL_H
 #define CAD_MATERIAL_H
-
-#include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/VE_XML/VEXMLObject.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>

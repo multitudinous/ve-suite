@@ -33,7 +33,6 @@
 #define _CAD_NODE_H_
 
 #include "VE_Open/VE_XML/VEXMLObject.h"
-#include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 
@@ -64,7 +63,7 @@ public:
    ///Constructor
    ///\param rootDocument The xerces document for this node.
    ///\param name The name of this node.
-   CADNode(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name);
+   CADNode( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name);
    virtual ~CADNode();
 
    

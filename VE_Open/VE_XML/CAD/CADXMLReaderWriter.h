@@ -40,7 +40,6 @@
  * Class to read in a CAD XML file.
  */
 #include "VE_Open/VE_XML/XMLReaderWriter.h"
-#include "VE_Installer/include/VEConfig.h"
 namespace VE_CAD
 {
    class CADNode;
@@ -67,7 +66,7 @@ protected:
    ///Internal function to populate the appropriate structures from the file
    ///read in.
    ///\param rootDocument The document representing the input XML structure.
-   virtual void _populateStructureFromDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument);
+   virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument);
    VE_CAD::CADNode* _rootNode;///< The rootNode of the XML Data read in.
 };
 }

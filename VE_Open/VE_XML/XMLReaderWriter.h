@@ -43,12 +43,15 @@
  * the hierarchy of a CAD structure.
  */
 
-namespace VE_XML{
+namespace VE_XML
+{
    class DOMDocumentManager;
 }
+
+#include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
-#include "VE_Installer/include/VEConfig.h"
+
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -98,7 +101,7 @@ protected:
    ///Internal function to populate the appropriate structures from the file
    ///read in.
    ///\param rootDocument The document representing the input XML structure.
-   virtual void _populateStructureFromDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)=0;
+   virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)=0;
 
    VE_XML::DOMDocumentManager* _domDocumentManager;///<The XML document manager.
 };

@@ -67,7 +67,7 @@ public:
    VEXMLObject& operator= ( const VEXMLObject& );
    
    ///Set the DOMDocument this object belongs to.
-   void SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner);
+   void SetOwnerDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner);
 
    ///Populate the VEXMLObject data from an XML element.
    virtual void SetObjectFromXMLData( DOMNode* xmlInput )=0;
