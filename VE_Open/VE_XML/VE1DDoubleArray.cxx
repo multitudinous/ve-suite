@@ -33,7 +33,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "VE_Open/VE_XML/VE1DDoublArray.h"
+#include "VE_Open/VE_XML/VE1DDoubleArray.h"
 using namespace VE_XML;
 ////////////////////////////////////////////////////
 //Constructor                                     //
@@ -45,15 +45,13 @@ VE1DDoublArray::VE1DDoublArray(DOMDocument* rootDoc,unsigned int nElements)
    // These should match the schema for min and max occurances 
    // of the float array
    minIndex = 2;
-   maxIndex = 1000000;
 }
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
 VE1DDoublArray::~VE1DDoublArray()
 {
-   if(_array.size())
-      _array.clear();
+   ;
 }
 ///////////////////////////////////////////
 VE1DDoublArray::VE1DDoublArray( const VE1DDoublArray& input )
@@ -62,7 +60,6 @@ VE1DDoublArray::VE1DDoublArray( const VE1DDoublArray& input )
    _nElements = input._nElements;
    _array = input._array;
    minIndex = input.minIndex;
-   maxIndex = input.maxIndex;
 }
 /////////////////////////////////////////////////////
 VE1DDoublArray& VE1DDoublArray::operator=( const VE1DDoublArray& input)
@@ -74,7 +71,6 @@ VE1DDoublArray& VE1DDoublArray::operator=( const VE1DDoublArray& input)
       _nElements = input._nElements;
       _array = input._array;
       minIndex = input.minIndex;
-      maxIndex = input.maxIndex;
    }
    return *this;
 }
@@ -156,7 +152,7 @@ void VE1DDoublArray::SetObjectFromXMLData(DOMNode* xmlInput)
       DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("data"));
       XMLSize_t numNodes = nodeList->getLength();
       _nElements = numNodes;
-      if ( ( minIndex > numNodes ) && ( maxIndex < numNodes ) )
+      if ( ( minIndex > numNodes ) )
       {
          std::cerr << " ERROR : VE1DDoublArray::SetObjectFromXMLData :" << 
                      " This node has too few or too many children." << std::endl;

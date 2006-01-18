@@ -89,7 +89,6 @@ protected:
 
 private:
    XMLSize_t minIndex;///<Mininum size of the array.
-   XMLSize_t maxIndex;///<Maximum size of the array.
 };
 }
 #endif// _XML_VE_1DDOUBLE_ARRAY_H_

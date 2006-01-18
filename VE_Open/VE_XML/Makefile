@@ -37,6 +37,8 @@ SRCS=\
    VECommand.cxx\
    VEDataValuePair.cxx\
    VEFloatArray.cxx\
+   VE1DDoubleArray.cxx\
+   VE2DDoubleArray.cxx\
    VEParameterBlock.cxx\
    VEStateInfo.cxx\
    VETransform.cxx\

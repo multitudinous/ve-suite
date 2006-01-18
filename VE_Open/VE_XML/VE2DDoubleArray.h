@@ -23,19 +23,19 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: VE1DDoublArray.h,v $
+ * File:          $RCSfile: VE2DDoublArray.h,v $
  * Date modified: $Date: 2006-01-14 18:41:24 -0600 (Sat, 14 Jan 2006) $
  * Version:       $Rev: 3503 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _XML_VE_1DDOUBLE_ARRAY_H_
-#define _XML_VE_1DDOUBLE_ARRAY_H_
-/*!\file VE1DDoublArray.h
+#ifndef _XML_VE_2DDOUBLE_ARRAY_H_
+#define _XML_VE_2DDOUBLE_ARRAY_H_
+/*!\file VE2DDoublArray.h
   Double Array API
   */
-/*!\class VE_XML::VE1DDoublArray
+/*!\class VE_XML::VE2DDoublArray
  *This class basically manages a vector of floats. 
  */
 #include <vector>
@@ -47,33 +47,34 @@
 
 namespace VE_XML
 {
-class VE_XML_EXPORTS VE1DDoublArray : public VEXMLObject
+class VE_XML_EXPORTS VE2DDoublArray : public VEXMLObject
 {
 public:
    ///Constructor
    ///\param rootDoc The owning DOMDocument.
    ///\param nElements The length of the float array.
-   VE1DDoublArray(DOMDocument* rootDoc,unsigned int nElements=3);
+   VE2DDoublArray(DOMDocument* rootDoc,unsigned int nElements=3);
    ///Destructor
-   virtual ~VE1DDoublArray();
+   virtual ~VE2DDoublArray();
    ///Copy Constructor
-   VE1DDoublArray( const VE1DDoublArray& );
+   VE2DDoublArray( const VE2DDoublArray& );
    ///equal operator
-   VE1DDoublArray& operator= ( const VE1DDoublArray& );
+   VE2DDoublArray& operator= ( const VE2DDoublArray& );
 
    ///Add a new element to the end of this array
    ///\param newValue The new value to add.
-   void AddElementToArray( double newValue);
+   void AddElementToArray( std::vector< double > newValue);
    ///Set this array from an input vector
    ///\param newArrayValues The new values to set to this array.
-   void SetArray( std::vector<double> newArrayValues);
+   void SetArray( std::vector< std::vector< double > > newArrayValues);
 
    ///Get a specific element
-   ///\param index The index of the element to return
-   double GetElement( unsigned int index);
+   ///\param i The i'th index of the element to return
+   ///\param j The j'th index of the element to return
+   double GetElement(unsigned int i, unsigned int j);
 
    ///Get the internal array.
-   std::vector<double> GetArray( void );
+   std::vector< std::vector< double > > GetArray( void );
    
    ///Populate the VEXMLObject data from an XML element.
    ///\param inputXML The input data.
@@ -85,11 +86,12 @@ protected:
    ///\param tagName The tag name of this element.
    virtual void _updateVEElement( std::string tagName);
    unsigned int _nElements;///<Length of this float array.
-   std::vector<double> _array;///<Raw data.
+   //std::vector<double> _array;///<Raw data.
+   std::vector< std::vector< double > > doubleArray;
 
 private:
    XMLSize_t minIndex;///<Mininum size of the array.
-   XMLSize_t maxIndex;///<Maximum size of the array.
+   //XMLSize_t maxIndex;///<Maximum size of the array.
 };
 }
-#endif// _XML_VE_1DDOUBLE_ARRAY_H_
+#endif// _XML_VE_2DDOUBLE_ARRAY_H_

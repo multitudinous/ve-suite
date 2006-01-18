@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: VE1DDoublArray.cxx,v $
+ * File:          $RCSfile: VE2DDoublArray.cxx,v $
  * Date modified: $Date: 2006-01-10 11:21:30 -0600 (Tue, 10 Jan 2006) $
  * Version:       $Rev: 3470 $
  * -----------------------------------------------------------------
@@ -33,85 +33,81 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "VE_Open/VE_XML/VE1DDoublArray.h"
+#include "VE_Open/VE_XML/VE2DDoubleArray.h"
 using namespace VE_XML;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-VE1DDoublArray::VE1DDoublArray(DOMDocument* rootDoc,unsigned int nElements)
+VE2DDoublArray::VE2DDoublArray(DOMDocument* rootDoc,unsigned int nElements)
 :VEXMLObject(rootDoc)
 {
    _nElements  = nElements;
    // These should match the schema for min and max occurances 
    // of the float array
    minIndex = 2;
-   maxIndex = 1000000;
 }
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
-VE1DDoublArray::~VE1DDoublArray()
+VE2DDoublArray::~VE2DDoublArray()
 {
-   if(_array.size())
-      _array.clear();
+   ;   
 }
 ///////////////////////////////////////////
-VE1DDoublArray::VE1DDoublArray( const VE1DDoublArray& input )
+VE2DDoublArray::VE2DDoublArray( const VE2DDoublArray& input )
 :VEXMLObject(input)
 {
-   _nElements = input._nElements;
-   _array = input._array;
+   _nElements  = input._nElements;
+   doubleArray = input.doubleArray;
    minIndex = input.minIndex;
-   maxIndex = input.maxIndex;
 }
 /////////////////////////////////////////////////////
-VE1DDoublArray& VE1DDoublArray::operator=( const VE1DDoublArray& input)
+VE2DDoublArray& VE2DDoublArray::operator=( const VE2DDoublArray& input)
 {
    if ( this != &input )
    {
       //biv-- make sure to call the parent =
       VEXMLObject::operator =(input);
       _nElements = input._nElements;
-      _array = input._array;
+      doubleArray = input.doubleArray;
       minIndex = input.minIndex;
-      maxIndex = input.maxIndex;
    }
    return *this;
 }
 /////////////////////////////////////////////////
-void VE1DDoublArray::AddElementToArray(double value)
+void VE2DDoublArray::AddElementToArray( std::vector< double > value )
 {
-   _array.push_back(value);
-   _nElements = static_cast< unsigned int >( _array.size() );
+   doubleArray.push_back(value);
+   _nElements = static_cast< unsigned int >( doubleArray.size() );
 }
 /////////////////////////////////////////////////////////////////
-void VE1DDoublArray::SetArray( std::vector< double > input )
+void VE2DDoublArray::SetArray( std::vector< std::vector< double > > input )
 {
-   _array.clear();
-   _array = input;
-   _nElements = static_cast< unsigned int >( _array.size() );;
+   doubleArray.clear();
+   doubleArray = input;
+   _nElements = static_cast< unsigned int >( doubleArray.size() );;
 }
 //////////////////////////////////////////////////
-double VE1DDoublArray::GetElement(unsigned int index)
+double VE2DDoublArray::GetElement(unsigned int i, unsigned int j)
 {
    try
    {
-      return _array.at(index);
+      return doubleArray.at( i ).at( j );
    }
    catch (...)
    {
-      std::cout<<"ERROR!!!"<<std::endl;
-      std::cout<<"Invalid index: "<<index<<" in VE1DDoublArray::GetElement!!!"<<std::endl;
+      std::cout<< " ERROR!!! "<< std::endl
+               << " Invalid index: "<< i << "," << j <<" in VE2DDoublArray::GetElement!!!"<<std::endl;
       return 0;
    }
 }
 ///////////////////////////////////////////////////
-std::vector< double > VE1DDoublArray::GetArray( void )
+std::vector< std::vector< double > > VE2DDoublArray::GetArray( void )
 {
-   return _array;
+   return doubleArray;
 }
 ////////////////////////////////////
-void VE1DDoublArray::_updateVEElement( std::string input )
+void VE2DDoublArray::_updateVEElement( std::string input )
 {
    if( !_veElement )
    {
@@ -121,20 +117,24 @@ void VE1DDoublArray::_updateVEElement( std::string input )
    //Be sure to set the number of children (_nChildren) 
    //either here or in the updating subElements code
    //this will be based on the size of the double array
-   _nChildren = static_cast< unsigned int >( _array.size() );
+   _nChildren = static_cast< unsigned int >( doubleArray.size() );
 
    //Add code here to update the specific sub elements
-   for ( unsigned int i = 0; i < _array.size(); ++i )
+   // This acutally needs to be an array of 1d arrays
+   for ( unsigned int i = 0; i < doubleArray.size(); ++i )
    {
-      // name comes from verg.xsd
-      DOMElement* valueTag  = _rootDocument->createElement( xercesString("data") );
-      _veElement->appendChild( valueTag );      
-      DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
-      valueTag->appendChild( valueNum );
+      for ( unsigned int j = 0; j < doubleArray.size(); ++j )
+      {
+         // name comes from verg.xsd
+         DOMElement* valueTag  = _rootDocument->createElement( xercesString("data") );
+         _veElement->appendChild( valueTag );      
+         DOMText* valueNum = _rootDocument->createTextNode( xercesString( doubleArray.at( i ).at( j ) ) );
+         valueTag->appendChild( valueNum );
+      }
    }
 }
 ////////////////////////////////////////////////////////////
-void VE1DDoublArray::SetObjectFromXMLData(DOMNode* xmlInput)
+void VE2DDoublArray::SetObjectFromXMLData(DOMNode* xmlInput)
 {
    //TODO:fill in the values for the double array
    //this is currently maxed out at 4 in the schema but
@@ -149,16 +149,16 @@ void VE1DDoublArray::SetObjectFromXMLData(DOMNode* xmlInput)
    
    if(currentElement)
    {   
-      _array.clear();
+      doubleArray.clear();
       
       // do we need to delete the old one or does xerces handle this???
       //_nElements = xmlInput->getChildNodes()->getLength();
       DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("data"));
       XMLSize_t numNodes = nodeList->getLength();
       _nElements = numNodes;
-      if ( ( minIndex > numNodes ) && ( maxIndex < numNodes ) )
+      if ( ( minIndex > numNodes ) )
       {
-         std::cerr << " ERROR : VE1DDoublArray::SetObjectFromXMLData :" << 
+         std::cerr << " ERROR : VE2DDoublArray::SetObjectFromXMLData :" << 
                      " This node has too few or too many children." << std::endl;
       }
    
@@ -166,17 +166,19 @@ void VE1DDoublArray::SetObjectFromXMLData(DOMNode* xmlInput)
       // element may be seprate entities.
       // if that is the case then inside the for loop
       // we just need to get each text node child
+
+      // need to get 1d arrays from 1darray class and construct the raw vectors
       for ( XMLSize_t i = 0; i < numNodes; ++i )
       {
          //We know this about the node so we can cast it...
          DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
          std::string stringVal( XMLString::transcode( temp->getData() ) );
-         _array.push_back( std::atof( stringVal.c_str() ) );
+         //doubleArray.push_back( std::atof( stringVal.c_str() ) );
       }
    }
    else
    {
-      std::cerr << " ERROR : VE1DDoublArray::SetObjectFromXMLData :" << 
+      std::cerr << " ERROR : VE2DDoublArray::SetObjectFromXMLData :" << 
                   " This node has no children which means there is probably a problem." << std::endl;
    }
 }
