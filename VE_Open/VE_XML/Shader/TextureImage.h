@@ -45,7 +45,7 @@
  */
 
 namespace VE_Shader{
-class TextureImage:public VEXMLObject{
+class TextureImage:public VE_XML::VEXMLObject{
 public:
    ///Constructor
    ///\param rootDocument The xerces document for this node.

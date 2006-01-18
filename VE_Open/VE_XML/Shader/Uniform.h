@@ -50,7 +50,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 namespace VE_Shader{
-class VE_SHADER_EXPORTS Uniform : public VEXMLObject{
+class VE_SHADER_EXPORTS Uniform : public VE_XML::VEXMLObject{
 public:
    ///Constructor
    ///\param rootDocument The xerces document for this node.
@@ -112,8 +112,11 @@ protected:
    void _updateSize();
    ///Internally update the data for the name of the uniform.
    void _updateUniformName();
+   ///Internally update the data type of the uniform.
    void _updateUniformType();
+   ///Internally update the values of the uniform.
    void _updateValues();
+   ///Internally update the data for the texture unit.
    void _updateTextureUnit();
 
    std::string _type;///<The dataType.
