@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/VE_XML/Shader/TextureImage.h"
 
-using namespace VE_Shaders;
+using namespace VE_Shader;
 ////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////

@@ -136,7 +136,7 @@ std::vector<float> Uniform::GetValues()
    return _values;
 }
 //////////////////////////////////////////////////
-void Uniform::_updateVEElements(std::string input)
+void Uniform::_updateVEElement(std::string input)
 {
    if( !_veElement )
    {

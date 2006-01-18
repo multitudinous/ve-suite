@@ -44,8 +44,7 @@
  * Class that stores an image in texture data.
  */
 
-
-namespace VE_Shaders{
+namespace VE_Shader{
 class TextureImage:public VEXMLObject{
 public:
    ///Constructor

@@ -49,7 +49,7 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-namespace VE_Shaders{
+namespace VE_Shader{
 class VE_SHADER_EXPORTS Uniform : public VEXMLObject{
 public:
    ///Constructor
