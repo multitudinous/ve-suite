@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
-   <xs:complexType name="Uniform">
-      <xs:sequence>
-         <xs:element name="type" type="xs:string" />
-         <xs:element name="size" type="xs:unsignedInt" />
-         <xs:element name="name" type="xs:string" />
-         <xs:element name="textureUnit" type="xs:unsignedInt" minOccurs="0" maxOccurs="unbounded" />
-         <xs:element name="value" type="xs:float" minOccurs="0" maxOccurs="4" />
-      </xs:sequence>
-   </xs:complexType>
-   <xs:complexType name="Shader">
-      <xs:sequence>
-         <xs:element name="type" type="xs:string" />
-         <xs:element name="uniform" type="Uniform" maxOccurs="unbounded" minOccurs="0" />
-         <xs:element name="shaderCode" type="xs:string" />
-         <xs:element name="texture" type="TextureImage" minOccurs="0" maxOccurs="unbounded" />
-      </xs:sequence>
-   </xs:complexType>
-   <xs:complexType name="Program">
-      <xs:sequence>
-         <xs:element name="name" type="xs:string" />
-         <xs:element name="vertexShader" type="Shader" maxOccurs="1" minOccurs="0" />
-         <xs:element name="fragmentShader" type="Shader" />
-      </xs:sequence>
-   </xs:complexType>
-   <xs:complexType name="TextureImage">
-      <xs:sequence>
-         <xs:element name="imageFile" type="xs:string" />
-      </xs:sequence>
-      <xs:attribute name="textureUnit" type="xs:unsignedInt" />
-      <xs:attribute name="dimension" type="xs:unsignedInt" />
-   </xs:complexType>
+	<xs:complexType name="Uniform">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" />
+			<xs:element name="size" type="xs:unsignedInt" />
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="textureUnit" type="xs:unsignedInt" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="value" type="xs:float" minOccurs="0" maxOccurs="4" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Shader">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" />
+			<xs:element name="uniform" type="Uniform" maxOccurs="unbounded" minOccurs="0" />
+			<xs:element name="shaderCode" type="xs:string" />
+			<xs:element name="texture" type="TextureImage" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Program">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="vertexShader" type="Shader" maxOccurs="1" minOccurs="0" />
+			<xs:element name="fragmentShader" type="Shader" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TextureImage">
+		<xs:sequence>
+			<xs:element name="imageFile" type="xs:string" />
+		</xs:sequence>
+		<xs:attribute name="textureUnit" type="xs:unsignedInt" />
+		<xs:attribute name="dimension" type="xs:unsignedInt" />
+	</xs:complexType>
 </xs:schema>
