@@ -96,8 +96,8 @@ protected:
    virtual void _updateVEElement( std::string tagName);
    unsigned int _nElements;///<Length of this float array.
    //std::vector<double> _array;///<Raw data.
-   std::vector< std::vector< double > > doubleArray;
-   std::vector< VE1DDoubleArray* > ve1DDoubleArray;
+   std::vector< std::vector< double > > doubleArray;///<Raw data.
+   std::vector< VE1DDoubleArray* > ve1DDoubleArray;///<Raw data.
 
 private:
    XMLSize_t minIndex;///<Mininum size of the array.
