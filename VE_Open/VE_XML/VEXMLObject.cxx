@@ -37,7 +37,7 @@ XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_XML;
 /////////////////////////////////////////////////////////////////////////////
-VEXMLObject::VEXMLObject( DOMDocument* rootDoc)
+VEXMLObject::VEXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc)
 {
    _veElement = 0;
    _needsUpdate = false;
@@ -69,7 +69,7 @@ VEXMLObject::~VEXMLObject()
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void VEXMLObject::SetOwnerDocument( DOMDocument* owner)
+void VEXMLObject::SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner)
 {
    _rootDocument = owner;
 }
@@ -97,7 +97,7 @@ void VEXMLObject::_clearAllChildrenFromElement()
       }
    }
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
 VE_XML::VEXMLObject::VEStr::VEStr(const char* const toTranscode)
 {
    // Call the private transcoding method
