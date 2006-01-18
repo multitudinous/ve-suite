@@ -80,6 +80,13 @@ protected:
    ///\param input The XML element information
    virtual void _updateVEElement(std::string input);
 
+   ///Internally update the texture unit.
+   void _updateTextureUnit();
+   ///Internally update the image file.
+   void _updateImageFileName();
+   ///Internally update the data dimensions.
+   void _updateDataDimensions();
+
    std::string _imageFile;///<The image file to create texture data from.
    unsigned int _textureUnit;///<This may not be needed but will store a texture unit for use in GL apps.
    unsigned int _dimension;///<The dimension of this texture data.

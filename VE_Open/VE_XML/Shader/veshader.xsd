@@ -27,8 +27,8 @@
 	<xs:complexType name="TextureImage">
 		<xs:sequence>
 			<xs:element name="imageFile" type="xs:string" />
+			<xs:element name="textureUnit" type="xs:unsignedInt" />
+			<xs:element name="dimension" type="xs:unsignedInt" />
 		</xs:sequence>
-		<xs:attribute name="textureUnit" type="xs:unsignedInt" />
-		<xs:attribute name="dimension" type="xs:unsignedInt" />
 	</xs:complexType>
 </xs:schema>
