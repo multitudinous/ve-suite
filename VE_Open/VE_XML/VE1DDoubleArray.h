@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: VE1DDoublArray.h,v $
+ * File:          $RCSfile: VE1DDoubleArray.h,v $
  * Date modified: $Date: 2006-01-14 18:41:24 -0600 (Sat, 14 Jan 2006) $
  * Version:       $Rev: 3503 $
  * -----------------------------------------------------------------
@@ -32,11 +32,11 @@
 
 #ifndef _XML_VE_1DDOUBLE_ARRAY_H_
 #define _XML_VE_1DDOUBLE_ARRAY_H_
-/*!\file VE1DDoublArray.h
+/*!\file VE1DDoubleArray.h
   Double Array API
   */
-/*!\class VE_XML::VE1DDoublArray
- *This class basically manages a vector of floats. 
+/*!\class VE_XML::VE1DDoubleArray
+ *This class basically manages a vector of doubles. 
  */
 #include <vector>
 
@@ -47,19 +47,19 @@
 
 namespace VE_XML
 {
-class VE_XML_EXPORTS VE1DDoublArray : public VEXMLObject
+class VE_XML_EXPORTS VE1DDoubleArray : public VEXMLObject
 {
 public:
    ///Constructor
    ///\param rootDoc The owning DOMDocument.
    ///\param nElements The length of the float array.
-   VE1DDoublArray(DOMDocument* rootDoc,unsigned int nElements=3);
+   VE1DDoubleArray(DOMDocument* rootDoc,unsigned int nElements=3);
    ///Destructor
-   virtual ~VE1DDoublArray();
+   virtual ~VE1DDoubleArray();
    ///Copy Constructor
-   VE1DDoublArray( const VE1DDoublArray& );
+   VE1DDoubleArray( const VE1DDoubleArray& );
    ///equal operator
-   VE1DDoublArray& operator= ( const VE1DDoublArray& );
+   VE1DDoubleArray& operator= ( const VE1DDoubleArray& );
 
    ///Add a new element to the end of this array
    ///\param newValue The new value to add.

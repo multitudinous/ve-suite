@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: VE2DDoublArray.h,v $
+ * File:          $RCSfile: VE2DDoubleArray.h,v $
  * Date modified: $Date: 2006-01-14 18:41:24 -0600 (Sat, 14 Jan 2006) $
  * Version:       $Rev: 3503 $
  * -----------------------------------------------------------------
@@ -32,10 +32,10 @@
 
 #ifndef _XML_VE_2DDOUBLE_ARRAY_H_
 #define _XML_VE_2DDOUBLE_ARRAY_H_
-/*!\file VE2DDoublArray.h
+/*!\file VE2DDoubleArray.h
   Double Array API
   */
-/*!\class VE_XML::VE2DDoublArray
+/*!\class VE_XML::VE2DDoubleArray
  *This class basically manages a vector of floats. 
  */
 #include <vector>
@@ -44,26 +44,35 @@
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
+namespace VE_XML
+{
+   class VE1DDoubleArray;
+}
 
 namespace VE_XML
 {
-class VE_XML_EXPORTS VE2DDoublArray : public VEXMLObject
+class VE_XML_EXPORTS VE2DDoubleArray : public VEXMLObject
 {
 public:
    ///Constructor
    ///\param rootDoc The owning DOMDocument.
    ///\param nElements The length of the float array.
-   VE2DDoublArray(DOMDocument* rootDoc,unsigned int nElements=3);
+   VE2DDoubleArray(DOMDocument* rootDoc,unsigned int nElements=3);
    ///Destructor
-   virtual ~VE2DDoublArray();
+   virtual ~VE2DDoubleArray();
    ///Copy Constructor
-   VE2DDoublArray( const VE2DDoublArray& );
+   VE2DDoubleArray( const VE2DDoubleArray& );
    ///equal operator
-   VE2DDoublArray& operator= ( const VE2DDoublArray& );
+   VE2DDoubleArray& operator= ( const VE2DDoubleArray& );
 
    ///Add a new element to the end of this array
    ///\param newValue The new value to add.
    void AddElementToArray( std::vector< double > newValue);
+
+   ///Add a new element to the end of this array
+   ///\param newValue The new value to add.
+   void AddElementToArray( VE1DDoubleArray* newValue);
+
    ///Set this array from an input vector
    ///\param newArrayValues The new values to set to this array.
    void SetArray( std::vector< std::vector< double > > newArrayValues);
@@ -88,10 +97,10 @@ protected:
    unsigned int _nElements;///<Length of this float array.
    //std::vector<double> _array;///<Raw data.
    std::vector< std::vector< double > > doubleArray;
+   std::vector< VE1DDoubleArray* > ve1DDoubleArray;
 
 private:
    XMLSize_t minIndex;///<Mininum size of the array.
-   //XMLSize_t maxIndex;///<Maximum size of the array.
 };
 }
 #endif// _XML_VE_2DDOUBLE_ARRAY_H_

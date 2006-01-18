@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: VE1DDoublArray.cxx,v $
+ * File:          $RCSfile: VE1DDoubleArray.cxx,v $
  * Date modified: $Date: 2006-01-10 11:21:30 -0600 (Tue, 10 Jan 2006) $
  * Version:       $Rev: 3470 $
  * -----------------------------------------------------------------
@@ -38,7 +38,7 @@ using namespace VE_XML;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-VE1DDoublArray::VE1DDoublArray(DOMDocument* rootDoc,unsigned int nElements)
+VE1DDoubleArray::VE1DDoubleArray(DOMDocument* rootDoc,unsigned int nElements)
 :VEXMLObject(rootDoc)
 {
    _nElements  = nElements;
@@ -49,12 +49,12 @@ VE1DDoublArray::VE1DDoublArray(DOMDocument* rootDoc,unsigned int nElements)
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
-VE1DDoublArray::~VE1DDoublArray()
+VE1DDoubleArray::~VE1DDoubleArray()
 {
    ;
 }
 ///////////////////////////////////////////
-VE1DDoublArray::VE1DDoublArray( const VE1DDoublArray& input )
+VE1DDoubleArray::VE1DDoubleArray( const VE1DDoubleArray& input )
 :VEXMLObject(input)
 {
    _nElements = input._nElements;
@@ -62,7 +62,7 @@ VE1DDoublArray::VE1DDoublArray( const VE1DDoublArray& input )
    minIndex = input.minIndex;
 }
 /////////////////////////////////////////////////////
-VE1DDoublArray& VE1DDoublArray::operator=( const VE1DDoublArray& input)
+VE1DDoubleArray& VE1DDoubleArray::operator=( const VE1DDoubleArray& input)
 {
    if ( this != &input )
    {
@@ -75,20 +75,20 @@ VE1DDoublArray& VE1DDoublArray::operator=( const VE1DDoublArray& input)
    return *this;
 }
 /////////////////////////////////////////////////
-void VE1DDoublArray::AddElementToArray(double value)
+void VE1DDoubleArray::AddElementToArray(double value)
 {
    _array.push_back(value);
    _nElements = static_cast< unsigned int >( _array.size() );
 }
 /////////////////////////////////////////////////////////////////
-void VE1DDoublArray::SetArray( std::vector< double > input )
+void VE1DDoubleArray::SetArray( std::vector< double > input )
 {
    _array.clear();
    _array = input;
    _nElements = static_cast< unsigned int >( _array.size() );;
 }
 //////////////////////////////////////////////////
-double VE1DDoublArray::GetElement(unsigned int index)
+double VE1DDoubleArray::GetElement(unsigned int index)
 {
    try
    {
@@ -97,17 +97,17 @@ double VE1DDoublArray::GetElement(unsigned int index)
    catch (...)
    {
       std::cout<<"ERROR!!!"<<std::endl;
-      std::cout<<"Invalid index: "<<index<<" in VE1DDoublArray::GetElement!!!"<<std::endl;
+      std::cout<<"Invalid index: "<<index<<" in VE1DDoubleArray::GetElement!!!"<<std::endl;
       return 0;
    }
 }
 ///////////////////////////////////////////////////
-std::vector< double > VE1DDoublArray::GetArray( void )
+std::vector< double > VE1DDoubleArray::GetArray( void )
 {
    return _array;
 }
 ////////////////////////////////////
-void VE1DDoublArray::_updateVEElement( std::string input )
+void VE1DDoubleArray::_updateVEElement( std::string input )
 {
    if( !_veElement )
    {
@@ -130,7 +130,7 @@ void VE1DDoublArray::_updateVEElement( std::string input )
    }
 }
 ////////////////////////////////////////////////////////////
-void VE1DDoublArray::SetObjectFromXMLData(DOMNode* xmlInput)
+void VE1DDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
 {
    //TODO:fill in the values for the double array
    //this is currently maxed out at 4 in the schema but
@@ -154,7 +154,7 @@ void VE1DDoublArray::SetObjectFromXMLData(DOMNode* xmlInput)
       _nElements = numNodes;
       if ( ( minIndex > numNodes ) )
       {
-         std::cerr << " ERROR : VE1DDoublArray::SetObjectFromXMLData :" << 
+         std::cerr << " ERROR : VE1DDoubleArray::SetObjectFromXMLData :" << 
                      " This node has too few or too many children." << std::endl;
       }
    
@@ -172,7 +172,7 @@ void VE1DDoublArray::SetObjectFromXMLData(DOMNode* xmlInput)
    }
    else
    {
-      std::cerr << " ERROR : VE1DDoublArray::SetObjectFromXMLData :" << 
+      std::cerr << " ERROR : VE1DDoubleArray::SetObjectFromXMLData :" << 
                   " This node has no children which means there is probably a problem." << std::endl;
    }
 }
