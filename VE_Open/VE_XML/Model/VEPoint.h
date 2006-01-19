@@ -53,7 +53,6 @@ class VE_XML_EXPORTS VEPoint : public VEXMLObject
 public:
    ///Constructor
    ///\param rootDoc The owning DOMDocument.
-   ///\param nElements The length of the float array.
    VEPoint( DOMDocument* rootDoc );
    ///Destructor
    virtual ~VEPoint();

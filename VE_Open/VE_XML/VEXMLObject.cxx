@@ -171,7 +171,7 @@ unsigned int VEXMLObject::ExtractIntegerDataNumberFromSimpleElement(DOMElement* 
 {
    DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
    std::string tmp = XMLString::transcode( rawText->getData() );
-   return static_cast<int>(atoi( tmp.c_str() ));
+   return atoi(tmp.c_str());
 }
 ///////////////////////////////////////////
 DOMDocument* VEXMLObject::GetRootDocument()
