@@ -102,6 +102,13 @@ void VE2DDoubleArray::AddElementToArray( std::vector< double > value )
    ve1DDoubleArray.back()->SetArray( doubleArray.back() );
    _nElements = static_cast< unsigned int >( doubleArray.size() );
 }
+/////////////////////////////////////////////////
+void VE2DDoubleArray::AddElementToArray( VE1DDoubleArray* value )
+{
+   ve1DDoubleArray.push_back( value );
+   doubleArray.push_back( ve1DDoubleArray.back()->GetArray() );
+   _nElements = static_cast< unsigned int >( doubleArray.size() );
+}
 /////////////////////////////////////////////////////////////////
 void VE2DDoubleArray::SetArray( std::vector< std::vector< double > > input )
 {

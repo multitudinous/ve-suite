@@ -71,7 +71,7 @@ public:
 
    ///Add a new element to the end of this array
    ///\param newValue The new value to add.
-   void AddElementToArray( VE2DDoubleArray* newValue);
+   void AddElementToArray( VE2DDoubleArray* newValue );
 
    ///Set this array from an input vector
    ///\param newArrayValues The new values to set to this array.

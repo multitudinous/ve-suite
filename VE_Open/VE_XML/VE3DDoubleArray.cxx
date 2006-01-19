@@ -102,6 +102,13 @@ void VE3DDoubleArray::AddElementToArray( std::vector< std::vector< double > > va
    ve2DDoubleArray.back()->SetArray( tripleArray.back() );
    _nElements = static_cast< unsigned int >( tripleArray.size() );
 }
+/////////////////////////////////////////////////
+void VE3DDoubleArray::AddElementToArray( VE2DDoubleArray* value )
+{
+   ve2DDoubleArray.push_back( value );
+   tripleArray.push_back( ve2DDoubleArray.back()->GetArray() );
+   _nElements = static_cast< unsigned int >( tripleArray.size() );
+}
 /////////////////////////////////////////////////////////////////
 void VE3DDoubleArray::SetArray( std::vector< std::vector< std::vector< double > > > input )
 {
