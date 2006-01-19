@@ -74,6 +74,10 @@ public:
 
    ///Get the name and location of image file that this data represents.
    std::string GetImageFile();
+   
+   ///Set the object from input XML data
+   ///\param xmlInput The input xml data.
+   void SetObjectFromXMLData(DOMNode* xmlInput);
 protected:
    ///Internally update the XML data for this element.
    ///\param input The XML element information
@@ -84,7 +88,7 @@ protected:
    ///Internally update the image file.
    void _updateImageFileName();
    ///Internally update the data dimensions.
-   void _updateDataDimensions();
+   void _updateDataDimension();
 
    std::string _imageFile;///<The image file to create texture data from.
    unsigned int _textureUnit;///<This may not be needed but will store a texture unit for use in GL apps.

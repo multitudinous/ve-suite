@@ -43,7 +43,7 @@
  * Class representing uniform variables for use in Shaders
  */
 
-/*!\namespace VE_SHADERS
+/*!\namespace VE_Shader
  * Contains classes that describe GLSL shaders and programs.
  */
 

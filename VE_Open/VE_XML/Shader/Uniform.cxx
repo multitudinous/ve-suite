@@ -32,7 +32,7 @@
 #include "VE_Open/VE_XML/Shader/Uniform.h"
 XERCES_CPP_NAMESPACE_USE
 
-using namespace VE_SHADERS;
+using namespace VE_Shader;
 //////////////////////////////////////////////////////////////////////////
 ///Constructor                                                          //
 //////////////////////////////////////////////////////////////////////////
@@ -255,4 +255,3 @@ void Uniform::SetObjectFromXMLData(DOMNode* xmlNode)
       }
    }      
 }
-#endif //_VE_UNIFORM_H_
