@@ -98,7 +98,7 @@ void VEXMLObject::_clearAllChildrenFromElement()
    }
 }
 ////////////////////////////////////////////////////////////////
-VE_XML::VEXMLObject::VEStr::VEStr(const char* const toTranscode)
+VEXMLObject::VEStr::VEStr(const char* const toTranscode)
 {
    // Call the private transcoding method
    fUnicodeForm = XMLString::transcode(toTranscode);
@@ -156,6 +156,13 @@ double VEXMLObject::ExtractDataNumberFromSimpleElement(DOMElement* element)
    DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
    std::string tmp = XMLString::transcode( rawText->getData() );
    return atof( tmp.c_str() );
+}
+//////////////////////////////////////////////////////////////////////////
+unsigned int VEXMLObject::ExtractIntegerDataNumberFromSimpleElement(DOMElement* element)
+{
+   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
+   std::string tmp = XMLString::transcode( rawText->getData() );
+   return static_cast<int>(atoi( tmp.c_str() ));
 }
 ///////////////////////////////////////////
 DOMDocument* VEXMLObject::GetRootDocument()

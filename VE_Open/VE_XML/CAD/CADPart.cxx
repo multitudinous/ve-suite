@@ -115,3 +115,4 @@ CADPart& CADPart::operator=(const CADPart& rhs)
    }
    return *this;
 }
+

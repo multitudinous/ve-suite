@@ -196,3 +196,4 @@ CADAssembly& CADAssembly::operator=(const CADAssembly& rhs)
    }
    return *this;
 }
+

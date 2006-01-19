@@ -287,3 +287,4 @@ CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
    }
    return *this;
 }
+

@@ -86,6 +86,10 @@ public:
    ///\param element Element to extract double from.
    double ExtractDataNumberFromSimpleElement( DOMElement* element);
    
+   ///utility functions for reading data from an element
+   ///\param element Element to extract unsigned integer from.
+   unsigned int ExtractIntegerDataNumberFromSimpleElement( DOMElement* element);
+
    ///utility functions for extracting subElement itemIndex from a complex element.
    ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
@@ -101,12 +105,16 @@ public:
    {
    public:
       ///Constructor
+      ///\param toTranscode The input to translate.
       VEStr( const char* const toTranscode);
       ///Constructor
+      ///\param input The input to translate.
       VEStr( int input);
       ///Constructor
+      ///\param input The input to translate.
       VEStr( double input);
       ///Constructor
+      ///\param input The input to translate.
       VEStr( std::string input);
 
       ///Destructor
