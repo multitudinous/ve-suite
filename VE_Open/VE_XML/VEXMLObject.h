@@ -102,6 +102,7 @@ public:
    void SetSubElement( std::string subElementTagName, std::string dataValue );
    void SetSubElement( std::string subElementTagName, unsigned int dataValue );
    void SetSubElement( std::string subElementTagName, double dataValue );
+   void SetSubElement( std::string subElementTagName, VEXMLObject* dataValue );
 
    /*!\class VE_XML::VEXMLObject::VEStr
     *  This is a simple class that lets us do easy (though not terribly efficient)

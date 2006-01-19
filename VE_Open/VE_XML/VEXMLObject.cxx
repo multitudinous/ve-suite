@@ -177,6 +177,11 @@ void VEXMLObject::SetSubElement( std::string subElementTagName, double dataValue
    _veElement->appendChild( dataValueNumElement );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void VEXMLObject::SetSubElement( std::string subElementTagName, VEXMLObject* dataValue )
+{
+   _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
+}
+////////////////////////////////////////////////////////////////////////////////
 std::string VEXMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)
 {
    DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
