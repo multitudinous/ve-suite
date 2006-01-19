@@ -84,7 +84,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib VE_XML.lib"
+				AdditionalDependencies="xerces-c_2.lib"
 				OutputFile="$(OutDir)/VE_Shader.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"

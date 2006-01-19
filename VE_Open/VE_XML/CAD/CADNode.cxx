@@ -30,10 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/VE_XML/VETransform.h"
+#include "VE_Open/VE_XML/Shader/Program.h"
 #include "VE_Open/VE_XML/CAD/CADAssembly.h"
 #include "VE_Open/VE_XML/CAD/CADMaterial.h"
-XERCES_CPP_NAMESPACE_USE
+
 using namespace VE_CAD;
+using namespace VE_Shader;
+using namespace VE_XML;
 //////////////////////////////////
 ///Constructor                  //
 //////////////////////////////////
@@ -46,6 +49,7 @@ CADNode::CADNode( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,
    _transform = new VE_XML::VETransform(_rootDocument); 
    _material = new VE_CAD::CADMaterial(_rootDocument); 
    _type = std::string("Node");
+   _glslProgram = 0;
 }
 ///////////////////
 ///Destructor    //
@@ -60,6 +64,11 @@ CADNode::~CADNode()
       delete _material;
       _material = 0;
    }
+}
+//////////////////////////////////////////////
+void CADNode::SetProgram(Program* glslProgram)
+{
+   _glslProgram = glslProgram;
 }
 ///////////////////////////////////////////
 void CADNode::SetNodeName(std::string name)
@@ -126,10 +135,22 @@ void CADNode::_updateVEElement(std::string input)
    }
 
    _updateNodeName();
-   
-   _veElement->appendChild( _parent->GetXMLData("parent") );
-   _veElement->appendChild( _material->GetXMLData("material") );
-   _veElement->appendChild( _transform->GetXMLData("transform") );
+   if(_parent)
+   {
+      _veElement->appendChild( _parent->GetXMLData("parent") );
+   }
+   if(_material)
+   {
+      _veElement->appendChild( _material->GetXMLData("material") );
+   }
+   if(_transform)
+   {
+      _veElement->appendChild( _transform->GetXMLData("transform") );
+   }
+   if(_glslProgram)
+   {
+      _veElement->appendChild(_glslProgram->GetXMLData("shaderProgram"));
+   }
    _updateNodeType();
 }
 ///////////////////////////////
@@ -178,14 +199,37 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             }
             DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
             if(_parent)
+            {
                _parent->SetObjectFromXMLData(parentNode);
-
+            }
             DOMElement* materialNode = GetSubElement(currentElement,std::string("material"),0);
-            _material->SetObjectFromXMLData(materialNode);
+            if(materialNode)
+            {
+               if(!_material)
+               {
+                  _material= new CADMaterial(_rootDocument);
+               }
+               _material->SetObjectFromXMLData(materialNode);
+            }
 
             DOMElement* transformNode = GetSubElement(currentElement,std::string("transform"),0);
-            _transform->SetObjectFromXMLData(transformNode);
-
+            if(transformNode)
+            {
+               if(!_transform)
+               {
+                  _transform = new VETransform(_rootDocument);
+               }
+               _transform->SetObjectFromXMLData(transformNode);
+            }
+            DOMElement* glslProgram = GetSubElement(currentElement,std::string("shaderProgram"),0);
+            if(glslProgram)
+            {
+               if(!_glslProgram)
+               {
+                  _glslProgram = new Program(_rootDocument);
+               }
+               _glslProgram->SetObjectFromXMLData(transformNode);
+            }
          }
       }
    }
@@ -198,6 +242,7 @@ CADNode::CADNode(const CADNode& rhs)
    _material = new VE_CAD::CADMaterial(*rhs._material);
    _parent = rhs._parent;
    _name = rhs._name;
+   _glslProgram = new Program(*rhs._glslProgram);
 }
 ////////////////////////////////////////////////
 CADNode& CADNode::operator=(const CADNode& rhs)
@@ -216,6 +261,8 @@ CADNode& CADNode::operator=(const CADNode& rhs)
          delete _material;
          _material = 0;
       }
+      _glslProgram = rhs._glslProgram;
+
       _material = new VE_CAD::CADMaterial(*rhs._material);
       _parent = rhs._parent;
       _name = rhs._name;

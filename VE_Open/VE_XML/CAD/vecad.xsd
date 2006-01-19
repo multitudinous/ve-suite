@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
-   <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/vesuite_installs/verg.xsd" />
+   <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/docs/verg.xsd" />
+   <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/docs/veshader.xsd" />
    <xs:complexType name="CADNode">
       <xs:sequence>
          <xs:element name="parent" type="CADAssembly" maxOccurs="1" minOccurs="0" />
@@ -8,6 +9,7 @@
          <xs:element name="material" type="CADMaterial" minOccurs="0" maxOccurs="1" />
          <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" default="Assembly" />
          <xs:element name="type" type="xs:string" />
+         <xs:element name="shaderProgram" type="Program" />
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="CADAssembly">

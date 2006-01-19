@@ -51,7 +51,10 @@
 namespace VE_XML{
    class VETransform;
 }
-XERCES_CPP_NAMESPACE_USE
+namespace VE_Shader
+{
+   class Program;
+}
 
 namespace VE_CAD{
 
@@ -65,8 +68,6 @@ public:
    ///\param name The name of this node.
    CADNode( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name);
    virtual ~CADNode();
-
-   
 
    ///Set the name of the node in the hierachy.
    ///\param name The name to set for this node.
@@ -83,6 +84,10 @@ public:
    ///Set the material for this node.
    ///\param material The material of this node.
    void SetMaterial(VE_CAD::CADMaterial* material);
+
+   ///Set the GLSL program for this node.
+   ///\param glslProgram The GLSL program.
+   void SetProgram(VE_Shader::Program* glslProgram);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
@@ -103,7 +108,10 @@ public:
 
    ///Get the material of this CAD node
    VE_CAD::CADMaterial* GetMaterial();
-   
+  
+   ///Get the GLSL program for this node.
+   VE_Shader::Program* GetGLSLProgram();
+
    ///Copy constructor
    CADNode(const CADNode& rhs);
 
@@ -125,6 +133,7 @@ protected:
    VE_XML::VETransform* _transform; ///< Transform for the node.
    VE_CAD::CADMaterial* _material; ///< Material for this node.
    VE_CAD::CADNode* _parent;  ///< Parent node.
+   VE_Shader::Program* _glslProgram;///<The glsl program.
    std::string _name;///< The name of this node.
    std::string _type;///< The type of node;
 };
