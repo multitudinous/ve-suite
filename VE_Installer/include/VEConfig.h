@@ -107,6 +107,11 @@
 	#  else
 	#    define VE_CAD_EXPORTS   __declspec(dllimport)
 	#  endif /* VE_CAD_LIBRARY */
+   #  ifdef VE_SHADER_LIBRARY
+	#    define VE_SHADER_EXPORTS   __declspec(dllexport)
+	#  else
+	#    define VE_SHADER_EXPORTS   __declspec(dllimport)
+	#  endif /* VE_SHADER_LIBRARY */
 #else
 	#  define VE_SCENEGRAPH_EXPORTS
    #  define VE_UTIL_EXPORTS
@@ -119,6 +124,7 @@
    #  define VE_BUILDER_EXPORTS
    #  define VE_XML_EXPORTS
    #  define VE_CAD_EXPORTS
+   #  define VE_SHADER_EXPORTS
 #endif
 
 #endif
