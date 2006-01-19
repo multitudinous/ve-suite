@@ -204,6 +204,7 @@ CADNode& CADNode::operator=(const CADNode& rhs)
 {
    if ( this != &rhs )
    {
+      VEXMLObject::operator =(rhs);
       if(_transform)
       {
          delete _transform;

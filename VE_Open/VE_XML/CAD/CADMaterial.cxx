@@ -256,6 +256,7 @@ CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
 {
    if ( this != &rhs )
    {
+      VEXMLObject::operator =(rhs);
       if(_kDiffuse)
       {
          delete _kDiffuse;

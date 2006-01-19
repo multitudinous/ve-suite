@@ -183,12 +183,12 @@
 					<Tool
 						Name="VCXMLDataGeneratorTool"/>
 				</FileConfiguration>
-				<File
-					RelativePath=".\vecad.h">
-				</File>
-				<File
-					RelativePath=".\vecad.xsx">
-				</File>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCXMLDataGeneratorTool"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>
