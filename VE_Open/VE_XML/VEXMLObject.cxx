@@ -176,6 +176,11 @@ void VEXMLObject::SetSubElement( std::string subElementTagName, double dataValue
    dataValueNumElement->appendChild( dataValueText );
    _veElement->appendChild( dataValueNumElement );
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+DOMElement* VEXMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex)
+{
+   return dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(itemIndex));
+}
 ////////////////////////////////////////////////////////////////////////////////
 void VEXMLObject::SetSubElement( std::string subElementTagName, VEXMLObject* dataValue )
 {
