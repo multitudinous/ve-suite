@@ -141,16 +141,40 @@ VEXMLObject::VEStr::~VEStr()
 {
    XMLString::release(&fUnicodeForm);
 }
-/////////////////////////////////////////////////////////////////////////////////////////////
-DOMElement* VEXMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,
-                                  unsigned int itemNumber)
-{
-   return dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(itemNumber));
-}
 ////////////////////////////////////////////////////
 const XMLCh* VEXMLObject::VEStr::unicodeForm() const
 {
    return fUnicodeForm;
+}
+////////////////////////////////////////////////////////////////////////////////
+void VEXMLObject::SetSubElement( std::string subElementTagName, std::string dataValue )
+{
+   DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   DOMText* dataValueString = _rootDocument->createTextNode( xercesString( dataValue ) );
+   dataValueStringElement->appendChild( dataValueString );
+   _veElement->appendChild( dataValueStringElement );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VEXMLObject::SetSubElement( std::string subElementTagName, unsigned int dataValue )
+{
+   DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   std::stringstream float2string;
+   float2string << dataValue;
+   DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
+
+   dataValueNumElement->appendChild( dataValueText );
+   _veElement->appendChild( dataValueNumElement );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VEXMLObject::SetSubElement( std::string subElementTagName, double dataValue )
+{
+   DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   std::stringstream float2string;
+   float2string << dataValue;
+   DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
+
+   dataValueNumElement->appendChild( dataValueText );
+   _veElement->appendChild( dataValueNumElement );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string VEXMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)
@@ -164,14 +188,14 @@ double VEXMLObject::ExtractDataNumberFromSimpleElement(DOMElement* element)
 {
    DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
    std::string tmp = XMLString::transcode( rawText->getData() );
-   return atof( tmp.c_str() );
+   return std::atof( tmp.c_str() );
 }
 //////////////////////////////////////////////////////////////////////////
 unsigned int VEXMLObject::ExtractIntegerDataNumberFromSimpleElement(DOMElement* element)
 {
    DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
    std::string tmp = XMLString::transcode( rawText->getData() );
-   return atoi(tmp.c_str());
+   return std::atoi( tmp.c_str() );
 }
 ///////////////////////////////////////////
 DOMDocument* VEXMLObject::GetRootDocument()

@@ -96,6 +96,13 @@ public:
    ///\param itemIndex The index of the subElement to extract from the complex element.
    DOMElement* GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex);
 
+   ///utility functions for creating subElements for _veElement.
+   ///\param subElementTagName The subelement tagname to extract from baseElement.
+   ///\param dataValue The data to be stored.
+   void SetSubElement( std::string subElementTagName, std::string dataValue );
+   void SetSubElement( std::string subElementTagName, unsigned int dataValue );
+   void SetSubElement( std::string subElementTagName, double dataValue );
+
    /*!\class VE_XML::VEXMLObject::VEStr
     *  This is a simple class that lets us do easy (though not terribly efficient)
     * trancoding of char* data to XMLCh data. --taken from xerces examples

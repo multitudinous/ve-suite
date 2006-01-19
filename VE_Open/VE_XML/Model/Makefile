@@ -34,7 +34,8 @@ CFDUNAME = $(shell uname)
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   VEPoint.cxx
+   VEPoint.cxx\
+   VEPort.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
