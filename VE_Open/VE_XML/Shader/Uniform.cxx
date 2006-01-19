@@ -70,6 +70,7 @@ Uniform& Uniform::operator=(const Uniform& rhs)
 {
    if(this != &rhs)
    {
+      VEXMLObject::operator =(rhs);
       _type = rhs._type;
       _variableSize = rhs._variableSize;
       _name = rhs._name;
@@ -211,13 +212,13 @@ void Uniform::SetObjectFromXMLData(DOMNode* xmlNode)
       {
          if(currentElement->hasChildNodes())
          {
-			//Get the name of the uniform
+			    //Get the name of the uniform
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
             if(nameNode)
             {
                 _name = ExtractDataStringFromSimpleElement( nameNode );
             }
-			//get the type
+			    //get the type
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {

@@ -46,6 +46,7 @@ TextureImage::TextureImage(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocum
 /////////////////////////////
 TextureImage::~TextureImage()
 {
+   _imageFile.clear();
 }
 ///////////////////////////////////////////////////
 TextureImage::TextureImage(const TextureImage& rhs)
@@ -156,6 +157,7 @@ TextureImage& TextureImage::operator=(const TextureImage& rhs)
 {
    if(this != &rhs)
    {
+      VEXMLObject::operator =(rhs);
       _imageFile = rhs._imageFile;
       _textureUnit = rhs._textureUnit;
       _dimension = rhs._dimension;

@@ -48,7 +48,6 @@
  * Contains classes that describe GLSL shaders and programs.
  */
 
-XERCES_CPP_NAMESPACE_USE
 
 namespace VE_Shader{
 class VE_SHADER_EXPORTS Uniform : public VE_XML::VEXMLObject{
