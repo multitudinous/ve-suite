@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: VE2DDoubleArray.cxx,v $
+ * File:          $RCSfile: VE3DDoubleArray.cxx,v $
  * Date modified: $Date: 2006-01-10 11:21:30 -0600 (Tue, 10 Jan 2006) $
  * Version:       $Rev: 3470 $
  * -----------------------------------------------------------------
@@ -33,13 +33,13 @@
 #include <iostream>
 #include <cstdlib>
 
+#include "VE_Open/VE_XML/VE3DDoubleArray.h"
 #include "VE_Open/VE_XML/VE2DDoubleArray.h"
-#include "VE_Open/VE_XML/VE1DDoubleArray.h"
 using namespace VE_XML;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-VE2DDoubleArray::VE2DDoubleArray(DOMDocument* rootDoc,unsigned int nElements)
+VE3DDoubleArray::VE3DDoubleArray(DOMDocument* rootDoc,unsigned int nElements)
 :VEXMLObject(rootDoc)
 {
    _nElements  = nElements;
@@ -50,79 +50,80 @@ VE2DDoubleArray::VE2DDoubleArray(DOMDocument* rootDoc,unsigned int nElements)
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
-VE2DDoubleArray::~VE2DDoubleArray()
+VE3DDoubleArray::~VE3DDoubleArray()
 {
    ;   
 }
 ///////////////////////////////////////////
-VE2DDoubleArray::VE2DDoubleArray( const VE2DDoubleArray& input )
+VE3DDoubleArray::VE3DDoubleArray( const VE3DDoubleArray& input )
 :VEXMLObject(input)
 {
    _nElements  = input._nElements;
-   doubleArray = input.doubleArray;
+   tripleArray = input.tripleArray;
    minIndex = input.minIndex;
 }
 /////////////////////////////////////////////////////
-VE2DDoubleArray& VE2DDoubleArray::operator=( const VE2DDoubleArray& input)
+VE3DDoubleArray& VE3DDoubleArray::operator=( const VE3DDoubleArray& input)
 {
    if ( this != &input )
    {
       //biv-- make sure to call the parent =
       VEXMLObject::operator =(input);
       _nElements = input._nElements;
-      doubleArray = input.doubleArray;
+      tripleArray = input.tripleArray;
       minIndex = input.minIndex;
    }
    return *this;
 }
 /////////////////////////////////////////////////
-void VE2DDoubleArray::AddElementToArray( std::vector< double > value )
+void VE3DDoubleArray::AddElementToArray( std::vector< std::vector< double > > value )
 {
-   doubleArray.push_back(value);
-   ve1DDoubleArray.push_back( new VE1DDoubleArray( _rootDocument ) );
-   ve1DDoubleArray.back()->SetArray( doubleArray.back() );
-   _nElements = static_cast< unsigned int >( doubleArray.size() );
+   tripleArray.push_back(value);
+   ve2DDoubleArray.push_back( new VE2DDoubleArray( _rootDocument ) );
+   ve2DDoubleArray.back()->SetArray( tripleArray.back() );
+   _nElements = static_cast< unsigned int >( tripleArray.size() );
 }
 /////////////////////////////////////////////////////////////////
-void VE2DDoubleArray::SetArray( std::vector< std::vector< double > > input )
+void VE3DDoubleArray::SetArray( std::vector< std::vector< std::vector< double > > > input )
 {
-   doubleArray.clear();
-   doubleArray = input;
-   _nElements = static_cast< unsigned int >( doubleArray.size() );
+   tripleArray.clear();
+   tripleArray = input;
+   _nElements = static_cast< unsigned int >( tripleArray.size() );
    // Clean old vector int
-   for ( size_t i = 0; i < doubleArray.size(); ++i )
+   for ( size_t i = 0; i < ve2DDoubleArray.size(); ++i )
    {
-      delete ve1DDoubleArray.at( i );
+      delete ve2DDoubleArray.at( i );
    }
-   ve1DDoubleArray.clear();
+   ve2DDoubleArray.clear();
    
-   for ( size_t i = 0; i < doubleArray.size(); ++i )
+   for ( size_t i = 0; i < tripleArray.size(); ++i )
    {
-      ve1DDoubleArray.push_back( new VE1DDoubleArray( _rootDocument ) );
-      ve1DDoubleArray.back()->SetArray( doubleArray.at( i ) );
+      ve2DDoubleArray.push_back( new VE2DDoubleArray( _rootDocument ) );
+      ve2DDoubleArray.back()->SetArray( tripleArray.at( i ) );
    }
 }
 //////////////////////////////////////////////////
-double VE2DDoubleArray::GetElement(unsigned int i, unsigned int j)
+double VE3DDoubleArray::GetElement( unsigned int i, unsigned int j, unsigned int k )
 {
    try
    {
-      return doubleArray.at( i ).at( j );
+      return tripleArray.at( i ).at( j ).at( k );
    }
    catch (...)
    {
       std::cout<< " ERROR!!! "<< std::endl
-               << " Invalid index: "<< i << "," << j <<" in VE2DDoubleArray::GetElement!!!"<<std::endl;
+               << " Invalid index: "<< i << "," << j << "," << k 
+               << " in VE3DDoubleArray::GetElement!!! " << std::endl;
       return 0;
    }
 }
 ///////////////////////////////////////////////////
-std::vector< std::vector< double > > VE2DDoubleArray::GetArray( void )
+std::vector< std::vector< std::vector< double > > > VE3DDoubleArray::GetArray( void )
 {
-   return doubleArray;
+   return tripleArray;
 }
 ////////////////////////////////////
-void VE2DDoubleArray::_updateVEElement( std::string input )
+void VE3DDoubleArray::_updateVEElement( std::string input )
 {
    if( !_veElement )
    {
@@ -132,18 +133,18 @@ void VE2DDoubleArray::_updateVEElement( std::string input )
    //Be sure to set the number of children (_nChildren) 
    //either here or in the updating subElements code
    //this will be based on the size of the double array
-   _nChildren = static_cast< unsigned int >( doubleArray.size() );
+   _nChildren = static_cast< unsigned int >( tripleArray.size() );
 
    //Add code here to update the specific sub elements
    // This acutally needs to be an array of 1d arrays
-   for ( size_t i = 0; i < ve1DDoubleArray.size(); ++i )
+   for ( size_t i = 0; i < ve2DDoubleArray.size(); ++i )
    {
       // name comes from verg.xsd
-      _veElement->appendChild( ve1DDoubleArray.at( i )->GetXMLData( "index2" ) );      
+      _veElement->appendChild( ve2DDoubleArray.at( i )->GetXMLData( "index3" ) );      
    }
 }
 ////////////////////////////////////////////////////////////
-void VE2DDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
+void VE3DDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
 {
    //TODO:fill in the values for the double array
    //this is currently maxed out at 4 in the schema but
@@ -158,22 +159,22 @@ void VE2DDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
    
    if ( currentElement )
    {   
-      doubleArray.clear();
+      tripleArray.clear();
      
-      for ( size_t i = 0; i < ve1DDoubleArray.size(); ++i )
+      for ( size_t i = 0; i < ve2DDoubleArray.size(); ++i )
       {
-         delete ve1DDoubleArray.at( i );
+         delete ve2DDoubleArray.at( i );
       }
-      ve1DDoubleArray.clear();
+      ve2DDoubleArray.clear();
 
       // do we need to delete the old one or does xerces handle this???
       //_nElements = xmlInput->getChildNodes()->getLength();
-      DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("index2"));
+      DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("index3"));
       XMLSize_t numNodes = nodeList->getLength();
       _nElements = numNodes;
       if ( minIndex > numNodes )
       {
-         std::cerr << " ERROR : VE2DDoubleArray::SetObjectFromXMLData :" << 
+         std::cerr << " ERROR : VE3DDoubleArray::SetObjectFromXMLData :" << 
                      " This node has too few or too many children." << std::endl;
       }
    
@@ -186,14 +187,14 @@ void VE2DDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
       for ( XMLSize_t i = 0; i < numNodes; ++i )
       {
          //We know this about the node so we can cast it...
-         ve1DDoubleArray.push_back( new VE1DDoubleArray( _rootDocument ) );
-         ve1DDoubleArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
-         doubleArray.push_back( ve1DDoubleArray.back()->GetArray() );
+         ve2DDoubleArray.push_back( new VE2DDoubleArray( _rootDocument ) );
+         ve2DDoubleArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
+         tripleArray.push_back( ve2DDoubleArray.back()->GetArray() );
       }
    }
    else
    {
-      std::cerr << " ERROR : VE2DDoubleArray::SetObjectFromXMLData :" << 
+      std::cerr << " ERROR : VE3DDoubleArray::SetObjectFromXMLData :" << 
                   " This node has no children which means there is probably a problem." << std::endl;
    }
 }
