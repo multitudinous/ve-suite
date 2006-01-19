@@ -90,7 +90,6 @@ public:
    virtual void SetObjectFromXMLData( DOMNode* inputXML ); 
    
 protected:
-   
    ///Internally update the data.
    ///\param tagName The tag name of this element.
    virtual void _updateVEElement( std::string tagName);

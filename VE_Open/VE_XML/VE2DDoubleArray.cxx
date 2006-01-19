@@ -79,6 +79,8 @@ VE2DDoubleArray& VE2DDoubleArray::operator=( const VE2DDoubleArray& input)
 void VE2DDoubleArray::AddElementToArray( std::vector< double > value )
 {
    doubleArray.push_back(value);
+   ve1DDoubleArray.push_back( new VE1DDoubleArray( _rootDocument ) );
+   ve1DDoubleArray.back()->SetArray( doubleArray.back() );
    _nElements = static_cast< unsigned int >( doubleArray.size() );
 }
 /////////////////////////////////////////////////////////////////
@@ -87,9 +89,18 @@ void VE2DDoubleArray::SetArray( std::vector< std::vector< double > > input )
    doubleArray.clear();
    doubleArray = input;
    _nElements = static_cast< unsigned int >( doubleArray.size() );
+   // Clean old vector int
+   for ( size_t i = 0; i < doubleArray.size(); ++i )
+   {
+      delete ve1DDoubleArray.at( i );
+   }
+   ve1DDoubleArray.clear();
    
-   ve1DDoubleArray.push_back( new VE1DDoubleArray( _rootDocument ) );
-   ve1DDoubleArray.back()->SetArray( doubleArray.at( 1 ) );
+   for ( size_t i = 0; i < doubleArray.size(); ++i )
+   {
+      ve1DDoubleArray.push_back( new VE1DDoubleArray( _rootDocument ) );
+      ve1DDoubleArray.back()->SetArray( doubleArray.at( i ) );
+   }
 }
 //////////////////////////////////////////////////
 double VE2DDoubleArray::GetElement(unsigned int i, unsigned int j)
@@ -125,16 +136,10 @@ void VE2DDoubleArray::_updateVEElement( std::string input )
 
    //Add code here to update the specific sub elements
    // This acutally needs to be an array of 1d arrays
-   for ( unsigned int i = 0; i < doubleArray.size(); ++i )
+   for ( size_t i = 0; i < ve1DDoubleArray.size(); ++i )
    {
-      for ( unsigned int j = 0; j < doubleArray.size(); ++j )
-      {
-         // name comes from verg.xsd
-         DOMElement* valueTag  = _rootDocument->createElement( xercesString("data") );
-         _veElement->appendChild( valueTag );      
-         DOMText* valueNum = _rootDocument->createTextNode( xercesString( doubleArray.at( i ).at( j ) ) );
-         valueTag->appendChild( valueNum );
-      }
+      // name comes from verg.xsd
+      _veElement->appendChild( ve1DDoubleArray.at( i )->GetXMLData( "data" ) );      
    }
 }
 ////////////////////////////////////////////////////////////
@@ -151,16 +156,22 @@ void VE2DDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
       currentElement = dynamic_cast< DOMElement* >(xmlInput);
    }
    
-   if(currentElement)
+   if ( currentElement )
    {   
       doubleArray.clear();
-      
+     
+      for ( size_t i = 0; i < ve1DDoubleArray.size(); ++i )
+      {
+         delete ve1DDoubleArray.at( i );
+      }
+      ve1DDoubleArray.clear();
+
       // do we need to delete the old one or does xerces handle this???
       //_nElements = xmlInput->getChildNodes()->getLength();
       DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("data"));
       XMLSize_t numNodes = nodeList->getLength();
       _nElements = numNodes;
-      if ( ( minIndex > numNodes ) )
+      if ( minIndex > numNodes )
       {
          std::cerr << " ERROR : VE2DDoubleArray::SetObjectFromXMLData :" << 
                      " This node has too few or too many children." << std::endl;
@@ -175,9 +186,9 @@ void VE2DDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
       for ( XMLSize_t i = 0; i < numNodes; ++i )
       {
          //We know this about the node so we can cast it...
-         DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
-         std::string stringVal( XMLString::transcode( temp->getData() ) );
-         //doubleArray.push_back( std::atof( stringVal.c_str() ) );
+         ve1DDoubleArray.push_back( new VE1DDoubleArray( _rootDocument ) );
+         ve1DDoubleArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
+         doubleArray.push_back( ve1DDoubleArray.back()->GetArray() );
       }
    }
    else
