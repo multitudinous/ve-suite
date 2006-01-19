@@ -46,8 +46,8 @@ CADNode::CADNode( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,
 {
    _name = name;
    _parent = 0;
-   _transform = new VE_XML::VETransform(_rootDocument); 
-   _material = new VE_CAD::CADMaterial(_rootDocument); 
+   _transform = 0;//new VE_XML::VETransform(_rootDocument); 
+   _material = 0;//new VE_CAD::CADMaterial(_rootDocument); 
    _type = std::string("Node");
    _glslProgram = 0;
 }

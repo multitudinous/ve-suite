@@ -100,8 +100,17 @@ public:
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
    void SetSubElement( std::string subElementTagName, std::string dataValue );
+   ///utility functions for creating subElements for _veElement.
+   ///\param subElementTagName The subelement tagname to extract from baseElement.
+   ///\param dataValue The data to be stored.
    void SetSubElement( std::string subElementTagName, unsigned int dataValue );
+   ///utility functions for creating subElements for _veElement.
+   ///\param subElementTagName The subelement tagname to extract from baseElement.
+   ///\param dataValue The data to be stored.
    void SetSubElement( std::string subElementTagName, double dataValue );
+   ///utility functions for creating subElements for _veElement.
+   ///\param subElementTagName The subelement tagname to extract from baseElement.
+   ///\param dataValue The data to be stored.
    void SetSubElement( std::string subElementTagName, VEXMLObject* dataValue );
 
    /*!\class VE_XML::VEXMLObject::VEStr
