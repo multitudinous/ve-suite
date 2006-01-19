@@ -52,7 +52,11 @@ VE2DDoubleArray::VE2DDoubleArray(DOMDocument* rootDoc,unsigned int nElements)
 /////////////////////////////
 VE2DDoubleArray::~VE2DDoubleArray()
 {
-   ;   
+   for ( size_t i = 0; i < ve1DDoubleArray.size(); ++i )
+   {
+      delete ve1DDoubleArray.at( i );
+   }
+   ve1DDoubleArray.clear();
 }
 ///////////////////////////////////////////
 VE2DDoubleArray::VE2DDoubleArray( const VE2DDoubleArray& input )
@@ -60,6 +64,10 @@ VE2DDoubleArray::VE2DDoubleArray( const VE2DDoubleArray& input )
 {
    _nElements  = input._nElements;
    doubleArray = input.doubleArray;
+   for ( size_t i = 0; i < input.ve1DDoubleArray.size(); ++i )
+   {
+      ve1DDoubleArray.push_back( new VE1DDoubleArray( *(input.ve1DDoubleArray.at( i )) ) );
+   }
    minIndex = input.minIndex;
 }
 /////////////////////////////////////////////////////
@@ -72,6 +80,17 @@ VE2DDoubleArray& VE2DDoubleArray::operator=( const VE2DDoubleArray& input)
       _nElements = input._nElements;
       doubleArray = input.doubleArray;
       minIndex = input.minIndex;
+
+      for ( size_t i = 0; i < ve1DDoubleArray.size(); ++i )
+      {
+         delete ve1DDoubleArray.at( i );
+      }
+      ve1DDoubleArray.clear();
+
+      for ( size_t i = 0; i < input.ve1DDoubleArray.size(); ++i )
+      {
+         ve1DDoubleArray.push_back( new VE1DDoubleArray( *(input.ve1DDoubleArray.at( i )) ) );
+      }
    }
    return *this;
 }

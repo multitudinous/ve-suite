@@ -52,7 +52,11 @@ VE3DDoubleArray::VE3DDoubleArray(DOMDocument* rootDoc,unsigned int nElements)
 /////////////////////////////
 VE3DDoubleArray::~VE3DDoubleArray()
 {
-   ;   
+   for ( size_t i = 0; i < ve2DDoubleArray.size(); ++i )
+   {
+      delete ve2DDoubleArray.at( i );
+   }
+   ve2DDoubleArray.clear();
 }
 ///////////////////////////////////////////
 VE3DDoubleArray::VE3DDoubleArray( const VE3DDoubleArray& input )
@@ -60,6 +64,10 @@ VE3DDoubleArray::VE3DDoubleArray( const VE3DDoubleArray& input )
 {
    _nElements  = input._nElements;
    tripleArray = input.tripleArray;
+   for ( size_t i = 0; i < input.ve2DDoubleArray.size(); ++i )
+   {
+      ve2DDoubleArray.push_back( new VE2DDoubleArray( *(input.ve2DDoubleArray.at( i )) ) );
+   }
    minIndex = input.minIndex;
 }
 /////////////////////////////////////////////////////
@@ -72,6 +80,17 @@ VE3DDoubleArray& VE3DDoubleArray::operator=( const VE3DDoubleArray& input)
       _nElements = input._nElements;
       tripleArray = input.tripleArray;
       minIndex = input.minIndex;
+
+      for ( size_t i = 0; i < ve2DDoubleArray.size(); ++i )
+      {
+         delete ve2DDoubleArray.at( i );
+      }
+      ve2DDoubleArray.clear();
+
+      for ( size_t i = 0; i < input.ve2DDoubleArray.size(); ++i )
+      {
+         ve2DDoubleArray.push_back( new VE2DDoubleArray( *(input.ve2DDoubleArray.at( i )) ) );
+      }
    }
    return *this;
 }
