@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/VE_XML/Shader/Uniform.h"
 XERCES_CPP_NAMESPACE_USE
-
 using namespace VE_Shader;
 //////////////////////////////////////////////////////////////////////////
 ///Constructor                                                          //
@@ -40,7 +39,7 @@ Uniform::Uniform(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
 :VE_XML::VEXMLObject(rootDocument)
 {
    _type = std::string("float");
-   _variableSize = std::string("float");
+   _variableSize = 0; 
    _name = std::string("");
    _textureUnit = 0;
 }
@@ -53,6 +52,7 @@ Uniform::~Uniform()
 //Copy constructor                 //
 /////////////////////////////////////
 Uniform:: Uniform(const Uniform& rhs)
+:VE_XML::VEXMLObject(rhs)
 {
    _type = rhs._type;
    _variableSize = rhs._variableSize;
@@ -68,7 +68,8 @@ Uniform:: Uniform(const Uniform& rhs)
 ///////////////////////////////////////////////
 Uniform& Uniform::operator=(const Uniform& rhs)
 {
-   if(&this != rhs){
+   if(this != &rhs)
+   {
       _type = rhs._type;
       _variableSize = rhs._variableSize;
       _name = rhs._name;
@@ -89,7 +90,7 @@ void Uniform::SetType(std::string type)
 ///////////////////////////////////////////////
 void Uniform::SetSize(unsigned int uniformSize)
 {
-   variableSize = uniformSize;
+   _variableSize = uniformSize;
 }
 ///////////////////////////////////////
 void Uniform::SetName(std::string name)
@@ -153,7 +154,7 @@ void Uniform::_updateVEElement(std::string input)
 void Uniform::_updateSize()
 {
    DOMElement* nodeSizeElement = _rootDocument->createElement(xercesString("size"));
-   DOMText* nodeSize = _rootDocument->createTextNode(xercesString(_size));
+   DOMText* nodeSize = _rootDocument->createTextNode(xercesString(static_cast<int>(_variableSize)));
    nodeSizeElement->appendChild(nodeSize);
    _veElement->appendChild(nodeSizeElement);
 }
@@ -189,7 +190,7 @@ void Uniform::_updateValues()
 void Uniform::_updateTextureUnit()
 {
    DOMElement* tUnitElement = _rootDocument->createElement(xercesString("textureUnit"));
-   DOMText* nodeTUnit = _rootDocument->createTextNode(xercesString(_textureUnit));
+   DOMText* nodeTUnit = _rootDocument->createTextNode(xercesString(static_cast<int>(_textureUnit)));
    tUnitElement->appendChild(nodeTUnit);
    _veElement->appendChild(tUnitElement);
 }
@@ -222,35 +223,35 @@ void Uniform::SetObjectFromXMLData(DOMNode* xmlNode)
             {
                _type = ExtractDataStringFromSimpleElement( typeNode );
                //if it is a texture get the texture unit
-			   if(_type = std::string("Sampler"))
-			   {
+               if(_type == std::string("Sampler"))
+               {
                   DOMElement* tUnitNode = GetSubElement(currentElement,std::string("textureUnit"),0);
                   if(tUnitNode)
                   {
-                      _textureUnit = ExtractDataValueFromSimpleElement( tUnitNode );
+                      _textureUnit = ExtractIntegerDataNumberFromSimpleElement(tUnitNode );
                   }
-			   }
+               }
             }
-			//Get the size of this uniform
+            //Get the size of this uniform
             DOMElement* lengthNode = GetSubElement(currentElement,std::string("size"),0);
             if(lengthNode)
             {
-                _variableSize = (unsigned int)ExtractDataValueFromSimpleElement( lengthNode );
+                _variableSize = ExtractIntegerDataNumberFromSimpleElement( lengthNode );
             }
-			//get the values for this uniform
-			if(_type != std::string("Sampler"))
-			{
-			   DOMElement* uniformValue = 0;
-			   _values.clear();
-			   for(unsigned int i = 0; i < _variableSize; i++)
-			   {
-                   uniformValue = GetSubElement(currentElement,std::string("value"),i);
-                   if(uniformValue)
-				   {
-					   _values.push_back(ExtractDataValueFromSimpleElement( uniformValue));
-				   }
-			   }
-			}
+            //get the values for this uniform
+            if(_type != std::string("Sampler"))
+            {
+               DOMElement* uniformValue = 0;
+               _values.clear();
+               for(unsigned int i = 0; i < _variableSize; i++)
+               {
+                  uniformValue = GetSubElement(currentElement,std::string("value"),i);
+                  if(uniformValue)
+                  {
+                     _values.push_back(ExtractDataNumberFromSimpleElement( uniformValue));
+                  }
+               }
+            }
          }
       }
    }      

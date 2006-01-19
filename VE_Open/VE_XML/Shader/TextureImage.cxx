@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/VE_XML/Shader/TextureImage.h"
-
 using namespace VE_Shader;
 ////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////
 TextureImage::TextureImage(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
+:VE_XML::VEXMLObject(rootDocument)
 {
    _imageFile = std::string("");
    _textureUnit = 0;
@@ -49,9 +49,11 @@ TextureImage::~TextureImage()
 }
 ///////////////////////////////////////////////////
 TextureImage::TextureImage(const TextureImage& rhs)
+:VE_XML::VEXMLObject(rhs)
 {
    _imageFile = rhs._imageFile;
    _textureUnit = rhs._textureUnit;
+   _dimension = rhs._dimension;
 }
 ///////////////////////////////////////////////////////
 void TextureImage::SetDimension(unsigned int dimension)
@@ -99,7 +101,7 @@ void TextureImage::_updateDataDimension()
 {
    DOMElement* dimensionTag  = _rootDocument->createElement(xercesString("dimension"));
    _veElement->appendChild(dimensionTag);      
-   DOMText* dimension = _rootDocument->createTextNode(xercesString( _dimension));
+   DOMText* dimension = _rootDocument->createTextNode(xercesString(static_cast<int>(_dimension)));
    dimensionTag->appendChild( dimension );
 }	
 ///////////////////////////////////////
@@ -107,7 +109,7 @@ void TextureImage::_updateTextureUnit()
 {
    DOMElement* tUnitTag  = _rootDocument->createElement(xercesString("textureUnit"));
    _veElement->appendChild(tUnitTag);      
-   DOMText* tUnit = _rootDocument->createTextNode(xercesString( _textureUnit));
+   DOMText* tUnit = _rootDocument->createTextNode(xercesString( static_cast<int>(_textureUnit)));
    tUnitTag->appendChild( tUnit );
 }	
 //////////////////////////////////////
@@ -134,7 +136,7 @@ void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
 	 //get the image file  name
          {
             DOMElement* nChildrenElement = GetSubElement(currentElement,std::string("imageFile"),0);
-            _numChildren = static_cast<int>(ExtractDataStringFromSimpleElement(nChildrenElement));
+            _imageFile = ExtractDataStringFromSimpleElement(nChildrenElement);
 	 } 
 	 //get the texture unit 
          {
@@ -148,4 +150,15 @@ void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
 	 } 
       }
    }
+}
+//////////////////////////////////////////////////////////////
+TextureImage& TextureImage::operator=(const TextureImage& rhs)
+{
+   if(this != &rhs)
+   {
+      _imageFile = rhs._imageFile;
+      _textureUnit = rhs._textureUnit;
+      _dimension = rhs._dimension;
+   }
+   return *this;
 }

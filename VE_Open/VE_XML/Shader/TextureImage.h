@@ -45,7 +45,7 @@
  */
 
 namespace VE_Shader{
-class TextureImage:public VE_XML::VEXMLObject{
+class VE_SHADER_EXPORTS TextureImage:public VE_XML::VEXMLObject{
 public:
    ///Constructor
    ///\param rootDocument The xerces document for this node.
@@ -78,6 +78,9 @@ public:
    ///Set the object from input XML data
    ///\param xmlInput The input xml data.
    void SetObjectFromXMLData(DOMNode* xmlInput);
+
+   ///equal operator
+   TextureImage& operator=(const TextureImage& rhs);
 protected:
    ///Internally update the XML data for this element.
    ///\param input The XML element information

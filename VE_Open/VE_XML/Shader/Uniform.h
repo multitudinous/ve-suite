@@ -35,6 +35,7 @@
 #include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
+#include <vector>
 
 /*!\file Uniform.h
   Shader Uniform API
@@ -83,6 +84,10 @@ public:
    ///as floats and will be converted and interpretted appropriately.
    ///\param newValues The new values for the uniform.
    void SetValues(std::vector<float> newValues);
+
+   ///Set the internal data values from a given XML element.
+   ///\param inputXML The element to extract the data from.
+   void SetObjectFromXMLData(DOMNode* inputXML);
 
    ///Get the type.
    std::string GetType();
