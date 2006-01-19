@@ -118,6 +118,15 @@ VEXMLObject::VEStr::VEStr( int input )
    // Call the private transcoding method
    fUnicodeForm = XMLString::transcode( dirStringStream.str().c_str() );
 }
+//////////////////////////////////////
+VEXMLObject::VEStr::VEStr( unsigned int input )
+{
+   std::ostringstream dirStringStream;
+   dirStringStream << std::setprecision(10) << input;
+
+   // Call the private transcoding method
+   fUnicodeForm = XMLString::transcode( dirStringStream.str().c_str() );
+}
 /////////////////////////////////////////
 VEXMLObject::VEStr::VEStr( double input )
 {

@@ -112,6 +112,9 @@ public:
       VEStr( int input);
       ///Constructor
       ///\param input The input to translate.
+      VEStr( unsigned int input);
+      ///Constructor
+      ///\param input The input to translate.
       VEStr( double input);
       ///Constructor
       ///\param input The input to translate.
