@@ -78,6 +78,46 @@ void Program::SetProgramName(std::string name)
 /////////////////////////////////////////////////////
 void Program::SetObjectFromXMLData(DOMNode* xmlInput)
 {
+    DOMElement* currentElement = 0;
+
+   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+   {
+      currentElement = dynamic_cast<DOMElement*>(xmlInput);
+   }
+   
+   if(currentElement)
+   {
+      //break down the element
+      {
+         if(currentElement->hasChildNodes())
+         {
+            //Get the source
+            DOMElement* vertexShader = GetSubElement(currentElement,std::string("vertexShader"),0);
+            if(vertexShader)
+            {
+               if(!_vertexShader)
+               {
+                  _vertexShader = new Shader(_rootDocument);
+               }
+               _vertexShader->SetObjectFromXMLData(vertexShader);
+            }
+            DOMElement* fragShader = GetSubElement(currentElement,std::string("fragmentShader"),0);
+            if(fragShader)
+            {
+               if(!_fragmentShader)
+               {
+                  _fragmentShader = new Shader(_rootDocument);
+               }
+               _fragmentShader->SetObjectFromXMLData(fragShader);
+            }
+            DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
+            if(nameNode)
+            {
+                _name = ExtractDataStringFromSimpleElement( nameNode );
+            }
+         }
+      }
+   }
 }
 ////////////////////////////////////
 Shader* Program::GetFragmentShader()

@@ -198,7 +198,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
               _type = ExtractDataStringFromSimpleElement( typeNode );
             }
             DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
-            if(_parent)
+            if(parentNode)
             {
                _parent->SetObjectFromXMLData(parentNode);
             }
@@ -228,11 +228,17 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                {
                   _glslProgram = new Program(_rootDocument);
                }
-               _glslProgram->SetObjectFromXMLData(transformNode);
+               _glslProgram->SetObjectFromXMLData(glslProgram);
             }
          }
       }
    }
+}
+
+///////////////////////////////////
+Program* CADNode::GetGLSLProgram()
+{
+   return _glslProgram;
 }
 /////////////////////////////////////
 CADNode::CADNode(const CADNode& rhs)
