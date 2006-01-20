@@ -114,7 +114,7 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData)
    _domDocumentManager->Load( xmlData );
    //override this in derived classes
    _populateStructureFromDocument(_domDocumentManager->GetCommandDocument());
-   _domDocumentManager->UnLoadParser();
+   //_domDocumentManager->UnLoadParser();
 }
 ///////////////////////////////////////////////////////////
 void XMLReaderWriter::WriteXMLDocument(std::string xmlData)
