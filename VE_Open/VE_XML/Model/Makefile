@@ -36,7 +36,8 @@ CFDUNAME = $(shell uname)
 SRCS=\
    VEPoint.cxx\
    VEPort.cxx\
-   VELink.cxx
+   VELink.cxx\
+   VENetwork.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
