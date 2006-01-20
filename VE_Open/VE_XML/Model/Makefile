@@ -37,7 +37,8 @@ SRCS=\
    VEPoint.cxx\
    VEPort.cxx\
    VELink.cxx\
-   VENetwork.cxx
+   VENetwork.cxx\
+   VEModel.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

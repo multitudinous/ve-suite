@@ -37,7 +37,7 @@
          <xs:element name="iconLocation" type="vePoint" maxOccurs="1" minOccurs="1" />
          <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1" />
          <xs:element name="ID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" />
-         <xs:element name="icon" type="xs:string" maxOccurs="1" minOccurs="1" />
+         <xs:element name="icon" type="xs:string" maxOccurs="1" minOccurs="0" />
          <xs:element name="results" type="veDataValuePair" maxOccurs="unbounded" minOccurs="0" />
          <xs:element name="inputs" type="veDataValuePair" maxOccurs="unbounded" minOccurs="0" />
          <xs:element name="informationPackets" type="veParameterBlock" maxOccurs="unbounded" minOccurs="0" />
