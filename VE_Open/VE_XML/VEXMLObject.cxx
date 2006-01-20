@@ -184,7 +184,14 @@ void VEXMLObject::SetSubElement( std::string subElementTagName, VEXMLObject* dat
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DOMElement* VEXMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex)
 {
-   return dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(itemIndex));
+   DOMElement* foundElement = dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(itemIndex));
+   if(foundElement){
+      if(foundElement->getParentNode() == baseElement)
+      {
+         return foundElement;
+      }
+   }
+   return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string VEXMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)
