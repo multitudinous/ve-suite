@@ -34,8 +34,8 @@
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/cfdDebug.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Open/VE_XML/VECommand.h"
-#include "VE_Open/VE_XML/VEDataValuePair.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 // --- VR Juggler Stuff --- //
 #include <gmtl/Xforms.h>
@@ -285,7 +285,7 @@ void cfdNavigate::updateNavigationFromGUI()
 
    if ( !commandType.compare( "Navigation_Data" ) )
    {
-      VE_XML::VEDataValuePair* commandData = command->GetDataValuePair( 0 );
+      VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
       this->cfdIso_value = commandData->GetDataValue();
       std::string newCommand = commandData->GetDataName();
 
@@ -614,7 +614,7 @@ void cfdNavigate::SetHeadRotationFlag( int input )
    rotationFlag = input;
 }
 //////////////////////////////////////////
-void cfdNavigate::SetVECommand( VE_XML::VECommand* veCommand )
+void cfdNavigate::SetVECommand( VE_XML::Command* veCommand )
 {
    command = veCommand;
 }

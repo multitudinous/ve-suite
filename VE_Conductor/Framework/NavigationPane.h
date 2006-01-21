@@ -55,7 +55,7 @@ class wxSizer;
 
 namespace VE_XML
 {
-   class VECommand;
+   class Command;
    class DOMDocumentManager;
 }
 
@@ -179,7 +179,7 @@ public:
 protected:
    int _activeButton;
    UI_NavigateScroll* navScroll;
-   std::vector< VE_XML::VECommand* > commands;
+   std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
    int cId, cIso_value;
    DOMDocument* doc;

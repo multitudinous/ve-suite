@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/cfdGlobalBase.h"
-#include "VE_Open/VE_XML/VECommand.h"
+#include "VE_Open/XML/Command.h"
 
 #include <iostream>
 
@@ -47,7 +47,7 @@ cfdGlobalBase::cfdGlobalBase()
 cfdGlobalBase::~cfdGlobalBase()
 {
 }
-void cfdGlobalBase::SetVECommand( VE_XML::VECommand* command )
+void cfdGlobalBase::SetVECommand( VE_XML::Command* command )
 {
    veCommand = command;
 }

@@ -43,9 +43,9 @@
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
-#include "VE_Open/VE_XML/DOMDocumentManager.h"
-#include "VE_Open/VE_XML/VECommand.h"
-#include "VE_Open/VE_XML/VEDataValuePair.h"
+#include "VE_Open/XML/DOMDocumentManager.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
@@ -1099,10 +1099,10 @@ void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
    DOMDocument* doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs
-   VE_XML::VEDataValuePair* dataValuePair = new VE_XML::VEDataValuePair( doc, std::string("FLOAT") );
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( doc, std::string("FLOAT") );
    dataValuePair->SetDataName( "Stereo" );
    dataValuePair->SetDataValue( 1 );
-   VE_XML::VECommand* veCommand = new VE_XML::VECommand( doc );
+   VE_XML::Command* veCommand = new VE_XML::Command( doc );
    veCommand->SetCommandName( std::string("Juggler_Display_Data") );
    veCommand->AddDataValuePair( dataValuePair );
    doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );

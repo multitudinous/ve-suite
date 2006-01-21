@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdDisplaySettings.h"
 
-#include "VE_Open/VE_XML/VEDataValuePair.h"
-#include "VE_Open/VE_XML/VECommand.h"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
 
 #include <jccl/RTRC/ConfigManager.h>
 #include <string>
@@ -59,7 +59,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
    if ( !commandType.compare( "Juggler_Display_Data" ) )
    {
       // Get datavalue pair from current command
-      VE_XML::VEDataValuePair* commandData = veCommand->GetDataValuePair( 0 );
+      VE_XML::DataValuePair* commandData = veCommand->GetDataValuePair( 0 );
       double size = commandData->GetDataValue();
       std::string newCommand = commandData->GetDataName();
 

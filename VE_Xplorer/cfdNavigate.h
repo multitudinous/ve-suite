@@ -44,7 +44,7 @@ namespace VE_SceneGraph
 
 namespace VE_XML
 {
-   class VECommand;
+   class Command;
 }
 
 //! Navigation tracker
@@ -131,7 +131,7 @@ public:
    void SetHeadRotationFlag( int );
 
    // New function for testing the new VECommand structure
-   void SetVECommand( VE_XML::VECommand* veCommand );
+   void SetVECommand( VE_XML::Command* veCommand );
    // accessor to set initial world position
    void SetInitialWorldPosition( float* translate, float* rotate, float* scale );
 private:
@@ -218,7 +218,7 @@ private:
    int rotationFlag;
 
    // class used to store xml command
-   VE_XML::VECommand* command;
+   VE_XML::Command* command;
    // data storage for initial world dcs location
    float initialTranslate[ 3 ];
    float initialRotate[ 3 ];

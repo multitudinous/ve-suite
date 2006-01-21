@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/impl/VjObs_i.h"
-#include "VE_Open/VE_XML/DOMDocumentManager.h"
+#include "VE_Open/XML/DOMDocumentManager.h"
 
 #include "VE_Xplorer/cfdTeacher.h"
 #include "VE_Xplorer/cfdQuatCamHandler.h"
@@ -48,8 +48,8 @@
 
 #include "VE_SceneGraph/cfdTempAnimation.h"
 
-#include "VE_Open/VE_XML/VECommand.h"
-#include "VE_Open/VE_XML/VEDataValuePair.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -116,8 +116,8 @@ VjObs_i::VjObs_i()
    _models = NULL;
    time_since_start = 0.0f;
    frameNumber = 0;
-   bufferCommand = new VECommand( NULL );
-   bufferCommand->AddDataValuePair( new VEDataValuePair( NULL ) );
+   bufferCommand = new Command( NULL );
+   bufferCommand->AddDataValuePair( new DataValuePair( NULL ) );
    bufferCommand->SetCommandName( "wait" );
    domManager = new DOMDocumentManager();
 }
@@ -723,7 +723,7 @@ void VjObs_i::PreFrameUpdate( void )
    // New xml command queue
    if ( !commandVectorQueue.empty() )
    {
-      std::vector< VECommand* >::iterator iter;
+      std::vector< Command* >::iterator iter;
       iter = commandVectorQueue.begin();
       (*bufferCommand) = (*(*iter));
       delete commandVectorQueue.at( 0 );
@@ -800,7 +800,7 @@ void VjObs_i::SetCommandString( const char* value)
    // now lets create a list of them
    for ( unsigned int i = 0; i < numCommands; ++i )
    {
-      VECommand* temp = new VECommand( commandDoc );
+      Command* temp = new Command( commandDoc );
       temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
       commandVectorQueue.push_back( temp );
    }

@@ -58,7 +58,7 @@ namespace VE_Xplorer
 namespace VE_XML
 {
    class DOMDocumentManager;
-   class VECommand;
+   class Command;
 }
 #include <vector>
 
@@ -197,8 +197,8 @@ protected:
    double mShort_data_array[ 9 ];
 
    VE_XML::DOMDocumentManager* domManager;
-   std::vector< VE_XML::VECommand* > commandVectorQueue;
-   VE_XML::VECommand* bufferCommand;
+   std::vector< VE_XML::Command* > commandVectorQueue;
+   VE_XML::Command* bufferCommand;
    cfdCommandArray* _bufferArray;
 #ifdef _CLUSTER
    // Cluster Stuff for the above state variables

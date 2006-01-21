@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/NavigationPane.h"
-#include "VE_Open/VE_XML/DOMDocumentManager.h"
-#include "VE_Open/VE_XML/VEDataValuePair.h"
-#include "VE_Open/VE_XML/VECommand.h"
+#include "VE_Open/XML/DOMDocumentManager.h"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Conductor/Framework/Nav_Bitmaps/x_left.xpm"
 #include "VE_Conductor/Framework/Nav_Bitmaps/x_right.xpm"
@@ -507,10 +507,10 @@ void NavigationPane::SendCommandsToXplorer( void )
    doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs
-   VE_XML::VEDataValuePair* dataValuePair = new VE_XML::VEDataValuePair( doc, std::string("FLOAT") );
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( doc, std::string("FLOAT") );
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( cIso_value );
-   VE_XML::VECommand* veCommand = new VE_XML::VECommand( doc );
+   VE_XML::Command* veCommand = new VE_XML::Command( doc );
    veCommand->SetCommandName( std::string("Navigation_Data") );
    veCommand->AddDataValuePair( dataValuePair );
    doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );

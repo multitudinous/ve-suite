@@ -39,7 +39,7 @@ namespace VE_Xplorer
 
 namespace VE_XML
 {
-   class VECommand;
+   class Command;
 }
 
 #include "VE_Installer/include/VEConfig.h"
@@ -65,14 +65,14 @@ public:
 
    ///Accessor to set the VECommand to be used in any class within Xplorer
    ///\param command holds the current command to be executed
-   void SetVECommand( VE_XML::VECommand* command );
+   void SetVECommand( VE_XML::Command* command );
 protected:
 
    ///<cfdApp side variables declared in VjObs_i.h
    VE_Xplorer::cfdCommandArray* _cfdCommandArray;
 
    ///<cfdApp side variables declared in VjObs_i.h
-   VE_XML::VECommand* veCommand;
+   VE_XML::Command* veCommand;
 
 private:
 };
