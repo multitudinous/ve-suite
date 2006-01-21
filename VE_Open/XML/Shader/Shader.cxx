@@ -69,7 +69,7 @@ Shader::~Shader()
 ///Copy constructor            //
 /////////////////////////////////
 Shader::Shader(const Shader& rhs)
-:VEXMLObject(rhs)
+:XMLObject(rhs)
 {
    for(size_t i = 0; i < rhs._uniformList.size(); i++)
    {

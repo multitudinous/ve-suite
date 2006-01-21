@@ -37,7 +37,7 @@ using namespace VE_Shader;
 //Constructor                                                           //
 //////////////////////////////////////////////////////////////////////////
 Program::Program(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:VEXMLObject(rootDocument)
+:XMLObject(rootDocument)
 {
    _name = std::string("VEProgram");
    _vertexShader = 0;
@@ -54,7 +54,7 @@ Program::~Program()
 //Copy constructor                 //
 /////////////////////////////////////
 Program::Program(const Program& rhs)
-:VEXMLObject(rhs)
+:XMLObject(rhs)
 {
    _vertexShader = new Shader(*rhs._vertexShader);
    _fragmentShader = new Shader(*rhs._fragmentShader);

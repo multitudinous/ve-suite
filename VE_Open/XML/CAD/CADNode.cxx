@@ -256,7 +256,7 @@ CADNode::CADNode(const CADNode& rhs)
    _glslProgram = 0;
 
    if(rhs._transform)
-      _transform = new VE_XML::VETransform(*rhs._transform);
+      _transform = new VE_XML::Transform(*rhs._transform);
    if(rhs._material)
       _material = new VE_CAD::CADMaterial(*rhs._material);
 
