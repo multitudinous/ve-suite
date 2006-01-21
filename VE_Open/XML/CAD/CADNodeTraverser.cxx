@@ -79,24 +79,8 @@ void CADNodeTraverser::SetRootNode(VE_CAD::CADNode* root)
 void CADNodeTraverser::Traverse()
 {
    if(_root){
-      //_level = 0;
-      if(_preFunc){
-         _preFunc->Apply(this,_root);
-         if(_ts == SKIP ||
-            _ts == STOP)
-         {
-            _ts = CONT;
-            return;
-         }
-      }
-
       //recurse the root node
       _traverseNode(_root);
-
-      //the post-callback
-      if(_postFunc){
-         _postFunc->Apply(this,_root);
-      }
    }else{
       std::cout<<"Error: CADNodeTraverser::traverse()!"<<std::endl;
       std::cout<<"Root node not set!"<<std::endl;

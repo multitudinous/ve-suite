@@ -128,14 +128,14 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
       if(_numChildren){
          for(int i = _numChildren -1; i >=0; i--)
          {
-            delete _children.at(i);
+           delete _children.at(i);
          }
          _children.clear();
       }
       //get the new number of children
       {
           DOMElement* nChildrenElement = GetSubElement(currentElement,std::string("numChildren"),0);
-          _numChildren = static_cast<int>(ExtractDataNumberFromSimpleElement(nChildrenElement));
+          _numChildren = ExtractIntegerDataNumberFromSimpleElement(nChildrenElement);
       }
       //populate the childList
       {

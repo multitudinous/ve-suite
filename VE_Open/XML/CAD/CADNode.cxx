@@ -68,7 +68,12 @@ CADNode::~CADNode()
 //////////////////////////////////////////////
 void CADNode::SetProgram(Program* glslProgram)
 {
-   _glslProgram = glslProgram;
+   if(_glslProgram)
+   {
+      delete _glslProgram;
+      _glslProgram = 0;
+   }
+   _glslProgram = new Program(*glslProgram);
 }
 ///////////////////////////////////////////
 void CADNode::SetNodeName(std::string name)
@@ -244,11 +249,24 @@ Program* CADNode::GetGLSLProgram()
 CADNode::CADNode(const CADNode& rhs)
 :VE_XML::XMLObject(rhs)
 {
-   _transform = new VE_XML::Transform(*rhs._transform);
-   _material = new VE_CAD::CADMaterial(*rhs._material);
+
+   _parent = 0;
+   _transform = 0;
+   _material = 0;
+   _glslProgram = 0;
+
+   if(rhs._transform)
+      _transform = new VE_XML::VETransform(*rhs._transform);
+   if(rhs._material)
+      _material = new VE_CAD::CADMaterial(*rhs._material);
+
+   if(rhs._glslProgram)
+      _glslProgram = new Program(*rhs._glslProgram);
+
    _parent = rhs._parent;
    _name = rhs._name;
-   _glslProgram = new Program(*rhs._glslProgram);
+   _type = rhs._type;
+   
 }
 ////////////////////////////////////////////////
 CADNode& CADNode::operator=(const CADNode& rhs)
