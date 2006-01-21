@@ -47,9 +47,12 @@
 
 namespace VE_XML
 {
-   class Port;
    class DataValuePair;
    class ParameterBlock;
+}
+namespace VE_Model
+{
+   class Port;
    class Point;
 }
 
@@ -58,9 +61,9 @@ namespace VE_CAD
    class CADNode;
 }
 
-namespace VE_XML
+namespace VE_Model
 {
-class VE_XML_EXPORTS Model : public VEXMLObject
+class VE_XML_EXPORTS Model : public VE_XML::XMLObject
 {
 public:
    ///Constructor
@@ -90,11 +93,11 @@ public:
    ///Get point for the icon location
    Point* GetIconLocation( void );
    ///Get results data
-   DataValuePair* GetResult( unsigned int i );
+   VE_XML::DataValuePair* GetResult( unsigned int i );
    ///Get results data
    unsigned int GetNumberOfResults( void );
    ///Get input data
-   DataValuePair* GetInput( unsigned int i );
+   VE_XML::DataValuePair* GetInput( unsigned int i );
    ///Get input data
    unsigned int GetNumberOfInputs( void );
    ///Get the i'th port for the model.
@@ -104,7 +107,7 @@ public:
    unsigned int GetNumberOfPorts( void );
    ///Get the i'th information packet for a model.
    ///\param i The i'th packet you are after.
-   ParameterBlock* GetInformationPacket( unsigned int i );
+   VE_XML::ParameterBlock* GetInformationPacket( unsigned int i );
    ///Get info packets data
    unsigned int GetNumberOfInformationPackets( void );
    ///Get the geometry for the model.
@@ -123,11 +126,11 @@ private:
    std::vector< Port* > ports;///<The vector port data if any for a model.
    Point* iconLocation;///<The icon location point container.
    ///The data value pair will contain all the results for a paticular model
-   std::vector< DataValuePair* > results;///<The classes hold the results for the model.
+   std::vector< VE_XML::DataValuePair* > results;///<The classes hold the results for the model.
    ///The data value pair will contain the model inputs for the model
-   std::vector< DataValuePair* > inputs;///<The classes hold the inputs for the model.
+   std::vector< VE_XML::DataValuePair* > inputs;///<The classes hold the inputs for the model.
    ///The parameter block holds all the data the was formerly stored in the param file
-   std::vector< ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
+   std::vector< VE_XML::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
    ///The CADNode contains the tree structure for the geometry
    VE_CAD::CADNode* geometry;///<The classes hold the geometry for the model.
 };

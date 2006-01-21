@@ -45,14 +45,14 @@
 
 #include <xercesc/dom/DOM.hpp>
 
-namespace VE_XML
+namespace VE_Model
 {
    class Link;
 }
 
-namespace VE_XML
+namespace VE_Model
 {
-class VE_XML_EXPORTS Network : public VEXMLObject
+class VE_XML_EXPORTS Network : public VE_XML::XMLObject
 {
 public:
    ///Constructor
@@ -71,7 +71,7 @@ public:
    
    ///Get the i'th link from the Network.
    ///\param i The i'th link you are after.
-   VE_XML::Link* GetLink( unsigned int i );
+   Link* GetLink( unsigned int i );
 
 protected:
    ///Internally update the data.
@@ -80,7 +80,7 @@ protected:
 
 private:
    ///raw datatypes of Network that are specified in the verg_model.xsd file
-   std::vector< VE_XML::Link* > links;///<Vector of Links.
+   std::vector< Link* > links;///<Vector of Links.
 };
 }
 #endif// _VE_NETWORK_H_

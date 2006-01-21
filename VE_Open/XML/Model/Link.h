@@ -50,13 +50,17 @@
 
 namespace VE_XML
 {
-   class Point;
    class DataValuePair;
 }
 
-namespace VE_XML
+namespace VE_Model
 {
-class VE_XML_EXPORTS Link : public VEXMLObject
+   class Point;
+}
+
+namespace VE_Model
+{
+class VE_XML_EXPORTS Link : public VE_XML::XMLObject
 {
 public:
    ///Constructor
@@ -74,12 +78,12 @@ public:
    virtual void SetObjectFromXMLData(DOMNode* xmlInput);
    
    ///Get the portInfo for the fromPort.
-   DataValuePair* GetFromPort( void );
+   VE_XML::DataValuePair* GetFromPort( void );
    ///Get the portInfo for the toPort.
-   DataValuePair* GetToPort( void );
+   VE_XML::DataValuePair* GetToPort( void );
    ///Get the i'th point for a link.
    ///\param i The i'th point you are after.
-   VE_XML::Point* GetLinkPoint( unsigned int i );
+   Point* GetLinkPoint( unsigned int i );
 
 protected:
    ///Internally update the data.
@@ -88,9 +92,9 @@ protected:
 
 private:
    ///raw datatypes of Link that are specified in the verg_model.xsd file
-   std::vector< VE_XML::Point* > linkPoints;///<Vector of Points.
+   std::vector< Point* > linkPoints;///<Vector of Points.
    ///The data value pair will contain the model and port number of the appropriate port to be linked
-   std::pair< DataValuePair*, DataValuePair* > portInfo;///<The classes hold the fromPort in first and the toPort in second.
+   std::pair< VE_XML::DataValuePair*, VE_XML::DataValuePair* > portInfo;///<The classes hold the fromPort in first and the toPort in second.
 };
 }
 #endif// _VE_LINK_H_

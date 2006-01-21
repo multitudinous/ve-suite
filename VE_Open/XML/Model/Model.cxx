@@ -44,7 +44,7 @@ using namespace VE_Model;
 //Constructor                             //
 ////////////////////////////////////////////
 Model::Model( DOMDocument* rootDoc )
-:VEXMLObject( rootDoc )
+:XMLObject( rootDoc )
 {
    modelName = '\0';
    uniqueModelID = 0;
@@ -85,7 +85,7 @@ Model::~Model()
 }
 ///////////////////////////////////////////
 Model::Model( const Model& input )
-:VEXMLObject(input)
+:XMLObject(input)
 {
    modelName = input.modelName;
    uniqueModelID = input.uniqueModelID;
@@ -121,7 +121,7 @@ Model& Model::operator=( const Model& input)
    if ( this != &input )
    {
       //biv-- make sure to call the parent =
-      VEXMLObject::operator =(input);
+      XMLObject::operator =(input);
       modelName = input.modelName;
       uniqueModelID = input.uniqueModelID;
       iconFileName = input.iconFileName;
@@ -227,7 +227,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
             delete iconLocation;
             iconLocation = 0;
          }
-         iconLocation = new VE_XML::Point( _rootDocument );
+         iconLocation = new Point( _rootDocument );
          iconLocation->SetObjectFromXMLData( dataValueStringName );
       }
 

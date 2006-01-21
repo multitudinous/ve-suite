@@ -40,7 +40,7 @@ using namespace VE_Model;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 Point::Point( DOMDocument* rootDoc )
-:VEXMLObject( rootDoc )
+:XMLObject( rootDoc )
 {
    point.first = 0;
    point.second = 0;
@@ -54,7 +54,7 @@ Point::~Point()
 }
 ///////////////////////////////////////////
 Point::Point( const Point& input )
-:VEXMLObject(input)
+:XMLObject(input)
 {
    point = input.point;
 }
@@ -64,7 +64,7 @@ Point& Point::operator=( const Point& input)
    if ( this != &input )
    {
       //biv-- make sure to call the parent =
-      VEXMLObject::operator =(input);
+      XMLObject::operator =(input);
       point = input.point;
    }
    return *this;

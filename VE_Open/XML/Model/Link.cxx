@@ -40,7 +40,7 @@ using namespace VE_Model;
 //Constructor                             //
 ////////////////////////////////////////////
 Link::Link( DOMDocument* rootDoc )
-:VEXMLObject( rootDoc )
+:XMLObject( rootDoc )
 {
    portInfo.first = new DataValuePair( rootDoc, "FLOAT" );
    portInfo.second = new DataValuePair( rootDoc, "FLOAT" );
@@ -59,7 +59,7 @@ Link::~Link()
 }
 ///////////////////////////////////////////
 Link::Link( const Link& input )
-:VEXMLObject(input)
+:XMLObject(input)
 {
    for ( size_t i; i < input.linkPoints.size(); ++i )
    {
@@ -75,7 +75,7 @@ Link& Link::operator=( const Link& input)
    if ( this != &input )
    {
       //biv-- make sure to call the parent =
-      VEXMLObject::operator =(input);
+      XMLObject::operator =(input);
       for ( size_t i; i < linkPoints.size(); ++i )
       {
          delete linkPoints.at( i );
@@ -120,7 +120,7 @@ DataValuePair* Link::GetToPort( void )
    return portInfo.second;
 }
 /////////////////////////////////////
-VE_XML::Point* Link::GetLinkPoint( unsigned int i )
+Point* Link::GetLinkPoint( unsigned int i )
 {
    try
    {

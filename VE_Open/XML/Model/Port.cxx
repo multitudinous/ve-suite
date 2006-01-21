@@ -42,7 +42,7 @@ using namespace VE_Model;
 //Constructor                             //
 ////////////////////////////////////////////
 Port::Port( DOMDocument* rootDoc )
-:VEXMLObject( rootDoc )
+:XMLObject( rootDoc )
 {
    portNumber = 0;
    modelName = '\0';
@@ -62,7 +62,7 @@ Port::~Port()
 }
 ///////////////////////////////////////////
 Port::Port( const Port& input )
-:VEXMLObject(input)
+:XMLObject(input)
 {
    for ( size_t i; i < portData.size(); ++i )
    {
@@ -86,7 +86,7 @@ Port& Port::operator=( const Port& input)
    if ( this != &input )
    {
       //biv-- make sure to call the parent =
-      VEXMLObject::operator =(input);
+      XMLObject::operator =(input);
       for ( size_t i; i < portData.size(); ++i )
       {
          delete portData.at( i );
@@ -121,7 +121,7 @@ void Port::SetDataFlowDirection( std::string direction )
    dataFlow = direction;
 }
 ////////////////////////////////////////////////////////////////////////
-void Port::SetPortLocation( VE_XML::Point* location )
+void Port::SetPortLocation( Point* location )
 {
    // we can do this because a point is always created be default
    delete portLocation;
@@ -212,7 +212,7 @@ void Port::SetObjectFromXMLData(DOMNode* element)
             delete portLocation;
             portLocation = 0;
          }
-         portLocation = new VE_XML::Point( _rootDocument );
+         portLocation = new Point( _rootDocument );
          portLocation->SetObjectFromXMLData( dataValueStringName );
       }
       // for port data

@@ -39,7 +39,7 @@ using namespace VE_Model;
 //Constructor                             //
 ////////////////////////////////////////////
 Network::Network( DOMDocument* rootDoc )
-:VEXMLObject( rootDoc )
+:XMLObject( rootDoc )
 {
    ;
 }
@@ -54,7 +54,7 @@ Network::~Network()
 }
 ///////////////////////////////////////////
 Network::Network( const Network& input )
-:VEXMLObject(input)
+:XMLObject(input)
 {
    for ( size_t i; i < input.links.size(); ++i )
    {
@@ -67,7 +67,7 @@ Network& Network::operator=( const Network& input)
    if ( this != &input )
    {
       //biv-- make sure to call the parent =
-      VEXMLObject::operator =(input);
+      XMLObject::operator =(input);
       for ( size_t i; i < links.size(); ++i )
       {
          delete links.at( i );
@@ -97,7 +97,7 @@ void Network::_updateVEElement( std::string input )
    }
 }
 /////////////////////////////////////
-VE_XML::Link* Network::GetLink( unsigned int i )
+Link* Network::GetLink( unsigned int i )
 {
    try
    {
