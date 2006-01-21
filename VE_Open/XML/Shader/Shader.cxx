@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/Shader/Shader.h"
+#include "VE_Open/VE_XML/Shader/Shader.h"
 
 #include "VE_Open/XML/Shader/Uniform.h"
 #include "VE_Open/XML/Shader/TextureImage.h"
@@ -256,6 +256,16 @@ void Shader::_updateShaderSource()
    DOMText* source = _rootDocument->createTextNode(xercesString(_shaderSource));
    sourceElement->appendChild(source);
    _veElement->appendChild(sourceElement);
+}
+////////////////////////////////////
+size_t Shader::GetNumberOfUniforms()
+{
+    return _uniformList.size();
+}
+/////////////////////////////////////////
+size_t Shader::GetNumberOfTextureImages()
+{
+    return _textureImages.size();
 }
 ////////////////////////////////////////////
 Shader& Shader::operator=(const Shader& rhs)

@@ -98,6 +98,12 @@ public:
    ///\param textureUnit The texture unit to search for.
    TextureImage* GetTextureImage(unsigned int textureUnit);
 
+   ///Get the number of uniforms.
+   size_t GetNumberOfUniforms();
+
+   ///Get the number of texture images.
+   size_t GetNumberOfTextureImages();
+
    ///Get a specific uniform by name.
    ///\param uniformName The uniform name to search for.
    Uniform* GetUniform(std::string uniformName);
