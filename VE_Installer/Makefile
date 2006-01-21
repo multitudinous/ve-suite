@@ -31,8 +31,10 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 DIRS= ${VE_SUITE_HOME}/VE_Open \
-      ${VE_SUITE_HOME}/VE_Open/VE_XML \
-      ${VE_SUITE_HOME}/VE_Open/VE_XML/CAD \
+      ${VE_SUITE_HOME}/VE_Open/XML \
+      ${VE_SUITE_HOME}/VE_Open/XML/CAD \
+      ${VE_SUITE_HOME}/VE_Open/XML/Shader \
+      ${VE_SUITE_HOME}/VE_Open/XML/Model \
       ${VE_SUITE_HOME}/VE_Conductor/Network \
       ${VE_SUITE_HOME}/VE_CE \
       ${VE_SUITE_HOME}/VE_Conductor \
@@ -51,8 +53,10 @@ default: all
 all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Open \
-${VE_SUITE_HOME}/VE_Open/VE_XML \
-${VE_SUITE_HOME}/VE_Open/VE_XML/CAD \
+${VE_SUITE_HOME}/VE_Open/XML \
+${VE_SUITE_HOME}/VE_Open/XML/CAD \
+${VE_SUITE_HOME}/VE_Open/XML/Shader \
+${VE_SUITE_HOME}/VE_Open/XML/Model \
 ${VE_SUITE_HOME}/VE_Conductor/Network \
 ${VE_SUITE_HOME}/VE_CE \
 ${VE_SUITE_HOME}/VE_Conductor \
