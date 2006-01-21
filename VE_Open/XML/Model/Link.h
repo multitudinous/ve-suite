@@ -60,7 +60,7 @@ namespace VE_Model
 
 namespace VE_Model
 {
-class VE_XML_EXPORTS Link : public VE_XML::XMLObject
+class VE_MODEL_EXPORTS Link : public VE_XML::XMLObject
 {
 public:
    ///Constructor

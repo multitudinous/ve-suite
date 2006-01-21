@@ -48,7 +48,7 @@
 
 namespace VE_Model
 {
-class VE_XML_EXPORTS Point : public VE_XML::XMLObject
+class VE_MODEL_EXPORTS Point : public VE_XML::XMLObject
 {
 public:
    ///Constructor

@@ -52,7 +52,7 @@ namespace VE_Model
 
 namespace VE_Model
 {
-class VE_XML_EXPORTS Network : public VE_XML::XMLObject
+class VE_MODEL_EXPORTS Network : public VE_XML::XMLObject
 {
 public:
    ///Constructor

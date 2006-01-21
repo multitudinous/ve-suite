@@ -63,7 +63,7 @@ namespace VE_CAD
 
 namespace VE_Model
 {
-class VE_XML_EXPORTS Model : public VE_XML::XMLObject
+class VE_MODEL_EXPORTS Model : public VE_XML::XMLObject
 {
 public:
    ///Constructor
