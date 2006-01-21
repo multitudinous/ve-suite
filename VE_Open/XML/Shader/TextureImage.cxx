@@ -29,13 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/VE_XML/Shader/TextureImage.h"
+#include "VE_Open/XML/Shader/TextureImage.h"
 using namespace VE_Shader;
 ////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////
 TextureImage::TextureImage(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:VE_XML::VEXMLObject(rootDocument)
+:VE_XML::XMLObject(rootDocument)
 {
    _imageFile = std::string("");
    _textureUnit = 0;
@@ -50,7 +50,7 @@ TextureImage::~TextureImage()
 }
 ///////////////////////////////////////////////////
 TextureImage::TextureImage(const TextureImage& rhs)
-:VE_XML::VEXMLObject(rhs)
+:VE_XML::XMLObject(rhs)
 {
    _imageFile = rhs._imageFile;
    _textureUnit = rhs._textureUnit;
@@ -157,7 +157,7 @@ TextureImage& TextureImage::operator=(const TextureImage& rhs)
 {
    if(this != &rhs)
    {
-      VEXMLObject::operator =(rhs);
+      XMLObject::operator =(rhs);
       _imageFile = rhs._imageFile;
       _textureUnit = rhs._textureUnit;
       _dimension = rhs._dimension;

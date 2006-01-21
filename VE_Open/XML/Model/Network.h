@@ -23,51 +23,64 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: CADXMLReaderWriter.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: Network.h,v $
+ * Date modified: $Date: 2006-01-14 18:41:24 -0600 (Sat, 14 Jan 2006) $
+ * Version:       $Rev: 3503 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CAD_XML_FILE_READER_H
-#define CAD_XML_FILE_READER_H
 
-/*!\file CADXMLReaderWriter.h
-  CADXMLReaderWriter API
+#ifndef _VE_NETWORK_H_
+#define _VE_NETWORK_H_
+/*!\file Network.h
+  *System Network API
   */
 
-/*!\class VE_CAD::CADXMLReaderWriter
- * Class to read in a CAD XML file.
+/*!\class VE_XML::Network
+ *Class that manages the system network for conductor.
  */
-#include "VE_Open/XML/XMLReaderWriter.h"
-namespace VE_CAD
+#include <string>
+#include <vector>
+#include "VE_Open/XML/XMLObject.h"
+
+#include <xercesc/dom/DOM.hpp>
+
+namespace VE_XML
 {
-   class CADNode;
+   class Link;
 }
-XERCES_CPP_NAMESPACE_USE
-namespace VE_CAD{
-   class VE_CAD_EXPORTS CADXMLReaderWriter: public VE_XML::XMLReaderWriter{
+
+namespace VE_XML
+{
+class VE_XML_EXPORTS Network : public VEXMLObject
+{
 public:
-   ///Default Constructor
-   CADXMLReaderWriter();
-   
-   ///Copy Constructor
-   CADXMLReaderWriter(const CADXMLReaderWriter& fr);
-
+   ///Constructor
+   ///\param rootDoc The owning DOMDocument
+   Network( DOMDocument* rootDoc );
    ///Destructor
-   virtual ~CADXMLReaderWriter();
+   virtual ~Network();
+   ///Copy Constructor
+   Network( const Network& );
+   ///equal operator
+   Network& operator= ( const Network& );
+   
+   ///set the data from an string representing the xml
+   ///\param xmlInput The input XML data.
+   virtual void SetObjectFromXMLData(DOMNode* xmlInput);
+   
+   ///Get the i'th link from the Network.
+   ///\param i The i'th link you are after.
+   VE_XML::Link* GetLink( unsigned int i );
 
-   ///Get the root node of the CAD Hierarchy
-   VE_CAD::CADNode* GetRootNode();
-
-   ///Equal Operator
-   CADXMLReaderWriter& operator=(const CADXMLReaderWriter& rhs);
 protected:
-   ///Internal function to populate the appropriate structures from the file
-   ///read in.
-   ///\param rootDocument The document representing the input XML structure.
-   virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument);
-   VE_CAD::CADNode* _rootNode;///< The rootNode of the XML Data read in.
+   ///Internally update the data.
+   ///\param tagName The tag name of this element.
+   virtual void _updateVEElement( std::string tagName );
+
+private:
+   ///raw datatypes of Network that are specified in the verg_model.xsd file
+   std::vector< VE_XML::Link* > links;///<Vector of Links.
 };
 }
-#endif// CAD_XML_READER_H
+#endif// _VE_NETWORK_H_

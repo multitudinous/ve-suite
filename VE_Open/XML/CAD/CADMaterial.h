@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CAD_MATERIAL_H
 #define CAD_MATERIAL_H
-#include "VE_Open/VE_XML/VEXMLObject.h"
+#include "VE_Open/XML/XMLObject.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <vector>
@@ -44,11 +44,15 @@
  * Class to represent a basic material.
  */
 XERCES_CPP_NAMESPACE_USE
-namespace VE_XML{
-   class VEFloatArray;
-};
-namespace VE_CAD{
-   class VE_CAD_EXPORTS CADMaterial: public VE_XML::VEXMLObject{
+namespace VE_XML
+{
+   class FloatArray;
+}
+
+namespace VE_CAD
+{
+class VE_CAD_EXPORTS CADMaterial: public VE_XML::XMLObject
+{
 public:
    ///Constructor
    ///\param rootDocument The root XML document of this material.
@@ -59,19 +63,19 @@ public:
 
    ///Set the diffuse component
    ///\param diffuse RGBA diffuse property
-   void SetDiffuseComponent(VE_XML::VEFloatArray* diffuse);
+   void SetDiffuseComponent(VE_XML::FloatArray* diffuse);
 
    ///Set the emissive component
    ///\param emissive RGBA emissive property
-   void SetEmissiveComponent(VE_XML::VEFloatArray* emissive);
+   void SetEmissiveComponent(VE_XML::FloatArray* emissive);
 
    ///Set the ambient component
    ///\param ambient RGBA ambient property
-   void SetAmbientComponent(VE_XML::VEFloatArray* ambient);
+   void SetAmbientComponent(VE_XML::FloatArray* ambient);
 
    ///Set the specular reflection component
    ///\param specular RGBA specular property
-   void SetSpecularComponent(VE_XML::VEFloatArray* specular);
+   void SetSpecularComponent(VE_XML::FloatArray* specular);
 
    ///Set the "shininess" of this material
    ///\param shine value
@@ -102,16 +106,16 @@ public:
    
    
    ///Get the diffuse property
-   VE_XML::VEFloatArray* GetDiffuse();
+   VE_XML::FloatArray* GetDiffuse();
 
    ///Get the emissive property
-   VE_XML::VEFloatArray* GetEmissive();
+   VE_XML::FloatArray* GetEmissive();
 
    ///Get the ambient property
-   VE_XML::VEFloatArray* GetAmbient();
+   VE_XML::FloatArray* GetAmbient();
 
    ///Get the specular property
-   VE_XML::VEFloatArray* GetSpecular();
+   VE_XML::FloatArray* GetSpecular();
   
    ///Get the shininess property
    double GetShininess();
@@ -152,14 +156,14 @@ protected:
    ///Internally update the XML data for the material color mode.
    void _updateColorMode();
 
-   VE_XML::VEFloatArray* _kDiffuse;///< Diffuse component.
-   VE_XML::VEFloatArray* _kEmissive;///< Emmisive component.
-   VE_XML::VEFloatArray* _ambient;///< Ambient component.
-   VE_XML::VEFloatArray* _specular;///< Specular component.
+   VE_XML::FloatArray* _kDiffuse;///< Diffuse component.
+   VE_XML::FloatArray* _kEmissive;///< Emmisive component.
+   VE_XML::FloatArray* _ambient;///< Ambient component.
+   VE_XML::FloatArray* _specular;///< Specular component.
    std::string _materialName;///< Name of this Material node.
    double _shininess;///< Shininess of the material
    std::string _colorMode;///< Color mode of this material
    std::string _face;///< Face that this material is applied to.
 };
 }
-#endif CAD_MATERIAL_H
+#endif //CAD_MATERIAL_H

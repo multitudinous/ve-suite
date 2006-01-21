@@ -32,7 +32,7 @@
 #ifndef _CAD_NODE_H_
 #define _CAD_NODE_H_
 
-#include "VE_Open/VE_XML/VEXMLObject.h"
+#include "VE_Open/XML/XMLObject.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 
@@ -48,20 +48,23 @@
  * Contains nodes for creating/managing a CAD hierarchy.
  */
 
-namespace VE_XML{
-   class VETransform;
+namespace VE_XML
+{
+   class Transform;
 }
+
 namespace VE_Shader
 {
    class Program;
 }
 
-namespace VE_CAD{
-
+namespace VE_CAD
+{
 class CADAssembly;
 class CADMaterial;
 
-class VE_CAD_EXPORTS CADNode: public VE_XML::VEXMLObject{
+class VE_CAD_EXPORTS CADNode: public VE_XML::XMLObject
+{
 public:
    ///Constructor
    ///\param rootDocument The xerces document for this node.
@@ -79,7 +82,7 @@ public:
 
    ///Set the transform for this node.
    ///\param transform The transform of this node.
-   void SetTransform(VE_XML::VETransform* transform);
+   void SetTransform(VE_XML::Transform* transform);
 
    ///Set the material for this node.
    ///\param material The material of this node.
@@ -104,7 +107,7 @@ public:
    VE_CAD::CADNode* GetParent();
 
    ///Get the transform of this CAD node.
-   VE_XML::VETransform* GetTransform();
+   VE_XML::Transform* GetTransform();
 
    ///Get the material of this CAD node
    VE_CAD::CADMaterial* GetMaterial();
@@ -130,7 +133,7 @@ protected:
    ///Internally update the type of the node in XML.
    void _updateNodeType();
 
-   VE_XML::VETransform* _transform; ///< Transform for the node.
+   VE_XML::Transform* _transform; ///< Transform for the node.
    VE_CAD::CADMaterial* _material; ///< Material for this node.
    VE_CAD::CADNode* _parent;  ///< Parent node.
    VE_Shader::Program* _glslProgram;///<The glsl program.

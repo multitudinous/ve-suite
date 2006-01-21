@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Open/VE_XML/CAD/CADNodeTraverser.h"
-#include "VE_Open/VE_XML/CAD/CADAssembly.h"
-#include "VE_Open/VE_XML/CAD/CADNode.h"
-#include "VE_Open/VE_XML/CAD/CADPart.h"
-#include "VE_Open/VE_XML/CAD/CADClone.h"
+#include "VE_Open/XML/CAD/CADNodeTraverser.h"
+#include "VE_Open/XML/CAD/CADAssembly.h"
+#include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/CAD/CADPart.h"
+#include "VE_Open/XML/CAD/CADClone.h"
 #include <iostream>
 
 using namespace VE_CAD;

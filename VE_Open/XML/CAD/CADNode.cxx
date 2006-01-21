@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/VE_XML/VETransform.h"
-#include "VE_Open/VE_XML/Shader/Program.h"
-#include "VE_Open/VE_XML/CAD/CADAssembly.h"
-#include "VE_Open/VE_XML/CAD/CADMaterial.h"
+#include "VE_Open/XML/Transform.h"
+#include "VE_Open/XML/Shader/Program.h"
+#include "VE_Open/XML/CAD/CADAssembly.h"
+#include "VE_Open/XML/CAD/CADMaterial.h"
 
 using namespace VE_CAD;
 using namespace VE_Shader;
@@ -42,11 +42,11 @@ using namespace VE_XML;
 //////////////////////////////////
 CADNode::CADNode( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,
                std::string name)
-:VE_XML::VEXMLObject(rootDoc)
+:VE_XML::XMLObject(rootDoc)
 {
    _name = name;
    _parent = 0;
-   _transform = 0;//new VE_XML::VETransform(_rootDocument); 
+   _transform = 0;//new VE_XML::Transform(_rootDocument); 
    _material = 0;//new VE_CAD::CADMaterial(_rootDocument); 
    _type = std::string("Node");
    _glslProgram = 0;
@@ -81,14 +81,14 @@ void CADNode::SetParent(VE_CAD::CADNode* parent)
    _parent = parent;
 }
 ///////////////////////////////////////////////////////
-void CADNode::SetTransform(VE_XML::VETransform* transform)
+void CADNode::SetTransform(VE_XML::Transform* transform)
 {
    if(_transform)
    {
       delete _transform;
       _transform = 0;
    }
-   _transform = new VE_XML::VETransform(*transform);
+   _transform = new VE_XML::Transform(*transform);
 }
 ////////////////////////////////////////////////////////
 void CADNode::SetMaterial(VE_CAD::CADMaterial* material)
@@ -116,7 +116,7 @@ VE_CAD::CADNode* CADNode::GetParent()
    return _parent;
 }
 //////////////////////////////////////////
-VE_XML::VETransform* CADNode::GetTransform()
+VE_XML::Transform* CADNode::GetTransform()
 {
    return _transform;
 }
@@ -217,7 +217,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             {
                if(!_transform)
                {
-                  _transform = new VETransform(_rootDocument);
+                  _transform = new Transform(_rootDocument);
                }
                _transform->SetObjectFromXMLData(transformNode);
             }
@@ -242,9 +242,9 @@ Program* CADNode::GetGLSLProgram()
 }
 /////////////////////////////////////
 CADNode::CADNode(const CADNode& rhs)
-:VE_XML::VEXMLObject(rhs)
+:VE_XML::XMLObject(rhs)
 {
-   _transform = new VE_XML::VETransform(*rhs._transform);
+   _transform = new VE_XML::Transform(*rhs._transform);
    _material = new VE_CAD::CADMaterial(*rhs._material);
    _parent = rhs._parent;
    _name = rhs._name;
@@ -255,13 +255,13 @@ CADNode& CADNode::operator=(const CADNode& rhs)
 {
    if ( this != &rhs )
    {
-      VEXMLObject::operator =(rhs);
+      XMLObject::operator =(rhs);
       if(_transform)
       {
          delete _transform;
          _transform = 0;
       }
-      _transform = new VE_XML::VETransform(*rhs._transform);
+      _transform = new VE_XML::Transform(*rhs._transform);
       if(_material)
       {
          delete _material;

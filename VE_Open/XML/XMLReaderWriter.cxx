@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Open/VE_XML/XMLReaderWriter.h"
-#include "VE_Open/VE_XML/DOMDocumentManager.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/DOMDocumentManager.h"
 #include <iostream>
 using namespace VE_XML;
 //////////////////////////////

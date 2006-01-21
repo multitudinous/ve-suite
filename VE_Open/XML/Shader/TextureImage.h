@@ -32,7 +32,7 @@
 #ifndef VE_TEXTURE_IMAGE_H
 #define VE_TEXTURE_IMAGE_H
 
-#include "VE_Open/VE_XML/VEXMLObject.h"
+#include "VE_Open/XML/XMLObject.h"
 #include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
@@ -45,7 +45,7 @@
  */
 
 namespace VE_Shader{
-class VE_SHADER_EXPORTS TextureImage:public VE_XML::VEXMLObject{
+class VE_SHADER_EXPORTS TextureImage:public VE_XML::XMLObject{
 public:
    ///Constructor
    ///\param rootDocument The xerces document for this node.

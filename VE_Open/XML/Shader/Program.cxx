@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Open/VE_XML/Shader/Program.h"
-#include "VE_Open/VE_XML/Shader/Shader.h"
+#include "VE_Open/XML/Shader/Program.h"
+#include "VE_Open/XML/Shader/Shader.h"
 using namespace VE_Shader;
 //////////////////////////////////////////////////////////////////////////
 //Constructor                                                           //
@@ -159,7 +159,7 @@ Program& Program::operator=(const Program& rhs)
 {
 
    if(this != &rhs){
-      VEXMLObject::operator=(rhs);
+      XMLObject::operator=(rhs);
       _vertexShader = rhs._vertexShader;
       _fragmentShader = rhs._fragmentShader;
       _name = rhs._name;

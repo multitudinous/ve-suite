@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include "VE_Open/VE_XML/CAD/CADXMLReaderWriter.h"
-#include "VE_Open/VE_XML/CAD/CADNode.h"
-#include "VE_Open/VE_XML/CAD/CADPart.h"
-#include "VE_Open/VE_XML/CAD/CADAssembly.h"
-#include "VE_Open/VE_XML/VEXMLObject.h"
+#include "VE_Open/XML/CAD/CADXMLReaderWriter.h"
+#include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/CAD/CADPart.h"
+#include "VE_Open/XML/CAD/CADAssembly.h"
+#include "VE_Open/XML/XMLObject.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_CAD;
 //////////////////////////////

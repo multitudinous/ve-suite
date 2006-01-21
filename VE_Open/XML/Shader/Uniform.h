@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UNIFORM_H_
 #define _VE_UNIFORM_H_
-#include "VE_Open/VE_XML/VEXMLObject.h"
+#include "VE_Open/XML/XMLObject.h"
 #include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
@@ -50,7 +50,7 @@
 
 
 namespace VE_Shader{
-class VE_SHADER_EXPORTS Uniform : public VE_XML::VEXMLObject{
+class VE_SHADER_EXPORTS Uniform : public VE_XML::XMLObject{
 public:
    ///Constructor
    ///\param rootDocument The xerces document for this node.

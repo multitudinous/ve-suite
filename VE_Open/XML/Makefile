@@ -34,17 +34,17 @@ CFDUNAME = $(shell uname)
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   VECommand.cxx\
-   VEDataValuePair.cxx\
-   VEFloatArray.cxx\
-   VE1DDoubleArray.cxx\
-   VE2DDoubleArray.cxx\
-   VE3DDoubleArray.cxx\
-   VEParameterBlock.cxx\
-   VEStateInfo.cxx\
-   VETransform.cxx\
-   VEUser.cxx\
-   VEXMLObject.cxx\
+   Command.cxx\
+   DataValuePair.cxx\
+   FloatArray.cxx\
+   OneDDoubleArray.cxx\
+   TwoDDoubleArray.cxx\
+   ThreeDDoubleArray.cxx\
+   ParameterBlock.cxx\
+   StateInfo.cxx\
+   Transform.cxx\
+   User.cxx\
+   XMLObject.cxx\
    XMLReaderWriter.cxx\
    DOMDocumentManager.cxx
 

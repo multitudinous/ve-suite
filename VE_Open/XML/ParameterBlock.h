@@ -1,0 +1,101 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile: ParameterBlock.h,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef _XML_VE_PARAMETER_BLOCK_H_
+#define _XML_VE_PARAMETER_BLOCK_H_
+/*!\file ParameterBlock.h
+  Parameter Block Information API
+  */
+/*!\class VE_XML::ParameterBlock
+ * This class manages a parameter block which is really a
+ * list of DataValuePair s and an optional Transform
+ */
+#include <string>
+#include <vector>
+
+#include "VE_Open/XML/XMLObject.h"
+namespace VE_XML{
+   class Transform;
+   class DataValuePair;
+}
+
+#include <xercesc/dom/DOM.hpp>
+#include <iostream>
+
+namespace VE_XML{
+class VE_XML_EXPORTS ParameterBlock : public XMLObject{
+public:
+   ///Constructor
+   ///\param rootDoc The owning DOMDocument.
+   ///\param id The identification number of this parameter block
+   ParameterBlock(DOMDocument* rootDoc,unsigned int id = 0);
+   ///Destructor
+   virtual ~ParameterBlock();
+
+   ///Set the identification number.
+   ///\param id The number specifiying what type of data is in this parameter block.
+   void SetId(unsigned int id);
+
+   ///Optional. Set the Transform.
+   ///\param transform The Transform information. Commonly used with CFD datasets and CAD information.
+   void SetTransform(VE_XML::Transform* transform);
+
+   ///Add a property, which is held in a DataValuePair.
+   ///\param prop The DataValuePair holding the information such as a CFD filename.
+   void AddProperty(VE_XML::DataValuePair* prop);
+   
+   ///set the data from an string representing the xml
+   ///\param xmlInput The input XML data.
+   virtual void SetObjectFromXMLData(DOMNode* xmlInput);
+   
+   ///Return the block ID.
+   unsigned int GetId();
+   ///Return the Transform.
+   VE_XML::Transform* GetTransform();
+   ///Return a DataValuePair based on a name.
+   ///\param name The name of the DataValuePair to search for.
+   VE_XML::DataValuePair* GetProperty(std::string name);
+   ///Return the DataValuePair at the index.
+   ///\param index The index of the DataValuePair.
+   VE_XML::DataValuePair* GetProperty(unsigned int index);
+
+
+protected:
+   ///Internally update the XML data.
+   ///\param tagName The tag name for this element
+	virtual void _updateVEElement( std::string tagName);
+   unsigned int _id;///<The block ID.
+   VE_XML::Transform* _dcs;///<The optional Transform.
+   std::vector<VE_XML::DataValuePair*> _properties;///<The DataValuePair list containing the block properties.
+};
+}
+#endif// _XML_VE_PARAMETER_BLOCK_H_

@@ -39,7 +39,7 @@
  * Class to represent a part file (the actual CAD geometry)
  */
 #include <xercesc/dom/DOM.hpp>
-#include "VE_Open/VE_XML/CAD/CADNode.h"
+#include "VE_Open/XML/CAD/CADNode.h"
 #include <string>
 
 XERCES_CPP_NAMESPACE_USE

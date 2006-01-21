@@ -29,29 +29,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/VE_XML/CAD/CADMaterial.h"
-#include "VE_Open/VE_XML/VEFloatArray.h"
+#include "VE_Open/XML/CAD/CADMaterial.h"
+#include "VE_Open/XML/FloatArray.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////
 //Constructor                                                     //
 ////////////////////////////////////////////////////////////////////
 CADMaterial::CADMaterial(DOMDocument* rootDocument,std::string name)
-:VE_XML::VEXMLObject(rootDocument)
+:VE_XML::XMLObject(rootDocument)
 {
    std::vector< double > temp;
    temp.assign( 4, 1.0f );
 
-   _kDiffuse = new VE_XML::VEFloatArray(_rootDocument);
+   _kDiffuse = new VE_XML::FloatArray(_rootDocument);
    _kDiffuse->SetArray(temp);
 
-   _kEmissive = new VE_XML::VEFloatArray(_rootDocument);
+   _kEmissive = new VE_XML::FloatArray(_rootDocument);
    _kEmissive->SetArray(temp);
 
-   _ambient = new VE_XML::VEFloatArray(_rootDocument);
+   _ambient = new VE_XML::FloatArray(_rootDocument);
    _ambient->SetArray(temp);
 
-   _specular = new VE_XML::VEFloatArray(_rootDocument);
+   _specular = new VE_XML::FloatArray(_rootDocument);
    _specular->SetArray(temp);
    _shininess = 50.0;
    _materialName = name;
@@ -97,22 +97,22 @@ void CADMaterial::SetColorMode(std::string colorMode)
    _colorMode = colorMode;
 }   
 /////////////////////////////////////////////////////
-void CADMaterial::SetDiffuseComponent(VE_XML::VEFloatArray* diffuse)
+void CADMaterial::SetDiffuseComponent(VE_XML::FloatArray* diffuse)
 {
    _kDiffuse = diffuse;
 }
 ///////////////////////////////////////////////////////
-void CADMaterial::SetEmissiveComponent(VE_XML::VEFloatArray* emissive)
+void CADMaterial::SetEmissiveComponent(VE_XML::FloatArray* emissive)
 {
    _kEmissive = emissive;
 }
 /////////////////////////////////////////////////////
-void CADMaterial::SetAmbientComponent(VE_XML::VEFloatArray* ambient)
+void CADMaterial::SetAmbientComponent(VE_XML::FloatArray* ambient)
 {
    _ambient = ambient;
 }
 //////////////////////////////////////////////////////
-void CADMaterial::SetSpecularComponent(VE_XML::VEFloatArray* specular)
+void CADMaterial::SetSpecularComponent(VE_XML::FloatArray* specular)
 {
    _specular = specular;
 }
@@ -137,22 +137,22 @@ double CADMaterial::GetShininess()
    return _shininess;
 }
 ////////////////////////////////////////////
-VE_XML::VEFloatArray* CADMaterial::GetDiffuse()
+VE_XML::FloatArray* CADMaterial::GetDiffuse()
 {
    return _kDiffuse;
 }
 /////////////////////////////////////////////
-VE_XML::VEFloatArray* CADMaterial::GetEmissive()
+VE_XML::FloatArray* CADMaterial::GetEmissive()
 {
    return _kEmissive;
 }
 ////////////////////////////////////////////
-VE_XML::VEFloatArray* CADMaterial::GetAmbient()
+VE_XML::FloatArray* CADMaterial::GetAmbient()
 {
    return _ambient;
 }
 /////////////////////////////////////////////
-VE_XML::VEFloatArray* CADMaterial::GetSpecular()
+VE_XML::FloatArray* CADMaterial::GetSpecular()
 {
    return _specular;
 }
@@ -242,12 +242,12 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
 }
 ////////////////////////////////////////////////
 CADMaterial::CADMaterial(const CADMaterial& rhs)
-:VEXMLObject(rhs)
+:XMLObject(rhs)
 {
-   _kDiffuse = new VE_XML::VEFloatArray(*rhs._kDiffuse);
-   _kEmissive = new VE_XML::VEFloatArray(*rhs._kEmissive);
-   _ambient = new VE_XML::VEFloatArray(*rhs._ambient);
-   _specular = new VE_XML::VEFloatArray(*rhs._specular);
+   _kDiffuse = new VE_XML::FloatArray(*rhs._kDiffuse);
+   _kEmissive = new VE_XML::FloatArray(*rhs._kEmissive);
+   _ambient = new VE_XML::FloatArray(*rhs._ambient);
+   _specular = new VE_XML::FloatArray(*rhs._specular);
    _shininess = rhs._shininess;
    _materialName = rhs._materialName;
 }
@@ -256,7 +256,7 @@ CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
 {
    if ( this != &rhs )
    {
-      VEXMLObject::operator =(rhs);
+      XMLObject::operator =(rhs);
       if(_kDiffuse)
       {
          delete _kDiffuse;
@@ -277,10 +277,10 @@ CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
          delete _specular;
          _specular = 0;
       }
-      _kDiffuse = new VE_XML::VEFloatArray(*rhs._kDiffuse);
-      _kEmissive = new VE_XML::VEFloatArray(*rhs._kEmissive);
-      _ambient = new VE_XML::VEFloatArray(*rhs._ambient);
-      _specular = new VE_XML::VEFloatArray(*rhs._specular);
+      _kDiffuse = new VE_XML::FloatArray(*rhs._kDiffuse);
+      _kEmissive = new VE_XML::FloatArray(*rhs._kEmissive);
+      _ambient = new VE_XML::FloatArray(*rhs._ambient);
+      _specular = new VE_XML::FloatArray(*rhs._specular);
       _shininess = rhs._shininess;
       _materialName = rhs._materialName;
       _colorMode = rhs._colorMode;

@@ -29,14 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/VE_XML/Shader/Uniform.h"
+#include "VE_Open/XML/Shader/Uniform.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_Shader;
 //////////////////////////////////////////////////////////////////////////
 ///Constructor                                                          //
 //////////////////////////////////////////////////////////////////////////
 Uniform::Uniform(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:VE_XML::VEXMLObject(rootDocument)
+:VE_XML::XMLObject(rootDocument)
 {
    _type = std::string("float");
    _variableSize = 0; 
@@ -52,7 +52,7 @@ Uniform::~Uniform()
 //Copy constructor                 //
 /////////////////////////////////////
 Uniform:: Uniform(const Uniform& rhs)
-:VE_XML::VEXMLObject(rhs)
+:VE_XML::XMLObject(rhs)
 {
    _type = rhs._type;
    _variableSize = rhs._variableSize;
@@ -70,7 +70,7 @@ Uniform& Uniform::operator=(const Uniform& rhs)
 {
    if(this != &rhs)
    {
-      VEXMLObject::operator =(rhs);
+      XMLObject::operator =(rhs);
       _type = rhs._type;
       _variableSize = rhs._variableSize;
       _name = rhs._name;

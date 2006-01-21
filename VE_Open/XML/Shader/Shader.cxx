@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/VE_XML/Shader/Shader.h"
+#include "VE_Open/XML/Shader/Shader.h"
 
-#include "VE_Open/VE_XML/Shader/Uniform.h"
-#include "VE_Open/VE_XML/Shader/TextureImage.h"
+#include "VE_Open/XML/Shader/Uniform.h"
+#include "VE_Open/XML/Shader/TextureImage.h"
 
 using namespace VE_Shader;
 using namespace VE_XML;
@@ -41,7 +41,7 @@ XERCES_CPP_NAMESPACE_USE
 //Constructor                                                         //
 ////////////////////////////////////////////////////////////////////////
 Shader::Shader(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:VE_XML::VEXMLObject(rootDocument)
+:VE_XML::XMLObject(rootDocument)
 {
    _shaderType = std::string("Vertex");
    _shaderSource = std::string("");
@@ -262,7 +262,7 @@ Shader& Shader::operator=(const Shader& rhs)
 {
    if(this != &rhs)
    {
-      VEXMLObject::operator =(rhs);
+      XMLObject::operator =(rhs);
       size_t nUniforms = _uniformList.size();
       for(size_t i = nUniforms -1; i >=0; i--)
       {

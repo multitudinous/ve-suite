@@ -14,7 +14,7 @@
 		<Configuration
 			Name="dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
-			IntermediateDirectory=".\VE_XML\$(ConfigurationName)"
+			IntermediateDirectory=".\XML\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -67,7 +67,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
-			IntermediateDirectory=".\VE_XML\$(ConfigurationName)"
+			IntermediateDirectory=".\XML\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -127,28 +127,28 @@
 				RelativePath=".\DOMDocumentManager.cxx">
 			</File>
 			<File
-				RelativePath=".\VECommand.cxx">
+				RelativePath=".\Command.cxx">
 			</File>
 			<File
-				RelativePath=".\VEDataValuePair.cxx">
+				RelativePath=".\DataValuePair.cxx">
 			</File>
 			<File
-				RelativePath=".\VEFloatArray.cxx">
+				RelativePath=".\FloatArray.cxx">
 			</File>
 			<File
-				RelativePath=".\VEParameterBlock.cxx">
+				RelativePath=".\ParameterBlock.cxx">
 			</File>
 			<File
-				RelativePath=".\VEStateInfo.cxx">
+				RelativePath=".\StateInfo.cxx">
 			</File>
 			<File
-				RelativePath=".\VETransform.cxx">
+				RelativePath=".\Transform.cxx">
 			</File>
 			<File
-				RelativePath=".\VEUser.cxx">
+				RelativePath=".\User.cxx">
 			</File>
 			<File
-				RelativePath=".\VEXMLObject.cxx">
+				RelativePath=".\XMLObject.cxx">
 			</File>
 			<File
 				RelativePath=".\XMLReaderWriter.cxx">
@@ -162,28 +162,28 @@
 				RelativePath=".\DOMDocumentManager.h">
 			</File>
 			<File
-				RelativePath=".\VECommand.h">
+				RelativePath=".\Command.h">
 			</File>
 			<File
-				RelativePath=".\VEDataValuePair.h">
+				RelativePath=".\DataValuePair.h">
 			</File>
 			<File
-				RelativePath=".\VEFloatArray.h">
+				RelativePath=".\FloatArray.h">
 			</File>
 			<File
-				RelativePath=".\VEParameterBlock.h">
+				RelativePath=".\ParameterBlock.h">
 			</File>
 			<File
-				RelativePath=".\VEStateInfo.h">
+				RelativePath=".\StateInfo.h">
 			</File>
 			<File
-				RelativePath=".\VETransform.h">
+				RelativePath=".\Transform.h">
 			</File>
 			<File
-				RelativePath=".\VEUser.h">
+				RelativePath=".\User.h">
 			</File>
 			<File
-				RelativePath=".\VEXMLObject.h">
+				RelativePath=".\XMLObject.h">
 			</File>
 			<File
 				RelativePath=".\XMLReaderWriter.h">
