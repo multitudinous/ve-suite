@@ -36,7 +36,7 @@
   *Data ports API
   */
 
-/*!\class VE_XML::Port
+/*!\class VE_Model::Port
  *Class that manages the port data for a specific model.
  *These class holds the raw data and the necessary info to draw the port
  *as well as the port direction (input or output) data

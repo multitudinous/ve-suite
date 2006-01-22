@@ -128,7 +128,7 @@ void Port::SetPortLocation( Point* location )
    portLocation = location;
 }
 ///////////////////////////////////////////////////////////////////
-void Port::SetPortData( std::vector< VE_XML::DataValuePair* > data )
+void Port::SetPortData( std::vector< DataValuePair* > data )
 {
    portData = data;
 }
