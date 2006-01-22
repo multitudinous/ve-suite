@@ -920,11 +920,12 @@ POLY Network::CalcLinkPoly(LINK l)
   num = modules[l.Fr_mod].pl_mod->GetNumOports();
   ports.resize(num);
   modules[l.Fr_mod].pl_mod->GetOPorts(ports);
-
+   // get initial port
   pos.x = bbox.x+ports[l.Fr_port].x;
   pos.y = bbox.y+ports[l.Fr_port].y;
 
   points.push_back(pos);
+   // Get all the connection in a link
   for (i=0; i<(int)l.cons.size(); i++)
     points.push_back(l.cons[i]);
 
@@ -936,12 +937,14 @@ POLY Network::CalcLinkPoly(LINK l)
   pos.x = bbox.x+ports[l.To_port].x;
   pos.y = bbox.y+ports[l.To_port].y;
 
+   // get end port
   points.push_back(pos);
 
+   // -3 so that we end up getting a 6 point wide line
   for (i=0; i<(int)points.size(); i++)
     result.push_back(wxPoint(points[i].x, points[i].y-3));
 
-
+   // +3 so that we end up getting a 6 point wide line
   for (i=(int)points.size()-1; i>=0; i--)
     result.push_back(wxPoint(points[i].x, points[i].y+3));
   
@@ -952,25 +955,29 @@ POLY Network::CalcLinkPoly(LINK l)
 ////////////////////////////////////////////////////
 POLY Network::CalcTagPoly(TAG t)
 {
-  wxPoint endpos;
-  POLY result;
+   // Create a poly based on a tag
+   wxPoint endpos;
+   POLY result;
 
-  endpos.x = t.box.x;
-  endpos.y = t.box.y+t.box.height/2;
-  
-  result.push_back(wxPoint(t.cons[0].x, t.cons[0].y-3));
-  result.push_back(wxPoint(t.cons[1].x, t.cons[1].y-3));
-  result.push_back(wxPoint(endpos.x, endpos.y-3));
-  result.push_back(wxPoint(t.box.x, t.box.y));
-  result.push_back(wxPoint(t.box.x+t.box.width, t.box.y));
-  result.push_back(wxPoint(t.box.x+t.box.width, t.box.y+t.box.height));
-  result.push_back(wxPoint(t.box.x, t.box.y+t.box.height));
-  result.push_back(wxPoint(endpos.x, endpos.y+3));
-  result.push_back(wxPoint(t.cons[1].x, t.cons[1].y+3));
-  result.push_back(wxPoint(t.cons[0].x, t.cons[0].y+3));
+   endpos.x = t.box.x;
+   endpos.y = t.box.y+t.box.height/2;
+   
+   // first point of the extension line
+   result.push_back(wxPoint(t.cons[0].x, t.cons[0].y-3));
+   // second point of the extension line
+   result.push_back(wxPoint(t.cons[1].x, t.cons[1].y-3));
+   // first corner of the text box
+   result.push_back(wxPoint(endpos.x, endpos.y-3));
+   result.push_back(wxPoint(t.box.x, t.box.y));
+   result.push_back(wxPoint(t.box.x+t.box.width, t.box.y));
+   result.push_back(wxPoint(t.box.x+t.box.width, t.box.y+t.box.height));
+   result.push_back(wxPoint(t.box.x, t.box.y+t.box.height));
+   // and now back around again
+   result.push_back(wxPoint(endpos.x, endpos.y+3));
+   result.push_back(wxPoint(t.cons[1].x, t.cons[1].y+3));
+   result.push_back(wxPoint(t.cons[0].x, t.cons[0].y+3));
 
-  return result;
-  
+  return result;  
 }
 
 
@@ -2830,6 +2837,11 @@ void Network::Save(wxString filename)
    Package p;
    Pack(p.intfs);
 
+   // Here we wshould loop over all of the following
+   //  Newtork
+   //  Models
+   //  Canvas info
+   //  tags
    p.SetPackName("Network");
    p.SetSysId(filename.c_str());
 
@@ -2844,6 +2856,11 @@ void Network::SaveS( std::string& network_pack )
    Package p;
    Pack(p.intfs);
 
+   // Here we wshould loop over all of the following
+   //  Newtork
+   //  Models
+   //  Canvas info
+   //  tags
    p.SetPackName("Network");
    p.SetSysId("test.xml");
 
@@ -2933,8 +2950,9 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
    {
       Package p;
       p.SetSysId("linkresult.xml");
-
       p.Load( linkresult, strlen(linkresult) );
+
+      // In the new code this would pass in a datavalue pair
       UIDialog* port_dlg = modules[mod].pl_mod->PortData( NULL, &(p.intfs[0]) );
 
       if ( port_dlg != NULL )
@@ -2972,6 +2990,7 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
       p.SetSysId("linkresult.xml");
       p.Load(result, strlen(result));
 
+      // In the new code this would pass in a datavalue pair
       modules[ m_selMod ].pl_mod->UnPackResult( &p.GetInterfaceVector()[0] );
       UIDialog* hello = modules[m_selMod].pl_mod->Result(NULL);
       
