@@ -38,7 +38,8 @@ SRCS=\
    Port.cxx\
    Link.cxx\
    Network.cxx\
-   Model.cxx
+   Model.cxx\
+   Tag.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

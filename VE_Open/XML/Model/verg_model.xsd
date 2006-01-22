@@ -20,9 +20,16 @@
          <xs:element name="linkPoints" type="vePoint" minOccurs="2" maxOccurs="unbounded" />
       </xs:sequence>
    </xs:complexType>
+   <xs:complexType name="veTag">
+      <xs:sequence>
+         <xs:element name="tagText" type="xs:string" />
+         <xs:element name="linkPoints" type="vePoint" minOccurs="3" maxOccurs="3" />
+      </xs:sequence>
+   </xs:complexType>
    <xs:complexType name="veNetwork">
       <xs:sequence>
          <xs:element name="link" type="veLink" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="conductorState" type="veDataValuePair" maxOccurs="6" minOccurs="6" />
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="vePoint">

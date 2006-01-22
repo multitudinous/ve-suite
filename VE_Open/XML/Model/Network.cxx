@@ -32,6 +32,7 @@
 
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 using namespace VE_XML;
 using namespace VE_Model;
@@ -51,6 +52,12 @@ Network::~Network()
       delete links.at( i );
    }
    links.clear();
+
+   for ( size_t i; i < conductorState.size(); ++i )
+   {
+      delete conductorState.at( i );
+   }
+   conductorState.clear();
 }
 ///////////////////////////////////////////
 Network::Network( const Network& input )
@@ -59,6 +66,11 @@ Network::Network( const Network& input )
    for ( size_t i; i < input.links.size(); ++i )
    {
       links.push_back( new Link( *(input.links.at( i )) ) );
+   }
+
+   for ( size_t i; i < input.conductorState.size(); ++i )
+   {
+      conductorState.push_back( new DataValuePair( *(input.conductorState.at( i )) ) );
    }
 }
 /////////////////////////////////////////////////////
@@ -78,6 +90,17 @@ Network& Network::operator=( const Network& input)
       {
          links.push_back( new Link( *(input.links.at( i )) ) );
       }
+
+      for ( size_t i; i < conductorState.size(); ++i )
+      {
+         delete conductorState.at( i );
+      }
+      conductorState.clear();
+
+      for ( size_t i; i < input.conductorState.size(); ++i )
+      {
+         conductorState.push_back( new DataValuePair( *(input.conductorState.at( i )) ) );
+      }
    }
    return *this;
 }
@@ -95,6 +118,11 @@ void Network::_updateVEElement( std::string input )
    {
       SetSubElement( "link", links.at( i ) );   
    }
+
+   for ( size_t i; i < conductorState.size(); ++i )
+   {
+      SetSubElement( "conductorState", conductorState.at( i ) );   
+   }
 }
 /////////////////////////////////////
 Link* Network::GetLink( unsigned int i )
@@ -107,6 +135,19 @@ Link* Network::GetLink( unsigned int i )
    {
       links.push_back( new Link( _rootDocument ) );
       return links.back();
+   }
+}
+/////////////////////////////////////
+DataValuePair* Network::GetDataValuePair( unsigned int i )
+{
+   try
+   {
+      return conductorState.at( i );
+   }
+   catch (...)
+   {
+      conductorState.push_back( new DataValuePair( _rootDocument ) );
+      return conductorState.back();
    }
 }
 ////////////////////////////////////////////////////////////
@@ -131,6 +172,17 @@ void Network::SetObjectFromXMLData(DOMNode* element)
             dataValueStringName = GetSubElement( currentElement, "link", i );
             links.push_back( new Link( _rootDocument ) );
             links.back()->SetObjectFromXMLData( dataValueStringName );
+         }
+      }
+      // for state info
+      {
+         unsigned int numberOfStates = currentElement->getElementsByTagName( xercesString("conductorState") )->getLength();
+
+         for ( unsigned int i = 0; i < numberOfStates; ++i )
+         {
+            dataValueStringName = GetSubElement( currentElement, "conductorState", i );
+            conductorState.push_back( new DataValuePair( _rootDocument ) );
+            conductorState.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
    }   

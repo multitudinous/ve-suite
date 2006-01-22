@@ -23,63 +23,62 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: Network.h,v $
+ * File:          $RCSfile: Tag.h,v $
  * Date modified: $Date: 2006-01-14 18:41:24 -0600 (Sat, 14 Jan 2006) $
  * Version:       $Rev: 3503 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VE_NETWORK_H_
-#define _VE_NETWORK_H_
-/*!\file Network.h
-  *System Network API
+#ifndef _VE_Tag_H_
+#define _VE_Tag_H_
+/*!\file Tag.h
+  *Data ports API
   */
 
-/*!\class VE_XML::Network
- *Class that manages the system network for conductor.
+/*!\class VE_XML::Tag
+ *Class that manages the port data for a specific model.
+ *These class holds the raw data and the necessary info to draw the port
+ *as well as the port direction (input or output) data
  */
 #include <string>
 #include <vector>
 #include "VE_Open/XML/XMLObject.h"
 
 #include <xercesc/dom/DOM.hpp>
-namespace VE_XML
+
+namespace VE_Model
 {
-   class DataValuePair;
+   class Point;
 }
 
 namespace VE_Model
 {
-   class Link;
-}
-
-namespace VE_Model
-{
-class VE_MODEL_EXPORTS Network : public VE_XML::XMLObject
+class VE_MODEL_EXPORTS Tag : public VE_XML::XMLObject
 {
 public:
    ///Constructor
    ///\param rootDoc The owning DOMDocument
-   Network( DOMDocument* rootDoc );
+   Tag( DOMDocument* rootDoc );
    ///Destructor
-   virtual ~Network();
+   virtual ~Tag();
    ///Copy Constructor
-   Network( const Network& );
+   Tag( const Tag& );
    ///equal operator
-   Network& operator= ( const Network& );
-   
+   Tag& operator= ( const Tag& );
+
+   ///Set the text for the tag
+   ///\param text string containing text for the tag
+   void SetTagText( std::string text );
    ///set the data from an string representing the xml
    ///\param xmlInput The input XML data.
    virtual void SetObjectFromXMLData(DOMNode* xmlInput);
    
-   ///Get the i'th link from the Network.
-   ///\param i The i'th link you are after.
-   Link* GetLink( unsigned int i );
-
-   ///Get the i'th link from the Network.
-   ///\param i The i'th link you are after.
-   VE_XML::DataValuePair* GetDataValuePair( unsigned int i );
+   ///Get the i'th point for a Tag.
+   ///\param i The i'th point you are after.
+   Point* GetTagPoint( unsigned int i );
+   ///Get the tag text
+   std::string GetTagText( void );
 
 protected:
    ///Internally update the data.
@@ -87,9 +86,9 @@ protected:
    virtual void _updateVEElement( std::string tagName );
 
 private:
-   ///raw datatypes of Network that are specified in the verg_model.xsd file
-   std::vector< Link* > links;///<Vector of Links.
-   std::vector< VE_XML::DataValuePair* > conductorState;///<Vector of data value pairs that hold conductor info.
+   ///raw datatypes of Tag that are specified in the verg_model.xsd file
+   std::vector< Point* > tagPoints;///<Vector of Points.
+   std::string tagText;///<string that contains text for the tag
 };
 }
-#endif// _VE_NETWORK_H_
+#endif// _VE_Tag_H_
