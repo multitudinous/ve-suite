@@ -104,74 +104,86 @@ void Scheduler::set_net (Network *n)
 
 void Scheduler::sweep (Module* exclude)
 {
-  int nmodules=_net->nmodules();
-  queue<Module *> needexecute;		
+   int nmodules=_net->nmodules();
+   queue<Module *> needexecute;		
 
-  // build queue of module ptrs to execute
-  int i;			    
-  for(i=0;i<nmodules;i++) {
-    Module* module=_net->module(i);
-    if(module->_need_execute)	
-      needexecute.push(module);
-  }
-  if(needexecute.empty()) {
-    return;
-  }
+   // build queue of module ptrs to execute
+   int i;			    
+   for(i=0;i<nmodules;i++) 
+   {
+      Module* module=_net->module(i);
+      if(module->_need_execute)	
+         needexecute.push(module);
+   }
+   
+   if(needexecute.empty()) 
+   {
+      return;
+   }
 
-  std::set<int> mod_been;
+   std::set<int> mod_been;
 
-  vector<Connection*> to_trigger;
-  while(!needexecute.empty()){
-    Module* module = needexecute.front();
-    needexecute.pop();
-    
-    if(mod_been.find(_net->module(module))==mod_been.end()) {
-      mod_been.insert(_net->module(module));
+   vector<Connection*> to_trigger;
+   while(!needexecute.empty())
+   {
+      Module* module = needexecute.front();
+      needexecute.pop();
 
-      // Add oports
-      int no=module->numOPorts();
-      int i;
-      for(i=0;i<no;i++) {
-	OPort* oport=module->getOPort(i);
-	int nc=oport->nconnections();
-	for(int c=0;c<nc;c++) {
-	  Connection* conn=oport->connection(c);
-	  IPort* iport=conn->get_iport();
-	  Module* m=iport->get_module();
-	  if(m != exclude && !m->_need_execute) {
-	    m->_need_execute=1;
-	    needexecute.push(m);
-	  }
-	}
+      if(mod_been.find(_net->module(module))==mod_been.end()) 
+      {
+         mod_been.insert(_net->module(module));
+
+         // Add oports
+         int no=module->numOPorts();
+         int i;
+         for(i=0;i<no;i++) 
+         {
+            OPort* oport=module->getOPort(i);
+            int nc=oport->nconnections();
+            for(int c=0;c<nc;c++) 
+            {
+               Connection* conn=oport->connection(c);
+               IPort* iport=conn->get_iport();
+               Module* m=iport->get_module();
+               if(m != exclude && !m->_need_execute) 
+               {
+                  m->_need_execute=1;
+                  needexecute.push(m);
+               }
+            }
+         }
+
+         // Now, look upstream...
+         int ni=module->numIPorts();
+         for(i=0;i<ni;i++) 
+         {
+            IPort* iport=module->getIPort(i);
+            if(iport->nconnections()) 
+            {
+               Connection* conn=iport->connection(0);
+               OPort* oport=conn->get_oport();
+               Module* m=oport->get_module();
+               if(!m->_need_execute) 
+               {
+                  if(m != exclude) 
+                  {
+                     // If this oport already has the data, add it
+                     // to the to_trigger list...
+                     if(oport->have_data())
+                     {
+                        to_trigger.push_back(conn);
+                     } 
+                     else 
+                     {
+                        m->_need_execute=true;
+                        needexecute.push(m);
+                     }
+                  }
+               }
+            }
+         }// end upstream for
       }
-      
-      // Now, look upstream...
-      int ni=module->numIPorts();
-      for(i=0;i<ni;i++) {
-	IPort* iport=module->getIPort(i);
-	if(iport->nconnections()) {
-	  Connection* conn=iport->connection(0);
-	  OPort* oport=conn->get_oport();
-	  Module* m=oport->get_module();
-	  if(!m->_need_execute) {
-	    if(m != exclude) {
-	      // If this oport already has the data, add it
-	      // to the to_trigger list...
-	      if(oport->have_data()){
-		to_trigger.push_back(conn);
-	      } else {
-		m->_need_execute=true;
-		needexecute.push(m);
-	      }
-	    }
-	  }
-	}
-      }
-      
-    }
-    
-  }
-  
+   } // end while
 }
 
 ////////////////////////////////////////////////////////////////////////////////
