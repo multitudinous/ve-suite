@@ -91,8 +91,8 @@ typedef struct
 
 class Network : public wxScrolledWindow
 {
-  //DECLARE_DYNAMIC_CLASS(Network)
- public:
+   //DECLARE_DYNAMIC_CLASS(Network)
+public:
   Network(){;}
   Network(wxWindow* parent, int id);
   ~Network();
@@ -116,6 +116,7 @@ class Network : public wxScrolledWindow
   void OnMouseMove(wxMouseEvent &event);
   void OnMLeftDown(wxMouseEvent &event);
   void OnMLeftUp(wxMouseEvent &event);
+   /// This function opens a plugins dialog when double clicked on the design canvas
   void OnDClick(wxMouseEvent &event);
   void OnMRightDown(wxMouseEvent &event);
   void OnAddTag(wxCommandEvent &event);
@@ -189,34 +190,35 @@ class Network : public wxScrolledWindow
   POLY CalcLinkPoly(LINK l); // calculate the bounding polygon of a link
   POLY CalcTagPoly(TAG t); // calculate the bounding polygon of a tag
 
- protected:
-  //Three main list of network objs
- 
-  std::vector<LINK*> links; //The list of links between the nodes of moduls.
-  std::vector<TAG> tags; //The list of text tags  
-  
-  int m_selMod; // selected module
-  int m_selFrPort; // selected From port
-  int m_selToPort; // selected To port;
-  int m_selLink; //selected Link
-  int m_selLinkCon; //selected Link Connector
-  int m_selTag; //selected Tag
-  int m_selTagCon; //selected Tag Connector
+protected:
+   //Three main list of network objs
 
-  wxPoint relative_pt; // the relative point of the polygon, used by the move module function
-  wxPoint tag_rpt; // the relative point of the tag
-  
-  void Pack(std::vector<Interface> & UIs);
-  void UnPack(std::vector<Interface> & UIs);
- private:
-  bool moving;
-  int intfssize;
+   std::vector<LINK*> links; //The list of links between the nodes of moduls.
+   std::vector<TAG> tags; //The list of text tags  
 
-  std::vector<wxRect> sbboxes; //start up bounding box; used by GetFreePos to calc start module location
-  int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
-  wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
+   int m_selMod; // selected module
+   int m_selFrPort; // selected From port
+   int m_selToPort; // selected To port;
+   int m_selLink; //selected Link
+   int m_selLinkCon; //selected Link Connector
+   int m_selTag; //selected Tag
+   int m_selTagCon; //selected Tag Connector
 
-  DECLARE_EVENT_TABLE() // no semicolon needed
+   wxPoint relative_pt; // the relative point of the polygon, used by the move module function
+   wxPoint tag_rpt; // the relative point of the tag
+
+   void Pack(std::vector<Interface> & UIs);
+   void UnPack(std::vector<Interface> & UIs);
+
+private:
+   bool moving;
+   int intfssize;
+
+   std::vector<wxRect> sbboxes; //start up bounding box; used by GetFreePos to calc start module location
+   int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
+   wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
+
+   DECLARE_EVENT_TABLE() // no semicolon needed
 };
 
 #endif

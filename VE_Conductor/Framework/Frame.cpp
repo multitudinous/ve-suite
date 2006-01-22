@@ -96,7 +96,7 @@ EVT_CLOSE(AppFrame::OnClose)
 //  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
 //  EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
 //  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
-  EVT_UPDATE_UI(7777, AppFrame::OnUpdateUIPop)
+  //EVT_UPDATE_UI_RANGE(v21ID_CONNECT, JUGGLER_SETTINGS, AppFrame::OnUpdateUIPop)
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
