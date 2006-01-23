@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/VE_XML/Shader/Shader.h"
+#include "VE_Open/XML/Shader/Shader.h"
 
 #include "VE_Open/XML/Shader/Uniform.h"
 #include "VE_Open/XML/Shader/TextureImage.h"
