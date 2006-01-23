@@ -106,7 +106,7 @@ void CADAssembly::_updateVEElement(std::string input)
 {
    //this is going to be "nutty"
    //Get the base elements from CADNode
-   VE_CAD::CADNode::_updateVEElement("CADAssembly");
+   VE_CAD::CADNode::_updateVEElement(input);
    _updateChildren();
 }
 /////////////////////////////////////////////////////

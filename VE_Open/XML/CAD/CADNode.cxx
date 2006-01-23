@@ -47,9 +47,7 @@ CADNode::CADNode( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,
    _name = name;
    _parent = 0;
    _transform = 0;//new VE_XML::Transform(_rootDocument); 
-   _material = 0;//new VE_CAD::CADMaterial(_rootDocument); 
    _type = std::string("Node");
-   _glslProgram = 0;
 }
 ///////////////////
 ///Destructor    //
@@ -64,16 +62,14 @@ CADNode::~CADNode()
       delete _material;
       _material = 0;
    }
-}
-//////////////////////////////////////////////
-void CADNode::SetProgram(Program* glslProgram)
-{
-   if(_glslProgram)
+   if(_attributeList.size())
    {
-      delete _glslProgram;
-      _glslProgram = 0;
+      for(size_t i = _attributeList.size() -1; i >= 0; i--)
+      {
+         delete _attributeList.at(i);
+      }
+      _attributeList.clear();
    }
-   _glslProgram = new Program(*glslProgram);
 }
 ///////////////////////////////////////////
 void CADNode::SetNodeName(std::string name)
@@ -96,14 +92,9 @@ void CADNode::SetTransform(VE_XML::Transform* transform)
    _transform = new VE_XML::Transform(*transform);
 }
 ////////////////////////////////////////////////////////
-void CADNode::SetMaterial(VE_CAD::CADMaterial* material)
+void CADNode::AddAttribute(VE_CAD::CADAttribute* attribute)
 {
-   if(_material)
-   {
-      delete _material;
-      _material = 0;
-   }
-   _material = new CADMaterial(*material);
+   _attributeList.push_back(attribute);
 }
 //////////////////////////////////
 std::string CADNode::GetNodeType()
@@ -125,10 +116,31 @@ VE_XML::Transform* CADNode::GetTransform()
 {
    return _transform;
 }
-///////////////////////////////////////////
-VE_CAD::CADMaterial* CADNode::GetMaterial()
+////////////////////////////////////////////////////////////
+VE_CAD::CADAttribute* CADNode::GetAttribute(unsigned int index)
 {
-   return _material;
+   try{
+   return _attributeList.at(index);
+   }
+   catch(...)
+   {
+      std::cout<<"ERROR!!!!!"<<std::endl;
+      std::cout<<"Invalid index!!!"<<std::endl;
+      std::cout<<"CADNode::GetAttribute(): "<<index<<std::endl;
+   }
+}
+////////////////////////////////////////////////////////////
+VE_CAD::CADAttribute* CADNode::GetAttribute(std::string name)
+{
+   size_t nAttributes = _attributeList.size();
+   for(size_t i = 0; i < nAttributes; i++)
+   {
+      if(_attributeList.at(i)->GetAttributeName() == name)
+      {
+         return _attributeList.at(i);
+      }
+   }
+   return 0;
 }
 /////////////////////////////////////////////////
 void CADNode::_updateVEElement(std::string input)
@@ -136,7 +148,7 @@ void CADNode::_updateVEElement(std::string input)
    //how is this going to work???
    if(!_veElement)
    {
-      _veElement = _rootDocument->createElement(xercesString("CADNode"));
+      _veElement = _rootDocument->createElement(xercesString(input));
    }
 
    _updateNodeName();
@@ -144,17 +156,18 @@ void CADNode::_updateVEElement(std::string input)
    {
       _veElement->appendChild( _parent->GetXMLData("parent") );
    }
-   if(_material)
-   {
-      _veElement->appendChild( _material->GetXMLData("material") );
-   }
    if(_transform)
    {
       _veElement->appendChild( _transform->GetXMLData("transform") );
    }
-   if(_glslProgram)
+
+   if(_attributeList.size())
    {
-      _veElement->appendChild(_glslProgram->GetXMLData("shaderProgram"));
+      size_t nAttributes = _attributeList.size();
+      for(size_t i = 0; i < nAttributes; i++)
+      {
+         _veElement->appendChild( _attributeList.at(i)->GetXMLData("attribute") );
+      }
    }
    _updateNodeType();
 }
@@ -206,6 +219,21 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             if(parentNode)
             {
                _parent->SetObjectFromXMLData(parentNode);
+            }
+            size_t nAttributes = _attributeList.size();
+            for(size_t i = nAttributes -1; i >= 0; i--)
+            {
+               delete _attributeList.at(i);
+            }
+            _attributeList.clear();
+
+            DOMNodeList* attributeNodes = currentElement->getElementsByTagName(xercesString("attribute"));
+            size_t nAttributes = attributesNodes->length();
+            for(size_t i = 0; i < nAttributes; i++)
+            {
+               DOMElement* attributeNode = dynamic_cast<DOMElement*>(attributeNodes->item(i));
+               CADAttribute* newAttribute = new CADAttribute(_rootDocument);
+               newAttribute->SetObjectFromXMLData(attributeNode);
             }
             DOMElement* materialNode = GetSubElement(currentElement,std::string("material"),0);
             if(materialNode)

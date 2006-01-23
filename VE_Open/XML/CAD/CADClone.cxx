@@ -60,7 +60,7 @@ void CADClone::_updateVEElement(std::string input)
 {
    //How is this going to work???
    //Get the base elements from CADNode
-   VE_CAD::CADNode::_updateVEElement("CADClone");
+   VE_CAD::CADNode::_updateVEElement(input);
 
    //add the extra stuff
    _veElement->appendChild(_originalNode->GetXMLData("originalNode"));

@@ -53,15 +53,10 @@ namespace VE_XML
    class Transform;
 }
 
-namespace VE_Shader
-{
-   class Program;
-}
-
 namespace VE_CAD
 {
 class CADAssembly;
-class CADMaterial;
+class CADAttribute;
 
 class VE_CAD_EXPORTS CADNode: public VE_XML::XMLObject
 {
@@ -84,13 +79,10 @@ public:
    ///\param transform The transform of this node.
    void SetTransform(VE_XML::Transform* transform);
 
-   ///Set the material for this node.
-   ///\param material The material of this node.
-   void SetMaterial(VE_CAD::CADMaterial* material);
+   ///Add an attribute for this node.
+   ///\param attribute A new attribute for this node.
+   void AddAttribute(VE_CAD::CADAttribute* attribute);
 
-   ///Set the GLSL program for this node.
-   ///\param glslProgram The GLSL program.
-   void SetProgram(VE_Shader::Program* glslProgram);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
@@ -109,11 +101,13 @@ public:
    ///Get the transform of this CAD node.
    VE_XML::Transform* GetTransform();
 
-   ///Get the material of this CAD node
-   VE_CAD::CADMaterial* GetMaterial();
+   ///Get an attribute of this CAD node by a name
+   ///\param name The name of the attribute to find.
+   VE_CAD::Attribute* GetAttribute(std::string name);
   
-   ///Get the GLSL program for this node.
-   VE_Shader::Program* GetGLSLProgram();
+    ///Get an attribute of this CAD node by a name
+   ///\param index The index of the attribute to find.
+   VE_CAD::Attribute* GetAttribute(unsigned int index);
 
    ///Copy constructor
    CADNode(const CADNode& rhs);
@@ -134,9 +128,8 @@ protected:
    void _updateNodeType();
 
    VE_XML::Transform* _transform; ///< Transform for the node.
-   VE_CAD::CADMaterial* _material; ///< Material for this node.
    VE_CAD::CADNode* _parent;  ///< Parent node.
-   VE_Shader::Program* _glslProgram;///<The glsl program.
+   std::vector<VE_CAD::CADAttribute*> _attributeList;///<A list of attributes for this node
    std::string _name;///< The name of this node.
    std::string _type;///< The type of node;
 };

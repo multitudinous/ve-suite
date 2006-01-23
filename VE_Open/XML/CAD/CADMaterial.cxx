@@ -190,6 +190,10 @@ void CADMaterial::_updateColorProperties()
 /////////////////////////////////////////////////////
 void CADMaterial::_updateVEElement(std::string input)
 {
+   if(!_veElement)
+   {
+      _veElement = _rootDocument->createElement(xercesString(input));
+   }
    _updateColorProperties();
    _updateShininess();
    _updateMaterialName();

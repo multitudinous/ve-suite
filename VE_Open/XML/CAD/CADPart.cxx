@@ -71,7 +71,7 @@ void CADPart::_updateVEElement(std::string input)
 {
    //How is this going to work???
    //Get the base elements from CADNode
-   VE_CAD::CADNode::_updateVEElement("CADPart");
+   VE_CAD::CADNode::_updateVEElement(input);
    _updateCADFileName();
 }
 /////////////////////////////////////////////////////
