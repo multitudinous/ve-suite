@@ -33,6 +33,8 @@
 #include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
+#include "VE_Open/XML/CAD/CADAttribute.h"
+
 
 using namespace VE_CAD;
 using namespace VE_Shader;
@@ -58,10 +60,7 @@ CADNode::~CADNode()
       delete _transform;
       _transform = 0;
    }
-   if(_material){
-      delete _material;
-      _material = 0;
-   }
+   
    if(_attributeList.size())
    {
       for(size_t i = _attributeList.size() -1; i >= 0; i--)
@@ -119,15 +118,18 @@ VE_XML::Transform* CADNode::GetTransform()
 ////////////////////////////////////////////////////////////
 VE_CAD::CADAttribute* CADNode::GetAttribute(unsigned int index)
 {
-   try{
-   return _attributeList.at(index);
+   try
+   {
+      return _attributeList.at(index);
    }
    catch(...)
    {
       std::cout<<"ERROR!!!!!"<<std::endl;
       std::cout<<"Invalid index!!!"<<std::endl;
       std::cout<<"CADNode::GetAttribute(): "<<index<<std::endl;
+      return 0;
    }
+   return 0;
 }
 ////////////////////////////////////////////////////////////
 VE_CAD::CADAttribute* CADNode::GetAttribute(std::string name)
@@ -220,30 +222,22 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             {
                _parent->SetObjectFromXMLData(parentNode);
             }
-            size_t nAttributes = _attributeList.size();
-            for(size_t i = nAttributes -1; i >= 0; i--)
+            size_t nOldAttributes = _attributeList.size();
+            for(size_t i = nOldAttributes -1; i >= 0; i--)
             {
                delete _attributeList.at(i);
             }
             _attributeList.clear();
 
             DOMNodeList* attributeNodes = currentElement->getElementsByTagName(xercesString("attribute"));
-            size_t nAttributes = attributesNodes->length();
-            for(size_t i = 0; i < nAttributes; i++)
+            XMLSize_t nNewAttributes = attributeNodes->getLength();
+            for(XMLSize_t  i = 0; i < nNewAttributes ; i++)
             {
                DOMElement* attributeNode = dynamic_cast<DOMElement*>(attributeNodes->item(i));
                CADAttribute* newAttribute = new CADAttribute(_rootDocument);
                newAttribute->SetObjectFromXMLData(attributeNode);
             }
-            DOMElement* materialNode = GetSubElement(currentElement,std::string("material"),0);
-            if(materialNode)
-            {
-               if(!_material)
-               {
-                  _material= new CADMaterial(_rootDocument);
-               }
-               _material->SetObjectFromXMLData(materialNode);
-            }
+            
 
             DOMElement* transformNode = GetSubElement(currentElement,std::string("transform"),0);
             if(transformNode)
@@ -254,24 +248,15 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                }
                _transform->SetObjectFromXMLData(transformNode);
             }
-            DOMElement* glslProgram = GetSubElement(currentElement,std::string("shaderProgram"),0);
-            if(glslProgram)
-            {
-               if(!_glslProgram)
-               {
-                  _glslProgram = new Program(_rootDocument);
-               }
-               _glslProgram->SetObjectFromXMLData(glslProgram);
-            }
+            
          }
       }
    }
 }
-
-///////////////////////////////////
-Program* CADNode::GetGLSLProgram()
+//////////////////////////////////////////////////////
+std::vector<CADAttribute*> CADNode::GetAttributeList()
 {
-   return _glslProgram;
+   return _attributeList;
 }
 /////////////////////////////////////
 CADNode::CADNode(const CADNode& rhs)
@@ -280,17 +265,23 @@ CADNode::CADNode(const CADNode& rhs)
 
    _parent = 0;
    _transform = 0;
-   _material = 0;
-   _glslProgram = 0;
 
    if(rhs._transform)
       _transform = new VE_XML::Transform(*rhs._transform);
-   if(rhs._material)
-      _material = new VE_CAD::CADMaterial(*rhs._material);
+  
+   if(_attributeList.size())
+   {
+      for(size_t i = _attributeList.size() -1; i >= 0; i--)
+      {
+         delete _attributeList.at(i);
+      }
+      _attributeList.clear();
+   }
 
-   if(rhs._glslProgram)
-      _glslProgram = new Program(*rhs._glslProgram);
-
+   for(size_t i = 0; rhs._attributeList.size(); i++)
+   {
+      _attributeList.push_back(rhs._attributeList.at(i));
+   }
    _parent = rhs._parent;
    _name = rhs._name;
    _type = rhs._type;
@@ -307,15 +298,20 @@ CADNode& CADNode::operator=(const CADNode& rhs)
          delete _transform;
          _transform = 0;
       }
-      _transform = new VE_XML::Transform(*rhs._transform);
-      if(_material)
+      if(_attributeList.size())
       {
-         delete _material;
-         _material = 0;
+         for(size_t i = _attributeList.size() -1; i >= 0; i--)
+         {
+            delete _attributeList.at(i);
+         }
+         _attributeList.clear();
       }
-      _glslProgram = rhs._glslProgram;
 
-      _material = new VE_CAD::CADMaterial(*rhs._material);
+      for(size_t i = 0; rhs._attributeList.size(); i++)
+      {
+         _attributeList.push_back(rhs._attributeList.at(i));
+      }
+      _transform = new VE_XML::Transform(*rhs._transform);
       _parent = rhs._parent;
       _name = rhs._name;
    }

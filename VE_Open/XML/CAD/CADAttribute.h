@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _CAD_NODE_H_
-#define _CAD_NODE_H_
+#ifndef _CAD_ATTRIBUTE_H_
+#define _CAD_ATTRIBUTE_H_
 
 #include "VE_Open/XML/XMLObject.h"
 #include <xercesc/dom/DOM.hpp>
@@ -87,6 +87,9 @@ public:
    ///Get the GLSL program for this node.
    VE_Shader::Program* GetGLSLProgram();
 
+   ///Get the name of a specific attribute.
+   std::string GetAttributeName();
+
    ///Copy constructor
    CADAttribute(const CADAttribute& rhs);
 
@@ -105,4 +108,4 @@ protected:
    VE_Shader::Program* _glslProgram;///<The glsl program.
 };
 }
-#endif// _CAD_NODE_H_
+#endif// _CAD_ATTRIBUTE_H_

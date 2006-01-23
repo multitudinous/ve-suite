@@ -127,6 +127,9 @@
 				RelativePath=".\CADAssembly.cxx">
 			</File>
 			<File
+				RelativePath=".\CADAttribute.cxx">
+			</File>
+			<File
 				RelativePath=".\CADClone.cxx">
 			</File>
 			<File
@@ -151,6 +154,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath=".\CADAssembly.h">
+			</File>
+			<File
+				RelativePath=".\CADAttribute.h">
 			</File>
 			<File
 				RelativePath=".\CADClone.h">

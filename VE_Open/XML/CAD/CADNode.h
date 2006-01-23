@@ -35,6 +35,7 @@
 #include "VE_Open/XML/XMLObject.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
+#include <vector>
 
 /*!\file CADNode.h
   CADNode API
@@ -103,11 +104,14 @@ public:
 
    ///Get an attribute of this CAD node by a name
    ///\param name The name of the attribute to find.
-   VE_CAD::Attribute* GetAttribute(std::string name);
+   VE_CAD::CADAttribute* GetAttribute(std::string name);
   
     ///Get an attribute of this CAD node by a name
    ///\param index The index of the attribute to find.
-   VE_CAD::Attribute* GetAttribute(unsigned int index);
+   VE_CAD::CADAttribute* GetAttribute(unsigned int index);
+
+   ///Get attributes for this node.
+   std::vector<CADAttribute*> GetAttributeList();
 
    ///Copy constructor
    CADNode(const CADNode& rhs);

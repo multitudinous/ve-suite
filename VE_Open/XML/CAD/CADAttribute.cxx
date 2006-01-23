@@ -38,8 +38,9 @@ using namespace VE_CAD;
 //Constructor                                                                      //
 /////////////////////////////////////////////////////////////////////////////////////
 CADAttribute::CADAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
+:XMLObject(rootDocument)
 {
-   _attributeType std::string("Material");
+   _attributeType = std::string("Material");
    _material = 0; 
    _glslProgram = 0;
 }
@@ -73,7 +74,7 @@ void CADAttribute::SetMaterial(VE_CAD::CADMaterial* material)
       delete _material;
       _material = 0;
    }
-   _material = new Program(*material);
+   _material = new CADMaterial(*material);
    _attributeType = std::string("Material");
 }
 //////////////////////////////////////////////////////////////
@@ -111,7 +112,7 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode)
             }
 	    if(_attributeType == std::string("Material"))
 	    {
-               DOMElement* materialNode = GetSubElement(currentElement,std::string("material"));
+          DOMElement* materialNode = GetSubElement(currentElement,std::string("material"),0);
 	       if(materialNode)
 	       {
                   if(!_material)
@@ -123,7 +124,7 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode)
 	    }
 	    else if(_attributeType == std::string("Program"))
 	    {
-               DOMElement* programNode = GetSubElement(currentElement,std::string("program"));
+               DOMElement* programNode = GetSubElement(currentElement,std::string("program"),0);
 	       if(programNode)
 	       {
                   if(!_glslProgram)
@@ -154,6 +155,7 @@ VE_Shader::Program* CADAttribute::GetGLSLProgram()
 }
 ///////////////////////////////////////////////////
 CADAttribute::CADAttribute(const CADAttribute& rhs)
+:XMLObject(rhs)
 {
    _attributeType = rhs._attributeType;
    if(_attributeType == std::string("Material"))
@@ -162,7 +164,7 @@ CADAttribute::CADAttribute(const CADAttribute& rhs)
    }
    else if(_attributeType == std::string("Program"))
    {
-      _glslProgram = new CADMaterial(*rhs._glslProgram);
+      _glslProgram = new Program(*rhs._glslProgram);
    }
 }
 //////////////////////////////////////////////////////////////
@@ -170,6 +172,7 @@ CADAttribute& CADAttribute::operator=(const CADAttribute& rhs)
 {
    if(this != &rhs)
    {
+      XMLObject::operator =(rhs);
       _attributeType = rhs._attributeType;
       if(_attributeType == std::string("Material"))
       {
