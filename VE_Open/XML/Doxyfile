@@ -547,12 +547,12 @@ FILTER_SOURCE_FILES    = NO
 # Note: To get rid of all source code in the generated output, make sure also 
 # VERBATIM_HEADERS is set to NO.
 
-SOURCE_BROWSER         = NO
+SOURCE_BROWSER         = YES
 
 # Setting the INLINE_SOURCES tag to YES will include the body 
 # of functions and classes directly in the documentation.
 
-INLINE_SOURCES         = NO
+INLINE_SOURCES         = YES
 
 # Setting the STRIP_CODE_COMMENTS tag to YES (the default) will instruct 
 # doxygen to hide any special comment blocks from generated source code 
@@ -662,14 +662,14 @@ HTML_ALIGN_MEMBERS     = YES
 # Microsoft HTML help workshop to generate a compressed HTML help file (.chm) 
 # of the generated HTML documentation.
 
-GENERATE_HTMLHELP      = NO
+GENERATE_HTMLHELP      = YES
 
 # If the GENERATE_HTMLHELP tag is set to YES, the CHM_FILE tag can 
 # be used to specify the file name of the resulting .chm file. You 
 # can add a path in front of the file if the result should not be 
 # written to the html output directory.
 
-CHM_FILE               = 
+CHM_FILE               = ./veopen.chm 
 
 # If the GENERATE_HTMLHELP tag is set to YES, the HHC_LOCATION tag can 
 # be used to specify the location (absolute path including file name) of 
@@ -693,7 +693,7 @@ BINARY_TOC             = NO
 # The TOC_EXPAND flag can be set to YES to add extra items for group members 
 # to the contents of the HTML help documentation and to the tree view.
 
-TOC_EXPAND             = NO
+TOC_EXPAND             = YES
 
 # The DISABLE_INDEX tag can be used to turn on/off the condensed index at 
 # top of each HTML page. The value NO (the default) enables the index and 
