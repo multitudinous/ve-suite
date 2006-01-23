@@ -223,12 +223,14 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                _parent->SetObjectFromXMLData(parentNode);
             }
             size_t nOldAttributes = _attributeList.size();
-            for(size_t i = nOldAttributes -1; i >= 0; i--)
+            if(nOldAttributes > 0)
             {
-               delete _attributeList.at(i);
+               for(size_t i = nOldAttributes -1; i >= 0; i--)
+               {
+                  delete _attributeList.at(i);
+               }
+               _attributeList.clear();
             }
-            _attributeList.clear();
-
             DOMNodeList* attributeNodes = currentElement->getElementsByTagName(xercesString("attribute"));
             XMLSize_t nNewAttributes = attributeNodes->getLength();
             for(XMLSize_t  i = 0; i < nNewAttributes ; i++)
@@ -236,6 +238,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                DOMElement* attributeNode = dynamic_cast<DOMElement*>(attributeNodes->item(i));
                CADAttribute* newAttribute = new CADAttribute(_rootDocument);
                newAttribute->SetObjectFromXMLData(attributeNode);
+               _attributeList.push_back(newAttribute);
             }
             
 

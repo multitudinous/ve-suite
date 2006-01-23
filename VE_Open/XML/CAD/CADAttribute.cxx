@@ -110,30 +110,31 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode)
             {
               _attributeType = ExtractDataStringFromSimpleElement( typeNode );
             }
-	    if(_attributeType == std::string("Material"))
-	    {
-          DOMElement* materialNode = GetSubElement(currentElement,std::string("material"),0);
-	       if(materialNode)
-	       {
+	    
+            if(_attributeType == std::string("Material"))
+            {
+               DOMElement* materialNode = GetSubElement(currentElement,std::string("material"),0);
+               if(materialNode)
+               {
                   if(!_material)
-	          {
+	               {
                      _material = new CADMaterial(_rootDocument);
-	          }
-	          _material->SetObjectFromXMLData(materialNode);
-	       }
-	    }
-	    else if(_attributeType == std::string("Program"))
-	    {
+                  }
+	               _material->SetObjectFromXMLData(materialNode);
+               }
+            }
+	         else if(_attributeType == std::string("Program"))
+            {
                DOMElement* programNode = GetSubElement(currentElement,std::string("program"),0);
-	       if(programNode)
-	       {
+	            if(programNode)
+               {
                   if(!_glslProgram)
-	          {
+                  {
                      _glslProgram = new Program(_rootDocument);
-	          }
-	          _glslProgram->SetObjectFromXMLData(programNode);
-	       }
-	    }
+                  }
+	                _glslProgram->SetObjectFromXMLData(programNode);
+               }
+            }
          } 
       }
    }
