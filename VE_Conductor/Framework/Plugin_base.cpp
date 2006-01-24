@@ -41,7 +41,14 @@
 #include "VE_Conductor/Framework/TexTable.h"
 #include "VE_Conductor/Framework/GeometryDataBuffer.h"
 
+#include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/Point.h"
+#include "VE_Open/XML/DataValuePair.h"
+
 #include <wx/dc.h>
+
+using namespace VE_Model;
+using namespace VE_XML;
 
 IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxObject )
 
@@ -103,6 +110,12 @@ REI_Plugin::~REI_Plugin()
       geom_dlg = 0;
    }
 
+   if ( veModel !=NULL )
+   {
+      delete veModel;
+      veModel = 0;
+   }
+
    if ( geometryDataBuffer!=NULL )
    {
       delete geometryDataBuffer;
@@ -126,7 +139,11 @@ void REI_Plugin::SetID(int id)
       geometryDataBuffer = new GeometryDataBuffer();
   geometryDataBuffer->SetCurrentModuleID(id);
 }
-
+/////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetName( wxString pluginName )
+{
+   name = pluginName;
+}
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetPos(wxPoint pt)
 {
@@ -398,7 +415,85 @@ Interface* REI_Plugin::Pack()
   return &mod_pack ;//wxstr;
   
 }
+////////////////////////////////////////////////////////////////////
+Model* REI_Plugin::GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
+{
+   if ( veModel != NULL )
+   {
+      delete veModel;
+   }
 
+   veModel = new Model( doc );
+   veModel->SetModelName( name.c_str() );
+   veModel->SetModelID( mod_pack._id );
+   veModel->SetIconFilename( std::string( "iconFilename" ) );
+   veModel->GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >( pos.x, pos.y ) );
+
+   ///Set the int data
+   std::map<std::string, long *>::iterator iteri;
+   for ( iteri=_int.begin(); iteri!=_int.end(); iteri++ )
+   {
+      veModel->GetInput( -1 )->SetData( iteri->first, *(iteri->second) );
+   }
+
+   ///Set the double data
+   std::map<std::string, double *>::iterator iterd;
+   for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
+   {
+      veModel->GetInput( -1 )->SetData( iterd->first, *(iterd->second) );
+   }
+
+   ///Set the string data
+   std::map<std::string, std::string *>::iterator iters;
+   for(iters=_string.begin(); iters!=_string.end(); iters++)
+   {
+      veModel->GetInput( -1 )->SetData( iters->first, *(iters->second) );
+   }
+
+   ///Set the 1d int data
+   std::map<std::string, std::vector<long> *>::iterator itervi;
+   for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
+   {
+      veModel->GetInput( -1 )->SetData( itervi->first, *(itervi->second) );
+   }
+
+   ///Set the 1d double data
+   std::map<std::string, std::vector<double> *>::iterator itervd;
+   for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
+   {
+      veModel->GetInput( -1 )->SetData( itervd->first, *(itervd->second) );
+   }
+
+   ///Set the 1d string data
+   std::map<std::string, std::vector<std::string> *>::iterator itervs;
+   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
+   {
+      veModel->GetInput( -1 )->SetData( itervs->first, *(itervs->second) );
+   }
+
+   // EPRI TAG
+   if ( financial_dlg != NULL ) 
+   {
+      veModel->GetInput( -1 )->SetData( "USE_FINANCIAL", (long)financial_dlg->_use_data );
+
+      veModel->GetInput( -1 )->SetData( "CC00", financial_dlg->_cc00_d );
+      veModel->GetInput( -1 )->SetData( "CC01", financial_dlg->_cc01_d );
+      veModel->GetInput( -1 )->SetData( "CC02", financial_dlg->_cc02_d );
+      veModel->GetInput( -1 )->SetData( "CC03", financial_dlg->_cc03_d );
+      veModel->GetInput( -1 )->SetData( "CC04", financial_dlg->_cc04_d );
+      veModel->GetInput( -1 )->SetData( "CC05", financial_dlg->_cc05_d );
+      veModel->GetInput( -1 )->SetData( "CC06", financial_dlg->_cc06_d );
+      veModel->GetInput( -1 )->SetData( "CC07", financial_dlg->_cc07_d );
+      veModel->GetInput( -1 )->SetData( "CC08", financial_dlg->_cc08_d );
+
+      veModel->GetInput( -1 )->SetData( "OM00", financial_dlg->_om00_d );
+      veModel->GetInput( -1 )->SetData( "OM01", financial_dlg->_om01_d );
+      veModel->GetInput( -1 )->SetData( "OM02", financial_dlg->_om02_d );
+      veModel->GetInput( -1 )->SetData( "OM03", financial_dlg->_om03_d );
+   }
+
+   return veModel;
+}
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::UnPack(Interface * intf)
 {
@@ -507,7 +602,81 @@ void REI_Plugin::UnPack(Interface * intf)
   }
   
 }
+/////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelElement )
+{
+   /*if ( veModel != NULL )
+   {
+      delete veModel;
+   }
 
+   veModel = new Model( doc );*/
+
+   veModel->SetObjectFromXMLData( modelElement );
+   name = wxString( veModel->GetModelName() );
+   mod_pack._id = veModel->GetModelID();
+   std::string tempFilename = veModel->GetIconFilename();
+   pos.x = veModel->GetIconLocation()->GetPoint().first;
+   pos.y = veModel->GetIconLocation()->GetPoint().second;
+
+   unsigned int numInputs = veModel->GetNumberOfInputs();
+   for ( unsigned int i = 0; i < numInputs; ++i )
+   {
+      DataValuePair* tempData = veModel->GetInput( i );
+      std::string dataType = tempData->GetDataName();
+      std::string dataName = tempData->GetDataType();
+      if ( std::string( "FLOAT" ) == dataType )
+      {
+         tempData->GetData( *(_double[ dataName ]) );
+      }
+      else if ( std::string( "LONG" ) == dataType )
+      {
+         tempData->GetData( *(_int[ dataName ]) );
+      }
+      else if ( std::string( "STRING" ) == dataType )
+      {
+         tempData->GetData( *(_string[ dataName ]) );
+      }
+      else if ( std::string( "1DSTRING" ) == dataType )
+      {
+         tempData->GetData( *(_string1D[ dataName ]) );
+      }
+      else if ( std::string( "1DDOUBLE" ) == dataType )
+      {
+         tempData->GetData( *(_double1D[ dataName ]) );
+      }
+      else if ( std::string( "1DLONG" ) == dataType )
+      {
+         tempData->GetData( *(_int1D[ dataName ]) );
+      }
+   }
+
+  // EPRI TAG
+  long uf = 0;
+  if(mod_pack.getVal("USE_FINANCIAL", uf)) {
+    
+    if(financial_dlg == NULL)
+      financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
+    
+    financial_dlg->_use_data = uf;
+    
+    financial_dlg->_cc00_d = mod_pack.getDouble("CC00");
+    financial_dlg->_cc01_d = mod_pack.getDouble("CC01");
+    financial_dlg->_cc02_d = mod_pack.getDouble("CC02");
+    financial_dlg->_cc03_d = mod_pack.getDouble("CC03");
+    financial_dlg->_cc04_d = mod_pack.getDouble("CC04");
+    financial_dlg->_cc05_d = mod_pack.getDouble("CC05");
+    financial_dlg->_cc06_d = mod_pack.getDouble("CC06");
+    financial_dlg->_cc07_d = mod_pack.getDouble("CC07");
+    financial_dlg->_cc08_d = mod_pack.getDouble("CC08");
+
+    financial_dlg->_om00_d = mod_pack.getDouble("OM00");
+    financial_dlg->_om01_d = mod_pack.getDouble("OM01");
+    financial_dlg->_om02_d = mod_pack.getDouble("OM02");
+    financial_dlg->_om03_d = mod_pack.getDouble("OM03");
+  }
+
+}
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::UnPackResult(Interface* intf)
 {

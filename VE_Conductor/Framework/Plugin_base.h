@@ -33,6 +33,8 @@
 #define PLUGIN_BASE_H
 
 #include "VE_Conductor/Framework/interface.h"
+#include <xercesc/dom/DOM.hpp>
+
 #define ICON 20000
 
 #include <wx/object.h>
@@ -50,6 +52,11 @@ class TextResultDialog;
 class GeometryDialog;
 class FinancialDialog;
 class GeometryDataBuffer;
+
+namespace VE_Model
+{
+   class Model;
+}
 
 typedef std::vector<wxPoint> POLY;
 
@@ -100,6 +107,9 @@ public:
    virtual wxString GetName();
    //This returns the name of the module
 
+   virtual void SetName( wxString pluginName );
+   //This sets the name of the module
+
    virtual wxString GetDesc();
    //This returns the description of the module, This should be a short description
 
@@ -112,6 +122,9 @@ public:
    virtual void UnPack(Interface* intf);
    //This is the load function of the module, unpack the input string and fill up the UI according to this
    virtual Interface* Pack();
+   //This is the load function of the module, unpack the input string and fill up the UI according to this
+   virtual VE_Model::Model* GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc );
+   virtual void SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelElement );
 
    //This is to unpack the result from the 
    virtual void UnPackResult(Interface * intf);
@@ -153,6 +166,9 @@ protected:
 
    Interface mod_pack;
    wxPoint pos; //The Position to draw Icon;
+
+   VE_Model::Model* veModel;
+   wxString name;
 
    //That's the for default implementation of the DrawIcon. Not part of the general interface
    wxPoint* poly; //The outline polygon points list;

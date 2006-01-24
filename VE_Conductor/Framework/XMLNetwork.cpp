@@ -14,12 +14,16 @@ void Network::Save( DOMDocument* doc )
    std::map<int, MODULE>::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
+      modules[ iter->first ].pl_mod->SetID(i);
       doc->getDocumentElement()->appendChild
          ( 
-            modules[ iter->first ].pl_mod->GetXMLData( "vecommand" )
+            modules[ iter->first ].pl_mod->GetVEModel()->GetXMLData( "vecommand" )
          );
+   for (iter=modules.begin(); iter!=modules.end(); iter++)
+   {
+      UIs.push_back(*(modules[i].pl_mod->Pack()));
    }
-
+   }
    //  Canvas info
    doc->getDocumentElement()->appendChild
          (
@@ -35,9 +39,30 @@ void Network::Save( DOMDocument* doc )
    //  tags
    for ( size_t i = 0; i < tags.size(); ++i )
    {
+      std::pair< unsigned int, unsigned int > pointCoords;
+
+      veTagVector.push_back( new VE_Model::Tag( doc ) );
+
+      veTagVector.back()->SetTagText( tags.back().text.c_str() );
+
+      pointCoords.first = tags.back().cons[0].x;
+      pointCoords.second = tags.back().cons[0].y;
+      veTagVector.back()->GetTagPoint( 0 )->SetPoint( pointCoords );
+
+      pointCoords.first = tags.back().cons[1].x;
+      pointCoords.second = tags.back().cons[1].y;
+      veTagVector.back()->GetTagPoint( 1 )->SetPoint( pointCoords );
+
+      pointCoords.first = tags.back().box.x;
+      pointCoords.second = tags.back().box.y;
+      veTagVector.back()->GetTagPoint( 2 )->SetPoint( pointCoords );
+   }
+
+   for ( size_t i = 0; i < tags.size(); ++i )
+   {
       doc->getDocumentElement()->appendChild
          ( 
-            tags.at( i )->GetXMLData( "veTag" )
+            veTagVector.at( i )->GetXMLData( "veTag" )
          );
    }
 }
@@ -80,6 +105,7 @@ void Network::Load( DOMDocument* doc )
       Command* temp = new Command( doc );
       temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
       commandVectorQueue.push_back( temp );
+  std::map<int, MODULE> modules; //The list of modules;
    }
 
    // do this for tags

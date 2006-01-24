@@ -288,6 +288,21 @@ void Model::SetObjectFromXMLData(DOMNode* element)
    }   
 }
 ////////////////////////////////////////////////////////////
+std::string Model::GetModelName( void )
+{
+   return modelName;
+}
+////////////////////////////////////////////////////////////
+unsigned int Model::GetModelID( void )
+{
+   return uniqueModelID;
+}
+////////////////////////////////////////////////////////////
+std::string Model::GetIconFilename( void )
+{
+   return iconFileName;
+}
+////////////////////////////////////////////////////////////
 Point* Model::GetIconLocation( void )
 {
    return iconLocation;
@@ -320,7 +335,7 @@ unsigned int Model::GetNumberOfResults( void )
    return results.size();
 }
 ////////////////////////////////////////////////////////////
-DataValuePair* Model::GetInput( unsigned int i )
+DataValuePair* Model::GetInput( int i )
 {
    try
    {

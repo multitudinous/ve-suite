@@ -94,6 +94,13 @@ public:
    ///\param xmlInput The input XML data.
    virtual void SetObjectFromXMLData(DOMNode* xmlInput);
    
+   ///Get the model name
+   std::string GetModelName( void );
+   ///Get the model id
+   unsigned int GetModelID( void );
+   ///Get the icon file name
+   std::string GetIconFilename( void );
+
    ///Get point for the icon location
    Point* GetIconLocation( void );
    ///Get results data
@@ -101,8 +108,9 @@ public:
    ///Get results data
    unsigned int GetNumberOfResults( void );
    ///Get input data
-   VE_XML::DataValuePair* GetInput( unsigned int i );
-   ///Get input data
+   ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
+   VE_XML::DataValuePair* GetInput( int i );
+   ///Get number of input data
    unsigned int GetNumberOfInputs( void );
    ///Get the i'th port for the model.
    ///\param i The i'th port you are after.

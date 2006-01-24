@@ -52,6 +52,9 @@ namespace VE_XML
 {
    class Transform;
    class FloatArray;
+   class OneDDoubleArray;
+   class TwoDDoubleArray;
+   class ThreeDDoubleArray;
 }
 
 namespace VE_XML
@@ -65,6 +68,14 @@ public:
    //FLOAT == a single float value
    //FARRAY == a float array
    //TRANSFORM == a Transform
+   //1DSTRING
+   //1DDOUBLE
+   //2DDOUBLE
+   //3DDOUBLE
+   //LONG
+   //1DLONG
+   //2DLONG
+   //3DLONG
    ///Constructor
    ///\param rootDoc The owning DOMDocument
    ///\param type The type of value in this pair.
@@ -90,7 +101,7 @@ public:
    
    ///Set the float data
    ///\param data The float data.
-   void SetDataValue(float data);
+   void SetDataValue( double data );
    
    
    ///Set the FloatArray data
@@ -122,6 +133,44 @@ public:
    ///Get the Transform data.
    VE_XML::Transform* GetDataTransform( void );
 
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
+   void SetData( std::string dataName, VE_XML::FloatArray* data );
+   void SetData( std::string dataName, VE_XML::Transform* data );
+
+   ///String data
+   void SetData( std::string dataName, std::string data );
+   void SetData( std::string dataName, std::vector< std::string > data );
+   
+   ///Double arrays
+   void SetData( std::string dataName, double data );
+   void SetData( std::string dataName, std::vector< double > data );
+   void SetData( std::string dataName, std::vector< std::vector< double > > data );
+   void SetData( std::string dataName, std::vector< std::vector< std::vector< double > > > data );
+
+   ///Int arrays
+   void SetData( std::string dataName, long data );
+   void SetData( std::string dataName, std::vector< long > data );
+   void SetData( std::string dataName, std::vector< std::vector< long > > data );
+   void SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data );
+
+   ///String data
+   void GetData( std::string& data );
+   void GetData( std::vector< std::string >& data );
+   
+   ///Double arrays
+   void GetData( double& data );
+   void GetData( std::vector< double >& data );
+   void GetData( std::vector< std::vector< double > >& data );
+   void GetData( std::vector< std::vector< std::vector< double > > >& data );
+
+   ///Int arrays
+   void GetData( long& data );
+   void GetData( std::vector< long >& data );
+   void GetData( std::vector< std::vector< long > >& data );
+   void GetData( std::vector< std::vector< std::vector< long > > >& data );
+
 protected:
    ///Internally update the data.
    ///\param tagName The tag name of this element.
@@ -140,9 +189,13 @@ protected:
 
    ///raw datatypes of DataValuePair that are specified in the verg.xsd file
    double _dataValue;///<Raw double value.
+   long intDataValue;///<Raw long value.
    std::string _dataString;///<Raw string value.
    VE_XML::FloatArray* _dataArray;///<Raw FloatArray value.
    VE_XML::Transform* _dataTransform;///<Raw Transform value.
+   VE_XML::OneDDoubleArray* oneDDouble;///<Raw double value.
+   VE_XML::TwoDDoubleArray* twoDDouble;///<Raw double value.
+   VE_XML::ThreeDDoubleArray* threeDDouble;///<Raw double value.
 };
 }
 #endif// _VE_DATA_VALUE_PAIR_H_
