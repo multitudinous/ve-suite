@@ -594,3 +594,50 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std
    }
    threeDDouble->SetArray( temp );
 }
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::string& data )
+{
+   data = _dataString;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::string >& data )
+{
+   //data = ;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( double& data )
+{
+   data = _dataValue;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< double >& data )
+{
+   data = oneDDouble->GetArray();
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< double > >& data )
+{
+   data = twoDDouble->GetArray();
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< std::vector< double > > >& data )
+{
+   data = threeDDouble->GetArray();
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( long& data )
+{
+   data = intDataValue;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< long >& data )
+{
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< long > >& data )
+{
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< std::vector< long > > >& data )
+{
+}

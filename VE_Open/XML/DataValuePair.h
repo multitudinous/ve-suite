@@ -55,6 +55,12 @@ namespace VE_XML
    class OneDDoubleArray;
    class TwoDDoubleArray;
    class ThreeDDoubleArray;
+   class OneDIntArray;
+   class TwoDDIntArray;
+   class ThreeDIntArray;
+   class OneDStringArray;
+   class TwoDStringArray;
+   class ThreeDStringArray;
 }
 
 namespace VE_XML
@@ -137,22 +143,55 @@ public:
    ///\param dataName Name of the data being passed in
    ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, VE_XML::FloatArray* data );
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, VE_XML::Transform* data );
 
    ///String data
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, std::string data );
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, std::vector< std::string > data );
    
    ///Double arrays
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, double data );
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, std::vector< double > data );
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, std::vector< std::vector< double > > data );
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, std::vector< std::vector< std::vector< double > > > data );
 
    ///Int arrays
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, long data );
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, std::vector< long > data );
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, std::vector< std::vector< long > > data );
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data );
 
    ///String data
@@ -196,6 +235,12 @@ protected:
    VE_XML::OneDDoubleArray* oneDDouble;///<Raw double value.
    VE_XML::TwoDDoubleArray* twoDDouble;///<Raw double value.
    VE_XML::ThreeDDoubleArray* threeDDouble;///<Raw double value.
+   VE_XML::OneDIntArray* oneDInt;///<Raw double value.
+   VE_XML::TwoDDIntArray* twoDInt;///<Raw double value.
+   VE_XML::ThreeDIntArray* threeDInt;///<Raw double value.
+   VE_XML::OneDStringArray* oneDString;///<Raw double value.
+   VE_XML::TwoDStringArray* twoDString;///<Raw double value.
+   VE_XML::ThreeDStringArray* threeDString;///<Raw double value.
 };
 }
 #endif// _VE_DATA_VALUE_PAIR_H_

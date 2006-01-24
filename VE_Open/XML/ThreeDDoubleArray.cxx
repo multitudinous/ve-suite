@@ -63,7 +63,6 @@ ThreeDDoubleArray::ThreeDDoubleArray( const ThreeDDoubleArray& input )
 :XMLObject(input)
 {
    _nElements  = input._nElements;
-   tripleArray = input.tripleArray;
    for ( size_t i = 0; i < input.twoDArray.size(); ++i )
    {
       twoDArray.push_back( new TwoDDoubleArray( *(input.twoDArray.at( i )) ) );
@@ -78,7 +77,6 @@ ThreeDDoubleArray& ThreeDDoubleArray::operator=( const ThreeDDoubleArray& input)
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
       _nElements = input._nElements;
-      tripleArray = input.tripleArray;
       minIndex = input.minIndex;
 
       for ( size_t i = 0; i < twoDArray.size(); ++i )
@@ -97,24 +95,20 @@ ThreeDDoubleArray& ThreeDDoubleArray::operator=( const ThreeDDoubleArray& input)
 /////////////////////////////////////////////////
 void ThreeDDoubleArray::AddElementToArray( std::vector< std::vector< double > > value )
 {
-   tripleArray.push_back(value);
    twoDArray.push_back( new TwoDDoubleArray( _rootDocument ) );
-   twoDArray.back()->SetArray( tripleArray.back() );
-   _nElements = static_cast< unsigned int >( tripleArray.size() );
+   twoDArray.back()->SetArray( value );
+   _nElements = static_cast< unsigned int >( twoDArray.size() );
 }
 /////////////////////////////////////////////////
 void ThreeDDoubleArray::AddElementToArray( TwoDDoubleArray* value )
 {
    twoDArray.push_back( value );
-   tripleArray.push_back( twoDArray.back()->GetArray() );
-   _nElements = static_cast< unsigned int >( tripleArray.size() );
+   _nElements = static_cast< unsigned int >( twoDArray.size() );
 }
 /////////////////////////////////////////////////////////////////
 void ThreeDDoubleArray::SetArray( std::vector< std::vector< std::vector< double > > > input )
 {
-   tripleArray.clear();
-   tripleArray = input;
-   _nElements = static_cast< unsigned int >( tripleArray.size() );
+   _nElements = static_cast< unsigned int >( input.size() );
    // Clean old vector int
    for ( size_t i = 0; i < twoDArray.size(); ++i )
    {
@@ -122,10 +116,10 @@ void ThreeDDoubleArray::SetArray( std::vector< std::vector< std::vector< double 
    }
    twoDArray.clear();
    
-   for ( size_t i = 0; i < tripleArray.size(); ++i )
+   for ( size_t i = 0; i < input.size(); ++i )
    {
       twoDArray.push_back( new TwoDDoubleArray( _rootDocument ) );
-      twoDArray.back()->SetArray( tripleArray.at( i ) );
+      twoDArray.back()->SetArray( input.at( i ) );
    }
 }
 //////////////////////////////////////////////////
@@ -133,7 +127,7 @@ double ThreeDDoubleArray::GetElement( unsigned int i, unsigned int j, unsigned i
 {
    try
    {
-      return tripleArray.at( i ).at( j ).at( k );
+      return twoDArray.at( i )->GetElement( j, k );
    }
    catch (...)
    {
@@ -146,6 +140,12 @@ double ThreeDDoubleArray::GetElement( unsigned int i, unsigned int j, unsigned i
 ///////////////////////////////////////////////////
 std::vector< std::vector< std::vector< double > > > ThreeDDoubleArray::GetArray( void )
 {
+   std::vector< std::vector< std::vector< double > > > tripleArray;///<Raw data.
+   for ( size_t i = 0; i < tripleArray.size(); ++i )
+   {
+      tripleArray.push_back( twoDArray.at(i)->GetArray() );
+   }
+
    return tripleArray;
 }
 ////////////////////////////////////
@@ -159,7 +159,7 @@ void ThreeDDoubleArray::_updateVEElement( std::string input )
    //Be sure to set the number of children (_nChildren) 
    //either here or in the updating subElements code
    //this will be based on the size of the double array
-   _nChildren = static_cast< unsigned int >( tripleArray.size() );
+   _nChildren = static_cast< unsigned int >( twoDArray.size() );
 
    //Add code here to update the specific sub elements
    // This acutally needs to be an array of 1d arrays
@@ -185,8 +185,6 @@ void ThreeDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
    
    if ( currentElement )
    {   
-      tripleArray.clear();
-     
       for ( size_t i = 0; i < twoDArray.size(); ++i )
       {
          delete twoDArray.at( i );
@@ -215,7 +213,6 @@ void ThreeDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
          //We know this about the node so we can cast it...
          twoDArray.push_back( new TwoDDoubleArray( _rootDocument ) );
          twoDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
-         tripleArray.push_back( twoDArray.back()->GetArray() );
       }
    }
    else

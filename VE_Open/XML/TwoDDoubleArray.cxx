@@ -63,7 +63,6 @@ TwoDDoubleArray::TwoDDoubleArray( const TwoDDoubleArray& input )
 :XMLObject(input)
 {
    _nElements  = input._nElements;
-   doubleArray = input.doubleArray;
    for ( size_t i = 0; i < input.oneDArray.size(); ++i )
    {
       oneDArray.push_back( new OneDDoubleArray( *(input.oneDArray.at( i )) ) );
@@ -78,7 +77,6 @@ TwoDDoubleArray& TwoDDoubleArray::operator=( const TwoDDoubleArray& input)
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
       _nElements = input._nElements;
-      doubleArray = input.doubleArray;
       minIndex = input.minIndex;
 
       for ( size_t i = 0; i < oneDArray.size(); ++i )
@@ -97,35 +95,31 @@ TwoDDoubleArray& TwoDDoubleArray::operator=( const TwoDDoubleArray& input)
 /////////////////////////////////////////////////
 void TwoDDoubleArray::AddElementToArray( std::vector< double > value )
 {
-   doubleArray.push_back(value);
    oneDArray.push_back( new OneDDoubleArray( _rootDocument ) );
-   oneDArray.back()->SetArray( doubleArray.back() );
-   _nElements = static_cast< unsigned int >( doubleArray.size() );
+   oneDArray.back()->SetArray( value );
+   _nElements = static_cast< unsigned int >( oneDArray.size() );
 }
 /////////////////////////////////////////////////
 void TwoDDoubleArray::AddElementToArray( OneDDoubleArray* value )
 {
    oneDArray.push_back( value );
-   doubleArray.push_back( oneDArray.back()->GetArray() );
-   _nElements = static_cast< unsigned int >( doubleArray.size() );
+   _nElements = static_cast< unsigned int >( oneDArray.size() );
 }
 /////////////////////////////////////////////////////////////////
 void TwoDDoubleArray::SetArray( std::vector< std::vector< double > > input )
 {
-   doubleArray.clear();
-   doubleArray = input;
-   _nElements = static_cast< unsigned int >( doubleArray.size() );
+   _nElements = static_cast< unsigned int >( input.size() );
    // Clean old vector int
-   for ( size_t i = 0; i < doubleArray.size(); ++i )
+   for ( size_t i = 0; i < oneDArray.size(); ++i )
    {
       delete oneDArray.at( i );
    }
    oneDArray.clear();
    
-   for ( size_t i = 0; i < doubleArray.size(); ++i )
+   for ( size_t i = 0; i < input.size(); ++i )
    {
       oneDArray.push_back( new OneDDoubleArray( _rootDocument ) );
-      oneDArray.back()->SetArray( doubleArray.at( i ) );
+      oneDArray.back()->SetArray( input.at( i ) );
    }
 }
 //////////////////////////////////////////////////
@@ -133,7 +127,7 @@ double TwoDDoubleArray::GetElement(unsigned int i, unsigned int j)
 {
    try
    {
-      return doubleArray.at( i ).at( j );
+      return oneDArray.at(i)->GetArray().at( j );
    }
    catch (...)
    {
@@ -145,7 +139,13 @@ double TwoDDoubleArray::GetElement(unsigned int i, unsigned int j)
 ///////////////////////////////////////////////////
 std::vector< std::vector< double > > TwoDDoubleArray::GetArray( void )
 {
-   return doubleArray;
+   std::vector< std::vector< double > > tempData;
+   for ( size_t i = 0; i < oneDArray.size(); ++i )
+   {
+      tempData.push_back( oneDArray.at( i )->GetArray() );
+   }
+
+   return tempData;
 }
 ////////////////////////////////////
 void TwoDDoubleArray::_updateVEElement( std::string input )
@@ -158,7 +158,7 @@ void TwoDDoubleArray::_updateVEElement( std::string input )
    //Be sure to set the number of children (_nChildren) 
    //either here or in the updating subElements code
    //this will be based on the size of the double array
-   _nChildren = static_cast< unsigned int >( doubleArray.size() );
+   _nChildren = static_cast< unsigned int >( oneDArray.size() );
 
    //Add code here to update the specific sub elements
    // This acutally needs to be an array of 1d arrays
@@ -184,8 +184,6 @@ void TwoDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
    
    if ( currentElement )
    {   
-      doubleArray.clear();
-     
       for ( size_t i = 0; i < oneDArray.size(); ++i )
       {
          delete oneDArray.at( i );
@@ -214,7 +212,6 @@ void TwoDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
          //We know this about the node so we can cast it...
          oneDArray.push_back( new OneDDoubleArray( _rootDocument ) );
          oneDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
-         doubleArray.push_back( oneDArray.back()->GetArray() );
       }
    }
    else
