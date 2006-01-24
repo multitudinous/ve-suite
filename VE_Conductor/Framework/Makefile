@@ -74,6 +74,9 @@ EXTRA_LDFLAGS+= -Wl,-E #-ldl -lrt -lc
 endif
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 EXTRA_LIBS+= -lGUIPluginLib -lVE_XMLLib -lm -lpthread 
+EXTRA_LIBS+= -lVE_ModelLib 
+EXTRA_LIBS+= -lVE_CADLib 
+EXTRA_LIBS+= -lVE_ShaderLib 
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
