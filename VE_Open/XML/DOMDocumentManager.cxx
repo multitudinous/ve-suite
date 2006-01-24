@@ -57,6 +57,8 @@ DOMDocumentManager::DOMDocumentManager( void )
    modulesDocument = 0;
    parseXMLFile = false;
    writeXMLFile = false;
+   parser = 0;
+   errHandler = 0;
    outputXMLFile = std::string("./output.veg");
 }
 //////////////////////////////////////////////////////

@@ -37,7 +37,7 @@ using namespace VE_CAD;
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////
-CADClone::CADClone(DOMDocument* rootDocument,std::string name,
+CADClone::CADClone(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name,
                  VE_CAD::CADNode* originalNode)
 :VE_CAD::CADNode(rootDocument,name)
 {

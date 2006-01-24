@@ -52,7 +52,7 @@ public:
    ///Constructor
    ///\param rootDocument The root XML document of this assembly.
    ///\param name Name of the assembly.
-   CADAssembly(DOMDocument* rootDocument,std::string name=std::string("Assembly"));
+   CADAssembly(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name=std::string("Assembly"));
    virtual ~CADAssembly();
 
    ///Add a child to this assembly

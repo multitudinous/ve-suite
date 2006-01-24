@@ -36,7 +36,7 @@ using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////
 //Constructor                                                     //
 ////////////////////////////////////////////////////////////////////
-CADMaterial::CADMaterial(DOMDocument* rootDocument,std::string name)
+CADMaterial::CADMaterial(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name)
 :VE_XML::XMLObject(rootDocument)
 {
    std::vector< double > temp;

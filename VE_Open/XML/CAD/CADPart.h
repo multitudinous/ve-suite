@@ -49,7 +49,7 @@ public:
    ///Constructor
    ///\param rootDocument The root XML document 
    ///\param name The name of the part
-   CADPart(DOMDocument* rootDocument,std::string name=std::string("Part"));
+   CADPart(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name=std::string("Part"));
 
    ///Destructor
    virtual ~CADPart();
