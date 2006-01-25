@@ -48,7 +48,7 @@ using namespace VE_XML;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-DataValuePair::DataValuePair(DOMDocument* rootDoc,std::string type )
+DataValuePair::DataValuePair(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,std::string type )
 :XMLObject(rootDoc)
 {
    _dataType = type;

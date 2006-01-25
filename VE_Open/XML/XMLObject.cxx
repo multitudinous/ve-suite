@@ -175,7 +175,7 @@ void XMLObject::SetSubElement( std::string subElementTagName, unsigned int dataV
    _veElement->appendChild( dataValueNumElement );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetSubElement( std::string subElementTagName, long dataValue )
+void XMLObject::SetSubElement( std::string subElementTagName, long int dataValue )
 {
    DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
    std::stringstream float2string;

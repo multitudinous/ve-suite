@@ -124,16 +124,25 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\DOMDocumentManager.cxx">
-			</File>
-			<File
 				RelativePath=".\Command.cxx">
 			</File>
 			<File
 				RelativePath=".\DataValuePair.cxx">
 			</File>
 			<File
+				RelativePath=".\DOMDocumentManager.cxx">
+			</File>
+			<File
 				RelativePath=".\FloatArray.cxx">
+			</File>
+			<File
+				RelativePath=".\OneDDoubleArray.cxx">
+			</File>
+			<File
+				RelativePath=".\OneDIntArray.cxx">
+			</File>
+			<File
+				RelativePath=".\OneDStringArray.cxx">
 			</File>
 			<File
 				RelativePath=".\ParameterBlock.cxx">
@@ -142,7 +151,19 @@
 				RelativePath=".\StateInfo.cxx">
 			</File>
 			<File
+				RelativePath=".\ThreeDDoubleArray.cxx">
+			</File>
+			<File
+				RelativePath=".\ThreeDIntArray.cxx">
+			</File>
+			<File
 				RelativePath=".\Transform.cxx">
+			</File>
+			<File
+				RelativePath=".\TwoDDoubleArray.cxx">
+			</File>
+			<File
+				RelativePath=".\TwoDIntArray.cxx">
 			</File>
 			<File
 				RelativePath=".\User.cxx">
@@ -159,16 +180,25 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\DOMDocumentManager.h">
-			</File>
-			<File
 				RelativePath=".\Command.h">
 			</File>
 			<File
 				RelativePath=".\DataValuePair.h">
 			</File>
 			<File
+				RelativePath=".\DOMDocumentManager.h">
+			</File>
+			<File
 				RelativePath=".\FloatArray.h">
+			</File>
+			<File
+				RelativePath=".\OneDDoubleArray.h">
+			</File>
+			<File
+				RelativePath=".\OneDIntArray.h">
+			</File>
+			<File
+				RelativePath=".\OneDStringArray.h">
 			</File>
 			<File
 				RelativePath=".\ParameterBlock.h">
@@ -177,7 +207,19 @@
 				RelativePath=".\StateInfo.h">
 			</File>
 			<File
+				RelativePath=".\ThreeDDoubleArray.h">
+			</File>
+			<File
+				RelativePath=".\ThreeDIntArray.h">
+			</File>
+			<File
 				RelativePath=".\Transform.h">
+			</File>
+			<File
+				RelativePath=".\TwoDDoubleArray.h">
+			</File>
+			<File
+				RelativePath=".\TwoDIntArray.h">
 			</File>
 			<File
 				RelativePath=".\User.h">

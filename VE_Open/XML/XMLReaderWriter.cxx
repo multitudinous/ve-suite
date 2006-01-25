@@ -54,7 +54,6 @@ XMLReaderWriter::~XMLReaderWriter()
          _domDocumentManager = 0;
       }
    }
-   
 }
 /////////////////////////////////////////////////
 void XMLReaderWriter::UseStandaloneDOMDocumentManager()
@@ -122,6 +121,6 @@ void XMLReaderWriter::WriteXMLDocument(std::string xmlData)
    if(_domDocumentManager){
       _domDocumentManager->SetOuputXMLFile(xmlData);
       _domDocumentManager->WriteAndReleaseCommandDocument();
-      _domDocumentManager->UnLoadParser();
+      //_domDocumentManager->UnLoadParser();
    }
 }

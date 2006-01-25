@@ -139,12 +139,15 @@ void DOMDocumentManager::Load( const std::string inputCommand )
    //MemBufInputSource inpsrc( (const XMLByte*)inputCommand.c_str(), inputCommand.size(), system_id.c_str());
   
    char* message;
-   parser = new XercesDOMParser();
+   if(!parser)
+   {
+      parser = new XercesDOMParser();
 
-   parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
-   parser->setDoNamespaces(true);    // optional
-   errHandler = (ErrorHandler*) new HandlerBase();
-   parser->setErrorHandler(errHandler);
+      parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
+      parser->setDoNamespaces(true);    // optional
+      errHandler = (ErrorHandler*) new HandlerBase();
+      parser->setErrorHandler(errHandler);
+   }
 
    try 
    {

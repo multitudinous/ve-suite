@@ -43,7 +43,7 @@ using namespace VE_Model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-Model::Model( DOMDocument* rootDoc )
+Model::Model(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc )
 :XMLObject( rootDoc )
 {
    modelName = '\0';
