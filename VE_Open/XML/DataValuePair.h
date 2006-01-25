@@ -56,11 +56,11 @@ namespace VE_XML
    class TwoDDoubleArray;
    class ThreeDDoubleArray;
    class OneDIntArray;
-   class TwoDDIntArray;
+   class TwoDIntArray;
    class ThreeDIntArray;
    class OneDStringArray;
-   class TwoDStringArray;
-   class ThreeDStringArray;
+   //class TwoDStringArray;
+   //class ThreeDStringArray;
 }
 
 namespace VE_XML
@@ -195,19 +195,39 @@ public:
    void SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data );
 
    ///String data
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( std::string& data );
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( std::vector< std::string >& data );
    
    ///Double arrays
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( double& data );
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( std::vector< double >& data );
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( std::vector< std::vector< double > >& data );
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( std::vector< std::vector< std::vector< double > > >& data );
 
    ///Int arrays
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( long& data );
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( std::vector< long >& data );
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( std::vector< std::vector< long > >& data );
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
    void GetData( std::vector< std::vector< std::vector< long > > >& data );
 
 protected:
@@ -236,11 +256,11 @@ protected:
    VE_XML::TwoDDoubleArray* twoDDouble;///<Raw double value.
    VE_XML::ThreeDDoubleArray* threeDDouble;///<Raw double value.
    VE_XML::OneDIntArray* oneDInt;///<Raw double value.
-   VE_XML::TwoDDIntArray* twoDInt;///<Raw double value.
+   VE_XML::TwoDIntArray* twoDInt;///<Raw double value.
    VE_XML::ThreeDIntArray* threeDInt;///<Raw double value.
    VE_XML::OneDStringArray* oneDString;///<Raw double value.
-   VE_XML::TwoDStringArray* twoDString;///<Raw double value.
-   VE_XML::ThreeDStringArray* threeDString;///<Raw double value.
+   //VE_XML::TwoDStringArray* twoDString;///<Raw double value.
+   //VE_XML::ThreeDStringArray* threeDString;///<Raw double value.
 };
 }
 #endif// _VE_DATA_VALUE_PAIR_H_

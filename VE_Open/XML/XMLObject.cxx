@@ -127,6 +127,15 @@ XMLObject::VEStr::VEStr( unsigned int input )
    // Call the private transcoding method
    fUnicodeForm = XMLString::transcode( dirStringStream.str().c_str() );
 }
+//////////////////////////////////////
+XMLObject::VEStr::VEStr( long int input )
+{
+   std::ostringstream dirStringStream;
+   dirStringStream << std::setprecision(10) << input;
+
+   // Call the private transcoding method
+   fUnicodeForm = XMLString::transcode( dirStringStream.str().c_str() );
+}
 /////////////////////////////////////////
 XMLObject::VEStr::VEStr( double input )
 {
@@ -156,6 +165,17 @@ void XMLObject::SetSubElement( std::string subElementTagName, std::string dataVa
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetSubElement( std::string subElementTagName, unsigned int dataValue )
+{
+   DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   std::stringstream float2string;
+   float2string << dataValue;
+   DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
+
+   dataValueNumElement->appendChild( dataValueText );
+   _veElement->appendChild( dataValueNumElement );
+}
+////////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetSubElement( std::string subElementTagName, long dataValue )
 {
    DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
    std::stringstream float2string;
@@ -209,6 +229,13 @@ double XMLObject::ExtractDataNumberFromSimpleElement(DOMElement* element)
 }
 //////////////////////////////////////////////////////////////////////////
 unsigned int XMLObject::ExtractIntegerDataNumberFromSimpleElement(DOMElement* element)
+{
+   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
+   std::string tmp = XMLString::transcode( rawText->getData() );
+   return std::atoi( tmp.c_str() );
+}
+//////////////////////////////////////////////////////////////////////////
+long int XMLObject::ExtractLongIntegerDataNumberFromSimpleElement(DOMElement* element)
 {
    DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
    std::string tmp = XMLString::transcode( rawText->getData() );

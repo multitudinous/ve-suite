@@ -13,12 +13,16 @@
          <xs:element name="dataName" type="xs:string" maxOccurs="1" minOccurs="1" />
          <xs:choice maxOccurs="1" minOccurs="1">
             <xs:element name="dataValueNum" type="xs:float" />
+            <xs:element name="dataValueInt" type="xs:integer" />
             <xs:element name="dataValueString" type="xs:string" />
             <xs:element name="dataArray" type="veFloatArray" />
             <xs:element name="dataTransform" type="veTransform" />
             <xs:element name="data1DDoubleArray" type="ve1DDoubleArray" />
             <xs:element name="data2DDoubleArray" type="ve2DDoubleArray" />
             <xs:element name="data3DDoubleArray" type="ve3DDoubleArray" />
+            <xs:element name="data1DIntArray" type="ve1DIntArray" />
+            <xs:element name="data2DIntArray" type="ve2DIntArray" />
+            <xs:element name="data3DIntArray" type="ve3DIntArray" />
             <xs:element name="data1DStringArray" type="ve1DStringArray" />
             <xs:element name="data2DStringArray" type="ve2DStringArray" />
             <xs:element name="data3DStringArray" type="ve3DStringArray" />
@@ -96,6 +100,21 @@
    <xs:complexType name="ve3DStringArray">
       <xs:sequence>
          <xs:element name="index3" type="ve2DStringArray" maxOccurs="unbounded" minOccurs="2" />
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ve1DIntArray">
+      <xs:sequence>
+         <xs:element name="data" type="xs:integer" minOccurs="2" maxOccurs="unbounded" />
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ve2DIntArray">
+      <xs:sequence>
+         <xs:element name="index2" type="ve1DIntArray" minOccurs="2" maxOccurs="unbounded" />
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ve3DIntArray">
+      <xs:sequence>
+         <xs:element name="index3" type="ve2DIntArray" maxOccurs="unbounded" minOccurs="2" />
       </xs:sequence>
    </xs:complexType>
 </xs:schema>

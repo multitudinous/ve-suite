@@ -40,6 +40,10 @@ SRCS=\
    OneDDoubleArray.cxx\
    TwoDDoubleArray.cxx\
    ThreeDDoubleArray.cxx\
+   OneDIntArray.cxx\
+   TwoDIntArray.cxx\
+   ThreeDIntArray.cxx\
+   OneDStringArray.cxx\
    ParameterBlock.cxx\
    StateInfo.cxx\
    Transform.cxx\

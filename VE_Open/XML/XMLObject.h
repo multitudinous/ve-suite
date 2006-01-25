@@ -90,6 +90,10 @@ public:
    ///\param element Element to extract unsigned integer from.
    unsigned int ExtractIntegerDataNumberFromSimpleElement( DOMElement* element);
 
+   ///utility functions for reading data from an element
+   ///\param element Element to extract long integer from.
+   long int ExtractLongIntegerDataNumberFromSimpleElement( DOMElement* element);
+
    ///utility functions for extracting subElement itemIndex from a complex element.
    ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
@@ -104,6 +108,10 @@ public:
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
    void SetSubElement( std::string subElementTagName, unsigned int dataValue );
+   ///utility functions for creating subElements for _veElement.
+   ///\param subElementTagName The subelement tagname to extract from baseElement.
+   ///\param dataValue The data to be stored.
+   void SetSubElement( std::string subElementTagName, long int dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
@@ -130,6 +138,9 @@ public:
       ///Constructor
       ///\param input The input to translate.
       VEStr( unsigned int input);
+      ///Constructor
+      ///\param input The input to translate.
+      VEStr( long int input);
       ///Constructor
       ///\param input The input to translate.
       VEStr( double input);
