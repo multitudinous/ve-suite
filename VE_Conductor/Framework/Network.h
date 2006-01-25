@@ -45,6 +45,11 @@
 #include <iostream>
 class GlobalParamDialog;
 
+namespace VE_Model
+{
+   class Network;
+}
+
 enum 
 {
    ADD_TAG,
@@ -217,6 +222,7 @@ private:
    std::vector<wxRect> sbboxes; //start up bounding box; used by GetFreePos to calc start module location
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
+   VE_Model::Network* veNetwork;
 
    DECLARE_EVENT_TABLE() // no semicolon needed
 };

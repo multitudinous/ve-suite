@@ -5,10 +5,37 @@ void Network::Save( DOMDocument* doc )
 {
    // Here we wshould loop over all of the following
    //  Newtork
+   if ( veNetwork )
+      delete veNetwork;
+   
+   veNetwork = new VE_Model::Network( doc );
+
+   veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", m_xUserScale );
+   veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", m_yUserScale );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nPixX", nPixX );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nPixY", nPixY );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", nUnitX );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", nUnitY );
+
+   for ( size_t i=0; i < links.size(); ++i )
+   {
+      veNetwork->GetLink( -1 )->GetFromPort()->SetData( modules[ links[i]->Fr_mod ].pl_mod->GetModelName(), links[i]->Fr_port );
+      veNetwork->GetLink( -1 )->GetFromPort()->SetData( modules[ links[i]->To_mod ].pl_mod->GetModelName(), links[i]->To_port );
+
+      //Try to store link cons,
+      //link cons are (x,y) wxpoint
+      //here I store x in one vector and y in the other
+      for ( size_t j=0; j< links[i]->cons.size(); ++j )
+	   {
+         veNetwork->GetLinkPoint( -1 )->SetPoint( std::pair< unsigned int, unsigned int >( links[i]->cons[j].x, links[i]->cons[j].y );
+      }
+   }
+
    doc->getDocumentElement()->appendChild
          (
-            VE_Model::Network->GetXMLData( "vecommand" );
+            veNetwork->GetXMLData( "veNetwork" );
          );
+
 
    //  Models
    std::map<int, MODULE>::iterator iter;
@@ -17,26 +44,17 @@ void Network::Save( DOMDocument* doc )
       modules[ iter->first ].pl_mod->SetID(i);
       doc->getDocumentElement()->appendChild
          ( 
-            modules[ iter->first ].pl_mod->GetVEModel()->GetXMLData( "vecommand" )
+            modules[ iter->first ].pl_mod->GetVEModel()->GetXMLData( "veModel" )
          );
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
-   {
-      UIs.push_back(*(modules[i].pl_mod->Pack()));
    }
-   }
-   //  Canvas info
-   doc->getDocumentElement()->appendChild
-         (
-            canvas->classinfo->GetXMLData( "vecommand" );
-         );
-  ntpk.setVal("m_xUserScale", m_xUserScale);
-  ntpk.setVal("m_yUserScale", m_yUserScale);
-  ntpk.setVal("nPixX", long(nPixX));
-  ntpk.setVal("nPixY", long(nPixY));
-  ntpk.setVal("nUnitX", long(nUnitX));
-  ntpk.setVal("nUnitY", long(nUnitY));
 
    //  tags
+   for ( size_t i = 0; i < veTagVector.size(); ++i )
+   {
+      delete veTagVector.at( i );
+   }
+   veTagVector.clear();
+
    for ( size_t i = 0; i < tags.size(); ++i )
    {
       std::pair< unsigned int, unsigned int > pointCoords;
@@ -74,38 +92,98 @@ void Network::Load( DOMDocument* doc )
    // Get a list of all the command elements
 
    // do this for network
-   VE_Model::Network* veNetwork = new VE_Model::Netowrk( doc );
+   if ( veNetwork )
+      delete veNetwork;
+   
+   veNetwork = new VE_Model::Network( doc );
+
    veNetwork->SetObjectFromXMLData
                ( 
                   dynamic_cast< DOMElement* >( doc->getDocumentElement()
                                                    ->getElementsByTagName( xercesString("veNetwork") )
                                                    ->item( 0 ) ) 
                );
-   unsigned int numCommands = subElements->getLength();
-   // now lets create a list of them
-   for ( unsigned int i = 0; i < numCommands; ++i )
+   veNetwork->GetDataValuePair( 0 )->GetData( &m_xUserScale );
+   veNetwork->GetDataValuePair( 1 )->GetData( &m_yUserScale );
+   veNetwork->GetDataValuePair( 2 )->GetData( &nPixX );
+   veNetwork->GetDataValuePair( 3 )->GetData( &nPixY );
+   veNetwork->GetDataValuePair( 4 )->GetData( &nUnitX );
+   veNetwork->GetDataValuePair( 5 )->GetData( &nUnitX );
+
+   for ( size_t i = 0; i < links.size(); ++i )
    {
-      Command* temp = new Command( doc );
-      temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
-      commandVectorQueue.push_back( temp );
-  ntpk.setVal("m_xUserScale", m_xUserScale);
-  ntpk.setVal("m_yUserScale", m_yUserScale);
-  ntpk.setVal("nPixX", long(nPixX));
-  ntpk.setVal("nPixY", long(nPixY));
-  ntpk.setVal("nUnitX", long(nUnitX));
-  ntpk.setVal("nUnitY", long(nUnitY));
+      delete links[i];
+   }
+   links.clear();
+   	      links.resize(temp); // repopulate the links vector
+	      for (j=0; j<temp; j++)
+	      {
+	         ln = new LINK;
+	         links[j]=ln;
+	      }
+
+   for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
+   {
+      else if ((pos=vars[i].find("ln_FrMod_"))!=(int)std::string::npos)
+	   {
+	      num = atoi(vars[i].substr(pos+9, 4).c_str());
+	      links[num]->Fr_mod=temp;
+	   }
+      else if ((pos=vars[i].find("ln_ToMod_"))!=(int)std::string::npos)
+	   {
+	      num = atoi(vars[i].substr(pos+9, 4).c_str());
+	      links[num]->To_mod=temp;
+	   }
+      else if ((pos=vars[i].find("ln_FrPort_"))!=(int)std::string::npos)
+	   {
+	      num = atoi(vars[i].substr(pos+10, 4).c_str());
+	      links[num]->Fr_port=temp;
+	   }
+      else if ((pos=vars[i].find("ln_ToPort_"))!=(int)std::string::npos)
+	   {
+	      num = atoi(vars[i].substr(pos+10, 4).c_str());
+	      links[num]->To_port=temp;
+	   }
+   }
+   for (i=0; i<vars.size(); i++)
+   {
+      ntpk.getVal(vars[i],templ1d);
+      if ((pos=vars[i].find("ln_ConX_"))!=(int)std::string::npos)
+	   {
+	      num = atoi(vars[i].substr(pos+8, 4).c_str());
+
+	      if (links[num]->cons.size()==0)
+	         links[num]->cons.resize(templ1d.size());
+
+	      for (j=0; j<(int)templ1d.size(); j++)
+	         links[num]->cons[j].x = templ1d[j];
+	   }
+      else if ((pos=vars[i].find("ln_ConY_"))!=(int)std::string::npos)
+	   {
+	      num = atoi(vars[i].substr(pos+8, 4).c_str());
+	      for (j=0; j<(int)templ1d.size(); j++)
+	         links[num]->cons[j].y = templ1d[j];
+	   }
    }
 
    // do this for models
-   DOMNodeList* subElements = doc->getDocumentElement()->getElementsByTagName( xercesString("vecommand") );
-   unsigned int numCommands = subElements->getLength();
+   DOMNodeList* subElements = doc->getDocumentElement()->getElementsByTagName( xercesString("veModel") );
+   unsigned int numModels = subElements->getLength();
    // now lets create a list of them
-   for ( unsigned int i = 0; i < numCommands; ++i )
+   for ( unsigned int i = 0; i < numModels; ++i )
    {
-      Command* temp = new Command( doc );
-      temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
-      commandVectorQueue.push_back( temp );
-  std::map<int, MODULE> modules; //The list of modules;
+         VE_Model::Model* model = new VE_Model::Model( doc );
+         model->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item( i ) ) );
+
+         wxClassInfo* cls = wxClassInfo::FindClass( model->GetModelName().c_str() );
+         REI_Plugin* tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
+         MODULE temp_mod;
+	      modules[ model->GetModelID() ] = temp_mod;
+	      modules[num].pl_mod = tempPlugin;
+         modules[num].pl_mod->SetID( model->GetModelID() );
+	      modules[num].cls_name = model->GetModelName();
+         *(modules[num].pl_mod->GetModel()) = *model;
+         delete model;
    }
 
    // do this for tags

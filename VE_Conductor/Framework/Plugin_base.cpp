@@ -416,6 +416,16 @@ Interface* REI_Plugin::Pack()
   
 }
 ////////////////////////////////////////////////////////////////////
+Model* REI_Plugin::GetModel( void )
+{
+   if ( veModel == NULL )
+   {
+      veModel = new Model( doc );
+   }
+
+   return veModel;
+}
+////////////////////////////////////////////////////////////////////
 Model* REI_Plugin::GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
 {
    if ( veModel != NULL )
@@ -474,7 +484,7 @@ Model* REI_Plugin::GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
    // EPRI TAG
    if ( financial_dlg != NULL ) 
    {
-      veModel->GetInput( -1 )->SetData( "USE_FINANCIAL", (long)financial_dlg->_use_data );
+      veModel->GetInput( -1 )->SetData( "USE_FINANCIAL", financial_dlg->_use_data );
 
       veModel->GetInput( -1 )->SetData( "CC00", financial_dlg->_cc00_d );
       veModel->GetInput( -1 )->SetData( "CC01", financial_dlg->_cc01_d );
@@ -650,7 +660,7 @@ void REI_Plugin::SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelEle
          tempData->GetData( *(_int1D[ dataName ]) );
       }
    }
-
+/*
   // EPRI TAG
   long uf = 0;
   if(mod_pack.getVal("USE_FINANCIAL", uf)) {
@@ -675,7 +685,7 @@ void REI_Plugin::SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelEle
     financial_dlg->_om02_d = mod_pack.getDouble("OM02");
     financial_dlg->_om03_d = mod_pack.getDouble("OM03");
   }
-
+*/
 }
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::UnPackResult(Interface* intf)

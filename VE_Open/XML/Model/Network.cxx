@@ -125,7 +125,7 @@ void Network::_updateVEElement( std::string input )
    }
 }
 /////////////////////////////////////
-Link* Network::GetLink( unsigned int i )
+Link* Network::GetLink( int i )
 {
    try
    {
@@ -138,7 +138,7 @@ Link* Network::GetLink( unsigned int i )
    }
 }
 /////////////////////////////////////
-DataValuePair* Network::GetDataValuePair( unsigned int i )
+DataValuePair* Network::GetDataValuePair( int i )
 {
    try
    {

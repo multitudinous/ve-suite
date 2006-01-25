@@ -81,28 +81,29 @@ Network::Network(wxWindow* parent, int id)
   :wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize,
 		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
 {
-  modules.clear();
-  links.clear();
-  m_xUserScale=1;
-  m_yUserScale=1;
-  nUnitX=100;
-  nUnitY=240;
-  nPixX = 10;
-  nPixY = 10;
-  SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
-  m_selMod = -1;
-  m_selFrPort = -1; 
-  m_selToPort = -1; 
-  m_selLink = -1; 
-  m_selLinkCon = -1; 
-  m_selTag = -1; 
-  m_selTagCon = -1; 
-  xold = yold =0;
-  moving = false;
-  paraview = false;
-  globalparam_dlg = new GlobalParamDialog(NULL, -1);
+   modules.clear();
+   links.clear();
+   m_xUserScale=1;
+   m_yUserScale=1;
+   nUnitX=100;
+   nUnitY=240;
+   nPixX = 10;
+   nPixY = 10;
+   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+   m_selMod = -1;
+   m_selFrPort = -1; 
+   m_selToPort = -1; 
+   m_selLink = -1; 
+   m_selLinkCon = -1; 
+   m_selTag = -1; 
+   m_selTagCon = -1; 
+   xold = yold =0;
+   moving = false;
+   paraview = false;
+   globalparam_dlg = new GlobalParamDialog(NULL, -1);
+   veNetwork = 0;
 
-  SetBackgroundColour(*wxWHITE);
+   SetBackgroundColour(*wxWHITE);
 }
 
 Network::~Network()
@@ -797,11 +798,11 @@ int Network::SelectLink(int x, int y)
 //////////////////////////////////////////////////////
 void Network::UnSelectLink(wxDC &dc)
 {
-  DrawLinkCon( *links[m_selLink], false );//wipe link connectors
-  
-  ReDraw(dc);
-  m_selLink = -1;
-  return;
+   DrawLinkCon( *links[m_selLink], false );//wipe link connectors
+   
+   ReDraw(dc);
+   m_selLink = -1;
+   return;
 }
 
 //////////////////////////////////////////////////////

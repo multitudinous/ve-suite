@@ -75,11 +75,11 @@ public:
    
    ///Get the i'th link from the Network.
    ///\param i The i'th link you are after.
-   Link* GetLink( unsigned int i );
+   Link* GetLink( int i );
 
    ///Get the i'th link from the Network.
    ///\param i The i'th link you are after.
-   VE_XML::DataValuePair* GetDataValuePair( unsigned int i );
+   VE_XML::DataValuePair* GetDataValuePair( int i );
 
 protected:
    ///Internally update the data.
