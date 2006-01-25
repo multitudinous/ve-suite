@@ -36,6 +36,11 @@
 #include "VE_Open/XML/OneDDoubleArray.h"
 #include "VE_Open/XML/TwoDDoubleArray.h"
 #include "VE_Open/XML/ThreeDDoubleArray.h"
+#include "VE_Open/XML/OneDIntArray.h"
+#include "VE_Open/XML/TwoDIntArray.h"
+#include "VE_Open/XML/ThreeDIntArray.h"
+#include "VE_Open/XML/OneDStringArray.h"
+
 #include <iostream>
 #include <sstream>
 
@@ -53,6 +58,15 @@ DataValuePair::DataValuePair(DOMDocument* rootDoc,std::string type )
    _dataArray = 0;
    _dataString = '\0';
    _dataTransform = 0;
+   
+   oneDDouble = 0;
+   twoDDouble = 0;
+   threeDDouble = 0;
+   oneDInt = 0;
+   twoDInt = 0;
+   threeDInt = 0;
+   oneDString = 0;
+   
 }
 ///////////////////////////////////
 DataValuePair::~DataValuePair()
@@ -67,6 +81,48 @@ DataValuePair::~DataValuePair()
       delete _dataTransform;
       _dataTransform = 0;
    }
+   
+   if ( oneDDouble )
+   {
+      delete oneDDouble;
+      oneDDouble = 0;
+   }
+
+   if ( twoDDouble )
+   {
+      delete twoDDouble;
+      twoDDouble = 0;
+   }
+
+   if ( threeDDouble )
+   {
+      delete threeDDouble;
+      threeDDouble = 0;
+   }
+
+   if ( oneDInt )
+   {
+      delete oneDInt;
+      oneDInt = 0;
+   }
+
+   if ( twoDInt )
+   {
+      delete twoDInt;
+      twoDInt = 0;
+   }
+
+   if ( threeDInt )
+   {
+      delete threeDInt;
+      threeDInt = 0;
+   }
+
+   if ( oneDString )
+   {
+      delete oneDString;
+      oneDString = 0;
+   }
 }
 ///////////////////////////////////////////
 DataValuePair::DataValuePair( const DataValuePair& input )
@@ -79,6 +135,27 @@ DataValuePair::DataValuePair( const DataValuePair& input )
    _dataArray = input._dataArray;
    _dataString = input._dataString;
    _dataTransform = input._dataTransform;
+
+   if ( input.oneDDouble )
+      oneDDouble = new OneDDoubleArray( *(input.oneDDouble) );
+
+   if ( input.twoDDouble )
+      twoDDouble = new TwoDDoubleArray( *(input.twoDDouble) );
+
+   if ( input.threeDDouble )
+      threeDDouble = new ThreeDDoubleArray( *(input.threeDDouble) );
+
+   if ( input.oneDInt )
+      oneDInt = new OneDIntArray( *(input.oneDInt) );
+
+   if ( input.twoDInt )
+      twoDInt = new TwoDIntArray( *(input.twoDInt) );
+
+   if ( input.threeDInt )
+      threeDInt = new ThreeDIntArray( *(input.threeDInt) );
+
+   if ( input.oneDString )
+      oneDString = new OneDStringArray( *(input.oneDString) );
 }
 /////////////////////////////////////////////////////
 DataValuePair& DataValuePair::operator=( const DataValuePair& input)
@@ -94,6 +171,27 @@ DataValuePair& DataValuePair::operator=( const DataValuePair& input)
       _dataArray = input._dataArray;
       _dataString = input._dataString;
       _dataTransform = input._dataTransform;
+
+      if ( input.oneDDouble )
+         *oneDDouble = *(input.oneDDouble);
+
+      if ( input.twoDDouble )
+         *twoDDouble = *(input.twoDDouble);
+
+      if ( input.threeDDouble )
+         *threeDDouble = *(input.threeDDouble);
+
+      if ( input.oneDInt )
+         *oneDInt = *(input.oneDInt);
+
+      if ( input.twoDInt )
+         *twoDInt = *(input.twoDInt);
+
+      if ( input.threeDInt )
+         *threeDInt = *(input.threeDInt);
+
+      if ( input.oneDString )
+         *oneDString = *(input.oneDString);
    }
    return *this;
 }
@@ -237,10 +335,13 @@ void DataValuePair::_updateVEElement( std::string input )
    _updateDataName();
 
    //update the value held in the pair
-   if( (_dataType == std::string("FLOAT")) || 
-       (_dataType == std::string("LONG")) )
+   if ( _dataType == std::string("FLOAT") )
    {
       _updateDataValueNumber();
+   }
+   else if( _dataType == std::string("LONG") )
+   {
+       SetSubElement( "dataValueInt", intDataValue );
    }
    else if(_dataType == std::string("STRING"))
    {
@@ -256,23 +357,31 @@ void DataValuePair::_updateVEElement( std::string input )
    }
    else if(_dataType == std::string("1DSTRING"))
    {
-      //_veElement->appendChild( _dataTransform->GetXMLData( "dataTransform" ) );
-      //SetSubElement( "data3DDoubleArray", threeDDouble );
+      SetSubElement( "data1DStringArray", oneDString );
    }
-   else if( (_dataType == std::string("1DDOUBLE")) ||
-            (_dataType == std::string("1DLONG")) )
+   else if( _dataType == std::string("1DDOUBLE") )
    {
       SetSubElement( "data1DDoubleArray", oneDDouble );
    }
-   else if( (_dataType == std::string("2DDOUBLE")) ||
-            (_dataType == std::string("2DLONG")) )
+   else if( _dataType == std::string("2DDOUBLE") )
    {
       SetSubElement( "data2DDoubleArray", twoDDouble );
    }
-   else if( (_dataType == std::string("3DDOUBLE")) ||
-            (_dataType == std::string("3DLONG")) )
+   else if( _dataType == std::string("3DDOUBLE") )
    {
       SetSubElement( "data3DDoubleArray", threeDDouble );
+   }
+   else if( _dataType == std::string("1DLONG") )
+   {
+      SetSubElement( "data1DIntArray", oneDDouble );
+   }
+   else if( _dataType == std::string("2DLONG") )
+   {
+      SetSubElement( "data2DIntArray", twoDDouble );
+   }
+   else if( _dataType == std::string("3DLONG") )
+   {
+      SetSubElement( "data3DIntArray", threeDDouble );
    }
 }
 ///////////////////////////////////////////////////
@@ -440,7 +549,47 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          }
          else if( currentElement->getElementsByTagName( xercesString("data1DStringArray") )->getLength() )
          {
-            std::cerr << "ERROR:: data type not implemented " << std::endl;
+            dataElement = GetSubElement( currentElement, "data1DStringArray", 0 );
+            if ( oneDString )
+            {
+               delete oneDString;
+            }
+            oneDString = new VE_XML::OneDStringArray( _rootDocument );
+            oneDString->SetObjectFromXMLData( dataElement );
+            SetDataType( std::string("1DSTRING") );
+         }
+         else if( currentElement->getElementsByTagName( xercesString("data1DIntArray") )->getLength() )
+         {
+            dataElement = GetSubElement( currentElement, "data1DIntArray", 0 );
+            if ( oneDInt )
+            {
+               delete oneDInt;
+            }
+            oneDInt = new VE_XML::OneDStringArray( _rootDocument );
+            oneDInt->SetObjectFromXMLData( dataElement );
+            SetDataType( std::string("1DLONG") );
+         }
+         else if( currentElement->getElementsByTagName( xercesString("data2DIntArray") )->getLength() )
+         {
+            dataElement = GetSubElement( currentElement, "data2DIntArray", 0 );
+            if ( twoDInt )
+            {
+               delete twoDInt;
+            }
+            twoDInt = new VE_XML::OneDStringArray( _rootDocument );
+            twoDInt->SetObjectFromXMLData( dataElement );
+            SetDataType( std::string("2DLONG") );
+         }
+         else if( currentElement->getElementsByTagName( xercesString("data3DIntArray") )->getLength() )
+         {
+            dataElement = GetSubElement( currentElement, "data3DIntArray", 0 );
+            if ( threeDInt )
+            {
+               delete threeDInt;
+            }
+            threeDInt = new VE_XML::OneDStringArray( _rootDocument );
+            threeDInt->SetObjectFromXMLData( dataElement );
+            SetDataType( std::string("3DLONG") );
          }
       }
    }
@@ -487,7 +636,10 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::string > da
    _dataName = dataName;
    SetDataType( std::string("1DSTRING") );
 
-   std::cerr << "ERROR:: This function is not implemented yet" << std::endl;
+   if ( oneDString == NULL )
+      oneDString = new OneDStringArray( _rootDocument );
+
+   oneDString->SetArray( data );
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::SetData( std::string dataName, double data )
@@ -542,14 +694,10 @@ void DataValuePair::SetData( std::string dataName, std::vector< long > data )
    _dataName = dataName;
    SetDataType( std::string("1DLONG") );
 
-   if ( oneDDouble == NULL )
-      oneDDouble = new OneDDoubleArray( _rootDocument );
+   if ( oneDInt == NULL )
+      oneDInt = new OneDIntArray( _rootDocument );
 
-   std::vector< double > temp;
-   for ( size_t i = 0; i < data.size(); ++i )
-      temp.push_back( data.at( i ) );
-
-   oneDDouble->SetArray( temp );
+   oneDInt->SetArray( data );
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::SetData( std::string dataName, std::vector< std::vector< long > > data )
@@ -557,18 +705,10 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< lon
    _dataName = dataName;
    SetDataType( std::string("2DLONG") );
 
-   if ( twoDDouble == NULL )
-      twoDDouble = new TwoDDoubleArray( _rootDocument );
+   if ( twoDInt == NULL )
+      twoDInt = new TwoDIntArray( _rootDocument );
 
-   std::vector< std::vector< double > > temp;
-   for ( size_t i = 0; i < data.size(); ++i )
-   {
-      std::vector< double > doubleData;
-      for ( size_t j = 0; j < data.at(i).size(); ++j )
-         doubleData.push_back( data.at( i ).at( j ) );
-      temp.push_back( doubleData );
-   }
-   twoDDouble->SetArray( temp );
+   twoDInt->SetArray( data );
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data )
@@ -576,23 +716,10 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std
    _dataName = dataName;
    SetDataType( std::string("3DLONG") );
 
-   if ( threeDDouble == NULL )
-      threeDDouble = new ThreeDDoubleArray( _rootDocument );
+   if ( threeDInt == NULL )
+      threeDInt = new ThreeDIntArray( _rootDocument );
 
-   std::vector< std::vector< std::vector< double > > > temp;
-   for ( size_t i = 0; i < data.size(); ++i )
-   {
-      std::vector< std::vector< double > > longVector;
-      for ( size_t j = 0; j < data.at(i).size(); ++j )
-      {
-         std::vector< double > longData;
-         for ( size_t k = 0; k < data.at(i).at(j).size(); ++k )
-            longData.push_back( data.at( i ).at( j ).at( k ) );
-         longVector.push_back( longData );
-      }
-      temp.push_back( longVector );
-   }
-   threeDDouble->SetArray( temp );
+   threeDInt->SetArray( temp );
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::string& data )
@@ -602,7 +729,7 @@ void DataValuePair::GetData( std::string& data )
 ////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::string >& data )
 {
-   //data = ;
+   data = oneDString->GetArray();
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::GetData( double& data )
@@ -632,12 +759,15 @@ void DataValuePair::GetData( long& data )
 ////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< long >& data )
 {
+   data = oneDInt->GetArray();
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::vector< long > >& data )
 {
+   data = twoDInt->GetArray();
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::vector< std::vector< std::vector< long > > >& data )
 {
+   data = threeDInt->GetArray();
 }
