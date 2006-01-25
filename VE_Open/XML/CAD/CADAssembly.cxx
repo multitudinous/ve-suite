@@ -186,6 +186,10 @@ CADAssembly& CADAssembly::operator=(const CADAssembly& rhs)
    if ( this != &rhs )
    {
       VE_CAD::CADNode::operator =(rhs);
+      for(unsigned int i = _numChildren -1; i >= 0; i--)
+      {
+         delete _children.at(i);
+      }
       _children.clear();
       _numChildren = rhs._numChildren;
 

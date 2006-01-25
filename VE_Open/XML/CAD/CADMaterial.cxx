@@ -281,6 +281,7 @@ CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
          delete _specular;
          _specular = 0;
       }
+       
       _kDiffuse = new VE_XML::FloatArray(*rhs._kDiffuse);
       _kEmissive = new VE_XML::FloatArray(*rhs._kEmissive);
       _ambient = new VE_XML::FloatArray(*rhs._ambient);

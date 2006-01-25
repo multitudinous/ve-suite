@@ -145,8 +145,8 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
             //populate the texture images
             {
                DOMNodeList* textureList = currentElement->getElementsByTagName(xercesString("texture"));
-               unsigned int nUniforms = textureList->getLength();
-               for(unsigned int i = 0; i < nUniforms; i++)
+               unsigned int nTextures = textureList->getLength();
+               for(unsigned int i = 0; i < nTextures; i++)
                {
                   TextureImage* newTexture= new TextureImage(_rootDocument);
                   newTexture->SetObjectFromXMLData(textureList->item(i));

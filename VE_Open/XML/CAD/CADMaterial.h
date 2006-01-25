@@ -57,7 +57,7 @@ public:
    ///Constructor
    ///\param rootDocument The root XML document of this material.
    ///\param name The name of this material.
-   CADMaterial(DOMDocument* rootDocument,std::string name=std::string("Material"));
+   CADMaterial(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name=std::string("Material"));
    ///Destructor
    virtual ~CADMaterial();
 

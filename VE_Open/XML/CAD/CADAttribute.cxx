@@ -177,11 +177,22 @@ CADAttribute& CADAttribute::operator=(const CADAttribute& rhs)
       _attributeType = rhs._attributeType;
       if(_attributeType == std::string("Material"))
       {
-         _material = rhs._material; 
+         if(_material)
+         {
+            delete _material;
+            _material = 0;
+         }
+         _material = new CADMaterial(*rhs._material); 
       }
       else if(_attributeType == std::string("Program"))
       {
-         _glslProgram = rhs._glslProgram;
+         if(_glslProgram)
+         {
+            delete _glslProgram;
+            _glslProgram = 0;
+         }
+         _glslProgram = new Program(*rhs._glslProgram);
+         
       }
    }
    return *this;

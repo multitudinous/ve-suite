@@ -63,7 +63,7 @@ CADNode::~CADNode()
    
    if(_attributeList.size())
    {
-      for(size_t i = _attributeList.size() -1; i >= 0; i--)
+      for(size_t i = _attributeList.size() - 1; i >= 0; i--)
       {
          delete _attributeList.at(i);
       }
@@ -90,7 +90,7 @@ void CADNode::SetTransform(VE_XML::Transform* transform)
    }
    _transform = new VE_XML::Transform(*transform);
 }
-////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void CADNode::AddAttribute(VE_CAD::CADAttribute* attribute)
 {
    _attributeList.push_back(attribute);
@@ -281,7 +281,7 @@ CADNode::CADNode(const CADNode& rhs)
       _attributeList.clear();
    }
 
-   for(size_t i = 0; rhs._attributeList.size(); i++)
+   for(size_t i = 0; i < rhs._attributeList.size(); i++)
    {
       _attributeList.push_back(rhs._attributeList.at(i));
    }
@@ -296,11 +296,6 @@ CADNode& CADNode::operator=(const CADNode& rhs)
    if ( this != &rhs )
    {
       XMLObject::operator =(rhs);
-      if(_transform)
-      {
-         delete _transform;
-         _transform = 0;
-      }
       if(_attributeList.size())
       {
          for(size_t i = _attributeList.size() -1; i >= 0; i--)
@@ -310,11 +305,17 @@ CADNode& CADNode::operator=(const CADNode& rhs)
          _attributeList.clear();
       }
 
-      for(size_t i = 0; rhs._attributeList.size(); i++)
+      for(size_t i = 0; i < rhs._attributeList.size(); i++)
       {
          _attributeList.push_back(rhs._attributeList.at(i));
       }
-      _transform = new VE_XML::Transform(*rhs._transform);
+      if(_transform)
+      {
+         delete _transform;
+         _transform = 0;
+      }
+      _transform = new Transform(*rhs._transform);
+      
       _parent = rhs._parent;
       _name = rhs._name;
    }

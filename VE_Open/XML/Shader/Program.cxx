@@ -49,6 +49,16 @@ Program::Program(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
 Program::~Program()
 {
    _name.clear();
+   if(_vertexShader)
+   {
+      delete _vertexShader;
+      _vertexShader = 0;
+   }
+   if(_fragmentShader)
+   {
+      delete _fragmentShader;
+      _fragmentShader = 0;
+   }
 }
 /////////////////////////////////////  
 //Copy constructor                 //
@@ -160,8 +170,24 @@ Program& Program::operator=(const Program& rhs)
 
    if(this != &rhs){
       XMLObject::operator=(rhs);
-      _vertexShader = rhs._vertexShader;
-      _fragmentShader = rhs._fragmentShader;
+      if(_vertexShader)
+      {
+         delete _vertexShader;
+         _vertexShader = 0;
+      }
+      if(_fragmentShader)
+      {
+         delete _fragmentShader;
+         _fragmentShader = 0;
+      }
+      if(rhs._vertexShader)
+      {
+         _vertexShader = new Shader(*rhs._vertexShader);
+      }
+      if(rhs._fragmentShader)
+      {
+         _fragmentShader = new Shader(*rhs._fragmentShader);
+      }
       _name = rhs._name;
    }
    return *this;

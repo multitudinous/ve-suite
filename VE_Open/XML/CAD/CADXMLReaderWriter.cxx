@@ -55,11 +55,6 @@ CADXMLReaderWriter::CADXMLReaderWriter(const CADXMLReaderWriter& fr)
 CADXMLReaderWriter::~CADXMLReaderWriter()
 {
   
-   if(_rootNode)
-   {
-      delete _rootNode;
-      _rootNode = 0;
-   }
 }
 ////////////////////////////////////////////
 VE_CAD::CADNode* CADXMLReaderWriter::GetRootNode()
@@ -123,12 +118,7 @@ CADXMLReaderWriter& CADXMLReaderWriter::operator=(const CADXMLReaderWriter& rhs)
 {
    if(&rhs != this){
       XMLReaderWriter::operator=(rhs);
-      if(_rootNode)
-      {
-         delete _rootNode;
-	       _rootNode = 0;
-      }
-      _rootNode = new VE_CAD::CADNode(*rhs._rootNode);
+      _rootNode = rhs._rootNode;
    }
    return *this;
 }
