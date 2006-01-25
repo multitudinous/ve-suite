@@ -75,7 +75,7 @@ VEGLCanvasSampleAppGraphicalPlugin::~VEGLCanvasSampleAppGraphicalPlugin( void )
    if ( !_param.empty() )
       _param.clear();
    if ( _geode != NULL )
-      delete _geode
+      delete _geode;
 }
 
 void VEGLCanvasSampleAppGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
@@ -85,7 +85,9 @@ void VEGLCanvasSampleAppGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
    CreateObjects();
 }
 
-void VEOPPDmod::CreateCustomVizFeature( int input )
+// Was initially as "void VEOPPDmod::"
+// Balu Changed it to "void VEGLCanvasSampleAppGraphicalPlugin::" on 1/25/2006
+void VEGLCanvasSampleAppGraphicalPlugin::CreateCustomVizFeature( int input )
 {
    xcoord = myInterface.getDouble("xcoord");
    ycoord = myInterface.getDouble("ycoord");
