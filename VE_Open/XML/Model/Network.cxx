@@ -47,13 +47,13 @@ Network::Network( DOMDocument* rootDoc )
 ///////////////////////////////////
 Network::~Network()
 {
-   for ( size_t i; i < links.size(); ++i )
+   for ( size_t i = 0; i < links.size(); ++i )
    {
       delete links.at( i );
    }
    links.clear();
 
-   for ( size_t i; i < conductorState.size(); ++i )
+   for ( size_t i = 0; i < conductorState.size(); ++i )
    {
       delete conductorState.at( i );
    }
@@ -63,12 +63,12 @@ Network::~Network()
 Network::Network( const Network& input )
 :XMLObject(input)
 {
-   for ( size_t i; i < input.links.size(); ++i )
+   for ( size_t i = 0; i < input.links.size(); ++i )
    {
       links.push_back( new Link( *(input.links.at( i )) ) );
    }
 
-   for ( size_t i; i < input.conductorState.size(); ++i )
+   for ( size_t i = 0; i < input.conductorState.size(); ++i )
    {
       conductorState.push_back( new DataValuePair( *(input.conductorState.at( i )) ) );
    }
@@ -80,24 +80,24 @@ Network& Network::operator=( const Network& input)
    {
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
-      for ( size_t i; i < links.size(); ++i )
+      for ( size_t i = 0; i < links.size(); ++i )
       {
          delete links.at( i );
       }
       links.clear();
 
-      for ( size_t i; i < input.links.size(); ++i )
+      for ( size_t i = 0; i < input.links.size(); ++i )
       {
          links.push_back( new Link( *(input.links.at( i )) ) );
       }
 
-      for ( size_t i; i < conductorState.size(); ++i )
+      for ( size_t i = 0; i < conductorState.size(); ++i )
       {
          delete conductorState.at( i );
       }
       conductorState.clear();
 
-      for ( size_t i; i < input.conductorState.size(); ++i )
+      for ( size_t i = 0; i < input.conductorState.size(); ++i )
       {
          conductorState.push_back( new DataValuePair( *(input.conductorState.at( i )) ) );
       }
@@ -114,12 +114,12 @@ void Network::_updateVEElement( std::string input )
    }
 
    // write all the elements according to verg_model.xsd
-   for ( size_t i; i < links.size(); ++i )
+   for ( size_t i = 0; i < links.size(); ++i )
    {
       SetSubElement( "link", links.at( i ) );   
    }
 
-   for ( size_t i; i < conductorState.size(); ++i )
+   for ( size_t i = 0; i < conductorState.size(); ++i )
    {
       SetSubElement( "conductorState", conductorState.at( i ) );   
    }

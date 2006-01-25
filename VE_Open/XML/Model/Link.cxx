@@ -51,7 +51,7 @@ Link::~Link()
    delete portInfo.first;
    delete portInfo.second;
 
-   for ( size_t i; i < linkPoints.size(); ++i )
+   for ( size_t i = 0; i < linkPoints.size(); ++i )
    {
       delete linkPoints.at( i );
    }
@@ -61,7 +61,7 @@ Link::~Link()
 Link::Link( const Link& input )
 :XMLObject(input)
 {
-   for ( size_t i; i < input.linkPoints.size(); ++i )
+   for ( size_t i = 0; i < input.linkPoints.size(); ++i )
    {
       linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
    }
@@ -76,13 +76,13 @@ Link& Link::operator=( const Link& input)
    {
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
-      for ( size_t i; i < linkPoints.size(); ++i )
+      for ( size_t i = 0; i < linkPoints.size(); ++i )
       {
          delete linkPoints.at( i );
       }
       linkPoints.clear();
 
-      for ( size_t i; i < input.linkPoints.size(); ++i )
+      for ( size_t i = 0; i < input.linkPoints.size(); ++i )
       {
          linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
       }
@@ -104,7 +104,7 @@ void Link::_updateVEElement( std::string input )
    // write all the elements according to verg_model.xsd
    SetSubElement( "fromPort", portInfo.first );
    SetSubElement( "toPort", portInfo.second );
-   for ( size_t i; i < linkPoints.size(); ++i )
+   for ( size_t i = 0; i < linkPoints.size(); ++i )
    {
       SetSubElement( "linkPoints", linkPoints.at( i ) );   
    }

@@ -54,7 +54,7 @@ Port::~Port()
 {
    delete portLocation;
 
-   for ( size_t i; i < portData.size(); ++i )
+   for ( size_t i = 0; i < portData.size(); ++i )
    {
       delete portData.at( i );
    }
@@ -64,13 +64,13 @@ Port::~Port()
 Port::Port( const Port& input )
 :XMLObject(input)
 {
-   for ( size_t i; i < portData.size(); ++i )
+   for ( size_t i = 0; i < portData.size(); ++i )
    {
       delete portData.at( i );
    }
    portData.clear();
 
-   for ( size_t i; i < input.portData.size(); ++i )
+   for ( size_t i = 0; i < input.portData.size(); ++i )
    {
       portData.push_back( new DataValuePair( *(input.portData.at( i )) ) );
    }
@@ -87,13 +87,13 @@ Port& Port::operator=( const Port& input)
    {
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
-      for ( size_t i; i < portData.size(); ++i )
+      for ( size_t i = 0; i < portData.size(); ++i )
       {
          delete portData.at( i );
       }
       portData.clear();
 
-      for ( size_t i; i < input.portData.size(); ++i )
+      for ( size_t i = 0; i < input.portData.size(); ++i )
       {
          portData.push_back( new DataValuePair( *(input.portData.at( i )) ) );
       }
@@ -146,7 +146,7 @@ void Port::_updateVEElement( std::string input )
    SetSubElement( "name", modelName );
    SetSubElement( "dataFlow", dataFlow );
    SetSubElement( "portLocation", portLocation );
-   for ( size_t i; i < portData.size(); ++i )
+   for ( size_t i = 0; i < portData.size(); ++i )
    {
       SetSubElement( "portData", portData.at( i ) );   
    }

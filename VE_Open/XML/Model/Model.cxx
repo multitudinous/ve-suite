@@ -55,7 +55,7 @@ Model::Model( DOMDocument* rootDoc )
 ///////////////////////////////////
 Model::~Model()
 {
-   for ( size_t i; i < ports.size(); ++i )
+   for ( size_t i = 0; i < ports.size(); ++i )
    {
       delete ports.at( i );
    }
@@ -63,19 +63,19 @@ Model::~Model()
 
    delete iconLocation;
 
-   for ( size_t i; i < results.size(); ++i )
+   for ( size_t i = 0; i < results.size(); ++i )
    {
       delete results.at( i );
    }
    results.clear();
 
-   for ( size_t i; i < inputs.size(); ++i )
+   for ( size_t i = 0; i < inputs.size(); ++i )
    {
       delete inputs.at( i );
    }
    inputs.clear();
 
-   for ( size_t i; i < informationPackets.size(); ++i )
+   for ( size_t i = 0; i < informationPackets.size(); ++i )
    {
       delete informationPackets.at( i );
    }
@@ -91,24 +91,24 @@ Model::Model( const Model& input )
    uniqueModelID = input.uniqueModelID;
    iconFileName = input.iconFileName;
 
-   for ( size_t i; i < input.ports.size(); ++i )
+   for ( size_t i = 0; i < input.ports.size(); ++i )
    {
       ports.push_back( new Port( *(input.ports.at( i )) ) );
    }
 
    iconLocation = new Point( *(input.iconLocation) );
 
-   for ( size_t i; i < input.results.size(); ++i )
+   for ( size_t i = 0; i < input.results.size(); ++i )
    {
       results.push_back( new DataValuePair( *(input.results.at( i )) ) );
    }
 
-   for ( size_t i; i < input.inputs.size(); ++i )
+   for ( size_t i = 0; i < input.inputs.size(); ++i )
    {
       inputs.push_back( new DataValuePair( *(input.inputs.at( i )) ) );
    }
 
-   for ( size_t i; i < input.informationPackets.size(); ++i )
+   for ( size_t i = 0; i < input.informationPackets.size(); ++i )
    {
       informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
    }
@@ -126,48 +126,48 @@ Model& Model::operator=( const Model& input)
       uniqueModelID = input.uniqueModelID;
       iconFileName = input.iconFileName;
 
-      for ( size_t i; i < ports.size(); ++i )
+      for ( size_t i = 0; i < ports.size(); ++i )
       {
          delete ports.at( i );
       }
       ports.clear();
 
-      for ( size_t i; i < input.ports.size(); ++i )
+      for ( size_t i = 0; i < input.ports.size(); ++i )
       {
          ports.push_back( new Port( *(input.ports.at( i )) ) );
       }
 
       *iconLocation = *(input.iconLocation);
 
-      for ( size_t i; i < results.size(); ++i )
+      for ( size_t i = 0; i < results.size(); ++i )
       {
          delete results.at( i );
       }
       results.clear();
 
-      for ( size_t i; i < input.results.size(); ++i )
+      for ( size_t i = 0; i < input.results.size(); ++i )
       {
          results.push_back( new DataValuePair( *(input.results.at( i )) ) );
       }
 
-      for ( size_t i; i < inputs.size(); ++i )
+      for ( size_t i = 0; i < inputs.size(); ++i )
       {
          delete inputs.at( i );
       }
       inputs.clear();
 
-      for ( size_t i; i < input.inputs.size(); ++i )
+      for ( size_t i = 0; i < input.inputs.size(); ++i )
       {
          inputs.push_back( new DataValuePair( *(input.inputs.at( i )) ) );
       }
 
-      for ( size_t i; i < informationPackets.size(); ++i )
+      for ( size_t i = 0; i < informationPackets.size(); ++i )
       {
          delete informationPackets.at( i );
       }
       informationPackets.clear();
 
-      for ( size_t i; i < input.informationPackets.size(); ++i )
+      for ( size_t i = 0; i < input.informationPackets.size(); ++i )
       {
          informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
       }
@@ -430,7 +430,7 @@ void Model::_updateVEElement( std::string input )
    }
 
    // write all the elements according to verg_model.xsd
-   for ( size_t i; i < ports.size(); ++i )
+   for ( size_t i = 0; i < ports.size(); ++i )
    {
       SetSubElement( "ports", ports.at( i ) );   
    }
@@ -440,17 +440,17 @@ void Model::_updateVEElement( std::string input )
    SetSubElement( "ID", uniqueModelID );
    SetSubElement( "icon", iconFileName );
 
-   for ( size_t i; i < results.size(); ++i )
+   for ( size_t i = 0; i < results.size(); ++i )
    {
       SetSubElement( "results", results.at( i ) );   
    }
 
-   for ( size_t i; i < inputs.size(); ++i )
+   for ( size_t i = 0; i < inputs.size(); ++i )
    {
       SetSubElement( "inputs", inputs.at( i ) );   
    }
 
-   for ( size_t i; i < informationPackets.size(); ++i )
+   for ( size_t i = 0; i < informationPackets.size(); ++i )
    {
       SetSubElement( "informationPackets", informationPackets.at( i ) );   
    }

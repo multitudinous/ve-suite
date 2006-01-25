@@ -46,7 +46,7 @@ Tag::Tag( DOMDocument* rootDoc )
 ///////////////////////////////////
 Tag::~Tag()
 {
-   for ( size_t i; i < tagPoints.size(); ++i )
+   for ( size_t i = 0; i < tagPoints.size(); ++i )
    {
       delete tagPoints.at( i );
    }
@@ -58,7 +58,7 @@ Tag::Tag( const Tag& input )
 {
    tagText = input.tagText;
 
-   for ( size_t i; i < input.tagPoints.size(); ++i )
+   for ( size_t i = 0; i < input.tagPoints.size(); ++i )
    {
       tagPoints.push_back( new Point( *(input.tagPoints.at( i )) ) );
    }
@@ -72,13 +72,13 @@ Tag& Tag::operator=( const Tag& input)
       XMLObject::operator =(input);
       tagText = input.tagText;
 
-      for ( size_t i; i < tagPoints.size(); ++i )
+      for ( size_t i = 0; i < tagPoints.size(); ++i )
       {
          delete tagPoints.at( i );
       }
       tagPoints.clear();
 
-      for ( size_t i; i < input.tagPoints.size(); ++i )
+      for ( size_t i = 0; i < input.tagPoints.size(); ++i )
       {
          tagPoints.push_back( new Point( *(input.tagPoints.at( i )) ) );
       }
@@ -101,7 +101,7 @@ void Tag::_updateVEElement( std::string input )
 
    // write all the elements according to verg_model.xsd
    SetSubElement( "tagText", tagText );
-   for ( size_t i; i < tagPoints.size(); ++i )
+   for ( size_t i = 0; i < tagPoints.size(); ++i )
    {
       SetSubElement( "linkPoints", tagPoints.at( i ) );   
    }
