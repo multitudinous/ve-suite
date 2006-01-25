@@ -85,7 +85,7 @@ public:
    ///Constructor
    ///\param rootDoc The owning DOMDocument
    ///\param type The type of value in this pair.
-   DataValuePair(DOMDocument* rootDoc,std::string type=std::string("STRING"));
+   DataValuePair( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,std::string type=std::string("STRING"));
    ///Destructor
    virtual ~DataValuePair();
    ///Copy Constructor

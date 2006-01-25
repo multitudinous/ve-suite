@@ -623,7 +623,7 @@ void REI_Plugin::SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelEle
    veModel = new Model( doc );*/
 
    veModel->SetObjectFromXMLData( modelElement );
-   name = wxString( veModel->GetModelName() );
+   name = wxString( veModel->GetModelName().c_str() );
    mod_pack._id = veModel->GetModelID();
    std::string tempFilename = veModel->GetIconFilename();
    pos.x = veModel->GetIconLocation()->GetPoint().first;
