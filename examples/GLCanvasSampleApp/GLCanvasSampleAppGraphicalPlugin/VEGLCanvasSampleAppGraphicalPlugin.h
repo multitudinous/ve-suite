@@ -47,11 +47,22 @@ public:
    VEGLCanvasSampleAppGraphicalPlugin( void );
    ~VEGLCanvasSampleAppGraphicalPlugin( void );
 
-   virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
+   virtual void InitializeNode( VE_SceneGraph::cfdDCS* ); 
+   virtual void CreateCustomVizFeature( int  );
+
 private:
    VE_SceneGraph::cfdGeode* _geode;
    double xcoord;
    double ycoord;
+
+   // Balu added on 1/25/2006
+   double radius;
+   float *scale;
+   float *trans;
+   float *rotate;
+   int transFlag;
+   float *stlColor;
+   int color;
 };
 extern "C"
 {
