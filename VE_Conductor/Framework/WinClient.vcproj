@@ -549,6 +549,9 @@
 				RelativePath=".\OrbThread.h">
 			</File>
 			<File
+				RelativePath=".\package.h">
+			</File>
+			<File
 				RelativePath=".\paraThread.h">
 			</File>
 			<File

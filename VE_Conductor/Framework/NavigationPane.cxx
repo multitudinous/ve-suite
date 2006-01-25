@@ -351,7 +351,7 @@ BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
    EVT_LEFT_UP(UI_NavButton::onMouseUp)
 END_EVENT_TABLE()
 
-////////////////////////////////////////////////////////  
+////////////////////////////////////////////////////////////////////////////////////////////////////  
 NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
 :wxDialog(NULL,-1, wxString("Navigation Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
@@ -447,7 +447,7 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
    }
 }
 
-///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
 void NavigationPane::updateParent(int pushed, int id)
 {
    //if we released a button tell cfdApp to stop moving
@@ -466,40 +466,40 @@ void NavigationPane::updateParent(int pushed, int id)
       SendCommandsToXplorer();
    }
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 void NavigationPane::OnTransStepSlider( wxScrollEvent& WXUNUSED(event))
 {
    dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
    cIso_value = navScroll->translationStepSize->GetValue();
    SendCommandsToXplorer();
 }
-////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 void NavigationPane::OnRotStepSlider( wxScrollEvent& WXUNUSED(event))
 {
    dataValueName = "CHANGE_ROTATION_STEP_SIZE";
    cIso_value = navScroll->rotationStepSize->GetValue();
    SendCommandsToXplorer();
 }
-////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 void NavigationPane::OnResetNavPosition( wxCommandEvent& WXUNUSED(event) )
 {
    dataValueName = "RESET_NAVIGATION_POSITION";
    cIso_value = navScroll->translationStepSize->GetValue();
    SendCommandsToXplorer();
 }
-////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 void NavigationPane::OnHeadCheck( wxCommandEvent& WXUNUSED(event) )
 {
    dataValueName = "ROTATE_ABOUT_HEAD";
    cIso_value = navScroll->headRotationChk->GetValue();
    SendCommandsToXplorer();
 }
-////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void NavigationPane::SetCommInstance( VjObs_ptr veEngine )
 {
    xplorerPtr = veEngine;
 }
-////////////////////////////////////////////////////////
+//////////////////////////////////////////////////
 void NavigationPane::SendCommandsToXplorer( void )
 {
    // Now need to construct domdocument and populate it with the new vecommand
@@ -509,7 +509,7 @@ void NavigationPane::SendCommandsToXplorer( void )
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( doc, std::string("FLOAT") );
    dataValuePair->SetDataName( dataValueName );
-   dataValuePair->SetDataValue( cIso_value );
+   dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    VE_XML::Command* veCommand = new VE_XML::Command( doc );
    veCommand->SetCommandName( std::string("Navigation_Data") );
    veCommand->AddDataValuePair( dataValuePair );

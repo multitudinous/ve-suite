@@ -94,8 +94,8 @@ short UI_ModelData::GetNumberOfGeomFiles( int input )
 {
    CORBA::ULong i = input;
    return _models[ i ].geometrynames.length();
+ 
 }
-
 VjObs::scalar_p*  UI_ModelData::GetGeomFilenames( int input)
 {
    CORBA::ULong i = input;

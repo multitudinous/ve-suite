@@ -1101,7 +1101,7 @@ void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( doc, std::string("FLOAT") );
    dataValuePair->SetDataName( "Stereo" );
-   dataValuePair->SetDataValue( 1 );
+   dataValuePair->SetDataValue( 1.0 );
    VE_XML::Command* veCommand = new VE_XML::Command( doc );
    veCommand->SetCommandName( std::string("Juggler_Display_Data") );
    veCommand->AddDataValuePair( dataValuePair );
