@@ -420,7 +420,7 @@ Model* REI_Plugin::GetModel( void )
 {
    if ( veModel == NULL )
    {
-      veModel = new Model( doc );
+      //veModel = new Model( doc );
    }
 
    return veModel;
@@ -484,7 +484,7 @@ Model* REI_Plugin::GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
    // EPRI TAG
    if ( financial_dlg != NULL ) 
    {
-      veModel->GetInput( -1 )->SetData( "USE_FINANCIAL", financial_dlg->_use_data );
+      veModel->GetInput( -1 )->SetData( "USE_FINANCIAL", static_cast< long >( financial_dlg->_use_data ) );
 
       veModel->GetInput( -1 )->SetData( "CC00", financial_dlg->_cc00_d );
       veModel->GetInput( -1 )->SetData( "CC01", financial_dlg->_cc01_d );

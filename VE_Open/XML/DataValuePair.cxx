@@ -565,7 +565,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete oneDInt;
             }
-            oneDInt = new VE_XML::OneDStringArray( _rootDocument );
+            oneDInt = new VE_XML::OneDIntArray( _rootDocument );
             oneDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("1DLONG") );
          }
@@ -576,7 +576,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete twoDInt;
             }
-            twoDInt = new VE_XML::OneDStringArray( _rootDocument );
+            twoDInt = new VE_XML::TwoDIntArray( _rootDocument );
             twoDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("2DLONG") );
          }
@@ -587,7 +587,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete threeDInt;
             }
-            threeDInt = new VE_XML::OneDStringArray( _rootDocument );
+            threeDInt = new VE_XML::ThreeDIntArray( _rootDocument );
             threeDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("3DLONG") );
          }
@@ -719,7 +719,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std
    if ( threeDInt == NULL )
       threeDInt = new ThreeDIntArray( _rootDocument );
 
-   threeDInt->SetArray( temp );
+   threeDInt->SetArray( data );
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::string& data )

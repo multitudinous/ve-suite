@@ -35,6 +35,7 @@ CFDUNAME = $(shell uname)
 # list the source files that are in current directory
 SRCS=\
    CADAssembly.cxx\
+   CADAttribute.cxx\
    CADClone.cxx\
    CADMaterial.cxx\
    CADNode.cxx\
