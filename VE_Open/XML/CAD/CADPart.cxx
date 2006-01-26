@@ -35,8 +35,8 @@ using namespace VE_CAD;
 ////////////////////////////////////////////////////////////
 //Constructor                                             //
 ////////////////////////////////////////////////////////////
-CADPart::CADPart(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name)
-:VE_CAD::CADNode(rootDocument,name)
+CADPart::CADPart(std::string name)
+:VE_CAD::CADNode(name)
 {
    _cadFileName = std::string("CADFile");
    _type = std::string("Part");

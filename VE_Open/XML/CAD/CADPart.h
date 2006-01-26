@@ -47,9 +47,8 @@ namespace VE_CAD{
 class VE_CAD_EXPORTS CADPart: public VE_CAD::CADNode{
 public:
    ///Constructor
-   ///\param rootDocument The root XML document 
    ///\param name The name of the part
-   CADPart(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name=std::string("Part"));
+   CADPart(std::string name=std::string("Part"));
 
    ///Destructor
    virtual ~CADPart();

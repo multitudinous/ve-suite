@@ -42,9 +42,8 @@ using namespace VE_XML;
 //////////////////////////////////
 ///Constructor                  //
 //////////////////////////////////
-CADNode::CADNode( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,
-               std::string name)
-:VE_XML::XMLObject(rootDoc)
+CADNode::CADNode(std::string name)
+:VE_XML::XMLObject()
 {
    _name = name;
    _parent = 0;
@@ -236,7 +235,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             for(XMLSize_t  i = 0; i < nNewAttributes ; i++)
             {
                DOMElement* attributeNode = dynamic_cast<DOMElement*>(attributeNodes->item(i));
-               CADAttribute* newAttribute = new CADAttribute(_rootDocument);
+               CADAttribute* newAttribute = new CADAttribute();
                newAttribute->SetObjectFromXMLData(attributeNode);
                _attributeList.push_back(newAttribute);
             }
@@ -247,7 +246,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             {
                if(!_transform)
                {
-                  _transform = new Transform(_rootDocument);
+                  _transform = new Transform();
                }
                _transform->SetObjectFromXMLData(transformNode);
             }

@@ -63,9 +63,8 @@ class VE_CAD_EXPORTS CADNode: public VE_XML::XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDocument The xerces document for this node.
    ///\param name The name of this node.
-   CADNode( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name);
+   CADNode(std::string name);
    virtual ~CADNode();
 
    ///Set the name of the node in the hierachy.

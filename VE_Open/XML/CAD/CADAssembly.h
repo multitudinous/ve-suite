@@ -50,9 +50,8 @@ namespace VE_CAD{
 class VE_CAD_EXPORTS CADAssembly: public VE_CAD::CADNode{
 public:
    ///Constructor
-   ///\param rootDocument The root XML document of this assembly.
    ///\param name Name of the assembly.
-   CADAssembly(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name=std::string("Assembly"));
+   CADAssembly(std::string name=std::string("Assembly"));
    virtual ~CADAssembly();
 
    ///Add a child to this assembly

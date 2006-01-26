@@ -37,9 +37,9 @@ using namespace VE_CAD;
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                              //
 /////////////////////////////////////////////////////////////////////////////////////////////
-CADClone::CADClone(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name,
+CADClone::CADClone(std::string name,
                  VE_CAD::CADNode* originalNode)
-:VE_CAD::CADNode(rootDocument,name)
+:VE_CAD::CADNode(name)
 {
    _originalNode = originalNode;
    _type = std::string("Clone");
@@ -101,11 +101,11 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
             if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
             {
                //this is an Assembly
-               _originalNode = new VE_CAD::CADAssembly(_rootDocument);
+               _originalNode = new VE_CAD::CADAssembly();
                
             }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
                //this is a Part
-               _originalNode = new VE_CAD::CADPart(_rootDocument);
+               _originalNode = new VE_CAD::CADPart();
             }
             _originalNode->SetObjectFromXMLData(originalNode);
          }

@@ -82,12 +82,10 @@ void CADXMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QU
          {
             delete _rootNode;
             _rootNode = 0;
-            _rootNode = new VE_CAD::CADAssembly(rootDocument);
-         }else{
-            _rootNode->SetOwnerDocument(rootDocument);
+            _rootNode = new VE_CAD::CADAssembly();
          }
       }else{
-         _rootNode = new VE_CAD::CADAssembly(rootDocument);
+         _rootNode = new VE_CAD::CADAssembly();
       }
       _rootNode->SetObjectFromXMLData(assemblies->item(0));
    }
@@ -107,12 +105,10 @@ void CADXMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QU
             {
                delete _rootNode;
                _rootNode = 0;
-               _rootNode = new VE_CAD::CADPart(rootDocument);
-            }else{
-              _rootNode->SetOwnerDocument(rootDocument);
+               _rootNode = new VE_CAD::CADPart();
             }
          }else{
-            _rootNode = new VE_CAD::CADPart(rootDocument);
+            _rootNode = new VE_CAD::CADPart();
          }
          _rootNode->SetObjectFromXMLData(parts->item(0)); 
       }

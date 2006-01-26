@@ -36,22 +36,22 @@ using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////
 //Constructor                                                     //
 ////////////////////////////////////////////////////////////////////
-CADMaterial::CADMaterial(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name)
-:VE_XML::XMLObject(rootDocument)
+CADMaterial::CADMaterial(std::string name)
+:VE_XML::XMLObject()
 {
    std::vector< double > temp;
    temp.assign( 4, 1.0f );
 
-   _kDiffuse = new VE_XML::FloatArray(_rootDocument);
+   _kDiffuse = new VE_XML::FloatArray();
    _kDiffuse->SetArray(temp);
 
-   _kEmissive = new VE_XML::FloatArray(_rootDocument);
+   _kEmissive = new VE_XML::FloatArray();
    _kEmissive->SetArray(temp);
 
-   _ambient = new VE_XML::FloatArray(_rootDocument);
+   _ambient = new VE_XML::FloatArray();
    _ambient->SetArray(temp);
 
-   _specular = new VE_XML::FloatArray(_rootDocument);
+   _specular = new VE_XML::FloatArray();
    _specular->SetArray(temp);
    _shininess = 50.0;
    _materialName = name;

@@ -36,8 +36,8 @@
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////
-CADAssembly::CADAssembly(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,std::string name)
-:VE_CAD::CADNode(rootDocument,name)
+CADAssembly::CADAssembly(std::string name)
+:VE_CAD::CADNode(name)
 {
   _numChildren = 0;
   _type = std::string("Assembly");
@@ -150,17 +150,17 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
             if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
             {
                //this is an Assembly
-               VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly(_rootDocument);
+               VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly();
                newAssembly->SetObjectFromXMLData(cadNode);
                _children.push_back(newAssembly);
             }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
                //this is a Part
-               VE_CAD::CADPart* newPart = new VE_CAD::CADPart(_rootDocument);
+               VE_CAD::CADPart* newPart = new VE_CAD::CADPart();
                newPart->SetObjectFromXMLData(cadNode);
                _children.push_back(newPart);
             }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Clone")){
                //this is a Clone
-               VE_CAD::CADClone* newClone = new VE_CAD::CADClone(_rootDocument);
+               VE_CAD::CADClone* newClone = new VE_CAD::CADClone();
                newClone->SetObjectFromXMLData(cadNode);
                _children.push_back(newClone);
             }else{

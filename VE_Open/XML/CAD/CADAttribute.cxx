@@ -37,8 +37,8 @@ using namespace VE_CAD;
 /////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                      //
 /////////////////////////////////////////////////////////////////////////////////////
-CADAttribute::CADAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:XMLObject(rootDocument)
+CADAttribute::CADAttribute( )
+:XMLObject()
 {
    _attributeType = std::string("Material");
    _material = 0; 
@@ -118,7 +118,7 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode)
                {
                   if(!_material)
 	               {
-                     _material = new CADMaterial(_rootDocument);
+                     _material = new CADMaterial();
                   }
 	               _material->SetObjectFromXMLData(materialNode);
                }
@@ -130,7 +130,7 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode)
                {
                   if(!_glslProgram)
                   {
-                     _glslProgram = new Program(_rootDocument);
+                     _glslProgram = new Program();
                   }
 	                _glslProgram->SetObjectFromXMLData(programNode);
                }

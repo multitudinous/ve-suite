@@ -57,8 +57,7 @@ class VE_CAD_EXPORTS CADAttribute: public VE_XML::XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDocument The xerces document for this node.
-   CADAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument);
+   CADAttribute();
    virtual ~CADAttribute();
 
    ///Set the type of attribute.
