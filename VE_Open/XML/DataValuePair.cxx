@@ -128,6 +128,14 @@ DataValuePair::~DataValuePair()
 DataValuePair::DataValuePair( const DataValuePair& input )
 :XMLObject(input)
 {
+   oneDDouble = 0;
+   twoDDouble = 0;
+   threeDDouble = 0;
+   oneDInt = 0;
+   twoDInt = 0;
+   threeDInt = 0;
+   oneDString = 0;
+
    _dataType = input._dataType;
    _dataName = input._dataName;
 
