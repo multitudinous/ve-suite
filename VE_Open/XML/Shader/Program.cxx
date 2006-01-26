@@ -109,6 +109,7 @@ void Program::SetObjectFromXMLData(DOMNode* xmlInput)
                {
                   _vertexShader = new Shader();
                }
+               _vertexShader->SetOwnerDocument(_rootDocument);
                _vertexShader->SetObjectFromXMLData(vertexShader);
             }
             DOMElement* fragShader = GetSubElement(currentElement,std::string("fragmentShader"),0);
@@ -118,6 +119,7 @@ void Program::SetObjectFromXMLData(DOMNode* xmlInput)
                {
                   _fragmentShader = new Shader();
                }
+               _fragmentShader->SetOwnerDocument(_rootDocument);
                _fragmentShader->SetObjectFromXMLData(fragShader);
             }
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);

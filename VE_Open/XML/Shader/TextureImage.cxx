@@ -138,17 +138,17 @@ void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
          {
             DOMElement* nChildrenElement = GetSubElement(currentElement,std::string("imageFile"),0);
             _imageFile = ExtractDataStringFromSimpleElement(nChildrenElement);
-	 } 
+         }
 	 //get the texture unit 
          {
             DOMElement* tUnitElement = GetSubElement(currentElement,std::string("textureUnit"),0);
             _textureUnit = static_cast<int>(ExtractDataNumberFromSimpleElement(tUnitElement));
-	 } 
+         }
 	 //get the data dimension 
          {
             DOMElement* dimensionElement = GetSubElement(currentElement,std::string("dimension"),0);
             _dimension = static_cast<int>(ExtractDataNumberFromSimpleElement(dimensionElement));
-	 } 
+         }
       }
    }
 }
