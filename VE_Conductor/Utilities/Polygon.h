@@ -31,6 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_CONDUCTOR_GUI_UTILITIES_POLYGON_
 #define _VE_CONDUCTOR_GUI_UTILITIES_POLYGON_
+#include <vector>
+#include <wx/gdicmn.h>
+
 namespace VE_Conductor
 {
 namespace GUI_Utilites
@@ -58,8 +61,8 @@ public:
    ///\param y y translation distance
    void TransPoly( Polygon oldpoly, int x, int y );
    double nearpnt( wxPoint pt, Polygon poly, Polygon& Near);
-   int intersect( POLY l1, POLY l2 );
-   int inside( wxPoint pt, POLY poly );
+   int intersect( Polygon l1, Polygon l2 );
+   int inside( wxPoint pt, Polygon poly );
 
 private:
    std::vector< wxPoint > poly;

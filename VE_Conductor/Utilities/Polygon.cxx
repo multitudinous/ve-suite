@@ -1,5 +1,44 @@
+#include "VE_Conductor/Utilities/Polygon.h"
+
+using namespace VE_Conducto::GUI_Utilities;
+
+////////////////////////////////////////////////
+Polygon::Polygon( void )
+{
+   ;//Do nothing since this class doesn't manage any of the pointers memory
+}
+////////////////////////////////////////////////
+Polygon::~Polygon( void );
+{
+   ;//Do nothing since this class doesn't manage any of the pointers memory
+}
+////////////////////////////////////////////////
+Polygon::Polygon( const Polygon& input );
+{
+   poly = input.poly;
+}
+////////////////////////////////////////////////
+Polygon::Polygon& operator= ( const Polygon& input );
+{
+   if ( this != &input )
+   {
+      poly.clear();
+      poly = input.poly;
+   }
+   return *this;
+}
+////////////////////////////////////////////////
+wxPoint* Polygon::GetPoint( size_t i )
+{
+   return &(poly.at( i ))
+}
+////////////////////////////////////////////////
+std::vector< wxPoint >* Polygon::GetPolygon( void )
+{
+   return &(poly);
+}
 /////////////////////////////////////////////////////////////
-int Network::ccw (wxPoint pt1, wxPoint pt2, wxPoint pt3)
+int Polygon::ccw (wxPoint pt1, wxPoint pt2, wxPoint pt3)
 {
   double dx1 = pt2.x - pt1.x;
   double dx2 = pt3.x - pt1.x;
@@ -16,7 +55,7 @@ int Network::ccw (wxPoint pt1, wxPoint pt2, wxPoint pt3)
 }
 
 /////////////////////////////////////////////////////////////
-void Network::TransPoly(POLY oldpoly, int x, int y)
+void Polygon::TransPoly(POLY oldpoly, int x, int y)
 {
   newpoly.clear();  
   for ( unsigned int i=0; i<oldpoly.size(); i++)
@@ -25,7 +64,7 @@ void Network::TransPoly(POLY oldpoly, int x, int y)
 }
 
 //////////////////////////////////////////////////////////////////
-double Network::nearpnt(wxPoint pt, POLY poly, POLY &Near)
+double Polygon::nearpnt(wxPoint pt, POLY poly, POLY &Near)
 {
   int i, i2;
 
@@ -66,7 +105,7 @@ double Network::nearpnt(wxPoint pt, POLY poly, POLY &Near)
 }
 
 ///////////////////////////////////////////////////////////////
-int Network::intersect(POLY l1, POLY l2)
+int Polygon::intersect(POLY l1, POLY l2)
 {
   int ccw11 = ccw(l1[0], l1[1], l2[0]);
   int ccw12 = ccw(l1[0], l1[1], l2[1]);
@@ -78,7 +117,7 @@ int Network::intersect(POLY l1, POLY l2)
 }
 
 //////////////////////////////////////////////////////////////
-int Network::inside( wxPoint pt, POLY poly ) 
+int Polygon::inside( wxPoint pt, POLY poly ) 
 {
    int i, count = 0, j = 0;
 
