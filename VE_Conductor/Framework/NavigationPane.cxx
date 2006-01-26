@@ -507,10 +507,12 @@ void NavigationPane::SendCommandsToXplorer( void )
    doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( doc, std::string("FLOAT") );
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
+   dataValuePair->SetOwnerDocument(doc);
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   VE_XML::Command* veCommand = new VE_XML::Command( doc );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetOwnerDocument(doc);
    veCommand->SetCommandName( std::string("Navigation_Data") );
    veCommand->AddDataValuePair( dataValuePair );
    doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );

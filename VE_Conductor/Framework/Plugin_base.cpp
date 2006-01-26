@@ -433,7 +433,10 @@ Model* REI_Plugin::GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
       delete veModel;
    }
 
-   veModel = new Model( doc );
+   veModel = new Model( );
+   ///May need to change this if it is not needed --biv
+   veModel->SetOwnerDocument(doc);
+
    veModel->SetModelName( name.c_str() );
    veModel->SetModelID( mod_pack._id );
    veModel->SetIconFilename( std::string( "iconFilename" ) );

@@ -116,10 +116,11 @@ VjObs_i::VjObs_i()
    _models = NULL;
    time_since_start = 0.0f;
    frameNumber = 0;
-   bufferCommand = new Command( NULL );
-   bufferCommand->AddDataValuePair( new DataValuePair( NULL ) );
+   bufferCommand = new Command(  );
+   bufferCommand->AddDataValuePair( new DataValuePair(  ) );
    bufferCommand->SetCommandName( "wait" );
    domManager = new DOMDocumentManager();
+   domManager->SetParseXMLStringOn();
 }
 
 void VjObs_i::InitCluster( void )
@@ -717,8 +718,10 @@ void VjObs_i::PreFrameUpdate( void )
    }
 
    // Just reinitialize the cfdid to null essentially if it is NOT GUI_NAV
-   if ( bufferCommand->GetDataValuePair( 0 )->GetDataName().compare( "GUI_NAV" ) )
-      bufferCommand->SetCommandName( "wait" );
+   if(bufferCommand->GetNumberOfDataValuePairs()){
+      if ( bufferCommand->GetDataValuePair( 0 )->GetDataName().compare( "GUI_NAV" ) )
+         bufferCommand->SetCommandName( "wait" );
+   }
 
    // New xml command queue
    if ( !commandVectorQueue.empty() )
@@ -800,7 +803,7 @@ void VjObs_i::SetCommandString( const char* value)
    // now lets create a list of them
    for ( unsigned int i = 0; i < numCommands; ++i )
    {
-      Command* temp = new Command( commandDoc );
+      Command* temp = new Command(  );
       temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
       commandVectorQueue.push_back( temp );
    }
