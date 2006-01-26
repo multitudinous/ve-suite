@@ -39,11 +39,11 @@ using namespace VE_Model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-Link::Link( DOMDocument* rootDoc )
-:XMLObject( rootDoc )
+Link::Link(  )
+:XMLObject(  )
 {
-   portInfo.first = new DataValuePair( rootDoc, "FLOAT" );
-   portInfo.second = new DataValuePair( rootDoc, "FLOAT" );
+   portInfo.first = new DataValuePair("FLOAT" );
+   portInfo.second = new DataValuePair("FLOAT" );
 }
 ///////////////////////////////////
 Link::~Link()
@@ -136,7 +136,7 @@ Point* Link::GetLinkPoint( unsigned int i )
       }
       else
       {
-         linkPoints.push_back( new Point( _rootDocument ) );
+         linkPoints.push_back( new Point(  ) );
          return linkPoints.back();
       }
    }
@@ -162,7 +162,7 @@ void Link::SetObjectFromXMLData(DOMNode* element)
             delete portInfo.first;
             portInfo.first = 0;
          }
-         portInfo.first = new VE_XML::DataValuePair( _rootDocument, "FLOAT" );
+         portInfo.first = new VE_XML::DataValuePair( "FLOAT" );
          portInfo.first->SetObjectFromXMLData( dataValueStringName );
       }
       // for port location
@@ -173,7 +173,7 @@ void Link::SetObjectFromXMLData(DOMNode* element)
             delete portInfo.second;
             portInfo.second = 0;
          }
-         portInfo.second = new VE_XML::DataValuePair( _rootDocument, "FLOAT" );
+         portInfo.second = new VE_XML::DataValuePair( "FLOAT" );
          portInfo.second->SetObjectFromXMLData( dataValueStringName );
       }
       // for link points
@@ -183,7 +183,7 @@ void Link::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
-            linkPoints.push_back( new Point( _rootDocument ) );
+            linkPoints.push_back( new Point(  ) );
             linkPoints.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }

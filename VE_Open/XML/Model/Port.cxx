@@ -41,13 +41,13 @@ using namespace VE_Model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-Port::Port( DOMDocument* rootDoc )
-:XMLObject( rootDoc )
+Port::Port(  )
+:XMLObject(  )
 {
    portNumber = 0;
    modelName = '\0';
    dataFlow = '\0';
-   portLocation = new Point( rootDoc );
+   portLocation = new Point(  );
 }
 ///////////////////////////////////
 Port::~Port()
@@ -212,7 +212,7 @@ void Port::SetObjectFromXMLData(DOMNode* element)
             delete portLocation;
             portLocation = 0;
          }
-         portLocation = new Point( _rootDocument );
+         portLocation = new Point(  );
          portLocation->SetObjectFromXMLData( dataValueStringName );
       }
       // for port data
@@ -222,7 +222,7 @@ void Port::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "portData", i );
-            portData.push_back( new DataValuePair( _rootDocument ) );
+            portData.push_back( new DataValuePair(  ) );
             portData.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }

@@ -64,8 +64,7 @@ class VE_MODEL_EXPORTS Link : public VE_XML::XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument
-   Link( DOMDocument* rootDoc );
+   Link( );
    ///Destructor
    virtual ~Link();
    ///Copy Constructor

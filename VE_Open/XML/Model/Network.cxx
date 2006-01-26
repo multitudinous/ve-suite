@@ -39,8 +39,8 @@ using namespace VE_Model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-Network::Network( DOMDocument* rootDoc )
-:XMLObject( rootDoc )
+Network::Network(  )
+:XMLObject(  )
 {
    ;
 }
@@ -133,7 +133,7 @@ Link* Network::GetLink( int i )
    }
    catch (...)
    {
-      links.push_back( new Link( _rootDocument ) );
+      links.push_back( new Link(  ) );
       return links.back();
    }
 }
@@ -146,7 +146,7 @@ DataValuePair* Network::GetDataValuePair( int i )
    }
    catch (...)
    {
-      conductorState.push_back( new DataValuePair( _rootDocument ) );
+      conductorState.push_back( new DataValuePair(  ) );
       return conductorState.back();
    }
 }
@@ -170,7 +170,7 @@ void Network::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "link", i );
-            links.push_back( new Link( _rootDocument ) );
+            links.push_back( new Link(  ) );
             links.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
@@ -181,7 +181,7 @@ void Network::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfStates; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "conductorState", i );
-            conductorState.push_back( new DataValuePair( _rootDocument ) );
+            conductorState.push_back( new DataValuePair(  ) );
             conductorState.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }

@@ -63,8 +63,7 @@ class VE_MODEL_EXPORTS Port : public VE_XML::XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument
-   Port( DOMDocument* rootDoc );
+   Port( );
    ///Destructor
    virtual ~Port();
    ///Copy Constructor

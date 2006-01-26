@@ -39,8 +39,8 @@ using namespace VE_Model;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-Point::Point(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc )
-:XMLObject( rootDoc )
+Point::Point( )
+:XMLObject( )
 {
    point.first = 0;
    point.second = 0;

@@ -52,8 +52,7 @@ class VE_MODEL_EXPORTS Point : public VE_XML::XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument.
-   Point( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc );
+   Point(  );
    ///Destructor
    virtual ~Point();
    ///Copy Constructor

@@ -58,8 +58,7 @@ class VE_MODEL_EXPORTS Tag : public VE_XML::XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument
-   Tag( DOMDocument* rootDoc );
+   Tag(  );
    ///Destructor
    virtual ~Tag();
    ///Copy Constructor

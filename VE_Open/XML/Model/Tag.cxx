@@ -38,8 +38,8 @@ using namespace VE_Model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-Tag::Tag( DOMDocument* rootDoc )
-:XMLObject( rootDoc )
+Tag::Tag()
+:XMLObject()
 {
    ;   
 }
@@ -128,7 +128,7 @@ Point* Tag::GetTagPoint( unsigned int i )
       }
       else
       {
-         tagPoints.push_back( new Point( _rootDocument ) );
+         tagPoints.push_back( new Point(  ) );
          return tagPoints.back();
       }
    }
@@ -158,7 +158,7 @@ void Tag::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPoints; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
-            tagPoints.push_back( new Point( _rootDocument ) );
+            tagPoints.push_back( new Point(  ) );
             tagPoints.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }

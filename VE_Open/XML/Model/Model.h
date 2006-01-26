@@ -71,8 +71,7 @@ class VE_MODEL_EXPORTS Model : public VE_XML::XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument
-   Model( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc );
+   Model( );
    ///Destructor
    virtual ~Model();
    ///Copy Constructor

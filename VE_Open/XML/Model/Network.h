@@ -60,8 +60,7 @@ class VE_MODEL_EXPORTS Network : public VE_XML::XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument
-   Network( DOMDocument* rootDoc );
+   Network( );
    ///Destructor
    virtual ~Network();
    ///Copy Constructor

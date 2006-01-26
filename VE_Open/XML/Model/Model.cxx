@@ -43,14 +43,14 @@ using namespace VE_Model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-Model::Model(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc )
-:XMLObject( rootDoc )
+Model::Model()
+:XMLObject(  )
 {
    modelName = '\0';
    uniqueModelID = 0;
    iconFileName = '\0';
-   iconLocation = new Point( rootDoc );
-   geometry = new CADNode( rootDoc, "oops" );
+   iconLocation = new Point(  );
+   geometry = new CADNode( "oops" );
 }
 ///////////////////////////////////
 Model::~Model()
@@ -227,7 +227,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
             delete iconLocation;
             iconLocation = 0;
          }
-         iconLocation = new Point( _rootDocument );
+         iconLocation = new Point(  );
          iconLocation->SetObjectFromXMLData( dataValueStringName );
       }
 
@@ -238,7 +238,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
             delete geometry;
             geometry = 0;
          }
-         geometry = new CADNode( _rootDocument, "oops"  );
+         geometry = new CADNode("oops" );
          geometry->SetObjectFromXMLData( dataValueStringName );
       }
 
@@ -248,7 +248,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "ports", i );
-            ports.push_back( new Port( _rootDocument ) );
+            ports.push_back( new Port(  ) );
             ports.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
@@ -259,7 +259,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "results", i );
-            results.push_back( new DataValuePair( _rootDocument ) );
+            results.push_back( new DataValuePair(  ) );
             results.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
@@ -270,7 +270,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "inputs", i );
-            results.push_back( new DataValuePair( _rootDocument ) );
+            results.push_back( new DataValuePair(  ) );
             results.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
@@ -281,7 +281,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "informationPackets", i );
-            informationPackets.push_back( new ParameterBlock( _rootDocument ) );
+            informationPackets.push_back( new ParameterBlock(  ) );
             informationPackets.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
@@ -324,7 +324,7 @@ DataValuePair* Model::GetResult( unsigned int i )
       }
       else
       {
-         results.push_back( new DataValuePair( _rootDocument ) );
+         results.push_back( new DataValuePair(  ) );
          return results.back();
       }
    }
@@ -351,7 +351,7 @@ DataValuePair* Model::GetInput( int i )
       }
       else
       {
-         inputs.push_back( new DataValuePair( _rootDocument ) );
+         inputs.push_back( new DataValuePair(  ) );
          return inputs.back();
       }
    }
@@ -378,7 +378,7 @@ Port* Model::GetPort( unsigned int i )
       }
       else
       {
-         ports.push_back( new Port( _rootDocument ) );
+         ports.push_back( new Port(  ) );
          return ports.back();
       }
    }
@@ -405,7 +405,7 @@ ParameterBlock* Model::GetInformationPacket( unsigned int i )
       }
       else
       {
-         informationPackets.push_back( new ParameterBlock( _rootDocument ) );
+         informationPackets.push_back( new ParameterBlock(  ) );
          return informationPackets.back();
       }
    }
