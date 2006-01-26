@@ -63,6 +63,7 @@ void CADClone::_updateVEElement(std::string input)
    VE_CAD::CADNode::_updateVEElement(input);
 
    //add the extra stuff
+   _originalNode->SetOwnerDocument(_rootDocument);
    _veElement->appendChild(_originalNode->GetXMLData("originalNode"));
    
 }

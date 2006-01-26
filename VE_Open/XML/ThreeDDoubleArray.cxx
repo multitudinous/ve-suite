@@ -166,6 +166,7 @@ void ThreeDDoubleArray::_updateVEElement( std::string input )
    for ( size_t i = 0; i < twoDArray.size(); ++i )
    {
       // name comes from verg.xsd
+      twoDArray.at(i)->SetOwnerDocument(_rootDocument);
       _veElement->appendChild( twoDArray.at( i )->GetXMLData( "index3" ) );      
    }
 }
@@ -212,7 +213,6 @@ void ThreeDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
       {
          //We know this about the node so we can cast it...
          twoDArray.push_back( new TwoDDoubleArray(  ) );
-         twoDArray.back()->SetOwnerDocument(_rootDocument);
          twoDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
       }
    }

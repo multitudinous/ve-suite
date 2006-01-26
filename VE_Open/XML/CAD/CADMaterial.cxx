@@ -182,9 +182,16 @@ void CADMaterial::_updateShininess()
 //////////////////////////////////////////
 void CADMaterial::_updateColorProperties()
 {
-   _veElement->appendChild( _kDiffuse->GetXMLData("kDiffuse"));      
-   _veElement->appendChild( _kEmissive->GetXMLData("kEmissive"));      
+   _kDiffuse->SetOwnerDocument(_rootDocument);
+   _veElement->appendChild( _kDiffuse->GetXMLData("kDiffuse"));
+
+   _kEmissive->SetOwnerDocument(_rootDocument);
+   _veElement->appendChild( _kEmissive->GetXMLData("kEmissive"));
+
+   _ambient->SetOwnerDocument(_rootDocument);
    _veElement->appendChild( _ambient->GetXMLData("kAmbient")); 
+   
+   _specular->SetOwnerDocument(_rootDocument);
    _veElement->appendChild( _specular->GetXMLData("specular"));
 }
 /////////////////////////////////////////////////////
@@ -233,16 +240,12 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
       if ( currentElement->hasChildNodes() )
       {
          // do we need to delete the old one or does xerces handle this???
-         _kDiffuse->SetOwnerDocument(_rootDocument);
          _kDiffuse->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kDiffuse"),0));
          
-         _kEmissive->SetOwnerDocument(_rootDocument);
          _kEmissive->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kEmissive"),0));
          
-         _ambient->SetOwnerDocument(_rootDocument);
          _ambient->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kAmbient"),0));
          
-         _specular->SetOwnerDocument(_rootDocument);
          _specular->SetObjectFromXMLData(GetSubElement(currentElement,std::string("specular"),0));
          
          _shininess = ExtractDataNumberFromSimpleElement(GetSubElement(currentElement,std::string("shininess"),0));

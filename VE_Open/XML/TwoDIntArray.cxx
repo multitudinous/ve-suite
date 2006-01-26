@@ -165,6 +165,7 @@ void TwoDIntArray::_updateVEElement( std::string input )
    for ( size_t i = 0; i < oneDArray.size(); ++i )
    {
       // name comes from verg.xsd
+      oneDArray.at(i)->SetOwnerDocument(_rootDocument);
       _veElement->appendChild( oneDArray.at( i )->GetXMLData( "index2" ) );      
    }
 }
@@ -211,7 +212,6 @@ void TwoDIntArray::SetObjectFromXMLData(DOMNode* xmlInput)
       {
          //We know this about the node so we can cast it...
          oneDArray.push_back( new OneDIntArray(  ) );
-         oneDArray.back()->SetOwnerDocument(_rootDocument);
          oneDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
       }
    }

@@ -138,7 +138,6 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
                for(unsigned int i = 0; i < nUniforms; i++)
                {
                   Uniform* newUniform = new Uniform();
-                  newUniform->SetOwnerDocument(_rootDocument);
                   newUniform->SetObjectFromXMLData(uniformList->item(i));
                   _uniformList.push_back(newUniform);
                }
@@ -150,7 +149,6 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
                for(unsigned int i = 0; i < nTextures; i++)
                {
                   TextureImage* newTexture= new TextureImage();
-                  newTexture->SetOwnerDocument(_rootDocument);
                   newTexture->SetObjectFromXMLData(textureList->item(i));
                   _textureImages.push_back(newTexture);
                }
@@ -231,6 +229,7 @@ void Shader::_updateTextureImages()
    //add the children nodes to the list
    for(size_t i = 0; i < _textureImages.size(); i++)
    {
+      _textureImages.at(i)->SetOwnerDocument(_rootDocument);
       _veElement->appendChild(_textureImages.at(i)->GetXMLData("texture"));
    }
 }
@@ -240,6 +239,7 @@ void Shader::_updateUniforms()
    //add the children nodes to the list
    for(size_t i = 0; i < _uniformList.size(); i++)
    {
+      _uniformList.at(i)->SetOwnerDocument(_rootDocument);
       _veElement->appendChild(_uniformList.at(i)->GetXMLData("uniform"));
    }
 }

@@ -123,9 +123,11 @@ void XMLReaderWriter::WriteXMLDocument(std::string xmlData,
 {
    if(_domDocumentManager){
       _domDocumentManager->SetOuputXMLFile(xmlData);
+      _domDocumentManager->SetWriteXMLFileOn();
       _domDocumentManager->CreateCommandDocument();
 
       node->SetOwnerDocument(_domDocumentManager->GetCommandDocument());
+      _domDocumentManager->GetCommandDocument()->getDocumentElement()->appendChild(node->GetXMLData("VEXML"));
 
       _domDocumentManager->WriteAndReleaseCommandDocument();
       _domDocumentManager->UnLoadParser();

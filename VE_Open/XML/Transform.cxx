@@ -181,12 +181,15 @@ void Transform::_updateVEElement( std::string input )
    //we know this to be 3 float arrays
    _nChildren = 3;
    // name comes from verg.xsd
+   translationArray->SetOwnerDocument(_rootDocument);
    DOMElement* translationTag  = translationArray->GetXMLData( "translation" );
    _veElement->appendChild( translationTag );      
 
+   scaleArray->SetOwnerDocument(_rootDocument);
    DOMElement* scaleTag  = scaleArray->GetXMLData( "scale" );
    _veElement->appendChild( scaleTag );      
 
+   rotationArray->SetOwnerDocument(_rootDocument);
    DOMElement* rotationTag  = rotationArray->GetXMLData( "rotation" );
    _veElement->appendChild( rotationTag );      
 }
@@ -207,13 +210,10 @@ void Transform::SetObjectFromXMLData( DOMNode* xmlInput )
    
          // do we need to delete the old one or does xerces handle this???
          _nChildren = 3;
-         translationArray->SetOwnerDocument(_rootDocument);
          translationArray->SetObjectFromXMLData( currentElement->getElementsByTagName(xercesString("translation"))->item(0) );
 
-         scaleArray->SetOwnerDocument(_rootDocument);
          scaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName(xercesString("scale"))->item(0) );
          
-         rotationArray->SetOwnerDocument(_rootDocument);
          rotationArray->SetObjectFromXMLData( currentElement->getElementsByTagName(xercesString("rotation"))->item(0) );
       }
    }

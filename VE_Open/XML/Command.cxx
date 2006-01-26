@@ -125,6 +125,7 @@ void Command::_updateCommandName()
 void Command::_updateDataValuePairs()
 {
    for(unsigned int i = 0; i < _nDataValuePairs;  i++){
+      _dataValuePairs.at(i)->SetOwnerDocument(_rootDocument);
       _veElement->appendChild( _dataValuePairs.at( i )->GetXMLData( "parameter" ) );
    }
 }
@@ -178,7 +179,6 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
             if( dvPairIn )
             {
                VE_XML::DataValuePair* veDvp = new VE_XML::DataValuePair();
-               veDvp->SetOwnerDocument(_rootDocument);
                veDvp->SetObjectFromXMLData(dvPairIn);
                _dataValuePairs.push_back(veDvp);
             }

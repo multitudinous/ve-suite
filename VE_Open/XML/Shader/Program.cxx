@@ -109,7 +109,6 @@ void Program::SetObjectFromXMLData(DOMNode* xmlInput)
                {
                   _vertexShader = new Shader();
                }
-               _vertexShader->SetOwnerDocument(_rootDocument);
                _vertexShader->SetObjectFromXMLData(vertexShader);
             }
             DOMElement* fragShader = GetSubElement(currentElement,std::string("fragmentShader"),0);
@@ -119,7 +118,6 @@ void Program::SetObjectFromXMLData(DOMNode* xmlInput)
                {
                   _fragmentShader = new Shader();
                }
-               _fragmentShader->SetOwnerDocument(_rootDocument);
                _fragmentShader->SetObjectFromXMLData(fragShader);
             }
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
@@ -155,8 +153,16 @@ void Program::_updateVEElement(std::string input)
       _veElement = _rootDocument->createElement( xercesString( input ) );
    }
    _updateProgramName();
-   _veElement->appendChild(_vertexShader->GetXMLData("vertexShader"));
-   _veElement->appendChild(_vertexShader->GetXMLData("fragmentShader"));
+   if(_vertexShader)
+   {
+      _vertexShader->SetOwnerDocument(_rootDocument);
+      _veElement->appendChild(_vertexShader->GetXMLData("vertexShader"));
+   }
+   if(_fragmentShader)
+   {
+      _fragmentShader->SetOwnerDocument(_rootDocument);
+      _veElement->appendChild(_vertexShader->GetXMLData("fragmentShader"));
+   }
 }
 /////////////////////////////////
 void Program::_updateProgramName()
