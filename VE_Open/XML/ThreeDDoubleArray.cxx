@@ -39,8 +39,8 @@ using namespace VE_XML;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-ThreeDDoubleArray::ThreeDDoubleArray(DOMDocument* rootDoc,unsigned int nElements)
-:XMLObject(rootDoc)
+ThreeDDoubleArray::ThreeDDoubleArray(unsigned int nElements)
+:XMLObject()
 {
    _nElements  = nElements;
    // These should match the schema for min and max occurances 
@@ -95,7 +95,7 @@ ThreeDDoubleArray& ThreeDDoubleArray::operator=( const ThreeDDoubleArray& input)
 /////////////////////////////////////////////////
 void ThreeDDoubleArray::AddElementToArray( std::vector< std::vector< double > > value )
 {
-   twoDArray.push_back( new TwoDDoubleArray( _rootDocument ) );
+   twoDArray.push_back( new TwoDDoubleArray(  ) );
    twoDArray.back()->SetArray( value );
    _nElements = static_cast< unsigned int >( twoDArray.size() );
 }
@@ -118,7 +118,7 @@ void ThreeDDoubleArray::SetArray( std::vector< std::vector< std::vector< double 
    
    for ( size_t i = 0; i < input.size(); ++i )
    {
-      twoDArray.push_back( new TwoDDoubleArray( _rootDocument ) );
+      twoDArray.push_back( new TwoDDoubleArray(  ) );
       twoDArray.back()->SetArray( input.at( i ) );
    }
 }
@@ -211,7 +211,7 @@ void ThreeDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
       for ( XMLSize_t i = 0; i < numNodes; ++i )
       {
          //We know this about the node so we can cast it...
-         twoDArray.push_back( new TwoDDoubleArray( _rootDocument ) );
+         twoDArray.push_back( new TwoDDoubleArray(  ) );
          twoDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
       }
    }

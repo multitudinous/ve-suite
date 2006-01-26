@@ -50,9 +50,8 @@ class VE_XML_EXPORTS OneDStringArray : public XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument.
    ///\param nElements The length of the float array.
-   OneDStringArray(DOMDocument* rootDoc,unsigned int nElements=3);
+   OneDStringArray(unsigned int nElements=3);
    ///Destructor
    virtual ~OneDStringArray();
    ///Copy Constructor

@@ -55,9 +55,8 @@ namespace VE_XML{
 class VE_XML_EXPORTS ParameterBlock : public XMLObject{
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument.
    ///\param id The identification number of this parameter block
-   ParameterBlock(DOMDocument* rootDoc,unsigned int id = 0);
+   ParameterBlock(unsigned int id = 0);
    ///Destructor
    virtual ~ParameterBlock();
 

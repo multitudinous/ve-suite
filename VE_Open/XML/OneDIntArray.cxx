@@ -38,8 +38,8 @@ using namespace VE_XML;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-OneDIntArray::OneDIntArray(DOMDocument* rootDoc,unsigned int nElements)
-:XMLObject(rootDoc)
+OneDIntArray::OneDIntArray(unsigned int nElements)
+:XMLObject()
 {
    _nElements  = nElements;
    // These should match the schema for min and max occurances 

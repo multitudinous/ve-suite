@@ -59,7 +59,7 @@ class VE_XML_EXPORTS Command : public XMLObject
 {
 public:
    ///Constructor
-   Command(DOMDocument* rootDoc);
+   Command();
    ///Destructor
    virtual ~Command();
    ///Copy Constructor

@@ -51,9 +51,8 @@ class VE_XML_EXPORTS FloatArray : public XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument.
    ///\param nElements The length of the float array.
-   FloatArray(DOMDocument* rootDoc,unsigned int nElements=3);
+   FloatArray(unsigned int nElements=3);
    ///Destructor
    virtual ~FloatArray();
    ///Copy Constructor

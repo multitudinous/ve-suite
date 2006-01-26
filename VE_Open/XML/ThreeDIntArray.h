@@ -55,9 +55,8 @@ class VE_XML_EXPORTS ThreeDIntArray : public XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument.
    ///\param nElements The length of the float array.
-   ThreeDIntArray(DOMDocument* rootDoc,unsigned int nElements=3);
+   ThreeDIntArray(unsigned int nElements=3);
    ///Destructor
    virtual ~ThreeDIntArray();
    ///Copy Constructor

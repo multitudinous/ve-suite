@@ -36,12 +36,12 @@
 XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_XML;
-/////////////////////////////////////////////////////////////////////////////
-XMLObject::XMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc)
+//////////////////////
+XMLObject::XMLObject()
 {
    _veElement = 0;
    _needsUpdate = false;
-   _rootDocument = rootDoc; 
+   _rootDocument = 0;
    _nChildren = 0;
 }
 ///////////////////////////////////////////////////
@@ -76,14 +76,20 @@ void XMLObject::SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* own
 ////////////////////////////////////////////////////////
 DOMElement* XMLObject::GetXMLData( std::string input )
 {
-   //Make sure old data is cleared from the xerces side of the element
-   _clearAllChildrenFromElement();
+   if(_rootDocument)
+   {
+      //Make sure old data is cleared from the xerces side of the element
+      _clearAllChildrenFromElement();
   
-   //update the xerces element w/ the current data in the object
-   //This function should be overridden in ALL derived classes!!!!!
-   _updateVEElement( input );
+      //update the xerces element w/ the current data in the object
+      //This function should be overridden in ALL derived classes!!!!!
+      _updateVEElement( input );
 
-   return _veElement;
+      return _veElement;
+   }else{
+      std::cout<<"Root Document not set!!"<<std::endl;
+      return 0;
+   }
 }
 ////////////////////////////////////////////////
 void XMLObject::_clearAllChildrenFromElement()

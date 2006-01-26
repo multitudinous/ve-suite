@@ -37,8 +37,8 @@ using namespace VE_XML;
 //////////////////////
 //Constructor       //
 //////////////////////
-Command::Command(DOMDocument* rootDoc)
-:XMLObject(rootDoc)
+Command::Command()
+:XMLObject()
 {
    _cmdName =  '\0';
    _nDataValuePairs = 0;
@@ -177,7 +177,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
             DOMElement* dvPairIn = dynamic_cast<DOMElement*>(subElements->item(i));
             if( dvPairIn )
             {
-               VE_XML::DataValuePair* veDvp = new VE_XML::DataValuePair(_rootDocument);
+               VE_XML::DataValuePair* veDvp = new VE_XML::DataValuePair();
                veDvp->SetObjectFromXMLData(dvPairIn);
                _dataValuePairs.push_back(veDvp);
             }

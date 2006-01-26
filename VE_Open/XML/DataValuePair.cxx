@@ -48,8 +48,8 @@ using namespace VE_XML;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-DataValuePair::DataValuePair(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDoc,std::string type )
-:XMLObject(rootDoc)
+DataValuePair::DataValuePair(std::string type )
+:XMLObject()
 {
    _dataType = type;
    _dataName = '\0';
@@ -498,7 +498,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete _dataArray;
                _dataArray = 0;
             }
-            _dataArray = new VE_XML::FloatArray(_rootDocument);
+            _dataArray = new VE_XML::FloatArray();
             _dataArray->SetObjectFromXMLData(subElements->item(0));
             SetDataType(std::string("FARRAY"));
          }
@@ -510,7 +510,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete _dataTransform;
                _dataTransform = 0;
             }
-            _dataTransform = new VE_XML::Transform(_rootDocument);
+            _dataTransform = new VE_XML::Transform();
             _dataTransform->SetObjectFromXMLData(subElements->item(0));
             SetDataType( std::string("TRANSFORM") );
          }
@@ -521,7 +521,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete oneDDouble;
             }
-            oneDDouble = new VE_XML::OneDDoubleArray( _rootDocument );
+            oneDDouble = new VE_XML::OneDDoubleArray(  );
             oneDDouble->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("1DDOUBLE") );
          }
@@ -532,7 +532,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete twoDDouble;
             }
-            twoDDouble = new VE_XML::TwoDDoubleArray( _rootDocument );
+            twoDDouble = new VE_XML::TwoDDoubleArray(  );
             twoDDouble->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("2DDOUBLE") );
          }
@@ -543,7 +543,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete threeDDouble;
             }
-            threeDDouble = new VE_XML::ThreeDDoubleArray( _rootDocument );
+            threeDDouble = new VE_XML::ThreeDDoubleArray(  );
             threeDDouble->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("3DDOUBLE") );
          }
@@ -554,7 +554,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete oneDString;
             }
-            oneDString = new VE_XML::OneDStringArray( _rootDocument );
+            oneDString = new VE_XML::OneDStringArray(  );
             oneDString->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("1DSTRING") );
          }
@@ -565,7 +565,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete oneDInt;
             }
-            oneDInt = new VE_XML::OneDIntArray( _rootDocument );
+            oneDInt = new VE_XML::OneDIntArray(  );
             oneDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("1DLONG") );
          }
@@ -576,7 +576,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete twoDInt;
             }
-            twoDInt = new VE_XML::TwoDIntArray( _rootDocument );
+            twoDInt = new VE_XML::TwoDIntArray(  );
             twoDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("2DLONG") );
          }
@@ -587,7 +587,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                delete threeDInt;
             }
-            threeDInt = new VE_XML::ThreeDIntArray( _rootDocument );
+            threeDInt = new VE_XML::ThreeDIntArray(  );
             threeDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("3DLONG") );
          }
@@ -637,7 +637,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::string > da
    SetDataType( std::string("1DSTRING") );
 
    if ( oneDString == NULL )
-      oneDString = new OneDStringArray( _rootDocument );
+      oneDString = new OneDStringArray(  );
 
    oneDString->SetArray( data );
 }
@@ -655,7 +655,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< double > data )
    SetDataType( std::string("1DDOUBLE") );
 
    if ( oneDDouble == NULL )
-      oneDDouble = new OneDDoubleArray( _rootDocument );
+      oneDDouble = new OneDDoubleArray(  );
 
    oneDDouble->SetArray( data );
 }
@@ -666,7 +666,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< dou
    SetDataType( std::string("2DDOUBLE") );
 
    if ( twoDDouble == NULL )
-      twoDDouble = new TwoDDoubleArray( _rootDocument );
+      twoDDouble = new TwoDDoubleArray(  );
 
    twoDDouble->SetArray( data );
 }
@@ -677,7 +677,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std
    SetDataType( std::string("3DDOUBLE") );
 
    if ( threeDDouble == NULL )
-      threeDDouble = new ThreeDDoubleArray( _rootDocument );
+      threeDDouble = new ThreeDDoubleArray(  );
 
    threeDDouble->SetArray( data );
 }
@@ -695,7 +695,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< long > data )
    SetDataType( std::string("1DLONG") );
 
    if ( oneDInt == NULL )
-      oneDInt = new OneDIntArray( _rootDocument );
+      oneDInt = new OneDIntArray(  );
 
    oneDInt->SetArray( data );
 }
@@ -706,7 +706,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< lon
    SetDataType( std::string("2DLONG") );
 
    if ( twoDInt == NULL )
-      twoDInt = new TwoDIntArray( _rootDocument );
+      twoDInt = new TwoDIntArray(  );
 
    twoDInt->SetArray( data );
 }
@@ -717,7 +717,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std
    SetDataType( std::string("3DLONG") );
 
    if ( threeDInt == NULL )
-      threeDInt = new ThreeDIntArray( _rootDocument );
+      threeDInt = new ThreeDIntArray(  );
 
    threeDInt->SetArray( data );
 }

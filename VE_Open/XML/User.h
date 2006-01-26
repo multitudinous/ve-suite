@@ -53,8 +53,7 @@ class VE_XML_EXPORTS User : public XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument.
-   User(DOMDocument* rootDoc);
+   User();
    ///Destructor
    virtual ~User();
    ///The control status of this user

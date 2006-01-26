@@ -36,8 +36,8 @@
 using namespace VE_XML;
 
 //////////////////////////
-StateInfo::StateInfo(DOMDocument* rootDoc)
-:XMLObject(rootDoc)
+StateInfo::StateInfo()
+:XMLObject()
 {
 }
 ///////////////////////////
@@ -116,7 +116,7 @@ void StateInfo::SetObjectFromXMLData(DOMNode* xmlInput)
       DOMElement* vecmdIn = dynamic_cast<DOMElement*>(subElements->item(i));
       if(vecmdIn)
       {
-         VE_XML::Command* Command = new VE_XML::Command(_rootDocument);
+         VE_XML::Command* Command = new VE_XML::Command();
          Command->SetObjectFromXMLData(vecmdIn);
          _stateInfo.push_back(Command);
       }

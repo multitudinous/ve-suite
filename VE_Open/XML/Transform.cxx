@@ -37,8 +37,8 @@ using namespace VE_XML;
 //////////////////////////
 //Constructor           //
 //////////////////////////
-Transform::Transform(DOMDocument* rootDoc)
-:XMLObject(rootDoc)
+Transform::Transform()
+:XMLObject()
 {
    /*
    _translation = 0;
@@ -49,13 +49,13 @@ Transform::Transform(DOMDocument* rootDoc)
    std::vector< double > temp;
    temp.assign( 3, 0.0f );
 
-   rotationArray = new FloatArray( rootDoc );
+   rotationArray = new FloatArray(  );
    rotationArray->SetArray( temp );
 
-   scaleArray = new FloatArray( rootDoc );
+   scaleArray = new FloatArray(  );
    scaleArray->SetArray( temp );
 
-   translationArray = new FloatArray( rootDoc );
+   translationArray = new FloatArray(  );
    translationArray->SetArray( temp );
 }
 ///////////////////////////

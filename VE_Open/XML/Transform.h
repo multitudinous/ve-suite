@@ -57,9 +57,8 @@ namespace VE_XML
 class VE_XML_EXPORTS Transform : public XMLObject
 {
 public:
-   ///Constructor
-   ///\param rootDoc The owning DOMDocument.
-   Transform( DOMDocument* rootDoc );
+   ///Constructor.
+   Transform( );
    ///Destructor
    virtual ~Transform();
    ///Copy Constructor

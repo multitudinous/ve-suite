@@ -55,8 +55,7 @@ namespace VE_XML{
 class VE_XML_EXPORTS StateInfo : public XMLObject{
 public:
    ///Constructor 
-   ///\param rootDoc The owning DOMDocument.
-   StateInfo(DOMDocument* rootDoc);
+   StateInfo();
    ///Destructor
    virtual ~StateInfo();
    

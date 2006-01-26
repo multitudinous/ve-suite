@@ -58,7 +58,7 @@ class VE_XML_EXPORTS XMLObject
 {
 public:
    ///Base constructor
-   XMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* );
+   XMLObject( );
    ///Destructor
    virtual ~XMLObject();
    ///Copy Construstor

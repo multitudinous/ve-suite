@@ -37,8 +37,8 @@ using namespace VE_XML;
 ////////////////
 //Constructors//
 ////////////////
-User::User(DOMDocument* rootDoc)
-:XMLObject(rootDoc)
+User::User()
+:XMLObject()
 {
    _stateInfo = 0;
    _userId = std::string("User_0");

@@ -40,11 +40,11 @@
 using namespace VE_XML;
 
 ////////////////////////////////////////////////////
-ParameterBlock::ParameterBlock(DOMDocument* rootDoc,unsigned int id)
-:XMLObject(rootDoc)
+ParameterBlock::ParameterBlock(unsigned int id)
+:XMLObject()
 {
    _id = id;
-   _dcs = new Transform( rootDoc );
+   _dcs = new Transform(  );
 }
 /////////////////////////////////////
 ParameterBlock::~ParameterBlock()

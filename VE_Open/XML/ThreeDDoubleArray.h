@@ -55,9 +55,8 @@ class VE_XML_EXPORTS ThreeDDoubleArray : public XMLObject
 {
 public:
    ///Constructor
-   ///\param rootDoc The owning DOMDocument.
    ///\param nElements The length of the float array.
-   ThreeDDoubleArray(DOMDocument* rootDoc,unsigned int nElements=3);
+   ThreeDDoubleArray(unsigned int nElements=3);
    ///Destructor
    virtual ~ThreeDDoubleArray();
    ///Copy Constructor
