@@ -233,10 +233,18 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
       if ( currentElement->hasChildNodes() )
       {
          // do we need to delete the old one or does xerces handle this???
+         _kDiffuse->SetOwnerDocument(_rootDocument);
          _kDiffuse->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kDiffuse"),0));
+         
+         _kEmissive->SetOwnerDocument(_rootDocument);
          _kEmissive->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kEmissive"),0));
+         
+         _ambient->SetOwnerDocument(_rootDocument);
          _ambient->SetObjectFromXMLData(GetSubElement(currentElement,std::string("kAmbient"),0));
+         
+         _specular->SetOwnerDocument(_rootDocument);
          _specular->SetObjectFromXMLData(GetSubElement(currentElement,std::string("specular"),0));
+         
          _shininess = ExtractDataNumberFromSimpleElement(GetSubElement(currentElement,std::string("shininess"),0));
          _materialName = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("materialName"),0));
          _face = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("face"),0));

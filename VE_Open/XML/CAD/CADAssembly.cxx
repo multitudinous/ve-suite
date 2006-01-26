@@ -151,16 +151,19 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
             {
                //this is an Assembly
                VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly();
+               newAssembly->SetOwnerDocument(_rootDocument);
                newAssembly->SetObjectFromXMLData(cadNode);
                _children.push_back(newAssembly);
             }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
                //this is a Part
                VE_CAD::CADPart* newPart = new VE_CAD::CADPart();
+               newPart->SetOwnerDocument(_rootDocument);
                newPart->SetObjectFromXMLData(cadNode);
                _children.push_back(newPart);
             }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Clone")){
                //this is a Clone
                VE_CAD::CADClone* newClone = new VE_CAD::CADClone();
+               newClone->SetOwnerDocument(_rootDocument);
                newClone->SetObjectFromXMLData(cadNode);
                _children.push_back(newClone);
             }else{

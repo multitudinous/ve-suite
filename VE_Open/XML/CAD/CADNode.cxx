@@ -219,6 +219,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
             if(parentNode)
             {
+               _parent->SetOwnerDocument(_rootDocument);
                _parent->SetObjectFromXMLData(parentNode);
             }
             size_t nOldAttributes = _attributeList.size();
@@ -236,6 +237,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             {
                DOMElement* attributeNode = dynamic_cast<DOMElement*>(attributeNodes->item(i));
                CADAttribute* newAttribute = new CADAttribute();
+               newAttribute->SetOwnerDocument(_rootDocument);
                newAttribute->SetObjectFromXMLData(attributeNode);
                _attributeList.push_back(newAttribute);
             }
@@ -248,6 +250,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                {
                   _transform = new Transform();
                }
+               _transform->SetOwnerDocument(_rootDocument);
                _transform->SetObjectFromXMLData(transformNode);
             }
             
