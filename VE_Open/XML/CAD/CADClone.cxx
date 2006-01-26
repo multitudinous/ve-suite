@@ -58,14 +58,14 @@ CADClone::~CADClone()
 //////////////////////////////////////////////////
 void CADClone::_updateVEElement(std::string input)
 {
-   //How is this going to work???
+   
    //Get the base elements from CADNode
    VE_CAD::CADNode::_updateVEElement(input);
-
+   
    //add the extra stuff
    _originalNode->SetOwnerDocument(_rootDocument);
    _veElement->appendChild(_originalNode->GetXMLData("originalNode"));
-   
+
 }
 ///////////////////////////////////////////
 VE_CAD::CADNode* CADClone::GetOriginalNode()

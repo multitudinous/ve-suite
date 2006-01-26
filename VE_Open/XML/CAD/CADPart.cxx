@@ -60,7 +60,7 @@ std::string CADPart::GetCADFileName()
 //////////////////////////////////
 void CADPart::_updateCADFileName()
 {
-   DOMElement* nameElement  = _rootDocument->createElement( xercesString("filename") );
+   DOMElement* nameElement  = _rootDocument->createElement( xercesString("fileName") );
    _veElement->appendChild( nameElement );      
    
    DOMText* fileName = _rootDocument->createTextNode( xercesString( _cadFileName ) );
@@ -72,6 +72,7 @@ void CADPart::_updateVEElement(std::string input)
    //How is this going to work???
    //Get the base elements from CADNode
    VE_CAD::CADNode::_updateVEElement(input);
+
    _updateCADFileName();
 }
 /////////////////////////////////////////////////////

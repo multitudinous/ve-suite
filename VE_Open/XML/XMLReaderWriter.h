@@ -70,9 +70,12 @@ public:
    virtual void ReadXMLData(std::string xmlData);
 
    ///Write the current XML document
-   ///\param xmlData The XML document to write to.
-   ///\param nodeToWrite The XML node to write.
-   virtual void WriteXMLDocument(std::string xmlData,VE_XML::XMLObject* nodeToWrite);
+   ///\param xmlFile The XML document to write to.
+   ///\param node The XML node to write.
+   ///\param tagName The tag name to use for when writing the node.
+   virtual void WriteXMLDocument(VE_XML::XMLObject* node,
+                                   std::string xmlFile,
+                                   std::string tagName);
 
    ///Set the Active DOMDocumentManager
    void SetDOMDocumentManager(VE_XML::DOMDocumentManager* ddManager);

@@ -161,7 +161,7 @@ void Program::_updateVEElement(std::string input)
    if(_fragmentShader)
    {
       _fragmentShader->SetOwnerDocument(_rootDocument);
-      _veElement->appendChild(_vertexShader->GetXMLData("fragmentShader"));
+      _veElement->appendChild(_fragmentShader->GetXMLData("fragmentShader"));
    }
 }
 /////////////////////////////////

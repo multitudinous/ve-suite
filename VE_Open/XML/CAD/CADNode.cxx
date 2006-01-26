@@ -151,7 +151,7 @@ void CADNode::_updateVEElement(std::string input)
    {
       _veElement = _rootDocument->createElement(xercesString(input));
    }
-
+   _updateNodeType();
    _updateNodeName();
    if(_parent)
    {
@@ -173,7 +173,7 @@ void CADNode::_updateVEElement(std::string input)
          _veElement->appendChild( _attributeList.at(i)->GetXMLData("attribute") );
       }
    }
-   _updateNodeType();
+   
 }
 ///////////////////////////////
 void CADNode::_updateNodeName()
@@ -238,9 +238,14 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             for(XMLSize_t  i = 0; i < nNewAttributes ; i++)
             {
                DOMElement* attributeNode = dynamic_cast<DOMElement*>(attributeNodes->item(i));
-               CADAttribute* newAttribute = new CADAttribute();
-               newAttribute->SetObjectFromXMLData(attributeNode);
-               _attributeList.push_back(newAttribute);
+               
+               //Need to check if the returned attribute belongs to this node
+               if(attributeNode->getParentNode() == currentElement)
+               {
+                  CADAttribute* newAttribute = new CADAttribute();
+                  newAttribute->SetObjectFromXMLData(attributeNode);
+                  _attributeList.push_back(newAttribute);
+               }
             }
             
 

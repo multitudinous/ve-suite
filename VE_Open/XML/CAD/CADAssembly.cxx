@@ -105,7 +105,6 @@ void CADAssembly::_updateChildren()
 /////////////////////////////////////////////////////
 void CADAssembly::_updateVEElement(std::string input)
 {
-   //this is going to be "nutty"
    //Get the base elements from CADNode
    VE_CAD::CADNode::_updateVEElement(input);
    _updateChildren();
@@ -143,11 +142,17 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
          DOMNodeList* childList = currentElement->getElementsByTagName(xercesString("children"));
          DOMElement* childListElement = dynamic_cast<DOMElement*>(childList->item(0));
          DOMNodeList* childrenNodes = childListElement->getElementsByTagName(xercesString("child"));
-         //DOMElement* cadNode = dynamic_cast<DOMElement*>(childList->item(0));
          for(unsigned int i = 0; i < _numChildren; i++)
          {
             DOMElement* cadNode = dynamic_cast<DOMElement*>(childrenNodes->item(i));
-            DOMElement* nodeType = GetSubElement(cadNode,std::string("type"),0);
+            DOMElement* nodeType = 0;
+            unsigned int k = 0;
+            while(!nodeType)
+            {
+               nodeType = GetSubElement(cadNode,std::string("type"),k);
+               k++;
+            }
+            if(nodeType){
             if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
             {
                //this is an Assembly
@@ -167,6 +172,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
             }else{
                std::cout<<"ERROR!"<<std::endl;
                std::cout<<"Unknown node type:"<<ExtractDataStringFromSimpleElement(nodeType)<<std::endl;    
+            }
             }
          }
       }

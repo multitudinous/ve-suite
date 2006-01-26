@@ -218,9 +218,10 @@ void Shader::_updateVEElement(std::string input)
       // name comes from verg.xsd
       _veElement = _rootDocument->createElement( xercesString( input ) );
    }
+   _updateShaderType();
    _updateTextureImages();
    _updateUniforms();
-   _updateShaderType();
+   
    _updateShaderSource();
 }
 ///////////////////////////////////
@@ -254,7 +255,7 @@ void Shader::_updateShaderType()
 //////////////////////////////////
 void Shader::_updateShaderSource()
 {
-   DOMElement* sourceElement = _rootDocument->createElement(xercesString("shaderSource"));
+   DOMElement* sourceElement = _rootDocument->createElement(xercesString("shaderCode"));
    DOMText* source = _rootDocument->createTextNode(xercesString(_shaderSource));
    sourceElement->appendChild(source);
    _veElement->appendChild(sourceElement);

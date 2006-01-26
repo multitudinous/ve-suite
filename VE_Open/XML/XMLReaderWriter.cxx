@@ -118,8 +118,9 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData)
    _domDocumentManager->UnLoadParser();
 }
 ///////////////////////////////////////////////////////////
-void XMLReaderWriter::WriteXMLDocument(std::string xmlData,
-                                   VE_XML::XMLObject* node)
+void XMLReaderWriter::WriteXMLDocument(VE_XML::XMLObject* node,
+                                   std::string xmlData,
+                                   std::string tagName)
 {
    if(_domDocumentManager){
       _domDocumentManager->SetOuputXMLFile(xmlData);
@@ -127,7 +128,7 @@ void XMLReaderWriter::WriteXMLDocument(std::string xmlData,
       _domDocumentManager->CreateCommandDocument();
 
       node->SetOwnerDocument(_domDocumentManager->GetCommandDocument());
-      _domDocumentManager->GetCommandDocument()->getDocumentElement()->appendChild(node->GetXMLData("VEXML"));
+      _domDocumentManager->GetCommandDocument()->getDocumentElement()->appendChild(node->GetXMLData(tagName));
 
       _domDocumentManager->WriteAndReleaseCommandDocument();
       _domDocumentManager->UnLoadParser();
