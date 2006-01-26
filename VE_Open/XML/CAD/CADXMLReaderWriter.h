@@ -57,6 +57,9 @@ public:
    ///Destructor
    virtual ~CADXMLReaderWriter();
 
+   ///\param cadNode The cadNode to write.
+   void SetCADNode(CADNode* cadNode);
+
    ///Get the root node of the CAD Hierarchy
    VE_CAD::CADNode* GetRootNode();
 

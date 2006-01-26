@@ -56,6 +56,11 @@ CADXMLReaderWriter::~CADXMLReaderWriter()
 {
   
 }
+/////////////////////////////////////////////////////
+void CADXMLReaderWriter::SetCADNode(CADNode* cadNode)
+{
+   _rootNode = cadNode;
+}
 ////////////////////////////////////////////
 VE_CAD::CADNode* CADXMLReaderWriter::GetRootNode()
 {
