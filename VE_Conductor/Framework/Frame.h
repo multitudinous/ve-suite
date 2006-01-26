@@ -79,6 +79,7 @@ enum
    v21ID_HELP,
    XPLORER_NAVIGATION,
    XPLORER_VIEWPOINTS,
+   XPLORER_SOUNDS,
    JUGGLER_STEREO,
    JUGGLER_MONO, 
    JUGGLER_SETTINGS
@@ -91,6 +92,7 @@ class UI_Tabs;
 class UI_Frame;
 class Network;
 class NavigationPane;
+class SoundsPane;
 class CORBAServiceList;
 
 namespace VE_XML
@@ -183,11 +185,12 @@ public:
   void LoadREIBase(wxCommandEvent &event);
   void LoadREISour(wxCommandEvent &event);
   void New(wxCommandEvent &event);
-
+ 
    // Controls for VE-Xplorer
    // These are the callbacks for the pull down menu
    void LaunchNavigationPane(wxCommandEvent& event);
    void LaunchViewpointsPane(wxCommandEvent& event);
+   void LaunchSoundsPane(wxCommandEvent& event);
 
    void JugglerSettings( wxCommandEvent& event );
 
@@ -199,6 +202,7 @@ public:
 
 private:
    NavigationPane* navPane;
+   SoundsPane* soundsPane;
    CORBAServiceList* serviceList;
    VE_XML::DOMDocumentManager* domManager;
 

@@ -43,6 +43,7 @@
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
+#include "VE_Conductor/Framework/SoundsPane.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -89,6 +90,8 @@ EVT_CLOSE(AppFrame::OnClose)
 
   EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
   EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
+  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
+  EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
   EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
 
 //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
@@ -134,6 +137,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    pelog = NULL;
    navPane = 0;
+   soundsPane = 0;
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
 }
@@ -254,6 +258,12 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       navPane = 0;
    }
 
+   if ( soundsPane )
+   {
+	   soundsPane->Destroy();
+	   soundsPane = 0;
+   }
+
    StoreFrameSize(GetRect(), NULL);
    Destroy();
 }
@@ -345,9 +355,11 @@ void AppFrame::CreateMenu()
 
    xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
    xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
+   xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
    xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    xplorerMenu->Enable( XPLORER_NAVIGATION, false);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
+   xplorerMenu->Enable( XPLORER_SOUNDS, false);
    xplorerMenu->Enable( JUGGLER_SETTINGS, false);
 
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
@@ -884,6 +896,7 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
       con_menu->Enable(v21ID_DISCONNECT_VE, true);
       xplorerMenu->Enable( XPLORER_NAVIGATION, true);
       xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
+	  xplorerMenu->Enable( XPLORER_SOUNDS, true);
       xplorerMenu->Enable( JUGGLER_SETTINGS, true);
    } 
    catch (CORBA::Exception &) 
@@ -1020,11 +1033,17 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
    con_menu->Enable(v21ID_DISCONNECT_VE, false);
    xplorerMenu->Enable( XPLORER_NAVIGATION, false);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
+   xplorerMenu->Enable( XPLORER_SOUNDS, false);
    xplorerMenu->Enable( JUGGLER_SETTINGS, false);
 
    if ( navPane )
    {
       navPane->Close( false );
+   }
+
+   if ( soundsPane )
+   {
+	   soundsPane->Close( false );
    }
 
    Log("Disconnect VE suceeded.\n");
@@ -1090,6 +1109,24 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
       // create pane and set appropriate vars
    }
    // now show it
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED(event) )
+{
+   if ( soundsPane == 0 )
+   {
+      // create pane and set appropriate vars
+      soundsPane = new SoundsPane( vjobs.in(), domManager );
+      // Set DOMDocument
+      // soundsPane->SetDOMManager( domManager );
+   }
+   else
+   {
+      // set pointer to corba object for comm
+      soundsPane->SetCommInstance( vjobs.in() );
+   }
+   // now show it
+   soundsPane->Show();
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
