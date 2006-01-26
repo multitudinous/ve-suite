@@ -36,8 +36,8 @@ using namespace VE_Shader;
 //////////////////////////////////////////////////////////////////////////
 //Constructor                                                           //
 //////////////////////////////////////////////////////////////////////////
-Program::Program(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:XMLObject(rootDocument)
+Program::Program()
+:XMLObject()
 {
    _name = std::string("VEProgram");
    _vertexShader = 0;
@@ -107,7 +107,7 @@ void Program::SetObjectFromXMLData(DOMNode* xmlInput)
             {
                if(!_vertexShader)
                {
-                  _vertexShader = new Shader(_rootDocument);
+                  _vertexShader = new Shader();
                }
                _vertexShader->SetObjectFromXMLData(vertexShader);
             }
@@ -116,7 +116,7 @@ void Program::SetObjectFromXMLData(DOMNode* xmlInput)
             {
                if(!_fragmentShader)
                {
-                  _fragmentShader = new Shader(_rootDocument);
+                  _fragmentShader = new Shader();
                }
                _fragmentShader->SetObjectFromXMLData(fragShader);
             }

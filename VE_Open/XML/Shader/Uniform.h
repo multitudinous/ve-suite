@@ -53,8 +53,7 @@ namespace VE_Shader{
 class VE_SHADER_EXPORTS Uniform : public VE_XML::XMLObject{
 public:
    ///Constructor
-   ///\param rootDocument The xerces document for this node.
-   Uniform(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument);
+   Uniform();
    virtual ~Uniform();
    ///Copy constructor
    Uniform(const Uniform& rhs);

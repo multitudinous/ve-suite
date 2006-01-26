@@ -35,8 +35,8 @@ using namespace VE_Shader;
 //////////////////////////////////////////////////////////////////////////
 ///Constructor                                                          //
 //////////////////////////////////////////////////////////////////////////
-Uniform::Uniform(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:VE_XML::XMLObject(rootDocument)
+Uniform::Uniform()
+:VE_XML::XMLObject()
 {
    _type = std::string("float");
    _variableSize = 0; 

@@ -48,8 +48,7 @@ namespace VE_Shader{
 class VE_SHADER_EXPORTS TextureImage:public VE_XML::XMLObject{
 public:
    ///Constructor
-   ///\param rootDocument The xerces document for this node.
-   TextureImage(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument);
+   TextureImage();
    ///Destructor
    virtual ~TextureImage();
    ///Copy constructor

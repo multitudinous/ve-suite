@@ -40,8 +40,8 @@ XERCES_CPP_NAMESPACE_USE
 ////////////////////////////////////////////////////////////////////////
 //Constructor                                                         //
 ////////////////////////////////////////////////////////////////////////
-Shader::Shader(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:VE_XML::XMLObject(rootDocument)
+Shader::Shader()
+:VE_XML::XMLObject()
 {
    _shaderType = std::string("Vertex");
    _shaderSource = std::string("");
@@ -137,7 +137,7 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
                unsigned int nUniforms = uniformList->getLength();
                for(unsigned int i = 0; i < nUniforms; i++)
                {
-                  Uniform* newUniform = new Uniform(_rootDocument);
+                  Uniform* newUniform = new Uniform();
                   newUniform->SetObjectFromXMLData(uniformList->item(i));
                   _uniformList.push_back(newUniform);
                }
@@ -148,7 +148,7 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
                unsigned int nTextures = textureList->getLength();
                for(unsigned int i = 0; i < nTextures; i++)
                {
-                  TextureImage* newTexture= new TextureImage(_rootDocument);
+                  TextureImage* newTexture= new TextureImage();
                   newTexture->SetObjectFromXMLData(textureList->item(i));
                   _textureImages.push_back(newTexture);
                }

@@ -55,8 +55,7 @@ namespace VE_Shader{
 class VE_SHADER_EXPORTS Shader:public VE_XML::XMLObject{
 public:
    ///Constructor
-   ///\param rootDocument The xerces document for this node.
-   Shader(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument);
+   Shader();
 
    ///Destructor
    virtual ~Shader();

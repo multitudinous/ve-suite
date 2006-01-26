@@ -34,8 +34,8 @@ using namespace VE_Shader;
 ////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////
-TextureImage::TextureImage(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)
-:VE_XML::XMLObject(rootDocument)
+TextureImage::TextureImage()
+:VE_XML::XMLObject()
 {
    _imageFile = std::string("");
    _textureUnit = 0;
