@@ -45,6 +45,7 @@
 
 namespace VE_XML
 {
+   class XMLObject;
    class DOMDocumentManager;
 }
 
@@ -70,7 +71,8 @@ public:
 
    ///Write the current XML document
    ///\param xmlData The XML document to write to.
-   virtual void WriteXMLDocument(std::string xmlData);
+   ///\param nodeToWrite The XML node to write.
+   virtual void WriteXMLDocument(std::string xmlData,VE_XML::XMLObject* nodeToWrite);
 
    ///Set the Active DOMDocumentManager
    void SetDOMDocumentManager(VE_XML::DOMDocumentManager* ddManager);

@@ -32,6 +32,8 @@
 
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
+#include "VE_Open/XML/XMLObject.h"
+
 #include <iostream>
 using namespace VE_XML;
 //////////////////////////////
@@ -116,10 +118,15 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData)
    _domDocumentManager->UnLoadParser();
 }
 ///////////////////////////////////////////////////////////
-void XMLReaderWriter::WriteXMLDocument(std::string xmlData)
+void XMLReaderWriter::WriteXMLDocument(std::string xmlData,
+                                   VE_XML::XMLObject* node)
 {
    if(_domDocumentManager){
       _domDocumentManager->SetOuputXMLFile(xmlData);
+      _domDocumentManager->CreateCommandDocument();
+
+      node->SetOwnerDocument(_domDocumentManager->GetCommandDocument());
+
       _domDocumentManager->WriteAndReleaseCommandDocument();
       _domDocumentManager->UnLoadParser();
    }
