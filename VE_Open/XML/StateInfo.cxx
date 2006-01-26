@@ -118,6 +118,7 @@ void StateInfo::SetObjectFromXMLData(DOMNode* xmlInput)
       {
          VE_XML::Command* Command = new VE_XML::Command();
          Command->SetObjectFromXMLData(vecmdIn);
+         Command->SetOwnerDocument(_rootDocument);
          _stateInfo.push_back(Command);
       }
    }

@@ -507,6 +507,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                _dataArray = 0;
             }
             _dataArray = new VE_XML::FloatArray();
+            _dataArray->SetOwnerDocument(_rootDocument);
             _dataArray->SetObjectFromXMLData(subElements->item(0));
             SetDataType(std::string("FARRAY"));
          }
@@ -519,6 +520,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                _dataTransform = 0;
             }
             _dataTransform = new VE_XML::Transform();
+            _dataTransform->SetOwnerDocument(_rootDocument);
             _dataTransform->SetObjectFromXMLData(subElements->item(0));
             SetDataType( std::string("TRANSFORM") );
          }
@@ -530,6 +532,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete oneDDouble;
             }
             oneDDouble = new VE_XML::OneDDoubleArray(  );
+            oneDDouble->SetOwnerDocument(_rootDocument);
             oneDDouble->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("1DDOUBLE") );
          }
@@ -541,6 +544,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete twoDDouble;
             }
             twoDDouble = new VE_XML::TwoDDoubleArray(  );
+            twoDDouble->SetOwnerDocument(_rootDocument);
             twoDDouble->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("2DDOUBLE") );
          }
@@ -552,6 +556,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete threeDDouble;
             }
             threeDDouble = new VE_XML::ThreeDDoubleArray(  );
+            threeDDouble->SetOwnerDocument(_rootDocument);
             threeDDouble->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("3DDOUBLE") );
          }
@@ -563,6 +568,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete oneDString;
             }
             oneDString = new VE_XML::OneDStringArray(  );
+            oneDString->SetOwnerDocument(_rootDocument);
             oneDString->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("1DSTRING") );
          }
@@ -574,6 +580,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete oneDInt;
             }
             oneDInt = new VE_XML::OneDIntArray(  );
+            oneDInt->SetOwnerDocument(_rootDocument);
             oneDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("1DLONG") );
          }
@@ -585,6 +592,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete twoDInt;
             }
             twoDInt = new VE_XML::TwoDIntArray(  );
+            twoDInt->SetOwnerDocument(_rootDocument);
             twoDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("2DLONG") );
          }
@@ -596,6 +604,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                delete threeDInt;
             }
             threeDInt = new VE_XML::ThreeDIntArray(  );
+            threeDInt->SetOwnerDocument(_rootDocument);
             threeDInt->SetObjectFromXMLData( dataElement );
             SetDataType( std::string("3DLONG") );
          }

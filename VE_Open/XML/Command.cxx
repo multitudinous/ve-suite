@@ -178,6 +178,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
             if( dvPairIn )
             {
                VE_XML::DataValuePair* veDvp = new VE_XML::DataValuePair();
+               veDvp->SetOwnerDocument(_rootDocument);
                veDvp->SetObjectFromXMLData(dvPairIn);
                _dataValuePairs.push_back(veDvp);
             }

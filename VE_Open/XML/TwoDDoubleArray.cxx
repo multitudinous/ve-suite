@@ -211,6 +211,7 @@ void TwoDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
       {
          //We know this about the node so we can cast it...
          oneDArray.push_back( new OneDDoubleArray(  ) );
+         oneDArray.back()->SetOwnerDocument(_rootDocument);
          oneDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
       }
    }
