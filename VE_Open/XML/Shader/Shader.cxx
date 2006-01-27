@@ -52,18 +52,22 @@ Shader::Shader()
 Shader::~Shader()
 {
    size_t nUniforms = _uniformList.size();
-   for(size_t i = nUniforms -1; i >=0; i--)
-   {
-      delete _uniformList.at(i);
+   if(nUniforms > 0 ){
+       for(size_t i = 0; i < nUniforms; i++)
+      {
+         delete _uniformList.at(i);
+      }
+      _uniformList.clear();
    }
-   _uniformList.clear();
-   
    size_t nTextures = _textureImages.size();
-   for(size_t i = nTextures-1; i >=0; i--)
+   if(nTextures > 0)
    {
-      delete _textureImages.at(i);
+       for(size_t i = 0;i < nTextures; i++)
+      {
+         delete _textureImages.at(i);
+      }
+      _textureImages.clear();
    }
-   _textureImages.clear();
 }
 /////////////////////////////////
 ///Copy constructor            //
