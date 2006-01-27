@@ -47,6 +47,7 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk

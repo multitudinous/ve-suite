@@ -32,7 +32,7 @@
 #include "VE_Conductor/Utilities/Module.h"
 #include <wx/window.h>
 
-using namespace VE_Conducto::GUI_Utilities;
+using namespace VE_Conductor::GUI_Utilities;
 
 ////////////////////////////////////////////////
 Module::Module( void )
@@ -41,12 +41,12 @@ Module::Module( void )
    canvas = 0;
 }
 ////////////////////////////////////////////////
-Module::~Module( void );
+Module::~Module( void )
 {
    ;//Do nothing since this class doesn't manage any of the pointers memory
 }
 ////////////////////////////////////////////////
-Module::Module( const Module& input );
+Module::Module( const Module& input )
 {
    pl_mod = input.pl_mod;
    poly = input.poly; 
@@ -55,7 +55,7 @@ Module::Module( const Module& input );
    links = input.links;
 }
 ////////////////////////////////////////////////
-Module::Module& operator= ( const Module& input );
+Module& Module::operator= ( const Module& input )
 {
    if ( this != &input )
    {
@@ -95,7 +95,7 @@ Polygon* Module::GetPolygon( void )
    return &(poly);
 }
 ////////////////////////////////////////////////
-REI_Plugin* Module::GetPlugin( void )
+/*REI_Plugin* Module::GetPlugin( void )
 {
    return pl_mod;
-}
+}*/

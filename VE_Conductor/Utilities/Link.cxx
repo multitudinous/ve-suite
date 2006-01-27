@@ -32,7 +32,7 @@
 #include "VE_Conductor/Utilities/Link.h"
 #include <wx/window.h>
 
-using namespace VE_Conducto::GUI_Utilities;
+using namespace VE_Conductor::GUI_Utilities;
 
 ////////////////////////////////////////////////
 Link::Link( void )
@@ -45,12 +45,12 @@ Link::Link( void )
    canvas = 0;
 }
 ////////////////////////////////////////////////
-Link::~Link( void );
+Link::~Link( void )
 {
    ;//Do nothing since this class doesn't manage any of the pointers memory
 }
 ////////////////////////////////////////////////
-Link::Link( const Link& input );
+Link::Link( const Link& input )
 {
    Fr_mod = input.Fr_mod;
    To_mod = input.To_mod;
@@ -62,7 +62,7 @@ Link::Link( const Link& input );
    canvas = input.canvas;
 }
 ////////////////////////////////////////////////
-Link::Link& operator= ( const Link& input );
+Link& Link::operator= ( const Link& input )
 {
    if ( this != &input )
    {
@@ -86,7 +86,7 @@ void Link::SetWxWindow( wxWindow* window )
 ////////////////////////////////////////////////
 wxPoint* Link::GetPoint( size_t i )
 {
-   return &(cons.at( i ))
+   return &(cons.at( i ));
 }
 ////////////////////////////////////////////////
 size_t Link::GetNumberOfPoints( void )

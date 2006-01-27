@@ -1,6 +1,6 @@
 #include "VE_Conductor/Utilities/Polygon.h"
 
-using namespace VE_Conducto::GUI_Utilities;
+using namespace VE_Conductor::GUI_Utilities;
 
 ////////////////////////////////////////////////
 Polygon::Polygon( void )
@@ -8,17 +8,17 @@ Polygon::Polygon( void )
    ;//Do nothing since this class doesn't manage any of the pointers memory
 }
 ////////////////////////////////////////////////
-Polygon::~Polygon( void );
+Polygon::~Polygon( void )
 {
    ;//Do nothing since this class doesn't manage any of the pointers memory
 }
 ////////////////////////////////////////////////
-Polygon::Polygon( const Polygon& input );
+Polygon::Polygon( const Polygon& input )
 {
    poly = input.poly;
 }
 ////////////////////////////////////////////////
-Polygon::Polygon& operator= ( const Polygon& input );
+Polygon& Polygon::operator= ( const Polygon& input )
 {
    if ( this != &input )
    {
@@ -30,7 +30,7 @@ Polygon::Polygon& operator= ( const Polygon& input );
 ////////////////////////////////////////////////
 wxPoint* Polygon::GetPoint( size_t i )
 {
-   return &(poly.at( i ))
+   return &(poly.at( i ));
 }
 ////////////////////////////////////////////////
 std::vector< wxPoint >* Polygon::GetPolygon( void )
@@ -38,7 +38,7 @@ std::vector< wxPoint >* Polygon::GetPolygon( void )
    return &(poly);
 }
 /////////////////////////////////////////////////////////////
-int Polygon::ccw (wxPoint pt1, wxPoint pt2, wxPoint pt3)
+/*int Polygon::ccw (wxPoint pt1, wxPoint pt2, wxPoint pt3)
 {
   double dx1 = pt2.x - pt1.x;
   double dx2 = pt3.x - pt1.x;
@@ -158,4 +158,5 @@ int Polygon::inside( wxPoint pt, POLY poly )
 
    return count & 1;
 }
+*/
 

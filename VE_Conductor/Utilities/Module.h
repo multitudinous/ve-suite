@@ -42,7 +42,7 @@ namespace VE_Conductor
 {
 class REI_Plugin;
 
-namespace GUI_Utilites
+namespace GUI_Utilities
 {
 class Module
 {

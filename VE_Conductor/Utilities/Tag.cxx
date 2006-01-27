@@ -32,7 +32,7 @@
 #include "VE_Conductor/Utilities/Tag.h"
 #include <wx/window.h>
 
-using namespace VE_Conducto::GUI_Utilities;
+using namespace VE_Conductor::GUI_Utilities;
 
 ////////////////////////////////////////////////
 Tag::Tag( void )
@@ -40,12 +40,12 @@ Tag::Tag( void )
    canvas = 0;
 }
 ////////////////////////////////////////////////
-Tag::~Tag( void );
+Tag::~Tag( void )
 {
    ;//Do nothing since this class doesn't manage any of the pointers memory
 }
 ////////////////////////////////////////////////
-Tag::Tag( const Tag& input );
+Tag::Tag( const Tag& input )
 {
    cons[0] = input.cons[0];
    cons[1] = input.cons[1];
@@ -55,7 +55,7 @@ Tag::Tag( const Tag& input );
    canvas = input.canvas;
 }
 ////////////////////////////////////////////////
-Tag::Tag& operator= ( const Tag& input );
+Tag& Tag::operator= ( const Tag& input )
 {
    if ( this != &input )
    {
@@ -69,27 +69,27 @@ Tag::Tag& operator= ( const Tag& input );
    return *this;
 }
 ////////////////////////////////////////////////
-void Module::SetWxWindow( wxWindow* window )
+void Tag::SetWxWindow( wxWindow* window )
 {
    canvas = window;
 }
 ////////////////////////////////////////////////
-wxPoint* Module::GetConnectorsPoint( size_t i )
+wxPoint* Tag::GetConnectorsPoint( size_t i )
 {
    return &(cons[i]);
 }
 ////////////////////////////////////////////////
-wxString* Module::GetTagText( void )
+wxString* Tag::GetTagText( void )
 {
    return &(text);
 }
 ////////////////////////////////////////////////
-Polygon* Module::GetPolygon( void )
+Polygon* Tag::GetPolygon( void )
 {
    return &(poly);
 }
 ////////////////////////////////////////////////
-wxRect* Module::GetBoundingBox( void )
+wxRect* Tag::GetBoundingBox( void )
 {
    return &(box);
 }

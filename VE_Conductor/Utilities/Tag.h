@@ -40,7 +40,7 @@ class wxWindow;
 
 namespace VE_Conductor
 {
-namespace GUI_Utilites
+namespace GUI_Utilities
 {
 class Tag
 {

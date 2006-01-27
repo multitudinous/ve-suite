@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
-#define _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
+#ifndef _VE_CONDUCTOR_GUI_UTILITIES_LINK_
+#define _VE_CONDUCTOR_GUI_UTILITIES_LINK_
 #include <vector>
 
 #include "VE_Conductor/Utilities/Polygon.h"
@@ -40,10 +40,8 @@ class wxWindow;
 
 namespace VE_Conductor
 {
-namespace GUI_Utilites
+namespace GUI_Utilities
 {
-class Polygon;
-
 class Link
 {
 public:
