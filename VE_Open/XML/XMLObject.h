@@ -121,10 +121,6 @@ public:
    ///\param dataValue The data to be stored.
    void SetSubElement( std::string subElementTagName, XMLObject* dataValue );
 
-   /*!\class VE_XML::XMLObject::VEStr
-    *  This is a simple class that lets us do easy (though not terribly efficient)
-    * trancoding of char* data to XMLCh data. --taken from xerces examples
-    */
 
    class VE_XML_EXPORTS VEStr
    {
