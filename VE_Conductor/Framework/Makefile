@@ -34,7 +34,6 @@ SRCS=\
    UI_VecTab.cpp \
    UI_StreamTab.cpp \
    UI_DataSetPanel.cpp \
-   UI_SoundsTab.cpp \
    UI_GeometryTab.cpp \
    UI_TeacherTab.cpp \
    UI_TransTab.cpp \
@@ -44,7 +43,8 @@ SRCS=\
    UI_ViewLocTab.cpp \
    UI_ModSelPanel.cpp \
    UI_ModelData.cpp \
-   spinctld.cpp 
+   spinctld.cpp\
+   SoundsPane.cpp 
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
