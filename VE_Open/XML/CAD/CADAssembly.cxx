@@ -47,22 +47,43 @@ CADAssembly::CADAssembly(std::string name)
 ///////////////////////////
 CADAssembly::~CADAssembly()
 {
-   for(int i = _numChildren -1; i >=0; i--)
+   for(unsigned int i = 0; i < _numChildren; i++)
    {
       delete _children.at(i);
    }
    _children.clear();
+   _numChildren = 0;
 }
 /////////////////////////////////////////////////
 void CADAssembly::AddChild(VE_CAD::CADNode* node)
 {
    _children.push_back(node);
-   node->SetParent(this);
+   node->SetParent(_uID);
    _numChildren = static_cast< unsigned int >(_children.size());
 }
 ////////////////////////////////////////////////////
 bool CADAssembly::RemoveChild(VE_CAD::CADNode* node)
 {
+   for(unsigned int i = 0; i < _numChildren; i++)
+   {
+      if(node == _children.at(i))
+      {
+         //delete the whole vector and copy back only the valid children
+         //this couldn't be more inefficient
+         std::vector<CADNode*> temp;
+
+         for(unsigned int j = 0; j < _numChildren; j++)
+         {
+            if(i != j) 
+               temp.push_back(_children.at(j));
+         }
+         delete _children.at(i);
+         _children.at(i) = 0;
+         _children = temp;
+         _numChildren = _children.size();
+         return true;
+      }
+   }
    std::cout<<"CADAssembly::RemoveChild() not implemented yet!!!"<<std::endl;
    return false;
 }
@@ -76,6 +97,18 @@ bool CADAssembly::RemoveChild(unsigned int whichChild)
 unsigned int CADAssembly::GetNumberOfChildren()
 {
    return _numChildren; 
+}
+/////////////////////////////////////////////////////////
+VE_CAD::CADNode* CADAssembly::GetChild(std::string name)
+{
+   for(size_t i = 0; i < _numChildren; i++)
+   {
+      if(_children.at(i)->GetNodeName() == name)
+      {
+         return _children.at(i);
+      }
+   }
+   return 0;
 }
 ///////////////////////////////////////////////////////////////
 VE_CAD::CADNode* CADAssembly::GetChild(unsigned int whichChild)
@@ -98,6 +131,7 @@ void CADAssembly::_updateChildren()
    //add the children nodes to the list
    for(unsigned int i = 0; i < _numChildren;  i++){
       _children.at(i)->SetOwnerDocument(_rootDocument);
+      _children.at(i)->SetParent(_uID);
       childList->appendChild( _children.at( i )->GetXMLData("child") );
    }
    _veElement->appendChild(childList);
@@ -158,16 +192,19 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
                //this is an Assembly
                VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly();
                newAssembly->SetObjectFromXMLData(cadNode);
+               newAssembly->SetParent(_uID);
                _children.push_back(newAssembly);
             }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
                //this is a Part
                VE_CAD::CADPart* newPart = new VE_CAD::CADPart();
                newPart->SetObjectFromXMLData(cadNode);
+               newPart->SetParent(_uID);
                _children.push_back(newPart);
             }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Clone")){
                //this is a Clone
                VE_CAD::CADClone* newClone = new VE_CAD::CADClone();
                newClone->SetObjectFromXMLData(cadNode);
+               newClone->SetParent(_uID);
                _children.push_back(newClone);
             }else{
                std::cout<<"ERROR!"<<std::endl;

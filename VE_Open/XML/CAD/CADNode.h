@@ -72,8 +72,8 @@ public:
    void SetNodeName(std::string name);
 
    ///Set the parent for this node.
-   ///\param parent The parent of this node.
-   void SetParent(VE_CAD::CADNode* parent);
+   ///\param parent The parent ID of this node.
+   void SetParent(unsigned int parentID);
 
    ///Set the transform for this node.
    ///\param transform The transform of this node.
@@ -96,7 +96,7 @@ public:
    std::string GetNodeName();
 
    ///Get the parent of this CAD node.
-   VE_CAD::CADNode* GetParent();
+   unsigned int GetParent();
 
    ///Get the transform of this CAD node.
    VE_XML::Transform* GetTransform();
@@ -112,6 +112,9 @@ public:
    ///Get attributes for this node.
    std::vector<CADAttribute*> GetAttributeList();
 
+   ///Get the ID
+   unsigned int GetID();
+
    ///Copy constructor
    CADNode(const CADNode& rhs);
 
@@ -119,7 +122,7 @@ public:
    CADNode& operator=(const CADNode& rhs);
 
 protected:
-   
+
    ///Internally update the XML data for this element.
    ///\param input The XML element information
    virtual void _updateVEElement(std::string input);
@@ -130,8 +133,9 @@ protected:
    ///Internally update the type of the node in XML.
    void _updateNodeType();
 
+   unsigned int _uID;///<A "unique" id for the node.
    VE_XML::Transform* _transform; ///< Transform for the node.
-   VE_CAD::CADNode* _parent;  ///< Parent node.
+   unsigned int  _parent;  ///< Parent node ID.
    std::vector<VE_CAD::CADAttribute*> _attributeList;///<A list of attributes for this node
    std::string _name;///< The name of this node.
    std::string _type;///< The type of node;

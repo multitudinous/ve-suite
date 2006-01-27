@@ -76,6 +76,10 @@ public:
 
    ///Get a specified child of this assembly
    VE_CAD::CADNode* GetChild(unsigned int whichChild);
+
+   ///Get a child by a name
+   ///\param name The of the child name to search for.
+   VE_CAD::CADNode* GetChild(std::string name);
    
    ///Copy constructor
    CADAssembly(const CADAssembly& rhs);

@@ -35,10 +35,11 @@
 #include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
 
-
+#include <ctime>
 using namespace VE_CAD;
 using namespace VE_Shader;
 using namespace VE_XML;
+
 //////////////////////////////////
 ///Constructor                  //
 //////////////////////////////////
@@ -49,6 +50,7 @@ CADNode::CADNode(std::string name)
    _parent = 0;
    _transform = 0;//new VE_XML::Transform(_rootDocument); 
    _type = std::string("Node");
+   _uID = time(0);
 }
 ///////////////////
 ///Destructor    //
@@ -62,7 +64,8 @@ CADNode::~CADNode()
    
    if(_attributeList.size())
    {
-      for(size_t i = _attributeList.size() - 1; i >= 0; i--)
+     size_t nAttributes =  _attributeList.size();
+       for(size_t i = 0; i < nAttributes; i++)
       {
          delete _attributeList.at(i);
       }
@@ -75,7 +78,7 @@ void CADNode::SetNodeName(std::string name)
    _name = name;
 }
 ////////////////////////////////////////////////////
-void CADNode::SetParent(VE_CAD::CADNode* parent)
+void CADNode::SetParent(unsigned int parent)
 {
    _parent = parent;
 }
@@ -105,7 +108,7 @@ std::string CADNode::GetNodeName()
    return _name;
 }
 /////////////////////////////////////////
-VE_CAD::CADNode* CADNode::GetParent()
+unsigned int CADNode::GetParent()
 {
    return _parent;
 }
@@ -143,6 +146,11 @@ VE_CAD::CADAttribute* CADNode::GetAttribute(std::string name)
    }
    return 0;
 }
+/////////////////////////////
+unsigned int CADNode::GetID()
+{
+   return _uID;
+}
 /////////////////////////////////////////////////
 void CADNode::_updateVEElement(std::string input)
 {
@@ -153,11 +161,15 @@ void CADNode::_updateVEElement(std::string input)
    }
    _updateNodeType();
    _updateNodeName();
-   if(_parent)
+   
+   SetSubElement(std::string("nodeID"),_uID);
+   SetSubElement(std::string("parent"),_parent);
+   
+   /*if(_parent)
    {
       _parent->SetOwnerDocument(_rootDocument);
       _veElement->appendChild( _parent->GetXMLData("parent") );
-   }
+   }*/
    if(_transform)
    {
       _transform->SetOwnerDocument(_rootDocument);
@@ -214,6 +226,12 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             {
               _name = ExtractDataStringFromSimpleElement( nameNode );
             }
+            //Is there a better way to do this
+            DOMElement* idNode = GetSubElement(currentElement,std::string("nodeID"),0);
+            if(idNode)
+            {
+               _uID = ExtractIntegerDataNumberFromSimpleElement(idNode );
+            }
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {
@@ -222,7 +240,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
             if(parentNode)
             {
-               _parent->SetObjectFromXMLData(parentNode);
+               _parent = ExtractIntegerDataNumberFromSimpleElement(parentNode);
             }
             size_t nOldAttributes = _attributeList.size();
             if(nOldAttributes > 0)
@@ -295,6 +313,7 @@ CADNode::CADNode(const CADNode& rhs)
    _parent = rhs._parent;
    _name = rhs._name;
    _type = rhs._type;
+   _uID = rhs._uID;
    
 }
 ////////////////////////////////////////////////
@@ -322,7 +341,7 @@ CADNode& CADNode::operator=(const CADNode& rhs)
          _transform = 0;
       }
       _transform = new Transform(*rhs._transform);
-      
+      _uID = rhs._uID;
       _parent = rhs._parent;
       _name = rhs._name;
    }
