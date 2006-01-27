@@ -539,8 +539,8 @@ void UI_Tabs::createTabPages()
    //AddPage( _transPage, _T("Transient"), false );
 
    //Sounds page
-   _soundPage = new UI_SoundTab(this);
-   AddPage( _soundPage, _T("Sounds"), false );
+   //_soundPage = new UI_SoundTab(this);
+   //AddPage( _soundPage, _T("Sounds"), false );
 
    //Navigation page
    // Don't know if this works
