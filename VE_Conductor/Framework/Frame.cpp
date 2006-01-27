@@ -90,8 +90,8 @@ EVT_CLOSE(AppFrame::OnClose)
 
   EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
   EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
-  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
-  EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
+//  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
+//  EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
   EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
 
 //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
@@ -137,7 +137,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    pelog = NULL;
    navPane = 0;
-   soundsPane = 0;
+   //soundsPane = 0;
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
 }
@@ -258,11 +258,11 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       navPane = 0;
    }
 
-   if ( soundsPane )
-   {
-	   soundsPane->Destroy();
-	   soundsPane = 0;
-   }
+   //if ( soundsPane )
+   //{
+	//   soundsPane->Destroy();
+	//   soundsPane = 0;
+   //}
 
    StoreFrameSize(GetRect(), NULL);
    Destroy();
@@ -1041,10 +1041,10 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
       navPane->Close( false );
    }
 
-   if ( soundsPane )
-   {
-	   soundsPane->Close( false );
-   }
+   //if ( soundsPane )
+   //{
+	//   soundsPane->Close( false );
+   //}
 
    Log("Disconnect VE suceeded.\n");
   //}catch (CORBA::Exception &) {
@@ -1111,7 +1111,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    // now show it
 }
 ///////////////////////////////////////////////////////////////////
-void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED(event) )
+/*void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( soundsPane == 0 )
    {
@@ -1127,7 +1127,7 @@ void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED(event) )
    }
    // now show it
    soundsPane->Show();
-}
+}*/
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 {

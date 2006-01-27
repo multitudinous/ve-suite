@@ -92,7 +92,7 @@ class UI_Tabs;
 class UI_Frame;
 class Network;
 class NavigationPane;
-class SoundsPane;
+//class SoundsPane;
 class CORBAServiceList;
 
 namespace VE_XML
@@ -190,7 +190,7 @@ public:
    // These are the callbacks for the pull down menu
    void LaunchNavigationPane(wxCommandEvent& event);
    void LaunchViewpointsPane(wxCommandEvent& event);
-   void LaunchSoundsPane(wxCommandEvent& event);
+//   void LaunchSoundsPane(wxCommandEvent& event);
 
    void JugglerSettings( wxCommandEvent& event );
 
@@ -202,7 +202,7 @@ public:
 
 private:
    NavigationPane* navPane;
-   SoundsPane* soundsPane;
+   //SoundsPane* soundsPane;
    CORBAServiceList* serviceList;
    VE_XML::DOMDocumentManager* domManager;
 
