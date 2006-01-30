@@ -46,6 +46,8 @@ Uniform::Uniform()
 ///////////////////
 Uniform::~Uniform()
 {
+   _type.clear();
+   _name.clear();
    _values.clear();
 }
 /////////////////////////////////////
@@ -54,6 +56,11 @@ Uniform::~Uniform()
 Uniform:: Uniform(const Uniform& rhs)
 :VE_XML::XMLObject(rhs)
 {
+   _type = std::string("float");
+   _variableSize = 0; 
+   _name = std::string("");
+   _textureUnit = 0;
+
    _type = rhs._type;
    _variableSize = rhs._variableSize;
    _name = rhs._name;

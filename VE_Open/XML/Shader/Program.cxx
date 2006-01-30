@@ -66,8 +66,17 @@ Program::~Program()
 Program::Program(const Program& rhs)
 :XMLObject(rhs)
 {
-   _vertexShader = new Shader(*rhs._vertexShader);
-   _fragmentShader = new Shader(*rhs._fragmentShader);
+   _name = std::string("VEProgram");
+   _vertexShader = 0;
+   _fragmentShader = 0;
+   if(rhs._vertexShader)
+   {
+      _vertexShader = new Shader(*rhs._vertexShader);
+   }
+   if(rhs._fragmentShader)
+   {
+      _fragmentShader = new Shader(*rhs._fragmentShader);
+   }
    _name = rhs._name;
 }
 /////////////////////////////////////////////////

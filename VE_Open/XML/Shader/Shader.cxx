@@ -51,6 +51,7 @@ Shader::Shader()
 /////////////////
 Shader::~Shader()
 {
+   _shaderSource.clear();
    size_t nUniforms = _uniformList.size();
    if(nUniforms > 0 ){
        for(size_t i = 0; i < nUniforms; i++)
@@ -75,6 +76,7 @@ Shader::~Shader()
 Shader::Shader(const Shader& rhs)
 :XMLObject(rhs)
 {
+   _shaderSource = std::string("");
    for(size_t i = 0; i < rhs._uniformList.size(); i++)
    {
       _uniformList.push_back(rhs._uniformList.at(i));
@@ -119,10 +121,10 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
             //clear out the current list of uniforms
             if(_uniformList.size()){
                size_t nUniforms = _uniformList.size();
-               for(size_t i = nUniforms -1; i >=0; i--)
+               /*for(size_t i = nUniforms -1; i >=0; i--)
                {
                   delete _uniformList.at(i);
-               }
+               }*/
                _uniformList.clear();
             }
             //clear out the current list of texture images
