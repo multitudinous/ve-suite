@@ -37,11 +37,24 @@ using namespace VE_CAD;
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                              //
 /////////////////////////////////////////////////////////////////////////////////////////////
-CADClone::CADClone(std::string name,
-                 VE_CAD::CADNode* originalNode)
+CADClone::CADClone(std::string name,VE_CAD::CADNode* originalNode)
 :VE_CAD::CADNode(name)
 {
-   _originalNode = originalNode;
+   if(originalNode)
+   {
+      if(originalNode->GetNodeType() == std::string("Assembly"))
+      {
+         _originalNode = new CADAssembly(*dynamic_cast<CADAssembly*>(originalNode));
+      }
+      else
+      {
+         _originalNode = new CADPart(*dynamic_cast<CADPart*>(originalNode));
+      }
+   }
+   else
+   {
+      _originalNode = 0;
+   }
    _type = std::string("Clone");
 }
 /////////////////////

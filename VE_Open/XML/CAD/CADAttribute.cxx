@@ -159,6 +159,8 @@ CADAttribute::CADAttribute(const CADAttribute& rhs)
 :XMLObject(rhs)
 {
    _attributeType = rhs._attributeType;
+   _material = 0;
+   _glslProgram = 0;
    if(_attributeType == std::string("Material"))
    {
       _material = new CADMaterial(*rhs._material); 
@@ -175,6 +177,8 @@ CADAttribute& CADAttribute::operator=(const CADAttribute& rhs)
    {
       XMLObject::operator =(rhs);
       _attributeType = rhs._attributeType;
+      _material = 0;
+      _glslProgram = 0;
       if(_attributeType == std::string("Material"))
       {
          if(_material)

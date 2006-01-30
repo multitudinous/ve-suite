@@ -129,9 +129,9 @@ VE_CAD::CADAttribute* CADNode::GetAttribute(unsigned int index)
       std::cout<<"ERROR!!!!!"<<std::endl;
       std::cout<<"Invalid index!!!"<<std::endl;
       std::cout<<"CADNode::GetAttribute(): "<<index<<std::endl;
-      return 0;
+      return _attributeList.at(0);;
    }
-   return 0;
+   return _attributeList.at(0);;
 }
 ////////////////////////////////////////////////////////////
 VE_CAD::CADAttribute* CADNode::GetAttribute(std::string name)
@@ -161,20 +161,21 @@ void CADNode::_updateVEElement(std::string input)
    }
    _updateNodeType();
    _updateNodeName();
-   
-   SetSubElement(std::string("nodeID"),_uID);
+
+   SetSubElement(std::string("nodeID"),_uID);   
    SetSubElement(std::string("parent"),_parent);
-   
+
    /*if(_parent)
    {
       _parent->SetOwnerDocument(_rootDocument);
       _veElement->appendChild( _parent->GetXMLData("parent") );
    }*/
-   if(_transform)
+   if(!_transform)
    {
-      _transform->SetOwnerDocument(_rootDocument);
-      _veElement->appendChild( _transform->GetXMLData("transform") );
+      _transform = new Transform();
    }
+   _transform->SetOwnerDocument(_rootDocument);
+   _veElement->appendChild( _transform->GetXMLData("transform") );
 
    if(_attributeList.size())
    {
@@ -245,10 +246,10 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             size_t nOldAttributes = _attributeList.size();
             if(nOldAttributes > 0)
             {
-               for(size_t i = nOldAttributes -1; i >= 0; i--)
+               /*for(size_t i = nOldAttributes -1; i >= 0; i--)
                {
                   delete _attributeList.at(i);
-               }
+               }*/
                _attributeList.clear();
             }
             DOMNodeList* attributeNodes = currentElement->getElementsByTagName(xercesString("attribute"));
@@ -299,10 +300,10 @@ CADNode::CADNode(const CADNode& rhs)
   
    if(_attributeList.size())
    {
-      for(size_t i = _attributeList.size() -1; i >= 0; i--)
+      /*for(size_t i = _attributeList.size() -1; i >= 0; i--)
       {
          delete _attributeList.at(i);
-      }
+      }*/
       _attributeList.clear();
    }
 

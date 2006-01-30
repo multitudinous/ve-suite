@@ -64,26 +64,26 @@ void CADAssembly::AddChild(VE_CAD::CADNode* node)
 ////////////////////////////////////////////////////
 bool CADAssembly::RemoveChild(VE_CAD::CADNode* node)
 {
-   for(unsigned int i = 0; i < _numChildren; i++)
+   /*for(unsigned int i = 0; i < _numChildren; i++)
    {
       if(node == _children.at(i))
       {
          //delete the whole vector and copy back only the valid children
          //this couldn't be more inefficient
-         std::vector<CADNode*> temp;
+         std::vector<CADNode> temp;
 
          for(unsigned int j = 0; j < _numChildren; j++)
          {
             if(i != j) 
                temp.push_back(_children.at(j));
          }
-         delete _children.at(i);
+         //delete _children.at(i);
          _children.at(i) = 0;
          _children = temp;
          _numChildren = _children.size();
          return true;
       }
-   }
+   }*/
    std::cout<<"CADAssembly::RemoveChild() not implemented yet!!!"<<std::endl;
    return false;
 }
@@ -160,10 +160,10 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
 
       //clear out the current list of children
       if(_numChildren){
-         for(int i = _numChildren -1; i >=0; i--)
+         /*for(int i = _numChildren -1; i >=0; i--)
          {
            delete _children.at(i);
-         }
+         }*/
          _children.clear();
       }
       //get the new number of children

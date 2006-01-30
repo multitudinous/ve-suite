@@ -108,11 +108,14 @@ void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,void* currentParent)
    //that have children so we must traverse the child nodes!!!!
    if(cNode->GetNodeType() == std::string("Assembly")){
       VE_CAD::CADAssembly* assembly = dynamic_cast<VE_CAD::CADAssembly*>(cNode);
-      unsigned int nChildren = assembly->GetNumberOfChildren();
-      //recurse the children of this node
-      for(unsigned int i = 0; i < nChildren; i++)
+      if(assembly)
       {
-        _traverseNode(assembly->GetChild(i),assembly);
+         unsigned int nChildren = assembly->GetNumberOfChildren();
+         //recurse the children of this node
+         for(unsigned int i = 0; i < nChildren; i++)
+         {
+           _traverseNode(assembly->GetChild(i),assembly);
+         }
       }
    }
    
