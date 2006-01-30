@@ -191,6 +191,15 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\CADNodeManagerDlg.cxx">
+			</File>
+			<File
+				RelativePath=".\CADNodeMenu.cxx">
+			</File>
+			<File
+				RelativePath="..\Utilities\CADTreeBuilder.cxx">
+			</File>
+			<File
 				RelativePath="Frame.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -296,6 +305,9 @@
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\SoundsPane.cpp">
 			</File>
 			<File
 				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cpp">
@@ -531,6 +543,15 @@
 				RelativePath="Avail_Modules.h">
 			</File>
 			<File
+				RelativePath=".\CADNodeManagerDlg.h">
+			</File>
+			<File
+				RelativePath=".\CADNodeMenu.h">
+			</File>
+			<File
+				RelativePath="..\Utilities\CADTreeBuilder.h">
+			</File>
+			<File
 				RelativePath="Frame.h">
 			</File>
 			<File
@@ -571,6 +592,9 @@
 			</File>
 			<File
 				RelativePath="ResultPanel.h">
+			</File>
+			<File
+				RelativePath=".\SoundsPane.h">
 			</File>
 			<File
 				RelativePath="StringParse.h">
