@@ -48,9 +48,10 @@ CADNode::CADNode(std::string name)
 {
    _name = name;
    _parent = 0;
-   _transform = 0;//new VE_XML::Transform(_rootDocument); 
+   _transform = new Transform(); 
    _type = std::string("Node");
    _uID = time(0);
+   _activeAttributeName = std::string("");
 }
 ///////////////////
 ///Destructor    //
@@ -97,6 +98,11 @@ void CADNode::AddAttribute(VE_CAD::CADAttribute* attribute)
 {
    _attributeList.push_back(attribute);
 }
+///////////////////////////////////////////////////////////
+void CADNode::SetActiveAttribute(std::string attributeName)
+{
+   _activeAttributeName = attributeName;
+}
 //////////////////////////////////
 std::string CADNode::GetNodeType()
 {
@@ -117,7 +123,7 @@ VE_XML::Transform* CADNode::GetTransform()
 {
    return _transform;
 }
-////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 VE_CAD::CADAttribute* CADNode::GetAttribute(unsigned int index)
 {
    try
@@ -145,6 +151,11 @@ VE_CAD::CADAttribute* CADNode::GetAttribute(std::string name)
       }
    }
    return 0;
+}
+///////////////////////////////////////////////////
+VE_CAD::CADAttribute* CADNode::GetActiveAttribute()
+{
+   return GetAttribute(_activeAttributeName);
 }
 /////////////////////////////
 unsigned int CADNode::GetID()
@@ -185,8 +196,8 @@ void CADNode::_updateVEElement(std::string input)
          _attributeList.at(i)->SetOwnerDocument(_rootDocument);
          _veElement->appendChild( _attributeList.at(i)->GetXMLData("attribute") );
       }
+      SetSubElement(std::string("activeAttributeName"),_activeAttributeName);
    }
-   
 }
 ///////////////////////////////
 void CADNode::_updateNodeName()
@@ -267,6 +278,13 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                }
             }
             
+            DOMElement* activeAttribNode = GetSubElement(currentElement,std::string("activeAttributeName"),0);
+            if(activeAttribNode)
+            {
+               _activeAttributeName = ExtractDataStringFromSimpleElement(activeAttribNode);
+            }
+
+            
 
             DOMElement* transformNode = GetSubElement(currentElement,std::string("transform"),0);
             if(transformNode)
@@ -293,17 +311,20 @@ CADNode::CADNode(const CADNode& rhs)
 {
 
    _parent = 0;
-   _transform = 0;
+   _transform = 0;;
 
    if(rhs._transform)
       _transform = new VE_XML::Transform(*rhs._transform);
   
+   else
+      _transform = new Transform();
+
    if(_attributeList.size())
    {
-      /*for(size_t i = _attributeList.size() -1; i >= 0; i--)
+      for(size_t i = _attributeList.size() -1; i >= 0; i--)
       {
          delete _attributeList.at(i);
-      }*/
+      }
       _attributeList.clear();
    }
 
@@ -311,6 +332,7 @@ CADNode::CADNode(const CADNode& rhs)
    {
       _attributeList.push_back(rhs._attributeList.at(i));
    }
+   _activeAttributeName = rhs._activeAttributeName;
    _parent = rhs._parent;
    _name = rhs._name;
    _type = rhs._type;
@@ -342,6 +364,7 @@ CADNode& CADNode::operator=(const CADNode& rhs)
          _transform = 0;
       }
       _transform = new Transform(*rhs._transform);
+      _activeAttributeName = rhs._activeAttributeName;
       _uID = rhs._uID;
       _parent = rhs._parent;
       _name = rhs._name;

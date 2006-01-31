@@ -83,10 +83,16 @@ public:
    ///\param attribute A new attribute for this node.
    void AddAttribute(VE_CAD::CADAttribute* attribute);
 
+   ///Set the name of the active attribute
+   ///\param attributeName The name of the active attribute.
+   void SetActiveAttribute(std::string attributeName); 
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+
+   ///Get the active attribute
+   VE_CAD::CADAttribute* GetActiveAttribute();
 
    ///Get the node type. 
    ///Valid types currently are Node,Assembly,Part and Clone
@@ -133,9 +139,10 @@ protected:
    ///Internally update the type of the node in XML.
    void _updateNodeType();
 
+   std::string _activeAttributeName;///<The name of the active attribute.
    unsigned int _uID;///<A "unique" id for the node.
-   VE_XML::Transform* _transform; ///< Transform for the node.
    unsigned int  _parent;  ///< Parent node ID.
+   VE_XML::Transform* _transform; ///< Transform for the node.
    std::vector<VE_CAD::CADAttribute*> _attributeList;///<A list of attributes for this node
    std::string _name;///< The name of this node.
    std::string _type;///< The type of node;

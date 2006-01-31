@@ -49,7 +49,11 @@ CADAssembly::~CADAssembly()
 {
    for(unsigned int i = 0; i < _numChildren; i++)
    {
-      delete _children.at(i);
+      if(_children.at(i))
+      {
+         delete _children.at(i);
+         _children.at(i) = 0;
+      }
    }
    _children.clear();
    _numChildren = 0;
@@ -160,10 +164,10 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
 
       //clear out the current list of children
       if(_numChildren){
-         /*for(int i = _numChildren -1; i >=0; i--)
+         for(int i = _numChildren -1; i >=0; i--)
          {
            delete _children.at(i);
-         }*/
+         }
          _children.clear();
       }
       //get the new number of children
