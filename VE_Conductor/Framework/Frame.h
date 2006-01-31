@@ -82,7 +82,8 @@ enum
    XPLORER_SOUNDS,
    JUGGLER_STEREO,
    JUGGLER_MONO, 
-   JUGGLER_SETTINGS
+   JUGGLER_SETTINGS,
+   CAD_NODE_DIALOG
 };
 
 class OrbThread;
@@ -94,6 +95,13 @@ class Network;
 class NavigationPane;
 class SoundsPane;
 class CORBAServiceList;
+namespace VE_Conductor
+{
+   namespace GUI_Utilities
+   {
+      class CADNodeManagerDlg;
+   }
+}
 
 namespace VE_XML
 {
@@ -192,6 +200,10 @@ public:
    void LaunchViewpointsPane(wxCommandEvent& event);
    void LaunchSoundsPane(wxCommandEvent& event);
 
+   ///Launch the CADNode GUI
+   ///\param event The wxCommand event.
+   void LaunchCADNodePane(wxCommandEvent& event);
+
    void JugglerSettings( wxCommandEvent& event );
 
   bool init_orb_naming();
@@ -203,6 +215,9 @@ public:
 private:
    NavigationPane* navPane;
    SoundsPane* soundsPane;
+
+   VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
+
    CORBAServiceList* serviceList;
    VE_XML::DOMDocumentManager* domManager;
 

@@ -37,11 +37,15 @@
 /*!\class GeometryanagerDialog
  * GUI class to manipulate CADNode tree.
  */
+#ifndef STAND_ALONE
+#include "VE_Open/skel/VjObsC.h"
+#endif
 #include "wx/dialog.h"
 #include "wx/treectrl.h"
 #include "wx/window.h"
 #include "wx/button.h"
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
+
 
 namespace VE_CAD
 {
@@ -62,12 +66,7 @@ public:
    ///\param parent The parent wxWindow.
    ///\param id The unique id for this window.
    CADNodeManagerDlg(VE_CAD::CADNode* node, wxWindow* parent, int id);
-                       /*, 
-                       const wxString& title = "CADTree Manager", 
-                       const wxPoint& pos = wxDefaultPosition,
-                       const wxSize& size= wxDefaultSize,
-                       long style = wxDEFAULT_DIALOG_STYLE, 
-                       const wxString& name = "CADTree Manager");*/
+                       
    ///Destructor
    virtual ~CADNodeManagerDlg();
    enum GEOMETRY_DIALOG_IDS
@@ -76,7 +75,15 @@ public:
       PROPERTY_ID,///<The property ID.
       GEOM_SAVE///<The save ID.
    };
-   
+#ifndef STAND_ALONE
+   ///Set the current vjObjs ptr for data passing.
+   ///\param xplorerCom The communication interface w/ xplorer.
+   void SetVjObsPtr(VjObs_var xplorerCom);
+#endif
+
+   ///Set the root CADNode to display.
+   ///\param rootNode The root CADNode to display.
+   void SetRootCADNode(VE_CAD::CADNode* rootNode);
 protected:
    ///Create the dialog
    void _buildDialog();
@@ -121,7 +128,9 @@ protected:
    
    ///Create a cloned node from an exisiting node in the tree.
    void _cloneNode(wxCommandEvent& event);
-
+#ifndef STAND_ALONE
+   VjObs_var _vjObsPtr;///<The VjObj ptr.
+#endif
    wxTreeCtrl* _geometryTree;///<The tree control.
    wxButton* _quitButton;///<The button to close the dialog.
    wxButton* _saveButton;///<The button to save the current CADHierarchy.

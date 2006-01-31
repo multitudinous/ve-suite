@@ -44,6 +44,7 @@
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
+#include "VE_Conductor/Framework/CADNodeManagerDlg.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -93,6 +94,7 @@ EVT_CLOSE(AppFrame::OnClose)
   EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
   EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
   EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
+  EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
 
 //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
 //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
@@ -140,6 +142,9 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    pelog = NULL;
    navPane = 0;
    soundsPane = 0;
+
+   _cadDialog = 0;
+
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
 }
@@ -266,6 +271,12 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       soundsPane = 0;
    }
 
+   if( _cadDialog)
+   {
+      _cadDialog->Destroy();
+      _cadDialog = 0;
+   }
+
    StoreFrameSize(GetRect(), NULL);
    Destroy();
 }
@@ -359,6 +370,8 @@ void AppFrame::CreateMenu()
    xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
    xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
    xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
+   xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
+   xplorerMenu->Enable( CAD_NODE_DIALOG,false);
    xplorerMenu->Enable( XPLORER_NAVIGATION, false);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
    xplorerMenu->Enable( XPLORER_SOUNDS, false);
@@ -900,6 +913,7 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
       xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
 	  xplorerMenu->Enable( XPLORER_SOUNDS, true);
       xplorerMenu->Enable( JUGGLER_SETTINGS, true);
+      xplorerMenu->Enable( CAD_NODE_DIALOG,true);
    } 
    catch (CORBA::Exception &) 
    {
@@ -1036,6 +1050,7 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
    xplorerMenu->Enable( XPLORER_NAVIGATION, false);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
    xplorerMenu->Enable( XPLORER_SOUNDS, false);
+   xplorerMenu->Enable( CAD_NODE_DIALOG,false);
    xplorerMenu->Enable( JUGGLER_SETTINGS, false);
 
    if ( navPane )
@@ -1129,6 +1144,25 @@ void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED(event) )
    }
    // now show it
    soundsPane->Show();
+}
+/////////////////////////////////////////////////////////////////
+void AppFrame::LaunchCADNodePane( wxCommandEvent& event )
+{
+   if( !_cadDialog)
+   {
+      //this will change once we have a way to retrieve the geometry from the model
+      _cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg(0,
+                                                               this,CAD_NODE_DIALOG);
+   }
+   /*
+   if(_activeModel)
+   {   
+      //this will change once we have a way to retrieve the geometry from the model
+      //_cadDialog->SetRootCADNode(_activeModel->GetGeometry());
+   }
+   */
+   _cadDialog->SetVjObsPtr(vjobs.in());
+   _cadDialog->Show();
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )

@@ -70,21 +70,7 @@ CADNodeManagerDlg::CADNodeManagerDlg(/*VjObs_ptr*/CADNode* node, wxWindow* paren
 :wxDialog(parent,id,wxString("CADTree Manager"),wxDefaultPosition,wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("CADTree Manager"))
 {
-   if(node)
-   {
-      if(node->GetNodeType() == std::string("Assembly"))
-      {
-         _rootNode = new CADAssembly(*dynamic_cast<CADAssembly*>(node));
-      }
-      else if(node->GetNodeType() == std::string("Part"))
-      {
-         _rootNode = new CADPart(*dynamic_cast<CADPart*>(node));
-      }
-   }
-   else
-   {
-      _rootNode = new CADAssembly(std::string("Empty Assembly"));
-   }
+   SetRootCADNode(node);
 
    _cadTreeBuilder =  new CADTreeBuilder(_rootNode,TREE_ID,this);
    _cadTreeBuilder->Traverse();
@@ -112,6 +98,38 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
       _cadTreeBuilder = 0;
    }
 
+}
+#ifndef STAND_ALONE
+//////////////////////////////////////////////////////////
+void CADNodeManagerDlg::SetVjObsPtr(VjObs_var xplorerCom)
+{
+   _vjObsPtr = xplorerCom.ptr();
+}
+#endif
+/////////////////////////////////////////////////////////
+void CADNodeManagerDlg::SetRootCADNode(CADNode* rootNode)
+{
+   if(rootNode)
+   {
+      if(_rootNode)
+      {
+         delete _rootNode;
+         _rootNode = 0;
+      }
+
+      if(rootNode->GetNodeType() == std::string("Assembly"))
+      {
+         _rootNode = new CADAssembly(*dynamic_cast<CADAssembly*>(rootNode));
+      }
+      else if(rootNode->GetNodeType() == std::string("Part"))
+      {
+         _rootNode = new CADPart(*dynamic_cast<CADPart*>(rootNode));
+      }
+   }
+   else
+   {
+      _rootNode = new CADAssembly(std::string("Empty Assembly"));
+   }
 }
 ///////////////////////////////////////
 void CADNodeManagerDlg::_buildDialog()
