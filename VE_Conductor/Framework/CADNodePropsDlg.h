@@ -32,6 +32,9 @@
 
 #ifndef CAD_PROPERTIES_DIALOG_H
 #define CAD_PROPERTIES_DIALOG_H
+#ifndef STAND_ALONE
+#include "VE_Open/skel/VjObsC.h"
+#endif
 #include <vector>
 #include <string>
 #include <wx/window.h>
@@ -57,7 +60,7 @@ class CADNodePropertiesDlg : public wxDialog
 public:
    enum CAD_PROPERTY_IDS
    {
-      ACTIVE_ATTRIBTUTE,///<The active attribute ID.
+      ACTIVE_ATTRIBUTE,///<The active attribute ID.
       ATTRIBUTE_PANEL_ID,///<The attribute panel ID.
       ATTRIBUTE_TYPE,///<The attribute type ID.
       TRANSFORM_PANEL_ID///<The transform panel ID.
@@ -70,6 +73,12 @@ public:
 
    ///Destructor
    virtual ~ CADNodePropertiesDlg();
+
+#ifndef STAND_ALONE
+   ///Set the current vjObjs ptr for data passing.
+   ///\param xplorerCom The communication interface w/ xplorer.
+   void SetVjObsPtr(VjObs_var xplorerCom);
+#endif
 
    ///Return the transform panel.
    wxPanel* GetTransformPanel();
@@ -97,8 +106,16 @@ protected:
    ///\param event The wxCommand event.
    void _updateAttributeType(wxCommandEvent& event);
 
+   ///Update the active attribute.
+   ///\param event The wxCommand event.
+   void _setActiveAttribute(wxCommandEvent& event);
+
    ///Update the available attributes for this CADNode.
    void _updateAvailableAttributes();
+
+#ifndef STAND_ALONE
+   VjObs_var _vjObsPtr;///<The VjObj ptr.
+#endif
 
    wxNotebook* _propertyTabs;///<The tabs for modifying the node properties.
    wxPanel* _transformPanel;///<The transform panel.

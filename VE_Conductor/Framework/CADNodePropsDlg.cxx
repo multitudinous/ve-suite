@@ -43,6 +43,7 @@
 #include <wx/combobox.h>
 #include <wx/listbox.h>
 #include <wx/arrstr.h>
+#include <wx/listbox.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
@@ -56,6 +57,7 @@ using namespace VE_CAD;
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_SPINCTRL(TRANSFORM_PANEL_ID,CADNodePropertiesDlg::_updateTransform)
    EVT_COMBOBOX(ATTRIBUTE_TYPE,CADNodePropertiesDlg::_updateAttributeType)
+   EVT_LISTBOX(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -91,6 +93,13 @@ CADNodePropertiesDlg
 ::~CADNodePropertiesDlg()
 {
 }
+#ifndef STAND_ALONE
+//////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::SetVjObsPtr(VjObs_var xplorerCom)
+{
+   _vjObsPtr = xplorerCom.ptr();
+}
+#endif
 ///////////////////////////////////
 void CADNodePropertiesDlg::_buildGUI()
 {
@@ -258,7 +267,7 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    //Active attribute selection
    wxStaticBox* activeAttribute = new wxStaticBox(_attributePanel, -1, wxT("Available Attributes"));
    wxStaticBoxSizer* activeAttributeSizer = new wxStaticBoxSizer(activeAttribute , wxVERTICAL);
-   _attributeSelection = new wxListBox(_attributePanel,ACTIVE_ATTRIBTUTE);
+   _attributeSelection = new wxListBox(_attributePanel,ACTIVE_ATTRIBUTE);
 
    if(_cadNode)
    {
@@ -311,6 +320,15 @@ void CADNodePropertiesDlg::_updateAttributeType(wxCommandEvent& event)
    else if(_attributeType->GetValue() == wxString("Shaders"))
    {
       _attributeSelection->Set(_availableShaders);
+   }
+}
+/////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& event)
+{
+   if(_cadNode)
+   {
+      wxString attributeName = _attributeSelection->GetStringSelection();
+      _cadNode->SetActiveAttribute(attributeName.GetData());
    }
 }
 ///////////////////////////////////////////////////////////////////

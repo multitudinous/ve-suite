@@ -372,6 +372,9 @@ void CADNodeManagerDlg::_showPropertiesDialog(wxCommandEvent& event)
    if(_activeTreeNode)
    {
       CADNodePropertiesDlg propsDlg(this,PROPERTY_ID,_activeCADNode);
+#ifndef STAND_ALONE
+      propsDlg.SetVjObsPtr(_vjObsPtr.in());
+#endif
       propsDlg.ShowModal();
    }
 }
