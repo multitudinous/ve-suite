@@ -57,6 +57,11 @@ namespace VE_Xplorer
    class cfdReadParam;
 }
 
+namespace VE_XML
+{
+   class Command;
+}
+
 #include <vector>
 
 #include "VE_Xplorer/cfdGlobalBase.h"
@@ -122,10 +127,16 @@ namespace VE_Xplorer
          float GetQuatCamIncrementor( void );
 
          bool IsActive( void );
+
+         // New function for testing the new VECommand structure
+         void SetVECommand( VE_XML::Command* veCommand );
    
          unsigned int numQuatCams;
          unsigned int numFlyThroughs;
          unsigned int* numPointsInFlyThrough;
+
+         int cfdId;
+         int cfdIso_value;
 
       private:
          cfdQuatCam* thisQuatCam;
@@ -157,6 +168,9 @@ namespace VE_Xplorer
          
          std::vector< std::vector <int> > flyThroughList;
          std::vector < int > completionTest;
+
+         // class used to store xml command
+         VE_XML::Command* command;
    };
 }
 #endif

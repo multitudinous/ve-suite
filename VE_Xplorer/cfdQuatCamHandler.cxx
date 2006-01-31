@@ -38,6 +38,8 @@
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 #include "VE_SceneGraph/cfdDCS.h"
 
@@ -100,6 +102,8 @@ cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS,
    onMasterNode = true;
 #endif
    
+   command = 0;
+
    CreateObjects();
    
 }
@@ -399,6 +403,15 @@ void cfdQuatCamHandler::AddNewFlythrough( void )
 bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
    bool flag = false;
+   std::string commandType;
+   if ( command )
+   {
+      commandType = command->GetCommandName();
+   }
+   else
+   {
+      commandType = "wait";
+   }
 
 #ifdef _CLUSTER
    if ( writeFrame == currentFrame - 1 )
@@ -407,112 +420,143 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    }
 #endif
 
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_NEW_VIEWPT )
+   if ( !commandType.compare( "ViewLoc_Data" ) )
    {
-      writeFrame = currentFrame;
-      this->TurnOffMovement();
-      this->LoadData( this->_nav->worldTrans, _worldDCS );
-      this->WriteToFile( this->quatCamFileName );
-      this->LoadFromFile( this->quatCamFileName );
-      this->writeReadComplete = true;
-      this->lastCommandId = LOAD_NEW_VIEWPT;
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
-   {
-      //this->frameTimer->startTiming();
-      this->activecam = true;
-      this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_SELECTED_VIEWPT )
-   {
-      writeFrame = currentFrame;
-      this->TurnOffMovement();
-      this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      this->RemoveViewPt();
-      this->WriteToFile( this->quatCamFileName );
-      this->LoadFromFile( this->quatCamFileName );
-      this->writeReadComplete = true;
-      this->lastCommandId = REMOVE_SELECTED_VIEWPT;
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ADD_NEW_POINT_TO_FLYTHROUGH )
-   {
-      writeFrame = currentFrame;
-      this->TurnOffMovement();
-      this->AddViewPtToFlyThrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
-                                   (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
-      this->WriteToFile( this->quatCamFileName );
-      this->LoadFromFile( this->quatCamFileName );
-      this->writeReadComplete = true;
-      this->lastCommandId = ADD_NEW_POINT_TO_FLYTHROUGH;
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == INSERT_NEW_POINT_IN_FLYTHROUGH )
-   {
-      writeFrame = currentFrame;
-      this->TurnOffMovement();
-      this->InsertViewPtInFlyThrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
-                                      (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ),
-                                      (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) );
-      this->WriteToFile( this->quatCamFileName );
-      this->LoadFromFile( this->quatCamFileName );
-      this->writeReadComplete = true;
-      this->lastCommandId = INSERT_NEW_POINT_IN_FLYTHROUGH;
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_POINT_FROM_FLYTHROUGH )
-   {
-      writeFrame = currentFrame;
-      this->TurnOffMovement();
-      this->RemoveFlythroughPt( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
-                                (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
-      this->WriteToFile( this->quatCamFileName );
-      this->LoadFromFile( this->quatCamFileName );
-      this->writeReadComplete = true;
-      this->lastCommandId = REMOVE_POINT_FROM_FLYTHROUGH;
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == DELETE_ENTIRE_FLYTHROUGH )
-   {
-      writeFrame = currentFrame;
-      this->TurnOffMovement();
-      this->DeleteEntireFlythrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-      this->WriteToFile( this->quatCamFileName );
-      this->LoadFromFile( this->quatCamFileName );
-      this->writeReadComplete = true;
-      this->lastCommandId = DELETE_ENTIRE_FLYTHROUGH;
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ADD_NEW_FLYTHROUGH )
-   {
-      writeFrame = currentFrame;
-      this->TurnOffMovement();
-      this->AddNewFlythrough();
-      this->WriteToFile( this->quatCamFileName );
-      this->LoadFromFile( this->quatCamFileName );
-      this->writeReadComplete = true;
-      this->lastCommandId = ADD_NEW_FLYTHROUGH;
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RUN_ACTIVE_FLYTHROUGH )
-   {
-      this->activeFlyThrough = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      this->_runFlyThrough = true;
-      this->activecam = true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STOP_ACTIVE_FLYTHROUGH )
-   {
-      this->TurnOffMovement();
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_MOVEMENT_SPEED )
-   {
-      this->movementSpeed = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      return true;
-   }
+      VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
+      //this->cfdIso_value = commandData->GetDataValue();
+      std::vector< long > commandIds;
+      commandData->GetData( commandIds );
+      std::string newCommand = commandData->GetDataName();
 
+      //if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_NEW_VIEWPT )
+      if ( !newCommand.compare( "LOAD_NEW_VIEWPT" ) ) 
+      {
+         writeFrame = currentFrame;
+         this->TurnOffMovement();
+         this->LoadData( this->_nav->worldTrans, _worldDCS );
+         this->WriteToFile( this->quatCamFileName );
+         this->LoadFromFile( this->quatCamFileName );
+         this->writeReadComplete = true;
+         this->lastCommandId = LOAD_NEW_VIEWPT;
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
+      else if ( !newCommand.compare( "MOVE_TO_SELECTED_LOCATION" ) )      
+      {
+         //this->frameTimer->startTiming();
+         this->activecam = true;
+         //this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         this->cam_id = (unsigned int)commandIds.at( 0 );
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_SELECTED_VIEWPT )
+      else if ( !newCommand.compare( "REMOVE_SELECTED_VIEWPT" ) )      
+      {
+         writeFrame = currentFrame;
+         this->TurnOffMovement();
+         //this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         this->cam_id = (unsigned int)commandIds.at( 0 );
+         this->RemoveViewPt();
+         this->WriteToFile( this->quatCamFileName );
+         this->LoadFromFile( this->quatCamFileName );
+         this->writeReadComplete = true;
+         this->lastCommandId = REMOVE_SELECTED_VIEWPT;
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ADD_NEW_POINT_TO_FLYTHROUGH )
+      else if ( !newCommand.compare( "ADD_NEW_POINT_TO_FLYTHROUGH" ) )      
+      {
+         writeFrame = currentFrame;
+         this->TurnOffMovement();
+         //this->AddViewPtToFlyThrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
+         //                             (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
+         this->AddViewPtToFlyThrough( (unsigned int)commandIds.at( 0 ), 
+                                      (unsigned int)commandIds.at( 1 ) );
+         this->WriteToFile( this->quatCamFileName );
+         this->LoadFromFile( this->quatCamFileName );
+         this->writeReadComplete = true;
+         this->lastCommandId = ADD_NEW_POINT_TO_FLYTHROUGH;
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == INSERT_NEW_POINT_IN_FLYTHROUGH )
+      else if ( !newCommand.compare( "INSERT_NEW_POINT_IN_FLYTHROUGH" ) )      
+      {
+         writeFrame = currentFrame;
+         this->TurnOffMovement();
+         //this->InsertViewPtInFlyThrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
+         //                                (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ),
+         //                                (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) );
+         this->InsertViewPtInFlyThrough( (unsigned int)commandIds.at( 0 ), 
+                                         (unsigned int)commandIds.at( 1 ),
+                                         (unsigned int)commandIds.at( 2 ) );
+         this->WriteToFile( this->quatCamFileName );
+         this->LoadFromFile( this->quatCamFileName );
+         this->writeReadComplete = true;
+         this->lastCommandId = INSERT_NEW_POINT_IN_FLYTHROUGH;
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_POINT_FROM_FLYTHROUGH )
+      else if ( !newCommand.compare( "REMOVE_POINT_FROM_FLYTHROUGH" ) )      
+      {
+         writeFrame = currentFrame;
+         this->TurnOffMovement();
+         //this->RemoveFlythroughPt( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
+         //                          (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
+         this->RemoveFlythroughPt( (unsigned int)commandIds.at( 0 ), 
+                                   (unsigned int)commandIds.at( 1 ) );
+         this->WriteToFile( this->quatCamFileName );
+         this->LoadFromFile( this->quatCamFileName );
+         this->writeReadComplete = true;
+         this->lastCommandId = REMOVE_POINT_FROM_FLYTHROUGH;
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == DELETE_ENTIRE_FLYTHROUGH )
+      else if ( !newCommand.compare( "DELETE_ENTIRE_FLYTHROUGH" ) )      
+      {
+         writeFrame = currentFrame;
+         this->TurnOffMovement();
+         //this->DeleteEntireFlythrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+         this->DeleteEntireFlythrough( (unsigned int)commandIds.at( 0 ) );
+         this->WriteToFile( this->quatCamFileName );
+         this->LoadFromFile( this->quatCamFileName );
+         this->writeReadComplete = true;
+         this->lastCommandId = DELETE_ENTIRE_FLYTHROUGH;
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ADD_NEW_FLYTHROUGH )
+      else if ( !newCommand.compare( "ADD_NEW_FLYTHROUGH" ) )      
+      {
+         writeFrame = currentFrame;
+         this->TurnOffMovement();
+         this->AddNewFlythrough();
+         this->WriteToFile( this->quatCamFileName );
+         this->LoadFromFile( this->quatCamFileName );
+         this->writeReadComplete = true;
+         this->lastCommandId = ADD_NEW_FLYTHROUGH;
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RUN_ACTIVE_FLYTHROUGH )
+      else if ( !newCommand.compare( "RUN_ACTIVE_FLYTHROUGH" ) )      
+      {
+         //this->activeFlyThrough = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         this->activeFlyThrough = (unsigned int)commandIds.at( 0 );
+         this->_runFlyThrough = true;
+         this->activecam = true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STOP_ACTIVE_FLYTHROUGH )
+      else if ( !newCommand.compare( "STOP_ACTIVE_FLYTHROUGH" ) )      
+      {
+         this->TurnOffMovement();
+         return true;
+      }
+      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_MOVEMENT_SPEED )
+      else if ( !newCommand.compare( "CHANGE_MOVEMENT_SPEED" ) )      
+      {
+         //this->movementSpeed = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         this->movementSpeed = (unsigned int)commandIds.at( 0 );
+         return true;
+      }
+   }
 
 
    return flag;
@@ -701,3 +745,7 @@ bool cfdQuatCamHandler::IsActive( void )
    return activecam;
 }
 
+void cfdQuatCamHandler::SetVECommand( VE_XML::Command* veCommand )
+{
+   command = veCommand;
+}
