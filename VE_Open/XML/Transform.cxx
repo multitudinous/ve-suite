@@ -49,11 +49,14 @@ Transform::Transform()
    std::vector< double > temp;
    temp.assign( 3, 0.0f );
 
+   std::vector< double > temp1;
+   temp1.assign( 3, 1.0f );
+
    rotationArray = new FloatArray(  );
    rotationArray->SetArray( temp );
 
    scaleArray = new FloatArray(  );
-   scaleArray->SetArray( temp );
+   scaleArray->SetArray( temp1 );
 
    translationArray = new FloatArray(  );
    translationArray->SetArray( temp );
