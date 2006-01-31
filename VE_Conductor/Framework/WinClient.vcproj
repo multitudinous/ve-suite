@@ -197,6 +197,9 @@
 				RelativePath=".\CADNodeMenu.cxx">
 			</File>
 			<File
+				RelativePath=".\CADNodePropsDlg.cxx">
+			</File>
+			<File
 				RelativePath="..\Utilities\CADTreeBuilder.cxx">
 			</File>
 			<File
@@ -547,6 +550,9 @@
 			</File>
 			<File
 				RelativePath=".\CADNodeMenu.h">
+			</File>
+			<File
+				RelativePath=".\CADNodePropsDlg.h">
 			</File>
 			<File
 				RelativePath="..\Utilities\CADTreeBuilder.h">

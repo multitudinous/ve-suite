@@ -32,6 +32,7 @@
 #include "VE_Conductor/Framework/CADNodeManagerDlg.h"
 #include "VE_Conductor/Framework/CADNodeMenu.h"
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
+#include "VE_Conductor/Framework/CADNodePropsDlg.h"
 
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
@@ -178,6 +179,12 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
          {
             cadNodeMenu->EnableGlobalMenus(true);
             cadNodeMenu->EnablePartMenus(true);
+         }
+         else if(cadNode->GetNode()->GetNodeType() == std::string("Clone"))
+         {
+            cadNodeMenu->EnableGlobalMenus(true);
+            cadNodeMenu->EnablePartMenus(true);
+            cadNodeMenu->EnableCloneMenu(false);
          }
       }
       if(cadNode->GetNode() == _rootNode)
@@ -346,7 +353,8 @@ void CADNodeManagerDlg::_showPropertiesDialog(wxCommandEvent& event)
 {
    if(_activeTreeNode)
    {
-
+      CADNodePropertiesDlg propsDlg(this,PROPERTY_ID,_activeCADNode);
+      propsDlg.ShowModal();
    }
 }
 ///////////////////////////////////////////////////////////

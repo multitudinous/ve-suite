@@ -73,6 +73,7 @@ public:
    enum GEOMETRY_DIALOG_IDS
    {
       TREE_ID,///<The tree ID.
+      PROPERTY_ID,///<The property ID.
       GEOM_SAVE///<The save ID.
    };
    
