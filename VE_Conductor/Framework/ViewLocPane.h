@@ -147,6 +147,8 @@ protected:
    VE_XML::DOMDocumentManager* domManager;
    std::string dataValueName;
 
+   std::vector< long > commandInputs;
+
    wxWindow* _parent;
 
    //the controls

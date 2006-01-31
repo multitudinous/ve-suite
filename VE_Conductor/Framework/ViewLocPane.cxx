@@ -585,7 +585,8 @@ void ViewLocPane::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
             //((UI_Tabs *)_parent)->cId = REMOVE_SELECTED_VIEWPT;
             //((UI_Tabs *)_parent)->sendDataArrayToServer();
             dataValueName = "REMOVE_SELECTED_VIEWPT";
-            cIso_value = i;
+            //cIso_value = i;
+            commandInputs.push_back( i );
             SendCommandsToXplorer();
 
             _updateWithcfdQuatCamHandler();
@@ -607,7 +608,8 @@ void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
             //((UI_Tabs *)_parent)->cId = MOVE_TO_SELECTED_LOCATION;
             //((UI_Tabs *)_parent)->sendDataArrayToServer();
             dataValueName = "MOVE_TO_SELECTED_LOCATION";
-            cIso_value = i;
+            //cIso_value = i;
+            commandInputs.push_back( i );
             SendCommandsToXplorer();
          }
 	   }
@@ -681,8 +683,10 @@ void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
                      //((UI_Tabs *)_parent)->cId = ADD_NEW_POINT_TO_FLYTHROUGH;
                      //((UI_Tabs *)_parent)->sendDataArrayToServer();
                      dataValueName = "ADD_NEW_POINT_TO_FLYTHROUGH";
-                     cIso_value = i;
-                     cSc = j;
+                     //cIso_value = i;
+                     //cSc = j;
+                     commandInputs.push_back( i );
+                     commandInputs.push_back( j );
                      SendCommandsToXplorer();
                      _updateWithcfdQuatCamHandler();
                   }
@@ -719,9 +723,12 @@ void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
                            //((UI_Tabs *)_parent)->cId = INSERT_NEW_POINT_IN_FLYTHROUGH;
                            //((UI_Tabs *)_parent)->sendDataArrayToServer();
                            dataValueName = "INSERT_NEW_POINT_IN_FLYTHROUGH";
-                           cIso_value = i;
-                           cSc = j;
-                           cMin = k;
+                           //cIso_value = i;
+                           //cSc = j;
+                           //cMin = k;
+                           commandInputs.push_back( i );
+                           commandInputs.push_back( j );
+                           commandInputs.push_back( k );
                            SendCommandsToXplorer();
                            _updateWithcfdQuatCamHandler();
                         }
@@ -754,8 +761,10 @@ void ViewLocPane::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
                      //((UI_Tabs *)_parent)->cId = REMOVE_POINT_FROM_FLYTHROUGH;
                      //((UI_Tabs *)_parent)->sendDataArrayToServer();
                      dataValueName = "REMOVE_POINT_FROM_FLYTHROUGH";
-                     cIso_value = i;
-                     cSc = j;
+                     //cIso_value = i;
+                     //cSc = j;
+                     commandInputs.push_back( i );
+                     commandInputs.push_back( j );
                      SendCommandsToXplorer();
                      _updateWithcfdQuatCamHandler();
                   }
@@ -780,7 +789,8 @@ void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
             //((UI_Tabs *)_parent)->cId = DELETE_ENTIRE_FLYTHROUGH;
             //((UI_Tabs *)_parent)->sendDataArrayToServer();
             dataValueName = "DELETE_ENTIRE_FLYTHROUGH";
-            cIso_value = i;
+            //cIso_value = i;
+            commandInputs.push_back( i );
             SendCommandsToXplorer();
             _updateWithcfdQuatCamHandler();
          }
@@ -804,7 +814,8 @@ void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
                //((UI_Tabs *)_parent)->cId = RUN_ACTIVE_FLYTHROUGH;
                //((UI_Tabs *)_parent)->sendDataArrayToServer();
                dataValueName = "RUN_ACTIVE_FLYTHROUGH";
-               cIso_value = i;
+               //cIso_value = i;
+               commandInputs.push_back( i );
                SendCommandsToXplorer();
             }
 	      }
@@ -831,7 +842,8 @@ void ViewLocPane::_onSpeedChange( wxScrollEvent& WXUNUSED(event) )
    //((UI_Tabs *)_parent)->cId = CHANGE_MOVEMENT_SPEED;
    //((UI_Tabs *)_parent)->sendDataArrayToServer();
    dataValueName = "CHANGE_MOVEMENT_SPEED";
-   cIso_value = _speedCtrlSlider->GetValue();
+   //cIso_value = _speedCtrlSlider->GetValue();
+   commandInputs.push_back( i );
    SendCommandsToXplorer();
 }
 
@@ -903,8 +915,10 @@ void NavigationPane::SendCommandsToXplorer( void )
 
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( doc, std::string("FLOAT") );
-   dataValuePair->SetDataName( dataValueName );
-   dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
+   //VE_XML::OneDIntArray* dataValueArray = new VE_XML::OneDIntArray( commandInputs.size() )
+   //dataValuePair->SetDataName( dataValueName );
+   //dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
+   dataValuePair->SetData( dataValueName, commandInputs );
    VE_XML::Command* veCommand = new VE_XML::Command( doc );
    veCommand->SetCommandName( std::string("ViewLoc_Data") );
    veCommand->AddDataValuePair( dataValuePair );
@@ -935,4 +949,5 @@ void NavigationPane::SendCommandsToXplorer( void )
    }
    //Clean up memory
    delete veCommand;
+   commandInputs.clear();
 }
