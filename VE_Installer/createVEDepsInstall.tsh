@@ -2,7 +2,7 @@
 #copies the appropriate libs/dlls from ve-suite for installs 
 #in the future cmd line args will specify VE-Suite home 
 
-setenv VE_VERSION .0.9.0
+setenv VE_VERSION .0.9.3
 #set vesuitedir $1
 #if(vesuitedir)
 #   setenv VE_SUITE_HOME $1
@@ -11,7 +11,7 @@ setenv VE_VERSION .0.9.0
 if ( $?VE_SUITE_HOME ) then
    echo $VE_SUITE_HOME
 else
-   setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_0.9.0/VE_Suite
+   setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_0.9.3/VE_Suite
 endif
 
 #determine the hosttype
@@ -96,9 +96,9 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
    cp -RD ${VJ_DEPS_DIR}/lib32/* ./vrJuggler-2.0.1/lib32/.
    cp -RD ${VJ_DEPS_DIR}/bin ./vrJuggler-2.0.1
-else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
+else if ( ${CFDHOSTTYPE} =~ SUSE_10.*_*64 ) then
    echo "Copying Juggler from:" ${VJ_BASE_DIR}
-   cp -Rd ${VJ_BASE_DIR}/lib64 ./vrJuggler-2.0.1/lib
+   cp -Rd ${VJ_BASE_DIR}/lib64 ./vrJuggler-2.0.1/lib64
    cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.0.1
    cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.0.1
    echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
@@ -135,13 +135,13 @@ else
    cp -Rd ${VTK_BASE_DIR}/lib/vtk/*.so ./bin
 endif
 
-echo "Copying ACE from:" ${ACE_HOME}
+echo "Copying ACE from:" ${TAO_HOME}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp -RD ${ACE_HOME}/IRIX32/lib/* ./bin
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
    cp -Rd ${ACE_HOME}/Linux64/lib/* ./bin
 else 
-   cp -Rd ${ACE_HOME}/Linux/lib/* ./bin
+   #cp -Rd ${TAO_HOME}/lib/* ./bin
 endif
 
 echo "Copying TAO from:" ${TAO_HOME}
@@ -156,10 +156,9 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
    cp -Rd ${TAO_HOME}/Linux64/bin/Naming_Service ./bin
    cp -Rd ${ACE_HOME}/Linux64/lib/* ./bin
 else 
-   cp -Rd ${TAO_HOME}/Linux/lib/* ./bin
-   cp -Rd ${TAO_HOME}/Linux/bin/NameService ./bin
-   cp -Rd ${TAO_HOME}/Linux/bin/Naming_Service ./bin
-   cp -Rd ${ACE_HOME}/Linux/lib/* ./bin
+   cp -Rd ${TAO_HOME}/lib/* ./bin
+   cp -Rd ${TAO_HOME}/bin/NameService ./bin
+   cp -Rd ${TAO_HOME}/bin/Naming_Service ./bin
 endif
 
 echo "Copying OSG from: " ${OSG_HOME}
