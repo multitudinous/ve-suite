@@ -175,7 +175,11 @@ VE_SceneGraph::cfdTempAnimation* cfdModel::GetAnimation()
    }
    return animation;
 }
-
+///////////////////////////////
+void cfdModel::PreFrameUpdate()
+{
+   vprDEBUG(vesDBG,1) << "cfdModel::PreFrameUpdate " <<std::endl;
+}
 ///////////////////////////////////////
 void cfdModel::CreateCfdDataSet( void )
 {

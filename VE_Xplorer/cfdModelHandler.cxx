@@ -424,6 +424,11 @@ void cfdModelHandler::InitScene( void )
 void cfdModelHandler::PreFrameUpdate( void )
 {
    bool updateScalarRange = false;
+
+   if(_activeModel)
+   {
+      _activeModel->PreFrameUpdate();
+   }
    
    if ( commandArray == NULL )
    {

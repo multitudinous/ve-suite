@@ -111,7 +111,10 @@ namespace VE_Xplorer
       public:
          cfdModel(VE_SceneGraph::cfdDCS *);
          ~cfdModel();
-      
+     
+         ///PreFrame callback to update the model based on commands from
+         ///VE-Conductor
+         void PreFrameUpdate(); 
          ///compare VjObs_i commandArray with its child's value
          virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){} 
 
