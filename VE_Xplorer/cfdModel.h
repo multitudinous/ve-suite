@@ -70,6 +70,7 @@ namespace VE_Xplorer
    class cfdDataSet;
    class fileInfo;
    class cfdFILE;
+   class cfdCommandArray;
 }
 
 #ifdef _OSG
@@ -101,15 +102,22 @@ enum Operation2Model
 };
 
 #include "VE_Installer/include/VEConfig.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdModel
+   class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
    {
       public:
          cfdModel(VE_SceneGraph::cfdDCS *);
          ~cfdModel();
       
+         ///compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){} 
+
+         ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand() {}
+
          void setModelNode( VE_SceneGraph::cfdNode * );
          void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
             
