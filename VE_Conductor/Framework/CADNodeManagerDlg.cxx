@@ -56,9 +56,9 @@ BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_MENU(CADNodeMenu::GEOM_PROPERTIES,CADNodeManagerDlg::_showPropertiesDialog)
    EVT_MENU(CADNodeMenu::GEOM_DELETE,CADNodeManagerDlg::_deleteNode)
    EVT_MENU(CADNodeMenu::GEOM_ASSEMBLY_CREATE,CADNodeManagerDlg::_createNewAssembly)
-   EVT_MENU(CADNodeMenu::GEOM_VEG_FILE_ADD,_addNodeFromVEGFile)
-   EVT_MENU(CADNodeMenu::GEOM_CAD_FILE_ADD,_addNodeFromCADFile)
-   EVT_MENU(CADNodeMenu::GEOM_CLONE_ADD,_cloneNode)
+   EVT_MENU(CADNodeMenu::GEOM_VEG_FILE_ADD,CADNodeManagerDlg::_addNodeFromVEGFile)
+   EVT_MENU(CADNodeMenu::GEOM_CAD_FILE_ADD,CADNodeManagerDlg::_addNodeFromCADFile)
+   EVT_MENU(CADNodeMenu::GEOM_CLONE_ADD,CADNodeManagerDlg::_cloneNode)
 END_EVENT_TABLE()
 
 

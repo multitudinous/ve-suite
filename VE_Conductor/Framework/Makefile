@@ -16,6 +16,9 @@ srcdir= .
 SRCS=\
    App.cpp \
    Avail_Modules.cpp \
+   CADNodeManagerDlg.cxx \
+   CADNodeMenu.cxx \
+   CADNodePropsDlg.cxx \
    Frame.cpp \
    moduleC.cpp \
    moduleS.cpp \
@@ -77,6 +80,7 @@ EXTRA_LIBS+= -lGUIPluginLib -lVE_XMLLib -lm -lpthread
 EXTRA_LIBS+= -lVE_ModelLib 
 EXTRA_LIBS+= -lVE_CADLib 
 EXTRA_LIBS+= -lVE_ShaderLib 
+EXTRA_LIBS+= -lVE_Conductor_UtilitiesLib
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
