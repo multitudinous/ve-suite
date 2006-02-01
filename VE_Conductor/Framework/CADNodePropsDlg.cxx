@@ -89,8 +89,7 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
 }
 
 /////////////////////////////////////////////////////
-CADNodePropertiesDlg
-::~CADNodePropertiesDlg()
+CADNodePropertiesDlg::~CADNodePropertiesDlg()
 {
 }
 #ifndef STAND_ALONE
@@ -298,7 +297,6 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
       for(size_t i = 0; i < nAttributes; i++)
       {
          attributeType = attributes.at(i)->GetAttributeType(); 
-         CADAttribute* newAttribute = attributes.at(i);
          if( attributeType == std::string("Material"))
          {   
             _availableMaterials.Add(attributes.at(i)->GetAttributeName().c_str());
