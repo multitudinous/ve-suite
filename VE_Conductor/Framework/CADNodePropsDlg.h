@@ -50,6 +50,10 @@ class wxComboBox;
 class wxListBox;
 class wxArrayString;
 
+namespace VE_XML
+{
+   class DataValuePair;
+}
 namespace VE_CAD
 {
    class CADNode;
@@ -79,6 +83,9 @@ public:
    ///\param xplorerCom The communication interface w/ xplorer.
    void SetVjObsPtr(VjObs_var xplorerCom);
 #endif
+
+   ///Clear out the current queue of instructions.
+   void ClearInstructions();
 
    ///Return the transform panel.
    wxPanel* GetTransformPanel();
@@ -115,6 +122,9 @@ protected:
 
 #ifndef STAND_ALONE
    VjObs_var _vjObsPtr;///<The VjObj ptr.
+   
+   ///Send the Command back to VE-Xplorer.
+   void _sendCommandsToXplorer();
 #endif
 
    wxNotebook* _propertyTabs;///<The tabs for modifying the node properties.
@@ -144,40 +154,8 @@ protected:
 
    VE_CAD::CADNode* _cadNode;///<The current CADNode.
 
+   std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 
-   /*void _buildTerrainUpdateButton();
-   void _buildFireUpdateButton();
-   void _buildTerrainPanel();
-   void _buildFirePanel();
-   void _onBrowseCallback(wxCommandEvent& event);
-   void _updateTerrainButtonCallback(wxCommandEvent& event);
-   void _updateFireButtonCallback(wxCommandEvent& event);
-   void _chooseFile(int style,int fileType);
-   
-   wxPanel* _terrainPanel;
-   wxTextCtrl* _heightMapFileCtrl;
-   wxTextCtrl* _terrainTextureFileCtrl;
-  
-   wxButton* _heightMapBrowseButton;
-   wxButton* _terrainTextureBrowseButton;
-
-   wxButton* _updateTerrainDataButton;
-   wxSpinCtrl* _treeCoverageCtrl;
-   wxSpinCtrl* _minNumberOfTreesCtrl;
-   wxSpinCtrl* _maxNumberOfTreesCtrl;
-   wxSpinCtrl* _treeGroupDiameterCtrl;
-   
-
-   //fire tab ctrls
-   wxPanel* _firePanel;
-   wxButton* _updateFireDataButton;
-   wxTextCtrl* _firePositionFileCtrl;
-   wxButton* _fireFileBrowseButton;
-   wxSpinCtrl* _fireSpreadRateCtrl;
-   wxSpinCtrl* _fireDurationCtrl;
-   wxSpinCtrl* _xFireOriginCtrl;
-   wxSpinCtrl* _yFireOriginCtrl;
-   wxSpinCtrl* _zFireOriginCtrl;*/
    DECLARE_EVENT_TABLE()
 
 };

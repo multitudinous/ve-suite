@@ -40,6 +40,9 @@
 #include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Open/XML/CAD/CADXMLReaderWriter.h"
 
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/filedlg.h>
@@ -408,3 +411,45 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& event)
        }
     }
 }
+#ifndef STAND_ALONE
+////////////////////////////////////////////////
+void CADNodeManagerDlg::_sendCommandsToXplorer()
+{
+   VE_XML::Command* cadCommand = new VE_XML::Command();
+
+   for(size_t i =0; i < _dataValuePairList.size(); i++)
+   {
+      cadCommand->AddDataValuePair(_dataValuePairList.at(i));
+   }
+
+   std::string commandString("returnString");
+   VE_CAD::CADXMLReaderWriter cadCommandWriter;
+   cadCommandWriter.UseStandaloneDOMDocumentManager();
+   cadCommandWriter.WriteToString();
+   cadCommandWriter.WriteXMLDocument(cadCommand,commandString,std::string("vecommands"));
+
+   char* tempDoc = new char[ commandString.size() + 1 ];
+   tempDoc = CORBA::string_dup( commandString.c_str() );
+
+   if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
+   {
+      try
+      {
+         // CORBA releases the allocated memory so we do not have to
+         _vjObsPtr->SetCommandString( tempDoc );
+      }
+      catch ( ... )
+      {
+         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         delete [] tempDoc;
+      }
+   }
+   else
+   {
+      delete [] tempDoc;
+   }
+   //Clean up memory
+   delete cadCommand;
+}
+#endif

@@ -51,6 +51,10 @@ namespace VE_CAD
 {
    class CADNode;
 }
+namespace VE_XML
+{
+   class DataValuePair;
+}
 #include <string>
 
 namespace VE_Conductor
@@ -85,6 +89,7 @@ public:
    ///\param rootNode The root CADNode to display.
    void SetRootCADNode(VE_CAD::CADNode* rootNode);
 protected:
+
    ///Create the dialog
    void _buildDialog();
    ///Create an image list
@@ -129,12 +134,18 @@ protected:
    ///Create a cloned node from an exisiting node in the tree.
    void _cloneNode(wxCommandEvent& event);
 #ifndef STAND_ALONE
+   ///Send CAD commands back to VE-Xplorer
+   void _sendCommandsToXplorer();
    VjObs_var _vjObsPtr;///<The VjObj ptr.
 #endif
    wxTreeCtrl* _geometryTree;///<The tree control.
    wxButton* _quitButton;///<The button to close the dialog.
    wxButton* _saveButton;///<The button to save the current CADHierarchy.
+
    CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
+
+   std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The DataValuePair s for the current command.
+
    VE_CAD::CADNode* _activeCADNode;///<The active CADNode.
    VE_CAD::CADNode* _rootNode;///<The active CADNode.
    VE_Conductor::GUI_Utilities::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.

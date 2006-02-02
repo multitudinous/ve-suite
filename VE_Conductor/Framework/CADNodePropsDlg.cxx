@@ -44,13 +44,17 @@
 #include <wx/listbox.h>
 #include <wx/arrstr.h>
 #include <wx/listbox.h>
+#include <wx/msgdlg.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
+#include "VE_Open/XML/CAD/CADXMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 using namespace VE_CAD;
 
@@ -329,11 +333,19 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& event)
       _cadNode->SetActiveAttribute(attributeName.GetData());
    }
 }
+//////////////////////////////////////////////
+void CADNodePropertiesDlg::ClearInstructions()
+{
+   ///deleting the command deletes the memory but
+   ///we need to insure that the vector is clear
+   _instructions.clear();
+}
 ///////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& event)
 {
    if(_cadNode)
    {
+      ClearInstructions();
       std::vector<double> temp;
 
       temp.push_back(_xTransformCtrl->GetValue());
@@ -356,6 +368,14 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& event)
       _cadNode->GetTransform()->GetRotationArray()->SetArray(temp);
 
       temp.clear();
+
+      VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
+      updateTransform->SetDataType("TRANSFORM");
+      updateTransform->SetDataName(std::string("CAD_TRANSFORM_UPDATE"));
+      updateTransform->SetDataTransform(_cadNode->GetTransform());
+      _instructions.push_back(updateTransform);
+
+      _sendCommandsToXplorer();
    }
 }
 ///////////////////////////////////////////////////////////////////
@@ -386,3 +406,48 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& event)
       currentTextCtrl->SetValue(fullPath);
    }
 }*/
+#ifndef STAND_ALONE
+///////////////////////////////////////////////////
+void CADNodePropertiesDlg::_sendCommandsToXplorer()
+{
+   VE_XML::Command* cadCommand = new VE_XML::Command();
+
+   for(size_t i =0; i < _instructions.size(); i++)
+   {
+      cadCommand->AddDataValuePair(_instructions.at(i));
+   }
+
+   cadCommand->SetCommandName("CAD_PROPERTY");
+
+   std::string commandString("returnString");
+   VE_CAD::CADXMLReaderWriter cadCommandWriter;
+   cadCommandWriter.UseStandaloneDOMDocumentManager();
+   cadCommandWriter.WriteToString();
+   cadCommandWriter.WriteXMLDocument(cadCommand,commandString,std::string("vecommand"));
+
+   char* tempDoc = new char[ commandString.size() + 1 ];
+   tempDoc = CORBA::string_dup( commandString.c_str() );
+
+   if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
+   {
+      try
+      {
+         // CORBA releases the allocated memory so we do not have to
+         _vjObsPtr->SetCommandString( tempDoc );
+      }
+      catch ( ... )
+      {
+         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         delete [] tempDoc;
+      }
+   }
+   else
+   {
+      delete [] tempDoc;
+   }
+   //Clean up memory
+   delete cadCommand;
+}
+#endif
+
