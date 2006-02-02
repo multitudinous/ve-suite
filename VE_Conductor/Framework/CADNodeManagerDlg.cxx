@@ -364,7 +364,8 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& event)
             {
                tagName = std::string("CADPart");
             }
-            cadReader.WriteXMLDocument(rootCADNode->GetNode(), std::string(dialog.GetPath()), tagName );
+            std::string outputFile = std::string(dialog.GetPath());
+            cadReader.WriteXMLDocument(rootCADNode->GetNode(), outputFile, tagName );
          }
       }
    }
