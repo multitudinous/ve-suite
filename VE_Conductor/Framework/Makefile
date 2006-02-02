@@ -43,11 +43,11 @@ SRCS=\
    UI_TransientDialog.cxx \
    UI_VertTab.cpp \
    UI_DesignParTab.cpp \
-   UI_ViewLocTab.cpp \
    UI_ModSelPanel.cpp \
    UI_ModelData.cpp \
    spinctld.cpp\
-   SoundsPane.cpp 
+   SoundsPane.cpp \
+   ViewLocPane.cxx
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)

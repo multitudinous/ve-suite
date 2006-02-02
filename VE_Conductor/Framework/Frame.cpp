@@ -44,6 +44,7 @@
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
+#include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/Framework/CADNodeManagerDlg.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/Command.h"
@@ -96,7 +97,7 @@ EVT_CLOSE(AppFrame::OnClose)
 
   EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
   EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
-  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
+//  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
   EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
   EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
   EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
@@ -147,6 +148,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    pelog = NULL;
    navPane = 0;
    soundsPane = 0;
+   viewlocPane = 0;
 
    _cadDialog = 0;
 
@@ -268,6 +270,12 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
    {
       navPane->Destroy();
       navPane = 0;
+   }
+
+   if ( viewlocPane )
+   {
+      viewlocPane->Destroy();
+      viewlocPane = 0;
    }
 
    if ( soundsPane )
@@ -1063,6 +1071,12 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
       navPane->Close( false );
    }
 
+   if ( viewlocPane )
+   {
+      viewlocPane->Close( false );
+   }
+
+
    if ( soundsPane )
    {
       soundsPane->Close( false );
@@ -1126,11 +1140,20 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////
 void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
 {
-   //if ( viewpointsPane == 0 )
+   if ( viewlocPane == 0 )
    {
       // create pane and set appropriate vars
+      viewlocPane = new ViewLocPane( vjobs.in(), domManager );
+      // Set DOMDocument
+      // viewlocPane->SetDOMManager( domManager );
+   }
+   else
+   {
+      // set pointer to corba object for comm
+      viewlocPane->SetCommInstance( vjobs.in() );
    }
    // now show it
+   viewlocPane->Show();
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED(event) )

@@ -79,9 +79,7 @@ END_EVENT_TABLE()
 ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
 :wxDialog(NULL, -1, wxString("Viewing Locations Pane"),
          wxDefaultPosition, wxDefaultSize, 
-		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP),
-wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize,
-          wxHSCROLL | wxVSCROLL)
+		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxHSCROLL|wxVSCROLL) & ~ wxSTAY_ON_TOP)
 {
 //   _parent = tControl;
    _numStoredLocations = 0;
@@ -102,7 +100,8 @@ wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize,
    int nUnitY=10;
    int nPixX = 5;
    int nPixY = 10;
-   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+//   SetScrollbar( nPixX, nPixY, nUnitX, nUnitY );
+   SetScrollPos( wxVERTICAL, nPixY );
    
    xplorerPtr = veEngine;
    domManager = domManagerIn;

@@ -110,8 +110,7 @@ protected:
    DECLARE_EVENT_TABLE()
 };*/
 
-class ViewLocPane : public wxDialog,
-public wxScrolledWindow
+class ViewLocPane : public wxDialog
 {
 public:
    ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );

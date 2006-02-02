@@ -94,6 +94,7 @@ class UI_Frame;
 class Network;
 class NavigationPane;
 class SoundsPane;
+class ViewLocPane;
 class CORBAServiceList;
 namespace VE_Conductor
 {
@@ -215,6 +216,7 @@ public:
 private:
    NavigationPane* navPane;
    SoundsPane* soundsPane;
+   ViewLocPane* viewlocPane;
 
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
 
