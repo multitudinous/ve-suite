@@ -279,12 +279,14 @@ void cfdVTKFileHandler::_getXMLPolyData()
 ////////////////////////////////////////////////
 void cfdVTKFileHandler::GetXMLImageData( void )
 {
+   std::cout<<"Reading image data..."<<std::endl;
    vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
    reader->SetFileName( _inFileName.c_str() );
    reader->Update();
    _dataSet = vtkImageData::New();
    _dataSet->ShallowCopy( reader->GetOutput() );
    reader->Delete();
+   std::cout<<"Finished Reading image data..."<<std::endl;
 }
 /////////////////////////////////////////////////////////////////////////////////
 bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,std::string outFileName)

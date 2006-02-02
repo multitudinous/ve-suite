@@ -103,11 +103,15 @@ SRCS=\
    cfdVectors.cxx \
    cfdRawNodeWriteTraverser.cxx \
    cfdWriteTraverser.cxx \
-   cfdObjectHandler.cxx
+   cfdObjectHandler.cxx \
+   CADEventHandler.cxx \
+   CADTransformEH.cxx 
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME) 
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
+
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib -VE_CADLib 
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk

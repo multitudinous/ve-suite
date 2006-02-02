@@ -103,12 +103,14 @@ SRCS=\
    cfdVectors.cxx \
    cfdRawNodeWriteTraverser.cxx \
    cfdWriteTraverser.cxx \
-   cfdObjectHandler.cxx
+   cfdObjectHandler.cxx \
+   CADEventHandler.cxx \
+   CADTransformEH.cxx 
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
-DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) -lVE_UtilLib
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib -VE_CADLib -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) -lVE_UtilLib
 DSO_PLUGIN_DEPS+= $(shell vrjuggler-config vrj --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 
