@@ -72,6 +72,21 @@ public:
    void SetTranslationArray( float* );
    void SetRotationArray( float* );
    void SetScaleArray( float* );
+
+   ///VE-XML compliant data setting
+
+   ///Set the translation array
+   ///\param array The array to set.
+   void SetTranslationArray( std::vector<double> array );
+
+   ///Set the rotation array
+   ///\param array The array to set.
+   void SetRotationArray( std::vector<double> array);
+
+   ///Set the scale array
+   ///\param array The array to set.
+   void SetScaleArray( std::vector<double> array );
+
    void SetRotationMatrix( gmtl::Matrix44f& );
 
    gmtl::Matrix44f GetMat( void );

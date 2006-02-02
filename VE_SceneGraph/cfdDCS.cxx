@@ -230,6 +230,78 @@ float* cfdDCS::GetScaleArray( void )
 {
    return this->_scale;
 }
+/////////////////////////////////////////////////////////////
+void cfdDCS::SetTranslationArray( std::vector<double> array )
+{
+   for (unsigned int i = 0; i < 3; i++ )
+   {
+      this->_translation[ i ] = array[ i ];
+   }
+#ifdef _PERFORMER
+
+   this->_dcs->setTrans( this->_translation[ 0 ],
+                       this->_translation[ 1 ],
+                       this->_translation[ 2 ] );
+#elif _OSG           
+   //update the specified transform
+   if ( _udcb )
+   {
+      _udcb->setTranslation(_translation);
+   }
+   
+#elif _OPENSG
+#endif
+}
+/////////////////////////////////////////////////////////////
+void cfdDCS::SetRotationArray( std::vector<double> array)
+{
+   for (unsigned int i = 0; i < 3; i++ )
+   {
+      this->_rotation[ i ] = array[ i ];
+   }
+#ifdef _PERFORMER
+   this->_dcs->setRot(this->_rotation[ 0 ],
+                    this->_rotation[ 1 ],
+                    this->_rotation[ 2 ]);
+#elif _OSG
+   if ( _udcb )
+   {
+      _udcb->setRotationDegreeAngles(_rotation[0],_rotation[1],_rotation[2]);
+      osg::Vec3f pitch(1,0,0);
+      osg::Vec3f roll(0,1,0);
+      osg::Vec3f yaw(0,0,1);
+   
+      osg::Matrixd rotateMat;
+
+      //rph              
+      rotateMat.makeRotate(_rotation[2],roll,
+                         _rotation[1],pitch,
+                         _rotation[0],yaw);
+
+      rotateMat.get( dcsQuat );
+   }
+#elif _OPENSG
+#endif
+}
+/////////////////////////////////////////////////////////////
+void cfdDCS::SetScaleArray( std::vector<double> array )
+{
+   for (unsigned int i = 0; i < 3; i++ )
+   {
+      this->_scale[ i ] = array[ i ];
+   }
+#ifdef _PERFORMER
+   this->_dcs->setScale( this->_scale[ 0 ],
+                           this->_scale[ 1 ],
+                           this->_scale[ 2 ] );
+#elif _OSG
+   if(_udcb)
+   {
+      _udcb->setScaleValues(_scale);
+   }
+#elif _OPENSG
+#endif
+}
 ////////////////////////////////////////////////
 void cfdDCS::SetTranslationArray( float* trans )
 {
