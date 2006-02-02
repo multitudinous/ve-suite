@@ -77,9 +77,11 @@ END_EVENT_TABLE()
 //Constructor//
 ///////////////
 ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
-:wxDialog(NULL, -1, wxString("Viewing Locations Pane"))
-//, wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize,
-//          wxHSCROLL | wxVSCROLL)
+:wxDialog(NULL, -1, wxString("Viewing Locations Pane"),
+         wxDefaultPosition, wxDefaultSize, 
+		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP),
+wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize,
+          wxHSCROLL | wxVSCROLL)
 {
 //   _parent = tControl;
    _numStoredLocations = 0;
@@ -100,13 +102,12 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
    int nUnitY=10;
    int nPixX = 5;
    int nPixY = 10;
-//   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
    
-   _buildPage();
-
-
    xplorerPtr = veEngine;
    domManager = domManagerIn;
+
+   _buildPage();
 
 }
 
@@ -119,10 +120,36 @@ ViewLocPane::~ViewLocPane( void )
 //////////////////////////////
 void ViewLocPane::_buildPage()
 {
+   try
+   {
+      if ( !CORBA::is_nil( xplorerPtr ) )
+      {
+std::cout << "I Made It Here0 " << std::endl;
+         num_viewlocs = xplorerPtr->getIsoValue();
+      }
+      std::cout << "number of viewing locations: "<< num_viewlocs << std::endl;
+
+std::cout << "I Made It Here1 " << std::endl;
+
+      if ( !CORBA::is_nil( xplorerPtr ) )
+      {
+std::cout << "I Made It Here2 " << std::endl;
+
+         flyThroughArray = xplorerPtr->getDouble2D( "getFlythroughData" );
+std::cout << "I Made It Here3 " << std::endl;
+
+      }
+      std::cout << "number of flythroughs: "<< flyThroughArray->length() << std::endl;
+   }
+   catch ( ... )
+   {
+      wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                     "Communication Failure", wxOK | wxICON_INFORMATION );
+   }
 
    _numStoredLocations = num_viewlocs;
 
-   for (CORBA::ULong j=0; j<length(); j++ )
+   for (CORBA::ULong j=0; j<flyThroughArray->length(); j++ )
    {
       std::vector<int> tempPts;
       for (CORBA::ULong k=0; k<flyThroughArray[j].length(); k++ )
@@ -143,7 +170,6 @@ void ViewLocPane::_buildPage()
 
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	_numViewLocLocal = _numStoredLocations;
 	_vwptsInActiveFlyLocal = _vwptsInActiveFly;
 	_numStoredFlythroughsLocal = _numStoredFlythroughs;
 	
@@ -229,7 +255,7 @@ void ViewLocPane::_buildPage()
 
    wxStaticText* _speedctrlLabel = new wxStaticText(this, -1, wxT("Approximate Linear Speed in feet/second"));
 
-   wxSlider* _speedCtrlSlider = new wxSlider(this, VIEWLOC_SPEED_CONTROL_SLIDER,10,0,100,
+   _speedCtrlSlider = new wxSlider(this, VIEWLOC_SPEED_CONTROL_SLIDER,10,0,100,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
@@ -440,9 +466,9 @@ void ViewLocPane::_rebuildNameArrays( void )
    if( !flyThroughList.empty() )
    {
       _numStoredFlythroughs = flyThroughList.size();
-      _flythroughName = new wxString[ numStoredFlythroughs ];
+      _flythroughName = new wxString[ _numStoredFlythroughs ];
 
-      for( unsigned int i=0; i<numStoredFlythroughs; i++)
+      for( unsigned int i=0; i<_numStoredFlythroughs; i++)
       {
          std::ostringstream flynamestream;
          flynamestream << "Flythrough " << i ;
@@ -452,7 +478,7 @@ void ViewLocPane::_rebuildNameArrays( void )
    }
    else
    {
-      numStoredFlythroughs = 1;
+      _numStoredFlythroughs = 1;
       _flythroughName = new wxString[1];
       _flythroughName[0] = wxT("No Flythroughs Built");
       _vwptsInActiveFly = 1;
@@ -494,23 +520,23 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
    flyThroughList.clear();
    VjObs::double2DArray_var  flyThroughArray;
 
-   if ( !CORBA::is_nil( ((UI_Tabs *)_parent)->server_ref ) )
+   if ( !CORBA::is_nil( xplorerPtr ) )
    {
       VjObs::obj_pd_var tempTest;
       int tempTestlocal = 0;
       
       while ( tempTestlocal == 0 )
       {
-         tempTest = ((UI_Tabs *)_parent)->server_ref->getDouble1D( "getCompletionTest" );
+         tempTest = xplorerPtr->getDouble1D( "getCompletionTest" );
          tempTestlocal = (int)tempTest[ 0 ];       
          wxMilliSleep( 50 );
       }
-      _numStoredLocations = ((UI_Tabs *)_parent)->server_ref->getIsoValue();
+      _numStoredLocations = xplorerPtr->getIsoValue();
    }
  
-   if ( !CORBA::is_nil( ((UI_Tabs *)_parent)->server_ref ) )
+   if ( !CORBA::is_nil( xplorerPtr ) )
    {
-      flyThroughArray = ((UI_Tabs *)_parent)->server_ref->getDouble2D( "getFlythroughData" );
+      flyThroughArray = xplorerPtr->getDouble2D( "getFlythroughData" );
    }
 
    for (CORBA::ULong j=0; j<flyThroughArray->length(); j++ )
@@ -524,7 +550,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
       tempPts.clear();
    }
 
-   numView_LocsGlobal = _numStoredLocations;
+   _numView_LocsGlobal = _numStoredLocations;
  
    _rebuildNameArrays();
    if ( flyThroughList.size() > tempindex && flyThroughList.size() != 0 )
@@ -574,7 +600,7 @@ void ViewLocPane::_onCancelNewVPName(wxCommandEvent& WXUNUSED(event))
 
 void ViewLocPane::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
 {
-   if ( numView_LocsGlobal > 0 )
+   if ( _numView_LocsGlobal > 0 )
    {
       for( unsigned int i=0;i<_numStoredLocations;i++ )
 	   {
@@ -598,7 +624,7 @@ void ViewLocPane::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
 
 void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
 {
-   if ( numView_LocsGlobal > 0 )
+   if ( _numView_LocsGlobal > 0 )
    {
       for( unsigned int i=0;i<_numStoredLocations;i++ )
 	   {
@@ -619,7 +645,7 @@ void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
 
 void ViewLocPane::_onBuildNewFlyButton(wxCommandEvent& WXUNUSED(event))
 {
-   if ( numView_LocsGlobal > 0 )
+   if ( _numView_LocsGlobal > 0 )
    {
       //((UI_Tabs *)_parent)->cId = ADD_NEW_FLYTHROUGH;
       //((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -666,7 +692,7 @@ void ViewLocPane::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
 
 void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   if ( numView_LocsGlobal > 0 )
+   if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -701,7 +727,7 @@ void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
 
 void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   if ( numView_LocsGlobal > 0 )
+   if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -744,7 +770,7 @@ void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
 
 void ViewLocPane::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   if ( numView_LocsGlobal > 0 )
+   if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -802,7 +828,7 @@ void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
 
 void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
 {
-   if ( numView_LocsGlobal > 0 )
+   if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -843,17 +869,12 @@ void ViewLocPane::_onSpeedChange( wxScrollEvent& WXUNUSED(event) )
    //((UI_Tabs *)_parent)->sendDataArrayToServer();
    dataValueName = "CHANGE_MOVEMENT_SPEED";
    //cIso_value = _speedCtrlSlider->GetValue();
-   commandInputs.push_back( i );
+   commandInputs.push_back( _speedCtrlSlider->GetValue() );
    SendCommandsToXplorer();
 }
 
 
 ///////////////////////////////////////
-ViewLocPane::~ViewLocPane()
-{
-
-}
-
 
 void ViewLocPane::_rebuildPage( void )
 { 
@@ -907,19 +928,24 @@ void ViewLocPane::_resetSelections( void )
 
 }
 
-void NavigationPane::SendCommandsToXplorer( void )
+void ViewLocPane::SetCommInstance( VjObs_ptr veEngine )
+{
+   xplorerPtr = veEngine;
+}
+
+void ViewLocPane::SendCommandsToXplorer( void )
 {
    // Now need to construct domdocument and populate it with the new vecommand
    domManager->CreateCommandDocument();
    doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( doc, std::string("FLOAT") );
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("LONG") );
    //VE_XML::OneDIntArray* dataValueArray = new VE_XML::OneDIntArray( commandInputs.size() )
    //dataValuePair->SetDataName( dataValueName );
    //dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    dataValuePair->SetData( dataValueName, commandInputs );
-   VE_XML::Command* veCommand = new VE_XML::Command( doc );
+   VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("ViewLoc_Data") );
    veCommand->AddDataValuePair( dataValuePair );
    doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );

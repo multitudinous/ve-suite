@@ -74,7 +74,6 @@ namespace VE_XML
    class DOMDocumentManager;
 }
 
-
 enum VIEWLOC_TAB_IDS{
    VIEWLOC_LOAD_BUTTON,
    VIEWLOC_ACCEPTNEWVPNAME_BUTTON,
@@ -111,8 +110,8 @@ protected:
    DECLARE_EVENT_TABLE()
 };*/
 
-class ViewLocPane : public wxDialog
-//, public wxScrolledWindow
+class ViewLocPane : public wxDialog,
+public wxScrolledWindow
 {
 public:
    ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
@@ -121,6 +120,9 @@ public:
    unsigned int _numStoredLocations;
    unsigned int _numStoredFlythroughs;
    unsigned int _vwptsInActiveFly;
+   unsigned int _numViewLocLocal;
+   unsigned int _vwptsInActiveFlyLocal;
+   unsigned int _numStoredFlythroughsLocal;
    std::vector< std::vector <int> > flyThroughList;
    wxString* _locationName;
    wxString* _flythroughName;
@@ -128,7 +130,12 @@ public:
 	wxString* _locNamesLocal;
 	wxString* _activeFlyNamesLocal;
 	wxString* _flythroughNamesLocal;
+   void SetCommInstance( VjObs_ptr veEngine );
    void SendCommandsToXplorer( void );
+
+   short    num_viewlocs;
+   VjObs::scalar_p_var   viewlocNameArray;
+   VjObs::double2DArray_var  flyThroughArray;
 
 protected:
    void _buildPage( void );
@@ -150,6 +157,16 @@ protected:
    std::vector< long > commandInputs;
 
    wxWindow* _parent;
+
+   wxComboBox* _activeflySel;
+   wxComboBox* _movetovwptSel;
+   wxComboBox* _removevwptSel;
+   wxComboBox* _addvptoflySel;
+   wxListBox* _flybuilderListBox;
+   wxComboBox* _insertvpinflySel;
+   wxComboBox* _removevpfromflySel;
+   wxComboBox* _deleteflySel;
+   wxSlider* _speedCtrlSlider;
 
    //the controls
    void _onLoad(wxCommandEvent& event);
