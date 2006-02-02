@@ -38,6 +38,9 @@
 #include <vtkImageData.h>
 //#include <vtkXMLImageDataReader.h>
 #include <vtkFloatArray.h>
+#include <vtkIntArray.h>
+#include <vtkUnsignedIntArray.h>
+#include <vtkUnsignedCharArray.h>
 //#include <vtkDataArray.h>
 #include <vtkPointData.h>
 #include <sstream>
@@ -193,10 +196,21 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       {
          std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : There are too many scalars in this texture " << std::endl;
       }
+      else if(flowImage->GetPointData()->GetNumberOfArrays() == 0)
+      {
+         std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : No scalars in this texture " << std::endl;
+      }
 
-      vtkFloatArray* flowData = dynamic_cast< vtkFloatArray* >( flowImage->GetPointData()->GetArray( 0 ) );
+      std::cout<<"2: "<<flowImage->GetPointData()->GetNumberOfArrays()<<std::endl;
+      std::cout<<"3: "<<flowImage->GetPointData()->GetArray(0)->GetDataType()<<std::endl;
+      vtkDataArray* flowData = dynamic_cast< vtkDataArray* >( flowImage->GetPointData()->GetArray( 0 ) );
+      if(!flowData)
+      {
+         std::cout<<"no flowdata!!"<<std::endl;
+      }
       dataName = flowData->GetName();
 
+     std::cout<<"3"<<std::endl;
       DataType curType;
       //read the file type
       if ( flowData->GetNumberOfComponents() == 1 )
@@ -217,6 +231,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
                         " There are too many components in this texture " << std::endl;
       }
 
+     std::cout<<"4"<<std::endl;
       //data range(magnitude) for scalars
       //ignore this value for vectors
       ScalarRange newRange;
@@ -228,10 +243,12 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       _range[0] = newRange.range[0];
       _range[1] = newRange.range[1];
 
+     std::cout<<"5"<<std::endl;
       _transientRange[0] = (_range[0] < _transientRange[0])?_range[0]:_transientRange[0];
       _transientRange[1] = (_range[1] > _transientRange[1])?_range[1]:_transientRange[1];
       //bounding box
       double* bbox = flowImage->GetBounds(); 
+     std::cout<<"6"<<std::endl;
       for ( unsigned int i = 0; i < 6; ++i )
       {
          _bbox[ i ] = bbox[ i ];
@@ -242,6 +259,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          _resolution = new int[3];
       }
 
+     std::cout<<"7"<<std::endl;
       //the dimensions  
       flowImage->GetDimensions( &*_resolution );
 
@@ -253,6 +271,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       double R,G,B,A;
       float alpha = 0;
       
+     std::cout<<"8"<<std::endl;
       int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
       unsigned char* pixels = 0;
       float invSRange = 1.0/(_range[1]-_range[0]);
@@ -315,6 +334,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
             }
          }
       }
+     std::cout<<"9"<<std::endl;
       //add the field
       _dataFields.push_back(pixels);
       flowImage->Delete();
