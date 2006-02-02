@@ -55,16 +55,23 @@ public:
    ///Get the i'th point from the polygon
    ///\param i i'th point
    wxPoint* GetPoint( size_t i );
+   ///Add new point to the polygon
+   ///\param newPoint The point to be added
+   void SetPoint( wxPoint newPoint );
+   size_t GetNumberOfPoints( void );
    ///Translates this polygon from oldpoly by x and y
    ///\param oldpoly polygon that you are translating from
    ///\param x x translation distance
    ///\param y y translation distance
    void TransPoly( Polygon oldpoly, int x, int y );
    double nearpnt( wxPoint pt, Polygon poly, Polygon& Near);
-   int intersect( Polygon l1, Polygon l2 );
-   int inside( wxPoint pt, Polygon poly );
+   ///Is this point inside this polygon
+   int inside( wxPoint pt );
+   double nearpnt( wxPoint pt, Polygon& Near );
+   void TransPoly( int x, int y, Polygon& newpoly );
 
 private:
+   int intersect( Polygon l1, Polygon l2 );
    std::vector< wxPoint > poly;
 };
 }

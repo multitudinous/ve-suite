@@ -37,11 +37,6 @@
 #include "VE_Conductor/Framework/UIDialog.h"
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
 
-#include "VE_Conductor/Utilities/Tag.h"
-#include "VE_Conductor/Utilities/Polygon.h"
-#include "VE_Conductor/Utilities/Module.h"
-#include "VE_Conductor/Utilities/Link.h"
-
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
 
@@ -115,9 +110,7 @@ Network::Network(wxWindow* parent, int id)
 
 Network::~Network()
 {
-   //std::map< int, Module >::iterator iter;
-   for ( unsigned int i=0; i< links.size(); i++)
-      delete links[i];
+   links.clear();
 
    /*for (iter=modules.begin(); iter!=modules.end(); iter++)
    {
@@ -166,7 +159,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
       i=iter->first;
       temp.x = evtpos.x;
       temp.y = evtpos.y;
-      if (inside(temp, modules[i].poly))
+      if ( modules[i].GetPolygon()->inside( temp ) )
 	   {
 	      m_selMod = i;
 	      bbox = modules[i].GetPlugin()->GetBBox();
@@ -209,7 +202,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
    if (m_selLink>=0)
    {
       for (unsigned int i=0; i<links[m_selLink].GetPoints()->size(); i++)
-	      if (computenorm( evtpos, links[m_selLink].GetPoint( i ) )<=3)
+	      if (computenorm( evtpos, *(links[m_selLink].GetPoint( i )) )<=3)
 	      {
 	         m_selLinkCon=i;
 	         break;
@@ -219,11 +212,11 @@ void Network::OnMLeftDown(wxMouseEvent& event)
    //Forth, check if any tag is selected
    for ( unsigned int i=0; i<tags.size(); i++)
    {
-      if (tags[i].box.Inside(evtpos))
+      if ( tags[i].GetBoundingBox()->Inside(evtpos) )
 	   {
 	      m_selTag=i;
-	      tag_rpt.x = evtpos.x - tags[i].box.x;
-	      tag_rpt.y = evtpos.y - tags[i].box.y;
+	      tag_rpt.x = evtpos.x - tags[i].GetBoundingBox()->x;
+	      tag_rpt.y = evtpos.y - tags[i].GetBoundingBox()->y;
 	      break;
 	   }
    }
@@ -231,13 +224,13 @@ void Network::OnMLeftDown(wxMouseEvent& event)
    //At last, check if any tag connector is selected
    for (unsigned int i=0; i<tags.size(); i++)
    {
-      if (computenorm(evtpos, tags[i].cons[0])<=3)
+      if (computenorm( evtpos, *(tags[i].GetConnectorsPoint( 0 )) )<=3)
 	   {
 	      m_selTag=i;
 	      m_selTagCon=0;
 	      break;
 	   }
-      if (computenorm(evtpos, tags[i].cons[1])<=3)
+      if (computenorm(evtpos, *(tags[i].GetConnectorsPoint( 1 )) ) <=3)
 	   {
 	      m_selTag=i;
 	      m_selTagCon=1;
@@ -283,8 +276,8 @@ void Network::OnMouseMove(wxMouseEvent& event)
 	      m_selLinkCon = -1;
 	      if (m_selLink>=0)
 	      {
-	         for ( unsigned int i=0; i<links[m_selLink]->GetPoints()->size(); i++)
-		         if (computenorm(evtpos, links[m_selLink]->cons[i])<=3)
+	         for ( unsigned int i=0; i<links[m_selLink].GetPoints()->size(); i++)
+		         if ( computenorm( evtpos, *(links[m_selLink].GetPoint( i )) ) <= 3 )
 		         {
 		            m_selLinkCon=i;
 		            break;
@@ -295,9 +288,9 @@ void Network::OnMouseMove(wxMouseEvent& event)
 	      m_selTagCon = -1;
 	      if (m_selTag>=0)
 	      {
-	         if (computenorm(evtpos, tags[m_selTag].cons[0])<=3)
+	         if (computenorm( evtpos, *(tags[m_selTag].GetConnectorsPoint( 0 )) ) <= 3 )
 		         m_selTagCon=0;
-	         if (computenorm(evtpos, tags[m_selTag].cons[1])<=3)
+	         if (computenorm( evtpos, *(tags[m_selTag].GetConnectorsPoint( 1 )) ) <= 3 )
 		         m_selTagCon=1;
 	      }
 	   }
@@ -506,118 +499,127 @@ void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////
 void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
 {
-   POLY linkline, temp, Near;
+   Polygon linkline, Near;
    wxRect bbox;
    std::vector<wxPoint> ports;  
    int n;
    int num;
   
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-   DrawLink(links[m_selLink], false);
+   links[m_selLink].DrawLink( false );
 
-  n = links[m_selLink]->cons.size()+2;
-  linkline.resize(n);
+   //n = links[m_selLink].GetNumberOfPoints()+2;
+   //linkline.resize(n);
 
-  bbox = modules[links[m_selLink]->Fr_mod].GetPlugin()->GetBBox();
+   unsigned long fromModuleID = links[m_selLink].GetFromModule();
+   bbox = modules[ fromModuleID ].GetPlugin()->GetBBox();  
+   num = modules[ fromModuleID ].GetPlugin()->GetNumOports();
+   ports.resize(num);
+   modules[ fromModuleID ].GetPlugin()->GetOPorts(ports);
+
+   unsigned int fromPort = links[m_selLink].GetFromPort();
+   linkline.GetPoint( 0 )->x = bbox.x+ports[ fromPort ].x;
+   linkline.GetPoint( 0 )->y = bbox.y+ports[ fromPort ].y;
+
+  size_t i;
+  for ( i=0; i< links[m_selLink].GetPoints()->size(); i++ )
+    *(linkline.GetPoint( i+1 )) = *(links[ m_selLink ].GetPoint( i ));
+   
+   unsigned long toModuleID = links[m_selLink].GetToModule();
+   bbox = modules[ toModuleID ].GetPlugin()->GetBBox();
+   num = modules[ toModuleID ].GetPlugin()->GetNumIports();	
+   ports.resize(num);
+   modules[ toModuleID ].GetPlugin()->GetIPorts(ports);
+
+   unsigned int toPort = links[m_selLink].GetToPort();
+   linkline.GetPoint( n-1 )->x = bbox.x+ports[ toPort ].x;
+   linkline.GetPoint( n-1 )->y = bbox.y+ports[ toPort ].y;
   
-  num = modules[links[m_selLink]->Fr_mod].GetPlugin()->GetNumOports();
-  ports.resize(num);
-  modules[links[m_selLink]->Fr_mod].GetPlugin()->GetOPorts(ports);
+   linkline.nearpnt( action_point, Near );
 
-  linkline[0].x = bbox.x+ports[links[m_selLink]->Fr_port].x;
-  linkline[0].y = bbox.y+ports[links[m_selLink]->Fr_port].y;
-
-  unsigned int i ,j;
-  for ( i=0; i<links[m_selLink].GetPoints()->size(); i++)
-    linkline[i+1] = links[m_selLink].GetPoint( i );
-
-  bbox = modules[links[m_selLink]->To_mod].GetPlugin()->GetBBox();
-
-  num = modules[links[m_selLink]->To_mod].GetPlugin()->GetNumIports();	
-  ports.resize(num);
-  modules[links[m_selLink]->To_mod].GetPlugin()->GetIPorts(ports);
-  int tempi;
-  tempi = links[m_selLink]->To_port;
-  linkline[n-1].x = bbox.x+ports[tempi].x;
-  tempi = links[m_selLink]->To_port;
-  linkline[n-1].y = bbox.y+ports[tempi].y;
-  
-  nearpnt(action_point, linkline, Near);
-
-   for ( i=0; i<linkline.size()-1; i++)
-      if(  (linkline[i].x <= Near[0].x && linkline[i+1].x>=Near[0].x)
-	         ||(linkline[i].x>=Near[0].x && linkline[i+1].x<=Near[0].x))
+   for ( i=0; i < linkline.GetNumberOfPoints()-1; i++)
+      if (  ( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x && 
+            linkline.GetPoint( i+1 )->x >= Near.GetPoint( 0 )->x ) ||
+            ( linkline.GetPoint( i )->x >= Near.GetPoint( 0 )->x && 
+            linkline.GetPoint( i+1 )->x <= Near.GetPoint( 0 )->x )
+         )
          break;
 
-   for ( j=1; j<linkline.size()-1; j++)
+   size_t j;
+   Polygon temp;
+   for ( j=1; j< linkline.GetNumberOfPoints()-1; ++j )
    {
-      if (j-1==i)
-	      temp.push_back(Near[0]);
-      temp.push_back(linkline[j]);
+      if ( j-1 == i )
+	      temp.SetPoint( *(Near.GetPoint( 0 )) );
+	   temp.SetPoint( *(linkline.GetPoint( j )) );
    }
 
-   if (j==1 && i==0) //Between the first link con and the port, and no cons yet
-      temp.push_back(Near[0]);
+   //Between the first link con and the port, and no cons yet
+   if (j==1 && i==0) 
+      temp.SetPoint( *(Near.GetPoint( 0 )) );
 
-   if (j==linkline.size()-1 && i==(j-1) && i!=0) //between the port and the las con
-      temp.push_back(Near[0]);
+   //between the port and the las con
+   if (j==linkline.GetNumberOfPoints()-1 && i==(j-1) && i!=0) 
+      temp.SetPoint( *(Near.GetPoint( 0 )) );
   
-  *(links[ m_selLink ]->GetPoints())=temp;
+  *(links[ m_selLink ].GetPolygon()) = temp;
   links[m_selLink].DrawLinkCon( true );
   m_selLink = -1;
   m_selLinkCon = -1;
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
     
 }
-
 /////////////////////////////////////////////////////
 void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
 {
-  wxClientDC dc(this);
-  PrepareDC(dc);
-  
-  dc.SetUserScale( m_xUserScale, m_yUserScale );
-  int w, h;
+   wxClientDC dc(this);
+   PrepareDC(dc);
 
-  wxString tag_text;
+   dc.SetUserScale( m_xUserScale, m_yUserScale );
 
-  tag_text=tags[m_selTag].text;
-  wxTextEntryDialog dialog(this,_T("Tag Editor"), _T("Please enter the text for the tag : "),tag_text, wxOK);
-  
-  if (dialog.ShowModal() == wxID_OK)
-    tag_text=dialog.GetValue();
+   wxString tag_text = *( tags[ m_selTag ].GetTagText() );
+   wxTextEntryDialog dialog(this,_T("Tag Editor"), _T("Please enter the text for the tag : "),tag_text, wxOK);
 
-  
-  dc.GetTextExtent(tag_text, &w, &h);
-  
-  tags[m_selTag].text = tag_text;
-  tags[m_selTag].box.width = w;
-  tags[m_selTag].box.height = h;
-  tags[m_selTag].poly = CalcTagPoly(tags[m_selTag]);
-  //  Refresh(false);
-  m_selTag = -1;
+   if (dialog.ShowModal() == wxID_OK)
+   {
+      tag_text=dialog.GetValue();
+   }
+
+   int w, h;
+   dc.GetTextExtent( tag_text, &w, &h);
+
+   *(tags[m_selTag].GetTagText()) = tag_text;
+   tags[m_selTag].GetBoundingBox()->width = w;
+   tags[m_selTag].GetBoundingBox()->height = h;
+   tags[m_selTag].CalcTagPoly();
+   //  Refresh(false);
+   m_selTag = -1;
 }
 
 /////////////////////////////////////////////////////
 void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 {
-  std::vector< Tag >::iterator iter;
-  int answer , i;
-
-  answer=wxMessageBox("Do you really want to delete this tag?", "Confirmation", wxYES_NO);
-  if (answer!=wxYES)
-    return;
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-  for (iter=tags.begin(), i=0; iter!=tags.end(); iter++, i++)
-    if (i==m_selTag)
+   int answer = wxMessageBox("Do you really want to delete this tag?", "Confirmation", wxYES_NO);
+   if ( answer != wxYES )
+   {
+      return;
+   }
+   
+   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+   
+   std::vector< Tag >::iterator iter;
+   int i;
+   for ( iter = tags.begin(), i=0; iter != tags.end(); iter++, i++)
+      if ( i == m_selTag )
       {
-	tags.erase(iter);
-	m_selTag=-1;
-	break;
+         tags.erase( iter );
+         m_selTag=-1;
+         break;
       }
-  while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-  //  Refresh(false);
-  ReDrawAll();
+   
+   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+   //  Refresh(false);
+   ReDrawAll();
 }
 
 /////////////////////////////////////////////////////
@@ -625,21 +627,22 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
 {
   std::vector< Link >::iterator iter;
   std::vector< Link >::iterator iter2;
-  int answer, i;
-  std::map< int, Module >::iterator miter;
+  int i;
 
-  answer=wxMessageBox("Do you really want to delete this link?", "Confirmation", wxYES_NO);
+  int answer=wxMessageBox("Do you really want to delete this link?", "Confirmation", wxYES_NO);
   if (answer!=wxYES)
     return;
   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+
+   std::map< int, Module >::iterator miter;
    for (miter=modules.begin(); miter!=modules.end(); miter++)
    {
       i=miter->first;
       unsigned int j;
-      for (iter2=modules[i].links.begin(), j=0; j<modules[i].links.size(); iter2++, j++)
-	      if (modules[i].links[j]==links[m_selLink])
+      for (iter2=modules[i].GetLinks()->begin(), j=0; j<modules[i].GetLinks()->size(); iter2++, j++)
+	      if ( modules[i].GetLink( j ) == &(links[ m_selLink ]) )
 	      {
-	         modules[i].links.erase(iter2);
+	         modules[i].RemoveLink( j );
 	         break;
 	      }
    }
@@ -651,6 +654,7 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
 	      m_selLink=-1;
 	      break;
       }
+
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
    //  Refresh(false);
    ReDrawAll();
@@ -691,37 +695,40 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
    std::map< int, Module >::iterator iter;
    std::vector< Link >::iterator iter2;
    std::vector< Link >::iterator iter3;
-   int answer, k;
    Link del_link;
 
-   answer=wxMessageBox("Do you really want to delete this module?", "Confirmation", wxYES_NO);
+   int answer=wxMessageBox("Do you really want to delete this module?", "Confirmation", wxYES_NO);
    if (answer!=wxYES)
       return;
 
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
 
    //first, delete all the links connects to it
-   while (modules[m_selMod].links.size()>0)
+   while ( modules[m_selMod].GetNumberOfLinks() > 0 )
    {
-      del_link = modules[m_selMod].links[0];
-      for (iter=modules.begin(); iter!=modules.end(); iter++)
-	   {
-	      k=iter->first;
-         unsigned int l;
-	      for ( iter2=modules[k].links.begin(), l=0; 
-	            l<modules[k].links.size(); iter2++, l++)
-	         if (modules[k].links[l]==del_link)
-	         {
-		         modules[k].links.erase(iter2);
-		         break;
-	         }
-	   }
-      
+      del_link = *(modules[m_selMod].GetLink( 0 ));
+
+      int k;
+      for ( k = 0; k < modules[ del_link.GetToModule() ].GetNumberOfLinks(); ++k )
+      {
+         Link* tempLink = modules[ del_link.GetToModule() ].GetLink( k );
+         if ( (tempLink->GetToPort() == del_link.GetToPort()) &&
+               (del_link.GetFromModule() == tempLink->GetFromModule())
+            )
+         {
+		      modules[ del_link.GetToModule() ].RemoveLink( k );
+		      break;
+         }
+      }
+
       for (iter3=links.begin(), k=0; iter3!=links.end(); iter3++, k++)
-	      if (links[k]==del_link)
-	      {
+         if ( (links[ k ].GetToPort() == del_link.GetToPort()) &&
+               (del_link.GetFromModule() == links[ k ].GetFromModule()) &&
+               (del_link.GetToModule() == links[ k ].GetToModule()) &&
+               (del_link.GetFromPort() == links[ k ].GetFromPort())
+            )
+         {
 	         links.erase(iter3);
-	         del_link = NULL;
 	         break;
 	      } 
    }
@@ -759,7 +766,7 @@ int Network::SelectMod( int x, int y )
       temp.x = x;
       temp.y = y;
       
-      if ( inside( temp, modules[i].poly ) )
+      if ( modules[i].GetPolygon()->inside( temp ) )
 	   {
          // I think...this means we have already been 
          // through here and is the same module selected -- mccdo
@@ -793,7 +800,7 @@ int Network::SelectLink(int x, int y)
    temp.y = y;
    for ( unsigned int i=0; i<links.size(); i++)
    {
-      if (inside(temp, links[i]->poly))
+      if ( links[i].GetPolygon()->inside( temp ) )
 	   {
 	      links[i].DrawLinkCon( true ); //draw link connectors
 	      m_selLink = i;
@@ -821,11 +828,11 @@ int Network::SelectTag(int x, int y)
    temp.y = y;
    for ( unsigned int i=0; i<tags.size(); i++)
    {
-      if (inside(temp, tags[i].poly))
+      if ( tags[i].GetPolygon()->inside( temp ) )
 	   {
 	      if (m_selTag == (int)i)
 	         return i;
-	      DrawTagCon(tags[i], true);
+	      tags[i].DrawTagCon( true );
 	      m_selTag = i;
 	      return i;
 	   }
@@ -836,7 +843,7 @@ int Network::SelectTag(int x, int y)
 /////////////////////////////////////////////////
 void Network::UnSelectTag(wxDC &dc)
 {
-  DrawTagCon(tags[m_selTag], false);
+  tags[m_selTag].DrawTagCon( false );
   
   ReDraw(dc);
   m_selTag = -1;
@@ -977,8 +984,8 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
     }
 
   //wipe off the old link connects with this module
-  for (i=0; i<(int)modules[mod].links.size(); i++)
-    DrawLink(modules[mod].links[i], false);
+  for ( i=0; i < modules[mod].GetNumberOfLinks(); i++)
+    modules[mod].GetLink( i )->DrawLink( false );
     
   cur_module->SetPos(wxPoint(x-relative_pt.x, y-relative_pt.y));
   
@@ -1019,7 +1026,6 @@ void Network::DropModule(int ix, int iy, int mod, wxDC& dc)
   int i, num;
   REI_Plugin * cur_module;
   bool scroll = false; 
-  POLY tmppoly;	
 
   //In drag mode
   if (mod < 0) // no module is selected
@@ -1069,15 +1075,17 @@ void Network::DropModule(int ix, int iy, int mod, wxDC& dc)
   
   cur_module->SetPos(wxPoint(x-relative_pt.x, y-relative_pt.y));
 
-  num = cur_module->GetNumPoly();
-  tmppoly.resize(num);
-  cur_module->GetPoly(tmppoly);
-
-  TransPoly(tmppoly, x-relative_pt.x, y-relative_pt.y, modules[mod].poly);
+  //num = cur_module->GetNumPoly();
+  //tmppoly.resize(num);
+  Polygon tmppoly;
+   POLY oldPoly;
+  cur_module->GetPoly( oldPoly );
+   *(tmppoly.GetPolygon()) = oldPoly;
+  tmppoly.TransPoly( x-relative_pt.x, y-relative_pt.y, *(modules[mod].GetPolygon()) );
 
   //Recalce links poly as well
-  for (i=0; i<(int)modules[mod].links.size(); i++)
-    modules[mod].links[i].CalcLinkPoly();
+  for (i=0; i<(int)modules[mod].GetNumberOfLinks(); i++)
+    modules[mod].GetLink( i )->CalcLinkPoly();
 
   //if ((bbox.x-3)>0)
   //  bbox.x-=3;
@@ -1122,7 +1130,7 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
       temp.x = x;
       temp.y = y;
 
-      if (inside(temp, modules[i].poly) && dest_mod!=mod)
+      if ( modules[i].GetPolygon()->inside( temp ) && dest_mod!=mod)
       {
          t = i;
          break;
@@ -1194,7 +1202,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
       i = iter->first;
       temp.x = x;
       temp.y = y;
-      if ( inside(temp, modules[i].poly))
+      if ( modules[i].GetPolygon()->inside( temp ) )
       {
          dest_mod = i;
          break;
@@ -1266,44 +1274,43 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    // if it is a good link
    if (dest_mod>=0 && dest_port>=0 && (dest_mod!=mod||dest_port!=pt))
    {
-      LINK* ln = new LINK;
-      if (flag) // if input port
+      Link ln;
+      if ( flag ) // if input port
       {
-         ln->To_mod = mod;
-         ln->To_port = pt;
-         ln->Fr_mod = dest_mod;
-         ln->Fr_port = dest_port;
-         ln->poly = CalcLinkPoly(*ln);
+         ln.SetToModule( mod );
+         ln.SetToPort( pt );
+         ln.SetFromModule( dest_mod );
+         ln.SetFromPort( dest_port );
       }
       else // if output port
       {
-         ln->To_mod = dest_mod;
-         ln->To_port = dest_port;
-         ln->Fr_mod = mod;
-         ln->Fr_port = pt;
-         ln->poly = CalcLinkPoly(*ln);
+         ln.SetToModule( dest_mod );
+         ln.SetToPort( dest_port );
+         ln.SetFromModule( mod );
+         ln.SetFromPort( pt );
       }
+      ln.CalcLinkPoly();
    
       // check for duplicate links
       bool found = false;
-      for (i=0; i<(int)modules[mod].links.size(); i++)
+      for (i=0; i<(int)modules[mod].GetNumberOfLinks(); i++)
       {
-         if ( (modules[mod].links[i]->To_mod == ln->To_mod)
-               && (modules[mod].links[i]->To_port == ln->To_port)
-               && (modules[mod].links[i]->Fr_mod == ln->Fr_mod)
-               && (modules[mod].links[i]->Fr_port == ln->Fr_port)
+         Link* tempLink = modules[mod].GetLink( i );
+         if ( (tempLink->GetToModule() == ln.GetToModule() )
+               && (tempLink->GetToPort() == ln.GetToPort() )
+               && (tempLink->GetFromModule() == ln.GetFromModule() )
+               && (tempLink->GetFromPort() == ln.GetFromPort() )
             )
          {
             found = true;
-            delete ln;
          }
       }
 
-      if (!found) // no duplicate links are allowed
+      if ( !found ) // no duplicate links are allowed
       { 
-         links.push_back(ln);
-         modules[ mod ].links.push_back( ln ); //push_back the index of the link
-         modules[ dest_mod ].links.push_back( ln );
+         links.push_back( ln );
+         modules[ mod ].GetLinks()->push_back( ln ); //push_back the index of the link
+         modules[ dest_mod ].GetLinks()->push_back( ln );
       }
    }
 
@@ -1361,21 +1368,22 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
     }
 
   //erase the original link;
-  DrawLink(links[ln], false);
+  links[ln].DrawLink( false );
   links[ln].DrawLinkCon( false );
-  links[ln]->cons[ln_con]=wxPoint(x,y);
+  *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
  
-  if (oldxpos!=xpos || oldypos!=ypos || scroll)
-    {
+   if ( oldxpos!=xpos || oldypos!=ypos || scroll)
+   {
       xpos = (int)( 1.0 * xpos * m_xUserScale );
       ypos = (int)( 1.0 * ypos * m_xUserScale );
-      
+
       Scroll(xpos, ypos);
       ReDrawAll();
-    }
-  else
-    ReDraw(dc);
-  links[ln].DrawLinkCon( true );
+   }
+   else
+      ReDraw(dc);
+
+   links[ln].DrawLinkCon( true );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1393,27 +1401,28 @@ void Network::DropLinkCon(int x, int y, int ln, int ln_con, wxDC &dc)
   //  w = w / m_xUserScale;
   //h = h / m_xUserScale; 
       
-  GetViewStart(&vx,&vy);
-  if (x > sx)
-    {
+   GetViewStart(&vx,&vy);
+   if (x > sx)
+   {
       r=(1.0*x/sx);
       nUnitX=int (r*nUnitX+1);
       SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
       scroll = true;
       vx = nUnitX;
-    }
-  if (y > sy)
-    {
+   }
+
+   if (y > sy)
+   {
       r=(1.0*y/sy);
       nUnitY=int (r*nUnitY+1);
       SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
       scroll = true;
       vy = nUnitY;
-    }
+   }
   
-  links[ln]->cons[ln_con] = wxPoint(x,y);
+  *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
 
-  links[ln]->poly = CalcLinkPoly(*links[ln]);
+  links[ln].CalcLinkPoly();
 
   //  Scroll(vx, vy);
   ReDraw(dc);
@@ -1467,9 +1476,9 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
     }
 
   //erase the original Tag;
-  DrawTag(&tags[t], false);
-  DrawTagCon(tags[t], false);
-  tags[t].cons[t_con]=wxPoint(x,y);
+  tags[t].DrawTag( false );
+  tags[t].DrawTagCon( false );
+  *(tags[t].GetConnectorsPoint( t_con ))=wxPoint(x,y);
   if (oldxpos!=xpos||oldypos!=ypos||scroll)
     {
       xpos = (int)( 1.0 * xpos * m_xUserScale );
@@ -1480,7 +1489,7 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
     }
   else
     ReDraw(dc);
-  DrawTagCon(tags[t], true);
+  tags[t].DrawTagCon( true );
   
 }
 
@@ -1518,9 +1527,9 @@ void Network::DropTagCon(int x, int y, int t, int t_con, wxDC &dc)
       vy = nUnitY;
     }
   
-  tags[t].cons[t_con] = wxPoint(x,y);
+  *(tags[t].GetConnectorsPoint( t_con )) = wxPoint(x,y);
 
-  tags[t].poly = CalcTagPoly(tags[t]);
+  tags[t].CalcTagPoly();
 
   //  Scroll(vx, vy);
   ReDraw(dc);
@@ -1573,11 +1582,11 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
     }
 
   //erase the original Tag;
-  DrawTag(&tags[t],  false);
-  DrawTagCon(tags[t], false);
+  tags[t].DrawTag( false );
+  tags[t].DrawTagCon( false );
 
-  tags[t].box.x=x-tag_rpt.x;
-  tags[t].box.y=y-tag_rpt.y;
+  tags[t].GetBoundingBox()->x = x-tag_rpt.x;
+  tags[t].GetBoundingBox()->y = y-tag_rpt.y;
 
   if (oldxpos!=xpos||oldypos!=ypos||scroll)
     {
@@ -1589,7 +1598,7 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
     }
   else
     ReDraw(dc);
-  DrawTagCon(tags[t], true);
+  tags[t].DrawTagCon( true );
   
 }
 
@@ -1626,10 +1635,10 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
       vy = nUnitY;
     }
   
-  tags[t].box.x = x - tag_rpt.x;
-  tags[t].box.y = y - tag_rpt.y;
+  tags[t].GetBoundingBox()->x = x - tag_rpt.x;
+  tags[t].GetBoundingBox()->y = y - tag_rpt.y;
 
-  tags[t].poly = CalcTagPoly(tags[t]);
+  tags[t].CalcTagPoly();
 
   //  Scroll(vx, vy);
   ReDraw(dc);
@@ -1641,40 +1650,41 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
 
 void Network::AddTag(int x, int y, wxString text)
 {
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-  TAG t;
-  int w, h;
-  wxClientDC dc(this);
-  PrepareDC(dc);
-  dc.SetUserScale( m_xUserScale, m_yUserScale );
+   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+   Tag t;
+   int w, h;
+   wxClientDC dc(this);
+   PrepareDC(dc);
+   dc.SetUserScale( m_xUserScale, m_yUserScale );
 
-  t.cons[0].x = x; t.cons[0].y = y;
-  
-  t.cons[1].x = x+60;
-  if (y>40)
-    t.cons[1].y = y-20;
-  else
-    t.cons[1].y = y+20;
+   t.GetConnectorsPoint( 0 )->x = x; 
+   t.GetConnectorsPoint( 0 )->y = y;
 
-  dc.GetTextExtent(text, &w, &h);
-  
-  t.text = text;
-  t.box.x=x+80;
-  t.box.y=t.cons[1].y - h/2;
-  t.box.width = w;
-  t.box.height = h;
-  t.poly = CalcTagPoly(t);
-  tags.push_back(t);
-  
-  while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-  ReDraw(dc);
+   t.GetConnectorsPoint( 1 )->x = x+60;
+   if ( y > 40 )
+      t.GetConnectorsPoint( 1 )->y = y-20;
+   else
+      t.GetConnectorsPoint( 1 )->y = y+20;
+
+   dc.GetTextExtent(text, &w, &h);
+
+   *(t.GetTagText()) = text;
+   t.GetBoundingBox()->x=x+80;
+   t.GetBoundingBox()->y = t.GetConnectorsPoint( 1 )->y - h/2;
+   t.GetBoundingBox()->width = w;
+   t.GetBoundingBox()->height = h;
+   t.CalcTagPoly();
+   tags.push_back(t);
+
+   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+   ReDraw(dc);
 }
 
 //////////////////////////////////////////////////////////////
 void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
 {
   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-  MODULE mod;
+  Module mod;
   POLY tmpPoly;
   int num;
 
@@ -1682,21 +1692,21 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
 
   bbox = cur_module->GetBBox(); //Get the Boundoing box of the modul 
 
-  cur_module->SetPos(GetFreePos(bbox)); //Set the new modules position to be a free space allocated by the network according to its bounding box
+  cur_module->SetPos( GetFreePos(bbox) ); //Set the new modules position to be a free space allocated by the network according to its bounding box
   bbox = cur_module->GetBBox();
-  mod.GetPlugin()=cur_module;
+  mod.SetPlugin( cur_module );
 
-  num = cur_module->GetNumPoly();
-  tmpPoly.resize(num);
-  cur_module->GetPoly(tmpPoly); 
+   num = cur_module->GetNumPoly();
+   tmpPoly.resize(num);
+   cur_module->GetPoly(tmpPoly); 
+   Polygon newPolygon;
+   *(newPolygon.GetPolygon()) = tmpPoly;
 
-  //for (i=0; i<tmpPoly.size(); i++)
-//	  tmp = tmpPoly[i];
-  TransPoly(tmpPoly, bbox.x, bbox.y, mod.poly); //Make the network recognize its polygon 
-  mod.cls_name = cls_name;
+   newPolygon.TransPoly( bbox.x, bbox.y, *(mod.GetPolygon()) ); //Make the network recognize its polygon 
+   mod.SetClassName( cls_name );
 
    int id;
-   std::map<int, MODULE>::iterator mit;
+   std::map<int, Module>::iterator mit;
    while (1)
    {
       id = wxNewId();
@@ -1760,7 +1770,7 @@ void Network::ReDraw(wxDC &dc)
    //dc.SetBackgroundMode(wxSOLID);
 
    // redraw all the active plugins
-   std::map<int, MODULE>::iterator iter;
+   std::map<int, Module>::iterator iter;
    for (iter=modules.begin(); iter!=modules.end(); iter++)
    {
       modules[ iter->first ].GetPlugin()->DrawIcon(&dc);
@@ -1769,157 +1779,11 @@ void Network::ReDraw(wxDC &dc)
 
    // draw all the links
    for ( size_t i = 0; i < links.size(); ++i )
-      DrawLink( links[i], true );
+      links[i].DrawLink( true );
 
    // draw all the links
    for ( size_t i = 0; i < tags.size(); ++i )
-      DrawTag( &tags[i], true );
-}
-
-///////////////////////////////////////////////////////////////////
-void Network::DrawLink(LINK *ln, bool flag)
-{ 
-  wxRect bbox;
-  POLY ports;
-  wxPoint * points;
-  wxPoint arrow[3];
-  int n;
-  int i, j, num;
-  
-  wxClientDC dc(this);
-  PrepareDC(dc);
-  dc.SetUserScale(m_xUserScale, m_yUserScale);
-
-  wxBrush old_brush = dc.GetBrush();
-  wxPen old_pen = dc.GetPen();
-
-  n = ln->cons.size()+2;
-  points = new wxPoint[n];
-
-  bbox = modules[ln->To_mod].GetPlugin()->GetBBox();
-  
-  num = modules[ln->To_mod].GetPlugin()->GetNumIports();
-  ports.resize(num);
-  modules[ln->To_mod].GetPlugin()->GetIPorts(ports);
-
-  points[0].x = bbox.x+ports[ln->To_port].x;
-  points[0].y = bbox.y+ports[ln->To_port].y;
-
-  j=1;
-  for (i=ln->cons.size()-1;i>=0; i--, j++)
-    points[j]=ln->cons[i];
-
-  bbox = modules[ln->Fr_mod].GetPlugin()->GetBBox();
-  num = modules[ln->Fr_mod].GetPlugin()->GetNumOports();
-  ports.resize(num);
-  modules[ln->Fr_mod].GetPlugin()->GetOPorts(ports);
-
-  points[n-1].x = bbox.x+ports[ln->Fr_port].x;
-  points[n-1].y = bbox.y+ports[ln->Fr_port].y;
-  
-  if (!flag)
-    {
-      dc.SetPen(*wxWHITE_PEN);
-      dc.SetBrush(*wxWHITE_BRUSH);
-    }
-  else
-    {
-      dc.SetPen(*wxBLACK_PEN);
-      dc.SetBrush(*wxWHITE_BRUSH);
-    }
-  dc.DrawLines(n, points);
-
-  //Now draw the arrow head
-  if (!flag)
-    {
-      dc.SetPen(*wxWHITE_PEN);
-      dc.SetBrush(*wxWHITE_BRUSH);
-    }
-  else
-    {
-      dc.SetPen(*wxBLACK_PEN);
-      dc.SetBrush(*wxBLACK_BRUSH);
-    }
-  
-  arrow[0]=points[0];
-  
-  
-   double a = atan(3.0/10.0);
-   double b = -a;
-   double sinb=sin(b); 
-   double cosb = cos(b);
-   double sina=sin(a); 
-   double cosa = cos(a);
-   double dist=sqrt(double((points[1].y-points[0].y)*(points[1].y-points[0].y)
-		   +(points[1].x-points[0].x)*(points[1].x-points[0].x)));
-
-  arrow[1].x=(int)( cosa*12.0/dist*(points[1].x-points[0].x)
-    -sina*12.0/dist*(points[1].y-points[0].y)+points[0].x );
-  arrow[1].y=(int)( sina*12.0/dist*(points[1].x-points[0].x)
-    +cosa*12.0/dist*(points[1].y-points[0].y)+points[0].y );
-
-  arrow[2].x=(int)( cosb*12.0/dist*(points[1].x-points[0].x)
-    -sinb*12.0/dist*(points[1].y-points[0].y)+points[0].x );
-  arrow[2].y=(int)( sinb*12.0/dist*(points[1].x-points[0].x)
-    +cosb*12.0/dist*(points[1].y-points[0].y)+points[0].y );
-  
-  dc.DrawPolygon(3, arrow);
-  dc.SetPen(old_pen);
-  dc.SetBrush(old_brush);
-  delete [] points; 
-}
-
-/////////////////////////////////////////////////////////////
-void Network::DrawTag(TAG *t, bool flag)
-{
-  
-  int w, h;
-  wxClientDC dc(this);
-  PrepareDC(dc);
-  dc.SetUserScale(m_xUserScale, m_yUserScale);
-  
-  wxBrush old_brush = dc.GetBrush();
-  wxPen old_pen = dc.GetPen();
-  wxPen mypen(old_pen);
-  mypen.SetColour("BLUE");
-  //  mypen.SetStyle(wxDOT);
-  // mypen.SetStyle(wxLONG_DASH);
-  wxPoint points[3];
-
-  dc.GetTextExtent(t->text, &w, &h);
-  t->box.width = w;
-  t->box.height = h;
-  t->poly = CalcTagPoly(*t);
-  points[0] = t->cons[0];
-  points[1] = t->cons[1];
-  points[2] = wxPoint(t->box.x, t->box.y+t->box.height/2);
-  
-  
-  if (!flag)
-    {
-      dc.SetPen(*wxWHITE_PEN);
-      dc.SetBrush(*wxWHITE_BRUSH);
-    }
-  else
-    {
-      dc.SetPen(mypen);
-      dc.SetBrush(*wxWHITE_BRUSH);
-    }
- 
-  fflush(NULL);
-  dc.DrawLines(3, points);
-  
-  
-  dc.DrawRectangle(t->box.x-3, t->box.y-3, t->box.width+6, t->box.height+6);
-
-
-  fflush(NULL);
-  if (flag) dc.DrawText(t->text, t->box.x, t->box.y);
-
-  fflush(NULL);
-  dc.SetPen(old_pen);
-  dc.SetBrush(old_brush);
-  
+      tags[i].DrawTag( true );
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -2073,49 +1937,6 @@ void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
   dc.SetBrush(old_brush);
 }
 
-////////////////////////////////////////////////////////////
-void Network::DrawTagCon(TAG t, bool flag)
-{
-  int i;
-  wxPoint bport[4];
-  wxClientDC dc(this);
-  wxCoord xoff, yoff;
-
-  bport[0]=wxPoint(0,0);
-  bport[1]=wxPoint(10,0);
-  bport[2]=wxPoint(10,10);
-  bport[3]=wxPoint(0,10);
-  
-  PrepareDC(dc);
-  dc.SetUserScale(m_xUserScale, m_yUserScale);
-
-  wxBrush old_brush = dc.GetBrush();
-  wxPen old_pen = dc.GetPen();
-
-  if (flag)
-    {
-      dc.SetBrush(*wxGREEN_BRUSH);
-      dc.SetPen(*wxBLACK_PEN);
-    }
-  else
-    {
-      dc.SetBrush(*wxWHITE_BRUSH);
-      dc.SetPen(*wxWHITE_PEN);
-    }
-  
-  for (i=0; i<2; i++)
-    {
-      xoff = t.cons[i].x-3;
-      yoff = t.cons[i].y-3;
-      
-      dc.DrawPolygon(4, bport, xoff, yoff);      
-    }
-
-  dc.SetBrush(old_brush);
-  dc.SetPen(old_pen);
- 
-}
-
 /////////////////////////////////////////////////////////
 ////// Math Functions for the points and polygons ///////
 /////////////////////////////////////////////////////////
@@ -2136,115 +1957,10 @@ int Network::ccw (wxPoint pt1, wxPoint pt2, wxPoint pt3)
   return 1;
 }
 
-///////////////////////////////////////////////////////////////
-int Network::intersect(POLY l1, POLY l2)
-{
-  int ccw11 = ccw(l1[0], l1[1], l2[0]);
-  int ccw12 = ccw(l1[0], l1[1], l2[1]);
-  int ccw21 = ccw(l2[0], l2[1], l1[0]);
-  int ccw22 = ccw(l2[0], l2[1], l1[1]);
- 
-  return(((ccw11*ccw12 < 0) && (ccw21*ccw22 < 0)) ||
-	 (ccw11*ccw12*ccw21*ccw22 == 0));
-}
-
-//////////////////////////////////////////////////////////////
-int Network::inside( wxPoint pt, POLY poly ) 
-{
-   int i, count = 0, j = 0;
-
-   POLY lt, lp, lv;
-
-   lt.push_back(pt); lt.push_back(pt); lt[1].x = 999999;
-   lp.push_back(pt); lp.push_back(pt);
-   lv.push_back(pt); lv.push_back(pt);
-
-   wxPoint p(poly.back());
-   poly.insert(poly.begin(), 1, p);
-
-   double numsides = poly.size()-1;
-   for(i=1; i<=numsides; i++) 
-   {
-      lp[0] = poly[i];
-      lp[1] = poly[i-1];
-      if ( intersect(lv, lp) ) 
-         return 1;
-   
-      lp[1] = poly[i];
-
-      if ( !intersect(lp, lt) ) 
-      {
-         lp[1] = poly[j];
-         if ( intersect(lp, lt) ) 
-            count++;
-         else
-            if ( i!=j+1 && ((ccw(lt[0], lt[1], poly[j])*(ccw(lt[0], lt[1], poly[i])) < 1)))
-               count++;
-         
-         j = i;
-      }
-   }
-   
-   if(j!=numsides && ccw(lt[0], lt[1], poly[j])*ccw(lt[0], lt[1], poly[1]) == 1)
-      count--;
-
-   return count & 1;
-}
-
 /////////////////////////////////////////////////////////////////
 double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 {
   return sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
-}
-
-//////////////////////////////////////////////////////////////////
-double Network::nearpnt(wxPoint pt, POLY poly, POLY &Near)
-{
-  int i, i2;
-
-  double t, d, dist = 99999, numsides = poly.size();
-
-  Near.clear();
-
-  for(i=0; i<numsides; i++) {
-    i2 = i+1;
-    if(i2 == numsides) i2 = 0;
-
-    wxRealPoint p;
-    wxRealPoint v(poly[i2].x-poly[i].x, poly[i2].y-poly[i].y);
-    wxRealPoint n(pt.x - poly[i].x, pt.y - poly[i].y);
-
-    t = (n.x*v.x + n.y*v.y) / (v.x*v.x + v.y*v.y);
-    if(t <= 0) {
-      p.x = poly[i].x;
-      p.y = poly[i].y;
-    } else if(t >= 1) {
-      p.x = poly[i2].x;
-      p.y = poly[i2].y;
-    } else {
-      p.x = poly[i].x+t*v.x;
-      p.y = poly[i].y+t*v.y;
-    }
-
-    d = computenorm(pt, wxPoint(((int) p.x), ((int) p.y)));
-    if(d < dist) {
-      Near.clear();
-      dist = d;
-      Near.push_back(wxPoint(((int) p.x), ((int) p.y)));
-    } else if(d==dist)
-      Near.push_back(wxPoint(((int) p.x), ((int) p.y)));
-  }
-
-  return dist;
-}
-
-/////////////////////////////////////////////////////////////
-void Network::TransPoly(POLY oldpoly, int x, int y, POLY &newpoly)
-{
-  newpoly.clear();  
-  for ( unsigned int i=0; i<oldpoly.size(); i++)
-    newpoly.push_back(wxPoint(oldpoly[i].x+x, oldpoly[i].y+y));
-   
 }
 
 //////////////////////////////////////////////
@@ -2268,7 +1984,7 @@ void Network::Pack(std::vector<Interface> & UIs)
   long tagCon0X, tagCon0Y, tagCon1X, tagCon1Y, tagBoxX, tagBoxY;
 
   int i,j;
-  std::map<int, MODULE>::iterator iter;
+  std::map<int, Module>::iterator iter;
 
   ntpk._type=0;
   ntpk._category=0;
@@ -2287,7 +2003,7 @@ void Network::Pack(std::vector<Interface> & UIs)
    {
       i=iter->first;
       //These are the essential information about a module
-      modCls = modules[i].cls_name;
+      modCls = modules[i].GetClassName();
       //poly can be calculated as mod.poly = TransPoly(cur_module->GetPoly(), bbox.x, bbox.y)
       //links vector can be reconstructed from the link's list
       //The order of modules needs to be preserved for the link list and the module UI
@@ -2301,10 +2017,10 @@ void Network::Pack(std::vector<Interface> & UIs)
    ntpk.setVal("Link_size", long(links.size()));
    for (i=0; i<(int)links.size(); i++)
    {
-      lnFrMod = links[i]->Fr_mod;
-      lnToMod = links[i]->To_mod;
-      lnFrPort = links[i]->Fr_port;
-      lnToPort = links[i]->To_port;
+      lnFrMod = links[i].GetFromModule();
+      lnToMod = links[i].GetToModule();
+      lnFrPort = links[i].GetFromPort();
+      lnToPort = links[i].GetToPort();
 
       std::ostringstream dirStringStream;
       dirStringStream << "ln_FrMod_" << std::setprecision(4) << std::setfill( '0' ) << i;
@@ -2332,10 +2048,10 @@ void Network::Pack(std::vector<Interface> & UIs)
       //Try to store link cons,
       //link cons are (x,y) wxpoint
       //here I store x in one vector and y in the other
-      for (j=0; j<(int)(links[i]->cons.size()); j++)
+      for (j=0; j<(int)(links[i].GetNumberOfPoints()); j++)
 	   {
-	      lnConX.push_back(links[i]->cons[j].x);
-	      lnConY.push_back(links[i]->cons[j].y);
+	      lnConX.push_back( links[i].GetPoint( j )->x );
+	      lnConY.push_back( links[i].GetPoint( j )->y );
 	   }
 
 	   dirStringStream << "ln_ConX_" << std::setprecision(4) << std::setfill( '0' ) << i;
@@ -2352,13 +2068,13 @@ void Network::Pack(std::vector<Interface> & UIs)
    ntpk.setVal("Tag_size", long(tags.size()));
    for (i=0; i<(int)tags.size(); i++)
    {
-      tagText = tags[i].text;
-      tagCon0X = tags[i].cons[0].x;
-      tagCon0Y = tags[i].cons[0].y;
-      tagCon1X = tags[i].cons[1].x;
-      tagCon1Y = tags[i].cons[1].y;
-      tagBoxX = tags[i].box.x;
-      tagBoxY = tags[i].box.y;
+      tagText = tags[i].GetTagText()->c_str();
+      tagCon0X = tags[i].GetConnectorsPoint( 0 )->x;
+      tagCon0Y = tags[i].GetConnectorsPoint( 0 )->y;
+      tagCon1X = tags[i].GetConnectorsPoint( 1 )->x;
+      tagCon1Y = tags[i].GetConnectorsPoint( 1 )->y;
+      tagBoxX = tags[i].GetBoundingBox()->x;
+      tagBoxY = tags[i].GetBoundingBox()->y;
 	  
       std::ostringstream dirStringStream;
       dirStringStream << "tag_Txt_" << std::setprecision(4) << std::setfill( '0' ) << i;
@@ -2432,7 +2148,7 @@ void Network::Pack(std::vector<Interface> & UIs)
 
 void Network::UnPack(std::vector<Interface> & intfs)
 {
-   int _id = 0;
+/*   int _id = 0;
    Interface ntpk;
    std::vector<std::string> vars;
    long temp = 0;
@@ -2445,10 +2161,10 @@ void Network::UnPack(std::vector<Interface> & intfs)
    wxRect bbox;
    LINK * ln;
    POLY tmpPoly;
-   std::map<int, MODULE>::iterator iter;
+   std::map<int, Module>::iterator iter;
    //Read it from the file
    int modsize = 0;
-   MODULE temp_mod;
+   Module temp_mod;
 
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){;}
 
@@ -2606,17 +2322,17 @@ void Network::UnPack(std::vector<Interface> & intfs)
 	   {
 	      num = atoi(vars[i].substr(pos+8, 4).c_str());
 
-	      if (links[num]->cons.size()==0)
-	         links[num]->cons.resize(templ1d.size());
+	      if ( links[num].GetNumberOfPoints() == 0 )
+	         links[num].GetPoints()->resize(templ1d.size());
 
 	      for (j=0; j<(int)templ1d.size(); j++)
-	         links[num]->cons[j].x = templ1d[j];
+	         links[num].GetPoint( j )->x = templ1d[j];
 	   }
       else if ((pos=vars[i].find("ln_ConY_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+8, 4).c_str());
 	      for (j=0; j<(int)templ1d.size(); j++)
-	         links[num]->cons[j].y = templ1d[j];
+	         links[num].GetPoint( j )->y = templ1d[j];
 	   }
    }
 
@@ -2626,7 +2342,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
    {
       
       _id = intfs[i]._id;
-      std::map<int, MODULE >::iterator itr=modules.find(_id);
+      std::map<int, Module >::iterator itr=modules.find(_id);
 
       if( (intfs[i]._type == 1) && (itr!=modules.end()) )
       {
@@ -2655,8 +2371,8 @@ void Network::UnPack(std::vector<Interface> & intfs)
    //first, calculate get the links vector into the modules
    for (i=0; i<links.size(); i++)
    {
-      modules[links[i]->To_mod].links.push_back(links[i]);
-      modules[links[i]->Fr_mod].links.push_back(links[i]);
+      modules[ links[ i ].GetToModule() ].GetLinks()->push_back( links[i] );
+      modules[ links[ i ].GetFromModule() ].GetLinks()->push_back( links[i] );
    }
 
    //Second, calculate the polyes
@@ -2667,14 +2383,14 @@ void Network::UnPack(std::vector<Interface> & intfs)
       polynum = modules[i].GetPlugin()->GetNumPoly();
       tmpPoly.resize(polynum);
       modules[i].GetPlugin()->GetPoly(tmpPoly);
-      TransPoly(tmpPoly, bbox.x, bbox.y, modules[i].poly); //Make the network recognize its polygon 
+      tmpPoly.TransPoly( bbox.x, bbox.y, modules[i].poly); //Make the network recognize its polygon 
    }
   
    for (i=0; i<links.size(); i++)
-      links[i]->poly = CalcLinkPoly(*(links[i]));
+      links[i].CalcLinkPoly();
 
    for (i=0; i<tags.size(); i++)
-      tags[i].poly = CalcTagPoly(tags[i]);
+      tags[i].CalcTagPoly();
   
    m_selMod = -1;
    m_selFrPort = -1; 
@@ -2687,7 +2403,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
   
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
-   Refresh();
+   Refresh();*/
 }
 
 void Network::Save(wxString filename)
@@ -2734,13 +2450,9 @@ void Network::New()
    // Just clear the design canvas
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
 
-   for ( size_t i=0; i < links.size(); i++)
-   {
-      delete links.at( i );
-   }
    links.clear();
 
-   std::map<int, MODULE>::iterator iter;
+   std::map<int, Module>::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
       delete modules[ iter->first ].GetPlugin();
@@ -2793,8 +2505,9 @@ void Network::LoadS(const char* inputs)
 void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 {
    char *linkresult;
-   int mod = links[ m_selLink ]->Fr_mod; //The to Mod are actually the from module for the data flow
-   int port = links[ m_selLink ]->Fr_port;
+   //The to Mod are actually the from module for the data flow
+   int mod = links[ m_selLink ].GetFromModule(); 
+   int port = links[ m_selLink ].GetFromPort();
 
    try 
    {

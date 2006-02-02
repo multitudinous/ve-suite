@@ -30,6 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/Module.h"
+
+#include "VE_Conductor/Framework/Plugin_base.h"
+
 #include <wx/window.h>
 
 using namespace VE_Conductor::GUI_Utilities;
@@ -85,6 +88,20 @@ std::vector< Link >* Module::GetLinks( void )
    return &(links);
 }
 ////////////////////////////////////////////////
+void Module::RemoveLink( size_t i )
+{
+   std::vector< Link >::iterator iter;
+   size_t j;
+   for ( iter = links.begin(), j = 0; iter != links.end(); iter++, j++)
+   {
+      if ( j == i )
+      {
+         links.erase( iter );
+         break;
+      }
+   }
+}
+////////////////////////////////////////////////
 std::string Module::GetClassName( void )
 {
    return cls_name;
@@ -95,7 +112,22 @@ Polygon* Module::GetPolygon( void )
    return &(poly);
 }
 ////////////////////////////////////////////////
-/*REI_Plugin* Module::GetPlugin( void )
+size_t Module::GetNumberOfLinks( void )
+{
+   return links.size();
+}
+////////////////////////////////////////////////
+void Module::SetClassName( std::string newClassname )
+{
+   cls_name = newClassname;
+}
+////////////////////////////////////////////////
+void Module::SetPlugin( REI_Plugin* newPlugin )
+{
+   pl_mod = newPlugin;
+}
+////////////////////////////////////////////////
+REI_Plugin* Module::GetPlugin( void )
 {
    return pl_mod;
-}*/
+}

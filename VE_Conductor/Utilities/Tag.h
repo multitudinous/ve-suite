@@ -64,6 +64,8 @@ public:
 
    ///
    void CalcTagPoly( void );
+   void DrawTagCon( bool flag );
+   void DrawTag( bool flag );
 
 private:
    wxPoint cons[2]; ///<2 connectors for tag, end and middle

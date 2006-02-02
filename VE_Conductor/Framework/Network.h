@@ -34,6 +34,10 @@
 #include "VE_Open/skel/moduleC.h"
 
 #include "VE_Conductor/Framework/Plugin_base.h"
+#include "VE_Conductor/Utilities/Link.h"
+#include "VE_Conductor/Utilities/Tag.h"
+#include "VE_Conductor/Utilities/Polygon.h"
+#include "VE_Conductor/Utilities/Module.h"
 
 #include <wx/event.h>
 #include <wx/scrolwin.h>
@@ -50,16 +54,6 @@ namespace VE_Model
    class Network;
 }
 
-namespace VE_Conductor
-{
-namespace GUI_Utilities
-{
-   class Tag;
-   class Module;
-   class Link;
-   class Polygon;
-}
-}
 enum 
 {
    ADD_TAG,
@@ -163,10 +157,10 @@ public:
    //Draw functions
    void DrawPorts( REI_Plugin* cur_module, bool flag);
    void DrawPorti( REI_Plugin* cur_module, int index, bool flag);
-   void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
-   void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
-   void DrawLink( VE_Conductor::GUI_Utilities::Link *l, bool flag);
-   void DrawTag( VE_Conductor::GUI_Utilities::Tag *t, bool flag);
+   //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
+   //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
+   //void DrawLink( VE_Conductor::GUI_Utilities::Link *l, bool flag);
+   //void DrawTag( VE_Conductor::GUI_Utilities::Tag *t, bool flag);
    void ReDraw(wxDC &dc);
 
    //Selection functions
@@ -191,19 +185,19 @@ public:
 
    //Math functions for the relationship of points and polygons
    int ccw( wxPoint pt1, wxPoint pt2, wxPoint pt3 );
-   int intersect( VE_Conductor::GUI_Utilities::Polygon l1, VE_Conductor::GUI_Utilities::Polygon l2);
-   int inside( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly);
+   //int intersect( VE_Conductor::GUI_Utilities::Polygon l1, VE_Conductor::GUI_Utilities::Polygon l2);
+   //int inside( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly);
    double computenorm (wxPoint pt1, wxPoint pt2);
-   double nearpnt( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly, 
-                                    VE_Conductor::GUI_Utilities::Polygon &near);
+   //double nearpnt( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly, 
+   //                                 VE_Conductor::GUI_Utilities::Polygon &near);
    void TransPoly( VE_Conductor::GUI_Utilities::Polygon oldpoly, 
                    int x, int y, VE_Conductor::GUI_Utilities::Polygon &newpoly);
 
    //Misc functions
    void CleanRect( wxRect box, wxDC& dc); // for wipeout a rectangular area
    wxPoint GetFreePos( wxRect bbox); // for finding a free start location for a new module
-   VE_Conductor::GUI_Utilities::Polygon CalcLinkPoly( VE_Conductor::GUI_Utilities::Tag l); // calculate the bounding polygon of a link
-   VE_Conductor::GUI_Utilities::Polygon CalcTagPoly( VE_Conductor::GUI_Utilities::Tag t); // calculate the bounding polygon of a tag
+   //VE_Conductor::GUI_Utilities::Polygon CalcLinkPoly( VE_Conductor::GUI_Utilities::Tag l); // calculate the bounding polygon of a link
+   //VE_Conductor::GUI_Utilities::Polygon CalcTagPoly( VE_Conductor::GUI_Utilities::Tag t); // calculate the bounding polygon of a tag
 
 protected:
    //Three main list of network objs

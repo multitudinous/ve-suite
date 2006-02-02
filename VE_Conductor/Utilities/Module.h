@@ -37,11 +37,10 @@
 #include "VE_Conductor/Utilities/Link.h"
 
 class wxWindow;
+class REI_Plugin;
 
 namespace VE_Conductor
 {
-//class REI_Plugin;
-
 namespace GUI_Utilities
 {
 class Module
@@ -60,10 +59,14 @@ public:
    ///\param window The window on which the tag will be drawn
    void SetWxWindow( wxWindow* window );
    Link* GetLink( size_t i );
+   void RemoveLink( size_t i );
    std::vector< Link >* GetLinks( void );
+   size_t GetNumberOfLinks( void );
    std::string GetClassName( void );
+   void SetClassName( std::string newClassname );
    Polygon* GetPolygon( void );
    REI_Plugin* GetPlugin( void );
+   void SetPlugin( REI_Plugin* newPlugin );
 
 private:
    REI_Plugin* pl_mod;

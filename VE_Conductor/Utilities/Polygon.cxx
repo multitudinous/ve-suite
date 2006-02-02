@@ -30,95 +30,35 @@ Polygon& Polygon::operator= ( const Polygon& input )
 ////////////////////////////////////////////////
 wxPoint* Polygon::GetPoint( size_t i )
 {
-   return &(poly.at( i ));
+   try
+   {
+      return &(poly.at( i ));
+   }
+   catch (...)
+   {
+      poly.push_back( wxPoint() );
+      return &(poly.at( i ));
+   }
+}
+////////////////////////////////////////////////
+void Polygon::SetPoint( wxPoint newPoint )
+{
+   poly.push_back( newPoint );
 }
 ////////////////////////////////////////////////
 std::vector< wxPoint >* Polygon::GetPolygon( void )
 {
    return &(poly);
 }
+////////////////////////////////////////////////
+size_t Polygon::GetNumberOfPoints( void )
+{
+   return poly.size();
+}
 /////////////////////////////////////////////////////////////
-/*int Polygon::ccw (wxPoint pt1, wxPoint pt2, wxPoint pt3)
+int Polygon::inside( wxPoint pt ) 
 {
-  double dx1 = pt2.x - pt1.x;
-  double dx2 = pt3.x - pt1.x;
-  double dy1 = pt2.y - pt1.y;
-  double dy2 = pt3.y - pt1.y;
-  
-  if(dx1*dy2 > dy1*dx2) return 1;
-  if(dx1*dy2 < dy1*dx2) return -1;
-  if(dx1*dy2 == dy1*dx2)
-    if(dx1*dx2 < 0 || dy1*dy2 < 0) return -1;
-    else if(dx1*dx1+dy1*dy1 >= dx2*dx2+dy2*dy2) return 0;
-  
-  return 1;
-}
-
-/////////////////////////////////////////////////////////////
-void Polygon::TransPoly(POLY oldpoly, int x, int y)
-{
-  newpoly.clear();  
-  for ( unsigned int i=0; i<oldpoly.size(); i++)
-    newpoly.push_back(wxPoint(oldpoly[i].x+x, oldpoly[i].y+y));
-   
-}
-
-//////////////////////////////////////////////////////////////////
-double Polygon::nearpnt(wxPoint pt, POLY poly, POLY &Near)
-{
-  int i, i2;
-
-  double t, d, dist = 99999, numsides = poly.size();
-
-  Near.clear();
-
-  for(i=0; i<numsides; i++) {
-    i2 = i+1;
-    if(i2 == numsides) i2 = 0;
-
-    wxRealPoint p;
-    wxRealPoint v(poly[i2].x-poly[i].x, poly[i2].y-poly[i].y);
-    wxRealPoint n(pt.x - poly[i].x, pt.y - poly[i].y);
-
-    t = (n.x*v.x + n.y*v.y) / (v.x*v.x + v.y*v.y);
-    if(t <= 0) {
-      p.x = poly[i].x;
-      p.y = poly[i].y;
-    } else if(t >= 1) {
-      p.x = poly[i2].x;
-      p.y = poly[i2].y;
-    } else {
-      p.x = poly[i].x+t*v.x;
-      p.y = poly[i].y+t*v.y;
-    }
-
-    d = computenorm(pt, wxPoint(((int) p.x), ((int) p.y)));
-    if(d < dist) {
-      Near.clear();
-      dist = d;
-      Near.push_back(wxPoint(((int) p.x), ((int) p.y)));
-    } else if(d==dist)
-      Near.push_back(wxPoint(((int) p.x), ((int) p.y)));
-  }
-
-  return dist;
-}
-
-///////////////////////////////////////////////////////////////
-int Polygon::intersect(POLY l1, POLY l2)
-{
-  int ccw11 = ccw(l1[0], l1[1], l2[0]);
-  int ccw12 = ccw(l1[0], l1[1], l2[1]);
-  int ccw21 = ccw(l2[0], l2[1], l1[0]);
-  int ccw22 = ccw(l2[0], l2[1], l1[1]);
- 
-  return(((ccw11*ccw12 < 0) && (ccw21*ccw22 < 0)) ||
-	 (ccw11*ccw12*ccw21*ccw22 == 0));
-}
-
-//////////////////////////////////////////////////////////////
-int Polygon::inside( wxPoint pt, POLY poly ) 
-{
+/*
    int i, count = 0, j = 0;
 
    POLY lt, lp, lv;
@@ -157,6 +97,68 @@ int Polygon::inside( wxPoint pt, POLY poly )
       count--;
 
    return count & 1;
-}
 */
+}
 
+//////////////////////////////////////////////////////////////////
+double Polygon::nearpnt(wxPoint pt, Polygon &Near)
+{
+/*  int i, i2;
+
+  double t, d, dist = 99999, numsides = poly.size();
+
+  Near.clear();
+
+  for(i=0; i<numsides; i++) {
+    i2 = i+1;
+    if(i2 == numsides) i2 = 0;
+
+    wxRealPoint p;
+    wxRealPoint v(poly[i2].x-poly[i].x, poly[i2].y-poly[i].y);
+    wxRealPoint n(pt.x - poly[i].x, pt.y - poly[i].y);
+
+    t = (n.x*v.x + n.y*v.y) / (v.x*v.x + v.y*v.y);
+    if(t <= 0) {
+      p.x = poly[i].x;
+      p.y = poly[i].y;
+    } else if(t >= 1) {
+      p.x = poly[i2].x;
+      p.y = poly[i2].y;
+    } else {
+      p.x = poly[i].x+t*v.x;
+      p.y = poly[i].y+t*v.y;
+    }
+
+    d = computenorm(pt, wxPoint(((int) p.x), ((int) p.y)));
+    if(d < dist) {
+      Near.clear();
+      dist = d;
+      Near.push_back(wxPoint(((int) p.x), ((int) p.y)));
+    } else if(d==dist)
+      Near.push_back(wxPoint(((int) p.x), ((int) p.y)));
+  }
+
+  return dist;
+*/
+}
+
+/////////////////////////////////////////////////////////////
+void Polygon::TransPoly( int x, int y, Polygon &newpoly)
+{
+/*  newpoly.clear();  
+  for ( unsigned int i=0; i<oldpoly.size(); i++)
+    newpoly.push_back(wxPoint(oldpoly[i].x+x, oldpoly[i].y+y));
+*/   
+}
+///////////////////////////////////////////////////////////////
+int Polygon::intersect(Polygon l1, Polygon l2)
+{
+/*  int ccw11 = ccw(l1[0], l1[1], l2[0]);
+  int ccw12 = ccw(l1[0], l1[1], l2[1]);
+  int ccw21 = ccw(l2[0], l2[1], l1[0]);
+  int ccw22 = ccw(l2[0], l2[1], l1[1]);
+ 
+  return(((ccw11*ccw12 < 0) && (ccw21*ccw22 < 0)) ||
+	 (ccw11*ccw12*ccw21*ccw22 == 0));
+*/
+}

@@ -86,7 +86,15 @@ void Link::SetWxWindow( wxWindow* window )
 ////////////////////////////////////////////////
 wxPoint* Link::GetPoint( size_t i )
 {
-   return &(cons.at( i ));
+   try
+   {
+      return &(cons.at( i ));
+   }
+   catch (...)
+   {
+      cons.push_back( wxPoint() );
+      return &(cons.at( i ));
+   }
 }
 ////////////////////////////////////////////////
 size_t Link::GetNumberOfPoints( void )
@@ -119,6 +127,26 @@ unsigned long Link::GetToModule( void )
    return To_mod;
 }
 ////////////////////////////////////////////////
+void Link::SetFromPort( unsigned int input )
+{
+   Fr_port = input;
+}
+////////////////////////////////////////////////
+void Link::SetToPort( unsigned int input )
+{
+   To_port = input;
+}
+////////////////////////////////////////////////
+void Link::SetFromModule( unsigned long input )
+{
+   Fr_mod = input;
+}
+////////////////////////////////////////////////
+void Link::SetToModule( unsigned long input )
+{
+   To_mod = input;
+}
+////////////////////////////////////////////////
 Polygon* Link::GetPolygon( void )
 {
    return &(poly);
@@ -126,6 +154,7 @@ Polygon* Link::GetPolygon( void )
 /////////////////////////////////////////////////////////
 void Link::DrawLinkCon( bool flag )
 {
+/*
    wxPoint bport[4];
   
   wxClientDC dc(this);
@@ -193,12 +222,13 @@ void Link::DrawLinkCon( bool flag )
 
   dc.SetBrush(old_brush);
   dc.SetPen(old_pen);
+*/
 }
 
 ///////////////////////////////////////
-Link::CalcLinkPoly()
+void Link::CalcLinkPoly()
 {
-   wxRect bbox;
+/*   wxRect bbox;
    wxPoint pos;
    POLY ports;
    POLY points;
@@ -240,6 +270,99 @@ Link::CalcLinkPoly()
     result.push_back(wxPoint(points[i].x, points[i].y+3));
   
   return result;
+*/
+}
 
+///////////////////////////////////////////////////////////////////
+void Link::DrawLink( bool flag )
+{ 
+/*  wxRect bbox;
+  POLY ports;
+  wxPoint * points;
+  wxPoint arrow[3];
+  int n;
+  int i, j, num;
+  
+  wxClientDC dc(this);
+  PrepareDC(dc);
+  dc.SetUserScale(m_xUserScale, m_yUserScale);
+
+  wxBrush old_brush = dc.GetBrush();
+  wxPen old_pen = dc.GetPen();
+
+  n = ln->cons.size()+2;
+  points = new wxPoint[n];
+
+  bbox = modules[ln->To_mod].GetPlugin()->GetBBox();
+  
+  num = modules[ln->To_mod].GetPlugin()->GetNumIports();
+  ports.resize(num);
+  modules[ln->To_mod].GetPlugin()->GetIPorts(ports);
+
+  points[0].x = bbox.x+ports[ln->To_port].x;
+  points[0].y = bbox.y+ports[ln->To_port].y;
+
+  j=1;
+  for (i=ln->cons.size()-1;i>=0; i--, j++)
+    points[j]=ln->cons[i];
+
+  bbox = modules[ln->Fr_mod].GetPlugin()->GetBBox();
+  num = modules[ln->Fr_mod].GetPlugin()->GetNumOports();
+  ports.resize(num);
+  modules[ln->Fr_mod].GetPlugin()->GetOPorts(ports);
+
+  points[n-1].x = bbox.x+ports[ln->Fr_port].x;
+  points[n-1].y = bbox.y+ports[ln->Fr_port].y;
+  
+  if (!flag)
+    {
+      dc.SetPen(*wxWHITE_PEN);
+      dc.SetBrush(*wxWHITE_BRUSH);
+    }
+  else
+    {
+      dc.SetPen(*wxBLACK_PEN);
+      dc.SetBrush(*wxWHITE_BRUSH);
+    }
+  dc.DrawLines(n, points);
+
+  //Now draw the arrow head
+  if (!flag)
+    {
+      dc.SetPen(*wxWHITE_PEN);
+      dc.SetBrush(*wxWHITE_BRUSH);
+    }
+  else
+    {
+      dc.SetPen(*wxBLACK_PEN);
+      dc.SetBrush(*wxBLACK_BRUSH);
+    }
+  
+  arrow[0]=points[0];
+  
+  
+   double a = atan(3.0/10.0);
+   double b = -a;
+   double sinb=sin(b); 
+   double cosb = cos(b);
+   double sina=sin(a); 
+   double cosa = cos(a);
+   double dist=sqrt(double((points[1].y-points[0].y)*(points[1].y-points[0].y)
+		   +(points[1].x-points[0].x)*(points[1].x-points[0].x)));
+
+  arrow[1].x=(int)( cosa*12.0/dist*(points[1].x-points[0].x)
+    -sina*12.0/dist*(points[1].y-points[0].y)+points[0].x );
+  arrow[1].y=(int)( sina*12.0/dist*(points[1].x-points[0].x)
+    +cosa*12.0/dist*(points[1].y-points[0].y)+points[0].y );
+
+  arrow[2].x=(int)( cosb*12.0/dist*(points[1].x-points[0].x)
+    -sinb*12.0/dist*(points[1].y-points[0].y)+points[0].x );
+  arrow[2].y=(int)( sinb*12.0/dist*(points[1].x-points[0].x)
+    +cosb*12.0/dist*(points[1].y-points[0].y)+points[0].y );
+  
+  dc.DrawPolygon(3, arrow);
+  dc.SetPen(old_pen);
+  dc.SetBrush(old_brush);
+  delete [] points; */
 }
 

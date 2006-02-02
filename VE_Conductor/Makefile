@@ -31,8 +31,9 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 DIRS= ${VE_SUITE_HOME}/VE_Conductor/Network \
-   ${VE_SUITE_HOME}/VE_Conductor/GUIPlugin \
-   ${VE_SUITE_HOME}/VE_Conductor/Framework 
+      ${VE_SUITE_HOME}/VE_Conductor/GUIPlugin \
+      ${VE_SUITE_HOME}/VE_Conductor/Utilities \
+      ${VE_SUITE_HOME}/VE_Conductor/Framework 
 
 # -----------------------------------------------------------------------------
 # Build targets.
@@ -43,6 +44,7 @@ all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Conductor/Network \
 ${VE_SUITE_HOME}/VE_Conductor/GUIPlugin \
+${VE_SUITE_HOME}/VE_Conductor/Utilities \
 ${VE_SUITE_HOME}/VE_Conductor/Framework::
 	cd $@ && $(MAKE)
 

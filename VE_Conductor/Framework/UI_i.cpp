@@ -87,7 +87,7 @@ void Body_UI_i::UpdateModuleUI (
     p.Load(msg, strlen(msg));
 
     ui_network_->s_mutexProtect.Lock();
-    ui_network_->modules[module_id].pl_mod->UnPack(&(p.GetInterfaceVector())[0]);
+    ui_network_->modules[module_id].GetPlugin()->UnPack(&(p.GetInterfaceVector())[0]);
     ui_network_->s_mutexProtect.Unlock();
     ui_network_->Refresh();
   }

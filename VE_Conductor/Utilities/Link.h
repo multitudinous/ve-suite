@@ -64,11 +64,17 @@ public:
    unsigned int GetToPort( void );
    unsigned long GetFromModule( void );
    unsigned long GetToModule( void );
+
+   void SetFromPort( unsigned int );
+   void SetToPort( unsigned int );
+   void SetFromModule( unsigned long );
+   void SetToModule( unsigned long );
    Polygon* GetPolygon( void );
 
    ///Helper functions
    void DrawLinkCon( bool flag );
    void CalcLinkPoly( void );
+   void DrawLink( bool flag );
 
 private:
    unsigned long Fr_mod;
