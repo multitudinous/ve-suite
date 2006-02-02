@@ -119,18 +119,29 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData)
 }
 ///////////////////////////////////////////////////////////
 void XMLReaderWriter::WriteXMLDocument(VE_XML::XMLObject* node,
-                                   std::string xmlData,
+                                   std::string& xmlData,
                                    std::string tagName)
 {
    if(_domDocumentManager){
-      _domDocumentManager->SetOuputXMLFile(xmlData);
-      _domDocumentManager->SetWriteXMLFileOn();
+      if(xmlData.compare("returnString"))
+      {
+         _domDocumentManager->SetOuputXMLFile(xmlData);
+         _domDocumentManager->SetWriteXMLFileOn();
+      }
+  
       _domDocumentManager->CreateCommandDocument();
 
       node->SetOwnerDocument(_domDocumentManager->GetCommandDocument());
       _domDocumentManager->GetCommandDocument()->getDocumentElement()->appendChild(node->GetXMLData(tagName));
 
-      _domDocumentManager->WriteAndReleaseCommandDocument();
+      if(!xmlData.compare("returnString"))
+      {
+         xmlData = _domDocumentManager->WriteAndReleaseCommandDocument();
+      }
+      else
+      {
+         _domDocumentManager->WriteAndReleaseCommandDocument();
+      }
       _domDocumentManager->UnLoadParser();
    }
 }

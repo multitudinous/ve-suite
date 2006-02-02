@@ -71,10 +71,11 @@ public:
 
    ///Write the current XML document
    ///\param xmlFile The XML document to write to.
-   ///\param node The XML node to write.
+   ///\param node The XML node to write. If writing to string set this to "returnString" and it
+   ///will be populated w/ the return string.
    ///\param tagName The tag name to use for when writing the node.
    virtual void WriteXMLDocument(VE_XML::XMLObject* node,
-                                   std::string xmlFile,
+                                   std::string& xmlFile,
                                    std::string tagName);
 
    ///Set the Active DOMDocumentManager
