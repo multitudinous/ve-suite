@@ -121,6 +121,12 @@
    #  else
    #    define VE_MODEL_EXPORTS   __declspec(dllimport)
    #  endif /* VE_MODEL_LIBRARY */
+
+   #  ifdef VE_CONDUCTOR_UTILS_LIBRARY
+   #    define VE_CONDUCTOR_UTILS_EXPORTS   __declspec(dllexport)
+   #  else
+   #    define VE_CONDUCTOR_UTILS_EXPORTS   __declspec(dllimport)
+   #  endif /* VE_CONDUCTOR_UTILS_LIBRARY */
 #else
    #  define VE_SCENEGRAPH_EXPORTS
    #  define VE_UTIL_EXPORTS
@@ -135,6 +141,7 @@
    #  define VE_CAD_EXPORTS
    #  define VE_SHADER_EXPORTS
    #  define VE_MODEL_EXPORTS
+   #  define VE_CONDUCTOR_UTILS_EXPORTS
 #endif
 
 #endif
