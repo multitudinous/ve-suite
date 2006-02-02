@@ -45,10 +45,13 @@ namespace VE_EVENTS{
 class EventHandler{
 public:
    ///Constructor
-   EventHandler();
-   virtual ~EventHandler();
+   EventHandler(){}
 
-   virtual Execute() = 0; 
+   ///Destructor
+   virtual ~EventHandler(){}
+
+   ///The call to handle the event
+   virtual void Execute() = 0; 
    
 protected:
 };
