@@ -200,9 +200,6 @@
 				RelativePath=".\CADNodePropsDlg.cxx">
 			</File>
 			<File
-				RelativePath="..\Utilities\CADTreeBuilder.cxx">
-			</File>
-			<File
 				RelativePath="Frame.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -553,9 +550,6 @@
 			</File>
 			<File
 				RelativePath=".\CADNodePropsDlg.h">
-			</File>
-			<File
-				RelativePath="..\Utilities\CADTreeBuilder.h">
 			</File>
 			<File
 				RelativePath="Frame.h">

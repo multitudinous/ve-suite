@@ -142,7 +142,7 @@ protected:
    wxButton* _quitButton;///<The button to close the dialog.
    wxButton* _saveButton;///<The button to save the current CADHierarchy.
 
-   CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
+   VE_Conductor::GUI_Utilities::CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
 
    std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The DataValuePair s for the current command.
 

@@ -499,7 +499,7 @@ void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////
 void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
 {
-   Polygon linkline, Near;
+   VE_Conductor::GUI_Utilities::Polygon linkline, Near;
    wxRect bbox;
    std::vector<wxPoint> ports;  
    int n;
@@ -546,7 +546,7 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
          break;
 
    size_t j;
-   Polygon temp;
+   VE_Conductor::GUI_Utilities::Polygon temp;
    for ( j=1; j< linkline.GetNumberOfPoints()-1; ++j )
    {
       if ( j-1 == i )
@@ -1077,7 +1077,7 @@ void Network::DropModule(int ix, int iy, int mod, wxDC& dc)
 
   //num = cur_module->GetNumPoly();
   //tmppoly.resize(num);
-  Polygon tmppoly;
+  VE_Conductor::GUI_Utilities::Polygon tmppoly;
    POLY oldPoly;
   cur_module->GetPoly( oldPoly );
    *(tmppoly.GetPolygon()) = oldPoly;
@@ -1699,7 +1699,7 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
    num = cur_module->GetNumPoly();
    tmpPoly.resize(num);
    cur_module->GetPoly(tmpPoly); 
-   Polygon newPolygon;
+   VE_Conductor::GUI_Utilities::Polygon newPolygon;
    *(newPolygon.GetPolygon()) = tmpPoly;
 
    newPolygon.TransPoly( bbox.x, bbox.y, *(mod.GetPolygon()) ); //Make the network recognize its polygon 
