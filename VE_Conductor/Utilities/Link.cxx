@@ -147,7 +147,7 @@ void Link::SetToModule( unsigned long input )
    To_mod = input;
 }
 ////////////////////////////////////////////////
-Polygon* Link::GetPolygon( void )
+VE_Conductor::GUI_Utilities::Polygon* Link::GetPolygon( void )
 {
    return &(poly);
 }

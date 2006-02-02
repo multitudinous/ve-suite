@@ -32,7 +32,7 @@
 #ifndef _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
 #define _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
 #include <vector>
-
+#include "VE_Installer/include/VEConfig.h"
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Link.h"
 
@@ -43,7 +43,7 @@ namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-class Module
+class VE_CONDUCTOR_UTILS_EXPORTS Module
 {
 public:
    ///Constructor

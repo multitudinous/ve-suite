@@ -33,7 +33,7 @@
 #define _VE_CONDUCTOR_GUI_UTILITIES_TAG_
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Link.h"
-
+#include "VE_Installer/include/VEConfig.h"
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 class wxWindow;
@@ -42,7 +42,7 @@ namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-class Tag
+class VE_CONDUCTOR_UTILS_EXPORTS Tag
 {
 public:
    ///Constructor

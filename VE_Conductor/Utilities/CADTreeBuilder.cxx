@@ -129,14 +129,14 @@ void CADTreeBuilder::SetWXTreeCtrl(wxTreeCtrl* tree)
    return *this;
 }*/
 /////////////////////////////////////////////
-CADTreeBuilder::TreeNodeData::~TreeNodeData()
+/*VE_Conductor::GUI_Utilities::CADTreeBuilder::TreeNodeData::~TreeNodeData()
 {
-   /*if(_cadNode)
+   if(_cadNode)
    {
       delete _cadNode;
       _cadNode = 0;
-   }*/
-}
+   }
+}*/
 //////////////////////////////////////////////////////////
 CADNode* CADTreeBuilder::GetCADNode(std::string name)
  {

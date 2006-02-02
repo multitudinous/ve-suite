@@ -32,7 +32,7 @@
 
 #ifndef CAD_TREE_BUILDER
 #define CAD_TREE_BUILDER
-
+#include "VE_Installer/include/VEConfig.h"
 /*!\file CADTreeBuilder.h
   CADTreeBuilder API
   */
@@ -52,7 +52,7 @@ namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-   class /*VE_CAD_EXPORTS*/ CADTreeBuilder: public VE_CAD::CADNodeTraverser
+   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public VE_CAD::CADNodeTraverser
    {
       public:
          enum TREE_IDS
@@ -115,7 +115,7 @@ namespace GUI_Utilities
          TreeNodeData(VE_CAD::CADNode* node){ _cadNode = node;}
 
          ///Destructor
-         virtual ~TreeNodeData();
+         virtual ~TreeNodeData(){}
             
          ///Get the CADNode.
          VE_CAD::CADNode* GetNode(){return _cadNode;}

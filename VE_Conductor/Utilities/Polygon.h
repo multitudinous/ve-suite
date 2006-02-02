@@ -33,12 +33,12 @@
 #define _VE_CONDUCTOR_GUI_UTILITIES_POLYGON_
 #include <vector>
 #include <wx/gdicmn.h>
-
+#include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-class Polygon
+class VE_CONDUCTOR_UTILS_EXPORTS Polygon
 {
 public:
    ///Constructor

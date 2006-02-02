@@ -58,6 +58,7 @@ size_t Polygon::GetNumberOfPoints( void )
 /////////////////////////////////////////////////////////////
 int Polygon::inside( wxPoint pt ) 
 {
+   return -1;
 /*
    int i, count = 0, j = 0;
 
@@ -103,6 +104,7 @@ int Polygon::inside( wxPoint pt )
 //////////////////////////////////////////////////////////////////
 double Polygon::nearpnt(wxPoint pt, Polygon &Near)
 {
+   return -1;
 /*  int i, i2;
 
   double t, d, dist = 99999, numsides = poly.size();
@@ -161,4 +163,5 @@ int Polygon::intersect(Polygon l1, Polygon l2)
   return(((ccw11*ccw12 < 0) && (ccw21*ccw22 < 0)) ||
 	 (ccw11*ccw12*ccw21*ccw22 == 0));
 */
+   return -1;
 }

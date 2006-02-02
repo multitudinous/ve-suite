@@ -107,7 +107,7 @@ std::string Module::GetClassName( void )
    return cls_name;
 }
 ////////////////////////////////////////////////
-Polygon* Module::GetPolygon( void )
+VE_Conductor::GUI_Utilities::Polygon* Module::GetPolygon( void )
 {
    return &(poly);
 }

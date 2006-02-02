@@ -84,7 +84,7 @@ wxString* Tag::GetTagText( void )
    return &(text);
 }
 ////////////////////////////////////////////////
-Polygon* Tag::GetPolygon( void )
+VE_Conductor::GUI_Utilities::Polygon* Tag::GetPolygon( void )
 {
    return &(poly);
 }
