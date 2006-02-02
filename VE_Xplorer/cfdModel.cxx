@@ -98,11 +98,9 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
 #endif
    _rootCADNode = 0;
    
-   _eventHandlers[std::string("CAD_PROPERTY")] = new VE_EVENTS::CADTransformEventHandler();
+   _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
+   _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")]->SetGlobalBaseObject(this);
 
-   //_eventHandlers;
-   //Dynamic Loading
-   //ActiveLoadingThread();
 }
 
 cfdModel::~cfdModel()
@@ -117,6 +115,19 @@ cfdModel::~cfdModel()
    }
    mGeomDataSets.clear();
 */
+   for ( std::map<unsigned int,VE_Xplorer::cfdFILE*>::iterator itr = _partList.begin();
+                                       itr != _partList.end(); itr++ )
+   {
+      delete itr->second;
+   }
+   _partList.clear();
+   for ( std::map<unsigned int,VE_SceneGraph::cfdDCS*>::iterator itr = _assemblyList.begin();
+                                       itr != _assemblyList.end(); itr++ )
+   {
+      delete itr->second;
+   }
+   _assemblyList.clear();
+
    // the following block allows the program to get to pfExit
    for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); itr++ )
@@ -203,18 +214,13 @@ void cfdModel::PreFrameUpdate()
 {
    vprDEBUG(vesDBG,1) << "cfdModel::PreFrameUpdate " <<std::endl<< vprDEBUG_FLUSH;;
 
-   std::map<std::string,VE_EVENTS::EventHandler*>::iterator foundCommand;
+   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
    if(veCommand)
    {
-      foundCommand = _eventHandlers.find(veCommand->GetCommandName());
-      if(foundCommand!= _eventHandlers.end())
+      currentEventHandler = _eventHandlers.find(veCommand->GetCommandName());
+      if(currentEventHandler != _eventHandlers.end())
       {
-         //Not sure how else to do this
-         if(!foundCommand->first.find(std::string("CAD_PROPERTY")))
-         {
-            foundCommand->second->SetXMLObject(_rootCADNode);
-         }
-         foundCommand->second->Execute(veCommand);
+          currentEventHandler->second->Execute(veCommand);
       }
    }
 }
@@ -796,3 +802,43 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
    return newStlName;
 }
 //Dynamic Loading Data End Here
+
+///////////////////////////////////////////
+VE_CAD::CADNode* cfdModel::GetRootCADNode()
+{
+   return _rootCADNode;
+}
+///////////////////////////////////////////////////////////
+VE_Xplorer::cfdFILE* cfdModel::GetPart(unsigned int partID)
+{
+   return _partList[partID];
+}
+/////////////////////////////////////////////////////////////////////
+VE_SceneGraph::cfdDCS* cfdModel::GetAssembly(unsigned int assemblyID)
+{
+   return _assemblyList[assemblyID];
+}
+//////////////////////////////////////////////
+bool cfdModel::PartExists(unsigned int partID)
+{
+   std::map<unsigned int,VE_Xplorer::cfdFILE*>::iterator foundPart;
+   foundPart = _partList.find(partID);
+
+   if(foundPart != _partList.end())
+   {
+      return true;
+   }
+   return false;
+}
+/////////////////////////////////////////////////////
+bool cfdModel::AssemblyExists(unsigned int assemblyID)
+{
+   std::map<unsigned int,VE_SceneGraph::cfdDCS*>::iterator foundAssembly;
+   foundAssembly = _assemblyList.find(assemblyID);
+
+   if(foundAssembly != _assemblyList.end())
+   {
+      return true;
+   }
+   return false;
+}

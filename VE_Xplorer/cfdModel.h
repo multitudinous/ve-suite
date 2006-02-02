@@ -160,6 +160,21 @@ namespace VE_Xplorer
          std::string GetGeomFileName( int );
          void CreateGeomDataSet( std::string );
 
+         ///Get a specific part. 
+         ///\param partID The ID of the part to search form
+         VE_Xplorer::cfdFILE* GetPart(unsigned int partID);
+
+         ///Get a specific assembly. 
+         ///\param assemblyID The ID of the assembly to search form
+         VE_SceneGraph::cfdDCS* GetAssembly(unsigned int assemblyID);
+
+         //Checks for cloning
+         ///\param partID The part ID to search for.
+         bool PartExists(unsigned int partID);
+
+         ///\param assemblyID The assembly ID to search for.
+         bool AssemblyExists(unsigned int assemblyID);
+
          VE_SceneGraph::cfdNode* GetCfdNode( void );
          VE_SceneGraph::cfdDCS* GetCfdDCS( void );
 
@@ -189,6 +204,10 @@ public:
    void AddVTKDataSet(vtkDataSet* );
    std::vector<vtkDataSet* >GetWaitingDataList();
  
+
+   ///The current graph
+   VE_CAD::CADNode* GetRootCADNode();
+   
       private:
          vpr::Thread *loadDataTh;
          vpr::Mutex mValueLock;
@@ -205,6 +224,9 @@ public:
          GeometoryDataSetList mGeomDataSets;
          typedef std::vector< VE_Xplorer::cfdDataSet* > VTKDataSetList;
          VTKDataSetList mVTKDataSets;
+
+         std::map<unsigned int,VE_Xplorer::cfdFILE*> _partList;///<A list of the current parts.
+         std::map<unsigned int,VE_SceneGraph::cfdDCS*> _assemblyList;///A list of the current assemblies.
 
       #ifdef _OSG
          typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;

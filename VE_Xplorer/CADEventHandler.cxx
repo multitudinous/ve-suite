@@ -30,7 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/CADEventHandler.h"
+#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/cfdFILE.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
+
+#include "VE_SceneGraph/cfdDCS.h"
+
 #include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/Transform.h"
+#include "VE_Open/XML/FloatArray.h"
 #include <iostream>
 
 using namespace VE_EVENTS;
@@ -55,11 +63,35 @@ CADEventHandler::~CADEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////
-void CADEventHandler::SetXMLObject(VE_XML::XMLObject* cadNode)
+void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 {
    try
    {
-      _cadNode = dynamic_cast<VE_CAD::CADNode*>(cadNode);
+      _baseObject = model;
+
+      VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
+      _cadNode = dynamic_cast<VE_CAD::CADNode*>(activeModel->GetRootCADNode());
+       VE_SceneGraph::cfdDCS* transform = 0;
+      if(_cadNode->GetNodeType() == std::string("Part"))
+      {
+         if(activeModel->PartExists(_cadNode->GetID()))
+         {
+            transform = activeModel->GetPart(_cadNode->GetID())->GetDCS();
+         }
+      }
+      else if(_cadNode->GetNodeType() == std::string("Assembly"))
+      {
+         if(activeModel->AssemblyExists(_cadNode->GetID()))
+         {
+            transform = activeModel->GetAssembly(_cadNode->GetID());
+         }
+      }
+      else if(_cadNode->GetNodeType() == std::string("Clone"))
+      {
+      }
+      transform->SetTranslationArray( _cadNode->GetTransform()->GetTranslationArray()->GetArray() );
+      transform->SetRotationArray( _cadNode->GetTransform()->GetRotationArray()->GetArray() );
+      transform->SetScaleArray( _cadNode->GetTransform()->GetScaleArray()->GetArray() );
    }
    catch(...)
    {

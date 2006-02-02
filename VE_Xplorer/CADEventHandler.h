@@ -43,9 +43,9 @@ namespace VE_CAD
 {
    class CADNode;
 }
-namespace VE_XML
+namespace VE_Xplorer
 {
-   class XMLObject;
+   class cfdGlobalBase;
 }
 namespace VE_EVENTS{
 class CADEventHandler : public EventHandler{
@@ -59,9 +59,9 @@ public:
    ///Destructor
    virtual ~CADEventHandler();
 
-   ///Set the CADNode.
-   ///\param cadNode The CADNode to execute the Command on.
-   void SetXMLObject(VE_XML::XMLObject* cadNode);
+   ///Set the cfdModel.
+   ///\param model The cfdModel to execute the Command on.
+   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model);
    
    ///Exectute the event
    ///\param command The current Command event.

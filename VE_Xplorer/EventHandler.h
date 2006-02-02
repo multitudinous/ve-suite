@@ -44,7 +44,10 @@
 namespace VE_XML
 {
    class Command;
-   class XMLObject;
+}
+namespace VE_Xplorer
+{
+   class cfdGlobalBase;
 }
 namespace VE_EVENTS{
 class EventHandler{
@@ -59,10 +62,11 @@ public:
    ///\param command The command to execute
    virtual void Execute(VE_XML::Command* command) = 0;
 
-   ///\param objectToModify The XMLObject to apply the command to.
-   virtual void SetXMLObject(VE_XML::XMLObject* objectToModify) = 0;
+   ///\param baseObject The cfdGlobalBase object to apply the command to.
+   virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject) = 0;
    
 protected:
+   VE_Xplorer::cfdGlobalBase* _baseObject;
 };
 }
 #endif// VE_EVENT_HANDLER_H
