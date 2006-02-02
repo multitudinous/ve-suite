@@ -66,9 +66,9 @@ class tecplotReader
          void allocateVariables();
          std::string header;    //store the header string in this string var
          std::string tempString; //temporary storage for strings
-         std::string::iterator I;   //an iterator to parse through strings
-         unsigned int I_Lower;  //lower location for the header
-         unsigned int I_Upper;  //another upper location for the header         
+         std::string::iterator I;   //an iterator to parse through strings  
+         size_t I_Lower;  //lower location for the header
+         size_t I_Upper;  //another upper location for the header                
          std::vector< std::string > variablNames;  //a vector of strings to store variabl names
          std::vector< int >::iterator vectorIntIterator;     //an iterator for vectors of ints
          std::vector< std::string >::iterator vectorStringIterator; //an iterator for vectors of strings 
