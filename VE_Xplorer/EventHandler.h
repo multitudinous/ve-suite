@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_EVENT_HANDLER_H
-#ifndef VE_EVENT_HANDLER_H
+#define VE_EVENT_HANDLER_H
 /*!\file EventHandler.h
   EventHandler API
   */
