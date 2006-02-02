@@ -40,7 +40,7 @@ class wxWindow;
 
 namespace VE_Conductor
 {
-class REI_Plugin;
+//class REI_Plugin;
 
 namespace GUI_Utilities
 {

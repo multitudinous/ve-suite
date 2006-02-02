@@ -123,3 +123,123 @@ Polygon* Link::GetPolygon( void )
 {
    return &(poly);
 }
+/////////////////////////////////////////////////////////
+void Link::DrawLinkCon( bool flag )
+{
+   wxPoint bport[4];
+  
+  wxClientDC dc(this);
+  PrepareDC(dc);
+  dc.SetUserScale(m_xUserScale, m_yUserScale);
+
+  wxBrush old_brush = dc.GetBrush();
+  wxPen old_pen = dc.GetPen();
+
+  wxCoord xoff, yoff;
+  POLY linkline, temp;
+  wxRect bbox;
+  POLY ports;  
+  int n, i, num;
+
+  bport[0]=wxPoint(0,0);
+  bport[1]=wxPoint(6,0);
+  bport[2]=wxPoint(6,6);
+  bport[3]=wxPoint(0,6);
+  
+  if (flag)
+    {
+      dc.SetBrush(*wxGREEN_BRUSH);
+      dc.SetPen(*wxBLACK_PEN);
+    }
+  else
+    {
+      dc.SetBrush(*wxWHITE_BRUSH);
+      dc.SetPen(*wxWHITE_PEN);
+    }
+  
+  if (m_selLink < 0)
+    return;
+
+  n = links[m_selLink]->cons.size()+2;
+  linkline.resize(n);
+
+  bbox = modules[links[m_selLink]->Fr_mod].pl_mod->GetBBox();
+  
+  num= modules[links[m_selLink]->Fr_mod].pl_mod->GetNumOports();
+  ports.resize(num);
+  modules[links[m_selLink]->Fr_mod].pl_mod->GetOPorts(ports);
+
+  linkline[0].x = bbox.x+ports[links[m_selLink]->Fr_port].x;
+  linkline[0].y = bbox.y+ports[links[m_selLink]->Fr_port].y;
+
+  for (i=0; i<(int)(links[m_selLink]->cons.size()); i++)
+    linkline[i+1]=links[m_selLink]->cons[i];
+
+  bbox = modules[links[m_selLink]->To_mod].pl_mod->GetBBox();
+
+  num = modules[links[m_selLink]->To_mod].pl_mod->GetNumIports();
+  ports.resize(num);
+  modules[links[m_selLink]->To_mod].pl_mod->GetIPorts(ports);
+  linkline[n-1].x = bbox.x+ports[links[m_selLink]->To_port].x;
+  linkline[n-1].y = bbox.y+ports[links[m_selLink]->To_port].y;
+
+  for (i=0; i<(int)linkline.size(); i++)
+    { 
+      xoff = linkline[i].x-3;
+      yoff = linkline[i].y-3;
+      
+      dc.DrawPolygon(4, bport, xoff, yoff);      
+    }
+
+  dc.SetBrush(old_brush);
+  dc.SetPen(old_pen);
+}
+
+///////////////////////////////////////
+Link::CalcLinkPoly()
+{
+   wxRect bbox;
+   wxPoint pos;
+   POLY ports;
+   POLY points;
+   POLY result;
+   int i;
+   int num;
+
+
+  bbox = modules[l.Fr_mod].pl_mod->GetBBox();
+  num = modules[l.Fr_mod].pl_mod->GetNumOports();
+  ports.resize(num);
+  modules[l.Fr_mod].pl_mod->GetOPorts(ports);
+   // get initial port
+  pos.x = bbox.x+ports[l.Fr_port].x;
+  pos.y = bbox.y+ports[l.Fr_port].y;
+
+  points.push_back(pos);
+   // Get all the connection in a link
+  for (i=0; i<(int)l.cons.size(); i++)
+    points.push_back(l.cons[i]);
+
+  bbox = modules[l.To_mod].pl_mod->GetBBox();
+  
+  num = modules[l.To_mod].pl_mod->GetNumIports();
+  ports.resize(num);
+  modules[l.To_mod].pl_mod->GetIPorts(ports);
+  pos.x = bbox.x+ports[l.To_port].x;
+  pos.y = bbox.y+ports[l.To_port].y;
+
+   // get end port
+  points.push_back(pos);
+
+   // -3 so that we end up getting a 6 point wide line
+  for (i=0; i<(int)points.size(); i++)
+    result.push_back(wxPoint(points[i].x, points[i].y-3));
+
+   // +3 so that we end up getting a 6 point wide line
+  for (i=(int)points.size()-1; i>=0; i--)
+    result.push_back(wxPoint(points[i].x, points[i].y+3));
+  
+  return result;
+
+}
+

@@ -100,7 +100,7 @@ void DOMDocumentManager::_readInputString(std::string xmlString)
 {
    std::string system_id( "input.xml" );
    MemBufInputSource inputXML((const XMLByte*)xmlString.c_str(),
-                           xmlString.size(), system_id.c_str());
+        static_cast< const unsigned int >( xmlString.size() ), system_id.c_str());
    parser->parse(inputXML);
 }
 ////////////////////////////////////////////////////////////

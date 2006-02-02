@@ -93,3 +93,32 @@ wxRect* Tag::GetBoundingBox( void )
 {
    return &(box);
 }
+
+////////////////////////////////////////////////////
+void Tag::CalcTagPoly( void )
+{
+   // Create a poly based on a tag
+   wxPoint endpos;
+   POLY result;
+
+   endpos.x = t.box.x;
+   endpos.y = t.box.y+t.box.height/2;
+   
+   // first point of the extension line
+   result.push_back(wxPoint(t.cons[0].x, t.cons[0].y-3));
+   // second point of the extension line
+   result.push_back(wxPoint(t.cons[1].x, t.cons[1].y-3));
+   // first corner of the text box
+   result.push_back(wxPoint(endpos.x, endpos.y-3));
+   result.push_back(wxPoint(t.box.x, t.box.y));
+   result.push_back(wxPoint(t.box.x+t.box.width, t.box.y));
+   result.push_back(wxPoint(t.box.x+t.box.width, t.box.y+t.box.height));
+   result.push_back(wxPoint(t.box.x, t.box.y+t.box.height));
+   // and now back around again
+   result.push_back(wxPoint(endpos.x, endpos.y+3));
+   result.push_back(wxPoint(t.cons[1].x, t.cons[1].y+3));
+   result.push_back(wxPoint(t.cons[0].x, t.cons[0].y+3));
+
+   //return result;  
+}
+

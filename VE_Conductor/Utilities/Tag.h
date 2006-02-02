@@ -62,6 +62,9 @@ public:
    Polygon* GetPolygon( void );
    wxRect* GetBoundingBox( void );
 
+   ///
+   void CalcTagPoly( void );
+
 private:
    wxPoint cons[2]; ///<2 connectors for tag, end and middle
    wxString text;///<Text displayed by the tag

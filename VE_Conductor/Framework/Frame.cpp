@@ -53,6 +53,9 @@
 #include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/Framework/Network.h"
 
+#include "VE_Conductor/Utilities/Module.h"
+#include "VE_Conductor/Utilities/Tag.h"
+
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <wx/splash.h>
@@ -61,6 +64,8 @@
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
 #include <sstream>
 #include <iomanip>
+
+using namespace VE_Conductor::GUI_Utilities;
 
 #ifdef WIN32
 #include <shellapi.h>
@@ -591,7 +596,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
    char* result;
    //char buf[80];
-   std::map<int, MODULE>::iterator iter;
+   std::map<int, Module>::iterator iter;
    unsigned int i;
    std::vector<wxString> titles;
    //TextResultDialog * result_dlg;
@@ -640,14 +645,14 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
                v_desc.clear();
                v_value.clear();
                /*
-               v_desc.push_back(iter->second.pl_mod->GetName());
+               v_desc.push_back(iter->second.GetPlugin()->GetName());
                std::ostringstream dirStringStream;
                dirStringStream << "   " << iter->first;
                std::string dirString = dirStringStream.str();
                v_value.push_back(dirString.c_str());
                */
                wxString str;
-               str = iter->second.pl_mod->GetName();
+               str = iter->second.GetPlugin()->GetName();
                str << " (" << iter->first << ")";
                result_dlg->NewTab( str );
 
@@ -722,26 +727,26 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    v_value.clear();
    for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) 
    {
-      if(iter->second.pl_mod->financial_dlg != NULL) 
+      if(iter->second.GetPlugin()->financial_dlg != NULL) 
       {
-         if(iter->second.pl_mod->financial_dlg->_use_data) 
+         if(iter->second.GetPlugin()->financial_dlg->_use_data) 
          {
-	         double TPC = iter->second.pl_mod->financial_dlg->_cc00_d *
+	         double TPC = iter->second.GetPlugin()->financial_dlg->_cc00_d *
 	                        (1 +
-	                     iter->second.pl_mod->financial_dlg->_cc01_d / 100 +
-	                     iter->second.pl_mod->financial_dlg->_cc02_d / 100 +
-	                     iter->second.pl_mod->financial_dlg->_cc03_d / 100 +
-	                     iter->second.pl_mod->financial_dlg->_cc04_d / 100 +
-	                     iter->second.pl_mod->financial_dlg->_cc05_d / 100);
+	                     iter->second.GetPlugin()->financial_dlg->_cc01_d / 100 +
+	                     iter->second.GetPlugin()->financial_dlg->_cc02_d / 100 +
+	                     iter->second.GetPlugin()->financial_dlg->_cc03_d / 100 +
+	                     iter->second.GetPlugin()->financial_dlg->_cc04_d / 100 +
+	                     iter->second.GetPlugin()->financial_dlg->_cc05_d / 100);
 
-	         double TPI = TPC + iter->second.pl_mod->financial_dlg->_cc06_d;
+	         double TPI = TPC + iter->second.GetPlugin()->financial_dlg->_cc06_d;
 
-	         double cccost = TPI + iter->second.pl_mod->financial_dlg->_cc07_d +
-	                           iter->second.pl_mod->financial_dlg->_cc08_d;
+	         double cccost = TPI + iter->second.GetPlugin()->financial_dlg->_cc07_d +
+	                           iter->second.GetPlugin()->financial_dlg->_cc08_d;
 
 	         total_cccost += cccost;
 
-	         v_desc.push_back(wxString(iter->second.pl_mod->GetName()));
+	         v_desc.push_back(wxString(iter->second.GetPlugin()->GetName()));
 	         //sprintf(buf,"%.2f", cccost);
             std::ostringstream dirStringStream;
             dirStringStream << std::setprecision(2) << cccost;
@@ -749,16 +754,16 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 
 	         v_value.push_back(dirString.c_str());
 
-	         double TMC = TPC * iter->second.pl_mod->financial_dlg->_om00_d / 100;
+	         double TMC = TPC * iter->second.GetPlugin()->financial_dlg->_om00_d / 100;
 	
 	         double omcost = TMC + 
-	                        iter->second.pl_mod->financial_dlg->_om01_d +
-	                        iter->second.pl_mod->financial_dlg->_om02_d +
-	                        iter->second.pl_mod->financial_dlg->_om02_d * iter->second.pl_mod->financial_dlg->_om03_d / 100;
+	                        iter->second.GetPlugin()->financial_dlg->_om01_d +
+	                        iter->second.GetPlugin()->financial_dlg->_om02_d +
+	                        iter->second.GetPlugin()->financial_dlg->_om02_d * iter->second.GetPlugin()->financial_dlg->_om03_d / 100;
 
 	         total_omcost += omcost;
 	
-	         v_desc2.push_back(wxString(iter->second.pl_mod->GetName()));
+	         v_desc2.push_back(wxString(iter->second.GetPlugin()->GetName()));
 	         //sprintf(buf,"%.2f", omcost);
             dirStringStream << std::setprecision(2) << omcost;
 	         v_value2.push_back(dirString.c_str());

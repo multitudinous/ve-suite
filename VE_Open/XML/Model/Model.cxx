@@ -330,7 +330,7 @@ DataValuePair* Model::GetResult( unsigned int i )
    }
 }
 ////////////////////////////////////////////////////////////
-unsigned int Model::GetNumberOfResults( void )
+size_t Model::GetNumberOfResults( void )
 {
    return results.size();
 }
@@ -357,7 +357,7 @@ DataValuePair* Model::GetInput( int i )
    }
 }
 ////////////////////////////////////////////////////////////
-unsigned int Model::GetNumberOfInputs( void )
+size_t Model::GetNumberOfInputs( void )
 {
    return inputs.size();
 }
@@ -384,7 +384,7 @@ Port* Model::GetPort( unsigned int i )
    }
 }
 ////////////////////////////////////////////////////////////
-unsigned int Model::GetNumberOfPorts( void )
+size_t Model::GetNumberOfPorts( void )
 {
    return ports.size();
 }
@@ -411,7 +411,7 @@ ParameterBlock* Model::GetInformationPacket( unsigned int i )
    }
 }
 ////////////////////////////////////////////////////////////
-unsigned int Model::GetNumberOfInformationPackets( void )
+size_t Model::GetNumberOfInformationPackets( void )
 {
    return informationPackets.size();
 }

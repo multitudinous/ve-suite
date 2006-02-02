@@ -66,6 +66,10 @@ public:
    unsigned long GetToModule( void );
    Polygon* GetPolygon( void );
 
+   ///Helper functions
+   void DrawLinkCon( bool flag );
+   void CalcLinkPoly( void );
+
 private:
    unsigned long Fr_mod;
    unsigned long To_mod;

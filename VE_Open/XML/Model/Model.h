@@ -105,22 +105,22 @@ public:
    ///Get results data
    VE_XML::DataValuePair* GetResult( unsigned int i );
    ///Get results data
-   unsigned int GetNumberOfResults( void );
+   size_t GetNumberOfResults( void );
    ///Get input data
    ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
    VE_XML::DataValuePair* GetInput( int i );
    ///Get number of input data
-   unsigned int GetNumberOfInputs( void );
+   size_t GetNumberOfInputs( void );
    ///Get the i'th port for the model.
    ///\param i The i'th port you are after.
    Port* GetPort( unsigned int i );
    ///Get port data
-   unsigned int GetNumberOfPorts( void );
+   size_t GetNumberOfPorts( void );
    ///Get the i'th information packet for a model.
    ///\param i The i'th packet you are after.
    VE_XML::ParameterBlock* GetInformationPacket( unsigned int i );
    ///Get info packets data
-   unsigned int GetNumberOfInformationPackets( void );
+   size_t GetNumberOfInformationPackets( void );
    ///Get the geometry for the model.
    VE_CAD::CADNode* GetGeometry( void );
 
