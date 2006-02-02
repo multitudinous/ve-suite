@@ -29,40 +29,41 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_EVENT_HANDLER_H
-#define VE_EVENT_HANDLER_H
-/*!\file EventHandler.h
-  EventHandler API
+#ifndef VE_CAD_TRANSFORM_EVENT_HANDLER_H
+#define VE_CAD_TRANSFORM_EVENT_HANDLER_H
+/*!\file CADTransformEventHandler.h
+  CADTransfomrEventHandler API
   */
-/*!\class EventHandler
- * Base class for event handling.
+/*!\class CADTransfomrEventHandler
+ * Class for handling CADNode transforms.
  */
-/*!\namespace VE_EVENTS
- * Namespace for ve-event handlers.
- */
-
 namespace VE_XML
 {
    class Command;
-   class XMLObject;
 }
+namespace VE_CAD
+{
+   class CADNode;
+}
+#include "VE_Xplorer/CADEventHandler.h"
 namespace VE_EVENTS{
-class EventHandler{
+class CADTransformEventHandler: public CADEventHandler{
 public:
    ///Constructor
-   EventHandler(){}
+   CADTransformEventHandler();
+
+   ///Copy Constructor
+   CADTransformEventHandler(const CADTransformEventHandler& rhs);
 
    ///Destructor
-   virtual ~EventHandler(){}
+   virtual ~CADTransformEventHandler();
 
-   ///The call to handle the event
-   ///\param command The command to execute
-   virtual void Execute(VE_XML::Command* command) = 0;
-
-   ///\param objectToModify The XMLObject to apply the command to.
-   virtual void SetXMLObject(VE_XML::XMLObject* objectToModify) = 0;
-   
+   ///Equal operator
+   CADTransformEventHandler& operator=(const CADTransformEventHandler& rhs);
 protected:
+   ///Update a transform on the CADNode.
+   ///\param command The Command containing the udpated transform.
+   void _operateOnNode(VE_XML::Command* command);
 };
 }
 #endif// VE_EVENT_HANDLER_H

@@ -277,6 +277,12 @@
 			Name="src"
 			Filter=".cpp">
 			<File
+				RelativePath=".\CADEventHandler.cxx">
+			</File>
+			<File
+				RelativePath=".\CADTransformEH.cxx">
+			</File>
+			<File
 				RelativePath=".\cfd1DTextInput.cxx">
 			</File>
 			<File
@@ -431,6 +437,12 @@
 			Name="headers"
 			Filter=".h">
 			<File
+				RelativePath=".\CADEventHandler.h">
+			</File>
+			<File
+				RelativePath=".\CADTransformEH.h">
+			</File>
+			<File
 				RelativePath=".\cfdDataSet.h">
 			</File>
 			<File
@@ -443,7 +455,13 @@
 				RelativePath=".\cfdEnum.h">
 			</File>
 			<File
+				RelativePath=".\cfdModel.h">
+			</File>
+			<File
 				RelativePath=".\cfdSoundHandler.h">
+			</File>
+			<File
+				RelativePath=".\EventHandler.h">
 			</File>
 		</Filter>
 		<Filter

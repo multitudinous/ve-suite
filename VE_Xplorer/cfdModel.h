@@ -64,7 +64,14 @@ namespace VE_SceneGraph
    class cfdClone;
    class cfdTempAnimation;
 }
-
+namespace VE_EVENTS
+{
+   class EventHandler;
+}
+namespace VE_CAD
+{
+   class CADNode;
+}
 namespace VE_Xplorer
 {
    class cfdDataSet;
@@ -116,7 +123,7 @@ namespace VE_Xplorer
          ///VE-Conductor
          void PreFrameUpdate(); 
          ///compare VjObs_i commandArray with its child's value
-         virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){} 
+         virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){return false;} 
 
          ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
          virtual void UpdateCommand() {}
@@ -221,6 +228,10 @@ public:
          bool mUpdateModelFlag;
          bool mMoveOldGeomDataSets;
          bool mMoveOldVTKDataSets;   
+
+         VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
+
+         std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
    };
 }
 #endif

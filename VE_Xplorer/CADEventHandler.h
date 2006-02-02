@@ -29,40 +29,53 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_EVENT_HANDLER_H
-#define VE_EVENT_HANDLER_H
-/*!\file EventHandler.h
-  EventHandler API
+#ifndef CAD_EVENT_HANDLER_H
+#define CAD_EVENT_HANDLER_H
+/*!\file CADEventHandler.h
+  CADEventHandler API
   */
-/*!\class EventHandler
- * Base class for event handling.
- */
-/*!\namespace VE_EVENTS
- * Namespace for ve-event handlers.
+/*!\class CADEventHandler
+ * Base class for CADNode event handling.
  */
 
+#include "VE_Xplorer/EventHandler.h"
+namespace VE_CAD
+{
+   class CADNode;
+}
 namespace VE_XML
 {
-   class Command;
    class XMLObject;
 }
 namespace VE_EVENTS{
-class EventHandler{
+class CADEventHandler : public EventHandler{
 public:
    ///Constructor
-   EventHandler(){}
+   CADEventHandler();
+
+   ///Copy Constructor
+   CADEventHandler(const CADEventHandler& ceh);
 
    ///Destructor
-   virtual ~EventHandler(){}
+   virtual ~CADEventHandler();
 
-   ///The call to handle the event
-   ///\param command The command to execute
-   virtual void Execute(VE_XML::Command* command) = 0;
+   ///Set the CADNode.
+   ///\param cadNode The CADNode to execute the Command on.
+   void SetXMLObject(VE_XML::XMLObject* cadNode);
+   
+   ///Exectute the event
+   ///\param command The current Command event.
+   void Execute(VE_XML::Command* command); 
 
-   ///\param objectToModify The XMLObject to apply the command to.
-   virtual void SetXMLObject(VE_XML::XMLObject* objectToModify) = 0;
+   ///Equal operator
+   CADEventHandler& operator=(const CADEventHandler& rhs);
    
 protected:
+   ///The internal operation on the CADNode.
+   ///\param command The Command to execute.
+   virtual void _operateOnNode(VE_XML::Command* command) = 0;
+
+   VE_CAD::CADNode* _cadNode;///<The CADNode.
 };
 }
 #endif// VE_EVENT_HANDLER_H

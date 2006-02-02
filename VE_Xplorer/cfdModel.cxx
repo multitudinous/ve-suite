@@ -39,6 +39,12 @@
 #include "VE_Builder/Translator/cfdGrid2Surface.h"
 #include "VE_SceneGraph/cfdClone.h"
 
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/CAD/CADNode.h"
+
+#include "VE_Xplorer/EventHandler.h"
+#include "VE_Xplorer/CADTransformEH.h"
+
 #ifdef _OSG
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureDataSet.h"
@@ -90,7 +96,11 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
 #ifdef _OSG
    _activeTextureDataSet = 0;
 #endif
+   _rootCADNode = 0;
+   
+   _eventHandlers[std::string("CAD_PROPERTY")] = new VE_EVENTS::CADTransformEventHandler();
 
+   //_eventHandlers;
    //Dynamic Loading
    //ActiveLoadingThread();
 }
@@ -163,8 +173,21 @@ cfdModel::~cfdModel()
    this->classic = new cfdGroup();
    this->textureBased = new cfdGroup();
 */
+
+   std::map<std::string,VE_EVENTS::EventHandler*>::iterator foundEvents;
+   // Remove any plugins that aren't present in the current network
+   for ( foundEvents=_eventHandlers.begin(); foundEvents!=_eventHandlers.end(); )
+   {
+      _eventHandlers.erase( foundEvents++ );
+   }
+   _eventHandlers.clear();
    vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
+   if(_rootCADNode)
+   {
+      delete _rootCADNode;
+      _rootCADNode = 0;
+   }
 }
 
 VE_SceneGraph::cfdTempAnimation* cfdModel::GetAnimation()
@@ -178,7 +201,22 @@ VE_SceneGraph::cfdTempAnimation* cfdModel::GetAnimation()
 ///////////////////////////////
 void cfdModel::PreFrameUpdate()
 {
-   vprDEBUG(vesDBG,1) << "cfdModel::PreFrameUpdate " <<std::endl;
+   vprDEBUG(vesDBG,1) << "cfdModel::PreFrameUpdate " <<std::endl<< vprDEBUG_FLUSH;;
+
+   std::map<std::string,VE_EVENTS::EventHandler*>::iterator foundCommand;
+   if(veCommand)
+   {
+      foundCommand = _eventHandlers.find(veCommand->GetCommandName());
+      if(foundCommand!= _eventHandlers.end())
+      {
+         //Not sure how else to do this
+         if(!foundCommand->first.find(std::string("CAD_PROPERTY")))
+         {
+            foundCommand->second->SetXMLObject(_rootCADNode);
+         }
+         foundCommand->second->Execute(veCommand);
+      }
+   }
 }
 ///////////////////////////////////////
 void cfdModel::CreateCfdDataSet( void )
