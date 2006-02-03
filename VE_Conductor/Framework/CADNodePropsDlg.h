@@ -81,7 +81,7 @@ public:
 #ifndef STAND_ALONE
    ///Set the current vjObjs ptr for data passing.
    ///\param xplorerCom The communication interface w/ xplorer.
-   void SetVjObsPtr(VjObs_var xplorerCom);
+   void SetVjObsPtr(VjObs_ptr xplorerCom);
 #endif
 
    ///Clear out the current queue of instructions.
@@ -121,7 +121,7 @@ protected:
    void _updateAvailableAttributes();
 
 #ifndef STAND_ALONE
-   VjObs_var _vjObsPtr;///<The VjObj ptr.
+   VjObs_ptr _vjObsPtr;///<The VjObj ptr.
    
    ///Send the Command back to VE-Xplorer.
    void _sendCommandsToXplorer();
@@ -151,6 +151,8 @@ protected:
    wxButton* _removeAttributeButton;///<The button for removing attributes.
    wxArrayString _availableShaders;///<The shader names.
    wxArrayString _availableMaterials;///<The material names.
+
+   std::string _commandName;///<The command name.
 
    VE_CAD::CADNode* _cadNode;///<The current CADNode.
 

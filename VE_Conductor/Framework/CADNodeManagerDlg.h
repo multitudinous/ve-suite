@@ -46,7 +46,7 @@
 #include "wx/button.h"
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
 
-
+#include "VE_Conductor/Framework/CADNodePropsDlg.h"
 namespace VE_CAD
 {
    class CADNode;
@@ -82,8 +82,11 @@ public:
 #ifndef STAND_ALONE
    ///Set the current vjObjs ptr for data passing.
    ///\param xplorerCom The communication interface w/ xplorer.
-   void SetVjObsPtr(VjObs_var xplorerCom);
+   void SetVjObsPtr(VjObs_ptr xplorerCom);
 #endif
+
+   ///Clear out the current queue of instructions.
+   void ClearInstructions();
 
    ///Set the root CADNode to display.
    ///\param rootNode The root CADNode to display.
@@ -145,6 +148,10 @@ protected:
    VE_Conductor::GUI_Utilities::CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
 
    std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The DataValuePair s for the current command.
+
+   std::string _commandName;///<The command name.
+
+   CADNodePropertiesDlg* _propsDlg;///<The Property dialog.
 
    VE_CAD::CADNode* _activeCADNode;///<The active CADNode.
    VE_CAD::CADNode* _rootNode;///<The active CADNode.

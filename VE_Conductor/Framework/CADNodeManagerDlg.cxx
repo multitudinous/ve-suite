@@ -75,6 +75,7 @@ CADNodeManagerDlg::CADNodeManagerDlg(/*VjObs_ptr*/CADNode* node, wxWindow* paren
 {
    SetRootCADNode(node);
 
+   _propsDlg = 0;
    _cadTreeBuilder =  new CADTreeBuilder(_rootNode,TREE_ID,this);
    _cadTreeBuilder->Traverse();
    _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
@@ -84,6 +85,7 @@ CADNodeManagerDlg::CADNodeManagerDlg(/*VjObs_ptr*/CADNode* node, wxWindow* paren
 
    _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetRootItem()));
    _activeCADNode = _rootNode;
+   _commandName = std::string("CAD");
 
    _buildDialog();
 }
@@ -100,13 +102,18 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
       delete _cadTreeBuilder;
       _cadTreeBuilder = 0;
    }
-
+   if(_propsDlg)
+   {
+      delete _propsDlg;
+      _propsDlg = 0;
+   }
+   _dataValuePairList.clear();
 }
 #ifndef STAND_ALONE
 //////////////////////////////////////////////////////////
-void CADNodeManagerDlg::SetVjObsPtr(VjObs_var xplorerCom)
+void CADNodeManagerDlg::SetVjObsPtr(VjObs_ptr xplorerCom)
 {
-   _vjObsPtr = xplorerCom.ptr();
+   _vjObsPtr = xplorerCom;
 }
 #endif
 /////////////////////////////////////////////////////////
@@ -229,6 +236,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& event)
    }
    else
    {
+
       if(_activeCADNode->GetNodeType() == std::string("Assembly"))
       {
          //pop a text dialog to enter the name of the new assembly
@@ -243,6 +251,35 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& event)
          _geometryTree->AppendItem(_activeTreeNode->GetId(),
                                  wxString(newAssembly->GetNodeName().c_str()),
                                  2,4,new CADTreeBuilder::TreeNodeData(newAssembly)); 
+         ClearInstructions();
+
+         _commandName = std::string("CAD_ADD_NODE");
+
+         VE_XML::DataValuePair* addNode = new VE_XML::DataValuePair();
+         addNode->SetDataType("STRING");
+         addNode->SetData(std::string("Node Type"),std::string("Assembly"));
+         _dataValuePairList.push_back(addNode);
+
+         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         nodeID->SetDataType("UNSIGNED INT");
+         nodeID->SetDataValue(newAssembly->GetID());
+         nodeID->SetDataName(std::string("Node ID"));
+         _dataValuePairList.push_back(nodeID);
+
+         VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
+         parentNode->SetDataType(std::string("UNSIGNED INT"));
+         parentNode->SetDataValue(_activeCADNode->GetID());
+         parentNode->SetDataName(std::string("Parent ID"));
+         _dataValuePairList.push_back(parentNode);
+
+         VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
+         parentNode->SetDataType(std::string("TRANSFORM"));
+         parentNode->SetDataTransform(newAssembly->GetTransform());
+         parentNode->SetDataName(std::string("Transform"));
+         _dataValuePairList.push_back(transform);
+
+         _sendCommandsToXplorer();
+         ClearInstructions();
       }
       else
       {
@@ -304,6 +341,8 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& event)
 {
+   
+   ClearInstructions();
    wxFileDialog dialog(this,
 		       _T("Open file"), 
 		       _T(""), 
@@ -330,6 +369,38 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& event)
               _cadTreeBuilder->SetRootNode(_rootNode);
               _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
               _cadTreeBuilder->Traverse();
+
+               _commandName = std::string("CAD_ADD_NODE");
+
+               VE_XML::DataValuePair* addNode = new VE_XML::DataValuePair();
+               addNode->SetDataType("STRING");
+               addNode->SetData(std::string("Node Type"),std::string("Part"));
+               _dataValuePairList.push_back(addNode);
+
+               VE_XML::DataValuePair* partName = new VE_XML::DataValuePair();
+               partName->SetDataType("STRING");
+               partName->SetData(std::string("CAD Filename"),newCADPart->GetCADFileName());
+               _dataValuePairList.push_back(partName);
+
+               VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+               nodeID->SetDataType("UNSIGNED INT");
+               nodeID->SetDataValue(newCADPart->GetID());
+               nodeID->SetDataName(std::string("Node ID"));
+               _dataValuePairList.push_back(nodeID);
+
+               VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
+               parentNode->SetDataType(std::string("UNSIGNED INT"));
+               parentNode->SetDataValue(_activeCADNode->GetID());
+               parentNode->SetDataName(std::string("Parent ID"));
+               _dataValuePairList.push_back(parentNode);
+
+               VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
+               transform->SetDataType(std::string("TRANSFORM"));
+               transform->SetDataTransform(newCADPart->GetTransform());
+               transform->SetDataName(std::string("Transform"));
+               _dataValuePairList.push_back(transform);
+               
+               _sendCommandsToXplorer();
            }      
         }
     }
@@ -375,12 +446,23 @@ void CADNodeManagerDlg::_showPropertiesDialog(wxCommandEvent& event)
 {
    if(_activeTreeNode)
    {
-      CADNodePropertiesDlg propsDlg(this,PROPERTY_ID,_activeCADNode);
+      if(!_propsDlg)
+      {
+         _propsDlg = new CADNodePropertiesDlg(this,PROPERTY_ID,_activeCADNode);
+      }
 #ifndef STAND_ALONE
-      propsDlg.SetVjObsPtr(_vjObsPtr.in());
+      _propsDlg->SetVjObsPtr(_vjObsPtr);
 #endif
-      propsDlg.ShowModal();
+      _propsDlg->ShowModal();
+    
    }
+}
+//////////////////////////////////////////////
+void CADNodeManagerDlg::ClearInstructions()
+{
+   ///deleting the command deletes the memory but
+   ///we need to insure that the vector is clear
+   _dataValuePairList.clear();
 }
 ///////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_deleteNode(wxCommandEvent& event)
@@ -422,12 +504,13 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
    {
       cadCommand->AddDataValuePair(_dataValuePairList.at(i));
    }
-
+   cadCommand->SetCommandName(_commandName);
    std::string commandString("returnString");
+
    VE_CAD::CADXMLReaderWriter cadCommandWriter;
    cadCommandWriter.UseStandaloneDOMDocumentManager();
    cadCommandWriter.WriteToString();
-   cadCommandWriter.WriteXMLDocument(cadCommand,commandString,std::string("vecommands"));
+   cadCommandWriter.WriteXMLDocument(cadCommand,commandString,std::string("vecommand"));
 
    char* tempDoc = new char[ commandString.size() + 1 ];
    tempDoc = CORBA::string_dup( commandString.c_str() );

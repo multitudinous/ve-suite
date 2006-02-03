@@ -98,9 +98,9 @@ CADNodePropertiesDlg::~CADNodePropertiesDlg()
 }
 #ifndef STAND_ALONE
 //////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::SetVjObsPtr(VjObs_var xplorerCom)
+void CADNodePropertiesDlg::SetVjObsPtr(VjObs_ptr xplorerCom)
 {
-   _vjObsPtr = xplorerCom.ptr();
+   _vjObsPtr = xplorerCom;
 }
 #endif
 ///////////////////////////////////
@@ -369,11 +369,25 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& event)
 
       temp.clear();
 
+      _commandName = std::string("CAD_TRANSFORM_UPDATE");
+
       VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
       updateTransform->SetDataType("TRANSFORM");
-      updateTransform->SetDataName(std::string("CAD_TRANSFORM_UPDATE"));
+      updateTransform->SetDataName(std::string("Transform"));
       updateTransform->SetDataTransform(_cadNode->GetTransform());
       _instructions.push_back(updateTransform);
+
+      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      nodeID->SetDataType("UNSIGNED INT");
+      nodeID->SetDataName(std::string("Node ID"));
+      nodeID->SetDataValue(_cadNode->GetID());
+      _instructions.push_back(nodeID);
+
+      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      nodeType->SetDataType("STRING");
+      nodeType->SetDataName(std::string("Node Type"));
+      nodeType->SetDataString(_cadNode->GetNodeType());
+      _instructions.push_back(nodeType);
 
       _sendCommandsToXplorer();
    }
@@ -417,7 +431,7 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
       cadCommand->AddDataValuePair(_instructions.at(i));
    }
 
-   cadCommand->SetCommandName("CAD_PROPERTY");
+   cadCommand->SetCommandName(_commandName);
 
    std::string commandString("returnString");
    VE_CAD::CADXMLReaderWriter cadCommandWriter;
