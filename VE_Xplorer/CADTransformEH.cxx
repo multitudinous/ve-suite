@@ -41,6 +41,7 @@
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
 #include "VE_Open/XML/CAD/CADNode.h"
+#include <iostream>
 using namespace VE_EVENTS;
 using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////////////
@@ -100,6 +101,7 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::Command* command)
       else if(_cadNode->GetNodeType() == std::string("Clone"))
       {
       }
+      std::cout<<"Updating transform for node: "<<nodeID->GetUIntData()<<std::endl;
       transform->SetTranslationArray( newTransform->GetDataTransform()->GetTranslationArray()->GetArray() );
       transform->SetRotationArray( newTransform->GetDataTransform()->GetRotationArray()->GetArray() );
       transform->SetScaleArray( newTransform->GetDataTransform()->GetScaleArray()->GetArray() );

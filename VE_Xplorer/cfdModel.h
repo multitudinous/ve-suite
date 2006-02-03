@@ -49,6 +49,7 @@ it is better to treat these two dataset as two different models.
 #include <string>
 #include <vector>
 #include <map>
+#include <utility>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
@@ -85,6 +86,7 @@ namespace VE_TextureBased
 {
    class cfdTextureDataSet;
 }
+#include <osg/StateSet>
 #endif
 
 class vtkDataSet;
@@ -263,6 +265,9 @@ public:
          VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
 
          std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
+#ifdef _OSG
+         std::map< unsigned int, std::pair< unsigned int,osg::ref_ptr< osg::StateSet > > > _nodeAttributes;///<The map of node attributes.
+#endif
    };
 }
 #endif

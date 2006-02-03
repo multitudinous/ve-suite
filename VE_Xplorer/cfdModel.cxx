@@ -47,6 +47,7 @@
 #include "VE_Xplorer/CADAddNodeEH.h"
 
 #ifdef _OSG
+#include <osg/StateSet>
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureDataSet.h"
 using namespace VE_TextureBased;

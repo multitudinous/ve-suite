@@ -105,6 +105,7 @@ SRCS=\
    cfdWriteTraverser.cxx \
    cfdObjectHandler.cxx \
    CADEventHandler.cxx \
+   CADAddNodeEH.cxx 
    CADTransformEH.cxx 
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME) 

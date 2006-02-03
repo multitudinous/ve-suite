@@ -39,6 +39,7 @@
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADNode.h"
+#include <iostream>
 using namespace VE_EVENTS;
 using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////////////
@@ -106,6 +107,8 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
       else if(nodeType->GetDataString() == std::string("Part"))
       {
          VE_XML::DataValuePair* partFileName = command->GetDataValuePair("CAD Filename");
+         std::cout<<"Creating part: "<<nodeID->GetUIntData()<<std::endl;
+         std::cout<<"Parent ID : "<<parentID->GetUIntData()<<std::endl;
          activeModel->CreatePart(partFileName->GetDataString(),nodeID->GetUIntData(),parentID->GetUIntData());
 	      
          VE_Xplorer::cfdFILE* partNode = activeModel->GetPart(nodeID->GetUIntData());
