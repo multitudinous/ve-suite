@@ -421,11 +421,11 @@ void AppFrame::ZoomIn(wxCommandEvent& WXUNUSED(event) )
   network->GetVirtualSize(&sx, &sy);
   //  printf("Virtual size sx: %d, sy: %d\n", sx, sy);
 
-  if (network->m_xUserScale>4)
-    return; // maximum zoom in x3
+   if ( network->GetUserScale()->first > 4 )
+      return; // maximum zoom in x3
 
-  network->m_xUserScale+=0.1;
-  network->m_yUserScale+=0.1; 
+  network->GetUserScale()->first +=0.1;
+  network->GetUserScale()->second +=0.1; 
 
   
   network->nPixX += 1;
@@ -446,11 +446,11 @@ void AppFrame::ZoomOut(wxCommandEvent& WXUNUSED(event))
   network->GetVirtualSize(&sx, &sy);
   //  printf("Virtual size sx: %d, sy: %d\n", sx, sy);
 
-  if (network->m_xUserScale<0.4)
-    return; //minimum x-5
+   if ( network->GetUserScale()->first < 0.4 )
+      return; //minimum x-5
 
-  network->m_xUserScale-=0.1;
-  network->m_yUserScale-=0.1;
+  network->GetUserScale()->first -= 0.1;
+  network->GetUserScale()->second -=0.1;
   network->nPixX-=1;
   network->nPixY-=1;
 
@@ -1156,7 +1156,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    viewlocPane->Show();
 }
 ///////////////////////////////////////////////////////////////////
-void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED( event ) )
 {
    if ( soundsPane == 0 )
    {
@@ -1174,7 +1174,7 @@ void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED(event) )
    soundsPane->Show();
 }
 /////////////////////////////////////////////////////////////////
-void AppFrame::LaunchCADNodePane( wxCommandEvent& event )
+void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 {
    if( !_cadDialog)
    {

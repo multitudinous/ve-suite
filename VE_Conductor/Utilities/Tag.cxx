@@ -122,11 +122,11 @@ void Tag::CalcTagPoly( void )
 }
 
 ////////////////////////////////////////////////////////////
-void Tag::DrawTagCon( bool flag )
+void Tag::DrawTagCon( bool flag, std::pair< double, double > scale )
 {
    wxClientDC dc( canvas );
    canvas->PrepareDC(dc);
-   //dc.SetUserScale(m_xUserScale, m_yUserScale);
+   dc.SetUserScale( scale.first, scale.second );
 
    wxBrush old_brush = dc.GetBrush();
    wxPen old_pen = dc.GetPen();
@@ -161,11 +161,11 @@ void Tag::DrawTagCon( bool flag )
 }
 
 /////////////////////////////////////////////////////////////
-void Tag::DrawTag( bool flag)
+void Tag::DrawTag( bool flag, std::pair< double, double > scale )
 {
    wxClientDC dc( canvas );
    canvas->PrepareDC(dc);
-   //dc.SetUserScale(m_xUserScale, m_yUserScale);
+   dc.SetUserScale( scale.first, scale.second );
   
    wxBrush old_brush = dc.GetBrush();
    wxPen old_pen = dc.GetPen();

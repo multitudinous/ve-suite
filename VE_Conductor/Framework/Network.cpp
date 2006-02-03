@@ -85,8 +85,8 @@ Network::Network(wxWindow* parent, int id)
 {
    modules.clear();
    links.clear();
-   m_xUserScale=1;
-   m_yUserScale=1;
+   userScale.first=1;
+   userScale.second=1;
    nUnitX=100;
    nUnitY=240;
    nPixX = 10;
@@ -130,7 +130,7 @@ void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
    wxPaintDC dc(this);
    PrepareDC(dc);
   
-   dc.SetUserScale( m_xUserScale, m_yUserScale );
+   dc.SetUserScale( userScale.first, userScale.second );
    // dc.Clear();
   
    ReDraw(dc); 
@@ -148,7 +148,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
  	
   wxClientDC dc(this);
   PrepareDC(dc);
-  dc.SetUserScale( m_xUserScale, m_yUserScale );
+  dc.SetUserScale( userScale.first, userScale.second );
 
   wxPoint evtpos = event.GetLogicalPosition(dc);
  
@@ -244,7 +244,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 {
   wxClientDC dc(this);
   PrepareDC(dc);
-  dc.SetUserScale( m_xUserScale, m_yUserScale );
+  dc.SetUserScale( userScale.first, userScale.second );
   
   wxPoint evtpos = event.GetLogicalPosition(dc);
   
@@ -330,7 +330,7 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 {
    wxClientDC dc(this);
    PrepareDC(dc);
-   dc.SetUserScale( m_xUserScale, m_yUserScale );
+   dc.SetUserScale( userScale.first, userScale.second );
 
    wxPoint evtpos = event.GetPosition();
    long x = dc.DeviceToLogicalX( evtpos.x );
@@ -373,7 +373,7 @@ void Network::OnMLeftUp(wxMouseEvent& event)
    else if (m_selMod>=0 && m_selFrPort<0 && m_selToPort<0)
    {
       //drop a module after dragging it around
-      DropModule(x, y, m_selMod, dc);
+      DropModule(x, y, m_selMod );
       m_selMod = -1;
    }
    moving = false;
@@ -385,7 +385,7 @@ void Network::OnDClick( wxMouseEvent& event )
    // This function opens a plugins dialog when double clicked on the design canvas
    wxClientDC dc( this );
    PrepareDC( dc );
-   dc.SetUserScale( m_xUserScale, m_yUserScale );
+   dc.SetUserScale( userScale.first, userScale.second );
 
    wxPoint evtpos = event.GetLogicalPosition( dc );
 
@@ -410,7 +410,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
 {
   wxClientDC dc(this);
   PrepareDC(dc);
-  dc.SetUserScale( m_xUserScale, m_yUserScale );
+  dc.SetUserScale( userScale.first, userScale.second );
 
   wxMenu pop_menu(_T("Action"));
     
@@ -506,9 +506,9 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
    int num;
   
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-   links[m_selLink].DrawLink( false );
+   links[m_selLink].DrawLink( false, userScale );
 
-   //n = links[m_selLink].GetNumberOfPoints()+2;
+   n = links[m_selLink].GetNumberOfPoints()+2;
    //linkline.resize(n);
 
    unsigned long fromModuleID = links[m_selLink].GetFromModule();
@@ -563,7 +563,7 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
       temp.SetPoint( *(Near.GetPoint( 0 )) );
   
   *(links[ m_selLink ].GetPolygon()) = temp;
-  links[m_selLink].DrawLinkCon( true );
+  links[m_selLink].DrawLinkCon( true, userScale );
   m_selLink = -1;
   m_selLinkCon = -1;
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
@@ -575,7 +575,7 @@ void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
    wxClientDC dc(this);
    PrepareDC(dc);
 
-   dc.SetUserScale( m_xUserScale, m_yUserScale );
+   dc.SetUserScale( userScale.first, userScale.second );
 
    wxString tag_text = *( tags[ m_selTag ].GetTagText() );
    wxTextEntryDialog dialog(this,_T("Tag Editor"), _T("Please enter the text for the tag : "),tag_text, wxOK);
@@ -672,7 +672,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
 
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
    
-   links[m_selLink].DrawLinkCon( false );
+   links[m_selLink].DrawLinkCon( false, userScale );
 
    for (iter=links[m_selLink].GetPoints()->begin(), i=0; iter!=links[m_selLink].GetPoints()->end(); iter++, i++)
       if ( i == m_selLinkCon )
@@ -683,7 +683,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
          break;
       }
 
-   links[m_selLink].DrawLinkCon( true );
+   links[m_selLink].DrawLinkCon( true, userScale );
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
    ReDrawAll();
@@ -802,7 +802,8 @@ int Network::SelectLink(int x, int y)
    {
       if ( links[i].GetPolygon()->inside( temp ) )
 	   {
-	      links[i].DrawLinkCon( true ); //draw link connectors
+         //draw link connectors
+	      links[i].DrawLinkCon( true, userScale ); 
 	      m_selLink = i;
 	      return i;
 	   }
@@ -813,7 +814,8 @@ int Network::SelectLink(int x, int y)
 //////////////////////////////////////////////////////
 void Network::UnSelectLink(wxDC &dc)
 {
-   links[m_selLink].DrawLinkCon( false );//wipe link connectors
+   //wipe link connectors
+   links[m_selLink].DrawLinkCon( false, userScale );
    
    ReDraw(dc);
    m_selLink = -1;
@@ -832,7 +834,7 @@ int Network::SelectTag(int x, int y)
 	   {
 	      if (m_selTag == (int)i)
 	         return i;
-	      tags[i].DrawTagCon( true );
+	      tags[i].DrawTagCon( true, userScale );
 	      m_selTag = i;
 	      return i;
 	   }
@@ -843,7 +845,7 @@ int Network::SelectTag(int x, int y)
 /////////////////////////////////////////////////
 void Network::UnSelectTag(wxDC &dc)
 {
-  tags[m_selTag].DrawTagCon( false );
+  tags[m_selTag].DrawTagCon( false, userScale );
   
   ReDraw(dc);
   m_selTag = -1;
@@ -940,15 +942,15 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
   GetVirtualSize(&sx, &sy);
   GetClientSize(&w, &h);
 
-  xpos = (int)( 1.0 * xpos / m_xUserScale );
-  ypos = (int)( 1.0 * ypos / m_xUserScale );
+  xpos = (int)( 1.0 * xpos / userScale.first );
+  ypos = (int)( 1.0 * ypos / userScale.first );
   oldxpos = xpos;
   oldypos = ypos;
 
-  sx = (int)( 1.0*sx / m_xUserScale );
-  sy = (int)( 1.0*sy / m_xUserScale );
-  w = (int)( 1.0*w / m_xUserScale );
-  h = (int)( 1.0*h / m_xUserScale ); 
+  sx = (int)( 1.0*sx / userScale.first );
+  sy = (int)( 1.0*sy / userScale.first );
+  w = (int)( 1.0*w / userScale.first );
+  h = (int)( 1.0*h / userScale.first ); 
   
   ex=xpos*xunit+w;
   ey=ypos*yunit+h;
@@ -961,14 +963,14 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
   bbox = cur_module->GetBBox(); //Get the Boundoing box of the modul 
   
   if (x>ex-bbox.width)
-    xpos+=1;//m_xUserScale;
+    xpos+=1;//userScale.first;
   else  if (x<(ex-w)+relative_pt.x)
-    xpos-=1;//m_xUserScale;
+    xpos-=1;//userScale.first;
   
   if (y>ey-bbox.height)
-    ypos+=1;//m_xUserScale;
+    ypos+=1;//userScale.first;
   if (y<(ey-h+relative_pt.y))
-    ypos-=1;//m_xUserScale;
+    ypos-=1;//userScale.first;
   
   if (x-relative_pt.x+bbox.width > sx)
     {
@@ -985,28 +987,28 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
 
   //wipe off the old link connects with this module
   for ( i=0; i < modules[mod].GetNumberOfLinks(); i++)
-    modules[mod].GetLink( i )->DrawLink( false );
+    modules[mod].GetLink( i )->DrawLink( false, userScale );
     
   cur_module->SetPos(wxPoint(x-relative_pt.x, y-relative_pt.y));
   
-  if ((bbox.x-3.0/m_xUserScale)>0)
-    bbox.x-=(int)( 3.0/m_xUserScale );
+  if ((bbox.x-3.0/userScale.first)>0)
+    bbox.x-=(int)( 3.0/userScale.first );
   else
     bbox.x=0;
   
-  if ((bbox.y-3.0/m_xUserScale)>0)
-    bbox.y-=(int)( 3.0/m_xUserScale );
+  if ((bbox.y-3.0/userScale.first)>0)
+    bbox.y-=(int)( 3.0/userScale.first );
   else
     bbox.y=0;
   
-  bbox.width+=(int)( 3.0/m_xUserScale );
-  bbox.height+=(int)( 3.0/m_xUserScale );
+  bbox.width+=(int)( 3.0/userScale.first );
+  bbox.height+=(int)( 3.0/userScale.first );
 
   CleanRect(bbox, dc);  
   if (oldxpos!=xpos||oldypos!=ypos||scroll)
     {
-      xpos = (int)( 1.0 * xpos * m_xUserScale );
-      ypos = (int)( 1.0 * ypos * m_xUserScale );
+      xpos = (int)( 1.0 * xpos * userScale.first );
+      ypos = (int)( 1.0 * ypos * userScale.first );
       Scroll(xpos, ypos);
       ReDrawAll();
     }
@@ -1016,14 +1018,14 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
 }
 
 /////////////////////////////////////////////////////////////
-void Network::DropModule(int ix, int iy, int mod, wxDC& dc)
+void Network::DropModule(int ix, int iy, int mod )
 {
   wxRect bbox; //Bounding box  
   int sx, sy;
   double r;
   int vx, vy;
   int x, y;
-  int i, num;
+  int i;
   REI_Plugin * cur_module;
   bool scroll = false; 
 
@@ -1032,8 +1034,8 @@ void Network::DropModule(int ix, int iy, int mod, wxDC& dc)
     return; 
   
   GetVirtualSize(&sx, &sy);
-  sx = (int)( 1.0*sx / m_xUserScale );
-  sy = (int)( 1.0*sy / m_xUserScale );
+  sx = (int)( 1.0*sx / userScale.first );
+  sy = (int)( 1.0*sy / userScale.first );
   
   if (ix<relative_pt.x)
     x=relative_pt.x;
@@ -1053,8 +1055,8 @@ void Network::DropModule(int ix, int iy, int mod, wxDC& dc)
   bbox.x = 0;
   bbox.y = 0;
   GetViewStart(&vx,&vy);
-  //  vx= vx / m_xUserScale;
-  //  vy = vy / m_xUserScale;
+  //  vx= vx / userScale.first;
+  //  vy = vy / userScale.first;
   
   if (x-relative_pt.x+bbox.width > sx)
     {
@@ -1102,8 +1104,8 @@ void Network::DropModule(int ix, int iy, int mod, wxDC& dc)
   //  bbox.width=sx;
   //  bbox.height=sy;
 
-  //xpos = 1.0 * xpos * m_xUserScale;
-  //ypos = 1.0 * ypos * m_xUserScale;
+  //xpos = 1.0 * xpos * userScale.first;
+  //ypos = 1.0 * ypos * userScale.first;
       
   //  Scroll(vx, vy);  
   //CleanRect(bbox, dc);
@@ -1363,10 +1365,10 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
   oldxpos = xpos;
   oldypos = ypos;
 
-  sx = (int)( 1.0*sx / m_xUserScale );
-  sy = (int)( 1.0*sy / m_xUserScale );
-  w = (int)( 1.0*w / m_xUserScale );
-  h = (int)( 1.0*h / m_xUserScale ); 
+  sx = (int)( 1.0*sx / userScale.first );
+  sy = (int)( 1.0*sy / userScale.first );
+  w = (int)( 1.0*w / userScale.first );
+  h = (int)( 1.0*h / userScale.first ); 
 
   ex=xpos*xunit+w;
   ey=ypos*yunit+h;
@@ -1395,14 +1397,14 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
     }
 
   //erase the original link;
-  links[ln].DrawLink( false );
-  links[ln].DrawLinkCon( false );
+  links[ln].DrawLink( false, userScale );
+  links[ln].DrawLinkCon( false, userScale );
   *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
  
    if ( oldxpos!=xpos || oldypos!=ypos || scroll)
    {
-      xpos = (int)( 1.0 * xpos * m_xUserScale );
-      ypos = (int)( 1.0 * ypos * m_xUserScale );
+      xpos = (int)( 1.0 * xpos * userScale.first );
+      ypos = (int)( 1.0 * ypos * userScale.first );
 
       Scroll(xpos, ypos);
       ReDrawAll();
@@ -1410,7 +1412,7 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
    else
       ReDraw(dc);
 
-   links[ln].DrawLinkCon( true );
+   links[ln].DrawLinkCon( true, userScale );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1423,10 +1425,10 @@ void Network::DropLinkCon(int x, int y, int ln, int ln_con, wxDC &dc)
   
   GetVirtualSize(&sx, &sy);
 
-  sx = (int)( 1.0*sx / m_xUserScale );
-  sy = (int)( 1.0*sy / m_xUserScale );
-  //  w = w / m_xUserScale;
-  //h = h / m_xUserScale; 
+  sx = (int)( 1.0*sx / userScale.first );
+  sy = (int)( 1.0*sy / userScale.first );
+  //  w = w / userScale.first;
+  //h = h / userScale.first; 
       
    GetViewStart(&vx,&vy);
    if (x > sx)
@@ -1471,10 +1473,10 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
   GetVirtualSize(&sx, &sy);
   GetClientSize(&w, &h);
   
-  sx = (int)( 1.0*sx / m_xUserScale );
-  sy = (int)( 1.0*sy / m_xUserScale );
-  w = (int)( 1.0*w / m_xUserScale );
-  h = (int)( 1.0*h / m_xUserScale ); 
+  sx = (int)( 1.0*sx / userScale.first );
+  sy = (int)( 1.0*sy / userScale.first );
+  w = (int)( 1.0*w / userScale.first );
+  h = (int)( 1.0*h / userScale.first ); 
 
   ex=xpos*xunit+w;
   ey=ypos*yunit+h;
@@ -1503,20 +1505,20 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
     }
 
   //erase the original Tag;
-  tags[t].DrawTag( false );
-  tags[t].DrawTagCon( false );
+  tags[t].DrawTag( false, userScale );
+  tags[t].DrawTagCon( false, userScale );
   *(tags[t].GetConnectorsPoint( t_con ))=wxPoint(x,y);
   if (oldxpos!=xpos||oldypos!=ypos||scroll)
     {
-      xpos = (int)( 1.0 * xpos * m_xUserScale );
-      ypos = (int)( 1.0 * ypos * m_xUserScale );
+      xpos = (int)( 1.0 * xpos * userScale.first );
+      ypos = (int)( 1.0 * ypos * userScale.first );
       
       Scroll(xpos, ypos);
       ReDrawAll();
     }
   else
     ReDraw(dc);
-  tags[t].DrawTagCon( true );
+  tags[t].DrawTagCon( true, userScale );
   
 }
 
@@ -1531,10 +1533,10 @@ void Network::DropTagCon(int x, int y, int t, int t_con, wxDC &dc)
 
   GetVirtualSize(&sx, &sy);
  
-  sx = (int)( 1.0*sx / m_xUserScale );
-  sy = (int)( 1.0*sy / m_xUserScale );
-  //  w = w / m_xUserScale;
-  //  h = h / m_xUserScale; 
+  sx = (int)( 1.0*sx / userScale.first );
+  sy = (int)( 1.0*sy / userScale.first );
+  //  w = w / userScale.first;
+  //  h = h / userScale.first; 
      
   GetViewStart(&vx,&vy);
   if (x > sx)
@@ -1577,10 +1579,10 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
   oldxpos = xpos;
   oldypos = ypos;
 
-  sx = (int)( 1.0*sx / m_xUserScale );
-  sy = (int)( 1.0*sy / m_xUserScale );
-  w = (int)( 1.0*w / m_xUserScale );
-  h = (int)( 1.0*h / m_xUserScale ); 
+  sx = (int)( 1.0*sx / userScale.first );
+  sy = (int)( 1.0*sy / userScale.first );
+  w = (int)( 1.0*w / userScale.first );
+  h = (int)( 1.0*h / userScale.first ); 
 
   ex=xpos*xunit+w;
   ey=ypos*yunit+h;
@@ -1609,23 +1611,23 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
     }
 
   //erase the original Tag;
-  tags[t].DrawTag( false );
-  tags[t].DrawTagCon( false );
+  tags[t].DrawTag( false, userScale );
+  tags[t].DrawTagCon( false, userScale );
 
   tags[t].GetBoundingBox()->x = x-tag_rpt.x;
   tags[t].GetBoundingBox()->y = y-tag_rpt.y;
 
   if (oldxpos!=xpos||oldypos!=ypos||scroll)
     {
-      xpos = (int)( 1.0 * xpos * m_xUserScale );
-      ypos = (int)( 1.0 * ypos * m_xUserScale );
+      xpos = (int)( 1.0 * xpos * userScale.first );
+      ypos = (int)( 1.0 * ypos * userScale.first );
       
       Scroll(xpos, ypos);
       ReDrawAll();
     }
   else
     ReDraw(dc);
-  tags[t].DrawTagCon( true );
+  tags[t].DrawTagCon( true, userScale );
   
 }
 
@@ -1639,10 +1641,10 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
   
   GetVirtualSize(&sx, &sy);
 
-  sx = (int)(1.0*sx / m_xUserScale);
-  sy = (int)(1.0*sy / m_xUserScale);
-  //  w = w / m_xUserScale;
-  //  h = h / m_xUserScale; 
+  sx = (int)(1.0*sx / userScale.first);
+  sy = (int)(1.0*sy / userScale.first);
+  //  w = w / userScale.first;
+  //  h = h / userScale.first; 
       
   GetViewStart(&vx,&vy);
   if (x > sx)
@@ -1682,7 +1684,7 @@ void Network::AddTag(int x, int y, wxString text)
    int w, h;
    wxClientDC dc(this);
    PrepareDC(dc);
-   dc.SetUserScale( m_xUserScale, m_yUserScale );
+   dc.SetUserScale( userScale.first, userScale.second );
 
    t.GetConnectorsPoint( 0 )->x = x; 
    t.GetConnectorsPoint( 0 )->y = y;
@@ -1755,7 +1757,7 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
   
   wxClientDC dc(this);
   PrepareDC(dc);
-  dc.SetUserScale( m_xUserScale, m_yUserScale );
+  dc.SetUserScale( userScale.first, userScale.second );
   ReDraw(dc);
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
@@ -1777,7 +1779,7 @@ void Network::ReDrawAll()
   //  dc.SetPen(*wxWHITE_PEN);
   //  dc.SetBrush(*wxWHITE_BRUSH);
   //  CleanRect(box, dc); 
-  dc.SetUserScale(m_xUserScale, m_yUserScale);
+  dc.SetUserScale(userScale.first, userScale.second);
   dc.SetBackground(*wxWHITE_BRUSH);
   dc.Clear();
   dc.SetPen(*wxBLACK_PEN);
@@ -1806,11 +1808,11 @@ void Network::ReDraw(wxDC &dc)
 
    // draw all the links
    for ( size_t i = 0; i < links.size(); ++i )
-      links[i].DrawLink( true );
+      links[i].DrawLink( true, userScale );
 
    // draw all the links
    for ( size_t i = 0; i < tags.size(); ++i )
-      tags[i].DrawTag( true );
+      tags[i].DrawTag( true, userScale );
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -1830,7 +1832,7 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
 
    wxClientDC dc(this);
    PrepareDC(dc);
-   dc.SetUserScale( m_xUserScale, m_yUserScale );
+   dc.SetUserScale( userScale.first, userScale.second );
 
    bport[0]=wxPoint(0,0);
    bport[1]=wxPoint(10,0);
@@ -1926,7 +1928,7 @@ void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
   wxRect bbox;
 
   PrepareDC(dc);
-  dc.SetUserScale( m_xUserScale, m_yUserScale );
+  dc.SetUserScale( userScale.first, userScale.second );
 
   bport[0]=wxPoint(0,0);
   bport[1]=wxPoint(10,0);
@@ -2000,8 +2002,8 @@ void Network::Pack(std::vector<Interface> & UIs)
   ntpk._type=0;
   ntpk._category=0;
   ntpk._id=-1;
-  ntpk.setVal("m_xUserScale", m_xUserScale);
-  ntpk.setVal("m_yUserScale", m_yUserScale);
+  ntpk.setVal("m_xUserScale", userScale.first);
+  ntpk.setVal("m_yUserScale", userScale.second);
   ntpk.setVal("nPixX", long(nPixX));
   ntpk.setVal("nPixY", long(nPixY));
   ntpk.setVal("nUnitX", long(nUnitX));
@@ -2632,3 +2634,9 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
    modules[m_selMod].GetPlugin()->SetIDtoGeometryDataBuffer();
    modules[m_selMod].GetPlugin()->GeometryData();
 }
+///////////////////////////////////////////
+std::pair< double, double >* Network::GetUserScale( void )
+{
+   return &userScale;
+}
+

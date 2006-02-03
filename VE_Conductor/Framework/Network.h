@@ -105,7 +105,8 @@ public:
    Network(){;}
    Network(wxWindow* parent, int id);
    ~Network();
-   double m_xUserScale, m_yUserScale; //Zoom Factor
+   //double m_xUserScale, m_yUserScale; //Zoom Factor
+
    int nPixX, nPixY; 
    int nUnitX, nUnitY; //Unit of the scrolled window
    Body::Executive_var exec; //put this reference here, so ther frame work can still access it YANG
@@ -152,7 +153,10 @@ public:
    void Load(wxString filename);
    void LoadS(const char* inputs); //load the network from a string
    void New();
-   protected:
+   ///Acessors
+   std::pair< double, double >* GetUserScale( void );
+
+protected:
 
    //Draw functions
    void DrawPorts( REI_Plugin* cur_module, bool flag);
@@ -173,7 +177,7 @@ public:
 
    //Move and drop functions
    void MoveModule(int x, int y, int mod, wxDC &dc);
-   void DropModule(int x, int y, int mod, wxDC &dc);
+   void DropModule(int x, int y, int mod );
    void MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc);
    void DropLinkCon(int x, int y, int ln, int ln_con, wxDC& dc);
    void MoveTagCon(int x, int y, int t, int t_con, wxDC &dc);
@@ -190,8 +194,8 @@ public:
    double computenorm (wxPoint pt1, wxPoint pt2);
    //double nearpnt( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly, 
    //                                 VE_Conductor::GUI_Utilities::Polygon &near);
-   void TransPoly( VE_Conductor::GUI_Utilities::Polygon oldpoly, 
-                   int x, int y, VE_Conductor::GUI_Utilities::Polygon &newpoly);
+   //void TransPoly( VE_Conductor::GUI_Utilities::Polygon oldpoly, 
+   //                int x, int y, VE_Conductor::GUI_Utilities::Polygon &newpoly);
 
    //Misc functions
    void CleanRect( wxRect box, wxDC& dc); // for wipeout a rectangular area
@@ -230,6 +234,7 @@ private:
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
    VE_Model::Network* veNetwork;
+   std::pair< double, double > userScale;
 
    DECLARE_EVENT_TABLE() // no semicolon needed
 };

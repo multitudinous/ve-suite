@@ -155,12 +155,11 @@ VE_Conductor::GUI_Utilities::Polygon* Link::GetPolygon( void )
    return &(poly);
 }
 /////////////////////////////////////////////////////////
-void Link::DrawLinkCon( bool flag )
+void Link::DrawLinkCon( bool flag, std::pair< double, double > scale )
 {
    wxClientDC dc( canvas );
    canvas->PrepareDC( dc );
-   // Not sure if I need this???
-   //dc.SetUserScale( m_xUserScale, m_yUserScale );
+   dc.SetUserScale( scale.first , scale.second );
 
    wxBrush old_brush = dc.GetBrush();
    wxPen old_pen = dc.GetPen();
@@ -208,11 +207,11 @@ void Link::CalcLinkPoly()
 }
 
 ///////////////////////////////////////////////////////////////////
-void Link::DrawLink( bool flag )
+void Link::DrawLink( bool flag, std::pair< double, double > scale )
 { 
    wxClientDC dc( canvas );
    canvas->PrepareDC( dc );
-   //dc.SetUserScale(m_xUserScale, m_yUserScale);
+   dc.SetUserScale( scale.first, scale.second );
 
    wxBrush old_brush = dc.GetBrush();
    wxPen old_pen = dc.GetPen();

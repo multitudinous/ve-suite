@@ -72,9 +72,9 @@ public:
    Polygon* GetPolygon( void );
 
    ///Helper functions
-   void DrawLinkCon( bool flag );
+   void DrawLinkCon( bool flag, std::pair< double, double > scale );
    void CalcLinkPoly( void );
-   void DrawLink( bool flag );
+   void DrawLink( bool flag, std::pair< double, double > scale );
 
 private:
    unsigned long Fr_mod;
