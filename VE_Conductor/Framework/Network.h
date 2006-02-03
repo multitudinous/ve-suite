@@ -184,7 +184,7 @@ public:
    void DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag);
 
    //Math functions for the relationship of points and polygons
-   int ccw( wxPoint pt1, wxPoint pt2, wxPoint pt3 );
+   //int ccw( wxPoint pt1, wxPoint pt2, wxPoint pt3 );
    //int intersect( VE_Conductor::GUI_Utilities::Polygon l1, VE_Conductor::GUI_Utilities::Polygon l2);
    //int inside( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly);
    double computenorm (wxPoint pt1, wxPoint pt2);

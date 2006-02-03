@@ -31,18 +31,21 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/Link.h"
 #include <wx/window.h>
+#include <wx/brush.h>
+#include <wx/pen.h>
+#include <wx/dcclient.h>
 
 using namespace VE_Conductor::GUI_Utilities;
 
 ////////////////////////////////////////////////
-Link::Link( void )
+Link::Link( wxWindow* designCanvas )
 {
    Fr_mod = 1000000;
    To_mod = 1000000;
    Fr_port = 1000000;
    To_port = 1000000;
 
-   canvas = 0;
+   canvas = designCanvas;
 }
 ////////////////////////////////////////////////
 Link::~Link( void )
@@ -154,191 +157,99 @@ VE_Conductor::GUI_Utilities::Polygon* Link::GetPolygon( void )
 /////////////////////////////////////////////////////////
 void Link::DrawLinkCon( bool flag )
 {
-/*
+   wxClientDC dc( canvas );
+   canvas->PrepareDC( dc );
+   // Not sure if I need this???
+   //dc.SetUserScale( m_xUserScale, m_yUserScale );
+
+   wxBrush old_brush = dc.GetBrush();
+   wxPen old_pen = dc.GetPen();
+
+   if ( flag )
+   {
+      dc.SetBrush( *wxGREEN_BRUSH );
+      dc.SetPen( *wxBLACK_PEN );
+   }
+   else
+   {
+      dc.SetBrush( *wxWHITE_BRUSH );
+      dc.SetPen( *wxWHITE_PEN );
+   }
+  
    wxPoint bport[4];
+   bport[ 0 ] = wxPoint( 0, 0 );
+   bport[ 1 ] = wxPoint( 6, 0 );
+   bport[ 2 ] = wxPoint( 6, 6 );
+   bport[ 3 ] = wxPoint( 0, 6 );
   
-  wxClientDC dc(this);
-  PrepareDC(dc);
-  dc.SetUserScale(m_xUserScale, m_yUserScale);
+   //Draw the connectors for the particular link
+   for ( size_t i = 0; i < cons.size(); ++i )
+   { 
+      wxCoord xoff = cons[ i ].x - 3;
+      wxCoord yoff = cons[ i ].y - 3;
 
-  wxBrush old_brush = dc.GetBrush();
-  wxPen old_pen = dc.GetPen();
+      dc.DrawPolygon( 4, bport, xoff, yoff );      
+   }
 
-  wxCoord xoff, yoff;
-  POLY linkline, temp;
-  wxRect bbox;
-  POLY ports;  
-  int n, i, num;
-
-  bport[0]=wxPoint(0,0);
-  bport[1]=wxPoint(6,0);
-  bport[2]=wxPoint(6,6);
-  bport[3]=wxPoint(0,6);
-  
-  if (flag)
-    {
-      dc.SetBrush(*wxGREEN_BRUSH);
-      dc.SetPen(*wxBLACK_PEN);
-    }
-  else
-    {
-      dc.SetBrush(*wxWHITE_BRUSH);
-      dc.SetPen(*wxWHITE_PEN);
-    }
-  
-  if (m_selLink < 0)
-    return;
-
-  n = links[m_selLink]->cons.size()+2;
-  linkline.resize(n);
-
-  bbox = modules[links[m_selLink]->Fr_mod].pl_mod->GetBBox();
-  
-  num= modules[links[m_selLink]->Fr_mod].pl_mod->GetNumOports();
-  ports.resize(num);
-  modules[links[m_selLink]->Fr_mod].pl_mod->GetOPorts(ports);
-
-  linkline[0].x = bbox.x+ports[links[m_selLink]->Fr_port].x;
-  linkline[0].y = bbox.y+ports[links[m_selLink]->Fr_port].y;
-
-  for (i=0; i<(int)(links[m_selLink]->cons.size()); i++)
-    linkline[i+1]=links[m_selLink]->cons[i];
-
-  bbox = modules[links[m_selLink]->To_mod].pl_mod->GetBBox();
-
-  num = modules[links[m_selLink]->To_mod].pl_mod->GetNumIports();
-  ports.resize(num);
-  modules[links[m_selLink]->To_mod].pl_mod->GetIPorts(ports);
-  linkline[n-1].x = bbox.x+ports[links[m_selLink]->To_port].x;
-  linkline[n-1].y = bbox.y+ports[links[m_selLink]->To_port].y;
-
-  for (i=0; i<(int)linkline.size(); i++)
-    { 
-      xoff = linkline[i].x-3;
-      yoff = linkline[i].y-3;
-      
-      dc.DrawPolygon(4, bport, xoff, yoff);      
-    }
-
-  dc.SetBrush(old_brush);
-  dc.SetPen(old_pen);
-*/
+   dc.SetBrush( old_brush );
+   dc.SetPen( old_pen );
 }
 
 ///////////////////////////////////////
 void Link::CalcLinkPoly()
 {
-/*   wxRect bbox;
-   wxPoint pos;
-   POLY ports;
-   POLY points;
-   POLY result;
-   int i;
-   int num;
-
-
-  bbox = modules[l.Fr_mod].pl_mod->GetBBox();
-  num = modules[l.Fr_mod].pl_mod->GetNumOports();
-  ports.resize(num);
-  modules[l.Fr_mod].pl_mod->GetOPorts(ports);
-   // get initial port
-  pos.x = bbox.x+ports[l.Fr_port].x;
-  pos.y = bbox.y+ports[l.Fr_port].y;
-
-  points.push_back(pos);
-   // Get all the connection in a link
-  for (i=0; i<(int)l.cons.size(); i++)
-    points.push_back(l.cons[i]);
-
-  bbox = modules[l.To_mod].pl_mod->GetBBox();
-  
-  num = modules[l.To_mod].pl_mod->GetNumIports();
-  ports.resize(num);
-  modules[l.To_mod].pl_mod->GetIPorts(ports);
-  pos.x = bbox.x+ports[l.To_port].x;
-  pos.y = bbox.y+ports[l.To_port].y;
-
-   // get end port
-  points.push_back(pos);
-
    // -3 so that we end up getting a 6 point wide line
-  for (i=0; i<(int)points.size(); i++)
-    result.push_back(wxPoint(points[i].x, points[i].y-3));
+   for ( size_t i=0; i< cons.size(); i++ )
+      poly.SetPoint( wxPoint( cons[i].x, cons[i].y-3 ) );
 
    // +3 so that we end up getting a 6 point wide line
-  for (i=(int)points.size()-1; i>=0; i--)
-    result.push_back(wxPoint(points[i].x, points[i].y+3));
-  
-  return result;
-*/
+   for ( size_t i = cons.size()-1; i >= 0; i--)
+      poly.SetPoint( wxPoint( cons[i].x, cons[i].y+3 ) );
 }
 
 ///////////////////////////////////////////////////////////////////
 void Link::DrawLink( bool flag )
 { 
-/*  wxRect bbox;
-  POLY ports;
-  wxPoint * points;
-  wxPoint arrow[3];
-  int n;
-  int i, j, num;
+   wxClientDC dc( canvas );
+   canvas->PrepareDC( dc );
+   //dc.SetUserScale(m_xUserScale, m_yUserScale);
+
+   wxBrush old_brush = dc.GetBrush();
+   wxPen old_pen = dc.GetPen();
+
+   wxPoint* points = new wxPoint[ cons.size() ];
+
+   //reverse the order of the points
+   size_t j = 0;
+   for ( size_t i = cons.size(); i >= 0; i--, j++ )
+      points[ j ] = cons[ i ];
+
+   if (!flag)
+   {
+      dc.SetPen( *wxWHITE_PEN );
+      dc.SetBrush( *wxWHITE_BRUSH );
+   }
+   else
+   {
+      dc.SetPen( *wxBLACK_PEN );
+      dc.SetBrush( *wxWHITE_BRUSH );
+   }
+   dc.DrawLines( cons.size(), points );
+
+   //Now draw the arrow head
+   if ( !flag )
+   {
+      dc.SetPen( *wxWHITE_PEN );
+      dc.SetBrush( *wxWHITE_BRUSH );
+   }
+   else
+   {
+      dc.SetPen( *wxBLACK_PEN );
+      dc.SetBrush( *wxBLACK_BRUSH );
+   }
   
-  wxClientDC dc(this);
-  PrepareDC(dc);
-  dc.SetUserScale(m_xUserScale, m_yUserScale);
-
-  wxBrush old_brush = dc.GetBrush();
-  wxPen old_pen = dc.GetPen();
-
-  n = ln->cons.size()+2;
-  points = new wxPoint[n];
-
-  bbox = modules[ln->To_mod].GetPlugin()->GetBBox();
-  
-  num = modules[ln->To_mod].GetPlugin()->GetNumIports();
-  ports.resize(num);
-  modules[ln->To_mod].GetPlugin()->GetIPorts(ports);
-
-  points[0].x = bbox.x+ports[ln->To_port].x;
-  points[0].y = bbox.y+ports[ln->To_port].y;
-
-  j=1;
-  for (i=ln->cons.size()-1;i>=0; i--, j++)
-    points[j]=ln->cons[i];
-
-  bbox = modules[ln->Fr_mod].GetPlugin()->GetBBox();
-  num = modules[ln->Fr_mod].GetPlugin()->GetNumOports();
-  ports.resize(num);
-  modules[ln->Fr_mod].GetPlugin()->GetOPorts(ports);
-
-  points[n-1].x = bbox.x+ports[ln->Fr_port].x;
-  points[n-1].y = bbox.y+ports[ln->Fr_port].y;
-  
-  if (!flag)
-    {
-      dc.SetPen(*wxWHITE_PEN);
-      dc.SetBrush(*wxWHITE_BRUSH);
-    }
-  else
-    {
-      dc.SetPen(*wxBLACK_PEN);
-      dc.SetBrush(*wxWHITE_BRUSH);
-    }
-  dc.DrawLines(n, points);
-
-  //Now draw the arrow head
-  if (!flag)
-    {
-      dc.SetPen(*wxWHITE_PEN);
-      dc.SetBrush(*wxWHITE_BRUSH);
-    }
-  else
-    {
-      dc.SetPen(*wxBLACK_PEN);
-      dc.SetBrush(*wxBLACK_BRUSH);
-    }
-  
-  arrow[0]=points[0];
+   wxPoint arrow[ 3 ];
+   arrow[0] = points[0];
   
   
    double a = atan(3.0/10.0);
@@ -363,6 +274,6 @@ void Link::DrawLink( bool flag )
   dc.DrawPolygon(3, arrow);
   dc.SetPen(old_pen);
   dc.SetBrush(old_brush);
-  delete [] points; */
+  delete [] points;
 }
 

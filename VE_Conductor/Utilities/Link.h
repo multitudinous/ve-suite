@@ -46,7 +46,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS Link
 {
 public:
    ///Constructor
-   Link( void );
+   Link( wxWindow* designCanvas );
    ///Destructor
    ~Link( void );
    ///Copy Constructor

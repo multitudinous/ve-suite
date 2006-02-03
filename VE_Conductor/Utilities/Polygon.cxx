@@ -1,4 +1,5 @@
 #include "VE_Conductor/Utilities/Polygon.h"
+#include <cmath>
 
 using namespace VE_Conductor::GUI_Utilities;
 
@@ -58,110 +59,143 @@ size_t Polygon::GetNumberOfPoints( void )
 /////////////////////////////////////////////////////////////
 int Polygon::inside( wxPoint pt ) 
 {
-   return -1;
-/*
    int i, count = 0, j = 0;
 
-   POLY lt, lp, lv;
+   Polygon lt, lp, lv;
 
-   lt.push_back(pt); lt.push_back(pt); lt[1].x = 999999;
-   lp.push_back(pt); lp.push_back(pt);
-   lv.push_back(pt); lv.push_back(pt);
+   lt.GetPolygon()->push_back( pt ); 
+   lt.GetPolygon()->push_back( pt ); 
+   lt.GetPoint( 1 )->x = 999999;
+   lp.GetPolygon()->push_back( pt ); 
+   lp.GetPolygon()->push_back( pt );
+   lv.GetPolygon()->push_back( pt ); 
+   lv.GetPolygon()->push_back( pt );
 
-   wxPoint p(poly.back());
-   poly.insert(poly.begin(), 1, p);
+   wxPoint p( poly.back() );
+   poly.insert( poly.begin(), 1, p );
 
    double numsides = poly.size()-1;
    for(i=1; i<=numsides; i++) 
    {
-      lp[0] = poly[i];
-      lp[1] = poly[i-1];
+      *(lp.GetPoint( 0 )) = poly[i];
+      *(lp.GetPoint( 1 )) = poly[i-1];
       if ( intersect(lv, lp) ) 
          return 1;
    
-      lp[1] = poly[i];
+      *(lp.GetPoint( 1 )) = poly[i];
 
       if ( !intersect(lp, lt) ) 
       {
-         lp[1] = poly[j];
+         *(lp.GetPoint( 1 )) = poly[j];
          if ( intersect(lp, lt) ) 
             count++;
          else
-            if ( i!=j+1 && ((ccw(lt[0], lt[1], poly[j])*(ccw(lt[0], lt[1], poly[i])) < 1)))
+            if ( i!=j+1 && ((ccw(lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[j])*(ccw(lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[i])) < 1)))
                count++;
          
          j = i;
       }
    }
    
-   if(j!=numsides && ccw(lt[0], lt[1], poly[j])*ccw(lt[0], lt[1], poly[1]) == 1)
+   if(j!=numsides && ccw(lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[j])*ccw(lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[1]) == 1)
       count--;
 
    return count & 1;
-*/
 }
 
 //////////////////////////////////////////////////////////////////
-double Polygon::nearpnt(wxPoint pt, Polygon &Near)
+double Polygon::nearpnt( wxPoint pt, Polygon& Near )
 {
-   return -1;
-/*  int i, i2;
+   double dist = 99999;
+   int numsides = poly.size();
 
-  double t, d, dist = 99999, numsides = poly.size();
+   Near.GetPolygon()->clear();
 
-  Near.clear();
+   for( size_t i=0; i<numsides; i++) 
+   {
+      int i2 = i+1;
+      if ( i2 == numsides ) 
+         i2 = 0;
 
-  for(i=0; i<numsides; i++) {
-    i2 = i+1;
-    if(i2 == numsides) i2 = 0;
+      wxRealPoint p;
+      wxRealPoint v( poly[i2].x-poly[i].x, poly[i2].y-poly[i].y );
+      wxRealPoint n( pt.x - poly[i].x, pt.y - poly[i].y );
 
-    wxRealPoint p;
-    wxRealPoint v(poly[i2].x-poly[i].x, poly[i2].y-poly[i].y);
-    wxRealPoint n(pt.x - poly[i].x, pt.y - poly[i].y);
+      double t = (n.x*v.x + n.y*v.y) / (v.x*v.x + v.y*v.y);
+      if(t <= 0) 
+      {
+         p.x = poly[i].x;
+         p.y = poly[i].y;
+      } 
+      else if(t >= 1) 
+      {
+         p.x = poly[i2].x;
+         p.y = poly[i2].y;
+      } 
+      else 
+      {
+         p.x = poly[i].x+t*v.x;
+         p.y = poly[i].y+t*v.y;
+      }
 
-    t = (n.x*v.x + n.y*v.y) / (v.x*v.x + v.y*v.y);
-    if(t <= 0) {
-      p.x = poly[i].x;
-      p.y = poly[i].y;
-    } else if(t >= 1) {
-      p.x = poly[i2].x;
-      p.y = poly[i2].y;
-    } else {
-      p.x = poly[i].x+t*v.x;
-      p.y = poly[i].y+t*v.y;
-    }
-
-    d = computenorm(pt, wxPoint(((int) p.x), ((int) p.y)));
-    if(d < dist) {
-      Near.clear();
-      dist = d;
-      Near.push_back(wxPoint(((int) p.x), ((int) p.y)));
-    } else if(d==dist)
-      Near.push_back(wxPoint(((int) p.x), ((int) p.y)));
+      double d = computenorm(pt, wxPoint(((int) p.x), ((int) p.y)));
+      if(d < dist) 
+      {
+         Near.GetPolygon()->clear();
+         dist = d;
+         Near.GetPolygon()->push_back(wxPoint(((int) p.x), ((int) p.y)));
+      } 
+      else if(d==dist)
+         Near.GetPolygon()->push_back(wxPoint(((int) p.x), ((int) p.y)));
   }
 
   return dist;
-*/
 }
 
 /////////////////////////////////////////////////////////////
 void Polygon::TransPoly( int x, int y, Polygon &newpoly)
 {
-/*  newpoly.clear();  
-  for ( unsigned int i=0; i<oldpoly.size(); i++)
-    newpoly.push_back(wxPoint(oldpoly[i].x+x, oldpoly[i].y+y));
-*/   
+  newpoly.GetPolygon()->clear();  
+  for ( size_t i=0; i < poly.size(); ++i )
+    newpoly.GetPolygon()->push_back( wxPoint( poly[i].x+x, poly[i].y+y) );
+  
 }
 ///////////////////////////////////////////////////////////////
 int Polygon::intersect(Polygon l1, Polygon l2)
 {
-/*  int ccw11 = ccw(l1[0], l1[1], l2[0]);
-  int ccw12 = ccw(l1[0], l1[1], l2[1]);
-  int ccw21 = ccw(l2[0], l2[1], l1[0]);
-  int ccw22 = ccw(l2[0], l2[1], l1[1]);
- 
-  return(((ccw11*ccw12 < 0) && (ccw21*ccw22 < 0)) ||
-	 (ccw11*ccw12*ccw21*ccw22 == 0));
-*/
-   return -1;
+   int ccw11 = ccw(l1.GetPoint( 0 ), l1.GetPoint( 1 ), l2.GetPoint( 0 ));
+   int ccw12 = ccw(l1.GetPoint( 0 ), l1.GetPoint( 1 ), l2.GetPoint( 1 ));
+   int ccw21 = ccw(l2.GetPoint( 0 ), l2.GetPoint( 1 ), l1.GetPoint( 0 ));
+   int ccw22 = ccw(l2.GetPoint( 0 ), l2.GetPoint( 1 ), l1.GetPoint( 1 ));
+
+   return( ((ccw11*ccw12 < 0) && (ccw21*ccw22 < 0)) ||
+      (ccw11*ccw12*ccw21*ccw22 == 0) );
 }
+///////////////////////////////////////////////////////////////
+int Polygon::ccw( wxPoint* pt1, wxPoint* pt2, wxPoint* pt3 )
+{
+   double dx1 = pt2->x - pt1->x;
+   double dx2 = pt3->x - pt1->x;
+   double dy1 = pt2->y - pt1->y;
+   double dy2 = pt3->y - pt1->y;
+  
+   if(dx1*dy2 > dy1*dx2) 
+      return 1;
+  
+   if(dx1*dy2 < dy1*dx2) 
+      return -1;
+  
+   if(dx1*dy2 == dy1*dx2)
+      if(dx1*dx2 < 0 || dy1*dy2 < 0) 
+         return -1;
+      else if(dx1*dx1+dy1*dy1 >= dx2*dx2+dy2*dy2) 
+         return 0;
+  
+   return 1;
+}
+///////////////////////////////////////////////////////////////
+double Polygon::computenorm( wxPoint pt1, wxPoint pt2 )
+{
+  return std::sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
+}
+

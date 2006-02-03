@@ -46,7 +46,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS Tag
 {
 public:
    ///Constructor
-   Tag( void );
+   Tag( wxWindow* designCanvas );
    ///Destructor
    ~Tag( void );
    ///Copy Constructor

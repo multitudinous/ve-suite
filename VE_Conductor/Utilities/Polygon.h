@@ -71,6 +71,8 @@ public:
    void TransPoly( int x, int y, Polygon& newpoly );
 
 private:
+   int ccw( wxPoint* pt1, wxPoint* pt2, wxPoint* pt3 );
+   double computenorm( wxPoint pt1, wxPoint pt2 );
    int intersect( Polygon l1, Polygon l2 );
    std::vector< wxPoint > poly;
 };

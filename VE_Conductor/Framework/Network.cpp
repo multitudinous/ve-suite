@@ -695,7 +695,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
    std::map< int, Module >::iterator iter;
    std::vector< Link >::iterator iter2;
    std::vector< Link >::iterator iter3;
-   Link del_link;
+   Link del_link( this );
 
    int answer=wxMessageBox("Do you really want to delete this module?", "Confirmation", wxYES_NO);
    if (answer!=wxYES)
@@ -1274,7 +1274,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    // if it is a good link
    if (dest_mod>=0 && dest_port>=0 && (dest_mod!=mod||dest_port!=pt))
    {
-      Link ln;
+      Link ln( this );
       if ( flag ) // if input port
       {
          ln.SetToModule( mod );
@@ -1289,7 +1289,6 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
          ln.SetFromModule( mod );
          ln.SetFromPort( pt );
       }
-      ln.CalcLinkPoly();
    
       // check for duplicate links
       bool found = false;
@@ -1302,12 +1301,40 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
                && (tempLink->GetFromPort() == ln.GetFromPort() )
             )
          {
+            {
+               // Get input port point for the link
+               wxRect bbox = modules[ ln.GetFromModule() ].GetPlugin()->GetBBox();
+               int num = modules[ ln.GetFromModule() ].GetPlugin()->GetNumOports();
+               POLY ports;
+               ports.resize( num );
+               modules[ ln.GetFromModule() ].GetPlugin()->GetOPorts(ports);
+               // get initial port
+               wxPoint pos;
+               pos.x = bbox.x+ports[ ln.GetFromPort() ].x;
+               pos.y = bbox.y+ports[ ln.GetFromPort() ].y;
+               ln.GetPoints()->push_back( pos );
+            }
+
+            {
+               // Get input port point for the link
+               wxRect bbox = modules[ ln.GetToModule() ].GetPlugin()->GetBBox();  
+               int num = modules[ ln.GetToModule() ].GetPlugin()->GetNumIports();
+               POLY ports;
+               ports.resize( num );
+               modules[ ln.GetToModule() ].GetPlugin()->GetIPorts( ports );
+               wxPoint pos;
+               pos.x = bbox.x+ports[ ln.GetToPort() ].x;
+               pos.y = bbox.y+ports[ ln.GetToPort() ].y;
+               ln.GetPoints()->push_back( pos );
+            }
+
             found = true;
          }
       }
 
       if ( !found ) // no duplicate links are allowed
       { 
+         ln.CalcLinkPoly();
          links.push_back( ln );
          modules[ mod ].GetLinks()->push_back( ln ); //push_back the index of the link
          modules[ dest_mod ].GetLinks()->push_back( ln );
@@ -1651,7 +1678,7 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
 void Network::AddTag(int x, int y, wxString text)
 {
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-   Tag t;
+   Tag t( this );
    int w, h;
    wxClientDC dc(this);
    PrepareDC(dc);
@@ -1940,22 +1967,6 @@ void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
 /////////////////////////////////////////////////////////
 ////// Math Functions for the points and polygons ///////
 /////////////////////////////////////////////////////////
-
-int Network::ccw (wxPoint pt1, wxPoint pt2, wxPoint pt3)
-{
-  double dx1 = pt2.x - pt1.x;
-  double dx2 = pt3.x - pt1.x;
-  double dy1 = pt2.y - pt1.y;
-  double dy2 = pt3.y - pt1.y;
-  
-  if(dx1*dy2 > dy1*dx2) return 1;
-  if(dx1*dy2 < dy1*dx2) return -1;
-  if(dx1*dy2 == dy1*dx2)
-    if(dx1*dx2 < 0 || dy1*dy2 < 0) return -1;
-    else if(dx1*dx1+dy1*dy1 >= dx2*dx2+dy2*dy2) return 0;
-  
-  return 1;
-}
 
 /////////////////////////////////////////////////////////////////
 double Network::computenorm( wxPoint pt1, wxPoint pt2 )
