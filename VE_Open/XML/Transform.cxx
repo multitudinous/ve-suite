@@ -244,17 +244,17 @@ FloatArray* Transform::GetRotationArray( void )
 //////////////////////////////////////////////////////////////
 void Transform::SetTranslationArray( FloatArray* input )
 {
-   *translationArray = *input;
+   translationArray = input;
 }
 //////////////////////////////////////////////////////////////
 void Transform::SetScaleArray( FloatArray* input )
 {
-   *scaleArray = *input;
+   scaleArray = input;
 }
 //////////////////////////////////////////////////////////////
 void Transform::SetRotationArray( FloatArray* input )
 {
-   *rotationArray = *input;
+   rotationArray = input;
 }
     
     

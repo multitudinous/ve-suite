@@ -66,6 +66,7 @@ DataValuePair::DataValuePair(std::string type )
    twoDInt = 0;
    threeDInt = 0;
    oneDString = 0;
+   _dataUInt = 0;
    
 }
 ///////////////////////////////////
@@ -136,13 +137,18 @@ DataValuePair::DataValuePair( const DataValuePair& input )
    threeDInt = 0;
    oneDString = 0;
 
+   _dataUInt = 0;
+   _dataTransform = 0;
+   _dataUInt = input._dataUInt;
    _dataType = input._dataType;
    _dataName = input._dataName;
 
    _dataValue = input._dataValue;
    _dataArray = input._dataArray;
    _dataString = input._dataString;
-   _dataTransform = input._dataTransform;
+
+   if(input._dataTransform)
+      _dataTransform = new Transform(*input._dataTransform);
 
    if ( input.oneDDouble )
       oneDDouble = new OneDDoubleArray( *(input.oneDDouble) );
@@ -174,11 +180,11 @@ DataValuePair& DataValuePair::operator=( const DataValuePair& input)
       XMLObject::operator =(input);
       _dataType = input._dataType;
       _dataName = input._dataName;
-
+      _dataUInt = input._dataUInt;
       _dataValue = input._dataValue;
       _dataArray = input._dataArray;
       _dataString = input._dataString;
-      _dataTransform = input._dataTransform;
+      _dataTransform = new Transform(*input._dataTransform);
 
       if ( input.oneDDouble )
          *oneDDouble = *(input.oneDDouble);
@@ -203,10 +209,27 @@ DataValuePair& DataValuePair::operator=( const DataValuePair& input)
    }
    return *this;
 }
+/////////////////////////////////////////
+unsigned int DataValuePair::GetUIntData()
+{
+   return _dataUInt;
+}
+/////////////////////////////////////////////////////
+void DataValuePair::SetDataValue(unsigned int data)
+{
+   if(_dataType != std::string("UNSIGNED INT"))
+   {
+      std::cout<<"Invalid type passed into DataValuePair::SetDataString"<<std::endl;
+      return;
+   }
+    _dataUInt = data;
+
+}
 ////////////////////////////////////////////
 void DataValuePair::SetDataType(std::string type)
 {
    if( (type == std::string("STRING")) ||
+      (type == std::string("UNSIGNED INT")) ||
        (type == std::string("FLOAT"))  ||
        (type == std::string("FARRAY")) ||
        (type == std::string("TRANSFORM")) ||
@@ -229,6 +252,7 @@ void DataValuePair::SetDataType(std::string type)
                <<"FLOAT == a single float value. "<<std::endl
                <<"FARRAY == a float array. "<<std::endl
                <<"TRANSFORM == a Transform."<<std::endl
+               <<"UNSIGNED INT == an Unsigned int."<<std::endl
                <<"1DDBOUBLE == a ."<<std::endl
                <<"2DDBOUBLE == a ."<<std::endl
                <<"3DDBOUBLE == a ."<<std::endl;
@@ -346,6 +370,10 @@ void DataValuePair::_updateVEElement( std::string input )
    if ( _dataType == std::string("FLOAT") )
    {
       _updateDataValueNumber();
+   }
+   else if( _dataType == std::string("UNSIGNED INT") )
+   {
+       SetSubElement( "dataValueUInt", _dataUInt );
    }
    else if( _dataType == std::string("LONG") )
    {
@@ -490,7 +518,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             DOMElement* dataValueStringName = dynamic_cast<DOMElement*>(subElements->item(0));
             if(dataValueStringName)
             {
-               _dataName = ExtractDataStringFromSimpleElement(dataValueStringName);
+               this->_dataString = ExtractDataStringFromSimpleElement(dataValueStringName);
                SetDataType(std::string("STRING"));
             }
          }

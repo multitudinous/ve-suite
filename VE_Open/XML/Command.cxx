@@ -49,9 +49,12 @@ Command::~Command()
 {
    if(_nDataValuePairs)
    {
-      for(unsigned int i = 0; i < _nDataValuePairs; i++)
+      //for( int i = 0; i < _nDataValuePairs; i++)
+      int i  = _nDataValuePairs -1;
+      while(i >=0)
       {
          delete _dataValuePairs.at(i);
+         i--;
       }
       _dataValuePairs.clear();
    }
@@ -75,10 +78,13 @@ Command& Command::operator=( const Command& input)
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
       _cmdName =  input._cmdName;
+      _nDataValuePairs = input._nDataValuePairs;
 
-      for(unsigned int i = 0; i < _nDataValuePairs; i++)
+      int i  = _dataValuePairs.size() - 1;
+      while(i >=0)
       {
          delete _dataValuePairs.at(i);
+         i--;
       }
       _dataValuePairs.clear();
 

@@ -26,6 +26,7 @@
             <xs:element name="data1DStringArray" type="ve1DStringArray" />
             <xs:element name="data2DStringArray" type="ve2DStringArray" />
             <xs:element name="data3DStringArray" type="ve3DStringArray" />
+            <xs:element name="dataValueUInt" type="xs:unsignedInt" />
          </xs:choice>
       </xs:sequence>
    </xs:complexType>

@@ -82,6 +82,7 @@ public:
    //1DLONG
    //2DLONG
    //3DLONG
+   //UNSIGNED INT
    ///Constructor
    ///\param type The type of value in this pair.
    DataValuePair( std::string type=std::string("STRING"));
@@ -107,8 +108,11 @@ public:
    ///Set the float data
    ///\param data The float data.
    void SetDataValue( double data );
-   
-   
+  
+   ///set the Unsigned int data
+   ///\param data The unsigned data.
+   void SetDataValue(unsigned int data);
+
    ///Set the FloatArray data
    ///\param data The FloatArray data.
    void SetDataArray( VE_XML::FloatArray* data );
@@ -121,6 +125,9 @@ public:
    ///\param xmlInput The input XML data.
    virtual void SetObjectFromXMLData(DOMNode* xmlInput);
    
+   ///Get the unsigned data
+   unsigned int GetUIntData();
+
    ///Get the data type.
    std::string GetDataType();
    ///Get the data name.
@@ -248,6 +255,7 @@ protected:
    ///raw datatypes of DataValuePair that are specified in the verg.xsd file
    double _dataValue;///<Raw double value.
    long intDataValue;///<Raw long value.
+   unsigned int _dataUInt;///<Raw unsigned int value
    std::string _dataString;///<Raw string value.
    VE_XML::FloatArray* _dataArray;///<Raw FloatArray value.
    VE_XML::Transform* _dataTransform;///<Raw Transform value.
