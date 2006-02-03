@@ -69,29 +69,7 @@ void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
    {
       _baseObject = model;
 
-      VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
-      _cadNode = dynamic_cast<VE_CAD::CADNode*>(activeModel->GetRootCADNode());
-       VE_SceneGraph::cfdDCS* transform = 0;
-      if(_cadNode->GetNodeType() == std::string("Part"))
-      {
-         if(activeModel->PartExists(_cadNode->GetID()))
-         {
-            transform = activeModel->GetPart(_cadNode->GetID())->GetDCS();
-         }
-      }
-      else if(_cadNode->GetNodeType() == std::string("Assembly"))
-      {
-         if(activeModel->AssemblyExists(_cadNode->GetID()))
-         {
-            transform = activeModel->GetAssembly(_cadNode->GetID());
-         }
-      }
-      else if(_cadNode->GetNodeType() == std::string("Clone"))
-      {
-      }
-      transform->SetTranslationArray( _cadNode->GetTransform()->GetTranslationArray()->GetArray() );
-      transform->SetRotationArray( _cadNode->GetTransform()->GetRotationArray()->GetArray() );
-      transform->SetScaleArray( _cadNode->GetTransform()->GetScaleArray()->GetArray() );
+      
    }
    catch(...)
    {
@@ -103,7 +81,7 @@ void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 ///////////////////////////////////////////////////////
 void CADEventHandler::Execute(VE_XML::Command* command)
 {
-   if(_cadNode)
+   if(_baseObject)
    {
       //this is overridden in derived classes
       _operateOnNode(command);

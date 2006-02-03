@@ -29,29 +29,27 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/CADTransformEH.h"
+#include "VE_Xplorer/CADAddNodeEH.h"
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdFILE.h"
-
 #include "VE_SceneGraph/cfdDCS.h"
 
 #include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-
-#include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
+#include "VE_Open/XML/Transform.h"
+#include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 using namespace VE_EVENTS;
 using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
-CADTransformEventHandler::CADTransformEventHandler()
+CADAddNodeEventHandler::CADAddNodeEventHandler()
 :VE_EVENTS::CADEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-CADTransformEventHandler::CADTransformEventHandler(const CADTransformEventHandler& rhs)
+CADAddNodeEventHandler::CADAddNodeEventHandler(const CADAddNodeEventHandler& rhs)
 :VE_EVENTS::CADEventHandler(rhs)
 {
    
@@ -59,12 +57,12 @@ CADTransformEventHandler::CADTransformEventHandler(const CADTransformEventHandle
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
-CADTransformEventHandler::~CADTransformEventHandler()
+CADAddNodeEventHandler::~CADAddNodeEventHandler()
 {
 }
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADTransformEventHandler& CADTransformEventHandler::operator=(const CADTransformEventHandler& rhs)
+CADAddNodeEventHandler& CADAddNodeEventHandler::operator=(const CADAddNodeEventHandler& rhs)
 {
    if(this != &rhs)
    {
@@ -73,39 +71,52 @@ CADTransformEventHandler& CADTransformEventHandler::operator=(const CADTransform
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void CADTransformEventHandler::_operateOnNode(VE_XML::Command* command)
+void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
 {
-   try{
-      VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
-
+   try
+   {
+      VE_XML::DataValuePair* parentID = command->GetDataValuePair("Parent ID");
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
-      VE_XML::DataValuePair* newTransform = command->GetDataValuePair("Transform");
-      
-      VE_SceneGraph::cfdDCS* transform = 0;
-      if(nodeType->GetDataString() == std::string("Part"))
+      VE_XML::DataValuePair* transform = command->GetDataValuePair("Transform");
+
+      VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
+
+      VE_SceneGraph::cfdDCS* parentAssembly = 0;
+      parentAssembly = activeModel->GetAssembly(parentID->GetUIntData());
+      if(!parentAssembly)
       {
-         if(activeModel->PartExists(nodeID->GetUIntData()))
-         {
-            transform = activeModel->GetPart(nodeID->GetUIntData())->GetDCS();
-         }
+         //create the root
+         activeModel->CreateAssembly(parentID->GetUIntData());
+         parentAssembly = activeModel->GetAssembly(parentID->GetUIntData());
+         activeModel->GetCfdDCS()->AddChild(parentAssembly);
       }
-      else if(nodeType->GetDataString() == std::string("Assembly"))
+
+      //This assumes the part/assembly isn't there already
+      if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         if(activeModel->AssemblyExists(nodeID->GetUIntData()))
-         {
-            transform = activeModel->GetAssembly(nodeID->GetUIntData());
-         }
+         activeModel->CreateAssembly(nodeID->GetUIntData());
+
+         parentAssembly->AddChild(activeModel->GetAssembly(nodeID->GetUIntData()));
+
+         activeModel->GetAssembly(nodeID->GetUIntData())->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
+         activeModel->GetAssembly(nodeID->GetUIntData())->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
+         activeModel->GetAssembly(nodeID->GetUIntData())->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
       }
-      else if(_cadNode->GetNodeType() == std::string("Clone"))
+      else if(nodeType->GetDataString() == std::string("Part"))
       {
+         VE_XML::DataValuePair* partFileName = command->GetDataValuePair("CAD Filename");
+         activeModel->CreatePart(partFileName->GetDataString(),nodeID->GetUIntData(),parentID->GetUIntData());
+	      
+         VE_Xplorer::cfdFILE* partNode = activeModel->GetPart(nodeID->GetUIntData());
+	      VE_SceneGraph::cfdDCS* partDCS = partNode->GetDCS();
+
+         partDCS->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
+         partDCS->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
+         partDCS->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
       }
-      transform->SetTranslationArray( newTransform->GetDataTransform()->GetTranslationArray()->GetArray() );
-      transform->SetRotationArray( newTransform->GetDataTransform()->GetRotationArray()->GetArray() );
-      transform->SetScaleArray( newTransform->GetDataTransform()->GetScaleArray()->GetArray() );
    }
    catch(...)
    {
-      std::cout<<"Error!!!Invalid command passed to CADTransformEH!!"<<std::endl;
    }
 }

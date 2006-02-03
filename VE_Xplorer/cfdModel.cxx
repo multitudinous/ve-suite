@@ -44,6 +44,7 @@
 
 #include "VE_Xplorer/EventHandler.h"
 #include "VE_Xplorer/CADTransformEH.h"
+#include "VE_Xplorer/CADAddNodeEH.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -100,6 +101,9 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
    
    _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
    _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")]->SetGlobalBaseObject(this);
+   
+   _eventHandlers[std::string("CAD_ADD_NODE")] = new VE_EVENTS::CADAddNodeEventHandler();
+   _eventHandlers[std::string("CAD_ADD_NODE")]->SetGlobalBaseObject(this);
 
 }
 
@@ -257,7 +261,6 @@ void cfdModel::SetMirrorNode( VE_SceneGraph::cfdGroup* dataNode )
       this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
    }
 }
-
 ///////////////////////////////////////
 cfdDataSet* cfdModel::GetActiveDataSet( void )
 {
@@ -807,6 +810,18 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
 VE_CAD::CADNode* cfdModel::GetRootCADNode()
 {
    return _rootCADNode;
+}
+///////////////////////////////////////////////////////
+void cfdModel::CreateAssembly(unsigned int assemblyID)
+{
+   _assemblyList[assemblyID] = new VE_SceneGraph::cfdDCS();
+}
+//////////////////////////////////////////////
+void cfdModel::CreatePart(std::string fileName,
+                       unsigned int partID,
+                       unsigned int parentID)
+{
+   _partList[partID] = new VE_Xplorer::cfdFILE(fileName,_assemblyList[parentID]);
 }
 ///////////////////////////////////////////////////////////
 VE_Xplorer::cfdFILE* cfdModel::GetPart(unsigned int partID)

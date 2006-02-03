@@ -160,6 +160,15 @@ namespace VE_Xplorer
          std::string GetGeomFileName( int );
          void CreateGeomDataSet( std::string );
 
+
+         ///Create a new assembly
+         void CreateAssembly(unsigned int assemblyID);
+
+         ///Create a new part
+         void CreatePart(std::string fileName,
+                       unsigned int partID,
+                       unsigned int parentID);
+
          ///Get a specific part. 
          ///\param partID The ID of the part to search form
          VE_Xplorer::cfdFILE* GetPart(unsigned int partID);
