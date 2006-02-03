@@ -504,9 +504,6 @@
 				RelativePath="..\Ve_ui\UI_VertTab.cpp">
 			</File>
 			<File
-				RelativePath="..\Ve_ui\UI_ViewLocTab.cpp">
-			</File>
-			<File
 				RelativePath="..\VE_UI\UI_VisTab.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -649,9 +646,6 @@
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_VertTab.h">
-			</File>
-			<File
-				RelativePath="..\Ve_ui\UI_ViewLocTab.h">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VisTab.h">
