@@ -733,6 +733,7 @@ void VjObs_i::PreFrameUpdate( void )
       delete commandVectorQueue.at( 0 );
       commandVectorQueue.erase( iter );
       cfdEnvironmentHandler::instance()->GetNavigate()->SetVECommand( bufferCommand );
+      cfdEnvironmentHandler::instance()->GetQuatCamHandler()->SetVECommand( bufferCommand );
       cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
       cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
       //std::cout << " command name " << bufferCommand->GetCommandName() << std::endl;
