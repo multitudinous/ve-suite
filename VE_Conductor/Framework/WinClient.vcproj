@@ -527,6 +527,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\ViewLocPane.cxx">
+			</File>
+			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\VjObsC.cpp">
 			</File>
 			<File
@@ -652,6 +655,9 @@
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VisTab.h">
+			</File>
+			<File
+				RelativePath=".\ViewLocPane.h">
 			</File>
 		</Filter>
 		<Filter
