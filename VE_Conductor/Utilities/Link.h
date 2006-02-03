@@ -53,7 +53,21 @@ public:
    Link( const Link& );
    ///equal operator
    Link& operator= ( const Link& );
-
+   ///Test for equality operator
+   friend inline bool operator== ( const Link& l1, const Link& l2 )
+   {
+      if ( 
+            (l1.Fr_mod == l2.Fr_mod) &&
+            (l1.To_mod == l2.To_mod) &&
+            (l1.Fr_port == l2.Fr_port) &&
+            (l1.To_port == l2.To_port)
+         )
+      {
+         return true;
+      }
+      return false;
+   }
+   
    ///Set the wxWindow on which you wish to draw a tag
    ///\param window The window on which the tag will be drawn
    void SetWxWindow( wxWindow* window );

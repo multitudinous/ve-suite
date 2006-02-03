@@ -333,7 +333,7 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
    }
 }
 //////////////////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::_updateAttributeType(wxCommandEvent& event)
+void CADNodePropertiesDlg::_updateAttributeType(wxCommandEvent& WXUNUSED(event))
 {
    if(_attributeType->GetValue() == wxString("Materials"))
    {
@@ -345,7 +345,7 @@ void CADNodePropertiesDlg::_updateAttributeType(wxCommandEvent& event)
    }
 }
 /////////////////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& event)
+void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& WXUNUSED(event))
 {
    if(_cadNode)
    {
@@ -361,7 +361,7 @@ void CADNodePropertiesDlg::ClearInstructions()
    _instructions.clear();
 }
 ///////////////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& event)
+void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
 {
    if(_cadNode)
    {

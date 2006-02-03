@@ -58,10 +58,10 @@ public:
    ///Set the wxWindow on which you wish to draw a tag
    ///\param window The window on which the tag will be drawn
    void SetWxWindow( wxWindow* window );
-   Link* GetLink( size_t i );
-   void RemoveLink( size_t i );
-   std::vector< Link >* GetLinks( void );
-   size_t GetNumberOfLinks( void );
+   //Link* GetLink( size_t i );
+   //void RemoveLink( size_t i );
+   //std::vector< Link >* GetLinks( void );
+   //size_t GetNumberOfLinks( void );
    std::string GetClassName( void );
    void SetClassName( std::string newClassname );
    Polygon* GetPolygon( void );
@@ -71,7 +71,7 @@ public:
 private:
    REI_Plugin* pl_mod;
    Polygon poly; //Poly is the current poly on the canvas
-   std::vector< Link > links; //links connected with me
+   //std::vector< Link > links; //links connected with me
    std::string cls_name;
    wxWindow* canvas;
 };

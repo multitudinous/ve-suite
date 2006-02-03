@@ -107,8 +107,6 @@ public:
    ~Network();
    //double m_xUserScale, m_yUserScale; //Zoom Factor
 
-   int nPixX, nPixY; 
-   int nUnitX, nUnitY; //Unit of the scrolled window
    Body::Executive_var exec; //put this reference here, so ther frame work can still access it YANG
 
    wxMutex s_mutexProtect;
@@ -155,6 +153,8 @@ public:
    void New();
    ///Acessors
    std::pair< double, double >* GetUserScale( void );
+   std::pair< int, int >* GetNumPix( void );
+   std::pair< int, int >* GetNumUnit( void );
 
 protected:
 
@@ -203,15 +203,19 @@ protected:
    //VE_Conductor::GUI_Utilities::Polygon CalcLinkPoly( VE_Conductor::GUI_Utilities::Tag l); // calculate the bounding polygon of a link
    //VE_Conductor::GUI_Utilities::Polygon CalcTagPoly( VE_Conductor::GUI_Utilities::Tag t); // calculate the bounding polygon of a tag
 
+   ///Get the point for a port or connector for a selected plugin
+   ///portType is either input or output
+   wxPoint GetPointForSelectedPlugin( unsigned long moduleID, unsigned int portNumber, std::string portType );
+
 protected:
    //Three main list of network objs
-
    std::vector< VE_Conductor::GUI_Utilities::Link > links; //The list of links between the nodes of moduls.
    std::vector< VE_Conductor::GUI_Utilities::Tag > tags; //The list of text tags  
+
 public:
    std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
-protected:
 
+protected:
    int m_selMod; // selected module
    int m_selFrPort; // selected From port
    int m_selToPort; // selected To port;
@@ -234,7 +238,19 @@ private:
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
    VE_Model::Network* veNetwork;
+
+   ///User scale
+   /// first = x scale
+   /// second = y scale
    std::pair< double, double > userScale;
+   ///Num Pixels
+   /// first = x pix
+   /// second = y pix
+   std::pair< int, int > numPix;
+   ///Num unit
+   /// first = x unit
+   /// second = y unit
+   std::pair< int, int > numUnit;
 
    DECLARE_EVENT_TABLE() // no semicolon needed
 };

@@ -55,7 +55,7 @@ Module::Module( const Module& input )
    poly = input.poly; 
    cls_name = input.cls_name;
    canvas = input.canvas;
-   links = input.links;
+   //links = input.links;
 }
 ////////////////////////////////////////////////
 Module& Module::operator= ( const Module& input )
@@ -67,8 +67,8 @@ Module& Module::operator= ( const Module& input )
       cls_name = input.cls_name;
       canvas = input.canvas;
       // we can do this because it is a vector of actual instances
-      links.clear();
-      links = input.links;
+      //links.clear();
+      //links = input.links;
    }
    return *this;
 }
@@ -77,7 +77,7 @@ void Module::SetWxWindow( wxWindow* window )
 {
    canvas = window;
 }
-////////////////////////////////////////////////
+/*////////////////////////////////////////////////
 Link* Module::GetLink( size_t i )
 {
    return &(links.at( i ));
@@ -86,6 +86,11 @@ Link* Module::GetLink( size_t i )
 std::vector< Link >* Module::GetLinks( void )
 {
    return &(links);
+}
+////////////////////////////////////////////////
+size_t Module::GetNumberOfLinks( void )
+{
+   return links.size();
 }
 ////////////////////////////////////////////////
 void Module::RemoveLink( size_t i )
@@ -100,7 +105,7 @@ void Module::RemoveLink( size_t i )
          break;
       }
    }
-}
+}*/
 ////////////////////////////////////////////////
 std::string Module::GetClassName( void )
 {
@@ -110,11 +115,6 @@ std::string Module::GetClassName( void )
 VE_Conductor::GUI_Utilities::Polygon* Module::GetPolygon( void )
 {
    return &(poly);
-}
-////////////////////////////////////////////////
-size_t Module::GetNumberOfLinks( void )
-{
-   return links.size();
 }
 ////////////////////////////////////////////////
 void Module::SetClassName( std::string newClassname )

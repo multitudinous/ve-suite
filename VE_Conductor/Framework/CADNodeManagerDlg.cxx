@@ -95,18 +95,21 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
    if(_rootNode)
    {
       delete _rootNode;
-      _rootNode;
+      _rootNode = 0;
    }
+
    if(_cadTreeBuilder)
    {
       delete _cadTreeBuilder;
       _cadTreeBuilder = 0;
    }
+
    if(_propsDlg)
    {
       delete _propsDlg;
       _propsDlg = 0;
    }
+
    _dataValuePairList.clear();
 }
 #ifndef STAND_ALONE
@@ -223,7 +226,7 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
    }
 }
 /////////////////////////////////////////////////////////////////
-void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& event)
+void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
 {
    if(!_rootNode)
    {
@@ -290,7 +293,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& event)
    }
 }
 /////////////////////////////////////////////////////////
-void CADNodeManagerDlg::_cloneNode(wxCommandEvent& event)
+void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 {
    if(_activeCADNode)
    {
@@ -309,7 +312,7 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& event)
    }
 }
 ///////////////////////////////////////////////////////////////////
-void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& event)
+void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
 {
    wxFileDialog dialog(this,
 		       _T("Open file"), 
@@ -339,7 +342,7 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& event)
     }
 }
 ///////////////////////////////////////////////////////////////////
-void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& event)
+void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
 {
    
    ClearInstructions();
@@ -406,7 +409,7 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& event)
     }
 }
 ///////////////////////////////////////////////////////////
-void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& event)
+void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
 {
    wxFileDialog dialog(this,
 		       _T("Save file as..."), 
@@ -442,7 +445,7 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& event)
    }
 }
 ////////////////////////////////////////////////////////////////////
-void CADNodeManagerDlg::_showPropertiesDialog(wxCommandEvent& event)
+void CADNodeManagerDlg::_showPropertiesDialog(wxCommandEvent& WXUNUSED(event))
 {
    if(_activeCADNode)
    {
@@ -461,7 +464,7 @@ void CADNodeManagerDlg::ClearInstructions()
    _dataValuePairList.clear();
 }
 ///////////////////////////////////////////////////////////
-void CADNodeManagerDlg::_deleteNode(wxCommandEvent& event)
+void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
 {
     CADTreeBuilder::TreeNodeData* cadNode = 0;
     //don't allow the user to delete the root node!!!
