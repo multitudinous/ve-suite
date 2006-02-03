@@ -50,7 +50,7 @@ class UI_StreamTab;
 class UI_TeacherTab;
 class UI_SoundTab;
 class UI_GeometryTab;
-class UI_ViewLocTab;
+//class UI_ViewLocTab;
 class UI_DesignParTab;
 class UI_VertTab;
 class UI_TransTab;
@@ -119,7 +119,7 @@ public:
    UI_NavigationTab* _navPage;
    UI_VertTab* _vertPage;
    UI_TransTab* _transPage;
-   UI_ViewLocTab* _viewlocPage;
+   //UI_ViewLocTab* _viewlocPage;
    UI_DesignParTab* _designparPage;
    UI_AdvectionPanel* _advectionPage;
 
@@ -132,7 +132,7 @@ public:
    short    num_geo;
    short    num_sounds;
    short    num_teacher;
-   short    num_viewlocs;
+   //short    num_viewlocs;
    //short    numSteadyStateDataSets;
    //bool     hasXPostData;
    //bool     hasYPostData;
@@ -144,11 +144,11 @@ public:
    VjObs::scalar_p   geoNameArray;
    VjObs::scalar_p_var   soundNameArray;
    VjObs::scalar_p_var   teacher_attrib;
-   VjObs::scalar_p_var   viewlocNameArray;
+   //VjObs::scalar_p_var   viewlocNameArray;
    VjObs::Models_var   _models;
-   VjObs::double2DArray_var  flyThroughArray;
+   //VjObs::double2DArray_var  flyThroughArray;
    //VjObs::scalar_p_var   viewlocNewPointName;
-   std::string viewlocNewPointName;
+   //std::string viewlocNewPointName;
    std::string   dest;
    short    dest_num;
    short    dest_id;

@@ -141,7 +141,7 @@ void UI_Tabs::getData()
 
       cPre_state = 0;
 
-      if ( !CORBA::is_nil( server_ref ) )
+      /*if ( !CORBA::is_nil( server_ref ) )
       {
       num_viewlocs = server_ref->getIsoValue();
       }
@@ -152,7 +152,7 @@ void UI_Tabs::getData()
       {
       flyThroughArray = server_ref->getDouble2D( "getFlythroughData" );
       }
-      std::cout << "number of flythroughs: "<< flyThroughArray->length() << std::endl;
+      std::cout << "number of flythroughs: "<< flyThroughArray->length() << std::endl;*/
    }
    catch ( ... )
    {
@@ -486,8 +486,8 @@ void UI_Tabs::createTabPages()
    //AddPage( _navPage, _T("Navigation"), false );
 
    //Viewing Locations page
-   _viewlocPage = new UI_ViewLocTab(this);
-   AddPage( _viewlocPage, _T("View Points"), false );
+   //_viewlocPage = new UI_ViewLocTab(this);
+   //AddPage( _viewlocPage, _T("View Points"), false );
 
    //Vectors page
    _vectorPage = new UI_VectorTab(this);
