@@ -444,17 +444,13 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& event)
 ////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_showPropertiesDialog(wxCommandEvent& event)
 {
-   if(_activeTreeNode)
+   if(_activeCADNode)
    {
-      if(!_propsDlg)
-      {
-         _propsDlg = new CADNodePropertiesDlg(this,PROPERTY_ID,_activeCADNode);
-      }
+      CADNodePropertiesDlg propsDlg(this,PROPERTY_ID,_activeCADNode);
 #ifndef STAND_ALONE
-      _propsDlg->SetVjObsPtr(_vjObsPtr);
+      propsDlg.SetVjObsPtr(_vjObsPtr);
 #endif
-      _propsDlg->ShowModal();
-    
+      propsDlg.ShowModal();
    }
 }
 //////////////////////////////////////////////

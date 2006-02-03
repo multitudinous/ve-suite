@@ -176,12 +176,18 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    wxStaticBoxSizer* transSizer = new wxStaticBoxSizer(translation, wxHORIZONTAL);
    _xTransformCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _xTransformCtrl->SetValue(0);
+   _xTransformCtrl->SetRange(-1000.0,1000.0);
+   _xTransformCtrl->SetIncrement(1.0);
 
    _yTransformCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _yTransformCtrl->SetValue(0);
+   _yTransformCtrl->SetRange(-1000.0,1000.0);
+   _yTransformCtrl->SetIncrement(1.0);
 
    _zTransformCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _zTransformCtrl->SetValue(0);
+   _zTransformCtrl->SetRange(-1000.0,1000.0);
+   _zTransformCtrl->SetIncrement(1.0);
 
    transSizer->Add(_xTransformCtrl,1,wxALIGN_CENTER_HORIZONTAL);
    transSizer->Add(_yTransformCtrl,1,wxALIGN_CENTER_HORIZONTAL);
@@ -194,12 +200,18 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    wxStaticBoxSizer* rotationSizer = new wxStaticBoxSizer(rotation, wxHORIZONTAL);
    _xRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _xRotationCtrl->SetValue(0);
+   _xRotationCtrl->SetRange(0.0,360.0);
+   _xRotationCtrl->SetIncrement(1.0);
 
    _yRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _yRotationCtrl->SetValue(0);
+   _yRotationCtrl->SetRange(0.0,360.0);
+   _yRotationCtrl->SetIncrement(1.0);
 
    _zRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _zRotationCtrl->SetValue(0);
+   _zRotationCtrl->SetRange(0.0,360.0);
+   _zRotationCtrl->SetIncrement(1.0);
 
    rotationSizer->Add(_xRotationCtrl,1,wxALIGN_CENTER_HORIZONTAL);
    rotationSizer->Add(_yRotationCtrl,1,wxALIGN_CENTER_HORIZONTAL);
@@ -214,9 +226,17 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    _yScaleCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _zScaleCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    
-   _xScaleCtrl->SetValue(0);
-   _yScaleCtrl->SetValue(0);
-   _zScaleCtrl->SetValue(0);
+   _xScaleCtrl->SetValue(1.0);
+   _xScaleCtrl->SetRange(0.0,100.0);
+   _xScaleCtrl->SetIncrement(1.0);
+
+   _yScaleCtrl->SetValue(1.0);
+   _yScaleCtrl->SetRange(0.0,100.0);
+   _yScaleCtrl->SetIncrement(1.0);
+
+   _zScaleCtrl->SetValue(1.0);
+   _zScaleCtrl->SetRange(0.0,100.0);
+   _zScaleCtrl->SetIncrement(1.0);
 
    scaleSizer->Add(_xScaleCtrl,1,wxALIGN_CENTER_HORIZONTAL);
    scaleSizer->Add(_yScaleCtrl,1,wxALIGN_CENTER_HORIZONTAL);
