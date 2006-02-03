@@ -196,6 +196,11 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 }
+///Set the name of the node
+void cfdNode::SetName(std::string name)
+{
+   GetRawNode()->setName(name);
+}
 /////////////////////////////////////////
 //load scene from file                 //
 /////////////////////////////////////////

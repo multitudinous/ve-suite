@@ -35,6 +35,8 @@
 
 #include "VE_SceneGraph/cfdDCS.h"
 
+#include "VE_SceneGraph/cfdClone.h"
+
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -98,10 +100,13 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::Command* command)
             transform = activeModel->GetAssembly(nodeID->GetUIntData());
          }
       }
-      else if(_cadNode->GetNodeType() == std::string("Clone"))
+      else if(nodeType->GetDataString() == std::string("Clone"))
       {
+         if(activeModel->CloneExists(nodeID->GetUIntData()))
+         {
+            transform = activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph();
+         }
       }
-      std::cout<<"Updating transform for node: "<<nodeID->GetUIntData()<<std::endl;
       transform->SetTranslationArray( newTransform->GetDataTransform()->GetTranslationArray()->GetArray() );
       transform->SetRotationArray( newTransform->GetDataTransform()->GetRotationArray()->GetArray() );
       transform->SetScaleArray( newTransform->GetDataTransform()->GetScaleArray()->GetArray() );

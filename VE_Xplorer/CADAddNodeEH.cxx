@@ -33,6 +33,7 @@
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdClone.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/FloatArray.h"
@@ -80,6 +81,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
       VE_XML::DataValuePair* transform = command->GetDataValuePair("Transform");
+      VE_XML::DataValuePair* nodeName = command->GetDataValuePair("Node Name");
 
       VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
 
@@ -103,20 +105,37 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
          activeModel->GetAssembly(nodeID->GetUIntData())->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
          activeModel->GetAssembly(nodeID->GetUIntData())->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
          activeModel->GetAssembly(nodeID->GetUIntData())->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
+         activeModel->GetAssembly(nodeID->GetUIntData())->SetName(nodeName->GetDataString());
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
          VE_XML::DataValuePair* partFileName = command->GetDataValuePair("CAD Filename");
-         std::cout<<"Creating part: "<<nodeID->GetUIntData()<<std::endl;
-         std::cout<<"Parent ID : "<<parentID->GetUIntData()<<std::endl;
          activeModel->CreatePart(partFileName->GetDataString(),nodeID->GetUIntData(),parentID->GetUIntData());
 	      
          VE_Xplorer::cfdFILE* partNode = activeModel->GetPart(nodeID->GetUIntData());
+         partNode->GetNode()->SetName(nodeName->GetDataString());
 	      VE_SceneGraph::cfdDCS* partDCS = partNode->GetDCS();
 
          partDCS->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
          partDCS->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
          partDCS->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
+      }
+      else if(nodeType->GetDataString() == std::string("Clone"))
+      {
+         
+         VE_XML::DataValuePair* originalNodeType = command->GetDataValuePair("Original Type");
+         VE_XML::DataValuePair* originalNodeID = command->GetDataValuePair("Original ID");
+
+         activeModel->CreateClone(nodeID->GetUIntData(),originalNodeID->GetUIntData(),originalNodeType->GetDataString());
+
+         VE_SceneGraph::cfdClone* newClone = activeModel->GetClone(nodeID->GetUIntData());
+         if(newClone)
+         {
+            newClone->GetClonedGraph()->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
+            newClone->GetClonedGraph()->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
+            newClone->GetClonedGraph()->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
+            parentAssembly->AddChild(newClone->GetClonedGraph());
+         }
       }
    }
    catch(...)

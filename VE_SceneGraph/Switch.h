@@ -23,69 +23,35 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdNode.h,v $
+ * File:          $RCSfile: cfdSwitch.h,v $
  * Date modified: $Date: 2006-01-10 11:21:30 -0600 (Tue, 10 Jan 2006) $
  * Version:       $Rev: 3470 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_SCENE_GRAPH_ATTRIBUTE_H
-#define VE_SCENE_GRAPH_ATTRIBUTE_H
-
-#include <string>
+#ifndef VE_SWITCH_H
+#define VE_SWITCH_H
 
 
 #ifdef _PERFORMER
+class pfSwitch;
 #elif _OSG
-#include <osg/StateSet>;
-#include <osg/ref_ptr>
-#elif _PERFORMER
-#elif _OPENSG
+#include <osg/Switch>
+#elif OPENSG
 #endif
 
-namespace VE_SceneGraph
-{
-namespace Utilities
-{
+namespace VE_SceneGraph{
 #ifdef _OSG
-class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public osg::StateSet
+   class VE_SCENEGRAPH_EXPORTS Switch : public osg::Switch
 #elif _PERFORMER
-class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public osg::StateSet
-#include <Performer/pr/pfMaterial.h>
+   class VE_SCENEGRAPH_EXPORTS Switch : public pfSwitch 
 #endif
-{
-public:   
-   ///Constructor
-   Attribute();
-#ifdef _OSG
-   ///Copy Constructor for OpenSceneGraph object
-   Attribute(const Attribute& pbQuad,
-             const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
+   {
+      public:
+         Switch(){}
+         virtual ~Switch(){}
 
-   ///OSG defines this macro
-   META_Object(VE_SceneGraph::Utilities,Attribute);
-  
-   ///Get the stateset representing the attribute
-   osg::StateSet* GetStateSet(); 
-#elif _PERFORMER
-   ///Get the stateset representing the attribute
-   pfGeoState* GetStateSet(); 
-#endif
-   
-   ///Destructor
-   virtual ~Attribute();
-
-   ///Create a StateSet from a CADAttribute.
-   ///\param attribute The CADAttribute.
-   void CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute);
-protected:
-
-#ifdef _OSG
-   osg::ref_ptr<osg::StateSet> _stateSet;
-#elif _PERFORMER
-   pfGeoState* _stateSet;
-#endif
-};
+      protected:
+   };
 }
-}
-#endif //VE_SCENE_GRAPH_ATTRIBUTE_H
+#endif// VE_SWITCH_H

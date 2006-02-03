@@ -165,6 +165,11 @@ namespace VE_Xplorer
 
          ///Create a new assembly
          void CreateAssembly(unsigned int assemblyID);
+         
+         ///Create a new clone
+         void CreateClone(unsigned int cloneID,
+                        unsigned int originalID,
+                        std::string orignalType);
 
          ///Create a new part
          void CreatePart(std::string fileName,
@@ -179,7 +184,13 @@ namespace VE_Xplorer
          ///\param assemblyID The ID of the assembly to search form
          VE_SceneGraph::cfdDCS* GetAssembly(unsigned int assemblyID);
 
-         //Checks for cloning
+         ///Get a specific assembly. 
+         ///\param assemblyID The ID of the assembly to search form
+         VE_SceneGraph::cfdClone* GetClone(unsigned int cloneID);
+
+         ///\param cloneID The part ID to search for.
+         bool CloneExists(unsigned int clone);
+
          ///\param partID The part ID to search for.
          bool PartExists(unsigned int partID);
 
@@ -238,6 +249,7 @@ public:
 
          std::map<unsigned int,VE_Xplorer::cfdFILE*> _partList;///<A list of the current parts.
          std::map<unsigned int,VE_SceneGraph::cfdDCS*> _assemblyList;///A list of the current assemblies.
+         std::map<unsigned int,VE_SceneGraph::cfdClone*> _cloneList;///A list of clones.
 
       #ifdef _OSG
          typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;

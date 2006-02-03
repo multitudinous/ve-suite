@@ -34,6 +34,7 @@
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdNode.h"
 #include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdClone.h"
 #include "VE_SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_Builder/Translator/cfdGrid2Surface.h"
@@ -133,6 +134,12 @@ cfdModel::~cfdModel()
    }
    _assemblyList.clear();
 
+   for ( std::map<unsigned int,VE_SceneGraph::cfdClone*>::iterator itr = _cloneList.begin();
+                                       itr != _cloneList.end(); itr++ )
+   {
+      delete itr->second;
+   }
+   _cloneList.clear();
    // the following block allows the program to get to pfExit
    for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); itr++ )
@@ -813,6 +820,21 @@ VE_CAD::CADNode* cfdModel::GetRootCADNode()
    return _rootCADNode;
 }
 ///////////////////////////////////////////////////////
+void cfdModel::CreateClone(unsigned int cloneID,
+                        unsigned int originalID,
+                        std::string originalType)
+{
+   if(originalType == std::string("Assembly"))
+   {
+      _cloneList[cloneID] = new VE_SceneGraph::cfdClone(GetAssembly(originalID));
+   }
+   else if(originalType == std::string("Part"))
+   {
+      _cloneList[cloneID] = new VE_SceneGraph::cfdClone(GetPart(originalID)->GetNode());
+   }
+   
+}
+///////////////////////////////////////////////////////
 void cfdModel::CreateAssembly(unsigned int assemblyID)
 {
    _assemblyList[assemblyID] = new VE_SceneGraph::cfdDCS();
@@ -834,6 +856,11 @@ VE_SceneGraph::cfdDCS* cfdModel::GetAssembly(unsigned int assemblyID)
 {
    return _assemblyList[assemblyID];
 }
+/////////////////////////////////////////////////////////////////////
+VE_SceneGraph::cfdClone* cfdModel::GetClone(unsigned int cloneID)
+{
+   return _cloneList[cloneID];
+}
 //////////////////////////////////////////////
 bool cfdModel::PartExists(unsigned int partID)
 {
@@ -853,6 +880,18 @@ bool cfdModel::AssemblyExists(unsigned int assemblyID)
    foundAssembly = _assemblyList.find(assemblyID);
 
    if(foundAssembly != _assemblyList.end())
+   {
+      return true;
+   }
+   return false;
+}
+/////////////////////////////////////////////////////
+bool cfdModel::CloneExists(unsigned int cloneID)
+{
+   std::map<unsigned int,VE_SceneGraph::cfdClone*>::iterator foundClone;
+   foundClone = _cloneList.find(cloneID);
+
+   if(foundClone!= _cloneList.end())
    {
       return true;
    }

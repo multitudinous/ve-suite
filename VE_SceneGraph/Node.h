@@ -24,17 +24,13 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdNode.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * Date modified: $Date: 2006-01-10 11:21:30 -0600 (Tue, 10 Jan 2006) $
+ * Version:       $Rev: 3470 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_NODE_H
-#define CFD_NODE_H
-
-#include "VE_SceneGraph/cfdSceneNode.h"
-#include <string>
-
+#ifndef VE_NODE_H
+#define VE_NODE_H
 
 #ifdef _PERFORMER
 class pfNode;
@@ -44,60 +40,28 @@ class pfFog;
 namespace osg 
 { 
    class Fog; 
-   class Node;
    class LightModel;
 }
+#include <osg/Node>
 #include <osg/ref_ptr>
 #elif _OPENSG
 #endif
 
 namespace VE_SceneGraph
 {
-   class VE_SCENEGRAPH_EXPORTS cfdNode: public cfdSceneNode
+#ifdef _OSG
+   class VE_SCENEGRAPH_EXPORTS Node: public osg::Node
+#else
+   class VE_SCENEGRAPH_EXPORTS Node: public pfNode
+#endif
    {
       public:   
-         cfdNode( void );
-         //copy constructor
-         cfdNode( const cfdNode& );
-         virtual ~cfdNode( void );
+         Node( ){}
+         virtual ~Node( void ){}
 
          //equal operator
-         cfdNode& operator= ( const cfdNode& );
-
-         ///Set the name of the node
-         void SetName(std::string name);
-
-#ifdef _PERFORMER
-         virtual pfNode* GetRawNode( void );
-#elif _OSG
-         virtual osg::Node* GetRawNode( void );
-#elif _OPENSG
-#endif
-
-#ifdef _PERFORMER
-         void pfTravNodeMaterial( pfNode* );
-         void pfTravNodeFog( pfNode* node_1, pfFog* fog );
-#elif _OSG
-         void TravNodeMaterial(osg::Node*);
-         void TravNodeFog(osg::Node* node_1, osg::Fog* fog);
-#elif _OPENSG
-#endif
-         void SetNodeProperties( int, float, float* );
-         void LoadFile( std::string );
-         cfdNode* Clone( int );
-   protected:
-#ifdef _PERFORMER
-         pfNode* _node;
-         pfLightModel* lightModel;
-#elif _OSG
-         osg::ref_ptr<osg::Node> _node;
-         osg::ref_ptr<osg::LightModel> lightModel;
-#elif _OPENSG
-#endif
-         float op;
-         float stlColor[ 3 ];
-         int color;
-         bool twosidedlighting;
+         Node& operator= ( const Node& );
+      protected:
    };
 }
 #endif

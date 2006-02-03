@@ -53,6 +53,9 @@ cfdClone::cfdClone()
 cfdClone::cfdClone(cfdNode* original)
 :cfdNode()
 {
+   _cloneTransform = 0;
+   _originalNode = 0;
+   _instanceNode = 0;
    CloneNode( original );
 }
 /////////////////////

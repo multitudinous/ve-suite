@@ -276,10 +276,16 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          _dataValuePairList.push_back(parentNode);
 
          VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
-         parentNode->SetDataType(std::string("TRANSFORM"));
-         parentNode->SetDataTransform(newAssembly->GetTransform());
-         parentNode->SetDataName(std::string("Transform"));
+         transform->SetDataType(std::string("TRANSFORM"));
+         transform->SetDataTransform(newAssembly->GetTransform());
+         transform->SetDataName(std::string("Transform"));
          _dataValuePairList.push_back(transform);
+
+         VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
+         nodeName->SetDataType(std::string("STRING"));
+         nodeName->SetDataString(newAssembly->GetNodeName());
+         nodeName->SetDataName(std::string("Node Name"));
+         _dataValuePairList.push_back(nodeName);
 
          _sendCommandsToXplorer();
          ClearInstructions();
@@ -295,7 +301,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 {
-   if(_activeCADNode)
+   if(_activeCADNode &&  (_activeTreeNode->GetId() != _geometryTree->GetRootItem()))
    {
       CADClone* newClone = new CADClone(_activeCADNode->GetNodeName(),_activeCADNode);
 
@@ -305,10 +311,59 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
          dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(parentID));
 
       dynamic_cast<CADAssembly*>(parentCADNode->GetNode())->AddChild(newClone);
+      ClearInstructions();
 
       _cadTreeBuilder->SetRootNode(_rootNode);
       _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
       _cadTreeBuilder->Traverse();
+
+      VE_XML::DataValuePair* addNode = new VE_XML::DataValuePair();
+      addNode->SetDataType("STRING");
+      addNode->SetData(std::string("Node Type"),std::string("Clone"));
+      _dataValuePairList.push_back(addNode);
+
+      VE_XML::DataValuePair* originalID = new VE_XML::DataValuePair();
+      originalID->SetDataType("UNSIGNED INT");
+      originalID->SetDataValue(_activeCADNode->GetID());
+      originalID->SetDataName(std::string("Original ID"));
+      _dataValuePairList.push_back(originalID);
+
+      VE_XML::DataValuePair* originalType = new VE_XML::DataValuePair();
+      originalType->SetDataType("STRING");
+      originalType->SetDataString(_activeCADNode->GetNodeType());
+      originalType->SetDataName(std::string("Original Type"));
+      _dataValuePairList.push_back(originalType);
+
+      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      nodeID->SetDataType("UNSIGNED INT");
+      nodeID->SetDataValue(newClone->GetID());
+      nodeID->SetDataName(std::string("Node ID"));
+      _dataValuePairList.push_back(nodeID);
+
+      VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
+      parentNode->SetDataType(std::string("UNSIGNED INT"));
+      parentNode->SetDataValue(_activeCADNode->GetParent());
+      parentNode->SetDataName(std::string("Parent ID"));
+      _dataValuePairList.push_back(parentNode);
+
+      VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
+      transform->SetDataType(std::string("TRANSFORM"));
+      transform->SetDataTransform(newClone->GetTransform());
+      transform->SetDataName(std::string("Transform"));
+      _dataValuePairList.push_back(transform);
+
+      VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
+      nodeName->SetDataType(std::string("STRING"));
+      nodeName->SetDataString(newClone->GetNodeName());
+      nodeName->SetDataName(std::string("Node Name"));
+      _dataValuePairList.push_back(nodeName);
+               
+      _sendCommandsToXplorer();
+   }
+   else
+   {
+       wxMessageBox( "Error! Can't Clone root node!!!.", 
+                        "CAD Clone Failure", wxOK | wxICON_INFORMATION );
    }
 }
 ///////////////////////////////////////////////////////////////////
@@ -402,6 +457,12 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
                transform->SetDataTransform(newCADPart->GetTransform());
                transform->SetDataName(std::string("Transform"));
                _dataValuePairList.push_back(transform);
+
+               VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
+               nodeName->SetDataType(std::string("STRING"));
+               nodeName->SetDataString(newCADPart->GetNodeName());
+               nodeName->SetDataName(std::string("Node Name"));
+               _dataValuePairList.push_back(nodeName);
                
                _sendCommandsToXplorer();
            }      
