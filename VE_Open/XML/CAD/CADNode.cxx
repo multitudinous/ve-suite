@@ -50,7 +50,7 @@ CADNode::CADNode(std::string name)
    _parent = 0;
    _transform = new Transform(); 
    _type = std::string("Node");
-   _uID = time(0);
+   _uID = static_cast<unsigned int>(time(NULL));
    _activeAttributeName = std::string("");
 }
 ///////////////////

@@ -44,7 +44,7 @@ SRCS=\
    CADXMLReaderWriter.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
-DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib -lVE_ShaderLib
 
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk

@@ -522,6 +522,11 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                SetDataType(std::string("STRING"));
             }
          }
+         else if(currentElement->getElementsByTagName(xercesString("dataValueUInt"))->getLength() )
+         {
+            DOMElement* dataUnsignedValue = GetSubElement( currentElement, "dataValueUInt", 0 );
+            _dataUInt = ExtractIntegerDataNumberFromSimpleElement( dataUnsignedValue  );
+         }
          else if(currentElement->getElementsByTagName(xercesString("dataValueNum"))->getLength() )
          {
             //get variables by tags
