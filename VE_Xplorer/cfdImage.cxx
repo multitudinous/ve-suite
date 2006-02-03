@@ -43,6 +43,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkTexture.h>
 #include <vtkImageReader.h>
+#include <vtkImageData.h>
 #include <vtkProperty.h>
 #include <vtkActor.h>
 

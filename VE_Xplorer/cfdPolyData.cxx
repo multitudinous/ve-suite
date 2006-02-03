@@ -150,7 +150,7 @@ void cfdPolyData::Update()
       vprDEBUG(vesDBG,1) << " Using scalar data from "
          << pd->GetPointData()->GetScalars()->GetName()
          << std::endl << vprDEBUG_FLUSH;
-      sphereGlyph->SelectInputScalars( pd->GetPointData()->GetScalars()->GetName() );
+      //sphereGlyph->SelectInputScalars( pd->GetPointData()->GetScalars()->GetName() );
       sphereGlyph->SetScaleModeToScaleByScalar();
       sphereGlyph->SetColorModeToColorByScalar();
 
