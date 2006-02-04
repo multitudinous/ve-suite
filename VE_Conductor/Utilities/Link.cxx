@@ -35,6 +35,8 @@
 #include <wx/pen.h>
 #include <wx/dcclient.h>
 
+#include <iostream>
+
 using namespace VE_Conductor::GUI_Utilities;
 
 ////////////////////////////////////////////////
@@ -198,12 +200,15 @@ void Link::DrawLinkCon( bool flag, std::pair< double, double > scale )
 void Link::CalcLinkPoly()
 {
    // -3 so that we end up getting a 6 point wide line
-   for ( size_t i=0; i< cons.size(); i++ )
+   for ( size_t i = 0; i < cons.size(); i++ )
+   {
       poly.SetPoint( wxPoint( cons[i].x, cons[i].y-3 ) );
+   }
 
    // +3 so that we end up getting a 6 point wide line
-   for ( size_t i = cons.size()-1; i >= 0; i--)
-      poly.SetPoint( wxPoint( cons[i].x, cons[i].y+3 ) );
+   std::vector< wxPoint >::iterator iter;
+   for ( iter = cons.end(); iter >= cons.begin(); --iter )
+      poly.SetPoint( wxPoint( iter->x, iter->y+3 ) );
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -220,8 +225,10 @@ void Link::DrawLink( bool flag, std::pair< double, double > scale )
 
    //reverse the order of the points
    size_t j = 0;
-   for ( size_t i = cons.size(); i >= 0; i--, j++ )
-      points[ j ] = cons[ i ];
+   std::vector< wxPoint >::iterator iter;
+   for ( iter = cons.end(); iter >= cons.begin(); --iter, j++ )
+   //for ( size_t i = cons.size(); i >= 0; i--, j++ )
+      points[ j ] = *(iter);
 
    if (!flag)
    {
@@ -273,6 +280,6 @@ void Link::DrawLink( bool flag, std::pair< double, double > scale )
   dc.DrawPolygon(3, arrow);
   dc.SetPen(old_pen);
   dc.SetBrush(old_brush);
-  delete [] points;
+  //delete [] points;
 }
 

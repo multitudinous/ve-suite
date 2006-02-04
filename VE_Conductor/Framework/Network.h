@@ -100,12 +100,10 @@ typedef struct
 */
 class Network : public wxScrolledWindow
 {
-   //DECLARE_DYNAMIC_CLASS(Network)
 public:
    Network(){;}
    Network(wxWindow* parent, int id);
    ~Network();
-   //double m_xUserScale, m_yUserScale; //Zoom Factor
 
    Body::Executive_var exec; //put this reference here, so ther frame work can still access it YANG
 

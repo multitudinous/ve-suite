@@ -185,6 +185,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 	      if (computenorm(temp, ports[i])<=10)
 	      {
 	         m_selFrPort = i;
+std::cout << m_selFrPort << " input ports " << std::endl;
 	         break;
 	      }
   
@@ -194,6 +195,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 	      if (computenorm(temp, ports[i])<=10)
 	      {
 	         m_selToPort = i;
+std::cout << m_selToPort << " ouput ports " << std::endl;
 	         break;
 	      }
    }
@@ -609,35 +611,23 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////
 void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
 {
-  std::vector< Link >::iterator iter;
-  std::vector< Link >::iterator iter2;
-  int i;
+   int answer=wxMessageBox("Do you really want to delete this link?", "Confirmation", wxYES_NO);
+   if (answer!=wxYES)
+      return;
+   
+   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
 
-  int answer=wxMessageBox("Do you really want to delete this link?", "Confirmation", wxYES_NO);
-  if (answer!=wxYES)
-    return;
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-
-   /*std::map< int, Module >::iterator miter;
-   for (miter=modules.begin(); miter!=modules.end(); miter++)
-   {
-      i=miter->first;
-      unsigned int j;
-      for (iter2=modules[i].GetLinks()->begin(), j=0; j<modules[i].GetLinks()->size(); iter2++, j++)
-	      if ( modules[i].GetLink( j ) == &(links[ m_selLink ]) )
-	      {
-	         modules[i].RemoveLink( j );
-	         break;
-	      }
-   }*/
-
+   int i;
+   std::vector< Link >::iterator iter;
    for (iter=links.begin(), i=0; iter!=links.end(); iter++, i++)
+   {
       if (i==m_selLink)
       {
-	      links.erase(iter);
-	      m_selLink=-1;
-	      break;
+         links.erase(iter);
+         m_selLink=-1;
+         break;
       }
+   }
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
    //  Refresh(false);
@@ -1050,6 +1040,7 @@ void Network::DropModule(int ix, int iy, int mod )
    //tmppoly.resize(num);
    VE_Conductor::GUI_Utilities::Polygon tmppoly;
    POLY oldPoly;
+   oldPoly.resize( cur_module->GetNumPoly() );
    cur_module->GetPoly( oldPoly );
    *(tmppoly.GetPolygon()) = oldPoly;
    tmppoly.TransPoly( x-relative_pt.x, y-relative_pt.y, *(modules[mod].GetPolygon()) );
@@ -1129,7 +1120,7 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
    else
    {
       DrawPorti(modules[mod].GetPlugin(), pt, flag);
-      offSet = GetPointForSelectedPlugin( mod, pt, "ouput" );
+      offSet = GetPointForSelectedPlugin( mod, pt, "output" );
    }
 
    dc.SetPen(*wxWHITE_PEN);
@@ -1229,6 +1220,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    // if it is a good link
    if (dest_mod>=0 && dest_port>=0 && (dest_mod!=mod||dest_port!=pt))
    {
+std::cout << dest_mod<< " : " << dest_port << " : "<< mod << " : " << dest_port << " : " << pt << std::endl;
       Link ln( this );
       if ( flag ) // if input port
       {
@@ -1266,6 +1258,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
          pos = GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" );
          ln.GetPoints()->push_back( pos );
 
+std::cout << "here 1 network " << std::endl;
          ln.CalcLinkPoly();
          links.push_back( ln );
       }

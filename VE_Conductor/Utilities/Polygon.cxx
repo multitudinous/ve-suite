@@ -1,5 +1,6 @@
 #include "VE_Conductor/Utilities/Polygon.h"
 #include <cmath>
+#include <iostream>
 
 using namespace VE_Conductor::GUI_Utilities;
 
@@ -44,6 +45,7 @@ wxPoint* Polygon::GetPoint( size_t i )
 ////////////////////////////////////////////////
 void Polygon::SetPoint( wxPoint newPoint )
 {
+//std::cout << " set point " << std::endl;
    poly.push_back( newPoint );
 }
 ////////////////////////////////////////////////
