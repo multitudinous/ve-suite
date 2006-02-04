@@ -185,7 +185,6 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 	      if (computenorm(temp, ports[i])<=10)
 	      {
 	         m_selFrPort = i;
-std::cout << m_selFrPort << " input ports " << std::endl;
 	         break;
 	      }
   
@@ -195,7 +194,6 @@ std::cout << m_selFrPort << " input ports " << std::endl;
 	      if (computenorm(temp, ports[i])<=10)
 	      {
 	         m_selToPort = i;
-std::cout << m_selToPort << " ouput ports " << std::endl;
 	         break;
 	      }
    }
@@ -941,16 +939,26 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
       scroll = true;
    }
 
+  cur_module->SetPos(wxPoint(x-relative_pt.x, y-relative_pt.y));
    //wipe off the old link connects with this module
    //Draw the links for a particular module
    for ( size_t i=0; i< links.size(); ++i )
    {
-      if ( (links.at( i ).GetFromModule() == mod) || (links.at( i ).GetToModule() == mod) )
+      if ( (links.at( i ).GetFromModule() == mod) )
+      {
          links.at( i ).DrawLink( false, userScale );
+         wxPoint pos = GetPointForSelectedPlugin( mod, links.at( i ).GetFromPort(), "output" );
+         *(links.at( i ).GetPoint( 0 )) = pos;
+      }
+      //if the modules are the same
+      if ( (links.at( i ).GetToModule() == mod) )
+      {
+         links.at( i ).DrawLink( false, userScale );
+         wxPoint pos = GetPointForSelectedPlugin( mod, links.at( i ).GetToPort(), "input" );
+         *(links.at( i ).GetPoint( links.at( i ).GetPoints()->size()-1 )) = pos;
+      }
    }
     
-  cur_module->SetPos(wxPoint(x-relative_pt.x, y-relative_pt.y));
-  
   if ((bbox.x-3.0/userScale.first)>0)
     bbox.x-=(int)( 3.0/userScale.first );
   else
@@ -1218,9 +1226,9 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    dc.DrawLine( offSet.x, offSet.y, xold, yold);
 
    // if it is a good link
-   if (dest_mod>=0 && dest_port>=0 && (dest_mod!=mod||dest_port!=pt))
+   // and a user can not link to itself
+   if (dest_mod>=0 && dest_port>=0 && ( (dest_mod!=mod) || (dest_port!=pt) ) )
    {
-std::cout << dest_mod<< " : " << dest_port << " : "<< mod << " : " << dest_port << " : " << pt << std::endl;
       Link ln( this );
       if ( flag ) // if input port
       {
@@ -1252,13 +1260,11 @@ std::cout << dest_mod<< " : " << dest_port << " : "<< mod << " : " << dest_port 
          wxPoint pos;
          // Get first port point for the link
          pos = GetPointForSelectedPlugin( ln.GetFromModule(), ln.GetFromPort(), "output" );
-         ln.GetPoints()->push_back( pos );
+         ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetFromModule(), ln.GetFromPort(), "output" ) );
 
          // Get last port point for the link
          pos = GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" );
-         ln.GetPoints()->push_back( pos );
-
-std::cout << "here 1 network " << std::endl;
+         ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" ) );
          ln.CalcLinkPoly();
          links.push_back( ln );
       }

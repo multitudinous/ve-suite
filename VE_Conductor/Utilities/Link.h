@@ -74,6 +74,7 @@ public:
    wxPoint* GetPoint( size_t i );
    size_t GetNumberOfPoints( void );
    std::vector< wxPoint >* GetPoints( void );
+   void SetPoint( wxPoint* pnt );
    unsigned int GetFromPort( void );
    unsigned int GetToPort( void );
    unsigned long GetFromModule( void );

@@ -78,6 +78,7 @@ REI_Plugin::REI_Plugin()
    mod_pack._type = 1 ; //Module
    mod_pack._category = 1; // normal modules
    mod_pack._id = -1;
+   veModel = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////

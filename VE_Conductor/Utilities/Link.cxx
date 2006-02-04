@@ -46,7 +46,7 @@ Link::Link( wxWindow* designCanvas )
    To_mod = 1000000;
    Fr_port = 1000000;
    To_port = 1000000;
-
+//cons.resize( 2 );
    canvas = designCanvas;
 }
 ////////////////////////////////////////////////
@@ -100,6 +100,13 @@ wxPoint* Link::GetPoint( size_t i )
       cons.push_back( wxPoint() );
       return &(cons.at( i ));
    }
+}
+////////////////////////////////////////////////
+void Link::SetPoint( wxPoint* pnt )
+{
+   cons.push_back( wxPoint() );
+   cons.back().x = pnt->x;
+   cons.back().y = pnt->y;
 }
 ////////////////////////////////////////////////
 size_t Link::GetNumberOfPoints( void )
@@ -202,13 +209,19 @@ void Link::CalcLinkPoly()
    // -3 so that we end up getting a 6 point wide line
    for ( size_t i = 0; i < cons.size(); i++ )
    {
+	   int x = cons[i].x;
+	   int y = cons[i].y-3;
       poly.SetPoint( wxPoint( cons[i].x, cons[i].y-3 ) );
    }
 
    // +3 so that we end up getting a 6 point wide line
    std::vector< wxPoint >::iterator iter;
-   for ( iter = cons.end(); iter >= cons.begin(); --iter )
-      poly.SetPoint( wxPoint( iter->x, iter->y+3 ) );
+   for ( iter = cons.end()-1; iter >= cons.begin(); --iter )
+   {
+		int x = iter->x;
+		int y = iter->y+3;
+	   poly.SetPoint( wxPoint( iter->x, iter->y+3 ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -226,7 +239,7 @@ void Link::DrawLink( bool flag, std::pair< double, double > scale )
    //reverse the order of the points
    size_t j = 0;
    std::vector< wxPoint >::iterator iter;
-   for ( iter = cons.end(); iter >= cons.begin(); --iter, j++ )
+   for ( iter = cons.end()-1; iter >= cons.begin(); --iter, j++ )
    //for ( size_t i = cons.size(); i >= 0; i--, j++ )
       points[ j ] = *(iter);
 
@@ -280,6 +293,6 @@ void Link::DrawLink( bool flag, std::pair< double, double > scale )
   dc.DrawPolygon(3, arrow);
   dc.SetPen(old_pen);
   dc.SetBrush(old_brush);
-  //delete [] points;
+  delete [] points;
 }
 
