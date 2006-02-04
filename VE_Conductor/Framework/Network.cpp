@@ -37,6 +37,13 @@
 #include "VE_Conductor/Framework/UIDialog.h"
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
 
+#include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/Link.h"
+#include "VE_Open/XML/Model/Point.h"
+#include "VE_Open/XML/Model/Model.h"
+
+#include "VE_Open/XML/DataValuePair.h"
+
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
 
@@ -498,29 +505,28 @@ void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
 
 /////////////////////////////////////////////////////
 void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
-{
-   VE_Conductor::GUI_Utilities::Polygon linkline, Near;
-  
+{  
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
    links[m_selLink].DrawLink( false, userScale );
 
-   int n = links[m_selLink].GetNumberOfPoints()+2;
+   //int n = links[m_selLink].GetNumberOfPoints()+2;
    //linkline.resize(n);
 
-   unsigned long fromModuleID = links[m_selLink].GetFromModule();
-   unsigned int fromPort = links[m_selLink].GetFromPort();
-   *(linkline.GetPoint( 0 )) = GetPointForSelectedPlugin( fromModuleID, fromPort, "ouput" );
+   //unsigned long fromModuleID = links[m_selLink].GetFromModule();
+   //unsigned int fromPort = links[m_selLink].GetFromPort();
+   //*(linkline.GetPoint( 0 )) = GetPointForSelectedPlugin( fromModuleID, fromPort, "ouput" );
 
-   size_t i;
-   for ( i=0; i< links[m_selLink].GetPoints()->size(); i++ )
-      *(linkline.GetPoint( i+1 )) = *(links[ m_selLink ].GetPoint( i ));
+   VE_Conductor::GUI_Utilities::Polygon linkline;
+   for ( size_t i=0; i< links[m_selLink].GetPoints()->size(); i++ )
+      *(linkline.GetPoint( i )) = *(links[ m_selLink ].GetPoint( i ));
    
-   unsigned long toModuleID = links[m_selLink].GetToModule();
-   unsigned int toPort = links[m_selLink].GetToPort();
-   *(linkline.GetPoint( n-1 )) = GetPointForSelectedPlugin( toModuleID, toPort, "input" );
-  
+   //unsigned long toModuleID = links[m_selLink].GetToModule();
+   //unsigned int toPort = links[m_selLink].GetToPort();
+   //*(linkline.GetPoint( n-1 )) = GetPointForSelectedPlugin( toModuleID, toPort, "input" );
+   VE_Conductor::GUI_Utilities::Polygon Near;
    linkline.nearpnt( action_point, Near );
 
+   size_t i;
    for ( i=0; i < linkline.GetNumberOfPoints()-1; i++)
       if (  ( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x && 
             linkline.GetPoint( i+1 )->x >= Near.GetPoint( 0 )->x ) ||
@@ -673,15 +679,17 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
    // Need to delete all links associated with this particular module
    // first, delete all the links connects to it
    std::vector< Link >::iterator iter3;
-   for ( iter3=links.begin(); iter3!=links.end(); iter3++ )
+   for ( iter3=links.begin(); iter3!=links.end(); )
    {
       if ( 
             (iter3->GetFromModule() == m_selMod) || 
             (iter3->GetToModule() == m_selMod) 
          )
       {
-	      links.erase(iter3);
-	   } 
+	      links.erase( iter3 );
+	   }
+      else
+         ++iter3;
    }
    
    //Now delete the plugin from the module and then remove from the map
@@ -1903,184 +1911,91 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 //////////////////////////////////////////////
 //////// Save and Load Functions /////////////
 //////////////////////////////////////////////
-void Network::Pack(std::vector<Interface> & UIs)
+void Network::Save( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
 {
-  // first record the network global variablables
-  Interface ntpk; //the network topology and connection pack
-  std::string network_pack;
-  //char* vname;
-  //module information to be saved
-  std::string modCls;
-  
-  //link information to be saved
-  long lnFrMod, lnToMod, lnFrPort, lnToPort;
-  std::vector<long> lnConX, lnConY;
+   // Here we wshould loop over all of the following
+   //  Newtork
+   if ( veNetwork )
+      delete veNetwork;
+   
+   veNetwork = new VE_Model::Network();
 
-  //tag information to be saved
-  std::string tagText;
-  long tagCon0X, tagCon0Y, tagCon1X, tagCon1Y, tagBoxX, tagBoxY;
+   veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
+   veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( numPix.first ) );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( numPix.second ) );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 
-  int i,j;
-  std::map<int, Module>::iterator iter;
-
-  ntpk._type=0;
-  ntpk._category=0;
-  ntpk._id=-1;
-  ntpk.setVal("m_xUserScale", userScale.first);
-  ntpk.setVal("m_yUserScale", userScale.second);
-  ntpk.setVal("GetNumPix()->first", long(GetNumPix()->first));
-  ntpk.setVal("GetNumPix()->second", long(GetNumPix()->second));
-  ntpk.setVal("GetNumUnit()->first", long(GetNumUnit()->first));
-  ntpk.setVal("GetNumUnit()->second", long(GetNumUnit()->second));
- 
-  // second, save the the 3 lists of the modules, links and tags
-  ntpk.setVal("Module_size", long(modules.size()));
-  
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
+   for ( size_t i = 0; i < links.size(); ++i )
    {
-      i=iter->first;
-      //These are the essential information about a module
-      modCls = modules[i].GetClassName();
-      //poly can be calculated as mod.poly = TransPoly(cur_module->GetPoly(), bbox.x, bbox.y)
-      //links vector can be reconstructed from the link's list
-      //The order of modules needs to be preserved for the link list and the module UI
-      //the UI information of module is packed in different interface packs
+      VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
+      //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
+      //xmlLink->GetToPort()->SetData( modules[ links[i].GetToModule() ].pl_mod->GetModelName(), links[i].GetToPort() );
+      xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromPort() ) );
+      xmlLink->GetToPort()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetToPort() ) );
 
-	   std::ostringstream dirStringStream;
-	   dirStringStream << "modCls_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), modCls); // this is string
-   }
-
-   ntpk.setVal("Link_size", long(links.size()));
-   for (i=0; i<(int)links.size(); i++)
-   {
-      lnFrMod = links[i].GetFromModule();
-      lnToMod = links[i].GetToModule();
-      lnFrPort = links[i].GetFromPort();
-      lnToPort = links[i].GetToPort();
-
-      std::ostringstream dirStringStream;
-      dirStringStream << "ln_FrMod_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), lnFrMod);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-	   dirStringStream << "ln_ToMod_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), lnToMod);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-	   dirStringStream << "ln_FrPort_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), lnFrPort);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-	   dirStringStream << "ln_ToPort_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), lnToPort);
-      dirStringStream.str("");
-      dirStringStream.clear();
-      
-      lnConX.clear();
-      lnConY.clear();
       //Try to store link cons,
       //link cons are (x,y) wxpoint
       //here I store x in one vector and y in the other
-      for (j=0; j<(int)(links[i].GetNumberOfPoints()); j++)
+      for ( size_t j = 0; j < links[ i ].GetNumberOfPoints(); ++j )
 	   {
-	      lnConX.push_back( links[i].GetPoint( j )->x );
-	      lnConY.push_back( links[i].GetPoint( j )->y );
-	   }
-
-	   dirStringStream << "ln_ConX_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), lnConX);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-	   dirStringStream << "ln_ConY_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), lnConY);
-      dirStringStream.str("");
-      dirStringStream.clear();
-   }
-
-   ntpk.setVal("Tag_size", long(tags.size()));
-   for (i=0; i<(int)tags.size(); i++)
-   {
-      tagText = tags[i].GetTagText()->c_str();
-      tagCon0X = tags[i].GetConnectorsPoint( 0 )->x;
-      tagCon0Y = tags[i].GetConnectorsPoint( 0 )->y;
-      tagCon1X = tags[i].GetConnectorsPoint( 1 )->x;
-      tagCon1Y = tags[i].GetConnectorsPoint( 1 )->y;
-      tagBoxX = tags[i].GetBoundingBox()->x;
-      tagBoxY = tags[i].GetBoundingBox()->y;
-	  
-      std::ostringstream dirStringStream;
-      dirStringStream << "tag_Txt_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), tagText);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-      dirStringStream << "tag_Con0X_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), tagCon0X);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-      dirStringStream << "tag_Con0Y_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), tagCon0Y);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-      dirStringStream << "tag_Con1X_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), tagCon1X);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-      dirStringStream << "tag_Con1Y_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), tagCon1Y);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-      dirStringStream << "tag_BoxX_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), tagBoxX);
-      dirStringStream.str("");
-      dirStringStream.clear();
-
-      dirStringStream << "tag_BoxY_" << std::setprecision(4) << std::setfill( '0' ) << i;
-      ntpk.setVal(dirStringStream.str(), tagBoxY);
-      dirStringStream.str("");
-      dirStringStream.clear();
-   }
-
-   UIs.clear();
-   UIs.push_back(ntpk);
-
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
-   {
-      i=iter->first;
-      modules[i].GetPlugin()->SetID(i);
-      UIs.push_back(*(modules[i].GetPlugin()->Pack()));
-      //if module has geometry data
-      // then grab geometry interface
-      // call spcific modules geom pack
-      if ( modules[i].GetPlugin()->HasGeomInfoPackage() )
-      {
-         //modules[i].GetPlugin()->GetGeometryInfoPackage()->SetID(i);
-         //UIs.push_back( *(modules[i].GetPlugin()->GetGeometryInfoPackage()->Pack()) );
-         Geometry* geometry = new Geometry( modules[ i ].GetPlugin()->GetID() );
-         geometry->SetGeometryDataBuffer( modules[ i ].GetPlugin()->GetGeometryDataBuffer() );
-
-         UIs.push_back( *(geometry->Pack()));
-
-         delete geometry;
+         xmlLink->GetLinkPoint( j )->SetPoint( std::pair< unsigned int, unsigned int >( links[ i ].GetPoint( j )->x, links[ i ].GetPoint( j )->y ) );
       }
    }
 
-   // Pack up global data
-   // This is commented out because the computational
-   // engine does not have the capability to handle
-   // global data yet. This functionality should
-   // be addressed shortly to handle this type of data
-   // in the framework.
-   //UIs.push_back( *(globalparam_dlg->Pack()) );
+   doc->getDocumentElement()->appendChild
+         (
+            veNetwork->GetXMLData( "veNetwork" )
+         );
+
+
+   //  Models
+   std::map< int, Module >::iterator iter;
+   for ( iter=modules.begin(); iter!=modules.end(); ++iter )
+   {
+      modules[ iter->first ].GetPlugin()->SetID( iter->first );
+      doc->getDocumentElement()->appendChild
+         ( 
+            modules[ iter->first ].GetPlugin()->GetVEModel( doc )->GetXMLData( "veModel" )
+         );
+   }
+
+   //  tags
+   /*for ( size_t i = 0; i < veTagVector.size(); ++i )
+   {
+      delete veTagVector.at( i );
+   }
+   veTagVector.clear();
+
+   for ( size_t i = 0; i < tags.size(); ++i )
+   {
+      std::pair< unsigned int, unsigned int > pointCoords;
+
+      veTagVector.push_back( new VE_Model::Tag( doc ) );
+
+      veTagVector.back()->SetTagText( tags.back().text.c_str() );
+
+      pointCoords.first = tags.back().cons[0].x;
+      pointCoords.second = tags.back().cons[0].y;
+      veTagVector.back()->GetTagPoint( 0 )->SetPoint( pointCoords );
+
+      pointCoords.first = tags.back().cons[1].x;
+      pointCoords.second = tags.back().cons[1].y;
+      veTagVector.back()->GetTagPoint( 1 )->SetPoint( pointCoords );
+
+      pointCoords.first = tags.back().box.x;
+      pointCoords.second = tags.back().box.y;
+      veTagVector.back()->GetTagPoint( 2 )->SetPoint( pointCoords );
+   }
+
+   for ( size_t i = 0; i < tags.size(); ++i )
+   {
+      doc->getDocumentElement()->appendChild
+         ( 
+            veTagVector.at( i )->GetXMLData( "veTag" )
+         );
+   }*/
 }
 
 void Network::UnPack(std::vector<Interface> & intfs)
@@ -2342,7 +2257,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
 
    Refresh();*/
 }
-
+/*
 void Network::Save(wxString filename)
 {
    //Actually write it to file
@@ -2380,7 +2295,7 @@ void Network::SaveS( std::string& network_pack )
    bool rv;
    network_pack = p.Save(rv);
 }
-
+*/
 ////////////////////////////////////////////////////////
 void Network::New()
 {

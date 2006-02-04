@@ -8,26 +8,27 @@ void Network::Save( DOMDocument* doc )
    if ( veNetwork )
       delete veNetwork;
    
-   veNetwork = new VE_Model::Network( doc );
+   veNetwork = new VE_Model::Network();
 
-   veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", m_xUserScale );
-   veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", m_yUserScale );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nPixX", nPixX );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nPixY", nPixY );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", nUnitX );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", nUnitY );
+   veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
+   veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nPixX", numPix.first );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nPixY", numPix.second );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", numUnit.first );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", numUnit.second );
 
-   for ( size_t i=0; i < links.size(); ++i )
+   for ( size_t i = 0; i < links.size(); ++i )
    {
-      veNetwork->GetLink( -1 )->GetFromPort()->SetData( modules[ links[i]->Fr_mod ].pl_mod->GetModelName(), links[i]->Fr_port );
-      veNetwork->GetLink( -1 )->GetFromPort()->SetData( modules[ links[i]->To_mod ].pl_mod->GetModelName(), links[i]->To_port );
+      VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
+      xmlLink->GetFromPort()->SetData( modules[ links[i]->GetFromModule() ].GetPlugin()->GetModelName(), links[i]->GetFromPort() );
+      xmlLink->GetToPort()->SetData( modules[ links[i]->GetToModule() ].pl_mod->GetModelName(), links[i]->GetToPort() );
 
       //Try to store link cons,
       //link cons are (x,y) wxpoint
       //here I store x in one vector and y in the other
-      for ( size_t j=0; j< links[i]->cons.size(); ++j )
+      for ( size_t j = 0; j < links[ i ].GetNumberOfPoints(); ++j )
 	   {
-         veNetwork->GetLinkPoint( -1 )->SetPoint( std::pair< unsigned int, unsigned int >( links[i]->cons[j].x, links[i]->cons[j].y );
+         xmlLink->GetLinkPoint( j )->SetPoint( std::pair< unsigned int, unsigned int >( links[ i ]->GetPoint( j )->x, links[ i ]->GetPoint( j )->y );
       }
    }
 
@@ -38,18 +39,18 @@ void Network::Save( DOMDocument* doc )
 
 
    //  Models
-   std::map<int, MODULE>::iterator iter;
+   std::map< int, Module >::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
-      modules[ iter->first ].pl_mod->SetID(i);
+      modules[ iter->first ].GetPlugin()->SetID(i);
       doc->getDocumentElement()->appendChild
          ( 
-            modules[ iter->first ].pl_mod->GetVEModel()->GetXMLData( "veModel" )
+            modules[ iter->first ].GetPlugin()->GetVEModel()->GetXMLData( "veModel" )
          );
    }
 
    //  tags
-   for ( size_t i = 0; i < veTagVector.size(); ++i )
+   /*for ( size_t i = 0; i < veTagVector.size(); ++i )
    {
       delete veTagVector.at( i );
    }
@@ -82,7 +83,7 @@ void Network::Save( DOMDocument* doc )
          ( 
             veTagVector.at( i )->GetXMLData( "veTag" )
          );
-   }
+   }*/
 }
 
 ////////////////////////////////////////////////////////

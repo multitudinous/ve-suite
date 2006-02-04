@@ -467,37 +467,53 @@ void AppFrame::ZoomOut(wxCommandEvent& WXUNUSED(event))
   network->Scroll(xpos, ypos);
   network->ReDrawAll();
 }
-
-void AppFrame::Save(wxCommandEvent& event)
+////////////////////////////////////////////////////////////////////
+void AppFrame::Save( wxCommandEvent& event )
 {
-  if (path==wxString("")) //First time call save will be the same as SaveAs
-    SaveAs(event);
-  else
-    network->Save(path);
+   //First time call save will be the same as SaveAs
+   if ( path == wxString("") ) 
+   {
+      SaveAs( event );
+   }
+   else
+   {
+      domManager->CreateCommandDocument();
+      DOMDocument* doc = domManager->GetCommandDocument();
+      network->Save( doc );
+      ///now write the file out from domdocument manager
+      //wrtie to path
+   }
 }
 
-void AppFrame::SaveAs(wxCommandEvent& WXUNUSED(event))
+void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
 {
-  wxFileDialog dialog
-    (
-     this,
-     _T("Save File dialog"),
-     directory,
-     fname,
-     _T("Network files (*.nt)|*.nt"),
-	 wxSAVE|wxOVERWRITE_PROMPT 
-     );
-  
-  if (directory=="")
-    dialog.SetDirectory(wxGetHomeDir());
+   wxFileDialog dialog
+   (
+      this,
+      _T("Save File dialog"),
+      directory,
+      fname,
+      _T("Network files (*.nt)|*.nt"),
+      wxSAVE | wxOVERWRITE_PROMPT 
+   );
 
-  if (dialog.ShowModal() == wxID_OK)
-    {
-      path=dialog.GetPath();
-      directory=dialog.GetDirectory();
-      fname=dialog.GetFilename();
-      network->Save(path);
-    }
+   if ( directory == "" )
+   {
+      dialog.SetDirectory( wxGetHomeDir() );
+   }
+
+   if ( dialog.ShowModal() == wxID_OK )
+   {
+      path = dialog.GetPath();
+      directory = dialog.GetDirectory();
+      fname = dialog.GetFilename();
+
+      domManager->CreateCommandDocument();
+      DOMDocument* doc = domManager->GetCommandDocument();
+      network->Save( doc );
+      ///now write the file out from domdocument manager
+      //wrtie to path
+   }
 }
 
 void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
@@ -546,12 +562,16 @@ void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
+   domManager->CreateCommandDocument();
+   DOMDocument* doc = domManager->GetCommandDocument();
+   network->Save( doc );
+
    std::string nw_str;
-   network->SaveS(nw_str);
+   // write the domdoc to the string above
    try 
    {
-      network->exec->SetNetwork(nw_str.c_str());
-      run_menu->Enable(v21ID_START_CALC, true);
+      network->exec->SetNetwork( nw_str.c_str() );
+      run_menu->Enable( v21ID_START_CALC, true );
    }
    catch ( CORBA::Exception& ) 
    {

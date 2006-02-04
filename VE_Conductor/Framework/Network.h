@@ -39,6 +39,8 @@
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Module.h"
 
+#include <xercesc/dom/DOM.hpp>
+
 #include <wx/event.h>
 #include <wx/scrolwin.h>
 #include <wx/textdlg.h>
@@ -144,8 +146,9 @@ public:
    void AddTag(int x, int y, wxString text);
 
    //Save and Load the network
-   void Save(wxString filename);
-   void SaveS(std::string &network_pack);            // save the network to a string
+   void Save( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc );
+   //void Save(wxString filename);
+   //void SaveS(std::string &network_pack);            // save the network to a string
    void Load(wxString filename);
    void LoadS(const char* inputs); //load the network from a string
    void New();
@@ -225,7 +228,7 @@ protected:
    wxPoint relative_pt; // the relative point of the polygon, used by the move module function
    wxPoint tag_rpt; // the relative point of the tag
 
-   void Pack( std::vector<Interface> & UIs );
+   //void Pack( std::vector<Interface> & UIs );
    void UnPack( std::vector<Interface> & UIs );
 
 private:
