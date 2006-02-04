@@ -83,6 +83,8 @@ public:
    ///Get the i'th point for a link.
    ///\param i The i'th point you are after.
    Point* GetLinkPoint( unsigned int i );
+   ///Get the number of points used to define a link.
+   size_t GetNumberOfLinkPoints( void );
 
 protected:
    ///Internally update the data.

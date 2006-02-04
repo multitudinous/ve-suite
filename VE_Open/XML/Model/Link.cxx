@@ -141,6 +141,11 @@ Point* Link::GetLinkPoint( unsigned int i )
       }
    }
 }
+/////////////////////////////////////
+size_t Link::GetNumberOfLinkPoints( void )
+{
+   return linkPoints.size();
+}
 ////////////////////////////////////////////////////////////
 void Link::SetObjectFromXMLData(DOMNode* element)
 {
