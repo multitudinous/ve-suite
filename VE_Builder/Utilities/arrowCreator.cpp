@@ -35,7 +35,7 @@
 #include "VE_Xplorer/fileIO.h"
 
 //#include "vtkDataSetReader.h"
-//#include "vtkPolyData.h"
+#include <vtkPolyData.h>
 //#include "vtkPolyDataReader.h"
 #include <vtkPolyDataWriter.h>
 using namespace VE_Util;
