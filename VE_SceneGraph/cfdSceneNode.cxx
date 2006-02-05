@@ -131,7 +131,13 @@ void cfdSceneNode::SetParent( cfdNode* parent )
    if ( this->_numParents > 1 )
    {
       // Is this really bad?
-      std::cerr << "Error : SetParent "<< _numParents << std::endl;
+      //no -- cloning cause multiple parents
+      ///dcs-original     dcs-clone
+      ///  \                /
+      ///   \              /
+      ///    \            /
+      ///      nodeToClone
+      ///std::cerr << "Error : SetParent "<< _numParents << std::endl;
       //exit( 1 );      
    }
    

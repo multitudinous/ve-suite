@@ -44,8 +44,8 @@ cfdClone::cfdClone()
 :cfdNode()
 {
    _cloneTransform = 0;
-   _originalNode = 0;
-   _instanceNode = 0;
+   //_originalNode = 0;
+   //_instanceNode = 0;
    //implement later
    /*_cloneMaterial = 0*/
 }
@@ -54,8 +54,8 @@ cfdClone::cfdClone(cfdNode* original)
 :cfdNode()
 {
    _cloneTransform = 0;
-   _originalNode = 0;
-   _instanceNode = 0;
+   //_originalNode = 0;
+   //_instanceNode = 0;
    CloneNode( original );
 }
 /////////////////////
@@ -72,7 +72,20 @@ void cfdClone::CloneNode(cfdNode* original)
    if(!_cloneTransform){
       _cloneTransform = new cfdDCS();
    }
-#ifdef _OSG
+   cfdDCS* assemblyNode = dynamic_cast<cfdDCS*>(original);
+   if(assemblyNode)
+   {
+      for(unsigned int i =0; i < assemblyNode->GetNumChildren(); i ++)
+      {
+         _cloneTransform->AddChild(assemblyNode->GetChild(i));
+      }
+
+   }
+   else
+   {
+      _cloneTransform->AddChild(original);
+   }
+/*#ifdef _OSG
    _originalNode = original->GetRawNode();
    _instanceNode = dynamic_cast<osg::Node*>(_originalNode->clone(osg::CopyOp::SHALLOW_COPY));
    if(_instanceNode.valid())
@@ -86,33 +99,37 @@ void cfdClone::CloneNode(cfdNode* original)
    }
 #elif _PERFORMER
 #elif _OPENSG
-#endif
+#endif*/
 }
 /////////////////////////////////////////////////
 void cfdClone::SetTranslationArray(float* translation)
 {
-   if(_cloneTransform){
+   if(_cloneTransform)
+   {
       _cloneTransform->SetTranslationArray(translation);
    }
 }
 /////////////////////////////////////////////////
 void cfdClone::SetRotationArray(float* rotation)
 {
-   if(_cloneTransform){
+   if(_cloneTransform)
+   {
       _cloneTransform->SetRotationArray(rotation);
    }
 }
 /////////////////////////////////////////////////
 void cfdClone::SetScaleArray(float* scale)
 {
-   if(_cloneTransform){
+   if(_cloneTransform)
+   {
       _cloneTransform->SetScaleArray(scale);
    }
 }
 //////////////////////////////////
 cfdDCS* cfdClone::GetClonedGraph()
 {
-   if(_cloneTransform){
+   if(_cloneTransform)
+   {
       return _cloneTransform;
    }
    return 0;

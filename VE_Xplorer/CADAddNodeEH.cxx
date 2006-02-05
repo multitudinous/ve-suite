@@ -84,7 +84,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
       VE_XML::DataValuePair* nodeName = command->GetDataValuePair("Node Name");
 
       VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
-
+      std::cout<<"---Adding node---"<<std::endl;
       VE_SceneGraph::cfdDCS* parentAssembly = 0;
       parentAssembly = activeModel->GetAssembly(parentID->GetUIntData());
       if(!parentAssembly)
@@ -93,6 +93,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
          activeModel->CreateAssembly(parentID->GetUIntData());
          parentAssembly = activeModel->GetAssembly(parentID->GetUIntData());
          activeModel->GetCfdDCS()->AddChild(parentAssembly);
+         std::cout<<"Root ID: "<<parentID->GetUIntData()<<std::endl;
       }
 
       //This assumes the part/assembly isn't there already
@@ -106,6 +107,8 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
          activeModel->GetAssembly(nodeID->GetUIntData())->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
          activeModel->GetAssembly(nodeID->GetUIntData())->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
          activeModel->GetAssembly(nodeID->GetUIntData())->SetName(nodeName->GetDataString());
+         std::cout<<"Parent ID: "<<parentID->GetUIntData()<<std::endl;
+         std::cout<<"Assembly ID: "<<nodeID->GetUIntData()<<std::endl;
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
@@ -119,6 +122,9 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
          partDCS->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
          partDCS->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
          partDCS->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
+         std::cout<<"Parent ID: "<<parentID->GetUIntData()<<std::endl;
+         std::cout<<"Part ID: "<<nodeID->GetUIntData()<<std::endl;
+      
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
@@ -136,6 +142,9 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
             newClone->GetClonedGraph()->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
             parentAssembly->AddChild(newClone->GetClonedGraph());
          }
+         std::cout<<"Parent ID: "<<parentID->GetUIntData()<<std::endl;
+         std::cout<<"Clone ID: "<<nodeID->GetUIntData()<<std::endl;
+      
       }
    }
    catch(...)

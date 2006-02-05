@@ -245,7 +245,8 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          //pop a text dialog to enter the name of the new assembly
          wxTextEntryDialog assemblyNameDlg(this, 
                                        wxString("New Assembly Name"),
-                                       wxString("Enter name for new assembly:"));
+                                       wxString("Enter name for new assembly:"),
+                                       wxString("Assembly"),wxOK);
          assemblyNameDlg.ShowModal();
          CADAssembly* newAssembly = new CADAssembly((assemblyNameDlg.GetValue().GetData()));
          newAssembly->SetParent(_activeCADNode->GetID());
@@ -416,7 +417,8 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
               //pop a text dialog to enter the name of the new assembly
               wxTextEntryDialog partNameDlg(this, 
                                        wxString("New Part Name"),
-                                       wxString("Enter name for new part:"));
+                                       wxString("Enter name for new part:"),
+                                       wxString("Part"),wxOK);
               partNameDlg.ShowModal();
               
               CADPart* newCADPart = new CADPart(partNameDlg.GetValue().GetData());

@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
 #include "VE_Open/XML/CAD/CADNode.h" 
+#include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/CAD/CADNodeTraverser.h"
 
@@ -206,11 +207,30 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder,
          //update the current parent
          treeGraph->SetCurrentParentNode(currentParentId); 
       }
-      else
+      else if(node->GetNodeType() == std::string("Part"))
       {
          currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
                                                                      wxString(node->GetNodeName().c_str())
                                                                      ,0,1,new TreeNodeData(node));
+      }
+      else if(node->GetNodeType() == std::string("Clone"))
+      {
+         CADClone* clone = dynamic_cast<CADClone*>(node);
+         if(clone)
+         {
+            if(clone->GetOriginalNode()->GetNodeType() == std::string("Assembly"))
+            {
+               currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
+                                                                     wxString(clone->GetNodeName().c_str())
+                                                                     ,2,4,new TreeNodeData(clone));
+            }
+            else if(clone->GetOriginalNode()->GetNodeType() == std::string("Part"))
+            {
+                currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
+                                                                     wxString(clone->GetNodeName().c_str())
+                                                                     ,0,1,new TreeNodeData(clone));
+            }
+         }
       }
    }
    else

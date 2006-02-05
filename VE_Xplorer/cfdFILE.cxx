@@ -147,7 +147,9 @@ cfdFILE::~cfdFILE()
                           << std::endl << vprDEBUG_FLUSH;
 
    delete this->DCS;
+#ifndef _OSG
    delete this->node;
+#endif
    //delete fog;
 }
 

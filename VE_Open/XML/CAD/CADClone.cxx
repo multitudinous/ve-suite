@@ -130,7 +130,21 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
 CADClone::CADClone(const CADClone& rhs)
 :VE_CAD::CADNode(rhs)
 {
-   _originalNode = rhs._originalNode;
+   if(rhs._originalNode)
+   {
+      if(rhs._originalNode->GetNodeType() == std::string("Assembly"))
+      {
+         _originalNode = new CADAssembly(*dynamic_cast<CADAssembly*>(rhs._originalNode));
+      }
+      else
+      {
+         _originalNode = new CADPart(*dynamic_cast<CADPart*>(rhs._originalNode));
+      }
+   }
+   else
+   {
+      _originalNode = 0;
+   }
 }
 ///////////////////////////////////////////////////
 CADClone& CADClone::operator=(const CADClone& rhs)
@@ -138,7 +152,21 @@ CADClone& CADClone::operator=(const CADClone& rhs)
    if ( this != &rhs )
    {
       VE_CAD::CADNode::operator =(rhs);
-      _originalNode = rhs._originalNode;
+      if(rhs._originalNode)
+      {
+         if(rhs._originalNode->GetNodeType() == std::string("Assembly"))
+         {
+            _originalNode = new CADAssembly(*dynamic_cast<CADAssembly*>(rhs._originalNode));
+         }
+         else
+         {
+            _originalNode = new CADPart(*dynamic_cast<CADPart*>(rhs._originalNode));
+         }
+      }
+      else
+      {
+         _originalNode = 0;
+      }
    }
    return *this;
 }

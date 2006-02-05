@@ -61,14 +61,14 @@ namespace VE_SceneGraph{
          cfdDCS* GetClonedGraph();
       protected:
          cfdDCS* _cloneTransform;
-#ifdef _OSG
+/*#ifdef _OSG
          osg::ref_ptr<osg::Node> _originalNode;
          osg::ref_ptr<osg::Node> _instanceNode;
 #elif _PERFORMER
         pfNode* _originalNode;
          pfNode* _instanceNode;
 #elif _OPENSG
-#endif
+#endif*/
       //implement later
       /*cfdMaterial* _cloneMaterial*/
    };
