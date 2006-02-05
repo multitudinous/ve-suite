@@ -113,20 +113,22 @@ cfdGroup::cfdGroup( void )
 ///////////////////////////
 cfdGroup::~cfdGroup( void )
 {
+
+   // If neccesary
+#ifdef _PERFORMER
+   //If these are pointers (not allocated memory) do we need to delete them???????--biv
    for ( unsigned int i = 0; i < childNodes.size(); i++ )
    {
       delete childNodes.at( i );
    }
    childNodes.clear();
-   
-   // If neccesary
-#ifdef _PERFORMER
    if ( this->_group != NULL )
    {
       pfDelete ( this->_group );
    }
 #elif _OSG
-  // _group->unref();
+   //shouldn't call delete
+   childNodes.clear();
 #elif _OPENSG
 #endif
 }

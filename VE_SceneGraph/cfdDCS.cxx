@@ -187,12 +187,6 @@ bool cfdDCS::operator== ( const cfdDCS& node1 )
 ///////////////////////
 cfdDCS::~cfdDCS( void )
 {
-   for ( unsigned int i = 0; i < childNodes.size(); i++ )
-   {
-      if ( childNodes.at( i ) )
-         delete childNodes.at( i );
-   }
-   childNodes.clear();
    // If neccesary
 #ifdef _PERFORMER
    //pfDelete ( this->_dcs );
