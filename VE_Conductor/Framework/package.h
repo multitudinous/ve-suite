@@ -93,8 +93,8 @@ protected:
    std::string packname; //The package name, goes to the name attrib of the element package
    std::string system_id; //The file name of the xml file or a fake filename used for parsing the memory buffer input source
 
-   void FillIntfs( DOMDocument *doc );
-   DOMDocument* BuildFromIntfs();
+   void FillIntfs( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* BuildFromIntfs();
 
 public:
 //private:

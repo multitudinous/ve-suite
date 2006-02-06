@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_Open\skel&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;WINVER=0x400;_MT;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -148,10 +148,10 @@
 				RelativePath=".\ExcelWrapper.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\VEOpen\skel\moduleC.cpp">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\VEOpen\skel\moduleS.cpp">
+				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.cpp">
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp">
