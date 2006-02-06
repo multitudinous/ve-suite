@@ -105,11 +105,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "appendVTK", "VE_Builder\Uti
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "arrowCreator", "VE_Builder\Utilities\mk\arrowCreator\arrowCreator.vcproj", "{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "combineFluentParticleFile", "VE_Builder\Utilities\mk\combineFluentParticleFile\combineFluentParticleFile.vcproj", "{B09F96C9-B4C1-45BC-9CB7-FD37C7A7ABB9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
@@ -471,18 +466,6 @@ Global
 		{8698FC83-6D5C-4911-9052-DC3A7EE1A472}.tao_osg_vep_cluster_dbg.ActiveCfg = Debug|Win32
 		{8698FC83-6D5C-4911-9052-DC3A7EE1A472}.tao_osg_vep_dbg.ActiveCfg = Debug|Win32
 		{8698FC83-6D5C-4911-9052-DC3A7EE1A472}.tao_pf_dbg.ActiveCfg = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.Builder_Tools.ActiveCfg = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.Builder_Tools.Build.0 = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.dbg.ActiveCfg = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.dbg.Build.0 = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.Debug.ActiveCfg = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.Debug.Build.0 = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.Release.ActiveCfg = Release|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.Release.Build.0 = Release|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.tao_osg_dbg.ActiveCfg = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.tao_osg_vep_cluster_dbg.ActiveCfg = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.tao_osg_vep_dbg.ActiveCfg = Debug|Win32
-		{3FE1B069-443C-44EA-9A9D-13ABD1D7ACAE}.tao_pf_dbg.ActiveCfg = Debug|Win32
 		{B09F96C9-B4C1-45BC-9CB7-FD37C7A7ABB9}.Builder_Tools.ActiveCfg = Debug|Win32
 		{B09F96C9-B4C1-45BC-9CB7-FD37C7A7ABB9}.Builder_Tools.Build.0 = Debug|Win32
 		{B09F96C9-B4C1-45BC-9CB7-FD37C7A7ABB9}.dbg.ActiveCfg = Debug|Win32
