@@ -27,14 +27,14 @@
 				RuntimeLibrary="3"
 				TreatWChar_tAsBuiltInType="TRUE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/SampleMFCUnit.pch"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -130,6 +130,70 @@
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
+		<Configuration
+			Name="install_osg_dbg|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			UseOfMFC="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(VE_DEPS_DIR)\include&quot;;&quot;$(VE_DEPS_DIR)\include\tao&quot;;&quot;$(VE_DEPS_DIR)\include\tao\orbsvcs&quot;;&quot;$(VE_DEPS_DIR)\include\xercesc&quot;;&quot;$(VE_INSTALL_DIR)\include&quot;;&quot;$(VE_INSTALL_DIR)\include\VEOpen\skel&quot;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;WINVER=0x400;_MT;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
+				MinimalRebuild="TRUE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				TreatWChar_tAsBuiltInType="TRUE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation=".\Debug/"
+				ObjectFile=".\Debug/"
+				ProgramDataBaseFileName=".\Debug/"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib rpcrt4.lib odbc32.lib odbccp32.lib comctl32.lib wsock32.lib ole32.lib oleaut32.lib GUIPlugin_d.lib VE_ConductorLib_d.lib"
+				OutputFile="..\..\Units\AdiabaticFlameTempUnit.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(VE_DEPS_DIR)\lib\win32&quot;;&quot;$(VE_INSTALL_DIR)\lib\win32&quot;"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\Debug/SampleMFCUnit.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="FALSE"
+				TypeLibraryName="$(IntDir)/$(ProjectName).tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(IntDir)"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -148,10 +212,10 @@
 				RelativePath=".\ExcelWrapper.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleC.cpp">
+				RelativePath="$(VE_INSTALL_DIR)\include\VEOpen\skel\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.cpp">
+				RelativePath="$(VE_INSTALL_DIR)\include\VEOpen\skel\moduleS.cpp">
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp">

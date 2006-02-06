@@ -1,5 +1,5 @@
 #include "AdiabaticFlameTempUnit_i.h"
-#include "string_ops.h"
+#include "VE_Conductor/Framework/string_ops.h"
 #include <iostream>
 using namespace std;
 

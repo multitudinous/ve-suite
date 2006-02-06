@@ -1,6 +1,6 @@
 #include "AverageAirTempUnit_i.h"
-#include "string_ops.h"
-#include "interface.h"
+#include "VE_Conductor/Framework/string_ops.h"
+#include "VE_Conductor/Framework/interface.h"
 #include <iostream>
 using namespace std;
 
