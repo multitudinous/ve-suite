@@ -81,7 +81,6 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
          wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxHSCROLL|wxVSCROLL) & ~ wxSTAY_ON_TOP)
 {
-//   _parent = tControl;
    _numStoredLocations = 0;
    _numStoredFlythroughs = 0;
    _vwptsInActiveFly = 0;
@@ -93,15 +92,6 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
 	_activeFlyNamesLocal = 0;
 	_flythroughNamesLocal = 0;
    flyThroughList.clear();
-
-   //parent = tControl;
-
-   int nUnitX=20;
-   int nUnitY=10;
-   int nPixX = 5;
-   int nPixY = 10;
-//   SetScrollbar( nPixX, nPixY, nUnitX, nUnitY );
-   SetScrollPos( wxVERTICAL, nPixY );
    
    xplorerPtr = veEngine;
    domManager = domManagerIn;
@@ -167,8 +157,6 @@ std::cout << "I Made It Here3 " << std::endl;
       _setUpActiveFlyThroughNames( 0 );
    }
 
-   wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
-
 	_vwptsInActiveFlyLocal = _vwptsInActiveFly;
 	_numStoredFlythroughsLocal = _numStoredFlythroughs;
 	
@@ -197,18 +185,27 @@ std::cout << "I Made It Here3 " << std::endl;
 	_activeFlyNamesLocal = _activeFlyNames;
 	_flythroughNamesLocal = _flythroughName;
 
-//*******Setting up the widgets for making and naming a new view point 
-   wxStaticBox* _allVPCtrlBox = new wxStaticBox(this, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+//*******Setting up the widgets for making and naming a new view point
+   wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
+ 
+   scrollWindow = new wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
+   int nUnitX=20;
+   int nUnitY=10;
+   int nPixX = 5;
+   int nPixY = 10;
+   scrollWindow->SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+   wxStaticBox* _allVPCtrlBox = new wxStaticBox(scrollWindow, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
-   wxButton* _addnewviewptButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
+	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(scrollWindow, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+
+   wxButton* _addnewviewptButton = new wxButton(scrollWindow, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
    
-   wxTextCtrl* _newvwptNameCtrl = new wxTextCtrl(this, -1, wxT("Enter Name for new pt"));
+   wxTextCtrl* _newvwptNameCtrl = new wxTextCtrl(scrollWindow, -1, wxT("Enter Name for new pt"));
 
-   wxButton* _newvwptNameOKButton = new wxButton(this, VIEWLOC_ACCEPTNEWVPNAME_BUTTON, wxT("OK"));
+   wxButton* _newvwptNameOKButton = new wxButton(scrollWindow, VIEWLOC_ACCEPTNEWVPNAME_BUTTON, wxT("OK"));
 
-   wxButton* _newvwptNameCancelButton = new wxButton(this, VIEWLOC_CANCELNEWVPNAME_BUTTON, wxT("Cancel"));
+   wxButton* _newvwptNameCancelButton = new wxButton(scrollWindow, VIEWLOC_CANCELNEWVPNAME_BUTTON, wxT("Cancel"));
 
    wxBoxSizer* _newVPNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
    _newVPNameButtonsSizer->Add(_newvwptNameOKButton,1,wxALIGN_LEFT);
@@ -220,20 +217,20 @@ std::cout << "I Made It Here3 " << std::endl;
 //***************************************************************************
 
 //********Finishing off the view points controls
-   wxStaticText* _removevwptLabel = new wxStaticText(this, -1, wxT("Delete View Points "));
+   wxStaticText* _removevwptLabel = new wxStaticText(scrollWindow, -1, wxT("Delete View Points "));
 
-   _removevwptSel = new wxComboBox(this, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+   _removevwptSel = new wxComboBox(scrollWindow, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                  wxDefaultSize,_numViewLocLocal, 
                                  _locNamesLocal, wxCB_READONLY);
 
-   wxStaticText* _movetovwptLabel = new wxStaticText(this, -1, wxT("Move to a View Point "));
+   wxStaticText* _movetovwptLabel = new wxStaticText(scrollWindow, -1, wxT("Move to a View Point "));
 
-   _movetovwptSel = new wxComboBox(this, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+   _movetovwptSel = new wxComboBox(scrollWindow, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                  wxDefaultSize,_numViewLocLocal, 
                                  _locNamesLocal, wxCB_READONLY);
 
-   wxStaticText* blank1 = new wxStaticText(this, -1, ""); //just a place holder
-   wxStaticText* blank2 = new wxStaticText(this, -1, ""); //just a place holder
+   wxStaticText* blank1 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
+   wxStaticText* blank2 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
 
 
    wxBoxSizer* _newVPControlsSizer = new wxBoxSizer(wxVERTICAL);
@@ -250,11 +247,11 @@ std::cout << "I Made It Here3 " << std::endl;
    _allVPCtrlsGroup->Add(_newVPControlsSizer,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
 //*******Throw in the Speed Control Slider
-   wxStaticBox* _speedCtrlBox = new wxStaticBox(this, -1, "Movement Speed Control", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBox* _speedCtrlBox = new wxStaticBox(scrollWindow, -1, "Movement Speed Control", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
-   wxStaticText* _speedctrlLabel = new wxStaticText(this, -1, wxT("Approximate Linear Speed in feet/second"));
+   wxStaticText* _speedctrlLabel = new wxStaticText(scrollWindow, -1, wxT("Approximate Linear Speed in feet/second"));
 
-   _speedCtrlSlider = new wxSlider(this, VIEWLOC_SPEED_CONTROL_SLIDER,10,0,100,
+   _speedCtrlSlider = new wxSlider(scrollWindow, VIEWLOC_SPEED_CONTROL_SLIDER,10,0,100,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
@@ -273,18 +270,18 @@ std::cout << "I Made It Here3 " << std::endl;
 
 
 //*******Building the Flythrough Controls
-   wxStaticBox* _allFlyCtrlBox = new wxStaticBox(this, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBox* _allFlyCtrlBox = new wxStaticBox(scrollWindow, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
    //Start with the controls for setting up a new flythrough and naming it
-	wxStaticBox* _newFlyNameCtrlBox = new wxStaticBox(this, -1, "Name the new Flythrough", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+	wxStaticBox* _newFlyNameCtrlBox = new wxStaticBox(scrollWindow, -1, "Name the new Flythrough", wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
-   wxButton* _addnewflythroughButton = new wxButton(this, VIEWLOC_NEWFLY_BUTTON, wxT("Add New Flythrough"));
+   wxButton* _addnewflythroughButton = new wxButton(scrollWindow, VIEWLOC_NEWFLY_BUTTON, wxT("Add New Flythrough"));
    
-   wxTextCtrl* _newflythroughNameCtrl = new wxTextCtrl(this, -1, wxT("Enter Name for new flythrough"));
+   wxTextCtrl* _newflythroughNameCtrl = new wxTextCtrl(scrollWindow, -1, wxT("Enter Name for new flythrough"));
 
-   wxButton* _newflythroughNameOKButton = new wxButton(this, VIEWLOC_ACCEPTNEWFLYNAME_BUTTON, wxT("OK"));
+   wxButton* _newflythroughNameOKButton = new wxButton(scrollWindow, VIEWLOC_ACCEPTNEWFLYNAME_BUTTON, wxT("OK"));
 
-   wxButton* _newflythroughNameCancelButton = new wxButton(this, VIEWLOC_CANCELNEWFLYNAME_BUTTON, wxT("Cancel"));
+   wxButton* _newflythroughNameCancelButton = new wxButton(scrollWindow, VIEWLOC_CANCELNEWFLYNAME_BUTTON, wxT("Cancel"));
 
    wxBoxSizer* _newFlyNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
    _newFlyNameButtonsSizer->Add(_newflythroughNameOKButton,1,wxALIGN_LEFT);
@@ -302,46 +299,46 @@ std::cout << "I Made It Here3 " << std::endl;
    //**********************************************
 
    //The rest of the flythrough controls
-   wxStaticText* _activeflyLabel = new wxStaticText(this, -1, wxT("Active Flythrough Selection"));
+   wxStaticText* _activeflyLabel = new wxStaticText(scrollWindow, -1, wxT("Active Flythrough Selection"));
 
-   _activeflySel = new wxComboBox(this, VIEWLOC_ACTIVEFLYSEL_COMBOBOX, wxT("Select Active Flythrough"),wxDefaultPosition, 
+   _activeflySel = new wxComboBox(scrollWindow, VIEWLOC_ACTIVEFLYSEL_COMBOBOX, wxT("Select Active Flythrough"),wxDefaultPosition, 
                                   wxDefaultSize, _numStoredFlythroughsLocal, 
                                   _flythroughNamesLocal, wxCB_READONLY);
 
-   wxStaticText* _addvptoflyLabel = new wxStaticText(this, -1, wxT("Add Viewpts at the end of Flythrough"));
+   wxStaticText* _addvptoflyLabel = new wxStaticText(scrollWindow, -1, wxT("Add Viewpts at the end of Flythrough"));
 
-   _addvptoflySel = new wxComboBox(this, VIEWLOC_ADDVPTOFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+   _addvptoflySel = new wxComboBox(scrollWindow, VIEWLOC_ADDVPTOFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                    wxDefaultSize, _numViewLocLocal, 
                                    _locNamesLocal, wxCB_READONLY);
 
-   wxStaticText* _insertvpinflyLabel = new wxStaticText(this, -1, wxT("Insert Viewpts within Flythrough"));
+   wxStaticText* _insertvpinflyLabel = new wxStaticText(scrollWindow, -1, wxT("Insert Viewpts within Flythrough"));
 
-   _insertvpinflySel = new wxComboBox(this, VIEWLOC_INSERTVPINFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+   _insertvpinflySel = new wxComboBox(scrollWindow, VIEWLOC_INSERTVPINFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                       wxDefaultSize, _numViewLocLocal, 
                                       _locNamesLocal, wxCB_READONLY);
 
-   wxStaticText* _removevpfromflyLabel = new wxStaticText(this, -1, wxT("Remove Viewpts from Flythrough"));
+   wxStaticText* _removevpfromflyLabel = new wxStaticText(scrollWindow, -1, wxT("Remove Viewpts from Flythrough"));
 
-   _removevpfromflySel = new wxComboBox(this, VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+   _removevpfromflySel = new wxComboBox(scrollWindow, VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                         wxDefaultSize, _vwptsInActiveFlyLocal,
                                         _activeFlyNamesLocal, wxCB_READONLY);
 
-   wxStaticText* _deleteflyLabel = new wxStaticText(this, -1, wxT("Delete Entire Flythrough"));
+   wxStaticText* _deleteflyLabel = new wxStaticText(scrollWindow, -1, wxT("Delete Entire Flythrough"));
 
-   _deleteflySel = new wxComboBox(this, VIEWLOC_DELETEFLYSEL_COMBOBOX, wxT("Select a Flythrough"),wxDefaultPosition, 
+   _deleteflySel = new wxComboBox(scrollWindow, VIEWLOC_DELETEFLYSEL_COMBOBOX, wxT("Select a Flythrough"),wxDefaultPosition, 
                                         wxDefaultSize, _numStoredFlythroughsLocal, 
                                         _flythroughNamesLocal, wxCB_READONLY);
 
 
-   _flybuilderListBox = new wxListBox(this, VIEWLOC_FLYBUILDER_LISTBOX, wxDefaultPosition, wxDefaultSize,
+   _flybuilderListBox = new wxListBox(scrollWindow, VIEWLOC_FLYBUILDER_LISTBOX, wxDefaultPosition, wxDefaultSize,
                                       _vwptsInActiveFlyLocal, _activeFlyNamesLocal,  
                                        wxLB_HSCROLL|wxLB_NEEDED_SB, wxDefaultValidator, wxT("Active Flythrough Order"));    
 
-   wxStaticText* blank3 = new wxStaticText(this, -1, ""); //just a place holder
-   wxStaticText* blank4 = new wxStaticText(this, -1, ""); //just a place holder
-   wxStaticText* blank5 = new wxStaticText(this, -1, ""); //just a place holder
-   wxStaticText* blank6 = new wxStaticText(this, -1, ""); //just a place holder
-   wxStaticText* blank7 = new wxStaticText(this, -1, ""); //just a place holder
+   wxStaticText* blank3 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
+   wxStaticText* blank4 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
+   wxStaticText* blank5 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
+   wxStaticText* blank6 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
+   wxStaticText* blank7 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
 
    wxBoxSizer* _flyModCtrlsSizer = new wxBoxSizer(wxVERTICAL);
    _flyModCtrlsSizer->Add(_activeflyLabel,1,wxALIGN_LEFT|wxEXPAND);
@@ -362,9 +359,9 @@ std::cout << "I Made It Here3 " << std::endl;
    _flyModCtrlsSizer->Add(blank7,1,wxALIGN_LEFT|wxEXPAND);
 
 
-   wxButton* _runactiveflyButton = new wxButton(this, VIEWLOC_RUNFLY_BUTTON, wxT("Start Active Flythrough"));
+   wxButton* _runactiveflyButton = new wxButton(scrollWindow, VIEWLOC_RUNFLY_BUTTON, wxT("Start Active Flythrough"));
 
-   wxButton* _stopactiveflyButton = new wxButton(this, VIEWLOC_STOPFLY_BUTTON, wxT("Stop Flythrough"));
+   wxButton* _stopactiveflyButton = new wxButton(scrollWindow, VIEWLOC_STOPFLY_BUTTON, wxT("Stop Flythrough"));
 
    wxBoxSizer* _runStopFlyButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
    _runStopFlyButtonsSizer->Add(_runactiveflyButton,1,wxALIGN_LEFT);
@@ -387,8 +384,10 @@ std::cout << "I Made It Here3 " << std::endl;
    viewlocPanelGroup->Add(_allLeftSide,1,wxALIGN_CENTER_HORIZONTAL); 
    viewlocPanelGroup->Add(_allFlyCtrlsGroup,2,wxALIGN_CENTER_HORIZONTAL); 
 
-   mainSizer->Add( viewlocPanelGroup,1,wxALIGN_LEFT|wxEXPAND);
+   scrollWindow->SetSizer( viewlocPanelGroup ); 
 
+   mainSizer->Add( scrollWindow,1,wxALIGN_LEFT|wxEXPAND);
+ 
    SetAutoLayout(true);
    this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
    SetSizer( mainSizer );

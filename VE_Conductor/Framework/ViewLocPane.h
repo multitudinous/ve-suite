@@ -156,6 +156,7 @@ protected:
    std::vector< long > commandInputs;
 
    wxWindow* _parent;
+   wxScrolledWindow* scrollWindow;
 
    wxComboBox* _activeflySel;
    wxComboBox* _movetovwptSel;
