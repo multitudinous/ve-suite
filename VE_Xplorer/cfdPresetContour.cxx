@@ -41,6 +41,7 @@
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkPolyData.h>
 
 // the following is for the PD stuff...
 #include <vtkActor.h>
@@ -60,6 +61,7 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
    cuttingPlane = 0;
    // set the cut function
    this->cutter = vtkCutter::New();
+   this->polydata = vtkPolyData::New();
 }
 
 cfdPresetContour::~cfdPresetContour()
@@ -69,6 +71,9 @@ cfdPresetContour::~cfdPresetContour()
 
    this->cutter->Delete();
    this->cutter = NULL;
+
+   this->polydata->Delete();
+   this->polydata = NULL;
 }
 
 void cfdPresetContour::Update( void )
@@ -106,6 +111,8 @@ void cfdPresetContour::Update( void )
          this->cuttingPlane = NULL;
       }
 
+      CreatePlane();
+/*
       this->cuttingPlane = new cfdCuttingPlane( 
             this->GetActiveDataSet()->GetDataSet()->GetBounds(),
             this->xyz, numSteps );
@@ -113,18 +120,21 @@ void cfdPresetContour::Update( void )
       // insure that we are using correct bounds for the given data set...
       this->cuttingPlane->SetBounds( 
                   this->GetActiveDataSet()->GetDataSet()->GetBounds() );
-      this->cuttingPlane->Advance( this->requestedValue );
+//std::cout<<"GETBOUNDS: "<<this->GetActiveDataSet()->GetDataSet()->GetBounds()<<std::endl;
 
+      this->cuttingPlane->Advance( this->requestedValue );
       this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
       this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       this->cutter->Update();
 
       this->SetMapperInput( this->cutter->GetOutput() );
+//      this->SetMapperInput( polydata );
 
       this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
+*/
       //this->mapper->Update();
    }
    
@@ -160,3 +170,57 @@ void cfdPresetContour::Update( void )
       this->cuttingPlane = NULL;
    }
 }
+
+//This function test for vtk data and if it is present creates the plane.
+//If no vtk data is present for the plane selection, this function will 
+//find the next closest plane.
+void cfdPresetContour::CreatePlane( void )
+{
+      int plane;
+      this->cuttingPlane = new cfdCuttingPlane( 
+            this->GetActiveDataSet()->GetDataSet()->GetBounds(),
+            this->xyz, numSteps );
+
+      // insure that we are using correct bounds for the given data set...
+      this->cuttingPlane->SetBounds( 
+                  this->GetActiveDataSet()->GetDataSet()->GetBounds() );
+
+
+      this->cuttingPlane->Advance( this->requestedValue );
+      this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+      this->cutter->Update();
+
+      vtkPolyData * polydata = this->cutter->GetOutput();
+
+      if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
+      {
+         std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
+         std::cerr<<"Finding next closest plane"<<std::endl;
+         while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 )  //&&(this->TargetReduction > 0.0) )
+         {
+            if( requestedValue < 50 )
+            {
+               this->requestedValue = this->requestedValue + 1;
+            }
+            else 
+            {
+               this->requestedValue = this->requestedValue - 1;
+            }
+            this->cuttingPlane->Advance( this->requestedValue ); 
+            this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+            this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+            this->cutter->Update();
+            polydata = this->cutter->GetOutput();            
+         }    
+      }       
+//      this->SetMapperInput( this->cutter->GetOutput() );
+      this->SetMapperInput( polydata );
+
+      this->mapper->SetScalarRange( this->GetActiveDataSet()
+                                        ->GetUserRange() );
+      this->mapper->SetLookupTable( this->GetActiveDataSet()
+                                        ->GetLookupTable() );
+
+}
+

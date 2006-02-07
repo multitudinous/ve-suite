@@ -110,10 +110,10 @@ cfdCuttingPlane::~cfdCuttingPlane( )
 }
 
 void cfdCuttingPlane::SetBounds( const double bounds[6] )
-{
+{   
    for ( int i=0; i<6; i++ )
    {
-      this->bd[i] = (float)bounds[i];
+      this->bd[i] = (double)bounds[i];
    }
 }
 
@@ -147,7 +147,7 @@ void cfdCuttingPlane::Advance( int requestedValue )
    if      ( this->isPastEnd() ) this->ResetOriginToLow();
    else if ( this->isAtEnd()   ) this->ResetOriginToHigh();
 
-   vprDEBUG(vesDBG, 1) << "this->origin[" << this->type << "] = " 
+   vprDEBUG(vesDBG, 0) << "this->origin[" << this->type << "] = " 
       << this->origin[this->type] << std::endl << vprDEBUG_FLUSH;
 
    this->plane->SetOrigin( this->origin );
@@ -172,7 +172,8 @@ void cfdCuttingPlane::ComputeOrigin( int requestedValue )
    // bd is calculated from the raw cfdDataSet NOT from the precalc values
    // type is either 0,1,2 representing x,y,z
    this->origin[this->type] = this->bd[2*this->type] + 
-                              requestedValue * (this->bd[2*this->type+1] - this->bd[2*this->type]) / 100.0;
+                              ( requestedValue * 0.010f ) * 
+                              (this->bd[2*this->type+1] - this->bd[2*this->type]);
 }
 
 int cfdCuttingPlane::isPastEnd()

@@ -35,6 +35,8 @@
 #include "VE_Xplorer/cfdContourBase.h"
 
 class vtkCutter;
+class vtkPolyData;
+
 namespace VE_Xplorer
 {
    class cfdCuttingPlane;
@@ -58,6 +60,7 @@ namespace VE_Xplorer
          ~cfdPresetContour();
 
          virtual void Update( void );
+         void CreatePlane( void );
 
       private:
          int xyz;
@@ -65,6 +68,7 @@ namespace VE_Xplorer
          vtkCutter       * cutter;
 
          cfdCuttingPlane * cuttingPlane;
+         vtkPolyData     * polydata;
    };
 }
 #endif

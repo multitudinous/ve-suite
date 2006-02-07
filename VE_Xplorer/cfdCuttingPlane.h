@@ -33,6 +33,7 @@
 #define CFD_CUTTING_PLANE
 #include "VE_Installer/include/VEConfig.h"
 class vtkPlane;
+class vtkDataSet;
 
 namespace VE_Xplorer
 {
@@ -73,7 +74,7 @@ namespace VE_Xplorer
 
          double normal[3];    // Normal direction to cut.
 
-         float bd[6];        // Boundary of the whole data sets.
+         double bd[6];        // Boundary of the whole data sets.
 
          float dx;           // used only by blue menu
 
