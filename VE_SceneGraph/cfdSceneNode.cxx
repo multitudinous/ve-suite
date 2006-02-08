@@ -137,7 +137,7 @@ void cfdSceneNode::SetParent( cfdNode* parent )
       ///   \              /
       ///    \            /
       ///      nodeToClone
-      ///std::cerr << "Error : SetParent "<< _numParents << std::endl;
+      std::cerr << "Warning : SetParent "<< _numParents << " this may cause problems with cleanup and other graph manipulations." << std::endl;
       //exit( 1 );      
    }
    
