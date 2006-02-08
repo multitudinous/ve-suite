@@ -160,7 +160,9 @@ DataValuePair::DataValuePair( const DataValuePair& input )
 
    if(input._veXMLObject)
    {
-      _veXMLObject = VE_XML::XMLObjectFactory::CreateXMLObjectCopy(input._veXMLObject->GetObjectType(),input._veXMLObject);
+      _veXMLObject = VE_XML::XMLObjectFactory::Instance()->CreateXMLObjectCopy(input._veXMLObject->GetObjectType(),
+                                                                   input._veXMLObject->GetObjectNamespace(),
+                                                                   input._veXMLObject);
    }
    if(input._dataTransform)
       _dataTransform = new Transform(*input._dataTransform);
@@ -204,7 +206,9 @@ DataValuePair& DataValuePair::operator=( const DataValuePair& input)
       _veXMLObject = 0;
       if(input._veXMLObject)
       {
-         _veXMLObject = XMLObjectFactory::CreateXMLObjectCopy(input._veXMLObject->GetObjectType(),input._veXMLObject);
+         _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy(input._veXMLObject->GetObjectType(),
+                                                              input._veXMLObject->GetObjectNamespace(),
+                                                              input._veXMLObject);
       }
 
       else if(input._dataTransform)
@@ -367,7 +371,9 @@ void DataValuePair::SetData(std::string dataName,VE_XML::XMLObject* vexmlObject)
 
    if(vexmlObject)
    {
-      _veXMLObject = XMLObjectFactory::CreateXMLObjectCopy(vexmlObject->GetObjectType(),vexmlObject);
+      _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy(vexmlObject->GetObjectType(),
+                                                           vexmlObject->GetObjectNamespace(),
+                                                           vexmlObject);
    }
 }
 ///////////////////////////////////////
@@ -595,15 +601,19 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                          delete _veXMLObject;
                          _veXMLObject = 0;
                       }
-                      DOMElement* objectType = GetSubElement(genericObject,"objectType",0);
-                      if(objectType)
+                      DOMElement* objectNamespace = GetSubElement(genericObject,"objectNamespace",0);
+                      if(objectNamespace)
                       {
-                         _veXMLObject = XMLObjectFactory::CreateXMLObject(ExtractDataStringFromSimpleElement(objectType));
-                         _veXMLObject->SetObjectFromXMLData(genericObject);
-                      } 
+                         DOMElement* objectType = GetSubElement(genericObject,"objectType",0);
+                         if(objectType)
+                         {
+                            _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject(ExtractDataStringFromSimpleElement(objectType),
+                                                                             ExtractDataStringFromSimpleElement(objectNamespace));
+                            _veXMLObject->SetObjectFromXMLData(genericObject);
+                         } 
+                      }
                   }
                }  
-            //}
          }
          catch(...)
          {

@@ -31,6 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/XMLCreator.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
 #include <sstream>
 #include <iomanip>
 XERCES_CPP_NAMESPACE_USE
@@ -45,6 +47,8 @@ XMLObject::XMLObject()
    _nChildren = 0;
    _objectType = std::string("XMLObject");
    _objectNamespace = std::string("XML");
+   //This may need to be somewhere else
+   XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
 }
 ///////////////////////////////////////////////////
 XMLObject::XMLObject( const XMLObject& input )
