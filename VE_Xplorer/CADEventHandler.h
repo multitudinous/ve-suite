@@ -39,6 +39,10 @@
  */
 
 #include "VE_Xplorer/EventHandler.h"
+namespace VE_XML
+{
+   class XMLObject;
+}
 namespace VE_CAD
 {
    class CADNode;
@@ -64,16 +68,16 @@ public:
    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model);
    
    ///Exectute the event
-   ///\param command The current Command event.
-   void Execute(VE_XML::Command* command); 
+   ///\param xmlObject The current xmlObject event.
+   void Execute(VE_XML::XMLObject* command); 
 
    ///Equal operator
    CADEventHandler& operator=(const CADEventHandler& rhs);
    
 protected:
    ///The internal operation on the CADNode.
-   ///\param command The Command to execute.
-   virtual void _operateOnNode(VE_XML::Command* command) = 0;
+   ///\param veXMLObject The veXMLObject to execute.
+   virtual void _operateOnNode(VE_XML::XMLObject* veXMLObject) = 0;
 
    VE_CAD::CADNode* _cadNode;///<The CADNode.
 };

@@ -34,6 +34,7 @@
                   <xs:element name="data3DStringArray" type="ve3DStringArray" />
                   <xs:element name="dataValueUInt" type="xs:unsignedInt" />
                </xs:choice>
+               <xs:element name="dataType" type="xs:string" />
             </xs:sequence>
          </xs:extension>
       </xs:complexContent>

@@ -145,6 +145,9 @@ public:
    ///Get the Transform data.
    VE_XML::Transform* GetDataTransform( void );
 
+   ///Get the xmlObject from the DataValuePair  
+   VE_XML::XMLObject* GetDataXMLObject();
+
    ///Helper functions to set data easily
    ///\param dataName Name of the data being passed in
    ///\param data Data value being passed in. Can be a broad range of data types
@@ -152,7 +155,13 @@ public:
    ///Helper functions to set data easily
    ///\param dataName Name of the data being passed in
    ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, VE_XML::Transform* data );
+   //void SetData( std::string dataName, VE_XML::Transform* data );
+
+
+   ///Helper functions to set data easily
+  ///\param dataName Name of the data being passed in
+  ///\param data XMLObject being passed in. Can be a broad range of data types
+  void SetData(std::string dataName, VE_XML::XMLObject* data);
 
    ///String data
    ///Helper functions to set data easily

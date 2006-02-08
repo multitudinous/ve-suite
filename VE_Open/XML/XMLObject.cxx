@@ -74,7 +74,7 @@ XMLObject::~XMLObject()
 //////////////////////////////////////////////////
 void XMLObject::SetObjectType(std::string tagName)
 {
-   _objectType = _objectType;
+   _objectType = tagName;
 }
 /////////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner)
@@ -94,12 +94,13 @@ DOMElement* XMLObject::GetXMLData( std::string input )
       //Make sure old data is cleared from the xerces side of the element
       _clearAllChildrenFromElement();
   
-      SetSubElement("objectType",_objectType);
+      
 
       //update the xerces element w/ the current data in the object
       //This function should be overridden in ALL derived classes!!!!!
       _updateVEElement( input );
 
+      SetSubElement("objectType",_objectType);
       return _veElement;
    }else{
       std::cout<<"Root Document not set!!"<<std::endl;
@@ -227,7 +228,17 @@ DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElem
 {
    DOMElement* foundElement = dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(itemIndex));
    if(foundElement){
-      if(foundElement->getParentNode() == baseElement)
+      if(foundElement->getParentNode() != baseElement)
+      {
+         XMLSize_t nChildren = baseElement->getChildNodes()->getLength();
+         for(XMLSize_t i = 0; i < nChildren; i++)
+         {
+            foundElement = dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(i));
+            if(foundElement->getParentNode() == baseElement)
+               return foundElement;
+         }   
+      }
+      else
       {
          return foundElement;
       }

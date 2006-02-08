@@ -67,7 +67,11 @@ public:
 
    ///
    ///\param objectType The unique string specifying what object to create
-   VE_XML::XMLObject* CreateXMLObject(std::string objectType);
+   static VE_XML::XMLObject* CreateXMLObject(std::string objectType);
+
+   ///\param objectType The unique string specifying what object to create
+   ///\param objectToCopy The object to pass to the copy constructor
+   static VE_XML::XMLObject* CreateXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy);
 
    //Template function to register an XMLObject in the factory
    //\param objectID The unique string specifying what object to register

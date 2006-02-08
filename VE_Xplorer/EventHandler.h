@@ -43,7 +43,7 @@
 
 namespace VE_XML
 {
-   class Command;
+   class XMLObject;
 }
 namespace VE_Xplorer
 {
@@ -59,11 +59,15 @@ public:
    virtual ~EventHandler(){}
 
    ///The call to handle the event
-   ///\param command The command to execute
-   virtual void Execute(VE_XML::Command* command) = 0;
+   ///\param objectToProcess The xml Object to process
+   virtual void Execute(VE_XML::XMLObject* objectToProcess=0) = 0;
 
    ///\param baseObject The cfdGlobalBase object to apply the command to.
    virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject) = 0;
+
+   ///This is needed by the entity factory...probably should use a 
+   ///different class for this.
+   VE_XML::XMLObject* GetNewXMLObject(){return 0;}
    
 protected:
    VE_Xplorer::cfdGlobalBase* _baseObject;

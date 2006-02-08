@@ -40,16 +40,15 @@ using namespace VE_CAD;
 CADClone::CADClone(std::string name,VE_CAD::CADNode* originalNode)
 :VE_CAD::CADNode(name)
 {
+   _originalNode = 0;
+   
    if(originalNode)
    {
       SetOriginalNode(originalNode);
    }
-   else
-   {
-      _originalNode = 0;
-   }
+
    _type = std::string("Clone");
-  SetObjectType("CADClone");
+   SetObjectType("CADClone");
 }
 /////////////////////
 //Destructor       //
@@ -75,6 +74,10 @@ void CADClone::SetOriginalNode(CADNode* originalNode)
       {
          _originalNode = new CADPart(*dynamic_cast<CADPart*>(originalNode));
       }
+   }
+   else
+   {
+      _originalNode = originalNode;
    }
 }
 //////////////////////////////////////////////////

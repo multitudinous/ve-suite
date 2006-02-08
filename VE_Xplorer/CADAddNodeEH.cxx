@@ -35,6 +35,7 @@
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdClone.h"
 
+#include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/FloatArray.h"
 #include "VE_Open/XML/Transform.h"
@@ -72,11 +73,12 @@ CADAddNodeEventHandler& CADAddNodeEventHandler::operator=(const CADAddNodeEventH
    }
    return *this;
 }
-///////////////////////////////////////////////////////////////////////
-void CADAddNodeEventHandler::_operateOnNode(VE_XML::Command* command)
+//////////////////////////////////////////////////////////////////////////
+void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 {
    try
    {
+      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
       VE_XML::DataValuePair* parentID = command->GetDataValuePair("Parent ID");
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");

@@ -140,6 +140,13 @@ cfdModel::~cfdModel()
       delete itr->second;
    }
    _cloneList.clear();
+   for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
+                                       itr != _eventHandlers.end(); itr++ )
+   {
+      delete itr->second;
+      itr->second = 0;
+   }
+   _eventHandlers.clear();
    // the following block allows the program to get to pfExit
    for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); itr++ )

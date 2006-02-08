@@ -37,6 +37,7 @@
 #include "VE_SceneGraph/cfdDCS.h"
 
 #include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
 #include <iostream>
@@ -62,14 +63,12 @@ CADEventHandler::CADEventHandler(const CADEventHandler& rhs)
 CADEventHandler::~CADEventHandler()
 {
 }
-///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 {
    try
    {
       _baseObject = model;
-
-      
    }
    catch(...)
    {
@@ -79,12 +78,12 @@ void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void CADEventHandler::Execute(VE_XML::Command* command)
+void CADEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
    if(_baseObject)
    {
       //this is overridden in derived classes
-      _operateOnNode(command);
+      _operateOnNode(veXMLObject);
    }
 }
 ///////////////////////////////////////////////////////////////////////

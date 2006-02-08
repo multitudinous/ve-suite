@@ -49,18 +49,20 @@ CADAssembly::CADAssembly(std::string name)
 CADAssembly::~CADAssembly()
 {
    for(unsigned int i = 0; i < _numChildren; i++)
-   {
-      if(_children.at(i))
+   { 
+      try
       {
-         try
+         if(_children.at(i))
          {
+        
             delete _children.at(i);
          }
-         catch(...)
-         {
-            std::cout<<"Child deleted!"<<std::endl;
-         }
+        
          _children.at(i) = 0;
+      } 
+      catch(...)
+      {
+         std::cout<<"Child deleted!"<<std::endl;
       }
    }
    _children.clear();

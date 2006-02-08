@@ -37,6 +37,7 @@
 
 #include "VE_SceneGraph/cfdClone.h"
 
+#include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -76,9 +77,11 @@ CADTransformEventHandler& CADTransformEventHandler::operator=(const CADTransform
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void CADTransformEventHandler::_operateOnNode(VE_XML::Command* command)
+void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 {
    try{
+
+      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
       VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
 
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
@@ -107,9 +110,10 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::Command* command)
             transform = activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph();
          }
       }
-      transform->SetTranslationArray( newTransform->GetDataTransform()->GetTranslationArray()->GetArray() );
-      transform->SetRotationArray( newTransform->GetDataTransform()->GetRotationArray()->GetArray() );
-      transform->SetScaleArray( newTransform->GetDataTransform()->GetScaleArray()->GetArray() );
+      VE_XML::Transform* rawTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());
+      transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );
+      transform->SetRotationArray( rawTransform->GetRotationArray()->GetArray() );
+      transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );
    }
    catch(...)
    {

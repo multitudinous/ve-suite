@@ -42,7 +42,6 @@
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
-
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/filedlg.h>
@@ -68,7 +67,7 @@ END_EVENT_TABLE()
 /////////////////////////////////////////////////////////////////////
 //Constructor                                                      //
 /////////////////////////////////////////////////////////////////////
-CADNodeManagerDlg::CADNodeManagerDlg(/*VjObs_ptr*/CADNode* node, wxWindow* parent, 
+CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent, 
                        wxWindowID id)
 :wxDialog(parent,id,wxString("CADTree Manager"),wxDefaultPosition,wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("CADTree Manager"))

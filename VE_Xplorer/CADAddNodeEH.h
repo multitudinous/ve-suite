@@ -39,7 +39,7 @@
  */
 namespace VE_XML
 {
-   class Command;
+   class XMLObject;
 }
 namespace VE_CAD
 {
@@ -63,7 +63,7 @@ public:
 protected:
    ///Update a transform on the CADNode.
    ///\param command The Command containing the udpated transform.
-   void _operateOnNode(VE_XML::Command* command);
+   void _operateOnNode(VE_XML::XMLObject* command);
 };
 }
 #endif// VE_EVENT_HANDLER_H
