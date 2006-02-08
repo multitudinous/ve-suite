@@ -47,8 +47,12 @@ XMLObject::XMLObject()
    _nChildren = 0;
    _objectType = std::string("XMLObject");
    _objectNamespace = std::string("XML");
+
    //This may need to be somewhere else
-   XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
+   }
 }
 ///////////////////////////////////////////////////
 XMLObject::XMLObject( const XMLObject& input )

@@ -37,7 +37,8 @@
 #include <string>
 
 using namespace VE_XML;
-XMLObjectFactory* XMLObjectFactory::_instanceOfFactory = 0;
+VE_XML::XMLObjectFactory* VE_XML::XMLObjectFactory::_instanceOfFactory = 0;
+std::map<std::string,CreationEventHandler*> VE_XML::XMLObjectFactory::_objectCreators;
 /////////////////////////////////////
 XMLObjectFactory::XMLObjectFactory( )
 {
@@ -73,37 +74,6 @@ VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectNameSpace
    {
       return xmlCreator->second->CreateNewXMLObject(objectType);
    }
-  /*if(objectType == "FloatArray"){
-      return new FloatArray();
-   }else if(objectType == "Transform"){
-      return new Transform();
-   }else if(objectType == "Command"){
-      return new Command();
-   }else if(objectType == "DataValuePair"){
-      return new DataValuePair();
-   }else if(objectType == "OneDDoubleArray"){
-      return new OneDDoubleArray();
-   }else if(objectType == "OneDIntArray"){
-      return new OneDIntArray();
-   }else if(objectType == "OneDStringArray"){
-      return new OneDStringArray();
-   }else if(objectType == "ParameterBlock"){
-      return new ParameterBlock();
-   }else if(objectType == "StateInfo"){
-      return new StateInfo();
-   }else if(objectType == "ThreeDDoubleArray"){
-      return new ThreeDDoubleArray();
-   }else if(objectType == "ThreeDIntArray"){
-      return new ThreeDIntArray();
-   }else if(objectType == "Transform"){
-      return new Transform();
-   }else if(objectType == "TwoDDoubleArray"){
-      return new TwoDDoubleArray();
-   }else if(objectType == "TwoDIntArray"){
-      return new TwoDIntArray();
-   }else if(objectType == "User"){
-      return new User();
-   }*/
    return 0;
 }
 
@@ -118,36 +88,17 @@ VE_XML::XMLObject* XMLObjectFactory::CreateXMLObjectCopy(std::string objectType,
    {
       return xmlCreator->second->CreateNewXMLObjectCopy(objectType,objectToCopy);
    }
-   /*if(objectType == "FloatArray"){
-      return new FloatArray(*dynamic_cast<FloatArray*>(objectToCopy));
-   }else if(objectType == "Command"){
-      return new Command(*dynamic_cast<Command*>(objectToCopy));
-   }else if(objectType == "DataValuePair"){
-      return new DataValuePair(*dynamic_cast<DataValuePair*>(objectToCopy));
-   }else if(objectType == "OneDDoubleArray"){
-      return new OneDDoubleArray(*dynamic_cast<OneDDoubleArray*>(objectToCopy));
-   }else if(objectType == "OneDIntArray"){
-      return new OneDIntArray(*dynamic_cast<OneDIntArray*>(objectToCopy));
-   }else if(objectType == "OneDStringArray"){
-      return new OneDStringArray(*dynamic_cast<OneDStringArray*>(objectToCopy));
-   }else if(objectType == "ParameterBlock"){
-      return new ParameterBlock(*dynamic_cast<ParameterBlock*>(objectToCopy));
-   }else if(objectType == "StateInfo"){
-      return new StateInfo(*dynamic_cast<StateInfo*>(objectToCopy));
-   }else if(objectType == "ThreeDDoubleArray"){
-      return new ThreeDDoubleArray(*dynamic_cast<ThreeDDoubleArray*>(objectToCopy));
-   }else if(objectType == "ThreeDIntArray"){
-      return new ThreeDIntArray(*dynamic_cast<ThreeDIntArray*>(objectToCopy));
-   }else if(objectType == "Transform"){
-      return new Transform(*dynamic_cast<Transform*>(objectToCopy));
-   }else if(objectType == "TwoDDoubleArray"){
-      return new TwoDDoubleArray(*dynamic_cast<TwoDDoubleArray*>(objectToCopy));
-   }else if(objectType == "TwoDIntArray"){
-      return new TwoDIntArray(*dynamic_cast<TwoDIntArray*>(objectToCopy));
-   }else if(objectType == "User"){
-      return new User(*dynamic_cast<User*>(objectToCopy));
-   }*/
    return 0;
+}
+/////////////////////////////////////////////////////////////////////////////
+bool XMLObjectFactory::ObjectCreatorIsRegistered(std::string objectNamespace)
+{
+   std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
+   if(_objectCreators.find(objectNamespace) != _objectCreators.end())
+   {
+      return true;
+   }
+   return false;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 bool XMLObjectFactory::RegisterObjectCreator(std::string objectNamespace,CreationEventHandler* newCreator)

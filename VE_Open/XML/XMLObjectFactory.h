@@ -79,6 +79,14 @@ public:
    ///\param objectNamespace The unique string specifying what namespace to register
    ///\param objectCreator The objectCreator to register 
    bool RegisterObjectCreator(std::string objectNamespace,VE_XML::CreationEventHandler* objectCreator);
+
+   ///Check if a CreationEventHandler is registered 
+   ///Valid types so far are:
+   ///XML == Objects from the VE_XML namespace
+   ///CAD == Objects from the CAD namespace
+   ///Shader == Objects from the Shader
+   ///\param objectNamespace The unique string specifying what namespace to register
+   bool ObjectCreatorIsRegistered(std::string objectNamespace);
 protected:
    ///Base constructor
    XMLObjectFactory( );

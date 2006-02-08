@@ -34,6 +34,9 @@
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
+#include "VE_Open/XML/CAD/CADCreator.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
 
 #include <ctime>
 using namespace VE_CAD;
@@ -55,6 +58,16 @@ CADNode::CADNode(std::string name)
    
    SetObjectType("CADNode");
    SetObjectNamespace("CAD");
+   //This may need to be somewhere else
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("CAD"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new CADCreator());
+   }
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
+   }
+
 }
 ///////////////////
 ///Destructor    //
