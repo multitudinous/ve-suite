@@ -481,12 +481,12 @@ void cfdDigitalAnalogGauge::UpdateMovingArrowAngle( double angle )
    this->arrowTransform->SetMatrix( this->arrowRefPosition );  // reset to ref
    this->arrowTransform->RotateZ( angle );  // incremental adjustment
 
-   /*this->gaugeDCS->RemoveChild( this->movingArrowGeode );
+   this->gaugeDCS->RemoveChild( this->movingArrowGeode );
    delete this->movingArrowGeode;
 
    this->movingArrowGeode = new VE_SceneGraph::cfdGeode();
    this->movingArrowGeode->TranslateTocfdGeode( this->GetMovingArrowActor() );
-   this->gaugeDCS->AddChild( this->movingArrowGeode );*/
+   this->gaugeDCS->AddChild( this->movingArrowGeode );
 }
 
 void cfdDigitalAnalogGauge::UpdateMovingArrowInRange( double value )
@@ -601,12 +601,12 @@ void cfdDigitalAnalogGauge::UpdateDigitalText( double value )
 
    this->digitalLabel->SetText( dirStringStream.str().c_str() );
 
-   /*this->gaugeDCS->RemoveChild( this->digitalGeode );
+   this->gaugeDCS->RemoveChild( this->digitalGeode );
    delete this->digitalGeode;
    
    this->digitalGeode = new VE_SceneGraph::cfdGeode();
    this->digitalGeode->TranslateTocfdGeode( this->GetDigitalActor() );
-   this->gaugeDCS->AddChild( this->digitalGeode );*/
+   this->gaugeDCS->AddChild( this->digitalGeode );
 }
 
 vtkActor * cfdDigitalAnalogGauge::GetDigitalActor()
