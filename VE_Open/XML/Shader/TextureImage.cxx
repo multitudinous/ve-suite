@@ -30,7 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/XML/Shader/TextureImage.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
 using namespace VE_Shader;
+using namespace VE_XML;
 ////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +43,10 @@ TextureImage::TextureImage()
    _imageFile = std::string("");
    _textureUnit = 0;
    _dimension = 2;
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
+   }
 }
 /////////////////////////////
 //Destructor               //

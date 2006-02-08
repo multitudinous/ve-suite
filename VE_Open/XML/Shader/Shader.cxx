@@ -33,6 +33,10 @@
 
 #include "VE_Open/XML/Shader/Uniform.h"
 #include "VE_Open/XML/Shader/TextureImage.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
+
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+
 
 using namespace VE_Shader;
 using namespace VE_XML;
@@ -45,6 +49,10 @@ Shader::Shader()
 {
    _shaderType = std::string("Vertex");
    _shaderSource = std::string("");
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
+   }
 }
 /////////////////
 //Destructor   //

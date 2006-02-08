@@ -30,8 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/XML/Shader/Uniform.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
+
+
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_Shader;
+using namespace VE_XML;
 //////////////////////////////////////////////////////////////////////////
 ///Constructor                                                          //
 //////////////////////////////////////////////////////////////////////////
@@ -42,6 +47,10 @@ Uniform::Uniform()
    _variableSize = 0; 
    _name = std::string("");
    _textureUnit = 0;
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
+   }
 }
 ///////////////////
 Uniform::~Uniform()

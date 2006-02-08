@@ -37,7 +37,8 @@ SRCS=\
    TextureImage.cxx\
    Uniform.cxx\
    Program.cxx\
-   Shader.cxx
+   Shader.cxx \
+   ShaderCreator.cxx \
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib

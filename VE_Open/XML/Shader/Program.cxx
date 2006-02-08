@@ -32,7 +32,12 @@
 
 #include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/Shader/Shader.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
+
+
 using namespace VE_Shader;
+using namespace VE_XML;
 //////////////////////////////////////////////////////////////////////////
 //Constructor                                                           //
 //////////////////////////////////////////////////////////////////////////
@@ -42,6 +47,10 @@ Program::Program()
    _name = std::string("VEProgram");
    _vertexShader = 0;
    _fragmentShader = 0;
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
+   }
 }
 ///////////////////
 //Destructor     //
