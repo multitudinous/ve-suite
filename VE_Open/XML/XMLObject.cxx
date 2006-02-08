@@ -79,6 +79,11 @@ XMLObject::~XMLObject()
 {
 }
 //////////////////////////////////////////////////
+void XMLObject::SetObjectNamespace(std::string tagname)
+{
+   _objectNamespace = tagname;
+}
+//////////////////////////////////////////////////
 void XMLObject::SetObjectType(std::string tagName)
 {
    _objectType = tagName;

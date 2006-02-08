@@ -69,6 +69,10 @@ public:
    ///Set the XMLObject type
    ///\param veObjectType
    void SetObjectType(std::string veObjectType);
+
+   ///Set the XMLObject Namespace
+   ///\param veObjectNamespace
+   void SetObjectNamespace(std::string veObjectNamespace);
    
    ///Set the DOMDocument this object belongs to.
    void SetOwnerDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner);
