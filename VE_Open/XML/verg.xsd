@@ -186,6 +186,7 @@
    <xs:complexType name="veXMLObject">
       <xs:sequence>
          <xs:element name="objectType" type="xs:string" />
+         <xs:element name="objectNamespace" type="xs:string" />
       </xs:sequence>
    </xs:complexType>
 </xs:schema>
