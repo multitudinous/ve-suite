@@ -51,9 +51,7 @@
 #include "VE_Open/XML/CAD/CADAttribute.h"
 
 
-//////////////////////////////////////////////
-template<class T> 
-T* CreationEventHandler<T>::GetNewXMLObject()
+//////////////////////////////////////////////////////////
+/*VE_XML::XMLObject* CreationEventHandler::GetNewXMLObject()
 {
-   return new T();
-}
+}*/

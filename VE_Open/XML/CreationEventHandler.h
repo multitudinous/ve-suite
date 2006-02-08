@@ -38,35 +38,8 @@
  * Create XMLObject event handling.
  */
 
-namespace VE_XML
-{
-   class XMLObject;
-   class Transform;
-   class FloatArray;
-
-   class OneDDoubleArray;
-   class OneDIntArray;
-   class OneDStringArray;
-
-   class TwoDDoubleArray;
-   class TwoDIntArray;
-   class TwoDStringArray;
-
-   class ThreeDDoubleArray;
-   class ThreeDIntArray;
-   class ThreeDStringArray;
-}
-namespace VE_CAD
-{
-   class CADAssembly;
-   class CADPart;
-   class CADClone;
-   class CADAttribute;
-}
-
-
-
-template<class T> 
+#include "VE_Open/XML/XMLObject.h"
+namespace VE_XML{
 class CreationEventHandler{
 public:
    ///Constructor
@@ -75,27 +48,18 @@ public:
    ///Destructor
    virtual ~CreationEventHandler(){}
 
-   ///Create a new XMLObject
-   T* GetNewXMLObject();
+   ///Create a new XMLObject.
+   ///\param objectType The type of object to create.
+   virtual VE_XML::XMLObject* CreateNewXMLObject(std::string objectType)=0;
+
+   ///Create a copy of a XMLObject
+   ///\param objectType The type of object to create.
+   ///\param objectToCopy The object to copy
+   virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,
+                                                  VE_XML::XMLObject* objectToCopy)=0;
 protected:
 };
+}
 #endif// VE_CREATION_EVENT_HANDLER_H
-typedef CreationEventHandler<VE_CAD::CADAssembly> AssemblyCreator;
-typedef CreationEventHandler<VE_CAD::CADPart> PartCreator;
-typedef CreationEventHandler<VE_CAD::CADClone> CloneCreator;
-typedef CreationEventHandler<VE_CAD::CADAttribute> AttributeCreator;
-
-typedef CreationEventHandler<VE_XML::Transform> TransformCreator;
-typedef CreationEventHandler<VE_XML::FloatArray> FloatArrayCreator;
-
-typedef CreationEventHandler<VE_XML::OneDDoubleArray> OneDDoubleArrayCreator;
-typedef CreationEventHandler<VE_XML::OneDIntArray> OneDIntArrayCreator;
-typedef CreationEventHandler<VE_XML::OneDStringArray> OneDStringArrayCreator;
-
-typedef CreationEventHandler<VE_XML::TwoDDoubleArray> TwoDDoubleArrayreator;
-typedef CreationEventHandler<VE_XML::TwoDIntArray> TwoDIntArrayCreator;
-
-typedef CreationEventHandler<VE_XML::ThreeDDoubleArray> ThreeDDoubleArrayCreator;
-typedef CreationEventHandler<VE_XML::ThreeDIntArray> ThreeDIntArrayCreator;
 
 
