@@ -34,6 +34,7 @@ CFDUNAME = $(shell uname)
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
+   CreationEventHandler.cxx \
    Command.cxx\
    DataValuePair.cxx\
    FloatArray.cxx\
@@ -48,7 +49,9 @@ SRCS=\
    StateInfo.cxx\
    Transform.cxx\
    User.cxx\
+   XMLCreator.cxx\
    XMLObject.cxx\
+   XMLObjectFactory.cxx\
    XMLReaderWriter.cxx\
    DOMDocumentManager.cxx
 
