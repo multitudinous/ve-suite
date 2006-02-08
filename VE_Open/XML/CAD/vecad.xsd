@@ -4,15 +4,19 @@
    <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/docs/verg.xsd" />
    <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/docs/veshader.xsd" />
    <xs:complexType name="CADNode">
-      <xs:sequence>
-         <xs:element name="parent" type="CADAssembly" maxOccurs="1" minOccurs="0" />
-         <xs:element name="transform" type="veTransform" minOccurs="1" maxOccurs="1" />
-         <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" default="Assembly" />
-         <xs:element name="type" type="xs:string" />
-         <xs:element name="attribute" type="CADAttribute" maxOccurs="unbounded" minOccurs="0" />
-         <xs:element name="nodeID" type="xs:unsignedInt" />
-         <xs:element name="activeAttributeName" type="xs:string" />
-      </xs:sequence>
+      <xs:complexContent>
+         <xs:restriction base="veXMLObject">
+            <xs:sequence>
+               <xs:element name="parent" type="CADAssembly" maxOccurs="1" minOccurs="0" />
+               <xs:element name="transform" type="veTransform" minOccurs="1" maxOccurs="1" />
+               <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" default="Assembly" />
+               <xs:element name="type" type="xs:string" />
+               <xs:element name="attribute" type="CADAttribute" maxOccurs="unbounded" minOccurs="0" />
+               <xs:element name="nodeID" type="xs:unsignedInt" />
+               <xs:element name="activeAttributeName" type="xs:string" />
+            </xs:sequence>
+         </xs:restriction>
+      </xs:complexContent>
    </xs:complexType>
    <xs:complexType name="CADAssembly">
       <xs:complexContent>
@@ -48,24 +52,32 @@
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="CADMaterial">
-      <xs:sequence>
-         <xs:element name="kDiffuse" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-         <xs:element name="kAmbient" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-         <xs:element name="kEmissive" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-         <xs:element name="specular" type="veFloatArray" maxOccurs="1" minOccurs="0" />
-         <xs:element name="shininess" type="xs:float" />
-         <xs:element name="materialName" type="xs:string" />
-         <xs:element name="face" type="xs:string" />
-         <xs:element name="colorMode" type="xs:string" />
-      </xs:sequence>
+      <xs:complexContent>
+         <xs:restriction base="veXMLObject">
+            <xs:sequence>
+               <xs:element name="kDiffuse" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+               <xs:element name="kAmbient" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+               <xs:element name="kEmissive" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+               <xs:element name="specular" type="veFloatArray" maxOccurs="1" minOccurs="0" />
+               <xs:element name="shininess" type="xs:float" />
+               <xs:element name="materialName" type="xs:string" />
+               <xs:element name="face" type="xs:string" />
+               <xs:element name="colorMode" type="xs:string" />
+            </xs:sequence>
+         </xs:restriction>
+      </xs:complexContent>
    </xs:complexType>
    <xs:complexType name="CADAttribute">
-      <xs:sequence>
-         <xs:choice maxOccurs="1" minOccurs="1">
-            <xs:element name="material" type="CADMaterial" />
-            <xs:element name="program" type="Program" />
-         </xs:choice>
-         <xs:element name="type" type="xs:string" />
-      </xs:sequence>
+      <xs:complexContent>
+         <xs:restriction base="veXMLObject">
+            <xs:sequence>
+               <xs:choice maxOccurs="1" minOccurs="1">
+                  <xs:element name="material" type="CADMaterial" />
+                  <xs:element name="program" type="Program" />
+               </xs:choice>
+               <xs:element name="type" type="xs:string" />
+            </xs:sequence>
+         </xs:restriction>
+      </xs:complexContent>
    </xs:complexType>
 </xs:schema>
