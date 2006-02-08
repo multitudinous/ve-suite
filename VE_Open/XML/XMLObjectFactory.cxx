@@ -33,91 +33,47 @@
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/CreationEventHandler.h"
 
-#include "VE_Open/XML/Transform.h"
-#include "VE_Open/XML/FloatArray.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/User.h"
-#include "VE_Open/XML/StateInfo.h"
-#include "VE_Open/XML/ParameterBlock.h"
-
-#include "VE_Open/XML/OneDDoubleArray.h"
-#include "VE_Open/XML/OneDIntArray.h"
-#include "VE_Open/XML/OneDStringArray.h"
-
-#include "VE_Open/XML/TwoDDoubleArray.h"
-#include "VE_Open/XML/TwoDIntArray.h"
-
-#include "VE_Open/XML/ThreeDDoubleArray.h"
-#include "VE_Open/XML/ThreeDIntArray.h"
-
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/CAD/CADClone.h"
-#include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/CAD/CADMaterial.h"
-
-#include "VE_Open/XML/Shader/TextureImage.h"
-#include "VE_Open/XML/Shader/Uniform.h"
-#include "VE_Open/XML/Shader/Program.h"
-#include "VE_Open/XML/Shader/Shader.h"
 #include <utility>
 #include <string>
 
 using namespace VE_XML;
-using namespace VE_CAD;
-using namespace VE_Shader;
+XMLObjectFactory* XMLObjectFactory::_instanceOfFactory = 0;
 /////////////////////////////////////
 XMLObjectFactory::XMLObjectFactory( )
 {
-   /*std::pair<std::string,CreationEventHandler<VE_XML::XMLObject>* > transform;
-   transform.first = std::string("Transform");
-
-   transform.second = new CreationEventHandler<VE_XML::XMLObject>();
-   _creationHandlers.insert(transform);
-
-   _creationHandlers["Transform"] = new CreationEventHandler<VE_XML::Transform>;
-   _creationHandlers["FloatArray"] = new FloatArrayCreator();
-
-   _creationHandlers["OneDDoubleArray"] = new OneDDoubleArrayCreator();
-   _creationHandlers["OneDIntArray"] = new OneDIntArrayCreator();
-   _creationHandlers["OneDStringArray"] = new OneDStringArrayCreator();
-
-   _creationHandlers["TwoDDoubleArray"] = new TwoDDoubleArrayreator();
-   _creationHandlers["TwoDIntArray"] = new TwoDIntArrayCreator();
-
-   _creationHandlers["ThreeDDoubleArray"] = new ThreeDDoubleArrayCreator();
-   _creationHandlers["ThreeDIntArray"] = new ThreeDIntArrayCreator();
-
-   _creationHandlers["CADAsembly"] = new AssemblyCreator();
-   _creationHandlers["CADPart"] = new PartCreator();
-   _creationHandlers["CADClone"] = new CloneCreator();
-   _creationHandlers["CADAttribute"] = new AttributeCreator();*/
 }
 /////////////////////////////////////
 XMLObjectFactory::~XMLObjectFactory()
 {
-   /*
-   for ( std::map<std::string ,CreationEventHandler<class T>* >::iterator itr = _creationHandlers.begin();
-                                       itr != _creationHandlers.end(); itr++ )
+   for(std::map<std::string, CreationEventHandler* >::iterator itr = _objectCreators.begin();
+                                       itr != _objectCreators.end(); itr++ )
    {
       delete itr->second;
       itr->second = 0;
    }
-   _creationHandlers.clear();
-   */
+   _objectCreators.clear();
+   
 }
-////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType)
+//////////////////////////////////////////////
+XMLObjectFactory* XMLObjectFactory::Instance()
 {
-   /*std::map<std::string,CreationEventHandler<class T>* >::iterator xmlCreator;
-   xmlCreator = _creationHandlers.find(objectType);
-   if(xmlCreator != _creationHandlers.end())
+   if(!_instanceOfFactory)
    {
-      return xmlCreator->second->GetNewXMLObject();
-   }*/
-  if(objectType == "FloatArray"){
+      _instanceOfFactory = new XMLObjectFactory();
+   }
+   return _instanceOfFactory;
+}
+/////////////////////////////////////////////////////////////////////////////////////
+VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectNameSpace,
+                                                     std::string objectType)
+{
+   std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
+   xmlCreator = _objectCreators.find(objectNameSpace);
+   if(xmlCreator != _objectCreators.end())
+   {
+      return xmlCreator->second->CreateNewXMLObject(objectType);
+   }
+  /*if(objectType == "FloatArray"){
       return new FloatArray();
    }else if(objectType == "Transform"){
       return new Transform();
@@ -147,14 +103,22 @@ VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType)
       return new TwoDIntArray();
    }else if(objectType == "User"){
       return new User();
-   }
+   }*/
    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* XMLObjectFactory::CreateXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy)
+VE_XML::XMLObject* XMLObjectFactory::CreateXMLObjectCopy(std::string objectType,
+                                                         std::string objectNamespace,
+                                                         VE_XML::XMLObject* objectToCopy)
 {
-   if(objectType == "FloatArray"){
+   std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
+   xmlCreator = _objectCreators.find(objectNamespace);
+   if(xmlCreator != _objectCreators.end())
+   {
+      return xmlCreator->second->CreateNewXMLObjectCopy(objectType,objectToCopy);
+   }
+   /*if(objectType == "FloatArray"){
       return new FloatArray(*dynamic_cast<FloatArray*>(objectToCopy));
    }else if(objectType == "Command"){
       return new Command(*dynamic_cast<Command*>(objectToCopy));
@@ -182,18 +146,28 @@ VE_XML::XMLObject* XMLObjectFactory::CreateXMLObjectCopy(std::string objectType,
       return new TwoDIntArray(*dynamic_cast<TwoDIntArray*>(objectToCopy));
    }else if(objectType == "User"){
       return new User(*dynamic_cast<User*>(objectToCopy));
-   }
+   }*/
    return 0;
 }
-////////////////////////////////////////////////////////////////////////////
-/*template <class T>
-bool XMLObjectFactory::RegisterObject(std::string objectType)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+bool XMLObjectFactory::RegisterObjectCreator(std::string objectNamespace,CreationEventHandler* newCreator)
 {
-   std::map<std::string,CreationEventHandler<class T>* >::iterator xmlCreator;
-   if(_creationHandlers.find(objectType) != _creationHandlers.end())
+   std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
+   if(_objectCreators.find(objectNamespace) != _objectCreators.end())
    {
-      return false
+      return false;
    }
-   _creationHandlers[objectType] = new CreationHandler<class T>;
+   if(objectNamespace != "XML" || 
+      objectNamespace != "CAD" ||
+      objectNamespace != "Shader")
+   {
+      std::cout<<"Invalid namespace specified: "<<objectNamespace<<std::endl;
+      std::cout<<"Valid namespaces are: "<<std::endl;
+      std::cout<<"XML"<<std::endl;
+      std::cout<<"CAD"<<std::endl;
+      std::cout<<"Shader"<<std::endl;
+      return false;
+   }
+   _objectCreators[objectNamespace] = newCreator;
    return true;
-}*/
+}

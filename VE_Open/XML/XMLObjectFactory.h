@@ -47,38 +47,46 @@
 namespace VE_XML
 {
    class XMLObject;
+   class CreationEventHandler;
 }
-//template<class T> class CreationEventHandler;
 
 namespace VE_XML
 {
 class VE_XML_EXPORTS XMLObjectFactory
 {
 public:
+
+   ///Get an instance of the ObjectFactory
+   static XMLObjectFactory* Instance();
+
+   ///\param objectType The unique string specifying what object to create
+   ///\param objectNamespace The namespace that the object belongs to. 
+   static VE_XML::XMLObject* CreateXMLObject(std::string objectType,
+                                             std::string objectNamespace);
+
+   ///\param objectType The unique string specifying what object to create
+   ///\param objectNamespace The namespace that the object belongs to. 
+   ///\param objectToCopy The object to pass to the copy constructor
+   static VE_XML::XMLObject* CreateXMLObjectCopy(std::string objectType,
+                                                 std::string objectNamespace,
+                                                 VE_XML::XMLObject* objectToCopy);
+
+   ///Register a CreationEventHandler for a namespace
+   ///Valid types so far are:
+   ///XML == Objects from the VE_XML namespace
+   ///CAD == Objects from the CAD namespace
+   ///Shader == Objects from the Shader
+   ///\param objectNamespace The unique string specifying what namespace to register
+   ///\param objectCreator The objectCreator to register 
+   bool RegisterObjectCreator(std::string objectNamespace,VE_XML::CreationEventHandler* objectCreator);
+protected:
    ///Base constructor
    XMLObjectFactory( );
    ///Destructor
    virtual ~XMLObjectFactory();
 
-   //Template function to create an XMLObject
-   //\param objectType The unique string specifying what object to create
-   //template <class T>
-   //T* CreateXMLObject(std::string objectType);
-
-   ///
-   ///\param objectType The unique string specifying what object to create
-   static VE_XML::XMLObject* CreateXMLObject(std::string objectType);
-
-   ///\param objectType The unique string specifying what object to create
-   ///\param objectToCopy The object to pass to the copy constructor
-   static VE_XML::XMLObject* CreateXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy);
-
-   //Template function to register an XMLObject in the factory
-   //\param objectID The unique string specifying what object to register
-   //template <class T>
-   //bool RegisterObject(std::string objectID);
-protected:
-   //std::map< std::string,  CreationEventHandler<class T>* > _creationHandlers;
+   static XMLObjectFactory* _instanceOfFactory;///<The instance of the XMLObjectFactory
+   static std::map< std::string,VE_XML::CreationEventHandler*> _objectCreators;///<Creators of XMLObjects in different namespaces.
 };
 }
 #endif// _VE_XML_OBJECT_FACTORY_H_

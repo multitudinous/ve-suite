@@ -44,6 +44,7 @@ XMLObject::XMLObject()
    _rootDocument = 0;
    _nChildren = 0;
    _objectType = std::string("XMLObject");
+   _objectNamespace = std::string("XML");
 }
 ///////////////////////////////////////////////////
 XMLObject::XMLObject( const XMLObject& input )
@@ -53,6 +54,7 @@ XMLObject::XMLObject( const XMLObject& input )
    _rootDocument = input._rootDocument; 
    _nChildren = input._nChildren;
    _objectType = input._objectType;
+   _objectNamespace = input._objectNamespace;
 }
 //////////////////////////////////////////////////////////////
 XMLObject& XMLObject::operator=( const XMLObject& input)
@@ -64,6 +66,7 @@ XMLObject& XMLObject::operator=( const XMLObject& input)
       _rootDocument = input._rootDocument; 
       _nChildren = input._nChildren;
       _objectType = input._objectType;
+      _objectNamespace = input._objectNamespace;
    }
    return *this;
 }
@@ -80,6 +83,11 @@ void XMLObject::SetObjectType(std::string tagName)
 void XMLObject::SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner)
 {
    _rootDocument = owner;
+}
+///////////////////////////////////////////
+std::string XMLObject::GetObjectNamespace()
+{
+   return _objectNamespace;
 }
 /////////////////////////////////////////
 std::string XMLObject::GetObjectType()
@@ -101,6 +109,7 @@ DOMElement* XMLObject::GetXMLData( std::string input )
       _updateVEElement( input );
 
       SetSubElement("objectType",_objectType);
+      SetSubElement("objectNamespace",_objectNamespace);
       return _veElement;
    }else{
       std::cout<<"Root Document not set!!"<<std::endl;
