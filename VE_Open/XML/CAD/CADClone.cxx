@@ -42,20 +42,14 @@ CADClone::CADClone(std::string name,VE_CAD::CADNode* originalNode)
 {
    if(originalNode)
    {
-      if(originalNode->GetNodeType() == std::string("Assembly"))
-      {
-         _originalNode = new CADAssembly(*dynamic_cast<CADAssembly*>(originalNode));
-      }
-      else
-      {
-         _originalNode = new CADPart(*dynamic_cast<CADPart*>(originalNode));
-      }
+      SetOriginalNode(originalNode);
    }
    else
    {
       _originalNode = 0;
    }
    _type = std::string("Clone");
+  SetObjectType("CADClone");
 }
 /////////////////////
 //Destructor       //
@@ -66,6 +60,21 @@ CADClone::~CADClone()
    {
       delete _originalNode;
       _originalNode = 0;
+   }
+}
+/////////////////////////////////////////////////////
+void CADClone::SetOriginalNode(CADNode* originalNode)
+{
+   if(!_originalNode)
+   {
+      if(originalNode->GetNodeType() == std::string("Assembly"))
+      {
+         _originalNode = new CADAssembly(*dynamic_cast<CADAssembly*>(originalNode));
+      }
+      else
+      {
+         _originalNode = new CADPart(*dynamic_cast<CADPart*>(originalNode));
+      }
    }
 }
 //////////////////////////////////////////////////

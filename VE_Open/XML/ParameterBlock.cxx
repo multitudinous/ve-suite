@@ -45,6 +45,8 @@ ParameterBlock::ParameterBlock(unsigned int id)
 {
    _id = id;
    _dcs = new Transform(  );
+   
+   SetObjectType("ParameterBlock");
 }
 /////////////////////////////////////
 ParameterBlock::~ParameterBlock()

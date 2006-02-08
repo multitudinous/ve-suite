@@ -65,6 +65,10 @@ public:
    XMLObject( const XMLObject& );
    ///equal operator
    XMLObject& operator= ( const XMLObject& );
+
+   ///Set the XMLObject type
+   ///\param veObjectType
+   void SetObjectType(std::string veObjectType);
    
    ///Set the DOMDocument this object belongs to.
    void SetOwnerDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner);
@@ -72,6 +76,9 @@ public:
    ///Populate the XMLObject data from an XML element.
    virtual void SetObjectFromXMLData( DOMNode* xmlInput )=0;
 
+   ///Return the object type. This should be set in the constructor of all derived classes
+   std::string GetObjectType();
+   
    ///Get an XML element from the current data in the string.
    DOMElement* GetXMLData( std::string tagName); 
 
@@ -171,6 +178,7 @@ protected:
    DOMElement* _veElement;///<The XML element.
    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* _rootDocument;///<The owning document for this element.
    unsigned int _nChildren;///<The number of childern for this element.
+   std::string _objectType;///<The tag name for this object;
 };
 ///Utility function to convert strings to Xerces compatible strings
 #define xercesString(str) VE_XML::XMLObject::VEStr(str).unicodeForm()

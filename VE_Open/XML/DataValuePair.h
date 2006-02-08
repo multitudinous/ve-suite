@@ -266,8 +266,7 @@ protected:
    VE_XML::TwoDIntArray* twoDInt;///<Raw double value.
    VE_XML::ThreeDIntArray* threeDInt;///<Raw double value.
    VE_XML::OneDStringArray* oneDString;///<Raw double value.
-   //VE_XML::TwoDStringArray* twoDString;///<Raw double value.
-   //VE_XML::ThreeDStringArray* threeDString;///<Raw double value.
+   VE_XML::XMLObject* _veXMLObject;///<Raw XMLObject.
 };
 }
 #endif// _VE_DATA_VALUE_PAIR_H_

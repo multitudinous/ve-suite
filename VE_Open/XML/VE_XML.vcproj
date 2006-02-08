@@ -127,6 +127,9 @@
 				RelativePath=".\Command.cxx">
 			</File>
 			<File
+				RelativePath=".\CreationEventHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\DataValuePair.cxx">
 			</File>
 			<File
@@ -172,6 +175,9 @@
 				RelativePath=".\XMLObject.cxx">
 			</File>
 			<File
+				RelativePath=".\XMLObjectFactory.cxx">
+			</File>
+			<File
 				RelativePath=".\XMLReaderWriter.cxx">
 			</File>
 		</Filter>
@@ -181,6 +187,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath=".\Command.h">
+			</File>
+			<File
+				RelativePath=".\CreationEventHandler.h">
 			</File>
 			<File
 				RelativePath=".\DataValuePair.h">
@@ -226,6 +235,9 @@
 			</File>
 			<File
 				RelativePath=".\XMLObject.h">
+			</File>
+			<File
+				RelativePath=".\XMLObjectFactory.h">
 			</File>
 			<File
 				RelativePath=".\XMLReaderWriter.h">

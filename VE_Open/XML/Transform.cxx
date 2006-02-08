@@ -60,6 +60,7 @@ Transform::Transform()
 
    translationArray = new FloatArray(  );
    translationArray->SetArray( temp );
+   SetObjectType("Transform");
 }
 ///////////////////////////
 //Destructor             //

@@ -55,6 +55,10 @@ public:
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
 
+   ///Set the original node to instance
+   ///\param originalNode The instance node.
+   void SetOriginalNode(CADNode* originalNode);
+
    ///Get the original node.
    VE_CAD::CADNode* GetOriginalNode();
  

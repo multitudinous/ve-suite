@@ -40,6 +40,7 @@ CADPart::CADPart(std::string name)
 {
    _cadFileName = std::string("CADFile");
    _type = std::string("Part");
+  SetObjectType("CADPart");
 }
 ///////////////////
 //Destructor     //

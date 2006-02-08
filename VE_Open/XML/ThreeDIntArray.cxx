@@ -46,6 +46,7 @@ ThreeDIntArray::ThreeDIntArray(unsigned int nElements)
    // These should match the schema for min and max occurances 
    // of the float array
    minIndex = 2;
+   SetObjectType("ThreeDIntArray");
 }
 /////////////////////////////
 //Destructor               //

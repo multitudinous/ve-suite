@@ -46,6 +46,7 @@ FloatArray::FloatArray(unsigned int nElements)
    // of the float array
    minIndex = 2;
    maxIndex = 4;
+   SetObjectType("FloatArray");
 }
 /////////////////////////////
 //Destructor               //

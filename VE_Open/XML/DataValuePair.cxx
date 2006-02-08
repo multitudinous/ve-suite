@@ -67,6 +67,7 @@ DataValuePair::DataValuePair(std::string type )
    threeDInt = 0;
    oneDString = 0;
    _dataUInt = 0;
+   SetObjectType("DataValuePair");
    
 }
 ///////////////////////////////////

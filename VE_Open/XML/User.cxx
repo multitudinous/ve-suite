@@ -43,6 +43,7 @@ User::User()
    _stateInfo = 0;
    _userId = std::string("User_0");
    _controlStatus = std::string("MASTER");
+   SetObjectType("User");
 
 }
 /////////////////

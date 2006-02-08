@@ -41,6 +41,7 @@ CADAssembly::CADAssembly(std::string name)
 {
   _numChildren = 0;
   _type = std::string("Assembly");
+  SetObjectType("CADAssembly");
 }
 ///////////////////////////
 ///Destructor            //
@@ -51,7 +52,14 @@ CADAssembly::~CADAssembly()
    {
       if(_children.at(i))
       {
-         delete _children.at(i);
+         try
+         {
+            delete _children.at(i);
+         }
+         catch(...)
+         {
+            std::cout<<"Child deleted!"<<std::endl;
+         }
          _children.at(i) = 0;
       }
    }
@@ -191,29 +199,29 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
                k++;
             }
             if(nodeType){
-            if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
-            {
-               //this is an Assembly
-               VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly();
-               newAssembly->SetObjectFromXMLData(cadNode);
-               newAssembly->SetParent(_uID);
-               _children.push_back(newAssembly);
-            }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
-               //this is a Part
-               VE_CAD::CADPart* newPart = new VE_CAD::CADPart();
-               newPart->SetObjectFromXMLData(cadNode);
-               newPart->SetParent(_uID);
-               _children.push_back(newPart);
-            }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Clone")){
-               //this is a Clone
-               VE_CAD::CADClone* newClone = new VE_CAD::CADClone();
-               newClone->SetObjectFromXMLData(cadNode);
-               newClone->SetParent(_uID);
-               _children.push_back(newClone);
-            }else{
-               std::cout<<"ERROR!"<<std::endl;
-               std::cout<<"Unknown node type:"<<ExtractDataStringFromSimpleElement(nodeType)<<std::endl;    
-            }
+               if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
+               {
+                  //this is an Assembly
+                  VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly();
+                  newAssembly->SetObjectFromXMLData(cadNode);
+                  newAssembly->SetParent(_uID);
+                  _children.push_back(newAssembly);
+               }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
+                  //this is a Part
+                  VE_CAD::CADPart* newPart = new VE_CAD::CADPart();
+                  newPart->SetObjectFromXMLData(cadNode);
+                  newPart->SetParent(_uID);
+                  _children.push_back(newPart);
+               }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Clone")){
+                  //this is a Clone
+                  VE_CAD::CADClone* newClone = new VE_CAD::CADClone();
+                  newClone->SetObjectFromXMLData(cadNode);
+                  newClone->SetParent(_uID);
+                  _children.push_back(newClone);
+               }else{
+                  std::cout<<"ERROR!"<<std::endl;
+                  std::cout<<"Unknown node type:"<<ExtractDataStringFromSimpleElement(nodeType)<<std::endl;    
+               }
             }
          }
       }

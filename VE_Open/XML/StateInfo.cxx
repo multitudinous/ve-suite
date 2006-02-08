@@ -39,6 +39,7 @@ using namespace VE_XML;
 StateInfo::StateInfo()
 :XMLObject()
 {
+   SetObjectType("StateInfo");
 }
 ///////////////////////////
 StateInfo::~StateInfo()

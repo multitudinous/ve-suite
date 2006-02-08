@@ -43,6 +43,7 @@ Command::Command()
    _cmdName =  '\0';
    _nDataValuePairs = 0;
    _dataValuePairs.clear();
+   SetObjectType("Command");
 }
 ///////////////////////
 Command::~Command()

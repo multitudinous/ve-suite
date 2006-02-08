@@ -43,6 +43,7 @@ XMLObject::XMLObject()
    _needsUpdate = false;
    _rootDocument = 0;
    _nChildren = 0;
+   _objectType = std::string("XMLObject");
 }
 ///////////////////////////////////////////////////
 XMLObject::XMLObject( const XMLObject& input )
@@ -51,6 +52,7 @@ XMLObject::XMLObject( const XMLObject& input )
    _needsUpdate = input._needsUpdate;
    _rootDocument = input._rootDocument; 
    _nChildren = input._nChildren;
+   _objectType = input._objectType;
 }
 //////////////////////////////////////////////////////////////
 XMLObject& XMLObject::operator=( const XMLObject& input)
@@ -61,6 +63,7 @@ XMLObject& XMLObject::operator=( const XMLObject& input)
       _needsUpdate = input._needsUpdate;
       _rootDocument = input._rootDocument; 
       _nChildren = input._nChildren;
+      _objectType = input._objectType;
    }
    return *this;
 }
@@ -68,10 +71,20 @@ XMLObject& XMLObject::operator=( const XMLObject& input)
 XMLObject::~XMLObject()
 {
 }
+//////////////////////////////////////////////////
+void XMLObject::SetObjectType(std::string tagName)
+{
+   _objectType = _objectType;
+}
 /////////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetOwnerDocument(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner)
 {
    _rootDocument = owner;
+}
+/////////////////////////////////////////
+std::string XMLObject::GetObjectType()
+{
+   return _objectType;
 }
 ////////////////////////////////////////////////////////
 DOMElement* XMLObject::GetXMLData( std::string input )
@@ -81,6 +94,8 @@ DOMElement* XMLObject::GetXMLData( std::string input )
       //Make sure old data is cleared from the xerces side of the element
       _clearAllChildrenFromElement();
   
+      SetSubElement("objectType",_objectType);
+
       //update the xerces element w/ the current data in the object
       //This function should be overridden in ALL derived classes!!!!!
       _updateVEElement( input );
