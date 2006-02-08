@@ -43,7 +43,8 @@ CADAttribute::CADAttribute( )
    _attributeType = std::string("Material");
    _material = 0; 
    _glslProgram = 0;
-  SetObjectType("CADAttribute");
+   SetObjectType("CADAttribute");
+   SetObjectNamespace("CAD");
 }
 /////////////////////////////
 //Destructor               //

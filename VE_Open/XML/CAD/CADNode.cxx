@@ -53,7 +53,8 @@ CADNode::CADNode(std::string name)
    _uID = static_cast<unsigned int>(time(NULL));
    _activeAttributeName = std::string("");
    
-  SetObjectType("CADNode");
+   SetObjectType("CADNode");
+   SetObjectNamespace("CAD");
 }
 ///////////////////
 ///Destructor    //

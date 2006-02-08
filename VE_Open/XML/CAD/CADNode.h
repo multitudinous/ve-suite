@@ -72,7 +72,7 @@ public:
    void SetNodeName(std::string name);
 
    ///Set the parent for this node.
-   ///\param parent The parent ID of this node.
+   ///\param parentID The parent ID of this node.
    void SetParent(unsigned int parentID);
 
    ///Set the transform for this node.

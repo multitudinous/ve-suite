@@ -59,7 +59,8 @@ CADMaterial::CADMaterial(std::string name)
    
    _colorMode = std::string("Ambient_and_Diffuse");
    _face = std::string("Front_and_Back");
-  SetObjectType("CADMaterial");
+   SetObjectType("CADMaterial");
+   SetObjectNamespace("CAD");
 }
 ///////////////////////////
 //Destructor             //

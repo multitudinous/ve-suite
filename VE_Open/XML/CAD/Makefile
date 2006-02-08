@@ -37,6 +37,7 @@ SRCS=\
    CADAssembly.cxx\
    CADAttribute.cxx\
    CADClone.cxx\
+   CADCreator.cxx\
    CADMaterial.cxx\
    CADNode.cxx\
    CADNodeTraverser.cxx\
