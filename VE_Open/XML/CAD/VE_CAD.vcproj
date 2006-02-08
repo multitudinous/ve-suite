@@ -133,6 +133,9 @@
 				RelativePath=".\CADClone.cxx">
 			</File>
 			<File
+				RelativePath=".\CADCreator.cxx">
+			</File>
+			<File
 				RelativePath=".\CADFactory.cxx">
 			</File>
 			<File
@@ -163,6 +166,9 @@
 			</File>
 			<File
 				RelativePath=".\CADClone.h">
+			</File>
+			<File
+				RelativePath=".\CADCreator.h">
 			</File>
 			<File
 				RelativePath=".\CADFactory.h">

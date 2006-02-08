@@ -380,10 +380,10 @@ copy .\pf_opt\VE_SceneGraph_pf.lib %VE_SUITE_HOME%\lib\win32
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\cfdClone.h">
+				RelativePath=".\Attribute.h">
 			</File>
 			<File
-				RelativePath=".\cfdConfig.h">
+				RelativePath=".\cfdClone.h">
 			</File>
 			<File
 				RelativePath=".\cfdDCS.h">
@@ -417,6 +417,18 @@ copy .\pf_opt\VE_SceneGraph_pf.lib %VE_SUITE_HOME%\lib\win32
 			</File>
 			<File
 				RelativePath=".\cfdTempAnimation.h">
+			</File>
+			<File
+				RelativePath=".\DCS.h">
+			</File>
+			<File
+				RelativePath=".\Group.h">
+			</File>
+			<File
+				RelativePath=".\Node.h">
+			</File>
+			<File
+				RelativePath=".\Switch.h">
 			</File>
 			<File
 				RelativePath=".\vtkActorToOSG.h">

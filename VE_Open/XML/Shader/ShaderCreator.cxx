@@ -36,7 +36,7 @@
 #include "VE_Open/XML/Shader/Program.h"
 
 using namespace VE_Shader;
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* ShaderCreator::CreateNewXMLObject(std::string objectType)
 {
    if(objectType == "Program")
@@ -57,17 +57,24 @@ VE_XML::XMLObject* ShaderCreator::CreateNewXMLObject(std::string objectType)
    }
    return 0;
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* ShaderCreator::CreateNewXMLObjectCopy(std::string objectType,
-                                                     VE_XML::XMLObject* objectToCopy)
+                                                  VE_XML::XMLObject* objectToCopy)
 {
-   if(objectType == "Program"){
+   if(objectType == "Program")
+   {
       return new Program(*dynamic_cast<Program*>(objectToCopy));
-   }else if(objectType == "Shader"){
+   }
+   else if(objectType == "Shader")
+   {
       return new Shader(*dynamic_cast<Shader*>(objectToCopy));
-   }else if(objectType == "Uniform"){
+   }
+   else if(objectType == "Uniform")
+   {
       return new Uniform(*dynamic_cast<Uniform*>(objectToCopy));
-   }else if(objectType == "TextureImage"){
+   }
+   else if(objectType == "TextureImage")
+   {
       return new TextureImage(*dynamic_cast<TextureImage*>(objectToCopy));
    }
    return 0;

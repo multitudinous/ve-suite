@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef SHADER_CREATOR_H
-#define SHADERCAD_CREATOR_H
+#define SHADER_CREATOR_H
 /*!\file ShaderCreator.h
   ShaderCreator API
   */
@@ -43,9 +43,10 @@ namespace VE_XML
    class XMLObject;
 }
 #include "VE_Open/XML/CreationEventHandler.h"
+#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Shader{
-class ShaderCreator : public VE_XML::CreationEventHandler{
+class VE_SHADER_EXPORTS ShaderCreator : public VE_XML::CreationEventHandler{
 public:
    ///Constructor
    ShaderCreator(){}

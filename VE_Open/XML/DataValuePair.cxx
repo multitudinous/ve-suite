@@ -552,7 +552,32 @@ VE_XML::Transform* DataValuePair::GetDataTransform()
    }
    return 0;
 }
+//////////////////////////////////////////////////////////////////////////////////////
+void DataValuePair::_extractXMLObject(DOMElement* baseElement,std::string objectTypeName)
+{
+   DOMElement* genericObject = GetSubElement(baseElement,objectTypeName,0);
+   if(genericObject)
+   {
+      if(_veXMLObject)
+      {
+         delete _veXMLObject;
+         _veXMLObject = 0;
+      }
 
+      DOMElement* objectNamespace = GetSubElement(genericObject,"objectNamespace",0);
+      if(objectNamespace)
+      {
+         DOMElement* objectType = GetSubElement(genericObject,"objectType",0);
+         if(objectType)
+         {
+            _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject(ExtractDataStringFromSimpleElement(objectType),
+                                                                  ExtractDataStringFromSimpleElement(objectNamespace));
+            _veXMLObject->SetObjectFromXMLData(genericObject);
+         } 
+      }
+   }
+
+}
 ////////////////////////////////////////////////////////////
 void DataValuePair::SetObjectFromXMLData(DOMNode* element)
 {

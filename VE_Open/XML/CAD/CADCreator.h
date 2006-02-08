@@ -45,7 +45,7 @@ namespace VE_XML
 #include "VE_Open/XML/CreationEventHandler.h"
 
 namespace VE_CAD{
-class CADCreator : public VE_XML::CreationEventHandler{
+class VE_CAD_EXPORTS CADCreator : public VE_XML::CreationEventHandler{
 public:
    ///Constructor
    CADCreator(){}

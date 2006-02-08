@@ -130,7 +130,7 @@
 				RelativePath=".\Shader.cxx">
 			</File>
 			<File
-				RelativePath=".\ShaderFactory.cxx">
+				RelativePath=".\ShaderCreator.cxx">
 			</File>
 			<File
 				RelativePath=".\TextureImage.cxx">
@@ -150,7 +150,7 @@
 				RelativePath=".\Shader.h">
 			</File>
 			<File
-				RelativePath=".\ShaderFactory.h">
+				RelativePath=".\ShaderCreator.h">
 			</File>
 			<File
 				RelativePath=".\TextureImage.h">

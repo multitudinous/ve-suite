@@ -172,6 +172,9 @@
 				RelativePath=".\User.cxx">
 			</File>
 			<File
+				RelativePath=".\XMLCreator.cxx">
+			</File>
+			<File
 				RelativePath=".\XMLObject.cxx">
 			</File>
 			<File
@@ -232,6 +235,9 @@
 			</File>
 			<File
 				RelativePath=".\User.h">
+			</File>
+			<File
+				RelativePath=".\XMLCreator.h">
 			</File>
 			<File
 				RelativePath=".\XMLObject.h">

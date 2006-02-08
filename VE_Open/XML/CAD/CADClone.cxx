@@ -55,11 +55,7 @@ CADClone::CADClone(std::string name,VE_CAD::CADNode* originalNode)
 /////////////////////
 CADClone::~CADClone()
 {
-   if(_originalNode)
-   {
-      delete _originalNode;
-      _originalNode = 0;
-   }
+  
 }
 /////////////////////////////////////////////////////
 void CADClone::SetOriginalNode(CADNode* originalNode)

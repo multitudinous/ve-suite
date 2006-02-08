@@ -118,6 +118,7 @@ VE_XML::XMLObject* XMLCreator::CreateNewXMLObjectCopy(std::string objectType,
    }else if(objectType == "User"){
       return new User(*dynamic_cast<User*>(objectToCopy));
    }
+   return 0;
 }
 
 

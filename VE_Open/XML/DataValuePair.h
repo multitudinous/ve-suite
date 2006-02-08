@@ -250,6 +250,12 @@ protected:
    ///\param tagName The tag name of this element.
    virtual void _updateVEElement( std::string tagName );
 
+   ///Internally extract data of type "XMLOBJECT" from the DataValuePair
+   ///In derived classes, this should be overridden
+   ///\param baseElement The element to extract the XMLObject from.
+   ///\param objectType The XMLObject::_objectType to extract
+   virtual void _extractXMLObject(DOMElement* baseElement,std::string objectType);
+
    ///Internally update the data name.
    void _updateDataName();
    ///Internally update the data value number.
