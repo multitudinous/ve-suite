@@ -36,24 +36,26 @@
 
 
 #ifdef _PERFORMER
+#include <Performer/pr/pfMaterial.h>
 #elif _OSG
-#include <osg/StateSet>;
+#include <osg/StateSet>
 #include <osg/ref_ptr>
-#elif _PERFORMER
 #elif _OPENSG
 #endif
-
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_CAD
+{
+   class CADAttribute;
+}
 namespace VE_SceneGraph
 {
 namespace Utilities
 {
 #ifdef _OSG
-class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public osg::StateSet
+class VE_SCENEGRAPH_UTILS_EXPORTS Attribute : public osg::StateSet{
 #elif _PERFORMER
-class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public osg::StateSet
-#include <Performer/pr/pfMaterial.h>
+class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public pfGeoSet{
 #endif
-{
 public:   
    ///Constructor
    Attribute();
@@ -64,14 +66,15 @@ public:
 
    ///OSG defines this macro
    META_Object(VE_SceneGraph::Utilities,Attribute);
-  
-   ///Get the stateset representing the attribute
-   osg::StateSet* GetStateSet(); 
 #elif _PERFORMER
-   ///Get the stateset representing the attribute
-   pfGeoState* GetStateSet(); 
-#endif
-   
+    Attribute(const Attribute& cfdSeq);
+    //to make this a performer class
+    static void init();
+
+    static pfType* getClassType( void ){ return _classType; }
+    Attribute& operator=(const Attribute& rhs);
+
+#endif 
    ///Destructor
    virtual ~Attribute();
 
@@ -79,11 +82,8 @@ public:
    ///\param attribute The CADAttribute.
    void CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute);
 protected:
-
-#ifdef _OSG
-   osg::ref_ptr<osg::StateSet> _stateSet;
-#elif _PERFORMER
-   pfGeoState* _stateSet;
+#ifdef _PERFORMER
+   static pfType* _classType;
 #endif
 };
 }
