@@ -34,7 +34,7 @@
 /*!\file XMLCreator.h
   XMLCreator API
   */
-/*!\class XMLCreator
+/*!\class VE_XML::XMLCreator
  * Create XMLObject.
  */
 

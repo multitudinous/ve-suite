@@ -34,7 +34,7 @@
 /*!\file CreationEventHandler.h
   CreationEventHandler API
   */
-/*!\class CreationEventHandler
+/*!\class VE_XML::CreationEventHandler
  * Create XMLObject event handling.
  */
 

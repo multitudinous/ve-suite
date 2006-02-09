@@ -34,7 +34,7 @@
 /*!\file CADCreator.h
   CADCreator API
   */
-/*!\class CADCreator
+/*!\class VE_CAD::CADCreator
  * Create CAD Objects.
  */
 

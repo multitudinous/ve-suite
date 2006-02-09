@@ -34,7 +34,7 @@
 /*!\file ShaderCreator.h
   ShaderCreator API
   */
-/*!\class ShaderCreator
+/*!\class VE_Shader::ShaderCreator
  * Create Objects within the VE_Shader namespace.
  */
 
