@@ -47,6 +47,7 @@
 #include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/Framework/CADNodeManagerDlg.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -477,11 +478,12 @@ void AppFrame::Save( wxCommandEvent& event )
    }
    else
    {
-      domManager->CreateCommandDocument();
-      DOMDocument* doc = domManager->GetCommandDocument();
-      network->Save( doc );
+      //domManager->CreateCommandDocument();
+      //DOMDocument* doc = domManager->GetCommandDocument();
+      //network->Save( doc );
       ///now write the file out from domdocument manager
       //wrtie to path
+      std::string data = network->Save();
    }
 }
 
@@ -507,12 +509,9 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
       path = dialog.GetPath();
       directory = dialog.GetDirectory();
       fname = dialog.GetFilename();
-
-      domManager->CreateCommandDocument();
-      DOMDocument* doc = domManager->GetCommandDocument();
-      network->Save( doc );
       ///now write the file out from domdocument manager
       //wrtie to path
+      std::string data = network->Save();
    }
 }
 
@@ -562,11 +561,7 @@ void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
-   domManager->CreateCommandDocument();
-   DOMDocument* doc = domManager->GetCommandDocument();
-   network->Save( doc );
-
-   std::string nw_str;
+   std::string nw_str = network->Save();
    // write the domdoc to the string above
    try 
    {
@@ -854,14 +849,15 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
 {
-  if (network->globalparam_dlg!=NULL)
-    network->globalparam_dlg->Show();
-  else
-    {
-      network->globalparam_dlg=new GlobalParamDialog(this, -1);
+   if ( network->globalparam_dlg != NULL )
+   {
       network->globalparam_dlg->Show();
-    }
-  
+   }
+   else
+   {
+      network->globalparam_dlg = new GlobalParamDialog( this, -1 );
+      network->globalparam_dlg->Show();
+   }
 }
 
 void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
@@ -1224,26 +1220,28 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 {
    // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument();
-   DOMDocument* doc = domManager->GetCommandDocument();
+   VE_XML::XMLReaderWriter netowrkWriter;
+   netowrkWriter.UseStandaloneDOMDocumentManager();
+   netowrkWriter.WriteToString();
 
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("FLOAT") );
-   dataValuePair->SetOwnerDocument(doc);
    dataValuePair->SetDataName( "Stereo" );
    dataValuePair->SetDataValue( 1.0 );
-   VE_XML::Command* veCommand = new VE_XML::Command(  );
-   veCommand->SetOwnerDocument(doc);
+   VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("Juggler_Display_Data") );
    veCommand->AddDataValuePair( dataValuePair );
-   doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );
 
    // New need to destroy document and send it
-   std::string commandData = domManager->WriteAndReleaseCommandDocument();
-   char* tempDoc = new char[ commandData.size() + 1 ];
-   tempDoc = CORBA::string_dup( commandData.c_str() );
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veCommand, "vecommand" ) );
+   std::string xmlDocument( "returnString" );
+   netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
-   if ( !CORBA::is_nil( vjobs ) && !commandData.empty() )
+   char* tempDoc = new char[ xmlDocument.size() + 1 ];
+   tempDoc = CORBA::string_dup( xmlDocument.c_str() );
+
+   if ( !CORBA::is_nil( vjobs ) && !xmlDocument.empty() )
    {
       try
       {

@@ -146,7 +146,7 @@ public:
    void AddTag(int x, int y, wxString text);
 
    //Save and Load the network
-   void Save( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc );
+   std::string Save( void );
    //void Save(wxString filename);
    //void SaveS(std::string &network_pack);            // save the network to a string
    void Load(wxString filename);

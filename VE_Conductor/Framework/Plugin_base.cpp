@@ -417,7 +417,7 @@ Interface* REI_Plugin::Pack()
   
 }
 ////////////////////////////////////////////////////////////////////
-Model* REI_Plugin::GetModel( void )
+/*Model* REI_Plugin::GetModel( void )
 {
    if ( veModel == NULL )
    {
@@ -425,17 +425,16 @@ Model* REI_Plugin::GetModel( void )
    }
 
    return veModel;
-}
+}*/
 ////////////////////////////////////////////////////////////////////
-Model* REI_Plugin::GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
+Model* REI_Plugin::GetVEModel( void )
 {
    if ( veModel != NULL )
    {
       delete veModel;
    }
 
-   veModel = new Model( );
-   veModel->SetOwnerDocument(doc);
+   veModel = new Model();
 
    veModel->SetModelName( name.c_str() );
    veModel->SetModelID( mod_pack._id );

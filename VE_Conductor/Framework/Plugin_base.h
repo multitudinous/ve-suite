@@ -123,9 +123,9 @@ public:
    //This is the load function of the module, unpack the input string and fill up the UI according to this
    virtual Interface* Pack();
    //This is the load function of the module, unpack the input string and fill up the UI according to this
-   virtual VE_Model::Model* GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc );
-   virtual void SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelElement );
-   VE_Model::Model* GetModel( void );
+   VE_Model::Model* GetVEModel( void );
+   void SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelElement );
+   //VE_Model::Model* GetModel( void );
 
    //This is to unpack the result from the 
    virtual void UnPackResult(Interface * intf);

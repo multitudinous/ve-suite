@@ -43,6 +43,7 @@
 #include "VE_Open/XML/Model/Model.h"
 
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
 
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
@@ -733,11 +734,16 @@ int Network::SelectMod( int x, int y )
          // I think...this means we have already been 
          // through here and is the same module selected -- mccdo
 	      if ( m_selMod == i )
-	         return i;
+	      {
+            // in the future send select module command -- mccdo
+            return i;
+         }
          // lets draw some ports sense the module is selected
 	      DrawPorts( modules[i].GetPlugin(), true );
          // now we are officially selected
 	      m_selMod = i;
+
+         // in the future send select module command -- mccdo
 	      return i;
 	   }
    }
@@ -1911,14 +1917,16 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 //////////////////////////////////////////////
 //////// Save and Load Functions /////////////
 //////////////////////////////////////////////
-void Network::Save( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
+std::string Network::Save( void )
 {
    // Here we wshould loop over all of the following
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    //  Newtork
    if ( veNetwork )
       delete veNetwork;
    
    veNetwork = new VE_Model::Network();
+   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veNetwork, "veNetwork" ) );
 
    veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
    veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
@@ -1944,21 +1952,15 @@ void Network::Save( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
       }
    }
 
-   doc->getDocumentElement()->appendChild
-         (
-            veNetwork->GetXMLData( "veNetwork" )
-         );
-
-
    //  Models
    std::map< int, Module >::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
       modules[ iter->first ].GetPlugin()->SetID( iter->first );
-      doc->getDocumentElement()->appendChild
-         ( 
-            modules[ iter->first ].GetPlugin()->GetVEModel( doc )->GetXMLData( "veModel" )
-         );
+      nodes.push_back( 
+                  std::pair< VE_XML::XMLObject*, std::string >( 
+                  modules[ iter->first ].GetPlugin()->GetVEModel(), "veModel" ) 
+                     );
    }
 
    //  tags
@@ -1996,6 +1998,15 @@ void Network::Save( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
             veTagVector.at( i )->GetXMLData( "veTag" )
          );
    }*/
+
+   VE_XML::XMLReaderWriter netowrkWriter;
+   netowrkWriter.UseStandaloneDOMDocumentManager();
+   netowrkWriter.WriteToString();
+
+   std::string xmlDocument( "returnString" );
+   netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Netowrk" );
+
+   return xmlDocument;
 }
 
 void Network::UnPack(std::vector<Interface> & intfs)
