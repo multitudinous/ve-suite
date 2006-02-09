@@ -52,35 +52,64 @@ using namespace VE_XML;
 /////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* XMLCreator::CreateNewXMLObject(std::string objectType)
 {
-   if(objectType == "FloatArray"){
+   if(objectType == "FloatArray")
+   {
       return new FloatArray();
-   }else if(objectType == "Transform"){
+   }
+   else if(objectType == "Transform")
+   {
       return new Transform();
-   }else if(objectType == "Command"){
+   }
+   else if(objectType == "Command")
+   {
       return new Command();
-   }else if(objectType == "DataValuePair"){
+   }
+   else if(objectType == "DataValuePair")
+   {
       return new DataValuePair();
-   }else if(objectType == "OneDDoubleArray"){
+   }
+   else if(objectType == "OneDDoubleArray")
+   {
       return new OneDDoubleArray();
-   }else if(objectType == "OneDIntArray"){
+   }
+   else if(objectType == "OneDIntArray")
+   {
       return new OneDIntArray();
-   }else if(objectType == "OneDStringArray"){
+   }
+   else if(objectType == "OneDStringArray")
+   {
       return new OneDStringArray();
-   }else if(objectType == "ParameterBlock"){
+   }
+   else if(objectType == "ParameterBlock")
+   {
       return new ParameterBlock();
-   }else if(objectType == "StateInfo"){
+   }
+   else if(objectType == "StateInfo")
+   {
       return new StateInfo();
-   }else if(objectType == "ThreeDDoubleArray"){
+   }
+   else if(objectType == "ThreeDDoubleArray")
+   {
       return new ThreeDDoubleArray();
-   }else if(objectType == "ThreeDIntArray"){
-      return new ThreeDIntArray();
-   }else if(objectType == "Transform"){
+   }
+   else if(objectType == "Transform")
+   {
       return new Transform();
-   }else if(objectType == "TwoDDoubleArray"){
+   }
+   else if(objectType == "TwoDDoubleArray")
+   {
       return new TwoDDoubleArray();
-   }else if(objectType == "TwoDIntArray"){
+   }
+   else if(objectType == "TwoDIntArray")
+   {
       return new TwoDIntArray();
-   }else if(objectType == "User"){
+   }
+   else if(objectType == "ThreeDIntArray")
+   {
+      return new ThreeDIntArray();
+   }
+   else if(objectType == "User")
+   {
       return new User();
    }
    return 0;

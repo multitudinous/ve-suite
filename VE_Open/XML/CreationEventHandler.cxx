@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/XML/CreationEventHandler.h"
+/*
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
@@ -49,7 +50,7 @@
 #include "VE_Open/XML/CAD/CADPart.h"
 #include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
-
+*/
 
 //////////////////////////////////////////////////////////
 /*VE_XML::XMLObject* CreationEventHandler::GetNewXMLObject()

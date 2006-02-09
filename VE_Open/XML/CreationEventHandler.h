@@ -39,8 +39,10 @@
  */
 
 #include "VE_Open/XML/XMLObject.h"
-namespace VE_XML{
-class VE_XML_EXPORTS CreationEventHandler{
+namespace VE_XML
+{
+class VE_XML_EXPORTS CreationEventHandler
+{
 public:
    ///Constructor
    CreationEventHandler(){}

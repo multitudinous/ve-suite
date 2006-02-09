@@ -377,12 +377,12 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          {
             try
             {
-              _extractXMLObject(currentElement,_dataName);
+               _extractXMLObject(currentElement,_dataName);
             }
             catch(...)
-           {
-              std::cout<<"Couldn't exctract generic XMLObject in DataValuePair!!"<<std::endl;
-           }
+            {
+               std::cout<<"Couldn't exctract generic XMLObject in DataValuePair!!"<<std::endl;
+            }
          }
          else if(_dataType == "STRING")
          {
@@ -423,6 +423,33 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
    
 }
 ////////////////////////////////////////////////////////////
+/*void GetData( VE_XML::XMLObject& data )
+{
+   data = *(XMLObjectFactory::Instance()->CreateXMLObjectCopy( _veXMLObject->GetObjectType(),
+                                                               _veXMLObject->GetObjectNamespace(),
+                                                               _veXMLObject) );
+}*/
+////////////////////////////////////////////////////////////
+void DataValuePair::SetData( std::string dataName, std::string data )
+{
+   _dataName = dataName;
+   SetDataType( std::string("STRING") );
+   _dataString = data;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::SetData( std::string dataName, std::vector< std::string > data )
+{
+   _dataName = dataName;
+   SetDataType( std::string("XMLOBJECT") );
+
+   OneDStringArray* oneDString = new OneDStringArray();
+
+   oneDString->SetArray( data );
+   SetData( dataName, oneDString );
+
+   delete oneDString;
+}
+////////////////////////////////////////////////////////////
 void DataValuePair::SetData( std::string dataName, double data )
 {
    _dataName = dataName;
@@ -430,11 +457,43 @@ void DataValuePair::SetData( std::string dataName, double data )
    _dataValue = data;
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::string data )
+void DataValuePair::SetData( std::string dataName, std::vector< double > data )
 {
    _dataName = dataName;
-   SetDataType( std::string("STRING") );
-   _dataString = data;
+   SetDataType( std::string("XMLOBJECT") );
+
+   OneDDoubleArray* oneDDouble = new OneDDoubleArray();
+
+   oneDDouble->SetArray( data );
+   SetData( dataName, oneDDouble );
+
+   delete oneDDouble;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::SetData( std::string dataName, std::vector< std::vector< double > > data )
+{
+   _dataName = dataName;
+   SetDataType( std::string("XMLOBJECT") );
+
+   TwoDDoubleArray* twoDDouble = new TwoDDoubleArray();
+
+   twoDDouble->SetArray( data );
+   SetData( dataName, twoDDouble );
+
+   delete twoDDouble;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std::vector< double > > > data )
+{
+   _dataName = dataName;
+   SetDataType( std::string("XMLOBJECT") );
+
+   ThreeDDoubleArray* threeDDouble = new ThreeDDoubleArray();
+
+   threeDDouble->SetArray( data );
+   SetData( dataName, threeDDouble );
+
+   delete threeDDouble;
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::SetData( std::string dataName, long data )
@@ -444,9 +503,60 @@ void DataValuePair::SetData( std::string dataName, long data )
    intDataValue = data;
 }
 ////////////////////////////////////////////////////////////
+void DataValuePair::SetData( std::string dataName, std::vector< long > data )
+{
+   _dataName = dataName;
+   SetDataType( std::string("XMLOBJECT") );
+
+   OneDIntArray* oneDInt = new OneDIntArray();
+
+   oneDInt->SetArray( data );
+   SetData( dataName, oneDInt );
+
+   delete oneDInt;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::SetData( std::string dataName, std::vector< std::vector< long > > data )
+{
+   _dataName = dataName;
+   SetDataType( std::string("XMLOBJECT") );
+
+   TwoDIntArray* twoDInt = new TwoDIntArray();
+
+   twoDInt->SetArray( data );
+   SetData( dataName, twoDInt );
+
+   delete twoDInt;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data )
+{
+   _dataName = dataName;
+   SetDataType( std::string("XMLOBJECT") );
+
+   ThreeDIntArray* threeDInt = new ThreeDIntArray();
+
+   threeDInt->SetArray( data );
+   SetData( dataName, threeDInt );
+
+   delete threeDInt;
+}
+////////////////////////////////////////////////////////////
 void DataValuePair::GetData( std::string& data )
 {
    data = _dataString;
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::string >& data )
+{
+   if ( _veXMLObject->GetObjectType() == "OneDStringArray" )
+   {
+      data = dynamic_cast< OneDStringArray* >( _veXMLObject )->GetArray();
+   }
+   else
+   {
+      std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
+   }
 }
 ////////////////////////////////////////////////////////////
 void DataValuePair::GetData( double& data )
@@ -454,9 +564,80 @@ void DataValuePair::GetData( double& data )
    data = _dataValue;
 }
 ////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< double >& data )
+{
+   if ( _veXMLObject->GetObjectType() == "OneDDoubleArray" )
+   {
+      data = dynamic_cast< OneDDoubleArray* >( _veXMLObject )->GetArray();
+   }
+   else
+   {
+      std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
+   }
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< double > >& data )
+{
+   if ( _veXMLObject->GetObjectType() == "TwoDDoubleArray" )
+   {
+      data = dynamic_cast< TwoDDoubleArray* >( _veXMLObject )->GetArray();
+   }
+   else
+   {
+      std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
+   }
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< std::vector< double > > >& data )
+{
+   if ( _veXMLObject->GetObjectType() == "ThreeDDoubleArray" )
+   {
+      data = dynamic_cast< ThreeDDoubleArray* >( _veXMLObject )->GetArray();
+   }
+   else
+   {
+      std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
+   }
+}
+////////////////////////////////////////////////////////////
 void DataValuePair::GetData( long& data )
 {
    data = intDataValue;
 }
 ////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< long >& data )
+{
+   if ( _veXMLObject->GetObjectType() == "OneDIntArray" )
+   {
+      data = dynamic_cast< OneDIntArray* >( _veXMLObject )->GetArray();
+   }
+   else
+   {
+      std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
+   }
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< long > >& data )
+{
+   if ( _veXMLObject->GetObjectType() == "TwoDIntArray" )
+   {
+      data = dynamic_cast< TwoDIntArray* >( _veXMLObject )->GetArray();
+   }
+   else
+   {
+      std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
+   }
+}
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< std::vector< long > > >& data )
+{
+   if ( _veXMLObject->GetObjectType() == "ThreeDIntArray" )
+   {
+      data = dynamic_cast< ThreeDIntArray* >( _veXMLObject )->GetArray();
+   }
+   else
+   {
+      std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
+   }
+}
 
