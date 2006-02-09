@@ -41,8 +41,7 @@ SRCS=\
    CADMaterial.cxx\
    CADNode.cxx\
    CADNodeTraverser.cxx\
-   CADPart.cxx\
-   CADXMLReaderWriter.cxx
+   CADPart.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib -lVE_ShaderLib
