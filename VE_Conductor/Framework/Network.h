@@ -146,7 +146,7 @@ public:
    void AddTag(int x, int y, wxString text);
 
    //Save and Load the network
-   std::string Save( void );
+   std::string Save( std::string fileName );
    //void Save(wxString filename);
    //void SaveS(std::string &network_pack);            // save the network to a string
    void Load(wxString filename);

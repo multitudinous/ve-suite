@@ -1917,7 +1917,7 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 //////////////////////////////////////////////
 //////// Save and Load Functions /////////////
 //////////////////////////////////////////////
-std::string Network::Save( void )
+std::string Network::Save( std::string fileName )
 {
    // Here we wshould loop over all of the following
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
@@ -2001,12 +2001,19 @@ std::string Network::Save( void )
 
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
-   netowrkWriter.WriteToString();
 
-   std::string xmlDocument( "returnString" );
-   netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Netowrk" );
+   if ( !fileName.compare("returnString") )
+   {
+      netowrkWriter.WriteToString();
+   }
+   else
+   {
+      netowrkWriter.WriteToFile();
+   }
 
-   return xmlDocument;
+   netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
+
+   return fileName;
 }
 
 void Network::UnPack(std::vector<Interface> & intfs)

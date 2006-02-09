@@ -483,7 +483,7 @@ void AppFrame::Save( wxCommandEvent& event )
       //network->Save( doc );
       ///now write the file out from domdocument manager
       //wrtie to path
-      std::string data = network->Save();
+      std::string data = network->Save( std::string( path.c_str() ) );
    }
 }
 
@@ -511,31 +511,31 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
       fname = dialog.GetFilename();
       ///now write the file out from domdocument manager
       //wrtie to path
-      std::string data = network->Save();
+      std::string data = network->Save( std::string( path.c_str() ) );
    }
 }
 
 void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 {
-  wxFileDialog dialog
-    (
-     this,
-     _T("Open File dialog"),
-     directory,
-     fname,
-     _T("Network files (*.nt)|*.nt")
-     );
-  
-  if (directory=="")
-    dialog.SetDirectory(wxGetHomeDir());
-  
-  if (dialog.ShowModal() == wxID_OK)
-    {
+   wxFileDialog dialog
+   (
+      this,
+      _T("Open File dialog"),
+      directory,
+      fname,
+      _T("Network files (*.nt)|*.nt")
+   );
+
+   if (directory=="")
+      dialog.SetDirectory(wxGetHomeDir());
+
+   if (dialog.ShowModal() == wxID_OK)
+   {
       path=dialog.GetPath();
       directory=dialog.GetDirectory();
       fname=dialog.GetFilename();
       network->Load(path);
-    }
+   }
 }
 
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
@@ -561,7 +561,7 @@ void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
-   std::string nw_str = network->Save();
+   std::string nw_str = network->Save( std::string( "returnString" ) );
    // write the domdoc to the string above
    try 
    {
