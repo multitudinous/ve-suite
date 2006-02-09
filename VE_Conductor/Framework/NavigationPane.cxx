@@ -503,7 +503,7 @@ void NavigationPane::SetCommInstance( VjObs_ptr veEngine )
 void NavigationPane::SendCommandsToXplorer( void )
 {
    // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument();
+   domManager->CreateCommandDocument("Command");
    doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs

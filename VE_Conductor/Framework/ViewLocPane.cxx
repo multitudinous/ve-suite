@@ -934,7 +934,7 @@ void ViewLocPane::SetCommInstance( VjObs_ptr veEngine )
 void ViewLocPane::SendCommandsToXplorer( void )
 {
    // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument();
+   domManager->CreateCommandDocument("Commands");
    doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs

@@ -116,7 +116,7 @@ void SoundsPane::SetCommInstance( VjObs_ptr veEngine )
 void SoundsPane::SendCommandsToXplorer( void )
 {
      // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument();
+   domManager->CreateCommandDocument("Command");
    doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs

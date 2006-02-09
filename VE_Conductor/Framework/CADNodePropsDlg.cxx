@@ -50,7 +50,7 @@
 #include "VE_Builder/Utilities/gui/spinctld.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/CAD/CADXMLReaderWriter.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
 #include "VE_Open/XML/Command.h"
@@ -453,10 +453,18 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
    cadCommand->SetCommandName(_commandName);
 
    std::string commandString("returnString");
-   VE_CAD::CADXMLReaderWriter cadCommandWriter;
+
+   VE_XML::XMLReaderWriter cadCommandWriter;
    cadCommandWriter.UseStandaloneDOMDocumentManager();
    cadCommandWriter.WriteToString();
-   cadCommandWriter.WriteXMLDocument(cadCommand,commandString,std::string("vecommand"));
+   
+   std::pair<VE_XML::Command*,std::string> nodeTagPair;
+   nodeTagPair.first = cadCommand;
+   nodeTagPair.second = std::string("vecommand");
+   std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
+   nodeToWrite.push_back(nodeTagPair);
+
+   cadCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"CAD");
 
    char* tempDoc = new char[ commandString.size() + 1 ];
    tempDoc = CORBA::string_dup( commandString.c_str() );

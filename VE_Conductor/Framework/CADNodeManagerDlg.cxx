@@ -38,7 +38,7 @@
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADPart.h"
 #include "VE_Open/XML/CAD/CADClone.h"
-#include "VE_Open/XML/CAD/CADXMLReaderWriter.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -50,6 +50,7 @@
 #include <wx/msgdlg.h>
 using namespace VE_Conductor::GUI_Utilities;
 using namespace VE_CAD;
+using namespace VE_XML;
 
 BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_TREE_END_LABEL_EDIT(TREE_ID,CADNodeManagerDlg::_editLabel)
@@ -381,12 +382,24 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
         {         
            if(dialog.GetPath().find(".veg") != -1)
            {
-              VE_CAD::CADXMLReaderWriter cadReader;
+              VE_XML::XMLReaderWriter cadReader;
               cadReader.UseStandaloneDOMDocumentManager();
               cadReader.ReadFromFile();
-              cadReader.ReadXMLData(std::string(dialog.GetPath()));
-              CADNode* loadedNode = cadReader.GetRootNode();
-
+              cadReader.ReadXMLData(std::string(dialog.GetPath()),"CAD","CADAssembly");
+              
+              CADNode* loadedNode = 0;
+              if(cadReader.GetLoadedXMLObjects().at(0))
+              {
+                 loadedNode = dynamic_cast<CADAssembly*>(cadReader.GetLoadedXMLObjects().at(0));
+              }
+              else
+              {
+                 cadReader.ReadXMLData(std::string(dialog.GetPath()),"CAD","CADPart");
+                 if(cadReader.GetLoadedXMLObjects().at(0))
+                 {
+                     loadedNode = dynamic_cast<CADPart*>(cadReader.GetLoadedXMLObjects().at(0));
+                 }
+              }
               dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(loadedNode);
 
               _cadTreeBuilder->SetRootNode(_rootNode);
@@ -483,7 +496,7 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
       {
          if(dialog.GetPath().find(".veg") != -1)
          {
-            VE_CAD::CADXMLReaderWriter cadReader;
+            VE_XML::XMLReaderWriter cadReader;
             cadReader.UseStandaloneDOMDocumentManager();
             cadReader.WriteToFile();
               
@@ -500,7 +513,14 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
                tagName = std::string("CADPart");
             }
             std::string outputFile = std::string(dialog.GetPath());
-            cadReader.WriteXMLDocument(rootCADNode->GetNode(), outputFile, tagName );
+
+            std::pair<CADNode*,std::string> nodeTagPair;
+            nodeTagPair.first = rootCADNode->GetNode();
+            nodeTagPair.second = tagName;
+            std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
+            nodeToWrite.push_back(nodeTagPair);
+          
+            cadReader.WriteXMLDocument(nodeToWrite, outputFile, "CAD");
          }
       }
    }
@@ -567,10 +587,17 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
    cadCommand->SetCommandName(_commandName);
    std::string commandString("returnString");
 
-   VE_CAD::CADXMLReaderWriter cadCommandWriter;
+   VE_XML::XMLReaderWriter cadCommandWriter;
    cadCommandWriter.UseStandaloneDOMDocumentManager();
    cadCommandWriter.WriteToString();
-   cadCommandWriter.WriteXMLDocument(cadCommand,commandString,std::string("vecommand"));
+   
+   std::pair<VE_XML::Command*,std::string> nodeTagPair;
+   nodeTagPair.first = cadCommand;
+   nodeTagPair.second = std::string("vecommand");
+   std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
+   nodeToWrite.push_back(nodeTagPair);
+
+   cadCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"CAD");
 
    char* tempDoc = new char[ commandString.size() + 1 ];
    tempDoc = CORBA::string_dup( commandString.c_str() );
