@@ -6,7 +6,7 @@ default: all
 all: makeVtkSurface meshViewer convertVTK2Binary \
       convertVTK2Ascii transformVTK scaleVTK \
       removeVtkCellsOutsideBox convertSurfaceFileToStl \
-      removeVtkPointData arrowCreator addNormals2Poly \
+      removeVtkPointData addNormals2Poly \
       moveFieldToPointData whatIsScalarRange \
       combineFluentParticleFile mergeVertices appendVTK \
       createMiniFlowdata convertCellDataToPointData compareScalars
@@ -16,7 +16,7 @@ all: makeVtkSurface meshViewer convertVTK2Binary \
 makeVtkSurface meshViewer convertVTK2Binary \
       convertVTK2Ascii transformVTK scaleVTK \
       removeVtkCellsOutsideBox convertSurfaceFileToStl \
-      removeVtkPointData arrowCreator addNormals2Poly \
+      removeVtkPointData addNormals2Poly \
       moveFieldToPointData whatIsScalarRange \
       combineFluentParticleFile mergeVertices appendVTK \
       createMiniFlowdata convertCellDataToPointData compareScalars::
@@ -36,7 +36,6 @@ clean:
 	-cd ./mk/removeVtkCellsOutsideBox && $(MAKE) clean
 	-cd ./mk/convertSurfaceFileToStl && $(MAKE) clean
 	-cd ./mk/removeVtkPointData && $(MAKE) clean
-	-cd ./mk/arrowCreator && $(MAKE) clean
 	-cd ./mk/addNormals2Poly && $(MAKE) clean
 	-cd ./mk/moveFieldToPointData && $(MAKE) clean
 	-cd ./mk/whatIsScalarRange && $(MAKE) clean
@@ -57,7 +56,6 @@ cleandepend:
 	-cd ./mk/removeVtkCellsOutsideBox && $(MAKE) cleandepend
 	-cd ./mk/convertSurfaceFileToStl && $(MAKE) cleandepend
 	-cd ./mk/removeVtkPointData && $(MAKE) cleandepend
-	-cd ./mk/arrowCreator && $(MAKE) cleandepend
 	-cd ./mk/addNormals2Poly && $(MAKE) cleandepend
 	-cd ./mk/moveFieldToPointData && $(MAKE) cleandepend
 	-cd ./mk/whatIsScalarRange && $(MAKE) cleandepend
