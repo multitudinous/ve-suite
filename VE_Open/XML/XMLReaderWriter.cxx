@@ -33,6 +33,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
 
 #include <iostream>
 using namespace VE_XML;
@@ -122,7 +123,7 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData,
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
                                                       std::string objectNamespace,
-                                                      std::string tagname)
+                                                      std::string tagName)
 {
 
    //Get the first element and check it's type
@@ -133,7 +134,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
    {
       for(unsigned int i = 0; i < nXMLObjects; i++)
       {
-         _xmlObjects.push_back(XMLObjectFactory::CreateNewXMLObject(objectNamespace,tagname));
+         _xmlObjects.push_back(XMLObjectFactory::CreateXMLObject(objectNamespace,tagName));
          _xmlObjects.back()->SetObjectFromXMLData(xmlObjects->item(i));
       }
    }
@@ -178,23 +179,25 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 }
 
 ///////////////////////////////////////////////////////////
-void XMLReaderWriter::WriteXMLDocument(VE_XML::XMLObject* node,
-                                   std::string& xmlData,
-                                   std::string tagName)
+void XMLReaderWriter::WriteXMLDocument( VE_XML::XMLObject* node,
+                                    std::string& xmlData,
+                                    std::string tagName,
+                                    std::string documentType )
 {
-   if(_domDocumentManager){
-      if(xmlData.compare("returnString"))
+   if ( _domDocumentManager )
+   {
+      if ( xmlData.compare("returnString") )
       {
          _domDocumentManager->SetOuputXMLFile(xmlData);
          _domDocumentManager->SetWriteXMLFileOn();
       }
   
-      _domDocumentManager->CreateCommandDocument();
+      _domDocumentManager->CreateCommandDocument( documentType );
 
       node->SetOwnerDocument(_domDocumentManager->GetCommandDocument());
       _domDocumentManager->GetCommandDocument()->getDocumentElement()->appendChild(node->GetXMLData(tagName));
 
-      if(!xmlData.compare("returnString"))
+      if( !xmlData.compare("returnString") )
       {
          xmlData = _domDocumentManager->WriteAndReleaseCommandDocument();
       }

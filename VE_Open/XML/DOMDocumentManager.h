@@ -44,6 +44,9 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include <string>
+#include <map>
+#include <utility>
+
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
@@ -98,7 +101,8 @@ public:
    /// Functions used to create a document and then return it in a std::string
    std::string WriteAndReleaseCommandDocument( void );
    ///Create the command document.
-   void CreateCommandDocument( void );
+   ///\param type The type of document to be encoded in the header of the xml document either: Network, Shader, Command
+   void CreateCommandDocument( std::string type );
 
 private:
     std::string outputXMLFile;///<The output XML file to write.
@@ -123,6 +127,8 @@ private:
 
    XercesDOMParser* parser;///<The DOMParser
    ErrorHandler* errHandler;///<The error handler for the parser.
+
+   std::map< std::string, std::pair< std::string, std::string > > documentType;
 };
 }
 #endif

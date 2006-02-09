@@ -52,12 +52,15 @@ namespace VE_XML
 #include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
+#include <vector>
 
 
 XERCES_CPP_NAMESPACE_USE
 
-namespace VE_XML{
-class VE_XML_EXPORTS XMLReaderWriter{
+namespace VE_XML
+{
+class VE_XML_EXPORTS XMLReaderWriter
+{
 public:
    ///Default Constructor
    XMLReaderWriter();
@@ -79,8 +82,9 @@ public:
    ///will be populated w/ the return string.
    ///\param tagName The tag name to use for when writing the node.
    virtual void WriteXMLDocument(VE_XML::XMLObject* node,
-                                   std::string& xmlFile,
-                                   std::string tagName);
+                                 std::string& xmlFile,
+                                 std::string tagName,
+                                 std::string documentType );
 
    ///Set the Active DOMDocumentManager
    void SetDOMDocumentManager(VE_XML::DOMDocumentManager* ddManager);
@@ -115,9 +119,10 @@ protected:
    ///\param rootDocument The document representing the input XML structure.
    ///\param objectNamespace The namespace the object to populate belongs to.
    ///\param objectTagName The tag name of the object to populate.
+   ///\param documentType The type of dom doc to be created either: Network, Shader, Command.
    virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
-                                               std::string objectNamespace,
-                                               std::string objectTagName);
+                                                std::string objectNamespace,
+                                                std::string tagName );
 
    std::vector<VE_XML::XMLObject*> _xmlObjects;///<The XMLObjects read in from a document file.
 

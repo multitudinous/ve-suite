@@ -60,6 +60,9 @@ DOMDocumentManager::DOMDocumentManager( void )
    parser = 0;
    errHandler = 0;
    outputXMLFile = std::string("./output.veg");
+   documentType[ "Network" ] = std::pair< std::string, std::string >( "Network", "network" );
+   documentType[ "Shader" ] = std::pair< std::string, std::string >( "Shader", "shader" );
+   documentType[ "Command" ] = std::pair< std::string, std::string >( "Commands", "commands" );
 }
 //////////////////////////////////////////////////////
 DOMDocumentManager::~DOMDocumentManager( void )
@@ -217,18 +220,29 @@ void DOMDocumentManager::UnLoadParser( void )
    }
 }
 /////////////////////////////////////////////////////
-void DOMDocumentManager::CreateCommandDocument( void )
+void DOMDocumentManager::CreateCommandDocument( std::string type )
 {
-  DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( xercesString( "LS" ) );
- 
-  commandDocument = impl->createDocument(0, xercesString( "commands" ), 0);
-  //DOMDocument* doc = impl->createDocument(0, xercesString( "commands" ), 0);
-  commandDocument->setVersion( xercesString( "1.0" ) );
-  commandDocument->setEncoding( xercesString( "ISO-8859-1" ) );
-  DOMElement* root_elem = commandDocument->getDocumentElement(); //This is the root element
-  root_elem->setAttribute( xercesString( "name" ), xercesString( "Commands" ) );
-  root_elem->setAttribute( xercesString( "xmlns:xsi" ), xercesString( "http://www.w3.org/2001/XMLSchema-instance" ) );
-  root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg.xsd" ) );
+   DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( xercesString( "LS" ) );
+
+   try
+   {
+      commandDocument = impl->createDocument(0, xercesString( documentType[ type ].second ), 0);
+   }
+   catch ( ... )
+   {
+      std::cerr << " ERROR : not a vaild document type : " << type << std::endl;
+      return;
+   }
+
+   commandDocument->setVersion( xercesString( "1.0" ) );
+   commandDocument->setEncoding( xercesString( "ISO-8859-1" ) );
+   DOMElement* root_elem = commandDocument->getDocumentElement(); //This is the root element
+   root_elem->setAttribute( xercesString( "name" ), xercesString( documentType[ type ].first ) );
+   root_elem->setAttribute( xercesString( "xmlns:xsi" ), xercesString( "http://www.w3.org/2001/XMLSchema-instance" ) );
+   root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg.xsd" ) );
+   root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg_model.xsd" ) );
+   root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "vecad.xsd" ) );
+   root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "veshader.xsd" ) );
 }
 /////////////////////////////////////////////////////
 std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
