@@ -104,7 +104,7 @@
 				OutputFile="..\..\GUIPlugins\AverAirTemp_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(VE_SUITE_HOME)\lib\win32;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
+				AdditionalLibraryDirectories="$(VE_SUITE_HOME)\lib\win32;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/AverAirTemp.pdb"
 				ImportLibrary="$(OutDir)/AverAirTemp.lib"

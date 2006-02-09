@@ -39,10 +39,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib rpcrt4.lib odbc32.lib odbccp32.lib comctl32.lib wsock32.lib ole32.lib oleaut32.lib GUIPlugin_d.lib VE_ConductorLib_d.lib"
+				AdditionalDependencies="ws2_32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib rpcrt4.lib odbc32.lib odbccp32.lib comctl32.lib wsock32.lib ole32.lib oleaut32.lib GUIPlugin_d.lib VE_ConductorLib_d.lib"
 				OutputFile="..\..\Units\AverageAirTempUnit.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/SampleMFCUnit.pdb"
 				SubSystem="2"
@@ -145,7 +145,7 @@
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				TreatWChar_tAsBuiltInType="TRUE"
+				TreatWChar_tAsBuiltInType="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=""
@@ -212,10 +212,10 @@
 				RelativePath=".\ExcelWrapper.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_INSTALL_DIR)\include\VEOpen\skel\moduleC.cpp">
+				RelativePath="..\..\..\..\..\..\VE_Suite.0.9.3\include\VEOpen\skel\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_INSTALL_DIR)\include\VEOpen\skel\moduleS.cpp">
+				RelativePath="..\..\..\..\..\..\VE_Suite.0.9.3\include\VEOpen\skel\moduleS.cpp">
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp">

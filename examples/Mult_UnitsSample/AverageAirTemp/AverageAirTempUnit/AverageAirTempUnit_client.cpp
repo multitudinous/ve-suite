@@ -46,11 +46,11 @@ BOOL CAverageAirTempApp::InitInstance()
    {
       XMLPlatformUtils::Initialize();
    }
-   catch(const XMLException &toCatch)
+   catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException &toCatch)
    {
       XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
             << "  Exception message:"
-            << XMLString::transcode(toCatch.getMessage())
+            << XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(toCatch.getMessage())
             << XERCES_STD_QUALIFIER endl;
       //return 1;
       exit(1);

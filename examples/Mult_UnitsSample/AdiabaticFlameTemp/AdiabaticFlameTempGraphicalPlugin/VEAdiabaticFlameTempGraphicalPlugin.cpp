@@ -64,7 +64,7 @@ VEAdiabaticFlameTempGraphicalPlugin::VEAdiabaticFlameTempGraphicalPlugin( void )
 {
   _objectName ="AdiabaticFlameTemp"; // Needs to match plugin name
    //_onSceneGraph = false;
-   _param.clear();
+  _param.clear();
 }
 
 // Destructor
@@ -76,8 +76,10 @@ VEAdiabaticFlameTempGraphicalPlugin::~VEAdiabaticFlameTempGraphicalPlugin( void 
 
 void VEAdiabaticFlameTempGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 {
+   std::cout<<"Initializing NODE!!!!!!!!!!!!!!"<<std::endl;
    cfdVEBaseClass::InitializeNode( veworldDCS );
    _param.assign( "./Plugins/vrxpr.param" );
+   std::cout<<"Calling CreateObjects!!!!!!!!!!!!!!"<<std::endl;
    CreateObjects();
 }
 
