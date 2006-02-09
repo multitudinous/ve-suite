@@ -53,6 +53,7 @@ namespace VE_XML
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <vector>
+#include <utility>
 
 
 XERCES_CPP_NAMESPACE_USE
@@ -81,9 +82,8 @@ public:
    ///\param node The XML node to write. If writing to string set this to "returnString" and it
    ///will be populated w/ the return string.
    ///\param tagName The tag name to use for when writing the node.
-   virtual void WriteXMLDocument(VE_XML::XMLObject* node,
+   virtual void WriteXMLDocument(std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
                                  std::string& xmlFile,
-                                 std::string tagName,
                                  std::string documentType );
 
    ///Set the Active DOMDocumentManager

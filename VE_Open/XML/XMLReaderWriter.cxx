@@ -179,13 +179,13 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 }
 
 ///////////////////////////////////////////////////////////
-void XMLReaderWriter::WriteXMLDocument( VE_XML::XMLObject* node,
+void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
                                     std::string& xmlData,
-                                    std::string tagName,
                                     std::string documentType )
 {
    if ( _domDocumentManager )
    {
+      ///If you wanted to return a string you can pass in returnString for xmlData
       if ( xmlData.compare("returnString") )
       {
          _domDocumentManager->SetOuputXMLFile(xmlData);
@@ -193,9 +193,15 @@ void XMLReaderWriter::WriteXMLDocument( VE_XML::XMLObject* node,
       }
   
       _domDocumentManager->CreateCommandDocument( documentType );
-
-      node->SetOwnerDocument(_domDocumentManager->GetCommandDocument());
-      _domDocumentManager->GetCommandDocument()->getDocumentElement()->appendChild(node->GetXMLData(tagName));
+      DOMDocument* doc = _domDocumentManager->GetCommandDocument();
+      
+      /// should put in an assert to verify tagnames == nodes
+      ///Loop over all the objects that are passed in
+      for ( size_t i = 0; i < nodes.size(); ++i )
+      {   
+         nodes.at( i ).first->SetOwnerDocument( _domDocumentManager->GetCommandDocument() );
+         doc->getDocumentElement()->appendChild( nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );  
+      }
 
       if( !xmlData.compare("returnString") )
       {
