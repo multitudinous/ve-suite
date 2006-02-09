@@ -65,9 +65,13 @@ public:
    ///Destructor
    virtual ~XMLReaderWriter();
 
-   ///Read an input XML string of type.
-   ///\param xmlData The input XML type.
-   virtual void ReadXMLData(std::string xmlData);
+   ///Read an input XML string or file.
+   ///\param xmlData The input XML string or file.
+   ///\param objectNamespace The namespace of the object to extract.
+   ///\param tagName The tagname of the element to extract.
+   virtual void ReadXMLData(std::string xmlData,
+                            std::string objectNamespace,
+                            std::string tagName);
 
    ///Write the current XML document
    ///\param xmlFile The XML document to write to.
@@ -82,7 +86,6 @@ public:
    void SetDOMDocumentManager(VE_XML::DOMDocumentManager* ddManager);
 
    ///Turn on a stand alone DOMDocumentManager.
-   //Kinda a HACK!!!
    void UseStandaloneDOMDocumentManager();
 
    ///Work around for the conflict when exposing the DOMDocumentManager
@@ -100,6 +103,9 @@ public:
    ///Get the active DOMDocumentManager.  
    VE_XML::DOMDocumentManager* GetDOMDocumentManager();
 
+   ///Return the loaded XMLObject s.
+   std::vector<VE_XML::XMLObject*> GetLoadedXMLObjects();
+
 protected:
 
    bool _standAloneDDM;///<Tells Reader whether it is using it's on DDM or one was passed in.
@@ -107,7 +113,13 @@ protected:
    ///Internal function to populate the appropriate structures from the file
    ///read in.
    ///\param rootDocument The document representing the input XML structure.
-   virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument)=0;
+   ///\param objectNamespace The namespace the object to populate belongs to.
+   ///\param objectTagName The tag name of the object to populate.
+   virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
+                                               std::string objectNamespace,
+                                               std::string objectTagName);
+
+   std::vector<VE_XML::XMLObject*> _xmlObjects;///<The XMLObjects read in from a document file.
 
    VE_XML::DOMDocumentManager* _domDocumentManager;///<The XML document manager.
 };

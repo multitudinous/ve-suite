@@ -110,13 +110,73 @@ VE_XML::DOMDocumentManager* XMLReaderWriter::GetDOMDocumentManager()
    return _domDocumentManager;
 }
 //////////////////////////////////////////////////////
-void XMLReaderWriter::ReadXMLData(std::string xmlData)
+void XMLReaderWriter::ReadXMLData(std::string xmlData,
+                                  std::string objectNamespace,
+                                  std::string tagname)
 {
    _domDocumentManager->Load( xmlData );
    //override this in derived classes
-   _populateStructureFromDocument(_domDocumentManager->GetCommandDocument());
+   _populateStructureFromDocument(_domDocumentManager->GetCommandDocument(),objectNamespace,tagname);
    _domDocumentManager->UnLoadParser();
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
+                                                      std::string objectNamespace,
+                                                      std::string tagname)
+{
+
+   //Get the first element and check it's type
+   DOMNodeList* xmlObjects = rootDocument->getElementsByTagName( xercesString(tagName) );
+
+   unsigned int nXMLObjects = xmlObjects->getLength();
+   if(nXMLObjects)
+   {
+      for(unsigned int i = 0; i < nXMLObjects; i++)
+      {
+         _xmlObjects.push_back(XMLObjectFactory::CreateNewXMLObject(objectNamespace,tagname));
+         _xmlObjects.back()->SetObjectFromXMLData(xmlObjects->item(i));
+      }
+   }
+   /*{
+      if(_rootNode)
+      {
+         if(_rootNode->GetNodeType() != std::string("Assembly"))
+         {
+            delete _rootNode;
+            _rootNode = 0;
+            _rootNode = new VE_CAD::CADAssembly();
+         }
+      }else{
+         _rootNode = new VE_CAD::CADAssembly();
+      }
+      _rootNode->SetObjectFromXMLData(assemblies->item(0));
+   }
+   else
+   {
+      ///check for single part
+      DOMNodeList* parts = rootDocument->getElementsByTagName( xercesString("CADPart") );
+      unsigned int nParts = parts->getLength();
+      if(nParts)
+      {
+
+         //probably should create an assembly and then add all the parts but
+         //assuming there is only one part file for now
+         if(_rootNode)
+         {
+            if(_rootNode->GetNodeType() != std::string("Part"))
+            {
+               delete _rootNode;
+               _rootNode = 0;
+               _rootNode = new VE_CAD::CADPart();
+            }
+         }else{
+            _rootNode = new VE_CAD::CADPart();
+         }
+         _rootNode->SetObjectFromXMLData(parts->item(0));
+      }
+   }*/
+}
+
 ///////////////////////////////////////////////////////////
 void XMLReaderWriter::WriteXMLDocument(VE_XML::XMLObject* node,
                                    std::string& xmlData,
