@@ -89,33 +89,60 @@ VE_XML::XMLObject* XMLCreator::CreateNewXMLObject(std::string objectType)
 VE_XML::XMLObject* XMLCreator::CreateNewXMLObjectCopy(std::string objectType,
                                                       VE_XML::XMLObject* objectToCopy)
 {
-   if(objectType == "FloatArray"){
+   if(objectType == "FloatArray")
+   {
       return new FloatArray(*dynamic_cast<FloatArray*>(objectToCopy));
-   }else if(objectType == "Command"){
+   }
+   else if(objectType == "Command")
+   {
       return new Command(*dynamic_cast<Command*>(objectToCopy));
-   }else if(objectType == "DataValuePair"){
+   }
+   else if(objectType == "DataValuePair")
+   {
       return new DataValuePair(*dynamic_cast<DataValuePair*>(objectToCopy));
-   }else if(objectType == "OneDDoubleArray"){
+   }
+   else if(objectType == "OneDDoubleArray")
+   {
       return new OneDDoubleArray(*dynamic_cast<OneDDoubleArray*>(objectToCopy));
-   }else if(objectType == "OneDIntArray"){
+   }
+   else if(objectType == "OneDIntArray")
+   {
       return new OneDIntArray(*dynamic_cast<OneDIntArray*>(objectToCopy));
-   }else if(objectType == "OneDStringArray"){
+   }
+   else if(objectType == "OneDStringArray")
+   {
       return new OneDStringArray(*dynamic_cast<OneDStringArray*>(objectToCopy));
-   }else if(objectType == "ParameterBlock"){
+   }
+   else if(objectType == "ParameterBlock")
+   {
       return new ParameterBlock(*dynamic_cast<ParameterBlock*>(objectToCopy));
-   }else if(objectType == "StateInfo"){
+   }
+   else if(objectType == "StateInfo")
+   {
       return new StateInfo(*dynamic_cast<StateInfo*>(objectToCopy));
-   }else if(objectType == "ThreeDDoubleArray"){
+   }
+   else if(objectType == "ThreeDDoubleArray")
+   {
       return new ThreeDDoubleArray(*dynamic_cast<ThreeDDoubleArray*>(objectToCopy));
-   }else if(objectType == "ThreeDIntArray"){
+   }
+   else if(objectType == "ThreeDIntArray")
+   {
       return new ThreeDIntArray(*dynamic_cast<ThreeDIntArray*>(objectToCopy));
-   }else if(objectType == "Transform"){
+   }
+   else if(objectType == "Transform")
+   {
       return new Transform(*dynamic_cast<Transform*>(objectToCopy));
-   }else if(objectType == "TwoDDoubleArray"){
+   }
+   else if(objectType == "TwoDDoubleArray")
+   {
       return new TwoDDoubleArray(*dynamic_cast<TwoDDoubleArray*>(objectToCopy));
-   }else if(objectType == "TwoDIntArray"){
+   }
+   else if(objectType == "TwoDIntArray")
+   {
       return new TwoDIntArray(*dynamic_cast<TwoDIntArray*>(objectToCopy));
-   }else if(objectType == "User"){
+   }
+   else if(objectType == "User")
+   {
       return new User(*dynamic_cast<User*>(objectToCopy));
    }
    return 0;

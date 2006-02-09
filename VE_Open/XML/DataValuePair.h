@@ -113,14 +113,6 @@ public:
    ///\param data The unsigned data.
    void SetDataValue(unsigned int data);
 
-   ///Set the FloatArray data
-   ///\param data The FloatArray data.
-   void SetDataArray( VE_XML::FloatArray* data );
-
-   ///Set the Transform data.
-   ///\param xForm The Transform data.
-   void SetDataTransform(VE_XML::Transform* xForm);
-
    ///set the data from an string representing the xml
    ///\param xmlInput The input XML data.
    virtual void SetObjectFromXMLData(DOMNode* xmlInput);
@@ -139,23 +131,13 @@ public:
    ///Get the value of the double data.
    double GetDataValue();
 
-   ///Get the FloatArray data.
-   VE_XML::FloatArray* GetDataArray( void );
-   
-   ///Get the Transform data.
-   VE_XML::Transform* GetDataTransform( void );
-
    ///Get the xmlObject from the DataValuePair  
    VE_XML::XMLObject* GetDataXMLObject();
 
    ///Helper functions to set data easily
    ///\param dataName Name of the data being passed in
    ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, VE_XML::FloatArray* data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   //void SetData( std::string dataName, VE_XML::Transform* data );
+   //void SetData( std::string dataName, VE_XML::FloatArray* data );
 
 
    ///Helper functions to set data easily
@@ -178,72 +160,27 @@ public:
    ///\param dataName Name of the data being passed in
    ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, double data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< double > data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::vector< double > > data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::vector< std::vector< double > > > data );
 
    ///Int arrays
    ///Helper functions to set data easily
    ///\param dataName Name of the data being passed in
    ///\param data Data value being passed in. Can be a broad range of data types
    void SetData( std::string dataName, long data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< long > data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::vector< long > > data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data );
 
    ///String data
    ///Helper functions to get data easily
    ///\param data Name of the data being passed in
    void GetData( std::string& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::string >& data );
    
    ///Double arrays
    ///Helper functions to get data easily
    ///\param data Name of the data being passed in
    void GetData( double& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< double >& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::vector< double > >& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::vector< std::vector< double > > >& data );
 
    ///Int arrays
    ///Helper functions to get data easily
    ///\param data Name of the data being passed in
    void GetData( long& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< long >& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::vector< long > >& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::vector< std::vector< long > > >& data );
 
 protected:
    ///Internally update the data.
@@ -272,15 +209,7 @@ protected:
    long intDataValue;///<Raw long value.
    unsigned int _dataUInt;///<Raw unsigned int value
    std::string _dataString;///<Raw string value.
-   VE_XML::FloatArray* _dataArray;///<Raw FloatArray value.
-   VE_XML::Transform* _dataTransform;///<Raw Transform value.
-   VE_XML::OneDDoubleArray* oneDDouble;///<Raw double value.
-   VE_XML::TwoDDoubleArray* twoDDouble;///<Raw double value.
-   VE_XML::ThreeDDoubleArray* threeDDouble;///<Raw double value.
-   VE_XML::OneDIntArray* oneDInt;///<Raw double value.
-   VE_XML::TwoDIntArray* twoDInt;///<Raw double value.
-   VE_XML::ThreeDIntArray* threeDInt;///<Raw double value.
-   VE_XML::OneDStringArray* oneDString;///<Raw double value.
+  
    VE_XML::XMLObject* _veXMLObject;///<Raw XMLObject.
 };
 }

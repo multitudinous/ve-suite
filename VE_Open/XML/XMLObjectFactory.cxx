@@ -37,6 +37,28 @@
 #include <string>
 
 using namespace VE_XML;
+
+//utility to properly initialize and delete the Singleton XMLObjectFactory
+namespace VE_XML
+{
+
+class ObjectFactoryMaker
+{
+public:
+  ObjectFactoryMaker()
+  {
+     VE_XML::XMLObjectFactory::Instance(); 
+  };
+  ~ObjectFactoryMaker()
+  { 
+     XMLObjectFactory::DeleteInstance(); 
+  };
+};
+}
+
+
+static VE_XML::ObjectFactoryMaker ObjectFactoryManager;
+
 VE_XML::XMLObjectFactory* VE_XML::XMLObjectFactory::_instanceOfFactory = 0;
 std::map<std::string,CreationEventHandler*> VE_XML::XMLObjectFactory::_objectCreators;
 /////////////////////////////////////
@@ -46,14 +68,24 @@ XMLObjectFactory::XMLObjectFactory( )
 /////////////////////////////////////
 XMLObjectFactory::~XMLObjectFactory()
 {
-   for(std::map<std::string, CreationEventHandler* >::iterator itr = _objectCreators.begin();
+   if(_objectCreators.size()){
+      for(std::map<std::string, CreationEventHandler* >::iterator itr = _objectCreators.begin();
                                        itr != _objectCreators.end(); itr++ )
-   {
-      delete itr->second;
-      itr->second = 0;
+      {
+         delete itr->second;
+         itr->second = 0;
+      }
+      _objectCreators.clear();
    }
-   _objectCreators.clear();
-   
+}
+///////////////////////////////////////
+void XMLObjectFactory::DeleteInstance()
+{
+   if(_instanceOfFactory)
+   {
+      delete _instanceOfFactory;
+      _instanceOfFactory = 0;
+   }
 }
 //////////////////////////////////////////////
 XMLObjectFactory* XMLObjectFactory::Instance()
@@ -65,8 +97,8 @@ XMLObjectFactory* XMLObjectFactory::Instance()
    return _instanceOfFactory;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectNameSpace,
-                                                     std::string objectType)
+VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType,
+                                               std::string objectNameSpace)
 {
    std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
    xmlCreator = _objectCreators.find(objectNameSpace);
@@ -108,9 +140,9 @@ bool XMLObjectFactory::RegisterObjectCreator(std::string objectNamespace,Creatio
    {
       return false;
    }
-   if(objectNamespace != "XML" || 
-      objectNamespace != "CAD" ||
-      objectNamespace != "Shader")
+   if(objectNamespace != std::string("XML") && 
+      objectNamespace != std::string("CAD") &&
+      objectNamespace != std::string("Shader"))
    {
       std::cout<<"Invalid namespace specified: "<<objectNamespace<<std::endl;
       std::cout<<"Valid namespaces are: "<<std::endl;

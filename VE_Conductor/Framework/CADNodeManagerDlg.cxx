@@ -42,6 +42,7 @@
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Transform.h"
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/filedlg.h>
@@ -276,9 +277,8 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          _dataValuePairList.push_back(parentNode);
 
          VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
-         transform->SetDataType(std::string("TRANSFORM"));
-         transform->SetDataTransform(newAssembly->GetTransform());
-         transform->SetDataName(std::string("Transform"));
+         transform->SetDataType(std::string("XMLOBJECT"));
+         transform->SetData("Transform",newAssembly->GetTransform());
          _dataValuePairList.push_back(transform);
 
          VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
@@ -347,8 +347,8 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
       _dataValuePairList.push_back(parentNode);
 
       VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
-      transform->SetDataType(std::string("TRANSFORM"));
-      transform->SetDataTransform(newClone->GetTransform());
+      transform->SetDataType(std::string("XMLOBJECT"));
+      transform->SetData(transform->GetObjectType(),newClone->GetTransform());
       transform->SetDataName(std::string("Transform"));
       _dataValuePairList.push_back(transform);
 
@@ -454,9 +454,8 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
                _dataValuePairList.push_back(parentNode);
 
                VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
-               transform->SetDataType(std::string("TRANSFORM"));
-               transform->SetDataTransform(newCADPart->GetTransform());
-               transform->SetDataName(std::string("Transform"));
+               transform->SetDataType("XMLOBJECT");
+               transform->SetData("Transform",newCADPart->GetTransform());
                _dataValuePairList.push_back(transform);
 
                VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();

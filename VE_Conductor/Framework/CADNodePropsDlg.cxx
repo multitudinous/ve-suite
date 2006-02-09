@@ -391,16 +391,16 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
 
       _commandName = std::string("CAD_TRANSFORM_UPDATE");
 
-      VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
-      updateTransform->SetDataType("XMLOBJECT");
-      updateTransform->SetData("Transform",_cadNode->GetTransform());
-      _instructions.push_back(updateTransform);
-
       VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
       nodeID->SetDataType("UNSIGNED INT");
       nodeID->SetDataName(std::string("Node ID"));
       nodeID->SetDataValue(_cadNode->GetID());
       _instructions.push_back(nodeID);
+      
+      VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
+      updateTransform->SetDataType("XMLOBJECT");
+      updateTransform->SetData("Transform",_cadNode->GetTransform());
+      _instructions.push_back(updateTransform);
 
       VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
       nodeType->SetDataType("STRING");

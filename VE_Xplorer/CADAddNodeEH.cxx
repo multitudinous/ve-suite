@@ -84,6 +84,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
       VE_XML::DataValuePair* transform = command->GetDataValuePair("Transform");
       VE_XML::DataValuePair* nodeName = command->GetDataValuePair("Node Name");
+      VE_XML::Transform* rawTransform = dynamic_cast<VE_XML::Transform*>(transform->GetDataXMLObject());
 
       VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"---Adding node---"<<std::endl;
@@ -105,9 +106,9 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 
          parentAssembly->AddChild(activeModel->GetAssembly(nodeID->GetUIntData()));
 
-         activeModel->GetAssembly(nodeID->GetUIntData())->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
-         activeModel->GetAssembly(nodeID->GetUIntData())->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
-         activeModel->GetAssembly(nodeID->GetUIntData())->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
+         activeModel->GetAssembly(nodeID->GetUIntData())->SetTranslationArray(rawTransform->GetTranslationArray()->GetArray() );
+         activeModel->GetAssembly(nodeID->GetUIntData())->SetRotationArray(rawTransform->GetRotationArray()->GetArray() );
+         activeModel->GetAssembly(nodeID->GetUIntData())->SetScaleArray(rawTransform->GetScaleArray()->GetArray() );
          activeModel->GetAssembly(nodeID->GetUIntData())->SetName(nodeName->GetDataString());
          std::cout<<"Parent ID: "<<parentID->GetUIntData()<<std::endl;
          std::cout<<"Assembly ID: "<<nodeID->GetUIntData()<<std::endl;
@@ -121,9 +122,9 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
          partNode->GetNode()->SetName(nodeName->GetDataString());
 	      VE_SceneGraph::cfdDCS* partDCS = partNode->GetDCS();
 
-         partDCS->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
-         partDCS->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
-         partDCS->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
+         partDCS->SetTranslationArray(rawTransform->GetTranslationArray()->GetArray() );
+         partDCS->SetRotationArray(rawTransform->GetRotationArray()->GetArray() );
+         partDCS->SetScaleArray(rawTransform->GetScaleArray()->GetArray() );
          std::cout<<"Parent ID: "<<parentID->GetUIntData()<<std::endl;
          std::cout<<"Part ID: "<<nodeID->GetUIntData()<<std::endl;
       
@@ -139,9 +140,9 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
          VE_SceneGraph::cfdClone* newClone = activeModel->GetClone(nodeID->GetUIntData());
          if(newClone)
          {
-            newClone->GetClonedGraph()->SetTranslationArray(transform->GetDataTransform()->GetTranslationArray()->GetArray() );
-            newClone->GetClonedGraph()->SetRotationArray(transform->GetDataTransform()->GetRotationArray()->GetArray() );
-            newClone->GetClonedGraph()->SetScaleArray(transform->GetDataTransform()->GetScaleArray()->GetArray() );
+            newClone->GetClonedGraph()->SetTranslationArray(rawTransform->GetTranslationArray()->GetArray() );
+            newClone->GetClonedGraph()->SetRotationArray(rawTransform->GetRotationArray()->GetArray() );
+            newClone->GetClonedGraph()->SetScaleArray(rawTransform->GetScaleArray()->GetArray() );
             parentAssembly->AddChild(newClone->GetClonedGraph());
          }
          std::cout<<"Parent ID: "<<parentID->GetUIntData()<<std::endl;

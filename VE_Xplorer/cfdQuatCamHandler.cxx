@@ -424,8 +424,10 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    {
       VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
       //this->cfdIso_value = commandData->GetDataValue();
+      
+      ///Change this to grab a OneDIntArray via GetDataXMLObject() from DataValuePair---biv
       std::vector< long > commandIds;
-      commandData->GetData( commandIds );
+      //commandData->GetData( commandIds );
       std::string newCommand = commandData->GetDataName();
 
       //if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_NEW_VIEWPT )

@@ -942,7 +942,8 @@ void ViewLocPane::SendCommandsToXplorer( void )
    //VE_XML::OneDIntArray* dataValueArray = new VE_XML::OneDIntArray( commandInputs.size() )
    //dataValuePair->SetDataName( dataValueName );
    //dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   dataValuePair->SetData( dataValueName, commandInputs );
+   ///Change this to use DataValuePair::SetData(std::string,XMLObject*)---biv
+   ///dataValuePair->SetData( dataValueName, commandInputs );
    VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("ViewLoc_Data") );
    veCommand->AddDataValuePair( dataValuePair );

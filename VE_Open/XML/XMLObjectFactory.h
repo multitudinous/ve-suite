@@ -58,6 +58,9 @@ public:
 
    ///Get an instance of the ObjectFactory
    static XMLObjectFactory* Instance();
+   
+   ///Cleanup the instance of the ObjectFactory
+   static void DeleteInstance();
 
    ///\param objectType The unique string specifying what object to create
    ///\param objectNamespace The namespace that the object belongs to. 

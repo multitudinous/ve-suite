@@ -21,18 +21,8 @@
                   <xs:element name="dataValueNum" type="xs:float" />
                   <xs:element name="dataValueInt" type="xs:integer" />
                   <xs:element name="dataValueString" type="xs:string" />
-                  <xs:element name="dataArray" type="veFloatArray" />
-                  <xs:element name="dataTransform" type="veTransform" />
-                  <xs:element name="data1DDoubleArray" type="ve1DDoubleArray" />
-                  <xs:element name="data2DDoubleArray" type="ve2DDoubleArray" />
-                  <xs:element name="data3DDoubleArray" type="ve3DDoubleArray" />
-                  <xs:element name="data1DIntArray" type="ve1DIntArray" />
-                  <xs:element name="data2DIntArray" type="ve2DIntArray" />
-                  <xs:element name="data3DIntArray" type="ve3DIntArray" />
-                  <xs:element name="data1DStringArray" type="ve1DStringArray" />
-                  <xs:element name="data2DStringArray" type="ve2DStringArray" />
-                  <xs:element name="data3DStringArray" type="ve3DStringArray" />
                   <xs:element name="dataValueUInt" type="xs:unsignedInt" />
+                  <xs:element name="genericObject" type="veXMLObject" />
                </xs:choice>
                <xs:element name="dataType" type="xs:string" />
             </xs:sequence>

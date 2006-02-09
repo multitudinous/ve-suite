@@ -174,7 +174,7 @@ float* Transform::GetRotation()
    return _rotation;
 }
 */
-////////////////////////////////////
+/////////////////////////////////////////////////////
 void Transform::_updateVEElement( std::string input )
 {
    if(!_veElement)
