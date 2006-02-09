@@ -94,29 +94,41 @@ void VESampleMFC_GaugesGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
 
 void VESampleMFC_GaugesGraphicalPlugin::CreateCustomVizFeature( int input ) 
 {
-   if ( ! v_value.empty() )		
+
+   if ( v_value.empty() )
+      return;
+
+   double calc1 = 0;
+   double calc2 = 0;
+   double calc3 = 0;
+
+   for ( unsigned int i = 0; i < v_desc.size(); i++ )
    {
-		for ( unsigned int i = 0; i < v_desc.size(); i++ )
+      if( v_desc[ i ] == std::string( "Calculation1" ) )
       {
-			if (v_desc[i] == std::string("Calculation1"))
-			{
-				const string var( v_value[ i ].c_str() );
-				string_to_double( var, calc1 );
-			}
-         if (v_desc[i] == std::string("Calculation2"))
-			{
-				const string var( v_value[ i ].c_str() );
-				string_to_double( var, calc2 );
-			}
-         if (v_desc[i] == std::string("Calculation3"))
-			{
-				const string var( v_value[ i ].c_str() );
-				string_to_double( var, calc3 );
-			}
+         const string var( v_value[ i ].c_str() );
+         cout << " Result from Excel " << var << endl;
+         string_to_double( var, calc1 );
+      }
+      if( v_desc[ i ] == std::string( "Calculation2" ) )
+      {
+         const string var( v_value[ i ].c_str() );
+         cout << " Result from Excel " << var << endl;
+         string_to_double( var, calc2 );
+      }
+      if( v_desc[ i ] == std::string( "Calculation3" ) )
+      {
+         const string var( v_value[ i ].c_str() );
+         cout << " Result from Excel " << var << endl;
+         string_to_double( var, calc3 );
       }
    }
 
    long calcselect = myInterface.getInt("int1");
+   std::cout<< "CalcSelect: " << calcselect <<std::endl;
+   std::cout<< "Calc1: " << calc1 <<std::endl;
+   std::cout<< "Calc2: " << calc2 <<std::endl;
+   std::cout<< "Calc3: " << calc3 <<std::endl;
 
    if ( calcselect == 0 )
    {

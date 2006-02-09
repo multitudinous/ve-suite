@@ -1,5 +1,5 @@
 #include "SampleMFC_GaugesUnit_i.h"
-#include "string_ops.h"
+#include "VE_Conductor/Framework/string_ops.h"
 
 // Implementation skeleton constructor
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)

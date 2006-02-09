@@ -4,7 +4,7 @@
 #include <Afx.h>
 #include "ExcelWrapper.h"
 #include "moduleS.h"
-#include "package.h" //so it can use the xerces stuff
+#include "VE_Conductor/Framework/package.h" //so it can use the xerces stuff
 
 #if !defined (ACE_LACKS_PRAGMA_ONCE)
 #pragma once

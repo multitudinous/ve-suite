@@ -56,11 +56,6 @@ public:
    virtual void CreateCustomVizFeature( int input );
 private:
    VE_Xplorer::cfdDigitalAnalogGauge* gauge;
-
-   double calc1;
-   double calc2;
-   double calc3;
-
 };
 extern "C"
 {
