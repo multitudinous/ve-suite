@@ -2001,16 +2001,6 @@ std::string Network::Save( std::string fileName )
 
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
-
-   if ( !fileName.compare("returnString") )
-   {
-      netowrkWriter.WriteToString();
-   }
-   else
-   {
-      netowrkWriter.WriteToFile();
-   }
-
    netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
 
    return fileName;
