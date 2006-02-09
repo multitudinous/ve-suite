@@ -435,7 +435,6 @@ Model* REI_Plugin::GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
    }
 
    veModel = new Model( );
-   ///May need to change this if it is not needed --biv
    veModel->SetOwnerDocument(doc);
 
    veModel->SetModelName( name.c_str() );
@@ -468,24 +467,21 @@ Model* REI_Plugin::GetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc )
    std::map<std::string, std::vector<long> *>::iterator itervi;
    for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
    {
-      ///Change these to use DataValuePair::GetDataXMLObject---biv
-      //veModel->GetInput( -1 )->SetData( itervi->first, *(itervi->second) );
+      veModel->GetInput( -1 )->SetData( itervi->first, *(itervi->second) );
    }
 
    ///Set the 1d double data
    std::map<std::string, std::vector<double> *>::iterator itervd;
    for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
    {
-      ///Change these to use DataValuePair::GetDataXMLObject---biv
-      //veModel->GetInput( -1 )->SetData( itervd->first, *(itervd->second) );
+      veModel->GetInput( -1 )->SetData( itervd->first, *(itervd->second) );
    }
 
    ///Set the 1d string data
    std::map<std::string, std::vector<std::string> *>::iterator itervs;
    for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
    {
-      ///Change these to use DataValuePair::GetDataXMLObject---biv
-      //veModel->GetInput( -1 )->SetData( itervs->first, *(itervs->second) );
+      veModel->GetInput( -1 )->SetData( itervs->first, *(itervs->second) );
    }
 
    // EPRI TAG
@@ -622,12 +618,12 @@ void REI_Plugin::UnPack(Interface * intf)
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelElement )
 {
-   /*if ( veModel != NULL )
+   if ( veModel != NULL )
    {
       delete veModel;
    }
 
-   veModel = new Model( doc );*/
+   veModel = new Model();
 
    veModel->SetObjectFromXMLData( modelElement );
    name = wxString( veModel->GetModelName().c_str() );
@@ -654,8 +650,7 @@ void REI_Plugin::SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelEle
       {
          tempData->GetData( *(_string[ dataName ]) );
       }
-      ///Change these to use DataValuePair::GetDataXMLObject---biv
-      /*else if ( std::string( "1DSTRING" ) == dataType )
+      else if ( std::string( "1DSTRING" ) == dataType )
       {
          tempData->GetData( *(_string1D[ dataName ]) );
       }
@@ -666,7 +661,11 @@ void REI_Plugin::SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelEle
       else if ( std::string( "1DLONG" ) == dataType )
       {
          tempData->GetData( *(_int1D[ dataName ]) );
-      }*/
+      }
+      else if ( std::string( "XMLOBJECT" ) == dataType )
+      {
+         tempData->GetData( *(_int1D[ dataName ]) );
+      }
    }
 /*
   // EPRI TAG
