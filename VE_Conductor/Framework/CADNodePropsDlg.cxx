@@ -464,7 +464,7 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
    std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
    nodeToWrite.push_back(nodeTagPair);
 
-   cadCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"CAD");
+   cadCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
 
    char* tempDoc = new char[ commandString.size() + 1 ];
    tempDoc = CORBA::string_dup( commandString.c_str() );

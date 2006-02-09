@@ -108,7 +108,13 @@ DataValuePair& DataValuePair::operator=( const DataValuePair& input)
       _dataUInt = input._dataUInt;
       _dataValue = input._dataValue;
       _dataString = input._dataString;
-      _veXMLObject = 0;
+
+      if(_veXMLObject)
+      {
+         delete _veXMLObject;
+         _veXMLObject = 0;
+      }
+
       if(input._veXMLObject)
       {
          _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy(input._veXMLObject->GetObjectType(),

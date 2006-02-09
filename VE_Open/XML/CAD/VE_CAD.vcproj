@@ -147,15 +147,6 @@
 			<File
 				RelativePath=".\CADPart.cxx">
 			</File>
-			<File
-				RelativePath=".\CADXMLReaderWriter.cxx">
-				<FileConfiguration
-					Name="dbg|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -184,15 +175,6 @@
 			</File>
 			<File
 				RelativePath=".\CADPart.h">
-			</File>
-			<File
-				RelativePath=".\CADXMLReaderWriter.h">
-				<FileConfiguration
-					Name="dbg|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
