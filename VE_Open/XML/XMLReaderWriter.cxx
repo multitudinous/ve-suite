@@ -57,6 +57,7 @@ XMLReaderWriter::~XMLReaderWriter()
          _domDocumentManager = 0;
       }
    }
+   _xmlObjects.clear();
 }
 /////////////////////////////////////////////////
 void XMLReaderWriter::UseStandaloneDOMDocumentManager()
@@ -120,6 +121,11 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData,
    _populateStructureFromDocument(_domDocumentManager->GetCommandDocument(),objectNamespace,tagname);
    _domDocumentManager->UnLoadParser();
 }
+//////////////////////////////////////////////////////////////////////
+std::vector<VE_XML::XMLObject*> XMLReaderWriter::GetLoadedXMLObjects()
+{
+   return _xmlObjects;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
                                                       std::string objectNamespace,
@@ -138,44 +144,6 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
          _xmlObjects.back()->SetObjectFromXMLData(xmlObjects->item(i));
       }
    }
-   /*{
-      if(_rootNode)
-      {
-         if(_rootNode->GetNodeType() != std::string("Assembly"))
-         {
-            delete _rootNode;
-            _rootNode = 0;
-            _rootNode = new VE_CAD::CADAssembly();
-         }
-      }else{
-         _rootNode = new VE_CAD::CADAssembly();
-      }
-      _rootNode->SetObjectFromXMLData(assemblies->item(0));
-   }
-   else
-   {
-      ///check for single part
-      DOMNodeList* parts = rootDocument->getElementsByTagName( xercesString("CADPart") );
-      unsigned int nParts = parts->getLength();
-      if(nParts)
-      {
-
-         //probably should create an assembly and then add all the parts but
-         //assuming there is only one part file for now
-         if(_rootNode)
-         {
-            if(_rootNode->GetNodeType() != std::string("Part"))
-            {
-               delete _rootNode;
-               _rootNode = 0;
-               _rootNode = new VE_CAD::CADPart();
-            }
-         }else{
-            _rootNode = new VE_CAD::CADPart();
-         }
-         _rootNode->SetObjectFromXMLData(parts->item(0));
-      }
-   }*/
 }
 
 ///////////////////////////////////////////////////////////
