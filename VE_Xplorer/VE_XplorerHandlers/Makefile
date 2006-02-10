@@ -106,6 +106,7 @@ SRCS=\
    cfdObjectHandler.cxx \
    CADEventHandler.cxx \
    CADAddNodeEH.cxx \
+   CADAddAttributeEH.cxx \
    CADTransformEH.cxx 
 
 			
