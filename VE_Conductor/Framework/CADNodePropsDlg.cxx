@@ -298,7 +298,7 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    //Active attribute selection
    wxStaticBox* activeAttribute = new wxStaticBox(_attributePanel, -1, wxT("Available Attributes"));
    wxStaticBoxSizer* activeAttributeSizer = new wxStaticBoxSizer(activeAttribute , wxVERTICAL);
-   _attributeSelection = new wxListBox(_attributePanel,ATTRIBUTE_PANEL_ID);
+   _attributeSelection = new wxListBox(_attributePanel,ACTIVE_ATTRIBUTE);
 
    if(_cadNode)
    {
@@ -373,8 +373,33 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& WXUNUSED(event))
 {
    if(_cadNode)
    {
+      ClearInstructions();
+      std::cout<<"Setting active attribute"<<std::endl;
       wxString attributeName = _attributeSelection->GetStringSelection();
       _cadNode->SetActiveAttribute(attributeName.GetData());
+      _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
+
+      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      nodeID->SetDataType("UNSIGNED INT");
+      nodeID->SetDataName(std::string("Node ID"));
+      nodeID->SetDataValue(_cadNode->GetID());
+      _instructions.push_back(nodeID);
+
+      VE_XML::DataValuePair* activeAttribute = new VE_XML::DataValuePair();
+      activeAttribute->SetDataType("STRING");
+      activeAttribute->SetData("Active Attribute",_cadNode->GetActiveAttribute()->GetAttributeName());
+      _instructions.push_back(activeAttribute);
+
+      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      nodeType->SetDataType("STRING");
+      nodeType->SetDataName(std::string("Node Type"));
+      nodeType->SetDataString(_cadNode->GetNodeType());
+      _instructions.push_back(nodeType);
+
+      std::cout<<"Done"<<std::endl;
+
+      _sendCommandsToXplorer();
+
    }
 }
 ///////////////////////////////////////////////////////////////
@@ -459,12 +484,6 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
                         addAttribute->SetDataType("XMLOBJECT");
                         addAttribute->SetData("CADAttribute",_cadNode->GetAttribute(newAttribute->GetAttributeName()));
                         _instructions.push_back(addAttribute);
-
-                        VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
-                        nodeType->SetDataType("STRING");
-                        nodeType->SetDataName(std::string("Node Type"));
-                        nodeType->SetDataString(_cadNode->GetNodeType());
-                        _instructions.push_back(nodeType);
 
                         _sendCommandsToXplorer();
                      }
@@ -551,6 +570,7 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////
 void CADNodePropertiesDlg::_sendCommandsToXplorer()
 {
+   std::cout<<"---Sending commands to Xplorer---"<<std::endl;
    VE_XML::Command* cadCommand = new VE_XML::Command();
 
    for(size_t i =0; i < _instructions.size(); i++)
@@ -576,11 +596,13 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
 
    char* tempDoc = new char[ commandString.size() + 1 ];
    tempDoc = CORBA::string_dup( commandString.c_str() );
-
+ 
    if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
    {
       try
       {
+         std::cout<<"The command to send: "<<std::endl;
+         std::cout<<tempDoc<<std::endl;
          // CORBA releases the allocated memory so we do not have to
          _vjObsPtr->SetCommandString( tempDoc );
       }
