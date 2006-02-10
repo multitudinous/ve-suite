@@ -58,7 +58,8 @@ DataValuePair::DataValuePair(std::string type )
    _dataValue = 0;
    _dataString = '\0';
    _dataUInt = 0;
-  
+   intDataValue = 0;
+
    _veXMLObject = 0;
    SetObjectType("DataValuePair");
    
@@ -76,13 +77,10 @@ DataValuePair::~DataValuePair()
 DataValuePair::DataValuePair( const DataValuePair& input )
 :XMLObject(input)
 {
-   
-
-   _dataUInt = 0;
-   
    _dataUInt = input._dataUInt;
    _dataType = input._dataType;
    _dataName = input._dataName;
+   intDataValue = input.intDataValue;
 
    _dataValue = input._dataValue;
    _dataString = input._dataString;
@@ -106,6 +104,7 @@ DataValuePair& DataValuePair::operator=( const DataValuePair& input)
       _dataType = input._dataType;
       _dataName = input._dataName;
       _dataUInt = input._dataUInt;
+      intDataValue = input.intDataValue;
       _dataValue = input._dataValue;
       _dataString = input._dataString;
 
@@ -147,6 +146,7 @@ void DataValuePair::SetDataType(std::string type)
       (type == std::string("UNSIGNED INT")) ||
        (type == std::string("FLOAT"))  ||
        (type == std::string("FARRAY")) ||
+       (type == std::string("LONG")) ||
        (type == std::string("XMLOBJECT")) )
    {
       _dataType = type;

@@ -124,7 +124,9 @@ DOMElement* XMLObject::GetXMLData( std::string input )
       SetSubElement("objectType",_objectType);
       SetSubElement("objectNamespace",_objectNamespace);
       return _veElement;
-   }else{
+   }
+   else
+   {
       std::cout<<"Root Document not set!!"<<std::endl;
       return 0;
    }
@@ -243,6 +245,7 @@ void XMLObject::SetSubElement( std::string subElementTagName, double dataValue )
 ////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue )
 {
+   dataValue->SetOwnerDocument( _rootDocument );
    _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

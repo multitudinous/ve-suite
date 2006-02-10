@@ -142,6 +142,7 @@ bool XMLObjectFactory::RegisterObjectCreator(std::string objectNamespace,Creatio
    }
    if(objectNamespace != std::string("XML") && 
       objectNamespace != std::string("CAD") &&
+      objectNamespace != std::string("Model") &&
       objectNamespace != std::string("Shader"))
    {
       std::cout<<"Invalid namespace specified: "<<objectNamespace<<std::endl;

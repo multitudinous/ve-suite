@@ -48,6 +48,8 @@ Port::Port(  )
    modelName = '\0';
    dataFlow = '\0';
    portLocation = new Point(  );
+   SetObjectType("Port");
+   SetObjectNamespace("Model");
 }
 ///////////////////////////////////
 Port::~Port()

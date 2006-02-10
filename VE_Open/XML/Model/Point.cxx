@@ -44,6 +44,8 @@ Point::Point( )
 {
    point.first = 0;
    point.second = 0;
+   SetObjectType("Point");
+   SetObjectNamespace("Model");
 }
 /////////////////////////////
 //Destructor               //

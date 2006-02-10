@@ -44,6 +44,8 @@ Link::Link(  )
 {
    portInfo.first = new DataValuePair("FLOAT" );
    portInfo.second = new DataValuePair("FLOAT" );
+   SetObjectType("Link");
+   SetObjectNamespace("Model");
 }
 ///////////////////////////////////
 Link::~Link()
@@ -102,6 +104,7 @@ void Link::_updateVEElement( std::string input )
    }
 
    // write all the elements according to verg_model.xsd
+   
    SetSubElement( "fromPort", portInfo.first );
    SetSubElement( "toPort", portInfo.second );
    for ( size_t i = 0; i < linkPoints.size(); ++i )

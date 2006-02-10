@@ -42,7 +42,8 @@ using namespace VE_Model;
 Network::Network(  )
 :XMLObject(  )
 {
-   ;
+   SetObjectType("Network");
+   SetObjectNamespace("Model");
 }
 ///////////////////////////////////
 Network::~Network()

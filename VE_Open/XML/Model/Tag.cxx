@@ -41,7 +41,8 @@ using namespace VE_Model;
 Tag::Tag()
 :XMLObject()
 {
-   ;   
+   SetObjectType("Tag");
+   SetObjectNamespace("Model");   
 }
 ///////////////////////////////////
 Tag::~Tag()

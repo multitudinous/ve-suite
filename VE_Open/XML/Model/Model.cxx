@@ -51,6 +51,8 @@ Model::Model()
    iconFileName = '\0';
    iconLocation = new Point(  );
    geometry = new CADNode( "oops" );
+   SetObjectType("Model");
+   SetObjectNamespace("Model");
 }
 ///////////////////////////////////
 Model::~Model()
@@ -343,13 +345,13 @@ DataValuePair* Model::GetInput( int i )
    }
    catch (...)
    {
-      if ( i > (inputs.size() + 1) )
+      //if ( i > (inputs.size() + 1) )
       {
          std::cerr << "The element request is out of sequence."
                      << " Please ask for a lower number point." << std::endl;
-         return 0;
+         //return 0;
       }
-      else
+      //else
       {
          inputs.push_back( new DataValuePair(  ) );
          return inputs.back();

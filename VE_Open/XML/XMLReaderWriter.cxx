@@ -167,7 +167,7 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObjec
       ///Loop over all the objects that are passed in
       for ( size_t i = 0; i < nodes.size(); ++i )
       {   
-         nodes.at( i ).first->SetOwnerDocument( _domDocumentManager->GetCommandDocument() );
+         nodes.at( i ).first->SetOwnerDocument( doc );
          doc->getDocumentElement()->appendChild( nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );  
       }
 
