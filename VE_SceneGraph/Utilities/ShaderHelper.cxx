@@ -118,6 +118,7 @@ ShaderHelper::~ShaderHelper()
 void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
 {
 #ifdef _OSG
+   std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
    if(!_ss.valid())
    {
       _ss = new osg::StateSet();
