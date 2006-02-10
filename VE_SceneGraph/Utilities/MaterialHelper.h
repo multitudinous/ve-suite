@@ -38,6 +38,7 @@
  * Class that creates an OSG StateSet representing
  * a glsl program.
  */
+#include "VE_Installer/include/VEConfig.h"
 
 ///\todo Still need to implement the performer side
 #ifdef _OSG
@@ -61,7 +62,7 @@ namespace VE_SceneGraph
 {
 namespace Utilities
 {
-class MaterialHelper{
+class VE_SCENEGRAPH_UTILS_EXPORTS MaterialHelper{
 public:
    ///Constructor
    MaterialHelper();

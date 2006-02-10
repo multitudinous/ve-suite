@@ -39,13 +39,23 @@
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_Builder/Translator/cfdGrid2Surface.h"
 #include "VE_SceneGraph/cfdClone.h"
+#include "VE_SceneGraph/Utilities/Attribute.h"
 
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
+#include "VE_Open/XML/XMLCreator.h"
+
 #include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/CAD/CADAttribute.h"
+#include "VE_Open/XML/CAD/CADCreator.h"
+
+#include "VE_Open/XML/Shader/ShaderCreator.h"
 
 #include "VE_Xplorer/EventHandler.h"
 #include "VE_Xplorer/CADTransformEH.h"
 #include "VE_Xplorer/CADAddNodeEH.h"
+#include "VE_Xplorer/CADAddAttributeEH.h"
+
 
 #ifdef _OSG
 #include <osg/StateSet>
@@ -100,13 +110,26 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
    _activeTextureDataSet = 0;
 #endif
    _rootCADNode = 0;
-   
+   if(!VE_XML::XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
+   {
+      VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
+   }
+   if(!VE_XML::XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
+   {
+      VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_Shader::ShaderCreator());
+   }
+   if(!VE_XML::XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("CAD"))
+   {
+      VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
+   }
    _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
    _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")]->SetGlobalBaseObject(this);
    
    _eventHandlers[std::string("CAD_ADD_NODE")] = new VE_EVENTS::CADAddNodeEventHandler();
    _eventHandlers[std::string("CAD_ADD_NODE")]->SetGlobalBaseObject(this);
 
+   _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")] = new VE_EVENTS::CADAddAttributeEventHandler();
+   _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")]->SetGlobalBaseObject(this);
 }
 
 cfdModel::~cfdModel()
@@ -204,13 +227,6 @@ cfdModel::~cfdModel()
    this->textureBased = new cfdGroup();
 */
 
-   std::map<std::string,VE_EVENTS::EventHandler*>::iterator foundEvents;
-   // Remove any plugins that aren't present in the current network
-   for ( foundEvents=_eventHandlers.begin(); foundEvents!=_eventHandlers.end(); )
-   {
-      _eventHandlers.erase( foundEvents++ );
-   }
-   _eventHandlers.clear();
    vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
    if(_rootCADNode)
@@ -852,6 +868,35 @@ void cfdModel::CreatePart(std::string fileName,
                        unsigned int parentID)
 {
    _partList[partID] = new VE_Xplorer::cfdFILE(fileName,_assemblyList[parentID]);
+}
+//////////////////////////////////////////////
+void cfdModel::AddAttributeToNode(unsigned int nodeID,
+                              std::string nodeType,
+                              VE_CAD::CADAttribute* newAttribute)
+{
+   osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
+   attribute->CreateStateSetFromAttribute(newAttribute);
+
+   std::pair<std::string,osg::ref_ptr< osg::StateSet > >attributeInfo;
+   attributeInfo.first = newAttribute->GetAttributeName();
+   attributeInfo.second = attribute.get();
+   
+   
+   std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+   attributeList = _nodeAttributes.find(nodeID);
+   std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > temp;
+   if(attributeList != _nodeAttributes.end())
+   {
+      temp = attributeList->second;
+      temp.push_back(attributeInfo);
+   }
+   else
+   { 
+      temp.push_back(attributeInfo);
+      _nodeAttributes[nodeID] = temp;
+   }
+   
+
 }
 ///////////////////////////////////////////////////////////
 VE_Xplorer::cfdFILE* cfdModel::GetPart(unsigned int partID)

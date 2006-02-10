@@ -42,6 +42,7 @@
 #include "VE_Open/XML/FloatArray.h"
 #include <string>
 using namespace VE_CAD;
+using namespace VE_SceneGraph::Utilities;
 ////////////////////////////////
 //Construtor                  //
 ////////////////////////////////

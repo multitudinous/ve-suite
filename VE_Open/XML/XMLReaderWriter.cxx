@@ -140,7 +140,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
    {
       for(unsigned int i = 0; i < nXMLObjects; i++)
       {
-         _xmlObjects.push_back(XMLObjectFactory::CreateXMLObject(objectNamespace,tagName));
+         _xmlObjects.push_back(XMLObjectFactory::CreateXMLObject(tagName,objectNamespace));
          _xmlObjects.back()->SetObjectFromXMLData(xmlObjects->item(i));
       }
    }

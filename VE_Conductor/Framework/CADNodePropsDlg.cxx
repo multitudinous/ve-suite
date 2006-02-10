@@ -446,6 +446,27 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
                         _cadNode->AddAttribute(newAttribute);
                         _updateAvailableAttributes();
                         _attributeSelection->SetSelection(_nShaders-1);
+
+                        _commandName = std::string("CAD_ADD_ATTRIBUTE_TO_NODE");
+                        
+                        VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+                        nodeID->SetDataType("UNSIGNED INT");
+                        nodeID->SetDataName(std::string("Node ID"));
+                        nodeID->SetDataValue(_cadNode->GetID());
+                        _instructions.push_back(nodeID);
+      
+                        VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
+                        addAttribute->SetDataType("XMLOBJECT");
+                        addAttribute->SetData("CADAttribute",_cadNode->GetAttribute(newAttribute->GetAttributeName()));
+                        _instructions.push_back(addAttribute);
+
+                        VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+                        nodeType->SetDataType("STRING");
+                        nodeType->SetDataName(std::string("Node Type"));
+                        nodeType->SetDataString(_cadNode->GetNodeType());
+                        _instructions.push_back(nodeType);
+
+                        _sendCommandsToXplorer();
                      }
                      catch(...)
                      {

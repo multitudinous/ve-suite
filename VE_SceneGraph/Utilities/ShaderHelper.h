@@ -34,10 +34,13 @@
 /*!\file ShaderHelper.h
   ShaderHelper API
   */
-/*!\class VE_CAD::ShaderHelper
+/*!\class VE_SceneGraph::Utilities::ShaderHelper
  * Class that creates an OSG StateSet representing
  * a glsl program.
  */
+#include "VE_Installer/include/VEConfig.h"
+///\todo This class still needs to be implemented for performer
+#ifdef _OSG
 #include <osg/StateSet>
 
 namespace osg
@@ -45,6 +48,8 @@ namespace osg
    class Shader;
    class Program;
 }
+#elif _PERFORMER
+#endif
 namespace VE_Shader
 {
    class Program;
@@ -54,8 +59,11 @@ namespace VE_Shader
 ///////////////////////////////////////////////////////////////////////
 //this class is used to create a stateset representing a glsl program//
 ///////////////////////////////////////////////////////////////////////
-namespace VE_Shader{
-class ShaderHelper{
+namespace VE_SceneGraph
+{
+namespace Utilities
+{
+class VE_SCENEGRAPH_UTILS_EXPORTS ShaderHelper{
 public:
    ///Constructor
    ShaderHelper();
@@ -68,10 +76,11 @@ public:
 
    ///Load and create the stateset from the input XML data
    void LoadGLSLProgram(VE_Shader::Program* glslProgram);
-
+#ifdef _OSG
    ///Get the created state set representing the shader
    osg::StateSet* GetProgramStateSet();
-
+#elif _PERFORMER
+#endif
    ///Equal operator
    ///\param rhs Right hand side.
    ShaderHelper& operator=(const ShaderHelper& rhs);
@@ -91,12 +100,14 @@ protected:
 
    std::vector<std::string> _vertexUniformNames;///<Vertex program uniform names.
    std::vector<std::string> _fragmentUniformNames;///<Fragment program uniform names.
-
+#ifdef _OSG
    osg::ref_ptr<osg::Shader> _vshader;///<The vertex shader.
    osg::ref_ptr<osg::Shader> _fshader;///<The fragment shader.
    osg::ref_ptr<osg::Program> _glslProgram;///<The GLSL program.
    osg::ref_ptr<osg::StateSet> _ss;///<The stateset representing the GLSL program.
-
+#elif _PERFORMER
+#endif
 };
+}
 }
 #endif// SHADER_HELPER_H

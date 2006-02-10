@@ -30,17 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "Utils/ShaderHelper.h"
+#include "VE_SceneGraph/Utilities/ShaderHelper.h"
+#ifdef _OSG
 #include <osg/StateSet>
 #include <osg/Shader>
 #include <osg/Uniform>
 #include <osg/Texture>
+#elif _PEFORMER
+#endif
+
 #include <iostream>
 #include <sstream>
 #include "VE_Open/XML/Shader/Shader.h"
 #include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/Shader/Uniform.h"
 using namespace VE_Shader;
+using namespace VE_SceneGraph::Utilities;
 //////////////////////////////////////
 //Constructors                      //
 //////////////////////////////////////
@@ -59,6 +64,7 @@ ShaderHelper::ShaderHelper(const ShaderHelper& rhs)
    {
       _fragmentUniformNames.push_back(rhs._fragmentUniformNames.at(i));
    }
+#ifdef _OSG
    if(rhs._vshader.valid())
       _vshader = new osg::Shader(*rhs._vshader.get());
    
@@ -67,6 +73,8 @@ ShaderHelper::ShaderHelper(const ShaderHelper& rhs)
    
    _glslProgram = new osg::Program(*_glslProgram.get());
    _ss = new osg::StateSet(*rhs._ss);
+#elif _PERFORMER
+#endif
 }
 //////////////////////////////////////////////////////////////
 ShaderHelper& ShaderHelper::operator=(const ShaderHelper& rhs)
@@ -83,7 +91,7 @@ ShaderHelper& ShaderHelper::operator=(const ShaderHelper& rhs)
       {
          _fragmentUniformNames.push_back(rhs._fragmentUniformNames.at(i));
       }
-
+#ifdef _OSG
       
       if(rhs._vshader.valid())
          _vshader = rhs._vshader;
@@ -93,6 +101,8 @@ ShaderHelper& ShaderHelper::operator=(const ShaderHelper& rhs)
      
       _glslProgram = rhs._glslProgram;
       _ss = rhs._ss;
+#elif _PERFORMER
+#endif
    }
    return *this;
 }
@@ -107,6 +117,7 @@ ShaderHelper::~ShaderHelper()
 ///////////////////////////////////////////////////////////////////
 void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
 {
+#ifdef _OSG
    if(!_ss.valid())
    {
       _ss = new osg::StateSet();
@@ -130,6 +141,10 @@ void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
    {
       _createGLSLShader(glslProgram->GetVertexShader());
    }
+   
+#elif _PERFORMER
+   std::cout<<"Not implemented for Performer yet!!!"<<std::endl;
+#endif
    _attachGLSLProgramToStateSet();
 }
 ///////////////////////////////////////////////////////////////
@@ -141,7 +156,7 @@ void ShaderHelper::_createGLSLShader(VE_Shader::Shader* shader)
       return;
    }
    _extractUniformsFromShader(shader);
-
+#ifdef _OSG
    if(shader->GetShaderType() == std::string("Fragment")){
       if(!_fshader)
       {
@@ -159,6 +174,9 @@ void ShaderHelper::_createGLSLShader(VE_Shader::Shader* shader)
       }
       _glslProgram->addShader(_vshader.get());
    }
+#elif _PERFORMER
+   std::cout<<"Not implemented for Performer yet!!!"<<std::endl;
+#endif
 }
 ////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
@@ -171,12 +189,12 @@ void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
    std::vector<float> uniformValues;
    for(size_t i = 0; i < nUniforms; i++)
    {
-      uniformData = shader->GetUniform(i);
+      uniformData = &shader->GetUniform(i);
       uniformName = uniformData->GetName();
       uniformType = uniformData->GetType();
       uniformSize = uniformData->GetSize();
       uniformValues = uniformData->GetValues();
-
+#ifdef _OSG
       if(uniformType == "Float"){
          if(uniformSize == 1)
          {
@@ -240,11 +258,15 @@ void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
                                                                      boolValues.at(3))));
          }
       }
+#elif _PERFORMER
+      std::cout<<"Not implemented for Performer yet!!!"<<std::endl;
+#endif
    }
 }
 /////////////////////////////////////////////////////////////////
 void ShaderHelper::_attachGLSLProgramToStateSet(bool override)
 {
+#ifdef _OSG
    if(_ss.valid()){
       if(_glslProgram.valid()){
          //_glslProgram->setName(_name.c_str());
@@ -255,7 +277,11 @@ void ShaderHelper::_attachGLSLProgramToStateSet(bool override)
          }
       }
    }
+#elif _PERFORMER
+   std::cout<<"Not implemented for Performer yet!!!"<<std::endl;
+#endif
 }
+#ifdef _OSG
 //////////////////////////////////////////////////////////////
 osg::StateSet* ShaderHelper::GetProgramStateSet()
 {
@@ -269,4 +295,5 @@ osg::StateSet* ShaderHelper::GetProgramStateSet()
    }
    return 0;
 }
-
+#elif _PERFORMER
+#endif

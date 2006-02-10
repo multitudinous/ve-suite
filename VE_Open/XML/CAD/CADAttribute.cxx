@@ -31,9 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/XML/CAD/CADAttribute.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include "VE_Open/XML/CAD/CADCreator.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/Shader/Program.h"
 using namespace VE_Shader;
 using namespace VE_CAD;
+using namespace VE_XML;
 /////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                      //
 /////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +49,16 @@ CADAttribute::CADAttribute( )
    _glslProgram = 0;
    SetObjectType("CADAttribute");
    SetObjectNamespace("CAD");
+   //This may need to be somewhere else
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("CAD"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new CADCreator());
+   }
+
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
+   }
 }
 /////////////////////////////
 //Destructor               //

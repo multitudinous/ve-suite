@@ -65,6 +65,7 @@ CADAssembly::~CADAssembly()
          std::cout<<"Child deleted!"<<std::endl;
       }
    }
+  
    _children.clear();
    _numChildren = 0;
 }

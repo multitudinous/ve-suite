@@ -72,6 +72,7 @@ namespace VE_EVENTS
 namespace VE_CAD
 {
    class CADNode;
+   class CADAttribute;
 }
 namespace VE_Xplorer
 {
@@ -162,6 +163,13 @@ namespace VE_Xplorer
          std::string GetGeomFileName( int );
          void CreateGeomDataSet( std::string );
 
+         ///Add a new attribute to a node
+         ///\param nodeID The ID of the node to add Attribute to.
+         ///\param nodeType The node type.
+         ///\param The CADAttribute to add to the node.
+         void AddAttributeToNode(unsigned int nodeID,
+                              std::string nodeType,
+                              VE_CAD::CADAttribute* newAttribute);
 
          ///Create a new assembly
          void CreateAssembly(unsigned int assemblyID);
@@ -278,7 +286,7 @@ public:
 
          std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 #ifdef _OSG
-         std::map< unsigned int, std::pair< unsigned int,osg::ref_ptr< osg::StateSet > > > _nodeAttributes;///<The map of node attributes.
+         std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
 #endif
    };
 }

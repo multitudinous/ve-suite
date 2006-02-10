@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_SceneGraph/Attribute.h"
+#include "VE_SceneGraph/Utilities/Attribute.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf.h>
@@ -50,10 +50,18 @@ void VE_SceneGraph::Utilities::Attribute::init(void)
    }
 }
 #endif
+#include "VE_Open/XML/CAD/CADAttribute.h"
+#include "VE_SceneGraph/Utilities/MaterialHelper.h"
+#include "VE_SceneGraph/Utilities/ShaderHelper.h"
+
+#ifdef _OSG
+//why is this needed
+#include <osg/Material>
+#elif _PERFORMER
+#endif
 
 using namespace VE_SceneGraph::Utilities;
 using namespace VE_CAD;
-using namespace VE_Shader;
 //////////////////////
 ///Constructor      //
 //////////////////////
@@ -73,7 +81,7 @@ Attribute::Attribute()
 #ifdef _OSG
 //////////////////////////////////////////////////////////
 Attribute::Attribute(const Attribute& veAttribute,
-                     const osg::CopyOp& copyop)
+                   const osg::CopyOp& copyop)
 :osg::StateSet(veAttribute,copyop)
 {
 }
@@ -85,17 +93,25 @@ Attribute::~Attribute()
 ////////////////////////////////////////////////////////////////////////////
 void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
 {
-   std::string attributeType = attributes->GetAttributeType(); 
+   std::string attributeType = attribute->GetAttributeType(); 
    if( attributeType == std::string("Material"))
    {
-      VE_CAD::MaterialHelper materialHelper;
+      MaterialHelper materialHelper;
       materialHelper.LoadMaterial(attribute->GetMaterial());
-      this = materialHelper.GetMaterialStateSet();
+#ifdef _OSG
+      osg::ref_ptr<osg::StateSet> temp = dynamic_cast<osg::StateSet*>(this); 
+      temp = materialHelper.GetMaterialStateSet().get();
+#elif _PERFORMER
+#endif
    }
    else if( attributeType == std::string("Program"))
    {
-      VE_Shader::ShaderHelper shaderHelper;
+      ShaderHelper shaderHelper;
       shaderHelper.LoadGLSLProgram(attribute->GetGLSLProgram());
-      this = materialHelper->GetProgramStateSet();
+#ifdef _OSG
+      osg::ref_ptr<osg::StateSet> temp = dynamic_cast<osg::StateSet*>(this); 
+      temp = shaderHelper.GetProgramStateSet();
+#elif _PERFORMER
+#endif
    }
 }

@@ -30,8 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/XML/CAD/CADMaterial.h"
+#include "VE_Open/XML/CAD/CADCreator.h"
 #include "VE_Open/XML/FloatArray.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
 XERCES_CPP_NAMESPACE_USE
+using namespace VE_XML;
 using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////
 //Constructor                                                     //
@@ -61,6 +64,11 @@ CADMaterial::CADMaterial(std::string name)
    _face = std::string("Front_and_Back");
    SetObjectType("CADMaterial");
    SetObjectNamespace("CAD");
+   //This may need to be somewhere else
+   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("CAD"))
+   {
+      XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new CADCreator());
+   }
 }
 ///////////////////////////
 //Destructor             //

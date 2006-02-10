@@ -93,11 +93,6 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
 /////////////////////////////////////////
 CADNodeManagerDlg::~CADNodeManagerDlg()
 {
-   if(_rootNode)
-   {
-      delete _rootNode;
-      _rootNode = 0;
-   }
 
    if(_cadTreeBuilder)
    {
