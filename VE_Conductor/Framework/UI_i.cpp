@@ -62,7 +62,7 @@ void Body_UI_i::UpdateNetwork (
       std::cout<<network<<std::endl;
     std::cout<<UIName_<<" :UpdateNetwork called"<<std::endl;
     
-    ui_network_->LoadS(network);
+    ui_network_->Load(network);
      
   }
   

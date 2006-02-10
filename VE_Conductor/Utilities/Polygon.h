@@ -63,7 +63,7 @@ public:
    ///\param oldpoly polygon that you are translating from
    ///\param x x translation distance
    ///\param y y translation distance
-   void TransPoly( Polygon oldpoly, int x, int y );
+   //void TransPoly( Polygon oldpoly, int x, int y );
    double nearpnt( wxPoint pt, Polygon poly, Polygon& Near);
    ///Is this point inside this polygon
    int inside( wxPoint pt );

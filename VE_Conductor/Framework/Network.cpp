@@ -1940,8 +1940,10 @@ std::string Network::Save( std::string fileName )
       VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
       //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
       //xmlLink->GetToPort()->SetData( modules[ links[i].GetToModule() ].pl_mod->GetModelName(), links[i].GetToPort() );
-      xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromPort() ) );
-      xmlLink->GetToPort()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetToPort() ) );
+      xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
+      xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
+      *(xmlLink->GetFromPort()) = static_cast< long int >( links[i].GetFromPort() );
+      *(xmlLink->GetToPort()) = static_cast< long int >( links[i].GetToPort() );
 
       //Try to store link cons,
       //link cons are (x,y) wxpoint
@@ -1961,6 +1963,7 @@ std::string Network::Save( std::string fileName )
                   std::pair< VE_XML::XMLObject*, std::string >( 
                   modules[ iter->first ].GetPlugin()->GetVEModel(), "veModel" ) 
                      );
+      dynamic_cast< VE_Model::Model* >( nodes.back().first )->SetModelName( modules[ iter->first ].GetClassName() );
    }
 
    //  tags
@@ -2005,305 +2008,6 @@ std::string Network::Save( std::string fileName )
 
    return fileName;
 }
-
-void Network::UnPack(std::vector<Interface> & intfs)
-{
-/*   int _id = 0;
-   Interface ntpk;
-   std::vector<std::string> vars;
-   long temp = 0;
-   double tempd = 0;
-   std::string temps;
-   std::vector<long> templ1d;
-   int pos, ii, j, num, polynum;
-   unsigned int i;
-   wxClassInfo * cls;
-   wxRect bbox;
-   LINK * ln;
-   POLY tmpPoly;
-   std::map<int, Module>::iterator iter;
-   //Read it from the file
-   int modsize = 0;
-   Module temp_mod;
-
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){;}
-
-   for (i=0; i< links.size(); i++)
-   {
-      delete links[i];
-   }
-   links.clear();
-
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
-   {
-      i = iter->first;
-      delete modules[i].GetPlugin();
-   }
-   modules.clear();
-
-   tags.clear();
-
-   ntpk = intfs[0];
-
-   vars = ntpk.getInts();
-   for (i=0; i<vars.size(); i++)
-   {
-      ntpk.getVal(vars[i], temp);
-      if (vars[i]=="GetNumPix()->first")
-	      GetNumPix()->first = temp;
-      else if (vars[i]=="GetNumPix()->second")
-	      GetNumPix()->second = temp;
-      else if (vars[i]=="GetNumUnit()->first")
-	      GetNumUnit()->first = temp;
-      else if (vars[i]=="GetNumUnit()->second")
-	      GetNumUnit()->second = temp;
-      else if (vars[i]=="Module_size")
-	      modsize=temp;
-      else if (vars[i]=="Link_size")
-	   {
-	      links.resize(temp); // repopulate the links vector
-	      for (j=0; j<temp; j++)
-	      {
-	         ln = new LINK;
-	         links[j]=ln;
-	      }
-	   }
-      else if (vars[i]=="Tag_size")
-	      tags.resize(temp);
-      else if ((pos=vars[i].find("ln_FrMod_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+9, 4).c_str());
-	      links[num]->Fr_mod=temp;
-	   }
-      else if ((pos=vars[i].find("ln_ToMod_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+9, 4).c_str());
-	      links[num]->To_mod=temp;
-	   }
-      else if ((pos=vars[i].find("ln_FrPort_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+10, 4).c_str());
-	      links[num]->Fr_port=temp;
-	   }
-      else if ((pos=vars[i].find("ln_ToPort_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+10, 4).c_str());
-	      links[num]->To_port=temp;
-	   }
-      else if ((pos=vars[i].find("tag_Con0X_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+10, 4).c_str());
-	      tags[num].cons[0].x = temp;
-	   }
-      else if ((pos=vars[i].find("tag_Con0Y_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+10, 4).c_str());
-	      tags[num].cons[0].y = temp;
-	   }
-      else if ((pos=vars[i].find("tag_Con1X_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+10, 4).c_str());
-	      tags[num].cons[1].x = temp;
-	   }
-      else if ((pos=vars[i].find("tag_Con1Y_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+10, 4).c_str());
-	      tags[num].cons[1].y = temp;
-	   }
-      else if ((pos=vars[i].find("tag_BoxX_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+9, 4).c_str());
-	      tags[num].box.x = temp;
-	   }
-      else if ((pos=vars[i].find("tag_BoxY_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+9, 4).c_str());
-	      tags[num].box.y = temp;
-	   }
-   }
-
-  vars = ntpk.getDoubles();
-  for (i=0; i<vars.size(); i++)
-    {
-      ntpk.getVal(vars[i], tempd);
-      if (vars[i]=="m_xUserScale")
-	m_xUserScale = tempd;
-      else if (vars[i]=="m_yUserScale")
- 	m_yUserScale = tempd;
-    }
-
-   vars = ntpk.getStrings();
-   for (i=0; i<vars.size(); i++)
-   {
-      ntpk.getVal(vars[i], temps);
-      if ((pos=vars[i].find("modCls_"))!=(int)std::string::npos)
-	   {
-	      num =atoi(vars[i].substr(pos+7, 4).c_str());
-	      cls = wxClassInfo::FindClass(temps.c_str());
-	      if (cls==NULL)
-	      {
-	         // wxMessageBox("Load failed : You don't have that class in your Plugin DLL!", temps.c_str());
-	         for (ii=0; ii< (int)links.size(); ii++)
-		         if (links[ii]!=NULL)
-		            delete links[ii];
-	         links.clear();
-	      
-	         for (iter=modules.begin(); iter!=modules.end(); iter++)
-		      {
-		         ii = iter->first;
-		         if (modules[ii].GetPlugin()!=NULL)
-		            delete modules[ii].GetPlugin();
-		      }
-	         modules.clear();
-	      
-	         tags.clear();
-	         while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-	            return;
-	      }
-
-	      modules[num]=temp_mod;
-	      modules[num].GetPlugin() = (REI_Plugin *) cls->CreateObject();
-         modules[num].GetPlugin()->SetID(num);
-	      modules[num].cls_name = temps;
-	   }
-   
-      if ((pos=vars[i].find("tag_Txt_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+8, 4).c_str());
-	      tags[num].text = wxString(temps.c_str());
-	   }
-   }
-   
-   vars = ntpk.getInts1D();
-   for (i=0; i<vars.size(); i++)
-   {
-      ntpk.getVal(vars[i],templ1d);
-      if ((pos=vars[i].find("ln_ConX_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+8, 4).c_str());
-
-	      if ( links[num].GetNumberOfPoints() == 0 )
-	         links[num].GetPoints()->resize(templ1d.size());
-
-	      for (j=0; j<(int)templ1d.size(); j++)
-	         links[num].GetPoint( j )->x = templ1d[j];
-	   }
-      else if ((pos=vars[i].find("ln_ConY_"))!=(int)std::string::npos)
-	   {
-	      num = atoi(vars[i].substr(pos+8, 4).c_str());
-	      for (j=0; j<(int)templ1d.size(); j++)
-	         links[num].GetPoint( j )->y = templ1d[j];
-	   }
-   }
-
-   // unpack the modules' UIs
-   // start from 1 because the link interface is the first one
-   for(i = 1; i<intfssize; ++i)
-   {
-      
-      _id = intfs[i]._id;
-      std::map<int, Module >::iterator itr=modules.find(_id);
-
-      if( (intfs[i]._type == 1) && (itr!=modules.end()) )
-      {
-         modules[_id].GetPlugin()->UnPack(&intfs[i]);
-      }
-      else if( intfs[i]._type == 2 )
-      {
-         Geometry* geometry = new Geometry( modules[_id].GetPlugin()->GetID() );
-         geometry->SetGeometryDataBuffer( modules[_id].GetPlugin()->GetGeometryDataBuffer() );
-
-         geometry->UnPack(&intfs[i]);
-
-         delete geometry;
-      }
-
-   }
-
-   //unpack the Global Param Dialog
-   // This is commented out because the computational engine
-   // strips the global data out so there is no reason to try
-   // to unpack it.
-   //globalparam_dlg->UnPack(&intfs[intfs.size()-1]);
-
-   //Now all the data are read from the file. 
-   //Let's try to reconstruct the link and the calculate the 
-   //first, calculate get the links vector into the modules
-   for (i=0; i<links.size(); i++)
-   {
-      modules[ links[ i ].GetToModule() ].GetLinks()->push_back( links[i] );
-      modules[ links[ i ].GetFromModule() ].GetLinks()->push_back( links[i] );
-   }
-
-   //Second, calculate the polyes
-   for (iter=modules.begin(); iter!=modules.end(); iter++)//=0; i<modules.size(); i++)
-   {
-      i=iter->first;
-      bbox = modules[i].GetPlugin()->GetBBox();
-      polynum = modules[i].GetPlugin()->GetNumPoly();
-      tmpPoly.resize(polynum);
-      modules[i].GetPlugin()->GetPoly(tmpPoly);
-      tmpPoly.TransPoly( bbox.x, bbox.y, modules[i].poly); //Make the network recognize its polygon 
-   }
-  
-   for (i=0; i<links.size(); i++)
-      links[i].CalcLinkPoly();
-
-   for (i=0; i<tags.size(); i++)
-      tags[i].CalcTagPoly();
-  
-   m_selMod = -1;
-   m_selFrPort = -1; 
-   m_selToPort = -1; 
-   m_selLink = -1; 
-   m_selLinkCon = -1; 
-   m_selTag = -1; 
-   m_selTagCon = -1; 
-   xold = yold =0;
-  
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
-
-   Refresh();*/
-}
-/*
-void Network::Save(wxString filename)
-{
-   //Actually write it to file
-   //used to create an nt file
-   Package p;
-   Pack(p.intfs);
-
-   // Here we wshould loop over all of the following
-   //  Newtork
-   //  Models
-   //  Canvas info
-   //  tags
-   p.SetPackName("Network");
-   p.SetSysId(filename.c_str());
-
-   p.Save();
-}
-
-////////////////////////////////////////////////////////
-void Network::SaveS( std::string& network_pack )
-{
-   //Actually write to memory
-   //usually used by Frame to submit job to ce
-   Package p;
-   Pack(p.intfs);
-
-   // Here we wshould loop over all of the following
-   //  Newtork
-   //  Models
-   //  Canvas info
-   //  tags
-   p.SetPackName("Network");
-   p.SetSysId("test.xml");
-
-   bool rv;
-   network_pack = p.Save(rv);
-}
-*/
 ////////////////////////////////////////////////////////
 void Network::New()
 {
@@ -2325,40 +2029,128 @@ void Network::New()
 
    Refresh();
 }
-
 ////////////////////////////////////////////////////////
-void Network::Load(wxString filename)
+void Network::Load( std::string xmlNetwork )
 {
    // Load from the nt file loaded through wx
-   wxString tempWx( filename );
-   Package p;
+   // Get a list of all the command elements   
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.ReadXMLData( xmlNetwork, "Model", "Network" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
-   std::string tempString( filename );
-   p.SetSysId( tempString.c_str() );
-   p.Load();
-
-   intfssize = p.GetIntfsNum();
-
-   UnPack(p.intfs);
-
-   // This function will read the xml file
-   // and then create the network and the models
-}
-
-//////////////////////////////////////////////////////
-void Network::LoadS(const char* inputs)
-{
-   // Load from memory
-   // This is general used by Load Job in Frame
-   Package p;
-   p.SetSysId("temp.xml");
-
-   if ( std::string( inputs ) != "" )
+   // do this for network
+   if ( veNetwork )
+      delete veNetwork;
+   
+   // we are expecting that a network will be found
+   if ( !objectVector.empty() )
    {
-      p.Load(inputs, strlen(inputs));
-      intfssize = p.GetIntfsNum();
-      UnPack(p.intfs);
+      veNetwork = dynamic_cast< VE_Model::Network* >( objectVector.at( 0 ) );
    }
+   else
+   {
+      wxMessageBox( "Improperly formated ves file.", 
+                        "VES File Read Error", wxOK | wxICON_INFORMATION );
+   }
+
+   veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
+   veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
+   veNetwork->GetDataValuePair( 2 )->GetData( (numPix.first) );
+   veNetwork->GetDataValuePair( 3 )->GetData( (numPix.second) );
+   veNetwork->GetDataValuePair( 4 )->GetData( (numUnit.first) );
+   veNetwork->GetDataValuePair( 5 )->GetData( (numUnit.second) );
+
+   links.clear();
+
+   for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
+   {
+	   links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
+
+      links.at( i ).SetFromPort( *(veNetwork->GetLink( i )->GetFromPort()) );
+      links.at( i ).SetToPort( *(veNetwork->GetLink( i )->GetToPort()) );
+
+      long moduleID;
+      veNetwork->GetLink( i )->GetFromModule()->GetData( moduleID );
+      links.at( i ).SetFromModule( moduleID );
+      veNetwork->GetLink( i )->GetToModule()->GetData( moduleID );
+      links.at( i ).SetToModule( moduleID );
+
+      size_t numberOfPoints = veNetwork->GetLink( i )->GetNumberOfLinkPoints();
+      for ( size_t j = 0; j < numberOfPoints; ++j )
+      {
+         std::pair< unsigned int, unsigned int > rawPoint = veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
+         wxPoint point;
+         point.x = rawPoint.first;
+         point.y = rawPoint.second;
+         links.at( i ).SetPoint( &point );
+      }
+      // Create the polygon for links
+      links.at( i ).CalcLinkPoly();
+   }
+
+   // do this for models
+   networkWriter.ReadXMLData( xmlNetwork, "Model", "Model" );
+   objectVector = networkWriter.GetLoadedXMLObjects();
+
+   // now lets create a list of them
+   for ( size_t i = 0; i < objectVector.size(); ++i )
+   {
+      VE_Model::Model* model = dynamic_cast< VE_Model::Model* >( objectVector.at( i ) );
+
+      wxClassInfo* cls = wxClassInfo::FindClass( model->GetModelName().c_str() );
+      REI_Plugin* tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
+      Module temp_mod;
+      unsigned int num = model->GetModelID();
+	   modules[ num ] = temp_mod;
+	   modules[ num ].SetPlugin( tempPlugin );
+      modules[ num ].GetPlugin()->SetID( num );
+	   modules[ num ].SetClassName( model->GetModelName() );
+      *(modules[ num ].GetPlugin()->GetModel()) = *model;
+      delete model;
+      //Second, calculate the polyes
+      wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
+      int polynum = modules[ num ].GetPlugin()->GetNumPoly();
+      POLY tmpPoly;
+      tmpPoly.resize( polynum );
+      modules[ num ].GetPlugin()->GetPoly(tmpPoly);
+      VE_Conductor::GUI_Utilities::Polygon tempPoly;
+      *(tempPoly.GetPolygon()) = tmpPoly;
+      tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
+   }
+/*
+   // do this for tags
+   DOMNodeList* subElements = doc->getDocumentElement()->getElementsByTagName( xercesString("veTag") );
+   unsigned int numTags = subElements->getLength();
+   // now lets create a list of them
+   for ( unsigned int i = 0; i < numCommands; ++i )
+   {
+      VE_Model::Tag* temp = new VE_Model::Tag( doc );
+      temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
+      veTagVector.push_back( temp );
+      tags.push_back( TAG );
+      tags.back().text = wxString( veTagVector.back()->GetTagText().c_str() );
+      tags.back().cons[0].x = veTagVector.back()->GetTagPoint( 0 )->GetPoint().first;
+      tags.back().cons[0].y = veTagVector.back()->GetTagPoint( 0 )->GetPoint().second;
+      tags.back().cons[1].x = veTagVector.back()->GetTagPoint( 1 )->GetPoint().first;
+      tags.back().cons[1].y = veTagVector.back()->GetTagPoint( 1 )->GetPoint().second;
+      tags.back().box.x = veTagVector.back()->GetTagPoint( 2 )->GetPoint().first;
+      tags.back().box.x = veTagVector.back()->GetTagPoint( 2 )->GetPoint().second;
+      // Create the polygon for tags
+      tags.back().CalcTagPoly();
+   }
+*/
+   m_selMod = -1;
+   m_selFrPort = -1; 
+   m_selToPort = -1; 
+   m_selLink = -1; 
+   m_selLinkCon = -1; 
+   m_selTag = -1; 
+   m_selTagCon = -1; 
+   xold = yold =0;
+
+   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
+
+   Refresh();
 }
 
 //////////////////////////////////////////////////////
@@ -2487,12 +2279,12 @@ std::pair< double, double >* Network::GetUserScale( void )
    return &userScale;
 }
 ///////////////////////////////////////////
-std::pair< int, int >* Network::GetNumPix( void )
+std::pair< unsigned int, unsigned int >* Network::GetNumPix( void )
 {
    return &numPix;
 }
 ///////////////////////////////////////////
-std::pair< int, int >* Network::GetNumUnit( void )
+std::pair< unsigned int, unsigned int >* Network::GetNumUnit( void )
 {
    return &numUnit;
 }

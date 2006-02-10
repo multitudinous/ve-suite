@@ -534,7 +534,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       path=dialog.GetPath();
       directory=dialog.GetDirectory();
       fname=dialog.GetFilename();
-      network->Load(path);
+      network->Load( path.c_str() );
    }
 }
 
@@ -550,7 +550,7 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
       Log("No VE_CE found!\n");
    }
 
-   network->LoadS(nw_str);
+   network->Load( nw_str );
    delete nw_str;
 }
 

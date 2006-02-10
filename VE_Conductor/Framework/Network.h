@@ -149,13 +149,14 @@ public:
    std::string Save( std::string fileName );
    //void Save(wxString filename);
    //void SaveS(std::string &network_pack);            // save the network to a string
-   void Load(wxString filename);
-   void LoadS(const char* inputs); //load the network from a string
+   //void Load(wxString filename);
+   //void LoadS(const char* inputs); //load the network from a string
+   void Load( std::string xmlNetwork );
    void New();
    ///Acessors
    std::pair< double, double >* GetUserScale( void );
-   std::pair< int, int >* GetNumPix( void );
-   std::pair< int, int >* GetNumUnit( void );
+   std::pair< unsigned int, unsigned int >* GetNumPix( void );
+   std::pair< unsigned int, unsigned int >* GetNumUnit( void );
 
 protected:
 
@@ -229,7 +230,7 @@ protected:
    wxPoint tag_rpt; // the relative point of the tag
 
    //void Pack( std::vector<Interface> & UIs );
-   void UnPack( std::vector<Interface> & UIs );
+   //void UnPack( std::vector<Interface> & UIs );
 
 private:
    bool moving;
@@ -247,11 +248,11 @@ private:
    ///Num Pixels
    /// first = x pix
    /// second = y pix
-   std::pair< int, int > numPix;
+   std::pair< unsigned int, unsigned int > numPix;
    ///Num unit
    /// first = x unit
    /// second = y unit
-   std::pair< int, int > numUnit;
+   std::pair< unsigned int, unsigned int > numUnit;
 
    DECLARE_EVENT_TABLE() // no semicolon needed
 };

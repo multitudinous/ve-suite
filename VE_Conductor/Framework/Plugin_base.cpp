@@ -417,15 +417,15 @@ Interface* REI_Plugin::Pack()
   
 }
 ////////////////////////////////////////////////////////////////////
-/*Model* REI_Plugin::GetModel( void )
+Model* REI_Plugin::GetModel( void )
 {
    if ( veModel == NULL )
    {
-      //veModel = new Model( doc );
+      veModel = new Model();
    }
 
    return veModel;
-}*/
+}
 ////////////////////////////////////////////////////////////////////
 Model* REI_Plugin::GetVEModel( void )
 {

@@ -125,7 +125,7 @@ public:
    //This is the load function of the module, unpack the input string and fill up the UI according to this
    VE_Model::Model* GetVEModel( void );
    void SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelElement );
-   //VE_Model::Model* GetModel( void );
+   VE_Model::Model* GetModel( void );
 
    //This is to unpack the result from the 
    virtual void UnPackResult(Interface * intf);
