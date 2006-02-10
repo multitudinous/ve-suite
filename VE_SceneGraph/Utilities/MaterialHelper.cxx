@@ -36,6 +36,7 @@
 #include <osg/ShadeModel>
 #elif _PERFORMER
 #endif
+
 #include "VE_SceneGraph/Utilities/MaterialHelper.h"
 
 #include "VE_Open/XML/CAD/CADMaterial.h"
@@ -83,33 +84,34 @@ void MaterialHelper::LoadMaterial(VE_CAD::CADMaterial* material)
    std::string colorMode = material->GetColorMode(); 
    float shininess = material->GetShininess();
 
-   osg::Material::ColorMode cMode = osg::Material::ColorMode::AMBIENT_AND_DIFFUSE;
+   osg::Material::ColorMode cMode = 
+      osg::Material::AMBIENT_AND_DIFFUSE;
 
    if(colorMode == std::string("Diffuse")){
-      cMode = osg::Material::ColorMode::DIFFUSE;
+      cMode = osg::Material::DIFFUSE;
    }else if(colorMode == std::string("Ambient")){
-      osg::Material::ColorMode::AMBIENT;
+      osg::Material::AMBIENT;
    }else if(colorMode == std::string("Emissive")){
-      osg::Material::ColorMode::EMISSION;
+      osg::Material::EMISSION;
    }else if(colorMode == std::string("Specular")){
-      osg::Material::ColorMode::SPECULAR;
+      osg::Material::SPECULAR;
    }else if(colorMode == std::string("Ambient_and_Diffuse")){
-      osg::Material::ColorMode::AMBIENT_AND_DIFFUSE;
+      osg::Material::AMBIENT_AND_DIFFUSE;
    }else if(colorMode == std::string("Off")){
-      osg::Material::ColorMode::OFF;
+      osg::Material::OFF;
    }else{
       std::cout<<"Unrecognized color mode: "<<colorMode<<std::endl;
       std::cout<<"SceneGraphBuilderSceneGraphCallback::Apply()"<<std::endl;
    }
    _material->setColorMode(cMode);
 
-   osg::Material::Face faceToApply = osg::Material::Face::FRONT;
+   osg::Material::Face faceToApply = osg::Material::FRONT;
    if(face == std::string("Front_and_Back")){
-      faceToApply = osg::Material::Face::FRONT_AND_BACK;
+      faceToApply = osg::Material::FRONT_AND_BACK;
    }else if(face == std::string("Back")){
-      faceToApply = osg::Material::Face::BACK;
+      faceToApply = osg::Material::BACK;
    }else if(face == std::string("Front")){
-      faceToApply = osg::Material::Face::FRONT;
+      faceToApply = osg::Material::FRONT;
    }else{
       std::cout<<"Unrecognized face: "<<face<<std::endl;
       std::cout<<"SceneGraphBuilderSceneGraphCallback::Apply()"<<std::endl;
