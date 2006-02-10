@@ -60,36 +60,7 @@ Shader::Shader()
 Shader::~Shader()
 {
    _shaderSource.clear();
-   /*size_t nUniforms = _uniformList.size();
-   if(nUniforms > 0 ){
-       for(size_t i = 0; i < nUniforms; i++)
-      {
-         try
-         {
-            delete _uniformList.at(i);
-         }
-         catch(...)
-         {
-         }
-      }
-         }*/
    _uniformList.clear();
-
-   /*size_t nTextures = _textureImages.size();
-   if(nTextures > 0)
-   {
-       for(size_t i = 0;i < nTextures; i++)
-      {
-         try
-         {
-            delete _textureImages.at(i);
-                     }
-         catch(...)
-         {
-         }
-      }
-      
-   }*/
    _textureImages.clear();
 }
 /////////////////////////////////
@@ -131,31 +102,21 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {
-                _shaderType = ExtractDataStringFromSimpleElement( typeNode );
+               _shaderType = ExtractDataStringFromSimpleElement( typeNode );
             }
 
             //Get the source
             DOMElement* sourceNode = GetSubElement(currentElement,std::string("shaderCode"),0);
             if(sourceNode)
             {
-                _shaderSource = ExtractDataStringFromSimpleElement( sourceNode );
+               _shaderSource = ExtractDataStringFromSimpleElement( sourceNode );
             }
             //clear out the current list of uniforms
             if(_uniformList.size()){
-               /*size_t nUniforms = _uniformList.size();
-               for(size_t i = nUniforms -1; i >=0; i--)
-               {
-                  delete _uniformList.at(i);
-               }*/
                _uniformList.clear();
             }
             //clear out the current list of texture images
             if(_textureImages.size()){
-               /*size_t nTextureImages = _textureImages.size();
-               for(size_t i = nTextureImages-1; i >=0; i--)
-               {
-                  delete _textureImages.at(i);
-               }*/
                _textureImages.clear();
             }
 
@@ -165,7 +126,6 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
                unsigned int nUniforms = uniformList->getLength();
                for(unsigned int i = 0; i < nUniforms; i++)
                {
-                  //Uniform* newUniform = new Uniform();
                   Uniform newUniform;
                   newUniform.SetObjectFromXMLData(uniformList->item(i));
                   _uniformList.push_back(newUniform);
@@ -177,7 +137,6 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
                unsigned int nTextures = textureList->getLength();
                for(unsigned int i = 0; i < nTextures; i++)
                {
-                  //TextureImage* newTexture= new TextureImage();
                   TextureImage newTexture;
                   newTexture.SetObjectFromXMLData(textureList->item(i));
                   _textureImages.push_back(newTexture);
