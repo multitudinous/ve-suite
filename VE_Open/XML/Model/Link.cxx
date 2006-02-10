@@ -39,19 +39,22 @@ using namespace VE_Model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-Link::Link(  )
-:XMLObject(  )
+Link::Link()
+:XMLObject()
 {
-   portInfo.first = new DataValuePair("FLOAT" );
-   portInfo.second = new DataValuePair("FLOAT" );
-   SetObjectType("Link");
-   SetObjectNamespace("Model");
+   moduleInfo.first = new DataValuePair( "FLOAT" );
+   moduleInfo.second = new DataValuePair( "FLOAT" );
+   portInfo.first = 0;
+   portInfo.second = 0;
+
+   SetObjectType( "Link" );
+   SetObjectNamespace( "Model" );
 }
 ///////////////////////////////////
 Link::~Link()
 {
-   delete portInfo.first;
-   delete portInfo.second;
+   delete moduleInfo.first;
+   delete moduleInfo.second;
 
    for ( size_t i = 0; i < linkPoints.size(); ++i )
    {
@@ -61,18 +64,20 @@ Link::~Link()
 }
 ///////////////////////////////////////////
 Link::Link( const Link& input )
-:XMLObject(input)
+:XMLObject( input )
 {
    for ( size_t i = 0; i < input.linkPoints.size(); ++i )
    {
       linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
    }
 
-   portInfo.first = new DataValuePair( *(input.portInfo.first) );
-   portInfo.second = new DataValuePair( *(input.portInfo.second) );
+   moduleInfo.first = new DataValuePair( *(input.moduleInfo.first) );
+   moduleInfo.second = new DataValuePair( *(input.moduleInfo.second) );
+   
+   portInfo = input.portInfo;
 }
 /////////////////////////////////////////////////////
-Link& Link::operator=( const Link& input)
+Link& Link::operator=( const Link& input )
 {
    if ( this != &input )
    {
@@ -89,8 +94,9 @@ Link& Link::operator=( const Link& input)
          linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
       }
 
-      *(portInfo.first) = *(input.portInfo.first);
-      *(portInfo.second) = *(input.portInfo.second);
+      *(moduleInfo.first) = *(input.moduleInfo.first);
+      *(moduleInfo.second) = *(input.moduleInfo.second);
+      portInfo = input.portInfo;
    }
    return *this;
 }
@@ -105,6 +111,8 @@ void Link::_updateVEElement( std::string input )
 
    // write all the elements according to verg_model.xsd
    
+   SetSubElement( "fromModule", moduleInfo.first );
+   SetSubElement( "toModule", moduleInfo.second );
    SetSubElement( "fromPort", portInfo.first );
    SetSubElement( "toPort", portInfo.second );
    for ( size_t i = 0; i < linkPoints.size(); ++i )
@@ -113,14 +121,24 @@ void Link::_updateVEElement( std::string input )
    }
 }
 ///////////////////////////////////////////////////
-DataValuePair* Link::GetFromPort( void )
+DataValuePair* Link::GetFromModule( void )
 {
-   return portInfo.first;
+   return moduleInfo.first;
 }
 //////////////////////////////////////////
-DataValuePair* Link::GetToPort( void )
+DataValuePair* Link::GetToModule( void )
 {
-   return portInfo.second;
+   return moduleInfo.second;
+}
+///////////////////////////////////////////////////
+long int* Link::GetFromPort( void )
+{
+   return &(portInfo.first);
+}
+//////////////////////////////////////////
+long int* Link::GetToPort( void )
+{
+   return &(portInfo.second);
 }
 /////////////////////////////////////
 Point* Link::GetLinkPoint( unsigned int i )
@@ -162,28 +180,34 @@ void Link::SetObjectFromXMLData(DOMNode* element)
    {
       //get variables by tags
       DOMElement* dataValueStringName = 0;
-      // for port location
+      // for module location
       {
-         dataValueStringName = GetSubElement( currentElement, "fromPort", 0 );
-         if ( portInfo.first )
+         dataValueStringName = GetSubElement( currentElement, "fromModule", 0 );
+         if ( moduleInfo.first )
          {
-            delete portInfo.first;
-            portInfo.first = 0;
+            delete moduleInfo.first;
+            moduleInfo.first = 0;
          }
-         portInfo.first = new VE_XML::DataValuePair( "FLOAT" );
-         portInfo.first->SetObjectFromXMLData( dataValueStringName );
+         moduleInfo.first = new VE_XML::DataValuePair( "FLOAT" );
+         moduleInfo.first->SetObjectFromXMLData( dataValueStringName );
       }
-      // for port location
+      // for module location
       {
-         dataValueStringName = GetSubElement( currentElement, "toPort", 0 );
-         if ( portInfo.second )
+         dataValueStringName = GetSubElement( currentElement, "toModule", 0 );
+         if ( moduleInfo.second )
          {
-            delete portInfo.second;
-            portInfo.second = 0;
+            delete moduleInfo.second;
+            moduleInfo.second = 0;
          }
-         portInfo.second = new VE_XML::DataValuePair( "FLOAT" );
-         portInfo.second->SetObjectFromXMLData( dataValueStringName );
+         moduleInfo.second = new VE_XML::DataValuePair( "FLOAT" );
+         moduleInfo.second->SetObjectFromXMLData( dataValueStringName );
       }
+
+      dataValueStringName = GetSubElement( currentElement, "fromPort", 0 );
+      portInfo.first = ExtractLongIntegerDataNumberFromSimpleElement( dataValueStringName );
+      dataValueStringName = GetSubElement( currentElement, "toPort", 0 );
+      portInfo.second = ExtractLongIntegerDataNumberFromSimpleElement( dataValueStringName );
+
       // for link points
       {
          unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("linkPoints") )->getLength();
@@ -191,7 +215,7 @@ void Link::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
-            linkPoints.push_back( new Point(  ) );
+            linkPoints.push_back( new Point() );
             linkPoints.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }

@@ -122,7 +122,7 @@ void XMLReaderWriter::ReadXMLData(std::string xmlData,
    _domDocumentManager->UnLoadParser();
 }
 //////////////////////////////////////////////////////////////////////
-std::vector<VE_XML::XMLObject*> XMLReaderWriter::GetLoadedXMLObjects()
+std::vector< VE_XML::XMLObject* > XMLReaderWriter::GetLoadedXMLObjects()
 {
    return _xmlObjects;
 }
@@ -136,12 +136,14 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
    DOMNodeList* xmlObjects = rootDocument->getElementsByTagName( xercesString(tagName) );
 
    unsigned int nXMLObjects = xmlObjects->getLength();
-   if(nXMLObjects)
+   if ( nXMLObjects )
    {
-      for(unsigned int i = 0; i < nXMLObjects; i++)
+      //In case we use the same readerwriter more than once for a read
+      _xmlObjects.clear();
+      for ( unsigned int i = 0; i < nXMLObjects; ++i )
       {
-         _xmlObjects.push_back(XMLObjectFactory::CreateXMLObject(tagName,objectNamespace));
-         _xmlObjects.back()->SetObjectFromXMLData(xmlObjects->item(i));
+         _xmlObjects.push_back( XMLObjectFactory::CreateXMLObject(tagName,objectNamespace) );
+         _xmlObjects.back()->SetObjectFromXMLData( xmlObjects->item(i) );
       }
    }
 }

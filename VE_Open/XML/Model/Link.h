@@ -77,9 +77,13 @@ public:
    virtual void SetObjectFromXMLData(DOMNode* xmlInput);
    
    ///Get the portInfo for the fromPort.
-   VE_XML::DataValuePair* GetFromPort( void );
+   VE_XML::DataValuePair* GetFromModule( void );
    ///Get the portInfo for the toPort.
-   VE_XML::DataValuePair* GetToPort( void );
+   VE_XML::DataValuePair* GetToModule( void );
+   ///Get the portInfo for the fromPort.
+   long int* GetFromPort( void );
+   ///Get the portInfo for the toPort.
+   long int* GetToPort( void );
    ///Get the i'th point for a link.
    ///\param i The i'th point you are after.
    Point* GetLinkPoint( unsigned int i );
@@ -95,7 +99,8 @@ private:
    ///raw datatypes of Link that are specified in the verg_model.xsd file
    std::vector< Point* > linkPoints;///<Vector of Points.
    ///The data value pair will contain the model and port number of the appropriate port to be linked
-   std::pair< VE_XML::DataValuePair*, VE_XML::DataValuePair* > portInfo;///<The classes hold the fromPort in first and the toPort in second.
+   std::pair< VE_XML::DataValuePair*, VE_XML::DataValuePair* > moduleInfo;///<The classes hold the fromPort in first and the toPort in second.
+   std::pair< long int, long int > portInfo;///<The classes hold the fromPort in first and the toPort in second.
 };
 }
 #endif// _VE_LINK_H_

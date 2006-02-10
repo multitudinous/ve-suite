@@ -139,6 +139,11 @@ Link* Network::GetLink( int i )
    }
 }
 /////////////////////////////////////
+size_t Network::GetNumberOfLinks( void )
+{
+   return links.size();
+}
+/////////////////////////////////////
 DataValuePair* Network::GetDataValuePair( int i )
 {
    try

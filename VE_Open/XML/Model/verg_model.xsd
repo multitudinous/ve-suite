@@ -21,8 +21,10 @@
       <xs:complexContent>
          <xs:restriction base="veXMLObject">
             <xs:sequence>
-               <xs:element name="fromPort" type="veDataValuePair" />
-               <xs:element name="toPort" type="veDataValuePair" />
+               <xs:element name="fromModule" type="veDataValuePair" />
+               <xs:element name="toModule" type="veDataValuePair" />
+               <xs:element name="fromPort" type="xs:unsignedInt" />
+               <xs:element name="toPort" type="xs:unsignedInt" />
                <xs:element name="linkPoints" type="vePoint" minOccurs="2" maxOccurs="unbounded" />
             </xs:sequence>
          </xs:restriction>

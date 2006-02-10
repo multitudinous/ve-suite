@@ -75,6 +75,7 @@ public:
    ///Get the i'th link from the Network.
    ///\param i The i'th link you are after.
    Link* GetLink( int i );
+   size_t GetNumberOfLinks( void );
 
    ///Get the i'th link from the Network.
    ///\param i The i'th link you are after.

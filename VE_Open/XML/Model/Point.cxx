@@ -92,15 +92,8 @@ void Point::_updateVEElement( std::string input )
 
    //Add code here to update the specific sub elements
    // name comes from verg.xsd
-   DOMElement* xValueTag  = _rootDocument->createElement( xercesString("xLocation") );
-   _veElement->appendChild( xValueTag );      
-   DOMText* xValueNum = _rootDocument->createTextNode( xercesString( point.first ) );
-   xValueTag->appendChild( xValueNum );
-
-   DOMElement* yValueTag  = _rootDocument->createElement( xercesString("yLocation") );
-   _veElement->appendChild( yValueTag );      
-   DOMText* yValueNum = _rootDocument->createTextNode( xercesString( point.first ) );
-   yValueTag->appendChild( yValueNum );
+   SetSubElement( "xLocation", point.first );
+   SetSubElement( "yLocation", point.second );
 }
 ////////////////////////////////////////////////////////////
 void Point::SetObjectFromXMLData(DOMNode* xmlInput)

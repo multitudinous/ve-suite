@@ -646,4 +646,9 @@ void DataValuePair::GetData( std::vector< std::vector< std::vector< long > > >& 
       std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
    }
 }
+////////////////////////////////////////////////////////////
+void DataValuePair::GetData( unsigned int& data )
+{
+   data = _dataUInt;
+}
 

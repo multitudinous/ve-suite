@@ -220,6 +220,9 @@ public:
    ///\param data Name of the data being passed in
    void GetData( std::vector< std::vector< std::vector< long > > >& data );
 
+   ///Helper functions to get data easily
+   ///\param data Name of the data being passed in
+   void GetData( unsigned int& data );
    ///XMLObject 
    ///Helper functions to get data easily
    ///\param data Name of the data being passed in
