@@ -50,7 +50,6 @@ endif
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   Attribute.cxx \
    cfdClone.cxx \
    cfdDCS.cxx \
    cfdGeode.cxx \
