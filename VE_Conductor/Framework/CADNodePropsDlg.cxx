@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Boston, MA 02111-1307, USA. 
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: SceneGraphBuilder.cxx,v $
@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Conductor/Framework/CADNodePropsDlg.h"
-
+#include <sstream>
 #include <wx/sizer.h>
 #include <wx/notebook.h>
 #include <wx/button.h>
@@ -44,21 +44,27 @@
 #include <wx/listbox.h>
 #include <wx/arrstr.h>
 #include <wx/listbox.h>
+#include <wx/filedlg.h>
+#include <wx/textdlg.h>
 #include <wx/msgdlg.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
+#include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
+#include "VE_Open/XML/Shader/Program.h"
 using namespace VE_CAD;
+using namespace VE_Shader;
 
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
+   EVT_BUTTON(ADD_ATTRIBUTE,CADNodePropertiesDlg::_addAttribute)
    EVT_SPINCTRL(TRANSFORM_PANEL_ID,CADNodePropertiesDlg::_updateTransform)
    EVT_COMBOBOX(ATTRIBUTE_TYPE,CADNodePropertiesDlg::_updateAttributeType)
    EVT_LISTBOX(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
@@ -88,6 +94,8 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    _attributeSelection = 0;
    _addAttributeButton = 0;
    _removeAttributeButton = 0;
+   _nShaders = 0;
+   _nMaterials = 0;
    
    _buildGUI();
 }
@@ -290,7 +298,7 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    //Active attribute selection
    wxStaticBox* activeAttribute = new wxStaticBox(_attributePanel, -1, wxT("Available Attributes"));
    wxStaticBoxSizer* activeAttributeSizer = new wxStaticBoxSizer(activeAttribute , wxVERTICAL);
-   _attributeSelection = new wxListBox(_attributePanel,ACTIVE_ATTRIBUTE);
+   _attributeSelection = new wxListBox(_attributePanel,ATTRIBUTE_PANEL_ID);
 
    if(_cadNode)
    {
@@ -298,7 +306,11 @@ void CADNodePropertiesDlg::_buildAttributePanel()
       _attributeSelection->Set(_availableMaterials);
       
    }
-   activeAttributeSizer->Add(_attributeSelection);
+   activeAttributeSizer->Add(_attributeSelection,1,wxEXPAND|wxALIGN_CENTER);
+ 
+   _addAttributeButton = new wxButton(_attributePanel, ADD_ATTRIBUTE,wxString("Add Attribute"));
+   activeAttributeSizer->Add(_addAttributeButton,0,wxALIGN_CENTER);
+
    attributePropSizer->Add(activeAttributeSizer,1,wxEXPAND|wxALIGN_CENTER);
 
 
@@ -314,6 +326,8 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
    {
       _availableShaders.clear();
       _availableMaterials.clear();
+      _nShaders = 0;
+      _nMaterials = 0;
 
       std::vector<CADAttribute*> attributes = _cadNode->GetAttributeList();
       size_t nAttributes = _cadNode->GetAttributeList().size();
@@ -323,12 +337,22 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
          attributeType = attributes.at(i)->GetAttributeType(); 
          if( attributeType == std::string("Material"))
          {   
+            _nMaterials++;
             _availableMaterials.Add(attributes.at(i)->GetAttributeName().c_str());
          }
          else if( attributeType == std::string("Program"))
          {
+            _nShaders++;
             _availableShaders.Add(attributes.at(i)->GetAttributeName().c_str());
          }
+      }
+      if(_attributeType->GetValue() == wxString("Materials"))
+      {
+         _attributeSelection->Set(_availableMaterials);
+      }
+      else if(_attributeType->GetValue() == wxString("Shaders"))
+      {
+         _attributeSelection->Set(_availableShaders);
       }
    }
 }
@@ -351,6 +375,92 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& WXUNUSED(event))
    {
       wxString attributeName = _attributeSelection->GetStringSelection();
       _cadNode->SetActiveAttribute(attributeName.GetData());
+   }
+}
+///////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
+{
+   if(_cadNode)
+   {
+      ClearInstructions();
+      wxString newAttributeName("Attribute");
+      if(_attributeType->GetValue() == wxString("Materials"))
+      {
+         std::stringstream nMaterials;
+         nMaterials<<_nMaterials;
+
+         VE_CAD::CADAttribute* newAttribute = new CADAttribute();
+         newAttribute->SetAttributeType("Material");
+         
+         VE_CAD::CADMaterial* newMaterial = new CADMaterial();
+         //1)Pop up the Material dlg.
+         //2)Get the colors from the dlg
+         newAttribute->SetMaterial(newMaterial);
+         _cadNode->AddAttribute(newAttribute);
+         _updateAvailableAttributes();
+         _attributeSelection->SetSelection(_nMaterials-1);
+      }
+      else if(_attributeType->GetValue() == wxString("Shaders"))
+      {
+         wxFileDialog dialog(this,
+		       _T("Add New Attribute"), 
+		       _T(""), 
+		       _T(""),
+		       _T("VE-Attribute files (*.vea)|*.vea;"),
+		       wxOPEN); 
+         if(dialog.ShowModal() == wxID_OK) 
+         {
+            if((!dialog.GetPath().IsEmpty()) 
+               && wxFileExists(dialog.GetPath())) 
+            {         
+               if(dialog.GetPath())
+               {
+                  VE_CAD::CADAttribute* newAttribute = new CADAttribute();
+                  newAttribute->SetAttributeType("Program");
+                  
+                  VE_XML::XMLReaderWriter shaderLoader;
+                  shaderLoader.UseStandaloneDOMDocumentManager();
+                  shaderLoader.ReadFromFile();
+                  shaderLoader.ReadXMLData(std::string(dialog.GetPath()),"Shader","Program");
+              
+                  VE_Shader::Program* loadedShader = 0;
+                  if(shaderLoader.GetLoadedXMLObjects().at(0))
+                  {
+                     try
+                     {
+                        loadedShader = dynamic_cast<VE_Shader::Program*>(shaderLoader.GetLoadedXMLObjects().at(0));
+                        for(unsigned int i = 0; i < _nShaders; i++)
+                        {
+                           if(loadedShader->GetProgramName().c_str() == _availableShaders[i])
+                           {
+                              wxMessageBox( "Shader is already loaded.", 
+                                  dialog.GetPath(), wxOK | wxICON_INFORMATION );
+                              
+                              delete newAttribute;
+                              newAttribute = 0;
+                              return;
+                           }
+                        }
+                        
+                        newAttribute->SetProgram(loadedShader);
+                        _cadNode->AddAttribute(newAttribute);
+                        _updateAvailableAttributes();
+                        _attributeSelection->SetSelection(_nShaders-1);
+                     }
+                     catch(...)
+                     {
+                        wxMessageBox( "Couldn't load shader file.", 
+                                      dialog.GetPath(), wxOK | wxICON_INFORMATION );
+                        
+                        delete newAttribute;
+                        newAttribute = 0;
+                        return;
+                     }
+                  }
+               }      
+            }
+         }
+      }
    }
 }
 //////////////////////////////////////////////
@@ -414,30 +524,7 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////////////////////
 /*void CADNodePropertiesDlg::_loadNewAttribute(int style,int fileType)
 {
-   wxString lastFile;
-   wxTextCtrl* currentTextCtrl = 0;
-   if(fileType == TERRAIN_TEXTURE){
-      std::cout<<"Loading terrain texture!"<<std::endl;
-      currentTextCtrl = _terrainTextureFileCtrl;
-   }else if(fileType == HEIGHT_MAP){
-      std::cout<<"Loading Height Map!"<<std::endl;
-      currentTextCtrl = _heightMapFileCtrl;
-   }else if(fileType == FIRE_FILE){
-      currentTextCtrl = _firePositionFileCtrl;
-   }
 
-   wxFileDialog fileBrowser(this,wxT("Choose a file"),  wxString(""),
-                currentTextCtrl->GetValue(), wxString("*.*"),style);   
-
-   wxString fileName;
-   wxString filePath;
-   wxString fullPath;
-   if(fileBrowser.ShowModal() == wxID_OK){
-      fileName = fileBrowser.GetFilename();
-      filePath = fileBrowser.GetDirectory();
-      fullPath = filePath + wxString("/") + fileName;
-      currentTextCtrl->SetValue(fullPath);
-   }
 }*/
 #ifndef STAND_ALONE
 ///////////////////////////////////////////////////

@@ -64,10 +64,12 @@ class CADNodePropertiesDlg : public wxDialog
 public:
    enum CAD_PROPERTY_IDS
    {
+      
       ACTIVE_ATTRIBUTE,///<The active attribute ID.
       ATTRIBUTE_PANEL_ID,///<The attribute panel ID.
       ATTRIBUTE_TYPE,///<The attribute type ID.
-      TRANSFORM_PANEL_ID///<The transform panel ID.
+      TRANSFORM_PANEL_ID,///<The transform panel ID.
+      ADD_ATTRIBUTE///<The add attribute button ID.
    };
    ///Constructor
    ///\param parent The parent window.
@@ -117,6 +119,10 @@ protected:
    ///\param event The wxCommand event.
    void _setActiveAttribute(wxCommandEvent& event);
 
+   ///Add an attribute to the node.
+   ///\param event The wxCommand event.
+   void _addAttribute(wxCommandEvent& event);
+
    ///Update the available attributes for this CADNode.
    void _updateAvailableAttributes();
 
@@ -152,6 +158,8 @@ protected:
    wxArrayString _availableShaders;///<The shader names.
    wxArrayString _availableMaterials;///<The material names.
 
+   unsigned int _nMaterials;///<The number of materials.
+   unsigned int _nShaders;///<The number of shaders.
    std::string _commandName;///<The command name.
 
    VE_CAD::CADNode* _cadNode;///<The current CADNode.
