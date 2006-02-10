@@ -55,6 +55,7 @@
 #include "VE_Xplorer/CADTransformEH.h"
 #include "VE_Xplorer/CADAddNodeEH.h"
 #include "VE_Xplorer/CADAddAttributeEH.h"
+#include "VE_Xplorer/CADSetActiveAttributeEH.h"
 
 
 #ifdef _OSG
@@ -130,6 +131,9 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
 
    _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")] = new VE_EVENTS::CADAddAttributeEventHandler();
    _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")]->SetGlobalBaseObject(this);
+
+   _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
+   _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")]->SetGlobalBaseObject(this);
 }
 
 cfdModel::~cfdModel()
@@ -255,6 +259,7 @@ void cfdModel::PreFrameUpdate()
       currentEventHandler = _eventHandlers.find(veCommand->GetCommandName());
       if(currentEventHandler != _eventHandlers.end())
       {
+          vprDEBUG(vesDBG,0) << "Executing: "<< veCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
           currentEventHandler->second->Execute(veCommand);
       }
    }
@@ -869,33 +874,89 @@ void cfdModel::CreatePart(std::string fileName,
 {
    _partList[partID] = new VE_Xplorer::cfdFILE(fileName,_assemblyList[parentID]);
 }
+////////////////////////////////////////////////////////////////
+void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
+                                       std::string nodeType,
+                                       std::string attributeName)
+{
+#ifdef _OSG
+   std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+   attributeList = _nodeAttributes.find(nodeID);
+   
+   if(attributeList != _nodeAttributes.end())
+   {
+      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
+      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
+      namesAndAttributes = attributeList->second;
+      for(foundAttribute = namesAndAttributes.begin();
+          foundAttribute != namesAndAttributes.end();
+          foundAttribute++)
+      {
+         std::cout<<"Found attribute: "<<foundAttribute->first<<std::endl;
+         if(foundAttribute->first == attributeName)
+         {
+            if(nodeType == "Assembly")
+            {
+               std::cout<<"Setting Assembly attribute: "<<foundAttribute->first<<std::endl;
+               GetAssembly(nodeID)->GetRawNode()->setStateSet(foundAttribute->second.get());
+            }
+            else if(nodeType == "Part")
+            {
+               std::cout<<"Setting Part attribute: "<<foundAttribute->first<<std::endl;
+               GetPart(nodeID)->GetNode()->GetRawNode()->setStateSet(dynamic_cast<osg::StateSet*>(foundAttribute->second.get()));
+               std::cout<<"valid: "<<foundAttribute->first<<std::endl;
+            }
+            else if(nodeType == "Clone")
+            {
+               std::cout<<"Setting Clone attribute: "<<foundAttribute->first<<std::endl;
+               GetClone(nodeID)->GetClonedGraph()->GetRawNode()->setStateSet(foundAttribute->second.get());
+            }
+         }
+      }
+   }
+   else
+   {
+      std::cout<<"Attribute not found: "<<attributeName<<std::endl;
+   }
+#elif _PERFORMER               
+   std::cout<<"cfdModel::SetActiveAttributeOnNode not implemented for Performer yet!!!"<<std::endl;
+#endif
+}
+
 //////////////////////////////////////////////
 void cfdModel::AddAttributeToNode(unsigned int nodeID,
-                              std::string nodeType,
                               VE_CAD::CADAttribute* newAttribute)
 {
+   std::cout<<"---cfdModel::AddAttributeToNode()---"<<std::endl;
    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
    attribute->CreateStateSetFromAttribute(newAttribute);
+
+   std::cout<<"1"<<std::endl;
 
    std::pair<std::string,osg::ref_ptr< osg::StateSet > >attributeInfo;
    attributeInfo.first = newAttribute->GetAttributeName();
    attributeInfo.second = attribute.get();
    
-   
+   std::cout<<"2"<<std::endl;
+
    std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
    attributeList = _nodeAttributes.find(nodeID);
    std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > temp;
    if(attributeList != _nodeAttributes.end())
    {
+      std::cout<<"3"<<std::endl;
       temp = attributeList->second;
+      std::cout<<"4"<<std::endl;
       temp.push_back(attributeInfo);
    }
    else
    { 
+      std::cout<<"5"<<std::endl;
       temp.push_back(attributeInfo);
+      std::cout<<"6"<<std::endl;
       _nodeAttributes[nodeID] = temp;
    }
-   
+   std::cout<<"---end cfdModel::AddAttributeToNode()---"<<std::endl;
 
 }
 ///////////////////////////////////////////////////////////

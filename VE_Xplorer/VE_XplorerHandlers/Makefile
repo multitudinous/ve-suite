@@ -107,12 +107,13 @@ SRCS=\
    CADEventHandler.cxx \
    CADAddNodeEH.cxx \
    CADAddAttributeEH.cxx \
+   CADSetActiveAttributeEH.cxx \
    CADTransformEH.cxx 
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
-DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib -lVE_CADLib -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) -lVE_UtilLib
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib -lVE_CADLib -lVE_SceneGraph_UtilitiesLib -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) -lVE_UtilLib
 DSO_PLUGIN_DEPS+= $(shell vrjuggler-config vrj --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 

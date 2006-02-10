@@ -77,14 +77,17 @@ void CADAddAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 {
    try
    {
+      std::cout<<"---Adding attribute to node---"<<std::endl;
+      std::cout<<"CADAddAttributeEventHandler."<<std::endl;
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
       VE_XML::DataValuePair* newAttribute = command->GetDataValuePair("CADAttribute");
       VE_CAD::CADAttribute* rawAttribute = dynamic_cast<VE_CAD::CADAttribute*>(newAttribute->GetDataXMLObject());
 
       VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
-      activeModel->AddAttributeToNode(nodeID->GetUIntData(),nodeType->GetDataString(),rawAttribute);
+      std::cout<<"Node:"<<nodeID->GetUIntData()<<std::endl;
+      std::cout<<"Attribute:"<<rawAttribute->GetAttributeName()<<std::endl;
+      activeModel->AddAttributeToNode(nodeID->GetUIntData(),rawAttribute);
    }
    catch(...)
    {

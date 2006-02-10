@@ -168,9 +168,14 @@ namespace VE_Xplorer
          ///\param nodeType The node type.
          ///\param The CADAttribute to add to the node.
          void AddAttributeToNode(unsigned int nodeID,
-                              std::string nodeType,
                               VE_CAD::CADAttribute* newAttribute);
-
+         ///Add a new attribute to a node
+         ///\param nodeID The ID of the node to add Attribute to.
+         ///\param nodeType The node type.
+         ///\param attributeName The name of the CADAttribute to activate on the CADNode.
+         void SetActiveAttributeOnNode(unsigned int nodeID,
+                                       std::string nodeType,
+                                       std::string attributeName);
          ///Create a new assembly
          void CreateAssembly(unsigned int assemblyID);
          
