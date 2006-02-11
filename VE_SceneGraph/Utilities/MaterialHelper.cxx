@@ -128,7 +128,7 @@ void MaterialHelper::LoadMaterial(VE_CAD::CADMaterial* material)
    _material->setSpecular(faceToApply,
                                osg::Vec4(specular.at(0),specular.at(1),specular.at(2),specular.at(3)));
 
-   _material->setName(materialName);
+   //_material->setName(materialName);
    _material->setShininess(faceToApply,shininess);
    _ss->setAttributeAndModes(_material.get());
 
