@@ -24,7 +24,6 @@
                   <xs:element name="dataValueUInt" type="xs:unsignedInt" />
                   <xs:element name="genericObject" type="veXMLObject" />
                </xs:choice>
-               <xs:element name="dataType" type="xs:string" />
             </xs:sequence>
          </xs:extension>
       </xs:complexContent>

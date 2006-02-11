@@ -244,7 +244,7 @@ void DataValuePair::_updateVEElement( std::string input )
    //Add code here to update the specific sub elements
    _updateDataName();
 
-   SetSubElement("dataType",_dataType);
+   //SetSubElement("dataType",_dataType);
 
    //update the value held in the pair
    if ( _dataType == std::string("FLOAT") )
@@ -265,7 +265,7 @@ void DataValuePair::_updateVEElement( std::string input )
    }
    else if(_dataType == std::string("XMLOBJECT"))
    {
-      SetSubElement(_veXMLObject->GetObjectType(),_veXMLObject);
+      SetSubElement( "genericObject" ,_veXMLObject);
    }
 }
 ///////////////////////////////////////////////////
@@ -346,13 +346,33 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
    if(element->getNodeType() == DOMNode::ELEMENT_NODE)
    {
       currentElement = dynamic_cast<DOMElement*>(element);
+      //std::cout << " Node name " << XMLString::transcode(currentElement->getNodeName()) << std::endl;
    }
 
    if(currentElement)
    {
       {
          //get variables by tags
-         DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("dataName"));
+         DOMNodeList* subElements = currentElement->getChildNodes();
+         ///Test code below
+         /*std::cout<< subElements->getLength() << std::endl;
+         for ( XMLSize_t i = 0; i < subElements->getLength(); ++i )
+         {
+            DOMNode* tempNode = subElements->item( i );
+            std::cout << tempNode->getNodeType() << std::endl;
+            if (  1 == tempNode->getNodeType() )
+            {
+               DOMElement* tempElement = dynamic_cast<DOMElement*>(tempNode);
+               std::cout << "----------------" << std::endl;
+               std::cout << " Node name " << XMLString::transcode(tempElement->getNodeName()) << std::endl;
+            }
+            else if (  3 == tempNode->getNodeType() )
+            {
+               DOMText* tempElement = dynamic_cast<DOMText*>(tempNode);
+               std::cout << " text value " << XMLString::transcode(tempElement->getData()) << std::endl;
+            }
+         }*/
+         subElements = currentElement->getElementsByTagName(xercesString("dataName"));
          //should only be the name of the command
          DOMElement* dataName = dynamic_cast<DOMElement*>(subElements->item(0));
          if(dataName)
@@ -366,13 +386,14 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          //get variables by tags
          DOMNodeList* subElements = 0;
          DOMElement* dataElement = 0;
-         DOMElement* typeNode = GetSubElement(currentElement,std::string("dataType"),0);
-         if(typeNode)
-         {
-            _dataType = ExtractDataStringFromSimpleElement( typeNode );
-         }
+         //DOMElement* typeNode = GetSubElement(currentElement,std::string("dataType"),0);
+         //if(typeNode)
+         //{
+         //   _dataType = ExtractDataStringFromSimpleElement( typeNode );
+         //}
 
-         if(_dataType == "XMLOBJECT")
+         //if(_dataType == "XMLOBJECT")
+         if ( currentElement->getElementsByTagName(xercesString("genericObject"))->getLength() )
          {
             try
             {
@@ -382,8 +403,10 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                std::cout<<"Couldn't exctract generic XMLObject in DataValuePair!!"<<std::endl;
             }
+            _dataType = "XMLOBJECT";
          }
-         else if(_dataType == "STRING")
+         //else if(_dataType == "STRING")
+         else if ( currentElement->getElementsByTagName(xercesString("dataValueString"))->getLength() )
          {
             subElements = currentElement->getElementsByTagName(xercesString("dataValueString"));
 
@@ -394,17 +417,22 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                SetDataType(std::string("STRING"));
             }
          }
-         else if(_dataType == "UNSIGNED INT")
+         else if ( currentElement->getElementsByTagName(xercesString("dataValueUInt"))->getLength() )
+         //_dataType == "UNSIGNED INT")
          {
             DOMElement* dataUnsignedValue = GetSubElement( currentElement, "dataValueUInt", 0 );
             _dataUInt = ExtractIntegerDataNumberFromSimpleElement( dataUnsignedValue  );
+            _dataType = "UNSIGNED INT";
          }
-         else if(_dataType == "LONG")
+         //else if(_dataType == "LONG")
+         else if ( currentElement->getElementsByTagName(xercesString("dataValueInt"))->getLength() )
          {
             DOMElement* dataLongdValue = GetSubElement( currentElement, "dataValueInt", 0 );
             intDataValue = ExtractIntegerDataNumberFromSimpleElement( dataLongdValue  );
+            _dataType = "LONG";
          }
-         else if(_dataType == "FLOAT" )
+         //else if(_dataType == "FLOAT" )
+         else if( currentElement->getElementsByTagName(xercesString("dataValueNum"))->getLength() )
          {
             //get variables by tags
             DOMNodeList* subElements = 0;
