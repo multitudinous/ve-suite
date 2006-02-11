@@ -96,22 +96,32 @@ void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
    std::string attributeType = attribute->GetAttributeType(); 
    if( attributeType == std::string("Material"))
    {
+#ifdef _OSG
       MaterialHelper materialHelper;
       materialHelper.LoadMaterial(attribute->GetMaterial());
-#ifdef _OSG
-      osg::ref_ptr<osg::StateSet> temp = dynamic_cast<osg::StateSet*>(this); 
-      temp = materialHelper.GetMaterialStateSet().get();
+     
 #elif _PERFORMER
 #endif
    }
    else if( attributeType == std::string("Program"))
    {
+#ifdef _OSG      
       ShaderHelper shaderHelper;
+      shaderHelper.SetStateSet(this);
       shaderHelper.LoadGLSLProgram(attribute->GetGLSLProgram());
-#ifdef _OSG
-      osg::ref_ptr<osg::StateSet> temp = dynamic_cast<osg::StateSet*>(this); 
-      temp = shaderHelper.GetProgramStateSet();
+
 #elif _PERFORMER
 #endif
    }
 }
+#ifdef _OSG
+/////////////////////////////////////////////////////
+Attribute& Attribute::operator=(const osg::StateSet& rhs)
+{
+   if(this != &rhs)
+   {
+      osg::StateSet::operator=(rhs);
+   }
+   return *this;
+}
+#endif

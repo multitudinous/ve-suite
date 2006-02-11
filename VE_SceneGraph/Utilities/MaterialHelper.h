@@ -72,6 +72,10 @@ public:
    ///Load and create the stateset from the input XML data
    void LoadMaterial(VE_CAD::CADMaterial* material);
 #ifdef _OSG
+   ///The state set that we want to load the material into
+   ///\param materialThe state set representing the material.
+   void SetStateSet(osg::StateSet* material);
+
    ///Get the created state set representing the shader
    osg::ref_ptr<osg::StateSet> GetMaterialStateSet();
 #elif _PERFORMER

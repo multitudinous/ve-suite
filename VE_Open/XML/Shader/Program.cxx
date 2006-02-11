@@ -47,6 +47,9 @@ Program::Program()
    _name = std::string("VEProgram");
    _vertexShader = 0;
    _fragmentShader = 0;
+   SetObjectType("Program");
+   SetObjectNamespace("Shader");
+   
    if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
    {
       XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());

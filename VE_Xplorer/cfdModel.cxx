@@ -931,29 +931,23 @@ void cfdModel::AddAttributeToNode(unsigned int nodeID,
    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
    attribute->CreateStateSetFromAttribute(newAttribute);
 
-   std::cout<<"1"<<std::endl;
-
    std::pair<std::string,osg::ref_ptr< osg::StateSet > >attributeInfo;
    attributeInfo.first = newAttribute->GetAttributeName();
    attributeInfo.second = attribute.get();
    
-   std::cout<<"2"<<std::endl;
-
    std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
    attributeList = _nodeAttributes.find(nodeID);
-   std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > temp;
+   
    if(attributeList != _nodeAttributes.end())
    {
-      std::cout<<"3"<<std::endl;
-      temp = attributeList->second;
-      std::cout<<"4"<<std::endl;
-      temp.push_back(attributeInfo);
+      std::cout<<"Adding attribute: "<<attributeList->first<<std::endl;
+      attributeList->second.push_back(attributeInfo);
    }
    else
    { 
-      std::cout<<"5"<<std::endl;
+      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > temp;
+      std::cout<<"Adding attribute: "<<attributeList->first<<std::endl;
       temp.push_back(attributeInfo);
-      std::cout<<"6"<<std::endl;
       _nodeAttributes[nodeID] = temp;
    }
    std::cout<<"---end cfdModel::AddAttributeToNode()---"<<std::endl;

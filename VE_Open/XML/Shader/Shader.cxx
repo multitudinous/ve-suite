@@ -49,6 +49,9 @@ Shader::Shader()
 {
    _shaderType = std::string("Vertex");
    _shaderSource = std::string("");
+   SetObjectType("Shader");
+   SetObjectNamespace("Shader");
+ 
    if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
    {
       XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());

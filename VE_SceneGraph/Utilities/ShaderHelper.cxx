@@ -114,6 +114,11 @@ ShaderHelper::~ShaderHelper()
    _vertexUniformNames.clear();
    _fragmentUniformNames.clear();
 }
+/////////////////////////////////////////////////////
+void ShaderHelper::SetStateSet(osg::StateSet* shader)
+{
+   _ss = shader;
+}
 ///////////////////////////////////////////////////////////////////
 void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
 {

@@ -79,6 +79,10 @@ public:
 #ifdef _OSG
    ///Get the created state set representing the shader
    osg::StateSet* GetProgramStateSet();
+
+   ///The state set that we want to load the shader into
+   ///\param shader The state set representing the shader.
+   void SetStateSet(osg::StateSet* shader);
 #elif _PERFORMER
 #endif
    ///Equal operator

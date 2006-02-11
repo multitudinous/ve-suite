@@ -43,6 +43,9 @@ TextureImage::TextureImage()
    _imageFile = std::string("");
    _textureUnit = 0;
    _dimension = 2;
+   SetObjectType("TextureImage");
+   SetObjectNamespace("Shader");
+ 
    if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
    {
       XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());

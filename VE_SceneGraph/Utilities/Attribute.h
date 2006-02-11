@@ -66,6 +66,7 @@ public:
 
    ///OSG defines this macro
    META_Object(VE_SceneGraph::Utilities,Attribute);
+   Attribute& operator=(const osg::StateSet& rhs);
 #elif _PERFORMER
     Attribute(const Attribute& cfdSeq);
     //to make this a performer class
@@ -73,8 +74,10 @@ public:
 
     static pfType* getClassType( void ){ return _classType; }
     Attribute& operator=(const Attribute& rhs);
+    Attribute& operator=(const pfGeoState& rhs);
 
 #endif 
+   
    ///Destructor
    virtual ~Attribute();
 

@@ -162,6 +162,11 @@ osg::ref_ptr<osg::StateSet> MaterialHelper::GetMaterialStateSet()
    }
    return 0;
 }
+/////////////////////////////////////////////////////////
+void MaterialHelper::SetStateSet(osg::StateSet* material)
+{
+   _ss = material;
+}
 #elif _PERFORMER
 #endif
 

@@ -47,6 +47,9 @@ Uniform::Uniform()
    _variableSize = 0; 
    _name = std::string("");
    _textureUnit = 0;
+   SetObjectType("Uniform");
+   SetObjectNamespace("Shader");
+ 
    if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
    {
       XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
