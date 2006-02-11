@@ -67,11 +67,11 @@ public:
 
    ///Set the material for this node.
    ///\param material The material of this node.
-   void SetMaterial(VE_CAD::CADMaterial* material);
+   void SetMaterial(VE_CAD::CADMaterial material);
 
    ///Set the GLSL program for this node.
    ///\param glslProgram The GLSL program.
-   void SetProgram(VE_Shader::Program* glslProgram);
+   void SetProgram(VE_Shader::Program glslProgram);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from

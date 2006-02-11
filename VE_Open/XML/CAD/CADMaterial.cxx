@@ -131,6 +131,11 @@ void CADMaterial::SetShininess(float shininess)
 {
    _shininess = shininess;
 }
+///////////////////////////////////////////////////
+void CADMaterial::SetMaterialName(std::string name)
+{
+   _materialName = name;
+}
 ///////////////////////////////////
 std::string CADMaterial::GetFace()
 {

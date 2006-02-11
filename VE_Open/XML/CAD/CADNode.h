@@ -81,7 +81,7 @@ public:
 
    ///Add an attribute for this node.
    ///\param attribute A new attribute for this node.
-   void AddAttribute(VE_CAD::CADAttribute* attribute);
+   void AddAttribute(VE_CAD::CADAttribute attribute);
 
    ///Set the name of the active attribute
    ///\param attributeName The name of the active attribute.
@@ -92,7 +92,7 @@ public:
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
 
    ///Get the active attribute
-   VE_CAD::CADAttribute* GetActiveAttribute();
+   VE_CAD::CADAttribute& GetActiveAttribute();
 
    ///Get the node type. 
    ///Valid types currently are Node,Assembly,Part and Clone
@@ -109,14 +109,14 @@ public:
 
    ///Get an attribute of this CAD node by a name
    ///\param name The name of the attribute to find.
-   VE_CAD::CADAttribute* GetAttribute(std::string name);
+   VE_CAD::CADAttribute& GetAttribute(std::string name);
   
     ///Get an attribute of this CAD node by a name
    ///\param index The index of the attribute to find.
-   VE_CAD::CADAttribute* GetAttribute(unsigned int index);
+   VE_CAD::CADAttribute& GetAttribute(unsigned int index);
 
    ///Get attributes for this node.
-   std::vector<CADAttribute*> GetAttributeList();
+   std::vector<CADAttribute> GetAttributeList();
 
    ///Get the ID
    unsigned int GetID();
@@ -143,7 +143,7 @@ protected:
    unsigned int _uID;///<A "unique" id for the node.
    unsigned int  _parent;  ///< Parent node ID.
    VE_XML::Transform* _transform; ///< Transform for the node.
-   std::vector<VE_CAD::CADAttribute*> _attributeList;///<A list of attributes for this node
+   std::vector<VE_CAD::CADAttribute> _attributeList;///<A list of attributes for this node
    std::string _name;///< The name of this node.
    std::string _type;///< The type of node;
 };

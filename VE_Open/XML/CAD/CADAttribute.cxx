@@ -83,25 +83,25 @@ void CADAttribute::SetAttributeType(std::string attributeType)
    _attributeType = attributeType;
 }
 /////////////////////////////////////////////////////////////
-void CADAttribute::SetMaterial(VE_CAD::CADMaterial* material)
+void CADAttribute::SetMaterial(VE_CAD::CADMaterial material)
 {
    if(_material)
    {
       delete _material;
       _material = 0;
    }
-   _material = new CADMaterial(*material);
+   _material = new CADMaterial(material);
    _attributeType = std::string("Material");
 }
 //////////////////////////////////////////////////////////////
-void CADAttribute::SetProgram(VE_Shader::Program* glslProgram)
+void CADAttribute::SetProgram(VE_Shader::Program glslProgram)
 {
    if(_glslProgram)
    {
       delete _glslProgram;
       _glslProgram = 0;
    }
-   _glslProgram = new Program(*glslProgram);
+   _glslProgram = new Program(glslProgram);
    _attributeType = std::string("Program");
 }
 //////////////////////////////////////////////////////////

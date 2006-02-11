@@ -69,6 +69,7 @@ public:
       ATTRIBUTE_PANEL_ID,///<The attribute panel ID.
       ATTRIBUTE_TYPE,///<The attribute type ID.
       TRANSFORM_PANEL_ID,///<The transform panel ID.
+      EDIT_ATTRIBUTE,///<The edit attribute ID.
       ADD_ATTRIBUTE///<The add attribute button ID.
    };
    ///Constructor
@@ -78,7 +79,11 @@ public:
    CADNodePropertiesDlg( wxWindow* parent, int id, VE_CAD::CADNode* node);
 
    ///Destructor
-   virtual ~ CADNodePropertiesDlg();
+   virtual ~CADNodePropertiesDlg();
+
+   ///Check for existing attribute name. 
+   ///\param attributeName The name to check for.
+   bool AttributeExists(std::string attributeName);
 
 #ifndef STAND_ALONE
    ///Set the current vjObjs ptr for data passing.
@@ -154,7 +159,7 @@ protected:
    wxComboBox* _attributeType;///<The attribute type selection box.
    wxListBox* _attributeSelection;///<The box listing the available attributes.
    wxButton* _addAttributeButton;///<The button for adding attributes.
-   wxButton* _removeAttributeButton;///<The button for removing attributes.
+   wxButton* _editAttributeButton;///<The button for removing attributes.
    wxArrayString _availableShaders;///<The shader names.
    wxArrayString _availableMaterials;///<The material names.
 

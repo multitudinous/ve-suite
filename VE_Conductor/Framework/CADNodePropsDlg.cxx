@@ -93,7 +93,7 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    _attributeType = 0;
    _attributeSelection = 0;
    _addAttributeButton = 0;
-   _removeAttributeButton = 0;
+   _editAttributeButton = 0;
    _nShaders = 0;
    _nMaterials = 0;
    
@@ -292,8 +292,14 @@ void CADNodePropertiesDlg::_buildAttributePanel()
                                2, 
                                choices,wxCB_DROPDOWN);
    attributeTypeSizer->Add(_attributeType,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   attributePropSizer->Add(attributeTypeSizer,1,wxEXPAND|wxALIGN_CENTER);
+    
+   _addAttributeButton = new wxButton(_attributePanel, ADD_ATTRIBUTE,wxString("Add..."));
+   attributeTypeSizer->Add(_addAttributeButton,0,wxALIGN_CENTER);
 
+   _editAttributeButton = new wxButton(_attributePanel, EDIT_ATTRIBUTE,wxString("Edit..."));
+   attributeTypeSizer->Add(_editAttributeButton,0,wxALIGN_CENTER);
+
+   attributePropSizer->Add(attributeTypeSizer,1,wxEXPAND|wxALIGN_CENTER);
 
    //Active attribute selection
    wxStaticBox* activeAttribute = new wxStaticBox(_attributePanel, -1, wxT("Available Attributes"));
@@ -308,8 +314,7 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    }
    activeAttributeSizer->Add(_attributeSelection,1,wxEXPAND|wxALIGN_CENTER);
  
-   _addAttributeButton = new wxButton(_attributePanel, ADD_ATTRIBUTE,wxString("Add Attribute"));
-   activeAttributeSizer->Add(_addAttributeButton,0,wxALIGN_CENTER);
+  
 
    attributePropSizer->Add(activeAttributeSizer,1,wxEXPAND|wxALIGN_CENTER);
 
@@ -329,21 +334,21 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
       _nShaders = 0;
       _nMaterials = 0;
 
-      std::vector<CADAttribute*> attributes = _cadNode->GetAttributeList();
+      std::vector<CADAttribute> attributes = _cadNode->GetAttributeList();
       size_t nAttributes = _cadNode->GetAttributeList().size();
       std::string attributeType;
       for(size_t i = 0; i < nAttributes; i++)
       {
-         attributeType = attributes.at(i)->GetAttributeType(); 
+         attributeType = attributes.at(i).GetAttributeType(); 
          if( attributeType == std::string("Material"))
          {   
             _nMaterials++;
-            _availableMaterials.Add(attributes.at(i)->GetAttributeName().c_str());
+            _availableMaterials.Add(attributes.at(i).GetAttributeName().c_str());
          }
          else if( attributeType == std::string("Program"))
          {
             _nShaders++;
-            _availableShaders.Add(attributes.at(i)->GetAttributeName().c_str());
+            _availableShaders.Add(attributes.at(i).GetAttributeName().c_str());
          }
       }
       if(_attributeType->GetValue() == wxString("Materials"))
@@ -387,7 +392,7 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& WXUNUSED(event))
 
       VE_XML::DataValuePair* activeAttribute = new VE_XML::DataValuePair();
       activeAttribute->SetDataType("STRING");
-      activeAttribute->SetData("Active Attribute",_cadNode->GetActiveAttribute()->GetAttributeName());
+      activeAttribute->SetData("Active Attribute",_cadNode->GetActiveAttribute().GetAttributeName());
       _instructions.push_back(activeAttribute);
 
       VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
@@ -414,16 +419,43 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
          std::stringstream nMaterials;
          nMaterials<<_nMaterials;
 
-         VE_CAD::CADAttribute* newAttribute = new CADAttribute();
-         newAttribute->SetAttributeType("Material");
+         VE_CAD::CADAttribute newAttribute;
+         newAttribute.SetAttributeType("Material");
          
-         VE_CAD::CADMaterial* newMaterial = new CADMaterial();
-         //1)Pop up the Material dlg.
-         //2)Get the colors from the dlg
-         newAttribute->SetMaterial(newMaterial);
+         VE_CAD::CADMaterial newMaterial;
+         
+         wxTextEntryDialog materialNameDlg(this, 
+                                       wxString("New Material Name"),
+                                       wxString("Enter name for new material:"),
+                                       wxString("Material")+wxString(nMaterials.str().c_str()),wxOK);
+         materialNameDlg.Show();
+         if(AttributeExists(materialNameDlg.GetValue().GetData()))
+         {
+            wxMessageBox( "Attribute with this name is already loaded.", 
+                          materialNameDlg.GetValue(), wxOK | wxICON_INFORMATION );
+                              return;
+         }
+         
+         newMaterial.SetMaterialName(materialNameDlg.GetValue().GetData());
+         newAttribute.SetMaterial(newMaterial);
          _cadNode->AddAttribute(newAttribute);
          _updateAvailableAttributes();
          _attributeSelection->SetSelection(_nMaterials-1);
+
+         _commandName = std::string("CAD_ADD_ATTRIBUTE_TO_NODE");
+                        
+         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         nodeID->SetDataType("UNSIGNED INT");
+         nodeID->SetDataName(std::string("Node ID"));
+         nodeID->SetDataValue(_cadNode->GetID());
+         _instructions.push_back(nodeID);
+      
+         VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
+         addAttribute->SetDataType("XMLOBJECT");
+         addAttribute->SetData("CADAttribute",&_cadNode->GetAttribute(newAttribute.GetAttributeName()));
+         _instructions.push_back(addAttribute);
+
+         _sendCommandsToXplorer();
       }
       else if(_attributeType->GetValue() == wxString("Shaders"))
       {
@@ -440,8 +472,8 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
             {         
                if(dialog.GetPath())
                {
-                  VE_CAD::CADAttribute* newAttribute = new CADAttribute();
-                  newAttribute->SetAttributeType("Program");
+                  VE_CAD::CADAttribute newAttribute;// = new CADAttribute();
+                  newAttribute.SetAttributeType("Program");
                   
                   VE_XML::XMLReaderWriter shaderLoader;
                   shaderLoader.UseStandaloneDOMDocumentManager();
@@ -454,20 +486,14 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
                      try
                      {
                         loadedShader = dynamic_cast<VE_Shader::Program*>(shaderLoader.GetLoadedXMLObjects().at(0));
-                        for(unsigned int i = 0; i < _nShaders; i++)
+                        if(AttributeExists(loadedShader->GetProgramName().c_str()))
                         {
-                           if(loadedShader->GetProgramName().c_str() == _availableShaders[i])
-                           {
-                              wxMessageBox( "Shader is already loaded.", 
+                           wxMessageBox( "Attribute with this name is already loaded.", 
                                   dialog.GetPath(), wxOK | wxICON_INFORMATION );
-                              
-                              delete newAttribute;
-                              newAttribute = 0;
                               return;
-                           }
                         }
                         
-                        newAttribute->SetProgram(loadedShader);
+                        newAttribute.SetProgram(*loadedShader);
                         _cadNode->AddAttribute(newAttribute);
                         _updateAvailableAttributes();
                         _attributeSelection->SetSelection(_nShaders-1);
@@ -482,7 +508,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
       
                         VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
                         addAttribute->SetDataType("XMLOBJECT");
-                        addAttribute->SetData("CADAttribute",_cadNode->GetAttribute(newAttribute->GetAttributeName()));
+                        addAttribute->SetData("CADAttribute",&_cadNode->GetAttribute(newAttribute.GetAttributeName()));
                         _instructions.push_back(addAttribute);
 
                         _sendCommandsToXplorer();
@@ -491,9 +517,6 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
                      {
                         wxMessageBox( "Couldn't load shader file.", 
                                       dialog.GetPath(), wxOK | wxICON_INFORMATION );
-                        
-                        delete newAttribute;
-                        newAttribute = 0;
                         return;
                      }
                   }
@@ -502,6 +525,22 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
          }
       }
    }
+}
+//////////////////////////////////////////////////////////
+bool CADNodePropertiesDlg::AttributeExists(std::string name)
+{
+   for(unsigned int i = 0; i < _nShaders; i++)
+   {
+      if(name.c_str() == _availableShaders[i])
+         return true;
+   }
+   
+   for(unsigned int i = 0; i < _nMaterials; i++)
+   {
+      if(name.c_str() == _availableMaterials[i])
+         return true;
+   }
+   return false;
 }
 //////////////////////////////////////////////
 void CADNodePropertiesDlg::ClearInstructions()

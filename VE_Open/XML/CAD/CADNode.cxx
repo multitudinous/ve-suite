@@ -80,15 +80,16 @@ CADNode::~CADNode()
       _transform = 0;
    }
    
-   if(_attributeList.size())
+   /*if(_attributeList.size())
    {
      size_t nAttributes =  _attributeList.size();
        for(size_t i = 0; i < nAttributes; i++)
       {
          delete _attributeList.at(i);
       }
-      _attributeList.clear();
-   }
+     
+   }*/
+   _attributeList.clear();
 }
 ///////////////////////////////////////////
 void CADNode::SetNodeName(std::string name)
@@ -111,7 +112,7 @@ void CADNode::SetTransform(VE_XML::Transform* transform)
    _transform = new VE_XML::Transform(*transform);
 }
 ///////////////////////////////////////////////////////////
-void CADNode::AddAttribute(VE_CAD::CADAttribute* attribute)
+void CADNode::AddAttribute(VE_CAD::CADAttribute attribute)
 {
    _attributeList.push_back(attribute);
 }
@@ -141,7 +142,7 @@ VE_XML::Transform* CADNode::GetTransform()
    return _transform;
 }
 ///////////////////////////////////////////////////////////////
-VE_CAD::CADAttribute* CADNode::GetAttribute(unsigned int index)
+VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
 {
    try
    {
@@ -157,20 +158,21 @@ VE_CAD::CADAttribute* CADNode::GetAttribute(unsigned int index)
    return _attributeList.at(0);;
 }
 ////////////////////////////////////////////////////////////
-VE_CAD::CADAttribute* CADNode::GetAttribute(std::string name)
+VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
 {
    size_t nAttributes = _attributeList.size();
    for(size_t i = 0; i < nAttributes; i++)
    {
-      if(_attributeList.at(i)->GetAttributeName() == name)
+      if(_attributeList.at(i).GetAttributeName() == name)
       {
          return _attributeList.at(i);
       }
    }
-   return 0;
+   //how do I do this?
+   ///return 0;
 }
 ///////////////////////////////////////////////////
-VE_CAD::CADAttribute* CADNode::GetActiveAttribute()
+VE_CAD::CADAttribute& CADNode::GetActiveAttribute()
 {
    return GetAttribute(_activeAttributeName);
 }
@@ -210,8 +212,8 @@ void CADNode::_updateVEElement(std::string input)
       size_t nAttributes = _attributeList.size();
       for(size_t i = 0; i < nAttributes; i++)
       {
-         _attributeList.at(i)->SetOwnerDocument(_rootDocument);
-         _veElement->appendChild( _attributeList.at(i)->GetXMLData("attribute") );
+         _attributeList.at(i).SetOwnerDocument(_rootDocument);
+         _veElement->appendChild( _attributeList.at(i).GetXMLData("attribute") );
       }
       SetSubElement(std::string("activeAttributeName"),_activeAttributeName);
    }
@@ -289,8 +291,9 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                //Need to check if the returned attribute belongs to this node
                if(attributeNode->getParentNode() == currentElement)
                {
-                  CADAttribute* newAttribute = new CADAttribute();
-                  newAttribute->SetObjectFromXMLData(attributeNode);
+                  //CADAttribute* newAttribute = new CADAttribute();
+                  CADAttribute newAttribute;
+                  newAttribute.SetObjectFromXMLData(attributeNode);
                   _attributeList.push_back(newAttribute);
                }
             }
@@ -317,8 +320,8 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
       }
    }
 }
-//////////////////////////////////////////////////////
-std::vector<CADAttribute*> CADNode::GetAttributeList()
+/////////////////////////////////////////////////////
+std::vector<CADAttribute> CADNode::GetAttributeList()
 {
    return _attributeList;
 }
@@ -332,16 +335,15 @@ CADNode::CADNode(const CADNode& rhs)
 
    if(rhs._transform)
       _transform = new VE_XML::Transform(*rhs._transform);
-  
    else
       _transform = new Transform();
 
    if(_attributeList.size())
    {
-      for(size_t i = _attributeList.size() -1; i >= 0; i--)
+      /*for(size_t i = _attributeList.size() -1; i >= 0; i--)
       {
          delete _attributeList.at(i);
-      }
+      }*/
       _attributeList.clear();
    }
 
@@ -364,10 +366,10 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       XMLObject::operator =(rhs);
       if(_attributeList.size())
       {
-         for(size_t i = _attributeList.size() -1; i >= 0; i--)
+         /*for(size_t i = _attributeList.size() -1; i >= 0; i--)
          {
             delete _attributeList.at(i);
-         }
+         }*/
          _attributeList.clear();
       }
 
