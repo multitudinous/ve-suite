@@ -518,7 +518,8 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
    //*(linkline.GetPoint( 0 )) = GetPointForSelectedPlugin( fromModuleID, fromPort, "ouput" );
 
    VE_Conductor::GUI_Utilities::Polygon linkline;
-   for ( size_t i=0; i< links[m_selLink].GetPoints()->size(); i++ )
+   size_t i;
+   for ( i=0; i< links[m_selLink].GetPoints()->size(); i++ )
       *(linkline.GetPoint( i )) = *(links[ m_selLink ].GetPoint( i ));
    
    //unsigned long toModuleID = links[m_selLink].GetToModule();
@@ -527,7 +528,7 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
    VE_Conductor::GUI_Utilities::Polygon Near;
    linkline.nearpnt( action_point, Near );
 
-   size_t i;
+   //size_t i;
    for ( i=0; i < linkline.GetNumberOfPoints()-1; i++)
       if (  ( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x && 
             linkline.GetPoint( i+1 )->x >= Near.GetPoint( 0 )->x ) ||

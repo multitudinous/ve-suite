@@ -110,17 +110,21 @@ VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* XMLObjectFactory::CreateXMLObjectCopy(std::string objectType,
-                                                         std::string objectNamespace,
-                                                         VE_XML::XMLObject* objectToCopy)
+VE_XML::XMLObject* XMLObjectFactory::CreateXMLObjectCopy( VE_XML::XMLObject* objectToCopy )
 {
-   std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
-   xmlCreator = _objectCreators.find(objectNamespace);
-   if(xmlCreator != _objectCreators.end())
+   std::string objectType = objectToCopy->GetObjectType();
+   std::string objectNamespace = objectToCopy->GetObjectNamespace();
+
+   ///I don't think we need this as we already have an object of the type we are creating
+   ///therefore no need to check this. 
+   ///registration of the creator is taken care of in the constructor of the xmlobject -- mccdo
+   //std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
+   //xmlCreator = _objectCreators.find(objectNamespace);
+   //if(xmlCreator != _objectCreators.end())
    {
-      return xmlCreator->second->CreateNewXMLObjectCopy(objectType,objectToCopy);
+      return _objectCreators[ objectNamespace ]->CreateNewXMLObjectCopy(objectType,objectToCopy);
    }
-   return 0;
+   //return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
 bool XMLObjectFactory::ObjectCreatorIsRegistered(std::string objectNamespace)

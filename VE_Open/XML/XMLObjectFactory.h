@@ -67,12 +67,8 @@ public:
    static VE_XML::XMLObject* CreateXMLObject(std::string objectType,
                                              std::string objectNamespace);
 
-   ///\param objectType The unique string specifying what object to create
-   ///\param objectNamespace The namespace that the object belongs to. 
    ///\param objectToCopy The object to pass to the copy constructor
-   static VE_XML::XMLObject* CreateXMLObjectCopy(std::string objectType,
-                                                 std::string objectNamespace,
-                                                 VE_XML::XMLObject* objectToCopy);
+   static VE_XML::XMLObject* CreateXMLObjectCopy( VE_XML::XMLObject* objectToCopy );
 
    ///Register a CreationEventHandler for a namespace
    ///Valid types so far are:

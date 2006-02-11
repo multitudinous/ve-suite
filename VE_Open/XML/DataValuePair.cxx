@@ -89,9 +89,7 @@ DataValuePair::DataValuePair( const DataValuePair& input )
 
    if(input._veXMLObject)
    {
-      _veXMLObject = VE_XML::XMLObjectFactory::Instance()->CreateXMLObjectCopy(input._veXMLObject->GetObjectType(),
-                                                                   input._veXMLObject->GetObjectNamespace(),
-                                                                   input._veXMLObject);
+      _veXMLObject = VE_XML::XMLObjectFactory::Instance()->CreateXMLObjectCopy( input._veXMLObject );
    }
 }
 /////////////////////////////////////////////////////
@@ -116,9 +114,7 @@ DataValuePair& DataValuePair::operator=( const DataValuePair& input)
 
       if(input._veXMLObject)
       {
-         _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy(input._veXMLObject->GetObjectType(),
-                                                              input._veXMLObject->GetObjectNamespace(),
-                                                              input._veXMLObject);
+         _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy( input._veXMLObject );
       }
    }
    return *this;
@@ -202,9 +198,7 @@ void DataValuePair::SetData(std::string dataName,VE_XML::XMLObject* vexmlObject)
 
    if(vexmlObject)
    {
-      _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy(vexmlObject->GetObjectType(),
-                                                           vexmlObject->GetObjectNamespace(),
-                                                           vexmlObject);
+      _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy( vexmlObject );
    }
 }
 ///////////////////////////////////////
@@ -271,7 +265,6 @@ void DataValuePair::_updateVEElement( std::string input )
    }
    else if(_dataType == std::string("XMLOBJECT"))
    {
-      _veXMLObject->SetOwnerDocument(_rootDocument);
       SetSubElement(_veXMLObject->GetObjectType(),_veXMLObject);
    }
 }
@@ -431,9 +424,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
 ////////////////////////////////////////////////////////////
 /*void GetData( VE_XML::XMLObject& data )
 {
-   data = *(XMLObjectFactory::Instance()->CreateXMLObjectCopy( _veXMLObject->GetObjectType(),
-                                                               _veXMLObject->GetObjectNamespace(),
-                                                               _veXMLObject) );
+   data = *(XMLObjectFactory::Instance()->CreateXMLObjectCopy( _veXMLObject) );
 }*/
 ////////////////////////////////////////////////////////////
 void DataValuePair::SetData( std::string dataName, std::string data )
