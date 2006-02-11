@@ -892,23 +892,23 @@ void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
           foundAttribute != namesAndAttributes.end();
           foundAttribute++)
       {
-         std::cout<<"Found attribute: "<<foundAttribute->first<<std::endl;
+         vprDEBUG(vesDBG,1) <<"|\tFound attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
          if(foundAttribute->first == attributeName)
          {
             if(nodeType == "Assembly")
             {
-               std::cout<<"Setting Assembly attribute: "<<foundAttribute->first<<std::endl;
+               vprDEBUG(vesDBG,1) <<"|\tSetting Assembly attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
                GetAssembly(nodeID)->GetRawNode()->setStateSet(foundAttribute->second.get());
             }
             else if(nodeType == "Part")
             {
-               std::cout<<"Setting Part attribute: "<<foundAttribute->first<<std::endl;
+               vprDEBUG(vesDBG,1) <<"|\tSetting Part attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
                GetPart(nodeID)->GetNode()->GetRawNode()->setStateSet(dynamic_cast<osg::StateSet*>(foundAttribute->second.get()));
-               std::cout<<"valid: "<<foundAttribute->first<<std::endl;
+               vprDEBUG(vesDBG,1) <<"|\tvalid: "<<foundAttribute->first<<std::endl;
             }
             else if(nodeType == "Clone")
             {
-               std::cout<<"Setting Clone attribute: "<<foundAttribute->first<<std::endl;
+               vprDEBUG(vesDBG,1) <<"|\tSetting Clone attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
                GetClone(nodeID)->GetClonedGraph()->GetRawNode()->setStateSet(foundAttribute->second.get());
             }
          }
@@ -916,7 +916,7 @@ void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
    }
    else
    {
-      std::cout<<"Attribute not found: "<<attributeName<<std::endl;
+      vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
    }
 #elif _PERFORMER               
    std::cout<<"cfdModel::SetActiveAttributeOnNode not implemented for Performer yet!!!"<<std::endl;
@@ -927,7 +927,7 @@ void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
 void cfdModel::AddAttributeToNode(unsigned int nodeID,
                               VE_CAD::CADAttribute* newAttribute)
 {
-   std::cout<<"---cfdModel::AddAttributeToNode()---"<<std::endl;
+   vprDEBUG(vesDBG,1) <<"|\tcfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
    attribute->CreateStateSetFromAttribute(newAttribute);
 
@@ -940,17 +940,17 @@ void cfdModel::AddAttributeToNode(unsigned int nodeID,
    
    if(attributeList != _nodeAttributes.end())
    {
-      std::cout<<"Adding attribute: "<<attributeList->first<<std::endl;
+      vprDEBUG(vesDBG,1) <<"|\tAdding attribute: "<<attributeList->first<<std::endl<< vprDEBUG_FLUSH;
       attributeList->second.push_back(attributeInfo);
    }
    else
    { 
       std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > temp;
-      std::cout<<"Adding attribute: "<<attributeList->first<<std::endl;
+      vprDEBUG(vesDBG,1) <<"|\tAdding attribute: "<<attributeList->first<<std::endl<< vprDEBUG_FLUSH;
       temp.push_back(attributeInfo);
       _nodeAttributes[nodeID] = temp;
    }
-   std::cout<<"---end cfdModel::AddAttributeToNode()---"<<std::endl;
+   vprDEBUG(vesDBG,1) <<"|\tend cfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
 
 }
 ///////////////////////////////////////////////////////////
