@@ -79,9 +79,9 @@ public:
 
    ///Write the current XML document
    ///\param xmlFile The XML document to write to.
-   ///\param node The XML node to write. If writing to string set this to "returnString" and it
+   ///\param nodes The XML node to write. If writing to string set this to "returnString" and it
    ///will be populated w/ the return string.
-   ///\param tagName The tag name to use for when writing the node.
+   ///\param documentType The type of dom doc to be created either: Network, Shader, Command.
    virtual void WriteXMLDocument(std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
                                  std::string& xmlFile,
                                  std::string documentType );
@@ -118,8 +118,7 @@ protected:
    ///read in.
    ///\param rootDocument The document representing the input XML structure.
    ///\param objectNamespace The namespace the object to populate belongs to.
-   ///\param objectTagName The tag name of the object to populate.
-   ///\param documentType The type of dom doc to be created either: Network, Shader, Command.
+   ///\param tagName The tag name of the object to populate.
    virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
                                                 std::string objectNamespace,
                                                 std::string tagName );
