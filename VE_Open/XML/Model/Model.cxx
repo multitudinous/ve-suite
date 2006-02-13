@@ -345,17 +345,13 @@ DataValuePair* Model::GetInput( int i )
    }
    catch (...)
    {
-      //if ( i > (inputs.size() + 1) )
+      if ( i >= 0 )
       {
-         std::cerr << "The element request is out of sequence."
-                     << " Please ask for a lower number point." << std::endl;
-         //return 0;
-      }
-      //else
-      {
-         inputs.push_back( new DataValuePair(  ) );
-         return inputs.back();
-      }
+         std::cerr << " Model::GetInput The element request is out of sequence."
+            << " Please ask for a lower number point or -1 to request new element." << std::endl;
+      }  
+      inputs.push_back( new DataValuePair(  ) );
+      return inputs.back();
    }
 }
 ////////////////////////////////////////////////////////////
