@@ -156,6 +156,7 @@ CADNode* CADTreeBuilder::GetCADNode(std::string name)
     {
        return _parentList.back();
     }
+    return -1;
  }
  //////////////////////////////////////
  /*void CADTreeBuilder::ClearParentList()

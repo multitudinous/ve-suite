@@ -428,7 +428,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
                                        wxString("New Material Name"),
                                        wxString("Enter name for new material:"),
                                        wxString("Material")+wxString(nMaterials.str().c_str()),wxOK);
-         materialNameDlg.Show();
+         materialNameDlg.ShowModal();
          if(AttributeExists(materialNameDlg.GetValue().GetData()))
          {
             wxMessageBox( "Attribute with this name is already loaded.", 
@@ -588,7 +588,7 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
       
       VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
       updateTransform->SetDataType("XMLOBJECT");
-      updateTransform->SetData("Transform",_cadNode->GetTransform());
+      updateTransform->SetData("genericObject",_cadNode->GetTransform());
       _instructions.push_back(updateTransform);
 
       VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
