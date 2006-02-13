@@ -199,7 +199,7 @@ osg::Node* cfdNode::GetRawNode(void)
 ///Set the name of the node
 void cfdNode::SetName(std::string name)
 {
-   GetRawNode()->setName(name);
+   GetRawNode()->setName(name.c_str());
 }
 /////////////////////////////////////////
 //load scene from file                 //
