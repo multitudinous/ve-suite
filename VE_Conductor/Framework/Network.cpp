@@ -2036,7 +2036,9 @@ void Network::Load( std::string xmlNetwork )
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
    VE_XML::XMLReaderWriter networkWriter;
-   networkWriter.ReadXMLData( xmlNetwork, "Model", "Network" );
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromFile();
+   networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
    // do this for network
@@ -2090,7 +2092,7 @@ void Network::Load( std::string xmlNetwork )
    }
 
    // do this for models
-   networkWriter.ReadXMLData( xmlNetwork, "Model", "Model" );
+   networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
    objectVector = networkWriter.GetLoadedXMLObjects();
 
    // now lets create a list of them
@@ -2106,8 +2108,7 @@ void Network::Load( std::string xmlNetwork )
 	   modules[ num ].SetPlugin( tempPlugin );
       modules[ num ].GetPlugin()->SetID( num );
 	   modules[ num ].SetClassName( model->GetModelName() );
-      *(modules[ num ].GetPlugin()->GetModel()) = *model;
-      delete model;
+      modules[ num ].GetPlugin()->SetVEModel( model );
       //Second, calculate the polyes
       wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
       int polynum = modules[ num ].GetPlugin()->GetNumPoly();

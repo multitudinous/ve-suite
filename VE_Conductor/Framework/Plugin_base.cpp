@@ -615,16 +615,16 @@ void REI_Plugin::UnPack(Interface * intf)
   
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetVEModel( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* modelElement )
+void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
 {
    if ( veModel != NULL )
    {
       delete veModel;
    }
 
-   veModel = new Model();
+   veModel = tempModel;
 
-   veModel->SetObjectFromXMLData( modelElement );
+   //veModel->SetObjectFromXMLData( modelElement );
    name = wxString( veModel->GetModelName().c_str() );
    mod_pack._id = veModel->GetModelID();
    std::string tempFilename = veModel->GetIconFilename();
