@@ -163,10 +163,10 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
-   XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
-   XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_Shader::ShaderCreator());
    //XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new ModelCreator());
-   XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new CADCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
 }
 
 void AppFrame::CreateVETab()
