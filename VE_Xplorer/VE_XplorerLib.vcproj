@@ -277,10 +277,16 @@
 			Name="src"
 			Filter=".cpp">
 			<File
+				RelativePath=".\CADAddAttributeEH.cxx">
+			</File>
+			<File
 				RelativePath=".\CADAddNodeEH.cxx">
 			</File>
 			<File
 				RelativePath=".\CADEventHandler.cxx">
+			</File>
+			<File
+				RelativePath=".\CADSetActiveAttributeEH.cxx">
 			</File>
 			<File
 				RelativePath=".\CADTransformEH.cxx">
@@ -440,10 +446,16 @@
 			Name="headers"
 			Filter=".h">
 			<File
+				RelativePath=".\CADAddAttributeEH.h">
+			</File>
+			<File
 				RelativePath=".\CADAddNodeEH.h">
 			</File>
 			<File
 				RelativePath=".\CADEventHandler.h">
+			</File>
+			<File
+				RelativePath=".\CADSetActiveAttributeEH.h">
 			</File>
 			<File
 				RelativePath=".\CADTransformEH.h">
