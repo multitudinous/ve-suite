@@ -253,8 +253,9 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
                               std::string attribName, std::string attrib )
 {
    dataValue->SetOwnerDocument( _rootDocument );
-   _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
-   _veElement->setAttribute( xercesString( attribName ), xercesString( attrib ) );
+   DOMElement* xmlObjectElement = dataValue->GetXMLData( subElementTagName );
+   xmlObjectElement->setAttribute( xercesString( attribName ), xercesString( attrib ) );
+   _veElement->appendChild( xmlObjectElement );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex)
