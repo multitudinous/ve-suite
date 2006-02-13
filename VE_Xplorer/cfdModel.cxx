@@ -888,6 +888,7 @@ void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
 void cfdModel::AddAttributeToNode(unsigned int nodeID,
                               VE_CAD::CADAttribute* newAttribute)
 {
+#ifdef _OSG
    vprDEBUG(vesDBG,1) <<"|\tcfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
    attribute->CreateStateSetFromAttribute(newAttribute);
@@ -911,6 +912,9 @@ void cfdModel::AddAttributeToNode(unsigned int nodeID,
       temp.push_back(attributeInfo);
       _nodeAttributes[nodeID] = temp;
    }
+#elif _PERFORMER
+   vprDEBUG(vesDBG,1)<<"Not implemented for Performer yet!!!"<<std::endl<< vprDEBUG_FLUSH;
+#endif
    vprDEBUG(vesDBG,1) <<"|\tend cfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
 
 }

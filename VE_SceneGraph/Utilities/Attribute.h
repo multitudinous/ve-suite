@@ -37,6 +37,10 @@
 
 #ifdef _PERFORMER
 #include <Performer/pr/pfMaterial.h>
+#include <Performer/pf.h>
+#include <Performer/pfdu.h>
+#include <Performer/pfutil.h>
+#include <Performer/pf/pfNode.h>
 #elif _OSG
 #include <osg/StateSet>
 #include <osg/ref_ptr>
@@ -54,7 +58,7 @@ namespace Utilities
 #ifdef _OSG
 class VE_SCENEGRAPH_UTILS_EXPORTS Attribute : public osg::StateSet{
 #elif _PERFORMER
-class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public pfGeoSet{
+class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public pfGeoState{
 #endif
 public:   
    ///Constructor

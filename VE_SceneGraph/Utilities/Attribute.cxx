@@ -31,8 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_SceneGraph/Utilities/Attribute.h"
 
+using namespace VE_SceneGraph::Utilities;
+using namespace VE_CAD;
 #ifdef _PERFORMER
 #include <Performer/pf.h>
+#include <Performer/pfdu.h>
+#include <Performer/pfutil.h>
 #include <Performer/pf/pfNode.h>
 //Performer static member for performer compliance
 //it allows performer to determine the class type
@@ -60,8 +64,6 @@ void VE_SceneGraph::Utilities::Attribute::init(void)
 #elif _PERFORMER
 #endif
 
-using namespace VE_SceneGraph::Utilities;
-using namespace VE_CAD;
 //////////////////////
 ///Constructor      //
 //////////////////////

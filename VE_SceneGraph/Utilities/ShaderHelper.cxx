@@ -114,11 +114,14 @@ ShaderHelper::~ShaderHelper()
    _vertexUniformNames.clear();
    _fragmentUniformNames.clear();
 }
+#ifdef _OSG
 /////////////////////////////////////////////////////
 void ShaderHelper::SetStateSet(osg::StateSet* shader)
 {
    _ss = shader;
 }
+#elif _PERFORMER
+#endif
 ///////////////////////////////////////////////////////////////////
 void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
 {
