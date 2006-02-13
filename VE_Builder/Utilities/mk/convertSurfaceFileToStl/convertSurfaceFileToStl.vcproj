@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -35,7 +35,7 @@
 				AdditionalDependencies="vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib vtkHybrid.lib"
 				OutputFile="$(OutDir)/convertSurfaceFileToStl.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;"
+				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/convertSurfaceFileToStl.pdb"
 				SubSystem="1"

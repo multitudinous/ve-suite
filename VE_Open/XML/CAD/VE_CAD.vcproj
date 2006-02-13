@@ -37,7 +37,7 @@
 				AdditionalDependencies="xerces-c_2d.lib"
 				OutputFile="$(OutDir)/VE_CAD_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/VE_CAD_d.pdb"
 				SubSystem="2"

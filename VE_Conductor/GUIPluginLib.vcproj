@@ -105,7 +105,7 @@
 				OutputFile="$(OutDir)\GUIPlugin_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/GUIPlugin.pdb"
 				ImportLibrary="$(OutDir)\GUIPlugin_d.lib"

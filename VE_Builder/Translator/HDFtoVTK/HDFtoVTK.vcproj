@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(HDF4_INC_PATH)&quot;;&quot;$(HDF5_INC_PATH)&quot;;&quot;$(SZIP_INC_PATH)&quot;;&quot;$(ZLIB_INC_PATH)&quot;;&quot;$(VTK_HOME)\include\vtk&quot;"
+				AdditionalIncludeDirectories="&quot;$(HDF4_INC_PATH)&quot;;&quot;$(HDF5_INC_PATH)&quot;;&quot;$(SZIP_INC_PATH)&quot;;&quot;$(ZLIB_INC_PATH)&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"

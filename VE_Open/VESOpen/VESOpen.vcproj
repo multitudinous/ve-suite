@@ -77,8 +77,8 @@
 				Name="VCCustomBuildTool"
 				Description="IDL Compiler"
 				CommandLine="echo C++ stubs. . .
-$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl
-$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl
+$(ACE_ROOT)/bin/tao_idl.exe -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash
+$(ACE_ROOT)/bin/tao_idl.exe -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash
 echo Done.
 "
 				AdditionalDependencies="module.idl;VjObs.idl"

@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;"
+				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -35,7 +35,7 @@
 				AdditionalDependencies="vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib flowTexture.lib"
 				OutputFile="$(OutDir)/vectorViz.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;C:\Documents and Settings\G-Biv\Desktop\development\flowTexture\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;C:\Documents and Settings\G-Biv\Desktop\development\flowTexture\Debug&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/vectorViz.pdb"
 				SubSystem="1"
