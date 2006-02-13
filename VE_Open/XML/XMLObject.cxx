@@ -49,10 +49,10 @@ XMLObject::XMLObject()
    _objectNamespace = std::string("XML");
 
    //This may need to be somewhere else
-   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
+   /*if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
    {
       XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
-   }
+   }*/
 }
 ///////////////////////////////////////////////////
 XMLObject::XMLObject( const XMLObject& input )

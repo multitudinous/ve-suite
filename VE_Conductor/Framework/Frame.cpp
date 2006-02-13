@@ -50,6 +50,11 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
+#include "VE_Open/XML/XMLCreator.h"
+#include "VE_Open/XML/CAD/CADCreator.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+//#include "VE_Open/XML/Model/ShaderCreator.h"
 
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
@@ -155,6 +160,10 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
+   XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
+   //XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new ModelCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new CADCreator());
 }
 
 void AppFrame::CreateVETab()

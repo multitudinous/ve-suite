@@ -61,6 +61,12 @@
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdDebug.h"
 
+#include "VE_Open/XML/XMLObjectFactory.h"
+#include "VE_Open/XML/XMLCreator.h"
+#include "VE_Open/XML/CAD/CADCreator.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+//#include "VE_Open/XML/Model/ShaderCreator.h"
+
 #ifdef _TAO
 #include "VE_Xplorer/cfdExecutive.h"
 #endif //_TAO
@@ -285,10 +291,13 @@ void cfdApp::initScene( void )
    std::cout << "|===================================================================|" << std::endl;
    std::cout << "|                                                                   |" << std::endl;
 # endif // _OPENMP
+   //Initialize all the XML objects
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_Shader::ShaderCreator());
+   //XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new ModelCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
 
-   //_corbaManager = new CorbaManager();
-   vprDEBUG(vesDBG,0) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
-   //filein_name = new char [ 256 ];
+   //enter the parameter file which will soon disappear
    do
    {
       std::cout << "|   Enter VE_Xplorer parameter filename: ";
