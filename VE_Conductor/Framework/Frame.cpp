@@ -73,6 +73,9 @@
 #include <iomanip>
 
 using namespace VE_Conductor::GUI_Utilities;
+using namespace VE_XML;
+using namespace VE_CAD;
+using namespace VE_Shader;
 
 #ifdef WIN32
 #include <shellapi.h>
