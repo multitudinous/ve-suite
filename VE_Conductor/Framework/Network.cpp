@@ -2037,7 +2037,16 @@ void Network::Load( std::string xmlNetwork )
    // Get a list of all the command elements   
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
-   networkWriter.ReadFromFile();
+
+   if ( xmlNetwork.size() < 512 )
+   {
+      networkWriter.ReadFromFile();
+   }
+   else
+   {
+      networkWriter.ReadFromString();
+   }
+
    networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
