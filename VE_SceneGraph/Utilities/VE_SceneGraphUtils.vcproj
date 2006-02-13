@@ -19,8 +19,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_PATENTED;VE_SCENEGRAPH_LIBRARY;_OSG"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_PATENTED;VE_SCENEGRAPH_UTILS_LIBRARY;_OSG"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -33,10 +33,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib"
 				OutputFile="$(OutDir)/VE_SceneGraphUtils_osg_vep_d.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/VE_SceneGraphUtils.pdb"
 				SubSystem="2"
@@ -133,10 +133,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib"
 				OutputFile="$(OutDir)/VE_SceneGraphUtils_osg_d.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/VE_SceneGraphUtils.pdb"
 				SubSystem="2"
@@ -172,7 +172,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VE_SCENEGRAPH_UTILS_LIBRARY;_PERFORMER;VTK44"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
