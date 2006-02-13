@@ -105,6 +105,7 @@ EXTRA_LIBS+= -lVE_TextureBasedLib$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_ConductorLib
 EXTRA_LIBS+= -lVE_XMLLib
 EXTRA_LIBS+= -lVE_CADLib
+EXTRA_LIBS+= -lVE_ModelLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 #include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk

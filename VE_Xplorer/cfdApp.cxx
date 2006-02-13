@@ -65,7 +65,7 @@
 #include "VE_Open/XML/XMLCreator.h"
 #include "VE_Open/XML/CAD/CADCreator.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
-//#include "VE_Open/XML/Model/ShaderCreator.h"
+#include "VE_Open/XML/Model/ModelCreator.h"
 
 #ifdef _TAO
 #include "VE_Xplorer/cfdExecutive.h"
@@ -294,7 +294,7 @@ void cfdApp::initScene( void )
    //Initialize all the XML objects
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_Shader::ShaderCreator());
-   //XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new ModelCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new VE_Model::ModelCreator());
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
 
    //enter the parameter file which will soon disappear

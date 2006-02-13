@@ -39,8 +39,8 @@ SRCS=\
    Link.cxx\
    Network.cxx\
    Model.cxx\
-   Tag.cxx
-
+   Tag.cxx\
+   ModelCreator.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
