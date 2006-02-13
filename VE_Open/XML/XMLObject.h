@@ -136,6 +136,13 @@ public:
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
    void SetSubElement( std::string subElementTagName, XMLObject* dataValue );
+   ///utility functions for creating subElements for _veElement.
+   ///\param subElementTagName The subelement tagname to extract from baseElement.
+   ///\param dataValue The data to be stored.
+   ///\param attribName The name of the atrribute to be set
+   ///\param atrrib The attribute value
+   void SetSubElement( std::string subElementTagName, XMLObject* dataValue, 
+                        std::string attribName, std::string attrib );
 
 
    class VE_XML_EXPORTS VEStr

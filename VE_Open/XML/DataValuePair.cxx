@@ -265,7 +265,7 @@ void DataValuePair::_updateVEElement( std::string input )
    }
    else if(_dataType == std::string("XMLOBJECT"))
    {
-      SetSubElement( "genericObject" ,_veXMLObject);
+      SetSubElement( "genericObject" , _veXMLObject, "objectType", _veXMLObject->GetObjectType() );
    }
 }
 ///////////////////////////////////////////////////
@@ -325,16 +325,21 @@ void DataValuePair::_extractXMLObject(DOMElement* baseElement,std::string object
          _veXMLObject = 0;
       }
 
-      DOMElement* objectNamespace = GetSubElement(genericObject,"objectNamespace",0);
-      if(objectNamespace)
+      //DOMElement* objectNamespace = GetSubElement(genericObject,"objectNamespace",0);
+      DOMAttr* attr = genericObject->getAttributeNode( xercesString( "objectType" ) );
+      if ( attr )
       {
-         DOMElement* objectType = GetSubElement(genericObject,"objectType",0);
-         if(objectType)
+         //DOMElement* objectType = GetSubElement(genericObject,"objectType",0);
+         //if(objectType)
          {
-            _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject(ExtractDataStringFromSimpleElement(objectType),
-                                                                  ExtractDataStringFromSimpleElement(objectNamespace));
+            std::string objectType = XMLString::transcode( attr->getValue() );
+            _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject( objectType, "new" );
             _veXMLObject->SetObjectFromXMLData(genericObject);
          } 
+      }
+      else
+      {
+         std::cerr << "DataValuePair::_extractXMLObject : ERROR : Document not formated properly" << std::endl;
       }
    }
 
@@ -397,7 +402,8 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          {
             try
             {
-               _extractXMLObject(currentElement,_dataName);
+               //subElements = currentElement->getElementsByTagName(xercesString("genericObject"));
+               _extractXMLObject( currentElement, "genericObject" );
             }
             catch(...)
             {

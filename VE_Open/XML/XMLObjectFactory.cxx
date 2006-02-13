@@ -60,7 +60,7 @@ public:
 static VE_XML::ObjectFactoryMaker ObjectFactoryManager;
 
 VE_XML::XMLObjectFactory* VE_XML::XMLObjectFactory::_instanceOfFactory = 0;
-std::map<std::string,CreationEventHandler*> VE_XML::XMLObjectFactory::_objectCreators;
+//std::map<std::string,CreationEventHandler*> VE_XML::XMLObjectFactory::_objectCreators;
 /////////////////////////////////////
 XMLObjectFactory::XMLObjectFactory( )
 {
@@ -101,10 +101,14 @@ VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType,
                                                std::string objectNameSpace)
 {
    std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
-   xmlCreator = _objectCreators.find(objectNameSpace);
-   if(xmlCreator != _objectCreators.end())
+   //xmlCreator = _objectCreators.find(objectNameSpace);
+   for ( xmlCreator = _objectCreators.begin(); xmlCreator != _objectCreators.end(); ++xmlCreator )
    {
-      return xmlCreator->second->CreateNewXMLObject(objectType);
+      VE_XML::XMLObject* temp = xmlCreator->second->CreateNewXMLObject(objectType);
+      if ( temp )
+      {
+         return temp;       
+      }
    }
    return 0;
 }

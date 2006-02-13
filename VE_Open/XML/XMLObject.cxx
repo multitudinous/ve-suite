@@ -121,8 +121,8 @@ DOMElement* XMLObject::GetXMLData( std::string input )
       //This function should be overridden in ALL derived classes!!!!!
       _updateVEElement( input );
 
-      SetSubElement("objectType",_objectType);
-      SetSubElement("objectNamespace",_objectNamespace);
+      //SetSubElement("objectType",_objectType);
+      //SetSubElement("objectNamespace",_objectNamespace);
       return _veElement;
    }
    else
@@ -247,6 +247,14 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
 {
    dataValue->SetOwnerDocument( _rootDocument );
    _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue,
+                              std::string attribName, std::string attrib )
+{
+   dataValue->SetOwnerDocument( _rootDocument );
+   _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
+   _veElement->setAttribute( xercesString( attribName ), xercesString( attrib ) );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex)
