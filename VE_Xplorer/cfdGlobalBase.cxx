@@ -51,3 +51,8 @@ void cfdGlobalBase::SetVECommand( VE_XML::Command* command )
 {
    veCommand = command;
 }
+//////////////////////////////////////////////
+VE_XML::Command* cfdGlobalBase::GetVECommand()
+{
+   return veCommand;
+}

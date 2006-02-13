@@ -289,7 +289,6 @@ public:
 
          VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
 
-         std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 #ifdef _OSG
          std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
 #endif

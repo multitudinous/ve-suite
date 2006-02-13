@@ -51,12 +51,6 @@
 
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 
-#include "VE_Xplorer/EventHandler.h"
-#include "VE_Xplorer/CADTransformEH.h"
-#include "VE_Xplorer/CADAddNodeEH.h"
-#include "VE_Xplorer/CADAddAttributeEH.h"
-#include "VE_Xplorer/CADSetActiveAttributeEH.h"
-
 
 #ifdef _OSG
 #include <osg/StateSet>
@@ -111,29 +105,7 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
    _activeTextureDataSet = 0;
 #endif
    _rootCADNode = 0;
-   if(!VE_XML::XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
-   {
-      VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
-   }
-   if(!VE_XML::XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
-   {
-      VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_Shader::ShaderCreator());
-   }
-   if(!VE_XML::XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("CAD"))
-   {
-      VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
-   }
-   _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
-   _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")]->SetGlobalBaseObject(this);
    
-   _eventHandlers[std::string("CAD_ADD_NODE")] = new VE_EVENTS::CADAddNodeEventHandler();
-   _eventHandlers[std::string("CAD_ADD_NODE")]->SetGlobalBaseObject(this);
-
-   _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")] = new VE_EVENTS::CADAddAttributeEventHandler();
-   _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")]->SetGlobalBaseObject(this);
-
-   _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
-   _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")]->SetGlobalBaseObject(this);
 }
 
 cfdModel::~cfdModel()
@@ -167,13 +139,13 @@ cfdModel::~cfdModel()
       delete itr->second;
    }
    _cloneList.clear();
-   for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
+  /* for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
                                        itr != _eventHandlers.end(); itr++ )
    {
       delete itr->second;
       itr->second = 0;
    }
-   _eventHandlers.clear();
+   _eventHandlers.clear();*/
    // the following block allows the program to get to pfExit
    for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); itr++ )
@@ -252,17 +224,6 @@ VE_SceneGraph::cfdTempAnimation* cfdModel::GetAnimation()
 void cfdModel::PreFrameUpdate()
 {
    vprDEBUG(vesDBG,1) << "cfdModel::PreFrameUpdate " <<std::endl<< vprDEBUG_FLUSH;;
-
-   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
-   if(veCommand)
-   {
-      currentEventHandler = _eventHandlers.find(veCommand->GetCommandName());
-      if(currentEventHandler != _eventHandlers.end())
-      {
-          vprDEBUG(vesDBG,0) << "Executing: "<< veCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
-          currentEventHandler->second->Execute(veCommand);
-      }
-   }
 }
 ///////////////////////////////////////
 void cfdModel::CreateCfdDataSet( void )

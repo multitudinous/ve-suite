@@ -57,6 +57,15 @@
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include "VE_SceneGraph/cfdGroup.h"
 
+
+#include "VE_Xplorer/EventHandler.h"
+#include "VE_Xplorer/CADTransformEH.h"
+#include "VE_Xplorer/CADAddNodeEH.h"
+#include "VE_Xplorer/CADAddAttributeEH.h"
+#include "VE_Xplorer/CADSetActiveAttributeEH.h"
+
+#include "VE_Open/XML/Command.h"
+
 #ifdef _OSG
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureDataSet.h"
@@ -100,6 +109,17 @@ cfdModelHandler::cfdModelHandler( void )
    this->commandArray   = 0;
    this->_activeModel   = 0;
    tbased = false;
+   _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
+   //_eventHandlers[std::string("CAD_TRANSFORM_UPDATE")]->SetGlobalBaseObject(this);
+   
+   _eventHandlers[std::string("CAD_ADD_NODE")] = new VE_EVENTS::CADAddNodeEventHandler();
+   //_eventHandlers[std::string("CAD_ADD_NODE")]->SetGlobalBaseObject(this);
+
+   _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")] = new VE_EVENTS::CADAddAttributeEventHandler();
+   //_eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")]->SetGlobalBaseObject(this);
+
+   _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
+   //_eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")]->SetGlobalBaseObject(this);
 #ifdef _OSG
 #ifdef VE_PATENTED
    _activeTDSet = 0;
@@ -136,6 +156,13 @@ void cfdModelHandler::CleanUp( void )
       this->arrow->Delete();
       arrow = 0;
    }
+   for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
+                                       itr != _eventHandlers.end(); itr++ )
+   {
+      delete itr->second;
+      itr->second = 0;
+   }
+   _eventHandlers.clear();
 }
 
 ///////////////////////
@@ -425,9 +452,16 @@ void cfdModelHandler::PreFrameUpdate( void )
 {
    bool updateScalarRange = false;
 
-   if(_activeModel)
+   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+   if(_activeModel->GetVECommand())
    {
-      _activeModel->PreFrameUpdate();
+      currentEventHandler = _eventHandlers.find(_activeModel->GetVECommand()->GetCommandName());
+      if(currentEventHandler != _eventHandlers.end())
+      {
+         vprDEBUG(vesDBG,0) << "Executing: "<< _activeModel->GetVECommand()->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
+         currentEventHandler->second->SetGlobalBaseObject(_activeModel);
+         currentEventHandler->second->Execute(_activeModel->GetVECommand());
+      }
    }
    
    if ( commandArray == NULL )

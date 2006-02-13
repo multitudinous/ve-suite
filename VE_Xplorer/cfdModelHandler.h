@@ -33,7 +33,8 @@
 #define CFD_MODELHANDLER_H
 
 #include <vpr/Util/Singleton.h>
-
+#include <map>
+#include <utility>
 namespace VE_SceneGraph
 {
    class cfdDCS;
@@ -48,7 +49,10 @@ namespace VE_Xplorer
    class cfdReadParam;
    class cfdScalarBarActor;
 }
-
+namespace VE_EVENTS
+{
+   class EventHandler;
+}
 #ifdef _OSG
 #ifdef VE_PATENTED
 namespace VE_TextureBased
@@ -124,6 +128,8 @@ namespace VE_Xplorer
          std::vector< cfdModel* > _modelList;
          // Used to store data for multi-dataset functions
          std::string oldDatasetName;//[256];
+
+         std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
    };
 }
 #endif

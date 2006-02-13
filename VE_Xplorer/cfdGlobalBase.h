@@ -66,6 +66,9 @@ public:
    ///Accessor to set the VECommand to be used in any class within Xplorer
    ///\param command holds the current command to be executed
    void SetVECommand( VE_XML::Command* command );
+
+   ///Get the current command
+   VE_XML::Command* GetVECommand();
 protected:
 
    ///<cfdApp side variables declared in VjObs_i.h

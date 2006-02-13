@@ -588,7 +588,7 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
       
       VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
       updateTransform->SetDataType("XMLOBJECT");
-      updateTransform->SetData("genericObject",_cadNode->GetTransform());
+      updateTransform->SetData("Transform",_cadNode->GetTransform());
       _instructions.push_back(updateTransform);
 
       VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
