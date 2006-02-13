@@ -46,6 +46,14 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
    {
       return new Link();
    }
+   else if ( objectType == "veModel" )
+   {
+      return new Model();
+   } 
+   else if ( objectType == "veNetwork" )
+   {
+      return new Network();
+   }
    else if ( objectType == "Model" )
    {
       return new Model();
@@ -81,6 +89,14 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObjectCopy(std::string objectType,
       return new Model(*dynamic_cast<Model*>(objectToCopy));
    }
    else if ( objectType == "Network" )
+   {
+      return new Network(*dynamic_cast<Network*>(objectToCopy));
+   }
+   else if ( objectType == "veModel" )
+   {
+      return new Model(*dynamic_cast<Model*>(objectToCopy));
+   }
+   else if ( objectType == "veNetwork" )
    {
       return new Network(*dynamic_cast<Network*>(objectToCopy));
    }
