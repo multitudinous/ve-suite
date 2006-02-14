@@ -84,12 +84,12 @@ char * Body_Executive_i::GetImportData (
       
       str = p.Save(rv);
     } else {
-      string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no data\n" ;
+      std::string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no data\n" ;
       std::cerr << msg;
       ClientMessage(msg.c_str());
     }
   } else {
-    string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
+    std::string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
     std::cerr << msg;
     ClientMessage(msg.c_str());
    
@@ -104,24 +104,26 @@ char * Body_Executive_i::GetImportData (
 
 void Body_Executive_i::execute (std::string mn)
 {
-  string msg;
-  if(_exec_thread.find(mn)==_exec_thread.end()) 
-    {
+   std::string msg;
+
+   if ( _exec_thread.find(mn)==_exec_thread.end() ) 
+   {
       std::cerr << "Cannot find execution thread for " << mn << std::endl;
-    } 
-  else {
-    if(!_exec_thread[mn]->needexecute()) 
+   } 
+   else 
+   {
+      if ( !_exec_thread[mn]->needexecute() ) 
       {
-   msg = "Failed to execute " + mn +"\n";
-   std::cerr << msg;
-   ClientMessage(msg.c_str());
+         msg = "Failed to execute " + mn +"\n";
+         std::cerr << msg;
+         ClientMessage(msg.c_str());
       }
-    else 
+      else 
       {
-   msg = "Executing " + mn +"\n";
-   ClientMessage(msg.c_str());
+         msg = "Executing " + mn +"\n";
+         ClientMessage(msg.c_str());
       }
-  }
+   }
 }
 
 void Body_Executive_i::SetExportData (
@@ -135,7 +137,7 @@ void Body_Executive_i::SetExportData (
     , Error::EUnknown
   ))
 {
-  string msg;
+  std::string msg;
   _mutex.acquire();
   
   std::cout << "SetExportData "<< module_id << " " << port_id << std::endl;
@@ -167,7 +169,7 @@ char * Body_Executive_i::GetExportData (
   ))
 {
   _mutex.acquire();
-  string msg;
+  std::string msg;
   std::cout << "GetExportData "<< module_id << " " << port_id << std::endl;
   
   Interface intf;
@@ -246,12 +248,12 @@ void Body_Executive_i::GetProfileData (
     if(oport->have_profile()) {
       data = new Types::Profile(*(oport->_profile));
     } else {
-      string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no Profile\n" ;
+      std::string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no Profile\n" ;
       std::cerr << msg;
       ClientMessage(msg.c_str());
     }
   } else {
-    string msg = "Unable to get Profile from mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
+    std::string msg = "Unable to get Profile from mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
     std::cerr << msg;
     ClientMessage(msg.c_str());	
   }
@@ -394,7 +396,7 @@ void Body_Executive_i::SetModuleResult (
 {
   _mutex.acquire();
 
-  string msg;
+  std::string msg;
   Package p;
   p.SetSysId("temp.xml");
   p.Load(result, strlen(result));
@@ -578,10 +580,10 @@ char * Body_Executive_i::GetNetwork (
   {
      p.intfs.push_back(_network->module(i)->_inputs);
 
-     if(_network->module(i)->hasGeomInfo())
+     /*if(_network->module(i)->hasGeomInfo())
      {
          p.intfs.push_back(_network->module(i)->_geominputs);
-     }
+     }*/
   }
   
   str = p.Save(rv);
@@ -706,10 +708,10 @@ void Body_Executive_i::StartCalc (
       p2.SetSysId("temp.xml");
       //p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
       p2.intfs.push_back(_network->module(rt)->_inputs);
-      if(_network->module(rt)->hasGeomInfo())
+      /*if(_network->module(rt)->hasGeomInfo())
       {
          p2.intfs.push_back(_network->module(rt)->_geominputs);
-      }
+      }*/
       str2 = p2.Save(rv2);
     
       if(rv2) 

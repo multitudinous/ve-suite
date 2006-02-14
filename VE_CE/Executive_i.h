@@ -34,8 +34,13 @@
 
 #include "VE_CE/Execute_Thread.h"
 
-#include "VE_CE/Network_Exec.h"
-#include "VE_CE/Scheduler.h"
+#include "VE_CE/Utilities/Network.h"
+#include "VE_CE/Utilities/Scheduler.h"
+#include "VE_CE/Utilities/Module.h"
+#include "VE_CE/Utilities/Connection.h"
+#include "VE_CE/Utilities/IPort.h"
+#include "VE_CE/Utilities/OPort.h"
+using namespace VE_CE::Utilities;
 
 #include "VE_Open/skel/moduleS.h"
 #include "VE_Conductor/Framework/package.h"

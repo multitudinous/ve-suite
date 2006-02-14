@@ -15,8 +15,6 @@ SRCS=\
    moduleS.cpp \
    Exe_server.cpp \
    Executive_i.cpp \
-   Network_Exec.cpp \
-   Scheduler.cpp \
 	Execute_Thread.cpp
 
 # Specify the OS-dependent directory name for object files and depends
@@ -49,6 +47,7 @@ EXTRA_INCLUDES += -I$(VE_SUITE_HOME)
 
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 EXTRA_LIBS+= -lVE_XMLLib
+EXTRA_LIBS+= -lVE_CE_UtilitiesLib
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
