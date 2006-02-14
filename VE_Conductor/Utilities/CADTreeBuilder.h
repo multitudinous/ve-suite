@@ -46,6 +46,7 @@ namespace VE_CAD
 {
    class CADNode;
 }
+#include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/CAD/CADNodeTraverser.h"
 namespace VE_Conductor
@@ -112,15 +113,15 @@ namespace GUI_Utilities
       public:
          ///Constructor
          ///\param node The holder of the node data.
-         TreeNodeData(VE_CAD::CADNode* node){ _cadNode = node;}
+         TreeNodeData(VE_CAD::CADNode node):_cadNode(node){}
 
          ///Destructor
          virtual ~TreeNodeData(){}
             
          ///Get the CADNode.
-         VE_CAD::CADNode* GetNode(){return _cadNode;}
+         VE_CAD::CADNode& GetNode(){return _cadNode;}
       protected:
-         VE_CAD::CADNode* _cadNode;///<The pointer to the CADNode this tree item represents.
+         VE_CAD::CADNode _cadNode;///<The pointer to the CADNode this tree item represents.
       };
 
       ///\param Pop the current parent.

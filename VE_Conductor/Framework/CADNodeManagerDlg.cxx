@@ -172,17 +172,16 @@ void CADNodeManagerDlg::_editLabel(wxTreeEvent& event)
    if(event.GetItem().IsOk())
    {
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
-      cadNode->GetNode()->SetNodeName(event.GetLabel().GetData());
+      cadNode->GetNode().SetNodeName(event.GetLabel().GetData());
    }
 }
 ///////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_setActiveNode(wxTreeEvent& event)
 {
-   CADTreeBuilder::TreeNodeData* cadNode = 0;
    if(event.GetItem().IsOk())
    {
       _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
-      _activeCADNode = _activeTreeNode->GetNode();
+      _activeCADNode = &_activeTreeNode->GetNode();
    }
 }
 /////////////////////////////////////////////////////////////////////////
@@ -244,13 +243,14 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
                                        wxString("Enter name for new assembly:"),
                                        wxString("Assembly"),wxOK);
          assemblyNameDlg.ShowModal();
-         CADAssembly* newAssembly = new CADAssembly((assemblyNameDlg.GetValue().GetData()));
-         newAssembly->SetParent(_activeCADNode->GetID());
+         //CADAssembly* newAssembly = new CADAssembly((assemblyNameDlg.GetValue().GetData()));
+         CADAssembly newAssembly((assemblyNameDlg.GetValue().GetData()));
+         newAssembly.SetParent(_activeCADNode->GetID());
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
  
          _geometryTree->AppendItem(_activeTreeNode->GetId(),
-                                 wxString(newAssembly->GetNodeName().c_str()),
-                                 2,4,new CADTreeBuilder::TreeNodeData(newAssembly)); 
+                                 wxString(newAssembly.GetNodeName().c_str()),
+                                 2,4,new CADTreeBuilder::TreeNodeData(&newAssembly)); 
          ClearInstructions();
 
          _commandName = std::string("CAD_ADD_NODE");
@@ -262,7 +262,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
 
          VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
          nodeID->SetDataType("UNSIGNED INT");
-         nodeID->SetDataValue(newAssembly->GetID());
+         nodeID->SetDataValue(newAssembly.GetID());
          nodeID->SetDataName(std::string("Node ID"));
          _dataValuePairList.push_back(nodeID);
 
@@ -274,12 +274,12 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
 
          VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
          transform->SetDataType(std::string("XMLOBJECT"));
-         transform->SetData("Transform",newAssembly->GetTransform());
+         transform->SetData("Transform",newAssembly.GetTransform());
          _dataValuePairList.push_back(transform);
 
          VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
          nodeName->SetDataType(std::string("STRING"));
-         nodeName->SetDataString(newAssembly->GetNodeName());
+         nodeName->SetDataString(newAssembly.GetNodeName());
          nodeName->SetDataName(std::string("Node Name"));
          _dataValuePairList.push_back(nodeName);
 
@@ -291,7 +291,6 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          wxMessageDialog errorDlg(this, wxString("Cannot add children to a Part node!!"),wxString("Error"));
          errorDlg.ShowModal();
       }
-
    }
 }
 /////////////////////////////////////////////////////////
@@ -299,7 +298,8 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 {
    if(_activeCADNode &&  (_activeTreeNode->GetId() != _geometryTree->GetRootItem()))
    {
-      CADClone* newClone = new CADClone(_activeCADNode->GetNodeName(),_activeCADNode);
+      //CADClone* newClone = new CADClone(_activeCADNode->GetNodeName(),_activeCADNode);
+      CADClone newClone(_activeCADNode->GetNodeName(),_activeCADNode);
 
       wxTreeItemId parentID = _geometryTree->GetItemParent(_activeTreeNode->GetId());
 
@@ -332,7 +332,7 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 
       VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
       nodeID->SetDataType("UNSIGNED INT");
-      nodeID->SetDataValue(newClone->GetID());
+      nodeID->SetDataValue(newClone.GetID());
       nodeID->SetDataName(std::string("Node ID"));
       _dataValuePairList.push_back(nodeID);
 
@@ -344,12 +344,12 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 
       VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
       transform->SetDataType(std::string("XMLOBJECT"));
-      transform->SetData("Transform",newClone->GetTransform());
+      transform->SetData("Transform",newClone.GetTransform());
       _dataValuePairList.push_back(transform);
 
       VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
       nodeName->SetDataType(std::string("STRING"));
-      nodeName->SetDataString(newClone->GetNodeName());
+      nodeName->SetDataString(newClone.GetNodeName());
       nodeName->SetDataName(std::string("Node Name"));
       _dataValuePairList.push_back(nodeName);
                
@@ -394,7 +394,7 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
                      loadedNode = dynamic_cast<CADPart*>(cadReader.GetLoadedXMLObjects().at(0));
                  }
               }
-              dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(loadedNode);
+              dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(*loadedNode);
 
               _cadTreeBuilder->SetRootNode(_rootNode);
               _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
@@ -406,7 +406,6 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
 {
-   
    ClearInstructions();
    wxFileDialog dialog(this,
 		       _T("Open file"), 
@@ -427,8 +426,9 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
                                        wxString("Part"),wxOK);
               partNameDlg.ShowModal();
               
-              CADPart* newCADPart = new CADPart(partNameDlg.GetValue().GetData());
-              newCADPart->SetCADFileName(dialog.GetPath().c_str());
+              //CADPart* newCADPart = new CADPart(partNameDlg.GetValue().GetData());
+              CADPart newCADPart(partNameDlg.GetValue().GetData());
+              newCADPart.SetCADFileName(dialog.GetPath().c_str());
 
               dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 
@@ -445,12 +445,12 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
 
                VE_XML::DataValuePair* partName = new VE_XML::DataValuePair();
                partName->SetDataType("STRING");
-               partName->SetData(std::string("CAD Filename"),newCADPart->GetCADFileName());
+               partName->SetData(std::string("CAD Filename"),newCADPart.GetCADFileName());
                _dataValuePairList.push_back(partName);
 
                VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
                nodeID->SetDataType("UNSIGNED INT");
-               nodeID->SetDataValue(newCADPart->GetID());
+               nodeID->SetDataValue(newCADPart.GetID());
                nodeID->SetDataName(std::string("Node ID"));
                _dataValuePairList.push_back(nodeID);
 
@@ -462,12 +462,12 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
 
                VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
                transform->SetDataType("XMLOBJECT");
-               transform->SetData("Transform",newCADPart->GetTransform());
+               transform->SetData("Transform",newCADPart.GetTransform());
                _dataValuePairList.push_back(transform);
 
                VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
                nodeName->SetDataType(std::string("STRING"));
-               nodeName->SetDataString(newCADPart->GetNodeName());
+               nodeName->SetDataString(newCADPart.GetNodeName());
                nodeName->SetDataName(std::string("Node Name"));
                _dataValuePairList.push_back(nodeName);
                
@@ -541,7 +541,6 @@ void CADNodeManagerDlg::ClearInstructions()
 ///////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
 {
-    CADTreeBuilder::TreeNodeData* cadNode = 0;
     //don't allow the user to delete the root node!!!
     if(_activeCADNode == _rootNode)
     {
@@ -551,6 +550,7 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
     }
     if(_activeTreeNode)
     {
+      CADNode* parentCADNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetItemParent(_activeTreeNode->GetId())))->GetNode();
        _geometryTree->Delete(_activeTreeNode->GetId());
        _commandName = std::string("CAD_DELETE_NODE");
 
@@ -573,6 +573,8 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
 
        _sendCommandsToXplorer();
        ClearInstructions();
+
+       dynamic_cast<CADAssembly*>(parentCADNode)->RemoveChild(_activeCADNode->GetID()); 
     }
 }
 #ifndef STAND_ALONE
@@ -623,5 +625,6 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
    }
    //Clean up memory
    delete cadCommand;
+   ClearInstructions();
 }
 #endif

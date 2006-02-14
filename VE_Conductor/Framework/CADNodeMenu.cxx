@@ -104,7 +104,7 @@ void CADNodeMenu::EnableGlobalMenus(bool onOff)
 {
    if(onOff == true)
    {
-      //Enable(GEOM_DELETE, true);
+      Enable(GEOM_DELETE, true);
       Enable(GEOM_PROPERTIES, true);
       //Enable(GEOM_MENU_MOVE_NODE, true);
       Enable(GEOM_CLONE_ADD,true);

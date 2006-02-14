@@ -203,7 +203,7 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder,
       {
          currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
                                                                      wxString(node->GetNodeName().c_str())
-                                                                     ,2,4,new TreeNodeData(node));
+                                                                     ,2,4,new TreeNodeData(*node));
       
          //update the current parent
          treeGraph->SetCurrentParentNode(currentParentId); 
@@ -212,7 +212,7 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder,
       {
          currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
                                                                      wxString(node->GetNodeName().c_str())
-                                                                     ,0,1,new TreeNodeData(node));
+                                                                     ,0,1,new TreeNodeData(*node));
       }
       else if(node->GetNodeType() == std::string("Clone"))
       {
@@ -223,13 +223,13 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder,
             {
                currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
                                                                      wxString(clone->GetNodeName().c_str())
-                                                                     ,2,4,new TreeNodeData(clone));
+                                                                     ,2,4,new TreeNodeData(*clone));
             }
             else if(clone->GetOriginalNode()->GetNodeType() == std::string("Part"))
             {
                 currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
                                                                      wxString(clone->GetNodeName().c_str())
-                                                                     ,0,1,new TreeNodeData(clone));
+                                                                     ,0,1,new TreeNodeData(*clone));
             }
          }
       }
@@ -238,7 +238,7 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder,
    {
       //must be the root node
       wxTreeItemId currentParentId = treeGraph->GetWXTreeCtrl()->AddRoot(wxString(node->GetNodeName().c_str()),
-                                                                  2,4,new TreeNodeData(node));
+                                                                  2,4,new TreeNodeData(*node));
       treeGraph->SetCurrentParentNode(currentParentId);
    }
 }
