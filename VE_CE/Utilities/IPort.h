@@ -31,7 +31,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_IPORT_H
 #define CE_UTILITIES_IPORT_H
-class IPort : public Port 
+#include "VE_Installer/include/VEConfig.h"
+#include "VE_CE/Utilities/Port.h"
+///Input port class
+namespace VE_CE
+{
+namespace Utilities
+{
+class VE_CE_UTILS_EXPORTS IPort : public Port 
 {
 public:
    IPort( int, Module* );
@@ -42,4 +49,6 @@ public:
 
    int clear_data(){ return 1; };
 };
+}
+}
 #endif

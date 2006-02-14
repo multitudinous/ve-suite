@@ -31,7 +31,21 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_SCHEDULER_H
 #define CE_UTILITIES_SCHEDULER_H
-class Scheduler
+#include "VE_Installer/include/VEConfig.h"
+#include "VE_CE/Utilities/node_loop.h"
+#include <vector>
+#include <stack>
+#include <set>
+
+///Scheduler that uses all the previous classes
+namespace VE_CE
+{
+namespace Utilities
+{
+class Module;
+class Network;
+
+class VE_CE_UTILS_EXPORTS Scheduler
 {
 public:
    Scheduler();
@@ -54,7 +68,7 @@ public:
   
 private:
 
-  int  visit     (int k, std::set<int> connid_ignore, std::vector<vector<int> >& sccs);
+  int  visit     (int k, std::set<int> connid_ignore, std::vector<std::vector<int> >& sccs);
   void visit     (std::vector<std::vector<int> > adj, int k,  std::vector<int>& order);
   int  breakdown (std::vector<int> S, std::set<int> connid_ignore, node_loop &node_loop);
 
@@ -65,4 +79,6 @@ private:
 
   node_loop _schedule_nodes;
 };
+}
+}
 #endif

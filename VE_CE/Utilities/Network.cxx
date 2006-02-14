@@ -29,8 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NETWORK_EXEC_H
-#define NETWORK_EXEC_H
+#include "VE_CE/Utilities/Network.h"
+#include "VE_CE/Utilities/Module.h"
+#include "VE_CE/Utilities/Connection.h"
+#include <set>
+#include <iostream>
+
+using namespace VE_CE::Utilities;
 Network::Network ()
 {
 }
@@ -62,7 +67,7 @@ int Network::parse( Interface* intf )
    for (i=0; i<vars.size(); i++) 
    {
       intf->getVal(vars[i], temps);
-      if ( vars[i].find("modCls_") != string::npos ) 
+      if ( vars[i].find("modCls_") != std::string::npos ) 
       {
          pos=vars[i].find("modCls_");
          num =atoi(vars[i].substr(pos+7, 4).c_str());
@@ -78,28 +83,28 @@ int Network::parse( Interface* intf )
    {
       intf->getVal(vars[i], temp);
 
-      if ( vars[i].find("ln_FrMod_") != string::npos ) 
+      if ( vars[i].find("ln_FrMod_") != std::string::npos ) 
       {
          pos=vars[i].find("ln_FrMod_",0,9);
          num = atoi(vars[i].substr(pos+9, 4).c_str());
          FrMod[num] = temp;
          links.insert(num);
       }
-      else if ( vars[i].find("ln_ToMod_") != string::npos ) 
+      else if ( vars[i].find("ln_ToMod_") != std::string::npos ) 
       {
          pos=vars[i].find("ln_ToMod_");
          num = atoi(vars[i].substr(pos+9, 4).c_str());
          ToMod[num] = temp;
          links.insert(num);
       }
-      else if ( vars[i].find("ln_FrPort_") != string::npos ) 
+      else if ( vars[i].find("ln_FrPort_") != std::string::npos ) 
       {
          pos=vars[i].find("ln_FrPort_");
          num = atoi(vars[i].substr(pos+10, 4).c_str());
          FrPort[num] = temp;; 
          links.insert(num);
       }
-      else if ( vars[i].find("ln_ToPort_") != string::npos ) 
+      else if ( vars[i].find("ln_ToPort_") != std::string::npos ) 
       {
          pos=vars[i].find("ln_ToPort_");
          num = atoi(vars[i].substr(pos+10, 4).c_str());
@@ -110,13 +115,13 @@ int Network::parse( Interface* intf )
 
    if(intf->getInt("Module_size") != (int)_module_ptrs.size()) 
    {
-      cerr << "Inconsistent Modules In Network\n";
+      std::cerr << "Inconsistent Modules In Network\n";
       return 0;
    }
   
    if(intf->getInt("Link_size")   != (int)links.size()) 
    {
-      cerr << "Inconsistent Links In Network\n";
+      std::cerr << "Inconsistent Links In Network\n";
       return 0;
    }
 
@@ -125,7 +130,7 @@ int Network::parse( Interface* intf )
 
     if(FrMod.find(*iter)==FrMod.end()  || ToMod.find(*iter)==FrMod.end()   ||
        FrPort.find(*iter)==FrMod.end() || ToPort.find(*iter)==FrMod.end()) {
-      cerr << "Bad link found\n";
+      std::cerr << "Bad link found\n";
       return  0;
     }
 
@@ -134,7 +139,7 @@ int Network::parse( Interface* intf )
 
     if(!addIPort(ToMod[*iter], ToPort[*iter], cn) ||
        !addOPort(FrMod[*iter], FrPort[*iter], cn)) {
-      cerr << "Error adding ports\n";
+      std::cerr << "Error adding ports\n";
       return 0;
     }
    }

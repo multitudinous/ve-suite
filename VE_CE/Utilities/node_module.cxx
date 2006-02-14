@@ -29,8 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NETWORK_EXEC_H
-#define NETWORK_EXEC_H
+#include "VE_CE/Utilities/node_module.h"
+#include "VE_CE/Utilities/Network.h"
+#include "VE_CE/Utilities/Module.h"
+#include "VE_CE/Utilities/IPort.h"
+#include "VE_CE/Utilities/OPort.h"
+#include "VE_CE/Utilities/Connection.h"
+#include <iostream>
+
+using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 
 node_module::node_module(Network *n, int m)
@@ -113,7 +120,7 @@ void node_module::get_outs(std::set<int> &outs, std::set<int> connid_ignore)
 
 void node_module::print_mods()
 {
-  cerr << " " << _module;
+  std::cerr << " " << _module;
 }
 
 /////////////

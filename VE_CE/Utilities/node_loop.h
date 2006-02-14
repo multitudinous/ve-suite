@@ -29,32 +29,43 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NETWORK_EXEC_H
-#define NETWORK_EXEC_H
-////////////////////////////////////////////////////////////////////////////////
+#ifndef CE_UTILITIES_NODE_LOOP_H
+#define CE_UTILITIES_NODE_LOOP_H
+#include "VE_Installer/include/VEConfig.h"
+#include "VE_CE/Utilities/node_base.h"
+#include <set>
+#include <vector>
 
-class node_loop : public node_base {
+namespace VE_CE
+{
+namespace Utilities
+{
+class node_module;
 
- public:
+class VE_CE_UTILS_EXPORTS node_loop : public node_base 
+{
+public:
 
-  node_loop  (Network *);
-  node_loop  (const node_loop&);
-  ~node_loop ();
-  
-  virtual int  mod_count () { return (int)_nodes.size(); };
-  virtual void get_mods (std::set<int> &);
-  virtual void get_ins (std::set<int> &, std::set<int> connid_ignore);
-  virtual void get_outs (std::set<int> &, std::set<int> connid_ignore);
-  virtual void print_mods ();
-  virtual int  execute_mods (int, bool);
-  virtual void need_execute ();
-  virtual void clear_out_to (std::set<int>);
-  
-  void clear ();
+   node_loop  (Network *);
+   node_loop  (const node_loop&);
+   ~node_loop ();
 
-  void add_node (const node_module*);
-  void add_node (const node_loop*);
-  
-  std::vector<node_base*> _nodes;
+   virtual int  mod_count () { return (int)_nodes.size(); };
+   virtual void get_mods (std::set<int> &);
+   virtual void get_ins (std::set<int> &, std::set<int> connid_ignore);
+   virtual void get_outs (std::set<int> &, std::set<int> connid_ignore);
+   virtual void print_mods ();
+   virtual int  execute_mods (int, bool);
+   virtual void need_execute ();
+   virtual void clear_out_to (std::set<int>);
 
+   void clear ();
+
+   void add_node (const node_module*);
+   void add_node (const node_loop*);
+
+   std::vector<node_base*> _nodes;
 };
+}
+}
+#endif

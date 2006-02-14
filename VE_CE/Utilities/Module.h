@@ -31,7 +31,22 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_MODULE_H
 #define CE_UTILITIES_MODULE_H
-class Module 
+#include "VE_Installer/include/VEConfig.h"
+#include "VE_Conductor/Framework/interface.h"
+#include "VE_Open/skel/moduleS.h"
+#include <vector>
+#include <string>
+
+namespace VE_CE
+{
+namespace Utilities
+{
+class OPort;
+class IPort;
+class Network;
+class Connection;
+
+class VE_CE_UTILS_EXPORTS Module 
 {
 public:
    Module( int, Network* );
@@ -99,4 +114,6 @@ private:
    ///ID for the particular module
    int _id;
 };
+}
+}
 #endif

@@ -31,9 +31,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_CONNECTION_H
 #define CE_UTILITIES_CONNECTION_H
+#include "VE_Installer/include/VEConfig.h"
 ///This class is basically a link
 ///It has an id, input port, output port
-class Connection 
+
+namespace VE_CE
+{
+namespace Utilities
+{
+class IPort;
+class OPort;
+
+class VE_CE_UTILS_EXPORTS Connection 
 {
 public:
    Connection(int);
@@ -51,9 +60,11 @@ public:
    int get_id();
 
 private:
-  IPort* _iport;
-  OPort* _oport;
+   IPort* _iport;
+   OPort* _oport;
 
-  int _id;
+   int _id;
 };
+}
+}
 #endif

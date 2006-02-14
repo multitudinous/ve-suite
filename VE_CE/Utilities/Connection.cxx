@@ -29,6 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_CE/Utilities/Connection.h"
+#include "VE_CE/Utilities/IPort.h"
+#include "VE_CE/Utilities/OPort.h"
+using namespace VE_CE::Utilities;
+
 Connection::Connection (int id)
   : _iport (NULL),
     _oport (NULL),

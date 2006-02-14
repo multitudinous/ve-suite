@@ -29,8 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NETWORK_EXEC_H
-#define NETWORK_EXEC_H
+#include "VE_CE/Utilities/node_loop.h"
+#include "VE_CE/Utilities/node_module.h"
+#include "VE_CE/Utilities/Network.h"
+#include "VE_CE/Utilities/Module.h"
+#include <iostream>
+
+using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 
 node_loop::node_loop(Network *n)
@@ -159,10 +164,10 @@ void node_loop::get_outs(std::set<int> &outs, std::set<int> connid_ignore)
 
 void node_loop::print_mods()
 {
-  cerr << " (";
+  std::cerr << " (";
   for(int i=0; i<(int)_nodes.size(); i++)
     _nodes[i]->print_mods();
-  cerr << " )";
+  std::cerr << " )";
 }
 
 /////////////

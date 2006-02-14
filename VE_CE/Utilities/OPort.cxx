@@ -29,6 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_CE/Utilities/OPort.h"
+using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 OPort::OPort (int id, Module* m)
   : Port (id, m)

@@ -29,13 +29,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NETWORK_EXEC_H
-#define NETWORK_EXEC_H
+#ifndef CE_UTILITIES_NODE_BASE_H
+#define CE_UTILITIES_NODE_BASE_H
+#include "VE_Installer/include/VEConfig.h"
+#include <set>
 
-class node_base 
+namespace VE_CE
+{
+namespace Utilities
+{
+class node_base;
+class Network;
+
+class VE_CE_UTILS_EXPORTS node_base 
 {
 public:
-
    node_base( Network *, int );
    node_base( const node_base& );
    virtual ~node_base();
@@ -54,3 +62,6 @@ public:
    Network *_net;
    int     _type;
 };
+}
+}
+#endif

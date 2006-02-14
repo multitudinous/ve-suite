@@ -29,49 +29,63 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NETWORK_EXEC_H
-#define NETWORK_EXEC_H
-class Network {
+#ifndef CE_UTILITIES_NETWORK_H
+#define CE_UTILITIES_NETWORK_H
+#include "VE_Installer/include/VEConfig.h"
+#include "VE_Conductor/Framework/interface.h"
+#include "VE_Open/skel/moduleS.h"
+#include <string>
+#include <vector>
 
+namespace VE_CE
+{
+namespace Utilities
+{
+class Module;
+class Connection;
+
+class VE_CE_UTILS_EXPORTS Network 
+{
 public:
-  
-  Network  ();
-  ~Network ();
+   Network  ();
+   ~Network ();
 
-  void clear ();
-  int  parse (Interface *);
+   void clear ();
+   int  parse (Interface *);
 
-  int nmodules   ();
-  void         add_module (int, std::string);
-  int          module     (Module*);
-  Module*      module     (int);
-  int moduleIdx  (int);
+   int nmodules   ();
+   void         add_module (int, std::string);
+   int          module     (Module*);
+   Module*      module     (int);
+   int moduleIdx  (int);
 
-  int addIPort (int, int, Connection*);
-  int addOPort (int, int, Connection*);
+   int addIPort (int, int, Connection*);
+   int addOPort (int, int, Connection*);
 
-  int getInput (int, Interface&);
-  int setInput (int, Interface*);
+   int getInput (int, Interface&);
+   int setInput (int, Interface*);
 
-  int getGeomInput(int, Interface&);
-  int setGeomInput(int, Interface*);
+   int getGeomInput(int, Interface&);
+   int setGeomInput(int, Interface*);
 
-  int getOutput (int, Interface&);
-  int setOutput (int, Interface*);
+   int getOutput (int, Interface&);
+   int setOutput (int, Interface*);
 
-  int getMessage (int, Interface&);
-  int setMessage (int, Interface*);
+   int getMessage (int, Interface&);
+   int setMessage (int, Interface*);
 
-  int getPortData (int, int, Interface&);
-  int setPortData (int, int, Interface*);
+   int getPortData (int, int, Interface&);
+   int setPortData (int, int, Interface*);
 
-  int getPortProfile (int, int, Types::Profile_out&);
-  int setPortProfile (int, int, const Types::Profile*);
+   int getPortProfile (int, int, Types::Profile_out&);
+   int setPortProfile (int, int, const Types::Profile*);
 
-  std::vector<Connection*> _connections;
+   std::vector<Connection*> _connections;
 
 protected:
-
   std::vector<Module*> _module_ptrs;
 
 };
+}
+}
+#endif

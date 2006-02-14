@@ -31,7 +31,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_PORT_H
 #define CE_UTILITIES_PORT_H
-class Port 
+#include "VE_Installer/include/VEConfig.h"
+#include <vector>
+
+///Port base class
+namespace VE_CE
+{
+namespace Utilities
+{
+class Connection;
+class Module;
+
+class VE_CE_UTILS_EXPORTS Port 
 {
 public:
    Port( int, Module* );
@@ -55,4 +66,6 @@ protected:
    // id of the port
    int _id;
 };
+}
+}
 #endif

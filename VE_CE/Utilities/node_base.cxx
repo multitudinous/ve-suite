@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NETWORK_EXEC_H
-#define NETWORK_EXEC_H
+#include "VE_CE/Utilities/node_base.h"
+using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 node_base::node_base(Network *n, int t)
   : _net(n), _type(t)

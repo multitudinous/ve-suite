@@ -29,6 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_CE/Utilities/Scheduler.h"
+#include "VE_CE/Utilities/Module.h"
+#include "VE_CE/Utilities/Network.h"
+#include "VE_CE/Utilities/OPort.h"
+#include "VE_CE/Utilities/IPort.h"
+#include "VE_CE/Utilities/Connection.h"
+#include "VE_CE/Utilities/node_module.h"
+#include <iostream>
+#include <queue>
+
+using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 Scheduler::Scheduler ( )
   : _net            (NULL),
@@ -78,10 +89,10 @@ void Scheduler::set_net (Network *n)
   _schedule_nodes.set_net(n);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scheduler::sweep (Module* exclude)
+void Scheduler::sweep( Module* exclude )
 {
    int nmodules=_net->nmodules();
-   queue<Module *> needexecute;		
+   std::queue<Module *> needexecute;		
 
    // build queue of module ptrs to execute
    int i;			    
@@ -99,7 +110,7 @@ void Scheduler::sweep (Module* exclude)
 
    std::set<int> mod_been;
 
-   vector<Connection*> to_trigger;
+   std::vector<Connection*> to_trigger;
    while(!needexecute.empty())
    {
       Module* module = needexecute.front();
@@ -180,7 +191,7 @@ int Scheduler::schedule (Module* mod)
     if(m->_need_execute) st++;
   }
   if(st==0) {
-    cerr << "st was zero\n";
+    std::cerr << "st was zero\n";
     return 0;
   }
 
@@ -189,7 +200,7 @@ int Scheduler::schedule (Module* mod)
   }
   
   if(breakdown(S, c_ignore, _schedule_nodes)) {
-    cerr << "error in top breakdown\n";
+    std::cerr << "error in top breakdown\n";
     return 0;
   }
   
@@ -226,7 +237,7 @@ int Scheduler::execute (Module* mod)
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Scheduler::visit(int k, std::set<int> connid_ignore,
-		     std::vector<vector<int> >& sccs)
+		     std::vector< std::vector<int> >& sccs)
 {
   visit_val[k] = ++visit_id;
   int min = visit_id;
@@ -284,7 +295,7 @@ int Scheduler::breakdown (std::vector<int> S,
   int i, j, k;
   int nmodules=_net->nmodules();
    
-  std::vector<vector<int> > sccs;
+  std::vector< std::vector<int> > sccs;
 
   if((int)S.size()==1) return 0;
 
@@ -301,7 +312,7 @@ int Scheduler::breakdown (std::vector<int> S,
      (((int)sccs[0].size()==1 && (int)sccs[1].size()!=1 && _net->module(sccs[0][0]-1)->_is_feedback) ||
       ((int)sccs[1].size()==1 && (int)sccs[0].size()!=1 && _net->module(sccs[1][0]-1)->_is_feedback))) 
     {
-      cerr << "Scheduler says: Unable (as of yet) to breakdown a loop\n";
+      std::cerr << "Scheduler says: Unable (as of yet) to breakdown a loop\n";
       return 0;
     }
 
@@ -318,7 +329,7 @@ int Scheduler::breakdown (std::vector<int> S,
 	}
 
       if(cnt == 0) {
-	cerr << "Scheduler says: there exists a loop with no feedback module\n";
+	std::cerr << "Scheduler says: there exists a loop with no feedback module\n";
 	return 1;
       }
 
@@ -341,7 +352,7 @@ int Scheduler::breakdown (std::vector<int> S,
 	  for(l=0; l<(int)sccs[i].size(); l++)
 	    if(sccs[i][l] == _net->module(m)+1) found = true;
 	  if(!found) {			
-	    cerr << "Scheduler says: There exists feedback module connected to module outside of feedback loop\n";
+	    std::cerr << "Scheduler says: There exists feedback module connected to module outside of feedback loop\n";
 	    return 1;
 	  }
 	  c_ignore.insert(iport->connection(k)->get_id());
@@ -359,7 +370,7 @@ int Scheduler::breakdown (std::vector<int> S,
       }
 
       if(nl.mod_count()==0) {
-	cerr << "Scheduler says: Had a nl.mod_count of zero !?\n";
+	std::cerr << "Scheduler says: Had a nl.mod_count of zero !?\n";
 	nodes._nodes.clear();
 	return 0;
       }
@@ -403,7 +414,7 @@ int Scheduler::breakdown (std::vector<int> S,
       visit(adj, k, order);
   
   if((int)order.size() != (int)nodes._nodes.size())
-    cerr << "ERROR IN SCHEDULE\n";
+    std::cerr << "ERROR IN SCHEDULE\n";
 
   node_loop nodes_copy(nodes);
   nodes._nodes.clear();

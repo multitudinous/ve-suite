@@ -30,6 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_CE/Utilities/Module.h"
+#include "VE_CE/Utilities/OPort.h"
+#include "VE_CE/Utilities/IPort.h"
+#include "VE_CE/Utilities/Network.h"
+#include "VE_CE/Utilities/Connection.h"
+
+using namespace VE_CE::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module (int id, Network* net)
@@ -160,7 +166,7 @@ int Module::oportIdx( int idx )
 void Module::addIPort( int p, Connection* c )
 {
    size_t sz = _iports.size();
-   fi = iportIdx( p );
+   int fi = iportIdx( p );
   
    if ( fi < 0 ) 
    {
@@ -175,7 +181,7 @@ void Module::addIPort( int p, Connection* c )
 void Module::addOPort( int p, Connection* c )
 {
    size_t sz = _oports.size();
-   fi = oportIdx( p );
+   int fi = oportIdx( p );
 
    if ( fi < 0 ) 
    {
