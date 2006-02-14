@@ -344,8 +344,7 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 
       VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
       transform->SetDataType(std::string("XMLOBJECT"));
-      transform->SetData(transform->GetObjectType(),newClone->GetTransform());
-      transform->SetDataName(std::string("Transform"));
+      transform->SetData("Transform",newClone->GetTransform());
       _dataValuePairList.push_back(transform);
 
       VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
@@ -552,21 +551,28 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
     }
     if(_activeTreeNode)
     {
-       if(_activeTreeNode->GetNode()->GetNodeType() == std::string("Assembly"))
-       {
-         //delete the node
-         _geometryTree->Delete(_activeTreeNode->GetId());
-       }
-       else
-       {
-          //delete the node
-          _geometryTree->Delete(_activeTreeNode->GetId());
-         
-          if(_activeCADNode)
-          {
-             //parent->RemoveChild(_activeCADNode);
-          }
-       }
+       _geometryTree->Delete(_activeTreeNode->GetId());
+       _commandName = std::string("CAD_DELETE_NODE");
+
+       VE_XML::DataValuePair* deleteNode = new VE_XML::DataValuePair();
+       deleteNode->SetDataType("STRING");
+       deleteNode->SetData(std::string("Node Type"),_activeCADNode->GetNodeType());
+       _dataValuePairList.push_back(deleteNode);
+
+       VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+       nodeID->SetDataType("UNSIGNED INT");
+       nodeID->SetDataValue(_activeCADNode->GetID());
+       nodeID->SetDataName(std::string("Node ID"));
+       _dataValuePairList.push_back(nodeID);
+
+       VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
+       parentNode->SetDataType(std::string("UNSIGNED INT"));
+       parentNode->SetDataValue(_activeCADNode->GetParent());
+       parentNode->SetDataName(std::string("Parent ID"));
+       _dataValuePairList.push_back(parentNode);
+
+       _sendCommandsToXplorer();
+       ClearInstructions();
     }
 }
 #ifndef STAND_ALONE

@@ -452,7 +452,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
       
          VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
          addAttribute->SetDataType("XMLOBJECT");
-         addAttribute->SetData("CADAttribute",&_cadNode->GetAttribute(newAttribute.GetAttributeName()));
+         addAttribute->SetData("Attribute",&_cadNode->GetAttribute(newAttribute.GetAttributeName()));
          _instructions.push_back(addAttribute);
 
          _sendCommandsToXplorer();
@@ -508,7 +508,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
       
                         VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
                         addAttribute->SetDataType("XMLOBJECT");
-                        addAttribute->SetData("CADAttribute",&_cadNode->GetAttribute(newAttribute.GetAttributeName()));
+                        addAttribute->SetData("Attribute",&_cadNode->GetAttribute(newAttribute.GetAttributeName()));
                         _instructions.push_back(addAttribute);
 
                         _sendCommandsToXplorer();
