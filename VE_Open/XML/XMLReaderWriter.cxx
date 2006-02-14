@@ -97,7 +97,7 @@ void XMLReaderWriter::ReadFromString()
 {
    if(_domDocumentManager)
    {
-      _domDocumentManager->SetParseXMLFileOn();
+      _domDocumentManager->SetParseXMLStringOn();
    }
 }
 //////////////////////////////////////////////////////////////////////////////////
