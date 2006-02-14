@@ -196,24 +196,24 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
       if(cadNode)
       {
          //cadNodeMenu->EnableCreateMenu(false);
-         if(cadNode->GetNode()->GetNodeType() == std::string("Assembly"))
+         if(cadNode->GetNode().GetNodeType() == std::string("Assembly"))
          {
             cadNodeMenu->EnableGlobalMenus(true);
             cadNodeMenu->EnableAssemblyMenus(true);
          }
-         else if(cadNode->GetNode()->GetNodeType() == std::string("Part"))
+         else if(cadNode->GetNode().GetNodeType() == std::string("Part"))
          {
             cadNodeMenu->EnableGlobalMenus(true);
             cadNodeMenu->EnablePartMenus(true);
          }
-         else if(cadNode->GetNode()->GetNodeType() == std::string("Clone"))
+         else if(cadNode->GetNode().GetNodeType() == std::string("Clone"))
          {
             cadNodeMenu->EnableGlobalMenus(true);
             cadNodeMenu->EnablePartMenus(true);
             cadNodeMenu->EnableCloneMenu(false);
          }
       }
-      if(cadNode->GetNode() == _rootNode)
+      if(cadNode->GetNode().GetID() == _rootNode->GetID())
       {
          cadNodeMenu->EnableCloneMenu(false);
       }
@@ -250,7 +250,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
  
          _geometryTree->AppendItem(_activeTreeNode->GetId(),
                                  wxString(newAssembly.GetNodeName().c_str()),
-                                 2,4,new CADTreeBuilder::TreeNodeData(&newAssembly)); 
+                                 2,4,new CADTreeBuilder::TreeNodeData(newAssembly)); 
          ClearInstructions();
 
          _commandName = std::string("CAD_ADD_NODE");
@@ -306,7 +306,8 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
       CADTreeBuilder::TreeNodeData* parentCADNode = 
          dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(parentID));
 
-      dynamic_cast<CADAssembly*>(parentCADNode->GetNode())->AddChild(newClone);
+      CADNode* pParent = &parentCADNode->GetNode();
+      dynamic_cast<CADAssembly*>(pParent)->AddChild(newClone);
       ClearInstructions();
 
       _cadTreeBuilder->SetRootNode(_rootNode);
@@ -498,18 +499,18 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
             CADTreeBuilder::TreeNodeData* rootCADNode =
                  dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetRootItem()));
 
-            if(rootCADNode->GetNode()->GetNodeType() == std::string("Assembly"))
+            if(rootCADNode->GetNode().GetNodeType() == std::string("Assembly"))
             {
                tagName = std::string("CADAssembly");
             }
-            else if(rootCADNode->GetNode()->GetNodeType() == std::string("Part"))
+            else if(rootCADNode->GetNode().GetNodeType() == std::string("Part"))
             {
                tagName = std::string("CADPart");
             }
             std::string outputFile = std::string(dialog.GetPath());
 
             std::pair<CADNode*,std::string> nodeTagPair;
-            nodeTagPair.first = rootCADNode->GetNode();
+            nodeTagPair.first = &rootCADNode->GetNode();
             nodeTagPair.second = tagName;
             std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
             nodeToWrite.push_back(nodeTagPair);
@@ -550,7 +551,7 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
     }
     if(_activeTreeNode)
     {
-      CADNode* parentCADNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetItemParent(_activeTreeNode->GetId())))->GetNode();
+      CADNode parentCADNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetItemParent(_activeTreeNode->GetId())))->GetNode();
        _geometryTree->Delete(_activeTreeNode->GetId());
        _commandName = std::string("CAD_DELETE_NODE");
 
@@ -574,7 +575,8 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
        _sendCommandsToXplorer();
        ClearInstructions();
 
-       dynamic_cast<CADAssembly*>(parentCADNode)->RemoveChild(_activeCADNode->GetID()); 
+       CADNode* pParent = &parentCADNode;
+       dynamic_cast<CADAssembly*>(pParent)->RemoveChild(_activeCADNode->GetID()); 
     }
 }
 #ifndef STAND_ALONE
