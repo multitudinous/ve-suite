@@ -55,7 +55,7 @@ public:
    virtual ~CADAssembly();
 
    ///Add a child to this assembly
-   void AddChild(VE_CAD::CADNode* node);
+   void AddChild(VE_CAD::CADNode node);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
@@ -64,22 +64,21 @@ public:
    ///\param node The pointer of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails
    ///\todo This function is NOT implemented yet and will ALWAYS return false!!!
-   bool RemoveChild(VE_CAD::CADNode* node);
+   bool RemoveChild(VE_CAD::CADNode node);
 
-   ///\param whichChild The index of the node to remove from this assembly
+   ///\param whichChildID The ID of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails 
-   ///\todo This function is NOT implemented yet and will ALWAYS return false!!!
-   bool RemoveChild(unsigned int whichChild); 
+   bool RemoveChild(unsigned int whichChildID); 
 
    ///Get the number of children of this assembly
    unsigned int GetNumberOfChildren();
 
    ///Get a specified child of this assembly
-   VE_CAD::CADNode* GetChild(unsigned int whichChild);
+   VE_CAD::CADNode& GetChild(unsigned int whichChild);
 
    ///Get a child by a name
    ///\param name The of the child name to search for.
-   VE_CAD::CADNode* GetChild(std::string name);
+   VE_CAD::CADNode& GetChild(std::string name);
    
    ///Copy constructor
    CADAssembly(const CADAssembly& rhs);
@@ -99,7 +98,7 @@ protected:
    unsigned int _numChildren; ///<number of children in this assembly
    ///\typedef ChildList
    /// A vector of VE_CAD::CADNode s
-   typedef std::vector<VE_CAD::CADNode*> ChildList; 
+   typedef std::vector<VE_CAD::CADNode> ChildList; 
    ChildList _children; ///<A list of the children
 };
 }

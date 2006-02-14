@@ -116,7 +116,7 @@ void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,void* currentParent)
          //recurse the children of this node
          for(unsigned int i = 0; i < nChildren; i++)
          {
-            _traverseNode(assembly->GetChild(i),assembly);
+            _traverseNode(&(assembly->GetChild(i)),assembly);
          }
       }
    }

@@ -226,19 +226,19 @@ void CADMaterial::_updateVEElement(std::string input)
 void CADMaterial::_updateMaterialFace()
 {
    DOMElement* faceElement = _rootDocument->createElement( xercesString("face") );
-   _veElement->appendChild( faceElement );      
-   
    DOMText* faceName = _rootDocument->createTextNode( xercesString( _face ) );
    faceElement->appendChild( faceName );
+
+   _veElement->appendChild( faceElement );      
 }
 ////////////////////////////////////
 void CADMaterial::_updateColorMode()
 {
    DOMElement* cModeElement = _rootDocument->createElement( xercesString("colorMode") );
+   DOMText* cMode = _rootDocument->createTextNode( xercesString( _colorMode ) );
+   cModeElement->appendChild( cMode );
+
    _veElement->appendChild( cModeElement );      
-   
-   DOMText* cMode = _rootDocument->createTextNode( xercesString( _face ) );
-   cModeElement  ->appendChild( cMode );
 }
 /////////////////////////////////////////////////////////
 void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
@@ -280,6 +280,8 @@ CADMaterial::CADMaterial(const CADMaterial& rhs)
    _specular = new VE_XML::FloatArray(*rhs._specular);
    _shininess = rhs._shininess;
    _materialName = rhs._materialName;
+   _face = rhs._face;
+   _colorMode = rhs._colorMode;
 }
 ////////////////////////////////////////////////////////////
 CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
