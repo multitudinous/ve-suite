@@ -55,8 +55,8 @@ public:
 
    int nmodules   ();
    void         add_module (int, std::string);
-   int          module     (Module*);
-   Module*      module     (int);
+   int GetModuleIndex( Module* );
+   Module* GetModule( int );
    int moduleIdx  (int);
 
    int addIPort (int, int, Connection*);

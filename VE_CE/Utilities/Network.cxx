@@ -169,7 +169,7 @@ int Network::nmodules ()
 }
 
 
-int Network::module (Module* mod)
+int Network::GetModuleIndex( Module* mod )
 {
   int i, fi = -1;
 
@@ -179,10 +179,16 @@ int Network::module (Module* mod)
   return fi;
 }
 
-Module* Network::module (int idx)
+Module* Network::GetModule( int idx )
 {
-  if(idx<0 || idx>=(int)_module_ptrs.size()) return NULL;
-  return _module_ptrs[idx];
+   try
+   {
+      return _module_ptrs.at( idx );
+   }
+   catch (...)
+   {
+      return NULL;   
+   }
 }
 
 int Network::moduleIdx (int id)

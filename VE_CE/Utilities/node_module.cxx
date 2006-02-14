@@ -72,21 +72,21 @@ void node_module::get_mods(std::set<int> &mods)
 
 void node_module::get_ins(std::set<int> &ins, std::set<int> connid_ignore)
 {
-  ins.clear();
-
-  Module *module = _net->module(_module-1);
-  
-  int ni = module->numIPorts();
-
-  for(int i=0; i<ni; i++) {
-    IPort *iport = module->getIPort(i);
-    int nc = iport->nconnections();
-    for(int c=0; c<nc; c++) {
+   ins.clear();
+   Module *module = _net->GetModule( _module-1 );
+    
+   for( int i=0; i < module->numIPorts(); i++) 
+   {
+      IPort *iport = module->getIPort(i);
+      int nc = iport->nconnections();
+      for(int c=0; c<nc; c++) 
+      {
       Connection *conn = iport->connection(c);
-      if(connid_ignore.find(conn->get_id())==connid_ignore.end()) {
-	OPort *oport = conn->get_oport();
-	Module *nmodule = oport->get_module();
-	ins.insert(_net->module(nmodule)+1);
+      if(connid_ignore.find(conn->get_id())==connid_ignore.end()) 
+      {
+	      OPort *oport = conn->get_oport();
+	      Module *nmodule = oport->get_module();
+	      ins.insert( _net->GetModuleIndex( nmodule ) + 1 );
       }
     }
   }
@@ -96,24 +96,25 @@ void node_module::get_ins(std::set<int> &ins, std::set<int> connid_ignore)
 
 void node_module::get_outs(std::set<int> &outs, std::set<int> connid_ignore)
 {
-  outs.clear();
+   outs.clear();
 
-  Module *module = _net->module(_module-1);
+   Module *module = _net->GetModule( _module-1 );
   
-  int no = module->numOPorts();
-
-  for(int i=0; i<no; i++) {
-    OPort *oport = module->getOPort(i);
-    int nc = oport->nconnections();
-    for(int c=0; c<nc; c++) {
-      Connection *conn = oport->connection(c);
-      if(connid_ignore.find(conn->get_id())==connid_ignore.end()) {
-	IPort *iport = conn->get_iport();
-	Module *nmodule = iport->get_module();
-	outs.insert(_net->module(nmodule)+1);
-      }
-    } 
-  }
+   for(int i=0; i<module->numOPorts(); i++) 
+   {
+      OPort *oport = module->getOPort(i);
+      int nc = oport->nconnections();
+      for(int c=0; c<nc; c++) 
+      {
+         Connection *conn = oport->connection(c);
+         if(connid_ignore.find(conn->get_id())==connid_ignore.end()) 
+         {
+            IPort *iport = conn->get_iport();
+            Module *nmodule = iport->get_module();
+            outs.insert( _net->GetModuleIndex(nmodule)+1);
+         }
+      } 
+   }
 }
 
 /////////////
@@ -125,23 +126,23 @@ void node_module::print_mods()
 
 /////////////
 
-int node_module::execute_mods(int mod, bool running)
+int node_module::execute_mods( int mod, bool running )
 {
-  Module *module = _net->module(_module-1);
-  if(module->_need_execute) {
-    // EXECUTING THIS MODULE
-    module->_need_execute = false;
-    return _module;
-  }
-
-  return 0;
+   Module *module = _net->GetModule( _module-1 );
+   if ( module->_need_execute ) 
+   {
+      // EXECUTING THIS MODULE
+      module->_need_execute = false;
+      return _module;
+   }
+   return 0;
 }
 
 /////////////
 
-void node_module::need_execute ()
+void node_module::need_execute()
 {
-  Module *module = _net->module(_module-1);
+  Module *module = _net->GetModule( _module-1 );
   module->_need_execute = true;
 }
 
@@ -149,7 +150,7 @@ void node_module::need_execute ()
 
 void node_module::clear_out_to (std::set<int> mods)
 {
-   Module *module = _net->module(_module-1);
+   Module *module = _net->GetModule( _module-1 );
    for(int i=0; i<module->numOPorts(); i++) 
    {
       OPort *oport = module->getOPort(i);
@@ -158,8 +159,8 @@ void node_module::clear_out_to (std::set<int> mods)
          Connection *conn = oport->connection(c);
          IPort *iport = conn->get_iport();
          Module *nmodule = iport->get_module();
-         int index = _net->module(nmodule)+1;
-         if(mods.find(index) != mods.end()) 
+         int index = _net->GetModuleIndex( nmodule ) + 1;
+         if ( mods.find(index) != mods.end() ) 
          {	
 	         // test
 	         //cerr << "clearing data at inlet port for " << nmodule->get_id() << "\n";

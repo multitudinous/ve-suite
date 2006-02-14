@@ -174,56 +174,65 @@ void node_loop::print_mods()
 
 int node_loop::execute_mods(int mod, bool running)
 {
-  int r;
+   int r;
 
-  for(int i=0; i<(int)_nodes.size()-1; i++) {
-    r = _nodes[i]->execute_mods(mod, running);
-    if(r > 0) return r;
-  }
+   for(int i=0; i<(int)_nodes.size()-1; i++) 
+   {
+      r = _nodes[i]->execute_mods(mod, running);
+      if(r > 0) 
+         return r;
+   }
  
-  r = _nodes[(int)_nodes.size()-1]->execute_mods(mod, running);
+   r = _nodes[(int)_nodes.size()-1]->execute_mods(mod, running);
 
-  bool is_fb = false;
-  if(_nodes[0]->_type==0)
-    if(_net->module(((node_module*)_nodes[0])->_module-1)->_is_feedback)
-      is_fb = true;
-  
-  if(r > 0 && is_fb) {
-    if(_net->module(((node_module*)_nodes[0])->_module-1)->_return_state == 3) {
-      _net->module(((node_module*)_nodes[0])->_module-1)->_return_state = 0;
-      // erase _node[0]'s feedback input
-      //mike, _net->module(((node_module*)_nodes[0])->_module-1)->getIPort(1)->reset();
-      //mike, while(_net->module(((node_module*)_nodes[0])->_module-1)->getIPort(1)->have_data())
-      //mike, _net->module(((node_module*)_nodes[0])->_module-1)->getIPort(1)->finish();
-    } else {
-      // erase all outputs to any nodes outside of this loop
-      std::set<int> mods;
-      get_mods(mods);
-      
-      std::set<int> c_ignore;
-      
-      std::set<int> outs;
-      get_outs(outs, c_ignore);
-      
-      std::set<int> dif;
-      set_difference(outs.begin(), outs.end(),
-		     mods.begin(), mods.end(),
-		     inserter(dif, dif.begin()));
+   bool is_fb = false;
+   if ( _nodes[0]->_type == 0 )
+   {
+      if ( _net->GetModule( ((node_module*)_nodes[0])->_module-1 )->_is_feedback )
+      {
+         is_fb = true;
+      }
+   }
 
-      // test
-      //std::set<int>::iterator iter;
-      //cerr << "REMOVING INPUTS TO: \n";
-      //for(iter=dif.begin(); iter!=dif.end(); iter++)
-      //	cerr << _net->module((*iter)-1)->get_id() << "\n";
+   if ( (r > 0) && is_fb ) 
+   {
+      if ( _net->GetModule( ((node_module*)_nodes[0])->_module-1 )->_return_state == 3) 
+      {
+         _net->GetModule( ((node_module*)_nodes[0])->_module-1 )->_return_state = 0;
+         // erase _node[0]'s feedback input
+         //mike, _net->module(((node_module*)_nodes[0])->_module-1)->getIPort(1)->reset();
+         //mike, while(_net->module(((node_module*)_nodes[0])->_module-1)->getIPort(1)->have_data())
+         //mike, _net->module(((node_module*)_nodes[0])->_module-1)->getIPort(1)->finish();
+      } 
+      else 
+      {
+         // erase all outputs to any nodes outside of this loop
+         std::set<int> mods;
+         get_mods(mods);
 
-      clear_out_to(dif);      
+         std::set<int> c_ignore;
 
-      // reschedule loop nodes
-      need_execute();
-    }
-  }
+         std::set<int> outs;
+         get_outs(outs, c_ignore);
 
-  return r;
+         std::set<int> dif;
+         set_difference(outs.begin(), outs.end(),
+		        mods.begin(), mods.end(),
+		        inserter(dif, dif.begin()));
+
+         // test
+         //std::set<int>::iterator iter;
+         //cerr << "REMOVING INPUTS TO: \n";
+         //for(iter=dif.begin(); iter!=dif.end(); iter++)
+         //	cerr << _net->module((*iter)-1)->get_id() << "\n";
+
+         clear_out_to(dif);      
+
+         // reschedule loop nodes
+         need_execute();
+      }
+   }
+   return r;
 }
 
 /////////////
