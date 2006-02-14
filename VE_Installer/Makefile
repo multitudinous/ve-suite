@@ -36,6 +36,7 @@ DIRS= ${VE_SUITE_HOME}/VE_Open \
       ${VE_SUITE_HOME}/VE_Open/XML/Shader \
       ${VE_SUITE_HOME}/VE_Open/XML/Model \
       ${VE_SUITE_HOME}/VE_Conductor/Network \
+      ${VE_SUITE_HOME}/VE_CE/Utilities \
       ${VE_SUITE_HOME}/VE_CE \
       ${VE_SUITE_HOME}/VE_Conductor \
       ${VE_SUITE_HOME}/VE_Xplorer \
@@ -58,6 +59,7 @@ ${VE_SUITE_HOME}/VE_Open/XML/CAD \
 ${VE_SUITE_HOME}/VE_Open/XML/Shader \
 ${VE_SUITE_HOME}/VE_Open/XML/Model \
 ${VE_SUITE_HOME}/VE_Conductor/Network \
+${VE_SUITE_HOME}/VE_CE/Utilities \
 ${VE_SUITE_HOME}/VE_CE \
 ${VE_SUITE_HOME}/VE_Conductor \
 ${VE_SUITE_HOME}/VE_Xplorer \
