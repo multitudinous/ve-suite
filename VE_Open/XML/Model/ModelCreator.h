@@ -46,7 +46,7 @@ namespace VE_XML
 
 namespace VE_Model
 {
-class VE_CAD_EXPORTS ModelCreator : public VE_XML::CreationEventHandler
+class VE_MODEL_EXPORTS ModelCreator : public VE_XML::CreationEventHandler
 {
 public:
    ///Constructor
