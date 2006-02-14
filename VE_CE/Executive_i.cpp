@@ -31,15 +31,28 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/string_ops.h"
 #include "VE_CE/Executive_i.h"
- 
+
+#include "VE_Open/XML/Model/ModelCreator.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include "VE_Open/XML/CAD/CADCreator.h"
+#include "VE_Open/XML/XMLCreator.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
+
 #include <iostream>
 
 // Implementation skeleton constructor
 Body_Executive_i::Body_Executive_i (CosNaming::NamingContext_ptr nc)
   : naming_context_(CosNaming::NamingContext::_duplicate(nc))
 {
-  _network = new Network();
-  _scheduler = new Scheduler(_network);
+   _network = new Network();
+   _scheduler = new Scheduler( _network );
+
+   //Initialize all the XML objects
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_Shader::ShaderCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new VE_Model::ModelCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
 }
 
 // Implementation skeleton destructor
@@ -59,47 +72,55 @@ char * Body_Executive_i::GetImportData (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+   _mutex.acquire();
  
-  std::cout << "GetImportData " << module_id << " " << port_id << std::endl;
+   std::cout << "GetImportData " << module_id << " " << port_id << std::endl;
 
-  Module *mod = _network->module(_network->moduleIdx(module_id));
-  if(!mod) {
-     std::cerr << "Cannot find module, id# " << module_id << std::endl;
-    return CORBA::string_dup("");  
-  }
-  IPort *iport = mod->getIPort(mod->iportIdx(port_id));
+   Module *mod = _network->GetModule( _network->moduleIdx(module_id) );
+   if(!mod) 
+   {
+      std::cerr << "Cannot find module, id# " << module_id << std::endl;
+      return CORBA::string_dup("");  
+   }
+   
+   IPort *iport = mod->getIPort(mod->iportIdx(port_id));
   
-  bool        rv = false;
-  std::string str;
+   bool        rv = false;
+   std::string str;
   
-  if(iport && iport->nconnections()) {
-    Connection* conn=iport->connection(0); // should only have one connection
-    OPort* oport=conn->get_oport();
+   if ( iport && iport->nconnections()) 
+   {
+      Connection* conn=iport->connection(0); // should only have one connection
+      OPort* oport=conn->get_oport();
     
-    if(oport->have_data()) {
-      Package p;
-      p.SetSysId("temp.xml");
-      p.intfs.push_back(oport->_data);
+      if(oport->have_data()) 
+      {
+         Package p;
+         p.SetSysId("temp.xml");
+         p.intfs.push_back(oport->_data);
       
-      str = p.Save(rv);
-    } else {
-      std::string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no data\n" ;
+         str = p.Save(rv);
+      } 
+      else 
+      {
+         std::string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no data\n" ;
+         std::cerr << msg;
+         ClientMessage(msg.c_str());
+      }
+   } 
+   else 
+   {
+      std::string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
       std::cerr << msg;
       ClientMessage(msg.c_str());
-    }
-  } else {
-    std::string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
-    std::cerr << msg;
-    ClientMessage(msg.c_str());
-   
-  }
+   }
   
-  _mutex.release();
+   _mutex.release();
   
-  if(rv) return CORBA::string_dup(str.c_str());
+   if ( rv ) 
+      return CORBA::string_dup(str.c_str());
   
-  return CORBA::string_dup("");//str.c_str());//"yang";//0;
+   return CORBA::string_dup("");//str.c_str());//"yang";//0;
 }
 
 void Body_Executive_i::execute (std::string mn)
@@ -234,7 +255,7 @@ void Body_Executive_i::GetProfileData (
  
   std::cout << "GetProfileData " << module_id << " " << port_id << std::endl;
 
-  Module *mod = _network->module(_network->moduleIdx(module_id));
+  Module *mod = _network->GetModule(_network->moduleIdx(module_id));
   if(!mod) {
     std::cerr << "Cannot find module, id# " << module_id << std::endl;
     return;
@@ -260,79 +281,90 @@ void Body_Executive_i::GetProfileData (
   
   _mutex.release();
 }
-
+/////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute_next_mod (long module_id)
 {
-  char *msg;
-  
-  try {
-    std::string mod_type = _network->module(_network->moduleIdx(module_id))->_name;
-    if(_mod_units.find(mod_type)!=_mod_units.end()) {
-      try {
-         msg = _mod_units[mod_type]->GetStatusMessage();
+   char *msg;
+
+   try 
+   {
+      std::string mod_type = _network->GetModule(_network->moduleIdx(module_id))->GetModuleName();
+      if ( _mod_units.find( mod_type )!= _mod_units.end() ) 
+      {
+         try 
+         {
+            msg = _mod_units[mod_type]->GetStatusMessage();
+         }
+         catch(CORBA::Exception &) 
+         {
+            std::cerr << "Cannot contact Module " << module_id << std::endl;
+         }
       }
-      catch(CORBA::Exception &) {
+      else 
+      {
+         std::cerr << "Cannot contact module of " << mod_type << " type" << std::endl;
+      }
+   }
+   catch (CORBA::Exception &) 
+   {
       std::cerr << "Cannot contact Module " << module_id << std::endl;
-      }
-    }
-    else {
-      std::cerr << "Cannot contact module of " << mod_type << " type" << std::endl;
-    }
-  }
-  catch (CORBA::Exception &) {
-    std::cerr << "Cannot contact Module " << module_id << std::endl;
-  }
+   }
+
+   Package sm;
+   sm.SetSysId("temp.xml");
+   sm.Load(msg, strlen(msg));
+
+   delete msg;
   
-  Package sm;
-  sm.SetSysId("temp.xml");
-  sm.Load(msg, strlen(msg));
-  
-  delete msg;
-  
-  if(sm.intfs.size()!=0) {
-    int rs = sm.intfs[0].getInt("RETURN_STATE"); // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
-    if(rs==-1) rs = sm.intfs[0].getInt("return_state");
-    _network->module(_network->moduleIdx(module_id))->_return_state = rs;
+   if(sm.intfs.size()!=0) 
+   {
+      int rs = sm.intfs[0].getInt("RETURN_STATE"); // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
+      if(rs==-1) rs = sm.intfs[0].getInt("return_state");
+         _network->GetModule(_network->moduleIdx(module_id))->_return_state = rs;
     
-    if(rs!=1) {
-      int rt = _scheduler->execute(_network->module(_network->moduleIdx(module_id)))-1;
-      if(rt<0) {
-         ClientMessage("Network execution complete\n");
-         
-      }
-      else if(_mod_units.find(_network->module(rt)->_name)==_mod_units.end()) {
-	std::cerr <<  "Cannot find running unit " << _network->module(rt)->_name << std::endl;
-      }
-      else {
+      if(rs!=1) 
+      {
+         int rt = _scheduler->execute(_network->GetModule(_network->moduleIdx(module_id)))-1;
+         if(rt<0) 
+         {
+            ClientMessage("Network execution complete\n");
+         }
+         else if(_mod_units.find(_network->GetModule(rt)->GetModuleName())==_mod_units.end()) 
+         {
+	         std::cerr <<  "Cannot find running unit " << _network->GetModule(rt)->GetModuleName() << std::endl;
+         }
+         else 
+         {
+            bool        rv2;
+            std::string str2;
    
-   bool        rv2;
-   std::string str2;
+            Package p2;
+            p2.SetSysId("temp.xml");
+            // p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
+            p2.intfs.push_back(_network->GetModule(rt)->_inputs);
+            str2 = p2.Save(rv2);
    
-   Package p2;
-   p2.SetSysId("temp.xml");
-   // p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
-   p2.intfs.push_back(_network->module(rt)->_inputs);
-   str2 = p2.Save(rv2);
-   
-   if(rv2) {
-     
-      //std::cout << _network->module(rt)->_name << "\n" << str2 << std::endl;
-      
-      try {
-         _mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
-         _mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
-         execute(_network->module(rt)->_name);
-      }
-      catch(CORBA::Exception &) {
-      std::cerr << "Cannot contact Module " << module_id << std::endl;
+            if(rv2) 
+            {
+               //std::cout << _network->module(rt)->_name << "\n" << str2 << std::endl;
+               try 
+               {
+                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetParams( str2.c_str() );
+                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetID( (long)_network->GetModule(rt)->_inputs._id );
+                  execute( _network->GetModule(rt)->GetModuleName() );
+               }
+               catch(CORBA::Exception &)
+               {
+                  std::cerr << "Cannot contact Module " << module_id << std::endl;
+               }
+            }
+            else  
+            {
+               std::cerr << "Error packing " << module_id << "'s Inputs" << std::endl;
+            }
+         }
       }
    }
-   else {
-      std::cerr << "Error packing " << module_id << "'s Inputs" << std::endl;
-   }
-      }
-    }
-  }
 }
 
 void Body_Executive_i::SetModuleMessage (
@@ -489,9 +521,9 @@ void Body_Executive_i::SetNetwork (
 {
    _mutex.acquire();
   
-   Package p;
-   p.SetSysId("temp.xml");
-   p.Load(network, strlen(network));
+   //Package p;
+   //p.SetSysId("temp.xml");
+   //p.Load(network, strlen(network));
   
    _network->clear();
    _scheduler->clear();
@@ -500,62 +532,62 @@ void Body_Executive_i::SetNetwork (
    _module_powers.clear();
    _thermal_input.clear();
 
-   std::vector<Interface>::iterator iter;
-   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      if(iter->_id==-1) 
-         break;
+   //std::vector<Interface>::iterator iter;
+   //for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   //   if(iter->_id==-1) 
+   //      break;
 
    // This if statement does not take into account global
    // data. In this statement the global data that that 
    // is sent gets stripped out because there is no 
    // mechanism to handle it yet.
-   if ( iter!=p.intfs.end() ) 
-   {
-      if ( _network->parse( &(*iter) ) )
+   //if ( iter!=p.intfs.end() ) 
+   //{
+      if ( _network->parse( std::string( network ) ) )
       {
-         _network_intf = *iter; //_network_intf is the first block of the network xml.
-         for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+         //_network_intf = *iter; //_network_intf is the first block of the network xml.
+         //for ( iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
          {
             //if ( iter->_type == 1 ) // this block is for inputs not geom
             {
-               if(iter->_category==1 && iter->_type == 1 &&_network->setInput(iter->_id, &(*iter))) 
+               //if(iter->_category==1 && iter->_type == 1 &&_network->setInput(iter->_id, &(*iter))) 
                {
-	               _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-                  _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-                  _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-                  _network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
-                  _network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
+	               //_network->GetModule( _network->moduleIdx( iter->_id ) )->_is_feedback  = iter->getInt("FEEDBACK");
+                  //_network->GetModule( _network->moduleIdx( iter->_id ) )->_need_execute = 1;
+                  //_network->GetModule( _network->moduleIdx( iter->_id ) )->_return_state = 0;
+                  //_network->GetModule( _network->moduleIdx(iter->_id) )->_type = iter->_type;
+                  //_network->GetModule( _network->moduleIdx(iter->_id) )->_category = iter->_category;
                }
-               else if(iter->_category==1 && iter->_type == 2 &&_network->setGeomInput(iter->_id, &(*iter)))
+               /*else if(iter->_category==1 && iter->_type == 2 &&_network->setGeomInput(iter->_id, &(*iter)))
                {
                   std::cout<<"The current module has geom info "<<std::endl;
                }
                else
                {
                   std::cerr << "Unable to set id# " << iter->_id << "'s inputs" << std::endl;
-               }
+               }*/
             }
          }
 
          _mutex.release();
-         if(!_scheduler->schedule(0))
+         if ( !_scheduler->schedule(0) )
          {
-            ClientMessage("Error in Schedule\n");
+            ClientMessage( "Error in Schedule\n" );
             return;
          }
          else 
          {
-            ClientMessage("Successfully Scheduled Network\n");
+            ClientMessage( "Successfully Scheduled Network\n" );
             _scheduler->print_schedule();
          }
       }
-   } 
-   else 
-   {
-      _mutex.release();
-      ClientMessage("Error in SetNetwork\n");
-      return;
-   }
+   //} 
+      else 
+      {
+         _mutex.release();
+         ClientMessage( "Error in SetNetwork\n" );
+         return;
+      }
 }
   
 char * Body_Executive_i::GetNetwork ( 
@@ -578,7 +610,7 @@ char * Body_Executive_i::GetNetwork (
  
   for(i=0; i<_network->nmodules(); i++)
   {
-     p.intfs.push_back(_network->module(i)->_inputs);
+     p.intfs.push_back(_network->GetModule(i)->_inputs);
 
      /*if(_network->module(i)->hasGeomInfo())
      {
@@ -616,10 +648,10 @@ void Body_Executive_i::SetModuleUI (
    {
       //if ( iter->_type == 1 ) // this block is for inputs not geom
       {
-         if(_network->setInput(module_id, &(*iter))) 
+         if ( _network->setInput( module_id, &(*iter) ) ) 
          {
-            _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-            _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+            _network->GetModule( _network->moduleIdx(iter->_id) )->_need_execute = 1;
+            _network->GetModule( _network->moduleIdx(iter->_id) )->_return_state = 0;
          }
          else
             std::cerr << "Unable to set mod id# " << module_id << "'s Input data" << std::endl;
@@ -693,7 +725,7 @@ void Body_Executive_i::StartCalc (
    _mutex.acquire();
   
    int rt = _scheduler->execute(0)-1;
-   int module_id = _network->module(rt)->_inputs._id;
+   int module_id = _network->GetModule(rt)->_inputs._id;
   
    if(rt<0) 
    {
@@ -707,7 +739,7 @@ void Body_Executive_i::StartCalc (
       Package p2;
       p2.SetSysId("temp.xml");
       //p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
-      p2.intfs.push_back(_network->module(rt)->_inputs);
+      p2.intfs.push_back(_network->GetModule(rt)->_inputs);
       /*if(_network->module(rt)->hasGeomInfo())
       {
          p2.intfs.push_back(_network->module(rt)->_geominputs);
@@ -723,15 +755,15 @@ void Body_Executive_i::StartCalc (
             std::cerr << "Initial Execute" << std::endl;
             if ( !_mod_units.empty() )
             {
-               if(_mod_units.find(_network->module(rt)->_name)!=_mod_units.end())
+               if(_mod_units.find( _network->GetModule(rt)->GetModuleName() )!=_mod_units.end())
                {
-                  _mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
-                  _mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
-                  execute(_network->module(rt)->_name);
+                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetParams(str2.c_str());
+                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetID( (long)_network->GetModule( rt )->_inputs._id );
+                  execute( _network->GetModule(rt)->GetModuleName() );
                }
                else
                {
-                  std::cerr << "Initial Execute, cannot contact Module " << _network->module(rt)->_name << std::endl;
+                  std::cerr << "Initial Execute, cannot contact Module " << _network->GetModule(rt)->GetModuleName() << std::endl;
                }
             }
             else
@@ -823,11 +855,11 @@ void Body_Executive_i::RegisterUI (
       //Body::UI_var ui = Body::UI::_narrow(ui_object.in());
     
       Body::UI_var ui = Body::UI::_duplicate(ui_ptr);
-      if (CORBA::is_nil(ui))
+      if ( CORBA::is_nil(ui) )
          std::cerr << "NULL UI" << std::endl;
 
       //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
-      uis_[std::string(UIName)] = ui;
+      uis_[ std::string(UIName) ] = ui;
 
       _mutex.release();
       ui->Raise("Connected to Executive\n");
@@ -856,7 +888,6 @@ void Body_Executive_i::RegisterUnit (
   //_mutex.acquire();
 
   static long unit_id;
-  std::map<std::string, Execute_Thread*>::iterator iter;
   // When this is called, a unit is already binded to the name service, 
   // so this call can get it's reference from the name service
   std::cerr << "Going to RegisterUnit " << UnitName << std::endl;
@@ -867,28 +898,30 @@ void Body_Executive_i::RegisterUnit (
   
   //std::cerr << "RegisterUnit " << UnitName << std::endl;
 
-  _mod_units[std::string(UnitName)] = Body::Unit::_duplicate(unit);
-  _mod_units[std::string(UnitName)]->SetID(unit_id++);
+   _mod_units[std::string(UnitName)] = Body::Unit::_duplicate(unit);
+   _mod_units[std::string(UnitName)]->SetID(unit_id++);
   
-  if((iter=_exec_thread.find(std::string(UnitName)))==_exec_thread.end()) {
-    // CLEAN THIS UP IN UNREGISTER UNIT !
-    Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
-    ex->activate();
+   std::map<std::string, Execute_Thread*>::iterator iter;
+   iter = _exec_thread.find( std::string(UnitName) );
+   
+   if( iter == _exec_thread.end() ) 
+   {
+      // CLEAN THIS UP IN UNREGISTER UNIT !
+      Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
+      ex->activate();
 
-    _exec_thread[std::string(UnitName)] = ex;
-  }
-  else //replace it with new reference
-  {
-
-   ACE_Task_Base::cleanup(iter->second, NULL);
-   if (iter->second)
-      delete iter->second;
-   Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
-    ex->activate();
-   iter->second=ex;
-  }
-
-  //_mutex.release();
+      _exec_thread[std::string(UnitName)] = ex;
+   }
+   else //replace it with new reference
+   {
+      ACE_Task_Base::cleanup(iter->second, NULL);
+      if (iter->second)
+         delete iter->second;
+      Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
+      ex->activate();
+      iter->second=ex;
+   }
+   //_mutex.release();
 }
   
 void Body_Executive_i::UnRegisterUI (
@@ -921,20 +954,20 @@ void Body_Executive_i::UnRegisterUnit (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
-  std::map<std::string, Execute_Thread*>::iterator iter;
-  iter=_exec_thread.find(std::string(UnitName));
-  if (iter!=_exec_thread.end())
-  {
-	ACE_Task_Base::cleanup(iter->second, NULL);
-	if (iter->second)
-		delete iter->second;
+   _mutex.acquire();
 
-	_exec_thread.erase(iter);
-  }
-  // Add your implementation here
+   std::map<std::string, Execute_Thread*>::iterator iter;
+   iter=_exec_thread.find(std::string(UnitName));
+   if (iter!=_exec_thread.end())
+   {
+	   ACE_Task_Base::cleanup(iter->second, NULL);
+	   if (iter->second)
+		   delete iter->second;
+
+	   _exec_thread.erase(iter);
+   }   
   
-  _mutex.release();
+   _mutex.release();
 }
 
 CORBA::Long Body_Executive_i::GetGlobalMod (

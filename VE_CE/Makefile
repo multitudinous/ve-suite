@@ -47,6 +47,9 @@ EXTRA_INCLUDES += -I$(VE_SUITE_HOME)
 
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 EXTRA_LIBS+= -lVE_XMLLib
+EXTRA_LIBS+= -lVE_ModelLib
+EXTRA_LIBS+= -lVE_CADLib
+EXTRA_LIBS+= -lVE_ShaderLib
 EXTRA_LIBS+= -lVE_CE_UtilitiesLib
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk

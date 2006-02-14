@@ -36,6 +36,7 @@
 #include "VE_Open/skel/moduleS.h"
 #include <string>
 #include <vector>
+#include <map>
 
 namespace VE_CE
 {
@@ -47,44 +48,50 @@ class Connection;
 class VE_CE_UTILS_EXPORTS Network 
 {
 public:
-   Network  ();
+   ///Constructor
+   Network();
+   ///Destructor
    ~Network ();
+   ///Basically is a destructor
+   void clear( void );
+   //Pass the string in from corba
+   int parse( std::string xmlNetwork );
 
-   void clear ();
-   int  parse (Interface *);
-
-   int nmodules   ();
-   void         add_module (int, std::string);
+   int nmodules();
+   void add_module( int, std::string );
+   
+   ///The module of interest is passed in and the
+   /// vector index is returned
    int GetModuleIndex( Module* );
-   Module* GetModule( int );
-   int moduleIdx  (int);
+   ///idx is the actual vector index
+   Module* GetModule( int idx );
+   ///idx is the conductor assigned index. the vector index is returned
+   int moduleIdx( int idx );
 
-   int addIPort (int, int, Connection*);
-   int addOPort (int, int, Connection*);
+   int addIPort( int, int, Connection*);
+   int addOPort( int, int, Connection*);
 
-   int getInput (int, Interface&);
-   int setInput (int, Interface*);
+   int getInput(int, Interface&);
+   int setInput(int, Interface*);
 
-   int getGeomInput(int, Interface&);
-   int setGeomInput(int, Interface*);
+   int getOutput(int, Interface&);
+   int setOutput(int, Interface*);
 
-   int getOutput (int, Interface&);
-   int setOutput (int, Interface*);
+   int getMessage(int, Interface&);
+   int setMessage(int, Interface*);
 
-   int getMessage (int, Interface&);
-   int setMessage (int, Interface*);
+   int getPortData(int, int, Interface&);
+   int setPortData(int, int, Interface*);
 
-   int getPortData (int, int, Interface&);
-   int setPortData (int, int, Interface*);
-
-   int getPortProfile (int, int, Types::Profile_out&);
-   int setPortProfile (int, int, const Types::Profile*);
-
-   std::vector<Connection*> _connections;
+   int getPortProfile(int, int, Types::Profile_out&);
+   int setPortProfile(int, int, const Types::Profile*);
 
 protected:
-  std::vector<Module*> _module_ptrs;
-
+   std::vector<Connection*> _connections;
+   std::vector<Module*> _module_ptrs;
+   /// This map should be used in the future. This would allow
+   /// easy access to modules from conductor ids.
+   std::map< int, Module* > moduleIDMap;
 };
 }
 }

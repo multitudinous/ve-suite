@@ -36,6 +36,10 @@
 #include "VE_Open/skel/moduleS.h"
 #include <vector>
 #include <string>
+namespace VE_Model
+{
+   class Model;
+}
 
 namespace VE_CE
 {
@@ -49,7 +53,7 @@ class Connection;
 class VE_CE_UTILS_EXPORTS Module 
 {
 public:
-   Module( int, Network* );
+   Module( int );
    Module( const Module& );
    ~Module ();
 
@@ -83,27 +87,29 @@ public:
    ///Set output port data for the specific port
    int setPortData( int, Interface* );
 
-   int getPortProfile (int, Types::Profile_out&);
-   int setPortProfile (int, const Types::Profile*);
+   int getPortProfile( int, Types::Profile_out& );
+   int setPortProfile( int, const Types::Profile* );
 
    ///Get the ID for the module
    int get_id();
-
-   std::string _name;
+   ///Get the modules name
+   std::string GetModuleName( void );
+   ///Get the VE_Model for this module
+   VE_Model::Model* GetVEModel( void );
+   ///Set the VE_Model for this module
+   void SetVEModel( VE_Model::Model* mod );
 
    int _need_execute;
    int _return_state;
    int _is_feedback;
 
-   int _type;
-   int _category;
+   //int _type;
+   //int _category;
 
    Interface _inputs;
    Interface _geominputs;
    Interface _outputs;
    Interface _messages;
-
-   Network* _net;
 
 private:
    //Input ports for the module
@@ -113,6 +119,10 @@ private:
 
    ///ID for the particular module
    int _id;
+   ///Module name
+   std::string _name;
+   
+   VE_Model::Model* veModel;
 };
 }
 }

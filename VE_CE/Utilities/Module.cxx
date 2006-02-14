@@ -35,18 +35,18 @@
 #include "VE_CE/Utilities/Network.h"
 #include "VE_CE/Utilities/Connection.h"
 
+#include "VE_Open/XML/Model/Model.h"
+
 using namespace VE_CE::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
-Module::Module (int id, Network* net)
+Module::Module ( int id )
   : _need_execute (true),
     _return_state (0),
     _is_feedback  (0),
-    _type         (-1),
-    _category     (-1),
-    _net          (net),
     _id           (id)
 {
+   veModel = new VE_Model::Model();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module (const Module &m)
@@ -67,10 +67,11 @@ Module::~Module ()
       delete _oports[i];
    }
    _oports.clear();
-   
+
+   delete veModel;   
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::copy (const Module &m)
+void Module::copy( const Module &m )
 {
   if(this==&m) return;
 
@@ -79,10 +80,8 @@ void Module::copy (const Module &m)
   _outputs      = m._outputs;
   _iports       = m._iports;
   _oports       = m._oports;
-  _net          = m._net;
   _id           = m._id;
-  _type         = m._type;
-  _category     = m._category;
+   *veModel = *(m.veModel);
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Module::numOPorts ()
@@ -237,4 +236,27 @@ int Module::setPortProfile (int p, const Types::Profile* prof)
 
    _oports[fi]->_profile = new Types::Profile(*prof); 
    return 1;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string Module::GetModuleName( void )
+{
+   return _name;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_Model::Model* Module::GetVEModel( void )
+{
+   return veModel;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Module::SetVEModel( VE_Model::Model* mod )
+{
+   if ( veModel )
+      delete veModel;
+
+   veModel = mod;
+   //Set the name of this module
+   //Set the input, results, port data data structures
+   //_is_feedback  = iter->getInt("FEEDBACK");
+   _need_execute = 1;
+   _return_state = 0;
 }

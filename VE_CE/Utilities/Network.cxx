@@ -32,6 +32,15 @@
 #include "VE_CE/Utilities/Network.h"
 #include "VE_CE/Utilities/Module.h"
 #include "VE_CE/Utilities/Connection.h"
+
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/Port.h"
+#include "VE_Open/XML/Model/Link.h"
+#include "VE_Open/XML/Model/Network.h"
+
 #include <set>
 #include <iostream>
 
@@ -45,122 +54,129 @@ Network::~Network ()
   clear();
 }
 
-void Network::clear ()
+void Network::clear()
 {
-  unsigned int i;
-  for(i=0; i<_module_ptrs.size(); i++) delete _module_ptrs[i];
-  for(i=0; i<_connections.size(); i++) delete _connections[i];
-  _module_ptrs.clear();
-  _connections.clear();
+   for ( size_t i = 0; i < _module_ptrs.size(); ++i ) 
+   {
+      delete _module_ptrs[i];
+   }
+   _module_ptrs.clear();
+
+   for ( size_t i = 0; i < _connections.size(); ++i ) 
+   {
+      delete _connections[i];
+   }
+   _connections.clear();
 }
 
-int Network::parse( Interface* intf )
+int Network::parse( std::string xmlNetwork )
 {
-   int num;
-   long int temp;
-   unsigned int i, pos;
+   // NOTE:This function assumes that the network as been cleared first
+   // Load from the nt file loaded through wx
+   // Get a list of all the command elements   
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
 
-   std::string temps;
-   std::vector<std::string> vars;
+   // do this for models
+std::cout << xmlNetwork << std::endl;
+   networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
-   vars = intf->getStrings();
-   for (i=0; i<vars.size(); i++) 
+   // now lets create a list of them
+   for ( size_t i = 0; i < objectVector.size(); ++i )
    {
-      intf->getVal(vars[i], temps);
-      if ( vars[i].find("modCls_") != std::string::npos ) 
-      {
-         pos=vars[i].find("modCls_");
-         num =atoi(vars[i].substr(pos+7, 4).c_str());
-         add_module(num, temps);
-      }
+      VE_Model::Model* model = dynamic_cast< VE_Model::Model* >( objectVector.at( i ) );
+      add_module( model->GetModelID(), model->GetModelName() );
+      GetModule( i )->SetVEModel( model );
    }
 
-   std::set<int> links;
-   std::map<int, int> FrMod, ToMod, FrPort, ToPort;
+   //read for the network info now
+   //this code must be second as the connections stuff assumes that the modules have already
+   // been created
+   networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
+   objectVector = networkWriter.GetLoadedXMLObjects();
 
-   vars = intf->getInts();
-   for (i=0; i<vars.size(); i++) 
+   // do this for network
+   //if ( veNetwork )
+   //   delete veNetwork;
+   VE_Model::Network* veNetwork = 0;
+   // we are expecting that a network will be found
+   if ( !objectVector.empty() )
    {
-      intf->getVal(vars[i], temp);
-
-      if ( vars[i].find("ln_FrMod_") != std::string::npos ) 
-      {
-         pos=vars[i].find("ln_FrMod_",0,9);
-         num = atoi(vars[i].substr(pos+9, 4).c_str());
-         FrMod[num] = temp;
-         links.insert(num);
-      }
-      else if ( vars[i].find("ln_ToMod_") != std::string::npos ) 
-      {
-         pos=vars[i].find("ln_ToMod_");
-         num = atoi(vars[i].substr(pos+9, 4).c_str());
-         ToMod[num] = temp;
-         links.insert(num);
-      }
-      else if ( vars[i].find("ln_FrPort_") != std::string::npos ) 
-      {
-         pos=vars[i].find("ln_FrPort_");
-         num = atoi(vars[i].substr(pos+10, 4).c_str());
-         FrPort[num] = temp;; 
-         links.insert(num);
-      }
-      else if ( vars[i].find("ln_ToPort_") != std::string::npos ) 
-      {
-         pos=vars[i].find("ln_ToPort_");
-         num = atoi(vars[i].substr(pos+10, 4).c_str());
-         ToPort[num] = temp;
-         links.insert(num);
-      }
+      veNetwork = dynamic_cast< VE_Model::Network* >( objectVector.at( 0 ) );
    }
-
-   if(intf->getInt("Module_size") != (int)_module_ptrs.size()) 
+   else
    {
-      std::cerr << "Inconsistent Modules In Network\n";
-      return 0;
+     std::cerr << "Improperly formated ves file." << "VES File Read Error" << std::endl;
+     return 0;
    }
-  
-   if(intf->getInt("Link_size")   != (int)links.size()) 
+
+   /*
+   veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
+   veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
+   veNetwork->GetDataValuePair( 2 )->GetData( (numPix.first) );
+   veNetwork->GetDataValuePair( 3 )->GetData( (numPix.second) );
+   veNetwork->GetDataValuePair( 4 )->GetData( (numUnit.first) );
+   veNetwork->GetDataValuePair( 5 )->GetData( (numUnit.second) );
+   */
+
+   for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++ i ) 
    {
-      std::cerr << "Inconsistent Links In Network\n";
-      return 0;
+
+      /*if ( FrMod.find(*iter)==FrMod.end()  || ToMod.find(*iter)==FrMod.end()   ||
+           FrPort.find(*iter)==FrMod.end() || ToPort.find(*iter)==FrMod.end()) 
+      {
+         std::cerr << "Bad link found\n";
+         return  0;
+      }*/
+
+      Connection* cn = new Connection( i );
+      _connections.push_back( cn );
+
+      long fromModuleID, toModuleID;
+      veNetwork->GetLink( i )->GetFromModule()->GetData( fromModuleID );
+      veNetwork->GetLink( i )->GetToModule()->GetData( toModuleID );
+
+      long int toPort = *(veNetwork->GetLink( i )->GetToPort());
+      long int fromPort = *(veNetwork->GetLink( i )->GetFromPort());
+
+      if ( 
+            !addIPort( toModuleID, toPort, cn ) ||
+            !addOPort( fromModuleID, fromPort, cn )
+         ) 
+      {
+         std::cerr << "Error adding ports" << std::endl;
+         return 0;
+      }
    }
-
-   std::set<int>::iterator iter;
-   for(iter=links.begin(); iter!=links.end(); iter++) {
-
-    if(FrMod.find(*iter)==FrMod.end()  || ToMod.find(*iter)==FrMod.end()   ||
-       FrPort.find(*iter)==FrMod.end() || ToPort.find(*iter)==FrMod.end()) {
-      std::cerr << "Bad link found\n";
-      return  0;
-    }
-
-    Connection* cn = new Connection(*iter);
-    _connections.push_back(cn);
-
-    if(!addIPort(ToMod[*iter], ToPort[*iter], cn) ||
-       !addOPort(FrMod[*iter], FrPort[*iter], cn)) {
-      std::cerr << "Error adding ports\n";
-      return 0;
-    }
-   }
-
    return 1;
 }
 
-int Network::addIPort (int m, int p, Connection* c)
+int Network::addIPort( int m, int p, Connection* c )
 {
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  _module_ptrs[fi]->addIPort(p, c);
-  return 1;
+   try
+   {
+      _module_ptrs.at( moduleIdx(m) )->addIPort(p, c);
+      return 1;
+   }
+   catch ( ... )
+   {
+      return 0;
+   }
 }
 
 int Network::addOPort (int m, int p, Connection* c)
 {
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  _module_ptrs[fi]->addOPort(p, c);
-  return 1;
+   try
+   {
+      _module_ptrs.at( moduleIdx(m) )->addOPort(p, c);
+      return 1;
+   }
+   catch ( ... )
+   {
+      return 0;
+   }
 }
 
 int Network::nmodules ()
@@ -171,12 +187,12 @@ int Network::nmodules ()
 
 int Network::GetModuleIndex( Module* mod )
 {
-  int i, fi = -1;
-
-  for(i=0; i<(int)_module_ptrs.size(); i++)
-    if(mod->get_id()==_module_ptrs[i]->get_id()) fi = i;
-
-  return fi;
+   for( size_t i = 0; i < _module_ptrs.size(); ++i )
+   {
+      if ( mod->get_id() == _module_ptrs[i]->get_id() ) 
+         return i;
+   }
+   return -1;
 }
 
 Module* Network::GetModule( int idx )
@@ -185,64 +201,58 @@ Module* Network::GetModule( int idx )
    {
       return _module_ptrs.at( idx );
    }
-   catch (...)
+   catch ( ... )
    {
       return NULL;   
    }
 }
 
-int Network::moduleIdx (int id)
+int Network::moduleIdx( int id )
 {
-  int i, fi = -1;
-
-  for(i=0; i<(int)_module_ptrs.size(); i++)
-    if(id==_module_ptrs[i]->get_id()) fi = i;
-
-  return fi;
+   ///This function goes from the veconductor assigned id
+   ///to the vector id.
+   for ( size_t i = 0; i < _module_ptrs.size(); ++i )
+   {
+      if ( id == _module_ptrs[ i ]->get_id() ) 
+         return i;
+   }
+   return -1;
 }
 
-void Network::add_module (int m, std::string name)
+void Network::add_module( int m, std::string name )
 {
-  int fi = moduleIdx(m);
-
-  if(fi>=0) return;
+   if( moduleIdx(m) >= 0 ) 
+      return;
   
-  Module *mod = new Module(m, this);
-  mod->_name = name;
-  _module_ptrs.push_back(mod);
+   Module *mod = new Module( m );
+   //mod->_name = name;
+   _module_ptrs.push_back( mod );
 }  
 
-int Network::getInput (int m, Interface& intf)
+int Network::getInput( int m, Interface& intf )
 {
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  intf.copy(_module_ptrs[fi]->_inputs);
-  return 1;
+   try
+   {
+      intf.copy( _module_ptrs.at( moduleIdx( m ) )->_inputs );
+      return 1;
+   }
+   catch ( ... )
+   {
+      return 0;
+   }
 }
 
-int Network::setInput (int m, Interface* intf)
+int Network::setInput( int m, Interface* intf)
 {
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  _module_ptrs[fi]->_inputs.copy(*intf);
-  return 1;
-}
-
-int Network::getGeomInput(int m, Interface& intf)
-{
-   int fi = moduleIdx(m);
-   if(fi<0) return 0;
-   intf.copy(_module_ptrs[fi]->_geominputs);
-   return 1;
-}
-
-int Network::setGeomInput(int m, Interface* intf)
-{
-   int fi = moduleIdx(m);
-   if(fi<0) return 0;
-   _module_ptrs[fi]->_geominputs.copy(*intf);
-   return 1;
-
+   try
+   {
+      _module_ptrs.at( moduleIdx(m) )->_inputs.copy(*intf);
+      return 1;
+   }
+   catch (...)
+   {
+      return 0;
+   }
 }
 
 int Network::getOutput (int m, Interface &intf)

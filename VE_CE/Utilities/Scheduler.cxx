@@ -173,9 +173,9 @@ void Scheduler::sweep( Module* exclude )
    } // end while
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Scheduler::schedule (Module* mod)
+int Scheduler::schedule( Module* mod )
 {
-  sweep(mod);
+  sweep( mod );
 
   int k;
   int nmodules = _net->nmodules();
