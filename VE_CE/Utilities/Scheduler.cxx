@@ -64,22 +64,23 @@ void Scheduler::clear ()
   _schedule_nodes.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scheduler::reset ()
+//This function appears to not be used anymore and my not be needed
+/*void Scheduler::reset()
 {
    for( int i = 0; i < _net->nmodules(); ++i )
    {
       _net->GetModule(i)->_need_execute = 1;
       _net->GetModule(i)->_return_state = 0;
       //_net->GetModule(i)->_inputs.clear();
-      _net->GetModule(i)->_outputs.clear();
-      _net->GetModule(i)->_messages.clear();
+      //_net->GetModule(i)->_outputs.clear();
+      //_net->GetModule(i)->_messages.clear();
 
       for ( int j=0; j<_net->GetModule(i)->numOPorts(); j++)
       {
          _net->GetModule(i)->getOPort(j)->_data.clear();
       }
    }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::set_net (Network *n)
 {
@@ -256,44 +257,53 @@ int Scheduler::visit(int k, std::set<int> connid_ignore,
   
   Module *module = _net->GetModule(k-1);
   
-  int m;
-  for(int i=0; i<module->numOPorts(); i++) {
-    OPort *oport = module->getOPort(i);
-    for(int c=0; c<oport->nconnections(); c++) {
-      Connection *conn = oport->connection(c);
-      if(connid_ignore.find(conn->get_id())==connid_ignore.end()) {
-	IPort *iport = conn->get_iport();
-	Module *nmodule = iport->get_module();
-	int index = _net->GetModuleIndex(nmodule)+1;
-	m = (!visit_val[index]) ? visit(index, connid_ignore, sccs) : visit_val[index];
-	if (m < min) min = m;
-      }
-    } 
-  }
-  
-  std::vector<int> scc;
-  if(min == visit_val[k]) {
-    scc.clear();
-    do {
-      m = visit_stack.top();
-      visit_stack.pop();
-      scc.push_back(m);
-      visit_val[m] = _net->nmodules() + 1;
-    } while(m != k);
-    sccs.push_back(scc);
-  }
+   int m;
+   for( size_t i=0; i<module->numOPorts(); i++) 
+   {
+      OPort *oport = module->getOPort(i);
+      for(int c=0; c<oport->nconnections(); c++) 
+      {
+         Connection *conn = oport->connection(c);
+         if(connid_ignore.find(conn->get_id())==connid_ignore.end()) 
+         {
+            IPort *iport = conn->get_iport();
+            Module *nmodule = iport->get_module();
+            int index = _net->GetModuleIndex(nmodule)+1;
+            m = (!visit_val[index]) ? visit(index, connid_ignore, sccs) : visit_val[index];
+            if (m < min) 
+            {
+               min = m;
+            }
+         }
+      } 
+   }
 
-  return min;  
+   std::vector<int> scc;
+   if(min == visit_val[k]) 
+   {
+      scc.clear();
+      do 
+      {
+         m = visit_stack.top();
+         visit_stack.pop();
+         scc.push_back(m);
+         visit_val[m] = _net->nmodules() + 1;
+      } 
+      while(m != k);
+      sccs.push_back(scc);
+   }
+
+   return min;  
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scheduler::visit(std::vector<std::vector<int> > adj, int k,
+void Scheduler::visit(std::vector<std::vector<int> > adj, size_t k,
 		      std::vector<int>& order)
 {
   visit_val[k] = ++visit_id;
    
-  for(int i=0; i<(int)adj[k].size(); i++)
-    if(adj[k][i]==1 && visit_val[i]==0)
-      visit(adj, i, order);
+   for ( size_t i=0; i< adj[k].size(); i++ )
+      if ( (adj[k][i]==1) && (visit_val[i]==0) )
+         visit( adj, i, order);
   
   order.insert(order.begin(), k);
 }

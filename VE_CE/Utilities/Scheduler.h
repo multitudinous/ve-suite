@@ -53,7 +53,7 @@ public:
    ~Scheduler();
 
    void clear();  
-   void reset();
+   //void reset();
    void set_net( Network* );
 
    void sweep    (Module*);
@@ -69,7 +69,7 @@ public:
 private:
 
   int  visit     (int k, std::set<int> connid_ignore, std::vector<std::vector<int> >& sccs);
-  void visit     (std::vector<std::vector<int> > adj, int k,  std::vector<int>& order);
+  void visit     (std::vector<std::vector<int> > adj, size_t k,  std::vector<int>& order);
   int  breakdown (std::vector<int> S, std::set<int> connid_ignore, node_loop &node_loop);
 
   std::vector<int> visit_val;

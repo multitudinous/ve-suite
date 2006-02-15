@@ -75,7 +75,7 @@ void node_module::get_ins(std::set<int> &ins, std::set<int> connid_ignore)
    ins.clear();
    Module *module = _net->GetModule( _module-1 );
     
-   for( int i=0; i < module->numIPorts(); i++) 
+   for( size_t i=0; i < module->numIPorts(); i++) 
    {
       IPort *iport = module->getIPort(i);
       int nc = iport->nconnections();
@@ -100,7 +100,7 @@ void node_module::get_outs(std::set<int> &outs, std::set<int> connid_ignore)
 
    Module *module = _net->GetModule( _module-1 );
   
-   for(int i=0; i<module->numOPorts(); i++) 
+   for( size_t i=0; i<module->numOPorts(); i++) 
    {
       OPort *oport = module->getOPort(i);
       int nc = oport->nconnections();
@@ -151,7 +151,7 @@ void node_module::need_execute()
 void node_module::clear_out_to (std::set<int> mods)
 {
    Module *module = _net->GetModule( _module-1 );
-   for(int i=0; i<module->numOPorts(); i++) 
+   for( size_t i=0; i<module->numOPorts(); i++) 
    {
       OPort *oport = module->getOPort(i);
       for(int c=0; c<oport->nconnections(); c++) 

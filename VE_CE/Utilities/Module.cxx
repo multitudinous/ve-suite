@@ -36,22 +36,30 @@
 #include "VE_CE/Utilities/Connection.h"
 
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/Port.h"
+
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 using namespace VE_CE::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
-Module::Module ( int id )
-  : _need_execute (true),
-    _return_state (0),
-    _is_feedback  (0),
-    _id           (id)
+Module::Module()
+  : _need_execute( true ),
+    _return_state( 0 ),
+    _is_feedback( 0 )
 {
    veModel = new VE_Model::Model();
+   inputs = new VE_XML::Command();
+   results = new VE_XML::Command();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Module::Module (const Module &m)
+Module::Module( const Module &m )
 {
-  copy(m);
+   veModel = new VE_Model::Model();
+   inputs = new VE_XML::Command();
+   results = new VE_XML::Command();
+   copy(m);
 }
 ////////////////////////////////////////////////////////////////////////////////
 Module::~Module ()
@@ -69,29 +77,48 @@ Module::~Module ()
    _oports.clear();
 
    delete veModel;   
+   delete inputs;
+   delete results;
+   
+   for ( size_t i = 0; i < ports.size(); ++i )
+   {
+      delete ports.at( i );
+   }
+   ports.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Module::copy( const Module &m )
 {
-  if(this==&m) return;
+   if(this==&m) return;
 
-  _need_execute = m._need_execute;
-  _inputs       = m._inputs;
-  _outputs      = m._outputs;
-  _iports       = m._iports;
-  _oports       = m._oports;
-  _id           = m._id;
+   _need_execute = m._need_execute;
+   _iports       = m._iports;
+   _oports       = m._oports;
+   _id           = m._id;
    *veModel = *(m.veModel);
+   *inputs = *(m.inputs);
+   *results = *(m.results);
+
+   for ( size_t i = 0; i < ports.size(); ++i )
+   {
+      delete ports.at( i );
+   }
+   ports.clear();
+
+   for ( size_t i = 0; i < m.ports.size(); ++i )
+   {
+      ports.push_back( new VE_Model::Port( *(m.ports.at( i )) ) );
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Module::numOPorts ()
+size_t Module::numOPorts()
 {
-  return (int)_oports.size();
+  return _oports.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Module::numIPorts ()
+size_t Module::numIPorts()
 {
-  return (int)_iports.size();
+  return _iports.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
 OPort* Module::getOPort( int idx )
@@ -192,31 +219,31 @@ void Module::addOPort( int p, Connection* c )
    c->connect_oport(_oports[fi]);
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Module::getPortData( int p, Interface& intf )
+int Module::getPortData( int p, VE_XML::Command& intf )
 {
    int fi = oportIdx( p );
    if ( fi < 0 ) 
       return 0;
 
-   intf.copy( _oports[fi]->_data );
+   //intf.copy( _oports[fi]->_data );
    return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Module::setPortData( int p, Interface* intf )
+int Module::setPortData( int p, VE_XML::Command* intf )
 {
    int fi = oportIdx(p);
    
    if ( fi < 0 ) 
       return 0;
    
-   _oports[fi]->_data.copy(*intf);
+   //_oports[fi]->_data.copy(*intf);
    return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Module::getPortProfile( int p, Types::Profile_out& prof )
 {
    int fi = oportIdx( p );  
-   if ( fi < 0 ) 
+   if ( fi < 0 )
       return 0; 
    
    prof = new Types::Profile( *(_oports[fi]->_profile) );
@@ -245,18 +272,107 @@ std::string Module::GetModuleName( void )
 ////////////////////////////////////////////////////////////////////////////////
 VE_Model::Model* Module::GetVEModel( void )
 {
+   //Set the input, results, port data data structures
    return veModel;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Module::SetVEModel( VE_Model::Model* mod )
 {
    if ( veModel )
+   {
       delete veModel;
+      veModel = 0;
+   }
 
    veModel = mod;
    //Set the name of this module
-   //Set the input, results, port data data structures
-   //_is_feedback  = iter->getInt("FEEDBACK");
+   _name = veModel->GetModelName();
+   // _id is set in the constructor
+   _id = veModel->GetModelID();
    _need_execute = 1;
    _return_state = 0;
+   //Set the input, results, port data data structures
+   if ( inputs )
+   {
+      delete inputs;
+      inputs = 0;
+   }
+
+   inputs = new VE_XML::Command();
+   for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
+   {
+      inputs->AddDataValuePair( veModel->GetInput( i ) );
+   }
+
+   ///Get feedback info
+   {
+      VE_XML::DataValuePair* dvp = inputs->GetDataValuePair( "FEEDBACK" );
+      if ( dvp )
+      {
+         unsigned int feedback;
+         dvp->GetData( feedback );
+         _is_feedback = static_cast< int >( feedback );
+      }
+   }
+
+   //Now get results
+   if ( results )
+   {
+      delete results;
+      results = 0;
+   }
+
+   results = new VE_XML::Command();
+   for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
+   {
+      results->AddDataValuePair( veModel->GetResult( i ) );
+   }
+
+   //Now get port data
+   for ( size_t i = 0; i < ports.size(); ++i )
+   {
+      delete ports.at( i );
+   }
+   ports.clear();
+
+   for ( size_t i = 0; i < veModel->GetNumberOfPorts(); ++i )
+   {
+      ports.push_back( veModel->GetPort( i ) );
+   }
+
+   //Probably now need to set port data pointers on the port vectors
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::Command* Module::GetInputData( void )
+{
+   //probably need to pull data somewhere
+   return inputs;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Module::SetInputData( VE_XML::Command* inputData )
+{
+   if ( inputs )
+   {
+      delete inputs;
+      inputs = 0;
+   }
+   //probably need to push data somewhere
+   inputs = inputData;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::Command* Module::GetResultsData( void )
+{
+   //probably need to pull data somewhere
+   return results;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Module::SetResultsData( VE_XML::Command* resultsData )
+{
+   if ( results )
+   {
+      delete results;
+      results = 0;
+   }
+   //probably need to push data somewhere
+   results = resultsData;
 }

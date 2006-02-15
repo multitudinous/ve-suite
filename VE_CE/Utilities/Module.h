@@ -39,6 +39,12 @@
 namespace VE_Model
 {
    class Model;
+   class Port;
+}
+
+namespace VE_XML
+{
+   class Command;
 }
 
 namespace VE_CE
@@ -53,16 +59,16 @@ class Connection;
 class VE_CE_UTILS_EXPORTS Module 
 {
 public:
-   Module( int );
+   Module();
    Module( const Module& );
-   ~Module ();
+   ~Module();
 
    void copy( const Module& );
 
    ///return number of output ports
-   int numOPorts( void );
+   size_t numOPorts( void );
    ///return number of input ports
-   int numIPorts( void );
+   size_t numIPorts( void );
 
    ///Get the vector index for the specific input port id 
    int iportIdx( int idx );
@@ -83,12 +89,20 @@ public:
    IPort* getFBPort ();
 
    ///Get output port data for the specific port
-   int getPortData( int, Interface& );
+   int getPortData( int, VE_XML::Command& );
    ///Set output port data for the specific port
-   int setPortData( int, Interface* );
+   int setPortData( int, VE_XML::Command* );
 
    int getPortProfile( int, Types::Profile_out& );
    int setPortProfile( int, const Types::Profile* );
+
+   ///Accessors for input data
+   VE_XML::Command* GetInputData( void );
+   void SetInputData( VE_XML::Command* inputData );
+
+   ///Accessors for input data
+   VE_XML::Command* GetResultsData( void );
+   void SetResultsData( VE_XML::Command* resultsData );
 
    ///Get the ID for the module
    int get_id();
@@ -106,10 +120,10 @@ public:
    //int _type;
    //int _category;
 
-   Interface _inputs;
-   Interface _geominputs;
-   Interface _outputs;
-   Interface _messages;
+   //Interface _inputs;
+   //Interface _geominputs;
+   //Interface _outputs;
+   //Interface _messages;
 
 private:
    //Input ports for the module
@@ -122,7 +136,16 @@ private:
    ///Module name
    std::string _name;
    
+   // The holder of the raw data for this class
+   // This class is responsible for the memory management here
    VE_Model::Model* veModel;
+   //Container for input data
+   VE_XML::Command* inputs;
+   //Container for results data
+   VE_XML::Command* results;
+   //Container for port data
+   std::vector< VE_Model::Port* > ports;
+   ///Do we need to keep track of messages?
 };
 }
 }

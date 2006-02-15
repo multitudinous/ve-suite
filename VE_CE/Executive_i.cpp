@@ -38,6 +38,7 @@
 #include "VE_Open/XML/XMLCreator.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
+#include "VE_Open/XML/Command.h"
 
 #include <iostream>
 
@@ -158,24 +159,31 @@ void Body_Executive_i::SetExportData (
     , Error::EUnknown
   ))
 {
-  std::string msg;
   _mutex.acquire();
   
-  std::cout << "SetExportData "<< module_id << " " << port_id << std::endl;
+  //std::cout << "SetExportData "<< module_id << " " << port_id << std::endl;
 
-  Package p;
-  p.SetSysId("temp.xml");
-  p.Load(data, strlen(data));
+  //Package p;
+  //p.SetSysId("temp.xml");
+  //p.Load(data, strlen(data));
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+   networkWriter.ReadXMLData( std::string( data ), "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
   
    // Should only be one item. But, maybe later...
-   std::vector<Interface>::iterator iter;
-   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      if(!_network->setPortData(module_id, port_id, &(*iter)))
+   //std::vector<Interface>::iterator iter;
+   //for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   {
+      if ( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortData( 
+            port_id, dynamic_cast< VE_XML::Command* >( objectVector.at(0) ) ) 
+         )
       {
-         msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+         std::string msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
          ClientMessage(msg.c_str());
       }
-  
+   }
    _mutex.release();
 }
   
@@ -189,30 +197,39 @@ char * Body_Executive_i::GetExportData (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
-  std::string msg;
-  std::cout << "GetExportData "<< module_id << " " << port_id << std::endl;
+   _mutex.acquire();
+   //std::cout << "GetExportData "<< module_id << " " << port_id << std::endl;
   
-  Interface intf;
-  if(!_network->getPortData(module_id, port_id, intf)) {
-    msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
-    ClientMessage(msg.c_str());
-  }
-       
-  bool        rv;
-  std::string str;
-  
-  Package p;
-  p.SetSysId("temp.xml");
-  p.intfs.push_back(intf);
-  
-  str = p.Save(rv);
-  
-  _mutex.release();
-  
-  if(rv) return CORBA::string_dup(str.c_str());
+   //Interface intf;
+   VE_XML::Command portData;
+   if ( !_network->GetModule( _network->moduleIdx( module_id ) )->getPortData( port_id, portData ) ) 
+   {
+      std::string msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+      ClientMessage(msg.c_str());
+      _mutex.release();
+      return CORBA::string_dup("");
+   }
 
-  return CORBA::string_dup("");//str.c_str());//"yang";//0;
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back( std::pair< VE_XML::Command*, std::string  >( &portData, std::string( "vecommand" ) ) );
+   std::string fileName( "returnString" );
+   VE_XML::XMLReaderWriter netowrkWriter;
+   netowrkWriter.UseStandaloneDOMDocumentManager();
+   netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+
+   //bool        rv;
+   //std::string str;
+  
+   //Package p;
+   //p.SetSysId("temp.xml");
+   //p.intfs.push_back(intf);
+  
+   //str = p.Save(rv);
+  
+   _mutex.release();
+  
+   //if(rv) 
+   return CORBA::string_dup( fileName.c_str() );
 }
 
 void Body_Executive_i::SetProfileData (
@@ -229,14 +246,16 @@ void Body_Executive_i::SetProfileData (
 
   std::cout << " SetProfileData "<< module_id << " " << port_id << std::endl;
  
-  std::string msg;
   
-  if(!_network->setPortProfile(module_id, port_id, &data)) {
-    msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port profile\n";
-    ClientMessage(msg.c_str());
-  } else {
-    ; //std::cout << "SetPortProfile success\n";
-  }
+   if( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortProfile( port_id, &data) ) 
+   {
+      std::string msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port profile\n";
+      ClientMessage(msg.c_str());
+   } 
+   else 
+   {
+      ; //std::cout << "SetPortProfile success\n";
+   }
  
   _mutex.release();
 }
@@ -282,9 +301,9 @@ void Body_Executive_i::GetProfileData (
   _mutex.release();
 }
 /////////////////////////////////////////////////////////////////////////////
-void Body_Executive_i::execute_next_mod (long module_id)
+void Body_Executive_i::execute_next_mod( long module_id )
 {
-   char *msg;
+   char *msg = 0;
 
    try 
    {
@@ -335,38 +354,47 @@ void Body_Executive_i::execute_next_mod (long module_id)
          }
          else 
          {
-            bool        rv2;
-            std::string str2;
+            //bool        rv2;
+            //std::string str2;
    
-            Package p2;
-            p2.SetSysId("temp.xml");
+            //Package p2;
+            //p2.SetSysId("temp.xml");
             // p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
-            p2.intfs.push_back(_network->GetModule(rt)->_inputs);
-            str2 = p2.Save(rv2);
+            //p2.intfs.push_back(_network->GetModule(rt)->_inputs);
+            //str2 = p2.Save(rv2);
    
-            if(rv2) 
-            {
+            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+            nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+                              _network->GetModule( rt )->GetInputData(), std::string( "vecommand" ) ) 
+                           );
+            std::string fileName( "returnString" );
+            VE_XML::XMLReaderWriter netowrkWriter;
+            netowrkWriter.UseStandaloneDOMDocumentManager();
+            netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+
+            //if(rv2) 
+            //{
                //std::cout << _network->module(rt)->_name << "\n" << str2 << std::endl;
                try 
                {
-                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetParams( str2.c_str() );
-                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetID( (long)_network->GetModule(rt)->_inputs._id );
+                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetParams( fileName.c_str() );
+                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetID( (long)_network->GetModule(rt)->get_id() );
                   execute( _network->GetModule(rt)->GetModuleName() );
                }
                catch(CORBA::Exception &)
                {
                   std::cerr << "Cannot contact Module " << module_id << std::endl;
                }
-            }
-            else  
-            {
-               std::cerr << "Error packing " << module_id << "'s Inputs" << std::endl;
-            }
+            //}
+            //else  
+            //{
+            //   std::cerr << "Error packing " << module_id << "'s Inputs" << std::endl;
+            //}
          }
       }
    }
 }
-
+////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetModuleMessage (
     CORBA::Long module_id,
     const char * msg
@@ -377,44 +405,11 @@ void Body_Executive_i::SetModuleMessage (
     , Error::EUnknown
   ))
 {  
-   std::cout << "SetModuleMessage " << msg << std::endl;
-
-   std::map<std::string, Body::UI_var>::iterator iter;
-   for(iter=uis_.begin(); iter!=uis_.end(); iter++) 
-   {
-      std::cout << msg << " :TO: " << iter->first << std::endl;
-      try 
-      {
-         iter->second->Raise(msg);
-      }
-      catch (CORBA::Exception &) 
-      {
-         _mutex.acquire();
-         std::cout << iter->first <<" is obsolete.\n";
-         uis_.erase( iter );
-         _mutex.release();
-      }
-   }
-
-  // THIS EXPECTS AN INTERFACE - NOT A STRING
-
-  // Package p;
-  // p.SetSysId("temp.xml");
-  // p.Load(msg, strlen(msg));
-  
-  // Should only be one item. But, maybe later...
-  // std::vector<Interface>::iterator iter;
-  // for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    // if(!_network->setMessage(module_id, &(*iter)))
-      // std::cerr << "Unable to set mod id# " << module_id 
-   //    << "'s Message data" << std::endl;
-/*  
-  //std::vector<Interface>::iterator iter2;
-  //for(iter2=p.intfs.begin(); iter2!=p.intfs.end(); iter2++)
-  //  if(!_network->setMessage(module_id, &(*iter2)))
-  //    std::cerr << "Unable to set mdo id# " << module_id
-   //    << "'s Message data << std::endl";
-*/
+   // send a unit message to all uis
+   std::string message = std::string( "SetModuleMessage ") + std::string( msg );
+   _mutex.acquire();
+   ClientMessage( message.c_str() );
+   _mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetModuleResult (
@@ -426,31 +421,46 @@ void Body_Executive_i::SetModuleResult (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+   _mutex.acquire();
 
-  std::string msg;
-  Package p;
-  p.SetSysId("temp.xml");
-  p.Load(result, strlen(result));
+   //Package p;
+   //p.SetSysId("temp.xml");
+   //p.Load(result, strlen(result));
 
    // Should only be one item. But, maybe later...
-  std::vector<Interface>::iterator iter;
-  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    if(_network->setOutput(module_id, &(*iter))) {
-      // Keep track of power requirements
-      bool f = false;
-      std::string p = iter->getString(std::string("Power (MW)"), &f);
-      if(f) _module_powers[module_id] = atof(p.c_str());
-      std::string ti = iter->getString(std::string("Thermal Input (MW)"), &f);
-      if(f) _thermal_input[module_id] = atof(ti.c_str()); //changed by yang
-      //original code is  //if(f) _thermal_input = atof(ti.c_str());
-    } else {
-      msg = "Unable to set mod id# " + to_string(module_id) + "'s Output data\n";
-      ClientMessage(msg.c_str());
-    }
-  
-  msg = "Mod id# "+ to_string(module_id) + "'s Execution is done\n";
-  ClientMessage(msg.c_str());
+   //std::vector<Interface>::iterator iter;
+   //for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   {
+      VE_XML::XMLReaderWriter networkWriter;
+      networkWriter.UseStandaloneDOMDocumentManager();
+      networkWriter.ReadFromString();
+      networkWriter.ReadXMLData( std::string( result ), "Command", "vecommand" );
+      std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+
+      _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) ) );
+      /*if ( _network->setOutput( module_id, &(*iter) ) ) 
+      {
+         // Keep track of power requirements
+         bool f = false;
+         std::string p = iter->getString(std::string("Power (MW)"), &f);
+         if(f) 
+            _module_powers[module_id] = atof(p.c_str());
+
+         std::string ti = iter->getString(std::string("Thermal Input (MW)"), &f);
+
+         if(f) 
+            _thermal_input[module_id] = atof(ti.c_str()); //changed by yang
+         //original code is  //if(f) _thermal_input = atof(ti.c_str());
+      } 
+      else 
+      {
+         std::string msg = "Unable to set mod id# " + to_string(module_id) + "'s Output data\n";
+         ClientMessage(msg.c_str());
+      }*/
+   }
+
+   std::string msg = "Mod id# "+ to_string(module_id) + "'s Execution is done\n";
+   ClientMessage(msg.c_str());
   
   _mutex.release();
 }
@@ -464,8 +474,20 @@ char * Body_Executive_i::GetModuleResult (
   ))
 {
    _mutex.acquire();
-  
-   Interface intf;
+
+   std::string fileName( "returnString" );
+   VE_XML::XMLReaderWriter netowrkWriter;
+   netowrkWriter.UseStandaloneDOMDocumentManager();
+
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(  std::pair< VE_XML::Command*, std::string  >( 
+                     _network->GetModule( _network->moduleIdx( module_id ) )->GetResultsData(), 
+                     std::string( "vecommand" ) ) 
+                  );
+   netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+   _mutex.release();
+   return CORBA::string_dup("");
+   /*Interface intf;
   
    if ( module_id == -1 ) 
    {
@@ -507,7 +529,7 @@ char * Body_Executive_i::GetModuleResult (
    if ( rv ) 
       return CORBA::string_dup(str.c_str());
 
-   return CORBA::string_dup("");//str.c_str());//"yang";//0;
+   return CORBA::string_dup("");//str.c_str());//"yang";//0;*/
 }
 ////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetNetwork (
@@ -562,6 +584,9 @@ char * Body_Executive_i::GetNetwork (
    _mutex.acquire();
    std::string xmlNetwork = _network->GetNetworkString();
    _mutex.release();
+
+   if ( xmlNetwork.empty() )
+      ClientMessage( "No current network present in VE-CE.\n" );
   
    return CORBA::string_dup( xmlNetwork.c_str() );
 }
@@ -575,9 +600,20 @@ void Body_Executive_i::SetModuleUI (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+   _mutex.acquire();
   
-  Package p;
+   ///I don't think this function is used. We may be able to remove it.
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+   networkWriter.ReadXMLData( std::string( ui ), "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+
+   _network->GetModule( _network->moduleIdx( module_id ) )->SetInputData( dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) ) );
+   _network->GetModule( _network->moduleIdx( module_id ) )->_need_execute = 1;
+   _network->GetModule( _network->moduleIdx( module_id ) )->_return_state = 0;
+  
+  /*Package p;
   p.SetSysId("temp.xml");
   p.Load(ui, strlen(ui));
   
@@ -595,7 +631,7 @@ void Body_Executive_i::SetModuleUI (
          else
             std::cerr << "Unable to set mod id# " << module_id << "'s Input data" << std::endl;
       }
-   }
+   }*/
    _mutex.release();
 }
   
@@ -664,7 +700,7 @@ void Body_Executive_i::StartCalc (
    _mutex.acquire();
   
    int rt = _scheduler->execute(0)-1;
-   int module_id = _network->GetModule(rt)->_inputs._id;
+   int module_id = _network->GetModule(rt)->get_id();
   
    if(rt<0) 
    {
@@ -672,20 +708,28 @@ void Body_Executive_i::StartCalc (
    }
    else 
    {
-      bool        rv2;
-      std::string str2;
+      //bool        rv2;
+      //std::string str2;
     
-      Package p2;
-      p2.SetSysId("temp.xml");
+      //Package p2;
+      //p2.SetSysId("temp.xml");
       //p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
-      p2.intfs.push_back(_network->GetModule(rt)->_inputs);
+      //p2.intfs.push_back(_network->GetModule(rt)->_inputs);
       /*if(_network->module(rt)->hasGeomInfo())
       {
          p2.intfs.push_back(_network->module(rt)->_geominputs);
       }*/
-      str2 = p2.Save(rv2);
+      //str2 = p2.Save(rv2);
+            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+            nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+                             _network->GetModule( rt )->GetInputData(), std::string( "vecommand" ) ) 
+                           );
+            std::string fileName( "returnString" );
+            VE_XML::XMLReaderWriter netowrkWriter;
+            netowrkWriter.UseStandaloneDOMDocumentManager();
+            netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
     
-      if(rv2) 
+      //if(rv2) 
       {
          //std::cout << _network->module(rt)->_name << "\n" << str2 << std::endl;
          
@@ -696,8 +740,8 @@ void Body_Executive_i::StartCalc (
             {
                if(_mod_units.find( _network->GetModule(rt)->GetModuleName() )!=_mod_units.end())
                {
-                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetParams(str2.c_str());
-                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetID( (long)_network->GetModule( rt )->_inputs._id );
+                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetParams( fileName.c_str() );
+                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetID( (long)_network->GetModule( rt )->get_id() );
                   // This starts a chain reaction which eventually leads to Execute_Thread
                   // which calls executenextmod in this class
                   // by having the thread do that all subsequent modules get executed
@@ -718,10 +762,10 @@ void Body_Executive_i::StartCalc (
             std::cerr << "Initial Execute, cannot contact Module " << module_id << std::endl;
          }
       }
-      else 
-      {
-         std::cerr << "Initial Execute, error packing " << module_id << "'s Inputs" << std::endl;
-      }
+      //else 
+      //{
+      //   std::cerr << "Initial Execute, error packing " << module_id << "'s Inputs" << std::endl;
+      //}
    }
    
    _mutex.release();
@@ -944,6 +988,8 @@ void Body_Executive_i::ClientMessage(const char *msg)
       catch (CORBA::Exception &) 
       {
          std::cout << iter->first <<" is obsolete." << std::endl;
+         // it seems this call should be blocked as we are messing with 
+         // a map that is used everywhere
 		   uis_.erase(iter);
 	   }
    }
