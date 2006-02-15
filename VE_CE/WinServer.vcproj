@@ -206,46 +206,6 @@
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.cpp">
 			</File>
-			<File
-				RelativePath="Network_Exec.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Scheduler.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -261,12 +221,6 @@
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.h">
-			</File>
-			<File
-				RelativePath="Network_Exec.h">
-			</File>
-			<File
-				RelativePath="Scheduler.h">
 			</File>
 		</Filter>
 		<Filter

@@ -367,9 +367,6 @@
 				RelativePath="..\VE_Open\skel\moduleS.cpp">
 			</File>
 			<File
-				RelativePath="..\VE_CE\Network_Exec.cpp">
-			</File>
-			<File
 				RelativePath=".\VE_i.cpp">
 			</File>
 			<File

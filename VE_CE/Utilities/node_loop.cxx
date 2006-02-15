@@ -34,6 +34,7 @@
 #include "VE_CE/Utilities/Network.h"
 #include "VE_CE/Utilities/Module.h"
 #include <iostream>
+#include <algorithm>
 
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +98,7 @@ void node_loop::get_mods(std::set<int> &mods)
 
   for(int i=0; i<(int)_nodes.size(); i++) {
     _nodes[i]->get_mods(temp_mods);
-    set_union(mods.begin(), mods.end(),
+	std::set_union(mods.begin(), mods.end(),
 	      temp_mods.begin(), temp_mods.end(),
 	      inserter(new_mods, new_mods.begin()));
     mods = new_mods;
@@ -118,7 +119,7 @@ void node_loop::get_ins(std::set<int> &ins, std::set<int> connid_ignore)
 
   for(int i=0; i<(int)_nodes.size(); i++) {
     _nodes[i]->get_ins(temp_ins, connid_ignore);
-    set_union(ins.begin(), ins.end(),
+	std::set_union(ins.begin(), ins.end(),
 	      temp_ins.begin(), temp_ins.end(),
 	      inserter(new_ins, new_ins.begin()));
     ins = new_ins;
@@ -126,7 +127,7 @@ void node_loop::get_ins(std::set<int> &ins, std::set<int> connid_ignore)
 
   new_ins.clear();
 
-  set_difference(ins.begin(), ins.end(),
+  std::set_difference(ins.begin(), ins.end(),
 		 mods.begin(), mods.end(),
 		 inserter(new_ins, new_ins.begin()));
   ins = new_ins;
@@ -146,7 +147,7 @@ void node_loop::get_outs(std::set<int> &outs, std::set<int> connid_ignore)
 
   for(int i=0; i<(int)_nodes.size(); i++) {
     _nodes[i]->get_outs(temp_outs, connid_ignore);
-    set_union(outs.begin(), outs.end(),
+	std::set_union(outs.begin(), outs.end(),
 	      temp_outs.begin(), temp_outs.end(),
 	      inserter(new_outs, new_outs.begin()));
     outs = new_outs;
@@ -154,7 +155,7 @@ void node_loop::get_outs(std::set<int> &outs, std::set<int> connid_ignore)
   
   new_outs.clear();
 
-  set_difference(outs.begin(), outs.end(),
+  std::set_difference(outs.begin(), outs.end(),
 		 mods.begin(), mods.end(),
 		 inserter(new_outs, new_outs.begin()));
   outs = new_outs;
@@ -216,7 +217,7 @@ int node_loop::execute_mods(int mod, bool running)
          get_outs(outs, c_ignore);
 
          std::set<int> dif;
-         set_difference(outs.begin(), outs.end(),
+		 std::set_difference(outs.begin(), outs.end(),
 		        mods.begin(), mods.end(),
 		        inserter(dif, dif.begin()));
 

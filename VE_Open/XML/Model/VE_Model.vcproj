@@ -130,6 +130,9 @@
 				RelativePath=".\Model.cxx">
 			</File>
 			<File
+				RelativePath=".\ModelCreator.cxx">
+			</File>
+			<File
 				RelativePath=".\Network.cxx">
 			</File>
 			<File
@@ -151,6 +154,9 @@
 			</File>
 			<File
 				RelativePath=".\Model.h">
+			</File>
+			<File
+				RelativePath=".\ModelCreator.h">
 			</File>
 			<File
 				RelativePath=".\Network.h">
