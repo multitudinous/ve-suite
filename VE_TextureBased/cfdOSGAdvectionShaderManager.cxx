@@ -852,7 +852,7 @@ void cfdOSGAdvectionShaderManager::_initLookUpFunction()
    
    osg::ref_ptr<osg::Texture1D>trans = new osg::Texture1D;
    trans->setDataVariance(osg::Object::DYNAMIC);
-   _lookUpFunction->setTextureSize(256);
+   _lookUpFunction->setTextureWidth(256);
    _lookUpFunction->setFilter(osg::Texture1D::MIN_FILTER,
                     osg::Texture1D::LINEAR);
    _lookUpFunction->setFilter(osg::Texture1D::MAG_FILTER,

@@ -155,7 +155,7 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
    rtts->setPBuffer(_pbuffer);
 
    // set up to charge the same RenderStageLighting is the parent previous stage.
-   rtts->setRenderStageLighting(previous_stage->getRenderStageLighting());
+   rtts->setPositionalStateContainer(previous_stage->getPositionalStateContainer());
 
    // record the render bin, to be restored after creation
    // of the render to text
@@ -187,8 +187,7 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
    // restore the previous renderbin.
    cv.setCurrentRenderBin(previousRenderBin);
 
-   if(rtts->getRenderGraphList().size()==0 && 
-      rtts->getRenderBinList().size()==0)
+   if(rtts->getRenderBinList().size()==0)
    {
       // getting to this point means that all the subgraph has been
       // culled by small feature culling or is beyond LOD ranges.

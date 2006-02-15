@@ -288,7 +288,7 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool useGamma,
    imageField->setDataVariance(osg::Object::DYNAMIC);
 
    osg::ref_ptr<osg::Texture1D> trans = new osg::Texture1D;
-   trans->setTextureSize(256);
+   trans->setTextureWidth(256);
    trans->setDataVariance(osg::Object::DYNAMIC);
    trans->setFilter(osg::Texture1D::MIN_FILTER,
                     osg::Texture1D::LINEAR);
