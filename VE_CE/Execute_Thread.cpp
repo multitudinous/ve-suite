@@ -54,35 +54,43 @@ Execute_Thread::~Execute_Thread ()
 
 int Execute_Thread::svc (void)
 {
-
-  while(true) {
-    while(true) {
-      _mutex.acquire();
-      if(_is_exec) break;
+   while ( true ) 
+   {
+      while ( true ) 
+      {
+         _mutex.acquire();
+         if ( _is_exec ) 
+            break;
       
+         _mutex.release();
+      
+         ACE_OS::sleep(2); 	    
+      }
+    
       _mutex.release();
-      
-      ACE_OS::sleep(2); 	    
-    }
+      try 
+      {
+         _mod->StartCalc();
+      } 
+      catch (CORBA::Exception &) 
+      {
+         cout <<"Module Execution Messed up.\n";
+      }
     
-    _mutex.release();
-    try {
-      _mod->StartCalc();
-    } catch (CORBA::Exception &) {
-      cout <<"Module Execution Messed up.\n";
+      _mutex.acquire();
+      _is_exec = false;
+      _mutex.release();
+    
+      try 
+      {
+         long id = (long)(_mod->GetID());
+         _executive->execute_next_mod( id );
+      }
+      catch (CORBA::Exception &) 
+      {
+         cout <<"Module GetID Messed up.\n";
+      }
    }
-    _mutex.acquire();
-    _is_exec = false;
-    _mutex.release();
-    
-    try {
-      long id = (long)(_mod->GetID());
-      _executive->execute_next_mod (id);
-    }catch (CORBA::Exception &) {
-      cout <<"Module GetID Messed up.\n";
-    }
-  }
-  
 }
 
 int Execute_Thread::lock ()

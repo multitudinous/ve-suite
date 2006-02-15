@@ -531,6 +531,7 @@ void Body_Executive_i::SetNetwork (
    if ( _network->parse( std::string( network ) ) )
    {
       _mutex.release();
+      // Make the new schedule
       if ( !_scheduler->schedule(0) )
       {
          ClientMessage( "Error in Schedule\n" );
@@ -697,6 +698,9 @@ void Body_Executive_i::StartCalc (
                {
                   _mod_units[_network->GetModule( rt )->GetModuleName()]->SetParams(str2.c_str());
                   _mod_units[_network->GetModule( rt )->GetModuleName()]->SetID( (long)_network->GetModule( rt )->_inputs._id );
+                  // This starts a chain reaction which eventually leads to Execute_Thread
+                  // which calls executenextmod in this class
+                  // by having the thread do that all subsequent modules get executed
                   execute( _network->GetModule(rt)->GetModuleName() );
                }
                else
@@ -807,7 +811,7 @@ void Body_Executive_i::RegisterUI (
    {
       //std::cerr << "CORBA exception raised! : " <<ex._name<< std::endl;
       //std::cerr << ex._info<<std::endl;
-      std::cerr<<"Can't call be UI "<<UIName<< std::endl;
+      std::cerr<<"Can't call UI name "<<UIName<< std::endl;
       _mutex.release();
    }
    return;
@@ -825,10 +829,11 @@ void Body_Executive_i::RegisterUnit (
 {
   //_mutex.acquire();
 
-  static long unit_id;
+  //static long unit_id;
   // When this is called, a unit is already binded to the name service, 
   // so this call can get it's reference from the name service
-  std::cerr << "Going to RegisterUnit " << UnitName << std::endl;
+   std::string message =  std::string("Going to RegisterUnit ") + std::string( UnitName ) + std::string("\n" );
+   ClientMessage( message.c_str() );
   //CosNaming::Name name(1);
   //name.length(1);
   //name[0].id = CORBA::string_dup(UnitName);
@@ -837,7 +842,7 @@ void Body_Executive_i::RegisterUnit (
   //std::cerr << "RegisterUnit " << UnitName << std::endl;
 
    _mod_units[std::string(UnitName)] = Body::Unit::_duplicate(unit);
-   _mod_units[std::string(UnitName)]->SetID(unit_id++);
+   //_mod_units[std::string(UnitName)]->SetID(unit_id++);
   
    std::map<std::string, Execute_Thread*>::iterator iter;
    iter = _exec_thread.find( std::string(UnitName) );
@@ -845,21 +850,22 @@ void Body_Executive_i::RegisterUnit (
    if( iter == _exec_thread.end() ) 
    {
       // CLEAN THIS UP IN UNREGISTER UNIT !
-      Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
+      Execute_Thread *ex = new Execute_Thread( _mod_units[std::string(UnitName)], (Body_Executive_i*)this);
       ex->activate();
-
-      _exec_thread[std::string(UnitName)] = ex;
+      _exec_thread[ std::string(UnitName) ] = ex;
    }
    else //replace it with new reference
    {
       ACE_Task_Base::cleanup(iter->second, NULL);
       if (iter->second)
          delete iter->second;
-      Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
+      Execute_Thread *ex = new Execute_Thread( _mod_units[std::string(UnitName)], (Body_Executive_i*)this);
       ex->activate();
-      iter->second=ex;
+      //iter->second=ex;
    }
    //_mutex.release();
+   message = std::string( "Successfully registered " ) + std::string( UnitName ) + std::string("\n" );
+   ClientMessage( message.c_str() );
 }
   
 void Body_Executive_i::UnRegisterUI (
@@ -930,14 +936,14 @@ void Body_Executive_i::ClientMessage(const char *msg)
 	std::map<std::string, Body::UI_var>::iterator iter;
 	for(iter=uis_.begin(); iter!=uis_.end(); iter++) 
 	{
-      std::cout << msg << " :TO: " << iter->first << std::endl;
+      std::cout << msg << " to -> " << iter->first << std::endl;
 	   try 
       {
    	   iter->second->Raise(msg);
 	   }
       catch (CORBA::Exception &) 
       {
-         std::cout <<iter->first<<" is obsolete.\n";
+         std::cout << iter->first <<" is obsolete." << std::endl;
 		   uis_.erase(iter);
 	   }
    }

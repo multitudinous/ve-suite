@@ -365,7 +365,7 @@ std::string Network::Save( std::string fileName )
    }
 
    //  tags
-   /*for ( size_t i = 0; i < veTagVector.size(); ++i )
+   for ( size_t i = 0; i < veTagVector.size(); ++i )
    {
       delete veTagVector.at( i );
    }
@@ -406,5 +406,6 @@ std::string Network::Save( std::string fileName )
 
    return fileName;
 }*/
+   return std::string( "" );
 }
 
