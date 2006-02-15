@@ -416,7 +416,7 @@ void Body_Executive_i::SetModuleMessage (
    //    << "'s Message data << std::endl";
 */
 }
-  
+////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetModuleResult (
     CORBA::Long module_id,
     const char * result
@@ -454,7 +454,7 @@ void Body_Executive_i::SetModuleResult (
   
   _mutex.release();
 }
-
+////////////////////////////////////////////////////////////////////////////  
 char * Body_Executive_i::GetModuleResult (
     CORBA::Long module_id
   )
@@ -509,7 +509,7 @@ char * Body_Executive_i::GetModuleResult (
 
    return CORBA::string_dup("");//str.c_str());//"yang";//0;
 }
-
+////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetNetwork (
     const char * network
     ACE_ENV_ARG_DECL
@@ -520,11 +520,7 @@ void Body_Executive_i::SetNetwork (
   ))
 {
    _mutex.acquire();
-  
-   //Package p;
-   //p.SetSysId("temp.xml");
-   //p.Load(network, strlen(network));
-  
+   //Clear old network and schedule
    _network->clear();
    _scheduler->clear();
   
@@ -532,64 +528,28 @@ void Body_Executive_i::SetNetwork (
    _module_powers.clear();
    _thermal_input.clear();
 
-   //std::vector<Interface>::iterator iter;
-   //for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-   //   if(iter->_id==-1) 
-   //      break;
-
-   // This if statement does not take into account global
-   // data. In this statement the global data that that 
-   // is sent gets stripped out because there is no 
-   // mechanism to handle it yet.
-   //if ( iter!=p.intfs.end() ) 
-   //{
-      if ( _network->parse( std::string( network ) ) )
+   if ( _network->parse( std::string( network ) ) )
+   {
+      _mutex.release();
+      if ( !_scheduler->schedule(0) )
       {
-         //_network_intf = *iter; //_network_intf is the first block of the network xml.
-         //for ( iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-         {
-            //if ( iter->_type == 1 ) // this block is for inputs not geom
-            {
-               //if(iter->_category==1 && iter->_type == 1 &&_network->setInput(iter->_id, &(*iter))) 
-               {
-	               //_network->GetModule( _network->moduleIdx( iter->_id ) )->_is_feedback  = iter->getInt("FEEDBACK");
-                  //_network->GetModule( _network->moduleIdx( iter->_id ) )->_need_execute = 1;
-                  //_network->GetModule( _network->moduleIdx( iter->_id ) )->_return_state = 0;
-                  //_network->GetModule( _network->moduleIdx(iter->_id) )->_type = iter->_type;
-                  //_network->GetModule( _network->moduleIdx(iter->_id) )->_category = iter->_category;
-               }
-               /*else if(iter->_category==1 && iter->_type == 2 &&_network->setGeomInput(iter->_id, &(*iter)))
-               {
-                  std::cout<<"The current module has geom info "<<std::endl;
-               }
-               else
-               {
-                  std::cerr << "Unable to set id# " << iter->_id << "'s inputs" << std::endl;
-               }*/
-            }
-         }
-
-         _mutex.release();
-         if ( !_scheduler->schedule(0) )
-         {
-            ClientMessage( "Error in Schedule\n" );
-            return;
-         }
-         else 
-         {
-            ClientMessage( "Successfully Scheduled Network\n" );
-            _scheduler->print_schedule();
-         }
-      }
-   //} 
-      else 
-      {
-         _mutex.release();
-         ClientMessage( "Error in SetNetwork\n" );
+         ClientMessage( "Error in Schedule\n" );
          return;
       }
+      else 
+      {
+         ClientMessage( "Successfully Scheduled Network\n" );
+         _scheduler->print_schedule();
+      }
+   }
+   else 
+   {
+      _mutex.release();
+      ClientMessage( "Error in SetNetwork\n" );
+      return;
+   }
 }
-  
+////////////////////////////////////////////////////////////////////////////  
 char * Body_Executive_i::GetNetwork ( 
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -598,35 +558,13 @@ char * Body_Executive_i::GetNetwork (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+   _mutex.acquire();
+   std::string xmlNetwork = _network->GetNetworkString();
+   _mutex.release();
   
-  int         i;
-  bool        rv;
-  std::string str;
-  
-  Package p;
-  p.SetSysId("temp.xml");
-  p.intfs.push_back(_network_intf);
- 
-  for(i=0; i<_network->nmodules(); i++)
-  {
-     p.intfs.push_back(_network->GetModule(i)->_inputs);
-
-     /*if(_network->module(i)->hasGeomInfo())
-     {
-         p.intfs.push_back(_network->module(i)->_geominputs);
-     }*/
-  }
-  
-  str = p.Save(rv);
-   
-  _mutex.release();
-  
-  if(rv) return CORBA::string_dup(str.c_str());
-
-  return CORBA::string_dup("");//str.c_str());//"yang";//0;
+   return CORBA::string_dup( xmlNetwork.c_str() );
 }
-
+////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetModuleUI (
     CORBA::Long module_id,
     const char * ui
@@ -995,7 +933,7 @@ void Body_Executive_i::ClientMessage(const char *msg)
       std::cout << msg << " :TO: " << iter->first << std::endl;
 	   try 
       {
-		   iter->second->Raise(msg);
+   	   iter->second->Raise(msg);
 	   }
       catch (CORBA::Exception &) 
       {

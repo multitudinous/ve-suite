@@ -56,6 +56,8 @@ public:
    void clear( void );
    //Pass the string in from corba
    int parse( std::string xmlNetwork );
+   ///Get the present network and pass it to vesuite
+   std::string GetNetworkString( void );
 
    int nmodules();
    void add_module( int, std::string );

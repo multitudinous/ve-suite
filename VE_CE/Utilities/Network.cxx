@@ -48,12 +48,12 @@ using namespace VE_CE::Utilities;
 Network::Network ()
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Network::~Network ()
 {
   clear();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Network::clear()
 {
    for ( size_t i = 0; i < _module_ptrs.size(); ++i ) 
@@ -68,7 +68,7 @@ void Network::clear()
    }
    _connections.clear();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::parse( std::string xmlNetwork )
 {
    // NOTE:This function assumes that the network as been cleared first
@@ -79,7 +79,6 @@ int Network::parse( std::string xmlNetwork )
    networkWriter.ReadFromString();
 
    // do this for models
-std::cout << xmlNetwork << std::endl;
    networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
@@ -152,7 +151,7 @@ std::cout << xmlNetwork << std::endl;
    }
    return 1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::addIPort( int m, int p, Connection* c )
 {
    try
@@ -165,7 +164,7 @@ int Network::addIPort( int m, int p, Connection* c )
       return 0;
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::addOPort (int m, int p, Connection* c)
 {
    try
@@ -178,13 +177,12 @@ int Network::addOPort (int m, int p, Connection* c)
       return 0;
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::nmodules ()
 {
   return _module_ptrs.size();
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::GetModuleIndex( Module* mod )
 {
    for( size_t i = 0; i < _module_ptrs.size(); ++i )
@@ -194,7 +192,7 @@ int Network::GetModuleIndex( Module* mod )
    }
    return -1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Module* Network::GetModule( int idx )
 {
    try
@@ -206,7 +204,7 @@ Module* Network::GetModule( int idx )
       return NULL;   
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::moduleIdx( int id )
 {
    ///This function goes from the veconductor assigned id
@@ -218,7 +216,7 @@ int Network::moduleIdx( int id )
    }
    return -1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Network::add_module( int m, std::string name )
 {
    if( moduleIdx(m) >= 0 ) 
@@ -228,7 +226,7 @@ void Network::add_module( int m, std::string name )
    //mod->_name = name;
    _module_ptrs.push_back( mod );
 }  
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::getInput( int m, Interface& intf )
 {
    try
@@ -241,7 +239,7 @@ int Network::getInput( int m, Interface& intf )
       return 0;
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::setInput( int m, Interface* intf)
 {
    try
@@ -254,7 +252,7 @@ int Network::setInput( int m, Interface* intf)
       return 0;
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::getOutput (int m, Interface &intf)
 {
   int fi = moduleIdx(m);
@@ -262,7 +260,7 @@ int Network::getOutput (int m, Interface &intf)
   intf.copy(_module_ptrs[fi]->_outputs);
   return 1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::setOutput (int m, Interface* intf)
 {
   int fi = moduleIdx(m);
@@ -270,7 +268,7 @@ int Network::setOutput (int m, Interface* intf)
   _module_ptrs[fi]->_outputs.copy(*intf);
   return 1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::getMessage (int m, Interface &intf)
 {
   int fi = moduleIdx(m);
@@ -278,7 +276,7 @@ int Network::getMessage (int m, Interface &intf)
   intf.copy(_module_ptrs[fi]->_messages);
   return 1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::setMessage (int m, Interface* intf)
 {
   int fi = moduleIdx(m);
@@ -286,33 +284,127 @@ int Network::setMessage (int m, Interface* intf)
   _module_ptrs[fi]->_messages.copy(*intf);
   return 1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::getPortData (int m, int p, Interface& intf)
 {
   int fi = moduleIdx(m);
   if(fi<0) return 0;
   return _module_ptrs[fi]->getPortData(p, intf);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::setPortData (int m, int p, Interface* intf)
 {
   int fi = moduleIdx(m);
   if(fi<0) return 0;
   return _module_ptrs[fi]->setPortData(p, intf);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::getPortProfile (int m, int p, Types::Profile_out& prof)
 {
   int fi = moduleIdx(m);
   if(fi<0) return 0;
   return _module_ptrs[fi]->getPortProfile(p, prof);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Network::setPortProfile (int m, int p, const Types::Profile* prof)
 {
   int fi = moduleIdx(m);
   if(fi<0) return 0;
   return _module_ptrs[fi]->setPortProfile(p, prof);
 }
-
 ////////////////////////////////////////////////////////////////////////////////
+std::string Network::GetNetworkString( void )
+{/*
+std::string Network::Save( std::string fileName )
+{
+   // Here we wshould loop over all of the following
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   //  Newtork
+   if ( veNetwork )
+      delete veNetwork;
+   
+   veNetwork = new VE_Model::Network();
+   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veNetwork, "veNetwork" ) );
+
+   veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
+   veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( numPix.first ) );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( numPix.second ) );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+
+   for ( size_t i = 0; i < links.size(); ++i )
+   {
+      VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
+      //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
+      //xmlLink->GetToPort()->SetData( modules[ links[i].GetToModule() ].pl_mod->GetModelName(), links[i].GetToPort() );
+      xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
+      xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
+      *(xmlLink->GetFromPort()) = static_cast< long int >( links[i].GetFromPort() );
+      *(xmlLink->GetToPort()) = static_cast< long int >( links[i].GetToPort() );
+
+      //Try to store link cons,
+      //link cons are (x,y) wxpoint
+      //here I store x in one vector and y in the other
+      for ( size_t j = 0; j < links[ i ].GetNumberOfPoints(); ++j )
+	   {
+         xmlLink->GetLinkPoint( j )->SetPoint( std::pair< unsigned int, unsigned int >( links[ i ].GetPoint( j )->x, links[ i ].GetPoint( j )->y ) );
+      }
+   }
+
+   //  Models
+   std::map< int, Module >::iterator iter;
+   for ( iter=modules.begin(); iter!=modules.end(); ++iter )
+   {
+      modules[ iter->first ].GetPlugin()->SetID( iter->first );
+      nodes.push_back( 
+                  std::pair< VE_XML::XMLObject*, std::string >( 
+                  modules[ iter->first ].GetPlugin()->GetVEModel(), "veModel" ) 
+                     );
+      dynamic_cast< VE_Model::Model* >( nodes.back().first )->SetModelName( modules[ iter->first ].GetClassName() );
+   }
+
+   //  tags
+   /*for ( size_t i = 0; i < veTagVector.size(); ++i )
+   {
+      delete veTagVector.at( i );
+   }
+   veTagVector.clear();
+
+   for ( size_t i = 0; i < tags.size(); ++i )
+   {
+      std::pair< unsigned int, unsigned int > pointCoords;
+
+      veTagVector.push_back( new VE_Model::Tag( doc ) );
+
+      veTagVector.back()->SetTagText( tags.back().text.c_str() );
+
+      pointCoords.first = tags.back().cons[0].x;
+      pointCoords.second = tags.back().cons[0].y;
+      veTagVector.back()->GetTagPoint( 0 )->SetPoint( pointCoords );
+
+      pointCoords.first = tags.back().cons[1].x;
+      pointCoords.second = tags.back().cons[1].y;
+      veTagVector.back()->GetTagPoint( 1 )->SetPoint( pointCoords );
+
+      pointCoords.first = tags.back().box.x;
+      pointCoords.second = tags.back().box.y;
+      veTagVector.back()->GetTagPoint( 2 )->SetPoint( pointCoords );
+   }
+
+   for ( size_t i = 0; i < tags.size(); ++i )
+   {
+      doc->getDocumentElement()->appendChild
+         ( 
+            veTagVector.at( i )->GetXMLData( "veTag" )
+         );
+   }
+
+   VE_XML::XMLReaderWriter netowrkWriter;
+   netowrkWriter.UseStandaloneDOMDocumentManager();
+   netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
+
+   return fileName;
+}*/
+}
+
