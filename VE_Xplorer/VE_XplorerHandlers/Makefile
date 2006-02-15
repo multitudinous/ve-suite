@@ -105,9 +105,11 @@ SRCS=\
    cfdWriteTraverser.cxx \
    cfdObjectHandler.cxx \
    CADEventHandler.cxx \
+   CADDeleteNodeEH.cxx \
    CADAddNodeEH.cxx \
    CADAddAttributeEH.cxx \
    CADSetActiveAttributeEH.cxx \
+   CADSetNameEH.cxx \
    CADTransformEH.cxx 
 
 			

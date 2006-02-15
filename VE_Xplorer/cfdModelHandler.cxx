@@ -61,8 +61,10 @@
 #include "VE_Xplorer/EventHandler.h"
 #include "VE_Xplorer/CADTransformEH.h"
 #include "VE_Xplorer/CADAddNodeEH.h"
+#include "VE_Xplorer/CADDeleteNodeEH.h"
 #include "VE_Xplorer/CADAddAttributeEH.h"
 #include "VE_Xplorer/CADSetActiveAttributeEH.h"
+#include "VE_Xplorer/CADSetNameEH.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -110,16 +112,12 @@ cfdModelHandler::cfdModelHandler( void )
    this->_activeModel   = 0;
    tbased = false;
    _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
-   //_eventHandlers[std::string("CAD_TRANSFORM_UPDATE")]->SetGlobalBaseObject(this);
    
    _eventHandlers[std::string("CAD_ADD_NODE")] = new VE_EVENTS::CADAddNodeEventHandler();
-   //_eventHandlers[std::string("CAD_ADD_NODE")]->SetGlobalBaseObject(this);
-
+   _eventHandlers[std::string("CAD_DELETE_NODE")] = new VE_EVENTS::CADDeleteNodeEventHandler();
    _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")] = new VE_EVENTS::CADAddAttributeEventHandler();
-   //_eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")]->SetGlobalBaseObject(this);
-
    _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
-   //_eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")]->SetGlobalBaseObject(this);
+   _eventHandlers[std::string("CAD_SET_NODE_NAME")] = new VE_EVENTS::CADSetNameEventHandler();
 #ifdef _OSG
 #ifdef VE_PATENTED
    _activeTDSet = 0;

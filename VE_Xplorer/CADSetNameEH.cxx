@@ -29,29 +29,28 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/CADAddAttributeEH.h"
+#include "VE_Xplorer/CADSetNameEH.h"
 #include "VE_Xplorer/cfdModel.h"
-#include "VE_SceneGraph/Utilities/Attribute.h"
+#include "VE_Xplorer/cfdFILE.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdClone.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAttribute.h"
 #include <iostream>
-
-using namespace VE_SceneGraph::Utilities;
 using namespace VE_EVENTS;
 using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
-CADAddAttributeEventHandler::CADAddAttributeEventHandler()
+CADSetNameEventHandler::CADSetNameEventHandler()
 :VE_EVENTS::CADEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-CADAddAttributeEventHandler::CADAddAttributeEventHandler(const CADAddAttributeEventHandler& rhs)
+CADSetNameEventHandler::CADSetNameEventHandler(const CADSetNameEventHandler& rhs)
 :VE_EVENTS::CADEventHandler(rhs)
 {
    
@@ -59,12 +58,12 @@ CADAddAttributeEventHandler::CADAddAttributeEventHandler(const CADAddAttributeEv
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
-CADAddAttributeEventHandler::~CADAddAttributeEventHandler()
+CADSetNameEventHandler::~CADSetNameEventHandler()
 {
 }
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADAddAttributeEventHandler& CADAddAttributeEventHandler::operator=(const CADAddAttributeEventHandler& rhs)
+CADSetNameEventHandler& CADSetNameEventHandler::operator=(const CADSetNameEventHandler& rhs)
 {
    if(this != &rhs)
    {
@@ -73,25 +72,34 @@ CADAddAttributeEventHandler& CADAddAttributeEventHandler::operator=(const CADAdd
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADAddAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 {
    try
    {
-      std::cout<<"---Adding attribute to node---"<<std::endl;
-      std::cout<<"CADAddAttributeEventHandler."<<std::endl;
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
+      VE_XML::DataValuePair* newName = command->GetDataValuePair("Node Name");
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePair* newAttribute = command->GetDataValuePair("Attribute");
-      VE_CAD::CADAttribute* rawAttribute = dynamic_cast<VE_CAD::CADAttribute*>(newAttribute->GetDataXMLObject());
+      VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
 
       VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
-      std::cout<<"Node:"<<nodeID->GetUIntData()<<std::endl;
-      std::cout<<"Attribute:"<<rawAttribute->GetAttributeName()<<std::endl;
-      activeModel->AddAttributeToNode(nodeID->GetUIntData(),rawAttribute);
+
+      //This assumes the part/assembly isn't there already
+      if(nodeType->GetDataString() == std::string("Assembly"))
+      {
+         activeModel->GetAssembly(nodeID->GetUIntData())->SetName(newName->GetDataString());
+      }
+      else if(nodeType->GetDataString() == std::string("Part"))
+      {
+         activeModel->GetPart(nodeID->GetUIntData())->GetNode()->SetName(newName->GetDataString());
+      }
+      else if(nodeType->GetDataString() == std::string("Clone"))
+      {
+         activeModel->GetClone(nodeID->GetUIntData())->SetName(newName->GetDataString());
+      }
    }
    catch(...)
    {
-      std::cout<<"Couldn't add attribute to node!!!"<<std::endl;
-      std::cout<<"CADAddAttributeEventHandler."<<std::endl;
+      std::cout<<"Error!!"<<std::endl;
+      std::cout<<"---Invalid node specified to remove!---"<<std::endl;
    }
 }
