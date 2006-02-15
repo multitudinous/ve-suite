@@ -55,7 +55,12 @@ public:
    virtual ~CADAssembly();
 
    ///Add a child to this assembly
-   void AddChild(VE_CAD::CADNode node);
+   ///\param node The node to add to the assembly
+   //void AddChild(VE_CAD::CADNode node);
+
+   ///Add a child to this assembly
+   ///\param node The node to add to the assembly
+   void AddChild(VE_CAD::CADNode* node);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
@@ -74,11 +79,11 @@ public:
    unsigned int GetNumberOfChildren();
 
    ///Get a specified child of this assembly
-   VE_CAD::CADNode& GetChild(unsigned int whichChild);
+   VE_CAD::CADNode* GetChild(unsigned int whichChild);
 
    ///Get a child by a name
    ///\param name The of the child name to search for.
-   VE_CAD::CADNode& GetChild(std::string name);
+   VE_CAD::CADNode* GetChild(std::string name);
    
    ///Copy constructor
    CADAssembly(const CADAssembly& rhs);
@@ -98,7 +103,7 @@ protected:
    unsigned int _numChildren; ///<number of children in this assembly
    ///\typedef ChildList
    /// A vector of VE_CAD::CADNode s
-   typedef std::vector<VE_CAD::CADNode> ChildList; 
+   typedef std::vector<VE_CAD::CADNode*> ChildList; 
    ChildList _children; ///<A list of the children
 };
 }

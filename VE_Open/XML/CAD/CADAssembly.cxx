@@ -70,12 +70,37 @@ CADAssembly::~CADAssembly()
    _numChildren = 0;
 }
 /////////////////////////////////////////////////
-void CADAssembly::AddChild(VE_CAD::CADNode node)
+void CADAssembly::AddChild(VE_CAD::CADNode* node)
 {
    _children.push_back(node);
-   node.SetParent(_uID);
+   _children.back()->SetParent(_uID);
+   /*if(node->GetNodeType() == "Assembly")
+   {
+      CADAssembly temp(*dynamic_cast<CADAssembly*>(node));
+      temp.SetParent(_uID);
+      _children.push_back(temp);
+   }
+   else if(node->GetNodeType() == "Part")
+   {
+      CADPart temp(*dynamic_cast<CADPart*>(node));
+      temp.SetParent(_uID);
+      _children.push_back(temp);
+   }
+   else if(node->GetNodeType() == "Clone")
+   {
+      CADClone temp(*dynamic_cast<CADClone*>(node));
+      temp.SetParent(_uID);
+      _children.push_back(temp);
+   }*/
    _numChildren = static_cast< unsigned int >(_children.size());
 }
+/////////////////////////////////////////////////
+/*void CADAssembly::AddChild(VE_CAD::CADNode node)
+{
+   _children.push_back(node);
+   _children.back().SetParent(_uID);
+   _numChildren = static_cast< unsigned int >(_children.size());
+}*/
 ////////////////////////////////////////////////////
 bool CADAssembly::RemoveChild(VE_CAD::CADNode node)
 {
@@ -107,12 +132,12 @@ bool CADAssembly::RemoveChild(VE_CAD::CADNode node)
 //////////////////////////////////////////////////////
 bool CADAssembly::RemoveChild(unsigned int whichChildID) 
 {
-   std::vector<CADNode>::iterator childToRemove;
+   std::vector<CADNode*>::iterator childToRemove;
    for(childToRemove = _children.begin();
        childToRemove != _children.end();
        childToRemove++)
    {
-      CADNode* childNode = &(*childToRemove);
+      CADNode* childNode = (*childToRemove);
       if(whichChildID  == childNode->GetID())
       {
          _children.erase(childToRemove);
@@ -128,18 +153,18 @@ unsigned int CADAssembly::GetNumberOfChildren()
    return _numChildren; 
 }
 /////////////////////////////////////////////////////////
-VE_CAD::CADNode& CADAssembly::GetChild(std::string name)
+VE_CAD::CADNode* CADAssembly::GetChild(std::string name)
 {
    for(size_t i = 0; i < _numChildren; i++)
    {
-      if(_children.at(i).GetNodeName() == name)
+      if(_children.at(i)->GetNodeName() == name)
       {
          return _children.at(i);
       }
    }
 }
 ///////////////////////////////////////////////////////////////
-VE_CAD::CADNode& CADAssembly::GetChild(unsigned int whichChild)
+VE_CAD::CADNode* CADAssembly::GetChild(unsigned int whichChild)
 {
    return _children.at(whichChild);
 }
@@ -158,9 +183,9 @@ void CADAssembly::_updateChildren()
 
    //add the children nodes to the list
    for(unsigned int i = 0; i < _numChildren;  i++){
-      _children.at(i).SetOwnerDocument(_rootDocument);
-      _children.at(i).SetParent(_uID);
-      childList->appendChild( _children.at( i ).GetXMLData("child") );
+      _children.at(i)->SetOwnerDocument(_rootDocument);
+      _children.at(i)->SetParent(_uID);
+      childList->appendChild( _children.at( i )->GetXMLData("child") );
    }
    _veElement->appendChild(childList);
 }
@@ -218,24 +243,24 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
                if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
                {
                   //this is an Assembly
-                  //VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly();
-                  VE_CAD::CADAssembly newAssembly;// = new VE_CAD::CADAssembly();
-                  newAssembly.SetObjectFromXMLData(cadNode);
-                  newAssembly.SetParent(_uID);
+                  VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly();
+                  //VE_CAD::CADAssembly newAssembly;// = new VE_CAD::CADAssembly();
+                  newAssembly->SetObjectFromXMLData(cadNode);
+                  newAssembly->SetParent(_uID);
                   _children.push_back(newAssembly);
                }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
                   //this is a Part
-                  //VE_CAD::CADPart* newPart = new VE_CAD::CADPart();
-                  VE_CAD::CADPart newPart;// = new VE_CAD::CADPart();
-                  newPart.SetObjectFromXMLData(cadNode);
-                  newPart.SetParent(_uID);
+                  VE_CAD::CADPart* newPart = new VE_CAD::CADPart();
+                  //VE_CAD::CADPart newPart;// = new VE_CAD::CADPart();
+                  newPart->SetObjectFromXMLData(cadNode);
+                  newPart->SetParent(_uID);
                   _children.push_back(newPart);
                }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Clone")){
                   //this is a Clone
-                  //VE_CAD::CADClone* newClone = new VE_CAD::CADClone();
-                  VE_CAD::CADClone newClone;// = new VE_CAD::CADClone();
-                  newClone.SetObjectFromXMLData(cadNode);
-                  newClone.SetParent(_uID);
+                  VE_CAD::CADClone* newClone = new VE_CAD::CADClone();
+                  //VE_CAD::CADClone newClone;// = new VE_CAD::CADClone();
+                  newClone->SetObjectFromXMLData(cadNode);
+                  newClone->SetParent(_uID);
                   _children.push_back(newClone);
                }else{
                   std::cout<<"ERROR!"<<std::endl;

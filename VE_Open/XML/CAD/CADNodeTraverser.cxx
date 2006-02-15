@@ -116,15 +116,10 @@ void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,void* currentParent)
          //recurse the children of this node
          for(unsigned int i = 0; i < nChildren; i++)
          {
-            _traverseNode(&(assembly->GetChild(i)),assembly);
+            _traverseNode(assembly->GetChild(i),assembly);
          }
       }
    }
-   /*else if(cNode->GetNodeType() == std::string("Clone"))
-   {
-      VE_CAD::CADClone* clone = dynamic_cast<VE_CAD::CADClone*>(cNode);
-      _traverseNode(clone->GetOriginalNode(),cNode);
-   }*/
    //the post-callback
    if(_postFunc){
       _postFunc->Apply(this,cNode,currentParent);

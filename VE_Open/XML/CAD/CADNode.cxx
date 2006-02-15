@@ -340,10 +340,6 @@ CADNode::CADNode(const CADNode& rhs)
 
    if(_attributeList.size())
    {
-      /*for(size_t i = _attributeList.size() -1; i >= 0; i--)
-      {
-         delete _attributeList.at(i);
-      }*/
       _attributeList.clear();
    }
 
@@ -366,10 +362,6 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       XMLObject::operator =(rhs);
       if(_attributeList.size())
       {
-         /*for(size_t i = _attributeList.size() -1; i >= 0; i--)
-         {
-            delete _attributeList.at(i);
-         }*/
          _attributeList.clear();
       }
 
