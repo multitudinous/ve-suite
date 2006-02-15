@@ -113,15 +113,15 @@ namespace GUI_Utilities
       public:
          ///Constructor
          ///\param node The holder of the node data.
-         TreeNodeData(VE_CAD::CADNode node):_cadNode(node){}
+         TreeNodeData(VE_CAD::CADNode* node);
 
          ///Destructor
-         virtual ~TreeNodeData(){}
+         virtual ~TreeNodeData();
             
          ///Get the CADNode.
-         VE_CAD::CADNode& GetNode(){return _cadNode;}
+         VE_CAD::CADNode* GetNode(){return _cadNode;}
       protected:
-         VE_CAD::CADNode _cadNode;///<The pointer to the CADNode this tree item represents.
+         VE_CAD::CADNode* _cadNode;///<The pointer to the CADNode this tree item represents.
       };
 
       ///\param Pop the current parent.
