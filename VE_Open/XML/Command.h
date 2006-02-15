@@ -41,6 +41,7 @@
  */
 #include <string>
 #include <vector>
+#include <map>
 
 #include "VE_Open/XML/XMLObject.h"
 
@@ -109,6 +110,7 @@ protected:
    unsigned int _nDataValuePairs;///<The number of DataValuePair s in this command.
    std::string _cmdName;///<The name of this command.
    std::vector< VE_XML::DataValuePair* > _dataValuePairs;///<The list of DataValuePair s in this command.  
+   std::map< std::string, VE_XML::DataValuePair* > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
 };
 }
 #endif// _XML_VE_COMMAND_H_

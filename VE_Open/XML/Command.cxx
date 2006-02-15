@@ -48,17 +48,12 @@ Command::Command()
 ///////////////////////
 Command::~Command()
 {
-   if(_nDataValuePairs)
+   for ( size_t i = 0; i < _dataValuePairs.size(); ++i )
    {
-      //for( int i = 0; i < _nDataValuePairs; i++)
-      int i  = _nDataValuePairs -1;
-      while(i >=0)
-      {
-         delete _dataValuePairs.at(i);
-         i--;
-      }
-      _dataValuePairs.clear();
+      delete _dataValuePairs.at(i);
    }
+   _dataValuePairs.clear();
+   nameToDataValuePairMap.clear();
 }
 ///////////////////////////////////////////
 Command::Command( const Command& input )
@@ -69,6 +64,7 @@ Command::Command( const Command& input )
    for ( unsigned int i = 0; i < input._nDataValuePairs; ++i )
    {
       _dataValuePairs.push_back( new DataValuePair( (*(input._dataValuePairs.at(i))) ) );
+      nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = _dataValuePairs.back();
    }
 }
 /////////////////////////////////////////////////////
@@ -88,11 +84,13 @@ Command& Command::operator=( const Command& input)
          i--;
       }
       _dataValuePairs.clear();
+      nameToDataValuePairMap.clear();
 
       _nDataValuePairs = input._nDataValuePairs;
       for ( unsigned int i = 0; i < input._nDataValuePairs; ++i )
       {
          _dataValuePairs.push_back( new DataValuePair( (*(input._dataValuePairs.at(i))) ) );
+         nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = _dataValuePairs.back();
       }
    }
    return *this;
@@ -102,6 +100,7 @@ void Command::AddDataValuePair(VE_XML::DataValuePair* commandValuePair)
 {
    _dataValuePairs.push_back(commandValuePair);
    _nDataValuePairs = static_cast< unsigned int >( _dataValuePairs.size() );
+   nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
 }
 /////////////////////////////////
 void Command::_updateVEElement( std::string input )
@@ -178,6 +177,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
                delete _dataValuePairs.at(i);
             }
             _dataValuePairs.clear();
+            nameToDataValuePairMap.clear();
          }
          //read in new data value pairs
          for(unsigned int i = 0; i < nDVPairsIn; i++)
@@ -188,6 +188,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
                VE_XML::DataValuePair* veDvp = new VE_XML::DataValuePair();
                veDvp->SetObjectFromXMLData(dvPairIn);
                _dataValuePairs.push_back(veDvp);
+               nameToDataValuePairMap[ veDvp->GetDataName() ] = veDvp;
             }
          }
       }
@@ -213,27 +214,28 @@ void Command::SetCommandName( std::string name )
 //////////////////////////////////////////////////////////////////////////////
 VE_XML::DataValuePair* Command::GetDataValuePair(std::string dataValueName)
 {
-   for(unsigned int i = 0; i < _nDataValuePairs; i++)
+   std::map< std::string, VE_XML::DataValuePair* >::iterator iter;
+   iter = nameToDataValuePairMap.find( dataValueName );
+   if ( iter != nameToDataValuePairMap.end() )
    {
-      if(dataValueName == _dataValuePairs.at(i)->GetDataName())
-      {
-         return _dataValuePairs.at(i);
-      }
+      return iter->second;
    }
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////
 VE_XML::DataValuePair* Command::GetDataValuePair(unsigned int index)
 {
-   if(_nDataValuePairs)
+   try
    {
-      if(_dataValuePairs.at(index))
-      {
-         return _dataValuePairs.at(index);
-      }
+      return _dataValuePairs.at(index);
    }
-   std::cout<<"Invalid index: "<< index<<" specified for Command::GetDataValuePair()"<<std::endl;
-   return 0;
+   catch ( ... )
+   {
+      std::cout << " Invalid index = "
+                  << index << " specified for Command::GetDataValuePair()"
+                  << std::endl;
+      return 0;
+   }
 }
 ///////////////////////////////////////////////////
 unsigned int Command::GetNumberOfDataValuePairs()
