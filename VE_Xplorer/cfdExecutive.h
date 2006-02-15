@@ -58,7 +58,13 @@ namespace VE_Xplorer
    class cfdThread;
 }
 
+namespace VE_CE
+{
+namespace Utilities
+{
 class Network;
+}
+}
 
 namespace Body { class Executive; }
 namespace CosNaming { class NamingContext; }
@@ -133,7 +139,7 @@ class cfdExecutive : public cfdGlobalBase
       cfdVEAvail_Modules* av_modules; 
 
       // Network class to decode network string
-      Network* _network;
+      VE_CE::Utilities::Network* _network;
    private:
       
       std::string _activeScalarName;

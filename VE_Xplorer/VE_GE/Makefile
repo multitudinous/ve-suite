@@ -85,7 +85,6 @@ SRCS=\
    cfdVjObsWrapper.cxx \
    moduleC.cpp \
    moduleS.cpp \
-   Network_Exec.cpp \
    VE_i.cpp \
    VjObs_i.cxx \
    VjObsS.cpp \
@@ -106,6 +105,7 @@ EXTRA_LIBS+= -lVE_ConductorLib
 EXTRA_LIBS+= -lVE_XMLLib
 EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ModelLib
+EXTRA_LIBS+= -lVE_CE_UtilitiesLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 #include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk

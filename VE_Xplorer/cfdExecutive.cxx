@@ -43,7 +43,7 @@
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdThread.h"
 
-#include "VE_CE/Network_Exec.h"
+#include "VE_CE/Utilities/Network.h"
 
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include <iostream>
@@ -57,6 +57,7 @@
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+using namespace VE_CE::Utilities;
 
 cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
                             PortableServer::POA* child_poa )
@@ -323,45 +324,35 @@ void cfdExecutive::GetNetwork( void )
       }
    }
 
-   if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
+   //if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
    {
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
       {
          
             if( iter->_category ==1 && iter->_type ==1 && _network->setInput(iter->_id, &(*iter))) 
             {
-               _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-               _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-               _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-               _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
+               //_network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+               //_network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+               //_network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+               //_id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
             }  
-            else if (iter->_category ==1 && iter->_type ==2 && _network->setGeomInput(iter->_id, &(*iter)))
-            {
-               std::cout<<"The current network string has geom info "<<std::endl;
-               
-            }
-            else
-            {
-               std::cerr << "|\tUnable to set id# " << iter->_id << "'s inputs" << std::endl;
-
-            }
 
          if ( iter->_id != -1 ) 
          {
             if ( iter->_type == 1 ) // then input data
             {
-               _it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
+               //_it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
             }
             else if ( iter->_type == 2 ) // then geom data
             {
-               _geom_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
+               //_geom_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
             }
          }
       }
    } 
-   else 
+   //else 
    {
-      std::cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << std::endl;
+   //   std::cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << std::endl;
    }
 ///////////////////////////
    /*if ( network )
