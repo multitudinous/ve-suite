@@ -100,6 +100,18 @@ CADNodeMenu::~CADNodeMenu()
   
 }
 //////////////////////////////////////////////////
+void CADNodeMenu::EnableDeleteMenu(bool onOff)
+{
+   if(onOff == true)
+   {
+      Enable(GEOM_DELETE, true);
+   }
+   else
+   {
+      Enable(GEOM_DELETE, false);
+   }
+}
+//////////////////////////////////////////////////
 void CADNodeMenu::EnableGlobalMenus(bool onOff)
 {
    if(onOff == true)

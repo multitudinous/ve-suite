@@ -64,9 +64,13 @@ public:
    virtual ~CADNodeMenu();
 
    ///Turn on the global menus.
-   ///\param onOff Turn on the global menus.
+   ///\param onOff Turn on the delete menus.
    void EnableGlobalMenus(bool onOff);
  
+   ///Turn on the delete menus.
+   ///\param onOff Turn on the global menus.
+   void EnableDeleteMenu(bool onOff);
+
    ///Turn on the Create node menus.
    ///\param onOff Turn on the global menus.
    void EnableCreateMenu(bool onOff);

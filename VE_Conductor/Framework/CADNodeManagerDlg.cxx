@@ -126,6 +126,7 @@ void CADNodeManagerDlg::SetRootCADNode(CADNode* rootNode)
          _rootNode = 0;
       }
 
+      //Change this from a copy after we migrate to getting this pointer from the model
       if(rootNode->GetNodeType() == std::string("Assembly"))
       {
          _rootNode = new CADAssembly(*dynamic_cast<CADAssembly*>(rootNode));
@@ -195,7 +196,6 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
       CADNodeMenu* cadNodeMenu = new CADNodeMenu();
       if(cadNode)
       {
-         //cadNodeMenu->EnableCreateMenu(false);
          if(cadNode->GetNode()->GetNodeType() == std::string("Assembly"))
          {
             cadNodeMenu->EnableGlobalMenus(true);
@@ -216,6 +216,7 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
       if(cadNode->GetNode()->GetID() == _rootNode->GetID())
       {
          cadNodeMenu->EnableCloneMenu(false);
+         cadNodeMenu->EnableDeleteMenu(false);
       }
       PopupMenu(cadNodeMenu);
    }
