@@ -174,6 +174,26 @@ void CADNodeManagerDlg::_editLabel(wxTreeEvent& event)
    {
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
       cadNode->GetNode()->SetNodeName(event.GetLabel().GetData());
+
+      _commandName = std::string("CAD_SET_NODE_NAME");
+
+      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      nodeID->SetDataType("UNSIGNED INT");
+      nodeID->SetDataValue(cadNode->GetNode()->GetID());
+      nodeID->SetDataName(std::string("Node ID"));
+      _dataValuePairList.push_back(nodeID);
+
+      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      nodeType->SetDataType("STRING");
+      nodeType->SetData(std::string("Node Type"),cadNode->GetNode()->GetNodeType());
+      _dataValuePairList.push_back(nodeType);
+
+      VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
+      nodeName->SetDataType("STRING");
+      nodeName->SetData(std::string("Node Name"),cadNode->GetNode()->GetNodeName());
+      _dataValuePairList.push_back(nodeName);
+
+      _sendCommandsToXplorer();
    }
 }
 ///////////////////////////////////////////////////////////
