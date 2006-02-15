@@ -700,7 +700,7 @@ void Body_Executive_i::StartCalc (
    _mutex.acquire();
   
    int rt = _scheduler->execute(0)-1;
-   int module_id = _network->GetModule(rt)->get_id();
+   //int module_id = _network->GetModule(rt)->get_id();
   
    if(rt<0) 
    {
@@ -749,7 +749,8 @@ void Body_Executive_i::StartCalc (
                }
                else
                {
-                  std::cerr << "Initial Execute, cannot contact Module " << _network->GetModule(rt)->GetModuleName() << std::endl;
+                  std::cerr << "Initial Execute, module " << _network->GetModule(rt)->GetModuleName() 
+                              << " is not registered yet" << std::endl;
                }
             }
             else
@@ -759,7 +760,8 @@ void Body_Executive_i::StartCalc (
          }
          catch(CORBA::Exception &) 
          {
-            std::cerr << "Initial Execute, cannot contact Module " << module_id << std::endl;
+            std::cerr << "Initial Execute, cannot contact Module " 
+                        << _network->GetModule(rt)->GetModuleName() << std::endl;
          }
       }
       //else 
