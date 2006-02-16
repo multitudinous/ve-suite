@@ -179,8 +179,8 @@ void Body_UI_i::Raise (
          std::cout << "|\tNotification Message : " << notification << " : Raise called " << std::endl
                      << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
          
-         vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
          {
+            vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
             statusStringBuffer.push_back( std::string( notification ) );
          }
          
