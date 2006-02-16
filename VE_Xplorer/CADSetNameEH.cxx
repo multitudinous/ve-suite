@@ -94,7 +94,7 @@ void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         activeModel->GetClone(nodeID->GetUIntData())->SetName(newName->GetDataString());
+         activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph()->SetName(newName->GetDataString());
       }
    }
    catch(...)
