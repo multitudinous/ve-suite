@@ -240,12 +240,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleC.cpp">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.cpp">
-			</File>
-			<File
 				RelativePath=".\NavigationPane.cxx">
 			</File>
 			<File
@@ -525,12 +519,6 @@
 			</File>
 			<File
 				RelativePath=".\ViewLocPane.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\VjObsC.cpp">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\VjObsS.cpp">
 			</File>
 		</Filter>
 		<Filter

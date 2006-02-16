@@ -71,7 +71,7 @@ namespace GUI_Utilities
          ///Destructor
          virtual ~CADTreeBuilder();
 
-         class TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback{
+         class VE_CONDUCTOR_UTILS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback{
          public:
             ///Constructor
             TreeGraphPreCallback(){;}
@@ -88,7 +88,7 @@ namespace GUI_Utilities
          protected:
       };
 
-      class TreeGraphPostCallback: public CADNodeTraverser::CADNodeTraverseCallback{
+      class VE_CONDUCTOR_UTILS_EXPORTS TreeGraphPostCallback: public CADNodeTraverser::CADNodeTraverseCallback{
          public:
             ///Constructor
             TreeGraphPostCallback(){;}
@@ -108,7 +108,7 @@ namespace GUI_Utilities
       /*!\class VE_CAD::CADTreeBuilder::TreeNodeData
        * Class to pair the CADNode with and item in the tree.
        */
-      class TreeNodeData : public wxTreeItemData
+      class VE_CONDUCTOR_UTILS_EXPORTS TreeNodeData : public wxTreeItemData
       {
       public:
          ///Constructor

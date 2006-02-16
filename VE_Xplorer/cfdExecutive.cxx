@@ -329,7 +329,7 @@ void cfdExecutive::GetNetwork( void )
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
       {
          
-            if( iter->_category ==1 && iter->_type ==1 && _network->setInput(iter->_id, &(*iter))) 
+            //if( iter->_category ==1 && iter->_type ==1 && _network->setInput(iter->_id, &(*iter))) 
             {
                //_network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
                //_network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;

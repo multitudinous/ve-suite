@@ -58,35 +58,31 @@
 		</Configuration>
 		<Configuration
 			Name="tao_dbg|Win32"
-			OutputDirectory="$(ConfigurationName)"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsrvcs&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VE_OPEN_MODULE_LIBRARY"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="3"/>
 			<Tool
-				Name="VCCustomBuildTool"
-				Description="IDL Compiler"
-				CommandLine="echo C++ stubs. . .
-$(ACE_ROOT)/bin/tao_idl.exe -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash
-$(ACE_ROOT)/bin/tao_idl.exe -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash
-echo Done.
-"
-				AdditionalDependencies="module.idl;VjObs.idl"
-				Outputs="moduleC.h;moduleC.cpp;moduleS.cpp;moduleS.h;VjObsC.h;VjObsS.h;VjObsC.cpp;VjObsS.cpp"/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/VESOpen.exe"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib"
+				OutputFile="$(OutDir)/VE_OpenModule_d.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/VESOpen.pdb"
 				SubSystem="2"
@@ -96,7 +92,13 @@ echo Done.
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				Description="IDL Compiler"
+				CommandLine="echo C++ stubs. . .
+$(ACE_ROOT)/bin/tao_idl.exe -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h
+$(ACE_ROOT)/bin/tao_idl.exe -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h
+echo Done.
+"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -120,11 +122,35 @@ echo Done.
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath="..\skel\moduleC.cpp">
+			</File>
+			<File
+				RelativePath="..\skel\moduleS.cpp">
+			</File>
+			<File
+				RelativePath="..\skel\VjObsC.cpp">
+			</File>
+			<File
+				RelativePath="..\skel\VjObsS.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath="..\skel\moduleC.h">
+			</File>
+			<File
+				RelativePath="..\skel\moduleS.h">
+			</File>
+			<File
+				RelativePath="..\skel\VjObsC.h">
+			</File>
+			<File
+				RelativePath="..\skel\VjObsS.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

@@ -200,12 +200,6 @@
 						BrowseInformation="1"/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleC.cpp">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -215,12 +209,6 @@
 			</File>
 			<File
 				RelativePath="Executive_i.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleC.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Open\skel\moduleS.h">
 			</File>
 		</Filter>
 		<Filter

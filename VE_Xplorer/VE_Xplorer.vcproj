@@ -361,22 +361,10 @@
 				RelativePath=".\cfdVjObsWrapper.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_Open\skel\moduleC.cpp">
-			</File>
-			<File
-				RelativePath="..\VE_Open\skel\moduleS.cpp">
-			</File>
-			<File
 				RelativePath=".\VE_i.cpp">
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\impl\VjObs_i.cxx">
-			</File>
-			<File
-				RelativePath="..\VE_Open\skel\VjObsC.cpp">
-			</File>
-			<File
-				RelativePath="..\VE_Open\skel\VjObsS.cpp">
 			</File>
 		</Filter>
 		<Filter

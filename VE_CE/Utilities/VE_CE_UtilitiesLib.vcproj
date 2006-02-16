@@ -156,12 +156,6 @@
 				RelativePath=".\Module.cxx">
 			</File>
 			<File
-				RelativePath="..\..\VE_Open\skel\moduleC.cpp">
-			</File>
-			<File
-				RelativePath="..\..\VE_Open\skel\moduleS.cpp">
-			</File>
-			<File
 				RelativePath=".\Network.cxx">
 			</File>
 			<File
