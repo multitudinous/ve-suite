@@ -83,12 +83,8 @@ SRCS=\
    cfdVEPluginLoader.cxx \
    cfdVEXplorer.cxx \
    cfdVjObsWrapper.cxx \
-   moduleC.cpp \
-   moduleS.cpp \
    VE_i.cpp \
-   VjObs_i.cxx \
-   VjObsS.cpp \
-   VjObsC.cpp
+   VjObs_i.cxx 
 			
 ifeq ($(WEB_BUILD), TRUE)
    include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.corona.mk
@@ -106,6 +102,7 @@ EXTRA_LIBS+= -lVE_XMLLib
 EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ModelLib
 EXTRA_LIBS+= -lVE_CE_UtilitiesLib
+EXTRA_LIBS+= -lVE_OpenModuleLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 #include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk

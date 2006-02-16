@@ -20,15 +20,11 @@ SRCS=\
    CADNodeMenu.cxx \
    CADNodePropsDlg.cxx \
    Frame.cpp \
-   moduleC.cpp \
-   moduleS.cpp \
    Network.cpp \
    NavigationPane.cxx \
    OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
-   VjObsC.cpp \
-   VjObsS.cpp \
    UI_AdvectionPanel.cxx \
    UI_i.cpp \
    UI_Frame.cpp \
@@ -81,6 +77,7 @@ EXTRA_LIBS+= -lVE_ModelLib
 EXTRA_LIBS+= -lVE_CADLib 
 EXTRA_LIBS+= -lVE_ShaderLib 
 EXTRA_LIBS+= -lVE_Conductor_UtilitiesLib
+EXTRA_LIBS+= -lVE_OpenModuleLib
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers

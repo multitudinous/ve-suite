@@ -11,11 +11,9 @@ all:
 	$(MAKE) $(APP_NAME)
 
 SRCS=\
-   moduleC.cpp \
-   moduleS.cpp \
    Exe_server.cpp \
    Executive_i.cpp \
-	Execute_Thread.cpp
+   Execute_Thread.cpp
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
@@ -53,6 +51,7 @@ EXTRA_LIBS+= -lVE_ModelLib
 EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ShaderLib
 EXTRA_LIBS+= -lVE_CE_UtilitiesLib
+EXTRA_LIBS+= -lVE_OpenModuleLib
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
