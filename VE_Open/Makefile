@@ -49,4 +49,4 @@ cxx_idl: $(IDL_CXX_FILES)
 	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
 
 # in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
-CLEAN_FILES+= $(CXX_GEN_DIR)/* 
+CLEAN_FILES+= $(CXX_GEN_DIR)/*.cpp $(CXX_GEN_DIR)/*.h $(CXX_GEN_DIR)/*.inl
