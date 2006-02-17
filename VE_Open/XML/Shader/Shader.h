@@ -37,6 +37,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <vector>
+#include <map>
 
 /*!\file Shader.h
   Shader API 
@@ -132,7 +133,7 @@ protected:
 
    std::string _shaderType;///<The type of shader represented.
    std::string _shaderSource;///<The raw shader source.
-   std::vector<TextureImage> _textureImages;///<The list of texture images.
+   std::map<unsigned int, TextureImage> _textureImages;///<The list of texture images.
    std::vector<Uniform> _uniformList;///<The list of uniforms.
 
 };

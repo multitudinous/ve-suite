@@ -127,7 +127,6 @@ protected:
    std::string _name;///<The name.
    std::vector<float> _values;///<The value of the uniform
    unsigned int _textureUnit;///<Optional texture unit if the data is a sampler.
-   
 };
 }
 #endif //_VE_UNIFORM_H_

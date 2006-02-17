@@ -36,6 +36,7 @@
 #include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
+#include <map>
 
 /*!\file TextureImage.h
   Texture Image 
@@ -54,11 +55,30 @@ public:
    ///Copy constructor
    TextureImage(const TextureImage& rhs);
 
+   ///Set the type of texture
+   ///\param type The type of texture.
+   ///Valid types are:
+   ///1D == one dimensional texture data
+   ///2D == two dimensional texture data
+   ///3D == three dimensional texture data
+   ///Cube == Cube map texture data
+   ///Environment == Environment map texture data
+   void SetTextureImageType(std::string type);
+
    ///Set the dimensions of the data stored in here.
    void SetDimension(unsigned int dimension);
 
    ///Set the image file representing the texture data.
-   void SetImageFile(std::string imageFileName);
+   ///\param face The face this image  applies to.
+   ///\param imageFileName The name of the file storing the image data
+   ///If type is Cube then the faces apply to which face of the cube:\n
+   ///Positive X == positive x face\n
+   ///Negative X == negative x face\n
+   ///Positive Y == positive y face\n
+   ///Negative Y == negative y face\n
+   ///Positive Z == positive z face\n
+   ///Negative Z == negative z face\n
+   void SetImageFile(std::string imageFileName,std::string face="FRONT");
 
    ///Set the texture unit of this data.
    ///\todo May not be necessary.
@@ -68,11 +88,22 @@ public:
    ///\todo May not be necessary.
    unsigned int GetTextureUnit();
 
+   ///The texture type.
+   std::string GetType();
+
    ///Get the dimension of the texture data.
    unsigned int GetDimension();
 
    ///Get the name and location of image file that this data represents.
-   std::string GetImageFile();
+   ///\param face The face.\n The default is the FRONT.\n
+   ///If type is Cube then the faces apply to which face of the cube:\n
+   ///Positive X == positive x face\n
+   ///Negative X == negative x face\n
+   ///Positive Y == positive y face\n
+   ///Negative Y == negative y face\n
+   ///Positive Z == positive z face\n
+   ///Negative Z == negative z face\n
+   std::string GetImageFile(std::string face="FRONT");
    
    ///Set the object from input XML data
    ///\param xmlInput The input xml data.
@@ -87,12 +118,18 @@ protected:
 
    ///Internally update the texture unit.
    void _updateTextureUnit();
+
+   ///Internally update the texture type .
+   void _updateTextureDataType();
+
    ///Internally update the image file.
    void _updateImageFileName();
+
    ///Internally update the data dimensions.
    void _updateDataDimension();
 
-   std::string _imageFile;///<The image file to create texture data from.
+   std::map<std::string,std::string> _imageFiles;///<The image file to create texture data from.
+   std::string _textureType;///<The data type represented by the image file.
    unsigned int _textureUnit;///<This may not be needed but will store a texture unit for use in GL apps.
    unsigned int _dimension;///<The dimension of this texture data.
 };

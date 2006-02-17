@@ -78,10 +78,11 @@ Shader::Shader(const Shader& rhs)
       _uniformList.push_back(rhs._uniformList.at(i));
    }
 
-   for(size_t i = 0; i < rhs._textureImages.size(); i++)
-   {
-      _textureImages.push_back(rhs._textureImages.at(i));
-   }
+   //for(size_t i = 0; i < rhs._textureImages.size(); i++)
+   //{
+      //is this correct for a map?
+      _textureImages = rhs._textureImages;
+   //}
    _shaderType = rhs._shaderType;
    _shaderSource = rhs._shaderSource;
 }
@@ -142,7 +143,8 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
                {
                   TextureImage newTexture;
                   newTexture.SetObjectFromXMLData(textureList->item(i));
-                  _textureImages.push_back(newTexture);
+                  _textureImages.insert(std::pair<unsigned int,TextureImage>(newTexture.GetTextureUnit(),newTexture));
+                  //_textureImages.push_back(newTexture);
                }
             }
          }
@@ -157,7 +159,12 @@ void Shader::AddUniform(Uniform newUniform)
 ///////////////////////////////////////////////////////////
 void Shader::AddTextureImage(TextureImage newTextureImage)
 {
-   _textureImages.push_back(newTextureImage);
+   /*std::pair<unsigned int, TextureImage> newTextureData;
+   newTextureData->first = newTextureImage.GetTextureUnit();
+   newTextureData->second = newTextureImage;
+   */
+   _textureImages.insert(std::pair<unsigned int,TextureImage>(newTextureImage.GetTextureUnit(),newTextureImage));
+   //_textureImages[newTextureImage.GetTextureUnit()] = newTextureData;
 }
 //////////////////////////////////////////////////
 void Shader::SetShaderType(std::string fragOrVert)
@@ -182,7 +189,15 @@ std::string Shader::GetShaderType()
 ////////////////////////////////////////////////////////////////
 TextureImage& Shader::GetTextureImage(unsigned int textureUnit)
 {
-   return _textureImages.at(textureUnit);
+   try
+   {
+      return _textureImages[textureUnit];
+   }
+   catch(...)
+   {
+      std::cout<<"Texture Unit: "<<textureUnit<<" doesn't exist!"<<std::endl;
+      std::cout<<"Shader::GetTextureImage() "<<std::endl;
+   }
 }
 ////////////////////////////////////////////////////
 Uniform& Shader::GetUniform(std::string uniformName)
@@ -220,10 +235,14 @@ void Shader::_updateVEElement(std::string input)
 void Shader::_updateTextureImages()
 {
    //add the children nodes to the list
-   for(size_t i = 0; i < _textureImages.size(); i++)
+   std::map<unsigned int, TextureImage>::iterator textures;
+   //for(size_t i = 0; i < _textureImages.size(); i++)
+   for(textures = _textureImages.begin();
+       textures != _textureImages.end();
+       textures++)
    {
-      _textureImages.at(i).SetOwnerDocument(_rootDocument);
-      _veElement->appendChild(_textureImages.at(i).GetXMLData("texture"));
+      textures->second.SetOwnerDocument(_rootDocument);
+      _veElement->appendChild(textures->second.GetXMLData("texture"));
    }
 }
 //////////////////////////////
@@ -286,10 +305,11 @@ Shader& Shader::operator=(const Shader& rhs)
       }*/
       _textureImages.clear();
 
-      for(size_t i = 0; i < rhs._textureImages.size(); i++)
-      {
-         _textureImages.push_back(rhs._textureImages.at(i));
-      }
+      //for(size_t i = 0; i < rhs._textureImages.size(); i++)
+      //{
+        //is this correct for maps?
+         _textureImages = rhs._textureImages;
+      //}
       _shaderType = rhs._shaderType;
       _shaderSource = rhs._shaderSource;
    }

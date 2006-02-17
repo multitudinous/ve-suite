@@ -40,7 +40,7 @@ using namespace VE_XML;
 TextureImage::TextureImage()
 :VE_XML::XMLObject()
 {
-   _imageFile = std::string("");
+   _textureType = "2D";
    _textureUnit = 0;
    _dimension = 2;
    SetObjectType("TextureImage");
@@ -56,13 +56,15 @@ TextureImage::TextureImage()
 /////////////////////////////
 TextureImage::~TextureImage()
 {
-   _imageFile.clear();
+   _imageFiles.clear();
+   _textureType.clear();
 }
 ///////////////////////////////////////////////////
 TextureImage::TextureImage(const TextureImage& rhs)
 :VE_XML::XMLObject(rhs)
 {
-   _imageFile = rhs._imageFile;
+   _imageFiles = rhs._imageFiles;
+   _textureType = rhs._textureType;
    _textureUnit = rhs._textureUnit;
    _dimension = rhs._dimension;
 }
@@ -71,10 +73,24 @@ void TextureImage::SetDimension(unsigned int dimension)
 {
    _dimension = dimension;
 }
-//////////////////////////////////////////////////////////
-void TextureImage::SetImageFile(std::string imageFileName)
+///////////////////////////////////////////////////////////////////////////
+void TextureImage::SetImageFile(std::string face,std::string imageFileName)
 {
-   _imageFile = imageFileName;
+   if(face != "FRONT"||
+      face != "Positive X"||
+      face != "Negative X"||
+      face != "Positive Y"||
+      face != "Negative Y"||
+      face != "Positive Z"||
+      face != "Negative Z") 
+   {
+      _imageFiles[face] = imageFileName;
+   }
+   else
+   {
+      std::cout<<"Invalid Face: "<<face<<std::endl;
+      std::cout<<"TextureImage::SetImageFile(): "<<face<<std::endl;
+   } 
 }
 ////////////////////////////////////////////////////
 void TextureImage::SetTextureUnit(unsigned int tUnit)
@@ -91,10 +107,18 @@ unsigned int TextureImage::GetDimension()
 {
    return _dimension;
 }
-////////////////////////////////////////
-std::string TextureImage::GetImageFile()
+/////////////////////////////////////////////////////////
+std::string TextureImage::GetImageFile(std::string face)
 {
-   return _imageFile;
+   try 
+   {
+      return _imageFiles[face];
+   } 
+   catch(...)
+   {
+      std::cout<<"Invalid Face: "<<face<<std::endl;
+      std::cout<<"TextureImage::GetImageFile(): "<<face<<std::endl;
+   }
 }
 //////////////////////////////////////////////////////
 void TextureImage::_updateVEElement(std::string input)
@@ -126,10 +150,20 @@ void TextureImage::_updateTextureUnit()
 //////////////////////////////////////
 void TextureImage::_updateImageFileName()
 {
+   /*This needs to be re-implemented!!
    DOMElement* imageNameElement = _rootDocument->createElement(xercesString("imageFile"));
    DOMText* imageName = _rootDocument->createTextNode(xercesString(_imageFile.c_str()));
    imageNameElement->appendChild(imageName);
    _veElement->appendChild(imageNameElement);
+   */
+}
+///////////////////////////////////////////
+void TextureImage::_updateTextureDataType()
+{
+   DOMElement* dataTypeElement = _rootDocument->createElement(xercesString("textureType"));
+   DOMText* dataType = _rootDocument->createTextNode(xercesString(_textureType.c_str()));
+   dataTypeElement->appendChild(dataType);
+   _veElement->appendChild(dataTypeElement);
 }
 //////////////////////////////////////////////////////////
 void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
@@ -147,17 +181,36 @@ void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
 	 //get the image file  name
          {
             DOMElement* nChildrenElement = GetSubElement(currentElement,std::string("imageFile"),0);
-            _imageFile = ExtractDataStringFromSimpleElement(nChildrenElement);
+            if(nChildrenElement)
+            {
+               /*This needs to be re implemented
+               _imageFile = ExtractDataStringFromSimpleElement(nChildrenElement);
+               */
+            }
+         }
+	 //get the texture data type 
+         {
+            DOMElement* dataType = GetSubElement(currentElement,std::string("textureType"),0);
+            if(dataType)
+            {
+               _textureType = ExtractDataStringFromSimpleElement(dataType);
+            }
          }
 	 //get the texture unit 
          {
             DOMElement* tUnitElement = GetSubElement(currentElement,std::string("textureUnit"),0);
-            _textureUnit = static_cast<int>(ExtractDataNumberFromSimpleElement(tUnitElement));
+            if(tUnitElement)
+            {
+               _textureUnit = static_cast<int>(ExtractDataNumberFromSimpleElement(tUnitElement));
+            }
          }
 	 //get the data dimension 
          {
             DOMElement* dimensionElement = GetSubElement(currentElement,std::string("dimension"),0);
-            _dimension = static_cast<int>(ExtractDataNumberFromSimpleElement(dimensionElement));
+            if(dimensionElement)
+            {
+               _dimension = static_cast<int>(ExtractDataNumberFromSimpleElement(dimensionElement));
+            }
          }
       }
    }
@@ -168,7 +221,8 @@ TextureImage& TextureImage::operator=(const TextureImage& rhs)
    if(this != &rhs)
    {
       XMLObject::operator =(rhs);
-      _imageFile = rhs._imageFile;
+      _imageFiles = rhs._imageFiles;
+      _textureType = rhs._textureType;
       _textureUnit = rhs._textureUnit;
       _dimension = rhs._dimension;
    }
