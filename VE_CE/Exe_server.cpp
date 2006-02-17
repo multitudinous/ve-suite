@@ -29,6 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+
 #include "VE_Open/skel/moduleC.h"
 #include "VE_CE/Executive_i.h"
 
@@ -39,6 +44,7 @@
 
 //This Exe_server act as the servant of the Executive
 //This Exe_server is also the Unit's client and the UI's client.
+XERCES_CPP_NAMESPACE_USE
 
 int main (int argc, char* argv[])
 { 

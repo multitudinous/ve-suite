@@ -39,6 +39,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 #include <iostream>
 
@@ -86,7 +87,7 @@ char * Body_Executive_i::GetImportData (
    
    IPort *iport = mod->getIPort(mod->iportIdx(port_id));
   
-   bool        rv = false;
+   //bool        rv = false;
    std::string str;
   
    if ( iport && iport->nconnections()) 
@@ -96,32 +97,34 @@ char * Body_Executive_i::GetImportData (
     
       if(oport->have_data()) 
       {
-         Package p;
+         /*Package p;
          p.SetSysId("temp.xml");
          p.intfs.push_back(oport->_data);
       
-         str = p.Save(rv);
+         str = p.Save(rv);*/
+         std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+         nodes.push_back( std::pair< VE_XML::Command*, std::string  >( oport->GetPortData(), std::string( "vecommand" ) ) );
+         std::string fileName( "returnString" );
+         VE_XML::XMLReaderWriter netowrkWriter;
+         netowrkWriter.UseStandaloneDOMDocumentManager();
+         netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+         str = fileName;
       } 
       else 
       {
          std::string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no data\n" ;
-         std::cerr << msg;
          ClientMessage(msg.c_str());
       }
    } 
    else 
    {
       std::string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
-      std::cerr << msg;
       ClientMessage(msg.c_str());
    }
   
    _mutex.release();
   
-   if ( rv ) 
-      return CORBA::string_dup(str.c_str());
-  
-   return CORBA::string_dup("");//str.c_str());//"yang";//0;
+   return CORBA::string_dup(str.c_str());
 }
 
 void Body_Executive_i::execute (std::string mn)
@@ -303,7 +306,7 @@ void Body_Executive_i::GetProfileData (
 /////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute_next_mod( long module_id )
 {
-   char *msg = 0;
+   std::string msg( "" );
 
    try 
    {
@@ -329,17 +332,30 @@ void Body_Executive_i::execute_next_mod( long module_id )
       std::cerr << "Cannot contact Module " << module_id << std::endl;
    }
 
-   Package sm;
-   sm.SetSysId("temp.xml");
-   sm.Load(msg, strlen(msg));
+   //Package sm;
+   //sm.SetSysId("temp.xml");
+   //sm.Load(msg, strlen(msg));
 
-   delete msg;
-  
-   if(sm.intfs.size()!=0) 
+   //delete msg;
+
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+   networkWriter.ReadXMLData( msg, "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+
+   if ( !objectVector.empty() ) 
    {
-      int rs = sm.intfs[0].getInt("RETURN_STATE"); // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
-      if(rs==-1) rs = sm.intfs[0].getInt("return_state");
-         _network->GetModule(_network->moduleIdx(module_id))->_return_state = rs;
+      VE_XML::Command* returnState = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+  
+      long rs;
+      // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
+      returnState->GetDataValuePair( "RETURN_STATE" )->GetData( rs );
+
+      if ( rs == -1 ) 
+         returnState->GetDataValuePair( "return_state" )->GetData( rs );
+    
+      _network->GetModule(_network->moduleIdx(module_id))->_return_state = rs;
     
       if(rs!=1) 
       {
@@ -368,9 +384,9 @@ void Body_Executive_i::execute_next_mod( long module_id )
                               _network->GetModule( rt )->GetInputData(), std::string( "vecommand" ) ) 
                            );
             std::string fileName( "returnString" );
-            VE_XML::XMLReaderWriter netowrkWriter;
-            netowrkWriter.UseStandaloneDOMDocumentManager();
-            netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+            //VE_XML::XMLReaderWriter netowrkWriter;
+            networkWriter.UseStandaloneDOMDocumentManager();
+            networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
 
             //if(rv2) 
             //{
