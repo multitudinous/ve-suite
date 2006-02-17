@@ -8,7 +8,7 @@
                <xs:element name="type" type="xs:string" />
                <xs:element name="size" type="xs:unsignedInt" />
                <xs:element name="name" type="xs:string" />
-               <xs:element name="textureUnit" type="xs:unsignedInt" minOccurs="0" maxOccurs="unbounded" />
+               <xs:element name="textureUnit" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" />
                <xs:element name="value" type="xs:float" minOccurs="0" maxOccurs="4" />
             </xs:sequence>
          </xs:restriction>
@@ -44,6 +44,7 @@
                <xs:element name="imageFile" type="xs:string" />
                <xs:element name="textureUnit" type="xs:unsignedInt" />
                <xs:element name="dimension" type="xs:unsignedInt" />
+               <xs:element name="textureType" type="xs:unsignedInt" />
             </xs:sequence>
          </xs:restriction>
       </xs:complexContent>
