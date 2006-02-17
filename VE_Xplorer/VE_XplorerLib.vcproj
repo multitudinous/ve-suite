@@ -283,10 +283,16 @@
 				RelativePath=".\CADAddNodeEH.cxx">
 			</File>
 			<File
+				RelativePath=".\CADDeleteNodeEH.cxx">
+			</File>
+			<File
 				RelativePath=".\CADEventHandler.cxx">
 			</File>
 			<File
 				RelativePath=".\CADSetActiveAttributeEH.cxx">
+			</File>
+			<File
+				RelativePath=".\CADSetNameEH.cxx">
 			</File>
 			<File
 				RelativePath=".\CADTransformEH.cxx">
@@ -452,10 +458,16 @@
 				RelativePath=".\CADAddNodeEH.h">
 			</File>
 			<File
+				RelativePath=".\CADDeleteNodeEH.h">
+			</File>
+			<File
 				RelativePath=".\CADEventHandler.h">
 			</File>
 			<File
 				RelativePath=".\CADSetActiveAttributeEH.h">
+			</File>
+			<File
+				RelativePath=".\CADSetNameEH.h">
 			</File>
 			<File
 				RelativePath=".\CADTransformEH.h">

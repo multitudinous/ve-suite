@@ -30,12 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_CE/Utilities/OPort.h"
+#include "VE_Open/XML/Command.h"
+
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 OPort::OPort (int id, Module* m)
   : Port (id, m)
 {
   _profile = NULL;
+   data = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OPort::OPort (const OPort& p)
@@ -46,29 +49,46 @@ OPort::OPort (const OPort& p)
 ////////////////////////////////////////////////////////////////////////////////
 OPort::~OPort ()
 {
+   if ( data )
+      delete data;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OPort::copy (const OPort& p)
 {
   if(this==&p) return;
   
-  _data    = p._data;
+  //_data    = p._data;
   if(_profile) delete _profile;
   _profile = new Types::Profile(*(p._profile));
+
+   if ( data )
+      delete data;
+   
+   *data = *(p.data);
 }
 ////////////////////////////////////////////////////////////////////////////////
-int OPort::have_data ()
+int OPort::have_data( void )
 {
-  return((_data.getInts()).size()      !=0 ||
+/*  return((_data.getInts()).size()      !=0 ||
 	 (_data.getDoubles()).size()   !=0 ||
 	 (_data.getStrings()).size()   !=0 ||
 	 (_data.getInts1D()).size()    !=0 ||
 	 (_data.getDoubles1D()).size() !=0 ||
-	 (_data.getStrings1D()).size() !=0 );
+	 (_data.getStrings1D()).size() !=0 );*/
+   return ( data != NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int OPort::have_profile ()
+int OPort::have_profile( void )
 {
-  return(_profile != NULL);
+  return ( _profile != NULL );
 }
-
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::Command* OPort::GetPortData( void )
+{
+   return data;
+}
+////////////////////////////////////////////////////////////////////////////////
+void OPort::SetPortData( VE_XML::Command* inputData )
+{
+   data = inputData;
+}

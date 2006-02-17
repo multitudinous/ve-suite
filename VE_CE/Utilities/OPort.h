@@ -34,8 +34,12 @@
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_CE/Utilities/Port.h"
 #include "VE_Open/skel/moduleS.h"
-#include "VE_Conductor/Framework/interface.h"
+//#include "VE_Conductor/Framework/interface.h"
 ///Output port class
+namespace VE_XML
+{
+   class Command;
+}
 namespace VE_CE
 {
 namespace Utilities
@@ -52,10 +56,15 @@ public:
    int have_data();
    int have_profile();
 
-   Interface      _data;
+   ///Get ouput port data
+   VE_XML::Command* GetPortData( void );
+   ///Set port data for respective port
+   void SetPortData( VE_XML::Command* inputData );
+
+   //Interface      _data;
    Types::Profile *_profile;
 protected:
-
+   VE_XML::Command* data;
 };
 }
 }

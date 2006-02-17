@@ -43,22 +43,22 @@
 using namespace VE_CE::Utilities;
 
 #include "VE_Open/skel/moduleS.h"
-#include "VE_Conductor/Framework/package.h"
+//#include "VE_Conductor/Framework/package.h"
 #include <string>
 #include <vector>
 #include <map>
 #include <orbsvcs/CosNamingC.h>
-
+/*
 #if !defined (ACE_LACKS_PRAGMA_ONCE)
 #pragma once
-#endif /* ACE_LACKS_PRAGMA_ONCE */
-
+#endif *//* ACE_LACKS_PRAGMA_ONCE */
+/*
 typedef struct {
   CORBA::Long module_id;
   std::vector<std::string> data;
   std::string msg;
 } MODULE_DATA;
-
+*/
 //Class Body_Executive_i
 class  Body_Executive_i : public virtual POA_Body::Executive
 {
@@ -73,7 +73,7 @@ public:
  
 protected:
 
-  void execute (std::string);
+  void execute( std::string );
 
   std::map<std::string, Body::Unit_var> _mod_units;
   std::map<std::string, Execute_Thread*> _exec_thread;
@@ -81,8 +81,8 @@ protected:
   CosNaming::NamingContext_var naming_context_;
   std::map<std::string, Body::UI_var> uis_;
 
-  Interface _network_intf;
-  Interface _global_intf;
+  //Interface _network_intf;
+  //Interface _global_intf;
 
   Network*   _network;
   Scheduler* _scheduler;
