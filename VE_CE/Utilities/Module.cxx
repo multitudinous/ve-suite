@@ -77,8 +77,12 @@ Module::~Module ()
    _oports.clear();
 
    delete veModel;   
-   delete inputs;
-   delete results;
+   // We should delete these but can't since model owns the actual memory
+   // and we are abusing the command class. model shoudl really hold the command 
+   // and manage ALL the memory so that we don't have to have command pointers
+   // in this class.
+   //delete inputs;
+   //delete results;
    
    for ( size_t i = 0; i < ports.size(); ++i )
    {
@@ -221,23 +225,28 @@ void Module::addOPort( int p, Connection* c )
 ////////////////////////////////////////////////////////////////////////////////
 int Module::getPortData( int p, VE_XML::Command& intf )
 {
-   int fi = oportIdx( p );
-   if ( fi < 0 ) 
+   try
+   {
+      intf = *(_oports.at( oportIdx(p) )->GetPortData());
+      return 1;
+   }
+   catch ( ... )
+   {
       return 0;
-
-   //intf.copy( _oports[fi]->_data );
-   return 1;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Module::setPortData( int p, VE_XML::Command* intf )
-{
-   int fi = oportIdx(p);
-   
-   if ( fi < 0 ) 
+{   
+   try
+   {
+      _oports.at( oportIdx(p) )->SetPortData( intf );
+      return 1;
+   }
+   catch ( ... )
+   {
       return 0;
-   
-   //_oports[fi]->_data.copy(*intf);
-   return 1;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Module::getPortProfile( int p, Types::Profile_out& prof )
@@ -325,6 +334,7 @@ void Module::SetVEModel( VE_Model::Model* mod )
    results = new VE_XML::Command();
    for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
    {
+
       results->AddDataValuePair( veModel->GetResult( i ) );
    }
 

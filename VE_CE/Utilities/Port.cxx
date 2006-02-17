@@ -47,17 +47,17 @@ Port::Port (const Port& p)
 ////////////////////////////////////////////////////////////////////////////////
 Port::~Port ()
 {
-   for ( size_t i = 0; i < _connections.size(); ++i )
+   /*for ( size_t i = 0; i < _connections.size(); ++i )
    {
       delete _connections.at( i );
    }
-   _connections.clear();
-
+   _connections.clear();*/
+/*
    if ( _module )
    {
       delete _module;
       _module = 0;
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Port::copy (const Port& p)

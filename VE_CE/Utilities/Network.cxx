@@ -159,32 +159,6 @@ int Network::parse( std::string xmlNetwork )
    return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*int Network::addIPort( int m, int p, Connection* c )
-{
-   try
-   {
-      _module_ptrs.at( moduleIdx(m) )->addIPort(p, c);
-      return 1;
-   }
-   catch ( ... )
-   {
-      return 0;
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::addOPort (int m, int p, Connection* c)
-{
-   try
-   {
-      _module_ptrs.at( moduleIdx(m) )->addOPort(p, c);
-      return 1;
-   }
-   catch ( ... )
-   {
-      return 0;
-   }
-}*/
-////////////////////////////////////////////////////////////////////////////////
 int Network::nmodules ()
 {
   return _module_ptrs.size();
@@ -231,92 +205,6 @@ void Network::add_module( int m, std::string name )
 
    _module_ptrs.push_back( new Module() );
 }  
-////////////////////////////////////////////////////////////////////////////////
-/*int Network::getInput( int m, Interface& intf )
-{
-   try
-   {
-      intf.copy( _module_ptrs.at( moduleIdx( m ) )->_inputs );
-      return 1;
-   }
-   catch ( ... )
-   {
-      return 0;
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::setInput( int m, Interface* intf)
-{
-   try
-   {
-      _module_ptrs.at( moduleIdx(m) )->_inputs.copy(*intf);
-      return 1;
-   }
-   catch (...)
-   {
-      return 0;
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::getOutput (int m, Interface &intf)
-{
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  intf.copy(_module_ptrs[fi]->_outputs);
-  return 1;
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::setOutput (int m, Interface* intf)
-{
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  _module_ptrs[fi]->_outputs.copy(*intf);
-  return 1;
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::getMessage (int m, Interface &intf)
-{
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  intf.copy(_module_ptrs[fi]->_messages);
-  return 1;
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::setMessage (int m, Interface* intf)
-{
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  _module_ptrs[fi]->_messages.copy(*intf);
-  return 1;
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::getPortData (int m, int p, Interface& intf)
-{
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  return _module_ptrs[fi]->getPortData(p, intf);
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::setPortData (int m, int p, Interface* intf)
-{
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  return _module_ptrs[fi]->setPortData(p, intf);
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::getPortProfile (int m, int p, Types::Profile_out& prof)
-{
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  return _module_ptrs[fi]->getPortProfile(p, prof);
-}
-////////////////////////////////////////////////////////////////////////////////
-int Network::setPortProfile (int m, int p, const Types::Profile* prof)
-{
-  int fi = moduleIdx(m);
-  if(fi<0) return 0;
-  return _module_ptrs[fi]->setPortProfile(p, prof);
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 std::string Network::GetNetworkString( void )
 {   

@@ -563,9 +563,8 @@ void Body_Executive_i::SetNetwork (
    _scheduler->clear();
   
    // Keep track of power requirements
-   _module_powers.clear();
-   _thermal_input.clear();
-
+   //_module_powers.clear();
+   //_thermal_input.clear();
    if ( _network->parse( std::string( network ) ) )
    {
       _mutex.release();
