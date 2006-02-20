@@ -44,6 +44,11 @@
 /*!\class VE_Shader::TextureImage
  * Class that stores an image in texture data.
  */
+namespace VE_XML
+{
+   class Command;
+}
+#include "VE_Open/XML/Command.h"
 
 namespace VE_Shader{
 class VE_SHADER_EXPORTS TextureImage:public VE_XML::XMLObject{
@@ -84,12 +89,46 @@ public:
    ///\todo May not be necessary.
    void SetTextureUnit(unsigned int Unit);
 
+   ///Set the GL_WRAP_MODE\n
+   ///\param direction S,T,R direction this wrap mode applies to.
+   ///WRAP_S\n
+   ///WRAP_T\n
+   ///WRAP_R\n
+   ///\param wrapMode the GL_WRAP_MODE\n
+   ///Clamp\n
+   ///Clamp to Edge\n
+   ///Clamp to Border\n
+   ///Repeat\n
+   ///Mirror\n
+   void SetWrapMode(std::string direction, std::string wrapMode);
+
+   ///Set the minification or magnification filter mode
+   ///\param minMagFilter The filter to set\n
+   ///MIN or MAG
+   ///\param mode The filter mode\n
+   ///Linear\n
+   ///Nearest\n
+   ///\todo Mipmapping not implemented yet!!
+   void SetFilterMode(std::string minMagFilter,std::string mode);
+   
+   ///Get the GL_WRAP_MODE\n
+   ///\param direction S,T,R direction this wrap mode applies to.
+   ///\param wrapMode The wrap mode
+   bool GetWrapMode(std::string direction,std::string& wrapMode);
+   
+   ///Set the minification or magnification filter mode
+   ///\param minMagFilter The filter to set\n
+   ///\param mode The filter mode\n
+   ///\todo Mipmapping not implemented yet!!
+   bool GetFilterMode(std::string minMagFilter,std::string& mode);
+
    ///Get the texture unit
    ///\todo May not be necessary.
    unsigned int GetTextureUnit();
 
    ///The texture type.
-   std::string GetType();
+   ///\param type The texture image type.
+   bool GetType(std::string& type);
 
    ///Get the dimension of the texture data.
    unsigned int GetDimension();
@@ -116,22 +155,8 @@ protected:
    ///\param input The XML element information
    virtual void _updateVEElement(std::string input);
 
-   ///Internally update the texture unit.
-   void _updateTextureUnit();
-
-   ///Internally update the texture type .
-   void _updateTextureDataType();
-
-   ///Internally update the image file.
-   void _updateImageFileName();
-
-   ///Internally update the data dimensions.
-   void _updateDataDimension();
-
-   std::map<std::string,std::string> _imageFiles;///<The image file to create texture data from.
-   std::string _textureType;///<The data type represented by the image file.
-   unsigned int _textureUnit;///<This may not be needed but will store a texture unit for use in GL apps.
-   unsigned int _dimension;///<The dimension of this texture data.
+   VE_XML::Command _textureDescription;///<Data package containing the information about the texture map.
+   
 };
 }
 #endif//VE_TEXTURE_IMAGE_H

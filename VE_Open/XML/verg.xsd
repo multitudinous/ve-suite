@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop"
+   version="1.0">
    <!--vecommand element type-->
    <xs:complexType name="vecommand">
       <xs:complexContent>
@@ -102,11 +103,11 @@
    </xs:complexType>
    <xs:complexType name="ve1DDoubleArray">
       <xs:complexContent>
-         <xs:restriction base="veXMLObject">
+         <xs:extension base="veXMLObject">
             <xs:sequence>
                <xs:element name="data" type="xs:decimal" minOccurs="2" maxOccurs="unbounded" />
             </xs:sequence>
-         </xs:restriction>
+         </xs:extension>
       </xs:complexContent>
    </xs:complexType>
    <xs:complexType name="ve2DDoubleArray">
@@ -173,9 +174,7 @@
       </xs:complexContent>
    </xs:complexType>
    <xs:complexType name="veXMLObject">
-      <xs:sequence>
-         <xs:element name="objectType" type="xs:string" />
-         <xs:element name="objectNamespace" type="xs:string" />
-      </xs:sequence>
+      <xs:sequence></xs:sequence>
+      <xs:attribute name="objectType" type="xs:string" use="optional" />
    </xs:complexType>
 </xs:schema>

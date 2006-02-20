@@ -32,6 +32,8 @@
 #include "VE_Open/XML/Shader/TextureImage.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 using namespace VE_Shader;
 using namespace VE_XML;
 ////////////////////////////////////////////////////////////////////////////////////
@@ -40,38 +42,143 @@ using namespace VE_XML;
 TextureImage::TextureImage()
 :VE_XML::XMLObject()
 {
-   _textureType = "2D";
-   _textureUnit = 0;
-   _dimension = 2;
    SetObjectType("TextureImage");
    SetObjectNamespace("Shader");
+   _textureDescription.SetCommandName("Texture Image Data");
+   
+   DataValuePair* storedDimension = new VE_XML::DataValuePair();
+   storedDimension->SetDataType("UNSIGNED INT");
+   storedDimension->SetDataName("Dimension");
+   storedDimension->SetDataValue(static_cast<unsigned int>(2));
+   _textureDescription.AddDataValuePair(storedDimension);
+
+   DataValuePair* storedUnit = new VE_XML::DataValuePair(); 
+   storedUnit->SetDataType("UNSIGNED INT");
+   storedUnit->SetDataName("Unit");
+   storedUnit->SetDataValue(static_cast<unsigned int>(0));
+   _textureDescription.AddDataValuePair(storedUnit);
+
+   DataValuePair* typeData = new VE_XML::DataValuePair();
+   typeData->SetDataType("STRING");
+   typeData->SetDataName("Type");
+   typeData->SetDataString("2D");
+   _textureDescription.AddDataValuePair(typeData);
+
+   DataValuePair* minification = new VE_XML::DataValuePair();
+   minification->SetDataType("STRING");
+   minification->SetDataName("Minification");
+   minification->SetDataString("Linear");
+   _textureDescription.AddDataValuePair(minification);
+
+   DataValuePair* magnification = new VE_XML::DataValuePair();
+   magnification ->SetDataType("STRING");
+   magnification ->SetDataName("Magnification");
+   magnification ->SetDataString("Linear");
+   _textureDescription.AddDataValuePair(magnification );
+
+   DataValuePair* wrapS = new VE_XML::DataValuePair();
+   wrapS->SetDataType("STRING");
+   wrapS->SetDataName("Wrap S");
+   wrapS->SetDataString("Clamp");
+   _textureDescription.AddDataValuePair(wrapS);
+
+   DataValuePair* wrapT = new VE_XML::DataValuePair();
+   wrapT->SetDataType("STRING");
+   wrapT->SetDataName("Wrap T");
+   wrapT->SetDataString("Clamp");
+   _textureDescription.AddDataValuePair(wrapT);
+
+   DataValuePair* wrapR = new VE_XML::DataValuePair();
+   wrapR->SetDataType("STRING");
+   wrapR->SetDataName("Wrap R");
+   wrapR->SetDataString("Clamp");
+   _textureDescription.AddDataValuePair(wrapR);
  
-   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
-   {
-      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
-   }
 }
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
 TextureImage::~TextureImage()
 {
-   _imageFiles.clear();
-   _textureType.clear();
+   
 }
 ///////////////////////////////////////////////////
 TextureImage::TextureImage(const TextureImage& rhs)
 :VE_XML::XMLObject(rhs)
 {
-   _imageFiles = rhs._imageFiles;
-   _textureType = rhs._textureType;
-   _textureUnit = rhs._textureUnit;
-   _dimension = rhs._dimension;
+   _textureDescription = VE_XML::Command(rhs._textureDescription);
+}
+////////////////////////////////////////////////////////////////////////////
+void TextureImage::SetWrapMode(std::string direction, std::string wrapMode)
+{
+   if(direction == "Wrap S" ||
+      direction == "Wrap T" ||
+      direction == "Wrap R")
+   {
+      VE_XML::DataValuePair* wrapModeData = _textureDescription.GetDataValuePair(direction);
+      if(wrapModeData)
+      {
+         wrapModeData->SetDataName(direction);
+         wrapModeData->SetDataString(wrapMode);
+      }
+   }
+}
+///////////////////////////////////////////////////////////////////////////
+void TextureImage::SetFilterMode(std::string minMagFilter,std::string mode)
+{
+   if(minMagFilter == "Minification" ||
+      minMagFilter == "Magnification")
+   {
+      VE_XML::DataValuePair* filterModeData = _textureDescription.GetDataValuePair(minMagFilter);
+      if(filterModeData)
+      {
+         filterModeData->SetDataName(minMagFilter);
+         filterModeData->SetDataString(mode);
+      }
+   }
+}
+///////////////////////////////////////////////////////////////////////////
+bool TextureImage::GetWrapMode(std::string direction,std::string& wrapMode)
+{
+   VE_XML::DataValuePair* wrapModeData = _textureDescription.GetDataValuePair(direction);
+   if(wrapModeData)
+   {
+      wrapMode = wrapModeData->GetDataString();
+      return true;
+   }
+   return false;
+}
+/////////////////////////////////////////////
+bool TextureImage::GetType(std::string& type)
+{
+   VE_XML::DataValuePair* textureType = _textureDescription.GetDataValuePair("Type");
+   if(textureType)
+   {
+      type = textureType->GetDataString();
+      return true;
+   }
+   return false;
+}
+///////////////////////////////////////////////////////////////////////////
+bool TextureImage::GetFilterMode(std::string minMagFilter,std::string& mode)
+{
+   VE_XML::DataValuePair* filterModeData = _textureDescription.GetDataValuePair(minMagFilter);
+   if(filterModeData)
+   {
+      mode = filterModeData->GetDataString();
+      return true;
+   }
+   return false;
 }
 ///////////////////////////////////////////////////////
 void TextureImage::SetDimension(unsigned int dimension)
 {
-   _dimension = dimension;
+   VE_XML::DataValuePair* storedDimension = _textureDescription.GetDataValuePair("Dimension");
+   if(storedDimension)
+   {
+      storedDimension->SetDataName("Dimension");
+      storedDimension->SetDataValue(dimension);
+   }
 }
 ///////////////////////////////////////////////////////////////////////////
 void TextureImage::SetImageFile(std::string face,std::string imageFileName)
@@ -84,7 +191,17 @@ void TextureImage::SetImageFile(std::string face,std::string imageFileName)
       face != "Positive Z"||
       face != "Negative Z") 
    {
-      _imageFiles[face] = imageFileName;
+      VE_XML::DataValuePair* faceImageData = _textureDescription.GetDataValuePair(face);
+      if(!faceImageData)
+      {
+         faceImageData = new VE_XML::DataValuePair();
+         faceImageData->SetData(face,imageFileName);
+         _textureDescription.AddDataValuePair(faceImageData);
+      }
+      else
+      {
+         faceImageData->SetData(face,imageFileName);
+      }
    }
    else
    {
@@ -95,29 +212,81 @@ void TextureImage::SetImageFile(std::string face,std::string imageFileName)
 ////////////////////////////////////////////////////
 void TextureImage::SetTextureUnit(unsigned int tUnit)
 {
-   _textureUnit = tUnit;
+    VE_XML::DataValuePair* storedUnit = _textureDescription.GetDataValuePair("Unit");
+   if(storedUnit)
+   {
+      storedUnit->SetDataValue(tUnit);
+   }
 }
 ///////////////////////////////////////////
 unsigned int TextureImage::GetTextureUnit()
 {
-   return _textureUnit;
+   VE_XML::DataValuePair* storedUnit = _textureDescription.GetDataValuePair("Unit");
+   if(storedUnit)
+   {
+      return storedUnit->GetUIntData();
+   }
+   return 0;
 }
 /////////////////////////////////////////
 unsigned int TextureImage::GetDimension()
 {
-   return _dimension;
+   VE_XML::DataValuePair* storedDimension = _textureDescription.GetDataValuePair("Dimension");
+   if(storedDimension)
+   {
+      return storedDimension->GetUIntData();
+   }
+   return 0;
 }
 /////////////////////////////////////////////////////////
 std::string TextureImage::GetImageFile(std::string face)
 {
    try 
    {
-      return _imageFiles[face];
+      VE_XML::DataValuePair* faceImageData = _textureDescription.GetDataValuePair(face);
+      if(!faceImageData)
+      {
+         throw "Invalid Texture Face";
+      }
+      return faceImageData->GetDataString();
+
    } 
-   catch(...)
+   catch(char* msg)
    {
-      std::cout<<"Invalid Face: "<<face<<std::endl;
-      std::cout<<"TextureImage::GetImageFile(): "<<face<<std::endl;
+      std::cout<<"TextureImage::GetImageFile() Error: "<<msg<<": "<<face<<std::endl;
+   }
+}
+////////////////////////////////////////////////////////////////
+void TextureImage::SetTextureImageType(std::string textureType)
+{
+   if(textureType == "1D" ||
+                   "2D" ||
+                   "3D" ||
+                   "Cube" ||
+                   "Environment")
+   {
+      VE_XML::DataValuePair* typeData = _textureDescription.GetDataValuePair(textureType);
+      if(!typeData)
+      {
+         typeData = new VE_XML::DataValuePair();
+         _textureDescription.AddDataValuePair(typeData);
+      }
+      typeData->SetData("Type",textureType);
+      if(textureType == "1D")
+         SetDimension(1);
+      else if(textureType == "2D")
+         SetDimension(2);
+      else if(textureType == "3D" ||
+             textureType == "Cube" ||
+             textureType == "Environment")
+      {
+         SetDimension(3);
+      }
+   }
+   else
+   {
+      std::cout<<"Invalid TextureType: "<<textureType<<std::endl;
+      std::cout<<"TextureImage::SetTextureImageType(): "<<std::endl;
    }
 }
 //////////////////////////////////////////////////////
@@ -127,43 +296,7 @@ void TextureImage::_updateVEElement(std::string input)
    {
       _veElement = _rootDocument->createElement(xercesString(input));
    }
-   _updateImageFileName();
-   _updateDataDimension();
-   _updateTextureUnit();
-}
-/////////////////////////////////////////
-void TextureImage::_updateDataDimension()
-{
-   DOMElement* dimensionTag  = _rootDocument->createElement(xercesString("dimension"));
-   _veElement->appendChild(dimensionTag);      
-   DOMText* dimension = _rootDocument->createTextNode(xercesString(static_cast<int>(_dimension)));
-   dimensionTag->appendChild( dimension );
-}	
-///////////////////////////////////////
-void TextureImage::_updateTextureUnit()
-{
-   DOMElement* tUnitTag  = _rootDocument->createElement(xercesString("textureUnit"));
-   _veElement->appendChild(tUnitTag);      
-   DOMText* tUnit = _rootDocument->createTextNode(xercesString( static_cast<int>(_textureUnit)));
-   tUnitTag->appendChild( tUnit );
-}	
-//////////////////////////////////////
-void TextureImage::_updateImageFileName()
-{
-   /*This needs to be re-implemented!!
-   DOMElement* imageNameElement = _rootDocument->createElement(xercesString("imageFile"));
-   DOMText* imageName = _rootDocument->createTextNode(xercesString(_imageFile.c_str()));
-   imageNameElement->appendChild(imageName);
-   _veElement->appendChild(imageNameElement);
-   */
-}
-///////////////////////////////////////////
-void TextureImage::_updateTextureDataType()
-{
-   DOMElement* dataTypeElement = _rootDocument->createElement(xercesString("textureType"));
-   DOMText* dataType = _rootDocument->createTextNode(xercesString(_textureType.c_str()));
-   dataTypeElement->appendChild(dataType);
-   _veElement->appendChild(dataTypeElement);
+   SetSubElement("textureDescriptionData",&_textureDescription);
 }
 //////////////////////////////////////////////////////////
 void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
@@ -176,43 +309,12 @@ void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
    
    if(currentElement)
    {
-      //break down the element
-      {
-	 //get the image file  name
-         {
-            DOMElement* nChildrenElement = GetSubElement(currentElement,std::string("imageFile"),0);
-            if(nChildrenElement)
-            {
-               /*This needs to be re implemented
-               _imageFile = ExtractDataStringFromSimpleElement(nChildrenElement);
-               */
-            }
-         }
-	 //get the texture data type 
-         {
-            DOMElement* dataType = GetSubElement(currentElement,std::string("textureType"),0);
-            if(dataType)
-            {
-               _textureType = ExtractDataStringFromSimpleElement(dataType);
-            }
-         }
-	 //get the texture unit 
-         {
-            DOMElement* tUnitElement = GetSubElement(currentElement,std::string("textureUnit"),0);
-            if(tUnitElement)
-            {
-               _textureUnit = static_cast<int>(ExtractDataNumberFromSimpleElement(tUnitElement));
-            }
-         }
-	 //get the data dimension 
-         {
-            DOMElement* dimensionElement = GetSubElement(currentElement,std::string("dimension"),0);
-            if(dimensionElement)
-            {
-               _dimension = static_cast<int>(ExtractDataNumberFromSimpleElement(dimensionElement));
-            }
-         }
-      }
+
+     DOMElement* descriptionData = GetSubElement(currentElement,std::string("textureDescriptionData"),0);
+     if(descriptionData)
+     {
+        _textureDescription.SetObjectFromXMLData(descriptionData);
+     }
    }
 }
 //////////////////////////////////////////////////////////////
@@ -221,10 +323,7 @@ TextureImage& TextureImage::operator=(const TextureImage& rhs)
    if(this != &rhs)
    {
       XMLObject::operator =(rhs);
-      _imageFiles = rhs._imageFiles;
-      _textureType = rhs._textureType;
-      _textureUnit = rhs._textureUnit;
-      _dimension = rhs._dimension;
+      _textureDescription = rhs._textureDescription;
    }
    return *this;
 }

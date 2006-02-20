@@ -51,11 +51,6 @@ Shader::Shader()
    _shaderSource = std::string("");
    SetObjectType("Shader");
    SetObjectNamespace("Shader");
- 
-   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
-   {
-      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
-   }
 }
 /////////////////
 //Destructor   //
@@ -78,11 +73,7 @@ Shader::Shader(const Shader& rhs)
       _uniformList.push_back(rhs._uniformList.at(i));
    }
 
-   //for(size_t i = 0; i < rhs._textureImages.size(); i++)
-   //{
-      //is this correct for a map?
-      _textureImages = rhs._textureImages;
-   //}
+   _textureImages = rhs._textureImages;
    _shaderType = rhs._shaderType;
    _shaderSource = rhs._shaderSource;
 }
@@ -143,8 +134,7 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
                {
                   TextureImage newTexture;
                   newTexture.SetObjectFromXMLData(textureList->item(i));
-                  _textureImages.insert(std::pair<unsigned int,TextureImage>(newTexture.GetTextureUnit(),newTexture));
-                  //_textureImages.push_back(newTexture);
+                  AddTextureImage(newTexture);
                }
             }
          }
@@ -159,12 +149,7 @@ void Shader::AddUniform(Uniform newUniform)
 ///////////////////////////////////////////////////////////
 void Shader::AddTextureImage(TextureImage newTextureImage)
 {
-   /*std::pair<unsigned int, TextureImage> newTextureData;
-   newTextureData->first = newTextureImage.GetTextureUnit();
-   newTextureData->second = newTextureImage;
-   */
    _textureImages.insert(std::pair<unsigned int,TextureImage>(newTextureImage.GetTextureUnit(),newTextureImage));
-   //_textureImages[newTextureImage.GetTextureUnit()] = newTextureData;
 }
 //////////////////////////////////////////////////
 void Shader::SetShaderType(std::string fragOrVert)

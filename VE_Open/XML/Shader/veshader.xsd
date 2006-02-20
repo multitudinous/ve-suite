@@ -41,10 +41,10 @@
       <xs:complexContent>
          <xs:restriction base="veXMLObject">
             <xs:sequence>
-               <xs:element name="imageFile" type="xs:string" />
+               <xs:element name="textureDescriptionData" type="vecommand" />
                <xs:element name="textureUnit" type="xs:unsignedInt" />
                <xs:element name="dimension" type="xs:unsignedInt" />
-               <xs:element name="textureType" type="xs:unsignedInt" />
+               <xs:element name="textureType" type="xs:string" />
             </xs:sequence>
          </xs:restriction>
       </xs:complexContent>
