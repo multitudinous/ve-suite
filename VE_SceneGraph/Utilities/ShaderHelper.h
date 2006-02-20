@@ -48,12 +48,14 @@ namespace osg
    class Shader;
    class Program;
 }
+#include <osg/Texture>
 #elif _PERFORMER
 #endif
 namespace VE_Shader
 {
    class Program;
    class Shader;
+   class TextureImage;
 }
 #include <string>
 #include <vector>
@@ -103,6 +105,19 @@ protected:
    ///\param The shader to extract uniforms from.
    void _extractUniformsFromShader(VE_Shader::Shader* shader);
 
+   ///Extract the texture images from the shader information.
+   ///\param textureImage The texture image data.
+   void _extractTextureFromShader(VE_Shader::TextureImage textureImage);
+
+#ifdef _OSG
+   ///Extract the wrap modes for the texture images
+   ///\param texture The texture.
+   ///\param param The wrap parameter
+   ///\param wrapMode The wrap mode.
+   void _setWrapOnTexture(osg::Texture* texture,
+                       osg::Texture::WrapParameter param,
+                       std::string wrapMode);
+#endif
    std::vector<std::string> _vertexUniformNames;///<Vertex program uniform names.
    std::vector<std::string> _fragmentUniformNames;///<Fragment program uniform names.
 #ifdef _OSG

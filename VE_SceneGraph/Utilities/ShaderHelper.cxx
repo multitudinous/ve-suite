@@ -36,6 +36,12 @@
 #include <osg/Shader>
 #include <osg/Uniform>
 #include <osg/Texture>
+#include <osg/Texture1D>
+#include <osg/Texture2D>
+#include <osg/Texture3D>
+#include <osg/TextureCubeMap>
+#include <osg/TexGen>
+#include <osgDB/ReadFile>
 #elif _PEFORMER
 #endif
 
@@ -44,6 +50,7 @@
 #include "VE_Open/XML/Shader/Shader.h"
 #include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/Shader/Uniform.h"
+#include "VE_Open/XML/Shader/TextureImage.h"
 using namespace VE_Shader;
 using namespace VE_SceneGraph::Utilities;
 //////////////////////////////////////
@@ -192,37 +199,142 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
 {
 #ifdef _OSG
    //create the image
+   unsigned int tUnit = textureImage.GetTextureUnit();
+   unsigned int dimension = textureImage.GetDimension();
+
    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile(textureImage.GetImageFile());
-   if(textureImage.GetType() == "1D")
+   osg::ref_ptr<osg::Texture> genericTexture;
+   std::string textureType("");
+   textureImage.GetType(textureType);
+
+   if(textureType == "1D" )
    {
       osg::ref_ptr<osg::Texture1D> texture1D = new osg::Texture1D();
       //we need to set the wrapping and filters still!!!!
-      texture1D->setImage(textureImageData);
+      texture1D->setImage(textureImageData.get());
 
       //Set the texture unit on the state set
       
+      genericTexture = texture1D.get();
    }
-   else if(textureImage.GetType() == "2D")
+   else if(textureType == "2D")
    {
       osg::ref_ptr<osg::Texture2D> texture2D = new osg::Texture2D();
       //we need to set the wrapping and filters still!!!!
-      texture2D->setImage(textureImageData);
+      texture2D->setImage(textureImageData.get());
+      genericTexture = texture2D.get();
    }
-   else if(textureImage.GetType() == "3D")
+   else if(textureType == "3D")
    {
       osg::ref_ptr<osg::Texture3D> texture3D = new osg::Texture3D();
       //we need to set the wrapping and filters still!!!!
-      texture3D->setImage(textureImageData);
-      std::cout<<"3d texture reader not implemented yet!!"<<std::endl;
+      texture3D->setImage(textureImageData.get());
+      genericTexture = texture3D.get();
    }
-   else if(textureImage.GetType() == "Cube")
+   else if(textureType == "Cube")
    {
       osg::ref_ptr<osg::TextureCubeMap> textureCubeMap = new osg::TextureCubeMap();
-      //we need to set the wrapping and filters still!!!!
-      std::cout<<"TextureCubeMap generator not implemented yet!!"<<std::endl;
+      textureCubeMap->setImage(osg::TextureCubeMap::POSITIVE_X, osgDB::readImageFile(textureImage.GetImageFile("Positive X")));
+      textureCubeMap->setImage(osg::TextureCubeMap::NEGATIVE_X, osgDB::readImageFile(textureImage.GetImageFile("Negative X")));
+      textureCubeMap->setImage(osg::TextureCubeMap::POSITIVE_Y, osgDB::readImageFile(textureImage.GetImageFile("Positive Y")));
+      textureCubeMap->setImage(osg::TextureCubeMap::NEGATIVE_Y, osgDB::readImageFile(textureImage.GetImageFile("Negative Y")));
+      textureCubeMap->setImage(osg::TextureCubeMap::POSITIVE_Z, osgDB::readImageFile(textureImage.GetImageFile("Positive Z")));
+      textureCubeMap->setImage(osg::TextureCubeMap::NEGATIVE_Z, osgDB::readImageFile(textureImage.GetImageFile("Negative Z")));     
+      
+      //this should be adjustable parameter in the TextureImage interface
+      osg::ref_ptr<osg::TexGen> textureCoordGeneration = new osg::TexGen;
+      textureCoordGeneration->setMode(osg::TexGen::REFLECTION_MAP);
+      _ss->setTextureAttributeAndModes(tUnit, textureCoordGeneration.get(),osg::StateAttribute::ON);
+      
+      genericTexture = textureCubeMap.get();
    }
 
+   if(genericTexture.valid())
+   {
+      std::string minFilter;
+      textureImage.GetFilterMode("Minification",minFilter);
+      
+      std::string magFilter;
+      textureImage.GetFilterMode("Magnification",magFilter);
+      
+      osg::Texture::FilterMode magMode = osg::Texture::LINEAR;
+      osg::Texture::FilterMode minMode = osg::Texture::LINEAR;
+
+      if(minFilter == "Nearest")
+      {
+         minMode =  osg::Texture::NEAREST;
+      }
+
+      if(magFilter == "Nearest")
+      {
+         magMode = osg::Texture::NEAREST;
+      }
+      //set the min/mag filters
+      genericTexture->setFilter(osg::Texture::MAG_FILTER,magMode);
+      genericTexture->setFilter(osg::Texture::MIN_FILTER,minMode);
+
+      //set the wrap modes
+      std::string sWrap;
+      std::string tWrap;
+      std::string rWrap;
+
+      osg::Texture::WrapMode swrapMode = osg::Texture::CLAMP;
+
+      textureImage.GetWrapMode("Wrap S",sWrap);
+
+      _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_S,sWrap);
+      
+      if(dimension != 1)
+      {
+         textureImage.GetWrapMode("Wrap T",tWrap);
+         _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_T,tWrap);
+      }
+      
+      if(dimension == 3)
+      {
+         textureImage.GetWrapMode("Wrap R",rWrap);
+         _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_R,rWrap);
+      }
+
+      //set the texture to the state set
+      _ss->setTextureAttributeAndModes(tUnit,genericTexture.get(),osg::StateAttribute::ON);
+
+      if(dimension == 1)
+         _ss->setTextureMode(tUnit,GL_TEXTURE_1D,osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+      
+      if(dimension == 2)
+         _ss->setTextureMode(tUnit,GL_TEXTURE_2D,osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+      
+      if(dimension == 3)
+         _ss->setTextureMode(tUnit,GL_TEXTURE_3D,osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+   }
 #endif
+}
+///////////////////////////////////////////////////////////////////////
+void ShaderHelper::_setWrapOnTexture(osg::Texture* texture,
+                                 osg::Texture::WrapParameter param,
+                                 std::string wrapMode)
+{
+   if(wrapMode == "Clamp to Border")
+   {
+      texture->setWrap(param,osg::Texture::CLAMP_TO_BORDER);
+   }
+   else if(wrapMode == "Clamp to Edge")
+   {
+      texture->setWrap(param,osg::Texture::CLAMP_TO_EDGE);
+   }
+   else if(wrapMode == "Repeat")
+   {
+      texture->setWrap(param,osg::Texture::REPEAT);
+   }
+   else if(wrapMode == "Mirror")
+   {
+      texture->setWrap(param,osg::Texture::MIRROR);
+   }
+   else if(wrapMode == "CLAMP")
+   {
+      texture->setWrap(param,osg::Texture::CLAMP);
+   }
 }
 ////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
@@ -304,7 +416,7 @@ void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
                                                                      boolValues.at(3))));
          }
       }else if(uniformType == "Sampler"){
-         _extractTexturesFromUniform(shader->GetTextureImage(uniformData->GetTextureUnit()));
+         _extractTextureFromShader(shader->GetTextureImage(uniformData->GetTextureUnit()));
       }
       
 #elif _PERFORMER
