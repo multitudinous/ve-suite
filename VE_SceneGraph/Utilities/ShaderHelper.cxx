@@ -187,6 +187,43 @@ void ShaderHelper::_createGLSLShader(VE_Shader::Shader* shader)
    std::cout<<"Not implemented for Performer yet!!!"<<std::endl;
 #endif
 }
+///////////////////////////////////////////////////////////////////////////////////
+void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImage)
+{
+#ifdef _OSG
+   //create the image
+   osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile(textureImage.GetImageFile());
+   if(textureImage.GetType() == "1D")
+   {
+      osg::ref_ptr<osg::Texture1D> texture1D = new osg::Texture1D();
+      //we need to set the wrapping and filters still!!!!
+      texture1D->setImage(textureImageData);
+
+      //Set the texture unit on the state set
+      
+   }
+   else if(textureImage.GetType() == "2D")
+   {
+      osg::ref_ptr<osg::Texture2D> texture2D = new osg::Texture2D();
+      //we need to set the wrapping and filters still!!!!
+      texture2D->setImage(textureImageData);
+   }
+   else if(textureImage.GetType() == "3D")
+   {
+      osg::ref_ptr<osg::Texture3D> texture3D = new osg::Texture3D();
+      //we need to set the wrapping and filters still!!!!
+      texture3D->setImage(textureImageData);
+      std::cout<<"3d texture reader not implemented yet!!"<<std::endl;
+   }
+   else if(textureImage.GetType() == "Cube")
+   {
+      osg::ref_ptr<osg::TextureCubeMap> textureCubeMap = new osg::TextureCubeMap();
+      //we need to set the wrapping and filters still!!!!
+      std::cout<<"TextureCubeMap generator not implemented yet!!"<<std::endl;
+   }
+
+#endif
+}
 ////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
 {
@@ -266,7 +303,10 @@ void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
                                                                      boolValues.at(2),
                                                                      boolValues.at(3))));
          }
+      }else if(uniformType == "Sampler"){
+         _extractTexturesFromUniform(shader->GetTextureImage(uniformData->GetTextureUnit()));
       }
+      
 #elif _PERFORMER
       std::cout<<"Not implemented for Performer yet!!!"<<std::endl;
 #endif
