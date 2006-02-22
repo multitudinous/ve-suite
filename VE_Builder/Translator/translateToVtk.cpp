@@ -53,6 +53,7 @@
 #include "VE_Builder/Translator/jdMAPReader.h"
 #include "VE_Builder/Translator/enSightGoldReader.h"
 #include "VE_Builder/Translator/ansysReader.h"
+#include "VE_Builder/Translator/ansysReader10.h"
 #include "VE_Builder/Translator/tecplotReader.h"
 using namespace VE_Util;
 
@@ -79,6 +80,7 @@ int retainEveryNthFrame = 1;
 plot3dReader   *plot3d;
 starReader     *star;
 ansysReader * reader = NULL;
+ansysReader10* reader10 = NULL;
 tecplotReader * _tecPlotReader = NULL;
 
 std::string preprocess( int argc, char *argv[], 
@@ -177,6 +179,8 @@ std::string preprocess( int argc, char *argv[],
          B_fname = 1; // don't have a default ANSYS *.rst filename
       else if ( type == 13 ) 
          B_fname = 1; // don't have a default ANSYS *.rst filename
+      else if ( type == 14 ) 
+         B_fname = 1; // don't have a default ANSYS 10 *.rst filename
 #endif  //SJK_TEST
 
       if ( B_fname == 0 )
@@ -216,6 +220,10 @@ std::string preprocess( int argc, char *argv[],
          }
          else if (type == 13)  // tec plot ascii
          {
+         }
+         else if ( type == 14 )  // ANSYS *.rst file
+         {
+            //std::cout<<"Type is :"<<type<<std::endl;
          }
          else
          {
@@ -359,6 +367,17 @@ std::string preprocess( int argc, char *argv[],
             do
             {
                 std::cout << "\nTecPlot ASCII file: \t";
+                std::cout.flush();
+                std::cin >> infilename;
+                std::cin.ignore();
+            }
+            while ( ! fileIO::isFileReadable( infilename ) );
+         }
+         else if (type == 14)    // ANSYS 10 *.rst file
+         {
+            do
+            {
+                std::cout << "\nANSYS 10 *.rst file: \t";
                 std::cout.flush();
                 std::cin >> infilename;
                 std::cin.ignore();
@@ -543,9 +562,10 @@ int main( int argc, char *argv[] )
                 << "(9)PLOT3D (10)John Deere MAP Data\n"
                 << "\t(11)John Deere EnSight Data" << "  " 
                 << "(12)ANSYS rst binary data\n"
-                << "\t(13)Tecplot ASCII files\n"
+                << "\t(13)Tecplot ASCII files\t"
+                << "(14)ANSYS 10 rst binary data\n"
                 << "\t(0)exit" <<std::endl;
-      cfdType = fileIO::getIntegerBetween( 0, 13 );
+      cfdType = fileIO::getIntegerBetween( 0, 14 );
    }
    else
    {
@@ -637,6 +657,11 @@ int main( int argc, char *argv[] )
    {
       _tecPlotReader = new tecplotReader();
       pointset = _tecPlotReader->tecplotToVTK( infilename, debug ); 
+   }
+   else if ( cfdType == 14 )
+   {
+      reader10 = new ansysReader10( infilename );
+      pointset = reader10->GetUGrid();
    }
 /*
    else if (cfdType == 5)        // PIV

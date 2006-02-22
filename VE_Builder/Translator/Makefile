@@ -27,6 +27,7 @@ SRCS=\
    jdMAPReader.cpp \
    enSightGoldReader.cpp \
    ansysReader.cpp \
+   ansysReader10.cpp \
    tecplotReader.cpp \
    vtkCleanUnstructuredGrid.cxx
 #   vtkEnSightFortranBinaryReader.cxx
