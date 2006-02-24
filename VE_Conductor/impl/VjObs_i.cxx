@@ -808,7 +808,17 @@ void VjObs_i::SetCommandString( const char* value)
    for ( unsigned int i = 0; i < numCommands; ++i )
    {
       Command* temp = new Command(  );
-      temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
+      DOMElement* tempElement = 0;
+      try
+      {
+         tempElement = dynamic_cast< DOMElement* >( subElements->item(i) );
+      }
+      catch ( ... )
+      {
+         std::cerr << "ERROR : dynamic_cast failed. You may need to recompile xerces with RTTI enabled" << std::endl;
+         return;
+      }
+      temp->SetObjectFromXMLData( tempElement );
       commandVectorQueue.push_back( temp );
    }
    // I am pretty sure we now need to release some memory for the domdocument
