@@ -61,6 +61,7 @@ void VE_SceneGraph::Utilities::Attribute::init(void)
 #ifdef _OSG
 //why is this needed
 #include <osg/Material>
+#include <osg/BlendFunc>
 #elif _PERFORMER
 #endif
 
@@ -95,7 +96,13 @@ Attribute::~Attribute()
 ////////////////////////////////////////////////////////////////////////////
 void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
 {
-   std::string attributeType = attribute->GetAttributeType(); 
+   std::string attributeType = attribute->GetAttributeType();
+   bool blending = attribute->NeedsBlending();
+
+#ifdef _OSG
+   
+#elif _PERFORMER
+#endif
    if( attributeType == std::string("Material"))
    {
 #ifdef _OSG
@@ -108,6 +115,24 @@ void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
    else if( attributeType == std::string("Program"))
    {
 #ifdef _OSG      
+      osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+      bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+   
+      //probabaly need more params for the user to set but initially, we don't need that
+      //so either enable "typical" blending (1-alpha) and bin appropriately.
+      if (!blending) 
+      {
+         setRenderingHint(osg::StateSet::OPAQUE_BIN);
+         setMode(GL_BLEND,osg::StateAttribute::ON);
+      }
+      else
+      {
+        setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+        setRenderBinDetails(99,std::string("DepthSortedBin"));
+        setMode(GL_BLEND,osg::StateAttribute::ON);
+      }
+      setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+      
       ShaderHelper shaderHelper;
       shaderHelper.SetStateSet(this);
       shaderHelper.LoadGLSLProgram(attribute->GetGLSLProgram());
