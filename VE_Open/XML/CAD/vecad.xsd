@@ -76,6 +76,7 @@
                   <xs:element name="program" type="Program" />
                </xs:choice>
                <xs:element name="type" type="xs:string" />
+               <xs:element name="blending" type="xs:boolean" />
             </xs:sequence>
          </xs:restriction>
       </xs:complexContent>

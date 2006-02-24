@@ -46,6 +46,7 @@ CADAttribute::CADAttribute( )
 {
    _attributeType = std::string("Material");
    _material = 0; 
+   _blending = true;
    _glslProgram = 0;
    SetObjectType("CADAttribute");
    SetObjectNamespace("CAD");
@@ -76,6 +77,16 @@ CADAttribute::~CADAttribute()
       _glslProgram = 0;
    }
    _attributeType.clear();
+}
+///////////////////////////////////
+void CADAttribute::EnableBlending()
+{
+   _blending = true;
+}
+////////////////////////////////////
+void CADAttribute::DisableBlending()
+{
+   _blending = false;
 }
 //////////////////////////////////////////////////////////////
 void CADAttribute::SetAttributeType(std::string attributeType)
@@ -125,6 +136,12 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode)
             if(typeNode)
             {
               _attributeType = ExtractDataStringFromSimpleElement( typeNode );
+            }
+
+            DOMElement* blendNode = GetSubElement(currentElement,std::string("blending"),0);
+            if(blendNode)
+            {
+              _blending = ExtractBooleanFromSimpleElement(blendNode);
             }
 	    
             if(_attributeType == std::string("Material"))
@@ -177,6 +194,8 @@ CADAttribute::CADAttribute(const CADAttribute& rhs)
    _attributeType = rhs._attributeType;
    _material = 0;
    _glslProgram = 0;
+   _blending = rhs._blending;
+
    if(_attributeType == std::string("Material"))
    {
       _material = new CADMaterial(*rhs._material); 
@@ -195,6 +214,7 @@ CADAttribute& CADAttribute::operator=(const CADAttribute& rhs)
       _attributeType = rhs._attributeType;
       _material = 0;
       _glslProgram = 0;
+      _blending = rhs._blending;
       if(_attributeType == std::string("Material"))
       {
          if(_material)
@@ -225,6 +245,8 @@ void CADAttribute::_updateVEElement(std::string input)
       _veElement = _rootDocument->createElement(xercesString(input));
    }
    SetSubElement("type",_attributeType);
+   SetSubElement("blending",_blending);
+
    if(_attributeType == std::string("Material"))
    {
       if(_material)

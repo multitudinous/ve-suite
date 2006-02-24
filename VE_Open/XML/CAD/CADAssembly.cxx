@@ -162,6 +162,7 @@ VE_CAD::CADNode* CADAssembly::GetChild(std::string name)
          return _children.at(i);
       }
    }
+   return 0;
 }
 ///////////////////////////////////////////////////////////////
 VE_CAD::CADNode* CADAssembly::GetChild(unsigned int whichChild)

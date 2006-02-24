@@ -77,6 +77,12 @@ public:
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
 
+   ///Enable blending for this attribute. 
+   void EnableBlending();
+
+   ///Disable the blending for this attribute.
+   void DisableBlending();
+
    ///Get the attribute type. 
    std::string GetAttributeType();
 
@@ -102,6 +108,8 @@ protected:
    virtual void _updateVEElement(std::string input);
 
    std::string _attributeType;///<The type of attribute
+
+   bool _blending;///<Enable or disable blending;
 
    VE_CAD::CADMaterial* _material; ///< Material for this node.
    VE_Shader::Program* _glslProgram;///<The glsl program.
