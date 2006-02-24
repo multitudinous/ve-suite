@@ -31,7 +31,7 @@
     			float opac=dot(normalize(-N),normalize(-I));
     			opac=abs(opac);
     			opac=1.0-pow(opac,0.8);
-   			 vec4 Cs=vec4(0.0,1.0,0.0,1.0);
+   			vec4 Cs=vec4(0.0,1.0,0.0,1.0);
     			gl_FragColor=opac*Cs;
 		}	                 
 	</shaderCode>
