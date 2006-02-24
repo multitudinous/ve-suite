@@ -172,6 +172,11 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode)
       }
    }
 }
+//////////////////////////////////
+bool CADAttribute::NeedsBlending()
+{
+   return _blending;
+}
 ////////////////////////////////////////////
 std::string CADAttribute::GetAttributeType()
 {

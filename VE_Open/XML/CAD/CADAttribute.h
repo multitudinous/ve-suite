@@ -83,6 +83,9 @@ public:
    ///Disable the blending for this attribute.
    void DisableBlending();
 
+   ///Check for blending
+   bool NeedsBlending();
+
    ///Get the attribute type. 
    std::string GetAttributeType();
 
