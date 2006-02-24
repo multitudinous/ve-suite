@@ -1,38 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 <!--Shader taken from 3Dlabs.com examples-->
 <Program>
-        <name>Toon</name>
+        <name>Toon Shading</name>
         <vertexShader>
           <type>Vertex</type>
           <shaderCode>
               varying vec3 Normal;
+              varying vec4 vertColor;
               void main(void)
               {
 	         Normal = normalize(gl_NormalMatrix * gl_Normal);
+                 vertColor = gl_Color;
 	         gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
               }
            </shaderCode>
         </vertexShader>
         <fragmentShader>
           <type>Fragment</type>
-          <uniform>
-            <name>DiffuseColor</name>
-            <type>Float</type>
-            <size>3</size>
-            <textureUnit>0</textureUnit>
-            <value>0.75</value>
-            <value>0.75</value>
-            <value>0.75</value>
-          </uniform>
-          <uniform>
-            <name>PhongColor</name>
-            <type>Float</type>
-            <size>3</size>
-            <textureUnit>0</textureUnit>
-            <value>0.8999999762</value>
-            <value>0.8999999762</value>
-            <value>0.8999999762</value>
-          </uniform>
           <uniform>
             <name>Edge</name>
             <type>Float</type>
@@ -48,14 +32,15 @@
             <value>0.8999999762</value>
           </uniform>
           <shaderCode>
-                             uniform vec3 DiffuseColor;
-                             uniform vec3 PhongColor;
                              uniform float Edge;
                              uniform float Phong;
                              varying vec3 Normal;
+                             varying vec4 vertColor;
 
                              void main (void)
 		             {
+                                vec3 DiffuseColor = vertColor.xyz;
+                                vec3 PhongColor = 1.25*DiffuseColor;
 	                        vec3 color = DiffuseColor;
 	                        float f = dot(vec3(0,0,1),Normal);
 		                float edgeFactor = step(Edge,abs(f));

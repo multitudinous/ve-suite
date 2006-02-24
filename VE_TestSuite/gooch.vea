@@ -1,103 +1,58 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<!-- modified Shader from 3dlabs.com-->
 <Program>
-   <name>Gooch</name>
+   <name>Gooch Shading</name>
    <vertexShader>
       <type>Vertex</type>
-      <uniform>
-         <name>LightPosition</name>
-         <type>Float</type>
-         <size>3</size>
-         <value>0.0</value>
-         <value>10.0</value>
-         <value>4.0</value>
-         <objectType>Uniform</objectType>
-         <objectNamespace>Shader</objectNamespace>
-      </uniform>
       <shaderCode>
-         uniform vec3  LightPosition;
          varying float NdotL;
          varying vec3  ReflectVec;
          varying vec3  ViewVec;
+         varying vec4  vertColor;
 
          void main(void)
          {
             vec3 ecPos      = vec3 (gl_ModelViewMatrix * gl_Vertex);
             vec3 tnorm      = normalize(gl_NormalMatrix * gl_Normal);
-            vec3 lightVec   = normalize(LightPosition - ecPos);
+            vec3 lightVec   = normalize(gl_LightSource[0].position.xyz - ecPos);
             ReflectVec      = normalize(reflect(-lightVec, tnorm));
             ViewVec         = normalize(-ecPos);
             NdotL           = (dot(lightVec, tnorm) + 1.0) * 0.5;
+            vertColor = gl_Color;
             gl_Position     = ftransform();
         }
       </shaderCode>
-      <objectType>Shader</objectType>
-      <objectNamespace>Shader</objectNamespace>
    </vertexShader>
    <fragmentShader>
               <type>Fragment</type>
-              <uniform>
-                <name>SurfaceColor</name>
-                <type>Float</type>
-                <size>3</size>
-                <textureUnit>0</textureUnit>
-                <value>0.75</value>
-                <value>0.75</value>
-                <value>0.75</value>
-                <objectType>Uniform</objectType>
-                <objectNamespace>Shader</objectNamespace>
-              </uniform>
-              <uniform>
-                <name>WarmColor</name>
-                <type>Float</type>
-                <size>3</size>
-                <textureUnit>0</textureUnit>
-                <value>0.5</value>
-                <value>0.5</value>
-                <value>0.5</value>
-                <objectType>Uniform</objectType>
-                <objectNamespace>Shader</objectNamespace>
-              </uniform>
-              <uniform>
-                <name>CoolColor</name>
-                <type>Float</type>
-                <size>3</size>
-                <textureUnit>0</textureUnit>
-                <value>0.8500000238</value>
-                <value>0.8500000238</value>
-                <value>0.8500000238</value>
-                <objectType>Uniform</objectType>
-                <objectNamespace>Shader</objectNamespace>
-              </uniform>
               <uniform>
                 <name>DiffuseWarm</name>
                 <type>Float</type>
                 <size>1</size>
                 <textureUnit>0</textureUnit>
-                <value>0.4499999881</value>
-                <objectType>Uniform</objectType>
-                <objectNamespace>Shader</objectNamespace>
+                <value>0.45</value>
               </uniform>
               <uniform>
                 <name>DiffuseCool</name>
                 <type>Float</type>
                 <size>1</size>
                 <textureUnit>0</textureUnit>
-                <value>0.4499999881</value>
-                <objectType>Uniform</objectType>
-                <objectNamespace>Shader</objectNamespace>
+                <value>0.45</value>
               </uniform>
               <shaderCode>
                           varying float NdotL;
                           varying vec3  ReflectVec;
+                          varying vec4  vertColor;
                           varying vec3  ViewVec;
-		          uniform vec3 CoolColor;
-		          uniform vec3 SurfaceColor;
-		          uniform vec3 WarmColor;
-		          uniform vec3 DiffuseWarm;
-		          uniform vec3 DiffuseCool;
+		          uniform float DiffuseWarm;
+		          uniform float DiffuseCool;
 
                           void main (void)
                           {
+                             vec3 SurfaceColor = vertColor.xyz;
+                             vec3 CoolColor = vertColor.xyz * 1.10;
+                             vec3 WarmColor = vertColor.xyz * .40;
+
                              vec3 kcool    = min(CoolColor + DiffuseCool * SurfaceColor, 1.0);
                              vec3 kwarm    = min(WarmColor + DiffuseWarm * SurfaceColor, 1.0); 
                              vec3 kfinal   = mix(kcool, kwarm, NdotL);
@@ -108,10 +63,8 @@
                              float spec    = max(dot(nreflect, nview), 0.0);
                              spec          = pow(spec, 32.0);
 
-                             gl_FragColor = vec4 (min(kfinal + spec, 1.0), 1.0);
+                             gl_FragColor = vec4 (min(kfinal + spec, 1.0), vertColor.w);
                           }
                           </shaderCode>
-              <objectType>Shader</objectType>
-              <objectNamespace>Shader</objectNamespace>
             </fragmentShader>
 </Program>

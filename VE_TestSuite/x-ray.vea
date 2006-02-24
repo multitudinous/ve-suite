@@ -9,12 +9,13 @@
 	<shaderCode>
 		varying vec3 N;
 		varying vec3 I;
-		
+	        varying vec4 currentColor;	
 		void main()
 		{
 			vec4 P=gl_ModelViewMatrix*gl_Vertex;
 			I=P.xyz;
 			N=gl_NormalMatrix*gl_Normal;
+                        currentColor = gl_Color;
 			gl_Position=ftransform();
 		}
 	</shaderCode>
@@ -25,13 +26,14 @@
 	<shaderCode>
 		varying vec3 N;
 		varying vec3 I;
+	        varying vec4 currentColor;	
 
 		void main()
 		{
     			float opac=dot(normalize(-N),normalize(-I));
     			opac=abs(opac);
     			opac=1.0-pow(opac,0.8);
-   			vec4 Cs=vec4(0.0,1.0,0.0,1.0);
+   			vec4 Cs=currentColor;
     			gl_FragColor=opac*Cs;
 		}	                 
 	</shaderCode>
