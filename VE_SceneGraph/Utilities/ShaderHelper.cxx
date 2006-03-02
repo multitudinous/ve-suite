@@ -202,12 +202,10 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
    unsigned int tUnit = textureImage.GetTextureUnit();
    unsigned int dimension = textureImage.GetDimension();
 
-   std::cout<<"Reading texture image: "<<textureImage.GetImageFile()<<std::endl;
    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile(textureImage.GetImageFile());
    osg::ref_ptr<osg::Texture> genericTexture;
    std::string textureType("");
    textureImage.GetType(textureType);
-   std::cout<<"Texture type: "<<textureType<<std::endl;
 
    if(textureType == "1D" )
    {
@@ -216,12 +214,10 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
       texture1D->setImage(textureImageData.get());
 
       //Set the texture unit on the state set
-      
       genericTexture = texture1D.get();
    }
    else if(textureType == "2D")
    {
-      std::cout<<"2D texture Image!"<<std::endl;
       osg::ref_ptr<osg::Texture2D> texture2D = new osg::Texture2D();
       //we need to set the wrapping and filters still!!!!
       texture2D->setImage(textureImageData.get());
@@ -284,33 +280,32 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
 
       osg::Texture::WrapMode swrapMode = osg::Texture::CLAMP;
 
-      textureImage.GetWrapMode("Wrap S",sWrap);
-
-      _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_S,sWrap);
+      if(textureImage.GetWrapMode("Wrap S",sWrap))
+         _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_S,sWrap);
       
       if(dimension != 1)
       {
-         textureImage.GetWrapMode("Wrap T",tWrap);
-         _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_T,tWrap);
+         if(textureImage.GetWrapMode("Wrap T",tWrap))
+            _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_T,tWrap);
       }
       
       if(dimension == 3)
       {
-         textureImage.GetWrapMode("Wrap R",rWrap);
-         _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_R,rWrap);
+         if(textureImage.GetWrapMode("Wrap R",rWrap))
+            _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_R,rWrap);
       }
 
       //set the texture to the state set
       _ss->setTextureAttributeAndModes(tUnit,genericTexture.get(),osg::StateAttribute::ON);
 
       if(dimension == 1)
-         _ss->setTextureMode(tUnit,GL_TEXTURE_1D,osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+         _ss->setTextureMode(tUnit,GL_TEXTURE_1D,osg::StateAttribute::ON);
       
       if(dimension == 2)
-         _ss->setTextureMode(tUnit,GL_TEXTURE_2D,osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+         _ss->setTextureMode(tUnit,GL_TEXTURE_2D,osg::StateAttribute::ON);
       
       if(dimension == 3)
-         _ss->setTextureMode(tUnit,GL_TEXTURE_3D,osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+         _ss->setTextureMode(tUnit,GL_TEXTURE_3D,osg::StateAttribute::ON);
    }
 #endif
 }
@@ -335,7 +330,7 @@ void ShaderHelper::_setWrapOnTexture(osg::Texture* texture,
    {
       texture->setWrap(param,osg::Texture::MIRROR);
    }
-   else if(wrapMode == "CLAMP")
+   else if(wrapMode == "Clamp")
    {
       texture->setWrap(param,osg::Texture::CLAMP);
    }
