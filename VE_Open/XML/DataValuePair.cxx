@@ -325,15 +325,11 @@ void DataValuePair::_extractXMLObject(DOMElement* baseElement,std::string object
          _veXMLObject = 0;
       }
 
-      //DOMElement* objectNamespace = GetSubElement(genericObject,"objectNamespace",0);
-      DOMAttr* attr = genericObject->getAttributeNode( xercesString( "objectType" ) );
-      if ( attr )
+      std::string attr = XMLString::transcode( genericObject->getAttribute(xercesString("objectType")));
+      if ( !attr.empty() )
       {
-         //DOMElement* objectType = GetSubElement(genericObject,"objectType",0);
-         //if(objectType)
          {
-            std::string objectType = XMLString::transcode( attr->getValue() );
-            _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject( objectType, "new" );
+            _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject( attr, "new" );
             _veXMLObject->SetObjectFromXMLData(genericObject);
          } 
       }

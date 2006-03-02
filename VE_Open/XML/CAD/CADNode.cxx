@@ -334,20 +334,33 @@ CADNode::CADNode(const CADNode& rhs)
    _transform = 0;;
 
    if(rhs._transform)
-      _transform = new VE_XML::Transform(*rhs._transform);
+   {
+      if(rhs._type != "Clone")
+      {
+         _transform = new VE_XML::Transform(*rhs._transform);
+      }
+      else
+      {
+         _transform = new Transform();
+      }
+   }
    else
+   {
       _transform = new Transform();
+   }
 
    if(_attributeList.size())
    {
       _attributeList.clear();
    }
-
-   for(size_t i = 0; i < rhs._attributeList.size(); i++)
+   if(rhs._type != "Clone")
    {
-      _attributeList.push_back(rhs._attributeList.at(i));
+      for(size_t i = 0; i < rhs._attributeList.size(); i++)
+      {
+         _attributeList.push_back(rhs._attributeList.at(i));
+      }
+      _activeAttributeName = rhs._activeAttributeName;
    }
-   _activeAttributeName = rhs._activeAttributeName;
    _parent = rhs._parent;
    _name = rhs._name;
    _type = rhs._type;
@@ -369,6 +382,7 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       {
          _attributeList.push_back(rhs._attributeList.at(i));
       }
+     
       if(_transform)
       {
          delete _transform;
@@ -376,6 +390,7 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       }
       _transform = new Transform(*rhs._transform);
       _activeAttributeName = rhs._activeAttributeName;
+      
       _uID = rhs._uID;
       _parent = rhs._parent;
       _name = rhs._name;

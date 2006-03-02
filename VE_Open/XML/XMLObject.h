@@ -96,6 +96,10 @@ public:
 
    ///utility functions for reading data from an element
    ///\param element Element to extract string from.
+   bool ExtractBooleanFromSimpleElement( DOMElement* element );
+
+   ///utility functions for reading data from an element
+   ///\param element Element to extract string from.
    std::string ExtractDataStringFromSimpleElement( DOMElement* element );
    
    ///utility functions for reading data from an element
@@ -115,6 +119,11 @@ public:
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param itemIndex The index of the subElement to extract from the complex element.
    DOMElement* GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex);
+
+   ///utility functions for creating subElements for _veElement.
+   ///\param subElementTagName The subelement tagname to extract from baseElement.
+   ///\param dataValue The data to be stored.
+   void SetSubElement( std::string subElementTagName, bool dataValue );
 
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
@@ -140,7 +149,7 @@ public:
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
    ///\param attribName The name of the atrribute to be set
-   ///\param atrrib The attribute value
+   ///\param attrib The attribute value
    void SetSubElement( std::string subElementTagName, XMLObject* dataValue, 
                         std::string attribName, std::string attrib );
 

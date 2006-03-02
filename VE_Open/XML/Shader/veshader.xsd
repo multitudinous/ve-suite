@@ -21,7 +21,7 @@
                <xs:element name="type" type="xs:string" />
                <xs:element name="uniform" type="Uniform" maxOccurs="unbounded" minOccurs="0" />
                <xs:element name="shaderCode" type="xs:string" />
-               <xs:element name="texture" type="TextureImage" minOccurs="0" maxOccurs="unbounded" />
+               <xs:element name="textureImage" type="TextureImage" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
          </xs:restriction>
       </xs:complexContent>

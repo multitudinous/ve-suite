@@ -42,6 +42,7 @@ using namespace VE_XML;
 TextureImage::TextureImage()
 :VE_XML::XMLObject()
 {
+   std::cout<<"New texture image"<<std::endl;
    SetObjectType("TextureImage");
    SetObjectNamespace("Shader");
    _textureDescription.SetCommandName("Texture Image Data");
@@ -296,7 +297,9 @@ void TextureImage::_updateVEElement(std::string input)
    {
       _veElement = _rootDocument->createElement(xercesString(input));
    }
+   std::cout<<"Setting subelement..."<<std::endl;
    SetSubElement("textureDescriptionData",&_textureDescription);
+   std::cout<<"---done---"<<std::endl;
 }
 //////////////////////////////////////////////////////////
 void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
@@ -309,10 +312,11 @@ void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)
    
    if(currentElement)
    {
-
+     std::cout<<"Getting textureDescriptionData"<<std::endl;
      DOMElement* descriptionData = GetSubElement(currentElement,std::string("textureDescriptionData"),0);
      if(descriptionData)
      {
+        std::cout<<"Found textureDescriptionData"<<std::endl;
         _textureDescription.SetObjectFromXMLData(descriptionData);
      }
    }

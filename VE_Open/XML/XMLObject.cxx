@@ -202,6 +202,16 @@ const XMLCh* XMLObject::VEStr::unicodeForm() const
    return fUnicodeForm;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
+{
+   DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   std::string boolValue("true");
+   if(!dataValue)boolValue = "false";
+   DOMText* dataValueString = _rootDocument->createTextNode( xercesString( boolValue ) );
+   dataValueStringElement->appendChild( dataValueString );
+   _veElement->appendChild( dataValueStringElement );
+}
+////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetSubElement( std::string subElementTagName, std::string dataValue )
 {
    DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
@@ -278,6 +288,14 @@ DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElem
       }
    }
    return 0;
+}
+//////////////////////////////////////////////////////////////////////
+bool XMLObject::ExtractBooleanFromSimpleElement(DOMElement* element)
+{
+   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
+   std::string tmp = XMLString::transcode( rawText->getData() );
+   if(tmp == "true")return true;
+   return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string XMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)

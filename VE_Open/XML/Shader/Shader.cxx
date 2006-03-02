@@ -128,10 +128,12 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
             }
             //populate the texture images
             {
-               DOMNodeList* textureList = currentElement->getElementsByTagName(xercesString("texture"));
+               DOMNodeList* textureList = currentElement->getElementsByTagName(xercesString("textureImage"));
                unsigned int nTextures = textureList->getLength();
+               std::cout<<"Texture Images: "<<nTextures<<std::endl;
                for(unsigned int i = 0; i < nTextures; i++)
                {
+                  std::cout<<"Adding texture image."<<std::endl;
                   TextureImage newTexture;
                   newTexture.SetObjectFromXMLData(textureList->item(i));
                   AddTextureImage(newTexture);
@@ -176,7 +178,13 @@ TextureImage& Shader::GetTextureImage(unsigned int textureUnit)
 {
    try
    {
+      if(!_textureImages.size())
+         throw("No textures present in shader!!");
       return _textureImages[textureUnit];
+   }
+   catch(const char* msg)
+   {
+      std::cout<<"ERROR: "<<msg<<std::endl;
    }
    catch(...)
    {
@@ -227,7 +235,7 @@ void Shader::_updateTextureImages()
        textures++)
    {
       textures->second.SetOwnerDocument(_rootDocument);
-      _veElement->appendChild(textures->second.GetXMLData("texture"));
+      _veElement->appendChild(textures->second.GetXMLData("textureImage"));
    }
 }
 //////////////////////////////
