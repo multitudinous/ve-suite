@@ -289,13 +289,15 @@ DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElem
    }
    return 0;
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool XMLObject::ExtractBooleanFromSimpleElement(DOMElement* element)
 {
    DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
    std::string tmp = XMLString::transcode( rawText->getData() );
-   if(tmp == "true")return true;
-   return false;
+   if(tmp == "true")
+      return true;
+   else
+      return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string XMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)

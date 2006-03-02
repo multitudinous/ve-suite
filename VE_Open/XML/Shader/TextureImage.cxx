@@ -256,6 +256,7 @@ std::string TextureImage::GetImageFile(std::string face)
    {
       std::cout<<"TextureImage::GetImageFile() Error: "<<msg<<": "<<face<<std::endl;
    }
+   return std::string("");
 }
 ////////////////////////////////////////////////////////////////
 void TextureImage::SetTextureImageType(std::string textureType)
