@@ -80,6 +80,7 @@ enum
    XPLORER_NAVIGATION,
    XPLORER_VIEWPOINTS,
    XPLORER_SOUNDS,
+   XPLORER_STREAMLINE,
    XPLORER_VISTABS,
    JUGGLER_STEREO,
    JUGGLER_MONO, 
@@ -96,6 +97,7 @@ class Network;
 class NavigationPane;
 class SoundsPane;
 class ViewLocPane;
+class StreamlinePane;
 class CORBAServiceList;
 namespace VE_Conductor
 {
@@ -201,6 +203,7 @@ public:
    void LaunchNavigationPane(wxCommandEvent& event);
    void LaunchViewpointsPane(wxCommandEvent& event);
    void LaunchSoundsPane(wxCommandEvent& event);
+   void LaunchStreamlinePane(wxCommandEvent& event);
    void LaunchVisTabs( wxCommandEvent& event );
 
    ///Launch the CADNode GUI
@@ -223,6 +226,7 @@ private:
 
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
 
+   StreamlinePane* streamlinePane;
    CORBAServiceList* serviceList;
    VE_XML::DOMDocumentManager* domManager;
 

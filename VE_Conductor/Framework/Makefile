@@ -25,6 +25,9 @@ SRCS=\
    OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
+   StreamersPane.cxx \
+   VjObsC.cpp \
+   VjObsS.cpp \
    UI_AdvectionPanel.cxx \
    UI_i.cpp \
    UI_Frame.cpp \
@@ -69,7 +72,7 @@ EXTRA_DEFS+=
 ifeq (${CFDHOSTTYPE},Darwin)
 #EXTRA_LDFLAGS+= -Wl
 else
-EXTRA_LDFLAGS+= -Wl,-E #-ldl -lrt -lc 
+EXTRA_LDFLAGS+= -Wl,-E -g #-ldl -lrt -lc 
 endif
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 EXTRA_LIBS+= -lGUIPluginLib -lVE_XMLLib -lm -lpthread 
@@ -100,6 +103,7 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
+EXTRA_CXXFLAGS+= -g
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
 # -----------------------------------------------------------------------------

@@ -126,7 +126,7 @@ void SoundsPane::SendCommandsToXplorer( void )
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetOwnerDocument(doc);
-   veCommand->SetCommandName( std::string("Navigation_Data") );
+   veCommand->SetCommandName( std::string("Sound_Data") );
    veCommand->AddDataValuePair( dataValuePair );
    doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );
 

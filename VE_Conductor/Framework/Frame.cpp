@@ -44,6 +44,7 @@
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
+#include "VE_Conductor/Framework/StreamersPane.h"
 #include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/Framework/CADNodeManagerDlg.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
@@ -111,11 +112,14 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
    EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
+   EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
+
    //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
    //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
    //  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
    //  EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
    //  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
+
    ///This call back is used by OrbThread
    ///It allows printing text to the message box below conductor
    EVT_UPDATE_UI(7777, AppFrame::OnUpdateUIPop)
@@ -162,6 +166,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    _cadDialog = 0;
 
+   streamlinePane = 0;
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
    ///Initialize VE-Open
@@ -300,6 +305,12 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       viewlocPane = 0;
    }
 
+   if ( streamlinePane )
+   {
+	   streamlinePane->Destroy();
+	   streamlinePane = 0;
+   }
+
    if ( soundsPane )
    {
       soundsPane->Destroy();
@@ -404,12 +415,15 @@ void AppFrame::CreateMenu()
    xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
    xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
    xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
+   xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
    xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
    xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
+
    xplorerMenu->Enable( XPLORER_NAVIGATION, true);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
    xplorerMenu->Enable( XPLORER_SOUNDS, true);
+   xplorerMenu->Enable( XPLORER_STREAMLINE, true);
    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
    xplorerMenu->Enable( CAD_NODE_DIALOG,true);
 
@@ -1132,6 +1146,10 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
       viewlocPane->Close( false );
    }
 
+   if ( streamlinePane )
+   {
+	   streamlinePane->Close( false );
+   }
 
    if ( soundsPane )
    {
@@ -1217,6 +1235,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    // now show it
    viewlocPane->Show();
 }
+
 ///////////////////////////////////////////////////////////////////
 void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED( event ) )
 {
@@ -1259,6 +1278,24 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
    */
    _cadDialog->SetVjObsPtr(vjobs.in());
    _cadDialog->Show();
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::LaunchStreamlinePane( wxCommandEvent& WXUNUSED(event) )
+{
+   if ( streamlinePane == 0 )
+   {
+      // create pane and set appropriate vars
+      streamlinePane = new StreamlinePane( vjobs.in(), domManager );
+      // Set DOMDocument
+      // navPane->SetDOMManager( domManager );
+   }
+   else
+   {
+      // set pointer to corba object for comm
+      streamlinePane->SetCommInstance( vjobs.in() );
+   }
+   // now show it
+   streamlinePane->Show();
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )

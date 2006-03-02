@@ -617,11 +617,12 @@ void StreamlinePane::SetCommInstance( VjObs_ptr veEngine )
 void StreamlinePane::SendCommandsToXplorer( void )
 {
    // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument();
+   domManager->CreateCommandDocument("Command");
    doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
+   dataValuePair->SetOwnerDocument(doc);
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    VE_XML::Command* veCommand = new VE_XML::Command();
