@@ -80,6 +80,7 @@ enum
    XPLORER_NAVIGATION,
    XPLORER_VIEWPOINTS,
    XPLORER_SOUNDS,
+   XPLORER_VISTABS,
    JUGGLER_STEREO,
    JUGGLER_MONO, 
    JUGGLER_SETTINGS,
@@ -185,10 +186,10 @@ public:
   void ViewHelp(wxCommandEvent &event);
   void GlobalParam(wxCommandEvent &event);
 
-  void ConExeServer(wxCommandEvent &event);
+  void ConExeServer( void );
   void DisConExeServer(wxCommandEvent &event);
   void DisConVEServer(wxCommandEvent &event);
-  void ConVEServer(wxCommandEvent &event);
+  void ConVEServer( void );
   void LoadBase(wxCommandEvent &event);
   void LoadSour(wxCommandEvent &event);
   void LoadREIBase(wxCommandEvent &event);
@@ -200,6 +201,7 @@ public:
    void LaunchNavigationPane(wxCommandEvent& event);
    void LaunchViewpointsPane(wxCommandEvent& event);
    void LaunchSoundsPane(wxCommandEvent& event);
+   void LaunchVisTabs( wxCommandEvent& event );
 
    ///Launch the CADNode GUI
    ///\param event The wxCommand event.
@@ -217,6 +219,7 @@ private:
    NavigationPane* navPane;
    SoundsPane* soundsPane;
    ViewLocPane* viewlocPane;
+   wxDialog* visTabs;
 
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
 

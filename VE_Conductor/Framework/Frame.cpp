@@ -82,40 +82,40 @@ using namespace VE_Shader;
 #endif
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
-EVT_CLOSE(AppFrame::OnClose)
-  EVT_MENU(v21ID_ZOOMIN, AppFrame::ZoomIn)
-  EVT_MENU(v21ID_ZOOMOUT, AppFrame::ZoomOut)
-  EVT_MENU(wxID_SAVE, AppFrame::Save)
-  EVT_MENU(wxID_SAVEAS, AppFrame::SaveAs)
-  EVT_MENU(wxID_NEW, AppFrame::New)
+   EVT_CLOSE(AppFrame::OnClose)
+   EVT_MENU(v21ID_ZOOMIN, AppFrame::ZoomIn)
+   EVT_MENU(v21ID_ZOOMOUT, AppFrame::ZoomOut)
+   EVT_MENU(wxID_SAVE, AppFrame::Save)
+   EVT_MENU(wxID_SAVEAS, AppFrame::SaveAs)
+   EVT_MENU(wxID_NEW, AppFrame::New)
    // this is probably a bug and needs to be fixed
-  EVT_MENU(wxID_EXIT, AppFrame::FrameClose)
-  EVT_MENU(wxID_OPEN, AppFrame::Open)
-  EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
-  EVT_MENU(v21ID_SUBMIT, AppFrame::SubmitToServer)
-  EVT_MENU(v21ID_CONNECT, AppFrame::ConExeServer)
-  EVT_MENU(v21ID_DISCONNECT, AppFrame::DisConExeServer)
-  EVT_MENU(v21ID_DISCONNECT_VE, AppFrame::DisConVEServer)
-  EVT_MENU(v21ID_CONNECT_VE, AppFrame::ConVEServer)
-  EVT_MENU(v21ID_START_CALC, AppFrame::StartCalc)
-  EVT_MENU(v21ID_STOP_CALC, AppFrame::StopCalc)
-  EVT_MENU(v21ID_PAUSE_CALC, AppFrame::PauseCalc)
-  EVT_MENU(v21ID_RESUME_CALC, AppFrame::ResumeCalc)
-  EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
-  EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
+   EVT_MENU(wxID_EXIT, AppFrame::FrameClose)
+   EVT_MENU(wxID_OPEN, AppFrame::Open)
+   EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
+   EVT_MENU(v21ID_SUBMIT, AppFrame::SubmitToServer)
+   //EVT_MENU(v21ID_CONNECT, AppFrame::ConExeServer)
+   EVT_MENU(v21ID_DISCONNECT, AppFrame::DisConExeServer)
+   EVT_MENU(v21ID_DISCONNECT_VE, AppFrame::DisConVEServer)
+   //EVT_MENU(v21ID_CONNECT_VE, AppFrame::ConVEServer)
+   EVT_MENU(v21ID_START_CALC, AppFrame::StartCalc)
+   EVT_MENU(v21ID_STOP_CALC, AppFrame::StopCalc)
+   EVT_MENU(v21ID_PAUSE_CALC, AppFrame::PauseCalc)
+   EVT_MENU(v21ID_RESUME_CALC, AppFrame::ResumeCalc)
+   EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
+   EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 
-  EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
-  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
-//  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
-  EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
-  EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
-  EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
-
-//  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
-//  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
-//  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
-//  EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
-//  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
+   EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
+   EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
+   //  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
+   EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
+   EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
+   EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
+   EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
+   //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
+   //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
+   //  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
+   //  EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
+   //  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
    ///This call back is used by OrbThread
    ///It allows printing text to the message box below conductor
    EVT_UPDATE_UI(7777, AppFrame::OnUpdateUIPop)
@@ -126,12 +126,13 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 {
   wx_log_splitter = new wxSplitterWindow(this, -1);
   wx_log_splitter->SetMinimumPaneSize( 40 );
+   wx_ve_splitter = 0;
   wx_ve_splitter = new wxSplitterWindow(wx_log_splitter, -1);
   wx_ve_splitter->SetMinimumPaneSize( 20 );
   wx_nw_splitter = new wxSplitterWindow(wx_ve_splitter, -1);
   wx_nw_splitter->SetMinimumPaneSize( 20 );
    xplorerMenu = 0;
-  
+   visTabs = 0;
   //LogWindow
   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
 
@@ -175,7 +176,7 @@ void AppFrame::CreateVETab()
   //create the image list for the tabs first
   // create a dummy image list with a few icons
 
-  wxSize imageSize(32, 32);
+/*  wxSize imageSize(32, 32);
   
   m_imageList = new wxImageList( imageSize.GetWidth(), imageSize.GetHeight() );
   
@@ -186,33 +187,40 @@ void AppFrame::CreateVETab()
   m_imageList->Add(wxArtProvider::GetIcon(wxART_WARNING, wxART_OTHER, imageSize));
   
   m_imageList->Add(wxArtProvider::GetIcon(wxART_ERROR, wxART_OTHER, imageSize));
-  
+  */
+   visTabs = new wxDialog(NULL,-1, wxString("Vis Tabs"), 
+		  wxDefaultPosition, wxDefaultSize, 
+		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP);
    //m_tabs = new UI_Tabs(vjobs.in(), wx_ve_splitter, ID_UI_TABS);
-   m_frame = new UI_Frame(vjobs.in(), wx_ve_splitter, wxID_HIGHEST);
+   m_frame = new UI_Frame(vjobs.in(), visTabs, wxID_HIGHEST);
    // Create the notebook's panels
    //m_tabs->AssignImageList(m_imageList);
    //m_frame->_tabs->AssignImageList(m_imageList);
    //m_tabs->createTabPages();
    //wxNotebookSizer *nbs = new wxNotebookSizer(m_tabs);
-   sizerTab = new wxBoxSizer(wxVERTICAL);
    //sizerTab->Add(nbs, 1, wxEXPAND | wxALL);
+   sizerTab = new wxBoxSizer(wxVERTICAL);
    sizerTab->Add(m_frame, 1, wxEXPAND | wxALL);
    sizerTab->Layout();
  
-   wx_ve_splitter->SetSizer(sizerTab);
-   wx_ve_splitter->SetAutoLayout(TRUE);
+   //wx_ve_splitter->SetSizer(sizerTab);
+   //wx_ve_splitter->SetAutoLayout(TRUE);
 
    //wx_ve_splitter->SplitVertically(wx_nw_splitter, m_tabs, 0);
-   wx_ve_splitter->SplitVertically(wx_nw_splitter, m_frame, 0);
+   //wx_ve_splitter->SplitVertically(wx_nw_splitter, m_frame, 0);
 
    //trying to get the tabs to show up on initialization!!!!!
    //wxSize windowSize = m_tabs->GetSize();
    //m_tabs->SetSize(windowSize.GetWidth()+1,windowSize.GetHeight()+1);
    //m_tabs->Refresh();
 
-   wxSize windowSize = m_frame->GetSize();
-   m_frame->SetSize(windowSize.GetWidth()+1,windowSize.GetHeight()+1);
-   m_frame->Refresh();
+   //wxSize windowSize = m_frame->GetSize();
+   //m_frame->SetSize(windowSize.GetWidth()+1,windowSize.GetHeight()+1);
+   //m_frame->Refresh();
+
+
+   //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+   SetSizer( sizerTab );
 }
 
 wxRect AppFrame::DetermineFrameSize (wxConfig* config)
@@ -341,17 +349,17 @@ void AppFrame::CreateMenu()
   file_menu->Enable(wxID_PRINT, false);
   
   
-  con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
-  con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
-  con_menu->AppendSeparator();
+  //con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
+  //con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
+  //con_menu->AppendSeparator();
   con_menu->Append(v21ID_SUBMIT, _("Sub&mit Job\tCtrl+M"));
   con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
   con_menu->AppendSeparator();
   con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
   con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
 
-  con_menu->Enable(v21ID_SUBMIT,false);
-  con_menu->Enable(v21ID_LOAD, false);
+  //con_menu->Enable(v21ID_SUBMIT,false);
+  //con_menu->Enable(v21ID_LOAD, false);
   con_menu->Enable(v21ID_DISCONNECT, false);
   con_menu->Enable(v21ID_DISCONNECT_VE, false);
 
@@ -398,11 +406,12 @@ void AppFrame::CreateMenu()
    xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
    xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
-   xplorerMenu->Enable( CAD_NODE_DIALOG,false);
-   xplorerMenu->Enable( XPLORER_NAVIGATION, false);
-   xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
-   xplorerMenu->Enable( XPLORER_SOUNDS, false);
-   xplorerMenu->Enable( JUGGLER_SETTINGS, false);
+   xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
+   xplorerMenu->Enable( XPLORER_NAVIGATION, true);
+   xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
+   xplorerMenu->Enable( XPLORER_SOUNDS, true);
+   xplorerMenu->Enable( JUGGLER_SETTINGS, true);
+   xplorerMenu->Enable( CAD_NODE_DIALOG,true);
 
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
 //  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
@@ -553,6 +562,10 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
+   ConExeServer();
+   // If not sucessful
+   if ( !is_orb_init )
+      return;
    char* nw_str = 0;
    try
    {
@@ -574,6 +587,10 @@ void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
+   ConExeServer();
+   // If not sucessful
+   if ( !is_orb_init )
+      return;
    std::string nw_str = network->Save( std::string( "returnString" ) );
    // write the domdoc to the string above
    try 
@@ -638,6 +655,11 @@ void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
+   ConExeServer();
+   // If not sucessful
+   if ( !is_orb_init )
+      return;
+   
    char* result;
    //char buf[80];
    std::map<int, Module>::iterator iter;
@@ -873,14 +895,20 @@ void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
    }
 }
 
-void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::ConExeServer( void )
 {
-   wxImage splashImage(ve_ce_banner_xpm);
-   wxBitmap bitmap(splashImage);
-   wxSplashScreen* splash = new wxSplashScreen(bitmap,
-           wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-          2500, this, -1, wxDefaultPosition, wxDefaultSize,
-          wxSIMPLE_BORDER|wxSTAY_ON_TOP);
+   //have we already connected
+   wxSplashScreen* splash = 0;
+   if ( !is_orb_init )
+   {
+      wxImage splashImage(ve_ce_banner_xpm);
+      wxBitmap bitmap(splashImage);
+      splash = new wxSplashScreen(bitmap,
+              wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
+             2500, this, -1, wxDefaultPosition, wxDefaultSize,
+             wxSIMPLE_BORDER|wxSTAY_ON_TOP);
+   }
+
    //wxSafeYield();
    if ( pelog==NULL )
    {
@@ -895,7 +923,10 @@ void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
       else
 	      return;
    }
-  
+
+
+
+
    try
    { 
       //_mutex.acquire();	  
@@ -913,12 +944,13 @@ void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
       Log("Can't find executive or UI registration error\n");
    }
    ::wxMilliSleep( 2500 );
-   delete splash;
+   if ( splash )
+      delete splash;
 }
   
-void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
+void AppFrame::ConVEServer( void )
 {
-   if (pelog==NULL)
+   if ( pelog == NULL )
    {
 	   pelog = new PEThread(this);
 	   pelog->activate();
@@ -957,13 +989,7 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
          std::cerr<<"VjObs is Nill"<<std::endl;
     
       //Create the VE Tab
-      con_menu->Enable(v21ID_CONNECT_VE, false);
       con_menu->Enable(v21ID_DISCONNECT_VE, true);
-      xplorerMenu->Enable( XPLORER_NAVIGATION, true);
-      xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
-	  xplorerMenu->Enable( XPLORER_SOUNDS, true);
-      xplorerMenu->Enable( JUGGLER_SETTINGS, true);
-      xplorerMenu->Enable( CAD_NODE_DIALOG,true);
    } 
    catch (CORBA::Exception &) 
    {
@@ -971,7 +997,6 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
       return;
    }
   
-   CreateVETab();
    ::wxMilliSleep( 2500 );
    delete splash;
    Log("Connected to VE server.\n");
@@ -1051,9 +1076,9 @@ void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
       delete p_ui_i;
       p_ui_i = NULL;
 
-      con_menu->Enable(v21ID_SUBMIT,false);
-      con_menu->Enable(v21ID_LOAD, false);
-      con_menu->Enable(v21ID_CONNECT, true);
+      //con_menu->Enable(v21ID_SUBMIT,false);
+      //con_menu->Enable(v21ID_LOAD, false);
+      //con_menu->Enable(v21ID_CONNECT, true);
       run_menu->Enable(v21ID_START_CALC, false);
       // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
       con_menu->Enable(v21ID_DISCONNECT, false);
@@ -1091,17 +1116,11 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
    {
    std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }*/
-   wx_ve_splitter->Unsplit(m_frame);
+   //wx_ve_splitter->Unsplit(m_frame);
    sizerTab->Detach(m_frame);
    delete m_frame;
    m_frame = NULL;
-   con_menu->Enable(v21ID_CONNECT_VE, true);
    con_menu->Enable(v21ID_DISCONNECT_VE, false);
-   xplorerMenu->Enable( XPLORER_NAVIGATION, false);
-   xplorerMenu->Enable( XPLORER_VIEWPOINTS, false);
-   xplorerMenu->Enable( XPLORER_SOUNDS, false);
-   xplorerMenu->Enable( CAD_NODE_DIALOG,false);
-   xplorerMenu->Enable( JUGGLER_SETTINGS, false);
 
    if ( navPane )
    {
@@ -1161,6 +1180,9 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( navPane == 0 )
    {
+      ConVEServer();
+      if ( CORBA::is_nil(vjobs.in()) )
+         return;
       // create pane and set appropriate vars
       navPane = new NavigationPane( vjobs.in(), domManager );
       // Set DOMDocument
@@ -1179,6 +1201,9 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( viewlocPane == 0 )
    {
+      ConVEServer();
+      if ( CORBA::is_nil(vjobs.in()) )
+         return;
       // create pane and set appropriate vars
       viewlocPane = new ViewLocPane( vjobs.in(), domManager );
       // Set DOMDocument
@@ -1197,6 +1222,9 @@ void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED( event ) )
 {
    if ( soundsPane == 0 )
    {
+      ConVEServer();
+      if ( CORBA::is_nil(vjobs.in()) )
+         return;
       // create pane and set appropriate vars
       soundsPane = new SoundsPane( vjobs.in(), domManager );
       // Set DOMDocument
@@ -1215,6 +1243,9 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 {
    if( !_cadDialog)
    {
+      ConVEServer();
+      if ( CORBA::is_nil(vjobs.in()) )
+         return;
       //this will change once we have a way to retrieve the geometry from the model
       _cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg(0,
                                                                this,CAD_NODE_DIALOG);
@@ -1232,6 +1263,7 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 {
+   ConVEServer();
    // Now need to construct domdocument and populate it with the new vecommand
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -1275,4 +1307,17 @@ void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
    //Clean up memory
    delete veCommand;
 }
-
+///////////////////////////////////////////////////////////////////
+void AppFrame::LaunchVisTabs( wxCommandEvent& WXUNUSED(event) )
+{
+   if ( visTabs == 0 )
+   {
+      ConVEServer();
+      if ( CORBA::is_nil(vjobs.in()) )
+         return;
+      // create pane and set appropriate vars
+      CreateVETab();
+   }
+   // now show it
+   visTabs->Show();
+}
