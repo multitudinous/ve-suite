@@ -630,7 +630,7 @@ const std::string cfdDCS::GetName( void )
 #endif
 }
 ////////////////////////////////////
-void cfdDCS::SetName( std::string name )
+/*void cfdDCS::SetName( std::string name )
 {
    const std::string test(name);
 #ifdef _OPENSG
@@ -642,7 +642,7 @@ void cfdDCS::SetName( std::string name )
 #elif _OSG
    _dcs->setName( test );
 #endif
-}
+}*/
 ////////////////////////////////////////////////////////////
 int cfdDCS::ReplaceChild( cfdNode* childToBeReplaced,
                          cfdNode* newChild)

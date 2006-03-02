@@ -202,10 +202,12 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
    unsigned int tUnit = textureImage.GetTextureUnit();
    unsigned int dimension = textureImage.GetDimension();
 
+   std::cout<<"Reading texture image: "<<textureImage.GetImageFile()<<std::endl;
    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile(textureImage.GetImageFile());
    osg::ref_ptr<osg::Texture> genericTexture;
    std::string textureType("");
    textureImage.GetType(textureType);
+   std::cout<<"Texture type: "<<textureType<<std::endl;
 
    if(textureType == "1D" )
    {
@@ -219,6 +221,7 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
    }
    else if(textureType == "2D")
    {
+      std::cout<<"2D texture Image!"<<std::endl;
       osg::ref_ptr<osg::Texture2D> texture2D = new osg::Texture2D();
       //we need to set the wrapping and filters still!!!!
       texture2D->setImage(textureImageData.get());
@@ -251,6 +254,7 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
 
    if(genericTexture.valid())
    {
+      std::cout<<"Setting up texture parameters for shader!"<<std::endl;
       std::string minFilter;
       textureImage.GetFilterMode("Minification",minFilter);
       
@@ -416,7 +420,9 @@ void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
                                                                      boolValues.at(3))));
          }
       }else if(uniformType == "Sampler"){
+         std::cout<<"Extracting Sampler!!"<<std::endl;
          _extractTextureFromShader(shader->GetTextureImage(uniformData->GetTextureUnit()));
+         std::cout<<"---Done---"<<std::endl;
       }
       
 #elif _PERFORMER

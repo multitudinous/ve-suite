@@ -64,7 +64,7 @@ namespace VE_SceneGraph{
          virtual cfdNode* GetChild( int );
          virtual int  GetNumChildren( void );
 
-         virtual void SetName( std::string );
+         //virtual void SetName( std::string );
          virtual int ReplaceChild( cfdNode*, cfdNode* );
 
          virtual cfdNode* Clone( int );
