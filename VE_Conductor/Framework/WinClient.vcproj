@@ -307,6 +307,9 @@
 				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cpp">
 			</File>
 			<File
+				RelativePath=".\StreamersPane.cxx">
+			</File>
+			<File
 				RelativePath=".\StringParse.cpp">
 			</File>
 			<File
@@ -585,7 +588,13 @@
 				RelativePath=".\SoundsPane.h">
 			</File>
 			<File
+				RelativePath=".\StreamersPane.h">
+			</File>
+			<File
 				RelativePath="StringParse.h">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_AdvectionPanel.h">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_DataSetPanel.h">
