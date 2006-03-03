@@ -58,6 +58,7 @@ EXTRA_CXXFLAGS+= -Wall
 #DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
