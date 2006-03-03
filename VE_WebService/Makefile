@@ -15,15 +15,9 @@ all:
 SRCS=\
    cfdWebServicesMain.cxx \
    cfdWebServices.cxx \
-   interface.cpp \
    moduleC.cpp \
    moduleS.cpp \
-   Network_Exec.cpp \
-   package.cpp \
-   string_ops.cpp \
    veWebService_i.cpp \
-   VjObsS.cpp \
-   VjObsC.cpp	\
 	query.cpp	\
 	vallist.cpp	\
 	field_names.cpp	\
@@ -68,14 +62,15 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
-include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
-include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
 EXEC_TAG = _tao
-vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework \
+vpath %.cpp $(VE_SUITE_HOME)	\
+         $(VE_SUITE_HOME)/VE_Conductor/Framework \
 			$(VE_SUITE_HOME)/VE_Xplorer \
 			$(VE_SUITE_HOME)/VE_Conductor/VE_UI $(IDL_HOME)/skel \
 			$(VE_SUITE_HOME)/VE_SceneGraph \
@@ -91,6 +86,7 @@ EXTRA_LIBS +=	-B static /usr/lib/mysql/libmysqlclient.a
 EXTRA_LIBS +=	-B static /usr/lib/mysql/libmysys.a
 EXTRA_LIBS +=	-B static /usr/lib/mysql/libmystrings.a
 EXTRA_LIBS +=	-B /home/users/kennyk/Graphics_Programming/msqlpp/lib/libmysqlpp.la
+EXTRA_LIBS += -lVE_UtilLib.so -lGUIPluginLib.so -lVE_ConductorLib.so
 
 EXTRA_CXXFLAGS += -I$(VJ_BASE_DIR)/include -I$(VE_SUITE_HOME)/VE_CE -I$(VE_SUITE_HOME)/VE_Xplorer -I$(VE_SUITE_HOME)/VE_SceneGraph 
 
