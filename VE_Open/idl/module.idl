@@ -107,6 +107,10 @@ module Body{
     //This is to Get the name
     string GetName() raises(Error::EUnknown);
     
+    //This is allows the unit to return model or 
+    //an internal network to the executive
+    string Query() raises(Error::EUnknown);
+    
   };
 
  interface UI { //This is the UI;
@@ -196,6 +200,10 @@ module Body{
 
     //This is to Get the global modules's ID, so the output of the global module can be used by all modules (for example, coal module), return value is the number of the global modules, the output parameter is the ids fo the global modules. So the Unit can call the  GetExportData(id) to the get the global data
     long GetGlobalMod(out Types::ArrayLong ids) raises(Error::EUnknown);
+
+    //This is allows the executive to return model or 
+    //an internal network to the ui
+    string Query() raises(Error::EUnknown);
 
   };
 
