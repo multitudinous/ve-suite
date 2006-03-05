@@ -814,7 +814,9 @@ void Body_Executive_i::StopCalc (
          // a map that is used everywhere
          UnRegisterUnit( iter->first.c_str() );
          // Not sure if increment here or not
+         std::map<std::string, Body::Unit_var>::iterator tempIter = iter + 1;
          _mod_units.erase( iter );
+         iter = tempIter;
 	   }
    }
   _mutex.release();
@@ -846,7 +848,9 @@ void Body_Executive_i::PauseCalc (
          // a map that is used everywhere
          UnRegisterUnit( iter->first.c_str() );
          // Not sure if increment here or not
+         std::map<std::string, Body::Unit_var>::iterator tempIter = iter + 1;
          _mod_units.erase( iter );
+         iter = tempIter;
 	   }
    }
   _mutex.release();
@@ -878,7 +882,9 @@ void Body_Executive_i::Resume (
          // a map that is used everywhere
          UnRegisterUnit( iter->first.c_str() );
          // Not sure if increment here or not
+         std::map<std::string, Body::Unit_var>::iterator tempIter = iter + 1;
          _mod_units.erase( iter );
+         iter = tempIter;
 	   }
    }
    _mutex.release();
