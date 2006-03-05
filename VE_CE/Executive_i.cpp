@@ -797,9 +797,26 @@ void Body_Executive_i::StopCalc (
   ))
 {
   _mutex.acquire();
-  
-  // mod->StopCalc();
-  
+   // Stop all units
+   std::map<std::string, Body::Unit_var>::iterator iter;
+   for ( iter = _mod_units.begin(); iter != _mod_units.end(); )
+   {
+	   try 
+      {
+   	   //queryString.append( iter->second->Query() );
+   	   iter->second->StopCalc();
+         ++iter;
+	   }
+      catch (CORBA::Exception &) 
+      {
+         // std::cout << iter->first <<" is obsolete." << std::endl;
+         // it seems this call should be blocked as we are messing with 
+         // a map that is used everywhere
+         UnRegisterUnit( iter->first.c_str() );
+         // Not sure if increment here or not
+         _mod_units.erase( iter );
+	   }
+   }
   _mutex.release();
 }
 
@@ -812,9 +829,26 @@ void Body_Executive_i::PauseCalc (
   ))
 {
   _mutex.acquire();
-  
-  // mod->PauseCalc();
-  
+   // Pause all units
+   std::map<std::string, Body::Unit_var>::iterator iter;
+   for ( iter = _mod_units.begin(); iter != _mod_units.end(); )
+   {
+	   try 
+      {
+   	   //queryString.append( iter->second->Query() );
+   	   iter->second->PauseCalc();
+         ++iter;
+	   }
+      catch (CORBA::Exception &) 
+      {
+         // std::cout << iter->first <<" is obsolete." << std::endl;
+         // it seems this call should be blocked as we are messing with 
+         // a map that is used everywhere
+         UnRegisterUnit( iter->first.c_str() );
+         // Not sure if increment here or not
+         _mod_units.erase( iter );
+	   }
+   }
   _mutex.release();
 }
 
@@ -826,11 +860,67 @@ void Body_Executive_i::Resume (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+   _mutex.acquire();
+   // Resume all the modules
+   std::map<std::string, Body::Unit_var>::iterator iter;
+   for ( iter = _mod_units.begin(); iter != _mod_units.end(); )
+   {
+	   try 
+      {
+   	   //queryString.append( iter->second->Query() );
+   	   iter->second->Resume();
+         ++iter;
+	   }
+      catch (CORBA::Exception &) 
+      {
+         // std::cout << iter->first <<" is obsolete." << std::endl;
+         // it seems this call should be blocked as we are messing with 
+         // a map that is used everywhere
+         UnRegisterUnit( iter->first.c_str() );
+         // Not sure if increment here or not
+         _mod_units.erase( iter );
+	   }
+   }
+   _mutex.release();
+}
   
-  // mod->Resume();
-  
-  _mutex.release();
+char *  Body_Executive_i::Query (
+    ACE_ENV_SINGLE_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ))
+{
+   ///string used to hold query data
+   std::string queryString;
+
+   _mutex.acquire();
+   // Resume all the modules
+   std::map<std::string, Body::Unit_var>::iterator iter;
+   for ( iter = _mod_units.begin(); iter != _mod_units.end(); )
+   {
+	   try 
+      {
+         // this may not work
+         // I think we actually need to grab all the sub elements from under the root document 
+         // and then append those
+   	   queryString.append( iter->second->Query() );
+         ++iter;
+	   }
+      catch (CORBA::Exception &) 
+      {
+         // std::cout << iter->first <<" is obsolete." << std::endl;
+         // it seems this call should be blocked as we are messing with 
+         // a map that is used everywhere
+         UnRegisterUnit( iter->first.c_str() );
+         // Not sure if increment here or not
+         _mod_units.erase( iter++ );
+	   }
+   }
+   _mutex.release();
+
+   return CORBA::string_dup( queryString.c_str() );
 }
   
 void Body_Executive_i::RegisterUI (

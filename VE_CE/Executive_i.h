@@ -263,6 +263,14 @@ virtual void Resume (
     , Error::EUnknown
   ));
 
+virtual char * Query (
+    ACE_ENV_SINGLE_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));
+
 virtual void RegisterUI (
     const char * UIName,
 	Body::UI_ptr ui
