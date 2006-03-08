@@ -272,8 +272,8 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "inputs", i );
-            results.push_back( new DataValuePair(  ) );
-            results.back()->SetObjectFromXMLData( dataValueStringName );
+            inputs.push_back( new DataValuePair(  ) );
+            inputs.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
 
@@ -368,18 +368,24 @@ Port* Model::GetPort( unsigned int i )
    }
    catch (...)
    {
-      if ( i > (ports.size() + 1) )
+      //if ( i > (ports.size() + 1) )
       {
          std::cerr << "The element request is out of sequence."
                      << " Please ask for a lower number point." << std::endl;
          return 0;
       }
-      else
+      /*else
       {
          ports.push_back( new Port(  ) );
          return ports.back();
-      }
+      }*/
    }
+}
+////////////////////////////////////////////////////////////
+Port* Model::GetPort( void )
+{
+   ports.push_back( new Port() );
+   return ports.back();
 }
 ////////////////////////////////////////////////////////////
 size_t Model::GetNumberOfPorts( void )

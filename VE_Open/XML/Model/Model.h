@@ -114,6 +114,8 @@ public:
    ///Get the i'th port for the model.
    ///\param i The i'th port you are after.
    Port* GetPort( unsigned int i );
+   ///Allocates a new port for the model.
+   Port* GetPort( void );
    ///Get port data
    size_t GetNumberOfPorts( void );
    ///Get the i'th information packet for a model.
