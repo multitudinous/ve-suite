@@ -50,6 +50,7 @@ namespace VE_CAD
 namespace VE_Xplorer
 {
    class cfdGlobalBase;
+   class cfdModel;
 }
 namespace VE_EVENTS{
 class CADEventHandler : public EventHandler{
@@ -79,6 +80,19 @@ protected:
    ///\param veXMLObject The veXMLObject to execute.
    virtual void _operateOnNode(VE_XML::XMLObject* veXMLObject) = 0;
 
+   ///Internal method to add nodes.
+   ///\param parentID The ID of the node to add the new node to.
+   ///\param node The new CADNode to add to the model
+   void _addNodeToNode(unsigned int parentID, VE_CAD::CADNode* node);
+   
+   ///Internal method to extract attribtutes from CADNodes.
+   ///\param node CADNode to extra attributes from.
+   void _setAttributesOnNode(VE_CAD::CADNode* node);
+ 
+   ///Internal method to extract transform from CADNodes.
+   void _setTransformOnNode(VE_CAD::CADNode* node);
+   
+   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
    VE_CAD::CADNode* _cadNode;///<The CADNode.
 };
 }

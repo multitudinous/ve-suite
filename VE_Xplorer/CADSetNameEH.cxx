@@ -81,20 +81,19 @@ void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
 
-      VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
-
-      //This assumes the part/assembly isn't there already
+      //This assumes the part/assembly is there already
       if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         activeModel->GetAssembly(nodeID->GetUIntData())->SetName(newName->GetDataString());
+         std::cout<<"Setting name: "<<newName->GetDataString()<<std::endl;
+         _activeModel->GetAssembly(nodeID->GetUIntData())->SetName(newName->GetDataString());
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
-         activeModel->GetPart(nodeID->GetUIntData())->GetNode()->SetName(newName->GetDataString());
+         _activeModel->GetPart(nodeID->GetUIntData())->GetNode()->SetName(newName->GetDataString());
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph()->SetName(newName->GetDataString());
+         _activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph()->SetName(newName->GetDataString());
       }
    }
    catch(...)

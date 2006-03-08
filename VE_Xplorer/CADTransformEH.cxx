@@ -82,7 +82,7 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    try{
 
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
+      //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
 
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
@@ -91,23 +91,23 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_SceneGraph::cfdDCS* transform = 0;
       if(nodeType->GetDataString() == std::string("Part"))
       {
-         if(activeModel->PartExists(nodeID->GetUIntData()))
+         if(_activeModel->PartExists(nodeID->GetUIntData()))
          {
-            transform = activeModel->GetPart(nodeID->GetUIntData())->GetDCS();
+            transform = _activeModel->GetPart(nodeID->GetUIntData())->GetDCS();
          }
       }
       else if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         if(activeModel->AssemblyExists(nodeID->GetUIntData()))
+         if(_activeModel->AssemblyExists(nodeID->GetUIntData()))
          {
-            transform = activeModel->GetAssembly(nodeID->GetUIntData());
+            transform = _activeModel->GetAssembly(nodeID->GetUIntData());
          }
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         if(activeModel->CloneExists(nodeID->GetUIntData()))
+         if(_activeModel->CloneExists(nodeID->GetUIntData()))
          {
-            transform = activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph();
+            transform = _activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph();
          }
       }
       VE_XML::Transform* rawTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());

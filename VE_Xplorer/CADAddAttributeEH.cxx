@@ -84,10 +84,10 @@ void CADAddAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::DataValuePair* newAttribute = command->GetDataValuePair("Attribute");
       VE_CAD::CADAttribute* rawAttribute = dynamic_cast<VE_CAD::CADAttribute*>(newAttribute->GetDataXMLObject());
 
-      VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
+      //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"Node:"<<nodeID->GetUIntData()<<std::endl;
       std::cout<<"Attribute:"<<rawAttribute->GetAttributeName()<<std::endl;
-      activeModel->AddAttributeToNode(nodeID->GetUIntData(),rawAttribute);
+      _activeModel->AddAttributeToNode(nodeID->GetUIntData(),rawAttribute);
    }
    catch(...)
    {

@@ -83,8 +83,8 @@ void CADSetActiveAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObj
       VE_XML::DataValuePair* activeAttribute = command->GetDataValuePair("Active Attribute");
 
       std::cout<<"--Setting active attribute--"<<std::endl;
-      VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
-      activeModel->SetActiveAttributeOnNode(nodeID->GetUIntData(),nodeType->GetDataString(),activeAttribute->GetDataString());
+      //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
+      _activeModel->SetActiveAttributeOnNode(nodeID->GetUIntData(),nodeType->GetDataString(),activeAttribute->GetDataString());
       std::cout<<"--done--"<<std::endl;
    }
    catch(...)
