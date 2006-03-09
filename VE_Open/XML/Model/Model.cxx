@@ -33,7 +33,7 @@
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/Model/Port.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 
@@ -50,7 +50,7 @@ Model::Model()
    uniqueModelID = 0;
    iconFileName = '\0';
    iconLocation = new Point(  );
-   geometry = new CADNode( "oops" );
+   geometry = 0;//new CADNode( "oops" );
    SetObjectType("Model");
    SetObjectNamespace("Model");
 }
@@ -83,7 +83,8 @@ Model::~Model()
    }
    informationPackets.clear();
 
-   delete geometry;
+   if ( geometry )
+      delete geometry;
 }
 ///////////////////////////////////////////
 Model::Model( const Model& input )
@@ -102,12 +103,12 @@ Model::Model( const Model& input )
 
    for ( size_t i = 0; i < input.results.size(); ++i )
    {
-      results.push_back( new DataValuePair( *(input.results.at( i )) ) );
+      results.push_back( new Command( *(input.results.at( i )) ) );
    }
 
    for ( size_t i = 0; i < input.inputs.size(); ++i )
    {
-      inputs.push_back( new DataValuePair( *(input.inputs.at( i )) ) );
+      inputs.push_back( new Command( *(input.inputs.at( i )) ) );
    }
 
    for ( size_t i = 0; i < input.informationPackets.size(); ++i )
@@ -149,7 +150,7 @@ Model& Model::operator=( const Model& input)
 
       for ( size_t i = 0; i < input.results.size(); ++i )
       {
-         results.push_back( new DataValuePair( *(input.results.at( i )) ) );
+         results.push_back( new Command( *(input.results.at( i )) ) );
       }
 
       for ( size_t i = 0; i < inputs.size(); ++i )
@@ -160,7 +161,7 @@ Model& Model::operator=( const Model& input)
 
       for ( size_t i = 0; i < input.inputs.size(); ++i )
       {
-         inputs.push_back( new DataValuePair( *(input.inputs.at( i )) ) );
+         inputs.push_back( new Command( *(input.inputs.at( i )) ) );
       }
 
       for ( size_t i = 0; i < informationPackets.size(); ++i )
@@ -261,7 +262,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "results", i );
-            results.push_back( new DataValuePair(  ) );
+            results.push_back( new Command(  ) );
             results.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
@@ -272,7 +273,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          for ( unsigned int i = 0; i < numberOfPortData; ++i )
          {
             dataValueStringName = GetSubElement( currentElement, "inputs", i );
-            inputs.push_back( new DataValuePair(  ) );
+            inputs.push_back( new Command(  ) );
             inputs.back()->SetObjectFromXMLData( dataValueStringName );
          }
       }
@@ -310,7 +311,7 @@ Point* Model::GetIconLocation( void )
    return iconLocation;
 }
 ////////////////////////////////////////////////////////////
-DataValuePair* Model::GetResult( unsigned int i )
+Command* Model::GetResult( unsigned int i )
 {
    try
    {
@@ -326,7 +327,7 @@ DataValuePair* Model::GetResult( unsigned int i )
       }
       else
       {
-         results.push_back( new DataValuePair(  ) );
+         results.push_back( new Command(  ) );
          return results.back();
       }
    }
@@ -337,7 +338,7 @@ size_t Model::GetNumberOfResults( void )
    return results.size();
 }
 ////////////////////////////////////////////////////////////
-DataValuePair* Model::GetInput( int i )
+Command* Model::GetInput( int i )
 {
    try
    {
@@ -350,9 +351,15 @@ DataValuePair* Model::GetInput( int i )
          std::cerr << " Model::GetInput The element request is out of sequence."
             << " Please ask for a lower number point or -1 to request new element." << std::endl;
       }  
-      inputs.push_back( new DataValuePair(  ) );
+      inputs.push_back( new Command() );
       return inputs.back();
    }
+}
+////////////////////////////////////////////////////////////
+VE_XML::Command* Model::GetInput( void )
+{
+   inputs.push_back( new Command() );
+   return inputs.back();
 }
 ////////////////////////////////////////////////////////////
 size_t Model::GetNumberOfInputs( void )
@@ -422,6 +429,9 @@ size_t Model::GetNumberOfInformationPackets( void )
 ////////////////////////////////////////////////////////////
 CADNode* Model::GetGeometry( void )
 {
+   if ( geometry == 0 )
+      geometry = new CADNode( "oops" );
+
    return geometry;
 }
 ///////////////////////////////////////
@@ -459,5 +469,6 @@ void Model::_updateVEElement( std::string input )
       SetSubElement( "informationPackets", informationPackets.at( i ) );   
    }
 
-   SetSubElement( "geometry", geometry );   
+   if ( geometry )
+      SetSubElement( "geometry", geometry );   
 }

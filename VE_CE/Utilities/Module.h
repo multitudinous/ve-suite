@@ -45,6 +45,7 @@ namespace VE_Model
 namespace VE_XML
 {
    class Command;
+   class XMLObject;
 }
 
 namespace VE_CE
@@ -97,12 +98,12 @@ public:
    int setPortProfile( int, const Types::Profile* );
 
    ///Accessors for input data
-   VE_XML::Command* GetInputData( void );
-   void SetInputData( VE_XML::Command* inputData );
+   std::vector< VE_XML::Command* > GetInputData( void );
+   void SetInputData( std::vector< VE_XML::XMLObject* > inputData );
 
    ///Accessors for input data
-   VE_XML::Command* GetResultsData( void );
-   void SetResultsData( VE_XML::Command* resultsData );
+   std::vector< VE_XML::Command* > GetResultsData( void );
+   void SetResultsData( std::vector< VE_XML::XMLObject* > resultsData );
 
    ///Get the ID for the module
    int get_id();
@@ -140,9 +141,9 @@ private:
    // This class is responsible for the memory management here
    VE_Model::Model* veModel;
    //Container for input data
-   VE_XML::Command* inputs;
+   std::vector< VE_XML::Command* > inputs;
    //Container for results data
-   VE_XML::Command* results;
+   std::vector< VE_XML::Command* > results;
    //Container for port data
    std::vector< VE_Model::Port* > ports;
    ///Do we need to keep track of messages?

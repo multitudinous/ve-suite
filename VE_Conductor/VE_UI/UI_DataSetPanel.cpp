@@ -448,7 +448,7 @@ void UI_DatasetPanel::_buildPanel()
    _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, wxDefaultSize,
                                   wxSL_AUTOTICKS|wxSL_LABELS); 
 //commented out before
-/*   if ( !_DataSets.empty() )
+   if ( !_DataSets.empty() )
    {
       //create the two spinners
       _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
@@ -463,7 +463,7 @@ void UI_DatasetPanel::_buildPanel()
                                    _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 1 ], 
                                    0.25, -1, wxEmptyString);
    }
-else*/ //commented from here to first comment
+   else //commented from here to first comment
    {
       //create the two spinners
       _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 

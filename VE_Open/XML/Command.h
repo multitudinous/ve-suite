@@ -93,7 +93,7 @@ public:
    
    ///Get a DataValuePair at the index.
    ///\param index The index of the DataValuePair to return.
-   VE_XML::DataValuePair* GetDataValuePair(unsigned int index);
+   VE_XML::DataValuePair* GetDataValuePair( int index );
 
    ///Return the number of DataValuePair s in this command.
    unsigned int GetNumberOfDataValuePairs();

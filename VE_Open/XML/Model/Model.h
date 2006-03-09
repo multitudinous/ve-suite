@@ -52,6 +52,7 @@
 namespace VE_XML
 {
    class DataValuePair;
+   class Command;
    class ParameterBlock;
 }
 namespace VE_Model
@@ -103,12 +104,14 @@ public:
    ///Get point for the icon location
    Point* GetIconLocation( void );
    ///Get results data
-   VE_XML::DataValuePair* GetResult( unsigned int i );
+   VE_XML::Command* GetResult( unsigned int i );
    ///Get results data
    size_t GetNumberOfResults( void );
    ///Get input data
    ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
-   VE_XML::DataValuePair* GetInput( int i );
+   VE_XML::Command* GetInput( int i );
+   ///Allocate another input block for use
+   VE_XML::Command* GetInput( void );
    ///Get number of input data
    size_t GetNumberOfInputs( void );
    ///Get the i'th port for the model.
@@ -139,9 +142,9 @@ private:
    std::vector< Port* > ports;///<The vector port data if any for a model.
    Point* iconLocation;///<The icon location point container.
    ///The data value pair will contain all the results for a paticular model
-   std::vector< VE_XML::DataValuePair* > results;///<The classes hold the results for the model.
+   std::vector< VE_XML::Command* > results;///<The classes hold the results for the model.
    ///The data value pair will contain the model inputs for the model
-   std::vector< VE_XML::DataValuePair* > inputs;///<The classes hold the inputs for the model.
+   std::vector< VE_XML::Command* > inputs;///<The classes hold the inputs for the model.
    ///The parameter block holds all the data the was formerly stored in the param file
    std::vector< VE_XML::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
    ///The CADNode contains the tree structure for the geometry

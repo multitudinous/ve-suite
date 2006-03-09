@@ -50,7 +50,10 @@ Command::~Command()
 {
    for ( size_t i = 0; i < _dataValuePairs.size(); ++i )
    {
-      delete _dataValuePairs.at(i);
+      //if ( _dataValuePairs.at(i) )
+      {
+         delete _dataValuePairs.at(i);
+      }
    }
    _dataValuePairs.clear();
    nameToDataValuePairMap.clear();
@@ -223,18 +226,21 @@ VE_XML::DataValuePair* Command::GetDataValuePair(std::string dataValueName)
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePair* Command::GetDataValuePair(unsigned int index)
+VE_XML::DataValuePair* Command::GetDataValuePair( int index )
 {
    try
    {
       return _dataValuePairs.at(index);
    }
-   catch ( ... )
+   catch (...)
    {
-      std::cout << " Invalid index = "
-                  << index << " specified for Command::GetDataValuePair()"
-                  << std::endl;
-      return 0;
+      if ( index >= 0 )
+      {
+         std::cerr << " Command::GetDataValuePair The element request is out of sequence."
+            << " Please ask for a lower number point or -1 to request new element." << std::endl;
+      }  
+      _dataValuePairs.push_back( new DataValuePair() );
+      return _dataValuePairs.back();
    }
 }
 ///////////////////////////////////////////////////

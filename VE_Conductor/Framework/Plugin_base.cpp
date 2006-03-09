@@ -44,6 +44,7 @@
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
 
 #include <wx/dc.h>
 
@@ -445,63 +446,77 @@ Model* REI_Plugin::GetVEModel( void )
    std::map<std::string, long *>::iterator iteri;
    for ( iteri=_int.begin(); iteri!=_int.end(); iteri++ )
    {
-      veModel->GetInput( -1 )->SetData( iteri->first, *(iteri->second) );
+      Command* tempCommand = veModel->GetInput( -1 );
+      tempCommand->SetCommandName( iteri->first );
+      tempCommand->GetDataValuePair( -1 )->SetData( iteri->first, *(iteri->second) );
    }
 
    ///Set the double data
    std::map<std::string, double *>::iterator iterd;
    for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
    {
-      veModel->GetInput( -1 )->SetData( iterd->first, *(iterd->second) );
+      Command* tempCommand = veModel->GetInput( -1 );
+      tempCommand->SetCommandName( iterd->first );
+      tempCommand->GetDataValuePair( -1 )->SetData( iterd->first, *(iterd->second) );
    }
 
    ///Set the string data
    std::map<std::string, std::string *>::iterator iters;
    for(iters=_string.begin(); iters!=_string.end(); iters++)
    {
-      veModel->GetInput( -1 )->SetData( iters->first, *(iters->second) );
+      Command* tempCommand = veModel->GetInput( -1 );
+      tempCommand->SetCommandName( iters->first );
+      tempCommand->GetDataValuePair( -1 )->SetData( iters->first, *(iters->second) );
    }
 
    ///Set the 1d int data
    std::map<std::string, std::vector<long> *>::iterator itervi;
    for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
    {
-      veModel->GetInput( -1 )->SetData( itervi->first, *(itervi->second) );
+      Command* tempCommand = veModel->GetInput( -1 );
+      tempCommand->SetCommandName( itervi->first );
+      tempCommand->GetDataValuePair( -1 )->SetData( itervi->first, *(itervi->second) );
    }
 
    ///Set the 1d double data
    std::map<std::string, std::vector<double> *>::iterator itervd;
    for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
    {
-      veModel->GetInput( -1 )->SetData( itervd->first, *(itervd->second) );
+      Command* tempCommand = veModel->GetInput( -1 );
+      tempCommand->SetCommandName( itervd->first );
+      tempCommand->GetDataValuePair( -1 )->SetData( itervd->first, *(itervd->second) );
    }
 
    ///Set the 1d string data
    std::map<std::string, std::vector<std::string> *>::iterator itervs;
    for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
    {
-      veModel->GetInput( -1 )->SetData( itervs->first, *(itervs->second) );
+      Command* tempCommand = veModel->GetInput( -1 );
+      tempCommand->SetCommandName( itervs->first );
+      tempCommand->GetDataValuePair( -1 )->SetData( itervs->first, *(itervs->second) );
    }
 
    // EPRI TAG
    if ( financial_dlg != NULL ) 
    {
-      veModel->GetInput( -1 )->SetData( "USE_FINANCIAL", static_cast< long >( financial_dlg->_use_data ) );
+      Command* tempCommand = veModel->GetInput( -1 );
+      tempCommand->SetCommandName( "EPRI TAG" );
+      tempCommand->GetDataValuePair( -1 )->SetData( "USE_FINANCIAL", static_cast< long >( financial_dlg->_use_data ) );
 
-      veModel->GetInput( -1 )->SetData( "CC00", financial_dlg->_cc00_d );
-      veModel->GetInput( -1 )->SetData( "CC01", financial_dlg->_cc01_d );
-      veModel->GetInput( -1 )->SetData( "CC02", financial_dlg->_cc02_d );
-      veModel->GetInput( -1 )->SetData( "CC03", financial_dlg->_cc03_d );
-      veModel->GetInput( -1 )->SetData( "CC04", financial_dlg->_cc04_d );
-      veModel->GetInput( -1 )->SetData( "CC05", financial_dlg->_cc05_d );
-      veModel->GetInput( -1 )->SetData( "CC06", financial_dlg->_cc06_d );
-      veModel->GetInput( -1 )->SetData( "CC07", financial_dlg->_cc07_d );
-      veModel->GetInput( -1 )->SetData( "CC08", financial_dlg->_cc08_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC00", financial_dlg->_cc00_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC01", financial_dlg->_cc01_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC02", financial_dlg->_cc02_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC03", financial_dlg->_cc03_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC04", financial_dlg->_cc04_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC05", financial_dlg->_cc05_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC06", financial_dlg->_cc06_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC07", financial_dlg->_cc07_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "CC08", financial_dlg->_cc08_d );
 
-      veModel->GetInput( -1 )->SetData( "OM00", financial_dlg->_om00_d );
-      veModel->GetInput( -1 )->SetData( "OM01", financial_dlg->_om01_d );
-      veModel->GetInput( -1 )->SetData( "OM02", financial_dlg->_om02_d );
-      veModel->GetInput( -1 )->SetData( "OM03", financial_dlg->_om03_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "OM00", financial_dlg->_om00_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "OM01", financial_dlg->_om01_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "OM02", financial_dlg->_om02_d );
+      tempCommand->GetDataValuePair( -1 )->SetData( "OM03", financial_dlg->_om03_d );
    }
 
    return veModel;
@@ -634,36 +649,40 @@ void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
    unsigned int numInputs = veModel->GetNumberOfInputs();
    for ( unsigned int i = 0; i < numInputs; ++i )
    {
-      DataValuePair* tempData = veModel->GetInput( i );
-      std::string dataType = tempData->GetDataName();
-      std::string dataName = tempData->GetDataType();
-      if ( std::string( "FLOAT" ) == dataType )
+      Command* commandData = veModel->GetInput( i );
+      for ( unsigned int k = 0; k < commandData->GetNumberOfDataValuePairs(); ++k )
       {
-         tempData->GetData( *(_double[ dataName ]) );
-      }
-      else if ( std::string( "LONG" ) == dataType )
-      {
-         tempData->GetData( *(_int[ dataName ]) );
-      }
-      else if ( std::string( "STRING" ) == dataType )
-      {
-         tempData->GetData( *(_string[ dataName ]) );
-      }
-      else if ( std::string( "1DSTRING" ) == dataType )
-      {
-         tempData->GetData( *(_string1D[ dataName ]) );
-      }
-      else if ( std::string( "1DDOUBLE" ) == dataType )
-      {
-         tempData->GetData( *(_double1D[ dataName ]) );
-      }
-      else if ( std::string( "1DLONG" ) == dataType )
-      {
-         tempData->GetData( *(_int1D[ dataName ]) );
-      }
-      else if ( std::string( "XMLOBJECT" ) == dataType )
-      {
-         tempData->GetData( *(_int1D[ dataName ]) );
+         DataValuePair* tempData = commandData->GetDataValuePair( k );
+         std::string dataType = tempData->GetDataName();
+         std::string dataName = tempData->GetDataType();
+         if ( std::string( "FLOAT" ) == dataType )
+         {
+            tempData->GetData( *(_double[ dataName ]) );
+         }
+         else if ( std::string( "LONG" ) == dataType )
+         {
+            tempData->GetData( *(_int[ dataName ]) );
+         }
+         else if ( std::string( "STRING" ) == dataType )
+         {
+            tempData->GetData( *(_string[ dataName ]) );
+         }
+         else if ( std::string( "1DSTRING" ) == dataType )
+         {
+            tempData->GetData( *(_string1D[ dataName ]) );
+         }
+         else if ( std::string( "1DDOUBLE" ) == dataType )
+         {
+            tempData->GetData( *(_double1D[ dataName ]) );
+         }
+         else if ( std::string( "1DLONG" ) == dataType )
+         {
+            tempData->GetData( *(_int1D[ dataName ]) );
+         }
+         else if ( std::string( "XMLOBJECT" ) == dataType )
+         {
+            tempData->GetData( *(_int1D[ dataName ]) );
+         }
       }
    }
 /*

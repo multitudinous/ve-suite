@@ -50,15 +50,11 @@ Module::Module()
     _is_feedback( 0 )
 {
    veModel = new VE_Model::Model();
-   inputs = new VE_XML::Command();
-   results = new VE_XML::Command();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module( const Module &m )
 {
    veModel = new VE_Model::Model();
-   inputs = new VE_XML::Command();
-   results = new VE_XML::Command();
    copy(m);
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,12 +73,8 @@ Module::~Module ()
    _oports.clear();
 
    delete veModel;   
-   // We should delete these but can't since model owns the actual memory
-   // and we are abusing the command class. model shoudl really hold the command 
-   // and manage ALL the memory so that we don't have to have command pointers
-   // in this class.
-   //delete inputs;
-   //delete results;
+   inputs.clear();
+   results.clear();
    
    for ( size_t i = 0; i < ports.size(); ++i )
    {
@@ -100,8 +92,12 @@ void Module::copy( const Module &m )
    _oports       = m._oports;
    _id           = m._id;
    *veModel = *(m.veModel);
-   *inputs = *(m.inputs);
-   *results = *(m.results);
+
+   inputs.clear();
+   inputs = m.inputs;
+
+   results.clear();
+   results = m.results;
 
    for ( size_t i = 0; i < ports.size(); ++i )
    {
@@ -300,42 +296,16 @@ void Module::SetVEModel( VE_Model::Model* mod )
    _id = veModel->GetModelID();
    _need_execute = 1;
    _return_state = 0;
-   //Set the input, results, port data data structures
-   if ( inputs )
-   {
-      delete inputs;
-      inputs = 0;
-   }
-
-   inputs = new VE_XML::Command();
-   for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
-   {
-      inputs->AddDataValuePair( veModel->GetInput( i ) );
-   }
 
    ///Get feedback info
    {
-      VE_XML::DataValuePair* dvp = inputs->GetDataValuePair( "FEEDBACK" );
+      /*VE_XML::DataValuePair* dvp = inputs->GetDataValuePair( "FEEDBACK" );
       if ( dvp )
       {
          unsigned int feedback;
          dvp->GetData( feedback );
          _is_feedback = static_cast< int >( feedback );
-      }
-   }
-
-   //Now get results
-   if ( results )
-   {
-      delete results;
-      results = 0;
-   }
-
-   results = new VE_XML::Command();
-   for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
-   {
-
-      results->AddDataValuePair( veModel->GetResult( i ) );
+      }*/
    }
 
    //Now get port data
@@ -353,36 +323,38 @@ void Module::SetVEModel( VE_Model::Model* mod )
    //Probably now need to set port data pointers on the port vectors
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command* Module::GetInputData( void )
+std::vector< VE_XML::Command* > Module::GetInputData( void )
 {
-   //probably need to pull data somewhere
+   inputs.clear();
+   for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
+   {
+      inputs.push_back( veModel->GetInput( i ) );
+   }
    return inputs;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::SetInputData( VE_XML::Command* inputData )
+void Module::SetInputData( std::vector< VE_XML::XMLObject* > inputData )
 {
-   if ( inputs )
+   for ( size_t i = 0; i < inputData.size(); ++i )
    {
-      delete inputs;
-      inputs = 0;
+      *(veModel->GetInput( i )) = *(dynamic_cast< VE_XML::Command* >( inputData.at( i ) ) );
    }
-   //probably need to push data somewhere
-   inputs = inputData;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command* Module::GetResultsData( void )
+std::vector< VE_XML::Command* > Module::GetResultsData( void )
 {
-   //probably need to pull data somewhere
+   results.clear();
+   for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
+   {
+      results.push_back( veModel->GetResult( i ) );
+   }
    return results;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::SetResultsData( VE_XML::Command* resultsData )
+void Module::SetResultsData( std::vector< VE_XML::XMLObject* > resultsData )
 {
-   if ( results )
+   for ( size_t i = 0; i < resultsData.size(); ++i )
    {
-      delete results;
-      results = 0;
+      *(veModel->GetResult( i )) = *(dynamic_cast< VE_XML::Command* >( resultsData.at( i ) ) );
    }
-   //probably need to push data somewhere
-   results = resultsData;
 }

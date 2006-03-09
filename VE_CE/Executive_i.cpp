@@ -380,9 +380,13 @@ void Body_Executive_i::execute_next_mod( long module_id )
             //str2 = p2.Save(rv2);
    
             std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-            nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
-                              _network->GetModule( rt )->GetInputData(), std::string( "vecommand" ) ) 
-                           );
+            std::vector< VE_XML::Command* > inputList = _network->GetModule( rt )->GetInputData();
+            for ( size_t k = 0; k < inputList.size(); ++k )
+            {
+               nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+                                 inputList.at( k ), std::string( "vecommand" ) ) 
+                              );
+            }
             std::string fileName( "returnString" );
             //VE_XML::XMLReaderWriter netowrkWriter;
             networkWriter.UseStandaloneDOMDocumentManager();
@@ -453,7 +457,7 @@ void Body_Executive_i::SetModuleResult (
       networkWriter.ReadXMLData( std::string( result ), "Command", "vecommand" );
       std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
-      _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) ) );
+      _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( objectVector );
       /*if ( _network->setOutput( module_id, &(*iter) ) ) 
       {
          // Keep track of power requirements
@@ -496,10 +500,14 @@ char * Body_Executive_i::GetModuleResult (
    netowrkWriter.UseStandaloneDOMDocumentManager();
 
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back(  std::pair< VE_XML::Command*, std::string  >( 
-                     _network->GetModule( _network->moduleIdx( module_id ) )->GetResultsData(), 
-                     std::string( "vecommand" ) ) 
-                  );
+   std::vector< VE_XML::Command* > resultList = _network->GetModule( _network->moduleIdx( module_id ) )->GetResultsData();
+   for ( size_t k = 0; k < resultList.size(); ++k )
+   {
+      nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+                        resultList.at( k ), std::string( "vecommand" ) ) 
+                     );
+   }
+
    netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
    _mutex.release();
    return CORBA::string_dup("");
@@ -624,7 +632,7 @@ void Body_Executive_i::SetModuleUI (
    networkWriter.ReadXMLData( std::string( ui ), "Command", "vecommand" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
-   _network->GetModule( _network->moduleIdx( module_id ) )->SetInputData( dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) ) );
+   _network->GetModule( _network->moduleIdx( module_id ) )->SetInputData( objectVector );
    _network->GetModule( _network->moduleIdx( module_id ) )->_need_execute = 1;
    _network->GetModule( _network->moduleIdx( module_id ) )->_return_state = 0;
   
@@ -736,9 +744,14 @@ void Body_Executive_i::StartCalc (
       }*/
       //str2 = p2.Save(rv2);
             std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-            nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
-                             _network->GetModule( rt )->GetInputData(), std::string( "vecommand" ) ) 
-                           );
+            std::vector< VE_XML::Command* > inputList = _network->GetModule( rt )->GetInputData();
+            for ( size_t k = 0; k < inputList.size(); ++k )
+            {
+               nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+                                 inputList.at( k ), std::string( "vecommand" ) ) 
+                              );
+            }
+
             std::string fileName( "returnString" );
             VE_XML::XMLReaderWriter netowrkWriter;
             netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -814,9 +827,7 @@ void Body_Executive_i::StopCalc (
          // a map that is used everywhere
          UnRegisterUnit( iter->first.c_str() );
          // Not sure if increment here or not
-         std::map<std::string, Body::Unit_var>::iterator tempIter = iter + 1;
-         _mod_units.erase( iter );
-         iter = tempIter;
+         _mod_units.erase( iter++ );
 	   }
    }
   _mutex.release();
@@ -848,9 +859,7 @@ void Body_Executive_i::PauseCalc (
          // a map that is used everywhere
          UnRegisterUnit( iter->first.c_str() );
          // Not sure if increment here or not
-         std::map<std::string, Body::Unit_var>::iterator tempIter = iter + 1;
-         _mod_units.erase( iter );
-         iter = tempIter;
+         _mod_units.erase( iter++ );
 	   }
    }
   _mutex.release();
@@ -882,9 +891,7 @@ void Body_Executive_i::Resume (
          // a map that is used everywhere
          UnRegisterUnit( iter->first.c_str() );
          // Not sure if increment here or not
-         std::map<std::string, Body::Unit_var>::iterator tempIter = iter + 1;
-         _mod_units.erase( iter );
-         iter = tempIter;
+         _mod_units.erase( iter++ );
 	   }
    }
    _mutex.release();
