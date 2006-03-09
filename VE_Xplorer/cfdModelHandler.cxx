@@ -34,8 +34,8 @@
 
 #include "VE_Xplorer/cfdDebug.h"
 
-#include <vtkPolyDataReader.h>
-#include <vtkPolyDataWriter.h>
+//#include <vtkPolyDataReader.h>
+//#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkPolyData.h>
 #include <vtkLookupTable.h>

@@ -176,7 +176,7 @@ void Body_UI_i::Raise (
       // Add your implementation here
       if (notification!=NULL)
       {
-         std::cout << "|\tNotification Message : " << notification << " : Raise called " << std::endl
+         std::cout << "|\tNotification Message : " << notification
                      << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
          
          {
