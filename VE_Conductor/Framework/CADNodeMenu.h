@@ -51,10 +51,13 @@ public:
       GEOM_PROPERTIES,//<Modify node properties,menu ID.
       GEOM_VEG_FILE_ADD,///Add a node from an existing VEG file,menu ID.
       GEOM_CAD_FILE_ADD,///Add a node from an existing CAD file, menu ID.
-      GEOM_NODE_CREATE,///<Create a new tree from a file.
-      GEOM_VEG_FILE_CREATE,///<Create a new tree from a file.
-      GEOM_ASSEMBLY_CREATE,///<Create a new CADAssembly.
-      GEOM_CAD_FILE_CREATE///<Create a new tree from a file.
+      GEOM_NODE_CREATE,///<Create a new tree from a file,menu ID.
+      GEOM_VEG_FILE_CREATE,///<Create a new tree from a file,menu ID.
+      GEOM_ASSEMBLY_CREATE,///<Create a new CADAssembly,menu ID.
+      GEOM_CAD_FILE_CREATE,///<Create a new tree from a file,menu ID.
+      GEOM_TOGGLE_ON,///<Toggle node on, menu ID.
+      GEOM_TOGGLE_OFF,///<Toggle node off, menu ID.
+      GEOM_DISPLAY_TOGGLE///<Toggle menu ID.
    };
 
    ///Constructor

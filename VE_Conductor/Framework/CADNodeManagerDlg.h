@@ -135,7 +135,12 @@ protected:
    void _addNodeFromCADFile(wxCommandEvent& event);
    
    ///Create a cloned node from an exisiting node in the tree.
+   ///\param event The command event.
    void _cloneNode(wxCommandEvent& event);
+
+   ///Toggle a node on/off.
+   ///\param event The command event.
+   void _toggleNode(wxCommandEvent& event);
 #ifndef STAND_ALONE
    ///Send CAD commands back to VE-Xplorer
    void _sendCommandsToXplorer();

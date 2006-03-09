@@ -87,10 +87,25 @@ CADNodeMenu::CADNodeMenu()
           wxITEM_NORMAL);
    Enable(GEOM_DELETE, false);
    InsertSeparator(3);
+
+#ifdef wxHAS_RADIO_MENU_ITEMS
+   wxMenu* toggleNodeSubMenu = new wxMenu();
+   toggleNodeSubMenu->AppendRadioItem(GEOM_TOGGLE_ON,
+                                      _T("ON"),
+                                      _T("Display this node"));
+   toggleNodeSubMenu->AppendRadioItem(GEOM_TOGGLE_OFF,
+                                      _T("OFF"),
+                                      _T("Hide this node"));
+   Append(GEOM_DISPLAY_TOGGLE,
+          _T("Toggle Node"),
+          toggleNodeSubMenu);
+   Enable(GEOM_DISPLAY_TOGGLE, true);
+   InsertSeparator(5);
+#endif
    
    Append(GEOM_PROPERTIES,
           _T("Properties..."),
-	       _T(""),
+          _T(""),
           wxITEM_NORMAL);
    Enable(GEOM_PROPERTIES, false);
 }

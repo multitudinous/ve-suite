@@ -63,6 +63,8 @@ BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_MENU(CADNodeMenu::GEOM_VEG_FILE_ADD,CADNodeManagerDlg::_addNodeFromVEGFile)
    EVT_MENU(CADNodeMenu::GEOM_CAD_FILE_ADD,CADNodeManagerDlg::_addNodeFromCADFile)
    EVT_MENU(CADNodeMenu::GEOM_CLONE_ADD,CADNodeManagerDlg::_cloneNode)
+   EVT_MENU(CADNodeMenu::GEOM_TOGGLE_ON,CADNodeManagerDlg::_toggleNode)
+   EVT_MENU(CADNodeMenu::GEOM_TOGGLE_OFF,CADNodeManagerDlg::_toggleNode)
 END_EVENT_TABLE()
 
 
@@ -312,6 +314,18 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          wxMessageDialog errorDlg(this, wxString("Cannot add children to a Part node!!"),wxString("Error"));
          errorDlg.ShowModal();
       }
+   }
+}
+/////////////////////////////////////////////////////////
+void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
+{
+   if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_ON)
+   {
+      std::cout<<"Toggle on!!"<<std::endl;
+   }
+   else if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_OFF)
+   {
+      std::cout<<"Toggle off!!"<<std::endl;
    }
 }
 /////////////////////////////////////////////////////////
