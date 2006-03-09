@@ -298,14 +298,16 @@ void Module::SetVEModel( VE_Model::Model* mod )
    _return_state = 0;
 
    ///Get feedback info
+   for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
    {
-      /*VE_XML::DataValuePair* dvp = inputs->GetDataValuePair( "FEEDBACK" );
+      VE_XML::DataValuePair* dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
       if ( dvp )
       {
          unsigned int feedback;
          dvp->GetData( feedback );
          _is_feedback = static_cast< int >( feedback );
-      }*/
+         break;
+      }   
    }
 
    //Now get port data
