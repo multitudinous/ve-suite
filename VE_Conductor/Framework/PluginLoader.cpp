@@ -102,7 +102,7 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
       wxString libn = veSuiteHome + "/lib/" + "win32/" + wxString( "DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
       wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
       if ( lib )
-         wxLogDebug("Loaded [ %s ]\n", libn );
+         wxLogDebug("Loaded [ %s ]\n", libn.c_str() );
    }
 
    RegisterPlugins();
