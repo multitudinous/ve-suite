@@ -1,5 +1,5 @@
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
-#include "VE_Conductor/DefaultPlugin/DefaultPlugin_UI.h"
+#include "VE_Conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h"
 
 #include <wx/dc.h>
 IMPLEMENT_DYNAMIC_CLASS(DefaultPlugin, REI_Plugin)

@@ -28,7 +28,7 @@ public:
   DefaultPlugin_UI_Dialog(wxWindow* parent, int id );
   DefaultPlugin_UI_Dialog(){;}
   
-  virtual ~Hummer_UI_Dialog();
+  virtual ~DefaultPlugin_UI_Dialog();
   
   virtual bool TransferDataFromWindow();
   virtual bool TransferDataToWindow();

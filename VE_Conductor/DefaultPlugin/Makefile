@@ -1,6 +1,6 @@
 # Create the OS-dependent directory name
 CFDHOSTTYPE?=	$(DZR_HOSTTYPE)
-PLUGIN = HUMMER
+PLUGIN = DefaultPlugin 
 APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/lib$(PLUGIN).so
 
 VE_CONDUCTOR_HOME = $(VE_SUITE_HOME)/VE_Conductor

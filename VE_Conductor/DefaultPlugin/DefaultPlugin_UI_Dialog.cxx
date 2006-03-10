@@ -1,4 +1,4 @@
-#include "VE_Conductor/DefaultPlugin/DefaultPlugin_UI.h"
+#include "VE_Conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h"
 
 #include <wx/radiobox.h>
 #include <wx/slider.h>
