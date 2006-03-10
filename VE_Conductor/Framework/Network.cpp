@@ -2110,7 +2110,14 @@ void Network::Load( std::string xmlNetwork )
       VE_Model::Model* model = dynamic_cast< VE_Model::Model* >( objectVector.at( i ) );
 
       wxClassInfo* cls = wxClassInfo::FindClass( model->GetModelName().c_str() );
+      // If the class has not had a custom module been created
+      if ( cls != 0 )
+      {
+         //Load the generic plugin for conductor
+         cls = wxClassInfo::FindClass( "DefaultPlugin" );
+      }
       REI_Plugin* tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
+
       Module temp_mod;
       unsigned int num = model->GetModelID();
 	   modules[ num ] = temp_mod;

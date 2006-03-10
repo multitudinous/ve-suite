@@ -137,40 +137,39 @@ void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
 
 void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
 {
-  ReiTreeItemData* item_data;
-  wxClassInfo* info;
-  REI_Plugin *object;
+   ReiTreeItemData* item_data;
+   wxClassInfo* info;
+   REI_Plugin *object;
 
-  selection = GetSelection();
-  if (selection<=0)
-    return;
+   selection = GetSelection();
+   if (selection<=0)
+      return;
 
-  item_data = (ReiTreeItemData*) GetItemData(selection);
-  if (item_data==NULL)
-    return;
+   item_data = (ReiTreeItemData*) GetItemData(selection);
+   if ( item_data == NULL )
+      return;
 
-  info = item_data->pl_clsi;
-  if (info)
-    {
-      object = (REI_Plugin *) info->CreateObject();
+   info = item_data->pl_clsi;
+   if ( info )
+   {
+      object = dynamic_cast< REI_Plugin* >( info->CreateObject() );
       network->AddtoNetwork(object, info->GetClassName());
       //      std::cout<<"a moduel size : "<<network->modules.size()<<std::endl;
       //(network->modules).push_back(object);
       //wxString title, desc;
-      
+
       //char* s;
       //sprintf(s, "%ul", object);				//modified by scorns 7/14/05
-	  //std::ostringstream  dirStringStream;
-	  //dirStringStream << object;
-	  //std::string dirString = dirStringStream.str();
-	  //s = (char*)dirString.c_str();
+      //std::ostringstream  dirStringStream;
+      //dirStringStream << object;
+      //std::string dirString = dirStringStream.str();
+      //s = (char*)dirString.c_str();
       //title << wxT("Description for ") << GetItemText(selection);
       //title<<s;
       // desc = object->GetDesc();
-      
+
       // wxMessageDialog(this, desc, title).ShowModal();
-    }
-  
+   }
 }
 
 void Avail_Modules::ShowMenu(wxTreeItemId id, const wxPoint& pt)
@@ -253,11 +252,7 @@ void Avail_Modules::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 
 bool Avail_Modules::LoadModules()
 {
-#ifdef _TAO
   pl_loader->LoadPlugins("GUIPlugins");
-#else
-  pl_loader->LoadPlugins("../Plugin");
-#endif  
   for ( unsigned int i=0; i<pl_loader->plugins.size(); i++)
     AddModule(pl_loader->plugins[i], pl_loader->plugin_cls[i]);
 

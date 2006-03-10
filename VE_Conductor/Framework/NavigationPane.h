@@ -52,6 +52,7 @@ class wxSlider;
 class wxButton;
 class wxWindow;
 class wxSizer;
+class wxScrolledWindow;
 
 namespace VE_XML
 {
@@ -92,11 +93,47 @@ protected:
    DECLARE_EVENT_TABLE()
 };
 
-class UI_NavigateScroll: public wxScrolledWindow
+//the main navigation tab class
+class NavigationPane : public wxDialog 
 {
 public:
-   UI_NavigateScroll(wxWindow* parent);
-   ~UI_NavigateScroll();
+   NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
+   virtual ~NavigationPane();
+
+   //turn off the navigation flag
+   void onLeftMouseUp(wxMouseEvent& event);
+   void onLeftDown(wxMouseEvent& event);
+
+   //mouse callback
+   void onMouse(wxMouseEvent& mouse);
+
+   //update the tab that we're moving/stopping
+   void updateParent(int push, int id);
+  
+   //add a button to the managed list
+   void setActiveButton(int id){_activeButton = id;}
+   int getActiveButton(){return _activeButton;}
+   
+   void OnTransStepSlider( wxScrollEvent& event);
+   void OnRotStepSlider( wxScrollEvent& event);
+   void OnResetNavPosition( wxCommandEvent& event );
+   void OnHeadCheck( wxCommandEvent& event );
+   void SetCommInstance( VjObs_ptr veEngine );
+   //void SetDOMManager( VE_XML::DOMDocumentManager* domManagerIn );
+   void SendCommandsToXplorer( void );
+
+   // Build the navigation pane
+   void BuildPane( void );
+protected:
+   int _activeButton;
+   wxScrolledWindow* scrollWindow;
+
+   std::vector< VE_XML::Command* > commands;
+   VjObs_ptr xplorerPtr;
+   int cId, cIso_value;
+   DOMDocument* doc;
+   VE_XML::DOMDocumentManager* domManager;
+   std::string dataValueName;
 
    UI_NavButton* _leftButton;
    UI_NavButton* _rightButton;
@@ -143,48 +180,6 @@ protected:
    wxBitmap* _bitmap11;
    wxBitmap* _bitmap12;
    wxBitmap* _bitmapcoord;
-
-   DECLARE_EVENT_TABLE()
-};
-
-//the main navigation tab class
-class NavigationPane : public wxDialog 
-{
-public:
-   NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
-   virtual ~NavigationPane(){;}
-
-   //turn off the navigation flag
-   void onLeftMouseUp(wxMouseEvent& event);
-   void onLeftDown(wxMouseEvent& event);
-
-   //mouse callback
-   void onMouse(wxMouseEvent& mouse);
-
-   //update the tab that we're moving/stopping
-   void updateParent(int push, int id);
-  
-   //add a button to the managed list
-   void setActiveButton(int id){_activeButton = id;}
-   int getActiveButton(){return _activeButton;}
-   
-   void OnTransStepSlider( wxScrollEvent& event);
-   void OnRotStepSlider( wxScrollEvent& event);
-   void OnResetNavPosition( wxCommandEvent& event );
-   void OnHeadCheck( wxCommandEvent& event );
-   void SetCommInstance( VjObs_ptr veEngine );
-   //void SetDOMManager( VE_XML::DOMDocumentManager* domManagerIn );
-   void SendCommandsToXplorer( void );
-
-protected:
-   int _activeButton;
-   UI_NavigateScroll* navScroll;
-   std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
-   int cId, cIso_value;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
-   std::string dataValueName;
 
    DECLARE_EVENT_TABLE()
 };

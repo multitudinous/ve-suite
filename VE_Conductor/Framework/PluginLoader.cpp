@@ -39,6 +39,7 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/image.h>
+#include <wx/utils.h>
 
 PluginLoader::PluginLoader()
 {
@@ -93,6 +94,15 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
          wxLogDebug ("Loaded [ %s ]\n", filename.c_str());
 
       cont = dir.GetNext(&filename);
+   }
+
+   wxString veSuiteHome;
+   if ( ::wxGetEnv( wxString( "VE_SUITE_HOME" ), &veSuiteHome ) )
+   {
+      wxString libn = veSuiteHome + "/lib/" + "win32/" + wxString( "DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
+      wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
+      if ( lib )
+         wxLogDebug("Loaded [ %s ]\n", libn );
    }
 
    RegisterPlugins();
