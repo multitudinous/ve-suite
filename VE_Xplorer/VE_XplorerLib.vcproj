@@ -295,6 +295,9 @@
 				RelativePath=".\CADSetNameEH.cxx">
 			</File>
 			<File
+				RelativePath=".\CADToggleEH.cxx">
+			</File>
+			<File
 				RelativePath=".\CADTransformEH.cxx">
 			</File>
 			<File
@@ -468,6 +471,9 @@
 			</File>
 			<File
 				RelativePath=".\CADSetNameEH.h">
+			</File>
+			<File
+				RelativePath=".\CADToggleEH.h">
 			</File>
 			<File
 				RelativePath=".\CADTransformEH.h">

@@ -110,7 +110,7 @@ void DOMDocumentManager::_readInputString(std::string xmlString)
 void DOMDocumentManager::_readInputFile(std::string xmlFile)
 {
    LocalFileInputSource inputXML(xercesString(xmlFile));
-   parser->parse(inputXML);
+   //parser->parse(inputXML);
    parser->parse(xmlFile.c_str());
 }
 //////////////////////////////////////////////////////

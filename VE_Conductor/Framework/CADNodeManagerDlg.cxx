@@ -489,7 +489,7 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
               _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
               
               _commandName = "CAD_ADD_NODE";
-              loadedNode->SetParent(_activeCADNode->GetID());
+              //loadedNode->SetParent(_activeCADNode->GetID());
               VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
               cadNode->SetDataType(std::string("XMLOBJECT"));
               cadNode->SetData("New Node",loadedNode);

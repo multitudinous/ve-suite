@@ -32,9 +32,11 @@
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADPart.h"
 #include "VE_Open/XML/CAD/CADClone.h"
+#include "VE_Open/XML/XMLObjectFactory.h"
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_CAD;
+using namespace VE_XML;
 ////////////////////////////////////////////////////////////////////
 CADAssembly::CADAssembly(std::string name)
 :VE_CAD::CADNode(name)
@@ -278,7 +280,8 @@ CADAssembly::CADAssembly(const CADAssembly& rhs)
 {
    _numChildren = rhs._numChildren;
    for(unsigned int i = 0; i < _numChildren; i++){
-      _children.push_back(rhs._children.at(i));
+      
+      _children.push_back(dynamic_cast<CADNode*>(XMLObjectFactory::Instance()->CreateXMLObjectCopy(rhs._children.at(i))));
    }
 }
 ///////////////////////////////////////////////////////////
