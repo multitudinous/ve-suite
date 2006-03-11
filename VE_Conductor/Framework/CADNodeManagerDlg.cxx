@@ -207,6 +207,12 @@ void CADNodeManagerDlg::_setActiveNode(wxTreeEvent& event)
       _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
       _activeCADNode = _activeTreeNode->GetNode();
    }
+   else
+   {
+      std::cout<<"Error setting active node!!!"<<std::endl;
+      _activeTreeNode = 0;
+      _activeCADNode = 0;
+   }
 }
 /////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
@@ -319,13 +325,37 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
 {
-   if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_ON)
+   if(_activeCADNode)
    {
-      std::cout<<"Toggle on!!"<<std::endl;
-   }
-   else if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_OFF)
-   {
-      std::cout<<"Toggle off!!"<<std::endl;
+      _commandName = "CAD_TOGGLE_NODE";
+
+      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      nodeID->SetDataType("UNSIGNED INT");
+      nodeID->SetDataValue(_activeCADNode->GetID());
+      nodeID->SetDataName(std::string("Node ID"));
+      _dataValuePairList.push_back(nodeID);
+
+      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      nodeType->SetDataType("STRING");
+      nodeType->SetData(std::string("Node Type"),_activeCADNode->GetNodeType());
+      _dataValuePairList.push_back(nodeType);
+
+      VE_XML::DataValuePair* toggleValue = new VE_XML::DataValuePair();
+      toggleValue->SetDataType("STRING");
+      if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_ON)
+      {
+         std::cout<<"Toggle on!!"<<std::endl;
+         toggleValue->SetData(std::string("Toggle Value"),std::string("ON"));
+      }
+      else if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_OFF)
+      {
+         std::cout<<"Toggle off!!"<<std::endl;
+         toggleValue->SetData(std::string("Toggle Value"),std::string("OFF"));
+      }
+      _dataValuePairList.push_back(toggleValue);
+
+      _sendCommandsToXplorer();
+      ClearInstructions();
    }
 }
 /////////////////////////////////////////////////////////
@@ -345,21 +375,24 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
       _cadTreeBuilder->SetRootNode(_rootNode);
       _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
       _cadTreeBuilder->Traverse();
+      _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
 
       _commandName = std::string("CAD_ADD_NODE");
+
+      newClone->SetParent(_activeCADNode->GetID());
 
       VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
       cadNode->SetDataType(std::string("XMLOBJECT"));
       cadNode->SetData("New Node",newClone);
       _dataValuePairList.push_back(cadNode);
 
-      VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
+/*      VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
       parentNode->SetDataType(std::string("UNSIGNED INT"));
       parentNode->SetDataValue(_activeCADNode->GetID());
       parentNode->SetDataName(std::string("Parent ID"));
       _dataValuePairList.push_back(parentNode);
       
-      /*VE_XML::DataValuePair* addNode = new VE_XML::DataValuePair();
+      VE_XML::DataValuePair* addNode = new VE_XML::DataValuePair();
       addNode->SetDataType("STRING");
       addNode->SetData(std::string("Node Type"),std::string("Clone"));
       _dataValuePairList.push_back(addNode);
@@ -408,7 +441,7 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
                         "CAD Clone Failure", wxOK | wxICON_INFORMATION );
    }
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
 {
    wxFileDialog dialog(this,
@@ -429,42 +462,47 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
               cadReader.ReadXMLData(std::string(dialog.GetPath()),"CAD","CADAssembly");
               
               CADNode* loadedNode = 0;
-              if(cadReader.GetLoadedXMLObjects().at(0))
+              std::vector<VE_XML::XMLObject*> loadedNodes;
+              loadedNodes = cadReader.GetLoadedXMLObjects();
+
+              if(loadedNodes.size())
               {
-                 loadedNode = dynamic_cast<CADAssembly*>(cadReader.GetLoadedXMLObjects().at(0));
+                 std::cout<<"---Loaded Assembly---"<<std::endl;
+                 loadedNode = new CADAssembly(*dynamic_cast<CADAssembly*>(loadedNodes.at(0)));
+                 dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(dynamic_cast<CADAssembly*>(loadedNode));
               }
               else
               {
                  cadReader.ReadXMLData(std::string(dialog.GetPath()),"CAD","CADPart");
-                 if(cadReader.GetLoadedXMLObjects().at(0))
+                 loadedNodes = cadReader.GetLoadedXMLObjects();
+                 if(loadedNodes.size())
                  {
-                     loadedNode = dynamic_cast<CADPart*>(cadReader.GetLoadedXMLObjects().at(0));
+                    std::cout<<"---Loaded Part---"<<std::endl;
+                    loadedNode = new CADPart(*dynamic_cast<CADPart*>(loadedNodes.at(0)));
+                    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(dynamic_cast<CADPart*>(loadedNode));
                  }
               }
-              dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(loadedNode);
 
-              _cadTreeBuilder->SetRootNode(_rootNode);
               _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
+              _cadTreeBuilder->SetRootNode(_rootNode);
               _cadTreeBuilder->Traverse();
+              _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
               
               _commandName = "CAD_ADD_NODE";
+              loadedNode->SetParent(_activeCADNode->GetID());
               VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
               cadNode->SetDataType(std::string("XMLOBJECT"));
               cadNode->SetData("New Node",loadedNode);
               _dataValuePairList.push_back(cadNode);
 
-              VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
-              parentNode->SetDataType(std::string("UNSIGNED INT"));
-              parentNode->SetDataValue(_activeCADNode->GetID());
-              parentNode->SetDataName(std::string("Parent ID"));
-              _dataValuePairList.push_back(parentNode);
+
               _sendCommandsToXplorer();
               ClearInstructions();
            }      
         }
     }
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
 {
    ClearInstructions();
@@ -495,59 +533,20 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
               _cadTreeBuilder->SetRootNode(_rootNode);
               std::cout<<"Deleting tree"<<std::endl;
               _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
-              std::cout<<"---Deleted tree---"<<std::endl;
-              std::cout<<"---Traversing tree---"<<std::endl;
               _cadTreeBuilder->Traverse();
-              std::cout<<"---Traversed tree---"<<std::endl;
+              _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
 
               _commandName = std::string("CAD_ADD_NODE");
+
+              newCADPart->SetParent(_activeCADNode->GetID());
 
               VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
               cadNode->SetDataType(std::string("XMLOBJECT"));
               cadNode->SetData("New Node",newCADPart);
               _dataValuePairList.push_back(cadNode);
 
-              VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
-              parentNode->SetDataType(std::string("UNSIGNED INT"));
-              parentNode->SetDataValue(_activeCADNode->GetID());
-              parentNode->SetDataName(std::string("Parent ID"));
-              _dataValuePairList.push_back(parentNode);
-
-/*               VE_XML::DataValuePair* addNode = new VE_XML::DataValuePair();
-               addNode->SetDataType("STRING");
-               addNode->SetData(std::string("Node Type"),std::string("Part"));
-               _dataValuePairList.push_back(addNode);
-
-               VE_XML::DataValuePair* partName = new VE_XML::DataValuePair();
-               partName->SetDataType("STRING");
-               partName->SetData(std::string("CAD Filename"),newCADPart->GetCADFileName());
-               _dataValuePairList.push_back(partName);
-
-               VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-               nodeID->SetDataType("UNSIGNED INT");
-               nodeID->SetDataValue(newCADPart->GetID());
-               nodeID->SetDataName(std::string("Node ID"));
-               _dataValuePairList.push_back(nodeID);
-
-               VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
-               parentNode->SetDataType(std::string("UNSIGNED INT"));
-               parentNode->SetDataValue(_activeCADNode->GetID());
-               parentNode->SetDataName(std::string("Parent ID"));
-               _dataValuePairList.push_back(parentNode);
-
-               VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
-               transform->SetDataType("XMLOBJECT");
-               transform->SetData("Transform",newCADPart->GetTransform());
-               _dataValuePairList.push_back(transform);
-
-               VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
-               nodeName->SetDataType(std::string("STRING"));
-               nodeName->SetDataString(newCADPart->GetNodeName());
-               nodeName->SetDataName(std::string("Node Name"));
-               _dataValuePairList.push_back(nodeName);
- */              
-               _sendCommandsToXplorer();
-               ClearInstructions();
+              _sendCommandsToXplorer();
+              ClearInstructions();
            }      
         }
     }

@@ -597,6 +597,9 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
       nodeType->SetDataString(_cadNode->GetNodeType());
       _instructions.push_back(nodeType);
 
+      std::cout<<"instructions size: "<<_instructions.size()<<std::endl;
+      std::cout<<"CADNode type: "<<_cadNode->GetNodeType()<<std::endl;
+
       _sendCommandsToXplorer();
    }
 }
@@ -635,12 +638,12 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
 
    char* tempDoc = new char[ commandString.size() + 1 ];
    tempDoc = CORBA::string_dup( commandString.c_str() );
- 
+
    if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
    {
       try
       {
-         std::cout<<"The command to send: "<<std::endl;
+         std::cout<<"---The command to send---"<<std::endl;
          std::cout<<tempDoc<<std::endl;
          // CORBA releases the allocated memory so we do not have to
          _vjObsPtr->SetCommandString( tempDoc );
