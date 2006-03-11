@@ -2284,12 +2284,13 @@ void Network::OnParaView(wxCommandEvent& WXUNUSED(event))
 
 void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 {
-   if (m_selMod<0) 
+   // This code needs to change to Gerrick's geom code
+   /*if (m_selMod<0) 
       return;
 
    std::string m_selmod_name = modules[m_selMod].GetPlugin()->GetName().c_str();
    modules[m_selMod].GetPlugin()->SetIDtoGeometryDataBuffer();
-   modules[m_selMod].GetPlugin()->GeometryData();
+   modules[m_selMod].GetPlugin()->GeometryData();*/
 }
 ///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )

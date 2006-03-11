@@ -43,11 +43,12 @@
 
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Point.h"
+#include "VE_Open/XML/Model/Port.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 
 #include <wx/dc.h>
-
+#include <wx/msgdlg.h>
 using namespace VE_Model;
 using namespace VE_XML;
 
@@ -80,6 +81,8 @@ REI_Plugin::REI_Plugin()
    mod_pack._category = 1; // normal modules
    mod_pack._id = -1;
    veModel = 0;
+   numberOfInputPorts = 0;
+   numberOfOutputPorts = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -135,11 +138,7 @@ REI_Plugin::~REI_Plugin()
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetID(int id)
 {
-  mod_pack._id = id;
-
-  if ( geometryDataBuffer == 0 )
-      geometryDataBuffer = new GeometryDataBuffer();
-  geometryDataBuffer->SetCurrentModuleID(id);
+   mod_pack._id = id;
 }
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetName( wxString pluginName )
@@ -169,79 +168,93 @@ wxRect REI_Plugin::GetBBox()
   result.SetX(pos.x);
   result.SetY(pos.y);
 
-  if (n_pts==0)
-    {
+   if ( n_pts == 0 )
+   {
       result.SetWidth(edge_size);
       result.SetHeight(edge_size);
       return result;
-    }
+   }
 
-  left=poly[0].x;
-  right=poly[0].x;
-  top=poly[0].y;
-  bottom=poly[0].y;
-  
-  for (i=1; i<n_pts; i++)
-    {
+   left = poly[0].x;
+   right = poly[0].x;
+   top = poly[0].y;
+   bottom = poly[0].y;
+
+   for (i=1; i<n_pts; i++)
+   {
       if (left>poly[i].x)
-	left=poly[i].x;
+         left=poly[i].x;
+      
       if (right<poly[i].x)
-	right=poly[i].x;
+         right=poly[i].x;
+   
       if (top>poly[i].y)
-	top=poly[i].y;
+         top=poly[i].y;
+   
       if (bottom<poly[i].y)
-	bottom=poly[i].y;
-    }
-  result.SetWidth(right-left+edge_size);
-  result.SetHeight(bottom-top+edge_size);
-  return result;	
+         bottom=poly[i].y;
+   }
+
+   result.SetWidth(right-left+edge_size);
+   result.SetHeight(bottom-top+edge_size);
+   return result;	
 }
 
 /////////////////////////////////////////////////////////////////////////////
-int REI_Plugin::GetNumPoly()
+int REI_Plugin::GetNumPoly( void )
 {
 	return n_pts;
 }
-
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::GetPoly(POLY &polygon)
+void REI_Plugin::GetPoly( POLY& polygon )
 {
-  //POLY polygon;
-  int i;
-
-  for (i=0; i<n_pts; i++)  
-    polygon[i]=poly[i];
-
-  return ;//polygon;
+   for ( int i=0; i < n_pts; i++ )  
+   {
+      polygon[i]=poly[i];
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
 int REI_Plugin::GetNumIports()
 {
-	return 1;
+	return inputPort.size();
 }
-
+/////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetNumIports( int numPorts )
+{
+   numberOfInputPorts = numPorts;
+}
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::GetIPorts(POLY &iports)
 {
-  
-  iports[0]=(poly[0]);
+   for ( int i = 0; i < inputPort.size(); ++i )
+   {
+      iports[ i ].x = poly[ 0 ].x;
+      iports[ i ].y = (poly[ 3 ].y / inputPort.size() ) * i;
+      //iports[ i ].x = inputPort.at( i )->GetPortLocation()->GetPoint().first;
+      //iports[ i ].y = inputPort.at( i )->GetPortLocation()->GetPoint().second;
+   }
 }
-
 /////////////////////////////////////////////////////////////////////////////
 int REI_Plugin::GetNumOports()
 {
-	return 1;
+	return outputPort.size();
 }
-
+/////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetNumOports( int numPorts )
+{
+   numberOfOutputPorts = numPorts;
+}
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::GetOPorts(POLY &oports)
 {
-  int o;
-
-  o = n_pts/2;
-  oports[0] = poly[o];
-    
+   for ( int i = 0; i < outputPort.size(); ++i )
+   {
+      oports[ i ].x = poly[ 1 ].x;
+      oports[ i ].y = ( poly[ 3 ].y / outputPort.size() ) * i;
+      //oports[ i ].x = outputPort.at( i )->GetPortLocation()->GetPoint().first;
+      //oports[ i ].y = outputPort.at( i )->GetPortLocation()->GetPoint().second;
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -325,13 +338,13 @@ unsigned int REI_Plugin::GetID()
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetName()
 {
-  return _T("Module");
+  return _T("Default Module");
 }
 
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetHelp()
 {
-  return _T("www.reaction-eng.com");  
+  return _T("www.vesuite.org");  
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -650,67 +663,93 @@ void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
    for ( unsigned int i = 0; i < numInputs; ++i )
    {
       Command* commandData = veModel->GetInput( i );
-      for ( unsigned int k = 0; k < commandData->GetNumberOfDataValuePairs(); ++k )
+      // Add if statement for input variables
+      //if "EPRI TAG"
+      //else
       {
-         DataValuePair* tempData = commandData->GetDataValuePair( k );
-         std::string dataType = tempData->GetDataName();
-         std::string dataName = tempData->GetDataType();
-         if ( std::string( "FLOAT" ) == dataType )
+         for ( unsigned int k = 0; k < commandData->GetNumberOfDataValuePairs(); ++k )
          {
-            tempData->GetData( *(_double[ dataName ]) );
-         }
-         else if ( std::string( "LONG" ) == dataType )
-         {
-            tempData->GetData( *(_int[ dataName ]) );
-         }
-         else if ( std::string( "STRING" ) == dataType )
-         {
-            tempData->GetData( *(_string[ dataName ]) );
-         }
-         else if ( std::string( "1DSTRING" ) == dataType )
-         {
-            tempData->GetData( *(_string1D[ dataName ]) );
-         }
-         else if ( std::string( "1DDOUBLE" ) == dataType )
-         {
-            tempData->GetData( *(_double1D[ dataName ]) );
-         }
-         else if ( std::string( "1DLONG" ) == dataType )
-         {
-            tempData->GetData( *(_int1D[ dataName ]) );
-         }
-         else if ( std::string( "XMLOBJECT" ) == dataType )
-         {
-            tempData->GetData( *(_int1D[ dataName ]) );
+            DataValuePair* tempData = commandData->GetDataValuePair( k );
+            std::string dataType = tempData->GetDataName();
+            std::string dataName = tempData->GetDataType();
+            if ( std::string( "FLOAT" ) == dataType )
+            {
+               tempData->GetData( *(_double[ dataName ]) );
+            }
+            else if ( std::string( "LONG" ) == dataType )
+            {
+               tempData->GetData( *(_int[ dataName ]) );
+            }
+            else if ( std::string( "STRING" ) == dataType )
+            {
+               tempData->GetData( *(_string[ dataName ]) );
+            }
+            else if ( std::string( "1DSTRING" ) == dataType )
+            {
+               tempData->GetData( *(_string1D[ dataName ]) );
+            }
+            else if ( std::string( "1DDOUBLE" ) == dataType )
+            {
+               tempData->GetData( *(_double1D[ dataName ]) );
+            }
+            else if ( std::string( "1DLONG" ) == dataType )
+            {
+               tempData->GetData( *(_int1D[ dataName ]) );
+            }
+            else if ( std::string( "XMLOBJECT" ) == dataType )
+            {
+               tempData->GetData( *(_int1D[ dataName ]) );
+            }
          }
       }
-   }
-/*
-  // EPRI TAG
-  long uf = 0;
-  if(mod_pack.getVal("USE_FINANCIAL", uf)) {
-    
-    if(financial_dlg == NULL)
-      financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
-    
-    financial_dlg->_use_data = uf;
-    
-    financial_dlg->_cc00_d = mod_pack.getDouble("CC00");
-    financial_dlg->_cc01_d = mod_pack.getDouble("CC01");
-    financial_dlg->_cc02_d = mod_pack.getDouble("CC02");
-    financial_dlg->_cc03_d = mod_pack.getDouble("CC03");
-    financial_dlg->_cc04_d = mod_pack.getDouble("CC04");
-    financial_dlg->_cc05_d = mod_pack.getDouble("CC05");
-    financial_dlg->_cc06_d = mod_pack.getDouble("CC06");
-    financial_dlg->_cc07_d = mod_pack.getDouble("CC07");
-    financial_dlg->_cc08_d = mod_pack.getDouble("CC08");
+      /*
+        // EPRI TAG
+        long uf = 0;
+        if(mod_pack.getVal("USE_FINANCIAL", uf)) {
 
-    financial_dlg->_om00_d = mod_pack.getDouble("OM00");
-    financial_dlg->_om01_d = mod_pack.getDouble("OM01");
-    financial_dlg->_om02_d = mod_pack.getDouble("OM02");
-    financial_dlg->_om03_d = mod_pack.getDouble("OM03");
-  }
-*/
+          if(financial_dlg == NULL)
+            financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
+
+          financial_dlg->_use_data = uf;
+
+          financial_dlg->_cc00_d = mod_pack.getDouble("CC00");
+          financial_dlg->_cc01_d = mod_pack.getDouble("CC01");
+          financial_dlg->_cc02_d = mod_pack.getDouble("CC02");
+          financial_dlg->_cc03_d = mod_pack.getDouble("CC03");
+          financial_dlg->_cc04_d = mod_pack.getDouble("CC04");
+          financial_dlg->_cc05_d = mod_pack.getDouble("CC05");
+          financial_dlg->_cc06_d = mod_pack.getDouble("CC06");
+          financial_dlg->_cc07_d = mod_pack.getDouble("CC07");
+          financial_dlg->_cc08_d = mod_pack.getDouble("CC08");
+
+          financial_dlg->_om00_d = mod_pack.getDouble("OM00");
+          financial_dlg->_om01_d = mod_pack.getDouble("OM01");
+          financial_dlg->_om02_d = mod_pack.getDouble("OM02");
+          financial_dlg->_om03_d = mod_pack.getDouble("OM03");
+        }
+      */
+   }
+
+   //Setup the ports so that the plugin can access them.
+   for ( size_t i = 0; i < veModel->GetNumberOfPorts(); ++i )
+   {
+      VE_Model::Port* tempPort = veModel->GetPort( i );
+      if ( tempPort->GetDataFlowDirection() == std::string( "input" ) )
+      {
+         inputPort.push_back( tempPort );
+      }
+      else if ( tempPort->GetDataFlowDirection() == std::string( "output" ) )
+      {
+         outputPort.push_back( tempPort );
+      }
+      else
+      {
+         wxMessageDialog( NULL, "Improperly formated ves file.", 
+                  "VES File Read Error", wxOK | wxICON_ERROR, wxDefaultPosition );
+      }
+   }
+
+   //
 }
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::UnPackResult(Interface* intf)
@@ -881,58 +920,3 @@ void REI_Plugin::FinancialData ()
   
   financial_dlg->Show();
 }
-
-// Gui to input geometry data
-
-void REI_Plugin::SetIDtoGeometryDataBuffer()
-{
-  if ( geometryDataBuffer == 0 )
-      geometryDataBuffer = new GeometryDataBuffer();
-
-   geometryDataBuffer->SetCurrentModuleID(this->GetID());
-}
-
-void REI_Plugin::GeometryData()
-{
-   geom_dlg = new GeometryDialog(NULL);
-   
-   if ( geometryDataBuffer == 0 )
-      geometryDataBuffer = new GeometryDataBuffer();
-
-   geom_dlg->SetGeometryDataBuffer( geometryDataBuffer );
-
-   geom_dlg->Show();
-}
-
-GeometryDataBuffer* REI_Plugin::GetGeometryDataBuffer( void )
-{
-   if ( geometryDataBuffer == 0 )
-      geometryDataBuffer = new GeometryDataBuffer();
-
-   return geometryDataBuffer;
-}
-
-bool REI_Plugin::HasGeomInfoPackage()
-{
-   //int local_id = this->GetID();
-   std::map<int, std::vector <GeometryInfoPackage> > localmap;
-
-   if ( geometryDataBuffer == 0 )
-      geometryDataBuffer = new GeometryDataBuffer();
-
-   std::vector<GeometryInfoPackage> locallist;
-
-   locallist = geometryDataBuffer->GetCurrentGeomInfoList();
-
-   if(locallist.size()>0)
-   {
-      return true;
-   }
-   else
-   {
-      return false;
-   }
-   
-}
-
-

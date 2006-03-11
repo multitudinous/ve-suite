@@ -271,7 +271,8 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
 DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex)
 {
    DOMElement* foundElement = dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(itemIndex));
-   if(foundElement){
+   if ( foundElement )
+   {
       if(foundElement->getParentNode() != baseElement)
       {
          XMLSize_t nChildren = baseElement->getElementsByTagName(xercesString(subElementTagName))->getLength();
@@ -302,8 +303,20 @@ bool XMLObject::ExtractBooleanFromSimpleElement(DOMElement* element)
 ////////////////////////////////////////////////////////////////////////////////
 std::string XMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)
 {
-   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
-   std::string tmp = XMLString::transcode( rawText->getData() );
+   std::string tmp;
+
+   try
+   {
+      // in case the element does not contain data
+      DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
+      if ( rawText )
+      {
+         tmp = XMLString::transcode( rawText->getData() );
+      }
+   }
+   catch ( ... )
+   {
+   }
    return tmp;
 }
 //////////////////////////////////////////////////////////////////////////

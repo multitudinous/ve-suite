@@ -56,6 +56,7 @@ class GeometryDataBuffer;
 namespace VE_Model
 {
    class Model;
+   class Port;
 }
 
 typedef std::vector<wxPoint> POLY;
@@ -72,21 +73,21 @@ public:
    virtual void DrawIcon(wxDC* dc);
    //This call return a window to be displayed on the framework
 
-   virtual void DrawID(wxDC* dc);
+   void DrawID(wxDC* dc);
 
-   virtual void SetPos(wxPoint pt);
+   void SetPos(wxPoint pt);
    //Set the start drawing location
 
-   virtual wxRect GetBBox();
+   wxRect GetBBox();
    //Return the bounding box;
 
    //To Get around the Memory allocation problem of windows dll
    //Add the calls for the size. So the main program can preallocate 
    // memory for it
 
-   virtual int GetNumPoly();
+   int GetNumPoly( void );
 
-   virtual void GetPoly(POLY &polygon); 
+   void GetPoly(POLY &polygon); 
    //Return the outline polygon
 
    virtual UIDialog* UI(wxWindow* parent);
@@ -101,7 +102,7 @@ public:
    virtual void FinancialData();
    //This returns the FinancialData dialog of the module
 
-   virtual unsigned int GetID();
+   unsigned int GetID();
    //This is the ID to identify the module
 
    virtual wxString GetName();
@@ -133,20 +134,17 @@ public:
    //To Get around the Memory allocation problem of windows dll
    //Add the calls for the size. So the main program can preallocate memory for it
 
-   virtual int GetNumIports();
+   int GetNumIports();
+   void SetNumIports( int numPorts );
    virtual void GetIPorts(POLY& ports);
 
-   virtual int GetNumOports();
+   int GetNumOports();
+   void SetNumOports( int numPorts );
    virtual void GetOPorts(POLY& ports);
 
    virtual void Lock(bool lock);
-   virtual void SetID(int id);
+   void SetID(int id);
    virtual bool Has3Ddata();
-
-   void SetIDtoGeometryDataBuffer();
-
-   bool HasGeomInfoPackage();
-
    // EPRI TAG
    FinancialDialog* financial_dlg;
 
@@ -175,8 +173,15 @@ protected:
    wxPoint* poly; //The outline polygon points list;
    int n_pts; //Number of points
 
-   std::vector<wxString> v_desc;
-   std::vector<wxString> v_value;
+   ///Port data info
+   int numberOfInputPorts;
+   int numberOfOutputPorts;
+   std::vector< VE_Model::Port* > inputPort;
+   std::vector< VE_Model::Port* > outputPort;
+   
+   //data storage types
+   std::vector< wxString > v_desc;
+   std::vector< wxString > v_value;
 
    std::map<std::string, long *>                      _int;
    std::map<std::string, double *>                    _double;

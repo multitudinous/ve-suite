@@ -220,7 +220,14 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 
       {
          dataValueStringName = GetSubElement( currentElement, "icon", 0 );
-         iconFileName = ExtractDataStringFromSimpleElement( dataValueStringName );
+         if ( dataValueStringName )
+         {
+            iconFileName = ExtractDataStringFromSimpleElement( dataValueStringName );
+         }
+         else
+         {
+            iconFileName = std::string( "no_icon" );
+         }
       }
 
       {
@@ -235,14 +242,17 @@ void Model::SetObjectFromXMLData(DOMNode* element)
       }
 
       {
-         dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
-         if ( geometry )
+         if ( currentElement->getElementsByTagName( xercesString("geometry") )->getLength() > 0 )
          {
-            delete geometry;
-            geometry = 0;
+            dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
+            if ( geometry )
+            {
+               delete geometry;
+               geometry = 0;
+            }
+            geometry = new CADNode("oops" );
+            geometry->SetObjectFromXMLData( dataValueStringName );
          }
-         geometry = new CADNode("oops" );
-         geometry->SetObjectFromXMLData( dataValueStringName );
       }
 
       {
@@ -311,7 +321,7 @@ Point* Model::GetIconLocation( void )
    return iconLocation;
 }
 ////////////////////////////////////////////////////////////
-Command* Model::GetResult(int i )
+Command* Model::GetResult( int i )
 {
    try
    {
@@ -319,13 +329,13 @@ Command* Model::GetResult(int i )
    }
    catch (...)
    {
-      if ( i >= 0)// (results.size() + 1) )
+      if ( i >= 0 )
       {
          std::cerr << "The element request is out of sequence."
                      << " Please ask for a lower number point." << std::endl;
          return 0;
       }
-      else
+      //else
       {
          results.push_back( new Command(  ) );
          return results.back();
@@ -400,6 +410,62 @@ size_t Model::GetNumberOfPorts( void )
 {
    return ports.size();
 }
+////////////////////////////////////////////////////////////
+/*Port* Model::GetInputPort( unsigned int i )
+{
+   try
+   {
+      return inputPorts.at( i );
+   }
+   catch (...)
+   {
+      if ( i > ( inputPorts.size() + 1) )
+      {
+         std::cerr << "The element request is out of sequence."
+                     << " Please ask for a lower number point." << std::endl;
+         return 0;
+      }
+      else
+      {
+         ports.push_back( new Port() );
+         inputPorts.push_back( ports.back() );
+         return ports.back();
+      }
+   }
+}
+////////////////////////////////////////////////////////////
+size_t Model::GetNumberOfInputPorts( void )
+{
+   return inputPorts.size();
+}
+////////////////////////////////////////////////////////////
+Port* Model::GetOutputPort( unsigned int i )
+{
+   try
+   {
+      return outputPorts.at( i );
+   }
+   catch (...)
+   {
+      if ( i > ( outputPorts.size() + 1) )
+      {
+         std::cerr << "The element request is out of sequence."
+                     << " Please ask for a lower number point." << std::endl;
+         return 0;
+      }
+      else
+      {
+         ports.push_back( new Port() );
+         outputPorts.push_back( ports.back() );
+         return ports.back();
+      }
+   }
+}
+////////////////////////////////////////////////////////////
+size_t Model::GetNumberOfOutputPorts( void )
+{
+   return outputPorts.size();
+}*/
 ////////////////////////////////////////////////////////////
 ParameterBlock* Model::GetInformationPacket( unsigned int i )
 {
