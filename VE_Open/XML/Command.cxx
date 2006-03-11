@@ -120,7 +120,7 @@ void Command::_updateVEElement( std::string input )
    _updateCommandName();
    _updateDataValuePairs();
 
-   _nChildren = 1 + _nDataValuePairs;
+   _nChildren = 1 + _dataValuePairs.size();
 }
 ////////////////////////////////////
 void Command::_updateCommandName()
