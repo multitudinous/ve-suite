@@ -104,7 +104,7 @@ public:
    ///Get point for the icon location
    Point* GetIconLocation( void );
    ///Get results data
-   VE_XML::Command* GetResult( unsigned int i );
+   VE_XML::Command* GetResult(int i );
    ///Get results data
    size_t GetNumberOfResults( void );
    ///Get input data
@@ -116,7 +116,7 @@ public:
    size_t GetNumberOfInputs( void );
    ///Get the i'th port for the model.
    ///\param i The i'th port you are after.
-   Port* GetPort( unsigned int i );
+   Port* GetPort(int i );
    ///Allocates a new port for the model.
    Port* GetPort( void );
    ///Get port data

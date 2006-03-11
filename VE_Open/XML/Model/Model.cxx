@@ -311,7 +311,7 @@ Point* Model::GetIconLocation( void )
    return iconLocation;
 }
 ////////////////////////////////////////////////////////////
-Command* Model::GetResult( unsigned int i )
+Command* Model::GetResult(int i )
 {
    try
    {
@@ -319,7 +319,7 @@ Command* Model::GetResult( unsigned int i )
    }
    catch (...)
    {
-      if ( i > (results.size() + 1) )
+      if ( i >= 0)// (results.size() + 1) )
       {
          std::cerr << "The element request is out of sequence."
                      << " Please ask for a lower number point." << std::endl;
@@ -367,7 +367,7 @@ size_t Model::GetNumberOfInputs( void )
    return inputs.size();
 }
 ////////////////////////////////////////////////////////////
-Port* Model::GetPort( unsigned int i )
+Port* Model::GetPort(int i )
 {
    try
    {
@@ -376,16 +376,17 @@ Port* Model::GetPort( unsigned int i )
    catch (...)
    {
       //if ( i > (ports.size() + 1) )
+	  if ( i >=0)
       {
          std::cerr << "The element request is out of sequence."
                      << " Please ask for a lower number point." << std::endl;
          return 0;
       }
-      /*else
+      else
       {
          ports.push_back( new Port(  ) );
          return ports.back();
-      }*/
+      }
    }
 }
 ////////////////////////////////////////////////////////////
