@@ -64,7 +64,7 @@ Command::Command( const Command& input )
 {
    _cmdName =  input._cmdName;
    _nDataValuePairs = input._nDataValuePairs;
-   for ( unsigned int i = 0; i < input._nDataValuePairs; ++i )
+   for ( unsigned int i = 0; i < input._dataValuePairs.size(); ++i )
    {
       _dataValuePairs.push_back( new DataValuePair( (*(input._dataValuePairs.at(i))) ) );
       nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = _dataValuePairs.back();
@@ -78,7 +78,7 @@ Command& Command::operator=( const Command& input)
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
       _cmdName =  input._cmdName;
-      _nDataValuePairs = input._nDataValuePairs;
+      _nDataValuePairs = input._dataValuePairs.size();
 
       int i  = _dataValuePairs.size() - 1;
       while(i >=0)
@@ -89,8 +89,8 @@ Command& Command::operator=( const Command& input)
       _dataValuePairs.clear();
       nameToDataValuePairMap.clear();
 
-      _nDataValuePairs = input._nDataValuePairs;
-      for ( unsigned int i = 0; i < input._nDataValuePairs; ++i )
+      _nDataValuePairs = input._dataValuePairs.size();
+      for ( unsigned int i = 0; i < input._dataValuePairs.size(); ++i )
       {
          _dataValuePairs.push_back( new DataValuePair( (*(input._dataValuePairs.at(i))) ) );
          nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = _dataValuePairs.back();
@@ -198,7 +198,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
       }
    }
    _nDataValuePairs = static_cast< unsigned int >( _dataValuePairs.size() );
-   _nChildren = 1 + _nDataValuePairs;
+   _nChildren = 1 + _dataValuePairs.size();
 }
 /////////////////////////////////////////////////////////////////////
 void Command::ExtractCmdNameFromElement(DOMElement* commandElement)
@@ -247,6 +247,6 @@ VE_XML::DataValuePair* Command::GetDataValuePair( int index )
 ///////////////////////////////////////////////////
 unsigned int Command::GetNumberOfDataValuePairs()
 {
-   return _nDataValuePairs;
+   return _dataValuePairs.size();
 }
    
