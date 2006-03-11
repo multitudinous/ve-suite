@@ -133,7 +133,8 @@ void Command::_updateCommandName()
 ///////////////////////////////////////
 void Command::_updateDataValuePairs()
 {
-   for(unsigned int i = 0; i < _nDataValuePairs;  i++){
+   for ( size_t i = 0; i < _dataValuePairs.size();  ++i )
+   {
       _dataValuePairs.at(i)->SetOwnerDocument(_rootDocument);
       _veElement->appendChild( _dataValuePairs.at( i )->GetXMLData( "parameter" ) );
    }
