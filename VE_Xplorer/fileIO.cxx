@@ -55,7 +55,7 @@ fileIO::~fileIO( )
 int fileIO::isFileReadable( const std::string filename )
 {
    std::ifstream fileIn( filename.c_str(), std::ios::in ); 
-   if ( ! fileIn )
+   if ( !fileIn.good() )
    {
       return 0;
    }
