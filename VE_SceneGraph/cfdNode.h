@@ -67,6 +67,13 @@ namespace VE_SceneGraph
          ///Set the name of the node
          void SetName(std::string name);
 
+         ///Toggle the display of this node on/off
+         ///\param onOff Turn on/off rendering of this node\n
+         ///Valid values are:\n
+         ///ON == display this node\n
+         ///OFF == hide this node\n
+         void ToggleDisplay(std::string onOff);
+
 #ifdef _PERFORMER
          virtual pfNode* GetRawNode( void );
 #elif _OSG

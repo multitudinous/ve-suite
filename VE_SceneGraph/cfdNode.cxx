@@ -196,10 +196,32 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 }
-///Set the name of the node
+//////////////////////////////////////
+///Set the name of the node         //
+//////////////////////////////////////
 void cfdNode::SetName(std::string name)
 {
    GetRawNode()->setName(name.c_str());
+}
+//////////////////////////////////////////////
+void cfdNode::ToggleDisplay(std::string onOff)
+{
+   if(onOff == "ON")
+   {
+#ifdef _OSG
+      GetRawNode()->setNodeMask(1);
+#elif _OPENSG
+#elif _PERFORMER
+#endif
+   }
+   else if(onOff == "OFF")
+   {
+#ifdef _OSG
+      GetRawNode()->setNodeMask(0);
+#elif _OPENSG
+#elif _PERFORMER
+#endif
+   }
 }
 /////////////////////////////////////////
 //load scene from file                 //
