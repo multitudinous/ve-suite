@@ -110,6 +110,7 @@ SRCS=\
    CADAddAttributeEH.cxx \
    CADSetActiveAttributeEH.cxx \
    CADSetNameEH.cxx \
+   CADToggleEH.cxx \
    CADTransformEH.cxx 
 
 			

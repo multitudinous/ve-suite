@@ -82,7 +82,6 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    try{
 
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
 
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");

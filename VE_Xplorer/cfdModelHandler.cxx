@@ -65,6 +65,7 @@
 #include "VE_Xplorer/CADAddAttributeEH.h"
 #include "VE_Xplorer/CADSetActiveAttributeEH.h"
 #include "VE_Xplorer/CADSetNameEH.h"
+#include "VE_Xplorer/CADToggleEH.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -118,6 +119,7 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")] = new VE_EVENTS::CADAddAttributeEventHandler();
    _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
    _eventHandlers[std::string("CAD_SET_NODE_NAME")] = new VE_EVENTS::CADSetNameEventHandler();
+   _eventHandlers[std::string("CAD_TOGGLE_NODE")] = new VE_EVENTS::CADToggleEventHandler();
 #ifdef _OSG
 #ifdef VE_PATENTED
    _activeTDSet = 0;

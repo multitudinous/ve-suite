@@ -110,13 +110,13 @@ CADEventHandler& CADEventHandler::operator=(const CADEventHandler& rhs)
 ////////////////////////////////////////////////////////
 void CADEventHandler::_setAttributesOnNode(CADNode* node)
 {
+   std::cout<<"Setting Attributes!!"<<std::endl;
    //set attributes
-   std::vector<CADAttribute>::iterator currentAttribute;
-   for(currentAttribute = node->GetAttributeList().begin();
-       currentAttribute != node->GetAttributeList().end();
-       currentAttribute++)
+   for(unsigned int i =0;  node->GetAttributeList().size(); i++)
    {
-      _activeModel->AddAttributeToNode(node->GetID(),&(*currentAttribute));
+      CADAttribute currentAttribute = node->GetAttributeList().at(i);
+      std::cout<<"Adding attribute: "<<currentAttribute.GetAttributeName()<<std::endl;
+      _activeModel->AddAttributeToNode(node->GetID(),&currentAttribute);
    }
 }
 ///////////////////////////////////////////////////////
@@ -127,14 +127,17 @@ void CADEventHandler::_setTransformOnNode(CADNode* node)
    unsigned int nodeID = node->GetID();
    if(node->GetNodeType() == "Assembly")
    {
+      std::cout<<"Setting transform on Assembly: "<<nodeID<<std::endl;
       transform = _activeModel->GetAssembly(nodeID);
    }
    else if(node->GetNodeType() == "Part")
    {
+      std::cout<<"Setting transform on Part: "<<nodeID<<std::endl;
       transform = _activeModel->GetPart(nodeID)->GetDCS();
    }
    else if(node->GetNodeType() == "Clone")
    {
+      std::cout<<"Setting transform on Clone: "<<nodeID<<std::endl;
       transform = _activeModel->GetClone(nodeID)->GetClonedGraph();
    }
    if(transform)
@@ -142,6 +145,10 @@ void CADEventHandler::_setTransformOnNode(CADNode* node)
       transform->SetTranslationArray(node->GetTransform()->GetTranslationArray()->GetArray() );
       transform->SetRotationArray(node->GetTransform()->GetRotationArray()->GetArray() );
       transform->SetScaleArray(node->GetTransform()->GetScaleArray()->GetArray() );
+   }
+   else
+   {
+      std::cout<<"No transform found!!"<<std::endl;
    }
 }
 /////////////////////////////////////////////////////////////////////////
@@ -151,10 +158,13 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* node)
    cfdDCS* parentAssembly = 0;
    parentAssembly = _activeModel->GetAssembly(parentID);
 
+   std::cout<<"---Adding node---"<<std::endl;
    if(parentAssembly)
    {
       if(node->GetNodeType() == "Assembly")
       {
+         std::cout<<"---Assembly---"<<std::endl;
+         std::cout<<"---"<<node->GetID()<<"---"<<std::endl;
          _activeModel->CreateAssembly(nodeID);
          _activeModel->GetAssembly(nodeID)->SetName(node->GetNodeName());
 
@@ -167,6 +177,8 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* node)
       }
       else if(node->GetNodeType() == "Part")
       {
+         std::cout<<"---Part---"<<std::endl;
+         std::cout<<"---"<<node->GetID()<<"---"<<std::endl;
           _activeModel->CreatePart(dynamic_cast<CADPart*>(node)->GetCADFileName(),nodeID,parentID);
 
           VE_Xplorer::cfdFILE* partNode = _activeModel->GetPart(nodeID);
@@ -174,10 +186,19 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* node)
       }
       else if(node->GetNodeType() == "Clone")
       {
+         std::cout<<"---Clone---"<<std::endl;
+         std::cout<<"---"<<node->GetID()<<"---"<<std::endl;
          CADClone* clone = dynamic_cast<CADClone*>(node);
          _activeModel->CreateClone(nodeID,clone->GetOriginalNode()->GetID(),clone->GetOriginalNode()->GetNodeType());         
       }
-      _setAttributesOnNode(node);
+      std::cout<<"Is this happening?"<<std::endl;
       _setTransformOnNode(node);
+      std::cout<<"---1---"<<std::endl;
+      _setAttributesOnNode(node);
+      std::cout<<"---2---"<<std::endl;
+   }
+   else
+   {
+      std::cout<<"No parent found!"<<std::endl;
    }
 }   

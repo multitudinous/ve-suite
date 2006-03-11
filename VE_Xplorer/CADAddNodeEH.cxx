@@ -79,21 +79,20 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    try
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* parentID = command->GetDataValuePair("Parent ID");
       VE_XML::DataValuePair* cadNode = command->GetDataValuePair("New Node");
       VE_CAD::CADNode* node = dynamic_cast<VE_CAD::CADNode*>(cadNode->GetDataXMLObject());
 
       VE_SceneGraph::cfdDCS* parentAssembly = 0;
-      parentAssembly = _activeModel->GetAssembly(parentID->GetUIntData());
+      parentAssembly = _activeModel->GetAssembly(node->GetParent());
 
       if(!parentAssembly)
       {
          //create the root
-         _activeModel->CreateAssembly(parentID->GetUIntData());
-         parentAssembly = _activeModel->GetAssembly(parentID->GetUIntData());
+         _activeModel->CreateAssembly(node->GetParent());
+         parentAssembly = _activeModel->GetAssembly(node->GetParent());
          _activeModel->GetCfdDCS()->AddChild(parentAssembly);
       }
-      _addNodeToNode(parentID->GetUIntData(),node);
+      _addNodeToNode(node->GetParent(),node);
    }
    catch(...)
    {
