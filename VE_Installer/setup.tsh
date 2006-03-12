@@ -118,8 +118,8 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
       
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
    setenv JDK_HOME /usr/java/jdk1.5.0_04
-   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK-5.0/Linux-RHEL4
-#   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Debug/VTK/Linux-RHEL_4
+#   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK-5.0/Linux-RHEL4
+   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Debug/VTK/Linux-RHEL_4
 #   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.1/Linux-RHEL_4
    setenv WX_HOME /home/users/mccdo/wxWindows/wxGTK-2.6.2/install-rhel_4
    #setenv WX_HOME /home/users/mccdo/wxWindows/wxX11-2.6.2/install-rhel4
