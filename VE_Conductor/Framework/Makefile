@@ -55,8 +55,8 @@ DEPDIR= $(CFDHOSTTYPE)
 NO_DEPEND= YES
 
 # One of these must be uncommented.
-#DEBUG_APP?= TRUE
-OPTIM_APP?= TRUE
+DEBUG_APP?= TRUE
+#OPTIM_APP?= TRUE
 
 EXTRA_CFLAGS+=
 

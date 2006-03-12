@@ -153,7 +153,7 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
    if ( info )
    {
       object = dynamic_cast< REI_Plugin* >( info->CreateObject() );
-      network->AddtoNetwork(object, info->GetClassName());
+      network->AddtoNetwork( object, info->GetClassName());
       //      std::cout<<"a moduel size : "<<network->modules.size()<<std::endl;
       //(network->modules).push_back(object);
       //wxString title, desc;

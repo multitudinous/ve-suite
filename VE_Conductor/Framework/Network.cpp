@@ -47,6 +47,7 @@
 
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
+#include <wx/utils.h>
 
 #include <sstream>
 #include <iomanip>
@@ -2033,6 +2034,9 @@ void Network::New()
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork )
 {
+   // Start the busy cursor
+   ::wxBeginBusyCursor();
+   ::wxSafeYield();
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
    VE_XML::XMLReaderWriter networkWriter;
@@ -2111,7 +2115,7 @@ void Network::Load( std::string xmlNetwork )
 
       wxClassInfo* cls = wxClassInfo::FindClass( model->GetModelName().c_str() );
       // If the class has not had a custom module been created
-      if ( cls != 0 )
+      if ( cls == 0 )
       {
          //Load the generic plugin for conductor
          cls = wxClassInfo::FindClass( "DefaultPlugin" );
@@ -2134,6 +2138,8 @@ void Network::Load( std::string xmlNetwork )
       VE_Conductor::GUI_Utilities::Polygon tempPoly;
       *(tempPoly.GetPolygon()) = tmpPoly;
       tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
+std::cout << " reveiw : " << std::endl
+      << num << " : "<< model->GetModelName() << " : " << bbox.x << " : " << bbox.y << std::endl;
    }
 /*
    // do this for tags
@@ -2169,6 +2175,7 @@ void Network::Load( std::string xmlNetwork )
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
    Refresh();
+   ::wxEndBusyCursor();
 }
 
 //////////////////////////////////////////////////////
