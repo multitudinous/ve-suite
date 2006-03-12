@@ -408,10 +408,10 @@ void UI_NavButton::onMouseUp(wxMouseEvent& WXUNUSED(event))
    //specific button we need to 
    //tell cfdApp to stop moving 
    //reset the active button
-   ((NavigationPane*)GetParent())->setActiveButton(NONE);
+   ((NavigationPane*)(GetParent()->GetParent()))->setActiveButton(NONE);
       
    //relay info to cfdApp 
-   ((NavigationPane*)GetParent())->updateParent(0,-1);
+   ((NavigationPane*)(GetParent()->GetParent()))->updateParent(0,-1);
 }
 ///////////////////////////////////////////////
 //only activate motion when left mouse is    //
@@ -419,7 +419,7 @@ void UI_NavButton::onMouseUp(wxMouseEvent& WXUNUSED(event))
 ///////////////////////////////////////////////
 void UI_NavButton::onMouse(wxMouseEvent& mouse)
 {
-   int activeId = ((NavigationPane*)GetParent())->getActiveButton();
+   int activeId = ((NavigationPane*)(GetParent()->GetParent()))->getActiveButton();
 
    //no button pushed yet
    if(activeId == NONE){     
@@ -430,10 +430,10 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
          _buttonPushed = 1;         
 
          //update the active button
-         ((NavigationPane*)GetParent())->setActiveButton(GetId());
+         ((NavigationPane*)(GetParent()->GetParent()))->setActiveButton(GetId());
 
          //pass the nav info to cfdApp
-         ((NavigationPane*)GetParent())->updateParent(_buttonPushed,GetId());              
+         ((NavigationPane*)(GetParent()->GetParent()))->updateParent(_buttonPushed,GetId());              
       }
    }
 }

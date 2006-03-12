@@ -204,9 +204,9 @@ void AppFrame::CreateVETab()
    //m_tabs->createTabPages();
    //wxNotebookSizer *nbs = new wxNotebookSizer(m_tabs);
    //sizerTab->Add(nbs, 1, wxEXPAND | wxALL);
-   sizerTab = new wxBoxSizer(wxVERTICAL);
-   sizerTab->Add(m_frame, 1, wxEXPAND | wxALL);
-   sizerTab->Layout();
+   //sizerTab = new wxBoxSizer(wxVERTICAL);
+   //sizerTab->Add(m_frame, 1, wxEXPAND | wxALL);
+   //sizerTab->Layout();
  
    //wx_ve_splitter->SetSizer(sizerTab);
    //wx_ve_splitter->SetAutoLayout(TRUE);
@@ -225,7 +225,7 @@ void AppFrame::CreateVETab()
 
 
    //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
-   SetSizer( sizerTab );
+   //SetSizer( sizerTab );
 }
 
 wxRect AppFrame::DetermineFrameSize (wxConfig* config)
@@ -1131,7 +1131,7 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
    std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }*/
    //wx_ve_splitter->Unsplit(m_frame);
-   sizerTab->Detach(m_frame);
+   //sizerTab->Detach(m_frame);
    delete m_frame;
    m_frame = NULL;
    con_menu->Enable(v21ID_DISCONNECT_VE, false);
