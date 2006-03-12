@@ -80,7 +80,9 @@ NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
    _activeButton = NONE;
-
+   
+   wxRect dialogPosition( 500, 200, 575, 550 );
+   this->SetSize( dialogPosition );
    BuildPane();
 
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
