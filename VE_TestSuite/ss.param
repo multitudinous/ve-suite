@@ -1,6 +1,6 @@
-7                    // the number of objects to follow
+8                    // the number of objects to follow
 0                    // OPTIONAL world DCS settings
-   1 1 1             // Scale values
+   3 3 3             // Scale values
    0 0 0             // Translation values
    30 0 0            // Rotation values (Z-X-Y format)
 9                    // Object type 9: Geometry
@@ -13,23 +13,23 @@
 8                    // Object type 8: data set
    1 1 1             // Scale values
    0 0 0             // Translation values
-   0 0 0             // Rotation values (Z-X-Y format)
-   ./3scl.vtk        // data set name
-   ./POST_DATA1      // precomputed data slice directory
+   30 0 0             // Rotation values (Z-X-Y format)
+   ./3scl.vtu        // data set name
+   ./POST_DAT      // precomputed data slice directory
    ./SURFACE1        // precomputed surface directory
 9                    // Object type 9: Geometry
    1                 // transparency toggle
    1 1 0.7 1         // color flag ( and 3 color values if flag = 1)
    1 1 1             // Scale values for geometry file
    0 0 0             // Translation values for geometry file
-   0 0 0             // Rotation values (Z-X-Y format)
+   30 0 0             // Rotation values (Z-X-Y format)
    ./Surface0.75.stl // Geometry file name
 8                    // Object type 8: data set
    1 1 1             // Scale values
    -4 0 0            // Translation values
    40 40 0           // Rotation values (Z-X-Y format)
-   ./2scl.vtk        // data set name
-   ./POST_DATA2      // precomputed data slice directory
+   ./2scl.vtu        // data set name
+   ./POST_DAT      // precomputed data slice directory
    ./SURFACE2        // precomputed surface directory
 9                    // Object type 9: Geometry
    1                 // transparency toggle
@@ -42,6 +42,13 @@
    1 1 1 
    0 0 0 
    0 0 0
-   vtkPolyData.vtk
+   vtkPolyData.vtp
+   ./JUNK            // precomputed data slice directory
+   ./JUNK2           // precomputed surface directory
+8                    // Object type 8: data set
+   1 1 1 
+   0 0 0 
+   0 0 0
+   test.vts
    ./JUNK            // precomputed data slice directory
    ./JUNK2           // precomputed surface directory
