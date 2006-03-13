@@ -56,6 +56,8 @@
 #include <wx/window.h>
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
+#include <wx/gdicmn.h>
+
 #include <iostream>
 
 BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
@@ -81,7 +83,8 @@ NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* 
 {
    _activeButton = NONE;
    
-   wxRect dialogPosition( 500, 200, 575, 550 );
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
    this->SetSize( dialogPosition );
    BuildPane();
 
@@ -446,7 +449,7 @@ void NavigationPane::updateParent(int pushed, int id)
    //if we released a button tell cfdApp to stop moving
    if ( !pushed )
    {
-      dataValueName = "STOP_GUI_NAV";
+      dataValueName.assign( "STOP_GUI_NAV" );
       cIso_value = -1;
       SendCommandsToXplorer();
    }
