@@ -40,6 +40,7 @@
 #include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/utils.h>
+#include <wx/filefn.h>
 
 #include <iostream>
 
@@ -63,12 +64,16 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
 {
    // Load the default plugin no matter what
    wxString veSuiteHome;
-   if ( ::wxGetEnv( wxString( "VE_SUITE_HOME" ), &veSuiteHome ) )
+   wxString hostType;
+   if ( ::wxGetEnv( wxString( "VE_SUITE_HOME" ), &veSuiteHome ) && 
+         ::wxGetEnv( wxString( "CFDHOSTTYPE" ), &hostType ) )
    {
-      wxString libn = veSuiteHome + "/lib/" + "RHEL_4/" + wxString( "DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
-      wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
-      if ( lib )
+      wxString libn = veSuiteHome + "/lib/" + hostType + wxString( "/DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
+      if ( ::wxFileExists( libn ) )
+      {
+         wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
          wxLogDebug("Loaded [ %s ]\n", libn.c_str() );
+      }
    }
 
    // Try to laod custom plugins
