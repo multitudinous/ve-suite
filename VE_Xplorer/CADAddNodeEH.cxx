@@ -41,6 +41,9 @@
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/CAD/CADPart.h"
+#include "VE_Open/XML/CAD/CADAssembly.h"
+#include "VE_Open/XML/CAD/CADClone.h"
 #include <iostream>
 using namespace VE_EVENTS;
 using namespace VE_CAD;
@@ -80,9 +83,30 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
       VE_XML::DataValuePair* cadNode = command->GetDataValuePair("New Node");
-      VE_CAD::CADNode* node = dynamic_cast<VE_CAD::CADNode*>(cadNode->GetDataXMLObject());
+      std::string nodeType = dynamic_cast<VE_CAD::CADNode*>(cadNode->GetDataXMLObject())->GetNodeType();
+
+      VE_CAD::CADNode* node = 0;
+      VE_CAD::CADAssembly* assembly = 0; 
+      VE_CAD::CADPart* part = 0;
+      VE_CAD::CADClone* clone = 0;
 
       VE_SceneGraph::cfdDCS* parentAssembly = 0;
+
+      if(nodeType == "Assembly")
+      {
+         assembly = dynamic_cast<VE_CAD::CADAssembly*>(cadNode->GetDataXMLObject());
+         node = dynamic_cast<CADNode*>(assembly);
+      }
+      else if(nodeType == "Part")
+      {
+         part = dynamic_cast<VE_CAD::CADPart*>(cadNode->GetDataXMLObject());
+         node = dynamic_cast<CADNode*>(part);
+      }
+      else if(nodeType == "Clone")
+      {
+         clone = dynamic_cast<VE_CAD::CADClone*>(cadNode->GetDataXMLObject());
+         node = dynamic_cast<CADNode*>(clone);
+      }
       parentAssembly = _activeModel->GetAssembly(node->GetParent());
 
       if(!parentAssembly)
@@ -92,7 +116,13 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
          parentAssembly = _activeModel->GetAssembly(node->GetParent());
          _activeModel->GetCfdDCS()->AddChild(parentAssembly);
       }
-      _addNodeToNode(node->GetParent(),node);
+
+      if(nodeType == "Assembly")
+         _addNodeToNode(node->GetParent(),assembly);
+      else if(nodeType == "Part")
+         _addNodeToNode(node->GetParent(),part);
+      else if(nodeType == "Clone")
+         _addNodeToNode(node->GetParent(),clone);
    }
    catch(...)
    {
