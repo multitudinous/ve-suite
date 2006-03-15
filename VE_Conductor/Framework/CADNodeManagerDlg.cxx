@@ -462,14 +462,16 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
               cadReader.ReadXMLData(std::string(dialog.GetPath()),"CAD","CADAssembly");
               
               CADNode* loadedNode = 0;
+              CADAssembly* newAssembly = 0;
+              CADPart* newPart = 0;
               std::vector<VE_XML::XMLObject*> loadedNodes;
               loadedNodes = cadReader.GetLoadedXMLObjects();
 
               if(loadedNodes.size())
               {
-                 std::cout<<"---Loaded Assembly---"<<std::endl;
-                 loadedNode = new CADAssembly(*dynamic_cast<CADAssembly*>(loadedNodes.at(0)));
-                 dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(dynamic_cast<CADAssembly*>(loadedNode));
+                 //std::cout<<"---Loaded Assembly---"<<std::endl;
+                 newAssembly = new CADAssembly(*dynamic_cast<CADAssembly*>(loadedNodes.at(0)));
+                 dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
               }
               else
               {
@@ -477,27 +479,31 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
                  loadedNodes = cadReader.GetLoadedXMLObjects();
                  if(loadedNodes.size())
                  {
-                    std::cout<<"---Loaded Part---"<<std::endl;
-                    loadedNode = new CADPart(*dynamic_cast<CADPart*>(loadedNodes.at(0)));
-                    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(dynamic_cast<CADPart*>(loadedNode));
+                    //std::cout<<"---Loaded Part---"<<std::endl;
+                    newPart = new CADPart(*dynamic_cast<CADPart*>(loadedNodes.at(0)));
+                    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newPart);
                  }
               }
-
-              _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
-              _cadTreeBuilder->SetRootNode(_rootNode);
-              _cadTreeBuilder->Traverse();
-              _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
+              if(newAssembly || newPart){
+                 _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
+                 _cadTreeBuilder->SetRootNode(_rootNode);
+                 _cadTreeBuilder->Traverse();
+                 _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
               
-              _commandName = "CAD_ADD_NODE";
-              //loadedNode->SetParent(_activeCADNode->GetID());
-              VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
-              cadNode->SetDataType(std::string("XMLOBJECT"));
-              cadNode->SetData("New Node",loadedNode);
-              _dataValuePairList.push_back(cadNode);
+                 _commandName = "CAD_ADD_NODE";
+                 VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
+                 cadNode->SetDataType(std::string("XMLOBJECT"));
+              
+                 if(newAssembly)
+                    cadNode->SetData("New Node",newAssembly);
+                 else if(newPart)
+                    cadNode->SetData("New Node",newPart);
+                 _dataValuePairList.push_back(cadNode);
 
 
-              _sendCommandsToXplorer();
-              ClearInstructions();
+                 _sendCommandsToXplorer();
+                 ClearInstructions();
+              }
            }      
         }
     }
