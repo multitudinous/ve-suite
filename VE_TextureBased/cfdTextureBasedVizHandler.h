@@ -81,6 +81,8 @@ namespace VE_TextureBased
          void SetNavigate( VE_Xplorer::cfdNavigate* navigate);
          void SetCursor( VE_Xplorer::cfdCursor* cursor);
          void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
+
+         void SetCurrentTime(double time);
   
          void ViewTextureBasedVis(bool trueFalse);
          //once we get pf side this may need to be ifdef'd
@@ -100,6 +102,8 @@ namespace VE_TextureBased
          void _updateScalarVisHandler();
          void _updateVectorVisHandler();
 
+         double _appTime;
+         double _animationDelay;
          std::string _paramFile;
          VE_Xplorer::cfdCommandArray* _cmdArray;
          VE_SceneGraph::cfdDCS* _worldDCS;
