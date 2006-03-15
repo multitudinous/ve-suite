@@ -185,6 +185,15 @@ enum cfdGeodeEnum
    TRANSIENT_PLAY,
    TRANSIENT_DURATION,
    TRANSIENT_SET_FRAME,
-   GEOMETRY_PICKING
+   GEOMETRY_PICKING,
+   
+   // Added for voice commands
+   RESET_PICKED_GEOMETRY,
+   SELECT_GEOMETRY,
+   UNSELECT_GEOMETRY,
+   GOTO_X,
+   GOTO_Y,
+   GOTO_Z
+   
 };
 #endif
