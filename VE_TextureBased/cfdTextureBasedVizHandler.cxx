@@ -71,6 +71,8 @@ using namespace VE_Xplorer;
 //////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 {
+   _animationDelay = 1.0;
+   _appTime = 0.0;
    _paramFile = '\0';
    _cmdArray = 0;
    _worldDCS = 0;
@@ -137,6 +139,7 @@ void cfdTextureBasedVizHandler::_updateShaders()
 {
 
    if(_activeTM){
+      _activeTM->CalculateUpdateTime(_appTime,_animationDelay);
       if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
         _updateScalarVisHandler();
       }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
@@ -233,11 +236,11 @@ void cfdTextureBasedVizHandler::_updateVisualization()
       if(_svvh){
          double duration = (double) _cmdArray->GetCommandValue(cfdCommandArray::CFD_ISO_VALUE);
          unsigned int nTimesteps = _activeTM->numberOfFields();
-         double delay = duration/((double)nTimesteps); 
+         _animationDelay = duration/((double)nTimesteps); 
          cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
          if(sShader)
          {
-            sShader->SetDelayTime(delay);
+            sShader->SetDelayTime(_animationDelay);
          }
       }
    }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_SET_FRAME){
@@ -319,6 +322,11 @@ void cfdTextureBasedVizHandler::_updateGraph()
          _cleared = true;
       }
    }
+}
+///////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::SetCurrentTime(double time)
+{
+  _appTime = time; 
 }
 //////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::PreFrameUpdate()
