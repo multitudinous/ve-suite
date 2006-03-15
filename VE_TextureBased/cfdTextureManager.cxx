@@ -51,6 +51,7 @@ using namespace VE_TextureBased;
 ////////////////////////////////
 cfdTextureManager::cfdTextureManager()
 {
+   _timeToUpdate = false;
    _curField = 0;
    _resolution = 0;
    _range[0] = 0;
@@ -84,6 +85,7 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
       _types.push_back(tm._types.at(i));
       _ranges.push_back(tm._ranges.at(i));
    }
+   _timeToUpdate = tm._timeToUpdate;
    _mode = tm._mode;
    _curField = tm._curField;
    _prevTime = tm._prevTime;
@@ -346,10 +348,20 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       return;
    }
 }
+/////////////////////////////////////
+bool cfdTextureManager::TimeToUpdate()
+{
+   return _timeToUpdate;
+}
+///////////////////////////////////////////////////
+unsigned char* cfdTextureManager::getCurrentField()
+{
+   return _dataFields.at(_curField);
+}
 //////////////////////////////////////////////////
 //get the next vector field                     //
 //////////////////////////////////////////////////
-unsigned char* cfdTextureManager::getNextField(/*int plusNeg*/)
+unsigned char* cfdTextureManager::getNextField()
 {
    //int dir = 1;
    //get the appropriate direction
@@ -386,8 +398,8 @@ unsigned char* cfdTextureManager::getNextField(/*int plusNeg*/)
    }
    else return 0;
 }
-//////////////////////////////////////////////////////////////
-int cfdTextureManager::timeToUpdate(double curTime,double delay)
+/////////////////////////////////////////////////////////////////////////
+void cfdTextureManager::CalculateUpdateTime(double curTime, double delay)
 {
    size_t numFields = _dataFields.size();
 
@@ -396,10 +408,10 @@ int cfdTextureManager::timeToUpdate(double curTime,double delay)
       if ( curTime - _prevTime >= delay )
       {
          _prevTime = curTime;
-         return 1;
+         _timeToUpdate = true;
       }
    }
-   return 0;
+   _timeToUpdate = false;
 }
 /////////////////////////////////////////////////////////
 void cfdTextureManager::setDirection(int forwardBackward)

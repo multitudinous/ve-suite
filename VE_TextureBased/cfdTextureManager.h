@@ -75,15 +75,20 @@ public:
    //get the flag
    bool UseShaders(){return _useShaders;}
 
+   /// check for updating
+   bool TimeToUpdate();
+
    float* getBoundingBox(){return _bbox;}
-   int timeToUpdate(double curTime,double delay);
+   void CalculateUpdateTime(double curTime,double delay);
 
    //get the vector field at a given timestep
    unsigned char* dataField(int timeStep){return _dataFields.at(timeStep);}
 
    //get the next vector field
-   unsigned char* getNextField(/*int plusNeg*/);
+   unsigned char* getNextField();
+   unsigned char* getCurrentField();
    unsigned int getNextFrame();
+
    //get the number of vector fields
    int numberOfFields(){return static_cast< int >( _dataFields.size() );}
 
@@ -107,6 +112,7 @@ public:
    std::string GetDataName( void ); 
 protected:
    bool _useShaders;
+   bool _timeToUpdate;
    int _curField;
    int* _resolution;
    std::vector<DataType> _types;
