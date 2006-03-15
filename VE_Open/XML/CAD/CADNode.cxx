@@ -329,6 +329,9 @@ std::vector<CADAttribute> CADNode::GetAttributeList()
 CADNode::CADNode(const CADNode& rhs)
 :VE_XML::XMLObject(rhs)
 {
+   //std::cout<<"CADNode copy constructor"<<std::endl;
+   //std::cout<<"rhs ID: "<<rhs._uID<<std::endl;
+   //std::cout<<"rhs type: "<<rhs._type<<std::endl;
 
    _parent = 0;
    _transform = 0;;
@@ -370,6 +373,8 @@ CADNode::CADNode(const CADNode& rhs)
 ////////////////////////////////////////////////
 CADNode& CADNode::operator=(const CADNode& rhs)
 {
+   //std::cout<<"CADNode operator= "<<std::endl;
+   //std::cout<<"rhs: "<<rhs._uID<<std::endl;
    if ( this != &rhs )
    {
       XMLObject::operator =(rhs);
