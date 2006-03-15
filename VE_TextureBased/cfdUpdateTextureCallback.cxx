@@ -163,7 +163,7 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              _textureDepth, 
                              GL_ALPHA, 
                              GL_UNSIGNED_BYTE,
-                             (unsigned char*)_tm->getNextField());
+                             (unsigned char*)_tm->getCurrentField());
               
                }else{
                   texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
@@ -174,7 +174,7 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              _textureDepth, 
                              GL_RGBA, 
                              GL_UNSIGNED_BYTE,
-                             (unsigned char*)_tm->getNextField());
+                             (unsigned char*)_tm->getCurrentField());
                }
             }
          }else{

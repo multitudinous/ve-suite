@@ -140,6 +140,10 @@ void cfdTextureBasedVizHandler::_updateShaders()
 
    if(_activeTM){
       _activeTM->CalculateUpdateTime(_appTime,_animationDelay);
+      if(_activeTM->TimeToUpdate())
+      {
+         _activeTM->getNextField();
+      }
       if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
         _updateScalarVisHandler();
       }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
