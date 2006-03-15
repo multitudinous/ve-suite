@@ -115,6 +115,11 @@ void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
    else if( attributeType == std::string("Program"))
    {
 #ifdef _OSG      
+      
+      ShaderHelper shaderHelper;
+      shaderHelper.SetStateSet(this);
+      shaderHelper.LoadGLSLProgram(attribute->GetGLSLProgram());
+
       osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
       bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
    
@@ -132,11 +137,6 @@ void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
         setMode(GL_BLEND,osg::StateAttribute::ON);
       }
       setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
-      
-      ShaderHelper shaderHelper;
-      shaderHelper.SetStateSet(this);
-      shaderHelper.LoadGLSLProgram(attribute->GetGLSLProgram());
-
 #elif _PERFORMER
 #endif
    }
