@@ -403,6 +403,7 @@ void cfdApp::latePreFrame( void )
          _tbvHandler->SetParentNode((VE_SceneGraph::cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
          _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
          _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
+         _tbvHandler->SetCurrentTime(this->_vjobsWrapper->GetSetAppTime(-1));
          _tbvHandler->PreFrameUpdate();
       }
    }
