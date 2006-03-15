@@ -409,6 +409,7 @@ void cfdTextureManager::CalculateUpdateTime(double curTime, double delay)
       {
          _prevTime = curTime;
          _timeToUpdate = true;
+         return;
       }
    }
    _timeToUpdate = false;
