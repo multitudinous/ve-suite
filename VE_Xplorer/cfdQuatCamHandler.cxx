@@ -40,6 +40,7 @@
 #include "VE_Xplorer/cfdReadParam.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/OneDIntArray.h"
 
 #include "VE_SceneGraph/cfdDCS.h"
 
@@ -427,7 +428,9 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
       
       ///Change this to grab a OneDIntArray via GetDataXMLObject() from DataValuePair---biv
       std::vector< long > commandIds;
-      //commandData->GetData( commandIds );
+      //VE_XML::OneDIntArray *tempArray = commandData->GetDataXMLObject(); 
+      //commandIds = tempArray->GetArray();
+      commandData->GetData( commandIds );
       std::string newCommand = commandData->GetDataName();
 
       //if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_NEW_VIEWPT )
@@ -555,7 +558,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
       else if ( !newCommand.compare( "CHANGE_MOVEMENT_SPEED" ) )      
       {
          //this->movementSpeed = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-         this->movementSpeed = (unsigned int)commandIds.at( 0 );
+         this->movementSpeed = commandIds.at( 0 );
          return true;
       }
    }
