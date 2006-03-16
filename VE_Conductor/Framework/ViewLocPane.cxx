@@ -113,19 +113,15 @@ void ViewLocPane::_buildPage()
    {
       if ( !CORBA::is_nil( xplorerPtr ) )
       {
-std::cout << "I Made It Here0 " << std::endl;
          num_viewlocs = xplorerPtr->getIsoValue();
+         _numViewLocLocal = num_viewlocs;
       }
       std::cout << "number of viewing locations: "<< num_viewlocs << std::endl;
 
-std::cout << "I Made It Here1 " << std::endl;
-
       if ( !CORBA::is_nil( xplorerPtr ) )
       {
-std::cout << "I Made It Here2 " << std::endl;
 
          flyThroughArray = xplorerPtr->getDouble2D( "getFlythroughData" );
-std::cout << "I Made It Here3 " << std::endl;
 
       }
       std::cout << "number of flythroughs: "<< flyThroughArray->length() << std::endl;
@@ -567,6 +563,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
  
    _rebuildPage();
    _activeflySel->SetValue( _flythroughName[ tempindex ] );
+   _resetSelections();
 
 }
 //////////////////
@@ -612,11 +609,10 @@ void ViewLocPane::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
             //cIso_value = i;
             commandInputs.push_back( i );
             SendCommandsToXplorer();
-
             _updateWithcfdQuatCamHandler();
          }
 	   } 
-      _resetSelections();
+      //_resetSelections();
    }
 }
 
@@ -637,7 +633,7 @@ void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
             SendCommandsToXplorer();
          }
 	   }
-      _resetSelections();
+      //_resetSelections();
    }
 }
 
@@ -718,7 +714,7 @@ void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
             }
 	      }
       }
-      _resetSelections();
+      //_resetSelections();
    }
    
 }
@@ -762,7 +758,7 @@ void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
             }
 	      }
       }
-      _resetSelections();
+      //_resetSelections();
    }
 }
 
@@ -796,7 +792,7 @@ void ViewLocPane::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
             }
 	      }
       }
-      _resetSelections();
+      //_resetSelections();
    }
 
 }
@@ -819,7 +815,7 @@ void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
             _updateWithcfdQuatCamHandler();
          }
 	   }
-      _resetSelections();
+      //_resetSelections();
    }
 
 }
@@ -934,16 +930,17 @@ void ViewLocPane::SetCommInstance( VjObs_ptr veEngine )
 void ViewLocPane::SendCommandsToXplorer( void )
 {
    // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument("Commands");
+   domManager->CreateCommandDocument("Command");
    doc = domManager->GetCommandDocument();
 
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("LONG") );
    //VE_XML::OneDIntArray* dataValueArray = new VE_XML::OneDIntArray( commandInputs.size() )
-   dataValuePair->SetDataName( dataValueName );
+   //dataValuePair->SetDataName( dataValueName );
    //dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    dataValuePair->SetData( dataValueName, commandInputs );
    VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetOwnerDocument(doc);
    veCommand->SetCommandName( std::string("ViewLoc_Data") );
    veCommand->AddDataValuePair( dataValuePair );
    doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );
@@ -974,4 +971,5 @@ void ViewLocPane::SendCommandsToXplorer( void )
    //Clean up memory
    delete veCommand;
    commandInputs.clear();
+   _resetSelections();
 }
