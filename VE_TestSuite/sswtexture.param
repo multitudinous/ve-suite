@@ -14,9 +14,9 @@
    1 1 1             // Scale values
    0 0 0             // Translation values
    0 0 0             // Rotation values (Z-X-Y format)
-   ./3scl.vtk        // data set name
-   ./POST_DATA1      // precomputed data slice directory
-   ./SURFACE1        // precomputed surface directory
+   ./3scl.vtu        // data set name
+   ./JUNK      // precomputed data slice directory
+   ./JUNK        // precomputed surface directory
 9                    // Object type 9: Geometry
    1                 // transparency toggle
    1 1 0.7 1         // color flag ( and 3 color values if flag = 1)
@@ -28,9 +28,9 @@
    1 1 1             // Scale values
    -4 0 0            // Translation values
    40 40 0           // Rotation values (Z-X-Y format)
-   ./2scl.vtk        // data set name
-   ./POST_DATA2      // precomputed data slice directory
-   ./SURFACE2        // precomputed surface directory
+   ./2scl.vtu        // data set name
+   ./JUNK      // precomputed data slice directory
+   ./JUNK        // precomputed surface directory
 9                    // Object type 9: Geometry
    1                 // transparency toggle
    1  1 1 1          // color flag (and 3 color values if flag = 1)
@@ -42,12 +42,12 @@
    1 1 1 
    0 0 0 
    0 0 0
-   vtkPolyData.vtk
+   vtkPolyData.vtp
    ./JUNK            // precomputed data slice directory
    ./JUNK2           // precomputed surface directory
 15                   //volumetric texture data
   4                  //number of texture description files
-  ./first-scalar.txt      //the texture description file
-  ./200_to_1000.txt      //the texture description file
-  ./fourth_param_is_a_scalar.txt      //the texture description file
-  ./steve's_vector.txt      //the texture description file
+  ./simpleScalars/scalars/first-scalar      //the texture description file
+  ./simpleScalars/scalars/200_to_1000      //the texture description file
+  ./simpleScalars/scalars/fourth_param_is_a_scalar      //the texture description file
+  ./simpleScalars/vectors/sample_vector      //the texture description file
