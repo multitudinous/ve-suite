@@ -93,6 +93,10 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
 	_flythroughNamesLocal = 0;
    flyThroughList.clear();
    
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
+   this->SetSize( dialogPosition );
+
    xplorerPtr = veEngine;
    domManager = domManagerIn;
 
@@ -378,7 +382,7 @@ void ViewLocPane::_buildPage()
 
    //add the rows to the main panel
    viewlocPanelGroup->Add(_allLeftSide,1,wxALIGN_CENTER_HORIZONTAL); 
-   viewlocPanelGroup->Add(_allFlyCtrlsGroup,2,wxALIGN_CENTER_HORIZONTAL); 
+   viewlocPanelGroup->Add(_allFlyCtrlsGroup,1,wxALIGN_CENTER_HORIZONTAL); 
 
    scrollWindow->SetSizer( viewlocPanelGroup ); 
 
@@ -577,6 +581,8 @@ void ViewLocPane::_onLoad(wxCommandEvent& WXUNUSED(event))
    //((UI_Tabs *)_parent)->sendDataArrayToServer();
    dataValueName = "LOAD_NEW_VIEWPT";
    //cId = navScroll->headRotationChk->GetValue();
+   commandInputs.push_back( 0 );
+   commandInputs.push_back( 0 );
    SendCommandsToXplorer();
 
    _updateWithcfdQuatCamHandler();
@@ -630,6 +636,7 @@ void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
             dataValueName = "MOVE_TO_SELECTED_LOCATION";
             //cIso_value = i;
             commandInputs.push_back( i );
+            commandInputs.push_back( 0 );
             SendCommandsToXplorer();
          }
 	   }
@@ -645,6 +652,8 @@ void ViewLocPane::_onBuildNewFlyButton(wxCommandEvent& WXUNUSED(event))
       //((UI_Tabs *)_parent)->sendDataArrayToServer();
       dataValueName = "ADD_NEW_FLYTHROUGH";
       //cIso_value = i;
+      commandInputs.push_back( 0 );
+      commandInputs.push_back( 0 );
       SendCommandsToXplorer();
 
       _updateWithcfdQuatCamHandler();
@@ -811,6 +820,7 @@ void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
             dataValueName = "DELETE_ENTIRE_FLYTHROUGH";
             //cIso_value = i;
             commandInputs.push_back( i );
+            commandInputs.push_back( 0 );
             SendCommandsToXplorer();
             _updateWithcfdQuatCamHandler();
          }
@@ -836,6 +846,7 @@ void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
                dataValueName = "RUN_ACTIVE_FLYTHROUGH";
                //cIso_value = i;
                commandInputs.push_back( i );
+               commandInputs.push_back( 0 );
                SendCommandsToXplorer();
             }
 	      }
@@ -848,6 +859,8 @@ void ViewLocPane::_onStopFly(wxCommandEvent& WXUNUSED(event))
    //((UI_Tabs *)_parent)->cId = STOP_ACTIVE_FLYTHROUGH;
    //((UI_Tabs *)_parent)->sendDataArrayToServer();
    dataValueName = "STOP_ACTIVE_FLYTHROUGH";
+   commandInputs.push_back( 0 );
+   commandInputs.push_back( 0 );
    SendCommandsToXplorer();
 }
 
@@ -864,6 +877,7 @@ void ViewLocPane::_onSpeedChange( wxScrollEvent& WXUNUSED(event) )
    dataValueName = "CHANGE_MOVEMENT_SPEED";
    //cIso_value = _speedCtrlSlider->GetValue();
    commandInputs.push_back( _speedCtrlSlider->GetValue() );
+   commandInputs.push_back( 0 );
    SendCommandsToXplorer();
 }
 
