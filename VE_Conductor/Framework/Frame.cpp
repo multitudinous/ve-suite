@@ -93,6 +93,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU(wxID_EXIT, AppFrame::FrameClose)
    EVT_MENU(wxID_OPEN, AppFrame::Open)
    EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
+   EVT_MENU(QUERY_FROM_SERVER, AppFrame::QueryFromServer)
    EVT_MENU(v21ID_SUBMIT, AppFrame::SubmitToServer)
    //EVT_MENU(v21ID_CONNECT, AppFrame::ConExeServer)
    EVT_MENU(v21ID_DISCONNECT, AppFrame::DisConExeServer)
@@ -365,6 +366,7 @@ void AppFrame::CreateMenu()
   //con_menu->AppendSeparator();
   con_menu->Append(v21ID_SUBMIT, _("Sub&mit Job\tCtrl+M"));
   con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
+  con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
   con_menu->AppendSeparator();
   con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
   con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
@@ -573,7 +575,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       network->Load( path.c_str() );
    }
 }
-
+///////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
    ConExeServer();
@@ -593,7 +595,36 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    network->Load( nw_str );
    delete nw_str;
 }
+///////////////////////////////////////////////////////////////////////////
+void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
+{
+   ConExeServer();
+   // If not sucessful
+   if ( !is_orb_init )
+      return;
 
+   std::string nw_str;
+
+   try
+   {
+      nw_str.assign( network->exec->Query() );
+   }
+   catch ( CORBA::Exception& )
+   {
+      Log("No ves network available\n");
+   }
+
+   // If there is nothing on the CE
+   if ( !nw_str.empty() )
+   {
+      network->Load( nw_str );
+   }
+   else
+   {
+      Log("No ves network available\n");
+   }
+}
+///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
    network->New();

@@ -96,7 +96,7 @@ Network::Network(wxWindow* parent, int id)
    links.clear();
    userScale.first=1;
    userScale.second=1;
-   GetNumUnit()->first=100;
+   GetNumUnit()->first=240;
    GetNumUnit()->second=240;
    GetNumPix()->first = 10;
    GetNumPix()->second = 10;
@@ -153,7 +153,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
   wxRect bbox;
   wxPoint pos, temp;
   std::map< int, Module >::iterator iter;
-  POLY ports;
+  PORT ports;
  	
   wxClientDC dc(this);
   PrepareDC(dc);
@@ -191,20 +191,26 @@ void Network::OnMLeftDown(wxMouseEvent& event)
       ports.resize( modules[m_selMod].GetPlugin()->GetNumIports() );
       modules[m_selMod].GetPlugin()->GetIPorts( ports );
       for ( unsigned int i=0; i<ports.size(); i++)
-	      if (computenorm(temp, ports[i])<=10)
+      {
+         wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+	      if (computenorm(temp, tempPoint)<=10)
 	      {
 	         m_selFrPort = i;
 	         break;
 	      }
-  
+      }
+
       ports.resize( modules[m_selMod].GetPlugin()->GetNumOports() );
 	   modules[m_selMod].GetPlugin()->GetOPorts( ports );
       for ( unsigned int i=0; i<ports.size(); i++)
-	      if (computenorm(temp, ports[i])<=10)
+	   {
+         wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+         if ( computenorm( temp, tempPoint )<=10)
 	      {
 	         m_selToPort = i;
 	         break;
 	      }
+      }
    }
    //Third, check if any link connector is selected
 
@@ -1168,7 +1174,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    //in the mean time, also find out the wipe off line's start position 
    //int xoff, yoff;
 
-   POLY ports;
+   PORT ports;
    wxRect bbox;
    wxPoint temp;
    int dest_mod, dest_port;
@@ -1211,11 +1217,14 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
          modules[dest_mod].GetPlugin()->GetOPorts(ports);
    
          for (i=0; i<(int)ports.size(); i++)
-            if (computenorm(temp, ports[i])<=10) 
+         {
+            wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+            if (computenorm(temp, tempPoint)<=10) 
             {
                dest_port = i;
                break;
             }
+         }
       }
    }
    else    // If ouput port
@@ -1229,11 +1238,14 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
          ports.resize( modules[dest_mod].GetPlugin()->GetNumIports() );
          modules[dest_mod].GetPlugin()->GetIPorts(ports);
          for (i=0; i<(int)ports.size(); i++)
-            if (computenorm(temp, ports[i])<=10)
+         {
+            wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+            if (computenorm(temp, tempPoint)<=10)
             {
                dest_port = i;
                break;
             }
+         }
       }
    }  
 
@@ -1767,7 +1779,6 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
    if (!cur_module)
       return;
 
-   POLY ports;
    size_t i;
    wxPoint bport[4];
    wxCoord xoff, yoff;
@@ -1799,17 +1810,19 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
       dc.SetPen(*wxWHITE_PEN);
    }
 
+   PORT ports;
    num = cur_module->GetNumIports();
    ports.resize(num);
    cur_module->GetIPorts(ports);
    for (i=0; i<(int)ports.size(); i++)
    {
+       wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
       // I believe this means move the points in from the edge of the icon
       // by 3 pixles
       // bbox.x returns the global x location and the ports.x returns the x location with respect to bbox.x
       // the same is also true for the y values 
-      xoff = ports[i].x+bbox.x-3;
-      yoff = ports[i].y+bbox.y-3;
+      xoff = tempPoint.x+bbox.x-3;
+      yoff = tempPoint.y+bbox.y-3;
 
       // draw the polygon 
       dc.DrawPolygon(4, bport, xoff, yoff);      
@@ -1831,8 +1844,9 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
 
    for ( i=0; i < ports.size(); i++)
    { 
-      xoff = ports[i].x+bbox.x-3;
-      yoff = ports[i].y+bbox.y-3;
+       wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+      xoff = tempPoint.x+bbox.x-3;
+      yoff = tempPoint.y+bbox.y-3;
 
       dc.DrawPolygon(4, bport, xoff, yoff);      
    }
@@ -1860,7 +1874,7 @@ void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
 {
    // used by trylink only which redraws things only if we are draggin a module
    // draw either the input or output ports for an specific port index in the module
-   POLY ports;
+   PORT ports;
    int num;
 
    if ( !cur_module )
@@ -1898,8 +1912,9 @@ void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
       dc.SetBrush(*wxCYAN_BRUSH);
    }
   
-   xoff = ports[index].x+bbox.x-3;
-   yoff = ports[index].y+bbox.y-3;
+   wxPoint tempPoint( ports[index].GetPortLocation()->GetPoint().first, ports[index].GetPortLocation()->GetPoint().second );
+   xoff = tempPoint.x+bbox.x-3;
+   yoff = tempPoint.y+bbox.y-3;
       
    dc.DrawPolygon(4, bport, xoff, yoff);      
   
@@ -1929,6 +1944,7 @@ std::string Network::Save( std::string fileName )
    
    veNetwork = new VE_Model::Network();
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veNetwork, "veNetwork" ) );
+std::cout << numPix.first << " : " << numPix.second << " : " << numUnit.first << " : " << numUnit.second << std::endl;
 
    veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
    veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
@@ -2034,9 +2050,18 @@ void Network::New()
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork )
 {
-   // Start the busy cursor
    ::wxBeginBusyCursor();
    ::wxSafeYield();
+   LoadThread* loadThread = new LoadThread( this );
+   loadThread->SetFileName( xmlNetwork );
+   loadThread->Create();
+   loadThread->GetThread()->Run();
+   ::wxEndBusyCursor();
+}
+////////////////////////////////////////////////////////
+void Network::CreateNetwork( std::string xmlNetwork )
+{
+   // Start the busy cursor
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
    VE_XML::XMLReaderWriter networkWriter;
@@ -2069,13 +2094,21 @@ void Network::Load( std::string xmlNetwork )
                         "VES File Read Error", wxOK | wxICON_INFORMATION );
    }
 
+   long int tempScaleInfo;
    veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
    veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
-   veNetwork->GetDataValuePair( 2 )->GetData( (numPix.first) );
-   veNetwork->GetDataValuePair( 3 )->GetData( (numPix.second) );
-   veNetwork->GetDataValuePair( 4 )->GetData( (numUnit.first) );
-   veNetwork->GetDataValuePair( 5 )->GetData( (numUnit.second) );
+   veNetwork->GetDataValuePair( 2 )->GetData( tempScaleInfo );
+   numPix.first = tempScaleInfo;
+   veNetwork->GetDataValuePair( 3 )->GetData( tempScaleInfo );
+   numPix.second = tempScaleInfo;
+   veNetwork->GetDataValuePair( 4 )->GetData( tempScaleInfo );
+   numUnit.first = tempScaleInfo;
+   veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
+   numUnit.second = tempScaleInfo;
 
+std::cout << (userScale.first) << " : " << (userScale.second) << std::endl
+            << (numPix.first) << " : " << numPix.second << std::endl
+            << numUnit.first << " : " << numUnit.second << std::endl;
    links.clear();
 
    for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
@@ -2138,8 +2171,8 @@ void Network::Load( std::string xmlNetwork )
       VE_Conductor::GUI_Utilities::Polygon tempPoly;
       *(tempPoly.GetPolygon()) = tmpPoly;
       tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
-std::cout << " reveiw : " << std::endl
-      << num << " : "<< model->GetModelName() << " : " << bbox.x << " : " << bbox.y << std::endl;
+//std::cout << " reveiw : " << std::endl
+//      << num << " : "<< model->GetModelName() << " : " << bbox.x << " : " << bbox.y << std::endl;
    }
 /*
    // do this for tags
@@ -2172,10 +2205,9 @@ std::cout << " reveiw : " << std::endl
    m_selTagCon = -1; 
    xold = yold =0;
 
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
-
+   //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
    Refresh();
-   ::wxEndBusyCursor();
+
 }
 
 //////////////////////////////////////////////////////
@@ -2319,8 +2351,9 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
 {
    wxRect bbox = modules[ moduleID ].GetPlugin()->GetBBox();
    int num = 0;
-   POLY ports;
+   PORT ports;
    wxPoint tempPoint;
+
    if ( portType == "input" )
    {
       num = modules[ moduleID ].GetPlugin()->GetNumIports();	
@@ -2339,8 +2372,27 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
       return tempPoint;
    }
 
-   tempPoint.x = bbox.x+ports[ portNumber ].x;
-   tempPoint.y = bbox.y+ports[ portNumber ].y;
+   if ( num > 0 )
+   {
+      size_t index = 0;
+      for ( size_t i = 0; i < ports.size(); ++i )
+      {
+         if ( ports.at( i ).GetPortNumber() == portNumber )
+         {
+            index = i;
+            break;
+         }
+      }
+      wxPoint portPoint( ports[ index ].GetPortLocation()->GetPoint().first, ports[ index ].GetPortLocation()->GetPoint().second );
+      tempPoint.x = bbox.x+portPoint.x;
+      tempPoint.y = bbox.y+portPoint.y;
+   }
+
    return tempPoint;
 }
-
+///////////////////////////////////////////
+void* Network::LoadThread::Entry( void )
+{
+   designCanvas->CreateNetwork( fileName );
+   return 0;
+}

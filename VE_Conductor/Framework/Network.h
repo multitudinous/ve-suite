@@ -45,7 +45,7 @@
 #include <wx/scrolwin.h>
 #include <wx/textdlg.h>
 #include <wx/menu.h>
-
+#include <wx/thread.h>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -152,11 +152,24 @@ public:
    //void Load(wxString filename);
    //void LoadS(const char* inputs); //load the network from a string
    void Load( std::string xmlNetwork );
+   void CreateNetwork( std::string xmlNetwork );
    void New();
    ///Acessors
    std::pair< double, double >* GetUserScale( void );
    std::pair< unsigned int, unsigned int >* GetNumPix( void );
    std::pair< unsigned int, unsigned int >* GetNumUnit( void );
+
+   class LoadThread : public wxThreadHelper
+   {
+   public:
+      LoadThread( Network* networks ) { designCanvas = networks; }
+      virtual ~LoadThread( void ) { ; }
+      void SetFileName( std::string file ) { fileName = file; }
+      virtual void* Entry();
+   private:
+      std::string fileName;
+      Network* designCanvas;
+   };
 
 protected:
 

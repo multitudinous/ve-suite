@@ -80,7 +80,7 @@ REI_Plugin::REI_Plugin()
    mod_pack._type = 1 ; //Module
    mod_pack._category = 1; // normal modules
    mod_pack._id = -1;
-   veModel = 0;
+   veModel = new Model();
    numberOfInputPorts = 0;
    numberOfOutputPorts = 0;
 }
@@ -225,12 +225,19 @@ void REI_Plugin::SetNumIports( int numPorts )
    numberOfInputPorts = numPorts;
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::GetIPorts(POLY &iports)
+void REI_Plugin::GetIPorts(PORT& iports)
 {
    for ( int i = 0; i < inputPort.size(); ++i )
    {
-      iports[ i ].x = poly[ 0 ].x;
-      iports[ i ].y = (poly[ 3 ].y / inputPort.size() ) * i;
+      iports[ i ] = (*inputPort.at( i ));
+      iports[ i ].GetPortLocation()->SetPoint( 
+               std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
+                                             );
+      inputPort.at( i )->GetPortLocation()->SetPoint( 
+               std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
+                                             );
+      //iports[ i ].x = poly[ 0 ].x;
+      //iports[ i ].y = (poly[ 3 ].y / inputPort.size() ) * i;
       //iports[ i ].x = inputPort.at( i )->GetPortLocation()->GetPoint().first;
       //iports[ i ].y = inputPort.at( i )->GetPortLocation()->GetPoint().second;
    }
@@ -246,12 +253,17 @@ void REI_Plugin::SetNumOports( int numPorts )
    numberOfOutputPorts = numPorts;
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::GetOPorts(POLY &oports)
+void REI_Plugin::GetOPorts(PORT& oports)
 {
    for ( int i = 0; i < outputPort.size(); ++i )
    {
-      oports[ i ].x = poly[ 1 ].x;
-      oports[ i ].y = ( poly[ 3 ].y / outputPort.size() ) * i;
+      oports[ i ] = (*outputPort.at( i ));
+      oports[ i ].GetPortLocation()->SetPoint( 
+               std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 
+                                             );
+      outputPort.at( i )->GetPortLocation()->SetPoint( 
+               std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 
+                                             );
       //oports[ i ].x = outputPort.at( i )->GetPortLocation()->GetPoint().first;
       //oports[ i ].y = outputPort.at( i )->GetPortLocation()->GetPoint().second;
    }
@@ -443,13 +455,13 @@ Model* REI_Plugin::GetModel( void )
 ////////////////////////////////////////////////////////////////////
 Model* REI_Plugin::GetVEModel( void )
 {
-   if ( veModel != NULL )
+   /*if ( veModel != NULL )
    {
       delete veModel;
    }
 
    veModel = new Model();
-
+   */
    veModel->SetModelName( name.c_str() );
    veModel->SetModelID( mod_pack._id );
    veModel->SetIconFilename( std::string( "iconFilename" ) );

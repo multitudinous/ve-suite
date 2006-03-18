@@ -33,6 +33,7 @@
 #define PLUGIN_BASE_H
 
 #include "VE_Conductor/Framework/interface.h"
+#include "VE_Open/XML/Model/Port.h"
 #include <xercesc/dom/DOM.hpp>
 
 #define ICON 20000
@@ -59,7 +60,8 @@ namespace VE_Model
    class Port;
 }
 
-typedef std::vector<wxPoint> POLY;
+typedef std::vector< VE_Model::Port > PORT;
+typedef std::vector< wxPoint > POLY;
 
 class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
 {
@@ -136,11 +138,11 @@ public:
 
    int GetNumIports();
    void SetNumIports( int numPorts );
-   virtual void GetIPorts(POLY& ports);
+   virtual void GetIPorts(PORT& ports);
 
    int GetNumOports();
    void SetNumOports( int numPorts );
-   virtual void GetOPorts(POLY& ports);
+   virtual void GetOPorts(PORT& ports);
 
    virtual void Lock(bool lock);
    void SetID(int id);

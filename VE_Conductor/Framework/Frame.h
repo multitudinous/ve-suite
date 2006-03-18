@@ -57,6 +57,7 @@ enum
    v21ID_CONNECT_VE,
    v21ID_SUBMIT,
    v21ID_LOAD, 
+   QUERY_FROM_SERVER, 
    v21ID_DISCONNECT,
    v21ID_DISCONNECT_VE, 
    v21ID_UNDO, 
@@ -165,39 +166,40 @@ public:
 	
   VjObs_var vjobs;
   
- private:
-  bool is_orb_init;
+private:
+   bool is_orb_init;
 
- protected:
-  wxRect DetermineFrameSize (wxConfig* config);
-  void StoreFrameSize (wxRect rect, wxConfig* config);
-  void CreateMenu();
-  void ZoomIn(wxCommandEvent &event);
-  void ZoomOut(wxCommandEvent &evetn);
-  void Save(wxCommandEvent &event);
-  void SaveAs(wxCommandEvent &event);
+protected:
+   wxRect DetermineFrameSize (wxConfig* config);
+   void StoreFrameSize (wxRect rect, wxConfig* config);
+   void CreateMenu();
+   void ZoomIn(wxCommandEvent &event);
+   void ZoomOut(wxCommandEvent &evetn);
+   void Save(wxCommandEvent &event);
+   void SaveAs(wxCommandEvent &event);
 
-  void Open(wxCommandEvent &event);
-  void SubmitToServer(wxCommandEvent &event);
-  void LoadFromServer(wxCommandEvent &event);
-  void StartCalc(wxCommandEvent &event);	
-  void StopCalc(wxCommandEvent &event);	
-  void PauseCalc(wxCommandEvent &event);	
-  void ResumeCalc(wxCommandEvent &event);	
-  void ViewResult(wxCommandEvent &event);
-  void ViewHelp(wxCommandEvent &event);
-  void GlobalParam(wxCommandEvent &event);
+   void Open(wxCommandEvent &event);
+   void SubmitToServer(wxCommandEvent &event);
+   void LoadFromServer(wxCommandEvent &event);
+   void QueryFromServer( wxCommandEvent& event );
+   void StartCalc(wxCommandEvent &event);	
+   void StopCalc(wxCommandEvent &event);	
+   void PauseCalc(wxCommandEvent &event);	
+   void ResumeCalc(wxCommandEvent &event);	
+   void ViewResult(wxCommandEvent &event);
+   void ViewHelp(wxCommandEvent &event);
+   void GlobalParam(wxCommandEvent &event);
 
-  void ConExeServer( void );
-  void DisConExeServer(wxCommandEvent &event);
-  void DisConVEServer(wxCommandEvent &event);
-  void ConVEServer( void );
-  void LoadBase(wxCommandEvent &event);
-  void LoadSour(wxCommandEvent &event);
-  void LoadREIBase(wxCommandEvent &event);
-  void LoadREISour(wxCommandEvent &event);
-  void New(wxCommandEvent &event);
- 
+   void ConExeServer( void );
+   void DisConExeServer(wxCommandEvent &event);
+   void DisConVEServer(wxCommandEvent &event);
+   void ConVEServer( void );
+   void LoadBase(wxCommandEvent &event);
+   void LoadSour(wxCommandEvent &event);
+   void LoadREIBase(wxCommandEvent &event);
+   void LoadREISour(wxCommandEvent &event);
+   void New(wxCommandEvent &event);
+
    // Controls for VE-Xplorer
    // These are the callbacks for the pull down menu
    void LaunchNavigationPane(wxCommandEvent& event);
