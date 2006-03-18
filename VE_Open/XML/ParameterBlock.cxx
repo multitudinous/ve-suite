@@ -90,10 +90,6 @@ void ParameterBlock::SetObjectFromXMLData(DOMNode* xmlInput)
 ////////////////////////////////////////
 void ParameterBlock::_updateVEElement( std::string input )
 {
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement(xercesString(input));
-   }
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
    //this will depend on the type of parameter block
 

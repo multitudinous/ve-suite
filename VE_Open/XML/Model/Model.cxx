@@ -504,12 +504,6 @@ CADNode* Model::GetGeometry( void )
 ///////////////////////////////////////
 void Model::_updateVEElement( std::string input )
 {
-   //fill in datavalue pairs, via xerces, according to schema
-   if ( !_veElement )
-   {
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
-
    // write all the elements according to verg_model.xsd
    for ( size_t i = 0; i < ports.size(); ++i )
    {

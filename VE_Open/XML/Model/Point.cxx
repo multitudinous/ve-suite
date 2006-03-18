@@ -84,12 +84,6 @@ std::pair< unsigned int, unsigned int > Point::GetPoint( void )
 ////////////////////////////////////
 void Point::_updateVEElement( std::string input )
 {
-   if( !_veElement )
-   {
-      // name comes from verg.xsd
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
-
    //Add code here to update the specific sub elements
    // name comes from verg.xsd
    SetSubElement( "xLocation", point.first );

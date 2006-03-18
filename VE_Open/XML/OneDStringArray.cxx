@@ -110,11 +110,6 @@ std::vector< std::string > OneDStringArray::GetArray( void )
 ////////////////////////////////////
 void OneDStringArray::_updateVEElement( std::string input )
 {
-   if( !_veElement )
-   {
-      // name comes from verg.xsd
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
    //Be sure to set the number of children (_nChildren) 
    //either here or in the updating subElements code
    //this will be based on the size of the string array

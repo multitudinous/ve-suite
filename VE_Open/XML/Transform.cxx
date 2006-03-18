@@ -177,10 +177,6 @@ float* Transform::GetRotation()
 /////////////////////////////////////////////////////
 void Transform::_updateVEElement( std::string input )
 {
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
    //we know this to be 3 float arrays
    _nChildren = 3;

@@ -184,11 +184,6 @@ unsigned int CADNode::GetID()
 /////////////////////////////////////////////////
 void CADNode::_updateVEElement(std::string input)
 {
-   //how is this going to work???
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement(xercesString(input));
-   }
    _updateNodeType();
    _updateNodeName();
 

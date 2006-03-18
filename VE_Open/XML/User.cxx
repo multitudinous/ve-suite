@@ -88,11 +88,6 @@ void User::SetObjectFromXMLData(DOMNode* xmlInput)
 //////////////////////////////
 void User::_updateVEElement( std::string input )
 {
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement(xercesString( input ));
-      
-   }
    //Be sure to set the number of children either here or in the updating subElements code
    //we know this to be 3: 
    //stateInfo element;

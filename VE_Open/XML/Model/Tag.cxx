@@ -94,12 +94,6 @@ void Tag::SetTagText( std::string text )
 ///////////////////////////////////////
 void Tag::_updateVEElement( std::string input )
 {
-   //fill in datavalue pairs, via xerces, according to schema
-   if ( !_veElement )
-   {
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
-
    // write all the elements according to verg_model.xsd
    SetSubElement( "tagText", tagText );
    for ( size_t i = 0; i < tagPoints.size(); ++i )

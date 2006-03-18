@@ -108,10 +108,6 @@ void Command::AddDataValuePair(VE_XML::DataValuePair* commandValuePair)
 /////////////////////////////////
 void Command::_updateVEElement( std::string input )
 {
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement(xercesString(input));
-   }
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
    //_nChildren will be the number of dvPairs + the name of the command but we have to call the
    //update functions below to get the ndvPairs before we can calculate _nChildren

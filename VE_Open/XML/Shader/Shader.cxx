@@ -213,11 +213,6 @@ Uniform& Shader::GetUniform(unsigned int index)
 ////////////////////////////////////////////////
 void Shader::_updateVEElement(std::string input)
 {
-   if( !_veElement )
-   {
-      // name comes from verg.xsd
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
    _updateShaderType();
    _updateTextureImages();
    _updateUniforms();

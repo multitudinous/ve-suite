@@ -168,11 +168,6 @@ std::string Program::GetProgramName()
 /////////////////////////////////////////////////
 void Program::_updateVEElement(std::string input)
 {
-   if( !_veElement )
-   {
-      // name comes from verg.xsd
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
    _updateProgramName();
    if(_vertexShader)
    {

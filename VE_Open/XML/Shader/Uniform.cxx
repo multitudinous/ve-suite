@@ -159,11 +159,6 @@ std::vector<float> Uniform::GetValues()
 //////////////////////////////////////////////////
 void Uniform::_updateVEElement(std::string input)
 {
-   if( !_veElement )
-   {
-      // name comes from verg.xsd
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
    _updateUniformName();
    _updateUniformType();
    _updateSize();

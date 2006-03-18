@@ -232,10 +232,6 @@ void DataValuePair::_updateDataValueString()
 void DataValuePair::_updateVEElement( std::string input )
 {
    //fill in datavalue pairs, via xerces, according to schema
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
 
    //we know there are only 2 children so set it now

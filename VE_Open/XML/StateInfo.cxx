@@ -67,10 +67,6 @@ void StateInfo::ClearState()
 ////////////////////////////////////
 void StateInfo::_updateVEElement( std::string input )
 {
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement(xercesString(input));
-   }
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
    //this will be based on the number of commands stored in the state
 

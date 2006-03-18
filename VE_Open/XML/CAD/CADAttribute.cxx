@@ -245,10 +245,6 @@ CADAttribute& CADAttribute::operator=(const CADAttribute& rhs)
 //////////////////////////////////////////////////////
 void CADAttribute::_updateVEElement(std::string input)
 {
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement(xercesString(input));
-   }
    SetSubElement("type",_attributeType);
    SetSubElement("blending",_blending);
 

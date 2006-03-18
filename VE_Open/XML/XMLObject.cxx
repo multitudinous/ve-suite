@@ -113,8 +113,8 @@ DOMElement* XMLObject::GetXMLData( std::string input )
    if(_rootDocument)
    {
       //Make sure old data is cleared from the xerces side of the element
-      _clearAllChildrenFromElement();
-  
+      //_clearAllChildrenFromElement();
+      _veElement = _rootDocument->createElement( xercesString( input ) );  
       
 
       //update the xerces element w/ the current data in the object

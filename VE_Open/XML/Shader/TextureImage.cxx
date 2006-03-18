@@ -294,10 +294,6 @@ void TextureImage::SetTextureImageType(std::string textureType)
 //////////////////////////////////////////////////////
 void TextureImage::_updateVEElement(std::string input)
 {
-   if(!_veElement)
-   {
-      _veElement = _rootDocument->createElement(xercesString(input));
-   }
    std::cout<<"Setting subelement..."<<std::endl;
    SetSubElement("textureDescriptionData",&_textureDescription);
    std::cout<<"---done---"<<std::endl;

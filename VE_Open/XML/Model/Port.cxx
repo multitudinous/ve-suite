@@ -137,12 +137,6 @@ void Port::SetPortData( std::vector< DataValuePair* > data )
 ///////////////////////////////////////
 void Port::_updateVEElement( std::string input )
 {
-   //fill in datavalue pairs, via xerces, according to schema
-   if ( !_veElement )
-   {
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
-
    // write all the elements according to verg_model.xsd
    SetSubElement( "number", portNumber );
    SetSubElement( "name", modelName );

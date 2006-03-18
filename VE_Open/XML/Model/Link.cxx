@@ -103,12 +103,6 @@ Link& Link::operator=( const Link& input )
 ///////////////////////////////////////
 void Link::_updateVEElement( std::string input )
 {
-   //fill in datavalue pairs, via xerces, according to schema
-   if ( !_veElement )
-   {
-      _veElement = _rootDocument->createElement( xercesString( input ) );
-   }
-
    // write all the elements according to verg_model.xsd
    
    SetSubElement( "fromModule", moduleInfo.first );
