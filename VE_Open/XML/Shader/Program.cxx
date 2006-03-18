@@ -34,7 +34,7 @@
 #include "VE_Open/XML/Shader/Shader.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
-
+XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_Shader;
 using namespace VE_XML;

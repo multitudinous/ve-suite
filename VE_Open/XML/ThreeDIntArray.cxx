@@ -35,6 +35,7 @@
 
 #include "VE_Open/XML/ThreeDIntArray.h"
 #include "VE_Open/XML/TwoDIntArray.h"
+XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 ////////////////////////////////////////////////////
 //Constructor                                     //

@@ -169,7 +169,7 @@ VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
       }
    }
    //how do I do this?
-   ///return 0;
+   return &0;
 }
 ///////////////////////////////////////////////////
 VE_CAD::CADAttribute& CADNode::GetActiveAttribute()

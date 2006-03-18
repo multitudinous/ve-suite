@@ -75,7 +75,7 @@ public:
    
    ///Create the transform from xml input
    ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData( DOMNode* xmlInput );
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
    
    
    /*

@@ -74,7 +74,7 @@ public:
    
    ///set the data from an string representing the xml
    ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData(DOMNode* xmlInput);
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
    
    ///Return the block ID.
    unsigned int GetId();

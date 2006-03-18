@@ -78,11 +78,11 @@ public:
 
    ///Utility function to extract a command name from an element.
    ///\param commandElement The command element.
-   void ExtractCmdNameFromElement(DOMElement* commandElement);
+   void ExtractCmdNameFromElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* commandElement);
 
    ///Populate the Command data from an XML element.
    ///\param xmlInput The element to populate the command data from.
-   virtual void SetObjectFromXMLData(DOMNode* xmlInput);
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
    
    ///Return the name of this command.
    std::string GetCommandName();

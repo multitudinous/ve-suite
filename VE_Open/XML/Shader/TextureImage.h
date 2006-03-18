@@ -146,7 +146,7 @@ public:
    
    ///Set the object from input XML data
    ///\param xmlInput The input xml data.
-   void SetObjectFromXMLData(DOMNode* xmlInput);
+   void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
 
    ///equal operator
    TextureImage& operator=(const TextureImage& rhs);

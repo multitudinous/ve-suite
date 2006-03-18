@@ -31,10 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLUGIN_BASE_H
 #define PLUGIN_BASE_H
-
-#include "VE_Conductor/Framework/interface.h"
+//#include <xercesc/dom/DOM.hpp>
+#include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/Model/Port.h"
-#include <xercesc/dom/DOM.hpp>
+#include "VE_Conductor/Framework/interface.h"
+#include <vector>
+#include <map>
 
 #define ICON 20000
 
@@ -60,8 +62,10 @@ namespace VE_Model
    class Port;
 }
 
-typedef std::vector< VE_Model::Port > PORT;
+class Interface;
+
 typedef std::vector< wxPoint > POLY;
+typedef std::vector< VE_Model::Port > PORT;
 
 class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
 {

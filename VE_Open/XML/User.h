@@ -84,7 +84,7 @@ public:
 
    ///Set the data for this object from an XML element
    ///\param xmlInput The input XML element
-  virtual void SetObjectFromXMLData(DOMNode* xmlInput);   
+  virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);   
 
 protected:
    ///Internally update this element

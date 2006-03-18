@@ -85,7 +85,7 @@ public:
 
    ///Set the internal data values from a given XML element.
    ///\param inputXML The element to extract the data from.
-   void SetObjectFromXMLData(DOMNode* inputXML);
+   void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML);
 
    ///Get the type.
    std::string GetType();

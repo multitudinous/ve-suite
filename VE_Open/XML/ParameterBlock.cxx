@@ -33,8 +33,7 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/DataValuePair.h"
-
-#include <xercesc/dom/DOM.hpp>
+XERCES_CPP_NAMESPACE_USE
 #include <iostream>
 
 using namespace VE_XML;

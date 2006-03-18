@@ -71,7 +71,7 @@ public:
    void SetTagText( std::string text );
    ///set the data from an string representing the xml
    ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData(DOMNode* xmlInput);
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
    
    ///Get the i'th point for a Tag.
    ///\param i The i'th point you are after.

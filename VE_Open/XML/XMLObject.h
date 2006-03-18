@@ -50,7 +50,6 @@
 /*!\namespace VE_XML
  * Contains nodes for creating/managing a XML Objects.
  */
-XERCES_CPP_NAMESPACE_USE
 
 namespace VE_XML
 {
@@ -80,7 +79,7 @@ public:
    void SetOwnerDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner);
 
    ///Populate the XMLObject data from an XML element.
-   virtual void SetObjectFromXMLData( DOMNode* xmlInput )=0;
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput )=0;
 
    ///Return the object type. This should be set in the constructor of all derived classes
    std::string GetObjectType();
@@ -89,36 +88,36 @@ public:
    std::string GetObjectNamespace();
 
    ///Get an XML element from the current data in the string.
-   DOMElement* GetXMLData( std::string tagName); 
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* GetXMLData( std::string tagName); 
 
    ///Return the root document of this element.
    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* GetRootDocument();
 
    ///utility functions for reading data from an element
    ///\param element Element to extract string from.
-   bool ExtractBooleanFromSimpleElement( DOMElement* element );
+   bool ExtractBooleanFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element );
 
    ///utility functions for reading data from an element
    ///\param element Element to extract string from.
-   std::string ExtractDataStringFromSimpleElement( DOMElement* element );
+   std::string ExtractDataStringFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element );
    
    ///utility functions for reading data from an element
    ///\param element Element to extract double from.
-   double ExtractDataNumberFromSimpleElement( DOMElement* element);
+   double ExtractDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
    
    ///utility functions for reading data from an element
    ///\param element Element to extract unsigned integer from.
-   unsigned int ExtractIntegerDataNumberFromSimpleElement( DOMElement* element);
+   unsigned int ExtractIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
 
    ///utility functions for reading data from an element
    ///\param element Element to extract long integer from.
-   long int ExtractLongIntegerDataNumberFromSimpleElement( DOMElement* element);
+   long int ExtractLongIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
 
    ///utility functions for extracting subElement itemIndex from a complex element.
    ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param itemIndex The index of the subElement to extract from the complex element.
-   DOMElement* GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex);
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* GetSubElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex);
 
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
@@ -200,7 +199,7 @@ protected:
    ///Clear all the children from the element.
    void _clearAllChildrenFromElement();
    bool _needsUpdate;///<Determines whether the internal data has changed.
-   DOMElement* _veElement;///<The XML element.
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* _veElement;///<The XML element.
    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* _rootDocument;///<The owning document for this element.
    std::string _objectType;///<The type of object;
    std::string _objectNamespace;///<The namespace for this object;

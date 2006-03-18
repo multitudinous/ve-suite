@@ -89,7 +89,7 @@ public:
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
-   virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlNode);
 
    ///Get the active attribute
    VE_CAD::CADAttribute& GetActiveAttribute();

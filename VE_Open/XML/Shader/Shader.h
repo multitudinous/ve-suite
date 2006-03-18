@@ -66,7 +66,7 @@ public:
 
    ///Set the object from input XML data
    ///\param xmlInput The input xml data.
-   void SetObjectFromXMLData(DOMNode* xmlInput);
+   void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
 
    ///Add a uniform variable to the shader
    ///\param newUniform The new uniform variable to add to the shader.

@@ -44,6 +44,7 @@
 
 #include <iostream>
 #include <sstream>
+XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_XML;
 ////////////////////////////////////////////

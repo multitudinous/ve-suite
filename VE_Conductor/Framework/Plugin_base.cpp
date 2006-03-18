@@ -32,18 +32,14 @@
 #include "VE_Conductor/Framework/Plugin_base.h"
 #include <iostream>
 #include "VE_Conductor/Framework/string_ops.h"
-#include "VE_Conductor/Framework/Geometry.h"
+//#include "VE_Conductor/Framework/Geometry.h"
 #include "VE_Conductor/Framework/UIDialog.h"
 #include "VE_Conductor/Framework/TextResultDialog.h"
+#include "VE_Conductor/Framework/TexTable.h"
 // EPRI TAG
 #include "VE_Conductor/Framework/FinancialDialog.h"
-#include "VE_Conductor/Framework/GeometryDialog.h"
-#include "VE_Conductor/Framework/TexTable.h"
-#include "VE_Conductor/Framework/GeometryDataBuffer.h"
-
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Point.h"
-#include "VE_Open/XML/Model/Port.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 
@@ -109,11 +105,11 @@ REI_Plugin::~REI_Plugin()
       port_dlg = 0;
    }
 
-   if ( geom_dlg!=NULL )
+   /*if ( geom_dlg!=NULL )
    {
       delete geom_dlg;
       geom_dlg = 0;
-   }
+   }*/
 
    if ( veModel !=NULL )
    {

@@ -87,7 +87,7 @@ public:
    
    ///Populate the XMLObject data from an XML element.
    ///\param inputXML The input data.
-   virtual void SetObjectFromXMLData( DOMNode* inputXML ); 
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML ); 
    
 protected:
    ///Internally update the data.

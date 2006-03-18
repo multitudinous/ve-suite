@@ -33,7 +33,7 @@
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/DataValuePair.h"
-
+XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 using namespace VE_Model;
 ////////////////////////////////////////////

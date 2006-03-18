@@ -115,7 +115,7 @@ public:
 
    ///set the data from an string representing the xml
    ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData(DOMNode* xmlInput);
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
    
    ///Get the unsigned data
    unsigned int GetUIntData();
@@ -237,7 +237,7 @@ protected:
    ///In derived classes, this should be overridden
    ///\param baseElement The element to extract the XMLObject from.
    ///\param objectType The XMLObject::_objectType to extract
-   virtual void _extractXMLObject(DOMElement* baseElement,std::string objectType);
+   virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,std::string objectType);
 
    ///Internally update the data name.
    void _updateDataName();

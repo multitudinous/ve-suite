@@ -68,7 +68,7 @@ public:
    
    ///Set the data from an string representing the xml
    ///\param xmlInput The input xml data.
-   virtual void SetObjectFromXMLData(DOMNode* xmlInput);
+   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
 
    ///Get a state based on the name.
    ///\param name The name of the state to search for

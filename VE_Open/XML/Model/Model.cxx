@@ -36,7 +36,7 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/CAD/CADNode.h"
-
+XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 using namespace VE_CAD;
 using namespace VE_Model;

@@ -32,7 +32,7 @@
 
 #include "VE_Open/XML/StateInfo.h"
 #include "VE_Open/XML/Command.h"
-
+XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 
 //////////////////////////
