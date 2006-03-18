@@ -154,7 +154,7 @@ void TwoDDoubleArray::_updateVEElement( std::string input )
    //Be sure to set the number of children (_nChildren) 
    //either here or in the updating subElements code
    //this will be based on the size of the double array
-   _nChildren = static_cast< unsigned int >( oneDArray.size() );
+   //_nChildren = static_cast< unsigned int >( oneDArray.size() );
 
    //Add code here to update the specific sub elements
    // This acutally needs to be an array of 1d arrays

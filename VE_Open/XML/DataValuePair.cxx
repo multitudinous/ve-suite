@@ -235,7 +235,7 @@ void DataValuePair::_updateVEElement( std::string input )
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
 
    //we know there are only 2 children so set it now
-   _nChildren = 2;
+   //_nChildren = 2;
 
    //Add code here to update the specific sub elements
    _updateDataName();

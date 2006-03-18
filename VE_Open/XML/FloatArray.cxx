@@ -117,7 +117,7 @@ void FloatArray::_updateVEElement( std::string input )
    //Be sure to set the number of children (_nChildren) 
    //either here or in the updating subElements code
    //this will be based on the size of the double array
-   _nChildren = static_cast< unsigned int >( _array.size() );
+   //_nChildren = static_cast< unsigned int >( _array.size() );
 
    //Add code here to update the specific sub elements
    for ( unsigned int i = 0; i < _array.size(); ++i )

@@ -58,7 +58,6 @@ CADMaterial::CADMaterial(std::string name)
    _specular->SetArray(temp);
    _shininess = 50.0;
    _materialName = name;
-   _nChildren = 7;
    
    _colorMode = std::string("Ambient_and_Diffuse");
    _face = std::string("Front_and_Back");

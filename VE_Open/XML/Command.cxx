@@ -116,7 +116,7 @@ void Command::_updateVEElement( std::string input )
    _updateCommandName();
    _updateDataValuePairs();
 
-   _nChildren = 1 + _dataValuePairs.size();
+   //_nChildren = 1 + _dataValuePairs.size();
 }
 ////////////////////////////////////
 void Command::_updateCommandName()
@@ -194,7 +194,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
       }
    }
    _nDataValuePairs = static_cast< unsigned int >( _dataValuePairs.size() );
-   _nChildren = 1 + _dataValuePairs.size();
+   //_nChildren = 1 + _dataValuePairs.size();
 }
 /////////////////////////////////////////////////////////////////////
 void Command::ExtractCmdNameFromElement(DOMElement* commandElement)

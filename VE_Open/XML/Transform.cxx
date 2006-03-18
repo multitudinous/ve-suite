@@ -179,7 +179,7 @@ void Transform::_updateVEElement( std::string input )
 {
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
    //we know this to be 3 float arrays
-   _nChildren = 3;
+   //_nChildren = 3;
    // name comes from verg.xsd
    translationArray->SetOwnerDocument(_rootDocument);
    DOMElement* translationTag  = translationArray->GetXMLData( "translation" );
@@ -209,7 +209,7 @@ void Transform::SetObjectFromXMLData( DOMNode* xmlInput )
       {
    
          // do we need to delete the old one or does xerces handle this???
-         _nChildren = 3;
+         //_nChildren = 3;
          translationArray->SetObjectFromXMLData( currentElement->getElementsByTagName(xercesString("translation"))->item(0) );
 
          scaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName(xercesString("scale"))->item(0) );

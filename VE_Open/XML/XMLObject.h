@@ -202,9 +202,10 @@ protected:
    bool _needsUpdate;///<Determines whether the internal data has changed.
    DOMElement* _veElement;///<The XML element.
    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* _rootDocument;///<The owning document for this element.
-   unsigned int _nChildren;///<The number of childern for this element.
    std::string _objectType;///<The type of object;
    std::string _objectNamespace;///<The namespace for this object;
+private:
+   unsigned int _nChildren;///<The number of childern for this element.
 };
 ///Utility function to convert strings to Xerces compatible strings
 #define xercesString(str) VE_XML::XMLObject::VEStr(str).unicodeForm()

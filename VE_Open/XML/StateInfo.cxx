@@ -80,7 +80,7 @@ void StateInfo::_updateCommands()
    for(size_t i = 0; i < nCommands;  i++){
       _veElement->appendChild( _stateInfo.at(i)->GetXMLData( "Command" ) );
    }
-   _nChildren = static_cast< unsigned int>( nCommands );
+   //_nChildren = static_cast< unsigned int>( nCommands );
 }
 /////////////////////////////////////////////////////////////
 //set the data from an string representing the xml         //

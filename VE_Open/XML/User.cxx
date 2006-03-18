@@ -93,7 +93,7 @@ void User::_updateVEElement( std::string input )
    //stateInfo element;
    //userId element;
    //controlStatus element;
-   _nChildren = 3;
+   //_nChildren = 3;
 
    //Add code here to update the specific sub elements
 
