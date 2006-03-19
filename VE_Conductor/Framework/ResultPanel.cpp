@@ -35,10 +35,12 @@
 #include <wx/statbox.h>
 #include <wx/sizer.h>
 
-//IMPLEMENT_DYNAMIC_CLASS(ResultPanel_Dialog, wxDialog);
-
 ResultPanel_Dialog::ResultPanel_Dialog(wxWindow* parent, int id)
-  : wxDialog((wxWindow *) parent, id, "Result Panel", wxDefaultPosition,wxDefaultSize)
+  : wxDialog((wxWindow *) parent, id, "Result Panel", 
+               wxDefaultPosition,
+               wxDefaultSize,
+               (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
+            )
 {
   wxBoxSizer* toptop = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* left_margin = new wxBoxSizer(wxHORIZONTAL);

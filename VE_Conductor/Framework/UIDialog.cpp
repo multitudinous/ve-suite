@@ -33,9 +33,14 @@
 //#include <wx/window.h>
 
 UIDialog::UIDialog(wxWindow* parent, int id, wxString title)
-  :wxDialog(parent, id, title)
+  :wxDialog( 
+               parent, id, title, 
+               wxDefaultPosition,
+               wxDefaultSize,
+               (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
+            )
 {
-
+   ;
 }
 
 void UIDialog::Lock(bool l)
