@@ -961,16 +961,16 @@ void AppFrame::ConExeServer( void )
 	   pelog->activate();
    }
 
-   if (!is_orb_init)
+   if ( !is_orb_init )
    {
-      if (init_orb_naming())
-	      is_orb_init = true;
-      else
-	      return;
+      is_orb_init = init_orb_naming();
    }
-
-
-
+   else
+   {
+      // already connected to orb
+      // don't need to reconnect
+      return;
+   }
 
    try
    { 
@@ -1001,12 +1001,15 @@ void AppFrame::ConVEServer( void )
 	   pelog->activate();
    }
 
-   if (!is_orb_init)
+   if ( !is_orb_init )
    {
-      if (init_orb_naming())
-	      is_orb_init=true;
-      else
-	      return;
+      is_orb_init = init_orb_naming();
+   }
+   else
+   {
+      // already connected to orb
+      // don't need to reconnect
+      return;
    }
 
    wxImage splashImage(ve_xplorer_banner_xpm);
@@ -1035,16 +1038,15 @@ void AppFrame::ConVEServer( void )
     
       //Create the VE Tab
       con_menu->Enable(v21ID_DISCONNECT_VE, true);
+      Log("Connected to VE server.\n");
    } 
    catch (CORBA::Exception &) 
    {
       Log("Can't find VE server\n");
-      return;
    }
   
    ::wxMilliSleep( 2500 );
    delete splash;
-   Log("Connected to VE server.\n");
 }
 
 bool AppFrame::init_orb_naming()
