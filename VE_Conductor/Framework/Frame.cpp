@@ -949,15 +949,12 @@ void AppFrame::ConExeServer( void )
 
    //have we already connected
    wxSplashScreen* splash = 0;
-   if ( !is_orb_init )
-   {
-      wxImage splashImage(ve_ce_banner_xpm);
-      wxBitmap bitmap(splashImage);
-      splash = new wxSplashScreen(bitmap,
-               wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-               2500, this, -1, wxDefaultPosition, wxDefaultSize,
-               wxSIMPLE_BORDER|wxSTAY_ON_TOP);
-   }
+   wxImage splashImage(ve_ce_banner_xpm);
+   wxBitmap bitmap(splashImage);
+   splash = new wxSplashScreen(bitmap,
+            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
+            2500, this, -1, wxDefaultPosition, wxDefaultSize,
+            wxSIMPLE_BORDER|wxSTAY_ON_TOP);
 
    //wxSafeYield();
    if ( pelog == NULL )
@@ -989,11 +986,8 @@ void AppFrame::ConExeServer( void )
       Log("Can't find executive or UI registration error\n");
    }
 
-   if ( splash )
-   {
-      ::wxMilliSleep( 2500 );
-      delete splash;
-   }
+   ::wxMilliSleep( 2500 );
+   delete splash;
 }
   
 void AppFrame::ConVEServer( void )
