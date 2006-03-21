@@ -147,6 +147,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    //m_tabs = ( UI_Tabs*) NULL;
    m_frame = 0;
    is_orb_init= false;
+   connectToVE = false;
+   connectToCE = false;
    p_ui_i=NULL;	
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
@@ -942,6 +944,9 @@ void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::ConExeServer( void )
 {
+   if ( connectToCE )
+      return;
+
    //have we already connected
    wxSplashScreen* splash = 0;
    if ( !is_orb_init )
@@ -949,52 +954,12 @@ void AppFrame::ConExeServer( void )
       wxImage splashImage(ve_ce_banner_xpm);
       wxBitmap bitmap(splashImage);
       splash = new wxSplashScreen(bitmap,
-              wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-             2500, this, -1, wxDefaultPosition, wxDefaultSize,
-             wxSIMPLE_BORDER|wxSTAY_ON_TOP);
+               wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
+               2500, this, -1, wxDefaultPosition, wxDefaultSize,
+               wxSIMPLE_BORDER|wxSTAY_ON_TOP);
    }
 
    //wxSafeYield();
-   if ( pelog==NULL )
-   {
-	   pelog = new PEThread(this);
-	   pelog->activate();
-   }
-
-   if ( !is_orb_init )
-   {
-      is_orb_init = init_orb_naming();
-   }
-   else
-   {
-      // already connected to orb
-      // don't need to reconnect
-      return;
-   }
-
-   try
-   { 
-      //_mutex.acquire();	  
-      OrbThread* ot = new OrbThread(this);
-      ot->activate();
-      //ot->Run();
-      //register it to the server
-      //_mutex.acquire();
-    
-      //_mutex.release();
-      //Enalbe Menu items
-   } 
-   catch ( CORBA::Exception& ) 
-   {
-      Log("Can't find executive or UI registration error\n");
-   }
-   ::wxMilliSleep( 2500 );
-   if ( splash )
-      delete splash;
-}
-  
-void AppFrame::ConVEServer( void )
-{
    if ( pelog == NULL )
    {
 	   pelog = new PEThread(this);
@@ -1005,19 +970,54 @@ void AppFrame::ConVEServer( void )
    {
       is_orb_init = init_orb_naming();
    }
-   else
+
+   try
+   { 
+      //_mutex.acquire();	  
+      ot = new OrbThread(this);
+      ot->activate();
+      //ot->Run();
+      //register it to the server
+      //_mutex.acquire();
+    
+      //_mutex.release();
+      //Enalbe Menu items
+      connectToCE = true;
+   } 
+   catch ( CORBA::Exception& ) 
    {
-      // already connected to orb
-      // don't need to reconnect
+      Log("Can't find executive or UI registration error\n");
+   }
+
+   if ( splash )
+   {
+      ::wxMilliSleep( 2500 );
+      delete splash;
+   }
+}
+  
+void AppFrame::ConVEServer( void )
+{
+   if ( connectToVE )
       return;
+
+   if ( pelog == NULL )
+   {
+	   pelog = new PEThread(this);
+	   pelog->activate();
+   }
+
+   if ( !is_orb_init )
+   {
+      is_orb_init = init_orb_naming();
    }
 
    wxImage splashImage(ve_xplorer_banner_xpm);
    wxBitmap bitmap(splashImage);
    wxSplashScreen* splash = new wxSplashScreen(bitmap,
-           wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-          2500, this, -1, wxDefaultPosition, wxDefaultSize,
-          wxSIMPLE_BORDER|wxSTAY_ON_TOP);
+            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
+            2500, this, -1, wxDefaultPosition, wxDefaultSize,
+            wxSIMPLE_BORDER|wxSTAY_ON_TOP);
    //wxSafeYield();
   
    try 
@@ -1033,12 +1033,13 @@ void AppFrame::ConVEServer( void )
       CORBA::Object_var ve_object = naming_context1->resolve(name);
       vjobs = VjObs::_narrow(ve_object.in());
 
-      if (CORBA::is_nil(vjobs.in()))
+      if ( CORBA::is_nil( vjobs.in() ) )
          std::cerr<<"VjObs is Nill"<<std::endl;
     
       //Create the VE Tab
       con_menu->Enable(v21ID_DISCONNECT_VE, true);
       Log("Connected to VE server.\n");
+      connectToVE = true;
    } 
    catch (CORBA::Exception &) 
    {
@@ -1136,35 +1137,12 @@ void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
    {
       Log("Disconnect failed.\n");
    }
+
+   connectToCE = false;
 }
 
 void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 {
-   //try {
-   /*CosNaming::Name name(1);
-
-   name.length(1);
-   name[0].id   = (const char*) "Master";
-   name[0].kind = (const char*) "VE_Xplorer";
-
-   try
-   {
-   //vprDEBUG(vprDBG_ALL,0) 
-   //<< "naming_context->unbind for CORBA Object  " 
-   //<< std::endl << vprDEBUG_FLUSH;
-   naming_context->unbind( name );
-   //naming_context->destroy();
-   }
-   catch( CosNaming::NamingContext::InvalidName& )
-   {
-   std::cerr << "Invalid name for CORBA Object  " << std::endl;
-   }
-   catch(CosNaming::NamingContext::NotFound& ex)
-   {
-   std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
-   }*/
-   //wx_ve_splitter->Unsplit(m_frame);
-   //sizerTab->Detach(m_frame);
    delete m_frame;
    m_frame = NULL;
    con_menu->Enable(v21ID_DISCONNECT_VE, false);
@@ -1190,13 +1168,8 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
    }
 
    Log("Disconnect VE suceeded.\n");
-  //}catch (CORBA::Exception &) {
-  
-  //Log("Disconnect VE failed.\n");
-  //}
-  
-  //delete vjobs;
 
+   connectToVE = false;
 }
 
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))

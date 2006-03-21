@@ -168,6 +168,9 @@ public:
   
 private:
    bool is_orb_init;
+   bool connectToVE;
+   bool connectToCE;
+   OrbThread* ot;
 
 protected:
    wxRect DetermineFrameSize (wxConfig* config);
