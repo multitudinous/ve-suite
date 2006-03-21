@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 
 <Program>
-<name>texture2D</name>
+<name>textured2D</name>
 
 <vertexShader>
 <type>Vertex</type>
