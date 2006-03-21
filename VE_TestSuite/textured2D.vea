@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+
+<Program>
+<name>texture2D</name>
+
+<vertexShader>
+<type>Vertex</type>
+	<shaderCode>
+		varying vec2 Texcoord;
+
+		void main()
+		{
+    			gl_Position=ftransform();
+
+    			//Texcoord=gl_Vertex.xy;
+			Texcoord=gl_MultiTexCoord0.xy;
+		}
+	</shaderCode>
+</vertexShader>
+
+<fragmentShader>
+<type>Fragment</type>
+	<uniform>
+		<name>baseMap</name>
+		<type>Sampler</type>
+		<size>1</size>
+		<textureUnit>0</textureUnit>
+	</uniform>
+	<textureImage> 
+		<textureDescriptionData> 
+			<parameter> 
+				<dataName>Wrap S</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap T</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap R</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Magnification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Minification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Type</dataName> 
+				<dataValueString>2D</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Dimension</dataName> 
+				<dataValueUInt>2</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>Unit</dataName> 
+				<dataValueUInt>0</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>FRONT</dataName> 
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Hyper/Textures/bronzeStatue.bmp</dataValueString> 
+			</parameter> 
+		</textureDescriptionData> 
+		<textureUnit>0</textureUnit> 
+		<dimension>2</dimension> 
+		<textureType>2D</textureType> 
+	</textureImage>
+	<shaderCode>
+		uniform sampler2D baseMap;
+		
+		varying vec2 Texcoord;
+
+		void main()
+		{
+    			gl_FragColor=texture2D(baseMap,Texcoord);
+		}
+	</shaderCode>
+</fragmentShader>
+
+</Program>
