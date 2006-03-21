@@ -9,13 +9,14 @@
 	<shaderCode>
 		varying vec3 N;
 		varying vec3 I;
-	        varying vec4 currentColor;	
+	      varying vec4 currentColor;
+
 		void main()
 		{
 			vec4 P=gl_ModelViewMatrix*gl_Vertex;
 			I=P.xyz;
 			N=gl_NormalMatrix*gl_Normal;
-                        currentColor = gl_Color;
+                  currentColor=gl_Color;
 			gl_Position=ftransform();
 		}
 	</shaderCode>
@@ -26,7 +27,7 @@
 	<shaderCode>
 		varying vec3 N;
 		varying vec3 I;
-	        varying vec4 currentColor;	
+	      varying vec4 currentColor;	
 
 		void main()
 		{
