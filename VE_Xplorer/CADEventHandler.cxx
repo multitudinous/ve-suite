@@ -217,6 +217,7 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
          //std::cout<<"      ---Set transform---"<<std::endl;
          _setAttributesOnNode(clone);
          //std::cout<<"      ---Set Attributes---"<<std::endl;
+         parentAssembly->AddChild(_activeModel->GetClone(clone->GetID())->GetClonedGraph());
       }
    }
    else
