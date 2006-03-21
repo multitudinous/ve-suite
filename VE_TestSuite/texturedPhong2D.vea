@@ -2,7 +2,7 @@
 <!--Shader adapted from RenderMonkey 1.6 Examples-->
 
 <Program>
-<name>Phong w/ Texture2D</name>
+<name>texturedPhong2D</name>
 
 <vertexShader>
 <type>Vertex</type>
