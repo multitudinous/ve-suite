@@ -468,13 +468,6 @@ void VTKDataToTexture::createTextures()
    msg = wxString("Building octree.");
    _updateTranslationStatus(msg.c_str());
 
-   //build the octree
-   _cLocator = vtkCellLocator::New();
-   _cLocator->SetDataSet(_dataSet);
-
-   //build the octree
-   _cLocator->BuildLocator();
-
    //get the info about the data in the data set
    _nPtDataArrays = _dataSet->GetPointData()->GetNumberOfArrays();
    _nScalars = countNumberOfParameters(1);
@@ -486,10 +479,18 @@ void VTKDataToTexture::createTextures()
 
   
    //by default, _recreateValidityBetweenTimeSteps is false
-   if(!_madeValidityStructure || _recreateValidityBetweenTimeSteps){
+   if(!_madeValidityStructure || _recreateValidityBetweenTimeSteps)
+   {
       msg = wxString("Sampling valid domain. . .");
       _updateTranslationStatus(msg.c_str());
+      //build the octree
+      _cLocator = vtkCellLocator::New();
+      _cLocator->SetDataSet(_dataSet);
+      //build the octree
+      _cLocator->BuildLocator();
+      //Now use it...
       _createValidityTexture();
+      _cLocator->Delete();
    }
 
    msg = wxString("Processing scalars. . .");
@@ -540,9 +541,7 @@ void VTKDataToTexture::createTextures()
       writeVelocityTexture(i);
       //std::cout<<"      Cleaning up."<<std::endl;
       _velocity.clear();
-   }
-   _cLocator->Delete();
-   
+   }   
 }
 ///////////////////////////////////////////////
 void VTKDataToTexture::_createValidityTexture()
@@ -595,21 +594,24 @@ void VTKDataToTexture::_createValidityTexture()
          
       _cLocator->FindClosestPoint(pt,closestPt,
 	                          cell,cellId,subId, dist);
- 
       weights = new double[cell->GetNumberOfPoints()];
       //check to see if this point is in
       //the returned cell
       int good = cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
-      if(good){
-       _validPt.push_back(true);
-      }else{
-         _validPt.push_back(false);
+      std::pair< int, int > cellDataPair( cellId, subId );
+      if(good)
+      {
+         _validPt.push_back( std::pair< bool, std::pair< int, int > >( true, cellDataPair ) );
+      }
+      else
+      {
+         _validPt.push_back( std::pair< bool, std::pair< int, int > >( false, cellDataPair ) );
       }
       if(weights){
          delete [] weights;
          weights = 0;
-     }
-     if((unsigned int)i > (unsigned int)nX){
+      }
+      if((unsigned int)i > (unsigned int)nX){
            i = 0;
            j ++;
            if((unsigned int)j > (unsigned int)nY){
@@ -619,7 +621,7 @@ void VTKDataToTexture::_createValidityTexture()
                   k = 0;
                }
            }
-        }
+      }
    }
    cell->Delete();
    _madeValidityStructure = true;
@@ -658,34 +660,63 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    double closestPt[3];
    double pcoords[3];
    double* weights = 0;
-   int index = 0;
-   _curPt = 0;
+   //int index = 0;
+   //_curPt = 0;
+
+   unsigned int i=0;
+   unsigned int j=0;
+   unsigned int k = 0;
+
+   unsigned int nX = _resolution[0]-1;
+   unsigned int nY = _resolution[1]-1;
+   unsigned int nZ = _resolution[2]-1;
+
+   unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
+
    //resample the data into a cartesian grid
-   for(int k = 0; k < _resolution[2]; k++){
+   for(unsigned int l = 0; l < nPixels; ++l)
+   {
       pt[2] = bbox[4] + k*delta[2];
-      for(int j = 0; j < _resolution[1]; j++){
-          pt[1] = bbox[2] +  j*delta[1];
-          for(int i= 0; i < _resolution[0]; i++){
-             pt[0] = bbox[0] + i*delta[0];
-             if(_validPt.at(index++)){
-                _cLocator->FindClosestPoint(pt,closestPt,
-		                               cell,cellId,subId, dist);
-                weights = new double[cell->GetNumberOfPoints()];
-	             //check to see if this point is in
-	             //the returned cell
-                cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
-                _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
-                if(weights){
-                   delete [] weights;
-                   weights = 0;
-                }
-             }else{
-               //point isn't in a cell
-	            //so set the texture data to 0
-               _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar); 
-             }
-             _curPt++;
-          } 
+      pt[1] = bbox[2] + j*delta[1];
+      pt[0] = bbox[0] + (i++)*delta[0];
+      if ( _validPt.at(l).first )
+      {
+         //_cLocator->FindClosestPoint(pt,closestPt,
+		   //                     cell,cellId,subId, dist);
+         cellId = _validPt.at(l).second.first;
+         subId = _validPt.at(l).second.second;
+         _dataSet->GetCell( cellId, cell );
+         weights = new double[cell->GetNumberOfPoints()];
+	      //check to see if this point is in
+	      //the returned cell
+         cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+         _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
+         if ( weights )
+         {
+            delete [] weights;
+            weights = 0;
+         }
+      }
+      else
+      {
+        //point isn't in a cell
+	     //so set the texture data to 0
+        _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar); 
+      }
+
+      if((unsigned int)i > (unsigned int)nX)
+      {
+         i = 0;
+         j ++;
+         if ( (unsigned int)j > (unsigned int)nY )
+         {
+            j = 0;
+            k ++;
+            if((unsigned int)k > (unsigned int)nZ)
+            {
+               k = 0;
+            }
+         }
       }
    } 
    //cleanup?

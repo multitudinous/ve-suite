@@ -39,6 +39,7 @@
 #include <vtkCellLocator.h>
 #include "flowTexture.h"
 #include <string>
+#include <utility>
 
 class TCFrame;
 class vtkCellDataToPointData;
@@ -181,7 +182,9 @@ protected:
    unsigned int _curPt;
    std::vector<double*> _scalarRanges;
    std::vector<double*> _vectorRanges;
-   std::vector<bool> _validPt;
+   // This holds data for a valid point
+   // the second pair holds the cellId and the subId for vtk
+   std::vector< std::pair< bool, std::pair< int, int > > > _validPt;
    char** _scalarNames;
    char** _vectorNames;
 

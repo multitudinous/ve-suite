@@ -1,5 +1,5 @@
 # Create the OS-dependent directory name
-MPI_APP = FALSE
+MPI_APP = FALSE 
 ifeq ($(MPI_APP), TRUE)
    APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/vtkTo3DTextureMPI
 else
