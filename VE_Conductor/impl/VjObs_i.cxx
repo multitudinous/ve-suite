@@ -711,7 +711,6 @@ void VjObs_i::PreFrameUpdate( void )
    // Populate the buffer array with the next command queue command
    if ( !commandQueue.empty() && !cfdSteadyStateVizHandler::instance()->TransientGeodesIsBusy() )
    {
-      std::cout<<"copy command"<<std::endl;
       std::vector< cfdCommandArray* >::iterator iter;
       iter = commandQueue.begin();
       (*_bufferArray) = (*(*iter));
