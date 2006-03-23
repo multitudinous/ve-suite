@@ -74,7 +74,7 @@ class GeometryDialog : public wxDialog
                         long  style = wxDEFAULT_DIALOG_STYLE
                      );  
       
-      ~GeometryDialog(){;}
+      virtual ~GeometryDialog(){;}
 
       virtual bool TransferDataFromWindow();
       virtual bool TransferDataToWindow();

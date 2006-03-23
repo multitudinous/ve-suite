@@ -73,7 +73,7 @@ class GlobalParamDialog : public wxDialog
 {
  public:
   GlobalParamDialog(wxWindow *parent, wxWindowID id );
-  ~GlobalParamDialog();
+  virtual ~GlobalParamDialog();
 
  protected:
   wxTextCtrl* plant_capacity;

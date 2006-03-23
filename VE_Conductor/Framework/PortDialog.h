@@ -46,7 +46,7 @@ class PortDialog : public wxDialog
 {
  public:
   PortDialog(const wxString& title);
-  ~PortDialog();
+  virtual ~PortDialog();
 
   void Set3Cols(const std::vector<wxString>& col1, const std::vector<wxString>& col2, const std::vector<wxString>& col3);
   ListTable *syngas;

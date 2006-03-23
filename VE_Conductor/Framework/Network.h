@@ -50,7 +50,7 @@
 #include <map>
 #include <iostream>
 class GlobalParamDialog;
-
+class wxProgressDialog;
 namespace VE_Model
 {
    class Network;
@@ -70,7 +70,9 @@ enum
    SHOW_DESC,
    PARAVIEW,
    SHOW_FINANCIAL, /* EPRI TAG */
-   GEOMETRY
+   GEOMETRY,
+   MODEL_INPUTS,
+   MODEL_RESULTS
 };
 /*
 typedef struct 
@@ -100,12 +102,12 @@ typedef struct
   POLY poly; //Poly is the current poly on the canvas
 } TAG;
 */
-class Network : public wxScrolledWindow
+class Network : public wxScrolledWindow, public wxThreadHelper
 {
 public:
    Network(){;}
    Network(wxWindow* parent, int id);
-   ~Network();
+   virtual ~Network();
 
    Body::Executive_var exec; //put this reference here, so ther frame work can still access it YANG
 
@@ -137,6 +139,8 @@ public:
    void OnParaView( wxCommandEvent &event );
    void OnShowDesc( wxCommandEvent &event );
    void OnGeometry( wxCommandEvent &event );
+   void OnInputsWindow( wxCommandEvent& event );
+   void OnResultsWindow( wxCommandEvent& event );
 
    // EPRI TAG
    void OnShowFinancial(wxCommandEvent &event);
@@ -158,19 +162,20 @@ public:
    std::pair< double, double >* GetUserScale( void );
    std::pair< unsigned int, unsigned int >* GetNumPix( void );
    std::pair< unsigned int, unsigned int >* GetNumUnit( void );
-
+   virtual void* Entry();
+/*
    class LoadThread : public wxThreadHelper
    {
    public:
       LoadThread( Network* networks ) { designCanvas = networks; }
       virtual ~LoadThread( void ) { ; }
       void SetFileName( std::string file ) { fileName = file; }
-      virtual void* Entry();
+      
    private:
       std::string fileName;
       Network* designCanvas;
    };
-
+*/
 protected:
 
    //Draw functions
@@ -248,7 +253,10 @@ protected:
 private:
    bool moving;
    int intfssize;
+   wxProgressDialog* _fileProgress;
+   bool isLoading;
 
+   std::string tempXMLNetworkData;
    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers

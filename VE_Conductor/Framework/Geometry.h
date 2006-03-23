@@ -42,7 +42,7 @@ class VE_GUIPLUGINS_EXPORTS Geometry
 {
 public:
    Geometry(int);
-   ~Geometry();
+   virtual ~Geometry();
    Geometry( const Geometry& );
    Geometry& operator= ( const Geometry& );
    

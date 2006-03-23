@@ -114,7 +114,7 @@ class ViewLocPane : public wxDialog
 {
 public:
    ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
-   ~ViewLocPane( void );
+   virtual ~ViewLocPane( void );
 
    unsigned int _numStoredLocations;
    unsigned int _numStoredFlythroughs;

@@ -32,7 +32,7 @@
 #include "VE_Conductor/Framework/Plugin_base.h"
 #include <iostream>
 #include "VE_Conductor/Framework/string_ops.h"
-//#include "VE_Conductor/Framework/Geometry.h"
+#include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/UIDialog.h"
 #include "VE_Conductor/Framework/TextResultDialog.h"
 #include "VE_Conductor/Framework/TexTable.h"
@@ -45,6 +45,7 @@
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>
+#include <wx/wx.h>
 using namespace VE_Model;
 using namespace VE_XML;
 
@@ -79,6 +80,10 @@ REI_Plugin::REI_Plugin()
    veModel = new Model();
    numberOfInputPorts = 0;
    numberOfOutputPorts = 0;
+
+   inputsDialog = 0;
+   resultsDialog = 0;
+   portsDialog = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -128,6 +133,24 @@ REI_Plugin::~REI_Plugin()
    {
       delete financial_dlg;
       financial_dlg = 0;
+   }
+
+   if ( inputsDialog )
+   {
+      inputsDialog->Destroy();
+      inputsDialog = 0;
+   }
+
+   if ( resultsDialog )
+   {
+      resultsDialog->Destroy();
+      resultsDialog = 0;
+   }
+
+   if ( portsDialog )
+   {
+      portsDialog->Destroy();
+      portsDialog = 0;
    }
 }
 
@@ -927,4 +950,101 @@ void REI_Plugin::FinancialData ()
     financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
   
   financial_dlg->Show();
+}
+///////////////////////////////////////////////
+void REI_Plugin::ViewInputVariables( void )
+{
+   if ( inputsDialog == NULL )
+   {
+      /*inputsDialog = new wxDialog
+            ( 
+               NULL, ::wxNewId(), _("Input Variables"), 
+               wxDefaultPosition,
+               wxDefaultSize,
+               (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
+            );*/
+      inputsDialog = new SummaryResultDialog(NULL, wxT("Input Variables"), wxSize(560, 400));
+      // Get all the inputs form the model
+      for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
+      {
+         std::vector< wxString > tagNames;
+         std::vector< wxString > values;
+         VE_XML::Command* inputCommand = veModel->GetInput( i );
+         GetDataTables( inputCommand, tagNames, values );
+         std::string inputParamter = inputCommand->GetCommandName();
+         inputsDialog->NewTab( wxT( inputParamter.c_str() ) );
+         inputsDialog->Set2Cols( tagNames, values );
+      }
+      // Get all the results form the model
+   }
+   //inputsDialog->Show();
+   inputsDialog->ShowModal();
+   delete inputsDialog;
+}
+///////////////////////////////////////////////
+void REI_Plugin::ViewResultsVariables( void )
+{
+   if ( resultsDialog == NULL )
+   {
+      /*inputsDialog = new wxDialog
+            ( 
+               NULL, ::wxNewId(), _("Input Variables"), 
+               wxDefaultPosition,
+               wxDefaultSize,
+               (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
+            );*/
+      resultsDialog = new SummaryResultDialog(NULL, wxT("Results Variables"), wxSize(560, 400));
+      // Get all the inputs form the model
+      for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
+      {
+         std::vector< wxString > tagNames;
+         std::vector< wxString > values;
+         VE_XML::Command* inputCommand = veModel->GetResult( i );
+         GetDataTables( inputCommand, tagNames, values );
+         std::string inputParamter = inputCommand->GetCommandName();
+         resultsDialog->NewTab( wxT( inputParamter.c_str() ) );
+         resultsDialog->Set2Cols( tagNames, values );
+      }
+      // Get all the results form the model
+   }
+   //inputsDialog->Show();
+   resultsDialog->ShowModal();
+   delete resultsDialog;
+}
+///////////////////////////////////////////////
+void REI_Plugin::GetDataTables( VE_XML::Command* inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
+{
+         for ( size_t j = 0; j < inputCommand->GetNumberOfDataValuePairs(); ++j )
+         {
+            VE_XML::DataValuePair* tempDVP = inputCommand->GetDataValuePair( j );
+            std::string dataType = tempDVP->GetDataType();
+            std::string dataName = tempDVP->GetDataName();
+            std::string stringData = "empty";
+
+            if ( dataType == std::string("FLOAT") )
+            {
+               double doubleData;
+               tempDVP->GetData( doubleData );
+               stringData = ::to_string( doubleData );
+            }
+            else if ( dataType == std::string("UNSIGNED INT") )
+            {
+               unsigned int intData;
+               tempDVP->GetData( intData );
+               stringData = ::to_string( intData );
+            }
+            else if ( dataType == std::string("LONG") )
+            {
+               long longData;
+               tempDVP->GetData( longData );
+               stringData = ::to_string( static_cast< int >( longData ) );
+            }
+            else if ( dataType == std::string("STRING") )
+            {
+               tempDVP->GetData( stringData );
+            }
+            // vectors of data to be displayed
+            tagNames.push_back( wxString( dataName.c_str() ) );
+            values.push_back( wxString( stringData.c_str() ) );
+         }
 }

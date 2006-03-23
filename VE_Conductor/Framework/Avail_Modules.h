@@ -64,7 +64,7 @@ class Avail_Modules : public wxTreeCtrl
   Avail_Modules() {;}
   Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style);
 
-  ~Avail_Modules();
+  virtual ~Avail_Modules();
   bool LoadModules(); //Load all the modules from the dlls 
   void OnItemRightClick(wxTreeEvent& event);
   void OnSelChanged(wxTreeEvent& event);

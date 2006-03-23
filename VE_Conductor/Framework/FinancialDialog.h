@@ -62,7 +62,7 @@ class FinancialDialog : public wxDialog
 {
  public:
   FinancialDialog(wxWindow *parent, wxWindowID id );
-  ~FinancialDialog();
+  virtual ~FinancialDialog();
 
  protected:
   

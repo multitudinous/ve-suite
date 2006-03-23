@@ -31,8 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXT_TABLE_H
 #define TEXT_TABLE_H
-
-
 #include <vector>
 #include <wx/grid.h>
 #include <wx/fontenum.h>
@@ -45,7 +43,7 @@ class VE_GUIPLUGINS_EXPORTS TexTable : public wxGrid
 {
 public:
    TexTable(wxWindow* parent, wxWindowID id = -1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
-   ~TexTable(){;}
+   virtual ~TexTable(){;}
    void Clear( void ){ ClearGrid(); SetNumofCols(2); }
    void SetColWidth( int Col_id, int width );
    void SetNumofCols( int num );

@@ -1,4 +1,5 @@
 #include "VE_Conductor/Utilities/Polygon.h"
+
 #include <cmath>
 #include <iostream>
 

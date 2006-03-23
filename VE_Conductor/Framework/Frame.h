@@ -119,6 +119,7 @@ public:
   
    AppFrame(){;}
    AppFrame(wxWindow* parent, wxWindowID id, const wxString& title);
+   virtual ~AppFrame() { ; }
    void OnClose( wxCloseEvent& event );
    void FrameClose( wxCommandEvent& event );
 

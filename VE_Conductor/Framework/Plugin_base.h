@@ -47,6 +47,7 @@ class wxPoint;
 class wxDC;
 class wxRect;
 class wxWindow;
+class wxDialog;
 
 #define edge_size 10
 class UIDialog;
@@ -55,11 +56,17 @@ class TextResultDialog;
 class GeometryDialog;
 class FinancialDialog;
 class GeometryDataBuffer;
+class SummaryResultDialog;
 
 namespace VE_Model
 {
    class Model;
    class Port;
+}
+
+namespace VE_XML
+{
+   class Command;
 }
 
 class Interface;
@@ -71,7 +78,7 @@ class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
 {
 public:
    REI_Plugin();
-   ~REI_Plugin();
+   virtual ~REI_Plugin();
 
    virtual double GetVersion();
    //Return the version number of the module
@@ -154,7 +161,14 @@ public:
    // EPRI TAG
    FinancialDialog* financial_dlg;
 
+   // virtual functions to launch custom input dialogs
+   virtual void ViewInputVariables( void );
+   virtual void ViewResultsVariables( void );
+   
 protected:
+   void GetDataTables( VE_XML::Command* inputCommand, 
+                        std::vector< wxString >& tagNames, 
+                        std::vector< wxString >& values );
 
    void RegistVar(std::string vname, long *var);
    void RegistVar(std::string vname, double *var);
@@ -195,6 +209,12 @@ protected:
    std::map<std::string, std::vector<long> * >        _int1D;
    std::map<std::string, std::vector<double> * >      _double1D;
    std::map<std::string, std::vector<std::string> * > _string1D;
+
+   // Dynamic input and results dialogs as well as port dialogs
+   //wxDialog* inputsDialog;
+   SummaryResultDialog* resultsDialog;
+   wxDialog* portsDialog;
+   SummaryResultDialog* inputsDialog;
 
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
 };

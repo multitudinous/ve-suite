@@ -41,14 +41,14 @@ class wxWindow;
 
 class VE_GUIPLUGINS_EXPORTS UIDialog : public wxDialog
 {
-   public:
-      UIDialog() {;}
-      UIDialog(wxWindow* parent, int id, wxString title="UI");
-      virtual void Lock(bool l); 
-      //This function locks/unlocks every input entry
-
-   protected:
-      bool lock;
+public:
+   UIDialog() {;}
+   UIDialog(wxWindow* parent, int id, wxString title="UI");
+   virtual ~UIDialog() { ; }
+   virtual void Lock(bool l); 
+   //This function locks/unlocks every input entry
+protected:
+   bool lock;
 };
 
 #endif

@@ -9,7 +9,7 @@ class CORBAServiceList : public wxDialog
 {
 public:
    CORBAServiceList( void );
-   ~CORBAServiceList( void );
+   virtual ~CORBAServiceList( void );
 
    void SetNamingContext( CosNaming::NamingContext_ptr naming_context );
    std::vector< std::string > GetListOfServices( void );

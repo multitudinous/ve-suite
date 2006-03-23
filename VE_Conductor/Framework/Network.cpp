@@ -48,6 +48,7 @@
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
 #include <wx/utils.h>
+#include <wx/progdlg.h>
 
 #include <sstream>
 #include <iomanip>
@@ -84,8 +85,11 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(SHOW_RESULT, Network::OnShowResult)
    EVT_MENU(PARAVIEW, Network::OnParaView)
    EVT_MENU(SHOW_DESC, Network::OnShowDesc)
+   EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
    EVT_MENU(SHOW_FINANCIAL, Network::OnShowFinancial) /* EPRI TAG */
-   EVT_MENU(GEOMETRY, Network::OnGeometry) /* EPRI TAG */
+   EVT_MENU(GEOMETRY, Network::OnGeometry)
+   EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
+   EVT_MENU(MODEL_RESULTS, Network::OnResultsWindow) /* EPRI TAG */
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -113,7 +117,7 @@ Network::Network(wxWindow* parent, int id)
    paraview = false;
    globalparam_dlg = new GlobalParamDialog(NULL, -1);
    veNetwork = 0;
-
+   isLoading = false;
    SetBackgroundColour(*wxWHITE);
 }
 
@@ -134,7 +138,7 @@ Network::~Network()
 
 void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 {
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+   while ( (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) ) { ; }
 
    wxPaintDC dc(this);
    PrepareDC(dc);
@@ -451,6 +455,12 @@ void Network::OnMRightDown(wxMouseEvent& event)
    // GUI to configure geometry for graphical env
   pop_menu.Append(GEOMETRY, "Geometry Config");
   pop_menu.Enable(GEOMETRY, true);
+
+   // GUI to configure geometry for graphical env
+  pop_menu.Append(MODEL_INPUTS, "Input Variables" );
+  pop_menu.Enable(MODEL_INPUTS, true);
+  pop_menu.Append(MODEL_RESULTS, "Result Variables" );
+  pop_menu.Enable(MODEL_RESULTS, true);
 
   pop_menu.Enable(ADD_LINK_CON, false);
   pop_menu.Enable(EDIT_TAG, false);
@@ -2050,20 +2060,29 @@ void Network::New()
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork )
 {
+   _fileProgress = new wxProgressDialog(wxString("Translation Progress"),
+                  "Load...", 
+                  100,this,
+                  wxPD_AUTO_HIDE|wxPD_SMOOTH|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME);
    ::wxBeginBusyCursor();
-   ::wxSafeYield();
-   LoadThread* loadThread = new LoadThread( this );
-   loadThread->SetFileName( xmlNetwork );
-   loadThread->Create();
-   loadThread->GetThread()->Run();
+   //::wxSafeYield();
+   //LoadThread* loadThread = new LoadThread( this );
+   //loadThread->SetFileName( xmlNetwork );
+   tempXMLNetworkData = xmlNetwork;
+   //wxThreadHelper::Create();
+   //this->GetThread()->Run();
+   CreateNetwork( xmlNetwork );
    ::wxEndBusyCursor();
 }
 ////////////////////////////////////////////////////////
 void Network::CreateNetwork( std::string xmlNetwork )
 {
+   // Just clear the design canvas
+   //while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) { ; }
    // Start the busy cursor
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
+   _fileProgress->Update( 10, "start loading" );
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
 
@@ -2106,9 +2125,6 @@ void Network::CreateNetwork( std::string xmlNetwork )
    veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
    numUnit.second = tempScaleInfo;
 
-std::cout << (userScale.first) << " : " << (userScale.second) << std::endl
-            << (numPix.first) << " : " << numPix.second << std::endl
-            << numUnit.first << " : " << numUnit.second << std::endl;
    links.clear();
 
    for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
@@ -2136,11 +2152,12 @@ std::cout << (userScale.first) << " : " << (userScale.second) << std::endl
       // Create the polygon for links
       links.at( i ).CalcLinkPoly();
    }
-
+   _fileProgress->Update( 50, "create models" );
    // do this for models
    networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
    objectVector = networkWriter.GetLoadedXMLObjects();
 
+   _fileProgress->Update( 75, "done create models" );
    // now lets create a list of them
    for ( size_t i = 0; i < objectVector.size(); ++i )
    {
@@ -2174,7 +2191,7 @@ std::cout << (userScale.first) << " : " << (userScale.second) << std::endl
 //std::cout << " reveiw : " << std::endl
 //      << num << " : "<< model->GetModelName() << " : " << bbox.x << " : " << bbox.y << std::endl;
    }
-/*
+   /*
    // do this for tags
    DOMNodeList* subElements = doc->getDocumentElement()->getElementsByTagName( xercesString("veTag") );
    unsigned int numTags = subElements->getLength();
@@ -2195,7 +2212,7 @@ std::cout << (userScale.first) << " : " << (userScale.second) << std::endl
       // Create the polygon for tags
       tags.back().CalcTagPoly();
    }
-*/
+   */
    m_selMod = -1;
    m_selFrPort = -1; 
    m_selToPort = -1; 
@@ -2204,10 +2221,10 @@ std::cout << (userScale.first) << " : " << (userScale.second) << std::endl
    m_selTag = -1; 
    m_selTagCon = -1; 
    xold = yold =0;
-
+   _fileProgress->Update( 100, "Done" );
    //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
    Refresh();
-
+   delete _fileProgress;
 }
 
 //////////////////////////////////////////////////////
@@ -2320,16 +2337,39 @@ void Network::OnParaView(wxCommandEvent& WXUNUSED(event))
 #endif
 
 }
-
+///////////////////////////////////////////
+void Network::OnInputsWindow(wxCommandEvent& WXUNUSED(event))
+{
+   if (m_selMod<0) 
+      return;
+   // Here we launch a dialog for a specific plugins input values
+   modules[m_selMod].GetPlugin()->ViewInputVariables();
+}
+///////////////////////////////////////////
+void Network::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
+{
+   if (m_selMod<0) 
+      return;
+   // Here we launch a dialog for a specific plugins input values
+   modules[m_selMod].GetPlugin()->ViewResultsVariables();
+}
+///////////////////////////////////////////
 void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 {
+   /*
    // This code needs to change to Gerrick's geom code
-   /*if (m_selMod<0) 
-      return;
-
-   std::string m_selmod_name = modules[m_selMod].GetPlugin()->GetName().c_str();
-   modules[m_selMod].GetPlugin()->SetIDtoGeometryDataBuffer();
-   modules[m_selMod].GetPlugin()->GeometryData();*/
+   if( !_cadDialog )
+   {
+      ConVEServer();
+      if ( CORBA::is_nil(vjobs.in()) )
+         return;
+      //this will change once we have a way to retrieve the geometry from the model
+      _cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg(0,
+                                                               this,CAD_NODE_DIALOG);
+   }
+   _cadDialog->SetVjObsPtr(vjobs.in());
+   _cadDialog->Show();
+   */
 }
 ///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )
@@ -2391,8 +2431,10 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
    return tempPoint;
 }
 ///////////////////////////////////////////
-void* Network::LoadThread::Entry( void )
+void* Network::Entry( void )
 {
-   designCanvas->CreateNetwork( fileName );
+   isLoading = true;
+   this->CreateNetwork( tempXMLNetworkData );
+   isLoading = false;
    return 0;
 }

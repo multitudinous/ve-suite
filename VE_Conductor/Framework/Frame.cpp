@@ -199,7 +199,11 @@ void AppFrame::CreateVETab()
    visTabs = new wxDialog(NULL,-1, wxString("Vis Tabs"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP);
-   //m_tabs = new UI_Tabs(vjobs.in(), wx_ve_splitter, ID_UI_TABS);
+   // Set the default location and size for the vis panel
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
+   visTabs->SetSize( dialogPosition );
+   //Create panel for vis pane
    m_frame = new UI_Frame(vjobs.in(), visTabs, wxID_HIGHEST);
    // Create the notebook's panels
    //m_tabs->AssignImageList(m_imageList);

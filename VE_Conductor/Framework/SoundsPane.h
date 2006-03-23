@@ -31,6 +31,7 @@ class SoundsPane : public wxDialog
 {
 public:
    SoundsPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
+   virtual ~SoundsPane(){;}
    void SetCommInstance( VjObs_ptr veEngine );
    //void SetDOMManager( VE_XML::DOMDocumentManager* domManagerIn );
    void SendCommandsToXplorer( void );

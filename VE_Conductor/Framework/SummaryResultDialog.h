@@ -46,7 +46,7 @@ class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog
 {
 public:
    SummaryResultDialog(wxWindow*parent, const wxString& title=wxT("Result Dialog"), wxSize tabsize= wxSize(477, 300));
-   ~SummaryResultDialog();
+   virtual ~SummaryResultDialog();
 
    void TabTitle( const wxString& title );
    void NewTab( const wxString& title = wxT("Results") );
