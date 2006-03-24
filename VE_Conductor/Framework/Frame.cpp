@@ -1324,26 +1324,26 @@ void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
    std::string xmlDocument( "returnString" );
    netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
-   char* tempDoc = new char[ xmlDocument.size() + 1 ];
-   tempDoc = CORBA::string_dup( xmlDocument.c_str() );
+   //char* tempDoc = new char[ xmlDocument.size() + 1 ];
+   //tempDoc = CORBA::string_dup( xmlDocument.c_str() );
 
    if ( !CORBA::is_nil( vjobs ) && !xmlDocument.empty() )
    {
       try
       {
          // CORBA releases the allocated memory so we do not have to
-         vjobs->SetCommandString( tempDoc );
+         vjobs->SetCommandString( CORBA::string_dup( xmlDocument.c_str() ) );
       }
       catch ( ... )
       {
          wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
                         "Communication Failure", wxOK | wxICON_INFORMATION );
-         delete [] tempDoc;
+         //delete [] tempDoc;
       }
    }
    else
    {
-      delete [] tempDoc;
+      //delete [] tempDoc;
    }
    //Clean up memory
    delete veCommand;
