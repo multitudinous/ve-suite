@@ -53,8 +53,10 @@ PluginLoader::PluginLoader()
 
 PluginLoader::~PluginLoader()
 {
-  for ( unsigned int i=0; i<plugins.size(); ++i )
-    delete (plugins[i]);
+   for ( unsigned int i=0; i<plugins.size(); ++i )
+   {
+      delete plugins.at( i );
+   }
 
   plugins.clear();
   plugin_cls.clear();

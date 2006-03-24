@@ -10,7 +10,7 @@ class DefaultPlugin : public REI_Plugin
 
 public:
    DefaultPlugin();
-   ~DefaultPlugin();
+   virtual ~DefaultPlugin();
 
    virtual double GetVersion();
    //Return the version number of the module
