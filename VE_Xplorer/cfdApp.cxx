@@ -86,6 +86,7 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
 #include <osg/Matrix>
+#include <osg/Referenced>
 #endif
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -111,7 +112,7 @@ using namespace VE_TextureBased;
 using namespace VE_Xplorer;
 using namespace VE_Util;
 
-cfdApp::cfdApp( void ) 
+cfdApp::cfdApp( int argc, char* argv[] ) 
 #ifdef _OSG
 : vrj::OsgApp( vrj::Kernel::instance() )
 #endif
@@ -121,15 +122,21 @@ cfdApp::cfdApp( void )
    this->executive = 0;
 #endif
 #ifdef _OSG
+   //osg::Referenced::instance()->setThreadSafeRefUnref(true);
+   osg::Referenced::setThreadSafeReferenceCounting(true);
+   osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 10 );
    _frameStamp = new osg::FrameStamp;
    _frameStamp->setReferenceTime(0.0);
    _frameStamp->setFrameNumber(0);
+   svUpdate = true;
 #ifdef VE_PATENTED
    _tbvHandler = 0;
    _pbuffer = 0;
 #endif
    _frameNumber = 0;
 #endif
+   this->argc = argc;
+   this->argv = argv;
 }
 
 void cfdApp::exit()
@@ -254,6 +261,11 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {
    vrj::OsgApp::configSceneView(newSceneViewer);
 
+   {
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   tempSvVector = newSceneViewer;
+   //tempSvVector.push_back( new_sv );
+   }
    //newSceneViewer->setBackgroundColor( osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f) );
    newSceneViewer->getLight()->setAmbient(osg::Vec4(0.4f,0.4f,0.4f,1.0f));
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
@@ -335,6 +347,17 @@ void cfdApp::initScene( void )
    // navigation and cursor 
    cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
    cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   for ( int i = 1; i < argc; ++i )
+   {
+      if ( (std::string( argv[i] ) == std::string("-VESDesktop")) &&
+            (argc >= i+2) 
+         )
+      {
+         cfdEnvironmentHandler::instance()->
+                     SetDesktopSize( atoi( argv[i+1] ), atoi( argv[i+2] ) );
+         break;
+      }
+   }
    cfdEnvironmentHandler::instance()->InitScene();
 
    // create steady state visualization objects
@@ -372,6 +395,8 @@ void cfdApp::preFrame( void )
 
 void cfdApp::latePreFrame( void )
 {
+   static long lastFrame = 0;
+   static float lastTime = 0.0f;
    vprDEBUG(vesDBG,3) << "cfdApp::latePreFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _CLUSTER
    //call the parent method
@@ -384,6 +409,14 @@ void cfdApp::latePreFrame( void )
    {
       _frameStamp->setFrameNumber( _frameNumber++ );
       _frameStamp->setReferenceTime( this->_vjobsWrapper->GetSetAppTime(-1) );
+      // This is a frame rate calculation
+      float deltaTime = this->_vjobsWrapper->GetSetAppTime(-1) - lastTime;
+      if ( deltaTime >= 1.0f )
+      {
+         //std::cout << "|\tFrameRate = " << _frameNumber - lastFrame << std::endl;
+         lastTime = this->_vjobsWrapper->GetSetAppTime(-1);
+         lastFrame = _frameNumber;
+      }
    }
 #endif
 
@@ -423,6 +456,27 @@ void cfdApp::latePreFrame( void )
 
    this->_vjobsWrapper->PreFrameUpdate();
    vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
+
+//std::cout << tempSvVector.size() << std::endl;
+   //for ( size_t i = 0; i < tempSvVector.size(); ++i )
+      {
+         //osg::ref_ptr<osgUtil::SceneView> sv;
+         //sv = (*sceneViewer);    // Get context specific scene viewer
+         //tempSvVector->at( i )->get();
+         //vprASSERT(tempSvVector.get() != NULL);
+         //if ( i == 0 )
+         if ( tempSvVector.get() )
+         tempSvVector->update();
+      }
+      /*std::vector< osg::ref_ptr<osgUtil::SceneView>* >* tempSvVector = sceneViewer.getDataVector();
+      for ( size_t i = 0; i < tempSvVector->size(); ++i )
+      {
+         //osg::ref_ptr<osgUtil::SceneView> sv;
+         //sv = (*sceneViewer);    // Get context specific scene viewer
+         //tempSvVector->at( i )->get();
+         vprASSERT(tempSvVector->at( i )->get() != NULL);
+         tempSvVector->at( i )->get()->update();
+      }*/
 }
 
 void cfdApp::intraFrame()
@@ -444,7 +498,7 @@ void cfdApp::contextPostDraw()
 void cfdApp::postFrame()
 {
    vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
-
+   svUpdate = true;
 #ifdef _OSG
    time_since_start = _timer.delta_s(_start_tick,_timer.tick());
 #ifdef _WEB_INTERfACE
@@ -515,6 +569,27 @@ void cfdApp::writeImageFileForWeb(void*)
 #endif   //_WEB_INTERFACE
 
 #ifdef _OSG
+void cfdApp::contextPreDraw( void )
+{
+   // For osg the update call is only supposed to be called by one application
+   // thread
+   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   if ( svUpdate )
+   {
+      svUpdate = false;
+
+      //std::vector< osg::ref_ptr<osgUtil::SceneView>* >* tempSvVector = sceneViewer.getDataVector();
+      /*for ( size_t i = 0; i < tempSvVector.size(); ++i )
+      {
+         //osg::ref_ptr<osgUtil::SceneView> sv;
+         //sv = (*sceneViewer);    // Get context specific scene viewer
+         //tempSvVector->at( i )->get();
+         vprASSERT(tempSvVector.at( i ).get() != NULL);
+         tempSvVector.at( i )->update();
+      }*/
+   }
+}
+///////////////////////////////////////////////////
 void cfdApp::draw()
 {
    glClear(GL_DEPTH_BUFFER_BIT);
@@ -608,7 +683,7 @@ void cfdApp::draw()
    }
 #endif   //_WEB_INTERFACE
 
-   sv->update();
+   //sv->update();
    sv->cull();
    sv->draw();
 

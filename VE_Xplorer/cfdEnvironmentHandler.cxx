@@ -49,6 +49,9 @@
 #include "VE_Xplorer/cfdDebug.h"
 #include "VE_Xplorer/cfdDisplaySettings.h"
 
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
 #ifdef _OSG
 #include "VE_Xplorer/cfdObjectHandler.h"
 #endif
@@ -90,7 +93,8 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 #endif // VE_PATENTED
    _readParam = 0;
    _param.erase();// = 0;
-
+   desktopWidth = 0;
+   desktopHeight = 0;
 }
 
 void cfdEnvironmentHandler::Initialize( std::string param )
@@ -193,6 +197,12 @@ cfdCursor* cfdEnvironmentHandler::GetCursor( void )
 {
    return this->cursor;
 }
+/////////////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::SetDesktopSize( int width, int height )
+{
+   desktopWidth = width;
+   desktopHeight = height;
+}
 ////////////////////////////////////////
 void cfdEnvironmentHandler::InitScene( void )
 {
@@ -254,6 +264,25 @@ void cfdEnvironmentHandler::InitScene( void )
    this->objectHandler->Initialize(this->nav);
 #endif //_OSG
 #endif //VE_PATENTED
+   if ( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
+   {
+      std::cout << "| 11. Initializing................................  Desktop Display |" << std::endl;
+      // Create the command and data value pairs
+      // to adjust the desktop settings.
+      VE_XML::DataValuePair* dvpDesktopWidth = new VE_XML::DataValuePair( std::string("FLOAT") );
+      dvpDesktopWidth->SetDataName( "desktop_width" );
+      dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
+      VE_XML::DataValuePair* dvpDesktopHeight = new VE_XML::DataValuePair( std::string("FLOAT") );
+      dvpDesktopHeight->SetDataName( "desktop_height" );
+      dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
+      VE_XML::Command* displayCommand = new VE_XML::Command();
+      displayCommand->SetCommandName( std::string("Juggler_Desktop_Data") );
+      displayCommand->AddDataValuePair( dvpDesktopWidth );
+      displayCommand->AddDataValuePair( dvpDesktopHeight );
+      displaySettings->SetVECommand( displayCommand );
+      displaySettings->CheckCommandId( NULL );
+      delete displayCommand;
+   }
 }
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )

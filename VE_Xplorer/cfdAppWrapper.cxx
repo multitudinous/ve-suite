@@ -69,11 +69,18 @@ bool cfdAppWrapper::JugglerIsRunning( void )
 void cfdAppWrapper::init( void * )
 {
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
-   _cfdApp = new cfdApp();  // Delcare an instance of my application
+   _cfdApp = new cfdApp( argc, argv );  // Delcare an instance of my application
    _cfdApp->SetWrapper( _vjObsWrapper );
    for ( int i = 1; i < argc; i++ )          // Configure the kernel
    {
-      kernel->loadConfigFile( argv[i] );  
+      if ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
+      {
+         i = i + 2;
+      }
+      else
+      {
+         kernel->loadConfigFile( argv[i] );  
+      }
    }
    
    kernel->start();                          // Start the kernel thread

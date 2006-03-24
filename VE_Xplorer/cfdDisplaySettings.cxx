@@ -56,7 +56,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
       commandType = "wait";
    }
 
-   if ( !commandType.compare( "Juggler_Display_Data" ) )
+   if ( commandType.compare( "Juggler_Display_Data" ) == 0)
    {
       // Get datavalue pair from current command
       VE_XML::DataValuePair* commandData = veCommand->GetDataValuePair( 0 );
@@ -74,7 +74,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
          //elements.at(0)->getNode()->save( std::cout );
          ChangeDisplayElements( true, elements.at(i) );
 
-         if ( !newCommand.compare( "Stereo" ) )         
+         if ( !newCommand.compare( "Stereo" ) )
          {  
             // just for testing purposes can be changed to stereo later
             size+=1;
@@ -84,6 +84,35 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
          ChangeDisplayElements( false, elements.at(i) );
       }
    }
+   else if ( commandType.compare( "Juggler_Desktop_Data" ) == 0 )
+   {
+      // Get current list of display elements
+      jccl::Configuration* oldCfg = jccl::ConfigManager::instance()->getActiveConfig();
+      std::vector< jccl::ConfigElementPtr > elements;
+      oldCfg->getByType( "display_window", elements );
+
+      for ( size_t i = 0; i < elements.size(); ++i )
+      {
+         ChangeDisplayElements( true, elements.at(i) );
+
+         //if ( !newCommand.compare( "Desktop_Size" ) )    
+         {
+            VE_XML::DataValuePair* desktopData = veCommand->GetDataValuePair( "desktop_width" );
+            // 2/3 the width
+            int xSize = desktopData->GetDataValue() * 0.667; 
+            elements.at(i)->setProperty(  "size", 0, xSize );
+            desktopData = veCommand->GetDataValuePair( "desktop_height" );
+            // 150 for the chat window and 50 for the menu bar height
+            int ySize = desktopData->GetDataValue() - 200; 
+            elements.at(i)->setProperty(  "size", 1, ySize );
+            elements.at(i)->setProperty(  "origin", 0, 0 );
+            elements.at(i)->setProperty(  "origin", 1, 150 );
+         }
+
+         ChangeDisplayElements( false, elements.at(i) );
+      }
+   }
+   veCommand = 0;
    return true;
 }
 //////////////////////////////////////////////////////////////////////////

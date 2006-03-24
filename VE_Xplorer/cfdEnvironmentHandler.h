@@ -94,7 +94,9 @@ public:
    cfdQuatCamHandler* GetQuatCamHandler( void );
    ///Accessor for cfdDisplaySettings
    cfdDisplaySettings* GetDisplaySettings( void );
-
+   ///Accessor to set desktop size information for
+   /// runtime reconfiguration of desktop windows
+   void SetDesktopSize( int width, int height );
 #ifdef _OSG 
 #ifdef VE_PATENTED 
    void ActivateGeometryPicking();
@@ -126,6 +128,10 @@ private:
    float worldRot[ 3 ];
    ///<The class used to change juggler configuration settings during runtime
    cfdDisplaySettings* displaySettings;
+   ///<Desktop width
+   int desktopWidth;
+   ///<Desktop height
+   int desktopHeight;
 };
 }
 #endif

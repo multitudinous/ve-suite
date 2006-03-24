@@ -81,7 +81,7 @@ class cfdApp: public vrj::OsgApp
 #endif
 {
    public:
-      cfdApp( void );
+      cfdApp( int argc, char* argv[] );
       virtual ~cfdApp( void ) { ; }
      
       // Initialize the scene graph
@@ -109,6 +109,7 @@ class cfdApp: public vrj::OsgApp
       virtual void bufferPreDraw( void );
       virtual void draw();
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
+      virtual void contextPreDraw( void );   	
 #ifdef VE_PATENTED
       virtual void contextInit( void );
       virtual void contextClose( void );
@@ -153,6 +154,8 @@ class cfdApp: public vrj::OsgApp
       //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
 #ifdef _OSG
+      bool svUpdate;
+      osg::ref_ptr<osgUtil::SceneView> tempSvVector;
 #ifdef VE_PATENTED
       VE_TextureBased::cfdTextureBasedVizHandler* _tbvHandler;
       //biv --may convert this to a singleton later
@@ -168,12 +171,14 @@ class cfdApp: public vrj::OsgApp
       cfdExecutive*     executive;
 #endif
 
-      // Only used in preframe for transient stuff
-      int   lastFrame;
-   private:
-      vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
-      std::string filein_name;
-	   double time_since_start;
+   // Only used in preframe for transient stuff
+   int   lastFrame;
+private:
+   vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
+   std::string filein_name;
+	double time_since_start;
+   int argc;
+   char** argv;
 	   //web interface stuff for writing the image file
 	   //to be viewed over the web
 #ifdef _WEB_INTERFACE
