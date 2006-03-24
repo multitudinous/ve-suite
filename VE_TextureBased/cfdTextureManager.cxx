@@ -160,20 +160,29 @@ unsigned int cfdTextureManager::getNextFrame()
 {
    size_t numFields = _dataFields.size();
    //now update the current field
-   if(_direction == 1){
+   if ( _direction == 1 )
+   {
       //haven't reached the end yet
       //so return the next field 
-      if(_curField < numFields-1){
+      if(_curField < numFields-1)
+      {
          _curField += _direction;
-      }else if(_curField == numFields-1){
+      }
+      else if ( _curField == numFields-1 )
+      {
          //we're at the end so we need to
          //return the beginning
          _curField = 0;
       }
-   }else{
-      if(_curField > 0){
+   }
+   else
+   {
+      if ( _curField > 0 )
+      {
          _curField += _direction;
-      }else if(_curField == 0){
+      }
+      else if ( _curField == 0 )
+      {
          //we're at the end so we need to
          //return the beginning
          _curField = static_cast< int >( numFields-1 );
@@ -203,8 +212,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : No scalars in this texture " << std::endl;
       }
 
-      std::cout<<"2: "<<flowImage->GetPointData()->GetNumberOfArrays()<<std::endl;
-      std::cout<<"3: "<<flowImage->GetPointData()->GetArray(0)->GetDataType()<<std::endl;
       vtkDataArray* flowData = dynamic_cast< vtkDataArray* >( flowImage->GetPointData()->GetArray( 0 ) );
       if(!flowData)
       {
@@ -212,7 +219,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
       dataName = flowData->GetName();
 
-     std::cout<<"3"<<std::endl;
       DataType curType;
       //read the file type
       if ( flowData->GetNumberOfComponents() == 1 )
@@ -233,7 +239,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
                         " There are too many components in this texture " << std::endl;
       }
 
-     std::cout<<"4"<<std::endl;
       //data range(magnitude) for scalars
       //ignore this value for vectors
       ScalarRange newRange;
@@ -245,12 +250,10 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       _range[0] = newRange.range[0];
       _range[1] = newRange.range[1];
 
-     std::cout<<"5"<<std::endl;
       _transientRange[0] = (_range[0] < _transientRange[0])?_range[0]:_transientRange[0];
       _transientRange[1] = (_range[1] > _transientRange[1])?_range[1]:_transientRange[1];
       //bounding box
       double* bbox = flowImage->GetBounds(); 
-     std::cout<<"6"<<std::endl;
       for ( unsigned int i = 0; i < 6; ++i )
       {
          _bbox[ i ] = bbox[ i ];
@@ -261,7 +264,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          _resolution = new int[3];
       }
 
-     std::cout<<"7"<<std::endl;
       //the dimensions  
       flowImage->GetDimensions( &*_resolution );
 
@@ -273,7 +275,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       double R,G,B,A;
       float alpha = 0;
       
-     std::cout<<"8"<<std::endl;
       int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
       unsigned char* pixels = 0;
       float invSRange = 1.0/(_range[1]-_range[0]);
@@ -313,7 +314,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
             if(_useShaders)
             {
                pixels[p]  = (unsigned char)(255.0*alpha);
-               //std::cout<<255.0*alpha<<std::endl;
             }
             else
             {
@@ -336,7 +336,6 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
             }
          }
       }
-     std::cout<<"9"<<std::endl;
       //add the field
       _dataFields.push_back(pixels);
       flowImage->Delete();
