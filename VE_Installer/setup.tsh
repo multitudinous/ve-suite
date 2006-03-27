@@ -119,15 +119,11 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
    setenv JDK_HOME /usr/java/jdk1.5.0_04
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK-5.0/Linux-RHEL4
-#   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Debug/VTK/Linux-RHEL_4
 #   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.1/Linux-RHEL_4
    setenv WX_HOME /home/users/mccdo/wxWindows/wxGTK-2.6.2/install-rhel_4
-   #setenv WX_HOME /home/users/mccdo/wxWindows/wxX11-2.6.2/install-rhel4
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-linux-rhel4-i686
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-linux-rhel4-i686-deps
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   #setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-RHEL_4
-   #setenv OSG_HOME /home/users/biv/research/externalAPIs/local_installs/RHEL_4
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.0/Linux-RHEL_4
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib:${VJ_DEPS_DIR}/lib
