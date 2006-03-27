@@ -19,6 +19,7 @@
 #include <vtkRectilinearGridWriter.h>
 #include <vtkPolyDataWriter.h>
 #include <iostream>
+#include <vtkUnstructuredGridReader.h>
 
 using namespace VE_Util;
 
@@ -174,19 +175,12 @@ void cfdVTKFileHandler::_readClassicVTKFile()
    vtkDataSetReader *genericReader = vtkDataSetReader::New();
    genericReader->SetFileName( _inFileName.c_str() );
    _dataSet = genericReader->GetOutput();
+   genericReader->Update();
    if (!_dataSet)
    {
-      std::cout << "vtkDataSetReader failed, will try the "
-                << "vtkXMLUnstructuredGridReader" << std::endl;
+      std::cout << "vtkDataSetReader failed, dataset not recognized." << std::endl;
       genericReader->Delete();
-
-      // try with the vtkXMLUnstructuredGridReader...
-      vtkXMLUnstructuredGridReader *ugr = vtkXMLUnstructuredGridReader::New();
-      ugr->SetFileName( _inFileName.c_str() );
-      ugr->Update();
-      _dataSet = vtkUnstructuredGrid::New();
-      _dataSet->DeepCopy( ugr->GetOutput() );
-      ugr->Delete();
+      _dataSet = 0;
    }
    else
    {
@@ -195,7 +189,7 @@ void cfdVTKFileHandler::_readClassicVTKFile()
       {
          std::cout<<"Unstructured Grid..."<<std::endl;
          _dataSet = vtkUnstructuredGrid::New();
-         _dataSet->ShallowCopy( genericReader->GetUnstructuredGridOutput() );
+         _dataSet->DeepCopy( genericReader->GetUnstructuredGridOutput() );
          genericReader->Delete();
       }
       else if ( dataObjectType == VTK_STRUCTURED_GRID )
