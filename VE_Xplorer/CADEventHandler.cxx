@@ -120,6 +120,12 @@ void CADEventHandler::_setAttributesOnNode(CADNode* activeNode)
     //  std::cout<<"Adding attribute: "<<currentAttribute.GetAttributeName()<<std::endl;
       _activeModel->AddAttributeToNode(activeNode->GetID(),&currentAttribute);
    }
+   if(nAttributes)
+   {
+      _activeModel->SetActiveAttributeOnNode(activeNode->GetID(),
+                                             activeNode->GetNodeType(), 
+                                             activeNode->GetActiveAttribute().GetAttributeName());
+   }
 }
 ///////////////////////////////////////////////////////
 void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
