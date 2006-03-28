@@ -17,7 +17,7 @@ switch ($1)
 
   case -runharvunit:
     /home/virtual1/VES/VES_Install/TSVEG/inl/Int_Harvester/Int_HarvesterUnit/Int_HarvesterUnitApp \
-    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService 
   breaksw
 
   case -simosg:
