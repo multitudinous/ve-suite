@@ -1,125 +1,153 @@
-#!/bin/sh -f
+#!/bin/csh -f
  
 # Set environment variables and paths for running the program
-export VE_SUITE_HOME=/home/virtual1/VE_Suite_Builds/VE_Suite
+#setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
+#setenv VE_SUITE_HOME /home/users/sgent/VE_Suite
 
 # Set the TAO nameServer properties used by the run scripts
-export TAO_MACHINE=virtual2.inel.gov
-export TAO_PORT=1234
+#setenv TAO_MACHINE lego.vrac.iastate.edu
+setenv TAO_MACHINE virtual1.inel.gov
+setenv TAO_PORT 1236
 
-export TAO_BUILD=TRUE
-export CLUSTER_APP=FALSE
-source ${VE_SUITE_HOME}/VE_Installer/setup.INL.sh
+#source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
 
-export MY_VJCONFIGS=/home/virtual1/VE_Suite_Builds/bay_5_vr
+set MY_VJCONFIGS=/home/vr/vjconfig/2.0beta2
 
-case $1 in
-  
-  -sim)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+switch ($1)
+
+  case -runharvunit:
+    /home/virtual1/VES/VES_Install/TSVEG/inl/Int_Harvester/Int_HarvesterUnit/Int_HarvesterUnitApp \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
-    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/simstandalone.jconf
-    /usr/share/Performer/bin/rmsem
-  ;;
+  breaksw
 
-  -wall)
-    date
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_cluster_tao \
+  case -simosg:
+    project_tao_osg \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
-    ${MY_VJCONFIGS}/bay_5_vr.jconf
-    date
-    /usr/share/Performer/bin/rmsem
-  ;;
+    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf \
+    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
+  breaksw
 
-  -nserv)
+  case -dualhead:
+    project_tao_osg \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    /home/virtual1/VES/VES_Install/TSVEG/bay_5_vr/dualhead_configs/dualhead.jconf
+  breaksw
+
+  case -simosgvep:
+    project_tao_osg_vep \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf \
+    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
+  breaksw
+
+  case -wall:  
+    project_tao_osg_cluster \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    /home/users/mccdo/babycave/vecr.jconf
+    /usr/share/Performer/bin/rmsem      
+  breaksw
+
+  case -nserv:
     killall -q Naming_Service 
     killall -q Exe_server 
     echo Starting TAO Naming Service on $TAO_MACHINE, port $TAO_PORT
-    Naming_Service -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
+    Naming_Service \
+    -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
     sleep 5
     echo TAO Naming Service Started
     echo Starting VE-CE...
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/Exe_server \
+    Exe_server \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
-  ;;
+  breaksw
   
-  -shutdown)
-    killall -q Naming_Service 
-    killall -q Exe_server 
-  ;;
+  case -shutdown:
+    killall Naming_Service 
+    killall Exe_server 
+  breaksw
 
-  -menu)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/WinClient \
+  case -menu:
+    WinClient \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
-  ;;
+  breaksw
 
-  -surface)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/makeVtkSurface
-  ;;
+  case -surface:
+    makeVtkSurface
+  breaksw
 
-  -preproc)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/preprocessor
-  ;;
+  case -preproc:
+    preprocessor
+  breaksw
 
-  -surf2stl)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/convertSurfaceFileToStl
-  ;;
+  case -surf2stl:
+    convertSurfaceFileToStl
+  breaksw
 
-  -transVTK)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/transformVTK
-  ;;
+  case -transVTK:
+    transformVTK
+  breaksw
 
-  -cfd2VTK)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/translateToVtk
-  ;;
+  case -cfd2VTK:
+    translateToVtk
+  breaksw
 
-  -make)
+  case -make:
     cd ${VE_SUITE_HOME}/VE_Installer
     gmake
-  ;;
+  breaksw
   
-  -makeclean)
+  case -makeclean:
     cd ${VE_SUITE_HOME}/VE_Installer
     gmake clean
     gmake cleandepend
-  ;;
+  breaksw
   
-  -merge)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/mergeVertices
-  ;;
+  case -merge:
+    mergeVertices
+  breaksw
 
-  -meshView)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/meshViewer
-  ;;
+  case -meshView:
+    meshViewer
+  breaksw
 
-  -scalRange)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/whatIsScalarRange
-  ;;
+  case -scalRange:
+    whatIsScalarRange
+  breaksw
 
-  -appendVTK)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/appendVTK
-  ;;
-  -doc)
+  case -appendVTK:
+    appendVTK  
+  breaksw
+
+  case -doc:
     mozilla file:///${VE_SUITE_HOME}/docs/starcd/initial.htm &
-  ;;
+  breaksw
  
-  -h)
-  
+  case -texture:
+    vtkTo3DTexture
+  breaksw
+
+  case -h:
+  default:
   echo ""
   echo Usage:
-  echo VES.inl [ options ] 
+  echo "VES.inl [ options ] "
   echo "         "-h = usage information "(this page)"
   echo The following indicates the workflow of getting the cfd data into the viewer.
   echo "   "-cfd2VTK = translate cfd flowdata to VTK format
   echo "     "-merge = merge vertices in unstructured grid
   echo "   "-preproc = precompute cutting planes
   echo This will start the viewer using the specified display
-  echo "       "-sim = sim mode desktop display
-  echo "      "-wall = run the display wall in Bay 5
+  echo "        "-c6 = c6 cave display
+  echo "    "-c4open = c4 open cave display
+  echo "  "-c4closed = c4 closed cave display
+  echo "       "-sim = sim mode desktop display Performer graphics
+  echo "    "-simosg = sim mode desktop display OpenSceneGraph graphics
+  echo " "-simosgvep = sim mode desktop display OpenSceneGraph Patented graphics
+  echo "    "-c6mono = c6 in mono
+  echo "    "-c4mono = c4 closed in mono
   echo When the viewer has started, start the menu in another shell
   echo "      "-menu = start wxWidgets menu to control viewer
   echo The following utilities might be useful occasionaly
-  echo "     "-nserv = restart TAO nameserver and VE-CE
+  echo "     "-nserv = restart TAO nameserver
   echo "   "-surface = make VTK surface from fluid mesh
   echo "  "-surf2stl = convert surface file to stl
   echo "  "-transVTK = move flowdata to align with geometry
@@ -130,11 +158,7 @@ case $1 in
   echo " "-appendVTK = append any two VTK files
   echo "       "-doc = view documentation for setting up a CFD post process case
   echo "  "-shutdown = shutdown VE-CE and TAO NameService
+  echo "   "-texture = tool to create 3D textures
   echo ""
-  ;;
-
-  *)
-   echo Use -h for help
-   ;;
- 
-esac
+  
+endsw
