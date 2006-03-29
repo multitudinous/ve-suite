@@ -2394,20 +2394,10 @@ void Network::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////
 void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 {
-   /*
-   // This code needs to change to Gerrick's geom code
-   if( !_cadDialog )
-   {
-      ConVEServer();
-      if ( CORBA::is_nil(vjobs.in()) )
-         return;
-      //this will change once we have a way to retrieve the geometry from the model
-      _cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg(0,
-                                                               this,CAD_NODE_DIALOG);
-   }
-   _cadDialog->SetVjObsPtr(vjobs.in());
-   _cadDialog->Show();
-   */
+   if (m_selMod<0) 
+      return;
+   // Here we launch a dialog for a specific plugins input values
+   modules[m_selMod].GetPlugin()->ViewCADInfo( xplorerPtr.in() );
 }
 ///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )

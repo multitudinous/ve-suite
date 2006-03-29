@@ -1038,6 +1038,7 @@ void AppFrame::ConVEServer( void )
       con_menu->Enable(v21ID_DISCONNECT_VE, true);
       Log("Connected to VE server.\n");
       connectToVE = true;
+      network->SetXplorerInterface( vjobs.in() );
    } 
    catch (CORBA::Exception &) 
    {

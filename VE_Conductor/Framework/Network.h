@@ -164,6 +164,8 @@ public:
    std::pair< unsigned int, unsigned int >* GetNumPix( void );
    std::pair< unsigned int, unsigned int >* GetNumUnit( void );
    virtual void* Entry();
+   
+   void SetXplorerInterface( VjObs_ptr veEngine );
 
 protected:
 
@@ -216,7 +218,6 @@ protected:
    ///portType is either input or output
    wxPoint GetPointForSelectedPlugin( unsigned long moduleID, unsigned int portNumber, std::string portType );
 
-   void SetXplorerInterface( VjObs_ptr veEngine );
 protected:
    //Three main list of network objs
    std::vector< VE_Conductor::GUI_Utilities::Link > links; //The list of links between the nodes of moduls.
@@ -266,7 +267,7 @@ private:
    std::pair< unsigned int, unsigned int > numUnit;
 
    ///ptr to send data back to explorer
-   VjObs_ptr xplorerPtr;
+   VjObs_var xplorerPtr;
    DECLARE_EVENT_TABLE() // no semicolon needed
 };
 

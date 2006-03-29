@@ -34,6 +34,7 @@
 //#include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/Model/Port.h"
+#include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/interface.h"
 #include <vector>
 #include <map>
@@ -67,6 +68,14 @@ namespace VE_Model
 namespace VE_XML
 {
    class Command;
+}
+
+namespace VE_Conductor
+{
+namespace GUI_Utilities
+{
+   class CADNodeManagerDlg;
+}
 }
 
 class Interface;
@@ -165,6 +174,9 @@ public:
    virtual void ViewInputVariables( void );
    virtual void ViewResultsVariables( void );
    
+   ///Launches the geometry dialogs
+   void ViewCADInfo( VjObs_ptr vjObjs );
+
 protected:
    void GetDataTables( VE_XML::Command* inputCommand, 
                         std::vector< wxString >& tagNames, 
@@ -216,6 +228,9 @@ protected:
    wxDialog* portsDialog;
    SummaryResultDialog* inputsDialog;
 
+   VjObs_var vjObsPtr;///<The VjObj ptr.
+
+   VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
 };
 

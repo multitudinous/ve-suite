@@ -55,6 +55,7 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
 # -----------------------------------------------------------------------------

@@ -43,8 +43,12 @@
 #include "VE_Xplorer/cfdNavigate.h"
 #include "VE_Xplorer/cfdSoundHandler.h"
 #include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/CADAddNodeEH.h"
 
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/CAD/CADNode.h"
 
 #include <fstream>
 #include <sstream>
@@ -85,7 +89,7 @@ void cfdVEBaseClass::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
    //this->geometryNode = new cfdModuleGeometry( groupNode );
    this->worldDCS = veworldDCS;
    this->_model = new cfdModel( _dcs );
-   this->_readParam = new cfdReadParam();
+   //this->_readParam = new cfdReadParam();
 }
 //////////////////////////////////////////////////////////////////      
 // Methods to do scene graph manipulations
@@ -517,4 +521,42 @@ VE_SceneGraph::cfdDCS* cfdVEBaseClass::GetWorldDCS()
 void cfdVEBaseClass::SetXMLModel( VE_Model::Model* tempModel )
 {
    xmlModel = tempModel;
+
+   //Decompose model to be utilized by the event handlers
+   VE_CAD::CADNode* cadNodeData = xmlModel->GetGeometry();
+   if ( cadNodeData )
+   {
+      VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
+      cadNode->SetDataType( std::string("XMLOBJECT") );
+      cadNode->SetData("New Node", cadNodeData );
+
+      VE_XML::Command* cadCommand = new VE_XML::Command();
+      cadCommand->AddDataValuePair( cadNode );
+      std::string _commandName = "CAD_ADD_NODE";
+      cadCommand->SetCommandName( _commandName );
+
+      //Process the cad
+      VE_EVENTS::CADAddNodeEventHandler newCADNode;
+      newCADNode.SetGlobalBaseObject( _model );
+      newCADNode.Execute( cadCommand );
+      delete cadCommand;
+   }
+
+   //process the information blocks
+   if ( xmlModel->GetNumberOfInformationPackets() > 0 )
+   {
+      //do something
+   }
+
+   //process inputs
+   if ( xmlModel->GetNumberOfInputs() > 0 )
+   {
+      //do something
+   }
+   
+   //process results
+   if ( xmlModel->GetNumberOfResults() > 0 )
+   {
+      //do something
+   }
 }

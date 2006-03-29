@@ -258,6 +258,10 @@ void cfdExecutive::GetEverything( void )
             _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
             _plugins[ iter->first ]->AddSelfToSG();
             cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
+            std::map< int, VE_Model::Model* >::iterator modelIter;
+            // this call always returns something because it is up to date with the id map
+            modelIter = idToModel.find( iter->first );
+            _plugins[ iter->first ]->SetXMLModel( modelIter->second );
             // Give graphical plugins access to wand position, wand buttons, and gui variables
             _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
             _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
@@ -268,10 +272,6 @@ void cfdExecutive::GetEverything( void )
          vprDEBUG(vesDBG,2) << "|\tModule results: " 
                               << this->_exec->GetModuleResult( iter->first )
                               << std::endl << vprDEBUG_FLUSH;
-         std::map< int, VE_Model::Model* >::iterator modelIter;
-         // this call always returns something because it is up to date with the id map
-         modelIter = idToModel.find( iter->first );
-         _plugins[ iter->first ]->SetXMLModel( modelIter->second );
          _plugins[ iter->first ]->PreFrameUpdate();
          vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                               << " ]-> " << iter->second 
@@ -364,16 +364,13 @@ void cfdExecutive::PreFrameUpdate( void )
 
       // If either of the positions are valid positions, 
       // then make results available to the graphical plugins...
-
-      /*if ( pos1 != std::string::npos || 
-            pos2 != std::string::npos || 
-            pos3 != std::string::npos )*/
-	    
       if ( pos1 != std::string::npos || 
             pos3 != std::string::npos )
       {
          std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-         for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
+         for ( foundPlugin=_plugins.begin(); 
+               foundPlugin!=_plugins.end(); 
+               foundPlugin++ )
          {  
             int dummyVar = 0;
             _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
@@ -381,13 +378,19 @@ void cfdExecutive::PreFrameUpdate( void )
          }
       }
       std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-      for ( foundPlugin = _plugins.begin(); foundPlugin != _plugins.end(); ++foundPlugin )
+      for ( foundPlugin = _plugins.begin(); 
+            foundPlugin != _plugins.end(); 
+            ++foundPlugin )
       {
          //if active model is the plugin's model...
-         if ( cfdModelHandler::instance()->GetActiveModel() == foundPlugin->second->GetCFDModel() )
+         if ( cfdModelHandler::instance()->GetActiveModel() == 
+               foundPlugin->second->GetCFDModel() )
          {
-            foundPlugin->second->PreFrameUpdate();
+            //only if you are selected
+            foundPlugin->second->SelectedPreFrameUpdate();
          }
+         //Call this for all plugins every frame
+         foundPlugin->second->PreFrameUpdate();
       }
    }
 }

@@ -32,8 +32,8 @@
 
 DIRS= ${VE_SUITE_HOME}/VE_Open \
       ${VE_SUITE_HOME}/VE_Open/XML \
-      ${VE_SUITE_HOME}/VE_Open/XML/CAD \
       ${VE_SUITE_HOME}/VE_Open/XML/Shader \
+      ${VE_SUITE_HOME}/VE_Open/XML/CAD \
       ${VE_SUITE_HOME}/VE_Open/XML/Model \
       ${VE_SUITE_HOME}/VE_Open/skel \
       ${VE_SUITE_HOME}/VE_Conductor/Network \
@@ -45,7 +45,6 @@ DIRS= ${VE_SUITE_HOME}/VE_Open \
       ${VE_SUITE_HOME}/VE_Builder/Preprocessor \
       ${VE_SUITE_HOME}/VE_Builder/vtkTo3DTexture/tcGUI \
       ${VE_SUITE_HOME}/VE_Builder/Utilities
-#      ${VE_SUITE_HOME}/VE_Builder/WX_Translator
 
 # -----------------------------------------------------------------------------
 # Build targets.
@@ -56,8 +55,8 @@ all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Open \
 ${VE_SUITE_HOME}/VE_Open/XML \
-${VE_SUITE_HOME}/VE_Open/XML/CAD \
 ${VE_SUITE_HOME}/VE_Open/XML/Shader \
+${VE_SUITE_HOME}/VE_Open/XML/CAD \
 ${VE_SUITE_HOME}/VE_Open/XML/Model \
 ${VE_SUITE_HOME}/VE_Open/skel \
 ${VE_SUITE_HOME}/VE_Conductor/Network \

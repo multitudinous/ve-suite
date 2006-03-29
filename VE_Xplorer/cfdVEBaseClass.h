@@ -115,8 +115,14 @@ public:
    void SetObjectName( std::string );
    virtual void CreateCustomVizFeature( int );
 
+   ///This function gets called if the model is selected
+   virtual void SelectedPreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
+
+   ///This gets called every frame no matter what
    virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
 
+   ///Set the VE_Model to be used by this plugin
+   ///\param tempModel Pointer to VE_Model
    void SetXMLModel( VE_Model::Model* tempModel );
    
 private:
