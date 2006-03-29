@@ -32,6 +32,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 #include "VE_Open/skel/moduleC.h"
+#include "VE_Open/skel/VjObsC.h"
 
 #include "VE_Conductor/Framework/Plugin_base.h"
 #include "VE_Conductor/Utilities/Link.h"
@@ -106,7 +107,7 @@ class Network : public wxScrolledWindow, public wxThreadHelper
 {
 public:
    Network(){;}
-   Network(wxWindow* parent, int id);
+   Network(wxWindow* parent, int id );
    virtual ~Network();
 
    Body::Executive_var exec; //put this reference here, so ther frame work can still access it YANG
@@ -163,19 +164,7 @@ public:
    std::pair< unsigned int, unsigned int >* GetNumPix( void );
    std::pair< unsigned int, unsigned int >* GetNumUnit( void );
    virtual void* Entry();
-/*
-   class LoadThread : public wxThreadHelper
-   {
-   public:
-      LoadThread( Network* networks ) { designCanvas = networks; }
-      virtual ~LoadThread( void ) { ; }
-      void SetFileName( std::string file ) { fileName = file; }
-      
-   private:
-      std::string fileName;
-      Network* designCanvas;
-   };
-*/
+
 protected:
 
    //Draw functions
@@ -227,6 +216,7 @@ protected:
    ///portType is either input or output
    wxPoint GetPointForSelectedPlugin( unsigned long moduleID, unsigned int portNumber, std::string portType );
 
+   void SetXplorerInterface( VjObs_ptr veEngine );
 protected:
    //Three main list of network objs
    std::vector< VE_Conductor::GUI_Utilities::Link > links; //The list of links between the nodes of moduls.
@@ -275,6 +265,8 @@ private:
    /// second = y unit
    std::pair< unsigned int, unsigned int > numUnit;
 
+   ///ptr to send data back to explorer
+   VjObs_ptr xplorerPtr;
    DECLARE_EVENT_TABLE() // no semicolon needed
 };
 

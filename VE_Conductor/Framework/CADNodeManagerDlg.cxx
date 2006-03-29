@@ -683,28 +683,21 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
 
    cadCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
 
-   char* tempDoc = new char[ commandString.size() + 1 ];
-   tempDoc = CORBA::string_dup( commandString.c_str() );
-   std::cout<<"----Sending Command----"<<std::endl;
-   std::cout<<tempDoc<<std::endl;
+   std::cout << "----Sending Command----" << std::endl;
+   std::cout << commandString << std::endl;
 
    if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
    {
       try
       {
          // CORBA releases the allocated memory so we do not have to
-         _vjObsPtr->SetCommandString( tempDoc );
+         _vjObsPtr->SetCommandString( CORBA::string_dup( commandString.c_str() ) );
       }
       catch ( ... )
       {
          wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
                         "Communication Failure", wxOK | wxICON_INFORMATION );
-         delete [] tempDoc;
       }
-   }
-   else
-   {
-      delete [] tempDoc;
    }
    //Clean up memory
    delete cadCommand;

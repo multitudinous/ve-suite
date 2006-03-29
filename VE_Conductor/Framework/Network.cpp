@@ -43,6 +43,7 @@
 #include "VE_Open/XML/Model/Model.h"
 
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 
 #include <wx/dc.h>
@@ -427,88 +428,88 @@ void Network::OnDClick( wxMouseEvent& event )
 ///////////////////////////////////////////////////////////////
 void Network::OnMRightDown(wxMouseEvent& event)
 {
-  wxClientDC dc(this);
-  PrepareDC(dc);
-  dc.SetUserScale( userScale.first, userScale.second );
+   wxClientDC dc(this);
+   PrepareDC(dc);
+   dc.SetUserScale( userScale.first, userScale.second );
 
-  wxMenu pop_menu(_T("Action"));
-    
-  pop_menu.Append(ADD_TAG, _T("Add Tag")); //This will always be enable
+   wxMenu pop_menu(_T("Action"));
 
-  pop_menu.Append(ADD_LINK_CON, _T("Add Link Connector"));
-  pop_menu.Append(EDIT_TAG, _T("Edit Tag"));
-  pop_menu.Append(DEL_LINK_CON, _T("Delete Link Connector"));
-  pop_menu.Append(DEL_LINK, _T("Delete Link"));
-  pop_menu.Append(DEL_TAG, _T("Delete Tag"));
-  pop_menu.Append(DEL_MOD, "Del Module");
+   pop_menu.Append(ADD_TAG, _T("Add Tag")); //This will always be enable
 
-  pop_menu.Append(SHOW_DESC, "Show Module Description");	
-  pop_menu.Append(SHOW_RESULT, "Show Module Result");
-  pop_menu.Append(PARAVIEW, "ParaView 3D Result");
-  
-  pop_menu.Append(SHOW_LINK_CONT, "Show Link Content");
+   pop_menu.Append(ADD_LINK_CON, _T("Add Link Connector"));
+   pop_menu.Append(EDIT_TAG, _T("Edit Tag"));
+   pop_menu.Append(DEL_LINK_CON, _T("Delete Link Connector"));
+   pop_menu.Append(DEL_LINK, _T("Delete Link"));
+   pop_menu.Append(DEL_TAG, _T("Delete Tag"));
+   pop_menu.Append(DEL_MOD, "Del Module");
 
-  // EPRI TAG
-  pop_menu.Append(SHOW_FINANCIAL, "Financial Data");
-  pop_menu.Enable(SHOW_FINANCIAL, true);
+   pop_menu.Append(SHOW_DESC, "Show Module Description");	
+   pop_menu.Append(SHOW_RESULT, "Show Module Result");
+   pop_menu.Append(PARAVIEW, "ParaView 3D Result");
 
-   // GUI to configure geometry for graphical env
-  pop_menu.Append(GEOMETRY, "Geometry Config");
-  pop_menu.Enable(GEOMETRY, true);
+   pop_menu.Append(SHOW_LINK_CONT, "Show Link Content");
+
+   // EPRI TAG
+   pop_menu.Append(SHOW_FINANCIAL, "Financial Data");
+   pop_menu.Enable(SHOW_FINANCIAL, true);
 
    // GUI to configure geometry for graphical env
-  pop_menu.Append(MODEL_INPUTS, "Input Variables" );
-  pop_menu.Enable(MODEL_INPUTS, true);
-  pop_menu.Append(MODEL_RESULTS, "Result Variables" );
-  pop_menu.Enable(MODEL_RESULTS, true);
+   pop_menu.Append(GEOMETRY, "Geometry Config");
+   pop_menu.Enable(GEOMETRY, true);
 
-  pop_menu.Enable(ADD_LINK_CON, false);
-  pop_menu.Enable(EDIT_TAG, false);
-  pop_menu.Enable(DEL_LINK_CON, false);
-  pop_menu.Enable(DEL_LINK, false);
-  pop_menu.Enable(DEL_TAG, false);
-  pop_menu.Enable(DEL_MOD, false);
-  pop_menu.Enable(SHOW_RESULT, false);
-  pop_menu.Enable(PARAVIEW, false);
+   // GUI to configure geometry for graphical env
+   pop_menu.Append(MODEL_INPUTS, "Input Variables" );
+   pop_menu.Enable(MODEL_INPUTS, true);
+   pop_menu.Append(MODEL_RESULTS, "Result Variables" );
+   pop_menu.Enable(MODEL_RESULTS, true);
 
-  pop_menu.Enable(SHOW_LINK_CONT, false);
+   pop_menu.Enable(ADD_LINK_CON, false);
+   pop_menu.Enable(EDIT_TAG, false);
+   pop_menu.Enable(DEL_LINK_CON, false);
+   pop_menu.Enable(DEL_LINK, false);
+   pop_menu.Enable(DEL_TAG, false);
+   pop_menu.Enable(DEL_MOD, false);
+   pop_menu.Enable(SHOW_RESULT, false);
+   pop_menu.Enable(PARAVIEW, false);
 
-  if (m_selLink>=0)
-    {
+   pop_menu.Enable(SHOW_LINK_CONT, false);
+
+   if (m_selLink>=0)
+   {
       pop_menu.Enable(DEL_LINK, true);
       pop_menu.Enable(SHOW_LINK_CONT, true);
       if (m_selLinkCon>=0) 
-	pop_menu.Enable(DEL_LINK_CON, true);
+         pop_menu.Enable(DEL_LINK_CON, true);
       else
-	pop_menu.Enable(ADD_LINK_CON, true);
-    };
+         pop_menu.Enable(ADD_LINK_CON, true);
+   }
 
-  if (m_selTag>=0 )
-    {
+   if (m_selTag>=0 )
+   {
       pop_menu.Enable(EDIT_TAG, true);
       pop_menu.Enable(DEL_TAG, true);
-    };
-  
-  if (m_selMod>=0)
-    {
+   }
+
+   if (m_selMod>=0)
+   {
       pop_menu.Enable(DEL_MOD, true);
       pop_menu.Enable(SHOW_RESULT, true);
       if (modules[m_selMod].GetPlugin()->Has3Ddata())
-	pop_menu.Enable(PARAVIEW, true);
-    };
-    
-  action_point = event.GetLogicalPosition(dc);
-  PopupMenu(&pop_menu, event.GetPosition());
-  
-  
-  m_selMod = -1;
-  m_selFrPort = -1; 
-  m_selToPort = -1; 
-  m_selLink = -1; 
-  m_selLinkCon = -1; 
-  m_selTag = -1; 
-  m_selTagCon = -1; 
-  xold = yold =0;
+         pop_menu.Enable(PARAVIEW, true);
+   }
+
+   action_point = event.GetLogicalPosition(dc);
+   PopupMenu(&pop_menu, event.GetPosition());
+
+
+   m_selMod = -1;
+   m_selFrPort = -1; 
+   m_selToPort = -1; 
+   m_selLink = -1; 
+   m_selLinkCon = -1; 
+   m_selTag = -1; 
+   m_selTagCon = -1; 
+   xold = yold =0;
 }
 
 //////// Menu event handlers ////////////////////////
@@ -761,7 +762,42 @@ int Network::SelectMod( int x, int y )
          // now we are officially selected
 	      m_selMod = i;
 
-         // in the future send select module command -- mccdo
+         // send select module command 
+         // Now need to construct domdocument and populate it with the new vecommand
+         VE_XML::XMLReaderWriter netowrkWriter;
+         netowrkWriter.UseStandaloneDOMDocumentManager();
+         netowrkWriter.WriteToString();
+
+         // Create the command and data value pairs
+         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+         dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
+         dataValuePair->SetDataValue( static_cast< unsigned int >( i ) );
+         VE_XML::Command* veCommand = new VE_XML::Command();
+         veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
+         veCommand->AddDataValuePair( dataValuePair );
+
+         // New need to destroy document and send it
+         std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+         nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veCommand, "vecommand" ) );
+         std::string xmlDocument( "returnString" );
+         netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
+
+         if ( !CORBA::is_nil( xplorerPtr ) && !xmlDocument.empty() )
+         {
+            try
+            {
+               // CORBA releases the allocated memory so we do not have to
+               xplorerPtr->SetCommandString( CORBA::string_dup( xmlDocument.c_str() ) );
+            }
+            catch ( ... )
+            {
+               wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                              "Communication Failure", wxOK | wxICON_INFORMATION );
+            }
+         }
+         //Clean up memory
+         delete veCommand;
+
 	      return i;
 	   }
    }
@@ -841,7 +877,11 @@ void Network::UnSelectTag(wxDC &dc)
 /////////////////////////////////////////////////
 /////////////// Misc Functions //////////////////
 /////////////////////////////////////////////////
-
+void Network::SetXplorerInterface( VjObs_ptr veEngine )
+{
+   xplorerPtr = veEngine;
+}
+/////////////////////////////////////////////////
 void Network::CleanRect(wxRect box, wxDC &dc)
 {
   wxBrush oldbrush = dc.GetBrush();
@@ -855,7 +895,6 @@ void Network::CleanRect(wxRect box, wxDC &dc)
   dc.SetBrush(oldbrush);
   dc.SetPen(oldpen);
 }
-
 /////////////////////////////////////////////////
 wxPoint Network::GetFreePos(wxRect bbox)
 {
@@ -1954,7 +1993,6 @@ std::string Network::Save( std::string fileName )
    
    veNetwork = new VE_Model::Network();
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veNetwork, "veNetwork" ) );
-std::cout << numPix.first << " : " << numPix.second << " : " << numUnit.first << " : " << numUnit.second << std::endl;
 
    veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
    veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
