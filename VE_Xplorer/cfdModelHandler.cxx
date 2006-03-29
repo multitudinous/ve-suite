@@ -66,6 +66,7 @@
 #include "VE_Xplorer/CADSetActiveAttributeEH.h"
 #include "VE_Xplorer/CADSetNameEH.h"
 #include "VE_Xplorer/CADToggleEH.h"
+#include "VE_Xplorer/ActiveModelEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -120,6 +121,7 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
    _eventHandlers[std::string("CAD_SET_NODE_NAME")] = new VE_EVENTS::CADSetNameEventHandler();
    _eventHandlers[std::string("CAD_TOGGLE_NODE")] = new VE_EVENTS::CADToggleEventHandler();
+   _eventHandlers[std::string("CHANGE_ACTIVE_MODEL")] = new VE_EVENTS::ActiveModelEventHandler();
 #ifdef _OSG
 #ifdef VE_PATENTED
    _activeTDSet = 0;
@@ -191,6 +193,20 @@ cfdScalarBarActor* cfdModelHandler::GetScalarBar(void)
 cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
 {
    return activeDataset;
+}
+/////////////////////////////////////////////////////
+void cfdModelHandler::SetActiveModel( int modelNumber )
+{
+   try
+   {
+      _activeModel = _modelList.at( modelNumber );
+   }
+   catch (...)
+   {
+      std::cerr << "|\t\tcfdModelHandler::SetActiveModel : " 
+                  << modelNumber 
+                  << " is out of range." << std::endl;
+   }
 }
 /////////////////////////////////////////////
 cfdModel* cfdModelHandler::GetModel( int i )
@@ -673,13 +689,6 @@ void cfdModelHandler::PreFrameUpdate( void )
          }
          //may need to add the handling of texture data stuff here
       } 
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_ACTIVE_MODEL )
-   {
-      vprDEBUG(vesDBG,1) << " cfdModelHandler :: Change Active Model " 
-            << commandArray->GetCommandValue( cfdCommandArray::CFD_SC )
-            << std::endl << vprDEBUG_FLUSH;
-      _activeModel = _modelList.at( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                == CHANGE_CONTOUR_SETTINGS )

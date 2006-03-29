@@ -34,10 +34,6 @@
 
 namespace VE_Xplorer
 {
-   #ifdef _TAO
-      class cfdExecutive;
-   #endif
-
    class cfdVjObsWrapper;
 }
 
@@ -167,9 +163,6 @@ class cfdApp: public vrj::OsgApp
       unsigned int _frameNumber;
 #endif
       cfdVjObsWrapper*              _vjobsWrapper;
-#ifdef _TAO
-      cfdExecutive*     executive;
-#endif
 
    // Only used in preframe for transient stuff
    int   lastFrame;

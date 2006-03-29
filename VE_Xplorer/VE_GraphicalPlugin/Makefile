@@ -60,8 +60,10 @@ SRCS=\
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Xplorer
-DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
-DSO_PLUGIN_DEPS+= -lVE_UtilLib -lVE_ConductorLib
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) 
+DSO_PLUGIN_DEPS+= -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) 
+DSO_PLUGIN_DEPS+= -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+DSO_PLUGIN_DEPS+= -lVE_UtilLib
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk

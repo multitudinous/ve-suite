@@ -33,6 +33,7 @@
 #define CFD_VE_BASECLASS_H
 
 #include <string>
+#include <vector>
 #include <map>
 
 //class cfdModuleGeometry;
@@ -52,8 +53,12 @@ namespace VE_Xplorer
    class cfdSoundHandler;
 }
 
-#include "VE_Conductor/Framework/interface.h"
+namespace VE_Model
+{
+   class Model;
+}
 
+#include "VE_Installer/include/VEConfig.h"
 namespace VE_Xplorer
 {
 class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass
@@ -91,14 +96,6 @@ public:
    std::string GetDesc();
    //This returns the description of the module, This should be a short description
 
-   virtual void UnPack(Interface* intf);
-   //This is the load function of the module, unpack the input string and fill up the UI according to this
-   virtual Interface* Pack();
-
-   //This is to unpack the result from the 
-   void UnPackResult(Interface * intf);
-   //This is the save function of the module. 
-
    void SetID(int id);
 
    cfdModel* GetCFDModel( void );
@@ -113,19 +110,15 @@ public:
 
    void SetSoundHandler( cfdSoundHandler* );
 
-   void SetInterface( Interface& );
-
-   virtual void SetGeomInterface ( Interface& );
-   Interface GetGeomInterface();
-
    void SetModuleResults( const std::string );
 
    void SetObjectName( std::string );
    virtual void CreateCustomVizFeature( int );
 
    virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
-   bool HasGeomInterface();
 
+   void SetXMLModel( VE_Model::Model* tempModel );
+   
 private:
    // This needs to be vector of geometry nodes
    //cfdModuleGeometry*  geometryNode;
@@ -141,18 +134,9 @@ protected:
    void CreateObjects( void );
    long pos_x;
    long pos_y;
-   // Stuff taken from Plugin_base.h
-   // All of Yang's work (REI)
-   void RegistVar(std::string vname, long *var);
-   void RegistVar(std::string vname, double *var);
-   void RegistVar(std::string vname, std::string *var);
-   void RegistVar(std::string vname, std::vector<long> *var);
-   void RegistVar(std::string vname, std::vector<double> *var);
-   void RegistVar(std::string vname, std::vector<std::string> *var);
+
    VE_SceneGraph::cfdDCS* GetWorldDCS();
 
-   Interface mod_pack;
-   
    std::map<std::string, long *>                      _int;
    std::map<std::string, double *>                    _double;
    std::map<std::string, std::string *>               _string;
@@ -176,13 +160,9 @@ protected:
    cfdNavigate* _navigate;
    cfdSoundHandler* soundHandler;
    
-   Interface myInterface;
-   Interface myGeomInterface;
-   
-      
+   VE_Model::Model* xmlModel;
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;
-
 };
 }
 

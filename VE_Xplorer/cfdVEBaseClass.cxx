@@ -44,10 +44,9 @@
 #include "VE_Xplorer/cfdSoundHandler.h"
 #include "VE_Xplorer/cfdObjects.h"
 
-#include "VE_Conductor/Framework/package.h"
+#include "VE_Open/XML/Model/Model.h"
 
 #include <fstream>
-#include <string>
 #include <sstream>
 
 #include "VE_Xplorer/cfdDebug.h"
@@ -58,33 +57,25 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
-
+//////////////////////////////////////////////////////////////////      
 // Constructor
 cfdVEBaseClass::cfdVEBaseClass( void ) 
 {
+   xmlModel = 0;
    _onSceneGraph = false;
-   _network.empty();//s = NULL;
+   _network.empty();
 }
-
-/*cfdVEBaseClass::cfdVEBaseClass( cfdDCS* veworldDCS )
-{
-   this->groupNode = new cfdGroup();
-   this->_dcs = new cfdDCS();
-   //this->dataRepresentation = new cfdObjects();
-   this->geometryNode = new cfdModuleGeometry( groupNode );
-   this->worldDCS = veworldDCS;
-   this->_model = new cfdModel( _dcs );
-   this->_readParam = new cfdReadParam();
-   //this->worldDCS->addChild( this->geometryNode->GetPfDCS() );
-   
-}*/
-
+//////////////////////////////////////////////////////////////////      
 // Destructor
 cfdVEBaseClass::~cfdVEBaseClass( void )
 {
    //delete this->dataRepresentation;
+   if ( xmlModel )
+   {
+      delete xmlModel;
+   }
 }
-
+//////////////////////////////////////////////////////////////////      
 void cfdVEBaseClass::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
 {
    //this->groupNode = new cfdGroup();
@@ -96,7 +87,7 @@ void cfdVEBaseClass::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
    this->_model = new cfdModel( _dcs );
    this->_readParam = new cfdReadParam();
 }
-
+//////////////////////////////////////////////////////////////////      
 // Methods to do scene graph manipulations
 // New methods may have to be added later
 void cfdVEBaseClass::AddSelfToSG( void )
@@ -104,26 +95,24 @@ void cfdVEBaseClass::AddSelfToSG( void )
    _onSceneGraph = true;
    this->worldDCS->AddChild( this->_dcs );
 }
-
+//////////////////////////////////////////////////////////////////      
 void cfdVEBaseClass::RemoveSelfFromSG( void )
 {
    _onSceneGraph = false;
    this->worldDCS->RemoveChild( this->_dcs );
 }
-
+//////////////////////////////////////////////////////////////////      
 // Change state information for geometric representation
 void cfdVEBaseClass::MakeTransparent( void )
 {
-/*   this->geometryNode->SetOpacity( 0.7 );
-   this->geometryNode->Update();*/
+   ;
 }
-
+//////////////////////////////////////////////////////////////////      
 void cfdVEBaseClass::SetColor( double* color )
 {
-   /*   this->geometryNode->SetRGBAColorArray( color );
-   this->geometryNode->Update();*/
+   ;
 }
-      
+//////////////////////////////////////////////////////////////////      
 // transform object based 
 void cfdVEBaseClass::SetTransforms( float* scale, float* rot, float* trans)
 {
@@ -131,7 +120,7 @@ void cfdVEBaseClass::SetTransforms( float* scale, float* rot, float* trans)
    this->_dcs->SetScaleArray( scale );
    this->_dcs->SetRotationArray( rot );
 }
-
+//////////////////////////////////////////////////////////////////      
 // Implement Gengxun's work by using socket
 // stuff from vtk. This will be used in parallel
 // with implementation of a unit connected to the 
@@ -192,7 +181,7 @@ std::string cfdVEBaseClass::GetName( void )
 {
    return this->_objectName;
 }
-
+/////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetObjectName( std::string input )
 {
    _objectName = input;
@@ -232,7 +221,7 @@ void cfdVEBaseClass::SetNavigate( cfdNavigate* input )
                 << std::endl;
    }
 }
-
+//////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetSoundHandler( cfdSoundHandler* input )
 {
    if ( input )
@@ -241,32 +230,11 @@ void cfdVEBaseClass::SetSoundHandler( cfdSoundHandler* input )
    }
    else
    {
-      std::cerr << " ERROR : cfdVEBaseClass::SetNavigate input is NULL "
+      std::cerr << " ERROR : cfdVEBaseClass::SetSoundHandler input is NULL "
                 << std::endl;
    }
 }
-
-// Copy the interface so dynamic objects can do custom features with gui data
-void cfdVEBaseClass::SetInterface( Interface& intf )
-{
-   this->myInterface.copy( intf );
-}
-
-void cfdVEBaseClass::SetGeomInterface (Interface& intf)
-{
-   this->myGeomInterface.copy (intf);
-
-}
-Interface cfdVEBaseClass::GetGeomInterface()
-{
-   return this->myGeomInterface;
-}
-
-bool cfdVEBaseClass::HasGeomInterface()
-{
-   return (myGeomInterface._type==2 && myGeomInterface._category==1);
-      
-}
+//////////////////////////////////////////////////////////////////////
 // Set the results for a particluar module so that we can use them for custom 
 // viz features
 void cfdVEBaseClass::SetModuleResults( const std::string network )
@@ -283,25 +251,15 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
       _network.assign( network );//strcpy( _network, network );
    }
   
-   /*try {
-      char* result;
-      result = exec->GetModuleResult(m_selMod);
-   }
-   catch (CORBA::Exception &) {
-      
-      std::cerr << "Maybe Computational Engine is down" << std::endl;
-      return;
-   }*/
-
-   Package p;
+   /*Package p;
    p.SetSysId("veresult.xml");
    p.Load(_network.c_str(), strlen(_network.c_str()));
 
    this->UnPackResult(&p.intfs[0]);
    //delete _network;
-   _network.erase();// = NULL;
+   _network.erase();// = NULL;*/
 }
-
+//////////////////////////////////////////////////////////////////////
 // Viz feature for the devloper to define
 // Can be anything that creates a geode
 void cfdVEBaseClass::CreateCustomVizFeature( int input )
@@ -309,153 +267,18 @@ void cfdVEBaseClass::CreateCustomVizFeature( int input )
    // Do nothing
    // Implement for each module
 }
-
-//This is the load function of the module, unpack the input string and fill up the UI according to this
-void cfdVEBaseClass::UnPack(Interface* intf)
-{
-   std::vector<std::string> vars;
-  
-   std::map<std::string, long *>::iterator iteri;
-   std::map<std::string, double *>::iterator iterd;
-   std::map<std::string, std::string *>::iterator iters;
-   std::map<std::string, std::vector<long> *>::iterator itervi;
-   std::map<std::string, std::vector<double> *>::iterator itervd;
-   std::map<std::string, std::vector<std::string> *>::iterator itervs;
-  
-   unsigned int i;
-   long temp;
-
-   mod_pack = *intf;
-   vars = mod_pack.getInts();
-   for (i=0; i<vars.size(); i++)
-   {
-      iteri =_int.find(vars[i]);
-      if (iteri!=_int.end())
-         mod_pack.getVal(vars[i], *(iteri->second));
-      else if (vars[i]=="XPOS")
-      {
-         mod_pack.getVal("XPOS", temp);
-         //pos.x = temp;
-         pos_x = temp;
-      }
-      else if (vars[i]=="YPOS")
-      {
-         mod_pack.getVal("YPOS", temp);
-         //pos.y = temp;
-         pos_y = temp;
-      }
-   }
-
-   vars = mod_pack.getDoubles();
-   for (i=0; i<vars.size(); i++)
-   {
-      iterd =_double.find(vars[i]);
-      if (iterd!=_double.end())
-         mod_pack.getVal(vars[i], *(iterd->second));
-   }  
-  
-   vars = mod_pack.getStrings();
-   for (i=0; i<vars.size(); i++)
-   {
-      iters =_string.find(vars[i]);
-      if (iters!=_string.end())
-         mod_pack.getVal(vars[i], *(iters->second));
-   }
-
-   vars = mod_pack.getInts1D();
-   for (i=0; i<vars.size(); i++)
-   {
-      itervi =_int1D.find(vars[i]);
-      if (itervi!=_int1D.end())
-         mod_pack.getVal(vars[i], *(itervi->second));
-   }
-
-   vars = mod_pack.getDoubles1D();
-   for (i=0; i<vars.size(); i++)
-   {
-      itervd =_double1D.find(vars[i]);
-      if (itervd!=_double1D.end())
-         mod_pack.getVal(vars[i], *(itervd->second));
-   }
-
-   vars = mod_pack.getStrings1D();
-   for (i=0; i<vars.size(); i++)
-   {
-      itervs =_string1D.find(vars[i]);
-      if (itervs!=_string1D.end())
-         mod_pack.getVal(vars[i], *(itervs->second));
-   }
-}
-
-Interface* cfdVEBaseClass::Pack()
-{  
-   std::string result;
-  
-   std::map<std::string, long *>::iterator iteri;
-   std::map<std::string, double *>::iterator iterd;
-   std::map<std::string, std::string *>::iterator iters;
-   std::map<std::string, std::vector<long> *>::iterator itervi;
-   std::map<std::string, std::vector<double> *>::iterator itervd;
-   std::map<std::string, std::vector<std::string> *>::iterator itervs;
-
-   //mod_pack.setVal("XPOS",long (pos.x));
-   //mod_pack.setVal("YPOS",long (pos.y));
-   mod_pack.setVal("XPOS",long (pos_x));
-   mod_pack.setVal("YPOS",long (pos_y));
-  
-   for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
-      mod_pack.setVal(iteri->first, *(iteri->second));
-
-   for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
-      mod_pack.setVal(iterd->first, *(iterd->second));
-
-   for(iters=_string.begin(); iters!=_string.end(); iters++)
-      mod_pack.setVal(iters->first, *(iters->second));
-
-   for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
-      mod_pack.setVal(itervi->first, *(itervi->second));
-
-   for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
-      mod_pack.setVal(itervd->first, *(itervd->second));
-
-   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
-      mod_pack.setVal(itervs->first, *(itervs->second));
-
-   //mod_pack.pack(result);
-  
-   //wxString wxstr = result.c_str();
-   return &mod_pack ;//wxstr;
-}
-
-//This is to unpack the result from the 
-void cfdVEBaseClass::UnPackResult(Interface * intf)
-{
-   // This will be module dependent. here is the Default 
-   // implementation when using the summary table to pack 
-   // things up in the module end
-   unsigned int i;
-   std::vector<std::string> descs;
-   descs = intf->getStrings();
-   v_desc.clear();
-   v_value.clear();
-   for (i=0; i<descs.size(); i++)
-   {
-      v_desc.push_back(descs[i].c_str());
-      v_value.push_back((intf->getString(descs[i])).c_str());
-   }
-}
-
 // Set the id for a particular module
+//////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetID(int id)
 {
    _modID = id;
 }
-
+//////////////////////////////////////////////////////////////////////
 cfdModel* cfdVEBaseClass::GetCFDModel( void )
 {
    return _model;
 }
-
+//////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::CreateObjects( void )
 {
    int numObjects;
@@ -605,7 +428,7 @@ void cfdVEBaseClass::CreateObjects( void )
       }
    }
 }
-
+//////////////////////////////////////////////////////////////////   
 void cfdVEBaseClass::LoadSurfaceFiles( std::string precomputedSurfaceDir )
 {
    if ( precomputedSurfaceDir.empty() )// == NULL )
@@ -618,70 +441,6 @@ void cfdVEBaseClass::LoadSurfaceFiles( std::string precomputedSurfaceDir )
    vprDEBUG(vesDBG,1) << "Loading surface files from " 
       << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
 
-   //store the current directory so we can change back to it
-//   char *cwd;
-/*#ifndef WIN32
-   if ((cwd = getcwd(NULL, 100)) == NULL)
-   {
-      std::cerr << "Couldn't get the current working directory!" << std::endl;
-      exit(1);
-   }
-*/
-/*   //open the directory (we already know that it is valid)
-   DIR* dir = opendir( precomputedSurfaceDir );
-   //change into this directory so that vtk can find the files
-   chdir( precomputedSurfaceDir );
-   
-   //get the name of each file
-   direct* file = 0;
-   while( (file = readdir(dir)) != NULL )
-   {
-      //assume all vtk files in this directory are to be loaded
-      if(strstr(file->d_name, ".vtk"))
-      {
-         char* pathAndFileName = new char[strlen(precomputedSurfaceDir)+
-                                          strlen(file->d_name)+2];
-         strcpy(pathAndFileName,precomputedSurfaceDir);
-         strcat(pathAndFileName,"/");
-         strcat(pathAndFileName,file->d_name);
-
-         if ( fileIO::isFileReadable( file->d_name ) ) 
-         {
-            vprDEBUG(vesDBG,0) << "\tsurface file = " << pathAndFileName
-                                   << std::endl << vprDEBUG_FLUSH;
-
-            _model->CreateCfdDataSet();
-            unsigned int numDataSets = _model->GetNumberOfCfdDataSets();
-            // subtract 1 because this number was 1 base not 0 base
-            numDataSets -= 1;
-            _model->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
-
-            // set the dcs matrix the same as the last file
-            _model->GetCfdDataSet( -1 )->SetDCS( 
-                        _model->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
-
-            // precomputed data that descends from a flowdata.vtk should
-            // automatically have the same color mapping as the "parent" 
-            _model->GetCfdDataSet( -1 )->SetParent( 
-                        _model->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
-            _model->GetCfdDataSet( -1 )->LoadData();
-         }
-         else
-         {
-            std::cerr << "ERROR: unreadable file = " << pathAndFileName
-                      << ".  You may need to correct your param file."
-                      << std::endl;
-            exit(1);
-         }
-      }
-   };
-   //close the directory
-   closedir( dir );
-   dir = 0;
-   file = 0;
-
-   //change back to the original directory
-   chdir( cwd );*/
    boost::filesystem::path dir_path( precomputedSurfaceDir );
 
    if ( boost::filesystem::is_directory( dir_path ) )
@@ -748,160 +507,14 @@ void cfdVEBaseClass::LoadSurfaceFiles( std::string precomputedSurfaceDir )
    {
       std::cout << "\nFound: " << dir_path.native_file_string() << "\n";    
    }
-/*
-bool find_file( const path & dir_path,     // in this directory,
-                const std::string & file_name, // search for this name,
-                path & path_found )        // placing path here if found
-{
-  if ( !exists( dir_path ) ) return false;
-  directory_iterator end_itr; // default construction yields past-the-end
-  for ( directory_iterator itr( dir_path );
-        itr != end_itr;
-        ++itr )
-  {
-    if ( is_directory( *itr ) )
-    {
-      if ( find_file( *itr, file_name, path_found ) ) return true;
-    }
-    else if ( itr->leaf() == file_name ) // see below
-    {
-      path_found = *itr;
-      return true;
-    }
-  }
-  return false;
-}*/
-/*#else
-   //biv--this code will need testing
-   //BIGTIME!!!!!!!
-   char buffer[_MAX_PATH];
-   BOOL finished;
-   HANDLE hList;
-   TCHAR* directory;//[MAX_PATH+1];
-   WIN32_FIND_DATA fileData;
-
-   //windows compatibility
-   //get the current working directory
-   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL){
-      std::cerr << "Couldn't get the current working directory!" << std::endl;
-      return ;
-   }
-
-   // Get the proper directory path for transient files
-   //sprintf(directory, "%s\\*", precomputedSurfaceDir);
-   std::ostringstream dirStringStream;
-   dirStringStream << precomputedSurfaceDir << "\\*";
-   std::string dirString = dirStringStream.str();
-   directory = (char*)dirString.c_str();
-
-   //get the first file
-   hList = FindFirstFile(directory, &fileData);
-  
-   //check to see if directory is valid
-   if ( hList == INVALID_HANDLE_VALUE )
-   { 
-      std::cerr << "No precomputed surface files found in: "
-                << precomputedSurfaceDir << std::endl;
-      return ;
-   }
-   else
-   {
-      // Traverse through the directory structure
-      finished = FALSE;
-      while ( !finished )
-      {
-         //add the file name to our data list
-         //assume all vtk files in this directory are part of the sequence
-         //assume all vtk files in this directory are to be loaded
-         if ( strstr(fileData.cFileName, ".vtk") )
-         {
-            char* pathAndFileName = new char[strlen(precomputedSurfaceDir)+
-                                          strlen(fileData.cFileName)+2];
-            strcpy(pathAndFileName,precomputedSurfaceDir);
-            strcat(pathAndFileName,"/");
-            strcat(pathAndFileName,fileData.cFileName);
-
-            if ( fileIO::isFileReadable( pathAndFileName ) )
-            {
-               vprDEBUG(vesDBG,0) << "\tsurface file = " << pathAndFileName
-                                      << std::endl << vprDEBUG_FLUSH;
-
-               _model->CreateCfdDataSet();
-               unsigned int numDataSets = _model->GetNumberOfCfdDataSets();
-               // subtract 1 because this number was 1 base not 0 base
-               numDataSets -= 1;
-               _model->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
-
-               // set the dcs matrix the same as the last file
-               _model->GetCfdDataSet( -1 )->SetDCS( 
-                  _model->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
-
-               // precomputed data that descends from a flowdata.vtk should
-               // automatically have the same color mapping as the "parent" 
-               _model->GetCfdDataSet( -1 )->SetParent( 
-                  _model->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
-            }
-            else
-            {
-               std::cerr << "ERROR: unreadable file = " << pathAndFileName
-                         << ".  You may need to correct your param file."
-                         << std::endl;
-               exit(1);
-            }
-         }
-
-         //check to see if this is the last file
-         if  (!FindNextFile(hList, &fileData))
-         {
-            if ( GetLastError() == ERROR_NO_MORE_FILES )
-            {
-               finished = TRUE;
-            }
-         }
-      }
-   }
-   //close the handle
-   FindClose(hList);
-   //make sure we are in the correct directory
-   chdir(cwd);
-#endif*/
 }
-   
-// Stuff taken from Plugin_base.h
-// All of Yang's work (REI)
-/////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::RegistVar(std::string vname, long *var)
-{
-   _int[vname]=var;
-}
-
-void cfdVEBaseClass::RegistVar(std::string vname, double *var)
-{
-   _double[vname]=var;
-}
-
-void cfdVEBaseClass::RegistVar(std::string vname, std::string *var)
-{
-   _string[vname]=var;
-}
-
-void cfdVEBaseClass::RegistVar(std::string vname, std::vector<long> *var)
-{
-   _int1D[vname]=var;
-}
-
-void cfdVEBaseClass::RegistVar(std::string vname, std::vector<double> *var)
-{
-   _double1D[vname]=var;
-}
-
-void cfdVEBaseClass::RegistVar(std::string vname, std::vector<std::string> *var)
-{
-   _string1D[vname]=var;
-}
-
+//////////////////////////////////////////////////////////////////   
 VE_SceneGraph::cfdDCS* cfdVEBaseClass::GetWorldDCS()
 {
    return this->worldDCS;
 }
-
+//////////////////////////////////////////////////////////////////   
+void cfdVEBaseClass::SetXMLModel( VE_Model::Model* tempModel )
+{
+   xmlModel = tempModel;
+}

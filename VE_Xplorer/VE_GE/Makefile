@@ -92,16 +92,15 @@ ifeq ($(WEB_BUILD), TRUE)
 endif
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
-EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) 
+EXTRA_LIBS+= -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_UtilLib
 EXTRA_LIBS+= -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_TextureBasedLib$(OSG)$(PATENTED_TAG)
-EXTRA_LIBS+= -lVE_ConductorLib
 EXTRA_LIBS+= -lVE_XMLLib
 EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ModelLib
-EXTRA_LIBS+= -lVE_CE_UtilitiesLib
 EXTRA_LIBS+= -lVE_OpenModuleLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk

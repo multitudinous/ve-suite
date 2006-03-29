@@ -31,35 +31,40 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdExecutive.h"
 #include "VE_SceneGraph/cfdDCS.h"
-#include "VE_Conductor/Framework/package.h"
-#include "VE_Xplorer/VE_i.h"
 
+#include "VE_Xplorer/VE_i.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_Xplorer/cfdVEAvailModules.h"
-
 #include "VE_Xplorer/cfdVEBaseClass.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdThread.h"
 
-#include "VE_CE/Utilities/Network.h"
+#include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/Model/Model.h"
 
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
+
 #include <iostream>
 #include <string>
 #include <sstream>
 
 #include "VE_Xplorer/cfdDebug.h"
+
 #include <vpr/System.h>
 
 #include <orbsvcs/CosNamingC.h>
 
+#include <xercesc/dom/DOM.hpp>
+XERCES_CPP_NAMESPACE_USE
+
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-using namespace VE_CE::Utilities;
+vprSingletonImp( VE_Xplorer::cfdExecutive );
 
-cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
+void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
                             PortableServer::POA* child_poa )
 {
    this->naming_context = inputNameContext;
@@ -87,22 +92,15 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
    VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->_masterNode );
 
    av_modules = new cfdVEAvail_Modules();
-   _network = new Network();
 
    //time_t* timeVal;
    long timeID = (long)time( NULL );
    std::ostringstream dirStringStream;
    dirStringStream << "VEClient" << timeID;
    std::string UINAME = dirStringStream.str();
-   bool is_orb_init = false;
 
    _exec = NULL;
    ui_i = 0;
-   if (!is_orb_init)
-   {
-      //init_orb_naming();
-      is_orb_init = true;
-   }
 
    try
    {
@@ -145,13 +143,11 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
                 << std::endl;
    }
 }
-
-cfdExecutive::~cfdExecutive( void )
+///////////////////////////////////////////////////////////////////
+void cfdExecutive::CleanUp( void )
 {
    this->runGetEverythingThread = false;
    delete av_modules;
-
-   //UnbindORB();
 
    try
    {
@@ -164,7 +160,7 @@ cfdExecutive::~cfdExecutive( void )
       std::cerr << "|\tDisconnect from VE_CE failed!" << std::endl;
    }
 }
-
+///////////////////////////////////////////////////////////////////
 void cfdExecutive::UnbindORB()
 {
    if ( ui_i )
@@ -196,211 +192,46 @@ void cfdExecutive::UnbindORB()
       }
    }
 }
-
-void cfdExecutive::init_orb_naming()
-{
-   //char *argv[2]={"-ORBInitRef", "NameService=file://ns.ior"};
-//   char **argv;
-//   argv = new char*[ 0 ];
-//   int argc = 0;
-/*   try {
-      // First initialize the ORB, 
-      //orb =
-         //CORBA::ORB_init (argc, argv,
-         //              ""); // the ORB name, it can be anything! 
-        
-      //Here is the code to set up the ROOT POA
-      CORBA::Object_var poa_object =
-         orb->resolve_initial_references ("RootPOA"); // get the root poa
-    
-      poa = PortableServer::POA::_narrow(poa_object.in());
-      PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
-      poa_manager->activate ();
-   
-      //Here is the part to contact the naming service and get the reference for the executive
-      CORBA::Object_var naming_context_object =
-         orb->resolve_initial_references ("NameService");
-      naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
-   }  catch (CORBA::Exception &) {
-      poa->destroy (1, 1);
-      // Finally destroy the ORB
-      //orb->destroy();
-      std::cerr << "CORBA exception raised!" << std::endl;
-   }*/
-}
-
-/*void cfdExecutive::GetNetwork ( void )
-{
-   char *nw_str;
-  
-   try 
-   { 
-      nw_str = _exec->GetNetwork();
-      //std::cout << "| Network String : " << nw_str << std::endl;
-   } 
-   catch (CORBA::Exception &) 
-   {
-      std::cout << "ERROR: cfdExecutive : no exec found! " << std::endl;
-   }
-  
-   char buf[25];
-   char *buf2;
-  
-   unsigned int size; 
-   unsigned int netlength = strlen(nw_str);
-   unsigned int ipos = 0;
-  
-   _it_map.clear();
-   _name_map.clear();
-
-   // Unpack incoming network string into individual interfaces,
-   // and place them into the _it_map and _name_map structures.
-  
-   while(1) 
-   {    
-      Interface intf;
-      //intf.unpack_ids(&nw_str[ipos]);
-    
-      ipos+=72;
-    
-      strncpy(buf, &nw_str[ipos], 24);
-      ipos+=24;
-      buf[24]='\0';
-      size = atoi(buf);
-    
-      buf2 = new char[size+1];
-      strncpy(buf2, &nw_str[ipos], size);
-      ipos+=size;
-      //intf.unpack(buf2);
-      delete [] buf2;
-    
-      _it_map[intf._id] = intf;
-      _name_map[intf.getString("NAME_")] = intf._id;
-      //std::cout << " Name : " << intf.getString("NAME_") << std::endl;
-      if(ipos>=netlength) break;
-   }
-  
-   delete nw_str;
-}
-*/
+///////////////////////////////////////////////////////////////////
 void cfdExecutive::GetNetwork( void )
 {
-/*  
-   char* network = 0;
-   try 
-   { 
-      network = _exec->GetNetwork();
-   } 
-   catch (CORBA::Exception &) 
-   {
-      std::cerr << "ERROR: cfdExecutive : no exec found! " << std::endl;
-   }
-*/
    // Get buffer value from Body_UI implementation
    std::string temp( ui_i->GetNetworkString() );
    const std::string network = temp;
    vprDEBUG(vesDBG,2) << "|\tNetwork String : " << network 
                           << std::endl << vprDEBUG_FLUSH;
 
-/////////////////////////////
-// This code taken from Executive_i.cpp
-   Package p;
-   p.SetSysId("temp.xml");
-   p.Load(network.c_str(), strlen(network.c_str()));
-  
-   _network->clear();
+   // Load from the nt file loaded through wx
+   // Get a list of all the command elements   
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+
+   // we can do this because the plugins will actually 
+   // manage the memory for these models. When a plugin is deleted the 
+   // plugin will be responsible for deleting the veModel pointer
+   // This logic also works for the case where a custom plugin doesn't exist because
+   // there will be a default plugin that will be created just like there
+   // is currently for conductor
+   currentModels.clear();
+   // do this for models
+   networkWriter.ReadXMLData( network, "Model", "veModel" );
+   currentModels = networkWriter.GetLoadedXMLObjects();
+
+   // now lets create a list of them
    _id_map.clear();
-   _it_map.clear();
-   _geom_map.clear();
-
-   std::vector<Interface>::iterator iter;
-   //std::vector<Interface> interfaceVector = p.GetInterfaceVector();
-   // Find network layout chunk in network structure
-   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   idToModel.clear();
+   for ( size_t i = 0; i < currentModels.size(); ++i )
    {
-      if ( iter->_id == -1 ) 
-      {
-         break;
-      }
+      VE_Model::Model* model = dynamic_cast< VE_Model::Model* >( currentModels.at( i ) );
+      _id_map[  model->GetModelID() ] = model->GetModelName();
+      idToModel[ model->GetModelID() ] = model;
    }
-
-   //if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
-   {
-      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      {
-         
-            //if( iter->_category ==1 && iter->_type ==1 && _network->setInput(iter->_id, &(*iter))) 
-            {
-               //_network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-               //_network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-               //_network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-               //_id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
-            }  
-
-         if ( iter->_id != -1 ) 
-         {
-            if ( iter->_type == 1 ) // then input data
-            {
-               //_it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
-            }
-            else if ( iter->_type == 2 ) // then geom data
-            {
-               //_geom_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
-            }
-         }
-      }
-   } 
-   //else 
-   {
-   //   std::cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << std::endl;
-   }
-///////////////////////////
-   /*if ( network )
-      delete [] network;*/
 }
 ///////////////////////////////////////////////////////////////////
-/*
-void cfdExecutive::GetOutput( std::string name )
-{
-  // NOTHING YET
-}
-*/
-///////////////////////////////////////////////////////////////////
-
-void cfdExecutive::GetPort (std::string name)
-{
-   std::string pt_str = 0;
-      
-   CORBA::Long mod_id  = (CORBA::Long)_name_map[name];
-   CORBA::Long port_id = 0;
-  
-   try 
-   { 
-      pt_str = _exec->GetExportData(mod_id, port_id);
-   } 
-   catch (CORBA::Exception &) 
-   {
-      std::cerr << "no exec found!" << std::endl;
-   }
- 
-   Interface intf;
-  
-   //intf.unpack_ids(&pt_str[0]);
-   //intf.unpack(&pt_str[96]);
-  
-   _pt_map[mod_id] = intf;
-  
-   //delete pt_str;
-}
-
-///////////////////////////////////////////////////////////////////
-
 void cfdExecutive::GetEverything( void )
 {
-   //while ( runGetEverythingThread )
-   {
-      //vpr::System::msleep( 500 );  // half-second delay
-   if ( !CORBA::is_nil( this->_exec) )//&& updateNetworkString )
+   if ( !CORBA::is_nil( this->_exec) )
    {
       vprDEBUG(vesDBG,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
       GetNetwork();
@@ -415,55 +246,38 @@ void cfdExecutive::GetEverything( void )
          {
             // if a new module is on the id map but not on the plugins map
             // create it...
-            cfdVEBaseClass* temp = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (std::string)iter->second ) );
-            if ( temp != NULL )
+            cfdVEBaseClass* temp = dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( iter->second ) );
+            if ( temp == 0 )
             {
-               _plugins[ iter->first ] = temp;//(cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (std::string)iter->second ) );
-               // When we create the _plugin map here we will do the following
-               _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
-               _plugins[ iter->first ]->AddSelfToSG();
-               cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
-               // Give graphical plugins access to wand position, wand buttons, and gui variables
-               _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
-               _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
-               _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
-               _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
-               _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
-               vprDEBUG(vesDBG,1) << "|\tModule results: " << this->_exec->GetModuleResult( iter->first )
-                                      << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
-                                      << " ]-> " << iter->second 
-                                      << " is being created."
-                                      << std::endl << vprDEBUG_FLUSH;
-               _plugins[ iter->first ]->PreFrameUpdate();
+               //load the default plugin
+               temp = dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
             }
+
+            _plugins[ iter->first ] = temp;
+            // When we create the _plugin map here we will do the following
+            _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
+            _plugins[ iter->first ]->AddSelfToSG();
+            cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
+            // Give graphical plugins access to wand position, wand buttons, and gui variables
+            _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
+            _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
+            _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
          }
-         else
-         {
-            // plugin already present...
-            vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
-                                    << " ]-> " << iter->second 
-                                    << " is already on the plugin map."
-                                    << std::endl << vprDEBUG_FLUSH;
-            // Give graphical plugins access to gui variables
-            _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
-            _plugins[ iter->first ]->PreFrameUpdate();
-         }
+
+         _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
+         vprDEBUG(vesDBG,2) << "|\tModule results: " 
+                              << this->_exec->GetModuleResult( iter->first )
+                              << std::endl << vprDEBUG_FLUSH;
+         std::map< int, VE_Model::Model* >::iterator modelIter;
+         // this call always returns something because it is up to date with the id map
+         modelIter = idToModel.find( iter->first );
+         _plugins[ iter->first ]->SetXMLModel( modelIter->second );
+         _plugins[ iter->first ]->PreFrameUpdate();
+         vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
+                              << " ]-> " << iter->second 
+                              << " is updated."
+                              << std::endl << vprDEBUG_FLUSH;
       }
-      
-      // Process geom interfaces
-      /*for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
-      {
-         foundPlugin = _plugins.find( iter->first );
-         if ( (foundPlugin == _plugins.end()) || _plugins.empty() )
-         {
-            // Need to set geom interfaces here
-            // do I have geometry info then
-            // do this....
-            Interface tempInterface = _geom_map[ iter->first ];
-            _plugins[ iter->first ]->SetGeometryInterface( tempInterface );
-         }
-      }*/
               
       // Remove any plugins that aren't present in the current network
       for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); )
@@ -493,62 +307,14 @@ void cfdExecutive::GetEverything( void )
       }
       vprDEBUG(vesDBG,0) << "|\tDone Getting Network From Executive"
                              << std::endl << vprDEBUG_FLUSH;    
-
-      /*
-       * Now the _plugins map has been set up completely, time to add geominfo
-       */
-      
-    
-      std::map<int, Interface>::iterator itr;
-      if(!_geom_map.empty()) //if we have the geom map then add into the plugin class
-      {
-                  
-         for(itr = _geom_map.begin();itr!=_geom_map.end();itr++)
-         {
-            if(_plugins.find(itr->first) != _plugins.end())
-            {
-               _plugins[itr->first]->SetGeomInterface(itr->second);
-
-            }
-                  
-         }
-      }
-
    }
    else
    {
-      vprDEBUG(vesDBG,3) << "ERROR : The Executive has not been " 
-                             << "intialized or not time to update!"
+      vprDEBUG(vesDBG,3) << "ERROR : The Executive has not been intialized!"
                              << std::endl << vprDEBUG_FLUSH;     
    }
-      //updateNetworkString = false;
-   }
 }
-
 ///////////////////////////////////////////////////////////////////
-/*
-void cfdExecutive::HowToUse( std::string name )
-{
-   // get a module id from a name
-  
-   CORBA::Long mod_id = (CORBA::Long)_name_map[name];
-  
-   // get some input data for module
-  
-   int x = _it_map[mod_id].getInt("x");
-   int y = _it_map[mod_id].getInt("y");
-   int z = _it_map[mod_id].getInt("z");  
-   // get some port data for module
-  
-   double temperature = _pt_map[mod_id].getDouble("TEMPERATURE");
-   double co          = _pt_map[mod_id].getDouble("CO");
-  
-   // get output data for module
-  
-   double efficiency = _ot_map[mod_id].getDouble("EFFICIENCY");
-   double cash_flow  = _ot_map[mod_id].getDouble("CASH_FLOW");
-}
-*/
 void cfdExecutive::InitModules( void )
 {
    // Initiallize the dashboard
@@ -574,7 +340,7 @@ void cfdExecutive::PreFrameUpdate( void )
       if ( ui_i->GetNetworkFlag() )
       {
          // Get Network and parse it
-         this->GetEverything();
+         GetEverything();
       }
 
       // store the statusString in order to perform multiple operations on it...
@@ -612,14 +378,6 @@ void cfdExecutive::PreFrameUpdate( void )
             int dummyVar = 0;
             _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
             _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
-            
-            //if the new network string has the geominfo
-            /*if((foundPlugin->second)->HasGeomInterface())
-            {  
-                  (foundPlugin->second)->UnPack(*((foundPlugin->second)->GetGeomInterface()));
-                  std::cout<<"[DBG]...UnPack the geom interface, now the plugin has the geominfo vector"<<std::endl;
-            }*/
-            
          }
       }
       std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
@@ -632,33 +390,13 @@ void cfdExecutive::PreFrameUpdate( void )
          }
       }
    }
-  
 }
-
-void cfdExecutive::SetCalculationsFlag( bool x )
-{
-   //vprDEBUG(vesDBG, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   this->_doneWithCalculations = x;
-}
-
-bool cfdExecutive::GetCalculationsFlag( void )
-{
-   //vprDEBUG(vesDBG, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   return this->_doneWithCalculations;
-}
-
 bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 {
 #ifdef _TAO
       if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR )
       {
-         this->SetCalculationsFlag( true );
+         //this->SetCalculationsFlag( true );
          return true;
       }
 /*      else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ACT_CUSTOM_VIZ )

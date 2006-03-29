@@ -68,3 +68,9 @@ cleandepend:
             cd $$dir && $(MAKE) cleandepend ;		\
             cd .. ;				\
         done
+
+clobber:
+	@for dir in $(DIRS) ; do		\
+            cd $$dir && $(MAKE) clobber ;		\
+            cd .. ;				\
+        done

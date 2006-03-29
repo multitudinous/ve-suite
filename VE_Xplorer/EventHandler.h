@@ -49,14 +49,16 @@ namespace VE_Xplorer
 {
    class cfdGlobalBase;
 }
-namespace VE_EVENTS{
-class EventHandler{
+namespace VE_EVENTS
+{
+class EventHandler
+{
 public:
    ///Constructor
-   EventHandler(){}
+   EventHandler(){;}
 
    ///Destructor
-   virtual ~EventHandler(){}
+   virtual ~EventHandler(){;}
 
    ///The call to handle the event
    ///\param objectToProcess The xml Object to process
@@ -67,7 +69,7 @@ public:
 
    ///This is needed by the entity factory...probably should use a 
    ///different class for this.
-   VE_XML::XMLObject* GetNewXMLObject(){return 0;}
+   //VE_XML::XMLObject* GetNewXMLObject(){return 0;}
    
 protected:
    VE_Xplorer::cfdGlobalBase* _baseObject;

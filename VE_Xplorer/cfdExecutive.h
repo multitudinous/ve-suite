@@ -33,10 +33,11 @@
 #define CFD_EXECUTIVE_H
 
 #include "VE_Xplorer/cfdGlobalBase.h"
-#include "VE_Conductor/Framework/interface.h"
+#include <vpr/Util/Singleton.h>
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace VE_SceneGraph
 {
@@ -58,12 +59,14 @@ namespace VE_Xplorer
    class cfdThread;
 }
 
-namespace VE_CE
+namespace VE_XML
 {
-namespace Utilities
-{
-class Network;
+   class XMLObject;
 }
+
+namespace VE_Model
+{
+   class Model;
 }
 
 namespace Body { class Executive; }
@@ -72,88 +75,94 @@ namespace PortableServer { class POA; }
 
 namespace VE_Xplorer
 {
-class cfdExecutive : public cfdGlobalBase
+class cfdExecutive : public cfdGlobalBase//: public vpr::Singleton< cfdModelHandler >
 {
-   public:
-      cfdExecutive( CosNaming::NamingContext*, PortableServer::POA* );
+private:
+   // Required so that vpr::Singleton can instantiate this class.
+   //friend class vpr::Singleton< cfdExecutive >;
+   //cfdExecutive(const cfdExecutive& o) { ; }
+   //cfdExecutive& operator=(const cfdExecutive& o) { ; }
+   // this class should be a singleton
+   // constructor
+   cfdExecutive( void ){;}
+   
+   // destructor
+   virtual ~cfdExecutive( void ){;}
+   vprSingletonHeader( cfdExecutive );   
+public:
+   void Initialize( CosNaming::NamingContext*, PortableServer::POA* );
+   void CleanUp( void );
+   
+   // the Computational Engine
+   Body::Executive* _exec;
 
-      ~cfdExecutive( void );
+   CosNaming::NamingContext* naming_context;
 
-      void init_orb_naming( void );
+   // Functions that operate on the Executive
+   void GetNetwork( void );
+   void GetOutput( std::string name);
+   //void GetPort( std::string name);
+   void GetEverything( void );
+   void HowToUse( std::string name);
 
-      // the Computational Engine
-      Body::Executive* _exec;
+   // Get intial module information from the executive
+   void InitModules( void );
 
-      CosNaming::NamingContext* naming_context;
+   // Update function called from within latePreFrame
+   void UpdateModules( void );
 
-      // _id_map : maps a module id to an interface object for a module's inputs.
-      std::map<int, Interface>   _it_map;
-  
-      // _pt_map : maps a module id to an interface object for a module's port data.
-      std::map<int, Interface>   _pt_map;
-  
-      // _pt_map : maps a module id to an interface object for a module's geom data.
-      std::map<int, Interface>   _geom_map;
+   // Update function called from within latePreFrame
+   void PreFrameUpdate( void );
 
-      // _ot_map : maps a module id to an interface object for a modules's outputs.
-      //std::map<int, Interface>   _ot_map;
-  
-      // _name_map : maps a module id to it's module name.
-      std::map< int, std::string> _id_map;
-      std::map< std::string, int > _name_map;
-  
-      // _name_map : maps a module name to it's module id.
-      std::map<int, cfdVEBaseClass* > _plugins;
+   // Function called within preFrame to allow cfdExecutive
+   // to have access to scalar information
+   void UnbindORB( void );
 
-      // Functions that operate on the Executive
-      void GetNetwork( void );
-      void GetOutput( std::string name);
-      void GetPort( std::string name);
-      void GetEverything( void );
-      void HowToUse( std::string name);
+   //void SetCalculationsFlag( bool );
 
-      // Get intial module information from the executive
-      void InitModules( void );
+   //bool GetCalculationsFlag( void );
 
-      // Update function called from within latePreFrame
-      void UpdateModules( void );
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray* );
 
-      // Update function called from within latePreFrame
-      void PreFrameUpdate( void );
- 
-      // Function called within preFrame to allow cfdExecutive
-      // to have access to scalar information
-      void UnbindORB( void );
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
 
-      void SetCalculationsFlag( bool );
+   //Loading the Available Modules
+   cfdVEAvail_Modules* av_modules; 
+private:
+   
+   std::string _activeScalarName;
+   cfdGauges* _gauges;
+   cfdDashboard* _dashBoard;
+   cfdInteractiveGeometry* _geometry;
+   Body_UI_i* ui_i;
+   VE_SceneGraph::cfdGroup* _masterNode;
+   std::vector< VE_XML::XMLObject* > currentModels;
 
-      bool GetCalculationsFlag( void );
+   bool _doneWithCalculations;
+   bool updateNetworkString;
+   bool runGetEverythingThread;
+   // Classes and variables for multithreading.
+   //cfdThread* thread;
+   // _id_map : maps a module id to an interface object for a module's inputs.
+   //std::map<int, Interface>   _it_map;
 
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray* );
+   // _pt_map : maps a module id to an interface object for a module's port data.
+   //std::map<int, Interface>   _pt_map;
 
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
+   // _pt_map : maps a module id to an interface object for a module's geom data.
+   //std::map<int, Interface>   _geom_map;
 
-      //Loading the Available Modules
-      cfdVEAvail_Modules* av_modules; 
+   // _ot_map : maps a module id to an interface object for a modules's outputs.
+   //std::map<int, Interface>   _ot_map;
 
-      // Network class to decode network string
-      VE_CE::Utilities::Network* _network;
-   private:
-      
-      std::string _activeScalarName;
-      cfdGauges* _gauges;
-      cfdDashboard* _dashBoard;
-      cfdInteractiveGeometry* _geometry;
-      Body_UI_i* ui_i;
-      VE_SceneGraph::cfdGroup* _masterNode;
+   // _name_map : maps a module id to it's module name.
+   std::map< int, std::string> _id_map;
+   std::map< int, VE_Model::Model* > idToModel;
 
-      bool _doneWithCalculations;
-      bool updateNetworkString;
-      bool runGetEverythingThread;
-      // Classes and variables for multithreading.
-      //cfdThread* thread;
+   // _name_map : maps a module name to it's module id.
+   std::map<int, cfdVEBaseClass* > _plugins;
 };
 }
 #endif

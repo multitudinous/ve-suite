@@ -118,9 +118,6 @@ cfdApp::cfdApp( int argc, char* argv[] )
 #endif
 {
    filein_name.erase();// = 0;
-#ifdef _TAO
-   this->executive = 0;
-#endif
 #ifdef _OSG
    //osg::Referenced::instance()->setThreadSafeRefUnref(true);
    osg::Referenced::setThreadSafeReferenceCounting(true);
@@ -141,7 +138,6 @@ cfdApp::cfdApp( int argc, char* argv[] )
 
 void cfdApp::exit()
 {
-   //delete [] filein_name;
    VE_SceneGraph::cfdPfSceneManagement::instance()->CleanUp();
    cfdModelHandler::instance()->CleanUp();
    cfdEnvironmentHandler::instance()->CleanUp();
@@ -153,12 +149,7 @@ void cfdApp::exit()
 #endif
 
 #ifdef _TAO
-   if ( this->executive ) 
-   {
-      vprDEBUG( vesDBG, 2 )  
-        << "deleting this->executive" << std::endl << vprDEBUG_FLUSH;
-      delete this->executive;
-   }
+   cfdExecutive::instance()->CleanUp();
 #endif // _TAO
    
 #ifdef _WEB_INTERFACE
@@ -310,6 +301,7 @@ void cfdApp::initScene( void )
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
 
    //enter the parameter file which will soon disappear
+   /*
    do
    {
       std::cout << "|   Enter VE_Xplorer parameter filename: ";
@@ -320,8 +312,7 @@ void cfdApp::initScene( void )
       }
    }
    while ( ! fileIO::isFileReadable( filein_name ) );
-
-   //std::cout << "filein_name: " << this->filein_name << std::endl;
+   */
 
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
@@ -336,16 +327,16 @@ void cfdApp::initScene( void )
    captureNextFrameForWeb = false;
 #endif   //_WEB_INTERFACE
    // define the rootNode, worldDCS, and lighting
-   VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
+   //VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
    VE_SceneGraph::cfdPfSceneManagement::instance()->InitScene();
 
    // modelHandler stores the arrow and holds all data and geometry
-   cfdModelHandler::instance()->Initialize( this->filein_name );
+   //cfdModelHandler::instance()->Initialize( this->filein_name );
    cfdModelHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdModelHandler::instance()->InitScene();
 
    // navigation and cursor 
-   cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
+   //cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
    cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    for ( int i = 1; i < argc; ++i )
    {
@@ -361,7 +352,7 @@ void cfdApp::initScene( void )
    cfdEnvironmentHandler::instance()->InitScene();
 
    // create steady state visualization objects
-   cfdSteadyStateVizHandler::instance()->Initialize( this->filein_name );
+   //cfdSteadyStateVizHandler::instance()->Initialize( this->filein_name );
    cfdSteadyStateVizHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdSteadyStateVizHandler::instance()->InitScene();
 
@@ -370,7 +361,7 @@ void cfdApp::initScene( void )
    _start_tick = _timer.tick();
 #ifdef VE_PATENTED
    _tbvHandler = cfdTextureBasedVizHandler::instance();
-   _tbvHandler->SetParameterFile(filein_name);
+   //_tbvHandler->SetParameterFile(filein_name);
    _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
    _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
@@ -381,7 +372,7 @@ void cfdApp::initScene( void )
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-   this->executive = new cfdExecutive( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
+   cfdExecutive::instance()->Initialize( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
 #endif // _TAO
 
    // This may need to be fixed
@@ -450,8 +441,8 @@ void cfdApp::latePreFrame( void )
    }
 
 #ifdef _TAO
-   this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
-   this->executive->PreFrameUpdate();
+   cfdExecutive::instance()->CheckCommandId( _vjobsWrapper->GetCommandArray() );
+   cfdExecutive::instance()->PreFrameUpdate();
 #endif // _TAO
 
    this->_vjobsWrapper->PreFrameUpdate();

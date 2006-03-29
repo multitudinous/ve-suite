@@ -68,68 +68,69 @@ class vtkPolyData;
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdModelHandler //: public vpr::Singleton< cfdModelHandler >
-   {
-      private:
-         // Required so that vpr::Singleton can instantiate this class.
-         //friend class vpr::Singleton< cfdModelHandler >;
-         //cfdModelHandler(const cfdModelHandler& o) { ; }
-         //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
-         cfdModelHandler( void );
-         ~cfdModelHandler( void ){ ; }// Never gets called, don't implement
-         vprSingletonHeader( cfdModelHandler );   
-      public:
-         void Initialize( std::string );
-         void CleanUp( void );
-         void InitScene( void );
-         void PreFrameUpdate( void );
-         cfdDataSet* GetActiveDataSet( void );
+class VE_XPLORER_EXPORTS cfdModelHandler //: public vpr::Singleton< cfdModelHandler >
+{
+private:
+   // Required so that vpr::Singleton can instantiate this class.
+   //friend class vpr::Singleton< cfdModelHandler >;
+   //cfdModelHandler(const cfdModelHandler& o) { ; }
+   //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
+   cfdModelHandler( void );
+   ~cfdModelHandler( void ){ ; }// Never gets called, don't implement
+   vprSingletonHeader( cfdModelHandler );   
+public:
+   void Initialize( std::string );
+   void CleanUp( void );
+   void InitScene( void );
+   void PreFrameUpdate( void );
+   cfdDataSet* GetActiveDataSet( void );
 
-         void SetCommandArray( cfdCommandArray* );
-         void CreateObjects( void );      
-         void LoadSurfaceFiles( std::string );
-         vtkPolyData* GetArrow( void );
-         cfdModel* GetModel( int );
-         void AddModel( cfdModel* );
-         void RemoveModel( cfdModel* );
-         cfdModel* GetActiveModel( void );
-         int GetNumberOfModels( void );
+   void SetCommandArray( cfdCommandArray* );
+   void CreateObjects( void );      
+   void LoadSurfaceFiles( std::string );
+   vtkPolyData* GetArrow( void );
+   cfdModel* GetModel( int );
+   void AddModel( cfdModel* );
+   void RemoveModel( cfdModel* );
+   cfdModel* GetActiveModel( void );
+   void SetActiveModel( int modelNumber );
+   int GetNumberOfModels( void );
 
-         void ReadNNumberOfDataSets(  std::string, std::string );
+   void ReadNNumberOfDataSets(  std::string, std::string );
 
-         cfdScalarBarActor* GetScalarBar(void);
-         //void ReadNNumberOfDataSets(  char*, char* );
+   cfdScalarBarActor* GetScalarBar(void);
+   //void ReadNNumberOfDataSets(  char*, char* );
 
 
-         //texture manager access
-   #ifdef _OSG
-   #ifdef VE_PATENTED
-         VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet( void );
-   #endif
-   #endif
-         bool GetVisOption();
-      protected:
-         vtkPolyData* _GetArrowPolyData();
-      private:
-         std::string _param;
-         cfdDataSet* activeDataset;
-         cfdCommandArray* commandArray;
-         cfdReadParam* _readParam;
-         cfdScalarBarActor* _scalarBar;
-         cfdModel* _activeModel;
+   //texture manager access
+#ifdef _OSG
+#ifdef VE_PATENTED
+   VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet( void );
+#endif
+#endif
+   bool GetVisOption();
+protected:
+   vtkPolyData* _GetArrowPolyData();
+private:
+   std::string _param;
+   cfdDataSet* activeDataset;
+   cfdCommandArray* commandArray;
+   cfdReadParam* _readParam;
+   cfdScalarBarActor* _scalarBar;
+   cfdModel* _activeModel;
 
-   #ifdef _OSG
-   #ifdef VE_PATENTED
-         VE_TextureBased::cfdTextureDataSet* _activeTDSet;
-   #endif
-   #endif
-         bool tbased;
-         vtkPolyData* arrow;
-         std::vector< cfdModel* > _modelList;
-         // Used to store data for multi-dataset functions
-         std::string oldDatasetName;//[256];
+#ifdef _OSG
+#ifdef VE_PATENTED
+   VE_TextureBased::cfdTextureDataSet* _activeTDSet;
+#endif
+#endif
+   bool tbased;
+   vtkPolyData* arrow;
+   std::vector< cfdModel* > _modelList;
+   // Used to store data for multi-dataset functions
+   std::string oldDatasetName;//[256];
 
-         std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
-   };
+   std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
+};
 }
 #endif
