@@ -88,6 +88,10 @@ UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
    cPre_state = 0;
    cTeacher_state = 0;
 
+   num_sounds = 0;
+   num_sounds = 0;
+   num_geo = 0;
+   if(  _modelData->GetNumberOfModels() > 0 )
    getData();
 }
 
