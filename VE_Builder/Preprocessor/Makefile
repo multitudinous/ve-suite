@@ -11,9 +11,6 @@ srcdir= .
 SRCS=\
    preprocessor.cxx \
    multiPlaneVtkOutput.cxx \
-   fileIO.cxx \
-   readWriteVtkThings.cxx \
-   cfdVTKFileHandler.cxx \
    setScalarAndVector.cpp
 
 # Specify the OS-dependent directory name for object files and depends
@@ -34,8 +31,8 @@ EXTRA_DEFS+=
 #_MPI for HPC build
 #SJK_TEST produces ascii output
 
-EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer \
-                 -I$(VE_SUITE_HOME)/VE_Builder/Utilities 
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}
+
                  
 
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
@@ -48,6 +45,8 @@ STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 EXTRA_LIBS+= -lm -L$(VJ_DEPS_DIR)/lib
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
+EXTRA_LIBS+= -lVE_UtilLib
 
 #include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
