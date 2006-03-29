@@ -34,6 +34,7 @@
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_Xplorer/cfdGlobalBase.h"
 #include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/cfdModelHandler.h"
 
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdClone.h"
@@ -78,7 +79,14 @@ void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 {
    try
    {
-      _activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(model);
+      if(model)
+      {
+         _activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(model);
+      }
+      else
+      {
+         _activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+      }
    }
    catch(...)
    {

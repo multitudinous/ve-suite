@@ -65,8 +65,10 @@ public:
    virtual ~CADEventHandler();
 
    ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on.
-   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model);
+   ///\param model The cfdModel to execute the Command on\n.
+   ///Default uses the active cfdModel from cfdModelHandler\n
+   ///Otherwise, the cfdModel passed in is used.
+   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
    
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.

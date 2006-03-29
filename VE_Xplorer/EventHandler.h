@@ -65,12 +65,7 @@ public:
    virtual void Execute(VE_XML::XMLObject* objectToProcess=0) = 0;
 
    ///\param baseObject The cfdGlobalBase object to apply the command to.
-   virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject) = 0;
-
-   ///This is needed by the entity factory...probably should use a 
-   ///different class for this.
-   //VE_XML::XMLObject* GetNewXMLObject(){return 0;}
-   
+   virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject=0) = 0;
 protected:
    VE_Xplorer::cfdGlobalBase* _baseObject;
 };

@@ -475,7 +475,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       if(currentEventHandler != _eventHandlers.end())
       {
          vprDEBUG(vesDBG,0) << "Executing: "<< _activeModel->GetVECommand()->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
-         currentEventHandler->second->SetGlobalBaseObject(_activeModel);
+         currentEventHandler->second->SetGlobalBaseObject();
          currentEventHandler->second->Execute(_activeModel->GetVECommand());
       }
    }
