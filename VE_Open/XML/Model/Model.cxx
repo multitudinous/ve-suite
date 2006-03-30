@@ -36,6 +36,7 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/CAD/CADAssembly.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 using namespace VE_CAD;
@@ -50,7 +51,7 @@ Model::Model()
    uniqueModelID = 0;
    iconFileName = '\0';
    iconLocation = new Point(  );
-   geometry = 0;//new CADNode( "oops" );
+   geometry = 0;
    SetObjectType("Model");
    SetObjectNamespace("Model");
 }
@@ -116,7 +117,7 @@ Model::Model( const Model& input )
       informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
    }
 
-   geometry = new CADNode( *(input.geometry) );
+   geometry = new CADAssembly( *(input.geometry) );
 }
 /////////////////////////////////////////////////////
 Model& Model::operator=( const Model& input)
@@ -250,7 +251,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
                delete geometry;
                geometry = 0;
             }
-            geometry = new CADNode("oops" );
+            geometry = new CADAssembly("oops" );
             geometry->SetObjectFromXMLData( dataValueStringName );
          }
       }
@@ -502,7 +503,7 @@ CADNode* Model::GetGeometry( void )
 CADNode* Model::AddGeometry( void )
 {
    if ( geometry == 0 )
-      geometry = new CADNode( "oops" );
+      geometry = new CADAssembly( "Model_Geometry" );
 
    return geometry;
 }

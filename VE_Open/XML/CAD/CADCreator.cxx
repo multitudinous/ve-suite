@@ -67,6 +67,7 @@ VE_XML::XMLObject* CADCreator::CreateNewXMLObject(std::string objectType)
 VE_XML::XMLObject* CADCreator::CreateNewXMLObjectCopy(std::string objectType,
                                                      VE_XML::XMLObject* objectToCopy)
 {
+std::cout << objectType << std::endl;
    if(objectType == "CADAssembly"){
       return new CADAssembly(*dynamic_cast<CADAssembly*>(objectToCopy));
    }else if(objectType == "CADPart"){

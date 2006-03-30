@@ -64,6 +64,7 @@ namespace VE_Model
 namespace VE_CAD
 {
    class CADNode;
+   class CADAssembly;
 }
 
 namespace VE_Model
@@ -165,7 +166,7 @@ private:
    ///The parameter block holds all the data the was formerly stored in the param file
    std::vector< VE_XML::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
    ///The CADNode contains the tree structure for the geometry
-   VE_CAD::CADNode* geometry;///<The classes hold the geometry for the model.
+   VE_CAD::CADAssembly* geometry;///<The classes hold the geometry for the model.
 };
 }
 #endif// _VE_MODEL_H_
