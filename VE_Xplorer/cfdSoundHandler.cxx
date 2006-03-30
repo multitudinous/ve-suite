@@ -50,6 +50,8 @@ cfdSoundHandler::cfdSoundHandler( std::string param )
    _param = param;
    this->_readParam = new cfdReadParam();
 
+   if ( param.empty() )
+      return;
    // Read the sound objects from the parameter file...
    this->CreateObjects();
 

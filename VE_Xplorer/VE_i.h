@@ -65,7 +65,7 @@ protected:
    std::vector< std::string > statusStringBuffer;
    vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
    vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
-   void SetNetworkString( char* );
+   void SetNetworkString( std::string tempString );
 
    virtual void UpdateNetwork (
       const char * network

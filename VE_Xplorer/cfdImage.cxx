@@ -64,6 +64,8 @@ cfdImage::cfdImage( std::string param )
    this->texture = NULL;
    bmpOrientation = -1;
 
+   if ( param.empty() )
+      return;
    _param = param;
    _readParam = new cfdReadParam();
    // Fix this if createobjects is true then continue else return

@@ -67,10 +67,10 @@ std::string Body_UI_i::GetNetworkString( void )
 }
 
 // Complimentary function to the above function
-void Body_UI_i::SetNetworkString( char* temp )
+void Body_UI_i::SetNetworkString( std::string tempString )
 {
    vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
-   networkStringBuffer.push_back( std::string( temp ) );
+   networkStringBuffer.push_back( tempString );
 }
 
 bool Body_UI_i::GetNetworkFlag( void )
@@ -190,12 +190,14 @@ void Body_UI_i::Raise (
               !temp.compare(0,22,"Connected to Executive") ||
               !temp.compare(0,17,"Error in Schedule") )
          {
-            std::cout << "|\tGoing To Do Something" << std::endl;
             try 
             { 
-               char* network = 0;
-               network = executive_->GetNetwork();
-               this->SetNetworkString( network );
+               std::string network( executive_->GetNetwork() );
+               if ( !network.empty() )
+               {
+                  this->SetNetworkString( network );
+                  std::cout << "|\tGoing To Do Something" << std::endl;
+               }
             } 
             catch (CORBA::Exception &) 
             {

@@ -469,6 +469,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    bool updateScalarRange = false;
 
    std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+   if ( _activeModel )
    if(_activeModel->GetVECommand())
    {
       currentEventHandler = _eventHandlers.find(_activeModel->GetVECommand()->GetCommandName());

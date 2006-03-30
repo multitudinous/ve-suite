@@ -99,7 +99,7 @@ cfdScalarBarActor::cfdScalarBarActor( std::string param, VE_SceneGraph::cfdGroup
 
    this->scalarBar = new VE_SceneGraph::cfdDCS();
 
-   this->CreateObjects();
+   //this->CreateObjects();
 }
  
 cfdScalarBarActor::~cfdScalarBarActor()

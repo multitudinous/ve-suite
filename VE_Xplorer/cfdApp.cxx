@@ -336,7 +336,7 @@ void cfdApp::initScene( void )
    cfdModelHandler::instance()->InitScene();
 
    // navigation and cursor 
-   //cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
+   cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
    cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    for ( int i = 1; i < argc; ++i )
    {
@@ -352,7 +352,7 @@ void cfdApp::initScene( void )
    cfdEnvironmentHandler::instance()->InitScene();
 
    // create steady state visualization objects
-   //cfdSteadyStateVizHandler::instance()->Initialize( this->filein_name );
+   cfdSteadyStateVizHandler::instance()->Initialize( this->filein_name );
    cfdSteadyStateVizHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdSteadyStateVizHandler::instance()->InitScene();
 

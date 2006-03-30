@@ -104,9 +104,9 @@ void cfdEnvironmentHandler::Initialize( std::string param )
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    displaySettings = new cfdDisplaySettings();
    this->nav = new cfdNavigate();
-   _readParam = new cfdReadParam();
+   //_readParam = new cfdReadParam();
    this->arrow = cfdModelHandler::instance()->GetArrow();
-   CreateObjects();
+   //CreateObjects();
 
 #ifdef VE_PATENTED
 #ifdef _OSG
