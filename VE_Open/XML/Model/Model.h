@@ -138,6 +138,11 @@ public:
    size_t GetNumberOfInformationPackets( void );
    ///Get the geometry for the model.
    VE_CAD::CADNode* GetGeometry( void );
+   ///Add a geometry node and return it
+   /// if there is already geometry then the function will return that pointer
+   VE_CAD::CADNode* Model::AddGeometry( void );
+   ///Delete the geometry for this model
+   void Model::DeleteGeometry( void );
 
 protected:
    ///Internally update the data.

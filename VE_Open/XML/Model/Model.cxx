@@ -496,10 +496,24 @@ size_t Model::GetNumberOfInformationPackets( void )
 ////////////////////////////////////////////////////////////
 CADNode* Model::GetGeometry( void )
 {
+   return geometry;
+}
+////////////////////////////////////////////////////////////
+CADNode* Model::AddGeometry( void )
+{
    if ( geometry == 0 )
       geometry = new CADNode( "oops" );
 
    return geometry;
+}
+////////////////////////////////////////////////////////////
+void Model::DeleteGeometry( void )
+{
+   if ( geometry )
+   {
+      delete geometry;
+      geometry = 0;
+   }
 }
 ///////////////////////////////////////
 void Model::_updateVEElement( std::string input )
