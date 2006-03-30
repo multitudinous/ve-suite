@@ -388,52 +388,6 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
       cadNode->SetData("New Node",newClone);
       _dataValuePairList.push_back(cadNode);
 
-/*      VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
-      parentNode->SetDataType(std::string("UNSIGNED INT"));
-      parentNode->SetDataValue(_activeCADNode->GetID());
-      parentNode->SetDataName(std::string("Parent ID"));
-      _dataValuePairList.push_back(parentNode);
-      
-      VE_XML::DataValuePair* addNode = new VE_XML::DataValuePair();
-      addNode->SetDataType("STRING");
-      addNode->SetData(std::string("Node Type"),std::string("Clone"));
-      _dataValuePairList.push_back(addNode);
-
-      VE_XML::DataValuePair* originalID = new VE_XML::DataValuePair();
-      originalID->SetDataType("UNSIGNED INT");
-      originalID->SetDataValue(_activeCADNode->GetID());
-      originalID->SetDataName(std::string("Original ID"));
-      _dataValuePairList.push_back(originalID);
-
-      VE_XML::DataValuePair* originalType = new VE_XML::DataValuePair();
-      originalType->SetDataType("STRING");
-      originalType->SetDataString(_activeCADNode->GetNodeType());
-      originalType->SetDataName(std::string("Original Type"));
-      _dataValuePairList.push_back(originalType);
-
-      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-      nodeID->SetDataType("UNSIGNED INT");
-      nodeID->SetDataValue(newClone->GetID());
-      nodeID->SetDataName(std::string("Node ID"));
-      _dataValuePairList.push_back(nodeID);
-
-      VE_XML::DataValuePair* parentNode = new VE_XML::DataValuePair();
-      parentNode->SetDataType(std::string("UNSIGNED INT"));
-      parentNode->SetDataValue(_activeCADNode->GetParent());
-      parentNode->SetDataName(std::string("Parent ID"));
-      _dataValuePairList.push_back(parentNode);
-
-      VE_XML::DataValuePair* transform = new VE_XML::DataValuePair();
-      transform->SetDataType(std::string("XMLOBJECT"));
-      transform->SetData("Transform",newClone->GetTransform());
-      _dataValuePairList.push_back(transform);
-
-      VE_XML::DataValuePair* nodeName = new VE_XML::DataValuePair();
-      nodeName->SetDataType(std::string("STRING"));
-      nodeName->SetDataString(newClone->GetNodeName());
-      nodeName->SetDataName(std::string("Node Name"));
-      _dataValuePairList.push_back(nodeName);
-       */        
       _sendCommandsToXplorer();
       ClearInstructions();
    }
@@ -456,14 +410,14 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
        if ((!dialog.GetPath().IsEmpty()) 
            && wxFileExists(dialog.GetPath())) 
         {         
-           if(dialog.GetPath().find(".veg") != -1)
+           if(dialog.GetPath().Find(".veg") != -1)
            {
               VE_XML::XMLReaderWriter cadReader;
               cadReader.UseStandaloneDOMDocumentManager();
               cadReader.ReadFromFile();
               cadReader.ReadXMLData(std::string(dialog.GetPath()),"CAD","CADAssembly");
               
-              CADNode* loadedNode = 0;
+              //CADNode* loadedNode = 0;
               CADAssembly* newAssembly = 0;
               CADPart* newPart = 0;
               std::vector<VE_XML::XMLObject*> loadedNodes;
@@ -473,7 +427,6 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
               {
                  //std::cout<<"---Loaded Assembly---"<<std::endl;
                  newAssembly = new CADAssembly(*dynamic_cast<CADAssembly*>(loadedNodes.at(0)));
-                 dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
               }
               else
               {
@@ -483,10 +436,26 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
                  {
                     //std::cout<<"---Loaded Part---"<<std::endl;
                     newPart = new CADPart(*dynamic_cast<CADPart*>(loadedNodes.at(0)));
-                    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newPart);
                  }
               }
               if(newAssembly || newPart){
+                 std::cout<<"Number of children on current root: "<<dynamic_cast<CADAssembly*>(_rootNode)->GetNumberOfChildren()<<std::endl;
+                 if(newAssembly)
+                 {
+                    if(dynamic_cast<CADAssembly*>(_rootNode)->GetNumberOfChildren() == 0)
+                    {
+                       std::cout<<"Reseting root CADNode"<<std::endl;
+                       SetRootCADNode(newAssembly);
+                    }
+                    else
+                    {
+                       dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
+                    }
+                 }
+                 else if(newPart)
+                 {
+                    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newPart);
+                 }
                  _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
                  _cadTreeBuilder->SetRootNode(_rootNode);
                  _cadTreeBuilder->Traverse();
@@ -501,7 +470,6 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
                  else if(newPart)
                     cadNode->SetData("New Node",newPart);
                  _dataValuePairList.push_back(cadNode);
-
 
                  _sendCommandsToXplorer();
                  ClearInstructions();
@@ -559,7 +527,7 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
         }
     }
 }
-///////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
 {
    wxFileDialog dialog(this,
@@ -571,7 +539,7 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
    if (dialog.ShowModal() == wxID_OK){
       if (!dialog.GetPath().IsEmpty()) 
       {
-         if(dialog.GetPath().find(".veg") != -1)
+         if(dialog.GetPath().Find(".veg") != -1)
          {
             VE_XML::XMLReaderWriter cadReader;
             cadReader.UseStandaloneDOMDocumentManager();
@@ -621,7 +589,7 @@ void CADNodeManagerDlg::ClearInstructions()
    ///we need to insure that the vector is clear
    _dataValuePairList.clear();
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
 {
     //don't allow the user to delete the root node!!!
@@ -706,3 +674,8 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
    ClearInstructions();
 }
 #endif
+////////////////////////////////////////
+CADNode* CADNodeManagerDlg::GetRootCADNode()
+{
+   return _rootNode;
+}

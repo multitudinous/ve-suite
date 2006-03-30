@@ -91,6 +91,9 @@ public:
    ///Set the root CADNode to display.
    ///\param rootNode The root CADNode to display.
    void SetRootCADNode(VE_CAD::CADNode* rootNode);
+
+   ///Get the root CADNode
+   VE_CAD::CADNode* GetRootCADNode();
 protected:
 
    ///Create the dialog
