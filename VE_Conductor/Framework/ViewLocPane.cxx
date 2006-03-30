@@ -97,7 +97,7 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
    wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
    this->SetSize( dialogPosition );
 
-   xplorerPtr = veEngine;
+   xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
 
    _buildPage();
@@ -938,7 +938,7 @@ void ViewLocPane::_resetSelections( void )
 
 void ViewLocPane::SetCommInstance( VjObs_ptr veEngine )
 {
-   xplorerPtr = veEngine;
+   xplorerPtr = VjObs::_duplicate( veEngine );
 }
 
 void ViewLocPane::SendCommandsToXplorer( void )

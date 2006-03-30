@@ -735,6 +735,7 @@ void VjObs_i::PreFrameUpdate( void )
       cfdEnvironmentHandler::instance()->GetNavigate()->SetVECommand( bufferCommand );
       cfdEnvironmentHandler::instance()->GetQuatCamHandler()->SetVECommand( bufferCommand );
       cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
+      if ( cfdModelHandler::instance()->GetActiveModel() )
       cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
       //std::cout << " command name " << bufferCommand->GetCommandName() << std::endl;
    }

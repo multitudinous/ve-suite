@@ -121,6 +121,7 @@ Network::Network(wxWindow* parent, int id)
    globalparam_dlg = new GlobalParamDialog(NULL, -1);
    veNetwork = 0;
    isLoading = false;
+   cadDialog = 0;
    SetBackgroundColour(*wxWHITE);
 }
 
@@ -790,7 +791,7 @@ int Network::SelectMod( int x, int y )
          std::string xmlDocument( "returnString" );
          netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
-         if ( !CORBA::is_nil( xplorerPtr ) && !xmlDocument.empty() )
+         if ( !CORBA::is_nil( xplorerPtr.in() ) && !xmlDocument.empty() )
          {
             try
             {
@@ -887,7 +888,7 @@ void Network::UnSelectTag(wxDC &dc)
 /////////////////////////////////////////////////
 void Network::SetXplorerInterface( VjObs_ptr veEngine )
 {
-   xplorerPtr = veEngine;
+   xplorerPtr = VjObs::_duplicate( veEngine );
 }
 /////////////////////////////////////////////////
 void Network::CleanRect(wxRect box, wxDC &dc)
@@ -2419,6 +2420,9 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 
    cadDialog->SetVjObsPtr( xplorerPtr.in() );
    cadDialog->ShowModal();
+   // Get cadnode back
+   delete cadDialog;
+   cadDialog = 0;
 }
 ///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )

@@ -37,17 +37,14 @@ class AppFrame;
 
 class REIApp : public wxApp
 {
-  
+public:
+   virtual bool OnInit();
+   virtual int OnExit();
 
- public:
-  virtual bool OnInit();
-  virtual int OnExit();
+   AppFrame *mainFrame;
 
-  AppFrame *mainFrame;
-  
-  long id;
+   long id;
 };
 
 DECLARE_APP(REIApp)
-
 #endif

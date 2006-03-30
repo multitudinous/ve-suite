@@ -85,7 +85,7 @@ StreamlinePane::StreamlinePane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* 
    //int nPixY = 10;
 //////////////////////////////   SetScrollRate(nUnitX, nUnitY);
 
-   xplorerPtr = veEngine;
+   xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
 
    _propSlider = 0;
@@ -611,7 +611,7 @@ void StreamlinePane::ConstructCommandId( void )
 ////////////////////////////////////////////////////////////
 void StreamlinePane::SetCommInstance( VjObs_ptr veEngine )
 {
-   xplorerPtr = veEngine;
+   xplorerPtr = VjObs::_duplicate( veEngine );
 }
 ///////////////////////////////////////////////////////////
 void StreamlinePane::SendCommandsToXplorer( void )

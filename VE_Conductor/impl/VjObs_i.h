@@ -137,6 +137,7 @@ public:
 
    void GetCfdStateVariables( void );
    cfdCommandArray* _cfdArray;
+   VE_XML::Command* bufferCommand;
    double cfdShort_data_array[ 9 ];
    
    std::vector< cfdCommandArray* > commandQueue;
@@ -198,7 +199,6 @@ protected:
 
    VE_XML::DOMDocumentManager* domManager;
    std::vector< VE_XML::Command* > commandVectorQueue;
-   VE_XML::Command* bufferCommand;
    cfdCommandArray* _bufferArray;
 #ifdef _CLUSTER
    // Cluster Stuff for the above state variables

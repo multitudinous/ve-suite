@@ -110,7 +110,7 @@ void SoundsPane::_onUpdate(wxCommandEvent& WXUNUSED(event))
 
 void SoundsPane::SetCommInstance( VjObs_ptr veEngine )
 {
-   xplorerPtr = veEngine;
+   xplorerPtr = VjObs::_duplicate( veEngine );
 }
 //////////////////////////////////////////////////
 void SoundsPane::SendCommandsToXplorer( void )

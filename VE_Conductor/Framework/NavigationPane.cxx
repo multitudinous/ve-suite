@@ -93,7 +93,7 @@ NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* 
    this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
    SetSizer( mainSizer );
 
-   xplorerPtr = veEngine;
+   xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
    
    // Update VE-Xplorer data
@@ -493,7 +493,7 @@ void NavigationPane::OnHeadCheck( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////
 void NavigationPane::SetCommInstance( VjObs_ptr veEngine )
 {
-   xplorerPtr = veEngine;
+   xplorerPtr = VjObs::_duplicate( veEngine );
 }
 //////////////////////////////////////////////////
 void NavigationPane::SendCommandsToXplorer( void )

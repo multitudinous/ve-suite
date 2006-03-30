@@ -76,6 +76,8 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
 :wxDialog(parent,id,wxString("CADTree Manager"),wxDefaultPosition,wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("CADTree Manager"))
 {
+   _rootNode = 0;
+
    SetRootCADNode(node);
 
    _propsDlg = 0;
@@ -114,7 +116,7 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
 //////////////////////////////////////////////////////////
 void CADNodeManagerDlg::SetVjObsPtr(VjObs_ptr xplorerCom)
 {
-   _vjObsPtr = xplorerCom;
+   _vjObsPtr = VjObs::_duplicate(xplorerCom);
 }
 #endif
 /////////////////////////////////////////////////////////
