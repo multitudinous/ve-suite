@@ -70,14 +70,6 @@ namespace VE_XML
    class Command;
 }
 
-namespace VE_Conductor
-{
-namespace GUI_Utilities
-{
-   class CADNodeManagerDlg;
-}
-}
-
 class Interface;
 
 typedef std::vector< wxPoint > POLY;
@@ -175,7 +167,7 @@ public:
    virtual void ViewResultsVariables( void );
    
    ///Launches the geometry dialogs
-   void ViewCADInfo( VjObs_ptr vjObjs );
+   //void ViewCADInfo( VjObs_ptr vjObjs );
 
 protected:
    void GetDataTables( VE_XML::Command* inputCommand, 
@@ -230,7 +222,6 @@ protected:
 
    VjObs_var vjObsPtr;///<The VjObj ptr.
 
-   VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
 };
 

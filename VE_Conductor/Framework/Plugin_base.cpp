@@ -466,11 +466,6 @@ Interface* REI_Plugin::Pack()
 ////////////////////////////////////////////////////////////////////
 Model* REI_Plugin::GetModel( void )
 {
-   if ( veModel == NULL )
-   {
-      veModel = new Model();
-   }
-
    return veModel;
 }
 ////////////////////////////////////////////////////////////////////
@@ -952,22 +947,6 @@ void REI_Plugin::FinancialData ()
     financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
   
   financial_dlg->Show();
-}
-///////////////////////////////////////////////
-void REI_Plugin::ViewCADInfo( VjObs_ptr vjObs )
-{
-   VjObs_var tempVjObs = vjObs;
-   if( !cadDialog )
-   {
-      if ( CORBA::is_nil( tempVjObs.in() ) )
-         return;
-      //this will change once we have a way to retrieve the geometry from the model
-      cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
-                                                               0, ::wxNewId() );
-   }
-
-   cadDialog->SetVjObsPtr( tempVjObs.in() );
-   cadDialog->Show();
 }
 ///////////////////////////////////////////////
 void REI_Plugin::ViewInputVariables( void )

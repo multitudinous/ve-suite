@@ -46,6 +46,8 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 
+#include "VE_Conductor/Framework/CADNodeManagerDlg.h"
+
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
 #include <wx/utils.h>
@@ -125,6 +127,12 @@ Network::Network(wxWindow* parent, int id)
 Network::~Network()
 {
    links.clear();
+
+   if( cadDialog)
+   {
+      cadDialog->Destroy();
+      cadDialog = 0;
+   }
 
    /*for (iter=modules.begin(); iter!=modules.end(); iter++)
    {
@@ -2396,8 +2404,21 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 {
    if (m_selMod<0) 
       return;
+
    // Here we launch a dialog for a specific plugins input values
-   modules[m_selMod].GetPlugin()->ViewCADInfo( xplorerPtr.in() );
+   VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+
+   if( !cadDialog )
+   {
+      if ( CORBA::is_nil( xplorerPtr.in() ) )
+         return;
+      //this will change once we have a way to retrieve the geometry from the model
+      cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
+                                                               this, ::wxNewId() );
+   }
+
+   cadDialog->SetVjObsPtr( xplorerPtr.in() );
+   cadDialog->ShowModal();
 }
 ///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )

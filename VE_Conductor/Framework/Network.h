@@ -75,34 +75,15 @@ enum
    MODEL_INPUTS,
    MODEL_RESULTS
 };
-/*
-typedef struct 
-{
-  unsigned long Fr_mod;
-  unsigned long To_mod;
-  int Fr_port;
-  int To_port;
 
-  std::vector<wxPoint> cons; //connectors
-  POLY poly; //Poly is the current poly on the canvas
-} LINK;
- 
-typedef struct 
+namespace VE_Conductor
 {
-  REI_Plugin * pl_mod;
-  POLY poly; //Poly is the current poly on the canvas
-  std::vector<LINK*> links; //links connected with me
-  std::string cls_name;
-} MODULE;
+namespace GUI_Utilities
+{
+   class CADNodeManagerDlg;
+}
+}
 
-typedef struct 
-{
-  wxPoint cons[2]; //2 connectors for tag, end and middle
-  wxString text;
-  wxRect box;
-  POLY poly; //Poly is the current poly on the canvas
-} TAG;
-*/
 class Network : public wxScrolledWindow, public wxThreadHelper
 {
 public:
@@ -268,6 +249,8 @@ private:
 
    ///ptr to send data back to explorer
    VjObs_var xplorerPtr;
+   ///Used to operate on cad data in a plugin
+   VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
    DECLARE_EVENT_TABLE() // no semicolon needed
 };
 
