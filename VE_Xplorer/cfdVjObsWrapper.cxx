@@ -41,6 +41,9 @@
 #include "VE_Xplorer/cfdModelHandler.h"
 
 #include "VE_Xplorer/cfdDebug.h"
+
+#include "VE_Open/XML/Command.h"
+
 #include <iostream>
 #include <boost/concept_check.hpp>
 
@@ -239,12 +242,17 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    }
 #endif // _CLUSTER
 }
-
+//////////////////////////////////////////////////////////////////////////////
 cfdCommandArray* cfdVjObsWrapper::GetCommandArray( void )
 {
    return _vjObs->_cfdArray;
 }
-
+//////////////////////////////////////////////////////////////////////////////
+VE_XML::Command* cfdVjObsWrapper::GetXMLCommand( void )
+{
+   return _vjObs->bufferCommand;
+}
+//////////////////////////////////////////////////////////////////////////////
 double cfdVjObsWrapper::GetShortArray( int i )
 {
    return _vjObs->cfdShort_data_array[ i ];

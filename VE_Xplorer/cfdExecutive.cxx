@@ -40,6 +40,7 @@
 #include "VE_Xplorer/cfdModelHandler.h"
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdThread.h"
+#include "VE_Xplorer/cfdModel.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
@@ -200,7 +201,7 @@ void cfdExecutive::GetNetwork( void )
    // Get buffer value from Body_UI implementation
    std::string temp( ui_i->GetNetworkString() );
    const std::string network = temp;
-   vprDEBUG(vesDBG,2) << "|\tNetwork String : " << network 
+   vprDEBUG(vesDBG,0) << "|\tNetwork String : " << network 
                           << std::endl << vprDEBUG_FLUSH;
 
    // Load from the nt file loaded through wx
@@ -259,7 +260,9 @@ void cfdExecutive::GetEverything( void )
             // When we create the _plugin map here we will do the following
             _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
             _plugins[ iter->first ]->AddSelfToSG();
-            cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
+            cfdModel* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
+            tempCFDModel->SetID( iter->first );
+            cfdModelHandler::instance()->AddModel( tempCFDModel );
             std::map< int, VE_Model::Model* >::iterator modelIter;
             // this call always returns something because it is up to date with the id map
             modelIter = idToModel.find( iter->first );

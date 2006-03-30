@@ -47,6 +47,10 @@ namespace PortableServer{ class POA; }
 #include <vector>
 #include <string>
 
+namespace VE_XML
+{
+   class Command;
+}
 namespace VE_Xplorer
 {
 class cfdVjObsWrapper
@@ -60,6 +64,7 @@ public:
    void init( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, int, char** );
 #endif
    cfdCommandArray* GetCommandArray( void );
+   VE_XML::Command* GetXMLCommand( void );
    double GetShortArray( int );
    void GetCfdStateVariables( void );
    void PreFrameUpdate( void );

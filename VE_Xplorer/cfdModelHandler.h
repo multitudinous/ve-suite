@@ -40,7 +40,10 @@ namespace VE_SceneGraph
    class cfdDCS;
    class cfdGroup;
 }
-
+namespace VE_XML
+{
+   class Command;
+}
 namespace VE_Xplorer
 {
    class cfdDataSet;
@@ -86,6 +89,8 @@ public:
    cfdDataSet* GetActiveDataSet( void );
 
    void SetCommandArray( cfdCommandArray* );
+   ///\param inputCommand input xml command
+   void SetXMLCommand( VE_XML::Command* inputCommand );
    void CreateObjects( void );      
    void LoadSurfaceFiles( std::string );
    vtkPolyData* GetArrow( void );
@@ -115,6 +120,7 @@ private:
    std::string _param;
    cfdDataSet* activeDataset;
    cfdCommandArray* commandArray;
+   VE_XML::Command* activeCommand;
    cfdReadParam* _readParam;
    cfdScalarBarActor* _scalarBar;
    cfdModel* _activeModel;

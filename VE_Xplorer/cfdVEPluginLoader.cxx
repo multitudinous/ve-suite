@@ -59,9 +59,10 @@ cfdVEPluginLoader::cfdVEPluginLoader()
 //////////////////////////////////////////////////////////////////
 cfdVEPluginLoader::~cfdVEPluginLoader()
 {
-   for ( size_t i=0; i<plugins.size(); i++)
+   std::map< int, cfdVEBaseClass* >::iterator iter;
+   for ( iter = plugins.begin(); iter != plugins.end(); ++iter)
    {
-      delete (plugins[i]);
+      delete iter->second;
    }
 
    for ( size_t i=0; i<libs.size(); i++)
@@ -83,21 +84,20 @@ int cfdVEPluginLoader::GetNumberOfPlugins( void )
 cfdVEBaseClass* cfdVEPluginLoader::CreateObject( std::string _objname )
 {
    int selectPlugin = -1;
-
-   for (unsigned int i=0; i<plugins.size(); i++)
-   {  
-      
-      if ( plugins.at(i)->GetName() == _objname )
+   std::map< int, cfdVEBaseClass* >::iterator iter;
+   for ( iter = plugins.begin(); iter != plugins.end(); ++iter )
+   {
+      if ( iter->second->GetName() == _objname )
       {
-         selectPlugin = i;
+         selectPlugin = iter->first;
          break;
       }
    }
 
-   if (selectPlugin == -1)
+   if ( selectPlugin == -1 )
    {
-      std::cerr <<"ERROR: cfdVEPluginLoader::CreateObject : " << _objname 
-            << " : Plugin Not Found!"<< std::endl;
+      std::cerr <<"|\tcfdVEPluginLoader::CreateObject : " << _objname 
+            << " : Plugin Not Found."<< std::endl;
       return NULL;
    }
 
@@ -185,7 +185,7 @@ void cfdVEPluginLoader::LoadPlugins( void )
 
       if ( test_obj )
       {
-         plugins.push_back( test_obj );
+         plugins[ i ] = test_obj;
          std::cout << "|\tLoaded and created plugin " 
                      << test_obj->GetName() << std::endl;
       }

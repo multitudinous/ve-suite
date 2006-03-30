@@ -106,12 +106,14 @@ cfdModelHandler::cfdModelHandler( void )
                           << std::endl << vprDEBUG_FLUSH;
    _param.erase();//_param = 0;
    
-   this->activeDataset  = 0;
-   this->_scalarBar     = 0;
-   this->arrow          = 0;
-   this->_readParam     = 0;
-   this->commandArray   = 0;
-   this->_activeModel   = 0;
+   activeDataset  = 0;
+   _scalarBar     = 0;
+   arrow          = 0;
+   _readParam     = 0;
+   commandArray   = 0;
+   _activeModel   = 0;
+   activeCommand  = 0;
+
    tbased = false;
    _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
    
@@ -170,10 +172,16 @@ void cfdModelHandler::CleanUp( void )
 ///////////////////////
 // Helper functions
 ///////////////////////
+/////////////////////////////////////////////////////////////
 void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
 {
    // Must be set before PreFrameUpdate is called
    commandArray = input;
+}
+/////////////////////////////////////////////////////////////
+void cfdModelHandler::SetXMLCommand( VE_XML::Command* inputCommand )
+{
+   activeCommand = inputCommand;
 }
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -199,11 +207,21 @@ void cfdModelHandler::SetActiveModel( int modelNumber )
 {
    try
    {
-      _activeModel = _modelList.at( modelNumber );
+      for ( size_t i = 0; i < _modelList.size(); i++ )
+      {
+         if ( modelNumber = _modelList.at( i )->GetID() )
+         {
+            vprDEBUG(vesDBG,1) << "|\tcfdModelHandler::SetActiveModel : " 
+                  << modelNumber 
+                  << " is set." << std::endl << vprDEBUG_FLUSH;
+            _activeModel = _modelList.at( i );
+            break;
+         }
+      }
    }
    catch (...)
    {
-      std::cerr << "|\t\tcfdModelHandler::SetActiveModel : " 
+      std::cerr << "|\tcfdModelHandler::SetActiveModel : " 
                   << modelNumber 
                   << " is out of range." << std::endl;
    }
@@ -469,15 +487,14 @@ void cfdModelHandler::PreFrameUpdate( void )
    bool updateScalarRange = false;
 
    std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
-   if ( _activeModel )
-   if(_activeModel->GetVECommand())
+   if( activeCommand )
    {
-      currentEventHandler = _eventHandlers.find(_activeModel->GetVECommand()->GetCommandName());
+      currentEventHandler = _eventHandlers.find( activeCommand->GetCommandName() );
       if(currentEventHandler != _eventHandlers.end())
       {
-         vprDEBUG(vesDBG,0) << "Executing: "<< _activeModel->GetVECommand()->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
+         vprDEBUG(vesDBG,0) << "Executing: "<< activeCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
          currentEventHandler->second->SetGlobalBaseObject();
-         currentEventHandler->second->Execute(_activeModel->GetVECommand());
+         currentEventHandler->second->Execute( activeCommand );
       }
    }
    

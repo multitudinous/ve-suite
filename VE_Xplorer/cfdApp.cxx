@@ -333,6 +333,7 @@ void cfdApp::initScene( void )
    // modelHandler stores the arrow and holds all data and geometry
    //cfdModelHandler::instance()->Initialize( this->filein_name );
    cfdModelHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   cfdModelHandler::instance()->SetXMLCommand( _vjobsWrapper->GetXMLCommand() );
    cfdModelHandler::instance()->InitScene();
 
    // navigation and cursor 

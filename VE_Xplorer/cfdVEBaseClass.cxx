@@ -49,6 +49,7 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/CAD/CADAssembly.h"
 
 #include <fstream>
 #include <sstream>
@@ -523,7 +524,7 @@ void cfdVEBaseClass::SetXMLModel( VE_Model::Model* tempModel )
    xmlModel = tempModel;
 
    //Decompose model to be utilized by the event handlers
-   VE_CAD::CADNode* cadNodeData = xmlModel->GetGeometry();
+   VE_CAD::CADAssembly* cadNodeData = dynamic_cast< VE_CAD::CADAssembly* >( xmlModel->GetGeometry() );
    if ( cadNodeData )
    {
       VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();

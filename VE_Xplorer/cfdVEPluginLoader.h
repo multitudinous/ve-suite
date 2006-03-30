@@ -36,7 +36,7 @@
 
 #include <vpr/DynLoad/LibraryFinder.h>
 
-#include <vector>
+#include <map>
 
 namespace VE_Xplorer
 {
@@ -70,7 +70,7 @@ public:
    cfdVEBaseClass* CreateObject( std::string ); 
 
 //private:
-   std::vector<cfdVEBaseClass*> plugins;
+   std::map< int, cfdVEBaseClass* > plugins;
    //Keep the list of the first intance of each plugin
    //std::vector<const wxClassInfo*> plugin_cls; 
 

@@ -105,21 +105,14 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
    _activeTextureDataSet = 0;
 #endif
    _rootCADNode = 0;
-   
+   modelID = 10000000;
 }
 
 cfdModel::~cfdModel()
 {
    vprDEBUG(vesDBG,2) << "cfdModel destructor"
                           << std::endl << vprDEBUG_FLUSH;
-/*
-   for ( GeometryDataSetList::iterator itr = mGeomDataSets.begin();
-                                       itr != mGeomDataSets.end(); itr++ )
-   {
-      delete *itr;
-   }
-   mGeomDataSets.clear();
-*/
+
    for ( std::map<unsigned int,VE_Xplorer::cfdFILE*>::iterator itr = _partList.begin();
                                        itr != _partList.end(); itr++ )
    {
@@ -353,19 +346,26 @@ VE_SceneGraph::cfdDCS* cfdModel::GetCfdDCS( )
 {
    return this->_worldDCS;
 }
-
 ///////////////////////////////
 bool cfdModel::GetMirrorDataFlag( void )
 {
    return mirrorDataFlag;
 }
-
 ///////////////////////////////
 void cfdModel::SetMirrorDataFlag( bool input )
 {
    mirrorDataFlag = input;
 }
-
+///////////////////////////////
+unsigned int cfdModel::GetID( void )
+{
+   return modelID;
+}
+///////////////////////////////
+void cfdModel::SetID( unsigned int id )
+{
+   modelID = id;
+}
 ///////////////////////////////
 void cfdModel::updateCurModel()
 {
