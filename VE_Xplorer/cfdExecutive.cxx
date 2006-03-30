@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdExecutive.h"
+
 #include "VE_SceneGraph/cfdDCS.h"
 
 #include "VE_Xplorer/VE_i.h"
@@ -51,8 +51,6 @@
 #include <string>
 #include <sstream>
 
-#include "VE_Xplorer/cfdDebug.h"
-
 #include <vpr/System.h>
 
 #include <orbsvcs/CosNamingC.h>
@@ -60,8 +58,12 @@
 #include <xercesc/dom/DOM.hpp>
 XERCES_CPP_NAMESPACE_USE
 
+#include "VE_Xplorer/cfdExecutive.h"
+#include "VE_Xplorer/cfdDebug.h"
+
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+
 vprSingletonImp( VE_Xplorer::cfdExecutive );
 
 void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,

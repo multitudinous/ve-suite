@@ -52,8 +52,10 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdModel;
 }
+#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_EVENTS{
-class CADEventHandler : public EventHandler{
+class VE_XPLORER_EXPORTS CADEventHandler : public EventHandler{
 public:
    ///Constructor
    CADEventHandler();

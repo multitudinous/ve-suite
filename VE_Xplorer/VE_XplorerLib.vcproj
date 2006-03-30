@@ -277,6 +277,9 @@
 			Name="src"
 			Filter=".cpp">
 			<File
+				RelativePath=".\ActiveModelEventHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\CADAddAttributeEH.cxx">
 			</File>
 			<File
@@ -454,6 +457,9 @@
 		<Filter
 			Name="headers"
 			Filter=".h">
+			<File
+				RelativePath=".\ActiveModelEventHandler.h">
+			</File>
 			<File
 				RelativePath=".\CADAddAttributeEH.h">
 			</File>

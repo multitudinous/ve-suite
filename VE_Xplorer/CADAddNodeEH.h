@@ -48,7 +48,7 @@ namespace VE_CAD
 #include "VE_Xplorer/CADEventHandler.h"
 namespace VE_EVENTS
 {
-class CADAddNodeEventHandler: public CADEventHandler{
+class VE_XPLORER_EXPORTS CADAddNodeEventHandler: public CADEventHandler{
 public:
    ///Constructor
    CADAddNodeEventHandler();

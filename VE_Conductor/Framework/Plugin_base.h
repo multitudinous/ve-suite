@@ -31,10 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLUGIN_BASE_H
 #define PLUGIN_BASE_H
+#include "VE_Open/skel/VjObsC.h"
 //#include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/Model/Port.h"
-#include "VE_Open/skel/VjObsC.h"
+
 #include "VE_Conductor/Framework/interface.h"
 #include <vector>
 #include <map>
@@ -43,6 +44,8 @@
 
 #include <wx/object.h>
 #include <wx/icon.h>
+
+
 
 class wxPoint;
 class wxDC;
