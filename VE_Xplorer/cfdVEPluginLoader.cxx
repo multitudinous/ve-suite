@@ -32,6 +32,8 @@
 
 #include "VE_Xplorer/cfdVEPluginLoader.h"
 #include "VE_Xplorer/cfdVEBaseClass.h"
+#include "VE_Xplorer/cfdDebug.h"
+
 #include <iostream>
 
 #include <vpr/vpr.h>
@@ -53,137 +55,31 @@ using namespace VE_Xplorer;
 cfdVEPluginLoader::cfdVEPluginLoader()
 {
    plugins.clear();
-   //plugin_cls.clear();
-   //::wxInitAllImageHandlers();
-   //wxPluginLibrary::ms_classes = new wxDLImports;
-   //wxPluginManager::CreateManifest();
-   //wxClassInfo::InitializeClasses();
-   //SetTopWindow( NULL );
 }
-
+//////////////////////////////////////////////////////////////////
 cfdVEPluginLoader::~cfdVEPluginLoader()
 {
-   for (unsigned int i=0; i<plugins.size(); i++)
+   for ( size_t i=0; i<plugins.size(); i++)
    {
       delete (plugins[i]);
    }
-   for (unsigned int i=0; i<libs.size(); i++)
+
+   for ( size_t i=0; i<libs.size(); i++)
    {
-      libs.at(i)->unload();
+      if ( libs.at(i)->isLoaded() )
+         libs.at(i)->unload();
       //delete libs.at(i);
    }
    plugins.clear();
    //plugin_cls.clear();
    libs.clear();
-/*   delete wxPluginLibrary::ms_classes;
-   wxPluginLibrary::ms_classes = NULL;
-   wxPluginManager::ClearManifest();
-   wxClassInfo::CleanUp();
-   wxModule::CleanUpModules();
-*/
-   //this->OnExit();
-   //this->CleanUp();
 }
-/*    
-bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
-{
-   wxString filename;
-
-   const wxString ext = wxString("*") + wxPluginLibrary::GetDllExt();
-  
-   wxLogDebug ("Loading plugins from [%s]", lib_dir.c_str());
-  
-   wxDir dir(lib_dir);// + "\\" + "plugins");
-  
-   if ( !dir.IsOpened() )
-   {
-      // deal with the error here - wxDir would already log an 
-      // error message explaining the exact reason of the failure
-      std::cerr << "|\tCan't find plugin dir. " << std::endl;
-      return FALSE;
-   }
-
-   bool cont = dir.GetFirst(&filename, ext, wxDIR_FILES );
-
-   if ( cont )
-   {
-      while ( cont )
-      {
-         wxFileName  libname(lib_dir, filename);
-         const wxString libn=lib_dir+"/"+libname.GetName()+wxPluginLibrary::GetDllExt();
-         //libs.push_back( new wxDynamicLibrary( libn ) );
-         libs.push_back( wxPluginManager::LoadLibrary (libn) );
-
-         if (libs.back()->IsLoaded())
-         {
-            wxLogDebug ("Loaded [ %s ]", filename.c_str());
-         }
-         else
-         {
-            wxLogDebug ("Could Not Load [ %s ]", filename.c_str());
-            //wxClassInfo* test = CLASSINFO(lib->GetLibHandle() )
-            //std::cout << test->m_className << std::endl;
-         }
-         cont = dir.GetNext(&filename);
-         //delete lib;
-      }
-
-      RegisterPlugins();
-      return TRUE;   
-   }
-   else
-   {
-      wxLogDebug ("Appropriate directory is present but no plugins are present" );
-      return false;        
-   }
-}
-*/
-
-/*
-void cfdVEPluginLoader::RegisterPlugins()
-{
-   wxNode *node;
-  
-   plugins.clear();
-   plugin_cls.clear();
-
-   wxClassInfo::sm_classTable->BeginFind();
-  
-   
-   // Rip through the entire classinfo hash
-    
-   // Looking for classes derived from "Plugin",
-   // but make sure they aren't actually the Plugin class itself !
-    
-   // This is a real rip off from the wxModule initialisation code
-   
-  
-   while ( (node = wxClassInfo::sm_classTable->Next()) )
-   {
-      wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
-		if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "VE_Xplorer::cfdVEBaseClass" ) )
-	   {   
-         cfdVEBaseClass* object = (cfdVEBaseClass *) classInfo->CreateObject();
-         plugins.push_back(object);
-         plugin_cls.push_back(classInfo);
-         std::cout << "|\tRegister plugins : " << classInfo->GetClassName() << std::endl;
-      }
-   }
-}
-*/
-/*char* cfdVEPluginLoader::GetPluginName( int index )
-{
-   char* _name;// = plugins.at(index)->GetName();
-   _name = NULL;
-   index
-   return _name;
-}*/
-
+//////////////////////////////////////////////////////////////////
 int cfdVEPluginLoader::GetNumberOfPlugins( void )
 {
    return plugins.size();
 }
-
+//////////////////////////////////////////////////////////////////
 cfdVEBaseClass* cfdVEPluginLoader::CreateObject( std::string _objname )
 {
    int selectPlugin = -1;
@@ -207,52 +103,95 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateObject( std::string _objname )
 
    return CreateNewPlugin( selectPlugin );
 }
-
+//////////////////////////////////////////////////////////////////
 void cfdVEPluginLoader::ScanAndLoad( void )
 {
+   //Look for custom plugin path
    std::string path("Plugins/");
    std::string modelPath;
    vpr::ReturnStatus status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
    std::string libDir = path + modelPath;
 
+   //Look for VE-Suite default plugin path
+   path.assign("/lib/");
+   //std::string modelPath;
+   std::string vesuitePath;
+   status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
+   status = vpr::System::getenv( std::string("VE_SUITE_HOME"), vesuitePath );
+   std::string vesuiteLibDir = vesuitePath + path + modelPath;
+
    boost::filesystem::path dir_path( libDir );
+   boost::filesystem::path vesuiteDirPath( vesuiteLibDir );
+   bool customPlugins = false;
    try
    {
       boost::filesystem::is_directory( dir_path );
+      customPlugins = true;
    }
    catch ( const std::exception& ex )
    {
-      std::cout << ex.what() << std::endl;
-      return;
+      vprDEBUG(vesDBG,1) << ex.what() 
+                           << std::endl 
+                           << vprDEBUG_FLUSH;
    }
 
-   vpr::LibraryFinder finder(libDir, DSO_SUFFIX);
+   // Load the custon plugin
+   if ( customPlugins )
+   {
+      vpr::LibraryFinder finder(libDir, DSO_SUFFIX);
 
-   libs = finder.getLibraries();
-   std::cout << " Number of libs : " << libs.size() << std::endl;
+      libs = finder.getLibraries();
+      vprDEBUG(vesDBG,1)  << " Number of libs : " 
+                           << libs.size() 
+                           << std::endl 
+                           << vprDEBUG_FLUSH;
+   }
 
-   for ( unsigned int i = 0; i < libs.size(); ++i )
+   // Load the default plugin
+   vpr::LibraryFinder finder(vesuiteLibDir, DSO_SUFFIX);
+
+   vpr::LibraryFinder::LibraryList defaultLibs = finder.getLibraries();
+   vprDEBUG(vesDBG,1) << " Number of libs : " 
+                        << defaultLibs.size() 
+                        << std::endl 
+                        << vprDEBUG_FLUSH;
+   for ( size_t i = 0; i < defaultLibs.size(); ++i )
+   {
+      libs.push_back( defaultLibs.at( i ) );
+   }
+
+   for ( size_t i = 0; i < libs.size(); ++i )
    {
       status = libs.at( i )->load();
-      std::cout << " Loaded lib successfully : " << status.success() << std::endl;
+      vprDEBUG(vesDBG,1)  << " Loaded lib successfully : " 
+                           << status.success() 
+                           << std::endl 
+                           << vprDEBUG_FLUSH;
    }
    
    LoadPlugins();
 }
-
+//////////////////////////////////////////////////////////////////
 void cfdVEPluginLoader::LoadPlugins( void )
 {
-   for ( unsigned int i = 0; i < libs.size(); ++i )
+   for ( size_t i = 0; i < libs.size(); ++i )
    {
-      cfdVEBaseClass* test_obj(NULL);
+      cfdVEBaseClass* test_obj( 0 );
 
-      test_obj = CreateNewPlugin( i );
+      if ( libs.at( i )->isLoaded() )
+      {
+         test_obj = CreateNewPlugin( i );
+      }
 
-      plugins.push_back( test_obj );
-      std::cout << test_obj->GetName() << std::endl;
+      if ( test_obj )
+      {
+         plugins.push_back( test_obj );
+         std::cout << "|\tLoaded and created plugin " 
+                     << test_obj->GetName() << std::endl;
+      }
    }
 }
-
+//////////////////////////////////////////////////////////////////
 cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
 {
    void* (*creator)();
@@ -261,11 +200,17 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
    // No, *this* is the weirdest cast I have ever written.
    creator = (void*(*)()) libs[ input ]->findSymbol( std::string("CreateVEPlugin") );
    if ( NULL != creator )
-      std::cout << " created plugin " << std::endl;
+   {
+      vprDEBUG(vesDBG,1)  << " created plugin " << std::endl << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      return 0;
+   }
 
    void* object = (*creator)();
    if ( NULL != object )
-      std::cout <<  " created Object creation " << std::endl;
+      vprDEBUG(vesDBG,1)  <<  " created Object creation " << std::endl << vprDEBUG_FLUSH;
 
    // Is there a way to test that this cast was successful?
    test_obj = static_cast<cfdVEBaseClass*>(object);
