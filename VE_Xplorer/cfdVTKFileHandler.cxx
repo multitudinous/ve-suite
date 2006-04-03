@@ -20,6 +20,7 @@
 #include <vtkPolyDataWriter.h>
 #include <iostream>
 #include <vtkUnstructuredGridReader.h>
+#include <fstream>
 
 using namespace VE_Util;
 
