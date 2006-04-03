@@ -1,10 +1,10 @@
 #!/bin/csh 
 # sets up environment to build and/or run VE-Xplorer
 #Change this to where VE-Suite installed
-setenv VE_INSTALL_DIR <install_location>/VE_Suite.0.9.0/RHEL_3
+setenv VE_INSTALL_DIR <install_location>/VE_Suite.0.9.5/RHEL_3
 
 #Change this VE-Suite pre-complied dependencies are installed
-setenv VE_DEPS_DIR <install_location>/VE_Suite_deps.0.9.0/RHEL_3
+setenv VE_DEPS_DIR <install_location>/VE_Suite_deps.0.9.5/RHEL_3
 
 # vrJuggler  
 # These are setup for using VE-Suite dependency install's location
