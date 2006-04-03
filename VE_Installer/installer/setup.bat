@@ -7,7 +7,7 @@ REM For example, if you installed in C:\Program Files\VE_Suite.0.9.0
 REM you must set VE_INSTALL_DIR in the following manner:
 REM set VE_INSTALL_DIR=C:\PROGRA~1\VE_Suite.0.9.0
 
-set VE_INSTALL_DIR=C:\VE_Suite.0.9.3
+set VE_INSTALL_DIR=C:\VE_Suite.0.9.5
 
 REM the directory containing datasets
 set VE_WORKING_DIR=%VE_INSTALL_DIR%\exampleDatasets
@@ -16,7 +16,7 @@ REM the directory containing user defined plugins
 set VE_USER_PLUGIN_DIR=.\
 
 REM VE-Suite pre-complied dependencies
-set VE_DEPS_DIR=C:\VE_Suite.0.9.3_Dependencies
+set VE_DEPS_DIR=C:\VE_Suite.0.9.5_Dependencies
 
 REM vrJuggler  
 REM These are setup for using VE-Suite dependency install's location
