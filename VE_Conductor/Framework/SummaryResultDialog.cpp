@@ -55,7 +55,7 @@ SummaryResultDialog::SummaryResultDialog(wxWindow * parent, const wxString& titl
    left_margin->Add(10, 10);
    right_margin->Add(10, 10);
    toptop->Add(left_margin, 0, wxALIGN_LEFT);
-   toptop->Add(top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL);
+   toptop->Add(top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    toptop->Add(right_margin, 0, wxALIGN_RIGHT);
 
    tabs = new wxNotebook (this, -1, wxDefaultPosition, tabsize, wxNB_TOP);
@@ -69,7 +69,7 @@ SummaryResultDialog::SummaryResultDialog(wxWindow * parent, const wxString& titl
    top_sizer->Add(new wxStaticText(this, -1, "Summary Data   ", wxDefaultPosition, wxDefaultSize), 0, wxALIGN_CENTER_HORIZONTAL);
    top_sizer->Add(10, 5, 0);
    //  top_sizer->Add(syngas, 0, wxALIGN_CENTER_HORIZONTAL);
-   top_sizer->Add(tabs, 0, wxALIGN_CENTER_HORIZONTAL);
+   top_sizer->Add(tabs, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    top_sizer->Add(10, 5, 0);
    top_sizer->Add(ok, 0, wxALIGN_CENTER_HORIZONTAL);
    top_sizer->Add(10, 10, 0); //the bottom margin
@@ -120,8 +120,11 @@ void SummaryResultDialog::NewTab( const wxString& title )
    }
    else
    {
-      wxPanel *panel = new wxPanel (tabs);
-      syngas = new TexTable (panel, -1, wxDefaultPosition, tsize);
-      tabs->AddPage (panel, title);
+      wxPanel* panel = new wxPanel( tabs );
+      wxBoxSizer* sizerPanel = new wxBoxSizer( wxVERTICAL );
+      syngas = new TexTable( panel, -1, wxDefaultPosition, tsize );
+      sizerPanel->Add( syngas, 1, wxEXPAND );
+      panel->SetSizer( sizerPanel );
+      tabs->AddPage( panel, title );
    }
 }

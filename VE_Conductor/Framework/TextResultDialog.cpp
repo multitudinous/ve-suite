@@ -57,7 +57,7 @@ TextResultDialog::TextResultDialog(wxWindow * parent, const wxString& title, wxS
   left_margin->Add(10, 10);
   right_margin->Add(10, 10);
   toptop->Add(left_margin, 0, wxALIGN_LEFT);
-  toptop->Add(top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL);
+  toptop->Add(top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
   toptop->Add(right_margin, 0, wxALIGN_RIGHT);
 
   syngas = new TexTable(this, -1, wxDefaultPosition, 
@@ -65,9 +65,11 @@ TextResultDialog::TextResultDialog(wxWindow * parent, const wxString& title, wxS
 
   ok = new wxButton(this, wxID_OK, "OK");
   top_sizer->Add(10, 10, 0);
-  top_sizer->Add(new wxStaticText(this, -1, "Summary Data   ", wxDefaultPosition, wxDefaultSize), 0, wxALIGN_CENTER_HORIZONTAL);
+  top_sizer->Add(
+         new wxStaticText(this, -1, "Summary Data   ", wxDefaultPosition, wxDefaultSize), 
+         0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0);
-  top_sizer->Add(syngas, 0, wxALIGN_CENTER_HORIZONTAL);
+  top_sizer->Add(syngas, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(ok, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 10, 0); //the bottom margin
