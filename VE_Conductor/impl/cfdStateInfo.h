@@ -74,7 +74,16 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    writer->writeFloat( clusterTime_since_start );
    writer->writeUint32( clusterFrameNumber );
    writer->writeFloat( clusterQuatCamIncrement );
-   writer->writeString( clusterXMLCommands );
+   //writer->writeString( clusterXMLCommands );
+   vpr::BufferObjectWriter* bufwriter =
+      static_cast< vpr::BufferObjectWriter* >( writer );
+ 
+   bufwriter->writeUint64(clusterXMLCommands.size());
+ 
+   for(unsigned i = 0; i < clusterXMLCommands.length(); ++i)
+   {
+     bufwriter->writeRaw((vpr::Uint8*)&(clusterXMLCommands[i]),1);
+   }
    return vpr::ReturnStatus::Succeed;
 }
 
@@ -95,7 +104,19 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    clusterTime_since_start = reader->readFloat();
    clusterFrameNumber      = reader->readUint32();
    clusterQuatCamIncrement = reader->readFloat();
-   clusterXMLCommands      = reader->readString();
+   //clusterXMLCommands      = reader->readString();
+   vpr::BufferObjectReader* bufreader =
+      static_cast< vpr::BufferObjectReader* >( reader );
+ 
+   vpr::Uint64 str_len = bufreader->readUint64();
+ 
+   if ( !clusterXMLCommands.empty() ) 
+      clusterXMLCommands.clear();
+ 
+   for(unsigned i = 0; i < str_len; ++i)
+   {
+     clusterXMLCommands += (char)(*bufreader->readRaw(1));
+   }
    return vpr::ReturnStatus::Succeed;
 }
 }

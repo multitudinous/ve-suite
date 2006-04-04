@@ -488,6 +488,10 @@ void VjObs_i::GetCfdStateVariables( void )
          this->mStates->clusterXMLCommands      = (*iter);
          commandStringQueue.erase( iter );
       }
+      else
+      {
+         this->mStates->clusterXMLCommands.erase();
+      }
 #ifdef _OSG
 #ifdef VE_PATENTED      
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
