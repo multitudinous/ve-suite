@@ -534,7 +534,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 
    if ( !mStates.isLocal() )
    {
-      if ( clusterXMLCommands.size() > 0 )
+      if ( this->mStates->clusterXMLCommands.size() > 0 )
          SetCommandString( this->mStates->clusterXMLCommands.c_str() );
    }
    //sync up the frames on all nodes in the
@@ -816,7 +816,7 @@ void VjObs_i::SetCommandString( const char* value)
    std::string commandString( value );
 #ifdef _CLUSTER
    if ( mStates.isLocal() )
-      commandVectorQueue.push_back( commandString );
+      commandStringQueue.push_back( commandString );
 #endif
    domManager->Load( commandString );
    std::cout << commandString << std::endl;
