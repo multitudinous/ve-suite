@@ -199,6 +199,7 @@ protected:
 
    VE_XML::DOMDocumentManager* domManager;
    std::vector< VE_XML::Command* > commandVectorQueue;
+   std::vector< std::string > commandStringQueue;
    cfdCommandArray* _bufferArray;
 #ifdef _CLUSTER
    // Cluster Stuff for the above state variables

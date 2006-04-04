@@ -46,6 +46,8 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 
+#include "VE_Open/XML/CAD/CADAssembly.h"
+
 #include "VE_Conductor/Framework/CADNodeManagerDlg.h"
 
 #include <wx/dc.h>
@@ -2421,6 +2423,8 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
    cadDialog->SetVjObsPtr( xplorerPtr.in() );
    cadDialog->ShowModal();
    // Get cadnode back
+   *( dynamic_cast< VE_CAD::CADAssembly* >( veModel->AddGeometry() ) ) = 
+      *( dynamic_cast< VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
    delete cadDialog;
    cadDialog = 0;
 }

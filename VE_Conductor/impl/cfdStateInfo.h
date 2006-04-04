@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <vpr/IO/SerializableObject.h>
+#include <string>
 
 namespace ClusterVariables
 {
@@ -50,6 +51,7 @@ struct StateVariables
    float    clusterTime_since_start;
    long     clusterFrameNumber;
    float    clusterQuatCamIncrement;
+   std::string clusterXMLCommands;
 };
 }
 
@@ -72,6 +74,7 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    writer->writeFloat( clusterTime_since_start );
    writer->writeUint32( clusterFrameNumber );
    writer->writeFloat( clusterQuatCamIncrement );
+   writer->writeString( clusterXMLCommands );
    return vpr::ReturnStatus::Succeed;
 }
 
@@ -92,6 +95,7 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    clusterTime_since_start = reader->readFloat();
    clusterFrameNumber      = reader->readUint32();
    clusterQuatCamIncrement = reader->readFloat();
+   clusterXMLCommands      = reader->readString();
    return vpr::ReturnStatus::Succeed;
 }
 }

@@ -480,6 +480,14 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTimesteps        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
       this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
       this->mStates->clusterTime_since_start = time_since_start;
+
+      if ( !commandStringQueue.empty() )
+      {
+         std::vector< std::string >::iterator iter;
+         iter = commandStringQueue.begin();
+         this->mStates->clusterXMLCommands      = (*iter);
+         commandStringQueue.erase( iter );
+      }
 #ifdef _OSG
 #ifdef VE_PATENTED      
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
@@ -510,20 +518,29 @@ void VjObs_i::GetCfdStateVariables( void )
 void VjObs_i::GetUpdateClusterStateVariables( void )
 {
 #ifdef _CLUSTER
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_SC, this->mStates->clusterSc );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
+   {
+      vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_SC, this->mStates->clusterSc );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
+   }
 
+   if ( !mStates.isLocal() )
+   {
+      if ( clusterXMLCommands.size() > 0 )
+         SetCommandString( this->mStates->clusterXMLCommands.c_str() );
+   }
    //sync up the frames on all nodes in the
    //cluster
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+
    if ( !mStates.isLocal() )
    {
       if ( cfdSteadyStateVizHandler::instance()->GetActiveAnimation() != NULL )
@@ -797,6 +814,10 @@ void VjObs_i::SetCommandString( const char* value)
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
 
    std::string commandString( value );
+#ifdef _CLUSTER
+   if ( mStates.isLocal() )
+      commandVectorQueue.push_back( commandString );
+#endif
    domManager->Load( commandString );
    std::cout << commandString << std::endl;
    DOMDocument* commandDoc = domManager->GetCommandDocument();
