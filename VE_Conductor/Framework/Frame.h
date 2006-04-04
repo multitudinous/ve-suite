@@ -151,15 +151,18 @@ public:
    wxMenu* xplorerMenu;
    wxMenu* xplorerJugglerMenu;
 
-  //wxMenu *config_menu;
-  
-  PEThread* pelog;
+   //wxMenu *config_menu;
+   PEThread* pelog;
 
-  void Log(const char* msg);
-  //ACE_Thread_Mutex _mutex; //public mutex for the execution order
-  void CloseVE();
+   void Log(const char* msg);
+   //ACE_Thread_Mutex _mutex; //public mutex for the execution order
+   void CloseVE();
 
- protected:
+   void ConExeServer( void );
+   void ConVEServer( void );
+   ///Returns pointer to xplorer corba object
+   VjObs_ptr GetXplorerObject( void );
+protected:
   int m_frameNr;
   wxString fname;
   wxString directory;
@@ -194,10 +197,8 @@ protected:
    void ViewHelp(wxCommandEvent &event);
    void GlobalParam(wxCommandEvent &event);
 
-   void ConExeServer( void );
    void DisConExeServer(wxCommandEvent &event);
    void DisConVEServer(wxCommandEvent &event);
-   void ConVEServer( void );
    void LoadBase(wxCommandEvent &event);
    void LoadSour(wxCommandEvent &event);
    void LoadREIBase(wxCommandEvent &event);

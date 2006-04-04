@@ -233,7 +233,8 @@ private:
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
    VE_Model::Network* veNetwork;
-
+   ///Parent window pointer to the splitter in AppFrame
+   wxWindow* parent;
    ///User scale
    /// first = x scale
    /// second = y scale

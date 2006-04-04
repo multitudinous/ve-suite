@@ -36,6 +36,7 @@
 #include "VE_Conductor/Framework/Geometry.h"
 #include "VE_Conductor/Framework/UIDialog.h"
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
+#include "VE_Conductor/Framework/Frame.h"
 
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
@@ -125,6 +126,7 @@ Network::Network(wxWindow* parent, int id)
    isLoading = false;
    cadDialog = 0;
    SetBackgroundColour(*wxWHITE);
+   this->parent = parent;
 }
 
 Network::~Network()
@@ -2414,7 +2416,12 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
    if( !cadDialog )
    {
       if ( CORBA::is_nil( xplorerPtr.in() ) )
-         return;
+      {
+         ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
+         SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
+         if ( CORBA::is_nil( xplorerPtr.in() ) )
+            return;
+      }
       //this will change once we have a way to retrieve the geometry from the model
       cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                this, ::wxNewId() );
@@ -2423,7 +2430,7 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
    cadDialog->SetVjObsPtr( xplorerPtr.in() );
    cadDialog->ShowModal();
    // Get cadnode back
-   *( dynamic_cast< VE_CAD::CADAssembly* >( veModel->AddGeometry() ) ) = 
+   *( dynamic_cast< VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
       *( dynamic_cast< VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
    delete cadDialog;
    cadDialog = 0;

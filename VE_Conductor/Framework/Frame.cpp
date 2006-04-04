@@ -1208,8 +1208,6 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
          return;
       // create pane and set appropriate vars
       navPane = new NavigationPane( vjobs.in(), domManager );
-      // Set DOMDocument
-      // navPane->SetDOMManager( domManager );
    }
    else
    {
@@ -1229,8 +1227,6 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
          return;
       // create pane and set appropriate vars
       viewlocPane = new ViewLocPane( vjobs.in(), domManager );
-      // Set DOMDocument
-      // viewlocPane->SetDOMManager( domManager );
    }
    else
    {
@@ -1251,8 +1247,6 @@ void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED( event ) )
          return;
       // create pane and set appropriate vars
       soundsPane = new SoundsPane( vjobs.in(), domManager );
-      // Set DOMDocument
-      // soundsPane->SetDOMManager( domManager );
    }
    else
    {
@@ -1363,3 +1357,9 @@ void AppFrame::LaunchVisTabs( wxCommandEvent& WXUNUSED(event) )
    // now show it
    visTabs->Show();
 }
+///////////////////////////////////////////////////////////////////
+VjObs_ptr AppFrame::GetXplorerObject( void )
+{
+   return vjobs.in();
+}
+
