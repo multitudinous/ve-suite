@@ -66,12 +66,20 @@ public:
    ///equal operator
    Transform& operator= ( const Transform& );
 
-   /*
-   void SetTranslation( float* );
-   void SetScale( float* );
-   //degrees, H-P-R (Z-X-Y)
-   void SetRotation( float* );
-   */
+   
+   ///Set the translation array for this transform
+   ///\param translation The translation 
+   void SetTranslation( float* translation );
+
+   ///Set the scale array for this transform
+   ///\param scale The scale 
+   void SetScale( float* scale );
+
+   ///Set the rotation array for this transform
+   ///\param rotation The rotation angles in degrees\n
+   ///rotation is specified in H-P-R (Z-X-Y)
+   void SetRotation( float* rotation );
+  
    
    ///Create the transform from xml input
    ///\param xmlInput The input XML data.

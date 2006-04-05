@@ -115,19 +115,14 @@ Transform& Transform::operator=( const Transform& input)
    }
    return *this;
 }
-/*
 //////////////////////////////////////////////
 void Transform::SetTranslation(float* trans)
 {
    if(trans)
    {
-      if(!_translation)
-      {
-         _translation = new float[3];
-      }
-      _translation[0] = trans[0];
-      _translation[1] = trans[1];
-      _translation[2] = trans[2];
+      translationArray->AddElementToArray(trans[0]);
+      translationArray->AddElementToArray(trans[1]);
+      translationArray->AddElementToArray(trans[2]);
    }
 }
 ////////////////////////////////////////
@@ -135,13 +130,9 @@ void Transform::SetScale(float* scale)
 {
    if(scale)
    {
-      if(!_scale)
-      {
-         _scale = new float[3];
-      }
-      _scale[0] = scale[0];
-      _scale[1] = scale[1];
-      _scale[2] = scale[2];
+      scaleArray->AddElementToArray(scale[0]);
+      scaleArray->AddElementToArray(scale[1]);
+      scaleArray->AddElementToArray(scale[2]);
    }
 }
 //////////////////////////////////////////////
@@ -149,17 +140,13 @@ void Transform::SetRotation(float* rotation)
 {
    if(rotation)
    {
-      if(!_rotation)
-      {
-         _rotation = new float[3];
-      }
-      _rotation[0] = rotation[0];
-      _rotation[1] = rotation[1];
-      _rotation[2] = rotation[2];
+      rotationArray->AddElementToArray(rotation[0]);
+      rotationArray->AddElementToArray(rotation[1]);
+      rotationArray->AddElementToArray(rotation[2]);
    }
 }
 ////////////////////////////////////
-float* Transform::GetTranslation()
+/*float* Transform::GetTranslation()
 {
    return _translation;
 }
