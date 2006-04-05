@@ -120,7 +120,7 @@ void Transform::SetTranslation(float* trans)
 {
    if(trans)
    {
-      translationArray.Clear();
+      translationArray->Clear();
       translationArray->AddElementToArray(trans[0]);
       translationArray->AddElementToArray(trans[1]);
       translationArray->AddElementToArray(trans[2]);
@@ -131,7 +131,7 @@ void Transform::SetScale(float* scale)
 {
    if(scale)
    {
-      scaleArray.Clear();
+      scaleArray->Clear();
       scaleArray->AddElementToArray(scale[0]);
       scaleArray->AddElementToArray(scale[1]);
       scaleArray->AddElementToArray(scale[2]);
@@ -142,7 +142,7 @@ void Transform::SetRotation(float* rotation)
 {
    if(rotation)
    {
-      rotationArray.Clear();
+      rotationArray->Clear();
       rotationArray->AddElementToArray(rotation[0]);
       rotationArray->AddElementToArray(rotation[1]);
       rotationArray->AddElementToArray(rotation[2]);
