@@ -67,6 +67,9 @@ public:
    ///\param newArrayValues The new values to set to this array.
    void SetArray( std::vector<double> newArrayValues);
 
+   ///Erase the elements in the array.
+   void Clear();
+
    ///Get a specific element
    ///\param index The index of the element to return
    double GetElement( unsigned int index);

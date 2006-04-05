@@ -80,6 +80,12 @@ FloatArray& FloatArray::operator=( const FloatArray& input)
    }
    return *this;
 }
+////////////////////////
+void FloatArray::Clear()
+{
+   if(_array.size())
+      _array.clear();
+}
 /////////////////////////////////////////////////
 void FloatArray::AddElementToArray(double value)
 {

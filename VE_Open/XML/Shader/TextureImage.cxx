@@ -148,6 +148,7 @@ bool TextureImage::GetWrapMode(std::string direction,std::string& wrapMode)
       wrapMode = wrapModeData->GetDataString();
       return true;
    }
+   std::cout<<"===Wrap mode not found: "<<direction<<" ==="<<std::endl;
    return false;
 }
 /////////////////////////////////////////////
