@@ -138,6 +138,14 @@ protected:
    ///\param event wxCommand event
    void _showColorDialog(wxCommandEvent& event);
 
+   ///Show the face selection mode dialog
+   ///\param event wxCommand event
+   void _showFaceSelectDialog(wxCommandEvent& event);
+
+   ///Show the color mode selection dialog
+   ///\param event wxCommand event
+   void _showColorModeSelectDialog(wxCommandEvent& event);
+
    ///Update the attribute dialog
    ///\param attributes The list of attributes to set in the dialog.
    void _updateAttributeList(wxArrayString attributes);

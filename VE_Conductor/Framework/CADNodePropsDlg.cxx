@@ -49,6 +49,7 @@
 #include <wx/msgdlg.h>
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
+#include <wx/choicdlg.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
@@ -79,6 +80,8 @@ BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_MENU(CADMaterialEditMenu::AMBIENT_ID,CADNodePropertiesDlg::_showColorDialog)
    EVT_MENU(CADMaterialEditMenu::SPECULAR_ID,CADNodePropertiesDlg::_showColorDialog)
    EVT_MENU(CADMaterialEditMenu::EMISSIVE_ID,CADNodePropertiesDlg::_showColorDialog)
+   EVT_MENU(CADMaterialEditMenu::FACE_ID,CADNodePropertiesDlg::_showFaceSelectDialog)
+   EVT_MENU(CADMaterialEditMenu::COLOR_MODE_ID,CADNodePropertiesDlg::_showColorModeSelectDialog)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -643,6 +646,56 @@ unsigned char CADNodePropertiesDlg::_convertToUnsignedCharColor(double value)
 double CADNodePropertiesDlg::_convertToDoubleColor(unsigned char value)
 {
    return ((double)(value))/255.0;
+}
+///////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& event)
+{
+   //We should only arrive in here if the attribute is a CADMaterial!!!!
+   if(_cadNode)
+   {
+      wxArrayString faceModes;
+      faceModes.Add("Front");
+      faceModes.Add("Front_and_Back");
+      faceModes.Add("Back");
+
+      CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
+      CADMaterial* material = activeAttribute.GetMaterial();
+      wxSingleChoiceDialog faceSelector(this, _T("Select Face to apply material"), _T("Material Face"),
+                           faceModes);
+
+      if (faceSelector.ShowModal() == wxID_OK)
+      {
+         std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
+         material->SetFace(std::string(faceSelector.GetStringSelection().GetData()));     
+      }
+   }
+}
+//////////////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(event))
+{
+   //We should only arrive in here if the attribute is a CADMaterial!!!!
+   if(_cadNode)
+   {
+      wxArrayString colorModes;
+      colorModes.Add("Ambient");
+      colorModes.Add("Ambient_and_Diffuse");
+      colorModes.Add("Diffuse");
+      colorModes.Add("Emissive");
+      colorModes.Add("Specular");
+      colorModes.Add("Off");
+
+      CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
+      CADMaterial* material = activeAttribute.GetMaterial();
+
+      wxSingleChoiceDialog colorSelector(this, _T("Select Color Mode"), _T("Material Color Mode"),
+                           colorModes);
+
+      if (colorSelector.ShowModal() == wxID_OK)
+      {
+         std::cout<<"Selecting face: "<<colorSelector.GetStringSelection()<<std::endl;
+         material->SetColorMode(std::string(colorSelector.GetStringSelection().GetData()));     
+      }
+   }
 }
 //////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
