@@ -134,6 +134,10 @@ protected:
    ///\param event The wxCommand event.
    void _addAttribute(wxCommandEvent& event);
 
+   ///Show the color selector dialog
+   ///\param event wxCommand event
+   void _showColorDialog(wxCommandEvent& event);
+
    ///Update the attribute dialog
    ///\param attributes The list of attributes to set in the dialog.
    void _updateAttributeList(wxArrayString attributes);
@@ -141,6 +145,13 @@ protected:
    ///Update the available attributes for this CADNode.
    void _updateAvailableAttributes();
 
+   ///utility function to convert double to unsigned char 
+   ///\param value The value to convert to double
+   double _convertToDoubleColor(unsigned char value);
+
+   ///utility function to convert unsigned char to double
+   ///\param value The value to convert to double
+   unsigned char _convertToUnsignedCharColor(double value);
 #ifndef STAND_ALONE
    VjObs_ptr _vjObsPtr;///<The VjObj ptr.
    

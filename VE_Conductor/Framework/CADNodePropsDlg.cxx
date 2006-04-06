@@ -47,6 +47,8 @@
 #include <wx/filedlg.h>
 #include <wx/textdlg.h>
 #include <wx/msgdlg.h>
+#include <wx/cmndata.h>
+#include <wx/colordlg.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
@@ -73,6 +75,10 @@ BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_COMBOBOX(ATTRIBUTE_TYPE,CADNodePropertiesDlg::_updateAttributeType)
    EVT_LIST_ITEM_SELECTED(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
    EVT_LIST_ITEM_RIGHT_CLICK(ACTIVE_ATTRIBUTE, CADNodePropertiesDlg::_editAttribute)
+   EVT_MENU(CADMaterialEditMenu::DIFFUSE_ID,CADNodePropertiesDlg::_showColorDialog)
+   EVT_MENU(CADMaterialEditMenu::AMBIENT_ID,CADNodePropertiesDlg::_showColorDialog)
+   EVT_MENU(CADMaterialEditMenu::SPECULAR_ID,CADNodePropertiesDlg::_showColorDialog)
+   EVT_MENU(CADMaterialEditMenu::EMISSIVE_ID,CADNodePropertiesDlg::_showColorDialog)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -165,15 +171,6 @@ wxPanel* CADNodePropertiesDlg::GetAttributePanel()
    }
    return _attributePanel;
 }
-//////////////////////////////////////////////////
-/*wxPanel* CADNodePropertiesDlg::GetAttributePanel()
-{
-   if(!_firePanel)
-   {
-      _buildFirePanel();
-   }
-   return _firePanel;
-}*/
 ///////////////////////////////////////////////////
 void CADNodePropertiesDlg::_buildTransformPanel()
 {
@@ -637,11 +634,77 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
       _sendCommandsToXplorer();
    }
 }
-///////////////////////////////////////////////////////////////////
-/*void CADNodePropertiesDlg::_loadNewAttribute(int style,int fileType)
+////////////////////////////////////////////////////////////////////////////
+unsigned char CADNodePropertiesDlg::_convertToUnsignedCharColor(double value)
 {
+   return (unsigned char)(255.0 - 255.0*(1.0-value));
+}
+//////////////////////////////////////////////////////////////////////
+double CADNodePropertiesDlg::_convertToDoubleColor(unsigned char value)
+{
+   return ((double)(value))/255.0;
+}
+//////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
+{
+   //We should only arrive in here if the attribute is a CADMaterial!!!!
+   if(_cadNode)
+   {
+      CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
+      CADMaterial* material = activeAttribute.GetMaterial();
 
-}*/
+      std::vector<double> currentColor;
+      wxColour color;
+
+      unsigned char R = 0;
+      unsigned char G = 0;
+      unsigned char B = 0;
+
+      //get the current color of the material
+      if(event.GetId() == CADMaterialEditMenu::DIFFUSE_ID)
+      {
+         currentColor = material->GetDiffuse()->GetArray();
+      }
+      else if(event.GetId() == CADMaterialEditMenu::AMBIENT_ID)
+      {
+         currentColor = material->GetDiffuse()->GetArray();
+      }
+      else if(event.GetId() == CADMaterialEditMenu::EMISSIVE_ID)
+      {
+         currentColor = material->GetDiffuse()->GetArray();
+      }
+      else if(event.GetId() == CADMaterialEditMenu::SPECULAR_ID)
+      {
+         currentColor = material->GetDiffuse()->GetArray();
+      }
+
+      //convert to wx compatible color
+      R = _convertToUnsignedCharColor(currentColor.at(0));
+      G = _convertToUnsignedCharColor(currentColor.at(1));
+      B = _convertToUnsignedCharColor(currentColor.at(2));
+
+      color.Set(R,G,B);
+
+      //this is kinda confusing...thanks wx!!!
+      wxColourData data;
+      data.SetChooseFull(true);
+      data.SetColour(color);
+
+      wxColourDialog colorDlg(this,&data);
+
+      if (colorDlg.ShowModal() == wxID_OK)
+      {
+          wxColourData retData = colorDlg.GetColourData();
+          wxColour col = retData.GetColour();
+          
+          //set the color on the material to the user selected color
+          currentColor.at(0) = _convertToDoubleColor(col.Red());
+          currentColor.at(1) = _convertToDoubleColor(col.Green());
+          currentColor.at(2) = _convertToDoubleColor(col.Blue());
+      }
+   }
+
+}
 #ifndef STAND_ALONE
 ///////////////////////////////////////////////////
 void CADNodePropertiesDlg::_sendCommandsToXplorer()
