@@ -42,24 +42,28 @@
 #include <wx/panel.h>
 #include <wx/combobox.h>
 #include <wx/listbox.h>
+#include <wx/listctrl.h>
 #include <wx/arrstr.h>
-#include <wx/listbox.h>
 #include <wx/filedlg.h>
 #include <wx/textdlg.h>
 #include <wx/msgdlg.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/CAD/CADMaterial.h"
+
+#include "VE_Conductor/Framework/CADMaterialEditMenu.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
+#include "VE_Open/XML/CAD/CADNode.h"
+#include "VE_Open/XML/CAD/CADAttribute.h"
+#include "VE_Open/XML/CAD/CADMaterial.h"
+
 #include "VE_Open/XML/Shader/Program.h"
+
 using namespace VE_CAD;
 using namespace VE_Shader;
 
@@ -67,7 +71,8 @@ BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_BUTTON(ADD_ATTRIBUTE,CADNodePropertiesDlg::_addAttribute)
    EVT_SPINCTRL(TRANSFORM_PANEL_ID,CADNodePropertiesDlg::_updateTransform)
    EVT_COMBOBOX(ATTRIBUTE_TYPE,CADNodePropertiesDlg::_updateAttributeType)
-   EVT_LISTBOX(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
+   EVT_LIST_ITEM_SELECTED(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
+   EVT_LIST_ITEM_RIGHT_CLICK(ACTIVE_ATTRIBUTE, CADNodePropertiesDlg::_editAttribute)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -296,25 +301,25 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    _addAttributeButton = new wxButton(_attributePanel, ADD_ATTRIBUTE,wxString("Add..."));
    attributeTypeSizer->Add(_addAttributeButton,0,wxALIGN_CENTER);
 
-   _editAttributeButton = new wxButton(_attributePanel, EDIT_ATTRIBUTE,wxString("Edit..."));
-   attributeTypeSizer->Add(_editAttributeButton,0,wxALIGN_CENTER);
+   //_editAttributeButton = new wxButton(_attributePanel, EDIT_ATTRIBUTE,wxString("Edit..."));
+   //attributeTypeSizer->Add(_editAttributeButton,0,wxALIGN_CENTER);
 
    attributePropSizer->Add(attributeTypeSizer,1,wxEXPAND|wxALIGN_CENTER);
 
    //Active attribute selection
    wxStaticBox* activeAttribute = new wxStaticBox(_attributePanel, -1, wxT("Available Attributes"));
    wxStaticBoxSizer* activeAttributeSizer = new wxStaticBoxSizer(activeAttribute , wxVERTICAL);
-   _attributeSelection = new wxListBox(_attributePanel,ACTIVE_ATTRIBUTE);
+   //_attributeSelection = new wxListBox(_attributePanel,ACTIVE_ATTRIBUTE);
+   _attributeSelection = new wxListCtrl(_attributePanel,ACTIVE_ATTRIBUTE,wxDefaultPosition,wxDefaultSize,wxLC_SINGLE_SEL|wxLC_LIST);
 
    if(_cadNode)
    {
       _updateAvailableAttributes();
-      _attributeSelection->Set(_availableMaterials);
+      _updateAttributeList(_availableMaterials);
+      //_attributeSelection->Set(_availableMaterials);
       
    }
    activeAttributeSizer->Add(_attributeSelection,1,wxEXPAND|wxALIGN_CENTER);
- 
-  
 
    attributePropSizer->Add(activeAttributeSizer,1,wxEXPAND|wxALIGN_CENTER);
 
@@ -323,6 +328,15 @@ void CADNodePropertiesDlg::_buildAttributePanel()
 
    _attributePanel->SetAutoLayout(true);
    _attributePanel->SetSizer(attributePanelSizer);
+}
+///////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_updateAttributeList(wxArrayString listOfAttributes)
+{
+      _attributeSelection->ClearAll();
+      for(size_t i = 0; i < listOfAttributes.GetCount(); i++)
+      {
+         _attributeSelection->InsertItem(i,listOfAttributes[i]);
+      }
 }
 ///////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateAvailableAttributes()
@@ -353,11 +367,13 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
       }
       if(_attributeType->GetValue() == wxString("Materials"))
       {
-         _attributeSelection->Set(_availableMaterials);
+         //_attributeSelection->Set(_availableMaterials);
+         _updateAttributeList(_availableMaterials);
       }
       else if(_attributeType->GetValue() == wxString("Shaders"))
       {
-         _attributeSelection->Set(_availableShaders);
+         //_attributeSelection->Set(_availableShaders);
+         _updateAttributeList(_availableShaders);
       }
    }
 }
@@ -366,21 +382,39 @@ void CADNodePropertiesDlg::_updateAttributeType(wxCommandEvent& WXUNUSED(event))
 {
    if(_attributeType->GetValue() == wxString("Materials"))
    {
-      _attributeSelection->Set(_availableMaterials);
+      _updateAttributeList(_availableMaterials);
+      //_attributeSelection->Set(_availableMaterials);
    }
    else if(_attributeType->GetValue() == wxString("Shaders"))
    {
-      _attributeSelection->Set(_availableShaders);
+      //_attributeSelection->Set(_availableShaders);
+      _updateAttributeList(_availableShaders);
    }
 }
-/////////////////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& WXUNUSED(event))
+/////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_editAttribute(wxListEvent& event)
 {
    if(_cadNode)
    {
       ClearInstructions();
-      std::cout<<"Setting active attribute"<<std::endl;
-      wxString attributeName = _attributeSelection->GetStringSelection();
+      wxString attributeName = event.GetText();
+      std::cout<<"Editting attribute"<<attributeName<<std::endl;
+      if(_attributeType->GetValue() == wxString("Materials"))
+      {
+         CADMaterialEditMenu* materialMenu = new CADMaterialEditMenu();
+         PopupMenu(materialMenu);
+      }
+   }
+}
+/////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_setActiveAttribute(wxListEvent& event)
+{
+   if(_cadNode)
+   {
+      ClearInstructions();
+      wxString attributeName = event.GetText();
+      std::cout<<"Setting active attribute:"<<attributeName<<std::endl;
+      //wxString attributeName = _attributeSelection->GetStringSelection();
       _cadNode->SetActiveAttribute(attributeName.GetData());
       _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
 
@@ -407,8 +441,8 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxCommandEvent& WXUNUSED(event))
 
    }
 }
-///////////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
+/////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
 {
    if(_cadNode)
    {
@@ -440,7 +474,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
          newAttribute.SetMaterial(newMaterial);
          _cadNode->AddAttribute(newAttribute);
          _updateAvailableAttributes();
-         _attributeSelection->SetSelection(_nMaterials-1);
+         //_attributeSelection->SetSelection(_nMaterials-1);
 
          _commandName = std::string("CAD_ADD_ATTRIBUTE_TO_NODE");
                         
@@ -496,7 +530,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& event)
                         newAttribute.SetProgram(*loadedShader);
                         _cadNode->AddAttribute(newAttribute);
                         _updateAvailableAttributes();
-                        _attributeSelection->SetSelection(_nShaders-1);
+                        //_attributeSelection->SetSelection(_nShaders-1);
 
                         _commandName = std::string("CAD_ADD_ATTRIBUTE_TO_NODE");
                         

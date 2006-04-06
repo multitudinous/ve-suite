@@ -48,6 +48,8 @@ class wxPanel;
 class wxTextCtrl;
 class wxComboBox;
 class wxListBox;
+class wxListEvent;
+class wxListCtrl;
 class wxArrayString;
 
 namespace VE_XML
@@ -121,12 +123,20 @@ protected:
    void _updateAttributeType(wxCommandEvent& event);
 
    ///Update the active attribute.
-   ///\param event The wxCommand event.
-   void _setActiveAttribute(wxCommandEvent& event);
+   ///\param event The wxListEvent event.
+   void _setActiveAttribute(wxListEvent& event);
+
+   ///Edit an attribute.
+   ///\param event The wxList event.
+   void _editAttribute(wxListEvent& event);
 
    ///Add an attribute to the node.
    ///\param event The wxCommand event.
    void _addAttribute(wxCommandEvent& event);
+
+   ///Update the attribute dialog
+   ///\param attributes The list of attributes to set in the dialog.
+   void _updateAttributeList(wxArrayString attributes);
 
    ///Update the available attributes for this CADNode.
    void _updateAvailableAttributes();
@@ -157,7 +167,7 @@ protected:
 
    ///Attribute panel controls
    wxComboBox* _attributeType;///<The attribute type selection box.
-   wxListBox* _attributeSelection;///<The box listing the available attributes.
+   wxListCtrl* _attributeSelection;///<The box listing the available attributes.
    wxButton* _addAttributeButton;///<The button for adding attributes.
    wxButton* _editAttributeButton;///<The button for removing attributes.
    wxArrayString _availableShaders;///<The shader names.

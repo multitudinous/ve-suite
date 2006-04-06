@@ -17,6 +17,7 @@ SRCS=\
    App.cpp \
    Avail_Modules.cpp \
    CADNodeManagerDlg.cxx \
+   CADMaterialEditMenu.cxx \
    CADNodeMenu.cxx \
    CADNodePropsDlg.cxx \
    Frame.cpp \
