@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<!--Shader adapted from RenderMonkey 1.6 examples-->
+
+<Program>
+<name>phongGlitter</name>
+
+<vertexShader>
+<type>Vertex</type>
+	<uniform>
+		<name>fvLightPosition</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>-100.0</value>
+		<value>100.0</value>
+		<value>100.0</value>
+	</uniform>
+	<uniform>
+		<name>fvEyePosition</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>0.0</value>
+		<value>0.0</value>
+		<value>100.0</value>
+	</uniform>
+	<shaderCode>
+		uniform vec3 fvLightPosition;
+		uniform vec3 fvEyePosition;
+
+		varying vec3 ViewDirection;
+		varying vec3 LightDirection;
+		varying vec3 Normal;
+		varying vec3 ObjPos;
+		varying vec2 Texcoord;   
+		   
+		void main()
+		{
+   			gl_Position=ftransform();
+   			Texcoord=gl_MultiTexCoord0.xy;
+   			ObjPos=gl_Vertex.xyz;
+    
+   			vec4 fvObjectPosition=gl_ModelViewMatrix*gl_Vertex;
+   
+   			ViewDirection=fvEyePosition-fvObjectPosition.xyz;
+			LightDirection=fvLightPosition-fvObjectPosition.xyz;
+   			Normal=gl_NormalMatrix*gl_Normal;
+		}
+	</shaderCode>
+</vertexShader>
+
+<fragmentShader>
+<type>Fragment</type>
+	<uniform>
+		<name>fvAmbient</name>
+		<type>Float</type>
+		<size>4</size>
+		<value>0.368627</value>
+		<value>0.368421</value>
+		<value>0.368421</value>
+		<value>1.0</value>
+	</uniform>
+	<uniform>
+		<name>fvSpecular</name>
+		<type>Float</type>
+		<size>4</size>
+		<value>0.490196</value>
+		<value>0.488722</value>
+		<value>0.488722</value>
+		<value>1.0</value>
+	</uniform>
+	<uniform>
+		<name>fvDiffuse</name>
+		<type>Float</type>
+		<size>4</size>
+		<value>0.886275</value>
+		<value>0.885003</value>
+		<value>0.885003</value>
+		<value>1.0</value>
+	</uniform>
+	<uniform>
+		<name>glitterStrength</name>
+		<type>Float</type>
+		<size>1</size>
+		<value>4.0</value>
+	</uniform>
+	<uniform>
+		<name>fSpecularPower</name>
+		<type>Float</type>
+		<size>1</size>
+		<value>25.0</value>
+	</uniform>
+	<uniform>
+		<name>noiseScale</name>
+		<type>Float</type>
+		<size>1</size>
+		<value>0.9</value>
+	</uniform>
+	<uniform>
+		<name>fleckDensity</name>
+		<type>Float</type>
+		<size>1</size>
+		<value>8.5</value>
+	</uniform>
+	<uniform>
+		<name>baseMap</name>
+		<type>Sampler</type>
+		<size>1</size>
+		<textureUnit>0</textureUnit>
+      </uniform>
+	<textureImage> 
+		<textureDescriptionData> 
+			<parameter> 
+				<dataName>Wrap S</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap T</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap R</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Magnification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Minification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Type</dataName> 
+				<dataValueString>2D</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Dimension</dataName> 
+				<dataValueUInt>2</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>Unit</dataName> 
+				<dataValueUInt>0</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>FRONT</dataName> 
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Hyper/Textures/paintedMetalBlue.tga</dataValueString> 
+			</parameter> 
+		</textureDescriptionData> 
+		<textureUnit>0</textureUnit> 
+		<dimension>2</dimension> 
+		<textureType>2D</textureType> 
+	</textureImage>
+	<uniform>
+		<name>noiseMap</name>
+		<type>Sampler</type>
+		<size>1</size>
+		<textureUnit>1</textureUnit>
+      </uniform>
+	<textureImage> 
+		<textureDescriptionData> 
+			<parameter> 
+				<dataName>Wrap S</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap T</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap R</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Magnification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Minification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Type</dataName> 
+				<dataValueString>3D</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Dimension</dataName> 
+				<dataValueUInt>3</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>Unit</dataName> 
+				<dataValueUInt>1</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>FRONT</dataName> 
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Hyper/Textures/random.tga</dataValueString> 
+			</parameter> 
+		</textureDescriptionData> 
+		<textureUnit>1</textureUnit> 
+		<dimension>3</dimension> 
+		<textureType>3D</textureType> 
+	</textureImage>
+	<shaderCode>
+		uniform vec4 fvAmbient;
+		uniform vec4 fvSpecular;
+		uniform vec4 fvDiffuse;
+		uniform float glitterStrength;
+		uniform float fSpecularPower;
+		uniform float noiseScale;
+		uniform float fleckDensity;
+
+		uniform sampler2D baseMap;
+		uniform sampler3D noiseMap;
+
+		varying vec3 Normal;
+		varying vec3 ViewDirection;
+		varying vec3 LightDirection;
+		varying vec3 ObjPos;
+		varying vec2 Texcoord;
+
+		void main()
+		{
+   			float noisy=texture3D(noiseMap,ObjPos*noiseScale).x;
+   			vec4 fvBaseColor=texture2D(baseMap,Texcoord);
+   
+   			vec3 fvLightDirection=normalize(LightDirection);
+   			vec3 fvNormal=normalize(Normal);
+   
+   			float fNDotL=dot(fvNormal,fvLightDirection); 
+   			vec3 fvReflection=normalize(((2.0*fvNormal)*fNDotL)-fvLightDirection); 
+   			vec3 fvViewDirection=normalize(ViewDirection);
+   			float fRDotV=max(0.0,dot(fvReflection,fvViewDirection));
+   			float specBase=clamp(dot(reflect(-normalize(fvViewDirection),fvNormal),fvLightDirection),0.0,1.0);
+   
+   			vec3 fp=fract(fleckDensity*ObjPos+9.0*noisy+0.1*fvViewDirection);
+   			fp*=(1.0-fp);
+   			float glitter=clamp(1.0-7.0*(fp.x+fp.y+fp.z),0.0,1.0);
+   			float glittering=glitter*pow(specBase,1.5);
+   
+   			vec4 base=fvBaseColor;
+   
+   			vec4 fvTotalAmbient=fvAmbient*base; 
+   			vec4 fvTotalDiffuse=fvDiffuse *fNDotL*base; 
+   			vec4 fvTotalSpecular=fvSpecular*(pow(fRDotV,fSpecularPower))+glitterStrength*glittering;
+  
+   			gl_FragColor=(fvTotalAmbient+fvTotalDiffuse+fvTotalSpecular);
+		}
+	</shaderCode>
+</fragmentShader>
+
+</Program>
