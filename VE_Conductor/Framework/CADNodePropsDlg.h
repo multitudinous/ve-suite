@@ -137,6 +137,10 @@ protected:
    ///Show the color selector dialog
    ///\param event wxCommand event
    void _showColorDialog(wxCommandEvent& event);
+   
+   ///Show the opacity dialog
+   ///\param event wxCommand event
+   void _showOpacityDialog(wxCommandEvent& event);
 
    ///Show the face selection mode dialog
    ///\param event wxCommand event

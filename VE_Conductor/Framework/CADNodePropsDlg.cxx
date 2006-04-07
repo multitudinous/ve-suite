@@ -55,6 +55,7 @@
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
 #include "VE_Conductor/Framework/CADMaterialEditMenu.h"
+#include "VE_Conductor/Framework/CADOpacitySliderDlg.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
@@ -69,7 +70,7 @@
 
 using namespace VE_CAD;
 using namespace VE_Shader;
-
+using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_BUTTON(ADD_ATTRIBUTE,CADNodePropertiesDlg::_addAttribute)
    EVT_SPINCTRL(TRANSFORM_PANEL_ID,CADNodePropertiesDlg::_updateTransform)
@@ -82,6 +83,7 @@ BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_MENU(CADMaterialEditMenu::EMISSIVE_ID,CADNodePropertiesDlg::_showColorDialog)
    EVT_MENU(CADMaterialEditMenu::FACE_ID,CADNodePropertiesDlg::_showFaceSelectDialog)
    EVT_MENU(CADMaterialEditMenu::COLOR_MODE_ID,CADNodePropertiesDlg::_showColorModeSelectDialog)
+   EVT_MENU(CADMaterialEditMenu::OPACITY_ID,CADNodePropertiesDlg::_showOpacityDialog)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -413,7 +415,6 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxListEvent& event)
    {
       ClearInstructions();
       wxString attributeName = event.GetText();
-      std::cout<<"Setting active attribute:"<<attributeName<<std::endl;
       //wxString attributeName = _attributeSelection->GetStringSelection();
       _cadNode->SetActiveAttribute(attributeName.GetData());
       _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
@@ -435,7 +436,6 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxListEvent& event)
       nodeType->SetDataString(_cadNode->GetNodeType());
       _instructions.push_back(nodeType);
 
-      std::cout<<"Done"<<std::endl;
 
       _sendCommandsToXplorer();
 
@@ -631,8 +631,6 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
       nodeType->SetDataString(_cadNode->GetNodeType());
       _instructions.push_back(nodeType);
 
-      std::cout<<"instructions size: "<<_instructions.size()<<std::endl;
-      std::cout<<"CADNode type: "<<_cadNode->GetNodeType()<<std::endl;
 
       _sendCommandsToXplorer();
    }
@@ -667,6 +665,20 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& event)
       {
          std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
          material->SetFace(std::string(faceSelector.GetStringSelection().GetData()));     
+      }
+   }
+}
+/////////////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_showOpacityDialog(wxCommandEvent& WXUNUSED(event))
+{
+   //We should only arrive in here if the attribute is a CADMaterial!!!!
+   if(_cadNode)
+   {
+      CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
+      CADOpacitySliderDlg opacityDlg(this,-1,_cadNode->GetID(),_cadNode->GetActiveAttribute().GetMaterial());
+      if (opacityDlg.ShowModal() == wxID_OK|wxID_CANCEL)
+      {
+         material->SetOpacity(opacityDlg.GetOpacity());
       }
    }
 }

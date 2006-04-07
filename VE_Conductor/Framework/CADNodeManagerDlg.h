@@ -34,7 +34,7 @@
 /*!\file CADNodeManagerDialog.h
   CADNodeManagerDialog API
   */
-/*!\class GeometryanagerDialog
+/*!\class CADNodeManagerDialog
  * GUI class to manipulate CADNode tree.
  */
 #ifndef STAND_ALONE

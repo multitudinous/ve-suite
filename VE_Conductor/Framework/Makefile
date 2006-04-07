@@ -20,6 +20,7 @@ SRCS=\
    CADMaterialEditMenu.cxx \
    CADNodeMenu.cxx \
    CADNodePropsDlg.cxx \
+   CADOpacitySliderDlg.cxx \
    Frame.cpp \
    Network.cpp \
    NavigationPane.cxx \
