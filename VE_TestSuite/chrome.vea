@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+
+<Program>
+<name>chrome</name>
+
+<vertexShader>
+<type>Vertex</type>
+	<shaderCode>
+		varying vec3 eyePos;
+		varying vec3 normal;
+
+		void main()
+		{
+    			gl_Position=ftransform();
+
+    			eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
+    			normal=gl_NormalMatrix*gl_Normal;
+		}
+	</shaderCode>
+</vertexShader>
+
+<fragmentShader>
+<type>Fragment</type>
+	<uniform>
+		<name>envMap</name>
+		<type>Sampler</type>
+		<size>1</size>
+		<textureUnit>0</textureUnit>
+	</uniform>
+	<textureImage> 
+		<textureDescriptionData> 
+			<parameter> 
+				<dataName>Wrap S</dataName> 
+				<dataValueString>Clamp to Edge</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap T</dataName> 
+				<dataValueString>Clamp to Edge</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap R</dataName> 
+				<dataValueString>Clamp to Edge</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Magnification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Minification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Type</dataName> 
+				<dataValueString>Cube</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Dimension</dataName> 
+				<dataValueUInt>3</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>Unit</dataName> 
+				<dataValueUInt>0</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>Positive X</dataName> 
+				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_RIGHT</dataValueString>
+			</parameter>
+			<parameter>
+				<dataName>Negative X</dataName>
+				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_LEFT</dataValueString>
+			</parameter>
+			<parameter>
+				<dataName>Positive Y</dataName>
+				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_TOP</dataValueString>
+			</parameter>
+			<parameter>
+				<dataName>Negative Y</dataName>
+				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_BOTTOM</dataValueString>
+			</parameter>
+			<parameter>
+				<dataName>Positive Z</dataName>
+				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_BACK</dataValueString>
+			</parameter>
+			<parameter>
+				<dataName>Negative Z</dataName>
+				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_FRONT</dataValueString>
+			</parameter> 
+		</textureDescriptionData> 
+		<textureUnit>0</textureUnit> 
+		<dimension>3</dimension> 
+		<textureType>Cube</textureType> 
+	</textureImage>
+	<shaderCode>
+		uniform samplerCube envMap;
+
+		varying vec3 eyePos;
+		varying vec3 normal;
+
+		void main()
+		{
+    			vec3 N=normalize(normal);
+    			vec3 V=normalize(eyePos);
+    			vec3 R=reflect(V,N);
+
+    			vec3 reflected_color=textureCube(envMap,R).rgb;
+
+    			gl_FragColor=vec4(reflected_color,1.0);
+		}
+	</shaderCode>
+</fragmentShader>
+
+</Program>
