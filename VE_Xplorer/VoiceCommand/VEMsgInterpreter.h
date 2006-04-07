@@ -6,8 +6,8 @@
 #include <iostream>
 #include <string>
 #include <orbsvcs/CosNamingC.h>
-#include "VEOpen/skel/moduleC.h"
-#include "VEOpen/skel/VjObsC.h"
+#include "VE_Open/skel/moduleC.h"
+#include "VE_Open/skel/VjObsC.h"
 
 //we may want this to be a dll that gets loaded optionally later
 

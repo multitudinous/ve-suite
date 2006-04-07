@@ -1,5 +1,5 @@
 #ifdef _TAO
-#include "VEOpen/skel/VjObsS.h"
+#include "VE_Open/skel/VjObsS.h"
 #include <orbsvcs/CosNamingC.h>
 #else
 #include "VjObs.h"
