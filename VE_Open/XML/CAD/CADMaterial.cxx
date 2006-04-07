@@ -278,6 +278,11 @@ void CADMaterial::SetOpacity(double opacity)
 {
    _opacity = opacity;
 }
+////////////////////////////////
+double CADMaterial::GetOpacity()
+{
+   return _opacity;
+}
 ////////////////////////////////////////////////
 CADMaterial::CADMaterial(const CADMaterial& rhs)
 :XMLObject(rhs)
