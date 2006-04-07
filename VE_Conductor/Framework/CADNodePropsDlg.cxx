@@ -717,6 +717,7 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
    {
       CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
       CADMaterial* material = activeAttribute.GetMaterial();
+      std::string updateComponent = "";
 
       std::vector<double> currentColor;
       wxColour color;
@@ -729,18 +730,22 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
       if(event.GetId() == CADMaterialEditMenu::DIFFUSE_ID)
       {
          currentColor = material->GetDiffuse()->GetArray();
+         updateComponent = "Diffuse";
       }
       else if(event.GetId() == CADMaterialEditMenu::AMBIENT_ID)
       {
          currentColor = material->GetDiffuse()->GetArray();
+         updateComponent = "Ambient";
       }
       else if(event.GetId() == CADMaterialEditMenu::EMISSIVE_ID)
       {
          currentColor = material->GetDiffuse()->GetArray();
+         updateComponent = "Emissive";
       }
       else if(event.GetId() == CADMaterialEditMenu::SPECULAR_ID)
       {
          currentColor = material->GetDiffuse()->GetArray();
+         updateComponent = "Specular";
       }
 
       //convert to wx compatible color
@@ -766,6 +771,29 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
           currentColor.at(0) = _convertToDoubleColor(col.Red());
           currentColor.at(1) = _convertToDoubleColor(col.Green());
           currentColor.at(2) = _convertToDoubleColor(col.Blue());
+
+         //send the data to Xplorer
+         ClearInstructions(); 
+         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE");
+
+         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         nodeID->SetDataType("UNSIGNED INT");
+         nodeID->SetDataName(std::string("Node ID"));
+         nodeID->SetDataValue(_cadNode->GetID());
+         _instructions.push_back(nodeID);
+
+         VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+         componentToUpdate->SetDataType("STRING");
+         componentToUpdate->SetData("Material Component",updateComponent);
+         _instructions.push_back(componentToUpdate);
+
+         VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+         materialToUpdate->SetDataType("XMLOBJECT");
+         materialToUpdate->SetData("Material",material);
+         _instructions.push_back(materialToUpdate);
+
+         _sendCommandsToXplorer();
+
       }
    }
 

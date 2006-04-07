@@ -73,7 +73,7 @@ void CADOpacitySliderDlg::_onSlider(wxScrollEvent& event)
    _material->SetOpacity(opacityValue);
 
    //build the command
-   _commandName = "MATERIAL_OPACITY_UPDATE";
+   _commandName = "CAD_ATTRIBUTE_MATERIAL_OPACITY_UPDATE";
    
    VE_XML::DataValuePair* opacityData = new VE_XML::DataValuePair();
    opacityData->SetData(std::string("Opacity"),opacityValue);
