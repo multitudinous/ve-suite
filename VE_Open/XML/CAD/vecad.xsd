@@ -60,6 +60,7 @@
                <xs:element name="kEmissive" type="veFloatArray" maxOccurs="1" minOccurs="0" />
                <xs:element name="specular" type="veFloatArray" maxOccurs="1" minOccurs="0" />
                <xs:element name="shininess" type="xs:float" />
+               <xs:element name="opacity" type="xs:float" />
                <xs:element name="materialName" type="xs:string" />
                <xs:element name="face" type="xs:string" />
                <xs:element name="colorMode" type="xs:string" />

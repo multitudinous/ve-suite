@@ -103,7 +103,13 @@ public:
    ///\param colorMode The color mode of this material.
    void SetColorMode(std::string colorMode);
    
+   ///Set the overall opacity for this material
+   ///\param  opacity The opacity value;
+   void SetOpacity(double opacity); 
    
+   ///Get the opacity value
+   double GetOpacity();
+
    ///Get the diffuse property
    VE_XML::FloatArray* GetDiffuse();
 
@@ -163,6 +169,7 @@ protected:
    double _shininess;///< Shininess of the material
    std::string _colorMode;///< Color mode of this material
    std::string _face;///< Face that this material is applied to.
+   double _opacity;///<Opacity value
 };
 }
 #endif //CAD_MATERIAL_H

@@ -43,7 +43,7 @@ CADMaterial::CADMaterial(std::string name)
 :VE_XML::XMLObject()
 {
    std::vector< double > temp;
-   temp.assign( 4, 1.0f );
+   temp.assign( 3, 1.0f );
 
    _kDiffuse = new VE_XML::FloatArray();
    _kDiffuse->SetArray(temp);
@@ -58,6 +58,7 @@ CADMaterial::CADMaterial(std::string name)
    _specular->SetArray(temp);
    _shininess = 50.0;
    _materialName = name;
+   _opacity = 1.0;
    
    _colorMode = std::string("Ambient_and_Diffuse");
    _face = std::string("Front_and_Back");
@@ -207,6 +208,12 @@ void CADMaterial::_updateColorProperties()
    
    _specular->SetOwnerDocument(_rootDocument);
    _veElement->appendChild( _specular->GetXMLData("specular"));
+
+   DOMElement* opacityElement  = _rootDocument->createElement( xercesString("opacity") );
+   _veElement->appendChild( opacityElement );      
+   
+   DOMText* opacity = _rootDocument->createTextNode( xercesString( _opacity ) );
+   opacityElement->appendChild( opacity );
 }
 /////////////////////////////////////////////////////
 void CADMaterial::_updateVEElement(std::string input)
@@ -259,11 +266,17 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
          _specular->SetObjectFromXMLData(GetSubElement(currentElement,std::string("specular"),0));
          
          _shininess = ExtractDataNumberFromSimpleElement(GetSubElement(currentElement,std::string("shininess"),0));
+         _opacity = ExtractDataNumberFromSimpleElement(GetSubElement(currentElement,std::string("opacity"),0));
          _materialName = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("materialName"),0));
          _face = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("face"),0));
          _colorMode= ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("colorMode"),0));
       }
    }
+}
+////////////////////////////////////////////
+void CADMaterial::SetOpacity(double opacity)
+{
+   _opacity = opacity;
 }
 ////////////////////////////////////////////////
 CADMaterial::CADMaterial(const CADMaterial& rhs)
@@ -277,6 +290,7 @@ CADMaterial::CADMaterial(const CADMaterial& rhs)
    _materialName = rhs._materialName;
    _face = rhs._face;
    _colorMode = rhs._colorMode;
+   _opacity = rhs._opacity;
 }
 ////////////////////////////////////////////////////////////
 CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
@@ -313,6 +327,7 @@ CADMaterial& CADMaterial::operator=(const CADMaterial& rhs)
       _materialName = rhs._materialName;
       _colorMode = rhs._colorMode;
       _face = rhs._face;
+      _opacity = rhs._opacity;
    }
    return *this;
 }
