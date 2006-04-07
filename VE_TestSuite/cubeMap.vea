@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+
+<Program>
+<name>cubeMap</name>
+
+<vertexShader>
+<type>Vertex</type>
+	<shaderCode>
+		varying vec3 objPos;
+
+		void main()
+		{
+			objPos=gl_Vertex.xyz;
+			gl_Position=ftransform();
+		}
+	</shaderCode>
+</vertexShader>
+
+<fragmentShader>
+<type>Fragment</type>
+	<uniform>
+		<name>envMap</name>
+		<type>Sampler</type>
+		<size>1</size>
+		<textureUnit>0</textureUnit>
+	</uniform>
+	<textureImage> 
+		<textureDescriptionData> 
+			<parameter> 
+				<dataName>Wrap S</dataName> 
+				<dataValueString>Clamp to Edge</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap T</dataName> 
+				<dataValueString>Clamp to Edge</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap R</dataName> 
+				<dataValueString>Clamp to Edge</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Magnification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Minification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Type</dataName> 
+				<dataValueString>Cube</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Dimension</dataName> 
+				<dataValueUInt>3</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>Unit</dataName> 
+				<dataValueUInt>0</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>FRONT</dataName> 
+				<dataValueString>
+						     "C:/Documents and Settings/Josh Koch/Desktop/Shader/CubeMap Files/CloudyHills/CloudyHills_RIGHT",
+						     "C:/Documents and Settings/Josh Koch/Desktop/Shader/CubeMap Files/CloudyHills/CloudyHills_LEFT",
+						     "C:/Documents and Settings/Josh Koch/Desktop/Shader/CubeMap Files/CloudyHills/CloudyHills_TOP",
+						     "C:/Documents and Settings/Josh Koch/Desktop/Shader/CubeMap Files/CloudyHills/CloudyHills_BOTTOM",
+						     "C:/Documents and Settings/Josh Koch/Desktop/Shader/CubeMap Files/CloudyHills/CloudyHills_BACK",
+						     "C:/Documents and Settings/Josh Koch/Desktop/Shader/CubeMap Files/CloudyHills/CloudyHills_FRONT",
+				</dataValueString> 
+			</parameter> 
+		</textureDescriptionData> 
+		<textureUnit>0</textureUnit> 
+		<dimension>3</dimension> 
+		<textureType>Cube</textureType> 
+	</textureImage>
+	<shaderCode>
+		uniform samplerCube envMap;
+
+		varying vec3 objPos;
+
+		void main() 
+		{ 
+			gl_FragColor=textureCube(envMap,objPos);	
+		}
+	</shaderCode>
+</fragmentShader>
+
+</Program>
+
