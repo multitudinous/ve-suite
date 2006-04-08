@@ -43,6 +43,7 @@
 #include "VE_Xplorer/cfdQuatCamHandler.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/cfdModel.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
@@ -319,6 +320,10 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
    this->cursor->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
+   if( cfdModelHandler::instance()->GetActiveModel() )
+   {
+      this->cursor->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
+   }
    this->cursor->CheckCommandId( _commandArray );
    this->cursor->Update( this->nav->GetCursorLocation(),
                            this->nav->GetDirection(), this->nav->worldTrans );

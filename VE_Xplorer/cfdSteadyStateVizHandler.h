@@ -75,6 +75,11 @@ namespace VE_SceneGraph
    class cfdDCS;
 }
 
+namespace VE_XML
+{
+   class Command;
+}
+
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >

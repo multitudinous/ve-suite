@@ -34,6 +34,8 @@
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_SceneGraph/cfdGeode.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
@@ -77,6 +79,8 @@ cfdStreamers::cfdStreamers( void )
    arrowDiameter = 1;
    streamArrows = 0;
    pointSource = 0;
+
+//   command = 0;
 }
 
 cfdStreamers::~cfdStreamers()
@@ -343,129 +347,107 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
 {
    // This is here because Dr. K. has code in 
    // cfdObjects that doesn't belong there
-   bool flag = cfdObjects::CheckCommandId( commandArray );
-   
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
+   bool flag = false; //cfdObjects::CheckCommandId( commandArray );
+   std::string commandType;
+   if ( veCommand )
    {
-      // Need to fix this
-      // look in old cfdApp to see how it was used
-      //this->useLastSource = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-
-      return true;
+      commandType = veCommand->GetCommandName();
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == BACKWARD_INTEGRATION )
+   else
    {
-      vprDEBUG(vesDBG,0) << " BACKWARD_INTEGRATION" 
-                             << std::endl << vprDEBUG_FLUSH;
-
-      this->SetIntegrationDirection( 2 );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == FORWARD_INTEGRATION )
-   {
-      vprDEBUG(vesDBG,0) << " FORWARD_INTEGRATION"
-                             << std::endl << vprDEBUG_FLUSH;
-
-      this->SetIntegrationDirection( 1 );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TWO_DIRECTION_INTEGRATION )
-   {
-      vprDEBUG(vesDBG,0) << " 2_DIRECTION_INTEGRATION" 
-                             << std::endl << vprDEBUG_FLUSH;
-
-      this->SetIntegrationDirection( 0 );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PROPAGATION_TIME )
-   {
-      vprDEBUG(vesDBG,0) << " CHANGE_PROPAGATION_TIME\t" 
-         << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-         << std::endl << vprDEBUG_FLUSH;
-      
-      this->SetPropagationTime( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_INT_STEP_LENGTH )
-   {
-      vprDEBUG(vesDBG,0) << " CHANGE_INT_STEP_LENGTH\t"
-         << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
-         << std::endl << vprDEBUG_FLUSH;
-      
-      this->SetIntegrationStepLength( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEP_LENGTH )
-   {
-      vprDEBUG(vesDBG,0) << " CHANGE_STEP_LENGTH\t" << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
-                             << std::endl << vprDEBUG_FLUSH;
-         
-      this->SetStepLength( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_ARROW )
-   {
-      vprDEBUG(vesDBG,0) << " STREAMLINE_ARROW\t" << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
-                             << std::endl << vprDEBUG_FLUSH;
-         
-      streamArrows = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      return true;
-   }
-   else if ((( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )) || ((commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )))
-   {
-      vprDEBUG(vesDBG,0) << " STREAMLINE_DIAMETER\t" 
-                              << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
-                              << std::endl << vprDEBUG_FLUSH;
-
-/*     
-      // diameter is obtained from gui, -100 < vectorScale < 100
-      // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
-      // convert range to -2.5 < x < 2.5, and compute the exponent...
-      float range = 2.5f;
-      int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 
-                       this->GetActiveDataSet()->GetLength()*0.001f;
-
-      // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
-      // note that multiplying by 0.005 is the same as dividing by 200, or the range
-      this->lineDiameter = (diameter + 110) * 0.005 *  20;
-
-      vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
-                             << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
-      arrowDiameter = localLineDiameter * 4.0f;
-      return true;
-*/
-      int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      // this is to convert 1 to 50 on the GUI  to approx from 1 to 28 pixels
-      //vector arrows and seed points are in feet
-     // this->lineDiameter = exp(diameter*0.06666f);
-      this->lineDiameter = 0.25 * diameter;
-
-      vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
-                             << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
-
-      //this will make the arrows on the streamlines twice the diameter
-      arrowDiameter = lineDiameter * 2.0f;
-      return true;
-
+      commandType = "wait";
    }
 
-//this last statement is redundant; taken care of by the preceeding else statement
-/*
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
+   if ( !commandType.compare( "Streamline_Data" ) )   
    {
+      VE_XML::DataValuePair* commandData = veCommand->GetDataValuePair( 0 );
+      std::vector < long > commandIds;
+      commandData->GetData( commandIds );
+      std::string newCommand = commandData->GetDataName();
 
+      if ( !newCommand.compare( "USE_LAST_STREAMLINE_SEEDPOINTS" ) )         
+      {
+         return true;
+      }
 
-      // diameter is obtained from gui, -100 < vectorScale < 100
-      // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
-      // convert range to -2.5 < x < 2.5, and compute the exponent...
-      float range = 2.5f;
-      int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-      arrowDiameter = 4.0f * exp( diameter / ( 100.0 / range ) ) * 
-                       this->GetActiveDataSet()->GetLength()*0.001f;
-      return true;
+      else if ( !newCommand.compare( "BACKWARD_INTEGRATION" ) )         
+      {
+         vprDEBUG(vesDBG,0) << " BACKWARD_INTEGRATION" 
+                                << std::endl << vprDEBUG_FLUSH;
+
+         this->SetIntegrationDirection( 2 );
+         return true;  
+      }
+      else if ( !newCommand.compare( "FORWARD_INTEGRATION" ) )         
+      {
+         vprDEBUG(vesDBG,0) << " FORWARD_INTEGRATION"
+                                << std::endl << vprDEBUG_FLUSH;
+
+         this->SetIntegrationDirection( 1 );
+         return true;  
+      }
+      else if ( !newCommand.compare( "TWO_DIRECTION_INTEGRATION" ) )         
+      {
+         vprDEBUG(vesDBG,0) << " TWO_DIRECTION_INTEGRATION" 
+                                << std::endl << vprDEBUG_FLUSH;
+
+         this->SetIntegrationDirection( 0 );
+         return true; 
+      }
+      else if ( !newCommand.compare( "CHANGE_INT_STEP_LENGTH" ) )         
+      {
+         vprDEBUG(vesDBG,0) << " CHANGE_INT_STEP_LENGTH\t"
+            << commandIds.at(4) 
+            << std::endl << vprDEBUG_FLUSH;
+
+         this->SetIntegrationStepLength( commandIds.at(4) );
+         return true;
+      }
+      else if ( !newCommand.compare( "CHANGE_PROPAGATION_TIME" ) )         
+      {
+         vprDEBUG(vesDBG,0) << " CHANGE_PROPAGATION_TIME\t" 
+            << commandIds.at(5) 
+            << std::endl << vprDEBUG_FLUSH;
+
+         this->SetPropagationTime( commandIds.at(5) );
+         return true;  
+      }
+      else if ( !newCommand.compare( "CHANGE_STEP_LENGTH" ) )         
+      {
+         vprDEBUG(vesDBG,0) << " CHANGE_STEP_LENGTH\t" << commandIds.at(6) 
+                                << std::endl << vprDEBUG_FLUSH;
+
+         this->SetStepLength( commandIds.at(6) );
+         return true;
+      }
+      else if ( !newCommand.compare( "STREAMLINE_ARROW" ) )         
+      {
+         vprDEBUG(vesDBG,0) << " STREAMLINE_ARROW\t" << this->cfdIso_value 
+                                << std::endl << vprDEBUG_FLUSH;
+
+         streamArrows = this->cfdIso_value;
+         return true;
+      }
+      else if ( (!newCommand.compare( "STREAMLINE_DIAMETER" ) ) )// || (!newCommand.compare( "CHANGE_STREAMLINE_CURSOR" ) ) )         
+      {
+         vprDEBUG(vesDBG,0) << " STREAMLINE_DIAMETER\t" 
+                                 << commandIds.at(7) 
+                                 << std::endl << vprDEBUG_FLUSH;
+ 
+         int diameter = commandIds.at(7);
+         // this is to convert 1 to 50 on the GUI  to approx from 1 to 28 pixels
+         //vector arrows and seed points are in feet
+        // this->lineDiameter = exp(diameter*0.06666f);
+         this->lineDiameter = 0.25 * diameter;
+
+         vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
+                                << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
+
+         //this will make the arrows on the streamlines twice the diameter
+         arrowDiameter = lineDiameter * 2.0f;
+         return true;
+      }
    }
-*/
    return flag;
 }
 
@@ -474,4 +456,3 @@ void cfdStreamers::UpdateCommand()
    cfdObjects::UpdateCommand();
    std::cerr << "doing nothing in cfdStreamers::UpdateCommand()" << std::endl;
 }
-

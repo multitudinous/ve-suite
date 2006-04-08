@@ -37,6 +37,9 @@
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdObjects.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
 #ifdef _PERFORMER
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfNode.h>
@@ -162,6 +165,7 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS,
    this->last_cursor_type = XPLANE;
 
    sphereRadius = 0.05f;
+//   command = 0;
 }
 
 cfdCursor::~cfdCursor()
@@ -820,94 +824,111 @@ void cfdCursor::SetActiveDataSet( cfdDataSet* input )
 // compare VjObs_i commandArray with its child's value
 bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 {
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
+   bool flag = false; //cfdObjects::CheckCommandId( commandArray );
+   std::string commandType;
+   if ( veCommand )
    {
-      vprDEBUG(vesDBG,1) << "this->id = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-                << ", this->min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) 
-                << ", this->max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
-                << std::endl << vprDEBUG_FLUSH;
+      commandType = veCommand->GetCommandName();
+   }
+   else
+   {
+      commandType = "wait";
+   }
 
-      if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == NO_CURSOR )
-      {
-         vprDEBUG(vesDBG,1) 
-           << "removing cursor with cursor->GetpfDCS() = "
-           << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
+   if ( !commandType.compare( "Streamline_Data" ) )   
+   {
+      VE_XML::DataValuePair* commandData = veCommand->GetDataValuePair( 0 );
+      std::vector < long > commandIds;
+      commandData->GetData( commandIds );
+      std::string newCommand = commandData->GetDataName();
 
-         this->cursorId = NONE;
-         if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) >= 0 )
-            this->_rootNode->RemoveChild( this->GetcfdDCS() );
-      }
-      else
+      if ( !newCommand.compare( "CHANGE_STREAMLINE_CURSOR" ) )
       {
-         if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == POINT_CURSOR )
-            this->cursorId = SPHERE;
-         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == X_PLANE_CURSOR )
-            this->cursorId = XPLANE;
-         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == Y_PLANE_CURSOR )
-            this->cursorId = YPLANE;
-         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == Z_PLANE_CURSOR )
-            this->cursorId = ZPLANE;
-         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == X_LINE_CURSOR )
-            this->cursorId = XLINE;
-         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == Y_LINE_CURSOR )
-            this->cursorId = YLINE;
-         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == Z_LINE_CURSOR )
-            this->cursorId = ZLINE;
+         vprDEBUG(vesDBG,1) << "this->id = " << commandData->GetDataName() << ", this->min = " << commandIds.at(1) 
+                   << ", this->max = " << commandIds.at(2) << std::endl << vprDEBUG_FLUSH;
+
+         if ( commandIds.at(0) == NO_CURSOR )
+         {
+            vprDEBUG(vesDBG,1) 
+              << "removing cursor with cursor->GetpfDCS() = "
+              << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
+
+            this->cursorId = NONE;
+            if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) >= 0 )
+               this->_rootNode->RemoveChild( this->GetcfdDCS() );
+         }
          else
          {
-            vprDEBUG(vesDBG,0) 
-              << "ERROR: Unknown cursorId -- Setting cursor to XPLANE"
-              << std::endl << vprDEBUG_FLUSH;
+            if ( commandIds.at(0) == POINT_CURSOR )
+               this->cursorId = SPHERE;
+            else if ( commandIds.at(0) == X_PLANE_CURSOR )
+               this->cursorId = XPLANE;
+            else if ( commandIds.at(0) == Y_PLANE_CURSOR )
+               this->cursorId = YPLANE;
+            else if ( commandIds.at(0) == Z_PLANE_CURSOR )
+               this->cursorId = ZPLANE;
+            else if ( commandIds.at(0) == X_LINE_CURSOR )
+               this->cursorId = XLINE;
+            else if ( commandIds.at(0) == Y_LINE_CURSOR )
+               this->cursorId = YLINE;
+            else if ( commandIds.at(0) == Z_LINE_CURSOR )
+               this->cursorId = ZLINE;
+            else
+            {
+               vprDEBUG(vesDBG,0) 
+                 << "ERROR: Unknown cursorId -- Setting cursor to XPLANE"
+                 << std::endl << vprDEBUG_FLUSH;
 
-            this->cursorId = XPLANE;
+               this->cursorId = XPLANE;
+            }
+
+            // fix this don't know what it used for
+            // look in old in cfdApp.cxx
+            // this->chgMod = true;
+
+            vprDEBUG(vesDBG,1) 
+              << "adding cursor with cursor->GetpfDCS() = "
+              << this->GetcfdDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
+
+            // if disconnected from scene graph, add
+            if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) < 0 )
+            {
+               this->_rootNode->AddChild( this->GetcfdDCS() );
+
+               vprDEBUG(vesDBG,2) 
+                  << "added cursor with cursor->GetpfDCS() = "
+                  << this->GetcfdDCS() << std::endl 
+                  << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
+            }
          }
-         
-         // fix this don't know what it used for
-         // look in old in cfdApp.cxx
-         // this->chgMod = true;
 
-         vprDEBUG(vesDBG,1) 
-           << "adding cursor with cursor->GetpfDCS() = "
-           << this->GetcfdDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
-
-         // if disconnected from scene graph, add
-         if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) < 0 )
+         //if ( this->cursorId != NONE && this->cursorId != SPHERE && this->cursorId != CUBE )
+         if ( this->cursorId != NONE && this->cursorId != SPHERE )
          {
-            this->_rootNode->AddChild( this->GetcfdDCS() );
+            this->SetPlaneReso( (int)commandIds.at(1) ); 
 
-            vprDEBUG(vesDBG,2) 
-               << "added cursor with cursor->GetpfDCS() = "
-               << this->GetcfdDCS() << std::endl 
-               << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
+            // convert size percentage (0-100) request to plane size
+            //std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() 
+            //            << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
+
+	         if ( this->activeDataSetDCS )
+	         {
+		         float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+		         float* worldDCSScale = this->worldDCS->GetScaleArray();
+		         float combineScale[ 3 ];
+		         combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
+
+               //this controls the size of the plane for the seed points
+               //the range on the GUI is from 1 to 100
+               //	this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
+		         this->SetPlaneSize( combineScale[ 0 ] * commandIds.at(2) * 0.5 * 0.0025 * _activeDataSet->GetLength() ); 
+
+               //this controls the size of the sphere seed points
+               //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
+		         //sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
+		         sphereRadius = (commandIds.at(3) + 5 ) * 0.01f;
+		      }
          }
-      }
-      
-      //if ( this->cursorId != NONE && this->cursorId != SPHERE && this->cursorId != CUBE )
-      if ( this->cursorId != NONE && this->cursorId != SPHERE )
-      {
-         this->SetPlaneReso( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) ); 
-
-         // convert size percentage (0-100) request to plane size
-         //std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() 
-         //            << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
-
-		if ( this->activeDataSetDCS )
-		{
-			float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
-			float* worldDCSScale = this->worldDCS->GetScaleArray();
-			float combineScale[ 3 ];
-			combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
-
-         //this controls the size of the plane for the seed points
-         //the range on the GUI is from 1 to 100
-         //	this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
-			this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.0025 * _activeDataSet->GetLength() ); 
-
-         //this controls the size of the sphere seed points
-         //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
-			//sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
-			sphereRadius = (commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) + 5 ) * 0.01f;
-		}
       }
    }
 

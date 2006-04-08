@@ -61,6 +61,9 @@
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
 #include "VE_Xplorer/cfdDebug.h"
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -722,11 +725,10 @@ void cfdSteadyStateVizHandler::InitScene( void )
    //std::cout << "|  9. Initializing..................................... Text Output |" << std::endl;
    //this->textOutput = new cfdTextOutput();
 }
-
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) != -1 )
-   {
+   {            
       vprDEBUG(vesDBG,2) 
          << "preFrame: id = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
          << ", iso = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
@@ -744,13 +746,13 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    {
       // Check to see if any of the objectss need updated before we 
       // create actors
+      this->commandList[ i ]->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
       bool commandApplies = this->commandList[ i ]->CheckCommandId( this->commandArray );
       vprDEBUG(vesDBG,4) << "|\tCommand Applies : " << commandApplies
                                    << std::endl << vprDEBUG_FLUSH;
    }
 
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-            == TRANSIENT_ACTIVE )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE )
    {
       this->transientActors = commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
    }
@@ -822,7 +824,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       }
    }
 
-   if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS ){
+   if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
+   {
       this->useLastSource = this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
    }
    else if (   ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&

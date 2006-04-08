@@ -57,6 +57,11 @@ namespace VE_Xplorer
    class cfdDataSet;
 }
 
+namespace VE_XML
+{
+   class Command;
+}
+
 #include "VE_Xplorer/cfdGlobalBase.h"
 
 //! Virtual cursors

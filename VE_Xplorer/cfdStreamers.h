@@ -45,6 +45,11 @@ namespace VE_Xplorer
    class cfdCommandArray;
 }
 
+namespace VE_XML
+{
+   class Command;
+}
+
 //! VTK streamers plane renderer.
 /*!
   A class to takes input data set(s) and generates streamlines 
