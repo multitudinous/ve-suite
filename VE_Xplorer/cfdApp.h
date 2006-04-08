@@ -54,7 +54,11 @@ const float SAMPLE_TIME = 1.0f;
 		class Group;
 		class FrameStamp;
 	} 
-	namespace osgUtil { class SceneView; }
+	namespace osgUtil 
+   { 
+      class SceneView;
+      class UpdateVisitor;
+   }
 	#ifdef _WEB_INTERFACE
 		#include <vpr/Thread/Thread.h>
 	#endif
@@ -151,7 +155,7 @@ class cfdApp: public vrj::OsgApp
 
 #ifdef _OSG
       bool svUpdate;
-      osg::ref_ptr<osgUtil::SceneView> tempSvVector;
+      //osg::ref_ptr<osgUtil::SceneView> tempSvVector;
 #ifdef VE_PATENTED
       VE_TextureBased::cfdTextureBasedVizHandler* _tbvHandler;
       //biv --may convert this to a singleton later
@@ -166,6 +170,7 @@ class cfdApp: public vrj::OsgApp
 
    // Only used in preframe for transient stuff
    int   lastFrame;
+   void update();
 private:
    vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
    std::string filein_name;
@@ -175,18 +180,20 @@ private:
 	   //web interface stuff for writing the image file
 	   //to be viewed over the web
 #ifdef _WEB_INTERFACE
-	   bool runWebImageSaveThread;
-	   bool readyToWriteWebImage;
-	   bool writingWebImageNow;
-	   bool captureNextFrameForWeb;
-	   int webImageWidth;
-	   int webImageHeight;
-	   vpr::Thread* writeWebImageFileThread;			//thread in which we write to the file
-	   std::string webImagePixelArray;
-	   void writeWebImageFile(void*);
-	   void captureWebImage();
-	   double timeOfLastCapture;
+	bool runWebImageSaveThread;
+	bool readyToWriteWebImage;
+	bool writingWebImageNow;
+	bool captureNextFrameForWeb;
+	int webImageWidth;
+	int webImageHeight;
+	vpr::Thread* writeWebImageFileThread;			//thread in which we write to the file
+	std::string webImagePixelArray;
+	void writeWebImageFile(void*);
+	void captureWebImage();
+	double timeOfLastCapture;
 #endif 
+   osg::ref_ptr< osg::NodeVisitor > mUpdateVisitor;
+   osg::ref_ptr< osg::FrameStamp > frameStamp;
 };
 }
 #endif

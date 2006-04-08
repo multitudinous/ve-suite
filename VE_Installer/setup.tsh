@@ -19,6 +19,9 @@ if ( -e /etc/redhat-release ) then
    else if ( ${firstWord} == "Fedora" ) then
       # extract some words from file to create something like Fedora_1
       setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 "_" $4}'`
+   else if ( ${firstWord} == "CentOS" ) then
+      # extract some words from file to create something like Fedora_1
+      setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 "_" $3}'`
    endif
 else if ( -e /etc/SuSE-release ) then
    # extract some words from file to create something like SuSE_9.2_x86-64

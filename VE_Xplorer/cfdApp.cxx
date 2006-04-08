@@ -82,6 +82,7 @@
 #include <osgDB/WriteFile>
 #include <osg/FrameStamp>
 #include <osgUtil/SceneView>
+#include <osgUtil/UpdateVisitor>
 #include <osg/MatrixTransform>
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
@@ -121,11 +122,12 @@ cfdApp::cfdApp( int argc, char* argv[] )
 #ifdef _OSG
    //osg::Referenced::instance()->setThreadSafeRefUnref(true);
    osg::Referenced::setThreadSafeReferenceCounting(true);
-   osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 10 );
+   osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
    _frameStamp = new osg::FrameStamp;
+   mUpdateVisitor = new osgUtil::UpdateVisitor();
    _frameStamp->setReferenceTime(0.0);
    _frameStamp->setFrameNumber(0);
-   svUpdate = true;
+   //svUpdate = true;
 #ifdef VE_PATENTED
    _tbvHandler = 0;
    _pbuffer = 0;
@@ -253,8 +255,8 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    vrj::OsgApp::configSceneView(newSceneViewer);
 
    {
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   tempSvVector = newSceneViewer;
+   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //tempSvVector = newSceneViewer;
    //tempSvVector.push_back( new_sv );
    }
    //newSceneViewer->setBackgroundColor( osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f) );
@@ -270,19 +272,19 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    newSceneViewer->setFrameStamp(_frameStamp.get());
    //newSceneViewer->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
 }
-
+/////////////////////////////////////////////////////////////////////////////
 void cfdApp::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 #endif //_OSG
-
+/////////////////////////////////////////////////////////////////////////////
 void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 {
    _vjobsWrapper = input;
 }
-
+/////////////////////////////////////////////////////////////////////////////
 void cfdApp::initScene( void )
 {
    vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
@@ -379,12 +381,12 @@ void cfdApp::initScene( void )
    // This may need to be fixed
    this->_vjobsWrapper->GetCfdStateVariables();
 }
-
+/////////////////////////////////////////////////////////////////////////////
 void cfdApp::preFrame( void )
 {
    ;
 }
-
+/////////////////////////////////////////////////////////////////////////////
 void cfdApp::latePreFrame( void )
 {
    static long lastFrame = 0;
@@ -457,8 +459,8 @@ void cfdApp::latePreFrame( void )
          //tempSvVector->at( i )->get();
          //vprASSERT(tempSvVector.get() != NULL);
          //if ( i == 0 )
-         if ( tempSvVector.get() )
-         tempSvVector->update();
+         //if ( tempSvVector.get() )
+         //tempSvVector->update();
       }
       /*std::vector< osg::ref_ptr<osgUtil::SceneView>* >* tempSvVector = sceneViewer.getDataVector();
       for ( size_t i = 0; i < tempSvVector->size(); ++i )
@@ -469,6 +471,11 @@ void cfdApp::latePreFrame( void )
          vprASSERT(tempSvVector->at( i )->get() != NULL);
          tempSvVector->at( i )->get()->update();
       }*/
+   // this call must be the last call in latePreframe so that
+   // osg get's updated properly
+#ifdef _OSG
+   this->update();
+#endif
 }
 
 void cfdApp::intraFrame()
@@ -695,5 +702,22 @@ void cfdApp::draw()
    glPopAttrib();
    glPopAttrib();
    glPopAttrib();
+}
+///////////////////////////////////////////////////
+void cfdApp::update( void )
+{
+	// Update the frame stamp with information from this frame
+	//frameStamp->setFrameNumber( getFrameNumber() );
+   //frameStamp->setReferenceTime( getFrameTime().secd() );
+	
+	// Set up the time and frame number so time dependant things (animations, particle system)
+	// function correctly
+	mUpdateVisitor->setTraversalNumber( _frameNumber );//getFrameNumber() ); // I'm not sure if this is nessisary
+	mUpdateVisitor->setFrameStamp( _frameStamp.get() ); 
+	
+	// update the scene by traversing it with the the update visitor which will
+	// call all node update callbacks and animations. This is equivalent to calling
+	// SceneView::update
+	getScene()->accept(*mUpdateVisitor);
 }
 #endif //_OSG
