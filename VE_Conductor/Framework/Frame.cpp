@@ -1283,6 +1283,9 @@ void AppFrame::LaunchStreamlinePane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( streamlinePane == 0 )
    {
+      ConVEServer();
+      if ( CORBA::is_nil(vjobs.in()) )
+         return;
       // create pane and set appropriate vars
       streamlinePane = new StreamlinePane( vjobs.in(), domManager );
       // Set DOMDocument

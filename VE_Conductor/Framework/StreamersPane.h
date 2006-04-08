@@ -116,6 +116,7 @@ protected:
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
    int cId, cIso_value, cMin, cMax, cSc;
+   std::vector< long > commandInputs;
    DOMDocument* doc;
    VE_XML::DOMDocumentManager* domManager;
    std::string dataValueName;

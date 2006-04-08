@@ -340,66 +340,50 @@ void StreamlinePane::_buildPage()
    scrollWindow->SetSizer( streamPanelGroup ); 
    //set this flag and let wx handle alignment
    this->SetAutoLayout(true);
-   this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+   this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );     
    //assign the group to the panel
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
    mainSizer->Add( scrollWindow,1,wxALIGN_LEFT|wxEXPAND);
    this->SetSizer( mainSizer );   
    
+   dataValueName = "CHANGE_STREAMLINE_CURSOR";
+   commandInputs.push_back( NO_CURSOR );
+   commandInputs.push_back( _nPtsSlider->GetValue()-1 );
+   commandInputs.push_back( _sizePerSlider->GetValue() );
+   commandInputs.push_back( sphereScaleSlider->GetValue() );
+
    // Send intial data to VE-Xplorer
    this->ConstructCommandId();
 
    dataValueName = "CHANGE_INT_STEP_LENGTH";
-   cIso_value = _iStepSlider->GetValue();
+   commandInputs.push_back( _iStepSlider->GetValue() );
    SendCommandsToXplorer();
 
    dataValueName = "CHANGE_PROPAGATION_TIME";
-   cIso_value = _propSlider->GetValue();
+   commandInputs.push_back( _propSlider->GetValue() );
    SendCommandsToXplorer();
 
    dataValueName = "CHANGE_STEP_LENGTH";
-   cIso_value = _stepSlider->GetValue();
+   commandInputs.push_back( _stepSlider->GetValue() );
    SendCommandsToXplorer();
 
-/*   
-   ((UI_Tabs *)_parent)->cId  = CHANGE_INT_STEP_LENGTH;
-   ((UI_Tabs *)_parent)->cIso_value = _iStepSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-
-   ((UI_Tabs *)_parent)->cId  = CHANGE_PROPAGATION_TIME;
-   ((UI_Tabs *)_parent)->cIso_value = _propSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-
-   ((UI_Tabs *)_parent)->cId  = CHANGE_STEP_LENGTH;
-   ((UI_Tabs *)_parent)->cIso_value = _stepSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
    if ( _integrationDirRBox->GetSelection() == 0 )
    {
       dataValueName = "BACKWARD_INTEGRATION";
-//      ((UI_Tabs *)_parent)->cId = BACKWARD_INTEGRATION;
    }
    else if ( _integrationDirRBox->GetSelection() == 1 )
    {
       dataValueName = "FORWARD_INTEGRATION";
-//      ((UI_Tabs *)_parent)->cId = FORWARD_INTEGRATION;
    }
    else if ( _integrationDirRBox->GetSelection() == 2 )
    {
       dataValueName = "TWO_DIRECTION_INTEGRATION";
-//      ((UI_Tabs *)_parent)->cId = TWO_DIRECTION_INTEGRATION;
    }
    SendCommandsToXplorer();
-//   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 
    dataValueName = "STREAMLINE_DIAMETER";
-   cIso_value = _diameterSlider->GetValue();
+   commandInputs.push_back( _diameterSlider->GetValue() );
    SendCommandsToXplorer();
-/*
-   ((UI_Tabs *)_parent)->cId  = STREAMLINE_DIAMETER;
-   ((UI_Tabs *)_parent)->cIso_value = _diameterSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
 }
 //////////////////////
 //Event handling    //
@@ -409,39 +393,24 @@ void StreamlinePane::_buildPage()
 void StreamlinePane::_oniStepSlider(wxScrollEvent& WXUNUSED(event))
 {
    dataValueName = "CHANGE_INT_STEP_LENGTH";
-   cIso_value = _iStepSlider->GetValue();
+   commandInputs.at(4) = _iStepSlider->GetValue();
    SendCommandsToXplorer();
-/*
-   ((UI_Tabs *)_parent)->cId  = CHANGE_INT_STEP_LENGTH;
-   ((UI_Tabs *)_parent)->cIso_value = _iStepSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
 }
 
 ///////////////////////////////////////////////////////////
 void  StreamlinePane::_onPropSlider(wxScrollEvent& WXUNUSED(event))
 {
    dataValueName = "CHANGE_PROPAGATION_TIME";
-   cIso_value = _propSlider->GetValue();
+   commandInputs.at(5) = _propSlider->GetValue();
    SendCommandsToXplorer();
-/*
-   ((UI_Tabs *)_parent)->cId  = CHANGE_PROPAGATION_TIME;
-   ((UI_Tabs *)_parent)->cIso_value = _propSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
 }
 
 //////////////////////////////////////////////////////////////
 void StreamlinePane::_onStepSlider(wxScrollEvent& WXUNUSED(event))
 {
    dataValueName = "CHANGE_STEP_LENGTH";
-   cIso_value = _stepSlider->GetValue();
+   commandInputs.at(6) = _stepSlider->GetValue();
    SendCommandsToXplorer();
-/*
-   ((UI_Tabs *)_parent)->cId  = CHANGE_STEP_LENGTH;
-   ((UI_Tabs *)_parent)->cIso_value = _stepSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
 }
 
 //////////////////////////////////////////////////////////////
@@ -450,20 +419,16 @@ void StreamlinePane::_onIntegrateDir(wxCommandEvent& WXUNUSED(event))
    if ( _integrationDirRBox->GetSelection() == 0 )
    {
       dataValueName = "BACKWARD_INTEGRATION";
-//      ((UI_Tabs *)_parent)->cId = BACKWARD_INTEGRATION;
    }
    else if ( _integrationDirRBox->GetSelection() == 1 )
    {
       dataValueName = "FORWARD_INTEGRATION";
-//      ((UI_Tabs *)_parent)->cId = FORWARD_INTEGRATION;
    }
    else if ( _integrationDirRBox->GetSelection() == 2 )
    {
       dataValueName = "TWO_DIRECTION_INTEGRATION";
-//      ((UI_Tabs *)_parent)->cId = TWO_DIRECTION_INTEGRATION;
    }
-      SendCommandsToXplorer();
-//   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
+   SendCommandsToXplorer();
 }
 
 //////////////////////////////////////////////////////////////
@@ -471,8 +436,6 @@ void StreamlinePane::_onParticleTrack(wxCommandEvent& WXUNUSED(event))
 {
    dataValueName = "ANIMATED_STREAMLINES";
    SendCommandsToXplorer();
-//   ((UI_Tabs *)_parent)->cId = ANIMATED_STREAMLINES;
-//   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 
    if ( particleControls )
    {
@@ -491,21 +454,14 @@ void StreamlinePane::_onCompStreamline(wxCommandEvent& WXUNUSED(event))
 {
    dataValueName = "STREAMLINES";
    SendCommandsToXplorer();
-//   ((UI_Tabs *)_parent)->cId = STREAMLINES;
-//   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
 
 ///////////////////////////////////////////////////////////
 void StreamlinePane::_onDiameterSlider(wxScrollEvent& WXUNUSED(event))
 {
    dataValueName = "STREAMLINE_DIAMETER";
-   cIso_value = _diameterSlider->GetValue();
+   commandInputs.at(7) = _diameterSlider->GetValue();
    SendCommandsToXplorer();
-/*
-   ((UI_Tabs *)_parent)->cId  = STREAMLINE_DIAMETER;
-   ((UI_Tabs *)_parent)->cIso_value = _diameterSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
 }
 
 ///////////////////////////////////////////////////////
@@ -517,13 +473,8 @@ void StreamlinePane::_onCheck(wxCommandEvent& WXUNUSED(event))
 void StreamlinePane::OnArrowCheck( wxCommandEvent& WXUNUSED(event) )
 {
    dataValueName = "STREAMLINE_ARROW";
-   cIso_value = arrowPointsChk->GetValue();
+   commandInputs.push_back( arrowPointsChk->GetValue() );
    SendCommandsToXplorer();
-/*
-   ((UI_Tabs *)_parent)->cId = STREAMLINE_ARROW;
-   ((UI_Tabs *)_parent)->cIso_value = arrowPointsChk->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
 }
 
 ///////////////////////////////////////////////////////
@@ -548,65 +499,49 @@ void StreamlinePane::onScaleSlider( wxScrollEvent& WXUNUSED(event) )
 void StreamlinePane::ConstructCommandId( void )
 {
    dataValueName = "CHANGE_STREAMLINE_CURSOR";
-   cMin = _nPtsSlider->GetValue()-1;
-   cMax = _sizePerSlider->GetValue();
-   cSc = sphereScaleSlider->GetValue();
-/*
-   ((UI_Tabs *)_parent)->cId  = CHANGE_STREAMLINE_CURSOR;
-   ((UI_Tabs *)_parent)->cMin = _nPtsSlider->GetValue()-1;           
-   ((UI_Tabs *)_parent)->cMax = _sizePerSlider->GetValue();
-   ((UI_Tabs *)_parent)->cSc  = sphereScaleSlider->GetValue();
-*/
+
    if ( _cursorRBox->GetSelection() == 0 )
    {
-      cIso_value = NO_CURSOR;
-//      ((UI_Tabs *)_parent)->cIso_value = NO_CURSOR;
+      commandInputs.at(0) = NO_CURSOR;
    }
    else if ( _cursorRBox->GetSelection() == 1 )
    { 
-      cIso_value = POINT_CURSOR;
-//      ((UI_Tabs *)_parent)->cIso_value = POINT_CURSOR;
+      commandInputs.at(0) = POINT_CURSOR;
    }
    else if ( _cursorRBox->GetSelection() == 2 )
    {
-
       if ( _directionRBox->GetSelection() == 0 )
       {
-         cIso_value = X_LINE_CURSOR;
-//         ((UI_Tabs *)_parent)->cIso_value = X_LINE_CURSOR;
+         commandInputs.at(0) = X_LINE_CURSOR;
       }
       else if ( _directionRBox->GetSelection() == 1 )
       {
-         cIso_value = Y_LINE_CURSOR;
-//         ((UI_Tabs *)_parent)->cIso_value = Y_LINE_CURSOR;
+         commandInputs.at(0) = Y_LINE_CURSOR;
       }
       else if ( _directionRBox->GetSelection() == 2 )
       {
-         cIso_value = Z_LINE_CURSOR;
-//         ((UI_Tabs *)_parent)->cIso_value = Z_LINE_CURSOR;
+         commandInputs.at(0) = Z_LINE_CURSOR;
       }
    }
    else if ( _cursorRBox->GetSelection() == 3 )
    {
-
       if ( _directionRBox->GetSelection() == 0 )
       {
-         cIso_value = X_PLANE_CURSOR;
-//         ((UI_Tabs *)_parent)->cIso_value = X_PLANE_CURSOR;
-      }
+         commandInputs.at(0) = X_PLANE_CURSOR;
+     }
       else if ( _directionRBox->GetSelection() == 1 )
       {
-         cIso_value = Y_PLANE_CURSOR;
-//         ((UI_Tabs *)_parent)->cIso_value = Y_PLANE_CURSOR;
+         commandInputs.at(0) = Y_PLANE_CURSOR;
       }
       else if ( _directionRBox->GetSelection() == 2 )
       {
-         cIso_value = Z_PLANE_CURSOR;
-//         ((UI_Tabs *)_parent)->cIso_value = Z_PLANE_CURSOR;
-      }
+         commandInputs.at(0) = Z_PLANE_CURSOR;
+     }
    }
+   commandInputs.at(1) = _nPtsSlider->GetValue()-1;
+   commandInputs.at(2) = _sizePerSlider->GetValue();
+   commandInputs.at(3) = sphereScaleSlider->GetValue();
    SendCommandsToXplorer();
-//   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 ////////////////////////////////////////////////////////////
 void StreamlinePane::SetCommInstance( VjObs_ptr veEngine )
@@ -623,8 +558,7 @@ void StreamlinePane::SendCommandsToXplorer( void )
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
    dataValuePair->SetOwnerDocument(doc);
-   dataValuePair->SetDataName( dataValueName );
-   dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
+   dataValuePair->SetData( dataValueName, commandInputs );
    VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetOwnerDocument(doc);
    veCommand->SetCommandName( std::string("Streamline_Data") );
