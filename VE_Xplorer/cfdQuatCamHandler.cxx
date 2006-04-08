@@ -562,8 +562,6 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          return true;
       }
    }
-
-
    return flag;
 }
 

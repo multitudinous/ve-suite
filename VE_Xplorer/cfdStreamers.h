@@ -84,6 +84,8 @@ public:
    void SetIntegrationStepLength( int );
 
    void SetStepLength( int );
+   
+   int cfdIso_value;
 
 private:
    //void UpdateTracker( float x[3], float v[3] ); // Update the position of the cursors.
