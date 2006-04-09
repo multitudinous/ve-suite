@@ -67,14 +67,15 @@ public:
 
    ///Set the data file name to be translated.
    ///\param inputData The file name of the data to be loaded.
-   void SetInputData( std::string inputData );
+   void SetInputData( std::string inputData, std::string inputDir );
 
    ///Get the vtkDataSet for the data that was passed in
    ///\param inputData The file name of the data to be loaded.
-   vtkDataSet* GetVTKDataSet( void );
+   vtkDataSet* GetVTKDataSet( int argc, char** argv );
 
 private:
    std::string inputDataName;///<The name of the data file.
+   std::string inputDataDir;///<The name of the input data dir.
    cfdTranslatorToVTK* activeLoader;///<The pointer to the active loader
    std::map< std::string, cfdTranslatorToVTK* > translatorMap;///<Map the translators to a filename or extension, must be unique
 };

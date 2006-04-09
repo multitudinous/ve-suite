@@ -8,7 +8,6 @@ int main(int argc, char** argv)
 {
    VE_Builder::DataLoader loader;
    loader.SetInputData( "something" );
-   vtkDataSet* tempData = loader.GetVTKDataSet();
-   //translator.TranslateToVTK(argc,argv);
+   vtkDataSet* tempData = loader.GetVTKDataSet( argc, argv );
    return 0;
 }

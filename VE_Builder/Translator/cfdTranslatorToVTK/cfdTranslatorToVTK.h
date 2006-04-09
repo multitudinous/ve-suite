@@ -86,11 +86,11 @@ public:
    unsigned int GetNumberOfFoundFiles();
    std::string GetFile( unsigned int fileNumber );
 
+   vtkDataSet* GetVTKFile( unsigned int whichFile );
 protected:
    bool _writeToVTK( unsigned int whichFile );
    ///Write the file to memory so that it is accessible 
    ///through other interfaces
-   bool GetVTKFile( unsigned int whichFile );
    unsigned int _nFoundFiles;
 
    std::string baseFileName;
