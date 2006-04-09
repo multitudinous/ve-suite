@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="cfdREIToVTK"
-	ProjectGUID="{C3E4EC67-9496-4391-A1B2-8180B3954E9D}"
+	ProjectGUID="{C3E4EC67-9449-4391-A1B2-8180B3954E9D}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
