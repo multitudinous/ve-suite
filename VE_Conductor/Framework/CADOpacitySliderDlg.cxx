@@ -1,3 +1,4 @@
+#include "VE_Conductor/Framework/CADOpacitySliderDlg.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
@@ -6,7 +7,7 @@
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/msgdlg.h>
-#include "VE_Conductor/Framework/CADOpacitySliderDlg.h"
+
 using namespace VE_CAD;
 using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE(CADOpacitySliderDlg,wxDialog)
