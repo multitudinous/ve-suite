@@ -75,18 +75,19 @@
 		</Configuration>
 		<Configuration
 			Name="dbg|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			IntermediateDirectory=".\GUIPluginLib\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation=".\Debug/"
@@ -100,14 +101,14 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GUIPlugin_d.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib"
-				OutputFile="$(VE_SUITE_HOME)\lib\win32\DefaultPlugin.dll"
+				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib"
+				OutputFile="$(VE_SUITE_HOME)\lib\win32\DefaultPlugin_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(VE_SUITE_HOME)\lib\win32;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/Baffle.pdb"
-				ImportLibrary=".\Debug/Baffle.lib"
+				ProgramDatabaseFile="$(OutDir)\GUIPlugin_d.pdb"
+				ImportLibrary="$(OutDir)\DefaultPlugin_d.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
