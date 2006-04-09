@@ -6,8 +6,10 @@
 
 class vtkDataSet;
 #include "VE_Installer/include/VEConfig.h"
-namespace VE_Builder{
-class VE_BUILDER_EXPORTS cfdTranslatorToVTK{
+namespace VE_Builder
+{
+class VE_BUILDER_EXPORTS cfdTranslatorToVTK
+{
 public:
    cfdTranslatorToVTK();
    virtual ~cfdTranslatorToVTK();
@@ -82,12 +84,16 @@ public:
    std::string GetOutputDirectory();
 
    unsigned int GetNumberOfFoundFiles();
-   std::string GetFile(unsigned int fileNumber);
+   std::string GetFile( unsigned int fileNumber );
 
 protected:
-   bool _writeToVTK(unsigned int whichFile);
+   bool _writeToVTK( unsigned int whichFile );
+   ///Write the file to memory so that it is accessible 
+   ///through other interfaces
+   bool GetVTKFile( unsigned int whichFile );
    unsigned int _nFoundFiles;
 
+   std::string baseFileName;
    std::string _fileExtension;
    std::string _inputDir;
    std::string _outputDir;

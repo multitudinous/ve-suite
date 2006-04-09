@@ -11,7 +11,8 @@ cfdTranslatorToVTK::cfdTranslatorToVTK()
 {
    _nFoundFiles = 0;
 
-   _fileExtension = ".*";
+   baseFileName = "flowdata"
+   _fileExtension = "vtk";
    _inputDir = "./";
    _outputDir = "./";
 
@@ -46,6 +47,11 @@ void cfdTranslatorToVTK::SetInputDirectory(std::string inDir)
 void cfdTranslatorToVTK::SetOutputDirectory(std::string outDir)
 {
    _outputDir = outDir;
+}
+///////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::SetFileName( std::string fileName )
+{
+   baseFileName = fileName;
 }
 //////////////////////////////////////////////////////////////////////////////   
 void cfdTranslatorToVTK::SetPreTranslateCallback(PreTranslateCallback* preTCbk)
@@ -100,27 +106,42 @@ bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
    {
       _preTCbk->Preprocess(argc,argv,this);
    }
+
    //just in case the Preprocess didn't set this
    if(!_nFoundFiles && _infileNames.size())
    {
       _nFoundFiles = static_cast< int >( _infileNames.size() );
    }
 
-   std::bitset<16> status;
+   std::bitset< 16 > status;
 
-   for(unsigned int i = 0; i < _nFoundFiles; i++)
+   for ( unsigned int i = 0; i < _nFoundFiles; ++i )
    {
-      if(_translateCbk)
+      if ( _translateCbk )
       {
-         _translateCbk->Translate(_outputDataset,this);
+         _translateCbk->Translate( _outputDataset, this );
       }
-      if(_postTCbk)
+
+      if ( _postTCbk )
       {
-         _postTCbk->PostProcess(this);
+         _postTCbk->PostProcess( this );
       }
-      status.set(i,_writeToVTK(i));
+      // Determine if we need to write the file or not
+      std::string writeOption;
+      if ( _extractOptionFromCmdLine( argc, argv, std::string("-w"), writeOption ) )
+      {
+         if ( writeOption == std::string( "file" ) )
+         {
+            status.set( i, _writeToVTK(i) );
+         }
+         else
+         {
+            status.set( i, true );
+         }
+      }
    }
-   for(unsigned int i = 0; i < status.size(); i++)
+
+   for ( unsigned int i = 0; i < status.size(); ++i )
    {
       if(!status.test(i))
       {
@@ -137,16 +158,35 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
       if(_outfileNames.empty())
       {
          std::stringstream tempName;
-         tempName<<_outputDir<<"/flowdata_"<<fileNum<<".vtk"<<"\0";
+         tempName << _outputDir << "/" 
+                  << baseFileName << "_" 
+                  << fileNum << "." 
+                  << _fileExtension << "\0";
          _outfileNames.push_back(tempName.str());
       }
       VE_Util::writeVtkThing(_outputDataset, 
                           (char*)_outfileNames.at(fileNum).c_str(),0);
       return true;
-   }else{
+   }
+   else
+   {
       std::cout<<"Invalid output vtk dataset!!!"<<std::endl;
       std::cout<<"cfdTranslatorToVTK::_writeToVTK"<<std::endl;
       return false;
+   }
+}
+//////////////////////////////////////////////////////////
+vtkDataSet* cfdTranslatorToVTK::GetVTKFile( unsigned int fileNum )
+{
+   if ( _outputDataset )
+   {
+      return _outputDataset;
+   }
+   else
+   {
+      std::cout<<"Invalid output vtk dataset!!!"<<std::endl;
+      std::cout<<"cfdTranslatorToVTK::_writeToVTK"<<std::endl;
+      return 0;
    }
 }
 ////////////////////////////////////////////////////////////////////////////////////
