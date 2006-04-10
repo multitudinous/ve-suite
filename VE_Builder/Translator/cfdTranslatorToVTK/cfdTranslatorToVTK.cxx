@@ -1,7 +1,8 @@
 #include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
 #include <bitset>
 #include <sstream>
-#include <vtkDataset.h>
+#include <iostream>
+#include <vtkDataSet.h>
 #include "VE_Xplorer/readWriteVtkThings.h"
 using namespace VE_Builder;
 ////////////////////////////////////////
