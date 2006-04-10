@@ -29,8 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Builder/Translator/DataLoader.h"
+#include "VE_Builder/Translator/DataLoader/DataLoader.h"
+#include "VE_Builder/Translator/AVSTranslator/AVSTranslator.h"
+#include "VE_Builder/Translator/REItoVTK/cfdREIToVTK.h"
+#include "VE_Builder/Translator/cfdDICOMTranslator/cfdDICOMTranslator.h"
+#include "VE_Xplorer/fileIO.h"
 
+using namespace VE_Builder;
 //////////////////////
 //Constructor       //
 //////////////////////
@@ -76,7 +81,7 @@ DataLoader& DataLoader::operator=( const DataLoader& input)
 vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
 {
    //Data processing loop
-   std::string fileExtension = fileIO::getExtension( inputDataName );
+   std::string fileExtension = VE_Util::fileIO::getExtension( inputDataName );
    if ( fileExtension.empty() )
    {
       // an example of this would be rei data
@@ -86,7 +91,7 @@ vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
    // could extract command line args to get loader to use
    // in addition to the above method
    std::string tempExtension;
-   if ( cfdTranslatorToVTK::_extractOptionFromCmdLine( argc, argv, "-loader", tempExtension ) )
+   if ( translatorMap[ "cas" ]->_extractOptionFromCmdLine( argc, argv, "-loader", tempExtension ) )
    {
       fileExtension = tempExtension;
    }

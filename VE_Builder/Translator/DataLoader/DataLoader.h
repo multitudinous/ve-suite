@@ -39,8 +39,11 @@
  * This is an interface that allows you to load data into tool 
  * in VE-Suite.
  */
+#include "VE_Installer/include/VEConfig.h"
 #include <string>
 #include <map>
+
+class vtkDataSet;
 
 namespace VE_Builder
 {
