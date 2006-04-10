@@ -36,6 +36,8 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
 
+#include <iostream>
+
 using namespace VE_Builder;
 ////////////////////////////////////////
 //Constructors                        //
@@ -60,7 +62,7 @@ void FluentTranslator::FluentPreTranslateCbk::Preprocess(int argc,char** argv,
    if(toVTK)
    {
       std::string singleFile;
-      if ( _extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile) )
+      if ( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile) )
       {
          toVTK->AddFoundFile(singleFile);
       }
