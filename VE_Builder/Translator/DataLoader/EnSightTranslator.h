@@ -29,25 +29,25 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _FLUENT_TRANSLATOR_H_
-#define _FLUENT_TRANSLATOR_H_
+#ifndef _ENSIGHT_TRANSLATOR_H_
+#define _ENSIGHT_TRANSLATOR_H_
 
 #include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
 
 namespace VE_Builder
 {
-class VE_BUILDER_EXPORTS FluentTranslator: 
+class VE_BUILDER_EXPORTS EnSightTranslator: 
    public VE_Builder::cfdTranslatorToVTK
 {
 public:
-   FluentTranslator();
-   virtual ~FluentTranslator();
+   EnSightTranslator();
+   virtual ~EnSightTranslator();
    //////////////////////////////////////////////////////
-   class FluentTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class EnSightTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {
    public:
-      FluentTranslateCbk(){;}
-      virtual ~FluentTranslateCbk(){;}
+      EnSightTranslateCbk(){;}
+      virtual ~EnSightTranslateCbk(){;}
       //////////////////////////////////////////////////
       //ouputDataset should be populated              //
       //appropriately by the translate callback.      //
@@ -56,18 +56,18 @@ public:
 		                     cfdTranslatorToVTK* toVTK);
    };
    //////////////////////////////////////////////////////
-   class FluentPreTranslateCbk: 
+   class EnSightPreTranslateCbk: 
       public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:
-      FluentPreTranslateCbk(){;}
-      virtual ~FluentPreTranslateCbk(){;}
+      EnSightPreTranslateCbk(){;}
+      virtual ~EnSightPreTranslateCbk(){;}
       void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
    };
 protected:
-   FluentPreTranslateCbk cmdParser;
-   FluentTranslateCbk fluentToVTK;
+   EnSightPreTranslateCbk cmdParser;
+   EnSightTranslateCbk ensightToVTK;
 };
 
 }
-#endif//_FLUENT_TRANSLATOR_H_
+#endif//_ENSIGHT_TRANSLATOR_H_
