@@ -49,7 +49,7 @@ DataLoader::DataLoader()
    // REI
    translatorMap[ "BANFDB" ] = new VE_Builder::cfdREItoVTK();
    // DICOM
-   translatorMap[ "jpg" ] = new VE_Builder::cfdDICOMTranslator();
+   translatorMap[ "dcm" ] = new VE_Builder::cfdDICOMTranslator();
    // Fluent
    translatorMap[ "cas" ] = new VE_Builder::FluentTranslator();
    // EnSight
