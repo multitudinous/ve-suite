@@ -12,7 +12,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/win32"
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			CharacterSet="2">
@@ -41,8 +41,7 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) %VE_SUITE_HOME%\bin\win32\$(TargetFileName)"/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool

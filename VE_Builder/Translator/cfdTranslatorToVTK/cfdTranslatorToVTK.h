@@ -18,6 +18,7 @@ public:
    void SetNumberOfFoundFiles(unsigned int nFilesFound);
    void SetInputDirectory(std::string inDir);
    void SetOutputDirectory(std::string inDir);
+   void SetFileName( std::string fileName );
 
    /////////////////////////////////////////////////////
    //The idea for these callback classes is similar to//
@@ -33,11 +34,12 @@ public:
       virtual ~PreTranslateCallback(){};
       virtual void Preprocess(int argc, char** argv,
                             cfdTranslatorToVTK* toVTK);
-   protected:
+   };
+   //protected:
       bool _extractOptionFromCmdLine(int argc,char** argv,
                                   std::string optionFlag,
                                   std::string& optionArg);
-   };
+
    /////////////////////////////////////////////////////////
    //translate callback must be defined or nothing happens//
    /////////////////////////////////////////////////////////

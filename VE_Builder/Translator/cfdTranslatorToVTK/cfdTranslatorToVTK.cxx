@@ -11,7 +11,7 @@ cfdTranslatorToVTK::cfdTranslatorToVTK()
 {
    _nFoundFiles = 0;
 
-   baseFileName = "flowdata"
+   baseFileName = "flowdata";
    _fileExtension = "vtk";
    _inputDir = "./";
    _outputDir = "./";
@@ -128,7 +128,7 @@ bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
       }
       // Determine if we need to write the file or not
       std::string writeOption;
-      if ( _extractOptionFromCmdLine( argc, argv, std::string("-w"), writeOption ) )
+	  if ( _extractOptionFromCmdLine( argc, argv, std::string("-w"), writeOption ) )
       {
          if ( writeOption == std::string( "file" ) )
          {
@@ -199,13 +199,13 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
    if(toVTK)
    {
       std::string inDir;
-      if(_extractOptionFromCmdLine(argc,argv,std::string("-i"),inDir))
+      if( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-i"),inDir))
       {
          toVTK->SetInputDirectory(inDir);
          toVTK->SetNumberOfFoundFiles(1);
       }
       std::string outDir;
-      if(_extractOptionFromCmdLine(argc,argv,std::string("-o"),outDir))
+      if( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-o"),outDir))
       {
          toVTK->SetOutputDirectory(outDir);
       }
@@ -218,7 +218,7 @@ void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
    _nFoundFiles = static_cast< int >( _infileNames.size() );
 }
 /////////////////////////////////////////////////////////////////////////////////
-bool cfdTranslatorToVTK::PreTranslateCallback::_extractOptionFromCmdLine(int argc,
+bool cfdTranslatorToVTK::_extractOptionFromCmdLine(int argc,
                                                                char** argv,
                                                       std::string optionFlag,
                                                       std::string& optionArg)
