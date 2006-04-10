@@ -20,6 +20,14 @@ public:
    void SetOutputDirectory(std::string inDir);
    void SetFileName( std::string fileName );
 
+   ///Utility function to process command line args
+   ///\param argc The number of command line args
+   ///\param argv The arg values as chars
+   ///\param optionFlag The option you are looking for
+   ///\param optionArg The returned argument
+   bool _extractOptionFromCmdLine(int argc,char** argv,
+                                  std::string optionFlag,
+                                  std::string& optionArg);
    /////////////////////////////////////////////////////
    //The idea for these callback classes is similar to//
    //the setup in OSG (www.openscenegraph.org)        //
@@ -35,10 +43,6 @@ public:
       virtual void Preprocess(int argc, char** argv,
                             cfdTranslatorToVTK* toVTK);
    };
-   //protected:
-      bool _extractOptionFromCmdLine(int argc,char** argv,
-                                  std::string optionFlag,
-                                  std::string& optionArg);
 
    /////////////////////////////////////////////////////////
    //translate callback must be defined or nothing happens//

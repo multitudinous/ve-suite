@@ -84,9 +84,15 @@ vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
    }
 
    // could extract command line args to get loader to use
+   // in addition to the above method
+   std::string tempExtension;
+   if ( cfdTranslatorToVTK::_extractOptionFromCmdLine( argc, argv, "-loader", tempExtension ) )
+   {
+      fileExtension = tempExtension;
+   }
 
    // process data with appropriate loader
-   activeLoader = translatorMap.find( fileExtension );
+   activeLoader = translatorMap[ fileExtension ];
    activeLoader->SetInputDirectory( inputDataDir );
    activeLoader->AddFoundFile( inputDataName );
    activeLoader->TranslateToVTK( argc, argv );
