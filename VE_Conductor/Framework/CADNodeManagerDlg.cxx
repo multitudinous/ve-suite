@@ -486,7 +486,8 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
 		       _T("Open file"), 
 		       _T(""), 
 		       _T(""),
-		       _T("CAD files (*.*)|*.*;"),
+		       _T("OSG files (*.osg;*.ive)|*.osg;*.ive;|SLT files (*.stl)|*.stl;|VRML files (*.wrl)|*.wrl;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb| Flight files (*.flt)|*.flt"),
+                       //"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
 		       wxOPEN); 
     if (dialog.ShowModal() == wxID_OK) {
        if ((!dialog.GetPath().IsEmpty()) 
