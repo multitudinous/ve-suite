@@ -35,7 +35,7 @@
 				AdditionalDependencies="vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib vtkHybrid.lib vrj_d.lib vpr_d.lib"
 				OutputFile="$(OutDir)/meshViewer.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/meshViewer.pdb"
 				SubSystem="1"
