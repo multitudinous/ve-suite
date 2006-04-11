@@ -645,8 +645,8 @@ double CADNodePropertiesDlg::_convertToDoubleColor(unsigned char value)
 {
    return ((double)(value))/255.0;
 }
-///////////////////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& event)
+/////////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& WXUNUSED(event))
 {
    //We should only arrive in here if the attribute is a CADMaterial!!!!
    if(_cadNode)
@@ -665,6 +665,27 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& event)
       {
          std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
          material->SetFace(std::string(faceSelector.GetStringSelection().GetData()));     
+         //send the data to Xplorer
+         ClearInstructions(); 
+         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_FACE");
+
+         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         nodeID->SetDataType("UNSIGNED INT");
+         nodeID->SetDataName(std::string("Node ID"));
+         nodeID->SetDataValue(_cadNode->GetID());
+         _instructions.push_back(nodeID);
+
+         VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+         componentToUpdate->SetDataType("STRING");
+         componentToUpdate->SetData("Material Face",material->GetFace());
+         _instructions.push_back(componentToUpdate);
+
+         VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+         materialToUpdate->SetDataType("STRING");
+         materialToUpdate->SetData("Material Name",material->GetMaterialName());
+         _instructions.push_back(materialToUpdate);
+
+         _sendCommandsToXplorer();
       }
    }
 }
@@ -679,6 +700,26 @@ void CADNodePropertiesDlg::_showOpacityDialog(wxCommandEvent& WXUNUSED(event))
       if (opacityDlg.ShowModal() == wxID_OK|wxID_CANCEL)
       {
          material->SetOpacity(opacityDlg.GetOpacity());
+         ClearInstructions(); 
+         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_OPACITY");
+
+         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         nodeID->SetDataType("UNSIGNED INT");
+         nodeID->SetDataName(std::string("Node ID"));
+         nodeID->SetDataValue(_cadNode->GetID());
+         _instructions.push_back(nodeID);
+
+         VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+         componentToUpdate->SetDataType("STRING");
+         componentToUpdate->SetData("Material Opacity",material->GetOpacity());
+         _instructions.push_back(componentToUpdate);
+
+         VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+         materialToUpdate->SetDataType("STRING");
+         materialToUpdate->SetData("Material Name",material->GetMaterialName());
+         _instructions.push_back(materialToUpdate);
+
+         _sendCommandsToXplorer();
       }
    }
 }
@@ -704,8 +745,30 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(e
 
       if (colorSelector.ShowModal() == wxID_OK)
       {
-         std::cout<<"Selecting face: "<<colorSelector.GetStringSelection()<<std::endl;
+         std::cout<<"Selecting color mode: "<<colorSelector.GetStringSelection()<<std::endl;
          material->SetColorMode(std::string(colorSelector.GetStringSelection().GetData()));     
+
+         //send the data to Xplorer
+         ClearInstructions(); 
+         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_COLOR_MODE");
+
+         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         nodeID->SetDataType("UNSIGNED INT");
+         nodeID->SetDataName(std::string("Node ID"));
+         nodeID->SetDataValue(_cadNode->GetID());
+         _instructions.push_back(nodeID);
+
+         VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+         componentToUpdate->SetDataType("STRING");
+         componentToUpdate->SetData("Color Mode",material->GetColorMode());
+         _instructions.push_back(componentToUpdate);
+
+         VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+         materialToUpdate->SetDataType("STRING");
+         materialToUpdate->SetData("Material Name",material->GetMaterialName());
+         _instructions.push_back(materialToUpdate);
+
+         _sendCommandsToXplorer();
       }
    }
 }
@@ -715,8 +778,8 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
    //We should only arrive in here if the attribute is a CADMaterial!!!!
    if(_cadNode)
    {
-      CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
-      CADMaterial* material = activeAttribute.GetMaterial();
+      CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
+      VE_XML::FloatArray* activeComponent = 0;
       std::string updateComponent = "";
 
       std::vector<double> currentColor;
@@ -729,26 +792,27 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
       //get the current color of the material
       if(event.GetId() == CADMaterialEditMenu::DIFFUSE_ID)
       {
-         currentColor = material->GetDiffuse()->GetArray();
+         activeComponent = material->GetDiffuse();
          updateComponent = "Diffuse";
       }
       else if(event.GetId() == CADMaterialEditMenu::AMBIENT_ID)
       {
-         currentColor = material->GetDiffuse()->GetArray();
+         activeComponent = material->GetAmbient();
          updateComponent = "Ambient";
       }
       else if(event.GetId() == CADMaterialEditMenu::EMISSIVE_ID)
       {
-         currentColor = material->GetDiffuse()->GetArray();
+         activeComponent = material->GetEmissive();
          updateComponent = "Emissive";
       }
       else if(event.GetId() == CADMaterialEditMenu::SPECULAR_ID)
       {
-         currentColor = material->GetDiffuse()->GetArray();
+         activeComponent = material->GetSpecular();
          updateComponent = "Specular";
       }
 
       //convert to wx compatible color
+      currentColor = activeComponent->GetArray();
       R = _convertToUnsignedCharColor(currentColor.at(0));
       G = _convertToUnsignedCharColor(currentColor.at(1));
       B = _convertToUnsignedCharColor(currentColor.at(2));
@@ -762,16 +826,18 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
 
       wxColourDialog colorDlg(this,&data);
 
+      colorDlg.SetTitle(wxString(updateComponent.c_str()));
       if (colorDlg.ShowModal() == wxID_OK)
       {
-          wxColourData retData = colorDlg.GetColourData();
-          wxColour col = retData.GetColour();
+         wxColourData retData = colorDlg.GetColourData();
+         wxColour col = retData.GetColour();
           
-          //set the color on the material to the user selected color
-          currentColor.at(0) = _convertToDoubleColor(col.Red());
-          currentColor.at(1) = _convertToDoubleColor(col.Green());
-          currentColor.at(2) = _convertToDoubleColor(col.Blue());
+         //set the color on the material to the user selected color
+         currentColor.at(0) = _convertToDoubleColor(col.Red());
+         currentColor.at(1) = _convertToDoubleColor(col.Green());
+         currentColor.at(2) = _convertToDoubleColor(col.Blue());
 
+         material->SetComponent(updateComponent,currentColor);
          //send the data to Xplorer
          ClearInstructions(); 
          _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE");
