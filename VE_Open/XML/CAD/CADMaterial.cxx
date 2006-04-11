@@ -43,7 +43,7 @@ CADMaterial::CADMaterial(std::string name)
 :VE_XML::XMLObject()
 {
    std::vector< double > temp;
-   temp.assign( 3, 1.0f );
+   temp.assign( 4, 1.0f );
 
    _kDiffuse = new VE_XML::FloatArray();
    _kDiffuse->SetArray(temp);
