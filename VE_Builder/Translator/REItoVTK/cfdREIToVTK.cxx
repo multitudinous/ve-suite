@@ -64,13 +64,14 @@ void cfdREItoVTK::REIPreTranslateCbk::Preprocess(int argc,char** argv,
    //reiToVTK->Setpdv_file("";std::string(argv[1])+"\\pp.dat");//std::string(argv[6]);
    reiToVTK->Setpdv_file(std::string(argv[1])+"\\pp.dat");
    reiToVTK->Setwrv_file(std::string(argv[1])+"\\minmax");//std::string(argv[7]);
+   reiToVTK->_nFoundFiles = 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdREItoVTK::REITranslateCbk::Translate(vtkDataSet*& outputDataset,
 		                                           VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    VE_Builder::cfdREItoVTK* reiToVTK =
-              dynamic_cast<VE_Builder::cfdREItoVTK*>(toVTK);
+                              dynamic_cast<VE_Builder::cfdREItoVTK*>(toVTK);
 
    DBConverter conv(reiToVTK->Getdb_file());
    conv.makeVTK(reiToVTK->Getdbv_file(), reiToVTK->Getwrv_file(), reiToVTK->Getscalars()); 
