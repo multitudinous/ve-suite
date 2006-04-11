@@ -72,7 +72,7 @@ cfdScalarBarActor::cfdScalarBarActor( std::string param, VE_SceneGraph::cfdGroup
 
    _param = param;
    _rootNode = rootNode;
-   _activeDataSet = NULL;
+   _activeDataSet = 0;
    cubeAxesGeode = 0;
    _readParam = new cfdReadParam();
    // Initialize the all the variables

@@ -119,12 +119,12 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
    status = vpr::System::getenv( std::string("VE_SUITE_HOME"), vesuitePath );
    std::string vesuiteLibDir = vesuitePath + path + modelPath;
-
-   boost::filesystem::path dir_path( libDir );
-   boost::filesystem::path vesuiteDirPath( vesuiteLibDir );
+   const std::string nameCheck( "native" );
    bool customPlugins = false;
    try
    {
+      boost::filesystem::path dir_path( libDir );
+	  boost::filesystem::path vesuiteDirPath( vesuiteLibDir, boost::filesystem::no_check );
       boost::filesystem::is_directory( dir_path );
       customPlugins = true;
    }
