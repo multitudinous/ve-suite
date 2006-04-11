@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Builder/Translator/DataLoader/DataLoader.h"
 #include "VE_Builder/Translator/DataLoader/FluentTranslator.h"
+#include "VE_Builder/Translator/DataLoader/MFIXTranslator.h"
 #include "VE_Builder/Translator/DataLoader/EnSightTranslator.h"
 #include "VE_Builder/Translator/AVSTranslator/AVSTranslator.h"
 #include "VE_Builder/Translator/REItoVTK/cfdREIToVTK.h"
@@ -57,7 +58,7 @@ DataLoader::DataLoader()
    // EnSight
    translatorMap[ "case" ] = new VE_Builder::EnSightTranslator();
    // MFIX
-   //translatorMap[ "mfix" ] = new VE_Builder::MFIXTranslator();
+   translatorMap[ "mfix" ] = new VE_Builder::MFIXTranslator();
 }
 ///////////////////////////////////////////////////////////////////////////
 DataLoader::~DataLoader()

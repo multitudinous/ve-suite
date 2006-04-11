@@ -29,9 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Builder/Translator/DataLoader/FluentTranslator.h"
+#include "VE_Builder/Translator/DataLoader/MFIXTranslator.h"
 #include <vtkDataSet.h>
-#include <vtkFLUENTReader.h>
+#include <vtkMFIXReader.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
@@ -42,24 +42,24 @@ using namespace VE_Builder;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
-FluentTranslator::FluentTranslator()
+MFIXTranslator::MFIXTranslator()
 {
 
-   SetTranslateCallback( &fluentToVTK );
+   SetTranslateCallback( &mfixToVTK );
    SetPreTranslateCallback( &cmdParser );
 }
 /////////////////////////////////////////
-FluentTranslator::~FluentTranslator()
+MFIXTranslator::~MFIXTranslator()
 {
 
 }
 //////////////////////////////////////////////////////////////////////////
-void FluentTranslator::FluentPreTranslateCbk::Preprocess(int argc,char** argv,
+void MFIXTranslator::MFIXPreTranslateCbk::Preprocess(int argc,char** argv,
                                                VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 
-   if(toVTK)
+   if ( toVTK )
    {
       std::string singleFile;
       if ( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile) )
@@ -69,16 +69,20 @@ void FluentTranslator::FluentPreTranslateCbk::Preprocess(int argc,char** argv,
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset,
+void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataSet*& outputDataset,
 		                                     VE_Builder::cfdTranslatorToVTK* toVTK )
 {
-   VE_Builder::FluentTranslator* FluentToVTK =
-              dynamic_cast< VE_Builder::FluentTranslator* >( toVTK );
-   if ( FluentToVTK )
+   VE_Builder::MFIXTranslator* MFIXToVTK =
+              dynamic_cast< VE_Builder::MFIXTranslator* >( toVTK );
+   if ( MFIXToVTK )
    {
-	   vtkFLUENTReader* reader = vtkFLUENTReader::New();
-	   reader->SetFileName( FluentToVTK->GetFile(0).c_str() );
+	   vtkMFIXReader *reader = vtkMFIXReader::New();
+	   reader->SetFileName( MFIXToVTK->GetFile(0).c_str() );
 	   reader->Update();
+	   int TimeStepRange[2]; 
+	   reader->GetTimeStepRange( TimeStepRange );
+	   //cout << "Number of Timesteps = " << TimeStepRange[0] << ", "<< TimeStepRange[1] << endl;
+	   reader->SetTimeStep( TimeStepRange[0] );
 
       if ( !outputDataset )
       {

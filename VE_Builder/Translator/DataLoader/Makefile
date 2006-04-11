@@ -35,7 +35,8 @@ CFDUNAME = $(shell uname)
 # list the source files that are in current directory
 SRCS=\
    DataLoader.cxx\
-   FluentTranslator.cxx
+   FluentTranslator.cxx\
+   MFIXTranslator.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include

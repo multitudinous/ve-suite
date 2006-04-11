@@ -29,25 +29,25 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _FLUENT_TRANSLATOR_H_
-#define _FLUENT_TRANSLATOR_H_
+#ifndef _MFIX_TRANSLATOR_H_
+#define _MFIX_TRANSLATOR_H_
 
 #include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
 
 namespace VE_Builder
 {
-class VE_BUILDER_EXPORTS FluentTranslator: 
+class VE_BUILDER_EXPORTS MFIXTranslator: 
    public VE_Builder::cfdTranslatorToVTK
 {
 public:
-   FluentTranslator();
-   virtual ~FluentTranslator();
+   MFIXTranslator();
+   virtual ~MFIXTranslator();
    //////////////////////////////////////////////////////
-   class FluentTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class MFIXTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {
    public:
-      FluentTranslateCbk(){;}
-      virtual ~FluentTranslateCbk(){;}
+      MFIXTranslateCbk(){;}
+      virtual ~MFIXTranslateCbk(){;}
       //////////////////////////////////////////////////
       //ouputDataset should be populated              //
       //appropriately by the translate callback.      //
@@ -56,18 +56,18 @@ public:
 		                     cfdTranslatorToVTK* toVTK);
    };
    //////////////////////////////////////////////////////
-   class FluentPreTranslateCbk: 
+   class MFIXPreTranslateCbk: 
       public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:
-      FluentPreTranslateCbk(){;}
-      virtual ~FluentPreTranslateCbk(){;}
+      MFIXPreTranslateCbk(){;}
+      virtual ~MFIXPreTranslateCbk(){;}
       void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
    };
 protected:
-   FluentPreTranslateCbk cmdParser;
-   FluentTranslateCbk fluentToVTK;
+   MFIXPreTranslateCbk cmdParser;
+   MFIXTranslateCbk mfixToVTK;
 };
 
 }
-#endif//_FLUENT_TRANSLATOR_H_
+#endif//_MFIX_TRANSLATOR_H_
