@@ -58,15 +58,6 @@ void MFIXTranslator::MFIXPreTranslateCbk::Preprocess(int argc,char** argv,
                                                VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
-
-   if ( toVTK )
-   {
-      std::string singleFile;
-      if ( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile) )
-      {
-         toVTK->AddFoundFile(singleFile);
-      }
-   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataSet*& outputDataset,

@@ -248,6 +248,11 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
       {
          toVTK->SetFileName( outFileName );
       }
+      std::string singleFile;
+      if ( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile) )
+      {
+         toVTK->AddFoundFile(singleFile);
+      }
    }
 }
 /////////////////////////////////////////////////////////////
