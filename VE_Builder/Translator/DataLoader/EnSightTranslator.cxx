@@ -39,6 +39,7 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
 #include <vtkFloatArray.h>
+#include <vtkAppendFilter.h>
 
 #include <iostream>
 
@@ -75,13 +76,23 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
       //reader->DebugOn();
       reader->SetCaseFileName( EnSightToVTK->GetFile(0).c_str() );
       reader->Update();
+      // used for multiple part ensight files
       int numberOfOutputs = reader->GetNumberOfOutputs();
+      vtkAppendFilter* appendFilter = vtkAppendFilter::New();
+      for ( int i = 0; i < numberOfOutputs; ++i )
+      {
+         appendFilter->AddInput( reader->GetOutput( i ) );
+      }
+      appendFilter->Update();
+
       if ( !outputDataset )
       {
          outputDataset = vtkUnstructuredGrid::New();
       }
       vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-      tmpDSet->DeepCopy( reader->GetOutput() );
+      tmpDSet->DeepCopy( appendFilter->GetOutput() );
+      reader->Delete();
+      appendFilter->Delete();
 
       //get the info about the data in the data set
       if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
@@ -102,7 +113,6 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
          outputDataset->DeepCopy(tmpDSet);
       }
       outputDataset->Update();
-      reader->Delete();
       tmpDSet->Delete();
       AddScalarsFromVectors( outputDataset );
    }
