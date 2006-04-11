@@ -33,9 +33,9 @@
 #include "VE_Builder/Translator/DataLoader/FluentTranslator.h"
 #include "VE_Builder/Translator/DataLoader/MFIXTranslator.h"
 #include "VE_Builder/Translator/DataLoader/EnSightTranslator.h"
-#include "VE_Builder/Translator/AVSTranslator/AVSTranslator.h"
-#include "VE_Builder/Translator/REItoVTK/cfdREIToVTK.h"
-#include "VE_Builder/Translator/cfdDICOMTranslator/cfdDICOMTranslator.h"
+//#include "VE_Builder/Translator/AVSTranslator/AVSTranslator.h"
+//#include "VE_Builder/Translator/REItoVTK/cfdREIToVTK.h"
+//#include "VE_Builder/Translator/cfdDICOMTranslator/cfdDICOMTranslator.h"
 #include "VE_Xplorer/fileIO.h"
 
 using namespace VE_Builder;
@@ -48,11 +48,11 @@ DataLoader::DataLoader()
    activeLoader = 0;
    // load up the translator map
    // AVS
-   translatorMap[ "avs" ] = new VE_Builder::AVSTranslator();
+   //translatorMap[ "avs" ] = new VE_Builder::AVSTranslator();
    // REI
-   translatorMap[ "BANFDB" ] = new VE_Builder::cfdREItoVTK();
+   //translatorMap[ "BANFDB" ] = new VE_Builder::cfdREItoVTK();
    // DICOM
-   translatorMap[ "dcm" ] = new VE_Builder::cfdDICOMTranslator();
+   //translatorMap[ "dcm" ] = new VE_Builder::cfdDICOMTranslator();
    // Fluent
    translatorMap[ "cas" ] = new VE_Builder::FluentTranslator();
    // EnSight
@@ -101,8 +101,11 @@ vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
 
    // process data with appropriate loader
    activeLoader = translatorMap[ fileExtension ];
-   activeLoader->SetInputDirectory( inputDataDir );
-   activeLoader->AddFoundFile( inputDataName );
+   if ( argc < 1 )
+   {
+      activeLoader->SetInputDirectory( inputDataDir );
+      activeLoader->AddFoundFile( inputDataName );
+   }
    activeLoader->TranslateToVTK( argc, argv );
    vtkDataSet* tempDataset = activeLoader->GetVTKFile( 0 );
    return tempDataset;

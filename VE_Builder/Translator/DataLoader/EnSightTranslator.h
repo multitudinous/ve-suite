@@ -54,6 +54,9 @@ public:
       //////////////////////////////////////////////////
       virtual void Translate(vtkDataSet*& outputDataset,
 		                     cfdTranslatorToVTK* toVTK);
+      ///This creates additional scalars from vector components
+      ///\param outputDataset Dataset to be used and modified
+      void AddScalarsFromVectors( vtkDataSet*& outputDataset );
    };
    //////////////////////////////////////////////////////
    class EnSightPreTranslateCbk: 

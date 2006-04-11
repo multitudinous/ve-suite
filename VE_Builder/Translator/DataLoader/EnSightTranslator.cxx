@@ -30,11 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Builder/Translator/DataLoader/EnSightTranslator.h"
+
+#include "VE_Builder/Translator/converter.h"
+
 #include <vtkDataSet.h>
 #include <vtkGenericEnSightReader.h>          // will open any ensight file
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
+#include <vtkFloatArray.h>
 
 #include <iostream>
 
@@ -42,19 +46,19 @@ using namespace VE_Builder;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
-FluentTranslator::FluentTranslator()
+EnSightTranslator::EnSightTranslator()
 {
 
-   SetTranslateCallback( &fluentToVTK );
+   SetTranslateCallback( &ensightToVTK );
    SetPreTranslateCallback( &cmdParser );
 }
 /////////////////////////////////////////
-FluentTranslator::~FluentTranslator()
+EnSightTranslator::~EnSightTranslator()
 {
 
 }
 //////////////////////////////////////////////////////////////////////////
-void FluentTranslator::FluentPreTranslateCbk::Preprocess(int argc,char** argv,
+void EnSightTranslator::EnSightPreTranslateCbk::Preprocess(int argc,char** argv,
                                                VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
@@ -69,17 +73,18 @@ void FluentTranslator::FluentPreTranslateCbk::Preprocess(int argc,char** argv,
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset,
+void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDataset,
 		                                     VE_Builder::cfdTranslatorToVTK* toVTK )
 {
-   VE_Builder::FluentTranslator* FluentToVTK =
-              dynamic_cast< VE_Builder::FluentTranslator* >( toVTK );
-   if ( FluentToVTK )
+   VE_Builder::EnSightTranslator* EnSightToVTK =
+              dynamic_cast< VE_Builder::EnSightTranslator* >( toVTK );
+   if ( EnSightToVTK )
    {
-	   vtkFLUENTReader* reader = vtkFLUENTReader::New();
-	   reader->SetFileName( FluentToVTK->GetFile(0).c_str() );
-	   reader->Update();
-
+      vtkGenericEnSightReader* reader = vtkGenericEnSightReader::New();
+      //reader->DebugOn();
+      reader->SetCaseFileName( EnSightToVTK->GetFile(0).c_str() );
+      reader->Update();
+      int numberOfOutputs = reader->GetNumberOfOutputs();
       if ( !outputDataset )
       {
          outputDataset = vtkUnstructuredGrid::New();
@@ -88,11 +93,11 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
       tmpDSet->DeepCopy( reader->GetOutput() );
 
       //get the info about the data in the data set
-      if ( tmpDSet->GetPointData()->GetNumberOfArrays() > 0 )
+      if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
       {
-         std::cout<<"Warning!!!"<<std::endl;
-         std::cout<<"No point data found!"<<std::endl;
-         std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+         //std::cout<<"Warning!!!"<<std::endl;
+         //std::cout<<"No point data found!"<<std::endl;
+         //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
 
          vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
          dataConvertCellToPoint->SetInput(tmpDSet);
@@ -108,28 +113,15 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
       outputDataset->Update();
       reader->Delete();
       tmpDSet->Delete();
+      AddScalarsFromVectors( outputDataset );
    }
-
-
-   reader = vtkGenericEnSightReader::New();
-   //reader->DebugOn();
-   reader->SetCaseFileName( caseFileName.c_str() );
-   reader->Update();
-   
-   // Convert vtkEnSightGoldReader cell centered data to point data
-   cell2point = vtkCellDataToPointData::New();
-   cell2point->SetInput( reader->GetOutput() );
-   cell2point->PassCellDataOff();
-   cell2point->Update();
-   
-   // Must do this so that we can clean up properly in the destructor
-   vtkUnstructuredGrid *finalUGrid = vtkUnstructuredGrid::New();
-   finalUGrid->ShallowCopy( cell2point->GetUnstructuredGridOutput() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void EnSightTranslator::EnSightTranslateCbk::AddScalarsFromVectors( vtkDataSet*& outputDataset )
+{
    //this portion is to grab scalar data out of the vectors and rewrite it back
    //into the VTK file
-   int numArrays = finalUGrid->GetPointData()->GetNumberOfArrays();
-   if ( debug )
-      std::cout << " Number of arrays is :" << numArrays <<std::endl;
+   int numArrays = outputDataset->GetPointData()->GetNumberOfArrays();
    int numComponents;
    int numOfTuples;
    std::string name;
@@ -138,33 +130,36 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
    double velMag;
    for ( int i=0;i<numArrays; i++ ) //loop pver number of arrays
    {
-      numComponents = finalUGrid->GetPointData()->GetArray(i)->GetNumberOfComponents();
+      numComponents = outputDataset->GetPointData()->GetArray(i)->GetNumberOfComponents();
       if ( numComponents > 1 ) //it is a vector
       {
          vtkFloatArray** scalarsFromVector;
          
          scalarsFromVector = new vtkFloatArray* [ numComponents+1 ];
-         name = (std::string) finalUGrid->GetPointData()->GetArray(i)->GetName();
-         numOfTuples = finalUGrid->GetPointData()->GetArray(i)->GetNumberOfTuples();
-         if ( debug ) std::cout<<" Name :" << name <<std::endl
-                               <<" Number of Tuples :"<< numOfTuples <<std::endl;
+         name = (std::string) outputDataset->GetPointData()->GetArray(i)->GetName();
+         numOfTuples = outputDataset->GetPointData()->GetArray(i)->GetNumberOfTuples();
+         //if ( debug ) std::cout<<" Name :" << name <<std::endl
+         //                      <<" Number of Tuples :"<< numOfTuples <<std::endl;
          for ( int compLoop=0;compLoop<numComponents; compLoop++ )
          {
             scalName = name;
-            if ( compLoop == 0 ) scalName.append("_u");
-            else if ( compLoop == 1 ) scalName.append("_v");
-            else if ( compLoop == 2 ) scalName.append("_w");            
+            if ( compLoop == 0 ) 
+               scalName.append("_u");
+            else if ( compLoop == 1 ) 
+               scalName.append("_v");
+            else if ( compLoop == 2 ) 
+               scalName.append("_w");            
             scalarsFromVector[ compLoop ] = vtkFloatArray::New();
             scalarsFromVector[ compLoop ]->SetNumberOfComponents( 1 );
             scalarsFromVector[ compLoop ]->SetNumberOfTuples( numOfTuples );
-            if ( debug ) 
-               std::cout << "Scalar name " <<scalName <<std::endl;
+            //if ( debug ) 
+            //   std::cout << "Scalar name " <<scalName <<std::endl;
             scalarsFromVector[ compLoop ]->SetName( scalName.c_str() );
             scalName.clear();
             for ( int tupLoop=0;tupLoop<numOfTuples; tupLoop++ )
             {
                //get the component data
-               component = finalUGrid->GetPointData()->GetArray(i)
+               component = outputDataset->GetPointData()->GetArray(i)
                            ->GetComponent( tupLoop, compLoop );
                scalarsFromVector[ compLoop ] ->SetComponent( tupLoop, 0, component ); 
             }
@@ -175,22 +170,26 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
          scalName.append("_magnitude");
          scalarsFromVector[ numComponents ]->SetNumberOfComponents( 1 );
          scalarsFromVector[ numComponents ]->SetNumberOfTuples( numOfTuples );
-         if ( debug ) 
-            std::cout << "Scalar name " <<scalName <<std::endl;
+         //if ( debug ) 
+         //   std::cout << "Scalar name " <<scalName <<std::endl;
          scalarsFromVector[ numComponents ]->SetName( scalName.c_str() );
          for ( int tupLoop=0;tupLoop<numOfTuples; tupLoop++ )
          {
             velMag = (double)(0);
             for ( int compLoop=0;compLoop<numComponents; compLoop++ )
             {
-               component = finalUGrid->GetPointData()->GetArray(i)
+               component = outputDataset->GetPointData()->GetArray(i)
                            ->GetComponent( tupLoop, compLoop );
                velMag = velMag + component*component;
             }
             velMag = sqrt( velMag );
             scalarsFromVector[ numComponents ]->SetComponent( tupLoop, 0, velMag );
          }
-         letUsersAddParamsToField( numComponents+1, scalarsFromVector, finalUGrid->GetPointData() );
+         //letUsersAddParamsToField( numComponents+1, scalarsFromVector, outputDataset->GetPointData() );
+         for ( int j=0; j<numComponents+1; j++ )
+         {
+            outputDataset->GetPointData()->AddArray( scalarsFromVector[ j ] );
+         }
          // deleting the allocated memory
          for ( int c=0;c<numComponents+1;c++ )
          {
@@ -199,8 +198,5 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
          delete [] scalarsFromVector;
          scalarsFromVector = NULL;
       }  //end if loop
-   }
-   return finalUGrid;
-
-}
- 
+   } //end for loop
+} 

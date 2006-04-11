@@ -160,11 +160,13 @@ bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
       }
       // Determine if we need to write the file or not
       std::string writeOption;
-	  if ( _extractOptionFromCmdLine( argc, argv, std::string("-w"), writeOption ) )
+      if ( _extractOptionFromCmdLine( argc, argv, std::string("-w"), writeOption ) )
       {
          if ( writeOption == std::string( "file" ) )
          {
             status.set( i, _writeToVTK(i) );
+            // because we are done with it after this...
+            _outputDataset->Delete();
          }
          else
          {
@@ -197,7 +199,7 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
          _outfileNames.push_back(tempName.str());
       }
       VE_Util::writeVtkThing(_outputDataset, 
-                          (char*)_outfileNames.at(fileNum).c_str(),0);
+                          (char*)_outfileNames.at(fileNum).c_str(),1);
       return true;
    }
    else
@@ -241,6 +243,11 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
       {
          toVTK->SetOutputDirectory(outDir);
       }
+      std::string outFileName;
+      if( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-outFileName"),outFileName))
+      {
+         toVTK->SetFileName( outFileName );
+      }
    }
 }
 /////////////////////////////////////////////////////////////
@@ -255,7 +262,7 @@ bool cfdTranslatorToVTK::_extractOptionFromCmdLine(int argc,
                                                       std::string optionFlag,
                                                       std::string& optionArg)
 {
-   std::cout << "Number of arguments: " << argc << std::endl;
+   //std::cout << "Number of arguments: " << argc << std::endl;
    for(int i = 0; i < argc; i++)
    {
       std::string curArg(argv[i]);

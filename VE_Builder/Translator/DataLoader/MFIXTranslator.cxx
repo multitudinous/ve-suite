@@ -92,11 +92,11 @@ void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataSet*& outputDataset,
       tmpDSet->DeepCopy( reader->GetOutput() );
 
       //get the info about the data in the data set
-      if ( tmpDSet->GetPointData()->GetNumberOfArrays() > 0 )
+      if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
       {
-         std::cout<<"Warning!!!"<<std::endl;
-         std::cout<<"No point data found!"<<std::endl;
-         std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+         //std::cout<<"Warning!!!"<<std::endl;
+         //std::cout<<"No point data found!"<<std::endl;
+         //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
 
          vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
          dataConvertCellToPoint->SetInput(tmpDSet);
