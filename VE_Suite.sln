@@ -258,12 +258,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_CE_UtilitiesLib", "VE_CE
 		{3BDA598D-7DFD-4926-82E9-68528528A716} = {3BDA598D-7DFD-4926-82E9-68528528A716}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cfdREIToVTK", "VE_Builder\Translator\REItoVTK\cfdREIToVTK.vcproj", "{C3E4EC67-9496-4391-A1B2-8180B3954E9D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
-		{C3E4EC67-9496-4391-A1B2-8179B3954E9D} = {C3E4EC67-9496-4391-A1B2-8179B3954E9D}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DefaultPlugin", "VE_Conductor\DefaultPlugin\DefaultPlugin.vcproj", "{AAD4615C-6241-4A4B-9458-B14A6789D5D3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3BDA598D-7DFD-4926-82E9-68528528A715} = {3BDA598D-7DFD-4926-82E9-68528528A715}
@@ -272,6 +266,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DefaultGraphicalPlugin", "VE_Xplorer\DefaultGraphicalPlugin\DefaultGraphicalPlugin.vcproj", "{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F} = {BABE88BF-50EE-4E66-84BB-7B801E9FD01F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cfdREITranslator", "VE_Builder\Translator\cfdREITranslator\cfdREITranslator.vcproj", "{29798D93-09EB-4566-AB70-719702D50602}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D} = {C3E4EC67-9496-4391-A1B2-8179B3954E9D}
 	EndProjectSection
 EndProject
 Global
@@ -841,15 +840,6 @@ Global
 		{4BDA598D-7DFD-3226-43E9-68528528A716}.tao_osg_vep_dbg.Build.0 = dbg|Win32
 		{4BDA598D-7DFD-3226-43E9-68528528A716}.tao_pf_dbg.ActiveCfg = dbg|Win32
 		{4BDA598D-7DFD-3226-43E9-68528528A716}.tao_pf_dbg.Build.0 = dbg|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.Builder_Tools.ActiveCfg = Debug|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.Builder_Tools.Build.0 = Debug|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.dbg.ActiveCfg = Debug|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.Debug.ActiveCfg = Debug|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.Release.ActiveCfg = Release|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.tao_osg_dbg.ActiveCfg = Debug|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.tao_osg_vep_cluster_dbg.ActiveCfg = Debug|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.tao_osg_vep_dbg.ActiveCfg = Debug|Win32
-		{C3E4EC67-9496-4391-A1B2-8180B3954E9D}.tao_pf_dbg.ActiveCfg = Debug|Win32
 		{AAD4615C-6241-4A4B-9458-B14A6789D5D3}.Builder_Tools.ActiveCfg = dbg|Win32
 		{AAD4615C-6241-4A4B-9458-B14A6789D5D3}.dbg.ActiveCfg = dbg|Win32
 		{AAD4615C-6241-4A4B-9458-B14A6789D5D3}.dbg.Build.0 = dbg|Win32
@@ -880,6 +870,22 @@ Global
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_vep_dbg.Build.0 = tao_osg_vep_dbg|Win32
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_pf_dbg.ActiveCfg = tao_osg_dbg|Win32
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_pf_dbg.Build.0 = tao_osg_dbg|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.Builder_Tools.ActiveCfg = Debug|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.Builder_Tools.Build.0 = Debug|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.dbg.ActiveCfg = Debug|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.dbg.Build.0 = Debug|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.Debug.ActiveCfg = Debug|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.Debug.Build.0 = Debug|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.Release.ActiveCfg = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.Release.Build.0 = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.tao_osg_dbg.ActiveCfg = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.tao_osg_dbg.Build.0 = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.tao_osg_vep_cluster_dbg.ActiveCfg = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.tao_osg_vep_cluster_dbg.Build.0 = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.tao_osg_vep_dbg.ActiveCfg = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.tao_osg_vep_dbg.Build.0 = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.tao_pf_dbg.ActiveCfg = Release|Win32
+		{29798D93-09EB-4566-AB70-719702D50602}.tao_pf_dbg.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
