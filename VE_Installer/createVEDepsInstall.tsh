@@ -132,14 +132,14 @@ echo "Copying VTK from:" ${VTK_BASE_DIR}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp -RD ${VTK_BASE_DIR}/lib/vtk/*.so ./bin
 else
-   cp -Rd ${VTK_BASE_DIR}/lib/vtk/*.so ./bin
+   cp -Rd ${VTK_BASE_DIR}/lib/* ./bin
 endif
 
 echo "Copying ACE from:" ${TAO_HOME}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp -RD ${ACE_HOME}/IRIX32/lib/* ./bin
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
-   cp -Rd ${ACE_HOME}/Linux64/lib/* ./bin
+   #cp -Rd ${ACE_HOME}/Linux64/lib/* ./bin
 else 
    #cp -Rd ${TAO_HOME}/lib/* ./bin
 endif
@@ -152,9 +152,9 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp -RD ${TAO_HOME}/IRIX32/bin/Naming_Service ./bin
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
    cp -Rd ${TAO_HOME}/Linux64/lib/* ./bin
-   cp -Rd ${TAO_HOME}/Linux64/bin/NameService ./bin
-   cp -Rd ${TAO_HOME}/Linux64/bin/Naming_Service ./bin
-   cp -Rd ${ACE_HOME}/Linux64/lib/* ./bin
+   cp -Rd ${TAO_HOME}/bin/NameService ./bin
+   cp -Rd ${TAO_HOME}/bin/Naming_Service ./bin
+   cp -Rd ${ACE_HOME}/lib/* ./bin
 else 
    cp -Rd ${TAO_HOME}/lib/* ./bin
    cp -Rd ${TAO_HOME}/bin/NameService ./bin
