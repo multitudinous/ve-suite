@@ -400,7 +400,7 @@ void CADNodePropertiesDlg::_editAttribute(wxListEvent& event)
    {
       ClearInstructions();
       wxString attributeName = event.GetText();
-      std::cout<<"Editting attribute"<<attributeName<<std::endl;
+      //std::cout<<"Editting attribute"<<attributeName<<std::endl;
       if(_attributeType->GetValue() == wxString("Materials"))
       {
          CADMaterialEditMenu* materialMenu = new CADMaterialEditMenu();
@@ -697,29 +697,10 @@ void CADNodePropertiesDlg::_showOpacityDialog(wxCommandEvent& WXUNUSED(event))
    {
       CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
       CADOpacitySliderDlg opacityDlg(this,-1,_cadNode->GetID(),_cadNode->GetActiveAttribute().GetMaterial());
+      opacityDlg.SetVjObsPtr(_vjObsPtr);
       if (opacityDlg.ShowModal() == wxID_OK|wxID_CANCEL)
       {
          material->SetOpacity(opacityDlg.GetOpacity());
-         ClearInstructions(); 
-         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_OPACITY");
-
-         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-         nodeID->SetDataType("UNSIGNED INT");
-         nodeID->SetDataName(std::string("Node ID"));
-         nodeID->SetDataValue(_cadNode->GetID());
-         _instructions.push_back(nodeID);
-
-         VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
-         componentToUpdate->SetDataType("STRING");
-         componentToUpdate->SetData("Material Opacity",material->GetOpacity());
-         _instructions.push_back(componentToUpdate);
-
-         VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
-         materialToUpdate->SetDataType("STRING");
-         materialToUpdate->SetData("Material Name",material->GetMaterialName());
-         _instructions.push_back(materialToUpdate);
-
-         _sendCommandsToXplorer();
       }
    }
 }
@@ -868,7 +849,7 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
 ///////////////////////////////////////////////////
 void CADNodePropertiesDlg::_sendCommandsToXplorer()
 {
-   std::cout<<"---Sending commands to Xplorer---"<<std::endl;
+   //std::cout<<"---Sending commands to Xplorer---"<<std::endl;
    VE_XML::Command* cadCommand = new VE_XML::Command();
 
    for(size_t i =0; i < _instructions.size(); i++)
@@ -899,8 +880,8 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
    {
       try
       {
-         std::cout<<"---The command to send---"<<std::endl;
-         std::cout<<tempDoc<<std::endl;
+         //std::cout<<"---The command to send---"<<std::endl;
+         //std::cout<<tempDoc<<std::endl;
          // CORBA releases the allocated memory so we do not have to
          _vjObsPtr->SetCommandString( tempDoc );
       }

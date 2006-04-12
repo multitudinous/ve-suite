@@ -52,7 +52,7 @@ void CADOpacitySliderDlg::SetSliderValue(double value)
 {
    //This should be a pecentage that comes in so we convert it
    //to an int 0-100
-   _opacitySlider->SetValue(100 - 100*(1.0-value));
+   _opacitySlider->SetValue(static_cast<int>(100 - 100*(1.0-value)));
 }
 ///////////////////////////////////////////////////////////
 void CADOpacitySliderDlg::SetVjObsPtr(VjObs_ptr xplorerCom)
@@ -74,9 +74,28 @@ void CADOpacitySliderDlg::_onSlider(wxScrollEvent& event)
    _material->SetOpacity(opacityValue);
 
    //build the command
-   _commandName = "CAD_ATTRIBUTE_MATERIAL_OPACITY_UPDATE";
-   
-   VE_XML::DataValuePair* opacityData = new VE_XML::DataValuePair();
+   //_commandName = "CAD_ATTRIBUTE_MATERIAL_OPACITY_UPDATE";
+    _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE");
+
+    VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+    nodeID->SetDataType("UNSIGNED INT");
+    nodeID->SetDataName(std::string("Node ID"));
+    nodeID->SetDataValue(_cadID);
+    _instructions.push_back(nodeID);
+
+    VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+    componentToUpdate->SetDataType("STRING");
+    componentToUpdate->SetData("Material Component","Opacity");
+    _instructions.push_back(componentToUpdate);
+
+    VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+    materialToUpdate->SetDataType("XMLOBJECT");
+    materialToUpdate->SetData("Material",_material);
+    _instructions.push_back(materialToUpdate);
+
+    _sendCommandsToXplorer();
+  
+   /*VE_XML::DataValuePair* opacityData = new VE_XML::DataValuePair();
    opacityData->SetData(std::string("Opacity"),opacityValue);
    _instructions.push_back(opacityData);
 
@@ -92,7 +111,7 @@ void CADOpacitySliderDlg::_onSlider(wxScrollEvent& event)
    nodeID->SetDataName(std::string("Node ID"));
    _instructions.push_back(nodeID);
 
-   _sendCommandsToXplorer();
+   _sendCommandsToXplorer();*/
    _clearInstructions();
 }
 //////////////////////////////////////////////
@@ -125,8 +144,6 @@ void CADOpacitySliderDlg::_sendCommandsToXplorer()
 
    opacityCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
 
-   std::cout << "----Sending Command----" << std::endl;
-   std::cout << commandString << std::endl;
 
    if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
    {
