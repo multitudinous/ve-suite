@@ -130,7 +130,7 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
             {
                DOMNodeList* textureList = currentElement->getElementsByTagName(xercesString("textureImage"));
                unsigned int nTextures = textureList->getLength();
-               std::cout<<"Texture Images: "<<nTextures<<std::endl;
+               std::cout<<"Texture Images in shader: "<<nTextures<<std::endl;
                for(unsigned int i = 0; i < nTextures; i++)
                {
                   std::cout<<"Adding texture image."<<std::endl;

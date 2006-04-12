@@ -297,6 +297,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             if(activeAttribNode)
             {
                _activeAttributeName = ExtractDataStringFromSimpleElement(activeAttribNode);
+               SetActiveAttribute(_activeAttributeName);
             }
 
             
@@ -333,14 +334,7 @@ CADNode::CADNode(const CADNode& rhs)
 
    if(rhs._transform)
    {
-      if(rhs._type != "Clone")
-      {
-         _transform = new VE_XML::Transform(*rhs._transform);
-      }
-      else
-      {
-         _transform = new Transform();
-      }
+      _transform = new VE_XML::Transform(*rhs._transform);
    }
    else
    {
@@ -351,14 +345,11 @@ CADNode::CADNode(const CADNode& rhs)
    {
       _attributeList.clear();
    }
-   if(rhs._type != "Clone")
+   for(size_t i = 0; i < rhs._attributeList.size(); i++)
    {
-      for(size_t i = 0; i < rhs._attributeList.size(); i++)
-      {
-         _attributeList.push_back(rhs._attributeList.at(i));
-      }
-      _activeAttributeName = rhs._activeAttributeName;
+      _attributeList.push_back(rhs._attributeList.at(i));
    }
+      _activeAttributeName = rhs._activeAttributeName;
    _parent = rhs._parent;
    _name = rhs._name;
    _type = rhs._type;

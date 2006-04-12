@@ -106,10 +106,44 @@ void CADMaterial::SetColorMode(std::string colorMode)
 {
    _colorMode = colorMode;
 }   
-/////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
 void CADMaterial::SetDiffuseComponent(VE_XML::FloatArray* diffuse)
 {
    _kDiffuse = diffuse;
+}
+////////////////////////////////////////////////////////////////////////
+void CADMaterial::SetComponent(std::string componentName,std::vector<double> values)
+{
+   if(componentName == "Diffuse")
+   {
+      _kDiffuse->SetArray(values);
+   }
+   else if(componentName == "Ambient")
+   {
+      _ambient->SetArray(values);
+   }
+   else if(componentName == "Emissive")
+   {
+      _kEmissive->SetArray(values);
+   }
+   else if(componentName == "Specular")
+   {
+      _specular->SetArray(values);
+   }
+   else
+   {
+      std::cout<<"Invalid component specified: "<<componentName<<" for material: "<<_materialName<<std::endl;
+   }
+}
+////////////////////////////////////////////////////////////////////////
+void CADMaterial::SetComponent(std::string componentName,double* values)
+{
+   std::vector<double> temp;
+   temp.push_back(values[0]);
+   temp.push_back(values[1]);
+   temp.push_back(values[2]);
+   temp.push_back(values[3]);
+   SetComponent(componentName,temp);
 }
 ///////////////////////////////////////////////////////
 void CADMaterial::SetEmissiveComponent(VE_XML::FloatArray* emissive)

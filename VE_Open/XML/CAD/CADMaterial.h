@@ -48,7 +48,7 @@ namespace VE_XML
 {
    class FloatArray;
 }
-
+#include <vector>
 namespace VE_CAD
 {
 class VE_CAD_EXPORTS CADMaterial: public VE_XML::XMLObject
@@ -91,6 +91,16 @@ public:
    ///Set the face that this material applies to.
    ///\param faceToApplyTo The face that this material applies to.
    void SetFace(std::string faceToApplyTo);
+ 
+   ///Set a component of the material
+   ///\param componentName The name of the component to set the values to.
+   ///\param values The new values to use
+   void SetComponent(std::string componentName,double* values);
+
+   ///Set a component of the material
+   ///\param componentName The name of the component to set the values to.
+   ///\param values The new values to use
+   void SetComponent(std::string componentName,std::vector<double> values);
 
    ///Set the color mode.
    ///Valid options are:
