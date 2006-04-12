@@ -667,7 +667,7 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& WXUNUSED(event)
          material->SetFace(std::string(faceSelector.GetStringSelection().GetData()));     
          //send the data to Xplorer
          ClearInstructions(); 
-         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_FACE");
+         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_MODE");
 
          VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
          nodeID->SetDataType("UNSIGNED INT");
@@ -677,12 +677,12 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& WXUNUSED(event)
 
          VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
          componentToUpdate->SetDataType("STRING");
-         componentToUpdate->SetData("Material Face",material->GetFace());
+         componentToUpdate->SetData("Mode","Face");
          _instructions.push_back(componentToUpdate);
 
          VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
-         materialToUpdate->SetDataType("STRING");
-         materialToUpdate->SetData("Material Name",material->GetMaterialName());
+         materialToUpdate->SetDataType("XMLOBJECT");
+         materialToUpdate->SetData("Material", material);
          _instructions.push_back(materialToUpdate);
 
          _sendCommandsToXplorer();
@@ -731,7 +731,8 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(e
 
          //send the data to Xplorer
          ClearInstructions(); 
-         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_COLOR_MODE");
+         //_commandName = std::string("CAD_ATTRIBUTE_MATERIAL_COLOR_MODE");
+         _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_MODE");
 
          VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
          nodeID->SetDataType("UNSIGNED INT");
@@ -741,12 +742,12 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(e
 
          VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
          componentToUpdate->SetDataType("STRING");
-         componentToUpdate->SetData("Color Mode",material->GetColorMode());
+         componentToUpdate->SetData("Mode","Color");
          _instructions.push_back(componentToUpdate);
 
          VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
-         materialToUpdate->SetDataType("STRING");
-         materialToUpdate->SetData("Material Name",material->GetMaterialName());
+         materialToUpdate->SetDataType("XMLOBJECT");
+         materialToUpdate->SetData("Material",material);
          _instructions.push_back(materialToUpdate);
 
          _sendCommandsToXplorer();
