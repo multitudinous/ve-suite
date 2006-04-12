@@ -72,7 +72,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
 
       //**************************************MESH GEOMETRY***********************
       // create some loop counters
-      int i,j;
+      //int i,j;
       bool endian_flip = 0;
 
       int ndim;  
@@ -152,11 +152,11 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
 
       // make space for scalar and vector names
       char ** parameterNames = new char * [numParameters];
-      for (i=0; i<numParameters; i++) parameterNames[i] = new char [9];
+      for (int i=0; i<numParameters; i++) parameterNames[i] = new char [9];
 
       // read and NULL terminate scalar names
       fseek(s1,8L,SEEK_CUR);
-      for (i=0;i<numScalars;i++)
+      for (int i=0;i<numScalars;i++)
       {
          if (parameterNames[i]==NULL)//.empty())//==NULL)
          {
@@ -170,7 +170,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
 
       // read and NULL terminate vector names
       fseek(s1,8L,SEEK_CUR);
-      for (i=0;i<numVectors;i++)
+      for (int i=0;i<numVectors;i++)
       {
          if (parameterNames[numScalars+i]==NULL)//.empty())//==NULL)
          {
@@ -184,7 +184,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
 
       if (debug)
       {
-         for (i=0;i<numParameters;i++)
+         for (int i=0;i<numParameters;i++)
             std::cout << "parameterNames[" << i << "]: \t\"" << parameterNames[i] << "\"" << std::endl;
       }
 
@@ -274,7 +274,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       // set up arrays to store scalar and vector data over entire mesh...
       vtkFloatArray ** parameterData = NULL;
       parameterData = new vtkFloatArray * [numParameters];
-      for (i=0; i < numParameters; i++)
+      for (int i=0; i < numParameters; i++)
       {
          parameterData[i] = vtkFloatArray::New();
          if (parameterData[i] == NULL)
@@ -288,7 +288,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
 
       // make room for each scalar data, we will use pointers to quickly create parameterData objects 
       float ** scalarData = new float * [numScalars];
-      for (i=0; i<numScalars; i++)
+      for (int i=0; i<numScalars; i++)
       {
          scalarData[i] = new float [num_verts];
          if (scalarData[i] == NULL)
@@ -299,7 +299,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       }
 
       // load ALL of the scalar data into individual vtkFloatarrays
-      for (i=0; i<numScalars; i++)
+      for (int i=0; i<numScalars; i++)
       {
          fseek(s1,8L,SEEK_CUR);
          if ( fileIO::readNByteBlockFromFile( scalarData[i], sizeof(float), num_verts, s1, endian_flip ) )
@@ -324,13 +324,13 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
 
          if (debug > 1)
          {
-            for (j=0; j<4; j++) 
+            for (int j=0; j<4; j++) 
                std::cout << "scalarData[" << i << "][" << j << "] = "
                   << scalarData[i][j] << std::endl;
 
             std::cout << "                ..." << std::endl;
 
-            for (j=num_verts-4; j<num_verts; j++) 
+            for (int j=num_verts-4; j<num_verts; j++) 
                std::cout << "scalarData[" << i << "][" << j << "] = "
                   << scalarData[i][j] << std::endl;
 
@@ -339,9 +339,9 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       }
 
       // make room for vector data 
-      int xyz;
+//      int xyz;
       float ** vectorData = new float * [3];
-      for (xyz=0; xyz<3; xyz++)
+      for (int xyz=0; xyz<3; xyz++)
       {
          vectorData[xyz] = new float [num_verts];
          if (vectorData[xyz] == NULL)
@@ -354,14 +354,14 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       }
        
       // get vector data 
-      for (i=0; i<numVectors; i++)
+      for (int i=0; i<numVectors; i++)
       {
          if ( debug )
             std::cout << "Reading vectorData[" << i+1 << " of " 
                << numVectors << "]:\t\"" 
                << parameterNames[numScalars+i] << "\"" << std::endl;
 
-         for (xyz=0; xyz<3; xyz++)
+         for (int xyz=0; xyz<3; xyz++)
          {
             fseek(s1,8L,SEEK_CUR);
             if ( fileIO::readNByteBlockFromFile( vectorData[xyz], sizeof(float),
@@ -382,11 +382,11 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
             // print begining and ending of vector data to screen...
             if ( debug )
             {
-               for (j=0; j<20; j++) 
+               for (int j=0; j<20; j++) 
                   std::cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = " 
                      << vectorData[xyz][j] << std::endl;
                std::cout << "                ..." << std::endl;
-               for (j=num_verts-20; j<num_verts; j++) 
+               for (int j=num_verts-20; j<num_verts; j++) 
                   std::cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = " 
                      << vectorData[xyz][j] << std::endl;
                std::cout << std::endl;
@@ -416,7 +416,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
    */
 
       //delete vectorData
-      for(i=0; i<3; i++)
+      for(int i=0; i<3; i++)
       {
          delete [] vectorData[ i ];   
          vectorData[ i ] = NULL;
@@ -425,14 +425,14 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       delete [] vectorData;         
       vectorData = NULL;
 
-      for (i=0; i < num_verts; i++) 
+      for (int i=0; i < num_verts; i++) 
       {
          if ( parameterData[ 0 ]->GetComponent( i, 0 ) == 8 )
             sGrid->BlankPoint( i );
       }
 
       //delete parameterData
-      for (i=0; i < numParameters; i++) 
+      for (int i=0; i < numParameters; i++) 
          parameterData[ i ]->Delete();
       
       delete [] parameterData;      
