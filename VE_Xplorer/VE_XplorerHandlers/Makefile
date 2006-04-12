@@ -114,6 +114,7 @@ SRCS=\
    CADSetNameEH.cxx \
    CADToggleEH.cxx \
    CADTransformEH.cxx \
+   MaterialModeUpdateEH.cxx \
    MaterialUpdateEH.cxx
 
 			

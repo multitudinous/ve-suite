@@ -192,8 +192,18 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       ///Get a specified CADAttribute for a specified CADNode
       ///\param nodeID The CADNode  
       ///\param attributeName The name of the CADAttribute to find.
+      ///\param component The name of the CADMaterial component to update.
+      ///\param face The face to apply the update to.
+      ///\param values The new values.
       void UpdateMaterialComponent(unsigned int nodeID,std::string attributeName,std::string component,
-                          std::string face,std::vector<double> values);
+                                    std::string face,std::vector<double> values);
+
+      ///Get a specified CADAttribute for a specified CADNode
+      ///\param nodeID The CADNode  
+      ///\param attributeName The name of the CADAttribute to find.
+      ///\param type The type of mode to update.
+      ///\param mode The new mode.
+      void UpdateMaterialMode(unsigned int nodeID,std::string attributeName,std::string type,std::string mode);
 
       ///Get a specific part. 
       ///\param partID The ID of the part to search form

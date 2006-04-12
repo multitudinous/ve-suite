@@ -864,7 +864,7 @@ void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
             else if(nodeType == "Part")
             {
                vprDEBUG(vesDBG,1) <<"|\tSetting Part attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetPart(nodeID)->GetNode()->GetRawNode()->setStateSet(foundAttribute->second.get());
+               GetPart(nodeID)->GetDCS()->GetRawNode()->setStateSet(foundAttribute->second.get());
                vprDEBUG(vesDBG,1) <<"|\tvalid: "<<foundAttribute->first<<std::endl;
             }
             else if(nodeType == "Clone")
@@ -917,6 +917,41 @@ void cfdModel::AddAttributeToNode(unsigned int nodeID,
 #endif
    vprDEBUG(vesDBG,1) <<"|\tend cfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
 
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void cfdModel::UpdateMaterialMode(unsigned int nodeID,std::string attributeName,std::string type,std::string mode)
+{
+#ifdef _OSG
+   std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+   attributeList = _nodeAttributes.find(nodeID);
+   
+   if(attributeList != _nodeAttributes.end())
+   {
+      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
+      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
+      namesAndAttributes = attributeList->second;
+      for(foundAttribute = namesAndAttributes.begin();
+          foundAttribute != namesAndAttributes.end();
+          foundAttribute++)
+      {
+         vprDEBUG(vesDBG,1) <<"|\tFound attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
+         if(foundAttribute->first == attributeName)
+         {
+            ///update the material component
+            osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = 
+                              dynamic_cast<VE_SceneGraph::Utilities::Attribute*>(foundAttribute->second.get());
+            if(attribute.valid())
+            {
+               attribute->UpdateMaterialMode(type,mode);
+            }
+            else
+            {
+               vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
+            }
+         }
+      }
+   }
+#endif
 }
 //////////////////////////////////////////////////////////////////////////////////////
 void cfdModel::UpdateMaterialComponent(unsigned int nodeID, std::string attributeName,
