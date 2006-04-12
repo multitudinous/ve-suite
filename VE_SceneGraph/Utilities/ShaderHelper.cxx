@@ -133,7 +133,7 @@ void ShaderHelper::SetStateSet(osg::StateSet* shader)
 void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
 {
 #ifdef _OSG
-   std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
+   //std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
    if(!_ss.valid())
    {
       _ss = new osg::StateSet();
@@ -202,11 +202,13 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
    unsigned int tUnit = textureImage.GetTextureUnit();
    unsigned int dimension = textureImage.GetDimension();
 
+   std::cout<<"Reading image file: "<<textureImage.GetImageFile()<<std::endl;
    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile(textureImage.GetImageFile());
    osg::ref_ptr<osg::Texture> genericTexture;
    std::string textureType("");
    textureImage.GetType(textureType);
 
+   std::cout<<"Extracting: "<<textureType<<std::endl;
    if(textureType == "1D" )
    {
       osg::ref_ptr<osg::Texture1D> texture1D = new osg::Texture1D();
@@ -232,6 +234,7 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
    }
    else if(textureType == "Cube")
    {
+      std::cout<<"Cube map"<<std::endl;
       osg::ref_ptr<osg::TextureCubeMap> textureCubeMap = new osg::TextureCubeMap();
       textureCubeMap->setImage(osg::TextureCubeMap::POSITIVE_X, osgDB::readImageFile(textureImage.GetImageFile("Positive X")));
       textureCubeMap->setImage(osg::TextureCubeMap::NEGATIVE_X, osgDB::readImageFile(textureImage.GetImageFile("Negative X")));
@@ -295,6 +298,7 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
             _setWrapOnTexture(genericTexture.get(),osg::Texture::WRAP_R,rWrap);
       }
 
+      //std::cout<<"Is this the problem??"<<std::endl;
       //set the texture to the state set
       _ss->setTextureAttributeAndModes(tUnit,genericTexture.get(),osg::StateAttribute::ON);
 
@@ -305,7 +309,13 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
          _ss->setTextureMode(tUnit,GL_TEXTURE_2D,osg::StateAttribute::ON);
       
       if(dimension == 3)
-         _ss->setTextureMode(tUnit,GL_TEXTURE_3D,osg::StateAttribute::ON);
+      {
+         if(textureType == "3D" )
+         {
+            //std::cout<<"Probably"<<std::endl;
+            _ss->setTextureMode(tUnit,GL_TEXTURE_3D,osg::StateAttribute::ON);
+         }
+      }
    }
 #endif
 }
@@ -416,6 +426,8 @@ void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
          }
       }else if(uniformType == "Sampler"){
          std::cout<<"Extracting Sampler!!"<<std::endl;
+         std::cout<<"Unit: "<<uniformData->GetTextureUnit()<<std::endl;
+         
          _extractTextureFromShader(shader->GetTextureImage(uniformData->GetTextureUnit()));
          std::cout<<"---Done---"<<std::endl;
       }

@@ -74,12 +74,13 @@ void MaterialHelper::LoadMaterial(VE_CAD::CADMaterial* material)
    }
 
    std::string materialName = material->GetMaterialName();
-   std::cout<<"Loading material: "<<materialName<<std::endl;
+   //std::cout<<"Loading material: "<<materialName<<std::endl;
 
    std::vector<double> diffuse = material->GetDiffuse()->GetArray();
    std::vector<double> ambient = material->GetAmbient()->GetArray();
    std::vector<double> specular = material->GetSpecular()->GetArray();
    std::vector<double> emmissive = material->GetEmissive()->GetArray();
+   double opacity = material->GetOpacity();
    std::string face = material->GetFace();
    std::string colorMode = material->GetColorMode(); 
    float shininess = material->GetShininess();
@@ -130,12 +131,13 @@ void MaterialHelper::LoadMaterial(VE_CAD::CADMaterial* material)
 
    //_material->setName(materialName);
    _material->setShininess(faceToApply,shininess);
-   _ss->setAttributeAndModes(_material.get());
+   _ss->setAttributeAndModes(_material.get(),osg::StateAttribute::ON);
 
    osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
       
    bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-   if ( diffuse.at(3) == 1.0 ) 
+   
+   if ( opacity == 1.0 ) 
    {
       _ss->setRenderingHint(osg::StateSet::OPAQUE_BIN);
       _ss->setMode(GL_BLEND,osg::StateAttribute::ON);

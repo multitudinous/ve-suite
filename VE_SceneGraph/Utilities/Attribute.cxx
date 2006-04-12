@@ -93,22 +93,68 @@ Attribute::Attribute(const Attribute& veAttribute,
 Attribute::~Attribute()
 {
 }
+////////////////////////////////////////////////////////////////
+void Attribute::UpdateMaterial(std::string componentName,std::string face,
+                    std::vector<double> values)
+{
+#ifdef _OSG
+   osg::Material::Face faceMode = osg::Material::FRONT_AND_BACK;
+   if(face == "Back")
+   {
+      faceMode = osg::Material::BACK;
+   }
+   else if(face == "Front")
+   {
+      faceMode = osg::Material::FRONT;
+   }
+   osg::ref_ptr<osg::Material> material = dynamic_cast<osg::Material*>(this->getAttribute(osg::StateAttribute::MATERIAL));   
+   if(material.valid())
+   {
+      /*std::cout<<"Updating: "<<componentName<<" :(";
+      std::cout<<values[0]<<",";
+      std::cout<<values[1]<<",";
+      std::cout<<values[2]<<",";
+      std::cout<<values[3]<<")"<<std::endl;
+      */
+      if(componentName == "Diffuse")
+      {
+         material->setDiffuse(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));
+      }
+      else if(componentName == "Ambient")
+      {
+         material->setAmbient(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));
+      }
+      else if(componentName == "Specular")
+      {
+         material->setSpecular(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));
+      }
+      else if(componentName == "Emissive")
+      {
+         material->setEmission(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));
+      }
+      else if(componentName == "Opacity")
+      {
+         material->setAlpha(faceMode,values[0]);
+      }
+   }
+   else 
+   {
+      std::cout<<"Node doesn't contian a material!!"<<std::endl;
+   }
+#endif
+}
 ////////////////////////////////////////////////////////////////////////////
 void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
 {
    std::string attributeType = attribute->GetAttributeType();
    bool blending = attribute->NeedsBlending();
 
-#ifdef _OSG
-   
-#elif _PERFORMER
-#endif
    if( attributeType == std::string("Material"))
    {
 #ifdef _OSG
       MaterialHelper materialHelper;
+      materialHelper.SetStateSet(this);
       materialHelper.LoadMaterial(attribute->GetMaterial());
-     
 #elif _PERFORMER
 #endif
    }
@@ -120,6 +166,10 @@ void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
       shaderHelper.SetStateSet(this);
       shaderHelper.LoadGLSLProgram(attribute->GetGLSLProgram());
 
+#elif _PERFORMER
+#endif
+   }
+#ifdef _OSG
       osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
       bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
    
@@ -139,7 +189,6 @@ void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
       setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
 #elif _PERFORMER
 #endif
-   }
 }
 #ifdef _OSG
 /////////////////////////////////////////////////////

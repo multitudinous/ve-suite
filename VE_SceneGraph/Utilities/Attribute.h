@@ -88,6 +88,12 @@ public:
    ///Create a StateSet from a CADAttribute.
    ///\param attribute The CADAttribute.
    void CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute);
+
+   ///Update a the components of a CADMaterial
+   ///\param componentName The name of the component to update
+   ///\param values The new values 
+   ///\param face The material face 
+   void UpdateMaterial(std::string componentName,std::string face,std::vector<double> values);
 protected:
 #ifdef _PERFORMER
    static pfType* _classType;
