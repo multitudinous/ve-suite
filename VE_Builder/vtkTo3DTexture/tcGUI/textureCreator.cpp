@@ -476,7 +476,6 @@ void VTKDataToTexture::createTextures()
    _vectorNames = getParameterNames(3,_nVectors);
 
    _cleanUpFileNames();
-
   
    //by default, _recreateValidityBetweenTimeSteps is false
    if(!_madeValidityStructure || _recreateValidityBetweenTimeSteps)
@@ -484,10 +483,17 @@ void VTKDataToTexture::createTextures()
       msg = wxString("Sampling valid domain. . .");
       _updateTranslationStatus(msg.c_str());
       //build the octree
+      //long timeID = (long)time( NULL );
+      //std::cout << timeID << std::endl;
       _cLocator = vtkCellLocator::New();
+      _cLocator->CacheCellBoundsOn();
+      _cLocator->AutomaticOn();
+      _cLocator->SetNumberOfCellsPerBucket( 100 );
       _cLocator->SetDataSet(_dataSet);
       //build the octree
       _cLocator->BuildLocator();
+      //long endtimeID = (long)time( NULL );
+      //std::cout << endtimeID - timeID << std::endl;
       //Now use it...
       _createValidityTexture();
       _cLocator->Delete();
@@ -496,7 +502,8 @@ void VTKDataToTexture::createTextures()
    msg = wxString("Processing scalars. . .");
    _updateTranslationStatus(msg.c_str());
 
-   for(int i = 0; i < _nScalars; i++){
+   for ( int i = 0; i < _nScalars; ++i )
+   {
       double bbox[6] = {0,0,0,0,0,0};
       //a bounding box
       _dataSet->GetBounds(bbox);
@@ -546,6 +553,8 @@ void VTKDataToTexture::createTextures()
 ///////////////////////////////////////////////
 void VTKDataToTexture::_createValidityTexture()
 {
+long timeID = (long)time( NULL );
+std::cout << timeID << std::endl;
     double bbox[6] = {0,0,0,0,0,0};
    //a bounding box
    _dataSet->GetBounds(bbox);
@@ -587,30 +596,47 @@ void VTKDataToTexture::_createValidityTexture()
    unsigned int nZ = _resolution[2]-1;
 
    unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
-   for(unsigned int l = 0; l < nPixels; l++){
+//long twoTime = (long)time( NULL );
+//std::cout << twoTime - timeID << std::endl;
+   _validPt.resize( nPixels );
+   for(unsigned int l = 0; l < nPixels; l++)
+   {
+//long zeroTime = (long)time( NULL );
+//std::cout << zeroTime << std::endl;
+      // we can parallelize this for loop by using a map to store the data and then
+      // merge the map after the texture has been created. 
+      // this would allow this function to be much faster. This function
+      // is where the majority of the time is spent currently.
       pt[2] = bbox[4] + k*delta[2];
       pt[1] = bbox[2] + j*delta[1];
       pt[0] = bbox[0] + (i++)*delta[0];
          
+//long threeTime = (long)time( NULL );
+//std::cout << threeTime - zeroTime << std::endl;
       _cLocator->FindClosestPoint(pt,closestPt,
 	                          cell,cellId,subId, dist);
-      weights = new double[cell->GetNumberOfPoints()];
+      //weights = new double[cell->GetNumberOfPoints()];
       //check to see if this point is in
       //the returned cell
-      int good = cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+      //int good = cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+      //if(weights){
+         //delete [] weights;
+         //weights = 0;
+      //}
       std::pair< int, int > cellDataPair( cellId, subId );
-      if(good)
+//long fourTime = (long)time( NULL );
+//std::cout << fourTime - threeTime << std::endl;
+      if( dist == 0 )
       {
-         _validPt.push_back( std::pair< bool, std::pair< int, int > >( true, cellDataPair ) );
+//std::cout << "good " << dist << " : " << cellId << " : " << subId << " : " <<  closestPt[ 0 ] << " : " <<  closestPt[ 1 ] << " : " <<  closestPt[ 2 ] << std::endl;
+         _validPt.at( l ) = ( std::pair< bool, std::pair< int, int > >( true, cellDataPair ) );
       }
       else
       {
-         _validPt.push_back( std::pair< bool, std::pair< int, int > >( false, cellDataPair ) );
+//std::cout << dist << " : " << cellId << " : " << subId << " : " <<  closestPt[ 0 ] << " : " <<  closestPt[ 1 ] << " : " <<  closestPt[ 2 ] << std::endl;
+         _validPt.at( l ) = ( std::pair< bool, std::pair< int, int > >( false, cellDataPair ) );
       }
-      if(weights){
-         delete [] weights;
-         weights = 0;
-      }
+
       if((unsigned int)i > (unsigned int)nX){
            i = 0;
            j ++;
@@ -622,9 +648,13 @@ void VTKDataToTexture::_createValidityTexture()
                }
            }
       }
+//long fiveTime = (long)time( NULL );
+//std::cout << fiveTime - fourTime << std::endl;
    }
    cell->Delete();
    _madeValidityStructure = true;
+long endTime = (long)time( NULL );
+std::cout << endTime - timeID << std::endl;
 }
 /////////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
@@ -676,6 +706,10 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    //resample the data into a cartesian grid
    for(unsigned int l = 0; l < nPixels; ++l)
    {
+      // we can parallelize this for loop by using a map to store the data and then
+      // merge the map after the texture has been created. 
+      // this would allow this function to be much faster. This function
+      // is where the majority of the time is spent currently.
       pt[2] = bbox[4] + k*delta[2];
       pt[1] = bbox[2] + j*delta[1];
       pt[0] = bbox[0] + (i++)*delta[0];
@@ -689,7 +723,8 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
          weights = new double[cell->GetNumberOfPoints()];
 	      //check to see if this point is in
 	      //the returned cell
-         cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+         //cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+         cell->EvaluateLocation(subId,pcoords,pt,weights);
          _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
          if ( weights )
          {
@@ -740,8 +775,14 @@ char* VTKDataToTexture::_cleanUpFileNames()
          if(ptr[j] == ' '){
             continue;
          }
-         //replace :'s w/ _'s
-         if(ptr[j] ==':'){
+         //replace :'s, ['s, ]'s, w/ _'s
+         if (  (ptr[j] ==':') || 
+               (ptr[j] =='[') || 
+               (ptr[j] ==']') || 
+               (ptr[j] =='/')|| 
+               (ptr[j] =='^')
+            )
+         {
             ptr[j] = '_';
          }
          tempName[index++] = ptr[j];
@@ -764,8 +805,14 @@ char* VTKDataToTexture::_cleanUpFileNames()
          if(ptr[j] == ' '){
             continue;
          }
-         //replace :'s w/ _'s
-         if(ptr[j] ==':'){
+         //replace :'s, ['s, ]'s, w/ _'s
+         if (  (ptr[j] ==':') || 
+               (ptr[j] =='[') || 
+               (ptr[j] ==']') || 
+               (ptr[j] =='/')|| 
+               (ptr[j] =='^')
+            )
+         {
             ptr[j] = '_';
          }
          tempName[index++] = ptr[j];
@@ -1098,18 +1145,26 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
 	}
 
    nameString.append( _scalarNames[whichScalar] );
-
-   boost::filesystem::path scalarNamePath( nameString );
    try
    {
-      boost::filesystem::is_directory( scalarNamePath );
+      boost::filesystem::path scalarNamePath( nameString );
+      try
+      {
+         boost::filesystem::is_directory( scalarNamePath );
+      }
+      catch ( const std::exception& ex )
+	   {
+	      std::cout << ex.what() << std::endl;
+         boost::filesystem::create_directory( scalarNamePath );
+	      std::cout << "...so we made it for you..." << std::endl;
+	   }
    }
    catch ( const std::exception& ex )
 	{
 	   std::cout << ex.what() << std::endl;
-      boost::filesystem::create_directory( scalarNamePath );
-	   std::cout << "...so we made it for you..." << std::endl;
-	}
+	   std::cout << "...bad filename creation..." << std::endl;
+	   std::cout << "...must expand the filename cleanup function..." << std::endl;
+   }   
 
    nameString.append( "/" );
    nameString.append( _scalarNames[whichScalar] );
