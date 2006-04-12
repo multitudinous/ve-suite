@@ -93,9 +93,51 @@ Attribute::Attribute(const Attribute& veAttribute,
 Attribute::~Attribute()
 {
 }
+//////////////////////////////////////////////////////////////////////
+void Attribute::UpdateMaterialMode(std::string type, std::string mode)
+{
+#ifdef _OSG
+   osg::ref_ptr<osg::Material> material = dynamic_cast<osg::Material*>(this->getAttribute(osg::StateAttribute::MATERIAL));   
+   if(material.valid())
+   {
+      if(type == "Color")
+      {
+         osg::Material::ColorMode colorMode = osg::Material::OFF;
+         if(mode == "Ambient")
+         {
+            colorMode = osg::Material::AMBIENT;
+         }
+         else if(mode == "Diffuse")
+         {
+            colorMode = osg::Material::DIFFUSE;
+         }
+         else if(mode == "Emissive")
+         {
+            colorMode = osg::Material::EMISSION;
+         }
+         else if(mode == "Specular")
+         {
+            colorMode = osg::Material::SPECULAR;
+         }
+         else if(mode == "Ambient_and_Diffuse")
+         {
+           colorMode = osg::Material::AMBIENT_AND_DIFFUSE; 
+         }
+         else if(mode == "Off")
+         {
+           colorMode = osg::Material::OFF;
+         }
+         material->setColorMode(colorMode);
+      }
+      else if(type == "Face")
+      {
+      }
+   }
+#endif
+}
 ////////////////////////////////////////////////////////////////
 void Attribute::UpdateMaterial(std::string componentName,std::string face,
-                    std::vector<double> values)
+                               std::vector<double> values)
 {
 #ifdef _OSG
    osg::Material::Face faceMode = osg::Material::FRONT_AND_BACK;

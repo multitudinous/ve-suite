@@ -94,6 +94,12 @@ public:
    ///\param values The new values 
    ///\param face The material face 
    void UpdateMaterial(std::string componentName,std::string face,std::vector<double> values);
+
+   ///Update a the modes of a CADMaterial
+   ///\param type The mode type\n
+   ///Color and Face are valid values. 
+   ///\param mode The mode to set 
+   void UpdateMaterialMode(std::string type,std::string mode);
 protected:
 #ifdef _PERFORMER
    static pfType* _classType;
