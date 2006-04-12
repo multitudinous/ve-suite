@@ -105,6 +105,7 @@ SRCS=\
    cfdWriteTraverser.cxx \
    cfdObjectHandler.cxx \
    ActiveModelEventHandler.cxx\
+   AttributeEventHandler.cxx \
    CADEventHandler.cxx \
    CADDeleteNodeEH.cxx \
    CADAddNodeEH.cxx \
@@ -112,7 +113,8 @@ SRCS=\
    CADSetActiveAttributeEH.cxx \
    CADSetNameEH.cxx \
    CADToggleEH.cxx \
-   CADTransformEH.cxx 
+   CADTransformEH.cxx \
+   MaterialUpdateEH.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

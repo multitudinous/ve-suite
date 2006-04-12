@@ -189,6 +189,12 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
                     unsigned int partID,
                     unsigned int parentID);
 
+      ///Get a specified CADAttribute for a specified CADNode
+      ///\param nodeID The CADNode  
+      ///\param attributeName The name of the CADAttribute to find.
+      void UpdateMaterialComponent(unsigned int nodeID,std::string attributeName,std::string component,
+                          std::string face,std::vector<double> values);
+
       ///Get a specific part. 
       ///\param partID The ID of the part to search form
       VE_Xplorer::cfdFILE* GetPart(unsigned int partID);
