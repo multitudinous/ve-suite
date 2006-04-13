@@ -23,6 +23,10 @@
  */
 
 ////@begin includes
+#include <wx/string.h>
+#include <wx/gdicmn.h>
+#include <wx/dialog.h>
+#include <wx/intl.h>
 ////@end includes
 
 /*!
@@ -30,6 +34,9 @@
  */
 
 ////@begin forward declarations
+class wxComboBox;
+class wxTextCtrl;
+class wxButton;
 ////@end forward declarations
 
 /*!
@@ -73,7 +80,7 @@
 
 class DataSetLoaderUI: public wxDialog
 {    
-    DECLARE_DYNAMIC_CLASS( DataSetLoaderUI )
+    //DECLARE_DYNAMIC_CLASS( DataSetLoaderUI )
     DECLARE_EVENT_TABLE()
 
 public:

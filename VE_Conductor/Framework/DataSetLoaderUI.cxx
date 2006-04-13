@@ -23,10 +23,19 @@
 #endif
 
 #ifndef WX_PRECOMP
-#include "wx/wx.h"
+//#include "wx/wx.h"
 #endif
 
 ////@begin includes
+#include <wx/sizer.h>
+#include <wx/scrolwin.h>
+#include <wx/statbox.h>
+#include <wx/listbox.h>
+#include <wx/bitmap.h>
+#include <wx/icon.h>
+#include <wx/button.h>
+#include <wx/textctrl.h>
+#include <wx/combobox.h>
 ////@end includes
 
 #include "DataSetLoaderUI.h"
@@ -38,7 +47,7 @@
  * DataSetLoaderUI type definition
  */
 
-IMPLEMENT_DYNAMIC_CLASS( DataSetLoaderUI, wxDialog )
+//IMPLEMENT_DYNAMIC_CLASS( DataSetLoaderUI, wxDialog )
 
 /*!
  * DataSetLoaderUI event table definition

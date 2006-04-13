@@ -73,7 +73,8 @@ enum
    SHOW_FINANCIAL, /* EPRI TAG */
    GEOMETRY,
    MODEL_INPUTS,
-   MODEL_RESULTS
+   MODEL_RESULTS,
+   DATASET
 };
 
 namespace VE_Conductor
@@ -116,11 +117,12 @@ public:
    void OnDelLink( wxCommandEvent &event );
    void OnDelLinkCon( wxCommandEvent &event );
    void OnDelMod( wxCommandEvent &event );
-   void OnShowLinkContent( wxCommandEvent &event );
-   void OnShowResult( wxCommandEvent &event );
-   void OnParaView( wxCommandEvent &event );
-   void OnShowDesc( wxCommandEvent &event );
-   void OnGeometry( wxCommandEvent &event );
+   void OnShowLinkContent( wxCommandEvent& event );
+   void OnShowResult( wxCommandEvent& event );
+   void OnParaView( wxCommandEvent& event );
+   void OnShowDesc( wxCommandEvent& event );
+   void OnGeometry( wxCommandEvent& event );
+   void OnDataSet( wxCommandEvent& event );
    void OnInputsWindow( wxCommandEvent& event );
    void OnResultsWindow( wxCommandEvent& event );
 

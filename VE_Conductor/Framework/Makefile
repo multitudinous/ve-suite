@@ -21,6 +21,7 @@ SRCS=\
    CADNodeMenu.cxx \
    CADNodePropsDlg.cxx \
    CADOpacitySliderDlg.cxx \
+   DataSetLoaderUI.cxx\
    Frame.cpp \
    Network.cpp \
    NavigationPane.cxx \

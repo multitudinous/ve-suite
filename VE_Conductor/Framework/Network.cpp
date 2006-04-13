@@ -50,6 +50,7 @@
 #include "VE_Open/XML/CAD/CADAssembly.h"
 
 #include "VE_Conductor/Framework/CADNodeManagerDlg.h"
+#include "VE_Conductor/Framework/DataSetLoaderUI.h"
 
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
@@ -94,6 +95,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
    EVT_MENU(SHOW_FINANCIAL, Network::OnShowFinancial) /* EPRI TAG */
    EVT_MENU(GEOMETRY, Network::OnGeometry)
+   EVT_MENU(DATASET, Network::OnDataSet)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
    EVT_MENU(MODEL_RESULTS, Network::OnResultsWindow) /* EPRI TAG */
 END_EVENT_TABLE()
@@ -469,6 +471,9 @@ void Network::OnMRightDown(wxMouseEvent& event)
    // GUI to configure geometry for graphical env
    pop_menu.Append(GEOMETRY, "Geometry Config");
    pop_menu.Enable(GEOMETRY, true);
+   // GUI to configure dataset for graphical env
+   pop_menu.Append(DATASET, "Data Set Config");
+   pop_menu.Enable(DATASET, true);
 
    // GUI to configure geometry for graphical env
    pop_menu.Append(MODEL_INPUTS, "Input Variables" );
@@ -2434,6 +2439,36 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
       *( dynamic_cast< VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
    delete cadDialog;
    cadDialog = 0;
+}
+///////////////////////////////////////////
+void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
+{
+   if (m_selMod<0) 
+      return;
+
+   // Here we launch a dialog for a specific plugins input values
+   VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+   DataSetLoaderUI* dataSetLoaderDlg = 0;
+   if( !cadDialog )
+   {
+      /*if ( CORBA::is_nil( xplorerPtr.in() ) )
+      {
+         ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
+         SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
+         if ( CORBA::is_nil( xplorerPtr.in() ) )
+            return;
+      }*/
+      //this will change once we have a way to retrieve the geometry from the model
+      dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId() );
+   }
+
+   //cadDialog->SetVjObsPtr( xplorerPtr.in() );
+   dataSetLoaderDlg->ShowModal();
+   // Get cadnode back
+   //*( dynamic_cast< VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
+   //   *( dynamic_cast< VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
+   delete dataSetLoaderDlg;
+   dataSetLoaderDlg = 0;
 }
 ///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )
