@@ -43,7 +43,8 @@
 #include <vector>
 
 #include "VE_Open/XML/XMLObject.h"
-namespace VE_XML{
+namespace VE_XML
+{
    class Transform;
    class DataValuePair;
 }
@@ -51,14 +52,20 @@ namespace VE_XML{
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
 
-namespace VE_XML{
-class VE_XML_EXPORTS ParameterBlock : public XMLObject{
+namespace VE_XML
+{
+class VE_XML_EXPORTS ParameterBlock : public XMLObject
+{
 public:
    ///Constructor
    ///\param id The identification number of this parameter block
-   ParameterBlock(unsigned int id = 0);
+   ParameterBlock( unsigned int id = 0 );
    ///Destructor
    virtual ~ParameterBlock();
+   ///Copy Constructor
+   ParameterBlock( const ParameterBlock& );
+   ///equal operator
+   ParameterBlock& operator= ( const ParameterBlock& );
 
    ///Set the identification number.
    ///\param id The number specifiying what type of data is in this parameter block.

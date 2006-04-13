@@ -43,7 +43,7 @@ ParameterBlock::ParameterBlock(unsigned int id)
 :XMLObject()
 {
    _id = id;
-   _dcs = new Transform(  );
+   _dcs = new Transform();
    
    SetObjectType("ParameterBlock");
 }
@@ -63,6 +63,39 @@ ParameterBlock::~ParameterBlock()
       _properties.clear();
    }
 }
+///////////////////////////////////////////
+ParameterBlock::ParameterBlock( const ParameterBlock& input )
+:XMLObject(input)
+{
+   _dcs = new Transform( *input._dcs );
+   _id = input._id;
+   for ( size_t i = 0; i < input._properties.size(); ++i )
+   {
+      _properties.push_back( new DataValuePair( *(input._properties.at(i)) ) );
+   }
+}
+/////////////////////////////////////////////////////
+ParameterBlock& ParameterBlock::operator=( const ParameterBlock& input)
+{
+   if ( this != &input )
+   {
+      //biv-- make sure to call the parent =
+      XMLObject::operator =(input);
+      *_dcs = *input._dcs;
+      _id = input._id;
+      for ( size_t i = 0; i < _properties.size(); ++i )
+      {
+         delete _properties.at(i);
+      }
+      _properties.clear();
+
+      for ( size_t i = 0; i < input._properties.size(); ++i )
+      {
+         _properties.push_back( new DataValuePair( *(input._properties.at(i)) ) );
+      }
+   }
+   return *this;
+}
 //////////////////////////////////////////////
 void ParameterBlock::SetId(unsigned int id)
 {
@@ -81,18 +114,57 @@ void ParameterBlock::AddProperty(VE_XML::DataValuePair* prop)
 //////////////////////////////////////////////////////////////////
 //set the data from an string representing the xml              //
 //////////////////////////////////////////////////////////////////
-void ParameterBlock::SetObjectFromXMLData(DOMNode* xmlInput)
+void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput )
 {
    //this will be tricky...
+   DOMElement* currentElement = 0;
+   if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
+   {
+      currentElement = dynamic_cast< DOMElement* >( xmlInput );
+   }
 
+   if ( currentElement )
+   {
+      //get variables by tags
+      DOMElement* dataValueStringName = 0;
+      //get the transform
+      dataValueStringName = GetSubElement( currentElement, "transform", 0 );
+      if ( _dcs )
+      {
+         delete _dcs;
+         _dcs = 0;
+      }
+      _dcs = new Transform();
+      _dcs->SetObjectFromXMLData( dataValueStringName );
+      //Get the block id
+      dataValueStringName = GetSubElement( currentElement, "blockID", 0 );
+      _id = ExtractIntegerDataNumberFromSimpleElement( dataValueStringName );
+      //Get the properties
+      for ( size_t i = 0; i < _properties.size(); ++i )
+      {
+         delete _properties.at( i );
+      }
+      _properties.clear();
+
+      unsigned int numberOfProperties = currentElement->getElementsByTagName( xercesString("properties") )->getLength();
+      for ( unsigned int i = 0; i < numberOfProperties; ++i )
+      {
+         dataValueStringName = GetSubElement( currentElement, "properties", i );
+         _properties.push_back( new DataValuePair() );
+         _properties.back()->SetObjectFromXMLData( dataValueStringName );
+      }
+   }
 }
 ////////////////////////////////////////
 void ParameterBlock::_updateVEElement( std::string input )
 {
-   //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
-   //this will depend on the type of parameter block
-
    //Add code here to update the specific sub elements
+   SetSubElement( "blockID", _id );
+   SetSubElement( "transform", _dcs );
+   for ( size_t i = 0; i < _properties.size(); ++i )
+   {
+      SetSubElement( "properties", _properties.at( i ) );
+   }
 }
 //////////////////////////////////////
 unsigned int ParameterBlock::GetId()
