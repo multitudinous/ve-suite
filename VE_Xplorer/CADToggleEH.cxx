@@ -90,7 +90,7 @@ void CADToggleEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       {
          std::cout<<"---Toggle part---"<<std::endl;
          std::cout<<"---"<<toggleValue->GetDataString()<<"---"<<std::endl;
-         _activeModel->GetPart(nodeID->GetUIntData())->GetNode()->ToggleDisplay(toggleValue->GetDataString());
+         _activeModel->GetPart(nodeID->GetUIntData())->GetDCS()->ToggleDisplay(toggleValue->GetDataString());
          std::cout<<"---Toggled part---"<<std::endl;
       }
       else if(nodeType->GetDataString() == std::string("Clone"))

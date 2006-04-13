@@ -68,6 +68,7 @@
 #include "VE_Xplorer/CADToggleEH.h"
 #include "VE_Xplorer/ActiveModelEventHandler.h"
 #include "VE_Xplorer/MaterialUpdateEH.h"
+#include "VE_Xplorer/MaterialModeUpdateEH.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -126,6 +127,8 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[std::string("CAD_TOGGLE_NODE")] = new VE_EVENTS::CADToggleEventHandler();
    _eventHandlers[std::string("CHANGE_ACTIVE_MODEL")] = new VE_EVENTS::ActiveModelEventHandler();
    _eventHandlers[std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE")] = new VE_EVENTS::MaterialUpdateEventHandler();
+   _eventHandlers[std::string("CAD_ATTRIBUTE_MATERIAL_MODE")] = new VE_EVENTS::MaterialModeUpdateEventHandler();
+   
 #ifdef _OSG
 #ifdef VE_PATENTED
    _activeTDSet = 0;

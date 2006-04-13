@@ -99,7 +99,7 @@ void CADDeleteNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         parentAssembly->RemoveChild(_activeModel->GetClone(nodeID->GetUIntData()));
+         parentAssembly->RemoveChild(_activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph());
       }
    }
    catch(...)
