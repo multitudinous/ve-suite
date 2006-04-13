@@ -54,6 +54,7 @@ include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
+#include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vpr.mk
 
 # -----------------------------------------------------------------------------
 # Application build targets.

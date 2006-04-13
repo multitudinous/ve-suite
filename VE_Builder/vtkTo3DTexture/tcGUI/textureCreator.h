@@ -37,6 +37,7 @@
 #include <vtkStructuredGridReader.h>
 #include <vtkRectilinearGridReader.h>
 #include <vtkCellLocator.h>
+#include <vtkOBBTree.h>
 #include "flowTexture.h"
 #include <string>
 #include <utility>
@@ -192,6 +193,7 @@ protected:
 
    vtkDataSet* _dataSet;
    vtkCellLocator* _cLocator;
+   //vtkOBBTree* _cLocator;
    vtkCellDataToPointData* _dataConvertCellToPoint;
    vtkUnstructuredGridReader* _usgrid;
    vtkStructuredGridReader* _sgrid;

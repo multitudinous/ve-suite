@@ -33,6 +33,7 @@
 
 
 #include <vtkCellLocator.h>
+#include <vtkOBBTree.h>
 #include <vtkGenericCell.h>
 #include <vtkPointData.h>
 #include <vtkCellData.h>
@@ -486,9 +487,11 @@ void VTKDataToTexture::createTextures()
       //long timeID = (long)time( NULL );
       //std::cout << timeID << std::endl;
       _cLocator = vtkCellLocator::New();
+      //_cLocator = vtkOBBTree::New();
       _cLocator->CacheCellBoundsOn();
       _cLocator->AutomaticOn();
-      _cLocator->SetNumberOfCellsPerBucket( 100 );
+      _cLocator->SetNumberOfCellsPerBucket( 50 );
+      //vtkDataSet* polyData = VE_Util::readVtkThing("./tempDataDir/surface.vtp");
       _cLocator->SetDataSet(_dataSet);
       //build the octree
       _cLocator->BuildLocator();
@@ -553,9 +556,9 @@ void VTKDataToTexture::createTextures()
 ///////////////////////////////////////////////
 void VTKDataToTexture::_createValidityTexture()
 {
-long timeID = (long)time( NULL );
-std::cout << timeID << std::endl;
-    double bbox[6] = {0,0,0,0,0,0};
+   long timeID = (long)time( NULL );
+
+   double bbox[6] = {0,0,0,0,0,0};
    //a bounding box
    _dataSet->GetBounds(bbox);
 
@@ -596,13 +599,11 @@ std::cout << timeID << std::endl;
    unsigned int nZ = _resolution[2]-1;
 
    unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
-//long twoTime = (long)time( NULL );
-//std::cout << twoTime - timeID << std::endl;
    _validPt.resize( nPixels );
+   long lasttime = (long)time( NULL );
+
    for(unsigned int l = 0; l < nPixels; l++)
    {
-//long zeroTime = (long)time( NULL );
-//std::cout << zeroTime << std::endl;
       // we can parallelize this for loop by using a map to store the data and then
       // merge the map after the texture has been created. 
       // this would allow this function to be much faster. This function
@@ -611,10 +612,9 @@ std::cout << timeID << std::endl;
       pt[1] = bbox[2] + j*delta[1];
       pt[0] = bbox[0] + (i++)*delta[0];
          
-//long threeTime = (long)time( NULL );
-//std::cout << threeTime - zeroTime << std::endl;
-      _cLocator->FindClosestPoint(pt,closestPt,
-	                          cell,cellId,subId, dist);
+      _cLocator->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
+      //std::cout << _cLocator->InsideOrOutside( pt ) << std::endl;
+      //_cLocator->InsideOrOutside( pt );
       //weights = new double[cell->GetNumberOfPoints()];
       //check to see if this point is in
       //the returned cell
@@ -623,18 +623,18 @@ std::cout << timeID << std::endl;
          //delete [] weights;
          //weights = 0;
       //}
-      std::pair< int, int > cellDataPair( cellId, subId );
-//long fourTime = (long)time( NULL );
-//std::cout << fourTime - threeTime << std::endl;
+
       if( dist == 0 )
       {
-//std::cout << "good " << dist << " : " << cellId << " : " << subId << " : " <<  closestPt[ 0 ] << " : " <<  closestPt[ 1 ] << " : " <<  closestPt[ 2 ] << std::endl;
-         _validPt.at( l ) = ( std::pair< bool, std::pair< int, int > >( true, cellDataPair ) );
+         //std::cout << "good " << l << " : " <<  dist << " : " << cellId << " : " << subId << " : " <<  closestPt[ 0 ] << " : " <<  closestPt[ 1 ] << " : " <<  closestPt[ 2 ] << std::endl;
+         _validPt.at( l ).first = true;
+         _validPt.at( l ).second.first = cellId;
+         _validPt.at( l ).second.second = subId;
       }
       else
       {
-//std::cout << dist << " : " << cellId << " : " << subId << " : " <<  closestPt[ 0 ] << " : " <<  closestPt[ 1 ] << " : " <<  closestPt[ 2 ] << std::endl;
-         _validPt.at( l ) = ( std::pair< bool, std::pair< int, int > >( false, cellDataPair ) );
+         //std::cout << dist << " : " << cellId << " : " << subId << " : " <<  closestPt[ 0 ] << " : " <<  closestPt[ 1 ] << " : " <<  closestPt[ 2 ] << std::endl;
+         _validPt.at( l ).first = false;
       }
 
       if((unsigned int)i > (unsigned int)nX){
@@ -648,13 +648,22 @@ std::cout << timeID << std::endl;
                }
            }
       }
-//long fiveTime = (long)time( NULL );
-//std::cout << fiveTime - fourTime << std::endl;
+
+      /*if ( l%100000 == 0 )
+      {
+         secondTime  = (long)time( NULL );;
+         //std::cout.seekp(ios::beg);
+         std::cout << "Number of pixels processed = " << l 
+                     << " in "<< secondTime - lasttime 
+                     << " seconds." << std::endl;
+         //std::cout.seekp(ios::beg); 
+         lasttime = secondTime;
+      }*/
    }
    cell->Delete();
    _madeValidityStructure = true;
-long endTime = (long)time( NULL );
-std::cout << endTime - timeID << std::endl;
+   long endTime = (long)time( NULL );
+   std::cout << endTime - timeID << std::endl;
 }
 /////////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
