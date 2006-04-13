@@ -280,6 +280,9 @@
 				RelativePath=".\ActiveModelEventHandler.cxx">
 			</File>
 			<File
+				RelativePath=".\AttributeEventHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\CADAddAttributeEH.cxx">
 			</File>
 			<File
@@ -453,12 +456,21 @@
 			<File
 				RelativePath=".\cfdWriteTraverser.cxx">
 			</File>
+			<File
+				RelativePath=".\MaterialModeUpdateEH.cxx">
+			</File>
+			<File
+				RelativePath=".\MaterialUpdateEH.cxx">
+			</File>
 		</Filter>
 		<Filter
 			Name="headers"
 			Filter=".h">
 			<File
 				RelativePath=".\ActiveModelEventHandler.h">
+			</File>
+			<File
+				RelativePath=".\AttributeEventHandler.h">
 			</File>
 			<File
 				RelativePath=".\CADAddAttributeEH.h">
@@ -504,6 +516,12 @@
 			</File>
 			<File
 				RelativePath=".\EventHandler.h">
+			</File>
+			<File
+				RelativePath=".\MaterialModeUpdateEH.h">
+			</File>
+			<File
+				RelativePath=".\MaterialUpdateEH.h">
 			</File>
 		</Filter>
 		<Filter
