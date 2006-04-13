@@ -2458,7 +2458,6 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
          if ( CORBA::is_nil( xplorerPtr.in() ) )
             return;
       }*/
-      //this will change once we have a way to retrieve the geometry from the model
       dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId() );
    }
 

@@ -50,20 +50,27 @@ class wxButton;
 #define SYMBOL_DATASETLOADERUI_IDNAME ID_DIALOG
 #define SYMBOL_DATASETLOADERUI_SIZE wxSize(-1, 500)
 #define SYMBOL_DATASETLOADERUI_POSITION wxDefaultPosition
-#define ID_SCROLLEDWINDOW 10001
-#define ID_COMBOBOX 10004
-#define ID_TEXTCTRL 10003
-#define ID_BUTTON 10002
-#define ID_TEXTCTRL2 10007
-#define ID_BUTTON3 10008
-#define ID_TEXTCTRL3 10009
-#define ID_BUTTON4 10010
-#define ID_BUTTON6 10013
-#define ID_BUTTON5 10014
-#define ID_TEXTCTRL1 10005
-#define ID_BUTTON2 10006
-#define ID_SCROLLEDWINDOW1 10012
-#define ID_LISTBOX 10011
+enum
+{
+   ID_SCROLLEDWINDOW=10001,
+   ID_COMBOBOX,
+   ID_TEXTCTRL,
+   ID_BUTTON,
+   ID_TEXTCTRL2,
+   ID_BUTTON3,
+   ID_TEXTCTRL3,
+   ID_BUTTON4,
+   ID_BUTTON6,
+   ID_BUTTON5,
+   ID_TEXTCTRL1,
+   ID_BUTTON2,
+   ID_SCROLLEDWINDOW1,
+   ID_LISTBOX,
+   ID_INFORMATION_PACKET_LIST,
+   ID_INFORMATION_PACKET_CHANGE_NAME,
+   ID_INFORMATION_PACKET_ADD_NAME
+};
+
 ////@end control identifiers
 
 /*!
@@ -113,6 +120,15 @@ public:
 
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX
     void OnListboxSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_INFORMATION_PACKET_LIST
+    void OnInformationPacketChange( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_INFORMATION_PACKET_CHANGE_NAME
+    void OnInformationPacketAdd( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_INFORMATION_PACKET_ADD_NAME
+    void OnInformationPacketChangeName( wxCommandEvent& event );
 
 ////@end DataSetLoaderUI event handler declarations
 

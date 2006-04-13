@@ -56,18 +56,15 @@
 BEGIN_EVENT_TABLE( DataSetLoaderUI, wxDialog )
 
 ////@begin DataSetLoaderUI event table entries
-    EVT_BUTTON( ID_BUTTON, DataSetLoaderUI::OnButtonClick )
-
-    EVT_BUTTON( ID_BUTTON3, DataSetLoaderUI::OnButton3Click )
-
-    EVT_BUTTON( ID_BUTTON4, DataSetLoaderUI::OnButton4Click )
-
-    EVT_BUTTON( ID_BUTTON6, DataSetLoaderUI::OnButton6Click )
-
-    EVT_BUTTON( ID_BUTTON2, DataSetLoaderUI::OnButton2Click )
-
-    EVT_LISTBOX( ID_LISTBOX, DataSetLoaderUI::OnListboxSelected )
-
+   EVT_BUTTON( ID_BUTTON, DataSetLoaderUI::OnButtonClick )
+   EVT_BUTTON( ID_BUTTON3, DataSetLoaderUI::OnButton3Click )
+   EVT_BUTTON( ID_BUTTON4, DataSetLoaderUI::OnButton4Click )
+   EVT_BUTTON( ID_BUTTON6, DataSetLoaderUI::OnButton6Click )
+   EVT_BUTTON( ID_BUTTON2, DataSetLoaderUI::OnButton2Click )
+   EVT_LISTBOX( ID_LISTBOX, DataSetLoaderUI::OnListboxSelected )
+   EVT_COMBOBOX( ID_INFORMATION_PACKET_LIST, DataSetLoaderUI::OnInformationPacketChange ) // this will refresh all the widgets for the given dataset
+   EVT_TEXT( ID_INFORMATION_PACKET_CHANGE_NAME, DataSetLoaderUI::OnInformationPacketChangeName ) // change the name of a given data set, will also need to change the name seen by xplorer
+   EVT_TEXT_ENTER( ID_INFORMATION_PACKET_ADD_NAME, DataSetLoaderUI::OnInformationPacketAdd ) // add a name to the list once enter is pushed, also add new information block
 ////@end DataSetLoaderUI event table entries
 
 END_EVENT_TABLE()
@@ -342,7 +339,7 @@ void DataSetLoaderUI::OnButton2Click( wxCommandEvent& event )
 /*!
  * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX
  */
-
+//////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& event )
 {
 ////@begin wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX in DataSetLoaderUI.
@@ -350,5 +347,28 @@ void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& event )
     event.Skip();
 ////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX in DataSetLoaderUI. 
 }
+//////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& event )
+{
+   /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_LISTBOX
+   // When we change the combox the newly slected item
+   // should be queried and all other widgets should be update with
+   // appropriate info
+}
+//////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& event )
+{
+    /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_LISTBOX
+   // When enter is pushed on the combox and new entry is specifiy and
+   // the appropriate widgets should be updated
+}
+//////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& event )
+{
+    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_LISTBOX
+   // If any text is changed with the name of a information packet then
+   // then the information packet should change as well in veModel.
+}
+//////////////////////////////////////////////////////////////////////////////
 
 
