@@ -41,7 +41,10 @@
 #include <wx/msgdlg.h>
 ////@end includes
 
-#include "DataSetLoaderUI.h"
+#include "VE_Conductor/Framework/DataSetLoaderUI.h"
+#include "VE_Conductor/Framework/TransformUI.h"
+
+#include "VE_Open/XML/ParameterBlock.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -78,11 +81,12 @@ END_EVENT_TABLE()
 
 DataSetLoaderUI::DataSetLoaderUI( )
 {
+   paramBlock = 0;
 }
 
 DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
-    Create(parent, id, caption, pos, size, style);
+   Create(parent, id, caption, pos, size, style);
 }
 
 /*!
@@ -92,27 +96,28 @@ DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxStrin
 bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin DataSetLoaderUI member initialisation
-    dataSetList = NULL;
-    dataSetTextEntry = NULL;
-    dataSetOpenButton = NULL;
-    preComputDirTextEntry = NULL;
-    preComputeOpenButton = NULL;
-    surfaceDataText = NULL;
-    surfaceDataOpenButton = NULL;
-    transformButton = NULL;
-    scalarButton = NULL;
+   paramBlock = 0;
+   dataSetList = NULL;
+   dataSetTextEntry = NULL;
+   dataSetOpenButton = NULL;
+   preComputDirTextEntry = NULL;
+   preComputeOpenButton = NULL;
+   surfaceDataText = NULL;
+   surfaceDataOpenButton = NULL;
+   transformButton = NULL;
+   scalarButton = NULL;
 ////@end DataSetLoaderUI member initialisation
 
 ////@begin DataSetLoaderUI creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
-    wxDialog::Create( parent, id, caption, pos, size, style );
+   SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+   wxDialog::Create( parent, id, caption, pos, size, style );
 
-    CreateControls();
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
-    Centre();
+   CreateControls();
+   GetSizer()->Fit(this);
+   GetSizer()->SetSizeHints(this);
+   Centre();
 ////@end DataSetLoaderUI creation
-    return true;
+   return true;
 }
 
 /*!
@@ -345,12 +350,42 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6
  */
 
-void DataSetLoaderUI::OnButton6Click( wxCommandEvent& event )
+void DataSetLoaderUI::OnButton6Click( wxCommandEvent& WXUNUSED(event) )
 {
    // Launch the transform UI
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6 in DataSetLoaderUI.
     // Before editing this code, remove the block markers.
-    event.Skip();
+   wxDialog transformDialog( this, 
+                              ::wxNewId(), 
+                              _("Transform Input Window"),
+                              wxDefaultPosition, 
+                              wxDefaultSize, 
+                              wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX );
+
+   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+   //wxBoxSizer* notebookSizer = new wxBoxSizer(wxVERTICAL);
+   //wxBoxSizer* bottomRow = new wxBoxSizer(wxHORIZONTAL);
+
+   if ( paramBlock )
+   {
+      mainSizer->Add( new VE_Conductor::GUI_Utilities::TransformUI( &transformDialog, _("Transform Input"), paramBlock->GetTransform() ), 
+                  -1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL );
+   }
+   else
+   {
+      mainSizer->Add( new VE_Conductor::GUI_Utilities::TransformUI( &transformDialog, _("Transform Input"), 0 ), 
+                  -1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL );
+   }
+
+   mainSizer->Add( transformDialog.CreateStdDialogButtonSizer( wxOK|wxCANCEL ), -1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL );
+   //set this flag and let wx handle alignment  
+   transformDialog.SetAutoLayout(true);
+
+   //assign the group to the panel              
+   transformDialog.SetSizer(mainSizer);
+   mainSizer->Fit( &transformDialog ); 
+   transformDialog.ShowModal();
+
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6 in DataSetLoaderUI. 
 }
 

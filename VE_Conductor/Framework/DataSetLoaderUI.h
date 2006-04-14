@@ -39,6 +39,11 @@
 class wxComboBox;
 class wxTextCtrl;
 class wxButton;
+
+namespace VE_XML
+{
+   class ParameterBlock;
+}
 ////@end forward declarations
 
 /*!
@@ -159,6 +164,7 @@ public:
 
    std::set< wxString > textureDirs;
 ////@end DataSetLoaderUI member variables
+   VE_XML::ParameterBlock* paramBlock;
 };
 
 #endif

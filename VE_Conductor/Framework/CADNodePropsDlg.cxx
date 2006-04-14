@@ -50,12 +50,14 @@
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
 #include <wx/choicdlg.h>
+#include <wx/intl.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
 #include "VE_Conductor/Framework/CADMaterialEditMenu.h"
 #include "VE_Conductor/Framework/CADOpacitySliderDlg.h"
+#include "VE_Conductor/Framework/TransformUI.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
@@ -163,7 +165,7 @@ wxPanel* CADNodePropertiesDlg::GetTransformPanel()
 {
    if(!_transformPanel)
    {
-      _buildTransformPanel();
+      _transformPanel = new TransformUI( this, _("CADNode Transform Properties"), _cadNode->GetTransform() );
    }
    return _transformPanel;
 }

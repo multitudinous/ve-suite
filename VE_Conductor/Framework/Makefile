@@ -49,7 +49,8 @@ SRCS=\
    UI_ModelData.cpp \
    spinctld.cpp\
    SoundsPane.cpp \
-   ViewLocPane.cxx
+   ViewLocPane.cxx\
+   TransformUI.cxx
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
