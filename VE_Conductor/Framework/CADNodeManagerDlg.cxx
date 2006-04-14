@@ -401,11 +401,13 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
 {
    wxFileDialog dialog(this,
-		       _T("Open file"), 
-		       _T(""), 
-		       _T(""),
-		       _T("VE-Geometry files (*.veg)|*.veg;"),
-		       wxOPEN); 
+            _T("Open file"), 
+            _T(""), 
+            _T(""),
+            _T("VE-Geometry files (*.veg)|*.veg;"),
+            wxOPEN|wxFILE_MUST_EXIST,//|wxCHANGE_DIR, 
+            wxDefaultPosition);
+
     if (dialog.ShowModal() == wxID_OK) {
        if ((!dialog.GetPath().IsEmpty()) 
            && wxFileExists(dialog.GetPath())) 

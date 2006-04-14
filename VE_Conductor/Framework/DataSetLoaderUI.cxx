@@ -36,6 +36,9 @@
 #include <wx/button.h>
 #include <wx/textctrl.h>
 #include <wx/combobox.h>
+#include <wx/filedlg.h>
+#include <wx/filename.h>
+#include <wx/msgdlg.h>
 ////@end includes
 
 #include "DataSetLoaderUI.h"
@@ -330,9 +333,42 @@ void DataSetLoaderUI::OnButton6Click( wxCommandEvent& event )
 
 void DataSetLoaderUI::OnButton2Click( wxCommandEvent& event )
 {
+   //Load data for the texturebased vis
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2 in DataSetLoaderUI.
     // Before editing this code, remove the block markers.
-    event.Skip();
+   wxString cwd( ::wxGetCwd() );
+   int answer = 0;
+   do
+   {
+      wxPoint pos(0,0);
+      wxFileDialog dialog(this,
+                           _T("Open file"), 
+                           _T(""), 
+                           _T(""),
+                           _T("VTK Texture Files (*.vti)|*.vti;"),
+                           wxOPEN|wxFILE_MUST_EXIST|wxCHANGE_DIR,
+                           wxDefaultPosition); 
+
+      if ( dialog.ShowModal() == wxID_OK ) 
+      {
+         if ( dialog.GetPath().Find(".vti") != -1 )
+         {
+            wxFileName textureDir( dialog.GetPath() );
+            textureDir.MakeRelativeTo( cwd, wxPATH_NATIVE );
+            wxString relativeTextureDirPath( textureDir.GetPath() );
+         }
+      }
+      wxMessageDialog promptDlg( this, 
+                        _("Are you done selecting texture files?"), 
+                        _("Texture Chooser"), 
+                        wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
+                        wxDefaultPosition);
+      answer = promptDlg.ShowModal();
+
+   }
+   while ( answer == wxID_NO );
+   wxFileName::SetCwd( cwd );
+   event.Skip();
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2 in DataSetLoaderUI. 
 }
 
