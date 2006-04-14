@@ -69,6 +69,8 @@ ParameterBlock::ParameterBlock( const ParameterBlock& input )
 {
    _dcs = new Transform( *input._dcs );
    _id = input._id;
+   paramName = input.paramName;
+
    for ( size_t i = 0; i < input._properties.size(); ++i )
    {
       _properties.push_back( new DataValuePair( *(input._properties.at(i)) ) );
@@ -83,6 +85,8 @@ ParameterBlock& ParameterBlock::operator=( const ParameterBlock& input)
       XMLObject::operator =(input);
       *_dcs = *input._dcs;
       _id = input._id;
+      paramName = input.paramName;
+
       for ( size_t i = 0; i < _properties.size(); ++i )
       {
          delete _properties.at(i);
@@ -177,7 +181,7 @@ VE_XML::Transform* ParameterBlock::GetTransform()
    return _dcs;
 }
 ///////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePair* ParameterBlock::GetProperty(std::string name)
+VE_XML::DataValuePair* ParameterBlock::GetProperty( std::string name )
 {
    size_t nProps = _properties.size();
    for ( size_t i = 0; i < nProps; i++)
@@ -187,12 +191,60 @@ VE_XML::DataValuePair* ParameterBlock::GetProperty(std::string name)
          return _properties.at(i);
       }
    }
+   /*
+   _properties.push_back( new DataValuePair() );
+   _properties.back()->SetDataName( name );
+   */
    return 0;
 }
 /////////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePair* ParameterBlock::GetProperty(unsigned int index)
+VE_XML::DataValuePair* ParameterBlock::GetProperty( int index )
 {
-   return _properties.at(index);
+   try
+   {
+      return _properties.at( index );
+   }
+   catch (...)
+   {
+      if ( index >= 0 )
+      {
+         std::cerr << "The element request is out of sequence."
+                     << " Please ask for a lower number point." << std::endl;
+         return 0;
+      }
+      else
+      {
+         _properties.push_back( new DataValuePair() );
+         return _properties.back();
+      }
+   }
 }
-
+/////////////////////////////////////////////////////////////////////////
+size_t ParameterBlock::GetNumberOfProperties( void )
+{
+   return _properties.size();
+}
+/////////////////////////////////////////////////////////////////////////
+void ParameterBlock::RemoveProperty( unsigned int index )
+{
+   std::vector< VE_XML::DataValuePair* >::iterator iter;
+   for ( iter = _properties.begin(); iter != _properties.end(); ++iter )
+   {
+      if ( _properties.at( index ) == (*iter) )
+      {
+         delete _properties.at( index );
+         _properties.erase( iter );
+      }
+   }
+}
+/////////////////////////////////////////////////////////////////////////
+void ParameterBlock::SetName( std::string name )
+{
+   paramName = name;
+}
+/////////////////////////////////////////////////////////////////////////
+std::string ParameterBlock::GetName( void )
+{
+   return paramName;
+}
 

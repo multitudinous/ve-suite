@@ -70,6 +70,9 @@ public:
    ///Set the identification number.
    ///\param id The number specifiying what type of data is in this parameter block.
    void SetId(unsigned int id);
+   ///Set the name of the parameter block.
+   ///\param name The name of the parameter block.
+   void SetName( std::string name );
 
    ///Optional. Set the Transform.
    ///\param transform The Transform information. Commonly used with CFD datasets and CAD information.
@@ -84,7 +87,9 @@ public:
    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
    
    ///Return the block ID.
-   unsigned int GetId();
+   unsigned int GetId( void );
+   ///Return the paramter block.
+   std::string GetName( void );
    ///Return the Transform.
    VE_XML::Transform* GetTransform();
    ///Return a DataValuePair based on a name.
@@ -92,7 +97,12 @@ public:
    VE_XML::DataValuePair* GetProperty(std::string name);
    ///Return the DataValuePair at the index.
    ///\param index The index of the DataValuePair.
-   VE_XML::DataValuePair* GetProperty(unsigned int index);
+   VE_XML::DataValuePair* GetProperty( int index );
+   ///Return the number DataValuePair's.
+   size_t GetNumberOfProperties( void );
+   ///Remove the DataValuePair at the index.
+   ///\param index The index of the DataValuePair.
+   void RemoveProperty( unsigned int index );
 
 
 protected:
@@ -102,6 +112,7 @@ protected:
    unsigned int _id;///<The block ID.
    VE_XML::Transform* _dcs;///<The optional Transform.
    std::vector<VE_XML::DataValuePair*> _properties;///<The DataValuePair list containing the block properties.
+   std::string paramName;
 };
 }
 #endif// _XML_VE_PARAMETER_BLOCK_H_

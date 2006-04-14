@@ -468,7 +468,7 @@ size_t Model::GetNumberOfOutputPorts( void )
    return outputPorts.size();
 }*/
 ////////////////////////////////////////////////////////////
-ParameterBlock* Model::GetInformationPacket( unsigned int i )
+ParameterBlock* Model::GetInformationPacket( int i )
 {
    try
    {
@@ -476,7 +476,7 @@ ParameterBlock* Model::GetInformationPacket( unsigned int i )
    }
    catch (...)
    {
-      if ( i > (informationPackets.size() + 1) )
+      if ( i >= 0 )
       {
          std::cerr << "The element request is out of sequence."
                      << " Please ask for a lower number point." << std::endl;
@@ -514,6 +514,19 @@ void Model::DeleteGeometry( void )
    {
       delete geometry;
       geometry = 0;
+   }
+}
+////////////////////////////////////////////////////////////
+void Model::RemoveInformationPacket( unsigned int i )
+{
+   std::vector< VE_XML::ParameterBlock* >::iterator iter;
+   for ( iter = informationPackets.begin(); iter != informationPackets.end(); ++iter )
+   {
+      if ( informationPackets.at( i ) == (*iter) )
+      {
+         delete informationPackets.at( i );
+         informationPackets.erase( iter );
+      }
    }
 }
 ///////////////////////////////////////

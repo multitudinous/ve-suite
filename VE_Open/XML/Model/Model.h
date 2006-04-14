@@ -134,11 +134,14 @@ public:
    size_t GetNumberOfOutputPorts( void );*/
    ///Get the i'th information packet for a model.
    ///\param i The i'th packet you are after.
-   VE_XML::ParameterBlock* GetInformationPacket( unsigned int i );
+   VE_XML::ParameterBlock* GetInformationPacket( int i );
    ///Get info packets data
    size_t GetNumberOfInformationPackets( void );
    ///Get the geometry for the model.
    VE_CAD::CADNode* GetGeometry( void );
+   ///Remove the i'th information packet for a model.
+   ///\param i The i'th packet you are after.
+   void RemoveInformationPacket( unsigned int i );
    ///Add a geometry node and return it
    /// if there is already geometry then the function will return that pointer
    VE_CAD::CADNode* Model::AddGeometry( void );
