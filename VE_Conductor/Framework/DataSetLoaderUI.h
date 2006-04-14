@@ -27,6 +27,8 @@
 #include <wx/gdicmn.h>
 #include <wx/dialog.h>
 #include <wx/intl.h>
+
+#include <set>
 ////@end includes
 
 /*!
@@ -154,6 +156,8 @@ public:
     wxButton* surfaceDataOpenButton;
     wxButton* transformButton;
     wxButton* scalarButton;
+
+   std::set< wxString > textureDirs;
 ////@end DataSetLoaderUI member variables
 };
 

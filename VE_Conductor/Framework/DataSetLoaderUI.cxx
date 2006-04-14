@@ -351,12 +351,10 @@ void DataSetLoaderUI::OnButton2Click( wxCommandEvent& event )
 
       if ( dialog.ShowModal() == wxID_OK ) 
       {
-         if ( dialog.GetPath().Find(".vti") != -1 )
-         {
-            wxFileName textureDir( dialog.GetPath() );
-            textureDir.MakeRelativeTo( cwd, wxPATH_NATIVE );
-            wxString relativeTextureDirPath( textureDir.GetPath() );
-         }
+         wxFileName textureDir( dialog.GetPath() );
+         textureDir.MakeRelativeTo( cwd, wxPATH_NATIVE );
+         wxString relativeTextureDirPath( textureDir.GetPath() );
+         textureDirs.insert( relativeTextureDirPath );
       }
       wxMessageDialog promptDlg( this, 
                         _("Are you done selecting texture files?"), 
@@ -364,7 +362,6 @@ void DataSetLoaderUI::OnButton2Click( wxCommandEvent& event )
                         wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
                         wxDefaultPosition);
       answer = promptDlg.ShowModal();
-
    }
    while ( answer == wxID_NO );
    wxFileName::SetCwd( cwd );
