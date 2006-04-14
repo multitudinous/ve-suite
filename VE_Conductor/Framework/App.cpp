@@ -33,44 +33,56 @@
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/package.h"
 
+#include <wx/dirdlg.h>
+#include <wx/intl.h>
+#include <wx/filename.h>
+
 IMPLEMENT_APP(REIApp);
 
 bool REIApp::OnInit()
 {
-
-  try
-    {
+   try
+   {
       XMLPlatformUtils::Initialize();
-    }
-  
-  catch(const XMLException &toCatch)
-    {
+   }
+   catch(const XMLException &toCatch)
+   {
       std::cerr << "Error during Xerces-c Initialization.\n"
-				<< "  Exception message:"
-				<< XMLString::transcode(toCatch.getMessage()) << std::endl;
+            << "  Exception message:"
+            << XMLString::transcode(toCatch.getMessage()) << std::endl;
       return 1;
-    }
+   }
 
 
-  SetAppName("VE-Conductor");
-  // this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
-  mainFrame= new AppFrame(NULL, 1023, "VE-Conductor");
- 
-  // Problem with generic wxNotebook implementation whereby it doesn't size
-  // properly unless you set the size again
+   SetAppName("VE-Conductor");
+   // this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+   mainFrame= new AppFrame(NULL, 1023, "VE-Conductor");
 
-#if defined(__WIN16__) || defined(__WXMOTIF__)
+   // Problem with generic wxNotebook implementation whereby it doesn't size
+   // properly unless you set the size again
+
+   #if defined(__WIN16__) || defined(__WXMOTIF__)
    int width, height;
-	mainFrame->GetSize(& width, & height);
-	mainFrame->SetSize(-1, -1, width, height);
-#endif
-  
+   mainFrame->GetSize(& width, & height);
+   mainFrame->SetSize(-1, -1, width, height);
+   #endif
 
-   
+   // Allow the user to setup a demo workign dir if they desire
+   wxDirDialog cwdChooser( NULL, 
+                  _("Choose your working directory."), 
+                  ::wxGetCwd(), 
+                  wxDD_DEFAULT_STYLE, 
+                  wxDefaultPosition, 
+                  wxDefaultSize);
+   if ( cwdChooser.ShowModal() == wxID_OK )
+   {
+      wxFileName::SetCwd( cwdChooser.GetPath() );
+   }
+
+   // Now launch the main ui
    mainFrame->Show(true);
    SetTopWindow(mainFrame);
    return true;
-
 }
 
 int REIApp::OnExit()

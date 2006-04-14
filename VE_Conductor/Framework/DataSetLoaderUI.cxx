@@ -60,7 +60,7 @@ BEGIN_EVENT_TABLE( DataSetLoaderUI, wxDialog )
 
 ////@begin DataSetLoaderUI event table entries
    EVT_BUTTON( ID_BUTTON, DataSetLoaderUI::OnButtonClick )
-   EVT_BUTTON( ID_BUTTON3, DataSetLoaderUI::OnButton3Click )
+   EVT_BUTTON( ID_BUTTON3, DataSetLoaderUI::OnButton4Click )
    EVT_BUTTON( ID_BUTTON4, DataSetLoaderUI::OnButton4Click )
    EVT_BUTTON( ID_BUTTON6, DataSetLoaderUI::OnButton6Click )
    EVT_BUTTON( ID_BUTTON2, DataSetLoaderUI::OnButton2Click )
@@ -284,24 +284,28 @@ wxIcon DataSetLoaderUI::GetIconResource( const wxString& name )
 
 void DataSetLoaderUI::OnButtonClick( wxCommandEvent& event )
 {
+   //Load a vtk file
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI.
     // Before editing this code, remove the block markers.
+   wxPoint pos(0,0);
+   wxFileDialog dialog(this,
+                        _T("Open file"), 
+                        _T(""), 
+                        _T(""),
+                        _T("VTK DataSet Files (*.vtk)|*.vtk;|VTK XML Unstructured Files (*.vtu)|*.vtu;|VTK XML Structured Files (*.vts)|*.vts;|VTK XML Image Files (*.vti)|*.vti;"),
+                        wxOPEN|wxFILE_MUST_EXIST,
+                        wxDefaultPosition); 
+
+   if ( dialog.ShowModal() == wxID_OK ) 
+   {
+      wxFileName datasetFilename( dialog.GetPath() );
+      datasetFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+      wxString relativeDataSetPath( datasetFilename.GetFullPath() );
+   }
     event.Skip();
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI. 
 }
 
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON3
- */
-
-void DataSetLoaderUI::OnButton3Click( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON3 in DataSetLoaderUI.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON3 in DataSetLoaderUI. 
-}
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4
@@ -309,9 +313,31 @@ void DataSetLoaderUI::OnButton3Click( wxCommandEvent& event )
 
 void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
 {
+   //Launch the surface data dir 
+   //Launch the precomputed data dir 
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4 in DataSetLoaderUI.
-    // Before editing this code, remove the block markers.
-    event.Skip();
+   wxPoint pos(0,0);
+   wxFileDialog dialog(this,
+                        _T("Open file"), 
+                        _T(""), 
+                        _T(""),
+                        _T("VTK Surface Files (*.vtk;*.vtp)|*.vtk;*.vtp;"),
+                        wxOPEN|wxFILE_MUST_EXIST,
+                        wxDefaultPosition); 
+
+   if ( dialog.ShowModal() == wxID_OK ) 
+   {
+      wxFileName surfaceDir( dialog.GetPath() );
+      surfaceDir.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+      if ( event.GetId() == ID_BUTTON4 )
+      {
+         wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
+      }
+      else if ( event.GetId() == ID_BUTTON3 )
+      {
+         wxString relativePrecomputedDirPath( surfaceDir.GetPath() );
+      }
+   }
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4 in DataSetLoaderUI. 
 }
 
@@ -321,6 +347,7 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
 
 void DataSetLoaderUI::OnButton6Click( wxCommandEvent& event )
 {
+   // Launch the transform UI
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6 in DataSetLoaderUI.
     // Before editing this code, remove the block markers.
     event.Skip();
