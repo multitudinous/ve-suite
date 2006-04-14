@@ -36,7 +36,7 @@
 /*!\file CADTreeBuilder.h
   CADTreeBuilder API
   */
-/*!\class VE_CAD::CADTreeBuilder
+/*!\class VE_Conductor::GUI_Utilities::CADTreeBuilder
  * Class for creating wxTreeCtrl and wxTreeItem from VE_CAD::CADNode.
  */
 #include <wx/treectrl.h>

@@ -31,26 +31,53 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/DualSlider.h"
 #include <wx/slider.h>
+#include <iostream>
+#include <cmath>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
 using namespace VE_Conductor::GUI_Utilities;
-////////////////////////
-DualSlider::DualSlider()
-:wxControl()
-{
-   _buffer = 1;
-   _minSlider = 0;
-   _maxSlider = 0;
-   _range[0] = 0;
-   _range[1] = 100;
-}
+BEGIN_EVENT_TABLE(DualSlider,wxPanel)
+   EVT_COMMAND_SCROLL(MIN_SLIDER,DualSlider::_onSlider)
+   EVT_COMMAND_SCROLL(MAX_SLIDER,DualSlider::_onSlider)
+END_EVENT_TABLE()
 ////////////////////////////////////////////////////////
 DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
+                        unsigned int buffer,
                         int min, int max,
+                        int minSliderValue, int maxSliderValue,
                         const wxPoint& pos, 
                         const wxSize& size,
                         long style,
                         const wxString& name)
+:wxPanel(parent,id,pos,size,wxTAB_TRAVERSAL,name)
 {
-   Create(parent,id,min,max,pos,size,style,name);
+   wxBoxSizer* dualSliderPanelSizer = new wxBoxSizer(wxVERTICAL);
+   wxStaticBox* dualSliderGroup = new wxStaticBox(this, -1, name);
+   wxStaticBoxSizer* dualSliderSizer = new wxStaticBoxSizer(dualSliderGroup, wxVERTICAL);
+
+   _buffer = buffer;
+   _range[0] = min;
+   _range[1] = max;
+
+   if(abs(_range[1] - _range[0]) < _buffer)
+   {
+      std::cout<<"ERROR!!"<<std::endl;
+      std::cout<<"Range: "<<_range[1]<<"-"<<_range[0]<<"="<<abs(_range[1]-_range[0])<<std::endl;
+      std::cout<<"DualSlider buffer: "<<_buffer<<std::endl;
+   }
+
+   _minSlider = new wxSlider(this, MIN_SLIDER, minSliderValue ,_range[0], _range[1], wxDefaultPosition,
+                             wxDefaultSize, style, wxDefaultValidator,"minSlider");
+
+   _maxSlider = new wxSlider(this, MAX_SLIDER, maxSliderValue ,_range[0], _range[1], wxDefaultPosition,
+                             wxDefaultSize, style, wxDefaultValidator,"maxSlider");
+   _ensureSliders(MIN_SLIDER);
+   dualSliderSizer->Add(_minSlider,1,wxALIGN_CENTER|wxEXPAND);
+   dualSliderSizer->Add(_maxSlider,1,wxALIGN_CENTER|wxEXPAND);
+
+   dualSliderPanelSizer->Add(dualSliderSizer,1,wxEXPAND|wxALIGN_CENTER);
+   SetAutoLayout(true);
+   SetSizer(dualSliderPanelSizer);
 }
 /////////////////////////
 DualSlider::~DualSlider()
@@ -66,44 +93,13 @@ DualSlider::~DualSlider()
       _maxSlider = 0;
    }
 }
-//////////////////////////////////////////////////////////////////////////
-bool DualSlider::Create(wxWindow* parent, wxWindowID id,
-                        int min,int max,
-                        const wxPoint& pos, const wxSize& size, long style,
-                        const wxString& name )
-{
-   if(!wxControl::Create(parent,id,pos,size,style|wxNO_BORDER,wxDefaultValidator,name))
-   {
-      return false; 
-   }
-   wxControl::SetLabel(name);
-   wxControl::SetBackgroundColour(parent->GetBackgroundColour());
-   wxControl::SetForegroundColour(parent->GetBackgroundColour());
-
-   int width = size.GetWidth(), height = size.GetHeight();
-
-   wxSize best_size( DoGetBestSize() );
-   if (width  == -1) width  = best_size.GetWidth();
-   if (height == -1) height = best_size.GetHeight();
-
-   _range[0] = min;
-   _range[1] = max;
-   _minSlider = new wxSlider(this,id,_range[0] ,_range[0], _range[1]-1, wxPoint(0,height/2),
-                             wxSize(-1,height/2), wxSL_HORIZONTAL, wxDefaultValidator,"minSlider");
-   _maxSlider = new wxSlider(this,id,_range[1] ,_range[0]+1, _range[1], wxPoint(0,0),
-                             wxSize(-1,height/2), wxSL_HORIZONTAL, wxDefaultValidator,"maxSlider");
-
-   DoSetSize(pos.x,pos.y,width,height);
-   SetBestSize(wxSize(width,height));
-   return true;
-}
 //////////////////////////////////////////////////
 void DualSlider::SetSliderRange(int min, int max)
 {
    _range[0] = min;
    _range[1] = max;
-   _minSlider->SetRange(_range[0],_range[1]-1);
-   _maxSlider->SetRange(_range[0]+1,_range[1]);
+   _minSlider->SetRange(_range[0],_range[1]);
+   _maxSlider->SetRange(_range[0],_range[1]);
 }
 ///////////////////////////////////////////
 void DualSlider::SetSliderBuffer(int buffer)
@@ -137,4 +133,49 @@ int DualSlider::GetSliderMaximum()
 int DualSlider::GetSliderMinimum()
 {
    return _range[0];
+}
+///////////////////////////////////////////////////
+void DualSlider::_ensureSliders(int activeSliderID)
+{
+   int minValue = _minSlider->GetValue();
+   int maxValue = _maxSlider->GetValue();
+
+   //maintain the value on the min/max sliders.
+   if(minValue > maxValue - static_cast<int>(_buffer))
+   {
+      if(minValue == _range[1])
+      {
+         _minSlider->SetValue(_range[1] - _buffer);
+      }
+      else if(maxValue == _range[0])
+      {
+         _maxSlider->SetValue(_range[0] + _buffer);
+      }
+
+      if(activeSliderID == MIN_SLIDER)
+      {
+         _maxSlider->SetValue(_minSlider->GetValue() + _buffer);
+      }
+      else if(activeSliderID == MAX_SLIDER)
+      {
+         _minSlider->SetValue(_maxSlider->GetValue() - _buffer);
+      }
+   }
+}
+////////////////////////////////////////////////
+void DualSlider::_onSlider(wxScrollEvent& event)
+{
+   _ensureSliders(event.GetId());
+
+   wxSlider* activeSlider = 0;
+   if(event.GetId() == MIN_SLIDER)
+   {
+      activeSlider = _minSlider;
+   }
+   else if(event.GetId() == MAX_SLIDER)
+   {
+      activeSlider = _maxSlider;
+   }
+
+   //need to set up some user definable callbacks for each slider
 }

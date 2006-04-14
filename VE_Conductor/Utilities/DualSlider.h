@@ -41,28 +41,35 @@
  * EXCEPT that the min can never be higher than the max and the max
  * can never be lower than the min.
  */
-#include <wx/control.h>
+#include <wx/panel.h>
 #include <wx/slider.h>
 namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-class VE_CONDUCTOR_UTILS_EXPORTS DualSlider: public wxControl
+class VE_CONDUCTOR_UTILS_EXPORTS DualSlider: public wxPanel
 {
 public:
-   ///Constructor
-   DualSlider();
-
+   enum DUAL_SLIDER_IDS
+   {
+      MAX_SLIDER,
+      MIN_SLIDER
+   };
    ///Constructor
    ///\param parent The parent window.
    ///\param id wxWindowID number
+   ///\param buffer Minimum allowable distance between slider values.
    ///\param minValue Minimum value.
    ///\param maxValue Maximum value.
+   ///\param minSliderValue Initial Minimum Slider value.
+   ///\param maxSliderValue Initial Maximum Slider value.
    ///\param point Initial location of control
    ///\param size Initial size of control
    ///\param style Style for the sliders.
    DualSlider(wxWindow* parent, wxWindowID id,
+              unsigned int buffer,
               int minValue, int maxValue,
+              int minSliderValue, int maxSliderValue,
               const wxPoint& point = wxDefaultPosition,
               const wxSize& size = wxDefaultSize, long style = wxSL_HORIZONTAL,
               const wxString& name = "minMaxDualSlider" );
@@ -78,19 +85,6 @@ public:
    ///\param buffer The buffer value.
    void SetSliderBuffer(int buffer);
 
-   ///Create the DualSlider
-   ///\param parent The parent window.
-   ///\param id wxWindowID number
-   ///\param minValue Minimum value.
-   ///\param maxValue Maximum value.
-   ///\param point Initial location of control
-   ///\param size Initial size of control
-   ///\param style Style for the sliders.
-   bool Create(wxWindow* parent, wxWindowID id,
-               int min, int max,
-               const wxPoint& pos, const wxSize& size, long style,
-               const wxString& name);
-
    ///Get the slider buffer value
    int GetSliderBuffer();
 
@@ -105,10 +99,21 @@ public:
    ///Get the value of the maximum slider
    int GetMaxSliderValue();
 protected:
+   ///Handle events on the sliders
+   ///\param event wxScollEvent
+   void _onSlider(wxScrollEvent& event);
+
+   ///Ensure that sliders don't cross over.
+   ///\param activeSliderID The slider on the dial that's moving
+   void _ensureSliders(int activeSliderID);
+
    int _range[2];///<Slider value bounds.
    unsigned int _buffer;///<Set the minimum space between sliders
    wxSlider* _minSlider;///<Minimum slider.\m Displayed on the top of the pair
    wxSlider* _maxSlider;///<Maximum slider.\m Displayed on the bottom of the pair.
+
+  
+   DECLARE_EVENT_TABLE()
 };
 }
 }
