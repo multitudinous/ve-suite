@@ -43,6 +43,7 @@
  */
 #include <wx/panel.h>
 #include <wx/slider.h>
+#include <map>
 namespace VE_Conductor
 {
 namespace GUI_Utilities
@@ -52,6 +53,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS DualSlider: public wxPanel
 public:
    enum DUAL_SLIDER_IDS
    {
+      BOTH_SLIDERS,
       MAX_SLIDER,
       MIN_SLIDER
    };
@@ -98,6 +100,33 @@ public:
    int GetMinSliderValue();
    ///Get the value of the maximum slider
    int GetMaxSliderValue();
+
+   /*!\class DualSlider::SliderCallback
+    *Class that allows the user to do operations based on slider events 
+    */
+   class SliderCallback
+   {
+      public:
+        ///Constructor
+        SliderCallback(){}
+        ///Destructor
+        virtual ~SliderCallback(){}
+        ///Do operations based on slider movement 
+        virtual void SliderOperation()=0;
+      protected:
+   };
+
+   ///Set the callback for the maxSlider
+   ///\param minSCbk The callback for the min slider
+   void SetMinSliderCallback(SliderCallback* minSCbk);
+
+   ///Set the callback for the maxSlider
+   ///\param maxSCbk The callback for the max slider
+   void SetMaxSliderCallback(SliderCallback* maxSCbk);
+
+   ///Callback that allows user to react to both sliders moving
+   ///\param maxSCbk The callback for the max slider
+   void SetBothSliderUpdateCallback(SliderCallback* bothSCbk);
 protected:
    ///Handle events on the sliders
    ///\param event wxScollEvent
@@ -105,13 +134,14 @@ protected:
 
    ///Ensure that sliders don't cross over.
    ///\param activeSliderID The slider on the dial that's moving
-   void _ensureSliders(int activeSliderID);
+   bool _ensureSliders(int activeSliderID);
 
    int _range[2];///<Slider value bounds.
    unsigned int _buffer;///<Set the minimum space between sliders
    wxSlider* _minSlider;///<Minimum slider.\m Displayed on the top of the pair
    wxSlider* _maxSlider;///<Maximum slider.\m Displayed on the bottom of the pair.
 
+   std::map<int,SliderCallback*> _callbacks;///<Map for the slider callbacks.
   
    DECLARE_EVENT_TABLE()
 };

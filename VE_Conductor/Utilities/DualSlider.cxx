@@ -135,7 +135,7 @@ int DualSlider::GetSliderMinimum()
    return _range[0];
 }
 ///////////////////////////////////////////////////
-void DualSlider::_ensureSliders(int activeSliderID)
+bool DualSlider::_ensureSliders(int activeSliderID)
 {
    int minValue = _minSlider->GetValue();
    int maxValue = _maxSlider->GetValue();
@@ -155,27 +155,50 @@ void DualSlider::_ensureSliders(int activeSliderID)
       if(activeSliderID == MIN_SLIDER)
       {
          _maxSlider->SetValue(_minSlider->GetValue() + _buffer);
+         return true;
       }
       else if(activeSliderID == MAX_SLIDER)
       {
          _minSlider->SetValue(_maxSlider->GetValue() - _buffer);
+         return true;
       }
    }
+   return false;
+}
+//////////////////////////////////////////////////////////////////////
+void DualSlider::SetBothSliderUpdateCallback(SliderCallback* bothSCbk)
+{
+   _callbacks[BOTH_SLIDERS] = bothSCbk;
+}
+/////////////////////////////////////////////////////////////////////////
+void DualSlider::SetMinSliderCallback(DualSlider::SliderCallback* minCbk)
+{
+   _callbacks[MIN_SLIDER] = minCbk;
+}
+/////////////////////////////////////////////////////////////////////////
+void DualSlider::SetMaxSliderCallback(DualSlider::SliderCallback* maxCbk)
+{
+   _callbacks[MAX_SLIDER] = maxCbk;
 }
 ////////////////////////////////////////////////
 void DualSlider::_onSlider(wxScrollEvent& event)
 {
-   _ensureSliders(event.GetId());
-
-   wxSlider* activeSlider = 0;
-   if(event.GetId() == MIN_SLIDER)
-   {
-      activeSlider = _minSlider;
+   int callbackID = event.GetId();
+   if(_ensureSliders(callbackID))
+   { 
+      callbackID = BOTH_SLIDERS;
    }
-   else if(event.GetId() == MAX_SLIDER)
+   try
    {
-      activeSlider = _maxSlider;
+     std::map<int,DualSlider::SliderCallback*>::iterator activeCallback;
+      activeCallback = _callbacks.find(callbackID);
+      if(activeCallback != _callbacks.end())
+      {
+         activeCallback->second->SliderOperation();   
+      }
    }
-
-   //need to set up some user definable callbacks for each slider
+   catch(...)
+   {
+      std::cout<<"Callback not found: "<<callbackID<<std::endl;
+   }
 }
