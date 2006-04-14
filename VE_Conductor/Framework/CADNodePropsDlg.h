@@ -66,7 +66,6 @@ class CADNodePropertiesDlg : public wxDialog
 public:
    enum CAD_PROPERTY_IDS
    {
-      
       ACTIVE_ATTRIBUTE,///<The active attribute ID.
       ATTRIBUTE_PANEL_ID,///<The attribute panel ID.
       ATTRIBUTE_TYPE,///<The attribute type ID.

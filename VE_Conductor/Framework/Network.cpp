@@ -2458,7 +2458,9 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
          if ( CORBA::is_nil( xplorerPtr.in() ) )
             return;
       }*/
-      dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId() );
+      dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId(), 
+                  SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
+                  SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
    }
 
    //cadDialog->SetVjObsPtr( xplorerPtr.in() );

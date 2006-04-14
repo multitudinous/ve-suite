@@ -167,11 +167,11 @@ wxPanel* CADNodePropertiesDlg::GetTransformPanel()
    {
       if ( _cadNode )
       {
-         _transformPanel = new TransformUI( this, _("CADNode Transform Properties"), _cadNode->GetTransform() );
+         _transformPanel = new TransformUI( _propertyTabs, _("CADNode Transform Properties"), _cadNode->GetTransform() );
       }
       else
       {
-         _transformPanel = new TransformUI( this, _("CADNode Transform Properties"), 0 );
+         _transformPanel = new TransformUI( _propertyTabs, _("CADNode Transform Properties"), 0 );
       }
    }
    return _transformPanel;

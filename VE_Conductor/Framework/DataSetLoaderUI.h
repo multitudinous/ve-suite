@@ -44,6 +44,10 @@ namespace VE_XML
 {
    class ParameterBlock;
 }
+namespace VE_Model
+{
+   class Model;
+}
 ////@end forward declarations
 
 /*!
@@ -100,10 +104,22 @@ class DataSetLoaderUI: public wxDialog
 public:
     /// Constructors
     DataSetLoaderUI( );
-    DataSetLoaderUI( wxWindow* parent, wxWindowID id = SYMBOL_DATASETLOADERUI_IDNAME, const wxString& caption = SYMBOL_DATASETLOADERUI_TITLE, const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, long style = SYMBOL_DATASETLOADERUI_STYLE );
+    DataSetLoaderUI( wxWindow* parent, 
+                     wxWindowID id = SYMBOL_DATASETLOADERUI_IDNAME, 
+                     const wxString& caption = SYMBOL_DATASETLOADERUI_TITLE, 
+                     const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
+                     const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
+                     long style = SYMBOL_DATASETLOADERUI_STYLE, 
+                     VE_Model::Model* veModel = 0);
 
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_DATASETLOADERUI_IDNAME, const wxString& caption = SYMBOL_DATASETLOADERUI_TITLE, const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, long style = SYMBOL_DATASETLOADERUI_STYLE );
+    bool Create( wxWindow* parent, 
+                  wxWindowID id = SYMBOL_DATASETLOADERUI_IDNAME, 
+                  const wxString& caption = SYMBOL_DATASETLOADERUI_TITLE, 
+                  const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
+                  const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
+                  long style = SYMBOL_DATASETLOADERUI_STYLE, 
+                  VE_Model::Model* veModel = 0);
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -164,6 +180,7 @@ public:
 
    std::set< wxString > textureDirs;
 ////@end DataSetLoaderUI member variables
+   VE_Model::Model* veModel;
    VE_XML::ParameterBlock* paramBlock;
 };
 
