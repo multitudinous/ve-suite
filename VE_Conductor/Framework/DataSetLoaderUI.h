@@ -39,6 +39,7 @@
 class wxComboBox;
 class wxTextCtrl;
 class wxButton;
+class wxListBox;
 
 namespace VE_XML
 {
@@ -153,6 +154,9 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_INFORMATION_PACKET_ADD_NAME
     void OnInformationPacketChangeName( wxCommandEvent& event );
 
+   ///Disable/enable the buttons
+   ///\ param flag Bool to control the ui.
+   void EnableUI( bool flag );
 ////@end DataSetLoaderUI event handler declarations
 
 ////@begin DataSetLoaderUI member function declarations
@@ -168,20 +172,28 @@ public:
     static bool ShowToolTips();
 
 ////@begin DataSetLoaderUI member variables
-    wxComboBox* dataSetList;
-    wxTextCtrl* dataSetTextEntry;
-    wxButton* dataSetOpenButton;
-    wxTextCtrl* preComputDirTextEntry;
-    wxButton* preComputeOpenButton;
-    wxTextCtrl* surfaceDataText;
-    wxButton* surfaceDataOpenButton;
-    wxButton* transformButton;
-    wxButton* scalarButton;
-
+   wxComboBox* dataSetList;
+   wxTextCtrl* dataSetTextEntry;
+   wxButton* dataSetOpenButton;
+   wxTextCtrl* preComputDirTextEntry;
+   wxButton* preComputeOpenButton;
+   wxTextCtrl* surfaceDataText;
+   wxButton* surfaceDataOpenButton;
+   wxButton* transformButton;
+   wxButton* scalarButton;
+   wxButton* itemButton22;
+   wxListBox* itemListBox24;
+   wxTextCtrl* itemTextCtrl21;  
+   wxStaticBox* itemStaticBoxSizer6Static;
+   wxStaticBox* itemStaticBoxSizer9Static;
+   wxStaticBox* itemStaticBoxSizer12Static;
+   wxStaticBox* itemStaticBoxSizer15Static;
+   wxStaticBox* itemStaticBoxSizer19Static;
    std::set< wxString > textureDirs;
 ////@end DataSetLoaderUI member variables
    VE_Model::Model* veModel;
    VE_XML::ParameterBlock* paramBlock;
+   int lastAddition;
 };
 
 #endif
