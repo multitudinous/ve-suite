@@ -129,6 +129,7 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
    GetSizer()->Fit(this);
    GetSizer()->SetSizeHints(this);
    Centre();
+   InitializeWidgets();
 ////@end DataSetLoaderUI creation
    return true;
 }
@@ -167,17 +168,22 @@ void DataSetLoaderUI::CreateControls()
     itemStaticBoxSizer4->Add(dataSetList, 0, wxALIGN_LEFT|wxALL, 5);
 
    ///////////////////////////////////////////////////////
-    itemStaticBoxSizer6Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("DataSet Filename"));
+    itemStaticBoxSizer6Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, 
+                                                _("DataSet Filename"));
     wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(itemStaticBoxSizer6Static, wxHORIZONTAL);
     itemStaticBoxSizer4->Add(itemStaticBoxSizer6, 0, wxALIGN_LEFT|wxALL, 5);
 
-    dataSetTextEntry = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL, _("Enter Filename Here"), wxDefaultPosition, wxSize(150, -1), wxTE_READONLY );
+    dataSetTextEntry = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL, 
+                                 _("Enter Filename Here"), wxDefaultPosition, 
+                                 wxSize(150, -1), wxTE_READONLY );
     dataSetTextEntry->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
         dataSetTextEntry->SetToolTip(_("Text Entry"));
     itemStaticBoxSizer6->Add(dataSetTextEntry, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    dataSetOpenButton = new wxButton( itemScrolledWindow3, ID_BUTTON, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
+    dataSetOpenButton = new wxButton( itemScrolledWindow3, ID_BUTTON, 
+                                       _("Open"), wxDefaultPosition, 
+                                       wxDefaultSize, 0 );
     dataSetOpenButton->SetHelpText(_("Load Data"));
     if (ShowToolTips())
         dataSetOpenButton->SetToolTip(_("Load Data"));
@@ -204,13 +210,17 @@ void DataSetLoaderUI::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer(itemStaticBoxSizer12Static, wxHORIZONTAL);
     itemStaticBoxSizer4->Add(itemStaticBoxSizer12, 0, wxALIGN_LEFT|wxALL, 5);
 
-    surfaceDataText = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL3, _("Enter Dir Here"), wxDefaultPosition, wxSize(150, -1), wxTE_READONLY );
+    surfaceDataText = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL3, 
+                                       _("Enter Dir Here"), wxDefaultPosition, 
+                                       wxSize(150, -1), wxTE_READONLY );
     surfaceDataText->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
         surfaceDataText->SetToolTip(_("Text Entry"));
     itemStaticBoxSizer12->Add(surfaceDataText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    surfaceDataOpenButton = new wxButton( itemScrolledWindow3, ID_BUTTON4, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
+    surfaceDataOpenButton = new wxButton( itemScrolledWindow3, ID_BUTTON4, 
+                                             _("Open"), wxDefaultPosition, 
+                                             wxDefaultSize, 0 );
     surfaceDataOpenButton->SetHelpText(_("Surface Data Dir"));
     if (ShowToolTips())
         surfaceDataOpenButton->SetToolTip(_("Surface Data Dir"));
@@ -244,7 +254,7 @@ void DataSetLoaderUI::CreateControls()
     wxBoxSizer* itemBoxSizer20 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer19->Add(itemBoxSizer20, 0, wxALIGN_LEFT, 5);
 
-    itemTextCtrl21 = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL1, _T(""), wxDefaultPosition, wxSize(150, -1), wxTE_READONLY );
+    itemTextCtrl21 = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL1, _T("Enter Dir Here-->"), wxDefaultPosition, wxSize(150, -1), wxTE_READONLY );
     itemBoxSizer20->Add(itemTextCtrl21, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemButton22 = new wxButton( itemScrolledWindow3, ID_BUTTON2, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -271,6 +281,60 @@ void DataSetLoaderUI::CreateControls()
     itemStdDialogButtonSizer25->Realize();
 
 ////@end DataSetLoaderUI content construction
+}
+///////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::InitializeWidgets( void )
+{
+   if ( veModel )
+   {
+      size_t numParamBlocks = veModel->GetNumberOfInformationPackets();
+
+      for ( size_t i = 0; i < numParamBlocks; ++i )
+      {
+         dataSetList->Append( veModel->GetInformationPacket( i )->GetName() );
+      }
+   }
+}
+///////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::SetTextCtrls( void )
+{
+   if ( paramBlock )
+   {
+      // clear the listbox before we enter the loop so that 
+      // we can add the appropriate entries if need be
+      itemListBox24->Clear();
+      dataSetTextEntry->SetValue( _("Enter Filename Here-->") );
+      surfaceDataText->SetValue( _("Enter Dir Here-->") );
+      preComputDirTextEntry->SetValue( _("Enter Dir Here-->") );
+      itemTextCtrl21->SetValue( _("Enter Dir Here-->") );
+
+      size_t numProperties = paramBlock->GetNumberOfProperties();
+      for ( size_t i = 0; i < numProperties; ++i )
+      {
+         VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( i );
+         if ( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
+         {
+            //clear...then append
+            itemListBox24->Append( tempDVP->GetDataString() );
+            itemTextCtrl21->SetValue( tempDVP->GetDataString() );
+         }
+         else if ( tempDVP->GetDataName() == "VTK_DATA_FILE" )
+         {
+            //clear...then append
+            dataSetTextEntry->SetValue( tempDVP->GetDataString() );
+         }
+         else if ( tempDVP->GetDataName() == "VTK_SURFACE_DIR_PATH" )
+         {
+            //clear...then append
+            surfaceDataText->SetValue( tempDVP->GetDataString() );
+         }
+         else if ( tempDVP->GetDataName() == "VTK_PRECOMPUTED_DIR_PATH" )
+         {
+            //clear...then append
+            preComputDirTextEntry->SetValue( tempDVP->GetDataString() );
+         }
+      }
+   }
 }
 
 /*!
@@ -332,6 +396,10 @@ void DataSetLoaderUI::OnButtonClick( wxCommandEvent& WXUNUSED(event) )
       wxString relativeDataSetPath( wxString("./") + datasetFilename.GetFullPath() );
       dataSetTextEntry->SetValue( relativeDataSetPath );
       VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_DATA_FILE" );
+      if ( !tempDVP )
+      {
+         tempDVP = paramBlock->GetProperty( -1 );
+      }
       tempDVP->SetData( "VTK_DATA_FILE", relativeDataSetPath.c_str() );
    }
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI. 
@@ -365,6 +433,10 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
          wxString relativeSurfaceDirPath( wxString("./") + surfaceDir.GetPath() );
          surfaceDataText->SetValue( relativeSurfaceDirPath );
          VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
+         if ( !tempDVP )
+         {
+            tempDVP = paramBlock->GetProperty( -1 );
+         }
          tempDVP->SetData( "VTK_SURFACE_DIR_PATH", relativeSurfaceDirPath.c_str() );
       }
       else if ( event.GetId() == ID_BUTTON3 )
@@ -372,7 +444,12 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
          wxString relativePrecomputedDirPath( wxString("./") + surfaceDir.GetPath() );
          preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
          VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" );
+         if ( !tempDVP )
+         {
+            tempDVP = paramBlock->GetProperty( -1 );
+         }
          tempDVP->SetData( "VTK_PRECOMPUTED_DIR_PATH", relativePrecomputedDirPath.c_str() );
+         preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
       }
    }
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4 in DataSetLoaderUI. 
@@ -492,7 +569,7 @@ void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& WXUNUSED(event) )
       {
          paramBlock->RemoveProperty( i );
          itemListBox24->Delete( itemListBox24->GetSelection() );
-         break;
+         return;
       }
    }
 ////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX in DataSetLoaderUI. 
@@ -531,6 +608,7 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& event )
       {
          paramBlock = veModel->GetInformationPacket( i );
          EnableUI( true );
+         SetTextCtrls();
          break;
       }
    }

@@ -227,6 +227,11 @@ size_t ParameterBlock::GetNumberOfProperties( void )
 /////////////////////////////////////////////////////////////////////////
 void ParameterBlock::RemoveProperty( unsigned int index )
 {
+   if ( index >= _properties.size() )
+   {
+      return;
+   }
+
    std::vector< VE_XML::DataValuePair* >::iterator iter;
    for ( iter = _properties.begin(); iter != _properties.end(); ++iter )
    {
@@ -234,6 +239,7 @@ void ParameterBlock::RemoveProperty( unsigned int index )
       {
          delete _properties.at( index );
          _properties.erase( iter );
+         break;
       }
    }
 }

@@ -155,8 +155,13 @@ public:
     void OnInformationPacketChangeName( wxCommandEvent& event );
 
    ///Disable/enable the buttons
-   ///\ param flag Bool to control the ui.
+   ///\param flag Bool to control the ui.
    void EnableUI( bool flag );
+   ///Initialize widgets
+   void InitializeWidgets( void );
+   ///Set the text controls when the text is modified
+   void SetTextCtrls( void );
+   
 ////@end DataSetLoaderUI event handler declarations
 
 ////@begin DataSetLoaderUI member function declarations
