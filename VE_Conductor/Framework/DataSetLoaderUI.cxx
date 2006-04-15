@@ -174,7 +174,7 @@ void DataSetLoaderUI::CreateControls()
     itemStaticBoxSizer4->Add(itemStaticBoxSizer6, 0, wxALIGN_LEFT|wxALL, 5);
 
     dataSetTextEntry = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL, 
-                                 _("Enter Filename Here"), wxDefaultPosition, 
+                                 _("Enter Filename Here-->"), wxDefaultPosition, 
                                  wxSize(150, -1), wxTE_READONLY );
     dataSetTextEntry->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
@@ -194,7 +194,7 @@ void DataSetLoaderUI::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer9 = new wxStaticBoxSizer(itemStaticBoxSizer9Static, wxHORIZONTAL);
     itemStaticBoxSizer4->Add(itemStaticBoxSizer9, 0, wxALIGN_LEFT|wxALL, 5);
 
-    preComputDirTextEntry = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL2, _("Enter Dir Here"), wxDefaultPosition, wxSize(150, -1), wxTE_READONLY );
+    preComputDirTextEntry = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL2, _("Enter Dir Here-->"), wxDefaultPosition, wxSize(150, -1), wxTE_READONLY );
     preComputDirTextEntry->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
         preComputDirTextEntry->SetToolTip(_("Text Entry"));
@@ -211,7 +211,7 @@ void DataSetLoaderUI::CreateControls()
     itemStaticBoxSizer4->Add(itemStaticBoxSizer12, 0, wxALIGN_LEFT|wxALL, 5);
 
     surfaceDataText = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL3, 
-                                       _("Enter Dir Here"), wxDefaultPosition, 
+                                       _("Enter Dir Here-->"), wxDefaultPosition, 
                                        wxSize(150, -1), wxTE_READONLY );
     surfaceDataText->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
@@ -625,6 +625,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& event )
       dataSetList->SetString( selection, dataSetList->GetValue() );
       paramBlock = veModel->GetInformationPacket( -1 );
       paramBlock->SetName( dataSetList->GetValue().c_str() );
+      paramBlock->SetId( ::wxNewId() );
       EnableUI( true );
       lastAddition = -1;
       //std::cout <<"OnInformationPacketAdd " <<  paramBlock->GetName() << std::endl;

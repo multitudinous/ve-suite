@@ -86,6 +86,7 @@
          <xs:extension base="veXMLObject">
             <xs:sequence>
                <xs:element name="blockID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" />
+               <xs:element name="blockName" type="xs:string" />
                <xs:element name="transform" type="veTransform" minOccurs="0" maxOccurs="1" />
                <xs:element name="properties" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>

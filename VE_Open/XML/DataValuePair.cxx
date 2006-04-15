@@ -184,22 +184,22 @@ void DataValuePair::SetDataValue( double data )
 ////////////////////////////////////////////////////////////////////////////////
 void DataValuePair::SetData(std::string dataName,VE_XML::XMLObject* vexmlObject)
 {
-   _dataName = dataName;
-
-   if ( _dataType != std::string("XMLOBJECT") )
+   if ( vexmlObject )
    {
-      std::cout<<"Invalid type passed into DataValuePair::SetDataTransform"<<std::endl;
-      return;
-   }
-   if(_veXMLObject)
-   {
-      delete _veXMLObject;
-      _veXMLObject = 0;
-   }
-
-   if(vexmlObject)
-   {
+      if ( _veXMLObject )
+      {
+         delete _veXMLObject;
+         _veXMLObject = 0;
+      }
       _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy( vexmlObject );
+
+      _dataName = dataName;
+
+      SetDataType( std::string("XMLOBJECT") );
+   }
+   else
+   {
+      std::cout<<"Invalid type passed into DataValuePair::SetData(std::string dataName,VE_XML::XMLObject* vexmlObject)"<<std::endl;
    }
 }
 ///////////////////////////////////////

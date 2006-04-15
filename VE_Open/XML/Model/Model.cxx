@@ -117,7 +117,11 @@ Model::Model( const Model& input )
       informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
    }
 
-   geometry = new CADAssembly( *(input.geometry) );
+   geometry = 0;
+   if ( input.geometry )
+   {
+      geometry = new CADAssembly( *(input.geometry) );
+   }
 }
 /////////////////////////////////////////////////////
 Model& Model::operator=( const Model& input)
@@ -176,7 +180,14 @@ Model& Model::operator=( const Model& input)
          informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
       }
 
-      *geometry = *(input.geometry);
+      if ( input.geometry )
+      {
+         if ( !geometry )
+         {
+            geometry = new CADAssembly();
+         }
+         *geometry = *(input.geometry);
+      }
    }
    return *this;
 }

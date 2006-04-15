@@ -44,7 +44,7 @@ ParameterBlock::ParameterBlock(unsigned int id)
 {
    _id = id;
    _dcs = new Transform();
-   
+   SetName("NULL");
    SetObjectType("ParameterBlock");
 }
 /////////////////////////////////////
@@ -143,6 +143,9 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
       //Get the block id
       dataValueStringName = GetSubElement( currentElement, "blockID", 0 );
       _id = ExtractIntegerDataNumberFromSimpleElement( dataValueStringName );
+      //Get the block name
+      dataValueStringName = GetSubElement( currentElement, "blockName", 0 );
+      paramName = ExtractDataStringFromSimpleElement( dataValueStringName );
       //Get the properties
       for ( size_t i = 0; i < _properties.size(); ++i )
       {
@@ -164,6 +167,7 @@ void ParameterBlock::_updateVEElement( std::string input )
 {
    //Add code here to update the specific sub elements
    SetSubElement( "blockID", _id );
+   SetSubElement( "blockName", paramName );
    SetSubElement( "transform", _dcs );
    for ( size_t i = 0; i < _properties.size(); ++i )
    {

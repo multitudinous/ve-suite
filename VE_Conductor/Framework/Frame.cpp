@@ -562,16 +562,17 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 {
    wxFileDialog dialog
-   (
-      this,
-      _T("Open File dialog"),
-      directory,
-      fname,
-      _T("Network files (*.nt)|*.nt")
-   );
+                  (
+                     this,
+                     _T("Open File dialog"),
+                     directory,
+                     fname,
+                     _T("Network files (*.nt)|*.nt"),
+                     wxOPEN|wxFILE_MUST_EXIST
+                  );
 
-   if (directory=="")
-      dialog.SetDirectory(wxGetHomeDir());
+   //if ( directory=="" )
+   //   dialog.SetDirectory(wxGetHomeDir());
 
    if (dialog.ShowModal() == wxID_OK)
    {
