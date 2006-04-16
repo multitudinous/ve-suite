@@ -69,6 +69,7 @@
 #include "VE_Xplorer/ActiveModelEventHandler.h"
 #include "VE_Xplorer/MaterialUpdateEH.h"
 #include "VE_Xplorer/MaterialModeUpdateEH.h"
+#include "VE_Xplorer/AddVTKDataSetEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -119,15 +120,16 @@ cfdModelHandler::cfdModelHandler( void )
    tbased = false;
    _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
    
-   _eventHandlers[std::string("CAD_ADD_NODE")] = new VE_EVENTS::CADAddNodeEventHandler();
-   _eventHandlers[std::string("CAD_DELETE_NODE")] = new VE_EVENTS::CADDeleteNodeEventHandler();
-   _eventHandlers[std::string("CAD_ADD_ATTRIBUTE_TO_NODE")] = new VE_EVENTS::CADAddAttributeEventHandler();
-   _eventHandlers[std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE")] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
-   _eventHandlers[std::string("CAD_SET_NODE_NAME")] = new VE_EVENTS::CADSetNameEventHandler();
-   _eventHandlers[std::string("CAD_TOGGLE_NODE")] = new VE_EVENTS::CADToggleEventHandler();
-   _eventHandlers[std::string("CHANGE_ACTIVE_MODEL")] = new VE_EVENTS::ActiveModelEventHandler();
-   _eventHandlers[std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE")] = new VE_EVENTS::MaterialUpdateEventHandler();
-   _eventHandlers[std::string("CAD_ATTRIBUTE_MATERIAL_MODE")] = new VE_EVENTS::MaterialModeUpdateEventHandler();
+   _eventHandlers[ std::string("CAD_ADD_NODE") ] = new VE_EVENTS::CADAddNodeEventHandler();
+   _eventHandlers[ std::string("CAD_DELETE_NODE") ] = new VE_EVENTS::CADDeleteNodeEventHandler();
+   _eventHandlers[ std::string("CAD_ADD_ATTRIBUTE_TO_NODE") ] = new VE_EVENTS::CADAddAttributeEventHandler();
+   _eventHandlers[ std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE") ] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
+   _eventHandlers[ std::string("CAD_SET_NODE_NAME") ] = new VE_EVENTS::CADSetNameEventHandler();
+   _eventHandlers[ std::string("CAD_TOGGLE_NODE") ] = new VE_EVENTS::CADToggleEventHandler();
+   _eventHandlers[ std::string("CHANGE_ACTIVE_MODEL") ] = new VE_EVENTS::ActiveModelEventHandler();
+   _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE") ] = new VE_EVENTS::MaterialUpdateEventHandler();
+   _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_MODE") ] = new VE_EVENTS::MaterialModeUpdateEventHandler();
+   _eventHandlers[ std::string("UPDATE_MODEL_DATASETS") ] = new VE_EVENTS::AddVTKDataSetEventHandler();
    
 #ifdef _OSG
 #ifdef VE_PATENTED

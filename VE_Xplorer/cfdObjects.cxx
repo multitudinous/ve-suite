@@ -180,42 +180,11 @@ cfdDataSet* cfdObjects::GetActiveDataSet()
    return activeDataSet;
 }
 
-void cfdObjects::SetActiveDataSet( cfdDataSet * dataset )
+void cfdObjects::SetActiveDataSet( cfdDataSet* dataset )
 {
-   vprDEBUG(vesDBG, 1) 
+   /*vprDEBUG(vesDBG, 4) 
       << "cfdObjects::SetActiveDataSet: " << dataset
-      << std::endl << vprDEBUG_FLUSH;
+      << std::endl << vprDEBUG_FLUSH;*/
 
    activeDataSet = dataset;
 }
-
-/////////////////// STATIC member functions follow ///////////////////
-
-
-/*float cfdObjects::vectorScale = 0.0;
-int   cfdObjects::particleOption = 0;
-float cfdObjects::particleScale = 0.0;
-
-
-
-// used by cfdPolydata for setting the type and size of particles
-void cfdObjects::SetParticleOption( int option )
-{
-   particleOption = option;
-}
-
-int cfdObjects::GetParticleOption()
-{
-   return particleOption;
-}
-
-void cfdObjects::SetParticleScale( float x )
-{
-   particleScale = x;
-}
-
-float cfdObjects::GetParticleScale()
-{
-   return particleScale;
-}
-*/

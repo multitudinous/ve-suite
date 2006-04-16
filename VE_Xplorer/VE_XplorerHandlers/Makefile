@@ -105,6 +105,7 @@ SRCS=\
    cfdWriteTraverser.cxx \
    cfdObjectHandler.cxx \
    ActiveModelEventHandler.cxx\
+   AddVTKDataSetEventHandler.cxx\
    AttributeEventHandler.cxx \
    CADEventHandler.cxx \
    CADDeleteNodeEH.cxx \

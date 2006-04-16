@@ -139,13 +139,14 @@ void cfdPresetContour::Update( void )
    }
    
    vtkActor* temp = vtkActor::New();
-   temp->SetMapper( this->mapper );
+temp->DebugOn();
+temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
    //geodes.push_back( new VE_SceneGraph::cfdGeode() );
    //geodes.back()->TranslateTocfdGeode( temp );
    //temp->Delete();
    //this->updateFlag = true;
-
+temp->Print( std::cout );
    try
    {
       VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
@@ -221,6 +222,5 @@ void cfdPresetContour::CreatePlane( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-
 }
 

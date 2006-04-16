@@ -1542,9 +1542,7 @@ void cfdDataSet::StoreScalarInfo()
                               this->GetParent()->GetActualScalarRange( ii ),
                               this->displayedScalarRange[ ii ] );
 
-         vprDEBUG(vesDBG
-
-,1) << "\tarray(" << i << "), scalarName[" 
+         vprDEBUG(vesDBG,1) << "|\tarray(" << i << "), scalarName[" 
             << ii << "] = \"" << this->scalarName[ ii ] 
             << "\", displayedScalarRange = "
             << this->displayedScalarRange[ ii ][ 0 ] << " : "
