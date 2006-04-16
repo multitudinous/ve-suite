@@ -43,7 +43,11 @@
 #elif _OPENSG
 #endif
 
+#include <vtkPolyData.h>
 #include <vtkActor.h>
+#include <vtkMapper.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkDataSet.h>
 
 #include <iostream>
 #include "VE_Xplorer/cfdDebug.h"
@@ -160,7 +164,7 @@ void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
 #ifdef _PERFORMER
    VE_SceneGraph::vtkActorToPF( actor, this->_geode, _vtkDebugLevel );
 #elif _OSG
-   VE_SceneGraph::vtkActorToOSG(actor,_geode.get(),_vtkDebugLevel);
+   VE_SceneGraph::vtkActorToOSG(actor, _geode,_vtkDebugLevel);
 #elif _OPENSG
 #endif
 }

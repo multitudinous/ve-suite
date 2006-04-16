@@ -56,7 +56,7 @@ namespace VE_Xplorer
       public:
          // Initialize the VTK objects and pipeline.
          cfdContour( );
-         ~cfdContour( );
+         virtual ~cfdContour( );
 
          // Update the position, x, and normal direction to cut.
          virtual void Update( void );

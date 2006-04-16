@@ -953,13 +953,13 @@ void AppFrame::ConExeServer( void )
       return;
 
    //have we already connected
-   wxSplashScreen* splash = 0;
+   /*wxSplashScreen* splash = 0;
    wxImage splashImage(ve_ce_banner_xpm);
    wxBitmap bitmap(splashImage);
    splash = new wxSplashScreen(bitmap,
             wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
             2500, this, -1, wxDefaultPosition, wxDefaultSize,
-            wxSIMPLE_BORDER|wxSTAY_ON_TOP);
+            wxSIMPLE_BORDER|wxSTAY_ON_TOP);*/
 
    //wxSafeYield();
    if ( pelog == NULL )
@@ -992,7 +992,7 @@ void AppFrame::ConExeServer( void )
    }
 
    ::wxMilliSleep( 2500 );
-   delete splash;
+   //delete splash;
 }
   
 void AppFrame::ConVEServer( void )
@@ -1011,12 +1011,12 @@ void AppFrame::ConVEServer( void )
       is_orb_init = init_orb_naming();
    }
 
-   wxImage splashImage(ve_xplorer_banner_xpm);
+   /*wxImage splashImage(ve_xplorer_banner_xpm);
    wxBitmap bitmap(splashImage);
    wxSplashScreen* splash = new wxSplashScreen(bitmap,
             wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
             2500, this, -1, wxDefaultPosition, wxDefaultSize,
-            wxSIMPLE_BORDER|wxSTAY_ON_TOP);
+            wxSIMPLE_BORDER|wxSTAY_ON_TOP);*/
    //wxSafeYield();
   
    try 
@@ -1047,7 +1047,7 @@ void AppFrame::ConVEServer( void )
    }
   
    ::wxMilliSleep( 2500 );
-   delete splash;
+   //delete splash;
 }
 
 bool AppFrame::init_orb_naming()

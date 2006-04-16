@@ -705,9 +705,9 @@ void cfdSteadyStateVizHandler::InitScene( void )
    // Initiate PIV data from INEL
    //
    std::cout << "| 42. Initializing.................................... Bitmap Image |" << std::endl;
-   this->image = new cfdImage( _param );
+   /*this->image = new cfdImage( _param );
    this->image->SetObjectType( IMAGE_EX );
-   this->dataList.push_back( this->image );     
+   this->dataList.push_back( this->image ); */    
    //
    // Initiate the Performer objects.
    //
@@ -785,7 +785,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             temp->SetGeodes( this->dataList[ i ]->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
             
-   VE_Xplorer::cfdRawNodeWriteTraverser cfdWT("test.osg");
+/*   VE_Xplorer::cfdRawNodeWriteTraverser cfdWT("test.osg");
 
    //set the graph
    cfdWT.setNode( this->dataList[ i ]->GetGeodes().at(0) );
@@ -795,7 +795,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 
    //write out the file
    cfdWT.writeFile();
-
+*/
             // search map for other object types with the same type as this one
             std::multimap< int, cfdGraphicsObject* >::iterator pos;
             for ( pos = graphicsObjects.lower_bound( this->dataList[ i ]->GetObjectType() ); 
@@ -853,16 +853,16 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    {
       vprDEBUG(vesDBG,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
                              << std::endl << vprDEBUG_FLUSH;
-      for ( int i = 0; i < (int)this->dataList.size(); i ++ )
+      for ( size_t i = 0; i < this->dataList.size(); i ++ )
       {          
-         if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == dataList[ i ]->GetObjectType() )
+         if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == dataList.at( i )->GetObjectType() )
          {
             vprDEBUG(vesDBG,1) << " setting viz object " << i 
                                    << " to _activeObject"
                                    << std::endl << vprDEBUG_FLUSH;
 
             //cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
-            this->_activeObject = this->dataList[ i ];
+            this->_activeObject = this->dataList.at( i );
             
             if ( this->_activeObject->GetObjectType() == IMAGE_EX )
             {

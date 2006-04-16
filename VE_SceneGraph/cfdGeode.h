@@ -67,13 +67,13 @@ namespace VE_SceneGraph{
 #endif
          void TurnOnDebugOutput(int onOff = 0){_vtkDebugLevel = onOff;}
          // This function implements the respective translate vtkActorToGeode
-         void TranslateTocfdGeode( vtkActor* );
+         void TranslateTocfdGeode( vtkActor* actor );
    protected:
          int _vtkDebugLevel;
 #ifdef _PERFORMER
          pfGeode* _geode;
 #elif _OSG
-         osg::ref_ptr<osg::Geode> _geode;
+         osg::ref_ptr< osg::Geode > _geode;
 #elif _OPENSG
 #endif
     };

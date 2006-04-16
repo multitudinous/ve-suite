@@ -10,6 +10,7 @@
 // workaround end
 
 #include "VE_SceneGraph/vtkActorToOSG.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 #ifdef VTK44
 #define VTK4
 typedef double vtkReal;
@@ -23,6 +24,8 @@ typedef float vtkReal;
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 #include <vtkCellData.h>
+#include <vtkMapper.h>
+#include <vtkPolyDataMapper.h>
 #endif
 
 #include <osg/Vec3>
@@ -44,12 +47,22 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::re
 
 	// if geode doesn't exist, then create a new one
 	if ( !geode.valid() )
-		geode = new osg::Geode();
-
+	{
+   	geode = new osg::Geode();
+      //std::cout << " creating a new geode in vtkactortoosg" << std::endl;
+   }
 	// get poly data
-	vtkPolyData *polyData = (vtkPolyData *) actor->GetMapper()->GetInput();
+	vtkPolyData* polyData = dynamic_cast< vtkPolyData* >( actor->GetMapper()->GetInput() );
 
-	// get primitive arrays
+   if ( verbose )
+   {
+      std::cout << polyData->GetNumberOfPolys() << std::endl;
+      std::cout << polyData->GetPolys()->GetNumberOfCells() << std::endl;
+      std::cout << polyData->GetNumberOfPolys() << std::endl;
+      std::cout << polyData->GetNumberOfCells() << std::endl;
+      std::cout << polyData->GetNumberOfPoints() << std::endl;
+	}
+   // get primitive arrays
 	osg::ref_ptr< osg::Geometry > points, lines, polys, strips;
 
 	// create new Geometry for the Geode
@@ -71,13 +84,23 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::re
 
 osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *primArray, int primType, int verbose) {
 
+   if (verbose) 
+   {
+      int numPts = primArray->GetNumberOfCells();
+      std::cerr << " " << numPts << " prim type " << primType;
+      std::cerr << "..." << std::endl;
+      std::cerr.flush();
+   }
+
 	// get polyData from vtkActor
 	vtkPolyData *polyData = (vtkPolyData *) actor->GetMapper()->GetInput();
 
 	int numPrimitives = primArray->GetNumberOfCells();
 	if (numPrimitives == 0) 
-		return NULL;
-
+	{
+   	std::cout << " no cells" << std::endl;
+      return NULL;
+   }
 	//Initialize the Geometry
 	osg::ref_ptr< osg::Geometry > geom = new osg::Geometry;
 

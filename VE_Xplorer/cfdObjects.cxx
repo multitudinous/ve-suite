@@ -59,6 +59,7 @@ cfdObjects::cfdObjects( void )
    this->pointSource = NULL;
    this->vtkToPFDebug = 0;
    this->usePreCalcData = false;
+   activeDataSet = 0;
    //this->actor = NULL;
    //this->PDactor = NULL;
    //this->addTransientGeode = 0;

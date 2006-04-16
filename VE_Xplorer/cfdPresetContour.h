@@ -57,7 +57,7 @@ namespace VE_Xplorer
          // (and set the number of cutting plane increments for blue menu)
          cfdPresetContour( const int xyz, const int numSteps = 10 );
 
-         ~cfdPresetContour();
+         virtual ~cfdPresetContour();
 
          virtual void Update( void );
          void CreatePlane( void );
@@ -68,7 +68,7 @@ namespace VE_Xplorer
          vtkCutter       * cutter;
 
          cfdCuttingPlane * cuttingPlane;
-         vtkPolyData     * polydata;
+         //vtkPolyData     * polydata;
    };
 }
 #endif

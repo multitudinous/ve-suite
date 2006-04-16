@@ -10,7 +10,6 @@
 #include <osg/ref_ptr>
 
 #include <vtkActor.h>
-#include <vtkPolyDataMapper.h>
 #include <vtkCellArray.h>
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_SceneGraph

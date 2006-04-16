@@ -230,7 +230,9 @@ void cfdDCS::SetTranslationArray( std::vector<double> array )
    for (unsigned int i = 0; i < 3; i++ )
    {
       this->_translation[ i ] = array[ i ];
+      //std::cout << this->_translation[ i ] << " ";
    }
+   //std::cout << std::endl;
 #ifdef _PERFORMER
 
    this->_dcs->setTrans( this->_translation[ 0 ],
@@ -252,7 +254,9 @@ void cfdDCS::SetRotationArray( std::vector<double> array)
    for (unsigned int i = 0; i < 3; i++ )
    {
       this->_rotation[ i ] = array[ i ];
+      //std::cout << this->_rotation[ i ] << " ";
    }
+   //std::cout << std::endl;
 #ifdef _PERFORMER
    this->_dcs->setRot(this->_rotation[ 0 ],
                     this->_rotation[ 1 ],
@@ -283,7 +287,9 @@ void cfdDCS::SetScaleArray( std::vector<double> array )
    for (unsigned int i = 0; i < 3; i++ )
    {
       this->_scale[ i ] = array[ i ];
+      //std::cout << this->_scale[ i ] << " ";
    }
+   //std::cout << std::endl;
 #ifdef _PERFORMER
    this->_dcs->setScale( this->_scale[ 0 ],
                            this->_scale[ 1 ],

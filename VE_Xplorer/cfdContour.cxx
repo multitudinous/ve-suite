@@ -53,6 +53,7 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 cfdContour::cfdContour()
+:cfdContourBase()
 {
    vprDEBUG(vesDBG,2) << "cfdContour constructor"
                           << std::endl << vprDEBUG_FLUSH;
@@ -96,7 +97,7 @@ cfdContour::cfdContour()
 
 #endif
 
-   this->filter->ExtentClippingOn();
+   //this->filter->ExtentClippingOn();
 }
 
 cfdContour::~cfdContour()

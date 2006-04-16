@@ -34,7 +34,11 @@
 #include "VE_Xplorer/cfdCuttingPlane.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 #include "VE_SceneGraph/cfdGeode.h"
+
+#include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
+
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
@@ -53,6 +57,7 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
+:cfdContourBase()
 {
    vprDEBUG(vesDBG, 1) << "cfdPresetContour::cfdPresetMomentum"
                            << std::endl << vprDEBUG_FLUSH;
@@ -61,7 +66,7 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
    cuttingPlane = 0;
    // set the cut function
    this->cutter = vtkCutter::New();
-   this->polydata = vtkPolyData::New();
+   //this->polydata = vtkPolyData::New();
 }
 
 cfdPresetContour::~cfdPresetContour()
@@ -72,8 +77,8 @@ cfdPresetContour::~cfdPresetContour()
    this->cutter->Delete();
    this->cutter = NULL;
 
-   this->polydata->Delete();
-   this->polydata = NULL;
+   //this->polydata->Delete();
+   //this->polydata = NULL;
 }
 
 void cfdPresetContour::Update( void )
@@ -139,14 +144,15 @@ void cfdPresetContour::Update( void )
    }
    
    vtkActor* temp = vtkActor::New();
-temp->DebugOn();
-temp->SetMapper( this->mapper );
+   temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
+//temp->GetMapper()->GetInput()->Print( std::cout );
+//temp->GetMapper()->Update();
    //geodes.push_back( new VE_SceneGraph::cfdGeode() );
    //geodes.back()->TranslateTocfdGeode( temp );
    //temp->Delete();
    //this->updateFlag = true;
-temp->Print( std::cout );
+
    try
    {
       VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
@@ -162,7 +168,7 @@ temp->Print( std::cout );
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdPresetContour" 
                            << std::endl << vprDEBUG_FLUSH;
    }
-   //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+
    temp->Delete();
 
    if ( cuttingPlane )
@@ -186,13 +192,12 @@ void cfdPresetContour::CreatePlane( void )
       this->cuttingPlane->SetBounds( 
                   this->GetActiveDataSet()->GetDataSet()->GetBounds() );
 
-
       this->cuttingPlane->Advance( this->requestedValue );
       this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
       this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       this->cutter->Update();
 
-      vtkPolyData * polydata = this->cutter->GetOutput();
+      vtkPolyData* polydata = this->cutter->GetOutput();
 
       if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
       {
@@ -215,7 +220,7 @@ void cfdPresetContour::CreatePlane( void )
             polydata = this->cutter->GetOutput();            
          }    
       }       
-//      this->SetMapperInput( this->cutter->GetOutput() );
+
       this->SetMapperInput( polydata );
 
       this->mapper->SetScalarRange( this->GetActiveDataSet()

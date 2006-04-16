@@ -67,13 +67,13 @@ public:
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
 
-   void SetMapperInput( vtkPolyData * );
+   void SetMapperInput( vtkPolyData* polydata );
 
    void SetFillType( const int );
 
 protected:
    vtkPolyDataMapper*   mapper;
-   vtkGeometryFilter*   filter;
+   //vtkGeometryFilter*   filter;
    vtkContourFilter*    cfilter;
    vtkBandedPolyDataContourFilter* bfilter;
    vtkDecimatePro*      deci;

@@ -54,12 +54,13 @@ using namespace VE_SceneGraph;
 
 // this class requires that the dataset has a scalar field.
 cfdContourBase::cfdContourBase()
+:cfdObjects()
 {
    vprDEBUG(vesDBG,2) << "cfdContourBase constructor"
                           << std::endl << vprDEBUG_FLUSH;
    this->deci = vtkDecimatePro::New();
    
-   this->filter = vtkGeometryFilter::New();
+   //this->filter = vtkGeometryFilter::New();
    this->cfilter = vtkContourFilter::New();              // for contourlines
    this->bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
    // turn clipping on to avoid unnecessary value generations with 
@@ -69,7 +70,7 @@ cfdContourBase::cfdContourBase()
    this->strip = vtkStripper::New();
 
    this->mapper = vtkPolyDataMapper::New();
-   this->mapper->SetInput( this->filter->GetOutput() );
+   //this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
    mapper->ImmediateModeRenderingOn();
    normals = vtkPolyDataNormals::New();
@@ -84,8 +85,8 @@ cfdContourBase::~cfdContourBase()
    vprDEBUG(vesDBG,2) << "cfdContourBase destructor"
                           << std::endl  << vprDEBUG_FLUSH;
 
-   this->filter->Delete();
-   this->filter = NULL;
+   //this->filter->Delete();
+   //this->filter = NULL;
    
    this->cfilter->Delete();
    this->cfilter = NULL;
@@ -112,26 +113,30 @@ cfdContourBase::~cfdContourBase()
 void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
 {
    this->tris->SetInput( polydata );
+   tris->Update();
    tris->GetOutput()->ReleaseDataFlagOn();
 
    // decimate points is used for lod control of contours
    this->deci->SetInput( tris->GetOutput() );
    this->deci->PreserveTopologyOn();
    this->deci->BoundaryVertexDeletionOff();
+   deci->Update();
    deci->GetOutput()->ReleaseDataFlagOn();
 
    this->strip->SetInput( this->deci->GetOutput() );
+   strip->Update();
    strip->GetOutput()->ReleaseDataFlagOn(); 
 
    if ( this->fillType == 0 )
    {
-      normals->SetInput( this->strip->GetOutput() );
+      normals->SetInput( strip->GetOutput() );
       normals->SetFeatureAngle( 130.0f );
-      normals->GetOutput()->ReleaseDataFlagOn(); 
+      //normals->GetOutput()->ReleaseDataFlagOn(); 
       normals->ComputePointNormalsOn();
       //normals->ComputeCellNormalsOn();
       normals->FlipNormalsOn();
-      this->mapper->SetInput( normals->GetOutput() );
+      normals->Update();
+      mapper->SetInput( normals->GetOutput() );
       mapper->ImmediateModeRenderingOn(); 
    }
    else if ( this->fillType == 1 )  // banded contours
@@ -147,7 +152,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       bfilter->GetOutput()->ReleaseDataFlagOn();
       normals->SetInput( bfilter->GetOutput() );
       normals->SetFeatureAngle( 130.0f );
-      normals->GetOutput()->ReleaseDataFlagOn(); 
+      //normals->GetOutput()->ReleaseDataFlagOn(); 
       normals->ComputePointNormalsOn();
       //normals->ComputeCellNormalsOn();
       normals->FlipNormalsOn();
@@ -164,7 +169,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       cfilter->GetOutput()->ReleaseDataFlagOn();
       normals->SetInput( cfilter->GetOutput() );
       normals->SetFeatureAngle( 130.0f );
-      normals->GetOutput()->ReleaseDataFlagOn(); 
+      //normals->GetOutput()->ReleaseDataFlagOn(); 
       normals->ComputePointNormalsOn();
       //normals->ComputeCellNormalsOn();
       normals->FlipNormalsOn();
