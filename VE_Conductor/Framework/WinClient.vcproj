@@ -206,6 +206,9 @@
 				RelativePath=".\CADOpacitySliderDlg.cxx">
 			</File>
 			<File
+				RelativePath=".\DataSetLoaderUI.cxx">
+			</File>
+			<File
 				RelativePath="Frame.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -317,6 +320,9 @@
 			</File>
 			<File
 				RelativePath=".\StringParse.cpp">
+			</File>
+			<File
+				RelativePath=".\TransformUI.cxx">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_AdvectionPanel.cxx">
@@ -555,6 +561,9 @@
 				RelativePath=".\CADOpacitySliderDlg.h">
 			</File>
 			<File
+				RelativePath=".\DataSetLoaderUI.h">
+			</File>
+			<File
 				RelativePath="Frame.h">
 			</File>
 			<File
@@ -604,6 +613,9 @@
 			</File>
 			<File
 				RelativePath="StringParse.h">
+			</File>
+			<File
+				RelativePath=".\TransformUI.h">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_AdvectionPanel.h">

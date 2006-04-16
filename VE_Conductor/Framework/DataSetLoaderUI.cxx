@@ -291,7 +291,7 @@ void DataSetLoaderUI::InitializeWidgets( void )
 
       for ( size_t i = 0; i < numParamBlocks; ++i )
       {
-         dataSetList->Append( veModel->GetInformationPacket( i )->GetName() );
+		  dataSetList->Append( veModel->GetInformationPacket( i )->GetName().c_str() );
       }
    }
 }
@@ -315,23 +315,23 @@ void DataSetLoaderUI::SetTextCtrls( void )
          if ( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
          {
             //clear...then append
-            itemListBox24->Append( tempDVP->GetDataString() );
-            itemTextCtrl21->SetValue( tempDVP->GetDataString() );
+            itemListBox24->Append( tempDVP->GetDataString().c_str() );
+            itemTextCtrl21->SetValue( tempDVP->GetDataString().c_str() );
          }
          else if ( tempDVP->GetDataName() == "VTK_DATA_FILE" )
          {
             //clear...then append
-            dataSetTextEntry->SetValue( tempDVP->GetDataString() );
+            dataSetTextEntry->SetValue( tempDVP->GetDataString().c_str() );
          }
          else if ( tempDVP->GetDataName() == "VTK_SURFACE_DIR_PATH" )
          {
             //clear...then append
-            surfaceDataText->SetValue( tempDVP->GetDataString() );
+            surfaceDataText->SetValue( tempDVP->GetDataString().c_str() );
          }
          else if ( tempDVP->GetDataName() == "VTK_PRECOMPUTED_DIR_PATH" )
          {
             //clear...then append
-            preComputDirTextEntry->SetValue( tempDVP->GetDataString() );
+            preComputDirTextEntry->SetValue( tempDVP->GetDataString().c_str() );
          }
       }
    }
