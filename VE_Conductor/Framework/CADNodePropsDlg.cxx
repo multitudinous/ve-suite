@@ -253,15 +253,15 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    _zScaleCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    
    _xScaleCtrl->SetValue(1.0);
-   _xScaleCtrl->SetRange(0.0,100.0);
+   _xScaleCtrl->SetRange(0.0,1000.0);
    _xScaleCtrl->SetIncrement(1.0);
 
    _yScaleCtrl->SetValue(1.0);
-   _yScaleCtrl->SetRange(0.0,100.0);
+   _yScaleCtrl->SetRange(0.0,1000.0);
    _yScaleCtrl->SetIncrement(1.0);
 
    _zScaleCtrl->SetValue(1.0);
-   _zScaleCtrl->SetRange(0.0,100.0);
+   _zScaleCtrl->SetRange(0.0,1000.0);
    _zScaleCtrl->SetIncrement(1.0);
 
    scaleSizer->Add(_xScaleCtrl,1,wxALIGN_CENTER_HORIZONTAL);
