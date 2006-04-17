@@ -165,14 +165,16 @@ wxPanel* CADNodePropertiesDlg::GetTransformPanel()
 {
    if(!_transformPanel)
    {
-      if ( _cadNode )
+      ///need to add more logic here so we can override the spinners on the transform dialog
+      /*if ( _cadNode )
       {
          _transformPanel = new TransformUI( _propertyTabs, _("CADNode Transform Properties"), _cadNode->GetTransform() );
       }
       else
       {
          _transformPanel = new TransformUI( _propertyTabs, _("CADNode Transform Properties"), 0 );
-      }
+      }*/
+      _buildTransformPanel();
    }
    return _transformPanel;
 }
