@@ -48,6 +48,8 @@
 #include <wx/filedlg.h>
 #include <wx/textdlg.h>
 #include <wx/msgdlg.h>
+#include <wx/filename.h>
+
 using namespace VE_Conductor::GUI_Utilities;
 using namespace VE_CAD;
 using namespace VE_XML;
@@ -409,10 +411,10 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
             wxDefaultPosition);
 
     if (dialog.ShowModal() == wxID_OK) {
-       if ((!dialog.GetPath().IsEmpty()) 
-           && wxFileExists(dialog.GetPath())) 
+       //if ((!dialog.GetPath().IsEmpty()) 
+       //    && wxFileExists(dialog.GetPath())) 
         {         
-           if(dialog.GetPath().Find(".veg") != -1)
+        //   if(dialog.GetPath().Find(".veg") != -1)
            {
               VE_XML::XMLReaderWriter cadReader;
               cadReader.UseStandaloneDOMDocumentManager();
@@ -490,13 +492,16 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
 		       _T(""),
 		       _T("OSG files (*.osg;*.ive)|*.osg;*.ive;|SLT files (*.stl)|*.stl;|VRML files (*.wrl)|*.wrl;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb| Flight files (*.flt)|*.flt"),
                        //"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
-		       wxOPEN); 
+		       wxOPEN|wxFILE_MUST_EXIST); 
     if (dialog.ShowModal() == wxID_OK) {
-       if ((!dialog.GetPath().IsEmpty()) 
-           && wxFileExists(dialog.GetPath())) 
+       //if ((!dialog.GetPath().IsEmpty()) 
+       //    && wxFileExists(dialog.GetPath())) 
         {         
-           if(dialog.GetPath())
+           //if(dialog.GetPath())
            {
+              wxFileName vegFileName( dialog.GetPath() );
+              vegFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+              wxString vegFileNamePath( wxString( "./" ) + vegFileName.GetFullPath() );
               //pop a text dialog to enter the name of the new assembly
               wxTextEntryDialog partNameDlg(this, 
                                        wxString("New Part Name"),
@@ -505,7 +510,7 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
               partNameDlg.ShowModal();
               
               CADPart* newCADPart = new CADPart(partNameDlg.GetValue().GetData());
-              newCADPart->SetCADFileName(dialog.GetPath().c_str());
+              newCADPart->SetCADFileName( vegFileNamePath.c_str() );
 
               dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 

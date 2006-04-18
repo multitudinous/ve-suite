@@ -51,6 +51,7 @@
 #include <wx/colordlg.h>
 #include <wx/choicdlg.h>
 #include <wx/intl.h>
+#include <wx/filename.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
@@ -509,21 +510,25 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
 		       _T(""), 
 		       _T(""),
 		       _T("VE-Attribute files (*.vea)|*.vea;"),
-		       wxOPEN); 
+		       wxOPEN|wxFILE_MUST_EXIST); 
          if(dialog.ShowModal() == wxID_OK) 
          {
-            if((!dialog.GetPath().IsEmpty()) 
-               && wxFileExists(dialog.GetPath())) 
+            //if((!dialog.GetPath().IsEmpty()) 
+            //   && wxFileExists(dialog.GetPath())) 
             {         
-               if(dialog.GetPath())
+               //if(dialog.GetPath())
                {
                   VE_CAD::CADAttribute newAttribute;// = new CADAttribute();
                   newAttribute.SetAttributeType("Program");
                   
+                  wxFileName veaFileName( dialog.GetPath() );
+                  veaFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+                  wxString veaFileNamePath( wxString( "./" ) + veaFileName.GetFullPath() );
+
                   VE_XML::XMLReaderWriter shaderLoader;
                   shaderLoader.UseStandaloneDOMDocumentManager();
                   shaderLoader.ReadFromFile();
-                  shaderLoader.ReadXMLData(std::string(dialog.GetPath()),"Shader","Program");
+                  shaderLoader.ReadXMLData( std::string( veaFileNamePath ),"Shader","Program");
               
                   VE_Shader::Program* loadedShader = 0;
                   if(shaderLoader.GetLoadedXMLObjects().at(0))
@@ -709,7 +714,7 @@ void CADNodePropertiesDlg::_showOpacityDialog(wxCommandEvent& WXUNUSED(event))
       CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
       CADOpacitySliderDlg opacityDlg(this,-1,_cadNode->GetID(),_cadNode->GetActiveAttribute().GetMaterial());
       opacityDlg.SetVjObsPtr(_vjObsPtr);
-      if (opacityDlg.ShowModal() == wxID_OK|wxID_CANCEL)
+      if (opacityDlg.ShowModal() == (wxID_OK|wxID_CANCEL))
       {
          material->SetOpacity(opacityDlg.GetOpacity());
       }
