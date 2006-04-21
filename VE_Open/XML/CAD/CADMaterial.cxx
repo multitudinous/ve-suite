@@ -49,7 +49,10 @@ CADMaterial::CADMaterial(std::string name)
    _kDiffuse->SetArray(temp);
 
    _kEmissive = new VE_XML::FloatArray();
-   _kEmissive->SetArray(temp);
+   _kEmissive->AddElementToArray(0.0);
+   _kEmissive->AddElementToArray(0.0);
+   _kEmissive->AddElementToArray(0.0);
+   _kEmissive->AddElementToArray(1.0);
 
    _ambient = new VE_XML::FloatArray();
    _ambient->SetArray(temp);
