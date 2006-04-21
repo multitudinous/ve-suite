@@ -51,6 +51,10 @@ namespace VE_CAD
 {
    class CADAttribute;
 }
+namespace VE_Shader
+{
+   class Uniform;
+}
 namespace VE_SceneGraph
 {
 namespace Utilities
@@ -88,6 +92,10 @@ public:
    ///Create a StateSet from a CADAttribute.
    ///\param attribute The CADAttribute.
    void CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute);
+
+   ///Update a Uniform value.
+   ///\param uniformToUpdate The new uniform information.
+   void UpdateShaderUniform(VE_Shader::Uniform* uniformToUpdate);
 
    ///Update a the components of a CADMaterial
    ///\param componentName The name of the component to update

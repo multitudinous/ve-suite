@@ -345,6 +345,110 @@ void ShaderHelper::_setWrapOnTexture(osg::Texture* texture,
       texture->setWrap(param,osg::Texture::CLAMP);
    }
 }
+/////////////////////////////////////////////////////////////////
+void ShaderHelper::UpdateUniform(VE_Shader::Uniform* uniformData)
+{
+#ifdef _OSG
+   std::string uniformName("");
+   std::string uniformType("");
+   unsigned int uniformSize = 0;
+   std::vector<float> uniformValues;
+
+   uniformName = uniformData->GetName();
+   uniformType = uniformData->GetType();
+   uniformSize = uniformData->GetSize();
+   uniformValues = uniformData->GetValues();
+
+   osg::ref_ptr<osg::Uniform> uniformToUpdate = _ss->getUniform(uniformName);
+   if(uniformToUpdate.valid()){
+      if(uniformType == "Float"){
+         if(uniformSize == 1)
+         {
+            uniformToUpdate->set(uniformValues.at(0));
+         }
+         else if(uniformSize == 2)
+         {
+            uniformToUpdate->set(osg::Vec2f(uniformValues.at(0),uniformValues.at(0)));
+         }
+         else if(uniformSize == 3)
+         {
+            uniformToUpdate->set(osg::Vec3f(uniformValues.at(0),
+                                            uniformValues.at(1),
+                                            uniformValues.at(2)));
+         }
+         else if(uniformSize == 4)
+         {
+            uniformToUpdate->set(osg::Vec4f(uniformValues.at(0),
+                                            uniformValues.at(1),
+                                            uniformValues.at(2),
+                                            uniformValues.at(3)));
+         }
+      }else if(uniformType == "Int"){
+         if(uniformSize == 1)
+         {
+            uniformToUpdate->set(static_cast<int>(uniformValues.at(0)));
+         }
+         else if(uniformSize == 2)
+         {
+            uniformToUpdate->set(osg::Vec2(static_cast<int>(uniformValues.at(0)),
+                                           static_cast<int>(uniformValues.at(1))));
+         }
+         else if(uniformSize == 3)
+         {
+            uniformToUpdate->set(osg::Vec3(static_cast<int>(uniformValues.at(0)),
+                                           static_cast<int>(uniformValues.at(1)),
+                                           static_cast<int>(uniformValues.at(2))));
+         } 
+         else if(uniformSize == 4)
+         {
+            uniformToUpdate->set(osg::Vec4(static_cast<int>(uniformValues.at(0)),
+                                           static_cast<int>(uniformValues.at(1)),
+                                           static_cast<int>(uniformValues.at(2)),
+                                           static_cast<int>(uniformValues.at(3))));
+         }
+      }else if(uniformType == "Bool"){
+         std::vector<bool> boolValues;
+         for(size_t i =0; i <uniformSize; i++)
+         {
+            if(uniformValues.at(i) == 0.0)
+            {
+               boolValues.push_back(false);
+            }
+            else
+            {
+               boolValues.push_back(true);
+            }
+         }
+         if(uniformSize == 1)
+         {
+            uniformToUpdate->set(boolValues.at(0));
+         }
+         else if(uniformSize == 2)
+         {
+            uniformToUpdate->set(osg::Vec2(boolValues.at(0),
+                                           boolValues.at(1)));
+         }
+         else if(uniformSize == 3)
+         {
+            uniformToUpdate->set(osg::Vec3(boolValues.at(0),
+                                           boolValues.at(1),
+                                           boolValues.at(2)));
+         }
+         else if(uniformSize == 4)
+         {
+            uniformToUpdate->set(osg::Vec4(boolValues.at(0),
+                                           boolValues.at(1),
+                                           boolValues.at(2),
+                                           boolValues.at(3)));
+         }
+      }else if(uniformType == "Sampler"){
+         std::cout<<"Updating Sampler!!"<<std::endl;
+      }
+   }
+#elif _PERFORMER
+      std::cout<<"Not implemented for Performer yet!!!"<<std::endl;
+#endif
+}
 ////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
 {
@@ -399,13 +503,13 @@ void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
          std::vector<bool> boolValues;
          for(size_t i =0; i <uniformSize; i++)
          {
-            if(uniformValues.at(i) == 0)
+            if(uniformValues.at(i) == 0.0)
             {
                boolValues.push_back(false);
             }
             else
             {
-               boolValues.push_back(false);
+               boolValues.push_back(true);
             }
          }
          if(uniformSize == 1)

@@ -30,9 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_SceneGraph/Utilities/Attribute.h"
-
 using namespace VE_SceneGraph::Utilities;
 using namespace VE_CAD;
+using namespace VE_Shader;
+
 #ifdef _PERFORMER
 #include <Performer/pf.h>
 #include <Performer/pfdu.h>
@@ -55,6 +56,7 @@ void VE_SceneGraph::Utilities::Attribute::init(void)
 }
 #endif
 #include "VE_Open/XML/CAD/CADAttribute.h"
+#include "VE_Open/XML/Shader/Uniform.h"
 #include "VE_SceneGraph/Utilities/MaterialHelper.h"
 #include "VE_SceneGraph/Utilities/ShaderHelper.h"
 
@@ -133,6 +135,15 @@ void Attribute::UpdateMaterialMode(std::string type, std::string mode)
       {
       }
    }
+#endif
+}
+////////////////////////////////////////////////////////////////////////
+void Attribute::UpdateShaderUniform(VE_Shader::Uniform* uniformToUpdate)
+{
+#ifdef _OSG
+   ShaderHelper shaderHelper;
+   shaderHelper.SetStateSet(this);
+   shaderHelper.UpdateUniform(uniformToUpdate);
 #endif
 }
 ////////////////////////////////////////////////////////////////

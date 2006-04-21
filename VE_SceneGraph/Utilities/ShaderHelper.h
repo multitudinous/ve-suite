@@ -55,6 +55,7 @@ namespace VE_Shader
 {
    class Program;
    class Shader;
+   class Uniform;
    class TextureImage;
 }
 #include <string>
@@ -86,6 +87,10 @@ public:
    ///The state set that we want to load the shader into
    ///\param shader The state set representing the shader.
    void SetStateSet(osg::StateSet* shader);
+
+   ///Update a uniform.
+   ///\param The uniform to update.
+   void UpdateUniform(VE_Shader::Uniform* uniformToUpdate);
 #elif _PERFORMER
 #endif
    ///Equal operator
