@@ -130,6 +130,7 @@ void Uniform::SetValues(std::vector<float> newValues)
    {
       _values.push_back(newValues.at(i));
    }
+   _variableSize = _values.size();
 }
 //////////////////////////////
 std::string Uniform::GetType()
