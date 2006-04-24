@@ -45,11 +45,19 @@
 #include <wx/config.h> 
 #include <wx/splitter.h>
 
+//Frame size
 const wxString LOCATION = _T("Framesize");
 const wxString LOCATION_X = _T("LocationX");
 const wxString LOCATION_Y = _T("LocationY");
 const wxString LOCATION_W = _T("LocationW");
 const wxString LOCATION_H = _T("LocationH");
+
+//cyang Features
+const wxString FEATURE = _T("Feature");
+const wxString F_FINANCIAL = _T("Financial");
+const wxString F_GEOMETRY = _T("Geometry");
+const wxString F_VISUALIZATION = _T("Visualization");
+//cyang
 
 enum 
 {
@@ -148,8 +156,14 @@ public:
   wxMenu *run_menu;
   wxMenu *edit_menu;
   wxMenu *help_menu;
-   wxMenu* xplorerMenu;
-   wxMenu* xplorerJugglerMenu;
+  wxMenu* xplorerMenu;
+  wxMenu* xplorerJugglerMenu;
+
+  //configuration flags   //cyang
+  bool f_financial;
+  bool f_geometry;
+  bool f_visualization;
+  //cyang
 
    //wxMenu *config_menu;
    PEThread* pelog;
@@ -162,13 +176,21 @@ public:
    void ConVEServer( void );
    ///Returns pointer to xplorer corba object
    VjObs_ptr GetXplorerObject( void );
+
+   //cyang
+   void GetConfig(wxConfig* config);
+   void StoreConfig(wxConfig* config);
+
 protected:
+
+
   int m_frameNr;
   wxString fname;
   wxString directory;
   wxString path;	
 	
   VjObs_var vjobs;
+
   
 private:
    bool is_orb_init;

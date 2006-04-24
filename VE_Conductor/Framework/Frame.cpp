@@ -127,7 +127,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
-  :wxFrame(parent, id, title), m_frameNr(0)
+  :wxFrame(parent, id, title), m_frameNr(0), f_financial(false), f_geometry(false), f_visualization(false)
 {
    wx_log_splitter = new wxSplitterWindow(this, -1);
    wx_log_splitter->SetMinimumPaneSize( 40 );
@@ -158,6 +158,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
    //wx_ve_splitter->Initialize(wx_nw_splitter);
    SetSize(DetermineFrameSize(NULL));
+   GetConfig(NULL);
+
    CreateMenu();
    CreateStatusBar();
    SetStatusText("VE-Conductor Status");
@@ -235,6 +237,24 @@ void AppFrame::CreateVETab()
    //SetSizer( sizerTab );
 }
 
+void AppFrame::GetConfig(wxConfig* config)
+{
+  wxConfig* cfg = config;
+  if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
+  int i;
+  
+  wxString key = FEATURE;
+  if (cfg->Exists (key)) 
+  {
+      cfg->Read (key + _T("/") + F_FINANCIAL, f_financial);
+      cfg->Read (key + _T("/") + F_GEOMETRY, f_geometry);
+      cfg->Read (key + _T("/") + F_VISUALIZATION, f_visualization);
+  }
+ //}
+  if (!config) delete cfg;
+
+}
+
 wxRect AppFrame::DetermineFrameSize (wxConfig* config)
 {
   const int minFrameWidth = 600;
@@ -245,16 +265,17 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   wxConfig* cfg = config;
   if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
   int i;
-  for (i = 0; i <= m_frameNr; i++) {
-    wxString key = LOCATION + wxString::Format ("%d", m_frameNr - i);
-    if (cfg->Exists (key)) {
+  //for (i = 0; i <= m_frameNr; i++) { //cyang only 1 frame
+    //wxString key = LOCATION + wxString::Format ("%d", m_frameNr - i);
+  wxString key = LOCATION + wxString::Format ("%d", 0);
+  if (cfg->Exists (key)) 
+  {
       rect.x = cfg->Read (key + _T("/") + LOCATION_X, rect.x);
       rect.y = cfg->Read (key + _T("/") + LOCATION_Y, rect.y);
       rect.width = cfg->Read (key + _T("/") + LOCATION_W, rect.width);
       rect.height = cfg->Read (key + _T("/") + LOCATION_H, rect.height);
-      break;
-    }
   }
+	//}
   if (!config) delete cfg;
   
   // check for reasonable values (within screen)
@@ -278,7 +299,20 @@ void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
   cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
   cfg->Write (key + _T("/") + LOCATION_W, rect.width);
   cfg->Write (key + _T("/") + LOCATION_H, rect.height);
+  
   if (!config) delete cfg;
+}
+
+void AppFrame::StoreConfig(wxConfig* config)
+{
+	//store config
+
+	wxConfig* cfg = config;
+	if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
+	wxString key = FEATURE;
+	cfg->Write (key+_T("/") + F_FINANCIAL, f_financial);
+	cfg->Write (key+_T("/") + F_GEOMETRY, f_geometry);
+	cfg->Write (key+_T("/") + F_VISUALIZATION, f_visualization);
 }
 
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
@@ -331,6 +365,7 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
    }
 
    StoreFrameSize(GetRect(), NULL);
+   StoreConfig(NULL);
    Destroy();
 }
 
@@ -347,8 +382,6 @@ void AppFrame::CreateMenu()
   run_menu = new wxMenu;
   edit_menu = new wxMenu;
   help_menu = new wxMenu;
-   xplorerMenu = new wxMenu();
-   xplorerJugglerMenu = new wxMenu();
 //  config_menu = new wxMenu;
 
   file_menu->Append(wxID_NEW, _("&New\tCtrl+N"));
@@ -415,26 +448,31 @@ void AppFrame::CreateMenu()
   //help_menu->Enable(v21ID_HELP, false);
   help_menu->Enable(wxID_ABOUT, false);
 
-   xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
-   xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
-   xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
-   xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
+  if (f_visualization)
+  {
+	xplorerMenu = new wxMenu();
+	xplorerJugglerMenu = new wxMenu();
 
-   xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
-   xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
-   xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
-   xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-   xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
-   xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
-   xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
+	xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
+	xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
+	xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
+	xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
 
-   xplorerMenu->Enable( XPLORER_NAVIGATION, true);
-   xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
-   xplorerMenu->Enable( XPLORER_SOUNDS, true);
-   xplorerMenu->Enable( XPLORER_STREAMLINE, true);
-   xplorerMenu->Enable( JUGGLER_SETTINGS, true);
-   xplorerMenu->Enable( CAD_NODE_DIALOG,true);
+	xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
+	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
+	xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
+	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
+	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
+	xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
+	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
 
+	xplorerMenu->Enable( XPLORER_NAVIGATION, true);
+	xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
+	xplorerMenu->Enable( XPLORER_SOUNDS, true);
+	xplorerMenu->Enable( XPLORER_STREAMLINE, true);
+	xplorerMenu->Enable( JUGGLER_SETTINGS, true);
+	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
+  }
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
 //  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
 //  config_menu->Append(v21ID_REI_BASE, _("Base Quench (REI)"));
@@ -451,7 +489,8 @@ void AppFrame::CreateMenu()
   menubar->Append(con_menu, _("&Connection"));
   menubar->Append(run_menu, _("&Execution"));
   menubar->Append(help_menu, _("&Help"));
-  menubar->Append( xplorerMenu, _("&VE-Xplorer") );
+  if (f_visualization)
+	menubar->Append( xplorerMenu, _("&VE-Xplorer") );
 
   SetMenuBar(menubar);
 }
