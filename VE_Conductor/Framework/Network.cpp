@@ -465,17 +465,26 @@ void Network::OnMRightDown(wxMouseEvent& event)
    pop_menu.Append(SHOW_LINK_CONT, "Show Link Content");
 
    // EPRI TAG
-   pop_menu.Append(SHOW_FINANCIAL, "Financial Data");
-   pop_menu.Enable(SHOW_FINANCIAL, true);
+   AppFrame* p_frame;
+   p_frame = ((AppFrame*)(parent->GetParent()->GetParent()));
+   if (p_frame->f_financial)
+   {
+	pop_menu.Append(SHOW_FINANCIAL, "Financial Data");
+	pop_menu.Enable(SHOW_FINANCIAL, true);
+   }
 
-   // GUI to configure geometry for graphical env
-   pop_menu.Append(GEOMETRY, "Geometry Config");
-   pop_menu.Enable(GEOMETRY, true);
+   if (p_frame->f_geometry)
+   {
+	// GUI to configure geometry for graphical env
+	pop_menu.Append(GEOMETRY, "Geometry Config");
+	pop_menu.Enable(GEOMETRY, true);
    // GUI to configure dataset for graphical env
    pop_menu.Append(DATASET, "Data Set Config");
    pop_menu.Enable(DATASET, true);
 
-   // GUI to configure geometry for graphical env
+	// GUI to configure geometry for graphical env
+   }
+	
    pop_menu.Append(MODEL_INPUTS, "Input Variables" );
    pop_menu.Enable(MODEL_INPUTS, true);
    pop_menu.Append(MODEL_RESULTS, "Result Variables" );
