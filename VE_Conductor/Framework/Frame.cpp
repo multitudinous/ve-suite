@@ -158,7 +158,10 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
    //wx_ve_splitter->Initialize(wx_nw_splitter);
    SetSize(DetermineFrameSize(NULL));
-   GetConfig(NULL);
+   //GetConfig(NULL);
+   f_financial = true;
+	f_geometry = true;
+	f_visualization = true;
 
    CreateMenu();
    CreateStatusBar();
