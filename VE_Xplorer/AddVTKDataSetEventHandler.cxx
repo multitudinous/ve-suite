@@ -172,6 +172,8 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
             //Load texture datasets
             if ( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
             {
+#ifdef _OSG
+#ifdef VE_PATENTED
                vprDEBUG(vesDBG,0) << "|\tCreating texture dataset." << std::endl << vprDEBUG_FLUSH;
                _activeModel->CreateTextureDataSet();
                size_t numProperties = tempInfoPacket->GetNumberOfProperties();
@@ -183,6 +185,8 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
                      _activeModel->AddDataSetToTextureDataSet( 0, tempInfoPacket->GetProperty( j )->GetDataString() );
                   }
                }
+#endif
+#endif
             }
             //Now load up the dataset
             //_activeModel->GetCfdDataSet( -1 )->LoadData();

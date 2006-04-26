@@ -280,6 +280,9 @@
 				RelativePath=".\ActiveModelEventHandler.cxx">
 			</File>
 			<File
+				RelativePath=".\AddVTKDataSetEventHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\AttributeEventHandler.cxx">
 			</File>
 			<File
@@ -468,6 +471,9 @@
 			Filter=".h">
 			<File
 				RelativePath=".\ActiveModelEventHandler.h">
+			</File>
+			<File
+				RelativePath=".\AddVTKDataSetEventHandler.h">
 			</File>
 			<File
 				RelativePath=".\AttributeEventHandler.h">

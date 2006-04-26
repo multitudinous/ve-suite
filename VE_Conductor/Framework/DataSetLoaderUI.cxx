@@ -130,6 +130,13 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
    GetSizer()->SetSizeHints(this);
    Centre();
    InitializeWidgets();
+   SetAutoLayout( true );
+   Refresh();
+   wxSize temp = GetSize();
+   temp.SetHeight( temp.GetHeight() +1);
+   temp.SetWidth( temp.GetWidth()+1 );
+   SetSize( temp );
+   //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
 ////@end DataSetLoaderUI creation
    return true;
 }
@@ -147,8 +154,8 @@ void DataSetLoaderUI::CreateControls()
     itemDialog1->SetSizer(itemBoxSizer2);
 
     wxScrolledWindow* itemScrolledWindow3 = new wxScrolledWindow( itemDialog1, ID_SCROLLEDWINDOW, wxDefaultPosition, wxSize(300, 500), wxHSCROLL|wxVSCROLL );
-    itemBoxSizer2->Add(itemScrolledWindow3, 0, wxALIGN_LEFT|wxALL, 5);
-    itemScrolledWindow3->SetScrollbars(1, 1, 0, 0);
+    itemBoxSizer2->Add(itemScrolledWindow3, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+    itemScrolledWindow3->SetScrollbars(20, 10, 5, 10);
 
     wxStaticBox* itemStaticBoxSizer4Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Steady State Data"));
     wxStaticBoxSizer* itemStaticBoxSizer4 = new wxStaticBoxSizer(itemStaticBoxSizer4Static, wxVERTICAL);
