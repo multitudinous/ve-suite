@@ -250,6 +250,12 @@ void AppFrame::GetConfig(wxConfig* config)
       cfg->Read (key + _T("/") + F_GEOMETRY, f_geometry);
       cfg->Read (key + _T("/") + F_VISUALIZATION, f_visualization);
   }
+  else
+	{
+		f_financial = true;
+		f_geometry = true;
+		f_visualization = true;
+	}
  //}
   if (!config) delete cfg;
 
@@ -313,6 +319,7 @@ void AppFrame::StoreConfig(wxConfig* config)
 	cfg->Write (key+_T("/") + F_FINANCIAL, f_financial);
 	cfg->Write (key+_T("/") + F_GEOMETRY, f_geometry);
 	cfg->Write (key+_T("/") + F_VISUALIZATION, f_visualization);
+	if (!config) delete cfg;
 }
 
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
