@@ -38,17 +38,17 @@
 #include <wx/bitmap.h>
 #include <wx/msgdlg.h>
 
-#include "VE_Installer/installer/installerImages/ve_suite_banner.xpm"
+#include "VE_Conductor/Framework/ROItb.xpm"
+
+#include "VE_Conductor/Framework/cspline.xpm"
+#include "VE_Conductor/Framework/scalartb.xpm"
+#include "VE_Conductor/Framework/vectortb.xpm"
+#include "VE_Conductor/Framework/scalartb_bw.xpm"
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
 
 BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
-   EVT_TOOL(TB_TOOLBAR,TextureBasedToolBar::_handleToolButtons)
-   EVT_TOOL(VECTOR_ID,TextureBasedToolBar::_handleToolButtons)
-   EVT_TOOL(ROI_ID,TextureBasedToolBar::_handleToolButtons)
-   EVT_TOOL(TRANSFER_FUNCS_ID,TextureBasedToolBar::_handleToolButtons)
-   EVT_TOOL(TB_TOOLBAR,TextureBasedToolBar::_handleToolButtons)
-   EVT_TOOL(ACTIVE_SOLUTION,TextureBasedToolBar::_handleToolButtons)
+   EVT_TOOL_RANGE(SCALAR_ID,ACTIVE_SOLUTION,TextureBasedToolBar::_handleToolButtons)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id,
 :wxDialog((wxWindow *) parent, id, "Texture-Based ToolBar",wxDefaultPosition,wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("Texture-Based ToolBar") )
 {
-   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
    _updateAvailableSolutions(scalarNames, vectorNames);
    _buildToolBar();
@@ -106,41 +106,63 @@ void TextureBasedToolBar::_updateSolutionList(wxArrayString activeSolutions)
    {
       _solutionSelection->Append(activeSolutions[i]);
    }
+   if(activeSolutions.GetCount())
+   {
+      _solutionSelection->SetValue(activeSolutions[0]);
+   }
 }
 /////////////////////////////////////////
 void TextureBasedToolBar::_buildToolBar()
 {
-   _tbToolButtons  = new wxToolBar(this,TB_TOOLBAR);
-   _tbToolButtons->SetToolBitmapSize(wxSize(64,64));
+   _tbToolButtons  = new wxToolBar(this,TB_TOOLBAR,wxDefaultPosition, wxDefaultSize,
+                                wxTB_HORIZONTAL | wxNO_BORDER |wxTB_TEXT);
+   _tbToolButtons->SetToolBitmapSize(wxSize(50,50));
 
    _solutionSelection = new wxComboBox(_tbToolButtons,ACTIVE_SOLUTION);
    _tbToolButtons->AddControl(_solutionSelection);
 
-   wxImage splashImage(ve_xplorer_banner_xpm);
-   wxBitmap bitmap(splashImage);
-   
-   wxImage test1Image(ve_ce_banner_xpm);
-   wxBitmap bitmap1(test1Image);
+   wxImage scalarOnImage(scalartb_xpm);
+   wxBitmap scalarOnBitmap(scalarOnImage);
 
-   wxImage test2Image(ve_suite_banner_xpm);
-   wxBitmap bitmap2(test1Image);
+   wxImage scalarOffImage(scalartb_bw_xpm);
+   wxBitmap scalarOffBitmap(scalarOffImage);
+   
+   wxImage vectorOnImage(vectortb_xpm);
+   wxBitmap vectorOnBitmap(vectorOnImage);
+
+   wxImage ROIOnImage(ROItb_xpm);
+   wxBitmap ROIOnBitmap(ROIOnImage);
+
+   
+   wxImage tfuncOnImage(cspline_xpm);
+   wxBitmap tfuncOnBitmap(tfuncOnImage);
+  
   
 
    _tbToolButtons->AddSeparator();
-   _tbToolButtons->AddRadioTool(SCALAR_ID,_T("Scalar"),bitmap,wxNullBitmap,_T("Scalar Data Tools") );
-   _tbToolButtons->AddRadioTool(VECTOR_ID,_T("Vector"),bitmap1,wxNullBitmap,_T("Vector Data Tools") );
+   _tbToolButtons->AddRadioTool(SCALAR_ID,_T("Scalars"),
+                             scalarOnBitmap,wxNullBitmap,
+                             _T("Scalar Data Tools") );
 
+   _tbToolButtons->AddRadioTool(VECTOR_ID,_T("Vectors"),
+                             vectorOnBitmap,wxNullBitmap,
+                             _T("Vector Data Tools") );
+  
    _tbToolButtons->AddSeparator();
-   _tbToolButtons->AddCheckTool(ROI_ID,_T("ROI"),bitmap2,wxNullBitmap,_T("Edit Region Of Interest") );
-   _tbToolButtons->AddCheckTool(TRANSFER_FUNCS_ID,_T("Transfer Functions"), bitmap2,wxNullBitmap,_T("Edit Transfer Functions") );
- 
+   _tbToolButtons->AddTool(ROI_ID,_T("ROI"),
+                        ROIOnBitmap,wxNullBitmap,
+                        wxITEM_NORMAL,_T("Edit Region Of Interest") );
+   _tbToolButtons->AddTool(TRANSFER_FUNCS_ID,_T("Transfer Functions"), 
+                        tfuncOnBitmap,wxNullBitmap,
+                        wxITEM_NORMAL,_T("Edit Transfer Functions") );
+
    _tbToolButtons->Realize();
    
 }
 ///////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetVjObsPtr(VjObs_ptr xplorerCom)
 {
-    _vjObsPtr = VjObs::_duplicate(xplorerCom);
+    _vjObsPtr = xplorerCom;
 }
 /////////////////////////////////////////////
 void TextureBasedToolBar::ClearInstructions()
@@ -152,9 +174,18 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
 {
    switch(event.GetId())
    {
+      case SCALAR_ID:
+         wxMessageBox( "Scalar tools.", 
+                        "Toolbar test", wxOK | wxICON_INFORMATION );
+         _updateSolutionList(_availableScalars);
+         event.Skip();
+         
+         break;
       case VECTOR_ID:
          wxMessageBox( "Vector tools.", 
                       "Toolbar test", wxOK | wxICON_INFORMATION );
+         _updateSolutionList(_availableVectors);
+         event.Skip();
          break;
       case TRANSFER_FUNCS_ID:
          wxMessageBox( "Transfer functions tools.", 
@@ -164,12 +195,9 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          wxMessageBox( "ROI tools.", 
                         "Toolbar test", wxOK | wxICON_INFORMATION );
          break;
-      case SCALAR_ID:
-      default:
-         wxMessageBox( "Scalar tools.", 
-                        "Toolbar test", wxOK | wxICON_INFORMATION );
-         break;
+
    };
+   //event.Skip();
 }
 //////////////////////////////////////////////////
 void TextureBasedToolBar::_sendCommandsToXplorer()

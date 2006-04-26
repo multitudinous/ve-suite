@@ -322,6 +322,9 @@
 				RelativePath=".\StringParse.cpp">
 			</File>
 			<File
+				RelativePath=".\TBToolBar.cxx">
+			</File>
+			<File
 				RelativePath=".\TransformUI.cxx">
 			</File>
 			<File
@@ -613,6 +616,9 @@
 			</File>
 			<File
 				RelativePath="StringParse.h">
+			</File>
+			<File
+				RelativePath=".\TBToolBar.h">
 			</File>
 			<File
 				RelativePath=".\TransformUI.h">
