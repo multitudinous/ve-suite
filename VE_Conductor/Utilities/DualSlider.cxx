@@ -92,6 +92,14 @@ DualSlider::~DualSlider()
       _maxSlider->Destroy(); 
       _maxSlider = 0;
    }
+
+   for ( std::map<int ,SliderCallback*>::iterator itr = _callbacks.begin();
+                                       itr != _callbacks.end(); itr++ )
+   {
+      delete itr->second;
+      itr->second = 0;
+   }
+   _callbacks.clear();
 }
 //////////////////////////////////////////////////
 void DualSlider::SetSliderRange(int min, int max)
