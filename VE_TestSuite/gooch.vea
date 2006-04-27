@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 <!-- modified Shader from 3dlabs.com-->
-
 <Program>
    <name>Gooch Shading</name>
    <vertexShader>
