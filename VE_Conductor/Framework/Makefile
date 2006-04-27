@@ -16,6 +16,7 @@ srcdir= .
 SRCS=\
    App.cpp \
    Avail_Modules.cpp \
+   BaseDialog.cxx \
    CADNodeManagerDlg.cxx \
    CADMaterialEditMenu.cxx \
    CADNodeMenu.cxx \
@@ -28,6 +29,7 @@ SRCS=\
    OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
+   ROIDialog.cxx \
    StreamersPane.cxx \
    VjObsC.cpp \
    VjObsS.cpp \
