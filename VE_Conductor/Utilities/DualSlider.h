@@ -108,12 +108,14 @@ public:
    {
       public:
         ///Constructor
-        SliderCallback(){}
+        SliderCallback(){_dualSlider = 0;}
         ///Destructor
         virtual ~SliderCallback(){}
+        void SetDualSlider(DualSlider* ds){_dualSlider = ds;}
         ///Do operations based on slider movement 
         virtual void SliderOperation()=0;
       protected:
+        DualSlider* _dualSlider;
    };
 
    ///Set the callback for the maxSlider

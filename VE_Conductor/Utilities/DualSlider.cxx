@@ -202,6 +202,7 @@ void DualSlider::_onSlider(wxScrollEvent& event)
       activeCallback = _callbacks.find(callbackID);
       if(activeCallback != _callbacks.end())
       {
+         activeCallback->second->SetDualSlider(this);
          activeCallback->second->SliderOperation();   
       }
    }
