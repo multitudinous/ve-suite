@@ -44,6 +44,8 @@
 #include "VE_Conductor/Framework/scalartb.xpm"
 #include "VE_Conductor/Framework/vectortb.xpm"
 #include "VE_Conductor/Framework/scalartb_bw.xpm"
+
+#include "VE_Conductor/Framework/ROIDialog.h"
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
 
@@ -192,8 +194,13 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
                         "Toolbar test", wxOK | wxICON_INFORMATION );
          break;
       case ROI_ID:
-         wxMessageBox( "ROI tools.", 
-                        "Toolbar test", wxOK | wxICON_INFORMATION );
+         ROIDialog roiDlg(this,-1,"Volume Clipping Bounds");
+         roiDlg->SetVjObjsPtr(_vjObsPtr);
+         if(roiDlg.ShowModal() == wxID_OK)
+         {
+            wxMessageBox( "ROI tools.", 
+                       "Toolbar test", wxOK | wxICON_INFORMATION );
+         }
          break;
 
    };
