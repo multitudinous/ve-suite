@@ -51,7 +51,9 @@
                           {
                              vec3 SurfaceColor = vertColor.xyz;
                              vec3 CoolColor = vertColor.xyz * 1.10;
-                             vec3 WarmColor = vertColor.xyz * .40;
+                             vec3 WarmColor = vertColor.xyz * .10;
+                            // vec3 CoolColor = vec3(0,0,0.6);
+                             //vec3 WarmColor = vec3(.6,.6,0);
 
                              vec3 kcool    = min(CoolColor + DiffuseCool * SurfaceColor, 1.0);
                              vec3 kwarm    = min(WarmColor + DiffuseWarm * SurfaceColor, 1.0); 
