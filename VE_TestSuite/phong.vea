@@ -15,7 +15,7 @@
 		void main()
 		{
    			gl_Position=ftransform();
-			color=gl_Color.rgb;
+				color=gl_Color.rgb;
    			lightVector=vec3(gl_LightSource[0].position);
    			objPos=gl_Vertex.xyz;
    			eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
@@ -44,7 +44,7 @@
      		uniform vec3 fvSpecular;
       	uniform float fSpecularPower;
       
-		varying vec3 color;
+			varying vec3 color;
       	varying vec3 lightVector;
       	varying vec3 objPos;
       	varying vec3 eyePos;
@@ -53,7 +53,6 @@
       	void main()
       	{
             	vec3 fvDiffuse=color;
-
             	vec3 L=normalize(lightVector);
             	vec3 N=normalize(normal);
             	float fNDotL=dot(N,L); 
@@ -65,7 +64,7 @@
             	vec3 fvTotalDiffuse=fvDiffuse*fNDotL; 
             	vec3 fvTotalSpecular=fvSpecular*(pow(fRDotL,fSpecularPower));
            
-            	gl_FragColor=(fvTotalDiffuse+fvTotalSpecular,1.0);
+            	gl_FragColor=vec4(fvTotalDiffuse+fvTotalSpecular,1.0);
       	}
 	</shaderCode>
 </fragmentShader>
