@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+
+<Program>
+<name>phong2</name>
+
+<vertexShader>
+<type>Vertex</type>
+	<shaderCode>
+ 		varying vec3 lightVector;
+      	varying vec3 objPos;
+      	varying vec3 eyePos;
+      	varying vec3 normal;
+   
+     		void main()
+      	{
+            	gl_Position=ftransform();
+        
+            	lightVector=vec3(gl_LightSource[0].position);
+            	objPos=gl_Vertex.xyz;
+            	eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
+            	normal=gl_NormalMatrix*gl_Normal;
+      	}
+	</shaderCode>
+</vertexShader>
+
+<fragmentShader>
+<type>Fragment</type>
+	<uniform>
+		<name>fSpecularPower</name>
+		<type>Float</type>
+		<size>1</size>
+		<value>20.0</value>
+	</uniform>
+	<shaderCode>
+		uniform float fSpecularPower;
+    
+         	varying vec3 lightVector;
+         	varying vec3 objPos;
+         	varying vec3 eyePos;
+         	varying vec3 normal;
+
+         	void main()
+         	{
+            	vec4 Ambient=gl_FrontMaterial.ambient;
+            	vec4 Diffuse=gl_FrontMaterial.diffuse;
+               	vec4 Specular=gl_FrontMaterial.specular;
+               
+               	vec3 L=normalize(lightVector);
+               	vec3 N=normalize(normal);
+               	float fNDotL=dot(N,L); 
+            
+               	vec3 V=normalize(eyePos);
+               	vec3 R=reflect(V,N);
+               	float fRDotL=max(0.0,dot(R,L));
+
+               	vec4 TotalAmbient=Ambient; 
+               	vec4 TotalDiffuse=Diffuse*fNDotL; 
+               	vec4 TotalSpecular=Specular*(pow(fRDotL,fSpecularPower));
+           
+               	gl_FragColor=(TotalAmbient+TotalDiffuse+TotalSpecular);
+         	}
+	</shaderCode>
+</fragmentShader>
+
+</Program>
