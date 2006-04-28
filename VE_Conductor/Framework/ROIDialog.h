@@ -53,6 +53,17 @@ public:
    ///Destructor
    virtual ~ROIDialog();
 
+   ///Set the name of the command
+   ///\param name The name of the command.
+   void SetCommandName(std::string name);
+  
+   ///Send the commands to Xplorer;
+   void SendCommands();
+
+   ///Add an instruction to send. This is for access in the callbacks.
+   ///\param newInstruct The instruction to add to the Command.
+   void AddInstruction(VE_XML::DataValuePair* newInstruct);
+protected:
    /*!\class ROIMinSliderCallback
     *Class that allows the user to do operations based on the min slider events
     */
@@ -121,17 +132,6 @@ public:
          std::string _direction;
          ROIDialog* _roidlg;
    };
-   ///Set the name of the command
-   ///\param name The name of the command.
-   void SetCommandName(std::string name);
-  
-   ///Send the commands to Xplorer;
-   void SendCommands();
-
-   ///Add an instruction to send. This is for access in the callbacks.
-   ///\param newInstruct The instruction to add to the Command.
-   void AddInstruction(VE_XML::DataValuePair* newInstruct);
-protected:
    ///Build the DualSlider s for this dialog
    void _createDualSliders();
    ///Add the controls to the dialog
