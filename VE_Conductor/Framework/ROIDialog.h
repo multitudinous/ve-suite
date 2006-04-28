@@ -38,10 +38,8 @@
  * GUI class to adjust Volume Visualization clip planes .
  * Bounds are handled as %'s of the bounding box.
  */
-#include <string>
-#include <wx/sizer.h>
-class wxWindow;
 
+#include <string>
 #include "VE_Conductor/Framework/BaseDialog.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
 

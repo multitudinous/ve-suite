@@ -67,9 +67,7 @@ public:
    void ClearInstructions();
 protected:
    ///Override this method in derived classes to add controls to the dialog.
-   //virtual wxBoxSizer* _buildGUI() = 0;
-   void _realize();
-   virtual void _buildGUI() = 0;
+   virtual void _buildGUI()=0;
 #ifndef STAND_ALONE
    VjObs_ptr _vjObsPtr;///<The VjObj ptr.
    

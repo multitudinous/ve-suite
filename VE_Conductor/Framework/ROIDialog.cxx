@@ -29,10 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include "VE_Conductor/Framework/ROIDialog.h"
+
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
+
 using namespace VE_Conductor::GUI_Utilities;
 ////////////////////////////////////////////////////////////////
 ROIDialog::ROIDialog(wxWindow* parent, int id,std::string title)
@@ -41,13 +44,14 @@ ROIDialog::ROIDialog(wxWindow* parent, int id,std::string title)
    _xBounds = 0;
    _yBounds = 0; 
    _zBounds = 0;
+   _buildGUI();
 }
 ///////////////////////
 ///Destructor        //
 ///////////////////////
 ROIDialog::~ROIDialog()
 {
-   if(_xBounds)
+   /*if(_xBounds)
    {
       _xBounds->Destroy();
       _xBounds = 0;
@@ -61,7 +65,7 @@ ROIDialog::~ROIDialog()
    {
       _zBounds->Destroy();
       _zBounds = 0;
-   }
+   }*/
 }
 ///////////////////////////
 void ROIDialog::_buildGUI()
@@ -74,7 +78,7 @@ void ROIDialog::_buildGUI()
    
 
    wxBoxSizer* ydualSizer = new wxBoxSizer(wxHORIZONTAL);
-   ydualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND);
+   ydualSizer->Add(_yBounds,1,wxALIGN_CENTER|wxEXPAND);
 
    wxBoxSizer* zdualSizer = new wxBoxSizer(wxHORIZONTAL);
    zdualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND);

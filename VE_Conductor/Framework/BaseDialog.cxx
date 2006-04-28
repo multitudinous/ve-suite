@@ -50,7 +50,6 @@ BaseDialog::BaseDialog (wxWindow* parent, int id,std::string title)
    _commandName = "";
    SetAutoLayout(true);
 
-   _realize();
    //wxBoxSizer* mainSizer = _buildGUI();
    //SetSizer(mainSizer);
    //mainSizer->Fit(this);
@@ -58,11 +57,6 @@ BaseDialog::BaseDialog (wxWindow* parent, int id,std::string title)
 /////////////////////////////////////////////////////
 BaseDialog::~BaseDialog()
 {
-}
-///////////////////////////
-void BaseDialog::_realize()
-{
-   _buildGUI();
 }
 //////////////////////////////////////////////////////////
 void BaseDialog::SetVjObsPtr(VjObs_ptr xplorerCom)

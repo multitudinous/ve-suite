@@ -195,7 +195,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          break;
       case ROI_ID:
          ROIDialog roiDlg(this,-1,"Volume Clipping Bounds");
-         roiDlg->SetVjObjsPtr(_vjObsPtr);
+         roiDlg.SetVjObsPtr(_vjObsPtr);
          if(roiDlg.ShowModal() == wxID_OK)
          {
             wxMessageBox( "ROI tools.", 
