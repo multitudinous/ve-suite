@@ -12,9 +12,6 @@
 #ifndef _ADVANCEDCONTOURS_H_
 #define _ADVANCEDCONTOURS_H_
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "advancedcontours.h"
-#endif
 
 /*!
  * Includes
@@ -47,7 +44,7 @@ namespace VE_XML
 ////@begin control identifiers
 #define ID_DIALOG 10000
 #define SYMBOL_ADVANCEDCONTOURS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_ADVANCEDCONTOURS_TITLE _("AdvancedContours")
+#define SYMBOL_ADVANCEDCONTOURS_TITLE _T("AdvancedContours")
 #define SYMBOL_ADVANCEDCONTOURS_IDNAME ID_DIALOG
 #define SYMBOL_ADVANCEDCONTOURS_SIZE wxSize(400, 300)
 #define SYMBOL_ADVANCEDCONTOURS_POSITION wxDefaultPosition
@@ -110,7 +107,12 @@ public:
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME, const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
+    bool Create( wxWindow* parent, 
+       wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME,
+       const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE,
+       const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, 
+       const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, 
+       long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
 
     /// Creates the controls and sizers
     void CreateControls();
