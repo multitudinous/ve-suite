@@ -65,6 +65,7 @@ namespace VE_XML
 #define ID_CHECKBOX1 10005
 #define ID_SLIDER 10008
 #define ID_BUTTON 10006
+#define ID_BUTTON1 10009
 ////@end control identifiers
 
 /*!

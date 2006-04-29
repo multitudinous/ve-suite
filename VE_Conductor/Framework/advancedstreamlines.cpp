@@ -142,9 +142,13 @@ END_EVENT_TABLE()
 
 AdvancedStreamlines::AdvancedStreamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Advanced Streamlines"), 
-      wxPoint(850,450), wxSize(400,450), 
+		wxDefaultPosition, wxDefaultSize,
       (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+   this->SetSize( dialogPosition );
+
    xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
 

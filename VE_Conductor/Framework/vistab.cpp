@@ -33,6 +33,8 @@
 #include "vistab.h"
 
 ////@begin XPM images
+#include "VE_Conductor/Framework/vector.xpm"
+#include "VE_Conductor/Framework/contour.xpm"
 ////@end XPM images
 
 /*!
@@ -50,6 +52,7 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_TOOL     (CONTOUR_BUTTON,    Vistab::_onContour)
    EVT_TOOL     (VECTOR_BUTTON,     Vistab::_onVector)
    EVT_TOOL     (STREAMLINE_BUTTON, Vistab::_onStreamline)
+   EVT_TOOL     (ISOSURFACE_BUTTON, Vistab::_onIsosurface)
 ////@end Vistab event table entries
 END_EVENT_TABLE()
 
@@ -59,9 +62,12 @@ END_EVENT_TABLE()
 
 Vistab::Vistab(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Visualization Tab"), 
-      wxPoint(850,50), wxSize(400,400), 
+		wxDefaultPosition, wxDefaultSize, 
       (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth()-427, 20, 427, 400 );
+   this->SetSize( dialogPosition );
 
    xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
@@ -109,47 +115,59 @@ void Vistab::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxToolBar* itemToolBar3 = new wxToolBar( itemDialog1, ID_TOOLBAR, wxDefaultPosition, wxSize(320, -1), wxTB_HORIZONTAL );
-    itemToolBar3->SetToolSeparation(10);
-    itemToolBar3->SetToolPacking(10);
+    wxToolBar* itemToolBar3 = new wxToolBar( itemDialog1, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL );
     itemToolBar3->SetToolBitmapSize(wxSize(45, 30));
-    wxBitmap itemtool4Bitmap(itemDialog1->GetBitmapResource(wxT("../../../../../../../home/users/jaredabo/GUIs/GUI/contour.png")));
+
+    wxBitmap itemtool4Bitmap(contour_xpm);
     wxBitmap itemtool4BitmapDisabled;
     itemToolBar3->AddTool(CONTOUR_BUTTON, _T(""), itemtool4Bitmap, itemtool4BitmapDisabled, wxITEM_RADIO, _("Scalar Contours"), wxEmptyString);
-    wxBitmap itemtool5Bitmap(itemDialog1->GetBitmapResource(wxT("../../../../../../../home/users/jaredabo/GUIs/GUI/vector.png")));
+
+    wxBitmap itemtool5Bitmap(vector_xpm);
     wxBitmap itemtool5BitmapDisabled;
     itemToolBar3->AddTool(VECTOR_BUTTON, _T(""), itemtool5Bitmap, itemtool5BitmapDisabled, wxITEM_RADIO, _("Vectors"), wxEmptyString);
-    wxBitmap itemtool6Bitmap(itemDialog1->GetBitmapResource(wxT("../../../../../../../home/users/jaredabo/GUIs/GUI/vector.png")));
+
+    wxBitmap itemtool6Bitmap(vector_xpm);
     wxBitmap itemtool6BitmapDisabled;
     itemToolBar3->AddTool(STREAMLINE_BUTTON, _T(""), itemtool6Bitmap, itemtool6BitmapDisabled, wxITEM_RADIO, _("Streamlines"), wxEmptyString);
-    wxBitmap itemtool7Bitmap(wxNullBitmap);
-    wxBitmap itemtool7BitmapDisabled;
-    itemToolBar3->AddTool(ID_TOOL3, _T(""), itemtool7Bitmap, itemtool7BitmapDisabled, wxITEM_RADIO, _("Isosurfaces"), wxEmptyString);
-    wxBitmap itemtool8Bitmap(wxNullBitmap);
-    wxBitmap itemtool8BitmapDisabled;
-    itemToolBar3->AddTool(ID_TOOL4, _T(""), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_RADIO, _("Polydata"), wxEmptyString);
-    wxBitmap itemtool9Bitmap(wxNullBitmap);
-    wxBitmap itemtool9BitmapDisabled;
-    itemToolBar3->AddTool(ID_TOOL5, _T(""), itemtool9Bitmap, itemtool9BitmapDisabled, wxITEM_RADIO, _("Texture Based"), wxEmptyString);
-    itemToolBar3->Realize();
-    itemBoxSizer2->Add(itemToolBar3, 0, wxGROW|wxALL, 5);
 
-    wxString itemComboBox10Strings[] = {
+    wxBitmap itemtool7Bitmap(vector_xpm);
+    wxBitmap itemtool7BitmapDisabled;
+    itemToolBar3->AddTool(ISOSURFACE_BUTTON, _T(""), itemtool7Bitmap, itemtool7BitmapDisabled, wxITEM_RADIO, _("Isosurfaces"), wxEmptyString);
+
+    wxBitmap itemtool8Bitmap(vector_xpm);
+    wxBitmap itemtool8BitmapDisabled;
+    itemToolBar3->AddTool(ID_TOOL5, _T(""), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_RADIO, _("Texture Based"), wxEmptyString);
+
+    itemToolBar3->Realize();
+    itemBoxSizer2->Add(itemToolBar3, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxBoxSizer* itemBoxSizer10 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer2->Add(itemBoxSizer10, 0, wxGROW|wxALL, 5);
+
+    wxString itemComboBox11Strings[] = {
         _("DataSet1"),
         _("DataSet2"),
         _("DataSet3")
     };
-    wxComboBox* itemComboBox10 = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxSize(150, -1), 3, itemComboBox10Strings, wxCB_DROPDOWN );
+    wxComboBox* itemComboBox11 = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxDefaultSize, 3, itemComboBox11Strings, wxCB_DROPDOWN );
     if (ShowToolTips())
-        itemComboBox10->SetToolTip(_("Data Sets"));
-    itemBoxSizer2->Add(itemComboBox10, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+        itemComboBox11->SetToolTip(_("Data Sets"));
+    itemBoxSizer10->Add(itemComboBox11, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxString itemComboBox12Strings[] = {
+        _("DataSet1"),
+        _("DataSet2"),
+        _("DataSet3")
+    };
+    wxComboBox* itemComboBox12 = new wxComboBox( itemDialog1, ID_COMBOBOX1, _T(""), wxDefaultPosition, wxDefaultSize, 3, itemComboBox12Strings, wxCB_DROPDOWN );
+    itemBoxSizer10->Add(itemComboBox12, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer11, 0, wxGROW|wxALL, 5);
 
     wxStaticBox* itemStaticBoxSizer12Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Scalars"));
     wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer(itemStaticBoxSizer12Static, wxHORIZONTAL);
-    itemBoxSizer11->Add(itemStaticBoxSizer12, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer11->Add(itemStaticBoxSizer12, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxString itemListBox13Strings[] = {
         _("DataSet1"),
@@ -157,11 +175,11 @@ void Vistab::CreateControls()
         _("DataSet3")
     };
     wxListBox* itemListBox13 = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize(125, -1), 3, itemListBox13Strings, wxLB_SINGLE );
-    itemStaticBoxSizer12->Add(itemListBox13, 0, wxGROW|wxALL, 5);
+    itemStaticBoxSizer12->Add(itemListBox13, 1, wxGROW|wxALL, 5);
 
     wxStaticBox* itemStaticBoxSizer14Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Vectors"));
     wxStaticBoxSizer* itemStaticBoxSizer14 = new wxStaticBoxSizer(itemStaticBoxSizer14Static, wxHORIZONTAL);
-    itemBoxSizer11->Add(itemStaticBoxSizer14, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer11->Add(itemStaticBoxSizer14, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxString itemListBox15Strings[] = {
         _("DataSet1"),
@@ -169,7 +187,7 @@ void Vistab::CreateControls()
         _("DataSet3")
     };
     wxListBox* itemListBox15 = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, -1), 3, itemListBox15Strings, wxLB_SINGLE );
-    itemStaticBoxSizer14->Add(itemListBox15, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer14->Add(itemListBox15, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxStaticText* itemStaticText16 = new wxStaticText( itemDialog1, wxID_STATIC, _("Max%"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     itemBoxSizer2->Add(itemStaticText16, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
@@ -216,11 +234,6 @@ wxBitmap Vistab::GetBitmapResource( const wxString& name )
         wxBitmap bitmap(_T("../../../../../../../home/users/jaredabo/GUIs/GUI/vector.png"), wxBITMAP_TYPE_PNG);
         return bitmap;
     }
-    else if (name == _T("../Deere/Deere/Pics/geom_with_baffle.PNG"))
-    {
-        wxBitmap bitmap(_T("../Deere/Deere/Pics/geom_with_baffle.PNG"), wxBITMAP_TYPE_PNG);
-        return bitmap;
-    }
     return wxNullBitmap;
 ////@end Vistab bitmap retrieval
 }
@@ -262,6 +275,13 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
    streamline = new Streamlines(xplorerPtr, domManager);
    streamline->ShowModal();
 std::cout<<"STREAMLINES WORKING"<<std::endl;
+}
+////////////////////////////////////////////////////////////
+void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
+{
+   isosurface = new Isosurfaces(xplorerPtr, domManager);
+   isosurface->ShowModal();
+std::cout<<"ISOSURFACES WORKING"<<std::endl;
 }
 /*!
  * Vistab type definition

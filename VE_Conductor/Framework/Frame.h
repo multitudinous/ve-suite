@@ -90,12 +90,14 @@ enum
    XPLORER_VIEWPOINTS,
    XPLORER_SOUNDS,
    XPLORER_STREAMLINE,
-   XPLORER_VISTABS,
+   XPLORER_VISTAB,
    JUGGLER_STEREO,
    JUGGLER_MONO, 
    JUGGLER_SETTINGS,
    CAD_NODE_DIALOG
 };
+//   XPLORER_VISTABS,
+
 
 class OrbThread;
 class PEThread;
@@ -108,6 +110,10 @@ class SoundsPane;
 class ViewLocPane;
 class StreamlinePane;
 class CORBAServiceList;
+
+//class Vectors;
+class Vistab;
+
 namespace VE_Conductor
 {
    namespace GUI_Utilities
@@ -233,8 +239,8 @@ protected:
    void LaunchViewpointsPane(wxCommandEvent& event);
    void LaunchSoundsPane(wxCommandEvent& event);
    void LaunchStreamlinePane(wxCommandEvent& event);
-   void LaunchVisTabs( wxCommandEvent& event );
-
+//   void LaunchVisTabs( wxCommandEvent& event );
+   void LaunchVistab( wxCommandEvent& event );
    ///Launch the CADNode GUI
    ///\param event The wxCommand event.
    void LaunchCADNodePane(wxCommandEvent& event);
@@ -251,7 +257,8 @@ private:
    NavigationPane* navPane;
    SoundsPane* soundsPane;
    ViewLocPane* viewlocPane;
-   wxDialog* visTabs;
+//   wxDialog* visTabs;
+   Vistab* vistab;
 
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
 

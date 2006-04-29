@@ -52,7 +52,15 @@ SRCS=\
    spinctld.cpp\
    SoundsPane.cpp \
    ViewLocPane.cxx\
-   TransformUI.cxx
+   TransformUI.cxx\
+   vistab.cpp\
+   vectors.cpp\
+   advancedvectors.cpp\
+   contours.cpp\
+   advancedcontours.cpp\
+   streamlines.cpp\
+   advancedstreamlines.cpp\
+   isosurfaces.cpp
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)

@@ -133,9 +133,13 @@ END_EVENT_TABLE()
 
 Streamlines::Streamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Streamlines"), 
-      wxPoint(850,450), wxSize(400,450), 
+		wxDefaultPosition, wxDefaultSize, 
       (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+   this->SetSize( dialogPosition );
+
    xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
 
@@ -226,8 +230,14 @@ void Streamlines::CreateControls()
     wxSlider* itemSlider11 = new wxSlider( itemDialog1, ID_SLIDER1, 2, 2, 20, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer3->Add(itemSlider11, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxButton* itemButton12 = new wxButton( itemDialog1, ADVANCED_STREAMLINE_BUTTON, _("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add(itemButton12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
+    itemStaticBoxSizer3->Add(itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxButton* itemButton13 = new wxButton( itemDialog1, wxID_OK, _("Compute Streamline"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer12->Add(itemButton13, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* itemButton14 = new wxButton( itemDialog1, ADVANCED_STREAMLINE_BUTTON, _("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer12->Add(itemButton14, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end Streamlines content construction
 }

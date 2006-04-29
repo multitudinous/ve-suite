@@ -45,6 +45,10 @@
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
 #include "VE_Conductor/Framework/StreamersPane.h"
+
+#include "VE_Conductor/Framework/vectors.h"
+#include "VE_Conductor/Framework/vistab.h"
+
 #include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/Framework/CADNodeManagerDlg.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
@@ -112,8 +116,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
    EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
-   EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
+//   EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
    EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
+   EVT_MENU( XPLORER_VISTAB, AppFrame::LaunchVistab )   
 
    //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
    //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
@@ -137,7 +142,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
    wx_nw_splitter->SetMinimumPaneSize( 20 );
    xplorerMenu = 0;
-   visTabs = 0;
+//   visTabs = 0;
    //LogWindow
    logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
 
@@ -175,6 +180,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    _cadDialog = 0;
 
    streamlinePane = 0;
+   vistab = 0;
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
    ///Initialize VE-Open
@@ -201,7 +207,7 @@ void AppFrame::CreateVETab()
   
   m_imageList->Add(wxArtProvider::GetIcon(wxART_ERROR, wxART_OTHER, imageSize));
   */
-   visTabs = new wxDialog(NULL,-1, wxString("Vis Tabs"), 
+/*   visTabs = new wxDialog(NULL,-1, wxString("Vis Tabs"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP);
    // Set the default location and size for the vis panel
@@ -237,7 +243,7 @@ void AppFrame::CreateVETab()
 
 
    //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
-   //SetSizer( sizerTab );
+   //SetSizer( sizerTab );*/
 }
 
 void AppFrame::GetConfig(wxConfig* config)
@@ -474,7 +480,8 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
 	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
 	xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
-	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
+//	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
+   xplorerMenu->Append( XPLORER_VISTAB, _("Visualization Tabs"));
 
 	xplorerMenu->Enable( XPLORER_NAVIGATION, true);
 	xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
@@ -1350,6 +1357,27 @@ void AppFrame::LaunchStreamlinePane( wxCommandEvent& WXUNUSED(event) )
    streamlinePane->Show();
 }
 ///////////////////////////////////////////////////////////////////
+void AppFrame::LaunchVistab( wxCommandEvent& WXUNUSED(event) )
+{
+   if ( vistab == 0 )
+   {
+      ConVEServer();
+      if ( CORBA::is_nil(vjobs.in()) )
+         return;
+      // create pane and set appropriate vars
+      vistab = new Vistab( vjobs.in(), domManager );
+      // Set DOMDocument
+      // navPane->SetDOMManager( domManager );
+   }
+   else
+   {
+      // set pointer to corba object for comm
+      vistab->SetCommInstance( vjobs.in() );
+   }
+   // now show it
+   vistab->Show();
+}
+///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 {
    ConVEServer();
@@ -1397,6 +1425,7 @@ void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
    delete veCommand;
 }
 ///////////////////////////////////////////////////////////////////
+/*
 void AppFrame::LaunchVisTabs( wxCommandEvent& WXUNUSED(event) )
 {
    if ( visTabs == 0 )
@@ -1410,6 +1439,7 @@ void AppFrame::LaunchVisTabs( wxCommandEvent& WXUNUSED(event) )
    // now show it
    visTabs->Show();
 }
+*/
 ///////////////////////////////////////////////////////////////////
 VjObs_ptr AppFrame::GetXplorerObject( void )
 {

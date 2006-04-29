@@ -56,9 +56,13 @@ END_EVENT_TABLE()
 
 Contours::Contours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Contours"), 
-      wxPoint(850,450), wxSize(400,450), 
+		wxDefaultPosition, wxDefaultSize,
       (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+   this->SetSize( dialogPosition );
+
    xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
 
@@ -105,58 +109,68 @@ void Contours::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer3, 0, wxGROW|wxALL, 5);
+    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Contour Controls"));
+    wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
+    itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
 
-    wxString itemRadioBox4Strings[] = {
+    wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
+    itemStaticBoxSizer3->Add(itemBoxSizer4, 0, wxGROW|wxALL, 5);
+
+    wxString itemRadioBox5Strings[] = {
         _("x"),
         _("y"),
         _("z"),
         _("By Wand")
     };
-    wxRadioBox* itemRadioBox4 = new wxRadioBox( itemDialog1, ID_RADIOBOX, _("Direction"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox4Strings, 1, wxRA_SPECIFY_COLS );
-    itemBoxSizer3->Add(itemRadioBox4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxRadioBox* itemRadioBox5 = new wxRadioBox( itemDialog1, ID_RADIOBOX, _("Direction"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+    itemBoxSizer4->Add(itemRadioBox5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxString itemRadioBox5Strings[] = {
+    wxString itemRadioBox6Strings[] = {
         _("Graduated"),
         _("Banded"),
         _("Lined")
     };
-    wxRadioBox* itemRadioBox5 = new wxRadioBox( itemDialog1, ID_RADIOBOX1, _("Contour Type"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
-    itemBoxSizer3->Add(itemRadioBox5, 0, wxALIGN_TOP|wxALL, 5);
+    wxRadioBox* itemRadioBox6 = new wxRadioBox( itemDialog1, ID_RADIOBOX1, _("Contour Type"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
+    itemBoxSizer4->Add(itemRadioBox6, 0, wxALIGN_TOP|wxALL, 5);
 
-    wxStaticBox* itemStaticBoxSizer6Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Multiple Planes"));
-    wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(itemStaticBoxSizer6Static, wxVERTICAL);
-    itemBoxSizer2->Add(itemStaticBoxSizer6, 0, wxGROW|wxALL, 5);
+    wxStaticBox* itemStaticBoxSizer7Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Multiple Planes"));
+    wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer(itemStaticBoxSizer7Static, wxVERTICAL);
+    itemStaticBoxSizer3->Add(itemStaticBoxSizer7, 0, wxGROW|wxALL, 5);
 
-    wxRadioButton* itemRadioButton7 = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _("All Precomputed Surfaces"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemRadioButton7->SetValue(false);
-    itemStaticBoxSizer6->Add(itemRadioButton7, 0, wxALIGN_LEFT|wxALL, 5);
+    wxRadioButton* itemRadioButton8 = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _("All Precomputed Surfaces"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemRadioButton8->SetValue(false);
+    itemStaticBoxSizer7->Add(itemRadioButton8, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxCheckBox* itemCheckBox8 = new wxCheckBox( itemDialog1, ID_CHECKBOX, _("Cycle Precomputed Surfaces"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemCheckBox8->SetValue(false);
-    itemStaticBoxSizer6->Add(itemCheckBox8, 0, wxALIGN_LEFT|wxALL, 5);
+    wxCheckBox* itemCheckBox9 = new wxCheckBox( itemDialog1, ID_CHECKBOX, _("Cycle Precomputed Surfaces"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemCheckBox9->SetValue(false);
+    itemStaticBoxSizer7->Add(itemCheckBox9, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxStaticBox* itemStaticBoxSizer9Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Single Plane"));
-    wxStaticBoxSizer* itemStaticBoxSizer9 = new wxStaticBoxSizer(itemStaticBoxSizer9Static, wxVERTICAL);
-    itemBoxSizer2->Add(itemStaticBoxSizer9, 0, wxGROW|wxALL, 5);
+    wxStaticBox* itemStaticBoxSizer10Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Single Plane"));
+    wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer(itemStaticBoxSizer10Static, wxVERTICAL);
+    itemStaticBoxSizer3->Add(itemStaticBoxSizer10, 0, wxGROW|wxALL, 5);
 
-    wxRadioButton* itemRadioButton10 = new wxRadioButton( itemDialog1, ID_RADIOBUTTON1, _("Specify a Single Plane"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemRadioButton10->SetValue(false);
-    itemStaticBoxSizer9->Add(itemRadioButton10, 0, wxALIGN_LEFT|wxALL, 5);
+    wxRadioButton* itemRadioButton11 = new wxRadioButton( itemDialog1, ID_RADIOBUTTON1, _("Specify a Single Plane"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemRadioButton11->SetValue(false);
+    itemStaticBoxSizer10->Add(itemRadioButton11, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxCheckBox* itemCheckBox11 = new wxCheckBox( itemDialog1, ID_CHECKBOX1, _("Use Nearest Precomputed Plane"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemCheckBox11->SetValue(false);
-    itemStaticBoxSizer9->Add(itemCheckBox11, 0, wxALIGN_LEFT|wxALL, 5);
+    wxCheckBox* itemCheckBox12 = new wxCheckBox( itemDialog1, ID_CHECKBOX1, _("Use Nearest Precomputed Plane"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemCheckBox12->SetValue(false);
+    itemStaticBoxSizer10->Add(itemCheckBox12, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _("Plane"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer2->Add(itemStaticText12, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _("Plane"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add(itemStaticText13, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider13 = new wxSlider( itemDialog1, ID_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemBoxSizer2->Add(itemSlider13, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    wxSlider* itemSlider14 = new wxSlider( itemDialog1, ID_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(itemSlider14, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxButton* itemButton14 = new wxButton( itemDialog1, ADVANCED_CONTOUR_BUTTON, _("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer2->Add(itemButton14, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxBoxSizer* itemBoxSizer15 = new wxBoxSizer(wxHORIZONTAL);
+    itemStaticBoxSizer3->Add(itemBoxSizer15, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxButton* itemButton16 = new wxButton( itemDialog1, wxID_OK, _("Add Plane"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer15->Add(itemButton16, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* itemButton17 = new wxButton( itemDialog1, ADVANCED_CONTOUR_BUTTON, _("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer15->Add(itemButton17, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end Contours content construction
 }
