@@ -29,7 +29,7 @@
 		<name>fSpecularPower</name>
 		<type>Float</type>
 		<size>1</size>
-		<value>16.0</value>
+		<value>25.0</value>
 	</uniform>
 	<shaderCode>
 		uniform float specularPower;
@@ -43,7 +43,7 @@
 		{
    			vec3 L=normalize(lightPos);
    			vec3 N=normalize(normal);
-   			float NDotL=dot(N,L); 
+   			float NDotL=max(0.0,dot(N,L)); 
    
    			vec3 V=normalize(eyePos);
    			vec3 R=reflect(V,N);
