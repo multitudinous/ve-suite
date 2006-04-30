@@ -60,27 +60,27 @@
 			</parameter> 
 			<parameter> 
 				<dataName>Positive X</dataName> 
-				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_RIGHT</dataValueString>
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_RIGHT</dataValueString>
 			</parameter>
 			<parameter>
 				<dataName>Negative X</dataName>
-				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_LEFT</dataValueString>
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_LEFT</dataValueString>
 			</parameter>
 			<parameter>
 				<dataName>Positive Y</dataName>
-				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_TOP</dataValueString>
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_TOP</dataValueString>
 			</parameter>
 			<parameter>
 				<dataName>Negative Y</dataName>
-				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_BOTTOM</dataValueString>
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_BOTTOM</dataValueString>
 			</parameter>
 			<parameter>
 				<dataName>Positive Z</dataName>
-				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_BACK</dataValueString>
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_BACK</dataValueString>
 			</parameter>
 			<parameter>
 				<dataName>Negative Z</dataName>
-				<dataValueString>/mnt/seraph/home17/users/jbkoch/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_FRONT</dataValueString>
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Textures/CubeMaps/CloudyHills/CloudyHills_FRONT</dataValueString>
 			</parameter> 
 		</textureDescriptionData> 
 		<textureUnit>0</textureUnit> 
