@@ -132,7 +132,7 @@ echo "Copying VTK from:" ${VTK_BASE_DIR}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp -RD ${VTK_BASE_DIR}/lib/vtk/*.so ./bin
 else
-   cp -Rd ${VTK_BASE_DIR}/lib/* ./bin
+   cp -Rd ${VTK_BASE_DIR}/lib/vtk/* ./bin
 endif
 
 echo "Copying ACE from:" ${TAO_HOME}
@@ -165,7 +165,7 @@ echo "Copying OSG from: " ${OSG_HOME}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp ${OSG_HOME}/lib32/*.so ./bin
    cp ${OSG_HOME}/lib32/osgPlugins/*.so ./bin
-else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
+else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_*64 ) then
    cp ${OSG_HOME}/lib64/*.so ./bin
    cp ${OSG_HOME}/lib64/osgPlugins/*.so ./bin
    cp ${OSG_HOME}/lib/*.so ./bin
