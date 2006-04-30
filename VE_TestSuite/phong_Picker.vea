@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 
 <Program>
-<name>phong(Picker)</name>
+<name>phong</name>
 
 <vertexShader>
 <type>Vertex</type>
 	<shaderCode>
-		varying vec3 color;
 		varying vec3 lightPos;
 		varying vec3 objPos;
       	varying vec3 eyePos;
@@ -15,12 +14,11 @@
       	void main()
       	{
             	gl_Position=ftransform();
-            	
-			color=gl_Color.rgb;
+            
             	objPos=gl_Vertex.xyz;
             	eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
-            	lightPos=gl_LightSource[0].position.xyz;
-            	normal=gl_NormalMatrix*gl_Normal;
+			lightPos=gl_LightSource[0].position.xyz;
+            	normal=vec3(gl_NormalMatrix*gl_Normal);
       	}
 	</shaderCode>
 </vertexShader>
@@ -28,36 +26,89 @@
 <fragmentShader>
 <type>Fragment</type>
 	<uniform>
-		<name>fSpecularPower</name>
+		<name>ambientLight</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>0.368627</value>
+		<value>0.368421</value>
+		<value>0.368421</value>
+	</uniform>
+	<uniform>
+		<name>diffuseLight</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>0.886275</value>
+		<value>0.885003</value>
+		<value>0.885003</value>
+	</uniform>
+	<uniform>
+		<name>specularLight</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>0.490196</value>
+		<value>0.488722</value>
+		<value>0.488722</value>
+	</uniform>
+	<uniform>
+		<name>ambientMaterial</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>0.368627</value>
+		<value>0.368421</value>
+		<value>0.368421</value>
+	</uniform>
+	<uniform>
+		<name>diffuseMaterial</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>0.886275</value>
+		<value>0.885003</value>
+		<value>0.885003</value>
+	</uniform>
+	<uniform>
+		<name>specularMaterial</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>0.490196</value>
+		<value>0.488722</value>
+		<value>0.488722</value>
+	</uniform>
+	<uniform>
+		<name>specularPower</name>
 		<type>Float</type>
 		<size>1</size>
 		<value>25.0</value>
 	</uniform>
 	<shaderCode>
-		uniform float specularPower;
+      	uniform vec3 ambientLight;
+      	uniform vec3 diffuseLight;
+      	uniform vec3 specularLight;
+      	uniform vec3 ambientMaterial;
+      	uniform vec3 diffuseMaterial;
+      	uniform vec3 specularMaterial;
+      	uniform float specularPower;
 
-		varying vec3 color;
-		varying vec3 lightPos;
+      	varying vec3 lightPos;
 		varying vec3 objPos;
-		varying vec3 eyePos;
-		varying vec3 normal;
+      	varying vec3 eyePos;
+      	varying vec3 normal;
 
-		void main()
-		{
-   			vec3 N=normalize(normal);
-			vec3 L=normalize(lightPos);
-   			float NDotL=max(dot(N,L),0.0); 
+      	void main()
+      	{
+            	vec3 N=normalize(normal);
+            	vec3 L=normalize(lightPos);
+            	float NDotL=max(dot(N,L),0.0); 
    
-   			vec3 V=normalize(eyePos);
-   			vec3 R=reflect(V,N);
-   			float RDotL=max(dot(R,L),0.0);
+            	vec3 V=normalize(eyePos);
+            	vec3 R=reflect(V,N);
+            	float RDotL=max(dot(R,L),0.0);
    
-  			vec3 TotalAmbient=0.0; 
-   			vec3 TotalDiffuse=color*NDotL; 
-   			vec3 TotalSpecular=gl_LightSource[0].specular.rgb*pow(RDotL,specularPower);
+           		vec3 TotalAmbient=ambientLight*ambientMaterial; 
+            	vec3 TotalDiffuse=diffuseLight*diffuseMaterial*NDotL; 
+            	vec3 TotalSpecular=specularLight*specularMaterial*pow(RDotL,specularPower);
   
-   			gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);  
-		}
+            	gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);  
+      	}
 	</shaderCode>
 </fragmentShader>
 
