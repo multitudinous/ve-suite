@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<!--Shader adapted from RenderMonkey 1.6 Examples-->
+
+<Program>
+<name>phong_Bump_Texture2D</name>
+
+<vertexShader>
+<type>Vertex</type>
+	<uniform>
+		<name>fvLightPosition</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>-10.0</value>
+		<value>10.0</value>
+		<value>10.0</value>
+	</uniform>
+	<uniform>
+		<name>fvEyePosition</name>
+		<type>Float</type>
+		<size>3</size>
+		<value>0.0</value>
+		<value>0.0</value>
+		<value>-50.0</value>
+	</uniform>
+	<uniform>
+		<name>Scale</name>
+		<type>Float</type>
+		<size>1</size>
+		<value>0.1</value>
+	</uniform>
+	<attribute>
+		<name>rm_Tangent</name>
+		<type>Float</type>
+		<size>3</size>
+		<value></value>
+		<value></value>
+		<value></value>
+	</attribute>
+	<shaderCode>
+		uniform vec3 fvLightPosition;
+		uniform vec3 fvEyePosition;
+		uniform float Scale;
+
+		varying vec2 Texcoord;
+		varying vec3 ViewDirection;
+		varying vec3 LightDirection;
+   		
+		attribute vec3 rm_Tangent;
+   		
+		void main()
+		{
+			gl_Position=ftransform();
+
+   			//Texcoord=gl_Vertex.xy*Scale;
+			Texcoord=gl_MultiTexCoord0.xy;
+    			
+   			vec4 fvObjectPosition=gl_ModelViewMatrix*gl_Vertex;
+   			
+   			vec3 fvViewDirection=fvEyePosition-fvObjectPosition.xyz;
+   			vec3 fvLightDirection=fvLightPosition-fvObjectPosition.xyz;
+     			
+   			vec3 fvNormal=gl_NormalMatrix*gl_Normal;
+   			vec3 fvTangent=gl_NormalMatrix*rm_Tangent;
+			vec3 fvBinormal=cross(fvNormal,fvTangent);
+     			 
+   			ViewDirection.x=dot(fvTangent,fvViewDirection);
+   			ViewDirection.y=dot(fvBinormal,fvViewDirection);
+   			ViewDirection.z=dot(fvNormal,fvViewDirection);
+  			 
+   			LightDirection.x=dot(fvTangent,fvLightDirection.xyz);
+   			LightDirection.y=dot(fvBinormal,fvLightDirection.xyz);
+   			LightDirection.z=dot(fvNormal,fvLightDirection.xyz);
+		}
+	</shaderCode>
+</vertexShader>
+
+<fragmentShader>
+<type>Fragment</type>
+	<uniform>
+		<name>fvAmbient</name>
+		<type>Float</type>
+		<size>4</size>
+		<value>0.368</value>
+		<value>0.368</value>
+		<value>0.368</value>
+		<value>1.0</value>
+	</uniform>
+	<uniform>
+		<name>fvSpecular</name>
+		<type>Float</type>
+		<size>4</size>
+		<value>0.488</value>
+		<value>0.488</value>
+		<value>0.488</value>
+		<value>1.0</value>
+	</uniform>
+	<uniform>
+		<name>fvDiffuse</name>
+		<type>Float</type>
+		<size>4</size>
+		<value>0.885</value>
+		<value>0.885</value>
+		<value>0.885</value>
+		<value>1.0</value>
+	</uniform>
+	<uniform>
+		<name>fSpecularPower</name>
+		<type>Float</type>
+		<size>1</size>
+		<value>25.0</value>
+	</uniform>
+	<uniform>
+		<name>baseMap</name>
+		<type>Sampler</type>
+		<size>1</size>
+		<textureUnit>0</textureUnit>
+      </uniform>
+	<textureImage> 
+		<textureDescriptionData> 
+			<parameter> 
+				<dataName>Wrap S</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap T</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap R</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Magnification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Minification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Type</dataName> 
+				<dataValueString>2D</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Dimension</dataName> 
+				<dataValueUInt>2</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>Unit</dataName> 
+				<dataValueUInt>0</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>FRONT</dataName> 
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Hyper/Textures/Fieldstone.tga</dataValueString> 
+			</parameter> 
+		</textureDescriptionData> 
+		<textureUnit>0</textureUnit> 
+		<dimension>2</dimension> 
+		<textureType>2D</textureType> 
+	</textureImage>
+	<uniform>
+		<name>bumpMap</name>
+		<type>Sampler</type>
+		<size>1</size>
+		<textureUnit>0</textureUnit>
+      </uniform>
+	<textureImage> 
+		<textureDescriptionData> 
+			<parameter> 
+				<dataName>Wrap S</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap T</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Wrap R</dataName> 
+				<dataValueString>Repeat</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Magnification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Minification</dataName> 
+				<dataValueString>Linear</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Type</dataName> 
+				<dataValueString>2D</dataValueString> 
+			</parameter> 
+			<parameter> 
+				<dataName>Dimension</dataName> 
+				<dataValueUInt>2</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>Unit</dataName> 
+				<dataValueUInt>1</dataValueUInt> 
+			</parameter> 
+			<parameter> 
+				<dataName>FRONT</dataName> 
+				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Hyper/Textures/FieldstoneBumpDOT3.tga</dataValueString> 
+			</parameter> 
+		</textureDescriptionData> 
+		<textureUnit>0</textureUnit> 
+		<dimension>2</dimension> 
+		<textureType>2D</textureType> 
+	</textureImage>
+	<shaderCode>
+		uniform vec4 fvAmbient;
+		uniform vec4 fvSpecular;
+		uniform vec4 fvDiffuse;
+		uniform float fSpecularPower;
+		uniform sampler2D baseMap;
+		uniform sampler2D bumpMap;
+		
+		varying vec2 Texcoord;
+		varying vec3 ViewDirection;
+		varying vec3 LightDirection;
+
+		void main()
+		{
+   			vec3 fvLightDirection=normalize(LightDirection);
+   			vec3 fvNormal=normalize((texture2D(bumpMap,Texcoord).xyz*2.0)-1.0);
+   			float fNDotL=dot(fvNormal,fvLightDirection); 
+   			
+  			vec3 fvReflection=normalize(((2.0*fvNormal)*fNDotL)-fvLightDirection); 
+   			vec3 fvViewDirection=normalize(ViewDirection);
+   			float fRDotV=max(0.0,dot(fvReflection,fvViewDirection));
+   			
+   			vec4 fvBaseColor=texture2D(baseMap,Texcoord);
+   			
+   			vec4 fvTotalAmbient=fvAmbient*fvBaseColor; 
+   			vec4 fvTotalDiffuse=fvDiffuse*fNDotL*fvBaseColor; 
+   			vec4 fvTotalSpecular=fvSpecular*(pow(fRDotV,fSpecularPower));
+  			
+   			gl_FragColor=(fvTotalAmbient+fvTotalDiffuse+fvTotalSpecular);
+		}
+	</shaderCode>
+</fragmentShader>
+
+</Program>
