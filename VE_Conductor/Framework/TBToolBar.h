@@ -63,9 +63,9 @@ public:
       TB_TOOLBAR///<Toolbar ID
    };
    ///Constructor
-   TextureBasedToolBar(wxWindow* parent, int id,
+   TextureBasedToolBar(wxWindow* parent, int id/*,
                      std::vector<std::string> scalarNames,
-                     std::vector<std::string> vectorNames);
+                     std::vector<std::string> vectorNames*/);
 
    ///Destructor
    virtual ~TextureBasedToolBar();

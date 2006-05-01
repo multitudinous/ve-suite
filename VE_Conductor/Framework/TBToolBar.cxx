@@ -54,17 +54,17 @@ BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////
-TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id,
+TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id/*,
                                    std::vector<std::string> scalarNames,
-                                   std::vector<std::string> vectorNames)
+                                   std::vector<std::string> vectorNames*/)
 :wxDialog((wxWindow *) parent, id, "Texture-Based ToolBar",wxDefaultPosition,wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("Texture-Based ToolBar") )
 {
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   _updateAvailableSolutions(scalarNames, vectorNames);
+   //_updateAvailableSolutions(scalarNames, vectorNames);
    _buildToolBar();
-   _updateSolutionList(_availableScalars);
+   //_updateSolutionList(_availableScalars);
 
    mainSizer->Add(_tbToolButtons,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
@@ -120,8 +120,8 @@ void TextureBasedToolBar::_buildToolBar()
                                 wxTB_HORIZONTAL | wxNO_BORDER |wxTB_TEXT);
    _tbToolButtons->SetToolBitmapSize(wxSize(50,50));
 
-   _solutionSelection = new wxComboBox(_tbToolButtons,ACTIVE_SOLUTION);
-   _tbToolButtons->AddControl(_solutionSelection);
+  // _solutionSelection = new wxComboBox(_tbToolButtons,ACTIVE_SOLUTION);
+   //_tbToolButtons->AddControl(_solutionSelection);
 
    wxImage scalarOnImage(scalartb_xpm);
    wxBitmap scalarOnBitmap(scalarOnImage);
@@ -179,14 +179,14 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
       case SCALAR_ID:
          wxMessageBox( "Scalar tools.", 
                         "Toolbar test", wxOK | wxICON_INFORMATION );
-         _updateSolutionList(_availableScalars);
+         //_updateSolutionList(_availableScalars);
          event.Skip();
          
          break;
       case VECTOR_ID:
          wxMessageBox( "Vector tools.", 
                       "Toolbar test", wxOK | wxICON_INFORMATION );
-         _updateSolutionList(_availableVectors);
+         //_updateSolutionList(_availableVectors);
          event.Skip();
          break;
       case TRANSFER_FUNCS_ID:

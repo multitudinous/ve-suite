@@ -52,6 +52,7 @@ SRCS=\
    spinctld.cpp\
    SoundsPane.cpp \
    ViewLocPane.cxx\
+   TBToolBar.cxx \
    TransformUI.cxx\
    vistab.cpp\
    vectors.cpp\

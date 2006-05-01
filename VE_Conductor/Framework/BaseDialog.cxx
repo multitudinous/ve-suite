@@ -44,15 +44,10 @@
 ////////////////////////////////////////////////////
 BaseDialog::BaseDialog (wxWindow* parent, int id,std::string title)
 :wxDialog((wxWindow*) parent, id, title.c_str(), wxDefaultPosition, wxDefaultSize,
-(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX))
+(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX))
 {
    _vjObsPtr = 0;
    _commandName = "";
-   SetAutoLayout(true);
-
-   //wxBoxSizer* mainSizer = _buildGUI();
-   //SetSizer(mainSizer);
-   //mainSizer->Fit(this);
 }
 /////////////////////////////////////////////////////
 BaseDialog::~BaseDialog()

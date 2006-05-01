@@ -27,7 +27,7 @@
 #endif
 
 ////@begin includes
-
+#include "VE_Conductor/Framework/TBToolBar.h"
 ////@end includes
 
 #include "vistab.h"
@@ -53,6 +53,7 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_TOOL     (VECTOR_BUTTON,     Vistab::_onVector)
    EVT_TOOL     (STREAMLINE_BUTTON, Vistab::_onStreamline)
    EVT_TOOL     (ISOSURFACE_BUTTON, Vistab::_onIsosurface)
+   EVT_TOOL     (TEXTURE_BASED_BUTTON, Vistab::_onTextureBased)
 ////@end Vistab event table entries
 END_EVENT_TABLE()
 
@@ -71,6 +72,7 @@ Vistab::Vistab(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 
    xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
+   _tbTools = 0;
 
    CreateControls();
 }
@@ -136,7 +138,7 @@ void Vistab::CreateControls()
 
     wxBitmap itemtool8Bitmap(vector_xpm);
     wxBitmap itemtool8BitmapDisabled;
-    itemToolBar3->AddTool(ID_TOOL5, _T(""), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_RADIO, _("Texture Based"), wxEmptyString);
+    itemToolBar3->AddTool(TEXTURE_BASED_BUTTON, _T(""), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_RADIO, _("Texture Based"), wxEmptyString);
 
     itemToolBar3->Realize();
     itemBoxSizer2->Add(itemToolBar3, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -282,6 +284,19 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
    isosurface = new Isosurfaces(xplorerPtr, domManager);
    isosurface->ShowModal();
 std::cout<<"ISOSURFACES WORKING"<<std::endl;
+}
+////////////////////////////////////////////////////////////
+void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
+{
+   if(!_tbTools)
+   {
+      _tbTools = new TextureBasedToolBar(this,-1);
+      _tbTools->SetVjObsPtr(xplorerPtr);
+   }
+   if(_tbTools->ShowModal() == wxID_OK)
+   {
+      std::cout<<"TBTools WORKING"<<std::endl;
+   }
 }
 /*!
  * Vistab type definition

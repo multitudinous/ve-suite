@@ -36,6 +36,7 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 
+#include <wx/statbox.h>
 using namespace VE_Conductor::GUI_Utilities;
 ////////////////////////////////////////////////////////////////
 ROIDialog::ROIDialog(wxWindow* parent, int id,std::string title)
@@ -45,6 +46,9 @@ ROIDialog::ROIDialog(wxWindow* parent, int id,std::string title)
    _yBounds = 0; 
    _zBounds = 0;
    _buildGUI();
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+   this->SetSize( dialogPosition );
 }
 ///////////////////////
 ///Destructor        //
@@ -70,12 +74,12 @@ ROIDialog::~ROIDialog()
 ///////////////////////////
 void ROIDialog::_buildGUI()
 {
-   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
- 
+   wxStaticBox* dualSliderGroup = new wxStaticBox(this, -1, wxT("Volume Clipping Planes"));
+   wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer(dualSliderGroup,wxVERTICAL);
+
    _createDualSliders();
    wxBoxSizer* xdualSizer = new wxBoxSizer(wxHORIZONTAL);
    xdualSizer->Add(_xBounds,1,wxALIGN_CENTER|wxEXPAND);
-   
 
    wxBoxSizer* ydualSizer = new wxBoxSizer(wxHORIZONTAL);
    ydualSizer->Add(_yBounds,1,wxALIGN_CENTER|wxEXPAND);
@@ -92,12 +96,12 @@ void ROIDialog::_buildGUI()
 
    //assign the group to the panel
    SetSizer(mainSizer);
-   mainSizer->Fit(this);
+   mainSizer->Fit(dynamic_cast<BaseDialog*>(this));
 }
 ////////////////////////////////////
 void ROIDialog::_createDualSliders()
 {
-   _xBounds = new DualSlider(this,-1,1,0, 100,0,0, wxDefaultPosition,wxDefaultSize,
+   _xBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
                              wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("X Bounds"));
    ROIMinSliderCallback* minX = new ROIMinSliderCallback(this,"X");
    ROIMaxSliderCallback* maxX = new ROIMaxSliderCallback(this,"X");
@@ -107,7 +111,7 @@ void ROIDialog::_createDualSliders()
    _xBounds->SetMaxSliderCallback(maxX);
    _xBounds->SetBothSliderUpdateCallback(bothX);
 
-   _yBounds = new DualSlider(this,-1,1,0, 100,0,0, wxDefaultPosition,wxDefaultSize,
+   _yBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
                              wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Y Bounds"));
 
    ROIMinSliderCallback* minY = new ROIMinSliderCallback(this,"Y");
@@ -118,7 +122,7 @@ void ROIDialog::_createDualSliders()
    _yBounds->SetMaxSliderCallback(maxY);
    _yBounds->SetBothSliderUpdateCallback(bothY);
 
-   _zBounds = new DualSlider(this,-1,1,0, 100,0,0, wxDefaultPosition,wxDefaultSize,
+   _zBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
                              wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Z Bounds"));
 
    ROIMinSliderCallback* minZ = new ROIMinSliderCallback(this,"Z");

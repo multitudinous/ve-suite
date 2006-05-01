@@ -30,10 +30,14 @@
 #include "VE_Conductor/Framework/contours.h"
 #include "VE_Conductor/Framework/streamlines.h"
 #include "VE_Conductor/Framework/isosurfaces.h"
+
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
 ////@end includes
 XERCES_CPP_NAMESPACE_USE
+
+class TextureBasedToolBar;
+
 namespace VE_XML
 {
    class Command;
@@ -49,7 +53,8 @@ enum VISTAB_IDS
    CONTOUR_BUTTON,
    VECTOR_BUTTON,
    STREAMLINE_BUTTON,
-   ISOSURFACE_BUTTON
+   ISOSURFACE_BUTTON,
+   TEXTURE_BASED_BUTTON
 };
 ////@end forward declarations
 
@@ -193,6 +198,7 @@ public:
     void _onVector(wxCommandEvent& );
     void _onStreamline(wxCommandEvent& );
     void _onIsosurface(wxCommandEvent& );
+    void _onTextureBased(wxCommandEvent& );
 ////@end Vistab event handler declarations
 
 ////@begin Vistab member function declarations
@@ -220,6 +226,7 @@ protected:
    Contours* contour;
    Streamlines* streamline;
    Isosurfaces* isosurface;
+   TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
 ////@begin Vistab member variables
 ////@end Vistab member variables
 };
