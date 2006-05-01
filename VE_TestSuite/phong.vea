@@ -6,7 +6,7 @@
 <vertexShader>
 <type>Vertex</type>
 	<shaderCode>
-		varying vec3 objPos;
+			varying vec3 objPos;
       	varying vec3 eyePos;
       	varying vec3 normal;
    
@@ -75,9 +75,9 @@
 		<name>lightPos</name>
 		<type>Float</type>
 		<size>3</size>
-		<value>-100.0</value>
-		<value>100.0</value>
-		<value>100.0</value>
+		<value>1000.0</value>
+		<value>1000.0</value>
+		<value>1000.0</value>
 	</uniform>
 	<uniform>
 		<name>specularPower</name>
