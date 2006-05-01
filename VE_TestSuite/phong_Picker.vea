@@ -16,7 +16,7 @@
       	{
             	gl_Position=ftransform();
             
-            	color=gl_Color;
+            	color=gl_Color.xyz;
 					objPos=gl_Vertex.xyz;
             	eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
 					lightPos=gl_LightSource[0].position.xyz;
