@@ -9,26 +9,18 @@
 // Licence:     
 /////////////////////////////////////////////////////////////////////////////
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma implementation "isosurfaces.h"
-#endif
-
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
 
 ////@begin includes
 ////@end includes
 
-#include "isosurfaces.h"
-
+#include "VE_Conductor/Framework/isosurfaces.h"
+#include <wx/sizer.h>
+#include <wx/checkbox.h>
+#include <wx/radiobox.h>
+#include <wx/radiobut.h>
+#include <wx/slider.h>
+#include <wx/icon.h>
+#include <iostream>
 ////@begin XPM images
 ////@end XPM images
 
@@ -182,19 +174,19 @@ void Isosurfaces::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Isosurface Controls"));
+    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Isosurface Controls"));
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
 
-    wxRadioButton* itemRadioButton4 = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _("Specify an Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxRadioButton* itemRadioButton4 = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _T("Specify an Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemRadioButton4->SetValue(false);
     itemStaticBoxSizer3->Add(itemRadioButton4, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxCheckBox* itemCheckBox5 = new wxCheckBox( itemDialog1, ID_CHECKBOX, _("Use Nearest Precomputed Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxCheckBox* itemCheckBox5 = new wxCheckBox( itemDialog1, ID_CHECKBOX, _T("Use Nearest Precomputed Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemCheckBox5->SetValue(false);
     itemStaticBoxSizer3->Add(itemCheckBox5, 0, wxGROW|wxALL, 5);
 
-    wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _("Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add(itemStaticText6, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
     wxSlider* itemSlider7 = new wxSlider( itemDialog1, ID_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
@@ -203,10 +195,10 @@ void Isosurfaces::CreateControls()
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxButton* itemButton9 = new wxButton( itemDialog1, wxID_OK, _("Compute Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton9 = new wxButton( itemDialog1, wxID_OK, _T("Compute Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(itemButton9, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* itemButton10 = new wxButton( itemDialog1, ID_BUTTON, _("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton10 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(itemButton10, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end Isosurfaces content construction

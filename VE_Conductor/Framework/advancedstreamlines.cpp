@@ -9,26 +9,15 @@
 // Licence:     
 /////////////////////////////////////////////////////////////////////////////
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma implementation "advancedstreamlines.h"
-#endif
-
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
 
 ////@begin includes
 ////@end includes
 
-#include "advancedstreamlines.h"
-
+#include "VE_Conductor/Framework/advancedstreamlines.h"
+#include <wx/sizer.h>
+#include <wx/slider.h>
+#include <wx/checkbox.h>
+#include <wx/icon.h>
 ////@begin XPM images
 ////@end XPM images
 
@@ -195,11 +184,11 @@ void AdvancedStreamlines::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Advanced Streamline Controls"));
+    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Advanced Streamline Controls"));
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
 
-    wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _("Propagation (Total) Time"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Propagation (Total) Time"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText4, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxSlider* itemSlider5 = new wxSlider( itemDialog1, ID_SLIDER, 100, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
@@ -208,13 +197,13 @@ void AdvancedStreamlines::CreateControls()
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer6, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText7 = new wxStaticText( itemDialog1, wxID_STATIC, _("Shorter"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+    wxStaticText* itemStaticText7 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Shorter"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemBoxSizer6->Add(itemStaticText7, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _("Longer"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+    wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Longer"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer6->Add(itemStaticText8, 1, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _("Integration Step"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Integration Step"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText9, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxSlider* itemSlider10 = new wxSlider( itemDialog1, ID_SLIDER1, 1000, 1, 5000, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
@@ -223,13 +212,13 @@ void AdvancedStreamlines::CreateControls()
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer11, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _("Smaller"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT|wxSTATIC_BORDER );
+    wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Smaller"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT|wxSTATIC_BORDER );
     itemBoxSizer11->Add(itemStaticText12, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _("Larger"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Larger"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer11->Add(itemStaticText13, 1, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _("Step"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Step"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxSlider* itemSlider15 = new wxSlider( itemDialog1, ID_SLIDER2, 1, 1, 5000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
@@ -238,19 +227,19 @@ void AdvancedStreamlines::CreateControls()
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer16, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _("Finer"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+    wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Finer"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemBoxSizer16->Add(itemStaticText17, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _("Coarser"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+    wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Coarser"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer16->Add(itemStaticText18, 1, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText19 = new wxStaticText( itemDialog1, wxID_STATIC, _("Sphere/Arrow/Particle Size(%)"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+    wxStaticText* itemStaticText19 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Sphere/Arrow/Particle Size(%)"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemStaticBoxSizer3->Add(itemStaticText19, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxSlider* itemSlider20 = new wxSlider( itemDialog1, ID_SLIDER3, 50, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer3->Add(itemSlider20, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText21 = new wxStaticText( itemDialog1, wxID_STATIC, _("Line Diameter"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText21 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Line Diameter"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText21, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxSlider* itemSlider22 = new wxSlider( itemDialog1, ID_SLIDER4, 0, -100, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
@@ -259,24 +248,24 @@ void AdvancedStreamlines::CreateControls()
     wxBoxSizer* itemBoxSizer23 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer23, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText24 = new wxStaticText( itemDialog1, wxID_STATIC, _("Decrease Size"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+    wxStaticText* itemStaticText24 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Decrease Size"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemBoxSizer23->Add(itemStaticText24, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText25 = new wxStaticText( itemDialog1, wxID_STATIC, _("Increase Size"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+    wxStaticText* itemStaticText25 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Increase Size"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer23->Add(itemStaticText25, 1, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxBoxSizer* itemBoxSizer26 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer26, 0, wxGROW|wxALL, 5);
 
-    wxCheckBox* itemCheckBox27 = new wxCheckBox( itemDialog1, ID_CHECKBOX, _("Use Last Seed Point"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxCheckBox* itemCheckBox27 = new wxCheckBox( itemDialog1, ID_CHECKBOX, _T("Use Last Seed Point"), wxDefaultPosition, wxDefaultSize, 0 );
     itemCheckBox27->SetValue(false);
     itemBoxSizer26->Add(itemCheckBox27, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxCheckBox* itemCheckBox28 = new wxCheckBox( itemDialog1, ID_CHECKBOX1, _("Stream Arrows"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxCheckBox* itemCheckBox28 = new wxCheckBox( itemDialog1, ID_CHECKBOX1, _T("Stream Arrows"), wxDefaultPosition, wxDefaultSize, 0 );
     itemCheckBox28->SetValue(false);
     itemBoxSizer26->Add(itemCheckBox28, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* itemButton29 = new wxButton( itemDialog1, ID_BUTTON, _("Particle Tracking"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton29 = new wxButton( itemDialog1, ID_BUTTON, _T("Particle Tracking"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemButton29, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 ////@end AdvancedStreamlines content construction

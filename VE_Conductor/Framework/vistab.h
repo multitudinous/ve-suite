@@ -14,10 +14,6 @@
 #ifndef _VISTAB_H_
 #define _VISTAB_H_
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "vistab.h"
-#endif
-
 /*!
  * Includes
  */
@@ -65,7 +61,7 @@ enum VISTAB_IDS
 ////@begin control identifiers
 #define ID_DIALOG 10000
 #define SYMBOL_VISTAB_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_VISTAB_TITLE _("VE-Suite")
+#define SYMBOL_VISTAB_TITLE _T("VE-Suite")
 #define SYMBOL_VISTAB_IDNAME ID_DIALOG
 #define SYMBOL_VISTAB_SIZE wxSize(400, 300)
 #define SYMBOL_VISTAB_POSITION wxDefaultPosition

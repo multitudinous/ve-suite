@@ -12,10 +12,6 @@
 #ifndef _VECTORS_H_
 #define _VECTORS_H_
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "vectors.h"
-#endif
-
 /*!
  * Includes
  */
@@ -51,7 +47,7 @@ namespace VE_XML
 ////@begin control identifiers
 #define ID_DIALOG 10000
 #define SYMBOL_VECTORS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_VECTORS_TITLE _("Vectors")
+#define SYMBOL_VECTORS_TITLE _T("Vectors")
 #define SYMBOL_VECTORS_IDNAME ID_DIALOG
 #define SYMBOL_VECTORS_SIZE wxSize(400, 300)
 #define SYMBOL_VECTORS_POSITION wxDefaultPosition

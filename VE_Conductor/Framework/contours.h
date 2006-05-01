@@ -14,9 +14,6 @@
 #ifndef _CONTOURS_H_
 #define _CONTOURS_H_
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "contours.h"
-#endif
 
 /*!
  * Includes
@@ -53,7 +50,7 @@ namespace VE_XML
 ////@begin control identifiers
 #define ID_DIALOG 10000
 #define SYMBOL_CONTOURS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_CONTOURS_TITLE _("Contours")
+#define SYMBOL_CONTOURS_TITLE _T("Contours")
 #define SYMBOL_CONTOURS_IDNAME ID_DIALOG
 #define SYMBOL_CONTOURS_SIZE wxSize(400, 300)
 #define SYMBOL_CONTOURS_POSITION wxDefaultPosition

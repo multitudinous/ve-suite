@@ -12,10 +12,6 @@
 #ifndef _STREAMLINES_H_
 #define _STREAMLINES_H_
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "streamlines.h"
-#endif
-
 /*!
  * Includes
  */
@@ -56,7 +52,7 @@ namespace VE_XML
 ////@begin control identifiers
 #define ID_DIALOG 10000
 #define SYMBOL_STREAMLINES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_STREAMLINES_TITLE _("Streamlines")
+#define SYMBOL_STREAMLINES_TITLE _T("Streamlines")
 #define SYMBOL_STREAMLINES_IDNAME ID_DIALOG
 #define SYMBOL_STREAMLINES_SIZE wxSize(400, 300)
 #define SYMBOL_STREAMLINES_POSITION wxDefaultPosition

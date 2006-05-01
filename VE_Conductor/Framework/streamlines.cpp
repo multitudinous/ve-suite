@@ -9,25 +9,18 @@
 // Licence:     
 /////////////////////////////////////////////////////////////////////////////
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma implementation "streamlines.h"
-#endif
-
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
 
 ////@begin includes
 ////@end includes
 
-#include "streamlines.h"
+#include "VE_Conductor/Framework/streamlines.h"
+#include <wx/sizer.h>
+#include <wx/checkbox.h>
+#include <wx/radiobox.h>
+#include <wx/radiobut.h>
+#include <wx/slider.h>
+#include <wx/icon.h>
+#include <iostream>
 
 ////@begin XPM images
 ////@end XPM images
@@ -186,7 +179,7 @@ void Streamlines::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Streamline Controls"));
+    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Streamline Controls"));
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
 
@@ -194,37 +187,37 @@ void Streamlines::CreateControls()
     itemStaticBoxSizer3->Add(itemBoxSizer4, 0, wxGROW|wxALL, 5);
 
     wxString itemRadioBox5Strings[] = {
-        _("none"),
-        _("point"),
-        _("line"),
-        _("plane")
+        _T("none"),
+        _T("point"),
+        _T("line"),
+        _T("plane")
     };
-    wxRadioBox* itemRadioBox5 = new wxRadioBox( itemDialog1, ID_RADIOBOX, _("Cursor Selection"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+    wxRadioBox* itemRadioBox5 = new wxRadioBox( itemDialog1, ID_RADIOBOX, _T("Cursor Selection"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(itemRadioBox5, 0, wxALIGN_TOP|wxALL, 5);
 
     wxString itemRadioBox6Strings[] = {
-        _("x"),
-        _("y"),
-        _("z")
+        _T("x"),
+        _T("y"),
+        _T("z")
     };
-    wxRadioBox* itemRadioBox6 = new wxRadioBox( itemDialog1, ID_RADIOBOX1, _("Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
+    wxRadioBox* itemRadioBox6 = new wxRadioBox( itemDialog1, ID_RADIOBOX1, _T("Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(itemRadioBox6, 0, wxALIGN_TOP|wxALL, 5);
 
     wxString itemRadioBox7Strings[] = {
-        _("backward"),
-        _("forward"),
-        _("both directions")
+        _T("backward"),
+        _T("forward"),
+        _T("both directions")
     };
-    wxRadioBox* itemRadioBox7 = new wxRadioBox( itemDialog1, ID_RADIOBOX2, _("Integration Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox7Strings, 1, wxRA_SPECIFY_COLS );
+    wxRadioBox* itemRadioBox7 = new wxRadioBox( itemDialog1, ID_RADIOBOX2, _T("Integration Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox7Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(itemRadioBox7, 0, wxALIGN_TOP|wxALL, 5);
 
-    wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _("Size(%)"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Size(%)"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxSlider* itemSlider9 = new wxSlider( itemDialog1, ID_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer3->Add(itemSlider9, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText10 = new wxStaticText( itemDialog1, wxID_STATIC, _("Number of Point (Per Plane Direction)"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText10 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Number of Point (Per Plane Direction)"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText10, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxSlider* itemSlider11 = new wxSlider( itemDialog1, ID_SLIDER1, 2, 2, 20, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
@@ -233,10 +226,10 @@ void Streamlines::CreateControls()
     wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxButton* itemButton13 = new wxButton( itemDialog1, wxID_OK, _("Compute Streamline"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton13 = new wxButton( itemDialog1, wxID_OK, _T("Compute Streamline"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add(itemButton13, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* itemButton14 = new wxButton( itemDialog1, ADVANCED_STREAMLINE_BUTTON, _("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton14 = new wxButton( itemDialog1, ADVANCED_STREAMLINE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add(itemButton14, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end Streamlines content construction

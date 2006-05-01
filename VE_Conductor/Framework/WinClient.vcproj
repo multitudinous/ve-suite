@@ -151,6 +151,15 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
+				RelativePath=".\advancedcontours.cpp">
+			</File>
+			<File
+				RelativePath=".\advancedstreamlines.cpp">
+			</File>
+			<File
+				RelativePath=".\advancedvectors.cpp">
+			</File>
+			<File
 				RelativePath="App.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -191,6 +200,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\BaseDialog.cxx">
+			</File>
+			<File
 				RelativePath=".\CADMaterialEditMenu.cxx">
 			</File>
 			<File
@@ -204,6 +216,9 @@
 			</File>
 			<File
 				RelativePath=".\CADOpacitySliderDlg.cxx">
+			</File>
+			<File
+				RelativePath=".\contours.cpp">
 			</File>
 			<File
 				RelativePath=".\DataSetLoaderUI.cxx">
@@ -247,6 +262,9 @@
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\isosurfaces.cpp">
 			</File>
 			<File
 				RelativePath=".\NavigationPane.cxx">
@@ -310,6 +328,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\ROIDialog.cxx">
+			</File>
+			<File
 				RelativePath=".\SoundsPane.cpp">
 			</File>
 			<File
@@ -317,6 +338,9 @@
 			</File>
 			<File
 				RelativePath=".\StreamersPane.cxx">
+			</File>
+			<File
+				RelativePath=".\streamlines.cpp">
 			</File>
 			<File
 				RelativePath=".\StringParse.cpp">
@@ -536,17 +560,32 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\vectors.cpp">
+			</File>
+			<File
 				RelativePath=".\ViewLocPane.cxx">
+			</File>
+			<File
+				RelativePath=".\vistab.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
+				RelativePath=".\advancedcontours.h">
+			</File>
+			<File
+				RelativePath=".\advancedvectors.h">
+			</File>
+			<File
 				RelativePath="App.h">
 			</File>
 			<File
 				RelativePath="Avail_Modules.h">
+			</File>
+			<File
+				RelativePath=".\BaseDialog.h">
 			</File>
 			<File
 				RelativePath=".\CADMaterialEditMenu.h">
@@ -564,7 +603,13 @@
 				RelativePath=".\CADOpacitySliderDlg.h">
 			</File>
 			<File
+				RelativePath=".\contours.h">
+			</File>
+			<File
 				RelativePath=".\DataSetLoaderUI.h">
+			</File>
+			<File
+				RelativePath=".\FinancialDialog.cpp">
 			</File>
 			<File
 				RelativePath="Frame.h">
@@ -574,6 +619,9 @@
 			</File>
 			<File
 				RelativePath="GlobalParamDialog.h">
+			</File>
+			<File
+				RelativePath=".\isosurfaces.h">
 			</File>
 			<File
 				RelativePath=".\NavigationPane.h">
@@ -609,10 +657,16 @@
 				RelativePath="ResultPanel.h">
 			</File>
 			<File
+				RelativePath=".\ROIDialog.h">
+			</File>
+			<File
 				RelativePath=".\SoundsPane.h">
 			</File>
 			<File
 				RelativePath=".\StreamersPane.h">
+			</File>
+			<File
+				RelativePath=".\streamlines.h">
 			</File>
 			<File
 				RelativePath="StringParse.h">
@@ -678,7 +732,13 @@
 				RelativePath="..\VE_UI\UI_VisTab.h">
 			</File>
 			<File
+				RelativePath=".\vectors.h">
+			</File>
+			<File
 				RelativePath=".\ViewLocPane.h">
+			</File>
+			<File
+				RelativePath=".\vistab.h">
 			</File>
 		</Filter>
 		<Filter
