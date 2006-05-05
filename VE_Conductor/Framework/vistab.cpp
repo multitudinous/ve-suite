@@ -14,6 +14,7 @@
 
 ////@begin includes
 #include "VE_Conductor/Framework/TBToolBar.h"
+
 ////@end includes
 
 #include "VE_Conductor/Framework/vistab.h"
@@ -44,10 +45,10 @@
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
 ////@begin Vistab event table entries
-   EVT_TOOL     (CONTOUR_BUTTON,    Vistab::_onContour)
-   EVT_TOOL     (VECTOR_BUTTON,     Vistab::_onVector)
-   EVT_TOOL     (STREAMLINE_BUTTON, Vistab::_onStreamline)
-   EVT_TOOL     (ISOSURFACE_BUTTON, Vistab::_onIsosurface)
+   EVT_TOOL     (CONTOUR_BUTTON,       Vistab::_onContour)
+   EVT_TOOL     (VECTOR_BUTTON,        Vistab::_onVector)
+   EVT_TOOL     (STREAMLINE_BUTTON,    Vistab::_onStreamline)
+   EVT_TOOL     (ISOSURFACE_BUTTON,    Vistab::_onIsosurface)
    EVT_TOOL     (TEXTURE_BASED_BUTTON, Vistab::_onTextureBased)
 ////@end Vistab event table entries
 END_EVENT_TABLE()
@@ -55,7 +56,7 @@ END_EVENT_TABLE()
 /*!
  * Vistab constructors
  */
-
+using namespace VE_Conductor::GUI_Utilities;
 Vistab::Vistab(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Visualization Tab"), 
 		wxDefaultPosition, wxDefaultSize, 
@@ -67,7 +68,12 @@ Vistab::Vistab(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 
    xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
+   vector = 0;
+   contour = 0;
+   streamline = 0;
+   isosurface = 0;
    _tbTools = 0;
+   scalarRange = 0;
 
    CreateControls();
 }
@@ -186,6 +192,13 @@ void Vistab::CreateControls()
     wxListBox* itemListBox15 = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, -1), 3, itemListBox15Strings, wxLB_SINGLE );
     itemStaticBoxSizer14->Add(itemListBox15, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    wxBoxSizer* scalarSizer = new wxBoxSizer(wxHORIZONTAL);
+    scalarRange = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
+                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Scalar Bounds"));
+    scalarSizer->Add(scalarRange,1,wxALIGN_CENTER|wxEXPAND);
+    itemBoxSizer2->Add(scalarSizer, 3, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
+   
+/*
     wxStaticText* itemStaticText16 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Max%"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     itemBoxSizer2->Add(itemStaticText16, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
@@ -200,6 +213,7 @@ void Vistab::CreateControls()
 
     wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add(itemButton20, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+*/
 ///@end Vistab content construction
 }
 

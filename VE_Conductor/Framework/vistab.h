@@ -26,13 +26,14 @@
 #include "VE_Conductor/Framework/contours.h"
 #include "VE_Conductor/Framework/streamlines.h"
 #include "VE_Conductor/Framework/isosurfaces.h"
-
+#include "VE_Conductor/Utilities/DualSlider.h"
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
 ////@end includes
 XERCES_CPP_NAMESPACE_USE
 
 class TextureBasedToolBar;
+//class DualSlider;
 
 namespace VE_XML
 {
@@ -223,6 +224,7 @@ protected:
    Streamlines* streamline;
    Isosurfaces* isosurface;
    TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
+   VE_Conductor::GUI_Utilities::DualSlider* scalarRange;
 ////@begin Vistab member variables
 ////@end Vistab member variables
 };
