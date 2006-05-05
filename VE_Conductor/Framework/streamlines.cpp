@@ -192,7 +192,7 @@ void Streamlines::CreateControls()
         _T("line"),
         _T("plane")
     };
-    wxRadioBox* itemRadioBox5 = new wxRadioBox( itemDialog1, ID_RADIOBOX, _T("Cursor Selection"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+    wxRadioBox* itemRadioBox5 = new wxRadioBox( itemDialog1, CURSOR_RBOX, _T("Cursor Selection"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(itemRadioBox5, 0, wxALIGN_TOP|wxALL, 5);
 
     wxString itemRadioBox6Strings[] = {
@@ -200,7 +200,7 @@ void Streamlines::CreateControls()
         _T("y"),
         _T("z")
     };
-    wxRadioBox* itemRadioBox6 = new wxRadioBox( itemDialog1, ID_RADIOBOX1, _T("Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
+    wxRadioBox* itemRadioBox6 = new wxRadioBox( itemDialog1, DIRECTION_RBOX, _T("Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(itemRadioBox6, 0, wxALIGN_TOP|wxALL, 5);
 
     wxString itemRadioBox7Strings[] = {
@@ -208,19 +208,19 @@ void Streamlines::CreateControls()
         _T("forward"),
         _T("both directions")
     };
-    wxRadioBox* itemRadioBox7 = new wxRadioBox( itemDialog1, ID_RADIOBOX2, _T("Integration Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox7Strings, 1, wxRA_SPECIFY_COLS );
+    wxRadioBox* itemRadioBox7 = new wxRadioBox( itemDialog1, INTEGRATION_DIR_RBOX, _T("Integration Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox7Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(itemRadioBox7, 0, wxALIGN_TOP|wxALL, 5);
 
     wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Size(%)"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider9 = new wxSlider( itemDialog1, ID_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    wxSlider* itemSlider9 = new wxSlider( itemDialog1, NUMBER_PTS_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer3->Add(itemSlider9, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxStaticText* itemStaticText10 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Number of Point (Per Plane Direction)"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText10, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider11 = new wxSlider( itemDialog1, ID_SLIDER1, 2, 2, 20, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    wxSlider* itemSlider11 = new wxSlider( itemDialog1, PLANE_SIZE_SLIDER, 2, 2, 20, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer3->Add(itemSlider11, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);

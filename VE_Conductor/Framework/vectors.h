@@ -31,6 +31,13 @@
 ////@begin forward declarations
 enum VECTOR_IDS
 {
+   VECTOR_DIR_RBOX,
+   MULTIPLE_PREVECTOR_RBUTTON,
+   MULTIPLE_PREVECTOR_CHK,
+   SINGLE_PREVECTOR_RBUTTON,
+   SINGLE_PREVECTOR_CHK,
+   VECTOR_PLANE_SLIDER,
+   ADD_VECTOR_PLANE_BUTTON,
    ADVANCED_VECTOR_BUTTON
 };
 ////@end forward declarations
@@ -121,7 +128,29 @@ public:
     void CreateControls();
 
 ////@begin Vectors event handler declarations
-    void _onAdvanced(wxCommandEvent& );
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX
+    void _onDirection( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
+    void _onMultiplePlanes( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+    void _onCyclePlanes( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON1
+    void _onSinglePlane( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX1
+    void _onPrecomputedPlane( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+    void _onPlane( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+    void _onAddPlane( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
+    void _onAdvanced( wxCommandEvent& event );
 ////@end Vectors event handler declarations
 
 ////@begin Vectors member function declarations

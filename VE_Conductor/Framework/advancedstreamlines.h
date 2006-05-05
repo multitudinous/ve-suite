@@ -12,9 +12,11 @@
 #ifndef _ADVANCEDSTREAMLINES_H_
 #define _ADVANCEDSTREAMLINES_H_
 
+/*
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma interface "advancedstreamlines.h"
 #endif
+*/
 
 /*!
  * Includes
@@ -131,14 +133,14 @@ public:
     void CreateControls();
 
 ////@begin AdvancedStreamlines event handler declarations
-    void _onCheck(wxCommandEvent& );
-    void OnArrowCheck( wxCommandEvent& );
-    void _oniStepSlider(wxScrollEvent& );
-    void _onPropSlider(wxScrollEvent& );
-    void _onStepSlider(wxScrollEvent& );
-    void _onDiameterSlider(wxScrollEvent& );
-    void onScaleSlider( wxScrollEvent& );
-    void _onParticleTrack(wxCommandEvent& );
+    void _onCheck(wxCommandEvent& event);
+    void _onArrowCheck( wxCommandEvent& event);
+    void _oniStepSlider(wxScrollEvent& event);
+    void _onPropSlider(wxScrollEvent& event);
+    void _onStepSlider(wxScrollEvent& event);
+    void _onDiameterSlider(wxScrollEvent& event);
+    void _onScaleSlider( wxScrollEvent& event);
+    void _onParticleTrack(wxCommandEvent& event);
 ////@end AdvancedStreamlines event handler declarations
 
 ////@begin AdvancedStreamlines member function declarations

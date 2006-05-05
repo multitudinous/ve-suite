@@ -29,7 +29,12 @@
  */
 
 ////@begin forward declarations
-
+enum ADVANCED_CONTOUR_IDS
+{
+   OPACITY_SLIDER,
+   WARPED_SCALE_SLIDER,
+   LOD_SLIDER
+};
 ////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
@@ -118,7 +123,14 @@ public:
     void CreateControls();
 
 ////@begin AdvancedContours event handler declarations
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+    void _onContourOpacity( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1
+    void _onWarpedContour( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2
+    void _onContourLOD( wxCommandEvent& event );
 ////@end AdvancedContours event handler declarations
 
 ////@begin AdvancedContours member function declarations

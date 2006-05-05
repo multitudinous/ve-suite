@@ -36,7 +36,11 @@
 
 enum ISOSURFACE_IDS
 {
-
+   ISOSURFACE_RBUTTON,
+   PRECOMPUTED_ISO_CHK,
+   ISOSURFACE_PLANE_SLIDER,
+   ADD_ISOSURFACE_BUTTON,
+   ADVANCED_ISOSURFACE_BUTTON
 };
 ////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
@@ -123,7 +127,20 @@ public:
     void CreateControls();
 
 ////@begin Isosurfaces event handler declarations
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
+    void _onIsosurface( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+    void _onPrecomputedIsosurface( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+    void _onIsosurfacePlane( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+    void _onAddIsosurface( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
+    void _onAdvanced( wxCommandEvent& event );
 ////@end Isosurfaces event handler declarations
 
 ////@begin Isosurfaces member function declarations

@@ -110,7 +110,11 @@ int IsosurfacesApp::OnExit()
 
 BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
 ////@begin Isosurfaces event table entries
-
+   EVT_RADIOBUTTON      (ISOSURFACE_RBUTTON,          Isosurfaces::_onIsosurface)
+   EVT_CHECKBOX         (PRECOMPUTED_ISO_CHK,         Isosurfaces::_onPrecomputedIsosurface)
+   EVT_SLIDER           (ISOSURFACE_PLANE_SLIDER,     Isosurfaces::_onIsosurfacePlane)
+   EVT_BUTTON           (ADD_ISOSURFACE_BUTTON,       Isosurfaces::_onAddIsosurface)
+   EVT_BUTTON           (ADVANCED_ISOSURFACE_BUTTON,  Isosurfaces::_onAdvanced)
 ////@end Isosurfaces event table entries
 END_EVENT_TABLE()
 
@@ -178,18 +182,18 @@ void Isosurfaces::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
 
-    wxRadioButton* itemRadioButton4 = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _T("Specify an Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxRadioButton* itemRadioButton4 = new wxRadioButton( itemDialog1, ISOSURFACE_RBUTTON, _T("Specify an Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemRadioButton4->SetValue(false);
     itemStaticBoxSizer3->Add(itemRadioButton4, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxCheckBox* itemCheckBox5 = new wxCheckBox( itemDialog1, ID_CHECKBOX, _T("Use Nearest Precomputed Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxCheckBox* itemCheckBox5 = new wxCheckBox( itemDialog1, PRECOMPUTED_ISO_CHK, _T("Use Nearest Precomputed Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemCheckBox5->SetValue(false);
     itemStaticBoxSizer3->Add(itemCheckBox5, 0, wxGROW|wxALL, 5);
 
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add(itemStaticText6, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider7 = new wxSlider( itemDialog1, ID_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    wxSlider* itemSlider7 = new wxSlider( itemDialog1, ISOSURFACE_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemBoxSizer2->Add(itemSlider7, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
@@ -198,7 +202,7 @@ void Isosurfaces::CreateControls()
     wxButton* itemButton9 = new wxButton( itemDialog1, wxID_OK, _T("Compute Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(itemButton9, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* itemButton10 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton10 = new wxButton( itemDialog1, ADVANCED_ISOSURFACE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(itemButton10, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end Isosurfaces content construction
@@ -237,4 +241,63 @@ wxIcon Isosurfaces::GetIconResource( const wxString& name )
     wxUnusedVar(name);
     return wxNullIcon;
 ////@end Isosurfaces icon retrieval
+}
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
+ */
+
+void Isosurfaces::_onIsosurface( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON in Isosurfaces.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON in Isosurfaces. 
+}
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+ */
+
+void Isosurfaces::_onPrecomputedIsosurface( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX in Isosurfaces.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX in Isosurfaces. 
+}
+
+/*!
+ * wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+ */
+
+void Isosurfaces::_onIsosurfacePlane( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in Isosurfaces.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in Isosurfaces. 
+}
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+ */
+
+void Isosurfaces::_onAddIsosurface( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1 in Isosurfaces.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1 in Isosurfaces. 
+}
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
+ */
+
+void Isosurfaces::_onAdvanced( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in Isosurfaces.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in Isosurfaces. 
 }

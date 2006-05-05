@@ -11,11 +11,11 @@
 
 #ifndef _ADVANCEDVECTORS_H_
 #define _ADVANCEDVECTORS_H_
-
+/*
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma interface "advancedvectors.h"
 #endif
-
+*/
 /*!
  * Includes
  */
@@ -32,6 +32,14 @@
  */
 
 ////@begin forward declarations
+enum ADVANCED_VECTOR_IDS
+{
+   VECTOR_MAX_SLIDER,
+   VECTOR_MIN_SLIDER,
+   VECTOR_SCALE_SLIDER,
+   VECTOR_RATIO_SLIDER,
+   SCALAR_BY_VECTOR_CHK
+};
 ////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
@@ -119,7 +127,20 @@ public:
     void CreateControls();
 
 ////@begin AdvancedVectors event handler declarations
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+    void _onVectorMax( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1
+    void _onVectorMin( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2
+    void _onVectorScale( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER3
+    void _onVectorRatio( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+    void _onScalarByVectorMag( wxCommandEvent& event );
 ////@end AdvancedVectors event handler declarations
 
 ////@begin AdvancedVectors member function declarations

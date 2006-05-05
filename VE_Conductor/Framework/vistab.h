@@ -129,7 +129,7 @@ public:
 ////@end Vistab member variables
 };
 
-/*!
+/*
  * Vistab class declaration
  */
 /*
@@ -167,7 +167,7 @@ public:
 ////@end Vistab member variables
 };
 
-/*!
+/*
  * Vistab class declaration
  */
 

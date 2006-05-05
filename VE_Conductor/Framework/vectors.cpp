@@ -113,7 +113,14 @@ int VectorsApp::OnExit()
 
 BEGIN_EVENT_TABLE( Vectors, wxDialog )
 ////@begin Vectors event table entrieS
-   EVT_BUTTON     (ADVANCED_VECTOR_BUTTON,    Vectors::_onAdvanced)
+   EVT_RADIOBOX      (VECTOR_DIR_RBOX,            Vectors::_onDirection)
+   EVT_RADIOBUTTON   (MULTIPLE_PREVECTOR_RBUTTON, Vectors::_onMultiplePlanes)
+   EVT_CHECKBOX      (MULTIPLE_PREVECTOR_CHK,     Vectors::_onCyclePlanes)
+   EVT_RADIOBUTTON   (SINGLE_PREVECTOR_RBUTTON,   Vectors::_onSinglePlane)
+   EVT_CHECKBOX      (SINGLE_PREVECTOR_CHK,       Vectors::_onPrecomputedPlane)
+   EVT_SLIDER        (VECTOR_PLANE_SLIDER,        Vectors::_onPlane)
+   EVT_BUTTON        (ADD_VECTOR_PLANE_BUTTON,    Vectors::_onAddPlane)
+   EVT_BUTTON        (ADVANCED_VECTOR_BUTTON,     Vectors::_onAdvanced)
 ////@end Vectors event table entries
 END_EVENT_TABLE()
 
@@ -284,4 +291,87 @@ void Vectors::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    adVector = new AdvancedVectors(xplorerPtr, domManager);
    adVector->ShowModal();
 std::cout<<"ADVANCEDVECTORS WORKING"<<std::endl;
+}
+/*!
+ * wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX
+ */
+
+void Vectors::_onDirection( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX in Contours.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX in Contours. 
+}
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
+ */
+
+void Vectors::_onMultiplePlanes( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON in Contours.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON in Contours. 
+}
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+ */
+
+void Vectors::_onCyclePlanes( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX in Contours.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX in Contours. 
+}
+
+/*!
+ * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON1
+ */
+
+void Vectors::_onSinglePlane( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON1 in Contours.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON1 in Contours. 
+}
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX1
+ */
+
+void Vectors::_onPrecomputedPlane( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX1 in Contours.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX1 in Contours. 
+}
+
+/*!
+ * wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+ */
+
+void Vectors::_onPlane( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in Contours.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in Contours. 
+}
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+ */
+
+void Vectors::_onAddPlane( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1 in Contours.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1 in Contours. 
 }
