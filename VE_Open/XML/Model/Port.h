@@ -91,6 +91,10 @@ public:
    ///\param data The DataValuePair vector of data.
    void SetPortData( std::vector< VE_XML::DataValuePair* > data );
 
+   ///Set the string data
+   ///\param porttype The name of the data type that this port is tied to
+   void SetPortType(std::string porttype);
+
    ///set the data from an string representing the xml
    ///\param xmlInput The input XML data.
    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
@@ -104,6 +108,8 @@ public:
    ///Get the port location.
    Point* GetPortLocation( void );
    ///Get the port data.
+   std::string GetPortType(void);
+   ///Get the port type.
    std::vector< VE_XML::DataValuePair* > GetPortData( void );
 
 protected:
@@ -117,6 +123,7 @@ protected:
    std::string modelName;///<Name of the model that the port belongs to.
    std::string dataFlow;///<Direction of the data flow, either input or output.
    Point* portLocation;///<Physical location of the port on the wx design canvas.
+   std::string portType;///<DataType of the port, in case the data is strong Typed
 };
 }
 #endif// _VE_PORT_H_

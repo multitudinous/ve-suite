@@ -103,6 +103,7 @@ Port& Port::operator=( const Port& input)
       portNumber = input.portNumber;
       modelName = input.modelName;
       dataFlow = input.dataFlow;
+	  portType = input.portType;
       *portLocation = *(input.portLocation);
    }
    return *this;
@@ -134,6 +135,11 @@ void Port::SetPortData( std::vector< DataValuePair* > data )
 {
    portData = data;
 }
+/////////////////////////////////////////////////////
+void Port::SetPortType( std::string porttype )
+{
+   portType = porttype;
+}
 ///////////////////////////////////////
 void Port::_updateVEElement( std::string input )
 {
@@ -142,6 +148,7 @@ void Port::_updateVEElement( std::string input )
    SetSubElement( "name", modelName );
    SetSubElement( "dataFlow", dataFlow );
    SetSubElement( "portLocation", portLocation );
+   SetSubElement( "portType", portType);
    for ( size_t i = 0; i < portData.size(); ++i )
    {
       SetSubElement( "portData", portData.at( i ) );   
@@ -166,6 +173,11 @@ std::string Port::GetDataFlowDirection( void )
 Point* Port::GetPortLocation( void )
 {
    return portLocation;
+}
+//////////////////////////////////////////
+std::string Port::GetPortType( void )
+{
+   return portType;
 }
 /////////////////////////////////////
 std::vector< VE_XML::DataValuePair* > Port::GetPortData( void )
