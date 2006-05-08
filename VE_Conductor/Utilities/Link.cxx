@@ -215,13 +215,20 @@ void Link::CalcLinkPoly()
    }
 
    // +3 so that we end up getting a 6 point wide line
-   std::vector< wxPoint >::iterator iter;
+   for ( int j = (cons.size()-1); j >=0 ; j-- )
+   {
+	   int x = cons[j].x;
+	   int y = cons[j].y+3;
+	   poly.SetPoint( wxPoint( cons[j].x, cons[j].y-3 ) );
+   }
+/*   std::vector< wxPoint >::iterator iter;
    for ( iter = cons.end()-1; iter >= cons.begin(); --iter )
    {
 		int x = iter->x;
 		int y = iter->y+3;
 	   poly.SetPoint( wxPoint( iter->x, iter->y+3 ) );
    }
+   */
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -239,9 +246,9 @@ void Link::DrawLink( bool flag, std::pair< double, double > scale )
    //reverse the order of the points
    size_t j = 0;
    std::vector< wxPoint >::iterator iter;
-   for ( iter = cons.end()-1; iter >= cons.begin(); --iter, j++ )
-   //for ( size_t i = cons.size(); i >= 0; i--, j++ )
-      points[ j ] = *(iter);
+   //for ( iter = cons.end()-1; iter >= cons.begin(); --iter, j++ )
+   for ( int i = cons.size()-1; i >= 0; i--, j++ )
+      points[ j ] = cons[i];
 
    if (!flag)
    {
