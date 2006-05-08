@@ -128,7 +128,7 @@ END_EVENT_TABLE()
 /*!
  * AdvancedStreamlines constructors
  */
-
+/*
 AdvancedStreamlines::AdvancedStreamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Advanced Streamlines"), 
 		wxDefaultPosition, wxDefaultSize,
@@ -143,12 +143,15 @@ AdvancedStreamlines::AdvancedStreamlines(VjObs_ptr veEngine, VE_XML::DOMDocument
 
    CreateControls();
 }
-/*
+*/
 AdvancedStreamlines::AdvancedStreamlines( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+    this->SetSize( dialogPosition );
 }
-*/
+
 /*!
  * AdvancedStreamlines creator
  */
@@ -156,6 +159,14 @@ AdvancedStreamlines::AdvancedStreamlines( wxWindow* parent, wxWindowID id, const
 bool AdvancedStreamlines::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin AdvancedStreamlines member initialisation
+   itemSlider5 = 0;  
+   itemSlider10 = 0; 
+   itemSlider15 = 0; 
+   itemSlider20 = 0; 
+   itemSlider22 = 0; 
+   itemCheckBox27 = 0;
+   itemCheckBox28 = 0;
+   itemButton29 = 0;
 ////@end AdvancedStreamlines member initialisation
 
 ////@begin AdvancedStreamlines creation

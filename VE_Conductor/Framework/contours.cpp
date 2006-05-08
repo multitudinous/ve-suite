@@ -54,7 +54,7 @@ END_EVENT_TABLE()
 /*!
  * Contours constructors
  */
-
+/*
 Contours::Contours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Contours"), 
 		wxDefaultPosition, wxDefaultSize,
@@ -69,12 +69,15 @@ Contours::Contours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 
    CreateControls();
 }
-/*
+*/
 Contours::Contours( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+    this->SetSize( dialogPosition );
 }
-*/
+
 /*!
  * Contours creator
  */
@@ -82,6 +85,15 @@ Contours::Contours( wxWindow* parent, wxWindowID id, const wxString& caption, co
 bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin Contours member initialisation
+   itemRadioBox5 = 0;
+   itemRadioBox6 = 0;
+   itemRadioButton8 = 0;
+   itemCheckBox9 = 0;
+   itemRadioButton11 = 0;
+   itemCheckBox12 = 0;
+   itemSlider14 = 0;
+   itemButton16 = 0;
+   itemButton17 = 0;
 ////@end Contours member initialisation
 
 ////@begin Contours creation
@@ -213,7 +225,13 @@ wxIcon Contours::GetIconResource( const wxString& name )
 /////////////////////////////////////////////////////////////////
 void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 {
-   adContour = new AdvancedContours(xplorerPtr, domManager);
+//   adContour = new AdvancedContours(xplorerPtr, domManager);
+   adContour = new AdvancedContours(this,                
+                  SYMBOL_ADVANCEDCONTOURS_IDNAME, 
+                  SYMBOL_ADVANCEDCONTOURS_TITLE,
+                  SYMBOL_ADVANCEDCONTOURS_POSITION,
+                  SYMBOL_ADVANCEDCONTOURS_SIZE, 
+                  SYMBOL_ADVANCEDCONTOURS_STYLE );
    adContour->ShowModal();
 std::cout<<"ADVANCEDCONTOURS WORKING"<<std::endl;
 }

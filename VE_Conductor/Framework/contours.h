@@ -32,25 +32,20 @@
  */
 
 ////@begin forward declarations
-enum CONTOUR_IDS
-{
-   CONTOUR_DIR_RBOX,
-   CONTOUR_TYPE_RBOX,
-   MULTIPLE_PRECONTOUR_RBUTTON,
-   MULTIPLE_PRECONTOUR_CHK,
-   SINGLE_PRECONTOUR_RBUTTON,
-   SINGLE_PRECONTOUR_CHK,
-   CONTOUR_PLANE_SLIDER,
-   ADD_CONTOUR_PLANE_BUTTON,
-   ADVANCED_CONTOUR_BUTTON
-};
-////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
 }
+
+class wxRadioBox;
+class wxRadioButton;
+class wxCheckBox;
+class wxSlider;
+class wxButton;
+////@end forward declarations
+
 /*!
  * Control identifiers
  */
@@ -71,6 +66,19 @@ namespace VE_XML
 #define ID_SLIDER 10008
 #define ID_BUTTON 10006
 #define ID_BUTTON1 10009
+
+enum CONTOUR_IDS
+{
+   CONTOUR_DIR_RBOX,
+   CONTOUR_TYPE_RBOX,
+   MULTIPLE_PRECONTOUR_RBUTTON,
+   MULTIPLE_PRECONTOUR_CHK,
+   SINGLE_PRECONTOUR_RBUTTON,
+   SINGLE_PRECONTOUR_CHK,
+   CONTOUR_PLANE_SLIDER,
+   ADD_CONTOUR_PLANE_BUTTON,
+   ADVANCED_CONTOUR_BUTTON
+};
 ////@end control identifiers
 
 /*!
@@ -92,9 +100,9 @@ class Contours: public wxDialog
 
 public:
     /// Constructors
-//    Contours( );
-//    Contours( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
-    Contours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    Contours( );
+    Contours( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
+//    Contours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -145,6 +153,15 @@ public:
     static bool ShowToolTips();
 
 ////@begin Contours member variables
+   wxRadioBox*    itemRadioBox5;
+   wxRadioBox*    itemRadioBox6;
+   wxRadioButton* itemRadioButton8;
+   wxCheckBox*    itemCheckBox9;
+   wxRadioButton* itemRadioButton11;
+   wxCheckBox*    itemCheckBox12;
+   wxSlider*      itemSlider14;
+   wxButton*      itemButton16;
+   wxButton*      itemButton17;
 ////@end Contours member variables
 
 protected:

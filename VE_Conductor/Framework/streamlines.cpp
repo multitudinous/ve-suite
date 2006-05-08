@@ -123,7 +123,7 @@ END_EVENT_TABLE()
 /*!
  * Streamlines constructors
  */
-
+/*
 Streamlines::Streamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Streamlines"), 
 		wxDefaultPosition, wxDefaultSize, 
@@ -138,12 +138,15 @@ Streamlines::Streamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMana
 
    CreateControls();
 }
-/*
+*/
 Streamlines::Streamlines( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+    this->SetSize( dialogPosition );
 }
-*/
+
 /*!
  * Streamlines creator
  */
@@ -151,6 +154,13 @@ Streamlines::Streamlines( wxWindow* parent, wxWindowID id, const wxString& capti
 bool Streamlines::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin Streamlines member initialisation
+   itemRadioBox5 = 0;
+   itemRadioBox6 = 0;
+   itemRadioBox7 = 0;
+   itemSlider9 = 0;
+   itemSlider11 = 0;
+   itemButton13 = 0;
+   itemButton14 = 0;
 ////@end Streamlines member initialisation
 
 ////@begin Streamlines creation
@@ -271,7 +281,13 @@ wxIcon Streamlines::GetIconResource( const wxString& name )
 }//////////////////////////////////////////////////////////
 void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 {
-   adStreamline = new AdvancedStreamlines(xplorerPtr, domManager);
+//   adStreamline = new AdvancedStreamlines(xplorerPtr, domManager);
+   adStreamline = new AdvancedStreamlines(this,                
+                     SYMBOL_ADVANCEDSTREAMLINES_IDNAME, 
+                     SYMBOL_ADVANCEDSTREAMLINES_TITLE,
+                     SYMBOL_ADVANCEDSTREAMLINES_POSITION,
+                     SYMBOL_ADVANCEDSTREAMLINES_SIZE, 
+                     SYMBOL_ADVANCEDSTREAMLINES_STYLE );
    adStreamline->ShowModal();
 std::cout<<"ADVANCEDSTREAMLINES WORKING"<<std::endl;
 }

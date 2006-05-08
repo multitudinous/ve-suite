@@ -29,22 +29,18 @@
  */
 
 ////@begin forward declarations
-enum STREAMLINE_IDS
-{
-   CURSOR_RBOX,
-   DIRECTION_RBOX,
-   INTEGRATION_DIR_RBOX,
-   PLANE_SIZE_SLIDER,
-   NUMBER_PTS_SLIDER,
-   ADVANCED_STREAMLINE_BUTTON
-};
-////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
 }
+
+class wxRadioBox;
+class wxSlider;
+class wxButton;
+////@end forward declarations
+
 /*!
  * Control identifiers
  */
@@ -63,6 +59,16 @@ namespace VE_XML
 #define ID_SLIDER1 10005
 #define ID_BUTTON 10006
 #define ID_BUTTON1 10007
+
+enum STREAMLINE_IDS
+{
+   CURSOR_RBOX,
+   DIRECTION_RBOX,
+   INTEGRATION_DIR_RBOX,
+   PLANE_SIZE_SLIDER,
+   NUMBER_PTS_SLIDER,
+   ADVANCED_STREAMLINE_BUTTON
+};
 ////@end control identifiers
 
 /*!
@@ -113,9 +119,9 @@ class Streamlines: public wxDialog
 
 public:
     /// Constructors
-//    Streamlines( );
-//    Streamlines( wxWindow* parent, wxWindowID id = SYMBOL_STREAMLINES_IDNAME, const wxString& caption = SYMBOL_STREAMLINES_TITLE, const wxPoint& pos = SYMBOL_STREAMLINES_POSITION, const wxSize& size = SYMBOL_STREAMLINES_SIZE, long style = SYMBOL_STREAMLINES_STYLE );
-    Streamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    Streamlines( );
+    Streamlines( wxWindow* parent, wxWindowID id = SYMBOL_STREAMLINES_IDNAME, const wxString& caption = SYMBOL_STREAMLINES_TITLE, const wxPoint& pos = SYMBOL_STREAMLINES_POSITION, const wxSize& size = SYMBOL_STREAMLINES_SIZE, long style = SYMBOL_STREAMLINES_STYLE );
+//    Streamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -144,7 +150,16 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
-////@begin Streamlines member variables
+////@begin Streamlines member variables\
+
+
+   wxRadioBox* itemRadioBox5;
+   wxRadioBox* itemRadioBox6;
+   wxRadioBox* itemRadioBox7;
+   wxSlider*   itemSlider9;
+   wxSlider*   itemSlider11;
+   wxButton*   itemButton13;
+   wxButton*   itemButton14;
 ////@end Streamlines member variables
 protected:
    std::vector< VE_XML::Command* > commands;

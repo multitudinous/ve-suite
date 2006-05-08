@@ -23,6 +23,7 @@
 ////@begin includes
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/VE_UI/UI_TransientDialog.h"
+#include "VE_Conductor/Utilities/DualSlider.h"
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
 ////@end includes
@@ -32,21 +33,18 @@
  */
 
 ////@begin forward declarations
-enum ADVANCED_VECTOR_IDS
-{
-   VECTOR_MAX_SLIDER,
-   VECTOR_MIN_SLIDER,
-   VECTOR_SCALE_SLIDER,
-   VECTOR_RATIO_SLIDER,
-   SCALAR_BY_VECTOR_CHK
-};
-////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
 }
+
+class wxSlider;
+class wxCheckBox;
+
+////@end forward declarations
+
 /*!
  * Control identifiers
  */
@@ -63,6 +61,15 @@ namespace VE_XML
 #define ID_SLIDER2 10003
 #define ID_SLIDER3 10004
 #define ID_CHECKBOX 10005
+
+enum ADVANCED_VECTOR_IDS
+{
+   VECTOR_MAX_SLIDER,
+   VECTOR_MIN_SLIDER,
+   VECTOR_SCALE_SLIDER,
+   VECTOR_RATIO_SLIDER,
+   SCALAR_BY_VECTOR_CHK
+};
 ////@end control identifiers
 
 /*!
@@ -115,9 +122,9 @@ class AdvancedVectors: public wxDialog
 
 public:
     /// Constructors
-//    AdvancedVectors( );
-//    AdvancedVectors( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDVECTORS_IDNAME, const wxString& caption = SYMBOL_ADVANCEDVECTORS_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDVECTORS_POSITION, const wxSize& size = SYMBOL_ADVANCEDVECTORS_SIZE, long style = SYMBOL_ADVANCEDVECTORS_STYLE );
-    AdvancedVectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    AdvancedVectors( );
+    AdvancedVectors( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDVECTORS_IDNAME, const wxString& caption = SYMBOL_ADVANCEDVECTORS_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDVECTORS_POSITION, const wxSize& size = SYMBOL_ADVANCEDVECTORS_SIZE, long style = SYMBOL_ADVANCEDVECTORS_STYLE );
+//    AdvancedVectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -156,12 +163,15 @@ public:
     static bool ShowToolTips();
 
 ////@begin AdvancedVectors member variables
+   VE_Conductor::GUI_Utilities::DualSlider* vectorRange;
+   wxSlider*   itemSlider10;
+   wxSlider*   itemSlider15;
+   wxCheckBox* itemCheckBox19;
 ////@end AdvancedVectors member variables
 
 protected:
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
-   int cId, cIso_value, cMin, cMax, cSc;
    std::vector< long > commandInputs;
    DOMDocument* doc;
    VE_XML::DOMDocumentManager* domManager;

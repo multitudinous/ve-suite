@@ -32,27 +32,24 @@
 ////@end includes
 XERCES_CPP_NAMESPACE_USE
 
-class TextureBasedToolBar;
+
 //class DualSlider;
 
-namespace VE_XML
-{
-   class Command;
-   class DOMDocumentManager;
-}
+
 /*!
  * Forward declarations
  */
 
 ////@begin forward declarations
-enum VISTAB_IDS
+namespace VE_XML
 {
-   CONTOUR_BUTTON,
-   VECTOR_BUTTON,
-   STREAMLINE_BUTTON,
-   ISOSURFACE_BUTTON,
-   TEXTURE_BASED_BUTTON
-};
+   class Command;
+   class DOMDocumentManager;
+}
+
+class TextureBasedToolBar;
+class wxComboBox;
+class wxListBox;
 ////@end forward declarations
 
 /*!
@@ -80,6 +77,15 @@ enum VISTAB_IDS
 #define ID_SLIDER1 10014
 #define ID_BUTTON 10015
 #define ID_COMBOBOX1 10016
+
+enum VISTAB_IDS
+{
+   CONTOUR_BUTTON,
+   VECTOR_BUTTON,
+   STREAMLINE_BUTTON,
+   ISOSURFACE_BUTTON,
+   TEXTURE_BASED_BUTTON
+};
 ////@end control identifiers
 
 /*!
@@ -179,9 +185,9 @@ class Vistab: public wxDialog
 
 public:
     /// Constructors
-//    Vistab( );
-//    Vistab( wxWindow* parent, wxWindowID id = SYMBOL_VISTAB_IDNAME, const wxString& caption = SYMBOL_VISTAB_TITLE, const wxPoint& pos = SYMBOL_VISTAB_POSITION, const wxSize& size = SYMBOL_VISTAB_SIZE, long style = SYMBOL_VISTAB_STYLE );
-    Vistab(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    Vistab( );
+    Vistab( wxWindow* parent, wxWindowID id = SYMBOL_VISTAB_IDNAME, const wxString& caption = SYMBOL_VISTAB_TITLE, const wxPoint& pos = SYMBOL_VISTAB_POSITION, const wxSize& size = SYMBOL_VISTAB_SIZE, long style = SYMBOL_VISTAB_STYLE );
+//    Vistab(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -210,15 +216,6 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
-protected:
-   std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
-   int cId, cIso_value, cMin, cMax, cSc;
-   std::vector< long > commandInputs;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
-   std::string dataValueName;
-
    Vectors* vector;
    Contours* contour;
    Streamlines* streamline;
@@ -226,7 +223,20 @@ protected:
    TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
    VE_Conductor::GUI_Utilities::DualSlider* scalarRange;
 ////@begin Vistab member variables
+   wxToolBar*  itemToolBar3;
+   wxComboBox* itemComboBox11;
+   wxComboBox* itemComboBox12; 
+   wxListBox*  itemListBox13; 
+   wxListBox*  itemListBox15;
 ////@end Vistab member variables
+
+protected:
+   std::vector< VE_XML::Command* > commands;
+   VjObs_ptr xplorerPtr;
+   std::vector< long > commandInputs;
+   DOMDocument* doc;
+   VE_XML::DOMDocumentManager* domManager;
+   std::string dataValueName;
 };
 
 #endif

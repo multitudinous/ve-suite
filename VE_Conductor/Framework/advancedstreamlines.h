@@ -34,24 +34,18 @@
  */
 
 ////@begin forward declarations
-enum ADVANCED_STREAMLINE_IDS
-{
-   PARTICLE_TRACKING_BUTTON,
-   USE_SEED_POINT_CHK,
-   PROPOGATION_SLIDER,
-   INTEGRATION_STEP_SLIDER,
-   STEP_SIZE_SLIDER,
-   ARROWS_CHK,
-   SPHERE_SIZE_SLIDER,
-   LINE_DIAMETER_SLIDER
-};
-////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
 }
+
+class wxSlider;
+class wxCheckBox;
+class wxButton;
+////@end forward declarations
+
 /*!
  * Control identifiers
  */
@@ -71,6 +65,18 @@ namespace VE_XML
 #define ID_CHECKBOX 10006
 #define ID_CHECKBOX1 10007
 #define ID_BUTTON 10008
+
+enum ADVANCED_STREAMLINE_IDS
+{
+   PARTICLE_TRACKING_BUTTON,
+   USE_SEED_POINT_CHK,
+   PROPOGATION_SLIDER,
+   INTEGRATION_STEP_SLIDER,
+   STEP_SIZE_SLIDER,
+   ARROWS_CHK,
+   SPHERE_SIZE_SLIDER,
+   LINE_DIAMETER_SLIDER
+};
 ////@end control identifiers
 
 /*!
@@ -121,9 +127,9 @@ class AdvancedStreamlines: public wxDialog
 
 public:
     /// Constructors
-//    AdvancedStreamlines( );
-//    AdvancedStreamlines( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME, const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION, const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE, long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
-    AdvancedStreamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    AdvancedStreamlines( );
+    AdvancedStreamlines( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME, const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION, const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE, long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
+//    AdvancedStreamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -156,11 +162,18 @@ public:
     static bool ShowToolTips();
 
 ////@begin AdvancedStreamlines member variables
+   wxSlider*   itemSlider5;  
+   wxSlider*   itemSlider10; 
+   wxSlider*   itemSlider15; 
+   wxSlider*   itemSlider20; 
+   wxSlider*   itemSlider22; 
+   wxCheckBox* itemCheckBox27;
+   wxCheckBox* itemCheckBox28;
+   wxButton*   itemButton29;
 ////@end AdvancedStreamlines member variables
 protected:
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
-   int cId, cIso_value, cMin, cMax, cSc;
    std::vector< long > commandInputs;
    DOMDocument* doc;
    VE_XML::DOMDocumentManager* domManager;

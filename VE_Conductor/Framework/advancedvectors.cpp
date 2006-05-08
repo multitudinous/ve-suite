@@ -120,7 +120,8 @@ END_EVENT_TABLE()
 /*!
  * AdvancedVectors constructors
  */
-
+using namespace VE_Conductor::GUI_Utilities;
+/*
 AdvancedVectors::AdvancedVectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Advanced Vectors"), 
 		wxDefaultPosition, wxDefaultSize,
@@ -133,14 +134,19 @@ AdvancedVectors::AdvancedVectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager*
    xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
 
+   vectorRange = 0;
+
    CreateControls();
 }
-/*
+*/
 AdvancedVectors::AdvancedVectors( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+    this->SetSize( dialogPosition );
 }
-*/
+
 /*!
  * AdvancedVectors creator
  */
@@ -148,6 +154,9 @@ AdvancedVectors::AdvancedVectors( wxWindow* parent, wxWindowID id, const wxStrin
 bool AdvancedVectors::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin AdvancedVectors member initialisation
+   itemSlider10 = 0;
+   itemSlider15 = 0;
+   itemCheckBox19 = 0;
 ////@end AdvancedVectors member initialisation
 
 ////@begin AdvancedVectors creation
@@ -179,7 +188,7 @@ void AdvancedVectors::CreateControls()
     wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Advanced Vector Controls"));
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
-
+/*
     wxStaticBox* itemStaticBoxSizer4Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Vector Threshold"));
     wxStaticBoxSizer* itemStaticBoxSizer4 = new wxStaticBoxSizer(itemStaticBoxSizer4Static, wxVERTICAL);
     itemStaticBoxSizer3->Add(itemStaticBoxSizer4, 0, wxGROW|wxALL, 5);
@@ -195,6 +204,12 @@ void AdvancedVectors::CreateControls()
 
     wxSlider* itemSlider8 = new wxSlider( itemDialog1, VECTOR_MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer4->Add(itemSlider8, 0, wxGROW|wxALL, 5);
+*/
+    wxBoxSizer* vectorSizer = new wxBoxSizer(wxHORIZONTAL);
+    vectorRange = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
+                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Vector Threshold"));
+    vectorSizer->Add(vectorRange,1,wxALIGN_CENTER|wxEXPAND);
+    itemStaticBoxSizer3->Add(vectorSizer, 5, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
 
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Vector Scale"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText9, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
@@ -203,13 +218,13 @@ void AdvancedVectors::CreateControls()
     itemStaticBoxSizer3->Add(itemSlider10, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer3->Add(itemBoxSizer11, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer3->Add(itemBoxSizer11, 1, wxGROW|wxALL, 5);
 
     wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Decrease Size"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer11->Add(itemStaticText12, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Increase Size\n"), wxDefaultPosition, wxSize(210, -1), wxALIGN_RIGHT );
-    itemBoxSizer11->Add(itemStaticText13, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Increase Size"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+    itemBoxSizer11->Add(itemStaticText13, 1, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Vector Ratio"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
@@ -218,13 +233,13 @@ void AdvancedVectors::CreateControls()
     itemStaticBoxSizer3->Add(itemSlider15, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer3->Add(itemBoxSizer16, 0, wxGROW|wxALL, 5);
+    itemStaticBoxSizer3->Add(itemBoxSizer16, 1, wxGROW|wxALL, 5);
 
     wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Dense"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer16->Add(itemStaticText17, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Sparse"), wxDefaultPosition, wxSize(260, -1), wxALIGN_RIGHT );
-    itemBoxSizer16->Add(itemStaticText18, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Sparse"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+    itemBoxSizer16->Add(itemStaticText18, 1, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxCheckBox* itemCheckBox19 = new wxCheckBox( itemDialog1, SCALAR_BY_VECTOR_CHK, _T("Scalar by Vector Magnitude"), wxDefaultPosition, wxDefaultSize, 0 );
     itemCheckBox19->SetValue(false);

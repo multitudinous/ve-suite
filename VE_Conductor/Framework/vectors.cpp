@@ -127,7 +127,7 @@ END_EVENT_TABLE()
 /*!
  * Vectors constructors
  */
-
+/*
 Vectors::Vectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Vectors"), 
 		wxDefaultPosition, wxDefaultSize,
@@ -142,13 +142,15 @@ Vectors::Vectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 
    CreateControls();
 }
-
-/*
+*/
 Vectors::Vectors( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+    this->SetSize( dialogPosition );
 }
-*/
+
 /*!
  * Vectors creator
  */
@@ -156,6 +158,14 @@ Vectors::Vectors( wxWindow* parent, wxWindowID id, const wxString& caption, cons
 bool Vectors::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin Vectors member initialisation
+   itemRadioBox5 = 0;
+   itemRadioButton8 = 0;
+   itemCheckBox9 = 0;
+   itemRadioButton11 = 0;
+   itemCheckBox12 = 0;
+   itemSlider14 = 0;
+   itemButton16 = 0;
+   itemButton17 = 0;
 ////@end Vectors member initialisation
 
 ////@begin Vectors creation
@@ -288,7 +298,13 @@ wxIcon Vectors::GetIconResource( const wxString& name )
 //////////////////////////////////////////////////////////
 void Vectors::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 {
-   adVector = new AdvancedVectors(xplorerPtr, domManager);
+//   adVector = new AdvancedVectors(xplorerPtr, domManager);
+   adVector = new AdvancedVectors(this,                
+                  SYMBOL_ADVANCEDVECTORS_IDNAME, 
+                  SYMBOL_ADVANCEDVECTORS_TITLE,
+                  SYMBOL_ADVANCEDVECTORS_POSITION,
+                  SYMBOL_ADVANCEDVECTORS_SIZE, 
+                  SYMBOL_ADVANCEDVECTORS_STYLE );
    adVector->ShowModal();
 std::cout<<"ADVANCEDVECTORS WORKING"<<std::endl;
 }

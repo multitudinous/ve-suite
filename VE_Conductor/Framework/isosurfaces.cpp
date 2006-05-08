@@ -121,10 +121,10 @@ END_EVENT_TABLE()
 /*!
  * Isosurfaces constructors
  */
-
+/*
 Isosurfaces::Isosurfaces(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Isosurfaces"), 
-		wxDefaultPosition, wxDefaultSize, 
+    wxDefaultPosition, wxDefaultSize, 
       (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
    wxSize displaySize = ::wxGetDisplaySize();
@@ -136,13 +136,20 @@ Isosurfaces::Isosurfaces(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMana
 
    CreateControls();
 }
+*/
+Isosurfaces::Isosurfaces( )
+{
 
-/*
+}
+
 Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+    this->SetSize( dialogPosition );
 }
-*/
+
 /*!
  * Isosurfaces creator
  */
@@ -150,6 +157,11 @@ Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id, const wxString& capti
 bool Isosurfaces::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin Isosurfaces member initialisation
+   itemRadioButton4 = 0;
+   itemCheckBox5 = 0;
+   itemSlider7 = 0;
+   itemButton9 = 0;
+   itemButton10 = 0;
 ////@end Isosurfaces member initialisation
 
 ////@begin Isosurfaces creation

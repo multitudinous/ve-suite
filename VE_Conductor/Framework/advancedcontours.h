@@ -29,19 +29,16 @@
  */
 
 ////@begin forward declarations
-enum ADVANCED_CONTOUR_IDS
-{
-   OPACITY_SLIDER,
-   WARPED_SCALE_SLIDER,
-   LOD_SLIDER
-};
-////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
 }
+
+class wxSlider;
+////@end forward declarations
+
 /*!
  * Control identifiers
  */
@@ -56,6 +53,13 @@ namespace VE_XML
 #define ID_SLIDER 10001
 #define ID_SLIDER1 10002
 #define ID_SLIDER2 10003
+
+enum ADVANCED_CONTOUR_IDS
+{
+   OPACITY_SLIDER,
+   WARPED_SCALE_SLIDER,
+   LOD_SLIDER
+};
 ////@end control identifiers
 
 /*!
@@ -106,9 +110,9 @@ class AdvancedContours: public wxDialog
 
 public:
     /// Constructors
-//    AdvancedContours( );
-//    AdvancedContours( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME, const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
-    AdvancedContours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    AdvancedContours( );
+    AdvancedContours( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME, const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
+//    AdvancedContours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -146,6 +150,9 @@ public:
     static bool ShowToolTips();
 
 ////@begin AdvancedContours member variables
+   wxSlider* itemSlider5;
+   wxSlider* itemSlider10;
+   wxSlider* itemSlider15;
 ////@end AdvancedContours member variables
 protected:
    std::vector< VE_XML::Command* > commands;

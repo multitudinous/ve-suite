@@ -109,7 +109,7 @@ END_EVENT_TABLE()
 /*!
  * AdvancedContours constructors
  */
-
+/*
 AdvancedContours::AdvancedContours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
 :wxDialog(NULL,-1, wxString("Advanced Contours"), 
 		wxDefaultPosition, wxDefaultSize,
@@ -124,12 +124,15 @@ AdvancedContours::AdvancedContours(VjObs_ptr veEngine, VE_XML::DOMDocumentManage
 
    CreateControls();
 }
-/*
+*/
 AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+    this->SetSize( dialogPosition );
 }
-*/
+
 /*!
  * AdvancedContours creator
  */
@@ -137,6 +140,9 @@ AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, const wxStr
 bool AdvancedContours::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin AdvancedContours member initialisation
+   itemSlider5 = 0;
+   itemSlider10 = 0;
+   itemSlider15 = 0;
 ////@end AdvancedContours member initialisation
 
 ////@begin AdvancedContours creation

@@ -33,22 +33,20 @@
  */
 
 ////@begin forward declarations
-
-enum ISOSURFACE_IDS
-{
-   ISOSURFACE_RBUTTON,
-   PRECOMPUTED_ISO_CHK,
-   ISOSURFACE_PLANE_SLIDER,
-   ADD_ISOSURFACE_BUTTON,
-   ADVANCED_ISOSURFACE_BUTTON
-};
-////@end forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
 }
+
+class wxRadioButton;
+class wxCheckBox;
+class wxSlider;
+class wxButton;
+class wxStaticBox;
+////@end forward declarations
+
 /*!
  * Control identifiers
  */
@@ -65,6 +63,15 @@ namespace VE_XML
 #define ID_SLIDER 10003
 #define ID_BUTTON 10004
 #define ID_BUTTON1 10005
+
+enum ISOSURFACE_IDS
+{
+   ISOSURFACE_RBUTTON,
+   PRECOMPUTED_ISO_CHK,
+   ISOSURFACE_PLANE_SLIDER,
+   ADD_ISOSURFACE_BUTTON,
+   ADVANCED_ISOSURFACE_BUTTON
+};
 ////@end control identifiers
 
 /*!
@@ -115,9 +122,14 @@ class Isosurfaces: public wxDialog
 
 public:
     /// Constructors
-//    Isosurfaces( );
-//    Isosurfaces( wxWindow* parent, wxWindowID id = SYMBOL_ISOSURFACES_IDNAME, const wxString& caption = SYMBOL_ISOSURFACES_TITLE, const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION, const wxSize& size = SYMBOL_ISOSURFACES_SIZE, long style = SYMBOL_ISOSURFACES_STYLE );
-    Isosurfaces(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    Isosurfaces( );
+    Isosurfaces(  wxWindow* parent, 
+                  wxWindowID id = SYMBOL_ISOSURFACES_IDNAME, 
+                  const wxString& caption = SYMBOL_ISOSURFACES_TITLE,
+                  const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION,
+                  const wxSize& size = SYMBOL_ISOSURFACES_SIZE, 
+                  long style = SYMBOL_ISOSURFACES_STYLE );
+//    Isosurfaces(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -156,6 +168,11 @@ public:
     static bool ShowToolTips();
 
 ////@begin Isosurfaces member variables
+   wxRadioButton* itemRadioButton4;
+   wxCheckBox*    itemCheckBox5;
+   wxSlider*      itemSlider7;
+   wxButton*      itemButton9;
+   wxButton*      itemButton10;
 ////@end Isosurfaces member variables
 protected:
    std::vector< VE_XML::Command* > commands;

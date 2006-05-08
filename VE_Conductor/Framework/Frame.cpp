@@ -117,7 +117,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
 //   EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
-   EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
+//   EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
    EVT_MENU( XPLORER_VISTAB, AppFrame::LaunchVistab )   
 
    //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
@@ -158,6 +158,9 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
    av_modules->SetNetwork(network);
+//   av_modules = new Avail_Modules(NULL, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
+//   network = new Network(NULL, -1 );
+//   av_modules->SetNetwork(network);
 
    wx_log_splitter->SplitHorizontally(wx_nw_splitter, logwindow, -100);
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
@@ -179,7 +182,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    _cadDialog = 0;
 
-   streamlinePane = 0;
+//   streamlinePane = 0;
    vistab = 0;
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
@@ -362,12 +365,18 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       viewlocPane = 0;
    }
 
+   if ( vistab )
+   {
+      vistab->Destroy();
+      vistab = 0;
+   }
+/*
    if ( streamlinePane )
    {
 	   streamlinePane->Destroy();
 	   streamlinePane = 0;
    }
-
+*/
    if ( soundsPane )
    {
       soundsPane->Destroy();
@@ -392,80 +401,80 @@ void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::CreateMenu() 
 {
-  menubar = new wxMenuBar;
-  file_menu = new wxMenu;
-  con_menu = new wxMenu;
-  run_menu = new wxMenu;
-  edit_menu = new wxMenu;
-  help_menu = new wxMenu;
-//  config_menu = new wxMenu;
+   menubar = new wxMenuBar;
+   file_menu = new wxMenu;
+   con_menu = new wxMenu;
+   run_menu = new wxMenu;
+   edit_menu = new wxMenu;
+   help_menu = new wxMenu;
+//   config_menu = new wxMenu;
 
-  file_menu->Append(wxID_NEW, _("&New\tCtrl+N"));
-  file_menu->Append(wxID_OPEN, _("&Open ..\tCtrl+O"));
-  file_menu->Append(wxID_SAVE, _("&Save\tCtrl+S"));
-  file_menu->Append(wxID_SAVEAS, _("Save &as ..\tCtrl+Shift+S"));
-  file_menu->AppendSeparator();
-  file_menu->Append (wxID_PRINT_SETUP, _("Print Set&up .."));
-  file_menu->Append (wxID_PREVIEW, _("Print Pre&view\tCtrl+Shift+P"));
-  file_menu->Append (wxID_PRINT, _("&Print ..\tCtrl+P"));
-  file_menu->AppendSeparator();
-  file_menu->Append (wxID_EXIT, _("&Quit\tCtrl+Q"));
+   file_menu->Append(wxID_NEW, _("&New\tCtrl+N"));
+   file_menu->Append(wxID_OPEN, _("&Open ..\tCtrl+O"));
+   file_menu->Append(wxID_SAVE, _("&Save\tCtrl+S"));
+   file_menu->Append(wxID_SAVEAS, _("Save &as ..\tCtrl+Shift+S"));
+   file_menu->AppendSeparator();
+   file_menu->Append (wxID_PRINT_SETUP, _("Print Set&up .."));
+   file_menu->Append (wxID_PREVIEW, _("Print Pre&view\tCtrl+Shift+P"));
+   file_menu->Append (wxID_PRINT, _("&Print ..\tCtrl+P"));
+   file_menu->AppendSeparator();
+   file_menu->Append (wxID_EXIT, _("&Quit\tCtrl+Q"));
 
-  file_menu->Enable(wxID_PRINT_SETUP, false);
-  file_menu->Enable(wxID_PREVIEW, false);	
-  file_menu->Enable(wxID_PRINT, false);
-  
-  
-  //con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
-  //con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
-  //con_menu->AppendSeparator();
-  con_menu->Append(v21ID_SUBMIT, _("Sub&mit Job\tCtrl+M"));
-  con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
-  con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
-  con_menu->AppendSeparator();
-  con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
-  con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
+   file_menu->Enable(wxID_PRINT_SETUP, false);
+   file_menu->Enable(wxID_PREVIEW, false);	
+   file_menu->Enable(wxID_PRINT, false);
 
-  //con_menu->Enable(v21ID_SUBMIT,false);
-  //con_menu->Enable(v21ID_LOAD, false);
-  con_menu->Enable(v21ID_DISCONNECT, false);
-  con_menu->Enable(v21ID_DISCONNECT_VE, false);
 
-  
-  run_menu->Append(v21ID_START_CALC, _("Start Simulation"));
-  run_menu->Append(v21ID_STOP_CALC, _("Stop Simulation"));
-  run_menu->Append(v21ID_PAUSE_CALC, _("Pause Simulation"));
-  run_menu->Append(v21ID_RESUME_CALC, _("Resume Simulation"));
-  run_menu->Append(v21ID_VIEW_RESULT, _("View Results"));
-  // run_menu->Append(v21ID_GLOBAL_PARAM, _("Global Parameters"));
-  // run_menu->Append(v21ID_VIEW_FINANCIAL, _("View Financial Params"));
-  
-  run_menu->Enable(v21ID_START_CALC, false);
-  run_menu->Enable(v21ID_STOP_CALC, false);
-  run_menu->Enable(v21ID_PAUSE_CALC, false);
-  run_menu->Enable(v21ID_RESUME_CALC, false);
-  // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
-  
-  edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
-  edit_menu->Append(v21ID_REDO, _("&Redo\tCtrl+R"));
-  edit_menu->AppendSeparator();
-  edit_menu->Append(v21ID_ZOOMIN, _("Zoom &In\tCtrl+I"));
-  edit_menu->Append(v21ID_ZOOMOUT, _("&Zoom Out\tCtrl+Z"));
-  
-  edit_menu->Enable(v21ID_UNDO, false);
-  edit_menu->Enable(v21ID_REDO, false);
-   
-  help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
-  help_menu->Append (v21ID_HELP, _("&Index"));
-  help_menu->AppendSeparator();
-  help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
+   //con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
+   //con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
+   //con_menu->AppendSeparator();
+   con_menu->Append(v21ID_SUBMIT, _("Sub&mit Job\tCtrl+M"));
+   con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
+   con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
+   con_menu->AppendSeparator();
+   con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
+   con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
 
-  help_menu->Enable(wxID_HELP_CONTENTS, false);
-  //help_menu->Enable(v21ID_HELP, false);
-  help_menu->Enable(wxID_ABOUT, false);
+   //con_menu->Enable(v21ID_SUBMIT,false);
+   //con_menu->Enable(v21ID_LOAD, false);
+   con_menu->Enable(v21ID_DISCONNECT, false);
+   con_menu->Enable(v21ID_DISCONNECT_VE, false);
 
-  if (f_visualization)
-  {
+
+   run_menu->Append(v21ID_START_CALC, _("Start Simulation"));
+   run_menu->Append(v21ID_STOP_CALC, _("Stop Simulation"));
+   run_menu->Append(v21ID_PAUSE_CALC, _("Pause Simulation"));
+   run_menu->Append(v21ID_RESUME_CALC, _("Resume Simulation"));
+   run_menu->Append(v21ID_VIEW_RESULT, _("View Results"));
+   // run_menu->Append(v21ID_GLOBAL_PARAM, _("Global Parameters"));
+   // run_menu->Append(v21ID_VIEW_FINANCIAL, _("View Financial Params"));
+
+   run_menu->Enable(v21ID_START_CALC, false);
+   run_menu->Enable(v21ID_STOP_CALC, false);
+   run_menu->Enable(v21ID_PAUSE_CALC, false);
+   run_menu->Enable(v21ID_RESUME_CALC, false);
+   // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
+
+   edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
+   edit_menu->Append(v21ID_REDO, _("&Redo\tCtrl+R"));
+   edit_menu->AppendSeparator();
+   edit_menu->Append(v21ID_ZOOMIN, _("Zoom &In\tCtrl+I"));
+   edit_menu->Append(v21ID_ZOOMOUT, _("&Zoom Out\tCtrl+Z"));
+
+   edit_menu->Enable(v21ID_UNDO, false);
+   edit_menu->Enable(v21ID_REDO, false);
+
+   help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
+   help_menu->Append (v21ID_HELP, _("&Index"));
+   help_menu->AppendSeparator();
+   help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
+
+   help_menu->Enable(wxID_HELP_CONTENTS, false);
+   //help_menu->Enable(v21ID_HELP, false);
+   help_menu->Enable(wxID_ABOUT, false);
+
+   if (f_visualization)
+   {
 	xplorerMenu = new wxMenu();
 	xplorerJugglerMenu = new wxMenu();
 
@@ -477,7 +486,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
 	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
 	xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
-	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
+//	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
 	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
 	xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
 //	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
@@ -489,7 +498,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Enable( XPLORER_STREAMLINE, true);
 	xplorerMenu->Enable( JUGGLER_SETTINGS, true);
 	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
-  }
+   }
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
 //  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
 //  config_menu->Append(v21ID_REI_BASE, _("Base Quench (REI)"));
@@ -500,16 +509,16 @@ void AppFrame::CreateMenu()
 //  config_menu->Enable(v21ID_SWEET, false);
 //  config_menu->Enable(v21ID_CO_DISPOSAL, false);
 
-  menubar->Append(file_menu, _("&File"));
-//  menubar->Append(config_menu, _("&Configurations"));
-  menubar->Append(edit_menu, _("&Edit"));
-  menubar->Append(con_menu, _("&Connection"));
-  menubar->Append(run_menu, _("&Execution"));
-  menubar->Append(help_menu, _("&Help"));
-  if (f_visualization)
-	menubar->Append( xplorerMenu, _("&VE-Xplorer") );
+   menubar->Append(file_menu, _("&File"));
+//   menubar->Append(config_menu, _("&Configurations"));
+   menubar->Append(edit_menu, _("&Edit"));
+   menubar->Append(con_menu, _("&Connection"));
+   menubar->Append(run_menu, _("&Execution"));
+   menubar->Append(help_menu, _("&Help"));
+   if (f_visualization)
+   menubar->Append( xplorerMenu, _("&VE-Xplorer") );
 
-  SetMenuBar(menubar);
+   SetMenuBar(menubar);
 }
 
 void AppFrame::ZoomIn(wxCommandEvent& WXUNUSED(event) )
@@ -1213,11 +1222,16 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
       viewlocPane->Close( false );
    }
 
+   if ( vistab )
+   {
+      vistab->Close( false );
+   }
+/*
    if ( streamlinePane )
    {
 	   streamlinePane->Close( false );
    }
-
+*/
    if ( soundsPane )
    {
       soundsPane->Close( false );
@@ -1336,6 +1350,7 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
    _cadDialog->Show();
 }
 ///////////////////////////////////////////////////////////////////
+/*
 void AppFrame::LaunchStreamlinePane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( streamlinePane == 0 )
@@ -1356,6 +1371,7 @@ void AppFrame::LaunchStreamlinePane( wxCommandEvent& WXUNUSED(event) )
    // now show it
    streamlinePane->Show();
 }
+*/
 ///////////////////////////////////////////////////////////////////
 void AppFrame::LaunchVistab( wxCommandEvent& WXUNUSED(event) )
 {
@@ -1365,7 +1381,14 @@ void AppFrame::LaunchVistab( wxCommandEvent& WXUNUSED(event) )
       if ( CORBA::is_nil(vjobs.in()) )
          return;
       // create pane and set appropriate vars
-      vistab = new Vistab( vjobs.in(), domManager );
+//      vistab = new Vistab( vjobs.in(), domManager );
+      vistab = new Vistab( this,
+                     SYMBOL_VISTAB_IDNAME,
+                     SYMBOL_VISTAB_TITLE,
+                     SYMBOL_VISTAB_POSITION,
+                     SYMBOL_VISTAB_SIZE,
+                     SYMBOL_VISTAB_STYLE );
+
       // Set DOMDocument
       // navPane->SetDOMManager( domManager );
    }
