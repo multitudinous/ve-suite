@@ -74,7 +74,8 @@ enum
    GEOMETRY,
    MODEL_INPUTS,
    MODEL_RESULTS,
-   DATASET
+   DATASET,
+   VISUALIZATION
 };
 
 namespace VE_Conductor
@@ -125,7 +126,7 @@ public:
    void OnDataSet( wxCommandEvent& event );
    void OnInputsWindow( wxCommandEvent& event );
    void OnResultsWindow( wxCommandEvent& event );
-
+   void OnVisualization( wxCommandEvent& event );
    // EPRI TAG
    void OnShowFinancial(wxCommandEvent &event);
 

@@ -118,7 +118,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
 //   EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
 //   EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
-   EVT_MENU( XPLORER_VISTAB, AppFrame::LaunchVistab )   
+//   EVT_MENU( XPLORER_VISTAB, AppFrame::LaunchVistab )   
 
    //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
    //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
@@ -183,7 +183,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    _cadDialog = 0;
 
 //   streamlinePane = 0;
-   vistab = 0;
+//   vistab = 0;
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
    ///Initialize VE-Open
@@ -364,17 +364,11 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       viewlocPane->Destroy();
       viewlocPane = 0;
    }
-
+/*
    if ( vistab )
    {
       vistab->Destroy();
       vistab = 0;
-   }
-/*
-   if ( streamlinePane )
-   {
-	   streamlinePane->Destroy();
-	   streamlinePane = 0;
    }
 */
    if ( soundsPane )
@@ -490,12 +484,12 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
 	xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
 //	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
-   xplorerMenu->Append( XPLORER_VISTAB, _("Visualization Tabs"));
+//   xplorerMenu->Append( XPLORER_VISTAB, _("Visualization Tabs"));
 
 	xplorerMenu->Enable( XPLORER_NAVIGATION, true);
 	xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
 	xplorerMenu->Enable( XPLORER_SOUNDS, true);
-	xplorerMenu->Enable( XPLORER_STREAMLINE, true);
+//	xplorerMenu->Enable( XPLORER_STREAMLINE, true);
 	xplorerMenu->Enable( JUGGLER_SETTINGS, true);
 	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
    }
@@ -1221,15 +1215,10 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
    {
       viewlocPane->Close( false );
    }
-
+/*
    if ( vistab )
    {
       vistab->Close( false );
-   }
-/*
-   if ( streamlinePane )
-   {
-	   streamlinePane->Close( false );
    }
 */
    if ( soundsPane )
@@ -1373,6 +1362,7 @@ void AppFrame::LaunchStreamlinePane( wxCommandEvent& WXUNUSED(event) )
 }
 */
 ///////////////////////////////////////////////////////////////////
+/*
 void AppFrame::LaunchVistab( wxCommandEvent& WXUNUSED(event) )
 {
    if ( vistab == 0 )
@@ -1400,6 +1390,7 @@ void AppFrame::LaunchVistab( wxCommandEvent& WXUNUSED(event) )
    // now show it
    vistab->Show();
 }
+*/
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 {

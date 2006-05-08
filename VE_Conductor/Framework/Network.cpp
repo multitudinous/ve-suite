@@ -51,6 +51,7 @@
 
 #include "VE_Conductor/Framework/CADNodeManagerDlg.h"
 #include "VE_Conductor/Framework/DataSetLoaderUI.h"
+#include "VE_Conductor/Framework/vistab.h"
 
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
@@ -98,6 +99,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(DATASET, Network::OnDataSet)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
    EVT_MENU(MODEL_RESULTS, Network::OnResultsWindow) /* EPRI TAG */
+   EVT_MENU(VISUALIZATION, Network::OnVisualization)
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -489,6 +491,9 @@ void Network::OnMRightDown(wxMouseEvent& event)
    pop_menu.Enable(MODEL_INPUTS, true);
    pop_menu.Append(MODEL_RESULTS, "Result Variables" );
    pop_menu.Enable(MODEL_RESULTS, true);
+
+   pop_menu.Append(VISUALIZATION, "Visualization" );
+   pop_menu.Enable(VISUALIZATION, true);
 
    pop_menu.Enable(ADD_LINK_CON, false);
    pop_menu.Enable(EDIT_TAG, false);
@@ -2488,6 +2493,18 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
 
    delete dataSetLoaderDlg;
    dataSetLoaderDlg = 0;
+}
+///////////////////////////////////////////
+void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
+{
+   Vistab* vistab = 0;
+   vistab = new Vistab( this,
+               SYMBOL_VISTAB_IDNAME,
+               SYMBOL_VISTAB_TITLE,
+               SYMBOL_VISTAB_POSITION,
+               SYMBOL_VISTAB_SIZE,
+               SYMBOL_VISTAB_STYLE );
+   vistab->ShowModal();
 }
 ///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )
