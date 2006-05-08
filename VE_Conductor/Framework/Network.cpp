@@ -1266,8 +1266,12 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
             wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
             if (computenorm(temp, tempPoint)<=10) 
             {
-               dest_port = i;
-               break;
+               //Also, we need to check if port Type is the same
+				if (IsPortCompatible(mod, pt, i, dest_port))
+				{
+					dest_port = i;
+					break;
+				}
             }
          }
       }
@@ -1287,8 +1291,11 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
             wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
             if (computenorm(temp, tempPoint)<=10)
             {
-               dest_port = i;
-               break;
+				if (IsPortCompatible(dest_mod, i, mod, pt))
+				{
+					dest_port = i;
+					break;
+				}
             }
          }
       }
@@ -1348,7 +1355,32 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    m_selToPort = -1;
    ReDrawAll();
 }
+/////////////////////////////////////////////////////////////////////
+bool Network::IsPortCompatible(int frmod, int frport, int tomod, int toport)
+{
+	int num = 0;
+	PORT ports;
+    wxPoint tempPoint;
 
+    num = modules[ frmod ].GetPlugin()->GetNumOports();	
+	ports.resize(num);
+    modules[ frmod ].GetPlugin()->GetOPorts( ports );
+	std::string type1="";
+	if (frport>=0 && frport<num)
+		type1= ports[frport].GetPortType();
+   
+	num = modules[ tomod ].GetPlugin()->GetNumIports();	
+	ports.resize(num);
+    modules[ tomod ].GetPlugin()->GetIPorts( ports );
+	std::string type2="";
+	if (toport>=0 && toport<num)
+		type2= ports[toport].GetPortType();
+   
+	if (type1==type2)
+		return true;
+	else
+		return false;
+}
 /////////////////////////////////////////////////////////////////////
 void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
 {
@@ -1848,17 +1880,23 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
    {
       dc.SetBrush(*wxRED_BRUSH);
       dc.SetPen(*wxBLACK_PEN);
+	  dc.SetTextForeground(*wxBLACK);
    }
    else
    {
       dc.SetBrush(*wxWHITE_BRUSH);
       dc.SetPen(*wxWHITE_PEN);
+	  dc.SetTextForeground(*wxWHITE);
    }
 
    PORT ports;
    num = cur_module->GetNumIports();
    ports.resize(num);
    cur_module->GetIPorts(ports);
+   
+   wxString text;
+   int w, h;
+   
    for (i=0; i<(int)ports.size(); i++)
    {
        wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
@@ -1870,7 +1908,12 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
       yoff = tempPoint.y+bbox.y-3;
 
       // draw the polygon 
-      dc.DrawPolygon(4, bport, xoff, yoff);      
+      dc.DrawPolygon(4, bport, xoff, yoff);  
+
+	  //also, need to draw port type
+	  text = ports[i].GetPortType().c_str();
+	  dc.GetTextExtent( text, &w, &h);
+	  dc.DrawText( text, xoff-w-2, yoff);
    }
    
    if ( flag )
@@ -1894,6 +1937,10 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
       yoff = tempPoint.y+bbox.y-3;
 
       dc.DrawPolygon(4, bport, xoff, yoff);      
+	  //also, need to draw port type
+	  text = ports[i].GetPortType().c_str();
+	  dc.GetTextExtent( text, &w, &h);
+	  dc.DrawText( text, xoff+12, yoff );
    }
 
    /* if ((bbox.x-3)>0)

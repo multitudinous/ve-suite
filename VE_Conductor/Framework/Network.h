@@ -203,6 +203,8 @@ protected:
    ///portType is either input or output
    wxPoint GetPointForSelectedPlugin( unsigned long moduleID, unsigned int portNumber, std::string portType );
 
+   //Check if the two port is compatible
+   bool IsPortCompatible(int frmod, int frport, int tomod, int toport);
 protected:
    //Three main list of network objs
    std::vector< VE_Conductor::GUI_Utilities::Link > links; //The list of links between the nodes of moduls.
