@@ -150,6 +150,9 @@
 				RelativePath=".\CADTreeBuilder.cxx">
 			</File>
 			<File
+				RelativePath=".\DualSlider.cxx">
+			</File>
+			<File
 				RelativePath=".\Link.cxx">
 			</File>
 			<File
