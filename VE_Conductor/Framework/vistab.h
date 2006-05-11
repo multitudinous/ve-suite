@@ -46,6 +46,10 @@ namespace VE_XML
    class Command;
    class DOMDocumentManager;
 }
+namespace VE_Model
+{
+   class Model;
+}
 
 class TextureBasedToolBar;
 class wxComboBox;
@@ -96,83 +100,7 @@ enum VISTAB_IDS
 #define wxCLOSE_BOX 0x1000
 #endif
 
-/*!
- * Vistab class declaration
- */
-/*
-class Vistab: public wxDialog
-{    
-    DECLARE_DYNAMIC_CLASS( Vistab )
-    DECLARE_EVENT_TABLE()
 
-public:
-    /// Constructors
-    Vistab( );
-    Vistab( wxWindow* parent, wxWindowID id = SYMBOL_VISTAB_IDNAME, const wxString& caption = SYMBOL_VISTAB_TITLE, const wxPoint& pos = SYMBOL_VISTAB_POSITION, const wxSize& size = SYMBOL_VISTAB_SIZE, long style = SYMBOL_VISTAB_STYLE );
-
-    /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_VISTAB_IDNAME, const wxString& caption = SYMBOL_VISTAB_TITLE, const wxPoint& pos = SYMBOL_VISTAB_POSITION, const wxSize& size = SYMBOL_VISTAB_SIZE, long style = SYMBOL_VISTAB_STYLE );
-
-    /// Creates the controls and sizers
-    void CreateControls();
-
-////@begin Vistab event handler declarations
-
-////@end Vistab event handler declarations
-
-////@begin Vistab member function declarations
-
-    /// Retrieves bitmap resources
-    wxBitmap GetBitmapResource( const wxString& name );
-
-    /// Retrieves icon resources
-    wxIcon GetIconResource( const wxString& name );
-////@end Vistab member function declarations
-
-    /// Should we show tooltips?
-    static bool ShowToolTips();
-
-////@begin Vistab member variables
-////@end Vistab member variables
-};
-
-/*
- * Vistab class declaration
- */
-/*
-class Vistab: public wxFrame
-{    
-    DECLARE_CLASS( Vistab )
-    DECLARE_EVENT_TABLE()
-
-public:
-    /// Constructors
-    Vistab( );
-    Vistab( wxWindow* parent, wxWindowID id = SYMBOL_VISTAB_IDNAME, const wxString& caption = SYMBOL_VISTAB_TITLE, const wxPoint& pos = SYMBOL_VISTAB_POSITION, const wxSize& size = SYMBOL_VISTAB_SIZE, long style = SYMBOL_VISTAB_STYLE );
-
-    /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_VISTAB_IDNAME, const wxString& caption = SYMBOL_VISTAB_TITLE, const wxPoint& pos = SYMBOL_VISTAB_POSITION, const wxSize& size = SYMBOL_VISTAB_SIZE, long style = SYMBOL_VISTAB_STYLE );
-
-    /// Creates the controls and sizers
-    void CreateControls();
-
-////@begin Vistab event handler declarations
-////@end Vistab event handler declarations
-
-////@begin Vistab member function declarations
-    /// Retrieves bitmap resources
-    wxBitmap GetBitmapResource( const wxString& name );
-
-    /// Retrieves icon resources
-    wxIcon GetIconResource( const wxString& name );
-////@end Vistab member function declarations
-
-    /// Should we show tooltips?
-    static bool ShowToolTips();
-
-////@begin Vistab member variables
-////@end Vistab member variables
-};
 
 /*
  * Vistab class declaration
@@ -180,13 +108,23 @@ public:
 
 class Vistab: public wxDialog
 {    
-//    DECLARE_DYNAMIC_CLASS( Vistab )
     DECLARE_EVENT_TABLE()
 
 public:
-    /// Constructors
-    Vistab( );
-    Vistab( wxWindow* parent, wxWindowID id = SYMBOL_VISTAB_IDNAME, const wxString& caption = SYMBOL_VISTAB_TITLE, const wxPoint& pos = SYMBOL_VISTAB_POSITION, const wxSize& size = SYMBOL_VISTAB_SIZE, long style = SYMBOL_VISTAB_STYLE );
+   ///Constructor
+   ///\param activeModel The active VE_Model::Model.
+   Vistab(VE_Model::Model* activeModel );
+
+   ///Constructor
+   ///\param activeModel The active VE_Model::Model.
+   Vistab(VE_Model::Model* activeModel,
+            wxWindow* parent,
+            wxWindowID id = SYMBOL_VISTAB_IDNAME,
+            const wxString& caption = SYMBOL_VISTAB_TITLE,
+            const wxPoint& pos = SYMBOL_VISTAB_POSITION,
+            const wxSize& size = SYMBOL_VISTAB_SIZE,
+            long style = SYMBOL_VISTAB_STYLE );
+
 //    Vistab(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
@@ -216,6 +154,7 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
+
    Vectors* vector;
    Contours* contour;
    Streamlines* streamline;
@@ -231,6 +170,7 @@ public:
 ////@end Vistab member variables
 
 protected:
+   VE_Model::Model* _activeModel;
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
    std::vector< long > commandInputs;

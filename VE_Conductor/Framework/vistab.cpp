@@ -15,6 +15,7 @@
 ////@begin includes
 #include "VE_Conductor/Framework/TBToolBar.h"
 
+#include "VE_Open/XML/Model/Model.h"
 ////@end includes
 
 #include "VE_Conductor/Framework/vistab.h"
@@ -57,35 +58,6 @@ END_EVENT_TABLE()
  * Vistab constructors
  */
 using namespace VE_Conductor::GUI_Utilities;
-/*
-Vistab::Vistab(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
-:wxDialog(NULL,-1, wxString("Visualization Tab"), 
-		wxDefaultPosition, wxDefaultSize, 
-      (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
-{
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth()-427, 20, 427, 400 );
-   this->SetSize( dialogPosition );
-
-   xplorerPtr = VjObs::_duplicate( veEngine );
-   domManager = domManagerIn;
-   vector = 0;
-   contour = 0;
-   streamline = 0;
-   isosurface = 0;
-   _tbTools = 0;
-   scalarRange = 0;
-
-   CreateControls();
-}
-*/
-Vistab::Vistab( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
-{
-    Create(parent, id, caption, pos, size, style);
-    wxSize displaySize = ::wxGetDisplaySize();
-    wxRect dialogPosition( displaySize.GetWidth()-427, 20, 427, 400 );
-    this->SetSize( dialogPosition );
-}
 
 /*!
  * Vistab creator
@@ -459,16 +431,18 @@ END_EVENT_TABLE()
 /*!
  * Vistab constructors
  */
-/*
-Vistab::Vistab( )
+
+Vistab::Vistab(VE_Model::Model* activeModel )
 {
+   _activeModel = activeModel;
 }
 
-Vistab::Vistab( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+Vistab::Vistab(VE_Model::Model* activeModel, wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
+    _activeModel = activeModel;
 }
-*/
+
 /*!
  * Vistab creator
  */
