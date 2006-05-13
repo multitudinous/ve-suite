@@ -132,7 +132,150 @@ void VjObs_i::InitCluster( void )
    this->mStates.init(new_guid);
 #endif // _CLUSTER
 }
+/////////////////////////////////////////////////////////////
 
+#ifdef _TAO
+VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::Models* VjObs_i::GetModels( CORBA::Long modelID )
+#endif
+{
+   VjObs::Model_var tempModel;
+   //Make sure we have some models
+   int numberOfModels = cfdModelHandler::instance()->GetNumberOfModels();
+   if ( numberOfModels == 0 )
+   {
+      return 0;
+   }
+   
+   // find the right model
+   cfdModel* tempCfdModel = 0;
+   for ( int i = 0; i < numberOfModels; ++i )
+   {
+      tempCfdModel = cfdModelHandler::instance()->GetModel( i );
+      if ( (CORBA::Long)tempCfdModel->GetID() == modelID )
+      {
+         break;
+      }
+      tempCfdModel = 0;
+   }
+   
+   // if we didn't find it then...
+   if ( tempCfdModel == 0 )
+   {
+      return 0;
+   }
+   
+   // now lets pass the model back
+   CORBA::ULong numDatasets = tempCfdModel->GetNumberOfCfdDataSets();
+   vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
+                    << std::endl << vprDEBUG_FLUSH;
+   if ( numDatasets > 0 )
+   {
+      //tempModel->dataVector = VjObs::Datasets( numDatasets ); 
+      tempModel->dataVector.length( numDatasets );
+
+      //tempModel->datasettypes  = VjObs::obj_p( numDatasets );
+      tempModel->datasettypes.length( numDatasets );
+
+      //tempModel->num_scalars_per_dataset = VjObs::obj_p( numDatasets );
+      tempModel->num_scalars_per_dataset.length( numDatasets );
+
+      //tempModel->num_vectors_per_dataset = VjObs::obj_p( numDatasets );
+      tempModel->num_vectors_per_dataset.length( numDatasets );
+
+      CORBA::ULong totalNumberOfScalars = 0;
+      CORBA::ULong totalNumberOfVectors = 0;
+      for ( CORBA::ULong j=0; j< numDatasets; j++ )
+      {
+         totalNumberOfScalars = tempCfdModel->GetCfdDataSet( j )->GetNumberOfScalars();
+         totalNumberOfVectors = tempCfdModel->GetCfdDataSet( j )->GetNumberOfVectors();
+
+         //tempModel.dataVector[ j ].vectornames = VjObs::scalar_p( totalNumberOfVectors );
+         tempModel->dataVector[ j ].vectornames.length( totalNumberOfVectors );
+      }
+      vprDEBUG(vprDBG_ALL,0)
+         << " totalNumberOfScalars: " << totalNumberOfScalars
+         << std::endl << vprDEBUG_FLUSH;
+
+      vprDEBUG(vprDBG_ALL,0)
+         << " totalNumberOfVectors: " << totalNumberOfVectors
+         << std::endl << vprDEBUG_FLUSH;
+
+      for ( CORBA::ULong j=0; j < numDatasets; j++ )
+      {
+         tempModel->dataVector[ j ].datasetname = CORBA::string_dup( 
+                    tempCfdModel->GetCfdDataSet( j )->GetFileName().c_str() );
+         vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << tempModel->dataVector[ j ].datasetname
+                       << std::endl << vprDEBUG_FLUSH;
+
+         tempModel->datasettypes[ j ] = tempCfdModel->GetCfdDataSet( j )->GetType();
+   
+         CORBA::Short num_scalars = tempCfdModel->GetCfdDataSet( j )->GetNumberOfScalars();
+         tempModel->num_scalars_per_dataset[ j ] = num_scalars;
+
+         //tempModel->dataVector[ j ].scalarVector = VjObs::Scalars( num_scalars ); 
+         tempModel->dataVector[ j ].scalarVector.length( num_scalars );
+         for (CORBA::ULong k=0; k < (unsigned int)num_scalars; k++ )
+         {
+            //Set scalar name
+            tempModel->dataVector[ j ].scalarVector[ k ].scalarnames = CORBA::string_dup(
+              tempCfdModel->GetCfdDataSet( j )->GetScalarName( k ).c_str() );
+            // Then get scalar range for a particular scalar
+            tempCfdModel->GetCfdDataSet( j )->SetActiveScalar( (int)k );
+            double* range = tempCfdModel->GetCfdDataSet( j )->GetRange();
+            // Allocate
+            tempModel->dataVector[ j ].scalarVector[ k ].scalarrange = VjObs::obj_pd( 2 ); 
+            tempModel->dataVector[ j ].scalarVector[ k ].scalarrange.length( 2 );
+            // Set
+            tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ] = range[ 0 ];
+            tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ] = range[ 1 ];
+            vprDEBUG(vprDBG_ALL,1) << "\tscl_name : " << tempModel->dataVector[ j ].scalarVector[ k ].scalarnames
+                           << tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ] << " : "
+                           << tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ] << std::endl << vprDEBUG_FLUSH;
+         }
+
+         CORBA::Short num_vectors = tempCfdModel->GetCfdDataSet( j )
+                                    ->GetNumberOfVectors();
+         tempModel->num_vectors_per_dataset[ j ] = num_vectors;
+
+         for (CORBA::ULong k=0; k < (unsigned int)num_vectors; k++ )
+         {
+            tempModel->dataVector[ j ].vectornames[ k ] = CORBA::string_dup(
+              tempCfdModel->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
+            vprDEBUG(vprDBG_ALL,1) << "\tvec_name : " << tempModel->dataVector[ j ].vectornames[ k ]
+                          << std::endl << vprDEBUG_FLUSH;
+         }
+      }
+   }
+   CORBA::ULong numGeoArrays = tempCfdModel->GetNumberOfGeomDataSets();
+   vprDEBUG(vprDBG_ALL,0)
+         << " Number of geometries to be transfered to the client: "
+         << numGeoArrays 
+         << std::endl << vprDEBUG_FLUSH;
+
+   if( numGeoArrays > 0 )
+   {
+      //(*_models)[ i ].geometrynames = VjObs::scalar_p(50);
+      tempModel->geometrynames.length( numGeoArrays );
+      for(CORBA::ULong j = 0; j < numGeoArrays; j++)
+      {
+            vprDEBUG(vprDBG_ALL,0)
+                  << " Geometry file ( "
+                  << j << " ) = " << tempCfdModel->GetGeomDataSet( j )->GetFilename() 
+                  << std::endl << vprDEBUG_FLUSH;
+            tempModel->geometrynames[ j ] = CORBA::string_dup(
+                            tempCfdModel->GetGeomDataSet( j )->GetFilename().c_str() );
+      }
+   }
+
+   return tempModel;
+}
+
+/////////////////////////////////////////////////////////////
 #ifdef _TAO
 VjObs::Models* VjObs_i::GetModels()
   ACE_THROW_SPEC ((

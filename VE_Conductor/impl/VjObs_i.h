@@ -87,6 +87,7 @@ public:
    //VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
    VjObs::Models* GetModels() throw (CORBA::SystemException);
+   VjObs::Model* GetModel( CORBA::Long modelID ) throw (CORBA::SystemException);
    //yang-REI : Change the design a little here
    //The original code's idea to set shared flag. Using that flag to wait for
    //the excution of the cfd::get_geo() and the cfd::get_scalar() to finish

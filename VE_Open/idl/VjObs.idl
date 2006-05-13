@@ -48,6 +48,8 @@ interface VjObs
    {
       string datasetname;
       scalar_p vectornames;
+      scalar_p textureVectorNames;
+      scalar_p textureScalarNames;
       Scalars scalarVector;
    };
 
@@ -64,7 +66,10 @@ interface VjObs
    };
 
    typedef sequence< Model > Models;
+   // Retrun all the models currently loaded in xplorer
    Models GetModels();
+   // Retrun the user requested model
+   Model GetModel( in long modelID );
 
    //void attach(in Observer o);
    //void detach(in Observer o);
