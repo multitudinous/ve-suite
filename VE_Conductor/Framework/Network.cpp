@@ -2545,7 +2545,7 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
 void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
 {
    Vistab* vistab = 0;
-   vistab = new Vistab( this,
+   vistab = new Vistab( NULL, this,
                SYMBOL_VISTAB_IDNAME,
                SYMBOL_VISTAB_TITLE,
                SYMBOL_VISTAB_POSITION,

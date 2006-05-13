@@ -57,7 +57,7 @@ class wxButton;
 #define SYMBOL_CONTOURS_IDNAME ID_DIALOG
 #define SYMBOL_CONTOURS_SIZE wxSize(400, 300)
 #define SYMBOL_CONTOURS_POSITION wxDefaultPosition
-#define ID_RADIOBOX 10001
+/*#define ID_RADIOBOX 10001
 #define ID_RADIOBOX1 10007
 #define ID_RADIOBUTTON 10002
 #define ID_CHECKBOX 10003
@@ -65,7 +65,7 @@ class wxButton;
 #define ID_CHECKBOX1 10005
 #define ID_SLIDER 10008
 #define ID_BUTTON 10006
-#define ID_BUTTON1 10009
+#define ID_BUTTON1 10009*/
 
 enum CONTOUR_IDS
 {

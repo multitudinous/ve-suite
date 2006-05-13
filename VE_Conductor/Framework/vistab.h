@@ -77,8 +77,8 @@ class wxListBox;
 #define ID_COMBOBOX 10010
 #define ID_LISTBOX 10011
 #define ID_LISTBOX1 10012
-#define ID_SLIDER 10013
-#define ID_SLIDER1 10014
+/*#define ID_SLIDER 10013
+#define ID_SLIDER1 10014*/
 #define ID_BUTTON 10015
 #define ID_COMBOBOX1 10016
 
