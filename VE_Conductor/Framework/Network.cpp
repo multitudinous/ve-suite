@@ -475,7 +475,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
 	pop_menu.Enable(SHOW_FINANCIAL, true);
    }
 
-   if (p_frame->f_geometry)
+   //if (p_frame->f_geometry)
    {
 	// GUI to configure geometry for graphical env
 	pop_menu.Append(GEOMETRY, "Geometry Config");
