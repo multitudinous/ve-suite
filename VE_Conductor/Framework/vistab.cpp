@@ -29,6 +29,7 @@
 #include <wx/combobox.h>
 #include <wx/listbox.h>
 #include <iostream>
+#include <string>
 ////@begin XPM images
 #include "VE_Conductor/Framework/vector.xpm"
 #include "VE_Conductor/Framework/contour.xpm"
@@ -167,8 +168,9 @@ void Vistab::CreateControls()
         _T("DataSet2"),
         _T("DataSet3")
     };
-    itemListBox13 = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize(125, -1), 3, itemListBox13Strings, wxLB_SINGLE );
-    itemStaticBoxSizer12->Add(itemListBox13, 1, wxGROW|wxALL, 5);
+    //itemListBox13 = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize(125, -1), 3, itemListBox13Strings, wxLB_SINGLE );
+    _scalarSelection = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize(125, -1), 3, itemListBox13Strings, wxLB_SINGLE );
+    itemStaticBoxSizer12->Add(_scalarSelection, 1, wxGROW|wxALL, 5);
 
     wxStaticBox* itemStaticBoxSizer14Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Vectors"));
     wxStaticBoxSizer* itemStaticBoxSizer14 = new wxStaticBoxSizer(itemStaticBoxSizer14Static, wxHORIZONTAL);
@@ -179,7 +181,8 @@ void Vistab::CreateControls()
         _T("DataSet2"),
         _T("DataSet3")
     };
-    itemListBox15 = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, -1), 3, itemListBox15Strings, wxLB_SINGLE );
+    //itemListBox15 = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, -1), 3, itemListBox15Strings, wxLB_SINGLE );
+    _vectorSelection = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, -1), 3, itemListBox15Strings, wxLB_SINGLE );
     itemStaticBoxSizer14->Add(itemListBox15, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* scalarSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -246,7 +249,6 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {
-//   contour = new Contours(xplorerPtr, domManager);
    contour = new Contours(this,                
                   SYMBOL_CONTOURS_IDNAME, 
                   SYMBOL_CONTOURS_TITLE,
@@ -254,12 +256,10 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
    contour->ShowModal();
-std::cout<<"CONTOURS WORKING"<<std::endl;   
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 {
-//   vector = new Vectors(xplorerPtr, domManager);
    vector = new Vectors( this,                
                   SYMBOL_VECTORS_IDNAME, 
                   SYMBOL_VECTORS_TITLE,
@@ -267,12 +267,10 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_VECTORS_SIZE, 
                   SYMBOL_VECTORS_STYLE );
    vector->ShowModal();
-std::cout<<"VECTORS WORKING"<<std::endl;
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
 {
-//   streamline = new Streamlines(xplorerPtr, domManager);
    streamline = new Streamlines( this,                
                   SYMBOL_STREAMLINES_IDNAME, 
                   SYMBOL_STREAMLINES_TITLE,
@@ -285,7 +283,6 @@ std::cout<<"STREAMLINES WORKING"<<std::endl;
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
-//   isosurface = new Isosurfaces(xplorerPtr, domManager);
    isosurface = new Isosurfaces( this,                
                   SYMBOL_ISOSURFACES_IDNAME, 
                   SYMBOL_ISOSURFACES_TITLE,
@@ -293,7 +290,6 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
    isosurface->ShowModal();
-std::cout<<"ISOSURFACES WORKING"<<std::endl;
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
@@ -328,88 +324,178 @@ END_EVENT_TABLE()
 /*!
  * Vistab constructors
  */
-
+//////////////////////////////////////////
+//Constructor                           //
+//////////////////////////////////////////
 Vistab::Vistab(VjObs::Model* activeModel )
 {
-   _activeModel = activeModel;
-}
+   _activeModel = 0;
+   _scalarSelection = 0;    
+   _vectorSelection = 0;    
+   _nDatasetsInActiveModel = 0;
 
-Vistab::Vistab(VjObs::Model* activeModel, wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+   _availableSolutions["MESH_SCALARS"].Add(""); 
+   _availableSolutions["MESH_VECTORS"].Add(""); 
+   _availableSolutions["TEXTURE_SCALARS"].Add("");  
+   _availableSolutions["TEXTURE_VECTORS"].Add(""); 
+   SetActiveModel(activeModel);
+
+}
+///////////////////////////////////////////////////////////////////
+//Constructor                                                    //
+///////////////////////////////////////////////////////////////////
+Vistab::Vistab(VjObs::Model* activeModel,
+               wxWindow* parent, wxWindowID id,
+               const wxString& caption,
+               const wxPoint& pos, const wxSize& size, long style )
 {
+    _activeModel = 0;
+
+   _availableSolutions["MESH_SCALARS"].Add(""); 
+   _availableSolutions["MESH_VECTORS"].Add(""); 
+   _availableSolutions["TEXTURE_SCALARS"].Add("");  
+   _availableSolutions["TEXTURE_VECTORS"].Add(""); 
+
+    SetActiveModel(activeModel);
     Create(parent, id, caption, pos, size, style);
-    _activeModel = activeModel;
 }
-
-/*!
- * Vistab creator
- */
-/*
-bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+///////////////////////////////////////////////////////
+void Vistab::SetActiveModel(VjObs::Model* activeModel)
 {
-////@begin Vistab member initialisation
-////@end Vistab member initialisation
-
-////@begin Vistab creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
-    wxDialog::Create( parent, id, caption, pos, size, style );
-
-    CreateControls();
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
-    Centre();
-////@end Vistab creation
-    return true;
+   _activeModel = activeModel;
+   _updateModelInformation(_activeModel);
 }
-*/
-/*!
- * Control creation for Vistab
- */
-/*
-void Vistab::CreateControls()
-{    
-////@begin Vistab content construction
-    // Generated by DialogBlocks, 18/04/2006 14:28:15 (unregistered)
-
-    Vistab* itemDialog1 = this;
-
-    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
-    itemDialog1->SetSizer(itemBoxSizer2);
-
-////@end Vistab content construction
-}
-*/
-/*!
- * Should we show tooltips?
- */
-/*
-bool Vistab::ShowToolTips()
+///////////////////////////////////////////////
+void Vistab::SetActiveDataset(std::string name)
 {
-    return true;
+   //is this incorrect to assume we have a model? -- biv
+   if(_activeModel)
+   {
+      //loop over available datasets
+      for(unsigned int i = 0; i < _activeModel->dataVector.length(); i++)
+      {
+         if(_activeModel->dataVector[i].datasetname == name)
+         {
+            _setActiveDataset(i);
+            return;
+         }
+      }
+   }
 }
-*/
-/*!
- * Get bitmap resources
- */
-/*
-wxBitmap Vistab::GetBitmapResource( const wxString& name )
+//////////////////////////////////////////////////////////////
+void Vistab::_updateModelInformation(VjObs::Model* newModel)
 {
-    // Bitmap retrieval
-////@begin Vistab bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end Vistab bitmap retrieval
+   //number of datasets
+   _nDatasetsInActiveModel =  newModel->dataVector.length();   
+   if(_nDatasetsInActiveModel > 0 )
+   {
+      //set the active dataset to the initial dataset in the model
+      _setActiveDataset(0); 
+   }
 }
-*/
-/*!
- * Get icon resources
- */
-/*
-wxIcon Vistab::GetIconResource( const wxString& name )
+//////////////////////////////////////////////////
+void Vistab::_setActiveDataset(unsigned int index)
 {
-    // Icon retrieval
-////@begin Vistab icon retrieval
-    wxUnusedVar(name);
-    return wxNullIcon;
-////@end Vistab icon retrieval
+   //is this incorrect to assume we have a model? -- biv
+   if(_activeModel)
+   {
+      CORBA::ULong i = index;
+      if(i < _nDatasetsInActiveModel)
+      {
+         _activeDataset = _activeModel->dataVector[i];
+
+         //update the available scalar, vector and texture data
+         _updateDatasetInformation(_activeDataset);
+      }
+   }
 }
-*/
+////////////////////////////////////////////////////////////////////
+void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
+{
+   _nScalarsInActiveDataset = datasetInfo.scalarVector.length();
+   if(_nScalarsInActiveDataset)
+   {
+      _updateAvailableScalarMeshSolutions(datasetInfo.scalarVector);
+   }
+
+   _nVectorsInActiveDataset = datasetInfo.vectornames.length();
+   if(_nVectorsInActiveDataset)
+   {
+      _updateAvailableSolutions("MESH_VECTORS",datasetInfo.vectornames);
+   }
+     
+   _nScalarTexturesInActiveDataset = datasetInfo.textureScalarNames.length();
+   if(_nScalarTexturesInActiveDataset)
+   {
+      _updateAvailableSolutions("TEXTURE_SCALARS",datasetInfo.textureScalarNames);
+   }
+
+   _nVectorTexturesInActiveDataset = datasetInfo.textureVectorNames.length();
+   if(_nVectorTexturesInActiveDataset)
+   {
+      _updateAvailableSolutions("TEXTURE_VECTORS",datasetInfo.textureVectorNames);
+   }
+}
+////////////////////////////////////////////////////////////////////////
+//We need this extra method because the data info is stored differenly//
+//for scalars                                                         // 
+////////////////////////////////////////////////////////////////////////
+void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
+{
+   std::map<std::string, wxArrayString >::iterator currentSolution;
+   currentSolution = _availableSolutions.find( "MESH_SCALARS" );
+   if(currentSolution != _availableSolutions.end())
+   {
+      currentSolution->second.Clear();
+      for(size_t i = 0; i < newScalars.length(); i++)
+      {
+         currentSolution->second.Add(wxString(newScalars[i].scalarnames));
+      }
+   }
+   else
+   {
+      std::cout<<"MESH_SCALAR data not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
+   }
+}
+/////////////////////////////////////////////////////////////////////
+void Vistab::_updateAvailableSolutions(std::string dataType,
+                                       VjObs::scalar_p names)
+{
+   std::map<std::string, wxArrayString >::iterator currentSolution;
+   currentSolution = _availableSolutions.find( dataType );
+   if(currentSolution != _availableSolutions.end())
+   {
+      currentSolution->second.Clear();
+      for(size_t i = 0; i < names.length(); i++)
+      {
+         currentSolution->second.Add(wxString(names[i]));
+      }
+   }
+   else
+   {
+      std::cout<<dataType<<" not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
+   }
+}
+///////////////////////////////////////////////////////////
+void Vistab::_updateComboBoxNames(std::string dataType,
+                                 wxArrayString listOfNames)
+{
+   wxComboBox* activeComboBox = 0; 
+   if(dataType == "MESH_SCALARS" ||
+      dataType == "TEXTURE_SCALARS")
+   {
+      activeComboBox = _scalarSelection;
+   }
+   else if(dataType == "MESH_VECTORS" ||
+         dataType == "TEXTURE_VECTORS")
+   {
+      activeComboBox = _vectorSelection;
+   }
+   activeComboBox->Clear();
+   for(size_t i = 0; i < listOfNames.GetCount(); i++)
+   {
+      activeComboBox->Insert(listOfNames[i]);
+   }
+}
+
+
