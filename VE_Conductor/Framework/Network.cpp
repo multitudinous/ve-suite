@@ -2544,13 +2544,59 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////
 void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
 {
+  
+   if (m_selMod<0)
+   {
+      return;
+   }
+   else
+   {
+      std::cout << m_selMod << std::endl;
+      SetActiveModel();
+   }
+  
+   //Get the active model ID from the xml data
+   VE_Model::Model* activeXMLModel = modules[m_selMod].GetPlugin()->GetModel();
+   unsigned int modelID = activeXMLModel->GetModelID();
+
+   //Get the active model from the CORBA side
+   ///Should this be a member variable?
+   VjObs::Model* activeCORBAModel = 0; 
+
+   //Does this need to be wrapped in something else?
+   if ( !CORBA::is_nil( xplorerPtr.in() ) )
+   {
+      try
+      {
+         activeCORBAModel = xplorerPtr->GetModel(static_cast<CORBA::Long>(modelID));
+      }
+      catch ( CORBA::Exception& )
+      {
+         std::cout << " Couldn't find model: " << modelID<<std::endl;
+         return;
+      }
+   }
+   else
+   {
+      std::cerr << " ERROR : Not connected to VE-Server " << std::endl;
+      return;
+   }
+
    Vistab* vistab = 0;
-   vistab = new Vistab( NULL, this,
+   vistab = new Vistab(activeCORBAModel,this,
                SYMBOL_VISTAB_IDNAME,
                SYMBOL_VISTAB_TITLE,
                SYMBOL_VISTAB_POSITION,
                SYMBOL_VISTAB_SIZE,
                SYMBOL_VISTAB_STYLE );
+
+   /*Vistab* vistab = 0;
+   vistab = new Vistab( NULL, this,
+               SYMBOL_VISTAB_IDNAME,
+               SYMBOL_VISTAB_TITLE,
+               SYMBOL_VISTAB_POSITION,
+               SYMBOL_VISTAB_SIZE,
+               SYMBOL_VISTAB_STYLE );*/
    vistab->ShowModal();
 }
 ///////////////////////////////////////////

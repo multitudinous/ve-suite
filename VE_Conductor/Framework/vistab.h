@@ -112,12 +112,12 @@ class Vistab: public wxDialog
 
 public:
    ///Constructor
-   ///\param activeModel The active VE_Model::Model.
-   Vistab(VE_Model::Model* activeModel );
+   ///\param activeModel The active Model information from CORBA.
+   Vistab(VjObs::Model* activeModel );
 
    ///Constructor
-   ///\param activeModel The active VE_Model::Model.
-   Vistab(VE_Model::Model* activeModel,
+   ///\param activeModel The active Model information from CORBA.
+   Vistab(VjObs::Model* activeModel,
             wxWindow* parent,
             wxWindowID id = SYMBOL_VISTAB_IDNAME,
             const wxString& caption = SYMBOL_VISTAB_TITLE,
@@ -170,7 +170,14 @@ public:
 ////@end Vistab member variables
 
 protected:
-   VE_Model::Model* _activeModel;
+   
+   VjObs::Model* _activeModel;///<The active Model data from CORBA.
+
+   wxArrayString _availableScalars;///<The available scalars for the current dataset.
+   wxArrayString _availableVectors;///<The available vectors for the current dataset.
+   wxArrayString _availableTextureDatasets;///<The available texture datasets for the Model.
+   wxArrayString _availableMeshDatasets;///<The available Mesh datasets for the Model.
+
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
    std::vector< long > commandInputs;
