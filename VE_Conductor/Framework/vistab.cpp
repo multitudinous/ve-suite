@@ -141,11 +141,12 @@ void Vistab::CreateControls()
         _T("DataSet2"),
         _T("DataSet3")
     };
-    itemComboBox11 = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxDefaultSize, 3, itemComboBox11Strings, wxCB_DROPDOWN );
+    //itemComboBox11 = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxDefaultSize, 3, itemComboBox11Strings, wxCB_DROPDOWN );
+    _datasetSelection = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxDefaultSize, 3, itemComboBox11Strings, wxCB_DROPDOWN );
 
     if (ShowToolTips())
-        itemComboBox11->SetToolTip(_T("Data Sets"));
-    itemBoxSizer10->Add(itemComboBox11, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+        _datasetSelection->SetToolTip(_T("Data Sets"));
+    itemBoxSizer10->Add(_datasetSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxString itemComboBox12Strings[] = {
         _T("DataSet1"),
@@ -304,30 +305,10 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
       std::cout<<"TBTools WORKING"<<std::endl;
    }
 }
-/*!
- * Vistab type definition
- */
-/*
-IMPLEMENT_DYNAMIC_CLASS( Vistab, wxDialog )
-*/
-/*!
- * Vistab event table definition
- */
-/*
-BEGIN_EVENT_TABLE( Vistab, wxDialog )
-
-////@begin Vistab event table entries
-////@end Vistab event table entries
-
-END_EVENT_TABLE()
-*/
-/*!
- * Vistab constructors
- */
 //////////////////////////////////////////
 //Constructor                           //
 //////////////////////////////////////////
-Vistab::Vistab(VjObs::Model* activeModel )
+Vistab::Vistab(VjObs::Model_var activeModel )
 {
    _activeModel = 0;
    _scalarSelection = 0;    
@@ -344,23 +325,34 @@ Vistab::Vistab(VjObs::Model* activeModel )
 ///////////////////////////////////////////////////////////////////
 //Constructor                                                    //
 ///////////////////////////////////////////////////////////////////
-Vistab::Vistab(VjObs::Model* activeModel,
+Vistab::Vistab(VjObs::Model_var activeModel,
                wxWindow* parent, wxWindowID id,
                const wxString& caption,
                const wxPoint& pos, const wxSize& size, long style )
 {
-    _activeModel = 0;
+   std::cout<<"Here 1"<<std::endl;
+   _activeModel = 0;
+   _scalarSelection = 0;    
+   _vectorSelection = 0;    
+   _nDatasetsInActiveModel = 0;
 
+   std::cout<<"Here 2"<<std::endl;
    _availableSolutions["MESH_SCALARS"].Add(""); 
+   std::cout<<"Here 3"<<std::endl;
    _availableSolutions["MESH_VECTORS"].Add(""); 
+   std::cout<<"Here 4"<<std::endl;
    _availableSolutions["TEXTURE_SCALARS"].Add("");  
+   std::cout<<"Here 5"<<std::endl;
    _availableSolutions["TEXTURE_VECTORS"].Add(""); 
+   std::cout<<"Here 6"<<std::endl;
 
     SetActiveModel(activeModel);
+   std::cout<<"Here 7"<<std::endl;
     Create(parent, id, caption, pos, size, style);
+   std::cout<<"Here 8"<<std::endl;
 }
 ///////////////////////////////////////////////////////
-void Vistab::SetActiveModel(VjObs::Model* activeModel)
+void Vistab::SetActiveModel(VjObs::Model_var activeModel)
 {
    _activeModel = activeModel;
    _updateModelInformation(_activeModel);
@@ -383,10 +375,12 @@ void Vistab::SetActiveDataset(std::string name)
    }
 }
 //////////////////////////////////////////////////////////////
-void Vistab::_updateModelInformation(VjObs::Model* newModel)
+void Vistab::_updateModelInformation(VjObs::Model_var newModel)
 {
+   std::cout<<"updateModelInformation"<<std::endl;
    //number of datasets
    _nDatasetsInActiveModel =  newModel->dataVector.length();   
+   std::cout<<"nDatasetsInActiveModel: "<< _nDatasetsInActiveModel<<std::endl;
    if(_nDatasetsInActiveModel > 0 )
    {
       //set the active dataset to the initial dataset in the model
@@ -396,6 +390,7 @@ void Vistab::_updateModelInformation(VjObs::Model* newModel)
 //////////////////////////////////////////////////
 void Vistab::_setActiveDataset(unsigned int index)
 {
+   std::cout<<"setActiveDataset"<<std::endl;
    //is this incorrect to assume we have a model? -- biv
    if(_activeModel)
    {
@@ -412,6 +407,7 @@ void Vistab::_setActiveDataset(unsigned int index)
 ////////////////////////////////////////////////////////////////////
 void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
 {
+   std::cout<<"udpateDatasetInformation"<<std::endl;
    _nScalarsInActiveDataset = datasetInfo.scalarVector.length();
    if(_nScalarsInActiveDataset)
    {
@@ -442,6 +438,7 @@ void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
 {
+   std::cout<<"udpateAvailableScalarMeshSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( "MESH_SCALARS" );
    if(currentSolution != _availableSolutions.end())
@@ -461,6 +458,7 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
 void Vistab::_updateAvailableSolutions(std::string dataType,
                                        VjObs::scalar_p names)
 {
+   std::cout<<"udpateAvailableSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( dataType );
    if(currentSolution != _availableSolutions.end())
@@ -480,7 +478,8 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
 void Vistab::_updateComboBoxNames(std::string dataType,
                                  wxArrayString listOfNames)
 {
-   wxComboBox* activeComboBox = 0; 
+   std::cout<<"updateComboBoxNames"<<std::endl;
+   wxListBox* activeComboBox = 0; 
    if(dataType == "MESH_SCALARS" ||
       dataType == "TEXTURE_SCALARS")
    {
@@ -494,7 +493,7 @@ void Vistab::_updateComboBoxNames(std::string dataType,
    activeComboBox->Clear();
    for(size_t i = 0; i < listOfNames.GetCount(); i++)
    {
-      activeComboBox->Insert(listOfNames[i]);
+      activeComboBox->Insert(listOfNames[i],i);
    }
 }
 

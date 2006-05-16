@@ -88,11 +88,11 @@ class Vistab: public wxDialog
 public:
    ///Constructor
    ///\param activeModel The active Model information from CORBA.
-   Vistab(VjObs::Model* activeModel );
+   Vistab(VjObs::Model_var activeModel );
 
    ///Constructor
    ///\param activeModel The active Model information from CORBA.
-   Vistab(VjObs::Model* activeModel,
+   Vistab(VjObs::Model_var activeModel,
             wxWindow* parent,
             wxWindowID id = SYMBOL_VISTAB_IDNAME,
             const wxString& caption = SYMBOL_VISTAB_TITLE,
@@ -120,7 +120,7 @@ public:
 
    ///Set the active model for this dialog
    ///\param activeModel The current model.
-   void SetActiveModel(VjObs::Model* activeModel);
+   void SetActiveModel(VjObs::Model_var activeModel);
 
    ///Set the active dataset
    ///\param name The name of the dataset
@@ -177,12 +177,11 @@ protected:
 
    ///Update the dialog information from a model
    ///\param newModel The model to extract new information from.
-   void _updateModelInformation(VjObs::Model* newModel);
+   void _updateModelInformation(VjObs::Model_var newModel);
 
    ///Update the dialog information from a dataset
    ///\param datasetInfo The dataset to extract the new information from.
    void _updateDatasetInformation(VjObs::Dataset datasetInfo );
-
    
    unsigned int _nDatasetsInActiveModel;///<The number of datasets in the active model.
    unsigned int _nScalarsInActiveDataset;///<Number of scalars in the active dataset.
@@ -190,14 +189,14 @@ protected:
    unsigned int _nScalarTexturesInActiveDataset;///<Number of scalars in the active texture dataset.
    unsigned int _nVectorTexturesInActiveDataset;///<Number of vectors in the active texture dataset.
 
-   VjObs::Model* _activeModel;///<The active Model data from CORBA.
+   VjObs::Model_var _activeModel;///<The active Model data from CORBA.
    VjObs::Dataset _activeDataset;///The active Dataset.
 
    std::map<std::string,wxArrayString> _availableSolutions;///<The current solutions available in the Model;
 
-   wxComboBox* _scalarSelection;///<The box listing the available attributes.
-   wxComboBox* _vectorSelection;///<The box listing the available attributes.
-
+   wxComboBox* _datasetSelection;///<The box listing the available datasets.
+   wxListBox* _scalarSelection;///<The box listing the available scalars in the current dataset.
+   wxListBox* _vectorSelection;///<The box listing the available vectors in the current dataset.
 
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;

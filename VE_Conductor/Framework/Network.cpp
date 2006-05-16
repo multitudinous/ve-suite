@@ -2554,6 +2554,15 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
       std::cout << m_selMod << std::endl;
       SetActiveModel();
    }
+   if ( CORBA::is_nil( xplorerPtr.in() ) )
+   {
+      ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
+      SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
+      if ( CORBA::is_nil( xplorerPtr.in() ) )
+      {
+         return;
+      }
+   }   
   
    //Get the active model ID from the xml data
    VE_Model::Model* activeXMLModel = modules[m_selMod].GetPlugin()->GetModel();
@@ -2561,14 +2570,14 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
 
    //Get the active model from the CORBA side
    ///Should this be a member variable?
-   VjObs::Model* activeCORBAModel = 0; 
+   VjObs::Model_var activeCORBAModel; 
 
    //Does this need to be wrapped in something else?
    if ( !CORBA::is_nil( xplorerPtr.in() ) )
    {
       try
       {
-         activeCORBAModel = xplorerPtr->GetModel(static_cast<CORBA::Long>(modelID));
+         activeCORBAModel = xplorerPtr->GetModel(modelID);
       }
       catch ( CORBA::Exception& )
       {
@@ -2696,8 +2705,10 @@ void Network::SetActiveModel( void )
    {
       try
       {
+         std::cout<<"Before send from conductor"<<std::endl;
          // CORBA releases the allocated memory so we do not have to
          xplorerPtr->SetCommandString( CORBA::string_dup( xmlDocument.c_str() ) );
+         std::cout<<"After send from conductor"<<std::endl;
       }
       catch ( ... )
       {
