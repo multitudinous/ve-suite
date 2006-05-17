@@ -140,10 +140,10 @@ VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
     CORBA::SystemException
   ))
 #else
-VjObs::Models* VjObs_i::GetModels( CORBA::Long modelID )
+VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
 #endif
 {
-   VjObs::Model_var tempModel;
+   VjObs::Model_var tempModel = new VjObs::Model();
    //Make sure we have some models
    int numberOfModels = cfdModelHandler::instance()->GetNumberOfModels();
    if ( numberOfModels == 0 )
@@ -158,6 +158,7 @@ VjObs::Models* VjObs_i::GetModels( CORBA::Long modelID )
       tempCfdModel = cfdModelHandler::instance()->GetModel( i );
       if ( (CORBA::Long)tempCfdModel->GetID() == modelID )
       {
+         std::cout<<"Found model: "<<modelID<<std::endl;
          break;
       }
       tempCfdModel = 0;
@@ -166,13 +167,13 @@ VjObs::Models* VjObs_i::GetModels( CORBA::Long modelID )
    // if we didn't find it then...
    if ( tempCfdModel == 0 )
    {
+      std::cout<<"Didn't find model: "<<modelID<<std::endl;
       return 0;
    }
    
    // now lets pass the model back
    CORBA::ULong numDatasets = tempCfdModel->GetNumberOfCfdDataSets();
-   vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
-                    << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets << std::endl << vprDEBUG_FLUSH;
    if ( numDatasets > 0 )
    {
       //tempModel->dataVector = VjObs::Datasets( numDatasets ); 
@@ -256,7 +257,6 @@ VjObs::Models* VjObs_i::GetModels( CORBA::Long modelID )
          << " Number of geometries to be transfered to the client: "
          << numGeoArrays 
          << std::endl << vprDEBUG_FLUSH;
-
    if( numGeoArrays > 0 )
    {
       //(*_models)[ i ].geometrynames = VjObs::scalar_p(50);
@@ -272,7 +272,7 @@ VjObs::Models* VjObs_i::GetModels( CORBA::Long modelID )
       }
    }
 
-   return tempModel;
+   return tempModel._retn();
 }
 
 /////////////////////////////////////////////////////////////
