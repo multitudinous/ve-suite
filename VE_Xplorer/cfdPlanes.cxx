@@ -170,7 +170,7 @@ cfdPlanes::~cfdPlanes()
 
    if (this->collectivePolyData != NULL )
    {
-      this->collectivePolyData->Delete();
+      //this->collectivePolyData->Delete();
       this->collectivePolyData = NULL;
    }
 
@@ -272,10 +272,11 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
 
    if ( this->collectivePolyData != NULL )
    {
-      this->collectivePolyData->Delete();
+      // user classes should delete
+      //this->collectivePolyData->Delete();
    }
    this->collectivePolyData = vtkPolyData::New();
-   this->collectivePolyData->DeepCopy( appendPolyData->GetOutput() );
+   this->collectivePolyData->ShallowCopy( appendPolyData->GetOutput() );
    appendPolyData->Delete();
 }
 

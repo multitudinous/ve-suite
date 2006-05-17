@@ -64,8 +64,7 @@ cfdVectors::~cfdVectors()
 
 void cfdVectors::Update( void )
 {
-   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-                                     ->GetPlanesData() == NULL )
+   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz ) == NULL )
    {
       vprDEBUG(vesDBG, 0) 
          << "cfdVectors, planesData == NULL so returning\n" << vprDEBUG_FLUSH;

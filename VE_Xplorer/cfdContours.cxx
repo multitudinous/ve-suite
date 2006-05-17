@@ -62,8 +62,7 @@ void cfdContours::Update( void )
    vprDEBUG(vesDBG,1) << "cfdContours::Update" 
                           << std::endl << vprDEBUG_FLUSH;
 
-   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-        == NULL )
+   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz ) == NULL )
    {
       vprDEBUG(vesDBG, 0) 
          << "cfdContours: planesData == NULL so returning" 
