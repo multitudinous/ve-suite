@@ -2570,14 +2570,33 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
 
    //Get the active model from the CORBA side
    ///Should this be a member variable?
-   VjObs::Model_var activeCORBAModel; 
+  // VjObs::Model_var activeCORBAModel; 
+   VjObs::Model* activeCORBAModel; 
 
    //Does this need to be wrapped in something else?
    if ( !CORBA::is_nil( xplorerPtr.in() ) )
    {
       try
       {
-         activeCORBAModel = xplorerPtr->GetModel(modelID);
+         if(xplorerPtr->GetModel(modelID))
+         {
+            activeCORBAModel = xplorerPtr->GetModel(modelID);
+
+            Vistab* vistab = 0;
+            vistab = new Vistab(activeCORBAModel,this,
+                                SYMBOL_VISTAB_IDNAME,
+                                SYMBOL_VISTAB_TITLE,
+                                SYMBOL_VISTAB_POSITION,
+                                SYMBOL_VISTAB_SIZE,
+                                SYMBOL_VISTAB_STYLE );
+
+            vistab->ShowModal();
+         }
+         else
+         { 
+            std::cout << " Model contains no datasets: " << modelID<<std::endl;
+            return;
+         }
       }
       catch ( CORBA::Exception& )
       {
@@ -2590,23 +2609,6 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
       std::cerr << " ERROR : Not connected to VE-Server " << std::endl;
       return;
    }
-
-   Vistab* vistab = 0;
-   vistab = new Vistab(activeCORBAModel,this,
-               SYMBOL_VISTAB_IDNAME,
-               SYMBOL_VISTAB_TITLE,
-               SYMBOL_VISTAB_POSITION,
-               SYMBOL_VISTAB_SIZE,
-               SYMBOL_VISTAB_STYLE );
-
-   /*Vistab* vistab = 0;
-   vistab = new Vistab( NULL, this,
-               SYMBOL_VISTAB_IDNAME,
-               SYMBOL_VISTAB_TITLE,
-               SYMBOL_VISTAB_POSITION,
-               SYMBOL_VISTAB_SIZE,
-               SYMBOL_VISTAB_STYLE );*/
-   vistab->ShowModal();
 }
 ///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )

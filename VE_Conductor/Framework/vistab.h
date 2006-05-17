@@ -192,7 +192,8 @@ protected:
    VjObs::Model_var _activeModel;///<The active Model data from CORBA.
    VjObs::Dataset _activeDataset;///The active Dataset.
 
-   std::map<std::string,wxArrayString> _availableSolutions;///<The current solutions available in the Model;
+   std::map<std::string,wxArrayString> _availableSolutions;///<The current solutions available in the current dataset;
+   wxArrayString _availableDatasets;///<The current datasets available in the Model;
 
    wxComboBox* _datasetSelection;///<The box listing the available datasets.
    wxListBox* _scalarSelection;///<The box listing the available scalars in the current dataset.
