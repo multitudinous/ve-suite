@@ -317,7 +317,7 @@ void Vistab::SetActiveDataset(std::string name)
       //loop over available datasets
       for(unsigned int i = 0; i < _activeModel->dataVector.length(); i++)
       {
-         if(_activeModel->dataVector[i].datasetname == name)
+         if(wxString(_activeModel->dataVector[i].datasetname) == wxString(name.c_str()))
          {
             _setActiveDataset(i);
             return;
