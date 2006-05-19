@@ -367,7 +367,7 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 {
    if(_activeCADNode &&  (_activeTreeNode->GetId() != _geometryTree->GetRootItem()))
    {
-      CADClone* newClone = new CADClone(_activeCADNode->GetNodeName(),_activeCADNode);
+      CADClone* newClone = new CADClone(_activeCADNode->GetNodeName()+std::string("_cloned"),_activeCADNode);
 
       wxTreeItemId parentID = _geometryTree->GetItemParent(_activeTreeNode->GetId());
 
@@ -382,8 +382,6 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
       _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
 
       _commandName = std::string("CAD_ADD_NODE");
-
-      newClone->SetParent(_activeCADNode->GetID());
 
       VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
       cadNode->SetDataType(std::string("XMLOBJECT"));
