@@ -101,7 +101,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
                }
                else
                {
-                  if ( strstr( dir_itr->leaf().c_str(), ".pfb") || strstr( dir_itr->leaf().c_str(), ".ive") )
+                  if ( strstr( dir_itr->leaf().c_str(), ".pfb") || strstr( dir_itr->leaf().c_str(), ".ive") || strstr( dir_itr->leaf().c_str(), ".osg"))
                   {
                      std::string pathAndFileName;// = new char[strlen(dir_path.leaf().c_str() )+
                      //                                 strlen(dir_itr->leaf().c_str())+2];
