@@ -1034,8 +1034,8 @@ void AppFrame::ConExeServer( void )
    { 
       //_mutex.acquire();	  
       ot = new OrbThread(this);
-      ot->svc();
-      //ot->activate();
+      //ot->svc();
+      ot->activate();
       //ot->Run();
       //register it to the server
       //_mutex.acquire();

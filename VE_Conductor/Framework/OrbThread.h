@@ -49,12 +49,12 @@ class AppFrame;
 
 
 
-class OrbThread //: public ACE_Task_Base //wxThread  
+class OrbThread : public ACE_Task_Base //wxThread  
 {
 public:
 	OrbThread(AppFrame* frame);
-	~OrbThread();
-	int svc (void);
+	virtual ~OrbThread();
+	virtual int svc (void);
 	//bool Do();
 	//virtual ExitCode Entry() { return (ExitCode) this->Do(); };
 protected:
