@@ -147,7 +147,7 @@ int OrbThread::svc (void)
          frame_->network->exec->RegisterUI(frame_->p_ui_i->UIName_.c_str(), ui.in());
          frame_->con_menu->Enable(v21ID_SUBMIT,true);
          frame_->con_menu->Enable(v21ID_LOAD, true);
-         frame_->con_menu->Enable(v21ID_CONNECT, false);
+         //frame_->con_menu->Enable(v21ID_CONNECT, false);
          frame_->run_menu->Enable(v21ID_VIEW_RESULT, true);
          frame_->con_menu->Enable(v21ID_DISCONNECT, true);
          
