@@ -132,7 +132,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
-  :wxFrame(parent, id, title), m_frameNr(0), f_financial(false), f_geometry(false), f_visualization(false)
+  :wxFrame(parent, id, title), m_frameNr(0), f_financial(true), f_geometry(true), f_visualization(true)
 {
    wx_log_splitter = new wxSplitterWindow(this, -1);
    wx_log_splitter->SetMinimumPaneSize( 40 );
@@ -255,9 +255,10 @@ void AppFrame::GetConfig(wxConfig* config)
   wxString key = FEATURE;
   if (cfg->Exists (key)) 
   {
-      cfg->Read (key + _T("/") + F_FINANCIAL, f_financial);
-      cfg->Read (key + _T("/") + F_GEOMETRY, f_geometry);
-      cfg->Read (key + _T("/") + F_VISUALIZATION, f_visualization);
+      bool exist = false;
+      exist  = cfg->Read (key + _T("/") + F_FINANCIAL, &f_financial);
+      exist  = cfg->Read (key + _T("/") + F_GEOMETRY, &f_geometry);
+      exist  = cfg->Read (key + _T("/") + F_VISUALIZATION, &f_visualization);
   }
   else
 	{
