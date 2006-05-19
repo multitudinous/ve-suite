@@ -60,6 +60,8 @@ OrbThread::~OrbThread()
 //bool OrbThread::Do() 
 int OrbThread::svc (void)
 {
+      try
+      {
    long id = time(NULL);
    //char* uiname;
    //sprintf(uiname, "UIClient%ld", id);
@@ -174,7 +176,12 @@ int OrbThread::svc (void)
       
          frame_->Log("Can't find executive or UI registration error.\n");
       }
-   }   
+   }
+      }catch (CORBA::Exception &) {
+        
+         frame_->Log("Can't find executive or UI registration error.\n");
+      }
+   
    return true;
 }
 
