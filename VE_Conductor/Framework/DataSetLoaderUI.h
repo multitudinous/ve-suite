@@ -80,7 +80,9 @@ enum
    ID_LISTBOX,
    ID_INFORMATION_PACKET_LIST,
    ID_INFORMATION_PACKET_CHANGE_NAME,
-   ID_INFORMATION_PACKET_ADD_NAME
+   ID_INFORMATION_PACKET_ADD_NAME,
+   ID_ADD_DATASET,
+   ID_DELETE_DATASET
 };
 
 ////@end control identifiers
@@ -187,6 +189,7 @@ public:
    wxButton* transformButton;
    wxButton* scalarButton;
    wxButton* itemButton22;
+   //wxButton* createDataSet;
    wxListBox* itemListBox24;
    wxTextCtrl* itemTextCtrl21;  
    wxStaticBox* itemStaticBoxSizer6Static;
