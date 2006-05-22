@@ -65,6 +65,7 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _scalarSelection = 0;    
    _vectorSelection = 0;    
    _nDatasetsInActiveModel = 0;
+   _datasetSelection = 0;
 
    _availableSolutions["MESH_SCALARS"].Add(""); 
    _availableSolutions["MESH_VECTORS"].Add(""); 
@@ -85,7 +86,8 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _scalarSelection = 0;    
    _vectorSelection = 0;    
    _nDatasetsInActiveModel = 0;
-
+   _datasetSelection = 0;
+   
    _availableSolutions["MESH_SCALARS"].Add(""); 
    _availableSolutions["MESH_VECTORS"].Add(""); 
    _availableSolutions["TEXTURE_SCALARS"].Add("");  
@@ -93,6 +95,10 @@ Vistab::Vistab(VjObs::Model_var activeModel,
 
    SetActiveModel(activeModel);
    Create(parent, id, caption, pos, size, style);
+   if(_nDatasetsInActiveModel)
+   {
+      _setActiveDataset(0);
+   }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -356,7 +362,10 @@ void Vistab::_setActiveDataset(unsigned int index)
       if(i < _nDatasetsInActiveModel)
       {
          _activeDataset = _activeModel->dataVector[i];
-
+         if(_datasetSelection)
+         {
+            _datasetSelection->SetSelection(i);
+         }
          //update the available scalar, vector and texture data
          _updateDatasetInformation(_activeDataset);
       }
