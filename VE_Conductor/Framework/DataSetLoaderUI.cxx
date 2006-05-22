@@ -28,6 +28,7 @@
 #include <wx/filedlg.h>
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
+#include <wx/textdlg.h>
 ////@end includes
 
 #include "VE_Conductor/Framework/DataSetLoaderUI.h"
@@ -61,7 +62,7 @@ BEGIN_EVENT_TABLE( DataSetLoaderUI, wxDialog )
    EVT_BUTTON( ID_ADD_DATASET, DataSetLoaderUI::OnInformationPacketAdd )
    EVT_LISTBOX_DCLICK( ID_LISTBOX, DataSetLoaderUI::OnListboxSelected )
    EVT_COMBOBOX( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketChange ) // this will refresh all the widgets for the given dataset
-   EVT_TEXT( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketChangeName ) // change the name of a given data set, will also need to change the name seen by xplorer
+   //EVT_TEXT( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketChangeName ) // change the name of a given data set, will also need to change the name seen by xplorer
    //EVT_TEXT_ENTER( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketAdd ) // add a name to the list once enter is pushed, also add new information block
 ////@end DataSetLoaderUI event table entries
 
@@ -153,10 +154,11 @@ void DataSetLoaderUI::CreateControls()
 
    ///////////////////////////////////////////////////////
     wxString* dataSetListStrings = NULL;
-    dataSetList = new wxComboBox( itemScrolledWindow3, ID_COMBOBOX, _("Type New DataSet Name Here"), wxDefaultPosition, wxSize(250, -1), 0, dataSetListStrings, wxCB_DROPDOWN );
-    dataSetList->SetStringSelection(_("Type New DataSet Name Here"));
-    dataSetList->Append(_("Unselect"));
-    dataSetList->Append(_("Add Dataset"));
+    //dataSetList = new wxComboBox( itemScrolledWindow3, ID_COMBOBOX, _("Type New DataSet Name Here"), wxDefaultPosition, wxSize(250, -1), 0, dataSetListStrings, wxCB_DROPDOWN );
+    dataSetList = new wxComboBox( itemScrolledWindow3, ID_COMBOBOX, _(""), wxDefaultPosition, wxSize(250, -1), 0, dataSetListStrings, wxCB_DROPDOWN );
+    //dataSetList->SetStringSelection(_("Type New DataSet Name Here"));
+    //dataSetList->Append(_("Unselect"));
+    //dataSetList->Append(_("Add Dataset"));
     //dataSetList->Append(_("Edit Dataset"));
     //dataSetList->Append(_("Delete Dataset"));
     dataSetList->SetHelpText(_("Text Entry"));
@@ -627,17 +629,28 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& event )
     /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_LISTBOX
    // When enter is pushed on the combox and new entry is specifiy and
    // the appropriate widgets should be updated
-   int selection = dataSetList->GetSelection();
-   if ( lastAddition == selection )
+   wxTextEntryDialog newDataSetName(this, 
+                                wxString("New Dataset"),
+                                        wxString("Enter name for new Dataset:"),
+                                        wxString("Dataset"),wxOK);
+   newDataSetName.ShowModal();
+   if(DatasetExists(newDataSetName.GetValue().GetData()))
    {
-      dataSetList->SetString( selection, dataSetList->GetValue() );
+      wxMessageBox( "Data with this name is already loaded.", 
+                          newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
+                              return;
+   }
+   else
+   {
+      _availableDatasets.Add(newDataSetName.GetValue());
+      dataSetList->Append(newDataSetName.GetValue());
+      
       paramBlock = veModel->GetInformationPacket( -1 );
-      paramBlock->SetName( dataSetList->GetValue().c_str() );
+      paramBlock->SetName( newDataSetName.GetValue().c_str() );
       paramBlock->SetId( ::wxNewId() );
       EnableUI( true );
-      lastAddition = -1;
-      //std::cout <<"OnInformationPacketAdd " <<  paramBlock->GetName() << std::endl;
    }
+  
 }
 //////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& event )
@@ -662,6 +675,14 @@ void DataSetLoaderUI::EnableUI( bool flag )
    transformButton->Enable( flag );
    itemButton22->Enable( flag );
 }
-//////////////////////////////////////////////////////////////////////////////
-
+/////////////////////////////////////////////////////////////
+bool DataSetLoaderUI::DatasetExists(std::string name)
+{
+   for(size_t i = 0; i < _availableDatasets.GetCount(); i++)
+   {
+      if(name.c_str() == _availableDatasets[i])
+         return true;
+   }
+   return false;
+}
 

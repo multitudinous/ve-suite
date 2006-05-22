@@ -2488,7 +2488,7 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
 
    // Here we launch a dialog for a specific plugins input values
    VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
-   DataSetLoaderUI* dataSetLoaderDlg = 0;
+   //DataSetLoaderUI* dataSetLoaderDlg = 0;
    if ( CORBA::is_nil( xplorerPtr.in() ) )
    {
       ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
@@ -2496,12 +2496,15 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
       if ( CORBA::is_nil( xplorerPtr.in() ) )
          return;
    }
-   dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId(), 
+   /*dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId(), 
+               SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
+               SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );*/
+   DataSetLoaderUI dataSetLoaderDlg( this, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
 
    //cadDialog->SetVjObsPtr( xplorerPtr.in() );
-   if ( dataSetLoaderDlg->ShowModal() == wxID_OK )
+   if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
    {
       //Now send the data to xplorer
       VE_XML::XMLReaderWriter netowrkWriter;
@@ -2538,8 +2541,8 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
       delete veCommand;
    }
 
-   delete dataSetLoaderDlg;
-   dataSetLoaderDlg = 0;
+  // delete dataSetLoaderDlg;
+   //dataSetLoaderDlg = 0;
 }
 ///////////////////////////////////////////
 void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
