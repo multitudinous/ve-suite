@@ -219,6 +219,12 @@ bool Vistab::ShowToolTips()
 {
     return true;
 }
+
+/*!
+ * Get bitmap resources
+ */
+
+
 //////////////////////////////////////////////////////////
 wxBitmap Vistab::GetBitmapResource( const wxString& name )
 {
@@ -238,6 +244,12 @@ wxBitmap Vistab::GetBitmapResource( const wxString& name )
     return wxNullBitmap;
 ////@end Vistab bitmap retrieval
 }
+
+/*!
+ * Get icon resources
+ */
+
+
 //////////////////////////////////////////////////////
 wxIcon Vistab::GetIconResource( const wxString& name )
 {

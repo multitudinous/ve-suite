@@ -209,11 +209,11 @@ void Vectors::CreateControls()
     };
     wxRadioBox* itemRadioBox5 = new wxRadioBox( itemDialog1, ID_V_RADIOBOX, _T("Direction"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(itemRadioBox5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
+/*
     wxBitmap itemStaticBitmap6Bitmap(itemDialog1->GetBitmapResource(wxT("../../../../../../home/users/jaredabo/TSVEG/VE_Suite/VE_TestSuite/vector2.png")));
     wxStaticBitmap* itemStaticBitmap6 = new wxStaticBitmap( itemDialog1, wxID_STATIC, itemStaticBitmap6Bitmap, wxDefaultPosition, wxSize(90, 93), 0 );
     itemBoxSizer4->Add(itemStaticBitmap6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
+*/
     wxStaticBox* itemStaticBoxSizer7Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Multiple Planes"));
     wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer(itemStaticBoxSizer7Static, wxVERTICAL);
     itemStaticBoxSizer3->Add(itemStaticBoxSizer7, 0, wxGROW|wxALL, 5);
@@ -268,7 +268,7 @@ bool Vectors::ShowToolTips()
 /*!
  * Get bitmap resources
  */
-
+/*
 wxBitmap Vectors::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
@@ -282,7 +282,7 @@ wxBitmap Vectors::GetBitmapResource( const wxString& name )
     return wxNullBitmap;
 ////@end Vectors bitmap retrieval
 }
-
+*/
 /*!
  * Get icon resources
  */
