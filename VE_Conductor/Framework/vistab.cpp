@@ -170,7 +170,7 @@ void Vistab::CreateControls()
     itemBoxSizer2->Add(itemBoxSizer10, 0, wxGROW|wxALL, 5);
 
     _datasetSelection = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxDefaultSize, _availableDatasets, wxCB_DROPDOWN );
-
+    
     if (ShowToolTips())
         _datasetSelection->SetToolTip(_T("Data Sets"));
     itemBoxSizer10->Add(_datasetSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -224,7 +224,7 @@ wxBitmap Vistab::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin Vistab bitmap retrieval
-    wxUnusedVar(name);
+  /*  wxUnusedVar(name);
     if (name == _T("../../../../../../../home/users/jaredabo/GUIs/GUI/contour.png"))
     {
         wxBitmap bitmap(_T("../../../../../../../home/users/jaredabo/GUIs/GUI/contour.png"), wxBITMAP_TYPE_PNG);
@@ -234,7 +234,7 @@ wxBitmap Vistab::GetBitmapResource( const wxString& name )
     {
         wxBitmap bitmap(_T("../../../../../../../home/users/jaredabo/GUIs/GUI/vector.png"), wxBITMAP_TYPE_PNG);
         return bitmap;
-    }
+    }*/
     return wxNullBitmap;
 ////@end Vistab bitmap retrieval
 }
@@ -344,7 +344,7 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
       for(unsigned int i = 0; i < _nDatasetsInActiveModel; i++)
       {
          std::cout<<"Dataset name: "<< newModel->dataVector[i].datasetname<<std::endl;
-         _availableDatasets.Add(wxString(newModel->dataVector[i].datasetname),i);
+         _availableDatasets.Add(wxString(newModel->dataVector[i].datasetname));
       }
 
       //set the active dataset to the initial dataset in the model
