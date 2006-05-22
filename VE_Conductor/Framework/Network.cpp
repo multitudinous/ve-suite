@@ -2585,15 +2585,14 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
          {
             activeCORBAModel = xplorerPtr->GetModel(modelID);
 
-            Vistab* vistab = 0;
-            vistab = new Vistab(activeCORBAModel,this,
+            Vistab vistab(activeCORBAModel,this,
                                 SYMBOL_VISTAB_IDNAME,
                                 SYMBOL_VISTAB_TITLE,
                                 SYMBOL_VISTAB_POSITION,
                                 SYMBOL_VISTAB_SIZE,
                                 SYMBOL_VISTAB_STYLE );
 
-            vistab->ShowModal();
+            vistab.ShowModal();
          }
          else
          { 

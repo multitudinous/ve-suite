@@ -175,14 +175,14 @@ void Vistab::CreateControls()
         _datasetSelection->SetToolTip(_T("Data Sets"));
     itemBoxSizer10->Add(_datasetSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxString itemComboBox12Strings[] = {
+    /*wxString itemComboBox12Strings[] = {
         _T("DataSet1"),
         _T("DataSet2"),
         _T("DataSet3")
     };
     itemComboBox12 = new wxComboBox( itemDialog1, ID_COMBOBOX1, _T(""), wxDefaultPosition, wxDefaultSize, 3, itemComboBox12Strings, wxCB_DROPDOWN );
 
-    itemBoxSizer10->Add(itemComboBox12, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer10->Add(itemComboBox12, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);*/
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer11, 0, wxGROW|wxALL, 5);
