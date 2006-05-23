@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.0.9.3"
-#define MyAppVerName "VE_Suite.0.9.3"
+#define MyAppName "VE_Suite.1.0.0"
+#define MyAppVerName "VE_Suite.1.0.0"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
@@ -13,6 +13,7 @@
 #define VEXplorerOSGVEP "bin/run.osg.vep.bat"
 #define VEXplorerOSGVEPC "bin/run.osg.vep.cluster.bat"
 #define VESetupScript "setup.bat"
+#define VELauncher "velauncher.py"
 
 [Setup]
 AppName={#MyAppName}
@@ -64,6 +65,7 @@ Name: desktopVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create Desk
 Name: desktopVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvep
 Name: desktopVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
 Name: desktopVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\pf
+Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon; Flags: unchecked
 
 ;Name: startMenuNSIcon; Description: Name Server; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: nameserver
 ;Name: startMenuVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: veconductor
@@ -87,22 +89,21 @@ Source: {#VEHOME}\VE_Installer\installer\run.pf.bat; DestDir: {app}\bin; Compone
 Source: {#VEHOME}\VE_Installer\installer\run.osg.bat; DestDir: {app}\bin; Components: vexplorer\osg; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\NameService.bat; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VE-Conductor.bat; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#VEHOME}\VE_Installer\installer\velauncher.py; DestDir: {app}; Flags: ignoreversion
 ;Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly overwritereadonly; Attribs: readonly hidden
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.cluster.bat; DestDir: {app}\bin; Components: vexplorer\osgvepcluster; Flags: ignoreversion confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
-Source: {#VEHOME}\VE_TestSuite\simpleScalars\*; DestDir: {app}\exampleDatasets\simpleScalars\; Flags: recursesubdirs; Components: examples
-Source: {#VEHOME}\VE_TestSuite\2scl.vtk; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\3scl2vec.vtk; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\3scl.vtk; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\200_to_1000.txt; DestDir: {app}\exampleDatasets\; Components: examples
+Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\shaders\; Components: examples
+Source: {#VEHOME}\VE_TestSuite\gooch.vea; DestDir: {app}\shaders\; Components: examples
+Source: {#VEHOME}\VE_TestSuite\toon.vea; DestDir: {app}\shaders\; Components: examples
+Source: {#VEHOME}\VE_TestSuite\x-ray.vea; DestDir: {app}\shaders\; Components: examples
+Source: {#VEHOME}\VE_TestSuite\2scl.vtu; DestDir: {app}\exampleDatasets\; Components: examples
+Source: {#VEHOME}\VE_TestSuite\3scl2vec.vtu; DestDir: {app}\exampleDatasets\; Components: examples
+Source: {#VEHOME}\VE_TestSuite\3scl.vtu; DestDir: {app}\exampleDatasets\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\eightCorners.stl; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\first-scalar.txt; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\fourth_param_is_a_scalar.txt; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\sswtexture.param; DestDir: {app}\exampleDatasets\; DestName: sample.param
-Source: {#VEHOME}\VE_TestSuite\steve's_vector.txt; DestDir: {app}\exampleDatasets\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\Surface0.75.stl; DestDir: {app}\exampleDatasets\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\vtkPolyData.vtk; DestDir: {app}\exampleDatasets; Components: examples
 Source: {#VEHOME}\VE_TestSuite\SURFACE1\*; DestDir: {app}\exampleDatasets\SURFACE1\; Components: examples; Flags: recursesubdirs
@@ -118,7 +119,7 @@ Source: {#VEHOME}\VE_Conductor\impl\*.h; DestDir: {app}\include\VE_Conductor\imp
 Source: {#VEHOME}\VE_Conductor\VE_UI\*.h; DestDir: {app}\include\VE_Conductor\VE_UI; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_SceneGraph\*.h; DestDir: {app}\include\VE_SceneGraph; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_Xplorer\*.h; DestDir: {app}\include\VE_Xplorer; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-Source: {#VEHOME}\VEOpen\skel\*; DestDir: {app}\include\VEOpen\skel; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEHOME}\VE_Open\skel\*; DestDir: {app}\include\VE_Open\skel; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_Installer\include\VEConfig.h; DestDir: {app}\include\VE_Installer\include; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer\pf vexplorer nameserver
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
@@ -130,6 +131,7 @@ Name: {group}\VE-Xplorer-OSG; Filename: {app}\{#VEXplorerOSG}; WorkingDir: {app}
 Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
+Name: {group}\VE-Launcher; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
 
 Name: {userdesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopNSIcon
@@ -138,4 +140,6 @@ Name: {userdesktop}\VE-Xplorer-OSG; Filename: {app}\bin\run.osg.bat; WorkingDir:
 Name: {userdesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPIcon
 Name: {userdesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPCIcon
 Name: {userdesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXPFIcon
+Name: {userdesktop}\VE-Launcher; Filename: {app}\velauncher.py; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVELauncherIcon
+
 ;Name: {userdesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\vesSmallIcon.bmp

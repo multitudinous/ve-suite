@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.0.9.3_Dependencies"
-#define MyAppVerName "VE_Suite.0.9.3_Dependencies"
+#define MyAppName "VE_Suite.1.0.0_Dependencies"
+#define MyAppVerName "VE_Suite.1.0.0_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
@@ -48,90 +48,91 @@ Name: xercesc; Description: Xerces-C++; Types: custom vecns vexosg vexpf full
 Name: osg; Description: OpenSceneGraph; Types: custom vexosg full
 Name: juggler; Description: vrJuggler; Types: custom vexosg vexpf full
 [Files]
-Source: {#VTKHOME}\bin\vtkzlib.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
-Source: {#VTKHOME}\bin\vtkCommon.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkDICOMParser.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkexpat.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkFiltering.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkfreetype.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkftgl.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkGraphics.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkHybrid.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkImaging.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkIO.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkjpeg.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkParallel.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkPatented.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkpng.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtkRendering.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#VTKHOME}\bin\vtktiff.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+Source: {#VTKHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
+;Source: {#VTKHOME}\bin\vtkCommon.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkexpat.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkFiltering.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkfreetype.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkftgl.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkGraphics.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkHybrid.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkImaging.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkIO.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkjpeg.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkParallel.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkPatented.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkpng.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtkRendering.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+;Source: {#VTKHOME}\bin\vtktiff.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
 Source: {#WXHOME}\lib\vc_dll\wxbase26d_vc_custom.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: wxwidgets
 Source: {#WXHOME}\lib\vc_dll\wxmsw26d_core_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw26d_gl_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw26d_adv_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAOd.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: acetao
-Source: {#ACETAOHOME}\bin\gperf.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+Source: {#ACETAOHOME}\lib\TAO*.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: acetao
+;Source: {#ACETAOHOME}\bin\gperf.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
 Source: {#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\tao_ifr.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\tao_imr.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\ACE_QoSd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\aced.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\ACEXMLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\Kokyud.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_AVd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_BiDirGIOPd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosConcurrencyd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosLifeCycled.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosLoadBalancingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosNamingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosNotificationd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosPropertyd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosTimed.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_CosTradingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_Domaind.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_DsEventLogAdmind.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_DsLogAdmind.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_DsNotifyLogAdmind.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_DynamicAnyd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_DynamicInterfaced.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_ETCLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_Fault_Toleranced.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_FT_ClientORBd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_FT_ServerORBd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_FTORB_Utilsd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_IDL_BE_DLLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_IDL_FE_DLLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_IFR_BE_DLLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_IFR_Clientd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_IFRServiced.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_IORInterceptord.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_IORManipd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_IORTabled.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_Messagingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_ObjRefTemplated.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_PortableGroupd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_PortableServerd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RT_Notificationd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTCORBAd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTCORBAEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTCosSchedulingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTEventLogd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTKokyuEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTOLDEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTPortableServerd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTSchedd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTSchedEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_RTSchedulerd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_Securityd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_SmartProxiesd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_Strategiesd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_Svc_Utilsd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_TypeCodeFactoryd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\bin\TAO_Valuetyped.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#XERCESHOME}\Build\Win32\VC7\Debug\xerces-c_2_6D.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
-Source: {#XERCESHOME}\Build\Win32\VC7\Debug\xerces-depdom_2_6D.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
+;Source: {#ACETAOHOME}\bin\tao_ifr.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\bin\tao_imr.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\ACE_QoSd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+Source: {#ACETAOHOME}\lib\aced.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\ACEXMLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\Kokyud.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_AVd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_BiDirGIOPd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosConcurrencyd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosLifeCycled.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosLoadBalancingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosCodecFactoryd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosNaming_Servd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosNamingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosNotificationd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosPropertyd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosTimed.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_CosTradingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_Domaind.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_DsEventLogAdmind.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_DsLogAdmind.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_DsNotifyLogAdmind.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_DynamicAnyd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_DynamicInterfaced.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_ETCLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_Fault_Toleranced.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_FT_ClientORBd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_FT_ServerORBd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_FTORB_Utilsd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_IDL_BE_DLLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_IDL_FE_DLLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_IFR_BE_DLLd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_IFR_Clientd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_IFRServiced.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_IORInterceptord.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_AnyTypeCoded.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_IORTabled.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_Messagingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_ObjRefTemplated.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_PortableGroupd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_PortableServerd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RT_Notificationd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTCORBAd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTCORBAEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTCosSchedulingd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTEventLogd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTKokyuEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTOLDEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTPortableServerd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTSchedd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTSchedEventd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_RTSchedulerd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_Securityd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_SmartProxiesd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_Strategiesd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_Svc_Utilsd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\TAO_TypeCodeFactoryd.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\bin\TAO_Valuetyped.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-c_2_7D.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-depdom_2_7D.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
 Source: {#VEHOME}\VE_Installer\installer\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
@@ -195,22 +196,22 @@ Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flag
 Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
 Source: {#OSGHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
 Source: {#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv; Attribs: readonly
-Source: {#XERCESHOME}\Build\Win32\VC7\Debug\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
 Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\ace\*.h; DestDir: {app}\include\ace; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
 Source: {#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\ace\aced.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\TAO\tao\TAOd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\TAO\orbsvcs\orbsvcs\TAO_CosNamingd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\TAO\tao\BiDir_GIOP\TAO_BiDirGIOPd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\TAO\tao\PortableServer\TAO_PortableServerd.lib; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv; DestDir: {app}\lib\win32
+;Source: {#ACETAOHOME}\lib\aced.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+;Source: {#ACETAOHOME}\lib\TAOd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+;Source: {#ACETAOHOME}\lib\TAO_CosNamingd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+;Source: {#ACETAOHOME}\lib\TAO_PortableServerd.lib; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv; DestDir: {app}\lib\win32
 Source: {#XERCESHOME}\src\*.c; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion
 Source: {#ACETAOHOME}\ace\*.inl; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion
 Source: {#ACETAOHOME}\tao\*.inl; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion
 Source: {#ACETAOHOME}\tao\tao\*.i; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion
 Source: {#ACETAOHOME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion
-Source: {#ACETAOHOME}\ace\*.i; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion
+;Source: {#ACETAOHOME}\ace\*.i; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion
 Source: {#ACETAOHOME}\tao\tao\*.cpp; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion
 Source: {#OSGHOME}\bin\osgviewerd.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly
 Source: {#OSGHOME}\bin\osgconvd.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly
