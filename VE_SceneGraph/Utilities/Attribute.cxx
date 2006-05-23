@@ -218,12 +218,7 @@ void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
       ShaderHelper shaderHelper;
       shaderHelper.SetStateSet(this);
       shaderHelper.LoadGLSLProgram(attribute->GetGLSLProgram());
-
-#elif _PERFORMER
-#endif
-   }
-#ifdef _OSG
-      osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+            osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
       bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
    
       //probabaly need more params for the user to set but initially, we don't need that
@@ -242,6 +237,7 @@ void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
       setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
 #elif _PERFORMER
 #endif
+   }
 }
 #ifdef _OSG
 /////////////////////////////////////////////////////

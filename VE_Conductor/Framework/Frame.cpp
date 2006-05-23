@@ -1036,6 +1036,7 @@ void AppFrame::ConExeServer( void )
       ot = new OrbThread(this);
       //ot->svc();
       ot->activate();
+      ::wxMilliSleep( 2500 );
       //ot->Run();
       //register it to the server
       //_mutex.acquire();
@@ -1049,7 +1050,7 @@ void AppFrame::ConExeServer( void )
       Log("Can't find executive or UI registration error\n");
    }
 
-   ::wxMilliSleep( 2500 );
+   //::wxMilliSleep( 2500 );
    //delete splash;
 }
   

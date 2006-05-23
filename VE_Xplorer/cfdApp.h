@@ -192,8 +192,10 @@ private:
 	void captureWebImage();
 	double timeOfLastCapture;
 #endif 
+#ifdef _OSG
    osg::ref_ptr< osg::NodeVisitor > mUpdateVisitor;
    osg::ref_ptr< osg::FrameStamp > frameStamp;
+#endif
 };
 }
 #endif

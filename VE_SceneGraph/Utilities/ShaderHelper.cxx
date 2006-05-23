@@ -320,6 +320,7 @@ void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImag
 #endif
 }
 ///////////////////////////////////////////////////////////////////////
+#ifdef _OSG
 void ShaderHelper::_setWrapOnTexture(osg::Texture* texture,
                                  osg::Texture::WrapParameter param,
                                  std::string wrapMode)
@@ -345,6 +346,7 @@ void ShaderHelper::_setWrapOnTexture(osg::Texture* texture,
       texture->setWrap(param,osg::Texture::CLAMP);
    }
 }
+#endif
 /////////////////////////////////////////////////////////////////
 void ShaderHelper::UpdateUniform(VE_Shader::Uniform* uniformData)
 {

@@ -112,19 +112,32 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    vpr::ReturnStatus status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
    std::string libDir = path + modelPath;
 
-   //Look for VE-Suite default plugin path
-   path.assign("/lib/");
    //std::string modelPath;
    std::string vesuitePath;
    status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
-   status = vpr::System::getenv( std::string("VE_SUITE_HOME"), vesuitePath );
+   if(vpr::System::getenv( std::string("VE_SUITE_HOME"), vesuitePath ).success())
+   {
+      vprDEBUG(vesDBG,0) << "Searching VE_SUITE_HOME for Default Plugin" 
+                           << std::endl 
+                           << vprDEBUG_FLUSH;
+      //Look for VE-Suite default plugin path
+      path.assign("/lib/");
+   }
+   else if(vpr::System::getenv( std::string("VE_INSTALL_DIR"), vesuitePath ).success())
+   {
+      vprDEBUG(vesDBG,0) << "Searching VE_INSTALL_DIR for Default Plugin" 
+                           << std::endl 
+                           << vprDEBUG_FLUSH;
+      //Look for VE-Suite default plugin path
+      path.assign("/bin/");
+   }
    std::string vesuiteLibDir = vesuitePath + path + modelPath;
    const std::string nameCheck( "native" );
    bool customPlugins = false;
    try
    {
       boost::filesystem::path dir_path( libDir );
-	  boost::filesystem::path vesuiteDirPath( vesuiteLibDir, boost::filesystem::no_check );
+	   boost::filesystem::path vesuiteDirPath( vesuiteLibDir, boost::filesystem::no_check );
       boost::filesystem::is_directory( dir_path );
       customPlugins = true;
    }
@@ -133,6 +146,19 @@ void cfdVEPluginLoader::ScanAndLoad( void )
       vprDEBUG(vesDBG,1) << ex.what() 
                            << std::endl 
                            << vprDEBUG_FLUSH;
+      try
+      {
+         vesuiteLibDir = vesuitePath + "/bin/";
+         boost::filesystem::path vesuiteDirPath( vesuiteLibDir, boost::filesystem::no_check );
+         boost::filesystem::is_directory( vesuiteDirPath );
+         
+      }
+      catch ( const std::exception& ex )
+      {
+         vprDEBUG(vesDBG,1) << ex.what() 
+                           << std::endl 
+                           << vprDEBUG_FLUSH;
+      }
    }
 
    // Load the custon plugin

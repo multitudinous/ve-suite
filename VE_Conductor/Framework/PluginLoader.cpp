@@ -67,11 +67,21 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    // Load the default plugin no matter what
    wxString veSuiteHome;
    wxString hostType;
-   if ( ::wxGetEnv( wxString( "VE_SUITE_HOME" ), &veSuiteHome ) && 
-         ::wxGetEnv( wxString( "CFDHOSTTYPE" ), &hostType ) )
+   wxString libDir;
+   if(::wxGetEnv( wxString( "VE_SUITE_HOME" ), &veSuiteHome ))
+   {
+      libDir = wxString("/lib/");
+      ::wxGetEnv( wxString( "CFDHOSTTYPE" ), &hostType );
+   }
+   else if(::wxGetEnv( wxString( "VE_INSTALL_DIR" ), &veSuiteHome ))
+   {  
+      libDir = wxString("/bin");
+      hostType = wxString("/");
+   }
+   if ( !(hostType.IsEmpty()) && (!veSuiteHome.IsEmpty()) )
    {
 #ifdef _WIN32
-      wxString libn = veSuiteHome + "/lib/" + hostType + wxString( "/DefaultPlugin_d" ) + wxPluginLibrary::GetDllExt();
+      wxString libn = veSuiteHome + libDir + hostType + wxString( "/DefaultPlugin_d" ) + wxPluginLibrary::GetDllExt();
 #else
 	   wxString libn = veSuiteHome + "/lib/" + hostType + wxString( "/DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
 #endif

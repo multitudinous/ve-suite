@@ -275,6 +275,23 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cfdREITranslator", "VE_Buil
 		{C3E4EC67-9496-4391-A1B2-8179B3954E9D} = {C3E4EC67-9496-4391-A1B2-8179B3954E9D}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataLoaderLib", "..\VE_Suite\VE_Builder\Translator\DataLoader\DataLoader.vcproj", "{00000E8F-0000-0000-0000-000000000000}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D} = {C3E4EC67-9496-4391-A1B2-8179B3954E9D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loaderToVTK", "VE_Builder\Translator\DataLoader\loaderToVTK\loaderToVTK.vcproj", "{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
+		{00000E8F-0000-0000-0000-000000000000} = {00000E8F-0000-0000-0000-000000000000}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AVSTranslator", "..\VE_Suite\VE_Builder\Translator\AVSTranslator\AVSTranslator.vcproj", "{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D} = {C3E4EC67-9496-4391-A1B2-8179B3954E9D}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Builder_Tools = Builder_Tools
@@ -884,6 +901,47 @@ Global
 		{29798D93-09EB-4566-AB70-719702D50602}.tao_osg_vep_cluster_dbg.ActiveCfg = Debug|Win32
 		{29798D93-09EB-4566-AB70-719702D50602}.tao_osg_vep_dbg.ActiveCfg = Debug|Win32
 		{29798D93-09EB-4566-AB70-719702D50602}.tao_pf_dbg.ActiveCfg = Debug|Win32
+		{00000E8F-0000-0000-0000-000000000000}.Builder_Tools.ActiveCfg = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.Builder_Tools.Build.0 = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.dbg.ActiveCfg = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.dbg.Build.0 = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.Debug.ActiveCfg = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.Debug.Build.0 = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.Release.ActiveCfg = Release|Win32
+		{00000E8F-0000-0000-0000-000000000000}.Release.Build.0 = Release|Win32
+		{00000E8F-0000-0000-0000-000000000000}.tao_osg_dbg.ActiveCfg = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.tao_osg_vep_cluster_dbg.ActiveCfg = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.tao_osg_vep_dbg.ActiveCfg = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.tao_pf_dbg.ActiveCfg = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.tao_pf_dbg.Build.0 = dbg|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.Builder_Tools.ActiveCfg = Debug|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.Builder_Tools.Build.0 = Debug|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.dbg.ActiveCfg = Debug|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.dbg.Build.0 = Debug|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.Debug.ActiveCfg = Debug|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.Debug.Build.0 = Debug|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.Release.ActiveCfg = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.Release.Build.0 = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_osg_dbg.ActiveCfg = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_osg_dbg.Build.0 = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_osg_vep_cluster_dbg.ActiveCfg = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_osg_vep_cluster_dbg.Build.0 = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_osg_vep_dbg.ActiveCfg = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_osg_vep_dbg.Build.0 = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_pf_dbg.ActiveCfg = Release|Win32
+		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_pf_dbg.Build.0 = Release|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Builder_Tools.ActiveCfg = Debug|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Builder_Tools.Build.0 = Debug|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.dbg.ActiveCfg = Debug|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.dbg.Build.0 = Debug|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Debug.ActiveCfg = Debug|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Debug.Build.0 = Debug|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Release.ActiveCfg = Release|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Release.Build.0 = Release|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.tao_osg_dbg.ActiveCfg = Release|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.tao_osg_vep_cluster_dbg.ActiveCfg = Release|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.tao_osg_vep_dbg.ActiveCfg = Debug|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.tao_pf_dbg.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

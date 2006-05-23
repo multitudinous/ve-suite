@@ -33,6 +33,7 @@
 #define VE_SCENE_GRAPH_ATTRIBUTE_H
 
 #include <string>
+#include <vector>
 
 
 #ifdef _PERFORMER

@@ -88,11 +88,12 @@ public:
    ///\param shader The state set representing the shader.
    void SetStateSet(osg::StateSet* shader);
 
+#elif _PERFORMER
+#endif
    ///Update a uniform.
    ///\param The uniform to update.
    void UpdateUniform(VE_Shader::Uniform* uniformToUpdate);
-#elif _PERFORMER
-#endif
+
    ///Equal operator
    ///\param rhs Right hand side.
    ShaderHelper& operator=(const ShaderHelper& rhs);

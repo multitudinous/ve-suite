@@ -497,8 +497,9 @@ void cfdApp::contextPostDraw()
 void cfdApp::postFrame()
 {
    vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
-   svUpdate = true;
+   
 #ifdef _OSG
+   svUpdate = true;
    time_since_start = _timer.delta_s(_start_tick,_timer.tick());
 #ifdef _WEB_INTERfACE
    if(time_since_start - timeOfLastCapture >= 5.0)      //if it's been five seconds since the last image cap
