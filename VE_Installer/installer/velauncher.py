@@ -608,7 +608,7 @@ class combSetup:
         #Set where VE-Suite's installed
         self.EnvFill("VE_INSTALL_DIR", os.getcwd())
         #Set VE_SUITE_HOME, if it's empty, to VE_INSTALL_DIR
-        self.EnvFill("VE_SUITE_HOME", os.getenv("VE_INSTALL_DIR"))
+        #self.EnvFill("VE_SUITE_HOME", os.getenv("VE_INSTALL_DIR"))
 ##        print "VE_SUITE_HOME: " + os.getenv("VE_SUITE_HOME") ##TESTER
         #Set where VE-Suite pre-complied dependencies are installed
         #NOTE: Receives this from the launcher.
