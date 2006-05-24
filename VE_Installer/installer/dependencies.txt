@@ -4,28 +4,14 @@ are included in the install.
 *******************************IMPORTANT*************************************
 All dependencies, as well as VE-Suite are compiled w/ Visual Studio 7.1(2003).
 *****************************************************************************
-wxWidgets 2.6.1 -- Open Source GUI API.
-Visualization ToolKit (VTK) 4.4 -- Open Source data handling/visualization API.
-xerces-C++ 2.6.0 -- C++ xml parser.
-ACE/TAO 5.4/1.4 -- CORBA implementation.
-OpenSceneGraph 0.9.9 -- SceneGraph handling.
+wxWidgets 2.6.3 -- Open Source GUI API.
+Visualization ToolKit (VTK) 5.0 -- Open Source data handling/visualization API.
+xerces-C++ 2.7.0 -- C++ xml parser.
+ACE/TAO 5.5 -- CORBA implementation.
+OpenSceneGraph 1.0 -- SceneGraph handling.
 vrJuggler 2.0.1 -- graphics device handling
 ===============================================================================
 NOTES:
-- If your install paths contains spaces you MUST use the "DOS 8 character
- equivalents".
-
-For example, if you installed in:
-
-C:\Program Files\VE_Suite.0.9.3_Dependencies
-
-You MUST set VE_INSTALL_DIR in the setup.bat file in the following manner:
-
-set VE_INSTALL_DIR=C:\PROGRA~1\VE_Suite.0.9.3_Dependencies
-- If ACE/TAO is selected, be sure to edit the NameService.bat file
- (located in your VE_INSTALL_DIR\bin)
-  to call the Name_Service.exe located in VE_DEPS_DIR\bin
-
 - Performer has pre-compiled binaries 
   and installers available at the website below.
 

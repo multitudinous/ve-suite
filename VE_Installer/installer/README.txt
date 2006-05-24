@@ -1,13 +1,14 @@
 ========================================================================
 Before attempting to run VE-Suite, be sure to install the dependencies.
-Versions of some of the pre-compiled dependencies are available via
-an installer on our website. The others are obtainable from the respective 
-sites.
+The pre-compiled dependencies are available via an installer on our website.
 
 See www.vesuite.org
 for information on obtaining VE-Suites dependendcies.
-=========================================================================
-VE-Suite_0.9.3
+======================================================================================
+NOTE: VE-Launcher REQUIRES wxPython (www.wxPython.org) to be installed before running
+the application. 
+======================================================================================
+VE-Suite_1.0.0
 
 This windows installer places components of VE-Suite on your computer.
 Five optional components are available from this installer:
@@ -15,44 +16,11 @@ Five optional components are available from this installer:
 Name Server -- Communications Engine
 VE-Xplorer -- Graphics Engine
 VE-Conductor -- Graphical User Interface
+VE-Launcher -- Launches specific components of VE-Suite.
 
 A sample dataset is also optionally installed.
 Headers and Libraries can also be installed, for building against the VE-Suite
 toolkit.
-
-After running the installer, you must edit your setup file 
-./setup.bat
-
-to reflect your environment. A shortcut (VE-Setup) to the setup.bat file 
-is provided on the Start Menu.
-
-The variables defined in the setup.bat file to tell VE-Suite where 
-its dependencies are located,as well as setting up the working directory.  
-
-For all installs set:
-VE_INSTALL_DIR ==> the location of the install (example: C:\VE_Suite.9.3)
-
-For VE-Xplorer make sure to set:
-VE_WORKING_DIR ==> the location of the parameter file containing the model 
-information
-
-After setting the enviroment, run the installed components from the start menu,
-under the VE-Suite.0.9.3 program folder.
-
-To view the sample dataset, type sample.param in VE-Xplorer cmd window when 
-prompted.
-========================================================================
-NOTES:
-- If your install paths contains spaces you MUST use the "DOS 8 character
- equivalents".
-
-For example, if you installed in:
-
-C:\Program Files\VE_Suite.0.9.3
-
-You MUST set VE_INSTALL_DIR in the setup.bat file in the following manner:
-
-set VE_INSTALL_DIR=C:\PROGRA~1\VE_Suite.0.9.3
 
 ========================================================================
 Visit: 

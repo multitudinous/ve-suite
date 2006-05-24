@@ -5,9 +5,9 @@ REM Where VE-Suite installed...
 REM If your install paths contains spaces you MUST use the "DOS 8 character equivalents"
 REM For example, if you installed in C:\Program Files\VE_Suite.0.9.0
 REM you must set VE_INSTALL_DIR in the following manner:
-REM set VE_INSTALL_DIR=C:\PROGRA~1\VE_Suite.0.9.0
+REM set VE_INSTALL_DIR=C:\PROGRA~1\VE_Suite.1.0.0
 
-set VE_INSTALL_DIR=C:\VE_Suite.0.9.5
+set VE_INSTALL_DIR=C:\VE_Suite.1.0.0
 
 REM the directory containing datasets
 set VE_WORKING_DIR=%VE_INSTALL_DIR%\exampleDatasets
@@ -16,7 +16,7 @@ REM the directory containing user defined plugins
 set VE_USER_PLUGIN_DIR=.\
 
 REM VE-Suite pre-complied dependencies
-set VE_DEPS_DIR=C:\VE_Suite.0.9.5_Dependencies
+set VE_DEPS_DIR=C:\VE_Suite.1.0.0_Dependencies
 
 REM vrJuggler  
 REM These are setup for using VE-Suite dependency install's location

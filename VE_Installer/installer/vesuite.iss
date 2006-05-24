@@ -56,7 +56,10 @@ Name: vexplorer\osgvepcluster; Description: OSG VE-Patented Cluster Graphics; Ty
 Name: veconductor; Description: VE-Conductor (GUI); Types: full
 Name: vebuildenv; Description: Headers and Libs; Types: full
 Name: examples; Description: Example datasets; Types: full
+Name: velauncher; Description: wxPython Launcher (Requires wxPython to be installed); Types: full
 [Registry]
+Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdeletekey
+Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Flags: uninsdeletekey; Components: ; Tasks: 
 
 [Tasks]
 Name: desktopNSIcon; Description: Name Server; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: nameserver
@@ -65,14 +68,14 @@ Name: desktopVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create Desk
 Name: desktopVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvep
 Name: desktopVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
 Name: desktopVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\pf
-Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon; Flags: unchecked
+Name: desktopVELauncherIcon; Description: VE-Launcher(Requires wxPython Install); GroupDescription: Create Desktop Icon; Flags: unchecked; Components: velauncher
 
-;Name: startMenuNSIcon; Description: Name Server; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: nameserver
-;Name: startMenuVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: veconductor
-;Name: startMenuVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osg
-;Name: startMenuVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvep
-;Name: startMenuVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
-;Name: startMenuVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\pf
+Name: startMenuNSIcon; Description: Name Server; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: nameserver
+Name: startMenuVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: veconductor
+Name: startMenuVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osg
+Name: startMenuVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvep
+Name: startMenuVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
+Name: startMenuVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\pf
 
 ;Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked
 
@@ -89,7 +92,7 @@ Source: {#VEHOME}\VE_Installer\installer\run.pf.bat; DestDir: {app}\bin; Compone
 Source: {#VEHOME}\VE_Installer\installer\run.osg.bat; DestDir: {app}\bin; Components: vexplorer\osg; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\NameService.bat; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VE-Conductor.bat; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\velauncher.py; DestDir: {app}; Flags: ignoreversion
+Source: {#VEHOME}\VE_Installer\installer\velauncher.py; DestDir: {app}; Flags: ignoreversion; Components: velauncher
 ;Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly overwritereadonly; Attribs: readonly hidden
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion confirmoverwrite
@@ -131,7 +134,7 @@ Name: {group}\VE-Xplorer-OSG; Filename: {app}\{#VEXplorerOSG}; WorkingDir: {app}
 Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {group}\VE-Launcher; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
+Name: {group}\VE-Launcher; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp; Components: velauncher
 Name: {group}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
 
 Name: {userdesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopNSIcon
