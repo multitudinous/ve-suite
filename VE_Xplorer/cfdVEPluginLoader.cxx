@@ -114,6 +114,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
 
    //std::string modelPath;
    std::string vesuitePath;
+   bool vesuiteHomeDefined = false;
    status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
    if(vpr::System::getenv( std::string("VE_SUITE_HOME"), vesuitePath ).success())
    {
@@ -122,6 +123,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
                            << vprDEBUG_FLUSH;
       //Look for VE-Suite default plugin path
       path.assign("/lib/");
+      vesuiteHomeDefined = true;
    }
    else if(vpr::System::getenv( std::string("VE_INSTALL_DIR"), vesuitePath ).success())
    {
@@ -130,7 +132,9 @@ void cfdVEPluginLoader::ScanAndLoad( void )
                            << vprDEBUG_FLUSH;
       //Look for VE-Suite default plugin path
       path.assign("/bin/");
+      vesuiteHomeDefined = false;
    }
+
    std::string vesuiteLibDir = vesuitePath + path + modelPath;
    const std::string nameCheck( "native" );
    bool customPlugins = false;
@@ -146,21 +150,14 @@ void cfdVEPluginLoader::ScanAndLoad( void )
       vprDEBUG(vesDBG,1) << ex.what() 
                            << std::endl 
                            << vprDEBUG_FLUSH;
-      try
-      {
-         vesuiteLibDir = vesuitePath + "/bin/";
-         boost::filesystem::path vesuiteDirPath( vesuiteLibDir, boost::filesystem::no_check );
-         boost::filesystem::is_directory( vesuiteDirPath );
-         
-      }
-      catch ( const std::exception& ex )
-      {
-         vprDEBUG(vesDBG,1) << ex.what() 
-                           << std::endl 
-                           << vprDEBUG_FLUSH;
-      }
+      
    }
-
+   if(!vesuiteHomeDefined)
+   {
+      vesuiteLibDir = vesuitePath + "/bin/";
+      boost::filesystem::path vesuiteDirPath( vesuiteLibDir, boost::filesystem::no_check );
+      boost::filesystem::is_directory( vesuiteDirPath );
+   }
    // Load the custon plugin
    if ( customPlugins )
    {
