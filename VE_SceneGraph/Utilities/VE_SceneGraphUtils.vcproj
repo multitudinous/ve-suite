@@ -189,7 +189,7 @@
 				AdditionalDependencies="libpf.lib libpfdu-util.lib vpr_d.lib vrj_pf_d.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib"
 				OutputFile="$(OutDir)/VE_SceneGraphUtils_pf_d.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/VE_SceneGraphUtils.pdb"
 				SubSystem="2"
