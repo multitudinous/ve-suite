@@ -7,18 +7,19 @@ sites.
 See www.vesuite.org
 for information on obtaining VE-Suites dependendcies.
 =========================================================================
-VE-Suite_0.9.3
+VE-Suite_0.9.3 Launcher
 
 This is the beta of the VE-Suite Launcher. Current features include:
 -Setting the Dependencies directory.
 -Setting the working directory from the Launcher.
 -Choosing which mode to run Xplorer in.
+-Choosing which Jconf to use for Xplorer.
 -Launching NameServer, Xplorer and Conductor (and any combination of the three)
 from one window.
 -Environmental variables set externally will override the Launcher's variable
 defaults, letting it work with custom builds as well.
 
-It is currently in beta testing for Windows and Unix (especially Unix).
+It is currently in beta testing for Windows and Unix.
 
 
 ========================================================================
@@ -36,8 +37,12 @@ Using VE-Suite Launcher, the Basics
 
 Double-click launcherBeta.py or type
     python launcherBeta.py
-in the command line to launch the Launcher. Since this is your first time
-activating it, it will ask you to find VE-Suite Dependencies directory for it.
+in the command line to launch the Launcher.
+
+NOTE: Double-clicking it might not work on Unix systems. More testing needed.
+
+Since this is your first time activating it, it will ask you to find
+the VE-Suite Dependencies directory for it.
 
 Once you've chosen the VE-Suite Dependencies directory, you'll see the main
 Launcher window. From here, you can:
@@ -65,13 +70,21 @@ as its last line.
 ========================================================================
 The Launcher's Current Status
 
-The VE-Suite Launcher runs on Windows machines with the last public release of
-VE-Suite and the latest versions of Python and wxPython. It should run with the
-latest build of VE-Suite on Windows.
+The VE-Suite Launcher runs on Windows & Unix machines with the last public
+release of VE-Suite and the latest versions of Python and wxPython. It should
+run with the latest build of VE-Suite on Windows and Unix systems.
 
-It will PROBABLY run with the latest build of VE-Suite on Unix systems.  I've only tested
-the underlying execute commands, not the GUI or the variable settings. Its
-performance on Unix won't be known until someone runs it on Unix.
+Since using different Jconf files for Xplorer is still in the works, the
+Launcher comes with a JCONF_STANDARD override. When it's set to True, the program
+will use the standard Jconf files to run Xplorer instead of the ones you chose.
+To use your chosen Jconf files, edit velauncher.py, go to line 27, and set
+JCONF_STANDARD to False.
+
+There is currently a minor error in the Unix version where the Launcher window
+will remain after the launch. This is because the Xplorer takes over the Launcher's
+terminal to get the user's input. It won't affect VE-Suite (unless you try to
+Force Quit it, which will quit VE-Suite as well) and will be fixed once Xplorer
+doesn't require the user to type in the .param file.
 
 
 ========================================================================
