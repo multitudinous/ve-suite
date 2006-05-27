@@ -2591,6 +2591,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                                 SYMBOL_VISTAB_POSITION,
                                 SYMBOL_VISTAB_SIZE,
                                 SYMBOL_VISTAB_STYLE );
+            vistab.SetCommInstance(xplorerPtr);
 
             vistab.ShowModal();
          }

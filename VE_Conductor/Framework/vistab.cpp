@@ -66,6 +66,8 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _vectorSelection = 0;    
    _nDatasetsInActiveModel = 0;
    _datasetSelection = 0;
+   _tbTools = 0;
+   xplorerPtr = 0;
 
    _availableSolutions["MESH_SCALARS"].Add(""); 
    _availableSolutions["MESH_VECTORS"].Add(""); 
@@ -87,6 +89,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _vectorSelection = 0;    
    _nDatasetsInActiveModel = 0;
    _datasetSelection = 0;
+   xplorerPtr = 0;
    
    _availableSolutions["MESH_SCALARS"].Add(""); 
    _availableSolutions["MESH_VECTORS"].Add(""); 
@@ -310,12 +313,10 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 {
-   if(!_tbTools)
-   {
-      _tbTools = new TextureBasedToolBar(this,-1);
-      _tbTools->SetVjObsPtr(xplorerPtr);
-   }
-   if(_tbTools->ShowModal() == wxID_OK)
+   
+   TextureBasedToolBar tbTools(this,-1);
+   tbTools.SetVjObsPtr(xplorerPtr);
+   if(tbTools.ShowModal() == wxID_OK)
    {
       std::cout<<"TBTools WORKING"<<std::endl;
    }
