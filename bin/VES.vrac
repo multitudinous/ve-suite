@@ -4,6 +4,8 @@
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
 #setenv VE_SUITE_HOME /home/users/sgent/VE_Suite
 
+/usr/X11R6/bin/xset -display :0.0 -dpms s reset s off
+
 # Set the TAO nameServer properties used by the run scripts
 #setenv TAO_MACHINE lego.vrac.iastate.edu
 setenv TAO_MACHINE abbott.vrac.iastate.edu
