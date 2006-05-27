@@ -37,7 +37,8 @@
 
 namespace VE_Xplorer
 {
-   class cfdNavigate;
+	class cfdNavigate;
+	class cfdTrackball;
    class cfdCursor;
    class cfdCommandArray;
    class cfdReadParam;
@@ -81,9 +82,11 @@ public:
    void PreFrameUpdate( void );
    void SetCommandArray( cfdCommandArray* );
    void CreateObjects( void );
-
+	
    ///Accessor for cfdNavigate
    cfdNavigate* GetNavigate( void );
+	///Accessor for cfdTrackball
+	cfdTrackball* GetTrackball( void );
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
    ///Accessor for cfdSoundHandler
@@ -97,6 +100,8 @@ public:
    ///Accessor to set desktop size information for
    /// runtime reconfiguration of desktop windows
    void SetDesktopSize( int width, int height );
+	void SetWindowDimensions( unsigned int width, unsigned int height );
+	void PostFrameUpdate();
 #ifdef _OSG 
 #ifdef VE_PATENTED 
    void ActivateGeometryPicking();
@@ -105,6 +110,7 @@ public:
 #endif //_OSG 
 private:
    cfdNavigate* nav;
+	cfdTrackball* trackball;
    cfdTeacher* _teacher;
    cfdSoundHandler* _soundHandler;
    cfdQuatCamHandler* _camHandler;
@@ -132,6 +138,9 @@ private:
    int desktopWidth;
    ///<Desktop height
    int desktopHeight;
+
+	int _windowWidth;
+	int _windowHeight;
 };
 }
 #endif

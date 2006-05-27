@@ -33,6 +33,7 @@
 
 #include "VE_Xplorer/fileIO.h"
 #include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdTrackball.h"
 #include "VE_Xplorer/cfdSoundHandler.h"
 #include "VE_Xplorer/cfdCursor.h"
 #include "VE_Xplorer/cfdEnum.h"
@@ -68,7 +69,8 @@ using namespace VE_Util;
 
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
-   nav            = 0;
+	nav            = 0;
+	trackball		= 0;
    _teacher       = 0;
    _soundHandler  = 0;
    _camHandler    = 0;
@@ -84,8 +86,8 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
       worldTrans[ i ] = 0.0f;
       worldRot[ i ] = 0.0f;
    }
-
    this->nav = 0;
+	this->trackball=0;
 #ifdef VE_PATENTED
 #ifdef _OSG
    this->objectHandler = 0;
@@ -105,6 +107,7 @@ void cfdEnvironmentHandler::Initialize( std::string param )
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    displaySettings = new cfdDisplaySettings();
    this->nav = new cfdNavigate();
+	this->trackball = new cfdTrackball();
    //_readParam = new cfdReadParam();
    this->arrow = cfdModelHandler::instance()->GetArrow();
    //CreateObjects();
@@ -121,10 +124,16 @@ void cfdEnvironmentHandler::CleanUp( void )
 {
    if ( this->nav )
    {  
-      vprDEBUG(vesDBG,2)  
+		  vprDEBUG(vesDBG,2)  
         << "|       deleting this->nav" << std::endl << vprDEBUG_FLUSH;
       delete nav;
    }
+
+	if ( this->trackball )
+	{
+		vprDEBUG(vesDBG,2)
+			<< "|		  deleting this->trackball" << std::endl << vprDEBUG_FLUSH;
+	}
    
    if ( this->_readParam )
    {  
@@ -192,6 +201,11 @@ cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
 cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
 {
    return this->nav;
+}
+/////////////////////////////////////////////////////////////////////
+cfdTrackball* cfdEnvironmentHandler::GetTrackball( void )
+{
+	return this->trackball;
 }
 /////////////////////////////////////////////////////////////////////
 cfdCursor* cfdEnvironmentHandler::GetCursor( void )
@@ -338,7 +352,22 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
-   _camHandler->PreFrameUpdate();   
+   _camHandler->PreFrameUpdate();
+
+	trackball->preFrame();
+	trackball->Matrix();
+}
+///////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
+{
+	_windowWidth = w;
+	_windowHeight = h;
+}
+/////////////////////////////////////////////
+void cfdEnvironmentHandler::PostFrameUpdate()
+{
+	//update the values in the trackball
+	trackball->Reshape(_windowWidth,_windowHeight);
 }
 
 void cfdEnvironmentHandler::CreateObjects( void )

@@ -448,6 +448,9 @@
 				RelativePath=".\cfdThread.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdTrackball.cpp">
+			</File>
+			<File
 				RelativePath=".\cfdVector.cxx">
 			</File>
 			<File
@@ -464,6 +467,9 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.cxx">
+			</File>
+			<File
+				RelativePath=".\trackball.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -515,10 +521,19 @@
 				RelativePath=".\cfdEnum.h">
 			</File>
 			<File
+				RelativePath=".\cfdEnvironmentHandler.h">
+			</File>
+			<File
 				RelativePath=".\cfdModel.h">
 			</File>
 			<File
+				RelativePath=".\cfdNavigate.h">
+			</File>
+			<File
 				RelativePath=".\cfdSoundHandler.h">
+			</File>
+			<File
+				RelativePath=".\cfdTrackball.h">
 			</File>
 			<File
 				RelativePath=".\EventHandler.h">
@@ -528,6 +543,9 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.h">
+			</File>
+			<File
+				RelativePath=".\trackball.h">
 			</File>
 		</Filter>
 		<Filter
