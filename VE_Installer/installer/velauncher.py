@@ -15,19 +15,18 @@ The launcher is made for standard builds of VE-Suite. To launch a custom build
 with it, create a batch/shell file to set the extra environmental variables,
 execute the launcher on its last command.
 """
-import os #Used for setting environmental variables, running programs
-import time #Used only for sleep() func in the NameServer call
+import os ##Used for setting environmental variables, running programs
+import time ##Used only for sleep() func in the NameServer call
 
-import wx #Used for GUI
+import wx ##Used for GUI
 
 ##Temporary override; sends standard Jconf files to launcher.
 ##Set JCONF_STANDARD to True if you want the standard configuration,
 ##set it to False if you want to test choosing your own Jconf file.
 ##CODE NOTE: Used in Launch.UnixLaunch and Launch.WindowsLaunch
 JCONF_STANDARD = True
-
-#File/Folder settings.
-#Note: The HOME_BASE variable will be the one the installer needs to modify.
+##File/Folder settings.
+##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 DIRECTORY_DEFAULT = os.path.join(os.getcwd(), "exampleDatasets")
 CONFIG_FILE = "VE-Suite-Launcher"
@@ -36,32 +35,18 @@ RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
                       "OSG Patented Cluster", "Performer"]
 JCONF_CONFIG = "JconfList"
 DEFAULT_JCONF = "simstandalone.jconf"
-
-#ID numbers used internally for identification in program
-#NOTE: Test if these are necessary
-ID_LAUNCH = 100
-ID_LOAD = 101
-ID_SAVE = 102
-ID_NAME_SERVER = 200
-ID_XPLORER = 201
-ID_CONDUCTOR = 202
-ID_DIRECTORY = 300 #Field's ID = ID_DIRECTORY, Button's ID = ID_DIRECTORY+1
-ID_RADIO_XPLORER = 400
-
 ##Values for launcher's GUI layout
-WINDOW_SIZE = (600, 400)
-BACKGROUND_COLOR = wx.Colour(149, 149, 251)
-TEXT_SIZE = (400, -1) #Pixel length of directory text field
-JCONF_DISPLAY_SIZE = (200, -1)
+INITIAL_WINDOW_SIZE = (500, -1)
+INITIAL_JCONF_WINDOW_SIZE = (200, 200)
+JCONF_LIST_DISPLAY_MIN_SIZE = (100, 50)
 TOP_SPACE = (75, 75)
-BORDER = (5, 5)
-VERTICAL_SPACE = (1, BORDER[1])
-HORIZONTAL_SPACE = (BORDER[0], 1)
-MIN_ROW_SIZE = 50
-LEFT_MARGIN = BORDER
+BORDER = 5
+VERTICAL_SPACE = (-1, BORDER)
+HORIZONTAL_SPACE = (BORDER, -1)
+LEFT_MARGIN = HORIZONTAL_SPACE
+BACKGROUND_COLOR = wx.Colour(150, 150, 250)
 NULL_SPACE = (0, 0)
 ##Other values for launcher's UI
-JCONF_WINDOW_SIZE = (300, 300)
 XPLORER_SHELL_NAME = "Xplorer Shell"
 CONDUCTOR_SHELL_NAME = "Conductor Shell"
 
@@ -102,116 +87,128 @@ class LauncherWindow(wx.Frame):
     """
     def __init__(self, parent, ID, title):
         """Builds the launcher's window and loads the last configuration."""
-        wx.Frame.__init__(self, parent, wx.ID_ANY, title,
-                          size=WINDOW_SIZE, style=wx.DEFAULT_FRAME_STYLE &
-                          ~(wx.RESIZE_BORDER | wx.RESIZE_BOX | wx.MAXIMIZE_BOX))
+        wx.Frame.__init__(self, parent, -1, title,
+                          style=wx.DEFAULT_FRAME_STYLE)
 
-        #Build buttons.
-        #NOTE: Save/load configs disabled for now.
-        #self.bLoad = wx.Button(self, ID_LOAD, "Load Settings")
-        #self.bSave = wx.Button(self, ID_SAVE, "Save Settings")
-        bDirectory = wx.Button(self, ID_DIRECTORY+1, "Choose Working Directory")
-        bEditJconf = wx.Button(self, -1, "Edit Jconf Files List")
-        bLaunch = wx.Button(self, ID_LAUNCH, "Launch VE Suite")
-        bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
-                                      " close the Launcher"))
-
-        #Build checkboxes.
-        self.cbNameServer = wx.CheckBox(self, ID_NAME_SERVER, "Name Server")
-        self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server at Launch"))
-        self.cbXplorer = wx.CheckBox(self, ID_XPLORER, "Xplorer")
-        self.cbXplorer.SetToolTip(wx.ToolTip("Run the Xplorer at Launch"))
-        self.cbConductor = wx.CheckBox(self, ID_CONDUCTOR, "Conductor")
-        self.cbConductor.SetToolTip(wx.ToolTip("Run the Conductor at Launch"))
-
-        #Prepare data storage
+        ##Prepare data storage
+        ##NOTE: jconfList is a local copy of the Jconf list stored in the
+        ##program's config. Changes to jconfList are mirrored in the config.
         self.jconfList = []
-        
-        #Build directory text window.
-        self.txDirectory = wx.TextCtrl(self, ID_DIRECTORY,
-                                       DIRECTORY_DEFAULT, size=TEXT_SIZE,
+        ##Build buttons.
+        ##NOTE: Save/load configs disabled for now.
+        ##self.bLoad = wx.Button(self, ID_LOAD, "Load Settings")
+        ##self.bSave = wx.Button(self, ID_SAVE, "Save Settings")
+        bDirectory = wx.Button(self, -1, "Choose Working Directory")
+        bDirectory.SetToolTip(wx.ToolTip("Choose the working directory for" +
+                                         " the programs."))
+        bEditJconf = wx.Button(self, -1, "Edit Jconf Files List")
+        bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Jconf files" +
+                                         " displayed in the Launcher."))
+        bLaunch = wx.Button(self, -1, "Launch VE Suite")
+        bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
+                                      " close the Launcher."))
+        ##Build directory text window.
+        self.txDirectory = wx.TextCtrl(self, -1,
+                                       DIRECTORY_DEFAULT,
                                        style=wx.TE_READONLY)
-
-        self.chJconf = wx.Choice(self, -1, size=TEXT_SIZE)
-        
-        #Build radio buttons.
-        self.rbXplorer = wx.RadioBox(self, ID_RADIO_XPLORER, "Xplorer Type",
+        self.txDirectory.SetToolTip(wx.ToolTip("The path of the" +
+                                               " working directory."))
+        self.chJconf = wx.Choice(self, -1)
+        self.chJconf.SetToolTip(wx.ToolTip("Choose the Jconf file Xplorer" +
+                                           " will use for its configuration" +
+                                           " settings."))
+        ##Build checkboxes.
+        self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
+        self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server at Launch"))
+        self.cbXplorer = wx.CheckBox(self, -1, "Xplorer")
+        self.cbXplorer.SetToolTip(wx.ToolTip("Run the Xplorer at Launch"))
+        self.cbConductor = wx.CheckBox(self, -1, "Conductor")
+        self.cbConductor.SetToolTip(wx.ToolTip("Run the Conductor at Launch"))
+        ##Build radio buttons.
+        self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Type",
                                      wx.DefaultPosition, wx.DefaultSize,
                                      RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_ROWS)
         self.rbXplorer.SetToolTip(wx.ToolTip("Which Xplorer format do you" +
                                              " want to launch?"))
-
-        #Set tool tip popup delay to 1 second
+        ##Set tool tip popup delay to 1 second
         wx.ToolTip.SetDelay(1000)
-        #Check the dependencies.
+        ##Check the dependencies.
         self.DependenciesCheck()
-        #Open default config file.
+        ##Restore config values from last time.
         config = wx.Config(CONFIG_FILE)
-        #Restore values from last time.
         self.LoadConfig(config, DEFAULT_CONFIG)
-                        
-        #Event bindings.
-        #NOTE: Save/load configs disabled for now.
-        #self.Bind(wx.EVT_BUTTON, self.OnSave, self.bSave)
-        #self.Bind(wx.EVT_BUTTON, self.OnLoad, self.bLoad)
+        ##Event bindings.
+        ##NOTE: Save/load configs disabled for now.
+        ##self.Bind(wx.EVT_BUTTON, self.OnSave, self.bSave)
+        ##self.Bind(wx.EVT_BUTTON, self.OnLoad, self.bLoad)
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckXplorer, self.cbXplorer)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, bLaunch)
         self.Bind(wx.EVT_BUTTON, self.EditJconf, bEditJconf)
-
-        #Layout format settings
-        #Save/Load column Sizer
+        
+        ##Layout format settings
+        ##Save/Load column Sizer
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        #NOTE: Save/load config buttons disabled for now
-#        columnSizer.AddMany([self.bLoad,
-#                             HORIZONTAL_SPACE,
-#                             self.bSave])
-
-        #Create the overall layout box
+        ##NOTE: Save/load config buttons disabled for now
+##        columnSizer.AddMany([self.bLoad,
+##                             HORIZONTAL_SPACE,
+##                             self.bSave])
+        ##Create the overall layout box
         rowSizer = wx.BoxSizer(wx.VERTICAL)
-#        #Add the Load/Save Config bar
-#        rowSizer.AddMany([columnSizer,
-#                          VERTICAL_SPACE])
-        #Construct the Directory column
-        columnSizer.AddMany([self.txDirectory,
-                             HORIZONTAL_SPACE,
-                             bDirectory])                               
-        #Construct the check box/radio box grid.
+##        ##Add the Load/Save Config bar
+##        rowSizer.AddMany([columnSizer,
+##                          VERTICAL_SPACE])
+        ##Construct the Directory column
+        columnSizer.Add(self.txDirectory, 1, wx.ALIGN_BOTTOM)
+        columnSizer.AddMany([HORIZONTAL_SPACE,
+                             bDirectory])
+        ##Construct the check box/radio box grid.
         gridSizer = wx.FlexGridSizer(3, 2,
                                      VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
         gridSizer.AddMany([self.cbNameServer, NULL_SPACE,
                            self.cbConductor, NULL_SPACE,       
                            self.cbXplorer, self.rbXplorer])
-        #Insert the Directory column.
-        rowSizer.AddMany([columnSizer,
-                          VERTICAL_SPACE])
-        #Construct the Jconf column.
+        ##Insert the Directory column.
+        rowSizer.Add(wx.StaticText(self, -1, "Working Directory:"))
+        rowSizer.Add(columnSizer, 0, wx.EXPAND) 
+        rowSizer.Add(VERTICAL_SPACE)
+        ##Construct the Jconf column.
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.AddMany([self.chJconf,
-                             HORIZONTAL_SPACE,
+        columnSizer.Add(self.chJconf, 1)
+        columnSizer.AddMany([HORIZONTAL_SPACE,
                              bEditJconf])
-        #Insert the Jconf column, box grid, and Launch button.
-        rowSizer.AddMany([columnSizer,
+        columnSizer.Add((-1, -1), 1)
+        ##Insert the Jconf column, box grid, and Launch button.
+        rowSizer.Add(wx.StaticText(self, -1, "Jconfiguration file:"))
+        rowSizer.Add(columnSizer, 0, wx.EXPAND)
+        rowSizer.AddMany([VERTICAL_SPACE,
+                          wx.StaticText(self, -1, "Programs to launch:"),
                           VERTICAL_SPACE,
-                          gridSizer,
-                          VERTICAL_SPACE])
-        rowSizer.Add(bLaunch, 0, wx.ALIGN_BOTTOM | wx.ALIGN_RIGHT)
-        #Add the left margin
+                          gridSizer])
+        rowSizer.Add(VERTICAL_SPACE, 1)
+        rowSizer.Add(bLaunch, 0, wx.ALIGN_RIGHT)
+        ##Add the left margin
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.AddMany([LEFT_MARGIN,
-                             rowSizer])
-        #Add the title graphic space
+        columnSizer.AddSpacer(LEFT_MARGIN)
+        columnSizer.Add(rowSizer, 1, wx.EXPAND)
+        ##Add the title graphic space
         rowSizer = wx.BoxSizer(wx.VERTICAL)
-        rowSizer.AddMany([TOP_SPACE,
-                          columnSizer])
-        #Set the background color
+        rowSizer.Add(TOP_SPACE)
+        rowSizer.Add(columnSizer, 1, wx.EXPAND)
+        ##Set the main sizer.
+        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainSizer.Add(rowSizer, 1, wx.BOTTOM | wx.RIGHT | wx.EXPAND, BORDER)
+        mainSizer.SetSizeHints(self)
+        self.SetSizer(mainSizer)
+        self.SetSize(INITIAL_WINDOW_SIZE)
+        ##Set the background color.
         self.SetBackgroundColour(BACKGROUND_COLOR)
-        self.SetSizer(rowSizer)
-        #Set initial choices.
+        ##Show the window.
         self.Show(True)
-        #Error check: Is there a /bin folder in the launcher's directory?
-        #If so, assume it's in VE Suite's folder. If not, warn the user.
+        print str(bEditJconf.GetRect())
+        ##Error check: Is there a /bin folder in the launcher's directory?
+        ##If so, assume it's in VE Suite's folder. If not, warn the user.
         if not os.path.exists("bin"):
             dlg = wx.MessageDialog(self,
                                    "VE Suite's /bin directory wasn't found" +
@@ -238,7 +235,7 @@ class LauncherWindow(wx.Frame):
         dependenciesDir = config.Read("DependenciesDir", ":::")
         legitimateDependenciesDir = False
 ##        print "Dependencies check." ##TESTER
-        #Set name of the file to check in the Dependencies folder
+        ##Set name of the file to check in the Dependencies folder
         if os.name == "posix":
             nameServiceFile = "Naming_Service"
         elif os.name == "nt":
@@ -283,7 +280,7 @@ class LauncherWindow(wx.Frame):
                                        "Are you sure you want to use it?",
                                        "Warning: Dependencies Directory" +
                                        " Looks Unfamiliar",
-                                       wx.YES | wx.NO)
+                                       wx.YES_NO | wx.NO_DEFAULT)
                 if dlg.ShowModal() == wx.ID_NO:
                     dlg.Destroy()
                     dependenciesDir = self.DependenciesGet()
@@ -317,13 +314,13 @@ class LauncherWindow(wx.Frame):
                                searchDir,
                                style=wx.DD_DEFAULT_STYLE)
             if dlg.ShowModal() == wx.ID_OK:
-                #If a directory's chosen, exit the loop and return it.
+                ##If a directory's chosen, exit the loop and return it.
                 searchDir = dlg.GetPath()
                 dirChosen = True
                 dlg.Destroy()
             else:
-                #If not, show an error message and ask the user to choose
-                #another directory or quit the launcher.
+                ##If not, show an error message and ask the user to choose
+                ##another directory or quit the launcher.
                 dlg.Destroy()
                 dlg = wx.MessageDialog(None,
                                        "You didn't choose a Dependencies" +
@@ -334,7 +331,7 @@ class LauncherWindow(wx.Frame):
                                        " or Cancel to quit VE Suite Launcher.",
                                        "Error: Directory Not Chosen",
                                        wx.OK | wx.CANCEL)
-                #Quit if the user refuses to choose a Dependencies directory.
+                ##Quit if the user refuses to choose a Dependencies directory.
                 if dlg.ShowModal() == wx.ID_CANCEL:
                     OnClose("dead parrot sketch")    
         return searchDir
@@ -346,6 +343,7 @@ class LauncherWindow(wx.Frame):
         won't be launched.
         The radio box is enabled if Xplorer's check box is checked,
         disabled if it isn't."""
+        self.rbXplorer.Enable(event.GetEventObject().IsChecked())
         self.rbXplorer.Enable(event.GetEventObject().IsChecked())
 
     def UpdateChJconf(self, cursor):
@@ -381,12 +379,12 @@ class LauncherWindow(wx.Frame):
         print "Jconf file: " + xplorerConfig ##TESTER
         return xplorerConfig
 
-    #The user chooses the directory path
+    ##The user chooses the directory path
     def ChooseDirectory(self, event):
         """The user chooses the working directory through a directory dialog."""
         curDir = self.txDirectory.GetValue()
-        #NOTE: If curDir doesn't exist, it automatically goes
-        #to the user's directory
+        ##NOTE: If curDir doesn't exist, it automatically goes
+        ##to the user's directory
         dlg = wx.DirDialog(self, "Choose VE Suite's working directory:",
                            self.txDirectory.GetValue(),
                            style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
@@ -400,7 +398,7 @@ class LauncherWindow(wx.Frame):
         Keyword arguments:
         config -- Link to the file/registry
         name -- What to name this configuration"""
-        #Save the current configuration under name
+        ##Save the current configuration under name
         config.SetPath("/" + name)
         config.Write("Directory", self.txDirectory.GetValue())
         config.WriteInt("JconfCursor", self.chJconf.GetSelection())
@@ -408,7 +406,7 @@ class LauncherWindow(wx.Frame):
         config.Write("Xplorer", str(self.cbXplorer.GetValue()))
         config.WriteInt("XplorerType", self.rbXplorer.GetSelection())
         config.Write("Conductor", str(self.cbConductor.GetValue()))
-##        print "Saved configuration." #TESTER
+##        print "Saved configuration." ##TESTER
         return
     
     def LoadConfig(self, config, name):
@@ -418,15 +416,15 @@ class LauncherWindow(wx.Frame):
         config -- Link to the file/registry
         name -- Name of configuration to load
         """
-        #Load the configuration file under name
+        ##Load the configuration file under name
         config.SetPath("/" + name)
-        #Set directory
+        ##Set directory
         self.txDirectory.SetValue(config.Read("Directory", DIRECTORY_DEFAULT))
-        #Set choices for Jconf list.
+        ##Set choices for Jconf list.
         if config.HasGroup(JCONF_CONFIG):
             self.jconfList = JconfList(name)
-        #Set default choices if JCONF_CONFIG doesn't exist,
-        #but DependenciesDir does.
+        ##Set default choices if JCONF_CONFIG doesn't exist,
+        ##but DependenciesDir does.
         elif config.Read("DependenciesDir", ":::") != ":::":
             config.SetPath(JCONF_CONFIG)
             p = os.path.join(config.Read("DependenciesDir"),
@@ -434,40 +432,40 @@ class LauncherWindow(wx.Frame):
                               DEFAULT_JCONF)
             config.Write(os.path.split(p)[1][:-6], p)
             self.jconfList = JconfList(name)
-        #If neither exists, bring up an error. NOTE: Should never be reached.
+        ##If neither exists, bring up an error. NOTE: Should never be reached.
         else:
             print "ERROR: No Jconf configuration found and failed to make" + \
                   "default Jconf from Dependencies dir."
-        #Set Jconf cursor & Jconf choices list.
+        ##Set Jconf cursor & Jconf choices list.
         self.UpdateChJconf(config.ReadInt("JconfCursor", 0))        
-        #Set Name Server
+        ##Set Name Server
         if config.Read("NameServer", "True") == "True":
             self.cbNameServer.SetValue(True)
         else:
             self.cbNameServer.SetValue(False)            
-        #Set Xplorer
+        ##Set Xplorer
         if config.Read("Xplorer", "True") == "True":
             self.cbXplorer.SetValue(True)
         else:
             self.cbXplorer.SetValue(False)
-        #Show/Fade the radiobox
+        ##Show/Fade the radiobox
         self.rbXplorer.Enable(self.cbXplorer.IsChecked())
-        #Set Xplorer Type
+        ##Set Xplorer Type
         data = config.ReadInt("XplorerType", -1)
         if data >= 0 and data < len(RADIO_XPLORER_LIST):
             self.rbXplorer.SetSelection(data)
         else:
             self.rbXplorer.SetSelection(0)
-        #Set Conductor
+        ##Set Conductor
         if config.Read("Conductor", "True") == "True":
             self.cbConductor.SetValue(True)
         else:
             self.cbConductor.SetValue(False)
-##        print "Configuration loaded." #TESTER
+##        print "Configuration loaded." ##TESTER
 
-    #MODIFY FOR CONFIG CHANGE
-    #NOTE: Disabled until Save/Load Configuration is implemented
-    #for the Launcher.
+    ##MODIFY FOR CONFIG CHANGE
+    ##NOTE: Disabled until Save/Load Configuration is implemented
+    ##for the Launcher.
 ##    def OnSave(self, event):
 ##        dlg = wx.FileDialog(self, message="Save settings as...",
 ##                            defaultDir=os.getcwd(),
@@ -486,8 +484,8 @@ class LauncherWindow(wx.Frame):
 
     def Launch(self, event):
         """Checks input, begins launch if error-free."""
-        #ERROR CHECK:  If no programs are selected, alert the user
-        #              and abort the launch.
+        ##ERROR CHECK:  If no programs are selected, alert the user
+        ##              and abort the launch.
         if not (self.cbNameServer.IsChecked() or self.cbConductor.IsChecked()
                 or self.cbXplorer.IsChecked()):
             dlg = wx.MessageDialog(self,
@@ -499,8 +497,8 @@ class LauncherWindow(wx.Frame):
             dlg.ShowModal()
             dlg.Destroy()
             return
-        #ERROR CHECK:  If working directory chosen doesn't exist,
-        #              alert the user and return them to the launcher.
+        ##ERROR CHECK:  If working directory chosen doesn't exist,
+        ##              alert the user and return them to the launcher.
         if not (os.path.exists(self.txDirectory.GetValue())):
             dlg = wx.MessageDialog(self,
                                    "The working directory you chose " +
@@ -508,13 +506,13 @@ class LauncherWindow(wx.Frame):
                                    "Do you want to select a new working " +
                                    "directory and continue the launch?",
                                    "Launch Error: Directory Doesn't Exist",
-                                   wx.YES | wx.NO)
-            #Activate ChooseDirectory & continue if user chooses YES.
+                                   wx.YES_NO | wx.YES_DEFAULT)
+            ##Activate ChooseDirectory & continue if user chooses YES.
             if dlg.ShowModal()==wx.ID_YES:
                 self.ChooseDirectory("dead parrot sketch")
                 dlg.Destroy()
-                #If the user didn't choose a new directory,
-                #catch it and abort the launch.
+                ##If the user didn't choose a new directory,
+                ##catch it and abort the launch.
                 if not (os.path.exists(self.txDirectory.GetValue())):
                     dlg = wx.MessageDialog(self,
                                            "You didn't choose an existing" +
@@ -527,18 +525,18 @@ class LauncherWindow(wx.Frame):
                     dlg.ShowModal()
                     dlg.Destroy()
                     return
-            #If user chooses NO, abort the launch.
+            ##If user chooses NO, abort the launch.
             else:
                 dlg.Destroy()
                 return
-        #Go into the Launch
+        ##Go into the Launch
         Launch(self,
                self.txDirectory.GetValue(),
                self.cbNameServer.IsChecked(), self.cbConductor.IsChecked(),
                self.cbXplorer.IsChecked(), self.rbXplorer.GetSelection(),
                self.GetSelectedJconf())
 
-    #Saves the current configuration under the prefs file before closing.
+    ##Saves the current configuration under the prefs file before closing.
     def OnClose(self, event):
         """Saves launcher's current configuration and quits the launcher.
 
@@ -550,7 +548,7 @@ class LauncherWindow(wx.Frame):
         ##ANTICIPATED FIX: Wait until Xplorer doesn't require text input
         ##for the .param file anymore, call it as a separate thread.
         ##(Add & to the end of its command.)
-        #Update default config file.
+        ##Update default config file.
         config = wx.Config(CONFIG_FILE)
         self.SaveConfig(config, DEFAULT_CONFIG)
         self.Hide()
@@ -569,7 +567,7 @@ class JconfList:
         Rename(pos, newName)
         Delete(pos)
         GetPath(index)
-        Length
+        Length / __len__
         GetNames
     """
     def __init__(self, configName):
@@ -636,6 +634,9 @@ class JconfList:
         """Returns the length of self.list."""
         return len(self.list)
 
+    def __len__(self):
+        return self.Length()
+
     def GetNames(self):
         """Returns a list of the entries' names."""
         nList = []
@@ -664,46 +665,59 @@ class JconfWindow(wx.Dialog):
         L: The linked Jconf list this window modifies.
         cursor: Index of the current selection in L."""
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title,
-                           size = JCONF_WINDOW_SIZE,
-                           style = wx.DEFAULT_FRAME_STYLE &
-                           ~(wx.RESIZE_BORDER | wx.RESIZE_BOX | wx.MAXIMIZE_BOX))
-        ##Build windows.
+                           style = wx.DEFAULT_FRAME_STYLE)
+        ##Data storage.
         self.list = L
-        self.confList = wx.ListBox(self, -1, size=(100, 200),
+        ##Build displays.
+        self.confList = wx.ListBox(self, -1, size=JCONF_LIST_DISPLAY_MIN_SIZE,
                                    choices=self.list.GetNames())
         self.confList.SetSelection(cursor)
-        self.display = wx.TextCtrl(self, -1, size=JCONF_DISPLAY_SIZE,
-                                   style=wx.TE_READONLY)
+        self.display = wx.TextCtrl(self, -1, style=wx.TE_READONLY)
+        self.DisplayJconfFile("dead parrot sketch")
+        ##Build buttons.
         bAdd = wx.Button(self, -1, "Add")
         bRename = wx.Button(self, -1, "Rename")
         self.bDelete = wx.Button(self, -1, "Delete")
         ##Check if Delete's enabled.
         self.DeleteEnabledCheck()
-        ##Set the display field.
-        self.DisplayJconfFile("dead parrot sketch")
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, bAdd)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
         self.Bind(wx.EVT_BUTTON, self.Rename, bRename)
         self.Bind(wx.EVT_LISTBOX, self.DisplayJconfFile, self.confList)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        ##Build layout.
+        ##Construct layout.
+        ##Add/Rename/Delete buttons.
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         rowSizer.AddMany([bAdd, VERTICAL_SPACE,
                           bRename, VERTICAL_SPACE,
                           self.bDelete])
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.AddMany([self.confList, HORIZONTAL_SPACE, rowSizer])
+        ##List field + buttons.
+        columnSizer.Add(self.confList, 1, wx.EXPAND)
+        columnSizer.AddMany([HORIZONTAL_SPACE, rowSizer])
+        ##List field + Path display
         rowSizer = wx.BoxSizer(wx.VERTICAL)
-        rowSizer.AddMany([columnSizer, VERTICAL_SPACE,
-                          self.display])
-        winSizer = wx.BoxSizer(wx.HORIZONTAL)
-        winSizer.Add(rowSizer, 0, wx.ALL, BORDER[0])
-        self.SetSizer(winSizer)
+        rowSizer.Add(columnSizer, 1, wx.EXPAND)
+        rowSizer.AddMany([VERTICAL_SPACE,
+                          wx.StaticText(self, -1, "Selection's Jconf file:")])
+        rowSizer.Add(self.display, 0, wx.EXPAND)
+        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
+        ##Set size, position.
+        mainSizer.SetSizeHints(self)
+        self.SetSizer(mainSizer)
+        self.SetSize(INITIAL_JCONF_WINDOW_SIZE)
+        self.CenterOnParent(wx.BOTH)
 
     def DisplayJconfFile(self, event):
         """Shows the .jconf file of the selection in the text field."""
-        f = os.path.split(self.list.GetPath(self.confList.GetSelection()))[1]
+        c = self.confList.GetSelection()
+        if c in range(len(self.list)):
+            p = self.list.GetPath(c)
+            f = os.path.split(p)[1]
+        else:
+            f = "ERROR: Entry missing from list."
         self.display.SetValue(f)
         
     def DeleteEnabledCheck(self):
@@ -740,13 +754,20 @@ class JconfWindow(wx.Dialog):
         """Deletes the selected entry from the list.
 
         Also moves the selection index if it would be off the list."""
-        cursor = self.confList.GetSelection()
-        self.list.Delete(cursor)
-        ##Move the cursor if it wouldn't be on the list anymore.
-        if cursor >= self.list.Length():
-            cursor = self.list.Length() - 1
-        self.Update(cursor)
-        self.DeleteEnabledCheck()
+        dlg = wx.MessageDialog(self,
+                               "Are you sure you want to delete\n" +
+                               self.confList.GetStringSelection() + "?",
+                               "Confirm Deletion",
+                               wx.YES_NO | wx.NO_DEFAULT)
+        dlg.CenterOnParent(wx.BOTH)
+        if dlg.ShowModal() == wx.ID_YES:
+            cursor = self.confList.GetSelection()
+            self.list.Delete(cursor)
+            ##Move the cursor if it wouldn't be on the list anymore.
+            if cursor >= self.list.Length():
+                cursor = self.list.Length() - 1
+            self.Update(cursor)
+            self.DeleteEnabledCheck()
 
     def Rename(self, event):
         """Renames the selected Jconf entry.
@@ -833,8 +854,8 @@ class Launch:
         workingDir -- Used for environmental vars.
         runName, runConductor, runXplorer,
         typeXplorer, jconf -- Used for launch code."""
-        #The launch is the final step.
-        #Destroy launcher window before beginning the actual launch. 
+        ##The launch is the final step.
+        ##Destroy launcher window before beginning the actual launch. 
         launcherWindow.Close()
         ##Get dependenciesDir for setting environmental variables
         config = wx.Config(CONFIG_FILE)
@@ -842,12 +863,12 @@ class Launch:
         dependenciesDir = config.Read("DependenciesDir", "ERROR")
         ##Set the environmental variables
         self.EnvSetup(dependenciesDir, workingDir)
-        #Use the user's defined directory as Current Working Dir
-##        print "Changing to directory: " + self.txDirectory.GetValue() #TESTER
+        ##Use the user's defined directory as Current Working Dir
+##        print "Changing to directory: " + self.txDirectory.GetValue() ##TESTER
         os.chdir(os.getenv("VE_WORKING_DIR"))
-##        print os.name #TESTER
-##        print os.getcwd() #TESTER
-        #Checks the OS and routes the launcher to the proper subfunction
+##        print os.name ##TESTER
+##        print os.getcwd() ##TESTER
+        ##Checks the OS and routes the launcher to the proper subfunction
         ##NOTE: Code out separate Setups, code in the combined Setup
         if os.name == "nt":
             self.Windows(runName, runConductor, runXplorer,
@@ -866,12 +887,12 @@ class Launch:
         runName, runConductor, runXplorer -- Run NameServer/Conductor/Xplorer?
         typeXplorer -- Which Xplorer program to run.
         jconf -- Which .jconf file to use for Xplorer's settings."""
-        #Name Server section
-        #NOTE: Name Server starts up in Launcher's window.
-        #Closing the Launcher's DOS window closes Name Server as well.
-        #Closing the Launcher doesn't close the Launcher's DOS window while
-        #Name Server's running, though.
-        #Do we need to give Name Server its own window?
+        ##Name Server section
+        ##NOTE: Name Server starts up in Launcher's window.
+        ##Closing the Launcher's DOS window closes Name Server as well.
+        ##Closing the Launcher doesn't close the Launcher's DOS window while
+        ##Name Server's running, though.
+        ##Do we need to give Name Server its own window?
         if runName:
             os.system("start /B Naming_Service.exe -ORBEndPoint" +
                       " iiop://%TAO_MACHINE%:%TAO_PORT%")
@@ -880,31 +901,31 @@ class Launch:
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
                       " -ORBDottedDecimalAddresses 1")
-        #Conductor section
+        ##Conductor section
         if runConductor:
             os.system('start "' + CONDUCTOR_SHELL_NAME + '" ' +
                       "WinClientd.exe -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
                       " -ORBDottedDecimalAddresses 1")
-        #Xplorer section
+        ##Xplorer section
         if runXplorer:
-            #Set Xplorer's type
-            if typeXplorer == 0: #OSG selection
+            ##Set Xplorer's type
+            if typeXplorer == 0: ##OSG selection
                 executable = "project_tao_osg_d.exe"
-            elif typeXplorer == 1: #OSG VEP selection
+            elif typeXplorer == 1: ##OSG VEP selection
                 executable = "project_tao_osg_vep_d.exe"
-            elif typeXplorer == 2: #OSG VEPC selection
+            elif typeXplorer == 2: ##OSG VEPC selection
                 executable = "project_tao_osg_vep_cluster_d.exe"
-            elif typeXplorer == 3: #PF selection
+            elif typeXplorer == 3: ##PF selection
                 executable = "project_taod.exe"
             else:
                 executable = "ERROR"
-            #JCONF OVERRIDE: Temp feature; remove later.
+            ##JCONF OVERRIDE: Temp feature; remove later.
             if JCONF_STANDARD:
                 jconf = str(os.getenv("VJ_BASE_DIR")) + \
-                        "/configFiles/simstandalone.jconf"
-            #Xplorer's start call
+                        "\\configFiles\\simstandalone.jconf"
+            ##Xplorer's start call
             os.system('start "' + XPLORER_SHELL_NAME + '" ' +
                       executable +
                       " " + jconf +
@@ -912,7 +933,7 @@ class Launch:
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
                       " -ORBDottedDecimalAddresses 1")
-##        print "Done." #TESTER
+##        print "Done." ##TESTER
         return
 
     def Unix(self, runName, runConductor, runXplorer, typeXplorer, jconf):
@@ -930,33 +951,33 @@ class Launch:
             os.system("VES -menu &")
         ##Xplorer section
         if runXplorer:
-            if typeXplorer == 0: #OSG selection
+            if typeXplorer == 0: ##OSG selection
                 ##os.system("VES -simosg")
                 executable = "project_tao_osg"
-            elif typeXplorer == 1: #OSG VEP selection
+            elif typeXplorer == 1: ##OSG VEP selection
                 ##os.system("VES -simosgvep")
                 executable = "project_tao_osg_vep"
-            elif typeXplorer == 2: #OSG VEPC selection
+            elif typeXplorer == 2: ##OSG VEPC selection
                 ##os.system("VES -clusterOSGVEP")
                 executable = "project_tao_osg_vep_cluster"
-            elif typeXplorer == 3: #PF selection
+            elif typeXplorer == 3: ##PF selection
                 ##os.system("VES -sim")
                 executable = "project_tao_pf"
-            #JCONF OVERRIDE: Temp feature; remove later.
+            ##JCONF OVERRIDE: Temp feature; remove later.
             if JCONF_STANDARD:
                 jconf = str(os.getenv("VJ_BASE_DIR")) + \
                         "/configFiles/sim.base.jconf " + \
                         str(os.getenv("VJ_BASE_DIR")) + \
                         "/configFiles/sim.wand.mixin.jconf"
-            #Xplorer's call
-            #Error tag: $$ERROR_1$$
+            ##Xplorer's call
+            ##Error tag: $$ERROR_1$$
             os.system(executable +
                       " -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
                       jconf +
                       " ; /usr/share/Performer/bin/rmsem")
-        print "Done." #TESTER
+        print "Done." ##TESTER
         return
 
 
@@ -997,21 +1018,21 @@ class Launch:
         PATH
         LD_LIBRARY_PATH or LD_LIBRARYN32_PATH (Unix systems only)"""
 
-        #Determine the OS
+        ##Determine the OS
         windows = (os.name == "nt")
         unix = (os.name == "posix")
-##        print "Setup begins." #TESTER
-        #Set where VE-Suite's installed
+##        print "Setup begins." ##TESTER
+        ##Set where VE-Suite's installed
         self.EnvFill("VE_INSTALL_DIR", os.getcwd())
-        #Set where VE-Suite pre-complied dependencies are installed
-        #NOTE: Receives this from the launcher.
+        ##Set where VE-Suite pre-complied dependencies are installed
+        ##NOTE: Receives this from the launcher.
         self.EnvFill("VE_DEPS_DIR", dependenciesDir)
-        #Gets working directory
-        #NOTE: Receives this from the launcher.
+        ##Gets working directory
+        ##NOTE: Receives this from the launcher.
         self.EnvFill("VE_WORKING_DIR", workingDir)
-        #vrJuggler  
-        #These are setup for using VE-Suite dependency install's location
-        #change only if you are using your own build
+        ##vrJuggler  
+        ##These are setup for using VE-Suite dependency install's location
+        ##change only if you are using your own build
         os.environ["VJ_BASE_DIR"] = os.path.join(os.getenv("VE_DEPS_DIR"),
                                                  JUGGLER_FOLDER)
         os.environ["VJ_DEPS_DIR"] = os.path.join(os.getenv("VE_DEPS_DIR"),
@@ -1019,44 +1040,44 @@ class Launch:
 ##        print "VJ_BASE_DIR: " + str(os.getenv("VJ_BASE_DIR")) ##TESTER
 ##        print "VJ_DEPS_DIR: " + str(os.getenv("VJ_DEPS_DIR")) ##TESTER
 
-        #Cluster apps & user-built dependencies were commented out,
-        #therefore they weren't added. Check old setup.bat for more details.
-        #NOTE: Since they were only used for custom builds, setting them
-        #was moved to an external batch/shell file which calls the Launcher
-        #on its last line.
+        ##Cluster apps & user-built dependencies were commented out,
+        ##therefore they weren't added. Check old setup.bat for more details.
+        ##NOTE: Since they were only used for custom builds, setting them
+        ##was moved to an external batch/shell file which calls the Launcher
+        ##on its last line.
 
-        #Functionality important but unknown
+        ##Functionality important but unknown
         self.EnvFill("TAO_MACHINE", "localhost")
         self.EnvFill("TAO_PORT", "1237")
 
-        #Set CFDHOSTNAME
+        ##Set CFDHOSTNAME
         if windows:
             self.EnvFill("CFDHOSTTYPE", "WIN32")
         elif unix:
-##            print str(os.path.exists("/etc/redhat-release")) #TESTER
+##            print str(os.path.exists("/etc/redhat-release")) ##TESTER
             if (os.path.exists("/etc/redhat-release")):
                 piped = os.popen("""cat /etc/redhat-release """ +
                                  """| awk -F" " '{print $1}'""", 'r')
                 firstWord = piped.read()[:-1]
-                #NOTE: [:-1] is to remove the line break from the read()
+                ##NOTE: [:-1] is to remove the line break from the read()
                 piped.close()
-##                print "First word: "+firstWord #TESTER
+##                print "First word: "+firstWord ##TESTER
                 if firstWord == "Red":
                     piped = os.popen("""cat /etc/redhat-release """ +
                                      """| awk -F" " '{print $3}'""", 'r')
                     thirdWord = piped.read()[:-1]
                     piped.close()
-##                    print "Third word: "+thirdWord #TESTER
+##                    print "Third word: "+thirdWord ##TESTER
                     if thirdWord == "Enterprise":
-                        #Extract words from file to create something like RHEL_3
+                        ##Extract words from file to create something like RHEL_3
                         piped = os.popen("""cat /etc/redhat-release """ +
                                          """| awk -F" " '{print "RHEL_" $7}'""",
                                          'r')
                         self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
                         piped.close()
                     else:
-                        #Extract words from file to create
-                        #something like RedHat_8.0
+                        ##Extract words from file to create
+                        ##something like RedHat_8.0
                         piped = os.popen("""cat /etc/redhat-release """ +
                                          """| awk -F" " '""" +
                                          """{print $1 $2 "_" $5}'""",
@@ -1064,23 +1085,23 @@ class Launch:
                         self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
                         piped.close()
                 elif firstWord == "Fedora":
-                    #Extract words from file to create something like Fedora_1
+                    ##Extract words from file to create something like Fedora_1
                     piped = os.popen("""cat /etc/redhat-release """ +
                                      """| awk -F" " '{print $1 "_" $4}'""", 'r')
                     self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
                     piped.close()
                 else:
-                    #NOTE: If the program couldn't identify this type of
-                    #Redhat, print an error & just use uname.
+                    ##NOTE: If the program couldn't identify this type of
+                    ##Redhat, print an error & just use uname.
 ##                    print "ERROR: UnixSetup wasn't able to catch a redhat" + \
-##                          "version to create the CFDHOSTTYPE var." #TESTER
-##                    print "Using generic uname as CFDHOSTTYPE instead." #TESTER
+##                          "version to create the CFDHOSTTYPE var." ##TESTER
+##                    print "Using generic uname as CFDHOSTTYPE instead." ##TESTER
                     piped = os.popen("uname")
                     self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
                     piped.close()
             elif os.path.exists("/etc/SuSE-release"):
-                #Extract words from file to create
-                #something like SuSE_9.2_x86-64
+                ##Extract words from file to create
+                ##something like SuSE_9.2_x86-64
                 piped = os.popen("""head -1 /etc/SuSE-release """ +
                                  """| awk -F" " '{print $1 "_" $3 "_" $4}'""",
                                  'r')
@@ -1090,25 +1111,25 @@ class Launch:
                 piped = os.popen("uname")
                 self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
                 piped.close()
-            #If CFDHOSTTYPE has parentheses, remove them.
+            ##If CFDHOSTTYPE has parentheses, remove them.
             piped = os.popen("""echo \"$CFDHOSTTYPE\" """ +
                              """| sed -e 's/(//g' | sed -e 's/)//g' """ + 
                              """| sed -e 's/"//g'""", 'r')
             os.environ["CFDHOSTTYPE"] = piped.read()[:-1]
             piped.close()
-##            print "CFDHOSTTYPE: " + str(os.getenv("CFDHOSTTYPE")) #TESTER
+##            print "CFDHOSTTYPE: " + str(os.getenv("CFDHOSTTYPE")) ##TESTER
 
         self.EnvFill("PHSHAREDSIZE", "534773700")
 
-        #Juggler debug output level
+        ##Juggler debug output level
         self.EnvFill("VPR_DEBUG_ENABLE", "0")
         self.EnvFill("VPR_DEBUG_NFY_LEVEL", "1")
         self.EnvFill("NO_PERF_PLUGIN", "TRUE")
         self.EnvFill("NO_RTRC_PLUGIN", "TRUE")
         self.EnvFill("PFNFYLEVEL", "0")
 
-        #Juggler dependencies
-        #These are currently set relative to VE-Suite's install
+        ##Juggler dependencies
+        ##These are currently set relative to VE-Suite's install
         vjBaseDir = os.getenv("VJ_BASE_DIR")
         self.EnvFill("JCCL_BASE_DIR", vjBaseDir)
         self.EnvFill("JCCL_DEFINITION_PATH", os.path.join(vjBaseDir,
@@ -1117,20 +1138,20 @@ class Launch:
         self.EnvFill("NSPR_ROOT", vjBaseDir)
         self.EnvFill("SNX_BASE_DIR", vjBaseDir)
 
-        #Python build environment variables
+        ##Python build environment variables
         if windows:
             os.environ["PYTHONPATH"] = os.path.join(os.getenv("VJ_DEPS_DIR"),
                                                     "lib", "python")
         elif unix:
-            #os.environ["PYTHONPATH"] = os.path.join(os.getenv("VJ_DEPS_DIR"),
-            #                                        "lib", "python")
+            ##os.environ["PYTHONPATH"] = os.path.join(os.getenv("VJ_DEPS_DIR"),
+            ##                                        "lib", "python")
             if os.getenv("OSG_HOME", "None") != "None":
                 os.environ["PATH"] = os.path.join(str(os.getenv("OSG_HOME")),
                                                   "share", "OpenSceneGraph",
                                                   "bin") + ":" + \
                                      str(os.getenv("PATH"))
 
-        #Update PATH (and the Library Path for Unix)
+        ##Update PATH (and the Library Path for Unix)
         if windows:
             os.environ["PATH"] = str(os.getenv("PATH")) + ";" + \
                                  os.path.join(str(os.getenv("VJ_DEPS_DIR")),
@@ -1155,19 +1176,19 @@ class Launch:
         ##    os.environ["PATH"] = str(os.getenv("PATH")) + ";" + \
         ##                         str(os.getenv("OSGHOME")) + r"\bin"
         elif unix:
-            #Determine name of library path
+            ##Determine name of library path
             if os.getenv("CFDHOSTTYPE") == "IRIX64":
                 libraryPath = "LD_LIBRARYN32_PATH"
                 lib = "lib32"
             else:
                 libraryPath = "LD_LIBRARY_PATH"
                 lib = "lib"
-            #Prepare the current library path
+            ##Prepare the current library path
             currentLibraryPath = str(os.getenv(libraryPath)) + ":"
             if currentLibraryPath == "None:":
                 currentLibraryPath = ""
-            print "CURRENT LIBRARY PATH: " + str(currentLibraryPath) #TESTER
-            #Update the library path
+            print "CURRENT LIBRARY PATH: " + str(currentLibraryPath) ##TESTER
+            ##Update the library path
             os.environ[libraryPath] = currentLibraryPath + \
                                       os.path.join(str(os.getenv("VE_DEPS_DIR")),
                                                    "bin") + ":" + \
@@ -1176,7 +1197,7 @@ class Launch:
                                                    "bin") + ":" + \
                                       os.path.join(str(os.getenv("VJ_BASE_DIR")),
                                                    lib)
-            #Update the path
+            ##Update the path
             os.environ["PATH"] = str(os.getenv("PATH")) + ":" + \
                                  os.path.join(str(os.getenv("VE_INSTALL_DIR")),
                                               "bin") + ":" + \
@@ -1184,9 +1205,9 @@ class Launch:
                                               "bin") + ":" + \
                                  os.path.join(str(os.getenv("VJ_BASE_DIR")),
                                               "bin")
-##        print "\nPATH: \n" + str(os.getenv("PATH")) #TESTER
+##        print "\nPATH: \n" + str(os.getenv("PATH")) ##TESTER
 ##        print "\nLibrary Path " + libraryPath + ": \n" + \
-##              str(os.getenv(libraryPath)) #TESTER
+##              str(os.getenv(libraryPath)) ##TESTER
 ##        print "Setup done." ##TESTER
 
     def EnvFill(self, var, default):
@@ -1194,11 +1215,11 @@ class Launch:
         os.environ[var] = os.getenv(var, default)
 ##        print var + ": " + os.getenv(var) ##TESTER
 
-#Jconf Override warning.
+##Jconf Override warning.
 if JCONF_STANDARD:
     print "Jconf override ON: Standard Jconf files used; custom choices" + \
           " won't be used."
-#The main loop
+##The main loop
 app = wx.PySimpleApp()
 frame = LauncherWindow(None,-1,'VE Suite Launcher')
 app.MainLoop()
