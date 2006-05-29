@@ -102,7 +102,7 @@ EXTRA_LIBS+= -lVE_XMLLib
 EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ModelLib
 EXTRA_LIBS+= -lVE_OpenModuleLib
-
+EXTRA_LIBS+= -lVE_ShaderLib
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 #include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 

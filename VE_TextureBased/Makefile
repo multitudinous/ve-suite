@@ -81,7 +81,10 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
 
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
-#DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
+EXTRA_INCLUDES+= $(shell vrjuggler-config --cxxflags)
+DSO_PLUGIN_DEPS+= -L/usr/X11R6/lib -lX11 -lGL
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
+DSO_PLUGIN_DEPS+= -lVE_UtilLib 
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 
 ifeq ($(SCENE_GRAPH), OSG)

@@ -47,6 +47,13 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
 #DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
+DSO_PLUGIN_DEPS+= -lVE_XMLLib
+DSO_PLUGIN_DEPS+= -lVE_ModelLib
+DSO_PLUGIN_DEPS+= -lVE_CADLib
+DSO_PLUGIN_DEPS+= -lVE_ShaderLib
+#EXTRA_LIBS+= -lVE_CE_UtilitiesLib
+#EXTRA_LIBS+= -lVE_OpenModuleLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk

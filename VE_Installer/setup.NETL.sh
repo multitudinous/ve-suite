@@ -3,7 +3,7 @@
 # sets up environment to build and/or run VE-Xplorer
 
 #this is typically defined in your .cshrc file
-export VE_SUITE_HOME=/nfs/scratch/VE_Suite
+export VE_SUITE_HOME=/Volumes/data/TSVEG//VE_Suite
 
 if [ -e /etc/redhat-release ]; then
    #echo "found /etc/redhat-release"
@@ -23,7 +23,7 @@ export CFDHOSTTYPE=`echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 #echo "CFDHOSTTYPE =" $CFDHOSTTYPE
 
 export TAO_BUILD=TRUE
-export CLUSTER_APP=TRUE
+export CLUSTER_APP=FALSE
 export SCENE_GRAPH=OSG
 export VE_PATENTED=TRUE
 export VEXMASTER=ids7
@@ -119,6 +119,28 @@ case "$CFDHOSTTYPE" in
    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
 
 ;;
+	Darwin*)
+   #setenv JDK_HOME /usr/java
+   export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk/install
+   export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install
+   export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj
+   export VJ_DEPS_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj-deps
+   export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.0/install
+	#setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
+
+   export DYLD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${WX_HOME}/lib
+   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
+   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+
+      export TAO_HOME=/Volumes/data/VE_Suite_Deps/ACE_TAO/install
+      export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${TAO_HOME}/lib
+      export PATH=${TAO_HOME}/bin:${PATH}
+
+      #setenv XERCESCROOT /sw
+      export XERCESCROOT=/Volumes/data/VE_Suite_Deps/xerces/install
+      export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${XERCESCROOT}/lib
+;;
    *)
    echo "ERROR: Unsupported operating system"
    echo "       OMNI_HOME, etc. are undefined"
@@ -132,6 +154,7 @@ export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHO
 export PATH=${WX_HOME}/bin:${PATH}
 if [ $?OSG_HOME ]; then
    export PATH=${OSG_HOME}/OpenSceneGraph/bin:${PATH}
+   export OSG_FILE_PATH=${OSG_HOME}/share/OpenSceneGraph-Data
 fi
 
 #echo ""

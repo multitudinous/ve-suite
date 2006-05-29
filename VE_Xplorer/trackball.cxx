@@ -65,7 +65,8 @@ void Trackball::Matrix(){
 	}
 
 	cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray((float *)accTranslation);
-	cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix(WorldMatrix*tb_accuTransform);
+	gmtl::Matrix44f tempWorldTrans = WorldMatrix*tb_accuTransform;
+	cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix( tempWorldTrans );
 	
 	Print(cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat());
 

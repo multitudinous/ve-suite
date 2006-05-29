@@ -64,6 +64,7 @@ DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
 DSO_PLUGIN_DEPS+= -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) 
 DSO_PLUGIN_DEPS+= -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 DSO_PLUGIN_DEPS+= -lVE_UtilLib
+DSO_PLUGIN_DEPS+= -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk

@@ -32,6 +32,8 @@
 #ifndef _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
 #define _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
 #include <vector>
+#include <string>
+
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Link.h"
@@ -67,12 +69,13 @@ public:
    Polygon* GetPolygon( void );
    REI_Plugin* GetPlugin( void );
    void SetPlugin( REI_Plugin* newPlugin );
+protected:
+	std::string cls_name;
 
 private:
    REI_Plugin* pl_mod;
    Polygon poly; //Poly is the current poly on the canvas
    //std::vector< Link > links; //links connected with me
-   std::string cls_name;
    wxWindow* canvas;
 };
 }

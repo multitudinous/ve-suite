@@ -103,7 +103,6 @@ SRCS=\
    cfdVectors.cxx \
    cfdRawNodeWriteTraverser.cxx \
    cfdWriteTraverser.cxx \
-   cfdObjectHandler.cxx \
    ActiveModelEventHandler.cxx\
    AddVTKDataSetEventHandler.cxx\
    AttributeEventHandler.cxx \
@@ -116,7 +115,10 @@ SRCS=\
    CADToggleEH.cxx \
    CADTransformEH.cxx \
    MaterialModeUpdateEH.cxx \
-   MaterialUpdateEH.cxx
+   MaterialUpdateEH.cxx\
+   trackball.cxx\
+   cfdTrackball.cxx
+#   cfdObjectHandler.cxx 
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
@@ -125,10 +127,12 @@ EXTRA_CXXFLAGS+= -g
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
 DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) 
 DSO_PLUGIN_DEPS+= -lVE_XMLLib 
-DSO_PLUGIN_DEPS+= -lVE_CADLib 
+DSO_PLUGIN_DEPS+= -lVE_CADLib
+DSO_PLUGIN_DEPS+= -lVE_ModelLib 
 DSO_PLUGIN_DEPS+= -lVE_SceneGraph_UtilitiesLib 
 DSO_PLUGIN_DEPS+= -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) 
 DSO_PLUGIN_DEPS+= -lVE_UtilLib
+DSO_PLUGIN_DEPS+= -lVE_TextureBasedLib$(OSG)$(PATENTED_TAG)
 DSO_PLUGIN_DEPS+= $(shell vrjuggler-config vrj --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 

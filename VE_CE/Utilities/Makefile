@@ -54,6 +54,12 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -Wall
 #EXTRA_CXXFLAGS+= -g
 EXTRA_CXXFLAGS+= -Wall
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
+DSO_PLUGIN_DEPS+= -lVE_XMLLib
+DSO_PLUGIN_DEPS+= -lVE_ModelLib
+DSO_PLUGIN_DEPS+= -lVE_OpenModuleLib
+
+
 #-L$(VJ_DEPS_DIR)/lib
 #DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))

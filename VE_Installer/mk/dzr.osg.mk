@@ -11,7 +11,8 @@ endif
 ifeq (${CFDPLATFORM},x86_64)
    EXTRA_LIBS+= -L$(OSG_HOME)/lib -L$(OSG_HOME)/lib64 -losg -losgDB -losgGA -losgUtil \
             -lOpenThreads -losgFX 
-
+   DSO_PLUGIN_DEPS+= -L$(OSG_HOME)/lib -L$(OSG_HOME)/lib64 -losg -losgDB -losgGA -losgUtil \
+            -lOpenThreads -losgFX 
 else
    ifeq (${CFDUNAME},IRIX64)
       EXTRA_LIBS+= -L$(OSG_HOME)/lib32 -losg -losgDB -losgGA -losgUtil \
@@ -19,8 +20,8 @@ else
    else
       EXTRA_LIBS+= -L$(OSG_HOME)/lib -losg -losgDB -losgGA -losgUtil \
             -lOpenThreads
+      DSO_PLUGIN_DEPS+= -L$(OSG_HOME)/lib -losg -losgDB -losgGA -losgUtil \
+            -lOpenThreads
    endif
 
 endif
-
-DSO_PLUGIN_DEPS+= $(EXTRA_LIBS)
