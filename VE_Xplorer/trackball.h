@@ -6,7 +6,7 @@
 using namespace gmtl;
 
 const double PI=3.14159265358979323846;
-const float FOVy=50.0f;
+const float FOVy=52.0f;
 
 class Trackball{
 public:
