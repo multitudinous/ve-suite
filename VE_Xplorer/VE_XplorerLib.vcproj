@@ -448,7 +448,7 @@
 				RelativePath=".\cfdThread.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdTrackball.cpp">
+				RelativePath=".\cfdTrackball.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdVector.cxx">
@@ -469,7 +469,7 @@
 				RelativePath=".\MaterialUpdateEH.cxx">
 			</File>
 			<File
-				RelativePath=".\trackball.cpp">
+				RelativePath=".\trackball.cxx">
 			</File>
 		</Filter>
 		<Filter

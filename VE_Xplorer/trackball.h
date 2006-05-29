@@ -2,7 +2,6 @@
 #define TRACKBALL_H
 
 #include <gmtl/Matrix.h>
-#include <gmtl/vec.h>
 
 using namespace gmtl;
 
@@ -13,7 +12,7 @@ class Trackball{
 public:
 	Trackball();
 	~Trackball();
-	void Print(Matrix44f mat);
+	//void Print(Matrix44f mat);
 	void Init();
 	void Matrix();
 	void Reshape(unsigned int width,unsigned int height);

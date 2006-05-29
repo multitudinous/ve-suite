@@ -23,6 +23,7 @@ Trackball::Trackball(){
 
 Trackball::~Trackball(){}
 
+/*
 void Trackball::Print(Matrix44f mat){
    printf("Matrix = \n");
    printf("[%5.2f %5.2f %5.2f %5.2f]\n",mat[0][0],mat[0][1],mat[0][2],mat[0][3]);
@@ -30,6 +31,7 @@ void Trackball::Print(Matrix44f mat){
    printf("[%5.2f %5.2f %5.2f %5.2f]\n",mat[2][0],mat[2][1],mat[2][2],mat[2][3]); 
    printf("[%5.2f %5.2f %5.2f %5.2f]\n",mat[3][0],mat[3][1],mat[3][2],mat[3][3]); 
 }
+*/
 
 void Trackball::Init(){
 	identity(tb_transform);
@@ -68,7 +70,7 @@ void Trackball::Matrix(){
 	gmtl::Matrix44f tempWorldTrans = WorldMatrix*tb_accuTransform;
 	cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix( tempWorldTrans );
 	
-	Print(cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat());
+	//Print(cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat());
 
 	identity(tb_transform);
 	//Shouldn't need this line, but for some reason the identity call is not
