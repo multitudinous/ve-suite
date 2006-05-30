@@ -23,7 +23,7 @@ DefaultPlugin
    poly[2]=wxPoint(icon_w,icon_h);
    poly[3]=wxPoint(0,icon_h);
 
-#define TESTPORT
+//#define TESTPORT
 #ifdef TESTPORT
    VE_Model::Port* Aport = new VE_Model::Port();
    VE_Model::Point * Aportloc = new VE_Model::Point();
