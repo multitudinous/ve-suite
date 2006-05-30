@@ -148,8 +148,8 @@ void MaterialHelper::LoadMaterial(VE_CAD::CADMaterial* material)
      _ss->setRenderBinDetails(99,std::string("DepthSortedBin"));
      _ss->setMode(GL_BLEND,osg::StateAttribute::ON);
    }
-   _ss->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
-   _ss->setAttributeAndModes(_material.get());
+   _ss->setAttributeAndModes(bf.get(),osg::StateAttribute::ON|osg::StateAttribute::PROTECTED);
+   _ss->setAttributeAndModes(_material.get(),osg::StateAttribute::ON|osg::StateAttribute::PROTECTED);
 #elif _PERFORMER
    std::cout<<"Material Loader Not implemented for Performer version yet!!!!!!"<<std::endl;
 #endif

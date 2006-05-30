@@ -553,7 +553,7 @@ void ShaderHelper::_attachGLSLProgramToStateSet(bool override)
          if(override){
             _ss->setAttributeAndModes(_glslProgram.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
          }else{
-            _ss->setAttributeAndModes(_glslProgram.get(),osg::StateAttribute::ON);
+            _ss->setAttributeAndModes(_glslProgram.get(),osg::StateAttribute::ON|osg::StateAttribute::PROTECTED);
          }
       }
    }
