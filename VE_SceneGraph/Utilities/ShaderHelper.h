@@ -105,7 +105,7 @@ protected:
   
    ///Attach the program to the stateset
    ///\param override Flag to override the stateset above
-   void _attachGLSLProgramToStateSet(bool override = true);
+   void _attachGLSLProgramToStateSet(bool override = false);
 
    ///Extract uniforms from the shader.
    ///\param The shader to extract uniforms from.
