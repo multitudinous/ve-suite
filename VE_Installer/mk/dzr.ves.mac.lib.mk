@@ -35,7 +35,7 @@ PROF_OPT_FLAGS=		$(DBG_FLAGS)
 # -----------------------------------------------------------------------------
 # Plug-in related settings.
 # -----------------------------------------------------------------------------
-DYNAMICLIB_EXT=         dylib
+DYNAMICLIB_EXT?=         dylib
 OBJEXT=			o
 OBJ_BUILD_FLAG=		-c
 OBJ_NAME_FLAG=		-o $@
@@ -88,13 +88,20 @@ endif
 PLUGIN_DSO=	$(PLUGIN_NAME)$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
 DYLIB_DEPS=	$(PRE_DSO_PLUGIN_DEPS) $(DSO_PLUGIN_DEPS)		\
 		$(POST_DSO_PLUGIN_DEPS)
+#Choose which shared library you are building
+BUILD_DLL?= true
 
 # It is critical that this be included before the $(PLUGIN_DSO) target below.
 include $(DZR_BASE_DIR)/mk/dzr.lib.mk
 plugin-dso: $(PLUGIN_DSO)
 
+ifeq ($(BUILD_DLL), true)
 $(PLUGIN_DSO): $(OBJS)
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS) $(DYLIB_DEPS)
+else
+$(PLUGIN_DSO): $(OBJS)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS) $(DYLIB_DEPS)
+endif
 
 CLOBBER_FILES+=	$(PLUGIN_DSO)
 CLEAN_FILES+=	$(PLUGIN_DSO)

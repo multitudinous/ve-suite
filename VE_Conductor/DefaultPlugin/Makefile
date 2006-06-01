@@ -72,6 +72,8 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 srcdir= .
 
 ifeq (${CFDUNAME},Darwin)
+DYNAMICLIB_EXT= bundle
+BUILD_DLL= false
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.mac.lib.mk
 else
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.linux.lib.mk

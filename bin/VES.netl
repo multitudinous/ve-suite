@@ -1,11 +1,11 @@
 #!/bin/sh -f
  
 # Set environment variables and paths for running the program
-export VE_SUITE_HOME=/nfs/scratch/VE_Suite
+export VE_SUITE_HOME=/Volumes/data/TSVEG/VE_Suite
 
 # Set the TAO nameServer properties used by the run scripts
-export TAO_MACHINE=ids7.scilan
-export TAO_PORT=55
+export TAO_MACHINE=localhost
+export TAO_PORT=1236
 
 source ${VE_SUITE_HOME}/VE_Installer/setup.NETL.sh
 
@@ -14,7 +14,7 @@ export MY_VJCONFIGS=/nfs/scratch/FutureGenPowerPlant/jugglerConfigs/Dougs
 case $1 in
   
   -sim)
-    project_tao_osg \
+    project_tao_osg_vep \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/simstandalone.jconf
   ;;
@@ -26,8 +26,8 @@ case $1 in
   ;;
 
   -nserv)
-    killall -q Naming_Service 
-    killall -q Exe_server 
+    killall  Naming_Service 
+    killall  Exe_server 
     echo Starting TAO Naming Service on $TAO_MACHINE, port $TAO_PORT
     Naming_Service -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
 #/hostname_in_ior=lars.netl.doe.gov &
