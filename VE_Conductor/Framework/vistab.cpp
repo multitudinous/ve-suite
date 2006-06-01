@@ -52,6 +52,9 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_TOOL     (STREAMLINE_BUTTON,    Vistab::_onStreamline)
    EVT_TOOL     (ISOSURFACE_BUTTON,    Vistab::_onIsosurface)
    EVT_TOOL     (TEXTURE_BASED_BUTTON, Vistab::_onTextureBased)
+   EVT_COMBOBOX(ID_COMBOBOX,Vistab::_OnSelectDataset)
+   EVT_LISTBOX(ID_LISTBOX,Vistab::_OnSelectScalar)
+   EVT_LISTBOX(ID_LISTBOX1,Vistab::_OnSelectVector)
 ////@end Vistab event table entries
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
@@ -210,6 +213,15 @@ void Vistab::CreateControls()
     scalarRange = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
                              wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Scalar Bounds"));
     scalarSizer->Add(scalarRange,1,wxALIGN_CENTER|wxEXPAND);
+    
+    /*ScalarRangeMinSliderCallback* minRange = new ScalarRangeMinSliderCallback();
+    ScalarRangeMaxSliderCallback* maxRange = new ScalarRangeMaxSliderCallback();
+    ScalarRangeBothMoveCallback* bothRange = new ScalarRangeBothMoveCallback();
+
+   scalarRange->SetMinSliderCallback(minRange);
+   scalarRange->SetMaxSliderCallback(maxRange);
+   scalarRange->SetBothSliderUpdateCallback(bothRange);
+*/
     itemBoxSizer2->Add(scalarSizer, 3, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
    
     wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
@@ -375,6 +387,7 @@ void Vistab::_setActiveDataset(unsigned int index)
       if(i < _nDatasetsInActiveModel)
       {
          _activeDataset = _activeModel->dataVector[i];
+         _activeDataSetName = _activeDataset.datasetname;
          if(_datasetSelection)
          {
             _datasetSelection->SetSelection(i);
@@ -476,5 +489,54 @@ void Vistab::_updateComboBoxNames(std::string dataType,
       activeComboBox->Insert(listOfNames[i],i);
    }
 }
-
-
+////////////////////////////////////////////
+DualSlider* Vistab::GetScalarRangeControls()
+{
+   return scalarRange;
+}
+////////////////////////////////////////////////////
+void Vistab::_OnSelectDataset(wxCommandEvent& event)
+{
+   _activeDataSetName = _datasetSelection->GetValue();
+}
+///////////////////////////////////////////////////
+void Vistab::_OnSelectScalar(wxCommandEvent& event)
+{
+   _activeScalarName = _scalarSelection->GetStringSelection();
+}
+///////////////////////////////////////////////////
+void Vistab::_OnSelectVector(wxCommandEvent& event)
+{
+   _activeVectorName =_vectorSelection->GetStringSelection();
+}
+//////////////////////////////////////////
+std::string Vistab::GetActiveScalarName()
+{
+   return _activeScalarName;
+}
+//////////////////////////////////////////
+std::string Vistab::GetActiveVectorName()
+{
+   return _activeVectorName;
+}
+//////////////////////////////////////////
+std::string Vistab::GetActiveDatasetName()
+{
+   return _activeDataSetName;
+}
+////////////////////////////////////////////////////
+/*void Vistab::ScalarRangeMinSliderCallback::SliderOperation()     
+{
+   _scalarRange[0] = scalarRange->GetSliderMininum();
+}
+////////////////////////////////////////////////////
+void Vistab::ScalarRangeMaxSliderCallback::SliderOperation()     
+{
+   _scalarRange[1] = scalarRange->GetSliderMaximum();
+}
+///////////////////////////////////////////////////
+void Vistab::ScalarRangeBothMoveCallback::SliderOperation()     
+{
+   _scalarRange[0] = scalarRange->GetSliderMininum();
+   _scalarRange[1] = scalarRange->GetSliderMaximum();
+}*/

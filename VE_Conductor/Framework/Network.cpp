@@ -2592,8 +2592,15 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                                 SYMBOL_VISTAB_SIZE,
                                 SYMBOL_VISTAB_STYLE );
             vistab.SetCommInstance(xplorerPtr);
-
-            vistab.ShowModal();
+            int error = vistab.ShowModal(); 
+            if( error == wxID_OK||
+                error == wxID_CLOSE||
+                error == wxID_CANCEL)
+            {
+               std::cout<<"Active dataset: "<<vistab.GetActiveDatasetName()<<std::endl;
+               std::cout<<"Active scalar: "<<vistab.GetActiveScalarName()<<std::endl;
+               std::cout<<"Active vector: "<<vistab.GetActiveVectorName()<<std::endl;
+            }
          }
          else
          { 

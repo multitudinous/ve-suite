@@ -126,6 +126,15 @@ public:
    ///\param name The name of the dataset
    void SetActiveDataset(std::string name);
 
+   ///Get active scalar name
+   std::string Vistab::GetActiveScalarName();
+   ///Get active vector name
+   std::string Vistab::GetActiveVectorName();
+   ///Get active dataset name
+   std::string Vistab::GetActiveDatasetName();
+
+   ///Get the scalar range sliders  
+   VE_Conductor::GUI_Utilities::DualSlider* GetScalarRangeControls();
 
    Vectors* vector;
    Contours* contour;
@@ -141,11 +150,71 @@ public:
    wxListBox*  itemListBox15;
 
 protected:
+   /*!\class ScalarRangeMinSliderCallback
+    *Class that allows the user to do operations based on the min slider events
+    */
+   class ScalarRangeMinSliderCallback:
+          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+   {
+      public:
+        ///Constructors
+         ScalarRangeMinSliderCallback(Vistab* parent){_parent = parent;}
+        ///Destructor
+        virtual ~ScalarRangeMinSliderCallback(){}
+        
+        ///The operation to do for the slider
+        virtual void SliderOperation();      
+      protected:
+         Vistab* _parent;
+   };
+   /*!\class ScalarRangeBothMoveCallback
+    *Class that allows the user to do operations based on both sliders moving, i.e.
+    *This is caused by the slider buffer being reached.
+    */
+   class ScalarRangeBothMoveCallback:
+          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+   {
+      public:
+        ///Constructors
+        ScalarRangeBothMoveCallback(Vistab* parent){_parent = parent;}
+      
+        ///Destructor
+        virtual ~ScalarRangeBothMoveCallback(){}
+        
+        ///The operation to do for the slider
+        virtual void SliderOperation();      
+      protected:
+         Vistab* _parent;
+   };
+   /*!\class ScalarRangeMaxSliderCallback
+    *Class that allows the user to do operations based on the max slider events
+    */
+   class ScalarRangeMaxSliderCallback:
+          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+   {
+      public:
+        ///Constructors
+        ScalarRangeMaxSliderCallback(Vistab* parent){_parent = parent;}
+        ///Destructor
+        virtual ~ScalarRangeMaxSliderCallback(){}
+        
+        ///The operation to do for the slider
+        virtual void SliderOperation();      
+      protected:
+         Vistab* _parent;
+   };
    void _onContour(wxCommandEvent& );
    void _onVector(wxCommandEvent& );
    void _onStreamline(wxCommandEvent& );
    void _onIsosurface(wxCommandEvent& );
    void _onTextureBased(wxCommandEvent& );
+
+   ///Update the active dataset
+   void Vistab::_OnSelectDataset(wxCommandEvent& event);
+   ///Update the active scalar
+   void Vistab::_OnSelectScalar(wxCommandEvent& event);
+   ///Update the active vector
+   void Vistab::_OnSelectVector(wxCommandEvent& event);
 
    ///Update the available solutions for a particular give dataset type
    ///\param newNames The list of new names to update
@@ -198,6 +267,13 @@ protected:
    wxComboBox* _datasetSelection;///<The box listing the available datasets.
    wxListBox* _scalarSelection;///<The box listing the available scalars in the current dataset.
    wxListBox* _vectorSelection;///<The box listing the available vectors in the current dataset.
+   
+   std::string _activeScalarName;///<The selected scalar
+   std::string _activeVectorName;///<The selected vector
+   std::string _activeDataSetName;///<Thea active dataset's name
+
+   std::map<std::string,float[2]> _originalScalarRanges;///<The scalar range for the active scalar
+   float _activeScalarRange[2];///<The active scalars range.
 
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
