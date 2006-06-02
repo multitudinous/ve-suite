@@ -38,13 +38,13 @@ DEFAULT_JCONF = "simstandalone.jconf"
 ##Values for launcher's GUI layout
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (200, 200)
+BACKGROUND_COLOR = wx.Colour(149, 149, 251)
 JCONF_LIST_DISPLAY_MIN_SIZE = (100, 50)
 TOP_SPACE = (75, 75)
 BORDER = 5
 VERTICAL_SPACE = (-1, BORDER)
 HORIZONTAL_SPACE = (BORDER, -1)
 LEFT_MARGIN = HORIZONTAL_SPACE
-BACKGROUND_COLOR = wx.Colour(150, 150, 250)
 NULL_SPACE = (0, 0)
 ##Other values for launcher's UI
 XPLORER_SHELL_NAME = "Xplorer Shell"
@@ -101,22 +101,26 @@ class LauncherWindow(wx.Frame):
         bDirectory = wx.Button(self, -1, "Choose Working Directory")
         bDirectory.SetToolTip(wx.ToolTip("Choose the working directory for" +
                                          " the programs."))
-        bEditJconf = wx.Button(self, -1, "Edit Jconf Files List")
-        bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Jconf files" +
-                                         " displayed in the Launcher."))
+        bEditJconf = wx.Button(self, -1, "Edit Juggler Configurations")
+        bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler configuration" +
+                                         " files displayed in the Launcher."))
         bLaunch = wx.Button(self, -1, "Launch VE Suite")
         bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
-        ##Build directory text window.
+        ##Build text controls.
         self.txDirectory = wx.TextCtrl(self, -1,
-                                       DIRECTORY_DEFAULT,
-                                       style=wx.TE_READONLY)
+                                       DIRECTORY_DEFAULT)
+                                       ##style=wx.TE_READONLY)
         self.txDirectory.SetToolTip(wx.ToolTip("The path of the" +
                                                " working directory."))
         self.chJconf = wx.Choice(self, -1)
-        self.chJconf.SetToolTip(wx.ToolTip("Choose the Jconf file Xplorer" +
-                                           " will use for its configuration" +
-                                           " settings."))
+        self.chJconf.SetToolTip(wx.ToolTip("Choose the Juggler configuration" +
+                                           " Xplorer will use for its" +
+                                           " configuration settings."))
+        self.txTaoPort = wx.TextCtrl(self, -1)
+        self.txTaoPort.SetToolTip(wx.ToolTip("Enter VE Suite's port."))
+        self.txTaoMachine = wx.TextCtrl(self, -1)
+        self.txTaoMachine.SetToolTip(wx.ToolTip("Enter VE Suite's machine."))
         ##Build checkboxes.
         self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
         self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server at Launch"))
@@ -134,9 +138,6 @@ class LauncherWindow(wx.Frame):
         wx.ToolTip.SetDelay(1000)
         ##Check the dependencies.
         self.DependenciesCheck()
-        ##Restore config values from last time.
-        config = wx.Config(CONFIG_FILE)
-        self.LoadConfig(config, DEFAULT_CONFIG)
         ##Event bindings.
         ##NOTE: Save/load configs disabled for now.
         ##self.Bind(wx.EVT_BUTTON, self.OnSave, self.bSave)
@@ -146,6 +147,8 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, bLaunch)
         self.Bind(wx.EVT_BUTTON, self.EditJconf, bEditJconf)
+        ##Restore config values from last time.
+        self.LoadConfig(DEFAULT_CONFIG)
         
         ##Layout format settings
         ##Save/Load column Sizer
@@ -172,15 +175,30 @@ class LauncherWindow(wx.Frame):
         ##Insert the Directory column.
         rowSizer.Add(wx.StaticText(self, -1, "Working Directory:"))
         rowSizer.Add(columnSizer, 0, wx.EXPAND) 
-        rowSizer.Add(VERTICAL_SPACE)
         ##Construct the Jconf column.
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.Add(self.chJconf, 1)
+        columnSizer.Add(self.chJconf, 1, wx.ALIGN_BOTTOM)
         columnSizer.AddMany([HORIZONTAL_SPACE,
                              bEditJconf])
         columnSizer.Add((-1, -1), 1)
-        ##Insert the Jconf column, box grid, and Launch button.
+        ##Insert the Jconf column.
+        rowSizer.Add(VERTICAL_SPACE)
         rowSizer.Add(wx.StaticText(self, -1, "Jconfiguration file:"))
+        rowSizer.Add(columnSizer, 0, wx.EXPAND)
+        ##Construct the Tao column.
+        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        columnSizer.Add(wx.StaticText(self, -1, "Tao Machine:"),
+                        0, wx.ALIGN_CENTER_VERTICAL)
+        columnSizer.Add(HORIZONTAL_SPACE)
+        columnSizer.Add(self.txTaoMachine, 2)
+        columnSizer.Add((HORIZONTAL_SPACE[0]*5, -1))
+        columnSizer.Add(wx.StaticText(self, -1, "Tao Port:"),
+                        0, wx.ALIGN_CENTER_VERTICAL)
+        columnSizer.Add(HORIZONTAL_SPACE)
+        columnSizer.Add(self.txTaoPort, 1)
+        columnSizer.Add(HORIZONTAL_SPACE, 1)
+        ##Insert the Tao column, box grid and Launch button.
+        rowSizer.Add(VERTICAL_SPACE)
         rowSizer.Add(columnSizer, 0, wx.EXPAND)
         rowSizer.AddMany([VERTICAL_SPACE,
                           wx.StaticText(self, -1, "Programs to launch:"),
@@ -206,7 +224,6 @@ class LauncherWindow(wx.Frame):
         self.SetBackgroundColour(BACKGROUND_COLOR)
         ##Show the window.
         self.Show(True)
-        print str(bEditJconf.GetRect())
         ##Error check: Is there a /bin folder in the launcher's directory?
         ##If so, assume it's in VE Suite's folder. If not, warn the user.
         if not os.path.exists("bin"):
@@ -390,15 +407,16 @@ class LauncherWindow(wx.Frame):
                            style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
         if dlg.ShowModal() == wx.ID_OK:
             self.txDirectory.SetValue(dlg.GetPath())
+            self.txDirectory.SetInsertionPointEnd()
         dlg.Destroy()
 
-    def SaveConfig(self, config, name):
+    def SaveConfig(self, name):
         """Saves the current configuration under name.
 
         Keyword arguments:
-        config -- Link to the file/registry
         name -- What to name this configuration"""
         ##Save the current configuration under name
+        config = wx.Config(CONFIG_FILE)
         config.SetPath("/" + name)
         config.Write("Directory", self.txDirectory.GetValue())
         config.WriteInt("JconfCursor", self.chJconf.GetSelection())
@@ -406,20 +424,23 @@ class LauncherWindow(wx.Frame):
         config.Write("Xplorer", str(self.cbXplorer.GetValue()))
         config.WriteInt("XplorerType", self.rbXplorer.GetSelection())
         config.Write("Conductor", str(self.cbConductor.GetValue()))
+        config.Write("TaoMachine", self.txTaoMachine.GetValue())
+        config.WriteInt("TaoPort", int(self.txTaoPort.GetValue()))
 ##        print "Saved configuration." ##TESTER
         return
     
-    def LoadConfig(self, config, name):
+    def LoadConfig(self, name):
         """Loads the configuration under name.
 
         Keyword arguments:
-        config -- Link to the file/registry
         name -- Name of configuration to load
         """
         ##Load the configuration file under name
+        config = wx.Config(CONFIG_FILE)
         config.SetPath("/" + name)
-        ##Set directory
+        ##Set directory, set insertion pt. to end of it for better initial view.
         self.txDirectory.SetValue(config.Read("Directory", DIRECTORY_DEFAULT))
+        self.txDirectory.SetInsertionPointEnd()
         ##Set choices for Jconf list.
         if config.HasGroup(JCONF_CONFIG):
             self.jconfList = JconfList(name)
@@ -437,7 +458,10 @@ class LauncherWindow(wx.Frame):
             print "ERROR: No Jconf configuration found and failed to make" + \
                   "default Jconf from Dependencies dir."
         ##Set Jconf cursor & Jconf choices list.
-        self.UpdateChJconf(config.ReadInt("JconfCursor", 0))        
+        self.UpdateChJconf(config.ReadInt("JconfCursor", 0))
+        ##Set Tao Machine & Port
+        self.txTaoMachine.SetValue(config.Read("TaoMachine", "localhost"))
+        self.txTaoPort.SetValue(config.Read("TaoPort", "1239"))
         ##Set Name Server
         if config.Read("NameServer", "True") == "True":
             self.cbNameServer.SetValue(True)
@@ -484,8 +508,8 @@ class LauncherWindow(wx.Frame):
 
     def Launch(self, event):
         """Checks input, begins launch if error-free."""
-        ##ERROR CHECK:  If no programs are selected, alert the user
-        ##              and abort the launch.
+        ##ERROR CHECK:  Are any programs selected?
+        ##              If not, abort launch.
         if not (self.cbNameServer.IsChecked() or self.cbConductor.IsChecked()
                 or self.cbXplorer.IsChecked()):
             dlg = wx.MessageDialog(self,
@@ -497,8 +521,20 @@ class LauncherWindow(wx.Frame):
             dlg.ShowModal()
             dlg.Destroy()
             return
-        ##ERROR CHECK:  If working directory chosen doesn't exist,
-        ##              alert the user and return them to the launcher.
+        ##ERROR CHECK:  Is the Tao Port between 0 and 65535?
+        ##              If not, abort launch.
+        if not (self.txTaoPort.GetValue().isdigit() and
+                int(self.txTaoPort.GetValue()) <= 65535):
+            dlg = wx.MessageDialog(self,
+                                   "You have entered an illegal Tao Port.\n" +
+                                   "Please enter a Tao Port between 0 and" +
+                                   " 65535.",
+                                   "Launch Error: Illegal Tao Port", wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+        ##ERROR CHECK:  Does the working directory chosen exist?
+        ##              If not, let the user change it.
         if not (os.path.exists(self.txDirectory.GetValue())):
             dlg = wx.MessageDialog(self,
                                    "The working directory you chose " +
@@ -529,12 +565,25 @@ class LauncherWindow(wx.Frame):
             else:
                 dlg.Destroy()
                 return
+        ##ERROR CHECK:  Does the selected Jconf file exist?
+        ##              If not, abort the launch.
+        if not (os.path.exists(self.GetSelectedJconf())):
+            dlg = wx.MessageDialog(self,
+                                   "The Juggler configuration file you chose " +
+                                   "doesn't exist.\n" +
+                                   "Please select a different one.",
+                                   "Launch Error: Jconf File Doesn't Exist",
+                                   wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
         ##Go into the Launch
         Launch(self,
                self.txDirectory.GetValue(),
                self.cbNameServer.IsChecked(), self.cbConductor.IsChecked(),
                self.cbXplorer.IsChecked(), self.rbXplorer.GetSelection(),
-               self.GetSelectedJconf())
+               self.GetSelectedJconf(),
+               self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()))
 
     ##Saves the current configuration under the prefs file before closing.
     def OnClose(self, event):
@@ -549,8 +598,7 @@ class LauncherWindow(wx.Frame):
         ##for the .param file anymore, call it as a separate thread.
         ##(Add & to the end of its command.)
         ##Update default config file.
-        config = wx.Config(CONFIG_FILE)
-        self.SaveConfig(config, DEFAULT_CONFIG)
+        self.SaveConfig(DEFAULT_CONFIG)
         self.Hide()
         self.Destroy()
 
@@ -740,8 +788,17 @@ class JconfWindow(wx.Dialog):
         """User chooses a new Jconf file to add to the list.
 
         Default name: Name of Jconf file."""
+        ##Default directory for the search is the
+        ##directory of the currently selected Jconf.
+        c = self.confList.GetSelection()
+        if c in range(len(self.list)):
+            p = self.list.GetPath(c)
+            f = os.path.split(p)[0]
+        else:
+            f = os.getcwd()
         dlg = wx.FileDialog(self,
                            "Choose a configuration file.",
+                           defaultDir = f,
                            wildcard = "Jconfig (*.jconf)|*.jconf",
                            style=wx.OPEN | wx.CHANGE_DIR)
         if dlg.ShowModal() == wx.ID_OK:
@@ -847,11 +904,13 @@ class Launch:
     def __init__(self, launcherWindow,
                  workingDir,
                  runName, runConductor, runXplorer, typeXplorer,
-                 jconf):
+                 jconf,
+                 taoMachine, taoPort):
         """Sets environmental vars and calls OS-specific launch code.
 
         Keyword arguments:
-        workingDir -- Used for environmental vars.
+        launcherWindow -- The caller. Used to close it after the call.
+        workingDir, taoMachine, taoPort -- Used for environmental vars.
         runName, runConductor, runXplorer,
         typeXplorer, jconf -- Used for launch code."""
         ##The launch is the final step.
@@ -862,7 +921,7 @@ class Launch:
         config.SetPath("/" + DEFAULT_CONFIG)
         dependenciesDir = config.Read("DependenciesDir", "ERROR")
         ##Set the environmental variables
-        self.EnvSetup(dependenciesDir, workingDir)
+        self.EnvSetup(dependenciesDir, workingDir, taoMachine, taoPort)
         ##Use the user's defined directory as Current Working Dir
 ##        print "Changing to directory: " + self.txDirectory.GetValue() ##TESTER
         os.chdir(os.getenv("VE_WORKING_DIR"))
@@ -981,7 +1040,7 @@ class Launch:
         return
 
 
-    def EnvSetup(self, dependenciesDir, workingDir):
+    def EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort):
         """Sets up the environmental variables to launch VE-Suite's programs.
 
         Only takes care of basic variables. Coders with custom builds can set
@@ -1046,9 +1105,9 @@ class Launch:
         ##was moved to an external batch/shell file which calls the Launcher
         ##on its last line.
 
-        ##Functionality important but unknown
-        self.EnvFill("TAO_MACHINE", "localhost")
-        self.EnvFill("TAO_PORT", "1237")
+        ##Set TAO variables
+        self.EnvFill("TAO_MACHINE", taoMachine)
+        self.EnvFill("TAO_PORT", str(taoPort))
 
         ##Set CFDHOSTNAME
         if windows:
