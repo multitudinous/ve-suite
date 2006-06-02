@@ -15,7 +15,11 @@
 ////@begin includes
 #include "VE_Conductor/Framework/TBToolBar.h"
 
+#include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 ////@end includes
 
 #include "VE_Conductor/Framework/vistab.h"
@@ -28,22 +32,14 @@
 #include <wx/statbmp.h>
 #include <wx/combobox.h>
 #include <wx/listbox.h>
+#include <wx/msgdlg.h>
+
 #include <iostream>
 #include <string>
 ////@begin XPM images
 #include "VE_Conductor/Framework/vector.xpm"
 #include "VE_Conductor/Framework/contour.xpm"
 ////@end XPM images
-
-/*!
- * Vistab type definition
- */
-
-//IMPLEMENT_DYNAMIC_CLASS( Vistab, wxDialog )
-
-/*!
- * Vistab event table definition
- */
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
 ////@begin Vistab event table entries
@@ -75,9 +71,12 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _availableSolutions["MESH_SCALARS"].Add(""); 
    _availableSolutions["MESH_VECTORS"].Add(""); 
    _availableSolutions["TEXTURE_SCALARS"].Add("");  
-   _availableSolutions["TEXTURE_VECTORS"].Add(""); 
+   _availableSolutions["TEXTURE_VECTORS"].Add("");
+   _commandName = "VISUALIZATION_TAB";
    SetActiveModel(activeModel);
-
+   _activeScalarName = _scalarSelection->GetStringSelection();
+   _activeVectorName = _vectorSelection->GetStringSelection();
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
 }
 ///////////////////////////////////////////////////////////////////
 //Constructor                                                    //
@@ -105,6 +104,10 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    {
       _setActiveDataset(0);
    }
+   _commandName = "VISUALIZATION_TAB";
+   _activeScalarName = _scalarSelection->GetStringSelection();
+   _activeVectorName = _vectorSelection->GetStringSelection();
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -214,14 +217,6 @@ void Vistab::CreateControls()
                              wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Scalar Bounds"));
     scalarSizer->Add(scalarRange,1,wxALIGN_CENTER|wxEXPAND);
     
-    /*ScalarRangeMinSliderCallback* minRange = new ScalarRangeMinSliderCallback();
-    ScalarRangeMaxSliderCallback* maxRange = new ScalarRangeMaxSliderCallback();
-    ScalarRangeBothMoveCallback* bothRange = new ScalarRangeBothMoveCallback();
-
-   scalarRange->SetMinSliderCallback(minRange);
-   scalarRange->SetMaxSliderCallback(maxRange);
-   scalarRange->SetBothSliderUpdateCallback(bothRange);
-*/
     itemBoxSizer2->Add(scalarSizer, 3, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
    
     wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
@@ -234,10 +229,6 @@ bool Vistab::ShowToolTips()
 {
     return true;
 }
-
-/*!
- * Get bitmap resources
- */
 
 
 //////////////////////////////////////////////////////////
@@ -269,7 +260,7 @@ wxBitmap Vistab::GetBitmapResource( const wxString& name )
 wxIcon Vistab::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-    wxUnusedVar(name);
+    //wxUnusedVar(name);
     return wxNullIcon;
 }
 //////////////////////////////////////////////////
@@ -431,6 +422,9 @@ void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
 {
+   ///clear out the scalar ranges from before
+   _originalScalarRanges.clear();
+
    std::cout<<"udpateAvailableScalarMeshSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( "MESH_SCALARS" );
@@ -439,6 +433,9 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
       currentSolution->second.Clear();
       for(size_t i = 0; i < newScalars.length(); i++)
       {
+         _originalScalarRanges[std::string(newScalars[i].scalarnames)].push_back(newScalars[i].scalarrange[0]);
+         _originalScalarRanges[std::string(newScalars[i].scalarnames)].push_back(newScalars[i].scalarrange[1]);
+
          currentSolution->second.Add(wxString(newScalars[i].scalarnames));
       }
    }
@@ -503,11 +500,12 @@ void Vistab::_OnSelectDataset(wxCommandEvent& event)
 void Vistab::_OnSelectScalar(wxCommandEvent& event)
 {
    _activeScalarName = _scalarSelection->GetStringSelection();
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectVector(wxCommandEvent& event)
 {
-   _activeVectorName =_vectorSelection->GetStringSelection();
+   _activeVectorName = _vectorSelection->GetStringSelection();
 }
 //////////////////////////////////////////
 std::string Vistab::GetActiveScalarName()
@@ -524,19 +522,113 @@ std::string Vistab::GetActiveDatasetName()
 {
    return _activeDataSetName;
 }
-////////////////////////////////////////////////////
-/*void Vistab::ScalarRangeMinSliderCallback::SliderOperation()     
+////////////////////////////////////
+void Vistab::ClearBaseInformation()
 {
-   _scalarRange[0] = scalarRange->GetSliderMininum();
+   _vistabBaseInformation.clear();
+   _commandName.clear();
 }
-////////////////////////////////////////////////////
-void Vistab::ScalarRangeMaxSliderCallback::SliderOperation()     
+////////////////////////////////////////
+void Vistab::ClearSpecificInformation()
 {
-   _scalarRange[1] = scalarRange->GetSliderMaximum();
+   _vistabSpecificInformation.clear();
+   _commandName.clear();
 }
-///////////////////////////////////////////////////
-void Vistab::ScalarRangeBothMoveCallback::SliderOperation()     
+///////////////////////////////////////////
+void Vistab::_updateBaseInformation()
 {
-   _scalarRange[0] = scalarRange->GetSliderMininum();
-   _scalarRange[1] = scalarRange->GetSliderMaximum();
-}*/
+   ///This is the default. Other dialogs actions will set the command name to the specific value if they are launched
+   _commandName = "VISUALIZATION_TAB";
+
+   VE_XML::DataValuePair* activeScalar = new VE_XML::DataValuePair();
+   activeScalar->SetDataType("STRING");
+   activeScalar->SetDataName(std::string("Active Scalar"));
+   activeScalar->SetDataString(_activeScalarName);
+
+   _vistabBaseInformation.push_back(activeScalar);
+   
+   VE_XML::DataValuePair* activeVector = new VE_XML::DataValuePair();
+   activeVector->SetDataType("STRING");
+   activeVector->SetDataName(std::string("Active Vector"));
+   activeVector->SetDataString(_activeVectorName);
+
+   _vistabBaseInformation.push_back(activeVector);
+
+   VE_XML::DataValuePair* activeDataset= new VE_XML::DataValuePair();
+   activeDataset->SetDataType("STRING");
+   activeDataset->SetDataName(std::string("Active Dataset"));
+   activeDataset->SetDataString(_activeDataSetName);
+
+   _vistabBaseInformation.push_back(activeDataset);
+
+   VE_XML::DataValuePair* scalarMin = new VE_XML::DataValuePair();
+   double minimumValue = _activeScalarRange.at(0) 
+                    + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
+   scalarMin->SetData("Scalar Min",minimumValue);
+
+   _vistabBaseInformation.push_back(scalarMin);
+
+   VE_XML::DataValuePair* scalarMax = new VE_XML::DataValuePair();
+   double maximumValue = _activeScalarRange.at(0) 
+                    + (scalarRange->GetMaxSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
+   scalarMax->SetData("Scalar Max",maximumValue);
+   
+   _vistabBaseInformation.push_back(scalarMax);
+}
+///////////////////////////////////////////
+void Vistab::SendUpdatedSettingsToXplorer()
+{
+   _updateBaseInformation();
+   VE_XML::Command* newCommand = new VE_XML::Command();
+
+   for(size_t i =0; i < _vistabBaseInformation.size(); i++)
+   {
+      newCommand->AddDataValuePair(_vistabBaseInformation.at(i));
+   }
+   for(size_t i =0; i < _vistabSpecificInformation.size(); i++)
+   {
+      newCommand->AddDataValuePair(_vistabSpecificInformation.at(i));
+   }
+
+   newCommand->SetCommandName(_commandName);
+
+   std::string commandString("returnString");
+
+   VE_XML::XMLReaderWriter commandWriter;
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteToString();
+   
+   std::pair<VE_XML::Command*,std::string> nodeTagPair;
+   nodeTagPair.first = newCommand;
+   nodeTagPair.second = std::string("vecommand");
+   std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
+   nodeToWrite.push_back(nodeTagPair);
+
+   commandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
+
+   char* tempDoc = new char[ commandString.size() + 1 ];
+   tempDoc = CORBA::string_dup( commandString.c_str() );
+
+   if ( !CORBA::is_nil( xplorerPtr ) && !commandString.empty() )
+   {
+      try
+      {
+         //std::cout<<"---The command to send---"<<std::endl;
+         //std::cout<<tempDoc<<std::endl;
+         // CORBA releases the allocated memory so we do not have to
+         xplorerPtr->SetCommandString( tempDoc );
+      }
+      catch ( ... )
+      {
+         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         delete [] tempDoc;
+      }
+   }
+   else
+   {
+      delete [] tempDoc;
+   }
+   //Clean up memory
+   delete newCommand;
+}

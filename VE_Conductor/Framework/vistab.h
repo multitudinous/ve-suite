@@ -35,6 +35,7 @@ namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
+   class DataValuePair;
 }
 namespace VE_Model
 {
@@ -126,6 +127,15 @@ public:
    ///\param name The name of the dataset
    void SetActiveDataset(std::string name);
 
+   ///Send the current vistab data to xplorer.
+   void SendUpdatedSettingsToXplorer();
+
+   ///Clear out the DataValuePair(s) of basic info about the vistab
+   void ClearBaseInformation();
+   
+   ///Clear out the DataValuePair(s) of specific info about the sub dialogs
+   void ClearSpecificInformation();
+
    ///Get active scalar name
    std::string Vistab::GetActiveScalarName();
    ///Get active vector name
@@ -209,12 +219,15 @@ protected:
    void _onIsosurface(wxCommandEvent& );
    void _onTextureBased(wxCommandEvent& );
 
+   ///update the base info for the dataset ie. active vector,scalar,dataset,range 
+   void _updateBaseInformation();
+
    ///Update the active dataset
-   void Vistab::_OnSelectDataset(wxCommandEvent& event);
+   void _OnSelectDataset(wxCommandEvent& event);
    ///Update the active scalar
-   void Vistab::_OnSelectScalar(wxCommandEvent& event);
+   void _OnSelectScalar(wxCommandEvent& event);
    ///Update the active vector
-   void Vistab::_OnSelectVector(wxCommandEvent& event);
+   void _OnSelectVector(wxCommandEvent& event);
 
    ///Update the available solutions for a particular give dataset type
    ///\param newNames The list of new names to update
@@ -272,8 +285,13 @@ protected:
    std::string _activeVectorName;///<The selected vector
    std::string _activeDataSetName;///<Thea active dataset's name
 
-   std::map<std::string,float[2]> _originalScalarRanges;///<The scalar range for the active scalar
-   float _activeScalarRange[2];///<The active scalars range.
+   std::map<std::string,std::vector<double> > _originalScalarRanges;///<The scalar range for the active scalar
+   std::vector<double> _activeScalarRange;///<The active scalars range.
+
+   std::vector<VE_XML::DataValuePair*> _vistabBaseInformation;///<The basic information from the vistab
+   std::vector<VE_XML::DataValuePair*> _vistabSpecificInformation;///<The specific information from specific vistab dialogs
+
+   std::string _commandName;///<The name of the command to send back
 
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;

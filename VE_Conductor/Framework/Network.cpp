@@ -2600,6 +2600,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                std::cout<<"Active dataset: "<<vistab.GetActiveDatasetName()<<std::endl;
                std::cout<<"Active scalar: "<<vistab.GetActiveScalarName()<<std::endl;
                std::cout<<"Active vector: "<<vistab.GetActiveVectorName()<<std::endl;
+               vistab.SendUpdatedSettingsToXplorer();
             }
          }
          else
