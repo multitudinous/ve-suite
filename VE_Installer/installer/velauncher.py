@@ -90,6 +90,10 @@ class LauncherWindow(wx.Frame):
         wx.Frame.__init__(self, parent, -1, title,
                           style=wx.DEFAULT_FRAME_STYLE)
 
+        ##Get the logo.
+        ##imLogo = wx.Image(os.path.join("images", "ve_logo.gif"),
+        ##                  wx.BITMAP_TYPE_GIF)
+
         ##Prepare data storage
         ##NOTE: jconfList is a local copy of the Jconf list stored in the
         ##program's config. Changes to jconfList are mirrored in the config.
@@ -212,7 +216,8 @@ class LauncherWindow(wx.Frame):
         columnSizer.Add(rowSizer, 1, wx.EXPAND)
         ##Add the title graphic space
         rowSizer = wx.BoxSizer(wx.VERTICAL)
-        rowSizer.Add(TOP_SPACE)
+        ##rowSizer.Add(imLogo)
+        rowSizer.Add(TOP_SPACE) ##Replace with line above later.
         rowSizer.Add(columnSizer, 1, wx.EXPAND)
         ##Set the main sizer.
         mainSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -309,6 +314,7 @@ class LauncherWindow(wx.Frame):
                 legitimateDependenciesDir = True
         ##Write the new Dependencies directory to default config.
         config.Write("DependenciesDir", dependenciesDir)
+
 
     def DependenciesGet(self):
         """Ask user for DependenciesDir. Called by DependenciesCheck.
@@ -425,7 +431,7 @@ class LauncherWindow(wx.Frame):
         config.WriteInt("XplorerType", self.rbXplorer.GetSelection())
         config.Write("Conductor", str(self.cbConductor.GetValue()))
         config.Write("TaoMachine", self.txTaoMachine.GetValue())
-        config.WriteInt("TaoPort", int(self.txTaoPort.GetValue()))
+        config.Write("TaoPort", self.txTaoPort.GetValue())
 ##        print "Saved configuration." ##TESTER
         return
     
@@ -440,17 +446,20 @@ class LauncherWindow(wx.Frame):
         config.SetPath("/" + name)
         ##Set directory, set insertion pt. to end of it for better initial view.
         self.txDirectory.SetValue(config.Read("Directory", DIRECTORY_DEFAULT))
-        self.txDirectory.SetInsertionPointEnd()
+        ##Sets txDirectory's cursor to end in Linux systems for easier reading.
+        ##Acts strange in Windows for some reason; investigate.
+        if os.name == "posix":
+            self.txDirectory.SetInsertionPointEnd()
         ##Set choices for Jconf list.
         if config.HasGroup(JCONF_CONFIG):
             self.jconfList = JconfList(name)
         ##Set default choices if JCONF_CONFIG doesn't exist,
         ##but DependenciesDir does.
         elif config.Read("DependenciesDir", ":::") != ":::":
-            config.SetPath(JCONF_CONFIG)
             p = os.path.join(config.Read("DependenciesDir"),
                               JUGGLER_FOLDER, "configFiles",
                               DEFAULT_JCONF)
+            config.SetPath(JCONF_CONFIG)
             config.Write(os.path.split(p)[1][:-6], p)
             self.jconfList = JconfList(name)
         ##If neither exists, bring up an error. NOTE: Should never be reached.
@@ -461,7 +470,12 @@ class LauncherWindow(wx.Frame):
         self.UpdateChJconf(config.ReadInt("JconfCursor", 0))
         ##Set Tao Machine & Port
         self.txTaoMachine.SetValue(config.Read("TaoMachine", "localhost"))
-        self.txTaoPort.SetValue(config.Read("TaoPort", "1239"))
+        ##Temporary workaround for error w/ Int TaoPort in last version
+        if config.GetEntryType("TaoPort") == 3: ##3 == Type_Integer
+            self.txTaoPort.SetValue(str(config.ReadInt("TaoPort", 1239)))
+        ##Normal functioning for Str TaoPort
+        else:
+            self.txTaoPort.SetValue(config.Read("TaoPort", "1239"))
         ##Set Name Server
         if config.Read("NameServer", "True") == "True":
             self.cbNameServer.SetValue(True)
@@ -638,6 +652,8 @@ class JconfList:
         """Adds [name, path] to the list."""
         self.list.append([name, path])
         self.config.Write(name, path)
+        ##NOTE: Adding the same Jconf file twice results in two entries w/
+        ##same name; correct that later.
 
     def Rename(self, pos, newName):
         """Renames the entry at pos to newName, appending a number if necessary.
@@ -800,7 +816,7 @@ class JconfWindow(wx.Dialog):
                            "Choose a configuration file.",
                            defaultDir = f,
                            wildcard = "Jconfig (*.jconf)|*.jconf",
-                           style=wx.OPEN | wx.CHANGE_DIR)
+                           style=wx.OPEN)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.list.Add(os.path.split(path)[1][:-6], path)
@@ -924,7 +940,7 @@ class Launch:
         self.EnvSetup(dependenciesDir, workingDir, taoMachine, taoPort)
         ##Use the user's defined directory as Current Working Dir
 ##        print "Changing to directory: " + self.txDirectory.GetValue() ##TESTER
-        os.chdir(os.getenv("VE_WORKING_DIR"))
+        ##os.chdir(os.getenv("VE_WORKING_DIR"))
 ##        print os.name ##TESTER
 ##        print os.getcwd() ##TESTER
         ##Checks the OS and routes the launcher to the proper subfunction
