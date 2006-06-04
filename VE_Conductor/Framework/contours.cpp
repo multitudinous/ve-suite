@@ -196,14 +196,20 @@ wxIcon Contours::GetIconResource( const wxString& name )
 void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 {
 //   adContour = new AdvancedContours(xplorerPtr, domManager);
-   adContour = new AdvancedContours(this,                
+   AdvancedContours adContour(this,                
                   SYMBOL_ADVANCEDCONTOURS_IDNAME, 
                   SYMBOL_ADVANCEDCONTOURS_TITLE,
                   SYMBOL_ADVANCEDCONTOURS_POSITION,
                   SYMBOL_ADVANCEDCONTOURS_SIZE, 
                   SYMBOL_ADVANCEDCONTOURS_STYLE );
-   adContour->ShowModal();
-std::cout<<"ADVANCEDCONTOURS WORKING"<<std::endl;
+   
+   int error = adContour.ShowModal(); 
+   if( error == wxID_OK||
+       error == wxID_CLOSE||
+       error == wxID_CANCEL)
+    {
+
+    }
 }
 /////////////////////////////////////////////////////
 void Contours::_onDirection( wxCommandEvent& event )
@@ -222,7 +228,7 @@ void Contours::_onMultiplePlanes( wxCommandEvent& event )
    _cyclePrecomputedCBox->Enable(true);
    _nearestPrecomputedCBox->SetValue(false);
    _nearestPrecomputedCBox->Enable(false);
-   
+   _planeOption.clear();
    _numberOfPlanesOption = "Multiple";
 
 }
@@ -239,7 +245,7 @@ void Contours::_onSinglePlane( wxCommandEvent& event )
 
    _nearestPrecomputedCBox->Enable(true);
    _nearestPrecomputedCBox->SetValue(false);
-   
+   _planeOption.clear();
    _numberOfPlanesOption = "Single";
 }
 ////////////////////////////////////////////////////////////
@@ -252,10 +258,15 @@ void Contours::_onPlane( wxCommandEvent& event )
 {
    _planePosition = static_cast<double>(_planePositonSlider->GetValue());  
 }
+////////////////////////////////////////
+/*void Contours::_updateAdvancedSettings()
+{
+}*/
 //////////////////////////////////////////
 void Contours::_updateContourInformation()
 {
 
+   _contourInformation.clear();
    VE_XML::DataValuePair* contourDirection = new VE_XML::DataValuePair();
    contourDirection->SetDataType("STRING");
    contourDirection->SetDataName(std::string("Direction"));
@@ -298,12 +309,13 @@ void Contours::_onAddPlane( wxCommandEvent& event )
 {
    _updateContourInformation();
    VE_XML::Command* newCommand = new VE_XML::Command();
-
+   newCommand->SetCommandName("UPDATE_CONTOUR_SETTINGS");
+   
    for(size_t i =0; i < _contourInformation.size(); i++)
    {
       newCommand->AddDataValuePair(_contourInformation.at(i));
    }
-   newCommand->SetCommandName("UPDATE_CONTOUR_SETTINGS");
+   
 
    try
    {

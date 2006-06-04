@@ -183,7 +183,7 @@ protected:
    DOMDocument* doc;
    VE_XML::DOMDocumentManager* domManager;
 
-   AdvancedContours* adContour;
+   //AdvancedContours* adContour;
 };
 
 #endif

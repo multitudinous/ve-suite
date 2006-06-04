@@ -65,7 +65,7 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _vectorSelection = 0;    
    _nDatasetsInActiveModel = 0;
    _datasetSelection = 0;
-   _tbTools = 0;
+   //_tbTools = 0;
    xplorerPtr = 0;
 
    _availableSolutions["MESH_SCALARS"].Add(""); 
@@ -118,11 +118,11 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
    itemComboBox12 = 0;
    itemListBox13 = 0; 
    itemListBox15 = 0;
-   vector = 0;
+   /*vector = 0;
    contour = 0;
    streamline = 0;
    isosurface = 0;
-   _tbTools = 0;
+   _tbTools = 0;*/
    scalarRange = 0;
 ////@end Vistab member initialisation
 
@@ -137,6 +137,10 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
 //    GetSizer()->SetDimension(427, 20, 427, 400);
 ////@end Vistab creation
     return true;
+}
+/////////////////
+Vistab::~Vistab()
+{
 }
 /////////////////////////////
 void Vistab::CreateControls()
@@ -174,6 +178,7 @@ void Vistab::CreateControls()
 
     itemToolBar3->Realize();
     itemBoxSizer2->Add(itemToolBar3, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 
     wxBoxSizer* itemBoxSizer10 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer10, 0, wxGROW|wxALL, 5);
@@ -271,47 +276,52 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {
-   contour = new Contours(this,                
+   Contours contour(this,                
                   SYMBOL_CONTOURS_IDNAME, 
                   SYMBOL_CONTOURS_TITLE,
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
-   contour->ShowModal();
+   contour.ShowModal();
+   itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 {
-   vector = new Vectors( this,                
+   Vectors vector( this,                
                   SYMBOL_VECTORS_IDNAME, 
                   SYMBOL_VECTORS_TITLE,
                   SYMBOL_VECTORS_POSITION,
                   SYMBOL_VECTORS_SIZE, 
                   SYMBOL_VECTORS_STYLE );
-   vector->ShowModal();
+   vector.ShowModal();
+   itemToolBar3->ToggleTool(VECTOR_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
 {
-   streamline = new Streamlines( this,                
+   Streamlines streamline( this,                
                   SYMBOL_STREAMLINES_IDNAME, 
                   SYMBOL_STREAMLINES_TITLE,
                   SYMBOL_STREAMLINES_POSITION,
                   SYMBOL_STREAMLINES_SIZE, 
                   SYMBOL_STREAMLINES_STYLE );
-   streamline->ShowModal();
+   streamline.ShowModal();
+   itemToolBar3->ToggleTool(STREAMLINE_BUTTON, false);
 std::cout<<"STREAMLINES WORKING"<<std::endl;
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
-   isosurface = new Isosurfaces( this,                
+   Isosurfaces isosurface( this,                
                   SYMBOL_ISOSURFACES_IDNAME, 
                   SYMBOL_ISOSURFACES_TITLE,
                   SYMBOL_ISOSURFACES_POSITION,
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
-   isosurface->ShowModal();
+   
+   isosurface.ShowModal();
+   itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
@@ -322,6 +332,7 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    if(tbTools.ShowModal() == wxID_OK)
    {
       std::cout<<"TBTools WORKING"<<std::endl;
+      itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
    }
 }
 ///////////////////////////////////////////////////////
@@ -537,8 +548,9 @@ void Vistab::ClearSpecificInformation()
 ///////////////////////////////////////////
 void Vistab::_updateBaseInformation()
 {
+   ClearBaseInformation();
    ///This is the default. Other dialogs actions will set the command name to the specific value if they are launched
-   _commandName = "VISUALIZATION_TAB";
+   _commandName = "VISUALIZATION_SETTINGS";
 
    VE_XML::DataValuePair* activeScalar = new VE_XML::DataValuePair();
    activeScalar->SetDataType("STRING");

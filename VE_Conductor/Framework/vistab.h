@@ -100,6 +100,7 @@ public:
             const wxPoint& pos = SYMBOL_VISTAB_POSITION,
             const wxSize& size = SYMBOL_VISTAB_SIZE,
             long style = SYMBOL_VISTAB_STYLE );
+   virtual ~Vistab();
 
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
@@ -147,11 +148,11 @@ public:
    ///Get the scalar range sliders  
    VE_Conductor::GUI_Utilities::DualSlider* GetScalarRangeControls();
 
-   Vectors* vector;
-   Contours* contour;
-   Streamlines* streamline;
-   Isosurfaces* isosurface;
-   TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
+   //Vectors* vector;
+   //Contours* contour;
+   //Streamlines* streamline;
+   //Isosurfaces* isosurface;
+   //TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
    VE_Conductor::GUI_Utilities::DualSlider* scalarRange;
 
    wxToolBar*  itemToolBar3;
