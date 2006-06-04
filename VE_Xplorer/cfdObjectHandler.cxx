@@ -42,7 +42,6 @@
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
 
-
 /*
 #include <osg/Geode>
 #include <osg/LineSegment>
@@ -385,7 +384,7 @@ void cfdObjectHandler::TranslateObject()
 
    osgMat.makeTranslate(offsetFromLastPosition);
 
-   osg::MatrixTransform * myTransform = this->getMatrixTransform();
+   osg::MatrixTransform* myTransform = this->getMatrixTransform();
   
    if (myTransform != NULL)
    {
@@ -397,29 +396,27 @@ void cfdObjectHandler::TranslateObject()
    
 }
 
-osg::MatrixTransform * cfdObjectHandler::getMatrixTransform()
+osg::MatrixTransform* cfdObjectHandler::getMatrixTransform()
 {
    if (this->selectedGeometry->getParents().front()->asGroup() != 0)
    {
-      if (this->selectedGeometry->getParents().front()->getParents().front()
-	  ->asTransform() != 0 &&
-	  this->selectedGeometry->getParents().front()->getParents().front()
-	  ->asTransform()
-	  ->asMatrixTransform() != 0 &&
-     this->selectedGeometry->getParents().front()->getParents().front() !=
-     this->worldNode)
+      if ( this->selectedGeometry->getParents().front()->getParents().front()
+            ->asTransform() != 0 &&
+            this->selectedGeometry->getParents().front()->getParents().front()
+            ->asTransform()->asMatrixTransform() != 0 &&
+            this->selectedGeometry->getParents().front()->getParents().front() !=
+            this->worldNode)
       {
-	 return this->selectedGeometry->getParents().front()->getParents().front()
-	    ->asTransform()->asMatrixTransform();
+         return this->selectedGeometry->getParents().front()->getParents().front()
+                  ->asTransform()->asMatrixTransform();
       }
    }
 
    osg::Matrix myMatrix;
    myMatrix.makeIdentity();
-   osg::MatrixTransform * myMatrixTransform = 
+   osg::MatrixTransform* myMatrixTransform = 
       new osg::MatrixTransform(myMatrix);
    myMatrixTransform->addChild(selectedGeometry->getParents().front());
-
 
    selectedGeometry->getParents().front()->asGroup()
      ->getParents().front()->asGroup()->addChild(myMatrixTransform);
@@ -427,7 +424,6 @@ osg::MatrixTransform * cfdObjectHandler::getMatrixTransform()
    selectedGeometry->getParents().front()->asGroup()
      ->getParents().front()->asGroup()
      ->removeChild(selectedGeometry->getParents().front());
-
 
    return myMatrixTransform;
 }
