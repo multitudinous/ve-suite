@@ -37,6 +37,7 @@ namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
+   class DataValuePair;
 }
 
 class wxRadioBox;
@@ -153,18 +154,28 @@ public:
     static bool ShowToolTips();
 
 ////@begin Contours member variables
-   wxRadioBox*    itemRadioBox5;
-   wxRadioBox*    itemRadioBox6;
-   wxRadioButton* itemRadioButton8;
-   wxCheckBox*    itemCheckBox9;
-   wxRadioButton* itemRadioButton11;
-   wxCheckBox*    itemCheckBox12;
-   wxSlider*      itemSlider14;
+   wxRadioBox*    _directionRBox;
+   wxRadioBox*    _contourTypeRBox;
+   wxRadioButton* _allPrecomputedRButton;
+   wxCheckBox*    _cyclePrecomputedCBox;
+   wxRadioButton* _singlePlaneRButton;
+   wxCheckBox*    _nearestPrecomputedCBox;
+   wxSlider*      _planePositonSlider;
    wxButton*      itemButton16;
    wxButton*      itemButton17;
 ////@end Contours member variables
 
 protected:
+   ///Update the contour with the current settings.
+   void _updateContourInformation();
+   std::vector<VE_XML::DataValuePair*> _contourInformation;///<The countour setting data
+
+   std::string _planeDirection;///<Store the value of the direction.
+   std::string _planeType;///<The contour type.
+   std::string _numberOfPlanesOption;///<Single or Multiple planes.
+   std::string _planeOption;///<Once single or multiple is selected, the plane option corresponds to the checkbox.
+   double _planePosition;///<The position of the plane.
+
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
    int cId, cIso_value, cMin, cMax, cSc;

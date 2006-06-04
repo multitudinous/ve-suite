@@ -172,6 +172,9 @@
 				RelativePath=".\CADTreeBuilder.h">
 			</File>
 			<File
+				RelativePath=".\DualSlider.h">
+			</File>
+			<File
 				RelativePath=".\Link.h">
 			</File>
 			<File

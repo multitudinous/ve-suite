@@ -128,7 +128,8 @@ public:
    void SetActiveDataset(std::string name);
 
    ///Send the current vistab data to xplorer.
-   void SendUpdatedSettingsToXplorer();
+   ///\param subDialogCommand The setting from any of the sub dialogs.
+   void SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand=0);
 
    ///Clear out the DataValuePair(s) of basic info about the vistab
    void ClearBaseInformation();

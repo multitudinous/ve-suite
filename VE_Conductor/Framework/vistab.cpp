@@ -575,8 +575,8 @@ void Vistab::_updateBaseInformation()
    
    _vistabBaseInformation.push_back(scalarMax);
 }
-///////////////////////////////////////////
-void Vistab::SendUpdatedSettingsToXplorer()
+////////////////////////////////////////////////////////////////////////////
+void Vistab::SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand)
 {
    _updateBaseInformation();
    VE_XML::Command* newCommand = new VE_XML::Command();
@@ -585,9 +585,11 @@ void Vistab::SendUpdatedSettingsToXplorer()
    {
       newCommand->AddDataValuePair(_vistabBaseInformation.at(i));
    }
-   for(size_t i =0; i < _vistabSpecificInformation.size(); i++)
+   if(subDialogCommand)
    {
-      newCommand->AddDataValuePair(_vistabSpecificInformation.at(i));
+      VE_XML::DataValuePair* subDialogSettings = new VE_XML::DataValuePair();
+      subDialogSettings->SetData("Sub-Dialog Settings",subDialogCommand);
+      newCommand->AddDataValuePair(subDialogSettings);
    }
 
    newCommand->SetCommandName(_commandName);
