@@ -405,7 +405,7 @@ osg::MatrixTransform* cfdObjectHandler::getMatrixTransform()
             this->selectedGeometry->getParents().front()->getParents().front()
             ->asTransform()->asMatrixTransform() != 0 &&
             this->selectedGeometry->getParents().front()->getParents().front() !=
-            this->worldNode)
+            this->worldNode.get())
       {
          return this->selectedGeometry->getParents().front()->getParents().front()
                   ->asTransform()->asMatrixTransform();
