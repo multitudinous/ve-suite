@@ -70,12 +70,12 @@ Name: desktopVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Cr
 Name: desktopVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\pf
 Name: desktopVELauncherIcon; Description: VE-Launcher(Requires wxPython Install); GroupDescription: Create Desktop Icon; Flags: unchecked; Components: velauncher
 
-Name: startMenuNSIcon; Description: Name Server; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: nameserver
-Name: startMenuVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: veconductor
-Name: startMenuVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osg
-Name: startMenuVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvep
-Name: startMenuVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
-Name: startMenuVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\pf
+;Name: startMenuNSIcon; Description: Name Server; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: nameserver
+;Name: startMenuVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: veconductor
+;Name: startMenuVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osg
+;Name: startMenuVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvep
+;Name: startMenuVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
+;Name: startMenuVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\pf
 
 ;Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked
 
