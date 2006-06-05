@@ -34,6 +34,7 @@ namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
+   class DataValuePair;
 }
 
 class wxRadioBox;
@@ -67,50 +68,10 @@ enum STREAMLINE_IDS
    INTEGRATION_DIR_RBOX,
    PLANE_SIZE_SLIDER,
    NUMBER_PTS_SLIDER,
-   ADVANCED_STREAMLINE_BUTTON
+   ADVANCED_STREAMLINE_BUTTON,
+   COMPUTE_STREAMLINE_BUTTON
 };
-////@end control identifiers
 
-/*!
- * StreamlinesApp class declaration
- */
-/*
-class StreamlinesApp: public wxApp
-{    
-    DECLARE_CLASS( StreamlinesApp )
-    DECLARE_EVENT_TABLE()
-
-public:
-    /// Constructor
-    StreamlinesApp();
-
-    /// Initialises the application
-    virtual bool OnInit();
-
-    /// Called on exit
-    virtual int OnExit();
-
-////@begin StreamlinesApp event handler declarations
-////@end StreamlinesApp event handler declarations
-
-////@begin StreamlinesApp member function declarations
-////@end StreamlinesApp member function declarations
-
-////@begin StreamlinesApp member variables
-////@end StreamlinesApp member variables
-};
-*/
-/*!
- * Application instance declaration 
- */
-
-////@begin declare app
-//DECLARE_APP(StreamlinesApp)
-////@end declare app
-
-/*!
- * Streamlines class declaration
- */
 
 class Streamlines: public wxDialog
 {    
@@ -131,11 +92,7 @@ public:
     void CreateControls();
 
 ////@begin Streamlines event handler declarations
-    void _onCursorSelect(wxCommandEvent& );
-    void _onDirection(wxCommandEvent& );
-    void _onIntegrateDir(wxCommandEvent& );
-    void _onnPointsSlider(wxScrollEvent& );
-    void _onAdvanced(wxCommandEvent& );
+   
 ////@end Streamlines event handler declarations
 
 ////@begin Streamlines member function declarations
@@ -153,23 +110,45 @@ public:
 ////@begin Streamlines member variables\
 
 
-   wxRadioBox* itemRadioBox5;
-   wxRadioBox* itemRadioBox6;
-   wxRadioBox* itemRadioBox7;
-   wxSlider*   itemSlider9;
-   wxSlider*   itemSlider11;
-   wxButton*   itemButton13;
+  
    wxButton*   itemButton14;
 ////@end Streamlines member variables
-protected:
-   std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
+protected: 
+   void _onCursorSelect(wxCommandEvent& );
+   void _onDirection(wxCommandEvent& );
+   void _onIntegrateDir(wxCommandEvent& );
+   void _onPointsSlider(wxScrollEvent& );
+   void _onAdvanced(wxCommandEvent& );
+   void _onSizeSlider(wxScrollEvent& event);
+   void _onCompute(wxCommandEvent& event);
+
+   ///Update the streamlines information
+   void _updateStreamlineInformation();
+   ///Update the advanced settings
+   void _updateAdvancedSettings();
+
+   wxRadioBox* _cursorRBox;
+   wxRadioBox* _directionRBox;
+   wxRadioBox* _integrationRBox;
+   wxSlider* _sizeSlider;
+   wxSlider* _nPointsSlider;
+   wxButton* itemButton13;
+
+   std::vector<VE_XML::DataValuePair*> _advancedSettings;///<The advanced settings.
+   std::vector<VE_XML::DataValuePair*> _streamlineInformation;///<The streamline setting data
+
+   double _streamSize;///<The size of the streamlines.
+   unsigned int _nPointsPerPlane;///<The number of seed points.
+   std::string _streamlineDirection;///<Store the value of the direction.
+   std::string _cursorType;///<The contour type.
+   std::string _integrationDirection;///<Single or Multiple planes.
+
    int cId, cIso_value, cMin, cMax, cSc;
    std::vector< long > commandInputs;
    DOMDocument* doc;
    VE_XML::DOMDocumentManager* domManager;
 
-   AdvancedStreamlines* adStreamline;
+   //AdvancedStreamlines* adStreamline;
 };
 
 #endif

@@ -644,6 +644,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& event )
    {
       _availableDatasets.Add(newDataSetName.GetValue());
       dataSetList->Append(newDataSetName.GetValue());
+      dataSetList->SetSelection(0);
       
       paramBlock = veModel->GetInformationPacket( -1 );
       paramBlock->SetName( newDataSetName.GetValue().c_str() );
@@ -669,6 +670,14 @@ void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& event )
 //////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::EnableUI( bool flag )
 {
+   if(dataSetList->GetCount())
+   {
+      dataSetList->Enable(true);
+   }
+   else
+   {
+      dataSetList->Enable(false);
+   }
    dataSetOpenButton->Enable( flag );
    preComputeOpenButton->Enable( flag );
    surfaceDataOpenButton->Enable( flag );
