@@ -97,7 +97,7 @@
 				ProgramDataBaseFileName="$(IntDir)"
 				BrowseInformation="1"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="3"
+				DebugInformationFormat="4"
 				CompileAs="2"
 				ForcedIncludeFiles=""
 				ShowIncludes="FALSE"/>
@@ -219,6 +219,9 @@
 			</File>
 			<File
 				RelativePath=".\contours.cpp">
+			</File>
+			<File
+				RelativePath=".\CORBAServiceList.cxx">
 			</File>
 			<File
 				RelativePath=".\DataSetLoaderUI.cxx">
@@ -604,6 +607,9 @@
 			</File>
 			<File
 				RelativePath=".\contours.h">
+			</File>
+			<File
+				RelativePath=".\CORBAServiceList.h">
 			</File>
 			<File
 				RelativePath=".\DataSetLoaderUI.h">
