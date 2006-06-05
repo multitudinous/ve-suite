@@ -108,7 +108,6 @@ class NavigationPane;
 class SoundsPane;
 class ViewLocPane;
 class StreamlinePane;
-class CORBAServiceList;
 
 //class Vectors;
 //class Vistab;
@@ -119,6 +118,11 @@ namespace VE_Conductor
    {
       class CADNodeManagerDlg;
    }
+}
+
+namespace VE_Conductor
+{
+   class CORBAServiceList;
 }
 
 namespace VE_XML
@@ -135,50 +139,51 @@ public:
    virtual ~AppFrame() { ; }
    void OnClose( wxCloseEvent& event );
    void FrameClose( wxCommandEvent& event );
+   VE_Conductor::CORBAServiceList* GetCORBAServiceList( void );
 
-  wxSplitterWindow* wx_log_splitter;
-  wxSplitterWindow* wx_ve_splitter;
-  wxSplitterWindow* wx_nw_splitter;
-  wxMenuBar* menubar;
-  wxToolBar* toolbar;
-  wxIcon* icon;
+   wxSplitterWindow* wx_log_splitter;
+   wxSplitterWindow* wx_ve_splitter;
+   wxSplitterWindow* wx_nw_splitter;
+   wxMenuBar* menubar;
+   wxToolBar* toolbar;
+   wxIcon* icon;
   
-  wxTextCtrl* logwindow;
-  Avail_Modules* av_modules;
-  Network* network;
-  
-  UI_Tabs *m_tabs; 
-  UI_Frame *m_frame;
-  	
-  wxImageList *m_imageList;
-  CORBA::ORB_var orb;
-  PortableServer::POA_var poa;
-  PortableServer::POA_var poa_root;
-  CosNaming::NamingContext_var naming_context;
-  Body_UI_i* p_ui_i;
-  wxMenu *file_menu;
-  wxMenu *con_menu;
-  wxMenu *run_menu;
-  wxMenu *edit_menu;
-  wxMenu *help_menu;
-  wxMenu* xplorerMenu;
-  wxMenu* xplorerJugglerMenu;
+   wxTextCtrl* logwindow;
+   Avail_Modules* av_modules;
+   Network* network;
 
-  //configuration flags   //cyang
-  bool f_financial;
-  bool f_geometry;
-  bool f_visualization;
-  //cyang
+   UI_Tabs *m_tabs; 
+   UI_Frame *m_frame;
+
+   wxImageList *m_imageList;
+   //CORBA::ORB_var orb;
+   //PortableServer::POA_var poa;
+   //PortableServer::POA_var poa_root;
+   //CosNaming::NamingContext_var naming_context;
+   //Body_UI_i* p_ui_i;
+   wxMenu *file_menu;
+   wxMenu *con_menu;
+   wxMenu *run_menu;
+   wxMenu *edit_menu;
+   wxMenu *help_menu;
+   wxMenu* xplorerMenu;
+   wxMenu* xplorerJugglerMenu;
+
+   //configuration flags   //cyang
+   bool f_financial;
+   bool f_geometry;
+   bool f_visualization;
+   //cyang
 
    //wxMenu *config_menu;
-   PEThread* pelog;
+   //PEThread* pelog;
 
    void Log(const char* msg);
    //ACE_Thread_Mutex _mutex; //public mutex for the execution order
    void CloseVE();
 
-   void ConExeServer( void );
-   void ConVEServer( void );
+   //void ConExeServer( void );
+   //void ConVEServer( void );
    ///Returns pointer to xplorer corba object
    VjObs_ptr GetXplorerObject( void );
 
@@ -201,7 +206,7 @@ private:
    bool is_orb_init;
    bool connectToVE;
    bool connectToCE;
-   OrbThread* ot;
+   //OrbThread* ot;
 
 protected:
    wxRect DetermineFrameSize (wxConfig* config);
@@ -246,13 +251,14 @@ protected:
 
    void JugglerSettings( wxCommandEvent& event );
 
-  bool init_orb_naming();
+  //bool init_orb_naming();
   void CreateVETab();
   void OnUpdateUIPop(wxUpdateUIEvent& event);
   
   wxBoxSizer *sizerTab;
 
 private:
+   void IdleEvent( wxIdleEvent& event );
    NavigationPane* navPane;
    SoundsPane* soundsPane;
    ViewLocPane* viewlocPane;
@@ -262,7 +268,7 @@ private:
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
 
    StreamlinePane* streamlinePane;
-   CORBAServiceList* serviceList;
+   VE_Conductor::CORBAServiceList* serviceList;
    VE_XML::DOMDocumentManager* domManager;
 
    DECLARE_EVENT_TABLE()

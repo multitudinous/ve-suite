@@ -94,7 +94,6 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
 
    // Try to laod custom plugins
    const wxString ext = wxString("*") + wxPluginLibrary::GetDllExt();
-
    wxLogDebug ("Loading plugins from [%s]\n", lib_dir.c_str());
 
    /* Create a directory object we can scan for plugins */

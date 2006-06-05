@@ -37,6 +37,8 @@
 #include "VE_Conductor/Framework/UIDialog.h"
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/CORBAServiceList.h"
 
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
@@ -2437,29 +2439,28 @@ void Network::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////
 void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 {
-   if (m_selMod<0) 
+   if ( !SetActiveModel() ) 
    {
       return;
    }
-   else
-   {
-      std::cout << m_selMod << std::endl;
-      SetActiveModel();
-   }
+
    // Here we launch a dialog for a specific plugins input values
    VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
 
    if( !cadDialog )
    {
-      if ( CORBA::is_nil( xplorerPtr.in() ) )
+      //if ( IsConnectedToXplorer() )
       {
-         ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
-         SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
-         if ( CORBA::is_nil( xplorerPtr.in() ) )
+         //((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
+         //dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+         //SetXplorerInterface( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer() );
+         /*if ( CORBA::is_nil( xplorerPtr.in() ) )
          {
             return;
-         }
+         }*/
       }
+      //else
+        // return;
       //this will change once we have a way to retrieve the geometry from the model
       cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                this, ::wxNewId() );
@@ -2476,26 +2477,21 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////
 void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
 {
-   if (m_selMod<0) 
+   if ( !SetActiveModel() ) 
    {
       return;
    }
-   else
-   {
-      std::cout << m_selMod << std::endl;
-      SetActiveModel();
-   }
-
+   
    // Here we launch a dialog for a specific plugins input values
    VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
    //DataSetLoaderUI* dataSetLoaderDlg = 0;
-   if ( CORBA::is_nil( xplorerPtr.in() ) )
+   /*if ( CORBA::is_nil( xplorerPtr.in() ) )
    {
       ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
       SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
       if ( CORBA::is_nil( xplorerPtr.in() ) )
          return;
-   }
+   }*/
    /*dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );*/
@@ -2517,26 +2513,8 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
       veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
       veCommand->AddDataValuePair( dataValuePair );
 
-      // New need to destroy document and send it
-      std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-      nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veCommand, "vecommand" ) );
-      std::string xmlDocument( "returnString" );
-      netowrkWriter.WriteToString();
-      netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
+      dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
 
-      if ( !CORBA::is_nil( xplorerPtr.in() ) && !xmlDocument.empty() )
-      {
-         try
-         {
-            // CORBA releases the allocated memory so we do not have to
-            xplorerPtr->SetCommandString( CORBA::string_dup( xmlDocument.c_str() ) );
-         }
-         catch ( ... )
-         {
-            wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                           "Communication Failure", wxOK | wxICON_INFORMATION );
-         }
-      }
       //Clean up memory
       delete veCommand;
    }
@@ -2547,17 +2525,12 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////
 void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
 {
-  
-   if (m_selMod<0)
+   if ( !SetActiveModel() ) 
    {
       return;
    }
-   else
-   {
-      std::cout << m_selMod << std::endl;
-      SetActiveModel();
-   }
-   if ( CORBA::is_nil( xplorerPtr.in() ) )
+
+   /*if ( CORBA::is_nil( xplorerPtr.in() ) )
    {
       ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
       SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
@@ -2565,7 +2538,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
       {
          return;
       }
-   }   
+   }   */
   
    //Get the active model ID from the xml data
    VE_Model::Model* activeXMLModel = modules[m_selMod].GetPlugin()->GetModel();
@@ -2690,17 +2663,12 @@ void* Network::Entry( void )
    return 0;
 }
 ///////////////////////////////////////////
-void Network::SetActiveModel( void )
+bool Network::SetActiveModel( void )
 {
    if (m_selMod<0) 
-      return;
+      return false;
 
-   // send select module command 
-   // Now need to construct domdocument and populate it with the new vecommand
-   VE_XML::XMLReaderWriter netowrkWriter;
-   netowrkWriter.UseStandaloneDOMDocumentManager();
-   netowrkWriter.WriteToString();
-
+   std::cout << m_selMod << std::endl;
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
    dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
@@ -2709,27 +2677,11 @@ void Network::SetActiveModel( void )
    veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
    veCommand->AddDataValuePair( dataValuePair );
 
-   // New need to destroy document and send it
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veCommand, "vecommand" ) );
-   std::string xmlDocument( "returnString" );
-   netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
+   dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   
+   SetXplorerInterface( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer() );
 
-   if ( !CORBA::is_nil( xplorerPtr.in() ) && !xmlDocument.empty() )
-   {
-      try
-      {
-         std::cout<<"Before send from conductor"<<std::endl;
-         // CORBA releases the allocated memory so we do not have to
-         xplorerPtr->SetCommandString( CORBA::string_dup( xmlDocument.c_str() ) );
-         std::cout<<"After send from conductor"<<std::endl;
-      }
-      catch ( ... )
-      {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
-      }
-   }
    //Clean up memory
    delete veCommand;
+   return true;
 }

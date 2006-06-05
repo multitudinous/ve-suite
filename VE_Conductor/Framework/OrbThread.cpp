@@ -45,7 +45,7 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-
+/*
 OrbThread::OrbThread(AppFrame* frame)
 //: wxThread(wxTHREAD_JOINABLE)
 {
@@ -184,7 +184,7 @@ int OrbThread::svc (void)
    
    return true;
 }
-
+*/
 PEThread::PEThread(AppFrame* frame)
 //: wxThread(wxTHREAD_JOINABLE)
 {

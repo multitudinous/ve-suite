@@ -150,7 +150,7 @@ public:
    virtual void* Entry();
    
    void SetXplorerInterface( VjObs_ptr veEngine );
-   void SetActiveModel( void );
+   bool SetActiveModel( void );
 
 protected:
 

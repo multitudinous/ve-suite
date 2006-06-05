@@ -31,8 +31,6 @@ SRCS=\
    PluginLoader.cpp \
    ROIDialog.cxx \
    StreamersPane.cxx \
-   VjObsC.cpp \
-   VjObsS.cpp \
    UI_AdvectionPanel.cxx \
    UI_i.cpp \
    UI_Frame.cpp \
@@ -61,7 +59,8 @@ SRCS=\
    advancedcontours.cpp\
    streamlines.cpp\
    advancedstreamlines.cpp\
-   isosurfaces.cpp
+   isosurfaces.cpp\
+   CORBAServiceList.cxx
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
@@ -130,7 +129,7 @@ cxx: $(OBJS)
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 ${APP_NAME}: $(OBJS)
 	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
-	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS)
 ifeq ($(CFDHOSTTYPE), Darwin)
 	$(shell wx-config --rezflags ) $(APP_NAME)
 endif

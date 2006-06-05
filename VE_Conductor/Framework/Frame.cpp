@@ -64,6 +64,7 @@
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/CORBAServiceList.h"
 
 #include "VE_Conductor/Utilities/Module.h"
 #include "VE_Conductor/Utilities/Tag.h"
@@ -78,6 +79,7 @@
 #include <iomanip>
 
 using namespace VE_Conductor::GUI_Utilities;
+using namespace VE_Conductor;
 using namespace VE_XML;
 using namespace VE_CAD;
 using namespace VE_Shader;
@@ -129,6 +131,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    ///This call back is used by OrbThread
    ///It allows printing text to the message box below conductor
    EVT_UPDATE_UI(7777, AppFrame::OnUpdateUIPop)
+   EVT_IDLE( AppFrame::IdleEvent )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -154,7 +157,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    is_orb_init= false;
    connectToVE = false;
    connectToCE = false;
-   p_ui_i=NULL;	
+   //p_ui_i=NULL;	
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
    av_modules->SetNetwork(network);
@@ -172,7 +175,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    CreateStatusBar();
    SetStatusText("VE-Conductor Status");
 
-   pelog = NULL;
+   //pelog = NULL;
    navPane = 0;
    soundsPane = 0;
    viewlocPane = 0;
@@ -183,6 +186,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 //   vistab = 0;
    //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
+   serviceList = new CORBAServiceList( this );
+   
    ///Initialize VE-Open
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_Shader::ShaderCreator() );
@@ -642,10 +647,12 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
-   ConExeServer();
+   //ConExeServer();
    // If not sucessful
-   if ( !is_orb_init )
-      return;
+   //if ( !is_orb_init )
+   //   return;
+   serviceList->IsConnectedToCE();
+
    char* nw_str = 0;
    try
    {
@@ -662,11 +669,12 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 {
-   ConExeServer();
+   /*ConExeServer();
    // If not sucessful
    if ( !is_orb_init )
       return;
-
+   */
+   serviceList->IsConnectedToCE();
    std::string nw_str;
 
    try
@@ -693,13 +701,15 @@ void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
    network->New();
 }
-
+///////////////////////////////////////////////////////////////////////////
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
-   ConExeServer();
+   //ConExeServer();
    // If not sucessful
-   if ( !is_orb_init )
-      return;
+   //if ( !is_orb_init )
+   //   return;
+   serviceList->IsConnectedToCE();
+   
    std::string nw_str = network->Save( std::string( "returnString" ) );
    // write the domdoc to the string above
    try 
@@ -764,10 +774,12 @@ void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
-   ConExeServer();
+   /*ConExeServer();
    // If not sucessful
    if ( !is_orb_init )
       return;
+   */
+   serviceList->IsConnectedToCE();
    
    char* result;
    //char buf[80];
@@ -990,7 +1002,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 
    delete result_dlg;
 }
-
+////////////////////////////////////////////////////////////////////
 void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
 {
    if ( network->globalparam_dlg != NULL )
@@ -1003,234 +1015,50 @@ void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
       network->globalparam_dlg->Show();
    }
 }
-
-void AppFrame::ConExeServer( void )
-{
-   if ( connectToCE )
-      return;
-
-   //have we already connected
-   /*wxSplashScreen* splash = 0;
-   wxImage splashImage(ve_ce_banner_xpm);
-   wxBitmap bitmap(splashImage);
-   splash = new wxSplashScreen(bitmap,
-            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-            2500, this, -1, wxDefaultPosition, wxDefaultSize,
-            wxSIMPLE_BORDER|wxSTAY_ON_TOP);*/
-
-   //wxSafeYield();
-   if ( pelog == NULL )
-   {
-	   pelog = new PEThread(this);
-	   pelog->activate();
-   }
-
-   if ( !is_orb_init )
-   {
-      is_orb_init = init_orb_naming();
-   }
-
-   try
-   { 
-      //_mutex.acquire();	  
-      ot = new OrbThread(this);
-      //ot->svc();
-      ot->activate();
-      ::wxMilliSleep( 2500 );
-      //ot->Run();
-      //register it to the server
-      //_mutex.acquire();
-    
-      //_mutex.release();
-      //Enalbe Menu items
-      connectToCE = true;
-   } 
-   catch ( CORBA::Exception& ) 
-   {
-      Log("Can't find executive or UI registration error\n");
-   }
-
-   //::wxMilliSleep( 2500 );
-   //delete splash;
-}
-  
-void AppFrame::ConVEServer( void )
-{
-   if ( connectToVE )
-      return;
-
-   if ( pelog == NULL )
-   {
-	   pelog = new PEThread(this);
-	   pelog->activate();
-   }
-
-   if ( !is_orb_init )
-   {
-      is_orb_init = init_orb_naming();
-   }
-
-   /*wxImage splashImage(ve_xplorer_banner_xpm);
-   wxBitmap bitmap(splashImage);
-   wxSplashScreen* splash = new wxSplashScreen(bitmap,
-            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-            2500, this, -1, wxDefaultPosition, wxDefaultSize,
-            wxSIMPLE_BORDER|wxSTAY_ON_TOP);*/
-   //wxSafeYield();
-  
-   try 
-   {
-      CosNaming::Name name(1);
-      name.length(1);
-      //Now get the reference of the VE server
-      name[0].id   = CORBA::string_dup ("Master");
-      name[0].kind = CORBA::string_dup ("VE_Xplorer");
-      CORBA::Object_var naming_context_object =
-      orb->resolve_initial_references ("NameService");
-      CosNaming::NamingContext_var naming_context1 = CosNaming::NamingContext::_narrow (naming_context_object.in ());
-      CORBA::Object_var ve_object = naming_context1->resolve(name);
-      vjobs = VjObs::_narrow(ve_object.in());
-
-      if ( CORBA::is_nil( vjobs.in() ) )
-         std::cerr<<"VjObs is Nill"<<std::endl;
-    
-      //Create the VE Tab
-      con_menu->Enable(v21ID_DISCONNECT_VE, true);
-      Log("Connected to VE server.\n");
-      connectToVE = true;
-      network->SetXplorerInterface( vjobs.in() );
-   } 
-   catch (CORBA::Exception &) 
-   {
-      Log("Can't find VE server\n");
-   }
-  
-   ::wxMilliSleep( 2500 );
-   //delete splash;
-}
-
-bool AppFrame::init_orb_naming()
-{
-   try 
-   {
-      // First initialize the ORB, 
-      orb = CORBA::ORB_init (wxGetApp().argc, wxGetApp().argv,
-                       ""); // the ORB name, it can be anything! 
-    
-      //Here is the part to contact the naming service and get the reference for the executive
-      CORBA::Object_var naming_context_object =
-         orb->resolve_initial_references ("NameService");
-      naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
-      /*if (naming_context==CORBA)
-      {
-         poa->destroy (1, 1);
-		    // Finally destroy the ORB
-		    orb->destroy();
-		    std::cerr << "Naming service not found!" << std::endl;
-		    return false;
-		    }
-      */
-      Log("Initialized ORB and connection to the Naming Service\n");
-      return true;
-   }
-   catch ( CORBA::Exception& ) 
-   {  
-      //		poa->destroy (1, 1);
-      // Finally destroy the ORB
-      orb->destroy();
-      Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
-      return false;
-   }
-}
-
+///////////////////////////////////////////////////////////////////
 void AppFrame::LoadBase(wxCommandEvent &WXUNUSED(event))
 {
   network->Load("IECMBase.nt");
 }
-
+///////////////////////////////////////////////////////////////////
 void AppFrame::LoadSour(wxCommandEvent &WXUNUSED(event))
 {
   network->Load("IECMSour.nt");
 }
-
+///////////////////////////////////////////////////////////////////
 void AppFrame::LoadREIBase(wxCommandEvent &WXUNUSED(event))
 {
   network->Load("REIBase.nt");
 }
+///////////////////////////////////////////////////////////////////
 void AppFrame::LoadREISour(wxCommandEvent &WXUNUSED(event))
 {
   network->Load("REISour.nt");
 }
-
+///////////////////////////////////////////////////////////////////
 void AppFrame::Log(const char* msg)
 {
-  if (pelog!=NULL)
-    pelog->SetMessage(msg);
-  
-  //::wxPostEvent(this, u);
+   if ( serviceList->GetMessageLog() != NULL )
+   {  
+      serviceList->GetMessageLog()->SetMessage( msg );
+   }
 }
-
+///////////////////////////////////////////////////////////////////
 void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event )
 {
   logwindow->AppendText(event.GetText());
 }
-
+///////////////////////////////////////////////////////////////////
 void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
 {
-   try
-   {
-      network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
-      delete p_ui_i;
-      p_ui_i = NULL;
-
-      //con_menu->Enable(v21ID_SUBMIT,false);
-      //con_menu->Enable(v21ID_LOAD, false);
-      //con_menu->Enable(v21ID_CONNECT, true);
-      run_menu->Enable(v21ID_START_CALC, false);
-      // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
-      con_menu->Enable(v21ID_DISCONNECT, false);
-    
-      Log("Disconnect successful.\n");
-   }
-   catch (CORBA::Exception &) 
-   {
-      Log("Disconnect failed.\n");
-   }
-
-   connectToCE = false;
+   serviceList->DisconnectFromCE();
 }
-
+//////////////////////////////////////////////////////////////////
 void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 {
-   delete m_frame;
-   m_frame = NULL;
-   con_menu->Enable(v21ID_DISCONNECT_VE, false);
-
-   if ( navPane )
-   {
-      navPane->Close( false );
-   }
-
-   if ( viewlocPane )
-   {
-      viewlocPane->Close( false );
-   }
-/*
-   if ( vistab )
-   {
-      vistab->Close( false );
-   }
-*/
-   if ( soundsPane )
-   {
-      soundsPane->Close( false );
-   }
-
-   Log("Disconnect VE suceeded.\n");
-
-   connectToVE = false;
+   serviceList->DisconnectFromXplorer();
 }
-
+//////////////////////////////////////////////////////////////////
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
 {
    char browser[1024];
@@ -1263,16 +1091,13 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( navPane == 0 )
    {
-      ConVEServer();
-      if ( CORBA::is_nil(vjobs.in()) )
-         return;
       // create pane and set appropriate vars
-      navPane = new NavigationPane( vjobs.in(), domManager );
+      navPane = new NavigationPane( GetXplorerObject(), domManager );
    }
    else
    {
       // set pointer to corba object for comm
-      navPane->SetCommInstance( vjobs.in() );
+      navPane->SetCommInstance( GetXplorerObject() );
    }
    // now show it
    navPane->Show();
@@ -1282,16 +1107,13 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( viewlocPane == 0 )
    {
-      ConVEServer();
-      if ( CORBA::is_nil(vjobs.in()) )
-         return;
       // create pane and set appropriate vars
-      viewlocPane = new ViewLocPane( vjobs.in(), domManager );
+      viewlocPane = new ViewLocPane( GetXplorerObject(), domManager );
    }
    else
    {
       // set pointer to corba object for comm
-      viewlocPane->SetCommInstance( vjobs.in() );
+      viewlocPane->SetCommInstance( GetXplorerObject() );
    }
    // now show it
    viewlocPane->Show();
@@ -1302,16 +1124,13 @@ void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED( event ) )
 {
    if ( soundsPane == 0 )
    {
-      ConVEServer();
-      if ( CORBA::is_nil(vjobs.in()) )
-         return;
       // create pane and set appropriate vars
-      soundsPane = new SoundsPane( vjobs.in(), domManager );
+      soundsPane = new SoundsPane( GetXplorerObject(), domManager );
    }
    else
    {
       // set pointer to corba object for comm
-      soundsPane->SetCommInstance( vjobs.in() );
+      soundsPane->SetCommInstance( GetXplorerObject() );
    }
    // now show it
    soundsPane->Show();
@@ -1321,9 +1140,6 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 {
    if( !_cadDialog)
    {
-      ConVEServer();
-      if ( CORBA::is_nil(vjobs.in()) )
-         return;
       //this will change once we have a way to retrieve the geometry from the model
       _cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg(0,
                                                                this,CAD_NODE_DIALOG);
@@ -1335,70 +1151,17 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
       //_cadDialog->SetRootCADNode(_activeModel->GetGeometry());
    }
    */
-   _cadDialog->SetVjObsPtr(vjobs.in());
+   _cadDialog->SetVjObsPtr( GetXplorerObject() );
    _cadDialog->Show();
 }
 ///////////////////////////////////////////////////////////////////
-/*
-void AppFrame::LaunchStreamlinePane( wxCommandEvent& WXUNUSED(event) )
-{
-   if ( streamlinePane == 0 )
-   {
-      ConVEServer();
-      if ( CORBA::is_nil(vjobs.in()) )
-         return;
-      // create pane and set appropriate vars
-      streamlinePane = new StreamlinePane( vjobs.in(), domManager );
-      // Set DOMDocument
-      // navPane->SetDOMManager( domManager );
-   }
-   else
-   {
-      // set pointer to corba object for comm
-      streamlinePane->SetCommInstance( vjobs.in() );
-   }
-   // now show it
-   streamlinePane->Show();
-}
-*/
-///////////////////////////////////////////////////////////////////
-/*
-void AppFrame::LaunchVistab( wxCommandEvent& WXUNUSED(event) )
-{
-   if ( vistab == 0 )
-   {
-      ConVEServer();
-      if ( CORBA::is_nil(vjobs.in()) )
-         return;
-      // create pane and set appropriate vars
-//      vistab = new Vistab( vjobs.in(), domManager );
-      vistab = new Vistab( this,
-                     SYMBOL_VISTAB_IDNAME,
-                     SYMBOL_VISTAB_TITLE,
-                     SYMBOL_VISTAB_POSITION,
-                     SYMBOL_VISTAB_SIZE,
-                     SYMBOL_VISTAB_STYLE );
-
-      // Set DOMDocument
-      // navPane->SetDOMManager( domManager );
-   }
-   else
-   {
-      // set pointer to corba object for comm
-      vistab->SetCommInstance( vjobs.in() );
-   }
-   // now show it
-   vistab->Show();
-}
-*/
-///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 {
-   ConVEServer();
+   //ConVEServer();
    // Now need to construct domdocument and populate it with the new vecommand
-   VE_XML::XMLReaderWriter netowrkWriter;
-   netowrkWriter.UseStandaloneDOMDocumentManager();
-   netowrkWriter.WriteToString();
+   //VE_XML::XMLReaderWriter netowrkWriter;
+   //netowrkWriter.UseStandaloneDOMDocumentManager();
+   //netowrkWriter.WriteToString();
 
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("FLOAT") );
@@ -1408,55 +1171,22 @@ void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
    veCommand->SetCommandName( std::string("Juggler_Display_Data") );
    veCommand->AddDataValuePair( dataValuePair );
 
-   // New need to destroy document and send it
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veCommand, "vecommand" ) );
-   std::string xmlDocument( "returnString" );
-   netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
-
-   //char* tempDoc = new char[ xmlDocument.size() + 1 ];
-   //tempDoc = CORBA::string_dup( xmlDocument.c_str() );
-
-   if ( !CORBA::is_nil( vjobs ) && !xmlDocument.empty() )
-   {
-      try
-      {
-         // CORBA releases the allocated memory so we do not have to
-         vjobs->SetCommandString( CORBA::string_dup( xmlDocument.c_str() ) );
-      }
-      catch ( ... )
-      {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
-         //delete [] tempDoc;
-      }
-   }
-   else
-   {
-      //delete [] tempDoc;
-   }
-   //Clean up memory
+   serviceList->SendCommandStringToXplorer( veCommand );
+   
    delete veCommand;
 }
-///////////////////////////////////////////////////////////////////
-/*
-void AppFrame::LaunchVisTabs( wxCommandEvent& WXUNUSED(event) )
-{
-   if ( visTabs == 0 )
-   {
-      ConVEServer();
-      if ( CORBA::is_nil(vjobs.in()) )
-         return;
-      // create pane and set appropriate vars
-      CreateVETab();
-   }
-   // now show it
-   visTabs->Show();
-}
-*/
 ///////////////////////////////////////////////////////////////////
 VjObs_ptr AppFrame::GetXplorerObject( void )
 {
    return vjobs.in();
 }
-
+///////////////////////////////////////////////////////////////////
+void AppFrame::IdleEvent( wxIdleEvent& event )
+{
+   serviceList->CheckORBWorkLoad();
+}
+///////////////////////////////////////////////////////////////////
+CORBAServiceList* AppFrame::GetCORBAServiceList( void )
+{
+   return serviceList;
+}

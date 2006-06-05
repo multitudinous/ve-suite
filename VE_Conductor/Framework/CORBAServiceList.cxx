@@ -1,13 +1,33 @@
 #include "VE_Conductor/Framework/CORBAServiceList.h"
 
-//#include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Conductor/Framework/OrbThread.h"
 
+#include <orbsvcs/CosNamingC.h>
+#include "VE_Conductor/Framework/UI_i.h"
+#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/App.h"
+
+#include <tao/BiDir_GIOP/BiDirGIOP.h>
+
+#include <sstream>
+
+#include <wx/wx.h>
+#include <wx/app.h>
+#include <wx/utils.h>
+
+using namespace VE_XML;
+using namespace VE_Conductor;
 
 /////////////////////////////////////////////////////////////
-CORBAServiceList::CORBAServiceList( void )
-//:wxDialog(NULL,-1, wxString("CORBA Service List Pane") )
+CORBAServiceList::CORBAServiceList( AppFrame* frame )
 {
-   //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+   this->frame = frame;
+   p_ui_i = 0;
+   pelog = 0;
 }
 /////////////////////////////////////////////////////////////
 CORBAServiceList::~CORBAServiceList( void )
@@ -19,85 +39,75 @@ void CORBAServiceList::SetNamingContext( CosNaming::NamingContext_ptr naming_con
    namingContext = naming_context;
 }
 /////////////////////////////////////////////////////////////
+bool CORBAServiceList::IsConnectedToXplorer( void )
+{
+   if ( CORBA::is_nil( vjobs.in() ) )
+   {
+      return ConnectToXplorer();
+   }
+   
+   return true;
+}
+/////////////////////////////////////////////////////////////
+bool CORBAServiceList::IsConnectedToCE( void )
+{
+   if ( CORBA::is_nil( module.in() ) )
+   {
+      return ConnectToCE();
+   }
+   
+   return true;
+}
+/////////////////////////////////////////////////////////////
 std::vector< std::string > CORBAServiceList::GetListOfServices( void )
 {
    unsigned long numServices;
-   namingContext.list( numServices, bindList, nameList );
+   //namingContext.list( numServices, bindList, nameList );
    //Need to look at CORBA book for for loop
    return serviceList;
 }   
-void AppFrame::ConExeServer( void )
+/////////////////////////////////////////////////////////////
+bool CORBAServiceList::ConnectToCE( void )
 {
-   if ( connectToCE )
-      return;
-
-   //have we already connected
-   /*wxSplashScreen* splash = 0;
-   wxImage splashImage(ve_ce_banner_xpm);
-   wxBitmap bitmap(splashImage);
-   splash = new wxSplashScreen(bitmap,
-            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-            2500, this, -1, wxDefaultPosition, wxDefaultSize,
-            wxSIMPLE_BORDER|wxSTAY_ON_TOP);*/
-
-   //wxSafeYield();
    if ( pelog == NULL )
    {
-	   pelog = new PEThread(this);
+	   pelog = new PEThread( frame );
 	   pelog->activate();
    }
 
-   if ( !is_orb_init )
+   if ( !IsConnectedToNamingService() )
    {
-      is_orb_init = init_orb_naming();
+      return false;
    }
 
-   try
-   { 
-      //_mutex.acquire();	  
-      ot = new OrbThread(this);
-      ot->activate();
-      //ot->Run();
-      //register it to the server
-      //_mutex.acquire();
-    
-      //_mutex.release();
-      //Enalbe Menu items
-      connectToCE = true;
-   } 
-   catch ( CORBA::Exception& ) 
+   if ( p_ui_i == 0 )
    {
-      Log("Can't find executive or UI registration error\n");
+      try
+      {   
+         CreateCORBAModule();
+      } 
+      catch ( CORBA::Exception& ) 
+      {
+            frame->Log("Can't find executive or UI registration error\n");
+            return false;
+      }
    }
-
-   ::wxMilliSleep( 2500 );
-   //delete splash;
+   return true;
 }
-  
-void AppFrame::ConVEServer( void )
+/////////////////////////////////////////////////////////////
+bool CORBAServiceList::ConnectToXplorer( void )
 {
-   if ( connectToVE )
-      return;
-
    if ( pelog == NULL )
    {
-	   pelog = new PEThread(this);
+	   pelog = new PEThread( frame );
 	   pelog->activate();
    }
-
-   if ( !is_orb_init )
+   
+   if ( !IsConnectedToNamingService() )
    {
-      is_orb_init = init_orb_naming();
+      return false;
    }
-
-   /*wxImage splashImage(ve_xplorer_banner_xpm);
-   wxBitmap bitmap(splashImage);
-   wxSplashScreen* splash = new wxSplashScreen(bitmap,
-            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-            2500, this, -1, wxDefaultPosition, wxDefaultSize,
-            wxSIMPLE_BORDER|wxSTAY_ON_TOP);*/
-   //wxSafeYield();
-  
+   
    try 
    {
       CosNaming::Name name(1);
@@ -115,26 +125,36 @@ void AppFrame::ConVEServer( void )
          std::cerr<<"VjObs is Nill"<<std::endl;
     
       //Create the VE Tab
-      con_menu->Enable(v21ID_DISCONNECT_VE, true);
-      Log("Connected to VE server.\n");
-      connectToVE = true;
-      network->SetXplorerInterface( vjobs.in() );
+      //con_menu->Enable(v21ID_DISCONNECT_VE, true);
+      frame->Log("Connected to VE server.\n");
+      //connectToVE = true;
+      //network->SetXplorerInterface( vjobs.in() );
    } 
    catch (CORBA::Exception &) 
    {
-      Log("Can't find VE server\n");
+      frame->Log("Can't find VE server\n");
+      return false;
    }
   
-   ::wxMilliSleep( 2500 );
-   //delete splash;
+   return true;
 }
-
-bool AppFrame::init_orb_naming()
+/////////////////////////////////////////////////////////////
+bool CORBAServiceList::IsConnectedToNamingService( void )
+{
+   if ( CORBA::is_nil( orb.in() ) )
+   {
+      return ConnectToNamingService();
+   }
+   
+   return true;
+}
+/////////////////////////////////////////////////////////////
+bool CORBAServiceList::ConnectToNamingService( void )
 {
    try 
    {
       // First initialize the ORB, 
-      orb = CORBA::ORB_init (wxGetApp().argc, wxGetApp().argv,
+      orb = CORBA::ORB_init (::wxGetApp().argc, ::wxGetApp().argv,
                        ""); // the ORB name, it can be anything! 
     
       //Here is the part to contact the naming service and get the reference for the executive
@@ -150,7 +170,7 @@ bool AppFrame::init_orb_naming()
 		    return false;
 		    }
       */
-      Log("Initialized ORB and connection to the Naming Service\n");
+      frame->Log("Initialized ORB and connection to the Naming Service\n");
       return true;
    }
    catch ( CORBA::Exception& ) 
@@ -158,41 +178,43 @@ bool AppFrame::init_orb_naming()
       //		poa->destroy (1, 1);
       // Finally destroy the ORB
       orb->destroy();
-      Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
+      frame->Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
       return false;
    }
 }
-void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
+/////////////////////////////////////////////////////////////
+bool CORBAServiceList::DisconnectFromCE( void )
 {
    try
    {
-      network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
+      frame->network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
       delete p_ui_i;
       p_ui_i = NULL;
 
       //con_menu->Enable(v21ID_SUBMIT,false);
       //con_menu->Enable(v21ID_LOAD, false);
       //con_menu->Enable(v21ID_CONNECT, true);
-      run_menu->Enable(v21ID_START_CALC, false);
+      frame->run_menu->Enable(v21ID_START_CALC, false);
       // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
-      con_menu->Enable(v21ID_DISCONNECT, false);
+      frame->con_menu->Enable(v21ID_DISCONNECT, false);
     
-      Log("Disconnect successful.\n");
+      frame->Log("Disconnect successful.\n");
    }
    catch (CORBA::Exception &) 
    {
-      Log("Disconnect failed.\n");
+      frame->Log("Disconnect failed.\n");
+      return false;
    }
 
-   connectToCE = false;
+   return true;
 }
-
-void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
+/////////////////////////////////////////////////////////////
+bool CORBAServiceList::DisconnectFromXplorer( void )
 {
-   delete m_frame;
-   m_frame = NULL;
-   con_menu->Enable(v21ID_DISCONNECT_VE, false);
-
+   // delete m_frame;
+   //m_frame = NULL;
+   frame->con_menu->Enable(v21ID_DISCONNECT_VE, false);
+/*
    if ( navPane )
    {
       navPane->Close( false );
@@ -212,8 +234,196 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
    {
       soundsPane->Close( false );
    }
+*/
+   frame->Log("Disconnect VE suceeded.\n");
 
-   Log("Disconnect VE suceeded.\n");
+   //connectToVE = false;
+   return true;
+}
+/////////////////////////////////////////////////////////////
+void CORBAServiceList::CheckORBWorkLoad( void )
+{
+   if ( !CORBA::is_nil( orb.in() ) )
+   {
+      ::wxMilliSleep( 250 );
+      if ( orb->work_pending() )
+      {
+         orb->perform_work();
+      }      
+   }
+}
+/////////////////////////////////////////////////////////////
+void CORBAServiceList::CreateCORBAModule( void )
+{
+   try
+   {
+      long id = time(NULL);
+      //char* uiname;
+      //sprintf(uiname, "UIClient%ld", id);
+      std::ostringstream dirStringStream;
+      dirStringStream << "UIClient" << id;
+      std::string UINAME = dirStringStream.str();
+      //uiname = (char*)dirString.c_str();
+      //std::string UINAME = uiname;
+      CosNaming::Name name(1);
+      name.length(1);
+      name[0].id = CORBA::string_dup ("Executive");
+      
+      CORBA::Object_var naming_context_object = orb->resolve_initial_references ("NameService");
+      naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
+      
+      CORBA::Object_var exec_object = naming_context->resolve(name);
+      frame->network->exec = Body::Executive::_narrow(exec_object.in());
+      
+      //Create the Servant
+      if ( p_ui_i == NULL )
+      {
+         p_ui_i= new Body_UI_i(frame->network->exec.in(), UINAME);
+         
+         //pass the Frame's pointer to the UI corba implementation
+         p_ui_i->SetUIFrame( frame );
+         //Here is the code to set up the ROOT POA
+         CORBA::Object_var poa_object = orb->resolve_initial_references ("RootPOA"); // get the root poa
+         poa_root = PortableServer::POA::_narrow(poa_object.in());
+         PortableServer::POAManager_var poa_manager = poa_root->the_POAManager ();
+         
+         CORBA::PolicyList policies (1);
+         policies.length (1);
+         
+         CORBA::Any pol;
+         pol <<= BiDirPolicy::BOTH;
+         policies[0] =
+            orb->create_policy (BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE,
+                                        pol);
+         
+         // Create POA as child of RootPOA with the above policies.  This POA
+         // will receive request in the same connection in which it sent
+         // the request
+         try
+         {
+            poa = poa_root->create_POA ("childPOA",
+                                                        poa_manager.in (),
+                                                        policies);
+         }
+         catch (const PortableServer::POA::AdapterAlreadyExists & )
+         {
+            std::cout << " Child POA Already Connected : Do nothing " << std::endl;
+         }
+         
+         // Creation of childPOA is over. Destroy the Policy objects.
+         for (CORBA::ULong i = 0; i < policies.length (); ++i)
+         {
+            policies[i]->destroy ();
+         }
+         
+         poa_manager->activate();
+         PortableServer::ObjectId_var idObject = PortableServer::string_to_ObjectId (CORBA::string_dup (UINAME.c_str()));
+         poa->activate_object_with_id( idObject.in() , p_ui_i );
+         
+         //Activate it to obtain the object reference
+         Body::UI_var ui = Body::UI::_narrow( poa->id_to_reference( idObject.in() ) );
+         
+         //CosNaming::Name UIname(1);
+         //UIname.length(1);
+         //UIname[0].id = CORBA::string_dup (UINAME.c_str());
+         
+         //Bind the object
+         //try   {
+         //      frame_->naming_context->bind(UIname, ui.in());
+         //   }catch(CosNaming::NamingContext::AlreadyBound& ex){
+         //      frame_->naming_context->rebind(UIname, ui.in());
+         //   }
+         
+         //(frame_->_mutex).release();
+         try {
+            frame->network->exec->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
+            frame->con_menu->Enable(v21ID_SUBMIT,true);
+            frame->con_menu->Enable(v21ID_LOAD, true);
+            //frame_->con_menu->Enable(v21ID_CONNECT, false);
+            frame->run_menu->Enable(v21ID_VIEW_RESULT, true);
+            frame->con_menu->Enable(v21ID_DISCONNECT, true);
+            
+            //frame_->orb->run();
+         }catch (CORBA::Exception &) {
+            
+            frame->Log("Can't find executive or UI registration error.\n");
+         }
+      }
+      else
+      {
+         try {
+            PortableServer::ObjectId_var idObject = PortableServer::string_to_ObjectId( CORBA::string_dup( UINAME.c_str() ) );
+            
+            //Activate it to obtain the object reference
+            Body::UI_var ui = Body::UI::_narrow( poa->id_to_reference( idObject.in() ) );
+            
+            frame->network->exec->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
+            frame->con_menu->Enable(v21ID_SUBMIT,true);
+            frame->con_menu->Enable(v21ID_LOAD, true);
+            frame->con_menu->Enable(v21ID_CONNECT, false);
+            frame->run_menu->Enable(v21ID_VIEW_RESULT, true);
+            frame->con_menu->Enable(v21ID_DISCONNECT, true);
+            
+         }catch (CORBA::Exception &) {
+            
+            frame->Log("Can't find executive or UI registration error.\n");
+         }
+      }
+   }
+   catch (CORBA::Exception &)
+   {
+      frame->Log("Can't find executive or UI registration error.\n");
+   }
+}
+//////////////////////////////////////////////////
+bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
+{
+   if ( !IsConnectedToXplorer() )
+      return false;
+      
+   //Now send the data to xplorer
+   VE_XML::XMLReaderWriter netowrkWriter;
+   netowrkWriter.UseStandaloneDOMDocumentManager();
 
-   connectToVE = false;
+   // Create the command and data value pairs
+   //VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   //dataValuePair->SetData( "CREATE_NEW_DATASETS", veModel );
+   //VE_XML::Command* veCommand = new VE_XML::Command();
+   //veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
+   //veCommand->AddDataValuePair( dataValuePair );
+
+   // New need to destroy document and send it
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veCommand, "vecommand" ) );
+   std::string xmlDocument( "returnString" );
+   netowrkWriter.WriteToString();
+   netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
+
+   if ( !CORBA::is_nil( vjobs.in() ) && !xmlDocument.empty() )
+   {
+      try
+      {
+         // CORBA releases the allocated memory so we do not have to
+         vjobs->SetCommandString( CORBA::string_dup( xmlDocument.c_str() ) );
+      }
+      catch ( ... )
+      {
+         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                       "Communication Failure", wxOK | wxICON_INFORMATION );
+         return false;
+      }
+   }
+   //Clean up memory
+   //delete veCommand;
+   return true;
+}
+/////////////////////////////////////////////////////////////////
+VjObs_ptr CORBAServiceList::GetXplorerPointer( void )
+{
+   return vjobs.in();
+}
+/////////////////////////////////////////////////////////////////
+PEThread* CORBAServiceList::GetMessageLog( void )
+{
+   return pelog;
 }
