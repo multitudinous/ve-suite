@@ -14,89 +14,7 @@
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/icon.h>
-/*!
- * Application instance implementation
- */
 
-////@begin implement app
-//IMPLEMENT_APP( AdvancedContoursApp )
-////@end implement app
-
-/*!
- * AdvancedContoursApp type definition
- */
-
-//IMPLEMENT_CLASS( AdvancedContoursApp, wxApp )
-
-/*!
- * AdvancedContoursApp event table definition
- */
-/*
-BEGIN_EVENT_TABLE( AdvancedContoursApp, wxApp )
-
-////@begin AdvancedContoursApp event table entries
-////@end AdvancedContoursApp event table entries
-
-END_EVENT_TABLE()
-*/
-/*!
- * Constructor for AdvancedContoursApp
- */
-/*
-AdvancedContoursApp::AdvancedContoursApp()
-{
-////@begin AdvancedContoursApp member initialisation
-////@end AdvancedContoursApp member initialisation
-}
-*/
-/*!
- * Initialisation for AdvancedContoursApp
- */
-/*
-bool AdvancedContoursApp::OnInit()
-{    
-////@begin AdvancedContoursApp initialisation
-    // Remove the comment markers above and below this block
-    // to make permanent changes to the code.
-
-#if wxUSE_XPM
-    wxImage::AddHandler(new wxXPMHandler);
-#endif
-#if wxUSE_LIBPNG
-    wxImage::AddHandler(new wxPNGHandler);
-#endif
-#if wxUSE_LIBJPEG
-    wxImage::AddHandler(new wxJPEGHandler);
-#endif
-#if wxUSE_GIF
-    wxImage::AddHandler(new wxGIFHandler);
-#endif
-////@end AdvancedContoursApp initialisation
-
-    return true;
-}
-*/
-/*!
- * Cleanup for AdvancedContoursApp
- */
-/*
-int AdvancedContoursApp::OnExit()
-{    
-////@begin AdvancedContoursApp cleanup
-    return wxApp::OnExit();
-////@end AdvancedContoursApp cleanup
-}
-*/
-
-/*!
- * AdvancedContours type definition
- */
-
-//IMPLEMENT_DYNAMIC_CLASS( AdvancedContours, wxDialog )
-
-/*!
- * AdvancedContours event table definition
- */
 
 BEGIN_EVENT_TABLE( AdvancedContours, wxDialog )
 ////@begin AdvancedContours event table entries
@@ -106,25 +24,7 @@ BEGIN_EVENT_TABLE( AdvancedContours, wxDialog )
 ////@end AdvancedContours event table entries
 END_EVENT_TABLE()
 
-/*!
- * AdvancedContours constructors
- */
-/*
-AdvancedContours::AdvancedContours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
-:wxDialog(NULL,-1, wxString("Advanced Contours"), 
-		wxDefaultPosition, wxDefaultSize,
-      (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
-{
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-   this->SetSize( dialogPosition );
 
-   xplorerPtr = VjObs::_duplicate( veEngine );
-   domManager = domManagerIn;
-
-   CreateControls();
-}
-*/
 AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
@@ -133,16 +33,15 @@ AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, const wxStr
     this->SetSize( dialogPosition );
 }
 
-/*!
- * AdvancedContours creator
- */
-
 bool AdvancedContours::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin AdvancedContours member initialisation
-   itemSlider5 = 0;
-   itemSlider10 = 0;
-   itemSlider15 = 0;
+   _opacitySlider = 0;
+   _warpedScaleSlider = 0;
+   _LODSlider = 0;
+   _opacity = 1.0;
+   _warpedScale = .5;
+   _LOD = 0.0;
 ////@end AdvancedContours member initialisation
 
 ////@begin AdvancedContours creation
@@ -178,8 +77,8 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Contour Opacity"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText4, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider5 = new wxSlider( itemDialog1, OPACITY_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(itemSlider5, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    _opacitySlider = new wxSlider( itemDialog1, OPACITY_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_opacitySlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer6, 0, wxGROW|wxALL, 5);
@@ -193,8 +92,8 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Warped Contour Scale"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText9, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider10 = new wxSlider( itemDialog1, WARPED_SCALE_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(itemSlider10, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    _warpedScaleSlider = new wxSlider( itemDialog1, WARPED_SCALE_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_warpedScaleSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer11, 0, wxALIGN_LEFT|wxALL, 5);
@@ -208,8 +107,8 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Contour LOD"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider15 = new wxSlider( itemDialog1, LOD_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(itemSlider15, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    _LODSlider = new wxSlider( itemDialog1, LOD_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_LODSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer16, 0, wxALIGN_LEFT|wxALL, 5);
@@ -222,11 +121,31 @@ void AdvancedContours::CreateControls()
 
 ////@end AdvancedContours content construction
 }
-
-/*!
- * Should we show tooltips?
- */
-
+/////////////////////////////////////////////////
+void AdvancedContours::SetOpacity(double opacity)
+{
+   if(_opacitySlider)
+   {
+      _opacitySlider->SetValue(static_cast<int>(100*opacity));
+   }
+}
+///////////////////////////////////////////////////////
+void AdvancedContours::SetWarpedScale(double warpScale)
+{
+   if(_warpedScaleSlider)
+   {
+      _warpedScaleSlider->SetValue(static_cast<int>(100*warpScale));
+   }
+}
+/////////////////////////////////////////
+void AdvancedContours::SetLOD(double LOD)
+{
+   if(_LODSlider)
+   {
+      _LODSlider->SetValue(static_cast<int>(100*LOD));
+   }
+}
+/////////////////////////////////////
 bool AdvancedContours::ShowToolTips()
 {
     return true;
@@ -257,39 +176,34 @@ wxIcon AdvancedContours::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end AdvancedContours icon retrieval
 }
-/*!
- * wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
- */
-
+/////////////////////////////////////
+double AdvancedContours::GetOpacity()
+{
+   return _opacity;
+}
+/////////////////////////////////////////
+double AdvancedContours::GetWarpedScale()
+{
+   return _warpedScale;
+}
+/////////////////////////////////
+double AdvancedContours::GetLOD()
+{
+   return _LOD;
+}
+/////////////////////////////////////////////////////////////////
 void AdvancedContours::_onContourOpacity( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in AdvancedContours.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in AdvancedContours. 
+   _opacity = static_cast<double>(_opacitySlider->GetValue()/100.0);
 }
-
-/*!
- * wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1
- */
-
+////////////////////////////////////////////////////////////////
 void AdvancedContours::_onWarpedContour( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1 in AdvancedContours.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1 in AdvancedContours. 
+   _warpedScale = static_cast<double>(_warpedScaleSlider->GetValue()/100.0);
 }
-
-/*!
- * wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2
- */
-
+/////////////////////////////////////////////////////////////
 void AdvancedContours::_onContourLOD( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2 in AdvancedContours.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2 in AdvancedContours. 
+   _LOD = static_cast<double>(_LODSlider->GetValue()/100.0);
 }
 

@@ -645,4 +645,5 @@ void Vistab::SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand)
    }
    //Clean up memory
    delete newCommand;
+   newCommand = 0;
 }

@@ -123,10 +123,37 @@ public:
        const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, 
        long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
 
-    /// Creates the controls and sizers
-    void CreateControls();
+   /// Creates the controls and sizers
+   void CreateControls();
+   
+   ///The opacity setting.
+   ///\param opacity The opacity setting
+   void SetOpacity(double opacity);
+   ///The warped scale.
+   ///\param warpScale The scale for warping on the contours
+   void SetWarpedScale(double warpScale);
+   ///The Level of Detail
+   ///\param LOD The LOD setting
+   void SetLOD(double LOD);
 
-////@begin AdvancedContours event handler declarations
+    /// Retrieves bitmap resources
+    wxBitmap GetBitmapResource( const wxString& name );
+
+    /// Retrieves icon resources
+    wxIcon GetIconResource( const wxString& name );
+
+    /// Should we show tooltips?
+    static bool ShowToolTips();
+
+    ///The opacity setting.
+    double GetOpacity();
+    ///The warped scale.
+    double GetWarpedScale();
+    ///The Level of Detail
+    double GetLOD();
+
+protected:
+   ////@begin AdvancedContours event handler declarations
     /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
     void _onContourOpacity( wxCommandEvent& event );
 
@@ -137,24 +164,14 @@ public:
     void _onContourLOD( wxCommandEvent& event );
 ////@end AdvancedContours event handler declarations
 
-////@begin AdvancedContours member function declarations
+   wxSlider* _opacitySlider;///<Opacity slider.
+   wxSlider* _warpedScaleSlider;///<Warped scale slider.
+   wxSlider* _LODSlider;///<Level Of Detail slider.
+   
+   double _opacity;///<The opacity setting.
+   double _warpedScale;///<The warped contour scale setting.
+   double _LOD;///<The Level Of Detail setting.
 
-    /// Retrieves bitmap resources
-    wxBitmap GetBitmapResource( const wxString& name );
-
-    /// Retrieves icon resources
-    wxIcon GetIconResource( const wxString& name );
-////@end AdvancedContours member function declarations
-
-    /// Should we show tooltips?
-    static bool ShowToolTips();
-
-////@begin AdvancedContours member variables
-   wxSlider* itemSlider5;
-   wxSlider* itemSlider10;
-   wxSlider* itemSlider15;
-////@end AdvancedContours member variables
-protected:
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
    int cId, cIso_value, cMin, cMax, cSc;

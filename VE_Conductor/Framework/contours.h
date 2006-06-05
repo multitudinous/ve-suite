@@ -104,6 +104,7 @@ public:
     Contours( );
     Contours( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
 //    Contours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    virtual ~Contours();   
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -154,6 +155,15 @@ public:
     static bool ShowToolTips();
 
 ////@begin Contours member variables
+  
+////@end Contours member variables
+
+protected:
+   ///Update the contour with the current settings.
+   void _updateContourInformation();
+   ///Update the advanced settings
+   void _updateAdvancedSettings();
+
    wxRadioBox*    _directionRBox;
    wxRadioBox*    _contourTypeRBox;
    wxRadioButton* _allPrecomputedRButton;
@@ -163,11 +173,8 @@ public:
    wxSlider*      _planePositonSlider;
    wxButton*      itemButton16;
    wxButton*      itemButton17;
-////@end Contours member variables
 
-protected:
-   ///Update the contour with the current settings.
-   void _updateContourInformation();
+   std::vector<VE_XML::DataValuePair*> _advancedSettings;///<The advanced settings.
    std::vector<VE_XML::DataValuePair*> _contourInformation;///<The countour setting data
 
    std::string _planeDirection;///<Store the value of the direction.
@@ -175,6 +182,9 @@ protected:
    std::string _numberOfPlanesOption;///<Single or Multiple planes.
    std::string _planeOption;///<Once single or multiple is selected, the plane option corresponds to the checkbox.
    double _planePosition;///<The position of the plane.
+   double _lastLOD;///<The last LOD setting from the advanced panel.
+   double _lastWarpedScale;///<The last warped scale setting from the advanced panel.
+   double _lastOpacity;///<The last opacity setting from the advanced panel.
 
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;

@@ -66,6 +66,9 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
    _numberOfPlanesOption = "Single";
    _planeOption = "";
    _planePosition = 0.;
+   _lastLOD = 1.0;
+   _lastWarpedScale = .5;
+   _lastOpacity = 1.0;
 ////@end Contours member initialisation
 
 ////@begin Contours creation
@@ -157,7 +160,12 @@ void Contours::CreateControls()
 
 ////@end Contours content construction
 }
-
+////////////////////
+Contours::~Contours()
+{
+   _advancedSettings.clear();
+   _contourInformation.clear();
+}
 /*!
  * Should we show tooltips?
  */
@@ -204,11 +212,17 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ADVANCEDCONTOURS_STYLE );
    
    int error = adContour.ShowModal(); 
+   adContour.SetLOD(_lastLOD);
+   adContour.SetOpacity(_lastOpacity);
+   adContour.SetWarpedScale(_lastWarpedScale);
+   
    if( error == wxID_OK||
        error == wxID_CLOSE||
        error == wxID_CANCEL)
     {
-
+       _lastLOD = adContour.GetLOD();
+       _lastOpacity = adContour.GetOpacity();
+       _lastWarpedScale = adContour.GetWarpedScale();
     }
 }
 /////////////////////////////////////////////////////
@@ -259,13 +273,25 @@ void Contours::_onPlane( wxCommandEvent& event )
    _planePosition = static_cast<double>(_planePositonSlider->GetValue());  
 }
 ////////////////////////////////////////
-/*void Contours::_updateAdvancedSettings()
+void Contours::_updateAdvancedSettings()
 {
-}*/
+   _advancedSettings.clear();
+
+   VE_XML::DataValuePair* contourOpacity = new VE_XML::DataValuePair();
+   contourOpacity->SetData("Contour Opacity",_lastOpacity);
+   _advancedSettings.push_back(contourOpacity);
+
+   VE_XML::DataValuePair* warpedScale = new VE_XML::DataValuePair();
+   warpedScale->SetData("Warped Contour Scale",_lastWarpedScale);
+   _advancedSettings.push_back(warpedScale);
+
+   VE_XML::DataValuePair* LODSetting = new VE_XML::DataValuePair();
+   LODSetting->SetData("Contour LOD",_lastLOD);
+   _advancedSettings.push_back(LODSetting);
+}
 //////////////////////////////////////////
 void Contours::_updateContourInformation()
 {
-
    _contourInformation.clear();
    VE_XML::DataValuePair* contourDirection = new VE_XML::DataValuePair();
    contourDirection->SetDataType("STRING");
@@ -308,6 +334,8 @@ void Contours::_updateContourInformation()
 void Contours::_onAddPlane( wxCommandEvent& event )
 {
    _updateContourInformation();
+   _updateAdvancedSettings();
+
    VE_XML::Command* newCommand = new VE_XML::Command();
    newCommand->SetCommandName("UPDATE_CONTOUR_SETTINGS");
    
@@ -315,8 +343,19 @@ void Contours::_onAddPlane( wxCommandEvent& event )
    {
       newCommand->AddDataValuePair(_contourInformation.at(i));
    }
-   
 
+   //The advanced settings command
+   VE_XML::Command* advancedSettings = new VE_XML::Command();
+   advancedSettings->SetCommandName("ADVANCED_CONTOUR_SETTINGS");
+   for(size_t i =0; i < _advancedSettings.size(); i++)
+   {
+      advancedSettings->AddDataValuePair(_advancedSettings.at(i));
+   }
+   //dvp representing the advanced settings within the contours information
+   VE_XML::DataValuePair* advancedContourSettings = new VE_XML::DataValuePair();
+   advancedContourSettings->SetData("Advanced Contour Settings",advancedSettings);
+   newCommand->AddDataValuePair(advancedContourSettings);
+   
    try
    {
       dynamic_cast<Vistab*>(GetParent())->SendUpdatedSettingsToXplorer(newCommand);
