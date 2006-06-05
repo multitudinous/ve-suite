@@ -40,8 +40,8 @@ case $1 in
   ;;
   
   -shutdown)
-    killall -q Naming_Service 
-    killall -q Exe_server 
+    killall Naming_Service 
+    killall Exe_server 
   ;;
 
   -menu)
