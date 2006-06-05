@@ -210,11 +210,11 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ADVANCEDCONTOURS_POSITION,
                   SYMBOL_ADVANCEDCONTOURS_SIZE, 
                   SYMBOL_ADVANCEDCONTOURS_STYLE );
-   
-   int error = adContour.ShowModal(); 
    adContour.SetLOD(_lastLOD);
    adContour.SetOpacity(_lastOpacity);
    adContour.SetWarpedScale(_lastWarpedScale);
+   int error = adContour.ShowModal(); 
+  
    
    if( error == wxID_OK||
        error == wxID_CLOSE||
