@@ -91,11 +91,7 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
-////@begin Streamlines event handler declarations
-   
-////@end Streamlines event handler declarations
 
-////@begin Streamlines member function declarations
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -142,6 +138,14 @@ protected:
    std::string _streamlineDirection;///<Store the value of the direction.
    std::string _cursorType;///<The contour type.
    std::string _integrationDirection;///<Single or Multiple planes.
+
+   double _lastIntegrationStepSize;///<Integration step size from advanced settings.
+   double _lastPropagationSize;///<Propagation size from advanced settings.
+   double _lastLineDiameter;///<Line diameter from advanced settings.
+   double _lastSphereArrowParticleSize;///<Sphere arrow particles from advanced settings.
+   double _lastStep;///<Step from advanced settings.
+   bool _lastSeedPtFlag;///<Seed pt flat from advanced settings.
+   bool _lastStreamArrow;///<Stream arrow from advanced settings.
 
    int cId, cIso_value, cMin, cMax, cSc;
    std::vector< long > commandInputs;

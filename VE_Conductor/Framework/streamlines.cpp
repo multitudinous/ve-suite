@@ -65,6 +65,14 @@ bool Streamlines::Create( wxWindow* parent, wxWindowID id,
    _nPointsPerPlane = 2;
    itemButton13 = 0;
    itemButton14 = 0;
+
+   _lastIntegrationStepSize = 1000.0;
+   _lastPropagationSize = 1.0;
+   _lastLineDiameter = 0.0;
+   _lastSphereArrowParticleSize = .5;
+   _lastStep = 1.0;
+   _lastSeedPtFlag = false;
+   _lastStreamArrow = false;
 ////@end Streamlines member initialisation
 
 ////@begin Streamlines creation
@@ -189,17 +197,52 @@ void Streamlines::_updateAdvancedSettings()
 {
    _advancedSettings.clear();
 
-   /*VE_XML::DataValuePair* contourOpacity = new VE_XML::DataValuePair();
-   contourOpacity->SetData("Contour Opacity",_lastOpacity);
-   _advancedSettings.push_back(contourOpacity);
+   VE_XML::DataValuePair* propagationTime = new VE_XML::DataValuePair();
+   propagationTime->SetData("Propagation Time",_lastPropagationSize);
+   _advancedSettings.push_back(propagationTime);
 
-   VE_XML::DataValuePair* warpedScale = new VE_XML::DataValuePair();
-   warpedScale->SetData("Warped Contour Scale",_lastWarpedScale);
-   _advancedSettings.push_back(warpedScale);
+   VE_XML::DataValuePair* integrationStep = new VE_XML::DataValuePair();
+   integrationStep->SetData("Integration Step Size",_lastIntegrationStepSize);
+   _advancedSettings.push_back(integrationStep);
+  
+   VE_XML::DataValuePair* lineDiameter = new VE_XML::DataValuePair();
+   lineDiameter->SetData("Diameter",_lastLineDiameter);
+   _advancedSettings.push_back(lineDiameter);
+   
+   VE_XML::DataValuePair* sphereArrowParticles = new VE_XML::DataValuePair();
+   sphereArrowParticles->SetData("Sphere/Arrow/Particle Size",_lastSphereArrowParticleSize);
+   _advancedSettings.push_back(sphereArrowParticles);
 
-   VE_XML::DataValuePair* LODSetting = new VE_XML::DataValuePair();
-   LODSetting->SetData("Contour LOD",_lastLOD);
-   _advancedSettings.push_back(LODSetting);*/
+   VE_XML::DataValuePair* stepSize = new VE_XML::DataValuePair();
+   stepSize->SetData("Step(?)",_lastStep);
+   _advancedSettings.push_back(stepSize);
+
+   VE_XML::DataValuePair* seedPtFlag = new VE_XML::DataValuePair();
+   seedPtFlag->SetDataName("Use Last Seed Pt");
+   seedPtFlag->SetDataType("UNSIGNED INT");
+   if(_lastSeedPtFlag)
+   {
+      seedPtFlag->SetDataValue(static_cast<unsigned int>(1));
+   }
+   else
+   {
+      seedPtFlag->SetDataValue(static_cast<unsigned int>(0));
+   }
+   _advancedSettings.push_back(seedPtFlag);
+
+   VE_XML::DataValuePair* streamArrow = new VE_XML::DataValuePair();
+   streamArrow->SetDataName("Use Stream Arrows");
+   streamArrow->SetDataType("UNSIGNED INT");
+   if(_lastStreamArrow)
+   {
+      streamArrow->SetDataValue(static_cast<unsigned int>(1));
+   }
+   else
+   {
+      streamArrow->SetDataValue(static_cast<unsigned int>(0));
+   }
+   _advancedSettings.push_back(streamArrow);
+
 }
 ////////////////////////////////////////////////
 void Streamlines::_updateStreamlineInformation()
@@ -247,8 +290,27 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
                      SYMBOL_ADVANCEDSTREAMLINES_POSITION,
                      SYMBOL_ADVANCEDSTREAMLINES_SIZE, 
                      SYMBOL_ADVANCEDSTREAMLINES_STYLE );
-   adStreamline.ShowModal();
-std::cout<<"ADVANCEDSTREAMLINES WORKING"<<std::endl;
+   adStreamline.SetIntegrationStepSize(_lastIntegrationStepSize);
+   adStreamline.SetPropagationSize(_lastPropagationSize);
+   adStreamline.SetLineDiameter(_lastLineDiameter);
+   adStreamline.SetSphereArrowParticleSize(_lastSphereArrowParticleSize);
+   adStreamline.SetStep(_lastStep);
+   adStreamline.SetUseLastSeedPt(_lastSeedPtFlag);
+   adStreamline.SetStreamArrow(_lastStreamArrow);
+
+   int error = adStreamline.ShowModal(); 
+   if( error == wxID_OK||
+       error == wxID_CLOSE||
+       error == wxID_CANCEL)
+    {
+       _lastIntegrationStepSize = adStreamline.GetIntegrationStepSize();
+       _lastPropagationSize = adStreamline.GetPropagationSize();
+       _lastLineDiameter = adStreamline.GetLineDiameter();
+       _lastSphereArrowParticleSize = adStreamline.GetSphereArrowParticleSize();
+       _lastStep = adStreamline.GetStep();
+       _lastSeedPtFlag = adStreamline.GetUseLastSeedPoint();
+       _lastStreamArrow = adStreamline.GetStreamArrow();
+    }
 }
 ////////////////////////////////////////////////////////
 void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))

@@ -141,6 +141,7 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
 /////////////////
 Vistab::~Vistab()
 {
+   ClearBaseInformation();
 }
 /////////////////////////////
 void Vistab::CreateControls()

@@ -79,46 +79,6 @@ enum ADVANCED_STREAMLINE_IDS
 };
 ////@end control identifiers
 
-/*!
- * AdvancedStreamlinesApp class declaration
- */
-/*
-class AdvancedStreamlinesApp: public wxApp
-{    
-    DECLARE_CLASS( AdvancedStreamlinesApp )
-    DECLARE_EVENT_TABLE()
-
-public:
-    /// Constructor
-    AdvancedStreamlinesApp();
-
-    /// Initialises the application
-    virtual bool OnInit();
-
-    /// Called on exit
-    virtual int OnExit();
-
-////@begin AdvancedStreamlinesApp event handler declarations
-////@end AdvancedStreamlinesApp event handler declarations
-
-////@begin AdvancedStreamlinesApp member function declarations
-////@end AdvancedStreamlinesApp member function declarations
-
-////@begin AdvancedStreamlinesApp member variables
-////@end AdvancedStreamlinesApp member variables
-};
-*/
-/*!
- * Application instance declaration 
- */
-
-////@begin declare app
-//DECLARE_APP(AdvancedStreamlinesApp)
-////@end declare app
-
-/*!
- * AdvancedStreamlines class declaration
- */
 
 class AdvancedStreamlines: public wxDialog
 {    
@@ -129,7 +89,7 @@ public:
     /// Constructors
     AdvancedStreamlines( );
     AdvancedStreamlines( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME, const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION, const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE, long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
-//    AdvancedStreamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -138,40 +98,92 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
-////@begin AdvancedStreamlines event handler declarations
-    void _onCheck(wxCommandEvent& event);
-    void _onArrowCheck( wxCommandEvent& event);
-    void _oniStepSlider(wxScrollEvent& event);
-    void _onPropSlider(wxScrollEvent& event);
-    void _onStepSlider(wxScrollEvent& event);
-    void _onDiameterSlider(wxScrollEvent& event);
-    void _onScaleSlider( wxScrollEvent& event);
-    void _onParticleTrack(wxCommandEvent& event);
-////@end AdvancedStreamlines event handler declarations
+   ///Set the propagation slider value
+   ///\param value The size
+   void SetPropagationSize(double value);
 
-////@begin AdvancedStreamlines member function declarations
+   ///Set the integration step size.
+   ///\param value The size
+   void SetIntegrationStepSize(double value);
 
-    /// Retrieves bitmap resources
-    wxBitmap GetBitmapResource( const wxString& name );
+   ///Set the step(?) size
+   ///\param value The size
+   void SetStep(double value);
+  
+   ///Set the sphere/arrow/particle(?) size
+   ///\param value The size
+   void SetSphereArrowParticleSize(double value);
 
-    /// Retrieves icon resources
-    wxIcon GetIconResource( const wxString& name );
-////@end AdvancedStreamlines member function declarations
+   ///Set the stream arrow flag
+   ///\param value The stream arrow flag
+   void SetStreamArrow(bool value);
 
-    /// Should we show tooltips?
-    static bool ShowToolTips();
+   ///Set the use last seed pt flag
+   ///\param value The use last seed pt flag
+   void SetUseLastSeedPt(bool value);
 
-////@begin AdvancedStreamlines member variables
-   wxSlider*   itemSlider5;  
-   wxSlider*   itemSlider10; 
-   wxSlider*   itemSlider15; 
-   wxSlider*   itemSlider20; 
-   wxSlider*   itemSlider22; 
-   wxCheckBox* itemCheckBox27;
-   wxCheckBox* itemCheckBox28;
-   wxButton*   itemButton29;
-////@end AdvancedStreamlines member variables
+   ///Set the line diameter
+   ///\param value The size
+   void SetLineDiameter(double value);
+
+   ///Get the propagation step size.
+   double GetPropagationSize();
+   ///Get the integration step size
+   double GetIntegrationStepSize();
+   ///Get the (?)step
+   double GetStep();
+   ///Get the Sphere/Arrow/Particle(?) size
+   double GetSphereArrowParticleSize();
+
+   ///Get the line diameter.
+   double GetLineDiameter();
+
+   ///Get the stream arrow.
+   bool GetStreamArrow();
+
+   ///Get the use last seed point flag
+   bool GetUseLastSeedPoint();
+
+
+   /// Retrieves bitmap resources
+   wxBitmap GetBitmapResource( const wxString& name );
+
+   /// Retrieves icon resources
+   wxIcon GetIconResource( const wxString& name );
+
+   /// Should we show tooltips?
+   static bool ShowToolTips();
+
 protected:
+   void _onLastSeedPtCheck(wxCommandEvent& event);
+   void _onArrowCheck( wxCommandEvent& event);
+   void _oniStepSlider(wxScrollEvent& event);
+   void _onPropSlider(wxScrollEvent& event);
+   void _onStepSlider(wxScrollEvent& event);
+   void _onDiameterSlider(wxScrollEvent& event);
+   void _onScaleSlider( wxScrollEvent& event);
+   void _onParticleTrack(wxCommandEvent& event);
+
+   double _propagationTime;///<The propagation time.
+   double _integrationStepSize;///<The integration step size
+   double _stepSize;///<The (?) step size.
+   double _sphereArrowParticleSize;///<The (?)size.
+   double _lineDiameter;///<The line diameter.
+
+   bool _useLastSeedPoint;///<Use last seed point.
+   bool _useStreamArrows;///<Use stream arrows.
+
+   wxSlider* _propagationSlider;  
+   wxSlider* _integrationSlider; 
+   wxSlider* _stepSlider; 
+   wxSlider* _sphereArrowParticleSlider; 
+   wxSlider* _diameterSlider; 
+   wxCheckBox* _lastSeedPtCheck;
+   wxCheckBox* _streamArrowCheck;
+
+   //wxButton*   itemButton29;
+
+
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
    std::vector< long > commandInputs;

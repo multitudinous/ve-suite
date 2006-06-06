@@ -18,97 +18,12 @@
 #include <wx/slider.h>
 #include <wx/checkbox.h>
 #include <wx/icon.h>
-////@begin XPM images
-////@end XPM images
 
-/*!
- * Application instance implementation
- */
-
-////@begin implement app
-//IMPLEMENT_APP( AdvancedStreamlinesApp )
-////@end implement app
-
-/*!
- * AdvancedStreamlinesApp type definition
- */
-
-//IMPLEMENT_CLASS( AdvancedStreamlinesApp, wxApp )
-
-/*!
- * AdvancedStreamlinesApp event table definition
- */
-/*
-BEGIN_EVENT_TABLE( AdvancedStreamlinesApp, wxApp )
-
-////@begin AdvancedStreamlinesApp event table entries
-////@end AdvancedStreamlinesApp event table entries
-
-END_EVENT_TABLE()
-*/
-/*!
- * Constructor for AdvancedStreamlinesApp
- */
-/*
-AdvancedStreamlinesApp::AdvancedStreamlinesApp()
-{
-////@begin AdvancedStreamlinesApp member initialisation
-////@end AdvancedStreamlinesApp member initialisation
-}
-*/
-/*!
- * Initialisation for AdvancedStreamlinesApp
- */
-/*
-bool AdvancedStreamlinesApp::OnInit()
-{    
-////@begin AdvancedStreamlinesApp initialisation
-    // Remove the comment markers above and below this block
-    // to make permanent changes to the code.
-
-#if wxUSE_XPM
-    wxImage::AddHandler(new wxXPMHandler);
-#endif
-#if wxUSE_LIBPNG
-    wxImage::AddHandler(new wxPNGHandler);
-#endif
-#if wxUSE_LIBJPEG
-    wxImage::AddHandler(new wxJPEGHandler);
-#endif
-#if wxUSE_GIF
-    wxImage::AddHandler(new wxGIFHandler);
-#endif
-////@end AdvancedStreamlinesApp initialisation
-
-    return true;
-}
-*/
-/*!
- * Cleanup for AdvancedStreamlinesApp
- */
-/*
-int AdvancedStreamlinesApp::OnExit()
-{    
-////@begin AdvancedStreamlinesApp cleanup
-    return wxApp::OnExit();
-////@end AdvancedStreamlinesApp cleanup
-}
-*/
-
-/*!
- * AdvancedStreamlines type definition
- */
-
-//IMPLEMENT_DYNAMIC_CLASS( AdvancedStreamlines, wxDialog )
-
-/*!
- * AdvancedStreamlines event table definition
- */
 
 BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
 ////@begin AdvancedStreamlines event table entries
-   EVT_BUTTON        ( PARTICLE_TRACKING_BUTTON, AdvancedStreamlines::_onParticleTrack)
-   EVT_CHECKBOX      ( USE_SEED_POINT_CHK,       AdvancedStreamlines::_onCheck)
+   //EVT_BUTTON        ( PARTICLE_TRACKING_BUTTON, AdvancedStreamlines::_onParticleTrack)
+   EVT_CHECKBOX      ( USE_SEED_POINT_CHK,       AdvancedStreamlines::_onLastSeedPtCheck)
    EVT_CHECKBOX      ( ARROWS_CHK,               AdvancedStreamlines::_onArrowCheck )
    EVT_COMMAND_SCROLL( SPHERE_SIZE_SLIDER,       AdvancedStreamlines::_onScaleSlider)
 #ifdef WIN32
@@ -125,60 +40,48 @@ BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
 ////@end AdvancedStreamlines event table entries
 END_EVENT_TABLE()
 
-/*!
- * AdvancedStreamlines constructors
- */
-/*
-AdvancedStreamlines::AdvancedStreamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
-:wxDialog(NULL,-1, wxString("Advanced Streamlines"), 
-		wxDefaultPosition, wxDefaultSize,
-      (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
-{
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-   this->SetSize( dialogPosition );
-
-   xplorerPtr = VjObs::_duplicate( veEngine );
-   domManager = domManagerIn;
-
-   CreateControls();
-}
-*/
-AdvancedStreamlines::AdvancedStreamlines( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+//////////////////////////////////////////////////////////////////////////
+AdvancedStreamlines::AdvancedStreamlines(wxWindow* parent, wxWindowID id,
+                                     const wxString& caption, 
+                                     const wxPoint& pos, 
+                                     const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
     wxSize displaySize = ::wxGetDisplaySize();
     wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
     this->SetSize( dialogPosition );
 }
-
-/*!
- * AdvancedStreamlines creator
- */
-
-bool AdvancedStreamlines::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+////////////////////////////////////////////////////////////////////////////////////////////
+bool AdvancedStreamlines::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
+                              const wxPoint& pos, const wxSize& size, long style )
 {
-////@begin AdvancedStreamlines member initialisation
-   itemSlider5 = 0;  
-   itemSlider10 = 0; 
-   itemSlider15 = 0; 
-   itemSlider20 = 0; 
-   itemSlider22 = 0; 
-   itemCheckBox27 = 0;
-   itemCheckBox28 = 0;
-   itemButton29 = 0;
-////@end AdvancedStreamlines member initialisation
+   _propagationSlider = 0;  
+   _integrationSlider = 0; 
+   _stepSlider = 0; 
+   _sphereArrowParticleSlider = 0; 
+   _diameterSlider = 0; 
+   _lastSeedPtCheck = 0;
+   _streamArrowCheck = 0;
 
-////@begin AdvancedStreamlines creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
-    wxDialog::Create( parent, id, caption, pos, size, style );
+   //itemButton29 = 0;
 
-    CreateControls();
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
-    Centre();
-////@end AdvancedStreamlines creation
-    return true;
+   _propagationTime = 1.0;
+   _integrationStepSize = 1000.0;
+   _stepSize = 1.0;
+   _sphereArrowParticleSize = .5;
+   _lineDiameter = 0.0;
+
+   _useLastSeedPoint = false;
+   _useStreamArrows = false;
+
+   SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+   wxDialog::Create( parent, id, caption, pos, size, style );
+
+   CreateControls();
+   GetSizer()->Fit(this);
+   GetSizer()->SetSizeHints(this);
+   Centre();
+   return true;
 }
 
 /*!
@@ -202,8 +105,8 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Propagation (Total) Time"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText4, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider5 = new wxSlider( itemDialog1, PROPOGATION_SLIDER, 100, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(itemSlider5, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    _propagationSlider = new wxSlider( itemDialog1, PROPOGATION_SLIDER, 100, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_propagationSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer6, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -217,8 +120,8 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Integration Step"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText9, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider10 = new wxSlider( itemDialog1, INTEGRATION_STEP_SLIDER, 1000, 1, 5000, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(itemSlider10, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    _integrationSlider = new wxSlider( itemDialog1, INTEGRATION_STEP_SLIDER, 1000, 1, 5000, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_integrationSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer11, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -232,8 +135,8 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Step"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider15 = new wxSlider( itemDialog1, STEP_SIZE_SLIDER, 1, 1, 5000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(itemSlider15, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    _stepSlider = new wxSlider( itemDialog1, STEP_SIZE_SLIDER, 1, 1, 5000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_stepSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer16, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -247,14 +150,14 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText19 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Sphere/Arrow/Particle Size(%)"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemStaticBoxSizer3->Add(itemStaticText19, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider20 = new wxSlider( itemDialog1, SPHERE_SIZE_SLIDER, 50, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(itemSlider20, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    _sphereArrowParticleSlider = new wxSlider( itemDialog1, SPHERE_SIZE_SLIDER, 50, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_sphereArrowParticleSlider, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxStaticText* itemStaticText21 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Line Diameter"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText21, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider22 = new wxSlider( itemDialog1, LINE_DIAMETER_SLIDER, 0, -100, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(itemSlider22, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    _diameterSlider = new wxSlider( itemDialog1, LINE_DIAMETER_SLIDER, 0, -100, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_diameterSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer23 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer23, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -268,15 +171,15 @@ void AdvancedStreamlines::CreateControls()
     wxBoxSizer* itemBoxSizer26 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer26, 0, wxGROW|wxALL, 5);
 
-    wxCheckBox* itemCheckBox27 = new wxCheckBox( itemDialog1, USE_SEED_POINT_CHK, _T("Use Last Seed Point"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemCheckBox27->SetValue(false);
-    itemBoxSizer26->Add(itemCheckBox27, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    _lastSeedPtCheck = new wxCheckBox( itemDialog1, USE_SEED_POINT_CHK, _T("Use Last Seed Point"), wxDefaultPosition, wxDefaultSize, 0 );
+    _lastSeedPtCheck->SetValue(false);
+    itemBoxSizer26->Add(_lastSeedPtCheck, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxCheckBox* itemCheckBox28 = new wxCheckBox( itemDialog1, ARROWS_CHK, _T("Stream Arrows"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemCheckBox28->SetValue(false);
-    itemBoxSizer26->Add(itemCheckBox28, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    _streamArrowCheck = new wxCheckBox( itemDialog1, ARROWS_CHK, _T("Stream Arrows"), wxDefaultPosition, wxDefaultSize, 0 );
+    _streamArrowCheck->SetValue(false);
+    itemBoxSizer26->Add(_streamArrowCheck, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* itemButton29 = new wxButton( itemDialog1, PARTICLE_TRACKING_BUTTON, _T("Particle Tracking"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton29 = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemButton29, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 ////@end AdvancedStreamlines content construction
@@ -316,43 +219,134 @@ wxIcon AdvancedStreamlines::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end AdvancedStreamlines icon retrieval
 }
-///////////////////////////////////////////////////////
-void AdvancedStreamlines::_onCheck( wxCommandEvent& WXUNUSED(event) )
+///////////////////////////////////////////////////////////
+void AdvancedStreamlines::SetPropagationSize(double value)
+{ 
+   if(_propagationSlider)
+   {
+      _propagationSlider->SetValue(static_cast<int>(value*100));
+   }
+}
+//////////////////////////////////////////////////////////////
+void AdvancedStreamlines::SetIntegrationStepSize(double value)
 {
-
+   if(_integrationSlider)
+   {
+      _integrationSlider->SetValue(static_cast<int>(value*100));
+   }
+}
+///////////////////////////////////////////////
+void AdvancedStreamlines::SetStep(double value)
+{
+   if(_stepSlider)
+   {
+      _stepSlider->SetValue(static_cast<int>(value*100));
+   }
+}
+//////////////////////////////////////////////////////////////////
+void AdvancedStreamlines::SetSphereArrowParticleSize(double value)
+{
+   if(_sphereArrowParticleSlider)
+   {
+      _sphereArrowParticleSlider->SetValue(static_cast<int>(value*100));
+   }
+}
+////////////////////////////////////////////////////////
+void AdvancedStreamlines::SetLineDiameter(double value)
+{
+   if(_diameterSlider)
+   {
+      _diameterSlider->SetValue(static_cast<int>(value*100));
+   }
+}
+////////////////////////////////////////////////////
+void AdvancedStreamlines::SetStreamArrow(bool value)
+{
+   if(_streamArrowCheck)
+   {
+      _streamArrowCheck->SetValue(value);
+   }
+}
+//////////////////////////////////////////////////////
+void AdvancedStreamlines::SetUseLastSeedPt(bool value)
+{
+   if(_lastSeedPtCheck)
+   {
+      _lastSeedPtCheck->SetValue(value);
+   }
+}
+////////////////////////////////////////////////
+double AdvancedStreamlines::GetPropagationSize()
+{
+   return  _propagationTime;
+}
+/////////////////////////////////////////////////////
+double AdvancedStreamlines::GetIntegrationStepSize()
+{
+   return _integrationStepSize;
+}
+/////////////////////////////////////
+double AdvancedStreamlines::GetStep()
+{
+   return _stepSize;
+}
+////////////////////////////////////////////////////////
+double AdvancedStreamlines::GetSphereArrowParticleSize()
+{
+   return _sphereArrowParticleSize;
+}
+/////////////////////////////////////////////
+double AdvancedStreamlines::GetLineDiameter()
+{
+   return _lineDiameter;
+}
+///////////////////////////////////////////////
+bool AdvancedStreamlines::GetUseLastSeedPoint()
+{
+   return _useLastSeedPoint;
+}
+//////////////////////////////////////////
+bool AdvancedStreamlines::GetStreamArrow()
+{
+   return _useStreamArrows;
+}
+///////////////////////////////////////////////////////
+void AdvancedStreamlines::_onLastSeedPtCheck( wxCommandEvent& WXUNUSED(event) )
+{
+   this->_useLastSeedPoint = _lastSeedPtCheck->GetValue();
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onArrowCheck( wxCommandEvent& WXUNUSED(event) )
 {
-
+   this->_useStreamArrows = _streamArrowCheck->GetValue();
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_oniStepSlider( wxScrollEvent& WXUNUSED(event) )
 {
-
+   _integrationStepSize = static_cast<double>(_integrationSlider->GetValue()/100.0);
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onPropSlider( wxScrollEvent& WXUNUSED(event) )
 {
-
+   _propagationTime = static_cast<double>(_propagationSlider->GetValue()/100.0);
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onStepSlider( wxScrollEvent& WXUNUSED(event) )
 {
-
+   _stepSize = static_cast<double>(_stepSlider->GetValue()/100.0);
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onDiameterSlider( wxScrollEvent& WXUNUSED(event) )
 {
-
+   _lineDiameter = static_cast<double>(this->_diameterSlider->GetValue()/100.0);
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onScaleSlider( wxScrollEvent& WXUNUSED(event) )
 {
-
+   _sphereArrowParticleSize = static_cast<double>(_sphereArrowParticleSlider->GetValue()/100.0);
 }
 ///////////////////////////////////////////////////////
-void AdvancedStreamlines::_onParticleTrack( wxCommandEvent& WXUNUSED(event) )
+/*void AdvancedStreamlines::_onParticleTrack( wxCommandEvent& WXUNUSED(event) )
 {
-
-}
+   
+}*/
