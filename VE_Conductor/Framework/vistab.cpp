@@ -320,7 +320,8 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ISOSURFACES_POSITION,
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
-   
+   isosurface.SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
+   isosurface.SetActiveScalar(_activeScalarName);
    isosurface.ShowModal();
    itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
 }

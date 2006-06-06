@@ -1,13 +1,34 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        isosurfaces.h
-// Purpose:     
-// Author:      Jared Abodeely
-// Modified by: 
-// Created:     Fri 21 Apr 2006 10:14:42 CDT
-// RCS-ID:      
-// Copyright:   
-// Licence:     
-/////////////////////////////////////////////////////////////////////////////
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile: GlobalParamDialog.h,v $
+ * Date modified: $Date: 2006-03-23 17:47:31 -0600 (Thu, 23 Mar 2006) $
+ * Version:       $Rev: 3957 $
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _ISOSURFACES_H_
 #define _ISOSURFACES_H_
@@ -16,23 +37,10 @@
 #pragma interface "isosurfaces.h"
 #endif
 
-/*!
- * Includes
- */
-
-////@begin includes
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/VE_UI/UI_TransientDialog.h"
-//#include "VE_Conductor/Framework/advancedisosurfaces.h"
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
-////@end includes
-
-/*!
- * Forward declarations
- */
-
-////@begin forward declarations
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
@@ -45,24 +53,13 @@ class wxCheckBox;
 class wxSlider;
 class wxButton;
 class wxStaticBox;
-////@end forward declarations
 
-/*!
- * Control identifiers
- */
-
-////@begin control identifiers
 #define ID_DIALOG 10000
 #define SYMBOL_ISOSURFACES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_ISOSURFACES_TITLE _T("Isosurfaces")
 #define SYMBOL_ISOSURFACES_IDNAME ID_DIALOG
 #define SYMBOL_ISOSURFACES_SIZE wxSize(400, 300)
 #define SYMBOL_ISOSURFACES_POSITION wxDefaultPosition
-/*#define ID_RADIOBUTTON 10001
-#define ID_CHECKBOX 10002
-#define ID_SLIDER 10003
-#define ID_BUTTON 10004
-#define ID_BUTTON1 10005*/
 
 enum ISOSURFACE_IDS
 {
@@ -72,48 +69,6 @@ enum ISOSURFACE_IDS
    ADD_ISOSURFACE_BUTTON,
    ADVANCED_ISOSURFACE_BUTTON
 };
-////@end control identifiers
-
-/*!
- * IsosurfacesApp class declaration
- */
-/*
-class IsosurfacesApp: public wxApp
-{    
-    DECLARE_CLASS( IsosurfacesApp )
-    DECLARE_EVENT_TABLE()
-
-public:
-    /// Constructor
-    IsosurfacesApp();
-
-    /// Initialises the application
-    virtual bool OnInit();
-
-    /// Called on exit
-    virtual int OnExit();
-
-////@begin IsosurfacesApp event handler declarations
-////@end IsosurfacesApp event handler declarations
-
-////@begin IsosurfacesApp member function declarations
-////@end IsosurfacesApp member function declarations
-
-////@begin IsosurfacesApp member variables
-////@end IsosurfacesApp member variables
-};
-*/
-/*!
- * Application instance declaration 
- */
-
-////@begin declare app
-//DECLARE_APP(IsosurfacesApp)
-////@end declare app
-
-/*!
- * Isosurfaces class declaration
- */
 
 class Isosurfaces: public wxDialog
 {    
@@ -128,8 +83,7 @@ public:
                   const wxString& caption = SYMBOL_ISOSURFACES_TITLE,
                   const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION,
                   const wxSize& size = SYMBOL_ISOSURFACES_SIZE, 
-                  long style = SYMBOL_ISOSURFACES_STYLE );
-//    Isosurfaces(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+                  long style = SYMBOL_ISOSURFACES_STYLE);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -138,49 +92,46 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
-////@begin Isosurfaces event handler declarations
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
-    void _onIsosurface( wxCommandEvent& event );
+    ///The name of the available scalars.
+    ///\param scalarNames all the scalars in this dataset
+    void SetAvailableScalars(wxArrayString scalarNames);
+    
+    ///Set the active scalar
+    ///\param activeScalarName The active scalar name
+    void SetActiveScalar(std::string activeScalarName);
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
-    void _onPrecomputedIsosurface( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
-    void _onIsosurfacePlane( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-    void _onAddIsosurface( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
-    void _onAdvanced( wxCommandEvent& event );
-////@end Isosurfaces event handler declarations
-
-////@begin Isosurfaces member function declarations
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
     /// Retrieves icon resources
     wxIcon GetIconResource( const wxString& name );
-////@end Isosurfaces member function declarations
 
     /// Should we show tooltips?
     static bool ShowToolTips();
 
-////@begin Isosurfaces member variables
-   wxRadioButton* itemRadioButton4;
-   wxCheckBox*    itemCheckBox5;
-   wxSlider*      itemSlider7;
-   wxButton*      itemButton9;
-   wxButton*      itemButton10;
-////@end Isosurfaces member variables
 protected:
-   std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
-   int cId, cIso_value, cMin, cMax, cSc;
-   std::vector< long > commandInputs;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
+   std::string _colorByScalarName;///<The name of the scalar to color by.
+   std::string _activeScalar;///The scalar that is active on the vistab
+   wxArrayString _scalarNames;///<The available scalars.
+   wxCheckBox* _useNearestPreComputedCheckBox;
+   wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
+   wxButton* _advancedButton;///<Display the color by scalar dialog
+   wxButton* _computeButton;///<Compute the iso-surface
+   
+   void _onIsosurface( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+   void _onPrecomputedIsosurface( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+   void _onIsosurfacePlane( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+   void _onAddIsosurface( wxCommandEvent& event );
+
+   ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+   void _onAdvanced(wxCommandEvent& event);
 };
 
 #endif

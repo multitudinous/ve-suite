@@ -1,113 +1,48 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        isosurfaces.cpp
-// Purpose:     
-// Author:      Jared Abodeely
-// Modified by: 
-// Created:     Fri 21 Apr 2006 10:14:42 CDT
-// RCS-ID:      
-// Copyright:   
-// Licence:     
-/////////////////////////////////////////////////////////////////////////////
-
-
-////@begin includes
-////@end includes
-
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile: GlobalParamDialog.h,v $
+ * Date modified: $Date: 2006-03-23 17:47:31 -0600 (Thu, 23 Mar 2006) $
+ * Version:       $Rev: 3957 $
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/isosurfaces.h"
+#include "VE_Conductor/Framework/vistab.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
 #include <wx/radiobut.h>
 #include <wx/slider.h>
 #include <wx/icon.h>
+#include <wx/choicdlg.h>
+#include <wx/msgdlg.h>
 #include <iostream>
-////@begin XPM images
-////@end XPM images
-
-/*!
- * Application instance implementation
- */
-
-////@begin implement app
-//IMPLEMENT_APP( IsosurfacesApp )
-////@end implement app
-
-/*!
- * IsosurfacesApp type definition
- */
-
-//IMPLEMENT_CLASS( IsosurfacesApp, wxApp )
-
-/*!
- * IsosurfacesApp event table definition
- */
-/*
-BEGIN_EVENT_TABLE( IsosurfacesApp, wxApp )
-
-////@begin IsosurfacesApp event table entries
-////@end IsosurfacesApp event table entries
-
-END_EVENT_TABLE()
-*/
-/*!
- * Constructor for IsosurfacesApp
- */
-/*
-IsosurfacesApp::IsosurfacesApp()
-{
-////@begin IsosurfacesApp member initialisation
-////@end IsosurfacesApp member initialisation
-}
-*/
-/*!
- * Initialisation for IsosurfacesApp
- */
-/*
-bool IsosurfacesApp::OnInit()
-{    
-////@begin IsosurfacesApp initialisation
-    // Remove the comment markers above and below this block
-    // to make permanent changes to the code.
-
-#if wxUSE_XPM
-    wxImage::AddHandler(new wxXPMHandler);
-#endif
-#if wxUSE_LIBPNG
-    wxImage::AddHandler(new wxPNGHandler);
-#endif
-#if wxUSE_LIBJPEG
-    wxImage::AddHandler(new wxJPEGHandler);
-#endif
-#if wxUSE_GIF
-    wxImage::AddHandler(new wxGIFHandler);
-#endif
-////@end IsosurfacesApp initialisation
-
-    return true;
-}
-*/
-/*!
- * Cleanup for IsosurfacesApp
- */
-/*
-int IsosurfacesApp::OnExit()
-{    
-////@begin IsosurfacesApp cleanup
-    return wxApp::OnExit();
-////@end IsosurfacesApp cleanup
-}
-*/
-
-/*!
- * Isosurfaces type definition
- */
-
-//IMPLEMENT_DYNAMIC_CLASS( Isosurfaces, wxDialog )
-
-/*!
- * Isosurfaces event table definition
- */
-
+///////////////////////////
 BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
 ////@begin Isosurfaces event table entries
    EVT_RADIOBUTTON      (ISOSURFACE_RBUTTON,          Isosurfaces::_onIsosurface)
@@ -117,74 +52,45 @@ BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
    EVT_BUTTON           (ADVANCED_ISOSURFACE_BUTTON,  Isosurfaces::_onAdvanced)
 ////@end Isosurfaces event table entries
 END_EVENT_TABLE()
-
-/*!
- * Isosurfaces constructors
- */
-/*
-Isosurfaces::Isosurfaces(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
-:wxDialog(NULL,-1, wxString("Isosurfaces"), 
-    wxDefaultPosition, wxDefaultSize, 
-      (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
-{
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-   this->SetSize( dialogPosition );
-
-   xplorerPtr = VjObs::_duplicate( veEngine );
-   domManager = domManagerIn;
-
-   CreateControls();
-}
-*/
 Isosurfaces::Isosurfaces( )
 {
 
 }
-
-Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+//////////////////////////////////////////////////////////
+Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id,
+                       const wxString& caption, 
+                       const wxPoint& pos, 
+                       const wxSize& size, long style )
 {
     Create(parent, id, caption, pos, size, style);
     wxSize displaySize = ::wxGetDisplaySize();
     wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
     this->SetSize( dialogPosition );
 }
-
-/*!
- * Isosurfaces creator
- */
-
-bool Isosurfaces::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+//////////////////////////////////////////////////////////
+bool Isosurfaces::Create( wxWindow* parent, wxWindowID id, 
+                       const wxString& caption, 
+                       const wxPoint& pos, 
+                       const wxSize& size, long style )
 {
-////@begin Isosurfaces member initialisation
-   itemRadioButton4 = 0;
-   itemCheckBox5 = 0;
-   itemSlider7 = 0;
-   itemButton9 = 0;
-   itemButton10 = 0;
-////@end Isosurfaces member initialisation
+   _useNearestPreComputedCheckBox = 0;
+   _isoSurfaceSlider = 0;
+   _advancedButton = 0;
+   _computeButton = 0;
 
-////@begin Isosurfaces creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
-    wxDialog::Create( parent, id, caption, pos, size, style );
+   SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+   wxDialog::Create( parent, id, caption, pos, size, style );
 
-    CreateControls();
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
-    Centre();
-////@end Isosurfaces creation
-    return true;
+   CreateControls();
+   GetSizer()->Fit(this);
+   GetSizer()->SetSizeHints(this);
+   Centre();
+
+   return true;
 }
-
-/*!
- * Control creation for Isosurfaces
- */
-
+//////////////////////////////////
 void Isosurfaces::CreateControls()
 {    
-////@begin Isosurfaces content construction
-    // Generated by DialogBlocks, Fri 28 Apr 2006 09:32:26 CDT 
-
     Isosurfaces* itemDialog1 = this;
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
@@ -194,122 +100,124 @@ void Isosurfaces::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
 
-    wxRadioButton* itemRadioButton4 = new wxRadioButton( itemDialog1, ISOSURFACE_RBUTTON, _T("Specify an Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemRadioButton4->SetValue(false);
-    itemStaticBoxSizer3->Add(itemRadioButton4, 0, wxALIGN_LEFT|wxALL, 5);
-
-    wxCheckBox* itemCheckBox5 = new wxCheckBox( itemDialog1, PRECOMPUTED_ISO_CHK, _T("Use Nearest Precomputed Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemCheckBox5->SetValue(false);
-    itemStaticBoxSizer3->Add(itemCheckBox5, 0, wxGROW|wxALL, 5);
+   
+    _useNearestPreComputedCheckBox = new wxCheckBox( itemDialog1, PRECOMPUTED_ISO_CHK, _T("Use Nearest Precomputed Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    _useNearestPreComputedCheckBox->SetValue(false);
+    itemStaticBoxSizer3->Add(_useNearestPreComputedCheckBox, 0, wxGROW|wxALL, 5);
 
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add(itemStaticText6, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
-    wxSlider* itemSlider7 = new wxSlider( itemDialog1, ISOSURFACE_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemBoxSizer2->Add(itemSlider7, 0, wxGROW|wxALL, 5);
+    _isoSurfaceSlider = new wxSlider( itemDialog1, ISOSURFACE_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemBoxSizer2->Add(_isoSurfaceSlider, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxButton* itemButton9 = new wxButton( itemDialog1, wxID_OK, _T("Compute Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer8->Add(itemButton9, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    _computeButton = new wxButton( itemDialog1, ADD_ISOSURFACE_BUTTON, _T("Compute Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer8->Add(_computeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* itemButton10 = new wxButton( itemDialog1, ADVANCED_ISOSURFACE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer8->Add(itemButton10, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-////@end Isosurfaces content construction
+    _advancedButton = new wxButton( itemDialog1, ADVANCED_ISOSURFACE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer8->Add(_advancedButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 }
-
-/*!
- * Should we show tooltips?
- */
-
+////////////////////////////////////////////////////////
+void Isosurfaces::SetActiveScalar(std::string activeScalar)
+{
+   _activeScalar = activeScalar;
+   _colorByScalarName = _activeScalar;
+}
+////////////////////////////////////////////////////////////////
+void Isosurfaces::SetAvailableScalars(wxArrayString scalarNames)
+{
+   for(size_t i = 0; i < scalarNames.Count(); i++)
+   {
+      _scalarNames.Add(scalarNames[i]);
+   }
+}
+////////////////////////////////
 bool Isosurfaces::ShowToolTips()
 {
     return true;
 }
-
-/*!
- * Get bitmap resources
- */
-
+////////////////////////////////////////////////////////////////
 wxBitmap Isosurfaces::GetBitmapResource( const wxString& name )
 {
-    // Bitmap retrieval
-////@begin Isosurfaces bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end Isosurfaces bitmap retrieval
+   wxUnusedVar(name);
+   return wxNullBitmap;
 }
-
-/*!
- * Get icon resources
- */
-
+////////////////////////////////////////////////////////////
 wxIcon Isosurfaces::GetIconResource( const wxString& name )
 {
-    // Icon retrieval
-////@begin Isosurfaces icon retrieval
-    wxUnusedVar(name);
-    return wxNullIcon;
-////@end Isosurfaces icon retrieval
+   wxUnusedVar(name);
+   return wxNullIcon;
 }
-/*!
- * wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
- */
-
+/////////////////////////////////////////////////////////
 void Isosurfaces::_onIsosurface( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON in Isosurfaces.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON in Isosurfaces. 
+
 }
-
-/*!
- * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
- */
-
+////////////////////////////////////////////////////////////////////
 void Isosurfaces::_onPrecomputedIsosurface( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX in Isosurfaces.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX in Isosurfaces. 
+
 }
-
-/*!
- * wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
- */
-
+/////////////////////////////////////////////////////////////
 void Isosurfaces::_onIsosurfacePlane( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in Isosurfaces.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in Isosurfaces. 
 }
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
- */
-
+///////////////////////////////////////////////////////////
 void Isosurfaces::_onAddIsosurface( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1 in Isosurfaces.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1 in Isosurfaces. 
+   VE_XML::Command* newCommand = new VE_XML::Command();
+   newCommand->SetCommandName("UPDATE_ISOSURFACE_SETTINGS");
+   
+   VE_XML::DataValuePair* isosurfaceValue = new VE_XML::DataValuePair();
+   isosurfaceValue->SetData("Iso-Surface Value",static_cast<double>((_isoSurfaceSlider->GetValue()/100.0)));
+   newCommand->AddDataValuePair(isosurfaceValue);
+
+   VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
+   colorByScalar->SetData("Color By Scalar",_colorByScalarName);
+   newCommand->AddDataValuePair(colorByScalar);
+
+   VE_XML::DataValuePair* nearestPrecomputed = new VE_XML::DataValuePair();
+   nearestPrecomputed->SetDataName("Use Nearest Precomputed");
+   nearestPrecomputed->SetDataType("UNSIGNED INT");
+   if(_useNearestPreComputedCheckBox->GetValue())
+   {
+      nearestPrecomputed->SetDataValue(static_cast<unsigned int>(1));
+   }
+   else
+   {
+      nearestPrecomputed->SetDataValue(static_cast<unsigned int>(0));
+   }
+   newCommand->AddDataValuePair(nearestPrecomputed);
+
+   try
+   {
+      dynamic_cast<Vistab*>(GetParent())->SendUpdatedSettingsToXplorer(newCommand);
+   }
+   catch(...)
+   {
+      {
+         wxMessageBox( "Invalid Parent","Communication Failure", 
+            wxOK | wxICON_INFORMATION );
+         if(newCommand)
+         {
+            delete newCommand;
+            newCommand = 0;
+         }
+      }
+   }
 }
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
- */
-
+//////////////////////////////////////////////////////
 void Isosurfaces::_onAdvanced( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in Isosurfaces.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in Isosurfaces. 
+   wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
+                                   _scalarNames);
+   //scalarSelector.SetStringSelection(_colorByScalarName);
+   if (scalarSelector.ShowModal() == wxID_OK)
+   {
+      _colorByScalarName = scalarSelector.GetStringSelection();
+   }
 }
+
