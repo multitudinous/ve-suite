@@ -102,10 +102,21 @@ DualSlider::~DualSlider()
    _callbacks.clear();
 }
 //////////////////////////////////////////////////
-void DualSlider::SetSliderRange(int min, int max)
+void DualSlider::SetMinimumSliderValue(int value)
 {
-   _range[0] = min;
-   _range[1] = max;
+   _minSlider->SetValue(value);
+}
+//////////////////////////////////////////////////
+void DualSlider::SetMaximumSliderValue(int value)
+{
+   _maxSlider->SetValue(value);
+}
+//////////////////////////////////////////////////
+void DualSlider::SetSliderRange(int minValue, 
+                             int maxValue)
+{
+   _range[0] = minValue;
+   _range[1] = maxValue;
    _minSlider->SetRange(_range[0],_range[1]);
    _maxSlider->SetRange(_range[0],_range[1]);
 }

@@ -277,25 +277,25 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {
-   Contours contour(this,                
+   Contours scalarContour(this,                
                   SYMBOL_CONTOURS_IDNAME, 
                   SYMBOL_CONTOURS_TITLE,
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
-   contour.ShowModal();
+   scalarContour.ShowModal();
    itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 {
-   Vectors vector( this,                
-                  SYMBOL_VECTORS_IDNAME, 
-                  SYMBOL_VECTORS_TITLE,
-                  SYMBOL_VECTORS_POSITION,
-                  SYMBOL_VECTORS_SIZE, 
-                  SYMBOL_VECTORS_STYLE );
-   vector.ShowModal();
+   Contours vectorContour(this,                
+                  SYMBOL_CONTOURS_IDNAME, 
+                  SYMBOL_CONTOURS_TITLE,
+                  SYMBOL_CONTOURS_POSITION,
+                  SYMBOL_CONTOURS_SIZE, 
+                  SYMBOL_CONTOURS_STYLE,"VECTOR" );
+   vectorContour.ShowModal();
    itemToolBar3->ToggleTool(VECTOR_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////

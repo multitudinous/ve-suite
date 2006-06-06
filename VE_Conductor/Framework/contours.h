@@ -58,15 +58,7 @@ class wxButton;
 #define SYMBOL_CONTOURS_IDNAME ID_DIALOG
 #define SYMBOL_CONTOURS_SIZE wxSize(400, 300)
 #define SYMBOL_CONTOURS_POSITION wxDefaultPosition
-/*#define ID_RADIOBOX 10001
-#define ID_RADIOBOX1 10007
-#define ID_RADIOBUTTON 10002
-#define ID_CHECKBOX 10003
-#define ID_RADIOBUTTON1 10004
-#define ID_CHECKBOX1 10005
-#define ID_SLIDER 10008
-#define ID_BUTTON 10006
-#define ID_BUTTON1 10009*/
+
 
 enum CONTOUR_IDS
 {
@@ -80,89 +72,86 @@ enum CONTOUR_IDS
    ADD_CONTOUR_PLANE_BUTTON,
    ADVANCED_CONTOUR_BUTTON
 };
-////@end control identifiers
-
-/*!
- * Compatibility
- */
 
 #ifndef wxCLOSE_BOX
 #define wxCLOSE_BOX 0x1000
 #endif
 
-/*!
- * Contours class declaration
- */
+
 
 class Contours: public wxDialog
 {    
-//    DECLARE_DYNAMIC_CLASS( Contours )
     DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
-    Contours( );
-    Contours( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
-//    Contours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
-    virtual ~Contours();   
-    void SendCommandsToXplorer( void );
-    void SetCommInstance( VjObs_ptr veEngine );
-    /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
+   Contours( );
+   Contours( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, 
+            const wxString& caption = SYMBOL_CONTOURS_TITLE, 
+            const wxPoint& pos = SYMBOL_CONTOURS_POSITION, 
+            const wxSize& size = SYMBOL_CONTOURS_SIZE, 
+            long style = SYMBOL_CONTOURS_STYLE, std::string type="SCALAR" );
 
-    /// Creates the controls and sizers
-    void CreateControls();
+   virtual ~Contours();   
+   
+   /// Creation
+   bool Create( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
 
-////@begin Contours event handler declarations
-    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX
-    void _onDirection( wxCommandEvent& event );
+   /// Creates the controls and sizers
+   void CreateControls();
 
-    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX1
-    void _onContourType( wxCommandEvent& event );
+   ///Set the data type\n
+   ///\param type The type of data\n
+   ///Valid types are:\n
+   ///SCALAR\n
+   ///VECTOR
+   void SetDataType(std::string type = "SCALAR");
+   
+   ///Get the data type being displayed
+   std::string GetDataType();
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
-    void _onMultiplePlanes( wxCommandEvent& event );
+   /// Retrieves bitmap resources
+   wxBitmap GetBitmapResource( const wxString& name );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
-    void _onCyclePlanes( wxCommandEvent& event );
+   /// Retrieves icon resources
+   wxIcon GetIconResource( const wxString& name );
 
-    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON1
-    void _onSinglePlane( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX1
-    void _onPrecomputedPlane( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
-    void _onPlane( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-    void _onAddPlane( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
-    void _onAdvanced( wxCommandEvent& event );
-////@end Contours event handler declarations
-
-////@begin Contours member function declarations
-
-    /// Retrieves bitmap resources
-    wxBitmap GetBitmapResource( const wxString& name );
-
-    /// Retrieves icon resources
-    wxIcon GetIconResource( const wxString& name );
-////@end Contours member function declarations
-
-    /// Should we show tooltips?
-    static bool ShowToolTips();
-
-////@begin Contours member variables
-  
-////@end Contours member variables
-
+   /// Should we show tooltips?
+   static bool ShowToolTips();
 protected:
    ///Update the contour with the current settings.
    void _updateContourInformation();
    ///Update the advanced settings
    void _updateAdvancedSettings();
+   
+   /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX
+   void _onDirection( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX1
+   void _onContourType( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
+   void _onMultiplePlanes( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+   void _onCyclePlanes( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON1
+   void _onSinglePlane( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX1
+   void _onPrecomputedPlane( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+   void _onPlane( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+   void _onAddPlane( wxCommandEvent& event );
+
+   /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
+   void _onAdvanced( wxCommandEvent& event );
+
+   std::string _dataType;///<Scalar or vector data
 
    wxRadioBox*    _directionRBox;
    wxRadioBox*    _contourTypeRBox;
@@ -185,15 +174,12 @@ protected:
    double _lastLOD;///<The last LOD setting from the advanced panel.
    double _lastWarpedScale;///<The last warped scale setting from the advanced panel.
    double _lastOpacity;///<The last opacity setting from the advanced panel.
+   std::vector<double> _lastVectorThreshold;///<The min and max values for the vector threshold.
+   double _lastVectorScale;///<The vector scale.
+   double _lastVectorRatio;///<The vector ratio.
+   bool _lastScaleByMagnitude;///<Flag for scaling.
 
-   std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
-   int cId, cIso_value, cMin, cMax, cSc;
-   std::vector< long > commandInputs;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
 
-   //AdvancedContours* adContour;
 };
 
 #endif

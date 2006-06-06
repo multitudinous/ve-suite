@@ -116,11 +116,12 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
    wxDialog::Create( parent, id, caption, pos, size, style );
 
    CreateControls();
-   EnableUI( false );
+   
    GetSizer()->Fit(this);
    GetSizer()->SetSizeHints(this);
    Centre();
    InitializeWidgets();
+   EnableUI( false );
    SetAutoLayout( true );
    Refresh();
    wxSize temp = GetSize();

@@ -2517,6 +2517,7 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
 
       //Clean up memory
       delete veCommand;
+      veCommand = 0;
    }
 
   // delete dataSetLoaderDlg;

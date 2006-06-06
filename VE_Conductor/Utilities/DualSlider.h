@@ -81,8 +81,16 @@ public:
    ///Set the range on the min slider
    ///\param min The minimum value
    ///\param max The maximum value
-   void SetSliderRange(int min,int max);
+   void SetSliderRange(int minValue,int maxValue);
 
+   ///Set the min slider
+   ///\param min The minimum value
+   void SetMinimumSliderValue(int value);
+   
+   ///Set the max slider
+   ///\param max The maximum value
+   void SetMaximumSliderValue(int value);
+   
    ///Set the minimum allowable distance between slider values.
    ///\param buffer The buffer value.
    void SetSliderBuffer(int buffer);
