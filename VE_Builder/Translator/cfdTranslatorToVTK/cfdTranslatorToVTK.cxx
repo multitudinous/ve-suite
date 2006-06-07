@@ -35,6 +35,7 @@
 #include <iostream>
 #include <vtkDataSet.h>
 #include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/fileIO.h"
 using namespace VE_Builder;
 ////////////////////////////////////////
 //Constructor                         //
@@ -73,7 +74,13 @@ void cfdTranslatorToVTK::SetFileExtension(std::string fileExtension)
 /////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::SetInputDirectory(std::string inDir)
 {
+   baseFileNames.clear();
    _inputDir = inDir;
+   _infileNames = VE_Util::fileIO::GetFilesInDirectory(inDir,_fileExtension);
+   for (size_t i = 0; i < _infileNames.size(); i++)
+   {
+      ExtractAndAddBaseName(_infileNames.at(i));
+   }
 }
 ///////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::SetOutputDirectory(std::string outDir)
@@ -195,7 +202,7 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
          tempName << _outputDir << "/" 
                   << baseFileNames[fileNum] << "_" 
                   << fileNum << "." 
-                  << _fileExtension << "\0";
+                  << "vtu" << "\0";
          _outfileNames.push_back(tempName.str());
       }
       VE_Util::writeVtkThing(_outputDataset, 
@@ -255,27 +262,32 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
       }
    }
 }
-/////////////////////////////////////////////////////////////
-void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
-{
-   size_t period = singleFile.rfind(".");
+////////////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::ExtractAndAddBaseName(std::string fileName)
+{   
+   size_t period = fileName.rfind(".");
    ///remove extension
-   std::string outfileMinusExtention(singleFile,0,period);
+   std::string outfileMinusExtention(fileName,0,period);
    ///remove leading slashes
 #ifdef WIN32
-   size_t slash = outfileMinusExtention.rfind("\\");
+   size_t backslash = outfileMinusExtention.rfind("\\");
+   size_t frontslash = outfileMinusExtention.rfind("/");
+   size_t slash = (backslash > frontslash)?backslash:frontslash;
 #else
    size_t slash = outfileMinusExtention.rfind("/");
 #endif
    baseFileNames.push_back(std::string(outfileMinusExtention,slash+1,outfileMinusExtention.size()));
+}
+/////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
+{
    _infileNames.push_back(singleFile);
    _nFoundFiles = static_cast< int >( _infileNames.size() );
 }
 /////////////////////////////////////////////////////////////////////////////////
-bool cfdTranslatorToVTK::_extractOptionFromCmdLine(int argc,
-                                                               char** argv,
-                                                      std::string optionFlag,
-                                                      std::string& optionArg)
+bool cfdTranslatorToVTK::_extractOptionFromCmdLine(int argc,char** argv,
+                                                   std::string optionFlag,
+                                                   std::string& optionArg)
 {
    //std::cout << "Number of arguments: " << argc << std::endl;
    for(int i = 0; i < argc; i++)
