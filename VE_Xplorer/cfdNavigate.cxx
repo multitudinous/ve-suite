@@ -266,6 +266,11 @@ void cfdNavigate::updateNavigationFromGUI()
    this->worldRot[ 0 ] = tempWorldRot[ 0 ];
    this->worldRot[ 1 ] = tempWorldRot[ 1 ];
    this->worldRot[ 2 ] = tempWorldRot[ 2 ];
+
+	float* tempWorldTrans = this->worldDCS->GetVETranslationArray();
+	this->worldTrans[ 0 ] = tempWorldTrans[ 0 ];
+	this->worldTrans[ 1 ] = tempWorldTrans[ 1 ];
+	this->worldTrans[ 2 ] = tempWorldTrans[ 2 ];
    
    // This is NOT how we should do things
    // Command should allowed to be null but because we always
@@ -591,7 +596,7 @@ void cfdNavigate::updateNavigationFromGUI()
    // manipulation of the worldTrans array
    float tempArray[ 3 ];
    for ( unsigned int i = 0; i < 3; i++ )
-      tempArray[ i ] = -this->worldTrans[ i ];
+      tempArray[ i ] = this->worldTrans[ i ];
 
    vprDEBUG(vesDBG,3) << " Navigate" << std::endl << vprDEBUG_FLUSH;
    this->worldDCS->SetTranslationArray( tempArray );

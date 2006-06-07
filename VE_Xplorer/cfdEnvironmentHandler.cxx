@@ -302,7 +302,11 @@ void cfdEnvironmentHandler::InitScene( void )
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
-   // Update Navigation variables   
+	// Update Trackball
+	trackball->preFrame();
+	trackball->Matrix();
+	
+	// Update Navigation variables   
    vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
 #ifdef VE_PATENTED
@@ -353,9 +357,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
    _camHandler->PreFrameUpdate();
-
-	trackball->preFrame();
-	trackball->Matrix();
 }
 ///////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)

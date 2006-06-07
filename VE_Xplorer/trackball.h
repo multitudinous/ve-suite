@@ -36,10 +36,8 @@ protected:
 	float tb_min[3];
 	Matrix44f tb_transform;
 	Matrix44f tb_accuTransform;
-	Matrix44f WorldMatrix;
 
 	void ResetTransforms();
-	//void Scale(int key);
 	void RotateView(float dx,float dy);
 	void Twist(float dx,float dy);
 	void Zoom(float dy);

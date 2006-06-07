@@ -36,13 +36,14 @@ void Trackball::Print(Matrix44f mat){
 void Trackball::Init(){
 	identity(tb_transform);
 	identity(tb_accuTransform);
-	WorldMatrix=cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
-	if(WorldMatrix[1][3]<=0.0)
-		WorldMatrix[1][3]=1.0;
 }
 
 void Trackball::Matrix(){
 	assert(tb_button!=-1);
+
+	tb_accuTransform=cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+	if(tb_accuTransform[1][3]<=0.0)
+		tb_accuTransform[1][3]=1.0;
 
 	Matrix44f mat;
 	Matrix44f accRotation;
@@ -67,8 +68,7 @@ void Trackball::Matrix(){
 	}
 
 	cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray((float *)accTranslation);
-	gmtl::Matrix44f tempWorldTrans = WorldMatrix*tb_accuTransform;
-	cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix( tempWorldTrans );
+	cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix(tb_accuTransform);
 	
 	//Print(cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat());
 
@@ -89,8 +89,7 @@ void Trackball::Keyboard(int key){
 	tb_key=key;
 	if(tb_key==113)
 		ResetTransforms();
-	//else
-		//Scale(tb_key);
+
 	tb_key=NULL;
 }
 
@@ -146,9 +145,6 @@ void Trackball::ResetTransforms(){
 	tb_accuTransform[1][3]=-d;
 	tb_accuTransform[2][3]=0.0f;
 }
-
-//void Trackball::Scale(int key){
-//}
 
 void Trackball::RotateView(float dx,float dy){
 	Matrix44f mat;
