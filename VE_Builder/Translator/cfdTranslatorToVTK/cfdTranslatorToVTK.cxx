@@ -43,7 +43,7 @@ cfdTranslatorToVTK::cfdTranslatorToVTK()
 {
    _nFoundFiles = 0;
 
-   baseFileName = "flowdata";
+   //baseFileName = "flowdata";
    _fileExtension = "vtk";
    _inputDir = "./";
    _outputDir = "./";
@@ -83,7 +83,7 @@ void cfdTranslatorToVTK::SetOutputDirectory(std::string outDir)
 ///////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::SetFileName( std::string fileName )
 {
-   baseFileName = fileName;
+   //baseFileName = fileName;
 }
 //////////////////////////////////////////////////////////////////////////////   
 void cfdTranslatorToVTK::SetPreTranslateCallback(PreTranslateCallback* preTCbk)
@@ -193,7 +193,7 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
       {
          std::stringstream tempName;
          tempName << _outputDir << "/" 
-                  << baseFileName << "_" 
+                  << baseFileNames[fileNum] << "_" 
                   << fileNum << "." 
                   << _fileExtension << "\0";
          _outfileNames.push_back(tempName.str());
@@ -258,6 +258,16 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
 /////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
 {
+   size_t period = singleFile.rfind(".");
+   ///remove extension
+   std::string outfileMinusExtention(singleFile,0,period);
+   ///remove leading slashes
+#ifdef WIN32
+   size_t slash = outfileMinusExtention.rfind("\\");
+#else
+   size_t slash = outfileMinusExtention.rfind("/");
+#endif
+   baseFileNames.push_back(std::string(outfileMinusExtention,slash+1,outfileMinusExtention.size()));
    _infileNames.push_back(singleFile);
    _nFoundFiles = static_cast< int >( _infileNames.size() );
 }

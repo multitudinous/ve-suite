@@ -130,7 +130,7 @@ protected:
    ///through other interfaces
    unsigned int _nFoundFiles;
 
-   std::string baseFileName;
+   std::vector<std::string> baseFileNames;
    std::string _fileExtension;
    std::string _inputDir;
    std::string _outputDir;
