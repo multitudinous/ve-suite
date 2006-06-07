@@ -463,6 +463,9 @@
 				RelativePath=".\cfdWriteTraverser.cxx">
 			</File>
 			<File
+				RelativePath=".\CreateVisObjectEventHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\MaterialModeUpdateEH.cxx">
 			</File>
 			<File
@@ -534,6 +537,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdTrackball.h">
+			</File>
+			<File
+				RelativePath=".\CreateVisObjectEventHandler.h">
 			</File>
 			<File
 				RelativePath=".\EventHandler.h">

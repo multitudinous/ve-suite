@@ -614,7 +614,7 @@ std::string fileIO::GetFile( std::string fileKeyword, std::string fileLocation )
 ////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::string extension)
 {
-   boost::filesystem::path dir_path( dir.c_str() );
+   boost::filesystem::path dir_path( dir.c_str(), boost::filesystem::no_check);
    std::list< std::string > filesInDir;
    try
    {
