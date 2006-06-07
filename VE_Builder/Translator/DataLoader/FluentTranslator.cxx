@@ -90,14 +90,16 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
          dataConvertCellToPoint->PassCellDataOff();
          dataConvertCellToPoint->Update();
          outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
+         reader->Delete();
          dataConvertCellToPoint->Delete();
       }
       else
       {
          outputDataset->DeepCopy(reader->GetOutput());
+         reader->Delete();
       }
       outputDataset->Update();
-      reader->Delete();
+      
       //tmpDSet->Delete();
    }
 }
