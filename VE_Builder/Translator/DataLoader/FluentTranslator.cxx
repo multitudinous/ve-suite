@@ -68,25 +68,25 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
    if ( FluentToVTK )
    {
 	   vtkFLUENTReader* reader = vtkFLUENTReader::New();
-	   reader->SetFileName( FluentToVTK->GetFile(0).c_str() );
+	   reader->SetFileName(FluentToVTK->GetFile(0).c_str() );
 	   reader->Update();
 
       if ( !outputDataset )
       {
          outputDataset = vtkUnstructuredGrid::New();
       }
-      vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-      tmpDSet->DeepCopy( reader->GetOutput() );
+      /*vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
+      tmpDSet->DeepCopy( reader->GetOutput()*/ //);
 
       //get the info about the data in the data set
-      if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
+      if ( reader->GetOutput()->GetPointData()->GetNumberOfArrays() == 0 )
       {
          //std::cout<<"Warning!!!"<<std::endl;
          //std::cout<<"No point data found!"<<std::endl;
          //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
 
          vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-         dataConvertCellToPoint->SetInput(tmpDSet);
+         dataConvertCellToPoint->SetInput(reader->GetOutput());
          dataConvertCellToPoint->PassCellDataOff();
          dataConvertCellToPoint->Update();
          outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
@@ -94,11 +94,11 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
       }
       else
       {
-         outputDataset->DeepCopy(tmpDSet);
+         outputDataset->DeepCopy(reader->GetOutput());
       }
       outputDataset->Update();
       reader->Delete();
-      tmpDSet->Delete();
+      //tmpDSet->Delete();
    }
 }
  
