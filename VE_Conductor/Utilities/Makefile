@@ -58,7 +58,7 @@ DSO_PLUGIN_DEPS+= -lVE_ModelLib
 DSO_PLUGIN_DEPS+= -lVE_CADLib
 DSO_PLUGIN_DEPS+= -lVE_ShaderLib
 #EXTRA_LIBS+= -lVE_CE_UtilitiesLib
-#EXTRA_LIBS+= -lVE_OpenModuleLib
+EXTRA_LIBS+= -lVE_OpenModuleLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
