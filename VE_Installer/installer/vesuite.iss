@@ -126,6 +126,7 @@ Source: {#VEHOME}\VE_Open\skel\*; DestDir: {app}\include\VE_Open\skel; Attribs: 
 Source: {#VEHOME}\VE_Installer\include\VEConfig.h; DestDir: {app}\include\VE_Installer\include; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer\pf vexplorer nameserver
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
+Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\stereo_desktop; Components: nameserver; Flags: ignoreversion recursesubdirs
 [Icons]
 Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
