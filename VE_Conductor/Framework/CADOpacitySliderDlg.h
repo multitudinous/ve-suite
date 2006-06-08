@@ -33,6 +33,7 @@
 #ifndef CAD_OPACITY_SLIDER_H
 #define CAD_OPACITY_SLIDER_H
 #include "VE_Open/skel/VjObsC.h"
+#include "VE_Installer/include/VEConfig.h"
 
 #include <string>
 #include <vector>
@@ -62,7 +63,7 @@ namespace VE_Conductor
 namespace GUI_Utilities
 {
 
-class CADOpacitySliderDlg:public wxDialog
+class VE_CONDUCTOR_UTILS_EXPORTS CADOpacitySliderDlg:public wxDialog
 {
 public:
    enum OPACITY_DLG_IDS

@@ -47,6 +47,7 @@
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
 
 #include "VE_Conductor/Framework/CADNodePropsDlg.h"
+#include "VE_Installer/include/VEConfig.h"
 namespace VE_CAD
 {
    class CADNode;
@@ -63,7 +64,7 @@ namespace GUI_Utilities
 {
 class CADTreeBuilder;
 
-class CADNodeManagerDlg: public wxDialog{
+class VE_CONDUCTOR_UTILS_EXPORTS CADNodeManagerDlg: public wxDialog{
 public:
    ///Constructor
    ///\param node The CADNode to manage with this dialog.

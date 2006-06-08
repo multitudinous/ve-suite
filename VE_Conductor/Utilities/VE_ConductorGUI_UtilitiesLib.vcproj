@@ -101,11 +101,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib wxmsw26d_adv.lib"
+				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib wxmsw26d_adv.lib aced.lib taod.lib"
 				OutputFile="$(OutDir)\VE_Conductor_UtilitiesLib_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/VEConductorLib_d.pdb"
 				ImportLibrary="$(OutDir)\VE_Conductor_GUI_UtilitiesLib_d.lib"
@@ -147,6 +147,21 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
+				RelativePath="..\Framework\CADMaterialEditMenu.cxx">
+			</File>
+			<File
+				RelativePath="..\Framework\CADNodeManagerDlg.cxx">
+			</File>
+			<File
+				RelativePath="..\Framework\CADNodeMenu.cxx">
+			</File>
+			<File
+				RelativePath="..\Framework\CADNodePropsDlg.cxx">
+			</File>
+			<File
+				RelativePath="..\Framework\CADOpacitySliderDlg.cxx">
+			</File>
+			<File
 				RelativePath=".\CADTreeBuilder.cxx">
 			</File>
 			<File
@@ -162,12 +177,30 @@
 				RelativePath=".\Polygon.cxx">
 			</File>
 			<File
+				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cpp">
+			</File>
+			<File
 				RelativePath=".\Tag.cxx">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
+			<File
+				RelativePath="..\Framework\CADMaterialEditMenu.h">
+			</File>
+			<File
+				RelativePath="..\Framework\CADNodeManagerDlg.h">
+			</File>
+			<File
+				RelativePath="..\Framework\CADNodeMenu.h">
+			</File>
+			<File
+				RelativePath="..\Framework\CADNodePropsDlg.h">
+			</File>
+			<File
+				RelativePath="..\Framework\CADOpacitySliderDlg.h">
+			</File>
 			<File
 				RelativePath=".\CADTreeBuilder.h">
 			</File>
@@ -182,6 +215,9 @@
 			</File>
 			<File
 				RelativePath=".\Polygon.h">
+			</File>
+			<File
+				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.h">
 			</File>
 			<File
 				RelativePath=".\Tag.h">

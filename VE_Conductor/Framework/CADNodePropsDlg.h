@@ -34,6 +34,7 @@
 #define CAD_PROPERTIES_DIALOG_H
 #ifndef STAND_ALONE
 #include "VE_Open/skel/VjObsC.h"
+#include "VE_Installer/include/VEConfig.h"
 #endif
 #include <vector>
 #include <string>
@@ -60,8 +61,11 @@ namespace VE_CAD
 {
    class CADNode;
 }
-
-class CADNodePropertiesDlg : public wxDialog
+namespace VE_Conductor
+{
+namespace GUI_Utilities
+{
+class VE_CONDUCTOR_UTILS_EXPORTS CADNodePropertiesDlg : public wxDialog
 {
 public:
    enum CAD_PROPERTY_IDS
@@ -206,6 +210,7 @@ protected:
    DECLARE_EVENT_TABLE()
 
 };
-
+}
+}
 #endif//CAD_PROPERTIES_DIALOG_H
 

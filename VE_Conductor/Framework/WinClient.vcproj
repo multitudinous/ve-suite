@@ -203,21 +203,6 @@
 				RelativePath=".\BaseDialog.cxx">
 			</File>
 			<File
-				RelativePath=".\CADMaterialEditMenu.cxx">
-			</File>
-			<File
-				RelativePath=".\CADNodeManagerDlg.cxx">
-			</File>
-			<File
-				RelativePath=".\CADNodeMenu.cxx">
-			</File>
-			<File
-				RelativePath=".\CADNodePropsDlg.cxx">
-			</File>
-			<File
-				RelativePath=".\CADOpacitySliderDlg.cxx">
-			</File>
-			<File
 				RelativePath=".\contours.cpp">
 			</File>
 			<File
@@ -335,9 +320,6 @@
 			</File>
 			<File
 				RelativePath=".\SoundsPane.cpp">
-			</File>
-			<File
-				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cpp">
 			</File>
 			<File
 				RelativePath=".\StreamersPane.cxx">
@@ -592,21 +574,6 @@
 			</File>
 			<File
 				RelativePath=".\BaseDialog.h">
-			</File>
-			<File
-				RelativePath=".\CADMaterialEditMenu.h">
-			</File>
-			<File
-				RelativePath=".\CADNodeManagerDlg.h">
-			</File>
-			<File
-				RelativePath=".\CADNodeMenu.h">
-			</File>
-			<File
-				RelativePath=".\CADNodePropsDlg.h">
-			</File>
-			<File
-				RelativePath=".\CADOpacitySliderDlg.h">
 			</File>
 			<File
 				RelativePath=".\contours.h">

@@ -37,10 +37,14 @@
 /*!\class CADMaterialEditMenu
  * GUI class to edit CADMaterial s .
  */
+#include "VE_Installer/include/VEConfig.h"
 #include <wx/menu.h>
+namespace VE_Conductor
+{
+namespace GUI_Utilities
+{
 
-
-class CADMaterialEditMenu : public wxMenu{
+class VE_CONDUCTOR_UTILS_EXPORTS CADMaterialEditMenu : public wxMenu{
 public:
    enum MATERIAL_EDIT_MENU_IDS
    {
@@ -63,4 +67,6 @@ public:
 
 protected:
 };
+}
+}
 #endif// CADMATERIAL_EDIT_MENU_H
