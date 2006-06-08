@@ -32,6 +32,8 @@
 #include "VE_Conductor/Framework/Frame.h"
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
+#include <wx/msgdlg.h>
+
 #include "VE_Conductor/Framework/ResultPanel.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/package.h"
@@ -138,76 +140,29 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title), m_frameNr(0), f_financial(true), f_geometry(true), f_visualization(true)
 {
    SetWindowStyle(wxDEFAULT_FRAME_STYLE & ~ (wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX));
-   /*wx_log_splitter = new wxSplitterWindow(this, -1);
-   wx_log_splitter->SetMinimumPaneSize( 40 );
 
-   wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
-   wx_nw_splitter->SetMinimumPaneSize( 20 );*/
+  
    xplorerMenu = 0;
-   //logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
-
+   
    this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
   
-   int displayWidth, displayHeight = 0;
-   ::wxDisplaySize(&displayWidth,&displayHeight);
+   //int displayWidth, displayHeight = 0;
+   //::wxDisplaySize(&displayWidth,&displayHeight);
 
    m_frame = 0;
    is_orb_init= false;
    connectToVE = false;
    connectToCE = false;
-   _treeView = new wxDialog((wxWindow*) parent, id, "Available Objects", 
-                                 wxDefaultPosition, wxDefaultSize,
-                                 (wxDEFAULT_DIALOG_STYLE&~ (wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));//|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
-   wxBoxSizer* treeViewSizer = new wxBoxSizer(wxHORIZONTAL);
-
-   /*wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
-
-   wxRect dialogPosition( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
-   _treeView->SetSize( dialogPosition );
+   _treeView = 0;
+   _displayMode = "Tablet";
+   _detectDisplayAndCreate();
    
-   
-*/ 
-   _treeView->SetAutoLayout(true);
-   _treeView->SetSizer(treeViewSizer);
-   wx_log_splitter = new wxSplitterWindow(_treeView, -1);
-   wx_log_splitter->SetMinimumPaneSize( 40 );
-   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
-
-   wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
-   wx_nw_splitter->SetMinimumPaneSize( 20 );
-
-   av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
-   network = new Network(wx_nw_splitter, -1 );
-   av_modules->SetNetwork(network);
-
-   wx_log_splitter->SplitHorizontally(wx_nw_splitter, logwindow, -100);
-   wx_nw_splitter->SplitVertically(av_modules, network, 140);
-   treeViewSizer->Add(wx_log_splitter,1, wxALIGN_CENTER|wxEXPAND);
-
-   //treeView->Show();
-   //SetSize(DetermineFrameSize(NULL));
-   SetSize(wxSize(displayWidth,75));
-   SetPosition(wxPoint(0,0));
-   //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
-   //wxRegion desktopSize(0,0,displayWidth,displayHeight);
-   //wxRegion xplorerWindownSize(%displayWidth,%displayHeight,xplorerWidth,xplorerHeight);
-   //if(desktopSize.Subtract(xplorerWindowSize))
-   //{
-   //   wxRegion frameShape = desktopSize;
-   //   SetShape(frameShape);
-   //}
-   //else
-   //{ 
-   //   SetSize(DetermineFrameSize(NULL));
-   //}
    GetConfig(NULL);
    
    CreateMenu();
    CreateStatusBar();
    SetStatusText("VE-Conductor Status");
-   //SetSize(DetermineFrameSize(NULL));
-   //pelog = NULL;
+
    navPane = 0;
    soundsPane = 0;
    viewlocPane = 0;
@@ -223,23 +178,115 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_Model::ModelCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
 }
+//////////////////////////////////////
+std::string AppFrame::_detectDisplay()
+{
+   for ( int i = 1; i < wxTheApp->argc ; ++i )
+   {
+      if ( (std::string( wxTheApp->argv[i] ) == std::string("-VESDesktop")) &&
+            (wxTheApp->argc >= i+2) 
+         )
+      {
+         _displayMode = std::string("Desktop");
+         break;
+      }
+   }
+   return _displayMode;
+}
+////////////////////////////////////////////////////////
+void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
+{
+   wx_log_splitter = new wxSplitterWindow(parent, -1);
+   wx_log_splitter->SetMinimumPaneSize( 40 );
+   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+
+   wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
+   wx_nw_splitter->SetMinimumPaneSize( 20 );
+
+   av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
+   network = new Network(wx_nw_splitter, -1 );
+   av_modules->SetNetwork(network);
+
+   wx_log_splitter->SplitHorizontally(wx_nw_splitter, logwindow, -100);
+   wx_nw_splitter->SplitVertically(av_modules, network, 140);
+}
+//////////////////////////////////
+void AppFrame::_configureDesktop()
+{
+   _treeView = new wxDialog(this, -1, "Available Objects", 
+                                 wxDefaultPosition, wxDefaultSize,
+                                 (wxDEFAULT_DIALOG_STYLE&~ (wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));//|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
+   wxBoxSizer* treeViewSizer = new wxBoxSizer(wxHORIZONTAL);
+
+   _treeView->SetAutoLayout(true);
+   _treeView->SetSizer(treeViewSizer);
+
+   _createTreeAndLogWindow(_treeView);
+   treeViewSizer->Add(wx_log_splitter,1, wxALIGN_CENTER|wxEXPAND);
+
+   int displayWidth, displayHeight = 0;
+   ::wxDisplaySize(&displayWidth,&displayHeight);
+
+   SetSize(wxSize(displayWidth,displayHeight*0.0732421875));
+   SetPosition(wxPoint(0,0));
+   //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
+   //wxRegion desktopSize(0,0,displayWidth,displayHeight);
+   //wxRegion xplorerWindownSize(%displayWidth,%displayHeight,xplorerWidth,xplorerHeight);
+   //if(desktopSize.Subtract(xplorerWindowSize))
+   //{
+   //   wxRegion frameShape = desktopSize;
+   //   SetShape(frameShape);
+   //}
+   //else
+   //{ 
+   //   SetSize(DetermineFrameSize(NULL));
+   //}
+}
+/////////////////////////////////
+void AppFrame::_configureTablet()
+{
+   _createTreeAndLogWindow(this);
+   SetSize(DetermineFrameSize(NULL));
+}
+/////////////////////////////////////////
+void AppFrame::_detectDisplayAndCreate()
+{ 
+   if(_detectDisplay() == "Desktop")
+   {
+      _configureDesktop();
+   }
+   else if(_detectDisplay() == "Tablet")
+   {
+      _configureTablet();
+   }
+   else
+   {
+      wxMessageBox( "Unable to create GUI.","Unknown display request!", 
+            wxOK | wxICON_INFORMATION );
+      _exit(1);
+   }
+}
 ///////////////////////////////
 bool AppFrame::Show(bool value)
 {
    bool status = false;
    status = wxFrame::Show(value);
 
-   int displayWidth, displayHeight = 0;
-   ::wxDisplaySize(&displayWidth,&displayHeight);
-   wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+   if(_displayMode == "Desktop")
+   {
+      int displayWidth, displayHeight = 0;
+      ::wxDisplaySize(&displayWidth,&displayHeight);
+      wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
 
-   wxRect dialogPosition( 2*displayWidth/3, bbox.GetBottomRight().y, 
+      wxRect dialogPosition( 2*displayWidth/3, bbox.GetBottomRight().y, 
                         displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
-   _treeView->SetSize( dialogPosition );
+      _treeView->SetSize( dialogPosition );
 
-   status = _treeView->Show();
+      status = _treeView->Show();
+   }
    return status;
 }
+////////////////////////////
 void AppFrame::CreateVETab()
 {
   //create the image list for the tabs first

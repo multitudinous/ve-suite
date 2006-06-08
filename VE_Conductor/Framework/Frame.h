@@ -212,6 +212,12 @@ private:
    //OrbThread* ot;
 
 protected:
+   void _createTreeAndLogWindow(wxWindow* parent);
+   void _configureDesktop();
+   void _configureTablet();
+   void _detectDisplayAndCreate();
+   std::string AppFrame::_detectDisplay();
+   
    wxRect DetermineFrameSize (wxConfig* config);
    void StoreFrameSize (wxRect rect, wxConfig* config);
    void CreateMenu();
@@ -268,6 +274,7 @@ private:
 //   wxDialog* visTabs;
 //   Vistab* vistab;
    wxDialog* _treeView;
+   std::string _displayMode;///<Desktop or Tablet.
 
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
 
