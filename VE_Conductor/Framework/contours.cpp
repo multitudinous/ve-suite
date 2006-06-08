@@ -63,9 +63,6 @@ Contours::Contours( wxWindow* parent, wxWindowID id,
                   const wxSize& size, long style,std::string type )
 {
    Create(parent, id, caption, pos, size, style);
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-   this->SetSize( dialogPosition );
    SetDataType(type);
 }
 /////////////////////////////////////////////////////////////////////////////////
@@ -228,6 +225,15 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ADVANCEDCONTOURS_POSITION,
                   SYMBOL_ADVANCEDCONTOURS_SIZE, 
                   SYMBOL_ADVANCEDCONTOURS_STYLE );
+      
+      int displayWidth, displayHeight = 0;
+      ::wxDisplaySize(&displayWidth,&displayHeight);
+      wxRect bbox = GetRect();
+      int width,height = 0;
+      GetSize(&width,&height);
+      adContour.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        width, height));
+
       adContour.SetLOD(_lastLOD);
       adContour.SetOpacity(_lastOpacity);
       adContour.SetWarpedScale(_lastWarpedScale);
@@ -251,6 +257,14 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ADVANCEDVECTORS_SIZE, 
                   SYMBOL_ADVANCEDVECTORS_STYLE );
 
+      int displayWidth, displayHeight = 0;
+      ::wxDisplaySize(&displayWidth,&displayHeight);
+      wxRect bbox = GetRect();
+      int width,height = 0;
+      GetSize(&width,&height);
+
+      adVector.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        width, height));
       adVector.SetScaleByMagFlag(_lastScaleByMagnitude);
       adVector.SetVectorRatio(_lastVectorRatio);
       adVector.SetVectorScale(_lastVectorScale);
@@ -325,7 +339,7 @@ void Contours::_updateAdvancedSettings()
 {
    _advancedSettings.clear();
 
-   if(_dataType == "SCALARS")
+   if(_dataType == "SCALAR")
    {
       VE_XML::DataValuePair* contourOpacity = new VE_XML::DataValuePair();
       contourOpacity->SetData("Contour Opacity",_lastOpacity);

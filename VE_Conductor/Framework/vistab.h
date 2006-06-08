@@ -297,6 +297,8 @@ protected:
    std::map<std::string,wxArrayString> _availableSolutions;///<The current solutions available in the current dataset;
    wxArrayString _availableDatasets;///<The current datasets available in the Model;
 
+   wxRect _vistabPosition;///<The bounding box of the vistab dialog.
+
    wxComboBox* _datasetSelection;///<The box listing the available datasets.
    wxListBox* _scalarSelection;///<The box listing the available scalars in the current dataset.
    wxListBox* _vectorSelection;///<The box listing the available vectors in the current dataset.

@@ -141,6 +141,9 @@ public:
    void FrameClose( wxCommandEvent& event );
    VE_Conductor::CORBAServiceList* GetCORBAServiceList( void );
 
+   ///Override so we can show the tree after things are initialized.  
+   virtual bool Show(bool value);
+
    wxSplitterWindow* wx_log_splitter;
    wxSplitterWindow* wx_ve_splitter;
    wxSplitterWindow* wx_nw_splitter;
@@ -264,6 +267,7 @@ private:
    ViewLocPane* viewlocPane;
 //   wxDialog* visTabs;
 //   Vistab* vistab;
+   wxDialog* _treeView;
 
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
 

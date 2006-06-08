@@ -2561,7 +2561,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
 
             Vistab vistab(activeCORBAModel,this,
                                 SYMBOL_VISTAB_IDNAME,
-                                SYMBOL_VISTAB_TITLE,
+                                activeXMLModel->GetModelName().c_str(),
                                 SYMBOL_VISTAB_POSITION,
                                 SYMBOL_VISTAB_SIZE,
                                 SYMBOL_VISTAB_STYLE );

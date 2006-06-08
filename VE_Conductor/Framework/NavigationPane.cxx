@@ -49,7 +49,7 @@
 #include "VE_Conductor/Framework/Nav_Bitmaps/coordinates.xpm"
 
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
-
+#include <wx/app.h>
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 #include <wx/button.h>
@@ -84,7 +84,13 @@ NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* 
    _activeButton = NONE;
    
    wxSize displaySize = ::wxGetDisplaySize();
+
+   wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+
    wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
+   /*wxRect dialogPosition( 2*displaySize.GetWidth()/3, bbox.GetBottomRight().y, 
+                        displaySize.GetWidth()/3, 
+                        .5*(displaySize.GetHeight()-displaySize.GetHeight()*0.0732421875) );*/
    this->SetSize( dialogPosition );
    BuildPane();
 

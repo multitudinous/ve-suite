@@ -137,44 +137,76 @@ END_EVENT_TABLE()
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title), m_frameNr(0), f_financial(true), f_geometry(true), f_visualization(true)
 {
-   wx_log_splitter = new wxSplitterWindow(this, -1);
+   SetWindowStyle(wxDEFAULT_FRAME_STYLE & ~ (wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX));
+   /*wx_log_splitter = new wxSplitterWindow(this, -1);
    wx_log_splitter->SetMinimumPaneSize( 40 );
-   // wx_ve_splitter = 0;
-   //wx_ve_splitter = new wxSplitterWindow(wx_log_splitter, -1);
-   //wx_ve_splitter->SetMinimumPaneSize( 20 );
+
    wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
-   wx_nw_splitter->SetMinimumPaneSize( 20 );
+   wx_nw_splitter->SetMinimumPaneSize( 20 );*/
    xplorerMenu = 0;
-//   visTabs = 0;
-   //LogWindow
-   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+   //logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
 
    this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+  
+   int displayWidth, displayHeight = 0;
+   ::wxDisplaySize(&displayWidth,&displayHeight);
 
-   // VE Tabs
-   //m_tabs = ( UI_Tabs*) NULL;
    m_frame = 0;
    is_orb_init= false;
    connectToVE = false;
    connectToCE = false;
-   //p_ui_i=NULL;	
+   _treeView = new wxDialog((wxWindow*) parent, id, "Available Objects", 
+                                 wxDefaultPosition, wxDefaultSize,
+                                 (wxDEFAULT_DIALOG_STYLE&~ (wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));//|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
+   wxBoxSizer* treeViewSizer = new wxBoxSizer(wxHORIZONTAL);
+
+   /*wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+
+   wxRect dialogPosition( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+   _treeView->SetSize( dialogPosition );
+   
+   
+*/ 
+   _treeView->SetAutoLayout(true);
+   _treeView->SetSizer(treeViewSizer);
+   wx_log_splitter = new wxSplitterWindow(_treeView, -1);
+   wx_log_splitter->SetMinimumPaneSize( 40 );
+   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+
+   wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
+   wx_nw_splitter->SetMinimumPaneSize( 20 );
+
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
    av_modules->SetNetwork(network);
-//   av_modules = new Avail_Modules(NULL, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
-//   network = new Network(NULL, -1 );
-//   av_modules->SetNetwork(network);
 
    wx_log_splitter->SplitHorizontally(wx_nw_splitter, logwindow, -100);
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
-   //wx_ve_splitter->Initialize(wx_nw_splitter);
-   SetSize(DetermineFrameSize(NULL));
+   treeViewSizer->Add(wx_log_splitter,1, wxALIGN_CENTER|wxEXPAND);
+
+   //treeView->Show();
+   //SetSize(DetermineFrameSize(NULL));
+   SetSize(wxSize(displayWidth,75));
+   SetPosition(wxPoint(0,0));
+   //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
+   //wxRegion desktopSize(0,0,displayWidth,displayHeight);
+   //wxRegion xplorerWindownSize(%displayWidth,%displayHeight,xplorerWidth,xplorerHeight);
+   //if(desktopSize.Subtract(xplorerWindowSize))
+   //{
+   //   wxRegion frameShape = desktopSize;
+   //   SetShape(frameShape);
+   //}
+   //else
+   //{ 
+   //   SetSize(DetermineFrameSize(NULL));
+   //}
    GetConfig(NULL);
    
    CreateMenu();
    CreateStatusBar();
    SetStatusText("VE-Conductor Status");
-
+   //SetSize(DetermineFrameSize(NULL));
    //pelog = NULL;
    navPane = 0;
    soundsPane = 0;
@@ -182,9 +214,6 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    _cadDialog = 0;
 
-//   streamlinePane = 0;
-//   vistab = 0;
-   //  menubar = 
    domManager = new VE_XML::DOMDocumentManager();
    serviceList = new CORBAServiceList( this );
    
@@ -194,7 +223,23 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_Model::ModelCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
 }
+///////////////////////////////
+bool AppFrame::Show(bool value)
+{
+   bool status = false;
+   status = wxFrame::Show(value);
 
+   int displayWidth, displayHeight = 0;
+   ::wxDisplaySize(&displayWidth,&displayHeight);
+   wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+
+   wxRect dialogPosition( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+   _treeView->SetSize( dialogPosition );
+
+   status = _treeView->Show();
+   return status;
+}
 void AppFrame::CreateVETab()
 {
   //create the image list for the tabs first
@@ -352,7 +397,11 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 	   //}
       //orb->destroy();
    }
-  
+   if(_treeView)
+   {
+      _treeView->Destroy();
+   }
+
    delete domManager;
    domManager = 0;
    

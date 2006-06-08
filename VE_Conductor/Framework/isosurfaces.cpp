@@ -214,6 +214,15 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& event )
 {
    wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
                                    _scalarNames);
+   int displayWidth, displayHeight = 0;
+   ::wxDisplaySize(&displayWidth,&displayHeight);
+  
+   wxRect bbox = GetRect();
+
+   int width,height = 0;
+   GetSize(&width,&height);
+   scalarSelector.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        width, height));
    //scalarSelector.SetStringSelection(_colorByScalarName);
    if (scalarSelector.ShowModal() == wxID_OK)
    {

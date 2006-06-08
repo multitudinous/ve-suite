@@ -33,6 +33,7 @@
 #include <wx/combobox.h>
 #include <wx/listbox.h>
 #include <wx/msgdlg.h>
+#include <wx/app.h>
 
 #include <iostream>
 #include <string>
@@ -77,6 +78,13 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _activeScalarName = _scalarSelection->GetStringSelection();
    _activeVectorName = _vectorSelection->GetStringSelection();
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
+
+   int displayWidth, displayHeight = 0;
+   ::wxDisplaySize(&displayWidth,&displayHeight);
+   wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+
+   _vistabPosition = wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
 }
 ///////////////////////////////////////////////////////////////////
 //Constructor                                                    //
@@ -108,6 +116,14 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _activeScalarName = _scalarSelection->GetStringSelection();
    _activeVectorName = _vectorSelection->GetStringSelection();
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
+
+   int displayWidth, displayHeight = 0;
+   ::wxDisplaySize(&displayWidth,&displayHeight);
+   wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+
+   _vistabPosition = wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+   SetSize( _vistabPosition );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -260,8 +276,6 @@ wxBitmap Vistab::GetBitmapResource( const wxString& name )
 /*!
  * Get icon resources
  */
-
-
 //////////////////////////////////////////////////////
 wxIcon Vistab::GetIconResource( const wxString& name )
 {
@@ -283,6 +297,7 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
+   scalarContour.SetSize(_vistabPosition);
    scalarContour.ShowModal();
    itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 }
@@ -295,6 +310,7 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE,"VECTOR" );
+   vectorContour.SetSize(_vistabPosition);
    vectorContour.ShowModal();
    itemToolBar3->ToggleTool(VECTOR_BUTTON, false);
 }
@@ -307,6 +323,7 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_STREAMLINES_POSITION,
                   SYMBOL_STREAMLINES_SIZE, 
                   SYMBOL_STREAMLINES_STYLE );
+   streamline.SetSize(_vistabPosition);
    streamline.ShowModal();
    itemToolBar3->ToggleTool(STREAMLINE_BUTTON, false);
 std::cout<<"STREAMLINES WORKING"<<std::endl;
@@ -320,6 +337,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ISOSURFACES_POSITION,
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
+   isosurface.SetSize(_vistabPosition);
    isosurface.SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
    isosurface.SetActiveScalar(_activeScalarName);
    isosurface.ShowModal();
@@ -331,11 +349,8 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    
    TextureBasedToolBar tbTools(this,-1);
    tbTools.SetVjObsPtr(xplorerPtr);
-   if(tbTools.ShowModal() == wxID_OK)
-   {
-      std::cout<<"TBTools WORKING"<<std::endl;
-      itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
-   }
+   tbTools.ShowModal();
+   itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
 }
 ///////////////////////////////////////////////////////
 void Vistab::SetActiveModel(VjObs::Model_var activeModel)
