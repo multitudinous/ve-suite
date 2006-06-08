@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/CADNodeManagerDlg.h"
-#include "VE_Conductor/Framework/CADNodeMenu.h"
+#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
+#include "VE_Conductor/Utilities/CADNodeMenu.h"
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
-#include "VE_Conductor/Framework/CADNodePropsDlg.h"
+#include "VE_Conductor/Utilities/CADNodePropsDlg.h"
 
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"

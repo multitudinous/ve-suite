@@ -1,4 +1,4 @@
-#include "VE_Conductor/Framework/CADOpacitySliderDlg.h"
+#include "VE_Conductor/Utilities/CADOpacitySliderDlg.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/XMLReaderWriter.h"

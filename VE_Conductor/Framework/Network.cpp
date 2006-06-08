@@ -51,7 +51,7 @@
 
 #include "VE_Open/XML/CAD/CADAssembly.h"
 
-#include "VE_Conductor/Framework/CADNodeManagerDlg.h"
+#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
 #include "VE_Conductor/Framework/DataSetLoaderUI.h"
 #include "VE_Conductor/Framework/vistab.h"
 

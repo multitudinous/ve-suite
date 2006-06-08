@@ -147,19 +147,19 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
-				RelativePath="..\Framework\CADMaterialEditMenu.cxx">
+				RelativePath=".\CADMaterialEditMenu.cxx">
 			</File>
 			<File
-				RelativePath="..\Framework\CADNodeManagerDlg.cxx">
+				RelativePath=".\CADNodeManagerDlg.cxx">
 			</File>
 			<File
-				RelativePath="..\Framework\CADNodeMenu.cxx">
+				RelativePath=".\CADNodeMenu.cxx">
 			</File>
 			<File
-				RelativePath="..\Framework\CADNodePropsDlg.cxx">
+				RelativePath=".\CADNodePropsDlg.cxx">
 			</File>
 			<File
-				RelativePath="..\Framework\CADOpacitySliderDlg.cxx">
+				RelativePath=".\CADOpacitySliderDlg.cxx">
 			</File>
 			<File
 				RelativePath=".\CADTreeBuilder.cxx">
@@ -187,19 +187,19 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
-				RelativePath="..\Framework\CADMaterialEditMenu.h">
+				RelativePath=".\CADMaterialEditMenu.h">
 			</File>
 			<File
-				RelativePath="..\Framework\CADNodeManagerDlg.h">
+				RelativePath=".\CADNodeManagerDlg.h">
 			</File>
 			<File
-				RelativePath="..\Framework\CADNodeMenu.h">
+				RelativePath=".\CADNodeMenu.h">
 			</File>
 			<File
-				RelativePath="..\Framework\CADNodePropsDlg.h">
+				RelativePath=".\CADNodePropsDlg.h">
 			</File>
 			<File
-				RelativePath="..\Framework\CADOpacitySliderDlg.h">
+				RelativePath=".\CADOpacitySliderDlg.h">
 			</File>
 			<File
 				RelativePath=".\CADTreeBuilder.h">

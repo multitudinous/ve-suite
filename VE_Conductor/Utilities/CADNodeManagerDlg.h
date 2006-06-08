@@ -46,7 +46,7 @@
 #include "wx/button.h"
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
 
-#include "VE_Conductor/Framework/CADNodePropsDlg.h"
+#include "VE_Conductor/Utilities/CADNodePropsDlg.h"
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_CAD
 {

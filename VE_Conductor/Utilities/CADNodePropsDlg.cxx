@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Conductor/Framework/CADNodePropsDlg.h"
+#include "VE_Conductor/Utilities/CADNodePropsDlg.h"
 #include <sstream>
 #include <wx/sizer.h>
 #include <wx/notebook.h>
@@ -56,8 +56,8 @@
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
-#include "VE_Conductor/Framework/CADMaterialEditMenu.h"
-#include "VE_Conductor/Framework/CADOpacitySliderDlg.h"
+#include "VE_Conductor/Utilities/CADMaterialEditMenu.h"
+#include "VE_Conductor/Utilities/CADOpacitySliderDlg.h"
 #include "VE_Conductor/Framework/TransformUI.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"

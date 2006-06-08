@@ -43,7 +43,7 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 
-#include "VE_Conductor/Framework/CADNodeManagerDlg.h"
+#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>

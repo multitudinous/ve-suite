@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Conductor/Framework/CADNodeMenu.h"
+#include "VE_Conductor/Utilities/CADNodeMenu.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 using namespace VE_CAD;
 using namespace VE_Conductor::GUI_Utilities;

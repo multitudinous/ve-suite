@@ -50,7 +50,7 @@
 #include "VE_Conductor/Framework/vistab.h"
 
 #include "VE_Conductor/Framework/ViewLocPane.h"
-#include "VE_Conductor/Framework/CADNodeManagerDlg.h"
+#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
