@@ -38,6 +38,11 @@ SRCS=\
    Polygon.cxx\
    Tag.cxx\
    CADTreeBuilder.cxx \
+   CADNodeManagerDlg.cxx \
+   CADMaterialEditMenu.cxx \
+   CADNodeMenu.cxx \
+   CADNodePropsDlg.cxx \
+   CADOpacitySliderDlg.cxx \
    DualSlider.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

@@ -17,11 +17,6 @@ SRCS=\
    App.cpp \
    Avail_Modules.cpp \
    BaseDialog.cxx \
-   CADNodeManagerDlg.cxx \
-   CADMaterialEditMenu.cxx \
-   CADNodeMenu.cxx \
-   CADNodePropsDlg.cxx \
-   CADOpacitySliderDlg.cxx \
    DataSetLoaderUI.cxx\
    Frame.cpp \
    Network.cpp \
