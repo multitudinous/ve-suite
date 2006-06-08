@@ -2464,7 +2464,16 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
       //this will change once we have a way to retrieve the geometry from the model
       cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                this, ::wxNewId() );
+      int displayWidth, displayHeight = 0;
+      ::wxDisplaySize(&displayWidth,&displayHeight);
+      wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+
+      wxRect cadDialogSize = wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+
+      cadDialog->SetSize(cadDialogSize);
    }
+
 
    cadDialog->SetVjObsPtr( xplorerPtr.in() );
    cadDialog->ShowModal();
