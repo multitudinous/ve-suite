@@ -183,9 +183,7 @@ std::string AppFrame::_detectDisplay()
 {
    for ( int i = 1; i < wxTheApp->argc ; ++i )
    {
-      if ( (std::string( wxTheApp->argv[i] ) == std::string("-VESDesktop")) &&
-            (wxTheApp->argc >= i+2) 
-         )
+      if ( (std::string( wxTheApp->argv[i] ) == std::string("-VESDesktop")))
       {
          _displayMode = std::string("Desktop");
          break;
