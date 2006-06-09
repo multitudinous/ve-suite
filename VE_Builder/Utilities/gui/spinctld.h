@@ -47,13 +47,13 @@ Differences to wxSpinCtrl:
 
 class WXDLLEXPORT wxTextCtrl;
 class wxSpinCtrlDblTextCtrl;
-
+#include "VE_Installer/include/VEConfig.h"
 enum
 {
     wxSPINCTRLDBL_AUTODIGITS = -1  // try to autocalc the # of digits
 };
 
-class wxSpinCtrlDbl: public wxControl
+class VE_CONDUCTOR_UTILS_EXPORTS wxSpinCtrlDbl: public wxControl
 {
 public:
     wxSpinCtrlDbl() : wxControl() { Init(); }
