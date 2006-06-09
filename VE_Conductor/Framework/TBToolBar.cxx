@@ -195,7 +195,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          break;
       case ROI_ID:
          ROIDialog roiDlg(this,-1,"Volume Clipping Bounds");
-         int displayWidth, displayHeight = 0;
+         /*int displayWidth, displayHeight = 0;
          ::wxDisplaySize(&displayWidth,&displayHeight);
   
          wxRect bbox = GetRect();
@@ -203,7 +203,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          int width,height = 0;
          GetSize(&width,&height);
          roiDlg.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        width, height));
+                       displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y)));*/
          roiDlg.SetVjObsPtr(_vjObsPtr);
          if(roiDlg.ShowModal() == wxID_OK)
          {
