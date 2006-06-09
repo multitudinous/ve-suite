@@ -43,12 +43,12 @@ SRCS=\
    CADNodeMenu.cxx \
    CADNodePropsDlg.cxx \
    CADOpacitySliderDlg.cxx \
-   $(VE_SUITE_HOME)/VE_Builder/Utilities/gui/spinctrld.cpp\
-   DualSlider.cxx
+   DualSlider.cxx\
+   spinctld.cpp
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
-#EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Utilities/gui
 
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
 #DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
@@ -60,7 +60,7 @@ DSO_PLUGIN_DEPS+= -lVE_CADLib
 DSO_PLUGIN_DEPS+= -lVE_ShaderLib
 DSO_PLUGIN_DEPS+= -lVE_ShaderLib
 #EXTRA_LIBS+= -lVE_CE_UtilitiesLib
-EXTRA_LIBS+= -lVE_OpenModuleLib
+DSO_PLUGIN_DEPS+= -lVE_OpenModuleLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk

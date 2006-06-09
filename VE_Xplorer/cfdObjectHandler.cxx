@@ -41,6 +41,7 @@
 #include <osg/Group>
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
+#include <osg/Array>
 
 /*
 #include <osg/Geode>
@@ -429,4 +430,4 @@ osg::MatrixTransform* cfdObjectHandler::getMatrixTransform()
 }
 
 #endif //_OSG
-#endif //VE_PATENTED48
+#endif //VE_PATENTED

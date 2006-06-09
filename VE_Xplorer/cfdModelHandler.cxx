@@ -512,99 +512,6 @@ void cfdModelHandler::PreFrameUpdate( void )
       exit( 1 );
    }
 
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-            == CHANGE_STEADYSTATE_DATASET )
-   {
-      unsigned int i = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      vprDEBUG(vesDBG,1) 
-         << "CHANGE_STEADYSTATE_DATASET " << i 
-         //<< ", scalarIndex = " << this->cfdSc
-         //<< ", min = " << this->cfdMin 
-         //<< ", max = " << this->cfdMax
-         << std::endl << vprDEBUG_FLUSH;
-
-      //update active texture dataset if it exists
-#ifdef _OSG
-#ifdef VE_PATENTED
-      unsigned int nTextureDataSets = _activeModel->GetNumberOfTextureDataSets();
-      if( (nTextureDataSets) && ( i < nTextureDataSets ) )
-      {
-         _activeTDSet = _activeModel->GetTextureDataSet(i);
-         _activeModel->SetActiveTextureDataSet(_activeTDSet);
-      }else{
-         _activeTDSet = 0;
-      }
-#endif
-#endif
-      if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
-      {
-         vprDEBUG(vesDBG,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
-                  << _activeModel->GetCfdDataSet( i )->GetFileName()
-                  << ", dcs = " << _activeModel->GetCfdDataSet( i )->GetDCS()
-                  << std::endl << vprDEBUG_FLUSH;
-
-         int cfdType = _activeModel->GetCfdDataSet( i )->GetType();
-         vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate cfdType: " << cfdType
-                             << std::endl << vprDEBUG_FLUSH;
-
-         // set the dataset as the appropriate dastaset type
-         // (and the active dataset as well)
-         activeDataset = _activeModel->GetCfdDataSet( i );         
-         _activeModel->SetActiveDataSet( activeDataset );         
-      
-         vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate last active dataset name = " 
-                             << oldDatasetName
-                             << std::endl << vprDEBUG_FLUSH;
-
-         vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate Activating steady state file " 
-                << activeDataset->GetFileName()
-                << std::endl << vprDEBUG_FLUSH;
-
-         // make sure that the user did not just hit same dataset button
-         // (or change scalar since that is routed through here too)
-         if ( oldDatasetName == activeDataset->GetFileName() )//if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
-         {
-            vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate  setting dataset as newly activated" 
-                                << std::endl << vprDEBUG_FLUSH;
-            activeDataset->SetNewlyActivated();
-            oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
-         }
-
-         // update scalar bar for possible new scalar name
-         updateScalarRange = true;
-         // Set the current active dataset for the scalar bar
-         // so that it knows how to update itself
-         _scalarBar->SetActiveDataSet( activeDataset );
-      }
-      else
-      {
-         std::cerr << "ERROR: cfdModelHandler::PreFrameUpdate  requested steady state dataset " 
-                  << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
-                  << _activeModel->GetNumberOfCfdDataSets()
-                  << std::endl;
-      }
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-               == CHANGE_VECTOR )
-   { 
-      int vectorIndex = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-      vprDEBUG(vesDBG,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
-                             << std::endl << vprDEBUG_FLUSH;
-
-      activeDataset->SetActiveVector( vectorIndex );
-      //activeDataset->GetParent()->SetActiveVector( vectorIndex );
-#ifdef _OSG
-#ifdef VE_PATENTED
-      if(_activeModel !=0)
-      {
-         if(_activeTDSet)
-         {
-            _activeTDSet->SetActiveVector(activeDataset->GetVectorName(vectorIndex));
-         }
-      }
-#endif
-#endif
-   }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                == UPDATE_GEOMETRY )
    {
@@ -724,25 +631,6 @@ void cfdModelHandler::PreFrameUpdate( void )
       if ( this->activeDataset != NULL )
          this->activeDataset->GetLookupTable()->SetAlphaRange(realOpacity, realOpacity);
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
-   {
-      if ( _activeModel &&  _activeModel->GetActiveDataSet())
-      {
-         //cfd visualization options
-         int visOpt = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-
-         if ( visOpt == TEXTURE_BASED_VISUALIZATION )
-         {
-			   _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(1);
-            tbased = true;
-         }
-         else if ( visOpt == CLASSIC_VISUALIZATION )
-         {
-            _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(0);
-            tbased = false;
-         }
-      }       
-   }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== MIRROR_VIS_DATA )
    {
       if ( _activeModel )
@@ -752,41 +640,6 @@ void cfdModelHandler::PreFrameUpdate( void )
       }
    }
 
-   // Can't be an else if because may have to update if dataset has changed beforehand
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 
-        commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE ||
-        updateScalarRange
-        )
-   { 
-      int scalarIndex = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-      vprDEBUG(vesDBG,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
-         << ", scalarIndex = " << scalarIndex
-         << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
-         << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
-         << std::endl << vprDEBUG_FLUSH;
-      //update active scalar texture if it exists
-#ifdef _OSG
-#ifdef VE_PATENTED
-      if(_activeModel !=0)
-      {
-         if(_activeTDSet)
-         {
-            _activeTDSet->SetActiveScalar(activeDataset->GetScalarName(scalarIndex));
-         }
-      }
-#endif
-#endif
-
-      activeDataset->SetActiveScalar( scalarIndex );
-      activeDataset->GetParent()->SetActiveScalar( scalarIndex );
-
-      activeDataset->ResetScalarBarRange( 
-                           (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
-                           (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
-      activeDataset->GetParent()->ResetScalarBarRange( 
-                           (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
-                           (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
-   }
 #ifdef _OSG 
 #ifdef VE_PATENTED
    if(commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_VECTOR||

@@ -84,6 +84,17 @@ protected:
    void Load3DTextureDirectories( std::string dirToLoad );
 
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
+private:
+   ///Set the active dataset for the cfdobject to work on
+   void SetActiveDataSet( void );
+   ///Set the active scalar 
+   void SetActiveScalar( void )l
+   ///Set he scalar range for the active scalar
+   void SetScalarRange( void );
+   ///Set access to the active sclalt range
+   void SetActiveVector( void );
+   ///Set the active cfd object based on the command
+   void SetActiveCfdObject( void );
 };
 }
 #endif// VE_EVENT_HANDLER_H
