@@ -43,6 +43,7 @@ SRCS=\
    CADNodeMenu.cxx \
    CADNodePropsDlg.cxx \
    CADOpacitySliderDlg.cxx \
+   $(VE_SUITE_HOME)/VE_Builder/Utilities/gui/spinctrld.cpp\
    DualSlider.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
@@ -56,6 +57,7 @@ DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 DSO_PLUGIN_DEPS+= -lVE_XMLLib
 DSO_PLUGIN_DEPS+= -lVE_ModelLib
 DSO_PLUGIN_DEPS+= -lVE_CADLib
+DSO_PLUGIN_DEPS+= -lVE_ShaderLib
 DSO_PLUGIN_DEPS+= -lVE_ShaderLib
 #EXTRA_LIBS+= -lVE_CE_UtilitiesLib
 EXTRA_LIBS+= -lVE_OpenModuleLib
