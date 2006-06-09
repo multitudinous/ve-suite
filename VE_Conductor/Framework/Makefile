@@ -42,7 +42,6 @@ SRCS=\
    UI_DesignParTab.cpp \
    UI_ModSelPanel.cpp \
    UI_ModelData.cpp \
-   spinctld.cpp\
    SoundsPane.cpp \
    ViewLocPane.cxx\
    TBToolBar.cxx \
