@@ -86,6 +86,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
    }
    else if ( commandType.compare( "Juggler_Desktop_Data" ) == 0 )
    {
+      jccl::ConfigManager::instance()->lockActive();
       // Get current list of display elements
       jccl::Configuration* oldCfg = jccl::ConfigManager::instance()->getActiveConfig();
       std::vector< jccl::ConfigElementPtr > elements;
@@ -111,6 +112,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
 
          ChangeDisplayElements( false, elements.at(i) );
       }
+      jccl::ConfigManager::instance()->unlockActive();
    }
    veCommand = 0;
    return true;
