@@ -90,36 +90,6 @@ using namespace VE_SceneGraph;
 
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {
-   this->surface = 0;
-   this->isosurface = 0;
-   this->contour = 0;
-   this->momentum = 0;
-   this->vector = 0;
-   this->x_contour = 0;
-   this->y_contour = 0;
-   this->z_contour = 0;
-   this->x_momentum = 0;
-   this->y_momentum = 0;
-   this->z_momentum = 0;
-   this->x_vector = 0;
-   this->y_vector = 0;
-   this->z_vector = 0;
-   this->x_contours = 0;
-   this->y_contours = 0;
-   this->z_contours = 0;
-   this->x_momentums = 0;
-   this->y_momentums = 0;
-   this->z_momentums = 0;
-   this->x_vectors = 0;
-   this->y_vectors = 0;
-   this->z_vectors = 0;
-   this->streamlines = 0;
-   this->particles = 0;
-   this->image = 0;
-   this->animStreamer = 0;
-   this->animImg = 0;
-   this->textOutput = 0;
-
    this->commandArray = 0;
    this->_activeDataSetDCS = 0;
    this->_activeObject = 0;
@@ -151,215 +121,6 @@ void cfdSteadyStateVizHandler::CleanUp( void )
       this->vjTh[0]->join();
       delete this->vjTh[0];
    }
-
-   if ( this->isosurface ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->isosurface" << std::endl << vprDEBUG_FLUSH;
-      delete this->isosurface;
-   }
-
-   if ( this->contour ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->contour" << std::endl << vprDEBUG_FLUSH;
-      delete this->contour;
-   }
-
-   if ( this->momentum ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->momentum" << std::endl << vprDEBUG_FLUSH;
-      delete this->momentum;
-   }
-
-   if ( this->vector ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->vector" << std::endl << vprDEBUG_FLUSH;
-      delete this->vector;
-   }
-
-   if ( this->x_contour ) 
-   {
-      vprDEBUG(vesDBG,2)   
-        << "deleting this->x_contour" << std::endl << vprDEBUG_FLUSH;
-      delete this->x_contour;
-   }
-
-   if ( this->y_contour ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->y_contour" << std::endl << vprDEBUG_FLUSH;
-      delete this->y_contour;
-   }
-
-   if ( this->z_contour ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->z_contour" << std::endl << vprDEBUG_FLUSH;
-      delete this->z_contour;
-   }
-
-   if ( this->x_momentum ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->x_momentum" << std::endl << vprDEBUG_FLUSH;
-      delete this->x_momentum;
-   }
-
-   if ( this->y_momentum ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->y_momentum" << std::endl << vprDEBUG_FLUSH;
-      delete this->y_momentum;
-   }
-
-   if ( this->z_momentum ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->z_momentum" << std::endl << vprDEBUG_FLUSH;
-      delete this->z_momentum;
-   }
-
-   if ( this->x_vector ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->x_vector" << std::endl << vprDEBUG_FLUSH;
-      delete this->x_vector;
-   }
-
-   if ( this->y_vector ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->y_vector" << std::endl << vprDEBUG_FLUSH;
-      delete this->y_vector;
-   }
-
-   if ( this->z_vector ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->z_vector" << std::endl << vprDEBUG_FLUSH;
-      delete this->z_vector;
-   }
-
-   if ( this->x_contours ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->x_contours" << std::endl << vprDEBUG_FLUSH;
-      delete this->x_contours;
-   }
-
-   if ( this->y_contours ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->y_contours" << std::endl << vprDEBUG_FLUSH;
-      delete this->y_contours;
-   }
-
-   if ( this->z_contours ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->z_contours" << std::endl << vprDEBUG_FLUSH;
-      delete this->z_contours;
-   }
-
-   if ( this->x_momentums ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->x_momentums" << std::endl << vprDEBUG_FLUSH;
-      delete this->x_momentums;
-   }
-
-   if ( this->y_momentums ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->y_momentums" << std::endl << vprDEBUG_FLUSH;
-      delete this->y_momentums;
-   }
-
-   if ( this->z_momentums ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->z_momentums" << std::endl << vprDEBUG_FLUSH;
-      delete this->z_momentums;
-   }
-
-   if ( this->x_vectors ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->x_vectors" << std::endl << vprDEBUG_FLUSH;
-      delete this->x_vectors;
-   }
-
-   if ( this->y_vectors ) 
-   {
-      vprDEBUG(vesDBG,2)  
-         << "deleting this->y_vectors" << std::endl << vprDEBUG_FLUSH;
-      delete this->y_vectors;
-   }
-
-   if ( this->z_vectors ) 
-   {
-      vprDEBUG(vesDBG,2) 
-         << "deleting this->z_vectors" << std::endl << vprDEBUG_FLUSH; 
-      delete this->z_vectors;
-   }
-   
-   if ( this->streamlines ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->streamlines" << std::endl << vprDEBUG_FLUSH;
-      delete this->streamlines;
-
-      // Delete the polydata array used for seed points
-      if ( this->lastSource != NULL )
-      {
-         this->lastSource->Delete();
-      }
-   }
-
-   if ( this->particles ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->particles" << std::endl << vprDEBUG_FLUSH;
-      delete this->particles;
-   }
-
-   if ( this->surface ) 
-   {
-      vprDEBUG(vesDBG,2) 
-        << "deleting this->surface" << std::endl << vprDEBUG_FLUSH;
-      delete this->surface;
-   }
-
-   if ( this->image ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->image" << std::endl << vprDEBUG_FLUSH;
-      delete this->image;
-   }
-
-   if ( this->animImg ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->animImg" << std::endl << vprDEBUG_FLUSH;
-      delete this->animImg;
-   }
-
-   if ( this->animStreamer ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->animStreamer" << std::endl << vprDEBUG_FLUSH;
-      delete this->animStreamer;
-   }
-
-   if ( this->textOutput ) 
-   {
-      vprDEBUG(vesDBG,2)  
-        << "deleting this->textOutput" << std::endl << vprDEBUG_FLUSH;
-      delete this->textOutput;
-   }
 }
 bool cfdSteadyStateVizHandler::TransientGeodesIsBusy()
 {
@@ -378,13 +139,27 @@ void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
    }
    commandArray = input;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
 {
    return this->_activeTempAnimation;
 }
-////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
+void cfdSteadyStateVizHandler::SetActiveVisObject( cfdObjects* tempObject )
+{
+   _activeObject = tempObject;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdSteadyStateVizHandler::SetComputeActorsAndGeodes( bool actorsAndGeodes )
+{
+   computeActorsAndGeodes = actorsAndGeodes;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdSteadyStateVizHandler::SetActorsAreReady( bool actorsReady )
+{
+   actorsAreReady = actorsReady;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdSteadyStateVizHandler::InitScene( void )
 {
 
@@ -396,6 +171,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
    //std::cout << "|  9. Initializing..................................... Text Output |" << std::endl;
    //this->textOutput = new cfdTextOutput();
 }
+////////////////////////////////////////////////////////////////////////////////
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) != -1 )
@@ -423,9 +199,9 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       vprDEBUG(vesDBG,3) << "|\tUpdating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
       bool alreadyRemoved = false;
-      for ( unsigned int i = 0; i < this->dataList.size(); i++ )
+      //for ( unsigned int i = 0; i < this->dataList.size(); i++ )
       {
-         if ( this->dataList.at( i )->GetUpdateFlag() )//|| 
+         if ( _activeObject->GetUpdateFlag() )//|| 
                //this->dataList.at( i )->GetTransientGeodeFlag() )
          {
             vprDEBUG(vesDBG,2) << "|\tCreating Objects"
@@ -433,10 +209,10 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
-            temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
+            temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
-            temp->SetGeodes( this->dataList[ i ]->GetGeodes() );
+            temp->SetGeodes( _activeObject->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
             
 /*   VE_Xplorer::cfdRawNodeWriteTraverser cfdWT("test.osg");
@@ -452,8 +228,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 */
             // search map for other object types with the same type as this one
             std::multimap< int, cfdGraphicsObject* >::iterator pos;
-            for ( pos = graphicsObjects.lower_bound( this->dataList[ i ]->GetObjectType() ); 
-                  pos != graphicsObjects.upper_bound( this->dataList[ i ]->GetObjectType() ); )
+            for ( pos = graphicsObjects.lower_bound( _activeObject->GetObjectType() ); 
+                  pos != graphicsObjects.upper_bound( _activeObject->GetObjectType() ); )
             {
                // and see if they have the same parent node
                // the parent node is unique becaue each dataset has a dcs
@@ -468,12 +244,12 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                   ++pos;
                }
             }
-            graphicsObjects.insert( std::make_pair( this->dataList[ i ]->GetObjectType(), temp ) );
+            graphicsObjects.insert( std::make_pair( _activeObject->GetObjectType(), temp ) );
 
             // Resetting these variables is very important
-            this->dataList[ i ]->SetUpdateFlag( false );
+            _activeObject->SetUpdateFlag( false );
             this->actorsAreReady = false;
-            this->dataList[ i ]->ClearGeodes();
+            _activeObject->ClearGeodes();
             vprDEBUG(vesDBG,2) << "|\tDone Creating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
 

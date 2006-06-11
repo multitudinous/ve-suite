@@ -82,99 +82,116 @@ namespace VE_XML
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
-   {
-      private:
-         // Required so that vpr::Singleton can instantiate this class.
-         //friend class vpr::Singleton< cfdSteadyStateVizHandler >;
-         cfdSteadyStateVizHandler( void );
-         //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
-         //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
-         ~cfdSteadyStateVizHandler( void ){ ; }// Never gets called, don't implement
-         vprSingletonHeader( cfdSteadyStateVizHandler );   
+class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
+{
+private:
+   // Required so that vpr::Singleton can instantiate this class.
+   //friend class vpr::Singleton< cfdSteadyStateVizHandler >;
+   cfdSteadyStateVizHandler( void );
+   //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
+   //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
+   ~cfdSteadyStateVizHandler( void ){ ; }// Never gets called, don't implement
+   vprSingletonHeader( cfdSteadyStateVizHandler );   
+
+public:
+   ///Initialize the sshandler claass
+   void Initialize( std::string );
+   ///Destructor functions since destructors don't get called yet
+   void CleanUp( void );
+   ///Called once by cfdApp to create any necessary objects
+   void InitScene( void );
+   ///The standard preframe function
+   void PreFrameUpdate( void );
+   ///The thread function used to create geodes and actors
+   void CreateActorThread( void * );
+   ///The function used to create streamlines
+   void streamers( void );
+   ///Set the active vis object - to be used by the addvis eh
+   ///\param tempObject The active Object to be used by the handler
+   void SetActiveVisObject( cfdObjects* tempObject );
+   ///Set the flag to tell sshandler that actors and geodes need to be created
+   ///- to be used by the addvis eh
+   ///\param actorsAndGeodes Go create geodes and actors in sshandler
+   void SetComputeActorsAndGeodes( bool actorsAndGeodes );
+   ///Set the flag to tell sshandler that actors are ready
+   ///- to be used by the addvis eh
+   ///\param actorsReady Bool that tells sshandler to add geodes
+   void SetActorsAreReady( bool actorsReady );
    
-      public:
-         void Initialize( std::string );
-         void CleanUp( void );
-         void InitScene( void );
-         void PreFrameUpdate( void );
-         void CreateActorThread( void * );
-         void streamers( void );
+   // Helper functions
+   void SetCommandArray( cfdCommandArray* );
+   VE_SceneGraph::cfdTempAnimation* GetActiveAnimation( void );
+   bool TransientGeodesIsBusy();
 
-         // Helper functions
-         void SetCommandArray( cfdCommandArray* );
-         VE_SceneGraph::cfdTempAnimation* GetActiveAnimation( void );
-         bool TransientGeodesIsBusy();
+private:
+   cfdPolyData*         surface;
+   cfdIsosurface*       isosurface;
+   cfdContour*          contour;
+   cfdPresetContour*    x_contour;
+   cfdPresetContour*    y_contour;
+   cfdPresetContour*    z_contour;
+   cfdContours*         x_contours;
+   cfdContours*         y_contours;
+   cfdContours*         z_contours;
+   cfdMomentum*         momentum;
+   cfdPresetMomentum*   x_momentum;
+   cfdPresetMomentum*   y_momentum;
+   cfdPresetMomentum*   z_momentum;
+   cfdMomentums*        x_momentums;
+   cfdMomentums*        y_momentums;
+   cfdMomentums*        z_momentums;
+   cfdVector*           vector;
+   cfdPresetVector*     x_vector;
+   cfdPresetVector*     y_vector;
+   cfdPresetVector*     z_vector;
+   cfdVectors*          x_vectors;
+   cfdVectors*          y_vectors;
+   cfdVectors*          z_vectors;
+   cfdStreamers*        streamlines;
+   cfdPolyData*         particles;
+   cfdImage*            image;
+   cfdAnimatedImage*    animImg;
+   cfdAnimatedStreamlineCone* animStreamer;
+   cfdTextOutput*       textOutput;
+   // Common objects for all functions
+   cfdCommandArray*  commandArray;
+   VE_SceneGraph::cfdDCS*     _activeDataSetDCS;
+   cfdObjects* _activeObject;
+   VE_SceneGraph::cfdTempAnimation* _activeTempAnimation;
 
-      private:
-         cfdPolyData*         surface;
-         cfdIsosurface*       isosurface;
-         cfdContour*          contour;
-         cfdPresetContour*    x_contour;
-         cfdPresetContour*    y_contour;
-         cfdPresetContour*    z_contour;
-         cfdContours*         x_contours;
-         cfdContours*         y_contours;
-         cfdContours*         z_contours;
-         cfdMomentum*         momentum;
-         cfdPresetMomentum*   x_momentum;
-         cfdPresetMomentum*   y_momentum;
-         cfdPresetMomentum*   z_momentum;
-         cfdMomentums*        x_momentums;
-         cfdMomentums*        y_momentums;
-         cfdMomentums*        z_momentums;
-         cfdVector*           vector;
-         cfdPresetVector*     x_vector;
-         cfdPresetVector*     y_vector;
-         cfdPresetVector*     z_vector;
-         cfdVectors*          x_vectors;
-         cfdVectors*          y_vectors;
-         cfdVectors*          z_vectors;
-         cfdStreamers*        streamlines;
-         cfdPolyData*         particles;
-         cfdImage*            image;
-         cfdAnimatedImage*    animImg;
-         cfdAnimatedStreamlineCone* animStreamer;
-         cfdTextOutput*       textOutput;
-         // Common objects for all functions
-         cfdCommandArray*  commandArray;
-         VE_SceneGraph::cfdDCS*     _activeDataSetDCS;
-         cfdObjects* _activeObject;
-         VE_SceneGraph::cfdTempAnimation* _activeTempAnimation;
+   // Classes and variables for multithreading.
+   vpr::Thread* vjTh[1];
 
-         // Classes and variables for multithreading.
-         vpr::Thread* vjTh[1];
-   
-         // Vectors that will eventually be stored as maps
-         // these hold all the objectsa for easy access and management
-         std::vector< cfdObjects* > dataList;
-         std::vector< cfdGlobalBase* > commandList;
+   // Vectors that will eventually be stored as maps
+   // these hold all the objectsa for easy access and management
+   //std::vector< cfdObjects* > dataList;
+   std::vector< cfdGlobalBase* > commandList;
 
-         std::string _param;
-         bool actorsAreReady;
-         bool computeActorsAndGeodes;
-         bool changeGeometry;
-         bool texturesActive;
-         vtkPolyData*   lastSource;
-         cfdNavigate*   nav;
-         cfdCursor*     cursor;
-         // Stores data from cfdCursor
-         // Variable will eventually be used to define bounding box
-         // for data interagation
-         double cur_box[6];
+   std::string _param;
+   bool actorsAreReady;
+   bool computeActorsAndGeodes;
+   bool changeGeometry;
+   bool texturesActive;
+   vtkPolyData*   lastSource;
+   cfdNavigate*   nav;
+   cfdCursor*     cursor;
+   // Stores data from cfdCursor
+   // Variable will eventually be used to define bounding box
+   // for data interagation
+   double cur_box[6];
 
-         // Need to get rid of this bool fix 
-         //bool inter_activeObject;
-         //bool chgMod;
-         //bool runStreamersThread;
-         bool runIntraParallelThread;
-         bool useLastSource;
-         bool transientBusy;
-         bool transientActors;
+   // Need to get rid of this bool fix 
+   //bool inter_activeObject;
+   //bool chgMod;
+   //bool runStreamersThread;
+   bool runIntraParallelThread;
+   bool useLastSource;
+   bool transientBusy;
+   bool transientActors;
 
-         // multi map to hold graphics objects
-         // the key is the viz type and the value is cfdGraphicsObject
-         std::multimap< int, cfdGraphicsObject* > graphicsObjects;
-   };
+   // multi map to hold graphics objects
+   // the key is the viz type and the value is cfdGraphicsObject
+   std::multimap< int, cfdGraphicsObject* > graphicsObjects;
+};
 }
 #endif

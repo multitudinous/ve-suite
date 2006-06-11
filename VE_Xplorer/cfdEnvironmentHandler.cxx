@@ -114,7 +114,7 @@ void cfdEnvironmentHandler::Initialize( std::string param )
 
 #ifdef VE_PATENTED
 #ifdef _OSG
-   this->objectHandler = new cfdObjectHandler();
+   //this->objectHandler = new cfdObjectHandler();
 #endif // _OSG
 #endif // VE_PATENTED
 
@@ -276,7 +276,7 @@ void cfdEnvironmentHandler::InitScene( void )
 
 #ifdef VE_PATENTED
 #ifdef _OSG
-   this->objectHandler->Initialize(this->nav);
+   //this->objectHandler->Initialize(this->nav);
 #endif //_OSG
 #endif //VE_PATENTED
    if ( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
@@ -311,7 +311,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 
 #ifdef VE_PATENTED
 #ifdef _OSG
-   this->objectHandler->UpdateObjectHandler();
+   //this->objectHandler->UpdateObjectHandler();
 #endif //_OSG
 #endif //VE_PATENTED
 
@@ -321,11 +321,11 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    {
       if(_commandArray->GetCommandValue( cfdCommandArray::CFD_SC))
       {
-         this->objectHandler->ActivateGeometryPicking();
+         //this->objectHandler->ActivateGeometryPicking();
       }
       else
       {
-         this->objectHandler->DeactivateGeometryPicking();
+         //this->objectHandler->DeactivateGeometryPicking();
       }
    }
 #endif

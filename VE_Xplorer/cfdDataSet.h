@@ -138,9 +138,11 @@ namespace VE_Xplorer
          // SetActiveScalar and compute the actual scalar range and the pretty range for display purposes
          // 0 <= activeScalar < numScalars
          void SetActiveScalar( int );
+         void SetActiveScalar( std::string scalarName );
          int GetActiveScalar();
 
          void SetActiveVector( int );
+         void SetActiveVector( std::string vectorName );
          int GetActiveVector();
 
          // Update the geometrical properties of the mesh

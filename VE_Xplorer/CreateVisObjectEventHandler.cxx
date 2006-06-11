@@ -36,8 +36,33 @@
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/fileIO.h"
 
+#include "VE_Xplorer/cfdPolyData.h"      
+#include "VE_Xplorer/cfdIsosurface.h"    
+#include "VE_Xplorer/cfdPresetContour.h" 
+#include "VE_Xplorer/cfdContours.h"      
+#include "VE_Xplorer/cfdMomentum.h"      
+#include "VE_Xplorer/cfdPresetMomentum.h"
+#include "VE_Xplorer/cfdMomentums.h"     
+#include "VE_Xplorer/cfdVector.h"        
+#include "VE_Xplorer/cfdPresetVector.h"  
+#include "VE_Xplorer/cfdVectors.h"       
+#include "VE_Xplorer/cfdStreamers.h"     
+#include "VE_Xplorer/cfdPolyData.h"      
+#include "VE_Xplorer/cfdImage.h"         
+#include "VE_Xplorer/cfdAnimatedImage.h" 
+#include "VE_Xplorer/cfdAnimatedStreamlineCone.h"
+#include "VE_Xplorer/cfdContour.h"
+#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdCursor.h"
+#include "VE_Xplorer/cfdTextOutput.h"
+
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdClone.h"
+#include "VE_SceneGraph/cfdSwitch.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Open/XML/XMLObject.h"
@@ -50,335 +75,275 @@
 
 #include "VE_Xplorer/cfdDebug.h"
 
+#include "VE_TextureBased/cfdTextureDataSet.h"
+
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
 #include <iostream>
 
 using namespace VE_EVENTS;
+using namespace VE_Xplorer;
+using namespace VE_TextureBased;
+using namespace VE_SceneGraph;
+
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::CreateVisObjectEventHandler()
 :VE_EVENTS::EventHandler()
 {
-   _activeModel = 0;
+   this->surface = 0;
+   this->isosurface = 0;
+   this->contour = 0;
+   this->momentum = 0;
+   this->vector = 0;
+   this->x_contour = 0;
+   this->y_contour = 0;
+   this->z_contour = 0;
+   this->x_momentum = 0;
+   this->y_momentum = 0;
+   this->z_momentum = 0;
+   this->x_vector = 0;
+   this->y_vector = 0;
+   this->z_vector = 0;
+   this->x_contours = 0;
+   this->y_contours = 0;
+   this->z_contours = 0;
+   this->x_momentums = 0;
+   this->y_momentums = 0;
+   this->z_momentums = 0;
+   this->x_vectors = 0;
+   this->y_vectors = 0;
+   this->z_vectors = 0;
+   this->streamlines = 0;
+   this->particles = 0;
+   this->image = 0;
+   this->animStreamer = 0;
+   this->animImg = 0;
+   this->textOutput = 0;
+   //_activeModel = 0;
    
    // Initialize all the vis objects from ssvishandler
-   //if ( cfdModelHandler::instance()->GetActiveDataSet() != NULL )
-   {
-      /*{
-      int postData = 0;
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetNumberOfPlanes() > 0 )
-            postData += 1;
-         
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetNumberOfPlanes() > 0 )
-            postData += 2;
-         
-         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetNumberOfPlanes() > 0 )
-            postData += 4;
-         
-         commandArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, postData );
-      }*/
-      
-      //
-      // Initiate the isosurface.
-      //
-      std::cout << "| 14. Initializing...................................... Isosurface |" << std::endl;
-      this->isosurface = new cfdIsosurface( 10 );
-      this->isosurface->SetObjectType( ISOSURFACE );
-      this->dataList.push_back( this->isosurface );
-      this->commandList.push_back( this->isosurface );
-      
-      //
-      // Initiate the interactive contour.
-      //
-      std::cout << "| 15. Initializing......................................... Contour |" << std::endl;
-      this->contour = new cfdContour();
-      this->contour->SetObjectType( CONTOUR );
-      this->dataList.push_back( this->contour ); 
-      this->commandList.push_back( this->contour );
-      
-      // Make sure that this dataset has a vector and scalar...
-      //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetVectors() &&
-      //     cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars() )
-      {
-         //
-         // Initiate the interactive momentum.
-         //
-         std::cout << "| 16. Initializing........................................ Momemtum |" << std::endl;
-         this->momentum = new cfdMomentum();
-         this->momentum->SetObjectType( MOMENTUM );
-         this->dataList.push_back( this->momentum );
-         this->commandList.push_back( this->momentum );
-         
-         //
-         // Initiate the interactive vector.
-         //
-         std::cout << "| 17. Initializing.......................................... Vector |" << std::endl;
-         this->vector = new cfdVector();
-         this->vector->SetObjectType( VECTOR );
-         this->dataList.push_back( this->vector );
-         this->commandList.push_back( this->vector );
-      }
-      
-      //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars() )
-      {
-         //
-         // Initiate the preset x contour.
-         //
-         std::cout << "| 19. Initializing................................ Preset x Contour |" << std::endl;
-         this->x_contour = new cfdPresetContour( 0, 10 );
-         this->x_contour->SetObjectType( X_CONTOUR );
-         this->dataList.push_back( this->x_contour );
-         this->commandList.push_back( this->x_contour );
-         
-         //
-         // Initiate the preset y contour.
-         //
-         std::cout << "| 20. Initializing................................ Preset y Contour |" << std::endl;
-         this->y_contour = new cfdPresetContour( 1, 10 );
-         this->y_contour->SetObjectType( Y_CONTOUR );
-         this->dataList.push_back( this->y_contour );
-         this->commandList.push_back( this->y_contour );
-         
-         //
-         // Initiate the preset z contour.
-         //
-         std::cout << "| 21. Initializing................................ Preset z Contour |" << std::endl;
-         this->z_contour = new cfdPresetContour( 2, 10 );
-         this->z_contour->SetObjectType( Z_CONTOUR );
-         this->dataList.push_back( this->z_contour );
-         this->commandList.push_back( this->z_contour );
-      }
-      
-      // Make sure that this dataset has a vector field...
-      //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetVectors() )
-      {
-         //
-         // Initiate the preset x momentum.
-         //
-         std::cout << "| 22. Initializing............................... Preset x Momentum |" << std::endl;
-         // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-         this->x_momentum = new cfdPresetMomentum( 0, 10 );
-         this->x_momentum->SetObjectType( X_MOMENTUM );
-         this->dataList.push_back( this->x_momentum );
-         this->commandList.push_back( this->x_momentum );
-         
-         //
-         // Initiate the preset y momentum.
-         //
-         std::cout << "| 23. Initializing............................... Preset y Momentum |" << std::endl;
-         // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-         this->y_momentum = new cfdPresetMomentum( 1, 10 );
-         this->y_momentum->SetObjectType( Y_MOMENTUM );
-         this->dataList.push_back( this->y_momentum );
-         this->commandList.push_back( this->y_momentum );
-         
-         //
-         // Initiate the preset z momentum.
-         //
-         std::cout << "| 24. Initializing............................... Preset z Momentum |" << std::endl;
-         // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-         this->z_momentum = new cfdPresetMomentum( 2, 10 );
-         this->z_momentum->SetObjectType( Z_MOMENTUM );
-         this->dataList.push_back( this->z_momentum );
-         this->commandList.push_back( this->z_momentum );
-         
-         //
-         // Initiate the preset x vector.
-         //
-         std::cout << "| 25. Initializing................................. Preset x Vector |" << std::endl;
-         this->x_vector = new cfdPresetVector( 0, 10 );
-         this->x_vector->SetObjectType( X_VECTOR );
-         this->dataList.push_back( this->x_vector );
-         this->commandList.push_back( this->x_vector );
-         
-         //
-         // Initiate the preset y vector.
-         //
-         std::cout << "| 26. Initializing................................. Preset y Vector |" << std::endl;
-         this->y_vector = new cfdPresetVector( 1, 10 );
-         this->y_vector->SetObjectType( Y_VECTOR );
-         this->dataList.push_back( this->y_vector );
-         this->commandList.push_back( this->y_vector );
-         
-         //
-         // Initiate the preset z vector.
-         //
-         std::cout << "| 27. Initializing................................. Preset z Vector |" << std::endl;
-         this->z_vector = new cfdPresetVector( 2, 10 );
-         this->z_vector->SetObjectType( Z_VECTOR );
-         this->dataList.push_back( this->z_vector );
-         this->commandList.push_back( this->z_vector );
-      }
-      
-      //
-      // Initiate the preset x contour lines.
-      //
-      //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetNumberOfPlanes() > 0 )
-      {
-         std::cout << "| 28. Initializing....................Multiple X-planes of Contours |" << std::endl;
-         this->x_contours = new cfdContours( 0 );
-         this->x_contours->SetObjectType( X_CONTOURS );
-         this->dataList.push_back( this->x_contours );
-         this->commandList.push_back( this->x_contours );
-      }
-      
-      //
-      // Initiate the preset y contour lines.
-      //
-      //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetNumberOfPlanes() > 0 )
-      {
-         std::cout << "| 29. Initializing....................Multiple Y-planes of Contours |" << std::endl;
-         this->y_contours = new cfdContours( 1 );
-         this->y_contours->SetObjectType( Y_CONTOURS );
-         this->dataList.push_back( this->y_contours );
-         this->commandList.push_back( this->y_contours );
-      }
-      
-      //
-      // Initiate the preset z contour lines.
-      //
-      //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetNumberOfPlanes() > 0 )
-      {
-         std::cout << "| 30. Initializing....................Multiple Z-planes of Contours |" << std::endl;
-         this->z_contours = new cfdContours( 2 );
-         this->z_contours->SetObjectType( Z_CONTOURS );
-         this->dataList.push_back( this->z_contours );
-         this->commandList.push_back( this->z_contours );
-      }
-      
-      // Make sure that this dataset has a vector and scalar...
-      //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetVectors() &&
-      //     cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars() )
-      
-      {
-         //
-         // Initiate the preset x momentums.
-         //
-         //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetNumberOfPlanes() > 0 )
-      {
-         std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
-         // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-         this->x_momentums = new cfdMomentums( 0 );
-         this->x_momentums->SetObjectType( X_MOMENTUMS );
-         this->dataList.push_back( this->x_momentums );
-         this->commandList.push_back( this->x_momentums );
-      }
-         
-         //
-         // Initiate the preset y momentums.
-         //
-         //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetNumberOfPlanes() > 0 )
-         {
-            std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
-            // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-            this->y_momentums = new cfdMomentums( 1 );
-            this->y_momentums->SetObjectType( Y_MOMENTUMS );
-            this->dataList.push_back( this->y_momentums );
-            this->commandList.push_back( this->y_momentums );
-         }
-         
-         //
-         // Initiate the preset z momentums.
-         //
-         //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetNumberOfPlanes() > 0 )
-         {
-            std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
-            // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-            this->z_momentums = new cfdMomentums( 2 );
-            this->z_momentums->SetObjectType( Z_MOMENTUMS );
-            this->dataList.push_back( this->z_momentums );
-            this->commandList.push_back( this->z_momentums );
-         }
-      }
-      
-      // Make sure that this dataset has a vector and scalar...
-      //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetVectors() )
-      {
-         //
-         // Initiate the preset x vectors.
-         //
-         //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetNumberOfPlanes() > 0 )
-      {
-         std::cout << "| 34. Initializing.........Multiple X-planes of Precomputed Vectors |" << std::endl;
-         this->x_vectors = new cfdVectors( 0 );
-         this->x_vectors->SetObjectType( X_VECTORS );
-         this->dataList.push_back( this->x_vectors );
-         this->commandList.push_back( this->x_vectors );
-      }
-         
-         //
-         // Initiate the preset y vectors.
-         //
-         //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetNumberOfPlanes() > 0 )
-         {
-            std::cout << "| 35. Initializing.........Multiple Y-planes of Precomputed Vectors |" << std::endl;
-            this->y_vectors = new cfdVectors( 1 );
-            this->y_vectors->SetObjectType( Y_VECTORS );
-            this->dataList.push_back( this->y_vectors );
-            this->commandList.push_back( this->y_vectors );
-         }
-         
-         //
-         // Initiate the preset z vectors.
-         //
-         //if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetNumberOfPlanes() > 0 )
-         {
-            std::cout << "| 36. Initializing.........Multiple Z-planes of Precomputed Vectors |" << std::endl;
-            this->z_vectors = new cfdVectors( 2 );
-            this->z_vectors->SetObjectType( Z_VECTORS );
-            this->dataList.push_back( this->z_vectors );
-            this->commandList.push_back( this->z_vectors );
-         }
-         
-         //
-         // Initiate the streamlines.
-         //
-         std::cout << "| 37. Initializing..................................... Streamlines |" << std::endl;
-         this->streamlines = new cfdStreamers();
-         this->streamlines->SetObjectType( STREAMLINES );
-         this->dataList.push_back( this->streamlines );     
-         this->commandList.push_back( this->streamlines );
-         
-         //
-         // Initiate the animated streamers.
-         //
-         std::cout << "| 39. Initializing............................. Animated Streamline |" << std::endl;
-         this->animStreamer = new cfdAnimatedStreamlineCone();
-         this->animStreamer->SetObjectType( ANIMATED_STREAMLINES );
-         this->dataList.push_back( this->animStreamer );     
-         this->commandList.push_back( this->animStreamer );
-         
-         //
-         // Initiate the animated Images.
-         //
-         std::cout << "| 39.b Initializing............................. Animated Images |" << std::endl;
-         //this->animImg = new cfdAnimatedImage( _param.c_str() );
-         //this->animImg->SetObjectType( ANIMATED_IMAGES );
-         //this->dataList.push_back( this->animImg);  
-      }
-   }
-   
-   //if ( cfdModelHandler::instance()->GetActiveDataSet() )
-   {
-      //
-      // Initiate the PolyData File
-      //
-      std::cout << "| 41. Initializing................................... PolyData File |" << std::endl;
-      this->particles = new cfdPolyData();
-      this->particles->SetObjectType( PARTICLES );
-      this->dataList.push_back( this->particles );     
-      this->commandList.push_back( this->particles );
-      
-      std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
-      this->surface = new cfdPolyData( 1.0 );
-      this->surface->SetObjectType( POLYDATA );
-      this->dataList.push_back( this->surface );
-      this->commandList.push_back( this->surface );
-   }
-   
+   //
+   // Initiate the isosurface.
+   //
+   std::cout << "| 14. Initializing...................................... Isosurface |" << std::endl;
+   this->isosurface = new cfdIsosurface( 10 );
+   this->isosurface->SetObjectType( ISOSURFACE );
+   visObjectMap[ ISOSURFACE ] = this->isosurface;
+
+   //
+   // Initiate the interactive contour.
+   //
+   std::cout << "| 15. Initializing......................................... Contour |" << std::endl;
+   this->contour = new cfdContour();
+   this->contour->SetObjectType( CONTOUR );
+   visObjectMap[ CONTOUR ] = this->contour;
+
+   //
+   // Initiate the interactive momentum.
+   //
+   std::cout << "| 16. Initializing........................................ Momemtum |" << std::endl;
+   this->momentum = new cfdMomentum();
+   this->momentum->SetObjectType( MOMENTUM );
+   visObjectMap[ MOMENTUM ] = this->momentum;
+
+   //
+   // Initiate the interactive vector.
+   //
+   std::cout << "| 17. Initializing.......................................... Vector |" << std::endl;
+   this->vector = new cfdVector();
+   this->vector->SetObjectType( VECTOR );
+   visObjectMap[ VECTOR ] = this->vector;
+
+   //
+   // Initiate the preset x contour.
+   //
+   std::cout << "| 19. Initializing................................ Preset x Contour |" << std::endl;
+   this->x_contour = new cfdPresetContour( 0, 10 );
+   this->x_contour->SetObjectType( X_CONTOUR );
+   visObjectMap[ X_CONTOUR ] = this->x_contour;
+
+   //
+   // Initiate the preset y contour.
+   //
+   std::cout << "| 20. Initializing................................ Preset y Contour |" << std::endl;
+   this->y_contour = new cfdPresetContour( 1, 10 );
+   this->y_contour->SetObjectType( Y_CONTOUR );
+   visObjectMap[ Y_CONTOUR ] = this->y_contour;
+
+   //
+   // Initiate the preset z contour.
+   //
+   std::cout << "| 21. Initializing................................ Preset z Contour |" << std::endl;
+   this->z_contour = new cfdPresetContour( 2, 10 );
+   this->z_contour->SetObjectType( Z_CONTOUR );
+   visObjectMap[ Z_CONTOUR ] = this->z_contour;
+
+   //
+   // Initiate the preset x momentum.
+   //
+   std::cout << "| 22. Initializing............................... Preset x Momentum |" << std::endl;
+   // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+   this->x_momentum = new cfdPresetMomentum( 0, 10 );
+   this->x_momentum->SetObjectType( X_MOMENTUM );
+   visObjectMap[ X_MOMENTUM ] = this->x_momentum;
+
+   //
+   // Initiate the preset y momentum.
+   //
+   std::cout << "| 23. Initializing............................... Preset y Momentum |" << std::endl;
+   // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+   this->y_momentum = new cfdPresetMomentum( 1, 10 );
+   this->y_momentum->SetObjectType( Y_MOMENTUM );
+   visObjectMap[ Y_MOMENTUM ] = this->y_momentum;
+
+   //
+   // Initiate the preset z momentum.
+   //
+   std::cout << "| 24. Initializing............................... Preset z Momentum |" << std::endl;
+   // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+   this->z_momentum = new cfdPresetMomentum( 2, 10 );
+   this->z_momentum->SetObjectType( Z_MOMENTUM );
+   visObjectMap[ Z_MOMENTUM ] = this->z_momentum;
+
+   //
+   // Initiate the preset x vector.
+   //
+   std::cout << "| 25. Initializing................................. Preset x Vector |" << std::endl;
+   this->x_vector = new cfdPresetVector( 0, 10 );
+   this->x_vector->SetObjectType( X_VECTOR );
+   visObjectMap[ X_VECTOR ] = this->x_vector;
+
+   //
+   // Initiate the preset y vector.
+   //
+   std::cout << "| 26. Initializing................................. Preset y Vector |" << std::endl;
+   this->y_vector = new cfdPresetVector( 1, 10 );
+   this->y_vector->SetObjectType( Y_VECTOR );
+   visObjectMap[ Y_VECTOR ] = this->y_vector;
+
+   //
+   // Initiate the preset z vector.
+   //
+   std::cout << "| 27. Initializing................................. Preset z Vector |" << std::endl;
+   this->z_vector = new cfdPresetVector( 2, 10 );
+   this->z_vector->SetObjectType( Z_VECTOR );
+   visObjectMap[ Z_VECTOR ] = this->z_vector;
+
+   //
+   // Initiate the preset x contour lines.
+   //
+   std::cout << "| 28. Initializing....................Multiple X-planes of Contours |" << std::endl;
+   this->x_contours = new cfdContours( 0 );
+   this->x_contours->SetObjectType( X_CONTOURS );
+   visObjectMap[ X_CONTOURS ] = this->x_contours;
+
+   //
+   // Initiate the preset y contour lines.
+   //
+   std::cout << "| 29. Initializing....................Multiple Y-planes of Contours |" << std::endl;
+   this->y_contours = new cfdContours( 1 );
+   this->y_contours->SetObjectType( Y_CONTOURS );
+   visObjectMap[ Y_CONTOURS ] = this->y_contours;
+
+   //
+   // Initiate the preset z contour lines.
+   //
+   std::cout << "| 30. Initializing....................Multiple Z-planes of Contours |" << std::endl;
+   this->z_contours = new cfdContours( 2 );
+   this->z_contours->SetObjectType( Z_CONTOURS );
+   visObjectMap[ Z_CONTOURS ] = this->z_contours;
+
+   //
+   // Initiate the preset x momentums.
+   //
+   std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
+   // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+   this->x_momentums = new cfdMomentums( 0 );
+   this->x_momentums->SetObjectType( X_MOMENTUMS );
+   visObjectMap[ X_MOMENTUMS ] = this->x_momentums;
+
+   //
+   // Initiate the preset y momentums.
+   //
+   std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
+   // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+   this->y_momentums = new cfdMomentums( 1 );
+   this->y_momentums->SetObjectType( Y_MOMENTUMS );
+   visObjectMap[ Y_MOMENTUMS ] = this->y_momentums;
+
+   //
+   // Initiate the preset z momentums.
+   //
+   std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
+   // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
+   this->z_momentums = new cfdMomentums( 2 );
+   this->z_momentums->SetObjectType( Z_MOMENTUMS );
+   visObjectMap[ Z_MOMENTUMS ] = this->z_momentums;
+
+   //
+   // Initiate the preset x vectors.
+   //
+   std::cout << "| 34. Initializing.........Multiple X-planes of Precomputed Vectors |" << std::endl;
+   this->x_vectors = new cfdVectors( 0 );
+   this->x_vectors->SetObjectType( X_VECTORS );
+   visObjectMap[ X_VECTORS ] = this->x_vectors;
+
+   //
+   // Initiate the preset y vectors.
+   //
+   std::cout << "| 35. Initializing.........Multiple Y-planes of Precomputed Vectors |" << std::endl;
+   this->y_vectors = new cfdVectors( 1 );
+   this->y_vectors->SetObjectType( Y_VECTORS );
+   visObjectMap[ Y_VECTORS ] = this->y_vectors;
+
+   //
+   // Initiate the preset z vectors.
+   //
+   std::cout << "| 36. Initializing.........Multiple Z-planes of Precomputed Vectors |" << std::endl;
+   this->z_vectors = new cfdVectors( 2 );
+   this->z_vectors->SetObjectType( Z_VECTORS );
+   visObjectMap[ Z_VECTORS ] = this->z_vectors;
+
+   //
+   // Initiate the streamlines.
+   //
+   std::cout << "| 37. Initializing..................................... Streamlines |" << std::endl;
+   this->streamlines = new cfdStreamers();
+   this->streamlines->SetObjectType( STREAMLINES );
+   visObjectMap[ STREAMLINES ] = this->streamlines;
+
+   //
+   // Initiate the animated streamers.
+   //
+   std::cout << "| 39. Initializing............................. Animated Streamline |" << std::endl;
+   this->animStreamer = new cfdAnimatedStreamlineCone();
+   this->animStreamer->SetObjectType( ANIMATED_STREAMLINES );
+   visObjectMap[ ANIMATED_STREAMLINES ] = this->animStreamer;
+
+   //
+   // Initiate the animated Images.
+   //
+   std::cout << "| 39.b Initializing............................. Animated Images |" << std::endl;
+   //this->animImg = new cfdAnimatedImage( _param.c_str() );
+   //this->animImg->SetObjectType( ANIMATED_IMAGES );
+   //this->dataList.push_back( this->animImg);  
+
+   //
+   // Initiate the PolyData File
+   //
+   std::cout << "| 41. Initializing................................... PolyData File |" << std::endl;
+   this->particles = new cfdPolyData();
+   this->particles->SetObjectType( PARTICLES );
+   visObjectMap[ PARTICLES ] = this->particles;
+
+   std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
+   this->surface = new cfdPolyData( 1.0 );
+   this->surface->SetObjectType( POLYDATA );
+   visObjectMap[ POLYDATA ] = this->surface;
+
    //
    // Initiate PIV data from INEL
    //
@@ -391,30 +356,239 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    std::cout << "| 51. Initializing........................................ pfGeodes |" << std::endl;
    
-   for ( int i = 0; i < (int)this->dataList.size(); i++ )
+   //for ( int i = 0; i < (int)this->dataList.size(); i++ )
+   /*std::map< int, cfdObjects* >::iterator iter;
+   for ( iter = visObjectMap.begin(); iter != viObjectMap.end(); ++iter )
    {
       // Initialize all the geode creation flags and dcs flags for all the geodes
-      this->dataList.at( i )->SetUpdateFlag( false );
-      this->dataList.at( i )->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
-   }
-   
+      iter->SetUpdateFlag( false );
+      iter->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
+   }*/
 }
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::CreateVisObjectEventHandler(const CreateVisObjectEventHandler& rhs)
 :VE_EVENTS::EventHandler(rhs)
 {
    
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::~CreateVisObjectEventHandler()
 {
    //delete all the objects from ssvishandler
-   ;
+   if ( this->isosurface ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->isosurface" << std::endl << vprDEBUG_FLUSH;
+      delete this->isosurface;
+   }
+   
+   if ( this->contour ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->contour" << std::endl << vprDEBUG_FLUSH;
+      delete this->contour;
+   }
+   
+   if ( this->momentum ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->momentum" << std::endl << vprDEBUG_FLUSH;
+      delete this->momentum;
+   }
+   
+   if ( this->vector ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->vector" << std::endl << vprDEBUG_FLUSH;
+      delete this->vector;
+   }
+   
+   if ( this->x_contour ) 
+   {
+      vprDEBUG(vesDBG,2)   
+      << "deleting this->x_contour" << std::endl << vprDEBUG_FLUSH;
+      delete this->x_contour;
+   }
+   
+   if ( this->y_contour ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->y_contour" << std::endl << vprDEBUG_FLUSH;
+      delete this->y_contour;
+   }
+   
+   if ( this->z_contour ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->z_contour" << std::endl << vprDEBUG_FLUSH;
+      delete this->z_contour;
+   }
+   
+   if ( this->x_momentum ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->x_momentum" << std::endl << vprDEBUG_FLUSH;
+      delete this->x_momentum;
+   }
+   
+   if ( this->y_momentum ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->y_momentum" << std::endl << vprDEBUG_FLUSH;
+      delete this->y_momentum;
+   }
+   
+   if ( this->z_momentum ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->z_momentum" << std::endl << vprDEBUG_FLUSH;
+      delete this->z_momentum;
+   }
+   
+   if ( this->x_vector ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->x_vector" << std::endl << vprDEBUG_FLUSH;
+      delete this->x_vector;
+   }
+   
+   if ( this->y_vector ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->y_vector" << std::endl << vprDEBUG_FLUSH;
+      delete this->y_vector;
+   }
+   
+   if ( this->z_vector ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->z_vector" << std::endl << vprDEBUG_FLUSH;
+      delete this->z_vector;
+   }
+   
+   if ( this->x_contours ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->x_contours" << std::endl << vprDEBUG_FLUSH;
+      delete this->x_contours;
+   }
+   
+   if ( this->y_contours ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->y_contours" << std::endl << vprDEBUG_FLUSH;
+      delete this->y_contours;
+   }
+   
+   if ( this->z_contours ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->z_contours" << std::endl << vprDEBUG_FLUSH;
+      delete this->z_contours;
+   }
+   
+   if ( this->x_momentums ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->x_momentums" << std::endl << vprDEBUG_FLUSH;
+      delete this->x_momentums;
+   }
+   
+   if ( this->y_momentums ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->y_momentums" << std::endl << vprDEBUG_FLUSH;
+      delete this->y_momentums;
+   }
+   
+   if ( this->z_momentums ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->z_momentums" << std::endl << vprDEBUG_FLUSH;
+      delete this->z_momentums;
+   }
+   
+   if ( this->x_vectors ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->x_vectors" << std::endl << vprDEBUG_FLUSH;
+      delete this->x_vectors;
+   }
+   
+   if ( this->y_vectors ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->y_vectors" << std::endl << vprDEBUG_FLUSH;
+      delete this->y_vectors;
+   }
+   
+   if ( this->z_vectors ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->z_vectors" << std::endl << vprDEBUG_FLUSH; 
+      delete this->z_vectors;
+   }
+   
+   if ( this->streamlines ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->streamlines" << std::endl << vprDEBUG_FLUSH;
+      delete this->streamlines;
+      
+      // Delete the polydata array used for seed points
+      // if ( this->lastSource != NULL )
+      //{
+      //   this->lastSource->Delete();
+      //}
+   }
+   
+   if ( this->particles ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->particles" << std::endl << vprDEBUG_FLUSH;
+      delete this->particles;
+   }
+   
+   if ( this->surface ) 
+   {
+      vprDEBUG(vesDBG,2) 
+      << "deleting this->surface" << std::endl << vprDEBUG_FLUSH;
+      delete this->surface;
+   }
+   
+   if ( this->image ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->image" << std::endl << vprDEBUG_FLUSH;
+      delete this->image;
+   }
+   
+   if ( this->animImg ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->animImg" << std::endl << vprDEBUG_FLUSH;
+      delete this->animImg;
+   }
+   
+   if ( this->animStreamer ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->animStreamer" << std::endl << vprDEBUG_FLUSH;
+      delete this->animStreamer;
+   }
+   
+   if ( this->textOutput ) 
+   {
+      vprDEBUG(vesDBG,2)  
+      << "deleting this->textOutput" << std::endl << vprDEBUG_FLUSH;
+      delete this->textOutput;
+   }
 }
+////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
-//////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler& CreateVisObjectEventHandler::operator=(const CreateVisObjectEventHandler& rhs)
 {
    if(this != &rhs)
@@ -423,10 +597,10 @@ CreateVisObjectEventHandler& CreateVisObjectEventHandler::operator=(const Create
    }
    return *this;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 {
-   try
+/*   try
    {
       if ( model )
       {
@@ -441,72 +615,84 @@ void CreateVisObjectEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase*
    {
       _activeModel = 0;
       std::cout<<"Invalid object passed to AddVTKDataSetEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+   }*/
 }
 //////////////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::Execute(VE_XML::XMLObject* xmlObject)
+void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
-   for ( unsigned int i = 0; i < this->commandList.size(); i++ )
+   // Set the active dataset
+   this->SetActiveDataSet( xmlObject );
+   // set the active scalar and range
+   this->SetActiveScalarAndRange( xmlObject );
+   // set the active vector
+   this->SetActiveVector( xmlObject );
+   // set the xml command to the cfdObject
+   std::map< int, cfdObjects* >::iterator iter;
+   for ( iter = visObjectMap.begin(); iter != visObjectMap.end(); ++iter )
    {
       // Check to see if any of the objectss need updated before we 
       // create actors
       if ( cfdModelHandler::instance()->GetActiveModel() )
       {
-         this->dataList.at( i )->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
-         this->commandList[ i ]->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
-         bool commandApplies = this->commandList[ i ]->CheckCommandId( this->commandArray );
-         vprDEBUG(vesDBG,4) << "|\tCommand Applies : " << commandApplies
-            << std::endl << vprDEBUG_FLUSH;
+         iter->second->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
+         iter->second->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
+         //pass in the command for a specific object
+         //bool commandApplies = this->commandList[ i ]->CheckCommandId( this->commandArray );
+         //vprDEBUG(vesDBG,4) << "|\tCommand Applies : " << commandApplies
+         //   << std::endl << vprDEBUG_FLUSH;
       }
    }
    
-   // Set the active dataset
-   // set the active scalar
-   // set the active scalar range
-   // set the active vector
    // get the active vis object
-   else if (   ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
+   /*if (   ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
                ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) < 100 )  && 
                ( !this->computeActorsAndGeodes ) &&
-               ( !this->texturesActive ) )
+               ( !this->texturesActive ) )*/
    {
-      vprDEBUG(vesDBG,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
-      << std::endl << vprDEBUG_FLUSH;
-      for ( size_t i = 0; i < this->dataList.size(); i ++ )
-      {          
-         if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == dataList.at( i )->GetObjectType() )
+      //vprDEBUG(vesDBG,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
+      //<< std::endl << vprDEBUG_FLUSH;
+      int activeObjectIndex = 0; 
+      for ( iter = visObjectMap.begin(); iter != visObjectMap.end(); ++iter )
+      {
+         if ( activeObjectIndex == iter->second->GetObjectType() )
          {
-            vprDEBUG(vesDBG,1) << " setting viz object " << i 
+            vprDEBUG(vesDBG,1) << " setting viz object " << iter->second->GetObjectType()
             << " to _activeObject"
             << std::endl << vprDEBUG_FLUSH;
             
             //cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
-            this->_activeObject = this->dataList.at( i );
-            
-            if ( this->_activeObject->GetObjectType() == IMAGE_EX )
+            this->activeObject = iter->second;
+            cfdDCS* activeDataSetDCS = 0;
+            /*if ( this->activeObject->GetObjectType() == IMAGE_EX )
             {
                this->_activeDataSetDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
             }
-            else
+            else*/
             {
-               this->_activeDataSetDCS = cfdModelHandler::instance()->GetActiveDataSet()->GetDCS();
+            activeDataSetDCS = cfdModelHandler::instance()->GetActiveDataSet()->GetDCS();
             }
             
             //if ( this->computeActorsAndGeodes == false )
             {
                // add active dataset DCS to scene graph if not already there...
                vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
-               << this->_activeDataSetDCS
+               << activeDataSetDCS
                << std::endl << vprDEBUG_FLUSH;
-               this->_activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
-               this->_activeObject->SetNormal( this->nav->GetDirection() );
-               this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
+               this->activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
+               this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
+               this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
                
-               this->_activeObject->SetRequestedValue( (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-               this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
-               this->_activeObject->SetPreCalcFlag( (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
-               this->computeActorsAndGeodes = true;
-               this->actorsAreReady = true;
+               //this should be handled by individual cfdobjects
+               //this->activeObject->SetRequestedValue( (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+               this->activeObject->SetCursorType( cfdEnvironmentHandler::instance()->GetCursor()->GetCursorID() );
+               //This should be handled in individual cfdbojects
+               //this->activeObject->SetPreCalcFlag( (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
+               //call back over to ssvishandler to set the flags
+               cfdSteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
+               //this->computeActorsAndGeodes = true;
+               cfdSteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
+               //this->actorsAreReady = true;
+               cfdSteadyStateVizHandler::instance()->SetActorsAreReady( true );
             }
             break;
          }
@@ -515,9 +701,9 @@ void CreateVisObjectEventHandler::Execute(VE_XML::XMLObject* xmlObject)
    }
    // set the update flag in steadystate viz handler
    // now update the vis object
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
-   {
-      if ( _activeModel &&  _activeModel->GetActiveDataSet())
+   //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
+   /*{
+      if ( activeModel &&  activeModel->GetActiveDataSet() )
       {
          //cfd visualization options
          int visOpt = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
@@ -533,260 +719,87 @@ void CreateVisObjectEventHandler::Execute(VE_XML::XMLObject* xmlObject)
             tbased = false;
          }
       }       
-   }   
+   }*/
    // add it to the scene graph - this handled by steadystatevis handler
-   try
-   {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* veModelDVP = command->GetDataValuePair("CREATE_NEW_DATASETS");
-      VE_Model::Model* veModel = dynamic_cast< VE_Model::Model* >( veModelDVP->GetDataXMLObject() );
-      size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
-      for ( size_t i = 0; i < numInfoPackets; ++i )
-      {
-         VE_XML::ParameterBlock* tempInfoPacket = veModel->GetInformationPacket( i );
-         if ( tempInfoPacket->GetProperty( "VTK_DATA_FILE" ) )
-         {
-            // Assume only one model for now
-            // Flexibilty to have multiply models
-            if ( !_activeModel )
-               return;
-            _activeModel->CreateCfdDataSet();
-
-            vprDEBUG(vesDBG,0) << "|\t************************************* "
-                             << std::endl << vprDEBUG_FLUSH;
-
-            vprDEBUG(vesDBG,0) << "|\tvtk DCS parameters:"
-                             << std::endl << vprDEBUG_FLUSH;
-
-            // Pass in -1 to GetCfdDataSet to get the last dataset added
-            _activeModel->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( tempInfoPacket->GetTransform()->GetScaleArray()->GetArray() );
-            _activeModel->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( tempInfoPacket->GetTransform()->GetTranslationArray()->GetArray() );
-            _activeModel->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( tempInfoPacket->GetTransform()->GetRotationArray()->GetArray() );
-
-            // get vtk data set name...
-            std::string vtk_filein = tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetDataString();
-
-            if ( VE_Util::fileIO::isFileReadable( vtk_filein ) ) 
-            {
-               vprDEBUG(vesDBG,0) << "|\tvtk file = " << vtk_filein 
-                                << ", dcs = "  << _activeModel->GetCfdDataSet( -1 )->GetDCS()
-                                << std::endl << vprDEBUG_FLUSH;
-               _activeModel->GetCfdDataSet( -1 )->SetFileName( vtk_filein );
-            }
-            else
-            {
-               std::cerr << "ERROR: unreadable vtk file = " << vtk_filein 
-                           << ".  You may need to correct your param file."
-                           << std::endl;
-               exit(1);
-            }
-
-            if ( tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" ) )
-            {
-               std::string precomputedDataSliceDir = tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->GetDataString();
-               _activeModel->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( precomputedDataSliceDir );
-            }
-
-            if ( tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" ) )
-            {
-               std::string precomputedSurfaceDir = tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->GetDataString();
-               _activeModel->GetCfdDataSet( -1 )->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
-            }
-
-            LoadSurfaceFiles( _activeModel->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
-            //Load texture datasets
-            if ( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
-            {
-#ifdef _OSG
-#ifdef VE_PATENTED
-               vprDEBUG(vesDBG,0) << "|\tCreating texture dataset." << std::endl << vprDEBUG_FLUSH;
-               _activeModel->CreateTextureDataSet();
-               size_t numProperties = tempInfoPacket->GetNumberOfProperties();
-               for ( size_t j = 0; j < numProperties; ++j )
-               {
-                  if ( tempInfoPacket->GetProperty( j )->GetDataName() == 
-                        std::string( "VTK_TEXTURE_DIR_PATH" ) )
-                  {
-                     _activeModel->AddDataSetToTextureDataSet( 0, tempInfoPacket->GetProperty( j )->GetDataString() );
-                  }
-               }
-#endif
-#endif
-            }
-            //Now load up the dataset
-            //_activeModel->GetCfdDataSet( -1 )->LoadData();
-            for ( unsigned int i = 0; i < _activeModel->GetNumberOfCfdDataSets(); i++)
-            {
-               std::cout << "|\tLoading data for file " 
-                           << _activeModel->GetCfdDataSet( i )->GetFileName()
-                           << std::endl;
-               _activeModel->GetCfdDataSet( i )->LoadData();
-               _activeModel->GetCfdDataSet( i )->SetArrow( VE_Xplorer::cfdModelHandler::instance()->GetArrow() );
-               if ( _activeModel->GetCfdDataSet( i )->GetParent() == _activeModel->GetCfdDataSet( i ) )
-               {
-                  VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->
-                        AddChild( _activeModel->GetCfdDataSet( i )->GetDCS() );
-                  _activeModel->SetActiveDataSet( _activeModel->GetCfdDataSet( i ) );
-               }
-            }
-         }
-      }
-   }
-   catch(...)
-   {
-      std::cerr << "|\tSomething bad happened in AddVTKDataSetEventHandler::Execute." << std::endl;
-   }
+   //Call b ack to ssviz handler to do this
 }
 //////////////////////////////////////////////////////////////////   
-void CreateVisObjectEventHandler::LoadSurfaceFiles( std::string precomputedSurfaceDir )
+void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject )
 {
-   if ( precomputedSurfaceDir.empty() )// == NULL )
-   {
-      vprDEBUG(vesDBG,1) << "precomputedSurfaceDir == NULL" 
-                             << std::endl << vprDEBUG_FLUSH;
-      return;
-   }
-
-   vprDEBUG(vesDBG,1) << "Loading surface files from " 
-      << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
-
-
-   boost::filesystem::path dir_path( precomputedSurfaceDir );
-
-   if ( boost::filesystem::is_directory( dir_path ) )
-   {
-      std::cout << "|\tIn directory: "
-              << dir_path.native_directory_string() << "\n";
-      boost::filesystem::directory_iterator end_iter;
-      for ( boost::filesystem::directory_iterator dir_itr( dir_path );
-            dir_itr != end_iter; ++dir_itr )    
-      {
-         try
-         {
-            if ( boost::filesystem::is_directory( *dir_itr ) )
-            {
-               std::cout << "|\tIs a sub directory " << dir_itr->leaf() << " [directory]\n";
-            }
-            else
-            {
-               std::cout << dir_itr->leaf() << "\n";
-               if ( strstr( dir_itr->leaf().c_str(), ".vtk") )
-               {
-                  std::string pathAndFileName;
-                  pathAndFileName.assign( dir_path.leaf().c_str() );
-                  pathAndFileName.append( "/" );
-                  pathAndFileName.append( dir_itr->leaf().c_str() );
-                  vprDEBUG(vesDBG,0) << "|\tsurface file = " << pathAndFileName
-                                         << std::endl << vprDEBUG_FLUSH;
-
-                  _activeModel->CreateCfdDataSet();
-                  unsigned int numDataSets = _activeModel->GetNumberOfCfdDataSets();
-                  // subtract 1 because this number was 1 base not 0 base
-                  numDataSets -= 1;
-                  _activeModel->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
-
-                  // set the dcs matrix the same as the last file
-                  _activeModel->GetCfdDataSet( -1 )->SetDCS( 
-                                    _activeModel->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
-
-                  // precomputed data that descends from a flowdata.vtk should
-                  // automatically have the same color mapping as the "parent" 
-                  _activeModel->GetCfdDataSet( -1 )->SetParent( 
-                                    _activeModel->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
-               }
-            }
-         }
-         catch ( const std::exception & ex )
-         {
-            std::cout << dir_itr->leaf() << " " << ex.what() << std::endl;
-         }
-      }
-   }
-   else // must be a file
-   {
-      std::cout << "\nFound: " << dir_path.native_file_string() << "\n";    
-   }
-}
-//////////////////////////////////////////////////////////////////   
-void CreateVisObjectEventHandler::Load3DTextureDirectories( std::string dirToLoad )
-{
-#ifdef _OSG
-#ifdef VE_PATENTED
-#endif
-#endif
-}
-//////////////////////////////////////////////////////////////////   
-void CreateVisObjectEventHandler::SetActiveVector( void )
-{
-if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-          == CHANGE_VECTOR )
-{ 
-   int vectorIndex = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-   vprDEBUG(vesDBG,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
-      << std::endl << vprDEBUG_FLUSH;
+   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
+   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Active Vector" );
+   std::string activeVector;
+   activeModelDVP->GetData( activeVector );
    
-   activeDataset->SetActiveVector( vectorIndex );
+   //int vectorIndex = 0;//(int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+   //vprDEBUG(vesDBG,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
+   //   << std::endl << vprDEBUG_FLUSH;
+   
+   cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
+   cfdDataSet* activeDataset = activeModel->GetActiveDataSet();
+   // need to set the vector by name
+   activeDataset->SetActiveVector( activeVector );
    //activeDataset->GetParent()->SetActiveVector( vectorIndex );
 #ifdef _OSG
 #ifdef VE_PATENTED
-   if(_activeModel !=0)
+//This if statement may disappear since are a gaurnteed of an activemodel at this ppoint
+   //if ( activeModel !=0 )
    {
-      if(_activeTDSet)
+      cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
+      if ( activeTDSet )
       {
-         _activeTDSet->SetActiveVector(activeDataset->GetVectorName(vectorIndex));
+         activeTDSet->SetActiveVector( activeVector );
       }
    }
 #endif
 #endif
 }
-}
 //////////////////////////////////////////////////////////////////   
-void CreateVisObjectEventHandler::SetActiveDataSet( void )
+void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject )
 {
-if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-     == CHANGE_STEADYSTATE_DATASET )
-{
-   unsigned int i = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
+   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Active Dataset" );
+   std::string dataSetName;
+   activeModelDVP->GetData( dataSetName );
+
+   //Need to set the active datasetname and get the position of the dataset
+   unsigned int i = 0;//(int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
    vprDEBUG(vesDBG,1) 
       << "CHANGE_STEADYSTATE_DATASET " << i 
-      //<< ", scalarIndex = " << this->cfdSc
-      //<< ", min = " << this->cfdMin 
-      //<< ", max = " << this->cfdMax
       << std::endl << vprDEBUG_FLUSH;
-   
+   cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
    //update active texture dataset if it exists
 #ifdef _OSG
 #ifdef VE_PATENTED
-   unsigned int nTextureDataSets = _activeModel->GetNumberOfTextureDataSets();
+   unsigned int nTextureDataSets = activeModel->GetNumberOfTextureDataSets();
    if( (nTextureDataSets) && ( i < nTextureDataSets ) )
    {
-      _activeTDSet = _activeModel->GetTextureDataSet(i);
-      _activeModel->SetActiveTextureDataSet(_activeTDSet);
-   }else{
-      _activeTDSet = 0;
+      cfdTextureDataSet* activeTDSet = activeModel->GetTextureDataSet( i );
+      activeModel->SetActiveTextureDataSet( activeTDSet );
    }
 #endif
 #endif
-   if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
+   if ( ( i < activeModel->GetNumberOfCfdDataSets() ) )
    {
       vprDEBUG(vesDBG,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
-      << _activeModel->GetCfdDataSet( i )->GetFileName()
-      << ", dcs = " << _activeModel->GetCfdDataSet( i )->GetDCS()
+      << activeModel->GetCfdDataSet( i )->GetFileName()
+      << ", dcs = " << activeModel->GetCfdDataSet( i )->GetDCS()
       << std::endl << vprDEBUG_FLUSH;
       
-      int cfdType = _activeModel->GetCfdDataSet( i )->GetType();
+      int cfdType = activeModel->GetCfdDataSet( i )->GetType();
       vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate cfdType: " << cfdType
          << std::endl << vprDEBUG_FLUSH;
       
       // set the dataset as the appropriate dastaset type
       // (and the active dataset as well)
-      activeDataset = _activeModel->GetCfdDataSet( i );         
-      _activeModel->SetActiveDataSet( activeDataset );         
+      cfdDataSet* activeDataset = activeModel->GetCfdDataSet( i );         
       
+      std::string oldDatasetName = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
       vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate last active dataset name = " 
          << oldDatasetName
          << std::endl << vprDEBUG_FLUSH;
       
+      activeModel->SetActiveDataSet( activeDataset );         
       vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate Activating steady state file " 
          << activeDataset->GetFileName()
          << std::endl << vprDEBUG_FLUSH;
@@ -801,58 +814,57 @@ if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
          oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
       }
       
-      // update scalar bar for possible new scalar name
-      updateScalarRange = true;
       // Set the current active dataset for the scalar bar
       // so that it knows how to update itself
-      _scalarBar->SetActiveDataSet( activeDataset );
+      //_scalarBar->SetActiveDataSet( activeDataset );
    }
    else
    {
       std::cerr << "ERROR: cfdModelHandler::PreFrameUpdate  requested steady state dataset " 
-      << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
-      << _activeModel->GetNumberOfCfdDataSets()
+      //<< commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
+      << activeModel->GetNumberOfCfdDataSets()
       << std::endl;
    }
 }
-}
 //////////////////////////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::SetActiveScalar( void )
+void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xmlObject )
 {
-   // Can't be an else if because may have to update if dataset has changed beforehand
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 
-        commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE ||
-        updateScalarRange
-        )
-   { 
-      int scalarIndex = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-      vprDEBUG(vesDBG,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
-         << ", scalarIndex = " << scalarIndex
-         << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
-         << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
-         << std::endl << vprDEBUG_FLUSH;
-      //update active scalar texture if it exists
+   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
+
+   std::string activeScalarName;
+   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Active Scalar" );
+   activeModelDVP->GetData( activeScalarName );   
+   double scalarMin;
+   activeModelDVP = command->GetDataValuePair( "Scalar Min" );
+   activeModelDVP->GetData( scalarMin );
+   double scalarMax;
+   activeModelDVP = command->GetDataValuePair( "Scalar Max" );
+   activeModelDVP->GetData( scalarMax );
+
+   /*(int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+   vprDEBUG(vesDBG,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
+      << ", scalarIndex = " << scalarIndex
+      << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
+      << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
+      << std::endl << vprDEBUG_FLUSH;*/
+   cfdDataSet* activeDataset = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+   //update active scalar texture if it exists
 #ifdef _OSG
 #ifdef VE_PATENTED
-      if(_activeModel !=0)
+   //if(_activeModel !=0)
+   {
+      cfdTextureDataSet* activeTDSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveTextureDataSet();
+      if( activeTDSet )
       {
-         if(_activeTDSet)
-         {
-            _activeTDSet->SetActiveScalar(activeDataset->GetScalarName(scalarIndex));
-         }
+         activeTDSet->SetActiveScalar( activeScalarName );
       }
-#endif
-#endif
-      
-      activeDataset->SetActiveScalar( scalarIndex );
-      activeDataset->GetParent()->SetActiveScalar( scalarIndex );
-      
-      activeDataset->ResetScalarBarRange( 
-                                          (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
-                                          (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
-      activeDataset->GetParent()->ResetScalarBarRange( 
-                                                       (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
-                                                       (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
+#endif
+#endif
    
+   activeDataset->SetActiveScalar( activeScalarName );
+   activeDataset->GetParent()->SetActiveScalar( activeScalarName );
+   
+   activeDataset->ResetScalarBarRange( scalarMin, scalarMax );
+   activeDataset->GetParent()->ResetScalarBarRange( scalarMin, scalarMax ); 
 }

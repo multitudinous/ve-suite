@@ -117,7 +117,8 @@ SRCS=\
    MaterialModeUpdateEH.cxx \
    MaterialUpdateEH.cxx\
    trackball.cxx\
-   cfdTrackball.cxx
+   cfdTrackball.cxx\
+   CreateVisObjectEventHandler.cxx
 #   cfdObjectHandler.cxx 
 
 			

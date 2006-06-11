@@ -907,7 +907,125 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
    vprDEBUG(vesDBG,0) << "\tmeanCellBBLength = " << this->meanCellBBLength
                           << std::endl << vprDEBUG_FLUSH;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::SetActiveScalar( std::string tempActiveScalar )
+{
+   if ( tempActiveScalar.empty() )
+   {
+      this->activeScalar = -1;
+      return;
+   }
+   
+   int scalar = -1;
+   for ( size_t i = 0; i < numScalars; ++i )
+   {
+      if ( scalarName[ i ] == tempActiveScalar )
+      {   
+         scalar = i;
+         break;
+      }
+   }
+   
+   if ( scalar < 0 || this->numScalars <= scalar )
+   {
+      std::cerr << "Error: SetActiveScalar: out-of-range scalar " 
+      << scalar << ", will use first scalar " << this->scalarName[ 0 ]
+      << std::endl;
+      this->activeScalar = 0;
+   }
+   else
+   {
+      this->activeScalar = scalar;
+      
+      vprDEBUG(vesDBG,1) 
+         << "cfdDataSet::SetActiveScalar: requested activeScalar = "
+         << this->activeScalar << ", scalarName = " 
+         << this->scalarName[ this->activeScalar ]
+         << std::endl << vprDEBUG_FLUSH;
+   }
+   
+   this->GetDataSet()->GetPointData()->SetActiveScalars( tempActiveScalar.c_str() );
+   
+   vprDEBUG(vesDBG,1) << "\tSetActiveScalar: Active scalar is \""
+      << this->GetDataSet()->GetPointData()->GetScalars()->GetName()
+      << "\"" << std::endl << vprDEBUG_FLUSH;
+   
+   for (int i=0; i<3; i++)
+   {
+      int numPlanes = 0;
+      if ( this->GetPrecomputedSlices( i ) )
+      {
+         numPlanes = this->GetPrecomputedSlices( i )->GetNumberOfPlanes();
+      }
+      vprDEBUG(vesDBG,1) << "\tnumPlanes = " << numPlanes
+         << std::endl << vprDEBUG_FLUSH;
+      
+      if ( numPlanes > 0 )
+      {
+         
+         /*this->GetPrecomputedSlices( i )->GetPlanesData()
+         ->GetPointData()->SetActiveScalars( 
+                                             this->scalarName[ this->activeScalar ].c_str() );
+         */
+         
+         for (int j=0; j<numPlanes; j++)
+         {
+            this->GetPrecomputedSlices( i )->GetPlane( j )
+            ->GetPointData()->SetActiveScalars( 
+                                                this->scalarName[ this->activeScalar ].c_str() );
+         }
+      }
+   }
+   // Store the actual range of the active scalar...
+   double * temp = this->GetActualScalarRange( this->activeScalar );
+   this->range [ 0 ] = temp[ 0 ];
+   this->range [ 1 ] = temp[ 1 ];
+   vprDEBUG(vesDBG,1) << "range[0] = " << this->range[0]
+      << ", range[1] = " << this->range[1]
+      << std::endl << vprDEBUG_FLUSH;
+   
+   temp = this->GetDisplayedScalarRange( this->activeScalar );
+   this->definedRange[ 0 ] = temp[ 0 ];
+   this->definedRange[ 1 ] = temp[ 1 ];
+   vprDEBUG(vesDBG,1) << "definedRange[0] = " << this->definedRange[0]
+      << ", definedRange[1] = " << this->definedRange[1]
+      << std::endl << vprDEBUG_FLUSH;
+   
+   vprDEBUG(vesDBG,1) << "actualScalarRange[0][0] = " 
+      << this->actualScalarRange[0][0]
+      << ", actualScalarRange[0][1] = " 
+      << this->actualScalarRange[0][1]
+      << std::endl << vprDEBUG_FLUSH;
+   
+   vprDEBUG(vesDBG,1) << "displayedScalarRange[0][0] = " 
+      << this->displayedScalarRange[0][0]
+      << ", displayedScalarRange[0][1] = "
+      << this->displayedScalarRange[0][1]
+      << std::endl << vprDEBUG_FLUSH;
+   
+   // Step length for streamline integration
+   this->stepLength = this->bbDiagonal/5.0f ;
+   vprDEBUG(vesDBG,1) << "\tSetActiveScalar: stepLength = " 
+      << this->stepLength << std::endl << vprDEBUG_FLUSH;
+   
+   // Maximum integration time for streamline integration
+   this->maxTime = 5.0f * this->bbDiagonal / 
+      ( ( this->range[1] - this->range[0] ) * 0.5f );
+   vprDEBUG(vesDBG,1) << "\tSetActiveScalar: maxTime = " 
+      << this->maxTime << std::endl << vprDEBUG_FLUSH;
+   
+   // Time step for streamline integration
+   this->timeStep = this->bbDiagonal / this->definedRange[1];
+   vprDEBUG(vesDBG,1) << "\tSetActiveScalar: timeStep = " 
+      << this->timeStep << std::endl << vprDEBUG_FLUSH;
+   
+   // set up the vtkLookupTable
+   this->lut->SetNumberOfColors( 256 );            //default is 256
+   this->lut->SetHueRange( 2.0f/3.0f, 0.0f );      //a blue-to-red scale
+   this->lut->SetTableRange( this->definedRange );
+   this->lut->Build();
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetActiveScalar( int scalar )
 {
    if ( this->numScalars == 0 )
@@ -1016,18 +1134,18 @@ void cfdDataSet::SetActiveScalar( int scalar )
    this->lut->SetTableRange( this->definedRange );
    this->lut->Build();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int cfdDataSet::GetActiveScalar()
 {
    // 0 <= activeScalar < numScalars
    return this->activeScalar;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double * cfdDataSet::GetVectorMagRange()
 {
    return this->vectorMagRange;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetActiveVector( int vector )
 {
    if ( this->numVectors == 0 )
@@ -1078,6 +1196,70 @@ void cfdDataSet::SetActiveVector( int vector )
             this->GetPrecomputedSlices( i )->GetPlane( j )
                 ->GetPointData()->SetActiveVectors( 
                                  this->vectorName[ this->activeVector ].c_str() );
+         }
+      }
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::SetActiveVector( std::string tempVectorName )
+{
+   if ( tempVectorName.empty() )
+   {
+      this->activeVector = -1;
+      return;
+   }
+   
+   int vector = -1;
+   for ( size_t i = 0; i < numVectors; ++i )
+   {
+      if ( vectorName[ i ] == tempVectorName )
+      {   
+         vector = i;
+         break;
+      }
+   }
+   
+   if ( vector < 0 || this->numVectors <= vector )
+   {
+      std::cerr << "Error: SetActiveVector: out-of-range vector " 
+      << vector << ", will use first vector " << this->vectorName[ 0 ]
+      << std::endl;
+      this->activeVector = 0;
+   }
+   else
+   {
+      this->activeVector = vector;
+      
+      vprDEBUG(vesDBG,1) 
+         << "cfdDataSet::SetActiveVector: requested activeVector = "
+         << this->activeVector << ", vectorName= " 
+         << this->vectorName[ this->activeVector ]
+         << std::endl << vprDEBUG_FLUSH;
+   }
+   
+   this->GetDataSet()->GetPointData()->SetActiveVectors( tempVectorName.c_str() );
+   
+   for (int i=0; i<3; i++)
+   {
+      int numPlanes = 0;
+      if ( this->GetPrecomputedSlices( i ) )
+      {
+         numPlanes = this->GetPrecomputedSlices( i )->GetNumberOfPlanes();
+      }
+      vprDEBUG(vesDBG,1) << "\tnumPlanes = " << numPlanes
+         << std::endl << vprDEBUG_FLUSH;
+      
+      if ( numPlanes > 0 )
+      {
+         /*this->GetPrecomputedSlices( i )->GetPlanesData()
+         ->GetPointData()->SetActiveVectors( 
+                                             this->vectorName[ this->activeVector ].c_str() );
+         */
+         for (int j=0; j<numPlanes; j++)
+         {
+            this->GetPrecomputedSlices( i )->GetPlane( j )
+            ->GetPointData()->SetActiveVectors( 
+                                                this->vectorName[ this->activeVector ].c_str() );
          }
       }
    }

@@ -38,6 +38,38 @@
  * Class for creating vis options.
  */
 #include <string>
+#include <vector>
+#include <map>
+
+namespace VE_Xplorer
+{
+   class cfdPolyData;      
+   class cfdIsosurface;    
+   class cfdPresetContour; 
+   class cfdContours;      
+   class cfdMomentum;      
+   class cfdPresetMomentum;
+   class cfdMomentums;     
+   class cfdVector;        
+   class cfdPresetVector;  
+   class cfdVectors;       
+   class cfdStreamers;     
+   class cfdPolyData;      
+   class cfdImage;         
+   class cfdAnimatedImage; 
+   class cfdAnimatedStreamlineCone;
+   class cfdContour;
+   class cfdGlobalBase;
+   class cfdObjects;
+   class cfdCommandArray;
+   class cfdNavigate;
+   class cfdCursor;
+   class cfdGraphicsObject;
+   class cfdModel;
+   class cfdTextOutput;
+   class cfdObjects;
+   class cfdGlobalBase;
+}
 namespace VE_XML
 {
    class XMLObject;
@@ -73,28 +105,56 @@ public:
    
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
-   void Execute(VE_XML::XMLObject* command); 
+   void Execute( VE_XML::XMLObject* command); 
 
-protected:
-   ///Load surface files from a predefined directory
-   ///\param directory to load files from
-   void LoadSurfaceFiles( std::string precomputedSurfaceDir );
-   ///Directory that contians 3d textures
-   ///\param directory to load files from
-   void Load3DTextureDirectories( std::string dirToLoad );
-
-   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
 private:
    ///Set the active dataset for the cfdobject to work on
-   void SetActiveDataSet( void );
-   ///Set the active scalar 
-   void SetActiveScalar( void )l
-   ///Set he scalar range for the active scalar
-   void SetScalarRange( void );
+   void SetActiveDataSet( VE_XML::XMLObject* xmlObject );
+   ///Set the active scalar and appropriate range
+   void SetActiveScalarAndRange( VE_XML::XMLObject* xmlObject );
    ///Set access to the active sclalt range
-   void SetActiveVector( void );
+   void SetActiveVector( VE_XML::XMLObject* xmlObject );
    ///Set the active cfd object based on the command
-   void SetActiveCfdObject( void );
+   void SetActiveCfdObject( VE_XML::XMLObject* xmlObject );
+
+   //VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
+   VE_Xplorer::cfdObjects* activeObject;   ///<The active cfdObject
+   VE_Xplorer::cfdPolyData*         surface;///<A cfdObject
+   VE_Xplorer::cfdIsosurface*       isosurface;///<A cfdObject
+   VE_Xplorer::cfdContour*          contour;///<A cfdObject
+   VE_Xplorer::cfdPresetContour*    x_contour;///<A cfdObject
+   VE_Xplorer::cfdPresetContour*    y_contour;///<A cfdObject
+   VE_Xplorer::cfdPresetContour*    z_contour;///<A cfdObject
+   VE_Xplorer::cfdContours*         x_contours;///<A cfdObject
+   VE_Xplorer::cfdContours*         y_contours;///<A cfdObject
+   VE_Xplorer::cfdContours*         z_contours;///<A cfdObject
+   VE_Xplorer::cfdMomentum*         momentum;///<A cfdObject
+   VE_Xplorer::cfdPresetMomentum*   x_momentum;///<A cfdObject
+   VE_Xplorer::cfdPresetMomentum*   y_momentum;///<A cfdObject
+   VE_Xplorer::cfdPresetMomentum*   z_momentum;///<A cfdObject
+   VE_Xplorer::cfdMomentums*        x_momentums;///<A cfdObject
+   VE_Xplorer::cfdMomentums*        y_momentums;///<A cfdObject
+   VE_Xplorer::cfdMomentums*        z_momentums;///<A cfdObject
+   VE_Xplorer::cfdVector*           vector;///<A cfdObject
+   VE_Xplorer::cfdPresetVector*     x_vector;///<A cfdObject
+   VE_Xplorer::cfdPresetVector*     y_vector;///<A cfdObject
+   VE_Xplorer::cfdPresetVector*     z_vector;///<A cfdObject
+   VE_Xplorer::cfdVectors*          x_vectors;///<A cfdObject
+   VE_Xplorer::cfdVectors*          y_vectors;///<A cfdObject
+   VE_Xplorer::cfdVectors*          z_vectors;///<A cfdObject
+   VE_Xplorer::cfdStreamers*        streamlines;///<A cfdObject
+   VE_Xplorer::cfdPolyData*         particles;///<A cfdObject
+   VE_Xplorer::cfdImage*            image;///<A cfdObject
+   VE_Xplorer::cfdAnimatedImage*    animImg;///<A cfdObject
+   VE_Xplorer::cfdAnimatedStreamlineCone* animStreamer;///<A cfdObject
+   VE_Xplorer::cfdTextOutput*       textOutput;///<A cfdObject
+   
+   // Vectors that will eventually be stored as maps
+   // these hold all the objectsa for easy access and management
+   //std::vector< VE_Xplorer::cfdObjects* > dataList;
+   //std::vector< VE_Xplorer::cfdGlobalBase* > commandList;
+   std::map< int, VE_Xplorer::cfdObjects* > visObjectMap;///<The container for all of the cfdObjects
+   
 };
 }
 #endif// VE_EVENT_HANDLER_H
