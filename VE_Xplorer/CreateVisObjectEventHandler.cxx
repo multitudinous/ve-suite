@@ -763,11 +763,11 @@ void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject
    activeModelDVP->GetData( dataSetName );
 
    //Need to set the active datasetname and get the position of the dataset
-   unsigned int i = 0;//(int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-   vprDEBUG(vesDBG,1) 
-      << "CHANGE_STEADYSTATE_DATASET " << i 
-      << std::endl << vprDEBUG_FLUSH;
    cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
+   unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
+      vprDEBUG(vesDBG,1) 
+         << "CHANGE_STEADYSTATE_DATASET " << i 
+         << std::endl << vprDEBUG_FLUSH;
    //update active texture dataset if it exists
 #ifdef _OSG
 #ifdef VE_PATENTED

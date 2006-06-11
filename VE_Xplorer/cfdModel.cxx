@@ -468,6 +468,20 @@ cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
    else
       return mVTKDataSets.at( dataset );
 }
+////////////////////////////////////////////////////////////////////////////////
+unsigned int cfdModel::GetIndexOfDataSet( std::string dataSetName )
+{
+   unsigned int dataSetIndex = 0;
+   for ( size_t i = 0; i < mVTKDataSets.size(); ++i )
+   {
+      if ( mVTKDataSets.at( i )->GetFileName() == dataSetName )
+      {
+         dataSetIndex = i;
+         break;
+      }
+   }
+   return dataSetIndex;
+}
 #ifdef _OSG
 /////////////////////////////////////////////////////////////////////
 VE_TextureBased::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)

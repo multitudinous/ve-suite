@@ -151,6 +151,7 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
 
    
       VE_Xplorer::cfdDataSet* GetCfdDataSet( int );
+      unsigned int GetIndexOfDataSet( std::string dataSetName );
       unsigned int GetNumberOfCfdDataSets( void );
       std::string GetCfdDataSetFileName( int );
       void CreateCfdDataSet( void );
