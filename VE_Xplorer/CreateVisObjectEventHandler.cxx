@@ -138,7 +138,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the interactive contour.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("wand");
    objectType.second.second = std::string("Single");
    std::cout << "| 15. Initializing......................................... Contour |" << std::endl;
@@ -149,7 +149,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the interactive momentum.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("wand");
    objectType.second.second = std::string("Single-warp");
    std::cout << "| 16. Initializing........................................ Momemtum |" << std::endl;
@@ -171,7 +171,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset x contour.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("x");
    objectType.second.second = std::string("Single");
    std::cout << "| 19. Initializing................................ Preset x Contour |" << std::endl;
@@ -182,7 +182,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset y contour.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("y");
    objectType.second.second = std::string("Single");
    std::cout << "| 20. Initializing................................ Preset y Contour |" << std::endl;
@@ -193,7 +193,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset z contour.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("z");
    objectType.second.second = std::string("Single");
    std::cout << "| 21. Initializing................................ Preset z Contour |" << std::endl;
@@ -204,7 +204,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset x momentum.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("x");
    objectType.second.second = std::string("Single-warp");
    std::cout << "| 22. Initializing............................... Preset x Momentum |" << std::endl;
@@ -216,7 +216,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset y momentum.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("y");
    objectType.second.second = std::string("Single-warp");
    std::cout << "| 23. Initializing............................... Preset y Momentum |" << std::endl;
@@ -228,7 +228,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset z momentum.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("z");
    objectType.second.second = std::string("Single-warp");
    std::cout << "| 24. Initializing............................... Preset z Momentum |" << std::endl;
@@ -273,7 +273,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset x contour lines.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("x");
    objectType.second.second = std::string("Multiple");
    std::cout << "| 28. Initializing....................Multiple X-planes of Contours |" << std::endl;
@@ -284,7 +284,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset y contour lines.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("y");
    objectType.second.second = std::string("Multiple");
    std::cout << "| 29. Initializing....................Multiple Y-planes of Contours |" << std::endl;
@@ -295,7 +295,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset z contour lines.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("z");
    objectType.second.second = std::string("Multiple");
    std::cout << "| 30. Initializing....................Multiple Z-planes of Contours |" << std::endl;
@@ -306,7 +306,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset x momentums.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("x");
    objectType.second.second = std::string("Multiple-warp");
    std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
@@ -317,7 +317,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset y momentums.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("y");
    objectType.second.second = std::string("Multiple-warp");
    std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
@@ -328,7 +328,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    //
    // Initiate the preset z momentums.
    //
-   objectType.first = std::string( "UPDATE_CONTOUR_SETTINGS" );
+   objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
    objectType.second.first = std::string("z");
    objectType.second.second = std::string("Multiple-warp");
    std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
@@ -713,7 +713,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    }
    
    std::string planes;
-   VE_XML::DataValuePair* planesDVP = objectCommand->GetDataValuePair( "Number Of Planes" );
+   VE_XML::DataValuePair* planesDVP = objectCommand->GetDataValuePair( "Number of Planes" );
    if ( planesDVP )
    {
       planesDVP->GetData( planes );      

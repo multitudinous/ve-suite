@@ -286,6 +286,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loaderToVTK", "VE_Builder\T
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AVSTranslator", "VE_Builder\Translator\AVSTranslator\AVSTranslator.vcproj", "{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}"
 	ProjectSection(ProjectDependencies) = postProject
+		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D} = {C3E4EC67-9496-4391-A1B2-8179B3954E9D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataLoader", "VE_Builder\Translator\DataLoader\DataLoader.vcproj", "{00000E8F-0000-0000-0000-000000000000}"
@@ -917,8 +919,8 @@ Global
 		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_osg_vep_dbg.ActiveCfg = Release|Win32
 		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_pf_dbg.ActiveCfg = Release|Win32
 		{141BBBEC-F13B-43D4-A6E5-CA3D48C8E210}.tao_pf_dbg.Build.0 = Release|Win32
-		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Builder_Tools.ActiveCfg = Release|Win32
-		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Builder_Tools.Build.0 = Release|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Builder_Tools.ActiveCfg = Debug|Win32
+		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Builder_Tools.Build.0 = Debug|Win32
 		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.dbg.ActiveCfg = Debug|Win32
 		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.dbg.Build.0 = Debug|Win32
 		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.Debug.ActiveCfg = Debug|Win32
@@ -931,8 +933,8 @@ Global
 		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.tao_osg_vep_dbg.ActiveCfg = Release|Win32
 		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.tao_pf_dbg.ActiveCfg = Release|Win32
 		{7E60B89B-0D35-4CC9-A04A-8F9ADB82434E}.tao_pf_dbg.Build.0 = Release|Win32
-		{00000E8F-0000-0000-0000-000000000000}.Builder_Tools.ActiveCfg = Release|Win32
-		{00000E8F-0000-0000-0000-000000000000}.Builder_Tools.Build.0 = Release|Win32
+		{00000E8F-0000-0000-0000-000000000000}.Builder_Tools.ActiveCfg = dbg|Win32
+		{00000E8F-0000-0000-0000-000000000000}.Builder_Tools.Build.0 = dbg|Win32
 		{00000E8F-0000-0000-0000-000000000000}.dbg.ActiveCfg = dbg|Win32
 		{00000E8F-0000-0000-0000-000000000000}.dbg.Build.0 = dbg|Win32
 		{00000E8F-0000-0000-0000-000000000000}.Debug.ActiveCfg = dbg|Win32

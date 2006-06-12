@@ -192,7 +192,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    }
 
    //process the current command form the gui
-   if ( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() )
+   if ( cfdModelHandler::instance()->GetActiveModel() )
+      if( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() )
    {
       std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
       VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetActiveModel()->GetVECommand();

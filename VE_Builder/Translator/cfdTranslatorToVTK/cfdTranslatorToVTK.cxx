@@ -79,7 +79,7 @@ void cfdTranslatorToVTK::SetInputDirectory(std::string inDir)
    _infileNames = VE_Util::fileIO::GetFilesInDirectory(inDir,_fileExtension);
    for (size_t i = 0; i < _infileNames.size(); i++)
    {
-      ExtractAndAddBaseName(_infileNames.at(i));
+      ExtractBaseName(_infileNames.at(i));
    }
 }
 ///////////////////////////////////////////////////////////////
@@ -201,8 +201,8 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
          std::stringstream tempName;
          tempName << _outputDir << "/" 
                   << baseFileNames[fileNum] << "_" 
-                  << fileNum << "." 
-                  << "vtu" << "\0";
+                  << fileNum << ".vtu" 
+                  << "\0";
          _outfileNames.push_back(tempName.str());
       }
       VE_Util::writeVtkThing(_outputDataset, 
@@ -240,7 +240,13 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
    if(toVTK)
    {
       std::string inDir;
-      if( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-i"),inDir))
+      std::string singleFile;
+      if ( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile) )
+      {
+         toVTK->AddFoundFile(singleFile);
+         toVTK->ExtractBaseName(singleFile);
+      }
+      else if( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-i"),inDir))
       {
          toVTK->SetInputDirectory(inDir);
          toVTK->SetNumberOfFoundFiles(1);
@@ -255,28 +261,38 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
       {
          toVTK->SetFileName( outFileName );
       }
-      std::string singleFile;
-      if ( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile) )
-      {
-         toVTK->AddFoundFile(singleFile);
-      }
+      
    }
 }
-////////////////////////////////////////////////////////////////////
-void cfdTranslatorToVTK::ExtractAndAddBaseName(std::string fileName)
+//////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::ExtractBaseName(std::string fileName)
 {   
    size_t period = fileName.rfind(".");
    ///remove extension
-   std::string outfileMinusExtention(fileName,0,period);
+   std::string outfileMinusExtension(fileName,0,period);
    ///remove leading slashes
 #ifdef WIN32
-   size_t backslash = outfileMinusExtention.rfind("\\");
-   size_t frontslash = outfileMinusExtention.rfind("/");
-   size_t slash = (backslash > frontslash)?backslash:frontslash;
+   size_t backslash = outfileMinusExtension.rfind("\\");
+   size_t frontslash = outfileMinusExtension.rfind("/");
+   size_t slash = 0;
+   if(backslash > outfileMinusExtension.size())
+   {
+      backslash = 0;
+   }
+   if(frontslash > outfileMinusExtension.size())
+   {
+      frontslash = 0;
+   }
+   slash = (backslash > frontslash)?backslash:frontslash;
 #else
-   size_t slash = outfileMinusExtention.rfind("/");
+   size_t slash = outfileMinusExtension.rfind("/");
 #endif
-   baseFileNames.push_back(std::string(outfileMinusExtention,slash+1,outfileMinusExtention.size()));
+   AddBaseName(std::string(outfileMinusExtension,slash+1,period));
+}
+//////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::AddBaseName(std::string baseName)
+{
+   baseFileNames.push_back(baseName);
 }
 /////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
@@ -284,12 +300,11 @@ void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
    _infileNames.push_back(singleFile);
    _nFoundFiles = static_cast< int >( _infileNames.size() );
 }
-/////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 bool cfdTranslatorToVTK::_extractOptionFromCmdLine(int argc,char** argv,
                                                    std::string optionFlag,
                                                    std::string& optionArg)
 {
-   //std::cout << "Number of arguments: " << argc << std::endl;
    for(int i = 0; i < argc; i++)
    {
       std::string curArg(argv[i]);

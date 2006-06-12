@@ -27,12 +27,12 @@ void AVSTranslator::AVSPreTranslateCbk::Preprocess(int argc,char** argv,
    if(toVTK)
    {
       std::string singleFile;
-      if(_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile))
+      if(toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile))
       {
          toVTK->AddFoundFile(singleFile);
       }
       std::string outDir;
-      if(_extractOptionFromCmdLine(argc,argv,std::string("-o"),outDir))
+      if(toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-o"),outDir))
       {
          toVTK->SetOutputDirectory(outDir);
       }

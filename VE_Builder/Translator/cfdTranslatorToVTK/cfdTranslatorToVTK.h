@@ -106,7 +106,8 @@ public:
    void SetTranslateCallback(TranslateCallback* tCbk);
 
    void AddFoundFile(std::string singleFile);
-   void ExtractAndAddBaseName(std::string fileName);
+   void AddBaseName(std::string baseName);
+   void ExtractBaseName(std::string fileName);
    /////////////////////////////////////////
    //main translation calling method      //
    //Basically makes the following calls: //

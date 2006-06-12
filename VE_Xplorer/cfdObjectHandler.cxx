@@ -274,7 +274,7 @@ void cfdObjectHandler::DrawLine(osg::Vec3f start, osg::Vec3f end)
    osg::Vec4Array* colors = new osg::Vec4Array;
    colors->push_back(osg::Vec4(1.0f, 0.0f, 1.0f, 1.0f) );
 
-   osg::ref_ptr< osg::UIntArray > cfdColorIndexArray;
+   osg::ref_ptr< osg::UIntArray > cfdColorIndexArray = new osg::UIntArray();
    cfdColorIndexArray->push_back(0);
     
    beamGeometry->setColorArray(colors);
