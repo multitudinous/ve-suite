@@ -24,7 +24,7 @@ import wx ##Used for GUI
 ##Set JCONF_STANDARD to True if you want the standard configuration,
 ##set it to False if you want to test choosing your own Jconf file.
 ##CODE NOTE: Used in Launch.UnixLaunch and Launch.WindowsLaunch
-JCONF_STANDARD = True
+JCONF_STANDARD = False
 ##File/Folder settings.
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
@@ -106,8 +106,9 @@ class LauncherWindow(wx.Frame):
         bDirectory.SetToolTip(wx.ToolTip("Choose the working directory for" +
                                          " the programs."))
         bEditJconf = wx.Button(self, -1, "Edit Juggler Configurations")
-        bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler configuration" +
-                                         " files displayed in the Launcher."))
+        bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
+                                         " configuration files displayed" +
+                                         " in the Launcher."))
         bLaunch = wx.Button(self, -1, "Launch VE Suite")
         bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
@@ -126,8 +127,11 @@ class LauncherWindow(wx.Frame):
         self.txTaoMachine = wx.TextCtrl(self, -1)
         self.txTaoMachine.SetToolTip(wx.ToolTip("Enter VE Suite's machine."))
         ##Build checkboxes.
+        self.cbDesktop = wx.CheckBox(self, -1, "Desktop Mode")
+        self.cbDesktop.SetToolTip(wx.ToolTip("Run VE Suite in Desktop Mode"))
         self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
-        self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server at Launch"))
+        self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server" +
+                                                " at Launch"))
         self.cbXplorer = wx.CheckBox(self, -1, "Xplorer")
         self.cbXplorer.SetToolTip(wx.ToolTip("Run the Xplorer at Launch"))
         self.cbConductor = wx.CheckBox(self, -1, "Conductor")
@@ -174,7 +178,7 @@ class LauncherWindow(wx.Frame):
         gridSizer = wx.FlexGridSizer(3, 2,
                                      VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
         gridSizer.AddMany([self.cbNameServer, NULL_SPACE,
-                           self.cbConductor, NULL_SPACE,       
+                           self.cbConductor, self.cbDesktop,       
                            self.cbXplorer, self.rbXplorer])
         ##Insert the Directory column.
         rowSizer.Add(wx.StaticText(self, -1, "Working Directory:"))
@@ -397,14 +401,14 @@ class LauncherWindow(wx.Frame):
         jconfWindow.Destroy()        
 
     def GetSelectedJconf(self):
-        """Returns the path of the Jconf file selected in the launcher window."""
+        """Returns the path of the selected Jconf file."""
         xplorerConfig = self.jconfList.GetPath(self.chJconf.GetSelection())
         print "Jconf file: " + xplorerConfig ##TESTER
         return xplorerConfig
 
     ##The user chooses the directory path
     def ChooseDirectory(self, event):
-        """The user chooses the working directory through a directory dialog."""
+        """The user chooses the working directory through a dialog."""
         curDir = self.txDirectory.GetValue()
         ##NOTE: If curDir doesn't exist, it automatically goes
         ##to the user's directory
@@ -432,6 +436,7 @@ class LauncherWindow(wx.Frame):
         config.Write("Conductor", str(self.cbConductor.GetValue()))
         config.Write("TaoMachine", self.txTaoMachine.GetValue())
         config.Write("TaoPort", self.txTaoPort.GetValue())
+        config.Write("DesktopMode", str(self.cbDesktop.GetValue()))
 ##        print "Saved configuration." ##TESTER
         return
     
@@ -444,7 +449,7 @@ class LauncherWindow(wx.Frame):
         ##Load the configuration file under name
         config = wx.Config(CONFIG_FILE)
         config.SetPath("/" + name)
-        ##Set directory, set insertion pt. to end of it for better initial view.
+        ##Set directory, set insertion pt. to end for better initial view.
         self.txDirectory.SetValue(config.Read("Directory", DIRECTORY_DEFAULT))
         ##Sets txDirectory's cursor to end in Linux systems for easier reading.
         ##Acts strange in Windows for some reason; investigate.
@@ -473,7 +478,6 @@ class LauncherWindow(wx.Frame):
         ##Temporary workaround for error w/ Int TaoPort in last version
         if config.GetEntryType("TaoPort") == 3: ##3 == Type_Integer
             self.txTaoPort.SetValue(str(config.ReadInt("TaoPort", 1239)))
-        ##Normal functioning for Str TaoPort
         else:
             self.txTaoPort.SetValue(config.Read("TaoPort", "1239"))
         ##Set Name Server
@@ -499,6 +503,11 @@ class LauncherWindow(wx.Frame):
             self.cbConductor.SetValue(True)
         else:
             self.cbConductor.SetValue(False)
+        ##Set Desktop Mode
+        if config.Read("DesktopMode", "True") == "True":
+            self.cbDesktop.SetValue(True)
+        else:
+            self.cbDesktop.SetValue(False)
 ##        print "Configuration loaded." ##TESTER
 
     ##MODIFY FOR CONFIG CHANGE
@@ -527,10 +536,10 @@ class LauncherWindow(wx.Frame):
         if not (self.cbNameServer.IsChecked() or self.cbConductor.IsChecked()
                 or self.cbXplorer.IsChecked()):
             dlg = wx.MessageDialog(self,
-                                   "The launch won't do anything because you " +
-                                   "haven't selected any programs.\n" +
-                                   "Please select some programs and try " +
-                                   "launching again.",
+                                   "The launch won't do anything because you"+
+                                   " haven't selected any programs.\n" +
+                                   "Please select some programs and try" +
+                                   " launching again.",
                                    "Launch Error: No Program Selected", wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
@@ -583,8 +592,8 @@ class LauncherWindow(wx.Frame):
         ##              If not, abort the launch.
         if not (os.path.exists(self.GetSelectedJconf())):
             dlg = wx.MessageDialog(self,
-                                   "The Juggler configuration file you chose " +
-                                   "doesn't exist.\n" +
+                                   "The Juggler configuration file you chose" +
+                                   " doesn't exist.\n" +
                                    "Please select a different one.",
                                    "Launch Error: Jconf File Doesn't Exist",
                                    wx.OK)
@@ -597,7 +606,8 @@ class LauncherWindow(wx.Frame):
                self.cbNameServer.IsChecked(), self.cbConductor.IsChecked(),
                self.cbXplorer.IsChecked(), self.rbXplorer.GetSelection(),
                self.GetSelectedJconf(),
-               self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()))
+               self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()),
+               self.cbDesktop.GetValue())
 
     ##Saves the current configuration under the prefs file before closing.
     def OnClose(self, event):
@@ -643,7 +653,7 @@ class JconfList:
             bCont = self.config.GetNextEntry(bCont[2])
 
     def SetConfig(self, configName):
-        """Sets self.config to the folder containing configName's Jconf info."""
+        """Sets self.config to the entry configName."""
         self.config = wx.Config(CONFIG_FILE)
         self.config.SetPath(configName)
         self.config.SetPath(JCONF_CONFIG)
@@ -656,7 +666,7 @@ class JconfList:
         ##same name; correct that later.
 
     def Rename(self, pos, newName):
-        """Renames the entry at pos to newName, appending a number if necessary.
+        """Renames the entry at pos to newName, appends a number if necessary.
 
         These suffixes are added to newName until a unique name's generated:
         [none], 1, 2, 3, ... 9, 10, 11, etc."""
@@ -677,7 +687,7 @@ class JconfList:
         ##Warns user if name had suffix added to it.
         if self.list[pos][0] != newName:
             dlg = wx.MessageDialog(None,
-                                   "The name " + newName +" already existed" + \
+                                   "The name " +newName +" already existed" + \
                                    " in the list.\n" + \
                                    "Your entry was given the" + \
                                    " name " + newName + suffix + " instead.",
@@ -921,14 +931,15 @@ class Launch:
                  workingDir,
                  runName, runConductor, runXplorer, typeXplorer,
                  jconf,
-                 taoMachine, taoPort):
+                 taoMachine, taoPort,
+                 desktopMode):
         """Sets environmental vars and calls OS-specific launch code.
 
         Keyword arguments:
         launcherWindow -- The caller. Used to close it after the call.
         workingDir, taoMachine, taoPort -- Used for environmental vars.
         runName, runConductor, runXplorer,
-        typeXplorer, jconf -- Used for launch code."""
+        typeXplorer, jconf, desktopMode -- Used for launch code."""
         ##The launch is the final step.
         ##Destroy launcher window before beginning the actual launch. 
         launcherWindow.Close()
@@ -947,15 +958,16 @@ class Launch:
         ##NOTE: Code out separate Setups, code in the combined Setup
         if os.name == "nt":
             self.Windows(runName, runConductor, runXplorer,
-                               typeXplorer, jconf)
+                               typeXplorer, jconf, desktopMode)
         elif os.name == "posix":
             self.Unix(runName, runConductor, runXplorer,
-                            typeXplorer, jconf)
+                            typeXplorer, jconf, desktopMode)
         else:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
         return
 
-    def Windows(self, runName, runConductor, runXplorer, typeXplorer, jconf):
+    def Windows(self, runName, runConductor, runXplorer, typeXplorer, jconf,
+                desktopMode):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -978,13 +990,24 @@ class Launch:
                       " -ORBDottedDecimalAddresses 1")
         ##Conductor section
         if runConductor:
-            os.system('start "' + CONDUCTOR_SHELL_NAME + '" ' +
-                      "WinClientd.exe -ORBInitRef" +
+            ##Append argument if desktop mode selected
+            if desktopMode:
+                desktop = " -VESDesktop"
+            else:
+                desktop = ""
+            os.system('start "%s" ' % (CONDUCTOR_SHELL_NAME) +
+                      "WinClientd.exe -ORBInitRef" + desktop +
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
                       " -ORBDottedDecimalAddresses 1")
         ##Xplorer section
         if runXplorer:
+            ##Append argument if desktop mode selected
+            if desktopMode:
+                w, h = wx.DisplaySize()
+                desktop = " -VESDesktop %s %s" % (w, h)
+            else:
+                desktop = ""
             ##Set Xplorer's type
             if typeXplorer == 0: ##OSG selection
                 executable = "project_tao_osg_d.exe"
@@ -1007,11 +1030,12 @@ class Launch:
                       " -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
-                      " -ORBDottedDecimalAddresses 1")
+                      " -ORBDottedDecimalAddresses 1" + desktop)
 ##        print "Done." ##TESTER
         return
 
-    def Unix(self, runName, runConductor, runXplorer, typeXplorer, jconf):
+    def Unix(self, runName, runConductor, runXplorer, typeXplorer, jconf,
+             desktopMode):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -1023,9 +1047,20 @@ class Launch:
             os.system("VES -nserv &")
         ##Conductor section
         if runConductor:
-            os.system("VES -menu &")
+            ##Append argument if desktop mode selected
+            if desktopMode:
+                desktop = " -VESDesktop"
+            else:
+                desktop = ""
+            os.system("VES -menu%s &" % (desktop))
         ##Xplorer section
         if runXplorer:
+            ##Append argument if desktop mode selected
+            if desktopMode:
+                w, h = wx.DisplaySize()
+                desktop = " -VESDesktop %s %s" % (w, h)
+            else:
+                desktop = ""
             if typeXplorer == 0: ##OSG selection
                 ##os.system("VES -simosg")
                 executable = "project_tao_osg"
@@ -1045,13 +1080,12 @@ class Launch:
                         str(os.getenv("VJ_BASE_DIR")) + \
                         "/configFiles/sim.wand.mixin.jconf"
             ##Xplorer's call
-            ##Error tag: $$ERROR_1$$
+            ##Error tag: Find $$ERROR_1$$ for more details.
             os.system(executable +
                       " -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
-                      jconf +
-                      " ; /usr/share/Performer/bin/rmsem")
+                      jconf + desktop)
         print "Done." ##TESTER
         return
 
@@ -1298,3 +1332,4 @@ if JCONF_STANDARD:
 app = wx.PySimpleApp()
 frame = LauncherWindow(None,-1,'VE Suite Launcher')
 app.MainLoop()
+
