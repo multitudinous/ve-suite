@@ -166,7 +166,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
       libs = finder.getLibraries();
       vprDEBUG(vesDBG,1)  << " Number of libs : " 
                            << libs.size() 
-                           << std::endl 
+                           << " " << DSO_SUFFIX << std::endl 
                            << vprDEBUG_FLUSH;
    }
 
@@ -174,9 +174,9 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    vpr::LibraryFinder finder(vesuiteLibDir, DSO_SUFFIX);
 
    vpr::LibraryFinder::LibraryList defaultLibs = finder.getLibraries();
-   vprDEBUG(vesDBG,1) << " Number of libs : " 
-                        << defaultLibs.size() 
-                        << std::endl 
+   vprDEBUG(vesDBG,1)  << " Number of libs : " 
+                        << libs.size() 
+                        << " " << DSO_SUFFIX << std::endl 
                         << vprDEBUG_FLUSH;
    for ( size_t i = 0; i < defaultLibs.size(); ++i )
    {

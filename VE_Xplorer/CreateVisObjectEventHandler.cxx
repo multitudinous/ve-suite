@@ -840,9 +840,8 @@ void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject 
    std::string activeVector;
    activeModelDVP->GetData( activeVector );
    
-   //int vectorIndex = 0;//(int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-   //vprDEBUG(vesDBG,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
-   //   << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << "|\t Setting Active Vector = " << activeVector
+      << std::endl << vprDEBUG_FLUSH;
    
    cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
    cfdDataSet* activeDataset = activeModel->GetActiveDataSet();
@@ -950,12 +949,11 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xm
    activeModelDVP = command->GetDataValuePair( "Scalar Max" );
    activeModelDVP->GetData( scalarMax );
 
-   /*(int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-   vprDEBUG(vesDBG,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
-      << ", scalarIndex = " << scalarIndex
-      << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
-      << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
-      << std::endl << vprDEBUG_FLUSH;*/
+   vprDEBUG(vesDBG,1) << "|\tSet the scalar and range "
+      << ", scalar = " << activeScalarName
+      << ", min = " << scalarMin
+      << ", max = " << scalarMax
+      << std::endl << vprDEBUG_FLUSH;
    cfdDataSet* activeDataset = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
    //update active scalar texture if it exists
 #ifdef _OSG

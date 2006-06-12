@@ -80,6 +80,10 @@ namespace VE_XML
    class Command;
 }
 
+namespace VE_EVENTS
+{
+   class EventHandler;
+}
 namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
@@ -192,6 +196,7 @@ private:
    // multi map to hold graphics objects
    // the key is the viz type and the value is cfdGraphicsObject
    std::multimap< int, cfdGraphicsObject* > graphicsObjects;
+   std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }
 #endif

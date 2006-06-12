@@ -273,16 +273,12 @@ void cfdObjectHandler::DrawLine(osg::Vec3f start, osg::Vec3f end)
  
    osg::Vec4Array* colors = new osg::Vec4Array;
    colors->push_back(osg::Vec4(1.0f, 0.0f, 1.0f, 1.0f) );
-     
-   osg::TemplateIndexArray
-      <unsigned int, osg::Array::UIntArrayType,4,4> *colorIndexArray;
-   colorIndexArray =
-      new osg::TemplateIndexArray<unsigned int, osg::Array::UIntArrayType,4,4>;
-   colorIndexArray->push_back(0);
 
- 
+   osg::ref_ptr< osg::UIntArray > cfdColorIndexArray;
+   cfdColorIndexArray->push_back(0);
+    
    beamGeometry->setColorArray(colors);
-   beamGeometry->setColorIndices(colorIndexArray);
+   beamGeometry->setColorIndices(cfdColorIndexArray.get());
    beamGeometry->setColorBinding(osg::Geometry::BIND_OVERALL) ;
 
 }   
@@ -413,7 +409,7 @@ osg::MatrixTransform* cfdObjectHandler::getMatrixTransform()
       }
    }
 
-   osg::Matrix myMatrix;
+   osg::Matrixd myMatrix;
    myMatrix.makeIdentity();
    osg::MatrixTransform* myMatrixTransform = 
       new osg::MatrixTransform(myMatrix);

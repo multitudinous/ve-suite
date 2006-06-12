@@ -60,7 +60,7 @@
 #include "VE_Xplorer/cfdTextOutput.h"
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdModelHandler.h"
-
+#include "VE_Xplorer/CreateVisObjectEventHandler.h"
 #include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
 
 #include "VE_Open/XML/Command.h"
@@ -76,7 +76,7 @@
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdGeode.h"
 #include "VE_SceneGraph/cfdTempAnimation.h"
-//This heare is WAY down here to fix compile errors on IRIX
+//This is WAY down here to fix compile errors on IRIX
 #include "VE_Xplorer/cfdSteadyStateVizHandler.h"
 
 #include <vtkDataSet.h>
@@ -103,6 +103,8 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    this->transientActors = true;
    this->vjTh[0] = 0;
    _param.erase();// = 0;
+   
+   _eventHandlers[std::string("VISUALIZATION_SETTINGS")] = new VE_EVENTS::CreateVisObjectEventHandler();
 }
 
 void cfdSteadyStateVizHandler::Initialize( std::string param )
@@ -187,6 +189,21 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          << ", teacher_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
          << ", compute actors and geode = " << computeActorsAndGeodes 
          << std::endl << vprDEBUG_FLUSH;
+   }
+
+   //process the current command form the gui
+   if ( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() )
+   {
+      std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+      VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
+      currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
+      if ( currentEventHandler != _eventHandlers.end() )
+      {
+         vprDEBUG(vesDBG,0) << "|\tExecuting: "<< tempCommand->GetCommandName() 
+                              << std::endl << vprDEBUG_FLUSH;
+         currentEventHandler->second->SetGlobalBaseObject();
+         currentEventHandler->second->Execute( tempCommand );
+      }
    }
 
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE )
