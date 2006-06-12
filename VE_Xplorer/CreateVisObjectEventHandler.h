@@ -40,6 +40,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <utility>
 
 namespace VE_Xplorer
 {
@@ -153,7 +154,7 @@ private:
    // these hold all the objectsa for easy access and management
    //std::vector< VE_Xplorer::cfdObjects* > dataList;
    //std::vector< VE_Xplorer::cfdGlobalBase* > commandList;
-   std::map< int, VE_Xplorer::cfdObjects* > visObjectMap;///<The container for all of the cfdObjects
+   std::map< std::pair< std::string, std::pair< std::string, std::string > >, VE_Xplorer::cfdObjects* > visObjectMap;///<The container for all of the cfdObjects
    
 };
 }
