@@ -124,7 +124,7 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
-////@begin Streamlines member variables\
+////@begin Streamlines member variables
 
 
   

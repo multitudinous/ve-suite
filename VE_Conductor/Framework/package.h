@@ -52,7 +52,11 @@ public:
    ~Package();
    Package( const Package& input )
    {
-      ;
+      this->intfs = input.intfs;
+      
+      this->intfsnum = input.intfsnum;
+      this->packname = input.packname; 
+      this->system_id = input.system_id;
    }
 
    Package& operator= ( const Package& input )

@@ -88,7 +88,11 @@ public:
 
    GeometryDataBuffer( const GeometryDataBuffer& input )
    {
-      ;
+      this->_geominfopackagelist = input._geominfopackagelist;
+      
+      this->activedgeominfo = input.activedgeominfo;
+      this->cur_modulename = input.cur_modulename; 
+      this->cur_moduleid = input.cur_moduleid;
    }
 
    GeometryDataBuffer& operator= ( const GeometryDataBuffer& input )

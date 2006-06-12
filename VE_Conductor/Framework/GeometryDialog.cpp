@@ -237,7 +237,7 @@ void GeometryDialog::_buildPage()
 
 }
 
-void GeometryDialog::_onButtonAddNewGeomInfoPackage(wxCommandEvent& event)
+void GeometryDialog::_onButtonAddNewGeomInfoPackage(wxCommandEvent& WXUNUSED(event))
 {
    std::vector<GeometryInfoPackage> templist;
    templist = geometryDataBuffer->GetCurrentGeomInfoList();
@@ -262,7 +262,7 @@ void GeometryDialog::_onButtonAddNewGeomInfoPackage(wxCommandEvent& event)
  
 }
 
-void GeometryDialog::_onButtonSaveGeomInfoPackage(wxCommandEvent& event)
+void GeometryDialog::_onButtonSaveGeomInfoPackage(wxCommandEvent& WXUNUSED(event))
 {
    GeometryInfoPackage temppackage;
    temppackage =  GetGeomInfoPackageFromInfoPage();
@@ -300,14 +300,14 @@ void GeometryDialog::_onButtonSaveGeomInfoPackage(wxCommandEvent& event)
 
 }
 
-void GeometryDialog::_onUIUpdateButtonSaveGeomInfoPackage(wxUpdateUIEvent& event)
+void GeometryDialog::_onUIUpdateButtonSaveGeomInfoPackage(wxUpdateUIEvent& event )
 {
    wxArrayInt selections;
    event.Enable(lbox_geompackagenames->GetSelections(selections) != 0);
 
 }
 
-void GeometryDialog::_onButtonDeleteSelGeomInfoPackage(wxCommandEvent& event)
+void GeometryDialog::_onButtonDeleteSelGeomInfoPackage(wxCommandEvent& WXUNUSED(event))
 {
    wxArrayInt selections;
    std::vector<int> itemindexs;
@@ -337,7 +337,7 @@ void GeometryDialog::_onButtonDeleteSelGeomInfoPackage(wxCommandEvent& event)
 }
 
 
-void GeometryDialog::_onUIUpdateButtonDeleteSelGeomInfoPackage(wxUpdateUIEvent& event)
+void GeometryDialog::_onUIUpdateButtonDeleteSelGeomInfoPackage(wxUpdateUIEvent& event )
 {
     wxArrayInt selections;
     event.Enable(lbox_geompackagenames->GetSelections(selections) != 0);
@@ -351,7 +351,7 @@ void GeometryDialog::_onListBox(wxCommandEvent& event)
    _onUpdateUIInfoPage(templist,item);
 }
 
-void GeometryDialog::_onDClickListBox(wxCommandEvent& event)
+void GeometryDialog::_onDClickListBox(wxCommandEvent& WXUNUSED(event))
 {
 }
 

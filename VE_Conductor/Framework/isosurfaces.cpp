@@ -152,21 +152,21 @@ wxIcon Isosurfaces::GetIconResource( const wxString& name )
    return wxNullIcon;
 }
 /////////////////////////////////////////////////////////
-void Isosurfaces::_onIsosurface( wxCommandEvent& event )
+void Isosurfaces::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
 
 }
 ////////////////////////////////////////////////////////////////////
-void Isosurfaces::_onPrecomputedIsosurface( wxCommandEvent& event )
+void Isosurfaces::_onPrecomputedIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
 
 }
 /////////////////////////////////////////////////////////////
-void Isosurfaces::_onIsosurfacePlane( wxCommandEvent& event )
+void Isosurfaces::_onIsosurfacePlane( wxCommandEvent& WXUNUSED(event) )
 {
 }
 ///////////////////////////////////////////////////////////
-void Isosurfaces::_onAddIsosurface( wxCommandEvent& event )
+void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
    VE_XML::Command* newCommand = new VE_XML::Command();
    newCommand->SetCommandName("UPDATE_ISOSURFACE_SETTINGS");
@@ -210,7 +210,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& event )
    }
 }
 //////////////////////////////////////////////////////
-void Isosurfaces::_onAdvanced( wxCommandEvent& event )
+void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 {
    wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
                                    _scalarNames);

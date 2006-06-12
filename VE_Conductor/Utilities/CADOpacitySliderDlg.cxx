@@ -65,7 +65,7 @@ double CADOpacitySliderDlg::GetOpacity()
    return (double)(_opacitySlider->GetValue())/100.0;
 }
 //////////////////////////////////////////////////////////
-void CADOpacitySliderDlg::_onSlider(wxScrollEvent& event)
+void CADOpacitySliderDlg::_onSlider(wxScrollEvent& WXUNUSED(event))
 {
    //update the material
    //convert int to double

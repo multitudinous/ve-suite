@@ -293,17 +293,17 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    }
 }
 /////////////////////////////////////////////////////
-void Contours::_onDirection( wxCommandEvent& event )
+void Contours::_onDirection( wxCommandEvent& WXUNUSED(event) )
 {
    _planeDirection = _directionRBox->GetStringSelection();
 }
 ///////////////////////////////////////////////////////
-/*void Contours::_onContourType( wxCommandEvent& event )
+/*void Contours::_onContourType( wxCommandEvent& WXUNUSED(event) )
 {
    _planeType = _contourTypeRBox->GetStringSelection();
 }*/
 //////////////////////////////////////////////////////////
-void Contours::_onMultiplePlanes( wxCommandEvent& event )
+void Contours::_onMultiplePlanes( wxCommandEvent& WXUNUSED(event) )
 {   
    _cyclePrecomputedCBox->SetValue(false);
    _cyclePrecomputedCBox->Enable(true);
@@ -314,12 +314,12 @@ void Contours::_onMultiplePlanes( wxCommandEvent& event )
 
 }
 //////////////////////////////////////////////////////
-void Contours::_onCyclePlanes( wxCommandEvent& event )
+void Contours::_onCyclePlanes( wxCommandEvent& WXUNUSED(event) )
 {
    _planeOption = _cyclePrecomputedCBox->GetLabel();
 }
 ///////////////////////////////////////////////////////
-void Contours::_onSinglePlane( wxCommandEvent& event )
+void Contours::_onSinglePlane( wxCommandEvent& WXUNUSED(event) )
 {
    _cyclePrecomputedCBox->SetValue(false);
    _cyclePrecomputedCBox->Enable(false);
@@ -330,12 +330,12 @@ void Contours::_onSinglePlane( wxCommandEvent& event )
    _numberOfPlanesOption = "Single";
 }
 ////////////////////////////////////////////////////////////
-void Contours::_onPrecomputedPlane( wxCommandEvent& event )
+void Contours::_onPrecomputedPlane( wxCommandEvent& WXUNUSED(event) )
 {
    _planeOption = _nearestPrecomputedCBox->GetLabel();
 }
 /////////////////////////////////////////////////
-void Contours::_onPlane( wxCommandEvent& event )
+void Contours::_onPlane( wxCommandEvent& WXUNUSED(event) )
 {
    _planePosition = static_cast<double>(_planePositonSlider->GetValue()*.01);  
 }
@@ -452,7 +452,7 @@ void Contours::_updateContourInformation()
 
 }
 ////////////////////////////////////////////////////
-void Contours::_onAddPlane( wxCommandEvent& event )
+void Contours::_onAddPlane( wxCommandEvent& WXUNUSED(event) )
 {
    _updateContourInformation();
    _updateAdvancedSettings();

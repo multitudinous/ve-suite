@@ -586,7 +586,7 @@ void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& WXUNUSED(event) )
 ////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX in DataSetLoaderUI. 
 }
 //////////////////////////////////////////////////////////////////////////////
-void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& event )
+void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED(event) )
 {
    /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_LISTBOX
    // When we change the combox the newly slected item
@@ -625,7 +625,7 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& event )
    }
 }
 //////////////////////////////////////////////////////////////////////////////
-void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& event )
+void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
 {
     /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_LISTBOX
    // When enter is pushed on the combox and new entry is specifiy and
@@ -655,7 +655,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& event )
   
 }
 //////////////////////////////////////////////////////////////////////////////
-void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& event )
+void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED(event) )
 {
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_LISTBOX
    // If any text is changed with the name of a information packet then

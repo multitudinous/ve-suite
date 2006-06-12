@@ -520,18 +520,18 @@ DualSlider* Vistab::GetScalarRangeControls()
    return scalarRange;
 }
 ////////////////////////////////////////////////////
-void Vistab::_OnSelectDataset(wxCommandEvent& event)
+void Vistab::_OnSelectDataset(wxCommandEvent& WXUNUSED(event))
 {
    _activeDataSetName = _datasetSelection->GetValue();
 }
 ///////////////////////////////////////////////////
-void Vistab::_OnSelectScalar(wxCommandEvent& event)
+void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 {
    _activeScalarName = _scalarSelection->GetStringSelection();
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 }
 ///////////////////////////////////////////////////
-void Vistab::_OnSelectVector(wxCommandEvent& event)
+void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
 {
    _activeVectorName = _vectorSelection->GetStringSelection();
 }

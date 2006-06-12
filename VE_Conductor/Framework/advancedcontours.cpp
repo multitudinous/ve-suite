@@ -230,22 +230,22 @@ double AdvancedContours::GetLOD()
    return _LOD;
 }
 /////////////////////////////////////////////////////////////////
-void AdvancedContours::_onContourOpacity( wxCommandEvent& event )
+void AdvancedContours::_onContourOpacity( wxCommandEvent& WXUNUSED(event) )
 {
    _opacity = static_cast<double>(_opacitySlider->GetValue()/100.0);
 }
 ////////////////////////////////////////////////////////////////
-void AdvancedContours::_onWarpedContour( wxCommandEvent& event )
+void AdvancedContours::_onWarpedContour( wxCommandEvent& WXUNUSED(event) )
 {
    _warpedScale = static_cast<double>(_warpedScaleSlider->GetValue()/100.0);
 }
 /////////////////////////////////////////////////////////////
-void AdvancedContours::_onContourLOD( wxCommandEvent& event )
+void AdvancedContours::_onContourLOD( wxCommandEvent& WXUNUSED(event) )
 {
    _LOD = static_cast<double>(_LODSlider->GetValue()/100.0);
 }
 //////////////////////////////////////////////////////////////
-void AdvancedContours::_onContourType( wxCommandEvent& event )
+void AdvancedContours::_onContourType( wxCommandEvent& WXUNUSED(event) )
 {
    _planeType = _contourTypeRBox->GetStringSelection();
 }

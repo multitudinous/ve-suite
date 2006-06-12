@@ -59,6 +59,7 @@ namespace VE_XML
 
 class wxSlider;
 class wxCheckBox;
+class wxRadioBox;
 ////@end forward declarations
 
 /*!
