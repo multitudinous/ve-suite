@@ -118,8 +118,9 @@ SRCS=\
    MaterialUpdateEH.cxx\
    trackball.cxx\
    cfdTrackball.cxx\
+   cfdObjectHandler.cxx\
+   cfdTrackball.cxx\
    CreateVisObjectEventHandler.cxx
-#   cfdObjectHandler.cxx 
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
