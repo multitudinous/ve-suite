@@ -35,11 +35,14 @@
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/icon.h>
+#include <wx/radiobox.h>
+#include <wx/checkbox.h>
 
 
 BEGIN_EVENT_TABLE( AdvancedContours, wxDialog )
 ////@begin AdvancedContours event table entries
    EVT_SLIDER        ( OPACITY_SLIDER,          AdvancedContours::_onContourOpacity )
+   EVT_RADIOBOX      (CONTOUR_TYPE_RBOX,        AdvancedContours::_onContourType)
    EVT_SLIDER        ( WARPED_SCALE_SLIDER,     AdvancedContours::_onWarpedContour )
    EVT_SLIDER        ( LOD_SLIDER,              AdvancedContours::_onContourLOD )
 ////@end AdvancedContours event table entries
@@ -60,9 +63,12 @@ bool AdvancedContours::Create( wxWindow* parent, wxWindowID id, const wxString& 
    _opacitySlider = 0;
    _warpedScaleSlider = 0;
    _LODSlider = 0;
+   _contourTypeRBox = 0;
+   _warpOptionCBox = 0;
    _opacity = 1.0;
    _warpedScale = .5;
    _LOD = 0.0;
+   _planeType = "Graduated";
 ////@end AdvancedContours member initialisation
 
 ////@begin AdvancedContours creation
@@ -120,10 +126,10 @@ void AdvancedContours::CreateControls()
     itemStaticBoxSizer3->Add(itemBoxSizer11, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Lower"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer11->Add(itemStaticText12, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    itemBoxSizer11->Add(itemStaticText12, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Higher"), wxDefaultPosition, wxSize(250, -1), wxALIGN_RIGHT );
-    itemBoxSizer11->Add(itemStaticText13, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    itemBoxSizer11->Add(itemStaticText13, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Contour LOD"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
@@ -135,12 +141,23 @@ void AdvancedContours::CreateControls()
     itemStaticBoxSizer3->Add(itemBoxSizer16, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Higher Detail"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
-    itemBoxSizer16->Add(itemStaticText17, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    itemBoxSizer16->Add(itemStaticText17, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Lower Detail"), wxDefaultPosition, wxSize(210, -1), wxALIGN_RIGHT );
-    itemBoxSizer16->Add(itemStaticText18, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    itemBoxSizer16->Add(itemStaticText18, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-////@end AdvancedContours content construction
+    wxString itemRadioBox6Strings[] = {
+        _T("Graduated"),
+        _T("Banded"),
+        _T("Lined")
+    };
+   
+    _contourTypeRBox = new wxRadioBox( itemDialog1, CONTOUR_TYPE_RBOX, _T("Contour Type"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
+    itemStaticBoxSizer3->Add(_contourTypeRBox, 0, wxALIGN_TOP|wxALL, 5);
+
+    _warpOptionCBox = new wxCheckBox( itemDialog1, WARP_OPTION_CHK, _T("Warp Option"), wxDefaultPosition, wxDefaultSize, 0 );
+    _warpOptionCBox->SetValue(false);
+    itemStaticBoxSizer3->Add(_warpOptionCBox, 0, wxALIGN_TOP|wxALL, 5);
 }
 /////////////////////////////////////////////////
 void AdvancedContours::SetOpacity(double opacity)
@@ -226,5 +243,30 @@ void AdvancedContours::_onWarpedContour( wxCommandEvent& event )
 void AdvancedContours::_onContourLOD( wxCommandEvent& event )
 {
    _LOD = static_cast<double>(_LODSlider->GetValue()/100.0);
+}
+//////////////////////////////////////////////////////////////
+void AdvancedContours::_onContourType( wxCommandEvent& event )
+{
+   _planeType = _contourTypeRBox->GetStringSelection();
+}
+///////////////////////////////////////////////////////
+void AdvancedContours::SetContourType(std::string type)
+{
+   _planeType = type;
+}
+/////////////////////////////////////////////////////
+void AdvancedContours::SetWarpOption(bool warpOption)
+{
+   _warpOptionCBox->SetValue(warpOption);
+}
+//////////////////////////////////////
+bool AdvancedContours::GetWarpOption()
+{
+   return _warpOptionCBox->GetValue();
+}
+//////////////////////////////////////////////
+std::string AdvancedContours::GetContourType()
+{
+   return _planeType;
 }
 

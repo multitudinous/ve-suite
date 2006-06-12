@@ -58,6 +58,7 @@ namespace VE_XML
 }
 
 class wxSlider;
+class wxCheckBox;
 ////@end forward declarations
 
 /*!
@@ -79,50 +80,10 @@ enum ADVANCED_CONTOUR_IDS
 {
    OPACITY_SLIDER,
    WARPED_SCALE_SLIDER,
-   LOD_SLIDER
+   LOD_SLIDER,
+   CONTOUR_TYPE_RBOX,
+   WARP_OPTION_CHK
 };
-////@end control identifiers
-
-/*!
- * AdvancedContoursApp class declaration
- */
-/*
-class AdvancedContoursApp: public wxApp
-{    
-    DECLARE_CLASS( AdvancedContoursApp )
-    DECLARE_EVENT_TABLE()
-
-public:
-    /// Constructor
-    AdvancedContoursApp();
-
-    /// Initialises the application
-    virtual bool OnInit();
-
-    /// Called on exit
-    virtual int OnExit();
-
-////@begin AdvancedContoursApp event handler declarations
-////@end AdvancedContoursApp event handler declarations
-
-////@begin AdvancedContoursApp member function declarations
-////@end AdvancedContoursApp member function declarations
-
-////@begin AdvancedContoursApp member variables
-////@end AdvancedContoursApp member variables
-};
-*/
-/*!
- * Application instance declaration 
- */
-
-////@begin declare app
-//DECLARE_APP(AdvancedContoursApp)
-////@end declare app
-
-/*!
- * AdvancedContours class declaration
- */
 
 class AdvancedContours: public wxDialog
 {    
@@ -132,8 +93,12 @@ class AdvancedContours: public wxDialog
 public:
     /// Constructors
     AdvancedContours( );
-    AdvancedContours( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME, const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
-//    AdvancedContours(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    AdvancedContours( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME, 
+                      const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE, 
+                      const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, 
+                      const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, 
+                      long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
+
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
@@ -157,6 +122,14 @@ public:
    ///\param LOD The LOD setting
    void SetLOD(double LOD);
 
+   ///Set the contour type
+   ///\param contourType The contour type.
+   void SetContourType(std::string contourType);
+
+   ///Set the warp option
+   ///\param warpOption true/false for warped contour
+   void SetWarpOption(bool warpOption);
+
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -173,6 +146,12 @@ public:
     ///The Level of Detail
     double GetLOD();
 
+    ///Get the contour type.
+    std::string GetContourType();
+
+    ///Get the value for the warped contour control
+    bool GetWarpOption();
+
 protected:
    ////@begin AdvancedContours event handler declarations
     /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
@@ -183,15 +162,21 @@ protected:
 
     /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2
     void _onContourLOD( wxCommandEvent& event );
+
+    ///wxEVT_COMMAND_RADIO_BOX event handler
+    ///\param event The radio box event
+    void _onContourType(wxCommandEvent& event);
 ////@end AdvancedContours event handler declarations
 
    wxSlider* _opacitySlider;///<Opacity slider.
    wxSlider* _warpedScaleSlider;///<Warped scale slider.
    wxSlider* _LODSlider;///<Level Of Detail slider.
-   
+   wxRadioBox* _contourTypeRBox;///<Contour radio box dialog.
+   wxCheckBox* _warpOptionCBox;///<Warp contour option.
    double _opacity;///<The opacity setting.
    double _warpedScale;///<The warped contour scale setting.
    double _LOD;///<The Level Of Detail setting.
+   std::string _planeType;///< The contour plane type.
 
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;

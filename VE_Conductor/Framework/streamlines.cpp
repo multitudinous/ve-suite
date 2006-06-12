@@ -231,7 +231,7 @@ void Streamlines::_updateAdvancedSettings()
    _advancedSettings.push_back(sphereArrowParticles);
 
    VE_XML::DataValuePair* stepSize = new VE_XML::DataValuePair();
-   stepSize->SetData("Step(?)",_lastStep);
+   stepSize->SetData("Step",_lastStep);
    _advancedSettings.push_back(stepSize);
 
    VE_XML::DataValuePair* seedPtFlag = new VE_XML::DataValuePair();
@@ -267,21 +267,21 @@ void Streamlines::_updateStreamlineInformation()
    _streamlineInformation.clear();
    VE_XML::DataValuePair* streamlineDirection = new VE_XML::DataValuePair();
    streamlineDirection->SetDataType("STRING");
-   streamlineDirection->SetDataName(std::string("Streamline Orientation"));
+   streamlineDirection->SetDataName(std::string("Cursor Direction"));
    streamlineDirection->SetDataString(_streamlineDirection);
 
    _streamlineInformation.push_back(streamlineDirection);
    
    VE_XML::DataValuePair* cursorSelection = new VE_XML::DataValuePair();
    cursorSelection->SetDataType("STRING");
-   cursorSelection->SetDataName(std::string("Cursor Selection"));
+   cursorSelection->SetDataName(std::string("Cursor Type"));
    cursorSelection->SetDataString(_cursorType);
 
    _streamlineInformation.push_back(cursorSelection);
 
    VE_XML::DataValuePair* integrationDirection = new VE_XML::DataValuePair();
    integrationDirection->SetDataType("STRING");
-   integrationDirection->SetDataName(std::string("Integtration Direction"));
+   integrationDirection->SetDataName(std::string("Integration Direction"));
    integrationDirection->SetDataString(_integrationDirection);
 
    _streamlineInformation.push_back(integrationDirection);

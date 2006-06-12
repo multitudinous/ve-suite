@@ -118,6 +118,7 @@ public:
    ///Get the scale by magnitude flag.
    bool GetScaleByMagFlag();
 
+
    /// Retrieves bitmap resources
    wxBitmap GetBitmapResource( const wxString& name );
 

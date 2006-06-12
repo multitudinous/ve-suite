@@ -84,7 +84,6 @@ class wxButton;
 enum CONTOUR_IDS
 {
    CONTOUR_DIR_RBOX,
-   CONTOUR_TYPE_RBOX,
    MULTIPLE_PRECONTOUR_RBUTTON,
    MULTIPLE_PRECONTOUR_CHK,
    SINGLE_PRECONTOUR_RBUTTON,
@@ -175,7 +174,7 @@ protected:
    std::string _dataType;///<Scalar or vector data
 
    wxRadioBox*    _directionRBox;
-   wxRadioBox*    _contourTypeRBox;
+   //wxRadioBox*    _contourTypeRBox;
    wxRadioButton* _allPrecomputedRButton;
    wxCheckBox*    _cyclePrecomputedCBox;
    wxRadioButton* _singlePlaneRButton;
@@ -199,6 +198,7 @@ protected:
    double _lastVectorScale;///<The vector scale.
    double _lastVectorRatio;///<The vector ratio.
    bool _lastScaleByMagnitude;///<Flag for scaling.
+   bool _warpOption;///<Flag for warp contour option
 
 
 };

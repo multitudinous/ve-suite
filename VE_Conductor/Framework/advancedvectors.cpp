@@ -130,6 +130,7 @@ void AdvancedVectors::CreateControls()
    _scaleByMagCheck = new wxCheckBox( itemDialog1, SCALAR_BY_VECTOR_CHK, _T("Scalar by Vector Magnitude"), wxDefaultPosition, wxDefaultSize, 0 );
    _scaleByMagCheck->SetValue(false);
    itemStaticBoxSizer3->Add(_scaleByMagCheck, 0, wxALIGN_LEFT|wxALL, 5);
+
 }
 ///////////////////////////////////////////////////////////////////
 void AdvancedVectors::SetVectorThreshold(std::vector<double> range)

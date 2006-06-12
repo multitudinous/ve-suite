@@ -47,7 +47,7 @@
 BEGIN_EVENT_TABLE( Contours, wxDialog )
 ////@begin Contours event table entries
    EVT_RADIOBOX      (CONTOUR_DIR_RBOX,            Contours::_onDirection)
-   EVT_RADIOBOX      (CONTOUR_TYPE_RBOX,           Contours::_onContourType)
+   //EVT_RADIOBOX      (CONTOUR_TYPE_RBOX,           Contours::_onContourType)
    EVT_RADIOBUTTON   (MULTIPLE_PRECONTOUR_RBUTTON, Contours::_onMultiplePlanes)
    EVT_CHECKBOX      (MULTIPLE_PRECONTOUR_CHK,     Contours::_onCyclePlanes)
    EVT_RADIOBUTTON   (SINGLE_PRECONTOUR_RBUTTON,   Contours::_onSinglePlane)
@@ -71,7 +71,7 @@ bool Contours::Create(wxWindow* parent, wxWindowID id, const wxString& caption,
                     long style )
 {
    _directionRBox = 0;
-   _contourTypeRBox = 0;
+   //_contourTypeRBox = 0;
    _allPrecomputedRButton = 0;
    _cyclePrecomputedCBox = 0;
    _singlePlaneRButton = 0;
@@ -92,6 +92,7 @@ bool Contours::Create(wxWindow* parent, wxWindowID id, const wxString& caption,
    _lastScaleByMagnitude = false;
    _lastVectorThreshold.push_back(0.0);
    _lastVectorThreshold.push_back(1.0);
+   _warpOption = false;
 
    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
    wxDialog::Create( parent, id, caption, pos, size, style );
@@ -127,7 +128,7 @@ void Contours::CreateControls()
     _directionRBox = new wxRadioBox( itemDialog1, CONTOUR_DIR_RBOX, _T("Direction"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(_directionRBox, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxString itemRadioBox6Strings[] = {
+    /*wxString itemRadioBox6Strings[] = {
         _T("Graduated"),
         _T("Banded"),
         _T("Lined")
@@ -135,7 +136,7 @@ void Contours::CreateControls()
    
     _contourTypeRBox = new wxRadioBox( itemDialog1, CONTOUR_TYPE_RBOX, _T("Contour Type"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(_contourTypeRBox, 0, wxALIGN_TOP|wxALL, 5);
-
+*/
     wxStaticBox* itemStaticBoxSizer7Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Multiple Planes"));
     wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer(itemStaticBoxSizer7Static, wxVERTICAL);
     itemStaticBoxSizer3->Add(itemStaticBoxSizer7, 0, wxGROW|wxALL, 5);
@@ -228,7 +229,7 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
       
       int displayWidth, displayHeight = 0;
       ::wxDisplaySize(&displayWidth,&displayHeight);
-      wxRect bbox = GetRect();
+      wxRect bbox = this->GetRect();
       int width,height = 0;
       GetSize(&width,&height);
       adContour.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
@@ -237,6 +238,8 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
       adContour.SetLOD(_lastLOD);
       adContour.SetOpacity(_lastOpacity);
       adContour.SetWarpedScale(_lastWarpedScale);
+      adContour.SetContourType(_planeType);
+      adContour.SetWarpOption(_warpOption);
       int status = adContour.ShowModal(); 
  
       if( status == wxID_OK||
@@ -246,6 +249,8 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
           _lastLOD = adContour.GetLOD();
           _lastOpacity = adContour.GetOpacity();
           _lastWarpedScale = adContour.GetWarpedScale();
+          _planeType = adContour.GetContourType();
+          _warpOption = adContour.GetWarpOption();
        }
    }
    else if(_dataType == "VECTOR")
@@ -293,10 +298,10 @@ void Contours::_onDirection( wxCommandEvent& event )
    _planeDirection = _directionRBox->GetStringSelection();
 }
 ///////////////////////////////////////////////////////
-void Contours::_onContourType( wxCommandEvent& event )
+/*void Contours::_onContourType( wxCommandEvent& event )
 {
    _planeType = _contourTypeRBox->GetStringSelection();
-}
+}*/
 //////////////////////////////////////////////////////////
 void Contours::_onMultiplePlanes( wxCommandEvent& event )
 {   
@@ -332,7 +337,7 @@ void Contours::_onPrecomputedPlane( wxCommandEvent& event )
 /////////////////////////////////////////////////
 void Contours::_onPlane( wxCommandEvent& event )
 {
-   _planePosition = static_cast<double>(_planePositonSlider->GetValue());  
+   _planePosition = static_cast<double>(_planePositonSlider->GetValue()*.01);  
 }
 ////////////////////////////////////////
 void Contours::_updateAdvancedSettings()
@@ -352,6 +357,25 @@ void Contours::_updateAdvancedSettings()
       VE_XML::DataValuePair* LODSetting = new VE_XML::DataValuePair();
       LODSetting->SetData("Contour LOD",_lastLOD);
       _advancedSettings.push_back(LODSetting);
+
+      VE_XML::DataValuePair* contourType = new VE_XML::DataValuePair();
+      contourType->SetDataType("STRING");
+      contourType->SetDataName(std::string("Type"));
+      contourType->SetDataString(_planeType);
+      _advancedSettings.push_back(contourType);
+      
+      VE_XML::DataValuePair* warpOptionFlag = new VE_XML::DataValuePair();
+      warpOptionFlag->SetDataName("Warp Option");
+      warpOptionFlag->SetDataType("UNSIGNED INT");
+      if(_warpOption)
+      {
+         warpOptionFlag->SetDataValue(static_cast<unsigned int>(1));
+      }
+      else
+      {
+         warpOptionFlag->SetDataValue(static_cast<unsigned int>(0));
+      }
+      _advancedSettings.push_back(warpOptionFlag);
    }
    else if(_dataType == "VECTOR")
    {
@@ -397,12 +421,12 @@ void Contours::_updateContourInformation()
 
    _contourInformation.push_back(contourDirection);
    
-   VE_XML::DataValuePair* contourType = new VE_XML::DataValuePair();
+   /*VE_XML::DataValuePair* contourType = new VE_XML::DataValuePair();
    contourType->SetDataType("STRING");
    contourType->SetDataName(std::string("Type"));
    contourType->SetDataString(_planeType);
 
-   _contourInformation.push_back(contourType);
+   _contourInformation.push_back(contourType);*/
 
    VE_XML::DataValuePair* numberOfPlanes = new VE_XML::DataValuePair();
    numberOfPlanes->SetDataType("STRING");
@@ -434,8 +458,14 @@ void Contours::_onAddPlane( wxCommandEvent& event )
    _updateAdvancedSettings();
 
    VE_XML::Command* newCommand = new VE_XML::Command();
-   newCommand->SetCommandName("UPDATE_CONTOUR_SETTINGS");
-   
+   if(_dataType == "SCALAR")
+   {
+      newCommand->SetCommandName("UPDATE_SCALAR_SETTINGS");
+   }
+   else if(_dataType == "VECTOR")
+   {
+       newCommand->SetCommandName("UPDATE_VECTOR_SETTINGS");
+   }
    for(size_t i =0; i < _contourInformation.size(); i++)
    {
       newCommand->AddDataValuePair(_contourInformation.at(i));
