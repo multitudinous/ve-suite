@@ -119,7 +119,6 @@ SRCS=\
    trackball.cxx\
    cfdTrackball.cxx\
    cfdObjectHandler.cxx\
-   cfdTrackball.cxx\
    CreateVisObjectEventHandler.cxx
 
 			
