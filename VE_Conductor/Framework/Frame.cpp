@@ -139,6 +139,7 @@ END_EVENT_TABLE()
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title), m_frameNr(0), f_financial(true), f_geometry(true), f_visualization(true)
 {
+   serviceList = new CORBAServiceList( this );
    SetWindowStyle(wxDEFAULT_FRAME_STYLE & ~ (wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX));
 
   
@@ -170,7 +171,6 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    _cadDialog = 0;
 
    domManager = new VE_XML::DOMDocumentManager();
-   serviceList = new CORBAServiceList( this );
    
    ///Initialize VE-Open
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );

@@ -199,15 +199,10 @@ cfdTextureDataSet* cfdModelHandler::GetActiveTextureDataSet()
 }
 #endif
 #endif
-
+/////////////////////////////////////////////////////
 cfdScalarBarActor* cfdModelHandler::GetScalarBar(void)
 {
    return _scalarBar;
-}
-/////////////////////////////////////////////////////
-cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
-{
-   return activeDataset;
 }
 /////////////////////////////////////////////////////
 void cfdModelHandler::SetActiveModel( int modelNumber )

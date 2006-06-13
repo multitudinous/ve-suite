@@ -333,9 +333,9 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 	
    // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
-   this->cursor->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
    if( cfdModelHandler::instance()->GetActiveModel() )
    {
+      this->cursor->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
       this->cursor->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
    }
    this->cursor->CheckCommandId( _commandArray );

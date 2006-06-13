@@ -28,5 +28,4 @@ namespace VE_Xplorer
 		Trackball tb;
 	};
 }
-
 #endif

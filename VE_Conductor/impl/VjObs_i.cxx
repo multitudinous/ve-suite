@@ -911,11 +911,12 @@ void VjObs_i::CreateCommandQueue( void )
    double newPreState = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
    double newIsoValue = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
    
-   int activeVector = cfdModelHandler::instance()->GetActiveDataSet()->GetActiveVector();
-   int activeScalar = cfdModelHandler::instance()->GetActiveDataSet()->GetActiveScalar();
+   //if we are doing transient vis then we already have an active model and dataset
+   int activeVector = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveVector();
+   int activeScalar = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveScalar();
 
    int activeMinMax[ 2 ];
-   cfdModelHandler::instance()->GetActiveDataSet()->GetRange( activeMinMax );
+   cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetRange( activeMinMax );
 
    std::map< int, cfdDataSet* >::iterator iter;
    

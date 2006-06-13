@@ -259,6 +259,7 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxContextMenuEvent& event)
          cadNodeMenu->EnableDeleteMenu(false);
       }
       PopupMenu(cadNodeMenu,wxDefaultPosition);
+      delete cadNodeMenu;
    }
 }
 /////////////////////////////////////////////////////////////////

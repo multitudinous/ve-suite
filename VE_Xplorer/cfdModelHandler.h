@@ -86,7 +86,6 @@ public:
    void CleanUp( void );
    void InitScene( void );
    void PreFrameUpdate( void );
-   cfdDataSet* GetActiveDataSet( void );
 
    void SetCommandArray( cfdCommandArray* );
    ///\param inputCommand input xml command

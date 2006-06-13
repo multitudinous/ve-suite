@@ -778,7 +778,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
             }
             else*/
             {
-            activeDataSetDCS = cfdModelHandler::instance()->GetActiveDataSet()->GetDCS();
+            activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
             }
             
             //if ( this->computeActorsAndGeodes == false )
@@ -787,7 +787,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
                vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
                << activeDataSetDCS
                << std::endl << vprDEBUG_FLUSH;
-               this->activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
+               this->activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
                this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
                this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
                
@@ -862,78 +862,6 @@ void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject 
 #endif
 #endif
 }
-//////////////////////////////////////////////////////////////////   
-void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject )
-{
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Active Dataset" );
-   std::string dataSetName;
-   activeModelDVP->GetData( dataSetName );
-
-   //Need to set the active datasetname and get the position of the dataset
-   cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
-   unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
-      vprDEBUG(vesDBG,1) 
-         << "CHANGE_STEADYSTATE_DATASET " << i 
-         << std::endl << vprDEBUG_FLUSH;
-   //update active texture dataset if it exists
-#ifdef _OSG
-#ifdef VE_PATENTED
-   unsigned int nTextureDataSets = activeModel->GetNumberOfTextureDataSets();
-   if( (nTextureDataSets) && ( i < nTextureDataSets ) )
-   {
-      cfdTextureDataSet* activeTDSet = activeModel->GetTextureDataSet( i );
-      activeModel->SetActiveTextureDataSet( activeTDSet );
-   }
-#endif
-#endif
-   if ( ( i < activeModel->GetNumberOfCfdDataSets() ) )
-   {
-      vprDEBUG(vesDBG,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
-      << activeModel->GetCfdDataSet( i )->GetFileName()
-      << ", dcs = " << activeModel->GetCfdDataSet( i )->GetDCS()
-      << std::endl << vprDEBUG_FLUSH;
-      
-      int cfdType = activeModel->GetCfdDataSet( i )->GetType();
-      vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate cfdType: " << cfdType
-         << std::endl << vprDEBUG_FLUSH;
-      
-      // set the dataset as the appropriate dastaset type
-      // (and the active dataset as well)
-      cfdDataSet* activeDataset = activeModel->GetCfdDataSet( i );         
-      
-      std::string oldDatasetName = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
-      vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate last active dataset name = " 
-         << oldDatasetName
-         << std::endl << vprDEBUG_FLUSH;
-      
-      activeModel->SetActiveDataSet( activeDataset );         
-      vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate Activating steady state file " 
-         << activeDataset->GetFileName()
-         << std::endl << vprDEBUG_FLUSH;
-      
-      // make sure that the user did not just hit same dataset button
-      // (or change scalar since that is routed through here too)
-      if ( oldDatasetName == activeDataset->GetFileName() )//if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
-      {
-         vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate  setting dataset as newly activated" 
-         << std::endl << vprDEBUG_FLUSH;
-         activeDataset->SetNewlyActivated();
-         oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
-      }
-      
-      // Set the current active dataset for the scalar bar
-      // so that it knows how to update itself
-      //_scalarBar->SetActiveDataSet( activeDataset );
-   }
-   else
-   {
-      std::cerr << "ERROR: cfdModelHandler::PreFrameUpdate  requested steady state dataset " 
-      //<< commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
-      << activeModel->GetNumberOfCfdDataSets()
-      << std::endl;
-   }
-}
 //////////////////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xmlObject )
 {
@@ -973,5 +901,77 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xm
    activeDataset->GetParent()->SetActiveScalar( activeScalarName );
    
    activeDataset->ResetScalarBarRange( scalarMin, scalarMax );
-   activeDataset->GetParent()->ResetScalarBarRange( scalarMin, scalarMax ); 
+   activeDataset->GetParent()->ResetScalarBarRange( scalarMin, scalarMax );
+}
+//////////////////////////////////////////////////////////////////   
+void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject )
+{
+   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
+   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Active Dataset" );
+   std::string dataSetName;
+   activeModelDVP->GetData( dataSetName );
+
+   //Need to set the active datasetname and get the position of the dataset
+   cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
+   unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
+      vprDEBUG(vesDBG,1) 
+         << "CreateVisObjectEventHandler CHANGE_STEADYSTATE_DATASET " << i 
+         << std::endl << vprDEBUG_FLUSH;
+   //update active texture dataset if it exists
+#ifdef _OSG
+#ifdef VE_PATENTED
+   unsigned int nTextureDataSets = activeModel->GetNumberOfTextureDataSets();
+   if( (nTextureDataSets) && ( i < nTextureDataSets ) )
+   {
+      cfdTextureDataSet* activeTDSet = activeModel->GetTextureDataSet( i );
+      activeModel->SetActiveTextureDataSet( activeTDSet );
+   }
+#endif
+#endif
+   if ( ( i < activeModel->GetNumberOfCfdDataSets() ) )
+   {
+      vprDEBUG(vesDBG,0) << "\CreateVisObjectEventHandler::PreFrameUpdate dataset = "
+      << activeModel->GetCfdDataSet( i )->GetFileName()
+      << ", dcs = " << activeModel->GetCfdDataSet( i )->GetDCS()
+      << std::endl << vprDEBUG_FLUSH;
+      
+      int cfdType = activeModel->GetCfdDataSet( i )->GetType();
+      vprDEBUG(vesDBG,1) << "\CreateVisObjectEventHandler::PreFrameUpdate cfdType: " << cfdType
+         << std::endl << vprDEBUG_FLUSH;
+      
+      // set the dataset as the appropriate dastaset type
+      // (and the active dataset as well)
+      cfdDataSet* activeDataset = activeModel->GetCfdDataSet( i );         
+      
+      std::string oldDatasetName = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
+      vprDEBUG(vesDBG,1) << "\CreateVisObjectEventHandler::PreFrameUpdate last active dataset name = " 
+         << oldDatasetName
+         << std::endl << vprDEBUG_FLUSH;
+      
+      activeModel->SetActiveDataSet( activeDataset );         
+      vprDEBUG(vesDBG,1) << "\CreateVisObjectEventHandler::PreFrameUpdate Activating steady state file " 
+         << activeDataset->GetFileName()
+         << std::endl << vprDEBUG_FLUSH;
+      
+      // make sure that the user did not just hit same dataset button
+      // (or change scalar since that is routed through here too)
+      if ( oldDatasetName == activeDataset->GetFileName() )//if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
+      {
+         vprDEBUG(vesDBG,1) << "\CreateVisObjectEventHandler::PreFrameUpdate  setting dataset as newly activated" 
+         << std::endl << vprDEBUG_FLUSH;
+         activeDataset->SetNewlyActivated();
+         oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
+      }
+      
+      // Set the current active dataset for the scalar bar
+      // so that it knows how to update itself
+      //_scalarBar->SetActiveDataSet( activeDataset );
+   }
+   else
+   {
+      std::cerr << "ERROR: CreateVisObjectEventHandler::PreFrameUpdate  requested steady state dataset " 
+      //<< commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
+      << activeModel->GetNumberOfCfdDataSets()
+      << std::endl;
+   }
 }
