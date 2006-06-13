@@ -278,18 +278,17 @@ void DataSetLoaderUI::CreateControls()
     itemListBox24 = new wxListBox( itemScrolledWindow23, ID_LISTBOX, wxDefaultPosition, wxSize(225, -1), 0, itemListBox24Strings, wxLB_SINGLE );
 
    ///////////////////////////////////////////////////////
-    //wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
-    wxBoxSizer* itemBoxSizer50 = new wxBoxSizer(wxHORIZONTAL);
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemBoxSizer50, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     wxButton* itemButton26 = new wxButton( itemDialog1, wxID_OK, _("Load"), wxDefaultPosition, wxDefaultSize, 0 );
     //itemButton26->SetDefault();
-    itemBoxSizer50->Add(itemButton26);
+    itemStdDialogButtonSizer25->AddButton(itemButton26);
 
     wxButton* itemButton27 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer50->Add(itemButton27);
+    itemStdDialogButtonSizer25->AddButton(itemButton27);
 
-    //itemStdDialogButtonSizer25->Realize();
+    itemStdDialogButtonSizer25->Realize();
 
 ////@end DataSetLoaderUI content construction
 }
