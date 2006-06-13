@@ -44,5 +44,4 @@ protected:
 	void Pan(float dx,float dy);
 	void Rotate(float x,float y,float z,float angle);
 };
-
 #endif

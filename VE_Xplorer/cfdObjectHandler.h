@@ -104,7 +104,7 @@ class VE_XPLORER_EXPORTS cfdObjectHandler
       double distance;
       std::string laserName;
       osg::Vec3f LastWandPosition;
-      osg::MatrixTransform * getMatrixTransform();
+      osg::MatrixTransform* getMatrixTransform();
       void TranslateObject();
       gadget::DigitalInterface translateDigital;
       osg::Node* rootNode;
