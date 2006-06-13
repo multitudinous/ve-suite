@@ -193,17 +193,19 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 
    //process the current command form the gui
    if ( cfdModelHandler::instance()->GetActiveModel() )
-      if( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() )
    {
-      std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
-      VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
-      currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
-      if ( currentEventHandler != _eventHandlers.end() )
+      if( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() )
       {
-         vprDEBUG(vesDBG,0) << "|\tExecuting: "<< tempCommand->GetCommandName() 
-                              << std::endl << vprDEBUG_FLUSH;
-         currentEventHandler->second->SetGlobalBaseObject();
-         currentEventHandler->second->Execute( tempCommand );
+         std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+         VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
+         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
+         if ( currentEventHandler != _eventHandlers.end() )
+         {
+            vprDEBUG(vesDBG,0) << "|\tExecuting: "<< tempCommand->GetCommandName() 
+                                 << std::endl << vprDEBUG_FLUSH;
+            currentEventHandler->second->SetGlobalBaseObject();
+            currentEventHandler->second->Execute( tempCommand );
+         }
       }
    }
 
@@ -278,6 +280,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                VE_SceneGraph::cfdGroup* temp = (VE_SceneGraph::cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
                cfdModelHandler::instance()->GetActiveModel()->SetMirrorNode( temp );
             }
+            this->_activeObject = NULL;
          }
          
 
@@ -410,7 +413,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
             //                       << pfMemory::getArenaBytesUsed() 
             //                       << std::endl << vprDEBUG_FLUSH;
 
-            this->_activeObject = NULL;
+            //this->_activeObject = NULL;
             this->computeActorsAndGeodes = false;   
             vprDEBUG(vesDBG,0) << "|\tDone updating cfdObject" 
                << std::endl << std::endl << vprDEBUG_FLUSH; 
@@ -461,5 +464,5 @@ void cfdSteadyStateVizHandler::streamers( void )
    }
 
    this->_activeObject->Update();
-   this->_activeObject = NULL;
+   //this->_activeObject = NULL;
 }
