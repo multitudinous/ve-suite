@@ -840,7 +840,7 @@ void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject 
    std::string activeVector;
    activeModelDVP->GetData( activeVector );
    
-   vprDEBUG(vesDBG,1) << "|\t Setting Active Vector = " << activeVector
+   vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveVector Setting Active Vector = " << activeVector
       << std::endl << vprDEBUG_FLUSH;
    
    cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
@@ -877,7 +877,7 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xm
    activeModelDVP = command->GetDataValuePair( "Scalar Max" );
    activeModelDVP->GetData( scalarMax );
 
-   vprDEBUG(vesDBG,1) << "|\tSet the scalar and range "
+   vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveScalarAndRange Set the scalar and range "
       << ", scalar = " << activeScalarName
       << ", min = " << scalarMin
       << ", max = " << scalarMax
@@ -915,7 +915,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject
    cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
    unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
       vprDEBUG(vesDBG,1) 
-         << "CreateVisObjectEventHandler CHANGE_STEADYSTATE_DATASET " << i 
+         << "|\tCreateVisObjectEventHandler CHANGE_STEADYSTATE_DATASET " << i 
          << std::endl << vprDEBUG_FLUSH;
    //update active texture dataset if it exists
 #ifdef _OSG
@@ -930,13 +930,13 @@ void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject
 #endif
    if ( ( i < activeModel->GetNumberOfCfdDataSets() ) )
    {
-      vprDEBUG(vesDBG,0) << "\CreateVisObjectEventHandler::PreFrameUpdate dataset = "
+      vprDEBUG(vesDBG,0) << "|\tCreateVisObjectEventHandler::SetActiveDataSet dataset = "
       << activeModel->GetCfdDataSet( i )->GetFileName()
       << ", dcs = " << activeModel->GetCfdDataSet( i )->GetDCS()
       << std::endl << vprDEBUG_FLUSH;
       
       int cfdType = activeModel->GetCfdDataSet( i )->GetType();
-      vprDEBUG(vesDBG,1) << "\CreateVisObjectEventHandler::PreFrameUpdate cfdType: " << cfdType
+      vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet cfdType: " << cfdType
          << std::endl << vprDEBUG_FLUSH;
       
       // set the dataset as the appropriate dastaset type
@@ -944,12 +944,12 @@ void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject
       cfdDataSet* activeDataset = activeModel->GetCfdDataSet( i );         
       
       std::string oldDatasetName = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
-      vprDEBUG(vesDBG,1) << "\CreateVisObjectEventHandler::PreFrameUpdate last active dataset name = " 
+      vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet last active dataset name = " 
          << oldDatasetName
          << std::endl << vprDEBUG_FLUSH;
       
       activeModel->SetActiveDataSet( activeDataset );         
-      vprDEBUG(vesDBG,1) << "\CreateVisObjectEventHandler::PreFrameUpdate Activating steady state file " 
+      vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet Activating steady state file " 
          << activeDataset->GetFileName()
          << std::endl << vprDEBUG_FLUSH;
       
@@ -957,7 +957,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject
       // (or change scalar since that is routed through here too)
       if ( oldDatasetName == activeDataset->GetFileName() )//if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
       {
-         vprDEBUG(vesDBG,1) << "\CreateVisObjectEventHandler::PreFrameUpdate  setting dataset as newly activated" 
+         vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet  setting dataset as newly activated" 
          << std::endl << vprDEBUG_FLUSH;
          activeDataset->SetNewlyActivated();
          oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
@@ -969,7 +969,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject
    }
    else
    {
-      std::cerr << "ERROR: CreateVisObjectEventHandler::PreFrameUpdate  requested steady state dataset " 
+      std::cerr << "ERROR: CreateVisObjectEventHandler::SetActiveDataSet  requested steady state dataset " 
       //<< commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
       << activeModel->GetNumberOfCfdDataSets()
       << std::endl;
