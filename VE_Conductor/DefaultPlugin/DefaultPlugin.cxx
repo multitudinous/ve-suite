@@ -101,7 +101,7 @@ UIDialog* DefaultPlugin::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString DefaultPlugin::GetName()
 {
-  wxString result="VEConductor_Default_DefaultPlugin"; //your name
+  wxString result="DefaultPlugin"; //your name
   return result;
 }
 /////////////////////////////////////////////////////////////////////////////

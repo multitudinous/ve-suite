@@ -57,8 +57,12 @@ using namespace VE_XML;
 BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_TREE_END_LABEL_EDIT(TREE_ID,CADNodeManagerDlg::_editLabel)
    EVT_TREE_SEL_CHANGED(TREE_ID,CADNodeManagerDlg::_setActiveNode)
-   EVT_TREE_ITEM_MENU(TREE_ID,CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
+   //EVT_TREE_ITEM_MENU(TREE_ID,CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
+   //EVT_TREE_ITEM_RIGHT_CLICK(TREE_ID, CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
+   //EVT_RIGHT_DOWN( CADNodeManagerDlg::_popupCADNodeManipulatorMenu )
+   EVT_CONTEXT_MENU(CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
    EVT_BUTTON(GEOM_SAVE,CADNodeManagerDlg::_saveCADFile)
+   
    EVT_MENU(CADNodeMenu::GEOM_PROPERTIES,CADNodeManagerDlg::_showPropertiesDialog)
    EVT_MENU(CADNodeMenu::GEOM_DELETE,CADNodeManagerDlg::_deleteNode)
    EVT_MENU(CADNodeMenu::GEOM_ASSEMBLY_CREATE,CADNodeManagerDlg::_createNewAssembly)
@@ -219,13 +223,16 @@ void CADNodeManagerDlg::_setActiveNode(wxTreeEvent& event)
    }
 }
 /////////////////////////////////////////////////////////////////////////
-void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
+//void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
+//void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxMouseEvent& event)
+void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxContextMenuEvent& event)
 {
+   wxTreeItemId item = _geometryTree->GetSelection();
    CADTreeBuilder::TreeNodeData* cadNode = 0;
-   if(event.GetItem().IsOk())
+   if(item.IsOk())
    {
-      cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
-      
+      cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData( item ));
+
       CADNodeMenu* cadNodeMenu = new CADNodeMenu();
       if(cadNode)
       {
@@ -251,7 +258,7 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
          cadNodeMenu->EnableCloneMenu(false);
          cadNodeMenu->EnableDeleteMenu(false);
       }
-      PopupMenu(cadNodeMenu);
+      PopupMenu(cadNodeMenu,wxDefaultPosition);
    }
 }
 /////////////////////////////////////////////////////////////////

@@ -112,8 +112,9 @@ protected:
 
    ///Launch the CADNode modifier menu.
    ///\param event The right-click event.
-   void _popupCADNodeManipulatorMenu(wxTreeEvent& event);
-
+   //void _popupCADNodeManipulatorMenu(wxTreeEvent& event);
+   //void _popupCADNodeManipulatorMenu(wxMouseEvent &event);
+   void _popupCADNodeManipulatorMenu(wxContextMenuEvent& event);
    ///Add a node to a selected node in the tree based from a VEG file.
    ///\param event The command event.
    void _addNodeFromVEGFile(wxCommandEvent& event);
