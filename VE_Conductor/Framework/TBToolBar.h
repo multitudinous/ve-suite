@@ -63,9 +63,9 @@ public:
       TB_TOOLBAR///<Toolbar ID
    };
    ///Constructor
-   TextureBasedToolBar(wxWindow* parent, int id/*,
-                     std::vector<std::string> scalarNames,
-                     std::vector<std::string> vectorNames*/);
+   TextureBasedToolBar(wxWindow* parent, int id,
+                     wxArrayString scalarNames,
+                     wxArrayString vectorNames);
 
    ///Destructor
    virtual ~TextureBasedToolBar();
@@ -104,8 +104,8 @@ protected:
    ///update the list of scalars and vectors
    ///\param scalarNames Scalar names
    ///\param vectorNames Vector names
-   void _updateAvailableSolutions(std::vector<std::string> scalarNames,
-                               std::vector<std::string> vectorNames);
+   void _updateAvailableSolutions(wxArrayString scalarNames,
+                               wxArrayString vectorNames);
    
    ///Handle tool button presses
    ///\param event wxCommand event

@@ -156,6 +156,11 @@ public:
    ///Clear out the DataValuePair(s) of specific info about the sub dialogs
    void ClearSpecificInformation();
 
+   ///Set the texture data information
+   ///\param textureData The directory names for the texture data
+   ///\param type The type of data\n Valid types are:\n TEXTURE_SCALARS\n TEXTURE_VECTORS
+   void SetTextureData(wxArrayString textureData,std::string type);
+
    ///Get active scalar name
    std::string Vistab::GetActiveScalarName();
    ///Get active vector name

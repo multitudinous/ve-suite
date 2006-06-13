@@ -47,6 +47,7 @@
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 
 #include "VE_Open/XML/CAD/CADAssembly.h"
@@ -2539,16 +2540,6 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
    {
       return;
    }
-
-   /*if ( CORBA::is_nil( xplorerPtr.in() ) )
-   {
-      ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
-      SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
-      if ( CORBA::is_nil( xplorerPtr.in() ) )
-      {
-         return;
-      }
-   }   */
   
    //Get the active model ID from the xml data
    VE_Model::Model* activeXMLModel = modules[m_selMod].GetPlugin()->GetModel();
@@ -2575,17 +2566,53 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                                 SYMBOL_VISTAB_SIZE,
                                 SYMBOL_VISTAB_STYLE );
             vistab.SetCommInstance(xplorerPtr);
-            int error = vistab.ShowModal(); 
-            if( error == wxID_OK||
-                error == wxID_CLOSE||
-                error == wxID_CANCEL)
+            size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
+            if(nInformationPackets)
             {
-               //std::cout<<"Active dataset: "<<vistab.GetActiveDatasetName()<<std::endl;
-               //std::cout<<"Active scalar: "<<vistab.GetActiveScalarName()<<std::endl;
-               //std::cout<<"Active vector: "<<vistab.GetActiveVectorName()<<std::endl;
-               //vistab.SendUpdatedSettingsToXplorer();
-               //this was only for testing.
+               wxArrayString scalarTextureDatasets;
+               wxArrayString vectorTextureDatasets;
+               bool hasScalarTextures = false;
+               bool hasVectorTextures = false;
+               for(size_t i = 0; i < nInformationPackets; i++)
+               {
+                  VE_XML::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket(i);
+                  size_t numProperties = paramBlock->GetNumberOfProperties();
+                  
+                  for ( size_t i = 0; i < numProperties; ++i )
+                  {
+                     VE_XML::DataValuePair* dataValuePair = paramBlock->GetProperty( i );
+                     if ( dataValuePair->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
+                     {
+                        
+                        size_t textureDataType = dataValuePair->GetDataString().find("scalars");
+                        if(textureDataType < dataValuePair->GetDataString().size())
+                        {
+                           scalarTextureDatasets.Add(dataValuePair->GetDataString().c_str());
+                           hasScalarTextures = true;
+                        }
+                        else 
+                        {
+                           textureDataType = dataValuePair->GetDataString().find("vectors");
+                           if(textureDataType < dataValuePair->GetDataString().size())
+                           {
+                               vectorTextureDatasets.Add(dataValuePair->GetDataString().c_str());
+                               hasVectorTextures = true;
+                           }
+                        }
+                     }
+                  }
+               }
+               if(hasScalarTextures)
+               {
+                  vistab.SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
+               }
+               if(hasVectorTextures)
+               {
+                  vistab.SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
+               }
+
             }
+            int error = vistab.ShowModal(); 
          }
          else
          { 

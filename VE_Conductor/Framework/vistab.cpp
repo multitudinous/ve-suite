@@ -347,7 +347,9 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 {
    
-   TextureBasedToolBar tbTools(this,-1);
+   TextureBasedToolBar tbTools(this,-1,
+                               _availableSolutions["TEXTURE_SCALARS"],
+                               _availableSolutions["TEXTURE_VECTORS"]);
    tbTools.SetVjObsPtr(xplorerPtr);
    tbTools.ShowModal();
    itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
@@ -416,6 +418,21 @@ void Vistab::_setActiveDataset(unsigned int index)
       }
    }
 }
+/////////////////////////////////////////////////
+void Vistab::SetTextureData(wxArrayString textureData,
+                            std::string type)
+{
+   std::map<std::string, wxArrayString >::iterator currentSolution;
+   currentSolution = _availableSolutions.find( type );
+   if(currentSolution != _availableSolutions.end())
+   {
+      currentSolution->second.Clear();
+      for(size_t i = 0; i < textureData.Count(); i++)
+      {
+         currentSolution->second.Add(textureData[i]);
+      }
+   }
+}
 ////////////////////////////////////////////////////////////////////
 void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
 {
@@ -432,7 +449,7 @@ void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
       _updateAvailableSolutions("MESH_VECTORS",datasetInfo.vectornames);
    }
      
-   _nScalarTexturesInActiveDataset = datasetInfo.textureScalarNames.length();
+   /*_nScalarTexturesInActiveDataset = datasetInfo.textureScalarNames.length();
    if(_nScalarTexturesInActiveDataset)
    {
       _updateAvailableSolutions("TEXTURE_SCALARS",datasetInfo.textureScalarNames);
@@ -442,7 +459,7 @@ void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
    if(_nVectorTexturesInActiveDataset)
    {
       _updateAvailableSolutions("TEXTURE_VECTORS",datasetInfo.textureVectorNames);
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////
 //We need this extra method because the data info is stored differenly//
