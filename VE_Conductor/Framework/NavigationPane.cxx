@@ -57,6 +57,8 @@
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/gdicmn.h>
+#include <wx/icon.h>
+
 
 #include <iostream>
 
