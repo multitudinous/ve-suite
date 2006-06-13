@@ -135,7 +135,7 @@ void cfdObjectHandler::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
 
    if ( listOfHits.empty())
    {
-      vprDEBUG(vesDBG,1) << "No object selected" << std::endl 
+      vprDEBUG(vesDBG,1) << "|\tcfdObjectHandler::ProcessHit No object selected" << std::endl 
                               << vprDEBUG_FLUSH;
    }
    else
@@ -289,27 +289,28 @@ void cfdObjectHandler::DrawLine(osg::Vec3f start, osg::Vec3f end)
 //using gestures from a glove.
 void cfdObjectHandler::UpdateObjectHandler()
 {
-  
-   osg::Vec3f startPoint, endPoint;
-   this->SetupStartEndPoint(&startPoint, &endPoint);
-   this->DrawLine(startPoint, endPoint);
-
-   if (this->digital->getData() == gadget::Digital::TOGGLE_ON)
+   if ( _active )
    {
-      this->SelectObject();
-   }
+      osg::Vec3f startPoint, endPoint;
+      this->SetupStartEndPoint(&startPoint, &endPoint);
+      this->DrawLine(startPoint, endPoint);
 
-   int buttonData = this->translateDigital->getData();
-   if ((buttonData == gadget::Digital::ON || buttonData == gadget::Digital::TOGGLE_ON) 
-       && this->selectedGeometry != NULL)
-   {
-      if(buttonData == gadget::Digital::TOGGLE_ON)
+      if (this->digital->getData() == gadget::Digital::TOGGLE_ON)
       {
-	 this->SetWandPosition();
+         this->SelectObject();
       }
-      this->TranslateObject();
+
+      int buttonData = this->translateDigital->getData();
+      if ((buttonData == gadget::Digital::ON || buttonData == gadget::Digital::TOGGLE_ON) 
+          && this->selectedGeometry != NULL)
+      {
+         if(buttonData == gadget::Digital::TOGGLE_ON)
+         {
+	         this->SetWandPosition();
+         }
+         this->TranslateObject();
+      }
    }
-   
 }
 
 void cfdObjectHandler::SetupStartEndPoint(osg::Vec3f * startPoint, 
