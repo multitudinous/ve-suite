@@ -326,7 +326,6 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
    streamline.SetSize(_vistabPosition);
    streamline.ShowModal();
    itemToolBar3->ToggleTool(STREAMLINE_BUTTON, false);
-std::cout<<"STREAMLINES WORKING"<<std::endl;
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )

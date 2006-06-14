@@ -38,6 +38,8 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"
 
+#include <iostream>
+
 ////@begin XPM images
 ////@end XPM images
 

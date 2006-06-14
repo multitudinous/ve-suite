@@ -62,10 +62,11 @@ Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id,
                        const wxPoint& pos, 
                        const wxSize& size, long style )
 {
-    Create(parent, id, caption, pos, size, style);
-    wxSize displaySize = ::wxGetDisplaySize();
-    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-    this->SetSize( dialogPosition );
+   Create(parent, id, caption, pos, size, style);
+   wxSize displaySize = ::wxGetDisplaySize();
+   int tempH = displaySize.GetHeight()-480;
+   wxRect dialogPosition( displaySize.GetWidth()-427, displaySize.GetHeight()-tempH, 427, tempH );
+   this->SetSize( dialogPosition );
 }
 //////////////////////////////////////////////////////////
 bool Isosurfaces::Create( wxWindow* parent, wxWindowID id, 

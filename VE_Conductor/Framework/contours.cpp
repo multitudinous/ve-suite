@@ -83,15 +83,15 @@ bool Contours::Create(wxWindow* parent, wxWindowID id, const wxString& caption,
    _planeType = "Graduated";
    _numberOfPlanesOption = "Single";
    _planeOption = "";
-   _planePosition = 0.;
-   _lastLOD = 1.0;
-   _lastWarpedScale = .5;
-   _lastOpacity = 1.0;
-   _lastVectorScale = 0.0;
-   _lastVectorRatio = 0.0;
+   _planePosition = 0.0f;
+   _lastLOD = 1.0f;
+   _lastWarpedScale = .5f;
+   _lastOpacity = 1.0f;
+   _lastVectorScale = 0.0f;
+   _lastVectorRatio = 0.0f;
    _lastScaleByMagnitude = false;
-   _lastVectorThreshold.push_back(0.0);
-   _lastVectorThreshold.push_back(1.0);
+   _lastVectorThreshold.push_back(0.0f);
+   _lastVectorThreshold.push_back(1.0f);
    _warpOption = false;
 
    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
@@ -337,7 +337,7 @@ void Contours::_onPrecomputedPlane( wxCommandEvent& WXUNUSED(event) )
 /////////////////////////////////////////////////
 void Contours::_onPlane( wxCommandEvent& WXUNUSED(event) )
 {
-   _planePosition = static_cast<double>(_planePositonSlider->GetValue()*.01);  
+   _planePosition = static_cast<double>(_planePositonSlider->GetValue());  
 }
 ////////////////////////////////////////
 void Contours::_updateAdvancedSettings()

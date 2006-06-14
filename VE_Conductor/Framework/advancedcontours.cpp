@@ -38,7 +38,6 @@
 #include <wx/radiobox.h>
 #include <wx/checkbox.h>
 
-
 BEGIN_EVENT_TABLE( AdvancedContours, wxDialog )
 ////@begin AdvancedContours event table entries
    EVT_SLIDER        ( OPACITY_SLIDER,          AdvancedContours::_onContourOpacity )
@@ -51,10 +50,11 @@ END_EVENT_TABLE()
 
 AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
-    Create(parent, id, caption, pos, size, style);
-    wxSize displaySize = ::wxGetDisplaySize();
-    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-    this->SetSize( dialogPosition );
+   Create(parent, id, caption, pos, size, style);
+   wxSize displaySize = ::wxGetDisplaySize();
+   int tempH = displaySize.GetHeight()-480;
+   wxRect dialogPosition( displaySize.GetWidth()-427, 200, 427, tempH );
+   this->SetSize( dialogPosition );
 }
 
 bool AdvancedContours::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
