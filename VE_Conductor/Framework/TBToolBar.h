@@ -63,12 +63,18 @@ public:
       TB_TOOLBAR///<Toolbar ID
    };
    ///Constructor
-   TextureBasedToolBar(wxWindow* parent, int id,
+   TextureBasedToolBar(wxWindow* parent, int id/*,
                      wxArrayString scalarNames,
-                     wxArrayString vectorNames);
+                     wxArrayString vectorNames*/);
 
    ///Destructor
    virtual ~TextureBasedToolBar();
+
+   ///Set the scalars
+   void SetScalars(wxArrayString scalarNames);
+   
+   ///Set the vectors
+   void SetVectors(wxArrayString vectorNames);
 
 #ifndef STAND_ALONE
    ///Set the current vjObjs ptr for data passing.

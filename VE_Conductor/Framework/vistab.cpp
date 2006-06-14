@@ -397,11 +397,13 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    if(!_tbTools)
    {
    
-      _tbTools = new TextureBasedToolBar (this,-1,
+      _tbTools = new TextureBasedToolBar (this,-1/*,
                                _availableSolutions["TEXTURE_SCALARS"],
-                               _availableSolutions["TEXTURE_VECTORS"]);
+                               _availableSolutions["TEXTURE_VECTORS"]*/);
    }
    _tbTools->SetVjObsPtr(xplorerPtr);
+   _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
+   _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
    
    _tbTools->ShowModal();
    itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
@@ -474,6 +476,11 @@ void Vistab::_setActiveDataset(unsigned int index)
 void Vistab::SetTextureData(wxArrayString textureData,
                             std::string type)
 {
+   if(type != "TEXTURE_SCALARS" ||
+      type != "TEXTURE_VECTORS")
+   {
+      return;
+   }
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( type );
    if(currentSolution != _availableSolutions.end())
@@ -545,6 +552,11 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
 void Vistab::_updateAvailableSolutions(std::string dataType,
                                        VjObs::scalar_p names)
 {
+   if(dataType != "MESH_VECTORS")
+   {
+      std::cout<<dataType<<" not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
+      return;
+   }
    std::cout<<"udpateAvailableSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( dataType );

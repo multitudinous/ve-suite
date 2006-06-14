@@ -57,15 +57,15 @@ BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////
-TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id,
+TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id/*,
                                    wxArrayString scalarNames,
-                                   wxArrayString vectorNames)
+                                   wxArrayString vectorNames*/)
 :wxDialog((wxWindow *) parent, id, "Texture-Based ToolBar",wxDefaultPosition,wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("Texture-Based ToolBar") )
 {
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   _updateAvailableSolutions(scalarNames, vectorNames);
+   //_updateAvailableSolutions(scalarNames, vectorNames);
    _buildToolBar();
    _updateSolutionList(_availableScalars);
 
@@ -88,19 +88,34 @@ TextureBasedToolBar::~TextureBasedToolBar()
 void TextureBasedToolBar::_updateAvailableSolutions(wxArrayString scalarNames,
                                               wxArrayString vectorNames)
 {
+}
+////////////////////////////////////////////////////////////////
+void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
+{
    size_t nScalars = scalarNames.Count();
-   size_t nVectors = vectorNames.Count();
-
    _availableScalars.Clear();
-   _availableVectors.Clear();
 
    for(size_t i = 0; i < nScalars; i++)
    {
-      _availableScalars.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(scalarNames[i].GetData()).c_str());
+      if(scalarNames[i] != wxString(""))
+      {
+         _availableScalars.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(scalarNames[i].GetData()).c_str());
+      }
    }
+}
+///////////////////////////////////////////////////////////////
+void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
+{
+   size_t nVectors = vectorNames.Count();
+   _availableVectors.Clear();
+   
+ 
    for(size_t i = 0; i < nVectors; i++)
    {
-      _availableVectors.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(vectorNames[i].GetData()).c_str());
+      if(vectorNames[i] != wxString(""))
+      {
+         _availableVectors.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(vectorNames[i].GetData()).c_str());
+      }
    }
 }
 ////////////////////////////////////////////////////////////////////////////
