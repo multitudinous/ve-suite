@@ -56,6 +56,7 @@ namespace VE_Model
 {
    class Network;
 }
+class Vistab;
 
 enum 
 {
@@ -233,6 +234,8 @@ private:
    int intfssize;
    wxProgressDialog* _fileProgress;
    bool isLoading;
+
+   Vistab* vistab;///< The visualization tab
 
    std::string tempXMLNetworkData;
    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location

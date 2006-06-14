@@ -134,6 +134,7 @@ Network::Network(wxWindow* parent, int id)
    cadDialog = 0;
    SetBackgroundColour(*wxWHITE);
    this->parent = parent;
+   vistab = 0;
 }
 
 Network::~Network()
@@ -144,6 +145,11 @@ Network::~Network()
    {
       cadDialog->Destroy();
       cadDialog = 0;
+   }
+   if(vistab)
+   {
+      vistab->Destroy();
+      vistab = 0;
    }
 
    /*for (iter=modules.begin(); iter!=modules.end(); iter++)
@@ -2558,14 +2564,16 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
          if(xplorerPtr->GetModel(modelID))
          {
             activeCORBAModel = xplorerPtr->GetModel(modelID);
-
-            Vistab vistab(activeCORBAModel,this,
+            if(!vistab)
+            {
+               vistab = new Vistab (activeCORBAModel,this,
                                 SYMBOL_VISTAB_IDNAME,
                                 activeXMLModel->GetModelName().c_str(),
                                 SYMBOL_VISTAB_POSITION,
                                 SYMBOL_VISTAB_SIZE,
                                 SYMBOL_VISTAB_STYLE );
-            vistab.SetCommInstance(xplorerPtr);
+            }
+            vistab->SetCommInstance(xplorerPtr);
             size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
             if(nInformationPackets)
             {
@@ -2604,15 +2612,15 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                }
                if(hasScalarTextures)
                {
-                  vistab.SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
+                  vistab->SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
                }
                if(hasVectorTextures)
                {
-                  vistab.SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
+                  vistab->SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
                }
 
             }
-            int error = vistab.ShowModal(); 
+            int error = vistab->ShowModal(); 
          }
          else
          { 

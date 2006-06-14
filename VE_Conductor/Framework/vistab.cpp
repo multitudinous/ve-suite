@@ -66,8 +66,13 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _vectorSelection = 0;    
    _nDatasetsInActiveModel = 0;
    _datasetSelection = 0;
-   //_tbTools = 0;
+   _tbTools = 0;
+   scalarContour = 0;
+   vectorContour = 0;
+   isosurface = 0;
+   streamline = 0;
    xplorerPtr = 0;
+   isosurface = 0;
 
    _availableSolutions["MESH_SCALARS"].Add(""); 
    _availableSolutions["MESH_VECTORS"].Add(""); 
@@ -100,6 +105,12 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _nDatasetsInActiveModel = 0;
    _datasetSelection = 0;
    xplorerPtr = 0;
+   isosurface =  0;
+   _tbTools = 0;
+   scalarContour = 0;
+   vectorContour = 0;
+   streamline = 0;
+   
    
    _availableSolutions["MESH_SCALARS"].Add(""); 
    _availableSolutions["MESH_VECTORS"].Add(""); 
@@ -158,6 +169,31 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
 Vistab::~Vistab()
 {
    ClearBaseInformation();
+   if(isosurface)
+   {
+      isosurface->Destroy();
+      isosurface = 0;
+   }
+   if(_tbTools)
+   {
+      _tbTools->Destroy();
+      _tbTools = 0;
+   }
+   if(scalarContour)
+   {
+      scalarContour->Destroy();
+      scalarContour = 0;
+   }
+    if(vectorContour)
+   {
+      vectorContour->Destroy();
+      vectorContour = 0;
+   }
+   if(streamline)
+   {
+      streamline->Destroy();
+      streamline = 0;
+   }
 }
 /////////////////////////////
 void Vistab::CreateControls()
@@ -291,66 +327,83 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {
-   Contours scalarContour(this,                
+   if(!scalarContour)
+   {
+      scalarContour = new Contours(this,                
                   SYMBOL_CONTOURS_IDNAME, 
                   SYMBOL_CONTOURS_TITLE,
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
-   scalarContour.SetSize(_vistabPosition);
-   scalarContour.ShowModal();
+      scalarContour->SetSize(_vistabPosition);
+   }
+   scalarContour->ShowModal();
    itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 {
-   Contours vectorContour(this,                
+   if(!vectorContour)
+   {
+      vectorContour = new Contours (this,                
                   SYMBOL_CONTOURS_IDNAME, 
                   SYMBOL_CONTOURS_TITLE,
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE,"VECTOR" );
-   vectorContour.SetSize(_vistabPosition);
-   vectorContour.ShowModal();
+      vectorContour->SetSize(_vistabPosition);
+   }
+   vectorContour->ShowModal();
    itemToolBar3->ToggleTool(VECTOR_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
 {
-   Streamlines streamline( this,                
+   if(!streamline)
+   {
+      streamline = new Streamlines ( this,                
                   SYMBOL_STREAMLINES_IDNAME, 
                   SYMBOL_STREAMLINES_TITLE,
                   SYMBOL_STREAMLINES_POSITION,
                   SYMBOL_STREAMLINES_SIZE, 
                   SYMBOL_STREAMLINES_STYLE );
-   streamline.SetSize(_vistabPosition);
-   streamline.ShowModal();
+      streamline->SetSize(_vistabPosition);
+   }
+   streamline->ShowModal();
    itemToolBar3->ToggleTool(STREAMLINE_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
-   Isosurfaces isosurface( this,                
+   if(!isosurface)
+   {
+      isosurface = new Isosurfaces ( this,                
                   SYMBOL_ISOSURFACES_IDNAME, 
                   SYMBOL_ISOSURFACES_TITLE,
                   SYMBOL_ISOSURFACES_POSITION,
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
-   isosurface.SetSize(_vistabPosition);
-   isosurface.SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
-   isosurface.SetActiveScalar(_activeScalarName);
-   isosurface.ShowModal();
+      isosurface->SetSize(_vistabPosition);
+   }
+   
+   isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
+   isosurface->SetActiveScalar(_activeScalarName);
+   isosurface->ShowModal();
    itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 {
+   if(!_tbTools)
+   {
    
-   TextureBasedToolBar tbTools(this,-1,
+      _tbTools = new TextureBasedToolBar (this,-1,
                                _availableSolutions["TEXTURE_SCALARS"],
                                _availableSolutions["TEXTURE_VECTORS"]);
-   tbTools.SetVjObsPtr(xplorerPtr);
-   tbTools.ShowModal();
+   }
+   _tbTools->SetVjObsPtr(xplorerPtr);
+   
+   _tbTools->ShowModal();
    itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
 }
 ///////////////////////////////////////////////////////

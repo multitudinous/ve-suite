@@ -46,6 +46,9 @@
 #include "VE_Conductor/Framework/scalartb_bw.xpm"
 
 #include "VE_Conductor/Framework/ROIDialog.h"
+
+#include "VE_Xplorer/fileIO.h"
+
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
 
@@ -93,11 +96,11 @@ void TextureBasedToolBar::_updateAvailableSolutions(wxArrayString scalarNames,
 
    for(size_t i = 0; i < nScalars; i++)
    {
-      _availableScalars.Add(scalarNames[i]);
+      _availableScalars.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(scalarNames[i].GetData()).c_str());
    }
    for(size_t i = 0; i < nVectors; i++)
    {
-      _availableVectors.Add(vectorNames[i]);
+      _availableVectors.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(vectorNames[i].GetData()).c_str());
    }
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -143,10 +146,13 @@ void TextureBasedToolBar::_buildToolBar()
    _tbToolButtons->AddRadioTool(SCALAR_ID,_T("Scalars"),
                              scalarOnBitmap,wxNullBitmap,
                              _T("Scalar Data Tools") );
+   
+   _tbToolButtons->ToggleTool(SCALAR_ID,false);
 
    _tbToolButtons->AddRadioTool(VECTOR_ID,_T("Vectors"),
                              vectorOnBitmap,wxNullBitmap,
                              _T("Vector Data Tools") );
+   _tbToolButtons->ToggleTool(VECTOR_ID,false);
   
    _tbToolButtons->AddSeparator();
    _tbToolButtons->AddTool(ROI_ID,_T("ROI"),

@@ -290,6 +290,12 @@ protected:
    ///\param datasetInfo The dataset to extract the new information from.
    void _updateDatasetInformation(VjObs::Dataset datasetInfo );
    
+   Contours* scalarContour;///<Scalar dialog
+   Contours* vectorContour;///Vector dialog
+   Streamlines* streamline;///<Streamline dialog
+   Isosurfaces* isosurface;///<Iso-Surface dialog
+   TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
+
    unsigned int _nDatasetsInActiveModel;///<The number of datasets in the active model.
    unsigned int _nScalarsInActiveDataset;///<Number of scalars in the active dataset.
    unsigned int _nVectorsInActiveDataset;///<Number of vectors in the active dataset.
