@@ -440,7 +440,7 @@ void Contours::_updateContourInformation()
 
    _contourInformation.push_back(planePosition);
 
-   if(!_planeOption.empty())
+   if( !_planeOption.empty() )
    {
       VE_XML::DataValuePair* planeOption = new VE_XML::DataValuePair();
       planeOption->SetDataType("STRING");

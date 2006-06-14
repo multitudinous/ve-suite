@@ -77,6 +77,12 @@ bool AdvancedVectors::Create(wxWindow* parent, wxWindowID id,
    GetSizer()->Fit(this);
    GetSizer()->SetSizeHints(this);
    Centre();
+   SetAutoLayout( true );
+   Refresh();
+   wxSize temp = GetSize();
+   temp.SetHeight( temp.GetHeight() +1);
+   temp.SetWidth( temp.GetWidth()+1 );
+   SetSize( temp );
    return true;
 }
 //////////////////////////////////////
@@ -96,11 +102,14 @@ void AdvancedVectors::CreateControls()
                              wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Vector Threshold"));
    vectorSizer->Add(vectorRange,1,wxALIGN_CENTER|wxEXPAND);
    itemStaticBoxSizer3->Add(vectorSizer, 5, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
+   //set the default values for the dual slider
+   vectorRange->SetMinimumSliderValue( 0 );
+   vectorRange->SetMaximumSliderValue( 100 );
 
    wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Vector Scale"), wxDefaultPosition, wxDefaultSize, 0 );
    itemStaticBoxSizer3->Add(itemStaticText9, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-   _vectorScaleSlider = new wxSlider( itemDialog1, VECTOR_SCALE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+   _vectorScaleSlider = new wxSlider( itemDialog1, VECTOR_SCALE_SLIDER, 1, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
    itemStaticBoxSizer3->Add(_vectorScaleSlider, 0, wxGROW|wxALL, 5);
 
    wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
@@ -115,7 +124,7 @@ void AdvancedVectors::CreateControls()
    wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Vector Ratio"), wxDefaultPosition, wxDefaultSize, 0 );
    itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-   _vectorRatioSlider = new wxSlider( itemDialog1, VECTOR_RATIO_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+   _vectorRatioSlider = new wxSlider( itemDialog1, VECTOR_RATIO_SLIDER, 1, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
    itemStaticBoxSizer3->Add(_vectorRatioSlider, 0, wxGROW|wxALL, 5);
 
    wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
@@ -137,8 +146,8 @@ void AdvancedVectors::SetVectorThreshold(std::vector<double> range)
 {
    if(vectorRange)
    {
-      vectorRange->SetMinimumSliderValue(static_cast<int>(range.at(0)*100));
-      vectorRange->SetMaximumSliderValue(static_cast<int>(range.at(1)*100));
+      vectorRange->SetMinimumSliderValue(static_cast<int>(range.at(0)));
+      vectorRange->SetMaximumSliderValue(static_cast<int>(range.at(1)));
    }
 }
 ///////////////////////////////////////////////////////////////////
@@ -147,8 +156,8 @@ void AdvancedVectors::GetVectorThreshold(std::vector<double>& range)
    if(vectorRange)
    {
       range.clear();
-      range.push_back(static_cast<double>(vectorRange->GetMinSliderValue()/100.0));
-      range.push_back(static_cast<double>(vectorRange->GetMaxSliderValue()/100.0));
+      range.push_back(static_cast<double>(vectorRange->GetMinSliderValue()));
+      range.push_back(static_cast<double>(vectorRange->GetMaxSliderValue()));
    }
 }
 //////////////////////////////////////////////////
@@ -156,7 +165,7 @@ void AdvancedVectors::SetVectorScale(double value)
 {
    if(_vectorScaleSlider)
    {
-      _vectorScaleSlider->SetValue(static_cast<int>(value*100));
+      _vectorScaleSlider->SetValue(static_cast<int>(value));
    }
 }
 //////////////////////////////////////////////////
@@ -164,7 +173,7 @@ void AdvancedVectors::SetVectorRatio(double value)
 {
    if(_vectorRatioSlider)
    {
-      _vectorRatioSlider->SetValue(static_cast<int>(value*100));
+      _vectorRatioSlider->SetValue(static_cast<int>(value));
    }
 }
 ///////////////////////////////////////////////////
@@ -178,12 +187,12 @@ void AdvancedVectors::SetScaleByMagFlag(bool value)
 ////////////////////////////////////////
 double AdvancedVectors::GetVectorScale()
 {
-   return static_cast<double>(_vectorScaleSlider->GetValue()/100.0);
+   return static_cast<double>(_vectorScaleSlider->GetValue());
 }
 ////////////////////////////////////////
 double AdvancedVectors::GetVectorRatio()
 {
-   return static_cast<double>(_vectorRatioSlider->GetValue()/100.0);
+   return static_cast<double>(_vectorRatioSlider->GetValue());
 }
 /////////////////////////////////////////
 bool AdvancedVectors::GetScaleByMagFlag()
