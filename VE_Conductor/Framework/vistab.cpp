@@ -206,32 +206,36 @@ void Vistab::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    itemToolBar3 = new wxToolBar( itemDialog1, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL );
+    itemToolBar3 = new wxToolBar( itemDialog1, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL| wxTB_TEXT );
     itemToolBar3->SetToolBitmapSize(wxSize(45, 30));
 
     wxBitmap itemtool4Bitmap(contour_xpm);
     wxBitmap itemtool4BitmapDisabled;
-    itemToolBar3->AddTool(CONTOUR_BUTTON, _T(""), itemtool4Bitmap, itemtool4BitmapDisabled, wxITEM_RADIO, _T("Scalar Contours"), wxEmptyString);
+    itemToolBar3->AddTool(CONTOUR_BUTTON, _T("Scalars"),
+                          itemtool4Bitmap, itemtool4BitmapDisabled,
+                          wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Scalar Contours"), wxEmptyString);
 
     wxBitmap itemtool5Bitmap(vector_xpm);
     wxBitmap itemtool5BitmapDisabled;
-    itemToolBar3->AddTool(VECTOR_BUTTON, _T(""), itemtool5Bitmap, itemtool5BitmapDisabled, wxITEM_RADIO, _T("Vectors"), wxEmptyString);
+    itemToolBar3->AddTool(VECTOR_BUTTON, _T("Vectors"), 
+                          itemtool5Bitmap, itemtool5BitmapDisabled,
+                          wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Vectors"), wxEmptyString);
 
     wxBitmap itemtool6Bitmap(vector_xpm);
     wxBitmap itemtool6BitmapDisabled;
-    itemToolBar3->AddTool(STREAMLINE_BUTTON, _T(""), itemtool6Bitmap, itemtool6BitmapDisabled, wxITEM_RADIO, _T("Streamlines"), wxEmptyString);
+    itemToolBar3->AddTool(STREAMLINE_BUTTON, _T("Streamlines"), itemtool6Bitmap, itemtool6BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Streamlines"), wxEmptyString);
 
     wxBitmap itemtool7Bitmap(vector_xpm);
     wxBitmap itemtool7BitmapDisabled;
-    itemToolBar3->AddTool(ISOSURFACE_BUTTON, _T(""), itemtool7Bitmap, itemtool7BitmapDisabled, wxITEM_RADIO, _T("Isosurfaces"), wxEmptyString);
+    itemToolBar3->AddTool(ISOSURFACE_BUTTON, _T("Isosurfaces"), itemtool7Bitmap, itemtool7BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Isosurfaces"), wxEmptyString);
 
     wxBitmap itemtool8Bitmap(vector_xpm);
     wxBitmap itemtool8BitmapDisabled;
-    itemToolBar3->AddTool(TEXTURE_BASED_BUTTON, _T(""), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_RADIO, _T("Texture Based"), wxEmptyString);
+    itemToolBar3->AddTool(TEXTURE_BASED_BUTTON, _T("Texture-Based"), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Texture Based"), wxEmptyString);
 
     itemToolBar3->Realize();
     itemBoxSizer2->Add(itemToolBar3, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-    itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
+    //itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 
     wxBoxSizer* itemBoxSizer10 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer10, 0, wxGROW|wxALL, 5);
@@ -330,7 +334,7 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
    if(!scalarContour)
    {
       scalarContour = new Contours(this,                
-                  SYMBOL_CONTOURS_IDNAME, 
+                  /*SYMBOL_CONTOURS_IDNAME*/-1, 
                   SYMBOL_CONTOURS_TITLE,
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
@@ -338,7 +342,7 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
       scalarContour->SetSize(_vistabPosition);
    }
    scalarContour->ShowModal();
-   itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
+   //itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
@@ -346,7 +350,7 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
    if(!vectorContour)
    {
       vectorContour = new Contours (this,                
-                  SYMBOL_CONTOURS_IDNAME, 
+                  /*SYMBOL_CONTOURS_IDNAME*/-1, 
                   SYMBOL_CONTOURS_TITLE,
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
@@ -354,7 +358,7 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
       vectorContour->SetSize(_vistabPosition);
    }
    vectorContour->ShowModal();
-   itemToolBar3->ToggleTool(VECTOR_BUTTON, false);
+   //itemToolBar3->ToggleTool(VECTOR_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
@@ -362,7 +366,7 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
    if(!streamline)
    {
       streamline = new Streamlines ( this,                
-                  SYMBOL_STREAMLINES_IDNAME, 
+                  /*SYMBOL_CONTOURS_IDNAME*/-1, 
                   SYMBOL_STREAMLINES_TITLE,
                   SYMBOL_STREAMLINES_POSITION,
                   SYMBOL_STREAMLINES_SIZE, 
@@ -370,7 +374,7 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
       streamline->SetSize(_vistabPosition);
    }
    streamline->ShowModal();
-   itemToolBar3->ToggleTool(STREAMLINE_BUTTON, false);
+   //itemToolBar3->ToggleTool(STREAMLINE_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
@@ -378,7 +382,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
    if(!isosurface)
    {
       isosurface = new Isosurfaces ( this,                
-                  SYMBOL_ISOSURFACES_IDNAME, 
+                  /*SYMBOL_CONTOURS_IDNAME*/-1, 
                   SYMBOL_ISOSURFACES_TITLE,
                   SYMBOL_ISOSURFACES_POSITION,
                   SYMBOL_ISOSURFACES_SIZE, 
@@ -389,7 +393,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
    isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
    isosurface->SetActiveScalar(_activeScalarName);
    isosurface->ShowModal();
-   itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
+   //itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
@@ -402,11 +406,11 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
                                _availableSolutions["TEXTURE_VECTORS"]*/);
    }
    _tbTools->SetVjObsPtr(xplorerPtr);
-   _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
    _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
+   _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
    
    _tbTools->ShowModal();
-   itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
+   //itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
 }
 ///////////////////////////////////////////////////////
 void Vistab::SetActiveModel(VjObs::Model_var activeModel)
@@ -476,9 +480,10 @@ void Vistab::_setActiveDataset(unsigned int index)
 void Vistab::SetTextureData(wxArrayString textureData,
                             std::string type)
 {
-   if(type != "TEXTURE_SCALARS" ||
+   if(type != "TEXTURE_SCALARS"&& 
       type != "TEXTURE_VECTORS")
    {
+      std::cout<<"Invalid type: "<<type<<std::endl;
       return;
    }
    std::map<std::string, wxArrayString >::iterator currentSolution;

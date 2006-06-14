@@ -564,7 +564,7 @@ void AppFrame::CreateMenu()
    //help_menu->Enable(v21ID_HELP, false);
    help_menu->Enable(wxID_ABOUT, false);
 
-   if (f_visualization)
+   //if (f_visualization)
    {
 	xplorerMenu = new wxMenu();
 	xplorerJugglerMenu = new wxMenu();
@@ -579,7 +579,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
 //	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
 	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
-	xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
+	//xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
 //	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
 //   xplorerMenu->Append( XPLORER_VISTAB, _("Visualization Tabs"));
 
@@ -588,7 +588,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Enable( XPLORER_SOUNDS, true);
 //	xplorerMenu->Enable( XPLORER_STREAMLINE, true);
 	xplorerMenu->Enable( JUGGLER_SETTINGS, true);
-	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
+//	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
    }
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
 //  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
@@ -606,7 +606,7 @@ void AppFrame::CreateMenu()
    menubar->Append(con_menu, _("&Connection"));
    menubar->Append(run_menu, _("&Execution"));
    menubar->Append(help_menu, _("&Help"));
-   if (f_visualization)
+   //if (f_visualization)
    menubar->Append( xplorerMenu, _("&VE-Xplorer") );
 
    SetMenuBar(menubar);

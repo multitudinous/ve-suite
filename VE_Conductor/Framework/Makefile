@@ -89,6 +89,7 @@ EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ShaderLib 
 EXTRA_LIBS+= -lVE_Conductor_UtilitiesLib
 EXTRA_LIBS+= -lVE_OpenModuleLib
+EXTRA_LIBS+= -lVE_UtilLib
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers

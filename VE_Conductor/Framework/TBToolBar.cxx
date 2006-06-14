@@ -53,7 +53,7 @@
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
 
 BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
-   EVT_TOOL_RANGE(SCALAR_ID,ACTIVE_SOLUTION,TextureBasedToolBar::_handleToolButtons)
+   EVT_TOOL_RANGE(SCALAR_ID,TRANSFER_FUNCS_ID,TextureBasedToolBar::_handleToolButtons)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////
@@ -65,9 +65,24 @@ TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id/*,
 {
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   //_updateAvailableSolutions(scalarNames, vectorNames);
+   _availableScalars.Add("No data available");
    _buildToolBar();
-   _updateSolutionList(_availableScalars);
+   if(!_availableScalars.Count())
+   {
+      if(!_availableVectors.Count())
+      {
+         _availableScalars.Add("No data available");
+         _updateSolutionList(_availableScalars);
+      }
+      else
+      {
+         _updateSolutionList(_availableVectors);
+      }
+   }
+   else 
+   {
+      _updateSolutionList(_availableScalars);
+   }
 
    mainSizer->Add(_tbToolButtons,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
@@ -99,9 +114,17 @@ void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
    {
       if(scalarNames[i] != wxString(""))
       {
+        std::cout<<"Adding scalar..."<<std::endl;
          _availableScalars.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(scalarNames[i].GetData()).c_str());
+        std::cout<<_availableScalars[i]<<std::endl;
+      }
+      else
+      {
+        std::cout<<"Scalar..."<<std::endl;
+        std::cout<<scalarNames[i]<<std::endl;
       }
    }
+   _updateSolutionList(_availableScalars);
 }
 ///////////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
@@ -114,9 +137,17 @@ void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
    {
       if(vectorNames[i] != wxString(""))
       {
+        std::cout<<"Adding Vector..."<<std::endl;
          _availableVectors.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(vectorNames[i].GetData()).c_str());
+        std::cout<<vectorNames[i]<<std::endl;
+      }
+      else
+      {
+        std::cout<<"Vector..."<<std::endl;
+        std::cout<<vectorNames[i]<<std::endl;
       }
    }
+   _updateSolutionList(_availableVectors);
 }
 ////////////////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_updateSolutionList(wxArrayString activeSolutions)
@@ -138,7 +169,8 @@ void TextureBasedToolBar::_buildToolBar()
                                 wxTB_HORIZONTAL | wxNO_BORDER |wxTB_TEXT);
    _tbToolButtons->SetToolBitmapSize(wxSize(50,50));
 
-   _solutionSelection = new wxComboBox(_tbToolButtons,ACTIVE_SOLUTION);
+   _solutionSelection = new wxComboBox(_tbToolButtons,ACTIVE_SOLUTION,wxEmptyString, wxDefaultPosition, wxSize(150,wxDefaultCoord) );
+   _updateSolutionList(_availableScalars);
    _tbToolButtons->AddControl(_solutionSelection);
 
    wxImage scalarOnImage(scalartb_xpm);
@@ -158,16 +190,18 @@ void TextureBasedToolBar::_buildToolBar()
    wxBitmap tfuncOnBitmap(tfuncOnImage);
   
    _tbToolButtons->AddSeparator();
-   _tbToolButtons->AddRadioTool(SCALAR_ID,_T("Scalars"),
+   _tbToolButtons->AddTool(SCALAR_ID,_T("Scalars"),
                              scalarOnBitmap,wxNullBitmap,
+                             wxITEM_NORMAL,
                              _T("Scalar Data Tools") );
    
-   _tbToolButtons->ToggleTool(SCALAR_ID,false);
+   //_tbToolButtons->ToggleTool(SCALAR_ID,false);
 
-   _tbToolButtons->AddRadioTool(VECTOR_ID,_T("Vectors"),
+   _tbToolButtons->AddTool(VECTOR_ID,_T("Vectors"),
                              vectorOnBitmap,wxNullBitmap,
+                             wxITEM_NORMAL,
                              _T("Vector Data Tools") );
-   _tbToolButtons->ToggleTool(VECTOR_ID,false);
+   //_tbToolButtons->ToggleTool(VECTOR_ID,false);
   
    _tbToolButtons->AddSeparator();
    _tbToolButtons->AddTool(ROI_ID,_T("ROI"),
@@ -193,20 +227,21 @@ void TextureBasedToolBar::ClearInstructions()
 ///////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
 {
+   std::cout<<"TBTool ID: "<<event.GetId()<<std::endl;
    switch(event.GetId())
    {
       case SCALAR_ID:
          wxMessageBox( "Scalar tools.", 
                         "Toolbar test", wxOK | wxICON_INFORMATION );
          _updateSolutionList(_availableScalars);
-         event.Skip();
+         //event.Skip();
          
          break;
       case VECTOR_ID:
          wxMessageBox( "Vector tools.", 
                       "Toolbar test", wxOK | wxICON_INFORMATION );
          _updateSolutionList(_availableVectors);
-         event.Skip();
+         //event.Skip();
          break;
       case TRANSFER_FUNCS_ID:
          wxMessageBox( "Transfer functions tools.", 
@@ -232,7 +267,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          break;
 
    };
-   _tbToolButtons->ToggleTool(event.GetId(),false);
+   //_tbToolButtons->ToggleTool(event.GetId(),false);
    //event.Skip();
 }
 //////////////////////////////////////////////////

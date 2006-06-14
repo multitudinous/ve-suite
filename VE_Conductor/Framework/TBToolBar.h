@@ -55,11 +55,11 @@ class TextureBasedToolBar : public wxDialog
 public:
    enum TBTOOLBAR_IDS
    {
-      SCALAR_ID=1000,///<Scalar ID
+      ACTIVE_SOLUTION=99999 ,///<Active scalar/vector ID
+      SCALAR_ID,///<Scalar ID
       VECTOR_ID,///<Vector ID
       ROI_ID,///<Region of interest ID
       TRANSFER_FUNCS_ID,///<Transfer function ID
-      ACTIVE_SOLUTION,///<Active scalar/vector ID
       TB_TOOLBAR///<Toolbar ID
    };
    ///Constructor

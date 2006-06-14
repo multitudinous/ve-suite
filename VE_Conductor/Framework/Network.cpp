@@ -2612,10 +2612,12 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                }
                if(hasScalarTextures)
                {
+                  std::cout<<"Found scalar texture directory"<<std::endl;
                   vistab->SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
                }
                if(hasVectorTextures)
                {
+                  std::cout<<"Found vector texture directory"<<std::endl;
                   vistab->SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
                }
 
