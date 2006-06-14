@@ -611,6 +611,52 @@ std::string fileIO::GetFile( std::string fileKeyword, std::string fileLocation )
    
    return file;
 }
+//////////////////////////////////////////////////////////////////////////////
+std::string fileIO::ExtractRelativeDirectoryFromFullPath(std::string fullPath)
+{
+#ifdef WIN32
+   size_t backslash = fullPath.rfind("\\");
+   size_t frontslash = fullPath.rfind("/");
+   size_t slash = 0;
+   if(backslash > fullPath.size())
+   {
+      backslash = 0;
+   }
+   if(frontslash > fullPath.size())
+   {
+      frontslash = 0;
+   }
+   slash = (backslash > frontslash)?backslash:frontslash;
+#else
+   size_t slash = fullPath.rfind("/");
+#endif
+   return std::string(fullPath,slash+1,fullPath.size());
+}
+/////////////////////////////////////////////////////////////////////
+std::string fileIO::ExtractBaseFileNameFromFullPath(std::string fileName)
+{   
+   size_t period = fileName.rfind(".");
+   ///remove extension
+   std::string outfileMinusExtension(fileName,0,period);
+   ///remove leading slashes
+#ifdef WIN32
+   size_t backslash = outfileMinusExtension.rfind("\\");
+   size_t frontslash = outfileMinusExtension.rfind("/");
+   size_t slash = 0;
+   if(backslash > outfileMinusExtension.size())
+   {
+      backslash = 0;
+   }
+   if(frontslash > outfileMinusExtension.size())
+   {
+      frontslash = 0;
+   }
+   slash = (backslash > frontslash)?backslash:frontslash;
+#else
+   size_t slash = outfileMinusExtension.rfind("/");
+#endif
+   return std::string(outfileMinusExtension,slash+1,period);
+}
 ////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::string extension)
 {

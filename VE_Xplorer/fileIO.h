@@ -74,6 +74,8 @@ public:
    static int ExtractIntegerFromString( std::string filename );
    static int ExtractIntegerBeforeExtension( std::string filename );
    static std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::string extension);
+   static std::string ExtractBaseFileNameFromFullPath(std::string fileName);
+   static std::string ExtractRelativeDirectoryFromFullPath(std::string fullPath);
 };
 }
 #endif
