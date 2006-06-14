@@ -2715,7 +2715,7 @@ bool Network::SetActiveModel( void )
    if (m_selMod<0) 
       return false;
 
-   std::cout << m_selMod << std::endl;
+   //std::cout << m_selMod << std::endl;
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
    dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
@@ -2724,11 +2724,14 @@ bool Network::SetActiveModel( void )
    veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
    veCommand->AddDataValuePair( dataValuePair );
 
-   dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
-   
-   SetXplorerInterface( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer() );
+   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+
+   if ( connected )
+   {
+      SetXplorerInterface( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer() );
+   }
 
    //Clean up memory
    delete veCommand;
-   return true;
+   return connected;
 }

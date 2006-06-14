@@ -1,7 +1,8 @@
 # Create the OS-dependent directory name
 CFDHOSTTYPE?=	$(DZR_HOSTTYPE)
 VE_SUITE_HOME?= ../../
-
+BUNDLE=$(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WinClient.app
+APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WinClient.app/Contents/MacOS/WinClient
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WinClient
 
 VE_UI_HOME = ${VE_SUITE_HOME}/VE_Conductor/VE_UI
@@ -111,10 +112,16 @@ include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
+
 
 EXTRA_CXXFLAGS+= -g
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
+ICONFILE=$(VE_SUITE_HOME)/VE_Conductor/wxmac.icns
+INFO_FILE=$(VE_SUITE_HOME)/VE_Conductor/Info.plist
+BUNDLESIGNATURE=????
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
@@ -124,11 +131,21 @@ cxx: $(OBJS)
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 ${APP_NAME}: $(OBJS)
 	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
-	$(LINK) $(LINK_OUT)$@ $(OBJS)
 ifeq ($(CFDHOSTTYPE), Darwin)
+#	mkdir -p $(BUNDLE)
+#	mkdir -p $(BUNDLE)/Contents 
+#	mkdir -p $(BUNDLE)/Contents/MacOS 
+#	mkdir -p $(BUNDLE)/Contents/Resources 
+	$(LINK) $(LINK_OUT)$@ $(OBJS)
 	$(shell wx-config --rezflags ) $(APP_NAME)
+#	/Developer/Tools/SetFile -a C $(APP_NAME)
+#	echo -n "APPL$(BUNDLESIGNATURE)" > $(BUNDLE)/Contents/PkgInfo
+#	cp -f $(ICONFILE) $(BUNDLE)/Contents/Resources/wxmac.icns
+#	cp -f $(INFO_FILE) $(BUNDLE)/Contents/Info.plist
+else
+	$(LINK) $(LINK_OUT)$@ $(OBJS)
 endif
-
+     
 #install:
 #	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
 #	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
