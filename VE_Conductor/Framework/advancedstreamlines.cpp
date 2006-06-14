@@ -241,7 +241,7 @@ void AdvancedStreamlines::SetPropagationSize(double value)
 { 
    if(_propagationSlider)
    {
-      _propagationSlider->SetValue(static_cast<int>(value*100));
+      _propagationSlider->SetValue(static_cast<int>(value));
    }
 }
 //////////////////////////////////////////////////////////////
@@ -249,7 +249,7 @@ void AdvancedStreamlines::SetIntegrationStepSize(double value)
 {
    if(_integrationSlider)
    {
-      _integrationSlider->SetValue(static_cast<int>(value*100));
+      _integrationSlider->SetValue(static_cast<int>(value));
    }
 }
 ///////////////////////////////////////////////
@@ -257,7 +257,7 @@ void AdvancedStreamlines::SetStep(double value)
 {
    if(_stepSlider)
    {
-      _stepSlider->SetValue(static_cast<int>(value*100));
+      _stepSlider->SetValue(static_cast<int>(value));
    }
 }
 //////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ void AdvancedStreamlines::SetSphereArrowParticleSize(double value)
 {
    if(_sphereArrowParticleSlider)
    {
-      _sphereArrowParticleSlider->SetValue(static_cast<int>(value*100));
+      _sphereArrowParticleSlider->SetValue(static_cast<int>(value));
    }
 }
 ////////////////////////////////////////////////////////
@@ -273,7 +273,7 @@ void AdvancedStreamlines::SetLineDiameter(double value)
 {
    if(_diameterSlider)
    {
-      _diameterSlider->SetValue(static_cast<int>(value*100));
+      _diameterSlider->SetValue(static_cast<int>(value));
    }
 }
 ////////////////////////////////////////////////////
@@ -340,27 +340,27 @@ void AdvancedStreamlines::_onArrowCheck( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_oniStepSlider( wxScrollEvent& WXUNUSED(event) )
 {
-   _integrationStepSize = static_cast<double>(_integrationSlider->GetValue()/100.0);
+   _integrationStepSize = static_cast<double>(_integrationSlider->GetValue());
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onPropSlider( wxScrollEvent& WXUNUSED(event) )
 {
-   _propagationTime = static_cast<double>(_propagationSlider->GetValue()/100.0);
+   _propagationTime = static_cast<double>(_propagationSlider->GetValue());
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onStepSlider( wxScrollEvent& WXUNUSED(event) )
 {
-   _stepSize = static_cast<double>(_stepSlider->GetValue()/100.0);
+   _stepSize = static_cast<double>(_stepSlider->GetValue());
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onDiameterSlider( wxScrollEvent& WXUNUSED(event) )
 {
-   _lineDiameter = static_cast<double>(this->_diameterSlider->GetValue()/100.0);
+   _lineDiameter = static_cast<double>(this->_diameterSlider->GetValue());
 }
 ///////////////////////////////////////////////////////
 void AdvancedStreamlines::_onScaleSlider( wxScrollEvent& WXUNUSED(event) )
 {
-   _sphereArrowParticleSize = static_cast<double>(_sphereArrowParticleSlider->GetValue()/100.0);
+   _sphereArrowParticleSize = static_cast<double>(_sphereArrowParticleSlider->GetValue());
 }
 ///////////////////////////////////////////////////////
 /*void AdvancedStreamlines::_onParticleTrack( wxCommandEvent& WXUNUSED(event) )

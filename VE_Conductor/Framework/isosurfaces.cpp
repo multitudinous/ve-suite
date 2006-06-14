@@ -172,7 +172,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
    newCommand->SetCommandName("UPDATE_ISOSURFACE_SETTINGS");
    
    VE_XML::DataValuePair* isosurfaceValue = new VE_XML::DataValuePair();
-   isosurfaceValue->SetData("Iso-Surface Value",static_cast<double>((_isoSurfaceSlider->GetValue()/100.0)));
+   isosurfaceValue->SetData("Iso-Surface Value",static_cast<double>((_isoSurfaceSlider->GetValue())));
    newCommand->AddDataValuePair(isosurfaceValue);
 
    VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
