@@ -86,7 +86,7 @@ bool Streamlines::Create( wxWindow* parent, wxWindowID id,
    _lastIntegrationStepSize = 1000.0;
    _lastPropagationSize = 1.0;
    _lastLineDiameter = 0.0;
-   _lastSphereArrowParticleSize = .5;
+   _lastSphereArrowParticleSize = 1.0;
    _lastStep = 1.0;
    _lastSeedPtFlag = false;
    _lastStreamArrow = false;

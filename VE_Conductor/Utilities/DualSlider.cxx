@@ -43,7 +43,7 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////
 DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
                         unsigned int buffer,
-                        int min, int max,
+                        int minRange, int maxRange,
                         int minSliderValue, int maxSliderValue,
                         const wxPoint& pos, 
                         const wxSize& size,
@@ -56,8 +56,8 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
    wxStaticBoxSizer* dualSliderSizer = new wxStaticBoxSizer(dualSliderGroup, wxVERTICAL);
 
    _buffer = buffer;
-   _range[0] = min;
-   _range[1] = max;
+   _range[0] = minRange;
+   _range[1] = maxRange;
 
    if(abs(_range[1] - _range[0]) < _buffer)
    {
@@ -78,6 +78,7 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
    dualSliderPanelSizer->Add(dualSliderSizer,1,wxEXPAND|wxALIGN_CENTER);
    SetAutoLayout(true);
    SetSizer(dualSliderPanelSizer);
+   dualSliderPanelSizer->Fit(this);
 }
 /////////////////////////
 DualSlider::~DualSlider()

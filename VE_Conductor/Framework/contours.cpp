@@ -87,11 +87,11 @@ bool Contours::Create(wxWindow* parent, wxWindowID id, const wxString& caption,
    _lastLOD = 1.0f;
    _lastWarpedScale = .5f;
    _lastOpacity = 1.0f;
-   _lastVectorScale = 0.0f;
-   _lastVectorRatio = 0.0f;
+   _lastVectorScale = 1.0f;
+   _lastVectorRatio = 1.0f;
    _lastScaleByMagnitude = false;
-   _lastVectorThreshold.push_back(0.0f);
    _lastVectorThreshold.push_back(1.0f);
+   _lastVectorThreshold.push_back(100.0f);
    _warpOption = false;
 
    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
@@ -147,6 +147,7 @@ void Contours::CreateControls()
 
     _cyclePrecomputedCBox = new wxCheckBox( itemDialog1, MULTIPLE_PRECONTOUR_CHK, _T("Cycle Precomputed Surfaces"), wxDefaultPosition, wxDefaultSize, 0 );
     _cyclePrecomputedCBox->SetValue(false);
+    _cyclePrecomputedCBox->Enable(false);
     itemStaticBoxSizer7->Add(_cyclePrecomputedCBox, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxStaticBox* itemStaticBoxSizer10Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Single Plane"));
@@ -154,7 +155,7 @@ void Contours::CreateControls()
     itemStaticBoxSizer3->Add(itemStaticBoxSizer10, 0, wxGROW|wxALL, 5);
 
     _singlePlaneRButton = new wxRadioButton( itemDialog1, SINGLE_PRECONTOUR_RBUTTON, _T("Specify a Single Plane"), wxDefaultPosition, wxDefaultSize, 0 );
-    _singlePlaneRButton->SetValue(false);
+    _singlePlaneRButton->SetValue(true);
     itemStaticBoxSizer10->Add(_singlePlaneRButton, 0, wxALIGN_LEFT|wxALL, 5);
 
     _nearestPrecomputedCBox = new wxCheckBox( itemDialog1, SINGLE_PRECONTOUR_CHK, _T("Use Nearest Precomputed Plane"), wxDefaultPosition, wxDefaultSize, 0 );
