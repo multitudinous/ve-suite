@@ -745,8 +745,11 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    // If not sucessful
    //if ( !is_orb_init )
    //   return;
-   serviceList->IsConnectedToCE();
-
+   if ( !serviceList->IsConnectedToCE() )
+   {
+      return;
+   }
+   
    char* nw_str = 0;
    try
    {
@@ -768,7 +771,10 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    if ( !is_orb_init )
       return;
    */
-   serviceList->IsConnectedToCE();
+   if ( !serviceList->IsConnectedToCE() )
+   {
+      return;
+   }
    std::string nw_str;
 
    try
@@ -802,7 +808,10 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
    // If not sucessful
    //if ( !is_orb_init )
    //   return;
-   serviceList->IsConnectedToCE();
+   if ( !serviceList->IsConnectedToCE() )
+   {
+      return;
+   }
    
    std::string nw_str = network->Save( std::string( "returnString" ) );
    // write the domdoc to the string above

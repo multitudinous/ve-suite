@@ -141,7 +141,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::IsConnectedToNamingService( void )
 {
-   if ( CORBA::is_nil( orb.in() ) )
+   if ( CORBA::is_nil( naming_context.in() ) )
    {
       return ConnectToNamingService();
    }
@@ -151,12 +151,26 @@ bool CORBAServiceList::IsConnectedToNamingService( void )
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::ConnectToNamingService( void )
 {
+   //Copy the command line args because tao deletes them after processing them
+   int argc = ::wxGetApp().argc;
+   char* argv[ argc ];
+   for ( int i = 0; i < argc; ++ i )
+   {
+      int stringLength = strlen( ::wxGetApp().argv[ i ] );
+      argv[ i ] = new char[ stringLength + 1 ];
+      strcpy(argv[ i ], ::wxGetApp().argv[ i ] );
+   }
+
    try 
    {
       // First initialize the ORB, 
-      orb = CORBA::ORB_init (::wxGetApp().argc, ::wxGetApp().argv,
-                       ""); // the ORB name, it can be anything! 
-    
+      orb = CORBA::ORB_init (argc, argv,""); // the ORB name, it can be anything! 
+      //delete the left over char*
+      for ( int i = 0; i < argc; ++ i )
+      {
+         delete [] argv[ i ];
+      }
+      
       //Here is the part to contact the naming service and get the reference for the executive
       CORBA::Object_var naming_context_object =
          orb->resolve_initial_references ("NameService");
@@ -243,13 +257,20 @@ bool CORBAServiceList::DisconnectFromXplorer( void )
 /////////////////////////////////////////////////////////////
 void CORBAServiceList::CheckORBWorkLoad( void )
 {
-   if ( !CORBA::is_nil( orb.in() ) )
+   try
    {
-      ::wxMilliSleep( 250 );
-      if ( orb->work_pending() )
+      if ( !CORBA::is_nil( orb.in() ) )
       {
-         orb->perform_work();
-      }      
+         ::wxMilliSleep( 250 );
+         if ( orb->work_pending() )
+         {
+            orb->perform_work();
+         }      
+      }
+   }
+   catch ( ... )
+   {
+      
    }
 }
 /////////////////////////////////////////////////////////////
