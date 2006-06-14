@@ -67,7 +67,7 @@ cfdMomentums::~cfdMomentums()
 
 void cfdMomentums::Update( void )
 {
-   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz ) == NULL )
+   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )
    {
       vprDEBUG(vesDBG, 0) 
          << "cfdMomentums: planesData == NULL so returning"

@@ -107,16 +107,16 @@ cfdIsosurface::~cfdIsosurface()
 
 void cfdIsosurface::Update()
 {
-   vprDEBUG(vesDBG, 1) <<"\ncfdIsosurface::Update: FileName: "
+   vprDEBUG(vesDBG, 1) <<"|\tcfdIsosurface::Update: FileName: "
       << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vesDBG, 1) << "this->requestedValue: "<< this->requestedValue
+   vprDEBUG(vesDBG, 1) << "|\trequestedValue: "<< this->requestedValue
                            << std::endl << vprDEBUG_FLUSH;
 
    // convert the requested value percentage (0-100) to a scalar value
    this->value = convertPercentage( this->requestedValue );
 
-   vprDEBUG(vesDBG, 1) << "this->value: "<< this->value
+   vprDEBUG(vesDBG, 1) << "|\tthis->value: "<< this->value
                            << std::endl << vprDEBUG_FLUSH;
 
 #ifdef USE_OMP
@@ -142,9 +142,13 @@ void cfdIsosurface::Update()
 
    this->contour->SetInput( this->GetActiveDataSet()->GetDataSet() );
    this->contour->SetValue( 0, this->value );
-   //this->normals->Update();
+   this->contour->Update();
+   this->normals->Update();
 #endif
 
+   GetActiveDataSet()->SetActiveScalar( colorByScalar );
+   GetActiveDataSet()->GetParent()->SetActiveScalar( colorByScalar );
+   this->mapper->SelectColorArray( colorByScalar.c_str() );
    this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
    this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
    //this->mapper->Update();
@@ -210,4 +214,22 @@ double cfdIsosurface::convertPercentage( const int percentage )
    }
    return this->value;
 }
+///////////////////////////////////////////////////////////////////////////
+void cfdIsosurface::UpdateCommand()
+{
+   //Call base method - currently does nothing
+   cfdObjects::UpdateCommand();
 
+   //Extract the specific commands from the overall command
+   VE_XML::DataValuePair* activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+
+   //Extract the isosurface value
+   activeModelDVP = objectCommand->GetDataValuePair( "Iso-Surface Value" );
+   double planePosition;
+   activeModelDVP->GetData( planePosition );
+   SetRequestedValue( static_cast< int >( planePosition ) );
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
+   activeModelDVP->GetData( colorByScalar );
+}

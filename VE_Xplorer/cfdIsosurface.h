@@ -39,10 +39,15 @@
 
 #include "VE_Xplorer/cfdObjects.h"
 
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
 class vtkContourFilter;
 class vtkPolyDataNormals;
 class vtkGeometryFilter;
 class vtkPolyDataMapper;
+
+#include <string>
 
 //! VTK isosurface renderer
 /*!
@@ -52,39 +57,42 @@ class vtkPolyDataMapper;
 */
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdIsosurface : public cfdObjects
-   {
-      public:
-         //Initialize pipeline
-         //(and set the number of isosurface increments for blue menu)
-         cfdIsosurface( int step = 10 );
+class VE_XPLORER_EXPORTS cfdIsosurface : public cfdObjects
+{
+public:
+   //Initialize pipeline
+   //(and set the number of isosurface increments for blue menu)
+   cfdIsosurface( int step = 10 );
 
-         ~cfdIsosurface( );
+   ~cfdIsosurface( );
 
-         virtual void Update( void );
+   virtual void Update( void );
 
-         // Get the current isosurface value.
-         double GetValue();
+   ///Get the current isosurface value.
+   double GetValue();
+   ///Override the cfdObjects function
+   virtual void UpdateCommand( void );
 
-      private:
-         double convertPercentage( const int percentage );
+private:
+   double convertPercentage( const int percentage );
 
-         int totalId;          // Total number of steps through the isosurface range.
+   int totalId;          // Total number of steps through the isosurface range.
 
-         double value;          // Current value of isosurface.
+   double value;          // Current value of isosurface.
 
-      #ifdef USE_OMP
-         float nData;          // Total number of data to be parallel processed
-         vtkContourFilter *contour[MAX_ISOSURFACE];
-         vtkPolyDataNormals *normals[MAX_ISOSURFACE];
-         vtkAppendPolyData *append;
-      #else
-         vtkContourFilter *contour;
-         vtkPolyDataNormals *normals;
-      #endif
+   std::string colorByScalar;
+#ifdef USE_OMP
+   float nData;          // Total number of data to be parallel processed
+   vtkContourFilter *contour[MAX_ISOSURFACE];
+   vtkPolyDataNormals *normals[MAX_ISOSURFACE];
+   vtkAppendPolyData *append;
+#else
+   vtkContourFilter *contour;
+   vtkPolyDataNormals *normals;
+#endif
 
-         vtkGeometryFilter *filter;
-         vtkPolyDataMapper *mapper;
-   };
+   vtkGeometryFilter *filter;
+   vtkPolyDataMapper *mapper;
+};
 }
 #endif

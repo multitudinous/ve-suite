@@ -730,107 +730,45 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
          advanced = "-warp";
    }
    
+   //Create the key for a specific object
    std::pair< std::string, std::pair< std::string, std::string > > commandType;
    commandType = std::make_pair( std::string( objectCommand->GetCommandName() ), 
                                 std::make_pair( direction, planes+advanced ) );
 
    // set the xml command to the cfdObject
-   //std::map< std::pair< std::string, std::pair< std::string, std::string > >, cfdObjects* >::iterator iter;
    this->activeObject = visObjectMap[ commandType ];
-   //for ( iter = visObjectMap.begin(); iter != visObjectMap.end(); ++iter )
+   // Check to see if any of the objectss need updated before we 
+   // create actors
+   if ( cfdModelHandler::instance()->GetActiveModel() )
    {
-      // Check to see if any of the objectss need updated before we 
-      // create actors
-      if ( cfdModelHandler::instance()->GetActiveModel() )
-      {
-         activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-         activeObject->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
-         //pass in the command for a specific object
-         //bool commandApplies = this->commandList[ i ]->CheckCommandId( this->commandArray );
-         //vprDEBUG(vesDBG,4) << "|\tCommand Applies : " << commandApplies
-         //   << std::endl << vprDEBUG_FLUSH;
-      }
+      activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
+      activeObject->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
+      activeObject->UpdateCommand();
    }
    
    // get the active vis object
-   /*if (   ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
-               ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) < 100 )  && 
-               ( !this->computeActorsAndGeodes ) &&
-               ( !this->texturesActive ) )*/
-   {
-      //vprDEBUG(vesDBG,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
-      //<< std::endl << vprDEBUG_FLUSH;
-      //int activeObjectIndex = 0; 
-      //for ( iter = visObjectMap.begin(); iter != visObjectMap.end(); ++iter )
-      {
-         //if ( activeObjectIndex == iter->second->GetObjectType() )
-         {
-            vprDEBUG(vesDBG,1) << " setting viz object " << activeObject->GetObjectType()
-            << " to _activeObject"
-            << std::endl << vprDEBUG_FLUSH;
-            
-            //cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
-            
-            cfdDCS* activeDataSetDCS = 0;
-            /*if ( this->activeObject->GetObjectType() == IMAGE_EX )
-            {
-               this->_activeDataSetDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
-            }
-            else*/
-            {
-            activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
-            }
-            
-            //if ( this->computeActorsAndGeodes == false )
-            {
-               // add active dataset DCS to scene graph if not already there...
-               vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
-               << activeDataSetDCS
-               << std::endl << vprDEBUG_FLUSH;
-               this->activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-               this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
-               this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
-               
-               //this should be handled by individual cfdobjects
-               //this->activeObject->SetRequestedValue( (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-               this->activeObject->SetCursorType( cfdEnvironmentHandler::instance()->GetCursor()->GetCursorID() );
-               //This should be handled in individual cfdbojects
-               //this->activeObject->SetPreCalcFlag( (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
-               //call back over to ssvishandler to set the flags
-               cfdSteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
-               //this->computeActorsAndGeodes = true;
-               cfdSteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
-               //this->actorsAreReady = true;
-               cfdSteadyStateVizHandler::instance()->SetActorsAreReady( true );
-            }
-            //break;
-         }
-      }
-      //extracting from inside the for loop
-   }
-   // set the update flag in steadystate viz handler
-   // now update the vis object
-   //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
-   /*{
-      if ( activeModel &&  activeModel->GetActiveDataSet() )
-      {
-         //cfd visualization options
-         int visOpt = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-         
-         if ( visOpt == TEXTURE_BASED_VISUALIZATION )
-         {
-			   _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(1);
-            tbased = true;
-         }
-         else if ( visOpt == CLASSIC_VISUALIZATION )
-         {
-            _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(0);
-            tbased = false;
-         }
-      }       
-   }*/
-   // add it to the scene graph - this handled by steadystatevis handler
-   //Call b ack to ssviz handler to do this
+   vprDEBUG(vesDBG,1) << " setting viz object " << activeObject->GetObjectType()
+                        << " to _activeObject"
+                        << std::endl << vprDEBUG_FLUSH;
+
+   //cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
+
+   cfdDCS* activeDataSetDCS = 0;
+   activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
+
+   // add active dataset DCS to scene graph if not already there...
+   vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
+                        << activeDataSetDCS
+                        << std::endl << vprDEBUG_FLUSH;
+   this->activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
+   this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
+   this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
+   this->activeObject->SetCursorType( cfdEnvironmentHandler::instance()->GetCursor()->GetCursorID() );
+
+   //call back over to ssvishandler to set the flags
+   cfdSteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
+   cfdSteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
+   cfdSteadyStateVizHandler::instance()->SetActorsAreReady( true );
 }
 //////////////////////////////////////////////////////////////////   
 void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject )
@@ -850,14 +788,10 @@ void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject 
    //activeDataset->GetParent()->SetActiveVector( vectorIndex );
 #ifdef _OSG
 #ifdef VE_PATENTED
-//This if statement may disappear since are a gaurnteed of an activemodel at this ppoint
-   //if ( activeModel !=0 )
+   cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
+   if ( activeTDSet )
    {
-      cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
-      if ( activeTDSet )
-      {
-         activeTDSet->SetActiveVector( activeVector );
-      }
+      activeTDSet->SetActiveVector( activeVector );
    }
 #endif
 #endif
@@ -886,13 +820,10 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xm
    //update active scalar texture if it exists
 #ifdef _OSG
 #ifdef VE_PATENTED
-   //if(_activeModel !=0)
+   cfdTextureDataSet* activeTDSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveTextureDataSet();
+   if( activeTDSet )
    {
-      cfdTextureDataSet* activeTDSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveTextureDataSet();
-      if( activeTDSet )
-      {
-         activeTDSet->SetActiveScalar( activeScalarName );
-      }
+      activeTDSet->SetActiveScalar( activeScalarName );
    }
 #endif
 #endif

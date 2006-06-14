@@ -34,6 +34,10 @@
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 
+#include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
 #include <cmath>
 
 #include "VE_Xplorer/cfdDebug.h"
@@ -116,72 +120,65 @@ cfdVectorBase::~cfdVectorBase()
 
 bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
 {
-   // This is here because Dr. K. has code in 
-   // cfdObjects that doesn't belong there
-   bool flag = cfdObjects::CheckCommandId( commandArray );
-   
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR_THRESHOLD )
-   { 
-      vprDEBUG(vesDBG,0) << " cfdVectorBase::CheckCommandId : CHANGE_VECTOR_THRESHOLD" 
-         << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
-         << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
-         << std::endl << vprDEBUG_FLUSH;
-
-      SetThreshHoldPercentages( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ),
-                                               (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
-      UpdateThreshHoldValues();
-
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR_MASK_RATIO )
-   { 
-      vprDEBUG(vesDBG,0) << " CHANGE_VECTOR_MASK_RATIO" 
-         << ", value = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-         << std::endl << vprDEBUG_FLUSH;
-
-      SetVectorRatioFactor( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR_SCALE )
-   {
-      vprDEBUG(vesDBG,0) << " CHANGE_VECTOR_SCALE" 
-         << ", value = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-         << std::endl << vprDEBUG_FLUSH;
-
-      SetVectorScale( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SCALE_BY_VECTOR_MAGNITUDE )
-   { 
-      vprDEBUG(vesDBG,0)
-         << "SCALE_BY_VECTOR_MAGNITUDE = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-         << std::endl << vprDEBUG_FLUSH;
-
-      SetScaleByVectorFlag( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEADYSTATE_DATASET )
-   { 
-      SetThreshHoldPercentages( 0, 100 );
-      SetVectorRatioFactor( 1 );
-      //this->UpdateThreshHoldValues();
-   }
-
-   // when scalar is changed reset vector thresholding to none...
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR  )
-   {
-      //UpdateThreshHoldValues();
-   }
-   return flag;
+   //May be removed because of new vecommand code
 }
 
 void cfdVectorBase::UpdateCommand()
 {
+   //Call base method - currently does nothing
    cfdObjects::UpdateCommand();
-   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
+
+   //Extract the specific commands from the overall command
+   VE_XML::DataValuePair* activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+
+   //Extract the plane position
+   activeModelDVP = objectCommand->GetDataValuePair( "Position" );
+   double planePosition;
+   activeModelDVP->GetData( planePosition );
+   SetRequestedValue( static_cast< int >( planePosition ) );
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Plane Option" );
+   if ( activeModelDVP )
+   {
+      std::string preCalculatedFlag;
+      activeModelDVP->GetData( preCalculatedFlag );
+
+      if ( preCalculatedFlag == "Use Nearest Precomputed Plane" )
+      {
+         SetPreCalcFlag( true );
+      }
+   }
+   else
+   {
+      SetPreCalcFlag( false );
+   }
+
+   //Extract the advanced settings from the commands
+   activeModelDVP = objectCommand->GetDataValuePair( "Advanced Vector Settings" );
+   objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Vector Threshold" );
+   std::vector< double > threshHoldValues;
+   activeModelDVP->GetData( threshHoldValues );
+   SetThreshHoldPercentages( static_cast< int >( threshHoldValues.at( 0 ) ),
+                             static_cast< int >( threshHoldValues.at( 1 ) ) );
+   UpdateThreshHoldValues();
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Vector Scale" );
+   double vectorScale;
+   activeModelDVP->GetData( vectorScale );
+   SetVectorScale( static_cast< float >( vectorScale ) );
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Vector Ratio" );
+   double vectorRatio;
+   activeModelDVP->GetData( vectorRatio );
+   SetVectorRatioFactor( static_cast< int >( vectorRatio ) );
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Scale By Magnitude" );
+   unsigned int scaleByMagnitude;
+   activeModelDVP->GetData( scaleByMagnitude );
+   SetScaleByVectorFlag( static_cast< int >( scaleByMagnitude ) );
 }
 //////////////////////////////////////////////
 void cfdVectorBase::SetVectorScale( float x )
@@ -409,7 +406,7 @@ void cfdVectorBase::UpdateThreshHoldValues()
    {
       //temp->GetRange( currentScalarRange );
       double* currentScalarRange = temp->GetRange();
-      vprDEBUG(vesDBG,1) << " currentScalarRange = " 
+      vprDEBUG(vesDBG,1) << "|\tcfdVectorBase::UpdateThreshHoldValues currentScalarRange = " 
          << currentScalarRange[ 0 ] << " : " <<  currentScalarRange[ 1 ] 
          << std::endl << vprDEBUG_FLUSH;
 
@@ -421,7 +418,7 @@ void cfdVectorBase::UpdateThreshHoldValues()
                     (double)_vectorThreshHoldMaxPercentage / 100.0
                     * ( currentScalarRange[1] - currentScalarRange[0] );
 
-      vprDEBUG(vesDBG, 1) << " Threshold Values = "
+      vprDEBUG(vesDBG, 1) << "|\tcfdVectorBase::UpdateThreshHoldValues Calculated Threshold Values = "
          << _vectorThreshHoldValues[ 0 ] << " : "
          << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
    }

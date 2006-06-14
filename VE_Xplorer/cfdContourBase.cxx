@@ -36,6 +36,10 @@
 
 #include "VE_Xplorer/cfdDebug.h"
 
+#include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
 #include <vtkPolyData.h>
 #include <vtkContourFilter.h>                // contour lines
 #include <vtkBandedPolyDataContourFilter.h>  // banded contours
@@ -76,7 +80,7 @@ cfdContourBase::cfdContourBase()
    normals = vtkPolyDataNormals::New();
 
    this->warpedContourScale = 0.0f;
-   this->contourOpacity = 0.0f;
+   this->contourOpacity = 1.0f;
    this->contourLOD = 1; 
 }
 
@@ -218,8 +222,82 @@ bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdContourBase::UpdateCommand()
 {
+   //Call base method - currently does nothing
    cfdObjects::UpdateCommand();
-   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
+
+   //Extract the specific commands from the overall command
+   VE_XML::DataValuePair* activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+
+   //Extract the plane position
+   activeModelDVP = objectCommand->GetDataValuePair( "Position" );
+   double planePosition;
+   activeModelDVP->GetData( planePosition );
+   SetRequestedValue( static_cast< int >( planePosition ) );
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Plane Option" );
+   if ( activeModelDVP )
+   {
+      std::string preCalculatedFlag;
+      activeModelDVP->GetData( preCalculatedFlag );
+
+      if ( preCalculatedFlag == "Use Nearest Precomputed Plane" )
+      {
+         SetPreCalcFlag( true );
+      }
+   }
+   else
+   {
+      SetPreCalcFlag( false );
+   }
+
+   //Extract the advanced settings from the commands
+   activeModelDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
+   objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+
+   // set the opacity
+   activeModelDVP = objectCommand->GetDataValuePair( "Contour Opacity" );
+   double opacity;
+   activeModelDVP->GetData( opacity );
+   contourOpacity = opacity * 0.01f;
+
+   // set the warped contour scale
+   activeModelDVP = objectCommand->GetDataValuePair( "Warped Contour Scale" );
+   double contourScale;
+   activeModelDVP->GetData( contourScale );
+   double v[2];
+   this->GetActiveDataSet()->GetUserRange( v );
+   int scale = contourScale;
+   this->warpedContourScale = (scale/50.0) * 0.2 
+                 * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
+
+   // Set the lod values
+   activeModelDVP = objectCommand->GetDataValuePair( "Contour LOD" );
+   double contourLOD;
+   activeModelDVP->GetData( contourLOD );
+   double lod = contourLOD;
+   double realLOD = lod * 0.01f;
+   vprDEBUG(vesDBG,0) << "CHANGE_CONTOUR_SETTINGS LOD Settings" 
+                          << contourLOD << " : " << lod << " : " << realLOD
+                          << std::endl << vprDEBUG_FLUSH;
+   this->deci->SetTargetReduction( realLOD );
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Type" );
+   std::string contourType;
+   activeModelDVP->GetData( contourType );
+   
+   if ( contourType == "Graduated" )
+   {
+      SetFillType( 0 );
+   }
+   else if ( contourType == "Banded" )
+   {
+      SetFillType( 1 );
+   }
+   else if ( contourType == "Lined" )
+   {
+      SetFillType( 2 );
+   }
 }
 
 void cfdContourBase::SetFillType( const int type )

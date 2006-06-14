@@ -73,8 +73,8 @@ namespace VE_Xplorer
          // compare VjObs_i commandArray with its child's value
          virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand();
+         ///Process the VECommand from Conductor
+         virtual void UpdateCommand( void );
 
          // update the actor
          virtual void Update() = 0;

@@ -64,10 +64,11 @@ cfdVectors::~cfdVectors()
 
 void cfdVectors::Update( void )
 {
-   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz ) == NULL )
+std::cout << " vectors update " << this->xyz << " " << this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() << std::endl;
+   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )
    {
       vprDEBUG(vesDBG, 0) 
-         << "cfdVectors, planesData == NULL so returning\n" << vprDEBUG_FLUSH;
+         << "cfdVectors, planesData has 0 planes so returning\n" << vprDEBUG_FLUSH;
       return;
    }
 

@@ -176,21 +176,6 @@ void cfdSteadyStateVizHandler::InitScene( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 {
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) != -1 )
-   {            
-      vprDEBUG(vesDBG,2) 
-         << "preFrame: id = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
-         << ", iso = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-         << ", scalarIndex = " << commandArray->GetCommandValue( cfdCommandArray::CFD_SC )
-         << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
-         << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
-         << ", geo_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
-         << ", pre_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE )
-         << ", teacher_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
-         << ", compute actors and geode = " << computeActorsAndGeodes 
-         << std::endl << vprDEBUG_FLUSH;
-   }
-
    //process the current command form the gui
    if ( cfdModelHandler::instance()->GetActiveModel() )
    {
@@ -223,7 +208,10 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       {
          if ( _activeObject->GetUpdateFlag() )//|| 
                //this->dataList.at( i )->GetTransientGeodeFlag() )
-         {
+         {  
+            // set the update flag in steadystate viz handler
+            // now update the vis object
+            cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->SetVal(0);
             vprDEBUG(vesDBG,2) << "|\tCreating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
             // if object needs updated then already have a graphics object
@@ -307,19 +295,6 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          pos->second->RemovecfdGeodeFromDCS();
          delete pos->second;
          graphicsObjects.erase( pos++ );
-      }
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
-   {
-      int visOpt = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-
-      if ( visOpt == TEXTURE_BASED_VISUALIZATION )
-      {
-         texturesActive = true;
-      }
-      else if ( visOpt == CLASSIC_VISUALIZATION )
-      {
-         texturesActive = false;
       }
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )

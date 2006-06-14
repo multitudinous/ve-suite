@@ -62,7 +62,7 @@ void cfdContours::Update( void )
    vprDEBUG(vesDBG,1) << "cfdContours::Update" 
                           << std::endl << vprDEBUG_FLUSH;
 
-   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz ) == NULL )
+   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )
    {
       vprDEBUG(vesDBG, 0) 
          << "cfdContours: planesData == NULL so returning" 
@@ -96,6 +96,7 @@ void cfdContours::Update( void )
       vtkActor* temp = vtkActor::New();
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
+      temp->GetProperty()->SetOpacity( contourOpacity );
       //geodes.push_back( new VE_SceneGraph::cfdGeode() );
       //geodes.back()->TranslateTocfdGeode( temp );
       //this->updateFlag = true;
