@@ -120,8 +120,7 @@ SRCS=\
    cfdTrackball.cxx\
    cfdObjectHandler.cxx\
    CreateVisObjectEventHandler.cxx\
-   ClearVisObjectsEventHandler.cxx\
-   DeleteObjectFromNetworkEventHandler.cxx
+   ClearVisObjectsEventHandler.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g

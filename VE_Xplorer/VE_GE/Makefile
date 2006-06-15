@@ -78,12 +78,8 @@ endif
 SRCS=\
    cfdApp.cxx \
    cfdAppWrapper.cxx \
-   cfdExecutive.cxx \
-   cfdVEAvailModules.cxx \
-   cfdVEPluginLoader.cxx \
    cfdVEXplorer.cxx \
    cfdVjObsWrapper.cxx \
-   VE_i.cpp \
    VjObs_i.cxx 
 			
 ifeq ($(WEB_BUILD), TRUE)
