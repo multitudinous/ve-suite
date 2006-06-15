@@ -2,7 +2,7 @@
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/translateToVtk
 
 all:
-	cd $(VE_SUITE_HOME)/VE_Xplorer/VE_Util && $(MAKE)
+	cd $(VE_SUITE_HOME)/VE_Xplorer/Utilities && $(MAKE)
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
 
