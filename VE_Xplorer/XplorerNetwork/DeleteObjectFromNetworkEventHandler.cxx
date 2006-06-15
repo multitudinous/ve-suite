@@ -123,4 +123,9 @@ void DeleteObjectFromNetworkEventHandler::Execute( VE_XML::XMLObject* xmlObject 
                               << " not present."
                               << std::endl << vprDEBUG_FLUSH;
    }
+   //Set active model to null so that if the previous active model is deleted
+   //that we don't get errors in our code other places.
+   cfdModelHandler::instance()->SetActiveModel( 0 );
+   vprDEBUG(vesDBG,1) << "|\t\tPlugin is deleted."
+                           << std::endl << vprDEBUG_FLUSH;
 }

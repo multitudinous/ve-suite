@@ -321,6 +321,9 @@ void cfdExecutive::GetEverything( void )
          }
          // The above code is from : The C++ Standard Library by:Josuttis pg. 205
       }
+      //Set active model to null so that if the previous active model is deleted
+      //that we don't get errors in our code other places.
+      cfdModelHandler::instance()->SetActiveModel( 0 );
       vprDEBUG(vesDBG,0) << "|\tDone Getting Network From Executive"
                              << std::endl << vprDEBUG_FLUSH;    
    }

@@ -903,6 +903,10 @@ void VjObs_i::PreFrameUpdate( void )
       cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
       //std::cout << " command name " << bufferCommand->GetCommandName() << std::endl;
    }
+   else
+   {
+      ;
+   }
 }
 
 void VjObs_i::CreateCommandQueue( void )
