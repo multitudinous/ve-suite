@@ -14,6 +14,9 @@
 
 ////@begin includes
 #include "VE_Conductor/Framework/TBToolBar.h"
+#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/CORBAServiceList.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"
@@ -49,9 +52,10 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_TOOL     (STREAMLINE_BUTTON,    Vistab::_onStreamline)
    EVT_TOOL     (ISOSURFACE_BUTTON,    Vistab::_onIsosurface)
    EVT_TOOL     (TEXTURE_BASED_BUTTON, Vistab::_onTextureBased)
-   EVT_COMBOBOX(ID_COMBOBOX,Vistab::_OnSelectDataset)
-   EVT_LISTBOX(ID_LISTBOX,Vistab::_OnSelectScalar)
-   EVT_LISTBOX(ID_LISTBOX1,Vistab::_OnSelectVector)
+   EVT_COMBOBOX( ID_COMBOBOX,Vistab::_OnSelectDataset )
+   EVT_LISTBOX( ID_LISTBOX,Vistab::_OnSelectScalar )
+   EVT_LISTBOX( ID_LISTBOX1,Vistab::_OnSelectVector )
+   EVT_BUTTON( ID_CLEAR_ALL_BUTTON, Vistab::OnClearAll )
 ////@end Vistab event table entries
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
@@ -281,8 +285,16 @@ void Vistab::CreateControls()
     
     itemBoxSizer2->Add(scalarSizer, 3, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
    
-    wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer2->Add(itemButton20, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+   //Last row buttons - advanced, clear all, ...
+   wxBoxSizer* lastRowButtons = new wxBoxSizer( wxHORIZONTAL );
+   itemBoxSizer2->Add( lastRowButtons );
+
+   wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+   lastRowButtons->Add( itemButton20, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+   clearAllButton = new wxButton( itemDialog1, ID_CLEAR_ALL_BUTTON, _T("Clear All"), wxDefaultPosition, wxDefaultSize, 0 );
+   lastRowButtons->Add( clearAllButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
 
 ///@end Vistab content construction
 }
@@ -691,6 +703,19 @@ void Vistab::_updateBaseInformation()
    _vistabBaseInformation.push_back(scalarMax);
 }
 ////////////////////////////////////////////////////////////////////////////
+void Vistab::OnClearAll( wxCommandEvent& WXUNUSED(event) )
+{
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+   dataValuePair->SetDataName( "CLEAR_ALL" );
+   dataValuePair->SetDataValue( static_cast< unsigned int >( 1 ) );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("CLEAR_VIS_OBJECTS") );
+   veCommand->AddDataValuePair( dataValuePair );
+
+   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////////
 void Vistab::SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand)
 {
    _updateBaseInformation();
@@ -709,44 +734,8 @@ void Vistab::SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand)
 
    newCommand->SetCommandName(_commandName);
 
-   std::string commandString("returnString");
+   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( newCommand );
 
-   VE_XML::XMLReaderWriter commandWriter;
-   commandWriter.UseStandaloneDOMDocumentManager();
-   commandWriter.WriteToString();
-   
-   std::pair<VE_XML::Command*,std::string> nodeTagPair;
-   nodeTagPair.first = newCommand;
-   nodeTagPair.second = std::string("vecommand");
-   std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
-   nodeToWrite.push_back(nodeTagPair);
-
-   commandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
-
-   char* tempDoc = new char[ commandString.size() + 1 ];
-   tempDoc = CORBA::string_dup( commandString.c_str() );
-
-   if ( !CORBA::is_nil( xplorerPtr ) && !commandString.empty() )
-   {
-      try
-      {
-         //std::cout<<"---The command to send---"<<std::endl;
-         //std::cout<<tempDoc<<std::endl;
-         // CORBA releases the allocated memory so we do not have to
-         xplorerPtr->SetCommandString( tempDoc );
-      }
-      catch ( ... )
-      {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
-         delete [] tempDoc;
-      }
-   }
-   else
-   {
-      delete [] tempDoc;
-   }
-   //Clean up memory
    delete newCommand;
    newCommand = 0;
 }

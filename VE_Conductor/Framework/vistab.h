@@ -94,7 +94,8 @@ enum VISTAB_IDS
    VECTOR_BUTTON,
    STREAMLINE_BUTTON,
    ISOSURFACE_BUTTON,
-   TEXTURE_BASED_BUTTON
+   TEXTURE_BASED_BUTTON,
+   ID_CLEAR_ALL_BUTTON
 };
 ////@end control identifiers
 
@@ -258,6 +259,8 @@ protected:
    void _OnSelectScalar(wxCommandEvent& event);
    ///Update the active vector
    void _OnSelectVector(wxCommandEvent& event);
+   ///Callback for the clear all button
+   void OnClearAll( wxCommandEvent& event );
 
    ///Update the available solutions for a particular give dataset type
    ///\param newNames The list of new names to update
@@ -314,6 +317,8 @@ protected:
    wxArrayString _availableDatasets;///<The current datasets available in the Model;
 
    wxRect _vistabPosition;///<The bounding box of the vistab dialog.
+   
+   wxButton* clearAllButton;///<The clear all button for vis objects
 
    wxComboBox* _datasetSelection;///<The box listing the available datasets.
    wxListBox* _scalarSelection;///<The box listing the available scalars in the current dataset.
