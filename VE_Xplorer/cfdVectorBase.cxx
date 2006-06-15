@@ -121,6 +121,7 @@ cfdVectorBase::~cfdVectorBase()
 bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
 {
    //May be removed because of new vecommand code
+   return false;
 }
 
 void cfdVectorBase::UpdateCommand()

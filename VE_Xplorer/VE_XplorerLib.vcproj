@@ -463,7 +463,13 @@
 				RelativePath=".\cfdWriteTraverser.cxx">
 			</File>
 			<File
+				RelativePath=".\ClearVisObjectsEventHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\CreateVisObjectEventHandler.cxx">
+			</File>
+			<File
+				RelativePath=".\DeleteObjectFromNetworkEventHandler.cxx">
 			</File>
 			<File
 				RelativePath=".\MaterialModeUpdateEH.cxx">
@@ -539,7 +545,10 @@
 				RelativePath=".\cfdTrackball.h">
 			</File>
 			<File
-				RelativePath=".\CreateVisObjectEventHandler.h">
+				RelativePath=".\ClearVisObjectsEventHandler.h">
+			</File>
+			<File
+				RelativePath=".\DeleteObjectFromNetworkEventHandler.h">
 			</File>
 			<File
 				RelativePath=".\EventHandler.h">
