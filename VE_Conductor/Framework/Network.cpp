@@ -2138,6 +2138,19 @@ void Network::New()
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
       delete modules[ iter->first ].GetPlugin();
+      //Delete it from xplorer as well
+      if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
+      {
+         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+         dataValuePair->SetDataName( "Object ID" );
+         dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
+         VE_XML::Command* veCommand = new VE_XML::Command();
+         veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
+         veCommand->AddDataValuePair( dataValuePair );
+         bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+         //Clean up memory
+         delete veCommand;
+      }
    }
    modules.clear();
 
@@ -2150,6 +2163,9 @@ void Network::New()
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork )
 {
+   //Get a new canvas first to cleanup memory
+   this->New();
+   //Now...lets process some files
    _fileProgress = new wxProgressDialog(wxString("Translation Progress"),
                   "Load...", 
                   100,this,
