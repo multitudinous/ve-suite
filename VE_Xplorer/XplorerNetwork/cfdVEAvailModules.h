@@ -2,10 +2,11 @@
 #define CFD_AVAIL_MODULES_H
 
 #include "VE_Xplorer/XplorerNetwork/cfdVEPluginLoader.h"
+#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Xplorer
 {
-class cfdVEAvail_Modules
+class VE_XPLORER_NETWORK_EXPORTS cfdVEAvail_Modules
 {
 public:
    cfdVEAvail_Modules( void );

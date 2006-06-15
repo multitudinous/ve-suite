@@ -469,9 +469,6 @@
 				RelativePath=".\CreateVisObjectEventHandler.cxx">
 			</File>
 			<File
-				RelativePath=".\DeleteObjectFromNetworkEventHandler.cxx">
-			</File>
-			<File
 				RelativePath=".\MaterialModeUpdateEH.cxx">
 			</File>
 			<File

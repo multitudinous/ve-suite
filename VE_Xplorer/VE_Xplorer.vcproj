@@ -346,22 +346,10 @@
 				RelativePath=".\cfdAppWrapper.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdExecutive.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdVEAvailModules.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdVEPluginLoader.cxx">
-			</File>
-			<File
 				RelativePath=".\cfdVEXplorer.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdVjObsWrapper.cxx">
-			</File>
-			<File
-				RelativePath=".\VE_i.cpp">
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\impl\VjObs_i.cxx">
@@ -377,19 +365,7 @@
 				RelativePath=".\cfdAppWrapper.h">
 			</File>
 			<File
-				RelativePath=".\cfdExecutive.h">
-			</File>
-			<File
-				RelativePath=".\cfdVEAvailModules.h">
-			</File>
-			<File
-				RelativePath=".\cfdVEPluginLoader.h">
-			</File>
-			<File
 				RelativePath=".\cfdVjObsWrapper.h">
-			</File>
-			<File
-				RelativePath=".\VE_i.h">
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\impl\VjObs_i.h">

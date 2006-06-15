@@ -33,6 +33,7 @@
 #define CFD_EXECUTIVE_H
 
 #include "VE_Xplorer/cfdGlobalBase.h"
+#include "VE_Installer/include/VEConfig.h"
 #include <vpr/Util/Singleton.h>
 
 #include <map>
@@ -80,7 +81,7 @@ namespace PortableServer { class POA; }
 
 namespace VE_Xplorer
 {
-class cfdExecutive : public cfdGlobalBase//: public vpr::Singleton< cfdModelHandler >
+class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public cfdGlobalBase//: public vpr::Singleton< cfdModelHandler >
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.

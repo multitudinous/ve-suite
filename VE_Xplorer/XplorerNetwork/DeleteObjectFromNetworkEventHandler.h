@@ -40,6 +40,7 @@
 //#include <string>
 //#include <vector>
 #include <map>
+#include "VE_Installer/include/VEConfig.h"
 //#include <utility>
 
 namespace VE_XML
@@ -55,7 +56,7 @@ namespace VE_Xplorer
 #include "VE_Xplorer/EventHandler.h"
 namespace VE_EVENTS
 {
-class VE_XPLORER_EXPORTS DeleteObjectFromNetworkEventHandler: public EventHandler
+class VE_XPLORER_NETWORK_EXPORTS DeleteObjectFromNetworkEventHandler: public EventHandler
 {
 public:
    ///Constructor

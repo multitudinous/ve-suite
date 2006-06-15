@@ -37,7 +37,7 @@
 #include <vpr/DynLoad/LibraryFinder.h>
 
 #include <map>
-
+#include "VE_Installer/include/VEConfig.h"
 namespace VE_Xplorer
 {
    class cfdVEBaseClass;
@@ -45,7 +45,7 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-class cfdVEPluginLoader
+class VE_XPLORER_NETWORK_EXPORTS cfdVEPluginLoader
 {
 public:
 

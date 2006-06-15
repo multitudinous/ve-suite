@@ -34,6 +34,7 @@
 #define VE_I_H_
 
 #include "VE_Open/skel/moduleS.h"
+#include "VE_Installer/include/VEConfig.h"
 #include <string>
 #include <vector>
 #include <vpr/Sync/Mutex.h>
