@@ -145,6 +145,12 @@
    #  else
    #    define VE_OPEN_MODULE_EXPORTS __declspec(dllimport)
    #  endif /* VE_OPEN_MODULE_LIBRARY */
+
+   #  ifdef XPLORER_NETWORK_LIBRARY
+   #    define VE_XPLORER_NETWORK_EXPORTS __declspec(dllexport)
+   #  else
+   #    define VE_XPLORER_NETWORK_EXPORTS __declspec(dllimport)
+   #  endif /* XPLORER_NETWORK_LIBRARY */
 #else
    #  define VE_SCENEGRAPH_EXPORTS
    #  define VE_UTIL_EXPORTS
@@ -163,6 +169,7 @@
    #  define VE_SCENEGRAPH_UTILS_EXPORTS
    #  define VE_CE_UTILS_EXPORTS
    #  define VE_OPEN_MODULE_EXPORTS
+   #define XPLORER_NETWORK_LIBRARY_EXPORTS
 #endif
 
 #endif
