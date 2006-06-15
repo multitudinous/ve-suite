@@ -85,8 +85,8 @@ bool Contours::Create(wxWindow* parent, wxWindowID id, const wxString& caption,
    _planeOption = "";
    _planePosition = 0.0f;
    _lastLOD = 1.0f;
-   _lastWarpedScale = .5f;
-   _lastOpacity = 1.0f;
+   _lastWarpedScale = 1.0f;
+   _lastOpacity = 100.0f;
    _lastVectorScale = 1.0f;
    _lastVectorRatio = 1.0f;
    _lastScaleByMagnitude = false;
