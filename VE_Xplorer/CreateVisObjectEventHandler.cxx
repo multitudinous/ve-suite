@@ -737,7 +737,12 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 
    // set the xml command to the cfdObject
    this->activeObject = visObjectMap[ commandType ];
-   // Check to see if any of the objectss need updated before we 
+   if ( activeObject == 0 )
+   {
+      std::cerr << "ERROR: selected vis option is not in the CreateVisObjectEventHandler. " << std::endl;
+   }
+
+   // Check to see if any of the objectss need updated before we
    // create actors
    if ( cfdModelHandler::instance()->GetActiveModel() )
    {
@@ -753,8 +758,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 
    //cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
 
-   cfdDCS* activeDataSetDCS = 0;
-   activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
+   cfdDCS* activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
 
    // add active dataset DCS to scene graph if not already there...
    vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
