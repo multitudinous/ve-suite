@@ -37,6 +37,7 @@
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <wx/msgdlg.h>
+#include <wx/filename.h>
 
 #include "VE_Conductor/Framework/ROItb.xpm"
 
@@ -104,19 +105,29 @@ void TextureBasedToolBar::_updateAvailableSolutions(wxArrayString scalarNames,
                                               wxArrayString vectorNames)
 {
 }
+////////////////////////////////////////////////////////////////////////////////////////
+/*wxString TextureBasedToolBar::ExtractRelativeDirectoryFromFullPath(wxString fullPathString)
+{
+   wxFilename fName(fullPathString);
+   fName.GetName();
+   return fName.GetName();
+}*/
 ////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
 {
    size_t nScalars = scalarNames.Count();
    _availableScalars.Clear();
 
+   
    for(size_t i = 0; i < nScalars; i++)
    {
       if(scalarNames[i] != wxString(""))
       {
-        std::cout<<"Adding scalar..."<<std::endl;
-         _availableScalars.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(scalarNames[i].GetData()).c_str());
-        std::cout<<_availableScalars[i]<<std::endl;
+         wxFileName fName(scalarNames[i]);
+         std::cout<<"Adding scalar..."<<std::endl;
+         //_availableScalars.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(scalarNames[i].GetData()).c_str());
+         _availableScalars.Add(fName.GetName());
+         std::cout<<_availableScalars[i]<<std::endl;
       }
       else
       {
@@ -137,9 +148,12 @@ void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
    {
       if(vectorNames[i] != wxString(""))
       {
-        std::cout<<"Adding Vector..."<<std::endl;
-         _availableVectors.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(vectorNames[i].GetData()).c_str());
-        std::cout<<vectorNames[i]<<std::endl;
+         wxFileName fName(vectorNames[i]);
+         
+         std::cout<<"Adding Vector..."<<std::endl;
+         //_availableVectors.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(vectorNames[i].GetData()).c_str());
+         _availableVectors.Add(fName.GetName());
+         std::cout<<vectorNames[i]<<std::endl;
       }
       else
       {

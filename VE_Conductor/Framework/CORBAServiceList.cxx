@@ -153,7 +153,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
 {
    //Copy the command line args because tao deletes them after processing them
    int argc = ::wxGetApp().argc;
-   char* argv[ argc ];
+   char** argv = new char*[ argc ];
    for ( int i = 0; i < argc; ++ i )
    {
       int stringLength = strlen( ::wxGetApp().argv[ i ] );
@@ -169,7 +169,10 @@ bool CORBAServiceList::ConnectToNamingService( void )
       for ( int i = 0; i < argc; ++ i )
       {
          delete [] argv[ i ];
+         argv[i] = 0;
       }
+      delete [] argv;
+      argv = 0;
       
       //Here is the part to contact the naming service and get the reference for the executive
       CORBA::Object_var naming_context_object =
