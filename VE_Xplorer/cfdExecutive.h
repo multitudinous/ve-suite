@@ -69,6 +69,11 @@ namespace VE_Model
    class Model;
 }
 
+namespace VE_EVENTS
+{
+   class EventHandler;
+}
+
 namespace Body { class Executive; }
 namespace CosNaming { class NamingContext; }
 namespace PortableServer { class POA; }
@@ -93,42 +98,33 @@ public:
    void Initialize( CosNaming::NamingContext*, PortableServer::POA* );
    void CleanUp( void );
    
-   // the Computational Engine
+   ///the Computational Engine
    Body::Executive* _exec;
-
    CosNaming::NamingContext* naming_context;
 
-   // Functions that operate on the Executive
+   ///Functions that operate on the Executive
    void GetNetwork( void );
    void GetOutput( std::string name);
-   //void GetPort( std::string name);
    void GetEverything( void );
    void HowToUse( std::string name);
-
-   // Get intial module information from the executive
+   ///Get intial module information from the executive
    void InitModules( void );
-
-   // Update function called from within latePreFrame
+   ///Update function called from within latePreFrame
    void UpdateModules( void );
-
-   // Update function called from within latePreFrame
+   ///Update function called from within latePreFrame
    void PreFrameUpdate( void );
-
-   // Function called within preFrame to allow cfdExecutive
-   // to have access to scalar information
+   ///Function called within preFrame to allow cfdExecutive
+   ///to have access to scalar information
    void UnbindORB( void );
-
-   //void SetCalculationsFlag( bool );
-
-   //bool GetCalculationsFlag( void );
-
-   // compare VjObs_i commandArray with its child's value
+   ///compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray* );
-
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-
-   //Loading the Available Modules
+   ///This function returns the map of the current plugins 
+   ///so that evehenthandlers can manipulate the plugins while
+   ///with commands from the gui
+   std::map<int, cfdVEBaseClass* >* GetTheCurrentPlugins( void );
+   ///Loading the Available Modules
    cfdVEAvail_Modules* av_modules; 
 private:
    
@@ -163,6 +159,8 @@ private:
 
    // _name_map : maps a module name to it's module id.
    std::map<int, cfdVEBaseClass* > _plugins;
+
+   std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }
 #endif

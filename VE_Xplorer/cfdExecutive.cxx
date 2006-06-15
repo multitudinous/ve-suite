@@ -44,9 +44,12 @@
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/Model/Model.h"
 
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
+
+#include "VE_Xplorer/DeleteObjectFromNetworkEventHandler.h"
 
 #include <iostream>
 #include <string>
@@ -140,11 +143,18 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
       //this->thread = new cfdThread();
       //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
    } 
-   catch (CORBA::Exception &) 
+   catch ( CORBA::Exception& ) 
    {      
       std::cerr << "|\tExecutive not present or VEClient registration error"
                 << std::endl;
    }
+
+   _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::DeleteObjectFromNetworkEventHandler();
+}
+///////////////////////////////////////////////////////////////////
+std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
+{
+   return &_plugins;
 }
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::CleanUp( void )
@@ -155,13 +165,14 @@ void cfdExecutive::CleanUp( void )
    try
    {
       _exec->UnRegisterUI( ui_i->UIName_.c_str() );
-      delete ui_i;
-      ui_i = 0;
    }
    catch( CORBA::Exception& )
    {
       std::cerr << "|\tDisconnect from VE_CE failed!" << std::endl;
    }
+
+   delete ui_i;
+   ui_i = 0;
 }
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::UnbindORB()
@@ -340,6 +351,24 @@ void cfdExecutive::PreFrameUpdate( void )
    vprDEBUG(vesDBG,3) << " cfdExecutive::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
 
+   //process the current command form the gui
+   if ( cfdModelHandler::instance()->GetActiveModel() )
+   {
+      if( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() )
+      {
+         std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+         VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
+         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
+         if ( currentEventHandler != _eventHandlers.end() )
+         {
+            vprDEBUG(vesDBG,0) << "|\tExecuting: "<< tempCommand->GetCommandName() 
+                                 << std::endl << vprDEBUG_FLUSH;
+            currentEventHandler->second->SetGlobalBaseObject();
+            currentEventHandler->second->Execute( tempCommand );
+         }
+      }
+   }
+
    if ( !CORBA::is_nil( this->_exec ) )
    {
       if ( ui_i->GetNetworkFlag() )
@@ -382,21 +411,23 @@ void cfdExecutive::PreFrameUpdate( void )
             _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
          }
       }
-      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-      for ( foundPlugin = _plugins.begin(); 
-            foundPlugin != _plugins.end(); 
-            ++foundPlugin )
+   }
+
+   ///process the standard plugin stuff
+   std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+   for ( foundPlugin = _plugins.begin(); 
+         foundPlugin != _plugins.end(); 
+         ++foundPlugin )
+   {
+      //if active model is the plugin's model...
+      if ( cfdModelHandler::instance()->GetActiveModel() == 
+            foundPlugin->second->GetCFDModel() )
       {
-         //if active model is the plugin's model...
-         if ( cfdModelHandler::instance()->GetActiveModel() == 
-               foundPlugin->second->GetCFDModel() )
-         {
-            //only if you are selected
-            foundPlugin->second->SelectedPreFrameUpdate();
-         }
-         //Call this for all plugins every frame
-         foundPlugin->second->PreFrameUpdate();
+         //only if you are selected
+         foundPlugin->second->SelectedPreFrameUpdate();
       }
+      //Call this for all plugins every frame
+      foundPlugin->second->PreFrameUpdate();
    }
 }
 bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
