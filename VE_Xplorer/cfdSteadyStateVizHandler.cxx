@@ -61,6 +61,7 @@
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 #include "VE_Xplorer/CreateVisObjectEventHandler.h"
+#include "VE_Xplorer/ClearVisObjectsEventHandler.h"
 #include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
 
 #include "VE_Open/XML/Command.h"
@@ -105,6 +106,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    _param.erase();// = 0;
    
    _eventHandlers[std::string("VISUALIZATION_SETTINGS")] = new VE_EVENTS::CreateVisObjectEventHandler();
+   _eventHandlers[std::string("CLEAR_VIS_OBJECTS")] = new VE_EVENTS::ClearVisObjectsEventHandler();
 }
 
 void cfdSteadyStateVizHandler::Initialize( std::string param )
@@ -117,6 +119,13 @@ void cfdSteadyStateVizHandler::Initialize( std::string param )
 void cfdSteadyStateVizHandler::CleanUp( void )
 {
    this->runIntraParallelThread = false;
+
+   std::map< std::string,VE_EVENTS::EventHandler*>::iterator pos;
+   for ( pos = _eventHandlers.begin(); pos != _eventHandlers.end(); )
+   {
+      delete pos->second;
+      _eventHandlers.erase( pos++ );
+   }
 
    if ( this->vjTh[0] )
    {
@@ -160,6 +169,19 @@ void cfdSteadyStateVizHandler::SetComputeActorsAndGeodes( bool actorsAndGeodes )
 void cfdSteadyStateVizHandler::SetActorsAreReady( bool actorsReady )
 {
    actorsAreReady = actorsReady;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdSteadyStateVizHandler::ClearVisObjects( void )
+{
+   vprDEBUG(vesDBG,2) << "|\tClear All Graphics Objects From Scene Graph"
+                          << std::endl << vprDEBUG_FLUSH;
+   std::multimap< int, cfdGraphicsObject* >::iterator pos;
+   for ( pos = graphicsObjects.begin(); pos != graphicsObjects.end(); )
+   {
+      pos->second->RemovecfdGeodeFromDCS();
+      delete pos->second;
+      graphicsObjects.erase( pos++ );
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdSteadyStateVizHandler::InitScene( void )
@@ -284,18 +306,6 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
    {
       this->useLastSource = this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
-   { 
-      vprDEBUG(vesDBG,2) << "|\tClear All Graphics Objects From Scene Graph"
-                             << std::endl << vprDEBUG_FLUSH;
-      std::multimap< int, cfdGraphicsObject* >::iterator pos;
-      for ( pos = graphicsObjects.begin(); pos != graphicsObjects.end(); )
-      {
-         pos->second->RemovecfdGeodeFromDCS();
-         delete pos->second;
-         graphicsObjects.erase( pos++ );
-      }
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
    {

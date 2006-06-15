@@ -121,6 +121,11 @@ public:
    ///- to be used by the addvis eh
    ///\param actorsReady Bool that tells sshandler to add geodes
    void SetActorsAreReady( bool actorsReady );
+   ///Clear all the vis objects from the graphics objects list
+   ///right now this must be done in ssvishandler
+   ///because the map is a private member of ssvishandler and this is the 
+   ///easiest way to handle for the time being
+   void ClearVisObjects( void );
    
    // Helper functions
    void SetCommandArray( cfdCommandArray* );
