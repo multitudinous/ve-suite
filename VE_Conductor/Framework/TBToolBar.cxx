@@ -51,7 +51,7 @@
 
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
-
+#include <iostream>
 BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
    EVT_TOOL_RANGE(SCALAR_ID,TRANSFER_FUNCS_ID,TextureBasedToolBar::_handleToolButtons)
 END_EVENT_TABLE()

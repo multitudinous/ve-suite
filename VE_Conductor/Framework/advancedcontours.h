@@ -88,8 +88,6 @@ enum ADVANCED_CONTOUR_IDS
 
 class AdvancedContours: public wxDialog
 {    
-//    DECLARE_DYNAMIC_CLASS( AdvancedContours )
-    DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
@@ -154,37 +152,13 @@ public:
     bool GetWarpOption();
 
 protected:
-   ////@begin AdvancedContours event handler declarations
-    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
-    void _onContourOpacity( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1
-    void _onWarpedContour( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2
-    void _onContourLOD( wxCommandEvent& event );
-
-    ///wxEVT_COMMAND_RADIO_BOX event handler
-    ///\param event The radio box event
-    void _onContourType(wxCommandEvent& event);
-////@end AdvancedContours event handler declarations
-
+   
    wxSlider* _opacitySlider;///<Opacity slider.
    wxSlider* _warpedScaleSlider;///<Warped scale slider.
    wxSlider* _LODSlider;///<Level Of Detail slider.
    wxRadioBox* _contourTypeRBox;///<Contour radio box dialog.
    wxCheckBox* _warpOptionCBox;///<Warp contour option.
-   double _opacity;///<The opacity setting.
-   double _warpedScale;///<The warped contour scale setting.
-   double _LOD;///<The Level Of Detail setting.
-   std::string _planeType;///< The contour plane type.
-
-   std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
-   int cId, cIso_value, cMin, cMax, cSc;
-   std::vector< long > commandInputs;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
+   
 };
 
 #endif

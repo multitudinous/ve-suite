@@ -38,14 +38,14 @@
 #include <wx/radiobox.h>
 #include <wx/checkbox.h>
 
-BEGIN_EVENT_TABLE( AdvancedContours, wxDialog )
+/*BEGIN_EVENT_TABLE( AdvancedContours, wxDialog )
 ////@begin AdvancedContours event table entries
    EVT_SLIDER        ( OPACITY_SLIDER,          AdvancedContours::_onContourOpacity )
    EVT_RADIOBOX      (CONTOUR_TYPE_RBOX,        AdvancedContours::_onContourType)
    EVT_SLIDER        ( WARPED_SCALE_SLIDER,     AdvancedContours::_onWarpedContour )
    EVT_SLIDER        ( LOD_SLIDER,              AdvancedContours::_onContourLOD )
 ////@end AdvancedContours event table entries
-END_EVENT_TABLE()
+END_EVENT_TABLE()*/
 
 
 AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -65,10 +65,10 @@ bool AdvancedContours::Create( wxWindow* parent, wxWindowID id, const wxString& 
    _LODSlider = 0;
    _contourTypeRBox = 0;
    _warpOptionCBox = 0;
-   _opacity = 100.0;
-   _warpedScale = 1.0f;
-   _LOD = 1.0;
-   _planeType = "Graduated";
+   /*_opacity = 1.0;
+   _warpedScale = .5;
+   _LOD = 0.0;
+   _planeType = "Graduated";*/
 ////@end AdvancedContours member initialisation
 
 ////@begin AdvancedContours creation
@@ -119,7 +119,7 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Warped Contour Scale"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText9, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    _warpedScaleSlider = new wxSlider( itemDialog1, WARPED_SCALE_SLIDER, 1, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    _warpedScaleSlider = new wxSlider( itemDialog1, WARPED_SCALE_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer3->Add(_warpedScaleSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
@@ -134,7 +134,7 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Contour LOD"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    _LODSlider = new wxSlider( itemDialog1, LOD_SLIDER, 1, 1, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    _LODSlider = new wxSlider( itemDialog1, LOD_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer3->Add(_LODSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
@@ -164,7 +164,7 @@ void AdvancedContours::SetOpacity(double opacity)
 {
    if(_opacitySlider)
    {
-      _opacitySlider->SetValue(static_cast<int>(opacity));
+      _opacitySlider->SetValue(static_cast<int>(100*opacity));
    }
 }
 ///////////////////////////////////////////////////////
@@ -172,7 +172,7 @@ void AdvancedContours::SetWarpedScale(double warpScale)
 {
    if(_warpedScaleSlider)
    {
-      _warpedScaleSlider->SetValue(static_cast<int>(warpScale));
+      _warpedScaleSlider->SetValue(static_cast<int>(100*warpScale));
    }
 }
 /////////////////////////////////////////
@@ -180,7 +180,7 @@ void AdvancedContours::SetLOD(double LOD)
 {
    if(_LODSlider)
    {
-      _LODSlider->SetValue(static_cast<int>(LOD));
+      _LODSlider->SetValue(static_cast<int>(100*LOD));
    }
 }
 /////////////////////////////////////
@@ -217,42 +217,22 @@ wxIcon AdvancedContours::GetIconResource( const wxString& name )
 /////////////////////////////////////
 double AdvancedContours::GetOpacity()
 {
-   return _opacity;
+   return  static_cast<double>(_opacitySlider->GetValue()/100.0);
 }
 /////////////////////////////////////////
 double AdvancedContours::GetWarpedScale()
 {
-   return _warpedScale;
+   return static_cast<double>(_warpedScaleSlider->GetValue()/100.0);
 }
 /////////////////////////////////
 double AdvancedContours::GetLOD()
 {
-   return _LOD;
-}
-/////////////////////////////////////////////////////////////////
-void AdvancedContours::_onContourOpacity( wxCommandEvent& WXUNUSED(event) )
-{
-   _opacity = static_cast<double>(_opacitySlider->GetValue());
-}
-////////////////////////////////////////////////////////////////
-void AdvancedContours::_onWarpedContour( wxCommandEvent& WXUNUSED(event) )
-{
-   _warpedScale = static_cast<double>(_warpedScaleSlider->GetValue());
-}
-/////////////////////////////////////////////////////////////
-void AdvancedContours::_onContourLOD( wxCommandEvent& WXUNUSED(event) )
-{
-   _LOD = static_cast<double>(_LODSlider->GetValue());
-}
-//////////////////////////////////////////////////////////////
-void AdvancedContours::_onContourType( wxCommandEvent& WXUNUSED(event) )
-{
-   _planeType = _contourTypeRBox->GetStringSelection();
+   return static_cast<double>(_LODSlider->GetValue()/100.0);
 }
 ///////////////////////////////////////////////////////
 void AdvancedContours::SetContourType(std::string type)
 {
-   _planeType = type;
+   _contourTypeRBox->SetStringSelection(type.c_str());
 }
 /////////////////////////////////////////////////////
 void AdvancedContours::SetWarpOption(bool warpOption)
@@ -267,6 +247,6 @@ bool AdvancedContours::GetWarpOption()
 //////////////////////////////////////////////
 std::string AdvancedContours::GetContourType()
 {
-   return _planeType;
+   return _contourTypeRBox->GetStringSelection().c_str();
 }
 

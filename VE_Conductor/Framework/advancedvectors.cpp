@@ -38,16 +38,6 @@
 #include <wx/icon.h>
 
 
-BEGIN_EVENT_TABLE( AdvancedVectors, wxDialog )
-////@begin AdvancedVectors event table entries
-   EVT_SLIDER       ( VECTOR_MAX_SLIDER,        AdvancedVectors::_onVectorMax )
-   EVT_SLIDER       ( VECTOR_MIN_SLIDER,        AdvancedVectors::_onVectorMin )
-   EVT_SLIDER       ( VECTOR_SCALE_SLIDER,      AdvancedVectors::_onVectorScale )
-   EVT_SLIDER       ( VECTOR_RATIO_SLIDER,      AdvancedVectors::_onVectorRatio )
-   EVT_CHECKBOX     ( SCALAR_BY_VECTOR_CHK,     AdvancedVectors::_onScalarByVectorMag )
-////@end AdvancedVectors event table entries
-END_EVENT_TABLE()
-
 
 using namespace VE_Conductor::GUI_Utilities;
 //////////////////////////////////////////////////////////////////
@@ -216,44 +206,4 @@ wxIcon AdvancedVectors::GetIconResource( const wxString& name )
 {
    wxUnusedVar(name);
    return wxNullIcon;
-}
-///////////////////////////////////////////////////////////
-void AdvancedVectors::_onVectorMax( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in AdvancedVectors.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER in AdvancedVectors. 
-}
-///////////////////////////////////////////////////////////
-void AdvancedVectors::_onVectorMin( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1 in AdvancedVectors.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1 in AdvancedVectors. 
-}
-/////////////////////////////////////////////////////////////
-void AdvancedVectors::_onVectorScale( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2 in AdvancedVectors.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2 in AdvancedVectors. 
-}
-/////////////////////////////////////////////////////////////
-void AdvancedVectors::_onVectorRatio( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER3 in AdvancedVectors.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER3 in AdvancedVectors. 
-}
-///////////////////////////////////////////////////////////////////
-void AdvancedVectors::_onScalarByVectorMag( wxCommandEvent& event )
-{
-////@begin wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX in AdvancedVectors.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX in AdvancedVectors. 
 }

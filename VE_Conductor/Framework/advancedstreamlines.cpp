@@ -37,26 +37,6 @@
 #include <wx/icon.h>
 
 
-BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
-////@begin AdvancedStreamlines event table entries
-   //EVT_BUTTON        ( PARTICLE_TRACKING_BUTTON, AdvancedStreamlines::_onParticleTrack)
-   EVT_CHECKBOX      ( USE_SEED_POINT_CHK,       AdvancedStreamlines::_onLastSeedPtCheck)
-   EVT_CHECKBOX      ( ARROWS_CHK,               AdvancedStreamlines::_onArrowCheck )
-   EVT_COMMAND_SCROLL( SPHERE_SIZE_SLIDER,       AdvancedStreamlines::_onScaleSlider)
-#ifdef WIN32
-   EVT_COMMAND_SCROLL_ENDSCROLL(PROPOGATION_SLIDER,         AdvancedStreamlines::_onPropSlider)
-   EVT_COMMAND_SCROLL_ENDSCROLL(INTEGRATION_STEP_SLIDER,    AdvancedStreamlines::_oniStepSlider)
-   EVT_COMMAND_SCROLL_ENDSCROLL(STEP_SIZE_SLIDER,           AdvancedStreamlines::_onStepSlider)
-   EVT_COMMAND_SCROLL_ENDSCROLL(LINE_DIAMETER_SLIDER,       AdvancedStreamlines::_onDiameterSlider)
-#else
-   EVT_COMMAND_SCROLL(PROPOGATION_SLIDER,         AdvancedStreamlines::_onPropSlider)
-   EVT_COMMAND_SCROLL(INTEGRATION_STEP_SLIDER,    AdvancedStreamlines::_oniStepSlider)
-   EVT_COMMAND_SCROLL(STEP_SIZE_SLIDER,           AdvancedStreamlines::_onStepSlider)
-   EVT_COMMAND_SCROLL(LINE_DIAMETER_SLIDER,       AdvancedStreamlines::_onDiameterSlider)
-#endif
-////@end AdvancedStreamlines event table entries
-END_EVENT_TABLE()
-
 //////////////////////////////////////////////////////////////////////////
 AdvancedStreamlines::AdvancedStreamlines(wxWindow* parent, wxWindowID id,
                                      const wxString& caption, 
@@ -81,15 +61,6 @@ bool AdvancedStreamlines::Create( wxWindow* parent, wxWindowID id, const wxStrin
    _streamArrowCheck = 0;
 
    //itemButton29 = 0;
-
-   _propagationTime = 1.0;
-   _integrationStepSize = 1000.0;
-   _stepSize = 1.0;
-   _sphereArrowParticleSize = .5;
-   _lineDiameter = 0.0;
-
-   _useLastSeedPoint = false;
-   _useStreamArrows = false;
 
    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
    wxDialog::Create( parent, id, caption, pos, size, style );
@@ -295,75 +266,35 @@ void AdvancedStreamlines::SetUseLastSeedPt(bool value)
 ////////////////////////////////////////////////
 double AdvancedStreamlines::GetPropagationSize()
 {
-   return  _propagationTime;
+   return  static_cast<double>(_propagationSlider->GetValue()); 
 }
 /////////////////////////////////////////////////////
 double AdvancedStreamlines::GetIntegrationStepSize()
-{
-   return _integrationStepSize;
+{ 
+   return static_cast<double>(_integrationSlider->GetValue());
 }
 /////////////////////////////////////
 double AdvancedStreamlines::GetStep()
-{
-   return _stepSize;
+{ 
+   return static_cast<double>(_stepSlider->GetValue()); 
 }
 ////////////////////////////////////////////////////////
 double AdvancedStreamlines::GetSphereArrowParticleSize()
 {
-   return _sphereArrowParticleSize;
+   return static_cast<double>(_sphereArrowParticleSlider->GetValue()); 
 }
 /////////////////////////////////////////////
 double AdvancedStreamlines::GetLineDiameter()
 {
-   return _lineDiameter;
+   return static_cast<double>(_diameterSlider->GetValue()); 
 }
 ///////////////////////////////////////////////
 bool AdvancedStreamlines::GetUseLastSeedPoint()
 {
-   return _useLastSeedPoint;
+   return _lastSeedPtCheck->GetValue();
 }
 //////////////////////////////////////////
 bool AdvancedStreamlines::GetStreamArrow()
 {
-   return _useStreamArrows;
+   return _streamArrowCheck->GetValue();
 }
-///////////////////////////////////////////////////////
-void AdvancedStreamlines::_onLastSeedPtCheck( wxCommandEvent& WXUNUSED(event) )
-{
-   this->_useLastSeedPoint = _lastSeedPtCheck->GetValue();
-}
-///////////////////////////////////////////////////////
-void AdvancedStreamlines::_onArrowCheck( wxCommandEvent& WXUNUSED(event) )
-{
-   this->_useStreamArrows = _streamArrowCheck->GetValue();
-}
-///////////////////////////////////////////////////////
-void AdvancedStreamlines::_oniStepSlider( wxScrollEvent& WXUNUSED(event) )
-{
-   _integrationStepSize = static_cast<double>(_integrationSlider->GetValue());
-}
-///////////////////////////////////////////////////////
-void AdvancedStreamlines::_onPropSlider( wxScrollEvent& WXUNUSED(event) )
-{
-   _propagationTime = static_cast<double>(_propagationSlider->GetValue());
-}
-///////////////////////////////////////////////////////
-void AdvancedStreamlines::_onStepSlider( wxScrollEvent& WXUNUSED(event) )
-{
-   _stepSize = static_cast<double>(_stepSlider->GetValue());
-}
-///////////////////////////////////////////////////////
-void AdvancedStreamlines::_onDiameterSlider( wxScrollEvent& WXUNUSED(event) )
-{
-   _lineDiameter = static_cast<double>(this->_diameterSlider->GetValue());
-}
-///////////////////////////////////////////////////////
-void AdvancedStreamlines::_onScaleSlider( wxScrollEvent& WXUNUSED(event) )
-{
-   _sphereArrowParticleSize = static_cast<double>(_sphereArrowParticleSlider->GetValue());
-}
-///////////////////////////////////////////////////////
-/*void AdvancedStreamlines::_onParticleTrack( wxCommandEvent& WXUNUSED(event) )
-{
-   
-}*/

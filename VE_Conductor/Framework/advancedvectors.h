@@ -69,8 +69,6 @@ enum ADVANCED_VECTOR_IDS
 
 class AdvancedVectors: public wxDialog
 {    
-//    DECLARE_DYNAMIC_CLASS( Vectors )
-    DECLARE_EVENT_TABLE()
 
 public:
    /// Constructors
@@ -129,20 +127,6 @@ public:
    static bool ShowToolTips();
 
 protected:
-   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
-   void _onVectorMax( wxCommandEvent& event );
-
-   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER1
-   void _onVectorMin( wxCommandEvent& event );
-
-   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER2
-   void _onVectorScale( wxCommandEvent& event );
-
-   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER3
-   void _onVectorRatio( wxCommandEvent& event );
-
-   /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
-   void _onScalarByVectorMag( wxCommandEvent& event );
 
    VE_Conductor::GUI_Utilities::DualSlider* vectorRange;
    wxSlider* _vectorScaleSlider;///<Slider widget for vector scale.

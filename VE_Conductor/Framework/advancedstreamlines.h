@@ -103,8 +103,6 @@ enum ADVANCED_STREAMLINE_IDS
 
 class AdvancedStreamlines: public wxDialog
 {    
-//    DECLARE_DYNAMIC_CLASS( AdvancedStreamlines )
-    DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
@@ -176,23 +174,6 @@ public:
    static bool ShowToolTips();
 
 protected:
-   void _onLastSeedPtCheck(wxCommandEvent& event);
-   void _onArrowCheck( wxCommandEvent& event);
-   void _oniStepSlider(wxScrollEvent& event);
-   void _onPropSlider(wxScrollEvent& event);
-   void _onStepSlider(wxScrollEvent& event);
-   void _onDiameterSlider(wxScrollEvent& event);
-   void _onScaleSlider( wxScrollEvent& event);
-   void _onParticleTrack(wxCommandEvent& event);
-
-   double _propagationTime;///<The propagation time.
-   double _integrationStepSize;///<The integration step size
-   double _stepSize;///<The (?) step size.
-   double _sphereArrowParticleSize;///<The (?)size.
-   double _lineDiameter;///<The line diameter.
-
-   bool _useLastSeedPoint;///<Use last seed point.
-   bool _useStreamArrows;///<Use stream arrows.
 
    wxSlider* _propagationSlider;  
    wxSlider* _integrationSlider; 
@@ -202,14 +183,6 @@ protected:
    wxCheckBox* _lastSeedPtCheck;
    wxCheckBox* _streamArrowCheck;
 
-   //wxButton*   itemButton29;
-
-
-   std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
-   std::vector< long > commandInputs;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
 };
 
 #endif
