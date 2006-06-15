@@ -110,7 +110,7 @@
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(IntDir)/GraphicalPlugin_tao_pf_d.pdb"
+				ProgramDatabaseFile="$(IntDir)/XplorerNetworkLib_tao_pf_d.pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/GraphicalPlugin_tao_pf_d.lib"
 				TargetMachine="1"/>
@@ -180,7 +180,7 @@
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(IntDir)/GraphicalPlugin_tao_osg_d.pdb"
+				ProgramDatabaseFile="$(IntDir)/XplorerNetworkLib_tao_osg_d.pdb"
 				SubSystem="0"
 				ImportLibrary="$(OutDir)/XplorerNetworkLib_tao_osg_d.lib"
 				TargetMachine="1"/>
