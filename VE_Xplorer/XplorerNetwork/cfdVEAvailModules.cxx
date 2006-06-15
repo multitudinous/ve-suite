@@ -1,4 +1,4 @@
-#include "VE_Xplorer/cfdVEAvailModules.h"
+#include "VE_Xplorer/XplorerNetwork/cfdVEAvailModules.h"
 #include <iostream>
 
 #include <fstream>

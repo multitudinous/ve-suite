@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/VE_i.h"
+#include "VE_Xplorer/XplorerNetwork/VE_i.h"
 #include <iostream>
 #include <vpr/Sync/Guard.h>
 

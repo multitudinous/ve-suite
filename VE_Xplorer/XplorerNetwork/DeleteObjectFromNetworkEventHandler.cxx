@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/DeleteObjectFromNetworkEventHandler.h"
+#include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdModelHandler.h"
-#include "VE_Xplorer/cfdExecutive.h"
+#include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
 #include "VE_Xplorer/cfdVEBaseClass.h"
 
 

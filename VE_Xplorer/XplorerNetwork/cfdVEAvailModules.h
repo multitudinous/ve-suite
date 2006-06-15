@@ -1,7 +1,7 @@
 #ifndef CFD_AVAIL_MODULES_H
 #define CFD_AVAIL_MODULES_H
 
-#include "VE_Xplorer/cfdVEPluginLoader.h"
+#include "VE_Xplorer/XplorerNetwork/cfdVEPluginLoader.h"
 
 namespace VE_Xplorer
 {

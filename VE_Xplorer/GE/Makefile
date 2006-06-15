@@ -99,6 +99,8 @@ EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ModelLib
 EXTRA_LIBS+= -lVE_OpenModuleLib
 EXTRA_LIBS+= -lVE_ShaderLib
+EXTRA_LIBS+= -lVE_XplorerNetworkLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 #include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 

@@ -68,7 +68,7 @@
 #include "VE_Open/XML/Model/ModelCreator.h"
 
 #ifdef _TAO
-#include "VE_Xplorer/cfdExecutive.h"
+#include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
 #endif //_TAO
 
 // Scene graph dependant headers

@@ -30,13 +30,14 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-DIRS= ${VE_SUITE_HOME}/VE_Xplorer/VE_Util \
+DIRS= ${VE_SUITE_HOME}/VE_Xplorer/Utilities \
    ${VE_SUITE_HOME}/VE_SceneGraph \
    ${VE_SUITE_HOME}/VE_SceneGraph/Utilities \
    ${VE_SUITE_HOME}/VE_TextureBased \
-   ${VE_SUITE_HOME}/VE_Xplorer/VE_XplorerHandlers \
-   ${VE_SUITE_HOME}/VE_Xplorer/VE_GraphicalPlugin \
-   ${VE_SUITE_HOME}/VE_Xplorer/VE_GE\
+   ${VE_SUITE_HOME}/VE_Xplorer/XplorerHandlers\
+   ${VE_SUITE_HOME}/VE_Xplorer/GraphicalPlugin\
+   ${VE_SUITE_HOME}/VE_Xplorer/XplorerNetwork\
+   ${VE_SUITE_HOME}/VE_Xplorer/GE\
    ${VE_SUITE_HOME}/VE_Xplorer/DefaultGraphicalPlugin
 
 # -----------------------------------------------------------------------------
@@ -46,13 +47,14 @@ default: all
 
 all: $(DIRS)
 
-${VE_SUITE_HOME}/VE_Xplorer/VE_Util \
+${VE_SUITE_HOME}/VE_Xplorer/Utilities \
 ${VE_SUITE_HOME}/VE_SceneGraph \
 ${VE_SUITE_HOME}/VE_SceneGraph/Utilities \
 ${VE_SUITE_HOME}/VE_TextureBased \
-${VE_SUITE_HOME}/VE_Xplorer/VE_XplorerHandlers \
-${VE_SUITE_HOME}/VE_Xplorer/VE_GraphicalPlugin \
-${VE_SUITE_HOME}/VE_Xplorer/VE_GE\
+${VE_SUITE_HOME}/VE_Xplorer/XplorerHandlers \
+${VE_SUITE_HOME}/VE_Xplorer/GraphicalPlugin \
+${VE_SUITE_HOME}/VE_Xplorer/XplorerNetwork\
+${VE_SUITE_HOME}/VE_Xplorer/GE\
 ${VE_SUITE_HOME}/VE_Xplorer/DefaultGraphicalPlugin::
 	cd $@ && $(MAKE)
 
