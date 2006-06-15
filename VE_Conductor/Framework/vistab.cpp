@@ -41,8 +41,10 @@
 #include <iostream>
 #include <string>
 ////@begin XPM images
-#include "VE_Conductor/Framework/vector.xpm"
+#include "VE_Conductor/Framework/new_vector.xpm"
 #include "VE_Conductor/Framework/contour.xpm"
+#include "VE_Conductor/Framework/streamlines.xpm"
+#include "VE_Conductor/Framework/isosurface.xpm"
 ////@end XPM images
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
@@ -219,21 +221,21 @@ void Vistab::CreateControls()
                           itemtool4Bitmap, itemtool4BitmapDisabled,
                           wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Scalar Contours"), wxEmptyString);
 
-    wxBitmap itemtool5Bitmap(vector_xpm);
+    wxBitmap itemtool5Bitmap(new_vector_xpm);
     wxBitmap itemtool5BitmapDisabled;
     itemToolBar3->AddTool(VECTOR_BUTTON, _T("Vectors"), 
                           itemtool5Bitmap, itemtool5BitmapDisabled,
                           wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Vectors"), wxEmptyString);
 
-    wxBitmap itemtool6Bitmap(vector_xpm);
+    wxBitmap itemtool6Bitmap(streamlines_xpm);
     wxBitmap itemtool6BitmapDisabled;
     itemToolBar3->AddTool(STREAMLINE_BUTTON, _T("Streamlines"), itemtool6Bitmap, itemtool6BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Streamlines"), wxEmptyString);
 
-    wxBitmap itemtool7Bitmap(vector_xpm);
+    wxBitmap itemtool7Bitmap(isosurface_xpm);
     wxBitmap itemtool7BitmapDisabled;
     itemToolBar3->AddTool(ISOSURFACE_BUTTON, _T("Isosurfaces"), itemtool7Bitmap, itemtool7BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Isosurfaces"), wxEmptyString);
 
-    wxBitmap itemtool8Bitmap(vector_xpm);
+    wxBitmap itemtool8Bitmap(new_vector_xpm);
     wxBitmap itemtool8BitmapDisabled;
     itemToolBar3->AddTool(TEXTURE_BASED_BUTTON, _T("Texture-Based"), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Texture Based"), wxEmptyString);
 
