@@ -40,10 +40,14 @@
  */
 
 #include <string>
-#include "VE_Conductor/Framework/BaseDialog.h"
+#include "VE_Installer/include/VEConfig.h"
+#include "VE_Conductor/Utilities/BaseDialog.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
-
-class ROIDialog : public BaseDialog 
+namespace VE_Conductor
+{
+namespace GUI_Utilities
+{
+class VE_CONDUCTOR_UTILS_EXPORTS ROIDialog : public BaseDialog 
 {
 public:
    ///Constructor
@@ -134,9 +138,12 @@ protected:
    void _createDualSliders();
    ///Add the controls to the dialog
    virtual void _buildGUI();
+   virtual wxSizer* _buildSpecificWidgets();
 
    VE_Conductor::GUI_Utilities::DualSlider* _xBounds;///<DualSlider for x bounds
    VE_Conductor::GUI_Utilities::DualSlider* _yBounds;///<DualSlider for y bounds
    VE_Conductor::GUI_Utilities::DualSlider* _zBounds;///<DualSlider for z bounds
 };
+}
+}
 #endif// ROI_DIALOG_H

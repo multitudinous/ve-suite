@@ -200,9 +200,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\BaseDialog.cxx">
-			</File>
-			<File
 				RelativePath=".\contours.cpp">
 			</File>
 			<File
@@ -316,9 +313,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\ROIDialog.cxx">
-			</File>
-			<File
 				RelativePath=".\SoundsPane.cpp">
 			</File>
 			<File
@@ -363,9 +357,6 @@
 			</File>
 			<File
 				RelativePath="Avail_Modules.h">
-			</File>
-			<File
-				RelativePath=".\BaseDialog.h">
 			</File>
 			<File
 				RelativePath=".\contours.h">
@@ -423,9 +414,6 @@
 			</File>
 			<File
 				RelativePath="ResultPanel.h">
-			</File>
-			<File
-				RelativePath=".\ROIDialog.h">
 			</File>
 			<File
 				RelativePath=".\SoundsPane.h">

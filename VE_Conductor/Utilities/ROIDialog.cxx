@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Conductor/Framework/ROIDialog.h"
+#include "VE_Conductor/utilities/ROIDialog.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -91,6 +91,11 @@ void ROIDialog::_buildGUI()
    mainSizer->Add(ydualSizer,1,wxALIGN_CENTER|wxEXPAND);
    mainSizer->Add(zdualSizer,1,wxALIGN_CENTER|wxEXPAND);
 
+   wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
+   _addOKButton(buttonRowSizer);
+   _addCloseButton(buttonRowSizer);
+   
+   mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER|wxEXPAND);
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
 
@@ -216,5 +221,27 @@ void ROIDialog::AddInstruction(VE_XML::DataValuePair* newInstruct)
 void ROIDialog::SendCommands()
 {
    _sendCommandsToXplorer();
+}
+////////////////////////////////////////////
+wxSizer* ROIDialog::_buildSpecificWidgets()
+{
+   wxStaticBox* dualSliderGroup = new wxStaticBox(this, -1, wxT("Volume Clipping Planes"));
+   wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer(dualSliderGroup,wxVERTICAL);
+
+   _createDualSliders();
+   wxBoxSizer* xdualSizer = new wxBoxSizer(wxHORIZONTAL);
+   xdualSizer->Add(_xBounds,1,wxALIGN_CENTER|wxEXPAND);
+
+   wxBoxSizer* ydualSizer = new wxBoxSizer(wxHORIZONTAL);
+   ydualSizer->Add(_yBounds,1,wxALIGN_CENTER|wxEXPAND);
+
+   wxBoxSizer* zdualSizer = new wxBoxSizer(wxHORIZONTAL);
+   zdualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND);
+
+   mainSizer->Add(xdualSizer,1,wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(ydualSizer,1,wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(zdualSizer,1,wxALIGN_CENTER|wxEXPAND);
+
+   return mainSizer;
 }
 

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Conductor/Framework/BaseDialog.h"
+#include "VE_Conductor/Utilities/BaseDialog.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>
@@ -39,6 +39,7 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
+using namespace VE_Conductor::GUI_Utilities;
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
 ////////////////////////////////////////////////////
@@ -65,6 +66,16 @@ void BaseDialog::ClearInstructions()
    ///we need to insure that the vector is clear
    _instructions.clear();
    _commandName.clear();
+}
+//////////////////////////////////////////////////////
+void BaseDialog::_addOKButton(wxSizer* buttonRowSizer)
+{
+   buttonRowSizer->Add(new wxButton(this,wxID_OK,"OK"),1,wxALIGN_CENTER);
+}
+/////////////////////////////////////////////////////////
+void BaseDialog::_addCloseButton(wxSizer* buttonRowSizer)
+{
+   buttonRowSizer->Add(new wxButton(this,wxID_CLOSE,"Close"),1,wxALIGN_CENTER);
 }
 /////////////////////////////////////////
 void BaseDialog::_sendCommandsToXplorer()
@@ -119,4 +130,3 @@ void BaseDialog::_sendCommandsToXplorer()
    //Clean up memory
    delete newCommand;
 }
-

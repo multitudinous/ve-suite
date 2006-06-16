@@ -35,6 +35,7 @@
 #ifndef STAND_ALONE
 #include "VE_Open/skel/VjObsC.h"
 #endif
+#include "VE_Installer/include/VEConfig.h"
 #include <vector>
 #include <string>
 #include <wx/window.h>
@@ -45,7 +46,11 @@ namespace VE_XML
 {
    class DataValuePair;
 }
-class BaseDialog : public wxDialog
+namespace VE_Conductor
+{
+namespace GUI_Utilities
+{
+class VE_CONDUCTOR_UTILS_EXPORTS BaseDialog : public wxDialog
 {
 public:
    ///Constructor
@@ -68,6 +73,10 @@ public:
 protected:
    ///Override this method in derived classes to add controls to the dialog.
    virtual void _buildGUI()=0;
+
+   void _addOKButton(wxSizer* buttonRowSizer);
+   void _addCloseButton(wxSizer* buttonRowSizer);
+
 #ifndef STAND_ALONE
    VjObs_ptr _vjObsPtr;///<The VjObj ptr.
    
@@ -77,6 +86,7 @@ protected:
    std::string _commandName;///<The name of the Command
    std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 };
-
+}
+}
 #endif//BASE_DIALOG_H
 

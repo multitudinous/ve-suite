@@ -147,6 +147,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
+				RelativePath=".\BaseDialog.cxx">
+			</File>
+			<File
 				RelativePath=".\CADMaterialEditMenu.cxx">
 			</File>
 			<File
@@ -177,15 +180,30 @@
 				RelativePath=".\Polygon.cxx">
 			</File>
 			<File
+				RelativePath=".\ROIDialog.cxx">
+			</File>
+			<File
 				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cpp">
 			</File>
 			<File
 				RelativePath=".\Tag.cxx">
 			</File>
+			<File
+				RelativePath=".\TBIsosurface.cxx">
+				<FileConfiguration
+					Name="dbg|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
+			<File
+				RelativePath=".\BaseDialog.h">
+			</File>
 			<File
 				RelativePath=".\CADMaterialEditMenu.h">
 			</File>
@@ -217,10 +235,16 @@
 				RelativePath=".\Polygon.h">
 			</File>
 			<File
+				RelativePath=".\ROIDialog.h">
+			</File>
+			<File
 				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.h">
 			</File>
 			<File
 				RelativePath=".\Tag.h">
+			</File>
+			<File
+				RelativePath=".\TBIsosurface.h">
 			</File>
 		</Filter>
 		<Filter
