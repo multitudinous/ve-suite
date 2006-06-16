@@ -71,6 +71,9 @@ DSO_PLUGIN_DEPS+= -lVE_ModelLib
 DSO_PLUGIN_DEPS+= -lVE_SceneGraph_UtilitiesLib 
 DSO_PLUGIN_DEPS+= -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG) 
 DSO_PLUGIN_DEPS+= -lVE_UtilLib
+DSO_PLUGIN_DEPS+= -lVE_OpenModuleLib
+DSO_PLUGIN_DEPS+= -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+DSO_PLUGIN_DEPS+= -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 DSO_PLUGIN_DEPS+= -lVE_TextureBasedLib$(OSG)$(PATENTED_TAG)
 DSO_PLUGIN_DEPS+= $(shell vrjuggler-config vrj --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
