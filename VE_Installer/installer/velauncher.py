@@ -25,6 +25,10 @@ import wx ##Used for GUI
 ##set it to False if you want to test choosing your own Jconf file.
 ##CODE NOTE: Used in Launch.UnixLaunch and Launch.WindowsLaunch
 JCONF_STANDARD = False
+##Miscellaneous values for launcher's UI
+XPLORER_SHELL_NAME = "Xplorer Shell"
+CONDUCTOR_SHELL_NAME = "Conductor Shell"
+FIXED = False
 ##File/Folder settings.
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
@@ -33,6 +37,31 @@ CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
 RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
                       "OSG Patented Cluster", "Performer"]
+MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization", "Custom"]
+MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
+                         "nameServer": [FIXED, True],
+                         "xplorer": [FIXED, True],
+                         "xplorerType": [FIXED, 1],
+                         "desktop": [FIXED, True],
+                         "jconf": [FIXED, "Desktop",
+                                   os.path.join(os.getenv("VE_INSTALL_DIR",
+                                                          os.getcwd()),
+                                                "stereo_desktop",
+                                                "desktop.jconf")],
+                         "taoMachine": [FIXED, "localhost"]},
+             "Tablet": {"conductor": [FIXED, True],
+                        "nameServer": [FIXED, False],
+                        "xplorer": [FIXED, False],
+                        "desktop": [FIXED, False]},
+             "Computation": {"conductor": [FIXED, False],
+                             "nameServer": [FIXED, True],
+                             "xplorer": [FIXED, False]},
+             "Visualization": {"conductor": [FIXED, False],
+                               "nameServer": [FIXED, False],
+                               "xplorer": [FIXED, True],
+                               "xplorerType": [FIXED, 1],
+                               "desktop": [FIXED, False]},
+             "Custom": {}}
 JCONF_CONFIG = "JconfList"
 DEFAULT_JCONF = "simstandalone.jconf"
 ##Values for launcher's GUI layout
@@ -46,9 +75,6 @@ VERTICAL_SPACE = (-1, BORDER)
 HORIZONTAL_SPACE = (BORDER, -1)
 LEFT_MARGIN = HORIZONTAL_SPACE
 NULL_SPACE = (0, 0)
-##Other values for launcher's UI
-XPLORER_SHELL_NAME = "Xplorer Shell"
-CONDUCTOR_SHELL_NAME = "Conductor Shell"
 
 class LauncherWindow(wx.Frame):
     """Manages the launcher's window and the use of data from it.
@@ -97,7 +123,16 @@ class LauncherWindow(wx.Frame):
         ##Prepare data storage
         ##NOTE: jconfList is a local copy of the Jconf list stored in the
         ##program's config. Changes to jconfList are mirrored in the config.
+        self.conductor = False
+        self.nameServer = False
+        self.xplorer = False
+        self.xplorerType = 0
+        self.desktop = False
         self.jconfList = []
+        self.jconfCursor = 0
+        self.taoMachine = ""
+        self.taoPort = ""
+
         ##Build buttons.
         ##NOTE: Save/load configs disabled for now.
         ##self.bLoad = wx.Button(self, ID_LOAD, "Load Settings")
@@ -105,43 +140,51 @@ class LauncherWindow(wx.Frame):
         bDirectory = wx.Button(self, -1, "Choose Working Directory")
         bDirectory.SetToolTip(wx.ToolTip("Choose the working directory for" +
                                          " the programs."))
-        bEditJconf = wx.Button(self, -1, "Edit Juggler Configurations")
-        bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
-                                         " configuration files displayed" +
-                                         " in the Launcher."))
+        self.bEditJconf = wx.Button(self, -1, "Juggler Configuration")
+        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
+                                              " configuration files" +
+                                              " displayed in the Launcher."))
         bLaunch = wx.Button(self, -1, "Launch VE Suite")
         bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
+        self.bCustom = wx.Button(self, -1, "Mode Settings")
+        self.bCustom.SetToolTip(wx.ToolTip("View and change settings for" +
+                                           "current mode."))
         ##Build text controls.
         self.txDirectory = wx.TextCtrl(self, -1,
                                        DIRECTORY_DEFAULT)
                                        ##style=wx.TE_READONLY)
         self.txDirectory.SetToolTip(wx.ToolTip("The path of the" +
                                                " working directory."))
-        self.chJconf = wx.Choice(self, -1)
-        self.chJconf.SetToolTip(wx.ToolTip("Choose the Juggler configuration" +
-                                           " Xplorer will use for its" +
-                                           " configuration settings."))
+#        self.chJconf = wx.Choice(self, -1)
+#        self.chJconf.SetToolTip(wx.ToolTip("Choose the Juggler configuration" +
+#                                           " Xplorer will use for its" +
+#                                           " configuration settings."))
         self.txTaoPort = wx.TextCtrl(self, -1)
         self.txTaoPort.SetToolTip(wx.ToolTip("Enter VE Suite's port."))
         self.txTaoMachine = wx.TextCtrl(self, -1)
         self.txTaoMachine.SetToolTip(wx.ToolTip("Enter VE Suite's machine."))
         ##Build checkboxes.
-        self.cbDesktop = wx.CheckBox(self, -1, "Desktop Mode")
-        self.cbDesktop.SetToolTip(wx.ToolTip("Run VE Suite in Desktop Mode"))
-        self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
-        self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server" +
-                                                " at Launch"))
-        self.cbXplorer = wx.CheckBox(self, -1, "Xplorer")
-        self.cbXplorer.SetToolTip(wx.ToolTip("Run the Xplorer at Launch"))
-        self.cbConductor = wx.CheckBox(self, -1, "Conductor")
-        self.cbConductor.SetToolTip(wx.ToolTip("Run the Conductor at Launch"))
+#        self.cbDesktop = wx.CheckBox(self, -1, "Desktop Mode")
+#        self.cbDesktop.SetToolTip(wx.ToolTip("Run VE Suite in Desktop Mode"))
+#        self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
+#        self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server" +
+#                                                " at Launch"))
+#        self.cbXplorer = wx.CheckBox(self, -1, "Xplorer")
+#        self.cbXplorer.SetToolTip(wx.ToolTip("Run the Xplorer at Launch"))
+#        self.cbConductor = wx.CheckBox(self, -1, "Conductor")
+#        self.cbConductor.SetToolTip(wx.ToolTip("Run the Conductor at Launch"))
         ##Build radio buttons.
-        self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Type",
-                                     wx.DefaultPosition, wx.DefaultSize,
-                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_ROWS)
-        self.rbXplorer.SetToolTip(wx.ToolTip("Which Xplorer format do you" +
-                                             " want to launch?"))
+        self.rbMode = wx.RadioBox(self, -1, "Launch Mode",
+                                  wx.DefaultPosition, wx.DefaultSize,
+                                  MODE_LIST, 1, wx.RA_SPECIFY_COLS)
+        self.rbMode.SetToolTip(wx.ToolTip("Which mode do you want to" +
+                                          " launch in?"))
+#        self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Type",
+#                                     wx.DefaultPosition, wx.DefaultSize,
+#                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_ROWS)
+#        self.rbXplorer.SetToolTip(wx.ToolTip("Which Xplorer format do you" +
+#                                             " want to launch?"))
         ##Set tool tip popup delay to 1 second
         wx.ToolTip.SetDelay(1000)
         ##Check the dependencies.
@@ -150,11 +193,14 @@ class LauncherWindow(wx.Frame):
         ##NOTE: Save/load configs disabled for now.
         ##self.Bind(wx.EVT_BUTTON, self.OnSave, self.bSave)
         ##self.Bind(wx.EVT_BUTTON, self.OnLoad, self.bLoad)
-        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckXplorer, self.cbXplorer)
+#        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckXplorer, self.cbXplorer)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, bLaunch)
-        self.Bind(wx.EVT_BUTTON, self.EditJconf, bEditJconf)
+        self.Bind(wx.EVT_BUTTON, self.EditJconf, self.bEditJconf)
+        self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
+        self.Bind(wx.EVT_RADIOBOX, self.ModeChanged, self.rbMode)
+#        self.Bind(wx.EVT_BUTTON, self.EditJconf, bEditJconf)
         ##Restore config values from last time.
         self.LoadConfig(DEFAULT_CONFIG)
         
@@ -175,24 +221,24 @@ class LauncherWindow(wx.Frame):
         columnSizer.AddMany([HORIZONTAL_SPACE,
                              bDirectory])
         ##Construct the check box/radio box grid.
-        gridSizer = wx.FlexGridSizer(3, 2,
-                                     VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
-        gridSizer.AddMany([self.cbNameServer, NULL_SPACE,
-                           self.cbConductor, self.cbDesktop,       
-                           self.cbXplorer, self.rbXplorer])
+#        gridSizer = wx.FlexGridSizer(3, 2,
+#                                     VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
+#        gridSizer.AddMany([self.cbNameServer, NULL_SPACE,
+#                           self.cbConductor, self.cbDesktop,       
+#                           self.cbXplorer, self.rbXplorer])
         ##Insert the Directory column.
         rowSizer.Add(wx.StaticText(self, -1, "Working Directory:"))
         rowSizer.Add(columnSizer, 0, wx.EXPAND) 
         ##Construct the Jconf column.
-        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.Add(self.chJconf, 1, wx.ALIGN_BOTTOM)
-        columnSizer.AddMany([HORIZONTAL_SPACE,
-                             bEditJconf])
-        columnSizer.Add((-1, -1), 1)
+#        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
+#        columnSizer.Add(self.chJconf, 1, wx.ALIGN_BOTTOM)
+#        columnSizer.AddMany([HORIZONTAL_SPACE,
+#                             bEditJconf])
+#        columnSizer.Add((-1, -1), 1)
         ##Insert the Jconf column.
-        rowSizer.Add(VERTICAL_SPACE)
-        rowSizer.Add(wx.StaticText(self, -1, "Jconfiguration file:"))
-        rowSizer.Add(columnSizer, 0, wx.EXPAND)
+#        rowSizer.Add(VERTICAL_SPACE)
+#        rowSizer.Add(wx.StaticText(self, -1, "Jconfiguration file:"))
+#        rowSizer.Add(columnSizer, 0, wx.EXPAND)
         ##Construct the Tao column.
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         columnSizer.Add(wx.StaticText(self, -1, "Tao Machine:"),
@@ -205,15 +251,20 @@ class LauncherWindow(wx.Frame):
         columnSizer.Add(HORIZONTAL_SPACE)
         columnSizer.Add(self.txTaoPort, 1)
         columnSizer.Add(HORIZONTAL_SPACE, 1)
-        ##Insert the Tao column, box grid and Launch button.
+        ##Insert the Tao column
         rowSizer.Add(VERTICAL_SPACE)
         rowSizer.Add(columnSizer, 0, wx.EXPAND)
+        ##Insert the box grid and Launch button.
+        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        columnSizer.AddMany([self.rbMode,
+                             HORIZONTAL_SPACE])
+        columnSizer.Add(self.bCustom, 0, wx.ALIGN_BOTTOM)
+        columnSizer.Add(HORIZONTAL_SPACE)
+        columnSizer.Add(self.bEditJconf, 0, wx.ALIGN_BOTTOM)
         rowSizer.AddMany([VERTICAL_SPACE,
-                          wx.StaticText(self, -1, "Programs to launch:"),
-                          VERTICAL_SPACE,
-                          gridSizer])
-        rowSizer.Add(VERTICAL_SPACE, 1)
-        rowSizer.Add(bLaunch, 0, wx.ALIGN_RIGHT)
+                          columnSizer])
+        rowSizer.Add(VERTICAL_SPACE, 0)
+        rowSizer.Add(bLaunch, 1, wx.EXPAND)
         ##Add the left margin
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         columnSizer.AddSpacer(LEFT_MARGIN)
@@ -319,7 +370,6 @@ class LauncherWindow(wx.Frame):
         ##Write the new Dependencies directory to default config.
         config.Write("DependenciesDir", dependenciesDir)
 
-
     def DependenciesGet(self):
         """Ask user for DependenciesDir. Called by DependenciesCheck.
 
@@ -363,50 +413,88 @@ class LauncherWindow(wx.Frame):
                     OnClose("dead parrot sketch")    
         return searchDir
 
-    def EvtCheckXplorer(self, event):
-        """Enables/Disables Xplorer's radio box.
+    def ModeChanged(self, event):
+        """Saves data & changes settings to match the selected mode."""
+        ##Save previous data entered by user.
+        self.UpdateData()
+        ##Change displayed data to mode's data.
+        self.UpdateDisplay()
 
-        Prevents the user from choosing Xplorer's mode if Xplorer
-        won't be launched.
-        The radio box is enabled if Xplorer's check box is checked,
-        disabled if it isn't."""
-        self.rbXplorer.Enable(event.GetEventObject().IsChecked())
-        self.rbXplorer.Enable(event.GetEventObject().IsChecked())
+    def UpdateData(self):
+        """Saves the user's input to the launcher's data variables."""
+        ##NOTE: Will have to change way user's variables are saved if 
+        ##modes allow users to change these in the future.
+        ##Probably by grabbing the oldMode and checking its settings.
+        if self.txTaoMachine.IsEnabled():
+            self.taoMachine = self.txTaoMachine.GetValue()
+        if self.txTaoPort.IsEnabled():
+            self.taoPort = self.txTaoPort.GetValue()
+        print "%s %s" % (self.taoMachine, self.taoPort) ##TESTER
+
+    def UpdateDisplay(self):
+        """Changes settings to match the selected mode."""
+        newMode = self.rbMode.GetStringSelection()
+        print "Mode changed to %s." % (newMode) ##TESTER
+        if newMode in MODE_DICT:
+            modeRules = MODE_DICT[newMode]
+        else:
+            modeRules = {}
+        ##Go through each rule listed in modeRules.
+        ##Change the corresponding controls to the value given.
+        ##If it's FIXED, prevent the user from changing it.
+        ##If a rule isn't given, it uses its regular value.
+        if "jconf" in modeRules:
+            self.bEditJconf.Enable(modeRules["jconf"][0])
+        elif ("xplorer" in modeRules) and (modeRules["xplorer"][0] == FIXED) \
+             and (modeRules["xplorer"][1] == False):
+            self.bEditJconf.Enable(False)
+        else:
+            self.bEditJconf.Enable(True)
+        if "taoMachine" in modeRules:
+            self.txTaoMachine.SetValue(modeRules["taoMachine"][1])
+            self.txTaoMachine.Enable(modeRules["taoMachine"][0])
+        else:
+            self.txTaoMachine.SetValue(self.taoMachine)
+            self.txTaoMachine.Enable(True)
+        if "taoPort" in modeRules:
+            self.txTaoPort.SetValue(modeRules["taoPort"][1])
+            self.txTaoPort.Enable(modeRules["taoPort"][0])
+        else:
+            self.txTaoPort.SetValue(self.taoPort)
+            self.txTaoPort.Enable(True)
 
     def UpdateChJconf(self, cursor):
-        """Updates the Jconf choice window in the Launcher.
-
-        Keyword arguments:
-        cursor -- ID of selected choice (changed to 0 if out of range)"""
-        ##Rebuild the choice list
-        self.chJconf.Clear()
-        nameArray = self.jconfList.GetNames()
-        for i in range(len(nameArray)):
-            self.chJconf.Append(nameArray[i])
+        """Updates JconfCursor."""
         ##Set the cursor
         if cursor == wx.NOT_FOUND or cursor < 0 \
-           or cursor >= self.chJconf.GetCount():
+           or cursor >= len(self.jconfList):
             cursor = 0
         ##Error catcher for lists without any items.
-        if self.chJconf.GetCount() == 0:
+        if len(self.jconfList) == 0:
             cursor = wx.NOT_FOUND
-        self.chJconf.SetSelection(cursor)
-        ##NOTE: Put in "Add new Jconf" option as last item.
+        self.jconfCursor = cursor
 
     def EditJconf(self, event):
         """Brings up the Jconf editing window."""
         jconfWindow = JconfWindow(self, wx.ID_ANY, "Edit Jconf List",
-                                  self.jconfList, self.chJconf.GetSelection())
+                                  self.jconfList, self.jconfCursor)
         jconfWindow.ShowModal()
         jconfWindow.Destroy()        
 
     def GetSelectedJconf(self):
         """Returns the path of the selected Jconf file."""
-        xplorerConfig = self.jconfList.GetPath(self.chJconf.GetSelection())
+        mode = self.rbMode.GetStringSelection()
+        if mode in MODE_DICT:
+            modeRules = MODE_DICT[mode] 
+        else:
+            modeRules = {}
+        if ("jconf" in modeRules) and (modeRules["jconf"][0] == FIXED):
+            xplorerConfig = modeRules["jconf"][2]
+        else:
+            xplorerConfig = self.jconfList.GetPath(self.jconfCursor)
         print "Jconf file: " + xplorerConfig ##TESTER
         return xplorerConfig
 
-    ##The user chooses the directory path
     def ChooseDirectory(self, event):
         """The user chooses the working directory through a dialog."""
         curDir = self.txDirectory.GetValue()
@@ -425,18 +513,21 @@ class LauncherWindow(wx.Frame):
 
         Keyword arguments:
         name -- What to name this configuration"""
+        ##Update the launcher's data
+        self.UpdateData()
         ##Save the current configuration under name
         config = wx.Config(CONFIG_FILE)
         config.SetPath("/" + name)
         config.Write("Directory", self.txDirectory.GetValue())
-        config.WriteInt("JconfCursor", self.chJconf.GetSelection())
-        config.Write("NameServer", str(self.cbNameServer.GetValue()))
-        config.Write("Xplorer", str(self.cbXplorer.GetValue()))
-        config.WriteInt("XplorerType", self.rbXplorer.GetSelection())
-        config.Write("Conductor", str(self.cbConductor.GetValue()))
-        config.Write("TaoMachine", self.txTaoMachine.GetValue())
-        config.Write("TaoPort", self.txTaoPort.GetValue())
-        config.Write("DesktopMode", str(self.cbDesktop.GetValue()))
+        config.WriteInt("JconfCursor", self.jconfCursor)
+        config.Write("NameServer", str(self.nameServer))
+        config.Write("Xplorer", str(self.xplorer))
+        config.WriteInt("XplorerType", self.xplorerType)
+        config.Write("Conductor", str(self.conductor))
+        config.Write("TaoMachine", self.taoMachine)
+        config.Write("TaoPort", self.taoPort)
+        config.Write("DesktopMode", str(self.desktop))
+        config.WriteInt("Mode", self.rbMode.GetSelection())
 ##        print "Saved configuration." ##TESTER
         return
     
@@ -471,70 +562,68 @@ class LauncherWindow(wx.Frame):
         else:
             print "ERROR: No Jconf configuration found and failed to make" + \
                   "default Jconf from Dependencies dir."
-        ##Set Jconf cursor & Jconf choices list.
-        self.UpdateChJconf(config.ReadInt("JconfCursor", 0))
-        ##Set Tao Machine & Port
-        self.txTaoMachine.SetValue(config.Read("TaoMachine", "localhost"))
+        ##Set Jconf cursor.
+        self.jconfCursor = config.ReadInt("JconfCursor", 0)
+        ##Set Tao Machine & Port.
+        self.taoMachine = config.Read("TaoMachine", "localhost")
         ##Temporary workaround for error w/ Int TaoPort in last version
         if config.GetEntryType("TaoPort") == 3: ##3 == Type_Integer
-            self.txTaoPort.SetValue(str(config.ReadInt("TaoPort", 1239)))
+            self.taoPort = str(config.ReadInt("TaoPort", 1239))
         else:
-            self.txTaoPort.SetValue(config.Read("TaoPort", "1239"))
+            self.taoPort = config.Read("TaoPort", "1239")
         ##Set Name Server
         if config.Read("NameServer", "True") == "True":
-            self.cbNameServer.SetValue(True)
+            self.nameServer = True
         else:
-            self.cbNameServer.SetValue(False)            
+            self.nameServer = False            
         ##Set Xplorer
         if config.Read("Xplorer", "True") == "True":
-            self.cbXplorer.SetValue(True)
+            self.xplorer = True
         else:
-            self.cbXplorer.SetValue(False)
-        ##Show/Fade the radiobox
-        self.rbXplorer.Enable(self.cbXplorer.IsChecked())
+            self.xplorer = False
         ##Set Xplorer Type
         data = config.ReadInt("XplorerType", -1)
         if data >= 0 and data < len(RADIO_XPLORER_LIST):
-            self.rbXplorer.SetSelection(data)
+            xplorerType = data
         else:
-            self.rbXplorer.SetSelection(0)
+            xplorerType = 0
         ##Set Conductor
         if config.Read("Conductor", "True") == "True":
-            self.cbConductor.SetValue(True)
+            self.conductor = True
         else:
-            self.cbConductor.SetValue(False)
+            self.conductor = False
         ##Set Desktop Mode
         if config.Read("DesktopMode", "True") == "True":
-            self.cbDesktop.SetValue(True)
+            self.desktop = True
         else:
-            self.cbDesktop.SetValue(False)
+            self.desktop = False
+        ##Set Mode
+        self.rbMode.SetSelection(config.ReadInt("Mode", len(MODE_LIST) - 1))
+        self.UpdateDisplay()
 ##        print "Configuration loaded." ##TESTER
 
-    ##MODIFY FOR CONFIG CHANGE
-    ##NOTE: Disabled until Save/Load Configuration is implemented
-    ##for the Launcher.
-##    def OnSave(self, event):
-##        dlg = wx.FileDialog(self, message="Save settings as...",
-##                            defaultDir=os.getcwd(),
-##                            defaultFile="", wildcard=SUFFIX_LIST,
-##                            style=wx.SAVE)
-##        if dlg.ShowModal() == wx.ID_OK:
-##            self.SaveConfig(dlg.GetPath())
-##
-##    def OnLoad(self, event):
-##        dlg = wx.FileDialog(self, message="Choose a file",
-##                            defaultDir=os.getcwd(),
-##                            defaultFile="", wildcard=SUFFIX_LIST,
-##                            style=wx.OPEN | wx.CHANGE_DIR)
-##        if dlg.ShowModal() == wx.ID_OK:
-##            self.LoadConfig(dlg.GetPath())
+    def Settings(self, event):
+        """Launches the Custom Settings window."""
+        mode = self.rbMode.GetStringSelection()
+        print "Mode changed to %s." % (mode) ##TESTER
+        if mode in MODE_DICT:
+            modeRules = MODE_DICT[mode]
+        else:
+            modeRules = {}
+        frame = SettingsWindow(self, self.jconfList, self.jconfCursor,
+                                     self.desktop, self.nameServer,
+                                     self.conductor, self.xplorer,
+                                     self.xplorerType,
+                                     modeRules)
+        frame.ShowModal()
+        frame.Destroy()
 
     def Launch(self, event):
         """Checks input, begins launch if error-free."""
         ##ERROR CHECK:  Are any programs selected?
         ##              If not, abort launch.
-        if not (self.cbNameServer.IsChecked() or self.cbConductor.IsChecked()
-                or self.cbXplorer.IsChecked()):
+        if not (self.nameServer or self.conductor
+                or self.xplorer):
             dlg = wx.MessageDialog(self,
                                    "The launch won't do anything because you"+
                                    " haven't selected any programs.\n" +
@@ -590,7 +679,8 @@ class LauncherWindow(wx.Frame):
                 return
         ##ERROR CHECK:  Does the selected Jconf file exist?
         ##              If not, abort the launch.
-        if not (os.path.exists(self.GetSelectedJconf())):
+        GetJconfPath = self.GetSelectedJconf()
+        if not (os.path.exists(GetJconfPath)):
             dlg = wx.MessageDialog(self,
                                    "The Juggler configuration file you chose" +
                                    " doesn't exist.\n" +
@@ -600,16 +690,43 @@ class LauncherWindow(wx.Frame):
             dlg.ShowModal()
             dlg.Destroy()
             return
+        mode = self.rbMode.GetStringSelection()
+        if mode in MODE_DICT:
+            modeRules = MODE_DICT[mode]
+        else:
+            modeRules = {}
+        ##Set variables
+        if ("conductor" in modeRules) and (modeRules["conductor"][0] == FIXED):
+            conductor = modeRules["conductor"][1]
+        else:
+            conductor = self.conductor
+        if ("nameServer" in modeRules) and \
+           (modeRules["nameServer"][0] == FIXED):
+            nameServer = modeRules["nameServer"][1]
+        else:
+            nameServer = self.nameServer
+        if ("xplorer" in modeRules) and (modeRules["xplorer"][0] == FIXED):
+            xplorer = modeRules["xplorer"][1]
+        else:
+            xplorer = self.xplorer
+        if ("xplorerType" in modeRules) and \
+           (modeRules["xplorerType"][0] == FIXED):
+            xplorerType = modeRules["xplorerType"][1]
+        else:
+            xplorerType = self.xplorerType
+        if ("desktop" in modeRules) and (modeRules["desktop"][0] == FIXED):
+            desktop = modeRules["desktop"][1]
+        else:
+            desktop = self.desktop
         ##Go into the Launch
         Launch(self,
                self.txDirectory.GetValue(),
-               self.cbNameServer.IsChecked(), self.cbConductor.IsChecked(),
-               self.cbXplorer.IsChecked(), self.rbXplorer.GetSelection(),
-               self.GetSelectedJconf(),
+               nameServer, conductor,
+               xplorer, xplorerType,
+               GetJconfPath,
                self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()),
-               self.cbDesktop.GetValue())
+               desktop)
 
-    ##Saves the current configuration under the prefs file before closing.
     def OnClose(self, event):
         """Saves launcher's current configuration and quits the launcher.
 
@@ -623,6 +740,214 @@ class LauncherWindow(wx.Frame):
         ##(Add & to the end of its command.)
         ##Update default config file.
         self.SaveConfig(DEFAULT_CONFIG)
+        self.Hide()
+        self.Destroy()
+
+
+class SettingsWindow(wx.Dialog):
+    def __init__(self, parent,
+                 jconf, jconfCursor,
+                 desktop, nameServer, conductor, xplorer, xplorerType,
+                 modeRules):
+        wx.Dialog.__init__(self, parent, -1, "Advanced Settings",
+                           style=wx.DEFAULT_FRAME_STYLE)
+        ##While creating, go through each rule listed in modeRules.
+        ##Change the corresponding controls to the value given.
+        ##If it's FIXED, prevent the user from changing it.
+        ##If a rule isn't given, it uses its regular value.
+        ##Set up data.
+        self.jconfList = jconf
+        self.xplorerTypeFixed = False
+        if ("xplorerType" in modeRules) and \
+           (modeRules["xplorerType"][0] == FIXED):
+            self.xplorerTypeFixed = True
+        self.desktopFixed = False
+        if ("desktop" in modeRules) and (modeRules["desktop"][0] == FIXED):
+            self.desktopFixed = True
+        ##Set up buttons.
+        self.bEditJconf = wx.Button(self, -1, "Edit Juggler Configurations")
+        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
+                                         " configuration files displayed" +
+                                         " in the Launcher."))
+        bOk = wx.Button(self, -1, "OK")
+        bOk.SetToolTip(wx.ToolTip("Finish changing settings and return" +
+                                  " to Launcher."))
+        ##Set up pull-down choice.
+        self.chJconf = wx.Choice(self, -1)
+        self.chJconf.SetToolTip(wx.ToolTip("Choose the Juggler configuration" +
+                                           " Xplorer will use for its" +
+                                           " configuration settings."))
+        if "jconf" in modeRules:
+            self.chJconf.Append(modeRules["jconf"][1])
+            self.chJconf.SetSelection(0)
+            self.chJconf.Enable(modeRules["jconf"][0])
+            self.bEditJconf.Enable(modeRules["jconf"][0])
+        elif ("xplorer" in modeRules) and (modeRules["xplorer"][0] == FIXED) \
+             and (modeRules["xplorer"][1] == False):
+            self.chJconf.Append("None")
+            self.chJconf.SetSelection(0)
+            self.chJconf.Enable(False)
+            self.bEditJconf.Enable(False)
+        else:
+            self.UpdateChJconf(jconfCursor)
+        ##Build checkboxes.
+        self.cbDesktop = wx.CheckBox(self, -1, "Desktop Mode")
+        self.cbDesktop.SetToolTip(wx.ToolTip("Run VE Suite in Desktop Mode"))
+        if "desktop" in modeRules:
+            self.cbDesktop.SetValue(modeRules["desktop"][1])
+            self.cbDesktop.Enable(modeRules["desktop"][0])
+        else:
+            self.cbDesktop.SetValue(desktop)
+        self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
+        self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server" +
+                                                " at Launch"))
+        if "nameServer" in modeRules:
+            self.cbNameServer.SetValue(modeRules["nameServer"][1])
+            self.cbNameServer.Enable(modeRules["nameServer"][0])
+        else:
+            self.cbNameServer.SetValue(nameServer)
+        self.cbXplorer = wx.CheckBox(self, -1, "Xplorer")
+        self.cbXplorer.SetToolTip(wx.ToolTip("Run the Xplorer at Launch"))
+        if "xplorer" in modeRules:
+            self.cbXplorer.SetValue(modeRules["xplorer"][1])
+            self.cbXplorer.Enable(modeRules["xplorer"][0])
+        else:
+            self.cbXplorer.SetValue(xplorer)
+        self.cbConductor = wx.CheckBox(self, -1, "Conductor")
+        self.cbConductor.SetToolTip(wx.ToolTip("Run the Conductor at Launch"))
+        if "conductor" in modeRules:
+            self.cbConductor.SetValue(modeRules["conductor"][1])
+            self.cbConductor.Enable(modeRules["conductor"][0])
+        else:
+            self.cbConductor.SetValue(conductor)
+        ##Build radio buttons.
+        self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Type",
+                                     wx.DefaultPosition, wx.DefaultSize,
+                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_ROWS)
+        self.rbXplorer.SetToolTip(wx.ToolTip("Which Xplorer format do you" +
+                                             " want to launch?"))
+        if "xplorerType" in modeRules:
+            self.rbXplorer.SetSelection(modeRules["xplorerType"][1])
+            self.rbXplorer.Enable(modeRules["xplorerType"][0])
+        else:
+            self.rbXplorer.SetSelection(xplorerType)
+        self.EvtCheckXplorer("dead parrot sketch")
+        ##Also calls self.EvtCheckDesktop as a follow-up
+        ##Bind events.
+        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckXplorer, self.cbXplorer)
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+        self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
+        self.Bind(wx.EVT_BUTTON, self.EditJconf, self.bEditJconf)
+        ##Set sizers.
+        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        rowSizer = wx.BoxSizer(wx.VERTICAL)
+        ##Construct & insert the Jconf column.
+        rowSizer.Add(wx.StaticText(self, -1, "Jconfiguration file:"))
+        columnSizer.Add(self.chJconf, 1, wx.ALIGN_BOTTOM)
+        columnSizer.AddMany([HORIZONTAL_SPACE,
+                             self.bEditJconf])
+        columnSizer.Add((-1, -1), 1)
+        rowSizer.Add(columnSizer, 0, wx.EXPAND)
+        ##Construct & insert the check box/radio box grid.
+        gridSizer = wx.FlexGridSizer(3, 2,
+                                     VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
+        gridSizer.AddMany([self.cbNameServer, NULL_SPACE,
+                           self.cbConductor, self.cbDesktop,
+                           self.cbXplorer, self.rbXplorer])
+        ##Insert the OK button.
+        rowSizer.Add(VERTICAL_SPACE)
+        rowSizer.AddMany([VERTICAL_SPACE,
+                          wx.StaticText(self, -1, "Programs to launch:"),
+                          VERTICAL_SPACE,
+                          gridSizer])
+        rowSizer.Add(VERTICAL_SPACE, 1)
+        rowSizer.Add(bOk, 0, wx.ALIGN_RIGHT)
+        ##Set the main sizer.
+        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainSizer.Add(rowSizer, 1, wx.BOTTOM | wx.RIGHT | wx.EXPAND, BORDER)
+        mainSizer.SetSizeHints(self)
+        self.SetSizer(mainSizer)
+        self.SetSize(INITIAL_WINDOW_SIZE)
+        ##Set the background color.
+        self.SetBackgroundColour(BACKGROUND_COLOR)
+
+    def EvtCheckXplorer(self, event):
+        """Enables/Disables Xplorer's radio box.
+
+        Prevents the user from choosing Xplorer's mode if Xplorer
+        won't be launched. The radio box is enabled if Xplorer's
+        check box is checked, disabled if it isn't."""
+        if self.xplorerTypeFixed == True:
+            self.rbXplorer.Enable(False)
+        else:
+            self.rbXplorer.Enable(self.cbXplorer.IsChecked())
+        ##Goes into EvtCheckDesktop to check that against cbXplorer, too.
+        self.EvtCheckDesktop("dead parrot sketch")
+
+    def EvtCheckDesktop(self, event):
+        """Enabled/Disables the Desktop button.
+
+        Prevents the user from choosing Desktop mode if
+        Conductor and Xplorer won't be launched."""
+        if self.desktopFixed == True:
+            self.cbDesktop.Enable(False)
+        else:
+            self.cbDesktop.Enable(self.cbConductor.IsChecked() or
+                                  self.cbXplorer.IsChecked())
+
+    def UpdateChJconf(self, cursor):
+        """Updates the Jconf choice window in the Launcher.
+
+        Keyword arguments:
+        cursor -- ID of selected choice (changed to 0 if out of range)"""
+        ##Rebuild the choice list
+        self.chJconf.Clear()
+        nameArray = self.jconfList.GetNames()
+        for i in range(len(nameArray)):
+            self.chJconf.Append(nameArray[i])
+        ##Set the cursor
+        if cursor == wx.NOT_FOUND or cursor < 0 \
+           or cursor >= self.chJconf.GetCount():
+            cursor = 0
+        ##Error catcher for lists without any items.
+        if self.chJconf.GetCount() == 0:
+            cursor = wx.NOT_FOUND
+        self.chJconf.SetSelection(cursor)
+        ##NOTE: Put in "Add new Jconf" option as last item.
+
+    def EditJconf(self, event):
+        """Brings up the Jconf editing window."""
+        jconfWindow = JconfWindow(self, wx.ID_ANY, "Edit Jconf List",
+                                  self.jconfList, self.chJconf.GetSelection())
+        jconfWindow.ShowModal()
+        jconfWindow.Destroy()        
+
+    def GetSelectedJconf(self):
+        """Returns the path of the selected Jconf file."""
+        jconfFile = self.jconfList.GetPath(self.chJconf.GetSelection())
+        print "Jconf file: " + jconfFile ##TESTER
+        return jconfFile
+
+    ##Saves the current configuration under the prefs file before closing.
+    def OnClose(self, event):
+        """Sends current configuration back to parent & closes window."""
+        ##Update parent.
+        parent = self.GetParent()
+        if self.cbConductor.IsEnabled():
+            parent.conductor = self.cbConductor.GetValue()
+        if self.cbNameServer.IsEnabled():
+            parent.nameServer = self.cbNameServer.GetValue()
+        if self.cbXplorer.IsEnabled():
+            ##Stuffed 3 variable updates in here so they don't get lost if
+            ##the user disables the XplorerType or the Desktop boxes.
+            ##Will need to be changed if modes allow user changes.
+            parent.xplorer = self.cbXplorer.GetValue()
+            parent.xplorerType = self.rbXplorer.GetSelection()
+            parent.desktop = self.cbDesktop.GetValue()
+        if self.chJconf.IsEnabled():
+            parent.jconfList = self.jconfList
+            parent.jconfCursor = self.chJconf.GetSelection()
+        ##Close.
         self.Hide()
         self.Destroy()
 
