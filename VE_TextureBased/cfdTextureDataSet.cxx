@@ -212,7 +212,7 @@ void cfdTextureDataSet::CreateTextureManager(std::string textureDescriptionFile)
    cfdTextureManager* tm = new cfdTextureManager();
    tm->SetUseShaders(true);
 
-   boost::filesystem::path scalarPath( textureDescriptionFile );
+   boost::filesystem::path scalarPath( textureDescriptionFile,boost::filesystem::no_check );
    try
    {
       boost::filesystem::is_directory( scalarPath );
