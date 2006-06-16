@@ -761,6 +761,18 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
       {
 	      delete modules[m_selMod].GetPlugin();
 	      modules.erase(iter);
+         if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
+         {
+            VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+            dataValuePair->SetDataName( "Object ID" );
+            dataValuePair->SetDataValue( static_cast< unsigned int >( m_selMod ) );
+            VE_XML::Command* veCommand = new VE_XML::Command();
+            veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
+            veCommand->AddDataValuePair( dataValuePair );
+            bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+            //Clean up memory
+            delete veCommand;
+         }         
 	      m_selLink=-1;
 	      break;
       }
