@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/isosurfaces.h"
+#include "VE_Conductor/Utilities/TBIsosurface.h"
 #include "VE_Conductor/Framework/vistab.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -37,14 +37,15 @@
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
 #include <wx/radiobut.h>
+#include <wx/combobox.h>
 #include <wx/slider.h>
 #include <wx/icon.h>
 #include <wx/choicdlg.h>
 #include <wx/msgdlg.h>
 #include <iostream>
 BEGIN_EVENT_TABLE( TextureBasedIsosurfaceDlg, wxDialog )
-   EVT_SLIDER(ISOSURFACE_SLIDER, TextureBasedIsosurfaceDlg::_onUpdateIsoSurface)
-   EVT_BUTTON(ADVANCED_BUTTON, TextureBasedIsosurfaceDlg::_onAdvanced)
+   EVT_SLIDER(TBISOSURFACE_PLANE_SLIDER, TextureBasedIsosurfaceDlg::_onUpdateIsoSurface)
+   EVT_BUTTON(TBADVANCED_ISOSURFACE_BUTTON, TextureBasedIsosurfaceDlg::_onAdvanced)
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
 //////////////////////////////////////////////////////////
@@ -70,18 +71,18 @@ void TextureBasedIsosurfaceDlg::_buildGUI()
 
    wxStaticBox* scalarNames = new wxStaticBox(this, -1, wxT("Active Scalar"));
    wxStaticBoxSizer* scalarNameSizer = new wxStaticBoxSizer(scalarNames, wxVERTICAL);
-   _availableScalars = new wxComboBox(this,availableScalars);//,wxEmptyString, wxDefaultPosition, wxSize(150,wxDefaultCoord) );
-   scalarNameSizer->Add(_availableScalars,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //_availableScalars = new wxComboBox(this,availableScalars);//,wxEmptyString, wxDefaultPosition, wxSize(150,wxDefaultCoord) );
+   //scalarNameSizer->Add(_availableScalars,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    mainSizer->Add(scalarNameSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+   wxStaticText* itemStaticText6 = new wxStaticText( this, wxID_STATIC, _T("Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
    mainSizer->Add(itemStaticText6, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
-   _isoSurfaceSlider = new wxSlider( this, ISOSURFACE_SLIDER, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
+   _isoSurfaceSlider = new wxSlider( this, TBISOSURFACE_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
    mainSizer->Add(_isoSurfaceSlider, 0, wxGROW|wxALL, 5);
 
-   _advancedButton = new wxButton( this, ADVANCED_ISOSURFACE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+   _advancedButton = new wxButton( this, TBADVANCED_ISOSURFACE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
    mainSizer->Add(_advancedButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -98,18 +99,18 @@ void TextureBasedIsosurfaceDlg::_buildGUI()
    mainSizer->Fit(dynamic_cast<BaseDialog*>(this));
 }
 //////////////////////////////////////////////////////////////////////////
-void TextureBasedToolBar::SetAvailableScalars(wxArrayString availableScalars)
+/*void TextureBasedIsosurfaceDlg::SetAvailableScalars(wxArrayString availableScalars)
 {
    _availableScalars->Clear();
-   for(size_t i = 0; i < activeSolutions.GetCount(); i++)
+   //for(size_t i = 0; i < activeSolutions.GetCount(); i++)
    {
-      _availableScalars->Append(activeSolutions[i]);
+   //   _availableScalars->Append(activeSolutions[i]);
    }
-   if(activeSolutions.GetCount())
+   //if(activeSolutions.GetCount())
    {
-      _availableScalars->SetValue(activeSolutions[0]);
+   //   _availableScalars->SetValue(activeSolutions[0]);
    }
-}
+}*/
 /////////////////////////////////////////////////////////////////////////
 void TextureBasedIsosurfaceDlg::SetActiveScalar(std::string activeScalar)
 {
@@ -138,7 +139,7 @@ void TextureBasedIsosurfaceDlg::_onUpdateIsoSurface( wxCommandEvent& WXUNUSED(ev
    colorByScalar->SetData("Color By Scalar",_colorByScalarName);
    newCommand->AddDataValuePair(colorByScalar);
 
-   VE_XML::DataValuePair* nearestPrecomputed = new VE_XML::DataValuePair();
+   /*VE_XML::DataValuePair* nearestPrecomputed = new VE_XML::DataValuePair();
    nearestPrecomputed->SetDataName("Use Nearest Precomputed");
    nearestPrecomputed->SetDataType("UNSIGNED INT");
    if(_useNearestPreComputedCheckBox->GetValue())
@@ -149,11 +150,11 @@ void TextureBasedIsosurfaceDlg::_onUpdateIsoSurface( wxCommandEvent& WXUNUSED(ev
    {
       nearestPrecomputed->SetDataValue(static_cast<unsigned int>(0));
    }
-   newCommand->AddDataValuePair(nearestPrecomputed);
+   newCommand->AddDataValuePair(nearestPrecomputed);*/
 
    try
    {
-      dynamic_cast<Vistab*>(GetParent())->SendUpdatedSettingsToXplorer(newCommand);
+      //dynamic_cast<Vistab*>(GetParent())->SendUpdatedSettingsToXplorer(newCommand);
    }
    catch(...)
    {
@@ -169,7 +170,7 @@ void TextureBasedIsosurfaceDlg::_onUpdateIsoSurface( wxCommandEvent& WXUNUSED(ev
    }
 }
 //////////////////////////////////////////////////////
-void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
+void TextureBasedIsosurfaceDlg::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 {
    int selectionIndex = 0;
    for(size_t i = 0; i < _scalarNames.Count(); i++)

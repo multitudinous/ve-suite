@@ -44,7 +44,10 @@ SRCS=\
    CADNodePropsDlg.cxx \
    CADOpacitySliderDlg.cxx \
    DualSlider.cxx\
-   spinctld.cpp
+   spinctld.cpp\
+   ROIDialog.cxx\
+   TBIsosurface.cxx\
+   BaseDialog.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include

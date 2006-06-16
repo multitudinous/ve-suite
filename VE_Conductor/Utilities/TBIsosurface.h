@@ -23,22 +23,21 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: GlobalParamDialog.h,v $
+ * File:          $RCSfile: TextureBasedIsosurfaceDlg.h,v $
  * Date modified: $Date: 2006-03-23 17:47:31 -0600 (Thu, 23 Mar 2006) $
  * Version:       $Rev: 3957 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _ISOSURFACES_H_
-#define _ISOSURFACES_H_
-
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "isosurfaces.h"
-#endif
+#ifndef TextureBasedIsosurfaceDlg_H_
+#define TextureBasedIsosurfaceDlg_H_
+#include "VE_Conductor/Utilities/BaseDialog.h"
 
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/VE_UI/UI_TransientDialog.h"
+#include "VE_Installer/include/VEConfig.h"
+
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
 XERCES_CPP_NAMESPACE_USE
@@ -53,6 +52,7 @@ class wxCheckBox;
 class wxSlider;
 class wxButton;
 class wxStaticBox;
+class wxComboBox;
 
 #define ID_DIALOG 10000
 #define SYMBOL_ISOSURFACES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -61,16 +61,16 @@ class wxStaticBox;
 #define SYMBOL_ISOSURFACES_SIZE wxSize(400, 300)
 #define SYMBOL_ISOSURFACES_POSITION wxDefaultPosition
 
-enum ISOSURFACE_IDS
+enum TBISOSURFACE_IDS
 {
-   ISOSURFACE_RBUTTON,
-   PRECOMPUTED_ISO_CHK,
-   ISOSURFACE_PLANE_SLIDER,
-   ADD_ISOSURFACE_BUTTON,
-   ADVANCED_ISOSURFACE_BUTTON
+   TBISOSURFACE_RBUTTON,
+   TBPRECOMPUTED_ISO_CHK,
+   TBISOSURFACE_PLANE_SLIDER,
+   TBADD_ISOSURFACE_BUTTON,
+   TBADVANCED_ISOSURFACE_BUTTON
 };
 
-class VE_CONDUCTOR_UTILS_EXPORTS Isosurfaces: public BaseDialog
+class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedIsosurfaceDlg: public VE_Conductor::GUI_Utilities::BaseDialog
 {    
     DECLARE_EVENT_TABLE()
 
@@ -78,22 +78,24 @@ public:
     /// Constructors
     TextureBasedIsosurfaceDlg(  wxWindow* parent, 
                   wxWindowID id =-1, 
-                  std::string title);
+                  std::string title = "wxDialog" );
 
     ///The name of the available scalars.
     ///\param scalarNames all the scalars in this dataset
     void SetAvailableScalars(wxArrayString scalarNames);
- 
+    void SetActiveScalar(std::string activeScalar);
+       
 protected:
    wxArrayString _scalarNames;///<The available scalars.
    wxComboBox* _availableScalars;///The widget for the available scalars;
    wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
+   wxButton* _advancedButton;
+   std::string _colorByScalarName;
+   std::string _activeScalar;
    
-   void _onIsosurface( wxCommandEvent& event );
-
+   void _onUpdateIsoSurface( wxCommandEvent& event );
+   void _buildGUI( void );
    ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
    void _onAdvanced(wxCommandEvent& event);
 };
-
-#endif
-    // _ISOSURFACES_H_
+#endif // TextureBasedIsosurfaceDlg_H_
