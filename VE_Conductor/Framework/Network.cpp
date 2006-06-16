@@ -2601,6 +2601,10 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                                 SYMBOL_VISTAB_SIZE,
                                 SYMBOL_VISTAB_STYLE );
             }
+            else
+            {
+               vistab->SetActiveModel(activeCORBAModel);
+            }
             vistab->SetCommInstance(xplorerPtr);
             size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
             if(nInformationPackets)

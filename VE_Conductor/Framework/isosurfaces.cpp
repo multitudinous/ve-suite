@@ -121,15 +121,15 @@ void Isosurfaces::CreateControls()
     _advancedButton = new wxButton( itemDialog1, ADVANCED_ISOSURFACE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(_advancedButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 }
-////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void Isosurfaces::SetActiveScalar(std::string activeScalar)
 {
    _activeScalar = activeScalar;
-   _colorByScalarName = _activeScalar;
 }
 ////////////////////////////////////////////////////////////////
 void Isosurfaces::SetAvailableScalars(wxArrayString scalarNames)
 {
+   _scalarNames.Clear();
    for(size_t i = 0; i < scalarNames.Count(); i++)
    {
       _scalarNames.Add(scalarNames[i]);
@@ -213,6 +213,17 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
 //////////////////////////////////////////////////////
 void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 {
+   int selectionIndex = 0;
+   for(size_t i = 0; i < _scalarNames.Count(); i++)
+   {
+      if(!_scalarNames[i].Cmp(_colorByScalarName.c_str()) )
+      {
+      std::cout<<"Found match:"<<_scalarNames[i]<<std::endl;
+         selectionIndex = i;
+         break;
+      }
+      std::cout<<_scalarNames[i]<<":"<<_colorByScalarName<<std::endl;
+   }
    wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
                                    _scalarNames);
    int displayWidth, displayHeight = 0;
@@ -224,7 +235,7 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    GetSize(&width,&height);
    scalarSelector.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
                         width, height));
-   //scalarSelector.SetStringSelection(_colorByScalarName);
+   scalarSelector.SetSelection(selectionIndex);
    if (scalarSelector.ShowModal() == wxID_OK)
    {
       _colorByScalarName = scalarSelector.GetStringSelection();
