@@ -218,11 +218,9 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    {
       if(!_scalarNames[i].Cmp(_colorByScalarName.c_str()) )
       {
-      std::cout<<"Found match:"<<_scalarNames[i]<<std::endl;
          selectionIndex = i;
          break;
       }
-      std::cout<<_scalarNames[i]<<":"<<_colorByScalarName<<std::endl;
    }
    wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
                                    _scalarNames);
