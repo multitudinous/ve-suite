@@ -169,7 +169,7 @@
    #  define VE_SCENEGRAPH_UTILS_EXPORTS
    #  define VE_CE_UTILS_EXPORTS
    #  define VE_OPEN_MODULE_EXPORTS
-   #define XPLORER_NETWORK_LIBRARY_EXPORTS
+   #  define VE_XPLORER_NETWORK_EXPORTS
 #endif
 
 #endif
