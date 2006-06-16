@@ -67,21 +67,6 @@ bool REIApp::OnInit()
    mainFrame->SetSize(-1, -1, width, height);
    #endif
 
-   if(!::wxGetEnv(wxString("VE_INSTALL_DIR"),0))
-   {
-      // Allow the user to setup a demo workign dir if they desire
-      wxDirDialog cwdChooser( NULL, 
-                  _("Choose your working directory."), 
-                  ::wxGetCwd(), 
-                  wxDD_DEFAULT_STYLE, 
-                  wxDefaultPosition, 
-                  wxDefaultSize);
-      if ( cwdChooser.ShowModal() == wxID_OK )
-      {
-         wxFileName::SetCwd( cwdChooser.GetPath() );
-      }
-   }
-
    // Now launch the main ui
    mainFrame->Show(true);
    SetTopWindow(mainFrame);

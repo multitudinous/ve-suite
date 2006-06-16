@@ -114,7 +114,7 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
 ////@end DataSetLoaderUI member initialisation
 
 ////@begin DataSetLoaderUI creation
-   SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+   //SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
    wxDialog::Create( parent, id, caption, pos, size, style );
 
    CreateControls();
