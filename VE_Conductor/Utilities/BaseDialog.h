@@ -74,8 +74,13 @@ protected:
    ///Override this method in derived classes to add controls to the dialog.
    virtual void _buildGUI()=0;
 
+   ///Add an OK button to the dialog
+   ///\param buttonRowSizer The sizer to add the button to
    void _addOKButton(wxSizer* buttonRowSizer);
-   void _addCloseButton(wxSizer* buttonRowSizer);
+   
+   ///Add a Cancel button to the dialog
+   ///\param buttonRowSizer The sizer to add the button to
+   void _addCancelButton(wxSizer* buttonRowSizer);
 
 #ifndef STAND_ALONE
    VjObs_ptr _vjObsPtr;///<The VjObj ptr.

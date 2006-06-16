@@ -73,9 +73,9 @@ void BaseDialog::_addOKButton(wxSizer* buttonRowSizer)
    buttonRowSizer->Add(new wxButton(this,wxID_OK,"OK"),1,wxALIGN_CENTER);
 }
 /////////////////////////////////////////////////////////
-void BaseDialog::_addCloseButton(wxSizer* buttonRowSizer)
+void BaseDialog::_addCancelButton(wxSizer* buttonRowSizer)
 {
-   buttonRowSizer->Add(new wxButton(this,wxID_CLOSE,"Close"),1,wxALIGN_CENTER);
+   buttonRowSizer->Add(new wxButton(this,wxID_CANCEL,"Cancel"),1,wxALIGN_CENTER);
 }
 /////////////////////////////////////////
 void BaseDialog::_sendCommandsToXplorer()

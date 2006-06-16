@@ -93,7 +93,6 @@ void ROIDialog::_buildGUI()
 
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
    _addOKButton(buttonRowSizer);
-   _addCloseButton(buttonRowSizer);
    
    mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER|wxEXPAND);
    //set this flag and let wx handle alignment
