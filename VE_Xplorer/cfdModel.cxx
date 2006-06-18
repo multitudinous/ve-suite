@@ -67,7 +67,6 @@ using namespace VE_TextureBased;
 //#include <vpr/vprTypes.h>
 
 #include <vtkUnstructuredGrid.h>
-#include <vtkUnstructuredGridReader.h>
 #include <vtkDataWriter.h>
 #include <vtkZLibDataCompressor.h>
 #include <vtkUnsignedCharArray.h>
