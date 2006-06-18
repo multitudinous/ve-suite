@@ -365,33 +365,34 @@ void VTKDataToTexture::TurnOffDynamicGridResampling()
 //               "./textures/vectors_n.rgba"             // 
 //representing the positive and negative textures        //
 ///////////////////////////////////////////////////////////
-void VTKDataToTexture::setVelocityFileName(const char* vFileName)
+void VTKDataToTexture::setVelocityFileName(const std::string vFileName)
 {
-   if(_vFileName){
+   if ( _vFileName )
+   {
       delete [] _vFileName;
       _vFileName = 0;
    }
-   _vFileName = new char[strlen(vFileName)+1];
-   strcpy(_vFileName,vFileName);
+   _vFileName = new char[ strlen( vFileName.c_str() )+1];
+   strcpy( _vFileName, vFileName.c_str() );
 }
 /////////////////////////////////////////////////////////////////
-void VTKDataToTexture::_updateTranslationStatus(const char* msg)
+void VTKDataToTexture::_updateTranslationStatus(const std::string msg)
 {
    if(_parent && !_isBatch){
-      _parent->UpdateProgressDialog(msg);
+      _parent->UpdateProgressDialog( msg );
    }
 }
 /////////////////////////////////////////////////////////////
 //set the output directory                                 //
 /////////////////////////////////////////////////////////////
-void VTKDataToTexture::setOutputDirectory(const char* outDir)
+void VTKDataToTexture::setOutputDirectory(const std::string outDir)
 {
    if(_outputDir){
       delete [] _outputDir;
       _outputDir = 0;
    }
-   _outputDir = new char[strlen(outDir)+1];
-   strcpy(_outputDir,outDir);
+   _outputDir = new char[strlen( outDir.c_str() )+1];
+   strcpy(_outputDir,outDir.c_str() );
 
 }
 //////////////////////////////////////////////////////////////////
@@ -425,11 +426,12 @@ void VTKDataToTexture::createDataSetFromFile(const std::string filename)
    }
 }
 /////////////////////////////////////////////////////////////
-void VTKDataToTexture::_confirmFileType(const char* fileName)
+void VTKDataToTexture::_confirmFileType(const std::string fileName)
 {
-   if(fileName){
+   if ( !fileName.size() )
+   {
       vtkDataReader* genericReader = vtkDataReader::New();   
-      genericReader->SetFileName(fileName);
+      genericReader->SetFileName(fileName.c_str() );
       if(genericReader->IsFileStructuredGrid()&&!_isSGrid){
          setStructuredGrid();
       }else if(genericReader->IsFileUnstructuredGrid()&&!_isUGrid){

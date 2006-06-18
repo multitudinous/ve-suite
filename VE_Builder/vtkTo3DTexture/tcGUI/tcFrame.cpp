@@ -285,16 +285,16 @@ void TCFrame::_buildGUI()
    GetStatusBar()->SetStatusText(wxString("..."));
 }
 ///////////////////////////////////////////////////
-void TCFrame::UpdateProgressDialog(const char* msg)
+void TCFrame::UpdateProgressDialog(const std::string msg)
 {
    if(_fileProgress){
-      _fileProgress->Update(_currentFile,msg);
+      _fileProgress->Update(_currentFile,msg.c_str() );
    }
 }
 /////////////////////////////////////////////////////
-void TCFrame::UpdateStatus(const char* statusString)
+void TCFrame::UpdateStatus(const std::string statusString)
 {
-   GetStatusBar()->SetStatusText(wxString(statusString));
+   GetStatusBar()->SetStatusText(wxString(statusString.c_str()));
 }
 /////////////////////////////////////////////////////////
 void TCFrame::SetMPIVariables( int iRank, int inumProcessors )
@@ -346,7 +346,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    {
       _currentFile = i;
       statusMsg = wxString("Translating ") + _gridFiles[i];
-      UpdateStatus(statusMsg);
+      UpdateStatus( statusMsg.c_str() );
       _fileProgress->Update(i, statusMsg);
       _translator->reset();
       _translator->setOutputDirectory((char*)_outputDir.c_str());
@@ -363,7 +363,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       _translator->createTextures();
    }
    statusMsg = wxString("Files written to: ") + _outputDir;
-   UpdateStatus(statusMsg);
+   UpdateStatus( statusMsg.c_str() );
    if(_fileProgress){
       delete _fileProgress;
       _fileProgress = 0;
@@ -456,9 +456,9 @@ void TCFrame::_onBrowseCallback(wxCommandEvent& event )
 //Batch translation interfaces                        //
 ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
-void TCFrame::SetInputDirectory(const char* inDirectory)
+void TCFrame::SetInputDirectory(const std::string inDirectory)
 {
-   if(inDirectory)
+   if ( !inDirectory.empty() )
    {
       if ( !_gridFiles.IsEmpty() )
       {
@@ -467,11 +467,11 @@ void TCFrame::SetInputDirectory(const char* inDirectory)
       _numFiles = 0;
 
       wxDir inputFileDirectory;
-      inputFileDirectory.Open( wxString(inDirectory) );
+      inputFileDirectory.Open( wxString( inDirectory.c_str() ) );
 
       if ( inputFileDirectory.IsOpened() )
       {
-        _inputDir = wxT(inDirectory);
+        _inputDir = wxT(inDirectory.c_str() );
 
         gridFiles = VE_Util::fileIO::GetFilesInDirectory( inDirectory, "vtu" );
         if ( gridFiles.size() == 0 )
@@ -485,9 +485,9 @@ void TCFrame::SetInputDirectory(const char* inDirectory)
    }
 }
 //////////////////////////////////////////////////////////
-void TCFrame::SetOutputDirectory(const char* outDirectory)
+void TCFrame::SetOutputDirectory(const std::string outDirectory)
 {
-   _outputDir = wxString(outDirectory);
+   _outputDir = wxString( outDirectory.c_str() );
 }
 //////////////////////////////////////////////////////
 void TCFrame::SetTextureResolution(int x,int y, int z)

@@ -63,17 +63,17 @@ public:
 
    virtual ~TCFrame();
    enum GridType{STRUCTURED,UNSTRUCTURED,RECTILINEAR};
-   void UpdateStatus(const char* statusString);
+   void UpdateStatus(const std::string statusString);
    void SetGridType(GridType type);
-   void UpdateProgressDialog(const char* msg);
+   void UpdateProgressDialog(const std::string msg);
 
    unsigned int GetNumberOfTimeSteps(){return _numFiles;}
 
    ///////////////////////////////
    //Batch translation interface//
    ///////////////////////////////
-   void SetInputDirectory(const char* inDirectory);
-   void SetOutputDirectory(const char* outDirectory);
+   void SetInputDirectory(const std::string inDirectory);
+   void SetOutputDirectory(const std::string outDirectory);
    void SetTextureResolution(int x, int y, int z);
    void BatchTranslation();
 

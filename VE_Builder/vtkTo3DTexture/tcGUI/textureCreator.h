@@ -83,10 +83,10 @@ public:
    //               "./vectors_n.rgba"     // 
    //representing the positive and negative textures//
    ///////////////////////////////////////////////////
-   void setVelocityFileName(const char* vFileName);
+   void setVelocityFileName(const std::string vFileName);
 
    //set the output directory
-   void setOutputDirectory(const char* outDir);
+   void setOutputDirectory(const std::string outDir);
 
    //set the dataset for this converter
    void setDataset(vtkDataSet* dSet);
@@ -141,7 +141,7 @@ protected:
    
    //check to make sure that grid type specified by the
    //user is the actual file type
-   void _confirmFileType(const char* fileName);
+   void _confirmFileType(const std::string fileName);
 
    //store the info if sampled pts are 
    //inside the computational domain
@@ -170,7 +170,7 @@ protected:
                                           int whichVector);
    void _extractTuplesForScalar(vtkIdList* ptIds,vtkDataArray* scalar,
                                           int whichScalar);
-   void _updateTranslationStatus(const char* msg);
+   void _updateTranslationStatus(const std::string msg);
 
    char* _cleanUpFileNames();
    
