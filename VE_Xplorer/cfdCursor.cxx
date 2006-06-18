@@ -921,7 +921,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
                //this controls the size of the plane for the seed points
                //the range on the GUI is from 1 to 100
                //	this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
-		         this->SetPlaneSize( combineScale[ 0 ] * commandIds.at(2) * 0.5 * 0.0025 * _activeDataSet->GetLength() ); 
+		         this->SetPlaneSize( combineScale[ 0 ] * commandIds.at(2) * 0.5 * 0.0025 * 1.0f); 
 
                //this controls the size of the sphere seed points
                //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet

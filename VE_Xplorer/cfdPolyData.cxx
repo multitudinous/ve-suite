@@ -157,7 +157,7 @@ void cfdPolyData::Update()
       // this attempts to set size of largest particle proportional
       // to the diagonal length of the entire dataset
 
-      float len = this->GetActiveDataSet()->GetLength();
+      float len = 1.0f; //this->GetActiveDataSet()->GetLength();
       // if there is only one point, then len equals zero...
       if ( len == 0.0 ) 
          len = 1.0;
@@ -279,7 +279,7 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
 	  // this->GetActiveDataSet()->GetParent()->GetUserRange( v );
       int scale = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
       this->warpedContourScale = (scale/50.0) * 0.1 
-                    * this->GetActiveDataSet()->GetParent()->GetLength();///(float)(v[1]-v[0]);
+                    * 1.0f;//this->GetActiveDataSet()->GetParent()->GetLength();///(float)(v[1]-v[0]);
 
       // contour lod control
       /*int lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );

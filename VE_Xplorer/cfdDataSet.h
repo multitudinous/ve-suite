@@ -101,8 +101,8 @@ namespace VE_Xplorer
 
          // Set/get the length of the diagonal of the bounding box for data set.
          void SetLength( float len );
-         void GetLength( float &len );
-         float GetLength();
+         //void GetLength( float &len );
+         //float GetLength();
 
          // Get the length of the diagonal of the bounding box of the average cell
          void GetMeanCellLength( float &len );

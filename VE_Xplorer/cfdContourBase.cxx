@@ -184,40 +184,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
 
 bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
 {
-   // This is here because there is code in 
-   // cfdObjects that doesn't belong there
-   // Fix this
-   bool flag = cfdObjects::CheckCommandId( commandArray );
-   
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_CONTOUR_FILL )
-   {
-      vprDEBUG(vesDBG,0) << "CHANGE_CONTOUR_FILL to type " 
-                             << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-                             << std::endl << vprDEBUG_FLUSH;
-
-      this->SetFillType( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-               == CHANGE_CONTOUR_SETTINGS )
-   {  
-      // warped contour settings
-      double v[2];
-      this->GetActiveDataSet()->GetUserRange( v );
-      int scale = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
-      this->warpedContourScale = (scale/50.0) * 0.2 
-                    * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
-
-      // contour lod control
-      double lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
-      double realLOD = lod/100.0f;
-      vprDEBUG(vesDBG,0) << "CHANGE_CONTOUR_SETTINGS LOD Settings" 
-                             << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) << " : " << lod << " : " << realLOD
-                             << std::endl << vprDEBUG_FLUSH;
-      this->deci->SetTargetReduction( realLOD );
-      return true;
-   }
-   return flag;
+   return true;
 }
 
 void cfdContourBase::UpdateCommand()
@@ -268,8 +235,7 @@ void cfdContourBase::UpdateCommand()
    double v[2];
    this->GetActiveDataSet()->GetUserRange( v );
    int scale = contourScale;
-   this->warpedContourScale = (scale/50.0) * 0.2 
-                 * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
+   this->warpedContourScale = (scale/50.0) * 0.2 * 1.0f / (float)(v[1]-v[0]);
 
    // Set the lod values
    activeModelDVP = objectCommand->GetDataValuePair( "Contour LOD" );
