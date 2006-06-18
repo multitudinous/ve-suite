@@ -44,6 +44,7 @@
 #include "VE_Xplorer/cfdSoundHandler.h"
 #include "VE_Xplorer/cfdObjects.h"
 #include "VE_Xplorer/CADAddNodeEH.h"
+#include "VE_Xplorer/AddVTKDataSetEventHandler.h"
 
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -409,7 +410,19 @@ void cfdVEBaseClass::SetXMLModel( VE_Model::Model* tempModel )
    //process the information blocks
    if ( xmlModel->GetNumberOfInformationPackets() > 0 )
    {
-      //do something
+      VE_XML::DataValuePair* modelNode = new VE_XML::DataValuePair();
+      modelNode->SetDataType( std::string("XMLOBJECT") );
+      modelNode->SetData("CREATE_NEW_DATASETS", xmlModel );
+      
+      VE_XML::Command* dataCommand = new VE_XML::Command();
+      dataCommand->AddDataValuePair( modelNode );
+      dataCommand->SetCommandName(  "UPDATE_MODEL_DATASETS" );
+      
+      //Process the vtk data
+      VE_EVENTS::AddVTKDataSetEventHandler addVTKEH;
+      addVTKEH.SetGlobalBaseObject( _model );
+      addVTKEH.Execute( dataCommand );
+      delete dataCommand;
    }
 
    //process inputs

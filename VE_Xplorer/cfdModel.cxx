@@ -75,6 +75,7 @@ using namespace VE_TextureBased;
 #include <vtkGeometryFilter.h>
 #include <vtkSTLWriter.h>
 #include <vtkPolyData.h>
+#include <vtkUnstructuredGridReader.h>
 
 #include <fstream>
 #include <sstream>
