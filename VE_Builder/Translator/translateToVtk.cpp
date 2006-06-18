@@ -408,7 +408,7 @@ std::string preprocess( int argc, char *argv[],
       }
       else
       {
-         // Get factor to scale the geometry (and vectors)
+/*         // Get factor to scale the geometry (and vectors)
          std::cout << "\nSelect the geometry/vector scaling:" << std::endl;
          std::cout << "(0) No scaling" << std::endl;
          std::cout << "(1) Custom scaling" << std::endl;
@@ -417,13 +417,13 @@ std::string preprocess( int argc, char *argv[],
          std::cout << "(4) inches to feet" << std::endl;
          std::cout << "(5) meters (1:12 scale) to feet" << std::endl;
          std::cout << "(6) centimeters to feet" << std::endl;
-         scaleIndex = fileIO::getIntegerBetween( 0, 6 );
+         scaleIndex = fileIO::getIntegerBetween( 0, 6 );*/
       }
    }
    
     float geomScale [3] = {1.0f, 1.0f, 1.0f};    // default
     if      ( scaleIndex == 0 ) { /* do nothing */ }
-    else if ( scaleIndex == 1 )
+/*    else if ( scaleIndex == 1 )
     {
 
 #ifndef SJK_TEST
@@ -494,7 +494,7 @@ std::string preprocess( int argc, char *argv[],
    }
    else
       std::cerr << "\n!!! Invalid scaleIndex = " << scaleIndex 
-                << ": will not scale geometry" << std::endl;
+                << ": will not scale geometry" << std::endl;*/
 
    //if ( debug ) 
       std::cout << "Using geomScale = " << geomScale[0] << std::endl;
