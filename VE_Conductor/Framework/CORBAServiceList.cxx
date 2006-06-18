@@ -12,6 +12,8 @@
 #include "VE_Conductor/Framework/App.h"
 
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
+#include <ace/SString.h>
+#include <ace/SStringfwd.h>
 
 #include <sstream>
 
@@ -86,10 +88,10 @@ bool CORBAServiceList::ConnectToCE( void )
       {   
          CreateCORBAModule();
       } 
-      catch ( CORBA::Exception& ) 
+      catch ( CORBA::Exception& ex ) 
       {
-            frame->Log("Can't find executive or UI registration error\n");
-            return false;
+         frame->Log("Can't find executive or UI registration error\n");
+         return false;
       }
    }
    return true;
@@ -130,9 +132,10 @@ bool CORBAServiceList::ConnectToXplorer( void )
       //connectToVE = true;
       //network->SetXplorerInterface( vjobs.in() );
    } 
-   catch (CORBA::Exception &) 
+   catch ( CORBA::Exception& ex ) 
    {
       frame->Log("Can't find VE server\n");
+      frame->Log( ex._info().c_str() );
       return false;
    }
   
@@ -188,14 +191,16 @@ bool CORBAServiceList::ConnectToNamingService( void )
 		    }
       */
       frame->Log("Initialized ORB and connection to the Naming Service\n");
+      
       return true;
    }
-   catch ( CORBA::Exception& ) 
+   catch ( CORBA::Exception& ex ) 
    {  
       //		poa->destroy (1, 1);
       // Finally destroy the ORB
       orb->destroy();
       frame->Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
+      frame->Log( ex._info().c_str() );
       return false;
    }
 }
@@ -217,9 +222,10 @@ bool CORBAServiceList::DisconnectFromCE( void )
     
       frame->Log("Disconnect successful.\n");
    }
-   catch (CORBA::Exception &) 
+   catch (CORBA::SystemException& ex ) 
    {
       frame->Log("Disconnect failed.\n");
+      frame->Log( ex._info().c_str() );
       return false;
    }
 
@@ -368,9 +374,11 @@ void CORBAServiceList::CreateCORBAModule( void )
             frame->con_menu->Enable(v21ID_DISCONNECT, true);
             
             //frame_->orb->run();
-         }catch (CORBA::Exception &) {
-            
-            frame->Log("Can't find executive or UI registration error.\n");
+         }
+         catch ( CORBA::Exception& ex ) 
+         {
+            frame->Log( "Can't find executive or UI registration error.\n" );
+            frame->Log( ex._info().c_str() );
          }
       }
       else
@@ -388,15 +396,18 @@ void CORBAServiceList::CreateCORBAModule( void )
             frame->run_menu->Enable(v21ID_VIEW_RESULT, true);
             frame->con_menu->Enable(v21ID_DISCONNECT, true);
             
-         }catch (CORBA::Exception &) {
-            
+         }
+         catch (CORBA::Exception& ex ) 
+         {
             frame->Log("Can't find executive or UI registration error.\n");
+            frame->Log( ex._info().c_str() );
          }
       }
    }
-   catch (CORBA::Exception &)
+   catch (CORBA::Exception& ex )
    {
       frame->Log("Can't find executive or UI registration error.\n");
+      frame->Log( ex._info().c_str() );
    }
 }
 //////////////////////////////////////////////////
