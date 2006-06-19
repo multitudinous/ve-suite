@@ -21,8 +21,14 @@ defaults, letting it work with custom builds as well.
 
 It is currently in beta testing for Windows and Unix.
 
+=========================================================================
+What's new:
 
-========================================================================
+Revision 4586: Cluster GUI added. It doesn't do anything on Windows yet, but
+when launched on Unix with Xplorer's OSG Cluster selected, it sends test commands to
+every checked computer on the cluster list.
+
+=========================================================================
 Installing VE-Suite Launcher
 
 VE-Suite Launcher runs off Python (python.org) and wxPython (wxpython.org).
