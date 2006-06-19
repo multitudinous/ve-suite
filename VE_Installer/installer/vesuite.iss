@@ -47,7 +47,7 @@ Name: custom; Description: Custom installation; Flags: iscustom
 [Components]
 Name: nameserver; Description: Name Server; Types: full
 Name: vexplorer; Description: VE-Xplorer; Types: full
-Name: vexplorer\pf; Description: Performer Graphics; Types: full
+;Name: vexplorer\pf; Description: Performer Graphics; Types: full
 ;Name: vexplorer\pfcluster; Description: Performer Cluster Graphics; Types: full
 Name: vexplorer\osg; Description: OSG Graphics; Types: full
 Name: vexplorer\osgvep; Description: OSG VE-Patented Graphics; Types: full
@@ -67,7 +67,7 @@ Name: desktopVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create 
 Name: desktopVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osg
 Name: desktopVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvep
 Name: desktopVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
-Name: desktopVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\pf
+;Name: desktopVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\pf
 Name: desktopVELauncherIcon; Description: VE-Launcher(Requires wxPython Install); GroupDescription: Create Desktop Icon; Flags: unchecked; Components: velauncher
 
 ;Name: startMenuNSIcon; Description: Name Server; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: nameserver
@@ -81,14 +81,14 @@ Name: desktopVELauncherIcon; Description: VE-Launcher(Requires wxPython Install)
 
 [Files]
 Source: {#VEHOME}\bin\win32\WinClientd.exe; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
-Source: {#VEHOME}\bin\win32\project_taod.exe; DestDir: {app}\bin; Components: vexplorer\pf; Flags: ignoreversion
+;Source: {#VEHOME}\bin\win32\project_taod.exe; DestDir: {app}\bin; Components: vexplorer\pf; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\project_tao_osg_d.exe; DestDir: {app}\bin; Components: vexplorer\osg; Flags: ignoreversion
 ;Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Components: vexplorer\osgvepcluster; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_d.exe; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion
 Source: {#VEHOME}\lib\win32\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\WinServerd.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\WinClientd.exe; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\run.pf.bat; DestDir: {app}\bin; Components: vexplorer\pf; Flags: ignoreversion confirmoverwrite
+;Source: {#VEHOME}\VE_Installer\installer\run.pf.bat; DestDir: {app}\bin; Components: vexplorer\pf; Flags: ignoreversion confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\run.osg.bat; DestDir: {app}\bin; Components: vexplorer\osg; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\NameService.bat; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VE-Conductor.bat; DestDir: {app}\bin; Flags: ignoreversion
@@ -124,7 +124,7 @@ Source: {#VEHOME}\VE_SceneGraph\*.h; DestDir: {app}\include\VE_SceneGraph; Attri
 Source: {#VEHOME}\VE_Xplorer\*.h; DestDir: {app}\include\VE_Xplorer; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_Open\skel\*; DestDir: {app}\include\VE_Open\skel; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_Installer\include\VEConfig.h; DestDir: {app}\include\VE_Installer\include; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer\pf vexplorer nameserver
+Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\stereo_desktop; Components: nameserver; Flags: ignoreversion recursesubdirs
 [Icons]
@@ -134,16 +134,16 @@ Name: {group}\VE-Conductor; Filename: {app}\{#VEConductor}; WorkingDir: {app}; C
 Name: {group}\VE-Xplorer-OSG; Filename: {app}\{#VEXplorerOSG}; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
+;Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Launcher; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp; Components: velauncher
 Name: {group}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
 
-Name: {userdesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopNSIcon
-Name: {userdesktop}\VE-Conductor; Filename: {app}\bin\VE-Conductor.bat; WorkingDir: {app}; Components: veconductor; IconFilename: {app}\images\vesSmallIcon.bmp; Flags: runminimized; Tasks: desktopVECIcon
-Name: {userdesktop}\VE-Xplorer-OSG; Filename: {app}\bin\run.osg.bat; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOIcon
-Name: {userdesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPIcon
-Name: {userdesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPCIcon
-Name: {userdesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXPFIcon
-Name: {userdesktop}\VE-Launcher; Filename: {app}\velauncher.py; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVELauncherIcon
+Name: {commondesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopNSIcon
+Name: {commondesktop}\VE-Conductor; Filename: {app}\bin\VE-Conductor.bat; WorkingDir: {app}; Components: veconductor; IconFilename: {app}\images\vesSmallIcon.bmp; Flags: runminimized; Tasks: desktopVECIcon
+Name: {commondesktop}\VE-Xplorer-OSG; Filename: {app}\bin\run.osg.bat; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOIcon
+Name: {commondesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPIcon
+Name: {commondesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPCIcon
+;Name: {commondesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXPFIcon
+Name: {commondesktop}\VE-Launcher; Filename: {app}\velauncher.py; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVELauncherIcon
 
-;Name: {userdesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\vesSmallIcon.bmp
+;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\vesSmallIcon.bmp
