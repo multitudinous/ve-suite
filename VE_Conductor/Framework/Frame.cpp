@@ -178,6 +178,11 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_Model::ModelCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
 }
+///////////////////////////////////////
+std::string AppFrame::GetDisplayMode()
+{
+   return _displayMode;
+}
 //////////////////////////////////////
 std::string AppFrame::_detectDisplay()
 {

@@ -144,6 +144,10 @@ public:
    ///Override so we can show the tree after things are initialized.  
    virtual bool Show(bool value);
 
+   ///Get the active display mode of conductor
+   ///\return Returns either:\n "Desktop" or"Tablet"
+   std::string GetDisplayMode();
+
    wxSplitterWindow* wx_log_splitter;
    wxSplitterWindow* wx_ve_splitter;
    wxSplitterWindow* wx_nw_splitter;
