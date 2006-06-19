@@ -461,7 +461,7 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
       _availableDatasets.Clear();
       for(unsigned int i = 0; i < _nDatasetsInActiveModel; i++)
       {
-         std::cout<<"Dataset name: "<< newModel->dataVector[i].datasetname<<std::endl;
+         wxMessageBox( "Dataset:", wxString(newModel->dataVector[i].datasetname), wxOK | wxICON_INFORMATION );
          _availableDatasets.Add(wxString(newModel->dataVector[i].datasetname));
       }
 
@@ -561,6 +561,7 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
 
          currentSolution->second.Add(wxString(newScalars[i].scalarnames));
       }
+      _updateComboBoxNames("MESH_SCALARS",currentSolution->second);
    }
    else
    {
@@ -586,6 +587,7 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
       {
          currentSolution->second.Add(wxString(names[i]));
       }
+      _updateComboBoxNames("MESH_VECTORS",currentSolution->second);
    }
    else
    {
@@ -623,6 +625,7 @@ DualSlider* Vistab::GetScalarRangeControls()
 void Vistab::_OnSelectDataset(wxCommandEvent& WXUNUSED(event))
 {
    _activeDataSetName = _datasetSelection->GetValue();
+   SetActiveDataset(_activeDataSetName);
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
