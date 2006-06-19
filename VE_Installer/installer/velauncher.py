@@ -17,6 +17,8 @@ execute the launcher on its last command.
 """
 import os ##Used for setting environmental variables, running programs
 import time ##Used only for sleep() func in the NameServer call
+import sys ##Gets command line arguments
+import getopt ##Cleans up command line arguments
 
 import wx ##Used for GUI
 
@@ -25,10 +27,15 @@ import wx ##Used for GUI
 ##set it to False if you want to test choosing your own Jconf file.
 ##CODE NOTE: Used in Launch.UnixLaunch and Launch.WindowsLaunch
 JCONF_STANDARD = False
+##If CLUSTER_TEST is set to True, using arguments on velauncher's command line
+##will also send CLUSTER_PACKAGE to the Launcher. Used to quickly test
+##Launcher's cluster code.
+CLUSTER_TEST = False
+CLUSTER_PACKAGE = ["mindy", "shaggy"]
 ##Miscellaneous values for launcher's UI
 XPLORER_SHELL_NAME = "Xplorer Shell"
 CONDUCTOR_SHELL_NAME = "Conductor Shell"
-FIXED = False
+FIXED = False ##Used in MODE_DICT
 ##File/Folder settings.
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
@@ -37,6 +44,7 @@ CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
 RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
                       "OSG Patented Cluster", "Performer"]
+XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC", "PF"]
 MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization", "Custom"]
 MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                          "nameServer": [FIXED, True],
@@ -63,6 +71,7 @@ MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                                "desktop": [FIXED, False]},
              "Custom": {}}
 JCONF_CONFIG = "JconfList"
+CLUSTER_CONFIG = "Cluster"
 DEFAULT_JCONF = "simstandalone.jconf"
 ##Values for launcher's GUI layout
 INITIAL_WINDOW_SIZE = (500, -1)
@@ -75,6 +84,99 @@ VERTICAL_SPACE = (-1, BORDER)
 HORIZONTAL_SPACE = (BORDER, -1)
 LEFT_MARGIN = HORIZONTAL_SPACE
 NULL_SPACE = (0, 0)
+
+class CommandLaunch:
+    def __init__(self, opts):
+        ##Set up vars.
+        self.conductor = False
+        self.nameServer = False
+        self.xplorer = False
+        self.xplorerType = None
+        self.desktop = False
+        self.taoMachine = None
+        self.taoPort = None
+        self.mode = None
+        self.depDir = None
+        self.workDir = None
+        self.jconf = None
+
+        ##Set vars from the command line.
+        for opt, arg in opts:
+            if opt in ('-c', "--conductor"):
+                self.conductor = True
+            elif opt in ('-n', "--nameserver"):
+                self.nameServer = True
+            elif opt in ('-x', "--xplorer="):
+                self.xplorer = True
+                if arg in XPLORER_TYPE_LIST:
+                    self.xplorerType = XPLORER_TYPE_LIST.index(arg)
+            elif opt in ('-k', "--desktop"):
+                self.desktop = True
+            elif opt in ('-j', "--jconf="):
+                self.jconf = arg
+            elif opt in ('-t', "--taomachine="):
+                self.taoMachine = arg
+            elif opt in ('-p', "--port="):
+                self.taoPort = arg
+            elif opt in ('-s', "--setup"):
+                print "ERROR: Setup isn't implemented yet." + \
+                      " Wait until next version."
+            elif opt in ('-w', "--dir="):
+                self.workDir = arg
+            elif opt in ('-e', "--dep="):
+                self.depDir = arg
+
+        ##Load the configuration file under name
+        config = wx.Config(CONFIG_FILE)
+        config.SetPath("/" + DEFAULT_CONFIG)
+        ##Fill in any args left out from the default config settings.
+        if self.depDir == None:
+            self.depDir = config.Read("DependenciesDir", "None")
+        if self.workDir == None:
+            self.workDir = config.Read("Directory", DIRECTORY_DEFAULT)
+        ##Set default choices if JCONF_CONFIG doesn't exist,
+        ##but DependenciesDir does.
+        if self.jconf == None:
+            if config.HasGroup(JCONF_CONFIG):
+                jconfList = JconfList(DEFAULT_CONFIG)
+                self.jconf= jconfList.GetPath(config.ReadInt("JconfCursor", 0))
+            ##Set default choice if JCONF_CONFIG doesn't exist,
+            ##but DependenciesDir does.
+            elif config.Read("DependenciesDir", ":::") != ":::":
+                self.jconf = os.path.join(config.Read("DependenciesDir"),
+                                          JUGGLER_FOLDER, "configFiles",
+                                          DEFAULT_JCONF)
+            ##If neither exists, bring up an error.
+            ##NOTE: Should never be reached.
+            else:
+                print "ERROR: No Jconf configuration found and failed" + \
+                      " to make default Jconf from Dependencies dir."
+        ##Set Tao Machine & Port.
+        if self.taoMachine == None:
+            self.taoMachine = config.Read("TaoMachine", "localhost")
+        if self.taoPort == None:
+            self.taoPort = config.Read("TaoPort", "1239")
+        ##Set Xplorer Type
+        if self.xplorerType == None:
+            data = config.ReadInt("XplorerType", 0)
+            if data >= 0 and data < len(RADIO_XPLORER_LIST):
+                self.xplorerType = data
+            else:
+                self.xplorerType = 0
+        
+        ##Cluster test code
+        if CLUSTER_TEST:
+            cluster = CLUSTER_PACKAGE
+        else:
+            cluster = None
+        ##Launch
+        Launch(None, self.workDir,
+               self.nameServer, self.conductor, self.xplorer, self.xplorerType,
+               self.jconf,
+               self.taoMachine, self.taoPort,
+               self.desktop,
+               self.depDir, cluster = cluster)
+
 
 class LauncherWindow(wx.Frame):
     """Manages the launcher's window and the use of data from it.
@@ -1235,6 +1337,303 @@ class JconfWindow(wx.Dialog):
         self.Destroy()
 
 
+##class ClusterDict:
+##    """Stores a dictionary of cluster comps in this setup:
+##    {name: [location, checked], name: [location, checked],..}
+##    under the variable self.list.
+##
+##    Functions:
+##        __init__(configName)
+##        SetConfig(configName)
+##        Add(name, path)
+##        Rename(pos, newName)
+##        Delete(pos)
+##        GetPath(index)
+##        Length / __len__
+##        GetNames
+##    """
+##    def __init__(self, configName):
+##        """Creates a dict of cluster names/locations from Launcher's Config."""
+##        self.cluster = {}
+##        self.SetConfig(configName)
+##        bCont = self.config.GetFirstGroup()
+####        print self.config.GetPath() ##Tester
+##        while (bCont[0]):
+##            name = bCont[1]
+##            self.config.SetPath(bCont[1])
+##            location = self.config.Read("location", "localhost")
+##            checked = self.config.ReadBool("checked", False)
+##            self.config.SetPath('..')
+##            self.cluster[name] = [location, checked]
+##            bCont = self.config.GetNextGroup(bCont[2])
+##
+##    def SetConfig(self, configName):
+##        """Sets self.config to the entry configName."""
+##        self.config = wx.Config(CONFIG_FILE)
+##        self.config.SetPath(configName)
+##        self.config.SetPath(CLUSTER_CONFIG)
+##
+##    def Add(self, name, location, checked):
+##        """Adds name: [location, checked] to the list & config."""
+##        ##Add to list.
+##        self.cluster[name] = [location, checked]
+##        ##Add to cluster.
+##        self.config.Write("location", location)
+##        self.config.WriteBool("checked", checked)
+##        self.config.SetPath('..')
+##        ##NOTE: Adding the same cluster file twice results in the previous one
+##        ##being overwritten. Correct that later.
+##
+##    def Rename(self, oldName, newName):
+##        """Renames oldName entry to newName, appends a number if necessary.
+##
+##        These suffixes are added to newName until a unique name's generated:
+##        [none], 1, 2, 3, ... 9, 10, 11, etc."""
+##        ##Save the entry's values.
+##        transition = self.cluster[oldName]
+##        del self.cluster[oldName]
+##        ##Add a numeric suffix to newName if it matches a name
+##        ##already in the dict.
+##        suffix = ""
+##        while (newName + str(suffix)) in self.cluster:
+##            if suffix == "":
+##                suffix = '1'
+##            else:
+##                suffix = str(int(suffix) + 1)
+##        ##Update cluster dict
+##        self.cluster[newName + suffix] = transition
+##        ##Update config
+##        self.config.RenameGroup(oldName, newName + suffix)
+##        ##Warns user if name had suffix added to it.
+##        if (newName + suffix) != newName:
+##            dlg = wx.MessageDialog(None,
+##                                   "The name " +newName +" already existed" + \
+##                                   " in the cluster list.\n" + \
+##                                   "Your entry was given the" + \
+##                                   " name " + newName + suffix + " instead.",
+##                                   "NOTE: Name Changed",
+##                                   wx.OK)
+##            dlg.ShowModal()
+##
+##    def Delete(self, name):
+##        """Deletes name's entry."""
+##        self.config.DeleteGroup(name)
+##        del self.cluster[name]
+##
+##    def GetLocation(self, name):
+##        """Returns the location of name's entry."""
+##        return self.cluster[name][0]
+##
+##    def GetChecked(self, name):
+##        """Returns checked status of name's entry."""
+##        return self.cluster[name][1]
+##
+##    def Length(self):
+##        """Returns the length of self.cluster."""
+##        return len(self.cluster)
+##
+##    def __len__(self):
+##        return self.Length()
+##
+##    def GetNames(self):
+##        """Returns a list of the entries' names."""
+##        nList = []
+##        for name in self.cluster:
+##            nList.append(name)
+##        return nList
+##
+##
+##class ClusterWindow(wx.Dialog):
+##    """A window for editing a list of clustered computers.
+##
+##    Functions:
+##        __init__(parent, ID, title, L, cursor=0)
+##        DisplayJconfFile(event)
+##        DeleteEnabledCheck
+##        Update(cursor)
+##        AddNew(event)
+##        Delete(event)
+##        Rename(event)
+##        OnClose(event)
+##    """
+##    def __init__(self, parent, ID, title, D):
+##        """Sets up the Jconf window.
+##
+##        Keyword arguments:
+##        D: The linked Cluster dictionary this window modifies.
+##        """
+##        wx.Dialog.__init__(self, parent, wx.ID_ANY, title,
+##                           style = wx.DEFAULT_FRAME_STYLE)
+##        ##Data storage.
+##        self.cDict = D
+##        ##Build displays.
+##        self.clusList = wx.ListBox(self, -1, size=JCONF_LIST_DISPLAY_MIN_SIZE,
+##                                   choices=self.cDict.GetNames())
+##        self.confList.SetSelection(cursor)
+##        self.display = wx.TextCtrl(self, -1, style=wx.TE_READONLY)
+##        self.DisplayJconfFile("dead parrot sketch")
+##        ##Build buttons.
+##        bAdd = wx.Button(self, -1, "Add")
+##        bRename = wx.Button(self, -1, "Rename")
+##        self.bDelete = wx.Button(self, -1, "Delete")
+##        ##Check if Delete's enabled.
+##        self.DeleteEnabledCheck()
+##        ##Bind buttons.
+##        self.Bind(wx.EVT_BUTTON, self.AddNew, bAdd)
+##        self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
+##        self.Bind(wx.EVT_BUTTON, self.Rename, bRename)
+##        self.Bind(wx.EVT_LISTBOX, self.DisplayJconfFile, self.confList)
+##        self.Bind(wx.EVT_CLOSE, self.OnClose)
+##        ##Construct layout.
+##        ##Add/Rename/Delete buttons.
+##        rowSizer = wx.BoxSizer(wx.VERTICAL)
+##        rowSizer.AddMany([bAdd, VERTICAL_SPACE,
+##                          bRename, VERTICAL_SPACE,
+##                          self.bDelete])
+##        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
+##        ##List field + buttons.
+##        columnSizer.Add(self.confList, 1, wx.EXPAND)
+##        columnSizer.AddMany([HORIZONTAL_SPACE, rowSizer])
+##        ##List field + Path display
+##        rowSizer = wx.BoxSizer(wx.VERTICAL)
+##        rowSizer.Add(columnSizer, 1, wx.EXPAND)
+##        rowSizer.AddMany([VERTICAL_SPACE,
+##                          wx.StaticText(self, -1, "Selection's Jconf file:")])
+##        rowSizer.Add(self.display, 0, wx.EXPAND)
+##        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
+##        mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
+##        ##Set size, position.
+##        mainSizer.SetSizeHints(self)
+##        self.SetSizer(mainSizer)
+##        self.SetSize(INITIAL_JCONF_WINDOW_SIZE)
+##        self.CenterOnParent(wx.BOTH)
+##
+##    def DisplayJconfFile(self, event):
+##        """Shows the .jconf file of the selection in the text field."""
+##        c = self.confList.GetSelection()
+##        if c in range(len(self.list)):
+##            p = self.list.GetPath(c)
+##            f = os.path.split(p)[1]
+##        else:
+##            f = "ERROR: Entry missing from list."
+##        self.display.SetValue(f)
+##        
+##    def DeleteEnabledCheck(self):
+##        """Disables/Enables the Delete button based on number of entries.
+##
+##        Disabled if entries <= 1
+##        Enabled if entries > 1"""
+##        if self.list.Length() <= 1:
+##            self.bDelete.Enable(False)
+##        else:
+##            self.bDelete.Enable(True)
+##
+##    def Update(self, cursor):
+##        """Updates the shown entries list to match recent changes."""
+##        self.confList.Set(self.list.GetNames())
+##        self.confList.SetSelection(cursor)
+##        self.DisplayJconfFile("dead parrot sketch")
+##
+##    def AddNew(self, event):
+##        """User chooses a new Jconf file to add to the list.
+##
+##        Default name: Name of Jconf file."""
+##        ##Default directory for the search is the
+##        ##directory of the currently selected Jconf.
+##        c = self.confList.GetSelection()
+##        if c in range(len(self.list)):
+##            p = self.list.GetPath(c)
+##            f = os.path.split(p)[0]
+##        else:
+##            f = os.getcwd()
+##        dlg = wx.FileDialog(self,
+##                           "Choose a configuration file.",
+##                           defaultDir = f,
+##                           wildcard = "Jconfig (*.jconf)|*.jconf",
+##                           style=wx.OPEN)
+##        if dlg.ShowModal() == wx.ID_OK:
+##            path = dlg.GetPath()
+##            self.list.Add(os.path.split(path)[1][:-6], path)
+##            self.Update(self.confList.GetSelection())
+##            self.DeleteEnabledCheck()
+##
+##    def Delete(self, event):
+##        """Deletes the selected entry from the list.
+##
+##        Also moves the selection index if it would be off the list."""
+##        dlg = wx.MessageDialog(self,
+##                               "Are you sure you want to delete\n" +
+##                               self.confList.GetStringSelection() + "?",
+##                               "Confirm Deletion",
+##                               wx.YES_NO | wx.NO_DEFAULT)
+##        dlg.CenterOnParent(wx.BOTH)
+##        if dlg.ShowModal() == wx.ID_YES:
+##            cursor = self.confList.GetSelection()
+##            self.list.Delete(cursor)
+##            ##Move the cursor if it wouldn't be on the list anymore.
+##            if cursor >= self.list.Length():
+##                cursor = self.list.Length() - 1
+##            self.Update(cursor)
+##            self.DeleteEnabledCheck()
+##
+##    def Rename(self, event):
+##        """Renames the selected Jconf entry.
+##        
+##        Ensures the new name:
+##        -Contains no slashes.
+##        -Isn't empty spaces."""
+##        loop = True
+##        name = self.confList.GetStringSelection()
+##        while loop:
+##            f= os.path.split(self.list.GetPath(self.confList.GetSelection()))[1]
+##            dlg = wx.TextEntryDialog(self,
+##                                     "What do you want to rename " + \
+##                                     self.confList.GetStringSelection() + \
+##                                     " to?\n\n" + \
+##                                     "Jconf File: " + f,
+##                                     "Rename",
+##                                     name)
+##            if dlg.ShowModal() == wx.ID_OK:
+##                name = dlg.GetValue()
+##                dlg.Destroy()
+##                cursor = self.confList.GetSelection()
+##                ##Check for slashes
+##                if name.count('/') > 0 or name.count('\\') > 0:
+##                    dlg = wx.MessageDialog(self,
+##                                           "Your new name has slashes" + \
+##                                           " in it.\n" + \
+##                                           "Please choose a different name.",
+##                                           "ERROR: Name Contains Slashes",
+##                                           wx.OK)
+##                    dlg.ShowModal()
+##                    dlg.Destroy()
+##                    name = name.replace('/', '-')
+##                    name = name.replace('\\', '-')
+##                ##Check if it's empty/spaces
+##                elif name.isspace() or name == '':
+##                    dlg = wx.MessageDialog(self,
+##                                           "Your new name is empty." + \
+##                                           "Please choose a different name.",
+##                                           "ERROR: Name is Empty",
+##                                           wx.OK)
+##                    dlg.ShowModal()
+##                    dlg.Destroy()
+##                    name = self.confList.GetStringSelection()
+##                ##Else accept it.
+##                else:
+##                    self.list.Rename(cursor, name)
+##                    self.Update(cursor)
+##                    loop = False
+##            else:
+##                loop = False
+##
+##    def OnClose(self, event):
+##        """Closes JconfWindow."""
+##        self.GetParent().UpdateChJconf(self.confList.GetSelection())
+##        self.Hide()
+##        self.Destroy()
+
+
 class Launch:
     """Prepares the environment and launches the chosen programs.
 
@@ -1257,21 +1656,26 @@ class Launch:
                  runName, runConductor, runXplorer, typeXplorer,
                  jconf,
                  taoMachine, taoPort,
-                 desktopMode):
+                 desktopMode,
+                 dependenciesDir = None, cluster = None):
         """Sets environmental vars and calls OS-specific launch code.
 
         Keyword arguments:
         launcherWindow -- The caller. Used to close it after the call.
         workingDir, taoMachine, taoPort -- Used for environmental vars.
         runName, runConductor, runXplorer,
-        typeXplorer, jconf, desktopMode -- Used for launch code."""
+        typeXplorer, jconf, desktopMode -- Used for launch code.
+        dependenciesDir -- Optional, used for environmental vars.
+        cluster -- Optional, used for running multiple Xplorers."""
         ##The launch is the final step.
-        ##Destroy launcher window before beginning the actual launch. 
-        launcherWindow.Close()
-        ##Get dependenciesDir for setting environmental variables
-        config = wx.Config(CONFIG_FILE)
-        config.SetPath("/" + DEFAULT_CONFIG)
-        dependenciesDir = config.Read("DependenciesDir", "ERROR")
+        ##Destroy launcher window before beginning the actual launch.
+        if launcherWindow != None:
+            launcherWindow.Close()
+        ##Get dependenciesDir for setting environmental variables.
+        if dependenciesDir == None:
+            config = wx.Config(CONFIG_FILE)
+            config.SetPath("/" + DEFAULT_CONFIG)
+            dependenciesDir = config.Read("DependenciesDir", "ERROR")
         ##Set the environmental variables
         self.EnvSetup(dependenciesDir, workingDir, taoMachine, taoPort)
         ##Use the user's defined directory as Current Working Dir
@@ -1286,7 +1690,7 @@ class Launch:
                                typeXplorer, jconf, desktopMode)
         elif os.name == "posix":
             self.Unix(runName, runConductor, runXplorer,
-                            typeXplorer, jconf, desktopMode)
+                            typeXplorer, jconf, desktopMode, cluster)
         else:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
         return
@@ -1360,7 +1764,7 @@ class Launch:
         return
 
     def Unix(self, runName, runConductor, runXplorer, typeXplorer, jconf,
-             desktopMode):
+             desktopMode, cluster = None):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -1410,7 +1814,17 @@ class Launch:
                       " -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
-                      jconf + desktop)
+                      jconf + desktop + " &")
+        ##Cluster mode
+        if cluster != None:
+            for comp in cluster:
+                print "Annoying %s" %(comp) ##TESTER
+                command = "ssh %s << EOF" % (comp)
+                command = command + '; echo "Hallo %s"; EOF' % (comp)
+                os.system(command)
+                time.sleep(5)
+##      My best guess for a python cluster code:
+##      command = "ssh " + comp + " << EOF; cd " + str(os.getenv("VE_INSTALL_DIR")) + "; python velauncher.py -x " + XPLORER_TYPE_LIST[typeXplorer] + " -j " + jconf + " -t " + str(os.getenv("TAO_MACHINE")) + " -p " + str(os.getenv("TAO_PORT")) + " -w " + str(os.getenv("VE_WORKING_DIR")) + " -e " + str(os.getenv("VE_DEPS_DIR")) + "; EOF &"
         print "Done." ##TESTER
         return
 
@@ -1430,7 +1844,6 @@ class Launch:
 
         Variables not overwritten, but set to a default value if empty:
         VE_INSTALL_DIR
-        VE_SUITE_HOME
         VE_DEPS_DIR
         VE_WORKING_DIR
         TAO_MACHINE
@@ -1653,8 +2066,25 @@ class Launch:
 if JCONF_STANDARD:
     print "Jconf override ON: Standard Jconf files used; custom choices" + \
           " won't be used."
-##The main loop
-app = wx.PySimpleApp()
-frame = LauncherWindow(None,-1,'VE Suite Launcher')
-app.MainLoop()
+##Get & clean up command line arguments.
+arguments = sys.argv[1:]
+try:
+    opts, args = getopt.getopt(arguments,
+                               "cnx:kj:t:p:sw:e:",
+                               ["conductor", "nameserver", "xplorer=",
+                                "desktop", "jconf=", "taomachine=", "port=",
+                                "setup", "dir=", "dep="])
+except getopt.GetoptError:
+    print "BRAKA!"
+    ##usage()
+    sys.exit(2)
+##Immediate command line run.
+##Takes arguments passed, uses defaults for the rest.
+if len(opts) > 0:
+    CommandLaunch(opts)
+##Window boot
+else:
+    app = wx.PySimpleApp()
+    frame = LauncherWindow(None,-1,'VE Suite Launcher')
+    app.MainLoop()
 

@@ -66,6 +66,27 @@ changed, then call:
     python betaLauncher.py
 as its last line.
 
+========================================================================
+Using VE_Suite Launcher, Command Line Launch
+
+You can also give arguments to the Launcher from the command line to
+immediately launch it. The options are:
+
+-c, --conductor: Launch Conductor
+-n, --nameserver: Launch NameServer
+-x <mode>, --xplorer=<mode>: Launch Xplorer. Modes include OSG, OSG-VEP,
+	OSG-VEPC and PF.
+-k, --desktop: Launch in desktop mode.
+-j <path>, --jconf=<path>: Use the VR Juggler configuration at <path>.
+-t <name>, --taomachine=<name>: Set tao machine to <name>.
+-p <port>, --port=<port>: Set tao port to <port>.
+-w <path>, --dir=<path>: Set working directory to <path>.
+-e <path>, --dep=<path>: Set dependencies directory to <path>.
+
+If you leave out -c, -n, -x, or -k, the Launcher will set those options to
+False. If you leave out -j, -t, -p, -w, or -e, the Launcher will use their
+saved custom values. (This will cause errors if you try to use a command line
+launch without setting a Dependencies directory in GUI mode, for example.)
 
 ========================================================================
 The Launcher's Current Status
@@ -86,6 +107,14 @@ terminal to get the user's input. It won't affect VE-Suite (unless you try to
 Force Quit it, which will quit VE-Suite as well) and will be fixed once Xplorer
 doesn't require the user to type in the .param file.
 
+---Cluster Testing---
+
+Cluster testing functions have been added to the Unix launch code. To test them,
+first set CLUSTER_TEST (line 33) to True. Then set CLUSTER_PACKAGE (line 34) to
+the names of every other computer in the test cluster. Finally, change the command
+variable (line 1823) to the commands you want to use. When you send command line
+arguments to VE Launcher in Unix (see above), the Cluster test will automatically
+run.
 
 ========================================================================
 Launcher Code Documentation
