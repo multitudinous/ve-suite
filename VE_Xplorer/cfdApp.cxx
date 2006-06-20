@@ -254,6 +254,8 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {
    vrj::OsgApp::configSceneView(newSceneViewer);
 
+	newSceneViewer->setDefaults(osgUtil::SceneView::NO_SCENEVIEW_LIGHT);
+
    {
    //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //tempSvVector = newSceneViewer;
