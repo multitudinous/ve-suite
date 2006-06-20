@@ -90,7 +90,7 @@ EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ShaderLib 
 EXTRA_LIBS+= -lVE_Conductor_UtilitiesLib
 EXTRA_LIBS+= -lVE_OpenModuleLib
-EXTRA_LIBS+= -lVE_UtilLib
+#EXTRA_LIBS+= -lVE_UtilLib
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
@@ -106,7 +106,8 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 EXTRA_PATH_FOR_SOURCES+= $(VE_UI_HOME) $(IDL_HOME)/skel \
                         $(VE_SUITE_HOME)/VE_Conductor/Framework \
-                        $(VE_SUITE_HOME)/VE_Builder/Utilities/gui
+                        $(VE_SUITE_HOME)/VE_Builder/Utilities/gui \
+								$(VE_SUITE_HOME)/VE_Conductor/Utilities
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
