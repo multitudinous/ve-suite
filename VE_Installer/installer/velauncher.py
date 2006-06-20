@@ -1596,7 +1596,7 @@ class ClusterWindow(wx.Dialog):
                                  self.cDict.GetChecked(name))
         if cursor == wx.NOT_FOUND or self.clustList.GetCount() == 0:
             self.clustList.SetSelection(wx.NOT_FOUND)
-        elif self.clustList.FindString(cursor) == wx.NOT_FOUND:
+        elif self.clustList.FindString(str(cursor)) == wx.NOT_FOUND:
             self.clustList.SetSelection(wx.NOT_FOUND)
         else:
             self.clustList.SetStringSelection(cursor)
