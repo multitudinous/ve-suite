@@ -200,5 +200,13 @@ void CADNodeMenu::SetToggleNodeValue(bool onOff)
 {
 	/*get the toggle menu
 	set the value to what was passed in*/ 
+   if(onOff == true)
+   {
+      Check(GEOM_TOGGLE_ON,true );
+   }
+   else
+   {
+      Check(GEOM_TOGGLE_OFF, true);
+   }
 }
 
