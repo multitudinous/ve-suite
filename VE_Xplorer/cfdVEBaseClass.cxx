@@ -139,11 +139,7 @@ void cfdVEBaseClass::GetDataFromUnit( void )
    this-> sock->WaitForConnection(33000);
 
    std::cout << "[DBG] VE_Xplorer is connected to the port 33000 "<< std::endl;
-   
-
-   vprDEBUG(vesDBG,1)
-         <<" UPDATE_INTERACTIVE_DESIGN " << this->Interactive_state;
-   
+      
    vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
    
    if (!this->sock->Receive(ugrid,1,9))

@@ -63,6 +63,7 @@
 
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/XMLCreator.h"
+#include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/CAD/CADCreator.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
@@ -439,7 +440,7 @@ void cfdApp::latePreFrame( void )
 #endif
 #endif
 
-   if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )
+   if ( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
    {
       // exit cfdApp was selected
       vrj::Kernel::instance()->stop(); // Stopping kernel 

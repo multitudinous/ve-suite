@@ -116,6 +116,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
    EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
+   EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
    //  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
    EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
    EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
@@ -433,7 +434,12 @@ void AppFrame::StoreConfig(wxConfig* config)
 }
 
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
-{
+{   
+   if ( GetDisplayMode() == "Desktop" )
+   {
+      ExitXplorer();
+   }
+   
    if (is_orb_init)
    {
       //CosNaming::Name UIname(1);
@@ -584,6 +590,12 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
 //	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
 	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
+   //If the display mode is desktop then we will disconnect when exit is selected
+   //and in other modes we will give the user the ability to exit
+   if ( GetDisplayMode() != "Desktop" )
+   {
+      xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
+   }
 	//xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
 //	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
 //   xplorerMenu->Append( XPLORER_VISTAB, _("Visualization Tabs"));
@@ -1297,4 +1309,22 @@ void AppFrame::IdleEvent( wxIdleEvent& event )
 CORBAServiceList* AppFrame::GetCORBAServiceList( void )
 {
    return serviceList;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ExitXplorer( void )
+{
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("STRING") );
+   dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );
+   veCommand->AddDataValuePair( dataValuePair );
+   
+   serviceList->SendCommandStringToXplorer( veCommand );
+   
+   delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnExitXplorer( wxCommandEvent& WXUNUSED(event) )
+{
+   ExitXplorer();
 }

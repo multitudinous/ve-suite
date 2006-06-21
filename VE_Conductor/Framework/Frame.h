@@ -93,7 +93,8 @@ enum
    JUGGLER_STEREO,
    JUGGLER_MONO, 
    JUGGLER_SETTINGS,
-   CAD_NODE_DIALOG
+   CAD_NODE_DIALOG,
+   XPLORER_EXIT
 };
 //      XPLORER_VISTAB,
 
@@ -256,6 +257,7 @@ protected:
    void LaunchViewpointsPane(wxCommandEvent& event);
    void LaunchSoundsPane(wxCommandEvent& event);
    void LaunchStreamlinePane(wxCommandEvent& event);
+   void OnExitXplorer( wxCommandEvent& event );
 //   void LaunchVisTabs( wxCommandEvent& event );
 //   void LaunchVistab( wxCommandEvent& event );
    ///Launch the CADNode GUI
@@ -271,6 +273,7 @@ protected:
   wxBoxSizer *sizerTab;
 
 private:
+     void ExitXplorer( void );
    void IdleEvent( wxIdleEvent& event );
    NavigationPane* navPane;
    SoundsPane* soundsPane;
