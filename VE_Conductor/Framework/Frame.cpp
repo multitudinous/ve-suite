@@ -1277,12 +1277,6 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 {
-   //ConVEServer();
-   // Now need to construct domdocument and populate it with the new vecommand
-   //VE_XML::XMLReaderWriter netowrkWriter;
-   //netowrkWriter.UseStandaloneDOMDocumentManager();
-   //netowrkWriter.WriteToString();
-
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("FLOAT") );
    dataValuePair->SetDataName( "Stereo" );
@@ -1298,7 +1292,7 @@ void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////
 VjObs_ptr AppFrame::GetXplorerObject( void )
 {
-   return vjobs.in();
+   return serviceList->GetXplorerPointer();
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::IdleEvent( wxIdleEvent& event )
