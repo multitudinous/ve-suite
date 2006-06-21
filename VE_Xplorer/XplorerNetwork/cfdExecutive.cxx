@@ -285,9 +285,9 @@ void cfdExecutive::GetEverything( void )
          }
 
          _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
-         vprDEBUG(vesDBG,2) << "|\tModule results: " 
+         /*vprDEBUG(vesDBG,2) << "|\tModule results: " 
                               << this->_exec->GetModuleResult( iter->first )
-                              << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;*/
          _plugins[ iter->first ]->PreFrameUpdate();
          vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                               << " ]-> " << iter->second 

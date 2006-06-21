@@ -83,6 +83,7 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("CADTree Manager"))
 {
    _rootNode = 0;
+   _toggleNodeOnOff = true;
 
    SetRootCADNode(node);
 
@@ -234,6 +235,7 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxContextMenuEvent& event)
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData( item ));
 
       CADNodeMenu* cadNodeMenu = new CADNodeMenu();
+	  cadNodeMenu->SetToggleNodeValue(_toggleNodeOnOff);
       if(cadNode)
       {
          if(cadNode->GetNode()->GetNodeType() == std::string("Assembly"))
@@ -356,14 +358,16 @@ void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
       toggleValue->SetDataType("STRING");
       if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_ON)
       {
-         std::cout<<"Toggle on!!"<<std::endl;
+         //std::cout<<"Toggle on!!"<<std::endl;
          toggleValue->SetData(std::string("Toggle Value"),std::string("ON"));
+		 _toggleNodeOnOff = true;
       }
       else if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_OFF)
       {
-         std::cout<<"Toggle off!!"<<std::endl;
+         //std::cout<<"Toggle off!!"<<std::endl;
          toggleValue->SetData(std::string("Toggle Value"),std::string("OFF"));
-      }
+         _toggleNodeOnOff = false;
+	  }
       _dataValuePairList.push_back(toggleValue);
 
       _sendCommandsToXplorer();
@@ -449,12 +453,12 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
                  }
               }
               if(newAssembly || newPart){
-                 std::cout<<"Number of children on current root: "<<dynamic_cast<CADAssembly*>(_rootNode)->GetNumberOfChildren()<<std::endl;
+                 //std::cout<<"Number of children on current root: "<<dynamic_cast<CADAssembly*>(_rootNode)->GetNumberOfChildren()<<std::endl;
                  if(newAssembly)
                  {
                     if(dynamic_cast<CADAssembly*>(_rootNode)->GetNumberOfChildren() == 0)
                     {
-                       std::cout<<"Reseting root CADNode"<<std::endl;
+                       //std::cout<<"Reseting root CADNode"<<std::endl;
                        SetRootCADNode(newAssembly);
                     }
                     else
@@ -508,20 +512,22 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
               wxFileName vegFileName( dialog.GetPath() );
               vegFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
               wxString vegFileNamePath( wxString( "./" ) + vegFileName.GetFullPath() );
+              wxFileName cadFileName( vegFileNamePath.c_str());
               //pop a text dialog to enter the name of the new assembly
               wxTextEntryDialog partNameDlg(this, 
                                        wxString("New Part Name"),
                                        wxString("Enter name for new part:"),
-                                       wxString("Part"),wxOK);
+                                       cadFileName.GetName(),wxOK);
               partNameDlg.ShowModal();
               
+    
               CADPart* newCADPart = new CADPart(partNameDlg.GetValue().GetData());
               newCADPart->SetCADFileName( vegFileNamePath.c_str() );
 
               dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 
               _cadTreeBuilder->SetRootNode(_rootNode);
-              std::cout<<"Deleting tree"<<std::endl;
+              //std::cout<<"Deleting tree"<<std::endl;
               _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
               _cadTreeBuilder->Traverse();
               _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
@@ -667,8 +673,8 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
 
    cadCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
 
-   std::cout << "----Sending Command----" << std::endl;
-   std::cout << commandString << std::endl;
+   //std::cout << "----Sending Command----" << std::endl;
+   //std::cout << commandString << std::endl;
 
    if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
    {

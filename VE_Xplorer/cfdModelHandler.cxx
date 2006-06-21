@@ -206,11 +206,9 @@ cfdScalarBarActor* cfdModelHandler::GetScalarBar(void)
 /////////////////////////////////////////////////////
 void cfdModelHandler::SetActiveModel( int modelNumber )
 {
-   try
-   {
       for ( size_t i = 0; i < _modelList.size(); i++ )
       {
-         if ( modelNumber = _modelList.at( i )->GetID() )
+         if ( modelNumber == _modelList.at( i )->GetID() )
          {
             vprDEBUG(vesDBG,1) << "|\tcfdModelHandler::SetActiveModel : " 
                   << modelNumber 
@@ -219,13 +217,9 @@ void cfdModelHandler::SetActiveModel( int modelNumber )
             break;
          }
       }
-   }
-   catch (...)
-   {
-      std::cerr << "|\tcfdModelHandler::SetActiveModel : " 
-                  << modelNumber 
-                  << " is out of range." << std::endl;
-   }
+	 
+	 if ( _modelList.size() == 0 )
+         _activeModel = 0;
 }
 /////////////////////////////////////////////
 cfdModel* cfdModelHandler::GetModel( int i )
@@ -486,14 +480,14 @@ void cfdModelHandler::InitScene( void )
 void cfdModelHandler::PreFrameUpdate( void )
 {
    bool updateScalarRange = false;
-
    std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
    if( activeCommand )
    {
+      vprDEBUG(vesDBG,2) << "in: "<< activeCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
       currentEventHandler = _eventHandlers.find( activeCommand->GetCommandName() );
       if(currentEventHandler != _eventHandlers.end())
       {
-         vprDEBUG(vesDBG,0) << "Executing: "<< activeCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
+         vprDEBUG(vesDBG,1) << "Executing: "<< activeCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
          currentEventHandler->second->SetGlobalBaseObject();
          currentEventHandler->second->Execute( activeCommand );
       }

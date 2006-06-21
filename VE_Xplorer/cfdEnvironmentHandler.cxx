@@ -392,8 +392,7 @@ void cfdEnvironmentHandler::CreateObjects( void )
       }
       /*else if ( id == 11 )
       {
-         vprDEBUG(vesDBG
-,0) << " World DCS parameters:"
+         vprDEBUG(vesDBG,0) << " World DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
          _readParam->read_pf_DCS_parameters( input, 
                         this->worldScale, this->worldTrans, this->worldRot );

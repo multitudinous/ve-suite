@@ -69,6 +69,7 @@ MaterialUpdateEventHandler& MaterialUpdateEventHandler::operator=(const Material
 ///////////////////////////////////////////////////////////////////////////////   
 void MaterialUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject) 
 {
+   std::cout<<"Material update event handler"<<std::endl;
    try
    {
       VE_XML::Command* componentUpdate = dynamic_cast<VE_XML::Command*>(veXMLObject);
@@ -97,6 +98,7 @@ void MaterialUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
       }
       else if(rawComponent == "Opacity")
       {
+         //std::cout<<"Update opacity"<<std::endl;
          values.push_back(rawMaterial->GetOpacity());
       }
 

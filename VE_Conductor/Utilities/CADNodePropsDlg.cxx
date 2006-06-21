@@ -80,6 +80,7 @@ BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_COMBOBOX(ATTRIBUTE_TYPE,CADNodePropertiesDlg::_updateAttributeType)
    EVT_LIST_ITEM_SELECTED(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
    EVT_LIST_ITEM_RIGHT_CLICK(ACTIVE_ATTRIBUTE, CADNodePropertiesDlg::_editAttribute)
+   //EVT_CHECKBOX(ASSOCIATE_CHECKBOX,CADNodePropertiesDlg::_onAssociateCheckBox)
    EVT_MENU(CADMaterialEditMenu::DIFFUSE_ID,CADNodePropertiesDlg::_showColorDialog)
    EVT_MENU(CADMaterialEditMenu::AMBIENT_ID,CADNodePropertiesDlg::_showColorDialog)
    EVT_MENU(CADMaterialEditMenu::SPECULAR_ID,CADNodePropertiesDlg::_showColorDialog)
@@ -113,6 +114,7 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    _attributeSelection = 0;
    _addAttributeButton = 0;
    _editAttributeButton = 0;
+   //_associateWithDataCheck = 0;
    _nShaders = 0;
    _nMaterials = 0;
    
@@ -313,6 +315,10 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    attributeTypeSizer->Add(_attributeType,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
     
    _addAttributeButton = new wxButton(_attributePanel, ADD_ATTRIBUTE,wxString("Add..."));
+   /*_associateWithDataCheck = new wxCheckBox(_attributePanel, ASSOCIATE_CHECKBOX,
+	                                        _T("Use Last Seed Point"), 
+											wxDefaultPosition, wxDefaultSize, 0 );
+   _associateWithDataCheck->SetValue(false);*/
    attributeTypeSizer->Add(_addAttributeButton,0,wxALIGN_CENTER);
 
    //_editAttributeButton = new wxButton(_attributePanel, EDIT_ATTRIBUTE,wxString("Edit..."));
@@ -391,6 +397,14 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
       }
    }
 }
+////////////////////////////////////////////////////////////////////////////////
+/*void CADNodePropertiesDlg::_onAssociateCheckBox(wxCommandEvent& WXUNUSED(event))
+{
+   if(_cadNode->GetAttributeList().size())
+   {
+      
+   }
+}*/
 //////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateAttributeType(wxCommandEvent& WXUNUSED(event))
 {
@@ -672,14 +686,13 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& WXUNUSED(event)
       faceModes.Add("Front_and_Back");
       faceModes.Add("Back");
 
-      CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
-      CADMaterial* material = activeAttribute.GetMaterial();
+      CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
       wxSingleChoiceDialog faceSelector(this, _T("Select Face to apply material"), _T("Material Face"),
                            faceModes);
 
       if (faceSelector.ShowModal() == wxID_OK)
       {
-         std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
+         //std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
          material->SetFace(std::string(faceSelector.GetStringSelection().GetData()));     
          //send the data to Xplorer
          ClearInstructions(); 
@@ -742,7 +755,7 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(e
 
       if (colorSelector.ShowModal() == wxID_OK)
       {
-         std::cout<<"Selecting color mode: "<<colorSelector.GetStringSelection()<<std::endl;
+         //std::cout<<"Selecting color mode: "<<colorSelector.GetStringSelection()<<std::endl;
          material->SetColorMode(std::string(colorSelector.GetStringSelection().GetData()));     
 
          //send the data to Xplorer
@@ -776,7 +789,8 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
    //We should only arrive in here if the attribute is a CADMaterial!!!!
    if(_cadNode)
    {
-      CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
+      CADAttribute* activeAttribute = &_cadNode->GetActiveAttribute();
+      CADMaterial* material = activeAttribute->GetMaterial();
       VE_XML::FloatArray* activeComponent = 0;
       std::string updateComponent = "";
 

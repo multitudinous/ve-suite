@@ -217,27 +217,24 @@ CADAttribute& CADAttribute::operator=(const CADAttribute& rhs)
    {
       XMLObject::operator =(rhs);
       _attributeType = rhs._attributeType;
-      _material = 0;
-      _glslProgram = 0;
       _blending = rhs._blending;
+      if(_material)
+      {
+         delete _material;
+         _material = 0;
+      }
+      if(_glslProgram)
+      {
+         delete _glslProgram;
+         _glslProgram = 0;
+      }
       if(_attributeType == std::string("Material"))
       {
-         if(_material)
-         {
-            delete _material;
-            _material = 0;
-         }
          _material = new CADMaterial(*rhs._material); 
       }
       else if(_attributeType == std::string("Program"))
       {
-         if(_glslProgram)
-         {
-            delete _glslProgram;
-            _glslProgram = 0;
-         }
          _glslProgram = new Program(*rhs._glslProgram);
-         
       }
    }
    return *this;

@@ -87,6 +87,7 @@ using namespace VE_SceneGraph;
 cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS, 
                    VE_SceneGraph::cfdGroup* rootNode )
 {
+   veCommand = 0;
    cursorId = NONE;
    this->arrow = arrow;
    this->worldDCS = worldDCS;

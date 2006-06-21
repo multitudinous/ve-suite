@@ -71,7 +71,6 @@ FloatArray& FloatArray::operator=( const FloatArray& input)
 {
    if ( this != &input )
    {
-      //biv-- make sure to call the parent =
       XMLObject::operator =(input);
       _nElements = input._nElements;
       _array = input._array;

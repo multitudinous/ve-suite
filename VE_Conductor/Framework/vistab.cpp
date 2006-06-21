@@ -45,6 +45,7 @@
 #include "VE_Conductor/Framework/contour.xpm"
 #include "VE_Conductor/Framework/streamlines.xpm"
 #include "VE_Conductor/Framework/isosurface.xpm"
+#include "VE_Conductor/Framework/scalartb.xpm"
 ////@end XPM images
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
@@ -125,14 +126,14 @@ Vistab::Vistab(VjObs::Model_var activeModel,
 
    SetActiveModel(activeModel);
    Create(parent, id, caption, pos, size, style);
-   if(_nDatasetsInActiveModel)
-   {
-      _setActiveDataset(0);
-   }
    _commandName = "VISUALIZATION_TAB";
    _activeScalarName = _scalarSelection->GetStringSelection();
    _activeVectorName = _vectorSelection->GetStringSelection();
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
+   if(_nDatasetsInActiveModel)
+   {
+      _setActiveDataset(0);
+   }
 
    int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);
@@ -235,7 +236,7 @@ void Vistab::CreateControls()
     wxBitmap itemtool7BitmapDisabled;
     itemToolBar3->AddTool(ISOSURFACE_BUTTON, _T("Isosurfaces"), itemtool7Bitmap, itemtool7BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Isosurfaces"), wxEmptyString);
 
-    wxBitmap itemtool8Bitmap(new_vector_xpm);
+    wxBitmap itemtool8Bitmap(scalartb_xpm);
     wxBitmap itemtool8BitmapDisabled;
     itemToolBar3->AddTool(TEXTURE_BASED_BUTTON, _T("Texture-Based"), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Texture Based"), wxEmptyString);
 
@@ -461,7 +462,6 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
       _availableDatasets.Clear();
       for(unsigned int i = 0; i < _nDatasetsInActiveModel; i++)
       {
-         wxMessageBox( "Dataset:", wxString(newModel->dataVector[i].datasetname), wxOK | wxICON_INFORMATION );
          _availableDatasets.Add(wxString(newModel->dataVector[i].datasetname));
       }
 
@@ -603,17 +603,26 @@ void Vistab::_updateComboBoxNames(std::string dataType,
    if(dataType == "MESH_SCALARS" ||
       dataType == "TEXTURE_SCALARS")
    {
+      std::cout<<"scalar combo box"<<std::endl;
       activeComboBox = _scalarSelection;
    }
    else if(dataType == "MESH_VECTORS" ||
          dataType == "TEXTURE_VECTORS")
    {
+      std::cout<<"vector list box"<<std::endl;
       activeComboBox = _vectorSelection;
    }
-   activeComboBox->Clear();
-   for(size_t i = 0; i < listOfNames.GetCount(); i++)
+   else
    {
-      activeComboBox->Insert(listOfNames[i],i);
+      std::cout<<"Invalid data type: "<<dataType<<std::endl;
+   }
+   if(activeComboBox)
+   {
+      activeComboBox->Clear();
+      for(size_t i = 0; i < listOfNames.GetCount(); i++)
+      {
+         activeComboBox->Insert(listOfNames[i],i);
+      }
    }
 }
 ////////////////////////////////////////////

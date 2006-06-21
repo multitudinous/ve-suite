@@ -195,4 +195,10 @@ void CADNodeMenu::EnableCreateMenu(bool onOff)
       EnableGlobalMenus(true);
    }
 }
+////////////////////////////////////////////////
+void CADNodeMenu::SetToggleNodeValue(bool onOff)
+{
+	/*get the toggle menu
+	set the value to what was passed in*/ 
+}
 

@@ -168,7 +168,7 @@ void Attribute::UpdateMaterial(std::string componentName,std::string face,
       std::cout<<values[1]<<",";
       std::cout<<values[2]<<",";
       std::cout<<values[3]<<")"<<std::endl;
-      */
+     */ 
       if(componentName == "Diffuse")
       {
          material->setDiffuse(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));

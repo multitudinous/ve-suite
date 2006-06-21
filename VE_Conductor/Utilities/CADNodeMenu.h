@@ -94,6 +94,10 @@ public:
    ///\param onOff Turn on the global menus.
    void EnableCloneMenu(bool onOff);
 
+   ///Set the displayed value on the toggle sub menu .
+   ///\param onOff Toggle on/off the node toggle menu.
+   void SetToggleNodeValue(bool onOff);
+
 protected:
 };
 }

@@ -879,7 +879,7 @@ void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
             {
                vprDEBUG(vesDBG,1) <<"|\tSetting Part attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
                GetPart(nodeID)->GetDCS()->GetRawNode()->setStateSet(foundAttribute->second.get());
-               vprDEBUG(vesDBG,1) <<"|\tvalid: "<<foundAttribute->first<<std::endl;
+               vprDEBUG(vesDBG,1) <<"|\tvalid: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
             }
             else if(nodeType == "Clone")
             {

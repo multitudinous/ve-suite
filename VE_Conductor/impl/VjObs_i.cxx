@@ -901,7 +901,6 @@ void VjObs_i::PreFrameUpdate( void )
       cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
       if ( cfdModelHandler::instance()->GetActiveModel() )
       cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
-      //std::cout << " command name " << bufferCommand->GetCommandName() << std::endl;
    }
    else
    {
@@ -971,7 +970,7 @@ void VjObs_i::SetCommandString( const char* value)
       commandStringQueue.push_back( commandString );
 #endif
    domManager->Load( commandString );
-   std::cout << commandString << std::endl;
+   //std::cout <<"VjObs::SetCommandString(): "<< commandString << std::endl;
    DOMDocument* commandDoc = domManager->GetCommandDocument();
 
    // Get a list of all the command elements
@@ -980,6 +979,7 @@ void VjObs_i::SetCommandString( const char* value)
    // now lets create a list of them
    for ( unsigned int i = 0; i < numCommands; ++i )
    {
+     // std::cout <<"VjObs::numCommands(): "<< numCommands << std::endl;
       Command* temp = new Command(  );
       DOMElement* tempElement = 0;
       try
@@ -994,8 +994,10 @@ void VjObs_i::SetCommandString( const char* value)
       temp->SetObjectFromXMLData( tempElement );
       commandVectorQueue.push_back( temp );
    }
+   //std::cout <<"VjObs::SetCommandString(): unloading parser "<< std::endl;
    // I am pretty sure we now need to release some memory for the domdocument
    domManager->UnLoadParser();
+   //std::cout <<"VjObs::SetCommandString(): Done "<< std::endl;
 }
 
 // Frame sync variables used by osg only at this point

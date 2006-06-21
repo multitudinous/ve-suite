@@ -356,7 +356,7 @@ void cfdObjectHandler::SetWandPosition()
    {
       this->LastWandPosition[ i ] = wandPosition[ i ];
    }
-   vprDEBUG(vesDBG,1) << "reseting wand Position" << std::endl;
+   vprDEBUG(vesDBG,1) << "reseting wand Position" << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdObjectHandler::TranslateObject()
