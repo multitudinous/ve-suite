@@ -17,7 +17,6 @@ srcdir= .
 SRCS=\
    App.cpp \
    Avail_Modules.cpp \
-   BaseDialog.cxx \
    DataSetLoaderUI.cxx\
    Frame.cpp \
    Network.cpp \
@@ -25,7 +24,6 @@ SRCS=\
    OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
-   ROIDialog.cxx \
    StreamersPane.cxx \
    UI_AdvectionPanel.cxx \
    UI_i.cpp \
@@ -90,7 +88,6 @@ EXTRA_LIBS+= -lVE_CADLib
 EXTRA_LIBS+= -lVE_ShaderLib 
 EXTRA_LIBS+= -lVE_Conductor_UtilitiesLib
 EXTRA_LIBS+= -lVE_OpenModuleLib
-#EXTRA_LIBS+= -lVE_UtilLib
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
