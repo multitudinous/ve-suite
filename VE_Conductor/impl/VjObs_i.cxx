@@ -970,7 +970,7 @@ void VjObs_i::SetCommandString( const char* value)
       commandStringQueue.push_back( commandString );
 #endif
    domManager->Load( commandString );
-   //std::cout <<"VjObs::SetCommandString(): "<< commandString << std::endl;
+   vprDEBUG(vprDBG_ALL,1) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
    DOMDocument* commandDoc = domManager->GetCommandDocument();
 
    // Get a list of all the command elements
