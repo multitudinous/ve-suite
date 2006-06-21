@@ -84,7 +84,7 @@ void cfdNavigate::Initialize( VE_SceneGraph::cfdDCS* worldDCS )
 {
    this->worldDCS = worldDCS;
    this->cursorLen = 2.0f;
-   this->dObj = 0.05f;
+   //this->dObj = 0.05f;
    this->UpdateDir( );
    this->UpdateLoc( );
 
@@ -215,7 +215,7 @@ void cfdNavigate::FwdTranslate( )
    {
       // Update the translation movement for the objects
       // How much object should move
-      this->worldLoc[i] += this->dir[i]*this->dObj;
+      this->worldLoc[i] += this->dir[i]*this->translationStepSize;
 
       // How much the cursor movement are needed to trace back
       // to the object after each movement of the object
@@ -268,9 +268,9 @@ void cfdNavigate::updateNavigationFromGUI()
    this->worldRot[ 2 ] = tempWorldRot[ 2 ];
 
 	float* tempWorldTrans = this->worldDCS->GetVETranslationArray();
-	this->worldTrans[ 0 ] = tempWorldTrans[ 0 ];
-	this->worldTrans[ 1 ] = tempWorldTrans[ 1 ];
-	this->worldTrans[ 2 ] = tempWorldTrans[ 2 ];
+	this->worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
+	this->worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
+	this->worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
    
    // This is NOT how we should do things
    // Command should allowed to be null but because we always
@@ -279,6 +279,7 @@ void cfdNavigate::updateNavigationFromGUI()
    // This should be changed once our complete command structure is
    // in place
    std::string commandType;
+   std::string newCommand;
    if ( command )
    {
       commandType = command->GetCommandName();
@@ -286,13 +287,15 @@ void cfdNavigate::updateNavigationFromGUI()
    else
    {
       commandType = "wait";
+      newCommand = "wait";
    }
 
-   if ( !commandType.compare( "Navigation_Data" ) )
-   {
-      VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
-      this->cfdIso_value = commandData->GetDataValue();
-      std::string newCommand = commandData->GetDataName();
+      if ( !commandType.compare( "Navigation_Data" ) )
+      {
+         VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
+         this->cfdIso_value = commandData->GetDataValue();
+         std::string newCommand = commandData->GetDataName();
+      }
 
       if ( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )         
       {
@@ -496,7 +499,6 @@ void cfdNavigate::updateNavigationFromGUI()
                this->worldRot[ 2 ] += rotationStepSize;
          }
       }
-   }
 
    if ( ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ) || 
         ( this->buttonData[1] == gadget::Digital::ON ) )
@@ -596,7 +598,7 @@ void cfdNavigate::updateNavigationFromGUI()
    // manipulation of the worldTrans array
    float tempArray[ 3 ];
    for ( unsigned int i = 0; i < 3; i++ )
-      tempArray[ i ] = this->worldTrans[ i ];
+      tempArray[ i ] = -this->worldTrans[ i ];
 
    vprDEBUG(vesDBG,3) << " Navigate" << std::endl << vprDEBUG_FLUSH;
    this->worldDCS->SetTranslationArray( tempArray );

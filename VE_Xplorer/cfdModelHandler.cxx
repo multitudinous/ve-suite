@@ -483,7 +483,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
    if( activeCommand )
    {
-      vprDEBUG(vesDBG,2) << "in: "<< activeCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
+      vprDEBUG(vesDBG,3) << "Command Name : "<< activeCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
       currentEventHandler = _eventHandlers.find( activeCommand->GetCommandName() );
       if(currentEventHandler != _eventHandlers.end())
       {
