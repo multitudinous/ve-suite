@@ -294,7 +294,7 @@ void cfdNavigate::updateNavigationFromGUI()
       {
          VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
          this->cfdIso_value = commandData->GetDataValue();
-         std::string newCommand = commandData->GetDataName();
+         newCommand = commandData->GetDataName();
       }
 
       if ( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )         

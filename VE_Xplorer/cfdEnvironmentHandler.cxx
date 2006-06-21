@@ -304,7 +304,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
 	// Update Trackball
 	trackball->preFrame();
-	trackball->Matrix();
+	//trackball->Matrix();
 	
 	// Update Navigation variables   
    vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;

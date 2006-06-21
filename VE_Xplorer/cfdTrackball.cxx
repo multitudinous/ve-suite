@@ -23,6 +23,11 @@ void cfdTrackball::preFrame(){
 	gadget::KeyboardMouse::EventQueue evt_queue=mKeyboard->getEventQueue();
 	gadget::KeyboardMouse::EventQueue::iterator i;
 
+   if ( evt_queue.empty() )
+   {
+      return;
+   }
+
 	for(i=evt_queue.begin();i!=evt_queue.end();++i){
 		const gadget::EventType type=(*i)->type();
 
@@ -45,8 +50,6 @@ void cfdTrackball::preFrame(){
 			tb.Motion(mouse_evt->getX(),mouse_evt->getY());
 		}
 	}
-}
 
-void cfdTrackball::Matrix(){
 	tb.Matrix();
 }
