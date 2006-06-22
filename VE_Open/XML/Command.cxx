@@ -241,7 +241,7 @@ VE_XML::DataValuePair* Command::GetDataValuePair( int index )
    }
 }
 ///////////////////////////////////////////////////
-unsigned int Command::GetNumberOfDataValuePairs()
+size_t Command::GetNumberOfDataValuePairs()
 {
    return _dataValuePairs.size();
 }
