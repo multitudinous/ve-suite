@@ -183,7 +183,6 @@ void cfdPresetContour::Update( void )
 //find the next closest plane.
 void cfdPresetContour::CreatePlane( void )
 {
-//      int plane;
       this->cuttingPlane = new cfdCuttingPlane( 
             this->GetActiveDataSet()->GetDataSet()->GetBounds(),
             this->xyz, numSteps );

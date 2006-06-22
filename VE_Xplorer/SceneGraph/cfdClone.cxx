@@ -75,7 +75,7 @@ void cfdClone::CloneNode(cfdNode* original)
    cfdDCS* assemblyNode = dynamic_cast<cfdDCS*>(original);
    if(assemblyNode)
    {
-      for(unsigned int i =0; i < (unsigned int) assemblyNode->GetNumChildren(); i ++)
+      for(unsigned int i =0; i < assemblyNode->GetNumChildren(); i ++)
       {
          _cloneTransform->AddChild(assemblyNode->GetChild(i));
       }

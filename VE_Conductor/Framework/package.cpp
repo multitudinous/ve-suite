@@ -792,7 +792,6 @@ DOMDocument * Package::BuildFromIntfs()
   DOMElement* cur_intf;
   DOMElement* cur_elem;
   DOMElement* tmp_elem;
-//  char tmp[80];
   double dval;
   long lval;
   std::string sval;

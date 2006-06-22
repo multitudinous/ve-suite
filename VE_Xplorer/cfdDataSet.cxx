@@ -918,7 +918,7 @@ void cfdDataSet::SetActiveScalar( std::string tempActiveScalar )
    }
    
    int scalar = -1;
-   for ( size_t i = 0; i < (size_t) numScalars; ++i )
+   for ( int i = 0; i <  numScalars; ++i )
    {
       if ( scalarName[ i ] == tempActiveScalar )
       {   
@@ -1211,7 +1211,7 @@ void cfdDataSet::SetActiveVector( std::string tempVectorName )
    }
    
    int vector = -1;
-   for ( size_t i = 0; i < (size_t) numVectors; ++i )
+   for ( int i = 0; i < numVectors; ++i )
    {
       if ( vectorName[ i ] == tempVectorName )
       {   

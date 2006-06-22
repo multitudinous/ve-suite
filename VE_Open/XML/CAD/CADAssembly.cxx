@@ -143,7 +143,7 @@ bool CADAssembly::RemoveChild(unsigned int whichChildID)
       if(whichChildID  == childNode->GetID())
       {
          _children.erase(childToRemove);
-         (size_t) _numChildren = _children.size();
+         _numChildren = static_cast< unsigned int > (_children.size());
          return true;
       }
    }

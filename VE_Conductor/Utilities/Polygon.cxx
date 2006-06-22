@@ -114,7 +114,7 @@ double Polygon::nearpnt( wxPoint pt, Polygon& Near )
 
    Near.GetPolygon()->clear();
 
-   for( size_t i=0; i< (size_t) numsides; i++) 
+   for( int i=0; i< numsides; i++) 
    {
       int i2 = i+1;
       if ( i2 == numsides ) 
