@@ -442,7 +442,7 @@
 				RelativePath=".\cfdTextOutput.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_TextureBased\cfdTextureBasedVizHandler.cxx">
+				RelativePath=".\cfdTextureBasedVizHandler.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdThread.cxx">
@@ -537,6 +537,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdSoundHandler.h">
+			</File>
+			<File
+				RelativePath=".\cfdTextureBasedVizHandler.h">
 			</File>
 			<File
 				RelativePath=".\cfdTrackball.h">
