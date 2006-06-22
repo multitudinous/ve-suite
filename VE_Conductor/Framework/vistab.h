@@ -35,7 +35,7 @@
 
 #include "wx/toolbar.h"
 #include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
+#include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/vectors.h"
 #include "VE_Conductor/Framework/contours.h"
 #include "VE_Conductor/Framework/streamlines.h"

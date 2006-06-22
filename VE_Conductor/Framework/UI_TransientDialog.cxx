@@ -1,5 +1,5 @@
 //#include "VE_Conductor/VE_UI/UI_Tabs.h"
-#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
+#include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
 #include "VE_Conductor/Framework/transientIcons/play.xpm"

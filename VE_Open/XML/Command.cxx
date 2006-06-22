@@ -80,7 +80,7 @@ Command& Command::operator=( const Command& input)
       _cmdName =  input._cmdName;
       _nDataValuePairs = input._dataValuePairs.size();
 
-      size_t i  = _dataValuePairs.size() - 1;
+      size_t i  = _dataValuePairs.size() -1;
       while(i >=0)
       {
          delete _dataValuePairs.at(i);

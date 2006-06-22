@@ -35,7 +35,7 @@
 #include "VE_Conductor/Utilities/BaseDialog.h"
 
 #include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
+#include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Installer/include/VEConfig.h"
 
 #include <xercesc/dom/DOM.hpp>

@@ -34,7 +34,7 @@
 #define _ADVANCEDVECTORS_H_
 
 #include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
+#include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
 #include <xercesc/dom/DOM.hpp>
 #include <vector>

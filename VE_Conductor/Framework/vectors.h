@@ -18,7 +18,7 @@
 
 ////@begin includes
 #include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
+#include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/advancedvectors.h"
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
