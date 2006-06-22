@@ -250,13 +250,16 @@ void REI_Plugin::GetIPorts(PORT& iports)
 {
    for ( int i = 0; i < inputPort.size(); ++i )
    {
+	   
       iports[ i ] = (*inputPort.at( i ));
+	  /*
       iports[ i ].GetPortLocation()->SetPoint( 
                std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
                                              );
       inputPort.at( i )->GetPortLocation()->SetPoint( 
                std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
-                                             );
+                                            );
+											*/
       //iports[ i ].x = poly[ 0 ].x;
       //iports[ i ].y = (poly[ 3 ].y / inputPort.size() ) * i;
       //iports[ i ].x = inputPort.at( i )->GetPortLocation()->GetPoint().first;
@@ -279,12 +282,14 @@ void REI_Plugin::GetOPorts(PORT& oports)
    for ( int i = 0; i < outputPort.size(); ++i )
    {
       oports[ i ] = (*outputPort.at( i ));
+	  /*
       oports[ i ].GetPortLocation()->SetPoint( 
                std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 
                                              );
       outputPort.at( i )->GetPortLocation()->SetPoint( 
                std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 
                                              );
+											 */
       //oports[ i ].x = outputPort.at( i )->GetPortLocation()->GetPoint().first;
       //oports[ i ].y = outputPort.at( i )->GetPortLocation()->GetPoint().second;
    }
@@ -302,7 +307,7 @@ void REI_Plugin::DrawIcon(wxDC* dc)
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::DrawID(wxDC* dc)
 {
-  //return; // no module id
+  return; // no module id
   int i;
   int x, y;
   int w, h;
