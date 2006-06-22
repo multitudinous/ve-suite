@@ -39,7 +39,7 @@ class pfGroup;
 namespace osg { class Group; }
 #elif _OPENSG
 #endif
-#include "VE_SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
 
 namespace VE_SceneGraph{
    class VE_SCENEGRAPH_EXPORTS cfdGroup: public cfdNode

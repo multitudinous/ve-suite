@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include <iostream>
 #include <algorithm>
 #include <string>

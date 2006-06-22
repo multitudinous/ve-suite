@@ -32,7 +32,7 @@
 #ifndef CFD_DCS_H
 #define CFD_DCS_H
 
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Quat.h>

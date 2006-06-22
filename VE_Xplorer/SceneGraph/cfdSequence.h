@@ -49,7 +49,7 @@ enum cfdLoopMode
    CFDSEQ_SWING
 };
 
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 namespace VE_SceneGraph{
    class cfdNode;
    class cfdSwitch;

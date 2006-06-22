@@ -32,7 +32,7 @@
 #ifndef CFD_GEODE_H
 #define CFD_GEODE_H
 
-#include "VE_SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
 
 #ifdef _PERFORMER
 class pfGeode;

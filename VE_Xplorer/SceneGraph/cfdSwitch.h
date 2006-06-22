@@ -32,7 +32,7 @@
 #ifndef CFD_SWITCH_H
 #define CFD_SWITCH_H
 
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 #ifdef _PERFORMER
 class pfSwitch;

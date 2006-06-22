@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_SceneGraph/cfdNode.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -85,7 +85,7 @@
 #endif
 
 #include "VE_Xplorer/cfdDebug.h"
-#include "VE_SceneGraph/cfdSequence.h"
+#include "VE_Xplorer/SceneGraph/cfdSequence.h"
 
 namespace VE_SceneGraph{
 

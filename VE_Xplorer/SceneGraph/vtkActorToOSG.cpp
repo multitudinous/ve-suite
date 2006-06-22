@@ -9,7 +9,7 @@
 //#include <strstream.h>
 // workaround end
 
-#include "VE_SceneGraph/vtkActorToOSG.h"
+#include "VE_Xplorer/SceneGraph/vtkActorToOSG.h"
 #include "VE_Xplorer/readWriteVtkThings.h"
 #ifdef VTK44
 #define VTK4

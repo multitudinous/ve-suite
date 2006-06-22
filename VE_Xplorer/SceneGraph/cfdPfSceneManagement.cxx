@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 /// Performer libraries
 #ifdef _PERFORMER
@@ -41,8 +41,8 @@
 #include <osg/Group>
 #include <osg/Node>
 #endif
-#include "VE_SceneGraph/cfdNode.h"
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 #ifndef WIN32
 #ifdef _PERFORMER
@@ -58,8 +58,8 @@
 
 #include <iostream>
 
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 using namespace VE_SceneGraph;
 vprSingletonImp(cfdPfSceneManagement );
 

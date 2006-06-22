@@ -29,17 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGeode.h>
 #include <Performer/pf/pfNode.h>
-#include "VE_SceneGraph/vtkActorToPF.h"
+#include "VE_Xplorer/SceneGraph/vtkActorToPF.h"
 #elif _OSG
 #include <osg/Geode>
 #include <osg/Node>
 #include <osg/CopyOp>
-#include "VE_SceneGraph/vtkActorToOSG.h"
+#include "VE_Xplorer/SceneGraph/vtkActorToOSG.h"
 #elif _OPENSG
 #endif
 

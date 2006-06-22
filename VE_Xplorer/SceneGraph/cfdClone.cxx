@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdClone.h"
 #ifdef _OSG
 #include <osg/MatrixTransform>
 #include <osg/CopyOp>

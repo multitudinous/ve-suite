@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_SceneGraph/cfdRawNodeTraverser.h"
+#include "VE_Xplorer/SceneGraph/cfdRawNodeTraverser.h"
 #include <iostream>
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>

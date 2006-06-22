@@ -32,7 +32,7 @@
 #ifndef CFD_NODE_H
 #define CFD_NODE_H
 
-#include "VE_SceneGraph/cfdSceneNode.h"
+#include "VE_Xplorer/SceneGraph/cfdSceneNode.h"
 #include <string>
 
 
