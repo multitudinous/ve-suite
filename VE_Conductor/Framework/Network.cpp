@@ -1288,7 +1288,8 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
             if (computenorm(temp, tempPoint)<=10) 
             {
                //Also, we need to check if port Type is the same
-				if (IsPortCompatible(mod, pt, i, dest_port))
+				if (IsPortCompatible(dest_mod, i, mod, pt))
+				//if (IsPortCompatible(mod, pt, dest_mod, i))
 				{
 					dest_port = i;
 					break;
@@ -1312,7 +1313,8 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
             wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
             if (computenorm(temp, tempPoint)<=10)
             {
-				if (IsPortCompatible(dest_mod, i, mod, pt))
+				//if (IsPortCompatible(dest_mod, i, mod, pt))
+				if (IsPortCompatible(mod, pt, dest_mod, i))
 				{
 					dest_port = i;
 					break;
