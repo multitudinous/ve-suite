@@ -36,8 +36,8 @@
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdClone.h"
 
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"

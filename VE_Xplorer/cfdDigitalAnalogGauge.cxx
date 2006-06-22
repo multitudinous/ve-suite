@@ -32,10 +32,10 @@
 
 #include "VE_Xplorer/cfdDigitalAnalogGauge.h"
 #include "VE_Xplorer/cfd1DTextInput.h"
-#include "VE_SceneGraph/cfdNode.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGeode.h"
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 #include <vtkArrowSource.h>
 #include <vtkSphereSource.h> //added by angran

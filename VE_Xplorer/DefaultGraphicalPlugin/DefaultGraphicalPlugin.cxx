@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "DefaultGraphicalPlugin.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include <iostream>
 
 using namespace VE_Xplorer;

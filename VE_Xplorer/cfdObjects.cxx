@@ -32,11 +32,11 @@
 #include "VE_Xplorer/cfdObjects.h"
 #include "VE_Xplorer/cfdReadParam.h"
 #include "VE_Xplorer/cfdDataSet.h"
-#include "VE_SceneGraph/cfdGeode.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/cfdEnum.h"
-#include "VE_SceneGraph/cfdTempAnimation.h"
-#include "VE_SceneGraph/cfdSequence.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdSequence.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 
 // Juggler Includes

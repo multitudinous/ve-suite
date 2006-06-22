@@ -60,10 +60,10 @@
 #include "VE_Xplorer/cfdCursor.h"
 #include "VE_Xplorer/cfdTextOutput.h"
 
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdClone.h"
-#include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -75,7 +75,7 @@
 
 #include "VE_Xplorer/cfdDebug.h"
 
-#include "VE_TextureBased/cfdTextureDataSet.h"
+#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>

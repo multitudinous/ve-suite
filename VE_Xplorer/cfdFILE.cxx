@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/cfdFILE.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
 
 #include <cassert>
 

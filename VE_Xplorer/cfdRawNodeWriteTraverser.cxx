@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdSequence.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdSequence.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>

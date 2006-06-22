@@ -31,10 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdCursor.h"
 #include "VE_Xplorer/cfdEnum.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Xplorer/cfdCommandArray.h"
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdObjects.h"
 #include "VE_Open/XML/Command.h"

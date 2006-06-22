@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_SceneGraph/Utilities/Attribute.h"
+#include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 using namespace VE_SceneGraph::Utilities;
 using namespace VE_CAD;
 using namespace VE_Shader;
@@ -57,8 +57,8 @@ void VE_SceneGraph::Utilities::Attribute::init(void)
 #endif
 #include "VE_Open/XML/CAD/CADAttribute.h"
 #include "VE_Open/XML/Shader/Uniform.h"
-#include "VE_SceneGraph/Utilities/MaterialHelper.h"
-#include "VE_SceneGraph/Utilities/ShaderHelper.h"
+#include "VE_Xplorer/SceneGraph/Utilities/MaterialHelper.h"
+#include "VE_Xplorer/SceneGraph/Utilities/ShaderHelper.h"
 
 #ifdef _OSG
 //why is this needed

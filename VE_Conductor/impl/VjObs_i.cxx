@@ -47,15 +47,15 @@
 #include "VE_Xplorer/cfdDisplaySettings.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 
-#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_TextureBased/cfdTextureBasedVizHandler.h"
-#include "VE_TextureBased/cfdVolumeVisualization.h"
+#include "VE_Xplorer/TextureBased/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
 using namespace VE_TextureBased;
 #endif
 #endif

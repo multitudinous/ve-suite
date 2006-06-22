@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include "VE_Xplorer/XplorerNetwork/VE_i.h"
 #include "VE_Xplorer/cfdEnum.h"
@@ -47,7 +47,7 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/Model/Model.h"
 
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
 

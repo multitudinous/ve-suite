@@ -33,9 +33,9 @@
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdFILE.h"
 
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
-#include "VE_SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/cfdClone.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"

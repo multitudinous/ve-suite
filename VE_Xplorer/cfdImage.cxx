@@ -35,7 +35,7 @@
 #include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_Xplorer/fileIO.h"
 #include "VE_Xplorer/cfdReadParam.h"
-#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkPlaneSource.h>
 #include <vtkBMPReader.h>

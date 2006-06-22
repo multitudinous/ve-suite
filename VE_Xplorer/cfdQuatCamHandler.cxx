@@ -42,7 +42,7 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/OneDIntArray.h"
 
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include <cmath>
 #include <iostream>

@@ -31,9 +31,9 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 DIRS= ${VE_SUITE_HOME}/VE_Xplorer/Utilities \
-   ${VE_SUITE_HOME}/VE_SceneGraph \
-   ${VE_SUITE_HOME}/VE_SceneGraph/Utilities \
-   ${VE_SUITE_HOME}/VE_TextureBased \
+   ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph \
+   ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/Utilities \
+   ${VE_SUITE_HOME}/VE_Xplorer/TextureBased \
    ${VE_SUITE_HOME}/VE_Xplorer/XplorerHandlers\
    ${VE_SUITE_HOME}/VE_Xplorer/GraphicalPlugin\
    ${VE_SUITE_HOME}/VE_Xplorer/XplorerNetwork\
@@ -48,9 +48,9 @@ default: all
 all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Xplorer/Utilities \
-${VE_SUITE_HOME}/VE_SceneGraph \
-${VE_SUITE_HOME}/VE_SceneGraph/Utilities \
-${VE_SUITE_HOME}/VE_TextureBased \
+${VE_SUITE_HOME}/VE_Xplorer/SceneGraph \
+${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/Utilities \
+${VE_SUITE_HOME}/VE_Xplorer/TextureBased \
 ${VE_SUITE_HOME}/VE_Xplorer/XplorerHandlers \
 ${VE_SUITE_HOME}/VE_Xplorer/GraphicalPlugin \
 ${VE_SUITE_HOME}/VE_Xplorer/XplorerNetwork\

@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdGraphicsObject.h"
-#include "VE_SceneGraph/cfdGeode.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdDataSet.h"
-#include "VE_SceneGraph/cfdSequence.h"
-#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdSequence.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 
-#include "VE_SceneGraph/cfdNode.h"
-#include "VE_SceneGraph/cfdSceneNode.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdSceneNode.h"
 
 #include "VE_Xplorer/cfdDebug.h"
 #ifdef _PERFORMER

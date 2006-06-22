@@ -71,12 +71,12 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
-#include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdGeode.h"
-#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 //This is WAY down here to fix compile errors on IRIX
 #include "VE_Xplorer/cfdSteadyStateVizHandler.h"
 

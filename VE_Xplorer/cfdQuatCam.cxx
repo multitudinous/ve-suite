@@ -32,7 +32,7 @@
 
 #include "VE_Xplorer/cfdQuatCam.h"
 #include "VE_Xplorer/cfdNavigate.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #ifdef _PERFORMER
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <Performer/pf.h>

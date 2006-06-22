@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_SceneGraph/Utilities/ShaderHelper.h"
+#include "VE_Xplorer/SceneGraph/Utilities/ShaderHelper.h"
 #ifdef _OSG
 #include <osg/StateSet>
 #include <osg/Shader>

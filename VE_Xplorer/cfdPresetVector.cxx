@@ -33,7 +33,7 @@
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdPlanes.h"
 #include "VE_Xplorer/cfdCuttingPlane.h"
-#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include "VE_Xplorer/cfdDebug.h"
 

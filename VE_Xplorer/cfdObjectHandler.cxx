@@ -34,8 +34,8 @@
 #include "VE_Xplorer/cfdObjectHandler.h"
 #include "VE_Xplorer/cfdNavigate.h"
 #include <vpr/Util/Singleton.h>
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/cfdDebug.h"
 
 #include <osg/Group>

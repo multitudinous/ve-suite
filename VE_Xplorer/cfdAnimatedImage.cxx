@@ -34,8 +34,8 @@
 #include "VE_Xplorer/cfdImage.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdCommandArray.h"
-#include "VE_SceneGraph/cfdTempAnimation.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include "VE_Xplorer/cfdDebug.h"
 

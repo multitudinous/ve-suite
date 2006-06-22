@@ -36,14 +36,14 @@
 #endif
 
 #include "VE_Xplorer/cfdTeacher.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_Xplorer/cfdWriteTraverser.h"
 #include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/cfdScalarBarActor.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 

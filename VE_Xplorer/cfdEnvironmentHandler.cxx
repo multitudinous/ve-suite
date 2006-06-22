@@ -45,9 +45,9 @@
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 #include "VE_Xplorer/cfdModel.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/cfdDebug.h"
 #include "VE_Xplorer/cfdDisplaySettings.h"
 

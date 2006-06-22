@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdTextOutput.h"
 
-#include "VE_SceneGraph/cfdGeode.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include "VE_Xplorer/cfdDebug.h"
 

@@ -34,8 +34,8 @@
 #include "VE_Xplorer/cfdFileInfo.h"  
 
 #include <cassert>
-#include "VE_SceneGraph/cfdGeode.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 //shouldn't have to declare these
 //should instead use the cfdNode types!!!

@@ -40,8 +40,8 @@
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/fileIO.h"
 #include "VE_Xplorer/cfdModel.h"
@@ -51,10 +51,10 @@
 #include "VE_Xplorer/cfdReadParam.h"
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_Xplorer/cfdScalarBarActor.h"
-#include "VE_SceneGraph/cfdTempAnimation.h"
-#include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 
 #include "VE_Xplorer/EventHandler.h"
@@ -74,8 +74,8 @@
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_TextureBased/cfdTextureDataSet.h"
-#include "VE_TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 using namespace VE_TextureBased;
 #endif
 #endif

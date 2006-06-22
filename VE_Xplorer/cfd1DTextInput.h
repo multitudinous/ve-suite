@@ -38,7 +38,7 @@ namespace VE_SceneGraph
    class cfdGeode;
 }
 class  vtkActor;
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 namespace VE_Xplorer
 {

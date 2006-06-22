@@ -4,8 +4,8 @@
 #include "VE_Xplorer/trackball.h"
 #include "VE_Xplorer/cfdNavigate.h"
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

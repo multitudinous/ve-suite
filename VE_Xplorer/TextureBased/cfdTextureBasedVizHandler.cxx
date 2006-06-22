@@ -49,8 +49,8 @@
 #include "VE_Xplorer/cfdNavigate.h"
 #include "VE_Xplorer/cfdGraphicsObject.h"
 #include "VE_Xplorer/cfdEnum.h"
-#include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include <fstream>
 #ifdef _PERFORMER

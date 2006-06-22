@@ -32,8 +32,8 @@
 
 #include "VE_Xplorer/cfdVEBaseClass.h"
 
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdReadParam.h"

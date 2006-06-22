@@ -37,26 +37,26 @@
 #include "VE_Xplorer/cfdApp.h"
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_TextureBased/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/TextureBased/cfdTextureBasedVizHandler.h"
 #endif
 #endif
 
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/fileIO.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdSteadyStateVizHandler.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 #include "VE_Xplorer/cfdModel.h"
-#include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/cfdDataSet.h"
 
 #include "VE_Xplorer/cfdCommandArray.h"
-#include "VE_SceneGraph/cfdNode.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/cfdObjects.h"
-#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/cfdVjObsWrapper.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdDebug.h"
@@ -93,7 +93,7 @@
 #ifdef _OSG
 #ifdef VE_PATENTED
 //#ifdef CFD_USE_SHADERS
-#include "VE_TextureBased/cfdPBufferManager.h"
+#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
 using namespace VE_TextureBased;
 //#endif
 #endif

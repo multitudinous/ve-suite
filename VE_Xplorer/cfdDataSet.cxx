@@ -41,10 +41,10 @@
 #include "VE_Xplorer/cfdAccessoryFunctions.h"
 #include "VE_Xplorer/fileIO.h"
 #include "VE_Xplorer/readWriteVtkThings.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/cfdVTKFileHandler.h"
 
 

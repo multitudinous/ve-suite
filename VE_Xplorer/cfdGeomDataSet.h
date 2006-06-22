@@ -47,8 +47,8 @@ class pfLightModel;
 #include <osg/MatrixTransform>
 #include <osg/Material>
 #endif
-#include "VE_SceneGraph/cfdNode.h"
-#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 //! CFD shell model loader
 /*!

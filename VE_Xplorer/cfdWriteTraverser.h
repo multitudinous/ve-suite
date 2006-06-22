@@ -34,7 +34,7 @@
 #define _CFD_WRITE_TRAVERSER_H_
 
 #include <vector>
-#include "VE_SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
 #ifdef _PERFORMER
 #include <Performer/pf/pfSequence.h>
 #include <Performer/pf/pfNode.h>
@@ -43,7 +43,7 @@
 #include <osg/Node>
 #elif _OPENSG
 #endif
-#include "VE_SceneGraph/cfdNodeTraverser.h"
+#include "VE_Xplorer/SceneGraph/cfdNodeTraverser.h"
 
 ////////////////////////////////////////
 //This class writes out a performer   // 

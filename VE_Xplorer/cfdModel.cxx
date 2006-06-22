@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdDataSet.h"
-#include "VE_SceneGraph/cfdTempAnimation.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdNode.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdClone.h"
-#include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_Builder/Translator/cfdGrid2Surface.h"
-#include "VE_SceneGraph/cfdClone.h"
-#include "VE_SceneGraph/Utilities/Attribute.h"
+#include "VE_Xplorer/SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
@@ -55,7 +55,7 @@
 #ifdef _OSG
 #include <osg/StateSet>
 #ifdef VE_PATENTED
-#include "VE_TextureBased/cfdTextureDataSet.h"
+#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
 using namespace VE_TextureBased;
 #endif
 #endif
