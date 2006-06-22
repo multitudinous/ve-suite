@@ -1796,10 +1796,10 @@ class Launch:
             else:
                 desktop = ""
             os.system('start "%s" ' % (CONDUCTOR_SHELL_NAME) +
-                      "WinClientd.exe -ORBInitRef" + desktop +
+                      "WinClientd.exe -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
-                      " -ORBDottedDecimalAddresses 1")
+                      " -ORBDottedDecimalAddresses 1" + desktop)
         ##Xplorer section
         if runXplorer:
             ##Append argument if desktop mode selected
