@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/TextureBased/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/cfdTextureBasedVizHandler.h"
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
