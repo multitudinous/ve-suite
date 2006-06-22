@@ -48,6 +48,9 @@
 
 #include "VE_Conductor/Utilities/CADNodePropsDlg.h"
 #include "VE_Installer/include/VEConfig.h"
+
+class wxFileName;
+
 namespace VE_CAD
 {
    class CADNode;
@@ -151,6 +154,16 @@ protected:
    void _sendCommandsToXplorer();
    VjObs_var _vjObsPtr;///<The VjObj ptr.
 #endif
+   ///This function takes a cad file name and constructs a command to send
+   ///to xplorer
+   ///\param fileName The filename to send to xplorer
+   void SendNewNodesToXplorer( wxFileName fileName );
+
+   ///This function takes a veg file name and constructs a command to send
+   ///to xplorer
+   ///\param fileName The filename to send to xplorer
+   void SendVEGNodesToXplorer( wxString fileName );
+   
    wxTreeCtrl* _geometryTree;///<The tree control.
    wxButton* _quitButton;///<The button to close the dialog.
    wxButton* _saveButton;///<The button to save the current CADHierarchy.
