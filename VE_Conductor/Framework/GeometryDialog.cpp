@@ -503,11 +503,12 @@ GeometryInfoPackage GeometryDialog::GetGeomInfoPackageFromInfoPage()
    temppackage.SetGeomFileName(txt.c_str());
 
    txt = t_transparencytoggle->GetValue();
+//   temppackage.SetTransparencyToggle(atoi(txt.c_str())==0)?false:true;
    temppackage.SetTransparencyToggle((bool)atoi(txt.c_str()));
 
    txt = t_colorflag->GetValue();
+//   temppackage.SetColorFlag(atoi(txt.c_str())==0)?false:true;
    temppackage.SetColorFlag((bool)atoi(txt.c_str()));
-
    double x, y,z;
    txt = t_scale0->GetValue();
    x = (double) atof(txt.c_str());

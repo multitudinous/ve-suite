@@ -54,11 +54,11 @@ namespace VE_Xplorer
          // attached to the listener, and its volume does not change when the
          // listener moves. If the sound is positional, the volume changes when the
          // listener moves
-         int   ambient;
+         bool   ambient;
 
          // retriggerable specifies whether a currently playing sound restarts
          // from the beginning when triggered.
-         int   retriggerable;  
+         bool   retriggerable;  
 
          // Number of times to play: -1 to loop, 1 (single shot) is default.
          int   repeat;      

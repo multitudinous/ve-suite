@@ -248,7 +248,7 @@ void REI_Plugin::SetNumIports( int numPorts )
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::GetIPorts(PORT& iports)
 {
-   for ( int i = 0; i < inputPort.size(); ++i )
+   for ( int i = 0; i < (int) inputPort.size(); ++i )
    {
 	   
       iports[ i ] = (*inputPort.at( i ));
@@ -279,7 +279,7 @@ void REI_Plugin::SetNumOports( int numPorts )
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::GetOPorts(PORT& oports)
 {
-   for ( int i = 0; i < outputPort.size(); ++i )
+   for ( int i = 0; i < (int) outputPort.size(); ++i )
    {
       oports[ i ] = (*outputPort.at( i ));
 	  /*

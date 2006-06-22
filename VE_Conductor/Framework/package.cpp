@@ -381,7 +381,7 @@ void Package::FillIntfs(DOMDocument *doc)
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
             tmp_attr = XMLString::transcode("val");
             tmp = XMLString::transcode(cur_geomelem->getAttribute(tmp_attr));
-            bool transparencytoggle = static_cast< bool >( atoi(tmp) );
+			bool transparencytoggle =  (atoi(tmp)== 0)?false:true ;
             delete[] tmp_attr;
             delete[] tmp;
             geomvals.SetTransparencyToggle(transparencytoggle); 
@@ -459,7 +459,7 @@ void Package::FillIntfs(DOMDocument *doc)
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
             tmp_attr = XMLString::transcode("val");
             tmp = XMLString::transcode(cur_geomelem->getAttribute(tmp_attr));
-            bool colorflag = static_cast< bool >( atoi(tmp) );
+            bool colorflag = (atoi(tmp)== 0)?false:true;
             delete[] tmp_attr;
             delete[] tmp;
             geomvals.SetColorFlag(colorflag); 
@@ -792,7 +792,7 @@ DOMDocument * Package::BuildFromIntfs()
   DOMElement* cur_intf;
   DOMElement* cur_elem;
   DOMElement* tmp_elem;
-  char tmp[80];
+//  char tmp[80];
   double dval;
   long lval;
   std::string sval;

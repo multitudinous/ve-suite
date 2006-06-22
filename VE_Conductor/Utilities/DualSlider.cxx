@@ -59,7 +59,7 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
    _range[0] = minRange;
    _range[1] = maxRange;
 
-   if(abs(_range[1] - _range[0]) < _buffer)
+   if(abs(_range[1] - _range[0]) < (int) _buffer) //check
    {
       std::cout<<"ERROR!!"<<std::endl;
       std::cout<<"Range: "<<_range[1]<<"-"<<_range[0]<<"="<<abs(_range[1]-_range[0])<<std::endl;
