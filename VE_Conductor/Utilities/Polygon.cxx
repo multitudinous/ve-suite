@@ -202,3 +202,7 @@ double Polygon::computenorm( wxPoint pt1, wxPoint pt2 )
   return std::sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
 }
 
+void Polygon::clear()
+{
+	poly.clear();
+}
