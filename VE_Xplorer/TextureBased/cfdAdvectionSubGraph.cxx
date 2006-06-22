@@ -32,13 +32,13 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <cmath>
-#include "VE_TextureBased/cfdAdvectionSubGraph.h"
-#include "VE_TextureBased/cfdOSGAdvectionShaderManager.h"
-#include "VE_TextureBased/cfdTextureManager.h"
-#include "VE_TextureBased/cfdPBufferManager.h"
-#include "VE_TextureBased/cfdVolumeVisualization.h"
-#include "VE_TextureBased/cfdTextureMatrixCallback.h"
-#include "VE_TextureBased/cfdPBufferQuad.h"
+#include "VE_Xplorer/TextureBased/cfdAdvectionSubGraph.h"
+#include "VE_Xplorer/TextureBased/cfdOSGAdvectionShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
+#include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
+#include "VE_Xplorer/TextureBased/cfdPBufferQuad.h"
 
 #include <osg/Group>
 #include <osg/Geode>

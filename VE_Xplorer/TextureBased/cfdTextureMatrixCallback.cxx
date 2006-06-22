@@ -32,7 +32,7 @@
 //class to update the texture matrix appropriately
 #ifdef VE_PATENTED
 #ifdef _OSG
-#include "VE_TextureBased/cfdTextureMatrixCallback.h"
+#include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
 #include <osg/TexMat>
 #include <osg/Matrix>
 #include <osg/Node>

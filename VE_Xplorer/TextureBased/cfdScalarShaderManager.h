@@ -33,7 +33,7 @@
 #define CFD_SCALAR_SHADER_MANAGER_H
 #ifdef VE_PATENTED
 #ifdef _OSG
-#include "VE_TextureBased/cfdOSGTransferShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
 namespace VE_TextureBased
 {
    class cfdTextureManager;

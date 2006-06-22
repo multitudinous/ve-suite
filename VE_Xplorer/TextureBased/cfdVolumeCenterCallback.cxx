@@ -35,7 +35,7 @@
 #include <osg/Billboard>
 #include <osg/NodeCallback>
 #include <osg/Vec3f>
-#include "VE_TextureBased/cfdVolumeCenterCallback.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeCenterCallback.h"
 using namespace VE_TextureBased;
 ///////////////////////////////////////////////////////////////////
 //Constructor                                                    //

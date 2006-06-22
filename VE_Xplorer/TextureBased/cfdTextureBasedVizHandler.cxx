@@ -29,15 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_TextureBased/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/TextureBased/cfdTextureBasedVizHandler.h"
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
-#include "VE_TextureBased/cfdVolumeVisNodeHandler.h"
-#include "VE_TextureBased/cfdTextureDataSet.h"
-#include "VE_TextureBased/cfdTextureManager.h"
-#include "VE_TextureBased/cfdVolumeVisualization.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h"
+#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
 #include <osg/State>
 #include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
@@ -56,12 +56,12 @@
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-#include "VE_TextureBased/cfdScalarVolumeVisHandler.h"
-#include "VE_TextureBased/cfdScalarShaderManager.h"
-#include "VE_TextureBased/cfdOSGTransferShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdScalarVolumeVisHandler.h"
+#include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
 
-#include "VE_TextureBased/cfdVectorVolumeVisHandler.h"
-#include "VE_TextureBased/cfdOSGAdvectionShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdVectorVolumeVisHandler.h"
+#include "VE_Xplorer/TextureBased/cfdOSGAdvectionShaderManager.h"
 
 vprSingletonImp( VE_TextureBased::cfdTextureBasedVizHandler );
 using namespace VE_TextureBased;

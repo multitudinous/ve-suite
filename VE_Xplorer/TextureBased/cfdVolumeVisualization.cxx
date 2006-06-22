@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef VE_PATENTED
-#include "VE_TextureBased/cfdVolumeVisualization.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
 
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
 #include <iostream>
 
-#include "VE_TextureBased/cfdAdvectionSubGraph.h"
-#include "VE_TextureBased/cfdTextureMatrixCallback.h"
-#include "VE_TextureBased/cfdVolumeCenterCallback.h"
-#include "VE_TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdAdvectionSubGraph.h"
+#include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeCenterCallback.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 
 #include <osg/TexMat>
 #include <osg/BlendFunc>

@@ -32,7 +32,7 @@
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OSG
-#include "VE_TextureBased/cfdOSGPingPongTexture3d.h"
+#include "VE_Xplorer/TextureBased/cfdOSGPingPongTexture3d.h"
 #include <osg/Image>
 #include <osg/State>
 #include <osg/Texture3D>

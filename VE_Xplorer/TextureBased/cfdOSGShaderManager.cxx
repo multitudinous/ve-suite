@@ -39,7 +39,7 @@
 #include <boost/filesystem/path.hpp>
 
 
-#include "VE_TextureBased/cfdOSGShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdOSGShaderManager.h"
 using namespace VE_TextureBased;
 //////////////////////////////////////////
 //Constructors                          //

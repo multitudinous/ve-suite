@@ -40,7 +40,7 @@ namespace VE_TextureBased
    class cfdScalarShaderManager;
    class cfdTextureManager;
 }
-#include "VE_TextureBased/cfdVolumeVisNodeHandler.h" 
+#include "VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h" 
 
 namespace VE_TextureBased
 {

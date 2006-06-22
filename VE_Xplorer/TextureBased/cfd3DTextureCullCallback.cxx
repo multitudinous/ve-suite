@@ -31,10 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef VE_PATENTED
 #ifdef _OSG
-#include "VE_TextureBased/cfd3DTextureCullCallback.h"
-#include "VE_TextureBased/cfdCopyTo3DTextureStage.h"
-#include "VE_TextureBased/cfdPBufferManager.h"
-#include "VE_TextureBased/cfdOSGPingPongTexture3d.h"
+#include "VE_Xplorer/TextureBased/cfd3DTextureCullCallback.h"
+#include "VE_Xplorer/TextureBased/cfdCopyTo3DTextureStage.h"
+#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
+#include "VE_Xplorer/TextureBased/cfdOSGPingPongTexture3d.h"
 #include <osg/Node>
 #include <osg/NodeVisitor>
 #include <osg/Texture3D>

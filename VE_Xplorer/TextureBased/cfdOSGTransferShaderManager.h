@@ -45,8 +45,8 @@ namespace VE_TextureBased
    class cfdUpdateTextureCallback;
 }
 
-#include "VE_TextureBased/cfdOSGShaderManager.h"
-#include "VE_TextureBased/cfdUpdateableOSGTexture1d.h"
+#include "VE_Xplorer/TextureBased/cfdOSGShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdUpdateableOSGTexture1d.h"
 
 #include <string>
 namespace VE_TextureBased

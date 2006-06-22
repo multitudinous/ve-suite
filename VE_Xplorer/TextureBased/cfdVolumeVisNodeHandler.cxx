@@ -40,9 +40,9 @@
 #include <osg/Switch>
 #include <iostream>
 #include <osg/Vec3f>
-#include "VE_TextureBased/cfdVolumeVisNodeHandler.h"
-#include "VE_TextureBased/cfdTextureManager.h"
-#include "VE_TextureBased/cfdTextureMatrixCallback.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////
 //Constructors                                  //

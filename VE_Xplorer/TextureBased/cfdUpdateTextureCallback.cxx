@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef VE_PATENTED
-#include "VE_TextureBased/cfdUpdateTextureCallback.h"
+#include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
 
 #ifdef _PERFORMER
 #elif _OPENSG
@@ -39,7 +39,7 @@
 
 #include <osg/Node>
 #include <osg/NodeVisitor>
-#include "VE_TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //

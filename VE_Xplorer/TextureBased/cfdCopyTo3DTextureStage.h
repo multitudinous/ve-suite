@@ -39,7 +39,7 @@
 #include <osg/StateSet>
 #include <osgUtil/RenderStage>
 #include <osg/FrameStamp>
-#include "VE_TextureBased/cfdPBufferManager.h"
+#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_TextureBased
 {

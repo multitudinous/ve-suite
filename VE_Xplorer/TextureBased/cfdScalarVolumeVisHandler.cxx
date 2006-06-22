@@ -32,11 +32,11 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 
-#include "VE_TextureBased/cfdTextureManager.h"
-#include "VE_TextureBased/cfdScalarVolumeVisHandler.h"
-#include "VE_TextureBased/cfdTextureMatrixCallback.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdScalarVolumeVisHandler.h"
+#include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
 
-#include "VE_TextureBased/cfdScalarShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
 
 
 #include <osg/TexGen>

@@ -32,7 +32,7 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <cmath>
-#include "VE_TextureBased/cfdPBufferManager.h"
+#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
 #ifdef WIN32
 // WGL_ARB_pbuffer
 static PFNWGLCREATEPBUFFERARBPROC  wglCreatePbufferARB;

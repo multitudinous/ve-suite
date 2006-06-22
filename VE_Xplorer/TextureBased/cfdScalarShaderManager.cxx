@@ -38,10 +38,10 @@
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
-#include "VE_TextureBased/cfdTextureManager.h"
-#include "VE_TextureBased/cfdUpdateTextureCallback.h"
-#include "VE_TextureBased/cfdOSGTransferShaderManager.h"
-#include "VE_TextureBased/cfdScalarShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
+#include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
 using namespace VE_TextureBased;
 //the shader inline source
 static const char* scalarFragSource = {

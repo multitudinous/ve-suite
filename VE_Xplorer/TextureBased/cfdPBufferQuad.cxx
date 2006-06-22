@@ -36,7 +36,7 @@
 #include <osg/Matrixd>
 #include <osg/Texture3D>
 
-#include "VE_TextureBased/cfdPBufferQuad.h"
+#include "VE_Xplorer/TextureBased/cfdPBufferQuad.h"
 
 //need a better way to do this but leaving global for now
 unsigned int curSlice =1;

@@ -33,7 +33,7 @@
 #ifdef _OSG
 #include <osg/FrameStamp>
 #include <cassert>
-#include "VE_TextureBased/cfdCopyTo3DTextureStage.h"
+#include "VE_Xplorer/TextureBased/cfdCopyTo3DTextureStage.h"
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////
 cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()

@@ -31,9 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef VE_PATENTED
 #ifdef _OSG
-#include "VE_TextureBased/cfdTextureDataSet.h"
-#include "VE_TextureBased/cfdVolumeVisualization.h"
-#include "VE_TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 
 #include "VE_Xplorer/fileIO.h"
 

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
-#include "VE_TextureBased/cfdVolumeBillboard.h"
+#include "VE_Xplorer/TextureBased/cfdVolumeBillboard.h"
 using namespace VE_TextureBased;
 bool cfdVolumeBillboard::computeMatrix(osg::Matrix& modelview,
                                    const osg::Vec3& eye_local,
