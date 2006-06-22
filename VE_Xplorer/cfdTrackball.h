@@ -6,7 +6,6 @@
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
 
-
 #include "VE_Xplorer/trackball.h"
 
 #include "VE_Installer/include/VEConfig.h"
@@ -21,8 +20,8 @@ namespace VE_Xplorer
 		cfdTrackball();
 		~cfdTrackball();
 		void preFrame();
-		void Matrix();
 		void Reshape(unsigned int width,unsigned int height);
+		void SetFOVy(float _top,float _bottom,float _near);
 	private:
 		gadget::KeyboardMouseInterface mKeyboard;
 		Trackball tb;

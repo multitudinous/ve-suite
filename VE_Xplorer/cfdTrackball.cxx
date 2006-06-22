@@ -19,6 +19,10 @@ void cfdTrackball::Reshape(unsigned int width,unsigned int height){
 	tb.Reshape(width,height);
 }
 
+void cfdTrackball::SetFOVy(float _top,float _bottom,float _near){
+	tb.SetFOVy(_top,_bottom,_near);
+}
+
 void cfdTrackball::preFrame(){
 	gadget::KeyboardMouse::EventQueue evt_queue=mKeyboard->getEventQueue();
 	gadget::KeyboardMouse::EventQueue::iterator i;
@@ -34,8 +38,6 @@ void cfdTrackball::preFrame(){
 		if(type==gadget::KeyPressEvent){
 			gadget::KeyEventPtr key_evt=dynamic_pointer_cast<gadget::KeyEvent>(*i);
 			tb.Keyboard(key_evt->getKey());
-			//std::cout<<key_evt->getKey()<<std::endl;
-			//std::cout<<std::endl;
 		}
 		else if(type==gadget::MouseButtonPressEvent){
 			gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);

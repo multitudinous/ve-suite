@@ -10,6 +10,8 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
+const float offset=0.5f;
+
 Trackball::Trackball(){
 	tb_currPos[0]=0.0f;
 	tb_currPos[1]=0.0f;
@@ -19,12 +21,10 @@ Trackball::Trackball(){
 	tb_moving=false;
 	tb_width=1;
 	tb_height=1;
+	tb_FOVy=1;
 }
 
-Trackball::~Trackball()
-{
-   ;
-}
+Trackball::~Trackball(){;}
 
 void Trackball::Init(){
 	identity(tb_transform);
@@ -35,8 +35,6 @@ void Trackball::Matrix(){
 	assert(tb_button!=-1);
 
 	tb_accuTransform=cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
-	if(tb_accuTransform[1][3]<=0.0)
-		tb_accuTransform[1][3]=1.0;
 
 	Matrix44f mat;
 	Matrix44f accRotation;
@@ -62,8 +60,6 @@ void Trackball::Matrix(){
 
 	cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray((float *)accTranslation);
 	cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix(tb_accuTransform);
-	
-	//Print(cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat());
 
 	identity(tb_transform);
 	//Shouldn't need this line, but for some reason the identity call is not
@@ -76,6 +72,12 @@ void Trackball::Reshape(unsigned int width,unsigned int height){
 	tb_width=width;
 	tb_height=height;
 	tb_aspectRatio=(float)width/(float)height;
+}
+
+void Trackball::SetFOVy(float _top,float _bottom,float _near){
+	float topAngle=(OneEightyDivPI)*atan(_top/_near);
+	float bottomAngle=(OneEightyDivPI)*atan(abs(_bottom)/_near);
+	tb_FOVy=topAngle+bottomAngle;
 }
 
 void Trackball::Keyboard(int key){
@@ -124,19 +126,16 @@ void Trackball::Motion(int x,int y){
 
 void Trackball::ResetTransforms(){
 	float d;
-	float w=abs((tb_max[0]-tb_min[0])/2);
-	float h=abs((tb_max[1]-tb_min[1])/2);
-	float depth=abs((tb_max[2]-tb_min[2])/2);
-	float Theta=(FOVy/2)*(PI/180);
+	float w=abs((tb_max[0]-tb_min[0])*0.5f);
+	float h=abs((tb_max[1]-tb_min[1])*0.5f);
+	float depth=abs((tb_max[2]-tb_min[2])*0.5f);
+	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
 	if(w>h&&w>depth)
 		d=(w/tan(Theta));
 	else if(h>w&&h>depth)
 		d=(h/tan(Theta))*tb_aspectRatio;
 	else
 		d=(depth/tan(Theta))*tb_aspectRatio;
-	tb_accuTransform[0][3]=0.0f;
-	tb_accuTransform[1][3]=-d;
-	tb_accuTransform[2][3]=0.0f;
 }
 
 void Trackball::RotateView(float dx,float dy){
@@ -156,24 +155,30 @@ void Trackball::Twist(float dx,float dy){
 	float mag=sqrtf(dx*dx+dy*dy);
 	float Theta=atan2f(tb_prevPos[0]-0.5,tb_prevPos[1]-0.5);
 	float newTheta=atan2f(tb_currPos[0]-0.5,tb_currPos[1]-0.5);
-	tb_angle=(180/PI)*(Theta-newTheta);
+	tb_angle=(OneEightyDivPI)*(Theta-newTheta);
 	Rotate(mat[1][0],mat[1][1],mat[1][2],tb_angle);
 }
 
 void Trackball::Zoom(float dy){
-	float viewlength=sqrtf(pow(tb_accuTransform[1][3],2));
+	float viewlength=abs(tb_accuTransform[1][3]);
 	float d=(viewlength*(1/(1+dy*2)))-viewlength;
-	tb_transform[1][3]=d;
-	if(tb_transform[1][3]+tb_accuTransform[1][3]<=1.0){
-		tb_transform[1][3]=0.0;
-		tb_accuTransform[1][3]=1.0;
+
+	if((tb_accuTransform[1][3]>-offset)&&(tb_accuTransform[1][3]<offset)){
+		if(tb_accuTransform[1][3]==0)
+			tb_transform[1][3]=offset;
+		else if(tb_accuTransform[1][3]>0)
+			tb_transform[1][3]=-2*offset;
+		else if(tb_accuTransform[1][3]<0)
+			tb_transform[1][3]=2*offset;
 	}
+	else
+		tb_transform[1][3]=d;
 }
 
 void Trackball::Pan(float dx,float dy){
 	float mag=sqrtf(dx*dx+dy*dy);
 	float d=sqrtf(pow(tb_accuTransform[1][3],2));
-	float Theta=(FOVy/2)*(PI/180);
+	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
 	float b=2*d*tan(Theta);
 	float dwx=dx*b*tb_aspectRatio;
 	float dwy=-dy*b;
@@ -182,7 +187,7 @@ void Trackball::Pan(float dx,float dy){
 }
 
 void Trackball::Rotate(float x,float y,float z,float angle){
-	float rad=(float)(angle*PI/180);
+	float rad=(float)(angle*PIDivOneEighty);
 	float cosAng=(float)(cos(rad));
 	float sinAng=(float)(sin(rad));
 	float denom=sqrtf(x*x+y*y+z*z);

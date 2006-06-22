@@ -101,6 +101,7 @@ public:
    /// runtime reconfiguration of desktop windows
    void SetDesktopSize( int width, int height );
 	void SetWindowDimensions( unsigned int width, unsigned int height );
+	void SetFrustumValues(float _top,float _bottom,float _near);
 	void PostFrameUpdate();
 #ifdef _OSG 
 #ifdef VE_PATENTED 
@@ -141,6 +142,10 @@ private:
 
 	int _windowWidth;
 	int _windowHeight;
+
+	float _frustumTop;
+	float _frustumBottom;
+	float _frustumNear;
 };
 }
 #endif

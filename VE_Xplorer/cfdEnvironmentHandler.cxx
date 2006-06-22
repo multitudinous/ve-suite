@@ -304,7 +304,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
 	// Update Trackball
 	trackball->preFrame();
-	//trackball->Matrix();
 	
 	// Update Navigation variables   
    vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
@@ -355,16 +354,24 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    _camHandler->PreFrameUpdate();
 }
 ///////////////////////////////////////////////////////////////
+//Set values for trackball
 void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
 {
 	_windowWidth = w;
 	_windowHeight = h;
 }
-/////////////////////////////////////////////
+
+void cfdEnvironmentHandler::SetFrustumValues(float _top,float _bottom,float _near){
+	_frustumTop=_top;
+	_frustumBottom=_bottom;
+	_frustumNear=_near;
+}
+///////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
-	//update the values in the trackball
+	//Update the values in the trackball
 	trackball->Reshape(_windowWidth,_windowHeight);
+	trackball->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
 }
 
 void cfdEnvironmentHandler::CreateObjects( void )

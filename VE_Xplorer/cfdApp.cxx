@@ -675,6 +675,11 @@ void cfdApp::draw()
                                     frustum[vrj::Frustum::VJ_NEAR],
                                     frustum[vrj::Frustum::VJ_FAR]);
 
+	//Allow trackball to grab frustum values to calculate FOVY
+	cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_TOP],
+																		 frustum[vrj::Frustum::VJ_BOTTOM],
+																		 frustum[vrj::Frustum::VJ_NEAR]);
+
    // Copy the view matrix
    sv->setViewMatrix(*osg_proj_xform_mat );
 #ifdef _WEB_INTERFACE
