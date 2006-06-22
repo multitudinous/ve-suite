@@ -702,7 +702,6 @@ Global
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_pf_dbg.ActiveCfg = tao_pf_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_pf_dbg.Build.0 = tao_pf_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.Builder_Tools.ActiveCfg = tao_osg_dbg|Win32
-		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.Builder_Tools.Build.0 = tao_osg_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.pf_dbg.ActiveCfg = tao_pf_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.pf_dbg.Build.0 = tao_pf_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_dbg.ActiveCfg = tao_osg_dbg|Win32
@@ -714,7 +713,6 @@ Global
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_pf_dbg.ActiveCfg = tao_pf_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_pf_dbg.Build.0 = tao_pf_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.Builder_Tools.ActiveCfg = pf_opt|Win32
-		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.Builder_Tools.Build.0 = pf_opt|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.pf_dbg.ActiveCfg = pf_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.pf_dbg.Build.0 = pf_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_dbg.ActiveCfg = osg_dbg|Win32
@@ -726,7 +724,6 @@ Global
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_pf_dbg.ActiveCfg = pf_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_pf_dbg.Build.0 = pf_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.Builder_Tools.ActiveCfg = pf_opt|Win32
-		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.Builder_Tools.Build.0 = pf_opt|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.pf_dbg.ActiveCfg = pf_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.pf_dbg.Build.0 = pf_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_dbg.ActiveCfg = osg_dbg|Win32
@@ -738,7 +735,6 @@ Global
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_pf_dbg.ActiveCfg = pf_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_pf_dbg.Build.0 = pf_dbg|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.Builder_Tools.ActiveCfg = pf_opt|Win32
-		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.Builder_Tools.Build.0 = pf_opt|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.pf_dbg.ActiveCfg = pf_dbg|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.pf_dbg.Build.0 = pf_dbg|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_dbg.ActiveCfg = osg_dbg|Win32
