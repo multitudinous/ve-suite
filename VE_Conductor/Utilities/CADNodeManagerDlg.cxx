@@ -117,7 +117,10 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
       _propsDlg = 0;
    }
 
-   _dataValuePairList.clear();
+   if(_dataValuePairList.size())
+   {
+      _dataValuePairList.clear();
+   }
 }
 #ifndef STAND_ALONE
 //////////////////////////////////////////////////////////
@@ -235,7 +238,7 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxContextMenuEvent& event)
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData( item ));
 
       CADNodeMenu* cadNodeMenu = new CADNodeMenu();
-	  cadNodeMenu->SetToggleNodeValue(_toggleNodeOnOff);
+	   cadNodeMenu->SetToggleNodeValue(_toggleNodeOnOff);
       if(cadNode)
       {
          if(cadNode->GetNode()->GetNodeType() == std::string("Assembly"))
