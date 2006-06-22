@@ -25,22 +25,8 @@ SRCS=\
    paraThread.cpp \
    PluginLoader.cpp \
    StreamersPane.cxx \
-   UI_AdvectionPanel.cxx \
    UI_i.cpp \
-   UI_Frame.cpp \
-   UI_Tabs.cpp \
-   UI_VisTab.cpp \
-   UI_VecTab.cpp \
-   UI_StreamTab.cpp \
-   UI_DataSetPanel.cpp \
-   UI_GeometryTab.cpp \
-   UI_TeacherTab.cpp \
-   UI_TransTab.cpp \
    UI_TransientDialog.cxx \
-   UI_VertTab.cpp \
-   UI_DesignParTab.cpp \
-   UI_ModSelPanel.cpp \
-   UI_ModelData.cpp \
    SoundsPane.cpp \
    ViewLocPane.cxx\
    TBToolBar.cxx \
