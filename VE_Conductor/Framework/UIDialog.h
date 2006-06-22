@@ -43,7 +43,7 @@ class VE_GUIPLUGINS_EXPORTS UIDialog : public wxDialog
 {
 public:
    UIDialog() {;}
-   UIDialog(wxWindow* parent, int id, wxString title="UI");
+   UIDialog(wxWindow* parent, int id, wxString title=wxT("UI"));
    virtual ~UIDialog() { ; }
    virtual void Lock(bool l); 
    //This function locks/unlocks every input entry
