@@ -548,9 +548,6 @@
 				RelativePath=".\ClearVisObjectsEventHandler.h">
 			</File>
 			<File
-				RelativePath=".\DeleteObjectFromNetworkEventHandler.h">
-			</File>
-			<File
 				RelativePath=".\EventHandler.h">
 			</File>
 			<File
