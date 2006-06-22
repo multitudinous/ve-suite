@@ -623,7 +623,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    {
       if ( _activeModel )
       {
-         bool tempFlag = static_cast< bool >( commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
+         bool tempFlag = ( commandArray->GetCommandValue( cfdCommandArray::CFD_SC )==0)?false:true;
 			_activeModel->SetMirrorDataFlag( tempFlag );
       }
    }

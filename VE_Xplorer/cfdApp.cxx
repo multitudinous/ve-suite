@@ -37,7 +37,7 @@
 #include "VE_Xplorer/cfdApp.h"
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_Xplorer/TextureBased/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/cfdTextureBasedVizHandler.h"
 #endif
 #endif
 

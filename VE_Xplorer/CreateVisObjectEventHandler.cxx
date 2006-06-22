@@ -84,8 +84,11 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-using namespace VE_TextureBased;
 using namespace VE_SceneGraph;
+#ifdef VE_PATENTED
+using namespace VE_TextureBased;
+#endif
+
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //

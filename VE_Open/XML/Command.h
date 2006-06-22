@@ -96,7 +96,7 @@ public:
    VE_XML::DataValuePair* GetDataValuePair( int index );
 
    ///Return the number of DataValuePair s in this command.
-   unsigned int GetNumberOfDataValuePairs();
+   size_t GetNumberOfDataValuePairs();
 
 protected:
    ///Internally update the command element.
@@ -107,7 +107,7 @@ protected:
    ///Internally update the DataValuePair s from the input XML data.
    void _updateDataValuePairs( void );
 
-   unsigned int _nDataValuePairs;///<The number of DataValuePair s in this command.
+   size_t _nDataValuePairs;///<The number of DataValuePair s in this command.
    std::string _cmdName;///<The name of this command.
    std::vector< VE_XML::DataValuePair* > _dataValuePairs;///<The list of DataValuePair s in this command.  
    std::map< std::string, VE_XML::DataValuePair* > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  

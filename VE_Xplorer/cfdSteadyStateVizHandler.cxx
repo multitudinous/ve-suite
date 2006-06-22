@@ -218,7 +218,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE )
    {
-      this->transientActors = commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
+      this->transientActors = (commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE )== 1)?true:false;
    }
    // check any virtual objects need to be updated
    if ( this->actorsAreReady && this->transientActors )
@@ -305,7 +305,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 
    if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
    {
-      this->useLastSource = this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      this->useLastSource = (this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )== 0)?false:true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
    {

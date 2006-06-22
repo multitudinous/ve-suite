@@ -64,7 +64,7 @@ Command::Command( const Command& input )
 {
    _cmdName =  input._cmdName;
    _nDataValuePairs = input._nDataValuePairs;
-   for ( unsigned int i = 0; i < input._dataValuePairs.size(); ++i )
+   for ( size_t i = 0; i < input._dataValuePairs.size(); ++i )
    {
       _dataValuePairs.push_back( new DataValuePair( (*(input._dataValuePairs.at(i))) ) );
       nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = _dataValuePairs.back();
@@ -80,7 +80,7 @@ Command& Command::operator=( const Command& input)
       _cmdName =  input._cmdName;
       _nDataValuePairs = input._dataValuePairs.size();
 
-      int i  = _dataValuePairs.size() - 1;
+      size_t i  = _dataValuePairs.size() - 1;
       while(i >=0)
       {
          delete _dataValuePairs.at(i);
@@ -90,7 +90,7 @@ Command& Command::operator=( const Command& input)
       nameToDataValuePairMap.clear();
 
       _nDataValuePairs = input._dataValuePairs.size();
-      for ( unsigned int i = 0; i < input._dataValuePairs.size(); ++i )
+      for ( size_t i = 0; i < input._dataValuePairs.size(); ++i )
       {
          _dataValuePairs.push_back( new DataValuePair( (*(input._dataValuePairs.at(i))) ) );
          nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = _dataValuePairs.back();
@@ -102,7 +102,7 @@ Command& Command::operator=( const Command& input)
 void Command::AddDataValuePair(VE_XML::DataValuePair* commandValuePair)
 {
    _dataValuePairs.push_back(commandValuePair);
-   _nDataValuePairs = static_cast< unsigned int >( _dataValuePairs.size() );
+   _nDataValuePairs =  _dataValuePairs.size() ;
    nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
 }
 /////////////////////////////////
@@ -173,7 +173,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
          if( nDVPairsIn && _nDataValuePairs)
          {  
             //clear out old dvpairs
-            for(unsigned int i = _nDataValuePairs -1; i > - 1;  i--){
+            for(size_t i = _nDataValuePairs -1; i > - 1;  i--){
                delete _dataValuePairs.at(i);
             }
             _dataValuePairs.clear();
@@ -193,7 +193,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
          }
       }
    }
-   _nDataValuePairs = static_cast< unsigned int >( _dataValuePairs.size() );
+   _nDataValuePairs = _dataValuePairs.size() ;
    //_nChildren = 1 + _dataValuePairs.size();
 }
 /////////////////////////////////////////////////////////////////////

@@ -112,7 +112,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/XplorerNetworkLib_tao_pf_d.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/GraphicalPlugin_tao_pf_d.lib"
+				ImportLibrary="$(OutDir)/XplorerNetworkLib_tao_pf_d.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"

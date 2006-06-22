@@ -143,7 +143,7 @@ std::string Uniform::GetName()
    return _name;
 }
 ///////////////////////////////
-unsigned int Uniform::GetSize()
+size_t Uniform::GetSize()
 {
    return _variableSize;
 }
@@ -264,7 +264,7 @@ void Uniform::SetObjectFromXMLData(DOMNode* xmlNode)
                   uniformValue = GetSubElement(currentElement,std::string("value"),i);
                   if(uniformValue)
                   {
-                     _values.push_back(ExtractDataNumberFromSimpleElement( uniformValue));
+                     _values.push_back(static_cast<float>(ExtractDataNumberFromSimpleElement( uniformValue)));
                   }
                }
             }

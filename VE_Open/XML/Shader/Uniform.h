@@ -94,7 +94,7 @@ public:
    std::string GetName();
 
    ///Get the size of the uniform vector
-   unsigned int GetSize();
+   size_t GetSize();
 
    ///Get the texture unit of the sampler
    unsigned int GetTextureUnit();
@@ -123,7 +123,7 @@ protected:
    void _updateTextureUnit();
 
    std::string _type;///<The dataType.
-   unsigned int _variableSize;///<The size.
+   size_t _variableSize;///<The size.
    std::string _name;///<The name.
    std::vector<float> _values;///<The value of the uniform
    unsigned int _textureUnit;///<Optional texture unit if the data is a sampler.
