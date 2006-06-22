@@ -31,12 +31,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Conductor/Framework/advancedstreamlines.h"
+#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/checkbox.h>
 #include <wx/icon.h>
 
-
+BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
+      EVT_BUTTON   ( PARTICLE_TRACKING,  AdvancedStreamlines::_OnParticleTracking )
+END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////////////
 AdvancedStreamlines::AdvancedStreamlines(wxWindow* parent, wxWindowID id,
                                      const wxString& caption, 
@@ -47,6 +50,8 @@ AdvancedStreamlines::AdvancedStreamlines(wxWindow* parent, wxWindowID id,
     wxSize displaySize = ::wxGetDisplaySize();
     wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
     this->SetSize( dialogPosition );
+
+    _parentLocal = parent;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 bool AdvancedStreamlines::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
@@ -60,7 +65,9 @@ bool AdvancedStreamlines::Create( wxWindow* parent, wxWindowID id, const wxStrin
    _lastSeedPtCheck = 0;
    _streamArrowCheck = 0;
 
+//    _parentLocal = parent;
    //itemButton29 = 0;
+   particleControls = 0;
 
    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
    wxDialog::Create( parent, id, caption, pos, size, style );
@@ -167,8 +174,14 @@ void AdvancedStreamlines::CreateControls()
     _streamArrowCheck->SetValue(false);
     itemBoxSizer26->Add(_streamArrowCheck, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* itemButton29 = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add(itemButton29, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxBoxSizer* _buttons = new wxBoxSizer( wxHORIZONTAL );
+
+    wxButton* _particleButton = new wxButton( itemDialog1, PARTICLE_TRACKING, _T("Particle"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    _buttons->Add( _particleButton, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    _buttons->Add( _closeButton, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    itemStaticBoxSizer3->Add( _buttons, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 ////@end AdvancedStreamlines content construction
 }
@@ -297,4 +310,19 @@ bool AdvancedStreamlines::GetUseLastSeedPoint()
 bool AdvancedStreamlines::GetStreamArrow()
 {
    return _streamArrowCheck->GetValue();
+}
+//////////////////////////////////////////
+void AdvancedStreamlines::_OnParticleTracking( wxCommandEvent& WXUNUSED(event) )
+{
+
+   if ( particleControls )
+   {
+      delete particleControls;
+      particleControls = 0;
+   }
+
+   particleControls = new UI_TransientDialog(19, this, PARTICLE_TRACKING_DIALOG );
+   particleControls->SetTitle(wxString("Particle Controls"));
+//   particleControls->SetTabControl( _parentLocal );
+   particleControls->ShowModal();
 }

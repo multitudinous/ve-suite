@@ -120,6 +120,9 @@ void Isosurfaces::CreateControls()
 
     _advancedButton = new wxButton( itemDialog1, ADVANCED_ISOSURFACE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(_advancedButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer8->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 }
 ///////////////////////////////////////////////////////////
 void Isosurfaces::SetActiveScalar(std::string activeScalar)

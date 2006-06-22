@@ -50,15 +50,18 @@
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
 ////@begin Vistab event table entries
-   EVT_TOOL     (CONTOUR_BUTTON,       Vistab::_onContour)
-   EVT_TOOL     (VECTOR_BUTTON,        Vistab::_onVector)
-   EVT_TOOL     (STREAMLINE_BUTTON,    Vistab::_onStreamline)
-   EVT_TOOL     (ISOSURFACE_BUTTON,    Vistab::_onIsosurface)
-   EVT_TOOL     (TEXTURE_BASED_BUTTON, Vistab::_onTextureBased)
-   EVT_COMBOBOX( ID_COMBOBOX,Vistab::_OnSelectDataset )
-   EVT_LISTBOX( ID_LISTBOX,Vistab::_OnSelectScalar )
-   EVT_LISTBOX( ID_LISTBOX1,Vistab::_OnSelectVector )
-   EVT_BUTTON( ID_CLEAR_ALL_BUTTON, Vistab::OnClearAll )
+   EVT_TOOL     ( CONTOUR_BUTTON,       Vistab::_onContour )
+   EVT_TOOL     ( VECTOR_BUTTON,        Vistab::_onVector )
+   EVT_TOOL     ( STREAMLINE_BUTTON,    Vistab::_onStreamline )
+   EVT_TOOL     ( ISOSURFACE_BUTTON,    Vistab::_onIsosurface )
+   EVT_TOOL     ( TEXTURE_BASED_BUTTON, Vistab::_onTextureBased )
+   EVT_TOOL     ( POLYDATA_BUTTON,      Vistab::_onPolydata )
+   EVT_COMBOBOX ( ID_COMBOBOX,          Vistab::_OnSelectDataset )
+   EVT_LISTBOX  ( ID_LISTBOX,           Vistab::_OnSelectScalar )
+   EVT_LISTBOX  ( ID_LISTBOX1,          Vistab::_OnSelectVector )
+   EVT_SPINCTRL ( MIN_SPINCTRL,         Vistab::_OnMinSlider )
+   EVT_SPINCTRL ( MAX_SPINCTRL,         Vistab::_OnMaxSlider )
+   EVT_BUTTON   ( ID_CLEAR_ALL_BUTTON,  Vistab::OnClearAll )
 ////@end Vistab event table entries
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
@@ -240,6 +243,10 @@ void Vistab::CreateControls()
     wxBitmap itemtool8BitmapDisabled;
     itemToolBar3->AddTool(TEXTURE_BASED_BUTTON, _T("Texture-Based"), itemtool8Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Texture Based"), wxEmptyString);
 
+    wxBitmap itemtool9Bitmap(isosurface_xpm);
+    wxBitmap itemtool9BitmapDisabled;
+    itemToolBar3->AddTool(POLYDATA_BUTTON, _T("Polydata"), itemtool9Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Polydata"), wxEmptyString);
+
     itemToolBar3->Realize();
     itemBoxSizer2->Add(itemToolBar3, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     //itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
@@ -269,9 +276,9 @@ void Vistab::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer(itemStaticBoxSizer12Static, wxHORIZONTAL);
     itemBoxSizer11->Add(itemStaticBoxSizer12, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-   _scalarSelection = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize(125, -1), _availableSolutions["MESH_SCALARS"] , wxLB_SINGLE );
-   _scalarSelection->SetSelection(0);    
-   itemStaticBoxSizer12->Add(_scalarSelection, 1, wxGROW|wxALL, 5);
+    _scalarSelection = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize(125, -1), _availableSolutions["MESH_SCALARS"] , wxLB_SINGLE );
+    _scalarSelection->SetSelection(0);    
+    itemStaticBoxSizer12->Add(_scalarSelection, 1, wxGROW|wxALL, 5);
 
     wxStaticBox* itemStaticBoxSizer14Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Vectors"));
     wxStaticBoxSizer* itemStaticBoxSizer14 = new wxStaticBoxSizer(itemStaticBoxSizer14Static, wxHORIZONTAL);
@@ -281,22 +288,49 @@ void Vistab::CreateControls()
     _vectorSelection->SetSelection(0);
     itemStaticBoxSizer14->Add(_vectorSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxBoxSizer* scalarSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxStaticBox* scalarBoundsStatic = new wxStaticBox(itemDialog1, wxID_ANY, _T("Scalar Bounds"));
+    wxStaticBoxSizer* scalarBoundsSizer = new wxStaticBoxSizer( scalarBoundsStatic, wxHORIZONTAL );
+//    wxBoxSizer* scalarBoundsSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* spinnerSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* scalarSizer = new wxBoxSizer(wxVERTICAL);
+
+    wxStaticText* _space1 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
+    wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T("Min"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
+    wxSpinCtrl* _minSpinner = new wxSpinCtrl( itemDialog1, MIN_SPINCTRL, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
+    wxStaticText* _space2 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
+    wxStaticText* _space3 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T("Max"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    wxSpinCtrl* _maxSpinner = new wxSpinCtrl( itemDialog1, MAX_SPINCTRL, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
+
+    spinnerSizer->Add(_space1, 0, wxALIGN_LEFT|wxALL, 5);
+    spinnerSizer->Add(_min, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);   
+    spinnerSizer->Add(_minSpinner, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    spinnerSizer->Add(_space2, 0, wxALIGN_LEFT|wxALL, 5);
+    spinnerSizer->Add(_space3, 0, wxALIGN_LEFT, 5);
+    spinnerSizer->Add(_max, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);    
+    spinnerSizer->Add(_maxSpinner, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
     scalarRange = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Scalar Bounds"));
+                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString(""));
     scalarSizer->Add(scalarRange,1,wxALIGN_CENTER|wxEXPAND);
+
+    scalarBoundsSizer->Add(spinnerSizer,1,wxALIGN_CENTER|wxEXPAND);
+    scalarBoundsSizer->Add(scalarSizer,3,wxALIGN_CENTER|wxEXPAND);
     
-    itemBoxSizer2->Add(scalarSizer, 3, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
+    itemBoxSizer2->Add(scalarBoundsSizer, 3, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
    
-   //Last row buttons - advanced, clear all, ...
-   wxBoxSizer* lastRowButtons = new wxBoxSizer( wxHORIZONTAL );
-   itemBoxSizer2->Add( lastRowButtons );
+    //Last row buttons - advanced, clear all, ...
+    wxBoxSizer* lastRowButtons = new wxBoxSizer( wxHORIZONTAL );
+    itemBoxSizer2->Add( lastRowButtons, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
-   wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
-   lastRowButtons->Add( itemButton20, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    lastRowButtons->Add( itemButton20, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-   clearAllButton = new wxButton( itemDialog1, ID_CLEAR_ALL_BUTTON, _T("Clear All"), wxDefaultPosition, wxDefaultSize, 0 );
-   lastRowButtons->Add( clearAllButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    clearAllButton = new wxButton( itemDialog1, ID_CLEAR_ALL_BUTTON, _T("Clear All"), wxDefaultPosition, wxDefaultSize, 0 );
+    lastRowButtons->Add( clearAllButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    lastRowButtons->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 
 ///@end Vistab content construction
@@ -426,6 +460,25 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    
    _tbTools->ShowModal();
    //itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
+}
+////////////////////////////////////////////////////////////
+void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
+{
+   if(!isosurface)
+   {
+      isosurface = new Isosurfaces ( this,                
+                  /*SYMBOL_CONTOURS_IDNAME*/-1, 
+                  SYMBOL_ISOSURFACES_TITLE,
+                  SYMBOL_ISOSURFACES_POSITION,
+                  SYMBOL_ISOSURFACES_SIZE, 
+                  SYMBOL_ISOSURFACES_STYLE );
+      isosurface->SetSize(_vistabPosition);
+   }
+   
+   isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
+   isosurface->SetActiveScalar(_activeScalarName);
+   isosurface->ShowModal();
+   //itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
 }
 ///////////////////////////////////////////////////////
 void Vistab::SetActiveModel(VjObs::Model_var activeModel)
@@ -646,6 +699,16 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
 {
    _activeVectorName = _vectorSelection->GetStringSelection();
+}
+///////////////////////////////////////////////////
+void Vistab::_OnMinSlider(wxSpinEvent& WXUNUSED(event))
+{
+
+}
+///////////////////////////////////////////////////
+void Vistab::_OnMaxSlider(wxSpinEvent& WXUNUSED(event))
+{
+
 }
 //////////////////////////////////////////
 std::string Vistab::GetActiveScalarName()

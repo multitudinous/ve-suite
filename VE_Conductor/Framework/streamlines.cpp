@@ -52,7 +52,7 @@ BEGIN_EVENT_TABLE( Streamlines, wxDialog )
    EVT_COMMAND_SCROLL(NUMBER_PTS_SLIDER,           Streamlines::_onPointsSlider)
    EVT_COMMAND_SCROLL(PLANE_SIZE_SLIDER,           Streamlines::_onSizeSlider)
    EVT_BUTTON        (ADVANCED_STREAMLINE_BUTTON,  Streamlines::_onAdvanced)
-   EVT_BUTTON        (COMPUTE_STREAMLINE_BUTTON,  Streamlines::_onCompute)
+   EVT_BUTTON        (COMPUTE_STREAMLINE_BUTTON,   Streamlines::_onCompute)
 ////@end Streamlines event table entries
 END_EVENT_TABLE()
 
@@ -170,6 +170,9 @@ void Streamlines::CreateControls()
 
     wxButton* itemButton14 = new wxButton( itemDialog1, ADVANCED_STREAMLINE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add(itemButton14, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer12->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end Streamlines content construction
 }

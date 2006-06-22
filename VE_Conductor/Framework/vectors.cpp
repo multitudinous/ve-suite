@@ -268,6 +268,9 @@ void Vectors::CreateControls()
     wxButton* itemButton17 = new wxButton( itemDialog1, ADVANCED_VECTOR_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer15->Add(itemButton17, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer15->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
 ////@end Vectors content construction
 }
 

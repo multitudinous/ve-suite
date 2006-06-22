@@ -62,6 +62,10 @@ namespace VE_XML
    class DOMDocumentManager;
 }
 
+//namespace VE_UI
+//{
+   class UI_TransientDialog;
+//}
 class wxSlider;
 class wxCheckBox;
 class wxButton;
@@ -96,14 +100,16 @@ enum ADVANCED_STREAMLINE_IDS
    STEP_SIZE_SLIDER,
    ARROWS_CHK,
    SPHERE_SIZE_SLIDER,
-   LINE_DIAMETER_SLIDER
+   LINE_DIAMETER_SLIDER,
+   PARTICLE_TRACKING,
+   PARTICLE_TRACKING_DIALOG
 };
 ////@end control identifiers
 
 
 class AdvancedStreamlines: public wxDialog
 {    
-
+    DECLARE_EVENT_TABLE()
 public:
     /// Constructors
     AdvancedStreamlines( );
@@ -145,6 +151,9 @@ public:
    ///\param value The size
    void SetLineDiameter(double value);
 
+   ///Call particle tracking gui
+   void _OnParticleTracking( wxCommandEvent& WXUNUSED(event) ); 
+
    ///Get the propagation step size.
    double GetPropagationSize();
    ///Get the integration step size
@@ -173,6 +182,8 @@ public:
    /// Should we show tooltips?
    static bool ShowToolTips();
 
+   wxWindow* _parentLocal;
+
 protected:
 
    wxSlider* _propagationSlider;  
@@ -182,6 +193,9 @@ protected:
    wxSlider* _diameterSlider; 
    wxCheckBox* _lastSeedPtCheck;
    wxCheckBox* _streamArrowCheck;
+
+   UI_TransientDialog* particleControls;
+   AdvancedStreamlines* _particleParent;
 
 };
 

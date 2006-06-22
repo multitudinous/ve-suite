@@ -108,26 +108,26 @@ public:
        const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, 
        long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
 
-   /// Creates the controls and sizers
-   void CreateControls();
-   
-   ///The opacity setting.
-   ///\param opacity The opacity setting
-   void SetOpacity(double opacity);
-   ///The warped scale.
-   ///\param warpScale The scale for warping on the contours
-   void SetWarpedScale(double warpScale);
-   ///The Level of Detail
-   ///\param LOD The LOD setting
-   void SetLOD(double LOD);
+    /// Creates the controls and sizers
+    void CreateControls();
 
-   ///Set the contour type
-   ///\param contourType The contour type.
-   void SetContourType(std::string contourType);
+    ///The opacity setting.
+    ///\param opacity The opacity setting
+    void SetOpacity(double opacity);
+    ///The warped scale.
+    ///\param warpScale The scale for warping on the contours
+    void SetWarpedScale(double warpScale);
+    ///The Level of Detail
+    ///\param LOD The LOD setting
+    void SetLOD(double LOD);
 
-   ///Set the warp option
-   ///\param warpOption true/false for warped contour
-   void SetWarpOption(bool warpOption);
+    ///Set the contour type
+    ///\param contourType The contour type.
+    void SetContourType(std::string contourType);
+
+    ///Set the warp option
+    ///\param warpOption true/false for warped contour
+    void SetWarpOption(bool warpOption);
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );

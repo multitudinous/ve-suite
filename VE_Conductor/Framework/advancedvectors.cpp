@@ -131,6 +131,9 @@ void AdvancedVectors::CreateControls()
    _scaleByMagCheck->SetValue(false);
    itemStaticBoxSizer3->Add(_scaleByMagCheck, 0, wxALIGN_LEFT|wxALL, 5);
 
+   wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+   itemStaticBoxSizer3->Add(_closeButton, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
 }
 ///////////////////////////////////////////////////////////////////
 void AdvancedVectors::SetVectorThreshold(std::vector<double> range)

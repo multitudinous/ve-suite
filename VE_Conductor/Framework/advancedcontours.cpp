@@ -113,7 +113,7 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText7 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Transparent"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemBoxSizer6->Add(itemStaticText7, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Opaque"), wxDefaultPosition, wxSize(215, -1), wxALIGN_RIGHT );
+    wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Opaque"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer6->Add(itemStaticText8, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Warped Contour Scale"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -128,7 +128,7 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Lower"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer11->Add(itemStaticText12, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Higher"), wxDefaultPosition, wxSize(250, -1), wxALIGN_RIGHT );
+    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Higher"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer11->Add(itemStaticText13, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Contour LOD"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -143,7 +143,7 @@ void AdvancedContours::CreateControls()
     wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Higher Detail"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemBoxSizer16->Add(itemStaticText17, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Lower Detail"), wxDefaultPosition, wxSize(210, -1), wxALIGN_RIGHT );
+    wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Lower Detail"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer16->Add(itemStaticText18, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxString itemRadioBox6Strings[] = {
@@ -152,12 +152,19 @@ void AdvancedContours::CreateControls()
         _T("Lined")
     };
    
-    _contourTypeRBox = new wxRadioBox( itemDialog1, CONTOUR_TYPE_RBOX, _T("Contour Type"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
-    itemStaticBoxSizer3->Add(_contourTypeRBox, 0, wxALIGN_TOP|wxALL, 5);
+    wxBoxSizer* _misc = new wxBoxSizer( wxHORIZONTAL );
 
+    _contourTypeRBox = new wxRadioBox( itemDialog1, CONTOUR_TYPE_RBOX, _T("Contour Type"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_ROWS );
     _warpOptionCBox = new wxCheckBox( itemDialog1, WARP_OPTION_CHK, _T("Warp Option"), wxDefaultPosition, wxDefaultSize, 0 );
     _warpOptionCBox->SetValue(false);
-    itemStaticBoxSizer3->Add(_warpOptionCBox, 0, wxALIGN_TOP|wxALL, 5);
+
+    _misc->Add( _contourTypeRBox, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    _misc->Add( _warpOptionCBox, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemStaticBoxSizer3->Add( _misc, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add(_closeButton, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 }
 /////////////////////////////////////////////////
 void AdvancedContours::SetOpacity(double opacity)

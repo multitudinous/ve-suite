@@ -41,6 +41,7 @@
 #include "VE_Conductor/Framework/streamlines.h"
 #include "VE_Conductor/Framework/isosurfaces.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
+
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
 XERCES_CPP_NAMESPACE_USE
@@ -58,6 +59,11 @@ namespace VE_XML
 namespace VE_Model
 {
    class Model;
+}
+
+namespace VE_Xplorer
+{
+   class cfdApp;
 }
 
 class TextureBasedToolBar;
@@ -90,12 +96,16 @@ enum VISTAB_IDS
    STREAMLINE_DLG,
    ISOSURFACE_DLG,
    TEXTURE_BASED_DLG,
+   POLYDATA_DLG,
    CONTOUR_BUTTON,
    VECTOR_BUTTON,
    STREAMLINE_BUTTON,
    ISOSURFACE_BUTTON,
    TEXTURE_BASED_BUTTON,
-   ID_CLEAR_ALL_BUTTON
+   POLYDATA_BUTTON,
+   ID_CLEAR_ALL_BUTTON,
+   MIN_SPINCTRL,
+   MAX_SPINCTRL
 };
 ////@end control identifiers
 
@@ -249,6 +259,8 @@ protected:
    void _onStreamline(wxCommandEvent& );
    void _onIsosurface(wxCommandEvent& );
    void _onTextureBased(wxCommandEvent& );
+   void _onPolydata(wxCommandEvent& );
+   void _onParticle(wxCommandEvent& );
 
    ///update the base info for the dataset ie. active vector,scalar,dataset,range 
    void _updateBaseInformation();
@@ -261,6 +273,10 @@ protected:
    void _OnSelectVector(wxCommandEvent& event);
    ///Callback for the clear all button
    void OnClearAll( wxCommandEvent& event );
+   ///Callback for min spinner
+   void _OnMinSlider( wxSpinEvent& event );
+   ///Callback for max spinner
+   void _OnMaxSlider( wxSpinEvent& event );
 
    ///Update the available solutions for a particular give dataset type
    ///\param newNames The list of new names to update
