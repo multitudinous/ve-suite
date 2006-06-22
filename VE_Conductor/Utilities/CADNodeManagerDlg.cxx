@@ -504,7 +504,7 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
                        _T("Open file"), 
                        _T(""), 
                        _T(""),
-                       _T("OSG files (*.osg;*.ive)|*.osg;*.ive;|SLT files (*.stl)|*.stl;|VRML files (*.wrl)|*.wrl;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb| Flight files (*.flt)|*.flt"),
+                       _T("OSG files (*.osg;*.ive)|*.osg;*.ive;|STL files (*.stl)|*.stl;|VRML files (*.wrl)|*.wrl;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb| Flight files (*.flt)|*.flt"),
                        //"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
                        wxOPEN|wxFILE_MUST_EXIST|wxMULTIPLE,
                        wxDefaultPosition);
@@ -561,44 +561,55 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxFileName fileName )
 /////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
 {
-   wxFileDialog dialog(this,
-		       _T("Save file as..."), 
-		       _T(""), 
-		       _T(""),
-		       _T("VE-Geometry files (*.veg)|*.veg"),
-		       wxSAVE); 
-   if (dialog.ShowModal() == wxID_OK){
-      if (!dialog.GetPath().IsEmpty()) 
+   wxFileName vegFileName;
+   do
+   {
+      wxTextEntryDialog newDataSetName(this, 
+                                       wxString("Enter the prefix for *.veg filename:"),
+                                       wxString("Save VEG file as..."),
+                                       wxString("geometry"),wxOK|wxCANCEL);
+
+      if ( newDataSetName.ShowModal() == wxID_OK )
       {
-         if(dialog.GetPath().Find(".veg") != -1)
-         {
-            VE_XML::XMLReaderWriter cadReader;
-            cadReader.UseStandaloneDOMDocumentManager();
-            cadReader.WriteToFile();
-              
-            std::string tagName("VECADNode");
-            CADTreeBuilder::TreeNodeData* rootCADNode =
-                 dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetRootItem()));
-
-            if(rootCADNode->GetNode()->GetNodeType() == std::string("Assembly"))
-            {
-               tagName = std::string("CADAssembly");
-            }
-            else if(rootCADNode->GetNode()->GetNodeType() == std::string("Part"))
-            {
-               tagName = std::string("CADPart");
-            }
-            std::string outputFile = std::string(dialog.GetPath());
-
-            std::pair<CADNode*,std::string> nodeTagPair;
-            nodeTagPair.first = rootCADNode->GetNode();
-            nodeTagPair.second = tagName;
-            std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
-            nodeToWrite.push_back(nodeTagPair);
-          
-            cadReader.WriteXMLDocument(nodeToWrite, outputFile, "Command");
-         }
+         vegFileName.ClearExt();
+         vegFileName.SetName( newDataSetName.GetValue() ); 
+         vegFileName.SetExt( wxString( "veg" ) );
       }
+      else
+      {
+         break;
+      }
+   }
+   while ( vegFileName.FileExists() );
+   
+   if ( vegFileName.HasName() ) 
+   {
+      VE_XML::XMLReaderWriter cadReader;
+      cadReader.UseStandaloneDOMDocumentManager();
+      cadReader.WriteToFile();
+        
+      std::string tagName("VECADNode");
+      CADTreeBuilder::TreeNodeData* rootCADNode =
+           dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetRootItem()));
+
+      if(rootCADNode->GetNode()->GetNodeType() == std::string("Assembly"))
+      {
+         tagName = std::string("CADAssembly");
+      }
+      else if(rootCADNode->GetNode()->GetNodeType() == std::string("Part"))
+      {
+         tagName = std::string("CADPart");
+      }
+
+      std::string outputFile = std::string( vegFileName.GetFullPath( wxPATH_NATIVE ).c_str() );
+
+      std::pair<CADNode*,std::string> nodeTagPair;
+      nodeTagPair.first = rootCADNode->GetNode();
+      nodeTagPair.second = tagName;
+      std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
+      nodeToWrite.push_back(nodeTagPair);
+    
+      cadReader.WriteXMLDocument(nodeToWrite, outputFile, "Command");
    }
 }
 ////////////////////////////////////////////////////////////////////

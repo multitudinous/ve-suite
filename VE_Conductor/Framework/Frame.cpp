@@ -33,6 +33,7 @@
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
 #include <wx/msgdlg.h>
+#include <wx/filename.h>
 
 #include "VE_Conductor/Framework/ResultPanel.h"
 #include "VE_Conductor/Framework/App.h"
@@ -706,26 +707,32 @@ void AppFrame::Save( wxCommandEvent& event )
 
 void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
 {
-   wxFileDialog dialog
-   (
-      this,
-      _T("Save File dialog"),
-      _T(""),
-      fname,
-      _T("Network files (*.nt)|*.nt"),
-      wxSAVE | wxOVERWRITE_PROMPT 
-   );
-
-   /*if ( directory == "" )
+   wxFileName vesFileName;
+   do
    {
-      dialog.SetDirectory( wxGetHomeDir() );
-   }*/
-
-   if ( dialog.ShowModal() == wxID_OK )
+      wxTextEntryDialog newDataSetName(this, 
+                                       wxString("Enter the prefix for *.ves filename:"),
+                                       wxString("Save VES file as..."),
+                                       wxString("network"),wxOK|wxCANCEL);
+      
+      if ( newDataSetName.ShowModal() == wxID_OK )
+      {
+         vesFileName.ClearExt();
+         vesFileName.SetName( newDataSetName.GetValue() ); 
+         vesFileName.SetExt( wxString( "ves" ) );
+      }
+      else
+      {
+         break;
+      }
+   }
+   while ( vesFileName.FileExists() );
+   
+   if ( vesFileName.HasName() ) 
    {
-      path = dialog.GetPath();
-      directory = dialog.GetDirectory();
-      fname = dialog.GetFilename();
+      path = vesFileName.GetFullPath();
+      directory = vesFileName.GetPath();
+      fname = vesFileName.GetFullName();
       ///now write the file out from domdocument manager
       //wrtie to path
       std::string data = network->Save( std::string( path.c_str() ) );
@@ -740,7 +747,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
                      _T("Open File dialog"),
                      _T(""),
                      fname,
-                     _T("Network files (*.nt)|*.nt"),
+                     _T("Network files (*.ves)|*.ves"),
                      wxOPEN|wxFILE_MUST_EXIST
                   );
 
