@@ -69,6 +69,7 @@ public:
    int inside( wxPoint pt );
    double nearpnt( wxPoint pt, Polygon& Near );
    void TransPoly( int x, int y, Polygon& newpoly );
+   void clear(); //clear all points out.
 
 private:
    int ccw( wxPoint* pt1, wxPoint* pt2, wxPoint* pt3 );
