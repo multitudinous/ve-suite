@@ -331,6 +331,9 @@
 				RelativePath=".\UI_i.cpp">
 			</File>
 			<File
+				RelativePath="..\Ve_ui\UI_TransientDialog.cxx">
+			</File>
+			<File
 				RelativePath=".\vectors.cpp">
 			</File>
 			<File
@@ -429,6 +432,9 @@
 			</File>
 			<File
 				RelativePath=".\TransformUI.h">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_TransientDialog.h">
 			</File>
 			<File
 				RelativePath=".\vectors.h">

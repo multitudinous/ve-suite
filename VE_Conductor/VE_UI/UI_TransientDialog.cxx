@@ -1,4 +1,4 @@
-#include "VE_Conductor/VE_UI/UI_Tabs.h"
+//#include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_TransientDialog.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
@@ -33,7 +33,7 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
                                        const wxString& name)
 :wxDialog(parent,id,title,pos,size,style,name)                                    
 {
-   _tab = 0;
+   //_tab = 0;
    //_nTimeSteps = numTimeSteps;
    _nTimeSteps = 19;
 
@@ -115,70 +115,71 @@ void UI_TransientDialog::_buildDialog()
    SetSizer(mainSizer);
 }
 ////////////////////////////////////////////////////
-void UI_TransientDialog::SetTabControl(UI_Tabs* tab)
+/*void UI_TransientDialog::SetTabControl(UI_Tabs* tab)
 {
-   _tab = tab;
-}
+   //_tab = tab;
+}*/
 ///////////////////////////////////////////////////////
 void UI_TransientDialog::_onPlay(wxCommandEvent& event )
 {
-   if(!_tab)
+   /*if(!_tab)
       return;
    if(event.GetId() == PLAY_BUTTON){
       _currentFrame->Enable(false);
       _tab->cId = TRANSIENT_PLAY;
-      _tab->sendDataArrayToServer();
-   }
+      //_tab->sendDataArrayToServer();
+   }*/
 }
 ///////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onForwardStep(wxCommandEvent& event )
 {
-   if(!_tab)
+   /*if(!_tab)
       return;
    if(event.GetId() == FORWARD_STEP_BUTTON){
       _currentFrame->Enable(false);
       _tab->cId = TRANSIENT_FORWARD;
-      _tab->sendDataArrayToServer();
-   }
+      //_tab->sendDataArrayToServer();
+   }*/
 }
 ///////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onBackwardStep(wxCommandEvent& event )
 {
-   if(!_tab)
+   /*if(!_tab)
       return;
    if(event.GetId() == BACKWARD_STEP_BUTTON){
       _currentFrame->Enable(false);
       _tab->cId = TRANSIENT_BACKWARD;
-      _tab->sendDataArrayToServer();
-   }
+      //_tab->sendDataArrayToServer();
+   }*/
 }
 ////////////////////////////////////////////////////////
 void UI_TransientDialog::_onStop(wxCommandEvent& event )
 {
-   if(!_tab)
+   /*if(!_tab)
       return;
    if(event.GetId() == STOP_BUTTON){
       //_currentFrame->Enable(true);
       _tab->cId = TRANSIENT_STOP;
-      _tab->sendDataArrayToServer();
-   }
+     // _tab->sendDataArrayToServer();
+   }*/
 }
 /////////////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onSetDuration(wxSpinEvent& WXUNUSED(event))
 {
-   if(!_tab)
+   /*if(!_tab)
       return;
    _tab->cId = TRANSIENT_DURATION;
    _tab->cIso_value = static_cast< int >( _duration->GetValue() );
-   _tab->sendDataArrayToServer();
+   //_tab->sendDataArrayToServer();*/
 }
 /////////////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onSelectFrame(wxSpinEvent& WXUNUSED(event))
 {
+   /*
    if(!_tab)
       return;
    _tab->cId = TRANSIENT_SET_FRAME;
    _tab->cIso_value = _currentFrame->GetValue();
-   _tab->sendDataArrayToServer();
+   //_tab->sendDataArrayToServer();*/
 }
 

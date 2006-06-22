@@ -42,7 +42,6 @@
 class wxSizer;
 class wxWindow;
 
-class UI_Tabs;
 class wxSpinCtrlDbl;
 //Transient control ids
 enum TRANS_DIALOG_IDS
@@ -67,13 +66,12 @@ public:
                     const wxString& name = "Transient Controls");
    ~UI_TransientDialog(){};
 
-   void SetTabControl(UI_Tabs* tab);
+//   void SetTabControl(UI_Tabs* tab);
 protected:
    void _buildDialog();
 
    unsigned int _nTimeSteps;
 
-   UI_Tabs* _tab;
    wxImage* _playImage;
    wxImage* _stopImage;
    wxImage* _forwardImage;
