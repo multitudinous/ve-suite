@@ -24,8 +24,6 @@ SRCS=\
    OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
-   StreamersPane.cxx \
-   UI_i.cpp \
    UI_TransientDialog.cxx \
    SoundsPane.cpp \
    ViewLocPane.cxx\

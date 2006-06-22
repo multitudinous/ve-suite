@@ -47,7 +47,7 @@
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
-#include "VE_Conductor/Framework/StreamersPane.h"
+//#include "VE_Conductor/Framework/StreamersPane.h"
 
 #include "VE_Conductor/Framework/vectors.h"
 #include "VE_Conductor/Framework/vistab.h"
