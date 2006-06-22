@@ -207,6 +207,7 @@ void Link::DrawLinkCon( bool flag, std::pair< double, double > scale )
 void Link::CalcLinkPoly()
 {
    // -3 so that we end up getting a 6 point wide line
+	poly.clear();
    for ( size_t i = 0; i < cons.size(); i++ )
    {
 	   int x = cons[i].x;
@@ -219,7 +220,7 @@ void Link::CalcLinkPoly()
    {
 	   int x = cons[j].x;
 	   int y = cons[j].y+3;
-	   poly.SetPoint( wxPoint( cons[j].x, cons[j].y-3 ) );
+	   poly.SetPoint( wxPoint( cons[j].x, cons[j].y+3 ) );
    }
 /*   std::vector< wxPoint >::iterator iter;
    for ( iter = cons.end()-1; iter >= cons.begin(); --iter )
