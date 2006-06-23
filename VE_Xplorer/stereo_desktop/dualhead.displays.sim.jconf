@@ -7,7 +7,7 @@
          <x11_pipes>-1</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
       </display_system>
-      <display_window name="FrontScreen (BothEyes)" version="4">
+      <display_window name="Welcome To Your Virtual Workspace / www.vesuite.org" version="4">
          <origin>0</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -16,11 +16,11 @@
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
                <visual_id>-1</visual_id>
-               <red_size>1</red_size>
-               <green_size>1</green_size>
-               <blue_size>1</blue_size>
-               <alpha_size>1</alpha_size>
-               <depth_buffer_size>8</depth_buffer_size>
+               <red_size>8</red_size>
+               <green_size>8</green_size>
+               <blue_size>8</blue_size>
+               <alpha_size>8</alpha_size>
+               <depth_buffer_size>16</depth_buffer_size>
                <fsaa_enable>false</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
