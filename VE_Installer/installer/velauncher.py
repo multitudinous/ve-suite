@@ -43,8 +43,8 @@ DIRECTORY_DEFAULT = os.path.join(os.getcwd(), "exampleDatasets")
 CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
 RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
-                      "OSG Patented Cluster", "Performer"]
-XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC", "PF"]
+                      "OSG Patented Cluster"] ##, "Performer"]
+XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC"] ##, "PF"]
 MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization", "Custom"]
 MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                          "nameServer": [FIXED, True],
@@ -67,12 +67,11 @@ MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
              "Visualization": {"conductor": [FIXED, False],
                                "nameServer": [FIXED, False],
                                "xplorer": [FIXED, True],
-                               "xplorerType": [FIXED, 1],
                                "desktop": [FIXED, False]},
              "Custom": {}}
 JCONF_CONFIG = "JconfList"
 CLUSTER_CONFIG = "Cluster"
-DEFAULT_JCONF = "simstandalone.jconf"
+DEFAULT_JCONF = os.path.join(os.getcwd(), "stereo_desktop", "desktop.jconf")
 ##Values for launcher's GUI layout
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (200, 200)
@@ -100,6 +99,7 @@ class CommandLaunch:
         self.workDir = None
         self.jconf = None
         self.cluster = None
+        self.clusterMaster = None
 
         ##Set vars from the command line.
         for opt, arg in opts:
@@ -144,9 +144,7 @@ class CommandLaunch:
             ##Set default choice if JCONF_CONFIG doesn't exist,
             ##but DependenciesDir does.
             elif config.Read("DependenciesDir", ":::") != ":::":
-                self.jconf = os.path.join(config.Read("DependenciesDir"),
-                                          JUGGLER_FOLDER, "configFiles",
-                                          DEFAULT_JCONF)
+                self.jconf = DEFAULT_JCONF
             ##If neither exists, bring up an error.
             ##NOTE: Should never be reached.
             else:
@@ -234,6 +232,7 @@ class LauncherWindow(wx.Frame):
         self.jconfList = []
         self.jconfCursor = 0
         self.clusterDict = None
+        self.clusterMaster = None
         self.taoMachine = ""
         self.taoPort = ""
 
@@ -244,10 +243,10 @@ class LauncherWindow(wx.Frame):
         bDirectory = wx.Button(self, -1, "Choose Working Directory")
         bDirectory.SetToolTip(wx.ToolTip("Choose the working directory for" +
                                          " the programs."))
-        self.bEditJconf = wx.Button(self, -1, "Juggler Configuration")
-        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
-                                              " configuration files" +
-                                              " displayed in the Launcher."))
+##        self.bEditJconf = wx.Button(self, -1, "Juggler Configuration")
+##        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
+##                                              " configuration files" +
+##                                              " displayed in the Launcher."))
         bLaunch = wx.Button(self, -1, "Launch VE Suite")
         bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
@@ -301,7 +300,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, bLaunch)
-        self.Bind(wx.EVT_BUTTON, self.EditJconf, self.bEditJconf)
+##        self.Bind(wx.EVT_BUTTON, self.EditJconf, self.bEditJconf)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_RADIOBOX, self.ModeChanged, self.rbMode)
 #        self.Bind(wx.EVT_BUTTON, self.EditJconf, bEditJconf)
@@ -364,7 +363,7 @@ class LauncherWindow(wx.Frame):
                              HORIZONTAL_SPACE])
         columnSizer.Add(self.bCustom, 0, wx.ALIGN_BOTTOM)
         columnSizer.Add(HORIZONTAL_SPACE)
-        columnSizer.Add(self.bEditJconf, 0, wx.ALIGN_BOTTOM)
+##        columnSizer.Add(self.bEditJconf, 0, wx.ALIGN_BOTTOM)
         rowSizer.AddMany([VERTICAL_SPACE,
                           columnSizer])
         rowSizer.Add(VERTICAL_SPACE, 0)
@@ -547,13 +546,13 @@ class LauncherWindow(wx.Frame):
         ##Change the corresponding controls to the value given.
         ##If it's FIXED, prevent the user from changing it.
         ##If a rule isn't given, it uses its regular value.
-        if "jconf" in modeRules:
-            self.bEditJconf.Enable(modeRules["jconf"][0])
-        elif ("xplorer" in modeRules) and (modeRules["xplorer"][0] == FIXED) \
-             and (modeRules["xplorer"][1] == False):
-            self.bEditJconf.Enable(False)
-        else:
-            self.bEditJconf.Enable(True)
+##        if "jconf" in modeRules:
+##            self.bEditJconf.Enable(modeRules["jconf"][0])
+##        elif ("xplorer" in modeRules) and (modeRules["xplorer"][0] == FIXED) \
+##             and (modeRules["xplorer"][1] == False):
+##            self.bEditJconf.Enable(False)
+##        else:
+##            self.bEditJconf.Enable(True)
         if "taoMachine" in modeRules:
             self.txTaoMachine.SetValue(modeRules["taoMachine"][1])
             self.txTaoMachine.Enable(modeRules["taoMachine"][0])
@@ -567,23 +566,23 @@ class LauncherWindow(wx.Frame):
             self.txTaoPort.SetValue(self.taoPort)
             self.txTaoPort.Enable(True)
 
-    def UpdateChJconf(self, cursor):
-        """Updates JconfCursor."""
-        ##Set the cursor
-        if cursor == wx.NOT_FOUND or cursor < 0 \
-           or cursor >= len(self.jconfList):
-            cursor = 0
-        ##Error catcher for lists without any items.
-        if len(self.jconfList) == 0:
-            cursor = wx.NOT_FOUND
-        self.jconfCursor = cursor
+##    def UpdateChJconf(self, cursor):
+##        """Updates JconfCursor."""
+##        ##Set the cursor
+##        if cursor == wx.NOT_FOUND or cursor < 0 \
+##           or cursor >= len(self.jconfList):
+##            cursor = 0
+##        ##Error catcher for lists without any items.
+##        if len(self.jconfList) == 0:
+##            cursor = wx.NOT_FOUND
+##        self.jconfCursor = cursor
 
-    def EditJconf(self, event):
-        """Brings up the Jconf editing window."""
-        jconfWindow = JconfWindow(self, wx.ID_ANY, "Edit Jconf List",
-                                  self.jconfList, self.jconfCursor)
-        jconfWindow.ShowModal()
-        jconfWindow.Destroy()        
+##    def EditJconf(self, event):
+##        """Brings up the Jconf editing window."""
+##        jconfWindow = JconfWindow(self, wx.ID_ANY, "Edit Jconf List",
+##                                  self.jconfList, self.jconfCursor)
+##        jconfWindow.ShowModal()
+##        jconfWindow.Destroy()        
 
     def GetSelectedJconf(self):
         """Returns the path of the selected Jconf file."""
@@ -632,6 +631,8 @@ class LauncherWindow(wx.Frame):
         config.Write("TaoPort", self.taoPort)
         config.Write("DesktopMode", str(self.desktop))
         config.WriteInt("Mode", self.rbMode.GetSelection())
+        config.Write("ClusterMaster", self.clusterMaster)
+        print self.clusterMaster ##TESTER
 ##        print "Saved configuration." ##TESTER
         return
     
@@ -652,15 +653,15 @@ class LauncherWindow(wx.Frame):
             self.txDirectory.SetInsertionPointEnd()
         ##Set Cluster list.
         self.clusterDict = ClusterDict(name)
+        ##Set ClusterMaster
+        self.clusterMaster = config.Read("ClusterMaster", "")
         ##Set choices for Jconf list.
         if config.HasGroup(JCONF_CONFIG):
             self.jconfList = JconfList(name)
         ##Set default choices if JCONF_CONFIG doesn't exist,
         ##but DependenciesDir does.
         elif config.Read("DependenciesDir", ":::") != ":::":
-            p = os.path.join(config.Read("DependenciesDir"),
-                              JUGGLER_FOLDER, "configFiles",
-                              DEFAULT_JCONF)
+            p = DEFAULT_JCONF
             config.SetPath(JCONF_CONFIG)
             config.Write(os.path.split(p)[1][:-6], p)
             self.jconfList = JconfList(name)
@@ -690,9 +691,9 @@ class LauncherWindow(wx.Frame):
         ##Set Xplorer Type
         data = config.ReadInt("XplorerType", -1)
         if data >= 0 and data < len(RADIO_XPLORER_LIST):
-            xplorerType = data
+            self.xplorerType = data
         else:
-            xplorerType = 0
+            self.xplorerType = 0
         ##Set Conductor
         if config.Read("Conductor", "True") == "True":
             self.conductor = True
@@ -717,7 +718,7 @@ class LauncherWindow(wx.Frame):
         else:
             modeRules = {}
         frame = SettingsWindow(self, self.jconfList, self.jconfCursor,
-                                     self.clusterDict,
+                                     self.clusterDict, self.clusterMaster,
                                      self.desktop, self.nameServer,
                                      self.conductor, self.xplorer,
                                      self.xplorerType,
@@ -856,7 +857,7 @@ class LauncherWindow(wx.Frame):
 
 class SettingsWindow(wx.Dialog):
     def __init__(self, parent,
-                 jconf, jconfCursor, clusterDict,
+                 jconf, jconfCursor, clusterDict, clusterMaster,
                  desktop, nameServer, conductor, xplorer, xplorerType,
                  modeRules):
         wx.Dialog.__init__(self, parent, -1, "Advanced Settings",
@@ -868,6 +869,7 @@ class SettingsWindow(wx.Dialog):
         ##Set up data.
         self.jconfList = jconf
         self.clusterDict = clusterDict
+        self.clusterMaster = clusterMaster
         self.xplorerTypeFixed = False
         if ("xplorerType" in modeRules) and \
            (modeRules["xplorerType"][0] == FIXED):
@@ -949,6 +951,8 @@ class SettingsWindow(wx.Dialog):
         ##Also calls self.EvtCheckDesktop as a follow-up
         ##Bind events.
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckXplorer, self.cbXplorer)
+        self.Bind(wx.EVT_RADIOBOX, self.EvtCheckCluster, self.rbXplorer)
+        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckDesktop, self.cbConductor)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
         self.Bind(wx.EVT_BUTTON, self.EditJconf, self.bEditJconf)
@@ -964,14 +968,18 @@ class SettingsWindow(wx.Dialog):
         columnSizer.Add((-1, -1), 1)
         rowSizer.Add(columnSizer, 0, wx.EXPAND)
         ##Construct & insert the check box/radio box grid.
+        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        columnSizer.AddMany([self.cbDesktop,
+                             HORIZONTAL_SPACE,
+                             self.bCluster])
         gridSizer = wx.FlexGridSizer(3, 2,
                                      VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
-        gridSizer.AddMany([self.cbNameServer, NULL_SPACE,
-                           self.cbConductor, self.cbDesktop,
+        gridSizer.AddMany([self.cbNameServer, (-1, self.bCluster.GetSize()[1]),
+                           self.cbConductor, columnSizer,
                            self.cbXplorer, self.rbXplorer])
-        ##Insert the Cluster button.
-        rowSizer.Add(VERTICAL_SPACE)
-        rowSizer.Add(self.bCluster)
+##        ##Insert the Cluster button.
+##        rowSizer.Add(VERTICAL_SPACE)
+##        rowSizer.Add(self.bCluster)
         ##Insert the Programs to Launch grid.
         rowSizer.AddMany([VERTICAL_SPACE,
                           wx.StaticText(self, -1, "Programs to launch:"),
@@ -982,7 +990,7 @@ class SettingsWindow(wx.Dialog):
         rowSizer.Add(bOk, 1, wx.EXPAND)
         ##Set the main sizer.
         mainSizer = wx.BoxSizer(wx.HORIZONTAL)
-        mainSizer.Add(rowSizer, 1, wx.BOTTOM | wx.RIGHT | wx.EXPAND, BORDER)
+        mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
         self.SetSize(INITIAL_WINDOW_SIZE)
@@ -1001,9 +1009,10 @@ class SettingsWindow(wx.Dialog):
             self.rbXplorer.Enable(self.cbXplorer.IsChecked())
         ##Goes into EvtCheckDesktop to check that against cbXplorer, too.
         self.EvtCheckDesktop("dead parrot sketch")
+        self.EvtCheckCluster("dead parrot sketch")
 
     def EvtCheckDesktop(self, event):
-        """Enabled/Disables the Desktop button.
+        """Enables/Disables the Desktop button.
 
         Prevents the user from choosing Desktop mode if
         Conductor and Xplorer won't be launched."""
@@ -1012,6 +1021,16 @@ class SettingsWindow(wx.Dialog):
         else:
             self.cbDesktop.Enable(self.cbConductor.IsChecked() or
                                   self.cbXplorer.IsChecked())
+
+    def EvtCheckCluster(self, event):
+        """Enables/Disables the Cluster button.
+
+        Prevents the user from choosing Cluster computers if
+        Xplorer won't run in OSG Cluster mode."""
+        if self.cbXplorer.IsChecked() and self.rbXplorer.GetSelection() == 2:
+            self.bCluster.Enable(True)
+        else:
+            self.bCluster.Enable(False)
 
     def UpdateChJconf(self, cursor):
         """Updates the Jconf choice window in the Launcher.
@@ -1047,7 +1066,7 @@ class SettingsWindow(wx.Dialog):
         return jconfFile
 
     def EditCluster(self, event):
-        clusterWindow = ClusterWindow(self, self.clusterDict)
+        clusterWindow = ClusterWindow(self, self.clusterDict, self.clusterMaster)
         clusterWindow.ShowModal()
         clusterWindow.Destroy()
 
@@ -1070,6 +1089,8 @@ class SettingsWindow(wx.Dialog):
         if self.chJconf.IsEnabled():
             parent.jconfList = self.jconfList
             parent.jconfCursor = self.chJconf.GetSelection()
+        parent.clusterMaster = self.clusterMaster
+        print self.clusterMaster ##TESTER
         ##Close.
         self.Hide()
         self.Destroy()
@@ -1363,7 +1384,7 @@ class JconfWindow(wx.Dialog):
 
 class ClusterDict:
     """Stores a dictionary of cluster comps in this setup:
-    {name: [location, checked], name: [location, checked],..}
+    {location: True, location: True,...}
     under the variable self.list.
 
     Functions:
@@ -1386,9 +1407,9 @@ class ClusterDict:
             name = bCont[1]
             self.config.SetPath(bCont[1])
             location = self.config.Read("location", "localhost")
-            checked = self.config.ReadBool("checked", False)
+##            checked = self.config.ReadBool("checked", False)
             self.config.SetPath('..')
-            self.cluster[name] = [location, checked]
+            self.cluster[location] = True
             bCont = self.config.GetNextGroup(bCont[2])
 
     def SetConfig(self, configName):
@@ -1397,71 +1418,71 @@ class ClusterDict:
         self.config.SetPath(configName)
         self.config.SetPath(CLUSTER_CONFIG)
 
-    def Add(self, name, location = "", checked = False):
-        """Adds name: [location, checked] to the list & config."""
-        ##Fill in location with name if location is blank.
-        if location == "":
-            location = name
+    def Add(self, location):
+        """Adds location: True to the list & config."""
+##        ##Fill in location with name if location is blank.
+##        if location == "":
+##            location = name
         ##Add to list.
-        self.cluster[name] = [location, checked]
+        self.cluster[location] = True
         ##Add to cluster.
-        self.config.SetPath(name)
+        self.config.SetPath(location)
         self.config.Write("location", location)
-        self.config.WriteBool("checked", checked)
+##        self.config.WriteBool("checked", checked)
         self.config.SetPath('..')
         ##NOTE: Adding the same cluster file twice results in the previous one
         ##being overwritten. Correct that later.
 
-    def Rename(self, oldName, newName):
-        """Renames oldName entry to newName, appends a number if necessary.
-
-        These suffixes are added to newName until a unique name's generated:
-        [none], 1, 2, 3, ... 9, 10, 11, etc."""
-        ##Save the entry's values.
-        transition = self.cluster[oldName]
-        del self.cluster[oldName]
-        ##Add a numeric suffix to newName if it matches a name
-        ##already in the dict.
-        suffix = ""
-        while (newName + str(suffix)) in self.cluster:
-            if suffix == "":
-                suffix = '1'
-            else:
-                suffix = str(int(suffix) + 1)
-        ##Update cluster dict
-        self.cluster[newName + suffix] = transition
-        ##Update config
-        self.config.RenameGroup(oldName, newName + suffix)
-        ##Warns user if name had suffix added to it.
-        if (newName + suffix) != newName:
-            dlg = wx.MessageDialog(None,
-                                   "The name " +newName +" already existed" + \
-                                   " in the cluster list.\n" + \
-                                   "Your entry was given the" + \
-                                   " name " + newName + suffix + " instead.",
-                                   "NOTE: Name Changed",
-                                   wx.OK)
-            dlg.ShowModal()
+##    def Rename(self, oldName, newName):
+##        """Renames oldName entry to newName, appends a number if necessary.
+##
+##        These suffixes are added to newName until a unique name's generated:
+##        [none], 1, 2, 3, ... 9, 10, 11, etc."""
+##        ##Save the entry's values.
+##        transition = self.cluster[oldName]
+##        del self.cluster[oldName]
+##        ##Add a numeric suffix to newName if it matches a name
+##        ##already in the dict.
+##        suffix = ""
+##        while (newName + str(suffix)) in self.cluster:
+##            if suffix == "":
+##                suffix = '1'
+##            else:
+##                suffix = str(int(suffix) + 1)
+##        ##Update cluster dict
+##        self.cluster[newName + suffix] = transition
+##        ##Update config
+##        self.config.RenameGroup(oldName, newName + suffix)
+##        ##Warns user if name had suffix added to it.
+##        if (newName + suffix) != newName:
+##            dlg = wx.MessageDialog(None,
+##                                   "The name " +newName +" already existed" + \
+##                                   " in the cluster list.\n" + \
+##                                   "Your entry was given the" + \
+##                                   " name " + newName + suffix + " instead.",
+##                                   "NOTE: Name Changed",
+##                                   wx.OK)
+##            dlg.ShowModal()
 
     def Delete(self, name):
         """Deletes name's entry."""
         self.config.DeleteGroup(name)
         del self.cluster[name]
 
-    def Check(self, name, checked):
-        """Changes checked status of name's entry."""
-        self.config.SetPath(name)
-        self.config.WriteBool("checked", checked)
-        self.config.SetPath('..')
-        self.cluster[name][1] = checked
+##    def Check(self, name, checked):
+##        """Changes checked status of name's entry."""
+##        self.config.SetPath(name)
+##        self.config.WriteBool("checked", checked)
+##        self.config.SetPath('..')
+##        self.cluster[name][1] = checked
         
     def GetLocation(self, name):
         """Returns the location of name's entry."""
         return self.cluster[name][0]
 
-    def GetChecked(self, name):
-        """Returns checked status of name's entry."""
-        return self.cluster[name][1]
+##    def GetChecked(self, name):
+##        """Returns checked status of name's entry."""
+##        return self.cluster[name][1]
 
     def Length(self):
         """Returns the length of self.cluster."""
@@ -1478,17 +1499,25 @@ class ClusterDict:
         return nList
 
     def GetLocations(self):
-        lList = []
-        for name in self.cluster:
-            lList.append(self.cluster[name][0])
-        return lList
+        """Returns a list of the entries' locations.
+
+        Duplicates GetNames()."""
+        return self.GetNames()
+##        lList = []
+##        for name in self.cluster:
+##            lList.append(self.cluster[name][0])
+##        return lList
 
     def GetCheckedLocations(self):
-        lList = []
-        for name in self.cluster:
-            if self.cluster[name][1] == True:
-                lList.append(self.cluster[name][0])
-        return lList
+        """Returns a list of checked locations.
+
+        Duplicates GetNames()."""
+        return self.GetNames()
+##        lList = []
+##        for name in self.cluster:
+##            if self.cluster[name][1] == True:
+##                lList.append(self.cluster[name][0])
+##        return lList
 
 
 class ClusterWindow(wx.Dialog):
@@ -1504,7 +1533,8 @@ class ClusterWindow(wx.Dialog):
         Rename(event)
         OnClose(event)
     """
-    def __init__(self, parent, D, ID = -1, title = "Cluster Settings"):
+    def __init__(self, parent, D, clusterMaster,
+                 ID = -1, title = "Cluster Settings"):
         """Sets up the Jconf window.
 
         Keyword arguments:
@@ -1514,28 +1544,29 @@ class ClusterWindow(wx.Dialog):
                            style = wx.DEFAULT_FRAME_STYLE)
         ##Data storage.
         self.cDict = D
+        self.clusterMaster = clusterMaster
         ##Build displays.
-        self.clustList = wx.CheckListBox(self, -1,
+        self.clustList = wx.ListBox(self, -1,
                                          size=JCONF_LIST_DISPLAY_MIN_SIZE)
-        self.display = wx.TextCtrl(self, -1, style=wx.TE_READONLY)
+        self.masterCtrl = wx.TextCtrl(self, -1)
+        self.masterCtrl.SetValue(self.clusterMaster)
         self.Update()
         ##Build buttons.
         bAdd = wx.Button(self, -1, "Add")
-        bRename = wx.Button(self, -1, "Rename")
+##        bRename = wx.Button(self, -1, "Rename")
         self.bDelete = wx.Button(self, -1, "Delete")
         ##Check if Delete's enabled.
         self.DeleteEnabledCheck()
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, bAdd)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
-        self.Bind(wx.EVT_BUTTON, self.Rename, bRename)
-        self.Bind(wx.EVT_LISTBOX, self.DisplayClustLoc, self.clustList)
+##        self.Bind(wx.EVT_BUTTON, self.Rename, bRename)
+##        self.Bind(wx.EVT_LISTBOX, self.DisplayClustLoc, self.clustList)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         ##Construct layout.
         ##Add/Rename/Delete buttons.
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         rowSizer.AddMany([bAdd, VERTICAL_SPACE,
-                          bRename, VERTICAL_SPACE,
                           self.bDelete])
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         ##List field + buttons.
@@ -1545,8 +1576,8 @@ class ClusterWindow(wx.Dialog):
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         rowSizer.Add(columnSizer, 1, wx.EXPAND)
         rowSizer.AddMany([VERTICAL_SPACE,
-                          wx.StaticText(self, -1, "Selection's location:")])
-        rowSizer.Add(self.display, 0, wx.EXPAND)
+                          wx.StaticText(self, -1, "Master's location:")])
+        rowSizer.Add(self.masterCtrl, 0, wx.EXPAND)
         mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
         ##Set size, position.
@@ -1555,17 +1586,17 @@ class ClusterWindow(wx.Dialog):
         self.SetSize(INITIAL_JCONF_WINDOW_SIZE)
         self.CenterOnParent(wx.BOTH)
 
-    def DisplayClustLoc(self, event):
-        """Shows the .jconf file of the selection in the text field."""
-        n = self.clustList.GetStringSelection()
-        if n in self.cDict.GetNames():
-            loc = self.cDict.GetLocation(n)
-        elif n == wx.NOT_FOUND or n == "":
-            loc = ""
-        else:
-            print n
-            loc = "ERROR: Entry missing from list."
-        self.display.SetValue(loc)
+##    def DisplayClustLoc(self, event):
+##        """Shows the .jconf file of the selection in the text field."""
+##        n = self.clustList.GetStringSelection()
+##        if n in self.cDict.GetNames():
+##            loc = self.cDict.GetLocation(n)
+##        elif n == wx.NOT_FOUND or n == "":
+##            loc = ""
+##        else:
+##            print n
+##            loc = "ERROR: Entry missing from list."
+##        self.display.SetValue(loc)
         
     def DeleteEnabledCheck(self):
         """Disables/Enables the Delete button based on number of entries.
@@ -1577,35 +1608,34 @@ class ClusterWindow(wx.Dialog):
         else:
             self.bDelete.Enable(True)
 
-    def SaveChecks(self):
-        for i in range(self.clustList.GetCount()):
-            name = self.clustList.GetString(i)
-            if name in self.cDict.GetNames():
-                self.cDict.Check(name, self.clustList.IsChecked(i))
+##    def SaveChecks(self):
+##        for i in range(self.clustList.GetCount()):
+##            name = self.clustList.GetString(i)
+##            if name in self.cDict.GetNames():
+##                self.cDict.Check(name, self.clustList.IsChecked(i))
         
     def Update(self, cursor = ""):
         """Updates the shown entries list & checks to match recent changes."""
         ##Set cursor if it's blank.
-        self.SaveChecks()
+##        self.SaveChecks()
         if cursor == "":
             cursor = self.clustList.GetStringSelection()
         self.clustList.Set(self.cDict.GetNames())
-        ##Set check marks.
-        for name in self.cDict.GetNames():
-            self.clustList.Check(self.clustList.FindString(name),
-                                 self.cDict.GetChecked(name))
+##        ##Set check marks.
+##        for name in self.cDict.GetNames():
+##            self.clustList.Check(self.clustList.FindString(name),
+##                                 self.cDict.GetChecked(name))
         if cursor == wx.NOT_FOUND or self.clustList.GetCount() == 0:
             self.clustList.SetSelection(wx.NOT_FOUND)
         elif self.clustList.FindString(str(cursor)) == wx.NOT_FOUND:
             self.clustList.SetSelection(wx.NOT_FOUND)
         else:
             self.clustList.SetStringSelection(cursor)
-        self.DisplayClustLoc("dead parrot sketch")
 
     def AddNew(self, event):
         """User chooses a new cluster computer to add to the list.
 
-        Default name: Location of cluster computer."""
+        Default name: Address of cluster computer."""
         dlg = wx.TextEntryDialog(self,
                                  "Please enter the address of the computer:",
                                  "Add Cluster Computer")
@@ -1616,13 +1646,12 @@ class ClusterWindow(wx.Dialog):
                 dlg.Destroy()
                 dlg = wx.MessageDialog(self,
                                        "That computer is already in the" +
-                                       " cluster list under %s.\n" %(name) +
+                                       " cluster list.\n" %(name) +
                                        "You don't need to add it again.",
                                        "ERROR: Computer Already in List",
                                        wx.OK)
                 dlg.Destroy()
                 return
-            ##NOTE: Overwrites entry with same name as this one's location.
             self.cDict.Add(location)
             self.Update(self)
             self.DeleteEnabledCheck()
@@ -1648,59 +1677,61 @@ class ClusterWindow(wx.Dialog):
             self.Update()
             self.DeleteEnabledCheck()
 
-    def Rename(self, event):
-        """Renames the selected Jconf entry.
-        
-        Ensures the new name:
-        -Contains no slashes.
-        -Isn't empty spaces."""
-        loop = True
-        name = self.clustList.GetStringSelection()
-        while loop:
-            f= self.cDict.GetLocation(name)
-            dlg = wx.TextEntryDialog(self,
-                                     "What do you want to rename " + \
-                                     name + " to?\n\n" + \
-                                     "Computer Location: " + f,
-                                     "Rename",
-                                     name)
-            if dlg.ShowModal() == wx.ID_OK:
-                name = dlg.GetValue()
-                dlg.Destroy()
-                ##Check for slashes
-                if name.count('/') > 0 or name.count('\\') > 0:
-                    dlg = wx.MessageDialog(self,
-                                           "Your new name has slashes" + \
-                                           " in it.\n" + \
-                                           "Please choose a different name.",
-                                           "ERROR: Name Contains Slashes",
-                                           wx.OK)
-                    dlg.ShowModal()
-                    dlg.Destroy()
-                    name = name.replace('/', '-')
-                    name = name.replace('\\', '-')
-                ##Check if it's empty/spaces
-                elif name.isspace() or name == '':
-                    dlg = wx.MessageDialog(self,
-                                           "Your new name is empty." + \
-                                           "Please choose a different name.",
-                                           "ERROR: Name is Empty",
-                                           wx.OK)
-                    dlg.ShowModal()
-                    dlg.Destroy()
-                    name = self.clustList.GetStringSelection()
-                ##Else accept it.
-                else:
-                    self.cDict.Rename(self.clustList.GetStringSelection(),
-                                          name)
-                    self.Update(name)
-                    loop = False
-            else:
-                loop = False
+##    def Rename(self, event):
+##        """Renames the selected Jconf entry.
+##        
+##        Ensures the new name:
+##        -Contains no slashes.
+##        -Isn't empty spaces."""
+##        loop = True
+##        name = self.clustList.GetStringSelection()
+##        while loop:
+##            f= self.cDict.GetLocation(name)
+##            dlg = wx.TextEntryDialog(self,
+##                                     "What do you want to rename " + \
+##                                     name + " to?\n\n" + \
+##                                     "Computer Location: " + f,
+##                                     "Rename",
+##                                     name)
+##            if dlg.ShowModal() == wx.ID_OK:
+##                name = dlg.GetValue()
+##                dlg.Destroy()
+##                ##Check for slashes
+##                if name.count('/') > 0 or name.count('\\') > 0:
+##                    dlg = wx.MessageDialog(self,
+##                                           "Your new name has slashes" + \
+##                                           " in it.\n" + \
+##                                           "Please choose a different name.",
+##                                           "ERROR: Name Contains Slashes",
+##                                           wx.OK)
+##                    dlg.ShowModal()
+##                    dlg.Destroy()
+##                    name = name.replace('/', '-')
+##                    name = name.replace('\\', '-')
+##                ##Check if it's empty/spaces
+##                elif name.isspace() or name == '':
+##                    dlg = wx.MessageDialog(self,
+##                                           "Your new name is empty." + \
+##                                           "Please choose a different name.",
+##                                           "ERROR: Name is Empty",
+##                                           wx.OK)
+##                    dlg.ShowModal()
+##                    dlg.Destroy()
+##                    name = self.clustList.GetStringSelection()
+##                ##Else accept it.
+##                else:
+##                    self.cDict.Rename(self.clustList.GetStringSelection(),
+##                                          name)
+##                    self.Update(name)
+##                    loop = False
+##            else:
+##                loop = False
 
     def OnClose(self, event):
         """Closes ClusterWindow."""
-        self.SaveChecks()
+##        self.SaveChecks()
+        self.GetParent().clusterMaster = self.masterCtrl.GetValue()
+        print self.masterCtrl.GetValue() ##TESTER
         self.Hide()
         self.Destroy()
 
