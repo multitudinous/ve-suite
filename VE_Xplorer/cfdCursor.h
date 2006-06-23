@@ -106,15 +106,22 @@ public:
    // Return the dynamic coordinate system with pfGeode objects.
    VE_SceneGraph::cfdDCS * GetcfdDCS();
 
-   // Set/Get plane size.
+   ///Set/Get plane size.
    void SetPlaneSize( float size );
    void GetPlaneSize( float &size );
    float GetPlaneSize();
 
-   // Set/Get plane resolution: the number of x-y subdivisions in the plane
+   ///Set/Get plane resolution: the number of x-y subdivisions in the plane
    void SetPlaneReso( int size );
    void GetPlaneReso( int &size );
    int GetPlaneReso();
+
+   ///Set the sphere scale
+   ///\param scale The scale of the speheres
+   void SetSphereScale( float scale );
+   ///Set the cursor type
+   ///\param The type of cursor to use
+   void SetCursorType( int type );
 
    // for box cursor...
    void getExtent(double boxExtent[6]);

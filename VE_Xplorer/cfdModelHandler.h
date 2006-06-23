@@ -88,8 +88,11 @@ public:
    void PreFrameUpdate( void );
 
    void SetCommandArray( cfdCommandArray* );
+   ///Set the active xml command
    ///\param inputCommand input xml command
    void SetXMLCommand( VE_XML::Command* inputCommand );
+   ///Returns the current xml command
+   VE_XML::Command* GetXMLCommand( void );
    void CreateObjects( void );      
    void LoadSurfaceFiles( std::string );
    vtkPolyData* GetArrow( void );

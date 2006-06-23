@@ -37,6 +37,8 @@
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/cfdModel.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -560,12 +562,21 @@ vtkCubeSource * cfdCursor::getBox()
 
 
 void cfdCursor::SetPlaneSize( float size )
-{
-   vprDEBUG(vesDBG, 1) << "Setting plane size : " << size
-                           << std::endl << vprDEBUG_FLUSH;
+{	
+   float* dataDCSScale = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
+	float* worldDCSScale = this->worldDCS->GetScaleArray();
+	float combineScale[ 3 ];
+	combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
+
+   //this controls the size of the plane for the seed points
+   //the range on the GUI is from 1 to 100
+	size = combineScale[ 0 ] * size * 0.5 * 0.0025 * 1.0f; 
 
    this->last_pSize = this->pSize;
    this->pSize = size;
+
+   vprDEBUG(vesDBG, 1) << "Setting plane size : " << size
+                           << std::endl << vprDEBUG_FLUSH;
 }
 
 
@@ -903,14 +914,9 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
             }
          }
 
-         //if ( this->cursorId != NONE && this->cursorId != SPHERE && this->cursorId != CUBE )
          if ( this->cursorId != NONE && this->cursorId != SPHERE )
          {
             this->SetPlaneReso( (int)commandIds.at(1) ); 
-
-            // convert size percentage (0-100) request to plane size
-            //std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() 
-            //            << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
 
 	         if ( this->activeDataSetDCS )
 	         {
@@ -921,12 +927,10 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 
                //this controls the size of the plane for the seed points
                //the range on the GUI is from 1 to 100
-               //	this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
 		         this->SetPlaneSize( combineScale[ 0 ] * commandIds.at(2) * 0.5 * 0.0025 * 1.0f); 
 
                //this controls the size of the sphere seed points
                //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
-		         //sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
 		         sphereRadius = (commandIds.at(3) + 5 ) * 0.01f;
 		      }
          }
@@ -942,3 +946,44 @@ void cfdCursor::UpdateCommand()
    std::cerr << "doing nothing in cfdCursor::UpdateCommand()" << std::endl;
 
 }
+/////////////////////////////////////////////////////////////////////////////////
+void cfdCursor::SetSphereScale( float scale )
+{
+   //this controls the size of the sphere seed points
+   //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
+   sphereRadius = ( scale + 5 ) * 0.01f;
+}
+/////////////////////////////////////////////////////////////////////////////////
+void cfdCursor::SetCursorType( int type )
+{
+   cursorId = type;
+
+   if ( cursorId == NONE )
+   {
+      vprDEBUG(vesDBG,1) 
+        << "removing cursor with cursor->GetpfDCS() = "
+        << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
+
+      if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) >= 0 )
+         this->_rootNode->RemoveChild( this->GetcfdDCS() );
+   }
+   else
+   {
+
+      vprDEBUG(vesDBG,1) 
+        << "adding cursor with cursor->GetpfDCS() = "
+        << this->GetcfdDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
+
+      // if disconnected from scene graph, add
+      if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) < 0 )
+      {
+         this->_rootNode->AddChild( this->GetcfdDCS() );
+
+         vprDEBUG(vesDBG,2) 
+            << "added cursor with cursor->GetpfDCS() = "
+            << this->GetcfdDCS() << std::endl 
+            << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
+      }
+   }
+}
+/////////////////////////////////////////////////////////////////////////////////

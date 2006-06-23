@@ -35,6 +35,8 @@
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
+#include <map>
+
 namespace VE_Xplorer
 {
 	class cfdNavigate;
@@ -58,6 +60,11 @@ namespace VE_SceneGraph
 {
    class cfdDCS;
    class cfdGroup;
+}
+
+namespace VE_EVENTS
+{
+   class EventHandler;
 }
 
 class vtkPolyData;
@@ -146,6 +153,8 @@ private:
 	float _frustumTop;
 	float _frustumBottom;
 	float _frustumNear;
+
+   std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }
 #endif

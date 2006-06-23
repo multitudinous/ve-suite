@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 
+#include "VE_Xplorer/EventHandler.h"
 #include "VE_Xplorer/fileIO.h"
 #include "VE_Xplorer/cfdNavigate.h"
 #include "VE_Xplorer/cfdTrackball.h"
@@ -50,6 +51,7 @@
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/cfdDebug.h"
 #include "VE_Xplorer/cfdDisplaySettings.h"
+#include "VE_Xplorer/XplorerHandlers/ChangeCursorEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -98,6 +100,8 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _param.erase();// = 0;
    desktopWidth = 0;
    desktopHeight = 0;
+
+   _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();
 }
 
 void cfdEnvironmentHandler::Initialize( std::string param )
@@ -302,12 +306,29 @@ void cfdEnvironmentHandler::InitScene( void )
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
-	// Update Trackball
-	trackball->preFrame();
-	
 	// Update Navigation variables   
    vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
+   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+   if( cfdModelHandler::instance()->GetXMLCommand() )
+   {
+      vprDEBUG(vesDBG,3) << "Command Name : "
+                           << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
+                           << std::endl<< vprDEBUG_FLUSH;
+      currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+      if(currentEventHandler != _eventHandlers.end())
+      {
+         vprDEBUG(vesDBG,1) << "Executing: "
+                              << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
+                              << std::endl<< vprDEBUG_FLUSH;
+         currentEventHandler->second->SetGlobalBaseObject();
+         currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+      }
+   }
+
+	// Update Trackball
+	trackball->preFrame();
+	
 #ifdef _OSG
 #ifdef VE_PATENTED
    this->objectHandler->UpdateObjectHandler();
