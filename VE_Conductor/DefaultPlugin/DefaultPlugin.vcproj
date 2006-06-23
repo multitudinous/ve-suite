@@ -75,7 +75,7 @@
 		</Configuration>
 		<Configuration
 			Name="dbg|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/UI/win32"
 			IntermediateDirectory=".\GUIPluginLib\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
@@ -102,7 +102,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib"
-				OutputFile="$(VE_SUITE_HOME)\lib\win32\DefaultPlugin_d.dll"
+				OutputFile="$(OutDir)/DefaultPlugin_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
