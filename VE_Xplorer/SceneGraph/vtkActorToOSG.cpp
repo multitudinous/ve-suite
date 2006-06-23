@@ -98,7 +98,10 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 	int numPrimitives = primArray->GetNumberOfCells();
 	if (numPrimitives == 0) 
 	{
-   	std::cout << " no cells" << std::endl;
+      if (verbose) 
+      {
+         std::cout << " no cells" << std::endl;
+      }
       return NULL;
    }
 	//Initialize the Geometry
