@@ -437,9 +437,6 @@
 				RelativePath=".\UI_TransientDialog.h">
 			</File>
 			<File
-				RelativePath="..\Ve_ui\UI_TransientDialog.h">
-			</File>
-			<File
 				RelativePath=".\vectors.h">
 			</File>
 			<File

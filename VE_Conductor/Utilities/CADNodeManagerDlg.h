@@ -167,6 +167,7 @@ protected:
    wxTreeCtrl* _geometryTree;///<The tree control.
    wxButton* _quitButton;///<The button to close the dialog.
    wxButton* _saveButton;///<The button to save the current CADHierarchy.
+   wxRect _geomPosition;///<The initial position of the dialog.
 
    VE_Conductor::GUI_Utilities::CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
 

@@ -149,6 +149,9 @@ public:
    ///\return Returns either:\n "Desktop" or"Tablet"
    std::string GetDisplayMode();
 
+   ///Get an appropriate size for sub dialogs
+   wxRect GetAppropriateSubDialogSize();
+
    wxSplitterWindow* wx_log_splitter;
    wxSplitterWindow* wx_ve_splitter;
    wxSplitterWindow* wx_nw_splitter;

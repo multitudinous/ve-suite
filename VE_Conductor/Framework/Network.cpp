@@ -2486,29 +2486,10 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 
    if( !cadDialog )
    {
-      //if ( IsConnectedToXplorer() )
-      {
-         //((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
-         //dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
-         //SetXplorerInterface( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer() );
-         /*if ( CORBA::is_nil( xplorerPtr.in() ) )
-         {
-            return;
-         }*/
-      }
-      //else
-        // return;
-      //this will change once we have a way to retrieve the geometry from the model
       cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                this, ::wxNewId() );
-      int displayWidth, displayHeight = 0;
-      ::wxDisplaySize(&displayWidth,&displayHeight);
-      wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
 
-      wxRect cadDialogSize = wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
-
-      cadDialog->SetSize(cadDialogSize);
+      cadDialog->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
 
    cadDialog->SetVjObsPtr( xplorerPtr.in() );

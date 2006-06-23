@@ -94,12 +94,7 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _activeVectorName = _vectorSelection->GetStringSelection();
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
-   int displayWidth, displayHeight = 0;
-   ::wxDisplaySize(&displayWidth,&displayHeight);
-   wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
-
-   _vistabPosition = wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+   _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
 }
 ///////////////////////////////////////////////////////////////////
 //Constructor                                                    //
@@ -137,13 +132,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    {
       _setActiveDataset(0);
    }
-
-   int displayWidth, displayHeight = 0;
-   ::wxDisplaySize(&displayWidth,&displayHeight);
-   wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
-
-   _vistabPosition = wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+   _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
    SetSize( _vistabPosition );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

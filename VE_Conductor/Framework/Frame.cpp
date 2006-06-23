@@ -384,7 +384,25 @@ void AppFrame::GetConfig(wxConfig* config)
   if (!config) delete cfg;
 
 }
+//////////////////////////////////////////////
+wxRect AppFrame::GetAppropriateSubDialogSize()
+{
+   int displayWidth= 0;
+   int displayHeight = 0;
 
+   ::wxDisplaySize(&displayWidth,&displayHeight);
+   if(_displayMode == "Desktop")
+   {
+      wxRect bbox = GetRect();
+      return wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+   }
+   else
+   {
+      return wxRect( 2*displayWidth/3, 0, 
+                   displayWidth/3, .5*(displayHeight) );
+   }
+}
 wxRect AppFrame::DetermineFrameSize (wxConfig* config)
 {
   const int minFrameWidth = 600;

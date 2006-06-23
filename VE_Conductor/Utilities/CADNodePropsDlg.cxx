@@ -409,14 +409,6 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
        _updateAttributeList(_availableShaders);
    }
 }
-////////////////////////////////////////////////////////////////////////////////
-/*void CADNodePropertiesDlg::_onAssociateCheckBox(wxCommandEvent& WXUNUSED(event))
-{
-   if(_cadNode->GetAttributeList().size())
-   {
-      
-   }
-}*/
 //////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateAttributeType(wxCommandEvent& WXUNUSED(event))
 {
