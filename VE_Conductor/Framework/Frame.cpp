@@ -201,18 +201,30 @@ std::string AppFrame::_detectDisplay()
 ////////////////////////////////////////////////////////
 void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
 {
-   wx_log_splitter = new wxSplitterWindow(parent, -1);
-   wx_log_splitter->SetMinimumPaneSize( 40 );
-   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+   if(_detectDisplay() == "Tablet")
+   {
+      wx_log_splitter = new wxSplitterWindow(parent, -1);
+      wx_log_splitter->SetMinimumPaneSize( 40 );
+      logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+      wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
+   }
+   else
+   {
+      logwindow = new wxTextCtrl(this, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+      wx_nw_splitter = new wxSplitterWindow(parent, -1);
+   }
 
-   wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
    wx_nw_splitter->SetMinimumPaneSize( 20 );
 
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
    av_modules->SetNetwork(network);
 
-   wx_log_splitter->SplitHorizontally(wx_nw_splitter, logwindow, -100);
+   if(_detectDisplay() == "Tablet")
+   {
+      wx_log_splitter->SplitHorizontally(wx_nw_splitter, logwindow, -100);
+   }
+
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
 }
 //////////////////////////////////
@@ -227,7 +239,7 @@ void AppFrame::_configureDesktop()
    _treeView->SetSizer(treeViewSizer);
 
    _createTreeAndLogWindow(_treeView);
-   treeViewSizer->Add(wx_log_splitter,1, wxALIGN_CENTER|wxEXPAND);
+   treeViewSizer->Add(wx_nw_splitter,1, wxALIGN_CENTER|wxEXPAND);
 
    int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);
