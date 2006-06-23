@@ -12,7 +12,7 @@
 	<Configurations>
 		<Configuration
 			Name="tao_osg_dbg|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/GE/win32"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
@@ -113,7 +113,7 @@
 		</Configuration>
 		<Configuration
 			Name="tao_osg_vep_dbg|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/GE/win32"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
