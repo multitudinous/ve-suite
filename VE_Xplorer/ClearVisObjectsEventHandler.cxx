@@ -31,6 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/ClearVisObjectsEventHandler.h"
 #include "VE_Xplorer/cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/cfdModel.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -89,4 +91,5 @@ void ClearVisObjectsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    //call back over to ssvishandler to clear the vis objects
    cfdSteadyStateVizHandler::instance()->ClearVisObjects();
+   cfdModelHandler::instance()->GetActiveModel()->MakeCADRootOpaque();
 }

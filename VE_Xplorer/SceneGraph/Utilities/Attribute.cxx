@@ -196,6 +196,24 @@ void Attribute::UpdateMaterial(std::string componentName,std::string face,
    }
 #endif
 }
+////////////////////////////////////////////
+void Attribute::CreateTransparencyStateSet()
+{
+#ifdef _OSG  
+   ShaderHelper shaderHelper;
+   shaderHelper.SetStateSet(this);
+   shaderHelper.LoadTransparencyProgram();
+
+   osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+   bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+   setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+   setRenderBinDetails(99,std::string("DepthSortedBin"));
+   setMode(GL_BLEND,osg::StateAttribute::ON);
+   setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+
+#elif _PERFORMER
+#endif
+}
 ////////////////////////////////////////////////////////////////////////////
 void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
 {

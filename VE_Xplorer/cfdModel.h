@@ -163,6 +163,15 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       unsigned int GetNumberOfGeomDataSets( void );
       std::string GetGeomFileName( int );
       void CreateGeomDataSet( std::string );
+      
+      ///Set the root CADNode
+      ///\param node The rootCADNode
+      void SetRootCADNode(VE_CAD::CADNode* node);
+      ///\param CAD goes transparent when dataset vis is active
+      void MakeCADRootTransparent();
+
+      ///\param CAD return to default state on clear all
+      void MakeCADRootOpaque();
 
       ///Add a new attribute to a node
       ///\param nodeID The ID of the node to add Attribute to.

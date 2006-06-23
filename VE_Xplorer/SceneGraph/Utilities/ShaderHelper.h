@@ -80,6 +80,9 @@ public:
 
    ///Load and create the stateset from the input XML data
    void LoadGLSLProgram(VE_Shader::Program* glslProgram);
+   
+   ///Load and create the stateset for transparency shader
+   void LoadTransparencyProgram();
 #ifdef _OSG
    ///Get the created state set representing the shader
    osg::StateSet* GetProgramStateSet();

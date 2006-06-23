@@ -752,6 +752,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
       activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
       activeObject->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
       activeObject->UpdateCommand();
+      cfdModelHandler::instance()->GetActiveModel()->MakeCADRootTransparent();
    }
    
    // get the active vis object
@@ -776,6 +777,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    cfdSteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
    cfdSteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
    cfdSteadyStateVizHandler::instance()->SetActorsAreReady( true );
+
 }
 //////////////////////////////////////////////////////////////////   
 void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject )

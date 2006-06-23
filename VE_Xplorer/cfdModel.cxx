@@ -816,7 +816,11 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
    return newStlName;
 }
 //Dynamic Loading Data End Here
-
+////////////////////////////////////////////////////
+void cfdModel::SetRootCADNode(VE_CAD::CADNode* node)
+{
+   _rootCADNode = node;
+}
 ///////////////////////////////////////////
 VE_CAD::CADNode* cfdModel::GetRootCADNode()
 {
@@ -897,7 +901,38 @@ void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
    std::cout<<"cfdModel::SetActiveAttributeOnNode not implemented for Performer yet!!!"<<std::endl;
 #endif
 }
+///////////////////////////////////////
+void cfdModel::MakeCADRootTransparent()
+{
+   //check for the attribute
+     
+   osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
+   attribute->CreateTransparencyStateSet();
 
+   try
+   {
+      (*_assemblyList.begin()).second->GetRawNode()->setStateSet(attribute.get());
+   }
+   catch(...)
+   {
+      vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"<<std::endl<< vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) <<"|\tcfdModel::MakeCADRootTransparent()---"<<std::endl<< vprDEBUG_FLUSH;
+   }
+
+}
+//////////////////////////////////
+void cfdModel::MakeCADRootOpaque()
+{
+   try
+   {
+      (*_assemblyList.begin()).second->GetRawNode()->getStateSet()->clear();
+   }
+   catch(...)
+   {
+      vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"<<std::endl<< vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) <<"|\tcfdModel::MakeCADRootOpaque()---"<<std::endl<< vprDEBUG_FLUSH;
+   }
+}
 //////////////////////////////////////////////
 void cfdModel::AddAttributeToNode(unsigned int nodeID,
                               VE_CAD::CADAttribute* newAttribute)

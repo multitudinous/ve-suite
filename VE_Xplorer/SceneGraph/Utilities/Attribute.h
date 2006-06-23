@@ -94,6 +94,9 @@ public:
    ///\param attribute The CADAttribute.
    void CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute);
 
+   ///Sets this stateset to be the transparency shader.
+   void CreateTransparencyStateSet();
+
    ///Update a Uniform value.
    ///\param uniformToUpdate The new uniform information.
    void UpdateShaderUniform(VE_Shader::Uniform* uniformToUpdate);

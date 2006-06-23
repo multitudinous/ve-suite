@@ -129,6 +129,50 @@ void ShaderHelper::SetStateSet(osg::StateSet* shader)
 }
 #elif _PERFORMER
 #endif
+////////////////////////////////////////////
+void ShaderHelper::LoadTransparencyProgram()
+{
+#ifdef _OSG
+   VE_Shader::Shader* vertShader = new VE_Shader::Shader();
+   vertShader->SetShaderType("Vertex");
+   std::string vertexSource("	varying vec3 N;\n"
+		                    "varying vec3 I;\n"
+	                       "varying vec4 currentColor;\n"
+
+		                     "void main()\n"
+		                     "{\n"
+			                  "vec4 P=gl_ModelViewMatrix*gl_Vertex;\n"
+			                  "I=P.xyz;\n"
+			                  "N=gl_NormalMatrix*gl_Normal;\n"
+                          "currentColor=gl_Color;\n"
+			                  "gl_Position=ftransform();\n"
+		                     "}\n");
+   vertShader->SetShaderSource(vertexSource);
+   
+   VE_Shader::Shader* fragShader = new VE_Shader::Shader();
+   fragShader->SetShaderType("Fragment");
+   std::string fragmentSource("varying vec3 N;\n"
+		                     " varying vec3 I;\n"
+                           "varying vec4 currentColor;\n"	
+                           "void main()\n"
+                           "{\n"
+    			                   "float opac=dot(normalize(-N),normalize(-I));\n"
+    			                   "opac=abs(opac);\n"
+    			                   "opac=1.0-pow(opac,0.8);\n"
+   			                   "vec4 Cs=currentColor;\n"
+    			                   "gl_FragColor=opac*Cs;\n"
+		                      "}\n"	   
+                            );
+   fragShader->SetShaderSource(fragmentSource);
+
+   VE_Shader::Program* glslProgram = new VE_Shader::Program();
+   glslProgram->SetProgramName("Dataset Transparency");
+   glslProgram->SetVertexShader(vertShader);
+   glslProgram->SetFragmentShader(fragShader);
+   LoadGLSLProgram(glslProgram);
+#elif _PERFORMER
+#endif
+}
 ///////////////////////////////////////////////////////////////////
 void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
 {
