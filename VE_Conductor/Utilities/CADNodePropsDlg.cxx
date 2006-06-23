@@ -76,6 +76,7 @@ using namespace VE_Shader;
 using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_BUTTON(ADD_ATTRIBUTE,CADNodePropertiesDlg::_addAttribute)
+   EVT_BUTTON(REMOVE_ATTRIBUTE,CADNodePropertiesDlg::_removeAttribute)
    EVT_SPINCTRL(TRANSFORM_PANEL_ID,CADNodePropertiesDlg::_updateTransform)
    EVT_COMBOBOX(ATTRIBUTE_TYPE,CADNodePropertiesDlg::_updateAttributeType)
    EVT_LIST_ITEM_SELECTED(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
@@ -137,14 +138,16 @@ void CADNodePropertiesDlg::_buildGUI()
 {
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* notebookSizer = new wxBoxSizer(wxVERTICAL);
-   //wxBoxSizer* bottomRow = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* bottomRow = new wxBoxSizer(wxVERTICAL);
 
    _buildTabs();
    notebookSizer->Add(_propertyTabs,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-
-
+   
    mainSizer->Add(notebookSizer,3,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
+   bottomRow->Add(new wxButton(this,wxID_OK,"OK"),0,wxALIGN_CENTER);
+
+   mainSizer->Add(bottomRow,0,wxALIGN_CENTER);
    //set this flag and let wx handle alignment  
    SetAutoLayout(true);
 
@@ -321,6 +324,10 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    _associateWithDataCheck->SetValue(false);*/
    attributeTypeSizer->Add(_addAttributeButton,0,wxALIGN_CENTER);
 
+   
+   _removeAttributeButton = new wxButton(_attributePanel, REMOVE_ATTRIBUTE,wxString("Remove..."));
+   attributeTypeSizer->Add(_removeAttributeButton,0,wxALIGN_CENTER);
+
    //_editAttributeButton = new wxButton(_attributePanel, EDIT_ATTRIBUTE,wxString("Edit..."));
    //attributeTypeSizer->Add(_editAttributeButton,0,wxALIGN_CENTER);
 
@@ -361,6 +368,10 @@ void CADNodePropertiesDlg::_updateAttributeList(wxArrayString listOfAttributes)
 ///////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateAvailableAttributes()
 {
+   _availableShaders.clear();
+   _availableMaterials.clear();
+   _nShaders = 0;
+   _nMaterials = 0;
    if(_cadNode->GetAttributeList().size())
    {
       _availableShaders.clear();
@@ -385,16 +396,17 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
             _availableShaders.Add(attributes.at(i).GetAttributeName().c_str());
          }
       }
-      if(_attributeType->GetValue() == wxString("Materials"))
-      {
-         //_attributeSelection->Set(_availableMaterials);
-         _updateAttributeList(_availableMaterials);
-      }
-      else if(_attributeType->GetValue() == wxString("Shaders"))
-      {
-         //_attributeSelection->Set(_availableShaders);
-         _updateAttributeList(_availableShaders);
-      }
+      
+   }
+   if(_attributeType->GetValue() == wxString("Materials"))
+   {
+      //_attributeSelection->Set(_availableMaterials);
+      _updateAttributeList(_availableMaterials);
+   }
+   else if(_attributeType->GetValue() == wxString("Shaders"))
+   {
+       //_attributeSelection->Set(_availableShaders);
+       _updateAttributeList(_availableShaders);
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -465,6 +477,31 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxListEvent& event)
 
       _sendCommandsToXplorer();
 
+   }
+}
+//////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_removeAttribute(wxCommandEvent& event)
+{
+   if(_cadNode)
+   {
+      ClearInstructions();
+      _commandName = "CAD_REMOVE_ATTRIBUTE";
+      std::string attributeName = _cadNode->GetActiveAttribute().GetAttributeName();
+      _cadNode->RemoveAttribute(attributeName);
+      _updateAvailableAttributes();
+      
+      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      nodeID->SetDataType("UNSIGNED INT");
+      nodeID->SetDataName(std::string("Node ID"));
+      nodeID->SetDataValue(_cadNode->GetID());
+      _instructions.push_back(nodeID);
+      
+      VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
+      addAttribute->SetDataType("STRING");
+      addAttribute->SetData("Attribute",attributeName);
+      _instructions.push_back(addAttribute);
+
+      _sendCommandsToXplorer();
    }
 }
 /////////////////////////////////////////////////////////////////////////
