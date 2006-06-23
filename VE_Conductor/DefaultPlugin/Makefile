@@ -42,7 +42,7 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
 #DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
-$(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
+$(shell mkdir -p $(VE_SUITE_HOME)/bin/Plugins/UI/$(CFDHOSTTYPE))
 DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 DSO_PLUGIN_DEPS+= -lVE_XMLLib
 DSO_PLUGIN_DEPS+= -lVE_ModelLib
@@ -58,7 +58,7 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/DefaultPlugin
+PLUGIN_NAME= $(VE_SUITE_HOME)/bin/Plugins/UI/$(CFDHOSTTYPE)/DefaultPlugin
 #OBJDIR is the place that the object files are stored.
 OBJDIR= $(CFDHOSTTYPE)_VE_DefaultPlugin
 

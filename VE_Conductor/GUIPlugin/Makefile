@@ -34,12 +34,12 @@ CFDUNAME = $(shell uname)
 # list the source files that are in current directory
 SRCS=\
    FinancialDialog.cpp \
-	ListTable.cpp \
+   ListTable.cpp \
    Plugin_base.cpp \
    GlobalParamDialog.cpp \
    Geometry.cpp \
    GeometryDialog.cpp \
-	GeometryDataManager.cpp \
+   GeometryDataManager.cpp \
    PortDialog.cpp \
    ResultPanel.cpp \
    StringParse.cpp \

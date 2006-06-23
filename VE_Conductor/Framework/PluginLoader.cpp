@@ -70,12 +70,12 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    wxString libDir;
    if(::wxGetEnv( wxString( "VE_SUITE_HOME" ), &veSuiteHome ))
    {
-      libDir = wxString("/lib/");
+      libDir = wxString("/bin/Plugins/UI/");
       ::wxGetEnv( wxString( "CFDHOSTTYPE" ), &hostType );
    }
    else if(::wxGetEnv( wxString( "VE_INSTALL_DIR" ), &veSuiteHome ))
    {  
-      libDir = wxString("/bin");
+      libDir = wxString("/bin/Plugins/UI");
       hostType = wxString("/");
    }
    if ( !(hostType.IsEmpty()) && (!veSuiteHome.IsEmpty()) )
@@ -83,7 +83,7 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
 #ifdef _WIN32
       wxString libn = veSuiteHome + libDir + hostType + wxString( "/DefaultPlugin_d" ) + wxPluginLibrary::GetDllExt();
 #else
-	   wxString libn = veSuiteHome + "/lib/" + hostType + wxString( "/DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
+	   wxString libn = veSuiteHome + libDir + hostType + wxString( "/DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
 #endif
 	   if ( ::wxFileExists( libn ) )
       {
