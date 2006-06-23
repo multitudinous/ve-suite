@@ -65,11 +65,11 @@ DSO_PLUGIN_DEPS+= -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG)
 DSO_PLUGIN_DEPS+= -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 DSO_PLUGIN_DEPS+= -lVE_UtilLib
 DSO_PLUGIN_DEPS+= -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
-$(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
+$(shell mkdir -p $(VE_SUITE_HOME)/bin/Plugins/GE/$(CFDHOSTTYPE))
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/DefaultGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+PLUGIN_NAME= $(VE_SUITE_HOME)/bin/Plugins/GE/$(CFDHOSTTYPE)/DefaultGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 # object files are being stored in a system-dependent directory so that builds
 # for multiple platforms may be maintained simultaneously.
 
