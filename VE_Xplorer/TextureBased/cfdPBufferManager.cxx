@@ -57,7 +57,6 @@ cfdPBufferManager::cfdPBufferManager()
    _frameBufferDeviceContext = 0;
    _frameBDGLContext = 0;
    _pBufferDeviceContext = 0;
-   _pBufferGLContext = 0;
 #else
    _oldDisplay = 0;
    _oldDrawable = 0;
@@ -79,6 +78,7 @@ cfdPBufferManager::cfdPBufferManager()
    _pfAttribList.push_back(8);
    _pfAttribList.push_back(None);
 #endif
+   _pBufferGLContext = 0;
    _hBuffer = 0;
    _isSupported = false;
    _isCreated = false;
