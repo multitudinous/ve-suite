@@ -116,6 +116,20 @@ void CADNode::AddAttribute(VE_CAD::CADAttribute attribute)
 {
    _attributeList.push_back(attribute);
 }
+////////////////////////////////////////////////////////
+void CADNode::RemoveAttribute(std::string attributeName)
+{
+   for ( std::vector<CADAttribute>::iterator itr = _attributeList.begin();
+                                    itr != _attributeList.end();
+                                    itr++ )
+   {
+      if((*itr).GetAttributeName() == attributeName)
+      {
+         _attributeList.erase(itr);
+         break;
+      }
+   }
+}
 ///////////////////////////////////////////////////////////
 void CADNode::SetActiveAttribute(std::string attributeName)
 {

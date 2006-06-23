@@ -83,6 +83,10 @@ public:
    ///\param attribute A new attribute for this node.
    void AddAttribute(VE_CAD::CADAttribute attribute);
 
+   ///Remove an attribute from the node
+   ///\param attributeName The name of the attribute to remove.
+   void RemoveAttribute(std::string attributeName);
+
    ///Set the name of the active attribute
    ///\param attributeName The name of the active attribute.
    void SetActiveAttribute(std::string attributeName); 
