@@ -119,9 +119,6 @@ public:
    ///\param index The index of the attribute to find.
    VE_CAD::CADAttribute& GetAttribute(unsigned int index);
 
-   ///Get the transparency shader.
-   VE_CAD::CADAttribute& GetTransparencyAttribute();
-
    ///Get attributes for this node.
    std::vector<CADAttribute> GetAttributeList();
 
@@ -146,13 +143,9 @@ protected:
    ///Internally update the type of the node in XML.
    void _updateNodeType();
 
-   ///Create the Dataset transparency shader.
-   void _createDatasetTransparencyShader();
-
    std::string _activeAttributeName;///<The name of the active attribute.
    unsigned int _uID;///<A "unique" id for the node.
    unsigned int  _parent;  ///< Parent node ID.
-   VE_CAD::CADAttribute _datasetTransparencyShader;///<The datset transparency shader
    VE_XML::Transform* _transform; ///< Transform for the node.
    std::vector<VE_CAD::CADAttribute> _attributeList;///<A list of attributes for this node
    std::string _name;///< The name of this node.
