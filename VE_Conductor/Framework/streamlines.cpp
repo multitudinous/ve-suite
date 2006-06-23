@@ -401,7 +401,7 @@ void Streamlines::_onIntegrateDir(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////////////////
 void Streamlines::_onSizeSlider(wxScrollEvent& WXUNUSED(event))
 {
-   _streamSize = static_cast<double>(_sizeSlider->GetValue()/100.0);
+   _streamSize = static_cast<double>(_sizeSlider->GetValue());
 }
 //////////////////////////////////////////////////////////
 void Streamlines::_onPointsSlider(wxScrollEvent& WXUNUSED(event))
