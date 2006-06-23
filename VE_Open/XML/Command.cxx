@@ -80,11 +80,9 @@ Command& Command::operator=( const Command& input)
       _cmdName =  input._cmdName;
       _nDataValuePairs = input._dataValuePairs.size();
 
-      size_t i  = _dataValuePairs.size() -1;
-      while(i >=0)
+      for ( size_t i = 0; i < _dataValuePairs.size(); ++i )
       {
          delete _dataValuePairs.at(i);
-         i--;
       }
       _dataValuePairs.clear();
       nameToDataValuePairMap.clear();
