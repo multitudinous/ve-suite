@@ -76,8 +76,10 @@ void Trackball::Reshape(unsigned int width,unsigned int height){
 
 void Trackball::SetFOVy(float _top,float _bottom,float _near){
 	float topAngle=(OneEightyDivPI)*atan(_top/_near);
-	float bottomAngle=(OneEightyDivPI)*atan(abs(_bottom)/_near);
+   float tempDiv = fabs(_bottom)/_near;
+	float bottomAngle=(OneEightyDivPI)*atan( tempDiv );
 	tb_FOVy=topAngle+bottomAngle;
+//std::cout << tb_FOVy << " " << _near << " " << _top << " " << _bottom << " " << topAngle << " " << bottomAngle << std::endl;
 }
 
 void Trackball::Keyboard(int key){
@@ -85,7 +87,7 @@ void Trackball::Keyboard(int key){
 	if(tb_key==113)
 		ResetTransforms();
 
-	tb_key=NULL;
+	tb_key=-1;
 }
 
 void Trackball::Mouse(int button,int state,int x,int y){
@@ -126,9 +128,9 @@ void Trackball::Motion(int x,int y){
 
 void Trackball::ResetTransforms(){
 	float d;
-	float w=abs((tb_max[0]-tb_min[0])*0.5f);
-	float h=abs((tb_max[1]-tb_min[1])*0.5f);
-	float depth=abs((tb_max[2]-tb_min[2])*0.5f);
+	float w=fabs((tb_max[0]-tb_min[0])*0.5f);
+	float h=fabs((tb_max[1]-tb_min[1])*0.5f);
+	float depth=fabs((tb_max[2]-tb_min[2])*0.5f);
 	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
 	if(w>h&&w>depth)
 		d=(w/tan(Theta));
@@ -160,7 +162,7 @@ void Trackball::Twist(float dx,float dy){
 }
 
 void Trackball::Zoom(float dy){
-	float viewlength=abs(tb_accuTransform[1][3]);
+	float viewlength=fabs(tb_accuTransform[1][3]);
 	float d=(viewlength*(1/(1+dy*2)))-viewlength;
 
 	if((tb_accuTransform[1][3]>-offset)&&(tb_accuTransform[1][3]<offset)){
