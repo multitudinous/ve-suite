@@ -33,9 +33,10 @@
 #include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
-#include "VE_Open/XML/CAD/CADAttribute.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/CAD/CADCreator.h"
+#include "VE_Open/XML/Shader/Shader.h"
+#include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 
 #include <ctime>
@@ -55,7 +56,7 @@ CADNode::CADNode(std::string name)
    _type = std::string("Node");
    _uID = static_cast<unsigned int>(time(NULL));
    _activeAttributeName = std::string("");
-   
+   _createDatasetTransparencyShader();
    SetObjectType("CADNode");
    SetObjectNamespace("CAD");
    //This may need to be somewhere else
@@ -90,6 +91,52 @@ CADNode::~CADNode()
      
    }*/
    _attributeList.clear();
+}
+////////////////////////////////////////////////
+void CADNode::_createDatasetTransparencyShader()
+{
+   _datasetTransparencyShader.SetAttributeType("Program");
+
+   VE_Shader::Shader* vertShader = new VE_Shader::Shader();
+   vertShader->SetShaderType("Vertex");
+   std::string vertexSource("	varying vec3 N;\n"
+		                    "varying vec3 I;\n"
+	                       "varying vec4 currentColor;\n"
+
+		                     "void main()\n"
+		                     "{\n"
+			                  "vec4 P=gl_ModelViewMatrix*gl_Vertex;\n"
+			                  "I=P.xyz;\n"
+			                  "N=gl_NormalMatrix*gl_Normal;\n"
+                          "currentColor=gl_Color;\n"
+			                  "gl_Position=ftransform();\n"
+		                     "}\n");
+   vertShader->SetShaderSource(vertexSource);
+   
+   VE_Shader::Shader* fragShader = new VE_Shader::Shader();
+   fragShader->SetShaderType("Fragment");
+   std::string fragmentSource("varying vec3 N;\n"
+		                     " varying vec3 I;\n"
+                           "varying vec4 currentColor;\n"	
+                           "void main()\n"
+                           "{\n"
+    			                   "float opac=dot(normalize(-N),normalize(-I));\n"
+    			                   "opac=abs(opac);\n"
+    			                   "opac=1.0-pow(opac,0.8);\n"
+   			                   "vec4 Cs=currentColor;\n"
+    			                   "gl_FragColor=opac*Cs;\n"
+		                      "}\n"	   
+                            );
+   fragShader->SetShaderSource(fragmentSource);
+
+   VE_Shader::Program glslProgram;
+   glslProgram.SetProgramName("Dataset Transparency");
+   glslProgram.SetVertexShader(vertShader);
+   glslProgram.SetFragmentShader(fragShader);
+
+   _datasetTransparencyShader.SetProgram(glslProgram);
+
+
 }
 ///////////////////////////////////////////
 void CADNode::SetNodeName(std::string name)
@@ -171,6 +218,11 @@ VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
    }
    return _attributeList.at(0);;
 }
+/////////////////////////////////////////////////////////
+VE_CAD::CADAttribute& CADNode::GetTransparencyAttribute()
+{
+   return _datasetTransparencyShader;
+}
 ////////////////////////////////////////////////////////////
 VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
 {
@@ -182,8 +234,9 @@ VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
          return _attributeList.at(i);
       }
    }
-   //how do I do this?
-   //return &0;
+   std::cout<<"Attribute: "<<name<<" NOT FOUND!!"<<std::endl;
+   std::cout<<"Returning default transparency shader!!"<<std::endl;
+   return _datasetTransparencyShader;
 }
 ///////////////////////////////////////////////////
 VE_CAD::CADAttribute& CADNode::GetActiveAttribute()
