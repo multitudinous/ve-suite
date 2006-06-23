@@ -83,6 +83,9 @@ VERTICAL_SPACE = (-1, BORDER)
 HORIZONTAL_SPACE = (BORDER, -1)
 LEFT_MARGIN = HORIZONTAL_SPACE
 NULL_SPACE = (0, 0)
+##Set up the config
+config = wx.Config(CONFIG_FILE)
+config.SetPath(DEFAULT_CONFIG)
 
 class CommandLaunch:
     def __init__(self, opts):
@@ -126,10 +129,9 @@ class CommandLaunch:
                 self.workDir = arg
             elif opt in ('-e', "--dep="):
                 self.depDir = arg
+            elif opt in ('-m', "--master="):
+                self.clusterMaster = arg
 
-        ##Load the configuration file under name
-        config = wx.Config(CONFIG_FILE)
-        config.SetPath("/" + DEFAULT_CONFIG)
         ##Fill in any args left out from the default config settings.
         if self.depDir == None:
             self.depDir = config.Read("DependenciesDir", "None")
@@ -409,9 +411,6 @@ class LauncherWindow(wx.Frame):
         then checks if that directory exists,
         then checks if that directory looks like the Dependencies directory.
         If any check fails, it asks the user for a Dependencies directory."""
-        ##Load DependenciesDir from default config file
-        config = wx.Config(CONFIG_FILE)
-        config.SetPath(DEFAULT_CONFIG)
         dependenciesDir = config.Read("DependenciesDir", ":::")
         legitimateDependenciesDir = False
 ##        print "Dependencies check." ##TESTER
@@ -619,8 +618,6 @@ class LauncherWindow(wx.Frame):
         ##Update the launcher's data
         self.UpdateData()
         ##Save the current configuration under name
-        config = wx.Config(CONFIG_FILE)
-        config.SetPath("/" + name)
         config.Write("Directory", self.txDirectory.GetValue())
         config.WriteInt("JconfCursor", self.jconfCursor)
         config.Write("NameServer", str(self.nameServer))
@@ -642,9 +639,9 @@ class LauncherWindow(wx.Frame):
         Keyword arguments:
         name -- Name of configuration to load
         """
-        ##Load the configuration file under name
-        config = wx.Config(CONFIG_FILE)
-        config.SetPath("/" + name)
+        ##Set config
+        config.SetPath('..')
+        config.SetPath(name)
         ##Set directory, set insertion pt. to end for better initial view.
         self.txDirectory.SetValue(config.Read("Directory", DIRECTORY_DEFAULT))
         ##Sets txDirectory's cursor to end in Linux systems for easier reading.
@@ -652,12 +649,12 @@ class LauncherWindow(wx.Frame):
         if os.name == "posix":
             self.txDirectory.SetInsertionPointEnd()
         ##Set Cluster list.
-        self.clusterDict = ClusterDict(name)
+        self.clusterDict = ClusterDict()
         ##Set ClusterMaster
         self.clusterMaster = config.Read("ClusterMaster", "")
         ##Set choices for Jconf list.
         if config.HasGroup(JCONF_CONFIG):
-            self.jconfList = JconfList(name)
+            self.jconfList = JconfList()
         ##Set default choices if JCONF_CONFIG doesn't exist,
         ##but DependenciesDir does.
         elif config.Read("DependenciesDir", ":::") != ":::":
@@ -1111,26 +1108,29 @@ class JconfList:
         Length / __len__
         GetNames
     """
-    def __init__(self, configName):
+    def __init__(self):
         """Creates a list of .jconf names/paths from the Launcher's Config."""
         self.list = []
-        self.SetConfig(configName)
-        bCont = self.config.GetFirstEntry()
+        config.SetPath(JCONF_CONFIG)
+        bCont = config.GetFirstEntry()
 ##        print self.config.GetPath() ##Tester
         while (bCont[0]):
-            self.list.append([bCont[1], self.config.Read(bCont[1])])
-            bCont = self.config.GetNextEntry(bCont[2])
+            self.list.append([bCont[1], config.Read(bCont[1])])
+            bCont = config.GetNextEntry(bCont[2])
+        config.SetPath('..')
 
-    def SetConfig(self, configName):
-        """Sets self.config to the entry configName."""
-        self.config = wx.Config(CONFIG_FILE)
-        self.config.SetPath(configName)
-        self.config.SetPath(JCONF_CONFIG)
+##    def SetConfig(self):
+##        """Sets self.config to the entry configName."""
+##        self.config = wx.Config(CONFIG_FILE)
+##        self.config.SetPath(configName)
+##        self.config.SetPath(JCONF_CONFIG)
 
     def Add(self, name, path):
         """Adds [name, path] to the list."""
         self.list.append([name, path])
-        self.config.Write(name, path)
+        config.SetPath(JCONF_CONFIG)
+        config.Write(name, path)
+        config.SetPath('..')
         ##NOTE: Adding the same Jconf file twice results in two entries w/
         ##same name; correct that later.
 
@@ -1151,7 +1151,10 @@ class JconfList:
             else:
                 suffix = str(int(suffix) + 1)
             x = curNames.count(newName + str(suffix))
-        self.config.RenameEntry(self.list[pos][0], newName + suffix)
+        
+        config.SetPath(JCONF_CONFIG)
+        config.RenameEntry(self.list[pos][0], newName + suffix)
+        config.SetPath('..')
         self.list[pos][0] = newName + suffix
         ##Warns user if name had suffix added to it.
         if self.list[pos][0] != newName:
@@ -1166,7 +1169,9 @@ class JconfList:
 
     def Delete(self, pos):
         """Deletes pos's entry."""
-        self.config.DeleteEntry(self.list[pos][0])
+        config.SetPath(JCONF_CONFIG)
+        config.DeleteEntry(self.list[pos][0])
+        config.SetPath('..')
         self.list.pop(pos)
 
     def GetPath(self, index):
@@ -1397,26 +1402,27 @@ class ClusterDict:
         Length / __len__
         GetNames
     """
-    def __init__(self, configName):
+    def __init__(self):
         """Creates a dict of cluster names/locations from Launcher's Config."""
         self.cluster = {}
-        self.SetConfig(configName)
-        bCont = self.config.GetFirstGroup()
+        config.SetPath(CLUSTER_CONFIG)
+        bCont = config.GetFirstGroup()
 ##        print self.config.GetPath() ##Tester
         while (bCont[0]):
             name = bCont[1]
-            self.config.SetPath(bCont[1])
-            location = self.config.Read("location", "localhost")
+            config.SetPath(bCont[1])
+            location = config.Read("location", "localhost")
 ##            checked = self.config.ReadBool("checked", False)
-            self.config.SetPath('..')
+            config.SetPath('..')
             self.cluster[location] = True
-            bCont = self.config.GetNextGroup(bCont[2])
+            bCont = config.GetNextGroup(bCont[2])
+        config.SetPath('..')
 
-    def SetConfig(self, configName):
-        """Sets self.config to the entry configName."""
-        self.config = wx.Config(CONFIG_FILE)
-        self.config.SetPath(configName)
-        self.config.SetPath(CLUSTER_CONFIG)
+##    def SetConfig(self, configName):
+##        """Sets self.config to the entry configName."""
+##        self.config = wx.Config(CONFIG_FILE)
+##        self.config.SetPath(configName)
+##        self.config.SetPath(CLUSTER_CONFIG)
 
     def Add(self, location):
         """Adds location: True to the list & config."""
@@ -1426,10 +1432,12 @@ class ClusterDict:
         ##Add to list.
         self.cluster[location] = True
         ##Add to cluster.
-        self.config.SetPath(location)
-        self.config.Write("location", location)
+        config.SetPath(CLUSTER_CONFIG)
+        config.SetPath(location)
+        config.Write("location", location)
 ##        self.config.WriteBool("checked", checked)
-        self.config.SetPath('..')
+        config.SetPath('..')
+        config.SetPath('..')
         ##NOTE: Adding the same cluster file twice results in the previous one
         ##being overwritten. Correct that later.
 
@@ -1466,7 +1474,9 @@ class ClusterDict:
 
     def Delete(self, name):
         """Deletes name's entry."""
-        self.config.DeleteGroup(name)
+        config.SetPath(CLUSTER_CONFIG)
+        config.DeleteGroup(name)
+        config.SetPath('..')
         del self.cluster[name]
 
 ##    def Check(self, name, checked):
@@ -1775,8 +1785,6 @@ class Launch:
             launcherWindow.Close()
         ##Get dependenciesDir for setting environmental variables.
         if dependenciesDir == None:
-            config = wx.Config(CONFIG_FILE)
-            config.SetPath("/" + DEFAULT_CONFIG)
             dependenciesDir = config.Read("DependenciesDir", "ERROR")
         ##Set the environmental variables
         self.EnvSetup(dependenciesDir, workingDir, taoMachine, taoPort)
@@ -2164,6 +2172,7 @@ class Launch:
         os.environ[var] = os.getenv(var, default)
 ##        print var + ": " + os.getenv(var) ##TESTER
 
+
 ##Jconf Override warning.
 if JCONF_STANDARD:
     print "Jconf override ON: Standard Jconf files used; custom choices" + \
@@ -2189,4 +2198,6 @@ else:
     app = wx.PySimpleApp()
     frame = LauncherWindow(None,-1,'VE Suite Launcher')
     app.MainLoop()
+    print "Out of the loop."
+    del config
 
