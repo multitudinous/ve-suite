@@ -104,7 +104,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
             elements.at(i)->setProperty(  "size", 0, xSize );
             desktopData = veCommand->GetDataValuePair( "desktop_height" );
             // 50 for the menu bar height
-            int ySize = desktopData->GetDataValue() - 50; 
+            int ySize = desktopData->GetDataValue() - 100; 
             elements.at(i)->setProperty(  "size", 1, ySize );
             elements.at(i)->setProperty(  "origin", 0, 0 );
             elements.at(i)->setProperty(  "origin", 1, 0 );

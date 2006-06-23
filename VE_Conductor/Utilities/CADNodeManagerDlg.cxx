@@ -647,7 +647,7 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
     if(_activeTreeNode)
     {
       CADNode* parentCADNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetItemParent(_activeTreeNode->GetId())))->GetNode();
-       _geometryTree->Delete(_activeTreeNode->GetId());
+       _activeCADNode = _activeTreeNode->GetNode();
        _commandName = std::string("CAD_DELETE_NODE");
 
        VE_XML::DataValuePair* deleteNode = new VE_XML::DataValuePair();
@@ -669,8 +669,9 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
 
        _sendCommandsToXplorer();
        ClearInstructions();
-
-       dynamic_cast<CADAssembly*>(parentCADNode)->RemoveChild(_activeCADNode->GetID()); 
+       
+       dynamic_cast<CADAssembly*>(parentCADNode)->RemoveChild(_activeCADNode->GetID());
+       _geometryTree->Delete(_activeTreeNode->GetId()); 
     }
 }
 #ifndef STAND_ALONE

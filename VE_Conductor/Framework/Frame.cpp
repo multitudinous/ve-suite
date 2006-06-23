@@ -230,6 +230,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
 //////////////////////////////////
 void AppFrame::_configureDesktop()
 {
+   SetTitle("VE-Suite: www.vesuite.org");
    _treeView = new wxDialog(this, -1, "Available Objects", 
                                  wxDefaultPosition, wxDefaultSize,
                                  (wxDEFAULT_DIALOG_STYLE&~ (wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));//|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
@@ -244,7 +245,7 @@ void AppFrame::_configureDesktop()
    int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);
 
-   SetSize(wxSize(displayWidth,75/*displayHeight*0.0732421875*/));
+   SetSize(wxSize(displayWidth,125/*displayHeight*0.0732421875*/));
    SetPosition(wxPoint(0,0));
    //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
    //wxRegion desktopSize(0,0,displayWidth,displayHeight);
