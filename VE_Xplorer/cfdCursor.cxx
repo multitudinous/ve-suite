@@ -570,7 +570,7 @@ void cfdCursor::SetPlaneSize( float size )
 
    //this controls the size of the plane for the seed points
    //the range on the GUI is from 1 to 100
-	size = combineScale[ 0 ] * size * 0.5 * 0.0025 * 1.0f; 
+	size = combineScale[ 0 ] * size * 0.5 * 1.0f; 
 
    this->last_pSize = this->pSize;
    this->pSize = size;

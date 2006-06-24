@@ -131,19 +131,21 @@ void ChangeCursorEventHandler::Execute( VE_XML::XMLObject* xmlObject )
       planesDVP->GetData( planes );      
    }
    
-   double numPointsPerPlane = 2;
+   unsigned int numPointsPerPlane = 2;
    VE_XML::DataValuePair* pointsDVP = objectCommand->GetDataValuePair( "Number Of Points Per Plane" );
-   if ( planesDVP )
+   if ( pointsDVP )
    {
-      pointsDVP->GetData( numPointsPerPlane );      
+      pointsDVP->GetData( numPointsPerPlane );
+      std::cout << " num points " << numPointsPerPlane << std::endl;
       cfdEnvironmentHandler::instance()->GetCursor()->SetPlaneReso( static_cast< int >( numPointsPerPlane ) );
    }
    
    double planeSize = 1;
    VE_XML::DataValuePair* sizeDVP = objectCommand->GetDataValuePair( "Size" );
-   if ( planesDVP )
+   if ( sizeDVP )
    {
-      pointsDVP->GetData( planeSize );      
+      sizeDVP->GetData( planeSize );      
+      std::cout << " planesize " << planeSize << std::endl;
       cfdEnvironmentHandler::instance()->GetCursor()->SetPlaneSize( static_cast< int >( planeSize ) );
    }
    
