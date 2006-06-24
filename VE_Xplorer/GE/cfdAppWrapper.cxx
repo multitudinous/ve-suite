@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdAppWrapper.h"
+#include "VE_Xplorer/GE/cfdAppWrapper.h"
 
-#include "VE_Xplorer/cfdApp.h"
+#include "VE_Xplorer/GE/cfdApp.h"
 #include "VE_Xplorer/cfdThread.h"
-#include "VE_Xplorer/cfdVjObsWrapper.h"
+#include "VE_Xplorer/GE/cfdVjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>
 #include <vpr/System.h>

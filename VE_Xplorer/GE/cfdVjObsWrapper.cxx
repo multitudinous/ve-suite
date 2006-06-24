@@ -29,13 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdVjObsWrapper.h"
+#include "VE_Xplorer/GE/cfdVjObsWrapper.h"
 #ifdef _TAO
 #include <orbsvcs/CosNamingC.h>
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #endif // _TAO
-#include "VE_Conductor/impl/VjObs_i.h"     //added for corba stuff
+#include "VE_Xplorer/GE/VjObs_i.h"     //added for corba stuff
 #include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdModelHandler.h"

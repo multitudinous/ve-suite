@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/impl/VjObs_i.h"
+#include "VE_Xplorer/GE/VjObs_i.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
 
 #include "VE_Xplorer/cfdTeacher.h"

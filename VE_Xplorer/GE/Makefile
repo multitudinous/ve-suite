@@ -43,14 +43,9 @@ else
    OSG = _pf
 endif
 
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/impl \
-                        $(VE_SUITE_HOME)/VE_Open/skel \
-                        $(VE_SUITE_HOME)/VE_Conductor/Framework \
-                        $(VE_SUITE_HOME)/VE_CE \
-                        $(VE_SUITE_HOME)/VE_Xplorer
+#EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Xplorer
 
-EXTRA_INCLUDES+= \
-               -I$(VE_SUITE_HOME)
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
 ifeq ($(TAO_BUILD), TRUE)
    include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
