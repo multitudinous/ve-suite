@@ -37,7 +37,7 @@
 #include <sstream>
 #include <string>
 #include <fstream>
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 //#include <cstdlib>
 
 #ifdef _PERFORMER
@@ -84,7 +84,7 @@
 #elif _OPENSG
 #endif
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include "VE_Xplorer/SceneGraph/cfdSequence.h"
 
 namespace VE_SceneGraph{

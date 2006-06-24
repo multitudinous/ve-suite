@@ -37,29 +37,29 @@
 #include "VE_Xplorer/GE/cfdApp.h"
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_Xplorer/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 #endif
 #endif
 
-#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/cfdSteadyStateVizHandler.h"
-#include "VE_Xplorer/cfdModelHandler.h"
-#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 
-#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/GE/cfdVjObsWrapper.h"
-#include "VE_Xplorer/cfdDataSet.h"
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/XMLCreator.h"

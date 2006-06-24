@@ -352,9 +352,6 @@
 				RelativePath=".\cfdVjObsWrapper.cxx">
 			</File>
 			<File
-				RelativePath=".\CorbaManager.cxx">
-			</File>
-			<File
 				RelativePath=".\VjObs_i.cxx">
 			</File>
 		</Filter>
@@ -372,9 +369,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdVjObsWrapper.h">
-			</File>
-			<File
-				RelativePath=".\CorbaManager.h">
 			</File>
 			<File
 				RelativePath=".\VjObs_i.h">

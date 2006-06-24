@@ -2,7 +2,6 @@
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
-#include "VE_Xplorer/cfdEnum.h"
 
 #include <wx/button.h>
 #include <wx/checklst.h>
@@ -104,7 +103,7 @@ void SoundsPane::_onUpdate(wxCommandEvent& WXUNUSED(event))
          cIso_value += (int)pow( 2.0f, (float)i );
    }
    std::cout << cIso_value << std::endl;
-   dataValueName = UPDATE_SOUNDS;
+   dataValueName = "UPDATE_SOUNDS";
    SendCommandsToXplorer();
 }
 

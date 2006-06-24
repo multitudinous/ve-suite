@@ -33,14 +33,14 @@
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include "VE_Xplorer/XplorerNetwork/VE_i.h"
-#include "VE_Xplorer/cfdEnum.h"
-#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerNetwork/cfdVEAvailModules.h"
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
-#include "VE_Xplorer/cfdModelHandler.h"
-#include "VE_Xplorer/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/cfdThread.h"
-#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdThread.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
@@ -63,7 +63,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

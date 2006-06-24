@@ -46,6 +46,7 @@ class wxBoxSizer;
 class wxStaticBoxSizer;
 
 #include "VE_Conductor/Network/interface.h"
+#include "VE_Installer/include/VEConfig.h"
 
 enum {
   PLANT_CAP,
@@ -69,7 +70,7 @@ enum {
   RADIO_B
 };
 
-class GlobalParamDialog : public wxDialog
+class VE_GUIPLUGINS_EXPORTS GlobalParamDialog : public wxDialog
 {
  public:
   GlobalParamDialog(wxWindow *parent, wxWindowID id );

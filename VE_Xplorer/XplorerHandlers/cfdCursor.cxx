@@ -67,7 +67,7 @@
 #define BOX_LENGTH 2.0f
 
 #include <gmtl/gmtl.h>
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include <gmtl/Matrix.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Vec.h>

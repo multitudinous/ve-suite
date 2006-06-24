@@ -33,7 +33,7 @@
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
-#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
 

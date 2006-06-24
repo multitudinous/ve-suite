@@ -49,7 +49,7 @@
 #include <vtkSphereSource.h>
 #include <vtkPointData.h>
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

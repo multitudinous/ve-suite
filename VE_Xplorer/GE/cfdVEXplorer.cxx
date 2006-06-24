@@ -42,7 +42,7 @@
 #include <iostream>
 #include <vpr/System.h>
 
-#include "VE_Xplorer/cfdThread.h"
+#include "VE_Xplorer/XplorerHandlers/cfdThread.h"
 using namespace VE_Xplorer;
 
 int main(int argc, char* argv[])

@@ -43,7 +43,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
-#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"

@@ -48,7 +48,7 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/Model/Model.h"
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>

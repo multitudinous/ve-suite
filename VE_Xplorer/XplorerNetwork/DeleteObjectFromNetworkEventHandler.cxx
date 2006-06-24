@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
-#include "VE_Xplorer/cfdModel.h"
-#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
 
@@ -44,7 +44,7 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/Model/Model.h"
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <iostream>
 

@@ -153,6 +153,9 @@
 				RelativePath=".\interface.cpp">
 			</File>
 			<File
+				RelativePath=".\package.cpp">
+			</File>
+			<File
 				RelativePath=".\string_ops.cpp">
 			</File>
 		</Filter>
@@ -164,6 +167,9 @@
 			</File>
 			<File
 				RelativePath=".\interface.h">
+			</File>
+			<File
+				RelativePath=".\package.h">
 			</File>
 			<File
 				RelativePath=".\string_ops.h">

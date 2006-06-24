@@ -32,7 +32,7 @@
 
 #include "VE_Xplorer/XplorerNetwork/cfdVEPluginLoader.h"
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <iostream>
 

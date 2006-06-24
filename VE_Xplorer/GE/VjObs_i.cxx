@@ -32,20 +32,20 @@
 #include "VE_Xplorer/GE/VjObs_i.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
 
-#include "VE_Xplorer/cfdTeacher.h"
-#include "VE_Xplorer/cfdQuatCamHandler.h"
-#include "VE_Xplorer/cfdDataSet.h"
-#include "VE_Xplorer/cfdModelHandler.h"
-#include "VE_Xplorer/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/cfdModelHandler.h"
-#include "VE_Xplorer/cfdSteadyStateVizHandler.h"
-#include "VE_Xplorer/cfdSoundHandler.h"
-#include "VE_Xplorer/cfdModel.h"
-#include "VE_Xplorer/cfdFILE.h"
-#include "VE_Xplorer/cfdEnum.h"
-#include "VE_Xplorer/cfdNavigate.h"
-#include "VE_Xplorer/cfdDisplaySettings.h"
-#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
+#include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 
@@ -54,7 +54,7 @@
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_Xplorer/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 #include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
 using namespace VE_TextureBased;
 #endif

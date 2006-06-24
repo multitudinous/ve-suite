@@ -55,7 +55,7 @@
 #include <vtkCubeAxesActor2D.h>
 #include <vtkTextProperty.h>
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <fstream>
 #include <sstream>

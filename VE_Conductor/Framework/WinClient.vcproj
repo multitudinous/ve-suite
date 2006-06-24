@@ -229,26 +229,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="GlobalParamDialog.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\isosurfaces.cpp">
 			</File>
 			<File
@@ -319,9 +299,6 @@
 				RelativePath=".\streamlines.cpp">
 			</File>
 			<File
-				RelativePath=".\StringParse.cpp">
-			</File>
-			<File
 				RelativePath=".\TBToolBar.cxx">
 			</File>
 			<File
@@ -371,16 +348,7 @@
 				RelativePath=".\DataSetLoaderUI.h">
 			</File>
 			<File
-				RelativePath=".\FinancialDialog.cpp">
-			</File>
-			<File
 				RelativePath="Frame.h">
-			</File>
-			<File
-				RelativePath=".\Geometry.h">
-			</File>
-			<File
-				RelativePath="GlobalParamDialog.h">
 			</File>
 			<File
 				RelativePath=".\isosurfaces.h">
@@ -401,31 +369,13 @@
 				RelativePath=".\paraThread.h">
 			</File>
 			<File
-				RelativePath=".\Plugin_base.h">
-			</File>
-			<File
 				RelativePath="PluginLoader.h">
-			</File>
-			<File
-				RelativePath="PortDialog.h">
-			</File>
-			<File
-				RelativePath=".\resource.h">
-			</File>
-			<File
-				RelativePath=".\resource1.h">
-			</File>
-			<File
-				RelativePath="ResultPanel.h">
 			</File>
 			<File
 				RelativePath=".\SoundsPane.h">
 			</File>
 			<File
 				RelativePath=".\streamlines.h">
-			</File>
-			<File
-				RelativePath="StringParse.h">
 			</File>
 			<File
 				RelativePath=".\TBToolBar.h">

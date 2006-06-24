@@ -32,7 +32,7 @@
 #ifndef CFD_EXECUTIVE_H
 #define CFD_EXECUTIVE_H
 
-#include "VE_Xplorer/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Installer/include/VEConfig.h"
 #include <vpr/Util/Singleton.h>
 

@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/package.h"
+#include "VE_Conductor/Network/package.h"
 #include <xercesc/sax/HandlerBase.hpp>
 #include <sstream>
 #include <iomanip>

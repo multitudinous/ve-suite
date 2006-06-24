@@ -36,11 +36,11 @@
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #endif // _TAO
 #include "VE_Xplorer/GE/VjObs_i.h"     //added for corba stuff
-#include "VE_Xplorer/cfdCommandArray.h"
-#include "VE_Xplorer/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include "VE_Open/XML/Command.h"
 

@@ -32,7 +32,7 @@
 #include "VE_Xplorer/GE/cfdAppWrapper.h"
 
 #include "VE_Xplorer/GE/cfdApp.h"
-#include "VE_Xplorer/cfdThread.h"
+#include "VE_Xplorer/XplorerHandlers/cfdThread.h"
 #include "VE_Xplorer/GE/cfdVjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>

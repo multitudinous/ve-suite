@@ -53,7 +53,7 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdVEBaseClass;
 }
-#include "VE_Xplorer/EventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 namespace VE_EVENTS
 {
 class VE_XPLORER_NETWORK_EXPORTS DeleteObjectFromNetworkEventHandler: public EventHandler
