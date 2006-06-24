@@ -64,8 +64,8 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
 
-#include "VE_Conductor/VE_UI/UI_Tabs.h"
-#include "VE_Conductor/VE_UI/UI_Frame.h"
+//#include "VE_Conductor/VE_UI/UI_Tabs.h"
+//#include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/Framework/CORBAServiceList.h"
 
