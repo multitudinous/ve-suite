@@ -40,7 +40,7 @@
 #include <vtkPointData.h>
 #include <vtkCellType.h>
 #include "VE_Builder/Translator/converter.h"     // for "letUsersAddParamsToField"
-#include "VE_Xplorer/fileIO.h"        // for "getTagAndValue"
+#include "VE_Xplorer/Utilities/fileIO.h"        // for "getTagAndValue"
 
 using namespace VE_Util;
 using std::istringstream;

@@ -43,7 +43,7 @@
 //#include <vtkUnstructuredGridWriter.h>
 //#include <vtkUnstructuredGrid.h>
 #include <vtkDataSet.h>
-#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 using namespace VE_Util;
 

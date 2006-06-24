@@ -32,8 +32,8 @@
 #include <iostream>
 #include <vector> 
 
-#include "VE_Xplorer/fileIO.h"
-#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 #include <vtkDataSet.h>
 #include <vtkFloatArray.h>

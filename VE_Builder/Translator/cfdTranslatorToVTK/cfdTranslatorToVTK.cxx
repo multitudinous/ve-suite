@@ -34,8 +34,8 @@
 #include <sstream>
 #include <iostream>
 #include <vtkDataSet.h>
-#include "VE_Xplorer/readWriteVtkThings.h"
-#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
 using namespace VE_Builder;
 ////////////////////////////////////////
 //Constructor                         //

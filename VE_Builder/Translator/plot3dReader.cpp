@@ -50,9 +50,9 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include "VE_Xplorer/fileIO.h"
-#include "VE_Builder/Translator/cfdGrid2Surface.h"
-#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
+#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 using namespace VE_Util;
 

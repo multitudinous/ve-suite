@@ -37,7 +37,7 @@
 #include <vtkFloatArray.h>  // this code requires VTK4
 #include <vtkPointData.h>
 
-#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Builder/Translator/converter.h"      // for "letUsersAddParamsToField"
 #include "VE_Builder/Translator/gridConversion.h"
 using namespace VE_Util;

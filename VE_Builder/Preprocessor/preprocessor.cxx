@@ -41,8 +41,8 @@
 #include "VE_Builder/Preprocessor/STAR_isosurface.h"
 #include "VE_Builder/Preprocessor/STAR_surface.h"
 #include "VE_Builder/Preprocessor/multiPlaneVtkOutput.h"
-#include "VE_Xplorer/fileIO.h"
-#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 #ifdef _MPI
 #include "mpi.h"

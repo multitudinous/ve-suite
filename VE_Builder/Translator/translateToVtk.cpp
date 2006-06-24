@@ -40,11 +40,11 @@
 #include <vtkTransform.h>
 #include <vtkTransformFilter.h>
 
-#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Builder/Translator/viewCells.h"
-#include "VE_Builder/Translator/cleanVtk.h"
-#include "VE_Xplorer/readWriteVtkThings.h"
-#include "VE_Xplorer/cfdAccessoryFunctions.h"
+#include "VE_Xplorer/Utilities/cleanVtk.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
 
 #include "VE_Builder/Translator/fluentParticles.h"
 #include "VE_Builder/Translator/reiParticles.h"

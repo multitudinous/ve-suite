@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "flowTexture.h"
 
-#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 #include <iostream>
 #include <fstream>
