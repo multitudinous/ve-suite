@@ -37,7 +37,7 @@
 #define MAX_MOMENTUM 20
 #endif
 
-#include "VE_Xplorer/cfdContourBase.h"
+#include "VE_Xplorer/XplorerHandler/cfdContourBase.h"
 
 class vtkPlane;
 class vtkCutter;

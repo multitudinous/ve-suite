@@ -38,7 +38,7 @@ class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkRungeKutta45;
 
-#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/XplorerHandler/cfdObjects.h"
 
 namespace VE_Xplorer
 {

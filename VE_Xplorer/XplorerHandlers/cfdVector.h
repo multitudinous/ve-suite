@@ -37,7 +37,7 @@ class vtkAppendFilter;
 #define MAX_VECTOR 20
 #endif
 
-#include "VE_Xplorer/cfdVectorBase.h"
+#include "VE_Xplorer/XplorerHandler/cfdVectorBase.h"
 
 class vtkPlane;
 class vtkCutter;

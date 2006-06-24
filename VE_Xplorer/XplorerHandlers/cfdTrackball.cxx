@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "VE_Xplorer/cfdTrackball.h"
+#include "VE_Xplorer/XplorerHandler/cfdTrackball.h"
 
 #include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Draw/OGL/GlWindow.h>

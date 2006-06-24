@@ -6,7 +6,7 @@
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
 
-#include "VE_Xplorer/trackball.h"
+#include "VE_Xplorer/XplorerHandler/trackball.h"
 
 #include "VE_Installer/include/VEConfig.h"
 

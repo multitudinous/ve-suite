@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/XplorerHandler/cfdTextureBasedVizHandler.h"
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
@@ -42,13 +42,13 @@
 #include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
-#include "VE_Xplorer/cfdWriteTraverser.h"
-#include "VE_Xplorer/cfdCommandArray.h"
-#include "VE_Xplorer/cfdReadParam.h"
-#include "VE_Xplorer/cfdCursor.h"
-#include "VE_Xplorer/cfdNavigate.h"
-#include "VE_Xplorer/cfdGraphicsObject.h"
-#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandler/cfdWriteTraverser.h"
+#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandler/cfdReadParam.h"
+#include "VE_Xplorer/XplorerHandler/cfdCursor.h"
+#include "VE_Xplorer/XplorerHandler/cfdNavigate.h"
+#include "VE_Xplorer/XplorerHandler/cfdGraphicsObject.h"
+#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 

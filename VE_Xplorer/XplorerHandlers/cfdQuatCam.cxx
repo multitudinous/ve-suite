@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/cfdQuatCam.h"
-#include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/XplorerHandler/cfdQuatCam.h"
+#include "VE_Xplorer/XplorerHandler/cfdNavigate.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #ifdef _PERFORMER
 #include <vrj/Draw/Pf/PfUtil.h>

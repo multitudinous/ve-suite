@@ -32,7 +32,7 @@
 #ifndef CFD_PRESET_CONTOUR_H
 #define CFD_PRESET_CONTOUR_H
 
-#include "VE_Xplorer/cfdContourBase.h"
+#include "VE_Xplorer/XplorerHandler/cfdContourBase.h"
 
 class vtkCutter;
 class vtkPolyData;

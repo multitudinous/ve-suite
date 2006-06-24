@@ -32,7 +32,7 @@
 #ifndef CFD_MOMENTUMS_H
 #define CFD_MOMENTUMS_H
 
-#include "VE_Xplorer/cfdContourBase.h"
+#include "VE_Xplorer/XplorerHandler/cfdContourBase.h"
 
 class vtkWarpVector;
 

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/cfdWriteTraverser.h"
+#include "VE_Xplorer/XplorerHandler/cfdWriteTraverser.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdSequence.h"
 

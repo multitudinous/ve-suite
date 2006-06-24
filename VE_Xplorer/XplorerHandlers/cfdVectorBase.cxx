@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdVectorBase.h"
-#include "VE_Xplorer/cfdDataSet.h"
-#include "VE_Xplorer/cfdEnum.h"
-#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandler/cfdVectorBase.h"
+#include "VE_Xplorer/XplorerHandler/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -40,7 +40,7 @@
 
 #include <cmath>
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
 
 #include <vtkPolyData.h>
 #include <vtkGeometryFilter.h>

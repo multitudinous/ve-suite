@@ -35,23 +35,23 @@
 #include <sys/dir.h>
 #endif
 
-#include "VE_Xplorer/cfdTeacher.h"
+#include "VE_Xplorer/XplorerHandler/cfdTeacher.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/cfdEnum.h"
-#include "VE_Xplorer/cfdCommandArray.h"
-#include "VE_Xplorer/cfdWriteTraverser.h"
-#include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
+#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandler/cfdWriteTraverser.h"
+#include "VE_Xplorer/XplorerHandler/cfdRawNodeWriteTraverser.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/cfdScalarBarActor.h"
-#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandler/cfdScalarBarActor.h"
+#include "VE_Xplorer/XplorerHandler/cfdModelHandler.h"
 
 #include <iostream>
 #include <string>
 #include <sstream>
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/gmtl.h>

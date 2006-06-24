@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/ClearVisObjectsEventHandler.h"
-#include "VE_Xplorer/cfdSteadyStateVizHandler.h"
-#include "VE_Xplorer/cfdModelHandler.h"
-#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/XplorerHandler/ClearVisObjectsEventHandler.h"
+#include "VE_Xplorer/XplorerHandler/cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/XplorerHandler/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandler/cfdModel.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"

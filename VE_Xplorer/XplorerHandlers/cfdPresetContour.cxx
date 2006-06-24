@@ -29,15 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdPresetContour.h"
+#include "VE_Xplorer/XplorerHandler/cfdPresetContour.h"
 
-#include "VE_Xplorer/cfdCuttingPlane.h"
-#include "VE_Xplorer/cfdDataSet.h"
-#include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/XplorerHandler/cfdCuttingPlane.h"
+#include "VE_Xplorer/XplorerHandler/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandler/cfdPlanes.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
-#include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
+#include "VE_Xplorer/XplorerHandler/cfdRawNodeWriteTraverser.h"
 
 
 #include <vtkLookupTable.h>
