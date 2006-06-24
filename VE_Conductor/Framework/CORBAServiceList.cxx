@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: CORBAServiceList.cxx,v $
- * Date modified: $Date: date $
- * Version:       $Rev: 999999 $
+ * File:          $RCSfile: CORBAServiceList.cxx CORBAServiceList.cxxCORBAServiceList.cxx,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

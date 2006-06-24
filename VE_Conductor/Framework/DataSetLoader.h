@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: DataSetLoader.h,v $
- * Date modified: $Date: date $
- * Version:       $Rev: 999999 $
+ * File:          $RCSfile: DataSetLoader.h DataSetLoader.hDataSetLoader.h,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

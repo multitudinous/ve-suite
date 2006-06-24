@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: Command.h,v $
- * Date modified: $Date: 2006-01-21 10:25:02 -0600 (Sat, 21 Jan 2006) $
- * Version:       $Rev: 3544 $
+ * File:          $RCSfile: ViewLocPane.h ViewLocPane.hCommand.h,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

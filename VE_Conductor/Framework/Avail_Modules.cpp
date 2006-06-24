@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: Avail_Modules.cpp,v $
+ * File:          $RCSfile: Avail_Modules.cpp Avail_Modules.cppAvail_Modules.cpp,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------

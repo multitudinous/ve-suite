@@ -60,6 +60,9 @@ int main( int argc, char *argv[] )
    {
       vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
       converter->SetInput( dataset );
+      //converter->DebugOn();
+      //converter->Print( std::cout );
+      converter->Update();
       vtkDataSet * pointBasedDataset = converter->GetOutput();
 
       // "1" means write binary

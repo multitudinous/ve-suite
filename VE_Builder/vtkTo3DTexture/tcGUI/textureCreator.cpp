@@ -639,28 +639,31 @@ void VTKDataToTexture::_createValidityTexture()
          _validPt.at( l ).first = false;
       }
 
-      if((unsigned int)i > (unsigned int)nX){
-           i = 0;
-           j ++;
-           if((unsigned int)j > (unsigned int)nY){
-               j = 0;
-               k ++;
-               if((unsigned int)k > (unsigned int)nZ){
-                  k = 0;
-               }
-           }
+      if ( (unsigned int)i > (unsigned int)nX )
+      {
+         i = 0;
+         j++;
+         if ( (unsigned int)j > (unsigned int)nY )
+         {
+            j = 0;
+            k++;
+            if ( (unsigned int)k > (unsigned int)nZ )
+            {
+               k = 0;
+            }
+         }
       }
 
-      /*if ( l%100000 == 0 )
+      if ( l%100000 == 0 )
       {
-         secondTime  = (long)time( NULL );;
+         long secondTime  = (long)time( NULL );;
          //std::cout.seekp(ios::beg);
          std::cout << "Number of pixels processed = " << l 
                      << " in "<< secondTime - lasttime 
                      << " seconds." << std::endl;
          //std::cout.seekp(ios::beg); 
          lasttime = secondTime;
-      }*/
+      }
    }
    cell->Delete();
    _madeValidityStructure = true;

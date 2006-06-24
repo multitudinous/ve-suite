@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: PluginLoader.cpp,v $
+ * File:          $RCSfile: PluginLoader.cpp PluginLoader.cppPluginLoader.cpp,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------

@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: ModelController.cxx,v $
- * Date modified: $Date: 2006-04-15 11:27:11 -0500 (Sat, 15 Apr 2006) $
- * Version:       $Rev: 4102 $
+ * File:          $RCSfile: ModelController.cxx ModelController.cxxModelController.cxx,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
