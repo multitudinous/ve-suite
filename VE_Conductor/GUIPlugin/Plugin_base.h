@@ -36,7 +36,7 @@
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/Model/Port.h"
 
-#include "VE_Conductor/Framework/interface.h"
+#include "VE_Conductor/Network/interface.h"
 #include <vector>
 #include <map>
 

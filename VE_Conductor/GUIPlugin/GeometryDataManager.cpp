@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/GeometryDataManager.h"
-#include "VE_Conductor/Framework/GeometryDataBuffer.h"
+#include "VE_Conductor/Network/GeometryDataBuffer.h"
 
 GeometryDataManager* GeometryDataManager::myinstance =0;
 

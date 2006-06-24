@@ -37,7 +37,7 @@
 #include <map>
 
 #include "VE_Installer/include/VEConfig.h"
-#include "VE_Conductor/Framework/GeometryDataBuffer.h"
+#include "VE_Conductor/Network/GeometryDataBuffer.h"
 
 
 class VE_CONDUCTOR_EXPORTS Interface //: public packable

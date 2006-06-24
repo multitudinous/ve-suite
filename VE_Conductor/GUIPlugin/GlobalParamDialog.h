@@ -45,7 +45,7 @@ class wxStaticText;
 class wxBoxSizer;
 class wxStaticBoxSizer;
 
-#include "VE_Conductor/Framework/interface.h"
+#include "VE_Conductor/Network/interface.h"
 
 enum {
   PLANT_CAP,

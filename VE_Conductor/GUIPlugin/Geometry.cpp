@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/Geometry.h"
 #include "VE_Xplorer/cfdEnum.h"
-#include "VE_Conductor/Framework/interface.h"
+#include "VE_Conductor/Network/interface.h"
 
 #include <iostream>
 #include <string>

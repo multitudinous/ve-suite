@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/GeometryDataBuffer.h"
+#include "VE_Conductor/Network/GeometryDataBuffer.h"
 #include <iostream> 
 #include <string>
 #include <sstream>

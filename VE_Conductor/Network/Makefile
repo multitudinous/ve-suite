@@ -33,12 +33,12 @@ CFDUNAME = $(shell uname)
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   interface.cpp \
-   package.cpp \
-   string_ops.cpp \
+   interface.cpp\
+   package.cpp\
+   string_ops.cpp\
    GeometryDataBuffer.cpp
 			
-EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
+#EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
 #EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
 
@@ -61,7 +61,7 @@ DEPDIR= $(CFDHOSTTYPE)_VEConductorLib
 #BUILD_TYPE=	dbg
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework
+#EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework
 srcdir= .
 DSO_PLUGIN_DEPS+= -L${VE_SUITE_HOME}/lib/${CFDHOSTTYPE} -lVE_XMLLib
 

@@ -32,7 +32,7 @@
 #ifndef PACKAGE_H
 #define PACKAGE_H
 
-#include "VE_Conductor/Framework/interface.h"
+#include "VE_Conductor/Network/interface.h"
 #include <vector>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>

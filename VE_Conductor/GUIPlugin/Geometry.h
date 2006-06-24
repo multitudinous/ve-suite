@@ -34,7 +34,7 @@
 
 #include <map>
 #include <vector>
-#include "VE_Conductor/Framework/GeometryDataBuffer.h"
+#include "VE_Conductor/Network/GeometryDataBuffer.h"
 
 class Interface;
 
