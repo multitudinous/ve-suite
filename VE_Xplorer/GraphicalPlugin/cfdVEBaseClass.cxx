@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/cfdVEBaseClass.h"
+#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
 
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
