@@ -927,6 +927,11 @@ void cfdModel::MakeCADRootTransparent()
 //////////////////////////////////
 void cfdModel::MakeCADRootOpaque()
 {
+   if ( _assemblyList.empty() )
+   {  
+      return;
+   }
+
    try
    {
       (*_assemblyList.begin()).second->GetRawNode()->getStateSet()->clear();
