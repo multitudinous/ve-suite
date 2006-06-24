@@ -150,13 +150,13 @@
 				RelativePath=".\cfdAccessoryFunctions.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdGrid2Surface.cpp">
+				RelativePath=".\cfdGrid2Surface.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdVTKFileHandler.cxx">
 			</File>
 			<File
-				RelativePath=".\cleanVtk.cpp">
+				RelativePath=".\cleanVtk.cxx">
 			</File>
 			<File
 				RelativePath=".\fileIO.cxx">
