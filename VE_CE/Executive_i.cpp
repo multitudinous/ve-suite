@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/string_ops.h"
+#include "VE_Conductor/Network/string_ops.h"
 #include "VE_CE/Executive_i.h"
 
 #include "VE_Open/XML/Model/ModelCreator.h"
