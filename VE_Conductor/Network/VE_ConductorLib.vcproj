@@ -147,41 +147,26 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
-				RelativePath=".\Framework\GeometryDataBuffer.cpp">
+				RelativePath=".\GeometryDataBuffer.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\interface.cpp">
+				RelativePath=".\interface.cpp">
 			</File>
 			<File
-				RelativePath=".\Framework\package.cpp">
-				<FileConfiguration
-					Name="dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Framework\string_ops.cpp">
-				<FileConfiguration
-					Name="dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
+				RelativePath=".\string_ops.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
-				RelativePath=".\Framework\GeometryDataBuffer.h">
+				RelativePath=".\GeometryDataBuffer.h">
 			</File>
 			<File
-				RelativePath=".\Framework\interface.h">
+				RelativePath=".\interface.h">
 			</File>
 			<File
-				RelativePath=".\Framework\package.h">
+				RelativePath=".\string_ops.h">
 			</File>
 		</Filter>
 		<Filter
