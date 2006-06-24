@@ -33,7 +33,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "VE_Conductor/Framework/ListTable.h"
+#include "VE_Conductor/GUIPlugin/ListTable.h"
 
 #include <wx/window.h>
 

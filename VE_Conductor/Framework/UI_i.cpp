@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "Frame.h"
-#include "UI_i.h"
-#include "package.h"
-#include "Network.h"
+#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/UI_i.h"
+#include "VE_Conductor/Framework/package.h"
+#include "VE_Conductor/Framework/Network.h"
 
   
 // Implementation skeleton constructor

@@ -35,16 +35,16 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 
-#include "VE_Conductor/Framework/ResultPanel.h"
+#include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/package.h"
 #include "VE_Conductor/Framework/OrbThread.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
-#include "VE_Conductor/Framework/FinancialDialog.h"
-#include "VE_Conductor/Framework/TextResultDialog.h"
-#include "VE_Conductor/Framework/TexTable.h"
-#include "VE_Conductor/Framework/GlobalParamDialog.h"
-#include "VE_Conductor/Framework/SummaryResultDialog.h"
+#include "VE_Conductor/GUIPlugin/FinancialDialog.h"
+#include "VE_Conductor/GUIPlugin/TextResultDialog.h"
+#include "VE_Conductor/GUIPlugin/TexTable.h"
+#include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
+#include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
 //#include "VE_Conductor/Framework/StreamersPane.h"

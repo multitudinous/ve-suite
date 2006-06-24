@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/Network.h"
-#include "VE_Conductor/Framework/PortDialog.h"
+#include "VE_Conductor/GUIPlugin/PortDialog.h"
 #include "VE_Conductor/Framework/package.h"
 #include "VE_Conductor/Framework/paraThread.h"
-#include "VE_Conductor/Framework/Geometry.h"
-#include "VE_Conductor/Framework/UIDialog.h"
-#include "VE_Conductor/Framework/GlobalParamDialog.h"
+#include "VE_Conductor/GUIPlugin/Geometry.h"
+#include "VE_Conductor/GUIPlugin/UIDialog.h"
+#include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/CORBAServiceList.h"

@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/TextResultDialog.h"
-#include "VE_Conductor/Framework/TexTable.h"
+#include "VE_Conductor/GUIPlugin/TextResultDialog.h"
+#include "VE_Conductor/GUIPlugin/TexTable.h"
 
 #include <iostream>
 

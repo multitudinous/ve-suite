@@ -1,6 +1,6 @@
 #ifndef Hummer_UI_H
 #define Hummer_UI_H
-#include "VE_Conductor/Framework/UIDialog.h"
+#include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include <vector>
 #include <string>
 

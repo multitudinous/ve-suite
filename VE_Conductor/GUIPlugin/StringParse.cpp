@@ -23,41 +23,27 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: PortDialog.h,v $
+ * File:          $RCSfile: StringParse.cpp,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PORTDIALOG_H
-#define PORTDIALOG_H
+#include "VE_Conductor/GUIPlugin/StringParse.h"
 
-#include <wx/dialog.h>
-
-class wxTextCtrl;
-class wxButton;
-class wxBoxSizer;
-class wxStaticText;
-
-#include <vector>
-#include "VE_Conductor/Framework/ListTable.h"
-
-class PortDialog : public wxDialog
+int get_tokens(char* s, std::vector<wxString> &toks, const char* delim)
 {
- public:
-  PortDialog(const wxString& title);
-  virtual ~PortDialog();
-
-  void Set3Cols(const std::vector<wxString>& col1, const std::vector<wxString>& col2, const std::vector<wxString>& col3);
-  ListTable *syngas;
-  wxTextCtrl *temp;
-  wxTextCtrl *pres;
-  wxTextCtrl *flrt;
-  wxButton *ok;
-  void SetVal(const wxString &var, const wxString &val);
-  DECLARE_EVENT_TABLE()
-};
-
-#endif
-
-
+  char* token;
+  int i=0;
+  token = strtok(s, delim);
+  
+  toks.clear();
+  while( token )
+    {
+      i++;
+      toks.push_back(wxString(token));
+      token = strtok(NULL, delim);
+    }
+  
+  return i; 
+}

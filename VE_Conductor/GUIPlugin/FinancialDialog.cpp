@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/FinancialDialog.h"
+#include "VE_Conductor/GUIPlugin/FinancialDialog.h"
 #include "VE_Conductor/Framework/interface.h"
 
 #include <wx/button.h>

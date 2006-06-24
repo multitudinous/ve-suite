@@ -23,41 +23,41 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: GeometryDataManager.cpp,v $
+ * File:          $RCSfile: PortDialog.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/GeometryDataManager.h"
-#include "VE_Conductor/Framework/GeometryDataBuffer.h"
+#ifndef PORTDIALOG_H
+#define PORTDIALOG_H
 
-GeometryDataManager* GeometryDataManager::myinstance =0;
+#include <wx/dialog.h>
 
-GeometryDataManager& GeometryDataManager::getInstance()
+class wxTextCtrl;
+class wxButton;
+class wxBoxSizer;
+class wxStaticText;
+
+#include <vector>
+#include "VE_Conductor/GUIPlugin/ListTable.h"
+
+class PortDialog : public wxDialog
 {
-   if(myinstance == 0)
-   {
-      myinstance = new GeometryDataManager();
+ public:
+  PortDialog(const wxString& title);
+  virtual ~PortDialog();
 
-   }
-   return *myinstance;
+  void Set3Cols(const std::vector<wxString>& col1, const std::vector<wxString>& col2, const std::vector<wxString>& col3);
+  ListTable *syngas;
+  wxTextCtrl *temp;
+  wxTextCtrl *pres;
+  wxTextCtrl *flrt;
+  wxButton *ok;
+  void SetVal(const wxString &var, const wxString &val);
+  DECLARE_EVENT_TABLE()
+};
 
-}
+#endif
 
-GeometryDataManager::~GeometryDataManager()
-{
-   delete _GeometryDataBuffer;
-   _GeometryDataBuffer =0;
-}
 
-GeometryDataBuffer* GeometryDataManager::GetGeometryDataBuffer()
-{
-   if(!_GeometryDataBuffer)
-   {
-      _GeometryDataBuffer = new GeometryDataBuffer;
-
-   }
-
-   return _GeometryDataBuffer;
-}

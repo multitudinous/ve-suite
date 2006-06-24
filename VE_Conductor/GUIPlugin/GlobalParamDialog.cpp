@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "GlobalParamDialog.h"
-#include "interface.h"
+#include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
+#include "VE_Conductor/Framework/interface.h"
 
 #include <wx/textctrl.h>
 #include <wx/combobox.h>

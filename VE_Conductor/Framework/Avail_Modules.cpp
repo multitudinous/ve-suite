@@ -31,9 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
-#include "VE_Conductor/Framework/StringParse.h"
+#include "VE_Conductor/GUIPlugin/StringParse.h"
 #include "VE_Conductor/Framework/PluginLoader.h"
-#include "VE_Conductor/Framework/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/Plugin_base.h"
 
 #include "VE_Conductor/xpm/icon1.xpm"
 #include "VE_Conductor/xpm/icon2.xpm"

@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "Network.h"
-#include "paraThread.h"
+#include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/paraThread.h"
 
 
 paraThread::paraThread(Network* network) : wxThread(wxTHREAD_JOINABLE)

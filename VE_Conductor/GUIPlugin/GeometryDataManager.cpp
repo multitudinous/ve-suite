@@ -23,26 +23,41 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: UIDialog.cpp,v $
+ * File:          $RCSfile: GeometryDataManager.cpp,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/UIDialog.h"
+#include "VE_Conductor/GUIPlugin/GeometryDataManager.h"
+#include "VE_Conductor/Framework/GeometryDataBuffer.h"
 
-UIDialog::UIDialog(wxWindow* parent, int id, wxString title)
-  :wxDialog( 
-               parent, id, title, 
-               wxDefaultPosition,
-               wxDefaultSize,
-               (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
-            )
+GeometryDataManager* GeometryDataManager::myinstance =0;
+
+GeometryDataManager& GeometryDataManager::getInstance()
 {
-   ;
+   if(myinstance == 0)
+   {
+      myinstance = new GeometryDataManager();
+
+   }
+   return *myinstance;
+
 }
 
-void UIDialog::Lock( bool l )
+GeometryDataManager::~GeometryDataManager()
 {
-  lock = l;
+   delete _GeometryDataBuffer;
+   _GeometryDataBuffer =0;
+}
+
+GeometryDataBuffer* GeometryDataManager::GetGeometryDataBuffer()
+{
+   if(!_GeometryDataBuffer)
+   {
+      _GeometryDataBuffer = new GeometryDataBuffer;
+
+   }
+
+   return _GeometryDataBuffer;
 }

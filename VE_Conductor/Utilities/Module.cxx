@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/Module.h"
 
-#include "VE_Conductor/Framework/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/Plugin_base.h"
 
 #include <wx/window.h>
 

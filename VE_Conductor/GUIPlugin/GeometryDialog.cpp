@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "GeometryDialog.h"
+#include "VE_Conductor/GUIPlugin/GeometryDialog.h"
 
 #include <wx/window.h>
 #include <wx/radiobox.h>

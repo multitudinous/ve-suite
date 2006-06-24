@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/TexTable.h"
+#include "VE_Conductor/GUIPlugin/TexTable.h"
 #include <iostream>
 
 #include <wx/window.h>

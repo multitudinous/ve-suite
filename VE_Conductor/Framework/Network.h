@@ -34,7 +34,7 @@
 #include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
 
-#include "VE_Conductor/Framework/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Conductor/Utilities/Link.h"
 #include "VE_Conductor/Utilities/Tag.h"
 #include "VE_Conductor/Utilities/Polygon.h"

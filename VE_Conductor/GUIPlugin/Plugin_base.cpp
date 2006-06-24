@@ -29,15 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include <iostream>
 #include "VE_Conductor/Framework/string_ops.h"
-#include "VE_Conductor/Framework/SummaryResultDialog.h"
-#include "VE_Conductor/Framework/UIDialog.h"
-#include "VE_Conductor/Framework/TextResultDialog.h"
-#include "VE_Conductor/Framework/TexTable.h"
+#include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
+#include "VE_Conductor/GUIPlugin/UIDialog.h"
+#include "VE_Conductor/GUIPlugin/TextResultDialog.h"
+#include "VE_Conductor/GUIPlugin/TexTable.h"
 // EPRI TAG
-#include "VE_Conductor/Framework/FinancialDialog.h"
+#include "VE_Conductor/GUIPlugin/FinancialDialog.h"
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/DataValuePair.h"

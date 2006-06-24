@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/ResultPanel.h"
+#include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>

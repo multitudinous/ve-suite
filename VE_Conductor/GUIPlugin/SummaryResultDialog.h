@@ -23,27 +23,42 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: StringParse.cpp,v $
+ * File:          $RCSfile: SummaryResultDialog.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/StringParse.h"
+#ifndef SUMMARYRESULTDIALOG_H
+#define SUMMARYRESULTDIALOG_H
+#include "VE_Conductor/GUIPlugin/UIDialog.h"
+#include "VE_Conductor/GUIPlugin/TexTable.h"
+#include "VE_Installer/include/VEConfig.h"
 
-int get_tokens(char* s, std::vector<wxString> &toks, const char* delim)
+class wxButton;
+class wxNotebook;
+class wxBoxSizer;
+class wxStaticText;
+
+#include <vector>
+
+class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog
 {
-  char* token;
-  int i=0;
-  token = strtok(s, delim);
-  
-  toks.clear();
-  while( token )
-    {
-      i++;
-      toks.push_back(wxString(token));
-      token = strtok(NULL, delim);
-    }
-  
-  return i; 
-}
+public:
+   SummaryResultDialog(wxWindow*parent, const wxString& title=wxT("Result Dialog"), wxSize tabsize= wxSize(477, 300));
+   virtual ~SummaryResultDialog();
+
+   void TabTitle( const wxString& title );
+   void NewTab( const wxString& title = wxT("Results") );
+   void Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2);
+   TexTable* syngas;
+
+private:
+   wxNotebook* tabs;
+   wxButton* ok;
+   wxSize tsize;
+   int first_tab;
+
+   DECLARE_EVENT_TABLE()
+};
+#endif

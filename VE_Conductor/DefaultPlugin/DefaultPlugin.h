@@ -1,7 +1,7 @@
 #ifndef DefaultPlugin_H
 #define DefaultPlugin_H
 
-#include "VE_Conductor/Framework/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include <wx/image.h>
 
 class DefaultPlugin : public REI_Plugin

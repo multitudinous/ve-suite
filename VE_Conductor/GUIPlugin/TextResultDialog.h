@@ -32,7 +32,7 @@
 #ifndef TEXTRESULTDIALOG_H
 #define TEXTRESULTDIALOG_H
 
-#include "VE_Conductor/Framework/UIDialog.h"
+#include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include <vector>
 
 class wxButton;

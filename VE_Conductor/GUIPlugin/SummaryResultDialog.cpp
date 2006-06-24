@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/SummaryResultDialog.h"
+#include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
 #include <iostream>
 
 #include <wx/stattext.h>
