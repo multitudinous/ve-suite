@@ -69,7 +69,7 @@ DEPDIR= $(CFDHOSTTYPE)_VE_UtilLib
 
 #BUILD_TYPE=	dbg
 
-srcdir= ..
+srcdir= .
 
 ifeq (${CFDUNAME},Darwin)
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.mac.lib.mk
