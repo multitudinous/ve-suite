@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/UI_i.h"
-#include "VE_Conductor/Framework/package.h"
+#include "VE_Conductor/Network/package.h"
 #include "VE_Conductor/Framework/Network.h"
 
   

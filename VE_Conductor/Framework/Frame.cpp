@@ -37,7 +37,7 @@
 
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/Framework/package.h"
+#include "VE_Conductor/Network/package.h"
 #include "VE_Conductor/Framework/OrbThread.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"
