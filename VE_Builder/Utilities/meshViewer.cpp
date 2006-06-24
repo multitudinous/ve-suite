@@ -52,7 +52,7 @@
 #include <vtkScalarsToColors.h>
 #include <vtkLookupTable.h>
 
-#include "VE_Xplorer/cfdImage.h"  //BMP support
+#include "VE_Xplorer/XplorerHandlers/cfdImage.h"  //BMP support
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Builder/Translator/viewCells.h"
 #include "VE_Builder/Utilities/setScalarAndVector.h"
