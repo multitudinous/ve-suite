@@ -905,7 +905,11 @@ void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
 void cfdModel::MakeCADRootTransparent()
 {
    //check for the attribute
-     
+   if ( _assemblyList.empty() )
+   {  
+      return;
+   }
+   
    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
    attribute->CreateTransparencyStateSet();
 
