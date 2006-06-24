@@ -217,14 +217,14 @@
 			Name="src"
 			Filter=".cpp">
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVEBaseClass.cxx">
+				RelativePath=".\cfdVEBaseClass.cxx">
 			</File>
 		</Filter>
 		<Filter
 			Name="headers"
 			Filter=".h">
 			<File
-				RelativePath="..\VE_Xplorer\cfdVEBaseClass.h">
+				RelativePath=".\cfdVEBaseClass.h">
 			</File>
 		</Filter>
 	</Files>

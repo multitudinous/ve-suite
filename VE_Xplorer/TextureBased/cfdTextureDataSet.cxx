@@ -35,7 +35,7 @@
 #include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 
-#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
 
 #include <iostream>
 #include <fstream>

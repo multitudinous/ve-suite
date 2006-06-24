@@ -340,16 +340,16 @@
 			Name="src"
 			Filter=".cpp">
 			<File
-				RelativePath=".\cfdApp.cxx">
+				RelativePath=".\Ge\cfdApp.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdAppWrapper.cxx">
+				RelativePath=".\Ge\cfdAppWrapper.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdVEXplorer.cxx">
+				RelativePath=".\Ge\cfdVEXplorer.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdVjObsWrapper.cxx">
+				RelativePath=".\Ge\cfdVjObsWrapper.cxx">
 			</File>
 			<File
 				RelativePath=".\Ge\VjObs_i.cxx">
@@ -359,13 +359,16 @@
 			Name="headers"
 			Filter=".h">
 			<File
-				RelativePath=".\cfdApp.h">
+				RelativePath=".\Ge\cfdApp.h">
 			</File>
 			<File
-				RelativePath=".\cfdAppWrapper.h">
+				RelativePath=".\Ge\cfdAppWrapper.h">
 			</File>
 			<File
-				RelativePath=".\cfdVjObsWrapper.h">
+				RelativePath=".\Ge\cfdStateInfo.h">
+			</File>
+			<File
+				RelativePath=".\Ge\cfdVjObsWrapper.h">
 			</File>
 			<File
 				RelativePath=".\Ge\VjObs_i.h">

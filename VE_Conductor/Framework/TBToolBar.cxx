@@ -48,7 +48,6 @@
 
 #include "VE_Conductor/Utilities/ROIDialog.h"
 
-#include "VE_Xplorer/fileIO.h"
 
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"

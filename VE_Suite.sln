@@ -267,15 +267,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataLoader", "VE_Builder\Tr
 		{C3E4EC67-9496-4391-A1B2-8179B3954E9D} = {C3E4EC67-9496-4391-A1B2-8179B3954E9D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicalPluginLib", "VE_Xplorer\GraphicalPlugin\GraphicalPluginLib.vcproj", "{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E8FE7A1C-3985-407A-9648-FE2C2D025E00} = {E8FE7A1C-3985-407A-9648-FE2C2D025E00}
-		{E8FE9A1C-3985-407A-9648-FF2C2D025EA1} = {E8FE9A1C-3985-407A-9648-FF2C2D025EA1}
-		{398FF31C-58CE-4A0A-A288-BC3917FC920A} = {398FF31C-58CE-4A0A-A288-BC3917FC920A}
-		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
-		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F} = {6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XplorerNetworkLib", "VE_Xplorer\XplorerNetwork\XplorerNetworkLib.vcproj", "{B5039180-C3C2-4D37-8B6C-004E58627DF8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E8FE7A1C-3985-407A-9648-FE2C2D025E00} = {E8FE7A1C-3985-407A-9648-FE2C2D025E00}
@@ -303,6 +294,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_SceneGraphUtils", "VE_Xp
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_UtilLib", "VE_Xplorer\Utilities\VE_UtilLib.vcproj", "{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicalPluginLib", "VE_Xplorer\GraphicalPlugin\GraphicalPluginLib.vcproj", "{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -852,21 +847,6 @@ Global
 		{00000E8F-0000-0000-0000-000000000000}.tao_osg_vep_cluster_dbg.ActiveCfg = dbg|Win32
 		{00000E8F-0000-0000-0000-000000000000}.tao_osg_vep_dbg.ActiveCfg = dbg|Win32
 		{00000E8F-0000-0000-0000-000000000000}.tao_pf_dbg.ActiveCfg = dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Builder_Tools.ActiveCfg = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.dbg.ActiveCfg = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.dbg.Build.0 = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.pf_dbg.ActiveCfg = tao_pf_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.pf_dbg.Build.0 = tao_pf_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release.ActiveCfg = Release|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release.Build.0 = Release|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_dbg.ActiveCfg = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_dbg.Build.0 = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_cluster_dbg.ActiveCfg = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_cluster_dbg.Build.0 = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_dbg.ActiveCfg = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_dbg.Build.0 = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_pf_dbg.ActiveCfg = tao_pf_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_pf_dbg.Build.0 = tao_pf_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.Builder_Tools.ActiveCfg = osg_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.Builder_Tools.Build.0 = osg_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.dbg.ActiveCfg = osg_vep_dbg|Win32
@@ -944,6 +924,22 @@ Global
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}.tao_osg_vep_dbg.Build.0 = dbg|Win32
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}.tao_pf_dbg.ActiveCfg = dbg|Win32
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}.tao_pf_dbg.Build.0 = dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Builder_Tools.ActiveCfg = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Builder_Tools.Build.0 = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.dbg.ActiveCfg = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.dbg.Build.0 = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.pf_dbg.ActiveCfg = tao_pf_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.pf_dbg.Build.0 = tao_pf_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release.ActiveCfg = Release|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release.Build.0 = Release|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_dbg.ActiveCfg = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_dbg.Build.0 = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_cluster_dbg.ActiveCfg = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_cluster_dbg.Build.0 = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_dbg.ActiveCfg = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_dbg.Build.0 = tao_osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_pf_dbg.ActiveCfg = tao_pf_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_pf_dbg.Build.0 = tao_pf_dbg|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

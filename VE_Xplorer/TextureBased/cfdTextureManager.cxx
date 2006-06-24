@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef VE_PATENTED
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
-#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 #include <fstream>
 //#include <vtkZLibDataCompressor.h>
