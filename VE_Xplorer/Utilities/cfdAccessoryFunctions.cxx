@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/cfdAccessoryFunctions.h"
+#include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
 #include <vtkGenericCell.h>
 #include <vtkDataSet.h>
 #include <vtkDataArray.h>

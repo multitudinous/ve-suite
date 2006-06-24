@@ -150,13 +150,13 @@
 				RelativePath=".\cfdAccessoryFunctions.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_Builder\Translator\cfdGrid2Surface.cpp">
+				RelativePath=".\cfdGrid2Surface.cpp">
 			</File>
 			<File
 				RelativePath=".\cfdVTKFileHandler.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_Builder\Translator\cleanVtk.cpp">
+				RelativePath=".\cleanVtk.cpp">
 			</File>
 			<File
 				RelativePath=".\fileIO.cxx">
@@ -168,6 +168,24 @@
 		<Filter
 			Name="headers"
 			Filter=".h">
+			<File
+				RelativePath=".\cfdAccessoryFunctions.h">
+			</File>
+			<File
+				RelativePath=".\cfdGrid2Surface.h">
+			</File>
+			<File
+				RelativePath=".\cfdVTKFileHandler.h">
+			</File>
+			<File
+				RelativePath=".\cleanVtk.h">
+			</File>
+			<File
+				RelativePath=".\fileIO.h">
+			</File>
+			<File
+				RelativePath=".\readWriteVtkThings.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
