@@ -46,7 +46,7 @@
 #include <cluster/ClusterNode.h>
 #include <plugins/ApplicationDataManager/UserData.h>
 #include <vpr/IO/SerializableObject.h>
-#include "VE_Conductor/impl/cfdStateInfo.h"
+#include "VE_Xplorer/GE/cfdStateInfo.h"
 #endif
 
 namespace VE_Xplorer
