@@ -35,23 +35,23 @@
 #include <sys/dir.h>
 #endif
 
-#include "VE_Xplorer/XplorerHandler/cfdTeacher.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandler/cfdWriteTraverser.h"
-#include "VE_Xplorer/XplorerHandler/cfdRawNodeWriteTraverser.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdWriteTraverser.h"
+#include "VE_Xplorer/XplorerHandlers/cfdRawNodeWriteTraverser.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/XplorerHandler/cfdScalarBarActor.h"
-#include "VE_Xplorer/XplorerHandler/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdScalarBarActor.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
 #include <iostream>
 #include <string>
 #include <sstream>
 
-#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/gmtl.h>

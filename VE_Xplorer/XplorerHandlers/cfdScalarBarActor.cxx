@@ -29,15 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandler/cfdScalarBarActor.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandler/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdScalarBarActor.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/XplorerHandler/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandler/cfdReadParam.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
 
 #include <vtkFloatArray.h>
 #include <vtkLookupTable.h>

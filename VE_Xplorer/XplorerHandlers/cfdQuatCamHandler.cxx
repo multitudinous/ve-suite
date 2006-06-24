@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/XplorerHandler/cfdQuatCamHandler.h"
-#include "VE_Xplorer/XplorerHandler/cfdFileInfo.h"
+#include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdFileInfo.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/XplorerHandler/cfdQuatCam.h"
-#include "VE_Xplorer/XplorerHandler/cfdNavigate.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandler/cfdReadParam.h"
+#include "VE_Xplorer/XplorerHandlers/cfdQuatCam.h"
+#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/OneDIntArray.h"

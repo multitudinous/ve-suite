@@ -29,14 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandler/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdClone.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/XplorerHandler/cfdFILE.h"
+#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
 #include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
 #include "VE_Xplorer/SceneGraph/cfdClone.h"
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
@@ -60,7 +60,7 @@ using namespace VE_TextureBased;
 #endif
 #endif
 
-#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>
@@ -80,7 +80,7 @@ using namespace VE_TextureBased;
 #include <fstream>
 #include <sstream>
 
-#include "VE_Xplorer/XplorerHandler/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;

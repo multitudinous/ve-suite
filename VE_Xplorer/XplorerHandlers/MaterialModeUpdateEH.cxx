@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandler/MaterialModeUpdateEH.h"
-#include "VE_Xplorer/XplorerHandler/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/MaterialModeUpdateEH.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/DataValuePair.h"

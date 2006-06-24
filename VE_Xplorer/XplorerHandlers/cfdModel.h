@@ -112,7 +112,7 @@ enum Operation2Model
 };
 
 #include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/XplorerHandler/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 namespace VE_Xplorer
 {

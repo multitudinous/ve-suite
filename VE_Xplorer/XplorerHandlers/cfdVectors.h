@@ -32,7 +32,7 @@
 #ifndef CFD_VECTORS_H
 #define CFD_VECTORS_H
 
-#include "VE_Xplorer/XplorerHandler/cfdVectorBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdVectorBase.h"
 
 namespace VE_Xplorer
 {

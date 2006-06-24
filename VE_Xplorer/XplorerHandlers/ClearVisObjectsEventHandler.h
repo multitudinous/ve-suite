@@ -45,7 +45,7 @@ namespace VE_Xplorer
 {
    class cfdGlobalBase;
 }
-#include "VE_Xplorer/XplorerHandler/EventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 namespace VE_EVENTS
 {
 class VE_XPLORER_EXPORTS ClearVisObjectsEventHandler: public EventHandler

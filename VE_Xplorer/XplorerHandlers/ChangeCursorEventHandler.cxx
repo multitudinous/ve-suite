@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/ChangeCursorEventHandler.h"
-#include "VE_Xplorer/XplorerHandler/cfdModel.h"
-#include "VE_Xplorer/XplorerHandler/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 //#include "VE_Xplorer/cfdVEBaseClass.h"
-#include "VE_Xplorer/XplorerHandler/cfdCursor.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 
 
 #include "VE_Open/XML/XMLObject.h"
@@ -46,7 +46,7 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/Model/Model.h"
 
-#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <iostream>
 

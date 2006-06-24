@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandler/cfdStreamers.h"
-#include "VE_Xplorer/XplorerHandler/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdStreamers.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"

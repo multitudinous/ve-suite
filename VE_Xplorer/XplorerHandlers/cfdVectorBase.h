@@ -32,7 +32,7 @@
 #ifndef CFD_VECTOR_BASE_H
 #define CFD_VECTOR_BASE_H
 
-#include "VE_Xplorer/XplorerHandler/cfdObjects.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkGlyph3D;
 class vtkGeometryFilter;

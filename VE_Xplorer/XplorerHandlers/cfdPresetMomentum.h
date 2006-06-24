@@ -32,7 +32,7 @@
 #ifndef CFD_PRESET_MOMENTUM_H
 #define CFD_PRESET_MOMENTUM_H
 
-#include "VE_Xplorer/XplorerHandler/cfdContourBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
 
 class vtkCutter;
 class vtkWarpVector;

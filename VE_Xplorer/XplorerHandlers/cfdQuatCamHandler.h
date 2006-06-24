@@ -64,7 +64,7 @@ namespace VE_XML
 
 #include <vector>
 
-#include "VE_Xplorer/XplorerHandler/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 namespace VE_Xplorer
 {

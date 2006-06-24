@@ -29,18 +29,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandler/cfdObjects.h"
-#include "VE_Xplorer/XplorerHandler/cfdReadParam.h"
-#include "VE_Xplorer/XplorerHandler/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
+#include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/SceneGraph/cfdSequence.h"
-#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 
 // Juggler Includes
-#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include <vpr/Sync/Guard.h>
 
 // VTK Includes

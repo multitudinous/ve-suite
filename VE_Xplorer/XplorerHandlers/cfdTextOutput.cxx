@@ -29,12 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandler/cfdTextOutput.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTextOutput.h"
 
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
-#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <string>
 #include <iostream>

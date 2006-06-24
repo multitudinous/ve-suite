@@ -31,17 +31,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/XplorerHandler/cfdSoundHandler.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandler/cfdReadParam.h"
+#include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/XplorerHandler/cfdSound.h"
+#include "VE_Xplorer/XplorerHandlers/cfdSound.h"
 
 #include <iostream>
 #include <fstream>
 
-#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 using namespace VE_Xplorer;
 using namespace VE_Util;
 

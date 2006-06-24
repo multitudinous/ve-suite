@@ -58,7 +58,7 @@ class vtkMaskPoints;
 #include <vector>
 #include <vpr/Sync/Mutex.h>
 
-#include "VE_Xplorer/XplorerHandler/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdObjects : public cfdGlobalBase

@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandler/cfdPolyData.h"
-#include "VE_Xplorer/XplorerHandler/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdPolyData.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
-#include "VE_Xplorer/XplorerHandler/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 
 #include <vtkTubeFilter.h>
 #include <vtkCellTypes.h>

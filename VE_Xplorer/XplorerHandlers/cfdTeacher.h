@@ -47,7 +47,7 @@ namespace VE_SceneGraph
    class cfdNode;
 }
 
-#include "VE_Xplorer/XplorerHandler/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 //A reader that reads performer binary files
 namespace VE_Xplorer

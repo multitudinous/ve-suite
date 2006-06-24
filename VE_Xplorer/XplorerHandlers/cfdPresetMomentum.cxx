@@ -29,12 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandler/cfdPresetMomentum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdPresetMomentum.h"
 
-#include "VE_Xplorer/XplorerHandler/cfdCuttingPlane.h"
-#include "VE_Xplorer/XplorerHandler/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandler/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandler/cfdPlanes.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCuttingPlane.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>

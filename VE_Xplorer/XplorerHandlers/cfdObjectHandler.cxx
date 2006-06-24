@@ -31,12 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef VE_PATENTED
 #ifdef _OSG
-#include "VE_Xplorer/XplorerHandler/cfdObjectHandler.h"
-#include "VE_Xplorer/XplorerHandler/cfdNavigate.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjectHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include <vpr/Util/Singleton.h>
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/XplorerHandler/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <osg/Group>
 #include <osg/Geometry>

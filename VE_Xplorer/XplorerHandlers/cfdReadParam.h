@@ -34,7 +34,7 @@
 
 #include <vector>
 #include <string>
-#include "VE_Xplorer/XplorerHandler/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 class vtkDataSet;
 
