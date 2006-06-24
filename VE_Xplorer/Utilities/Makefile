@@ -41,14 +41,13 @@ SRCS=\
    cfdAccessoryFunctions.cxx \
    cfdGrid2Surface.cxx \
    cfdVTKFileHandler.cxx \
-   cleanVtk.cpp \
+   cleanVtk.cxx \
    fileIO.cxx \
    readWriteVtkThings.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
 
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
 #DSO_PLUGIN_DEPS+= $(shell vrjuggler-config --extra-libs)
