@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "DefaultGraphicalPlugin.h"
+#include "VE_Xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include <iostream>
 

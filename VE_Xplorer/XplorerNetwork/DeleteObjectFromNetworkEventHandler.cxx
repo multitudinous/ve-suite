@@ -33,7 +33,7 @@
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
-#include "VE_Xplorer/cfdVEBaseClass.h"
+#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
 
 
 #include "VE_Open/XML/XMLObject.h"
