@@ -34,7 +34,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-//#include "VE_Xplorer/cfdVEBaseClass.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 
 
