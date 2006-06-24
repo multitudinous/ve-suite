@@ -121,7 +121,7 @@ int vtkFLUENTReader::RequestInformation(
 		int id = VariableIds->GetValue(i);
 		int nc = VariableSizes->GetValue(i);
 		CellData[ i ] = vtkDoubleArray::New();
-		CellData[ i ]->SetName(VariableNames[id]);
+      CellData[ i ]->SetName(VariableNames[id].c_str());
 		CellData[ i ]->SetNumberOfComponents(nc);
 	}
 
@@ -1405,13 +1405,13 @@ void vtkFLUENTReader::ParseDataFile(void)
 
 void vtkFLUENTReader::InitializeVariableNames ( void )
 {
-   for(int i =0; i < 1500; i++)
+   /*for(int i =0; i < 1500; i++)
    {
       std::stringstream nameIndex;
       nameIndex<<"UNKNOWN_DATA_TYPE_"<<i<<"\0";
       
       VariableNames[i] = const_cast<char*>(nameIndex.str().c_str());
-   }
+   }*/
 	VariableNames[1] = "PRESSURE";
 	VariableNames[2] = "MOMENTUM";
 	VariableNames[3] = "TEMPERATURE";
@@ -4006,6 +4006,10 @@ int vtkFLUENTReader::GetDataASCII(int ix)
 			if(IsNewVariable(ssid)){
 				VariableIds->InsertValue(NumberOfVariables, ssid);
 				VariableSizes->InsertValue(NumberOfVariables, size);
+            
+            std::stringstream nameIndex;
+            nameIndex<<"UNKNOWN_DATA_TYPE_"<<ssid<<"\0";
+            VariableNames[ssid] = nameIndex.str();
 				NumberOfVariables++;
 			}
 		}
@@ -4050,6 +4054,9 @@ int vtkFLUENTReader::GetDataSinglePrecision(int ix)
 			if(IsNewVariable(ssid)){
 				VariableIds->InsertValue(NumberOfVariables, ssid);
 				VariableSizes->InsertValue(NumberOfVariables, size);
+            std::stringstream nameIndex;
+            nameIndex<<"UNKNOWN_DATA_TYPE_"<<ssid<<"\0";
+            VariableNames[ssid] = nameIndex.str();
 				NumberOfVariables++;
 			}
 		}
@@ -4087,6 +4094,9 @@ int vtkFLUENTReader::GetDataDoublePrecision(int ix)
 			if(IsNewVariable(ssid)){
 				VariableIds->InsertValue(NumberOfVariables, ssid);
 				VariableSizes->InsertValue(NumberOfVariables, size);
+            std::stringstream nameIndex;
+            nameIndex<<"UNKNOWN_DATA_TYPE_"<<ssid<<"\0";
+            VariableNames[ssid] = nameIndex.str();
 				NumberOfVariables++;
 			}
 		}
@@ -4188,15 +4198,15 @@ int vtkFLUENTReader::IsCellZoneId(int zi)
 	return flag;
 }
 
-int vtkFLUENTReader::IsNewVariable(int ssid)
+bool vtkFLUENTReader::IsNewVariable(int ssid)
 {
-	int flag = 1;
+	//int flag = 1;
 	for(int i=0;i<NumberOfVariables;i++){
 		if(ssid == VariableIds->GetValue(i)){
-			flag = 0;
+			return false;
 		}
 	}
-	return flag;
+	return true;
 }
 
 int vtkFLUENTReader::GetVariableIndex(int ssid)
