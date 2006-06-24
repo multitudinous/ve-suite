@@ -39,12 +39,12 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 
-#include "VE_Conductor/Framework/ROItb.xpm"
+#include "VE_Conductor/xpm/ROItb.xpm"
 
-#include "VE_Conductor/Framework/cspline.xpm"
-#include "VE_Conductor/Framework/scalartb.xpm"
-#include "VE_Conductor/Framework/vectortb.xpm"
-#include "VE_Conductor/Framework/scalartb_bw.xpm"
+#include "VE_Conductor/xpm/cspline.xpm"
+#include "VE_Conductor/xpm/scalartb.xpm"
+#include "VE_Conductor/xpm/vectortb.xpm"
+#include "VE_Conductor/xpm/scalartb_bw.xpm"
 
 #include "VE_Conductor/Utilities/ROIDialog.h"
 

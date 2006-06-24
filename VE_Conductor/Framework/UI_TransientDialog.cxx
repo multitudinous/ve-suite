@@ -2,10 +2,10 @@
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
-#include "VE_Conductor/Framework/transientIcons/play.xpm"
-#include "VE_Conductor/Framework/transientIcons/next.xpm"
-#include "VE_Conductor/Framework/transientIcons/prev.xpm"
-#include "VE_Conductor/Framework/transientIcons/stop.xpm"
+#include "VE_Conductor/xpm/transientIcons/play.xpm"
+#include "VE_Conductor/xpm/transientIcons/next.xpm"
+#include "VE_Conductor/xpm/transientIcons/prev.xpm"
+#include "VE_Conductor/xpm/transientIcons/stop.xpm"
 
 #include <wx/sizer.h>
 #include <wx/window.h>

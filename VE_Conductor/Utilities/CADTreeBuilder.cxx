@@ -40,11 +40,11 @@
 #include <wx/imaglist.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include "VE_Conductor/Framework/icon1.xpm"
-#include "VE_Conductor/Framework/icon2.xpm"
-#include "VE_Conductor/Framework/icon3.xpm"
-#include "VE_Conductor/Framework/icon4.xpm"
-#include "VE_Conductor/Framework/icon5.xpm"
+#include "VE_Conductor/xpm/icon1.xpm"
+#include "VE_Conductor/xpm/icon2.xpm"
+#include "VE_Conductor/xpm/icon3.xpm"
+#include "VE_Conductor/xpm/icon4.xpm"
+#include "VE_Conductor/xpm/icon5.xpm"
 
 #include <string>
 using namespace VE_CAD;

@@ -35,11 +35,11 @@
 #include "VE_Conductor/Framework/PluginLoader.h"
 #include "VE_Conductor/Framework/Plugin_base.h"
 
-#include "VE_Conductor/Framework/icon1.xpm"
-#include "VE_Conductor/Framework/icon2.xpm"
-#include "VE_Conductor/Framework/icon3.xpm"
-#include "VE_Conductor/Framework/icon4.xpm"
-#include "VE_Conductor/Framework/icon5.xpm"
+#include "VE_Conductor/xpm/icon1.xpm"
+#include "VE_Conductor/xpm/icon2.xpm"
+#include "VE_Conductor/xpm/icon3.xpm"
+#include "VE_Conductor/xpm/icon4.xpm"
+#include "VE_Conductor/xpm/icon5.xpm"
 
 #ifdef WIN32
 #include <shellapi.h>

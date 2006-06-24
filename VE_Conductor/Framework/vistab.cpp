@@ -41,11 +41,11 @@
 #include <iostream>
 #include <string>
 ////@begin XPM images
-#include "VE_Conductor/Framework/new_vector.xpm"
-#include "VE_Conductor/Framework/contour.xpm"
-#include "VE_Conductor/Framework/streamlines.xpm"
-#include "VE_Conductor/Framework/isosurface.xpm"
-#include "VE_Conductor/Framework/scalartb.xpm"
+#include "VE_Conductor/xpm/new_vector.xpm"
+#include "VE_Conductor/xpm/contour.xpm"
+#include "VE_Conductor/xpm/streamlines.xpm"
+#include "VE_Conductor/xpm/isosurface.xpm"
+#include "VE_Conductor/xpm/scalartb.xpm"
 ////@end XPM images
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
