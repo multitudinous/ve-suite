@@ -32,7 +32,7 @@
 #ifndef CFD_CONTOUR_BASE_H
 #define CFD_CONTOUR_BASE_H
 
-#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkPolyData;
 class vtkPolyDataMapper;

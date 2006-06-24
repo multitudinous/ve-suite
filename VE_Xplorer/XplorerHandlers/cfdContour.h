@@ -32,7 +32,7 @@
 #ifndef CFD_CONTOUR_H
 #define CFD_CONTOUR_H
 
-#include "cfdContourBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
 
 class vtkPlane;
 class vtkCutter;

@@ -38,7 +38,7 @@
  * Base class for CADAttribute event handling.
  */
 
-#include "VE_Xplorer/EventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 namespace VE_XML
 {
    class XMLObject;

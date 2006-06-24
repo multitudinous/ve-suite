@@ -32,7 +32,7 @@
 #ifndef CFD_COMMAND_OBJECTS_H
 #define CFD_COMMAND_OBJECTS_H
 
-#include "VE_Xplorer/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 namespace VE_Xplorer
 {
    class cfdCommandArray;

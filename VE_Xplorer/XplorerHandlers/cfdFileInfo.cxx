@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdFileInfo.h"
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdFileInfo.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 using namespace VE_Xplorer;
 

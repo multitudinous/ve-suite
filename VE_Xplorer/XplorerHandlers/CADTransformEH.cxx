@@ -29,9 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/CADTransformEH.h"
-#include "VE_Xplorer/cfdModel.h"
-#include "VE_Xplorer/cfdFILE.h"
+#include "VE_Xplorer/XplorerHandlers/CADTransformEH.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
 
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 

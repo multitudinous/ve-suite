@@ -36,8 +36,8 @@
    computation.
 */
 
-#include "VE_Xplorer/cfdDataSet.h"
-#include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
 #include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
@@ -62,7 +62,7 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkCellData.h>
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <iostream>
 #include <sstream>

@@ -32,7 +32,7 @@
 #ifndef CFD_CONTOURS_H
 #define CFD_CONTOURS_H
 
-#include "cfdContourBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
 
 #include <string>
 

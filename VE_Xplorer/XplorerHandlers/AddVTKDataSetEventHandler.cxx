@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/AddVTKDataSetEventHandler.h"
-#include "VE_Xplorer/cfdModel.h"
-#include "VE_Xplorer/cfdModelHandler.h"
-#include "VE_Xplorer/cfdFILE.h"
-#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/AddVTKDataSetEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"

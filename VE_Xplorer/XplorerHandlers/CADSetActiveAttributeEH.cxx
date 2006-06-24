@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/CADSetActiveAttributeEH.h"
-#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/CADSetActiveAttributeEH.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 
 #include "VE_Open/XML/XMLObject.h"

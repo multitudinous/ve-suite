@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/cfdDigitalAnalogGauge.h"
-#include "VE_Xplorer/cfd1DTextInput.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDigitalAnalogGauge.h"
+#include "VE_Xplorer/XplorerHandlers/cfd1DTextInput.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
@@ -56,7 +56,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;

@@ -32,7 +32,7 @@
 #ifndef CFD_IMAGE_H
 #define CFD_IMAGE_H
 
-#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkBMPReader;
 class vtkImageReader;

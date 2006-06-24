@@ -1,9 +1,9 @@
 #include <cmath>
 #include <cassert>
 
-#include "VE_Xplorer/trackball.h"
-#include "VE_Xplorer/cfdNavigate.h"
-#include "VE_Xplorer/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/trackball.h"
+#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 

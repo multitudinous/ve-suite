@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/cfdFILE.h"
+#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 
 #include <cassert>
 
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #ifdef _PERFORMER
 #include <Performer/pr/pfFog.h>
 #elif _OSG

@@ -29,9 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdGeomDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGeomDataSet.h"
 
-#include "VE_Xplorer/cfdFileInfo.h"  
+#include "VE_Xplorer/XplorerHandlers/cfdFileInfo.h"  
 
 #include <cassert>
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
@@ -59,7 +59,7 @@
 #include <vtkSTLReader.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
-#include "VE_Xplorer/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/cfd1DTextInput.h"
+#include "VE_Xplorer/XplorerHandlers/cfd1DTextInput.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkActor.h>

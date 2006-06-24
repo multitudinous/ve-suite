@@ -29,12 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/CADEventHandler.h"
-#include "VE_Xplorer/cfdModel.h"
-#include "VE_Xplorer/cfdFILE.h"
-#include "VE_Xplorer/cfdGlobalBase.h"
-#include "VE_Xplorer/cfdModel.h"
-#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/CADEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdClone.h"

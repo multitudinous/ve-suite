@@ -32,7 +32,7 @@
 #ifndef CFD_ANIMATED_IMAGE_H
 #define CFD_ANIMATED_IMAGE_H
 
-#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkPolyDataMapper;
 class vtkPolyData;

@@ -32,7 +32,7 @@
 #ifndef CFD_ANIMATED_STREAMLINE_CONE_H
 #define CFD_ANIMATED_STREAMLINE_CONE_H
 
-#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkPolyDataMapper;
 class vtkPolyData;

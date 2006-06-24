@@ -62,7 +62,7 @@ namespace VE_XML
    class Command;
 }
 
-#include "VE_Xplorer/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 //! Virtual cursors
 /*!

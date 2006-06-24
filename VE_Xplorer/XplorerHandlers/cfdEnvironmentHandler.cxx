@@ -29,35 +29,35 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 
-#include "VE_Xplorer/EventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/cfdNavigate.h"
-#include "VE_Xplorer/cfdTrackball.h"
-#include "VE_Xplorer/cfdSoundHandler.h"
-#include "VE_Xplorer/cfdCursor.h"
-#include "VE_Xplorer/cfdEnum.h"
-#include "VE_Xplorer/cfdCommandArray.h"
-#include "VE_Xplorer/cfdReadParam.h"
-#include "VE_Xplorer/cfdTeacher.h"
-#include "VE_Xplorer/cfdSoundHandler.h"
-#include "VE_Xplorer/cfdQuatCamHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTrackball.h"
+#include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
+#include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
 #include "VE_Xplorer/cfdDataSet.h"
-#include "VE_Xplorer/cfdModelHandler.h"
-#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/cfdDebug.h"
-#include "VE_Xplorer/cfdDisplaySettings.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeCursorEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
 #ifdef _OSG
-#include "VE_Xplorer/cfdObjectHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdObjectHandler.h"
 #endif
 
 #include <fstream>
