@@ -34,7 +34,7 @@
 #include "VE_Xplorer/cfdCuttingPlane.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdPlanes.h"
-#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include "VE_Xplorer/cfdRawNodeWriteTraverser.h"

@@ -46,8 +46,9 @@ namespace VE_CAD
    class CADNode;
 }
 #include "VE_Xplorer/CADEventHandler.h"
+#include "VE_Installer/include/VEConfig.h"
 namespace VE_EVENTS{
-class CADSetActiveAttributeEventHandler: public CADEventHandler{
+class VE_XPLORER_EXPORTS CADSetActiveAttributeEventHandler: public CADEventHandler{
 public:
    ///Constructor
    CADSetActiveAttributeEventHandler();

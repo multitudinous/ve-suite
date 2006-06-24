@@ -352,7 +352,7 @@
 				RelativePath=".\cfdVjObsWrapper.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\impl\VjObs_i.cxx">
+				RelativePath=".\Ge\VjObs_i.cxx">
 			</File>
 		</Filter>
 		<Filter
@@ -368,7 +368,7 @@
 				RelativePath=".\cfdVjObsWrapper.h">
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\impl\VjObs_i.h">
+				RelativePath=".\Ge\VjObs_i.h">
 			</File>
 			<Filter
 				Name="Resource Files"

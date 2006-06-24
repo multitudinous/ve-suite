@@ -32,8 +32,8 @@
 #include <string>
 #include "VE_Xplorer/cfdPlanes.h"
 #include "VE_Xplorer/cfdCuttingPlane.h"
-#include "VE_Xplorer/fileIO.h"
-#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>

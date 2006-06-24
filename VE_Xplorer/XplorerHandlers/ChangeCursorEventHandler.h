@@ -56,7 +56,7 @@ namespace VE_Xplorer
 #include "VE_Xplorer/EventHandler.h"
 namespace VE_EVENTS
 {
-class VE_XPLORER_NETWORK_EXPORTS ChangeCursorEventHandler: public EventHandler
+class VE_XPLORER_EXPORTS ChangeCursorEventHandler: public EventHandler
 {
 public:
    ///Constructor

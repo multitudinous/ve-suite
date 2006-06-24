@@ -46,9 +46,10 @@ namespace VE_CAD
    class CADNode;
 }
 #include "VE_Xplorer/CADEventHandler.h"
+#include "VE_Installer/include/VEConfig.h"
 namespace VE_EVENTS
 {
-class CADToggleEventHandler: public CADEventHandler{
+class VE_XPLORER_EXPORTS CADToggleEventHandler: public CADEventHandler{
 public:
    ///Constructor
    CADToggleEventHandler();

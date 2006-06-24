@@ -37,7 +37,7 @@
 #include "VE_Xplorer/SceneGraph/cfdClone.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/cfdFILE.h"
-#include "VE_Builder/Translator/cfdGrid2Surface.h"
+#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
 #include "VE_Xplorer/SceneGraph/cfdClone.h"
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 

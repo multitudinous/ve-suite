@@ -463,6 +463,9 @@
 				RelativePath=".\cfdWriteTraverser.cxx">
 			</File>
 			<File
+				RelativePath=".\XplorerHandlers\ChangeCursorEventHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\ClearVisObjectsEventHandler.cxx">
 			</File>
 			<File
@@ -543,6 +546,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdTrackball.h">
+			</File>
+			<File
+				RelativePath=".\XplorerHandlers\ChangeCursorEventHandler.h">
 			</File>
 			<File
 				RelativePath=".\ClearVisObjectsEventHandler.h">
