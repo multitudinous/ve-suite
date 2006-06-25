@@ -24,8 +24,8 @@
 #
 # -----------------------------------------------------------------
 # File:          $RCSfile: Makefile,v $
-# Date modified: $Date: 2005-06-11 15:04:41 -0500 (Sat, 11 Jun 2005) $
-# Version:       $Rev: 2404 $
+# Date modified: $Date$
+# Version:       $Rev$
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************

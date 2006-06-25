@@ -14,7 +14,7 @@ elif [ -e /etc/SuSE-release ]; then
    # extract first and third words from file to create something like SuSE_9.1
    export CFDHOSTTYPE=`head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3}'`
 else
-   echo "uname is" `uname`
+   #echo "uname is" `uname`
    export CFDHOSTTYPE=`uname`
 fi
 
@@ -29,7 +29,7 @@ export VE_PATENTED=TRUE
 export VEXMASTER=ids7
 
 export PFNFYLEVEL=2
-export VPR_DEBUG_NFY_LEVEL=1
+export VPR_DEBUG_NFY_LEVEL=2
 export VPR_DEBUG_ENABLE=1
 export NO_RTRC_PLUGIN=TRUE
 export NO_PERF_PLUGIN=TRUE
@@ -123,6 +123,7 @@ case "$CFDHOSTTYPE" in
    #setenv JDK_HOME /usr/java
    export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk/install
    export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install
+   #export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install-cocoa
    export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj
    export VJ_DEPS_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj-deps
    export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.0/install

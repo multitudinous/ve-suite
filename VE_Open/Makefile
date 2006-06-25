@@ -24,8 +24,8 @@
 #
 # -----------------------------------------------------------------
 # File:          Makefile,v
-# Date modified: $Date: 2005-12-24 11:15:46 -0600 (Sat, 24 Dec 2005) $
-# Version:       $Rev: 3393 $
+# Date modified: $Date$
+# Version:       $Rev$
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
