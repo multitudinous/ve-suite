@@ -1098,19 +1098,24 @@ CORBA::Long Body_Executive_i::GetGlobalMod (
 void Body_Executive_i::ClientMessage(const char *msg)
 {
 	std::map<std::string, Body::UI_var>::iterator iter;
-	for(iter=uis_.begin(); iter!=uis_.end(); iter++) 
+	for(iter=uis_.begin(); iter!=uis_.end(); ) 
 	{
       std::cout << msg << " to -> " << iter->first << std::endl;
 	   try 
       {
    	   iter->second->Raise(msg);
+         ++iter;
 	   }
       catch (CORBA::Exception &) 
       {
          std::cout << iter->first <<" is obsolete." << std::endl;
          // it seems this call should be blocked as we are messing with 
          // a map that is used everywhere
-		   uis_.erase(iter);
+		   uis_.erase( iter++ );
 	   }
+      catch (...)
+      {
+         std::cout << "another kind of exception " << std::endl;
+      }
    }
 }

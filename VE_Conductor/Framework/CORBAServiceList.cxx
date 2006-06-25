@@ -79,12 +79,30 @@ bool CORBAServiceList::IsConnectedToXplorer( void )
       return ConnectToXplorer();
    }
 
+   try
+   {
+      vjobs->_non_existent();
+   }
+   catch (...)
+   {
+      return ConnectToXplorer();
+   }
+   
    return true;
 }
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::IsConnectedToCE( void )
 {
    if ( CORBA::is_nil( module.in() ) )
+   {
+      return ConnectToCE();
+   }
+   
+   try
+   {
+      module->_non_existent();
+   }
+   catch (...)
    {
       return ConnectToCE();
    }
@@ -474,11 +492,11 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
       }
       catch ( ... )
       {
-         VjObs::_tao_release( vjobs );
-         if ( !IsConnectedToXplorer() )
+         //VjObs::_tao_release( vjobs );
+         //if ( !IsConnectedToXplorer() )
          {  
-            wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                          "Communication Failure", wxOK | wxICON_INFORMATION );
+            //wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+            //              "Communication Failure", wxOK | wxICON_INFORMATION );
             return false;
          }
       }
