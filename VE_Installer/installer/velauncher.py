@@ -70,7 +70,7 @@ DEFAULT_JCONF = os.path.join(os.getcwd(), "stereo_desktop", "desktop.jconf")
 ##Values for launcher's GUI layout
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (200, 200)
-BACKGROUND_COLOR = wx.Colour(149, 149, 251)
+BACKGROUND_COLOR = wx.Colour(236, 233, 216)
 JCONF_LIST_DISPLAY_MIN_SIZE = (100, 50)
 TOP_SPACE = (75, 75)
 BORDER = 5
@@ -81,6 +81,12 @@ NULL_SPACE = (0, 0)
 ##Set up the config
 config = wx.Config(CONFIG_FILE)
 config.SetPath(DEFAULT_CONFIG)
+
+def Style(window):
+    print str(window.GetBackgroundColour())
+    ##Set the background color.
+    window.SetBackgroundColour(BACKGROUND_COLOR)
+    return
 
 def usage():
     print \
@@ -217,12 +223,12 @@ class LauncherWindow(wx.Frame):
     def __init__(self, parent, ID, title):
         """Builds the launcher's window and loads the last configuration."""
         wx.Frame.__init__(self, parent, -1, title,
-                          style=wx.DEFAULT_FRAME_STYLE)
+                          style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
 
         ##NOTE: Get logo from here.
         ##Get the logo.
-        ##imLogo = wx.Image(os.path.join("images", "ve_logo.gif"),
-        ##                  wx.BITMAP_TYPE_GIF)
+        bmLogo = wx.Bitmap("ve_logo.xpm", wx.BITMAP_TYPE_XPM)
+        sbmLogo = wx.StaticBitmap(self, -1, bmLogo)
 
         ##Prepare data storage
         ##NOTE: jconfList is a local copy of the Jconf list stored in the
@@ -300,44 +306,39 @@ class LauncherWindow(wx.Frame):
                         0, wx.ALIGN_CENTER_VERTICAL)
         columnSizer.Add(HORIZONTAL_SPACE)
         columnSizer.Add(self.txTaoMachine, 2)
-        columnSizer.Add((HORIZONTAL_SPACE[0]*5, -1))
+        columnSizer.Add((HORIZONTAL_SPACE[0]*3, -1))
         columnSizer.Add(wx.StaticText(self, -1, "Tao Port:"),
                         0, wx.ALIGN_CENTER_VERTICAL)
         columnSizer.Add(HORIZONTAL_SPACE)
         columnSizer.Add(self.txTaoPort, 1)
-        columnSizer.Add(HORIZONTAL_SPACE, 1)
         ##Insert the Tao column
         rowSizer.Add(VERTICAL_SPACE)
         rowSizer.Add(columnSizer, 0, wx.EXPAND)
-        ##Insert the box grid and Launch button.
+        ##Insert the box grid.
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         columnSizer.AddMany([self.rbMode,
                              HORIZONTAL_SPACE])
-        columnSizer.Add(self.bCustom, 0, wx.ALIGN_BOTTOM)
+        columnSizer.Add(self.bCustom, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
         columnSizer.Add(HORIZONTAL_SPACE)
         rowSizer.AddMany([VERTICAL_SPACE,
                           columnSizer])
-        rowSizer.Add(VERTICAL_SPACE, 0)
-        rowSizer.Add(bLaunch, 1, wx.EXPAND)
-        ##Add the left margin
-        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.AddSpacer(LEFT_MARGIN)
-        columnSizer.Add(rowSizer, 1, wx.EXPAND)
         ##Add the title graphic space
-        rowSizer = wx.BoxSizer(wx.VERTICAL)
-        ##rowSizer.Add(imLogo)
-        rowSizer.Add(TOP_SPACE) ##Replace with line above later.
-        rowSizer.Add(columnSizer, 1, wx.EXPAND)
-        ##Set the main sizer.
-        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
-        mainSizer.Add(rowSizer, 1, wx.BOTTOM | wx.RIGHT | wx.EXPAND, BORDER)
+        rowSizer2 = wx.BoxSizer(wx.VERTICAL)
+        rowSizer2.Add(sbmLogo)
+        rowSizer2.Add(rowSizer, 0, wx.EXPAND)
+        ##Set the main sizer, add Launch button.
+        mainSizer = wx.BoxSizer(wx.VERTICAL)
+        mainSizer.Add(rowSizer2, 0, wx.ALL | wx.EXPAND, BORDER)
+        mainSizer.Add(bLaunch, 1, wx.EXPAND)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
         self.SetSize(INITIAL_WINDOW_SIZE)
         ##Set the background color.
-        self.SetBackgroundColour(BACKGROUND_COLOR)
+        Style(self)
         ##Show the window.
         self.Show(True)
+        print self.rbMode.GetPosition() ##TESTER
+        print self.rbMode.GetSize() ##TESTER
         ##Error check: Is there a /bin folder in the launcher's directory?
         ##If so, assume it's in VE Suite's folder. If not, warn the user.
         if not os.path.exists("bin"):
@@ -629,17 +630,25 @@ class LauncherWindow(wx.Frame):
     def Settings(self, event):
         """Launches the Custom Settings window."""
         mode = self.rbMode.GetStringSelection()
-        print "Mode changed to %s." % (mode) ##TESTER
         if mode in MODE_DICT:
             modeRules = MODE_DICT[mode]
         else:
             modeRules = {}
+        x, y = self.GetPosition()
+        x2, y2 = self.rbMode.GetPosition()
+        x3 = self.rbMode.GetSize()[0]
+        ##Sets the upper-left corner of the Settings window to be just
+        ##right of the Mode radio box. Needs some nudging to avoid covering
+        ##up important info.
+        position = wx.Point(x + x2 + x3 + HORIZONTAL_SPACE[0],
+                            y + y2 + VERTICAL_SPACE[1])
         frame = SettingsWindow(self, self.jconfList, self.jconfCursor,
                                      self.clusterDict, self.clusterMaster,
                                      self.desktop, self.nameServer,
                                      self.conductor, self.xplorer,
                                      self.xplorerType,
-                                     modeRules)
+                                     modeRules, mode,
+                                     position = position)
         frame.ShowModal()
         frame.Destroy()
 
@@ -777,9 +786,9 @@ class SettingsWindow(wx.Dialog):
     def __init__(self, parent,
                  jconf, jconfCursor, clusterDict, clusterMaster,
                  desktop, nameServer, conductor, xplorer, xplorerType,
-                 modeRules):
-        wx.Dialog.__init__(self, parent, -1, "Advanced Settings",
-                           style=wx.DEFAULT_FRAME_STYLE)
+                 modeRules, modeName, position = wx.DefaultPosition):
+        wx.Dialog.__init__(self, parent, -1, "%s Settings" %(modeName),
+                           pos = position, style = wx.DEFAULT_FRAME_STYLE)
         ##While creating, go through each rule listed in modeRules.
         ##Change the corresponding controls to the value given.
         ##If it's FIXED, prevent the user from changing it.
@@ -883,13 +892,12 @@ class SettingsWindow(wx.Dialog):
         columnSizer.Add(self.chJconf, 1, wx.ALIGN_BOTTOM)
         columnSizer.AddMany([HORIZONTAL_SPACE,
                              self.bEditJconf])
-        columnSizer.Add((-1, -1), 1)
         rowSizer.Add(columnSizer, 0, wx.EXPAND)
         ##Construct & insert the check box/radio box grid.
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.AddMany([self.cbDesktop,
-                             HORIZONTAL_SPACE,
-                             self.bCluster])
+        columnSizer.Add(self.cbDesktop)
+        columnSizer.Add(HORIZONTAL_SPACE)
+        columnSizer.Add(self.bCluster)
         gridSizer = wx.FlexGridSizer(3, 2,
                                      VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
         gridSizer.AddMany([self.cbNameServer, (-1, self.bCluster.GetSize()[1]),
@@ -900,17 +908,16 @@ class SettingsWindow(wx.Dialog):
                           wx.StaticText(self, -1, "Programs to launch:"),
                           VERTICAL_SPACE,
                           gridSizer])
-        ##Insert the OK button.
-        rowSizer.Add(VERTICAL_SPACE, 0)
-        rowSizer.Add(bOk, 1, wx.EXPAND)
-        ##Set the main sizer.
-        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
-        mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
+        ##Set the main sizer, insert OK button.
+        mainSizer = wx.BoxSizer(wx.VERTICAL)
+        mainSizer.Add(rowSizer, 0, wx.ALL | wx.EXPAND, BORDER)
+        mainSizer.Add(bOk, 1, wx.EXPAND)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
         self.SetSize(INITIAL_WINDOW_SIZE)
+        ##self.CenterOnParent(wx.BOTH)
         ##Set the background color.
-        self.SetBackgroundColour(BACKGROUND_COLOR)
+        Style(self)
 
     def EvtCheckXplorer(self, event):
         """Enables/Disables Xplorer's radio box.
@@ -1137,6 +1144,7 @@ class JconfWindow(wx.Dialog):
         bAdd = wx.Button(self, -1, "Add")
         bRename = wx.Button(self, -1, "Rename")
         self.bDelete = wx.Button(self, -1, "Delete")
+        bOk = wx.Button(self, -1, "Ok")
         ##Check if Delete's enabled.
         self.DeleteEnabledCheck()
         ##Bind buttons.
@@ -1161,13 +1169,16 @@ class JconfWindow(wx.Dialog):
         rowSizer.AddMany([VERTICAL_SPACE,
                           wx.StaticText(self, -1, "Selection's Jconf file:")])
         rowSizer.Add(self.display, 0, wx.EXPAND)
-        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
+        mainSizer.Add(bOk, 0, wx.EXPAND)
         ##Set size, position.
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
         self.SetSize(INITIAL_JCONF_WINDOW_SIZE)
         self.CenterOnParent(wx.BOTH)
+        ##Set the background color.
+        Style(self)
 
     def DisplayJconfFile(self, event):
         """Shows the .jconf file of the selection in the text field."""
@@ -1413,6 +1424,7 @@ class ClusterWindow(wx.Dialog):
         ##Build buttons.
         bAdd = wx.Button(self, -1, "Add")
         self.bDelete = wx.Button(self, -1, "Delete")
+        bOk = wx.Button(self, -1, "Ok")
         ##Check if Delete's enabled.
         self.DeleteEnabledCheck()
         ##Bind buttons.
@@ -1434,13 +1446,16 @@ class ClusterWindow(wx.Dialog):
         rowSizer.AddMany([VERTICAL_SPACE,
                           wx.StaticText(self, -1, "Master's location:")])
         rowSizer.Add(self.masterCtrl, 0, wx.EXPAND)
-        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
+        mainSizer.Add(bOk, 0, wx.EXPAND)
         ##Set size, position.
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
         self.SetSize(INITIAL_JCONF_WINDOW_SIZE)
         self.CenterOnParent(wx.BOTH)
+        ##Set the background color.
+        Style(self)
 
     def DeleteEnabledCheck(self):
         """Disables/Enables the Delete button based on number of entries.
@@ -1457,7 +1472,7 @@ class ClusterWindow(wx.Dialog):
         ##Set cursor if it's blank.
         if cursor == "":
             cursor = self.clustList.GetStringSelection()
-        self.clustList.Set(self.cDict.GetNames())
+        self.clustList.Set(sorted(set(self.cDict.GetNames())))
         if cursor == wx.NOT_FOUND or self.clustList.GetCount() == 0:
             self.clustList.SetSelection(wx.NOT_FOUND)
         elif self.clustList.FindString(str(cursor)) == wx.NOT_FOUND:
