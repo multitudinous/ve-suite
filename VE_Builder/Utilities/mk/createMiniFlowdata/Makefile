@@ -9,7 +9,6 @@ all:
 srcdir= ../../
 
 SRCS=\
-   cfdAccessoryFunctions.cxx \
    createMiniFlowdata.cpp 
 
 # Specify the OS-dependent directory name for object files and depends
@@ -28,8 +27,7 @@ EXTRA_CXXFLAGS+=
 
 EXTRA_DEFS+=
 
-EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer \
-                 -I$(VE_SUITE_HOME)/VE_Builder/Translator
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) 
 EXTRA_LIBS+= -lVE_UtilLib
 
