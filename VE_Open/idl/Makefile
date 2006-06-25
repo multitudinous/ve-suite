@@ -33,12 +33,12 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-CXX_GEN_DIR= $(srcdir)/skel
+CXX_GEN_DIR= $(srcdir)/../skel
 CXX_IDL=      tao_idl
-CXX_IDL_OPTS=  -o $(CXX_GEN_DIR) -in -GI -I./idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h
+CXX_IDL_OPTS=  -o $(CXX_GEN_DIR) -in -GI -I./ -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h
 CXX_IDL_INCLUDES= 
 
-vpath %.idl $(srcdir)/idl $(srcdir)
+vpath %.idl $(srcdir)
 
 # -----------------------------------------------------------------------------
 # Application build targets.
