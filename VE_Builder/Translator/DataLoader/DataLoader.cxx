@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: DataLoader.cxx,v $
- * Date modified: $Date: 2006-03-18 17:23:46 -0600 (Sat, 18 Mar 2006) $
- * Version:       $Rev: 3936 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
