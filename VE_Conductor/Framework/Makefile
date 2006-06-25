@@ -38,6 +38,7 @@ SRCS=\
    streamlines.cpp\
    advancedstreamlines.cpp\
    isosurfaces.cpp\
+   polydata.cpp\
    CORBAServiceList.cxx
 
 # Specify the OS-dependent directory name for object files and depends

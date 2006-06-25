@@ -39,6 +39,8 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+
+#include "VE_Builder/Utilities/gui/spinctld.h"
 ////@end includes
 
 #include "VE_Conductor/Framework/vistab.h"
@@ -75,9 +77,10 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_COMBOBOX ( ID_COMBOBOX,          Vistab::_OnSelectDataset )
    EVT_LISTBOX  ( ID_LISTBOX,           Vistab::_OnSelectScalar )
    EVT_LISTBOX  ( ID_LISTBOX1,          Vistab::_OnSelectVector )
-   EVT_SPINCTRL ( MIN_SPINCTRL,         Vistab::_OnMinSlider )
-   EVT_SPINCTRL ( MAX_SPINCTRL,         Vistab::_OnMaxSlider )
    EVT_BUTTON   ( ID_CLEAR_ALL_BUTTON,  Vistab::OnClearAll )
+   EVT_COMMAND_SCROLL( MIN_SPINCTRL,    Vistab::_onMinSpinCtrl )
+   EVT_COMMAND_SCROLL( MAX_SPINCTRL,    Vistab::_onMaxSpinCtrl )
+   EVT_COMMAND_SCROLL( MIN_MAX_SLIDERS, Vistab::_onMinMaxSlider )
 ////@end Vistab event table entries
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
@@ -98,7 +101,7 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    isosurface = 0;
    streamline = 0;
    xplorerPtr = 0;
-   isosurface = 0;
+   polydata = 0;
 
    _availableSolutions["MESH_SCALARS"].Add(""); 
    _availableSolutions["MESH_VECTORS"].Add(""); 
@@ -131,6 +134,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    scalarContour = 0;
    vectorContour = 0;
    streamline = 0;
+   polydata = 0;
    
    
    _availableSolutions["MESH_SCALARS"].Add(""); 
@@ -160,6 +164,8 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
    itemComboBox12 = 0;
    itemListBox13 = 0; 
    itemListBox15 = 0;
+   _minSpinner = 0;
+   _maxSpinner = 0;
    /*vector = 0;
    contour = 0;
    streamline = 0;
@@ -208,6 +214,11 @@ Vistab::~Vistab()
    {
       streamline->Destroy();
       streamline = 0;
+   }
+   if(polydata)
+   {
+      polydata->Destroy();
+      polydata = 0;
    }
 }
 /////////////////////////////
@@ -293,7 +304,7 @@ void Vistab::CreateControls()
     _vectorSelection->SetSelection(0);
     itemStaticBoxSizer14->Add(_vectorSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticBox* scalarBoundsStatic = new wxStaticBox(itemDialog1, wxID_ANY, _T("Scalar Bounds"));
+    wxStaticBox* scalarBoundsStatic = new wxStaticBox(itemDialog1, wxID_ANY, _T("Scalar Range"));
     wxStaticBoxSizer* scalarBoundsSizer = new wxStaticBoxSizer( scalarBoundsStatic, wxHORIZONTAL );
 //    wxBoxSizer* scalarBoundsSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer* spinnerSizer = new wxBoxSizer(wxVERTICAL);
@@ -301,11 +312,11 @@ void Vistab::CreateControls()
 
     wxStaticText* _space1 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
     wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T("Min"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
-    wxSpinCtrl* _minSpinner = new wxSpinCtrl( itemDialog1, MIN_SPINCTRL, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
+    _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
     wxStaticText* _space2 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
     wxStaticText* _space3 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T("Max"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    wxSpinCtrl* _maxSpinner = new wxSpinCtrl( itemDialog1, MAX_SPINCTRL, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
+    _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
 
     spinnerSizer->Add(_space1, 0, wxALIGN_LEFT|wxALL, 5);
     spinnerSizer->Add(_min, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);   
@@ -315,7 +326,7 @@ void Vistab::CreateControls()
     spinnerSizer->Add(_max, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);    
     spinnerSizer->Add(_maxSpinner, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    scalarRange = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
+    scalarRange = new DualSlider(this,MIN_MAX_SLIDERS,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
                              wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString(""));
     scalarSizer->Add(scalarRange,1,wxALIGN_CENTER|wxEXPAND);
 
@@ -469,20 +480,20 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////
 void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
 {
-   if(!isosurface)
+   if(!polydata)
    {
-      isosurface = new Isosurfaces ( this,                
+      polydata = new Polydata ( this,                
                   /*SYMBOL_CONTOURS_IDNAME*/-1, 
-                  SYMBOL_ISOSURFACES_TITLE,
-                  SYMBOL_ISOSURFACES_POSITION,
-                  SYMBOL_ISOSURFACES_SIZE, 
-                  SYMBOL_ISOSURFACES_STYLE );
-      isosurface->SetSize(_vistabPosition);
+                  SYMBOL_POLYDATA_TITLE,
+                  SYMBOL_POLYDATA_POSITION,
+                  SYMBOL_POLYDATA_SIZE, 
+                  SYMBOL_POLYDATA_STYLE );
+      polydata->SetSize(_vistabPosition);
    }
    
-   isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
-   isosurface->SetActiveScalar(_activeScalarName);
-   isosurface->ShowModal();
+   polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
+   polydata->SetActiveScalar(_activeScalarName);
+   polydata->ShowModal();
    //itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
 }
 ///////////////////////////////////////////////////////
@@ -526,6 +537,7 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
       //set the active dataset to the initial dataset in the model
       _setActiveDataset(0); 
    }
+std::cout<<"Here1"<<std::endl;
 }
 //////////////////////////////////////////////////
 void Vistab::_setActiveDataset(unsigned int index)
@@ -547,6 +559,7 @@ void Vistab::_setActiveDataset(unsigned int index)
          _updateDatasetInformation(_activeDataset);
       }
    }
+std::cout<<"Here2"<<std::endl;
 }
 /////////////////////////////////////////////////
 void Vistab::SetTextureData(wxArrayString textureData,
@@ -596,6 +609,7 @@ void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
    {
       _updateAvailableSolutions("TEXTURE_VECTORS",datasetInfo.textureVectorNames);
    }*/
+std::cout<<"Here3"<<std::endl;
 }
 ////////////////////////////////////////////////////////////////////////
 //We need this extra method because the data info is stored differenly//
@@ -625,6 +639,7 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
    {
       std::cout<<"MESH_SCALAR data not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
    }
+std::cout<<"Here4"<<std::endl;
 }
 /////////////////////////////////////////////////////////////////////
 void Vistab::_updateAvailableSolutions(std::string dataType,
@@ -651,6 +666,7 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
    {
       std::cout<<dataType<<" not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
    }
+std::cout<<"Here5"<<std::endl;
 }
 ///////////////////////////////////////////////////////////
 void Vistab::_updateComboBoxNames(std::string dataType,
@@ -693,18 +709,48 @@ void Vistab::_OnSelectDataset(wxCommandEvent& WXUNUSED(event))
 {
    _activeDataSetName = _datasetSelection->GetValue();
    SetActiveDataset(_activeDataSetName);
+std::cout<<"Here6"<<std::endl;
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 {
    _activeScalarName = _scalarSelection->GetStringSelection();
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
+/*
+   VE_XML::DataValuePair* scalarMin = new VE_XML::DataValuePair();
+   minimumValue = _activeScalarRange.at(0) 
+                    + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
+   scalarMin->SetData("Scalar Min",minimumValue);
+
+   _vistabBaseInformation.push_back(scalarMin);
+
+   VE_XML::DataValuePair* scalarMax = new VE_XML::DataValuePair();
+   maximumValue = _activeScalarRange.at(0) 
+                    + (scalarRange->GetMaxSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
+   scalarMax->SetData("Scalar Max",maximumValue);
+   
+   _vistabBaseInformation.push_back(scalarMax);
+*/
+   double minBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.99;
+   double maxBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.01;
+   _minSpinner->SetRange( _activeScalarRange.at(0), minBoundRange );   
+   _minSpinner->SetValue( _activeScalarRange.at(0) );
+   _maxSpinner->SetRange( maxBoundRange, _activeScalarRange.at(1) );
+   _maxSpinner->SetValue( _activeScalarRange.at(1) );
+
+   scalarRange->SetMinimumSliderValue( 0 );
+   scalarRange->SetMaximumSliderValue( 100 );
+
+std::cout<<"Here7"<<std::endl;
+std::cout<<_activeScalarName<<std::endl;
+std::cout<<_activeScalarRange.at(1)<<std::endl;
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
 {
    _activeVectorName = _vectorSelection->GetStringSelection();
 }
+/*
 ///////////////////////////////////////////////////
 void Vistab::_OnMinSlider(wxSpinEvent& WXUNUSED(event))
 {
@@ -715,6 +761,7 @@ void Vistab::_OnMaxSlider(wxSpinEvent& WXUNUSED(event))
 {
 
 }
+*/
 //////////////////////////////////////////
 std::string Vistab::GetActiveScalarName()
 {
@@ -771,14 +818,14 @@ void Vistab::_updateBaseInformation()
    _vistabBaseInformation.push_back(activeDataset);
 
    VE_XML::DataValuePair* scalarMin = new VE_XML::DataValuePair();
-   double minimumValue = _activeScalarRange.at(0) 
+   minimumValue = _activeScalarRange.at(0) 
                     + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
    scalarMin->SetData("Scalar Min",minimumValue);
 
    _vistabBaseInformation.push_back(scalarMin);
 
    VE_XML::DataValuePair* scalarMax = new VE_XML::DataValuePair();
-   double maximumValue = _activeScalarRange.at(0) 
+   maximumValue = _activeScalarRange.at(0) 
                     + (scalarRange->GetMaxSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
    scalarMax->SetData("Scalar Max",maximumValue);
    
@@ -820,4 +867,65 @@ void Vistab::SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand)
 
    delete newCommand;
    newCommand = 0;
+}
+///////////////////////////////////////////////////////////////////////////
+void Vistab::_onMinSpinCtrl( wxScrollEvent& WXUNUSED(event) )
+{
+   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+   double minValue = 0;
+
+   minValue = ( ( _minSpinner->GetValue() - _activeScalarRange.at(0) ) / ( range ) * 100);
+std::cout<<"MinValue: "<<minValue<<std::endl;
+
+   if( minValue == 100 )
+   {
+      scalarRange->SetMaximumSliderValue( (int)minValue+1 );    
+      scalarRange->SetMinimumSliderValue( (int)minValue );   
+std::cout<<"MinValue1: "<<minValue<<std::endl;
+   }
+   else if( scalarRange->GetMaxSliderValue() <= (int)minValue )
+   {
+      scalarRange->SetMaximumSliderValue( (int)minValue+1 );
+      scalarRange->SetMinimumSliderValue( (int)minValue );
+std::cout<<"MinValue2: "<<minValue<<std::endl;
+   }
+   else
+   {
+      scalarRange->SetMinimumSliderValue( (int)minValue );
+std::cout<<"MinValue3: "<<minValue<<std::endl;
+   }
+
+} 
+///////////////////////////////////////////////////////////////////////////
+void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) )
+{
+   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+   double maxValue = 100;
+
+   maxValue = ( ( range - ( _activeScalarRange.at(1) - _maxSpinner->GetValue() ) ) / ( range ) * 100);
+std::cout<<"MaxValue: "<<maxValue<<std::endl;
+
+   if( maxValue == 0 )
+   {
+      scalarRange->SetMaximumSliderValue( (int)maxValue+1 );    
+      scalarRange->SetMinimumSliderValue( (int)maxValue );       
+   }
+   else if( scalarRange->GetMinSliderValue() >= (int)maxValue )
+   {
+      scalarRange->SetMinimumSliderValue( (int)maxValue-1 );
+      scalarRange->SetMaximumSliderValue( (int)maxValue );
+   } 
+   else
+   {  
+      scalarRange->SetMaximumSliderValue( (int)maxValue );
+   }
+} 
+//////////////////////////////////////////////////////////////////////////
+void Vistab::_onMinMaxSlider( wxScrollEvent& WXUNUSED(event) )
+{
+   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+
+   _minSpinner->SetValue( ( range - (double)scalarRange->GetMinSliderValue() ) / 100 + _activeScalarRange.at(0) );
+   _maxSpinner->SetValue( ( _activeScalarRange.at(1) - ( range - ( range - (double)scalarRange->GetMaxSliderValue() ) ) ) / 100);
+std::cout<<"MinMaxSlider"<<std::endl;
 }

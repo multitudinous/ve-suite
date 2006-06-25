@@ -23,18 +23,18 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: isosurface.h isosurface.hGlobalParamDialog.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: GlobalParamDialog.h,v $
+ * Date modified: $Date: 2006-03-23 17:47:31 -0600 (Thu, 23 Mar 2006) $
+ * Version:       $Rev: 3957 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _ISOSURFACES_H_
-#define _ISOSURFACES_H_
+#ifndef _POLYDATA_H_
+#define _POLYDATA_H_
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "isosurfaces.h"
+#pragma interface "polydata.h"
 #endif
 
 #include "VE_Open/skel/VjObsC.h"
@@ -55,44 +55,44 @@ class wxButton;
 class wxStaticBox;
 
 #define ID_DIALOG 10000
-#define SYMBOL_ISOSURFACES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_ISOSURFACES_TITLE _T("Isosurfaces")
-#define SYMBOL_ISOSURFACES_IDNAME ID_DIALOG
-#define SYMBOL_ISOSURFACES_SIZE wxSize(400, 300)
-#define SYMBOL_ISOSURFACES_POSITION wxDefaultPosition
+#define SYMBOL_POLYDATA_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
+#define SYMBOL_POLYDATA_TITLE _T("Polydata")
+#define SYMBOL_POLYDATA_IDNAME ID_DIALOG
+#define SYMBOL_POLYDATA_SIZE wxSize(400, 300)
+#define SYMBOL_POLYDATA_POSITION wxDefaultPosition
 
-enum ISOSURFACE_IDS
+enum POLYDATA_IDS
 {
-   ISOSURFACE_RBUTTON,
-   PRECOMPUTED_ISO_CHK,
-   ISOSURFACE_PLANE_SLIDER,
-   ADD_ISOSURFACE_BUTTON,
-   ADVANCED_ISOSURFACE_BUTTON
+   POLYDATA_RBUTTON,
+   PRECOMPUTED_POLY_CHK,
+   POLYDATA_PLANE_SLIDER,
+   ADD_POLYDATA_BUTTON,
+   ADVANCED_POLYDATA_BUTTON
 };
 
-class Isosurfaces: public wxDialog
+class Polydata: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
     DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
-    Isosurfaces( );
-    Isosurfaces(  wxWindow* parent, 
-                  wxWindowID id = SYMBOL_ISOSURFACES_IDNAME, 
-                  const wxString& caption = SYMBOL_ISOSURFACES_TITLE,
-                  const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION,
-                  const wxSize& size = SYMBOL_ISOSURFACES_SIZE, 
-                  long style = SYMBOL_ISOSURFACES_STYLE);
+    Polydata( );
+    Polydata(  wxWindow* parent, 
+                  wxWindowID id = SYMBOL_POLYDATA_IDNAME, 
+                  const wxString& caption = SYMBOL_POLYDATA_TITLE,
+                  const wxPoint& pos = SYMBOL_POLYDATA_POSITION,
+                  const wxSize& size = SYMBOL_POLYDATA_SIZE, 
+                  long style = SYMBOL_POLYDATA_STYLE);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
     bool Create( wxWindow* parent,
-                 wxWindowID id = SYMBOL_ISOSURFACES_IDNAME,
-                 const wxString& caption = SYMBOL_ISOSURFACES_TITLE,
-                 const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION,
-                 const wxSize& size = SYMBOL_ISOSURFACES_SIZE,
-                 long style = SYMBOL_ISOSURFACES_STYLE );
+                 wxWindowID id = SYMBOL_POLYDATA_IDNAME,
+                 const wxString& caption = SYMBOL_POLYDATA_TITLE,
+                 const wxPoint& pos = SYMBOL_POLYDATA_POSITION,
+                 const wxSize& size = SYMBOL_POLYDATA_SIZE,
+                 long style = SYMBOL_POLYDATA_STYLE );
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -120,24 +120,24 @@ protected:
    std::string _activeScalar;///The scalar that is active on the vistab
    wxArrayString _scalarNames;///<The available scalars.
    wxCheckBox* _useNearestPreComputedCheckBox;
-   wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
+   wxSlider* _polydataSlider;///<Set the value of the iso-surface
    wxButton* _advancedButton;///<Display the color by scalar dialog
    wxButton* _computeButton;///<Compute the iso-surface
    
-   void _onIsosurface( wxCommandEvent& event );
+   void _onPolydata( wxCommandEvent& event );
 
    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
-   void _onPrecomputedIsosurface( wxCommandEvent& event );
+   void _onPrecomputedPolydata( wxCommandEvent& event );
 
    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
-   void _onIsosurfacePlane( wxCommandEvent& event );
+   void _onPolydataPlane( wxCommandEvent& event );
 
    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-   void _onAddIsosurface( wxCommandEvent& event );
+   void _onAddPolydata( wxCommandEvent& event );
 
    ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
    void _onAdvanced(wxCommandEvent& event);
 };
 
 #endif
-    // _ISOSURFACES_H_
+    // _POLYDATA_H_

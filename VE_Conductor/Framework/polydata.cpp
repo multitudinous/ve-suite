@@ -23,13 +23,13 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: isosurfaces.cpp isosurfaces.cppGlobalParamDialog.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: GlobalParamDialog.h,v $
+ * Date modified: $Date: 2006-03-23 17:47:31 -0600 (Thu, 23 Mar 2006) $
+ * Version:       $Rev: 3957 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/isosurfaces.h"
+#include "VE_Conductor/Framework/polydata.h"
 #include "VE_Conductor/Framework/vistab.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -43,21 +43,21 @@
 #include <wx/msgdlg.h>
 #include <iostream>
 ///////////////////////////
-BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
-////@begin Isosurfaces event table entries
-   EVT_RADIOBUTTON      (ISOSURFACE_RBUTTON,          Isosurfaces::_onIsosurface)
-   EVT_CHECKBOX         (PRECOMPUTED_ISO_CHK,         Isosurfaces::_onPrecomputedIsosurface)
-   EVT_SLIDER           (ISOSURFACE_PLANE_SLIDER,     Isosurfaces::_onIsosurfacePlane)
-   EVT_BUTTON           (ADD_ISOSURFACE_BUTTON,       Isosurfaces::_onAddIsosurface)
-   EVT_BUTTON           (ADVANCED_ISOSURFACE_BUTTON,  Isosurfaces::_onAdvanced)
-////@end Isosurfaces event table entries
+BEGIN_EVENT_TABLE( Polydata, wxDialog )
+////@begin polydata event table entries
+   EVT_RADIOBUTTON      (POLYDATA_RBUTTON,          Polydata::_onPolydata)
+   EVT_CHECKBOX         (PRECOMPUTED_POLY_CHK,      Polydata::_onPrecomputedPolydata)
+   EVT_SLIDER           (POLYDATA_PLANE_SLIDER,     Polydata::_onPolydataPlane)
+   EVT_BUTTON           (ADD_POLYDATA_BUTTON,       Polydata::_onAddPolydata)
+   EVT_BUTTON           (ADVANCED_POLYDATA_BUTTON,  Polydata::_onAdvanced)
+////@end polydata event table entries
 END_EVENT_TABLE()
-Isosurfaces::Isosurfaces( )
+Polydata::Polydata( )
 {
 
 }
 //////////////////////////////////////////////////////////
-Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id,
+Polydata::Polydata( wxWindow* parent, wxWindowID id,
                        const wxString& caption, 
                        const wxPoint& pos, 
                        const wxSize& size, long style )
@@ -69,13 +69,13 @@ Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id,
    this->SetSize( dialogPosition );
 }
 //////////////////////////////////////////////////////////
-bool Isosurfaces::Create( wxWindow* parent, wxWindowID id, 
+bool Polydata::Create( wxWindow* parent, wxWindowID id, 
                        const wxString& caption, 
                        const wxPoint& pos, 
                        const wxSize& size, long style )
 {
    _useNearestPreComputedCheckBox = 0;
-   _isoSurfaceSlider = 0;
+   _polydataSlider = 0;
    _advancedButton = 0;
    _computeButton = 0;
 
@@ -90,47 +90,47 @@ bool Isosurfaces::Create( wxWindow* parent, wxWindowID id,
    return true;
 }
 //////////////////////////////////
-void Isosurfaces::CreateControls()
+void Polydata::CreateControls()
 {    
-    Isosurfaces* itemDialog1 = this;
+    Polydata* itemDialog1 = this;
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Isosurface Controls"));
+    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Polydata Controls"));
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
 
    
-    _useNearestPreComputedCheckBox = new wxCheckBox( itemDialog1, PRECOMPUTED_ISO_CHK, _T("Use Nearest Precomputed Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    _useNearestPreComputedCheckBox = new wxCheckBox( itemDialog1, PRECOMPUTED_POLY_CHK, _T("Use Nearest Precomputed Polydata"), wxDefaultPosition, wxDefaultSize, 0 );
     _useNearestPreComputedCheckBox->SetValue(false);
     itemStaticBoxSizer3->Add(_useNearestPreComputedCheckBox, 0, wxGROW|wxALL, 5);
 
-    wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Polydata"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText6, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
-    _isoSurfaceSlider = new wxSlider( itemDialog1, ISOSURFACE_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(_isoSurfaceSlider, 0, wxGROW|wxALL, 5);
+    _polydataSlider = new wxSlider( itemDialog1, POLYDATA_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    itemStaticBoxSizer3->Add(_polydataSlider, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    _computeButton = new wxButton( itemDialog1, ADD_ISOSURFACE_BUTTON, _T("Compute Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
+    _computeButton = new wxButton( itemDialog1, ADD_POLYDATA_BUTTON, _T("Update"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(_computeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    _advancedButton = new wxButton( itemDialog1, ADVANCED_ISOSURFACE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    _advancedButton = new wxButton( itemDialog1, ADVANCED_POLYDATA_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(_advancedButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 }
 ///////////////////////////////////////////////////////////
-void Isosurfaces::SetActiveScalar(std::string activeScalar)
+void Polydata::SetActiveScalar(std::string activeScalar)
 {
    _activeScalar = activeScalar;
 }
 ////////////////////////////////////////////////////////////////
-void Isosurfaces::SetAvailableScalars(wxArrayString scalarNames)
+void Polydata::SetAvailableScalars(wxArrayString scalarNames)
 {
    _scalarNames.Clear();
    for(size_t i = 0; i < scalarNames.Count(); i++)
@@ -139,45 +139,45 @@ void Isosurfaces::SetAvailableScalars(wxArrayString scalarNames)
    }
 }
 ////////////////////////////////
-bool Isosurfaces::ShowToolTips()
+bool Polydata::ShowToolTips()
 {
     return true;
 }
 ////////////////////////////////////////////////////////////////
-wxBitmap Isosurfaces::GetBitmapResource( const wxString& name )
+wxBitmap Polydata::GetBitmapResource( const wxString& name )
 {
    wxUnusedVar(name);
    return wxNullBitmap;
 }
 ////////////////////////////////////////////////////////////
-wxIcon Isosurfaces::GetIconResource( const wxString& name )
+wxIcon Polydata::GetIconResource( const wxString& name )
 {
    wxUnusedVar(name);
    return wxNullIcon;
 }
 /////////////////////////////////////////////////////////
-void Isosurfaces::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
+void Polydata::_onPolydata( wxCommandEvent& WXUNUSED(event) )
 {
 
 }
 ////////////////////////////////////////////////////////////////////
-void Isosurfaces::_onPrecomputedIsosurface( wxCommandEvent& WXUNUSED(event) )
+void Polydata::_onPrecomputedPolydata( wxCommandEvent& WXUNUSED(event) )
 {
 
 }
 /////////////////////////////////////////////////////////////
-void Isosurfaces::_onIsosurfacePlane( wxCommandEvent& WXUNUSED(event) )
+void Polydata::_onPolydataPlane( wxCommandEvent& WXUNUSED(event) )
 {
 }
 ///////////////////////////////////////////////////////////
-void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
+void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED(event) )
 {
    VE_XML::Command* newCommand = new VE_XML::Command();
-   newCommand->SetCommandName("UPDATE_ISOSURFACE_SETTINGS");
+   newCommand->SetCommandName("UPDATE_POLYDATA_SETTINGS");
    
-   VE_XML::DataValuePair* isosurfaceValue = new VE_XML::DataValuePair();
-   isosurfaceValue->SetData("Iso-Surface Value",static_cast<double>((_isoSurfaceSlider->GetValue())));
-   newCommand->AddDataValuePair(isosurfaceValue);
+   VE_XML::DataValuePair* polydataValue = new VE_XML::DataValuePair();
+   polydataValue->SetData("Polydata Value",static_cast<double>((_polydataSlider->GetValue())));
+   newCommand->AddDataValuePair(polydataValue);
 
    VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
    colorByScalar->SetData("Color By Scalar",_colorByScalarName);
@@ -214,7 +214,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
    }
 }
 //////////////////////////////////////////////////////
-void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
+void Polydata::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 {
    int selectionIndex = 0;
    for(size_t i = 0; i < _scalarNames.Count(); i++)
@@ -225,7 +225,7 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
          break;
       }
    }
-   wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
+   wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color Polydata by."), _T("Color by Scalar"),
                                    _scalarNames);
    int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);

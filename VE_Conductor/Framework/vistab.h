@@ -40,6 +40,7 @@
 #include "VE_Conductor/Framework/contours.h"
 #include "VE_Conductor/Framework/streamlines.h"
 #include "VE_Conductor/Framework/isosurfaces.h"
+#include "VE_Conductor/Framework/polydata.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
 
 #include <xercesc/dom/DOM.hpp>
@@ -69,6 +70,7 @@ namespace VE_Xplorer
 class TextureBasedToolBar;
 class wxComboBox;
 class wxListBox;
+class wxSpinCtrlDbl;
 
 #define ID_DIALOG 10000
 #define SYMBOL_VISTAB_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -105,7 +107,8 @@ enum VISTAB_IDS
    POLYDATA_BUTTON,
    ID_CLEAR_ALL_BUTTON,
    MIN_SPINCTRL,
-   MAX_SPINCTRL
+   MAX_SPINCTRL,
+   MIN_MAX_SLIDERS
 };
 ////@end control identifiers
 
@@ -139,7 +142,12 @@ public:
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_VISTAB_IDNAME, const wxString& caption = SYMBOL_VISTAB_TITLE, const wxPoint& pos = SYMBOL_VISTAB_POSITION, const wxSize& size = SYMBOL_VISTAB_SIZE, long style = SYMBOL_VISTAB_STYLE );
+    bool Create( wxWindow* parent,
+                 wxWindowID id = SYMBOL_VISTAB_IDNAME,
+                 const wxString& caption = SYMBOL_VISTAB_TITLE,
+                 const wxPoint& pos = SYMBOL_VISTAB_POSITION, 
+                 const wxSize& size = SYMBOL_VISTAB_SIZE, 
+                 long style = SYMBOL_VISTAB_STYLE );
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -199,6 +207,8 @@ public:
    wxComboBox* itemComboBox12; 
    wxListBox*  itemListBox13; 
    wxListBox*  itemListBox15;
+   wxSpinCtrlDbl* _minSpinner;
+   wxSpinCtrlDbl* _maxSpinner;
 
 protected:
    /*!\class ScalarRangeMinSliderCallback
@@ -260,7 +270,6 @@ protected:
    void _onIsosurface(wxCommandEvent& );
    void _onTextureBased(wxCommandEvent& );
    void _onPolydata(wxCommandEvent& );
-   void _onParticle(wxCommandEvent& );
 
    ///update the base info for the dataset ie. active vector,scalar,dataset,range 
    void _updateBaseInformation();
@@ -274,9 +283,11 @@ protected:
    ///Callback for the clear all button
    void OnClearAll( wxCommandEvent& event );
    ///Callback for min spinner
-   void _OnMinSlider( wxSpinEvent& event );
+   void _onMinSpinCtrl( wxScrollEvent& WXUNUSED(event) );
    ///Callback for max spinner
-   void _OnMaxSlider( wxSpinEvent& event );
+   void _onMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) );
+   ///Callback for slider max and min values
+   void _onMinMaxSlider( wxScrollEvent& WXUNUSED(event) ); 
 
    ///Update the available solutions for a particular give dataset type
    ///\param newNames The list of new names to update
@@ -315,10 +326,11 @@ protected:
    void _updateDatasetInformation(VjObs::Dataset datasetInfo );
    
    Contours* scalarContour;///<Scalar dialog
-   Contours* vectorContour;///Vector dialog
+   Contours* vectorContour;///<Vector dialog
    Streamlines* streamline;///<Streamline dialog
    Isosurfaces* isosurface;///<Iso-Surface dialog
    TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
+   Polydata* polydata;///<Polydata dialog
 
    unsigned int _nDatasetsInActiveModel;///<The number of datasets in the active model.
    unsigned int _nScalarsInActiveDataset;///<Number of scalars in the active dataset.
@@ -358,6 +370,9 @@ protected:
    DOMDocument* doc;
    VE_XML::DOMDocumentManager* domManager;
    std::string dataValueName;
+
+   double minimumValue;
+   double maximumValue;
 };
 
 #endif
