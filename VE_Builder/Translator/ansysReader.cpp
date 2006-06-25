@@ -39,7 +39,7 @@
 #include <netinet/in.h>
 #endif
 #include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Builder/Translator/vtkCleanUnstructuredGrid.h"
+#include <vtkExtractUnstructuredGrid.h>
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkGenericCell.h>
@@ -3002,14 +3002,25 @@ vtkUnstructuredGrid * ansysReader::GetUGrid()
    //return this->ugrid;
 
    std::cout << "\nMerging coincident points in the unstructured grid..." << std::endl;
-   vtkCleanUnstructuredGrid * clean = vtkCleanUnstructuredGrid::New();
-   clean->SetInput( this->ugrid );
-   clean->Update();
+   vtkExtractUnstructuredGrid *extunsgrid = vtkExtractUnstructuredGrid::New();
+   //extunsgrid->DebugOn();
+   extunsgrid->BreakOnError();
+   extunsgrid->PointClippingOn();
+   extunsgrid->CellClippingOff();
+   extunsgrid->ExtentClippingOff();
+   extunsgrid->MergingOn();
+   
+   int numPoints = ugrid->GetNumberOfPoints();
+   std::cout << "numPoints = " << numPoints << std::endl;
+   extunsgrid->SetInput( this->ugrid );
+   extunsgrid->SetPointMinimum( 0 );
+   extunsgrid->SetPointMaximum( numPoints );
+   extunsgrid->Update();
    this->ugrid->Delete();
-
+   
    vtkUnstructuredGrid * cleanedGrid = vtkUnstructuredGrid::New();
-   cleanedGrid->ShallowCopy( clean->GetOutput() );
-   clean->Delete();
+   cleanedGrid->ShallowCopy( extunsgrid->GetOutput() );
+   extunsgrid->Delete();
    return cleanedGrid;
 }
 

@@ -1,3 +1,4 @@
+
 # Create the OS-dependent directory name
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/translateToVtk
 
@@ -28,9 +29,8 @@ SRCS=\
    enSightGoldReader.cpp \
    ansysReader.cpp \
    ansysReader10.cpp \
-   tecplotReader.cpp \
-   vtkCleanUnstructuredGrid.cxx
-#   vtkEnSightFortranBinaryReader.cxx
+   tecplotReader.cpp 
+
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
 DEPDIR= $(CFDHOSTTYPE)

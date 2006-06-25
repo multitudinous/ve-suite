@@ -330,129 +330,119 @@ void cfdStreamers::SetPropagationTime( int value )
    this->propagationTime = (float)value * 
                   ( 100.0f * this->GetActiveDataSet()->GetMaxTime() / 20.0f );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::SetIntegrationStepLength( int value )
 {
    this->integrationStepLength = (float)value * ( 0.050f )/50.0f;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::SetStepLength( int value )
 {
    this->stepLength = (float)value * ((this->GetActiveDataSet()
                                            ->GetMeanCellLength()/30.0f) /50.0f); // 
    
 }
-
-bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
-{
-   // This is here because Dr. K. has code in 
-   // cfdObjects that doesn't belong there
-   bool flag = false; //cfdObjects::CheckCommandId( commandArray );
-   std::string commandType;
-   if ( veCommand )
-   {
-      commandType = veCommand->GetCommandName();
-   }
-   else
-   {
-      commandType = "wait";
-   }
-
-   if ( !commandType.compare( "Streamline_Data" ) )   
-   {
-      VE_XML::DataValuePair* commandData = veCommand->GetDataValuePair( 0 );
-      std::vector < long > commandIds;
-      commandData->GetData( commandIds );
-      std::string newCommand = commandData->GetDataName();
-
-      if ( !newCommand.compare( "USE_LAST_STREAMLINE_SEEDPOINTS" ) )         
-      {
-         return true;
-      }
-
-      else if ( !newCommand.compare( "BACKWARD_INTEGRATION" ) )         
-      {
-         vprDEBUG(vesDBG,0) << " BACKWARD_INTEGRATION" 
-                                << std::endl << vprDEBUG_FLUSH;
-
-         this->SetIntegrationDirection( 2 );
-         return true;  
-      }
-      else if ( !newCommand.compare( "FORWARD_INTEGRATION" ) )         
-      {
-         vprDEBUG(vesDBG,0) << " FORWARD_INTEGRATION"
-                                << std::endl << vprDEBUG_FLUSH;
-
-         this->SetIntegrationDirection( 1 );
-         return true;  
-      }
-      else if ( !newCommand.compare( "TWO_DIRECTION_INTEGRATION" ) )         
-      {
-         vprDEBUG(vesDBG,0) << " TWO_DIRECTION_INTEGRATION" 
-                                << std::endl << vprDEBUG_FLUSH;
-
-         this->SetIntegrationDirection( 0 );
-         return true; 
-      }
-      else if ( !newCommand.compare( "CHANGE_INT_STEP_LENGTH" ) )         
-      {
-         vprDEBUG(vesDBG,0) << " CHANGE_INT_STEP_LENGTH\t"
-            << commandIds.at(4) 
-            << std::endl << vprDEBUG_FLUSH;
-
-         this->SetIntegrationStepLength( commandIds.at(4) );
-         return true;
-      }
-      else if ( !newCommand.compare( "CHANGE_PROPAGATION_TIME" ) )         
-      {
-         vprDEBUG(vesDBG,0) << " CHANGE_PROPAGATION_TIME\t" 
-            << commandIds.at(5) 
-            << std::endl << vprDEBUG_FLUSH;
-
-         this->SetPropagationTime( commandIds.at(5) );
-         return true;  
-      }
-      else if ( !newCommand.compare( "CHANGE_STEP_LENGTH" ) )         
-      {
-         vprDEBUG(vesDBG,0) << " CHANGE_STEP_LENGTH\t" << commandIds.at(6) 
-                                << std::endl << vprDEBUG_FLUSH;
-
-         this->SetStepLength( commandIds.at(6) );
-         return true;
-      }
-      else if ( !newCommand.compare( "STREAMLINE_ARROW" ) )         
-      {
-         vprDEBUG(vesDBG,0) << " STREAMLINE_ARROW\t" << this->cfdIso_value 
-                                << std::endl << vprDEBUG_FLUSH;
-
-         streamArrows = this->cfdIso_value;
-         return true;
-      }
-      else if ( (!newCommand.compare( "STREAMLINE_DIAMETER" ) ) )// || (!newCommand.compare( "CHANGE_STREAMLINE_CURSOR" ) ) )         
-      {
-         vprDEBUG(vesDBG,0) << " STREAMLINE_DIAMETER\t" 
-                                 << commandIds.at(7) 
-                                 << std::endl << vprDEBUG_FLUSH;
- 
-         int diameter = commandIds.at(7);
-         // this is to convert 1 to 50 on the GUI  to approx from 1 to 28 pixels
-         //vector arrows and seed points are in feet
-        // this->lineDiameter = exp(diameter*0.06666f);
-         this->lineDiameter = 0.25 * diameter;
-
-         vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
-                                << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
-
-         //this will make the arrows on the streamlines twice the diameter
-         arrowDiameter = lineDiameter * 2.0f;
-         return true;
-      }
-   }
-   return flag;
-}
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::UpdateCommand()
 {
+   //Call base method - currently does nothing
    cfdObjects::UpdateCommand();
-   std::cerr << "doing nothing in cfdStreamers::UpdateCommand()" << std::endl;
+   
+   //Extract the specific commands from the overall command
+   VE_XML::DataValuePair* activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+   
+   //Extract the integration direction
+   activeModelDVP = objectCommand->GetDataValuePair( "Integration Direction" );
+   std::string intDirection;
+   activeModelDVP->GetData( intDirection );
+   
+   if ( !intDirection.compare( "backward" ) )         
+   {
+      vprDEBUG(vesDBG,0) << " BACKWARD_INTEGRATION" 
+      << std::endl << vprDEBUG_FLUSH;
+      
+      this->SetIntegrationDirection( 2 );
+   }
+   else if ( !intDirection.compare( "forward" ) )         
+   {
+      vprDEBUG(vesDBG,0) << " FORWARD_INTEGRATION"
+      << std::endl << vprDEBUG_FLUSH;
+      
+      this->SetIntegrationDirection( 1 );
+   }
+   else if ( !intDirection.compare( "both directions" ) )         
+   {
+      vprDEBUG(vesDBG,0) << " TWO_DIRECTION_INTEGRATION" 
+      << std::endl << vprDEBUG_FLUSH;
+      
+      this->SetIntegrationDirection( 0 );
+   }
+   
+   //Extract the advanced settings from the commands
+   activeModelDVP = objectCommand->GetDataValuePair( "Advanced Streamline Settings" );
+   objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+   
+   /////////////////////
+   activeModelDVP = objectCommand->GetDataValuePair( "Use Stream Arrows" );
+   unsigned int opacity;
+   activeModelDVP->GetData( opacity );
+   vprDEBUG(vesDBG,0) << " STREAMLINE_ARROW\t" << opacity 
+      << std::endl << vprDEBUG_FLUSH;
+   streamArrows = opacity;
+   
+   /////////////////////
+   activeModelDVP = objectCommand->GetDataValuePair( "Step" );
+   double stepSizeStream = 1.0f;
+   activeModelDVP->GetData( stepSizeStream );
+   vprDEBUG(vesDBG,0) << " CHANGE_STEP_LENGTH\t" << stepSizeStream 
+      << std::endl << vprDEBUG_FLUSH;
+   this->SetStepLength( static_cast< int >( stepSizeStream ) );
+   
+   /////////////////////
+   activeModelDVP = objectCommand->GetDataValuePair( "Integration Step Size" );
+   double contourLOD;
+   activeModelDVP->GetData( contourLOD );
+   vprDEBUG(vesDBG,0) << " CHANGE_INT_STEP_LENGTH\t"
+      << contourLOD 
+      << std::endl << vprDEBUG_FLUSH;
+   this->SetIntegrationStepLength( static_cast< int >( contourLOD ) );
+   
+   /////////////////////
+   activeModelDVP = objectCommand->GetDataValuePair( "Propagation Time" );
+   double propagationTime = 1.0f;
+   activeModelDVP->GetData( propagationTime );
+   vprDEBUG(vesDBG,0) << " CHANGE_PROPAGATION_TIME\t" 
+      << propagationTime 
+      << std::endl << vprDEBUG_FLUSH;
+   this->SetPropagationTime( static_cast< int >( propagationTime ) );
+   
+   /////////////////////
+   activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   double streamDiamter = 1.0f;
+   activeModelDVP->GetData( streamDiamter );
+   vprDEBUG(vesDBG,0) << " STREAMLINE_DIAMETER\t" 
+      << streamDiamter 
+      << std::endl << vprDEBUG_FLUSH;   
+   int diameter = static_cast< int >( streamDiamter );
+   // this is to convert 1 to 50 on the GUI  to approx from 1 to 28 pixels
+   //vector arrows and seed points are in feet
+   // this->lineDiameter = exp(diameter*0.06666f);
+   this->lineDiameter = 0.25 * diameter;
+   
+   vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
+      << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
+   
+   //this will make the arrows on the streamlines twice the diameter
+   arrowDiameter = lineDiameter * 2.0f;
+   
+   /////////////////////
+   //activeModelDVP = objectCommand->GetDataValuePair( "Sphere/Arrow/Particle Size" );
+   //double sphereArrow = 1.0f;
+   //activeModelDVP->GetData( streamDiamter );
+   
+   /////////////////////
+   activeModelDVP = objectCommand->GetDataValuePair( "Use Last Seed Pt" );
+   unsigned int lastSeedPt;
+   activeModelDVP->GetData( lastSeedPt );
 }
