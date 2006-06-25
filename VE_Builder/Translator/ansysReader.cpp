@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ansysReader.cpp,v $
- * Date modified: $Date: 2004-05-18 16:09:54 -0500 (Tue, 18 May 2004) $
- * Version:       $Rev: 385 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

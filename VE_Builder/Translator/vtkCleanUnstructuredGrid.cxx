@@ -24,7 +24,7 @@
 #include "vtkCollection.h"
 #include "vtkPointLocator.h"
 
-vtkCxxRevisionMacro(vtkCleanUnstructuredGrid, "$Revision: 1.6 $");
+vtkCxxRevisionMacro(vtkCleanUnstructuredGrid, "$Revision$");
 vtkStandardNewMacro(vtkCleanUnstructuredGrid);
 
 //----------------------------------------------------------------------------
