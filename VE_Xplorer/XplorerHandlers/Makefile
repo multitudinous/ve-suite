@@ -122,6 +122,8 @@ SRCS=\
    CreateVisObjectEventHandler.cxx\
    ClearVisObjectsEventHandler.cxx\
    ChangeCursorEventHandler.cxx\
+   TBIsosurfaceEnableEH.cxx \
+   TBIsosurfaceUpdateEH.cxx\
    TBUpdateScalarRangeEH.cxx\
    TBBBoxEH.cxx\
    TBClipPlaneEH.cxx\
