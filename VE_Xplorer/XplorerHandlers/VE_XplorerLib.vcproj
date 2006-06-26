@@ -484,6 +484,9 @@
 				RelativePath=".\TBBBoxEH.cxx">
 			</File>
 			<File
+				RelativePath=".\TBClipPlaneEH.cxx">
+			</File>
+			<File
 				RelativePath=".\TBUpdateScalarRangeEH.cxx">
 			</File>
 			<File
@@ -720,6 +723,9 @@
 			</File>
 			<File
 				RelativePath=".\TBBBoxEH.h">
+			</File>
+			<File
+				RelativePath=".\TBClipPlaneEH.h">
 			</File>
 			<File
 				RelativePath=".\TBUpdateScalarRangeEH.h">

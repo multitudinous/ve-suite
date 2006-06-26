@@ -44,6 +44,7 @@
 #include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
+#include "VE_Xplorer/XplorerHandlers/TBClipPlaneEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBBBoxEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBUpdateScalarRangeEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBUpdateSolutionEH.h"
@@ -107,6 +108,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _eventHandlers[std::string("TB_ACTIVE_SOLUTION")] = new VE_EVENTS::TextureBasedUpdateSolutionEventHandler();
    _eventHandlers[std::string("TB_SCALAR_RANGE")] = new VE_EVENTS::TextureBasedUpdateScalarRangeEventHandler();
    _eventHandlers[std::string("TB_BBOX_DISPLAY")] = new VE_EVENTS::TextureBasedBoundingBoxEventHandler();
+   _eventHandlers[std::string("TB_ROI_UPDATE")] = new VE_EVENTS::TextureBasedClipPlaneEventHandler();
   
 }
 ///////////////////////////////////////////////////////////
@@ -177,13 +179,74 @@ void cfdTextureBasedVizHandler::_updateShaders()
    }
    _updateShaderState();
 }
+////////////////////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
+                                           std::string planeDirection,
+                                           double alpha)
+{   
+   double plane[4] = {0,0,0,0};
+   if(planeCoordinate == "X")
+   {
+      plane[0] = 1.0;
+      plane[3] = _currentBBox[0] + alpha*(_currentBBox[1] - _currentBBox[0]);
+      //get the xplane positions
+      if(planeDirection == "Positive")
+      {
+         plane[3] *=-1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE_MIN,plane);
+      }
+      else if(planeDirection == "Negative")
+      {
+         plane[0] *=-1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE_MAX,plane);
+      }
+   }
+   else if(planeCoordinate == "Y")
+   {
+      plane[1] = 1.0;
+      plane[3] = _currentBBox[2] + alpha*(_currentBBox[3] - _currentBBox[2]);
+      //get the yplane positions
+      if(planeDirection == "Positive")
+      {
+         plane[3] *= -1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE_MIN,plane);
+      }
+      else if(planeDirection == "Negative")
+      {
+         plane[1] *= -1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE_MAX,plane);
+      }
+   }
+   else if(planeCoordinate == "Z")
+   {    
+      //create an z plane
+      plane[2] = 1.0;
+      plane[3] = _currentBBox[4] + alpha*(_currentBBox[5] - _currentBBox[4]);
+      //get the zplane positions
+      if(planeDirection == "Positive")
+      {
+         plane[3] *= -1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE_MIN,plane);
+      }
+      else if(planeDirection == "Negative")
+      {
+         plane[2] *= -1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE_MAX,plane);
+      }
+   }
+   else
+   {
+      std::cout<<"Invalid Clipping plane coordinate specified!!"<<std::endl;
+      std::cout<<"cfdTextureBasedVizHandler::UpdateClipPlane"<<std::endl;
+   }
+}
 //////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateVisualization()
 {
    //update analysis techniques
    //if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_CONTOUR||
     //  _cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_VECTOR){
-      if(_activeVolumeVizNode && _currentBBox){
+     /* if(_activeVolumeVizNode && _currentBBox){
          //create an x plane
          double xplane[4] = {1,0,0,0};
          float alpha = 0;//(float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
@@ -201,7 +264,7 @@ void cfdTextureBasedVizHandler::_updateVisualization()
          }
       }
       //_cleared = false;
-   /*}else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_CONTOUR||
+   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_CONTOUR||
            _cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_VECTOR){
       if(_activeVolumeVizNode&&_currentBBox){
          //create an y plane
@@ -398,7 +461,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tbvizCommand );
             //_updateShaders();
-            _updateVisualization();
+            //_updateVisualization();
             _updateGraph();
          }
       }

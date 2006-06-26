@@ -92,6 +92,14 @@ namespace VE_TextureBased
          ///Update the bounding box
          void UpdateBoundingBox(bool value);
 
+         ///Update the clip plane position
+         ///\param planeCoordinate The "X","Y","Z" specification for a plane.
+         ///\param planeDirection The direction "Negative" or "Positive"
+         ///\param alpha The plane position.
+         void UpdateClipPlane(std::string planeCoordinate,
+                       std::string planeDirection,
+                       double alpha);
+
          ///Update the scalar range
          ///\param range The new scalar range
          void UpdateScalarRange(float* range);

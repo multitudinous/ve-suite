@@ -275,13 +275,13 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          break;
       case VECTOR_ID:
          wxMessageBox( "Vector tools.", 
-                      "Toolbar test", wxOK | wxICON_INFORMATION );
+                      "Unavailable!!", wxOK | wxICON_INFORMATION );
          //_updateSolutionList(_availableVectors);
          //event.Skip();
          break;
       case TRANSFER_FUNCS_ID:
          wxMessageBox( "Transfer functions tools.", 
-                        "Toolbar test", wxOK | wxICON_INFORMATION );
+                        "Unavailable!!", wxOK | wxICON_INFORMATION );
          break;
       case ROI_ID:
          {
@@ -298,8 +298,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
             roiDlg.SetVjObsPtr(_vjObsPtr);
             if(roiDlg.ShowModal() == wxID_OK)
             {
-               wxMessageBox( "ROI tools.", 
-                       "Toolbar test", wxOK | wxICON_INFORMATION );
+               
             }
          }
          break;
