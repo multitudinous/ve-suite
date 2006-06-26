@@ -1152,6 +1152,7 @@ class JconfWindow(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.AddNew, bAdd)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
         self.Bind(wx.EVT_BUTTON, self.Rename, bRename)
+        self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
         self.Bind(wx.EVT_LISTBOX, self.DisplayJconfFile, self.confList)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         ##Construct layout.
@@ -1431,6 +1432,7 @@ class ClusterWindow(wx.Dialog):
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, bAdd)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
+        self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         ##Construct layout.
         ##Add/Rename/Delete buttons.
