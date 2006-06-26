@@ -830,6 +830,11 @@ class SettingsWindow(wx.Dialog):
         self.chJconf.SetToolTip(wx.ToolTip("Choose the Juggler configuration" +
                                            " Xplorer will use for its" +
                                            " configuration settings."))
+        ##Edit Jconf button.
+        self.bEditJconf = wx.Button(self, -1, "Edit Juggler Configurations")
+        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
+                                         " configuration files displayed" +
+                                         " in the Launcher."))
         if "jconf" in modeRules:
             self.chJconf.Append(modeRules["jconf"][1])
             self.chJconf.SetSelection(0)
@@ -843,11 +848,6 @@ class SettingsWindow(wx.Dialog):
             self.bEditJconf.Enable(False)
         else:
             self.UpdateChJconf(jconfCursor)
-        ##Edit Jconf button.
-        self.bEditJconf = wx.Button(self, -1, "Edit Juggler Configurations")
-        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
-                                         " configuration files displayed" +
-                                         " in the Launcher."))
         ##Name Server checkbox.
         self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
         self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server" +
