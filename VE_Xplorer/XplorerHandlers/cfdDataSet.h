@@ -89,8 +89,6 @@ namespace VE_Xplorer
          void GetRange( double dataRange[2] );
          void GetRange( double &dataMin, double &dataMax );
          double * GetRange();
-
-         void GetRange(int* range);
   
          // Set/get the min/max velocity, used defined.
          void SetUserRange( double userRange[2] );
@@ -151,7 +149,7 @@ namespace VE_Xplorer
          static void AutoComputeUserRange( const double rawRange[2],
                                     double prettyRange[2] );
 
-         void ResetScalarBarRange( int min, int max );
+         void ResetScalarBarRange( double min, double max );
 
          void SetFileName( const std::string filename );
          void SetFileName_OnFly(int);
@@ -277,7 +275,7 @@ namespace VE_Xplorer
 
          VE_Util::cfdVTKFileHandler* _vtkFHndlr;
          int partOfTransientSeries;
-         int intRange[2];
+         //int intRange[2];
 
       #ifdef USE_OMP 
          unsigned int noOfData;   // Total no. of octants.

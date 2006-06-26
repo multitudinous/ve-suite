@@ -117,8 +117,8 @@ cfdDataSet::cfdDataSet( )
    this->actualScalarRange = NULL;
    this->displayedScalarRange = NULL;
    this->meanCellBBLength = 0.0;
-   this->intRange[0] = 0;
-   this->intRange[1] =1000000;
+   //this->intRange[0] = 0;
+   //this->intRange[1] =1000000;
    this->animation = 0;
    _vtkFHndlr = 0;
 }
@@ -1347,17 +1347,10 @@ void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
       prettyRange[1] = prettyRange[0] + (intHighMinusLow+4) * pow(10.0,order);
 */
 }
-
-void cfdDataSet::GetRange(int* range)
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::ResetScalarBarRange( double min, double max )
 {
-   range[0] = intRange[0];
-   range[1] = intRange[1];
-}
-void cfdDataSet::ResetScalarBarRange( int min, int max )
-{
-   this->intRange[0] = min;
-   this->intRange[1] = max;
-// converts percentile parameters into decimal values for a particular scalar
+   // converts percentile parameters into decimal values for a particular scalar
    vprDEBUG(vesDBG,1) << "cfdDataSet::ResetScalarBarRange "
                           << "min = " << min << ", max = " << max
                           << std::endl << vprDEBUG_FLUSH;
@@ -1367,12 +1360,13 @@ void cfdDataSet::ResetScalarBarRange( int min, int max )
       return;
    }
 
+   //Get the actual scalar range for the active scalar
    double rawRange[2];
    this->GetParent()->GetRange( rawRange );
 
    double newRawRange[2];
-   newRawRange[0] = rawRange[0] + (rawRange[1]-rawRange[0])*(double)min/100.;
-   newRawRange[1] = rawRange[0] + (rawRange[1]-rawRange[0])*(double)max/100.;
+   newRawRange[0] = min;//rawRange[0] + (rawRange[1]-rawRange[0])*(double)min/100.;
+   newRawRange[1] = max;//rawRange[0] + (rawRange[1]-rawRange[0])*(double)max/100.;
 
    double newPrettyRange[2];
    this->AutoComputeUserRange( newRawRange, newPrettyRange );

@@ -121,7 +121,13 @@ SRCS=\
    cfdObjectHandler.cxx\
    CreateVisObjectEventHandler.cxx\
    ClearVisObjectsEventHandler.cxx\
-   ChangeCursorEventHandler.cxx
+   ChangeCursorEventHandler.cxx\
+   TBUpdateScalarRangeEH.cxx\
+   TBBBoxEH.cxx\
+   TBClipPlaneEH.cxx\
+   TextureBasedEventHandler.cxx\
+   TBActivateEH.cxx\
+   TBUpdateSolutionEH.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g
