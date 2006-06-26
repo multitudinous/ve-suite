@@ -487,6 +487,12 @@
 				RelativePath=".\TBClipPlaneEH.cxx">
 			</File>
 			<File
+				RelativePath=".\TBIsosurfaceEnableEH.cxx">
+			</File>
+			<File
+				RelativePath=".\TBIsosurfaceUpdateEH.cxx">
+			</File>
+			<File
 				RelativePath=".\TBUpdateScalarRangeEH.cxx">
 			</File>
 			<File
@@ -726,6 +732,12 @@
 			</File>
 			<File
 				RelativePath=".\TBClipPlaneEH.h">
+			</File>
+			<File
+				RelativePath=".\TBIsosurfaceEnableEH.h">
+			</File>
+			<File
+				RelativePath=".\TBIsosurfaceUpdateEH.h">
 			</File>
 			<File
 				RelativePath=".\TBUpdateScalarRangeEH.h">

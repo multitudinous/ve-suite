@@ -55,6 +55,7 @@ namespace VE_TextureBased
          void SetIsoSurfaceValue(float percentScalarRange);
          void SetCurrentTransientTexture(unsigned int whichTimeStep, bool makeSlave = false);
          void SetDelayTime(double delay);
+         void EnsureScalarRange();
       protected:
          void _setupStateSetForGLSL();
          bool _isoSurface;

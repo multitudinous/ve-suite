@@ -44,6 +44,8 @@
 #include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
+#include "VE_Xplorer/XplorerHandlers/TBIsosurfaceUpdateEH.h"
+#include "VE_Xplorer/XplorerHandlers/TBIsosurfaceEnableEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBClipPlaneEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBBBoxEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBUpdateScalarRangeEH.h"
@@ -109,7 +111,8 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _eventHandlers[std::string("TB_SCALAR_RANGE")] = new VE_EVENTS::TextureBasedUpdateScalarRangeEventHandler();
    _eventHandlers[std::string("TB_BBOX_DISPLAY")] = new VE_EVENTS::TextureBasedBoundingBoxEventHandler();
    _eventHandlers[std::string("TB_ROI_UPDATE")] = new VE_EVENTS::TextureBasedClipPlaneEventHandler();
-  
+   _eventHandlers[std::string("TB_ISOSURFACE_ENABLE")] = new VE_EVENTS::TextureBasedIsosurfaceEnableEventHandler();
+   _eventHandlers[std::string("TB_UPDATE_ISOSURFACE")] = new VE_EVENTS::TextureBasedIsosurfaceUpdateEventHandler();
 }
 ///////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::CleanUp( void )
@@ -178,6 +181,39 @@ void cfdTextureBasedVizHandler::_updateShaders()
 
    }
    _updateShaderState();
+}
+//////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::UpdateIsosurface(double value)
+{
+   if(_svvh)
+   {
+      cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+      if(sShader)
+      {
+         sShader->ActivateIsoSurface();
+         sShader->SetIsoSurfaceValue(value);
+      }
+   }
+}
+////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::EnsureIsosurface(bool onOff)
+{
+   if(_svvh)
+   {
+      cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+      if(sShader)
+      {
+         if(onOff)
+         {
+            sShader->ActivateIsoSurface();
+         }
+         else
+         {
+            sShader->DeactivateIsoSurface();
+         }
+         sShader->EnsureScalarRange();
+      }
+   }
 }
 ////////////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
@@ -391,16 +427,24 @@ void cfdTextureBasedVizHandler::_updateGraph()
          }
 #endif
       }
-   }else if (/* _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL*/0 ){ 
-      if(_parent){
-         //need to remove the clip planes
-         if(_activeVolumeVizNode){
-            _activeVolumeVizNode->ResetClipPlanes();
-            ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
-         }
-         _activeTM = 0;
-         _cleared = true;
+   }
+}
+/////////////////////////////////////////////////
+/*void cfdTextureBasedVizHander::AddTextureBasedVizGraph()
+{
+}*/
+/////////////////////////////////////////
+void cfdTextureBasedVizHandler::ClearAll()
+{
+   if(_parent)
+   {
+      //need to remove the clip planes
+      if(_activeVolumeVizNode)
+      {
+         _activeVolumeVizNode->ResetClipPlanes();
+         ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
       }
+         _activeTM = 0;
    }
 }
 ///////////////////////////////////////////////////////////
@@ -576,7 +620,7 @@ void cfdTextureBasedVizHandler::UpdateScalarRange(float* range)
       cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
       if(sShader)
       {
-         sShader->DeactivateIsoSurface();
+         //sShader->DeactivateIsoSurface();
          sShader->SetScalarRange(range);
       }
       _svvh->EnableDecorator();

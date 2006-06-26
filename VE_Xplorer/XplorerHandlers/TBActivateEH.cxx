@@ -32,7 +32,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/TBActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataset.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"

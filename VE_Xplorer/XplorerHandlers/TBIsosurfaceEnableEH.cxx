@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/XplorerHandlers/TBBBoxEH.h"
+#include "VE_Xplorer/XplorerHandlers/TBIsosurfaceEnableEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
@@ -43,21 +43,21 @@
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////
-TextureBasedBoundingBoxEventHandler::TextureBasedBoundingBoxEventHandler()
+TextureBasedIsosurfaceEnableEventHandler::TextureBasedIsosurfaceEnableEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////
-TextureBasedBoundingBoxEventHandler
-::TextureBasedBoundingBoxEventHandler(const TextureBasedBoundingBoxEventHandler& ceh)
+TextureBasedIsosurfaceEnableEventHandler
+::TextureBasedIsosurfaceEnableEventHandler(const TextureBasedIsosurfaceEnableEventHandler& ceh)
 {
 }
 /////////////////////////////////////////////////////////////////////
-TextureBasedBoundingBoxEventHandler::~TextureBasedBoundingBoxEventHandler()
+TextureBasedIsosurfaceEnableEventHandler::~TextureBasedIsosurfaceEnableEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedBoundingBoxEventHandler& 
-TextureBasedBoundingBoxEventHandler::operator=(const TextureBasedBoundingBoxEventHandler& rhs)
+TextureBasedIsosurfaceEnableEventHandler& 
+TextureBasedIsosurfaceEnableEventHandler::operator=(const TextureBasedIsosurfaceEnableEventHandler& rhs)
 {
    if(&rhs != this)
    {
@@ -66,18 +66,19 @@ TextureBasedBoundingBoxEventHandler::operator=(const TextureBasedBoundingBoxEven
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedBoundingBoxEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
 {
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* bboxFlag = command->GetDataValuePair( "BBox Flag" );
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateBoundingBox((bboxFlag->GetUIntData()==1)?true:false);
-      
+      VE_XML::DataValuePair* enable = command->GetDataValuePair("Iso-Surface State");      
+      std::string onOff;
+      enable->GetData(onOff);
+      VE_TextureBased::cfdTextureBasedVizHandler::instance()->EnsureIsosurface((onOff=="On")?true:false);
    }
    catch(...)
    {
       std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedBoundingBoxEventHandler::_operateOnNode()"<<std::endl;
+      std::cout<<"TextureBasedIsosurfaceEnableEventHandler::_operateOnNode()"<<std::endl;
    }
 }

@@ -273,6 +273,11 @@ void cfdScalarShaderManager::_updateTransferFunction()
    tFunc->dirtyTextureObject();
    
 }
+////////////////////////////////////////////////
+void cfdScalarShaderManager::EnsureScalarRange()
+{
+   _updateTransferFunction();
+}
 ///////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetScalarRange(float* range)
 {

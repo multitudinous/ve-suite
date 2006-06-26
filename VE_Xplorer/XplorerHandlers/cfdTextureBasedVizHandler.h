@@ -104,6 +104,17 @@ namespace VE_TextureBased
          ///\param range The new scalar range
          void UpdateScalarRange(float* range);
 
+         ///Activate/deactivate isosurface visualization.
+         ///\param onOff Turn it off or on.
+         void EnsureIsosurface(bool onOff);
+
+         ///Activate the isosurface
+         ///\param value The new isosurface value.
+         void UpdateIsosurface(double value);
+
+         ///Clear the texture-based visualize
+         void ClearAll();
+
          void SetCurrentTime(double time);
   
          void ViewTextureBasedVis(bool trueFalse);

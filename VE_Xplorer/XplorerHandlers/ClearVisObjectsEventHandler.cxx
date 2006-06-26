@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/ClearVisObjectsEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 
@@ -48,6 +49,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace VE_TextureBased;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -91,5 +93,6 @@ void ClearVisObjectsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    //call back over to ssvishandler to clear the vis objects
    cfdSteadyStateVizHandler::instance()->ClearVisObjects();
+   cfdTextureBasedVizHandler::instance()->ClearAll();
    cfdModelHandler::instance()->GetActiveModel()->MakeCADRootOpaque();
 }

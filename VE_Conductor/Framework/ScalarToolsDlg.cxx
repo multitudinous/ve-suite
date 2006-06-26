@@ -83,7 +83,7 @@ void ScalarToolsDialog::_buildGUI()
    wxStaticBox* isoSliderBox = new wxStaticBox(this, -1, _T("Isosurface"));
    wxStaticBoxSizer* isoSizer = new wxStaticBoxSizer(isoSliderBox,wxVERTICAL);
    
-   /*wxBoxSizer* enableIsoSizer = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* enableIsoSizer = new wxBoxSizer(wxHORIZONTAL);
    _isosurfaceCheck = new wxCheckBox(this,ISO_ENABLE_CHECK,_T("Enable Isosurface"));
    enableIsoSizer->Add(_isosurfaceCheck,0,wxALIGN_CENTER);
 
@@ -91,7 +91,7 @@ void ScalarToolsDialog::_buildGUI()
    _advancedButton->Enable(false);
    enableIsoSizer->Add(_advancedButton,0,wxALIGN_CENTER);
 
-   isoSizer->Add(enableIsoSizer,1,wxALIGN_CENTER|wxEXPAND);*/
+   isoSizer->Add(enableIsoSizer,1,wxALIGN_CENTER|wxEXPAND);
 
    _isoSlider = new wxSlider(this, TB_ISOSURFACE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
    _isoSlider->Enable(false);
@@ -226,7 +226,8 @@ void ScalarToolsDialog::_onUpdateIsosurface(wxCommandEvent& command)
 void ScalarToolsDialog::_onEnableIsoSurface(wxCommandEvent& command)
 {
    _isoSlider->Enable(_isosurfaceCheck->GetValue());
-   _advancedButton->Enable(_isosurfaceCheck->GetValue());
+   //this isn't ready yet
+   //_advancedButton->Enable(_isosurfaceCheck->GetValue());
 
    ClearInstructions();
    _commandName = "TB_ISOSURFACE_ENABLE";
