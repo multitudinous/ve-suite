@@ -85,7 +85,7 @@ Source: {#VEHOME}\bin\win32\WinClientd.exe; DestDir: {app}\bin; Components: veco
 Source: {#VEHOME}\bin\win32\project_tao_osg_d.exe; DestDir: {app}\bin; Components: vexplorer\osg; Flags: ignoreversion
 ;Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Components: vexplorer\osgvepcluster; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_d.exe; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion
-Source: {#VEHOME}\lib\win32\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#VEHOME}\lib\win32\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEHOME}\bin\win32\WinServerd.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\WinClientd.exe; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
 ;Source: {#VEHOME}\VE_Installer\installer\run.pf.bat; DestDir: {app}\bin; Components: vexplorer\pf; Flags: ignoreversion confirmoverwrite
@@ -126,6 +126,7 @@ Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; 
 Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\stereo_desktop; Components: nameserver; Flags: ignoreversion recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\dist\*; DestDir: {app}; Flags: ignoreversion; Components: velauncher
 Source: {#VEHOME}\VE_Installer\installer\ve_logo.xpm; DestDir: {app}; Flags: replacesameversion
+Source: {#VEHOME}\bin\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 [Icons]
 Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
