@@ -772,7 +772,8 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
    this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
    this->activeObject->SetCursorType( cfdEnvironmentHandler::instance()->GetCursor()->GetCursorID() );
-
+   activeObject->SetUpdateFlag( false );
+   
    //call back over to ssvishandler to set the flags
    cfdSteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
    cfdSteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );

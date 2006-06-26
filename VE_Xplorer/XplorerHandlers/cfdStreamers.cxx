@@ -424,17 +424,20 @@ void cfdStreamers::UpdateCommand()
    vprDEBUG(vesDBG,0) << " STREAMLINE_DIAMETER\t" 
       << streamDiamter 
       << std::endl << vprDEBUG_FLUSH;   
+   // diameter is obtained from gui, -100 < vectorScale < 100
+   // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
+   // convert range to -2.5 < x < 2.5, and compute the exponent...
+   float range = 2.5f;
    int diameter = static_cast< int >( streamDiamter );
-   // this is to convert 1 to 50 on the GUI  to approx from 1 to 28 pixels
-   //vector arrows and seed points are in feet
-   // this->lineDiameter = exp(diameter*0.06666f);
-   this->lineDiameter = 0.25 * diameter;
+   float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f *0.001f;
+   
+   // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
+   // note that multiplying by 0.005 is the same as dividing by 200, or the range
+   this->lineDiameter = (diameter + 110) * 0.005 *  20;
    
    vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
       << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
-   
-   //this will make the arrows on the streamlines twice the diameter
-   arrowDiameter = lineDiameter * 2.0f;
+   arrowDiameter = localLineDiameter * 4.0f;
    
    /////////////////////
    //activeModelDVP = objectCommand->GetDataValuePair( "Sphere/Arrow/Particle Size" );
