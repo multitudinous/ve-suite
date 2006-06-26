@@ -93,6 +93,8 @@ void ClearVisObjectsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    //call back over to ssvishandler to clear the vis objects
    cfdSteadyStateVizHandler::instance()->ClearVisObjects();
+#ifdef VE_PATENTED
    cfdTextureBasedVizHandler::instance()->ClearAll();
+#endif
    cfdModelHandler::instance()->GetActiveModel()->MakeCADRootOpaque();
 }

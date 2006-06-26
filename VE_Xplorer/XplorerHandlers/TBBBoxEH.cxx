@@ -42,6 +42,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedBoundingBoxEventHandler::TextureBasedBoundingBoxEventHandler()
 {
@@ -81,3 +82,4 @@ void TextureBasedBoundingBoxEventHandler::_operateOnNode(VE_XML::XMLObject* veXM
       std::cout<<"TextureBasedBoundingBoxEventHandler::_operateOnNode()"<<std::endl;
    }
 }
+#endif

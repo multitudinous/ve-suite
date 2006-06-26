@@ -42,6 +42,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedUpdateSolutionEventHandler::TextureBasedUpdateSolutionEventHandler()
 {
@@ -113,3 +114,4 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(VE_XML::XMLObject* v
       std::cout<<"TextureBasedUpdateSolutionEventHandler::_operateOnNode()"<<std::endl;
    }
 }
+#endif

@@ -42,6 +42,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedIsosurfaceEnableEventHandler::TextureBasedIsosurfaceEnableEventHandler()
 {
@@ -82,3 +83,4 @@ void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode(VE_XML::XMLObject*
       std::cout<<"TextureBasedIsosurfaceEnableEventHandler::_operateOnNode()"<<std::endl;
    }
 }
+#endif

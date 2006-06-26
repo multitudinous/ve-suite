@@ -43,10 +43,12 @@ namespace VE_XML
 {
    class XMLObject;
 }
+#ifdef VE_PATENTED
 namespace VE_TextureBased
 {
    class cfdTextureDataSet;
 }
+#endif
 namespace VE_Xplorer
 {
    class cfdGlobalBase;
@@ -86,8 +88,9 @@ protected:
 
    ///Set the active cfdTextureDataset
    void _setActiveTextureDataset(/*std::string tdsName*/);
-
+#ifdef VE_PATENTED
    VE_TextureBased::cfdTextureDataSet* _activeTDSet;///<The active cfdTextureDataset.
+#endif
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
 };
 }
