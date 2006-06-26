@@ -481,6 +481,12 @@
 				RelativePath=".\TBActivateEH.cxx">
 			</File>
 			<File
+				RelativePath=".\TBBBoxEH.cxx">
+			</File>
+			<File
+				RelativePath=".\TBUpdateScalarRangeEH.cxx">
+			</File>
+			<File
 				RelativePath=".\TBUpdateSolutionEH.cxx">
 			</File>
 			<File
@@ -711,6 +717,12 @@
 			</File>
 			<File
 				RelativePath=".\TBActivateEH.h">
+			</File>
+			<File
+				RelativePath=".\TBBBoxEH.h">
+			</File>
+			<File
+				RelativePath=".\TBUpdateScalarRangeEH.h">
 			</File>
 			<File
 				RelativePath=".\TBUpdateSolutionEH.h">

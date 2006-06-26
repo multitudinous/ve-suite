@@ -44,6 +44,8 @@
 #include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
+#include "VE_Xplorer/XplorerHandlers/TBBBoxEH.h"
+#include "VE_Xplorer/XplorerHandlers/TBUpdateScalarRangeEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBUpdateSolutionEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
@@ -103,6 +105,9 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 
    _eventHandlers[std::string("TB_ACTIVATE")] = new VE_EVENTS::TextureBasedActivateEventHandler();
    _eventHandlers[std::string("TB_ACTIVE_SOLUTION")] = new VE_EVENTS::TextureBasedUpdateSolutionEventHandler();
+   _eventHandlers[std::string("TB_SCALAR_RANGE")] = new VE_EVENTS::TextureBasedUpdateScalarRangeEventHandler();
+   _eventHandlers[std::string("TB_BBOX_DISPLAY")] = new VE_EVENTS::TextureBasedBoundingBoxEventHandler();
+  
 }
 ///////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::CleanUp( void )
@@ -339,6 +344,21 @@ void cfdTextureBasedVizHandler::_updateGraph()
 void cfdTextureBasedVizHandler::SetCurrentTime(double time)
 {
   _appTime = time; 
+}
+////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::UpdateBoundingBox(bool value)
+{
+   if(_activeVolumeVizNode && activeVisNodeHdlr)
+   {
+      if(value)
+      {
+         activeVisNodeHdlr->TurnOnBBox();
+      }
+      else
+      {
+         activeVisNodeHdlr->TurnOffBBox();
+      }
+   }
 }
 ////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::UpdateActiveTextureManager()

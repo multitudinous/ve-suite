@@ -51,6 +51,7 @@ namespace VE_XML
 class wxArrayString;
 class wxToolBar;
 class wxComboBox;
+class wxCheckBox;
 
 class TextureBasedToolBar : public VE_Conductor::GUI_Utilities::BaseDialog
 {
@@ -62,7 +63,8 @@ public:
       VECTOR_ID,///<Vector ID
       ROI_ID,///<Region of interest ID
       TRANSFER_FUNCS_ID,///<Transfer function ID
-      TB_TOOLBAR///<Toolbar ID
+      TB_TOOLBAR,///<Toolbar ID
+      BBOX_CHECK_BOX///<Bounding box check
    };
    ///Constructor
    TextureBasedToolBar(wxWindow* parent, int id/*,
@@ -84,8 +86,8 @@ public:
 protected:
    wxToolBar* _tbToolButtons;///<The toolbar buttons;
    wxComboBox* _solutionSelection;///<The list of active solutions.
-   std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
-   
+   wxCheckBox* _bboxCheckBox;///<The check box to activate the Bounding Box
+  
    wxArrayString _availableScalars;///<Scalar names
    wxArrayString _availableVectors;///<Vector names
 
@@ -105,6 +107,10 @@ protected:
    ///Handle tool button presses
    ///\param event wxCommand event
    void _handleToolButtons(wxCommandEvent& event);
+   
+   ///Handle bounding box check box event
+   ///\param event wxCommand event
+   void _onBBoxCheck(wxCommandEvent& event);
    DECLARE_EVENT_TABLE()
 };
 #endif// TEXTURE_BASED_TOOL_BAR_H

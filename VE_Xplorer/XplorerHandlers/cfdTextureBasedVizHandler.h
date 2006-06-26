@@ -89,6 +89,9 @@ namespace VE_TextureBased
          ///Update the active cfdTextureManager by pinging the cfdTextureDataSet
          void UpdateActiveTextureManager();
 
+         ///Update the bounding box
+         void UpdateBoundingBox(bool value);
+
          ///Update the scalar range
          ///\param range The new scalar range
          void UpdateScalarRange(float* range);

@@ -38,6 +38,7 @@
 #include <wx/bitmap.h>
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
+#include <wx/checkbox.h>
 
 #include "VE_Conductor/xpm/ROItb.xpm"
 
@@ -57,6 +58,7 @@
 #include <iostream>
 BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
    EVT_TOOL_RANGE(SCALAR_ID,TRANSFER_FUNCS_ID,TextureBasedToolBar::_handleToolButtons)
+   EVT_CHECKBOX(BBOX_CHECK_BOX,TextureBasedToolBar::_onBBoxCheck)
 END_EVENT_TABLE()
 
 using namespace VE_Conductor::GUI_Utilities;
@@ -86,11 +88,15 @@ TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
       _updateSolutionList(_availableScalars);
    }*/
 
-   mainSizer->Add(_tbToolButtons,1,wxALIGN_CENTER_HORIZONTAL);
+   mainSizer->Add(_tbToolButtons,2,wxALIGN_CENTER);
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
+   _bboxCheckBox = new wxCheckBox(this,BBOX_CHECK_BOX,"Display Bounds");
+   _bboxCheckBox->SetValue(true);
+
+   buttonRowSizer->Add(_bboxCheckBox,0,wxALIGN_CENTER);
    _addOKButton(buttonRowSizer);
    
-   mainSizer->Add(buttonRowSizer,0,wxALIGN_CENTER_HORIZONTAL);
+   mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -214,6 +220,31 @@ void TextureBasedToolBar::_buildGUI()
 
    _tbToolButtons->Realize();
    
+}
+/////////////////////////////////////////////////////////////
+void TextureBasedToolBar::_onBBoxCheck(wxCommandEvent& event)
+{
+   ClearInstructions();
+   _commandName = "TB_BBOX_DISPLAY";
+   
+   VE_XML::DataValuePair* showBBox = new VE_XML::DataValuePair();
+   showBBox->SetDataType("UNSIGNED INT");
+   showBBox->SetDataName(std::string("BBox Flag"));
+   unsigned int value = 0;
+   if(_bboxCheckBox->GetValue())
+   {
+      value = 1;
+   }
+   else
+   {
+      value = 0;
+   }   
+   showBBox->SetDataValue(value);
+   
+   _instructions.push_back(showBBox);
+   _sendCommandsToXplorer();
+   ClearInstructions();
+
 }
 ///////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
