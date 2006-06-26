@@ -78,16 +78,20 @@ Using VE_Suite Launcher, Command Line Launch
 You can also give arguments to the Launcher from the command line to
 immediately launch it. The options are:
 
--c, --conductor: Launch Conductor
--n, --nameserver: Launch NameServer
--x <mode>, --xplorer=<mode>: Launch Xplorer. Modes include OSG, OSG-VEP,
-	OSG-VEPC and PF.
--k, --desktop: Launch in desktop mode.
--j <path>, --jconf=<path>: Use the VR Juggler configuration at <path>.
--t <name>, --taomachine=<name>: Set tao machine to <name>.
--p <port>, --port=<port>: Set tao port to <port>.
--w <path>, --dir=<path>: Set working directory to <path>.
--e <path>, --dep=<path>: Set dependencies directory to <path>.
+<none>: Start the velauncher GUI.
+
+-c, --conductor: Launch VE Conductor.
+-n, --nameserver: Launch VE NameServer.
+-x <xplorer type>, --xplorer=<xplorer type>: Launch VE Xplorer in <xplorer type> mode. You can choose OSG, OSG-VEP, or OSG-VEPC.
+
+-k, --desktop: Set VE Conductor and VE Xplorer to Desktop mode.
+-j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's Juggler configuration.
+-w <dir>, --dir=<dir>: Set the Working directory to <dir>.
+
+-t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.
+-p <port>, --port=<port>: Set TAOPORT to <port>.
+-e <dir>, --dep=<dir>: Set the Dependencies directory to <dir>.
+-m <name>, --master=<name>: Set VEXMASTER to <name>.
 
 If you leave out -c, -n, -x, or -k, the Launcher will set those options to
 False. If you leave out -j, -t, -p, -w, or -e, the Launcher will use their
