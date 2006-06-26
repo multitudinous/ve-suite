@@ -310,7 +310,7 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
                      SYMBOL_ADVANCEDSTREAMLINES_POSITION,
                      SYMBOL_ADVANCEDSTREAMLINES_SIZE, 
                      SYMBOL_ADVANCEDSTREAMLINES_STYLE );
-   int displayWidth, displayHeight = 0;
+   /*int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);
   
    wxRect bbox = GetRect();
@@ -318,7 +318,8 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    int width,height = 0;
    GetSize(&width,&height);
    adStreamline.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        width, height));
+                        width, height));*/
+   adStreamline.SetSize(GetRect());
    adStreamline.SetIntegrationStepSize(_lastIntegrationStepSize);
    adStreamline.SetPropagationSize(_lastPropagationSize);
    adStreamline.SetLineDiameter(_lastLineDiameter);

@@ -918,7 +918,7 @@ void VjObs_i::CreateCommandQueue( void )
    int activeVector = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveVector();
    int activeScalar = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveScalar();
 
-   int activeMinMax[ 2 ];
+   double activeMinMax[ 2 ];
    cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetRange( activeMinMax );
 
    std::map< int, cfdDataSet* >::iterator iter;

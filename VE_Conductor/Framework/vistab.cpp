@@ -467,6 +467,7 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    {
    
       _tbTools = new TextureBasedToolBar (this,-1);
+      _tbTools->SetSize(_vistabPosition.x, _vistabPosition.y, -1, -1, wxSIZE_USE_EXISTING);
    }
    _tbTools->SetVjObsPtr(xplorerPtr);
    _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
@@ -493,7 +494,6 @@ void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
    polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
    polydata->SetActiveScalar(_activeScalarName);
    polydata->ShowModal();
-   //itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
 }
 ///////////////////////////////////////////////////////
 void Vistab::SetActiveModel(VjObs::Model_var activeModel)
@@ -596,19 +596,6 @@ void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
    {
       _updateAvailableSolutions("MESH_VECTORS",datasetInfo.vectornames);
    }
-     
-   /*_nScalarTexturesInActiveDataset = datasetInfo.textureScalarNames.length();
-   if(_nScalarTexturesInActiveDataset)
-   {
-      _updateAvailableSolutions("TEXTURE_SCALARS",datasetInfo.textureScalarNames);
-   }
-
-   _nVectorTexturesInActiveDataset = datasetInfo.textureVectorNames.length();
-   if(_nVectorTexturesInActiveDataset)
-   {
-      _updateAvailableSolutions("TEXTURE_VECTORS",datasetInfo.textureVectorNames);
-   }*/
-std::cout<<"Here3"<<std::endl;
 }
 ////////////////////////////////////////////////////////////////////////
 //We need this extra method because the data info is stored differenly//
@@ -739,10 +726,6 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 
    scalarRange->SetMinimumSliderValue( 0 );
    scalarRange->SetMaximumSliderValue( 100 );
-
-std::cout<<"Here7"<<std::endl;
-std::cout<<_activeScalarName<<std::endl;
-std::cout<<_activeScalarRange.at(1)<<std::endl;
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))

@@ -295,10 +295,12 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          GetSize(&width,&height);
          roiDlg.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y)));*/
+           
+            roiDlg.SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
             roiDlg.SetVjObsPtr(_vjObsPtr);
             if(roiDlg.ShowModal() == wxID_OK)
             {
-               
+               ;
             }
          }
          break;

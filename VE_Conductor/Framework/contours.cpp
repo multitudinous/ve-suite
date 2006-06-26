@@ -236,8 +236,9 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
       wxRect bbox = this->GetRect();
       int width,height = 0;
       GetSize(&width,&height);
-      adContour.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        width, height));
+      /*adContour.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+                        width, height));*/
+      adContour.SetSize(GetRect());
 
       adContour.SetLOD(_lastLOD);
       adContour.SetOpacity(_lastOpacity);

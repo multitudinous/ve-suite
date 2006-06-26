@@ -45,6 +45,9 @@
 #include "VE_Conductor/Utilities/DualSlider.h"
 
 class wxComboBox;
+class wxCheckBox;
+class wxButton;
+class wxSlider;
 
 class ScalarToolsDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
 {
@@ -56,7 +59,10 @@ public:
    
    enum SCALAR_TOOLS_IDS
    {
-      AVAILABLE_SCALARS
+      AVAILABLE_SCALARS,
+      ISO_ENABLE_CHECK,
+      TB_ISOSURFACE_SLIDER,
+      ADVANCED_TB_ISOSURFACE
    };
 
    ///Set the name of the command
@@ -103,6 +109,24 @@ protected:
    ///\param command The wxCommandEvent
    void _updateActiveScalar(wxCommandEvent& command);
 
+   ///Update the scalar to color the iso-surface by
+   ///\param command The wxCommandEvent
+   void _setColorByFace(wxCommandEvent& command);
+
+   ///Update the isosurface
+   ///\param command The wxCommandEvent
+   void _onUpdateIsosurface(wxCommandEvent& command);
+
+   ///Enable/Disable isosurface visualization
+   ///\param command The wxCommandEvent
+   void _onEnableIsoSurface(wxCommandEvent& command);
+
+   wxString _activeScalar;///<The name of the scalar we are working on.
+   wxString _colorByScalarName;///<The name of the scalar to color by.
+
+   wxButton* _advancedButton;///<The advanced iso surface button.
+   wxCheckBox* _isosurfaceCheck;///<The iso surface check box.
+   wxSlider* _isoSlider;///<The isosurface slider.
    wxComboBox* _scalarSelection;///<The available scalars.
    VE_Conductor::GUI_Utilities::DualSlider* _scalarRange;///<DualSlider for x bounds
    DECLARE_EVENT_TABLE()
