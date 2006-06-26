@@ -916,7 +916,6 @@ class SettingsWindow(wx.Dialog):
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
         self.SetSize(INITIAL_WINDOW_SIZE)
-        ##self.CenterOnParent(wx.BOTH)
         ##Set the background color.
         Style(self)
 
@@ -985,7 +984,6 @@ class SettingsWindow(wx.Dialog):
     def GetSelectedJconf(self):
         """Returns the path of the selected Jconf file."""
         jconfFile = self.jconfList.GetPath(self.chJconf.GetSelection())
-        print "Jconf file: " + jconfFile ##TESTER
         return jconfFile
 
     def EditCluster(self, event):
@@ -1003,17 +1001,16 @@ class SettingsWindow(wx.Dialog):
         if self.cbNameServer.IsEnabled():
             parent.nameServer = self.cbNameServer.GetValue()
         if self.cbXplorer.IsEnabled():
-            ##Stuffed 3 variable updates in here so they don't get lost if
-            ##the user disables the XplorerType or the Desktop boxes.
-            ##Will need to be changed if modes allow user changes.
             parent.xplorer = self.cbXplorer.GetValue()
+        if self.cbXplorer.IsEnabled() or self.rbXplorer.IsEnabled():
             parent.xplorerType = self.rbXplorer.GetSelection()
+        if self.cbXplorer.IsEnabled() or self.cbConductor.IsEnabled() or \
+           self.cbDesktop.IsEnabled():
             parent.desktop = self.cbDesktop.GetValue()
         if self.chJconf.IsEnabled():
             parent.jconfList = self.jconfList
             parent.jconfCursor = self.chJconf.GetSelection()
         parent.clusterMaster = self.clusterMaster
-        print self.clusterMaster ##TESTER
         ##Close.
         self.Hide()
         self.Destroy()
