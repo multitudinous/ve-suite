@@ -164,7 +164,10 @@ void cfdExecutive::CleanUp( void )
 
    try
    {
-      _exec->UnRegisterUI( ui_i->UIName_.c_str() );
+      if(ui_i)
+      {
+         _exec->UnRegisterUI( ui_i->UIName_.c_str() );
+      }
    }
    catch( CORBA::Exception& )
    {

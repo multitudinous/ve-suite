@@ -46,11 +46,13 @@ namespace VE_XML
 #include <vector>
 #include <string>
 
+#include "VE_Conductor/Utilities/BaseDialog.h"
+
 class wxArrayString;
 class wxToolBar;
 class wxComboBox;
 
-class TextureBasedToolBar : public wxDialog
+class TextureBasedToolBar : public VE_Conductor::GUI_Utilities::BaseDialog
 {
 public:
    enum TBTOOLBAR_IDS
@@ -76,15 +78,8 @@ public:
    ///Set the vectors
    void SetVectors(wxArrayString vectorNames);
 
-#ifndef STAND_ALONE
-   ///Set the current vjObjs ptr for data passing.
-   ///\param xplorerCom The communication interface w/ xplorer.
-   void SetVjObsPtr(VjObs_ptr xplorerCom);
-#endif
-
-   ///Clear out the current queue of instructions.
-   void ClearInstructions();
-   
+   ///Activate the texture based visualization
+   bool ActivateTextureVisualization();
    
 protected:
    wxToolBar* _tbToolButtons;///<The toolbar buttons;
@@ -94,14 +89,8 @@ protected:
    wxArrayString _availableScalars;///<Scalar names
    wxArrayString _availableVectors;///<Vector names
 
-#ifndef STAND_ALONE
-   VjObs_ptr _vjObsPtr;///<The VjObj ptr.
-
-   ///Send the Command back to VE-Xplorer.
-   void _sendCommandsToXplorer();
-#endif 
    ///Build the toolbar.  
-   void _buildToolBar();
+   void _buildGUI();
 
    ///update the displayed available solutions
    ///\param activeSolutions The active solutions names

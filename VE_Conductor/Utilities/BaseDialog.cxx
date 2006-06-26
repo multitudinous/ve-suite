@@ -129,4 +129,6 @@ void BaseDialog::_sendCommandsToXplorer()
    }
    //Clean up memory
    delete newCommand;
+
+   ClearInstructions();
 }

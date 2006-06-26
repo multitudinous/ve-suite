@@ -797,11 +797,11 @@ void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject 
    //activeDataset->GetParent()->SetActiveVector( vectorIndex );
 #ifdef _OSG
 #ifdef VE_PATENTED
-   cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
+   /*cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
    if ( activeTDSet )
    {
       activeTDSet->SetActiveVector( activeVector );
-   }
+   }*/
 #endif
 #endif
 }
@@ -829,11 +829,12 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xm
    //update active scalar texture if it exists
 #ifdef _OSG
 #ifdef VE_PATENTED
-   cfdTextureDataSet* activeTDSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveTextureDataSet();
+   ///These don't necessarily match do they?
+   /*cfdTextureDataSet* activeTDSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveTextureDataSet();
    if( activeTDSet )
    {
       activeTDSet->SetActiveScalar( activeScalarName );
-   }
+   }*/
 #endif
 #endif
    

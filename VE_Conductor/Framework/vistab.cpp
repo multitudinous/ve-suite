@@ -466,16 +466,15 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    if(!_tbTools)
    {
    
-      _tbTools = new TextureBasedToolBar (this,-1/*,
-                               _availableSolutions["TEXTURE_SCALARS"],
-                               _availableSolutions["TEXTURE_VECTORS"]*/);
+      _tbTools = new TextureBasedToolBar (this,-1);
    }
    _tbTools->SetVjObsPtr(xplorerPtr);
    _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
    _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
-   
-   _tbTools->ShowModal();
-   //itemToolBar3->ToggleTool(TEXTURE_BASED_BUTTON, false);
+   if(_tbTools->ActivateTextureVisualization())
+   {
+      _tbTools->ShowModal();
+   }
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )

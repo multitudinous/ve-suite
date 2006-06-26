@@ -47,7 +47,10 @@
 #include "VE_Conductor/xpm/scalartb_bw.xpm"
 
 #include "VE_Conductor/Utilities/ROIDialog.h"
+#include "VE_Conductor/Framework/ScalarToolsDlg.h"
 
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
@@ -58,16 +61,14 @@ END_EVENT_TABLE()
 
 using namespace VE_Conductor::GUI_Utilities;
 //////////////////////////////////////////////////////////////////
-TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id/*,
-                                   wxArrayString scalarNames,
-                                   wxArrayString vectorNames*/)
-:wxDialog((wxWindow *) parent, id, "Texture-Based ToolBar",wxDefaultPosition,wxDefaultSize,
-(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("Texture-Based ToolBar") )
+TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
+:VE_Conductor::GUI_Utilities::BaseDialog(parent,id,"Texture-Based Tools")
 {
-   wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
    //_availableScalars.Add("No data available");
-   _buildToolBar();
+   //_buildToolBar();
+   _buildGUI();
    /*if(!_availableScalars.Count())
    {
       if(!_availableVectors.Count())
@@ -85,7 +86,11 @@ TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id/*,
       _updateSolutionList(_availableScalars);
    }*/
 
-   mainSizer->Add(_tbToolButtons,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   mainSizer->Add(_tbToolButtons,1,wxALIGN_CENTER_HORIZONTAL);
+   wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
+   _addOKButton(buttonRowSizer);
+   
+   mainSizer->Add(buttonRowSizer,0,wxALIGN_CENTER_HORIZONTAL);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -105,13 +110,6 @@ void TextureBasedToolBar::_updateAvailableSolutions(wxArrayString scalarNames,
                                               wxArrayString vectorNames)
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////
-/*wxString TextureBasedToolBar::ExtractRelativeDirectoryFromFullPath(wxString fullPathString)
-{
-   wxFilename fName(fullPathString);
-   fName.GetName();
-   return fName.GetName();
-}*/
 ////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
 {
@@ -124,10 +122,7 @@ void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
       if(scalarNames[i] != wxString(""))
       {
          wxFileName fName(scalarNames[i]);
-         std::cout<<"Adding scalar..."<<std::endl;
-         //_availableScalars.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(scalarNames[i].GetData()).c_str());
          _availableScalars.Add(fName.GetName());
-         std::cout<<_availableScalars[i]<<std::endl;
       }
       else
       {
@@ -135,7 +130,7 @@ void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
         std::cout<<scalarNames[i]<<std::endl;
       }
    }
-   //_updateSolutionList(_availableScalars);
+  // _updateSolutionList(_availableScalars);
 }
 ///////////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
@@ -149,11 +144,7 @@ void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
       if(vectorNames[i] != wxString(""))
       {
          wxFileName fName(vectorNames[i]);
-         
-         std::cout<<"Adding Vector..."<<std::endl;
-         //_availableVectors.Add(VE_Util::fileIO::ExtractRelativeDirectoryFromFullPath(vectorNames[i].GetData()).c_str());
          _availableVectors.Add(fName.GetName());
-         std::cout<<vectorNames[i]<<std::endl;
       }
       else
       {
@@ -177,13 +168,13 @@ void TextureBasedToolBar::_updateSolutionList(wxArrayString activeSolutions)
    }
 }
 /////////////////////////////////////////
-void TextureBasedToolBar::_buildToolBar()
+void TextureBasedToolBar::_buildGUI()
 {
    _tbToolButtons  = new wxToolBar(this,TB_TOOLBAR,wxDefaultPosition, wxDefaultSize,
                                 wxTB_HORIZONTAL | wxNO_BORDER |wxTB_TEXT);
    _tbToolButtons->SetToolBitmapSize(wxSize(50,50));
 
-   /*_solutionSelection = new wxComboBox(_tbToolButtons,ACTIVE_SOLUTION,wxEmptyString, wxDefaultPosition, wxSize(150,wxDefaultCoord) );
+   /*_solutionSelection = new wxComboBox(this,ACTIVE_SOLUTION,wxEmptyString, wxDefaultPosition, wxSize(150,wxDefaultCoord) );
    _updateSolutionList(_availableScalars);
    _tbToolButtons->AddControl(_solutionSelection);
 */
@@ -209,14 +200,10 @@ void TextureBasedToolBar::_buildToolBar()
                              wxITEM_NORMAL,
                              _T("Scalar Data Tools") );
    
-   //_tbToolButtons->ToggleTool(SCALAR_ID,false);
-
    _tbToolButtons->AddTool(VECTOR_ID,_T("Vectors"),
                              vectorOnBitmap,wxNullBitmap,
                              wxITEM_NORMAL,
                              _T("Vector Data Tools") );
-   //_tbToolButtons->ToggleTool(VECTOR_ID,false);
-  
    _tbToolButtons->AddSeparator();
    _tbToolButtons->AddTool(ROI_ID,_T("ROI"),
                         ROIOnBitmap,wxNullBitmap,
@@ -228,25 +215,29 @@ void TextureBasedToolBar::_buildToolBar()
    _tbToolButtons->Realize();
    
 }
-///////////////////////////////////////////////////////////
-void TextureBasedToolBar::SetVjObsPtr(VjObs_ptr xplorerCom)
-{
-    _vjObsPtr = xplorerCom;
-}
-/////////////////////////////////////////////
-void TextureBasedToolBar::ClearInstructions()
-{
-    _instructions.clear();
-}
 ///////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
 {
-   std::cout<<"TBTool ID: "<<event.GetId()<<std::endl;
    switch(event.GetId())
    {
       case SCALAR_ID:
-         wxMessageBox( "Scalar tools.", 
-                        "Toolbar test", wxOK | wxICON_INFORMATION );
+         {
+            if(_availableScalars.GetCount())
+            {
+               ScalarToolsDialog stDlg(this,-1,"Scalar Tools");
+               stDlg.SetVjObsPtr(_vjObsPtr);
+               stDlg.UpdateScalarList(_availableScalars);
+               if(stDlg.ShowModal() == wxID_OK)
+               {
+               }
+            }
+            else
+            {
+               wxMessageBox( "ERROR!", 
+                            "No scalar data available!!", wxOK | wxICON_ERROR);
+            
+            }
+         }
          //_updateSolutionList(_availableScalars);
          //event.Skip();
          
@@ -262,7 +253,8 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
                         "Toolbar test", wxOK | wxICON_INFORMATION );
          break;
       case ROI_ID:
-         ROIDialog roiDlg(this,-1,"Volume Clipping Bounds");
+         {
+           ROIDialog roiDlg(this,-1,"Volume Clipping Bounds");
          /*int displayWidth, displayHeight = 0;
          ::wxDisplaySize(&displayWidth,&displayHeight);
   
@@ -272,11 +264,12 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          GetSize(&width,&height);
          roiDlg.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y)));*/
-         roiDlg.SetVjObsPtr(_vjObsPtr);
-         if(roiDlg.ShowModal() == wxID_OK)
-         {
-            wxMessageBox( "ROI tools.", 
+            roiDlg.SetVjObsPtr(_vjObsPtr);
+            if(roiDlg.ShowModal() == wxID_OK)
+            {
+               wxMessageBox( "ROI tools.", 
                        "Toolbar test", wxOK | wxICON_INFORMATION );
+            }
          }
          break;
 
@@ -284,7 +277,38 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
    //_tbToolButtons->ToggleTool(event.GetId(),false);
    //event.Skip();
 }
-//////////////////////////////////////////////////
-void TextureBasedToolBar::_sendCommandsToXplorer()
+/////////////////////////////////////////////////////////
+bool TextureBasedToolBar::ActivateTextureVisualization()
 {
+   ClearInstructions();
+   _commandName = "TB_ACTIVATE";
+   
+   if(_availableScalars.GetCount())
+   {
+      VE_XML::DataValuePair* activateCommand = new VE_XML::DataValuePair();
+      activateCommand->SetDataType("STRING");
+      activateCommand->SetDataName(std::string("Active Scalar"));
+      activateCommand->SetDataString(_availableScalars[0].GetData());
+      _instructions.push_back(activateCommand);
+      _sendCommandsToXplorer();
+   }
+   else if(_availableVectors.GetCount())
+   {
+      VE_XML::DataValuePair* activateCommand = new VE_XML::DataValuePair();
+      activateCommand->SetDataType("STRING");
+      activateCommand->SetDataName(std::string("Active Vector"));
+      activateCommand->SetDataString(_availableVectors[0].GetData());
+      _instructions.push_back(activateCommand);
+      _sendCommandsToXplorer();
+   }
+   else
+   {
+      wxMessageBox( "ERROR.", 
+                   "No texture-based datasets available!!", wxOK | wxICON_ERROR );
+      _tbToolButtons->Enable(false);
+      return false;
+
+   }
+   ClearInstructions();
+   return true;
 }

@@ -34,6 +34,9 @@
 #ifdef VE_PATENTED
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
+
+#include "VE_Xplorer/XplorerHandlers/TextureBasedEventHandler.h"
+
 #include <string>
 namespace VE_SceneGraph
 {
@@ -51,6 +54,7 @@ namespace VE_Xplorer
 }
 
 #include <vector>
+#include <map>
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
@@ -81,6 +85,13 @@ namespace VE_TextureBased
          void SetNavigate( VE_Xplorer::cfdNavigate* navigate);
          void SetCursor( VE_Xplorer::cfdCursor* cursor);
          void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
+
+         ///Update the active cfdTextureManager by pinging the cfdTextureDataSet
+         void UpdateActiveTextureManager();
+
+         ///Update the scalar range
+         ///\param range The new scalar range
+         void UpdateScalarRange(float* range);
 
          void SetCurrentTime(double time);
   
@@ -125,6 +136,9 @@ namespace VE_TextureBased
          float* _currentBBox;
          bool _cleared;
          bool _textureBaseSelected;
+
+         std::map<std::string,VE_EVENTS::TextureBasedEventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
+
       private:
          // Required so that vpr::Singleton can instantiate this class.
          //friend class vpr::Singleton< cfdTextureBasedVizHandler >;

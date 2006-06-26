@@ -97,8 +97,11 @@ DualSlider::~DualSlider()
    for ( std::map<int ,SliderCallback*>::iterator itr = _callbacks.begin();
                                        itr != _callbacks.end(); itr++ )
    {
-      delete itr->second;
-      itr->second = 0;
+      if(itr->second)
+      {
+         delete itr->second;
+         itr->second = 0;
+      }
    }
    _callbacks.clear();
 }

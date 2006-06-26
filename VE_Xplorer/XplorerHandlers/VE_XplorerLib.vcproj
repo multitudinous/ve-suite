@@ -224,7 +224,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="3"
+				DebugInformationFormat="4"
 				CompileAs="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
 			<Tool
@@ -478,6 +478,15 @@
 				RelativePath=".\MaterialUpdateEH.cxx">
 			</File>
 			<File
+				RelativePath=".\TBActivateEH.cxx">
+			</File>
+			<File
+				RelativePath=".\TBUpdateSolutionEH.cxx">
+			</File>
+			<File
+				RelativePath=".\TextureBasedEventHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\trackball.cxx">
 			</File>
 		</Filter>
@@ -699,6 +708,15 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.h">
+			</File>
+			<File
+				RelativePath=".\TBActivateEH.h">
+			</File>
+			<File
+				RelativePath=".\TBUpdateSolutionEH.h">
+			</File>
+			<File
+				RelativePath=".\TextureBasedEventHandler.h">
 			</File>
 			<File
 				RelativePath=".\trackball.h">
