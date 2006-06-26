@@ -583,7 +583,8 @@ class LauncherWindow(wx.Frame):
             p = DEFAULT_JCONF
             config.SetPath(JCONF_CONFIG)
             config.Write(os.path.split(p)[1][:-6], p)
-            self.jconfList = JconfList(name)
+            config.SetPath('..')
+            self.jconfList = JconfList()
         ##If neither exists, bring up an error. NOTE: Should never be reached.
         else:
             print "ERROR: No Jconf configuration found and failed to make" + \
