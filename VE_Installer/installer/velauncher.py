@@ -1708,11 +1708,10 @@ class Launch:
         jconf -- Which .jconf file to use for Xplorer's settings."""
         ##Name Server section
         if runName:
-            os.system("start /B Naming_Service.exe -ORBEndPoint" +
+            os.system("Naming_Service -ORBEndPoint" +
                       " iiop://${TAO_MACHINE}:${TAO_PORT}")
             time.sleep(5)
-            os.system("start /B WinServerd.exe -ORBInitRef" +
-                      " NameService=" +
+            os.system("WinServerd -ORBInitRef NameService=" +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService" +
                       " -ORBDottedDecimalAddresses 1")
         ##Conductor section
