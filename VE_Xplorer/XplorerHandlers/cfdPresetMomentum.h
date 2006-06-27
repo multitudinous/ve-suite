@@ -65,6 +65,7 @@ namespace VE_Xplorer
          Output a updated pfGeoSet.  
          */
          virtual void Update( void );
+         void CreatePlane( void );
 
       private:
          int xyz;
