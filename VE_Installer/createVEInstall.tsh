@@ -117,7 +117,7 @@ rm -rf ./exampleDatasets/simple/vectors/sample_vector/.svn
 #cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
 
 echo "Copying VE-Launcher script..."
-cp -f ${VE_SUITE_HOME}/VE_Installer/installer/velauncher.py ./VE-Launcher.py
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/velauncher.py ./velauncher.py
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_logo.xpm ./images/.
 
 echo "Copying Desktop configuration file..."
