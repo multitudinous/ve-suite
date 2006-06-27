@@ -35,7 +35,7 @@ FIXED = False ##Used in MODE_DICT
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 DIRECTORY_DEFAULT = os.path.join(os.getcwd(), "exampleDatasets")
-LOGO_LOCATION = "ve_logo.xpm"
+LOGO_LOCATION = "./images/ve_logo.xpm"
 CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
 RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
