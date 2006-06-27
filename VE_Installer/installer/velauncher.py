@@ -1708,7 +1708,13 @@ class Launch:
         jconf -- Which .jconf file to use for Xplorer's settings."""
         ##Name Server section
         if runName:
-            os.system("VES -nserv &")
+            os.system("start /B Naming_Service.exe -ORBEndPoint" +
+                      " iiop://${TAO_MACHINE}:${TAO_PORT}")
+            time.sleep(5)
+            os.system("start /B WinServerd.exe -ORBInitRef" +
+                      " NameService=" +
+                      "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService" +
+                      " -ORBDottedDecimalAddresses 1")
         ##Conductor section
         if runConductor:
             ##Append argument if desktop mode selected
@@ -1716,7 +1722,9 @@ class Launch:
                 desktop = "-VESDesktop"
             else:
                 desktop = ""
-            os.system("VES -menu %s &" % (desktop))
+            os.system("WinClient -ORBInitRef NameService=corbaloc:iiop:" +
+                      "${TAO_MACHINE}:${TAO_PORT}/" +
+                      "NameService %s &" % (desktop))
         ##Xplorer section
         if runXplorer:
             ##Append argument if desktop mode selected
@@ -1735,16 +1743,13 @@ class Launch:
                 executable = "project_tao_pf"
             ##Xplorer's call
             ##Error tag: Find $$ERROR_1$$ for more details.
-            ##os.system("%s -ORBInitRef NameService=" %(executable) +
-            ##          "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
-            ##          "%s %s &" %(jconf, desktop))
+            os.system("%s -ORBInitRef NameService=" %(executable) +
+                      "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
+                      "%s %s &" %(jconf, desktop))
         ##Cluster mode
         if runXplorer and typeXplorer == 2 and cluster != None:
-##        if cluster != None: ##TESTER
-##            print cluster ##TESTER
             for comp in cluster:
-##                print "Comp: %s" %(comp) ##TESTER
-##                print "Annoying %s" %(comp) ##TESTER
+                print "Annoying %s" %(comp) ##TESTER
                 launcherDir = str(os.getenv("VE_INSTALL_DIR"))
                 xplorerType = XPLORER_TYPE_LIST[typeXplorer]
                 taoMachine = str(os.getenv("TAO_MACHINE"))
@@ -1753,12 +1758,12 @@ class Launch:
                 depsDir = str(os.getenv("VE_DEPS_DIR"))
                 master = str(os.getenv("VEXMASTER"))
                 command = ""
-                command = 'ssh -X %s "cd %s;' %(comp, launcherDir) + \
-                          ' python velauncher.py" &'
 ##                command = 'ssh -X %s "cd %s;' %(comp, launcherDir) + \
-##                          ' python velauncher.py -x %s' %(xplorerType) + \
-##                          ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
-##                          ' -w %s -e %s -m %s"' %(workDir, depsDir, master)
+##                          ' python velauncher.py" &'
+                command = 'ssh -X %s "cd %s;' %(comp, launcherDir) + \
+                          ' python velauncher.py -x %s' %(xplorerType) + \
+                          ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
+                          ' -w %s -e %s -m %s"' %(workDir, depsDir, master)
                 os.system(command)
                 time.sleep(5)
         return
