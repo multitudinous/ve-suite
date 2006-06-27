@@ -661,8 +661,9 @@ class LauncherWindow(wx.Dialog):
         ##Sets the upper-left corner of the Settings window to be just
         ##right of the Mode radio box. Needs some nudging to avoid covering
         ##up important info.
-        position = wx.Point(x + x2 + x3 + HORIZONTAL_SPACE[0],
-                            y + y2 + VERTICAL_SPACE[1])
+        OFFSET = 20 ##Pixels
+        position = wx.Point(x + x2 + x3 + OFFSET,
+                            y + y2 + OFFSET)
         frame = SettingsWindow(self, self.jconfList, self.jconfCursor,
                                      self.clusterDict, self.clusterMaster,
                                      self.desktop, self.nameServer,
@@ -1317,7 +1318,7 @@ class JconfWindow(wx.Dialog):
                 elif name.isspace() or name == '':
                     dlg = wx.MessageDialog(self,
                                            "Your new name is empty." + \
-                                           "Please choose a different name.",
+                                           " Please choose a different name.",
                                            "ERROR: Name is Empty",
                                            wx.OK)
                     dlg.ShowModal()
@@ -1403,7 +1404,6 @@ class ClusterDict:
         """Returns a list of the entries' names."""
         nList = []
         for name in self.cluster:
-            print name ##TESTER
             nList.append(name)
         return nList
 
@@ -1439,6 +1439,7 @@ class ClusterWindow(wx.Dialog):
 
         Keyword arguments:
         D: The linked Cluster dictionary this window modifies.
+        clusterMaster: Name of the cluster's Master.
         """
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title,
                            style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
@@ -1506,7 +1507,10 @@ class ClusterWindow(wx.Dialog):
         ##Set cursor if it's blank.
         if cursor == "":
             cursor = self.clustList.GetStringSelection()
-        self.clustList.Set(sorted(set(self.cDict.GetNames())))
+        print str(cursor) ##TESTER
+        nameList = self.cDict.GetNames()
+        nameList.sort()
+        self.clustList.Set(nameList)
         if cursor == wx.NOT_FOUND or self.clustList.GetCount() == 0:
             self.clustList.SetSelection(wx.NOT_FOUND)
         elif self.clustList.FindString(str(cursor)) == wx.NOT_FOUND:
@@ -1536,7 +1540,7 @@ class ClusterWindow(wx.Dialog):
                 dlg.Destroy()
                 return
             self.cDict.Add(location)
-            self.Update(self)
+            self.Update()
             self.DeleteEnabledCheck()
         else:
             dlg.Destroy()
@@ -1556,9 +1560,13 @@ class ClusterWindow(wx.Dialog):
             self.cDict.Delete(name)
             ##Move the cursor if it wouldn't be on the list anymore.
             cursor = self.clustList.GetSelection()
-            if cursor >= len(self.cDict):
-                cursor = len(self.cDict) - 1
-            self.Update()
+            if len(self.cDict) == 0:
+                cursor = wx.NOT_FOUND
+            elif cursor >= len(self.cDict):
+                cursor = self.clustList.GetString(len(self.cDict) - 1)
+            else:
+                cursor = self.clustList.GetString(cursor + 1)
+            self.Update(cursor)
             self.DeleteEnabledCheck()
 
     def OnClose(self, event):
