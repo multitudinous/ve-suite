@@ -20,7 +20,6 @@ SRCS=\
    gridConversion.cpp \
    viewCells.cpp \
    fireReader.cpp \
-   cfdGrid2Surface.cpp \
    particle.cpp \
    fluentParticles.cpp \
    reiParticles.cpp \
