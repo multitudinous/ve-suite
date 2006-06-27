@@ -115,6 +115,27 @@ namespace VE_TextureBased
          ///Clear the texture-based visualize
          void ClearAll();
 
+         ///Set the current frame
+         ///\param frame The current step in the transient visualization.
+         void SetCurrentFrame(unsigned int frame);
+
+         ///Step the current visualization
+         ///\param direction The direction to step
+         void StepTransientVisualization(std::string direction);
+
+         ///Update the duration of the current visualization
+         ///\param duration The duration
+         void UpdateTransientDuration(double duration);
+
+         ///Play the transient visualization
+         void PlayTransientVisualization();
+
+         ///Stop the transient visualization
+         void StopTransientVisualization();
+
+         ///Set the direction of the visualization
+         void SetTransientDirection(std::string direction);
+
          void SetCurrentTime(double time);
   
          void ViewTextureBasedVis(bool trueFalse);

@@ -115,7 +115,7 @@ protected:
 
    ///Update the isosurface
    ///\param command The wxCommandEvent
-   void _onUpdateIsosurface(wxCommandEvent& command);
+   void _onUpdateIsosurface(wxScrollEvent& command);
 
    ///Enable/Disable isosurface visualization
    ///\param command The wxCommandEvent

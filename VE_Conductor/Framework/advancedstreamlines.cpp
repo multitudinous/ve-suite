@@ -36,6 +36,9 @@
 #include <wx/slider.h>
 #include <wx/checkbox.h>
 #include <wx/icon.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/bmpbuttn.h>
 
 BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
       EVT_BUTTON   ( PARTICLE_TRACKING,  AdvancedStreamlines::_OnParticleTracking )

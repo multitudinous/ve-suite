@@ -47,7 +47,7 @@ namespace VE_XML
 #include <string>
 
 #include "VE_Conductor/Utilities/BaseDialog.h"
-
+class UI_TransientDialog;
 class wxArrayString;
 class wxToolBar;
 class wxComboBox;
@@ -64,7 +64,8 @@ public:
       ROI_ID,///<Region of interest ID
       TRANSFER_FUNCS_ID,///<Transfer function ID
       TB_TOOLBAR,///<Toolbar ID
-      BBOX_CHECK_BOX///<Bounding box check
+      BBOX_CHECK_BOX,///<Bounding box check
+      TRANSIENT_BUTTON///<Transient controls
    };
    ///Constructor
    TextureBasedToolBar(wxWindow* parent, int id/*,
@@ -87,6 +88,7 @@ protected:
    wxToolBar* _tbToolButtons;///<The toolbar buttons;
    wxComboBox* _solutionSelection;///<The list of active solutions.
    wxCheckBox* _bboxCheckBox;///<The check box to activate the Bounding Box
+   UI_TransientDialog* _transientControls;///<The "radio-like" controls for transient visualiation.
   
    wxArrayString _availableScalars;///<Scalar names
    wxArrayString _availableVectors;///<Vector names
@@ -111,6 +113,12 @@ protected:
    ///Handle bounding box check box event
    ///\param event wxCommand event
    void _onBBoxCheck(wxCommandEvent& event);
+   
+   ///Launch transient controls
+   ///\param event wxCommand event
+   void _onTransient(wxCommandEvent& event);
+   
+
    DECLARE_EVENT_TABLE()
 };
 #endif// TEXTURE_BASED_TOOL_BAR_H

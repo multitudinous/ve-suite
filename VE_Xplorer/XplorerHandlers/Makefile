@@ -122,6 +122,8 @@ SRCS=\
    CreateVisObjectEventHandler.cxx\
    ClearVisObjectsEventHandler.cxx\
    ChangeCursorEventHandler.cxx\
+   TBTransientModeUpdateEH.cxx \
+   TBTransientDurationUpdateEH.cxx \
    TBIsosurfaceEnableEH.cxx \
    TBIsosurfaceUpdateEH.cxx\
    TBUpdateScalarRangeEH.cxx\

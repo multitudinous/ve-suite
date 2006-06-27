@@ -493,6 +493,12 @@
 				RelativePath=".\TBIsosurfaceUpdateEH.cxx">
 			</File>
 			<File
+				RelativePath=".\TBTransientDurationUpdateEH.cxx">
+			</File>
+			<File
+				RelativePath=".\TBTransientModeUpdateEH.cxx">
+			</File>
+			<File
 				RelativePath=".\TBUpdateScalarRangeEH.cxx">
 			</File>
 			<File
@@ -738,6 +744,12 @@
 			</File>
 			<File
 				RelativePath=".\TBIsosurfaceUpdateEH.h">
+			</File>
+			<File
+				RelativePath=".\TBTransientDurationUpdateEH.h">
+			</File>
+			<File
+				RelativePath=".\TBTransientModeUpdateEH.h">
 			</File>
 			<File
 				RelativePath=".\TBUpdateScalarRangeEH.h">

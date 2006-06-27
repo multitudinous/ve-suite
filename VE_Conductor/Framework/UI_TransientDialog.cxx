@@ -38,10 +38,19 @@
 #include "VE_Conductor/xpm/transientIcons/prev.xpm"
 #include "VE_Conductor/xpm/transientIcons/stop.xpm"
 
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
+
 #include <wx/sizer.h>
 #include <wx/window.h>
+#include <wx/image.h>
+#include <wx/bmpbuttn.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/dialog.h>
 
 #include <iostream>
+#include <string>
 
 BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_BUTTON(PLAY_BUTTON, UI_TransientDialog::_onPlay)
@@ -51,22 +60,20 @@ BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_SPINCTRL(CURRENT_FRAME, UI_TransientDialog::_onSelectFrame)
    EVT_SPINCTRL(DURATION_CNTL_BOX, UI_TransientDialog::_onSetDuration)
 END_EVENT_TABLE()
+
+using namespace VE_Conductor::GUI_Utilities;
 ///////////////////////////////////////////////////////
 //Constructor                                        //
 ///////////////////////////////////////////////////////
 UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
                                        wxWindow* parent, 
                                        wxWindowID id, 
-                                       const wxString& title, 
-                                       const wxPoint& pos ,
-                                       const wxSize& size,
-                                       long style, 
-                                       const wxString& name)
-:wxDialog(parent,id,title,pos,size,style,name)                                    
+                                       std::string title)
+:BaseDialog(parent,id,title)
 {
    //_tab = 0;
    //_nTimeSteps = numTimeSteps;
-   _nTimeSteps = 19;
+   _nTimeSteps = 100;
 
    _playImage = new wxImage(play_xpm);
    _forwardImage = new wxImage(next_xpm);
@@ -112,10 +119,10 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
    _currentFrame->Enable(false);
    _duration = new wxSpinCtrlDbl( *this, DURATION_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
                                    0, 100, 0, 1.0, -1, wxEmptyString);
-   _buildDialog();
+   _buildGUI();
 }
 ///////////////////////////////////////
-void UI_TransientDialog::_buildDialog()
+void UI_TransientDialog::_buildGUI()
 {
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* spinSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -139,78 +146,90 @@ void UI_TransientDialog::_buildDialog()
    controlSizer->Add(_playButton,1,wxALIGN_CENTER|wxEXPAND);
    controlSizer->Add(_nextButton,1,wxALIGN_CENTER|wxEXPAND);
 
-   mainSizer->Add(controlSizer,1,wxALIGN_CENTER|wxEXPAND);
-   mainSizer->Add(spinSizer,2,wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(controlSizer,0,wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(spinSizer,1,wxALIGN_CENTER|wxEXPAND);
+   //_addOKButton(mainSizer);
 
+   SetSize(200,120);
    SetAutoLayout(true);
    SetSizer(mainSizer);
 }
-////////////////////////////////////////////////////
-/*void UI_TransientDialog::SetTabControl(UI_Tabs* tab)
-{
-   //_tab = tab;
-}*/
 ///////////////////////////////////////////////////////
 void UI_TransientDialog::_onPlay(wxCommandEvent& event )
 {
-   /*if(!_tab)
-      return;
-   if(event.GetId() == PLAY_BUTTON){
-      _currentFrame->Enable(false);
-      _tab->cId = TRANSIENT_PLAY;
-      //_tab->sendDataArrayToServer();
-   }*/
+   ClearInstructions();
+   _commandName = "TB_TRANSIENT_MODE_UPDATE";
+   
+   VE_XML::DataValuePair* updateMode = new VE_XML::DataValuePair();
+   updateMode->SetData("Mode","Play");
+   _instructions.push_back(updateMode);
+   _sendCommandsToXplorer();
+   ClearInstructions();
 }
 ///////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onForwardStep(wxCommandEvent& event )
 {
-   /*if(!_tab)
-      return;
-   if(event.GetId() == FORWARD_STEP_BUTTON){
-      _currentFrame->Enable(false);
-      _tab->cId = TRANSIENT_FORWARD;
-      //_tab->sendDataArrayToServer();
-   }*/
+   ClearInstructions();
+   _commandName = "TB_TRANSIENT_MODE_UPDATE";
+   
+   VE_XML::DataValuePair* updateMode = new VE_XML::DataValuePair();
+   updateMode->SetData("Mode","Step");
+   _instructions.push_back(updateMode);
+
+   
+   VE_XML::DataValuePair* updateDirection = new VE_XML::DataValuePair();
+   updateDirection->SetData("Direction","Forward");
+   _instructions.push_back(updateDirection);
+
+   _sendCommandsToXplorer();
+   ClearInstructions();
 }
 ///////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onBackwardStep(wxCommandEvent& event )
 {
-   /*if(!_tab)
-      return;
-   if(event.GetId() == BACKWARD_STEP_BUTTON){
-      _currentFrame->Enable(false);
-      _tab->cId = TRANSIENT_BACKWARD;
-      //_tab->sendDataArrayToServer();
-   }*/
+   ClearInstructions();
+   _commandName = "TB_TRANSIENT_MODE_UPDATE";
+   
+   VE_XML::DataValuePair* updateMode = new VE_XML::DataValuePair();
+   updateMode->SetData("Mode","Step");
+   _instructions.push_back(updateMode);
+
+   
+   VE_XML::DataValuePair* updateDirection = new VE_XML::DataValuePair();
+   updateDirection->SetData("Direction","Backward");
+   _instructions.push_back(updateDirection);
+
+   _sendCommandsToXplorer();
+   ClearInstructions();
 }
 ////////////////////////////////////////////////////////
 void UI_TransientDialog::_onStop(wxCommandEvent& event )
 {
-   /*if(!_tab)
-      return;
-   if(event.GetId() == STOP_BUTTON){
-      //_currentFrame->Enable(true);
-      _tab->cId = TRANSIENT_STOP;
-     // _tab->sendDataArrayToServer();
-   }*/
+   ClearInstructions();
+   _commandName = "TB_TRANSIENT_MODE_UPDATE";
+   
+   VE_XML::DataValuePair* updateMode = new VE_XML::DataValuePair();
+   updateMode->SetData("Mode","Stop");
+   _instructions.push_back(updateMode);
+   _sendCommandsToXplorer();
+   ClearInstructions();
 }
 /////////////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onSetDuration(wxSpinEvent& WXUNUSED(event))
 {
-   /*if(!_tab)
-      return;
-   _tab->cId = TRANSIENT_DURATION;
-   _tab->cIso_value = static_cast< int >( _duration->GetValue() );
-   //_tab->sendDataArrayToServer();*/
+   ClearInstructions();
+   _commandName = "TB_TRANSIENT_DURATION_UPDATE";
+  
+   VE_XML::DataValuePair* duration = new VE_XML::DataValuePair();
+   duration->SetData("Duration", _duration->GetValue());
+   _instructions.push_back(duration);
+
+   _sendCommandsToXplorer();
+   ClearInstructions();
 }
 /////////////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onSelectFrame(wxSpinEvent& WXUNUSED(event))
 {
-   /*
-   if(!_tab)
-      return;
-   _tab->cId = TRANSIENT_SET_FRAME;
-   _tab->cIso_value = _currentFrame->GetValue();
-   //_tab->sendDataArrayToServer();*/
+   
 }
 

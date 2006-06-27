@@ -139,6 +139,22 @@ cfdTextureManager::~cfdTextureManager()
       _ranges.clear();
    }
 }
+/////////////////////////////////////////////////////
+void cfdTextureManager::SetPlayMode(std::string mode)
+{
+   if(mode == "Play")
+   {
+      setPlayMode(PLAY);
+   }
+  /* else if(mode == "Step")
+   {
+      setPlayMode(STEP);
+   }*/
+   else if(mode == "Stop")
+   {
+      setPlayMode(STOP);
+   }
+}
 //////////////////////////////////////////////////////
 void cfdTextureManager::SetUseShaders(bool useShaders)
 {

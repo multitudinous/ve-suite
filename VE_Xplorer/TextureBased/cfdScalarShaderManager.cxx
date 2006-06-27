@@ -326,7 +326,8 @@ void cfdScalarShaderManager::SetDelayTime(double delay)
 void cfdScalarShaderManager::SetCurrentTransientTexture(unsigned int whichTimeStep,
                                                   bool makeSlave )
 {
-   if(_utCbk.valid()){
+   if(_utCbk.valid())
+   {
      _utCbk->SetCurrentFrame(whichTimeStep,makeSlave);
    }
 }

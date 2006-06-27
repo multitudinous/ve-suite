@@ -47,7 +47,7 @@ using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE( ScalarToolsDialog, wxDialog )
    EVT_COMBOBOX(AVAILABLE_SCALARS,ScalarToolsDialog::_updateActiveScalar)
    EVT_BUTTON(ADVANCED_TB_ISOSURFACE,ScalarToolsDialog::_setColorByFace)
-   EVT_SLIDER (TB_ISOSURFACE_SLIDER,ScalarToolsDialog::_onUpdateIsosurface)
+   EVT_COMMAND_SCROLL (TB_ISOSURFACE_SLIDER,ScalarToolsDialog::_onUpdateIsosurface)
    EVT_CHECKBOX(ISO_ENABLE_CHECK,ScalarToolsDialog::_onEnableIsoSurface)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ void ScalarToolsDialog::_setColorByFace(wxCommandEvent& command)
    }
 }
 ////////////////////////////////////////////////////////////////////
-void ScalarToolsDialog::_onUpdateIsosurface(wxCommandEvent& command)
+void ScalarToolsDialog::_onUpdateIsosurface(wxScrollEvent& command)
 {
    ClearInstructions();
    _commandName = "TB_UPDATE_ISOSURFACE";

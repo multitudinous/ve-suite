@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_TEXTURE_BASED_LIBRARY;_OSG;VE_PATENTED"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -28,7 +28,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"
+				DebugInformationFormat="4"
 				ShowIncludes="FALSE"/>
 			<Tool
 				Name="VCCustomBuildTool"/>

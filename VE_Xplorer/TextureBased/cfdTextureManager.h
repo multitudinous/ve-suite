@@ -61,6 +61,10 @@ public:
    //add a vector field from a file
    void addFieldTextureFromFile(std::string textureFile);
 
+   ///Set the play mode via string
+   ///"Play","Stop"
+   void SetPlayMode(std::string mode);
+
    void setPlayMode(PlayMode mode){_mode = mode;}
    //forwardBackward == -1 backward
    //forwardBackward == 1 forward

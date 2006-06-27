@@ -49,6 +49,7 @@
 
 #include "VE_Conductor/Utilities/ROIDialog.h"
 #include "VE_Conductor/Framework/ScalarToolsDlg.h"
+#include "VE_Conductor/Framework/UI_TransientDialog.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -59,6 +60,7 @@
 BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
    EVT_TOOL_RANGE(SCALAR_ID,TRANSFER_FUNCS_ID,TextureBasedToolBar::_handleToolButtons)
    EVT_CHECKBOX(BBOX_CHECK_BOX,TextureBasedToolBar::_onBBoxCheck)
+   EVT_BUTTON(TRANSIENT_BUTTON,TextureBasedToolBar::_onTransient)
 END_EVENT_TABLE()
 
 using namespace VE_Conductor::GUI_Utilities;
@@ -68,25 +70,8 @@ TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
 {
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
-   //_availableScalars.Add("No data available");
-   //_buildToolBar();
    _buildGUI();
-   /*if(!_availableScalars.Count())
-   {
-      if(!_availableVectors.Count())
-      {
-         _availableScalars.Add("No data available");
-         _updateSolutionList(_availableScalars);
-      }
-      else
-      {
-         _updateSolutionList(_availableVectors);
-      }
-   }
-   else 
-   {
-      _updateSolutionList(_availableScalars);
-   }*/
+   _transientControls = 0;
 
    mainSizer->Add(_tbToolButtons,2,wxALIGN_CENTER);
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -94,6 +79,7 @@ TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
    _bboxCheckBox->SetValue(true);
 
    buttonRowSizer->Add(_bboxCheckBox,0,wxALIGN_CENTER);
+   buttonRowSizer->Add(new wxButton(this,TRANSIENT_BUTTON,_T("Transient")),0,wxALIGN_CENTER);
    _addOKButton(buttonRowSizer);
    
    mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER);
@@ -136,7 +122,6 @@ void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
         std::cout<<scalarNames[i]<<std::endl;
       }
    }
-  // _updateSolutionList(_availableScalars);
 }
 ///////////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
@@ -158,7 +143,6 @@ void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
         std::cout<<vectorNames[i]<<std::endl;
       }
    }
-   //_updateSolutionList(_availableVectors);
 }
 ////////////////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_updateSolutionList(wxArrayString activeSolutions)
@@ -180,10 +164,6 @@ void TextureBasedToolBar::_buildGUI()
                                 wxTB_HORIZONTAL | wxNO_BORDER |wxTB_TEXT);
    _tbToolButtons->SetToolBitmapSize(wxSize(50,50));
 
-   /*_solutionSelection = new wxComboBox(this,ACTIVE_SOLUTION,wxEmptyString, wxDefaultPosition, wxSize(150,wxDefaultCoord) );
-   _updateSolutionList(_availableScalars);
-   _tbToolButtons->AddControl(_solutionSelection);
-*/
    wxImage scalarOnImage(scalartb_xpm);
    wxBitmap scalarOnBitmap(scalarOnImage);
 
@@ -244,7 +224,17 @@ void TextureBasedToolBar::_onBBoxCheck(wxCommandEvent& event)
    _instructions.push_back(showBBox);
    _sendCommandsToXplorer();
    ClearInstructions();
-
+}
+//////////////////////////////////////////////////////////////
+void TextureBasedToolBar::_onTransient(wxCommandEvent& event)
+{
+   if(!_transientControls)
+   {
+      _transientControls = new UI_TransientDialog(0,this,-1);
+   }
+   _transientControls->SetVjObsPtr(_vjObsPtr);
+   _transientControls->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
+   _transientControls->Show();
 }
 ///////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
@@ -269,15 +259,11 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
             
             }
          }
-         //_updateSolutionList(_availableScalars);
-         //event.Skip();
          
          break;
       case VECTOR_ID:
-         wxMessageBox( "Vector tools.", 
-                      "Unavailable!!", wxOK | wxICON_INFORMATION );
-         //_updateSolutionList(_availableVectors);
-         //event.Skip();
+         wxMessageBox( "Unavailable!!","Vector tools.", 
+                       wxOK | wxICON_INFORMATION );
          break;
       case TRANSFER_FUNCS_ID:
          wxMessageBox( "Transfer functions tools.", 
@@ -285,16 +271,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          break;
       case ROI_ID:
          {
-           ROIDialog roiDlg(this,-1,"Volume Clipping Bounds");
-         /*int displayWidth, displayHeight = 0;
-         ::wxDisplaySize(&displayWidth,&displayHeight);
-  
-         wxRect bbox = GetRect();
-
-         int width,height = 0;
-         GetSize(&width,&height);
-         roiDlg.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                       displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y)));*/
+            ROIDialog roiDlg(this,-1,"Volume Clipping Bounds");
            
             roiDlg.SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
             roiDlg.SetVjObsPtr(_vjObsPtr);
@@ -306,8 +283,6 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          break;
 
    };
-   //_tbToolButtons->ToggleTool(event.GetId(),false);
-   //event.Skip();
 }
 /////////////////////////////////////////////////////////
 bool TextureBasedToolBar::ActivateTextureVisualization()

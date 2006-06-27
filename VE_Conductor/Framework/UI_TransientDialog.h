@@ -31,18 +31,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_TRANSIENT_DIALOG_H_
 #define _VE_UI_TRANSIENT_DIALOG_H_
-#include <wx/spinctrl.h>
-#include <wx/image.h>
-#include <wx/bmpbuttn.h>
-#include <wx/bmpbuttn.h>
-#include <wx/stattext.h>
-#include <wx/statbox.h>
-#include <wx/dialog.h>
+
+#include "VE_Conductor/Utilities/BaseDialog.h"
 
 class wxSizer;
 class wxWindow;
-
+class wxImage;
+class wxBitmapButton;
 class wxSpinCtrlDbl;
+#include <wx/spinctrl.h>
 //Transient control ids
 enum TRANS_DIALOG_IDS
 {
@@ -54,21 +51,18 @@ enum TRANS_DIALOG_IDS
    CURRENT_FRAME
 };
 
-class UI_TransientDialog : public wxDialog {
+class UI_TransientDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
+{
 public:
    UI_TransientDialog(int numTimeSteps,
                     wxWindow* parent, 
 		               wxWindowID id = -1, 
-                    const wxString& title = "Transient Controls", 
-                    const wxPoint& pos = wxDefaultPosition,
-                    const wxSize& size = wxSize(200,100),
-                    long style = wxDEFAULT_DIALOG_STYLE, 
-                    const wxString& name = "Transient Controls");
+                     std::string title = "Transient Controls");
    ~UI_TransientDialog(){};
 
 //   void SetTabControl(UI_Tabs* tab);
 protected:
-   void _buildDialog();
+   virtual void _buildGUI();
 
    unsigned int _nTimeSteps;
 
