@@ -43,10 +43,12 @@ class vtkDecimatePro;
 class vtkTriangleFilter;
 class vtkStripper;
 class vtkPolyDataNormals;
+class vtkCutter;
 
 namespace VE_Xplorer
 {
    class cfdCommandArray;
+   class cfdCuttingPlane;
 }
 
 namespace VE_Xplorer
@@ -70,6 +72,7 @@ public:
    void SetMapperInput( vtkPolyData* polydata );
 
    void SetFillType( const int );
+   void CreatePlane();
 
 protected:
    vtkPolyDataMapper*   mapper;
@@ -80,11 +83,16 @@ protected:
    vtkTriangleFilter*   tris;
    vtkStripper*         strip;
    vtkPolyDataNormals*  normals;
+   vtkCutter*           cutter;
+
+   cfdCuttingPlane* cuttingPlane;
 
    int fillType;
    double warpedContourScale;
    double contourOpacity;
    int contourLOD; 
+   int xyz;
+   int numSteps;
 };
 }
 #endif

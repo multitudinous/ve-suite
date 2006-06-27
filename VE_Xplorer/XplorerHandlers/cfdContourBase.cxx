@@ -33,6 +33,8 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdCuttingPlane.h"
+#include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
@@ -52,6 +54,8 @@
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
 #include <vtkPolyDataNormals.h>
+#include <vtkCutter.h>
+#include <vtkPlane.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -72,6 +76,7 @@ cfdContourBase::cfdContourBase()
    this->bfilter->ClippingOn();   
    this->tris = vtkTriangleFilter::New();
    this->strip = vtkStripper::New();
+   this->cutter = vtkCutter::New();
 
    this->mapper = vtkPolyDataMapper::New();
    //this->mapper->SetInput( this->filter->GetOutput() );
@@ -82,6 +87,7 @@ cfdContourBase::cfdContourBase()
    this->warpedContourScale = 0.0f;
    this->contourOpacity = 1.0f;
    this->contourLOD = 1; 
+   cuttingPlane = 0;
 }
 
 cfdContourBase::~cfdContourBase()
@@ -112,6 +118,11 @@ cfdContourBase::~cfdContourBase()
 
    normals->Delete();
    normals = NULL;
+
+   cutter->Delete();
+   cutter = NULL;
+
+   cuttingPlane = NULL;
 }
 
 void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
@@ -279,4 +290,49 @@ void cfdContourBase::SetFillType( const int type )
       fillType = 0;
    }
 }
+void cfdContourBase::CreatePlane( void )
+{
+      this->cuttingPlane = new cfdCuttingPlane( 
+            this->GetActiveDataSet()->GetDataSet()->GetBounds(),
+            this->xyz, numSteps );
 
+      // insure that we are using correct bounds for the given data set...
+      this->cuttingPlane->SetBounds( 
+                  this->GetActiveDataSet()->GetDataSet()->GetBounds() );
+
+      this->cuttingPlane->Advance( this->requestedValue );
+      this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+      this->cutter->Update();
+
+      vtkPolyData* polydata = this->cutter->GetOutput();
+
+      if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
+      {
+         std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
+         std::cerr<<"Finding next closest plane"<<std::endl;
+         while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 )  //&&(this->TargetReduction > 0.0) )
+         {
+            if( requestedValue < 50 )
+            {
+               this->requestedValue = this->requestedValue + 1;
+            }
+            else 
+            {
+               this->requestedValue = this->requestedValue - 1;
+            }
+            this->cuttingPlane->Advance( this->requestedValue ); 
+            this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+            this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+            this->cutter->Update();
+            polydata = this->cutter->GetOutput();            
+         }    
+      }       
+
+      this->SetMapperInput( polydata );
+
+      this->mapper->SetScalarRange( this->GetActiveDataSet()
+                                        ->GetUserRange() );
+      this->mapper->SetLookupTable( this->GetActiveDataSet()
+                                        ->GetLookupTable() );
+}

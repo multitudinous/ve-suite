@@ -65,17 +65,10 @@ namespace VE_Xplorer
          Output a updated pfGeoSet.  
          */
          virtual void Update( void );
-         void CreatePlane( void );
+//         void CreatePlane( void );
 
       private:
-         int xyz;
-         int numSteps;
-
-         vtkCutter       * cutter;
-
          vtkWarpVector   * warper;
-
-         cfdCuttingPlane * cuttingPlane;
    };
 }
 #endif

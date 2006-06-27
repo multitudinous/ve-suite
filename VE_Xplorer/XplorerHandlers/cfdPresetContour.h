@@ -60,15 +60,8 @@ namespace VE_Xplorer
          virtual ~cfdPresetContour();
 
          virtual void Update( void );
-         void CreatePlane( void );
 
       private:
-         int xyz;
-         int numSteps;
-         vtkCutter       * cutter;
-
-         cfdCuttingPlane * cuttingPlane;
-         //vtkPolyData     * polydata;
    };
 }
 #endif
