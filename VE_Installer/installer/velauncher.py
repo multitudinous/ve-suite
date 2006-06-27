@@ -930,9 +930,9 @@ class SettingsWindow(wx.Dialog):
                                      VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
         gridSizer.Add(self.cbNameServer)
         if os.name == "nt":
-            gridSizer.Add(-1, -1)
+            gridSizer.Add((-1, -1))
         else:
-            gridSizer.Add(-1, self.bCluster.GetSize()[1])
+            gridSizer.Add((-1, self.bCluster.GetSize()[1]))
         gridSizer.AddMany([self.cbConductor, columnSizer,
                            self.cbXplorer, self.rbXplorer])
         ##Insert the Programs to Launch grid.
