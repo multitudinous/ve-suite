@@ -645,7 +645,7 @@ class LauncherWindow(wx.Dialog):
         else:
             self.desktop = False
         ##Set Mode
-        self.rbMode.SetSelection(config.ReadInt("Mode", len(MODE_LIST) - 1))
+        self.rbMode.SetSelection(config.ReadInt("Mode", 0))
         self.UpdateDisplay()
 
     def Settings(self, event):
@@ -896,6 +896,8 @@ class SettingsWindow(wx.Dialog):
         self.bCluster = wx.Button(self, -1, "Set Cluster Computers")
         self.bCluster.SetToolTip(wx.ToolTip("Set which computers in" +
                                             " the cluster to run."))
+        if os.name == "nt":
+            self.bCluster.Hide()
         ##Set up OK button.
         bOk = wx.Button(self, -1, "OK")
         bOk.SetToolTip(wx.ToolTip("Finish changing settings and return" +
