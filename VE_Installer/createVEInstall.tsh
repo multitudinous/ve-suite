@@ -54,6 +54,7 @@ echo "to: " ${VE_PLAT_INSTALL_DIR}
 
 #need to check somehow to see if the directory already exists
 mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
+mkdir -p ${VE_PLAT_INSTALL_DIR}/images
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simple
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/PrISUm
@@ -99,20 +100,21 @@ cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/PrISUmblend.mtl ./exampleDatasets
 echo "======Done creating PrISUm example data directory======"
 
 #remove the subversion directory
-rm -rf ./exampleDatasets/simpleScalars/scalars/.svn
-rm -rf ./exampleDatasets/simpleScalars/scalars/fourth_param_is_a_scalar/.svn
-rm -rf ./exampleDatasets/simpleScalars/scalars/200_to_1000/.svn
-rm -rf ./exampleDatasets/simpleScalars/scalars/first-scalar/.svn
+rm -rf ./exampleDatasets/simple/scalars/.svn
+rm -rf ./exampleDatasets/simple/scalars/fourth_param_is_a_scalar/.svn
+rm -rf ./exampleDatasets/simple/scalars/200_to_1000/.svn
+rm -rf ./exampleDatasets/simple/scalars/first-scalar/.svn
 
-rm -rf ./exampleDatasets/simpleScalars/vectors/.svn
-rm -rf ./exampleDatasets/simpleScalars/vectors/secondvector/.svn
-rm -rf ./exampleDatasets/simpleScalars/vectors/sample_vector/.svn
+rm -rf ./exampleDatasets/simple/vectors/.svn
+rm -rf ./exampleDatasets/simple/vectors/secondvector/.svn
+rm -rf ./exampleDatasets/simple/vectors/sample_vector/.svn
 
 #echo "Copying setup file..."
 #cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
 
 echo "Copying VE-Launcher script..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/velauncher.py ./VE-Launcher.py
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_logo.xpm ./images/.
 
 echo "Copying README..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VELauncher_Readme.txt ./README.txt
