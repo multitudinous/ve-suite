@@ -47,6 +47,14 @@ switch ($1)
     /usr/share/Performer/bin/rmsem
   breaksw
 
+  case -desktopVE:
+    project_tao_osg_vep \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    ${VJ_BASE_DIR}/configFiles/sim.base.jconf \
+    ${VJ_BASE_DIR}/configFiles/sim.wand.mixin.jconf -VESDesktop 1280 1024
+    /usr/share/Performer/bin/rmsem
+  breaksw
+
   case -nserv:
     killall Naming_Service 
     killall Exe_server 
@@ -68,6 +76,11 @@ switch ($1)
   case -menu:
     WinClient \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
+  breaksw
+
+  case -desktopMenu:
+    WinClient \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService -VESDesktop
   breaksw
 
   case -surface:

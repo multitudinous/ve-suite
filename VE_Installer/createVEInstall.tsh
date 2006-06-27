@@ -114,7 +114,10 @@ rm -rf ./exampleDatasets/simple/vectors/secondvector/.svn
 rm -rf ./exampleDatasets/simple/vectors/sample_vector/.svn
 
 #echo "Copying setup file..."
-#cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
+
+#echo "Copying VES file..."
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VES.run ./bin/VES
 
 echo "Copying VE-Launcher script..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/velauncher.py ./velauncher.py
