@@ -66,12 +66,12 @@ Source: {#VEHOME}\bin\win32\AVSTranslatord.exe; DestDir: {app}\bin; Flags: ignor
 Source: {#VEHOME}\bin\win32\cfdDICOMTranslator_d.exe; DestDir: {app}\bin; Flags: ignoreversion; DestName: cfdDICOMTranslator.exe
 Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}
 Source: {#VEHOME}\VE_Installer\installer\buildershell.bat; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {app}\images; DestName: vesSmallIcon.bmp
+Source: {#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico; DestDir: {app}\images; DestName: Ve_icon.ico
 Source: {#VEHOME}\VE_Installer\installer\vebuilder.txt; DestDir: {app}; Attribs: readonly; Flags: isreadme overwritereadonly uninsremovereadonly; DestName: README.txt
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-Name: {group}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {userdesktop}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
+Name: {group}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\Ve_icon.ico
+Name: {userdesktop}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\Ve_icon.ico
 [Tasks]
 Name: BuilderShell; Description: VE-Builder Tools Shell; GroupDescription: Create Desktop Icon; Flags: unchecked

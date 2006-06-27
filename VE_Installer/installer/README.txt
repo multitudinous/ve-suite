@@ -5,8 +5,7 @@ The pre-compiled dependencies are available via an installer on our website.
 See www.vesuite.org
 for information on obtaining VE-Suites dependendcies.
 ======================================================================================
-NOTE: VE-Launcher REQUIRES wxPython (www.wxPython.org) to be installed before running
-the application. 
+NOTE:
 ======================================================================================
 VE-Suite_1.0.0
 

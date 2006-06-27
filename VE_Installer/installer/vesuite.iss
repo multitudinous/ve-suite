@@ -129,7 +129,7 @@ Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonl
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\stereo_desktop; Components: nameserver; Flags: ignoreversion recursesubdirs
 ;Source: {#VEHOME}\VE_Installer\installer\dist\*; DestDir: {app}; Flags: ignoreversion; Components: velauncher
-Source: {#VEHOME}\VE_Installer\installer\ve_logo.xpm; DestDir: {app}; Flags: replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\ve_logo.xpm; DestDir: {app}\images; Flags: replacesameversion
 Source: {#VEHOME}\bin\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\images; Flags: replacesameversion
 [Icons]

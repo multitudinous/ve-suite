@@ -7,7 +7,7 @@ sites.
 See www.vesuite.org
 for information on obtaining VE-Suites dependendcies.
 =========================================================================
-VE-Suite_0.9.3 Launcher
+VE-Suite_1.0.0 Launcher
 
 This is the beta of the VE-Suite Launcher. Current features include:
 -Setting the Dependencies directory.
