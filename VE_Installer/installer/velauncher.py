@@ -833,8 +833,8 @@ class SettingsWindow(wx.Dialog):
         ##Edit Jconf button.
         self.bEditJconf = wx.Button(self, -1, "Edit Juggler Configurations")
         self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
-                                         " configuration files displayed" +
-                                         " in the Launcher."))
+                                              " configuration files displayed" +
+                                              " in the Launcher."))
         if "jconf" in modeRules:
             self.chJconf.Append(modeRules["jconf"][1])
             self.chJconf.SetSelection(0)
@@ -928,8 +928,12 @@ class SettingsWindow(wx.Dialog):
         columnSizer.Add(self.bCluster)
         gridSizer = wx.FlexGridSizer(3, 2,
                                      VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
-        gridSizer.AddMany([self.cbNameServer, (-1, self.bCluster.GetSize()[1]),
-                           self.cbConductor, columnSizer,
+        gridSizer.Add(self.cbNameServer)
+        if os.name == "nt":
+            gridSizer.Add(-1, -1)
+        else:
+            gridSizer.Add(-1, self.bCluster.GetSize()[1])
+        gridSizer.AddMany([self.cbConductor, columnSizer,
                            self.cbXplorer, self.rbXplorer])
         ##Insert the Programs to Launch grid.
         rowSizer.AddMany([VERTICAL_SPACE,
