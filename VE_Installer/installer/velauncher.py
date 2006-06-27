@@ -1709,11 +1709,11 @@ class Launch:
         ##Name Server section
         if runName:
             os.system("Naming_Service -ORBEndPoint" +
-                      " iiop://${TAO_MACHINE}:${TAO_PORT}")
+                      " iiop://${TAO_MACHINE}:${TAO_PORT} &")
             time.sleep(5)
             os.system("WinServerd -ORBInitRef NameService=" +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService" +
-                      " -ORBDottedDecimalAddresses 1")
+                      " -ORBDottedDecimalAddresses 1 &")
         ##Conductor section
         if runConductor:
             ##Append argument if desktop mode selected
