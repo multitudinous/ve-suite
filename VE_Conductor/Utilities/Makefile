@@ -46,7 +46,6 @@ SRCS=\
    DualSlider.cxx\
    spinctld.cpp\
    ROIDialog.cxx\
-   TBIsosurface.cxx\
    BaseDialog.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
