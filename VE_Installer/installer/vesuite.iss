@@ -102,6 +102,8 @@ Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}; Fl
 ;Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\shaders\; Components: examples
+Source: {#VEHOME}\VE_TestSuite\simpleScalars\*.vti; DestDir: {app}\exampleDatasets; Components: examples; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs
+
 Source: {#VEHOME}\VE_TestSuite\gooch.vea; DestDir: {app}\shaders\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\toon.vea; DestDir: {app}\shaders\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\x-ray.vea; DestDir: {app}\shaders\; Components: examples
