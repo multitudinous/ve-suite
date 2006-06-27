@@ -535,7 +535,6 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
       //set the active dataset to the initial dataset in the model
       _setActiveDataset(0); 
    }
-std::cout<<"Here1"<<std::endl;
 }
 //////////////////////////////////////////////////
 void Vistab::_setActiveDataset(unsigned int index)
@@ -557,7 +556,6 @@ void Vistab::_setActiveDataset(unsigned int index)
          _updateDatasetInformation(_activeDataset);
       }
    }
-std::cout<<"Here2"<<std::endl;
 }
 /////////////////////////////////////////////////
 void Vistab::SetTextureData(wxArrayString textureData,
@@ -624,7 +622,6 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
    {
       std::cout<<"MESH_SCALAR data not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
    }
-std::cout<<"Here4"<<std::endl;
 }
 /////////////////////////////////////////////////////////////////////
 void Vistab::_updateAvailableSolutions(std::string dataType,
@@ -651,7 +648,6 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
    {
       std::cout<<dataType<<" not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
    }
-std::cout<<"Here5"<<std::endl;
 }
 ///////////////////////////////////////////////////////////
 void Vistab::_updateComboBoxNames(std::string dataType,
@@ -694,7 +690,6 @@ void Vistab::_OnSelectDataset(wxCommandEvent& WXUNUSED(event))
 {
    _activeDataSetName = _datasetSelection->GetValue();
    SetActiveDataset(_activeDataSetName);
-std::cout<<"Here6"<<std::endl;
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
@@ -862,7 +857,6 @@ void Vistab::_onMinSpinCtrl( wxScrollEvent& WXUNUSED(event) )
    double minValue = 0;
 
    minValue = ( ( _minSpinner->GetValue() - _activeScalarRange.at(0) ) / ( range ) * 100);
-std::cout<<"MinValue: "<<minValue<<std::endl;
 
    if( minValue == 100 )
    {
@@ -870,7 +864,6 @@ std::cout<<"MinValue: "<<minValue<<std::endl;
 //      scalarRange->SetMinimumSliderValue( (int)minValue );   
       _minSlider->SetValue( (int)minValue );
       _maxSlider->SetValue( (int)minValue+1 );   
-std::cout<<"MinValue1: "<<minValue<<std::endl;
    }
 //   else if( scalarRange->GetMaxSliderValue() <= (int)minValue )
    else if( _maxSlider->GetValue() <= (int)minValue )
@@ -879,13 +872,11 @@ std::cout<<"MinValue1: "<<minValue<<std::endl;
 //      scalarRange->SetMinimumSliderValue( (int)minValue );
       _minSlider->SetValue( (int)minValue );
       _maxSlider->SetValue( (int)minValue+1 );   
-std::cout<<"MinValue2: "<<minValue<<std::endl;
    }
    else
    {
 //      scalarRange->SetMinimumSliderValue( (int)minValue );
       _minSlider->SetValue( (int)minValue );  
-std::cout<<"MinValue3: "<<minValue<<std::endl;
    }
 
 } 
@@ -896,7 +887,6 @@ void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) )
    double maxValue = 100;
 
    maxValue = ( ( range - ( _activeScalarRange.at(1) - _maxSpinner->GetValue() ) ) / ( range ) * 100);
-std::cout<<"MaxValue: "<<maxValue<<std::endl;
 
    if( maxValue == 0 )
    {
@@ -926,7 +916,6 @@ void Vistab::_onMinMaxSlider( wxScrollEvent& WXUNUSED(event) )
 
    _minSpinner->SetValue( ( range - (double)scalarRange->GetMinSliderValue() ) / 100 + _activeScalarRange.at(0) );
    _maxSpinner->SetValue( ( _activeScalarRange.at(1) - ( range - ( range - (double)scalarRange->GetMaxSliderValue() ) ) ) / 100);
-std::cout<<"MinMaxSlider"<<std::endl;
 }
 //////////////////////////////////////////////////////////////////////////
 void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED(event) )
@@ -940,7 +929,6 @@ void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED(event) )
 
    _minSpinner->SetValue( range * (double)_minSlider->GetValue() / 100  + _activeScalarRange.at(0) );
    _maxSpinner->SetValue( _activeScalarRange.at(1) - ( range * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
-std::cout<<"MinSpinnerValue: "<<std::endl;
 }
 //////////////////////////////////////////////////////////////////////////
 void Vistab::_onMaxSlider( wxScrollEvent& WXUNUSED(event) )
@@ -954,7 +942,6 @@ void Vistab::_onMaxSlider( wxScrollEvent& WXUNUSED(event) )
 
    _minSpinner->SetValue( ( range * (double)_minSlider->GetValue() ) / 100 + _activeScalarRange.at(0) );
    _maxSpinner->SetValue( _activeScalarRange.at(1) - ( range * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
-std::cout<<"MaxSpinnerValue: "<<( range * (double)_minSlider->GetValue() ) / 100 + _activeScalarRange.at(0)<<std::endl;
 }
 //////////////////////////////////////////////////////////////////////////
 bool Vistab::_ensureSliders(int activeSliderID)
