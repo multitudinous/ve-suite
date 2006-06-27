@@ -1610,14 +1610,17 @@ class Launch:
         cluster -- Optional, used for running multiple Xplorers."""
         ##The launch is the final step.
         ##Destroy launcher window before beginning the actual launch.
+	print "Entered launcher." ##TESTER
         if launcherWindow != None:
             launcherWindow.Close()
         ##Get dependenciesDir for setting environmental variables.
         if dependenciesDir == None:
             dependenciesDir = config.Read("DependenciesDir", "ERROR")
         ##Set the environmental variables
+	print "Entering environmental setup." ##TESTER
         self.EnvSetup(dependenciesDir, workingDir, taoMachine, taoPort,
                       master)
+	print "Exiting environmental setup." ##TESTER
         ##Use the user's defined directory as Current Working Dir
 ##        print "Changing to directory: " + self.txDirectory.GetValue() ##TESTER
         os.chdir(os.getenv("VE_WORKING_DIR"))
@@ -1629,8 +1632,10 @@ class Launch:
             self.Windows(runName, runConductor, runXplorer,
                          typeXplorer, jconf, desktopMode)
         elif os.name == "posix":
+	    print "Entering Unix launch code." ##TESTER
             self.Unix(runName, runConductor, runXplorer,
                       typeXplorer, jconf, desktopMode, cluster, master)
+	    print "Exited Unix launch code." ##TESTER
         else:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
         return
@@ -1707,14 +1712,16 @@ class Launch:
         typeXplorer -- Which Xplorer program to run.
         jconf -- Which .jconf file to use for Xplorer's settings."""
         ##Name Server section
+	print "Starting nameserver." ##TESTER
         if runName:
             os.system("Naming_Service -ORBEndPoint" +
                       " iiop://${TAO_MACHINE}:${TAO_PORT} &")
             time.sleep(5)
-            os.system("WinServerd -ORBInitRef NameService=" +
+            os.system("Exe_server -ORBInitRef NameService=" +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService" +
                       " -ORBDottedDecimalAddresses 1 &")
         ##Conductor section
+	print "Starting conductor." ##TESTER
         if runConductor:
             ##Append argument if desktop mode selected
             if desktopMode:
@@ -1757,12 +1764,12 @@ class Launch:
                 depsDir = str(os.getenv("VE_DEPS_DIR"))
                 master = str(os.getenv("VEXMASTER"))
                 command = ""
-##                command = 'ssh -X %s "cd %s;' %(comp, launcherDir) + \
-##                          ' python velauncher.py" &'
-                command = 'ssh -X %s "cd %s;' %(comp, launcherDir) + \
-                          ' python velauncher.py -x %s' %(xplorerType) + \
-                          ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
-                          ' -w %s -e %s -m %s"' %(workDir, depsDir, master)
+                command = 'ssh %s "cd %s;' %(comp, launcherDir) + \
+                          ' python velauncher.py" &'
+##                command = 'ssh %s "cd %s;' %(comp, launcherDir) + \
+##                          ' python velauncher.py -x %s' %(xplorerType) + \
+##                          ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
+##                          ' -w %s -e %s -m %s"' %(workDir, depsDir, master)
                 os.system(command)
                 time.sleep(5)
         return
@@ -1979,7 +1986,7 @@ class Launch:
     def EnvFill(self, var, default):
         """Sets environmental variable var to default if it is empty."""
         os.environ[var] = os.getenv(var, default)
-##        print var + ": " + os.getenv(var) ##TESTER
+        print var + ": " + os.getenv(var) ##TESTER
 
 
 ##Get & clean up command line arguments.
