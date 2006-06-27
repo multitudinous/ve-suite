@@ -71,7 +71,7 @@ echo "To: " ${VE_TEMP_DEPS_INST_DIR}
 #if ( ${CFDHOSTTYPE} == "IRIX64" ) then
 #   mkdir -p ${VE_DEPS_PLAT_INSTALL_DIR}/vrJuggler-2.b2
 #else
-   mkdir -p ${VE_DEPS_PLAT_INSTALL_DIR}/vrJuggler-2.0.1
+   mkdir -p ${VE_DEPS_PLAT_INSTALL_DIR}/vrJuggler2.0.1
 #endif
 
 #need to check somehow to see if the directory already exists
@@ -90,28 +90,28 @@ cd ${VE_DEPS_PLAT_INSTALL_DIR}
 #echo "Now copy all the deps to a new dir to create deps tar ball"
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    echo "Copying Juggler from:" ${VJ_BASE_DIR}
-   cp -RD ${VJ_BASE_DIR}/lib32 ./vrJuggler-2.0.1
-   cp -RD ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.0.1
-   cp -RD ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.0.1
+   cp -RD ${VJ_BASE_DIR}/lib32 ./vrJuggler2.0.1
+   cp -RD ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler2.0.1
+   cp -RD ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler2.0.1
    echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
-   cp -RD ${VJ_DEPS_DIR}/lib32/* ./vrJuggler-2.0.1/lib32/.
-   cp -RD ${VJ_DEPS_DIR}/bin ./vrJuggler-2.0.1
+   cp -RD ${VJ_DEPS_DIR}/lib32/* ./vrJuggler2.0.1/lib32/.
+   cp -RD ${VJ_DEPS_DIR}/bin ./vrJuggler2.0.1
 else if ( ${CFDHOSTTYPE} =~ SUSE_10.*_*64 ) then
    echo "Copying Juggler from:" ${VJ_BASE_DIR}
-   cp -Rd ${VJ_BASE_DIR}/lib64 ./vrJuggler-2.0.1/lib64
-   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.0.1
-   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.0.1
+   cp -Rd ${VJ_BASE_DIR}/lib64 ./vrJuggler2.0.1/lib64
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler2.0.1
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler2.0.1
    echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
-   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggler-2.0.1
-   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggler-2.0.1
+   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggler2.0.1
+   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggler2.0.1
 else
    echo "Copying Juggler from:" ${VJ_BASE_DIR}
-   cp -Rd ${VJ_BASE_DIR}/lib ./vrJuggler-2.0.1
-   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.0.1
-   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.0.1
+   cp -Rd ${VJ_BASE_DIR}/lib ./vrJuggler2.0.1
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler2.0.1
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler2.0.1
    echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
-   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggler-2.0.1
-   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggler-2.0.1
+   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggler2.0.1
+   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggler2.0.1
 endif
 
 echo "Copying wxWidgets from:" ${WX_HOME}

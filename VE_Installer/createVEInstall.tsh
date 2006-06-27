@@ -70,6 +70,9 @@ cd ${VE_PLAT_INSTALL_DIR}
 echo "Copying new exes..."
 cp ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/* ./bin
 
+echo "Copying Default Plugin..."
+cp -rf ${VE_SUITE_HOME}/bin/Plugins ./bin/.
+
 echo "Copying new dlls..."
 cp ${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}/* ./bin
 
@@ -96,6 +99,7 @@ cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/outFile3.vtk ./exampleDatasets/Pr
 echo "   PrISUm geometery files..."
 cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/PrISUmblend.obj ./exampleDatasets/PrISUm/.
 cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/PrISUmblend.mtl ./exampleDatasets/PrISUm/.
+cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/utext.JPG ./exampleDatasets/PrISUm/.
 
 echo "======Done creating PrISUm example data directory======"
 
@@ -116,8 +120,9 @@ echo "Copying VE-Launcher script..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/velauncher.py ./VE-Launcher.py
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_logo.xpm ./images/.
 
-echo "Copying README..."
-cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VELauncher_Readme.txt ./README.txt
+echo "Copying Desktop configuration file..."
+mkdir ./stereo_desktop
+cp -rf ${VE_SUITE_HOME}/VE_Xplorer/stereo_desktop/* ./stereo_desktop
 
 echo "Creating tar.gz file..."
 #write the tar file in the install directory
