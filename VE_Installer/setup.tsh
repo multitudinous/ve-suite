@@ -189,7 +189,8 @@ else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_i* ) then
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE_TAO/Linux-SuSE_10
+      #setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE_TAO/Linux-SuSE_10
+      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-TAO-5.5/Linux-SuSE10
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/lib
       setenv PATH ${TAO_HOME}/bin:${PATH}
 

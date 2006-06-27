@@ -2,7 +2,7 @@
 #copies the appropriate libs/dlls from ve-suite for installs 
 #in the future cmd line args will specify VE-Suite home 
 
-setenv VE_VERSION .0.9.3
+setenv VE_VERSION 1.0.0
 #set vesuitedir $1
 #if(vesuitedir)
 #   setenv VE_SUITE_HOME $1
@@ -11,7 +11,7 @@ setenv VE_VERSION .0.9.3
 if ( $?VE_SUITE_HOME ) then
    echo $VE_SUITE_HOME
 else 
-   setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_0.9.3/VE_Suite
+   setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_1.0.0/VE_Suite
 endif
 
 #determine the platform
@@ -55,18 +55,11 @@ echo "to: " ${VE_PLAT_INSTALL_DIR}
 #need to check somehow to see if the directory already exists
 mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets
-#mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simpleScalars/vectors
-#mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simpleScalars/scalars
-#mkdir -p ${VE_PLAT_INSTALL_DIR}/glsl_shaders
-#mkdir -p ${VE_PLAT_INSTALL_DIR}/images
+mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simple
+mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/PrISUm
 
 echo "Removing old dlls and exes files..."
 rm -rf ${VE_PLAT_INSTALL_DIR}/bin/*
-echo "Removing old example dataset files..."
-rm -rf ${VE_PLAT_INSTALL_DIR}/exampleDatasets/*
-echo "Removing old shader files..."
-rm -rf ${VE_PLAT_INSTALL_DIR}/glsl_shaders/*
-#rm -rf ${VE_PLAT_INSTALL_DIR}/images/*
 
 #go into the directory
 cd ${VE_PLAT_INSTALL_DIR}
@@ -79,39 +72,50 @@ cp ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/* ./bin
 echo "Copying new dlls..."
 cp ${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}/* ./bin
 
-echo "Copying example dataset..."
-echo "   Sample VTK files..."
-cp  ${VE_SUITE_HOME}/VE_TestSuite/2scl.vtk ./exampleDatasets/.
-cp  ${VE_SUITE_HOME}/VE_TestSuite/3scl2vec.vtk ./exampleDatasets/.
-cp  ${VE_SUITE_HOME}/VE_TestSuite/3scl.vtk ./exampleDatasets/.
-cp  ${VE_SUITE_HOME}/VE_TestSuite/vtkPolyData.vtk ./exampleDatasets/.
+echo "======Copying simple example model files======"
+echo "   simple VTK files..."
+cp ${VE_SUITE_HOME}/VE_TestSuite/2scl.vtu ./exampleDatasets/simple/.
+cp ${VE_SUITE_HOME}/VE_TestSuite/3scl2vec.vtu ./exampleDatasets/simple/.
+cp ${VE_SUITE_HOME}/VE_TestSuite/3scl.vtu ./exampleDatasets/simple/. 
+cp ${VE_SUITE_HOME}/VE_TestSuite/vtkPolyData.vtp ./exampleDatasets/simple/. 
 
-echo "   Sample geometery files..."
-cp ${VE_SUITE_HOME}/VE_TestSuite/eightCorners.stl ./exampleDatasets/.
-cp ${VE_SUITE_HOME}/VE_TestSuite/Surface0.75.stl ./exampleDatasets/.
+echo "   simple geometery files..."
+cp ${VE_SUITE_HOME}/VE_TestSuite/eightCorners.stl ./exampleDatasets/simple/.
+cp ${VE_SUITE_HOME}/VE_TestSuite/Surface0.75.stl ./exampleDatasets/simple/.
 
-echo "   Sample texture data..."
-cp -Rf ${VE_SUITE_HOME}/VE_TestSuite/simpleScalars ./exampleDatasets
+echo "   Sample simple texture data..."
+cp -R ${VE_SUITE_HOME}/VE_TestSuite/simpleScalars/* ./exampleDatasets/simple/.
+echo "======Done creating simple example data directory======"
+echo""
+echo""
+echo""
+echo "======Copying PrISUm example model files======"
+echo "   PrISUm VTK files..."
+cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/outFile3.vtk ./exampleDatasets/PrISUm/.
+echo "   PrISUm geometery files..."
+cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/PrISUmblend.obj ./exampleDatasets/PrISUm/.
+cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/PrISUmblend.mtl ./exampleDatasets/PrISUm/.
+
+echo "======Done creating PrISUm example data directory======"
+
 #remove the subversion directory
-rm -rf ./exampleDatasets/simpleScalars/.svn
 rm -rf ./exampleDatasets/simpleScalars/scalars/.svn
+rm -rf ./exampleDatasets/simpleScalars/scalars/fourth_param_is_a_scalar/.svn
+rm -rf ./exampleDatasets/simpleScalars/scalars/200_to_1000/.svn
+rm -rf ./exampleDatasets/simpleScalars/scalars/first-scalar/.svn
+
 rm -rf ./exampleDatasets/simpleScalars/vectors/.svn
-cp ${VE_SUITE_HOME}/VE_TestSuite/*.txt ./exampleDatasets/.
+rm -rf ./exampleDatasets/simpleScalars/vectors/secondvector/.svn
+rm -rf ./exampleDatasets/simpleScalars/vectors/sample_vector/.svn
 
-echo "   Sample parameter file..."
-cp -rf ${VE_SUITE_HOME}/VE_TestSuite/sswtexture.param ./exampleDatasets/sample.param
+#echo "Copying setup file..."
+#cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
 
-#echo "Copying glsl shaders..."
-#cp -f ${VE_SUITE_HOME}/VE_TextureBased/glsl_shaders/*.glsl ./glsl_shaders/.
+echo "Copying VE-Launcher script..."
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/velauncher.py ./VE-Launcher.py
 
-echo "Copying setup file..."
-cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
-
-echo "Copying VES script..."
-cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VES.run ./bin/VES
-
-echo "Copying README script..."
-cp -f ${VE_SUITE_HOME}/VE_Installer/installer/README.unix.txt ./README.txt
+echo "Copying README..."
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VELauncher_Readme.txt ./README.txt
 
 echo "Creating tar.gz file..."
 #write the tar file in the install directory
