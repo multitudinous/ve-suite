@@ -335,12 +335,13 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
    }
    else
    {
-      wxMessageBox( "ERROR.", 
-                   "No texture-based datasets available!!", wxOK | wxICON_ERROR );
+      wxMessageBox( "No texture-based datasets available!!","ERROR.", 
+                    wxOK | wxICON_ERROR );
       _tbToolButtons->Enable(false);
       return false;
 
    }
+   _tbToolButtons->Enable(true);
    ClearInstructions();
    return true;
 }
