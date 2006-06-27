@@ -81,6 +81,8 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_COMMAND_SCROLL( MIN_SPINCTRL,    Vistab::_onMinSpinCtrl )
    EVT_COMMAND_SCROLL( MAX_SPINCTRL,    Vistab::_onMaxSpinCtrl )
    EVT_COMMAND_SCROLL( MIN_MAX_SLIDERS, Vistab::_onMinMaxSlider )
+   EVT_COMMAND_SCROLL( MIN_SLIDER,       Vistab::_onMinSlider )
+   EVT_COMMAND_SCROLL( MAX_SLIDER,      Vistab::_onMaxSlider )
 ////@end Vistab event table entries
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
@@ -326,9 +328,15 @@ void Vistab::CreateControls()
     spinnerSizer->Add(_max, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);    
     spinnerSizer->Add(_maxSpinner, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    scalarRange = new DualSlider(this,MIN_MAX_SLIDERS,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString(""));
-    scalarSizer->Add(scalarRange,1,wxALIGN_CENTER|wxEXPAND);
+//    scalarRange = new DualSlider(this,MIN_MAX_SLIDERS,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
+//                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString(""));
+//    scalarSizer->Add(scalarRange,1,wxALIGN_CENTER|wxEXPAND);
+
+    _minSlider = new wxSlider( itemDialog1, MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    _maxSlider = new wxSlider( itemDialog1, MAX_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    scalarSizer->Add(_minSlider,1,wxALIGN_CENTER|wxEXPAND);
+    scalarSizer->Add(_maxSlider,1,wxALIGN_CENTER|wxEXPAND);
+
 
     scalarBoundsSizer->Add(spinnerSizer,1,wxALIGN_CENTER|wxEXPAND);
     scalarBoundsSizer->Add(scalarSizer,3,wxALIGN_CENTER|wxEXPAND);
@@ -363,17 +371,6 @@ wxBitmap Vistab::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
 ////@begin Vistab bitmap retrieval
-  /*  wxUnusedVar(name);
-    if (name == _T("../../../../../../../home/users/jaredabo/GUIs/GUI/contour.png"))
-    {
-        wxBitmap bitmap(_T("../../../../../../../home/users/jaredabo/GUIs/GUI/contour.png"), wxBITMAP_TYPE_PNG);
-        return bitmap;
-    }
-    else if (name == _T("../../../../../../../home/users/jaredabo/GUIs/GUI/vector.png"))
-    {
-        wxBitmap bitmap(_T("../../../../../../../home/users/jaredabo/GUIs/GUI/vector.png"), wxBITMAP_TYPE_PNG);
-        return bitmap;
-    }*/
     return wxNullBitmap;
 ////@end Vistab bitmap retrieval
 }
@@ -702,21 +699,7 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 {
    _activeScalarName = _scalarSelection->GetStringSelection();
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
-/*
-   VE_XML::DataValuePair* scalarMin = new VE_XML::DataValuePair();
-   minimumValue = _activeScalarRange.at(0) 
-                    + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
-   scalarMin->SetData("Scalar Min",minimumValue);
 
-   _vistabBaseInformation.push_back(scalarMin);
-
-   VE_XML::DataValuePair* scalarMax = new VE_XML::DataValuePair();
-   maximumValue = _activeScalarRange.at(0) 
-                    + (scalarRange->GetMaxSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
-   scalarMax->SetData("Scalar Max",maximumValue);
-   
-   _vistabBaseInformation.push_back(scalarMax);
-*/
    double minBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.99;
    double maxBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.01;
    _minSpinner->SetRange( _activeScalarRange.at(0), minBoundRange );   
@@ -724,8 +707,24 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
    _maxSpinner->SetRange( maxBoundRange, _activeScalarRange.at(1) );
    _maxSpinner->SetValue( _activeScalarRange.at(1) );
 
-   scalarRange->SetMinimumSliderValue( 0 );
-   scalarRange->SetMaximumSliderValue( 100 );
+   if( _activeScalarRange.at(1) == _activeScalarRange.at(0) )
+   {
+      _minSpinner->Enable(false);
+      _maxSpinner->Enable(false);
+      _minSlider->Enable(false);
+      _maxSlider->Enable(false);
+   }
+   else
+   {
+      _minSpinner->Enable(true);
+      _maxSpinner->Enable(true);
+      _minSlider->Enable(true);
+      _maxSlider->Enable(true);
+   }
+//   scalarRange->SetMinimumSliderValue( 0 );
+//   scalarRange->SetMaximumSliderValue( 100 );
+   _minSlider->SetValue( 0 );
+   _maxSlider->SetValue( 100 );
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
@@ -800,15 +799,19 @@ void Vistab::_updateBaseInformation()
    _vistabBaseInformation.push_back(activeDataset);
 
    VE_XML::DataValuePair* scalarMin = new VE_XML::DataValuePair();
+//   minimumValue = _activeScalarRange.at(0) 
+//                    + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
    minimumValue = _activeScalarRange.at(0) 
-                    + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
+                    + ((double)_minSlider->GetValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
    scalarMin->SetData("Scalar Min",minimumValue);
 
    _vistabBaseInformation.push_back(scalarMin);
 
    VE_XML::DataValuePair* scalarMax = new VE_XML::DataValuePair();
-   maximumValue = _activeScalarRange.at(0) 
-                    + (scalarRange->GetMaxSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
+//   maximumValue = _activeScalarRange.at(0) 
+//                    + (scalarRange->GetMaxSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
+   maximumValue = _activeScalarRange.at(1) - ( (_activeScalarRange.at(1) - _activeScalarRange.at(0)) 
+                  * (100 - (double)_maxSlider->GetValue()) / 100.0);
    scalarMax->SetData("Scalar Max",maximumValue);
    
    _vistabBaseInformation.push_back(scalarMax);
@@ -861,19 +864,25 @@ std::cout<<"MinValue: "<<minValue<<std::endl;
 
    if( minValue == 100 )
    {
-      scalarRange->SetMaximumSliderValue( (int)minValue+1 );    
-      scalarRange->SetMinimumSliderValue( (int)minValue );   
+//      scalarRange->SetMaximumSliderValue( (int)minValue+1 );    
+//      scalarRange->SetMinimumSliderValue( (int)minValue );   
+      _minSlider->SetValue( (int)minValue );
+      _maxSlider->SetValue( (int)minValue+1 );   
 std::cout<<"MinValue1: "<<minValue<<std::endl;
    }
-   else if( scalarRange->GetMaxSliderValue() <= (int)minValue )
+//   else if( scalarRange->GetMaxSliderValue() <= (int)minValue )
+   else if( _maxSlider->GetValue() <= (int)minValue )
    {
-      scalarRange->SetMaximumSliderValue( (int)minValue+1 );
-      scalarRange->SetMinimumSliderValue( (int)minValue );
+//      scalarRange->SetMaximumSliderValue( (int)minValue+1 );
+//      scalarRange->SetMinimumSliderValue( (int)minValue );
+      _minSlider->SetValue( (int)minValue );
+      _maxSlider->SetValue( (int)minValue+1 );   
 std::cout<<"MinValue2: "<<minValue<<std::endl;
    }
    else
    {
-      scalarRange->SetMinimumSliderValue( (int)minValue );
+//      scalarRange->SetMinimumSliderValue( (int)minValue );
+      _minSlider->SetValue( (int)minValue );  
 std::cout<<"MinValue3: "<<minValue<<std::endl;
    }
 
@@ -889,17 +898,23 @@ std::cout<<"MaxValue: "<<maxValue<<std::endl;
 
    if( maxValue == 0 )
    {
-      scalarRange->SetMaximumSliderValue( (int)maxValue+1 );    
-      scalarRange->SetMinimumSliderValue( (int)maxValue );       
+//      scalarRange->SetMaximumSliderValue( (int)maxValue+1 );    
+//      scalarRange->SetMinimumSliderValue( (int)maxValue );  
+      _minSlider->SetValue( (int)maxValue+1 );
+      _maxSlider->SetValue( (int)maxValue );     
    }
-   else if( scalarRange->GetMinSliderValue() >= (int)maxValue )
+//   else if( scalarRange->GetMinSliderValue() >= (int)maxValue )
+   else if( _minSlider->GetValue() >= (int)maxValue )
    {
-      scalarRange->SetMinimumSliderValue( (int)maxValue-1 );
-      scalarRange->SetMaximumSliderValue( (int)maxValue );
+//      scalarRange->SetMinimumSliderValue( (int)maxValue-1 );
+//      scalarRange->SetMaximumSliderValue( (int)maxValue );
+      _minSlider->SetValue( (int)maxValue-1 );
+      _maxSlider->SetValue( (int)maxValue );   
    } 
    else
    {  
-      scalarRange->SetMaximumSliderValue( (int)maxValue );
+//      scalarRange->SetMaximumSliderValue( (int)maxValue );
+      _maxSlider->SetValue( (int)maxValue );   
    }
 } 
 //////////////////////////////////////////////////////////////////////////
@@ -910,4 +925,63 @@ void Vistab::_onMinMaxSlider( wxScrollEvent& WXUNUSED(event) )
    _minSpinner->SetValue( ( range - (double)scalarRange->GetMinSliderValue() ) / 100 + _activeScalarRange.at(0) );
    _maxSpinner->SetValue( ( _activeScalarRange.at(1) - ( range - ( range - (double)scalarRange->GetMaxSliderValue() ) ) ) / 100);
 std::cout<<"MinMaxSlider"<<std::endl;
+}
+//////////////////////////////////////////////////////////////////////////
+void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED(event) )
+{
+   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+
+   if( _minSlider->GetValue() >= _maxSlider->GetValue() ) // && _minSlider->GetValue() < 100 )
+   {
+      _ensureSliders(MIN_SLIDER);
+   }
+
+   _minSpinner->SetValue( range * (double)_minSlider->GetValue() / 100  + _activeScalarRange.at(0) );
+   _maxSpinner->SetValue( _activeScalarRange.at(1) - ( range * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
+std::cout<<"MinSpinnerValue: "<<std::endl;
+}
+//////////////////////////////////////////////////////////////////////////
+void Vistab::_onMaxSlider( wxScrollEvent& WXUNUSED(event) )
+{
+   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+
+   if( _maxSlider->GetValue() <= _minSlider->GetValue() ) //&& _maxSlider->GetValue() > 0 )
+   {
+      _ensureSliders(MAX_SLIDER);
+   }
+
+   _minSpinner->SetValue( ( range * (double)_minSlider->GetValue() ) / 100 + _activeScalarRange.at(0) );
+   _maxSpinner->SetValue( _activeScalarRange.at(1) - ( range * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
+std::cout<<"MaxSpinnerValue: "<<( range * (double)_minSlider->GetValue() ) / 100 + _activeScalarRange.at(0)<<std::endl;
+}
+//////////////////////////////////////////////////////////////////////////
+bool Vistab::_ensureSliders(int activeSliderID)
+{
+   int minValue = _minSlider->GetValue();
+   int maxValue = _maxSlider->GetValue();
+
+   //maintain the value on the min/max sliders.
+   if(minValue > maxValue - static_cast<int>(1))
+   {
+      if(minValue == 100)
+      {
+         _minSlider->SetValue(100 - 1);
+      }
+      else if(maxValue == 0)
+      {
+         _maxSlider->SetValue(0 + 1);
+      }
+
+      if(activeSliderID == MIN_SLIDER)
+      {
+         _maxSlider->SetValue(_minSlider->GetValue() + 1);
+         return true;
+      }
+      else if(activeSliderID == MAX_SLIDER)
+      {
+         _minSlider->SetValue(_maxSlider->GetValue() - 1);
+         return true;
+      }
+   }
+   return false;
 }

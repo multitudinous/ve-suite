@@ -108,7 +108,9 @@ enum VISTAB_IDS
    ID_CLEAR_ALL_BUTTON,
    MIN_SPINCTRL,
    MAX_SPINCTRL,
-   MIN_MAX_SLIDERS
+   MIN_MAX_SLIDERS,
+   MIN_SLIDER,
+   MAX_SLIDER
 };
 ////@end control identifiers
 
@@ -209,6 +211,8 @@ public:
    wxListBox*  itemListBox15;
    wxSpinCtrlDbl* _minSpinner;
    wxSpinCtrlDbl* _maxSpinner;
+   wxSlider* _minSlider;
+   wxSlider* _maxSlider;
 
 protected:
    /*!\class ScalarRangeMinSliderCallback
@@ -288,7 +292,12 @@ protected:
    void _onMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) );
    ///Callback for slider max and min values
    void _onMinMaxSlider( wxScrollEvent& WXUNUSED(event) ); 
-
+   ///Callback for slider max and min values
+   void _onMinSlider( wxScrollEvent& WXUNUSED(event) );
+   ///Callback for slider max and min values
+   void _onMaxSlider( wxScrollEvent& WXUNUSED(event) );
+   ///Callback to keep sliders from crossing
+   bool _ensureSliders(int activeSliderID);
    ///Update the available solutions for a particular give dataset type
    ///\param newNames The list of new names to update
    void _updateAvailableScalarMeshSolutions(VjObs::Scalars newNames);
