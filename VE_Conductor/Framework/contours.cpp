@@ -42,6 +42,9 @@
 #include <wx/icon.h>
 #include <wx/msgdlg.h>
 
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+
 #include <iostream>
 
 BEGIN_EVENT_TABLE( Contours, wxDialog )

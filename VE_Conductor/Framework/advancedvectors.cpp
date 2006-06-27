@@ -37,6 +37,10 @@
 #include <wx/checkbox.h>
 #include <wx/icon.h>
 
+#include <wx/bmpbuttn.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+
 
 
 using namespace VE_Conductor::GUI_Utilities;

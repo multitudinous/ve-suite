@@ -38,6 +38,10 @@
 #include <wx/radiobox.h>
 #include <wx/checkbox.h>
 
+#include <wx/bmpbuttn.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+
 /*BEGIN_EVENT_TABLE( AdvancedContours, wxDialog )
 ////@begin AdvancedContours event table entries
    EVT_SLIDER        ( OPACITY_SLIDER,          AdvancedContours::_onContourOpacity )

@@ -55,6 +55,8 @@
 #include <wx/listbox.h>
 #include <wx/msgdlg.h>
 #include <wx/app.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
 
 #include <iostream>
 #include <string>
