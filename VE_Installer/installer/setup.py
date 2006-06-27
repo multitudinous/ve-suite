@@ -2,4 +2,4 @@
 from distutils.core import setup
 import py2exe
 
-setup(console=["velauncher.py"])
+setup(windows=["velauncher.py"], zipfile=None)
