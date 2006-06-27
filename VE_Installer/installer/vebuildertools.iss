@@ -21,11 +21,12 @@ OutputBaseFilename=vebuildertools{#VEVERSION}
 Compression=lzma
 SolidCompression=true
 WindowVisible=true
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_suite_banner.bmp
-WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\icons.bmp
+WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
+WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WizardImageStretch=false
 UninstallFilesDir={app}\bin
 OutputDir={#VEHOME}\VE_Installer\installer
+WizardImageBackColor=clGray
 [Types]
 ;Name: optional; Description: VE-Util Library
 [Components]

@@ -21,10 +21,11 @@ OutputBaseFilename=vesuite_deps{#VEVERSION}
 Compression=lzma
 SolidCompression=true
 OutputDir={#VEHOME}\VE_Installer\installer
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_suite_banner.bmp
-WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\icons.bmp
+WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
+WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WindowVisible=true
 WizardImageStretch=false
+WizardImageBackColor=clGray
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
