@@ -74,7 +74,7 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
    //_tab = 0;
    //_nTimeSteps = numTimeSteps;
    _nTimeSteps = 100;
-   _commandPrefix = "TB_"
+   _commandPrefix = "TB_";
 
    _playImage = new wxImage(play_xpm);
    _forwardImage = new wxImage(next_xpm);
