@@ -19,8 +19,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE,VTK_STREAMS_FWD_ONLY,VTK44"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE,VTK_STREAMS_FWD_ONLY,VTK44,VE_USER_LIBRARY"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -131,9 +131,6 @@
 				RelativePath=".\en7Reader.cpp">
 			</File>
 			<File
-				RelativePath=".\enSightGoldReader.cpp">
-			</File>
-			<File
 				RelativePath=".\fireReader.cpp">
 			</File>
 			<File
@@ -155,16 +152,10 @@
 				RelativePath=".\particle.cpp">
 			</File>
 			<File
-				RelativePath=".\plot3dReader.cpp">
-			</File>
-			<File
 				RelativePath=".\reiParticles.cpp">
 			</File>
 			<File
 				RelativePath=".\reiReader.cpp">
-			</File>
-			<File
-				RelativePath=".\starReader.cpp">
 			</File>
 			<File
 				RelativePath=".\tecplotReader.cpp">
@@ -174,9 +165,6 @@
 			</File>
 			<File
 				RelativePath=".\viewCells.cpp">
-			</File>
-			<File
-				RelativePath=".\vtkCleanUnstructuredGrid.cxx">
 			</File>
 		</Filter>
 		<Filter
@@ -190,13 +178,7 @@
 				RelativePath=".\ansysReader10.h">
 			</File>
 			<File
-				RelativePath=".\cfdGrid2Surface.h">
-			</File>
-			<File
 				RelativePath=".\converter.h">
-			</File>
-			<File
-				RelativePath=".\enSightGoldReader.h">
 			</File>
 			<File
 				RelativePath=".\fluentParticle.h">
@@ -214,22 +196,13 @@
 				RelativePath=".\particle.h">
 			</File>
 			<File
-				RelativePath=".\plot3dReader.h">
-			</File>
-			<File
 				RelativePath=".\reiParticles.h">
-			</File>
-			<File
-				RelativePath=".\starReader.h">
 			</File>
 			<File
 				RelativePath=".\tecplotReader.h">
 			</File>
 			<File
 				RelativePath=".\viewCells.h">
-			</File>
-			<File
-				RelativePath=".\vtkCleanUnstructuredGrid.h">
 			</File>
 			<File
 				RelativePath=".\vtkEnSightFortranBinaryReader.h">
