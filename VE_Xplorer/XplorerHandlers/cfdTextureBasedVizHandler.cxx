@@ -528,10 +528,12 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tbvizCommand );
             _updateGraph();
+
+
          }
       }
    }
-   
+   _updateShaders();  
 }
 ///////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetParameterFile(std::string paramFile)

@@ -233,8 +233,8 @@ void TextureBasedToolBar::_onTransient(wxCommandEvent& event)
       _transientControls = new UI_TransientDialog(0,this,-1);
    }
    _transientControls->SetVjObsPtr(_vjObsPtr);
-   _transientControls->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
-   _transientControls->Show();
+   _transientControls->SetSize(GetRect());
+   _transientControls->ShowModal();
 }
 ///////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)

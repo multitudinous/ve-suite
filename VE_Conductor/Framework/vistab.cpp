@@ -242,7 +242,7 @@ void Vistab::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    itemToolBar3 = new wxToolBar( itemDialog1, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL| wxTB_TEXT );
+    itemToolBar3 = new wxToolBar( itemDialog1, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL/*| wxTB_TEXT*/ );
     itemToolBar3->SetToolBitmapSize(wxSize(45, 30));
 
     wxBitmap itemtool4Bitmap(contour_xpm);

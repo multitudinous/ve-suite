@@ -56,10 +56,7 @@ namespace GUI_Utilities
    class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public VE_CAD::CADNodeTraverser
    {
       public:
-         enum TREE_IDS
-         {
-            TREE_ID=1010
-         };
+        
          ///Constructor
          ///\param cadNode The root CADNode.
          ///\param parent The parent wxWindow
