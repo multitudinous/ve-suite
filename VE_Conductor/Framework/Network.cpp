@@ -2495,8 +2495,11 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
    cadDialog->SetVjObsPtr( xplorerPtr.in() );
    cadDialog->ShowModal();
    // Get cadnode back
-   *( dynamic_cast< VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
+   if(cadDialog->GetRootCADNode())
+   {
+      *( dynamic_cast< VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
       *( dynamic_cast< VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
+   }
 }
 ///////////////////////////////////////////
 void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )

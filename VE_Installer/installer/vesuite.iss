@@ -102,20 +102,20 @@ Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}; Fl
 ;Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\shaders\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\simpleScalars\*.vti; DestDir: {app}\exampleDatasets; Components: examples; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs
+Source: {#VEHOME}\VE_TestSuite\simpleScalars\*.vti; DestDir: {app}\exampleDatasets\simple\texture-based; Components: examples; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs
 
 Source: {#VEHOME}\VE_TestSuite\gooch.vea; DestDir: {app}\shaders\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\toon.vea; DestDir: {app}\shaders\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\x-ray.vea; DestDir: {app}\shaders\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\2scl.vtu; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\3scl2vec.vtu; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\3scl.vtu; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\eightCorners.stl; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\Surface0.75.stl; DestDir: {app}\exampleDatasets\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\vtkPolyData.vtk; DestDir: {app}\exampleDatasets; Components: examples
-Source: {#VEHOME}\VE_TestSuite\SURFACE1\*; DestDir: {app}\exampleDatasets\SURFACE1\; Components: examples; Flags: recursesubdirs
-Source: {#VEHOME}\VE_TestSuite\POST_DATA1\*; DestDir: {app}\exampleDatasets\POST_DATA1; Components: examples; Flags: recursesubdirs
-Source: {#VEHOME}\VE_TestSuite\POST_DATA2\*; DestDir: {app}\\exampleDatasets\POST_DATA2; Components: examples; Flags: recursesubdirs
+Source: {#VEHOME}\VE_TestSuite\2scl.vtu; DestDir: {app}\exampleDatasets\simple; Components: examples
+Source: {#VEHOME}\VE_TestSuite\3scl2vec.vtu; DestDir: {app}\exampleDatasets\simple; Components: examples
+Source: {#VEHOME}\VE_TestSuite\3scl.vtu; DestDir: {app}\exampleDatasets\simple; Components: examples
+Source: {#VEHOME}\VE_TestSuite\eightCorners.stl; DestDir: {app}\exampleDatasets\simple; Components: examples
+Source: {#VEHOME}\VE_TestSuite\Surface0.75.stl; DestDir: {app}\exampleDatasets\simple; Components: examples
+Source: {#VEHOME}\VE_TestSuite\vtkPolyData.vtk; DestDir: {app}\exampleDatasets\simple; Components: examples
+Source: {#VEHOME}\VE_TestSuite\SURFACE1\*; DestDir: {app}\exampleDatasets\simple\SURFACE1\; Components: examples; Flags: recursesubdirs
+Source: {#VEHOME}\VE_TestSuite\POST_DATA1\*; DestDir: {app}\exampleDatasets\simple\POST_DATA1; Components: examples; Flags: recursesubdirs
+Source: {#VEHOME}\VE_TestSuite\POST_DATA2\*; DestDir: {app}\\exampleDatasets\simple\POST_DATA2; Components: examples; Flags: recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {app}\images; DestName: vesSmallIcon.bmp
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: vexplorer\osgvepcluster
 Source: {#VEHOME}\bin\win32\WinClientd.exe.manifest; DestDir: {app}\bin
