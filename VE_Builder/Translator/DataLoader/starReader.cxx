@@ -39,7 +39,7 @@
 #include <vtkFloatArray.h> // this code requires VTK4
 #include <vtkPointData.h>
 #include <vtkCellType.h>
-#include "VE_Builder/Translator/converter.h"     // for "letUsersAddParamsToField"
+#include "VE_Builder/Translator/DataLoader/converter.h"     // for "letUsersAddParamsToField"
 #include "VE_Xplorer/Utilities/fileIO.h"        // for "getTagAndValue"
 
 using namespace VE_Util;

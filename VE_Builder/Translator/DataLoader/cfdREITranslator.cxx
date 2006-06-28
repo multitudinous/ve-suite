@@ -42,8 +42,8 @@
 #include <vtkPointData.h>
 
 #include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Builder/Translator/converter.h"      // for "letUsersAddParamsToField"
-#include "VE_Builder/Translator/gridConversion.h"
+#include "VE_Builder/Translator/DataLoader/converter.h"      // for "letUsersAddParamsToField"
+#include "VE_Builder/Translator/DataLoader/gridConversion.h"
 
 #include <iostream>
 

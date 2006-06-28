@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Builder/Translator/DataLoader/EnSightTranslator.h"
 
-#include "VE_Builder/Translator/converter.h"
+#include "VE_Builder/Translator/DataLoader/converter.h"
 
 #include <vtkDataSet.h>
 #include <vtkGenericEnSightReader.h>          // will open any ensight file
