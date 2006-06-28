@@ -480,7 +480,9 @@ class LauncherWindow(wx.Dialog):
                                        wx.OK | wx.CANCEL)
                 ##Quit if the user refuses to choose a Dependencies directory.
                 if dlg.ShowModal() == wx.ID_CANCEL:
-                    OnClose("dead parrot sketch")    
+                    self.Hide()
+                    self.Destroy()
+                    sys.exit(0)
         return searchDir
 
     def ModeChanged(self, event):
@@ -499,12 +501,10 @@ class LauncherWindow(wx.Dialog):
             self.taoMachine = self.txTaoMachine.GetValue()
         if self.txTaoPort.IsEnabled():
             self.taoPort = self.txTaoPort.GetValue()
-        print "%s %s" % (self.taoMachine, self.taoPort) ##TESTER
 
     def UpdateDisplay(self):
         """Changes settings to match the selected mode."""
         newMode = self.rbMode.GetStringSelection()
-        print "Mode changed to %s." % (newMode) ##TESTER
         if newMode in MODE_DICT:
             modeRules = MODE_DICT[newMode]
         else:
@@ -537,7 +537,6 @@ class LauncherWindow(wx.Dialog):
             xplorerConfig = modeRules["jconf"][2]
         else:
             xplorerConfig = self.jconfList.GetPath(self.jconfCursor)
-        print "Jconf file: " + xplorerConfig ##TESTER
         return xplorerConfig
 
     def ChooseDirectory(self, event):
@@ -572,7 +571,6 @@ class LauncherWindow(wx.Dialog):
         config.Write("DesktopMode", str(self.desktop))
         config.WriteInt("Mode", self.rbMode.GetSelection())
         config.Write("ClusterMaster", self.clusterMaster)
-        print self.clusterMaster ##TESTER
         return
     
     def LoadConfig(self, name):
@@ -676,28 +674,60 @@ class LauncherWindow(wx.Dialog):
 
     def Launch(self, event):
         """Checks input, begins launch if error-free."""
+        ##Set mode
+        mode = self.rbMode.GetStringSelection()
+        if mode in MODE_DICT:
+            modeRules = MODE_DICT[mode]
+        else:
+            modeRules = {}
+        ##Set variables
+        if ("conductor" in modeRules) and (modeRules["conductor"][0] == FIXED):
+            conductor = modeRules["conductor"][1]
+        else:
+            conductor = self.conductor
+        if ("nameServer" in modeRules) and \
+           (modeRules["nameServer"][0] == FIXED):
+            nameServer = modeRules["nameServer"][1]
+        else:
+            nameServer = self.nameServer
+        if ("xplorer" in modeRules) and (modeRules["xplorer"][0] == FIXED):
+            xplorer = modeRules["xplorer"][1]
+        else:
+            xplorer = self.xplorer
+        if ("xplorerType" in modeRules) and \
+           (modeRules["xplorerType"][0] == FIXED):
+            xplorerType = modeRules["xplorerType"][1]
+        else:
+            xplorerType = self.xplorerType
+        if ("desktop" in modeRules) and (modeRules["desktop"][0] == FIXED):
+            desktop = modeRules["desktop"][1]
+        else:
+            desktop = self.desktop
+        print "Cluster slaves selected:" ##TESTER
+        for loc in self.clusterDict.GetCheckedLocations(): ##TESTER
+            print loc ##TESTER
         ##ERROR CHECK:  Are any programs selected?
         ##              If not, abort launch.
-        if not (self.nameServer or self.conductor
-                or self.xplorer):
+        if not (conductor or nameServer or xplorer):
             dlg = wx.MessageDialog(self,
                                    "The launch won't do anything because you"+
-                                   " haven't selected any programs.\n" +
-                                   "Please select some programs and try" +
-                                   " launching again.",
+                                   " haven't chosen any programs to launch.\n"+
+                                   "Please choose some programs to launch" +
+                                   " and try again.",
                                    "Launch Error: No Program Selected", wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
+            self.Settings("dead parrot sketch")
             return
         ##ERROR CHECK:  Is the Tao Port between 0 and 65535?
         ##              If not, abort launch.
         if not (self.txTaoPort.GetValue().isdigit() and
                 int(self.txTaoPort.GetValue()) <= 65535):
             dlg = wx.MessageDialog(self,
-                                   "You have entered an illegal Tao Port.\n" +
-                                   "Please enter a Tao Port between 0 and" +
+                                   "You have entered an illegal CE Port.\n" +
+                                   "Please enter a port between 0 and" +
                                    " 65535.",
-                                   "Launch Error: Illegal Tao Port", wx.OK)
+                                   "Launch Error: Illegal CE Port", wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
             return
@@ -705,7 +735,8 @@ class LauncherWindow(wx.Dialog):
         ##              If not, let the user change it.
         if not (os.path.exists(self.txDirectory.GetValue())):
             dlg = wx.MessageDialog(self,
-                                   "The working directory you chose " +
+                                   "The working directory you chose,\n" +
+                                   "%s,\n" %(self.txDirectory.GetValue()) +
                                    "doesn't exist.\n" +
                                    "Do you want to select a new working " +
                                    "directory and continue the launch?",
@@ -738,7 +769,8 @@ class LauncherWindow(wx.Dialog):
         GetJconfPath = self.GetSelectedJconf()
         if not (os.path.exists(GetJconfPath)):
             dlg = wx.MessageDialog(self,
-                                   "The Juggler configuration file you chose" +
+                                   "The Xplorer configuration file you chose,"+
+                                   "\n%s,\n" %(GetJconfPath) +
                                    " doesn't exist.\n" +
                                    "Please select a different one.",
                                    "Launch Error: Jconf File Doesn't Exist",
@@ -746,37 +778,6 @@ class LauncherWindow(wx.Dialog):
             dlg.ShowModal()
             dlg.Destroy()
             return
-        mode = self.rbMode.GetStringSelection()
-        if mode in MODE_DICT:
-            modeRules = MODE_DICT[mode]
-        else:
-            modeRules = {}
-        ##Set variables
-        if ("conductor" in modeRules) and (modeRules["conductor"][0] == FIXED):
-            conductor = modeRules["conductor"][1]
-        else:
-            conductor = self.conductor
-        if ("nameServer" in modeRules) and \
-           (modeRules["nameServer"][0] == FIXED):
-            nameServer = modeRules["nameServer"][1]
-        else:
-            nameServer = self.nameServer
-        if ("xplorer" in modeRules) and (modeRules["xplorer"][0] == FIXED):
-            xplorer = modeRules["xplorer"][1]
-        else:
-            xplorer = self.xplorer
-        if ("xplorerType" in modeRules) and \
-           (modeRules["xplorerType"][0] == FIXED):
-            xplorerType = modeRules["xplorerType"][1]
-        else:
-            xplorerType = self.xplorerType
-        if ("desktop" in modeRules) and (modeRules["desktop"][0] == FIXED):
-            desktop = modeRules["desktop"][1]
-        else:
-            desktop = self.desktop
-        print "Cluster locations selected:" ##TESTER
-        for loc in self.clusterDict.GetCheckedLocations(): ##TESTER
-            print loc ##TESTER
         ##Go into the Launch
         Launch(self,
                self.txDirectory.GetValue(),
@@ -1165,6 +1166,7 @@ class JconfWindow(wx.Dialog):
         ##Data storage.
         self.list = L
         ##Build displays.
+        self.lblPath = wx.StaticText(self, -1)
         self.confList = wx.ListBox(self, -1, size=JCONF_LIST_DISPLAY_MIN_SIZE,
                                    choices=self.list.GetNames())
         self.confList.SetSelection(cursor)
@@ -1198,7 +1200,7 @@ class JconfWindow(wx.Dialog):
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         rowSizer.Add(columnSizer, 1, wx.EXPAND)
         rowSizer.AddMany([VERTICAL_SPACE,
-                          wx.StaticText(self, -1, "Selection's Jconf file:")])
+                          self.lblPath])
         rowSizer.Add(self.display, 0, wx.EXPAND)
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
@@ -1214,12 +1216,14 @@ class JconfWindow(wx.Dialog):
     def DisplayJconfFile(self, event):
         """Shows the .jconf file of the selection in the text field."""
         c = self.confList.GetSelection()
+        s = self.confList.GetStringSelection()
         if c in range(len(self.list)):
             p = self.list.GetPath(c)
             f = os.path.split(p)[1]
         else:
             f = "ERROR: Entry missing from list."
         self.display.SetValue(f)
+        self.lblPath.SetLabel("%s's path:" %(s))
         
     def DeleteEnabledCheck(self):
         """Disables/Enables the Delete button based on number of entries.
@@ -1290,7 +1294,7 @@ class JconfWindow(wx.Dialog):
         loop = True
         name = self.confList.GetStringSelection()
         while loop:
-            f= os.path.split(self.list.GetPath(self.confList.GetSelection()))[1]
+            f=os.path.split(self.list.GetPath(self.confList.GetSelection()))[1]
             dlg = wx.TextEntryDialog(self,
                                      "What do you want to rename " + \
                                      self.confList.GetStringSelection() + \
@@ -1477,9 +1481,10 @@ class ClusterWindow(wx.Dialog):
         columnSizer.AddMany([HORIZONTAL_SPACE, rowSizer])
         ##List field + Path display
         rowSizer = wx.BoxSizer(wx.VERTICAL)
+        rowSizer.Add(wx.StaticText(self, -1, "Slave names:"))
         rowSizer.Add(columnSizer, 1, wx.EXPAND)
         rowSizer.AddMany([VERTICAL_SPACE,
-                          wx.StaticText(self, -1, "Master's location:")])
+                          wx.StaticText(self, -1, "Master's name:")])
         rowSizer.Add(self.masterCtrl, 0, wx.EXPAND)
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
@@ -1507,7 +1512,6 @@ class ClusterWindow(wx.Dialog):
         ##Set cursor if it's blank.
         if cursor == "":
             cursor = self.clustList.GetStringSelection()
-        print str(cursor) ##TESTER
         nameList = self.cDict.GetNames()
         nameList.sort()
         self.clustList.Set(nameList)
@@ -1610,32 +1614,24 @@ class Launch:
         cluster -- Optional, used for running multiple Xplorers."""
         ##The launch is the final step.
         ##Destroy launcher window before beginning the actual launch.
-	print "Entered launcher." ##TESTER
         if launcherWindow != None:
             launcherWindow.Close()
         ##Get dependenciesDir for setting environmental variables.
         if dependenciesDir == None:
             dependenciesDir = config.Read("DependenciesDir", "ERROR")
         ##Set the environmental variables
-	print "Entering environmental setup." ##TESTER
         self.EnvSetup(dependenciesDir, workingDir, taoMachine, taoPort,
                       master)
-	print "Exiting environmental setup." ##TESTER
         ##Use the user's defined directory as Current Working Dir
-##        print "Changing to directory: " + self.txDirectory.GetValue() ##TESTER
         os.chdir(os.getenv("VE_WORKING_DIR"))
-##        print os.name ##TESTER
-##        print os.getcwd() ##TESTER
         ##Checks the OS and routes the launcher to the proper subfunction
         ##NOTE: Code out separate Setups, code in the combined Setup
         if os.name == "nt":
             self.Windows(runName, runConductor, runXplorer,
                          typeXplorer, jconf, desktopMode)
         elif os.name == "posix":
-	    print "Entering Unix launch code." ##TESTER
             self.Unix(runName, runConductor, runXplorer,
                       typeXplorer, jconf, desktopMode, cluster, master)
-	    print "Exited Unix launch code." ##TESTER
         else:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
         return
@@ -1712,7 +1708,6 @@ class Launch:
         typeXplorer -- Which Xplorer program to run.
         jconf -- Which .jconf file to use for Xplorer's settings."""
         ##Name Server section
-	print "Starting nameserver." ##TESTER
         if runName:
             os.system("Naming_Service -ORBEndPoint" +
                       " iiop://${TAO_MACHINE}:${TAO_PORT} &")
@@ -1721,7 +1716,6 @@ class Launch:
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService" +
                       " -ORBDottedDecimalAddresses 1 &")
         ##Conductor section
-	print "Starting conductor." ##TESTER
         if runConductor:
             ##Append argument if desktop mode selected
             if desktopMode:
@@ -1902,7 +1896,6 @@ class Launch:
                              """| sed -e 's/"//g'""", 'r')
             os.environ["CFDHOSTTYPE"] = piped.read()[:-1]
             piped.close()
-##            print "CFDHOSTTYPE: %s" %(str(os.getenv("CFDHOSTTYPE"))) ##TESTER
 
         self.EnvFill("PHSHAREDSIZE", "534773700")
 
@@ -1964,7 +1957,6 @@ class Launch:
             currentLibraryPath = str(os.getenv(libraryPath)) + ":"
             if currentLibraryPath == "None:":
                 currentLibraryPath = ""
-##            print "CURRENT LIBRARY PATH: " + str(currentLibraryPath) ##TESTER
             ##Update the library path
             os.environ[libraryPath] = currentLibraryPath + \
                                       os.path.join(str(os.getenv("VE_DEPS_DIR")),
@@ -2009,7 +2001,6 @@ else:
     app = wx.PySimpleApp()
     frame = LauncherWindow(None,-1,'VE Suite Launcher')
     app.MainLoop()
-    print "Out of the main loop." ##TESTER
     ##Delete the config link to avoid memory leakage.
     del config
 
