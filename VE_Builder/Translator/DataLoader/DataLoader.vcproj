@@ -20,8 +20,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_BUILDER_LIBRARY;WINVER=0x400;VTK44"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_USER_BUILDER_LIBRARY;WINVER=0x400;VTK44"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -72,7 +72,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_BUILDER_LIBRARY;WINVER=0x400;VTK44"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
@@ -124,6 +124,15 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath=".\AVSTranslator.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdDICOMTranslator.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdREITranslator.cxx">
+			</File>
+			<File
 				RelativePath=".\DataLoader.cxx">
 			</File>
 			<File
@@ -133,13 +142,31 @@
 				RelativePath=".\FluentTranslator.cxx">
 			</File>
 			<File
+				RelativePath=".\main.cxx">
+			</File>
+			<File
 				RelativePath=".\MFIXTranslator.cxx">
+			</File>
+			<File
+				RelativePath=".\plot3dReader.cxx">
+			</File>
+			<File
+				RelativePath=".\starReader.cxx">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\AVSTranslator.h">
+			</File>
+			<File
+				RelativePath=".\cfdDICOMTranslator.h">
+			</File>
+			<File
+				RelativePath=".\cfdREITranslator.h">
+			</File>
 			<File
 				RelativePath=".\DataLoader.h">
 			</File>
@@ -151,6 +178,12 @@
 			</File>
 			<File
 				RelativePath=".\MFIXTranslator.h">
+			</File>
+			<File
+				RelativePath=".\plot3dReader.h">
+			</File>
+			<File
+				RelativePath=".\starReader.h">
 			</File>
 		</Filter>
 		<Filter
