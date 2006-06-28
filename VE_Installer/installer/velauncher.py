@@ -35,7 +35,7 @@ FIXED = False ##Used in MODE_DICT
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 DIRECTORY_DEFAULT = os.path.join(os.getcwd(), "exampleDatasets")
-LOGO_LOCATION = "./images/ve_logo.xpm"
+LOGO_LOCATION = os.path.join(os.getcwd(), "images", "ve_logo.xpm")
 CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
 RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
@@ -179,8 +179,8 @@ class CommandLaunch:
             ##If neither exists, bring up an error.
             ##NOTE: Should never be reached.
             else:
-                print "ERROR: No Jconf configuration found and failed" + \
-                      " to make default Jconf from Dependencies dir."
+                print "ERROR: No Xplorer configuration found and no" + \
+                      "Dependencies directory to find the default from."
         ##Set Tao Machine & Port.
         if self.taoMachine == None:
             self.taoMachine = config.Read("TaoMachine", "localhost")
@@ -280,26 +280,28 @@ class LauncherWindow(wx.Dialog):
                                          " the programs."))
         ##Build Tao Machine text ctrl.
         self.txTaoMachine = wx.TextCtrl(self, -1)
-        self.txTaoMachine.SetToolTip(wx.ToolTip("Enter VE Suite's machine."))
+        self.txTaoMachine.SetToolTip(wx.ToolTip("Enter the computing" +
+                                                "engine's name."))
         ##Build Tao Port text ctrl.
         self.txTaoPort = wx.TextCtrl(self, -1)
-        self.txTaoPort.SetToolTip(wx.ToolTip("Enter VE Suite's port."))
+        self.txTaoPort.SetToolTip(wx.ToolTip("Enter the computing" +
+                                             " engine's port."))
         ##Build Mode radio box.
         self.rbMode = wx.RadioBox(self, -1, "Launch Mode",
                                   wx.DefaultPosition, wx.DefaultSize,
                                   MODE_LIST, 1, wx.RA_SPECIFY_COLS)
-        self.rbMode.SetToolTip(wx.ToolTip("Which mode do you want to" +
+        self.rbMode.SetToolTip(wx.ToolTip("Choose which mode you want to" +
                                           " launch in?"))
         ##Build Mode Settings button.
         self.bCustom = wx.Button(self, -1, "Mode Settings")
         self.bCustom.SetToolTip(wx.ToolTip("View and change settings for" +
-                                           "current mode."))
+                                           " the current mode."))
         ##Build Launch button.
         bLaunch = wx.Button(self, -1, "Launch VE Suite")
         bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
-        ##Set tool tip popup delay to 1 second
-        wx.ToolTip.SetDelay(1000)
+        ##Set tool tip popup delay to 2 seconds.
+        wx.ToolTip.SetDelay(2000)
         ##Check the dependencies.
         self.DependenciesCheck()
         ##Event bindings.
@@ -324,12 +326,12 @@ class LauncherWindow(wx.Dialog):
         rowSizer.Add(columnSizer, 0, wx.EXPAND) 
         ##Construct the Tao column.
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.Add(wx.StaticText(self, -1, "Tao Machine:"),
+        columnSizer.Add(wx.StaticText(self, -1, "CE Name:"),
                         0, wx.ALIGN_CENTER_VERTICAL)
         columnSizer.Add(HORIZONTAL_SPACE)
         columnSizer.Add(self.txTaoMachine, 2)
         columnSizer.Add((HORIZONTAL_SPACE[0]*3, -1))
-        columnSizer.Add(wx.StaticText(self, -1, "Tao Port:"),
+        columnSizer.Add(wx.StaticText(self, -1, "CE Port:"),
                         0, wx.ALIGN_CENTER_VERTICAL)
         columnSizer.Add(HORIZONTAL_SPACE)
         columnSizer.Add(self.txTaoPort, 1)
@@ -829,14 +831,11 @@ class SettingsWindow(wx.Dialog):
             self.desktopFixed = True
         ##Jconf pull-down menu.
         self.chJconf = wx.Choice(self, -1)
-        self.chJconf.SetToolTip(wx.ToolTip("Choose the Juggler configuration" +
-                                           " Xplorer will use for its" +
-                                           " configuration settings."))
+        self.chJconf.SetToolTip(wx.ToolTip("Choose Xplorer's configuration."))
         ##Edit Jconf button.
-        self.bEditJconf = wx.Button(self, -1, "Edit Juggler Configurations")
-        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Juggler" +
-                                              " configuration files displayed" +
-                                              " in the Launcher."))
+        self.bEditJconf = wx.Button(self, -1, "Edit Configuration List")
+        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Xplorer" +
+                                              " configurations."))
         if "jconf" in modeRules:
             self.chJconf.Append(modeRules["jconf"][1])
             self.chJconf.SetSelection(0)
@@ -852,8 +851,7 @@ class SettingsWindow(wx.Dialog):
             self.UpdateChJconf(jconfCursor)
         ##Name Server checkbox.
         self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
-        self.cbNameServer.SetToolTip(wx.ToolTip("Run the Name Server" +
-                                                " at Launch"))
+        self.cbNameServer.SetToolTip(wx.ToolTip("Run Name Server at Launch"))
         if "nameServer" in modeRules:
             self.cbNameServer.SetValue(modeRules["nameServer"][1])
             self.cbNameServer.Enable(modeRules["nameServer"][0])
@@ -861,7 +859,7 @@ class SettingsWindow(wx.Dialog):
             self.cbNameServer.SetValue(nameServer)
         ##Conductor checkbox.
         self.cbConductor = wx.CheckBox(self, -1, "Conductor")
-        self.cbConductor.SetToolTip(wx.ToolTip("Run the Conductor at Launch"))
+        self.cbConductor.SetToolTip(wx.ToolTip("Run Conductor at Launch"))
         if "conductor" in modeRules:
             self.cbConductor.SetValue(modeRules["conductor"][1])
             self.cbConductor.Enable(modeRules["conductor"][0])
@@ -869,7 +867,7 @@ class SettingsWindow(wx.Dialog):
             self.cbConductor.SetValue(conductor)
         ##Xplorer checkbox.
         self.cbXplorer = wx.CheckBox(self, -1, "Xplorer")
-        self.cbXplorer.SetToolTip(wx.ToolTip("Run the Xplorer at Launch"))
+        self.cbXplorer.SetToolTip(wx.ToolTip("Run Xplorer at Launch"))
         if "xplorer" in modeRules:
             self.cbXplorer.SetValue(modeRules["xplorer"][1])
             self.cbXplorer.Enable(modeRules["xplorer"][0])
@@ -877,7 +875,8 @@ class SettingsWindow(wx.Dialog):
             self.cbXplorer.SetValue(xplorer)
         ##Desktop checkbox.
         self.cbDesktop = wx.CheckBox(self, -1, "Desktop Mode")
-        self.cbDesktop.SetToolTip(wx.ToolTip("Run VE Suite in Desktop Mode"))
+        self.cbDesktop.SetToolTip(wx.ToolTip("Set Desktop Mode for" +
+                                             " Conductor and Xplorer"))
         if "desktop" in modeRules:
             self.cbDesktop.SetValue(modeRules["desktop"][1])
             self.cbDesktop.Enable(modeRules["desktop"][0])
@@ -896,14 +895,13 @@ class SettingsWindow(wx.Dialog):
             self.rbXplorer.SetSelection(xplorerType)
         ##Cluster button.
         self.bCluster = wx.Button(self, -1, "Set Cluster Computers")
-        self.bCluster.SetToolTip(wx.ToolTip("Set which computers in" +
-                                            " the cluster to run."))
+        self.bCluster.SetToolTip(wx.ToolTip("Set the computers in" +
+                                            " the cluster."))
         if os.name == "nt":
             self.bCluster.Hide()
         ##Set up OK button.
         bOk = wx.Button(self, -1, "OK")
-        bOk.SetToolTip(wx.ToolTip("Finish changing settings and return" +
-                                  " to Launcher."))
+        bOk.SetToolTip(wx.ToolTip("Return to the Launcher."))
         self.EvtCheckXplorer("dead parrot sketch")
         ##Also calls self.EvtCheckDesktop as a follow-up
         ##Bind events.
@@ -918,7 +916,7 @@ class SettingsWindow(wx.Dialog):
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         ##Construct & insert the Jconf column.
-        rowSizer.Add(wx.StaticText(self, -1, "Jconfiguration file:"))
+        rowSizer.Add(wx.StaticText(self, -1, "Xplorer configuration:"))
         columnSizer.Add(self.chJconf, 1, wx.ALIGN_BOTTOM)
         columnSizer.AddMany([HORIZONTAL_SPACE,
                              self.bEditJconf])
@@ -1005,11 +1003,10 @@ class SettingsWindow(wx.Dialog):
         if self.chJconf.GetCount() == 0:
             cursor = wx.NOT_FOUND
         self.chJconf.SetSelection(cursor)
-        ##NOTE: Put in "Add new Jconf" option as last item.
 
     def EditJconf(self, event):
         """Brings up the Jconf editing window."""
-        jconfWindow = JconfWindow(self, wx.ID_ANY, "Edit Jconf List",
+        jconfWindow = JconfWindow(self, wx.ID_ANY, "Xplorer Configurations",
                                   self.jconfList, self.chJconf.GetSelection())
         jconfWindow.ShowModal()
         jconfWindow.Destroy()        
@@ -1020,7 +1017,8 @@ class SettingsWindow(wx.Dialog):
         return jconfFile
 
     def EditCluster(self, event):
-        clusterWindow = ClusterWindow(self, self.clusterDict, self.clusterMaster)
+        clusterWindow = ClusterWindow(self, self.clusterDict,
+                                      self.clusterMaster)
         clusterWindow.ShowModal()
         clusterWindow.Destroy()
 
@@ -1174,9 +1172,13 @@ class JconfWindow(wx.Dialog):
         self.DisplayJconfFile("dead parrot sketch")
         ##Build buttons.
         bAdd = wx.Button(self, -1, "Add")
+        bAdd.SetToolTip(wx.ToolTip("Add a configuration listing."))
         bRename = wx.Button(self, -1, "Rename")
+        bRename.SetToolTip(wx.ToolTip("Rename a configuration listing."))
         self.bDelete = wx.Button(self, -1, "Delete")
+        self.bDelete.SetToolTip(wx.ToolTip("Delete a configuration listing."))
         bOk = wx.Button(self, -1, "Ok")
+        bOk.SetToolTip(wx.ToolTip("Return to Settings."))
         ##Check if Delete's enabled.
         self.DeleteEnabledCheck()
         ##Bind buttons.
@@ -1198,6 +1200,7 @@ class JconfWindow(wx.Dialog):
         columnSizer.AddMany([HORIZONTAL_SPACE, rowSizer])
         ##List field + Path display
         rowSizer = wx.BoxSizer(wx.VERTICAL)
+        rowSizer.Add(wx.StaticText(self, -1, "Xplorer Configurations:"))
         rowSizer.Add(columnSizer, 1, wx.EXPAND)
         rowSizer.AddMany([VERTICAL_SPACE,
                           self.lblPath])
@@ -1455,12 +1458,16 @@ class ClusterWindow(wx.Dialog):
                                          size=JCONF_LIST_DISPLAY_MIN_SIZE)
         ##Build Add & Delete buttons.
         bAdd = wx.Button(self, -1, "Add")
+        bOk.SetToolTip(wx.ToolTip("Add a slave listing."))
         self.bDelete = wx.Button(self, -1, "Delete")
+        bOk.SetToolTip(wx.ToolTip("Delete a slave listing."))
         ##Build master display.
         self.masterCtrl = wx.TextCtrl(self, -1)
         self.masterCtrl.SetValue(self.clusterMaster)
+        bOk.SetToolTip(wx.ToolTip("Name the master computer."))
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
+        bOk.SetToolTip(wx.ToolTip("Return to Settings."))
         ##Fill in info.
         self.Update()
         ##Check if Delete's enabled.
