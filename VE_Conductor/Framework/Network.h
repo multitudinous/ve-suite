@@ -234,6 +234,7 @@ private:
    int intfssize;
    wxProgressDialog* _fileProgress;
    bool isLoading;
+   bool isDataSet;
 
    Vistab* vistab;///< The visualization tab
 

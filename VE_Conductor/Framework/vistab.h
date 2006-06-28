@@ -110,7 +110,8 @@ enum VISTAB_IDS
    MAX_SPINCTRL,
    MIN_MAX_SLIDERS,
    MIN_SLIDER,
-   MAX_SLIDER
+   MAX_SLIDER,
+   CLOSE_BUTTON
 };
 ////@end control identifiers
 
@@ -302,6 +303,7 @@ protected:
    ///\param newNames The list of new names to update
    void _updateAvailableScalarMeshSolutions(VjObs::Scalars newNames);
 
+   void _onClose( wxCommandEvent& event );
    ///Update the available solutions for a particular give dataset type
    ///\param dataType The data set type\n 
    ///Valid types include:\n
@@ -340,6 +342,7 @@ protected:
    Isosurfaces* isosurface;///<Iso-Surface dialog
    TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
    Polydata* polydata;///<Polydata dialog
+   Vistab* vistab;
 
    unsigned int _nDatasetsInActiveModel;///<The number of datasets in the active model.
    unsigned int _nScalarsInActiveDataset;///<Number of scalars in the active dataset.
@@ -382,6 +385,9 @@ protected:
 
    double minimumValue;
    double maximumValue;
+
+   bool scalarSelect;
+   bool vectorSelect;
 };
 
 #endif

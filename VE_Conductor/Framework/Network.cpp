@@ -135,6 +135,7 @@ Network::Network(wxWindow* parent, int id)
    SetBackgroundColour(*wxWHITE);
    this->parent = parent;
    vistab = 0;
+   isDataSet = false;
 }
 
 Network::~Network()
@@ -2596,11 +2597,12 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                wxArrayString vectorTextureDatasets;
                bool hasScalarTextures = false;
                bool hasVectorTextures = false;
+
                for(size_t i = 0; i < nInformationPackets; i++)
                {
                   VE_XML::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket(i);
                   size_t numProperties = paramBlock->GetNumberOfProperties();
-                  
+                                       
                   for ( size_t i = 0; i < numProperties; ++i )
                   {
                      VE_XML::DataValuePair* dataValuePair = paramBlock->GetProperty( i );
@@ -2623,8 +2625,12 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                            }
                         }
                      }
+
+                     isDataSet = true;
                   }
+
                }
+
                if(hasScalarTextures)
                {
                   std::cout<<"Found scalar texture directory"<<std::endl;
@@ -2637,7 +2643,16 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
                }
 
             }
-            int error = vistab->ShowModal(); 
+
+            if(isDataSet)
+            {
+               int error = vistab->ShowModal(); 
+            }
+            else
+            {
+               wxMessageBox( "Open a dataset","Dataset Failure", 
+                              wxOK | wxICON_INFORMATION );
+            }
          }
          else
          { 
