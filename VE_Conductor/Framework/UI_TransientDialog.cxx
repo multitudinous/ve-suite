@@ -74,6 +74,7 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
    //_tab = 0;
    //_nTimeSteps = numTimeSteps;
    _nTimeSteps = 100;
+   _commandPrefix = "TB_"
 
    _playImage = new wxImage(play_xpm);
    _forwardImage = new wxImage(next_xpm);
@@ -154,11 +155,16 @@ void UI_TransientDialog::_buildGUI()
    SetAutoLayout(true);
    SetSizer(mainSizer);
 }
+////////////////////////////////////////////////////////////////
+void UI_TransientDialog::SetCommandPrefix(std::string newPrefix)
+{
+   _commandPrefix = newPrefix;
+}
 ///////////////////////////////////////////////////////
 void UI_TransientDialog::_onPlay(wxCommandEvent& event )
 {
    ClearInstructions();
-   _commandName = "TB_TRANSIENT_MODE_UPDATE";
+   _commandName = std::string(_commandPrefix + "TRANSIENT_MODE_UPDATE");
    
    VE_XML::DataValuePair* updateMode = new VE_XML::DataValuePair();
    updateMode->SetData("Mode","Play");
@@ -170,7 +176,7 @@ void UI_TransientDialog::_onPlay(wxCommandEvent& event )
 void UI_TransientDialog::_onForwardStep(wxCommandEvent& event )
 {
    ClearInstructions();
-   _commandName = "TB_TRANSIENT_MODE_UPDATE";
+   _commandName = std::string(_commandPrefix+"TRANSIENT_MODE_UPDATE");
    
    VE_XML::DataValuePair* updateMode = new VE_XML::DataValuePair();
    updateMode->SetData("Mode","Step");
@@ -188,7 +194,7 @@ void UI_TransientDialog::_onForwardStep(wxCommandEvent& event )
 void UI_TransientDialog::_onBackwardStep(wxCommandEvent& event )
 {
    ClearInstructions();
-   _commandName = "TB_TRANSIENT_MODE_UPDATE";
+   _commandName = std::string(_commandPrefix + "TRANSIENT_MODE_UPDATE");
    
    VE_XML::DataValuePair* updateMode = new VE_XML::DataValuePair();
    updateMode->SetData("Mode","Step");
@@ -206,7 +212,7 @@ void UI_TransientDialog::_onBackwardStep(wxCommandEvent& event )
 void UI_TransientDialog::_onStop(wxCommandEvent& event )
 {
    ClearInstructions();
-   _commandName = "TB_TRANSIENT_MODE_UPDATE";
+   _commandName = std::string(_commandPrefix + "TRANSIENT_MODE_UPDATE");
    
    VE_XML::DataValuePair* updateMode = new VE_XML::DataValuePair();
    updateMode->SetData("Mode","Stop");
@@ -218,7 +224,7 @@ void UI_TransientDialog::_onStop(wxCommandEvent& event )
 void UI_TransientDialog::_onSetDuration(wxSpinEvent& WXUNUSED(event))
 {
    ClearInstructions();
-   _commandName = "TB_TRANSIENT_DURATION_UPDATE";
+   _commandName = std::string(_commandPrefix + "TRANSIENT_DURATION_UPDATE");
   
    VE_XML::DataValuePair* duration = new VE_XML::DataValuePair();
    duration->SetData("Duration", _duration->GetValue());

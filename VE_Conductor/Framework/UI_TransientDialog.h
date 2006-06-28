@@ -60,11 +60,15 @@ public:
                      std::string title = "Transient Controls");
    ~UI_TransientDialog(){};
 
-//   void SetTabControl(UI_Tabs* tab);
+   ///Set the command prefix so that we can use this control to
+   ///send different commands.
+   ///\param newPrefix The command prefix
+   void SetCommandPrefix(std::string newPrefix);
 protected:
    virtual void _buildGUI();
 
    unsigned int _nTimeSteps;
+   std::string _commandPrefix;///<The command prefix.
 
    wxImage* _playImage;
    wxImage* _stopImage;
