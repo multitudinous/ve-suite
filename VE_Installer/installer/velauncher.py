@@ -1716,6 +1716,9 @@ class Launch:
         jconf -- Which .jconf file to use for Xplorer's settings."""
         ##Name Server section
         if runName:
+            os.system("killall Naming_Service")
+            os.system("killall Exe_server")
+            time.sleep(1)
             os.system("Naming_Service -ORBEndPoint" +
                       " iiop://${TAO_MACHINE}:${TAO_PORT} &")
             time.sleep(5)
@@ -1858,10 +1861,10 @@ class Launch:
                     thirdWord = piped.read()[:-1]
                     piped.close()
                     if thirdWord == "Enterprise":
-                        ##Extract words from file to create something like RHEL_3
-                        piped = os.popen("""cat /etc/redhat-release """ +
-                                         """| awk -F" " '{print "RHEL_" $7}'""",
-                                         'r')
+                        ##Extract words from file to create similar to RHEL_3
+                        piped= os.popen("""cat /etc/redhat-release """ +
+                                        """| awk -F" " '{print "RHEL_" $7}'""",
+                                        'r')
                         self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
                         piped.close()
                     else:
@@ -1875,8 +1878,8 @@ class Launch:
                         piped.close()
                 elif firstWord == "Fedora":
                     ##Extract words from file to create something like Fedora_1
-                    piped = os.popen("""cat /etc/redhat-release """ +
-                                     """| awk -F" " '{print $1 "_" $4}'""", 'r')
+                    piped= os.popen("""cat /etc/redhat-release """ +
+                                    """| awk -F" " '{print $1 "_" $4}'""", 'r')
                     self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
                     piped.close()
                 else:
@@ -1966,13 +1969,11 @@ class Launch:
                 currentLibraryPath = ""
             ##Update the library path
             os.environ[libraryPath] = currentLibraryPath + \
-                                      os.path.join(str(os.getenv("VE_DEPS_DIR")),
-                                                   "bin") + ":" + \
-                                      os.path.join(str(os.getenv("VE_INSTALL" + \
-                                                                 "_DIR")),
-                                                   "bin") + ":" + \
-                                      os.path.join(str(os.getenv("VJ_BASE_DIR")),
-                                                   lib)
+                       os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")+ \
+                       ":" + \
+                       os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin")+ \
+                       ":" + \
+                       os.path.join(str(os.getenv("VJ_BASE_DIR")), lib)
             ##Update the path
             os.environ["PATH"] = str(os.getenv("PATH")) + ":" + \
                                  os.path.join(str(os.getenv("VE_INSTALL_DIR")),
