@@ -42,7 +42,7 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 EXTRA_LIBS+= -lm -L$(VJ_DEPS_DIR)/lib
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_UtilLib -lDataLoaderLib -lTranslatorToVTKLib
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator/DataLoader
-
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
 #vrj.appdefs.mk 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 #include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk

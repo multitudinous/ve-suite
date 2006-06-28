@@ -33,9 +33,11 @@
 #include "VE_Builder/Translator/DataLoader/FluentTranslator.h"
 #include "VE_Builder/Translator/DataLoader/MFIXTranslator.h"
 #include "VE_Builder/Translator/DataLoader/EnSightTranslator.h"
-//#include "VE_Builder/Translator/AVSTranslator/AVSTranslator.h"
-//#include "VE_Builder/Translator/REItoVTK/cfdREIToVTK.h"
-//#include "VE_Builder/Translator/cfdDICOMTranslator/cfdDICOMTranslator.h"
+#include "VE_Builder/Translator/DataLoader/AVSTranslator.h"
+#include "VE_Builder/Translator/DataLoader/cfdREITranslator.h"
+#include "VE_Builder/Translator/DataLoader/cfdDICOMTranslator.h"
+#include "VE_Builder/Translator/DataLoader/plot3dReader.h"
+
 #include "VE_Xplorer/Utilities/fileIO.h"
 
 using namespace VE_Builder;
@@ -48,17 +50,19 @@ DataLoader::DataLoader()
    activeLoader = 0;
    // load up the translator map
    // AVS
-   //translatorMap[ "avs" ] = new VE_Builder::AVSTranslator();
+   translatorMap[ "avs" ] = new VE_Builder::AVSTranslator();
    // REI
-   //translatorMap[ "BANFDB" ] = new VE_Builder::cfdREItoVTK();
+   translatorMap[ "BANFDB" ] = new VE_Builder::cfdREITranslator();
    // DICOM
-   //translatorMap[ "dcm" ] = new VE_Builder::cfdDICOMTranslator();
+   translatorMap[ "dcm" ] = new VE_Builder::cfdDICOMTranslator();
    // Fluent
    translatorMap[ "cas" ] = new VE_Builder::FluentTranslator();
    // EnSight
    translatorMap[ "case" ] = new VE_Builder::EnSightTranslator();
    // MFIX
    translatorMap[ "mfix" ] = new VE_Builder::MFIXTranslator();
+   // MFIX
+   translatorMap[ "xyz" ] = new VE_Builder::plot3dReader();
 }
 ///////////////////////////////////////////////////////////////////////////
 DataLoader::~DataLoader()

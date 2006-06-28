@@ -37,18 +37,27 @@ SRCS=\
    DataLoader.cxx\
    FluentTranslator.cxx\
    MFIXTranslator.cxx\
-   EnSightTranslator.cxx
+   EnSightTranslator.cxx\
+   AVSTranslator.cxx\
+   cfdDICOMTranslator.cxx\
+   cfdREITranslator.cxx\
+   converter.cpp\
+   gridConversion.cpp\
+   plot3dReader.cpp\
+   StarCDTranslator.cxx\
+   starReader.cpp
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
-#EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
 EXTRA_LDFLAGS+= -g
 EXTRA_CXXFLAGS+= -g
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
-#DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib
-#DSO_PLUGIN_DEPS+= -lVE_CADLib
+DSO_PLUGIN_DEPS += -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_UtilLib
+DSO_PLUGIN_DEPS += -lTranslatorToVTKLib
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk

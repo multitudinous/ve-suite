@@ -36,14 +36,14 @@
 
 namespace VE_Builder
 {
-class VE_BUILDER_EXPORTS MFIXTranslator: 
+class VE_USER_BUILDER_EXPORTS MFIXTranslator: 
    public VE_Builder::cfdTranslatorToVTK
 {
 public:
    MFIXTranslator();
    virtual ~MFIXTranslator();
    //////////////////////////////////////////////////////
-   class MFIXTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS MFIXTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       MFIXTranslateCbk(){;}
@@ -56,7 +56,7 @@ public:
 		                     cfdTranslatorToVTK* toVTK);
    };
    //////////////////////////////////////////////////////
-   class MFIXPreTranslateCbk: 
+   class VE_USER_BUILDER_EXPORTS MFIXPreTranslateCbk: 
       public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:

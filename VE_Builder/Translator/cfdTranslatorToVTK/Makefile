@@ -42,10 +42,11 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g
 EXTRA_CXXFLAGS+= -g
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
-#DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_XMLLib
+DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_UtilLib
 #DSO_PLUGIN_DEPS+= -lVE_CADLib
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk

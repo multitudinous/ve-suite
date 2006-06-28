@@ -23,53 +23,49 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: plot3dReader.h,v $
+ * File:          $RCSfile: filename,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PLOT3DREADER_H
-#define PLOT3DREADER_H
+#ifndef _AVS_TRANSLATOR_H_
+#define _AVS_TRANSLATOR_H_
 
-class vtkStructuredGridWriter;
-class vtkStructuredGrid;
-class vtkPLOT3DReader;
-class vtkUnstructuredGridWriter;
-class vtkUnstructuredGrid;
-class vtkAppendFilter;
 
-class plot3dReader
-{
+#include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
+
+namespace VE_Builder{
+class VE_USER_BUILDER_EXPORTS AVSTranslator: 
+   public VE_Builder::cfdTranslatorToVTK{
+
+public:
+   AVSTranslator();
+   virtual ~AVSTranslator();
+ 
+   class VE_USER_BUILDER_EXPORTS AVSTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback{
    public:
-      plot3dReader( void );
-      ~plot3dReader( void );
-      plot3dReader( plot3dReader * );
-
-      //void writeParticlePolyData( void );
-      //void readPPLOT1( void );
-      void GetFileNames( void );
-      //void readParticleParamFile( void );
-      vtkUnstructuredGrid  *GetUnsGrid( void );
-      vtkUnstructuredGrid *MakeVTKSurfaceFromGeomFiles( void ); 
-
-      //typedef std::vector< Particle * > Particles;
-      //Particles particles;
-      //int nsl;
-      //int nps;
-
-      vtkStructuredGridWriter    *writer;      
-      vtkPLOT3DReader            *reader;
-      vtkStructuredGrid          **grids;
-      vtkUnstructuredGrid        *unsgrid;
-      vtkUnstructuredGridWriter  *unswriter;
-      vtkAppendFilter            *filter;
-
-      char  plot3dGeomFileName[100];
-      char  plot3dDataFileName[100];
-      char  *plot3dSurfaceFileName[100];
-      int   answer;   
-      int   numGrids;
-      int   numOfSurfaceGrids;
+      AVSTranslateCbk(){};
+      virtual ~AVSTranslateCbk(){};
+      //////////////////////////////////////////////////
+      //ouputDataset should be populated              //
+      //appropriately by the translate callback.      //
+      //////////////////////////////////////////////////
+      virtual void Translate(vtkDataSet*& outputDataset,
+		                     cfdTranslatorToVTK* toVTK);
+   protected:
+   };
+   class VE_USER_BUILDER_EXPORTS AVSPreTranslateCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback{
+   public:
+      AVSPreTranslateCbk(){};
+      virtual ~AVSPreTranslateCbk(){};
+      void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+   protected:
+   };
+protected:
+   AVSPreTranslateCbk _cmdParser;
+   AVSTranslateCbk _AVSToVTK;
 };
-#endif
+
+}
+#endif//_AVS_TRANSLATOR_H_

@@ -23,34 +23,48 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: readWriteVtkThings.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+ * Version:       $Rev: 999999 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef ENSIGHTGOLDREADER_H
-#define ENSIGHTGOLDREADER_H
+#ifndef _CFD_DICOM_TRANSLATOR_H_
+#define _CFD_DICOM_TRANSLATOR_H_
 
-#include <string>
 
-class vtkGenericEnSightReader;
-class vtkCellDataToPointData;
-class vtkUnstructuredGrid;
-class vtkPointData;
-class vtkFloatArray;
-class enSightGoldReader
-{
+#include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
+
+namespace VE_Builder{
+class VE_USER_BUILDER_EXPORTS cfdDICOMTranslator: 
+   public VE_Builder::cfdTranslatorToVTK{
+
+public:
+   cfdDICOMTranslator();
+   virtual ~cfdDICOMTranslator();
+ 
+   class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback{
    public:
-      enSightGoldReader( void );
-      ~enSightGoldReader( void );
-   
-      // Simple translator that implements vtk's EnSightGoldReader
-      vtkUnstructuredGrid* GetUnstructuredGrid( std::string, int );
-
-   private:
-      vtkGenericEnSightReader*   reader;
-      vtkCellDataToPointData* cell2point;
+      DICOMTranslateCbk(){};
+      virtual ~DICOMTranslateCbk(){};
+      //////////////////////////////////////////////////
+      //ouputDataset should be populated              //
+      //appropriately by the translate callback.      //
+      //////////////////////////////////////////////////
+      virtual void Translate(vtkDataSet*& outputDataset,
+		                     cfdTranslatorToVTK* toVTK);
+   protected:
+   };
+   class VE_USER_BUILDER_EXPORTS DICOMPreTranslateCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback{
+   public:
+      DICOMPreTranslateCbk(){};
+      virtual ~DICOMPreTranslateCbk(){};
+   protected:
+   };
+protected:
+   DICOMPreTranslateCbk _cmdParser;
+   DICOMTranslateCbk _dicomToVTK;
 };
 
-#endif
+}
+#endif//_CFD_DICOM_TRANSLATOR_H_

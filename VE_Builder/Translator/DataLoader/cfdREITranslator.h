@@ -29,14 +29,45 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <iostream>
-#include "VE_Builder/Translator/cfdREITranslator/cfdREITranslator.h"
-///////////////////////////////////////////////////////////////////
-//Example of how to read REI files and create vtk files for the//
-//REI data                                                     //
-///////////////////////////////////////////////////////////////////
-void main(int argc, char** argv)
+#ifndef _CFD_REI_TRANS_H_
+#define _CFD_REI_TRANS_H_
+
+
+#include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
+#include <set>
+
+namespace VE_Builder{
+class VE_USER_BUILDER_EXPORTS cfdREITranslator: public VE_Builder::cfdTranslatorToVTK
 {
-   VE_Builder::cfdREITranslator translator;
-   translator.TranslateToVTK(argc,argv);
+public:
+   cfdREITranslator();
+   virtual ~cfdREITranslator();
+
+   class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   {
+   public:
+      REITranslatorCbk(){};
+      virtual ~REITranslatorCbk(){};
+      //////////////////////////////////////////////////
+      //ouputDataset should be populated              //
+      //appropriately by the translate callback.      //
+      //////////////////////////////////////////////////
+      virtual void Translate(vtkDataSet*& outputDataset,
+		                     cfdTranslatorToVTK* toVTK);
+      int debug;
+   protected:
+   };
+   class VE_USER_BUILDER_EXPORTS REIPreTranslatorCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
+   {
+   public:
+      REIPreTranslatorCbk(){};
+      virtual ~REIPreTranslatorCbk(){};
+      //void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+   protected:
+   };
+protected:
+   REIPreTranslatorCbk _cmdParser;
+   REITranslatorCbk _reiTranslator;
+};
 }
+#endif//_CFD_REI_TRANS_H_

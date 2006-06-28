@@ -29,12 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Builder/Translator/AVSTranslator/AVSTranslator.h"
+#include "VE_Builder/Translator/DataLoader/AVSTranslator.h"
 #include <vtkDataSet.h>
 #include <vtkAVSucdReader.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
+
+#include <iostream>
 
 using namespace VE_Builder;
 ////////////////////////////////////////

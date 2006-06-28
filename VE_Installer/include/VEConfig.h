@@ -98,6 +98,12 @@
    #    define VE_BUILDER_EXPORTS   __declspec(dllimport)
    #  endif /* VE_BUILDER_LIBRARY */
 
+   #  ifdef VE_USER_BUILDER_LIBRARY
+   #    define VE_USER_BUILDER_EXPORTS   __declspec(dllexport)
+   #  else
+   #    define VE_USER_BUILDER_EXPORTS   __declspec(dllimport)
+   #  endif /* VE_USER_BUILDER_LIBRARY */
+
    #  ifdef VE_XML_LIBRARY
    #    define VE_XML_EXPORTS   __declspec(dllexport)
    #  else
@@ -161,6 +167,7 @@
    #  define VE_TEXTURE_BASED_EXPORTS
    #  define VE_USER_PLUGIN_EXPORTS
    #  define VE_BUILDER_EXPORTS
+   #  define VE_USER_BUILDER_EXPORTS
    #  define VE_XML_EXPORTS
    #  define VE_CAD_EXPORTS
    #  define VE_SHADER_EXPORTS

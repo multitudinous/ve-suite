@@ -52,7 +52,7 @@ namespace VE_Builder
 
 namespace VE_Builder
 {
-class VE_BUILDER_EXPORTS DataLoader
+class VE_USER_BUILDER_EXPORTS DataLoader
 {
 public:
    ///Constructor

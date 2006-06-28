@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Builder/Translator/cfdREITranslator/cfdREITranslator.h"
+#include "VE_Builder/Translator/DataLoader/cfdREITranslator.h"
 #include <vtkDataSet.h>
 #include <vtkImageData.h>
 #include <vtkDICOMImageReader.h>
@@ -44,6 +44,8 @@
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Builder/Translator/converter.h"      // for "letUsersAddParamsToField"
 #include "VE_Builder/Translator/gridConversion.h"
+
+#include <iostream>
 
 using namespace VE_Util;
 using namespace VE_Builder;
@@ -237,8 +239,14 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
          std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          exit(0);
       }
-      if (debug > 1) for (i=0; i<nx; i++) std::cout << "xCenters[" << i << "] = " << xCenters[i] << std::endl;
-
+      
+      if (debug > 1) 
+      {
+         for ( size_t i=0; i<nx; ++i )
+         {
+            std::cout << "xCenters[" << i << "] = " << xCenters[i] << std::endl;
+         }
+      }
       // get yCenters
       fseek(s1,8L,SEEK_CUR);
       if ( fileIO::readNByteBlockFromFile( yCenters, sizeof(float), ny, s1, endian_flip ) )
@@ -246,8 +254,14 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
          std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          exit(0);
       }
-      if (debug > 1) for (i=0; i<ny; i++) std::cout << "yCenters[" << i << "] = " << yCenters[i] << std::endl;
-
+      
+      if (debug > 1) 
+      {
+         for ( size_t i=0; i<ny; i++) 
+         {
+            std::cout << "yCenters[" << i << "] = " << yCenters[i] << std::endl;
+         }
+      }
       // get zCenters
       fseek(s1,8L,SEEK_CUR);
       if ( fileIO::readNByteBlockFromFile( zCenters, sizeof(float), nz, s1, endian_flip ) )
@@ -255,7 +269,14 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
          std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          exit(0);
       }
-      if (debug > 1) for (i=0; i<nz; i++) std::cout << "zCenters[" << i << "] = " << zCenters[i] << std::endl;
+      
+      if (debug > 1) 
+      {
+         for ( size_t i=0; i<nz; i++) 
+         {
+            std::cout << "zCenters[" << i << "] = " << zCenters[i] << std::endl;
+         }
+      }
 
       // populate the vertex coordinate floatArrays with the center values
       // SetArray uses the actual array provided; it does not copy the data from
@@ -264,7 +285,9 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       // up or reallocates memory.
 
       if ( debug )
+      {
          std::cout << "DEBUG :: Allocating X_Centers float arrays " << std::endl;
+      }
 
       vtkFloatArray *xCoords = vtkFloatArray::New();
       xCoords->SetArray( xCenters, nx, 0 );

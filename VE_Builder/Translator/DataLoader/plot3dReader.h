@@ -23,54 +23,97 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: filename,v $
+ * File:          $RCSfile: plot3dReader.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _ENSIGHT_TRANSLATOR_H_
-#define _ENSIGHT_TRANSLATOR_H_
+#ifndef PLOT3DREADER_H
+#define PLOT3DREADER_H
+
+class vtkStructuredGridWriter;
+class vtkStructuredGrid;
+class vtkPLOT3DReader;
+class vtkUnstructuredGridWriter;
+class vtkUnstructuredGrid;
+class vtkAppendFilter;
 
 #include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
 
 namespace VE_Builder
 {
-class VE_USER_BUILDER_EXPORTS EnSightTranslator: 
-   public VE_Builder::cfdTranslatorToVTK
+class  VE_USER_BUILDER_EXPORTS plot3dReader: public VE_Builder::cfdTranslatorToVTK
 {
 public:
-   EnSightTranslator();
-   virtual ~EnSightTranslator();
+   plot3dReader( void );
+   ~plot3dReader( void );
+   plot3dReader( plot3dReader * );
    //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS EnSightTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS Plot3DTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {
    public:
-      EnSightTranslateCbk(){;}
-      virtual ~EnSightTranslateCbk(){;}
+      Plot3DTranslateCbk(){;}
+      virtual ~Plot3DTranslateCbk(){;}
       //////////////////////////////////////////////////
       //ouputDataset should be populated              //
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
       virtual void Translate(vtkDataSet*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
+                             cfdTranslatorToVTK* toVTK);
       ///This creates additional scalars from vector components
       ///\param outputDataset Dataset to be used and modified
-      void AddScalarsFromVectors( vtkDataSet*& outputDataset );
+   private:
+      vtkStructuredGridWriter    *writer;      
+      vtkPLOT3DReader            *reader;
+      vtkStructuredGrid          **grids;
+      vtkUnstructuredGrid        *unsgrid;
+      vtkUnstructuredGridWriter  *unswriter;
+      vtkAppendFilter            *filter;      
+      int   answer;   
+      int   numGrids;
+      char  plot3dGeomFileName[100];
+      char  plot3dDataFileName[100];
+      int   numOfSurfaceGrids;
    };
    //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS EnSightPreTranslateCbk: 
+   class VE_USER_BUILDER_EXPORTS Plot3DPreTranslateCbk: 
       public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:
-      EnSightPreTranslateCbk(){;}
-      virtual ~EnSightPreTranslateCbk(){;}
+      Plot3DPreTranslateCbk(){;}
+      virtual ~Plot3DPreTranslateCbk(){;}
       void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+      std::string GetIBlankFlag( void );
+      std::string GetNumberOfDimensions( void );
+      std::string GetMultigridFlag( void );
+      std::string GetXYZFilename( void );
+      std::string GetQFilename( void );
+   private:
+      std::string numberOfDimensions;
+      std::string iblankFlag;
+      std::string multiGridFlag;
+      std::string xyzFilename;
+      std::string qFilename;
    };
-protected:
-   EnSightPreTranslateCbk cmdParser;
-   EnSightTranslateCbk ensightToVTK;
-};
+   
+   //void writeParticlePolyData( void );
+   //void readPPLOT1( void );
+   void GetFileNames( void );
+   //void readParticleParamFile( void );
+   vtkUnstructuredGrid  *GetUnsGrid( void );
+   vtkUnstructuredGrid *MakeVTKSurfaceFromGeomFiles( void );
 
+   //typedef std::vector< Particle * > Particles;
+   //Particles particles;
+   //int nsl;
+   //int nps;
+
+   char  *plot3dSurfaceFileName[100];
+
+protected:
+   Plot3DPreTranslateCbk cmdParser;
+   Plot3DTranslateCbk plot3dToVTK;
+};
 }
-#endif//_ENSIGHT_TRANSLATOR_H_
+#endif

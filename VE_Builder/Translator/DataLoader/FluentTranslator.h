@@ -36,14 +36,14 @@
 
 namespace VE_Builder
 {
-class VE_BUILDER_EXPORTS FluentTranslator: 
+class VE_USER_BUILDER_EXPORTS FluentTranslator: 
    public VE_Builder::cfdTranslatorToVTK
 {
 public:
    FluentTranslator();
    virtual ~FluentTranslator();
    //////////////////////////////////////////////////////
-   class FluentTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS FluentTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       FluentTranslateCbk(){;}
@@ -56,7 +56,7 @@ public:
 		                     cfdTranslatorToVTK* toVTK);
    };
    //////////////////////////////////////////////////////
-   class FluentPreTranslateCbk: 
+   class VE_USER_BUILDER_EXPORTS FluentPreTranslateCbk: 
       public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:

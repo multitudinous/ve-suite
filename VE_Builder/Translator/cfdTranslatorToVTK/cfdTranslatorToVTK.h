@@ -101,9 +101,17 @@ public:
    protected:
    };
 
+   ///Set all the callbacks for the required translator
+   ///\param preTCbk Callback class
    void SetPreTranslateCallback(PreTranslateCallback* preTCbk);
+   ///\param postTCbk Callback class
    void SetPostTranslateCallback(PostTranslateCallback* postTCbk);
+   ///\param tCbk Callback class
    void SetTranslateCallback(TranslateCallback* tCbk);
+   ///Get all the callbacks for the required translator
+   PreTranslateCallback* GetPreTranslateCallback( void );
+   PostTranslateCallback* GetPostTranslateCallback( void );
+   TranslateCallback* GetTranslateCallback( void );
 
    void AddFoundFile(std::string singleFile);
    void AddBaseName(std::string baseName);
