@@ -41,6 +41,8 @@
 #include <wx/slider.h>
 #include <wx/icon.h>
 #include <wx/choicdlg.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
 #include <wx/msgdlg.h>
 #include <iostream>
 BEGIN_EVENT_TABLE( TextureBasedIsosurfaceDlg, wxDialog )

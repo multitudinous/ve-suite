@@ -391,10 +391,18 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 
       dynamic_cast<CADAssembly*>(parentCADNode->GetNode())->AddChild(newClone);
 
-      _cadTreeBuilder->SetRootNode(_rootNode);
-      _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
-      _cadTreeBuilder->Traverse();
-      _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
+     if(newClone->GetOriginalNode()->GetNodeType() == std::string("Assembly"))
+     {
+        _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
+                               wxString(newClone->GetNodeName().c_str())
+                               ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
+     }
+     else if(newClone->GetOriginalNode()->GetNodeType() == std::string("Part"))
+     {
+        _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
+                               wxString(newClone->GetNodeName().c_str())
+                               ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
+     }
 
       _commandName = std::string("CAD_ADD_NODE");
 
@@ -481,7 +489,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
       {
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newPart);
       }
-      _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
+      //_cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
       _cadTreeBuilder->SetRootNode(_rootNode);
       _cadTreeBuilder->Traverse();
       _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
@@ -543,11 +551,8 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxFileName fileName )
 
    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 
-   _cadTreeBuilder->SetRootNode(_rootNode);
-   //std::cout<<"Deleting tree"<<std::endl;
-   _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
-   _cadTreeBuilder->Traverse();
-   _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
+   _geometryTree->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str()),
+                                             0,1,new CADTreeBuilder::TreeNodeData(newCADPart));
 
    _commandName = std::string("CAD_ADD_NODE");
 
