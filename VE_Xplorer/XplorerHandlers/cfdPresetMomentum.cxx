@@ -64,21 +64,18 @@ cfdPresetMomentum::cfdPresetMomentum( const int xyz,
    this->numSteps = numSteps;
 
    // set the cut function
-   this->cutter = vtkCutter::New();
+//   this->cutter = vtkCutter::New();
 
    this->warper = vtkWarpVector::New();
 }
 
 cfdPresetMomentum::~cfdPresetMomentum()
 {
-   //delete this->cuttingPlane;
-   this->cuttingPlane = NULL;
-
-   this->cutter->Delete();
-   this->cutter = NULL;
-
-   this->warper->Delete();
-   this->warper = NULL;
+   if(warper)
+   {
+      warper->Delete();
+      warper = NULL;
+   }
 }
 
 void cfdPresetMomentum::Update( void )
@@ -117,6 +114,11 @@ void cfdPresetMomentum::Update( void )
    }
    else
    {
+      if ( cuttingPlane )
+      {
+         delete this->cuttingPlane;
+         this->cuttingPlane = NULL;
+      }
       CreatePlane();
 /*
       this->cuttingPlane = new cfdCuttingPlane( 

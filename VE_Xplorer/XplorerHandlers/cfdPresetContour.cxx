@@ -65,20 +65,12 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
    this->numSteps = numSteps;
    cuttingPlane = 0;
    // set the cut function
-   this->cutter = vtkCutter::New();
+//   this->cutter = vtkCutter::New();
    //this->polydata = vtkPolyData::New();
 }
 
 cfdPresetContour::~cfdPresetContour()
 {
-//   delete this->cuttingPlane;
-   this->cuttingPlane = NULL;
-
-   this->cutter->Delete();
-   this->cutter = NULL;
-
-   //this->polydata->Delete();
-   //this->polydata = NULL;
 }
 
 void cfdPresetContour::Update( void )
@@ -171,9 +163,10 @@ void cfdPresetContour::Update( void )
 
    temp->Delete();
 
-   if ( cuttingPlane )
-   {
-      delete this->cuttingPlane;
-      this->cuttingPlane = NULL;
-   }
+//   if ( cuttingPlane )
+//   {
+//      delete this->cuttingPlane;
+//      this->cuttingPlane = NULL;
+//   }
+
 }

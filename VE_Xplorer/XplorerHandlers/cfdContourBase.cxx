@@ -66,27 +66,27 @@ cfdContourBase::cfdContourBase()
 {
    vprDEBUG(vesDBG,2) << "cfdContourBase constructor"
                           << std::endl << vprDEBUG_FLUSH;
-   this->deci = vtkDecimatePro::New();
+   deci = vtkDecimatePro::New();
    
    //this->filter = vtkGeometryFilter::New();
-   this->cfilter = vtkContourFilter::New();              // for contourlines
-   this->bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
+   cfilter = vtkContourFilter::New();              // for contourlines
+   bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
    // turn clipping on to avoid unnecessary value generations with 
    // vtkBandedPolyDataContourFilter::GenerateValues().
-   this->bfilter->ClippingOn();   
-   this->tris = vtkTriangleFilter::New();
-   this->strip = vtkStripper::New();
-   this->cutter = vtkCutter::New();
+   bfilter->ClippingOn();   
+   tris = vtkTriangleFilter::New();
+   strip = vtkStripper::New();
+   cutter = vtkCutter::New();
 
-   this->mapper = vtkPolyDataMapper::New();
+   mapper = vtkPolyDataMapper::New();
    //this->mapper->SetInput( this->filter->GetOutput() );
-   this->mapper->SetColorModeToMapScalars();
+   mapper->SetColorModeToMapScalars();
    mapper->ImmediateModeRenderingOn();
    normals = vtkPolyDataNormals::New();
 
-   this->warpedContourScale = 0.0f;
-   this->contourOpacity = 1.0f;
-   this->contourLOD = 1; 
+   warpedContourScale = 0.0f;
+   contourOpacity = 1.0f;
+   contourLOD = 1; 
    cuttingPlane = 0;
 }
 
@@ -97,6 +97,7 @@ cfdContourBase::~cfdContourBase()
 
    //this->filter->Delete();
    //this->filter = NULL;
+
    if(cfilter)
    {
       this->cfilter->Delete();
@@ -143,8 +144,12 @@ cfdContourBase::~cfdContourBase()
      cutter = 0;
    }
 
-   cuttingPlane = NULL;
-}
+   if(cuttingPlane)
+   {
+      delete cuttingPlane;
+      cuttingPlane = NULL;
+   }
+}  
 
 void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
 {
@@ -313,47 +318,47 @@ void cfdContourBase::SetFillType( const int type )
 }
 void cfdContourBase::CreatePlane( void )
 {
-      this->cuttingPlane = new cfdCuttingPlane( 
-            this->GetActiveDataSet()->GetDataSet()->GetBounds(),
-            this->xyz, numSteps );
+   cuttingPlane = new cfdCuttingPlane( 
+         GetActiveDataSet()->GetDataSet()->GetBounds(),
+         xyz, numSteps );
 
-      // insure that we are using correct bounds for the given data set...
-      this->cuttingPlane->SetBounds( 
-                  this->GetActiveDataSet()->GetDataSet()->GetBounds() );
+   // insure that we are using correct bounds for the given data set...
+   cuttingPlane->SetBounds( 
+         GetActiveDataSet()->GetDataSet()->GetBounds() );
 
-      this->cuttingPlane->Advance( this->requestedValue );
-      this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-      this->cutter->Update();
+   cuttingPlane->Advance( requestedValue );
+   cutter->SetCutFunction( cuttingPlane->GetPlane() );
+   cutter->SetInput( GetActiveDataSet()->GetDataSet() );
+   cutter->Update();
 
-      vtkPolyData* polydata = this->cutter->GetOutput();
+   vtkPolyData* polydata = cutter->GetOutput();
 
-      if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
+   if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
+   {
+      std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
+      std::cerr<<"Finding next closest plane"<<std::endl;
+      while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 )  //&&(this->TargetReduction > 0.0) )
       {
-         std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
-         std::cerr<<"Finding next closest plane"<<std::endl;
-         while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 )  //&&(this->TargetReduction > 0.0) )
+         if( requestedValue < 50 )
          {
-            if( requestedValue < 50 )
-            {
-               this->requestedValue = this->requestedValue + 1;
-            }
-            else 
-            {
-               this->requestedValue = this->requestedValue - 1;
-            }
-            this->cuttingPlane->Advance( this->requestedValue ); 
-            this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-            this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-            this->cutter->Update();
-            polydata = this->cutter->GetOutput();            
-         }    
-      }       
+            requestedValue = requestedValue + 1;
+         }
+         else 
+         {
+            requestedValue = requestedValue - 1;
+         }
+         cuttingPlane->Advance( requestedValue ); 
+         cutter->SetCutFunction( cuttingPlane->GetPlane() );
+         cutter->SetInput( GetActiveDataSet()->GetDataSet() );
+         cutter->Update();
+         polydata = cutter->GetOutput();            
+      }    
+   }       
 
-      this->SetMapperInput( polydata );
+   SetMapperInput( polydata );
 
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                        ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                        ->GetLookupTable() );
+   mapper->SetScalarRange( GetActiveDataSet()
+                                     ->GetUserRange() );
+   mapper->SetLookupTable( GetActiveDataSet()
+                                     ->GetLookupTable() );
 }
