@@ -97,30 +97,51 @@ cfdContourBase::~cfdContourBase()
 
    //this->filter->Delete();
    //this->filter = NULL;
-   
-   this->cfilter->Delete();
-   this->cfilter = NULL;
-   
-   this->bfilter->Delete();
-   this->bfilter = NULL;
+   if(cfilter)
+   {
+      this->cfilter->Delete();
+      this->cfilter = 0;
+   }
+   if(bfilter)
+   {   
+      this->bfilter->Delete();
+      this->bfilter = 0;
+   }
 
-   this->tris->Delete();
-   this->tris = NULL;
+   if(tris)
+   {   
+      this->tris->Delete();
+      this->tris = 0;
+   }
 
-   this->strip->Delete();
-   this->strip = NULL;
-   
-   this->mapper->Delete();
-   this->mapper = NULL;
+   if(strip)
+   { 
+      this->strip->Delete();
+      this->strip = 0;
+   }
 
-   this->deci->Delete();
-   this->deci = NULL;
+   if(mapper)
+   {  
+      this->mapper->Delete();
+      this->mapper = 0;
+   }   
 
-   normals->Delete();
-   normals = NULL;
+   if(deci)
+   {
+      this->deci->Delete();
+      this->deci = 0;
+   }
+   if(normals)
+   {
+      normals->Delete();
+      normals = 0;
+   }
 
-   cutter->Delete();
-   cutter = NULL;
+   if(cutter)
+   {
+     cutter->Delete();
+     cutter = 0;
+   }
 
    cuttingPlane = NULL;
 }
