@@ -71,7 +71,8 @@ DEFAULT_JCONF = os.path.join(os.getcwd(), "stereo_desktop", "desktop.jconf")
 ##Values for launcher's GUI layout
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (250, 250)
-BACKGROUND_COLOR = wx.Colour(236, 233, 216)
+##BACKGROUND_COLOR = wx.Colour(236, 233, 216)
+BACKGROUND_COLOR = wx.Colour(200, 200, 200)
 JCONF_LIST_DISPLAY_MIN_SIZE = (100, 50)
 TOP_SPACE = (75, 75)
 BORDER = 5
@@ -721,6 +722,17 @@ class LauncherWindow(wx.Dialog):
             dlg.Destroy()
             self.Settings("dead parrot sketch")
             return
+        ##ERROR CHECK:  Is the Tao Machine name blank?
+        ##              If so, abort launch.
+        taoMachine = self.txTaoMachine.GetValue()
+        if taoMachine == "" or taoMachine.isspace():
+            dlg = wx.MessageDialog(self,
+                                   "You haven't entered the CE's Name.\n" +
+                                   "Please enter a name for the CE.",
+                                   "Launch Error: Missing CE Name", wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
         ##ERROR CHECK:  Is the Tao Port between 0 and 65535?
         ##              If not, abort launch.
         if not (self.txTaoPort.GetValue().isdigit() and
@@ -761,7 +773,7 @@ class LauncherWindow(wx.Dialog):
                                            " Exist", wx.OK)
                     dlg.ShowModal()
                     dlg.Destroy()
-                    return
+                    return            self.txDirectory.SetInsertionPointEnd()
             ##If user chooses NO, abort the launch.
             else:
                 dlg.Destroy()
@@ -823,6 +835,7 @@ class SettingsWindow(wx.Dialog):
         self.clusterDict = clusterDict
         self.clusterMaster = clusterMaster
         self.xplorerTypeFixed = False
+        self.desktop = desktop
         if ("xplorerType" in modeRules) and \
            (modeRules["xplorerType"][0] == FIXED):
             self.xplorerTypeFixed = True
@@ -881,7 +894,7 @@ class SettingsWindow(wx.Dialog):
             self.cbDesktop.SetValue(modeRules["desktop"][1])
             self.cbDesktop.Enable(modeRules["desktop"][0])
         else:
-            self.cbDesktop.SetValue(desktop)
+            self.cbDesktop.SetValue(self.desktop)
         ##Xplorer Type radio box.
         self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Type",
                                      wx.DefaultPosition, wx.DefaultSize,
@@ -960,9 +973,20 @@ class SettingsWindow(wx.Dialog):
             self.rbXplorer.Enable(False)
         else:
             self.rbXplorer.Enable(self.cbXplorer.IsChecked())
-        ##Goes into EvtCheckDesktop to check that against cbXplorer, too.
-        self.EvtCheckDesktop("dead parrot sketch")
+        ##Goes into EvtCheckCluster to check that against cbXplorer, too.
         self.EvtCheckCluster("dead parrot sketch")
+
+    def EvtCheckCluster(self, event):
+        """Enables/Disables the Cluster button.
+
+        Prevents the user from choosing Cluster computers if
+        Xplorer won't run in OSG Cluster mode."""
+        if self.cbXplorer.IsChecked() and self.rbXplorer.GetSelection() == 2:
+            self.bCluster.Enable(True)
+        else:
+            self.bCluster.Enable(False)
+        ##Goes into EvtCheckDesktop to check that against rbXplorer, too.
+        self.EvtCheckDesktop("dead parrot sketch")
 
     def EvtCheckDesktop(self, event):
         """Enables/Disables the Desktop button.
@@ -974,16 +998,6 @@ class SettingsWindow(wx.Dialog):
         else:
             self.cbDesktop.Enable(self.cbConductor.IsChecked() or
                                   self.cbXplorer.IsChecked())
-
-    def EvtCheckCluster(self, event):
-        """Enables/Disables the Cluster button.
-
-        Prevents the user from choosing Cluster computers if
-        Xplorer won't run in OSG Cluster mode."""
-        if self.cbXplorer.IsChecked() and self.rbXplorer.GetSelection() == 2:
-            self.bCluster.Enable(True)
-        else:
-            self.bCluster.Enable(False)
 
     def UpdateChJconf(self, cursor):
         """Updates the Jconf choice window in the Launcher.
@@ -1221,11 +1235,13 @@ class JconfWindow(wx.Dialog):
         c = self.confList.GetSelection()
         s = self.confList.GetStringSelection()
         if c in range(len(self.list)):
-            p = self.list.GetPath(c)
-            f = os.path.split(p)[1]
+            f = self.list.GetPath(c)
+##            p = self.list.GetPath(c)
+##            f = os.path.split(p)[1]
         else:
             f = "ERROR: Entry missing from list."
         self.display.SetValue(f)
+        self.display.SetInsertionPointEnd()
         self.lblPath.SetLabel("%s's path:" %(s))
         
     def DeleteEnabledCheck(self):
@@ -1250,17 +1266,19 @@ class JconfWindow(wx.Dialog):
         Default name: Name of Jconf file."""
         ##Default directory for the search is the
         ##directory of the currently selected Jconf.
-        c = self.confList.GetSelection()
-        if c in range(len(self.list)):
-            p = self.list.GetPath(c)
-            f = os.path.split(p)[0]
-        else:
-            f = os.getcwd()
+##        c = self.confList.GetSelection()
+##        if c in range(len(self.list)):
+##            p = self.list.GetPath(c)
+##            f = os.path.split(p)[0]
+##        else:
+##            f = os.getcwd()
+        f = config.Read("DependenciesDir", os.getcwd())
+        f = os.path.join(f, JUGGLER_FOLDER, "configFiles")
         dlg = wx.FileDialog(self,
-                           "Choose a configuration file.",
-                           defaultDir = f,
-                           wildcard = "Jconfig (*.jconf)|*.jconf",
-                           style=wx.OPEN)
+                            "Choose a configuration file.",
+                            defaultDir = f,
+                            wildcard = "Jconfig (*.jconf)|*.jconf",
+                            style=wx.OPEN)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.list.Add(os.path.split(path)[1][:-6], path)
@@ -1716,8 +1734,7 @@ class Launch:
         jconf -- Which .jconf file to use for Xplorer's settings."""
         ##Name Server section
         if runName:
-            os.system("killall Naming_Service")
-            os.system("killall Exe_server")
+            os.system("killall Naming_Service Exe_server")
             time.sleep(1)
             os.system("Naming_Service -ORBEndPoint" +
                       " iiop://${TAO_MACHINE}:${TAO_PORT} &")
@@ -1986,7 +2003,7 @@ class Launch:
     def EnvFill(self, var, default):
         """Sets environmental variable var to default if it is empty."""
         os.environ[var] = os.getenv(var, default)
-        print var + ": " + os.getenv(var) ##TESTER
+##        print var + ": " + os.getenv(var) ##TESTER
 
 
 ##Get & clean up command line arguments.
