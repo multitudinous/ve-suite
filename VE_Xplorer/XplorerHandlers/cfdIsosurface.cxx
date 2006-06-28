@@ -42,7 +42,10 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+#include <vtkPointData.h>
+#include <vtkDataArray.h>
 
+//#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -143,21 +146,30 @@ void cfdIsosurface::Update()
    this->contour->SetInput( this->GetActiveDataSet()->GetDataSet() );
    this->contour->SetValue( 0, this->value );
    this->contour->Update();
+   //do this to color the isosurface by a different color
+   contour->GetOutput()->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
    this->normals->Update();
 #endif
 
-   GetActiveDataSet()->SetActiveScalar( colorByScalar );
-   GetActiveDataSet()->GetParent()->SetActiveScalar( colorByScalar );
-   this->mapper->SelectColorArray( colorByScalar.c_str() );
-   this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
-   this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
-   //this->mapper->Update();
+   //this->mapper->SelectColorArray(  colorByScalar.c_str() );
+   double* tempRange = this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange();
+   this->mapper->SetScalarRange( this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange() );
+
+   vtkLookupTable* lut = vtkLookupTable::New();
+   lut->SetNumberOfColors( 256 );            //default is 256
+   lut->SetHueRange( 2.0f/3.0f, 0.0f );      //a blue-to-red scale
+   lut->SetTableRange( tempRange );
+   lut->Build();
+   
+   this->mapper->SetLookupTable( lut );
+
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
    geodes.push_back( new VE_SceneGraph::cfdGeode() );
    geodes.back()->TranslateTocfdGeode( temp );
    temp->Delete();
+   lut->Delete();
    this->updateFlag = true;
 }
 
