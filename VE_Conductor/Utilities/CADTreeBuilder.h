@@ -53,7 +53,8 @@ namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public VE_CAD::CADNodeTraverser
+   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public VE_CAD::CADNodeTraverser,public wxTreeCtrl
+                                              
    {
       public:
         
