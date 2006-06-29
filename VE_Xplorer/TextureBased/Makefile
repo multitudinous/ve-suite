@@ -82,7 +82,11 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
 #EXTRA_LDFLAGS+= -L$(VJ_DEPS_DIR)/lib
 EXTRA_INCLUDES+= $(shell vrjuggler-config --cxxflags)
+ifeq ($(shell uname -m),x86_64)
+DSO_PLUGIN_DEPS+= -L/usr/X11R6/lib64 -lX11 -lGL
+else
 DSO_PLUGIN_DEPS+= -L/usr/X11R6/lib -lX11 -lGL
+endif
 DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
 DSO_PLUGIN_DEPS+= -lVE_UtilLib 
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
