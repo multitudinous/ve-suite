@@ -76,7 +76,7 @@
 		</Configuration>
 		<Configuration
 			Name="tao_pf_dbg|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/GE/win32"
 			IntermediateDirectory="./GraphicalPluginLib/$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
@@ -141,7 +141,7 @@
 		</Configuration>
 		<Configuration
 			Name="tao_osg_dbg|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/GE/win32"
 			IntermediateDirectory="./GraphicalPluginLib/$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"

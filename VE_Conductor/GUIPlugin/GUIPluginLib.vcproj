@@ -75,7 +75,7 @@
 		</Configuration>
 		<Configuration
 			Name="dbg|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/UI/win32"
 			IntermediateDirectory=".\GUIPluginLib\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
