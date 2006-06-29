@@ -53,10 +53,6 @@ using namespace VE_Conductor::GUI_Utilities;
 ///Constructor                          //
 //////////////////////////////////////////
 CADTreeBuilder::CADTreeBuilder(CADNode* root,int id ,wxWindow* parent)
-:wxTreeCtrl(parent,id,wxDefaultPosition,wxDefaultSize,wxTR_HAS_BUTTONS|
-                            wxTR_EDIT_LABELS|
-                            wxTR_HAS_VARIABLE_ROW_HEIGHT|
-                            wxTR_DEFAULT_STYLE|wxVSCROLL)
 {
    SetRootNode(root);
    _parentWindow = parent;
@@ -64,8 +60,11 @@ CADTreeBuilder::CADTreeBuilder(CADNode* root,int id ,wxWindow* parent)
    _parentPopper = new TreeGraphPostCallback();
 
      
-   //_treeCtrl =  new wxTreeCtrl(_parentWindow,id,wxDefaultPosition,wxDefaultSize,
-                            
+   _treeCtrl =  new wxTreeCtrl(_parentWindow,id,wxDefaultPosition,wxDefaultSize,
+                            wxTR_HAS_BUTTONS|
+                            wxTR_EDIT_LABELS|
+                            wxTR_HAS_BUTTONS|
+                            wxTR_HAS_VARIABLE_ROW_HEIGHT|wxTR_DEFAULT_STYLE|wxVSCROLL);
    _createImageList();
    SetPreNodeTraverseCallback(_treeCtrlCreator);
    SetPostNodeTraverseCallback(_parentPopper);
@@ -102,11 +101,11 @@ CADTreeBuilder::~CADTreeBuilder()
 ////////////////////////////////////////////////
 wxTreeCtrl* CADTreeBuilder::GetWXTreeCtrl()
 {
-   /*if(_treeCtrl)
+   if(_treeCtrl)
    {
       return _treeCtrl;
-   }*/
-   return this;
+   }
+   return 0;
 }
 ////////////////////////////////////////////////////
 void CADTreeBuilder::SetWXTreeCtrl(wxTreeCtrl* tree)
@@ -278,8 +277,7 @@ void CADTreeBuilder::_createImageList()
         }
     }
 
-    //_treeCtrl->AssignImageList(images);
-    AssignImageList(images);
+    _treeCtrl->AssignImageList(images);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 void CADTreeBuilder::TreeGraphPostCallback::Apply(CADNodeTraverser* treeBuilder,

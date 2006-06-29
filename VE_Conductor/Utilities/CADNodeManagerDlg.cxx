@@ -90,12 +90,12 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
    _propsDlg = 0;
    _cadTreeBuilder =  new CADTreeBuilder(_rootNode,TREE_ID,this);
    _cadTreeBuilder->Traverse();
-   //_cadTreeBuilder = _cadTreeBuilder->GetWXTreeCtrl();
+   _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
 
    _quitButton = 0;
    _saveButton = 0;
 
-   _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_cadTreeBuilder->GetItemData(_cadTreeBuilder->GetRootItem()));
+   _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetRootItem()));
    _activeCADNode = _rootNode;
    _commandName = std::string("CAD");
 
@@ -107,13 +107,13 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
 
    if(_cadTreeBuilder)
    {
-      _cadTreeBuilder->Destroy();
+      delete _cadTreeBuilder;
       _cadTreeBuilder = 0;
    }
 
    if(_propsDlg)
    {
-      _propsDlg->Destroy();
+      delete _propsDlg;
       _propsDlg = 0;
    }
 
@@ -161,21 +161,21 @@ void CADNodeManagerDlg::_buildDialog()
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxVERTICAL);
 
-   wxStaticBox* cadTree = new wxStaticBox(this, -1, wxT("Tree View"));
-   wxStaticBoxSizer* cadTreePropSizer = new wxStaticBoxSizer(cadTree, wxVERTICAL);
+   //wxStaticBox* cadTree = new wxStaticBox(this, -1, wxT("Tree View"));
+   //wxStaticBoxSizer* cadTreePropSizer = new wxStaticBoxSizer(cadTree, wxVERTICAL);
 
    wxBoxSizer* treeSizer = new wxBoxSizer(wxHORIZONTAL);
   
    _quitButton = new wxButton(this,wxID_OK,wxString("Close"));
    _saveButton = new wxButton(this,GEOM_SAVE,wxString("Save As..."));
 
-   treeSizer->Add(_cadTreeBuilder,1,wxALIGN_CENTER|wxEXPAND); 
-   cadTreePropSizer->Add(treeSizer,1,wxALIGN_CENTER|wxEXPAND);
+   treeSizer->Add(_geometryTree,1,wxALIGN_CENTER|wxEXPAND); 
+   //cadTreePropSizer->Add(treeSizer,1,wxALIGN_CENTER|wxEXPAND);
 
    buttonRowSizer->Add(_saveButton,0,wxALIGN_CENTER);
    buttonRowSizer->Add(_quitButton,0,wxALIGN_CENTER);
 
-   mainSizer->Add(cadTreePropSizer, 1, wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(treeSizer, 1, wxALIGN_CENTER|wxEXPAND);
    mainSizer->Add(buttonRowSizer, 1, wxALIGN_CENTER);
    SetAutoLayout(true);
    SetSizer(mainSizer);
@@ -186,7 +186,7 @@ void CADNodeManagerDlg::_editLabel(wxTreeEvent& event)
    CADTreeBuilder::TreeNodeData* cadNode = 0;
    if(event.GetItem().IsOk())
    {
-      cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_cadTreeBuilder->GetItemData(event.GetItem()));
+      cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
       cadNode->GetNode()->SetNodeName(event.GetLabel().GetData());
 
       _commandName = std::string("CAD_SET_NODE_NAME");
@@ -216,7 +216,7 @@ void CADNodeManagerDlg::_setActiveNode(wxTreeEvent& event)
 {
    if(event.GetItem().IsOk())
    {
-      _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_cadTreeBuilder->GetItemData(event.GetItem()));
+      _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
       _activeCADNode = _activeTreeNode->GetNode();
    }
    else
@@ -231,11 +231,11 @@ void CADNodeManagerDlg::_setActiveNode(wxTreeEvent& event)
 //void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxMouseEvent& event)
 void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxContextMenuEvent& event)
 {
-   wxTreeItemId item = _cadTreeBuilder->GetSelection();
+   wxTreeItemId item = _geometryTree->GetSelection();
    CADTreeBuilder::TreeNodeData* cadNode = 0;
    if(item.IsOk())
    {
-      cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_cadTreeBuilder->GetItemData( item ));
+      cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData( item ));
 
       CADNodeMenu* cadNodeMenu = new CADNodeMenu();
 	   cadNodeMenu->SetToggleNodeValue(_toggleNodeOnOff);
@@ -277,7 +277,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
 
      _cadTreeBuilder->SetRootNode(_rootNode);//,TREE_ID,this);
      _cadTreeBuilder->Traverse();
-     //_cadTreeBuilder = _cadTreeBuilder->GetWXTreeCtrl();
+     _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
    }
    else
    {
@@ -294,7 +294,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          newAssembly->SetParent(_activeCADNode->GetID());
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
  
-         _cadTreeBuilder->AppendItem(_activeTreeNode->GetId(),
+         _geometryTree->AppendItem(_activeTreeNode->GetId(),
                                  wxString(newAssembly->GetNodeName().c_str()),
                                  2,4,new CADTreeBuilder::TreeNodeData(newAssembly)); 
          ClearInstructions();
@@ -380,26 +380,26 @@ void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
 /////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 {
-   if(_activeCADNode &&  (_activeTreeNode->GetId() != _cadTreeBuilder->GetRootItem()))
+   if(_activeCADNode &&  (_activeTreeNode->GetId() != _geometryTree->GetRootItem()))
    {
       CADClone* newClone = new CADClone(_activeCADNode->GetNodeName()+std::string("_cloned"),_activeCADNode);
 
-      wxTreeItemId parentID = _cadTreeBuilder->GetItemParent(_activeTreeNode->GetId());
+      wxTreeItemId parentID = _geometryTree->GetItemParent(_activeTreeNode->GetId());
 
       CADTreeBuilder::TreeNodeData* parentCADNode = 
-         dynamic_cast<CADTreeBuilder::TreeNodeData*>(_cadTreeBuilder->GetItemData(parentID));
+         dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(parentID));
 
       dynamic_cast<CADAssembly*>(parentCADNode->GetNode())->AddChild(newClone);
 
      if(newClone->GetOriginalNode()->GetNodeType() == std::string("Assembly"))
      {
-        _cadTreeBuilder->AppendItem(_cadTreeBuilder->GetItemParent(_activeTreeNode->GetId()),
+        _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
                                wxString(newClone->GetNodeName().c_str())
                                ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
      }
      else if(newClone->GetOriginalNode()->GetNodeType() == std::string("Part"))
      {
-        _cadTreeBuilder->AppendItem(_cadTreeBuilder->GetItemParent(_activeTreeNode->GetId()),
+        _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
                                wxString(newClone->GetNodeName().c_str())
                                ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
      }
@@ -492,7 +492,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
       //_cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
       _cadTreeBuilder->SetRootNode(_rootNode);
       _cadTreeBuilder->Traverse();
-      //_cadTreeBuilder = _cadTreeBuilder->GetWXTreeCtrl();
+      _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
 
       _commandName = "CAD_ADD_NODE";
       VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
@@ -551,7 +551,7 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxFileName fileName )
 
    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 
-   _cadTreeBuilder->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str()),
+   _geometryTree->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str()),
                                              0,1,new CADTreeBuilder::TreeNodeData(newCADPart));
 
    _commandName = std::string("CAD_ADD_NODE");
@@ -598,7 +598,7 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
         
       std::string tagName("VECADNode");
       CADTreeBuilder::TreeNodeData* rootCADNode =
-           dynamic_cast<CADTreeBuilder::TreeNodeData*>(_cadTreeBuilder->GetItemData(_cadTreeBuilder->GetRootItem()));
+           dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetRootItem()));
 
       if(rootCADNode->GetNode()->GetNodeType() == std::string("Assembly"))
       {
@@ -651,7 +651,7 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
     }
     if(_activeTreeNode)
     {
-      CADNode* parentCADNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_cadTreeBuilder->GetItemData(_cadTreeBuilder->GetItemParent(_activeTreeNode->GetId())))->GetNode();
+      CADNode* parentCADNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetItemParent(_activeTreeNode->GetId())))->GetNode();
        _activeCADNode = _activeTreeNode->GetNode();
        _commandName = std::string("CAD_DELETE_NODE");
 
@@ -676,7 +676,7 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
        ClearInstructions();
        
        dynamic_cast<CADAssembly*>(parentCADNode)->RemoveChild(_activeCADNode->GetID());
-       _cadTreeBuilder->Delete(_activeTreeNode->GetId()); 
+       _geometryTree->Delete(_activeTreeNode->GetId()); 
     }
 }
 #ifndef STAND_ALONE
