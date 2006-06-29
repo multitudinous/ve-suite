@@ -65,6 +65,10 @@ CORBAServiceList::CORBAServiceList( AppFrame* frame )
 /////////////////////////////////////////////////////////////
 CORBAServiceList::~CORBAServiceList( void )
 {
+   if ( pelog )
+   {
+      delete pelog;
+   }
 }
 /////////////////////////////////////////////////////////////
 void CORBAServiceList::SetNamingContext( CosNaming::NamingContext_ptr naming_context )

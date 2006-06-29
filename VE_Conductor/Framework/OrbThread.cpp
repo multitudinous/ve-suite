@@ -190,16 +190,19 @@ PEThread::PEThread(AppFrame* frame)
 {
    frame_ = frame;
    //Create();
+   shutdown = true;
 }
 
 PEThread::~PEThread()
 {
+   ShutDownThread();
+   ACE_OS::sleep(3); 
 }
 
 //bool PEThread::Do() 
 int PEThread::svc (void)
 {
-   while(1)
+   while( shutdown )
    {
       _mutex.acquire();
       if (message!="")
@@ -216,7 +219,12 @@ int PEThread::svc (void)
    }
    return 1;
 }
-
+/////////////////////////////////////////////////////////////
+void PEThread::ShutDownThread( void )
+{
+   shutdown = false;
+}
+/////////////////////////////////////////////////////////////
 void PEThread::SetMessage(const char* msg)
 {
   _mutex.acquire();
