@@ -621,10 +621,10 @@ void cfdApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT(sv.get() != NULL);
 
-   if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_LOD_SCALE )
+   /*if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_LOD_SCALE )
    {
       sv->setLODScale( (float)_vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_SC ));
-   }
+   }*/
    vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = vrj::GlDrawManager::instance();
 
@@ -637,10 +637,10 @@ void cfdApp::draw()
 	cfdEnvironmentHandler::instance()->SetWindowDimensions(w_width,w_height);
 
    // compute unsigned versions of the viewport info (for passing to glViewport)
-   unsigned ll_x = unsigned(vp_ox*float(w_width));
-   unsigned ll_y = unsigned(vp_oy*float(w_height));
-   unsigned x_size = unsigned(vp_sx*float(w_width));
-   unsigned y_size = unsigned(vp_sy*float(w_height));
+   unsigned ll_x = unsigned( vp_ox*float( w_width ) );
+   unsigned ll_y = unsigned( vp_oy*float( w_height) );
+   unsigned x_size = unsigned( vp_sx*float( w_width) );
+   unsigned y_size = unsigned( vp_sy*float( w_height) );
 
    // Add the tree to the scene viewer and set properties
    sv->setSceneData(getScene());
@@ -656,8 +656,8 @@ void cfdApp::draw()
    // Copy the matrix
    vrj::Projection* project = userData->getProjection();
    //const float* vj_proj_view_mat = project->getViewMatrix().mData;
-   //osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
-   osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
+   osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
+   //osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
 
    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
    gmtl::Matrix44f _vjMatrix( project->getViewMatrix() );
@@ -678,10 +678,11 @@ void cfdApp::draw()
 	//Allow trackball to grab frustum values to calculate FOVY
 	cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_TOP],
 																		 frustum[vrj::Frustum::VJ_BOTTOM],
-																		 frustum[vrj::Frustum::VJ_NEAR]);
+                                                       frustum[vrj::Frustum::VJ_NEAR]);
 
    // Copy the view matrix
-   sv->setViewMatrix(*osg_proj_xform_mat );
+   sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
+   
 #ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
    if(userData->getViewport()->isSimulator())   //if this is a sim window context....
