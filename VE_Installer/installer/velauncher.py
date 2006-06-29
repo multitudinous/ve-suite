@@ -34,6 +34,7 @@ FIXED = False ##Used in MODE_DICT
 ##File/Folder settings.
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
+VELAUNCHER_DIR = os.getcwd()
 DIRECTORY_DEFAULT = os.path.join(os.getcwd(), "exampleDatasets")
 LOGO_LOCATION = os.path.join(os.getcwd(), "images", "ve_logo.xpm")
 CONFIG_FILE = "VE-Suite-Launcher"
@@ -1476,13 +1477,13 @@ class ClusterWindow(wx.Dialog):
                                          size=JCONF_LIST_DISPLAY_MIN_SIZE)
         ##Build Add & Delete buttons.
         bAdd = wx.Button(self, -1, "Add")
-        bOk.SetToolTip(wx.ToolTip("Add a slave listing."))
+        bAdd.SetToolTip(wx.ToolTip("Add a slave listing."))
         self.bDelete = wx.Button(self, -1, "Delete")
-        bOk.SetToolTip(wx.ToolTip("Delete a slave listing."))
+        self.bDelete.SetToolTip(wx.ToolTip("Delete a slave listing."))
         ##Build master display.
         self.masterCtrl = wx.TextCtrl(self, -1)
         self.masterCtrl.SetValue(self.clusterMaster)
-        bOk.SetToolTip(wx.ToolTip("Name the master computer."))
+        self.masterCtrl.SetToolTip(wx.ToolTip("Name the master computer."))
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
         bOk.SetToolTip(wx.ToolTip("Return to Settings."))
@@ -1752,8 +1753,49 @@ class Launch:
             os.system("WinClient -ORBInitRef NameService=corbaloc:iiop:" +
                       "${TAO_MACHINE}:${TAO_PORT}/" +
                       "NameService %s &" % (desktop))
+        ##Cluster mode
+        if runXplorer and typeXplorer == 2 and cluster != None:
+            ##Build cluster file
+            launcherDir = str(os.getenv("VE_INSTALL_DIR"))
+            xplorerType = XPLORER_TYPE_LIST[typeXplorer]
+            taoMachine = str(os.getenv("TAO_MACHINE"))
+            taoPort = str(os.getenv("TAO_PORT"))
+            workDir = str(os.getenv("VE_WORKING_DIR"))
+            depsDir = str(os.getenv("VE_DEPS_DIR"))
+            master = str(os.getenv("VEXMASTER"))
+            command = 'python velauncher.py -x %s' %(xplorerType) + \
+                      ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
+                      ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
+            print command ##TESTER
+            clusterFileName = "cluster.tsh"
+            clusterFilePath = os.path.join(VELAUNCHER_DIR, clusterFileName)
+            sourceFile = file(clusterFilePath, 'w')
+            sourceFile.write("#!/bin/csh\n")
+            sourceFile.write("ssh $1 << EOF\n")
+            sourceFile.write("setenv PYTHONPATH %s\n" %(os.getenv("PYTHONPATH")))
+            sourceFile.write("setenv LD_LIBRARY_PATH %s\n" %(os.getenv("LD_LIBRARY_PATH")))
+            sourceFile.write("cd %s\n" %(VELAUNCHER_DIR))
+            sourceFile.write("%s\n" %(command))
+            sourceFile.write("EOF\n")
+            sourceFile.close()
+            for comp in cluster:
+                print "Annoying %s" %(comp) ##TESTER
+                print "Doing source %s %s" %(clusterFileName, comp) ##TESTER
+                os.system("source %s %s &" %(clusterFilePath, comp))
+##                command = ""
+##                command = command + 'ssh %s "cd %s &&' %(comp, launcherDir)
+##                command = command + ' setenv PYTHONPATH ${PYTHONPATH};' + \
+##                          '%s &&' %(os.getenv("PYTHONPATH"))
+##                command = command + ' setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH};' + \
+##                          '%s &&' %(os.getenv("LD_LIBRARY_PATH"))
+##                command = command + ' xclock" &'
+##                command = 'ssh %s "cd %s;' %(comp, launcherDir) + \
+##                          ' python velauncher.py -x %s' %(xplorerType) + \
+##                          ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
+##                          ' -w %s -e %s -m %s"' %(workDir, depsDir, master)
+##                os.system(command)
         ##Xplorer section
-        if runXplorer:
+        elif runXplorer:
             ##Append argument if desktop mode selected
             if desktopMode:
                 w, h = wx.DisplaySize()
@@ -1773,27 +1815,8 @@ class Launch:
             os.system("%s -ORBInitRef NameService=" %(executable) +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
                       "%s %s &" %(jconf, desktop))
-        ##Cluster mode
-        if runXplorer and typeXplorer == 2 and cluster != None:
-            for comp in cluster:
-                print "Annoying %s" %(comp) ##TESTER
-                launcherDir = str(os.getenv("VE_INSTALL_DIR"))
-                xplorerType = XPLORER_TYPE_LIST[typeXplorer]
-                taoMachine = str(os.getenv("TAO_MACHINE"))
-                taoPort = str(os.getenv("TAO_PORT"))
-                workDir = str(os.getenv("VE_WORKING_DIR"))
-                depsDir = str(os.getenv("VE_DEPS_DIR"))
-                master = str(os.getenv("VEXMASTER"))
-                command = ""
-                command = 'ssh %s "cd %s;' %(comp, launcherDir) + \
-                          ' python velauncher.py" &'
-##                command = 'ssh %s "cd %s;' %(comp, launcherDir) + \
-##                          ' python velauncher.py -x %s' %(xplorerType) + \
-##                          ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
-##                          ' -w %s -e %s -m %s"' %(workDir, depsDir, master)
-                os.system(command)
-                time.sleep(5)
         return
+
 
 
     def EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
@@ -2003,7 +2026,7 @@ class Launch:
     def EnvFill(self, var, default):
         """Sets environmental variable var to default if it is empty."""
         os.environ[var] = os.getenv(var, default)
-##        print var + ": " + os.getenv(var) ##TESTER
+        print var + ": " + os.getenv(var) ##TESTER
 
 
 ##Get & clean up command line arguments.
