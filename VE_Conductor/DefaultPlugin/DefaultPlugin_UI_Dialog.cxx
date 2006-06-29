@@ -54,13 +54,23 @@ DefaultPlugin_UI_Dialog
 : UIDialog((wxWindow *) parent, id, "DefaultPlugin")
 {
 
-_buildPage();
+   _buildPage();
 //put anything else you want in constructor here
+
 }
 
 void DefaultPlugin_UI_Dialog::_buildPage()
 {
+   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+   mainSizer->Add(new wxButton(this,wxID_OK,_T("Close")),1,wxALIGN_CENTER);
+   //set this flag and let wx handle alignment  OKAY
+   SetAutoLayout(true);
 
+   //assign the group to the panel              OKAY
+   SetSizer(mainSizer);
+   mainSizer->Fit(this);
+   
+   return;
    //create the panel for the baffle tab
 
    //////////////////////////////////
@@ -69,7 +79,7 @@ void DefaultPlugin_UI_Dialog::_buildPage()
 
    //The names of the radio box choices
 //   wxString direction[] = {wxT("No Wind"), wxT("Cross Wind"), wxT("Tail Wind"), wxT("Other")};
-   wxString direction[] = {wxT("No Wind"), wxT("Cross Wind From Left"), wxT("Tail Wind")};
+  /* wxString direction[] = {wxT("No Wind"), wxT("Cross Wind From Left"), wxT("Tail Wind")};
 
    //Create a vertical radio box
    _directionRBox = new wxRadioBox(this, DIRECTION_RBOX, wxT("Wind Direction"),
@@ -112,20 +122,7 @@ void DefaultPlugin_UI_Dialog::_buildPage()
    _widthSlider = new wxSlider(this, WIDTH_SLIDER, 0, 0, 500,
                                   wxDefaultPosition, slidesize,
                                   wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
-/*
-   _xLocSlider = new wxSlider(this, X_LOCATION_SLIDER, 0, 0, 100,
-                                  wxDefaultPosition, slidesize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
-
-   _yLocSlider = new wxSlider(this, Y_LOCATION_SLIDER, 0, 0, 100,
-                                  wxDefaultPosition, slidesize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
-
-   _zLocSlider = new wxSlider(this, Z_LOCATION_SLIDER, 0, 0, 100,
-                                  wxDefaultPosition, slidesize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
-*/
-   hGroup = new wxStaticBox(this,-1, wxT("Baffle Height (mm Along Z Axis)"));
+   hGroup  new wxStaticBox(this,-1, wxT("Baffle Height (mm Along Z Axis)"));
    wGroup = new wxStaticBox(this,-1, wxT("Baffle Width (mm Along Y Axis)"));
    xGroup = new wxStaticBox(this,-1, wxT("X Start Pos (mm)"));
    yGroup = new wxStaticBox(this,-1, wxT("Y Start Pos (mm)"));
@@ -188,22 +185,13 @@ void DefaultPlugin_UI_Dialog::_buildPage()
    RowThree->Add(xLocGroup,1, wxALIGN_LEFT); 
    RowThree->Add(yLocGroup,1, wxALIGN_LEFT);
    RowThree->Add(zLocGroup,1, wxALIGN_LEFT);
-/*
-   RowFour->Add(yLocGroup,1, wxALIGN_LEFT); 
 
-   RowFive->Add(zLocGroup,1, wxALIGN_LEFT);
-*/
- 
    RowSix->Add(_sliderUpdate, 1, wxALIGN_CENTER_HORIZONTAL);
-//   RowSix->Add(_clearButton, 1, wxALIGN_CENTER_HORIZONTAL);
-//   RowSix->Add(_exitButton, 1, wxALIGN_CENTER_HORIZONTAL);
- 
+
    //for my baffle tab                          OKAY
    baffleGroup->Add(secondRow, 1, wxALIGN_LEFT|wxEXPAND); 
    baffleGroup->Add(thirdRow, 1, wxALIGN_LEFT|wxEXPAND);   
    baffleGroup->Add(RowThree, 1, wxALIGN_LEFT|wxEXPAND); 
-//   baffleGroup->Add(RowFour, 1, wxALIGN_LEFT|wxEXPAND);
-//   baffleGroup->Add(RowFive, 1, wxALIGN_LEFT|wxEXPAND);
    baffleGroup->Add(RowOne, 1, wxALIGN_LEFT|wxEXPAND);
    baffleGroup->Add(RowTwo, 1, wxALIGN_LEFT|wxEXPAND);   
    baffleGroup->Add(RowSix, 1, wxALIGN_LEFT|wxEXPAND); 
@@ -214,7 +202,7 @@ void DefaultPlugin_UI_Dialog::_buildPage()
    //assign the group to the panel              OKAY
    SetSizer(baffleGroup);
    baffleGroup->Fit(this);  
-
+*/
 
 }
 
