@@ -54,7 +54,9 @@ echo "to: " ${VE_PLAT_INSTALL_DIR}
 
 #need to check somehow to see if the directory already exists
 mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
-mkdir -p ${VE_PLAT_INSTALL_DIR}/images
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include
+mkdir -p ${VE_PLAT_INSTALL_DIR}/lib
+mkdir -p ${VE_PLAT_INSTALL_DIR}/installerImages
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simple
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/PrISUm
@@ -75,6 +77,12 @@ cp -rf ${VE_SUITE_HOME}/bin/Plugins ./bin/.
 
 echo "Copying new dlls..."
 cp ${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}/* ./bin
+
+echo "Copying includes..."
+cp ${VE_SUITE_HOME}/*.h ./include
+
+echo "Copying libraries..."
+cp ${VE_SUITE_HOME}/lib*.lib ./lib
 
 echo "======Copying simple example model files======"
 echo "   simple VTK files..."
@@ -121,7 +129,7 @@ cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VES.run ./bin/VES
 
 echo "Copying VE-Launcher script..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/velauncher.py ./velauncher.py
-cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_logo.xpm ./images/.
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_logo.xpm ./installerImages/.
 
 echo "Copying Desktop configuration file..."
 mkdir ./stereo_desktop

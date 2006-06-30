@@ -131,7 +131,7 @@ Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\stereo_deskt
 ;Source: {#VEHOME}\VE_Installer\installer\dist\*; DestDir: {app}; Flags: ignoreversion; Components: velauncher
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\images; Flags: replacesameversion
 Source: {#VEHOME}\bin\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\images; Flags: replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\installerImages; Flags: replacesameversion
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
