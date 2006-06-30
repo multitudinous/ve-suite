@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_USER_BUILDER_LIBRARY;WINVER=0x400;VTK44;FLUENT_MFIX"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -157,6 +157,9 @@
 				RelativePath=".\plot3dReader.cxx">
 			</File>
 			<File
+				RelativePath=".\StarCDTranslator.cxx">
+			</File>
+			<File
 				RelativePath=".\starReader.cxx">
 			</File>
 		</Filter>
@@ -193,6 +196,9 @@
 			</File>
 			<File
 				RelativePath=".\plot3dReader.h">
+			</File>
+			<File
+				RelativePath=".\StarCDTranslator.h">
 			</File>
 			<File
 				RelativePath=".\starReader.h">
