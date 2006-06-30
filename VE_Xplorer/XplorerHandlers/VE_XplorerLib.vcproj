@@ -478,6 +478,9 @@
 				RelativePath=".\MaterialUpdateEH.cxx">
 			</File>
 			<File
+				RelativePath=".\QCLoadFileEH.cxx">
+			</File>
+			<File
 				RelativePath=".\TBActivateEH.cxx">
 			</File>
 			<File
@@ -729,6 +732,9 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.h">
+			</File>
+			<File
+				RelativePath=".\QCLoadFileEH.h">
 			</File>
 			<File
 				RelativePath=".\TBActivateEH.h">

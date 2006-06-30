@@ -72,6 +72,7 @@ namespace VE_XML
 {
    class Command;
    class DOMDocumentManager;
+   class DataValuePair;
 }
 
 enum VIEWLOC_TAB_IDS{
@@ -91,7 +92,9 @@ enum VIEWLOC_TAB_IDS{
    VIEWLOC_STOPFLY_BUTTON,
    VIEWLOC_FLYBUILDER_LISTBOX,
    VIEWLOC_DELETEFLYSEL_COMBOBOX,
-   VIEWLOC_SPEED_CONTROL_SLIDER
+   VIEWLOC_SPEED_CONTROL_SLIDER,
+   VIEWLOC_LOAD_FILE,
+   VIEWLOC_SAVE_FILE
 };
 
 /*class UI_ViewLocTabScroll: public wxScrolledWindow{
@@ -145,6 +148,8 @@ protected:
    void _rebuildPage( void );
    void _resetSelections( void );
 
+   std::string _commandName;///<The name of the command.
+   std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The list of DataValuePairs
    int _numView_LocsGlobal;
    std::vector< VE_XML::Command* > commands;
    VjObs_ptr xplorerPtr;
@@ -154,7 +159,6 @@ protected:
    std::string dataValueName;
 
    std::vector< long > commandInputs;
-
    wxWindow* _parent;
    wxScrolledWindow* scrollWindow;
 
@@ -186,6 +190,12 @@ protected:
    void _onFlyBuilderListBox(wxCommandEvent& event);
    void _onDeleteFlySel(wxCommandEvent& event);
    void _onSpeedChange(wxScrollEvent& event);
+   
+   ///Load a stored view points file
+   void _onLoadStoredPointsFile(wxCommandEvent& event);
+
+   ///Save current view points to a file.
+   void _onSaveStoredPointsFile(wxCommandEvent& event);
 
    DECLARE_EVENT_TABLE()
 };

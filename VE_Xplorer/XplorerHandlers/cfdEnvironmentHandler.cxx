@@ -75,7 +75,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 	trackball		= 0;
    _teacher       = 0;
    _soundHandler  = 0;
-   _camHandler    = 0;
+   //_camHandler    = 0;
    cursor         = 0;
    _param.erase();//         = 0;
    _commandArray  = 0;
@@ -153,11 +153,9 @@ void cfdEnvironmentHandler::CleanUp( void )
       delete this->cursor;
    }
 
-   if ( this->_camHandler )
-   {  
-      vprDEBUG(vesDBG,2)  
-        << "|       deleting this->_camHandler" << std::endl << vprDEBUG_FLUSH;
-      delete this->_camHandler;
+   if(VE_Xplorer::cfdQuatCamHandler::instance())
+   {
+      VE_Xplorer::cfdQuatCamHandler::instance()->CleanUp();
    }
 
    if ( this->_soundHandler )
@@ -192,10 +190,10 @@ cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
    return _teacher;
 }
 /////////////////////////////////////////////////////////////////////
-cfdQuatCamHandler* cfdEnvironmentHandler::GetQuatCamHandler( void )
+/*cfdQuatCamHandler* cfdEnvironmentHandler::GetQuatCamHandler( void )
 {
    return _camHandler;
-}
+}*/
 /////////////////////////////////////////////////////////////////////
 cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
 {
@@ -261,9 +259,11 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    // Initiate quatcam
    //
-   std::cout << "|  9. Initializing..................................... cfdQuatCams |" << std::endl;
+   /*std::cout << "|  9. Initializing..................................... cfdQuatCams |" << std::endl;
    this->_camHandler = new cfdQuatCamHandler( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(),
-                                          this->nav, _param.c_str() );
+                                          , _param.c_str() );*/
+   VE_Xplorer::cfdQuatCamHandler::instance()->SetNavigation(this->nav);
+   VE_Xplorer::cfdQuatCamHandler::instance()->SetDCS(VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS());
 
    //
    // Initiate quatcam
@@ -368,11 +368,11 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
        this->cursor->getExtent( this->cur_box );   //record current box cursor position
    }
 */
-   _camHandler->CheckCommandId( _commandArray );
+   VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
-   _camHandler->PreFrameUpdate();
+   VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
 }
 ///////////////////////////////////////////////////////////////
 //Set values for trackball

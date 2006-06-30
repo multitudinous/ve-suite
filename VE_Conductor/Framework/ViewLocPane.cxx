@@ -30,6 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/ViewLocPane.h"
+#include "VE_Conductor/Framework/CORBAServiceList.h"
+#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/App.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
@@ -52,6 +55,8 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <wx/sizer.h>
+#include <wx/app.h>
+#include <wx/filename.h>
 
 BEGIN_EVENT_TABLE(ViewLocPane, wxDialog)
    EVT_BUTTON(VIEWLOC_LOAD_BUTTON,ViewLocPane::_onLoad)
@@ -68,11 +73,12 @@ BEGIN_EVENT_TABLE(ViewLocPane, wxDialog)
    EVT_COMBOBOX(VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX,ViewLocPane::_onRemoveVPfromFlySel)
    EVT_COMBOBOX(VIEWLOC_DELETEFLYSEL_COMBOBOX,ViewLocPane::_onDeleteFlySel)
    EVT_BUTTON(VIEWLOC_RUNFLY_BUTTON,ViewLocPane::_onStartActiveFly)
+   EVT_BUTTON(VIEWLOC_LOAD_FILE,ViewLocPane::_onLoadStoredPointsFile)
+   EVT_BUTTON(VIEWLOC_SAVE_FILE,ViewLocPane::_onSaveStoredPointsFile)
    EVT_BUTTON(VIEWLOC_STOPFLY_BUTTON,ViewLocPane::_onStopFly)
    EVT_LISTBOX(VIEWLOC_FLYBUILDER_LISTBOX,ViewLocPane::_onFlyBuilderListBox)
    EVT_COMMAND_SCROLL(VIEWLOC_SPEED_CONTROL_SLIDER, ViewLocPane::_onSpeedChange )
 END_EVENT_TABLE()
-
 ///////////////
 //Constructor//
 ///////////////
@@ -84,6 +90,13 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
    _numStoredLocations = 0;
    _numStoredFlythroughs = 0;
    _vwptsInActiveFly = 0;
+   _numViewLocLocal = 0;
+   _vwptsInActiveFlyLocal= 0;
+   _numStoredFlythroughsLocal = 0;   
+   _commandName = "";
+   _numStoredLocations = 0;
+   _numStoredFlythroughs = 0;
+   _vwptsInActiveFly = 0;
    _locationName = 0;
    _flythroughName = 0;
    _activeFlyNames = 0;
@@ -91,103 +104,102 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
 	_locNamesLocal = 0;
 	_activeFlyNamesLocal = 0;
 	_flythroughNamesLocal = 0;
+   _numView_LocsGlobal = 0;
+   _vwptsInActiveFlyLocal = 0;
+   
    flyThroughList.clear();
    
    wxSize displaySize = ::wxGetDisplaySize();
    wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
    this->SetSize( dialogPosition );
 
-   xplorerPtr = VjObs::_duplicate( veEngine );
+   //xplorerPtr = VjObs::_duplicate( veEngine );
    domManager = domManagerIn;
 
    _buildPage();
 
 }
-
+/////////////////////////////////
 ViewLocPane::~ViewLocPane( void )
 {
    delete [] _locationName;
+}
+/////////////////////////////////////////////////////////////////
+void ViewLocPane::_onLoadStoredPointsFile(wxCommandEvent& event)
+{
+   ///this is Waaaaaaaaaaaaaaay hacked... --biv
+   wxFileDialog dialog(this,
+                       _T("Open file"), 
+                       _T(""), 
+                       _T(""),
+                       _T("View Location files (*.vel;*.dat)|*.vel;*.dat;"),
+                       wxOPEN|wxFILE_MUST_EXIST,//|wxMULTIPLE,|wxCHANGE_DIR, 
+                       wxDefaultPosition);
+   
+   if (dialog.ShowModal() == wxID_OK)
+   {
+      wxFileName viewPtsFilename( dialog.GetPath() );
+      viewPtsFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+      wxString relativeViewLocationsPath( wxString("./") + viewPtsFilename.GetFullPath() );
+
+      VE_XML::DataValuePair* velFileName = new VE_XML::DataValuePair();
+      velFileName->SetData("View Locations file",relativeViewLocationsPath.c_str());
+      _dataValuePairList.push_back(velFileName);
+
+      _commandName = "QC_LOAD_STORED_POINTS";
+      SendCommandsToXplorer();
+      ///hack!!! ping xplorer since it was just updated to populate the GUI!!!
+      ///This is no good!!!---biv
+      _updateWithcfdQuatCamHandler();
+     
+   }
+}
+/////////////////////////////////////////////////////////////////
+void ViewLocPane::_onSaveStoredPointsFile(wxCommandEvent& event)
+{
+   wxFileName velFileName;
+   do
+   {
+      wxTextEntryDialog viewLocationsFileDlg(this, 
+                                       wxString("Enter the prefix for *.vel filename:"),
+                                       wxString("Save VEL file as..."),
+                                       wxString("locations"),wxOK|wxCANCEL);
+
+      if ( viewLocationsFileDlg.ShowModal() == wxID_OK )
+      {
+         velFileName.ClearExt();
+         velFileName.SetName( viewLocationsFileDlg.GetValue() ); 
+         velFileName.SetExt( wxString( "vel" ) );
+      }
+      else
+      {
+         break;
+      }
+   }
+   while ( velFileName.FileExists() );
+   
+   if ( velFileName.HasName() ) 
+   {
+      _dataValuePairList.clear();
+      VE_XML::DataValuePair* velFile = new VE_XML::DataValuePair();
+      velFile->SetData("View Points file",velFileName.GetFullPath( wxPATH_NATIVE ).c_str() );
+      _dataValuePairList.push_back(velFile);
+
+      _commandName = "VL_SAVE_STORED_POINTS";
+      SendCommandsToXplorer();
+   }
 }
 //////////////////////////////
 //build the viewing locations tab       //
 //////////////////////////////
 void ViewLocPane::_buildPage()
 {
-   try
-   {
-      if ( !CORBA::is_nil( xplorerPtr ) )
-      {
-         num_viewlocs = xplorerPtr->getIsoValue();
-         _numViewLocLocal = num_viewlocs;
-      }
-      std::cout << "number of viewing locations: "<< num_viewlocs << std::endl;
-
-      if ( !CORBA::is_nil( xplorerPtr ) )
-      {
-
-         flyThroughArray = xplorerPtr->getDouble2D( "getFlythroughData" );
-
-      }
-      std::cout << "number of flythroughs: "<< flyThroughArray->length() << std::endl;
-   }
-   catch ( ... )
-   {
-      wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                     "Communication Failure", wxOK | wxICON_INFORMATION );
-   }
-
-   _numStoredLocations = num_viewlocs;
-
-   for (CORBA::ULong j=0; j<flyThroughArray->length(); j++ )
-   {
-      std::vector<int> tempPts;
-      for (CORBA::ULong k=0; k<flyThroughArray[j].length(); k++ )
-      {
-         tempPts.push_back( (int)flyThroughArray[j][k] );
-      }    
-      flyThroughList.push_back(tempPts);
-      tempPts.clear();
-   }
-
-   _numView_LocsGlobal = _numStoredLocations;
-
-   _rebuildNameArrays();
-   if ( flyThroughList.size() > 0 )
-   {
-      _setUpActiveFlyThroughNames( 0 );
-   }
-
-	_vwptsInActiveFlyLocal = _vwptsInActiveFly;
-	_numStoredFlythroughsLocal = _numStoredFlythroughs;
-	
-	if ( _locNamesLocal )
-	{
-		delete [] _locNamesLocal;
-	}
-
-	_locNamesLocal = new wxString[ _numViewLocLocal ];
-
-	if ( _activeFlyNamesLocal )
-	{
-		delete [] _activeFlyNamesLocal;
-	}
-
-	_activeFlyNamesLocal = new wxString[ _vwptsInActiveFlyLocal ];
-
-	if ( _flythroughNamesLocal )
-	{
-		delete [] _flythroughNamesLocal;
-	}
-
-	_flythroughNamesLocal = new wxString[ _numStoredFlythroughsLocal ];
-
-	_locNamesLocal = _locationName;
-	_activeFlyNamesLocal = _activeFlyNames;
-	_flythroughNamesLocal = _flythroughName;
+   
 
 //*******Setting up the widgets for making and naming a new view point
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
- 
+  
+   wxString choices[] = {"Choose a View Point"};
    scrollWindow = new wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
    int nUnitX=20;
    int nUnitY=10;
@@ -198,6 +210,8 @@ void ViewLocPane::_buildPage()
    wxStaticBox* _allVPCtrlBox = new wxStaticBox(scrollWindow, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
 	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(scrollWindow, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+
+   wxButton* loadViewLocationButton = new wxButton(scrollWindow,VIEWLOC_LOAD_FILE,"Load View Location File");
 
    wxButton* _addnewviewptButton = new wxButton(scrollWindow, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
    
@@ -220,20 +234,21 @@ void ViewLocPane::_buildPage()
    wxStaticText* _removevwptLabel = new wxStaticText(scrollWindow, -1, wxT("Delete View Points "));
 
    _removevwptSel = new wxComboBox(scrollWindow, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                 wxDefaultSize,_numViewLocLocal, 
-                                 _locNamesLocal, wxCB_READONLY);
+                                 wxDefaultSize,1, 
+                                 choices, wxCB_READONLY);
 
    wxStaticText* _movetovwptLabel = new wxStaticText(scrollWindow, -1, wxT("Move to a View Point "));
 
    _movetovwptSel = new wxComboBox(scrollWindow, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                 wxDefaultSize,_numViewLocLocal, 
-                                 _locNamesLocal, wxCB_READONLY);
+                                 wxDefaultSize,1, 
+                                 choices, wxCB_READONLY);
 
    wxStaticText* blank1 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
    wxStaticText* blank2 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
 
 
    wxBoxSizer* _newVPControlsSizer = new wxBoxSizer(wxVERTICAL);
+   _newVPControlsSizer->Add(loadViewLocationButton,1,wxALIGN_CENTER_HORIZONTAL);
    _newVPControlsSizer->Add(_addnewviewptButton,1,wxALIGN_CENTER_HORIZONTAL);
    _newVPControlsSizer->Add(_newVPNameCtrlGroup,3,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    _newVPControlsSizer->Add(blank1,2,wxALIGN_CENTER_HORIZONTAL);
@@ -302,36 +317,36 @@ void ViewLocPane::_buildPage()
    wxStaticText* _activeflyLabel = new wxStaticText(scrollWindow, -1, wxT("Active Flythrough Selection"));
 
    _activeflySel = new wxComboBox(scrollWindow, VIEWLOC_ACTIVEFLYSEL_COMBOBOX, wxT("Select Active Flythrough"),wxDefaultPosition, 
-                                  wxDefaultSize, _numStoredFlythroughsLocal, 
-                                  _flythroughNamesLocal, wxCB_READONLY);
+                                  wxDefaultSize, 1, 
+                                  choices, wxCB_READONLY);
 
    wxStaticText* _addvptoflyLabel = new wxStaticText(scrollWindow, -1, wxT("Add Viewpts at the end of Flythrough"));
 
    _addvptoflySel = new wxComboBox(scrollWindow, VIEWLOC_ADDVPTOFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                   wxDefaultSize, _numViewLocLocal, 
-                                   _locNamesLocal, wxCB_READONLY);
+                                   wxDefaultSize, 1, 
+                                   choices, wxCB_READONLY);
 
    wxStaticText* _insertvpinflyLabel = new wxStaticText(scrollWindow, -1, wxT("Insert Viewpts within Flythrough"));
 
    _insertvpinflySel = new wxComboBox(scrollWindow, VIEWLOC_INSERTVPINFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                      wxDefaultSize, _numViewLocLocal, 
-                                      _locNamesLocal, wxCB_READONLY);
+                                      wxDefaultSize, 1, 
+                                      choices, wxCB_READONLY);
 
    wxStaticText* _removevpfromflyLabel = new wxStaticText(scrollWindow, -1, wxT("Remove Viewpts from Flythrough"));
 
    _removevpfromflySel = new wxComboBox(scrollWindow, VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                        wxDefaultSize, _vwptsInActiveFlyLocal,
-                                        _activeFlyNamesLocal, wxCB_READONLY);
+                                        wxDefaultSize, 1,
+                                        choices, wxCB_READONLY);
 
    wxStaticText* _deleteflyLabel = new wxStaticText(scrollWindow, -1, wxT("Delete Entire Flythrough"));
 
    _deleteflySel = new wxComboBox(scrollWindow, VIEWLOC_DELETEFLYSEL_COMBOBOX, wxT("Select a Flythrough"),wxDefaultPosition, 
-                                        wxDefaultSize, _numStoredFlythroughsLocal, 
-                                        _flythroughNamesLocal, wxCB_READONLY);
+                                        wxDefaultSize, 1, 
+                                        choices, wxCB_READONLY);
 
 
    _flybuilderListBox = new wxListBox(scrollWindow, VIEWLOC_FLYBUILDER_LISTBOX, wxDefaultPosition, wxDefaultSize,
-                                      _vwptsInActiveFlyLocal, _activeFlyNamesLocal,  
+                                      1, choices,  
                                        wxLB_HSCROLL|wxLB_NEEDED_SB, wxDefaultValidator, wxT("Active Flythrough Order"));    
 
    wxStaticText* blank3 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
@@ -428,7 +443,6 @@ void ViewLocPane::_buildPage()
 
 }
 
-
 void ViewLocPane::_rebuildNameArrays( void )
 {
    //This will get called every time there's a change so all
@@ -484,7 +498,7 @@ void ViewLocPane::_rebuildNameArrays( void )
       _activeFlyNames[0] = wxT("No Flythroughs Built");
    }
 }
-
+///////////////////////////////////////////////////////////
 void ViewLocPane::_setUpActiveFlyThroughNames( int index )
 {
    if ( _activeFlyNames )
@@ -503,7 +517,7 @@ void ViewLocPane::_setUpActiveFlyThroughNames( int index )
    }
   
 }
-
+//////////////////////////////////////////////////////
 void ViewLocPane::_updateWithcfdQuatCamHandler( void )
 {
    unsigned int tempindex = 0;
@@ -518,23 +532,23 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
    flyThroughList.clear();
    VjObs::double2DArray_var  flyThroughArray;
 
-   if ( !CORBA::is_nil( xplorerPtr ) )
+   if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
    {
       VjObs::obj_pd_var tempTest;
       int tempTestlocal = 0;
       
-      while ( tempTestlocal == 0 )
+      /*while ( tempTestlocal == 0 )
       {
-         tempTest = xplorerPtr->getDouble1D( "getCompletionTest" );
+         tempTest = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getDouble1D( "getCompletionTest" );
          tempTestlocal = (int)tempTest[ 0 ];       
          wxMilliSleep( 50 );
-      }
-      _numStoredLocations = xplorerPtr->getIsoValue();
+      }*/
+      _numStoredLocations = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getIsoValue();
    }
  
-   if ( !CORBA::is_nil( xplorerPtr ) )
+   if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
    {
-      flyThroughArray = xplorerPtr->getDouble2D( "getFlythroughData" );
+      flyThroughArray = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getDouble2D( "getFlythroughData" );
    }
 
    for (CORBA::ULong j=0; j<flyThroughArray->length(); j++ )
@@ -577,10 +591,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
 //////////////////////////////////////////////////
 void ViewLocPane::_onLoad(wxCommandEvent& WXUNUSED(event))
 {
-   //((UI_Tabs *)_parent)->cId = LOAD_NEW_VIEWPT;
-   //((UI_Tabs *)_parent)->sendDataArrayToServer();
    dataValueName = "LOAD_NEW_VIEWPT";
-   //cId = navScroll->headRotationChk->GetValue();
    commandInputs.push_back( 0 );
    commandInputs.push_back( 0 );
    SendCommandsToXplorer();
@@ -588,15 +599,21 @@ void ViewLocPane::_onLoad(wxCommandEvent& WXUNUSED(event))
    _updateWithcfdQuatCamHandler();
    _resetSelections();
 }
-
+//////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAcceptNewVPName(wxCommandEvent& WXUNUSED(event))
 {
    //This will be used once user defined names are implemented
-}
 
+    //we can handle this now with the new schema. All we have to do is send back
+   //a string name for each view point. ---biv
+}
+/////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onCancelNewVPName(wxCommandEvent& WXUNUSED(event))
 {
    //This will be used once user defined names are implemented
+
+    //we can handle this now with the new schema. All we have to do is send back
+   //a string name for each view point. ---biv
 }
 
 void ViewLocPane::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
@@ -605,12 +622,8 @@ void ViewLocPane::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
    {
       for( unsigned int i=0;i<_numStoredLocations;i++ )
 	   {
-		   //if( _removevwptSel->GetStringSelection() == _locationName[i])
          if( _removevwptSel->GetValue() == _locationName[i])
          {
-            //((UI_Tabs *)_parent)->cIso_value = i;
-            //((UI_Tabs *)_parent)->cId = REMOVE_SELECTED_VIEWPT;
-            //((UI_Tabs *)_parent)->sendDataArrayToServer();
             dataValueName = "REMOVE_SELECTED_VIEWPT";
             //cIso_value = i;
             commandInputs.push_back( i );
@@ -630,11 +643,7 @@ void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
 	   {
 		   if( _movetovwptSel->GetValue() == _locationName[i])
          {
-            //((UI_Tabs *)_parent)->cIso_value = i;
-            //((UI_Tabs *)_parent)->cId = MOVE_TO_SELECTED_LOCATION;
-            //((UI_Tabs *)_parent)->sendDataArrayToServer();
             dataValueName = "MOVE_TO_SELECTED_LOCATION";
-            //cIso_value = i;
             commandInputs.push_back( i );
             commandInputs.push_back( 0 );
             SendCommandsToXplorer();
@@ -643,15 +652,12 @@ void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
       //_resetSelections();
    }
 }
-
+///////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onBuildNewFlyButton(wxCommandEvent& WXUNUSED(event))
 {
    if ( _numView_LocsGlobal > 0 )
    {
-      //((UI_Tabs *)_parent)->cId = ADD_NEW_FLYTHROUGH;
-      //((UI_Tabs *)_parent)->sendDataArrayToServer();
       dataValueName = "ADD_NEW_FLYTHROUGH";
-      //cIso_value = i;
       commandInputs.push_back( 0 );
       commandInputs.push_back( 0 );
       SendCommandsToXplorer();
@@ -663,17 +669,23 @@ void ViewLocPane::_onBuildNewFlyButton(wxCommandEvent& WXUNUSED(event))
       _activeflySel->SetSelection( flyThroughList.size() - 1 );
    }
 }
-
+//////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAcceptNewFlyName(wxCommandEvent& WXUNUSED(event))
 {
    //This will be used once user defined names are implemented
-}
 
+   //we can handle this now with the new schema. All we have to do is send back
+   //a string name for each view point. ---biv
+}
+//////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onCancelNewFlyName(wxCommandEvent& WXUNUSED(event))
 {
    //This will be used once user defined names are implemented
-}
 
+    //we can handle this now with the new schema. All we have to do is send back
+   //a string name for each view point. ---biv
+}
+///////////////////////////////////////////////////////////////////
 void ViewLocPane::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
 {
    if ( _flythroughName[ 0 ] != wxT("No Flythroughs Built") )
@@ -692,7 +704,7 @@ void ViewLocPane::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
       _resetSelections();
    }
 }
-
+///////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
 {
    if ( _numView_LocsGlobal > 0 )
@@ -707,13 +719,7 @@ void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
                {
                   if( _addvptoflySel->GetValue() == _locationName[j])
                   {
-                     //((UI_Tabs *)_parent)->cIso_value = i;
-                     //((UI_Tabs *)_parent)->cSc = j;
-                     //((UI_Tabs *)_parent)->cId = ADD_NEW_POINT_TO_FLYTHROUGH;
-                     //((UI_Tabs *)_parent)->sendDataArrayToServer();
                      dataValueName = "ADD_NEW_POINT_TO_FLYTHROUGH";
-                     //cIso_value = i;
-                     //cSc = j;
                      commandInputs.push_back( i );
                      commandInputs.push_back( j );
                      SendCommandsToXplorer();
@@ -727,7 +733,7 @@ void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
    }
    
 }
-
+//////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
 {
    if ( _numView_LocsGlobal > 0 )
@@ -746,15 +752,7 @@ void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
                      {
                         if( _insertvpinflySel->GetValue() == _locationName[k])
                         {
-                           //((UI_Tabs *)_parent)->cIso_value = i;
-                           //((UI_Tabs *)_parent)->cSc = j;
-                           //((UI_Tabs *)_parent)->cMin = k;
-                           //((UI_Tabs *)_parent)->cId = INSERT_NEW_POINT_IN_FLYTHROUGH;
-                           //((UI_Tabs *)_parent)->sendDataArrayToServer();
                            dataValueName = "INSERT_NEW_POINT_IN_FLYTHROUGH";
-                           //cIso_value = i;
-                           //cSc = j;
-                           //cMin = k;
                            commandInputs.push_back( i );
                            commandInputs.push_back( j );
                            commandInputs.push_back( k );
@@ -770,7 +768,7 @@ void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
       //_resetSelections();
    }
 }
-
+////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
 {
    if ( _numView_LocsGlobal > 0 )
@@ -785,13 +783,7 @@ void ViewLocPane::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
                {
                   if( _removevpfromflySel->GetValue() == _activeFlyNames[j])
                   {
-                     //((UI_Tabs *)_parent)->cIso_value = i;
-                     //((UI_Tabs *)_parent)->cSc = j;
-                     //((UI_Tabs *)_parent)->cId = REMOVE_POINT_FROM_FLYTHROUGH;
-                     //((UI_Tabs *)_parent)->sendDataArrayToServer();
                      dataValueName = "REMOVE_POINT_FROM_FLYTHROUGH";
-                     //cIso_value = i;
-                     //cSc = j;
                      commandInputs.push_back( i );
                      commandInputs.push_back( j );
                      SendCommandsToXplorer();
@@ -805,7 +797,7 @@ void ViewLocPane::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
    }
 
 }
-
+///////////////////////////////////////////////////////////////////
 void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
 {
    if ( flyThroughList.size() > 0 )
@@ -814,11 +806,7 @@ void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
 	   {
 		   if( _deleteflySel->GetValue() == _flythroughName[i])
          {
-            //((UI_Tabs *)_parent)->cIso_value = i;
-            //((UI_Tabs *)_parent)->cId = DELETE_ENTIRE_FLYTHROUGH;
-            //((UI_Tabs *)_parent)->sendDataArrayToServer();
             dataValueName = "DELETE_ENTIRE_FLYTHROUGH";
-            //cIso_value = i;
             commandInputs.push_back( i );
             commandInputs.push_back( 0 );
             SendCommandsToXplorer();
@@ -829,7 +817,7 @@ void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
    }
 
 }
-
+////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
 {
    if ( _numView_LocsGlobal > 0 )
@@ -840,11 +828,7 @@ void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
 	      {
 		      if( ( _activeflySel->GetValue() == _flythroughName[i] ) && ( flyThroughList.at( i ).size() > 1 ) )
             {
-               //((UI_Tabs *)_parent)->cIso_value = i;
-               //((UI_Tabs *)_parent)->cId = RUN_ACTIVE_FLYTHROUGH;
-               //((UI_Tabs *)_parent)->sendDataArrayToServer();
                dataValueName = "RUN_ACTIVE_FLYTHROUGH";
-               //cIso_value = i;
                commandInputs.push_back( i );
                commandInputs.push_back( 0 );
                SendCommandsToXplorer();
@@ -853,37 +837,28 @@ void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
       }
    }
 }
-
+/////////////////////////////////////////////////////////////
 void ViewLocPane::_onStopFly(wxCommandEvent& WXUNUSED(event))
 {
-   //((UI_Tabs *)_parent)->cId = STOP_ACTIVE_FLYTHROUGH;
-   //((UI_Tabs *)_parent)->sendDataArrayToServer();
    dataValueName = "STOP_ACTIVE_FLYTHROUGH";
    commandInputs.push_back( 0 );
    commandInputs.push_back( 0 );
    SendCommandsToXplorer();
 }
-
+///////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onFlyBuilderListBox(wxCommandEvent& WXUNUSED(event))
 {
    
 }
-
+///////////////////////////////////////////////////////////////////
 void ViewLocPane::_onSpeedChange( wxScrollEvent& WXUNUSED(event) )
 {
-   //((UI_Tabs *)_parent)->cIso_value = _speedCtrlSlider->GetValue();;
-   //((UI_Tabs *)_parent)->cId = CHANGE_MOVEMENT_SPEED;
-   //((UI_Tabs *)_parent)->sendDataArrayToServer();
    dataValueName = "CHANGE_MOVEMENT_SPEED";
-   //cIso_value = _speedCtrlSlider->GetValue();
    commandInputs.push_back( _speedCtrlSlider->GetValue() );
    commandInputs.push_back( 0 );
    SendCommandsToXplorer();
 }
-
-
 ///////////////////////////////////////
-
 void ViewLocPane::_rebuildPage( void )
 { 
    _removevwptSel->Clear();
@@ -924,7 +899,7 @@ void ViewLocPane::_rebuildPage( void )
 
 
 }
-
+///////////////////////////////////////////
 void ViewLocPane::_resetSelections( void )
 {
    _removevwptSel->SetSelection( 0 );
@@ -935,55 +910,62 @@ void ViewLocPane::_resetSelections( void )
    _removevpfromflySel->SetSelection( 0 ); 
 
 }
-
+///////////////////////////////////////////////////////
 void ViewLocPane::SetCommInstance( VjObs_ptr veEngine )
 {
    xplorerPtr = VjObs::_duplicate( veEngine );
 }
-
+////////////////////////////////////////////////
 void ViewLocPane::SendCommandsToXplorer( void )
 {
-   // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument("Command");
-   doc = domManager->GetCommandDocument();
 
-   // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("LONG") );
-   //VE_XML::OneDIntArray* dataValueArray = new VE_XML::OneDIntArray( commandInputs.size() )
-   //dataValuePair->SetDataName( dataValueName );
-   //dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   dataValuePair->SetData( dataValueName, commandInputs );
+   //This assumes that the command name was set by the callback
+   //as well as the DataValuePairs
    VE_XML::Command* veCommand = new VE_XML::Command();
-   veCommand->SetOwnerDocument(doc);
-   veCommand->SetCommandName( std::string("ViewLoc_Data") );
-   veCommand->AddDataValuePair( dataValuePair );
-   doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );
 
-   // New need to destroy document and send it
-   std::string commandData = domManager->WriteAndReleaseCommandDocument();
-   char* tempDoc = new char[ commandData.size() + 1 ];
-   tempDoc = CORBA::string_dup( commandData.c_str() );
+   ///This is a hack to get around sending of only 1 command name and not using event handlers in the original
+   ///code.
+   ///This will have to be re-written to handle commands properly on the xplorer side -- biv
+   if(!commandInputs.empty())
+   {
+      _dataValuePairList.clear();
 
-   if ( !CORBA::is_nil( xplorerPtr ) && !commandData.empty() )
+      _commandName = "ViewLoc_Data";
+      // Create the command and data value pairs
+      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("LONG") );
+      dataValuePair->SetData( dataValueName, commandInputs );
+      _dataValuePairList.push_back( dataValuePair );
+   }
+ 
+   veCommand->SetCommandName(_commandName);
+
+   for(size_t i =0; i < _dataValuePairList.size(); i++)
+   {
+      veCommand->AddDataValuePair(_dataValuePairList.at(i));
+   }
+
+   if( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer())
    {
       try
       {
          // CORBA releases the allocated memory so we do not have to
-         xplorerPtr->SetCommandString( tempDoc );
+         dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
       }
       catch ( ... )
       {
          wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
                         "Communication Failure", wxOK | wxICON_INFORMATION );
-         delete [] tempDoc;
       }
    }
    else
-   {
-      delete [] tempDoc;
+   {   wxMessageBox( "Could not connect to VE-Xplorer!", 
+                        "Communication Failure", wxOK | wxICON_INFORMATION );
+      
    }
    //Clean up memory
    delete veCommand;
    commandInputs.clear();
+   _dataValuePairList.clear();
+   _commandName = " ";
    _resetSelections();
 }

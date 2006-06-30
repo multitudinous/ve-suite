@@ -38,11 +38,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Transient_Tools", "VE_Build
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Translator", "VE_Builder\Translator\Translator.vcproj", "{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtkTo3DTexture", "VE_Builder\vtkTo3DTexture\tcGUI\tcGUI.vcproj", "{EDEEFC20-C5B2-4070-89D7-F5472115E585}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
@@ -365,17 +360,6 @@ Global
 		{90C2B6FD-209E-45D8-BDED-1AEA1CA90E14}.tao_osg_vep_cluster_dbg.ActiveCfg = Debug|Win32
 		{90C2B6FD-209E-45D8-BDED-1AEA1CA90E14}.tao_osg_vep_dbg.ActiveCfg = Debug|Win32
 		{90C2B6FD-209E-45D8-BDED-1AEA1CA90E14}.tao_pf_dbg.ActiveCfg = Debug|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.Builder_Tools.ActiveCfg = Debug|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.Builder_Tools.Build.0 = Debug|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.dbg.ActiveCfg = Debug|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.dbg.Build.0 = Debug|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.pf_dbg.ActiveCfg = Release|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.Release.ActiveCfg = Release|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.Release.Build.0 = Release|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.tao_osg_dbg.ActiveCfg = Debug|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.tao_osg_vep_cluster_dbg.ActiveCfg = Debug|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.tao_osg_vep_dbg.ActiveCfg = Debug|Win32
-		{DDAC25AA-FE00-4DC7-AEEB-E2CB732E0A7B}.tao_pf_dbg.ActiveCfg = Debug|Win32
 		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Builder_Tools.ActiveCfg = Debug|Win32
 		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Builder_Tools.Build.0 = Debug|Win32
 		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.dbg.ActiveCfg = Debug|Win32

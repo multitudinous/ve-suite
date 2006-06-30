@@ -43,6 +43,7 @@
 #include <gmtl/Generate.h>
 
 #include <vpr/Util/Timer.h>
+#include <vpr/Util/Singleton.h>
 
 namespace VE_SceneGraph
 {
@@ -63,8 +64,10 @@ namespace VE_XML
 }
 
 #include <vector>
+#include <map>
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 
 namespace VE_Xplorer
 {
@@ -72,10 +75,12 @@ namespace VE_Xplorer
    {
       public:
          //Constructors
-         cfdQuatCamHandler( VE_SceneGraph::cfdDCS*, cfdNavigate*, std::string );
+         //cfdQuatCamHandler( VE_SceneGraph::cfdDCS*, cfdNavigate*, std::string );
       
          //Destructor
-         ~cfdQuatCamHandler();
+         //~cfdQuatCamHandler();
+         ///Singleton cleanup
+         void CleanUp( void );
 
          // compare VjObs_i commandArray with its child's value
          virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
@@ -83,7 +88,15 @@ namespace VE_Xplorer
          // in future, multi-threaded apps will make a copy of VjObs_i commandArray
          virtual void UpdateCommand();
 
-         void CreateObjects( void );
+         //void CreateObjects( void );
+
+         ///Set the cfdDCS 
+         ///\param newDCS The new cfdDCS
+         void SetDCS(VE_SceneGraph::cfdDCS* newDCS);
+
+         ///Set cfdNavigate
+         ///\param nav The new cfdNavigate
+         void SetNavigation(VE_Xplorer::cfdNavigate* nav);
    
          void LoadData(double*, VE_SceneGraph::cfdDCS*);
 
@@ -137,6 +150,9 @@ namespace VE_Xplorer
 
          int cfdId;
          int cfdIso_value;
+   protected:
+      std::map<std::string,VE_EVENTS::EventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
+
 
       private:
          cfdQuatCam* thisQuatCam;
@@ -171,6 +187,13 @@ namespace VE_Xplorer
 
          // class used to store xml command
          VE_XML::Command* command;
+
+          // Required so that vpr::Singleton can instantiate this class.
+         //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
+         cfdQuatCamHandler(/* VE_SceneGraph::cfdDCS* worldDCS,cfdNavigate* nav, std::string param */);
+  
+         ~cfdQuatCamHandler( void ){ ; }// Never gets called, don't implement
+         vprSingletonHeader( cfdQuatCamHandler );   
    };
 }
 #endif

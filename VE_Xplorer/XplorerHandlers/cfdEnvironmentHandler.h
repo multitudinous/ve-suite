@@ -101,7 +101,7 @@ public:
    ///Accessor for cfdTeacher
    cfdTeacher* GetTeacher( void );
    ///Accessor for cfdQuatCamHandler
-   cfdQuatCamHandler* GetQuatCamHandler( void );
+   //cfdQuatCamHandler* GetQuatCamHandler( void );
    ///Accessor for cfdDisplaySettings
    cfdDisplaySettings* GetDisplaySettings( void );
    ///Accessor to set desktop size information for

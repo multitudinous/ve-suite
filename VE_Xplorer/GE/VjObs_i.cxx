@@ -453,7 +453,7 @@ VjObs::obj_pd* VjObs_i::getDouble1D(  const char* input )
    if ( strcmp(input,"getCompletionTest") == 0 )
    {
       std::vector< int > completionTest;
-      completionTest = cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getCompletionTest();
+      completionTest = cfdQuatCamHandler::instance()->getCompletionTest();
       array1dData = new VjObs::obj_pd( completionTest.size() );
       array1dData->length( completionTest.size() );
       for ( CORBA::ULong i=0; i<completionTest.size(); i++)
@@ -482,7 +482,7 @@ VjObs::double2DArray* VjObs_i::getDouble2D(  const char* input )
    if ( strcmp(input,"getFlythroughData") == 0 )
    {
       std::vector< std::vector< int > > flyThroughList;
-      flyThroughList = cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getFlyThroughs();
+      flyThroughList = cfdQuatCamHandler::instance()->getFlyThroughs();
 
       arrayData = new VjObs::double2DArray( flyThroughList.size() );
       arrayData->length( flyThroughList.size() );
@@ -531,7 +531,7 @@ CORBA::Long VjObs_i::getIsoValue()
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
    //return _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-   return cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getNumLocs();
+   return cfdQuatCamHandler::instance()->getNumLocs();
 }
 
 #ifdef _TAO
@@ -897,7 +897,7 @@ void VjObs_i::PreFrameUpdate( void )
       delete commandVectorQueue.at( 0 );
       commandVectorQueue.erase( iter );
       cfdEnvironmentHandler::instance()->GetNavigate()->SetVECommand( bufferCommand );
-      cfdEnvironmentHandler::instance()->GetQuatCamHandler()->SetVECommand( bufferCommand );
+      cfdQuatCamHandler::instance()->SetVECommand( bufferCommand );
       cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
       if ( cfdModelHandler::instance()->GetActiveModel() )
       cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );

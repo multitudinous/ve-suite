@@ -31,6 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/QCLoadFileEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdFileInfo.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCam.h"
@@ -43,6 +45,7 @@
 #include "VE_Open/XML/OneDIntArray.h"
 
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <cmath>
 #include <iostream>
@@ -61,14 +64,15 @@ using namespace VE_Xplorer;
 using namespace VE_Util;
 using namespace VE_SceneGraph;
 
+vprSingletonImp( VE_Xplorer::cfdQuatCamHandler );
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //NOTE: ALL USEFUL COUT'S SHOULD BE MADE VPR:DEBUG STATEMENTS, LEVEL 2
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS, 
-                                     cfdNavigate* nav, std::string param )
+cfdQuatCamHandler::cfdQuatCamHandler( /*VE_SceneGraph::cfdDCS* worldDCS, 
+                                     cfdNavigate* nav, std::string param*/ )
 {
    flyThroughList.clear();
    thisQuatCam = NULL;
@@ -84,9 +88,9 @@ cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS,
    cam_id = 0;
    activeFlyThrough = -1;
    
-   _worldDCS = worldDCS;
-   _nav = nav;
-   _param = param;
+   _worldDCS = 0;
+   _nav = 0;
+   _param = "";//param;
    completionTest.push_back( 0 );
    pointCounter = 0;
    movementIntervalCalc = 0.01;
@@ -105,12 +109,28 @@ cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS,
    
    command = 0;
 
-   CreateObjects();
+   //CreateObjects();
+   quatCamDirName = "./";
+
+   quatCamFileName = ".stored_viewpts_flythroughs.vel";
+   
+   _eventHandlers[std::string("QC_LOAD_STORED_POINTS")] = new VE_EVENTS::QuatCamLoadFileEventHandler();
    
 }
-
-cfdQuatCamHandler::~cfdQuatCamHandler( void )
+///////////////////////////////////////////////////////////////
+void cfdQuatCamHandler::SetDCS(VE_SceneGraph::cfdDCS* worldDCS)
 {
+   _worldDCS = worldDCS;
+}
+///////////////////////////////////////////////////////////////////
+void cfdQuatCamHandler::SetNavigation(VE_Xplorer::cfdNavigate* nav)
+{
+   _nav = nav;
+}
+///////////////////////////////////////
+void cfdQuatCamHandler::CleanUp( void )
+{
+   ///empty destrutor?
 }
 void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldDCS)
 {
@@ -571,6 +591,22 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
 {
    currentFrame += 1;
 
+   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+   if( cfdModelHandler::instance()->GetXMLCommand() )
+   {
+      vprDEBUG(vesDBG,3) << "Command Name : "
+                           << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
+                           << std::endl<< vprDEBUG_FLUSH;
+      currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+      if(currentEventHandler != _eventHandlers.end())
+      {
+         vprDEBUG(vesDBG,1) << "Executing: "
+                              << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
+                              << std::endl<< vprDEBUG_FLUSH;
+         currentEventHandler->second->SetGlobalBaseObject();
+         currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+      }
+   }
    frameTimer->stopTiming();
    if ( _runFlyThrough )
    {
@@ -624,7 +660,7 @@ void cfdQuatCamHandler::UpdateCommand()
    std::cerr << "doing nothing in cfdQuatCamHandler::UpdateCommand()" << std::endl;
 }
 
-void cfdQuatCamHandler::CreateObjects( void )
+/*void cfdQuatCamHandler::CreateObjects( void )
 {
    quatCamDirName = "./STORED_VIEWPTS";
 
@@ -632,7 +668,7 @@ void cfdQuatCamHandler::CreateObjects( void )
 
    this->LoadFromFile( this->quatCamFileName );
 
-}
+}*/
 
 double cfdQuatCamHandler::getLinearDistance( gmtl::Vec3f vjVecLast, gmtl::Vec3f vjVecNext )
 {
