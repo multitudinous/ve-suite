@@ -75,7 +75,7 @@
 			</parameter> 
 			<parameter> 
 				<dataName>FRONT</dataName> 
-				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Hyper/Textures/carpet.tga</dataValueString> 
+				<dataValueString>C:/TSVEG/NETL/HyperModel/Textures/carpet_casino3.jpg</dataValueString> 
 			</parameter> 
 		</textureDescriptionData> 
 		<textureUnit>0</textureUnit> 
@@ -105,9 +105,9 @@
    
    			vec3 baseColor=vec3(texture2D(baseMap,texCoord));
    
-   			vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*baseColor; 
-   			vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*baseColor*NDotL; 
-   			vec3 TotalSpecular=gl_LightSource[0].specular.rgb*(pow(RDotL,specularPower));
+   			vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*gl_FrontMaterial.ambient.rgb*baseColor; 
+   			vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*gl_FrontMaterial.diffuse.rgb*baseColor*NDotL; 
+   			vec3 TotalSpecular=gl_LightSource[0].specular.rgb*gl_FrontMaterial.specular.rgb*(pow(RDotL,specularPower));
   
    			gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);  
 		}

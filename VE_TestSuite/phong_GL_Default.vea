@@ -6,6 +6,7 @@
 <vertexShader>
 <type>Vertex</type>
 	<shaderCode>
+		varying vec3 color;
 		varying vec3 lightPos;
 		varying vec3 objPos;
       	varying vec3 eyePos;
@@ -15,6 +16,7 @@
       	{
             	gl_Position=ftransform();
             
+			color=gl_Color.xyz;
             	objPos=gl_Vertex.xyz;
             	eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
             	lightPos=gl_LightSource[0].position.xyz;
@@ -26,14 +28,15 @@
 <fragmentShader>
 <type>Fragment</type>
 	<uniform>
-		<name>fSpecularPower</name>
+		<name>specularPower</name>
 		<type>Float</type>
 		<size>1</size>
 		<value>25.0</value>
 	</uniform>
 	<shaderCode>
 		uniform float specularPower;
-
+	
+		varying vec3 color;
 		varying vec3 lightPos;
 		varying vec3 objPos;
 		varying vec3 eyePos;
@@ -49,9 +52,9 @@
    			vec3 R=reflect(V,N);
    			float RDotL=max(dot(R,L),0.0);
    
-  			vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*gl_FrontMaterial.ambient.rgb; 
-   			vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*gl_FrontMaterial.diffuse.rgb*NDotL; 
-   			vec3 TotalSpecular=gl_LightSource[0].specular.rgb*pow(RDotL,specularPower);
+  			vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*gl_FrontMaterial.ambient.rgb*color; 
+   			vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*gl_FrontMaterial.diffuse.rgb*color*NDotL; 
+   			vec3 TotalSpecular=gl_LightSource[0].specular.rgb*gl_FrontMaterial.specular.rgb*pow(RDotL,specularPower);
   
    			gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);  
 		}

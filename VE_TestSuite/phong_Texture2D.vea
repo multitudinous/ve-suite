@@ -6,6 +6,7 @@
 <vertexShader>
 <type>Vertex</type>
 	<shaderCode>
+		varying vec3 lightPos;
 		varying vec3 objPos;
       	varying vec3 eyePos;
       	varying vec3 normal;
@@ -18,6 +19,7 @@
             	objPos=gl_Vertex.xyz;
             	eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
             	normal=vec3(gl_NormalMatrix*gl_Normal);
+			lightPos=gl_LightSource[0].position.xyz;
 			texCoord=gl_MultiTexCoord0.xy;
 			//texCoord=gl_Vertex.xy;
       	}
@@ -27,7 +29,7 @@
 <fragmentShader>
 <type>Fragment</type>
 	<uniform>
-		<name>ambientLight</name>
+		<name>ambientMaterial</name>
 		<type>Float</type>
 		<size>3</size>
 		<value>0.368627</value>
@@ -35,20 +37,12 @@
 		<value>0.368421</value>
 	</uniform>
 	<uniform>
-		<name>diffuseLight</name>
+		<name>diffuseMaterial</name>
 		<type>Float</type>
 		<size>3</size>
 		<value>0.886275</value>
 		<value>0.885003</value>
 		<value>0.885003</value>
-	</uniform>
-	<uniform>
-		<name>specularLight</name>
-		<type>Float</type>
-		<size>3</size>
-		<value>0.490196</value>
-		<value>0.488722</value>
-		<value>0.488722</value>
 	</uniform>
 	<uniform>
 		<name>specularMaterial</name>
@@ -59,18 +53,10 @@
 		<value>0.488722</value>
 	</uniform>
 	<uniform>
-		<name>lightPos</name>
-		<type>Float</type>
-		<size>3</size>
-		<value>-100.0</value>
-		<value>100.0</value>
-		<value>100.0</value>
-	</uniform>
-	<uniform>
 		<name>specularPower</name>
 		<type>Float</type>
 		<size>1</size>
-		<value>25.0</value>
+		<value>20.0</value>
 	</uniform>
 	<uniform>
 		<name>baseMap</name>
@@ -114,7 +100,7 @@
 			</parameter> 
 			<parameter> 
 				<dataName>FRONT</dataName> 
-				<dataValueString>C:/TSVEG/VE_Suite/VE_TestSuite/Textures/carpet.jpg</dataValueString> 
+				<dataValueString>C:/TSVEG/NETL/HyperModel/Textures/carpet_casino3.jpg</dataValueString> 
 			</parameter> 
 		</textureDescriptionData> 
 		<textureUnit>0</textureUnit> 
@@ -122,16 +108,15 @@
 		<textureType>2D</textureType> 
 	</textureImage>
 	<shaderCode>
-      	uniform vec3 ambientLight;
-      	uniform vec3 diffuseLight;
-      	uniform vec3 specularLight;
+      	uniform vec3 ambientMaterial;
+      	uniform vec3 diffuseMaterial;
       	uniform vec3 specularMaterial;
-      	uniform vec3 lightPos;
       	uniform float specularPower;
 
 		uniform sampler2D baseMap;
 
-      	varying vec3 objPos;
+      	varying vec3 lightPos;
+		varying vec3 objPos;
       	varying vec3 eyePos;
       	varying vec3 normal;
 		varying vec2 texCoord;
@@ -148,9 +133,9 @@
    
 			vec3 baseColor=vec3(texture2D(baseMap,texCoord));
 
-           		vec3 TotalAmbient=ambientLight*baseColor; 
-            	vec3 TotalDiffuse=diffuseLight*baseColor*NDotL; 
-            	vec3 TotalSpecular=specularLight*specularMaterial*pow(RDotL,specularPower);
+           		vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*baseColor; 
+            	vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*baseColor*NDotL; 
+            	vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);
   
             	gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);  
       	}
