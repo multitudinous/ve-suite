@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h"
-#include "VE_Installer/installer/installerImages/icons.xpm"
+#include "VE_Conductor/xpm/square.xpm"
 #include "VE_Open/XML/Model/Point.h"
 #include <iostream>
 
@@ -42,9 +42,9 @@ IMPLEMENT_DYNAMIC_CLASS(DefaultPlugin, REI_Plugin)
 DefaultPlugin
 ::DefaultPlugin()
 {
-   wxImage my_img( icons_xpm );
-   icon_w = (int)my_img.GetWidth()*1.20;
-   icon_h = (int)my_img.GetHeight()*1.20;
+   wxImage my_img( square_xpm );
+   icon_w = (int)my_img.GetWidth()*0.30f;
+   icon_h = (int)my_img.GetHeight()*0.30f;
    my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
 
    n_pts = 4;
