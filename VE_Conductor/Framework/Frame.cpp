@@ -1282,7 +1282,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    if ( viewlocPane == 0 )
    {
       // create pane and set appropriate vars
-      viewlocPane = new ViewLocPane( GetXplorerObject(), domManager );
+      viewlocPane = new ViewLocPane( );
    }
    else
    {
