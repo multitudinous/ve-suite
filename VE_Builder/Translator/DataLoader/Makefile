@@ -31,12 +31,12 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 CFDUNAME = $(shell uname)
 
+#FLUENT_MFIX= TRUE
+
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
    DataLoader.cxx\
-   FluentTranslator.cxx\
-   MFIXTranslator.cxx\
    EnSightTranslator.cxx\
    AVSTranslator.cxx\
    cfdDICOMTranslator.cxx\
@@ -46,7 +46,14 @@ SRCS=\
    plot3dReader.cpp\
    StarCDTranslator.cxx\
    starReader.cpp
-			
+
+ifeq (${FLUENT_MFIX}, TRUE)
+SRCS+=\
+   FluentTranslator.cxx\
+   MFIXTranslator.cxx
+EXTRA_CXXFLAGS+= -DFLUENT_MFIX
+endif
+
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator

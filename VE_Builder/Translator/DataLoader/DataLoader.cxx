@@ -30,13 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Builder/Translator/DataLoader/DataLoader.h"
+#ifdef FLUENT_MFIX
 #include "VE_Builder/Translator/DataLoader/FluentTranslator.h"
 #include "VE_Builder/Translator/DataLoader/MFIXTranslator.h"
+#endif
 #include "VE_Builder/Translator/DataLoader/EnSightTranslator.h"
 #include "VE_Builder/Translator/DataLoader/AVSTranslator.h"
 #include "VE_Builder/Translator/DataLoader/cfdREITranslator.h"
 #include "VE_Builder/Translator/DataLoader/cfdDICOMTranslator.h"
 #include "VE_Builder/Translator/DataLoader/plot3dReader.h"
+#include "VE_Builder/Translator/DataLoader/StarCDTranslator.h"
 
 #include "VE_Xplorer/Utilities/fileIO.h"
 
@@ -55,14 +58,18 @@ DataLoader::DataLoader()
    translatorMap[ "BANFDB" ] = new VE_Builder::cfdREITranslator();
    // DICOM
    translatorMap[ "dcm" ] = new VE_Builder::cfdDICOMTranslator();
+#ifdef FLUENT_MFIX
    // Fluent
    translatorMap[ "cas" ] = new VE_Builder::FluentTranslator();
-   // EnSight
-   translatorMap[ "case" ] = new VE_Builder::EnSightTranslator();
    // MFIX
    translatorMap[ "mfix" ] = new VE_Builder::MFIXTranslator();
-   // MFIX
+#endif
+   // EnSight
+   translatorMap[ "ens" ] = new VE_Builder::EnSightTranslator();
+   // Plot3D
    translatorMap[ "xyz" ] = new VE_Builder::plot3dReader();
+   // StarCD
+   translatorMap[ "star" ] = new VE_Builder::StarCDTranslator();
 }
 ///////////////////////////////////////////////////////////////////////////
 DataLoader::~DataLoader()
