@@ -79,7 +79,7 @@ public:
    virtual ~CADNodeManagerDlg();
    enum GEOMETRY_DIALOG_IDS
    {
-      TREE_ID=2000000000,///<The tree ID.
+      TREE_ID=wxID_HIGHEST+1,///<The tree ID.
       PROPERTY_ID,///<The property ID.
       GEOM_SAVE///<The save ID.
    };
