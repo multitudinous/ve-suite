@@ -647,9 +647,9 @@ void VjObs_i::GetCfdStateVariables( void )
       }
 #endif
 #endif
-      if ( cfdEnvironmentHandler::instance()->GetQuatCamHandler()->IsActive() )
+      if ( cfdQuatCamHandler::instance()->IsActive() )
       {
-         this->mStates->clusterQuatCamIncrement = cfdEnvironmentHandler::instance()->GetQuatCamHandler()->GetQuatCamIncrementor();
+         this->mStates->clusterQuatCamIncrement = cfdQuatCamHandler::instance()->GetQuatCamIncrementor();
       }
       else
       {
@@ -708,9 +708,9 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       }
 #endif
 #endif
-      if ( cfdEnvironmentHandler::instance()->GetQuatCamHandler()->IsActive() )
+      if ( cfdQuatCamHandler::instance()->IsActive() )
       {
-         cfdEnvironmentHandler::instance()->GetQuatCamHandler()->SetQuatCamIncrementor( this->mStates->clusterQuatCamIncrement );
+         cfdQuatCamHandler::instance()->SetQuatCamIncrementor( this->mStates->clusterQuatCamIncrement );
       }
    }
    //this->_unusedNewData    = false;

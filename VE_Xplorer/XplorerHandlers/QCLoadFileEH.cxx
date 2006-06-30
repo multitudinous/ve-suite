@@ -40,7 +40,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
+
 ////////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler::QuatCamLoadFileEventHandler()
 {
@@ -85,4 +85,3 @@ void QuatCamLoadFileEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       std::cout<<"QuatCamLoadFileEventHandler::_operateOnNode()"<<std::endl;
    }
 }
-#endif
