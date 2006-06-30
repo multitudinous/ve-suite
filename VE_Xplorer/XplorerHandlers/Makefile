@@ -131,7 +131,8 @@ SRCS=\
    TBClipPlaneEH.cxx\
    TextureBasedEventHandler.cxx\
    TBActivateEH.cxx\
-   TBUpdateSolutionEH.cxx
+   TBUpdateSolutionEH.cxx\
+   QCLoadFileEH.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g
