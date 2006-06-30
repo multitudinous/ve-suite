@@ -639,7 +639,7 @@ void AppFrame::CreateMenu()
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
    xplorerMenu->Enable( XPLORER_SOUNDS, true);
    xplorerMenu->Enable( XPLORER_SCENES, true);
-   xplorerMenu->Enable( XPLORER_STREAMLINE, true);
+   //xplorerMenu->Enable( XPLORER_STREAMLINE, true);
    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
 //	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
    }

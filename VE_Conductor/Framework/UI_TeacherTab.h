@@ -51,6 +51,7 @@ class UI_TeacherTab : public wxDialog
 {
 public:
    UI_TeacherTab(wxWindow* tControl);
+   virtual ~UI_TeacherTab( void ){ ; }
 protected:
    void _buildPage();
    
