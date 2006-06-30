@@ -48,7 +48,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS CADNodeMenu : public wxMenu{
 public:
    enum GEOMETRY_MENU_IDS
    {
-      GEOM_MENU_MOVE_NODE=1000,///<Move node in tree, menu ID.
+      GEOM_MENU_MOVE_NODE=105000,///<Move node in tree, menu ID.
       GEOM_NODE_ADD,///<Add node in tree, menu ID.
       GEOM_CLONE_ADD,///<Add cloned node to the tree, menu ID.
       GEOM_DELETE,///<Delete node from tree, menu ID.

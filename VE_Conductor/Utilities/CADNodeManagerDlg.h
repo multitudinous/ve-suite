@@ -79,7 +79,7 @@ public:
    virtual ~CADNodeManagerDlg();
    enum GEOMETRY_DIALOG_IDS
    {
-      TREE_ID,///<The tree ID.
+      TREE_ID=2000000000,///<The tree ID.
       PROPERTY_ID,///<The property ID.
       GEOM_SAVE///<The save ID.
    };
@@ -98,7 +98,7 @@ public:
 
    ///Get the root CADNode
    VE_CAD::CADNode* GetRootCADNode();
-protected:
+//protected:
 
    ///Create the dialog
    void _buildDialog();
@@ -115,9 +115,9 @@ protected:
 
    ///Launch the CADNode modifier menu.
    ///\param event The right-click event.
-   //void _popupCADNodeManipulatorMenu(wxTreeEvent& event);
+   void _popupCADNodeManipulatorMenu(wxTreeEvent& event);
    //void _popupCADNodeManipulatorMenu(wxMouseEvent &event);
-   void _popupCADNodeManipulatorMenu(wxContextMenuEvent& event);
+   //void _popupCADNodeManipulatorMenu(wxContextMenuEvent& event);
    ///Add a node to a selected node in the tree based from a VEG file.
    ///\param event The command event.
    void _addNodeFromVEGFile(wxCommandEvent& event);

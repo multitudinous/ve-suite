@@ -122,7 +122,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
       //Body_UI_i ui_i( UINAME);
 
       PortableServer::ObjectId_var id = 
-         PortableServer::string_to_ObjectId( CORBA::string_dup( "cfdExecutive" ) ); 
+         PortableServer::string_to_ObjectId( "cfdExecutive" ); 
     
       //activate it with this child POA 
       child_poa->activate_object_with_id( id.in(), &(*ui_i) );
