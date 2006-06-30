@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_USER_BUILDER_LIBRARY;WINVER=0x400;VTK44"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_USER_BUILDER_LIBRARY;WINVER=0x400;VTK44;FLUENT_MFIX"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

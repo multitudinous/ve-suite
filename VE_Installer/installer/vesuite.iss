@@ -129,7 +129,7 @@ Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonl
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\stereo_desktop; Components: nameserver; Flags: ignoreversion recursesubdirs
 ;Source: {#VEHOME}\VE_Installer\installer\dist\*; DestDir: {app}; Flags: ignoreversion; Components: velauncher
-Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\images; Flags: replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\installerImages; Flags: replacesameversion
 Source: {#VEHOME}\bin\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\installerImages; Flags: replacesameversion
 [Icons]
@@ -140,7 +140,7 @@ Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 ;Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\VE_icon.ico
 ;Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
 ;Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {group}\VE-Suite; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\images\VE_icon.ico; Components: velauncher
+Name: {group}\VE-Suite; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico; Components: velauncher
 ;Name: {group}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app}; IconFilename: {app}\images\VE_icon.ico
 
 ;Name: {commondesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\VE_icon.ico; Tasks: desktopNSIcon
@@ -149,6 +149,6 @@ Name: {group}\VE-Suite; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFi
 ;Name: {commondesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\VE_icon.ico; Tasks: desktopVXOVEPIcon
 ;Name: {commondesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\VE_icon.ico; Tasks: desktopVXOVEPCIcon
 ;Name: {commondesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXPFIcon
-Name: {commondesktop}\VE-Suite; Filename: {app}\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\images\VE_icon.ico; Tasks: desktopVELauncherIcon
+Name: {commondesktop}\VE-Suite; Filename: {app}\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
 
 ;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\VE_icon.ico
