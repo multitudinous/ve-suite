@@ -481,6 +481,9 @@
 				RelativePath=".\QCLoadFileEH.cxx">
 			</File>
 			<File
+				RelativePath=".\StoredSceneEH.cxx">
+			</File>
+			<File
 				RelativePath=".\TBActivateEH.cxx">
 			</File>
 			<File
@@ -735,6 +738,9 @@
 			</File>
 			<File
 				RelativePath=".\QCLoadFileEH.h">
+			</File>
+			<File
+				RelativePath=".\StoredSceneEH.h">
 			</File>
 			<File
 				RelativePath=".\TBActivateEH.h">

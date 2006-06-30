@@ -52,6 +52,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeCursorEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/StoredSceneEH.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -102,6 +103,8 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    desktopHeight = 0;
 
    _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();
+   _eventHandlers[ std::string("Stored Scenes") ] = new VE_EVENTS::StoredSceneEventHandler();
+
 }
 
 void cfdEnvironmentHandler::Initialize( std::string param )

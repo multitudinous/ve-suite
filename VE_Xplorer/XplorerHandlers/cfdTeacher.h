@@ -71,6 +71,14 @@ namespace VE_Xplorer
          int getNumberOfFiles();
          std::string getFileName( int i );
 
+         ///Clear the stored scenes
+         void ClearStoredScenes();
+         ///Switch the active scene
+         ///\param whichScene The scene to display
+         void LoadScene(unsigned int whichScene);
+         ///Save out the scene
+         void RecordScene();
+
       private:
          VE_SceneGraph::cfdDCS* DCS;
          VE_SceneGraph::cfdDCS* _worldDCS;
