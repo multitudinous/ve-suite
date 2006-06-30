@@ -413,16 +413,15 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
       scalarContour->SetSize(_vistabPosition);
    }
    
-   if(scalarSelect || vectorSelect)
+   //if(scalarSelect || vectorSelect)
    {
       scalarContour->ShowModal();
    }
-   else
+   /*else
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
-   }
-   //itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
+   }*/
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
@@ -438,16 +437,15 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
       vectorContour->SetSize(_vistabPosition);
    }
 
-   if(scalarSelect || vectorSelect)
+   //if(scalarSelect || vectorSelect)
    {
       vectorContour->ShowModal();
    }
-   else
+   /*else
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
-   }
-   //itemToolBar3->ToggleTool(VECTOR_BUTTON, false);
+   }*/
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
