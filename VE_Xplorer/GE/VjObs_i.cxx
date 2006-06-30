@@ -89,8 +89,7 @@ VjObs_i::VjObs_i()
    //geo_name->length(50);
    //scl_name       = new VjObs::scalar_p(50);
    //scl_name->length(50);
-   teacher_name   = new VjObs::scalar_p(50);
-   teacher_name->length(50);
+   teacher_name   = new VjObs::scalar_p();
    //dataset_names  = new VjObs::scalar_p(50);
    //dataset_names->length(50);
    sound_names    = new VjObs::scalar_p(50);
