@@ -25,7 +25,8 @@ SRCS=\
    paraThread.cpp \
    PluginLoader.cpp \
    UI_i.cpp \
-   UI_TransientDialog.cxx \
+   UI_TransientDialog.cxx\
+   UI_TeacherTab.cpp\
    SoundsPane.cpp \
    ViewLocPane.cxx\
    TBToolBar.cxx \

@@ -94,6 +94,7 @@ enum
    JUGGLER_MONO, 
    JUGGLER_SETTINGS,
    CAD_NODE_DIALOG,
+   XPLORER_SCENES,
    XPLORER_EXIT
 };
 //      XPLORER_VISTAB,
@@ -109,7 +110,7 @@ class NavigationPane;
 class SoundsPane;
 class ViewLocPane;
 class StreamlinePane;
-
+class UI_TeacherTab;
 //class Vectors;
 //class Vistab;
 
@@ -260,6 +261,7 @@ protected:
    void LaunchViewpointsPane(wxCommandEvent& event);
    void LaunchSoundsPane(wxCommandEvent& event);
    void LaunchStreamlinePane(wxCommandEvent& event);
+   void LaunchRecordScenes( wxCommandEvent& event );
    void OnExitXplorer( wxCommandEvent& event );
 //   void LaunchVisTabs( wxCommandEvent& event );
 //   void LaunchVistab( wxCommandEvent& event );
@@ -281,6 +283,7 @@ private:
    NavigationPane* navPane;
    SoundsPane* soundsPane;
    ViewLocPane* viewlocPane;
+   UI_TeacherTab* recordScenes;
 //   wxDialog* visTabs;
 //   Vistab* vistab;
    wxDialog* _treeView;

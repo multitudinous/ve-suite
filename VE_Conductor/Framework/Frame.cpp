@@ -40,6 +40,7 @@
 #include "VE_Conductor/Network/package.h"
 #include "VE_Conductor/Framework/OrbThread.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
+#include "VE_Conductor/Framework/UI_TeacherTab.h"
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/TexTable.h"
@@ -117,6 +118,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
    EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
+   EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
    EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
    //  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
    EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
@@ -146,7 +148,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
   
    xplorerMenu = 0;
-   
+   recordScenes = 0;
    this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
   
    //int displayWidth, displayHeight = 0;
@@ -619,6 +621,7 @@ void AppFrame::CreateMenu()
 
 	xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
 	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
+	xplorerMenu->Append( XPLORER_SCENES, _("Record Scenes") );
 	xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
 //	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
 	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
@@ -632,11 +635,12 @@ void AppFrame::CreateMenu()
 //	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
 //   xplorerMenu->Append( XPLORER_VISTAB, _("Visualization Tabs"));
 
-	xplorerMenu->Enable( XPLORER_NAVIGATION, true);
-	xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
-	xplorerMenu->Enable( XPLORER_SOUNDS, true);
-//	xplorerMenu->Enable( XPLORER_STREAMLINE, true);
-	xplorerMenu->Enable( JUGGLER_SETTINGS, true);
+   xplorerMenu->Enable( XPLORER_NAVIGATION, true);
+   xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
+   xplorerMenu->Enable( XPLORER_SOUNDS, true);
+   xplorerMenu->Enable( XPLORER_SCENES, true);
+   xplorerMenu->Enable( XPLORER_STREAMLINE, true);
+   xplorerMenu->Enable( JUGGLER_SETTINGS, true);
 //	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
    }
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
@@ -1259,6 +1263,18 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
    }
    // now show it
    navPane->Show();
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED(event) )
+{
+   if ( recordScenes == 0 )
+   {
+      // create pane and set appropriate vars
+      recordScenes = new UI_TeacherTab( this );
+   }
+
+   // now show it
+   recordScenes->Show();
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
