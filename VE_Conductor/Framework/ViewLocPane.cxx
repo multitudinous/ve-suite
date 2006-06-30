@@ -57,12 +57,14 @@
 #include <wx/sizer.h>
 #include <wx/app.h>
 #include <wx/filename.h>
+#include <wx/choicdlg.h>
 
 BEGIN_EVENT_TABLE(ViewLocPane, wxDialog)
    EVT_BUTTON(VIEWLOC_LOAD_BUTTON,ViewLocPane::_onLoad)
+   EVT_BUTTON(REMOVE_VIEW_PT_BUTTON,ViewLocPane::_onRemoveVP)
    EVT_BUTTON(VIEWLOC_ACCEPTNEWVPNAME_BUTTON,ViewLocPane::_onAcceptNewVPName)
    EVT_BUTTON(VIEWLOC_CANCELNEWVPNAME_BUTTON,ViewLocPane::_onCancelNewVPName)
-   EVT_COMBOBOX(VIEWLOC_REMOVEVP_COMBOBOX,ViewLocPane::_onRemoveVP)
+   //EVT_COMBOBOX(VIEWLOC_REMOVEVP_COMBOBOX,ViewLocPane::_onRemoveVP)
    EVT_COMBOBOX(VIEWLOC_MOVETOVP_COMBOBOX,ViewLocPane::_onMoveToVP)
    EVT_BUTTON(VIEWLOC_NEWFLY_BUTTON,ViewLocPane::_onBuildNewFlyButton)
    EVT_BUTTON(VIEWLOC_ACCEPTNEWFLYNAME_BUTTON,ViewLocPane::_onAcceptNewFlyName)
@@ -85,7 +87,7 @@ END_EVENT_TABLE()
 ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
 :wxDialog(NULL, -1, wxString("Viewing Locations Pane"),
          wxDefaultPosition, wxDefaultSize, 
-		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxHSCROLL|wxVSCROLL) & ~ wxSTAY_ON_TOP)
+		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
    _numStoredLocations = 0;
    _numStoredFlythroughs = 0;
@@ -106,6 +108,8 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
 	_flythroughNamesLocal = 0;
    _numView_LocsGlobal = 0;
    _vwptsInActiveFlyLocal = 0;
+   _removevwptSel = 0;
+   _movetovwptSel = 0;
    
    flyThroughList.clear();
    
@@ -113,16 +117,12 @@ ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domMan
    wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
    this->SetSize( dialogPosition );
 
-   //xplorerPtr = VjObs::_duplicate( veEngine );
-   domManager = domManagerIn;
-
    _buildPage();
 
 }
 /////////////////////////////////
 ViewLocPane::~ViewLocPane( void )
 {
-   delete [] _locationName;
 }
 /////////////////////////////////////////////////////////////////
 void ViewLocPane::_onLoadStoredPointsFile(wxCommandEvent& event)
@@ -133,7 +133,7 @@ void ViewLocPane::_onLoadStoredPointsFile(wxCommandEvent& event)
                        _T(""), 
                        _T(""),
                        _T("View Location files (*.vel;*.dat)|*.vel;*.dat;"),
-                       wxOPEN|wxFILE_MUST_EXIST,//|wxMULTIPLE,|wxCHANGE_DIR, 
+                       wxOPEN|wxFILE_MUST_EXIST, 
                        wxDefaultPosition);
    
    if (dialog.ShowModal() == wxID_OK)
@@ -151,7 +151,6 @@ void ViewLocPane::_onLoadStoredPointsFile(wxCommandEvent& event)
       ///hack!!! ping xplorer since it was just updated to populate the GUI!!!
       ///This is no good!!!---biv
       _updateWithcfdQuatCamHandler();
-     
    }
 }
 /////////////////////////////////////////////////////////////////
@@ -200,26 +199,26 @@ void ViewLocPane::_buildPage()
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
   
    wxString choices[] = {"Choose a View Point"};
-   scrollWindow = new wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
+   //scrollWindow = new wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
    int nUnitX=20;
    int nUnitY=10;
    int nPixX = 5;
    int nPixY = 10;
-   scrollWindow->SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+   //scrollWindow->SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-   wxStaticBox* _allVPCtrlBox = new wxStaticBox(scrollWindow, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBox* _allVPCtrlBox = new wxStaticBox(this, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
-	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(scrollWindow, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
-   wxButton* loadViewLocationButton = new wxButton(scrollWindow,VIEWLOC_LOAD_FILE,"Load View Location File");
+   wxButton* loadViewLocationButton = new wxButton(this,VIEWLOC_LOAD_FILE,"Load View Location File");
 
-   wxButton* _addnewviewptButton = new wxButton(scrollWindow, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
+   wxButton* _addnewviewptButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
    
-   wxTextCtrl* _newvwptNameCtrl = new wxTextCtrl(scrollWindow, -1, wxT("Enter Name for new pt"));
+   wxTextCtrl* _newvwptNameCtrl = new wxTextCtrl(this, -1, wxT("Enter Name for new pt"));
 
-   wxButton* _newvwptNameOKButton = new wxButton(scrollWindow, VIEWLOC_ACCEPTNEWVPNAME_BUTTON, wxT("OK"));
+   wxButton* _newvwptNameOKButton = new wxButton(this, VIEWLOC_ACCEPTNEWVPNAME_BUTTON, wxT("OK"));
 
-   wxButton* _newvwptNameCancelButton = new wxButton(scrollWindow, VIEWLOC_CANCELNEWVPNAME_BUTTON, wxT("Cancel"));
+   wxButton* _newvwptNameCancelButton = new wxButton(this, VIEWLOC_CANCELNEWVPNAME_BUTTON, wxT("Cancel"));
 
    wxBoxSizer* _newVPNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
    _newVPNameButtonsSizer->Add(_newvwptNameOKButton,1,wxALIGN_LEFT);
@@ -231,20 +230,21 @@ void ViewLocPane::_buildPage()
 //***************************************************************************
 
 //********Finishing off the view points controls
-   wxStaticText* _removevwptLabel = new wxStaticText(scrollWindow, -1, wxT("Delete View Points "));
+   wxStaticText* _removevwptLabel = new wxStaticText(this, -1, wxT("Delete View Points "));
 
-   _removevwptSel = new wxComboBox(scrollWindow, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+   wxButton* _removeViewPointButton = new wxButton(this,REMOVE_VIEW_PT_BUTTON,wxT("Delete"));
+   /*_removevwptSel = new wxComboBox(this, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+                                 wxDefaultSize,1, 
+                                 choices, wxCB_READONLY);*/
+
+   wxStaticText* _movetovwptLabel = new wxStaticText(this, -1, wxT("Move to a View Point "));
+
+   _movetovwptSel = new wxComboBox(this, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                  wxDefaultSize,1, 
                                  choices, wxCB_READONLY);
 
-   wxStaticText* _movetovwptLabel = new wxStaticText(scrollWindow, -1, wxT("Move to a View Point "));
-
-   _movetovwptSel = new wxComboBox(scrollWindow, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                 wxDefaultSize,1, 
-                                 choices, wxCB_READONLY);
-
-   wxStaticText* blank1 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank2 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
+   wxStaticText* blank1 = new wxStaticText(this, -1, ""); //just a place holder
+   wxStaticText* blank2 = new wxStaticText(this, -1, ""); //just a place holder
 
 
    wxBoxSizer* _newVPControlsSizer = new wxBoxSizer(wxVERTICAL);
@@ -253,7 +253,7 @@ void ViewLocPane::_buildPage()
    _newVPControlsSizer->Add(_newVPNameCtrlGroup,3,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    _newVPControlsSizer->Add(blank1,2,wxALIGN_CENTER_HORIZONTAL);
    _newVPControlsSizer->Add(_removevwptLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _newVPControlsSizer->Add(_removevwptSel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   _newVPControlsSizer->Add(_removeViewPointButton,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    _newVPControlsSizer->Add(blank2,2,wxALIGN_CENTER_HORIZONTAL);
    _newVPControlsSizer->Add(_movetovwptLabel,1,wxALIGN_LEFT|wxEXPAND);
    _newVPControlsSizer->Add(_movetovwptSel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
@@ -262,11 +262,11 @@ void ViewLocPane::_buildPage()
    _allVPCtrlsGroup->Add(_newVPControlsSizer,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
 //*******Throw in the Speed Control Slider
-   wxStaticBox* _speedCtrlBox = new wxStaticBox(scrollWindow, -1, "Movement Speed Control", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBox* _speedCtrlBox = new wxStaticBox(this, -1, "Movement Speed Control", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
-   wxStaticText* _speedctrlLabel = new wxStaticText(scrollWindow, -1, wxT("Approximate Linear Speed in feet/second"));
+   wxStaticText* _speedctrlLabel = new wxStaticText(this, -1, wxT("Approximate Linear Speed in feet/second"));
 
-   _speedCtrlSlider = new wxSlider(scrollWindow, VIEWLOC_SPEED_CONTROL_SLIDER,10,0,100,
+   _speedCtrlSlider = new wxSlider(this, VIEWLOC_SPEED_CONTROL_SLIDER,10,0,100,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
@@ -285,7 +285,8 @@ void ViewLocPane::_buildPage()
 
 
 //*******Building the Flythrough Controls
-   wxStaticBox* _allFlyCtrlBox = new wxStaticBox(scrollWindow, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+/*this isn't working
+  wxStaticBox* _allFlyCtrlBox = new wxStaticBox(scrollWindow, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
    //Start with the controls for setting up a new flythrough and naming it
 	wxStaticBox* _newFlyNameCtrlBox = new wxStaticBox(scrollWindow, -1, "Name the new Flythrough", wxDefaultPosition,wxDefaultSize,wxCAPTION);
@@ -314,7 +315,7 @@ void ViewLocPane::_buildPage()
    //**********************************************
 
    //The rest of the flythrough controls
-   wxStaticText* _activeflyLabel = new wxStaticText(scrollWindow, -1, wxT("Active Flythrough Selection"));
+   /*wxStaticText* _activeflyLabel = new wxStaticText(scrollWindow, -1, wxT("Active Flythrough Selection"));
 
    _activeflySel = new wxComboBox(scrollWindow, VIEWLOC_ACTIVEFLYSEL_COMBOBOX, wxT("Select Active Flythrough"),wxDefaultPosition, 
                                   wxDefaultSize, 1, 
@@ -390,22 +391,22 @@ void ViewLocPane::_buildPage()
    wxStaticBoxSizer* _allFlyCtrlsGroup = new wxStaticBoxSizer(_allFlyCtrlBox, wxVERTICAL);
    _allFlyCtrlsGroup->Add(_allFlythroughCtrls,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
-
+*/
 //********Now Put the entire page together
    //the main group
    wxBoxSizer* viewlocPanelGroup = new wxBoxSizer(wxHORIZONTAL);
 
    //add the rows to the main panel
    viewlocPanelGroup->Add(_allLeftSide,1,wxALIGN_CENTER_HORIZONTAL); 
-   viewlocPanelGroup->Add(_allFlyCtrlsGroup,1,wxALIGN_CENTER_HORIZONTAL); 
+   //viewlocPanelGroup->Add(_allFlyCtrlsGroup,1,wxALIGN_CENTER_HORIZONTAL); 
 
-   scrollWindow->SetSizer( viewlocPanelGroup ); 
+   //scrollWindow->SetSizer( viewlocPanelGroup ); 
 
-   mainSizer->Add( scrollWindow,1,wxALIGN_LEFT|wxEXPAND);
+   //mainSizer->Add( scrollWindow,1,wxALIGN_LEFT|wxEXPAND);
  
    SetAutoLayout(true);
-   this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
-   SetSizer( mainSizer );
+   //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+   SetSizer( viewlocPanelGroup );
 
    //Complete Hack needed to get the page to refresh properly
 	// Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
@@ -429,53 +430,45 @@ void ViewLocPane::_buildPage()
 
    _rebuildPage();
 	_resetSelections();
-   _activeflySel->SetSelection( 0 );
+   //_activeflySel->SetSelection( 0 );
 
    _newVPNameCtrlBox->Enable( false );
    _newvwptNameCtrl->Enable( false );
    _newvwptNameOKButton->Enable( false );
    _newvwptNameCancelButton->Enable( false );
 
-   _newFlyNameCtrlBox->Enable( false );
+/*   _newFlyNameCtrlBox->Enable( false );
    _newflythroughNameCtrl->Enable( false );
    _newflythroughNameOKButton->Enable( false );
    _newflythroughNameCancelButton->Enable( false );
-
+*/
 }
 
 void ViewLocPane::_rebuildNameArrays( void )
 {
    //This will get called every time there's a change so all
    //dynamic memory allocations have to be cleaned up
-   if ( _locationName )
-   {
-      delete [] _locationName;
-   }
-   if ( _flythroughName )
-   {
-      delete [] _flythroughName;
-   }
 
+   _locationName.Clear();
+   _flythroughName.Clear();
    //Now the wxString arrays can be filled
    if( _numStoredLocations > 0 )
    {
-      _locationName = new wxString[ _numStoredLocations ];
 
       for( unsigned int i=0; i<_numStoredLocations; i++)
       {
          std::ostringstream vwptstream;
          vwptstream << "View Location " << i ;
-         _locationName[i] = vwptstream.str().c_str();
+         _locationName.Add(vwptstream.str().c_str());
       }
    }
    else
    {
       _numStoredLocations = 1;
-      _locationName = new wxString[1];
-      _locationName[0] = wxT("No Stored Locations");
+      _locationName.Add(wxT("No Stored Locations"));
    }
 
-   if( !flyThroughList.empty() )
+   /*if( !flyThroughList.empty() )
    {
       _numStoredFlythroughs = flyThroughList.size();
       _flythroughName = new wxString[ _numStoredFlythroughs ];
@@ -497,23 +490,20 @@ void ViewLocPane::_rebuildNameArrays( void )
       _activeFlyNames = new wxString[ _vwptsInActiveFly ];
       _activeFlyNames[0] = wxT("No Flythroughs Built");
    }
+   */
 }
 ///////////////////////////////////////////////////////////
 void ViewLocPane::_setUpActiveFlyThroughNames( int index )
 {
-   if ( _activeFlyNames )
-   {
-      delete [] _activeFlyNames;
-   }
+   _activeFlyNames.Clear();
 
    _vwptsInActiveFly = flyThroughList.at( index ).size();
-   _activeFlyNames = new wxString[ _vwptsInActiveFly ];
 
    for ( unsigned int i=0; i<_vwptsInActiveFly; i++ )
    {
       std::ostringstream activeflynamestream;
       activeflynamestream << "View Location " << flyThroughList.at( index ).at( i ) ;
-      _activeFlyNames[i] = activeflynamestream.str().c_str();
+      _activeFlyNames.Add(activeflynamestream.str().c_str());
    }
   
 }
@@ -521,13 +511,13 @@ void ViewLocPane::_setUpActiveFlyThroughNames( int index )
 void ViewLocPane::_updateWithcfdQuatCamHandler( void )
 {
    unsigned int tempindex = 0;
-   for( unsigned int i=0;i<flyThroughList.size();i++ )
+   /*for( unsigned int i=0;i<flyThroughList.size();i++ )
    {
 	   if( _activeflySel->GetValue() == _flythroughName[i])
       {
          tempindex = i;
       }
-   }  
+   }  */
    
    flyThroughList.clear();
    VjObs::double2DArray_var  flyThroughArray;
@@ -580,7 +570,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
    }
  
    _rebuildPage();
-   _activeflySel->SetValue( _flythroughName[ tempindex ] );
+   //_activeflySel->SetValue( _flythroughName[ tempindex ] );
    _resetSelections();
 
 }
@@ -620,24 +610,33 @@ void ViewLocPane::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
 {
    if ( _numView_LocsGlobal > 0 )
    {
-      for( unsigned int i=0;i<_numStoredLocations;i++ )
-	   {
-         if( _removevwptSel->GetValue() == _locationName[i])
+      wxSingleChoiceDialog viewPointSelector(this, _T("Select View Point to Delete."), 
+                                          _T("Remove View Point"),
+                                           _locationName);
+  
+      viewPointSelector.SetSize(GetRect());
+      unsigned int selectionIndex = 0;
+      if (viewPointSelector.ShowModal() == wxID_OK)
+      {
+         for(size_t i = 0; i < _numStoredLocations; i++)
          {
-            dataValueName = "REMOVE_SELECTED_VIEWPT";
-            //cIso_value = i;
-            commandInputs.push_back( i );
-            SendCommandsToXplorer();
-            _updateWithcfdQuatCamHandler();
+            if(!_locationName[i].Cmp(viewPointSelector.GetStringSelection()) )
+            {
+               selectionIndex = i;
+               break;
+            }
          }
-	   } 
-      //_resetSelections();
+      }
+      dataValueName = "REMOVE_SELECTED_VIEWPT";
+      commandInputs.push_back( selectionIndex );
+      SendCommandsToXplorer();
+      _updateWithcfdQuatCamHandler();
    }
 }
 
 void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
 {
-   if ( _numView_LocsGlobal > 0 )
+   //if ( _numView_LocsGlobal > 0 )
    {
       for( unsigned int i=0;i<_numStoredLocations;i++ )
 	   {
@@ -655,7 +654,7 @@ void ViewLocPane::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onBuildNewFlyButton(wxCommandEvent& WXUNUSED(event))
 {
-   if ( _numView_LocsGlobal > 0 )
+   /*if ( _numView_LocsGlobal > 0 )
    {
       dataValueName = "ADD_NEW_FLYTHROUGH";
       commandInputs.push_back( 0 );
@@ -667,7 +666,7 @@ void ViewLocPane::_onBuildNewFlyButton(wxCommandEvent& WXUNUSED(event))
       _rebuildPage();
       _resetSelections();
       _activeflySel->SetSelection( flyThroughList.size() - 1 );
-   }
+   }*/
 }
 //////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAcceptNewFlyName(wxCommandEvent& WXUNUSED(event))
@@ -688,7 +687,7 @@ void ViewLocPane::_onCancelNewFlyName(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////////////////////
 void ViewLocPane::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   if ( _flythroughName[ 0 ] != wxT("No Flythroughs Built") )
+   /*if ( _flythroughName[ 0 ] != wxT("No Flythroughs Built") )
    {
       int tempindex = 0;
       for( unsigned int i=0; i<flyThroughList.size(); i++ )
@@ -702,12 +701,12 @@ void ViewLocPane::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
       _rebuildPage();
       _activeflySel->SetValue( _flythroughName[ tempindex ] );
       _resetSelections();
-   }
+   }*/
 }
 ///////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   if ( _numView_LocsGlobal > 0 )
+   /*if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -730,13 +729,13 @@ void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
 	      }
       }
       //_resetSelections();
-   }
+   }*/
    
 }
 //////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   if ( _numView_LocsGlobal > 0 )
+   /*if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -766,12 +765,12 @@ void ViewLocPane::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
 	      }
       }
       //_resetSelections();
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   if ( _numView_LocsGlobal > 0 )
+  /* if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -794,13 +793,13 @@ void ViewLocPane::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
 	      }
       }
       //_resetSelections();
-   }
+   }*/
 
 }
 ///////////////////////////////////////////////////////////////////
 void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   if ( flyThroughList.size() > 0 )
+   /*if ( flyThroughList.size() > 0 )
    {
       for( unsigned int i=0; i<flyThroughList.size(); i++ )
 	   {
@@ -814,13 +813,13 @@ void ViewLocPane::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
          }
 	   }
       //_resetSelections();
-   }
+   }*/
 
 }
 ////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
 {
-   if ( _numView_LocsGlobal > 0 )
+   /*if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -835,7 +834,7 @@ void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
             }
 	      }
       }
-   }
+   }*/
 }
 /////////////////////////////////////////////////////////////
 void ViewLocPane::_onStopFly(wxCommandEvent& WXUNUSED(event))
@@ -861,9 +860,11 @@ void ViewLocPane::_onSpeedChange( wxScrollEvent& WXUNUSED(event) )
 ///////////////////////////////////////
 void ViewLocPane::_rebuildPage( void )
 { 
-   _removevwptSel->Clear();
-   _movetovwptSel->Clear();
-   _addvptoflySel->Clear();
+   //if(_removevwptSel)
+   //   _removevwptSel->Clear();
+   if(_movetovwptSel)
+      _movetovwptSel->Clear();
+   /*_addvptoflySel->Clear();
    _insertvpinflySel->Clear();
    _activeflySel->Clear();
    _deleteflySel->Clear();
@@ -871,21 +872,25 @@ void ViewLocPane::_rebuildPage( void )
    _flybuilderListBox->Clear();
 
    _removevwptSel->Insert( wxT("Select a View Point"), 0 );
-   _movetovwptSel->Insert( wxT("Select a View Point"), 0 );
+   
    _addvptoflySel->Insert( wxT("Select a View Point"), 0 );
    _insertvpinflySel->Insert( wxT("Select a View Point"), 0 );
    _deleteflySel->Insert( wxT("Select a Flythrough"), 0 );   
    _removevpfromflySel->Insert( ("Select a View Point"), 0 ); 
-
-   for ( unsigned int i=0; i<_numStoredLocations; i++ )
-   {  
-      _removevwptSel->Insert( _locationName[ i ], ( i + 1 ) );
-      _movetovwptSel->Insert( _locationName[ i ], ( i + 1 ) );
-      _addvptoflySel->Insert( _locationName[ i ], ( i + 1 ) );
-      _insertvpinflySel->Insert( _locationName[ i ], ( i + 1 ) );
+*/
+   _movetovwptSel->Insert( wxT("Select a View Point"), 0 );
+   if( _movetovwptSel)
+   {
+      for ( unsigned int i=0; i<_numStoredLocations; i++ )
+      {  
+         //_removevwptSel->Insert( _locationName[ i ],i );
+         _movetovwptSel->Insert( _locationName[ i ] ,i);
+      //_addvptoflySel->Insert( _locationName[ i ], ( i + 1 ) );
+      //_insertvpinflySel->Insert( _locationName[ i ], ( i + 1 ) );
+      }
    }
 
-   for ( unsigned int i=0; i<_numStoredFlythroughs; i++ )
+   /*for ( unsigned int i=0; i<_numStoredFlythroughs; i++ )
    {
       _activeflySel->Insert( _flythroughName[ i ], ( i ) );
       _deleteflySel->Insert( _flythroughName[ i ], ( i + 1 ) );
@@ -895,20 +900,22 @@ void ViewLocPane::_rebuildPage( void )
    {
       _removevpfromflySel->Insert( _activeFlyNames[ i ], ( i + 1 ) );
       _flybuilderListBox->Insert( _activeFlyNames[ i ], ( i ) );
-   }
+   }*/
 
 
 }
 ///////////////////////////////////////////
 void ViewLocPane::_resetSelections( void )
 {
-   _removevwptSel->SetSelection( 0 );
-   _movetovwptSel->SetSelection( 0 );
-   _addvptoflySel->SetSelection( 0 );
+   if(_removevwptSel)
+      _removevwptSel->SetSelection( 0 );
+   //if(_movetovwptSel)
+   //   _movetovwptSel->SetSelection( 0 );
+   /*_addvptoflySel->SetSelection( 0 );
    _insertvpinflySel->SetSelection( 0 );
    _deleteflySel->SetSelection( 0 );   
    _removevpfromflySel->SetSelection( 0 ); 
-
+*/
 }
 ///////////////////////////////////////////////////////
 void ViewLocPane::SetCommInstance( VjObs_ptr veEngine )

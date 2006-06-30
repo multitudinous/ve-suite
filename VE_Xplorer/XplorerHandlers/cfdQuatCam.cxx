@@ -124,6 +124,11 @@ void cfdQuatCam::UpdateRotation( VE_SceneGraph::cfdDCS* worldDCS)
    Matrix44f temp;
    temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
    worldDCS->SetRotationMatrix( temp );
+   float tempTrans[3] ;
+   tempTrans[0] = -vjVecCurrTrans[0];
+   tempTrans[1] = -vjVecCurrTrans[1];
+   tempTrans[2] = -vjVecCurrTrans[2];
+   worldDCS->SetTranslationArray(tempTrans/*vjVecCurrTrans.getData()*/);
 }  
 
 gmtl::Matrix44f cfdQuatCam::GetMatrix( void )

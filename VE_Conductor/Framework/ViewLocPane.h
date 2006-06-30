@@ -94,7 +94,8 @@ enum VIEWLOC_TAB_IDS{
    VIEWLOC_DELETEFLYSEL_COMBOBOX,
    VIEWLOC_SPEED_CONTROL_SLIDER,
    VIEWLOC_LOAD_FILE,
-   VIEWLOC_SAVE_FILE
+   VIEWLOC_SAVE_FILE,
+   REMOVE_VIEW_PT_BUTTON
 };
 
 /*class UI_ViewLocTabScroll: public wxScrolledWindow{
@@ -126,12 +127,12 @@ public:
    unsigned int _vwptsInActiveFlyLocal;
    unsigned int _numStoredFlythroughsLocal;
    std::vector< std::vector <int> > flyThroughList;
-   wxString* _locationName;
-   wxString* _flythroughName;
-   wxString* _activeFlyNames;
-	wxString* _locNamesLocal;
-	wxString* _activeFlyNamesLocal;
-	wxString* _flythroughNamesLocal;
+   wxArrayString _locationName;
+   wxArrayString _flythroughName;
+   wxArrayString _activeFlyNames;
+	wxArrayString _locNamesLocal;
+	wxArrayString _activeFlyNamesLocal;
+	wxArrayString _flythroughNamesLocal;
    void SetCommInstance( VjObs_ptr veEngine );
    void SendCommandsToXplorer( void );
 
