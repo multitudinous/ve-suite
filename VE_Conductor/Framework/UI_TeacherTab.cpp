@@ -29,17 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/UI_TeacherTab.h"
-#include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/CORBAServiceList.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-
 #include "VE_Open/skel/VjObsS.h"
-
-#include <iostream>
-
 #include <wx/notebook.h>
 #include <wx/button.h>
 #include <wx/radiobut.h>
@@ -47,6 +37,14 @@
 #include <wx/radiobox.h>
 #include <wx/msgdlg.h>
 
+#include "VE_Conductor/Framework/UI_TeacherTab.h"
+#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/CORBAServiceList.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
+#include <iostream>
 
 BEGIN_EVENT_TABLE(UI_TeacherTab, wxDialog )
    EVT_RADIOBOX(TEACHER_RBOX,UI_TeacherTab::_onTeacher)
@@ -84,6 +82,8 @@ void UI_TeacherTab::_buildPage()
    {
       fileNames = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->get_teacher_name();
       numStoredScenes = fileNames->length();
+      if(numStoredScenes == 0)
+         numStoredScenes = 1;
    }   
    
    wxString* defaultName;
@@ -101,7 +101,7 @@ void UI_TeacherTab::_buildPage()
    }
    else
    {
-      defaultName = new wxString[ numStoredScenes ];
+      defaultName = new wxString[ 1];
       defaultName[ 0 ] = wxT("No PFB Files");
    }
 

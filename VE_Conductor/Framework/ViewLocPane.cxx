@@ -84,7 +84,7 @@ END_EVENT_TABLE()
 ///////////////
 //Constructor//
 ///////////////
-ViewLocPane::ViewLocPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
+ViewLocPane::ViewLocPane(  )
 :wxDialog(NULL, -1, wxString("Viewing Locations Pane"),
          wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
@@ -920,7 +920,7 @@ void ViewLocPane::_resetSelections( void )
 ///////////////////////////////////////////////////////
 void ViewLocPane::SetCommInstance( VjObs_ptr veEngine )
 {
-   xplorerPtr = VjObs::_duplicate( veEngine );
+   //xplorerPtr = VjObs::_duplicate( veEngine );
 }
 ////////////////////////////////////////////////
 void ViewLocPane::SendCommandsToXplorer( void )

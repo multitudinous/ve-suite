@@ -83,7 +83,6 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("CADTree Manager"))
 {
    _rootNode = 0;
-   _toggleNodeOnOff = true;
 
    SetRootCADNode(node);
 
@@ -238,7 +237,7 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData( item ));
 
       CADNodeMenu* cadNodeMenu = new CADNodeMenu();
-	   cadNodeMenu->SetToggleNodeValue(_toggleNodeOnOff);
+      cadNodeMenu->SetToggleNodeValue(_toggleNodeOnOff[cadNode->GetNode()->GetID()]);
       if(cadNode)
       {
          if(cadNode->GetNode()->GetNodeType() == std::string("Assembly"))
@@ -273,6 +272,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
    if(!_rootNode)
    {
      _rootNode = new CADAssembly();
+     _toggleNodeOnOff[_rootNode->GetID()] = true;
      _activeCADNode = _rootNode;
 
      _cadTreeBuilder->SetRootNode(_rootNode);//,TREE_ID,this);
@@ -292,6 +292,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          assemblyNameDlg.ShowModal();
          CADAssembly* newAssembly = new CADAssembly((assemblyNameDlg.GetValue().GetData()));
          newAssembly->SetParent(_activeCADNode->GetID());
+         _toggleNodeOnOff[newAssembly->GetID()] = true;
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
  
          _geometryTree->AppendItem(_activeTreeNode->GetId(),
@@ -363,13 +364,13 @@ void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
       {
          //std::cout<<"Toggle on!!"<<std::endl;
          toggleValue->SetData(std::string("Toggle Value"),std::string("ON"));
-		 _toggleNodeOnOff = true;
+		   _toggleNodeOnOff[_activeCADNode->GetID()] = true;
       }
       else if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_OFF)
       {
          //std::cout<<"Toggle off!!"<<std::endl;
          toggleValue->SetData(std::string("Toggle Value"),std::string("OFF"));
-         _toggleNodeOnOff = false;
+         _toggleNodeOnOff[_activeCADNode->GetID()] = false;
 	  }
       _dataValuePairList.push_back(toggleValue);
 
@@ -454,11 +455,12 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
    CADPart* newPart = 0;
    std::vector<VE_XML::XMLObject*> loadedNodes;
    loadedNodes = cadReader.GetLoadedXMLObjects();
-
+   
    if(loadedNodes.size())
    {
       //std::cout<<"---Loaded Assembly---"<<std::endl;
       newAssembly = new CADAssembly(*dynamic_cast<CADAssembly*>(loadedNodes.at(0)));
+      _toggleNodeOnOff[newAssembly->GetID()] = true;
    }
    else
    {
@@ -468,6 +470,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
       {
          //std::cout<<"---Loaded Part---"<<std::endl;
          newPart = new CADPart(*dynamic_cast<CADPart*>(loadedNodes.at(0)));
+         _toggleNodeOnOff[newPart->GetID()] = true;
       }
    }
    if(newAssembly || newPart)
@@ -548,7 +551,7 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxFileName fileName )
 
    CADPart* newCADPart = new CADPart(partNameDlg.GetValue().GetData());
    newCADPart->SetCADFileName( vegFileNamePath.c_str() );
-
+   _toggleNodeOnOff[newCADPart->GetID()] = true;
    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 
    _geometryTree->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str()),

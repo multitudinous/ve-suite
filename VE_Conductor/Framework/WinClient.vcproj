@@ -314,6 +314,9 @@
 				RelativePath=".\UI_i.cpp">
 			</File>
 			<File
+				RelativePath=".\UI_TeacherTab.cpp">
+			</File>
+			<File
 				RelativePath=".\UI_TransientDialog.cxx">
 			</File>
 			<File
@@ -391,6 +394,9 @@
 			</File>
 			<File
 				RelativePath=".\TransformUI.h">
+			</File>
+			<File
+				RelativePath=".\UI_TeacherTab.h">
 			</File>
 			<File
 				RelativePath=".\UI_TransientDialog.h">

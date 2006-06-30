@@ -60,6 +60,7 @@ namespace VE_XML
    class DataValuePair;
 }
 #include <string>
+#include <map>
 
 namespace VE_Conductor
 {
@@ -173,7 +174,7 @@ public:
 
    std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The DataValuePair s for the current command.
 
-   bool _toggleNodeOnOff;///Flag determining whether or not to display the selected CADNode.
+   std::map<unsigned int,bool> _toggleNodeOnOff;///Flag determining whether or not to display the selected CADNode.
    std::string _commandName;///<The command name.
 
    CADNodePropertiesDlg* _propsDlg;///<The Property dialog.

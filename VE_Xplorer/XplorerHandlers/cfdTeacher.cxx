@@ -221,7 +221,7 @@ void cfdTeacher::RecordScene()
    if ( _worldDCS )
    {
       cfdGroup* tempGroup = new cfdGroup();
-      tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
+      //tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
       gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
       //temporarily reset the world DCS matrix to the identity
@@ -234,7 +234,7 @@ void cfdTeacher::RecordScene()
       writePFBFile(this->_worldDCS,(std::string)pfb_filename.c_str());
 
       tempGroup->RemoveChild(_worldDCS);
-      tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
+      //tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
       delete tempGroup;
          
       this->_worldDCS->SetMat( m );
@@ -366,7 +366,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
          
          cfdGroup* tempGroup = new cfdGroup();
                   
-         tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
+         //tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
          
          gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
@@ -386,7 +386,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 
 
          tempGroup->RemoveChild(_worldDCS);
-         tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
+         //tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
          delete tempGroup;
          /*float* scaleArray = this->_worldDCS->GetScaleArray();
          float tempScale = 1.0f / scaleArray[ 0 ];

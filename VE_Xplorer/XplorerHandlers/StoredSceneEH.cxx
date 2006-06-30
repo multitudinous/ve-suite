@@ -80,16 +80,16 @@ void StoredSceneEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       if(command->GetDataValuePair("LOAD_PFB_FILE"))
       {
          command->GetDataValuePair("LOAD_PFB_FILE")->GetData(whichChild);
-	 VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->LoadScene(whichChild);
+	      VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->LoadScene(whichChild);
          
       }
       else if(command->GetDataValuePair("CLEAR_PFB_FILE"))
       {
-	 VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->ClearStoredScenes();
+	      VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->ClearStoredScenes();
       }
       else if(command->GetDataValuePair("RECORD_SCENE"))
       {
-	 VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->RecordScene();
+	      VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->RecordScene();
       }
    }
    catch(...)
