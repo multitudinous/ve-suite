@@ -26,7 +26,6 @@ SRCS=\
    PluginLoader.cpp \
    UI_i.cpp \
    UI_TransientDialog.cxx\
-   UI_TeacherTab.cpp\
    SoundsPane.cpp \
    ViewLocPane.cxx\
    TBToolBar.cxx \
@@ -41,7 +40,8 @@ SRCS=\
    isosurfaces.cpp\
    polydata.cpp\
    CORBAServiceList.cxx\
-   ScalarToolsDlg.cxx
+   ScalarToolsDlg.cxx\
+	UI_TeacherTab.cpp
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
