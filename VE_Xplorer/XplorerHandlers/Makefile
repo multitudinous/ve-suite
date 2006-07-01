@@ -132,7 +132,8 @@ SRCS=\
    TextureBasedEventHandler.cxx\
    TBActivateEH.cxx\
    TBUpdateSolutionEH.cxx\
-   QCLoadFileEH.cxx
+   QCLoadFileEH.cxx\
+   StoredSceneEH.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g
