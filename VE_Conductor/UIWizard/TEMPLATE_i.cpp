@@ -116,12 +116,6 @@ char * Body_Unit_i::GetStatusMessage (
     // Add your implementation here
     const char *status;
     bool rv;
-    Package p;
-    p.SetPackName("Status");
-    p.SetSysId("status.xml");
-    p.intfs.resize(1);
-    p.intfs[0].setInt("return_state", return_state);
-    status = p.Save(rv);
     return CORBA::string_dup(status);
   }
   
@@ -151,10 +145,6 @@ void Body_Unit_i::SetParams (
     if (string(param)=="")
       return;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
-    Package p;
-        
-    p.SetSysId("gui.xml");
-    p.Load(param, strlen(param));
     //Now make use of p.intfs to get your GUI vars out
     //eff = p.intfs[0].getDouble("eff");
     //pressure_out = p.intfs[0].getDouble("pressure_out");
@@ -217,19 +207,24 @@ char * Body_Unit_i::GetName (
     return CORBA::string_dup(UnitName_.c_str());
   }
 
+char * Body_Unit_i::Query (
+                             ACE_ENV_SINGLE_ARG_DECL
+                             )
+ACE_THROW_SPEC ((
+                 CORBA::SystemException
+                 , Error::EUnknown
+                 ))
+{
+   // Add your implementation here
+   std::cout<<UnitName_<<" :GetName called"<<endl;
+   return CORBA::string_dup(UnitName_.c_str());
+}
+
 void Body_Unit_i::error (std::string msg)
 {
-  Package p;
   const char* result;
   bool rv;
-  p.SetPackName("result");
-  p.SetSysId("result.xml");
-  msg+="\n";
   executive_->SetModuleMessage(id_, msg.c_str());
-  p.intfs.clear();
-  result = p.Save(rv);
-  return_state = 1;
-  executive_->SetModuleResult(id_, result); //this marks the end the execution
 }
 
 void Body_Unit_i::warning (std::string msg)

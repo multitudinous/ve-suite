@@ -32,11 +32,7 @@
 #ifndef UNIT_I_H_
 #define UNIT_I_H_
 
-#include "moduleS.h"
-#include "package.h" //so it can use the xerces stuff
-#if !defined (ACE_LACKS_PRAGMA_ONCE)
-#pragma once
-#endif /* ACE_LACKS_PRAGMA_ONCE */
+#include <VE_Open/skel/moduleS.h>
 
 //Class Body_Unit_i
 class  Body_Unit_i : public virtual POA_Body::Unit
@@ -157,6 +153,14 @@ virtual char * GetName (
     CORBA::SystemException
     , Error::EUnknown
   ));
+
+virtual char * Query (
+                        ACE_ENV_SINGLE_ARG_DECL
+                        )
+   ACE_THROW_SPEC ((
+                    CORBA::SystemException
+                    , Error::EUnknown
+                    ));
 };
 
 #endif

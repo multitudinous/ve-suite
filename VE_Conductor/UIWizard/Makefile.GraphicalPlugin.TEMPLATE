@@ -38,13 +38,9 @@ PLUGIN = VETemplate
 # Include macros and targets
 #----------------------------------------------------------------------------
 
-EXTRA_INCLUDES+=	\
-               -I${VE_SUITE_HOME}/VE_Xplorer \
-               -I${VE_SUITE_HOME} \
-               -I${VE_SUITE_HOME}/VE_Conductor/Framework \
-               -I${VE_SUITE_HOME}/VE_CE/skel
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}
 
-EXTRA_PATHS_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_Xplorer 
+#EXTRA_PATHS_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_Xplorer 
 
 EXEC_TAG = _tao
 

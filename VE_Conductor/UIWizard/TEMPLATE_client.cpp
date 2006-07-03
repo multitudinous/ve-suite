@@ -29,7 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "moduleC.h"
+#include <VE_Open/skel/moduleC.h>
+#include <VE_Open/XML/XMLReaderWriter.h>
+
 #include <orbsvcs/CosNamingC.h>
 #include "Template_i.h"
 #include <tao/BiDir_GIOP/BiDirGIOP.h>

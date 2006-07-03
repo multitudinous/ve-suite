@@ -31,16 +31,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VETemplate.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdGeode.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/cfdModel.h"
-#include "VE_Xplorer/cfdReadParam.h"
-#include "VE_Xplorer/fileIO.h"
-#include "VE_Xplorer/cfdFILE.h"
-#include "VE_Xplorer/cfdDataSet.h"
-#include "VE_Conductor/Framework/string_ops.h"
-#include "VE_Xplorer/cfdCursor.h"
+#include <VE_Xplorer/SceneGraph/cfdGroup.h>
+#include <VE_Xplorer/SceneGraph/cfdGeode.h>
+#include <VE_Xplorer/SceneGraph/cfdDCS.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
+#include <VE_Xplorer/Utilities/fileIO.h>
+#include <VE_Xplorer/XplorerHandlers/cfdFILE.h>
+#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
+#include <VE_Conductor/Network/string_ops.h>
+#include <VE_Xplorer/XplorerHandlers/cfdCursor.h>
 
 #include <fstream>
 //#include <cstdlib>
@@ -63,22 +63,14 @@ using namespace VE_SceneGraph;
 VETemplate::VETemplate( void ) : cfdVEBaseClass()
 {
   _objectName ="Template"; // Needs to match plugin name
-   //_onSceneGraph = false;
-   _param = NULL;
 }
 
 // Destructor
 VETemplate::~VETemplate( void )
 {
-   if ( _param )
-      delete [] _param;
 }
 
 void VETemplate::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   this->_param = new char[100];
-   strcpy( this->_param, "./VETemplate.param");
-   //cout << _param << endl;
-   CreateObjects();
 }

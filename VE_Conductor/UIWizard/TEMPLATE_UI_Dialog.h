@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEMPLATE_UI_DIALOG_H
 #define TEMPLATE_UI_DIALOG_H
-#include "VE_Conductor/Framework/UIDialog.h"
+#include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include <vector>
 #include <string>
 

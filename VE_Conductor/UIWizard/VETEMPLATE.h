@@ -32,7 +32,7 @@
 #ifndef VE_Template_H
 #define VE_Template_H
 
-#include "VE_Xplorer/cfdVEBaseClass.h"
+#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
 
 namespace VE_SceneGraph
 {
