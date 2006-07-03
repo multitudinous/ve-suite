@@ -117,8 +117,7 @@ public:
    ///Launch the CADNode modifier menu.
    ///\param event The right-click event.
    void _popupCADNodeManipulatorMenu(wxTreeEvent& event);
-   //void _popupCADNodeManipulatorMenu(wxMouseEvent &event);
-   //void _popupCADNodeManipulatorMenu(wxContextMenuEvent& event);
+
    ///Add a node to a selected node in the tree based from a VEG file.
    ///\param event The command event.
    void _addNodeFromVEGFile(wxCommandEvent& event);
@@ -146,6 +145,9 @@ public:
    ///Create a cloned node from an exisiting node in the tree.
    ///\param event The command event.
    void _cloneNode(wxCommandEvent& event);
+
+   ///Make sure the tree is updated properly
+   void _ensureTree();
 
    ///Toggle a node on/off.
    ///\param event The command event.

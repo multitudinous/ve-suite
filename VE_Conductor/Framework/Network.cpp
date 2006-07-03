@@ -2492,12 +2492,16 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 
       cadDialog->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
-
+   cadDialog->SetRootCADNode(veModel->GetGeometry());
    cadDialog->SetVjObsPtr( xplorerPtr.in() );
    cadDialog->ShowModal();
    // Get cadnode back
    if(cadDialog->GetRootCADNode())
    {
+      if(!veModel->GetGeometry())
+      {
+         veModel->AddGeometry();
+      }
       *( dynamic_cast< VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
       *( dynamic_cast< VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
    }
