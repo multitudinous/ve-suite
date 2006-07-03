@@ -82,11 +82,10 @@ namespace VE_Xplorer
       private:
          VE_SceneGraph::cfdDCS* DCS;
          VE_SceneGraph::cfdDCS* _worldDCS;
-         VE_SceneGraph::cfdNode** node;  // array of nodes
-         int numFiles;
+         std::vector< VE_SceneGraph::cfdNode* > node;  // array of nodes
+         int pfb_count;
 	      std::vector<std::string> pfbFileNames;
          std::string directory;
-         int pfb_count;
          cfdWriteTraverser* _cfdWT;
    };
 }

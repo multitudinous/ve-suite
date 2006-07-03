@@ -38,6 +38,7 @@ class wxButton;
 class wxRadioButton;
 class wxSizer;
 class wxRadioBox;
+class wxBoxSizer;
 
 enum TEACHER_TAB_IDS
 {
@@ -59,6 +60,7 @@ protected:
    //the controls
    wxRadioBox* _teacherRBox;
    wxButton* _clearButton;
+   wxBoxSizer* teacherPanelGroup;
    //event handlers
    void _onTeacher(wxCommandEvent& event);
    void _onClear(wxCommandEvent& event);

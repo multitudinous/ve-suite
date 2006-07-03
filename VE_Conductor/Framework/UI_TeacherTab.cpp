@@ -62,11 +62,28 @@ UI_TeacherTab::UI_TeacherTab(wxWindow* tControl)
    _parent = tControl;
    _teacherRBox = 0;
 
+   //the panel sizer
+   teacherPanelGroup = new wxBoxSizer(wxVERTICAL);
+
    _buildPage();
 
+   wxBoxSizer* buttonPanelGroup = new wxBoxSizer(wxHORIZONTAL);
+   wxButton* _closeButton = new wxButton( this, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+   buttonPanelGroup->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+   
+   wxButton* recordButton = new wxButton( this, RECORD_SCENE, _T("Record Scene"), wxDefaultPosition, wxDefaultSize, 0 );
+   buttonPanelGroup->Add(recordButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+   
+   teacherPanelGroup->Add( buttonPanelGroup,0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+   
    wxSize displaySize = ::wxGetDisplaySize();
    wxRect dialogPosition( displaySize.GetWidth() * 0.667f, 125, displaySize.GetWidth() * 0.333f, 500 );
    this->SetSize( dialogPosition );
+   
+   //set this flag and let wx handle alignment
+   SetAutoLayout(true);
+   //assign the group to the panel
+   SetSizer(teacherPanelGroup);   
 }
 //////////////////////////////
 //build the sound tab       //
@@ -81,60 +98,45 @@ void UI_TeacherTab::_buildPage()
    if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
    {
       fileNames = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->get_teacher_name();
-      numStoredScenes = fileNames->length();
-      if(numStoredScenes == 0)
-         numStoredScenes = 1;
+      numStoredScenes = fileNames->length() + 1;
    }   
    
    wxString* defaultName;
-
    if ( numStoredScenes > 1 )
    {
       defaultName = new wxString[ numStoredScenes ];
-      defaultName[ 0 ] = wxT("No PFB Files Selected");
+      defaultName[ 0 ] = wxT("No Stored Scenes Selected");
 
       for(CORBA::ULong i = 1; i < (unsigned int)numStoredScenes; ++i )
       {
          defaultName[ i ] = fileNames[ i - 1 ];
-         std::cout << "PFB  Name " << i << " : " << defaultName[ i ] << std::endl;
+         //std::cout << "PFB  Name " << i << " : " << defaultName[ i ] << std::endl;
       }
    }
    else
    {
       defaultName = new wxString[ 1];
-      defaultName[ 0 ] = wxT("No PFB Files");
+      defaultName[ 0 ] = wxT("No Stored Scenes");
    }
 
-   _teacherRBox = new wxRadioBox(this, TEACHER_RBOX, wxT("PFB Files"),
+   if ( _teacherRBox )
+   {
+      teacherPanelGroup->Detach( _teacherRBox );
+      _teacherRBox->Destroy();
+      //delete _teacherRBox;
+      _teacherRBox = 0;
+   }
+   
+   _teacherRBox = new wxRadioBox(this, TEACHER_RBOX, wxT( "Stored Scenes" ),
                                 wxDefaultPosition, wxDefaultSize, numStoredScenes,
                                 defaultName,1 , wxRA_SPECIFY_COLS);
+   teacherPanelGroup->Add(_teacherRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    if ( numStoredScenes == 1 )
    {
       _teacherRBox->Enable( false );
       //_teacherRBox->Enable( false );
    }
-
-   // Clear button
-   //_clearButton = new wxButton(this, TEACHER_CLEAR_BUTTON, wxT("Clear PFB Files"));
-
-   //the panel sizer
-   wxBoxSizer* teacherPanelGroup = new wxBoxSizer(wxVERTICAL);
-   teacherPanelGroup->Add(_teacherRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-
-   wxBoxSizer* buttonPanelGroup = new wxBoxSizer(wxHORIZONTAL);
-   wxButton* _closeButton = new wxButton( this, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
-   buttonPanelGroup->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-   wxButton* recordButton = new wxButton( this, RECORD_SCENE, _T("Record Scene"), wxDefaultPosition, wxDefaultSize, 0 );
-   buttonPanelGroup->Add(recordButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-   teacherPanelGroup->Add( buttonPanelGroup,0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-   //set this flag and let wx handle alignment
-   SetAutoLayout(true);
-   //assign the group to the panel
-   SetSizer(teacherPanelGroup);
 }
 //////////////////
 //event handling//
@@ -199,6 +201,7 @@ void UI_TeacherTab::_onClear(wxCommandEvent& event)
    {
       // CORBA releases the allocated memory so we do not have to
       dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+      _buildPage();
    }
    catch ( ... )
    {

@@ -70,11 +70,8 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
                           << std::endl << vprDEBUG_FLUSH;
 
    // initialize in case the directory is not there...
-   this->numFiles = 0;
-   pfb_count = 0;
    _cfdWT = NULL;
    this->DCS = NULL;
-   this->node = NULL;
    this->_worldDCS = 0;
    pfb_count = 0;
    _cfdWT = NULL;
@@ -133,29 +130,30 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
 	}
 
    // how many performer binaries found ?
-   this->numFiles = this->pfbFileNames.size();
-   vprDEBUG(vesDBG,1) << "Number of performer binaries: " << numFiles
+   pfb_count = this->pfbFileNames.size();
+   vprDEBUG(vesDBG,1) << "Number of performer binaries: " << pfb_count
                           << std::endl << vprDEBUG_FLUSH;
 
-   this->node = new VE_SceneGraph::cfdNode * [ this->numFiles ];
+   //this->node = new VE_SceneGraph::cfdNode * [ this->numFiles ];
   
-   for (int i=0; i<this->numFiles; i++)
+   for (int i=0; i<this->pfb_count; i++)
    {
-      this->node[ i ] = new VE_SceneGraph::cfdNode();
-	   this->node[ i ]->LoadFile( (std::string)this->pfbFileNames[ i ].c_str() );
+      this->node.push_back( new VE_SceneGraph::cfdNode() );
+	   this->node.back()->LoadFile( this->pfbFileNames[ i ] );
    }
 }
 
 cfdTeacher::~cfdTeacher( )
 {
    int i;
-   for ( i = 0; i < this->numFiles; i++)
+   for ( i = 0; i < this->node.size(); i++)
    {  
       this->DCS->RemoveChild( this->node[i] );
       delete this->node[i];
    }
    delete this->DCS;
-
+   node.clear();
+   
    vprDEBUG(vesDBG,1) << "exiting cfdTeacher destructor"
                           << std::endl << vprDEBUG_FLUSH;
 }
@@ -172,14 +170,14 @@ VE_SceneGraph::cfdDCS * cfdTeacher::GetcfdDCS()
 
 int cfdTeacher::getNumberOfFiles()
 {
-   return this->numFiles;
+   return pfbFileNames.size();
 }
 
 std::string cfdTeacher::getFileName( int i )
 {
-   if ( i >= 0 && i < this->numFiles )
+   if ( i >= 0 && i < this->pfbFileNames.size() )
    {
-	   return (std::string)this->pfbFileNames[i].c_str();
+	   return this->pfbFileNames[i];
    }
    else
    {
@@ -213,6 +211,7 @@ void cfdTeacher::RecordScene()
 #endif
    std::string dirString = dirStringStream.str();
    pfb_filename = dirString.c_str();
+   pfbFileNames.push_back( pfb_filename );
 
    vprDEBUG(vesDBG,0) << "scene stored as " << pfb_filename
                              << std::endl << vprDEBUG_FLUSH;
@@ -220,7 +219,7 @@ void cfdTeacher::RecordScene()
    // store the world DCS matrix..
    if ( _worldDCS )
    {
-      cfdGroup* tempGroup = new cfdGroup();
+      //cfdGroup* tempGroup = new cfdGroup();
       //tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
       gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
@@ -230,25 +229,26 @@ void cfdTeacher::RecordScene()
       // Make an identity matrix
       gmtl::identity( I );
       this->_worldDCS->SetMat( I );
-      tempGroup->AddChild(_worldDCS);
-      writePFBFile(this->_worldDCS,(std::string)pfb_filename.c_str());
+      //tempGroup->AddChild(_worldDCS);
+      writePFBFile(this->_worldDCS, pfb_filename );
 
-      tempGroup->RemoveChild(_worldDCS);
+      //tempGroup->RemoveChild(_worldDCS);
       //tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
-      delete tempGroup;
+      //delete tempGroup;
          
       this->_worldDCS->SetMat( m );
    }
    else
    {
-      writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(),
-                    (std::string)pfb_filename);
+      writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(), pfb_filename);
    }
+
+   this->node.push_back( new VE_SceneGraph::cfdNode() );
+   this->node.back()->LoadFile( this->pfbFileNames.back() );
    // store the active geometry and viz objects as a pfb
    // (but not the sun, menu, laser, or text)
-   int store_int = 0;
-
-   vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << store_int
+ 
+   vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << pfb_count
                              << std::endl << vprDEBUG_FLUSH;
       
     // increment the counter and reset the id to -1...
