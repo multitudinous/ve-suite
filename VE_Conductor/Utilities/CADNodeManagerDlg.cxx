@@ -492,7 +492,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
       {
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newPart);
       }
-      //_cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
+      _cadTreeBuilder->GetWXTreeCtrl()->DeleteAllItems();
       _cadTreeBuilder->SetRootNode(_rootNode);
       _cadTreeBuilder->Traverse();
       _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
