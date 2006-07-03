@@ -102,7 +102,7 @@ void UI_TeacherTab::_buildPage()
    }   
    
    wxString* defaultName;
-   if ( numStoredScenes > 1 )
+   //if ( numStoredScenes > 1 )
    {
       defaultName = new wxString[ numStoredScenes ];
       defaultName[ 0 ] = wxT("No Stored Scenes Selected");
@@ -113,11 +113,11 @@ void UI_TeacherTab::_buildPage()
          //std::cout << "PFB  Name " << i << " : " << defaultName[ i ] << std::endl;
       }
    }
-   else
-   {
-      defaultName = new wxString[ 1];
-      defaultName[ 0 ] = wxT("No Stored Scenes");
-   }
+   //else
+   //{
+   //   defaultName = new wxString[ 1];
+   //   defaultName[ 0 ] = wxT("No Stored Scenes");
+   //}
 
    if ( _teacherRBox )
    {
@@ -130,13 +130,17 @@ void UI_TeacherTab::_buildPage()
    _teacherRBox = new wxRadioBox(this, TEACHER_RBOX, wxT( "Stored Scenes" ),
                                 wxDefaultPosition, wxDefaultSize, numStoredScenes,
                                 defaultName,1 , wxRA_SPECIFY_COLS);
-   teacherPanelGroup->Add(_teacherRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   teacherPanelGroup->Insert(0,_teacherRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   if ( numStoredScenes == 1 )
-   {
-      _teacherRBox->Enable( false );
+   //if ( numStoredScenes == 1 )
+   //{
+   //   _teacherRBox->Enable( false );
       //_teacherRBox->Enable( false );
-   }
+  // }
+   wxSize temp = GetSize();
+   temp.SetHeight( temp.GetHeight() +1);
+   temp.SetWidth( temp.GetWidth()+1 );
+   SetSize( temp );      
 }
 //////////////////
 //event handling//
