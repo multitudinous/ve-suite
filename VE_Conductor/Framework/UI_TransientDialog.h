@@ -23,7 +23,6 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: UI_TransientDialog.h UI_TransientDialog.hUI_TransientDialog.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------

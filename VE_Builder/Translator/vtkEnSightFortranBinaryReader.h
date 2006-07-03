@@ -1,7 +1,6 @@
 /*=========================================================================
 
   Program:   Visualization Toolkit
-  Module:    $RCSfile: vtkEnSightFortranBinaryReader.h,v $
   Language:  C++
   Date:      $Date$
   Version:   $Revision$

@@ -23,7 +23,6 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: NavigationPane.cxx NavigationPane.cxxUI_NavTab.cpp,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------

@@ -23,7 +23,6 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: paraThread.cpp paraThread.cppparaThread.cpp,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------

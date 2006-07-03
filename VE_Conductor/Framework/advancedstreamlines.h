@@ -23,7 +23,6 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: advancedstreamlines.h advancedstreamlines.hGlobalParamDialog.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------

@@ -23,7 +23,6 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: Avail_Modules.h Avail_Modules.hAvail_Modules.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
