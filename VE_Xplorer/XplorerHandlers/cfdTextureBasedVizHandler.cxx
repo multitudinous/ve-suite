@@ -87,7 +87,7 @@ using namespace VE_Xplorer;
 //////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 {
-   _animationDelay = 1.0;
+   _animationDelay = 0.0001f;
    _appTime = 0.0;
    _paramFile = '\0';
    _cmdArray = 0;

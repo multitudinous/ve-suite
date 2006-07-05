@@ -59,7 +59,7 @@ _subloadImageHeight(0),
 _subloadImageDepth(0)
 {
    _tm = 0;
-   _delay = 1.0;
+   _delay = 0.0001f;
    _isSlave = false;
    _currentFrame = 0;
    _isLuminance = false;
