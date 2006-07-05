@@ -85,6 +85,7 @@ void plot3dReader::Plot3DPreTranslateCbk::Preprocess(int argc,char** argv,
       toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-multiGridFlag"), multiGridFlag );
       toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-iblankFlag"), iblankFlag);
       toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-numberofDimensions"), numberOfDimensions);
+      toVTK->SetNumberOfFoundFiles( 1 );
    }
 
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
@@ -120,10 +121,12 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
 {
    VE_Builder::plot3dReader* plot3DToVTK =
    dynamic_cast< VE_Builder::plot3dReader* >( toVTK );
+
    if ( plot3DToVTK )
    {
       writer      = vtkStructuredGridWriter::New();
       reader      = vtkPLOT3DReader::New();
+      reader->DebugOn();
       //reader->ReleaseDataFlagOn();   
       unswriter   = vtkUnstructuredGridWriter::New();
       unsgrid     = vtkUnstructuredGrid::New();
@@ -214,7 +217,8 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
       numGrids = reader->GetNumberOfGrids();
       grids = new vtkStructuredGrid*[ numGrids ];
       
-      std::cout << "|   Number of grids in " <<  plot3dGeomFileName << " : " << 
+      reader->Print( std::cout );
+      std::cout << "|   Number of grids in " << 
          numGrids << std::endl;
       //writer->DebugOn();
       writer->BreakOnError();
