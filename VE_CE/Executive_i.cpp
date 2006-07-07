@@ -336,39 +336,40 @@ void Body_Executive_i::execute_next_mod( long module_id )
    //sm.Load(msg, strlen(msg));
 
    //delete msg;
+	if (msg!="")
+	{
+		VE_XML::XMLReaderWriter networkWriter;
+		networkWriter.UseStandaloneDOMDocumentManager();
+		networkWriter.ReadFromString();
+		networkWriter.ReadXMLData( msg, "Command", "Command" );
+		std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
-   VE_XML::XMLReaderWriter networkWriter;
-   networkWriter.UseStandaloneDOMDocumentManager();
-   networkWriter.ReadFromString();
-   networkWriter.ReadXMLData( msg, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-
-   if ( !objectVector.empty() ) 
-   {
-      VE_XML::Command* returnState = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+		if ( !objectVector.empty() ) 
+		{
+			VE_XML::Command* returnState = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
   
-      long rs;
-      // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
-      returnState->GetDataValuePair( "RETURN_STATE" )->GetData( rs );
+			long rs;
+			// 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
+			returnState->GetDataValuePair( "RETURN_STATE" )->GetData( rs );
 
-      if ( rs == -1 ) 
-         returnState->GetDataValuePair( "return_state" )->GetData( rs );
+			if ( rs == -1 ) 
+			returnState->GetDataValuePair( "return_state" )->GetData( rs );
     
-      _network->GetModule(_network->moduleIdx(module_id))->_return_state = rs;
+			_network->GetModule(_network->moduleIdx(module_id))->_return_state = rs;
     
-      if(rs!=1) 
-      {
-         int rt = _scheduler->execute(_network->GetModule(_network->moduleIdx(module_id)))-1;
-         if(rt<0) 
-         {
-            ClientMessage("Network execution complete\n");
-         }
-         else if(_mod_units.find(_network->GetModule(rt)->GetModuleName())==_mod_units.end()) 
-         {
-	         std::cerr <<  "Cannot find running unit " << _network->GetModule(rt)->GetModuleName() << std::endl;
-         }
-         else 
-         {
+			if(rs!=1) 
+			{
+				int rt = _scheduler->execute(_network->GetModule(_network->moduleIdx(module_id)))-1;
+				if(rt<0) 
+				{
+				ClientMessage("Network execution complete\n");
+			}
+			else if(_mod_units.find(_network->GetModule(rt)->GetModuleName())==_mod_units.end()) 
+			{
+				std::cerr <<  "Cannot find running unit " << _network->GetModule(rt)->GetModuleName() << std::endl;
+			}
+			else 
+			{
             //bool        rv2;
             //std::string str2;
    
@@ -378,40 +379,41 @@ void Body_Executive_i::execute_next_mod( long module_id )
             //p2.intfs.push_back(_network->GetModule(rt)->_inputs);
             //str2 = p2.Save(rv2);
    
-            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-            std::vector< VE_XML::Command* > inputList = _network->GetModule( rt )->GetInputData();
-            for ( size_t k = 0; k < inputList.size(); ++k )
-            {
-               nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+				std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+				std::vector< VE_XML::Command* > inputList = _network->GetModule( rt )->GetInputData();
+				for ( size_t k = 0; k < inputList.size(); ++k )
+				{
+					nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
                                  inputList.at( k ), std::string( "vecommand" ) ) 
                               );
-            }
-            std::string fileName( "returnString" );
-            //VE_XML::XMLReaderWriter netowrkWriter;
-            networkWriter.UseStandaloneDOMDocumentManager();
-            networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+				}
+				std::string fileName( "returnString" );
+				//VE_XML::XMLReaderWriter netowrkWriter;
+				networkWriter.UseStandaloneDOMDocumentManager();
+				networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
 
             //if(rv2) 
             //{
                //std::cout << _network->module(rt)->_name << "\n" << str2 << std::endl;
-               try 
-               {
+				try 
+				{
                   _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetParams( fileName.c_str() );
                   _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetID( (long)_network->GetModule(rt)->get_id() );
                   execute( _network->GetModule(rt)->GetModuleName() );
-               }
-               catch(CORBA::Exception &)
-               {
+				}
+				catch(CORBA::Exception &)
+				{
                   std::cerr << "Cannot contact Module " << module_id << std::endl;
-               }
+				}
             //}
             //else  
             //{
             //   std::cerr << "Error packing " << module_id << "'s Inputs" << std::endl;
             //}
-         }
-      }
-   }
+			}
+		  }
+	 }
+  }
 }
 ////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetModuleMessage (
