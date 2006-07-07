@@ -63,6 +63,10 @@ VE_XML::XMLObject* XMLCreator::CreateNewXMLObject(std::string objectType)
    {
       return new Command();
    }
+   else if ( objectType == "vecommand")
+   {
+	   return new Command();
+   }
    else if(objectType == "DataValuePair")
    {
       return new DataValuePair();

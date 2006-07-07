@@ -141,8 +141,13 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
       _xmlObjects.clear();
       for ( unsigned int i = 0; i < nXMLObjects; ++i )
       {
-		  _xmlObjects.push_back( XMLObjectFactory::Instance()->CreateXMLObject(tagName,objectNamespace) );
-         _xmlObjects.back()->SetObjectFromXMLData( xmlObjects->item(i) );
+		  VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->CreateXMLObject(tagName,objectNamespace);
+		  if (newXMLobj!=NULL)
+		  {
+			_xmlObjects.push_back( newXMLobj );
+			_xmlObjects[i]->SetObjectFromXMLData( xmlObjects->item(i) );
+		  }
+         //_xmlObjects.back()->SetObjectFromXMLData( xmlObjects->item(i) );
       }
    }
 }
