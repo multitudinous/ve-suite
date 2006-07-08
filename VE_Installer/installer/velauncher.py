@@ -1153,7 +1153,6 @@ class JconfList:
         nList.sort()
         return nList
 
-
 class JconfWindow(wx.Dialog):
     """A window for editing a list of Jconf files.
 
@@ -1283,7 +1282,7 @@ class JconfWindow(wx.Dialog):
             finalName = self.jDict.Add(name, path)
             if name != finalName:
                 self.NameChangeWarning(name, finalName)
-            self.Update(self.confList.GetStringSelection())
+            self.Update(finalName)
             self.DeleteEnabledCheck()
         dlg.Destroy()
 
@@ -1740,9 +1739,8 @@ class Launch:
             else:
                 executable = "ERROR"
             ##Xplorer's start call
-            os.system('start "' + XPLORER_SHELL_NAME + '" ' +
-                      '"%s"' %(executable) +
-                      " " + jconf +
+            os.system('start "%s"' %(XPLORER_SHELL_NAME) +
+                      ' %s "%s"' %(executable, jconf) +
                       " -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
@@ -1791,7 +1789,7 @@ class Launch:
             depsDir = str(os.getenv("VE_DEPS_DIR"))
             master = str(os.getenv("VEXMASTER"))
             command = 'python velauncher.py -x %s' %(xplorerType) + \
-                      ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
+                      ' -j "%s" -t %s -p %s' %(jconf, taoMachine, taoPort) + \
                       ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
 ##            print command ##TESTER
             clusterFileName = "cluster.tsh"
@@ -1831,6 +1829,7 @@ class Launch:
                 desktop = "-VESDesktop %s %s" % (w, h)
             else:
                 desktop = ""
+            ##Set Xplorer's type
             if typeXplorer == 0: ##OSG selection
                 executable = "project_tao_osg"
             elif typeXplorer == 1: ##OSG VEP selection
