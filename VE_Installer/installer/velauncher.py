@@ -1741,7 +1741,7 @@ class Launch:
                 executable = "ERROR"
             ##Xplorer's start call
             os.system('start "' + XPLORER_SHELL_NAME + '" ' +
-                      executable +
+                      '"%s"' %(executable) +
                       " " + jconf +
                       " -ORBInitRef" +
                       " NameService=" +
@@ -1843,7 +1843,7 @@ class Launch:
             ##Error tag: Find $$ERROR_1$$ for more details.
             os.system("%s -ORBInitRef NameService=" %(executable) +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
-                      "%s %s &" %(jconf, desktop))
+                      '"%s" %s &' %(jconf, desktop))
         return
 
     def EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
