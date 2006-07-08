@@ -585,19 +585,18 @@ const std::string cfdDCS::GetName( void )
 #endif
 }
 ////////////////////////////////////
-/*void cfdDCS::SetName( std::string name )
+void cfdDCS::SetName( std::string name )
 {
-   const std::string test(name);
 #ifdef _OPENSG
    std::cerr << " ERROR: cfdDCS::SetName is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 #ifdef _PERFORMER
-   _dcs->setName( test.c_str() );
+   _dcs->setName( name.c_str() );
 #elif _OSG
-   _dcs->setName( test );
+   _dcs.get()->setName( name );
 #endif
-}*/
+}
 ////////////////////////////////////////////////////////////
 int cfdDCS::ReplaceChild( cfdNode* childToBeReplaced,
                          cfdNode* newChild)
