@@ -129,6 +129,10 @@ VE_XML::XMLObject* XMLCreator::CreateNewXMLObjectCopy(std::string objectType,
    {
       return new Command(*dynamic_cast<Command*>(objectToCopy));
    }
+   else if ( objectType == "vecommand")
+   {
+	   return new Command(*dynamic_cast<Command*>(objectToCopy));
+   }
    else if(objectType == "DataValuePair")
    {
       return new DataValuePair(*dynamic_cast<DataValuePair*>(objectToCopy));

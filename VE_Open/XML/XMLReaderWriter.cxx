@@ -141,13 +141,16 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
       _xmlObjects.clear();
       for ( unsigned int i = 0; i < nXMLObjects; ++i )
       {
-		  VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->CreateXMLObject(tagName,objectNamespace);
-		  if (newXMLobj!=NULL)
-		  {
-			_xmlObjects.push_back( newXMLobj );
-			_xmlObjects[i]->SetObjectFromXMLData( xmlObjects->item(i) );
-		  }
-         //_xmlObjects.back()->SetObjectFromXMLData( xmlObjects->item(i) );
+         VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->CreateXMLObject(tagName,objectNamespace);
+         if ( newXMLobj != NULL )
+         {
+            _xmlObjects.push_back( newXMLobj );
+            _xmlObjects[i]->SetObjectFromXMLData( xmlObjects->item(i) );
+         }
+         else
+         {
+            std::cerr << "VE-Open XMLReaderWriter Error : No creator method for tagname = " << tagname << std::endl;
+         }
       }
    }
 }
