@@ -298,8 +298,11 @@ bool AppFrame::Show(bool value)
       ::wxDisplaySize(&displayWidth,&displayHeight);
       wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
 
-      wxRect dialogPosition( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+      wxRect dialogPosition( 2*displayWidth/3, 
+                             bbox.GetBottomRight().y, 
+                             displayWidth/3, 
+                             (displayHeight-bbox.GetBottomRight().y)/2 
+                           );
       _treeView->SetSize( dialogPosition );
 
       status = _treeView->Show();
@@ -397,13 +400,19 @@ wxRect AppFrame::GetAppropriateSubDialogSize()
    if(_displayMode == "Desktop")
    {
       wxRect bbox = GetRect();
-      return wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        displayWidth/3, .5*(displayHeight-bbox.GetBottomRight().y) );
+      return wxRect( 2*displayWidth/3, 
+                     bbox.GetBottomRight().y, 
+                     displayWidth/3, 
+                     (displayHeight-bbox.GetBottomRight().y)/2 
+                   );
    }
    else
    {
-      return wxRect( 2*displayWidth/3, 0, 
-                   displayWidth/3, .5*(displayHeight) );
+      return wxRect( 2*displayWidth/3, 
+                     0, 
+                     displayWidth/3, 
+                     displayHeight/2 
+                   );
    }
 }
 wxRect AppFrame::DetermineFrameSize (wxConfig* config)
@@ -1254,12 +1263,7 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
    if ( navPane == 0 )
    {
       // create pane and set appropriate vars
-      navPane = new NavigationPane( GetXplorerObject(), domManager );
-   }
-   else
-   {
-      // set pointer to corba object for comm
-      navPane->SetCommInstance( GetXplorerObject() );
+      navPane = new NavigationPane();
    }
    // now show it
    navPane->Show();

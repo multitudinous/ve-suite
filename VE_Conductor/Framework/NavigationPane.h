@@ -31,8 +31,6 @@
 #ifndef _VE_UI_NAV_H_
 #define _VE_UI_NAV_H_
 
-#include "VE_Open/skel/VjObsC.h"
-
 #include <wx/image.h>
 #include <wx/dialog.h>
 #include <wx/bmpbuttn.h>
@@ -45,6 +43,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 #include <vector>
+#include <string>
 
 class wxCheckBox;
 class wxSlider;
@@ -96,7 +95,7 @@ protected:
 class NavigationPane : public wxDialog 
 {
 public:
-   NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
+   NavigationPane( void );
    virtual ~NavigationPane();
 
    //turn off the navigation flag
@@ -117,8 +116,6 @@ public:
    void OnRotStepSlider( wxScrollEvent& event);
    void OnResetNavPosition( wxCommandEvent& event );
    void OnHeadCheck( wxCommandEvent& event );
-   void SetCommInstance( VjObs_ptr veEngine );
-   //void SetDOMManager( VE_XML::DOMDocumentManager* domManagerIn );
    void SendCommandsToXplorer( void );
 
    // Build the navigation pane
@@ -128,10 +125,7 @@ protected:
    wxScrolledWindow* scrollWindow;
 
    std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
    int cId, cIso_value;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
    std::string dataValueName;
 
    UI_NavButton* _leftButton;

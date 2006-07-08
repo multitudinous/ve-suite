@@ -29,9 +29,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/NavigationPane.h"
+#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/CORBAServiceList.h"
+
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
+
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Conductor/xpm/Nav_Bitmaps/x_left.xpm"
 #include "VE_Conductor/xpm/Nav_Bitmaps/x_right.xpm"
@@ -77,7 +82,7 @@ BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////  
-NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
+NavigationPane::NavigationPane()
 :wxDialog(NULL,-1, wxString("Navigation Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
@@ -100,8 +105,8 @@ NavigationPane::NavigationPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* 
    this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
    SetSizer( mainSizer );
 
-   xplorerPtr = VjObs::_duplicate( veEngine );
-   domManager = domManagerIn;
+   //xplorerPtr = VjObs::_duplicate( veEngine );
+   //domManager = domManagerIn;
    
    // Update VE-Xplorer data
    dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
@@ -497,52 +502,19 @@ void NavigationPane::OnHeadCheck( wxCommandEvent& WXUNUSED(event) )
    cIso_value = headRotationChk->GetValue();
    SendCommandsToXplorer();
 }
-///////////////////////////////////////////////////////////
-void NavigationPane::SetCommInstance( VjObs_ptr veEngine )
-{
-   xplorerPtr = VjObs::_duplicate( veEngine );
-}
 //////////////////////////////////////////////////
 void NavigationPane::SendCommandsToXplorer( void )
 {
-   // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument("Command");
-   doc = domManager->GetCommandDocument();
-
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
-   dataValuePair->SetOwnerDocument(doc);
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    VE_XML::Command* veCommand = new VE_XML::Command();
-   veCommand->SetOwnerDocument(doc);
    veCommand->SetCommandName( std::string("Navigation_Data") );
    veCommand->AddDataValuePair( dataValuePair );
-   doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );
-
-   // New need to destroy document and send it
-   std::string commandData = domManager->WriteAndReleaseCommandDocument();
-   char* tempDoc = new char[ commandData.size() + 1 ];
-   tempDoc = CORBA::string_dup( commandData.c_str() );
-
-   if ( !CORBA::is_nil( xplorerPtr ) && !commandData.empty() )
-   {
-      try
-      {
-         // CORBA releases the allocated memory so we do not have to
-         xplorerPtr->SetCommandString( tempDoc );
-      }
-      catch ( ... )
-      {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
-         delete [] tempDoc;
-      }
-   }
-   else
-   {
-      delete [] tempDoc;
-   }
+   
+   dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   
    //Clean up memory
    delete veCommand;
 }
