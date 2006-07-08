@@ -46,6 +46,8 @@
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
+
+#include <boost/filesystem/path.hpp>
 #include <iostream>
 
 using namespace VE_EVENTS;
@@ -207,7 +209,13 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
          CADPart* newPart = dynamic_cast<CADPart*>(activeNode);
          //std::cout<<"      ---Part---"<<std::endl;
          //std::cout<<"      ---"<<newPart->GetID()<<"---"<<std::endl;
-          _activeModel->CreatePart(newPart->GetCADFileName(),newPart->GetID(),parentID);
+         std::string tempFilename = newPart->GetCADFileName();
+         boost::filesystem::path correctedPath( newPart->GetCADFileName() );
+         
+          _activeModel->CreatePart( correctedPath.native_file_string(),
+                                    newPart->GetID(),
+                                    parentID
+                                  );
 
          VE_Xplorer::cfdFILE* partNode = _activeModel->GetPart(newPart->GetID());
          partNode->GetNode()->SetName(newPart->GetNodeName());

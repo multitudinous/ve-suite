@@ -76,7 +76,11 @@ UI_TeacherTab::UI_TeacherTab(wxWindow* tControl)
    teacherPanelGroup->Add( buttonPanelGroup,0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
    
    wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth() * 0.667f, 125, displaySize.GetWidth() * 0.333f, 500 );
+   wxRect dialogPosition( static_cast< int >( displaySize.GetWidth() * 0.667f ), 
+                          125, 
+                          static_cast< int >( displaySize.GetWidth() * 0.333f ), 
+                          500 
+                        );
    this->SetSize( dialogPosition );
    
    //set this flag and let wx handle alignment
