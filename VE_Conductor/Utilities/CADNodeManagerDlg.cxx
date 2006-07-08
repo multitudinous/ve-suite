@@ -531,7 +531,7 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
                        _T("Open file"), 
                        _T(""), 
                        _T(""),
-                       _T("OSG files (*.osg;*.ive)|*.osg;*.ive;|STL files (*.stl)|*.stl;|VRML files (*.wrl)|*.wrl;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb| Flight files (*.flt)|*.flt"),
+                       _T("OSG files (*.osg;*.ive)|*.osg;*.ive;|STL files (*.stl)|*.stl;|VRML/Inventor files (*.wrl;*.iv)|*.wrl;*.iv;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb;| Flight files (*.flt)|*.flt;| DXF files (*.dxf)|*.dxf;| 3DS files (*.3ds)|*.3ds"),
                        //"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
                        wxOPEN|wxFILE_MUST_EXIST|wxMULTIPLE,
                        wxDefaultPosition);
