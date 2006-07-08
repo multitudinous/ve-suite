@@ -28,10 +28,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/Framework/CORBAServiceList.h"
+
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/Framework/CORBAServiceList.h"
 
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
