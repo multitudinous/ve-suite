@@ -143,8 +143,6 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title), m_frameNr(0), f_financial(true), f_geometry(true), f_visualization(true)
 {
    serviceList = new CORBAServiceList( this );
-   SetWindowStyle(wxDEFAULT_FRAME_STYLE & ~ (wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX));
-
   
    xplorerMenu = 0;
    recordScenes = 0;
@@ -187,7 +185,7 @@ std::string AppFrame::GetDisplayMode()
    return _displayMode;
 }
 //////////////////////////////////////
-std::string AppFrame::_detectDisplay()
+void AppFrame::_detectDisplay()
 {
    for ( int i = 1; i < wxTheApp->argc ; ++i )
    {
@@ -197,12 +195,12 @@ std::string AppFrame::_detectDisplay()
          break;
       }
    }
-   return _displayMode;
+   //return _displayMode;
 }
 ////////////////////////////////////////////////////////
 void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
 {
-   if(_detectDisplay() == "Tablet")
+   if( GetDisplayMode() == "Tablet")
    {
       wx_log_splitter = new wxSplitterWindow(parent, -1);
       wx_log_splitter->SetMinimumPaneSize( 40 );
@@ -221,7 +219,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
    network = new Network(wx_nw_splitter, -1 );
    av_modules->SetNetwork(network);
 
-   if(_detectDisplay() == "Tablet")
+   if ( GetDisplayMode() == "Tablet")
    {
       wx_log_splitter->SplitHorizontally(wx_nw_splitter, logwindow, -100);
    }
@@ -270,13 +268,16 @@ void AppFrame::_configureTablet()
 /////////////////////////////////////////
 void AppFrame::_detectDisplayAndCreate()
 { 
-   if(_detectDisplay() == "Desktop")
+   _detectDisplay();
+   if ( GetDisplayMode() == "Desktop")
    {
       _configureDesktop();
+      SetWindowStyle( wxDEFAULT_FRAME_STYLE & ~ (wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX) );
    }
-   else if(_detectDisplay() == "Tablet")
+   else if ( GetDisplayMode() == "Tablet")
    {
       _configureTablet();
+      SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
    }
    else
    {

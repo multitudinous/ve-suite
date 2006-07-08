@@ -221,10 +221,10 @@ private:
 
 protected:
    void _createTreeAndLogWindow(wxWindow* parent);
-   void _configureDesktop();
-   void _configureTablet();
-   void _detectDisplayAndCreate();
-   std::string AppFrame::_detectDisplay();
+   void _configureDesktop( void );
+   void _configureTablet( void );
+   void _detectDisplayAndCreate( void );
+   void _detectDisplay( void );
    
    wxRect DetermineFrameSize (wxConfig* config);
    void StoreFrameSize (wxRect rect, wxConfig* config);
