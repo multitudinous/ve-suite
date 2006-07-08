@@ -149,7 +149,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
          }
          else
          {
-            std::cerr << "VE-Open XMLReaderWriter Error : No creator method for tagname = " << tagname << std::endl;
+            std::cerr << "VE-Open XMLReaderWriter Error : No creator method for tagname = " << tagName << std::endl;
          }
       }
    }
