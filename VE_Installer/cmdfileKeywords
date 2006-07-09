@@ -1,0 +1,8 @@
+# if the file has a header block then replace lines 26 through 29...
+26,29c\
+ \ * Date modified: $Date:  \$\
+ \ * Version:       $Rev:  \$\
+ \ * Author:        $Author:  \$\
+ \ * Id:            $Id:  \$\
+ \ * -----------------------------------------------------------------\
+ \ *

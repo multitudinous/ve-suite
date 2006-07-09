@@ -23,9 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: filename,v $
- * Date modified: $Date: date $
- * Version:       $Rev: 999999 $
+ * Date modified: $Date:  $
+ * Version:       $Rev:  $
+ * Author:        $Author:  $
+ * Id:            $Id:  $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
