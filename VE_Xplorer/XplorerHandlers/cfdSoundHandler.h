@@ -23,10 +23,14 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
  * Date modified: $Date$
  * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
+ *
+ * -----------------------------------------------------------------
+ *
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_SOUNDHANDLER

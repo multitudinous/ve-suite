@@ -23,10 +23,14 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_DIGITALANALOGGAUGE_H
+ * -----------------------------------------------------------------
+ *
 #define CFD_DIGITALANALOGGAUGE_H
 
 #include <utility>
