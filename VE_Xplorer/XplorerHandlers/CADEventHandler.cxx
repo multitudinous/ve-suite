@@ -176,7 +176,7 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
    cfdDCS* parentAssembly = 0;
    parentAssembly = _activeModel->GetAssembly(parentID);
 
-   vprDEBUG( vesDBG, 1 ) << "---Adding node---" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG( vesDBG, 1 ) << "|---Adding node---" << std::endl << vprDEBUG_FLUSH;
    if(parentAssembly)
    {
       if(activeNode->GetNodeType() == "Assembly")
@@ -209,8 +209,8 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
       else if(activeNode->GetNodeType() == "Part")
       {
          CADPart* newPart = dynamic_cast<CADPart*>(activeNode);
-         vprDEBUG( vesDBG, 1 ) <<"      ---Part---"<< std::endl << vprDEBUG_FLUSH;
-         vprDEBUG( vesDBG, 1 ) <<"      ---"<<newPart->GetID()<<"---"<<std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---Part---"<< std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---"<<newPart->GetID()<<"---"<< std::endl << vprDEBUG_FLUSH;
          std::string tempFilename = newPart->GetCADFileName();
          boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
          boost::filesystem::path testPath = correctedPath.normalize();
@@ -224,11 +224,11 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
          VE_Xplorer::cfdFILE* partNode = _activeModel->GetPart(newPart->GetID());
          partNode->GetNode()->SetName(newPart->GetNodeName());
 
-         //std::cout<<"   ---Setting node properties---"<<std::endl;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
          _setTransformOnNode(newPart);
-         //std::cout<<"      ---Set transform---"<<std::endl;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---Set transform---"<< std::endl << vprDEBUG_FLUSH;
          _setAttributesOnNode(newPart);
-         //std::cout<<"      ---Set Attributes---"<<std::endl;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---Set Attributes---"<< std::endl << vprDEBUG_FLUSH;
       }
       else if(activeNode->GetNodeType() == "Clone")
       {
