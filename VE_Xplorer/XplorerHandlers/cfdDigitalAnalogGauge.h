@@ -29,9 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
-  *************** <auto-copyright.pl END do not edit this line> ***************/
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_DIGITALANALOGGAUGE_H
 #define CFD_DIGITALANALOGGAUGE_H
 
