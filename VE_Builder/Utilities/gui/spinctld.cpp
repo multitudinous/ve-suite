@@ -29,6 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef WX_PRECOMP
     #include "wx/valtext.h"     // for wxTextValidator

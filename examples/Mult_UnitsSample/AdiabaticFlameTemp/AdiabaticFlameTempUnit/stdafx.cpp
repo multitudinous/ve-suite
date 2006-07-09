@@ -29,6 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // stdafx.cpp : source file that includes just the standard includes
 // OPPDUnit.pch will be the pre-compiled header

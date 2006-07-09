@@ -29,6 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"

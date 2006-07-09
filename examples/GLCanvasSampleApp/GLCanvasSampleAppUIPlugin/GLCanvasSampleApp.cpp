@@ -29,6 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "GLCanvasSampleApp.h"
 #include "GLCanvasSampleApp_UI_Dialog.h"

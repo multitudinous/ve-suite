@@ -29,6 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "AverageAirTempUnit_i.h"
 #include "VE_Conductor/Framework/string_ops.h"

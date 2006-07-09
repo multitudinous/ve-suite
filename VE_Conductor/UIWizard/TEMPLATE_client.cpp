@@ -29,6 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <VE_Open/skel/moduleC.h>
 #include <VE_Open/XML/XMLReaderWriter.h>
