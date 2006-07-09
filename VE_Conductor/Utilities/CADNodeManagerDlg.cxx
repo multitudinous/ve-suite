@@ -551,7 +551,7 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxFileName fileName )
 {
    ClearInstructions();
    wxFileName vegFileName( fileName );
-   vegFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+   vegFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_UNIX );
    wxString vegFileNamePath( wxString( "./" ) + vegFileName.GetFullPath() );
    wxFileName cadFileName( vegFileNamePath.c_str());
    //pop a text dialog to enter the name of the new assembly

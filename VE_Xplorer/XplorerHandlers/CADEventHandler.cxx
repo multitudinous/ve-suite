@@ -47,6 +47,8 @@
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
 
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
 #include <boost/filesystem/path.hpp>
 #include <iostream>
 
@@ -174,7 +176,7 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
    cfdDCS* parentAssembly = 0;
    parentAssembly = _activeModel->GetAssembly(parentID);
 
-   //std::cout<<"---Adding node---"<<std::endl;
+   vprDEBUG( vesDBG, 1 ) << "---Adding node---" << std::endl << vprDEBUG_FLUSH;
    if(parentAssembly)
    {
       if(activeNode->GetNodeType() == "Assembly")
@@ -207,11 +209,13 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
       else if(activeNode->GetNodeType() == "Part")
       {
          CADPart* newPart = dynamic_cast<CADPart*>(activeNode);
-         //std::cout<<"      ---Part---"<<std::endl;
-         //std::cout<<"      ---"<<newPart->GetID()<<"---"<<std::endl;
+         vprDEBUG( vesDBG, 1 ) <<"      ---Part---"<< std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( vesDBG, 1 ) <<"      ---"<<newPart->GetID()<<"---"<<std::endl << vprDEBUG_FLUSH;
          std::string tempFilename = newPart->GetCADFileName();
-         boost::filesystem::path correctedPath( newPart->GetCADFileName() );
-         
+         boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
+         boost::filesystem::path testPath = correctedPath.normalize();
+         vprDEBUG( vesDBG, 1 ) << testPath.string() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( vesDBG, 1 ) << tempFilename << std::endl << correctedPath.native_file_string() << std::endl << vprDEBUG_FLUSH;
           _activeModel->CreatePart( correctedPath.native_file_string(),
                                     newPart->GetID(),
                                     parentID
