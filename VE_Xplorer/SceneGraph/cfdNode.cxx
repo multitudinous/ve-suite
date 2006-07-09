@@ -200,11 +200,15 @@ osg::Node* cfdNode::GetRawNode(void)
 //////////////////////////////////////
 void cfdNode::SetName(std::string name)
 {
-   GetRawNode()->setName(name.c_str());
+   if ( GetRawNode() )
+      GetRawNode()->setName(name.c_str());
 }
 //////////////////////////////////////////////
 void cfdNode::ToggleDisplay(std::string onOff)
 {
+   if ( !GetRawNode() )
+      return;
+      
    if(onOff == "ON")
    {
 #ifdef _OSG
