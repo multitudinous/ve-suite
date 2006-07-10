@@ -56,6 +56,7 @@ echo "to: " ${VE_PLAT_INSTALL_DIR}
 mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include
 mkdir -p ${VE_PLAT_INSTALL_DIR}/lib
+mkdir -p ${VE_PLAT_INSTALL_DIR}/shaders
 mkdir -p ${VE_PLAT_INSTALL_DIR}/installerImages
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simple
@@ -83,6 +84,14 @@ cp ${VE_SUITE_HOME}/*.h ./include
 
 echo "Copying libraries..."
 cp ${VE_SUITE_HOME}/lib*.lib ./lib
+
+echo "Copying Sample shader files..."
+cp ${VE_SUITE_HOME}/VE_TestSuite/brick.vea ./shaders/brick.vea
+cp ${VE_SUITE_HOME}/VE_TestSuite/gooch.vea ./shaders/gooch.vea
+cp ${VE_SUITE_HOME}/VE_TestSuite/phong_GL_Default.vea ./shaders/phong_GL_Default.vea
+cp ${VE_SUITE_HOME}/VE_TestSuite/phong.vea ./shaders/phong.vea
+cp ${VE_SUITE_HOME}/VE_TestSuite/toon.vea ./shaders/toon.vea
+cp ${VE_SUITE_HOME}/VE_TestSuite/x-ray.vea ./shaders/x-ray.vea
 
 echo "======Copying simple example model files======"
 echo "   simple VTK files..."
