@@ -24,7 +24,7 @@
  *
  * -----------------------------------------------------------------
  * Date modified: $Date$
- * Version:       $Rev$
+ * Version:       $Rev: 4907 $
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
@@ -215,7 +215,7 @@ void CADNodeManagerDlg::_buildDialog()
 void CADNodeManagerDlg::_editLabel(wxTreeEvent& event)
 {
    CADTreeBuilder::TreeNodeData* cadNode = 0;
-   if(event.GetItem().IsOk())
+   if(event.GetItem().IsOk()&& (!event.IsEditCancelled()))
    {
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
       cadNode->GetNode()->SetNodeName(event.GetLabel().GetData());
