@@ -32,9 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VJOBS_I_H_
 #define _VJOBS_I_H_
+#include "VE_Open/skel/VjObsS.h"
 #include <vpr/Sync/Mutex.h>
 
-#include "VE_Open/skel/VjObsS.h"
 
 #ifdef _CLUSTER
 #include <cluster/ClusterManager.h>

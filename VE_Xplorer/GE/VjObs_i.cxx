@@ -30,8 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
-
 #include "VE_Xplorer/GE/VjObs_i.h"
 
 #include "VE_Open/XML/DOMDocumentManager.h"
@@ -49,6 +47,8 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
+
 
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 

@@ -32,10 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_I_H_
 #define VE_I_H_
-#include <vpr/Sync/Mutex.h>
-
 #include "VE_Open/skel/moduleS.h"
 #include "VE_Installer/include/VEConfig.h"
+#include <vpr/Sync/Mutex.h>
 
 #include <string>
 #include <vector>
