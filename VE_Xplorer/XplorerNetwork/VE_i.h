@@ -29,26 +29,19 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef VE_I_H_
 #define VE_I_H_
+#include <vpr/Sync/Mutex.h>
 
 #include "VE_Open/skel/moduleS.h"
 #include "VE_Installer/include/VEConfig.h"
+
 #include <string>
 #include <vector>
-#include <vpr/Sync/Mutex.h>
-
-#if !defined (ACE_LACKS_PRAGMA_ONCE)
-#pragma once
-#endif /* ACE_LACKS_PRAGMA_ONCE */
 
 namespace VE_Xplorer
 {
-//Class Body_UI_i
 class  Body_UI_i : public virtual POA_Body::UI
 {
 public:

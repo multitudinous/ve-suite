@@ -29,21 +29,12 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VJOBS_I_H_
 #define _VJOBS_I_H_
-
-#ifdef _TAO
-#include "VE_Open/skel/VjObsS.h"
-#else
-#include "VE_Open/skel/VjObs.h"
-#endif
-
 #include <vpr/Sync/Mutex.h>
+
+#include "VE_Open/skel/VjObsS.h"
 
 #ifdef _CLUSTER
 #include <cluster/ClusterManager.h>
