@@ -24,7 +24,7 @@
  *
  * -----------------------------------------------------------------
  * Date modified: $Date$
- * Version:       $Rev: 4907 $
+ * Version:       $Rev$
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
@@ -192,8 +192,8 @@ void CADNodeManagerDlg::_buildDialog()
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxVERTICAL);
 
-   //wxStaticBox* cadTree = new wxStaticBox(this, -1, wxT("Tree View"));
-   //wxStaticBoxSizer* cadTreePropSizer = new wxStaticBoxSizer(cadTree, wxVERTICAL);
+   wxStaticBox* cadTree = new wxStaticBox(this, -1, wxT("Tree View"));
+   wxStaticBoxSizer* cadTreePropSizer = new wxStaticBoxSizer(cadTree, wxVERTICAL);
 
    wxBoxSizer* treeSizer = new wxBoxSizer(wxHORIZONTAL);
   
@@ -201,12 +201,14 @@ void CADNodeManagerDlg::_buildDialog()
    _saveButton = new wxButton(this,GEOM_SAVE,wxString("Save As..."));
 
    treeSizer->Add(_geometryTree,1,wxALIGN_CENTER|wxEXPAND); 
-   //cadTreePropSizer->Add(treeSizer,1,wxALIGN_CENTER|wxEXPAND);
-
+   cadTreePropSizer->Add(treeSizer,1,wxALIGN_CENTER|wxEXPAND);
+   _geometryTree->Raise();
+   
    buttonRowSizer->Add(_saveButton,0,wxALIGN_CENTER);
    buttonRowSizer->Add(_quitButton,0,wxALIGN_CENTER);
 
-   mainSizer->Add(treeSizer, 1, wxALIGN_CENTER|wxEXPAND);
+   //mainSizer->Add(treeSizer, 1, wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(cadTreePropSizer, 1, wxALIGN_CENTER|wxEXPAND);
    mainSizer->Add(buttonRowSizer, 1, wxALIGN_CENTER);
    SetAutoLayout(true);
    SetSizer(mainSizer);
