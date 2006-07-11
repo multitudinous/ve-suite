@@ -215,8 +215,6 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
          vprDEBUG( vesDBG, 1 ) <<"|\t---"<<newPart->GetID()<<"---"<< std::endl << vprDEBUG_FLUSH;
          std::string tempFilename = newPart->GetCADFileName();
          boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
-         boost::filesystem::path testPath = correctedPath.normalize();
-         vprDEBUG( vesDBG, 1 ) << testPath.string() << std::endl << vprDEBUG_FLUSH;
          vprDEBUG( vesDBG, 1 ) << tempFilename << std::endl << correctedPath.native_file_string() << std::endl << vprDEBUG_FLUSH;
           _activeModel->CreatePart( correctedPath.native_file_string(),
                                     newPart->GetID(),

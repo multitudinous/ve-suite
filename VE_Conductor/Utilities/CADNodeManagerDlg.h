@@ -163,7 +163,7 @@ public:
    ///This function takes a cad file name and constructs a command to send
    ///to xplorer
    ///\param fileName The filename to send to xplorer
-   void SendNewNodesToXplorer( wxFileName fileName );
+   void SendNewNodesToXplorer( wxString fileName );
 
    ///This function takes a veg file name and constructs a command to send
    ///to xplorer
