@@ -186,7 +186,7 @@ void DataSetLoaderUI::CreateControls()
     if (ShowToolTips())
         dataSetList->SetToolTip(_("Text Entry"));
     itemStaticBoxSizer4->Add(dataSetList, 0, wxALIGN_LEFT|wxALL, 5);
-
+    dataSetList->Raise();
    ///////////////////////////////////////////////////
     wxBoxSizer* dataButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -218,7 +218,6 @@ void DataSetLoaderUI::CreateControls()
     if (ShowToolTips())
         dataSetOpenButton->SetToolTip(_("Load Data"));
     itemStaticBoxSizer6->Add(dataSetOpenButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
    ///////////////////////////////////////////////////////
     itemStaticBoxSizer9Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Precomputed Data Directory"));
     wxStaticBoxSizer* itemStaticBoxSizer9 = new wxStaticBoxSizer(itemStaticBoxSizer9Static, wxHORIZONTAL);
@@ -234,7 +233,7 @@ void DataSetLoaderUI::CreateControls()
     if (ShowToolTips())
         preComputeOpenButton->SetToolTip(_("Precomputed Data Dir"));
     itemStaticBoxSizer9->Add(preComputeOpenButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
+    preComputDirTextEntry->Raise();
    ///////////////////////////////////////////////////////
     itemStaticBoxSizer12Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Surface Data Directory"));
     wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer(itemStaticBoxSizer12Static, wxHORIZONTAL);
@@ -255,7 +254,7 @@ void DataSetLoaderUI::CreateControls()
     if (ShowToolTips())
         surfaceDataOpenButton->SetToolTip(_("Surface Data Dir"));
     itemStaticBoxSizer12->Add(surfaceDataOpenButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
+    surfaceDataText->Raise();
    ///////////////////////////////////////////////////////
     itemStaticBoxSizer15Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("DataSet Attributes"));
     wxStaticBoxSizer* itemStaticBoxSizer15 = new wxStaticBoxSizer(itemStaticBoxSizer15Static, wxHORIZONTAL);
@@ -275,7 +274,7 @@ void DataSetLoaderUI::CreateControls()
         scalarButton->SetToolTip(_("Future Use"));
     scalarButton->Enable(false);
     itemStaticBoxSizer15->Add(scalarButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
+    transformButton->Raise();
    ///////////////////////////////////////////////////////
     itemStaticBoxSizer19Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Volumetric Data Directories"));
     wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(itemStaticBoxSizer19Static, wxVERTICAL);
@@ -296,7 +295,7 @@ void DataSetLoaderUI::CreateControls()
 
     wxString* itemListBox24Strings = NULL;
     itemListBox24 = new wxListBox( itemScrolledWindow23, ID_LISTBOX, wxDefaultPosition, wxSize(225, -1), 0, itemListBox24Strings, wxLB_SINGLE );
-
+    itemTextCtrl21->Raise();
    ///////////////////////////////////////////////////////
     wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
 

@@ -137,6 +137,7 @@ void UI_TransientDialog::_buildGUI()
    wxStaticBox* duration = new wxStaticBox(this,-1,
                                 wxString("Duration (s)"));
    wxStaticBoxSizer* dSizer = new wxStaticBoxSizer(duration,wxHORIZONTAL);
+   //wxBoxSizer* dSizer = new wxBoxSizer(wxHORIZONTAL);
 
    tStepSizer->Add(_currentFrame,1,wxALIGN_CENTER);
    dSizer->Add(_duration,1,wxALIGN_CENTER);
@@ -150,6 +151,8 @@ void UI_TransientDialog::_buildGUI()
 
    mainSizer->Add(controlSizer,0,wxALIGN_CENTER|wxEXPAND);
    mainSizer->Add(spinSizer,1,wxALIGN_CENTER|wxEXPAND);
+   _duration->Raise();
+   _currentFrame->Raise();
    //_addOKButton(mainSizer);
 
    SetSize(200,120);

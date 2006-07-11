@@ -77,6 +77,9 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
    dualSliderSizer->Add(_maxSlider,1,wxALIGN_CENTER|wxEXPAND);
 
    dualSliderPanelSizer->Add(dualSliderSizer,1,wxEXPAND|wxALIGN_CENTER);
+   _minSlider->Raise();
+   _maxSlider->Raise();
+   
    SetAutoLayout(true);
    SetSizer(dualSliderPanelSizer);
    dualSliderPanelSizer->Fit(this);

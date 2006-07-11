@@ -96,6 +96,9 @@ void ROIDialog::_buildGUI()
    _addOKButton(buttonRowSizer);
    
    mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER|wxEXPAND);
+   _xBounds->Raise();
+   _yBounds->Raise();
+   _zBounds->Raise();
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
 
