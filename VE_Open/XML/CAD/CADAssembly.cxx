@@ -233,9 +233,17 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
          DOMNodeList* childList = currentElement->getElementsByTagName(xercesString("children"));
          DOMElement* childListElement = dynamic_cast<DOMElement*>(childList->item(0));
          DOMNodeList* childrenNodes = childListElement->getElementsByTagName(xercesString("child"));
-         for(unsigned int i = 0; i < _numChildren; i++)
+         size_t nChilderenReally = childrenNodes->getLength();
+         for(unsigned int i = 0; i < nChilderenReally; i++)
          {
             DOMElement* cadNode = dynamic_cast<DOMElement*>(childrenNodes->item(i));
+            unsigned int g = 0;
+            while(cadNode->getParentNode() != childListElement)
+            {
+               i++;
+               cadNode = dynamic_cast<DOMElement*>(childrenNodes->item(i));
+               if(i == nChilderenReally)return;
+            }
             DOMElement* nodeType = 0;
             unsigned int k = 0;
             while(!nodeType)
