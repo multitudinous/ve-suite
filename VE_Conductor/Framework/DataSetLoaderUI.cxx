@@ -422,7 +422,7 @@ void DataSetLoaderUI::OnButtonClick( wxCommandEvent& WXUNUSED(event) )
    {
       wxFileName datasetFilename( dialog.GetPath() );
       datasetFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
-      wxString relativeDataSetPath( wxString("./") + datasetFilename.GetFullPath() );
+      wxString relativeDataSetPath( datasetFilename.GetFullPath() );
       dataSetTextEntry->SetValue( relativeDataSetPath );
       VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_DATA_FILE" );
       if ( !tempDVP )
@@ -459,7 +459,7 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
       surfaceDir.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
       if ( event.GetId() == ID_BUTTON4 )
       {
-         wxString relativeSurfaceDirPath( wxString("./") + surfaceDir.GetPath() );
+         wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
          surfaceDataText->SetValue( relativeSurfaceDirPath );
          VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
          if ( !tempDVP )
@@ -470,7 +470,7 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
       }
       else if ( event.GetId() == ID_BUTTON3 )
       {
-         wxString relativePrecomputedDirPath( wxString("./") + surfaceDir.GetPath() );
+         wxString relativePrecomputedDirPath( surfaceDir.GetPath() );
          preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
          VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" );
          if ( !tempDVP )
@@ -555,7 +555,7 @@ void DataSetLoaderUI::OnButton2Click( wxCommandEvent& WXUNUSED(event) )
       {
          wxFileName textureDir( dialog.GetPath() );
          textureDir.MakeRelativeTo( cwd, wxPATH_NATIVE );
-         wxString relativeTextureDirPath( wxString( "./" ) + textureDir.GetPath() );
+         wxString relativeTextureDirPath( textureDir.GetPath() );
          itemTextCtrl21->SetValue( relativeTextureDirPath );
          textureDirs.insert( relativeTextureDirPath );
       }
