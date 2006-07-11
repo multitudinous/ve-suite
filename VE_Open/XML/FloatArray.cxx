@@ -105,13 +105,16 @@ void FloatArray::SetArray( std::vector< double > input )
 //////////////////////////////////////////////////
 double FloatArray::GetElement(unsigned int index)
 {
-   if(_array.at(index))
+   try
    {
-      return _array.at(index);
+      return _array.at( index );
    }
-   std::cout<<"ERROR!!!"<<std::endl;
-   std::cout<<"Invalid index: "<<index<<" in FloatArray::GetElement!!!"<<std::endl;
-   return 0;
+   catch (...)
+   {
+      std::cout<<"ERROR!!!"<<std::endl;
+      std::cout<<"Invalid index: "<<index<<" in FloatArray::GetElement!!!"<<std::endl;
+      return 0;
+   }
 }
 ///////////////////////////////////////////////////
 std::vector< double > FloatArray::GetArray( void )
