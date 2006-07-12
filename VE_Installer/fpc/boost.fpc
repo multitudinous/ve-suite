@@ -1,0 +1,16 @@
+prefix=/home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-linux-rhel4-i686-deps
+exec_prefix=${prefix}/bin
+share_dir=${prefix}/share
+man_dir=${prefix}/man
+
+Name: Boost
+Description: 
+URL: 
+Version: 
+Provides: boost
+Requires: 
+Arch: i686
+Libs: -L${prefix}/lib -lboost_filesystem-gcc-mt-1_33
+Libs.private: 
+Cflags: -I${prefix}/include
+

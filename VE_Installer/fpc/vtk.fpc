@@ -1,0 +1,21 @@
+prefix=/home/users/mccdo/VTK/vtk-5.0/install-rhel4_release
+exec_prefix=${prefix}/bin
+share_dir=${prefix}/share
+man_dir=${prefix}/man
+
+Name: VTK
+Description: 
+URL: 
+Version: 5.0
+Provides: vtk
+Requires: 
+Arch: i686
+Libs: -L${prefix}/lib -lvtkImaging -lvtkGraphics\
+      -lvtkCommon -lvtkHybrid -lvtkIO -lvtkFiltering\
+      -lvtkRendering -lvtkParallel -lvtkexpat\
+      -lvtkpng -lvtktiff -lvtksys -lvtkjpeg\
+      -lvtkexoIIc -lvtkftgl -lvtkfreetype -lvtkDICOMParser\
+      -lvtkzlib -lvtkMPEG2Encode -lvtkNetCDF
+Libs.private: 
+Cflags: -I${prefix}/include/vtk-5.0 -DVTK44 -DVTK_STREAMS_FWD_ONLY
+##Note: Missing -I${ve_suite_home}
