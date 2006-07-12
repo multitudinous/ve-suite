@@ -1,15 +1,15 @@
-prefix: /home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Linux-RHEL_4
-exec_prefix: ${prefix}/bin
-share_dir: ${prefix}/share
-man_dir: ${prefix}/man
+prefix=/home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Linux-RHEL_4
+exec_prefix=${prefix}/bin
+share_dir=${prefix}/share
+man_dir=${prefix}/man
 
-Name= Xerces
-Description= 
-URL= 
-Version= 
-Provides= xerces
-Requires= 
-Arch= i686
-Libs= -L${prefix}/lib -lxerces-c
-Libs.private= 
-Cflags= -I${prefix}/include
+Name: Xerces
+Description: 
+URL: 
+Version: 
+Provides: xerces
+Requires: 
+Arch: i686
+Libs: -L${prefix}/lib -lxerces-c
+Libs.private: 
+Cflags: -I${prefix}/include
