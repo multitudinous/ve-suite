@@ -421,8 +421,9 @@ void DataSetLoaderUI::OnButtonClick( wxCommandEvent& WXUNUSED(event) )
    if ( dialog.ShowModal() == wxID_OK ) 
    {
       wxFileName datasetFilename( dialog.GetPath() );
-      datasetFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+      datasetFilename.MakeRelativeTo( ::wxGetCwd() );
       wxString relativeDataSetPath( datasetFilename.GetFullPath() );
+      relativeDataSetPath.Replace( "\\", "/", true );
       dataSetTextEntry->SetValue( relativeDataSetPath );
       VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_DATA_FILE" );
       if ( !tempDVP )
@@ -456,10 +457,11 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
    if ( dialog.ShowModal() == wxID_OK ) 
    {
       wxFileName surfaceDir( dialog.GetPath() );
-      surfaceDir.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+      surfaceDir.MakeRelativeTo( ::wxGetCwd() );
       if ( event.GetId() == ID_BUTTON4 )
       {
          wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
+         relativeSurfaceDirPath.Replace( "\\", "/", true );
          surfaceDataText->SetValue( relativeSurfaceDirPath );
          VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
          if ( !tempDVP )
@@ -471,6 +473,7 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
       else if ( event.GetId() == ID_BUTTON3 )
       {
          wxString relativePrecomputedDirPath( surfaceDir.GetPath() );
+         relativePrecomputedDirPath.Replace( "\\", "/", true );
          preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
          VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" );
          if ( !tempDVP )
@@ -554,8 +557,9 @@ void DataSetLoaderUI::OnButton2Click( wxCommandEvent& WXUNUSED(event) )
       if ( dialog.ShowModal() == wxID_OK ) 
       {
          wxFileName textureDir( dialog.GetPath() );
-         textureDir.MakeRelativeTo( cwd, wxPATH_NATIVE );
+         textureDir.MakeRelativeTo( cwd );
          wxString relativeTextureDirPath( textureDir.GetPath() );
+         relativeTextureDirPath.Replace( "\\", "/", true );
          itemTextCtrl21->SetValue( relativeTextureDirPath );
          textureDirs.insert( relativeTextureDirPath );
       }
