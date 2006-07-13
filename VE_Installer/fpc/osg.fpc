@@ -1,0 +1,18 @@
+prefix=/home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.0/Linux-RHEL_4
+exec_prefix=${prefix}/bin
+share_dir=${prefix}/share
+man_dir=${prefix}/man
+
+Name: OSG
+Description: 
+URL: 
+Version: 
+Provides: osg
+Requires: 
+Arch: i686
+Libs: -L${prefix}/lib -losg -losgDB -losgGA -losgUtil \
+      -lOpenThreads
+Libs.private: 
+Cflags: -D_OSG -I${prefix}/include
+
+## NOTE: Need to cover "include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk"
