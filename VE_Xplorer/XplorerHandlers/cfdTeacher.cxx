@@ -40,6 +40,8 @@
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdClone.h"
+
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdWriteTraverser.h"
@@ -220,24 +222,20 @@ void cfdTeacher::RecordScene()
    // store the world DCS matrix..
    if ( _worldDCS )
    {
-      //cfdGroup* tempGroup = new cfdGroup();
-      //tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
-      gmtl::Matrix44f m = this->_worldDCS->GetMat();
+     /* gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
       //temporarily reset the world DCS matrix to the identity
       gmtl::Matrix44f I;
 
       // Make an identity matrix
       gmtl::identity( I );
-      this->_worldDCS->SetMat( I );
-      //tempGroup->AddChild(_worldDCS);
-      writePFBFile(this->_worldDCS, pfb_filename );
+      this->_worldDCS->SetMat( I );*/
+      VE_SceneGraph::cfdClone* graphToWrite = new VE_SceneGraph::cfdClone(_worldDCS);
 
-      //tempGroup->RemoveChild(_worldDCS);
-      //tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
-      //delete tempGroup;
-         
-      this->_worldDCS->SetMat( m );
+      writePFBFile(graphToWrite->GetClonedGraph()/*this->_worldDCS*/, pfb_filename );
+      delete graphToWrite;
+      graphToWrite = 0;
+      //this->_worldDCS->SetMat( m );
    }
    else
    {
