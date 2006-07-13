@@ -16,8 +16,8 @@ case $1 in
   -sim)
     project_tao_osg_vep \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
-    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/simstandalone.jconf
-  ;;
+    ${VE_SUITE_HOME}/VE_Xplorer/stereo_desktop/desktop.jconf -VESDesktop 1440 900
+    ;;
 
   -wall)
     project_cluster_tao_osg \
@@ -46,7 +46,7 @@ case $1 in
 
   -menu)
     WinClient \
-    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService -VESDesktop
   ;;
 
   -surface)
