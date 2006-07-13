@@ -1,0 +1,28 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import( 'xerces' )
+
+shader_srcs = Split("""
+   TextureImage.cxx
+   Uniform.cxx
+   Program.cxx
+   Shader.cxx 
+   ShaderCreator.cxx 
+""")
+
+shader_srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'Shader', s), shader_srcs)
+
+env = baseEnv.Copy()
+#env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+env.Append(LIBPATH = '#',
+              LIBS = 'VE_XMLLib')
+for lib in xerces:
+   env.Append(LIBS = lib)
+
+env.SharedLibrary(target = '#/VE_ShaderLib', source = shader_srcs)
+#env.Program(pj('#','bin',Platform,'VE_Open','VE_XML'), source = shader_srcs)

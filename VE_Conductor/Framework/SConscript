@@ -1,0 +1,109 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import( '*' )  ##Imports all; previous Imports redundant.
+
+##Check for Redundancy
+skel_srcs = Split("""
+   moduleC.cpp 
+   moduleS.cpp 
+   VjObsC.cpp 
+   VjObsS.cpp 
+""")
+
+framework_srcs = Split("""
+   App.cpp 
+   Avail_Modules.cpp
+   BaseDialog.cxx
+    DataSetLoaderUI.cxx
+   Frame.cpp 
+   Network.cpp 
+   NavigationPane.cxx 
+   OrbThread.cpp 
+   paraThread.cpp 
+   PluginLoader.cpp 
+    ROIDialog.cxx
+    StreamersPane.cxx
+   SoundsPane.cpp 
+   ViewLocPane.cxx
+    TBToolBar.cxx
+    TransformUI.cxx
+    vistab.cpp
+    vectors.cpp
+    advancedvectors.cpp
+    contours.cpp
+    advancedcontours.cpp
+    streamlines.cpp
+    advancedstreamlines.cpp
+    isosurfaces.cpp
+    CORBAServiceList.cxx
+   UI_i.cpp 
+""")
+
+ui_srcs = Split("""
+   UI_AdvectionPanel.cxx 
+   UI_Frame.cpp 
+   UI_Tabs.cpp 
+   UI_VisTab.cpp 
+   UI_VecTab.cpp 
+   UI_StreamTab.cpp 
+   UI_DataSetPanel.cpp 
+   UI_GeometryTab.cpp 
+   UI_TeacherTab.cpp 
+   UI_TransTab.cpp 
+   UI_TransientDialog.cxx 
+   UI_VertTab.cpp 
+   UI_DesignParTab.cpp 
+   UI_ModSelPanel.cpp 
+   UI_ModelData.cpp 
+""")
+
+gui_srcs = Split("""
+   spinctld.cpp 
+""")
+
+##Tacks on paths to the srcs lists above.
+skel_srcs = map(lambda s: pj('#', 'VE_Open', 'skel', s), skel_srcs)
+framework_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Framework', s), framework_srcs)
+ui_srcs = map(lambda s: pj('#', 'VE_Conductor', 'VE_UI', s), ui_srcs)
+gui_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', 'gui', s), gui_srcs)
+
+##Combines all of the srcs lists into frameworks_srcs
+frameworks_srcs = list()
+frameworks_srcs.extend(skel_srcs)
+frameworks_srcs.extend(framework_srcs)
+frameworks_srcs.extend(ui_srcs)
+frameworks_srcs.extend(gui_srcs)
+
+
+env = baseEnv.Copy()
+env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
+env.Append(CPPPATH = pj(os.getenv('VJ_BASE_DIR', ''), 'bin'))
+env.Append(LIBPATH = '#',
+              LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XMLLib', 'VE_ModelLib',
+                      'VE_CADLib', 'VE_ShaderLib', 'VE_Conductor_UtilitiesLib',
+                      'VE_OpenModuleLib', 'VE_UtilLib'])
+
+for lib in xerces:
+   env.Append(LIBS = lib)
+for lib in ace_tao:
+   env.Append(LIBS = lib)
+for lib in vtk:
+   env.Append(LIBS = lib)
+for lib in osg:
+   env.Append(LIBS = lib)
+for lib in boost:
+   env.Append(LIBS = lib)
+env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
+#env.ParseConfig( 'corona-config --libs' )
+env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
+env.ParseConfig( 'wx-config --cxxflags --libs' )
+
+#env.SharedLibrary(target = '#/Framework', source = frameworks_srcs)
+env.Program(pj('#','bin',Platform,'WinClient'), source = frameworks_srcs)
+

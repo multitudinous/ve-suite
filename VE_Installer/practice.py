@@ -38,10 +38,10 @@ else:
 os.environ['CFDHOSTTYPE'] = os.getenv('HOSTTYPE','')
 print "CFDHOSTTYPE = " , os.getenv('CFDHOSTTYPE','')
 
-#os.environ['TAO_BUILD'] = 'TRUE'
-#print "TAO_BUILD = " , os.getenv('TAO_BUILD','')
-os.environ['TAO_BUILD'] = 'FALSE'
+os.environ['TAO_BUILD'] = 'TRUE'
 print "TAO_BUILD = " , os.getenv('TAO_BUILD','')
+#os.environ['TAO_BUILD'] = 'FALSE'
+#print "TAO_BUILD = " , os.getenv('TAO_BUILD','')
 
 os.environ['PFNFYLEVEL'] = '2'
 print "PFNFYLEVEL = " , os.getenv('PFNFYLEVEL','')

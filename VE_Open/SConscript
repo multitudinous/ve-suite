@@ -1,0 +1,73 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+
+env = baseEnv.Copy()
+env.Append(CPPPATH = [os.getcwd()])
+
+env.Append(CPPPATH = ['idl'])
+print "CPPPATH: " + str(env["CPPPATH"]) ##TESTER
+
+idlFile = ['','']
+target = ['module.h', 'VjObs.h']
+srcs = ['module.idl', 'VjObs.idl']
+srcsss = list()
+
+idlCmd = 'tao_idl -o ./VE_Open/skel -GI -I./VE_Open/idl ./VE_Open/idl/'
+idlFile[0] = idlCmd + srcs[0]
+idlFile[1] = idlCmd + srcs[1]
+
+##for fileIdl in srcs:
+##   print "FileIDL: %s" % (fileIdl) ##TESTER
+##   idlCmd = 'tao_idl -o ./VE_Open/skel -GI -I./VE_Open/idl ./VE_Open/idl/'
+##   idlFile[0] = idlCmd + srcs[0]
+##   idlFile[1] = idlCmd + srcs[1]
+
+for i in [0,1]:
+   bld = Builder(action = idlFile[i])
+   env.Append(BUILDERS={'tao_idl':bld})
+   env.tao_idl(target[i], srcsss)
+
+print "IDLFile: %s" % idlFile ##TESTER
+
+
+
+
+
+
+
+
+
+
+######
+#tao_idl -o ./skel -GI -I./idl  ./idl/module.idl
+#tao_idl -o ./skel -GI -I./idl  ./idl/VjObs.idl
+#
+#srcs = list()
+#srcs.extend(['./VE_Open/idl/module.idl'])
+#srcs.extend(['./VE_Open/idl/VjObs.idl'])
+#
+#target = list()
+#target.extend(['moduleC.h'])
+#target.extend(['VjObs.h'])
+#target.extend(['moduleC.inl'])
+#
+#
+######################################
+#target1 = "module.h"
+#target2 = "VjObs.h"
+#
+#idlCmd1 = 'tao_idl -o ./VE_Open/skel -GI -I./VE_Open/idl ./VE_Open/idl/module.idl'
+#bld1 = Builder(action = idlCmd1,
+#              src_suffix = '.idl')
+#env.Append(BUILDERS={'tao_idl':bld1}) 
+#env.tao_idl(target1, srcs)
+#
+#idlCmd2 = 'tao_idl -o ./VE_Open/skel -GI -I./VE_Open/idl ./VE_Open/idl/VjObs.idl'
+#bld2 = Builder(action = idlCmd2,
+#              src_suffix = '.idl')
+#env.Append(BUILDERS={'tao_idl':bld2}) 
+#env.tao_idl(target2, srcs)
+#########################################

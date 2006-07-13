@@ -3,30 +3,48 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('Platform')
+Import( 'vtk' )
+Import( 'boost' )
 
 srcs = Split("""
-   translateToVtk.cpp
-   ansysReader.cpp 
-   starReader.cpp 
-   avsReader.cpp 
-   reiReader.cpp 
+	translateToVtk.cpp
+   starReader.cpp
+   avsReader.cpp
+   reiReader.cpp
    en7Reader.cpp
-   mfixReader.cpp  
-   converter.cpp 
-   gridConversion.cpp 
-   fireReader.cpp 
-   particle.cpp 
-   fluentParticles.cpp 
-   reiParticles.cpp 
-   plot3dReader.cpp 
+   mfixReader.cpp
+   converter.cpp
+   gridConversion.cpp
+   viewCells.cpp
+   fireReader.cpp
+   cfdGrid2Surface.cpp
+   particle.cpp
+   fluentParticles.cpp
+   reiParticles.cpp
+   plot3dReader.cpp
    jdMAPReader.cpp
    enSightGoldReader.cpp
+   ansysReader.cpp
+   ansysReader10.cpp
+   tecplotReader.cpp
+   vtkCleanUnstructuredGrid.cxx
 """)
+## REMOVED: vtkEnSightFortranBinaryReader.cxx
 
 srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', s), srcs)
 
 env = baseEnv.Copy()
-env.Append(CPPPATH = [os.getcwd()])
+##env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+env.Append(CPPPATH = ['#/VE_Builder/Utilities'])
 env.Append(LIBPATH = '#',
-              LIBS = 'Shared_Library')
+              LIBS = 'VE_UtilLib')
+
+for lib in vtk:
+   env.Append(LIBS = lib)
+for lib in boost:
+   env.Append(LIBS = lib)
+env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
+env.ParseConfig( 'vrjuggler-config vrj_ogl --libs' )
 env.Program(pj('#','bin',Platform,'Translator'), source = srcs)

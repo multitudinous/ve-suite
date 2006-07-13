@@ -1,0 +1,34 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import( 'vtk' )
+Import( 'boost' )
+
+srcs = Split("""
+   flowTexture.cpp 
+   tcApp.cpp
+   tcFrame.cpp 
+   textureCreator.cpp
+""")
+
+srcs = map(lambda s: pj('#', 'VE_Builder', 'vtkTo3DTexture', 'tcGUI', s), srcs)
+
+env = baseEnv.Copy()
+#env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
+env.Append(LIBPATH = '#',
+              LIBS = 'VE_UtilLib')
+
+for lib in vtk:
+   env.Append(LIBS = lib)
+for lib in boost:
+   env.Append(LIBS = lib)
+env.ParseConfig( 'wx-config --cxxflags --libs' )
+env.ParseConfig( 'vrjuggler-config --libs --extra-libs --includes' )
+env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
+
+env.Program(pj('#','bin',Platform,'vtkTo3DTexture'), source = srcs)

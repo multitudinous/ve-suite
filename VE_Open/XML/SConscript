@@ -1,0 +1,46 @@
+import os, sys, string
+import practice
+pj = os.path.join
+
+Import( 'xerces' )
+
+Import('baseEnv')
+Import('Platform')
+
+xml_srcs = Split("""
+   CreationEventHandler.cxx 
+   Command.cxx
+   DataValuePair.cxx
+   FloatArray.cxx
+   OneDDoubleArray.cxx
+   TwoDDoubleArray.cxx
+   ThreeDDoubleArray.cxx
+   OneDIntArray.cxx
+   TwoDIntArray.cxx
+   ThreeDIntArray.cxx
+   OneDStringArray.cxx
+   ParameterBlock.cxx
+   StateInfo.cxx
+   Transform.cxx
+   User.cxx
+   XMLCreator.cxx
+   XMLObject.cxx
+   XMLObjectFactory.cxx
+   XMLReaderWriter.cxx
+   DOMDocumentManager.cxx
+""")
+
+xml_srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), xml_srcs)
+
+env = baseEnv.Copy()
+#VE_SUITE_HOME = os.getenv('VE_SUITE_HOME','')
+#env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+#env.Append(LIBPATH = '#',
+#              LIBS = 'vrshares')
+for lib in xerces:
+   env.Append(LIBS = lib)
+
+env.SharedLibrary(target = '#/VE_XMLLib', source = xml_srcs)
+#env.Program(pj('#','bin',Platform,'VE_Open','VE_XML'), source = srcs)

@@ -3,16 +3,44 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('Platform')
+Import( 'vtk' )
+Import( 'boost' )
 
-srcs = Split("""
+preprocess_srcs = Split("""
    multiPlaneVtkOutput.cxx
    preprocessor.cxx
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Builder', 'Preprocessor', s), srcs)
+utilities_srcs = Split("""
+   setScalarAndVector.cpp
+""")
+
+xplorer_srcs = Split("""
+   fileIO.cxx 
+   readWriteVtkThings.cxx 
+   cfdVTKFileHandler.cxx 
+""")
+
+preprocess_srcs = map(lambda s: pj('#', 'VE_Builder', 'Preprocessor', s), preprocess_srcs)
+utilities_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', s), utilities_srcs)
+xplorer_srcs = map(lambda s: pj('#', 'VE_Xplorer', s), xplorer_srcs)
+
+preprocessor_srcs = list()
+preprocessor_srcs.extend(preprocess_srcs)
+preprocessor_srcs.extend(xplorer_srcs)
+preprocessor_srcs.extend(utilities_srcs)
 
 env = baseEnv.Copy()
-env.Append(CPPPATH = [os.getcwd()])
+#env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
 env.Append(LIBPATH = '#',
-              LIBS = 'Shared_Library')
-env.Program(pj('#','bin',Platform,'Preprocessor'), source = srcs)
+              LIBS = 'VE_UtilLib')
+
+for lib in vtk:
+   env.Append(LIBS = lib)
+for lib in boost:
+    env.Append(LIBS = lib)  
+env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
+
+env.Program(pj('#','bin',Platform,'Preprocessor'), source = preprocessor_srcs)

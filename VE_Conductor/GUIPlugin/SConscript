@@ -1,0 +1,44 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import( 'xerces' )
+
+framework_srcs = Split("""
+   FinancialDialog.cpp 
+	ListTable.cpp 
+   Plugin_base.cpp 
+   GlobalParamDialog.cpp 
+   Geometry.cpp 
+   GeometryDialog.cpp 
+	GeometryDataManager.cpp 
+   PortDialog.cpp 
+   ResultPanel.cpp 
+   StringParse.cpp 
+   SummaryResultDialog.cpp 
+   TexTable.cpp 
+   TextResultDialog.cpp 
+   UIDialog.cpp 
+""")
+
+framework_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Framework', s), framework_srcs)
+
+guiplugins_srcs = list()
+guiplugins_srcs.extend(framework_srcs)
+
+env = baseEnv.Copy()
+#env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') ) ##ADDITION
+env.Append(LIBPATH = '#',
+              LIBS = 'VE_ConductorLib')
+for lib in xerces:
+   env.Append(LIBS = lib)
+env.ParseConfig( 'wx-config --cxxflags --libs' )
+
+env.SharedLibrary(target = '#/GUIPluginLib', source = guiplugins_srcs)
+
+#env.Program(pj('#','bin',Platform,'VE_CE'), source = network_srcs)
+

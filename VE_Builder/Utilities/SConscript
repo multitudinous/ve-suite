@@ -3,6 +3,8 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('Platform')
+Import( 'vtk' )
+Import( 'boost' )
 
 addNormals2Poly = Split("""
    addNormals2Poly.cpp
@@ -12,13 +14,12 @@ appendVTK = Split("""
    appendVTK.cpp
 """)
 
-arrowCreator = Split("""
-   arrowCreator.cpp
-   cfdArrow.cpp
-""")
-
 combineFluentParticleFile = Split("""
    CombinePartFiles.cpp
+""")
+
+compareScalars = Split("""
+    compareScalars.cpp
 """)
 
 convertCellDataToPointData = Split("""
@@ -38,12 +39,13 @@ convertVTK2Binary = Split("""
 """)
 
 createMiniFlowdata = Split("""
-   createMiniFlowdata.cpp 
+   createMiniFlowdata.cpp
 """)
 
 makeVtkSurface = Split("""
-   makeVtkSurface.cpp 
-""")
+   makeVtkSurface.cpp
+   setScalarAndVector.cpp
+   ../Translator/viewCells.cpp""")
 
 mergeVertices = Split("""
    mergeVertices.cpp
@@ -51,7 +53,8 @@ mergeVertices = Split("""
 
 meshViewer = Split("""
    meshViewer.cpp
-""")
+   setScalarAndVector.cpp
+   ../Translator/viewCells.cpp""")
 
 moveFieldToPointData = Split("""
    moveFieldToPointData.cpp
@@ -79,27 +82,37 @@ whatIsScalarRange = Split("""
 
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = ['#/VE_Builder/Translator'])
-env.Append(CPPPATH = ['#/VE_Builder/Preprocessor'])
-env.Append(CPPPATH = ['#/VE_Builder/Utilities'])
-env.Append(CPPPATH = ['#/VE_Xplorer'])
-env.Append(LIBPATH = '/home/users/nelsonn/svn_Test/VE_Suite',
-              LIBS = 'Shared_Library')
-env.Program(pj('#','bin',Platform,'vr_addNormals2Poly'), source = addNormals2Poly)
-env.Program(pj('#','bin',Platform,'vr_appendVTK'), source = appendVTK)
-env.Program(pj('#','bin',Platform,'vr_arrowCreator'), source = arrowCreator)
-env.Program(pj('#','bin',Platform,'vr_combineFluentParticleFile'), source = combineFluentParticleFile)
-env.Program(pj('#','bin',Platform,'vr_convertCellDataToPointData'), source = convertCellDataToPointData)
-env.Program(pj('#','bin',Platform,'vr_convertSurfaceFileToStl'), source = convertSurfaceFileToStl)
-env.Program(pj('#','bin',Platform,'vr_convertVTK2Ascii'), source = convertVTK2Ascii)
-env.Program(pj('#','bin',Platform,'vr_convertVTK2Binary'), source = convertVTK2Binary)
-#env.Program(pj('#','bin',Platform,'vr_createMiniFlowdata'), source = createMiniFlowdata)
-env.Program(pj('#','bin',Platform,'vr_makeVtkSurface'), source = makeVtkSurface)
-env.Program(pj('#','bin',Platform,'vr_mergeVertices'), source = mergeVertices)
-env.Program(pj('#','bin',Platform,'vr_meshViewer'), source = meshViewer)
-env.Program(pj('#','bin',Platform,'vr_moveFieldToPointData'), source = moveFieldToPointData)
-env.Program(pj('#','bin',Platform,'vr_removeVtkCellsOutsideBox'), source = removeVtkCellsOutsideBox)
-env.Program(pj('#','bin',Platform,'vr_removeVtkPointData'), source = removeVtkPointData)
-env.Program(pj('#','bin',Platform,'vr_scaleVTK'), source = scaleVTK)
-env.Program(pj('#','bin',Platform,'vr_transformVTK'), source = transformVTK)
-#env.Program(pj('#','bin',Platform,'vr_whatIsScalarRange'), source = whatIsScalarRange)
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
+env.Append(LIBPATH = '#',
+              LIBS = 'VE_UtilLib')
+
+env.Append(CPPPATH = pj('#', 'VE_Builder', 'Translator'))
+
+
+for lib in vtk:
+   env.Append(LIBS = lib)
+for lib in boost:
+   env.Append(LIBS = lib)
+env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
+env.ParseConfig( 'vrjuggler-config --libs --extra-libs --includes' )
+
+env.Program(pj('#','bin',Platform,'addNormals2Poly'), source = addNormals2Poly)
+env.Program(pj('#','bin',Platform,'appendVTK'), source = appendVTK)
+env.Program(pj('#','bin',Platform,'combineFluentParticleFile'), source = combineFluentParticleFile)
+env.Program(pj('#','bin',Platform,'compareScalars'), source = compareScalars)
+env.Program(pj('#','bin',Platform,'convertCellDataToPointData'), source = convertCellDataToPointData)
+env.Program(pj('#','bin',Platform,'convertSurfaceFileToStl'), source = convertSurfaceFileToStl)
+env.Program(pj('#','bin',Platform,'convertVTK2Ascii'), source = convertVTK2Ascii)
+env.Program(pj('#','bin',Platform,'convertVTK2Binary'), source = convertVTK2Binary)
+#env.Program(pj('#','bin',Platform,'createMiniFlowdata'), source = createMiniFlowdata)
+env.Program(pj('#','bin',Platform,'makeVtkSurface'), source = makeVtkSurface)
+env.Program(pj('#','bin',Platform,'mergeVertices'), source = mergeVertices)
+env.Program(pj('#','bin',Platform,'meshViewer'), source = meshViewer)
+env.Program(pj('#','bin',Platform,'moveFieldToPointData'), source = moveFieldToPointData)
+env.Program(pj('#','bin',Platform,'removeVtkCellsOutsideBox'), source = removeVtkCellsOutsideBox)
+env.Program(pj('#','bin',Platform,'removeVtkPointData'), source = removeVtkPointData)
+env.Program(pj('#','bin',Platform,'scaleVTK'), source = scaleVTK)
+env.Program(pj('#','bin',Platform,'transformVTK'), source = transformVTK)
+env.Program(pj('#','bin',Platform,'whatIsScalarRange'), source = whatIsScalarRange)

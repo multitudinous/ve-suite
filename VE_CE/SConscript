@@ -1,0 +1,52 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import( '*' )
+
+
+ce_srcs = Split("""
+   Exe_server.cpp 
+   Executive_i.cpp 
+   Execute_Thread.cpp  
+""")
+
+##REDUNDANT.
+##skel_srcs = Split("""
+##   moduleC.cpp 
+##   moduleS.cpp  
+##""")
+
+ce_srcs = map(lambda s: pj('#', 'VE_CE', s), ce_srcs)
+##skel_srcs = map(lambda s: pj('#', 'VE_Open', 'skel', s), skel_srcs)
+
+##ce_srcs = list()
+##ce_srcs.extend(ces_srcs)
+##ce_srcs.extend(skel_srcs)
+
+env = baseEnv.Copy()
+##env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
+env.Append(LIBPATH = '#',
+              LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
+                      'VE_ShaderLib', 'VE_CE_UtilitiesLib', 'VE_OpenModuleLib'])
+for lib in xerces:
+   env.Append(LIBS = lib)
+for lib in ace_tao:
+    env.Append(LIBS = lib) 
+for lib in vtk:
+   env.Append(LIBS = lib)
+for lib in osg:
+   env.Append(LIBS = lib) 
+for lib in boost:
+   env.Append(LIBS = lib)  
+env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
+#env.ParseConfig( 'corona-config --libs' )
+env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
+env.ParseConfig( 'wx-config --cxxflags --libs' )
+
+#env.SharedLibrary(target = '#/VE_CE', source = ce_srcs)
+env.Program(pj('#','bin',Platform,'Exe_Server'), source = ce_srcs)

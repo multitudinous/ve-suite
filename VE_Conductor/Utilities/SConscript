@@ -1,0 +1,41 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import( 'xerces' )
+
+frameworkutil_srcs = Split("""
+   Link.cxx
+   Module.cxx
+   Polygon.cxx
+   Tag.cxx
+   CADTreeBuilder.cxx
+    DualSlider.cxx
+   CADNodeManagerDlg.cxx
+   CADMaterialEditMenu.cxx
+   CADNodeMenu.cxx 
+   CADNodePropsDlg.cxx
+   CADOpacitySliderDlg.cxx
+""")
+
+frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), frameworkutil_srcs)
+
+#guiplugins_srcs = list()
+#guiplugins_srcs.extend(framework_srcs)
+
+env = baseEnv.Copy()
+#env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') ) ##ADDITION
+env.Append(LIBPATH = '#',
+              LIBS = 'VE_ConductorLib')
+for lib in xerces:
+   env.Append(LIBS = lib)
+env.ParseConfig( 'wx-config --cxxflags --libs' )
+
+env.SharedLibrary(target = '#/VE_Conductor_UtilitiesLib', source = frameworkutil_srcs)
+
+#env.Program(pj('#','bin',Platform,'VE_CE'), source = frameworkutil_srcs)
+
