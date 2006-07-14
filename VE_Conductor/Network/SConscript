@@ -3,32 +3,33 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
+Import('libPath')
 Import('xerces')
 
 
-framework_srcs = Split("""
+srcs = Split("""
    interface.cpp 
    package.cpp 
    string_ops.cpp 
    GeometryDataBuffer.cpp
 """)
 
-framework_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Framework', s), framework_srcs)
+srcs = map(lambda s: pj('#', 'VE_Conductor', 'Network', s), srcs)
 
-##network_srcs = list()
-##network_srcs.extend(framework_srcs)
+##srcs = list()
+##srcs.extend(srcs)
 
 env = baseEnv.Copy()
 #env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
-env.Append(LIBPATH = '#',
+env.Append(LIBPATH = libPath,
               LIBS = 'VE_XMLLib')
 for lib in xerces:
    env.Append(LIBS = lib)
-env.SharedLibrary(target = '#/VE_ConductorLib', source = framework_srcs)
+targetLib = pj(libPath, 'VE_ConductorLib')
+env.SharedLibrary(target = targetLib, source = srcs)
 
-#env.Program(pj('#','bin',Platform,'VE_CE'), source = network_srcs)
+#env.Program(pj('#','bin',Platform,'VE_CE'), source = srcs)
 
 
 

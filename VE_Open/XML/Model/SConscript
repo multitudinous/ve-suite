@@ -2,8 +2,8 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
-Import( 'xerces' )
+Import('libPath')
+Import('xerces')
 
 model_srcs = Split("""
    Point.cxx
@@ -21,10 +21,11 @@ env = baseEnv.Copy()
 #env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
 env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
-env.Append(LIBPATH = '#',
+env.Append(LIBPATH = libPath,
               LIBS = 'VE_XMLLib')
 for lib in xerces:
    env.Append(LIBS = lib)
 
-env.SharedLibrary(target = '#/VE_ModelLib', source = model_srcs)
+targetLib = pj(libPath, 'VE_ModelLib')
+env.SharedLibrary(target = targetLib, source = model_srcs)
 #env.Program(pj('#','bin',Platform,'VE_Open','VE_XML'), source = model_srcs)

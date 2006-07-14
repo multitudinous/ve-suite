@@ -5,7 +5,7 @@ pj = os.path.join
 Import( 'xerces' )
 
 Import('baseEnv')
-Import('Platform')
+Import('libPath')
 
 xml_srcs = Split("""
    CreationEventHandler.cxx 
@@ -37,10 +37,11 @@ env = baseEnv.Copy()
 #env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
 env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
-#env.Append(LIBPATH = '#',
+#env.Append(LIBPATH = libPath,
 #              LIBS = 'vrshares')
 for lib in xerces:
    env.Append(LIBS = lib)
 
-env.SharedLibrary(target = '#/VE_XMLLib', source = xml_srcs)
+targetLib = pj(libPath, 'VE_XMLLib')
+env.SharedLibrary(target = targetLib, source = xml_srcs)
 #env.Program(pj('#','bin',Platform,'VE_Open','VE_XML'), source = srcs)

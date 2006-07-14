@@ -3,16 +3,19 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('Platform')
-Import( 'xerces' )
+Import('xerces')
+Import('wx')
+Import('ace_tao')
+Import('libPath')
 
 framework_srcs = Split("""
    FinancialDialog.cpp 
-	ListTable.cpp 
+   ListTable.cpp 
    Plugin_base.cpp 
    GlobalParamDialog.cpp 
    Geometry.cpp 
    GeometryDialog.cpp 
-	GeometryDataManager.cpp 
+   GeometryDataManager.cpp 
    PortDialog.cpp 
    ResultPanel.cpp 
    StringParse.cpp 
@@ -30,15 +33,23 @@ guiplugins_srcs.extend(framework_srcs)
 env = baseEnv.Copy()
 #env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
-env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') ) ##ADDITION
-env.Append(LIBPATH = '#',
-              LIBS = 'VE_ConductorLib')
+##env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+##env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
+env.Append(LIBPATH = libPath,
+              LIBS = 'VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
+                     'VE_CADLib', 'VE_ShaderLib',
+                     'VE_OpenModuleLib')
 for lib in xerces:
    env.Append(LIBS = lib)
-env.ParseConfig( 'wx-config --cxxflags --libs' )
+for lib in wx:
+   env.Append(LIBS = lib)
+for lib in ace_tao:
+   env.Append(LIBS = lib)
+env.ParseConfig('wx-config --cxxflags --libs')
+env.ParseConfig('vrjuggler-config --extra-libs')
 
-env.SharedLibrary(target = '#/GUIPluginLib', source = guiplugins_srcs)
+targetLib = pj(libPath, 'GUIPluginLib'
+env.SharedLibrary(target = targetLib, source = guiplugins_srcs)
 
 #env.Program(pj('#','bin',Platform,'VE_CE'), source = network_srcs)
 

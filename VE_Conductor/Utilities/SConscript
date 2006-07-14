@@ -3,7 +3,10 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('Platform')
-Import( 'xerces' )
+Import('xerces')
+Import('wx')
+Import('ace_tao')
+Import('libPath')
 
 frameworkutil_srcs = Split("""
    Link.cxx
@@ -11,15 +14,19 @@ frameworkutil_srcs = Split("""
    Polygon.cxx
    Tag.cxx
    CADTreeBuilder.cxx
-    DualSlider.cxx
    CADNodeManagerDlg.cxx
    CADMaterialEditMenu.cxx
    CADNodeMenu.cxx 
    CADNodePropsDlg.cxx
    CADOpacitySliderDlg.cxx
+   DualSlider.cxx
+   ROIDialog.cxx
+   BaseDialog.cxx
 """)
 
 frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), frameworkutil_srcs)
+srcs = frameworkutil_srcs
+srcs.append(pj('#', 'VE_Builder', 'Utilities', 'gui', 'spinctld.cpp')
 
 #guiplugins_srcs = list()
 #guiplugins_srcs.extend(framework_srcs)
@@ -27,15 +34,24 @@ frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), fram
 env = baseEnv.Copy()
 #env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
-env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') ) ##ADDITION
-env.Append(LIBPATH = '#',
-              LIBS = 'VE_ConductorLib')
+##env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+##env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') ) ##ADDITION
+env.Append(LIBPATH = libPath,
+              LIBS = 'VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
+                     'VE_CADLib', 'VE_ShaderLib',
+                     'VE_OpenModuleLib')
 for lib in xerces:
    env.Append(LIBS = lib)
-env.ParseConfig( 'wx-config --cxxflags --libs' )
+for lib in ace_tao:
+   env.Append(LIBS = lib)
+for lib in wx:
+   env.Append(LIBS = lib)
 
-env.SharedLibrary(target = '#/VE_Conductor_UtilitiesLib', source = frameworkutil_srcs)
+env.ParseConfig('wx-config --cxxflags --libs')
+env.ParseConfig('vrjuggler-config --extra-libs')
+
+targetLib = pj(libPath, 'VE_Conductor_UtilitiesLib')
+env.SharedLibrary(target = targetLib, source = frameworkutil_srcs)
 
 #env.Program(pj('#','bin',Platform,'VE_CE'), source = frameworkutil_srcs)
 
