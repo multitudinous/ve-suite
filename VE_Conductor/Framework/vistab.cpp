@@ -194,9 +194,9 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
     wxDialog::Create( parent, id, caption, pos, size, style );
 
     CreateControls();
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
-    Centre();
+    //GetSizer()->Fit(this);
+    //GetSizer()->SetSizeHints(this);
+    //Centre();
 //    GetSizer()->SetDimension(427, 20, 427, 400);
 ////@end Vistab creation
     return true;

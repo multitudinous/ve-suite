@@ -406,7 +406,7 @@ wxRect AppFrame::GetAppropriateSubDialogSize()
       wxRect bbox = GetRect();
       int xStart = lrint( 2.0f*displayWidth/3.0f );
       int width = lrint( displayWidth/3.0f );
-      int height = lrint( (displayHeight-bbox.GetBottomRight().y)/2.0f );
+      int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
       return wxRect( xStart, 
                      bbox.GetBottomRight().y, 
                      width, 
@@ -417,7 +417,7 @@ wxRect AppFrame::GetAppropriateSubDialogSize()
    {
       int xStart = lrint( 2.0f*displayWidth/3.0f );
       int width = lrint( displayWidth/3.0f );
-      int height = lrint( displayHeight/2.0f );
+      int height = lrint( 3*displayHeight/4.0f );
       return wxRect( xStart, 
                      0, 
                      width, 
