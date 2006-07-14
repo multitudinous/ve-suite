@@ -282,9 +282,9 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
       ss->setRenderingHint(osg::StateSet::OPAQUE_BIN);
       ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
       ss->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
-      osg::Geometry* bboxCube = new osg::Geometry;
+	  osg::ref_ptr<osg::Geometry> bboxCube = new osg::Geometry;
 
-      osg::Vec3Array* coords = new osg::Vec3Array();
+	  osg::ref_ptr<osg::Vec3Array> coords = new osg::Vec3Array();
       coords->push_back(_bbox.corner(0));
       coords->push_back(_bbox.corner(1));
       coords->push_back(_bbox.corner(2));
@@ -312,19 +312,19 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
       coords->push_back(_bbox.corner(3));
       coords->push_back(_bbox.corner(7));
 
-      bboxCube->setVertexArray(coords);
+      bboxCube->setVertexArray(coords.get());
 
-      osg::Vec4Array* colors = new osg::Vec4Array(1);
+      osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(1);
       (*colors)[0].set(1.0f,1.0f,0.0f,1.0f);
-      bboxCube->setColorArray(colors);
+      bboxCube->setColorArray(colors.get());
       bboxCube->setColorBinding(osg::Geometry::BIND_OVERALL);
       bboxCube->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES,
 			       0,coords->size()));
       
-      osg::Geode* geode = new osg::Geode;
-      geode->addDrawable(bboxCube);
+	  osg::ref_ptr<osg::Geode> geode = new osg::Geode;
+      geode->addDrawable(bboxCube.get());
       geode->setName("Visual BBox");
-      _visualBoundingBox->addChild(geode);
+      _visualBoundingBox->addChild(geode.get());
       
    }else{
       std::cout<<"Invalid bbox in cfdVolumeVisNodeHandler::_createVisualBBox!"<<std::endl;

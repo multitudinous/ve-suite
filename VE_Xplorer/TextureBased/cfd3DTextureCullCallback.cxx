@@ -148,7 +148,7 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
    // set up lighting.
    // currently ignore lights in the scene graph itself..
    // will do later.
-   osgUtil::RenderStage* previous_stage = cv.getCurrentRenderBin()->getStage();
+   osg::ref_ptr<osgUtil::RenderStage> previous_stage = cv.getCurrentRenderBin()->getStage();
 
    // set up the background color and clear mask.
    rtts->setClearColor(osg::Vec4(0.0f,0.0,0.0f,1.0f));
@@ -198,11 +198,11 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
    int height = _h;
    int width  = _w;
 
-   osg::Viewport* new_viewport = new osg::Viewport;
+   osg::ref_ptr<osg::Viewport> new_viewport = new osg::Viewport;
    new_viewport->setViewport(0,0,width,height);
-   rtts->setViewport(new_viewport);
+   rtts->setViewport(new_viewport.get());
 
-   _localState->setAttribute(new_viewport);    
+   _localState->setAttribute(new_viewport.get());    
 
    // and the render to texture stage to the current stages
    // dependancy list.

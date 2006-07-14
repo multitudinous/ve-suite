@@ -619,7 +619,7 @@ void cfdVolumeVisualization::TranslateCenterBy(float* translate)
 void cfdVolumeVisualization::_buildSlices()
 {
     // set up the slices.
-    osg::Geometry* geom = new osg::Geometry;
+   osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
 
     //the slices are y slices because the camera is looking
     //down the y axis in eye space
@@ -627,8 +627,8 @@ void cfdVolumeVisualization::_buildSlices()
     float y = halfSize;
     float dy =-_diagonal/(float)(_nSlices-1);
 
-    osg::Vec3Array* ycoords = new osg::Vec3Array(4*_nSlices);
-    geom->setVertexArray(ycoords);
+    osg::ref_ptr<osg::Vec3Array> ycoords = new osg::Vec3Array(4*_nSlices);
+    geom->setVertexArray(ycoords.get());
     
     for(unsigned int i = 0; i< _nSlices; ++i, y+=dy)
     {
@@ -639,14 +639,14 @@ void cfdVolumeVisualization::_buildSlices()
     }
    
     
-    osg::Vec3Array* normals = new osg::Vec3Array(1);
+    osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array(1);
     (*normals)[0].set(0.0f,-1.0f,0.0f);
-    geom->setNormalArray(normals);
+    geom->setNormalArray(normals.get());
     geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
 
-    osg::Vec4Array* colors = new osg::Vec4Array(1);
+    osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(1);
     (*colors)[0].set(1.0f,1.0f,1.0f,.2);
-    geom->setColorArray(colors);
+    geom->setColorArray(colors.get());
     geom->setColorBinding(osg::Geometry::BIND_OVERALL);
 
     geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
@@ -654,7 +654,7 @@ void cfdVolumeVisualization::_buildSlices()
     _billboard = new osg::Billboard;
     //_billboard = new cfdVolumeBillboard();
     _billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
-    _billboard->addDrawable(geom);
+    _billboard->addDrawable(geom.get());
 
     //position the slices in the scene
     _billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
