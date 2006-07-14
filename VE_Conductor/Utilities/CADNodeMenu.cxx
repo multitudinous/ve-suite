@@ -90,7 +90,6 @@ CADNodeMenu::CADNodeMenu()
    Enable(GEOM_DELETE, false);
    InsertSeparator(3);
 
-#ifdef wxHAS_RADIO_MENU_ITEMS
    wxMenu* toggleNodeSubMenu = new wxMenu();
    toggleNodeSubMenu->AppendRadioItem(GEOM_TOGGLE_ON,
                                       _T("ON"),
@@ -103,7 +102,6 @@ CADNodeMenu::CADNodeMenu()
           toggleNodeSubMenu);
    Enable(GEOM_DISPLAY_TOGGLE, true);
    InsertSeparator(5);
-#endif
    
    Append(GEOM_PROPERTIES,
           _T("Properties..."),
