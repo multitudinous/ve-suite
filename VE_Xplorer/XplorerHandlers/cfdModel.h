@@ -182,6 +182,12 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       ///\param The CADAttribute to add to the node.
       void AddAttributeToNode(unsigned int nodeID,
                            VE_CAD::CADAttribute* newAttribute);
+	   ///Add a new attribute to a node
+      ///\param nodeID The ID of the node to add Attribute to.
+      ///\param nodeType The node type.
+      ///\param neAttribute The name of the CADAttribute to remove from the node.
+      void RemoveAttributeFromNode(unsigned int nodeID,std::string nodeType,
+                                   std::string newAttribute);
       ///Add a new attribute to a node
       ///\param nodeID The ID of the node to add Attribute to.
       ///\param nodeType The node type.

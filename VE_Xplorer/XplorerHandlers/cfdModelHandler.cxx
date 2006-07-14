@@ -66,6 +66,8 @@
 #include "VE_Xplorer/XplorerHandlers/CADSetActiveAttributeEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADSetNameEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADToggleEH.h"
+#include "VE_Xplorer/XplorerHandlers/CADRemoveAttributeEH.h"
+
 #include "VE_Xplorer/XplorerHandlers/ActiveModelEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/MaterialUpdateEH.h"
 #include "VE_Xplorer/XplorerHandlers/MaterialModeUpdateEH.h"
@@ -129,6 +131,7 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("CHANGE_ACTIVE_MODEL") ] = new VE_EVENTS::ActiveModelEventHandler();
    _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE") ] = new VE_EVENTS::MaterialUpdateEventHandler();
    _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_MODE") ] = new VE_EVENTS::MaterialModeUpdateEventHandler();
+   _eventHandlers[ std::string("CAD_REMOVE_ATTRIBUTE") ] = new VE_EVENTS::CADRemoveAttributeEventHandler();
    _eventHandlers[ std::string("UPDATE_MODEL_DATASETS") ] = new VE_EVENTS::AddVTKDataSetEventHandler();
    
 #ifdef _OSG

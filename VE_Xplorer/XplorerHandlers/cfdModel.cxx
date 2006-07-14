@@ -943,6 +943,56 @@ void cfdModel::MakeCADRootOpaque()
       vprDEBUG(vesDBG,1) <<"|\tcfdModel::MakeCADRootOpaque()---"<<std::endl<< vprDEBUG_FLUSH;
    }
 }
+/////////////////////////////////////////////////////////////////////////////////////
+void cfdModel::RemoveAttributeFromNode(unsigned int nodeID,std::string nodeType,
+                                       std::string attributeName)
+{
+#ifdef _OSG
+	std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+   attributeList = _nodeAttributes.find(nodeID);
+   
+   if(attributeList != _nodeAttributes.end())
+   {
+      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
+      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
+      namesAndAttributes = attributeList->second;
+      for(foundAttribute = namesAndAttributes.begin();
+          foundAttribute != namesAndAttributes.end();
+          )
+      {
+         vprDEBUG(vesDBG,1) <<"|\tFound attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
+         if(foundAttribute->first == attributeName)
+         {
+            namesAndAttributes.erase(foundAttribute);
+			   
+            if(nodeType == "Assembly")
+            {
+               //vprDEBUG(vesDBG,1) <<"|\tSetting Assembly attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
+               GetAssembly(nodeID)->GetRawNode()->getStateSet()->clear();
+            }
+            else if(nodeType == "Part")
+            {
+               //vprDEBUG(vesDBG,1) <<"|\tSetting Part attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
+               GetPart(nodeID)->GetDCS()->GetRawNode()->getStateSet()->clear();
+               vprDEBUG(vesDBG,1) <<"|\tvalid: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
+            }
+            else if(nodeType == "Clone")
+            {
+               //vprDEBUG(vesDBG,1) <<"|\tSetting Clone attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
+               GetClone(nodeID)->GetClonedGraph()->GetRawNode()->getStateSet()->clear();
+            }
+            break;
+         }
+         foundAttribute++;
+      }
+   }
+   else
+   {
+      vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
+   }
+
+#endif
+}
 //////////////////////////////////////////////
 void cfdModel::AddAttributeToNode(unsigned int nodeID,
                               VE_CAD::CADAttribute* newAttribute)
