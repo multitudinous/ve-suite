@@ -404,18 +404,24 @@ wxRect AppFrame::GetAppropriateSubDialogSize()
    if(_displayMode == "Desktop")
    {
       wxRect bbox = GetRect();
-      return wxRect( 2*displayWidth/3, 
+      int xStart = lrint( 2.0f*displayWidth/3.0f );
+      int width = lrint( displayWidth/3.0f );
+      int height = lrint( (displayHeight-bbox.GetBottomRight().y)/2.0f );
+      return wxRect( xStart, 
                      bbox.GetBottomRight().y, 
-                     displayWidth/3, 
-                     (displayHeight-bbox.GetBottomRight().y)/2 
+                     width, 
+                     height 
                    );
    }
    else
    {
-      return wxRect( 2*displayWidth/3, 
+      int xStart = lrint( 2.0f*displayWidth/3.0f );
+      int width = lrint( displayWidth/3.0f );
+      int height = lrint( displayHeight/2.0f );
+      return wxRect( xStart, 
                      0, 
-                     displayWidth/3, 
-                     displayHeight/2 
+                     width, 
+                     height 
                    );
    }
 }
