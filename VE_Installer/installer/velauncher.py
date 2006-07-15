@@ -356,7 +356,7 @@ class LauncherWindow(wx.Dialog):
         self.Show(True)
         ##Error check: Is there a /bin folder in the launcher's directory?
         ##If so, assume it's in VE Suite's folder. If not, warn the user.
-        if not os.path.exists("bin"):
+        if not os.path.exists("bin") and os.getenv("VE_INSTALL_DIR") == "":
             dlg = wx.MessageDialog(self,
                                    "VE Suite's /bin directory wasn't found" +
                                    " in the Launcher's directory.\n" +
@@ -1855,8 +1855,6 @@ class Launch:
         The environmental settings will carry over.
 
         Variables overwritten by this class:
-        VJ_BASE_DIR
-        VJ_DEPS_DIR
         CFDHOSTTYPE (removes parantheses from CFDHOSTTYPE)
 
         Variables not overwritten, but set to a default value if empty:
@@ -1877,6 +1875,8 @@ class Launch:
         NSPR_ROOT
         SNX_BASE_DIR
         VEXMASTER
+        VJ_BASE_DIR
+        VJ_DEPS_DIR
 
         Variables appended:
         PYTHON_PATH (Windows systems only)
@@ -1897,11 +1897,10 @@ class Launch:
         ##vrJuggler  
         ##These are setup for using VE-Suite dependency install's location
         ##change only if you are using your own build
-        os.environ["VJ_BASE_DIR"] = os.path.join(os.getenv("VE_DEPS_DIR"),
-                                                 JUGGLER_FOLDER)
-        os.environ["VJ_DEPS_DIR"] = os.path.join(os.getenv("VE_DEPS_DIR"),
-                                                 JUGGLER_FOLDER)
-
+        self.EnvFill("VJ_BASE_DIR", os.path.join(os.getenv("VE_DEPS_DIR"),
+                                                 JUGGLER_FOLDER))
+        self.EnvFill("VJ_DEPS_DIR", os.path.join(os.getenv("VE_DEPS_DIR"),
+                                                 JUGGLER_FOLDER))
         ##Cluster apps & user-built dependencies were commented out,
         ##therefore they weren't added. Check old setup.bat for more details.
         ##NOTE: Since they were only used for custom builds, setting them
