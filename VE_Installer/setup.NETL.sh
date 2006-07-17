@@ -40,7 +40,7 @@ export OSGNOTIFYLEVEL=DEBUG_INFO
 export PFSHAREDSIZE=534773700
 export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
-export DYLD_INSERT_LIBRARIES=/usr/lib/libMallocDebug.A.dylib
+#export DYLD_INSERT_LIBRARIES=/usr/lib/libMallocDebug.A.dylib
 case "$CFDHOSTTYPE" in
    IRIX*) 
    #echo "CFDHOSTTYPE contains IRIX"
