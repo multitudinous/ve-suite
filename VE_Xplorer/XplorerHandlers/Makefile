@@ -107,6 +107,7 @@ SRCS=\
    AttributeEventHandler.cxx \
    CADEventHandler.cxx \
    CADDeleteNodeEH.cxx \
+   CADRemoveAttributeEH.cxx \
    CADAddNodeEH.cxx \
    CADAddAttributeEH.cxx \
    CADSetActiveAttributeEH.cxx \
