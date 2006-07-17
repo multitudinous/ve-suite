@@ -75,6 +75,11 @@ changed, then call:
     python velauncher.py
 as its last line. Run the batch/shell whenever you want to use the custom build.
 
+You can also run velauncher.py in dev mode by calling:
+    python velauncher.py --dev
+This will get rid of the annoying "Dependencies file doesn't exist" errors for
+dev builds.
+
 ========================================================================
 Using VE-Suite Launcher, Clusters
 
@@ -94,6 +99,8 @@ You can also give arguments to the Launcher from the command line to
 immediately launch it. The options are:
 
 <none>: Start the velauncher GUI.
+--dev: Start the velauncher GUI in developer mode. Doesn't work with any
+other arguments.
 
 -c, --conductor: Launch VE Conductor.
 -n, --nameserver: Launch VE NameServer.

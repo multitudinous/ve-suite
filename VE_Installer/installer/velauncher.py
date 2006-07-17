@@ -26,7 +26,8 @@ import wx ##Used for GUI
 ##Miscellaneous values for launcher's UI
 XPLORER_SHELL_NAME = "Xplorer Shell"
 CONDUCTOR_SHELL_NAME = "Conductor Shell"
-FIXED = False ##Used in MODE_DICT
+FIXED = False ##Constant var used in MODE_DICT
+devMode = False ##Run VE-Suite in dev mode?
 ##File/Folder settings.
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
@@ -92,6 +93,8 @@ def usage():
     print """
 LEGAL ARGUMENTS FOR VELAUNCHER.PY
 <none>: Start the velauncher GUI.
+--dev: Start the velauncher GUI in developer mode. Doesn't work with any
+other arguments.
 
 -c, --conductor: Launch VE Conductor.
 -n, --nameserver: Launch VE NameServer.
@@ -296,7 +299,8 @@ class LauncherWindow(wx.Dialog):
         ##Set tool tip popup delay to 2 seconds.
         wx.ToolTip.SetDelay(2000)
         ##Check the dependencies.
-        self.DependenciesCheck()
+        if not devMode:
+            self.DependenciesCheck()
         ##Event bindings.
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
@@ -434,7 +438,7 @@ class LauncherWindow(wx.Dialog):
             else:
                 legitimateDependenciesDir = True
         ##Write the new Dependencies directory to default config.
-        config.Write("DependenciesDir", dependenciesDir)
+        config.dWrite("DependenciesDir", dependenciesDir)
 
     def DependenciesGet(self):
         """Ask user for DependenciesDir. Called by DependenciesCheck.
@@ -601,7 +605,12 @@ class LauncherWindow(wx.Dialog):
         ##If neither exists, bring up an error. NOTE: Should never be reached.
         else:
             print "ERROR: No Jconf configuration found and failed to make" + \
-                  "default Jconf from Dependencies dir."
+                  " default Jconf from Dependencies dir."
+            print "Substituting a dead parrot instead."
+            config.SetPath(JCONF_CONFIG)
+            config.Write("Dead Parrot", "es/just/sleeping")
+            config.SetPath('..')
+            self.jconfList = JconfList()
         ##Set Jconf cursor.
         self.jconfSelection = config.Read("JconfSelection", "None")
         ##Set Tao Machine & Port.
@@ -2062,19 +2071,22 @@ try:
                                "cnx:kj:t:p:sw:e:m:",
                                ["conductor", "nameserver", "xplorer=",
                                 "desktop", "jconf=", "taomachine=", "port=",
-                                "setup", "dir=", "dep=", "master="])
+                                "setup", "dir=", "dep=", "master=", "dev"])
 except getopt.GetoptError:
     usage()
     sys.exit(2)
-##Immediate command line run.
-##Takes arguments passed, uses defaults for the rest.
-if len(opts) > 0:
-    CommandLaunch(opts)
 ##Window boot
-else:
+if len(opts) == 0 or (len(opts) == 1 and opts[0] == ("--dev", "")):
+    if len(opts) == 1 and opts[0] == ("--dev", ""):
+        devMode = True
     app = wx.PySimpleApp()
     frame = LauncherWindow(None,-1,'VE Suite Launcher')
     app.MainLoop()
     ##Delete the config link to avoid memory leakage.
     del config
+##Command line boot
+##Takes arguments passed, uses defaults for the rest, launches immediately.
+else:
+    CommandLaunch(opts)
+
 

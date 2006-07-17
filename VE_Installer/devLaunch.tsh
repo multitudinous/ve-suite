@@ -1,0 +1,6 @@
+cd ..
+setenv VE_SUITE_HOME `pwd`
+cd VE_Installer
+source setup.tsh
+cd installer
+python velauncher.py --dev
