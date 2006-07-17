@@ -981,6 +981,7 @@ void REI_Plugin::ViewInputVariables( void )
    // Get all the results form the model
    inputsDialog->ShowModal();
    delete inputsDialog;
+   inputsDialog = 0;
 }
 ///////////////////////////////////////////////
 void REI_Plugin::ViewResultsVariables( void )
