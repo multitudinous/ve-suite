@@ -910,7 +910,7 @@ void cfdModel::MakeCADRootTransparent()
    {  
       return;
    }
-   
+#ifdef _OSG   
    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
    attribute->CreateTransparencyStateSet();
 
@@ -923,6 +923,7 @@ void cfdModel::MakeCADRootTransparent()
       vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"<<std::endl<< vprDEBUG_FLUSH;
       vprDEBUG(vesDBG,1) <<"|\tcfdModel::MakeCADRootTransparent()---"<<std::endl<< vprDEBUG_FLUSH;
    }
+#endif
 
 }
 //////////////////////////////////
@@ -932,7 +933,7 @@ void cfdModel::MakeCADRootOpaque()
    {  
       return;
    }
-
+#ifdef _OSG
    try
    {
       (*_assemblyList.begin()).second->GetRawNode()->getStateSet()->clear();
@@ -942,6 +943,7 @@ void cfdModel::MakeCADRootOpaque()
       vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"<<std::endl<< vprDEBUG_FLUSH;
       vprDEBUG(vesDBG,1) <<"|\tcfdModel::MakeCADRootOpaque()---"<<std::endl<< vprDEBUG_FLUSH;
    }
+#endif
 }
 /////////////////////////////////////////////////////////////////////////////////////
 void cfdModel::RemoveAttributeFromNode(unsigned int nodeID,std::string nodeType,
