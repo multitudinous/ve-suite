@@ -81,7 +81,7 @@ NULL_SPACE = (0, 0)
 ##Set up the config
 config = wx.Config(CONFIG_FILE)
 config.SetPath(DEFAULT_CONFIG)
-
+    
 def Style(window):
     """The uniform style of each window in VE Launcher."""
     ##Set the background color.
@@ -438,7 +438,7 @@ class LauncherWindow(wx.Dialog):
             else:
                 legitimateDependenciesDir = True
         ##Write the new Dependencies directory to default config.
-        config.dWrite("DependenciesDir", dependenciesDir)
+        config.Write("DependenciesDir", dependenciesDir)
 
     def DependenciesGet(self):
         """Ask user for DependenciesDir. Called by DependenciesCheck.
@@ -1159,7 +1159,7 @@ class JconfList:
         nList = []
         for name in self.jDict:
             nList.append(name)
-        nList.sort()
+        nList.sort(key = str.lower)
         return nList
 
 class JconfWindow(wx.Dialog):
@@ -1457,6 +1457,7 @@ class ClusterDict:
         nList = []
         for name in self.cluster:
             nList.append(name)
+        nList.sort(key=str.lower)
         return nList
 
     def GetLocations(self):
@@ -1565,7 +1566,6 @@ class ClusterWindow(wx.Dialog):
         if cursor == "":
             cursor = self.clustList.GetStringSelection()
         nameList = self.cDict.GetNames()
-        nameList.sort()
         self.clustList.Set(nameList)
         if cursor == wx.NOT_FOUND or self.clustList.GetCount() == 0:
             self.clustList.SetSelection(wx.NOT_FOUND)
@@ -1683,7 +1683,7 @@ class Launch:
             self.clusterScript += "setenv PYTHONPATH %s\n" %(os.getenv("PYTHONPATH"))
         else:
             self.cluster = False
-        print "Cluster script set up? %s" %(self.cluster)
+##        print "Cluster script set up? %s" %(self.cluster) ##TESTER
         ##Get dependenciesDir for setting environmental variables.
         if dependenciesDir == None:
             dependenciesDir = config.Read("DependenciesDir", "ERROR")
@@ -1734,8 +1734,8 @@ class Launch:
                 desktop = " -VESDesktop"
             else:
                 desktop = ""
-            os.system('start "%s" ' % (CONDUCTOR_SHELL_NAME) +
-                      "WinClientd.exe -ORBInitRef" +
+            os.system('start "%s" /B' % (CONDUCTOR_SHELL_NAME) +
+                      " WinClientd.exe -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
                       " -ORBDottedDecimalAddresses 1" + desktop)
@@ -1759,7 +1759,7 @@ class Launch:
             else:
                 executable = "ERROR"
             ##Xplorer's start call
-            os.system('start "%s"' %(XPLORER_SHELL_NAME) +
+            os.system('start "%s" /B' %(XPLORER_SHELL_NAME) +
                       ' %s "%s"' %(executable, jconf) +
                       " -ORBInitRef" +
                       " NameService=" +
