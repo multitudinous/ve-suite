@@ -1,119 +1,183 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="DataLoader"
 	ProjectGUID="{00000E8F-0000-0000-0000-000000000000}"
 	RootNamespace="DataLoader"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory=".\DataLoader\$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_USER_BUILDER_LIBRARY;WINVER=0x400;VTK44;FLUENT_MFIX"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib"
 				OutputFile="$(OutDir)/DataLoader_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/DataLoader_d.pdb"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/DataLoader_d.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory=".\DataLoader\$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_BUILDER_LIBRARY;WINVER=0x400;VTK44"
 				RuntimeLibrary="2"
-				RuntimeTypeInfo="TRUE"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib"
 				OutputFile="$(OutDir)/DataLoader.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="$(OutDir)/DataLoader.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -122,92 +186,120 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
 			<File
-				RelativePath=".\AVSTranslator.cxx">
+				RelativePath=".\AVSTranslator.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDICOMTranslator.cxx">
+				RelativePath=".\cfdDICOMTranslator.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdREITranslator.cxx">
+				RelativePath=".\cfdREITranslator.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\converter.cpp">
+				RelativePath=".\converter.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\DataLoader.cxx">
+				RelativePath=".\DataLoader.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\EnSightTranslator.cxx">
+				RelativePath=".\EnSightTranslator.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\FluentTranslator.cxx">
+				RelativePath=".\FluentTranslator.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\gridConversion.cxx">
+				RelativePath=".\gridConversion.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\main.cxx">
+				RelativePath=".\main.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\MFIXTranslator.cxx">
+				RelativePath=".\MFIXTranslator.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\plot3dReader.cxx">
+				RelativePath=".\plot3dReader.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\StarCDTranslator.cxx">
+				RelativePath=".\StarCDTranslator.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\starReader.cxx">
+				RelativePath=".\starReader.cxx"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 			<File
-				RelativePath=".\AVSTranslator.h">
+				RelativePath=".\AVSTranslator.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDICOMTranslator.h">
+				RelativePath=".\cfdDICOMTranslator.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdREITranslator.h">
+				RelativePath=".\cfdREITranslator.h"
+				>
 			</File>
 			<File
-				RelativePath=".\converter.h">
+				RelativePath=".\converter.h"
+				>
 			</File>
 			<File
-				RelativePath=".\DataLoader.h">
+				RelativePath=".\DataLoader.h"
+				>
 			</File>
 			<File
-				RelativePath=".\EnSightTranslator.h">
+				RelativePath=".\EnSightTranslator.h"
+				>
 			</File>
 			<File
-				RelativePath=".\FluentTranslator.h">
+				RelativePath=".\FluentTranslator.h"
+				>
 			</File>
 			<File
-				RelativePath=".\gridConversion.h">
+				RelativePath=".\gridConversion.h"
+				>
 			</File>
 			<File
-				RelativePath=".\MFIXTranslator.h">
+				RelativePath=".\MFIXTranslator.h"
+				>
 			</File>
 			<File
-				RelativePath=".\plot3dReader.h">
+				RelativePath=".\plot3dReader.h"
+				>
 			</File>
 			<File
-				RelativePath=".\StarCDTranslator.h">
+				RelativePath=".\StarCDTranslator.h"
+				>
 			</File>
 			<File
-				RelativePath=".\starReader.h">
+				RelativePath=".\starReader.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
 		</Filter>
 	</Files>
 	<Globals>

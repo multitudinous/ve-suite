@@ -93,6 +93,33 @@ using namespace VE_Shader;
 
 #ifdef WIN32
 #include <shellapi.h>
+#include <math.h>
+/* Win32 doesn't seem to have these functions.
+** Therefore implement inline versions of these functions here.
+*/
+__inline long int
+lrint (double flt)
+{
+  int intgr;
+  _asm
+  {
+      fld flt
+      fistp intgr
+  } ;
+  return intgr ;
+}
+
+__inline long int
+lrintf (float flt)
+{
+   int intgr;
+   _asm
+  {
+    fld flt
+    fistp intgr
+  } ;
+  return intgr ;
+}
 #endif
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)

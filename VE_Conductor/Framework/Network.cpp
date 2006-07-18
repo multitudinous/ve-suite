@@ -2533,7 +2533,7 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
    DataSetLoaderUI dataSetLoaderDlg( this, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
-
+   dataSetLoaderDlg.SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    //cadDialog->SetVjObsPtr( xplorerPtr.in() );
    if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
    {

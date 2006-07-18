@@ -1,87 +1,138 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="VE_XplorerLib"
 	ProjectGUID="{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}"
 	RootNamespace="VE_Xplorer"
-	SccProjectName=""
-	SccLocalPath="">
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Release/VE_Xplorer.tlb"
+				HeaderFileName=""
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE;VTK4"
-				StringPooling="TRUE"
-				RuntimeLibrary="4"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/VE_Xplorer.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"/>
+				SuppressStartupBanner="true"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="gadget_d.lib"
 				ShowProgress="2"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\bin\bin\release&quot;;&quot;$(VJ_BASE_DIR)\vrjuggler-2.0-alpha4.win32-vc71\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				ProgramDatabaseFile=".\Release/VE_Xplorer.pdb"
 				SubSystem="1"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName=".\Release/VE_Xplorer.tlb"
-				HeaderFileName=""/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="tao_pf_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName="$(ConfigurationName)/VE_Xplorer.tlb"
+				HeaderFileName=""
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
@@ -90,63 +141,93 @@
 				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;WXUSINGDLL;VE_XPLORER_LIBRARY;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
+				DisableSpecificWarnings="4244;4251;4275;4290;4291"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libpf.lib libpfdu-util.lib vpr_d.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib comctl32.lib ws2_32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_XplorerLib_tao_pf_d.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(PFROOT)\lib\Debug&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
-				IgnoreAllDefaultLibraries="FALSE"
+				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VE_XplorerLib_tao_pf_d.pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/VE_XplorerLib_tao_pf_d.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName="$(ConfigurationName)/VE_Xplorer.tlb"
-				HeaderFileName=""/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="tao_osg_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Debug/VE_Xplorer.tlb"
+				HeaderFileName=""
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
@@ -155,63 +236,93 @@
 				PreprocessorDefinitions="_DEBUG;_OSG;WXUSINGDLL;VE_XPLORER_LIBRARY;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
+				DisableSpecificWarnings="4244;4251;4275;4290;4291"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_d.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(XERCESCROOT)\\Build\Win32\VC7.1\Debug&quot;"
-				IgnoreAllDefaultLibraries="FALSE"
+				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VEXplorerLib_tao_osg_d.pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)\VE_XplorerLib_tao_osg_d.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName=".\Debug/VE_Xplorer.tlb"
-				HeaderFileName=""/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="tao_osg_vep_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Debug/VE_Xplorer.tlb"
+				HeaderFileName=""
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
@@ -220,54 +331,65 @@
 				PreprocessorDefinitions="_DEBUG;_OSG;VE_PATENTED;VE_XPLORER_LIBRARY;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;WXDEBUG=1;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
+				DisableSpecificWarnings="4244;4251;4275;4290;4291"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
-				ShowProgress="0"
-				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_vep_d.dll"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(XERCESCROOT)\\Build\Win32\VC7.1\Debug&quot;"
-				IgnoreAllDefaultLibraries="FALSE"
-				IgnoreDefaultLibraryNames=""
-				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(IntDir)/VEXplorerLib_tao_osg_vep_d.pdb"
-				SubSystem="1"
-				ImportLibrary="$(OutDir)\VE_XplorerLib_tao_osg_vep_d.lib"
-				TargetMachine="1"/>
-			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName=".\Debug/VE_Xplorer.tlb"
-				HeaderFileName=""/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
+				Culture="1033"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCLinkerTool"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
+				ShowProgress="0"
+				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_vep_d.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(XERCESCROOT)\\Build\Win32\VC7.1\Debug&quot;"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(IntDir)/VEXplorerLib_tao_osg_vep_d.pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)\VE_XplorerLib_tao_osg_vep_d.lib"
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -275,513 +397,690 @@
 	<Files>
 		<Filter
 			Name="src"
-			Filter=".cpp">
+			Filter=".cpp"
+			>
 			<File
-				RelativePath=".\ActiveModelEventHandler.cxx">
+				RelativePath=".\ActiveModelEventHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\AddVTKDataSetEventHandler.cxx">
+				RelativePath=".\AddVTKDataSetEventHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\AttributeEventHandler.cxx">
+				RelativePath=".\AttributeEventHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CADAddAttributeEH.cxx">
+				RelativePath=".\CADAddAttributeEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CADAddNodeEH.cxx">
+				RelativePath=".\CADAddNodeEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CADDeleteNodeEH.cxx">
+				RelativePath=".\CADDeleteNodeEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CADEventHandler.cxx">
+				RelativePath=".\CADEventHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CADSetActiveAttributeEH.cxx">
+				RelativePath=".\CADRemoveAttributeEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CADSetNameEH.cxx">
+				RelativePath=".\CADSetActiveAttributeEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CADToggleEH.cxx">
+				RelativePath=".\CADSetNameEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CADTransformEH.cxx">
+				RelativePath=".\CADToggleEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfd1DTextInput.cxx">
+				RelativePath=".\CADTransformEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdAnimatedImage.cxx">
+				RelativePath=".\cfd1DTextInput.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdAnimatedStreamlineCone.cxx">
+				RelativePath=".\cfdAnimatedImage.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdCommandArray.cxx">
+				RelativePath=".\cfdAnimatedStreamlineCone.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdCommandObjects.cxx">
+				RelativePath=".\cfdCommandArray.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdContour.cxx">
+				RelativePath=".\cfdCommandObjects.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdContourBase.cxx">
+				RelativePath=".\cfdContour.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdContours.cxx">
+				RelativePath=".\cfdContourBase.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdCursor.cxx">
+				RelativePath=".\cfdContours.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdCuttingPlane.cxx">
+				RelativePath=".\cfdCursor.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDataSet.cxx">
+				RelativePath=".\cfdCuttingPlane.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDigitalAnalogGauge.cxx">
+				RelativePath=".\cfdDataSet.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDisplaySettings.cxx">
+				RelativePath=".\cfdDigitalAnalogGauge.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdEnvironmentHandler.cxx">
+				RelativePath=".\cfdDisplaySettings.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdFILE.cxx">
+				RelativePath=".\cfdEnvironmentHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdFileInfo.cxx">
+				RelativePath=".\cfdFILE.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdGeomDataSet.cxx">
+				RelativePath=".\cfdFileInfo.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdGlobalBase.cxx">
+				RelativePath=".\cfdGeomDataSet.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdGraphicsObject.cxx">
+				RelativePath=".\cfdGlobalBase.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdImage.cxx">
+				RelativePath=".\cfdGraphicsObject.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdIsosurface.cxx">
+				RelativePath=".\cfdImage.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdModel.cxx">
+				RelativePath=".\cfdIsosurface.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdModelHandler.cxx">
+				RelativePath=".\cfdModel.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdMomentum.cxx">
+				RelativePath=".\cfdModelHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdMomentums.cxx">
+				RelativePath=".\cfdMomentum.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdNavigate.cxx">
+				RelativePath=".\cfdMomentums.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdObjectHandler.cxx">
+				RelativePath=".\cfdNavigate.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdObjects.cxx">
+				RelativePath=".\cfdObjectHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPlanes.cxx">
+				RelativePath=".\cfdObjects.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPolyData.cxx">
+				RelativePath=".\cfdPlanes.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPresetContour.cxx">
+				RelativePath=".\cfdPolyData.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPresetMomentum.cxx">
+				RelativePath=".\cfdPresetContour.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPresetVector.cxx">
+				RelativePath=".\cfdPresetMomentum.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdQuatCam.cxx">
+				RelativePath=".\cfdPresetVector.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdQuatCamHandler.cxx">
+				RelativePath=".\cfdQuatCam.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdRawNodeWriteTraverser.cxx">
+				RelativePath=".\cfdQuatCamHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdReadParam.cxx">
+				RelativePath=".\cfdRawNodeWriteTraverser.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdScalarBarActor.cxx">
+				RelativePath=".\cfdReadParam.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdSound.cxx">
+				RelativePath=".\cfdScalarBarActor.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdSoundHandler.cxx">
+				RelativePath=".\cfdSound.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdSteadyStateVizHandler.cxx">
+				RelativePath=".\cfdSoundHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdStreamers.cxx">
+				RelativePath=".\cfdSteadyStateVizHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdTeacher.cxx">
+				RelativePath=".\cfdStreamers.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdTextOutput.cxx">
+				RelativePath=".\cfdTeacher.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdTextureBasedVizHandler.cxx">
+				RelativePath=".\cfdTextOutput.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdThread.cxx">
+				RelativePath=".\cfdTextureBasedVizHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdTrackball.cxx">
+				RelativePath=".\cfdThread.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdVector.cxx">
+				RelativePath=".\cfdTrackball.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdVectorBase.cxx">
+				RelativePath=".\cfdVector.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdVectors.cxx">
+				RelativePath=".\cfdVectorBase.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdWriteTraverser.cxx">
+				RelativePath=".\cfdVectors.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\ChangeCursorEventHandler.cxx">
+				RelativePath=".\cfdWriteTraverser.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\ClearVisObjectsEventHandler.cxx">
+				RelativePath=".\ChangeCursorEventHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\CreateVisObjectEventHandler.cxx">
+				RelativePath=".\ClearVisObjectsEventHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\MaterialModeUpdateEH.cxx">
+				RelativePath=".\CreateVisObjectEventHandler.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\MaterialUpdateEH.cxx">
+				RelativePath=".\MaterialModeUpdateEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\QCLoadFileEH.cxx">
+				RelativePath=".\MaterialUpdateEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\StoredSceneEH.cxx">
+				RelativePath=".\QCLoadFileEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBActivateEH.cxx">
+				RelativePath=".\StoredSceneEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBBBoxEH.cxx">
+				RelativePath=".\TBActivateEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBClipPlaneEH.cxx">
+				RelativePath=".\TBBBoxEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBIsosurfaceEnableEH.cxx">
+				RelativePath=".\TBClipPlaneEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBIsosurfaceUpdateEH.cxx">
+				RelativePath=".\TBIsosurfaceEnableEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBTransientDurationUpdateEH.cxx">
+				RelativePath=".\TBIsosurfaceUpdateEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBTransientModeUpdateEH.cxx">
+				RelativePath=".\TBTransientDurationUpdateEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBUpdateScalarRangeEH.cxx">
+				RelativePath=".\TBTransientModeUpdateEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TBUpdateSolutionEH.cxx">
+				RelativePath=".\TBUpdateScalarRangeEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TextureBasedEventHandler.cxx">
+				RelativePath=".\TBUpdateSolutionEH.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\trackball.cxx">
+				RelativePath=".\TextureBasedEventHandler.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\trackball.cxx"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="headers"
-			Filter=".h">
+			Filter=".h"
+			>
 			<File
-				RelativePath=".\ActiveModelEventHandler.h">
+				RelativePath=".\ActiveModelEventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\AddVTKDataSetEventHandler.h">
+				RelativePath=".\AddVTKDataSetEventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\AttributeEventHandler.h">
+				RelativePath=".\AttributeEventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CADAddAttributeEH.h">
+				RelativePath=".\CADAddAttributeEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CADAddNodeEH.h">
+				RelativePath=".\CADAddNodeEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CADDeleteNodeEH.h">
+				RelativePath=".\CADDeleteNodeEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CADEventHandler.h">
+				RelativePath=".\CADEventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CADSetActiveAttributeEH.h">
+				RelativePath=".\CADRemoveAttributeEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CADSetNameEH.h">
+				RelativePath=".\CADSetActiveAttributeEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CADToggleEH.h">
+				RelativePath=".\CADSetNameEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CADTransformEH.h">
+				RelativePath=".\CADToggleEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfd1DTextInput.h">
+				RelativePath=".\CADTransformEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdAnimatedImage.h">
+				RelativePath=".\cfd1DTextInput.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdAnimatedStreamlineCone.h">
+				RelativePath=".\cfdAnimatedImage.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdCommandArray.h">
+				RelativePath=".\cfdAnimatedStreamlineCone.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdCommandObjects.h">
+				RelativePath=".\cfdCommandArray.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdContour.h">
+				RelativePath=".\cfdCommandObjects.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdContourBase.h">
+				RelativePath=".\cfdContour.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdContours.h">
+				RelativePath=".\cfdContourBase.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdCursor.h">
+				RelativePath=".\cfdContours.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdCuttingPlane.h">
+				RelativePath=".\cfdCursor.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDataSet.h">
+				RelativePath=".\cfdCuttingPlane.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDebug.h">
+				RelativePath=".\cfdDataSet.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDigitalAnalogGauge.h">
+				RelativePath=".\cfdDebug.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdDisplaySettings.h">
+				RelativePath=".\cfdDigitalAnalogGauge.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdEnum.h">
+				RelativePath=".\cfdDisplaySettings.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdEnvironmentHandler.h">
+				RelativePath=".\cfdEnum.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdFILE.h">
+				RelativePath=".\cfdEnvironmentHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdFileInfo.h">
+				RelativePath=".\cfdFILE.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdGeomDataSet.h">
+				RelativePath=".\cfdFileInfo.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdGlobalBase.h">
+				RelativePath=".\cfdGeomDataSet.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdGraphicsObject.h">
+				RelativePath=".\cfdGlobalBase.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdImage.h">
+				RelativePath=".\cfdGraphicsObject.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdIsosurface.h">
+				RelativePath=".\cfdImage.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdModel.h">
+				RelativePath=".\cfdIsosurface.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdModelHandler.h">
+				RelativePath=".\cfdModel.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdMomentum.h">
+				RelativePath=".\cfdModelHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdMomentums.h">
+				RelativePath=".\cfdMomentum.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdNavigate.h">
+				RelativePath=".\cfdMomentums.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdNotify.h">
+				RelativePath=".\cfdNavigate.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdObjectHandler.h">
+				RelativePath=".\cfdNotify.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdObjects.h">
+				RelativePath=".\cfdObjectHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPlanes.h">
+				RelativePath=".\cfdObjects.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPolyData.h">
+				RelativePath=".\cfdPlanes.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPresetContour.h">
+				RelativePath=".\cfdPolyData.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPresetMomentum.h">
+				RelativePath=".\cfdPresetContour.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdPresetVector.h">
+				RelativePath=".\cfdPresetMomentum.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdQuatCam.h">
+				RelativePath=".\cfdPresetVector.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdQuatCamHandler.h">
+				RelativePath=".\cfdQuatCam.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdRawNodeWriteTraverser.h">
+				RelativePath=".\cfdQuatCamHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdReadParam.h">
+				RelativePath=".\cfdRawNodeWriteTraverser.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdScalarBarActor.h">
+				RelativePath=".\cfdReadParam.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdSound.h">
+				RelativePath=".\cfdScalarBarActor.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdSoundHandler.h">
+				RelativePath=".\cfdSound.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdSteadyStateVizHandler.h">
+				RelativePath=".\cfdSoundHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdStreamers.h">
+				RelativePath=".\cfdSteadyStateVizHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdTeacher.h">
+				RelativePath=".\cfdStreamers.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdTextOutput.h">
+				RelativePath=".\cfdTeacher.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdTextureBasedVizHandler.h">
+				RelativePath=".\cfdTextOutput.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdThread.h">
+				RelativePath=".\cfdTextureBasedVizHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdTrackball.h">
+				RelativePath=".\cfdThread.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdVector.h">
+				RelativePath=".\cfdTrackball.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdVectorBase.h">
+				RelativePath=".\cfdVector.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdVectors.h">
+				RelativePath=".\cfdVectorBase.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cfdWriteTraverser.h">
+				RelativePath=".\cfdVectors.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ChangeCursorEventHandler.h">
+				RelativePath=".\cfdWriteTraverser.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ClearVisObjectsEventHandler.h">
+				RelativePath=".\ChangeCursorEventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CreateVisObjectEventHandler.h">
+				RelativePath=".\ClearVisObjectsEventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\EventHandler.h">
+				RelativePath=".\CreateVisObjectEventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\get_time.h">
+				RelativePath=".\EventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\MaterialModeUpdateEH.h">
+				RelativePath=".\get_time.h"
+				>
 			</File>
 			<File
-				RelativePath=".\MaterialUpdateEH.h">
+				RelativePath=".\MaterialModeUpdateEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\QCLoadFileEH.h">
+				RelativePath=".\MaterialUpdateEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\StoredSceneEH.h">
+				RelativePath=".\QCLoadFileEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBActivateEH.h">
+				RelativePath=".\StoredSceneEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBBBoxEH.h">
+				RelativePath=".\TBActivateEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBClipPlaneEH.h">
+				RelativePath=".\TBBBoxEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBIsosurfaceEnableEH.h">
+				RelativePath=".\TBClipPlaneEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBIsosurfaceUpdateEH.h">
+				RelativePath=".\TBIsosurfaceEnableEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBTransientDurationUpdateEH.h">
+				RelativePath=".\TBIsosurfaceUpdateEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBTransientModeUpdateEH.h">
+				RelativePath=".\TBTransientDurationUpdateEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBUpdateScalarRangeEH.h">
+				RelativePath=".\TBTransientModeUpdateEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBUpdateSolutionEH.h">
+				RelativePath=".\TBUpdateScalarRangeEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TextureBasedEventHandler.h">
+				RelativePath=".\TBUpdateSolutionEH.h"
+				>
 			</File>
 			<File
-				RelativePath=".\trackball.h">
+				RelativePath=".\TextureBasedEventHandler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\vtkSmartPtr.h">
+				RelativePath=".\trackball.h"
+				>
+			</File>
+			<File
+				RelativePath=".\vtkSmartPtr.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+			>
 		</Filter>
 	</Files>
 	<Globals>

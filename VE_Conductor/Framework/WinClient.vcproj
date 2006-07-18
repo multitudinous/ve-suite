@@ -1,147 +1,209 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="VE_Conductor"
 	ProjectGUID="{E18B55CA-745E-4EBC-9056-85CA897EE690}"
 	RootNamespace="WinClient"
-	SccProjectName=""
-	SccLocalPath="">
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Release/WinClient.tlb"
+				HeaderFileName=""
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				StringPooling="TRUE"
-				RuntimeLibrary="4"
-				EnableFunctionLevelLinking="TRUE"
-				UsePrecompiledHeader="2"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/WinClient.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"/>
+				SuppressStartupBanner="true"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile=".\Release/WinClient.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/WinClient.pdb"
 				SubSystem="2"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Release/WinClient.tlb"
-				HeaderFileName=""/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/bin/win32"
 			IntermediateDirectory="./VE_Conductor/$(ConfigurationName)"
 			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Debug/WinClient.tlb"
+				HeaderFileName=""
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO"
-				IgnoreStandardIncludePath="FALSE"
+				IgnoreStandardIncludePath="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation=""
 				ObjectFile="$(IntDir)/"
 				ProgramDataBaseFileName="$(IntDir)"
 				BrowseInformation="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 				CompileAs="2"
 				ForcedIncludeFiles=""
-				ShowIncludes="FALSE"/>
+				ShowIncludes="false"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib wxmsw26d_adv.lib xerces-c_2D.lib"
 				OutputFile="$(OutDir)/WinClientd.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/WinClient.pdb"
 				SubSystem="2"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/WinClient.tlb"
-				HeaderFileName=""/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -149,271 +211,351 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
+			>
 			<File
-				RelativePath=".\advancedcontours.cpp">
+				RelativePath=".\advancedcontours.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\advancedstreamlines.cpp">
+				RelativePath=".\advancedstreamlines.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\advancedvectors.cpp">
+				RelativePath=".\advancedvectors.cpp"
+				>
 			</File>
 			<File
-				RelativePath="App.cpp">
+				RelativePath="App.cpp"
+				>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
-						PreprocessorDefinitions=""/>
+						PreprocessorDefinitions=""
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32">
+					Name="dbg|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
+						BrowseInformation="1"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Avail_Modules.cpp">
+				RelativePath="Avail_Modules.cpp"
+				>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
-						PreprocessorDefinitions=""/>
+						PreprocessorDefinitions=""
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32">
+					Name="dbg|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
+						BrowseInformation="1"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\contours.cpp">
+				RelativePath=".\contours.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\CORBAServiceList.cxx">
+				RelativePath=".\CORBAServiceList.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\DataSetLoaderUI.cxx">
+				RelativePath=".\DataSetLoaderUI.cxx"
+				>
 			</File>
 			<File
-				RelativePath="Frame.cpp">
+				RelativePath="Frame.cpp"
+				>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
-						PreprocessorDefinitions=""/>
+						PreprocessorDefinitions=""
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32">
+					Name="dbg|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
+						BrowseInformation="1"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\isosurfaces.cpp">
+				RelativePath=".\isosurfaces.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\NavigationPane.cxx">
+				RelativePath=".\NavigationPane.cxx"
+				>
 			</File>
 			<File
-				RelativePath="Network.cpp">
+				RelativePath="Network.cpp"
+				>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
-						PreprocessorDefinitions=""/>
+						PreprocessorDefinitions=""
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32">
+					Name="dbg|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
+						BrowseInformation="1"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\OrbThread.cpp">
+				RelativePath=".\OrbThread.cpp"
+				>
 				<FileConfiguration
-					Name="dbg|Win32">
+					Name="dbg|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="..\IDL"/>
+						AdditionalIncludeDirectories="..\IDL"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\paraThread.cpp">
+				RelativePath=".\paraThread.cpp"
+				>
 				<FileConfiguration
-					Name="dbg|Win32">
+					Name="dbg|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="..\IDL"/>
+						AdditionalIncludeDirectories="..\IDL"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="PluginLoader.cpp">
+				RelativePath="PluginLoader.cpp"
+				>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
-						PreprocessorDefinitions=""/>
+						PreprocessorDefinitions=""
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32">
+					Name="dbg|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
+						BrowseInformation="1"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\polydata.cpp">
+				RelativePath=".\polydata.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ScalarToolsDlg.cxx">
+				RelativePath=".\ScalarToolsDlg.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\SoundsPane.cpp">
+				RelativePath=".\SoundsPane.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\streamlines.cpp">
+				RelativePath=".\streamlines.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\TBToolBar.cxx">
+				RelativePath=".\TBToolBar.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\TransformUI.cxx">
+				RelativePath=".\TransformUI.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\UI_i.cpp">
+				RelativePath=".\UI_i.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\UI_TeacherTab.cpp">
+				RelativePath=".\UI_TeacherTab.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\UI_TransientDialog.cxx">
+				RelativePath=".\UI_TransientDialog.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\vectors.cpp">
+				RelativePath=".\vectors.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ViewLocPane.cxx">
+				RelativePath=".\ViewLocPane.cxx"
+				>
 			</File>
 			<File
-				RelativePath=".\vistab.cpp">
+				RelativePath=".\vistab.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;fi;fd">
+			Filter="h;hpp;hxx;hm;inl;fi;fd"
+			>
 			<File
-				RelativePath=".\advancedcontours.h">
+				RelativePath=".\advancedcontours.h"
+				>
 			</File>
 			<File
-				RelativePath=".\advancedstreamlines.h">
+				RelativePath=".\advancedstreamlines.h"
+				>
 			</File>
 			<File
-				RelativePath=".\advancedvectors.h">
+				RelativePath=".\advancedvectors.h"
+				>
 			</File>
 			<File
-				RelativePath="App.h">
+				RelativePath="App.h"
+				>
 			</File>
 			<File
-				RelativePath="Avail_Modules.h">
+				RelativePath="Avail_Modules.h"
+				>
 			</File>
 			<File
-				RelativePath=".\contours.h">
+				RelativePath=".\contours.h"
+				>
 			</File>
 			<File
-				RelativePath=".\CORBAServiceList.h">
+				RelativePath=".\CORBAServiceList.h"
+				>
 			</File>
 			<File
-				RelativePath=".\DataSetLoaderUI.h">
+				RelativePath=".\DataSetLoaderUI.h"
+				>
 			</File>
 			<File
-				RelativePath="Frame.h">
+				RelativePath="Frame.h"
+				>
 			</File>
 			<File
-				RelativePath=".\isosurfaces.h">
+				RelativePath=".\isosurfaces.h"
+				>
 			</File>
 			<File
-				RelativePath=".\NavigationPane.h">
+				RelativePath=".\NavigationPane.h"
+				>
 			</File>
 			<File
-				RelativePath="Network.h">
+				RelativePath="Network.h"
+				>
 			</File>
 			<File
-				RelativePath=".\OrbThread.h">
+				RelativePath=".\OrbThread.h"
+				>
 			</File>
 			<File
-				RelativePath=".\paraThread.h">
+				RelativePath=".\paraThread.h"
+				>
 			</File>
 			<File
-				RelativePath="PluginLoader.h">
+				RelativePath="PluginLoader.h"
+				>
 			</File>
 			<File
-				RelativePath=".\polydata.h">
+				RelativePath=".\polydata.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ScalarToolsDlg.h">
+				RelativePath=".\ScalarToolsDlg.h"
+				>
 			</File>
 			<File
-				RelativePath=".\SoundsPane.h">
+				RelativePath=".\SoundsPane.h"
+				>
 			</File>
 			<File
-				RelativePath=".\streamlines.h">
+				RelativePath=".\streamlines.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TBToolBar.h">
+				RelativePath=".\TBToolBar.h"
+				>
 			</File>
 			<File
-				RelativePath=".\TransformUI.h">
+				RelativePath=".\TransformUI.h"
+				>
 			</File>
 			<File
-				RelativePath=".\UI_TeacherTab.h">
+				RelativePath=".\UI_TeacherTab.h"
+				>
 			</File>
 			<File
-				RelativePath=".\UI_TransientDialog.h">
+				RelativePath=".\UI_TransientDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\vectors.h">
+				RelativePath=".\vectors.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ViewLocPane.h">
+				RelativePath=".\ViewLocPane.h"
+				>
 			</File>
 			<File
-				RelativePath=".\vistab.h">
+				RelativePath=".\vistab.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+			>
 		</Filter>
 	</Files>
 	<Globals>

@@ -3,9 +3,9 @@ REM Edit this file to reflect your local environment for VE_Suite
 set VE_SUITE_HOME=C:\devEnv\VE_Suite_1.0
 set VE_INSTALL_DIR=C:\devEnv\VE_Suite_1.0
 
-set VJ_BASE_DIR=C:\devEnv\vrjuggler-2.0.1-win32-vc71
-set VJ_DEPS_DIR=C:\devEnv\vrjuggler-2.0.1-win32-vc71-deps
-set VTK_HOME=C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install
+set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80
+set VJ_DEPS_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80-deps
+set VTK_HOME=C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8
 set WX_HOME=C:\devEnv\VES.1.0-deps\wxWidgets-2.6.3
 set WX_ROOT=C:\devEnv\VES.1.0-Deps\wxWidgets-2.6.3
 set JAVA_HOME=C:\j2sdk1.4.2_06
@@ -14,8 +14,10 @@ set TAO_ROOT=%ACE_ROOT%\TAO
 set XERCESCROOT=C:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0
 set OSGHOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.0\OpenSceneGraph
 set DEMETER_HOME=C:\devEnv\demeter-3.21
-set TAO_MACHINE=localhost
+ set TAO_MACHINE=localhost
 REM set TAO_MACHINE=costello.vrac.iastate.edu
+REM set TAO_MACHINE=keymaker.vrac.iastate.edu
+
 set TAO_PORT=1237
 set SNX_BASE_DIR=%VJ_BASE_DIR%
 
@@ -28,7 +30,7 @@ REM shouldn't have to modify UNLESS "local" builds (debug for example)
 REM are desired. In this case modify the appropriate variables accordingly.
 
 set CFDHOSTTYPE=WIN32
-
+set OSGNOTIFYLEVEL=DEBUG_INFO
 set CONDUCTOR_BASE_DIR=%VE_SUITE_HOME%\VE_Conductor
 
 REM set PHSHAREDSIZE=534773700
