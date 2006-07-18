@@ -491,58 +491,118 @@ Model* REI_Plugin::GetVEModel( void )
    veModel->SetIconFilename( std::string( "iconFilename" ) );
    veModel->GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >( pos.x, pos.y ) );
 
-   ///Set the int data
-   std::map<std::string, long *>::iterator iteri;
-   for ( iteri=_int.begin(); iteri!=_int.end(); iteri++ )
    {
-      Command* tempCommand = veModel->GetInput( -1 );
-      tempCommand->SetCommandName( iteri->first );
-      tempCommand->GetDataValuePair( -1 )->SetData( iteri->first, *(iteri->second) );
+      ///Set the int data
+      std::map<std::string, long *>::iterator iteri;
+      for ( iteri=_int.begin(); iteri!=_int.end(); iteri++ )
+      {
+         Command* tempCommand = veModel->GetInput( iteri->first );
+         if ( !tempCommand )
+         {
+            tempCommand = veModel->GetInput( -1 );
+            tempCommand->SetCommandName( iteri->first );
+            tempCommand->GetDataValuePair( -1 )->SetData( iteri->first, *(iteri->second) );
+         }
+         else
+         {
+            tempCommand->GetDataValuePair( 0 )->SetData( iteri->first, *(iteri->second) );
+         }
+      }
    }
 
-   ///Set the double data
-   std::map<std::string, double *>::iterator iterd;
-   for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
    {
-      Command* tempCommand = veModel->GetInput( -1 );
-      tempCommand->SetCommandName( iterd->first );
-      tempCommand->GetDataValuePair( -1 )->SetData( iterd->first, *(iterd->second) );
+      ///Set the double data
+      std::map<std::string, double *>::iterator iterd;
+      for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
+      {
+         Command* tempCommand = veModel->GetInput( iterd->first );
+         if ( !tempCommand )
+         {
+            tempCommand = veModel->GetInput( -1 );
+            tempCommand->SetCommandName( iterd->first );
+            tempCommand->GetDataValuePair( -1 )->SetData( iterd->first, *(iterd->second) );
+         }
+         else
+         {
+            tempCommand->GetDataValuePair( 0 )->SetData( iterd->first, *(iterd->second) );
+         }
+      }
    }
 
-   ///Set the string data
-   std::map<std::string, std::string *>::iterator iters;
-   for(iters=_string.begin(); iters!=_string.end(); iters++)
    {
-      Command* tempCommand = veModel->GetInput( -1 );
-      tempCommand->SetCommandName( iters->first );
-      tempCommand->GetDataValuePair( -1 )->SetData( iters->first, *(iters->second) );
+      ///Set the string data
+      std::map<std::string, std::string *>::iterator iters;
+      for(iters=_string.begin(); iters!=_string.end(); iters++)
+      {
+         Command* tempCommand = veModel->GetInput( iters->first );
+         if ( !tempCommand )
+         {
+            tempCommand = veModel->GetInput( -1 );
+            tempCommand->SetCommandName( iters->first );
+            tempCommand->GetDataValuePair( -1 )->SetData( iters->first, *(iters->second) );
+         }
+         else
+         {
+            tempCommand->GetDataValuePair( 0 )->SetData( iters->first, *(iters->second) );
+         }
+      }
    }
 
-   ///Set the 1d int data
-   std::map<std::string, std::vector<long> *>::iterator itervi;
-   for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
    {
-      Command* tempCommand = veModel->GetInput( -1 );
-      tempCommand->SetCommandName( itervi->first );
-      tempCommand->GetDataValuePair( -1 )->SetData( itervi->first, *(itervi->second) );
+      ///Set the 1d int data
+      std::map<std::string, std::vector<long> *>::iterator itervi;
+      for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
+      {
+         Command* tempCommand = veModel->GetInput( itervi->first );
+         if ( !tempCommand )
+         {
+            tempCommand = veModel->GetInput( -1 );
+            tempCommand->SetCommandName( itervi->first );
+            tempCommand->GetDataValuePair( -1 )->SetData( itervi->first, *(itervi->second) );
+         }
+         else
+         {
+            tempCommand->GetDataValuePair( 0 )->SetData( itervi->first, *(itervi->second) );
+         }
+      }
    }
 
-   ///Set the 1d double data
-   std::map<std::string, std::vector<double> *>::iterator itervd;
-   for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
    {
-      Command* tempCommand = veModel->GetInput( -1 );
-      tempCommand->SetCommandName( itervd->first );
-      tempCommand->GetDataValuePair( -1 )->SetData( itervd->first, *(itervd->second) );
+      ///Set the 1d double data
+      std::map<std::string, std::vector<double> *>::iterator itervd;
+      for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
+      {
+         Command* tempCommand = veModel->GetInput( itervd->first );
+         if ( !tempCommand )
+         {
+            tempCommand = veModel->GetInput( -1 );
+            tempCommand->SetCommandName( itervd->first );
+            tempCommand->GetDataValuePair( -1 )->SetData( itervd->first, *(itervd->second) );
+         }
+         else
+         {
+            tempCommand->GetDataValuePair( 0 )->SetData( itervd->first, *(itervd->second) );
+         }
+      }
    }
 
-   ///Set the 1d string data
-   std::map<std::string, std::vector<std::string> *>::iterator itervs;
-   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
    {
-      Command* tempCommand = veModel->GetInput( -1 );
-      tempCommand->SetCommandName( itervs->first );
-      tempCommand->GetDataValuePair( -1 )->SetData( itervs->first, *(itervs->second) );
+      ///Set the 1d string data
+      std::map<std::string, std::vector<std::string> *>::iterator itervs;
+      for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
+      {
+         Command* tempCommand = veModel->GetInput( itervs->first );
+         if ( !tempCommand )
+         {
+            tempCommand = veModel->GetInput( -1 );
+            tempCommand->SetCommandName( itervs->first );
+            tempCommand->GetDataValuePair( -1 )->SetData( itervs->first, *(itervs->second) );
+         }
+         else
+         {
+            tempCommand->GetDataValuePair( 0 )->SetData( itervs->first, *(itervs->second) );
+         }
+      }      
    }
 
    // EPRI TAG
@@ -706,36 +766,61 @@ void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
          for ( unsigned int k = 0; k < commandData->GetNumberOfDataValuePairs(); ++k )
          {
             DataValuePair* tempData = commandData->GetDataValuePair( k );
-            std::string dataType = tempData->GetDataName();
-            std::string dataName = tempData->GetDataType();
+            std::string dataName = tempData->GetDataName();
+            std::string dataType = tempData->GetDataType();
+            // to grab the data from the maps properly            
+            std::map<std::string, long *>::iterator iteri;
+            std::map<std::string, double *>::iterator iterd;
+            std::map<std::string, std::string *>::iterator iters;
+            std::map<std::string, std::vector<long> *>::iterator itervi;
+            std::map<std::string, std::vector<double> *>::iterator itervd;
+            std::map<std::string, std::vector<std::string> *>::iterator itervs;
+
             if ( std::string( "FLOAT" ) == dataType )
             {
-               tempData->GetData( *(_double[ dataName ]) );
+               iterd = _double.find( dataName );
+               if ( iterd != _double.end() );
+                  tempData->GetData( *(iterd->second) );
             }
             else if ( std::string( "LONG" ) == dataType )
             {
-               tempData->GetData( *(_int[ dataName ]) );
+               iteri = _int.find( dataName );
+               if ( iteri != _int.end() );
+               {   
+                  tempData->GetData( *(iteri->second) );
+               }
             }
             else if ( std::string( "STRING" ) == dataType )
             {
-               tempData->GetData( *(_string[ dataName ]) );
+               iters = _string.find( dataName );
+               if ( iters != _string.end() );
+                  tempData->GetData( *(iters->second) );
             }
             else if ( std::string( "1DSTRING" ) == dataType )
             {
-               tempData->GetData( *(_string1D[ dataName ]) );
+               itervs = _string1D.find( dataName );
+               if ( itervs != _string1D.end() );
+                  tempData->GetData( *(itervs->second) );
             }
             else if ( std::string( "1DDOUBLE" ) == dataType )
             {
-               tempData->GetData( *(_double1D[ dataName ]) );
+               itervd = _double1D.find( dataName );
+               if ( itervd != _double1D.end() );
+                  tempData->GetData( *(itervd->second) );
             }
             else if ( std::string( "1DLONG" ) == dataType )
             {
-               tempData->GetData( *(_int1D[ dataName ]) );
+               itervi = _int1D.find( dataName );
+               if ( itervi != _int1D.end() );
+                  tempData->GetData( *(itervi->second) );
             }
-            else if ( std::string( "XMLOBJECT" ) == dataType )
+            /*else if ( std::string( "XMLOBJECT" ) == dataType )
             {
+               iteri = _double.find( dataName );
+               if ( iteri != _double.end() );
+               tempData->GetData( *(iteri->second) );
                tempData->GetData( *(_int1D[ dataName ]) );
-            }
+            }*/
          }
       }
       /*

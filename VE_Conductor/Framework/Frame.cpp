@@ -493,6 +493,9 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       ExitXplorer();
    }
    
+   delete serviceList;
+   serviceList = 0;
+   
    if (is_orb_init)
    {
       //CosNaming::Name UIname(1);
@@ -1365,7 +1368,8 @@ VjObs_ptr AppFrame::GetXplorerObject( void )
 ///////////////////////////////////////////////////////////////////
 void AppFrame::IdleEvent( wxIdleEvent& event )
 {
-   serviceList->CheckORBWorkLoad();
+   if ( serviceList )
+      serviceList->CheckORBWorkLoad();
 }
 ///////////////////////////////////////////////////////////////////
 CORBAServiceList* AppFrame::GetCORBAServiceList( void )
