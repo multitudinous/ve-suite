@@ -1673,6 +1673,17 @@ class Launch:
         ##Destroy launcher window before beginning the actual launch.
         if launcherWindow != None:
             launcherWindow.Close()
+        ##Set self.cluster to True if there's cluster functionality.
+        ##If so, begin building self.clusterScript
+        ##Used in EnvSetup and Windows/Unix.
+        if runXplorer and typeXplorer == 2 and cluster != None:
+            self.cluster = True
+            self.clusterScript = "#!/bin/csh\n"
+            self.clusterScript += "ssh $1 << EOF\n"
+            self.clusterScript += "setenv PYTHONPATH %s\n" %(os.getenv("PYTHONPATH"))
+        else:
+            self.cluster = False
+        print "Cluster script set up? %s" %(self.cluster)
         ##Get dependenciesDir for setting environmental variables.
         if dependenciesDir == None:
             dependenciesDir = config.Read("DependenciesDir", "ERROR")
@@ -1788,8 +1799,8 @@ class Launch:
                       "${TAO_MACHINE}:${TAO_PORT}/" +
                       "NameService %s &" % (desktop))
         ##Cluster mode
-        if runXplorer and typeXplorer == 2 and cluster != None:
-            ##Build cluster file
+        if self.cluster:
+            ##Finish building cluster file
             launcherDir = str(os.getenv("VE_INSTALL_DIR"))
             xplorerType = XPLORER_TYPE_LIST[typeXplorer]
             taoMachine = str(os.getenv("TAO_MACHINE"))
@@ -1801,19 +1812,22 @@ class Launch:
                       ' -j "%s" -t %s -p %s' %(jconf, taoMachine, taoPort) + \
                       ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
 ##            print command ##TESTER
+            self.clusterScript += "cd %s\n" %(VELAUNCHER_DIR)
+            self.clusterScript += "%s\n" %(command)
+            self.clusterScript += "EOF\n"
             clusterFileName = "cluster.tsh"
             clusterFilePath = os.path.join(VELAUNCHER_DIR, clusterFileName)
             sourceFile = file(clusterFilePath, 'w')
-            sourceFile.write("#!/bin/csh\n")
-            sourceFile.write("ssh $1 << EOF\n")
-            sourceFile.write("setenv PYTHONPATH %s\n"
-                             %(os.getenv("PYTHONPATH")))
-            sourceFile.write("setenv LD_LIBRARY_PATH %s\n"
-                             %(os.getenv("LD_LIBRARY_PATH")))
-            sourceFile.write("cd %s\n" %(VELAUNCHER_DIR))
-            sourceFile.write("%s\n" %(command))
-            sourceFile.write("EOF\n")
+            sourceFile.write(self.clusterScript)
             sourceFile.close()
+            ##sourceFile.write("#!/bin/csh\n")
+            ##sourceFile.write("ssh $1 << EOF\n")
+            ##sourceFile.write("setenv LD_LIBRARY_PATH %s\n"
+            ##                 %(os.getenv("LD_LIBRARY_PATH")))
+            ##sourceFile.write("setenv PATH %s\n"
+            ##                 %(os.getenv("PATH")))
+            ##sourceFile.write("setenv VJ_BASE_DIR %s\n" %(os.getenv("VJ_BASE_DIR")))
+            ##sourceFile.write("setenv VJ_DEPS_DIR %s\n" %(os.getenv("VJ_DEPS_DIR")))
             for comp in cluster:
 ##                print "Annoying %s" %(comp) ##TESTER
 ##                print "Doing source %s %s" %(clusterFileName, comp) ##TESTER
@@ -1896,7 +1910,10 @@ class Launch:
         windows = (os.name == "nt")
         unix = (os.name == "posix")
         ##Set where VE-Suite's installed
-        self.EnvFill("VE_INSTALL_DIR", os.getcwd())
+        if devMode:
+             self.EnvFill("VE_INSTALL_DIR", os.getenv("VE_SUITE_HOME"))
+        else:
+             self.EnvFill("VE_INSTALL_DIR", os.getcwd())
         ##Set where VE-Suite pre-complied dependencies are installed
         ##NOTE: Receives this from the launcher.
         self.EnvFill("VE_DEPS_DIR", dependenciesDir)
@@ -2057,10 +2074,15 @@ class Launch:
                                               "bin") + ":" + \
                                  os.path.join(str(os.getenv("VJ_BASE_DIR")),
                                               "bin")
+            ##Do a call to EnvFill to fill in the vars for the cluster file.
+            self.EnvFill(libraryPath, "ERROR")
+            self.EnvFill("PATH", "ERROR")
 
     def EnvFill(self, var, default):
         """Sets environmental variable var to default if it is empty."""
         os.environ[var] = os.getenv(var, default)
+        if self.cluster:
+            self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
 ##        print var + ": " + os.getenv(var) ##TESTER
 
 
