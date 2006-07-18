@@ -360,6 +360,18 @@ size_t Model::GetNumberOfResults( void )
 {
    return results.size();
 }
+////////////////////////////////////////////////
+Command* Model::GetInput(std::string inputName)
+{
+   for(size_t i = 0; i < inputs.size(); i++)
+   {
+      if(inputs.at(i)->GetCommandName() == inputName)
+      {
+         return inputs.at(i);
+      }
+   }
+   return 0;
+}
 ////////////////////////////////////////////////////////////
 Command* Model::GetInput( int i )
 {

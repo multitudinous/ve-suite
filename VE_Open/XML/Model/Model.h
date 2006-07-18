@@ -114,6 +114,11 @@ public:
    ///Get input data
    ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
    VE_XML::Command* GetInput( int i );
+
+   ///Get the input variable by name
+   ///\param inputName Then name of the input to retrieve
+   VE_XML::Command* GetInput(std::string inputName);
+
    ///Allocate another input block for use
    VE_XML::Command* GetInput( void );
    ///Get number of input data
