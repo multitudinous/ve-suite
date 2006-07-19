@@ -1078,6 +1078,7 @@ CORBA::Long Body_Executive_i::GetGlobalMod (
 
 void Body_Executive_i::ClientMessage(const char *msg)
 {
+   std::cout << "CE Output = " << msg;
 	std::map<std::string, Body::UI_var>::iterator iter;
 	for(iter=uis_.begin(); iter!=uis_.end(); ) 
 	{
