@@ -606,9 +606,10 @@ class LauncherWindow(wx.Dialog):
         else:
             print "ERROR: No Jconf configuration found and failed to make" + \
                   " default Jconf from Dependencies dir."
-            print "Substituting a dead parrot instead."
+            print "Substituting dev .jconf path instead."
             config.SetPath(JCONF_CONFIG)
-            config.Write("Dead Parrot", "es/just/sleeping")
+            config.Write("DevDesktop", os.path.join(os.getcwd(), "..", "..",
+                         "VE_Xplorer", "stereo_desktop", "desktop.jconf"))
             config.SetPath('..')
             self.jconfList = JconfList()
         ##Set Jconf cursor.
@@ -1159,7 +1160,7 @@ class JconfList:
         nList = []
         for name in self.jDict:
             nList.append(name)
-        nList.sort(key = str.lower)
+        nList.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return nList
 
 class JconfWindow(wx.Dialog):
@@ -1457,7 +1458,7 @@ class ClusterDict:
         nList = []
         for name in self.cluster:
             nList.append(name)
-        nList.sort(key=str.lower)
+        nList.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return nList
 
     def GetLocations(self):
