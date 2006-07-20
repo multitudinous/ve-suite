@@ -116,6 +116,11 @@ public:
    ///\param element Element to extract long integer from.
    long int ExtractLongIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
 
+   ///Get a string attribute by name
+   ///\param attributeName The name of the attribute
+   ///\param attribute The attribute to retrive.
+   void GetAttribute(std::string attributeName,std::string& attribute);
+
    ///utility functions for extracting subElement itemIndex from a complex element.
    ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
@@ -154,6 +159,11 @@ public:
    ///\param attrib The attribute value
    void SetSubElement( std::string subElementTagName, XMLObject* dataValue, 
                         std::string attribName, std::string attrib );
+
+   ///utility functions for creating attribute on _veElement.
+   ///\param attirbuteName The name of the atrribute to be set
+   ///\param attribute The attribute value
+   void SetAttribute(std::string attirbuteName,std::string attribute);
 
 
    class VE_XML_EXPORTS VEStr

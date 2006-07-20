@@ -259,6 +259,11 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
    dataValue->SetOwnerDocument( _rootDocument );
    _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
 }
+/////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetAttribute(std::string attirbuteName,std::string attribute)
+{
+   _veElement->setAttribute( xercesString( attirbuteName ), xercesString( attribute ) );
+}
 ////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue,
                               std::string attribName, std::string attrib )
@@ -268,6 +273,24 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
    xmlObjectElement->setAttribute( xercesString( attribName ), xercesString( attrib ) );
    _veElement->appendChild( xmlObjectElement );
 }
+//////////////////////////////////////////////////////////////////////////////
+void XMLObject::GetAttribute(std::string attributeName,std::string& attribute)
+{
+
+   attribute.clear();
+   try
+   {
+      char* fUnicodeForm = XMLString::transcode( _veElement->getAttribute(xercesString(attributeName)) );
+      attribute.assign( fUnicodeForm );
+      delete fUnicodeForm;
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid element!!"<<std::endl;
+      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
+   }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex)
 {

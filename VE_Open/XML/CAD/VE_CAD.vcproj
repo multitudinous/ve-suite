@@ -213,6 +213,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CADNodeAnimation.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\CADNodeTraverser.cxx"
 				>
 			</File>
@@ -248,6 +252,10 @@
 			</File>
 			<File
 				RelativePath=".\CADNode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CADNodeAnimation.h"
 				>
 			</File>
 			<File

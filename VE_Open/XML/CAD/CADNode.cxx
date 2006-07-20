@@ -34,8 +34,11 @@
 #include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/CAD/CADCreator.h"
+#include "VE_Open/XML/CAD/CADNodeAnimation.h"
+
+#include "VE_Open/XML/XMLObjectFactory.h"
+
 #include "VE_Open/XML/Shader/Shader.h"
 #include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
@@ -91,6 +94,14 @@ CADNode::~CADNode()
      
    }*/
    _attributeList.clear();
+   _animations.clear();
+}
+/////////////////////////////////////////////////////////
+void CADNode::AddAnimation(std::string animationFileName)
+{
+   CADNodeAnimation newAnimation;
+   newAnimation.SetAnimationFileName(animationFileName);
+   _animations.push_back(newAnimation);
 }
 ///////////////////////////////////////////
 void CADNode::SetNodeName(std::string name)
@@ -135,6 +146,11 @@ void CADNode::RemoveAttribute(std::string attributeName)
 void CADNode::SetActiveAttribute(std::string attributeName)
 {
    _activeAttributeName = attributeName;
+}
+////////////////////////////
+bool CADNode::HasAnimation()
+{
+   return (!_animations.empty());
 }
 //////////////////////////////////
 std::string CADNode::GetNodeType()
@@ -203,11 +219,7 @@ void CADNode::_updateVEElement(std::string input)
    SetSubElement(std::string("nodeID"),_uID);   
    SetSubElement(std::string("parent"),_parent);
 
-   /*if(_parent)
-   {
-      _parent->SetOwnerDocument(_rootDocument);
-      _veElement->appendChild( _parent->GetXMLData("parent") );
-   }*/
+
    if(!_transform)
    {
       _transform = new Transform();
@@ -224,6 +236,16 @@ void CADNode::_updateVEElement(std::string input)
          _veElement->appendChild( _attributeList.at(i).GetXMLData("attribute") );
       }
       SetSubElement(std::string("activeAttributeName"),_activeAttributeName);
+   }
+
+   if(_animations.size())
+   {
+      size_t nAnimations = _animations.size();
+      for(size_t i = 0; i < nAnimations; i++)
+      {
+         _animations.at(i).SetOwnerDocument(_rootDocument);
+         _veElement->appendChild( _animations.at(i).GetXMLData("animation") );
+      }
    }
 }
 ///////////////////////////////
@@ -305,6 +327,22 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                   _attributeList.push_back(newAttribute);
                }
             }
+
+            _animations.clear();
+            DOMNodeList* animationNodes = currentElement->getElementsByTagName(xercesString("animation"));
+            XMLSize_t nNewAnimations = animationNodes->getLength();
+            for(XMLSize_t  i = 0; i < nNewAnimations ; i++)
+            {
+               DOMElement* animationNode = dynamic_cast<DOMElement*>(animationNodes->item(i));
+               
+               if(animationNode->getParentNode() == currentElement)
+               {
+                  CADNodeAnimation newAnimation;
+                  newAnimation.SetObjectFromXMLData(animationNode);
+                  _animations.push_back(newAnimation);
+               }
+            }
+
             
             DOMElement* activeAttribNode = GetSubElement(currentElement,std::string("activeAttributeName"),0);
             if(activeAttribNode)
@@ -314,7 +352,6 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             }
 
             
-
             DOMElement* transformNode = GetSubElement(currentElement,std::string("transform"),0);
             if(transformNode)
             {
@@ -362,7 +399,11 @@ CADNode::CADNode(const CADNode& rhs)
    {
       _attributeList.push_back(rhs._attributeList.at(i));
    }
-      _activeAttributeName = rhs._activeAttributeName;
+   for(size_t i = 0; i < rhs._animations.size(); i++)
+   {
+      _animations.push_back(rhs._animations.at(i));
+   }
+   _activeAttributeName = rhs._activeAttributeName;
    _parent = rhs._parent;
    _name = rhs._name;
    _type = rhs._type;
@@ -385,6 +426,15 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       for(size_t i = 0; i < rhs._attributeList.size(); i++)
       {
          _attributeList.push_back(rhs._attributeList.at(i));
+      }
+
+      if(_animations.size())
+      {
+         _animations.clear();
+      }
+      for(size_t i = 0; i < rhs._animations.size(); i++)
+      {
+         _animations.push_back(rhs._animations.at(i));
       }
      
       if(_transform)

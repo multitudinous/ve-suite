@@ -61,6 +61,7 @@ namespace VE_XML
 namespace VE_CAD
 {
 class CADAssembly;
+class CADNodeAnimation;
 
 class VE_CAD_EXPORTS CADNode: public VE_XML::XMLObject
 {
@@ -85,6 +86,10 @@ public:
    ///Add an attribute for this node.
    ///\param attribute A new attribute for this node.
    void AddAttribute(VE_CAD::CADAttribute attribute);
+
+   ///Add an animation file for this CADNode.
+   ///\param animationFileName The path to the animation file.
+   void AddAnimation(std::string animationFileName);
 
    ///Remove an attribute from the node
    ///\param attributeName The name of the attribute to remove.
@@ -111,6 +116,9 @@ public:
    ///Get the parent of this CAD node.
    unsigned int GetParent();
 
+   ///Check if this CADNode has any animation information.
+   bool HasAnimation();
+
    ///Get the transform of this CAD node.
    VE_XML::Transform* GetTransform();
 
@@ -121,6 +129,14 @@ public:
     ///Get an attribute of this CAD node by a name
    ///\param index The index of the attribute to find.
    VE_CAD::CADAttribute& GetAttribute(unsigned int index);
+
+
+   ///There is probably only one of these but internally we keep a vector of them
+   ///\param index The animation file index in the list.
+   CADNodeAnimation& GetAnimation(unsigned int index = 0);
+
+   ///Get the CADNodeAnimation for this CADNode.
+   std::vector<CADNodeAnimation> GetAnimationList();
 
    ///Get attributes for this node.
    std::vector<CADAttribute> GetAttributeList();
@@ -151,6 +167,7 @@ protected:
    unsigned int  _parent;  ///< Parent node ID.
    VE_XML::Transform* _transform; ///< Transform for the node.
    std::vector<VE_CAD::CADAttribute> _attributeList;///<A list of attributes for this node
+   std::vector<VE_CAD::CADNodeAnimation> _animations;//<A list of animation path files for this node.
    std::string _name;///< The name of this node.
    std::string _type;///< The type of node;
 };

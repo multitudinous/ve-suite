@@ -37,6 +37,7 @@
 #include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
+#include "VE_Open/XML/CAD/CADNodeAnimation.h"
 
 using namespace VE_CAD;
 //////////////////////////////////////////////////////////////////////
@@ -62,22 +63,39 @@ VE_XML::XMLObject* CADCreator::CreateNewXMLObject(std::string objectType)
    {
       return new CADMaterial();
    }
+   else if(objectType == "CADNodeAnimation")
+   {
+      return new CADNodeAnimation();
+   }
    return 0;
 }
 //////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* CADCreator::CreateNewXMLObjectCopy(std::string objectType,
                                                      VE_XML::XMLObject* objectToCopy)
 {
-   if(objectType == "CADAssembly"){
+   if(objectType == "CADAssembly")
+   {
       return new CADAssembly(*dynamic_cast<CADAssembly*>(objectToCopy));
-   }else if(objectType == "CADPart"){
+   }
+   else if(objectType == "CADPart")
+   {
       return new CADPart(*dynamic_cast<CADPart*>(objectToCopy));
-   }else if(objectType == "CADClone"){
+   }
+   else if(objectType == "CADClone")
+   {
       return new CADClone(*dynamic_cast<CADClone*>(objectToCopy));
-   }else if(objectType == "CADAttribute"){
+   }
+   else if(objectType == "CADAttribute")
+   {
       return new CADAttribute(*dynamic_cast<CADAttribute*>(objectToCopy));
-   }else if(objectType == "CADMaterial"){
+   }
+   else if(objectType == "CADMaterial")
+   {
       return new CADMaterial(*dynamic_cast<CADMaterial*>(objectToCopy));
+   }
+   else if(objectType == "CADNodeAnimation")
+   {
+      return new CADNodeAnimation(*dynamic_cast<CADNodeAnimation*>(objectToCopy));
    }
    return 0;
 }
