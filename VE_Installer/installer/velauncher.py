@@ -1830,9 +1830,10 @@ class Launch:
             ##sourceFile.write("setenv VJ_BASE_DIR %s\n" %(os.getenv("VJ_BASE_DIR")))
             ##sourceFile.write("setenv VJ_DEPS_DIR %s\n" %(os.getenv("VJ_DEPS_DIR")))
             for comp in cluster:
-##                print "Annoying %s" %(comp) ##TESTER
+                print "***CLUSTER CALL: %s***" %(comp) ##TESTER
 ##                print "Doing source %s %s" %(clusterFileName, comp) ##TESTER
                 os.system("source %s %s &" %(clusterFilePath, comp))
+		time.sleep(5)
 ##                command = ""
 ##                command = command + 'ssh %s "cd %s &&' %(comp, launcherDir)
 ##                command = command + ' setenv PYTHONPATH ${PYTHONPATH};' + \
