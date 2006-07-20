@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VE_BASECLASS_H
 #define CFD_VE_BASECLASS_H
@@ -59,6 +57,11 @@ namespace VE_Xplorer
 namespace VE_Model
 {
    class Model;
+}
+
+namespace VE_XML
+{
+   class Command;
 }
 
 #include "VE_Installer/include/VEConfig.h"
@@ -127,7 +130,9 @@ public:
    ///Set the VE_Model to be used by this plugin
    ///\param tempModel Pointer to VE_Model
    void SetXMLModel( VE_Model::Model* tempModel );
-   
+   ///Set current command whatever it is
+   ///\param command Current command from conductor
+   virtual void SetCurrentCommand( VE_XML::Command* command );
 private:
    // This needs to be vector of geometry nodes
    //cfdModuleGeometry*  geometryNode;

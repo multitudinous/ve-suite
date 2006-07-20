@@ -434,3 +434,8 @@ void cfdVEBaseClass::SetXMLModel( VE_Model::Model* tempModel )
       //do something
    }
 }
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEBaseClass::SetCurrentCommand( VE_XML::Command* command )
+{
+   vprDEBUG(vesDBG,0) << command->GetCommandName() << std::endl << vprDEBUG_FLUSH;
+}
