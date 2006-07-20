@@ -497,10 +497,15 @@ void CADNodePropertiesDlg::_removeAttribute(wxCommandEvent& event)
       nodeID->SetDataName(std::string("Node ID"));
       nodeID->SetDataValue(_cadNode->GetID());
       _instructions.push_back(nodeID);
+
+      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      nodeType ->SetDataType("STRING");
+      nodeType ->SetData("Node Type",_cadNode->GetNodeType());
+      _instructions.push_back(nodeType );
       
       VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
       addAttribute->SetDataType("STRING");
-      addAttribute->SetData("Attribute",attributeName);
+      addAttribute->SetData("Attribute Name",attributeName);
       _instructions.push_back(addAttribute);
 
       _sendCommandsToXplorer();

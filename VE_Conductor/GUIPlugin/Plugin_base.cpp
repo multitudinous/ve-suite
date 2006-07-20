@@ -783,13 +783,13 @@ void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
             if ( std::string( "FLOAT" ) == dataType )
             {
                iterd = _double.find( dataName );
-               if ( iterd != _double.end() );
+               if ( iterd != _double.end() )
                   tempData->GetData( *(iterd->second) );
             }
             else if ( std::string( "LONG" ) == dataType )
             {
                iteri = _int.find( dataName );
-               if ( iteri != _int.end() );
+               if ( iteri != _int.end() )
                {   
                   tempData->GetData( *(iteri->second) );
                }
@@ -797,25 +797,25 @@ void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
             else if ( std::string( "STRING" ) == dataType )
             {
                iters = _string.find( dataName );
-               if ( iters != _string.end() );
+               if ( iters != _string.end() )
                   tempData->GetData( *(iters->second) );
             }
             else if ( std::string( "1DSTRING" ) == dataType )
             {
                itervs = _string1D.find( dataName );
-               if ( itervs != _string1D.end() );
+               if ( itervs != _string1D.end() )
                   tempData->GetData( *(itervs->second) );
             }
             else if ( std::string( "1DDOUBLE" ) == dataType )
             {
                itervd = _double1D.find( dataName );
-               if ( itervd != _double1D.end() );
+               if ( itervd != _double1D.end() )
                   tempData->GetData( *(itervd->second) );
             }
             else if ( std::string( "1DLONG" ) == dataType )
             {
                itervi = _int1D.find( dataName );
-               if ( itervi != _int1D.end() );
+               if ( itervi != _int1D.end() )
                   tempData->GetData( *(itervi->second) );
             }
             /*else if ( std::string( "XMLOBJECT" ) == dataType )

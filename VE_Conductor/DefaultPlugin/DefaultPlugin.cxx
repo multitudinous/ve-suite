@@ -40,8 +40,8 @@
 IMPLEMENT_DYNAMIC_CLASS(DefaultPlugin, REI_Plugin)
 
 /////////////////////////////////////////////////////////////////////////////
-DefaultPlugin
-::DefaultPlugin()
+DefaultPlugin::DefaultPlugin()
+:REI_Plugin()
 {
    wxImage my_img( square_xpm );
    icon_w = (int)my_img.GetWidth()*0.30f;
@@ -56,7 +56,7 @@ DefaultPlugin
    poly[3]=wxPoint(0,icon_h);
 
    height = 100;
-   RegistVar("height", &height );
+   //RegistVar("height", &height );
 
    dlg = 0;
    name = "DefaultPlugin";
