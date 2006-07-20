@@ -427,9 +427,12 @@ void cfdExecutive::PreFrameUpdate( void )
          ++foundPlugin )
    {
       //1. Set the current command on all plugins
-      VE_XML::Command* tempCommand = 
+      if ( cfdModelHandler::instance()->GetActiveModel() )
+      {
+         VE_XML::Command* tempCommand = 
                   cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
-      foundPlugin->second->SetCurrentCommand( tempCommand );
+         foundPlugin->second->SetCurrentCommand( tempCommand );
+      }
       //2. if active model is the plugin's model...
       if ( cfdModelHandler::instance()->GetActiveModel() == 
             foundPlugin->second->GetCFDModel() )
