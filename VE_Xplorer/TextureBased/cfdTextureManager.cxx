@@ -282,7 +282,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       }
 
       //the dimensions  
-      flowImage->GetDimensions( &*_resolution );
+      flowImage->GetDimensions( _resolution );
 
       if ( !_resolution[2] ) 
       {

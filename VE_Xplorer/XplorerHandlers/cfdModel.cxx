@@ -1019,7 +1019,6 @@ void cfdModel::AddAttributeToNode(unsigned int nodeID,
    else
    { 
       std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > temp;
-      vprDEBUG(vesDBG,1) <<"|\tAdding attribute: "<<attributeList->first<<std::endl<< vprDEBUG_FLUSH;
       temp.push_back(attributeInfo);
       _nodeAttributes[nodeID] = temp;
    }
