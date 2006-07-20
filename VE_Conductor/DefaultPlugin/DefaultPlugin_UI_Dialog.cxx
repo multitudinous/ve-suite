@@ -39,22 +39,26 @@
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
 
+#include <iostream>
+
 BEGIN_EVENT_TABLE(DefaultPlugin_UI_Dialog, UIDialog)
 //apparently no event for the sliders
-  EVT_RADIOBOX    (DIRECTION_RBOX,           DefaultPlugin_UI_Dialog::_onDirection)
-  EVT_RADIOBOX    (ERROR_RBOX,               DefaultPlugin_UI_Dialog::_onError)
-  EVT_BUTTON      (UPDATE_BUTTON,            DefaultPlugin_UI_Dialog::_onSliderUpdate)
-  EVT_BUTTON      (EXIT_BUTTON,              DefaultPlugin_UI_Dialog::_onExit)
-  EVT_BUTTON      (CLEAR_BUTTON,             DefaultPlugin_UI_Dialog::_onClear)
+   EVT_COMMAND_SCROLL   (HEIGHT_SLIDER,   DefaultPlugin_UI_Dialog::SliderUpdate)
+   EVT_RADIOBOX         (DIRECTION_RBOX,  DefaultPlugin_UI_Dialog::_onDirection)
+   EVT_RADIOBOX         (ERROR_RBOX,      DefaultPlugin_UI_Dialog::_onError)
+   EVT_BUTTON           (UPDATE_BUTTON,   DefaultPlugin_UI_Dialog::_onSliderUpdate)
+   EVT_BUTTON           (EXIT_BUTTON,     DefaultPlugin_UI_Dialog::_onExit)
+   EVT_BUTTON           (CLEAR_BUTTON,    DefaultPlugin_UI_Dialog::_onClear)
 END_EVENT_TABLE()
 
 //Here is the constructor with passed in pointers
 DefaultPlugin_UI_Dialog
 ::DefaultPlugin_UI_Dialog
-(wxWindow* parent, int id)
+(wxWindow* parent, int id, long int* height)
 : UIDialog((wxWindow *) parent, id, "DefaultPlugin")
 {
 
+   this->height = height;
    _buildPage();
 //put anything else you want in constructor here
 
@@ -71,7 +75,7 @@ void DefaultPlugin_UI_Dialog::_buildPage()
    SetSizer(mainSizer);
    mainSizer->Fit(this);
    
-   return;
+   //return;
    //create the panel for the baffle tab
 
    //////////////////////////////////
@@ -80,7 +84,7 @@ void DefaultPlugin_UI_Dialog::_buildPage()
 
    //The names of the radio box choices
 //   wxString direction[] = {wxT("No Wind"), wxT("Cross Wind"), wxT("Tail Wind"), wxT("Other")};
-  /* wxString direction[] = {wxT("No Wind"), wxT("Cross Wind From Left"), wxT("Tail Wind")};
+   wxString direction[] = {wxT("No Wind"), wxT("Cross Wind From Left"), wxT("Tail Wind")};
 
    //Create a vertical radio box
    _directionRBox = new wxRadioBox(this, DIRECTION_RBOX, wxT("Wind Direction"),
@@ -116,14 +120,14 @@ void DefaultPlugin_UI_Dialog::_buildPage()
 
    //Steve added these five other sliders for the baffle GUI
 
-   _heightSlider = new wxSlider(this, HEIGHT_SLIDER, 0, 0, 500,
+   _heightSlider = new wxSlider(this, HEIGHT_SLIDER, 100, 0, 500,
                                   wxDefaultPosition, slidesize,
                                   wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
 
    _widthSlider = new wxSlider(this, WIDTH_SLIDER, 0, 0, 500,
                                   wxDefaultPosition, slidesize,
                                   wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
-   hGroup  new wxStaticBox(this,-1, wxT("Baffle Height (mm Along Z Axis)"));
+   hGroup = new wxStaticBox(this,-1, wxT("Baffle Height (mm Along Z Axis)"));
    wGroup = new wxStaticBox(this,-1, wxT("Baffle Width (mm Along Y Axis)"));
    xGroup = new wxStaticBox(this,-1, wxT("X Start Pos (mm)"));
    yGroup = new wxStaticBox(this,-1, wxT("Y Start Pos (mm)"));
@@ -197,14 +201,13 @@ void DefaultPlugin_UI_Dialog::_buildPage()
    baffleGroup->Add(RowTwo, 1, wxALIGN_LEFT|wxEXPAND);   
    baffleGroup->Add(RowSix, 1, wxALIGN_LEFT|wxEXPAND); 
 
+   _heightSlider->Raise();
    //set this flag and let wx handle alignment  OKAY
    SetAutoLayout(true);
 
    //assign the group to the panel              OKAY
    SetSizer(baffleGroup);
-   baffleGroup->Fit(this);  
-*/
-
+   baffleGroup->Fit(this);
 }
 
 /////////////////////////////////////////////////////
@@ -223,30 +226,37 @@ bool DefaultPlugin_UI_Dialog::TransferDataFromWindow()
 ////////////////////////////////////////////////////
 bool DefaultPlugin_UI_Dialog::TransferDataToWindow()
 {
+//std::cout << *height << std::endl;
+    _heightSlider->SetValue( *height );
     return true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DefaultPlugin_UI_Dialog::Lock(bool l)
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DefaultPlugin_UI_Dialog::_onDirection(wxCommandEvent& event)
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DefaultPlugin_UI_Dialog::_onError(wxCommandEvent& event)
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DefaultPlugin_UI_Dialog::_onSliderUpdate(wxCommandEvent& event)   
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DefaultPlugin_UI_Dialog::_onClear(wxCommandEvent& event)
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DefaultPlugin_UI_Dialog::_onExit(wxCommandEvent& event)
 {
+}
+////////////////////////////////////////////////////////////////////////////////
+void DefaultPlugin_UI_Dialog::SliderUpdate(wxScrollEvent& event)
+{
+   *height = _heightSlider->GetValue();
 }
 

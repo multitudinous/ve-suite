@@ -64,6 +64,8 @@ public:
 protected:
    wxBitmap* my_icon;
    int icon_w, icon_h;
+public:
+   long int height;
 };
 
 #endif

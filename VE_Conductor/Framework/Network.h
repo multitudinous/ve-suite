@@ -79,7 +79,9 @@ enum
    MODEL_INPUTS,
    MODEL_RESULTS,
    DATASET,
-   VISUALIZATION
+   VISUALIZATION,
+   SET_UI_PLUGIN_NAME,
+   SET_ACTIVE_MODEL
 };
 
 namespace VE_Conductor
@@ -131,6 +133,8 @@ public:
    void OnInputsWindow( wxCommandEvent& event );
    void OnResultsWindow( wxCommandEvent& event );
    void OnVisualization( wxCommandEvent& event );
+   void OnSetUIPluginName( wxCommandEvent& event );
+   void OnSetActiveXplorerModel( wxCommandEvent& event );
    // EPRI TAG
    void OnShowFinancial(wxCommandEvent &event);
 

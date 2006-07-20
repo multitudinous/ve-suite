@@ -59,7 +59,7 @@ class wxButton;
 class DefaultPlugin_UI_Dialog : public UIDialog
 {
 public:
-  DefaultPlugin_UI_Dialog(wxWindow* parent, int id );
+  DefaultPlugin_UI_Dialog(wxWindow* parent, int id, long int* height );
   DefaultPlugin_UI_Dialog(){;}
   
   virtual ~DefaultPlugin_UI_Dialog();
@@ -88,7 +88,7 @@ public:
    wxButton* _clearButton;
    wxButton* _exitButton;
 
- 
+   long int* height;
  public:
   //GUI Variables
   void _buildPage();
@@ -97,6 +97,7 @@ public:
   void _onSliderUpdate(wxCommandEvent& event);   
   void _onClear(wxCommandEvent& event);
   void _onExit(wxCommandEvent& event);
+  void SliderUpdate(wxScrollEvent& event);
 
   DECLARE_EVENT_TABLE()
 };

@@ -486,6 +486,11 @@ Model* REI_Plugin::GetVEModel( void )
 
    veModel = new Model();
    */
+   if ( name.IsEmpty() )
+   {
+      name = "PleaseDefineClassName";
+   }
+   
    veModel->SetModelName( name.c_str() );
    veModel->SetModelID( mod_pack._id );
    veModel->SetIconFilename( std::string( "iconFilename" ) );
@@ -736,7 +741,6 @@ void REI_Plugin::UnPack(Interface * intf)
     financial_dlg->_om02_d = mod_pack.getDouble("OM02");
     financial_dlg->_om03_d = mod_pack.getDouble("OM03");
   }
-  
 }
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
@@ -1128,5 +1132,18 @@ void REI_Plugin::GetDataTables( VE_XML::Command* inputCommand, std::vector< wxSt
       // vectors of data to be displayed
       tagNames.push_back( wxString( dataName.c_str() ) );
       values.push_back( wxString( stringData.c_str() ) );
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetPluginNameDialog( void )
+{
+   wxTextEntryDialog newPluginName( 0, 
+                                    wxString("Enter the name for your UI plugin:"),
+                                    wxString("Set UI Plugin Name..."),
+                                    wxString("YourPluginName"),wxOK|wxCANCEL);
+
+   if ( newPluginName.ShowModal() == wxID_OK )
+   {
+      name = newPluginName.GetValue(); 
    }
 }

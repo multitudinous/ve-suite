@@ -106,6 +106,8 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
    EVT_MENU(MODEL_RESULTS, Network::OnResultsWindow) /* EPRI TAG */
    EVT_MENU(VISUALIZATION, Network::OnVisualization)
+   EVT_MENU(SET_UI_PLUGIN_NAME, Network::OnSetUIPluginName )
+   EVT_MENU(SET_ACTIVE_MODEL, Network::OnSetActiveXplorerModel )
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -499,14 +501,21 @@ void Network::OnMRightDown(wxMouseEvent& event)
 
 	// GUI to configure geometry for graphical env
    }
-	
+	//UI for input variables
    pop_menu.Append(MODEL_INPUTS, "Input Variables" );
    pop_menu.Enable(MODEL_INPUTS, true);
+   //UI for results variables
    pop_menu.Append(MODEL_RESULTS, "Result Variables" );
    pop_menu.Enable(MODEL_RESULTS, true);
-
+   //UI for vis variables
    pop_menu.Append(VISUALIZATION, "Visualization" );
    pop_menu.Enable(VISUALIZATION, true);
+   //Make a specific plusing active in xplorer
+   pop_menu.Append(SET_ACTIVE_MODEL, "Set Active Xplorer Model" );
+   pop_menu.Enable(SET_ACTIVE_MODEL, true);
+   //Set the plugin name for a model
+   pop_menu.Append(SET_UI_PLUGIN_NAME, "Set UI Plugin Name" );
+   pop_menu.Enable(SET_UI_PLUGIN_NAME, true);
 
    pop_menu.Enable(ADD_LINK_CON, false);
    pop_menu.Enable(EDIT_TAG, false);
@@ -2099,7 +2108,7 @@ std::string Network::Save( std::string fileName )
                   std::pair< VE_XML::XMLObject*, std::string >( 
                   modules[ iter->first ].GetPlugin()->GetVEModel(), "veModel" ) 
                      );
-      dynamic_cast< VE_Model::Model* >( nodes.back().first )->SetModelName( modules[ iter->first ].GetClassName() );
+      //dynamic_cast< VE_Model::Model* >( nodes.back().first )->SetModelName( modules[ iter->first ].GetClassName() );
    }
 
    //  tags
@@ -2478,7 +2487,7 @@ void Network::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
    modules[m_selMod].GetPlugin()->ViewResultsVariables();
 }
 ///////////////////////////////////////////
-void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
+void Network::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
 {
    if ( !SetActiveModel() ) 
    {
@@ -2510,7 +2519,7 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
    }
 }
 ///////////////////////////////////////////
-void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
+void Network::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
 {
    if ( !SetActiveModel() ) 
    {
@@ -2559,7 +2568,7 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED(event) )
    //dataSetLoaderDlg = 0;
 }
 ///////////////////////////////////////////
-void Network::OnVisualization(wxCommandEvent& WXUNUSED(event))
+void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
 {
    if ( !SetActiveModel() ) 
    {
@@ -2746,8 +2755,13 @@ void* Network::Entry( void )
    isLoading = false;
    return 0;
 }
-///////////////////////////////////////////
-bool Network::SetActiveModel( void )
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnSetActiveXplorerModel( wxCommandEvent& WXUNUSED( event ) )
+{
+   SetActiveModel();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Network::SetActiveModel()
 {
    if (m_selMod<0) 
       return false;
@@ -2771,4 +2785,14 @@ bool Network::SetActiveModel( void )
    //Clean up memory
    delete veCommand;
    return connected;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
+{
+   if ( m_selMod < 0) 
+   {
+      return;
+   }
+   // Here we launch a dialog for a specific plugins input values
+   modules[m_selMod].GetPlugin()->SetPluginNameDialog();   
 }

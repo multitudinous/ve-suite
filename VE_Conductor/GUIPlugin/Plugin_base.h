@@ -84,73 +84,66 @@ typedef std::vector< VE_Model::Port > PORT;
 class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
 {
 public:
+   ///Defualt constructor
    REI_Plugin();
+   ///Defualt destructor for plugins
    virtual ~REI_Plugin();
-
+   ///Return the version number of the module
    virtual double GetVersion();
-   //Return the version number of the module
-
+   ///This call return a window to be displayed on the framework
    virtual void DrawIcon(wxDC* dc);
-   //This call return a window to be displayed on the framework
-
+   ///Draw he id for a particular plugin
    void DrawID(wxDC* dc);
-
+   ///Set the start drawing location
    void SetPos(wxPoint pt);
-   //Set the start drawing location
-
+   ///Return the bounding box;
    wxRect GetBBox();
-   //Return the bounding box;
-
-   //To Get around the Memory allocation problem of windows dll
-   //Add the calls for the size. So the main program can preallocate 
-   // memory for it
-
+   ///To Get around the Memory allocation problem of windows dll
+   ///Add the calls for the size. So the main program can preallocate 
+   /// memory for it
    int GetNumPoly( void );
-
+   ///Return the outline polygon
    void GetPoly(POLY &polygon); 
-   //Return the outline polygon
-
+   ///This returns the UI dialog of the module
    virtual UIDialog* UI(wxWindow* parent);
-   //This returns the UI dialog of the module
-
+   ///This returns the Result dialog of the module
    virtual UIDialog* Result(wxWindow* parent);
-   //This returns the Result dialog of the module
-
+   ///This returns the PortData dialog of the module
    virtual UIDialog* PortData(wxWindow* parent,  Interface *intf);
-   //This returns the PortData dialog of the module
-
+   ///This returns the FinancialData dialog of the module
    virtual void FinancialData();
-   //This returns the FinancialData dialog of the module
-
+   ///This is the ID to identify the module
    unsigned int GetID();
-   //This is the ID to identify the module
-
+   ///This returns the name of the module
    virtual wxString GetName();
-   //This returns the name of the module
-
+   ///This sets the name of the module
    virtual void SetName( wxString pluginName );
-   //This sets the name of the module
-
+   ///This returns the description of the module, This should be a short description
    virtual wxString GetDesc();
-   //This returns the description of the module, This should be a short description
-
+   ///Return the URL of the online help
    virtual wxString GetHelp();
-   //Return the URL of the online help
-
+   ///Get geometry data
    void GeometryData();
+   ///Get the geometry data buffer - this is deprecated
    GeometryDataBuffer* GetGeometryDataBuffer( void );
-
+   ///Unpack the interface - this is deprecated
    virtual void UnPack(Interface* intf);
-   //This is the load function of the module, unpack the input string and fill up the UI according to this
+   ///This is the load function of the module, 
+   ///unpack the input string and fill up the UI according to this
    virtual Interface* Pack();
-   //This is the load function of the module, unpack the input string and fill up the UI according to this
+   //This is the load function of the module, 
+   ///unpack the input string and fill up the UI according to this
    VE_Model::Model* GetVEModel( void );
+   ///Set the ve model
    void SetVEModel( VE_Model::Model* tempModel );
+   ///Get the model constructed by the dialog
    VE_Model::Model* GetModel( void );
-
-   //This is to unpack the result from the 
+   ///This is to unpack the result from the 
    virtual void UnPackResult(Interface * intf);
-
+   ///method to start a dialog to ask the user for a plugin name so that the 
+   ///name can be defined at run time
+   void SetPluginNameDialog( void );
+   
    //To Get around the Memory allocation problem of windows dll
    //Add the calls for the size. So the main program can preallocate memory for it
 

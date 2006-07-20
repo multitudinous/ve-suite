@@ -55,6 +55,11 @@ DefaultPlugin
    poly[2]=wxPoint(icon_w,icon_h);
    poly[3]=wxPoint(0,icon_h);
 
+   height = 100;
+   RegistVar("height", &height );
+
+   dlg = 0;
+   name = "DefaultPlugin";
 //#define TESTPORT
 #ifdef TESTPORT
    VE_Model::Port* Aport = new VE_Model::Port();
@@ -126,14 +131,15 @@ UIDialog* DefaultPlugin::UI(wxWindow* parent)
   if (dlg!=NULL)
     return dlg;
   
-  dlg = new DefaultPlugin_UI_Dialog(parent, -1);
+  //dlg = new DefaultPlugin_UI_Dialog(parent, -1, &height );
       
   return dlg;
 }
 /////////////////////////////////////////////////////////////////////////////
 wxString DefaultPlugin::GetName()
 {
-  wxString result="DefaultPlugin"; //your name
+  wxString result ="DefaultPlugin";
+  
   return result;
 }
 /////////////////////////////////////////////////////////////////////////////
