@@ -165,18 +165,20 @@ void DataSetLoaderUI::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxScrolledWindow* itemScrolledWindow3 = new wxScrolledWindow( itemDialog1, ID_SCROLLEDWINDOW, wxDefaultPosition, wxSize(300, 500), wxHSCROLL|wxVSCROLL );
-    itemBoxSizer2->Add(itemScrolledWindow3, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
-    itemScrolledWindow3->SetScrollbars(20, 10, 5, 10);
+    //wxScrolledWindow* itemScrolledWindow3 = new wxScrolledWindow( itemDialog1, ID_SCROLLEDWINDOW, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
+    //itemBoxSizer2->Add(itemScrolledWindow3, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+    //itemScrolledWindow3->SetScrollbars(20, 10, 5, 10);
 
-    wxStaticBox* itemStaticBoxSizer4Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Steady State Data"));
+    //wxStaticBox* itemStaticBoxSizer4Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Steady State Data"));
+    wxStaticBox* itemStaticBoxSizer4Static = new wxStaticBox( itemDialog1, wxID_ANY, _("Steady State Data"));
     wxStaticBoxSizer* itemStaticBoxSizer4 = new wxStaticBoxSizer(itemStaticBoxSizer4Static, wxVERTICAL);
-    itemScrolledWindow3->SetSizer(itemStaticBoxSizer4);
+    //itemScrolledWindow3->SetSizer(itemStaticBoxSizer4);
+    itemBoxSizer2->Add( itemStaticBoxSizer4, 1, wxALL|wxEXPAND, 5);
 
    ///////////////////////////////////////////////////////
     wxString* dataSetListStrings = NULL;
     //dataSetList = new wxComboBox( itemScrolledWindow3, ID_COMBOBOX, _("Type New DataSet Name Here"), wxDefaultPosition, wxSize(250, -1), 0, dataSetListStrings, wxCB_DROPDOWN );
-    dataSetList = new wxComboBox( itemScrolledWindow3, ID_COMBOBOX, _(""), wxDefaultPosition, wxSize(250, -1), 0, dataSetListStrings, wxCB_DROPDOWN );
+    dataSetList = new wxComboBox( itemDialog1, ID_COMBOBOX, _(""), wxDefaultPosition, wxDefaultSize, 0, dataSetListStrings, wxCB_DROPDOWN );
     //dataSetList->SetStringSelection(_("Type New DataSet Name Here"));
     //dataSetList->Append(_("Unselect"));
     //dataSetList->Append(_("Add Dataset"));
@@ -185,33 +187,33 @@ void DataSetLoaderUI::CreateControls()
     dataSetList->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
         dataSetList->SetToolTip(_("Text Entry"));
-    itemStaticBoxSizer4->Add(dataSetList, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer4->Add(dataSetList, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
     dataSetList->Raise();
    ///////////////////////////////////////////////////
     wxBoxSizer* dataButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
 
     itemStaticBoxSizer4->Add(dataButtonsSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-    wxButton* loadButton = new wxButton( itemScrolledWindow3, ID_ADD_DATASET, _("Add DataSet"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* loadButton = new wxButton( itemDialog1, ID_ADD_DATASET, _("Add DataSet"), wxDefaultPosition, wxDefaultSize, 0 );
     dataButtonsSizer->Add(loadButton);
 
-    wxButton* deleteButton = new wxButton( itemScrolledWindow3, ID_DELETE_DATASET, _("Delete DataSet"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* deleteButton = new wxButton( itemDialog1, ID_DELETE_DATASET, _("Delete DataSet"), wxDefaultPosition, wxDefaultSize, 0 );
     dataButtonsSizer->Add(deleteButton);
 
    ///////////////////////////////////////////////////////
-    itemStaticBoxSizer6Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, 
+    itemStaticBoxSizer6Static = new wxStaticBox(itemDialog1, wxID_ANY, 
                                                 _("DataSet Filename"));
     wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(itemStaticBoxSizer6Static, wxHORIZONTAL);
-    itemStaticBoxSizer4->Add(itemStaticBoxSizer6, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer4->Add(itemStaticBoxSizer6, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
 
-    dataSetTextEntry = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL, 
+    dataSetTextEntry = new wxTextCtrl( itemDialog1, ID_TEXTCTRL, 
                                  _("Enter Filename Here-->"), wxDefaultPosition, 
-                                 wxSize(150, -1), wxTE_READONLY );
+                                 wxDefaultSize, wxTE_READONLY );
     dataSetTextEntry->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
         dataSetTextEntry->SetToolTip(_("Text Entry"));
-    itemStaticBoxSizer6->Add(dataSetTextEntry, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer6->Add(dataSetTextEntry, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5);
 
-    dataSetOpenButton = new wxButton( itemScrolledWindow3, ID_BUTTON, 
+    dataSetOpenButton = new wxButton( itemDialog1, ID_BUTTON, 
                                        _("Open"), wxDefaultPosition, 
                                        wxDefaultSize, 0 );
     dataSetOpenButton->SetHelpText(_("Load Data"));
@@ -219,35 +221,35 @@ void DataSetLoaderUI::CreateControls()
         dataSetOpenButton->SetToolTip(_("Load Data"));
     itemStaticBoxSizer6->Add(dataSetOpenButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
    ///////////////////////////////////////////////////////
-    itemStaticBoxSizer9Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Precomputed Data Directory"));
+    itemStaticBoxSizer9Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Precomputed Data Directory"));
     wxStaticBoxSizer* itemStaticBoxSizer9 = new wxStaticBoxSizer(itemStaticBoxSizer9Static, wxHORIZONTAL);
-    itemStaticBoxSizer4->Add(itemStaticBoxSizer9, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer4->Add(itemStaticBoxSizer9, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
 
-    preComputDirTextEntry = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL2, _("Enter Dir Here-->"), wxDefaultPosition, wxSize(150, -1), wxTE_READONLY );
+    preComputDirTextEntry = new wxTextCtrl( itemDialog1, ID_TEXTCTRL2, _("Enter Dir Here-->"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     preComputDirTextEntry->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
         preComputDirTextEntry->SetToolTip(_("Text Entry"));
-    itemStaticBoxSizer9->Add(preComputDirTextEntry, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer9->Add(preComputDirTextEntry, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5);
 
-    preComputeOpenButton = new wxButton( itemScrolledWindow3, ID_BUTTON3, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
+    preComputeOpenButton = new wxButton( itemDialog1, ID_BUTTON3, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
     if (ShowToolTips())
         preComputeOpenButton->SetToolTip(_("Precomputed Data Dir"));
     itemStaticBoxSizer9->Add(preComputeOpenButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
     preComputDirTextEntry->Raise();
    ///////////////////////////////////////////////////////
-    itemStaticBoxSizer12Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Surface Data Directory"));
+    itemStaticBoxSizer12Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Surface Data Directory"));
     wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer(itemStaticBoxSizer12Static, wxHORIZONTAL);
-    itemStaticBoxSizer4->Add(itemStaticBoxSizer12, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer4->Add(itemStaticBoxSizer12, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
 
-    surfaceDataText = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL3, 
+    surfaceDataText = new wxTextCtrl( itemDialog1, ID_TEXTCTRL3, 
                                        _("Enter Dir Here-->"), wxDefaultPosition, 
-                                       wxSize(150, -1), wxTE_READONLY );
+                                       wxDefaultSize, wxTE_READONLY );
     surfaceDataText->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
         surfaceDataText->SetToolTip(_("Text Entry"));
-    itemStaticBoxSizer12->Add(surfaceDataText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer12->Add(surfaceDataText, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5);
 
-    surfaceDataOpenButton = new wxButton( itemScrolledWindow3, ID_BUTTON4, 
+    surfaceDataOpenButton = new wxButton( itemDialog1, ID_BUTTON4, 
                                              _("Open"), wxDefaultPosition, 
                                              wxDefaultSize, 0 );
     surfaceDataOpenButton->SetHelpText(_("Surface Data Dir"));
@@ -256,19 +258,19 @@ void DataSetLoaderUI::CreateControls()
     itemStaticBoxSizer12->Add(surfaceDataOpenButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
     surfaceDataText->Raise();
    ///////////////////////////////////////////////////////
-    itemStaticBoxSizer15Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("DataSet Attributes"));
+    itemStaticBoxSizer15Static = new wxStaticBox(itemDialog1, wxID_ANY, _("DataSet Attributes"));
     wxStaticBoxSizer* itemStaticBoxSizer15 = new wxStaticBoxSizer(itemStaticBoxSizer15Static, wxHORIZONTAL);
-    itemStaticBoxSizer4->Add(itemStaticBoxSizer15, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer4->Add(itemStaticBoxSizer15, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
 
-    transformButton = new wxButton( itemScrolledWindow3, ID_BUTTON6, _("Transform"), wxDefaultPosition, wxDefaultSize, 0 );
+    transformButton = new wxButton( itemDialog1, ID_BUTTON6, _("Transform"), wxDefaultPosition, wxDefaultSize, 0 );
     transformButton->SetHelpText(_("Transform GUI"));
     if (ShowToolTips())
         transformButton->SetToolTip(_("Transform GUI"));
     itemStaticBoxSizer15->Add(transformButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemStaticBoxSizer15->Add(65, 5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer15->Add(65, 5, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5);
 
-    scalarButton = new wxButton( itemScrolledWindow3, ID_BUTTON5, _("Scalar"), wxDefaultPosition, wxDefaultSize, 0 );
+    scalarButton = new wxButton( itemDialog1, ID_BUTTON5, _("Scalar"), wxDefaultPosition, wxDefaultSize, 0 );
     scalarButton->SetHelpText(_("Future Use"));
     if (ShowToolTips())
         scalarButton->SetToolTip(_("Future Use"));
@@ -276,25 +278,25 @@ void DataSetLoaderUI::CreateControls()
     itemStaticBoxSizer15->Add(scalarButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
     transformButton->Raise();
    ///////////////////////////////////////////////////////
-    itemStaticBoxSizer19Static = new wxStaticBox(itemScrolledWindow3, wxID_ANY, _("Volumetric Data Directories"));
+    itemStaticBoxSizer19Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Volumetric Data Directories"));
     wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(itemStaticBoxSizer19Static, wxVERTICAL);
-    itemStaticBoxSizer4->Add(itemStaticBoxSizer19, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer4->Add(itemStaticBoxSizer19, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
 
     wxBoxSizer* itemBoxSizer20 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer19->Add(itemBoxSizer20, 0, wxALIGN_LEFT, 5);
+    itemStaticBoxSizer19->Add(itemBoxSizer20, 0, wxALIGN_LEFT|wxEXPAND, 5);
 
-    itemTextCtrl21 = new wxTextCtrl( itemScrolledWindow3, ID_TEXTCTRL1, _T("Enter Dir Here-->"), wxDefaultPosition, wxSize(150, -1), wxTE_READONLY );
-    itemBoxSizer20->Add(itemTextCtrl21, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemTextCtrl21 = new wxTextCtrl( itemDialog1, ID_TEXTCTRL1, _T("Enter Dir Here-->"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+    itemBoxSizer20->Add(itemTextCtrl21, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5);
 
-    itemButton22 = new wxButton( itemScrolledWindow3, ID_BUTTON2, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemButton22 = new wxButton( itemDialog1, ID_BUTTON2, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer20->Add(itemButton22, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxScrolledWindow* itemScrolledWindow23 = new wxScrolledWindow( itemScrolledWindow3, ID_SCROLLEDWINDOW1, wxDefaultPosition, wxSize(-1, 40), wxHSCROLL|wxVSCROLL );
-    itemStaticBoxSizer19->Add(itemScrolledWindow23, 0, wxALIGN_LEFT|wxALL, 5);
+    wxScrolledWindow* itemScrolledWindow23 = new wxScrolledWindow( itemDialog1, ID_SCROLLEDWINDOW1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
+    itemStaticBoxSizer19->Add(itemScrolledWindow23, 1, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
     itemScrolledWindow23->SetScrollbars(1, 1, 0, 0);
 
     wxString* itemListBox24Strings = NULL;
-    itemListBox24 = new wxListBox( itemScrolledWindow23, ID_LISTBOX, wxDefaultPosition, wxSize(225, -1), 0, itemListBox24Strings, wxLB_SINGLE );
+    itemListBox24 = new wxListBox( itemScrolledWindow23, ID_LISTBOX, wxDefaultPosition, wxDefaultSize, 0, itemListBox24Strings, wxLB_SINGLE );
     itemTextCtrl21->Raise();
    ///////////////////////////////////////////////////////
     wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
