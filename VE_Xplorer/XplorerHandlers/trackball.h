@@ -39,9 +39,6 @@
 
 using namespace gmtl;
 
-const double OneEightyDivPI=57.29577951;
-const double PIDivOneEighty=.0174532925;
-
 class Trackball{
 public:
 	Trackball();
@@ -55,7 +52,6 @@ public:
 	void Motion(int x,int y);
 
 protected:
-   bool tb_tracking;
    bool tb_moving;
    float tb_currPos[2];
    float tb_prevPos[2];
@@ -66,7 +62,6 @@ protected:
 	int tb_key;
 	int tb_button;
    float tb_angle;
-   float tb_axis[3];
 	float tb_max[3];
 	float tb_min[3];
 	Matrix44f tb_transform;
@@ -79,4 +74,5 @@ protected:
 	void Pan(float dx,float dy);
 	void Rotate(float x,float y,float z,float angle);
 };
+
 #endif
