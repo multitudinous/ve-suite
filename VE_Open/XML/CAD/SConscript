@@ -14,6 +14,7 @@ cad_srcs = Split("""
    CADNode.cxx
    CADNodeTraverser.cxx
    CADPart.cxx
+   CADNodeAnimation.cxx
 """)
 
 cad_srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'CAD', s), cad_srcs)

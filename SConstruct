@@ -68,7 +68,7 @@ def BuildLinuxEnvironment():
     libpath = ['/home/vr/Applications/TSVEG/Libraries/Release/Debug/VTK/Linux-RHEL_4/lib/vtk',
                '/home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Linux-RHEL_4/lib',
                '/home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.0/Linux-RHEL_4/lib',
-               '/home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE_TAO/Linux-RHEL_4/lib']
+               '/home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-TAO-5.5/Linux-RHEL_4/lib']
     LIBS = []
 
 ##Global variables exported to other SConscripts.
@@ -78,7 +78,7 @@ def BuildLinuxEnvironment():
     osg = ['osg', 'osgDB', 'osgGA', 'osgUtil', 'OpenThreads']
     ace_tao = ['TAO_IORInterceptor', 'TAO_ObjRefTemplate', 'TAO_Valuetype', 'TAO', 'ACE',
                'pthread', 'TAO_CosNaming', 'TAO_Svc_Utils', 'TAO_IORTable', 'TAO_Messaging',
-               'TAO_PortableServer', 'TAO_BiDirGIOP']
+               'TAO_PortableServer', 'TAO_BiDirGIOP', 'TAO_AnyTypeCode']
     boost = ['boost_filesystem-gcc-mt-d', 'boost_filesystem-gcc-mt-1_33']
 #    vrjuggler = [ 'jccl', 'vrj', 'vrj_ogl','sonix', 'gadget', 'vpr', 'SM', 'ICE', 'X11', 'm', 'cppdom', 'uuid' ]
 
@@ -181,15 +181,15 @@ ceSubdirs = Split("""
 
 xplorerSubdirs = Split("""
     Utilities  
-    SceneGraph
-    SceneGraph/Utilities
-    TextureBased
-    XplorerHandlers
-    GraphicalPlugin
-    XplorerNetwork
-    GE
-    DefaultGraphicalPlugin
-""")
+""")##    SceneGraph
+##    SceneGraph/Utilities
+##    TextureBased
+##    XplorerHandlers
+##    GraphicalPlugin
+##    XplorerNetwork
+##    GE
+##    DefaultGraphicalPlugin
+##""")
 
 builderSubdirs = Split("""
     Translator/cfdTranslatorToVTK
@@ -210,10 +210,9 @@ ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
 ##Run SConscript files in all of those folders.
 ##REDUNDANT: SConscript(['#/VE_Conductor/Network/SConscript'])
 SConscript(dirs = openSubdirs)
-SConscript(dirs = ['#/VE_Conductor/Network'])
 SConscript(dirs = ceSubdirs)
-##SConscript(dirs = conductorSubdirs)
-##SConscript(dirs = xplorerSubdirs)
+SConscript(dirs = conductorSubdirs)
+SConscript(dirs = xplorerSubdirs)
 ##SConscript(dirs = builderSubdirs)
 
 ##SConscript(['#/VE_Switcher/SConscript'])

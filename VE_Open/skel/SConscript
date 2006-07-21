@@ -17,7 +17,8 @@ env = baseEnv.Copy()
 #env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
 ##env.Append(CPPPATH = pj( env['TAO_HOME'], 'include') )
-env.Append(CPPPATH = pj( '/home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE_TAO/Linux-RHEL_4', 'include') )
+##env.Append(CPPPATH = pj( '/home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-TAO-5.4/Linux-RHEL_4', 'include') )
+env.ParseConfig('flagpoll tao --cflags')
 env.Append(LIBPATH = libPath,
               LIBS = ['VE_XMLLib', 'VE_ShaderLib'])
 for lib in ace_tao:

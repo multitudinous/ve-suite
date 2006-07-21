@@ -50,5 +50,4 @@ env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
 env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
 env.ParseConfig( 'wx-config --cxxflags --libs' )
 
-#env.SharedLibrary(target = '#/VE_CE', source = ce_srcs)
 env.Program(pj('#', 'bin', cfdHostType, 'Exe_server'), source = ce_srcs)

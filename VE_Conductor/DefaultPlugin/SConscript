@@ -5,6 +5,7 @@ Import('baseEnv')
 Import('Platform')
 Import('xerces')
 Import('ace_tao')
+Import('libPath')
 
 srcs = Split("""
     DefaultPlugin.cxx
@@ -14,11 +15,10 @@ srcs = Split("""
 env = baseEnv.Copy()
 
 env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = pj(os.getenv('TAO_HOME',''), 'include') )
+##env.Append(CPPPATH = [os.getcwd()])
+##env.Append(CPPPATH = pj(os.getenv('TAO_HOME',''), 'include') )
 env.Append(CPPPATH = pj('#', 'VE_Conductor', 'Framework') )
-env.Append(LIBPATH = ['#',
-                      pj( '#', 'lib', os.getenv('CFDHOSTTYPE') ) ],
+env.Append(LIBPATH = libPath,
               LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                       'VE_CADLib', 'VE_ShaderLib', 'GUIPluginLib',
                       'VE_OpenModuleLib'])
@@ -28,10 +28,12 @@ for lib in xerces:
 for lib in ace_tao:
     env.Append(LIBS = lib)
 env.ParseConfig( 'wx-config --cxxflags --libs' )
+env.ParseConfig('flagpoll tao --cflags')
 
 ##EXTRA
 ##env.ParseConfig( 'vrjuggler-config --extra-libs' )
 ##env.Append(CPPPATH = pj(os.getenv('VJ_DEPS_DIR'), 'include'))
 ##env.Append(CPPPATH = pj('#', 'VE_Builder', 'Translator'))
 
-env.SharedLibrary('DefaultPlugin_UI_Dialog', source = srcs)
+targetLib = pj(libPath, 'DefaultPlugin_UI_Dialog')
+env.SharedLibrary(targetLib, source = srcs)

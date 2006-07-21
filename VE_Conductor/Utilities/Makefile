@@ -46,7 +46,7 @@ SRCS=\
    spinctld.cpp\
    ROIDialog.cxx\
    BaseDialog.cxx
-			
+
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Utilities/gui
@@ -58,7 +58,6 @@ DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 DSO_PLUGIN_DEPS+= -lVE_XMLLib
 DSO_PLUGIN_DEPS+= -lVE_ModelLib
 DSO_PLUGIN_DEPS+= -lVE_CADLib
-DSO_PLUGIN_DEPS+= -lVE_ShaderLib
 DSO_PLUGIN_DEPS+= -lVE_ShaderLib
 #EXTRA_LIBS+= -lVE_CE_UtilitiesLib
 DSO_PLUGIN_DEPS+= -lVE_OpenModuleLib

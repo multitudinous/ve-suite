@@ -53,4 +53,3 @@ for lib in ace_tao:
 
 targetLib = pj(libPath, 'VE_CE_UtilitiesLib')
 env.SharedLibrary(target = targetLib, source = ceutil_srcs)
-#env.Program(pj('#','bin',Platform,'Exe_Server'), source = ceutil_srcs)
