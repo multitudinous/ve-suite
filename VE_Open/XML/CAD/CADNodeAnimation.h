@@ -66,6 +66,10 @@ public:
    ///\param fileSourceType The type of attribute.
    void SetFileType(std::string fileSourceType);
 
+   ///Set the name of the animation
+   ///\param name The name of the animation
+   void SetAnimationName(std::string name);
+
    ///Set the play mode.
    ///Valid types are "Loop" or "Once".
    ///\param playMode The play mode for the animation.
@@ -78,6 +82,9 @@ public:
 
    ///Get the file type. 
    std::string GetFileType();
+
+   ///Get the name of this animation.
+   std::string GetAnimationName();
 
    ///The play mode of the animation.
    std::string GetPlayMode();
@@ -100,6 +107,7 @@ protected:
    std::string _fileSourceType;///<The type of attribute
    std::string _animationFileName;///<The actual name of the file.
    std::string _playMode;///<The play mode of the animation.
+   std::string _name;///<The name of the animation.
 };
 }
 #endif// CAD_NODE_ANIMATION_H

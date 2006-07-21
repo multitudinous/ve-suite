@@ -47,6 +47,8 @@ CADNodeAnimation::CADNodeAnimation()
    _fileSourceType = "OSG";
    _animationFileName = " ";
    _playMode = "Once";
+   _name = "VE-Animation";
+   SetObjectNamespace("CAD");
    SetObjectType("CADNodeAnimation");
 }
 /////////////////////////////////////
@@ -55,6 +57,11 @@ CADNodeAnimation::CADNodeAnimation()
 CADNodeAnimation::~CADNodeAnimation()
 {
 
+}
+/////////////////////////////////////////////////////////
+void CADNodeAnimation::SetAnimationName(std::string name)
+{
+   _name = name;
 }
 /////////////////////////////////////////////////////////////////
 void CADNodeAnimation::SetAnimationFileName(std::string fileName)
@@ -93,7 +100,17 @@ void CADNodeAnimation::SetObjectFromXMLData( DOMNode* xmlNode)
       {
          _animationFileName = ExtractDataStringFromSimpleElement(animationFile);
       }
+      DOMElement* name = GetSubElement(currentElement,"name",0);
+      if(name)
+      {
+         _name = ExtractDataStringFromSimpleElement(name);
+      }
    }
+}
+////////////////////////////////////////////////
+std::string CADNodeAnimation::GetAnimationName()
+{
+   return _name;
 }
 ///////////////////////////////////////////
 std::string CADNodeAnimation::GetFileType()
@@ -112,19 +129,23 @@ std::string CADNodeAnimation::GetAnimationFileName()
 }
 ///////////////////////////////////////////////////////////////
 CADNodeAnimation::CADNodeAnimation(const CADNodeAnimation& rhs)
+:XMLObject(rhs)
 {
    _fileSourceType = rhs._fileSourceType;
    _animationFileName = rhs._animationFileName;
    _playMode = rhs._playMode;
+   _name = rhs._name;
 }
 //////////////////////////////////////////////////////////////////////////
 CADNodeAnimation& CADNodeAnimation::operator=(const CADNodeAnimation& rhs)
 {
    if(this != &rhs)
    {
+      XMLObject::operator =(rhs);
       _fileSourceType = rhs._fileSourceType;
       _animationFileName = rhs._animationFileName;
       _playMode = rhs._playMode;
+      _name = rhs._name;
    }
    return *this;
 }
@@ -132,6 +153,7 @@ CADNodeAnimation& CADNodeAnimation::operator=(const CADNodeAnimation& rhs)
 void CADNodeAnimation::_updateVEElement(std::string input)
 {
    SetSubElement("fileName",_animationFileName);
+   SetSubElement("name",_name);
    SetAttribute("fileType",_fileSourceType);
    SetAttribute("playMode",_playMode);
 }

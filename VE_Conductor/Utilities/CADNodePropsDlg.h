@@ -79,7 +79,12 @@ public:
       TRANSFORM_PANEL_ID,///<The transform panel ID.
       EDIT_ATTRIBUTE,///<The edit attribute ID.
       REMOVE_ATTRIBUTE,///<The remove attribute ID.
-      ADD_ATTRIBUTE///<The add attribute button ID.
+      ADD_ATTRIBUTE,///<The add attribute button ID.
+      ACTIVE_ANIMATION,///<The active attribute ID.
+      ANIMATION_PANEL_ID,///<The animation panel ID.
+      EDIT_ANIMATION,///<The edit attribute ID.
+      REMOVE_ANIMATION,///<The remove attribute ID.
+      ADD_ANIMATION///<The add attribute button ID.
    };
    ///Constructor
    ///\param parent The parent window.
@@ -93,6 +98,10 @@ public:
    ///Check for existing attribute name. 
    ///\param attributeName The name to check for.
    bool AttributeExists(std::string attributeName);
+
+   ///Check for existing animation name. 
+   ///\param name The name to check for.
+   bool AnimationExists(wxString name);
 
 #ifndef STAND_ALONE
    ///Set the current vjObjs ptr for data passing.
@@ -108,6 +117,9 @@ public:
    
    ///Return the attribute panel.
    wxPanel* GetAttributePanel();
+
+   ///Return the Animation Panel
+   wxPanel* GetAnimationPanel();
 protected:
    ///Internally build the GUI.
    void _buildGUI();
@@ -120,6 +132,9 @@ protected:
    
    ///Build the transform panel.
    void _buildAttributePanel();
+   
+   ///Build the animation panel.
+   void _buildAnimationPanel();
 
    ///Update the transform of a node
    ///\param event The wxCommand event.
@@ -168,6 +183,25 @@ protected:
    ///Update the available attributes for this CADNode.
    void _updateAvailableAttributes();
 
+   ///Add an animation to the node.
+   ///\param event The wxCommand event.
+   void _addAnimation(wxCommandEvent& event);
+
+   ///Remove an animation from the node.
+   ///\param event The wxCommand event.
+   void _removeAnimation(wxCommandEvent& event);
+   
+   ///Update the active animation.
+   ///\param event The wxListEvent event.
+   void _setActiveAnimation(wxListEvent& event);
+
+   ///Update the animation dialog
+   ///\param animations The list of animations to set in the dialog.
+   void _updateAnimationList(wxArrayString animations);
+
+   ///Update the available animations for this CADNode.
+   void _updateAvailableAnimations();
+
    ///utility function to convert double to unsigned char 
    ///\param value The value to convert to double
    double _convertToDoubleColor(unsigned char value);
@@ -185,6 +219,7 @@ protected:
    wxNotebook* _propertyTabs;///<The tabs for modifying the node properties.
    wxPanel* _transformPanel;///<The transform panel.
    wxPanel* _attributePanel;///<The attribute panel.
+   wxPanel* _animationPanel;///<The animation panel.
 
    ///Transform panel controls
    wxSpinCtrlDbl* _xTransformCtrl;///<X translation control
@@ -207,6 +242,13 @@ protected:
    wxButton* _editAttributeButton;///<The button for removing attributes.
    wxArrayString _availableShaders;///<The shader names.
    wxArrayString _availableMaterials;///<The material names.
+
+   ///Animation panel controls
+   wxArrayString _animationFiles;///<The animation file names.
+   
+   wxListCtrl* _animationSelection;///<The available animationFiles.
+   wxButton* _addAnimationButton;///<The button for adding attributes.
+   wxButton* _removeAnimationButton;///<The button for adding attributes.
 
    unsigned int _nMaterials;///<The number of materials.
    unsigned int _nShaders;///<The number of shaders.

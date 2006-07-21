@@ -69,6 +69,7 @@
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
+#include "VE_Open/XML/CAD/CADNodeAnimation.h"
 
 #include "VE_Open/XML/Shader/Program.h"
 
@@ -76,6 +77,7 @@ using namespace VE_CAD;
 using namespace VE_Shader;
 using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
+   EVT_BUTTON(ADD_ANIMATION,CADNodePropertiesDlg::_addAnimation)
    EVT_BUTTON(ADD_ATTRIBUTE,CADNodePropertiesDlg::_addAttribute)
    EVT_BUTTON(REMOVE_ATTRIBUTE,CADNodePropertiesDlg::_removeAttribute)
    EVT_SPINCTRL(TRANSFORM_PANEL_ID,CADNodePropertiesDlg::_updateTransform)
@@ -112,10 +114,14 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    _propertyTabs = 0;
    _transformPanel = 0;
    _attributePanel = 0;
+   _animationPanel = 0;
+
    _attributeType = 0;
    _attributeSelection = 0;
    _addAttributeButton = 0;
    _editAttributeButton = 0;
+   
+   _addAnimationButton = 0;
    //_associateWithDataCheck = 0;
    _nShaders = 0;
    _nMaterials = 0;
@@ -166,21 +172,13 @@ void CADNodePropertiesDlg::_buildTabs()
 
    _propertyTabs->AddPage(GetTransformPanel(),_T("Transform"), true);
    _propertyTabs->AddPage(GetAttributePanel(),_T("Attributes"), false);
+   _propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
 }
 //////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetTransformPanel()
 {
    if(!_transformPanel)
    {
-      ///need to add more logic here so we can override the spinners on the transform dialog
-      /*if ( _cadNode )
-      {
-         _transformPanel = new TransformUI( _propertyTabs, _("CADNode Transform Properties"), _cadNode->GetTransform() );
-      }
-      else
-      {
-         _transformPanel = new TransformUI( _propertyTabs, _("CADNode Transform Properties"), 0 );
-      }*/
       _buildTransformPanel();
    }
    return _transformPanel;
@@ -193,6 +191,15 @@ wxPanel* CADNodePropertiesDlg::GetAttributePanel()
       _buildAttributePanel();
    }
    return _attributePanel;
+}
+//////////////////////////////////////////////////
+wxPanel* CADNodePropertiesDlg::GetAnimationPanel()
+{
+   if(!_animationPanel)
+   {
+      _buildAnimationPanel();
+   }
+   return _animationPanel;
 }
 ///////////////////////////////////////////////////
 void CADNodePropertiesDlg::_buildTransformPanel()
@@ -366,14 +373,151 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    _attributePanel->SetAutoLayout(true);
    _attributePanel->SetSizer(attributePanelSizer);
 }
+//////////////////////////////////////////////////
+void CADNodePropertiesDlg::_buildAnimationPanel()
+{
+   _animationPanel = new wxPanel(_propertyTabs,ANIMATION_PANEL_ID);
+
+   wxBoxSizer* animationPanelSizer = new wxBoxSizer(wxVERTICAL);
+   wxStaticBox* animationProperties = new wxStaticBox(_animationPanel, -1, wxT("CADNode Animations"));
+   wxStaticBoxSizer* animationPropSizer = new wxStaticBoxSizer(animationProperties, wxHORIZONTAL);
+
+   //Active animation selection
+   wxStaticBox* activeAnimation = new wxStaticBox(_animationPanel, -1, wxT("Available Animations"));
+   wxStaticBoxSizer* activeAnimationSizer = new wxStaticBoxSizer(activeAnimation , wxVERTICAL);
+   _animationSelection = new wxListCtrl(_animationPanel,ACTIVE_ANIMATION,wxDefaultPosition,wxDefaultSize,wxLC_SINGLE_SEL|wxLC_LIST);
+
+   if(_cadNode)
+   {
+      _updateAvailableAnimations();
+      
+   }
+   _addAnimationButton = new wxButton(_animationPanel, ADD_ANIMATION,wxString("Add..."));
+   animationPropSizer->Add(_addAnimationButton,0,wxALIGN_CENTER);
+
+   _removeAnimationButton = new wxButton(_attributePanel, REMOVE_ANIMATION,wxString("Remove..."));
+   animationPropSizer->Add(_removeAttributeButton,0,wxALIGN_CENTER);
+   
+   activeAnimationSizer->Add(_animationSelection,1,wxEXPAND|wxALIGN_CENTER);
+
+   animationPropSizer->Add(activeAnimationSizer,1,wxEXPAND|wxALIGN_CENTER);
+
+
+   animationPanelSizer->Add(animationPropSizer,1,wxEXPAND|wxALIGN_CENTER);
+
+   _animationPanel->SetAutoLayout(true);
+   _animationPanel->SetSizer(animationPanelSizer);
+}
+///////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
+{
+   if(_cadNode)
+   {
+      ClearInstructions();
+    
+      {
+         
+         wxFileDialog dialog(this,
+		          _T("Add New Animation File"), 
+		          _T(""), 
+		          _T(""),
+		          _T("Animation Files(*.*)|*.*;"),
+		          wxOPEN|wxFILE_MUST_EXIST); 
+         try
+         {
+            if(dialog.ShowModal() == wxID_OK) 
+            {
+               wxFileName animationFileName( dialog.GetPath() );
+               animationFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+               wxString animationFileNamePath( wxString( "./" ) + animationFileName.GetFullPath() );
+
+               wxTextEntryDialog animationNameDlg(this, 
+                        wxString("New Animation Name"),
+                        wxString("Enter name for new node animation:"),
+                        animationFileName.GetName(),wxOK);
+               animationNameDlg.ShowModal();
+            
+               while(AnimationExists(animationNameDlg.GetValue().GetData()))
+               {
+                  wxMessageBox( "Animation with this name is already loaded.", 
+                  animationNameDlg.GetValue(), wxOK | wxICON_INFORMATION );
+               }
+               _cadNode->AddAnimation(animationNameDlg.GetValue().GetData(),
+                                   animationFileNamePath.c_str());
+               _updateAvailableAnimations();
+                  
+               _commandName = std::string("CAD_ADD_ANIMATION_TO_NODE");
+                  
+               VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+               nodeID->SetDataType("UNSIGNED INT");
+               nodeID->SetDataName(std::string("Node ID"));
+               nodeID->SetDataValue(_cadNode->GetID());
+               _instructions.push_back(nodeID);
+      
+               VE_XML::DataValuePair* addAnimation = new VE_XML::DataValuePair();
+               addAnimation->SetDataType("XMLOBJECT");
+               addAnimation->SetData("Animation Info",
+                                  &_cadNode->GetAnimation(animationNameDlg.GetValue().GetData()));
+               _instructions.push_back(addAnimation);
+
+              _sendCommandsToXplorer();
+            }
+         }
+      
+         catch(...)
+         {
+            wxMessageBox( "Couldn't load animation file.", 
+                       dialog.GetPath(), wxOK | wxICON_INFORMATION );
+                     return;
+         }
+      }
+   }
+
+}
+//////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_removeAnimation(wxCommandEvent& event)
+{
+}
+//////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_setActiveAnimation(wxListEvent& event)
+{
+}
+/////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_updateAnimationList(wxArrayString animations)
+{  
+   _animationSelection->ClearAll();
+   for(size_t i = 0; i < animations.GetCount(); i++)
+   {
+      _animationSelection->InsertItem(i,animations[i]);
+   }
+}
+//////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_updateAvailableAnimations()
+{
+   
+   if(_cadNode->GetNumberOfAnimations() > 0)
+   {
+      _animationFiles.clear();
+
+      size_t nAnimations = _cadNode->GetNumberOfAnimations();
+
+      for(size_t i = 0; i < nAnimations; i++)
+      {
+         _animationFiles.Add(_cadNode->GetAnimation(i).GetAnimationName().c_str());   
+      }
+      
+   }
+   _updateAnimationList(_animationFiles);
+   
+}
 ///////////////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateAttributeList(wxArrayString listOfAttributes)
 {
-      _attributeSelection->ClearAll();
-      for(size_t i = 0; i < listOfAttributes.GetCount(); i++)
-      {
-         _attributeSelection->InsertItem(i,listOfAttributes[i]);
-      }
+   _attributeSelection->ClearAll();
+   for(size_t i = 0; i < listOfAttributes.GetCount(); i++)
+   {
+      _attributeSelection->InsertItem(i,listOfAttributes[i]);
+   }
 }
 ///////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateAvailableAttributes()
@@ -571,10 +715,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
 		       wxOPEN|wxFILE_MUST_EXIST); 
          if(dialog.ShowModal() == wxID_OK) 
          {
-            //if((!dialog.GetPath().IsEmpty()) 
-            //   && wxFileExists(dialog.GetPath())) 
-            {         
-               //if(dialog.GetPath())
+            {
                {
                   VE_CAD::CADAttribute newAttribute;// = new CADAttribute();
                   newAttribute.SetAttributeType("Program");
@@ -633,6 +774,18 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
          }
       }
    }
+}
+////////////////////////////////////////////////////////////
+bool CADNodePropertiesDlg::AnimationExists(wxString name)
+{
+   for(unsigned int i = 0; _animationFiles.GetCount(); i++)
+   {
+      if(name == _animationFiles[i])
+      {
+         return true;
+      }
+   }
+   return false;
 }
 //////////////////////////////////////////////////////////
 bool CADNodePropertiesDlg::AttributeExists(std::string name)

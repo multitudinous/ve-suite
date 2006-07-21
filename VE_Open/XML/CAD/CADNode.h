@@ -89,7 +89,9 @@ public:
 
    ///Add an animation file for this CADNode.
    ///\param animationFileName The path to the animation file.
-   void AddAnimation(std::string animationFileName);
+   ///\param animationReferenceName The reference name to the CADNodeAnimation.
+   void AddAnimation(std::string animationReferenceName,
+                     std::string animationFileName);
 
    ///Remove an attribute from the node
    ///\param attributeName The name of the attribute to remove.
@@ -130,13 +132,16 @@ public:
    ///\param index The index of the attribute to find.
    VE_CAD::CADAttribute& GetAttribute(unsigned int index);
 
+   ///There is probably only one of these but internally we keep a vector of them
+   ///\param name The reference name of the animation to find.
+   VE_CAD::CADNodeAnimation& GetAnimation(std::string name);
 
    ///There is probably only one of these but internally we keep a vector of them
    ///\param index The animation file index in the list.
-   CADNodeAnimation& GetAnimation(unsigned int index = 0);
+   VE_CAD::CADNodeAnimation& GetAnimation(unsigned int index);
 
    ///Get the CADNodeAnimation for this CADNode.
-   std::vector<CADNodeAnimation> GetAnimationList();
+   size_t GetNumberOfAnimations();
 
    ///Get attributes for this node.
    std::vector<CADAttribute> GetAttributeList();

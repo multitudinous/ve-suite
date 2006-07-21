@@ -96,11 +96,12 @@ CADNode::~CADNode()
    _attributeList.clear();
    _animations.clear();
 }
-/////////////////////////////////////////////////////////
-void CADNode::AddAnimation(std::string animationFileName)
+//////////////////////////////////////////////////////////////////////////
+void CADNode::AddAnimation(std::string name,std::string animationFileName)
 {
    CADNodeAnimation newAnimation;
    newAnimation.SetAnimationFileName(animationFileName);
+   newAnimation.SetAnimationName(name);
    _animations.push_back(newAnimation);
 }
 ///////////////////////////////////////////
@@ -371,14 +372,40 @@ std::vector<CADAttribute> CADNode::GetAttributeList()
 {
    return _attributeList;
 }
+///////////////////////////////////////////////////////////////////
+VE_CAD::CADNodeAnimation& CADNode::GetAnimation(unsigned int index)
+{
+   try
+   {
+      return _animations.at(index);
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid animation index: "<<index<<std::endl;
+      std::cout<<"CADNode::GetAnimation()"<<std::endl;
+   }
+}
+/////////////////////////////////////////////////////////
+CADNodeAnimation& CADNode::GetAnimation(std::string name)
+{
+   size_t nAnimations = _animations.size();
+   for(size_t i = 0; i < nAnimations; i++)
+   {
+      if(_animations.at(i).GetAnimationName() == name)
+      {
+         return _animations.at(i);
+      }
+   }
+}
+///////////////////////////////////////
+size_t CADNode::GetNumberOfAnimations()
+{
+   return _animations.size();
+}
 /////////////////////////////////////
 CADNode::CADNode(const CADNode& rhs)
 :VE_XML::XMLObject(rhs)
 {
-   //std::cout<<"CADNode copy constructor"<<std::endl;
-   //std::cout<<"rhs ID: "<<rhs._uID<<std::endl;
-   //std::cout<<"rhs type: "<<rhs._type<<std::endl;
-
    _parent = 0;
    _transform = 0;;
 
