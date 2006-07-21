@@ -276,19 +276,39 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          _bbox[ i ] = bbox[ i ];
       }
 
+      int oldResolution[3] = {0,0,0};
       if ( !_resolution )
       {
          _resolution = new int[3];
       }
+      else
+      {
+         oldResolution[0] = _resolution[0];
+         oldResolution[0] = _resolution[1];
+         oldResolution[0] = _resolution[2];
+      }
 
       //the dimensions  
+ 
       flowImage->GetDimensions( _resolution );
 
       if ( !_resolution[2] ) 
       {
-         _resolution[2] = 1; 
+         _resolution[2] = 2; 
+      }
+      if(_dataFields.size()&&
+         (oldResolution[0] != _resolution[0] ||
+         oldResolution[0] != _resolution[1] ||
+         oldResolution[0] != _resolution[2] ))
+      {
+         std::cout<<"Error!!!"<<std::endl;
+         std::cout<<"Texture resolutions are non-consistent within the set!!"<<std::endl;
+         std::cout<<"Re-Translate the texture data!!!"<<std::endl;
+         flowImage->Delete();
+         return;
       }
    
+      
       double R,G,B,A;
       float alpha = 0;
       
