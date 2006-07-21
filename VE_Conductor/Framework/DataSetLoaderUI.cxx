@@ -49,6 +49,7 @@
 #include <wx/textdlg.h>
 ////@end includes
 
+#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include "VE_Conductor/Framework/DataSetLoaderUI.h"
 #include "VE_Conductor/Framework/TransformUI.h"
 
@@ -148,7 +149,7 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
    temp.SetHeight( temp.GetHeight() +1);
    temp.SetWidth( temp.GetWidth()+1 );
    SetSize( temp );
-   //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+   this->SetIcon( ve_icon32x32_xpm );
 ////@end DataSetLoaderUI creation
    return true;
 }

@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.0.0"
-#define MyAppVerName "VE_Suite.1.0.0"
+#define MyAppName "VE_Suite.1.0.1"
+#define MyAppVerName "VE_Suite.1.0.1"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
@@ -118,7 +118,7 @@ Source: {#VEHOME}\VE_TestSuite\POST_DATA1\*; DestDir: {app}\exampleDatasets\simp
 Source: {#VEHOME}\VE_TestSuite\POST_DATA2\*; DestDir: {app}\\exampleDatasets\simple\POST_DATA2; Components: examples; Flags: recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {app}\images; DestName: vesSmallIcon.bmp
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: vexplorer\osgvepcluster
-Source: {#VEHOME}\bin\win32\WinClientd.exe.manifest; DestDir: {app}\bin
+;Source: {#VEHOME}\bin\win32\WinClientd.exe.manifest; DestDir: {app}\bin
 ;Source: {#VEHOME}\examples\Model\*; DestDir: {app}\examplePlugins; Flags: overwritereadonly recursesubdirs uninsremovereadonly
 Source: {#VEHOME}\VE_CE\*.h; DestDir: {app}\include\VE_CE; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Conductor\*.h; DestDir: {app}\include\VE_Conductor; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
@@ -132,6 +132,8 @@ Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\stereo_deskt
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\installerImages; Flags: replacesameversion
 Source: {#VEHOME}\bin\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\installerImages; Flags: replacesameversion
+Source: {#JUGGLERINSTHOME}\lib\ms*.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver
+Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

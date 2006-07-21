@@ -172,7 +172,7 @@ void CADNodePropertiesDlg::_buildTabs()
 
    _propertyTabs->AddPage(GetTransformPanel(),_T("Transform"), true);
    _propertyTabs->AddPage(GetAttributePanel(),_T("Attributes"), false);
-   _propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
+   //_propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
 }
 //////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetTransformPanel()
@@ -395,7 +395,7 @@ void CADNodePropertiesDlg::_buildAnimationPanel()
    _addAnimationButton = new wxButton(_animationPanel, ADD_ANIMATION,wxString("Add..."));
    animationPropSizer->Add(_addAnimationButton,0,wxALIGN_CENTER);
 
-   _removeAnimationButton = new wxButton(_attributePanel, REMOVE_ANIMATION,wxString("Remove..."));
+   _removeAnimationButton = new wxButton(_animationPanel, REMOVE_ANIMATION,wxString("Remove..."));
    animationPropSizer->Add(_removeAttributeButton,0,wxALIGN_CENTER);
    
    activeAnimationSizer->Add(_animationSelection,1,wxEXPAND|wxALIGN_CENTER);

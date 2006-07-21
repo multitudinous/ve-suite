@@ -82,6 +82,7 @@
 #include <wx/utils.h>
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
+#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include <sstream>
 #include <iomanip>
 
@@ -177,8 +178,9 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   
    xplorerMenu = 0;
    recordScenes = 0;
-   this->SetIcon( wxIcon( ve_icon64x64_xpm ) );
-  
+
+   this->SetIcon( ve_icon32x32_xpm );
+
    //int displayWidth, displayHeight = 0;
    //::wxDisplaySize(&displayWidth,&displayHeight);
 

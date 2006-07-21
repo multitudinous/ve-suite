@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.0.0_Dependencies"
-#define MyAppVerName "VE_Suite.1.0.0_Dependencies"
+#define MyAppName "VE_Suite.1.0.1_Dependencies"
+#define MyAppVerName "VE_Suite.1.0.1_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
@@ -35,19 +35,19 @@ Name: custom; Description: Custom installation; Flags: iscustom
 
 
 Name: full; Description: All pre-compiled dependencies
-Name: vexpf; Description: VE-Xplorer-PF (Performer based)
+;Name: vexpf; Description: VE-Xplorer-PF (Performer based)
 Name: vexosg; Description: VE-Xplorer-OSG (OpenSceneGraph based)
 Name: vecns; Description: VE-Conductor(GUI) and Name Server
 Name: custom; Description: Custom; Flags: iscustom
 
 [Components]
 Name: depsbuildenv; Description: Headers and Libs; Types: custom full
-Name: vtk; Description: Visualiztion ToolKit; Types: custom vexosg vexpf full
-Name: acetao; Description: ACE/TAO; Types: vecns vexosg vexpf full custom
-Name: wxwidgets; Description: wxWidgets 2.6.1; Types: custom vecns full
-Name: xercesc; Description: Xerces-C++; Types: custom vecns vexosg vexpf full
+Name: vtk; Description: Visualiztion ToolKit; Types: custom vexosg  full
+Name: acetao; Description: ACE/TAO; Types: vecns vexosg  full custom
+Name: wxwidgets; Description: wxWidgets 2.6.3; Types: custom vecns full
+Name: xercesc; Description: Xerces-C++; Types: custom vecns vexosg  full
 Name: osg; Description: OpenSceneGraph; Types: custom vexosg full
-Name: juggler; Description: vrJuggler; Types: custom vexosg vexpf full
+Name: juggler; Description: vrJuggler; Types: custom vexosg  full
 [Files]
 Source: {#VTKHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
 ;Source: {#VTKHOME}\bin\vtkCommon.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
