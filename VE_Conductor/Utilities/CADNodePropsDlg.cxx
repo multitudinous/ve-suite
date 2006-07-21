@@ -205,7 +205,7 @@ void CADNodePropertiesDlg::_buildTransformPanel()
 
 
    ///translation
-   wxStaticBox* translation = new wxStaticBox(_transformPanel, -1, wxT("Translation "));
+   wxStaticBox* translation = new wxStaticBox(_transformPanel, -1, wxT("Translation (ft)"));
    wxStaticBoxSizer* transSizer = new wxStaticBoxSizer(translation, wxHORIZONTAL);
    _xTransformCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _xTransformCtrl->SetValue(0);
@@ -232,7 +232,7 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    transformPropSizer->Add(transSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //rotation
-   wxStaticBox* rotation = new wxStaticBox(_transformPanel, -1, wxT("Rotation"));
+   wxStaticBox* rotation = new wxStaticBox(_transformPanel, -1, wxT("Rotation (deg)"));
    wxStaticBoxSizer* rotationSizer = new wxStaticBoxSizer(rotation, wxHORIZONTAL);
    _xRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _xRotationCtrl->SetValue(0);

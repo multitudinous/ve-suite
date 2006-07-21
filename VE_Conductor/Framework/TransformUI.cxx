@@ -62,7 +62,7 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transfo
 
 
    ///translation
-   wxStaticBox* translation = new wxStaticBox(this, -1, wxT("Translation "));
+   wxStaticBox* translation = new wxStaticBox(this, -1, wxT("Translation (ft)"));
    wxStaticBoxSizer* transSizer = new wxStaticBoxSizer(translation, wxHORIZONTAL);
    _xTransformCtrl =  new wxSpinCtrlDbl(this, TRANSFORM_PANEL_ID);
    _xTransformCtrl->SetValue(0);
@@ -86,7 +86,7 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transfo
    transformPropSizer->Add(transSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //rotation
-   wxStaticBox* rotation = new wxStaticBox(this, -1, wxT("Rotation"));
+   wxStaticBox* rotation = new wxStaticBox(this, -1, wxT("Rotation (deg)"));
    wxStaticBoxSizer* rotationSizer = new wxStaticBoxSizer(rotation, wxHORIZONTAL);
    _xRotationCtrl =  new wxSpinCtrlDbl(this, TRANSFORM_PANEL_ID);
    _xRotationCtrl->SetValue(0);
