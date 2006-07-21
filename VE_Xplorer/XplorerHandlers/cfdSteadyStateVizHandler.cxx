@@ -108,6 +108,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    
    _eventHandlers[std::string("VISUALIZATION_SETTINGS")] = new VE_EVENTS::CreateVisObjectEventHandler();
    _eventHandlers[std::string("CLEAR_VIS_OBJECTS")] = new VE_EVENTS::ClearVisObjectsEventHandler();
+   _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::ClearVisObjectsEventHandler();
 }
 
 void cfdSteadyStateVizHandler::Initialize( std::string param )
