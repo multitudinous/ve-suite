@@ -53,6 +53,9 @@ public:
    void SetInputDirectory(std::string inDir);
    void SetOutputDirectory(std::string inDir);
    void SetFileName( std::string fileName );
+   ///Function to list all the features of a respective translator
+   ///when the -h option is specified
+   virtual void DisplayHelp( void ) = 0;
 
    ///Utility function to process command line args
    ///\param argc The number of command line args

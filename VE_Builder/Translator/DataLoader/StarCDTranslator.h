@@ -45,7 +45,9 @@ class VE_USER_BUILDER_EXPORTS StarCDTranslator : public VE_Builder::cfdTranslato
 public:
    StarCDTranslator();
    virtual ~StarCDTranslator();
- 
+   ///Display help for the StarCD translator
+   virtual void DisplayHelp( void );
+   
    class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {
    public:

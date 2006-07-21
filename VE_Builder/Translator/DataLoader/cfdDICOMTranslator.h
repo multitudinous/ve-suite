@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CFD_DICOM_TRANSLATOR_H_
 #define _CFD_DICOM_TRANSLATOR_H_
@@ -45,6 +43,8 @@ class VE_USER_BUILDER_EXPORTS cfdDICOMTranslator:
 public:
    cfdDICOMTranslator();
    virtual ~cfdDICOMTranslator();
+   ///Display help for the DICOM translator
+   virtual void DisplayHelp( void );
  
    class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback{
    public:

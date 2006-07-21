@@ -45,6 +45,8 @@ class VE_USER_BUILDER_EXPORTS FluentTranslator:
 public:
    FluentTranslator();
    virtual ~FluentTranslator();
+   ///Display help for the Fluent translator
+   virtual void DisplayHelp( void );
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS FluentTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {

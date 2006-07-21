@@ -106,4 +106,10 @@ void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataSet*& outputDataset,
       tmpDSet->Delete();
    }
 }
- 
+////////////////////////////////////////////////////////////////////////////////
+void MFIXTranslator::DisplayHelp( void )
+{
+   std::cout << "|\MFIX Translator Usage:" << std::endl
+               << "\t -singleFile <filename_to_load> -o <output_dir> "
+               << "-outFileName <output_filename> -loader mfix -w file" << std::endl;
+}

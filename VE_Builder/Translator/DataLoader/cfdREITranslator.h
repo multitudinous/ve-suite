@@ -45,6 +45,8 @@ class VE_USER_BUILDER_EXPORTS cfdREITranslator: public VE_Builder::cfdTranslator
 public:
    cfdREITranslator();
    virtual ~cfdREITranslator();
+   ///Display help for the REI translator
+   virtual void DisplayHelp( void );
 
    class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {

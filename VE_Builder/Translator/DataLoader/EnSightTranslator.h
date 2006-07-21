@@ -45,6 +45,8 @@ class VE_USER_BUILDER_EXPORTS EnSightTranslator:
 public:
    EnSightTranslator();
    virtual ~EnSightTranslator();
+   ///Display help for the EnSight translator
+   virtual void DisplayHelp( void );
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS EnSightTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {

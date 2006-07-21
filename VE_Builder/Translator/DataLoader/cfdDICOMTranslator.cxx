@@ -38,6 +38,8 @@
 #include <vtkProbeFilter.h>
 #include <vtkPoints.h>
 
+#include <iostream>
+
 using namespace VE_Builder;
 ////////////////////////////////////////
 //Constructors                        //
@@ -123,4 +125,10 @@ void cfdDICOMTranslator::DICOMTranslateCbk::Translate(vtkDataSet*& outputDataset
       dicomTranslator->Delete();
    }
 }
- 
+////////////////////////////////////////////////////////////////////////////////
+void cfdDICOMTranslator::DisplayHelp( void )
+{
+   std::cout << "|\tDICOM Translator Usage:" << std::endl
+               << "\t -singleFile <filename_to_load> -o <output_dir> "
+               << "-outFileName <output_filename> -loader dcm -w file" << std::endl;
+}

@@ -45,6 +45,8 @@ class VE_USER_BUILDER_EXPORTS MFIXTranslator:
 public:
    MFIXTranslator();
    virtual ~MFIXTranslator();
+   ///Display help for the MFIX translator
+   virtual void DisplayHelp( void );
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS MFIXTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {

@@ -314,6 +314,14 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void plot3dReader::DisplayHelp( void )
+{
+   std::cout << "|\tPlot3D Translator Usage:" << std::endl
+               << "\t -geometryFileXYZ <filename_to_load> -dataFileQ <filename_to_load> "
+               << "-o <output_dir> -multiGridFlag <0|1> -iblankFlag <0|1> -numberofDimensions <0|1> "
+               << "-outFileName <output_filename> -loader xyz -w file" << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
 /*void plot3dReader::GetFileNames( void ) 
 {
    numOfSurfaceGrids = 0;

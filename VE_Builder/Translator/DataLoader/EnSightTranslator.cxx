@@ -202,3 +202,10 @@ void EnSightTranslator::EnSightTranslateCbk::AddScalarsFromVectors( vtkDataSet*&
       }  //end if loop
    } //end for loop
 } 
+////////////////////////////////////////////////////////////////////////////////
+void EnSightTranslator::DisplayHelp( void )
+{
+   std::cout << "|\tEnSight Translator Usage:" << std::endl
+               << "\t -singleFile <filename_to_load> -o <output_dir> "
+               << "-outFileName <output_filename> -loader ens -w file" << std::endl;
+}

@@ -44,6 +44,8 @@
 
 #include "VE_Xplorer/Utilities/fileIO.h"
 
+#include <iostream>
+
 using namespace VE_Builder;
 //////////////////////
 //Constructor       //
@@ -106,11 +108,19 @@ vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
    // could extract command line args to get loader to use
    // in addition to the above method
    std::string tempExtension;
-   if ( translatorMap[ "cas" ]->_extractOptionFromCmdLine( argc, argv, "-loader", tempExtension ) )
+   if ( translatorMap[ "dcm" ]->_extractOptionFromCmdLine( argc, argv, "-loader", tempExtension ) )
    {
       fileExtension = tempExtension;
    }
-
+   else
+   {
+      std::map< std::string, cfdTranslatorToVTK* >::iterator iter;
+      for ( iter = translatorMap.begin(); iter != translatorMap.end(); ++iter )
+      {
+         iter->second->DisplayHelp();
+      }
+      return 0;
+   }
    // process data with appropriate loader
    activeLoader = translatorMap[ fileExtension ];
    if ( argc < 1 )

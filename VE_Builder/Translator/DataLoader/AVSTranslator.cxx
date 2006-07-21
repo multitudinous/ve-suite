@@ -110,4 +110,10 @@ void AVSTranslator::AVSTranslateCbk::Translate(vtkDataSet*& outputDataset,
       }
    }
 }
- 
+////////////////////////////////////////////////////////////////////////////////
+void AVSTranslator::DisplayHelp( void )
+{
+   std::cout << "|\tAVS Translator Usage:" << std::endl
+               << "\t -singleFile <filename_to_load> -o <output_dir> "
+               << "-outFileName <output_filename> -loader avs -w file" << std::endl;
+}

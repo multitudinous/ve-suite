@@ -104,4 +104,10 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
       //tmpDSet->Delete();
    }
 }
- 
+////////////////////////////////////////////////////////////////////////////////
+void FluentTranslator::DisplayHelp( void )
+{
+   std::cout << "|\Fluent Translator Usage:" << std::endl
+               << "\t -singleFile <filename_to_load> -o <output_dir> "
+               << "-outFileName <output_filename> -loader cas -w file" << std::endl;
+}

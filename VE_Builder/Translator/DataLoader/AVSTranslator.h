@@ -38,14 +38,17 @@
 
 #include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
 
-namespace VE_Builder{
+namespace VE_Builder
+{
 class VE_USER_BUILDER_EXPORTS AVSTranslator: 
-   public VE_Builder::cfdTranslatorToVTK{
-
+   public VE_Builder::cfdTranslatorToVTK
+{
 public:
    AVSTranslator();
    virtual ~AVSTranslator();
- 
+   ///Display help for the AVS translator
+   virtual void DisplayHelp( void );
+   
    class VE_USER_BUILDER_EXPORTS AVSTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback{
    public:
       AVSTranslateCbk(){};

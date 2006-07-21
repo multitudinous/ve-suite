@@ -501,3 +501,10 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       //exit(0);
    }
 }
+////////////////////////////////////////////////////////////////////////////////
+void cfdREITranslator::DisplayHelp( void )
+{
+   std::cout << "|\tREI Translator Usage:" << std::endl
+   << "\t -singleFile <filename_to_load> -o <output_dir> "
+   << "-outFileName <output_filename> -loader BANFDB -w file" << std::endl;
+}

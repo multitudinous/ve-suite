@@ -52,6 +52,8 @@ public:
    plot3dReader( void );
    ~plot3dReader( void );
    plot3dReader( plot3dReader * );
+   ///Display help for the Plot3D translator
+   virtual void DisplayHelp( void );
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS Plot3DTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
    {
