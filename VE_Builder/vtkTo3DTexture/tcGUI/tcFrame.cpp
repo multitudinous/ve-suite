@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "tcFrame.h"
 #include "wx/string.h"
@@ -521,7 +519,9 @@ void TCFrame::BatchTranslation()
 {
    _translator->setBatchOn();
    //process the files
-   //for ( int i = 0; i < _numFiles; ++i )
+   /*std::cout << " rannk = " << rank << std::endl 
+               << " number of files = " << _numFiles << std::endl 
+               << " number of processors = " << numProcessors << std::endl;*/
    for ( int i = rank; i < _numFiles; i += numProcessors )
    {
       _translator->reset();

@@ -40,12 +40,16 @@
 #endif
 IMPLEMENT_APP(TCApp)
 
+#include <iostream>
 //////////////////////////////
 //Initialize the application//
 //////////////////////////////
 bool TCApp::OnInit()
 {
+   //This function is entered first and then the command line
+   // parser function is called
    wxApp::OnInit();
+   //For commandline parsing we are returning from the command line function
    int ierror;
    p = 1;
    rank = 0;
@@ -76,6 +80,11 @@ bool TCApp::OnInit()
 bool TCApp::_translateFromCmdLine()
 {
    _frame->BatchTranslation();
+#ifdef USE_MPI
+   int ierror;
+   ierror = MPI_Barrier( MPI_COMM_WORLD );
+   ierror = MPI_Finalize();
+#endif
    return false;
 }
 //////////////////////////////////////////////////
@@ -169,5 +178,4 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
       
    }
    return true;
-  
 }

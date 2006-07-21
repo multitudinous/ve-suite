@@ -527,9 +527,9 @@ void VTKDataToTexture::createTextures()
       msg = wxString("Resampling scalar data.");
       _updateTranslationStatus(msg.c_str());
       _resampleData(i,1);
-      //std::cout<<"         Writing data to texture."<<std::endl;
+      //std::cout<<"Writing data to texture."<<std::endl;
       writeScalarTexture(i);
-      //std::cout<<"      Cleaning up."<<std::endl;
+      //std::cout<<"Cleaning up."<<std::endl;
       _curScalar.clear();
    }
    //std::cout<<"Processing vectors:"<<std::endl;
@@ -671,7 +671,7 @@ void VTKDataToTexture::_createValidityTexture()
    cell->Delete();
    _madeValidityStructure = true;
    long endTime = (long)time( NULL );
-   std::cout << endTime - timeID << std::endl;
+   std::cout << "Total Time = " << endTime - timeID << std::endl;
 }
 /////////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
@@ -792,11 +792,12 @@ char* VTKDataToTexture::_cleanUpFileNames()
          if(ptr[j] == ' '){
             continue;
          }
-         //replace :'s, ['s, ]'s, w/ _'s
+         //replace :'s, ['s, ]'s, ''s, -> w/ _'s
          if (  (ptr[j] ==':') || 
                (ptr[j] =='[') || 
                (ptr[j] ==']') || 
-               (ptr[j] =='/')|| 
+               (ptr[j] =='/') || 
+               (ptr[j] =='\'') || 
                (ptr[j] =='^')
             )
          {
@@ -822,11 +823,12 @@ char* VTKDataToTexture::_cleanUpFileNames()
          if(ptr[j] == ' '){
             continue;
          }
-         //replace :'s, ['s, ]'s, w/ _'s
+         //replace :'s, ['s, ]'s, ''s, -> w/ _'s
          if (  (ptr[j] ==':') || 
                (ptr[j] =='[') || 
                (ptr[j] ==']') || 
-               (ptr[j] =='/')|| 
+               (ptr[j] =='/') || 
+               (ptr[j] =='\'') || 
                (ptr[j] =='^')
             )
          {
@@ -1089,7 +1091,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    }
    nameString.append( "/vectors/" );
 
-   boost::filesystem::path vectorPath( nameString );
+   boost::filesystem::path vectorPath( nameString, boost::filesystem::no_check );
    try
    {
       boost::filesystem::is_directory( vectorPath );
@@ -1103,7 +1105,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
 
    nameString.append( _vectorNames[whichVector] );
 
-   boost::filesystem::path vectorNamePath( nameString );
+   boost::filesystem::path vectorNamePath( nameString, boost::filesystem::no_check );
    try
    {
       boost::filesystem::is_directory( vectorNamePath );
@@ -1149,7 +1151,7 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    }
    nameString.append( "/scalars/" );
 
-   boost::filesystem::path scalarPath( nameString );
+   boost::filesystem::path scalarPath( nameString, boost::filesystem::no_check );
    try
    {
       boost::filesystem::is_directory( scalarPath );
