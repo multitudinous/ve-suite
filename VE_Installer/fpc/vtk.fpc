@@ -10,11 +10,11 @@ Version: 5.0
 Provides: vtk
 Requires: 
 Arch: i686
-Libs: -L${prefix}/lib -lvtkImaging -lvtkGraphics\
-      -lvtkCommon -lvtkHybrid -lvtkIO -lvtkFiltering\
-      -lvtkRendering -lvtkParallel -lvtkexpat\
-      -lvtkpng -lvtktiff -lvtksys -lvtkjpeg\
-      -lvtkexoIIc -lvtkftgl -lvtkfreetype -lvtkDICOMParser\
+Libs: -L${prefix}/lib -lvtkImaging -lvtkGraphics \
+      -lvtkCommon -lvtkHybrid -lvtkIO -lvtkFiltering \
+      -lvtkRendering -lvtkParallel -lvtkexpat \
+      -lvtkpng -lvtktiff -lvtksys -lvtkjpeg \
+      -lvtkexoIIc -lvtkftgl -lvtkfreetype -lvtkDICOMParser \
       -lvtkzlib -lvtkMPEG2Encode -lvtkNetCDF
 Libs.private: 
 Cflags: -I${prefix}/include/vtk-5.0 -DVTK44 -DVTK_STREAMS_FWD_ONLY

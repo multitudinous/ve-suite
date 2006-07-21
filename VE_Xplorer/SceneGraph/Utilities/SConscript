@@ -1,0 +1,30 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import('osg')
+Import('xerces')
+Import('libPath')
+
+srcs = Split("""
+    Attribute.cxx
+    MaterialHelper.cxx
+    ShaderHelper.cxx
+""")
+
+srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
+                        'Utilities', s), srcs)
+
+env = baseEnv.Copy()
+env.Append(CPPPATH = ['#'])
+for lib in xerces:
+    env.Append(LIBS = lib)
+if os.getenv('SCENE_GRAPH') == 'OSG':
+    for lib in osg:
+        env.Append(LIBS = lib)
+env.ParseConfig('wx-config --cxxflags --libs')
+env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')
+
+targetLib = pj(libPath, 'VE_SceneGraph_UtilitiesLib')
+env.SharedLibrary(target = targetLib, source = srcs)

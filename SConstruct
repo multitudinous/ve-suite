@@ -65,7 +65,7 @@ def BuildLinuxEnvironment():
 
 
     LINKFLAGS = CXXFLAGS
-    libpath = ['/home/vr/Applications/TSVEG/Libraries/Release/Debug/VTK/Linux-RHEL_4/lib/vtk',
+    libpath = ['/home/vr/Applications/TSVEG/Libraries/Release/Debug/VTK/Linux-RHEL_4/lib/vtk-5.0',
                '/home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Linux-RHEL_4/lib',
                '/home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.0/Linux-RHEL_4/lib',
                '/home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-TAO-5.5/Linux-RHEL_4/lib']
@@ -74,7 +74,9 @@ def BuildLinuxEnvironment():
 ##Global variables exported to other SConscripts.
     xerces = ['xerces-c']
     vtk = ['vtkImaging', 'vtkGraphics', 'vtkCommon', 'vtkHybrid', 'vtkIO', 'vtkFiltering',
-           'vtkRendering', 'vtkParallel']
+           'vtkRendering', 'vtkParallel', 'vtkexpat', 'vtkpng', 'vtktiff', 'vtksys', 'vtkjpeg',
+           'vtkexoIIc', 'vtkftgl', 'vtkfreetype', 'vtkDICOMParser', 'vtkzlib', 'vtkMPEG2Encode',
+           'vtkNetCDF']
     osg = ['osg', 'osgDB', 'osgGA', 'osgUtil', 'OpenThreads']
     ace_tao = ['TAO_IORInterceptor', 'TAO_ObjRefTemplate', 'TAO_Valuetype', 'TAO', 'ACE',
                'pthread', 'TAO_CosNaming', 'TAO_Svc_Utils', 'TAO_IORTable', 'TAO_Messaging',
@@ -117,6 +119,8 @@ def BuildLinuxEnvironment():
                   CPPPATH = CPPPATH,
                   LIBPATH = libpath,
                   LIBS = LIBS)
+    if os.getenv('VE_PATENTED') == 'TRUE':
+        env.Append(CXXFLAGS = '-DVE_PATENTED')
     return env
 
 ##OBSOLETE
@@ -156,6 +160,21 @@ BuildDir(buildDir, '.', duplicate = 0)
 ##BuildDir(buildDir, '.', duplicate = 1)
 
 env = baseEnv.Copy()
+if os.getenv('SCENE_GRAPH') == 'OSG':
+    osg_tag = "_osg"
+else:
+    osg_tag = "_pf"
+if os.getenv('VE_PATENTED') == 'TRUE':
+    patented_tag = "_vep"
+else:
+    patented_tag = ''
+if os.getenv('TAO_BUILD') == 'TRUE':
+    exec_tag = '_tao'
+else:
+    exec_tag = ''
+Export('osg_tag')
+Export('patented_tag')
+Export('exec_tag')
 
 openSubdirs = Split("""
     VE_Open
@@ -181,12 +200,12 @@ ceSubdirs = Split("""
 
 xplorerSubdirs = Split("""
     Utilities  
-""")##    SceneGraph
-##    SceneGraph/Utilities
-##    TextureBased
-##    XplorerHandlers
-##    GraphicalPlugin
-##    XplorerNetwork
+    SceneGraph
+    SceneGraph/Utilities
+    TextureBased
+    XplorerHandlers
+    GraphicalPlugin
+""")##    XplorerNetwork
 ##    GE
 ##    DefaultGraphicalPlugin
 ##""")

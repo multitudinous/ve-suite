@@ -1,0 +1,138 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import( '*' )
+
+xplorer_srcs = Split("""
+   cfd1DTextInput.cxx 
+   cfdAnimatedImage.cxx 
+   cfdAnimatedStreamlineCone.cxx 
+   cfdCommandArray.cxx 
+   cfdCommandObjects.cxx 
+   cfdContour.cxx 
+   cfdContourBase.cxx 
+   cfdContours.cxx 
+   cfdCursor.cxx 
+   cfdCuttingPlane.cxx 
+   cfdDataSet.cxx
+   cfdDigitalAnalogGauge.cxx 
+   cfdDisplaySettings.cxx 
+   cfdEnvironmentHandler.cxx 
+   cfdFILE.cxx 
+   cfdFileInfo.cxx 
+   cfdGlobalBase.cxx 
+   cfdGraphicsObject.cxx 
+   cfdImage.cxx 
+   cfdIsosurface.cxx 
+   cfdModel.cxx 
+   cfdModelHandler.cxx 
+   cfdMomentum.cxx 
+   cfdMomentums.cxx
+   cfdNavigate.cxx 
+   cfdObjects.cxx 
+   cfdPlanes.cxx 
+   cfdPolyData.cxx 
+   cfdPresetContour.cxx 
+   cfdPresetMomentum.cxx 
+   cfdPresetVector.cxx 
+   cfdQuatCamHandler.cxx 
+   cfdQuatCam.cxx 
+   cfdReadParam.cxx 
+   cfdScalarBarActor.cxx 
+   cfdSound.cxx 
+   cfdSoundHandler.cxx 
+   cfdSteadyStateVizHandler.cxx 
+   cfdStreamers.cxx 
+   cfdTeacher.cxx 
+   cfdTextOutput.cxx
+   cfdTextureBasedVizHandler.cxx
+   cfdThread.cxx 
+   cfdVectorBase.cxx
+   cfdVector.cxx 
+   cfdVectors.cxx 
+   cfdRawNodeWriteTraverser.cxx 
+   cfdWriteTraverser.cxx
+    ActiveModelEventHandler.cxx
+    AddVTKDataSetEventHandler.cxx
+    AttributeEventHandler.cxx 
+   CADEventHandler.cxx 
+   CADDeleteNodeEH.cxx
+    CADRemoveAttributeEH.cxx
+   CADAddNodeEH.cxx 
+   CADAddAttributeEH.cxx 
+   CADSetActiveAttributeEH.cxx 
+   CADSetNameEH.cxx
+    CADToggleEH.cxx
+   CADTransformEH.cxx
+    MaterialModeUpdateEH.cxx
+    MaterialUpdateEH.cxx
+    trackball.cxx
+    cfdTrackball.cxx
+    cfdObjectHandler.cxx
+    CreateVisObjectEventHandler.cxx
+    ClearVisObjectsEventHandler.cxx
+    ChangeCursorEventHandler.cxx
+    TBTransientModeUpdateEH.cxx
+    TBTransientDurationUpdateEH.cxx
+    TBIsosurfaceEnableEH.cxx
+    TBIsosurfaceUpdateEH.cxx
+    TBUpdateScalarRangeEH.cxx
+    TBBBoxEH.cxx
+    TBClipPlaneEH.cxx
+    TextureBasedEventHandler.cxx
+    TBActivateEH.cxx
+    TBUpdateSolutionEH.cxx
+    QCLoadFileEH.cxx
+    StoredSceneEH.cxx
+""")
+##REMOVED: DeleteObjectFromNetworkEventHandler.cxx
+
+xplorer_srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s),
+                             xplorer_srcs)
+
+env = baseEnv.Copy()
+if os.getenv('SCENE_GRAPH') == 'OSG':
+    osg_tag = "_osg"
+else:
+    osg_tag = "_pf"
+if os.getenv('VE_PATENTED') == 'TRUE':
+    env.Append(CXXFLAGS = '-DVE_PATENTED')
+    patented_tag = "_vep"
+else:
+    patented_tag = ''
+if os.getenv('TAO_BUILD') == 'TRUE':
+    exec_tag = '_tao'
+else:
+    exec_tag = ''
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
+env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
+env.Append(CPPPATH = pj( os.getenv('OSG_HOME',''), 'include') )
+env.Append(LIBPATH = '#',
+              LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib',
+                      'VE_SceneGraph_UtilitiesLib', 
+                      'VE_SceneGraphLib%s%s' %(osg_tag, patented_tag),
+                      'VE_UtilLib',
+                      'VE_TextureBasedLib%s%s' %(osg_tag, patented_tag)])
+
+for lib in ace_tao:
+   env.Append(LIBS = lib)
+for lib in vtk:
+   env.Append(LIBS = lib)
+for lib in xerces:
+   env.Append(LIBS = lib)
+if os.getenv('SCENE_GRAPH') == 'OSG':
+    for lib in osg:
+        env.Append(LIBS = lib)
+env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
+env.ParseConfig('flagpoll gmtl --cflags --libs')
+##env.ParseConfig( 'vrjuggler-config vrj --extra-libs' )
+
+targetLib = pj(libPath, 'VE_XplorerLib%s%s%s' %(exec_tag, osg_tag,
+                                                patented_tag))
+env.SharedLibrary(target = targetLib, source = xplorer_srcs)
+

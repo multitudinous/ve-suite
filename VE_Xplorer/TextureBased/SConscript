@@ -1,0 +1,70 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import('osg')
+Import('boost')
+Import('vtk')
+Import('libPath')
+
+srcs = Split("""
+   cfd3DTextureCullCallback.cxx
+   cfdAdvectionSubGraph.cxx
+   cfdCopyTo3DTextureStage.cxx
+   cfdOSGAdvectionShaderManager.cxx
+   cfdOSGPingPongTexture3d.cxx
+   cfdOSGShaderManager.cxx
+   cfdOSGTransferShaderManager.cxx
+   cfdPBufferManager.cxx
+   cfdPBufferQuad.cxx
+   cfdScalarShaderManager.cxx
+   cfdScalarVolumeVisHandler.cxx
+   cfdSimpleTextureCallback.cxx
+   cfdTextureDataSet.cxx
+   cfdTextureManager.cxx
+   cfdTextureMatrixCallback.cxx
+   cfdUpdateableOSGNoiseTexture3d.cxx
+   cfdUpdateableOSGTexture1d.cxx
+   cfdUpdateParameterCallback.cxx
+   cfdUpdateTextureCallback.cxx
+   cfdVectorVolumeVisHandler.cxx
+   cfdVolumeBillboard.cxx
+   cfdVolumeCenterCallback.cxx
+   cfdVolumeVisNodeHandler.cxx
+   cfdVolumeVisualization.cxx
+""")
+
+srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)
+
+env = baseEnv.Copy()
+if os.getenv('SCENE_GRAPH') == 'OSG':
+    osg_tag = "_osg"
+else:
+    osg_tag = "_pf"
+if os.getenv('VE_PATENTED') == 'TRUE':
+    env.Append(CXXFLAGS = '-DVE_PATENTED')
+    patented_tag = "_vep"
+else:
+    patented_tag = ''
+exec_tag = ''
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+env.Append(LIBPATH = libPath,
+              LIBS = 'VE_UtilLib')
+env.Append(LIBPATH = pj('usr', 'X11R6', 'lib'),
+              LIBS = ['X11', 'GL'])
+for lib in vtk:
+    env.Append(LIBS = lib)
+for lib in boost:
+    env.Append(LIBS = lib)
+if os.getenv('SCENE_GRAPH') == 'OSG':
+    for lib in osg:
+        env.Append(LIBS = lib)
+env.ParseConfig('wx-config --cxxflags --libs')
+env.ParseConfig('vrjuggler-config --libs --extra-libs \
+                 --includes --cxxflags')
+
+targetLib = pj(libPath, 'VE_TextureBasedLib%s%s%s'
+                        %(exec_tag, osg_tag, patented_tag))
+env.SharedLibrary(target = targetLib, source = srcs)

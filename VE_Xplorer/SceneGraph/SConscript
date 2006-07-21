@@ -1,0 +1,56 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import('osg')
+Import('boost')
+Import('vtk')
+Import('libPath')
+
+srcs = Split("""
+    cfdClone.cxx
+    cfdDCS.cxx
+    cfdGeode.cxx
+    cfdGroup.cxx
+    cfdNode.cxx
+    cfdNodeTraverser.cxx
+    cfdPfSceneManagement.cxx
+    cfdRawNodeTraverser.cxx
+    cfdSceneNode.cxx
+    cfdSequence.cxx
+    cfdSwitch.cxx
+    cfdTempAnimation.cxx
+    vtkActorToOSG.cpp
+    vtkActorToPF.cxx
+""")
+
+srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
+
+env = baseEnv.Copy()
+if os.getenv('SCENE_GRAPH') == 'OSG':
+    osg_tag = "_osg"
+else:
+    osg_tag = "_pf"
+if os.getenv('VE_PATENTED') == 'TRUE':
+    env.Append(CXXFLAGS = '-DVE_PATENTED')
+    patented_tag = "_vep"
+else:
+    patented_tag = ''
+exec_tag = ''
+env.Append(CPPPATH = ['#'])
+env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+##env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
+env.Append(LIBPATH = libPath)
+for lib in vtk:
+    env.Append(LIBS = lib)
+if os.getenv('SCENE_GRAPH') == 'OSG':
+    for lib in osg:
+        env.Append(LIBS = lib)
+env.ParseConfig('flagpoll gmtl --cflags')
+env.ParseConfig('wx-config --cxxflags --libs')
+env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')
+
+targetLib = pj(libPath, 'VE_SceneGraph%s%s%s' %(exec_tag, osg_tag,
+                                                patented_tag))
+env.SharedLibrary(target = targetLib, source = srcs)
