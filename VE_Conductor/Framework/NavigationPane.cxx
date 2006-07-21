@@ -55,7 +55,7 @@
 #include "VE_Conductor/xpm/Nav_Bitmaps/yaw_cw.xpm"
 #include "VE_Conductor/xpm/Nav_Bitmaps/coordinates.xpm"
 
-#include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
+#include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include <wx/app.h>
 #include <wx/checkbox.h>
 #include <wx/slider.h>
@@ -105,7 +105,7 @@ NavigationPane::NavigationPane()
 
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
    mainSizer->Add( scrollWindow,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
-   this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
+   this->SetIcon( wxIcon( ve_icon64x64_xpm ) );
    SetSizer( mainSizer );
 
    //xplorerPtr = VjObs::_duplicate( veEngine );
