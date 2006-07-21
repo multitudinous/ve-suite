@@ -44,12 +44,14 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Transform.h"
+
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/filedlg.h>
 #include <wx/textdlg.h>
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
+#include <wx/intl.h>
 
 using namespace VE_Conductor::GUI_Utilities;
 using namespace VE_CAD;
@@ -591,6 +593,7 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
 void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
 {
    wxFileName vegFileName;
+   int answer = 0;
    do
    {
       wxTextEntryDialog newDataSetName(this, 
@@ -608,8 +611,19 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
       {
          break;
       }
+
+      if ( vegFileName.FileExists() )
+      {
+         wxString tempMessage = _("Do you want to replace ") + vegFileName.GetFullName() + _("?");
+         wxMessageDialog promptDlg( this, 
+                                    tempMessage, 
+                                    _("Overwrite File Warning"), 
+                                    wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
+                                    wxDefaultPosition);
+         answer = promptDlg.ShowModal();
+      }
    }
-   while ( vegFileName.FileExists() );
+   while ( answer == wxID_NO );
    
    if ( vegFileName.HasName() ) 
    {

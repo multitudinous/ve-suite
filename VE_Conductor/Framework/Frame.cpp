@@ -792,6 +792,7 @@ void AppFrame::Save( wxCommandEvent& event )
 void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
 {
    wxFileName vesFileName;
+   int answer = 0;
    do
    {
       wxTextEntryDialog newDataSetName(this, 
@@ -809,8 +810,19 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
       {
          break;
       }
+      
+      if ( vesFileName.FileExists() )
+      {
+         wxString tempMessage = _("Do you want to replace ") + vesFileName.GetFullName() + _("?");
+         wxMessageDialog promptDlg( this, 
+                                    tempMessage, 
+                                    _("Overwrite File Warning"), 
+                                    wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
+                                    wxDefaultPosition);
+         answer = promptDlg.ShowModal();
+      }
    }
-   while ( vesFileName.FileExists() );
+   while ( answer == wxID_NO );
    
    if ( vesFileName.HasName() ) 
    {
