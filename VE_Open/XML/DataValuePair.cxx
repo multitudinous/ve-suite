@@ -214,7 +214,8 @@ void DataValuePair::_updateDataName()
 //////////////////////////////////////////////
 void DataValuePair::_updateDataValueNumber()
 {
-   DOMElement* dataValueNumElement = _rootDocument->createElement(xercesString("dataValueNum"));
+   DOMElement* dataValueNumElement = _rootDocument->createElement(xercesString("dataValue"));
+   dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:float") );
    std::stringstream float2string;
    float2string<<_dataValue;
    DOMText* dataValue = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
@@ -225,10 +226,15 @@ void DataValuePair::_updateDataValueNumber()
 //////////////////////////////////////////////
 void DataValuePair::_updateDataValueString()
 {
-   DOMElement* dataValueStringElement = _rootDocument->createElement(xercesString("dataValueString"));
-   DOMText* dataValueString = _rootDocument->createTextNode(xercesString(_dataString.c_str()));
-   dataValueStringElement->appendChild(dataValueString);
-   _veElement->appendChild(dataValueStringElement);
+   // xs:float
+   // xs:string
+   // xs:integer
+   // xs:unsignedInt
+   DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString("dataValue") );
+   dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:string") );
+   DOMText* dataValueString = _rootDocument->createTextNode( xercesString(_dataString.c_str()) );
+   dataValueStringElement->appendChild( dataValueString );
+   _veElement->appendChild( dataValueStringElement );
 }
 ///////////////////////////////////////
 void DataValuePair::_updateVEElement( std::string input )
@@ -247,19 +253,21 @@ void DataValuePair::_updateVEElement( std::string input )
    //update the value held in the pair
    if ( _dataType == std::string("FLOAT") )
    {
-      _updateDataValueNumber();
+      //_updateDataValueNumber();
+      SetSubElement( "dataValue", _dataValue );
    }
    else if( _dataType == std::string("UNSIGNED INT") )
    {
-       SetSubElement( "dataValueUInt", _dataUInt );
+       SetSubElement( "dataValue", _dataUInt );
    }
    else if( _dataType == std::string("LONG") )
    {
-       SetSubElement( "dataValueInt", intDataValue );
+       SetSubElement( "dataValue", intDataValue );
    }
    else if(_dataType == std::string("STRING"))
    {
-      _updateDataValueString();
+      //_updateDataValueString();
+      SetSubElement( "dataValue", _dataString );
    }
    else if(_dataType == std::string("XMLOBJECT"))
    {
@@ -435,7 +443,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          else if( currentElement->getElementsByTagName(xercesString("dataValueNum"))->getLength() )
          {
             //get variables by tags
-            DOMNodeList* subElements = 0;
+            //DOMNodeList* subElements = 0;
             subElements = currentElement->getElementsByTagName(xercesString("dataValueNum"));
 
             DOMElement* dataValueNum = dynamic_cast<DOMElement*>(subElements->item(0));
@@ -443,6 +451,54 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             {
                _dataValue  = ExtractDataNumberFromSimpleElement(dataValueNum);
                SetDataType(std::string("FLOAT"));
+            }
+         }
+         
+         
+         else if ( currentElement->getElementsByTagName(xercesString("dataValue"))->getLength() )
+         {
+            DOMElement* dataValueTemp = GetSubElement( currentElement, "dataValue", 0 );
+            std::string type;
+            GetAttribute( dataValueTemp, "type", type );
+
+            if ( type == "xs:string" )
+            {
+               //subElements = currentElement->getElementsByTagName(xercesString("dataValueString"));
+               
+               //DOMElement* dataValueStringName = dynamic_cast<DOMElement*>(subElements->item(0));
+               //if(dataValueStringName)
+               {
+                  this->_dataString = ExtractDataStringFromSimpleElement( dataValueTemp );
+                  SetDataType(std::string("STRING"));
+               }
+            }
+            else if ( type == "xs:unsignedInt" )
+               //_dataType == "UNSIGNED INT")
+            {
+               //DOMElement* dataUnsignedValue = GetSubElement( currentElement, "dataValueUInt", 0 );
+               _dataUInt = ExtractIntegerDataNumberFromSimpleElement( dataValueTemp  );
+               _dataType = "UNSIGNED INT";
+            }
+            //else if(_dataType == "LONG")
+            else if ( type == "xs:integer" )
+            {
+               //DOMElement* dataLongdValue = GetSubElement( currentElement, "dataValueInt", 0 );
+               intDataValue = ExtractIntegerDataNumberFromSimpleElement( dataValueTemp  );
+               _dataType = "LONG";
+            }
+            //else if(_dataType == "FLOAT" )
+            else if( type == "xs:float" )
+            {
+               //get variables by tags
+               //DOMNodeList* subElements = 0;
+               //subElements = currentElement->getElementsByTagName(xercesString("dataValueNum"));
+               
+               //DOMElement* dataValueNum = dynamic_cast<DOMElement*>(subElements->item(0));
+               //if(dataValueNum)
+               {
+                  _dataValue  = ExtractDataNumberFromSimpleElement( dataValueTemp );
+                  SetDataType(std::string("FLOAT"));
+               }
             }
          }
       }

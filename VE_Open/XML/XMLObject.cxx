@@ -206,6 +206,7 @@ const XMLCh* XMLObject::VEStr::unicodeForm() const
 void XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
 {
    DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:boolean") );
    std::string boolValue("true");
    if(!dataValue)boolValue = "false";
    DOMText* dataValueString = _rootDocument->createTextNode( xercesString( boolValue ) );
@@ -216,6 +217,7 @@ void XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
 void XMLObject::SetSubElement( std::string subElementTagName, std::string dataValue )
 {
    DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:string") );
    DOMText* dataValueString = _rootDocument->createTextNode( xercesString( dataValue ) );
    dataValueStringElement->appendChild( dataValueString );
    _veElement->appendChild( dataValueStringElement );
@@ -224,6 +226,7 @@ void XMLObject::SetSubElement( std::string subElementTagName, std::string dataVa
 void XMLObject::SetSubElement( std::string subElementTagName, unsigned int dataValue )
 {
    DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:unsignedInt") );
    std::stringstream float2string;
    float2string << dataValue;
    DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
@@ -235,6 +238,7 @@ void XMLObject::SetSubElement( std::string subElementTagName, unsigned int dataV
 void XMLObject::SetSubElement( std::string subElementTagName, long int dataValue )
 {
    DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:integer") );
    std::stringstream float2string;
    float2string << dataValue;
    DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
@@ -246,6 +250,7 @@ void XMLObject::SetSubElement( std::string subElementTagName, long int dataValue
 void XMLObject::SetSubElement( std::string subElementTagName, double dataValue )
 {
    DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:double") );
    std::stringstream float2string;
    float2string << dataValue;
    DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
@@ -274,13 +279,13 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
    _veElement->appendChild( xmlObjectElement );
 }
 //////////////////////////////////////////////////////////////////////////////
-void XMLObject::GetAttribute(std::string attributeName,std::string& attribute)
+void XMLObject::GetAttribute( DOMElement* baseElement, std::string attributeName,std::string& attribute)
 {
 
    attribute.clear();
    try
    {
-      char* fUnicodeForm = XMLString::transcode( _veElement->getAttribute(xercesString(attributeName)) );
+      char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName)) );
       attribute.assign( fUnicodeForm );
       delete fUnicodeForm;
    }

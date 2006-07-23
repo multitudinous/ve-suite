@@ -119,7 +119,7 @@ public:
    ///Get a string attribute by name
    ///\param attributeName The name of the attribute
    ///\param attribute The attribute to retrive.
-   void GetAttribute(std::string attributeName,std::string& attribute);
+   void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, std::string& attribute);
 
    ///utility functions for extracting subElement itemIndex from a complex element.
    ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.

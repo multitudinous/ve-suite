@@ -47,7 +47,11 @@ Module::Module( void )
 ////////////////////////////////////////////////
 Module::~Module( void )
 {
-   ;//Do nothing since this class doesn't manage any of the pointers memory
+   if ( pl_mod )
+   {
+      delete pl_mod;
+      pl_mod = 0;
+   }
 }
 ////////////////////////////////////////////////
 Module::Module( const Module& input )

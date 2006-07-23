@@ -93,8 +93,8 @@ void CADNodeAnimation::SetObjectFromXMLData( DOMNode* xmlNode)
    if(currentElement)
    {
       //Get the attributes
-      GetAttribute("fileType",_fileSourceType);
-      GetAttribute("playMode",_playMode);
+      GetAttribute(currentElement, "fileType",_fileSourceType);
+      GetAttribute(currentElement, "playMode",_playMode);
       DOMElement* animationFile = GetSubElement(currentElement,"fileName",0);
       if(animationFile)
       {

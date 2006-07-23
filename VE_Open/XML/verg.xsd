@@ -19,10 +19,7 @@
             <xs:sequence>
                <xs:element name="dataName" type="xs:string" maxOccurs="1" minOccurs="1" />
                <xs:choice maxOccurs="1" minOccurs="1">
-                  <xs:element name="dataValueNum" type="xs:float" />
-                  <xs:element name="dataValueInt" type="xs:integer" />
-                  <xs:element name="dataValueString" type="xs:string" />
-                  <xs:element name="dataValueUInt" type="xs:unsignedInt" />
+                  <xs:element name="dataValue" type="xs:anyType" />
                   <xs:element name="genericObject" type="veXMLObject" />
                </xs:choice>
             </xs:sequence>

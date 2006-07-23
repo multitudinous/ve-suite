@@ -768,14 +768,14 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
    
    //Now delete the plugin from the module and then remove from the map
    std::map< int, Module >::iterator iter;
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
+   for (iter=modules.begin(); iter!=modules.end();)
    {
-      if (iter->first==m_selMod)
+      if ( iter->first==m_selMod )
       {
-	      delete modules[m_selMod].GetPlugin();
-	      modules.erase(iter);
-         if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
-         {
+	      //delete modules[m_selMod].GetPlugin();
+	      modules.erase( iter++ );
+         //if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
+         //{
             VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
             dataValuePair->SetDataName( "Object ID" );
             dataValuePair->SetDataValue( static_cast< unsigned int >( m_selMod ) );
@@ -785,9 +785,13 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
             bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
             //Clean up memory
             delete veCommand;
-         }         
+         //}         
 	      m_selLink=-1;
 	      break;
+      }
+      else
+      {
+         ++iter;
       }
    }
 
@@ -2164,9 +2168,9 @@ void Network::New()
    std::map<int, Module>::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
-      delete modules[ iter->first ].GetPlugin();
+      //delete modules[ iter->first ].GetPlugin();
       //Delete it from xplorer as well
-      if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
+      //if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
       {
          VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
          dataValuePair->SetDataName( "Object ID" );
@@ -2227,9 +2231,10 @@ void Network::CreateNetwork( std::string xmlNetwork )
    {
       networkWriter.ReadFromString();
    }
-
+   _fileProgress->Update( 15, "start loading" );
    networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   _fileProgress->Update( 25, "start loading" );
 
    // do this for network
    if ( veNetwork )
@@ -2246,6 +2251,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
                         "VES File Read Error", wxOK | wxICON_INFORMATION );
    }
 
+   _fileProgress->Update( 30, "start loading" );
    long int tempScaleInfo;
    veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
    veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
@@ -2259,6 +2265,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    numUnit.second = tempScaleInfo;
 
    links.clear();
+   _fileProgress->Update( 35, "start loading" );
 
    for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
    {
@@ -2292,8 +2299,10 @@ void Network::CreateNetwork( std::string xmlNetwork )
 
    _fileProgress->Update( 75, "done create models" );
    // now lets create a list of them
+   int timeCalc = objectVector.size()/25;
    for ( size_t i = 0; i < objectVector.size(); ++i )
    {
+      _fileProgress->Update( 75 + (i*timeCalc), "Loading data" );
       VE_Model::Model* model = dynamic_cast< VE_Model::Model* >( objectVector.at( i ) );
 
       wxClassInfo* cls = wxClassInfo::FindClass( model->GetModelName().c_str() );
