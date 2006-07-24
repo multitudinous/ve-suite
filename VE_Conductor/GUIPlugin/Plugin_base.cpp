@@ -185,8 +185,8 @@ double REI_Plugin::GetVersion()
 wxRect REI_Plugin::GetBBox()
 {
   wxRect result;
-  int left, right, top, bottom;
-  int i;
+  //int left, right, top, bottom;
+  //int i;
 
   //Calculate the Bounding box out the of polygon
   result.SetX(pos.x);
@@ -199,12 +199,12 @@ wxRect REI_Plugin::GetBBox()
       return result;
    }
 
-   left = poly[0].x;
-   right = poly[0].x;
-   top = poly[0].y;
-   bottom = poly[0].y;
+   int left = poly[0].x;
+   int right = poly[0].x;
+   int top = poly[0].y;
+   int bottom = poly[0].y;
 
-   for (i=1; i<n_pts; i++)
+   for (int i=1; i<n_pts; i++)
    {
       if (left>poly[i].x)
          left=poly[i].x;

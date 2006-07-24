@@ -313,11 +313,17 @@ void Network::OnMouseMove(wxMouseEvent& event)
 	   }
 	  
       if (m_selMod>=0 && SelectMod(x, y)<0 ) 
-	  		UnSelectMod(dc); //Unselect only get called by state changed from something selected state to nothing selected state
+	  	{	
+         UnSelectMod(dc); //Unselect only get called by state changed from something selected state to nothing selected state
+      }
 	   else if (m_selLink>=0 && SelectLink(x, y )<0)
-	      UnSelectLink(dc);
+	   {   
+         UnSelectLink(dc);
+      }
       else if (m_selTag>=0 && SelectTag(x, y)<0)
-	      UnSelectTag(dc);
+	   {   
+         UnSelectTag(dc);
+      }
       else
 	   {
 	      // To avoid the shortcut evaluation
@@ -1785,17 +1791,32 @@ void Network::AddTag(int x, int y, wxString text)
 void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
 {
   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-  Module mod;
   POLY tmpPoly;
   int num;
 
+  int id;
+  std::map<int, Module>::iterator mit;
+  while (1)
+  {
+     id = wxNewId();
+     if ( id > 9999 )
+        id=id%9999;
+     
+     mit = modules.find(id);
+     if ( mit == modules.end() )
+        break;
+  };
+  //do it this way because we don't have equal operators setup for plugins
+  Module mod;
+  modules[id]=mod;
+  
   wxRect bbox; //Bounding box  
 
   bbox = cur_module->GetBBox(); //Get the Boundoing box of the modul 
 
   cur_module->SetPos( GetFreePos(bbox) ); //Set the new modules position to be a free space allocated by the network according to its bounding box
   bbox = cur_module->GetBBox();
-  mod.SetPlugin( cur_module );
+  modules[id].SetPlugin( cur_module );
 
    num = cur_module->GetNumPoly();
    tmpPoly.resize(num);
@@ -1803,24 +1824,8 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
    VE_Conductor::GUI_Utilities::Polygon newPolygon;
    *(newPolygon.GetPolygon()) = tmpPoly;
 
-   newPolygon.TransPoly( bbox.x, bbox.y, *(mod.GetPolygon()) ); //Make the network recognize its polygon 
-   mod.SetClassName( cls_name );
-
-   int id;
-   std::map<int, Module>::iterator mit;
-   while (1)
-   {
-      id = wxNewId();
-      if ( id > 9999 )
-         id=id%9999;
-   
-      mit = modules.find(id);
-      if ( mit == modules.end() )
-         break;
-   };
-
-
-  modules[id]=mod;
+   newPolygon.TransPoly( bbox.x, bbox.y, *(modules[id].GetPolygon()) ); //Make the network recognize its polygon 
+   modules[id].SetClassName( cls_name );
 
   modules[id].GetPlugin()->SetID(id);  
   //modules.push_back(mod);
