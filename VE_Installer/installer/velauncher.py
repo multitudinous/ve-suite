@@ -23,6 +23,8 @@ import getopt ##Cleans up command line arguments
 
 import wx ##Used for GUI
 
+##Features enabled/disabled
+CLUSTER_ENABLED = False
 ##Miscellaneous values for launcher's UI
 XPLORER_SHELL_NAME = "Xplorer Shell"
 CONDUCTOR_SHELL_NAME = "Conductor Shell"
@@ -302,7 +304,23 @@ class LauncherWindow(wx.Dialog):
         wx.ToolTip.SetDelay(2000)
         ##Check the dependencies.
         if not devMode:
-            self.DependenciesCheck()
+            dependenciesDir = config.Read("DependenciesDir", ":::")
+            if dependenciesDir == ":::":
+                dlg = wx.MessageDialog(None,
+                                       "Welcome to VE Suite!\n" +
+                                       "Before you can begin, I need" +
+                                       " to find the VE_Suite_Dependencies " +
+                                       "directory.\n" +
+                                       "Please select the Dependencies" +
+                                       " directory for me.",
+                                       "Welcome to VE Suite", wx.OK)
+                dlg.ShowModal()
+                dlg.Destroy()
+                self.DependenciesChange()
+            else:
+                legitDeps = self.DependenciesCheck(dependenciesDir)
+                if not legitDeps:
+                    self.DependenciesChange()
         ##Event bindings.
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
@@ -374,16 +392,13 @@ class LauncherWindow(wx.Dialog):
             dlg.ShowModal()
             dlg.Destroy()
 
-    def DependenciesCheck(self):
-        """Ask user for DependenciesDir if one doesn't exist in default config.
+    def DependenciesCheck(self, dependenciesDir):
+        """Returns true if Dependencies folder checks out, false if it doesn't.
 
         Automatically called during __init__.
-        Checks if default/DependenciesDir exists in default config,
-        then checks if that directory exists,
-        then checks if that directory looks like the Dependencies directory.
-        If any check fails, it asks the user for a Dependencies directory."""
-        dependenciesDir = config.Read("DependenciesDir", ":::")
-        legitimateDependenciesDir = False
+        Checks if dependenciesDir exists,
+        then checks if it looks like the Dependencies directory.
+        If any check fails, it returns False. Else it returns True."""
         ##Set name of the file to check in the Dependencies folder
         if os.name == "posix":
             nameServiceFile = "Naming_Service"
@@ -391,99 +406,101 @@ class LauncherWindow(wx.Dialog):
             nameServiceFile = "Naming_Service.exe"
         else:
             nameServiceFile = "None"
-        while not legitimateDependenciesDir:
-            ##Check if DependenciesDir exists in default config.
-            if dependenciesDir == ":::":
-                dlg = wx.MessageDialog(None,
-                                       "Welcome to VE Suite!\n" +
-                                       "Before you can begin, I need" +
-                                       " to find the VE_Suite_Dependencies " +
-                                       "directory.\n" +
-                                       "Please select the Dependencies" +
-                                       " directory for me.",
-                                       "Welcome to VE Suite", wx.OK)
-                dlg.ShowModal()
-                dlg.Destroy()
-                dependenciesDir = self.DependenciesGet()
-            ##Check if DependenciesDir's path exists.
-            elif not os.path.exists(dependenciesDir):
-                dlg = wx.MessageDialog(None,
-                                       "I can't find the " +
-                                       "VE_Suite_Dependencies directory.\n" +
-                                       "It may have been moved, renamed," +
-                                       " or deleted.\n" +
-                                       "Please find it for me.",
-                                       "Error: Dependencies Directory" +
-                                       " Not Found",
-                                       wx.OK)
-                dlg.ShowModal()
-                dlg.Destroy()
-                dependenciesDir = self.DependenciesGet()
-            ##Check if DependenciesDir's contents look legitimate.
-            elif not os.path.exists(os.path.join(dependenciesDir,
-                                    "bin", nameServiceFile)):
-                dlg = wx.MessageDialog(None,
-                                       str(dependenciesDir) + "\n" +
-                                       "doesn't look like the Dependencies " +
-                                       "directory I need.\n" +
-                                       "Are you sure you want to use it?",
-                                       "Warning: Dependencies Directory" +
-                                       " Looks Unfamiliar",
-                                       wx.YES_NO | wx.NO_DEFAULT)
-                if dlg.ShowModal() == wx.ID_NO:
-                    dlg.Destroy()
-                    dependenciesDir = self.DependenciesGet()
-                else:
-                    legitimateDependenciesDir = True
-                    dlg.Destroy()
-            ##If all checks passed, exit the loop
+        ##Check if DependenciesDir's path exists.
+        if not os.path.exists(dependenciesDir):
+            dlg = wx.MessageDialog(None,
+                                   "I can't find the " +
+                                   "VE_Suite_Dependencies directory.\n" +
+                                   "It may have been moved, renamed," +
+                                   " or deleted.\n" +
+                                   "Please find it for me.",
+                                   "Error: Dependencies Directory" +
+                                   " Not Found",
+                                   wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return False
+        ##Check if DependenciesDir's contents look legitimate.
+        elif not os.path.exists(os.path.join(dependenciesDir,
+                                "bin", nameServiceFile)):
+            dlg = wx.MessageDialog(None,
+                                   str(dependenciesDir) + "\n" +
+                                   "doesn't look like the Dependencies " +
+                                   "directory I need.\n" +
+                                   "Are you sure you want to use it?",
+                                   "Warning: Dependencies Directory" +
+                                   " Looks Unfamiliar",
+                                   wx.YES_NO | wx.NO_DEFAULT)
+            response = dlg.ShowModal()
+            dlg.Destroy()
+            if response == wx.ID_NO:
+                return False
             else:
-                legitimateDependenciesDir = True
+                return True
+        ##If all checks passed, return True.
+        return True
+
+    def DependenciesChange(self):
+        """Asks user for a new DependenciesDir."""
+        legitimateDependenciesDir = False
+        while not legitimateDependenciesDir:
+            dependenciesDir = self.DependenciesGet()
+            if dependenciesDir == None:
+                return
+            legitimateDependenciesDir = self.DependenciesCheck(dependenciesDir)
         ##Write the new Dependencies directory to default config.
         config.Write("DependenciesDir", dependenciesDir)
+        return
 
     def DependenciesGet(self):
-        """Ask user for DependenciesDir. Called by DependenciesCheck.
+        """Ask user for DependenciesDir. Called by DependenciesChange.
 
         Returns the directory path the user chose.
         Helper function for DependenciesCheck."""
-        dirChosen = False
-        while not dirChosen:
-            ##Go up a directory if it's a Unix os to get out
-            ##of the VE_Suite directory.
-            if os.name == "nt":
-                searchDir = os.getcwd()
-            elif os.name == "posix":
-                searchDir = os.path.split(os.getcwd())[0]
+        ##Go up a directory if it's a Unix os to get out
+        ##of the VE_Suite directory.
+        if os.name == "nt":
+            searchDir = os.getcwd()
+        elif os.name == "posix":
+            searchDir = os.path.split(os.getcwd())[0]
+        else:
+            searchDir = "dead parrot sketch"
+        ##User chooses the directory.
+        dlg = wx.DirDialog(None,
+                           "Choose the VE Dependencies directory:",
+                           searchDir,
+                           style=wx.DD_DEFAULT_STYLE)
+        if dlg.ShowModal() == wx.ID_OK:
+            ##If a directory's chosen, exit the loop and return it.
+            searchDir = dlg.GetPath()
+            dirChosen = True
+            dlg.Destroy()
+        elif config.Read("DependenciesDir", ":::") == ":::":
+            ##If not, and no existing DependenciesDir exists,
+            ##show an error message and ask the user to choose
+            ##another directory or quit the launcher.
+            dlg.Destroy()
+            dlg = wx.MessageDialog(None,
+                                   "You didn't choose a Dependencies" +
+                                   " directory.\n" +
+                                   "VE Suite Launcher won't run" +
+                                   " without one.\n" +
+                                   "Press OK to find the directory" +
+                                   " or Cancel to quit VE Suite Launcher.",
+                                   "Error: Directory Not Chosen",
+                                   wx.OK | wx.CANCEL)
+            ##Quit if the user refuses to choose a Dependencies directory.
+            if dlg.ShowModal() == wx.ID_CANCEL:
+                self.Hide()
+                self.Destroy()
+                sys.exit(0)
             else:
-                searchDir = "dead parrot sketch"
-            dlg = wx.DirDialog(None,
-                               "Choose the VE Dependencies directory:",
-                               searchDir,
-                               style=wx.DD_DEFAULT_STYLE)
-            if dlg.ShowModal() == wx.ID_OK:
-                ##If a directory's chosen, exit the loop and return it.
-                searchDir = dlg.GetPath()
-                dirChosen = True
-                dlg.Destroy()
-            else:
-                ##If not, show an error message and ask the user to choose
-                ##another directory or quit the launcher.
-                dlg.Destroy()
-                dlg = wx.MessageDialog(None,
-                                       "You didn't choose a Dependencies" +
-                                       " directory.\n" +
-                                       "VE Suite Launcher won't run" +
-                                       " without one.\n" +
-                                       "Press OK to find the directory" +
-                                       " or Cancel to quit VE Suite Launcher.",
-                                       "Error: Directory Not Chosen",
-                                       wx.OK | wx.CANCEL)
-                ##Quit if the user refuses to choose a Dependencies directory.
-                if dlg.ShowModal() == wx.ID_CANCEL:
-                    self.Hide()
-                    self.Destroy()
-                    sys.exit(0)
+                return self.DependenciesChange()
+        else:
+            ##Else if none chosen & one already exists,
+            ##return None.
+            searchDir = None
+            dlg.Destroy()
         return searchDir
 
     def ModeChanged(self, event):
@@ -918,7 +935,7 @@ class SettingsWindow(wx.Dialog):
         self.bCluster = wx.Button(self, -1, "Set Cluster Computers")
         self.bCluster.SetToolTip(wx.ToolTip("Set the computers in" +
                                             " the cluster."))
-        if os.name == "nt":
+        if os.name == "nt" or not CLUSTER_ENABLED:
             self.bCluster.Hide()
         ##Set up OK button.
         bOk = wx.Button(self, -1, "OK")
@@ -1693,7 +1710,8 @@ class Launch:
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
         ##Used in EnvSetup and Windows/Unix.
-        if runXplorer and typeXplorer == 2 and cluster != None:
+        if runXplorer and typeXplorer == 2 and cluster != None and \
+           CLUSTER_ENABLED:
             self.cluster = True
             self.clusterScript = "#!/bin/csh\n"
             self.clusterScript += "ssh $1 << EOF\n"

@@ -17,12 +17,17 @@ This is the beta of the VE-Suite Launcher. Current features include:
 -Launching NameServer, Xplorer and Conductor (and any combination of the three)
 from one window.
 -Choosing preset modes to run in.
--Cluster launching: Launch Xplorer on every cluster node from one. (UNIX only.)
+-Can run the Launcher from the command line for quick launches.
+-Can run the Launcher in Dev mode for developer builds.
 -Environmental variables set externally will override the Launcher's variable
 defaults, letting it work with custom builds as well.
 
 =========================================================================
 Version List
+
+1.0.1:
+-Can now start the Launcher in Dev mode.
+-Cluster launching disabled for reworking.
 
 1.0.0: Initial release.
 
@@ -81,18 +86,6 @@ This will get rid of the annoying "Dependencies file doesn't exist" errors for
 dev builds.
 
 ========================================================================
-Using VE-Suite Launcher, Clusters
-
-If you set Xplorer's format to OSG Patented Cluster, you can use the
-Set Cluster Computers button to specify the cluster's master and slave nodes.
-VE Launcher will run differently if you use cluster computers in OSG-VEPC mode:
-
--NameServer and Conductor will run on your terminal.
--The master's location will be sent to each slave as the VEXMASTER variable.
--Xplorer will only start on computers listed as slaves. Xplorer will NOT start
-on your terminal unless it's listed as a slave.
-
-========================================================================
 Using VE_Suite Launcher, Command Line Launch
 
 You can also give arguments to the Launcher from the command line to
@@ -124,9 +117,10 @@ launch without setting a Dependencies directory in GUI mode, for example.)
 ========================================================================
 The Launcher's Current Status
 
-The VE-Suite Launcher runs on Windows & Unix machines with the last public
-release of VE-Suite and the latest versions of Python and wxPython. Mac compatibility
-and Windows cluster functionality are slated for future versions.
+The VE-Suite Launcher runs on Windows as a standalone executable.
+It runs on Unix machines with Python 2.3 and the last public releases of
+VE-Suite and wxPython. Mac compatibility and cluster functionality are
+slated for future versions.
 
 ========================================================================
 Launcher Code Documentation
