@@ -244,7 +244,9 @@ class LauncherWindow(wx.Dialog):
     def __init__(self, parent, ID, title):
         """Builds the launcher's window and loads the last configuration."""
         wx.Dialog.__init__(self, parent, -1, title,
-                           style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+                           style = wx.DEFAULT_FRAME_STYLE &
+                           ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
+                           wx.MAXIMIZE_BOX) | wx.TAB_TRAVERSAL)
 
         ##Prepare data storage
         ##NOTE: jconfList is a local copy of the Jconf list stored in the
@@ -353,7 +355,7 @@ class LauncherWindow(wx.Dialog):
         mainSizer.Add(bLaunch, 1, wx.EXPAND)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
-        self.SetSize(INITIAL_WINDOW_SIZE)
+##        self.SetSize(INITIAL_WINDOW_SIZE)
         ##Set the background color.
         Style(self)
         ##Show the window.
@@ -582,7 +584,11 @@ class LauncherWindow(wx.Dialog):
         config.SetPath('..')
         config.SetPath(name)
         ##Set directory, set insertion pt. to end for better initial view.
-        self.txDirectory.SetValue(config.Read("Directory", DIRECTORY_DEFAULT))
+        if devMode:
+            defaultDirectory = os.getcwd()
+        else:
+            defaultDirectory = DIRECTORY_DEFAULT
+        self.txDirectory.SetValue(config.Read("Directory", defaultDirectory))
         ##Sets txDirectory's cursor to end in Linux systems for easier reading.
         ##Acts strange in Windows for some reason; investigate.
         if os.name == "posix":
@@ -617,7 +623,7 @@ class LauncherWindow(wx.Dialog):
         ##Set Tao Machine & Port.
         self.taoMachine = config.Read("TaoMachine", "localhost")
         ##Temporary workaround for error w/ Int TaoPort in last version
-        if config.GetEntryType("TaoPort") == 3: ##3s working directory:",
+        if config.GetEntryType("TaoPort") == 3: ##3: Int entry type",
             self.taoPort = str(config.ReadInt("TaoPort", 1239))
         else:
             self.taoPort = config.Read("TaoPort", "1239")
@@ -809,11 +815,6 @@ class LauncherWindow(wx.Dialog):
 
         Called after a successful Launch or when the user manually closes
         the launcher window."""
-        ##CODE NOTE: Known error running on Unix where the window isn't
-        ##closed, and closing it causes VE-Suite to quit. Cause is a
-        ##direct call to the Xplorer program. (Find error tag: $$ERROR_1$$)
-        ##ANTICIPATED FIX: Wait until Xplorer doesn't require text input
-        ##for the .param file anymore, call it as a separate thread.
         ##(Add & to the end of its command.)
         ##Update default config file.
         self.SaveConfig(DEFAULT_CONFIG)
@@ -829,7 +830,10 @@ class SettingsWindow(wx.Dialog):
                  modeRules, modeName, position = wx.DefaultPosition):
         """Creates the Settings window."""
         wx.Dialog.__init__(self, parent, -1, "%s Settings" %(modeName),
-                           pos = position, style = wx.DEFAULT_FRAME_STYLE)
+                           pos = position,
+                           style = wx.DEFAULT_FRAME_STYLE &
+                           ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
+                           wx.MAXIMIZE_BOX))
         ##While creating, go through each rule listed in modeRules.
         ##Change the corresponding controls to the value given.
         ##If it's FIXED, prevent the user from changing it.
@@ -963,7 +967,7 @@ class SettingsWindow(wx.Dialog):
         mainSizer.Add(bOk, 1, wx.EXPAND)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
-        self.SetSize(INITIAL_WINDOW_SIZE)
+##        self.SetSize(INITIAL_WINDOW_SIZE)
         ##Set the background color.
         Style(self)
 
@@ -1145,7 +1149,10 @@ class JconfList:
 
     def GetPath(self, name):
         """Returns the path of name's entry."""
-        return self.jDict[name]
+        if name in self.jDict:
+            return self.jDict[name]
+        else:
+            return "None"
 
     def Length(self):
         """Returns the length of self.jDict."""
@@ -1443,7 +1450,8 @@ class ClusterDict:
 
     def GetLocation(self, name):
         """Returns the location of name's entry."""
-        return self.cluster[name][0]
+        if name in self.cluster:
+            return self.cluster[name][0]
 
     def Length(self):
         """Returns the length of self.cluster."""
@@ -1606,6 +1614,14 @@ class ClusterWindow(wx.Dialog):
         """Deletes the selected entry from the list.
 
         Also moves the selection index if it would be off the list."""
+        ##Error catch if nothing's selected.
+        if self.clustList.GetStringSelection() == "":
+            dlg = wx.MessageDialog(self, "Can't delete; nothing is selected.",
+                                   "Deletion Error: Nothing Selected",
+                                   wx.OK)
+            dlg.ShowModal()
+            return
+        ##Confirm delete.
         dlg = wx.MessageDialog(self,
                                "Are you sure you want to delete" +
                                " %s?" %(self.clustList.GetStringSelection()),
