@@ -1,4 +1,5 @@
 cd ..
+cd ..
 setenv VE_SUITE_HOME `pwd`
 cd VE_Installer
 source setup.tsh
