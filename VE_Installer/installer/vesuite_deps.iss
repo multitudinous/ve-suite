@@ -41,13 +41,13 @@ Name: vecns; Description: VE-Conductor(GUI) and Name Server
 Name: custom; Description: Custom; Flags: iscustom
 
 [Components]
-Name: depsbuildenv; Description: Headers and Libs; Types: custom full
-Name: vtk; Description: Visualiztion ToolKit; Types: custom vexosg  full
-Name: acetao; Description: ACE/TAO; Types: vecns vexosg  full custom
-Name: wxwidgets; Description: wxWidgets 2.6.3; Types: custom vecns full
-Name: xercesc; Description: Xerces-C++; Types: custom vecns vexosg  full
-Name: osg; Description: OpenSceneGraph; Types: custom vexosg full
-Name: juggler; Description: vrJuggler; Types: custom vexosg  full
+Name: depsbuildenv; Description: Headers and Libs; Types: full
+Name: vtk; Description: Visualiztion ToolKit; Types: vexosg  full
+Name: acetao; Description: ACE/TAO; Types: vecns vexosg  full
+Name: wxwidgets; Description: wxWidgets 2.6.3; Types: vecns full
+Name: xercesc; Description: Xerces-C++; Types: vecns vexosg  full
+Name: osg; Description: OpenSceneGraph; Types: vexosg full
+Name: juggler; Description: vrJuggler; Types: vexosg  full
 [Files]
 Source: {#VTKHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
 ;Source: {#VTKHOME}\bin\vtkCommon.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
