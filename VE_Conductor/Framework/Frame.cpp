@@ -1263,10 +1263,7 @@ void AppFrame::LoadREISour(wxCommandEvent &WXUNUSED(event))
 ///////////////////////////////////////////////////////////////////
 void AppFrame::Log(const char* msg)
 {
-   if ( serviceList->GetMessageLog() != NULL )
-   {  
-      serviceList->GetMessageLog()->SetMessage( msg );
-   }
+   serviceList->GetMessageLog()->SetMessage( msg );
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event )

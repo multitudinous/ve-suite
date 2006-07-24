@@ -60,6 +60,7 @@ namespace VE_Model
    class Network;
 }
 class Vistab;
+class AppFrame;
 
 enum 
 {
@@ -252,6 +253,8 @@ private:
    VE_Model::Network* veNetwork;
    ///Parent window pointer to the splitter in AppFrame
    wxWindow* parent;
+   ///wxframe pointer for frame.cxx
+   AppFrame* frame;
    ///User scale
    /// first = x scale
    /// second = y scale

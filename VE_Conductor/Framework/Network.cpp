@@ -141,6 +141,7 @@ Network::Network(wxWindow* parent, int id)
    this->parent = parent;
    vistab = 0;
    isDataSet = false;
+   frame = dynamic_cast< AppFrame* >( parent->GetParent()->GetParent() );
 }
 
 Network::~Network()
@@ -2379,8 +2380,14 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 {
    char *linkresult;
    //The to Mod are actually the from module for the data flow
-   int mod = links[ m_selLink ].GetFromModule(); 
+   int mod = links[ m_selLink ].GetFromModule();
    int port = links[ m_selLink ].GetFromPort();
+
+   if ( CORBA::is_nil( exec.in() ) )
+   {
+      frame->Log( "Not Connected to CE yet!\n" );
+      return;
+   }
 
    try 
    {
@@ -2388,7 +2395,7 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
    }
    catch ( CORBA::Exception& ) 
    {
-      std::cerr << "Maybe Engine is down" << std::endl;
+      frame->Log( "Maybe Engine is down\n");
       return;
    }
 
@@ -2416,7 +2423,7 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
 
    if ( CORBA::is_nil( exec.in() ) )
    {
-      std::cerr<<"Not Connected yet!" << std::endl;
+      frame->Log( "Not Connected yet!\n" );
       return;
    }
   
@@ -2426,7 +2433,7 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
    }
    catch (CORBA::Exception &) 
    {
-		std::cerr << "Maybe Computational Engine is down" << std::endl;
+		frame->Log( "Maybe Computational Engine is down\n" );
       return;
    }
 
@@ -2663,12 +2670,12 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
 
                if(hasScalarTextures)
                {
-                  std::cout<<"Found scalar texture directory"<<std::endl;
+                  //std::cout<<"Found scalar texture directory"<<std::endl;
                   vistab->SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
                }
                if(hasVectorTextures)
                {
-                  std::cout<<"Found vector texture directory"<<std::endl;
+                  //std::cout<<"Found vector texture directory"<<std::endl;
                   vistab->SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
                }
 
@@ -2686,19 +2693,19 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
          }
          else
          { 
-            std::cout << " Model contains no datasets: " << modelID<<std::endl;
+            frame->Log( " Model contains no datasets: \n" );//<< modelID<<std::endl;
             return;
          }
       }
       catch ( CORBA::Exception& )
       {
-         std::cout << " Couldn't find model: " << modelID<<std::endl;
+         frame->Log( " Couldn't find model: \n" );//<< modelID<<std::endl;
          return;
       }
    }
    else
    {
-      std::cerr << " ERROR : Not connected to VE-Server " << std::endl;
+      frame->Log( " Not connected to VE-Server \n" );//<< std::endl;
       return;
    }
 }

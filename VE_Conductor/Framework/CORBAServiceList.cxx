@@ -518,5 +518,11 @@ VjObs_ptr CORBAServiceList::GetXplorerPointer( void )
 /////////////////////////////////////////////////////////////////
 PEThread* CORBAServiceList::GetMessageLog( void )
 {
+   if ( pelog == NULL )
+   {
+	   pelog = new PEThread( frame );
+	   pelog->activate();
+   }
+   
    return pelog;
 }
