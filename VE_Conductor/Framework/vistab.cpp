@@ -360,8 +360,8 @@ void Vistab::CreateControls()
     wxBoxSizer* lastRowButtons = new wxBoxSizer( wxHORIZONTAL );
     itemBoxSizer2->Add( lastRowButtons, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
-    wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
-    lastRowButtons->Add( itemButton20, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    //wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
+    //lastRowButtons->Add( itemButton20, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     clearAllButton = new wxButton( itemDialog1, ID_CLEAR_ALL_BUTTON, _T("Clear All"), wxDefaultPosition, wxDefaultSize, 0 );
     lastRowButtons->Add( clearAllButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
