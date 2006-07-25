@@ -69,6 +69,8 @@ using namespace VE_TextureBased;
 #include <iostream>
 #include <map>
 
+//vprSingletonImp( VE_Xplorer::VjObs_i );
+
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_XML;
@@ -972,7 +974,7 @@ void VjObs_i::SetCommandString( const char* value)
       commandStringQueue.push_back( commandString );
 #endif
    domManager->Load( commandString );
-   vprDEBUG(vprDBG_ALL,1) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
    DOMDocument* commandDoc = domManager->GetCommandDocument();
 
    // Get a list of all the command elements

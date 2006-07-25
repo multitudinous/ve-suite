@@ -45,6 +45,8 @@
 #include "VE_Xplorer/GE/cfdStateInfo.h"
 #endif
 
+//#include <vpr/Util/Singleton.h>
+
 namespace VE_Xplorer
 {
    class cfdModelHandler;
