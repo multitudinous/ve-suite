@@ -463,42 +463,23 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
 
             if ( type == "xs:string" )
             {
-               //subElements = currentElement->getElementsByTagName(xercesString("dataValueString"));
-               
-               //DOMElement* dataValueStringName = dynamic_cast<DOMElement*>(subElements->item(0));
-               //if(dataValueStringName)
-               {
-                  this->_dataString = ExtractDataStringFromSimpleElement( dataValueTemp );
-                  SetDataType(std::string("STRING"));
-               }
+               this->_dataString = ExtractDataStringFromSimpleElement( dataValueTemp );
+               SetDataType(std::string("STRING"));
             }
             else if ( type == "xs:unsignedInt" )
-               //_dataType == "UNSIGNED INT")
             {
-               //DOMElement* dataUnsignedValue = GetSubElement( currentElement, "dataValueUInt", 0 );
                _dataUInt = ExtractIntegerDataNumberFromSimpleElement( dataValueTemp  );
                _dataType = "UNSIGNED INT";
             }
-            //else if(_dataType == "LONG")
             else if ( type == "xs:integer" )
             {
-               //DOMElement* dataLongdValue = GetSubElement( currentElement, "dataValueInt", 0 );
                intDataValue = ExtractIntegerDataNumberFromSimpleElement( dataValueTemp  );
                _dataType = "LONG";
             }
-            //else if(_dataType == "FLOAT" )
-            else if( type == "xs:float" )
+            else if( type == "xs:double" )
             {
-               //get variables by tags
-               //DOMNodeList* subElements = 0;
-               //subElements = currentElement->getElementsByTagName(xercesString("dataValueNum"));
-               
-               //DOMElement* dataValueNum = dynamic_cast<DOMElement*>(subElements->item(0));
-               //if(dataValueNum)
-               {
-                  _dataValue  = ExtractDataNumberFromSimpleElement( dataValueTemp );
-                  SetDataType(std::string("FLOAT"));
-               }
+               _dataValue  = ExtractDataNumberFromSimpleElement( dataValueTemp );
+               SetDataType(std::string("FLOAT"));
             }
          }
       }
