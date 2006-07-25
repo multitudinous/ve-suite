@@ -229,7 +229,7 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile : No scalars in this texture " << std::endl;
       }
 
-      vtkDataArray* flowData = dynamic_cast< vtkDataArray* >( flowImage->GetPointData()->GetArray( 0 ) );
+      vtkDataArray* flowData = flowImage->GetPointData()->GetArray( 0 );
       if(!flowData)
       {
          std::cout<<"no flowdata!!"<<std::endl;
@@ -284,8 +284,8 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       else
       {
          oldResolution[0] = _resolution[0];
-         oldResolution[0] = _resolution[1];
-         oldResolution[0] = _resolution[2];
+         oldResolution[1] = _resolution[1];
+         oldResolution[2] = _resolution[2];
       }
 
       //the dimensions  
@@ -296,10 +296,13 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       {
          _resolution[2] = 2; 
       }
-      if(_dataFields.size()&&
-         (oldResolution[0] != _resolution[0] ||
-         oldResolution[0] != _resolution[1] ||
-         oldResolution[0] != _resolution[2] ))
+
+      if ( _dataFields.size() &&
+           ( ( oldResolution[0] != _resolution[0] ) ||
+             ( oldResolution[1] != _resolution[1] ) ||
+             ( oldResolution[2] != _resolution[2] ) 
+           ) 
+         )
       {
          std::cout<<"Error!!!"<<std::endl;
          std::cout<<"Texture resolutions are non-consistent within the set!!"<<std::endl;
