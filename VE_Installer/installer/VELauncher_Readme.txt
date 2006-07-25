@@ -66,6 +66,7 @@ corresponding OS folder, tucked within the VE_Suite.#.#.#_Dependencies folder.
 
 Once you've chosen the VE-Suite Dependencies directory, you'll see the main
 Launcher window. From here, you can:
+-Change your Dependencies directory.
 -Choose your working directory.
 -Choose the Computing Engine's name and port.
 -Choose which mode to run in.
