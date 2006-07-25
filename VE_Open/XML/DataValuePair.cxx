@@ -481,6 +481,11 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
                _dataValue  = ExtractDataNumberFromSimpleElement( dataValueTemp );
                SetDataType(std::string("FLOAT"));
             }
+            else
+            {
+               std::cerr << "ERROR DataValuePair::SetObjectFromXMLData = "
+                           << type << " data type not supported." << std::endl; 
+            }
          }
       }
    }
