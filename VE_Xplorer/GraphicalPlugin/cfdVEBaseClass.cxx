@@ -439,6 +439,6 @@ void cfdVEBaseClass::SetCurrentCommand( VE_XML::Command* command )
 {
    if(command)
    {
-      vprDEBUG(vesDBG,0) << command->GetCommandName() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,4) << command->GetCommandName() << std::endl << vprDEBUG_FLUSH;
    }
 }
