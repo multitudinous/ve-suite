@@ -249,6 +249,8 @@ class LauncherWindow(wx.Dialog):
                            style = wx.DEFAULT_FRAME_STYLE &
                            ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
                            wx.MAXIMIZE_BOX) | wx.TAB_TRAVERSAL)
+        ##NOTE: wx.TAB_TRAVERSAL disabled until radio box tabbing works.
+        ##NOTE: Menu doesn't work with dialog.
 
         ##Prepare data storage
         ##NOTE: jconfList is a local copy of the Jconf list stored in the
@@ -269,6 +271,10 @@ class LauncherWindow(wx.Dialog):
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
         sbmLogo = wx.StaticBitmap(self, -1, bmLogo)
 
+        ##Build Dependencies Change button.
+        bDepChange = wx.Button(self, -1, "Change Dependencies Folder")
+        bDepChange.SetToolTip(wx.ToolTip("Change the VE-Suite Dependencies" +
+                                         " folder."))
         ##Build Directory text ctrl.
         self.txDirectory = wx.TextCtrl(self, -1,
                                        DIRECTORY_DEFAULT)
@@ -300,6 +306,14 @@ class LauncherWindow(wx.Dialog):
         bLaunch = wx.Button(self, -1, "Launch VE Suite")
         bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
+        ##Build menu bar
+        ##menuBar = wx.MenuBar()
+        ##menu = wx.Menu()
+        ##menu.Append(110, "Change &Dependencies")
+        ##menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
+        ##menuBar.Append(menu, "&File")
+        ##self.SetMenuBar(menuBar)
+
         ##Set tool tip popup delay to 2 seconds.
         wx.ToolTip.SetDelay(2000)
         ##Check the dependencies.
@@ -316,17 +330,20 @@ class LauncherWindow(wx.Dialog):
                                        "Welcome to VE Suite", wx.OK)
                 dlg.ShowModal()
                 dlg.Destroy()
-                self.DependenciesChange()
+                self.DependenciesChange("dead parrot sketch")
             else:
                 legitDeps = self.DependenciesCheck(dependenciesDir)
                 if not legitDeps:
-                    self.DependenciesChange()
+                    self.DependenciesChange("dead parrot sketch")
         ##Event bindings.
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_RADIOBOX, self.ModeChanged, self.rbMode)
+        self.Bind(wx.EVT_BUTTON, self.DependenciesChange, bDepChange)
+        ##self.Bind(wx.EVT_MENU, self.DependenciesChange, id=110)
+        ##self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         ##Restore config values from last time.
         self.LoadConfig(DEFAULT_CONFIG)
         
@@ -365,7 +382,14 @@ class LauncherWindow(wx.Dialog):
                           columnSizer])
         ##Add the title graphic space
         rowSizer2 = wx.BoxSizer(wx.VERTICAL)
-        rowSizer2.Add(sbmLogo)
+        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        columnSizer.Add(sbmLogo)
+        columnSizer.Add(HORIZONTAL_SPACE)
+        columnSizer.Add(bDepChange, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
+        if devMode:
+            bDepChange.Hide()
+        rowSizer2.Add(columnSizer)
+        rowSizer2.Add(VERTICAL_SPACE)
         rowSizer2.Add(rowSizer, 0, wx.EXPAND)
         ##Set the main sizer, add Launch button.
         mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -440,7 +464,7 @@ class LauncherWindow(wx.Dialog):
         ##If all checks passed, return True.
         return True
 
-    def DependenciesChange(self):
+    def DependenciesChange(self, event):
         """Asks user for a new DependenciesDir."""
         legitimateDependenciesDir = False
         while not legitimateDependenciesDir:
@@ -459,7 +483,9 @@ class LauncherWindow(wx.Dialog):
         Helper function for DependenciesCheck."""
         ##Go up a directory if it's a Unix os to get out
         ##of the VE_Suite directory.
-        if os.name == "nt":
+        if config.Read("DependenciesDir", ":::") != ":::":
+            searchDir = config.Read("DependenciesDir")
+        elif os.name == "nt":
             searchDir = os.getcwd()
         elif os.name == "posix":
             searchDir = os.path.split(os.getcwd())[0]
@@ -495,7 +521,7 @@ class LauncherWindow(wx.Dialog):
                 self.Destroy()
                 sys.exit(0)
             else:
-                return self.DependenciesChange()
+                return self.DependenciesChange("dead parrot sketch")
         else:
             ##Else if none chosen & one already exists,
             ##return None.
@@ -806,7 +832,7 @@ class LauncherWindow(wx.Dialog):
         ##ERROR CHECK:  Does the selected Jconf file exist?
         ##              If not, abort the launch.
         GetJconfPath = self.GetSelectedJconf()
-        if not (os.path.exists(GetJconfPath)):
+        if xplorer and not (os.path.exists(GetJconfPath)):
             dlg = wx.MessageDialog(self,
                                    "The Xplorer configuration file you chose,"+
                                    "\n%s,\n" %(GetJconfPath) +

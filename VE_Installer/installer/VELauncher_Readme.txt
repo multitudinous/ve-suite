@@ -28,6 +28,7 @@ Version List
 1.0.1:
 -Can now start the Launcher in Dev mode.
 -Cluster launching disabled for reworking.
+-Change Dependencies Folder button added.
 
 1.0.0: Initial release.
 
@@ -38,12 +39,22 @@ VE-Suite Launcher requires Python (python.org) and wxPython (wxpython.org).
 The default VE Suite installation will install VE Launcher in the proper place.
 Moving it out of VE Suite's directory or renaming it will cause problems.
 
+=========================================================================
+Upgrading VE-Suite Launcher
 
-========================================================================
+If you're upgrading from a previous version of VE-Suite, you'll need to update
+which Dependencies folder VE-Launcher uses as well. Start up the Launcher,
+click the Change Dependencies button, and select your latest VE-Suite Dependencies
+directory.
+
+Also, all versions of VE-Launcher use the same configuration file; you'll have to
+change the Dependencies folder each time you use a different version of VE-Suite.
+
+=========================================================================
 Using VE-Suite Launcher, the Basics
 
-Double-click launcherBeta.py or type
-    python launcherBeta.py
+Double-click velauncher.py or type
+    python velauncher.py
 in the command line to launch the Launcher.
 
 NOTE: Double-clicking it might not work on Unix systems.
