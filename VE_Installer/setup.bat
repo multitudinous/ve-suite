@@ -59,6 +59,7 @@ set Path=%Path%;%VE_SUITE_HOME%\bin;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll
 set Path=%Path%;%VE_SUITE_HOME%\bin\Plugins\UI\win32;
 set Path=%Path%;%VE_SUITE_HOME%\bin\Plugins\GE\win32;
 set Path=%Path%;%ACE_ROOT%\bin;%ACE_ROOT%\lib;%XERCESCROOT%\Build\Win32\VC7.1\Debug
+set Path=%Path%;%TAO_ROOT%\orbsvcs\Naming_Service
 set Path=%Path%;%VE_SUITE_HOME%\bin\win32
 set Path=%Path%;%OSGHOME%\bin;%VE_SUITE_HOME%\lib\win32
 set Path=%Path%;%DEMETER_HOME%\bin;
