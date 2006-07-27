@@ -2,7 +2,7 @@
 #copies the appropriate libs/dlls from ve-suite for installs 
 #in the future cmd line args will specify VE-Suite home 
 
-setenv VE_VERSION 1.0.0
+setenv VE_VERSION 1.0.1
 #set vesuitedir $1
 #if(vesuitedir)
 #   setenv VE_SUITE_HOME $1
@@ -120,7 +120,7 @@ cp /home/vr/Applications/TSVEG/Test_Pit/PrISUm/utext.JPG ./exampleDatasets/PrISU
 
 echo "======Done creating PrISUm example data directory======"
 
-#remove the subversion directory
+#remove the subversion directories
 rm -rf ./exampleDatasets/simple/scalars/.svn
 rm -rf ./exampleDatasets/simple/scalars/fourth_param_is_a_scalar/.svn
 rm -rf ./exampleDatasets/simple/scalars/200_to_1000/.svn
@@ -129,6 +129,10 @@ rm -rf ./exampleDatasets/simple/scalars/first-scalar/.svn
 rm -rf ./exampleDatasets/simple/vectors/.svn
 rm -rf ./exampleDatasets/simple/vectors/secondvector/.svn
 rm -rf ./exampleDatasets/simple/vectors/sample_vector/.svn
+
+rm -rf ./bin/Plugins/.svn
+rm -rf ./bin/Plugins/UI/.svn
+rm -rf ./bin/Plugins/GE/.svn
 
 #echo "Copying setup file..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
