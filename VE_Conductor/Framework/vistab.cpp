@@ -552,6 +552,15 @@ void Vistab::SetActiveModel(VjObs::Model_var activeModel)
 {
    _activeModel = activeModel;
    _updateModelInformation(_activeModel);
+   if(_datasetSelection)
+   {
+      _datasetSelection->Clear();
+	  for(size_t i = 0; i < _datasetSelection->GetCount(); i++)
+	  {
+         _datasetSelection->Append(_availableDatasets[i]);
+	  }
+      
+   }
 }
 ///////////////////////////////////////////////
 void Vistab::SetActiveDataset(std::string name)
