@@ -1630,28 +1630,51 @@ class ClusterWindow(wx.Dialog):
         """User chooses a new cluster computer to add to the list.
 
         Default name: Address of cluster computer."""
-        dlg = wx.TextEntryDialog(self,
-                                 "Please enter the address of the computer:",
-                                 "Add Cluster Computer")
-        if dlg.ShowModal() == wx.ID_OK:
-            location = dlg.GetValue()
-            dlg.Destroy()
-            ##Check if this location's already listed.
-            if location in self.cDict.GetLocations():
-                dlg = wx.MessageDialog(self,
-                                       "[%s] is already in the" %(location) +
-                                       " cluster list.\n" +
-                                       "You don't need to add it again.",
-                                       "ERROR: Computer Already in List",
-                                       wx.OK)
-                dlg.ShowModal()
+        loop = True
+        while loop:
+            dlg = wx.TextEntryDialog(self,
+                                     "Please enter the name of the computer:",
+                                     "Add Cluster Computer")
+            if dlg.ShowModal() == wx.ID_OK:
+                location = dlg.GetValue()
                 dlg.Destroy()
-                return
-            self.cDict.Add(location)
-            self.Update()
-            self.DeleteEnabledCheck()
-        else:
-            dlg.Destroy()
+                ##Reject if it's empty.
+                if location.isspace() or location == '':
+                    dlg = wx.MessageDialog(self,
+                                           "Your name is empty." + \
+                                           " Please try again.",
+                                           "ERROR: Name is Empty",
+                                           wx.OK)
+                    dlg.ShowModal()
+                    dlg.Destroy()
+                ##Reject if it has slashes.
+                elif '/' in location or '\\' in location:
+                    dlg = wx.MessageDialog(self,
+                                           "Your name has slashes in it.\n" + \
+                                           "Please try again.",
+                                           "ERROR: Name Contains Slashes",
+                                           wx.OK)
+                    dlg.ShowModal()
+                    dlg.Destroy()                
+                ##Return if this location's already listed.
+                elif location in self.cDict.GetLocations():
+                    dlg = wx.MessageDialog(self,
+                                           "[%s] is already in the" %(location)+
+                                           " cluster list.\n" +
+                                           "You don't need to add it again.",
+                                           "ERROR: Computer Already in List",
+                                           wx.OK)
+                    dlg.ShowModal()
+                    dlg.Destroy()
+                    return
+                else:
+                    loop = False
+                    self.cDict.Add(location)
+                    self.Update()
+                    self.DeleteEnabledCheck()
+            else:
+                loop = False
+                dlg.Destroy()
 
     def Delete(self, event):
         """Deletes the selected entry from the list.
