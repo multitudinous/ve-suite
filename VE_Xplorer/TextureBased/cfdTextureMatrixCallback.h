@@ -35,6 +35,13 @@
 //class to update the texture matrix appropriately
 #ifndef CFD_TEXTURE_MATRIX_CALLBACK_H 
 #define CFD_TEXTURE_MATRIX_CALLBACK_H 
+/*!\file cfdTextureMatrixCallback.h
+* cfdTextureMatrixCallback API
+*/
+
+/*!\class VE_TextureBased::cfdTextureMatrixCallback
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 

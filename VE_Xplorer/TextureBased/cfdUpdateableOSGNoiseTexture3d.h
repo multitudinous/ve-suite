@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H
 #define CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H
+/*!\file cfdUpdateableOSGNoiseTexture3d.h
+* cfdUpdateableOSGNoiseTexture3d API
+*/
+
+/*!\class VE_TextureBased::cfdUpdateableOSGNoiseTexture3d
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG

@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DEFAULT_GRAPHICAL_PLUGIN_H
 #define DEFAULT_GRAPHICAL_PLUGIN_H
+/*!\file DefaultGraphicalPlugin.h
+DefaultGraphicalPlugin API
+*/
+
+/*!\class ::DefaultGraphicalPlugin
+*
+*/
 
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
 

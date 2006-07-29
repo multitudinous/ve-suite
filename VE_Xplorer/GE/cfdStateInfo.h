@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <vpr/IO/SerializableObject.h>
 #include <string>
+/*!\file cfdStateInfo.h
+StateVariables API
+*/
+
+/*!\class ClusterVariables::StateVariables
+*
+*/
 
 namespace ClusterVariables
 {

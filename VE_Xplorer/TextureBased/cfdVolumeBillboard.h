@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VOLUME_BILLBOARD_H
 #define CFD_VOLUME_BILLBOARD_H
+/*!\file cfdVolumeBillboard.h
+* cfdVolumeBillboard API
+*/
+
+/*!\class VE_TextureBased::cfdVolumeBillboard
+*
+*/
 #ifdef _OSG
 #include <osg/Matrix>
 #include <osg/Vec3>

@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFDTEMPANIMATION_H
 #define CFDTEMPANIMATION_H
+/*!\file cfdTempAnimation.h
+cfdTempAnimation API
+*/
+
+/*!\class VE_SceneGraph::cfdTempAnimation
+*
+*/
 
 #ifdef _OSG
 #include <osg/ref_ptr>

@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_SCALAR_SHADER_MANAGER_H
 #define CFD_SCALAR_SHADER_MANAGER_H
+/*!\file cfdScalarShaderManager.h
+* cfdScalarShaderManager API
+*/
+
+/*!\class VE_TextureBased::cfdScalarShaderManager
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"

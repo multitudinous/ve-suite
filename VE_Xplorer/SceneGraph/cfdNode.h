@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_NODE_H
 #define CFD_NODE_H
+/*!\file cfdNode.h
+cfdNode API
+*/
+
+/*!\class VE_SceneGraph::cfdNode
+*
+*/
 
 #include "VE_Xplorer/SceneGraph/cfdSceneNode.h"
 #include <string>

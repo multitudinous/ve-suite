@@ -32,9 +32,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef _VRAC_CFD_SEQUENCE_H_
 #define _VRAC_CFD_SEQUENCE_H_
+/*!\file cfdSequence.h
+cfdSequence API
+*/
+
+/*!\class VE_SceneGraph::cfdSequence
+*
+*/
 
 enum cfdPlayMode
 {

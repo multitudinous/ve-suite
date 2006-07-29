@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_3D_TEXTURE_UPDATE_CALLBACK_H
 #define CFD_3D_TEXTURE_UPDATE_CALLBACK_H
+/*!\file cfd3DTextureCullCallback.h
+* cfd3DTextureCullCallback API
+*/
+
+/*!\class VE_TextureBased::cfd3DTextureCullCallback
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 //#ifdef CFD_USE_SHADERS

@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_GEODE_H
 #define CFD_GEODE_H
+/*!\file cfdGeode.h
+cfdGeode API
+*/
+
+/*!\class VE_SceneGraph::cfdGeode
+*
+*/
 
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 

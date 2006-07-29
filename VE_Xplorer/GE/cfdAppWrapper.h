@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_APPWRAPPER_H
 #define CFD_APPWRAPPER_H
+/*!\file cfdAppWrapper.h
+cfdAppWrapper API
+*/
+
+/*!\class VE_Xplorer::cfdAppWrapper
+*
+*/
 
 namespace VE_Xplorer
 {

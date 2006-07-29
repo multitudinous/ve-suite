@@ -35,6 +35,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _BIV_TEXTURE_MANAGER_H_
 #define _BIV_TEXTURE_MANAGER_H_
+/*!\file cfdTextureManager.h
+* cfdTextureManager API
+*/
+
+/*!\class VE_TextureBased::cfdTextureManager
+*
+*/
 #ifdef VE_PATENTED
 #ifdef WIN32
 #include <windows.h>

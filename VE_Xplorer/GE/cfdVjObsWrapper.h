@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VJOBSWRAPPER_H
 #define CFD_VJOBSWRAPPER_H
+/*!\file cfdVjObsWrapper.h
+cfdVjObsWrapper API
+*/
+
+/*!\class VE_Xplorer::cfdVjObsWrapper
+*
+*/
 
 namespace VE_Xplorer
 {

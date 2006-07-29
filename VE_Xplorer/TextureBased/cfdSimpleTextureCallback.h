@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_SIMPLE_TEXTURE_CALLBACK_H
 #define CFD_SIMPLE_TEXTURE_CALLBACK_H
+/*!\file cfdSimpleTextureCallback.h
+* cfdSimpleTextureCallback API
+*/
+
+/*!\class VE_TextureBased::cfdSimpleTextureCallback
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG

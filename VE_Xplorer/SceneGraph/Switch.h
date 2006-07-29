@@ -34,7 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_SWITCH_H
 #define VE_SWITCH_H
+/*!\file Switch.h
+Switch API
+*/
 
+/*!\class VE_SceneGraph::Switch
+*
+*/
 
 #ifdef _PERFORMER
 class pfSwitch;

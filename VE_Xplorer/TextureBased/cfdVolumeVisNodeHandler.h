@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VOLUME_VIZ_NODE_HANDLER_H
 #define CFD_VOLUME_VIZ_NODE_HANDLER_H
+/*!\file cfdVolumeVisNodeHandler.h
+* cfdVolumeVisNodeHandler API
+*/
+
+/*!\class VE_TextureBased::cfdVolumeVisNodeHandler
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/BoundingBox>

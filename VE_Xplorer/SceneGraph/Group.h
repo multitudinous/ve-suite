@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_GROUP_H
 #define VE_GROUP_H
+/*!\file Group.h
+Group API
+*/
+
+/*!\class VE_SceneGraph::Group
+*
+*/
 
 #ifdef _PERFORMER
 #include <pf/pfGroup.h>;

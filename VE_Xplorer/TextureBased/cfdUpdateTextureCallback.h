@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_UPDATE_TEXTURE_CALLBACK_H
 #define CFD_UPDATE_TEXTURE_CALLBACK_H
+/*!\file cfdUpdateTextureCallback.h
+* cfdUpdateTextureCallback API
+*/
+
+/*!\class VE_TextureBased::cfdUpdateTextureCallback
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG

@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_OSG_PING_PONG_TEXTURE_3D_H
 #define CFD_OSG_PING_PONG_TEXTURE_3D_H
+/*!\file cfdOSGPingPongTexture3D.h
+* cfdOSGPingPongTexture3D API
+*/
+
+/*!\class VE_TextureBased::cfdOSGPingPongTexture3D
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OSG

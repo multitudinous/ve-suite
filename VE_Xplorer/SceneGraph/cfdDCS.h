@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_DCS_H
 #define CFD_DCS_H
+/*!\file cfdDCS.h
+cfdDCS API
+*/
+
+/*!\class VE_SceneGraph::cfdDCS
+*
+*/
 
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 

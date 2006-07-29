@@ -35,6 +35,13 @@
 
 #ifndef _CFD_NODE_TRAVERSER_H_
 #define _CFD_NODE_TRAVERSER_H_
+/*!\file cfdNodeTraverser.h
+cfdNodeTraverser API
+*/
+
+/*!\class VE_SceneGraph::cfdNodeTraverser
+*
+*/
 
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 

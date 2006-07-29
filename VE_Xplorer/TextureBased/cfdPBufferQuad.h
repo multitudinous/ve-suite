@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PBUFFER_QUAD_H
 #define CFD_PBUFFER_QUAD_H
+/*!\file cfdPBufferQuad.h
+* cfdPBufferQuad API
+*/
+
+/*!\class VE_TextureBased::cfdPBufferQuad
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/Drawable>

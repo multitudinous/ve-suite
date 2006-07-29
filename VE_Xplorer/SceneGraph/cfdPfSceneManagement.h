@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PFSCENEMANAGEMENT_H
 #define CFD_PFSCENEMANAGEMENT_H
+/*!\file cfdPfSceneManagement.h
+cfdPfSceneManagement API
+*/
+
+/*!\class VE_SceneGraph::cfdPfSceneManagement
+*
+*/
 
 namespace VE_SceneGraph
 {

@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_TEXTURE_DATA_SET_H
 #define CFD_TEXTURE_DATA_SET_H
+/*!\file TextureDataInfo.h
+* TextureDataInfo API
+*/
+
+/*!\class VE_TextureBased::TextureDataInfo
+*
+*/
 #ifdef _OSG
 #ifdef VE_PATENTED
 namespace VE_TextureBased

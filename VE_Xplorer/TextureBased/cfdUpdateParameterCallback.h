@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_UPDATE_PARAMETER_CALLBACK_H
 #define CFD_UPDATE_PARAMETER_CALLBACK_H
+/*!\file cfdUpdateParameterCallback.h
+* cfdUpdateParameterCallback API
+*/
+
+/*!\class VE_TextureBased::cfdUpdateParameterCallback
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 

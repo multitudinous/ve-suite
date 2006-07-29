@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_NODE_H
 #define VE_NODE_H
+/*!\file Node.h
+Node API
+*/
+
+/*!\class VE_SceneGraph::Node
+*
+*/
 
 #ifdef _PERFORMER
 class pfNode;

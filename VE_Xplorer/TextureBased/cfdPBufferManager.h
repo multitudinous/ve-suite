@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _BIV_PBUFFER_MANAGER_H_
 #define _BIV_PBUFFER_MANAGER_H_
+/*!\file cfdPBufferManager.h
+* cfdPBufferManager API
+*/
+
+/*!\class VE_TextureBased::cfdPBufferManager
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 

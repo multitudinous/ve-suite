@@ -32,9 +32,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef _CFD_RAW_NODE_TRAVERSER_H_
 #define _CFD_RAW_NODE_TRAVERSER_H_
+/*!\file cfdRawNodeTraverser.h
+cfdRawNodeTraverser API
+*/
+
+/*!\class VE_SceneGraph::cfdRawNodeTraverser
+*
+*/
 
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 

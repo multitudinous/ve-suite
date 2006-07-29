@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VECTOR_VOLUME_VIS_HANDLER_H
 #define CFD_VECTOR_VOLUME_VIS_HANDLER_H
+/*!\file cfdVectorVolumeVisHandler.h
+* cfdVectorVolumeVisHandler API
+*/
+
+/*!\class VE_TextureBased::cfdVectorVolumeVisHandler
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 namespace osg

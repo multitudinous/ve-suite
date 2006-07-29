@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
 #define CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
+/*!\file cfdUpdateableOSGTexture1d.h
+* cfdUpdateableOSGTexture1d API
+*/
+
+/*!\class VE_TextureBased::cfdUpdateableOSGTexture1d
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OSG

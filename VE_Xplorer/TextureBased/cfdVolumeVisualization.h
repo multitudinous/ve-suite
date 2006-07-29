@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VOLUME_VISUALIZATION_H
 #define CFD_VOLUME_VISUALIZATION_H
+/*!\file cfdVolumeVisualization.h
+* cfdVolumeVisualization API
+*/
+
+/*!\class VE_TextureBased::cfdVolumeVisualization
+*
+*/
 #ifdef VE_PATENTED
 
 #ifdef _PERFORMER

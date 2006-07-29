@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_DCS_H
 #define VE_DCS_H
+/*!\file DCS.h
+* DCS API
+*/
+
+/*!\class VE_SceneGraph::DCS
+*
+*/
 
 #ifdef _PERFORMER
 class pfDCS;

@@ -35,6 +35,13 @@
 //class to update the billboard center appropriately` 
 #ifndef CFD_VOLUME_CENTER_CALLBACK_H 
 #define CFD_VOLUME_CENTER_CALLBACK_H 
+/*!\file cfdVolumeCenterCallback.h
+* cfdVolumeCenterCallback API
+*/
+
+/*!\class VE_TextureBased::cfdVolumeCenterCallback
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 

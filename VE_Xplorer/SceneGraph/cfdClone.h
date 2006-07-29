@@ -34,6 +34,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CLONE_H
 #define CFD_CLONE_H
+/*!\file cfdClone.h
+cfdClone API
+*/
+
+/*!\class VE_SceneGraph::cfdClone
+*
+*/
+
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 namespace VE_SceneGraph{
    class cfdDCS;

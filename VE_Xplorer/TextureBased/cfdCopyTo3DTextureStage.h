@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_COPY_TO_3DTEXTURE_STAGE_H
 #define CFD_COPY_TO_3DTEXTURE_STAGE_H
+/*!\file cfdCopyTo3DTextureStage.h
+* cfdCopyTo3DTextureStage API
+*/
+
+/*!\class VE_TextureBased::cfdCopyTo3DTextureStage
+*
+*/
 #ifdef VE_PATENTED
 #ifdef _OSG
 

@@ -32,6 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VJOBS_I_H_
 #define _VJOBS_I_H_
+/*!\file VjObs_i.h
+VjObs_i API
+*/
+
+/*!\class VE_Xplorer::VjObs_i
+*
+*/
 #include "VE_Open/skel/VjObsS.h"
 #include <vpr/Sync/Mutex.h>
 

@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_SWITCH_H
 #define CFD_SWITCH_H
+/*!\file cfdSwitch.h
+cfdSwitch API
+*/
+
+/*!\class VE_SceneGraph::cfdSwitch
+*
+*/
 
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 

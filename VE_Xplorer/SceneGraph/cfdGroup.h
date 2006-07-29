@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_GROUP_H
 #define CFD_GROUP_H
+/*!\file cfdGroup.h
+cfdGroup API
+*/
+
+/*!\class VE_SceneGraph::cfdGroup
+*
+*/
 
 #include <vector>
 #ifdef _PERFORMER
