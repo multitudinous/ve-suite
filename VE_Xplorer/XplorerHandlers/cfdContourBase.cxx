@@ -330,6 +330,8 @@ void cfdContourBase::CreatePlane( void )
    cuttingPlane->Advance( requestedValue );
    cutter->SetCutFunction( cuttingPlane->GetPlane() );
    cutter->SetInput( GetActiveDataSet()->GetDataSet() );
+   //cutter->DebugOn();
+   //cutter->Print( std::cout );
    cutter->Update();
 
    vtkPolyData* polydata = cutter->GetOutput();
@@ -338,7 +340,8 @@ void cfdContourBase::CreatePlane( void )
    {
       std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
       std::cerr<<"Finding next closest plane"<<std::endl;
-      while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 )  //&&(this->TargetReduction > 0.0) )
+      int counter = 0;
+      while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys() < 1 ) || counter > 3 )//&&(this->TargetReduction > 0.0) )
       {
          if( requestedValue < 50 )
          {
@@ -352,7 +355,13 @@ void cfdContourBase::CreatePlane( void )
          cutter->SetCutFunction( cuttingPlane->GetPlane() );
          cutter->SetInput( GetActiveDataSet()->GetDataSet() );
          cutter->Update();
-         polydata = cutter->GetOutput();            
+         polydata = cutter->GetOutput();      
+         //cutter->Print( std::cout );
+         //std::cout << std::endl;
+         //std::cout << std::endl;
+         //std::cout << std::endl;
+         //std::cout << std::endl;
+         counter += 1;      
       }    
    }       
 

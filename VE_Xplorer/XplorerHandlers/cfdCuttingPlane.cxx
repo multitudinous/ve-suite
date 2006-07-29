@@ -153,8 +153,7 @@ void cfdCuttingPlane::Advance( int requestedValue )
 
    this->plane->SetOrigin( this->origin );
    this->plane->Modified();
-
-   return;
+   //this->plane->Update();
 }
 
 void cfdCuttingPlane::GetOrigin( double Origin[ 3 ]  )
