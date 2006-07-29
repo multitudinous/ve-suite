@@ -1055,6 +1055,12 @@ void REI_Plugin::ViewInputVariables( void )
             wxDefaultSize,
             (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
          );*/
+   if ( inputsDialog )
+   {
+      delete inputsDialog;
+      inputsDialog = 0;
+   }
+
    inputsDialog = new SummaryResultDialog(NULL, wxT("Input Variables"), wxSize(560, 400));
    // Get all the inputs form the model
    for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
@@ -1068,9 +1074,7 @@ void REI_Plugin::ViewInputVariables( void )
       inputsDialog->Set2Cols( tagNames, values );
    }
    // Get all the results form the model
-   inputsDialog->ShowModal();
-   delete inputsDialog;
-   inputsDialog = 0;
+   inputsDialog->Show();
 }
 ///////////////////////////////////////////////
 void REI_Plugin::ViewResultsVariables( void )
@@ -1082,6 +1086,12 @@ void REI_Plugin::ViewResultsVariables( void )
             wxDefaultSize,
             (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
          );*/
+   if ( resultsDialog )
+   {
+      delete resultsDialog;
+      resultsDialog = 0;
+   }
+   
    resultsDialog = new SummaryResultDialog(NULL, wxT("Results Variables"), wxSize(560, 400));
    // Get all the inputs form the model
    for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
@@ -1094,8 +1104,7 @@ void REI_Plugin::ViewResultsVariables( void )
       resultsDialog->NewTab( wxT( inputParamter.c_str() ) );
       resultsDialog->Set2Cols( tagNames, values );
    }
-   resultsDialog->ShowModal();
-   delete resultsDialog;
+   resultsDialog->Show();
 }
 ///////////////////////////////////////////////
 void REI_Plugin::GetDataTables( VE_XML::Command* inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
