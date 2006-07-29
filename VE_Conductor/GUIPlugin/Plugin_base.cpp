@@ -1048,16 +1048,9 @@ void REI_Plugin::FinancialData ()
 ///////////////////////////////////////////////
 void REI_Plugin::ViewInputVariables( void )
 {
-   /*inputsDialog = new wxDialog
-         ( 
-            NULL, ::wxNewId(), _("Input Variables"), 
-            wxDefaultPosition,
-            wxDefaultSize,
-            (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
-         );*/
    if ( inputsDialog )
    {
-      delete inputsDialog;
+      inputsDialog->Destroy();
       inputsDialog = 0;
    }
 
@@ -1079,16 +1072,9 @@ void REI_Plugin::ViewInputVariables( void )
 ///////////////////////////////////////////////
 void REI_Plugin::ViewResultsVariables( void )
 {
-   /*inputsDialog = new wxDialog
-         ( 
-            NULL, ::wxNewId(), _("Input Variables"), 
-            wxDefaultPosition,
-            wxDefaultSize,
-            (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP
-         );*/
    if ( resultsDialog )
    {
-      delete resultsDialog;
+      resultsDialog->Destroy();
       resultsDialog = 0;
    }
    
