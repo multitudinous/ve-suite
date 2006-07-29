@@ -901,7 +901,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 
    try
    {
-      nw_str.assign( network->exec->Query() );
+      nw_str.assign( network->exec->Query( 0 ) );
    }
    catch ( CORBA::Exception& )
    {
