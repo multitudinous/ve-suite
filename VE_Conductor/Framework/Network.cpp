@@ -2216,10 +2216,16 @@ void Network::Load( std::string xmlNetwork )
    //this->GetThread()->Run();
    CreateNetwork( xmlNetwork );
    ::wxEndBusyCursor();
+   delete _fileProgress;
 }
 ////////////////////////////////////////////////////////
 void Network::CreateNetwork( std::string xmlNetwork )
 {
+   if ( xmlNetwork.empty() )
+   {
+      return;
+   }
+   
    // Just clear the design canvas
    //while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) { ; }
    // Start the busy cursor
@@ -2372,7 +2378,6 @@ void Network::CreateNetwork( std::string xmlNetwork )
    _fileProgress->Update( 100, "Done" );
    //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
    Refresh();
-   delete _fileProgress;
 }
 
 //////////////////////////////////////////////////////

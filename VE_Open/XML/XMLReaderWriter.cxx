@@ -134,6 +134,11 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 {
 
    //Get the first element and check it's type
+   if ( !rootDocument )
+   {
+      return;
+   }
+   
    DOMNodeList* xmlObjects = rootDocument->getElementsByTagName( xercesString(tagName) );
 
    unsigned int nXMLObjects = xmlObjects->getLength();

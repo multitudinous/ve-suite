@@ -46,6 +46,7 @@
 #include <xercesc/framework/XMLFormatter.hpp>
 
 #include <iostream>
+#include <fstream>
 
 //using namespace VE_Conductor;
 using namespace VE_XML;
@@ -102,6 +103,11 @@ void DOMDocumentManager::SetOuputXMLFile(std::string xmlOutputFile)
 ////////////////////////////////////////////////////////////////
 void DOMDocumentManager::_readInputString(std::string xmlString)
 {
+   if ( xmlString.empty() )
+   {
+      return;
+   }
+   
    std::string system_id( "input.xml" );
    MemBufInputSource inputXML((const XMLByte*)xmlString.c_str(),
         static_cast< const unsigned int >( xmlString.size() ), system_id.c_str());
@@ -110,7 +116,12 @@ void DOMDocumentManager::_readInputString(std::string xmlString)
 ////////////////////////////////////////////////////////////
 void DOMDocumentManager::_readInputFile(std::string xmlFile)
 {
-   LocalFileInputSource inputXML(xercesString(xmlFile));
+   if ( !std::ifstream( xmlFile.c_str() ).good() )
+   {
+      return;
+   }
+   
+   //LocalFileInputSource inputXML(xercesString(xmlFile));
    //parser->parse(inputXML);
    parser->parse(xmlFile.c_str());
 }
