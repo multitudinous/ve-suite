@@ -651,14 +651,14 @@ void AppFrame::CreateMenu()
    edit_menu->Enable(v21ID_UNDO, false);
    edit_menu->Enable(v21ID_REDO, false);
 
-   help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
+   //help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
    help_menu->Append (v21ID_HELP, _("&Index"));
-   help_menu->AppendSeparator();
-   help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
+   //help_menu->AppendSeparator();
+   //help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
 
-   help_menu->Enable(wxID_HELP_CONTENTS, false);
+   //help_menu->Enable(wxID_HELP_CONTENTS, false);
    //help_menu->Enable(v21ID_HELP, false);
-   help_menu->Enable(wxID_ABOUT, false);
+   //help_menu->Enable(wxID_ABOUT, true);
 
    //if (f_visualization)
    {
@@ -1283,25 +1283,7 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 //////////////////////////////////////////////////////////////////
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
 {
-   char browser[1024];
-   wxString help;
-   wxString fgroot;
-   wxString docdir;
-   wxString cmd;
-   fgroot = getenv("FGROOT");
-  
-#ifdef WIN32
-   docdir=fgroot+"\\Framework\\doc";
-   help = fgroot+"\\Framework\\doc\\index.html";
-   FindExecutable("index.html", docdir.c_str(), browser);
-#endif
-   cmd="\"";
-   cmd+=browser;
-   cmd+="\" \"";
-   cmd+=help;
-   cmd+="\"";
-  
-   ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+   ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php" ) );
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::CloseVE()
