@@ -382,8 +382,9 @@ void Body_Executive_i::execute_next_mod( long module_id )
 
                try 
                {
-                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetParams( fileName.c_str() );
-                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetID( (long)_network->GetModule(rt)->get_id() );
+                  long int tempID = static_cast< long int >(  _network->GetModule(rt)->get_id() );
+                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetParams( tempID, fileName.c_str() );
+                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetID( tempID );
                   execute( _network->GetModule(rt)->GetModuleName() );
                }
                catch(CORBA::Exception &)
@@ -688,7 +689,7 @@ char * Body_Executive_i::GetStatus (
   
   return CORBA::string_dup("");//str.c_str());//"yang";//0;
 }
-  
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::StartCalc (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -749,8 +750,9 @@ void Body_Executive_i::StartCalc (
             {
                if(_mod_units.find( _network->GetModule(rt)->GetModuleName() )!=_mod_units.end())
                {
-                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetParams( fileName.c_str() );
-                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetID( (long)_network->GetModule( rt )->get_id() );
+                  long int tempID = static_cast< long >( _network->GetModule( rt )->get_id() );
+                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetParams( tempID, fileName.c_str() );
+                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetID( tempID );
                   // This starts a chain reaction which eventually leads to Execute_Thread
                   // which calls executenextmod in this class
                   // by having the thread do that all subsequent modules get executed
@@ -781,7 +783,7 @@ void Body_Executive_i::StartCalc (
    
    _mutex.release();
 }
-  
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::StopCalc (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -813,7 +815,7 @@ void Body_Executive_i::StopCalc (
    }
   _mutex.release();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::PauseCalc (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -845,7 +847,7 @@ void Body_Executive_i::PauseCalc (
    }
   _mutex.release();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::Resume (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -878,7 +880,7 @@ void Body_Executive_i::Resume (
    _mutex.release();
 }
   
-char *  Body_Executive_i::Query (
+char *  Body_Executive_i::Query (  const char * command
     ACE_ENV_SINGLE_ARG_DECL
   )
   ACE_THROW_SPEC ((
@@ -899,7 +901,7 @@ char *  Body_Executive_i::Query (
          // this may not work
          // I think we actually need to grab all the sub elements from under the root document 
          // and then append those
-   	   queryString.append( iter->second->Query() );
+   	   queryString.append( iter->second->Query( CORBA::string_dup( command ) ) );
          ++iter;
 	   }
       catch (CORBA::Exception &) 
@@ -916,7 +918,7 @@ char *  Body_Executive_i::Query (
 
    return CORBA::string_dup( queryString.c_str() );
 }
-  
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::RegisterUI (
     const char * UIName,
       Body::UI_ptr ui_ptr
@@ -961,7 +963,7 @@ void Body_Executive_i::RegisterUI (
    }
    return;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::RegisterUnit (
     const char * UnitName,
    Body::Unit_ptr unit,
@@ -1012,7 +1014,7 @@ void Body_Executive_i::RegisterUnit (
    message = std::string( "Successfully registered " ) + std::string( UnitName ) + std::string("\n" );
    ClientMessage( message.c_str() );
 }
-  
+////////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::UnRegisterUI (
     const char * UIName
   )
@@ -1034,7 +1036,7 @@ void Body_Executive_i::UnRegisterUI (
 	}
   _mutex.release();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::UnRegisterUnit (
     const char * UnitName
   )
@@ -1058,7 +1060,7 @@ void Body_Executive_i::UnRegisterUnit (
   
    _mutex.release();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 CORBA::Long Body_Executive_i::GetGlobalMod (
     Types::ArrayLong_out ids
   )
@@ -1075,7 +1077,44 @@ CORBA::Long Body_Executive_i::GetGlobalMod (
   
   return CORBA::Long(0);
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void Body_Executive_i::SetID (
+                              const char * moduleName,
+                              ::CORBA::Long id
+                              )
+ACE_THROW_SPEC ((
+                 ::CORBA::SystemException,
+                 ::Error::EUnknown
+                 ))
+{
+   // Add your implementation here
+}
+////////////////////////////////////////////////////////////////////////////////
+void Body_Executive_i::DeleteModuleInstance (
+                                             const char * moduleName,
+                                             ::CORBA::Long module_id
+                                             )
+ACE_THROW_SPEC ((
+                 ::CORBA::SystemException,
+                 ::Error::EUnknown
+                 ))
+{
+   // Add your implementation here
+}
+////////////////////////////////////////////////////////////////////////////////
+void Body_Executive_i::SetParams (
+                                  const char * moduleName,
+                                  ::CORBA::Long module_id,
+                                  const char * param
+                                  )
+ACE_THROW_SPEC ((
+                 ::CORBA::SystemException,
+                 ::Error::EUnknown
+                 ))
+{
+   // Add your implementation here
+}
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::ClientMessage(const char *msg)
 {
    std::cout << "CE Output = " << msg;

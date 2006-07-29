@@ -266,7 +266,7 @@ virtual void Resume (
     , Error::EUnknown
   ));
 
-virtual char * Query (
+virtual char * Query ( const char * command
     ACE_ENV_SINGLE_ARG_DECL
   )
   ACE_THROW_SPEC ((
@@ -320,6 +320,16 @@ virtual CORBA::Long GetGlobalMod (
     CORBA::SystemException
     , Error::EUnknown
   ));
+
+virtual void SetID( const char * moduleName, ::CORBA::Long id )
+   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ));
+
+virtual void DeleteModuleInstance( const char * moduleName, ::CORBA::Long module_id )
+   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ));
+
+virtual void SetParams( const char * moduleName, ::CORBA::Long module_id, const char * param )
+   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ));
+
 
 void ClientMessage(const char *msg);
 

@@ -23,7 +23,6 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: module.idl,v $
  * Date modified: $Date: date $
  * Version:       $Rev: 999999 $
  * -----------------------------------------------------------------
@@ -93,14 +92,19 @@ module Body{
     string GetUserData() raises(Error::EUnknown);
     
     //This is to Set the Module up
-    void SetParams(in string param) raises(Error::EUnknown);
+    void SetParams(in long module_id, in string param) raises(Error::EUnknown);
     
     //This is to Set the ID
     void SetID(in long id) raises(Error::EUnknown);
     
+    void SetCurID(in long id) raises(Error::EUnknown);
+
     //This is to Get the ID
-    long GetID() raises(Error::EUnknown);
+    Types::ArrayLong GetID() raises(Error::EUnknown);
     
+    //This return the current active instance's ID
+    long GetCurID() raises(Error::EUnknown);
+
     //This is to Set the name
     void SetName(in string name) raises(Error::EUnknown);
     
@@ -109,7 +113,10 @@ module Body{
     
     //This is allows the unit to return model or 
     //an internal network to the executive
-    string Query() raises(Error::EUnknown);
+    string Query(in string commands) raises(Error::EUnknown);
+
+    //This is to delet the instance, called by CE
+    void DeleteModuleInstance(in long module_id) raises(Error::EUnknown);
     
   };
 
@@ -203,7 +210,14 @@ module Body{
 
     //This is allows the executive to return model or 
     //an internal network to the ui
-    string Query() raises(Error::EUnknown);
+    string Query(in string commands) raises(Error::EUnknown);
+
+    //Those calls pass through to Unit Iterface
+    void SetID(in string moduleName, in long id) raises(Error::EUnknown);	
+
+    void DeleteModuleInstance(in string moduleName, in long module_id) raises(Error::EUnknown);
+	
+    void SetParams(in string moduleName, in long module_id, in string param) raises(Error::EUnknown);
 
   };
 
@@ -253,4 +267,40 @@ module Body{
       //This is to update the network, called by the Executive
       void UpdateNetwork(in string network) raises(Error::EUnknown);
    };
+   /////////////////////////////////////////////////////////////////////////////
+   interface InfoSource
+   { // This is the interface for working with a hierarchy of models under one
+     // unit operation. This is a beta interface.
+    
+      //This is for querying the status of the module
+      string GetStatusMessage() raises(Error::EUnknown);
+    
+      //This is to Set the Module up
+      void SetParams(in string param) raises(Error::EUnknown);
+
+      //This is to to get info source results - can be and sort of data
+      string GetResults() raises(Error::EUnknown);
+    
+      //This is to Set the ID
+      void SetID(in long id) raises(Error::EUnknown);
+    
+      //This is to Get the ID
+      long GetID() raises(Error::EUnknown);
+    
+      //This is to Set the name
+      void SetName(in string name) raises(Error::EUnknown);
+    
+      //This is to Get the name
+      string GetName() raises(Error::EUnknown);
+   };
+   /////////////////////////////////////////////////////////////////////////////
+   interface VEObject : Unit
+   { // This is the interface for working with a VEObject. It inherits from Unit.
+    
+      //This is to disconnect the Unit to the Executive
+      void UnRegisterInfoSource(in string InfoSourceName) raises(Error::EUnknown);
+
+      //This is to Register a Unit to the Executive, flag=0 is normal module, flag=1 will be the global module
+      void RegisterInfoSource(in string InfoSourceName, in Body::InfoSource infoSourceIn, in long flag) raises(Error::EUnknown);
+    };
 };

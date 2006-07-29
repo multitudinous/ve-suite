@@ -128,7 +128,7 @@ case "$CFDHOSTTYPE" in
    #export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install-cocoa
    export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj
    export VJ_DEPS_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj-deps
-   export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.0/install
+   export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.1/install
 	#setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
    export DYLD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib:${VJ_DEPS_DIR}/lib
