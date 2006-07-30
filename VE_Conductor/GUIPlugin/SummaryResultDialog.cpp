@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
 #include <iostream>
@@ -58,7 +56,7 @@ SummaryResultDialog::SummaryResultDialog(wxWindow * parent, const wxString& titl
    left_margin->Add(10, 10);
    right_margin->Add(10, 10);
    toptop->Add(left_margin, 0, wxALIGN_LEFT);
-   toptop->Add(top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   toptop->Add(top_sizer, 1,  wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    toptop->Add(right_margin, 0, wxALIGN_RIGHT);
 
    tabs = new wxNotebook (this, -1, wxDefaultPosition, tabsize, wxNB_TOP);
@@ -69,10 +67,10 @@ SummaryResultDialog::SummaryResultDialog(wxWindow * parent, const wxString& titl
 
    ok = new wxButton(this, wxID_OK, "OK");
    top_sizer->Add(10, 10, 0);
-   top_sizer->Add(new wxStaticText(this, -1, "Summary Data   ", wxDefaultPosition, wxDefaultSize), 0, wxALIGN_CENTER_HORIZONTAL);
-   top_sizer->Add(10, 5, 0);
+   //top_sizer->Add(new wxStaticText(this, -1, "Summary Data   ", wxDefaultPosition, wxDefaultSize), 0, wxALIGN_CENTER_HORIZONTAL);
+   //top_sizer->Add(10, 5, 0);
    //  top_sizer->Add(syngas, 0, wxALIGN_CENTER_HORIZONTAL);
-   top_sizer->Add(tabs, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   top_sizer->Add(tabs, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    top_sizer->Add(10, 5, 0);
    top_sizer->Add(ok, 0, wxALIGN_CENTER_HORIZONTAL);
    top_sizer->Add(10, 10, 0); //the bottom margin

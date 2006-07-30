@@ -42,7 +42,7 @@ TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxS
 //wxTextCtrl(parent, id, "x", pos, size, wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL|wxTE_DONTWRAP)
 {
   CreateGrid (0,2);
-  SetColLabelValue (0, "Title");
+  SetColLabelValue (0, "Description");
   SetColLabelValue (1, "Value");
   SetRowMinimalAcceptableHeight (9);
   SetColMinimalAcceptableWidth (27);

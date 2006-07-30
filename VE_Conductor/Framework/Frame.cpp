@@ -999,11 +999,6 @@ void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
-   /*ConExeServer();
-   // If not sucessful
-   if ( !is_orb_init )
-      return;
-   */
    serviceList->IsConnectedToCE();
    
    char* result;
@@ -1027,7 +1022,12 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    result_dlg->syngas->Clear();
    result_dlg->syngas->AddRow(titles);
    */
-   result_dlg = new SummaryResultDialog(NULL, wxT("Result Summary"), wxSize(560, 400));
+   if ( result_dlg )
+   {
+      result_dlg->Destroy();
+      result_dlg = 0;
+   }
+   result_dlg = new SummaryResultDialog(NULL, wxT("Result Summary - All Modules"), wxSize(560, 400));
    result_dlg->syngas->Clear();
    result_dlg->syngas->SetNumofCols( 2 );
    result_dlg->syngas->SetColTitles( titles );
@@ -1223,9 +1223,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
       result_dlg->Set2Cols(v_desc2, v_value2);
    }
 
-   result_dlg->ShowModal();
-
-   delete result_dlg;
+   result_dlg->Show();
 }
 ////////////////////////////////////////////////////////////////////
 void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
