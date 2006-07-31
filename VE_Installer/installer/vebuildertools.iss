@@ -16,7 +16,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\VE_BuilderTools.1.0.2
 DefaultGroupName=VE-Builder_Tools 1.0.2
-AllowNoIcons=yes
+AllowNoIcons=true
 OutputBaseFilename=vebuildertools{#VEVERSION}
 Compression=lzma
 SolidCompression=true
@@ -27,6 +27,11 @@ WizardImageStretch=false
 UninstallFilesDir={app}\bin
 OutputDir={#VEHOME}\VE_Installer\installer
 WizardImageBackColor=clGray
+ShowTasksTreeLines=true
+ShowLanguageDialog=yes
+VersionInfoVersion=1.0.2
+VersionInfoCompany=Virtual Engineering Research Group
+VersionInfoDescription=VES Builder Tools
 [Types]
 ;Name: optional; Description: VE-Util Library
 [Components]
