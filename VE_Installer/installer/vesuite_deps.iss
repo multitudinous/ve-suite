@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.0.1_Dependencies"
-#define MyAppVerName "VE_Suite.1.0.1_Dependencies"
+#define MyAppName "VE_Suite.1.0.*_Dependencies"
+#define MyAppVerName "VE_Suite.1.0.*_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 

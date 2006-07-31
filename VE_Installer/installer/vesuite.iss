@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.0.1"
-#define MyAppVerName "VE_Suite.1.0.1"
+#define MyAppName "VE_Suite.1.0.2"
+#define MyAppVerName "VE_Suite.1.0.2"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
@@ -61,7 +61,11 @@ Name: velauncher; Description: wxPython Launcher; Types: full
 [Registry]
 Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdeletekey
 Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Flags: uninsdeletekey; Components: " velauncher examples vebuildenv veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver"; Tasks: " desktopVELauncherIcon"
-
+Root: HKCR; SubKey: .ves; ValueType: string; ValueData: VESNetworkfile; Flags: uninsdeletekey createvalueifdoesntexist
+Root: HKCR; SubKey: VESNetworkfile; ValueType: string; ValueData: VE-Suite Network file; Flags: uninsdeletekey
+Root: HKCR; SubKey: VESNetworkfile\Shell\Open\Command; ValueType: string; ValueData: """{app}\velauncher.exe"" ""%1"""; Flags: uninsdeletevalue
+Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\installerImages\VE_icon.ico,0; Flags: uninsdeletevalue
+Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher; ValueType: string; ValueData: Open with &VE-Launcher
 [Tasks]
 ;Name: desktopNSIcon; Description: Name Server; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: nameserver
 ;Name: desktopVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create Desktop Icon; Flags: unchecked; Components: veconductor
@@ -94,7 +98,7 @@ Source: {#VEHOME}\bin\win32\WinClientd.exe; DestDir: {app}\bin; Components: veco
 ;Source: {#VEHOME}\VE_Installer\installer\NameService.bat; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 ;Source: {#VEHOME}\VE_Installer\installer\VE-Conductor.bat; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 
-Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}; Flags: ignoreversion; Components: velauncher
+Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}; Flags: ignoreversion
 ;Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly overwritereadonly; Attribs: readonly hidden
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion confirmoverwrite
@@ -134,6 +138,7 @@ Source: {#VEHOME}\bin\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion recurses
 Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\installerImages; Flags: replacesameversion
 Source: {#JUGGLERINSTHOME}\lib\ms*.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver
 Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver
+Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
@@ -154,3 +159,4 @@ Name: {group}\VE-Suite; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFi
 Name: {commondesktop}\VE-Suite; Filename: {app}\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
 
 ;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\VE_icon.ico
+Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
