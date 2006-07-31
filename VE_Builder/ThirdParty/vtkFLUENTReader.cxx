@@ -16,7 +16,7 @@
 //
 // Please address all comments to Brian Dotson (Brian.Dotson@netl.doe.gov)
 #include <sstream>
-#include "vtkFLUENTReader.h"
+#include "vtkFluentReader.h"
 #include "vtkDataArraySelection.h"
 #include "vtkErrorCode.h"
 #include "vtkUnstructuredGrid.h"
@@ -34,23 +34,25 @@
 #include "vtkCellArray.h"
 #include "vtkHexahedron.h"
 
-vtkCxxRevisionMacro(vtkFLUENTReader, "$Revision: 1.1 $");
-vtkStandardNewMacro(vtkFLUENTReader);
+vtkCxxRevisionMacro(vtkFluentReader, "$Revision: 1.1 $");
+vtkStandardNewMacro(vtkFluentReader);
+//vtkStandardNewMacro(vtkFluentReader);
+
 
 //----------------------------------------------------------------------------
-vtkFLUENTReader::vtkFLUENTReader()
+vtkFluentReader::vtkFluentReader()
 {
 	this->FileName  = NULL;
 	CreateVTKObjects();
 }
 
 //----------------------------------------------------------------------------
-vtkFLUENTReader::~vtkFLUENTReader()
+vtkFluentReader::~vtkFluentReader()
 {
 }
 
 //----------------------------------------------------------------------------
-int vtkFLUENTReader::RequestData(
+int vtkFluentReader::RequestData(
   vtkInformation *vtkNotUsed(request),
   vtkInformationVector **vtkNotUsed(inputVector),
   vtkInformationVector *outputVector)
@@ -66,13 +68,13 @@ int vtkFLUENTReader::RequestData(
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::PrintSelf(ostream& os, vtkIndent indent)
+void vtkFluentReader::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os,indent);
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::ReadFile(vtkUnstructuredGrid *output)
+void vtkFluentReader::ReadFile(vtkUnstructuredGrid *output)
 {
   	output->Allocate();
 	output->ShallowCopy(mesh);
@@ -84,7 +86,7 @@ void vtkFLUENTReader::ReadFile(vtkUnstructuredGrid *output)
 }
 
 //----------------------------------------------------------------------------
-int vtkFLUENTReader::RequestInformation(
+int vtkFluentReader::RequestInformation(
   vtkInformation *vtkNotUsed(request),
   vtkInformationVector **vtkNotUsed(inputVector),
   vtkInformationVector *vtkNotUsed(outputVector))
@@ -150,7 +152,7 @@ int vtkFLUENTReader::RequestInformation(
 }
 
 //----------------------------------------------------------------------------
-int vtkFLUENTReader::OpenCaseAndDataFiles( void )
+int vtkFluentReader::OpenCaseAndDataFiles( void )
 {
 	int len = strlen(FileName);
 	len = len -4;
@@ -190,7 +192,7 @@ int vtkFLUENTReader::OpenCaseAndDataFiles( void )
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::GetCellDataRange(int cellComp, int index, float *min, float *max)
+void vtkFluentReader::GetCellDataRange(int cellComp, int index, float *min, float *max)
 {
   if (index >= this->veclen[cellComp] || index < 0)
     {
@@ -201,20 +203,20 @@ void vtkFLUENTReader::GetCellDataRange(int cellComp, int index, float *min, floa
 }
 
 //----------------------------------------------------------------------------
-const char* vtkFLUENTReader::GetCellArrayName(int index)
+const char* vtkFluentReader::GetCellArrayName(int index)
 {
   return this->CellDataArraySelection->GetArrayName(index);
 }
 
 //----------------------------------------------------------------------------
-int vtkFLUENTReader::GetCellArrayStatus(const char* name)
+int vtkFluentReader::GetCellArrayStatus(const char* name)
 {
   return this->CellDataArraySelection->ArrayIsEnabled(name);
 }
 
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::SetCellArrayStatus(const char* name, int status)
+void vtkFluentReader::SetCellArrayStatus(const char* name, int status)
 {
   if(status)
     {
@@ -227,25 +229,25 @@ void vtkFLUENTReader::SetCellArrayStatus(const char* name, int status)
 }
 
 //----------------------------------------------------------------------------
-int vtkFLUENTReader::GetNumberOfCellArrays()
+int vtkFluentReader::GetNumberOfCellArrays()
 {
   return this->CellDataArraySelection->GetNumberOfArrays();
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::EnableAllCellArrays()
+void vtkFluentReader::EnableAllCellArrays()
 {
     this->CellDataArraySelection->EnableAllArrays();
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::DisableAllCellArrays()
+void vtkFluentReader::DisableAllCellArrays()
 {
     this->CellDataArraySelection->DisableAllArrays();
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::ParseCaseFile(void)
+void vtkFluentReader::ParseCaseFile(void)
 {
 	int bufptr = 0;
 	while(bufptr < CaseFileBufferLength){
@@ -258,7 +260,7 @@ void vtkFLUENTReader::ParseCaseFile(void)
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::MakeFaceTreeParentTable(void)
+void vtkFluentReader::MakeFaceTreeParentTable(void)
 {
 	for(int i=0;i<NumberOfFaceTrees;i++){
 		if(FaceTreeParentFaceId1->GetValue(i) > LastFaceTreeParent){
@@ -280,7 +282,7 @@ void vtkFLUENTReader::MakeFaceTreeParentTable(void)
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::MakeCellTreeParentTable(void)
+void vtkFluentReader::MakeCellTreeParentTable(void)
 {
 	for(int i=0;i<NumberOfCellTrees;i++){
 		if(CellTreeParentCellId1->GetValue(i) > LastCellTreeParent){
@@ -303,7 +305,7 @@ void vtkFLUENTReader::MakeCellTreeParentTable(void)
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::LoadFaceKidFlags(void)
+void vtkFluentReader::LoadFaceKidFlags(void)
 {
 	// Initialize
 	for(int i=0;i<=NumberOfFaces;i++){
@@ -327,7 +329,7 @@ void vtkFLUENTReader::LoadFaceKidFlags(void)
 }
 
 //----------------------------------------------------------------------------
-void vtkFLUENTReader::LoadFaceParentFlags(void)
+void vtkFluentReader::LoadFaceParentFlags(void)
 {
 	// Initialize
 	for(int i=0;i<=NumberOfFaces;i++){
@@ -346,7 +348,7 @@ void vtkFLUENTReader::LoadFaceParentFlags(void)
 }
 
 //----------------------------------------------------------------------------
-void   vtkFLUENTReader::LoadInterfaceFaceChildFlags(void)
+void   vtkFluentReader::LoadInterfaceFaceChildFlags(void)
 {
 	// Initialize Flag Array
 	for(int i=1;i<=NumberOfFaces;i++){
@@ -360,7 +362,7 @@ void   vtkFLUENTReader::LoadInterfaceFaceChildFlags(void)
 }
 
 //----------------------------------------------------------------------------
-void 	vtkFLUENTReader::LoadNCGFaceChildFlags(void)
+void 	vtkFluentReader::LoadNCGFaceChildFlags(void)
 {
 	// Initialize Flag Array
 	for(int i=0;i<=NumberOfFaces;i++){
@@ -374,7 +376,7 @@ void 	vtkFLUENTReader::LoadNCGFaceChildFlags(void)
 }
 
 //----------------------------------------------------------------------------
-void   vtkFLUENTReader::BuildCells(void)
+void   vtkFluentReader::BuildCells(void)
 {
 	int SpinF0 = 0;
 	int SpinF1 = 0;
@@ -1198,7 +1200,7 @@ void   vtkFLUENTReader::BuildCells(void)
 	} 
 }
 
-void   vtkFLUENTReader::LoadCellParentFlags(void)
+void   vtkFluentReader::LoadCellParentFlags(void)
 {
 	// Initialize Array
 	for(int i=1;i<=NumberOfCells;i++){
@@ -1213,7 +1215,7 @@ void   vtkFLUENTReader::LoadCellParentFlags(void)
 
 }
 
-void   vtkFLUENTReader::LoadCellNumberOfFaces(void)
+void   vtkFluentReader::LoadCellNumberOfFaces(void)
 {
 	for(int i=0;i<=NumberOfCells;i++){
 		CellNumberOfFaces->InsertValue(i,0);
@@ -1239,7 +1241,7 @@ void   vtkFLUENTReader::LoadCellNumberOfFaces(void)
 	}
 }
 
-void   vtkFLUENTReader::LoadCellFaces(void)
+void   vtkFluentReader::LoadCellFaces(void)
 {
 	// Make an index array to determine where each cell is in the cell face array.
 	//  and ...
@@ -1287,7 +1289,7 @@ void   vtkFLUENTReader::LoadCellFaces(void)
 	}
 }
 
-void   vtkFLUENTReader::RemoveExtraFaces(void)
+void   vtkFluentReader::RemoveExtraFaces(void)
 {
 	int* faces = new int[1000000];
 	int* badKids = new int[1000000];
@@ -1389,7 +1391,7 @@ delete [] faces;
 delete [] badKids;
 }
 
-void vtkFLUENTReader::ParseDataFile(void)
+void vtkFluentReader::ParseDataFile(void)
 {
 	int bufptr = 0;
 	while(bufptr < DataFileBufferLength){
@@ -1402,7 +1404,7 @@ void vtkFLUENTReader::ParseDataFile(void)
 	return;
 }
 
-void vtkFLUENTReader::InitializeVariableNames ( void )
+void vtkFluentReader::InitializeVariableNames ( void )
 {
    /*for(int i =0; i < 1500; i++)
    {
@@ -2137,7 +2139,7 @@ void vtkFLUENTReader::InitializeVariableNames ( void )
 	VariableNames[1331] = "TEMPERATURE_M2";
 }
 
-int vtkFLUENTReader::GetCaseIndex(int ix)
+int vtkFluentReader::GetCaseIndex(int ix)
 {
 	char b[5];
 	
@@ -2179,7 +2181,7 @@ int vtkFLUENTReader::GetCaseIndex(int ix)
 	}
 }
 
-int vtkFLUENTReader::ExecuteCaseTask(int task, int file_index)
+int vtkFluentReader::ExecuteCaseTask(int task, int file_index)
 {
 	int new_index = 0;
 
@@ -2376,7 +2378,7 @@ int vtkFLUENTReader::ExecuteCaseTask(int task, int file_index)
 
 }
 
-int vtkFLUENTReader::GetDataIndex(int ix)
+int vtkFluentReader::GetDataIndex(int ix)
 {
 	char b[5];
 	
@@ -2418,7 +2420,7 @@ int vtkFLUENTReader::GetDataIndex(int ix)
 	}
 }
 
-int vtkFLUENTReader::ExecuteDataTask(int task, int file_index)
+int vtkFluentReader::ExecuteDataTask(int task, int file_index)
 {
 	int new_index;
 	
@@ -2503,17 +2505,17 @@ int vtkFLUENTReader::ExecuteDataTask(int task, int file_index)
 }
 
 
-int vtkFLUENTReader::GetComment(int ix)
+int vtkFluentReader::GetComment(int ix)
 {
 	return GoToNextRightParen(ix);
 }
 
-int vtkFLUENTReader::GetHeader(int ix)
+int vtkFluentReader::GetHeader(int ix)
 {
 	return GoToNextRightParen(ix);
 }
 
-int vtkFLUENTReader::GetMachineConfiguration(int ix)
+int vtkFluentReader::GetMachineConfiguration(int ix)
 {
 	char buf[120];
 	int j = ix+1;	
@@ -2536,22 +2538,22 @@ int vtkFLUENTReader::GetMachineConfiguration(int ix)
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::GetVariablesASCII(int ix)
+int vtkFluentReader::GetVariablesASCII(int ix)
 {
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::GetCortexVariablesASCII(int ix)
+int vtkFluentReader::GetCortexVariablesASCII(int ix)
 {
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::GetDomainVariablesASCII(int ix)
+int vtkFluentReader::GetDomainVariablesASCII(int ix)
 {
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::GetCellsASCII(int ix)
+int vtkFluentReader::GetCellsASCII(int ix)
 {
 	char buf[120];
 	int j = ix+1;	
@@ -2585,7 +2587,7 @@ int vtkFLUENTReader::GetCellsASCII(int ix)
 	return GoToNextRightParen(j)+1;
 }
 
-int vtkFLUENTReader::GetFacesASCII(int ix)
+int vtkFluentReader::GetFacesASCII(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -2679,7 +2681,7 @@ int vtkFLUENTReader::GetFacesASCII(int ix)
 	return j;
 }
 
-int vtkFLUENTReader::GetNodesASCII(int ix)
+int vtkFluentReader::GetNodesASCII(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -2723,7 +2725,7 @@ int vtkFLUENTReader::GetNodesASCII(int ix)
 	
 }
 
-int vtkFLUENTReader::GetFaceParentsASCII(int ix)
+int vtkFluentReader::GetFaceParentsASCII(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -2762,7 +2764,7 @@ int vtkFLUENTReader::GetFaceParentsASCII(int ix)
 	return GoToNextRightParen(j)+1;
 }
 
-int vtkFLUENTReader::GetNCG1InformationASCII(int ix)
+int vtkFluentReader::GetNCG1InformationASCII(int ix)
 {
 
 	// Face Information
@@ -2801,7 +2803,7 @@ int vtkFLUENTReader::GetNCG1InformationASCII(int ix)
 
 	return GoToNextRightParen(j)+1;
 }
-int vtkFLUENTReader::GetNCG2InformationASCII(int ix)
+int vtkFluentReader::GetNCG2InformationASCII(int ix)
 {
 	// Node Information
 	char buf[120];
@@ -2846,22 +2848,22 @@ int vtkFLUENTReader::GetNCG2InformationASCII(int ix)
 	return j;
 }
 
-int vtkFLUENTReader::GetNodeFlagsASCII(int ix)
+int vtkFluentReader::GetNodeFlagsASCII(int ix)
 {
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::Command54(int ix)
+int vtkFluentReader::Command54(int ix)
 {
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::GetZoneSectionsASCII(int ix)
+int vtkFluentReader::GetZoneSectionsASCII(int ix)
 {
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::GetPeriodicShadowFacesASCII(int ix)
+int vtkFluentReader::GetPeriodicShadowFacesASCII(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -2898,17 +2900,17 @@ int vtkFLUENTReader::GetPeriodicShadowFacesASCII(int ix)
 	return j;
 }
 
-int vtkFLUENTReader::GetGridSizeASCII(int ix)
+int vtkFluentReader::GetGridSizeASCII(int ix)
 {
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::GetPartitionASCII(int ix)
+int vtkFluentReader::GetPartitionASCII(int ix)
 {
 	return GoToNextSectionASCII(ix);
 }
 
-int vtkFLUENTReader::GetCellTreeASCII(int ix)
+int vtkFluentReader::GetCellTreeASCII(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -2948,7 +2950,7 @@ int vtkFLUENTReader::GetCellTreeASCII(int ix)
 	return GoToNextSectionASCII(j);
 }
 
-int vtkFLUENTReader::GetFaceTreeASCII(int ix)
+int vtkFluentReader::GetFaceTreeASCII(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -2990,22 +2992,22 @@ int vtkFLUENTReader::GetFaceTreeASCII(int ix)
 
 //--------------------------------------------------------------------------------------
 
-int vtkFLUENTReader::GetVariablesSinglePrecision(int ix)
+int vtkFluentReader::GetVariablesSinglePrecision(int ix)
 {
 	return GoToNextSectionSinglePrecision( ix, "2037)");
 }
 
-int vtkFLUENTReader::GetCortexVariablesSinglePrecision(int ix)
+int vtkFluentReader::GetCortexVariablesSinglePrecision(int ix)
 {
 	return GoToNextSectionSinglePrecision( ix, "2038)");
 }
 
-int vtkFLUENTReader::GetDomainVariablesSinglePrecision(int ix)
+int vtkFluentReader::GetDomainVariablesSinglePrecision(int ix)
 {
 	return GoToNextSectionSinglePrecision( ix, "2064)");
 }
 
-int vtkFLUENTReader::GetCellsSinglePrecision(int ix)
+int vtkFluentReader::GetCellsSinglePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3039,7 +3041,7 @@ int vtkFLUENTReader::GetCellsSinglePrecision(int ix)
 	return GoToNextSectionSinglePrecision( j, "2012)");	
 }
 
-int vtkFLUENTReader::GetFacesSinglePrecision(int ix)
+int vtkFluentReader::GetFacesSinglePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3147,7 +3149,7 @@ int vtkFLUENTReader::GetFacesSinglePrecision(int ix)
 	return GoToNextSectionSinglePrecision( j, "2013)");
 }
 
-int vtkFLUENTReader::GetNodesSinglePrecision(int ix)
+int vtkFluentReader::GetNodesSinglePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3184,7 +3186,7 @@ int vtkFLUENTReader::GetNodesSinglePrecision(int ix)
 	return GoToNextSectionSinglePrecision( j, "2010)");
 }
 
-int vtkFLUENTReader::GetFaceParentsSinglePrecision(int ix)
+int vtkFluentReader::GetFaceParentsSinglePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3220,7 +3222,7 @@ int vtkFLUENTReader::GetFaceParentsSinglePrecision(int ix)
 	return GoToNextSectionSinglePrecision( j, "2061)");
 }
 
-int vtkFLUENTReader::GetNCG1InformationSinglePrecision(int ix)
+int vtkFluentReader::GetNCG1InformationSinglePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3253,7 +3255,7 @@ int vtkFLUENTReader::GetNCG1InformationSinglePrecision(int ix)
 
 	return GoToNextSectionSinglePrecision( j, "2062)");
 }
-int vtkFLUENTReader::GetNCG2InformationSinglePrecision(int ix)
+int vtkFluentReader::GetNCG2InformationSinglePrecision(int ix)
 {
 	// Node Information
 	char buf[120];
@@ -3298,17 +3300,17 @@ int vtkFLUENTReader::GetNCG2InformationSinglePrecision(int ix)
 	return GoToNextSectionSinglePrecision( j, "2063)");
 }
 
-int vtkFLUENTReader::GetNodeFlagsSinglePrecision(int ix)
+int vtkFluentReader::GetNodeFlagsSinglePrecision(int ix)
 {
 	return GoToNextSectionSinglePrecision( ix, "2041)");
 }
 
-int vtkFLUENTReader::GetZoneSectionsSinglePrecision(int ix)
+int vtkFluentReader::GetZoneSectionsSinglePrecision(int ix)
 {
 	return GoToNextSectionSinglePrecision( ix, "2039)");
 }
 
-int vtkFLUENTReader::GetPeriodicShadowFacesSinglePrecision(int ix)
+int vtkFluentReader::GetPeriodicShadowFacesSinglePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3342,17 +3344,17 @@ int vtkFLUENTReader::GetPeriodicShadowFacesSinglePrecision(int ix)
 	return GoToNextSectionSinglePrecision( j, "2018)");
 }
 
-int vtkFLUENTReader::GetGridSizeSinglePrecision(int ix)
+int vtkFluentReader::GetGridSizeSinglePrecision(int ix)
 {
 	return GoToNextSectionSinglePrecision( ix, "2033)");
 }
 
-int vtkFLUENTReader::GetPartitionSinglePrecision(int ix)
+int vtkFluentReader::GetPartitionSinglePrecision(int ix)
 {
 	return GoToNextSectionSinglePrecision( ix, "2040)");
 }
 
-int vtkFLUENTReader::GetCellTreeSinglePrecision(int ix)
+int vtkFluentReader::GetCellTreeSinglePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3392,7 +3394,7 @@ int vtkFLUENTReader::GetCellTreeSinglePrecision(int ix)
 	return GoToNextSectionSinglePrecision( j, "2058)");
 }
 
-int vtkFLUENTReader::GetFaceTreeSinglePrecision(int ix)
+int vtkFluentReader::GetFaceTreeSinglePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3433,22 +3435,22 @@ int vtkFLUENTReader::GetFaceTreeSinglePrecision(int ix)
 
 //---------------------------------------------------------------------------------------
 
-int vtkFLUENTReader::GetVariablesDoublePrecision(int ix)
+int vtkFluentReader::GetVariablesDoublePrecision(int ix)
 {
 	return GoToNextSectionDoublePrecision( ix, "3037)");
 }
 
-int vtkFLUENTReader::GetCortexVariablesDoublePrecision(int ix)
+int vtkFluentReader::GetCortexVariablesDoublePrecision(int ix)
 {
 	return GoToNextSectionDoublePrecision( ix, "3038)");
 }
 
-int vtkFLUENTReader::GetDomainVariablesDoublePrecision(int ix)
+int vtkFluentReader::GetDomainVariablesDoublePrecision(int ix)
 {
 	return GoToNextSectionDoublePrecision( ix, "3064)");
 }
 
-int vtkFLUENTReader::GetCellsDoublePrecision(int ix)
+int vtkFluentReader::GetCellsDoublePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3482,7 +3484,7 @@ int vtkFLUENTReader::GetCellsDoublePrecision(int ix)
 	return GoToNextSectionDoublePrecision( j, "3012)");	
 }
 
-int vtkFLUENTReader::GetFacesDoublePrecision(int ix)
+int vtkFluentReader::GetFacesDoublePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3590,7 +3592,7 @@ int vtkFLUENTReader::GetFacesDoublePrecision(int ix)
 	return GoToNextSectionDoublePrecision( j, "3013)");
 }
 
-int vtkFLUENTReader::GetNodesDoublePrecision(int ix)
+int vtkFluentReader::GetNodesDoublePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3628,7 +3630,7 @@ int vtkFLUENTReader::GetNodesDoublePrecision(int ix)
 	return GoToNextSectionSinglePrecision( j, "3010)");
 }
 
-int vtkFLUENTReader::GetFaceParentsDoublePrecision(int ix)
+int vtkFluentReader::GetFaceParentsDoublePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3664,7 +3666,7 @@ int vtkFLUENTReader::GetFaceParentsDoublePrecision(int ix)
 	return GoToNextSectionDoublePrecision( j, "3061)");
 }
 
-int vtkFLUENTReader::GetNCG1InformationDoublePrecision(int ix)
+int vtkFluentReader::GetNCG1InformationDoublePrecision(int ix)
 {
 	// Face Information
 	char buf[120];
@@ -3699,7 +3701,7 @@ int vtkFLUENTReader::GetNCG1InformationDoublePrecision(int ix)
 	return GoToNextSectionDoublePrecision( j, "3062)");
 }
 
-int vtkFLUENTReader::GetNCG2InformationDoublePrecision(int ix)
+int vtkFluentReader::GetNCG2InformationDoublePrecision(int ix)
 {
 	// Node Information
 	char buf[120];
@@ -3744,17 +3746,17 @@ int vtkFLUENTReader::GetNCG2InformationDoublePrecision(int ix)
 	return GoToNextSectionDoublePrecision( j, "3063)");
 }
 
-int vtkFLUENTReader::GetNodeFlagsDoublePrecision(int ix)
+int vtkFluentReader::GetNodeFlagsDoublePrecision(int ix)
 {
 	return GoToNextSectionDoublePrecision( ix, "3041)");
 }
 
-int vtkFLUENTReader::GetZoneSectionsDoublePrecision(int ix)
+int vtkFluentReader::GetZoneSectionsDoublePrecision(int ix)
 {
 	return GoToNextSectionDoublePrecision( ix, "3039)");
 }
 
-int vtkFLUENTReader::GetPeriodicShadowFacesDoublePrecision(int ix)
+int vtkFluentReader::GetPeriodicShadowFacesDoublePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3787,17 +3789,17 @@ int vtkFLUENTReader::GetPeriodicShadowFacesDoublePrecision(int ix)
 	return GoToNextSectionDoublePrecision( j, "3018)");
 }
 
-int vtkFLUENTReader::GetGridSizeDoublePrecision(int ix)
+int vtkFluentReader::GetGridSizeDoublePrecision(int ix)
 {
 	return GoToNextSectionDoublePrecision( ix, "3033)");
 }
 
-int vtkFLUENTReader::GetPartitionDoublePrecision(int ix)
+int vtkFluentReader::GetPartitionDoublePrecision(int ix)
 {
 	return GoToNextSectionDoublePrecision( ix, "3040)");
 }
 
-int vtkFLUENTReader::GetCellTreeDoublePrecision(int ix)
+int vtkFluentReader::GetCellTreeDoublePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3837,7 +3839,7 @@ int vtkFLUENTReader::GetCellTreeDoublePrecision(int ix)
 	return GoToNextSectionDoublePrecision( j, "3058)");
 }
 
-int vtkFLUENTReader::GetFaceTreeDoublePrecision(int ix)
+int vtkFluentReader::GetFaceTreeDoublePrecision(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -3876,7 +3878,7 @@ int vtkFLUENTReader::GetFaceTreeDoublePrecision(int ix)
 	return GoToNextSectionDoublePrecision( j, "3059)");
 }
 
-int vtkFLUENTReader::GetGridDimension(int ix)
+int vtkFluentReader::GetGridDimension(int ix)
 {
 	char b2[2];
 
@@ -3889,17 +3891,17 @@ int vtkFLUENTReader::GetGridDimension(int ix)
 }
 
 
-int vtkFLUENTReader::GetDataComment(int ix)
+int vtkFluentReader::GetDataComment(int ix)
 {
 	return GoToNextRightParenData(ix);
 }
 
-int vtkFLUENTReader::GetDataHeader(int ix)
+int vtkFluentReader::GetDataHeader(int ix)
 {
 	return GoToNextRightParenData(ix);
 }
 
-int vtkFLUENTReader::GetDataGridDimension(int ix)
+int vtkFluentReader::GetDataGridDimension(int ix)
 {
 	char b2[2];
 
@@ -3911,27 +3913,27 @@ int vtkFLUENTReader::GetDataGridDimension(int ix)
 	return GoToNextRightParenData(ix);
 }
 
-int vtkFLUENTReader::GetDataMachineConfiguration(int ix)
+int vtkFluentReader::GetDataMachineConfiguration(int ix)
 {
 	return GoToNextSectionASCIIData(ix);
 }
 
-int vtkFLUENTReader::GetDataGridSizeASCII(int ix)
+int vtkFluentReader::GetDataGridSizeASCII(int ix)
 {
 	return GoToNextSectionASCIIData(ix);
 }
 
-int vtkFLUENTReader::GetDataVariablesASCII(int ix)
+int vtkFluentReader::GetDataVariablesASCII(int ix)
 {
 	return GoToNextSectionASCIIData(ix);
 }
 
-int vtkFLUENTReader::GetUnknownASCII313(int ix)
+int vtkFluentReader::GetUnknownASCII313(int ix)
 {
 	return GoToNextSectionASCIIData(ix);
 }
 
-int vtkFLUENTReader::GoToNextRightParenData(int ix)
+int vtkFluentReader::GoToNextRightParenData(int ix)
 {
 	int i = ix;
 	while(DataFileBuffer[i] != ')' ){
@@ -3940,7 +3942,7 @@ int vtkFLUENTReader::GoToNextRightParenData(int ix)
 	return i;
 }
 
-int vtkFLUENTReader::GoToNextLeftParenData(int ix)
+int vtkFluentReader::GoToNextLeftParenData(int ix)
 {
 	int i = ix;
 	while(DataFileBuffer[i] != '(' ){
@@ -3949,7 +3951,7 @@ int vtkFLUENTReader::GoToNextLeftParenData(int ix)
 	return i;
 }
 
-int vtkFLUENTReader::GoToNextSectionASCIIData(int ix)
+int vtkFluentReader::GoToNextSectionASCIIData(int ix)
 {
 	int i = ix + 1;
 	int level = 0;
@@ -3966,7 +3968,7 @@ int vtkFLUENTReader::GoToNextSectionASCIIData(int ix)
 	return i;
 }
 
-int vtkFLUENTReader::GoToNextSectionSinglePrecisionData(int ix, char buf[])
+int vtkFluentReader::GoToNextSectionSinglePrecisionData(int ix, char buf[])
 {
 	int i = ix + 1;
 	while( !((DataFileBuffer[i] == buf[0]) && (DataFileBuffer[i+1] == buf[1]) && (DataFileBuffer[i+2] == buf[2]) && (DataFileBuffer[i+3] == buf[3]) && (DataFileBuffer[i+4] == buf[4]) )){
@@ -3975,7 +3977,7 @@ int vtkFLUENTReader::GoToNextSectionSinglePrecisionData(int ix, char buf[])
 	return i+4;
 }
 
-int vtkFLUENTReader::GoToNextSectionDoublePrecisionData(int ix, char buf[])
+int vtkFluentReader::GoToNextSectionDoublePrecisionData(int ix, char buf[])
 {
 	int i = ix + 1;
 	while( !((DataFileBuffer[i] == buf[0]) && (DataFileBuffer[i+1] == buf[1]) && (DataFileBuffer[i+2] == buf[2]) && (DataFileBuffer[i+3] == buf[3]) && (DataFileBuffer[i+4] == buf[4]) )){
@@ -3984,7 +3986,7 @@ int vtkFLUENTReader::GoToNextSectionDoublePrecisionData(int ix, char buf[])
 	return i+4;
 }
 
-int vtkFLUENTReader::GetDataASCII(int ix)
+int vtkFluentReader::GetDataASCII(int ix)
 {
 	char buf[120];
 	int j = ix + 1;	
@@ -4031,7 +4033,7 @@ int vtkFLUENTReader::GetDataASCII(int ix)
 }
 
 
-int vtkFLUENTReader::GetDataSinglePrecision(int ix)
+int vtkFluentReader::GetDataSinglePrecision(int ix)
 {
 
 	char buf[120];
@@ -4073,7 +4075,7 @@ int vtkFLUENTReader::GetDataSinglePrecision(int ix)
 	return GoToNextSectionSinglePrecisionData( j, "2300)");
 }
 
-int vtkFLUENTReader::GetDataDoublePrecision(int ix)
+int vtkFluentReader::GetDataDoublePrecision(int ix)
 {
 
 	char buf[120];
@@ -4117,52 +4119,52 @@ int vtkFLUENTReader::GetDataDoublePrecision(int ix)
 
 }
 
-int vtkFLUENTReader::GetUnknownSinglePrecision2301(int ix)
+int vtkFluentReader::GetUnknownSinglePrecision2301(int ix)
 {
 	return GoToNextSectionSinglePrecisionData( ix, "2301)");
 }
 
-int vtkFLUENTReader::GetUnknownSinglePrecision2302(int ix)
+int vtkFluentReader::GetUnknownSinglePrecision2302(int ix)
 {
 	return GoToNextSectionSinglePrecisionData( ix, "2302)");
 }
 
-int vtkFLUENTReader::GetUnknownSinglePrecision2313(int ix)
+int vtkFluentReader::GetUnknownSinglePrecision2313(int ix)
 {
 	return GoToNextSectionSinglePrecisionData( ix, "2313)");
 }
 
-int vtkFLUENTReader::GetUnknownDoublePrecision3301(int ix)
+int vtkFluentReader::GetUnknownDoublePrecision3301(int ix)
 {
 	return GoToNextSectionDoublePrecisionData( ix, "3301)");
 }
 
-int vtkFLUENTReader::GetUnknownDoublePrecision3302(int ix)
+int vtkFluentReader::GetUnknownDoublePrecision3302(int ix)
 {
 	return GoToNextSectionDoublePrecisionData( ix, "3302)");
 }
 
-int vtkFLUENTReader::GetUnknownDoublePrecision3313(int ix)
+int vtkFluentReader::GetUnknownDoublePrecision3313(int ix)
 {
 	return GoToNextSectionDoublePrecisionData( ix, "3313)");
 }
 
-int vtkFLUENTReader::GetUnknownASCII301(int ix)
+int vtkFluentReader::GetUnknownASCII301(int ix)
 {
 	return GoToNextSectionASCIIData(ix);
 }
 
-int vtkFLUENTReader::GetUnknownASCII302(int ix)
+int vtkFluentReader::GetUnknownASCII302(int ix)
 {
 	return GoToNextSectionASCIIData(ix);
 }
 
-int vtkFLUENTReader::GetUnknownASCII303(int ix)
+int vtkFluentReader::GetUnknownASCII303(int ix)
 {
 	return GoToNextSectionASCIIData(ix);
 }
 
-int vtkFLUENTReader::GetDataUnknownASCII(int ix)
+int vtkFluentReader::GetDataUnknownASCII(int ix)
 {
 	int j = ix + 1;	
 
@@ -4173,7 +4175,7 @@ int vtkFLUENTReader::GetDataUnknownASCII(int ix)
 	return j;
 }
 
-void vtkFLUENTReader::GetStringToNextRightParenData(int ix, char buf[] )
+void vtkFluentReader::GetStringToNextRightParenData(int ix, char buf[] )
 {
 	// Copy contents between ( ) into buffer
 	int j = ix;
@@ -4186,7 +4188,7 @@ void vtkFLUENTReader::GetStringToNextRightParenData(int ix, char buf[] )
 	buf[k] = 0;
 }
 
-int vtkFLUENTReader::IsCellZoneId(int zi)
+int vtkFluentReader::IsCellZoneId(int zi)
 {
 	int flag = 0;
 	for(int i=0;i<NumberOfCellZones;i++){
@@ -4197,7 +4199,7 @@ int vtkFLUENTReader::IsCellZoneId(int zi)
 	return flag;
 }
 
-bool vtkFLUENTReader::IsNewVariable(int ssid)
+bool vtkFluentReader::IsNewVariable(int ssid)
 {
 	//int flag = 1;
 	for(int i=0;i<NumberOfVariables;i++){
@@ -4208,7 +4210,7 @@ bool vtkFLUENTReader::IsNewVariable(int ssid)
 	return true;
 }
 
-int vtkFLUENTReader::GetVariableIndex(int ssid)
+int vtkFluentReader::GetVariableIndex(int ssid)
 {
 	int index = 0;
 	for(int i=0;i<NumberOfVariables;i++){
@@ -4219,7 +4221,7 @@ int vtkFLUENTReader::GetVariableIndex(int ssid)
 	return index;
 }
 
-int vtkFLUENTReader::GetBinaryIntegerData(int ix)
+int vtkFluentReader::GetBinaryIntegerData(int ix)
 {
 	union mix_i{
 		int i;
@@ -4239,7 +4241,7 @@ int vtkFLUENTReader::GetBinaryIntegerData(int ix)
 	return mi.i;
 }
 
-float vtkFLUENTReader::GetBinaryFloatData(int ix)
+float vtkFluentReader::GetBinaryFloatData(int ix)
 {
 	union mix_i{
 		float i;
@@ -4258,7 +4260,7 @@ float vtkFLUENTReader::GetBinaryFloatData(int ix)
 	return mi.i;
 }
 
-double vtkFLUENTReader::GetBinaryDoubleData(int ix)
+double vtkFluentReader::GetBinaryDoubleData(int ix)
 {
 	union mix_i{
 		double i;
@@ -4278,7 +4280,7 @@ double vtkFLUENTReader::GetBinaryDoubleData(int ix)
 	return mi.i;
 }
 
-int vtkFLUENTReader::IsASCIICharacterHexDigit(int ix)
+int vtkFluentReader::IsASCIICharacterHexDigit(int ix)
 {
 	if( (CaseFileBuffer[ix] >= 0x30) && (CaseFileBuffer[ix] <= 0x39)){
 		return 1;
@@ -4291,7 +4293,7 @@ int vtkFLUENTReader::IsASCIICharacterHexDigit(int ix)
 	}
 }
 
-int vtkFLUENTReader::GoToNextASCIIHexDigit(int ix)
+int vtkFluentReader::GoToNextASCIIHexDigit(int ix)
 {
 	int i = ix;
 	while(! IsASCIICharacterHexDigit(i)){
@@ -4300,7 +4302,7 @@ int vtkFLUENTReader::GoToNextASCIIHexDigit(int ix)
 	return i;
 }
 
-int vtkFLUENTReader::GoToNextRightParen(int ix)
+int vtkFluentReader::GoToNextRightParen(int ix)
 {
 	int i = ix;
 	while(CaseFileBuffer[i] != ')' ){
@@ -4309,7 +4311,7 @@ int vtkFLUENTReader::GoToNextRightParen(int ix)
 	return i;
 }
 
-int vtkFLUENTReader::GoToNextLeftParen(int ix)
+int vtkFluentReader::GoToNextLeftParen(int ix)
 {
 	int i = ix;
 	while(CaseFileBuffer[i] != '(' ){
@@ -4318,7 +4320,7 @@ int vtkFLUENTReader::GoToNextLeftParen(int ix)
 	return i;
 }
 
-int vtkFLUENTReader::GoToNextEOL(int ix)
+int vtkFluentReader::GoToNextEOL(int ix)
 {
 	int i = ix;
 	while(CaseFileBuffer[i] != 0x0a ){
@@ -4327,7 +4329,7 @@ int vtkFLUENTReader::GoToNextEOL(int ix)
 	return i;
 }
 
-int vtkFLUENTReader::GoToNextSectionASCII(int ix)
+int vtkFluentReader::GoToNextSectionASCII(int ix)
 {
 	int i = ix + 1;
 	int level = 0;
@@ -4344,7 +4346,7 @@ int vtkFLUENTReader::GoToNextSectionASCII(int ix)
 	return i;
 }
 
-void vtkFLUENTReader::GetStringToNextRightParen(int ix, char buf[] )
+void vtkFluentReader::GetStringToNextRightParen(int ix, char buf[] )
 {
 	// Copy contents between ( ) into buffer
 	int j = ix;
@@ -4357,7 +4359,7 @@ void vtkFLUENTReader::GetStringToNextRightParen(int ix, char buf[] )
 	buf[k] = 0;
 }
 
-void vtkFLUENTReader::GetStringToNextRightParenOrEOL(int ix, char buf[] )
+void vtkFluentReader::GetStringToNextRightParenOrEOL(int ix, char buf[] )
 {
 	// Copy contents between ( ) into buffer
 	int j = ix;
@@ -4370,7 +4372,7 @@ void vtkFLUENTReader::GetStringToNextRightParenOrEOL(int ix, char buf[] )
 	buf[k] = 0;
 }
 
-void vtkFLUENTReader::GetMixedCellTypes(int ix, int fi, int li)
+void vtkFluentReader::GetMixedCellTypes(int ix, int fi, int li)
 {
 	int j = ix;
 
@@ -4388,7 +4390,7 @@ void vtkFLUENTReader::GetMixedCellTypes(int ix, int fi, int li)
 	}
 }
 
-int vtkFLUENTReader::GoToNextSectionSinglePrecision(int ix, char buf[])
+int vtkFluentReader::GoToNextSectionSinglePrecision(int ix, char buf[])
 {
 	int i = ix + 1;
 	while( !((CaseFileBuffer[i] == buf[0]) && (CaseFileBuffer[i+1] == buf[1]) && (CaseFileBuffer[i+2] == buf[2]) && (CaseFileBuffer[i+3] == buf[3]) && (CaseFileBuffer[i+4] == buf[4]) )){
@@ -4397,7 +4399,7 @@ int vtkFLUENTReader::GoToNextSectionSinglePrecision(int ix, char buf[])
 	return i+4;
 }
 
-int vtkFLUENTReader::GoToNextSectionDoublePrecision(int ix, char buf[])
+int vtkFluentReader::GoToNextSectionDoublePrecision(int ix, char buf[])
 {
 	int i = ix + 1;
 	while( !((CaseFileBuffer[i] == buf[0]) && (CaseFileBuffer[i+1] == buf[1]) && (CaseFileBuffer[i+2] == buf[2]) && (CaseFileBuffer[i+3] == buf[3]) && (CaseFileBuffer[i+4] == buf[4]) )){
@@ -4406,7 +4408,7 @@ int vtkFLUENTReader::GoToNextSectionDoublePrecision(int ix, char buf[])
 	return i+4;
 }
 
-int vtkFLUENTReader::GetBinaryInteger(int ix)
+int vtkFluentReader::GetBinaryInteger(int ix)
 {
 	union mix_i{
 		int i;
@@ -4425,7 +4427,7 @@ int vtkFLUENTReader::GetBinaryInteger(int ix)
 	return mi.i;
 }
 
-float vtkFLUENTReader::GetBinaryFloat(int ix)
+float vtkFluentReader::GetBinaryFloat(int ix)
 {
 	union mix_i{
 		float i;
@@ -4444,7 +4446,7 @@ float vtkFLUENTReader::GetBinaryFloat(int ix)
 	return mi.i;
 }
 
-double vtkFLUENTReader::GetBinaryDouble(int ix)
+double vtkFluentReader::GetBinaryDouble(int ix)
 {
 	union mix_i{
 		double i;
@@ -4464,7 +4466,7 @@ double vtkFLUENTReader::GetBinaryDouble(int ix)
 	return mi.i;
 }
 
-int vtkFLUENTReader::GetAsciiInteger(int ix)
+int vtkFluentReader::GetAsciiInteger(int ix)
 {
 	int j = ix;
 	int first = GoToNextASCIIHexDigit(j);
@@ -4488,7 +4490,7 @@ int vtkFLUENTReader::GetAsciiInteger(int ix)
 	
 }
 
-int vtkFLUENTReader::GoPastAsciiInteger(int ix)
+int vtkFluentReader::GoPastAsciiInteger(int ix)
 {
 
 	int j = ix;
@@ -4500,7 +4502,7 @@ int vtkFLUENTReader::GoPastAsciiInteger(int ix)
 }
 
 
-int vtkFLUENTReader::GoToNextEOLData(int ix)
+int vtkFluentReader::GoToNextEOLData(int ix)
 {
 	int i = ix;
 	while(DataFileBuffer[i] != 0x0a ){
@@ -4509,7 +4511,7 @@ int vtkFLUENTReader::GoToNextEOLData(int ix)
 	return i;
 }
 
-void vtkFLUENTReader::GetStringToNextRightParenOrEOLData(int ix, char buf[] )
+void vtkFluentReader::GetStringToNextRightParenOrEOLData(int ix, char buf[] )
 {
 	// Copy contents between ( ) into buffer
 	int j = ix;
@@ -4522,7 +4524,7 @@ void vtkFLUENTReader::GetStringToNextRightParenOrEOLData(int ix, char buf[] )
 	buf[k] = 0;
 }
 
-void vtkFLUENTReader::CreateVTKObjects(void)
+void vtkFluentReader::CreateVTKObjects(void)
 {
 	this->NumberOfCellFields = 0;
 	this->NumberOfCellComponents = 0;
@@ -4625,7 +4627,7 @@ void vtkFLUENTReader::CreateVTKObjects(void)
 }
 
 
-void vtkFLUENTReader::DeleteVTKObjects(void)
+void vtkFluentReader::DeleteVTKObjects(void)
 {
 	delete [] CaseFileBuffer;
 	delete [] DataFileBuffer;
