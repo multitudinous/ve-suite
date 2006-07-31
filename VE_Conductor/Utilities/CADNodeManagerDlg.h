@@ -152,6 +152,10 @@ public:
    ///Make sure the tree is updated properly
    void _ensureTree();
 
+   ///Expand a node in the wxTreeCtrl
+   ///\param nodeID The node to expand
+   void _expandNode(wxTreeItemId nodeID);
+
    ///Toggle a node on/off.
    ///\param event The command event.
    void _toggleNode(wxCommandEvent& event);

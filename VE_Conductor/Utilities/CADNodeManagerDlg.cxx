@@ -92,28 +92,10 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
    _quitButton = 0;
    _saveButton = 0;
 
-
-
-   /*  new CADTreeBuilder(_rootNode,TREE_ID,this);
-   _cadTreeBuilder->Traverse();
-   _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
-*/
-
- /*  _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetRootItem()));
-   _activeCADNode = _rootNode;
-   */_commandName = std::string("CAD");
+   _commandName = std::string("CAD");
    SetRootCADNode(node);
    _buildDialog();
 }
-///////////////////////////////////
-/*int CADNodeManagerDlg::ShowModal()
-{
-   if(_rootNode)
-   {
-   }
-
-   return wxDialog::ShowModal();
-}*/
 /////////////////////////////////////////
 CADNodeManagerDlg::~CADNodeManagerDlg()
 {
@@ -184,9 +166,24 @@ void CADNodeManagerDlg::_ensureTree()
    }
    _cadTreeBuilder->Traverse();
    _geometryTree = _cadTreeBuilder->GetWXTreeCtrl();
-
+   _expandNode(_geometryTree->GetRootItem());
    _activeTreeNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetRootItem()));
    _activeCADNode = _rootNode;
+}
+////////////////////////////////////////////////////////
+void CADNodeManagerDlg::_expandNode( wxTreeItemId node )
+{
+    if ( node != _geometryTree->GetRootItem() )
+        _geometryTree->Expand( node );
+
+    wxTreeItemIdValue cookie;
+    wxTreeItemId child = _geometryTree->GetFirstChild(node, cookie);
+
+    while ( child.IsOk() )
+    {
+        _expandNode( child );
+        child = _geometryTree->GetNextChild(node, cookie);
+    }
 }
 ///////////////////////////////////////
 void CADNodeManagerDlg::_buildDialog()
@@ -461,6 +458,7 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
          SendVEGNodesToXplorer( fileNamesVector.Item( i ) );
       }
    }
+   _expandNode(_activeTreeNode->GetId());
 }
 ////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
@@ -551,6 +549,7 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
          SendNewNodesToXplorer( fileNamesVector.Item( i ) );
       }
    }
+   _expandNode(_activeTreeNode->GetId());
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
@@ -576,7 +575,6 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
 
    _geometryTree->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str()),
                                              0,1,new CADTreeBuilder::TreeNodeData(newCADPart));
-
    _commandName = std::string("CAD_ADD_NODE");
 
    newCADPart->SetParent(_activeCADNode->GetID());
@@ -712,6 +710,7 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
        
        dynamic_cast<CADAssembly*>(parentCADNode)->RemoveChild(_activeCADNode->GetID());
        _geometryTree->Delete(_activeTreeNode->GetId()); 
+	   _ensureTree();
     }
 }
 #ifndef STAND_ALONE
