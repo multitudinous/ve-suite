@@ -190,7 +190,7 @@ Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags
 Source: {#COINHOME}\bin\coin2d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler2.0.1; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#OSGHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#OSGHOME}\..\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
 Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
 Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion recursesubdirs; Components: depsbuildenv
 Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion recursesubdirs; Components: depsbuildenv

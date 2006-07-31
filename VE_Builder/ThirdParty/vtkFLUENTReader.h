@@ -11,10 +11,10 @@
      PURPOSE.  See the above copyright notice for more information.
 
 =========================================================================*/
-// .NAME vtkFluentReader - reads a dataset in Fluent file format
+// .NAME vtkFLUENTReader - reads a dataset in FLUENT file format
 // .SECTION Description
-// vtkFluentReader creates an unstructured grid dataset. It reads .cas and
-// .dat files stored in Fluent native format.
+// vtkFLUENTReader creates an unstructured grid dataset. It reads .cas and
+// .dat files stored in FLUENT native format.
 //
 // .SECTION Thanks
 // Thanks to Brian W. Dotson (Department of Energy, National Energy 
@@ -25,8 +25,8 @@
 // .SECTION See Also
 // vtkGAMBITReader
 
-#ifndef __vtkFluentReader_h
-#define __vtkFluentReader_h
+#ifndef __vtkFLUENTReader_h
+#define __vtkFLUENTReader_h
 
 #include "vtkUnstructuredGridAlgorithm.h"
 
@@ -46,11 +46,11 @@ class vtkIdTypeArray;
 class vtkDataArraySelection;
 #include <map>
 
-class VTK_IO_EXPORT vtkFluentReader : public vtkUnstructuredGridAlgorithm
+class VTK_IO_EXPORT vtkFLUENTReader : public vtkUnstructuredGridAlgorithm
 {
 public:
-	static vtkFluentReader *New();
-	vtkTypeRevisionMacro(vtkFluentReader,vtkUnstructuredGridAlgorithm);
+	static vtkFLUENTReader *New();
+	vtkTypeRevisionMacro(vtkFLUENTReader,vtkUnstructuredGridAlgorithm);
 	void PrintSelf(ostream& os, vtkIndent indent);
 	vtkSetStringMacro(FileName);
 	vtkGetStringMacro(FileName);
@@ -201,8 +201,8 @@ public:
 	void GetStringToNextRightParenOrEOLData(int ix, char buf[] );
 
 protected:
-	vtkFluentReader();
-	~vtkFluentReader();
+	vtkFLUENTReader();
+	~vtkFLUENTReader();
 	int RequestInformation(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 	int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 	int BinaryFile;
@@ -316,8 +316,8 @@ private:
    std::map<int,std::string> VariableNames;
 	vtkUnstructuredGrid *mesh;
 
-	vtkFluentReader(const vtkFluentReader&);  // Not implemented.
-	void operator=(const vtkFluentReader&);  // Not implemented.
+	vtkFLUENTReader(const vtkFLUENTReader&);  // Not implemented.
+	void operator=(const vtkFLUENTReader&);  // Not implemented.
 };
 
 #endif
