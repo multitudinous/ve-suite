@@ -79,7 +79,7 @@ using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_BUTTON(ADD_ANIMATION,CADNodePropertiesDlg::_addAnimation)
    EVT_BUTTON(ADD_ATTRIBUTE,CADNodePropertiesDlg::_addAttribute)
-   EVT_BUTTON(REMOVE_ATTRIBUTE,CADNodePropertiesDlg::_removeAttribute)
+   EVT_BUTTON(RESTORE_DEFAULT_ATTRIBUTE,CADNodePropertiesDlg::_restoreDefaultAttribute)
    EVT_SPINCTRL(TRANSFORM_PANEL_ID,CADNodePropertiesDlg::_updateTransform)
    EVT_COMBOBOX(ATTRIBUTE_TYPE,CADNodePropertiesDlg::_updateAttributeType)
    EVT_LIST_ITEM_SELECTED(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
@@ -122,6 +122,7 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    _editAttributeButton = 0;
    
    _addAnimationButton = 0;
+   _restoreDefaultAttributeButton = 0;
    //_associateWithDataCheck = 0;
    _nShaders = 0;
    _nMaterials = 0;
@@ -344,6 +345,9 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    
    _removeAttributeButton = new wxButton(_attributePanel, REMOVE_ATTRIBUTE,wxString("Remove..."));
    attributeTypeSizer->Add(_removeAttributeButton,0,wxALIGN_CENTER);
+
+   _restoreDefaultAttributeButton = new wxButton(_attributePanel, RESTORE_DEFAULT_ATTRIBUTE,wxString("Restore Defaults"));
+   attributeTypeSizer->Add(_restoreDefaultAttributeButton ,0,wxALIGN_CENTER);
 
    //_editAttributeButton = new wxButton(_attributePanel, EDIT_ATTRIBUTE,wxString("Edit..."));
    //attributeTypeSizer->Add(_editAttributeButton,0,wxALIGN_CENTER);
@@ -623,6 +627,35 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxListEvent& event)
 
       _sendCommandsToXplorer();
 
+   }
+}
+//////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_restoreDefaultAttribute(wxCommandEvent& event)
+{
+   if(_cadNode)
+   {
+      ClearInstructions();
+      _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
+
+      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      nodeID->SetDataType("UNSIGNED INT");
+      nodeID->SetDataName(std::string("Node ID"));
+      nodeID->SetDataValue(_cadNode->GetID());
+      _instructions.push_back(nodeID);
+
+      VE_XML::DataValuePair* activeAttribute = new VE_XML::DataValuePair();
+      activeAttribute->SetDataType("STRING");
+      activeAttribute->SetData("Active Attribute","Default Attribute");
+      _instructions.push_back(activeAttribute);
+
+      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      nodeType->SetDataType("STRING");
+      nodeType->SetDataName(std::string("Node Type"));
+      nodeType->SetDataString(_cadNode->GetNodeType());
+      _instructions.push_back(nodeType);
+
+      _sendCommandsToXplorer();
+      _attributeSelection->SetA
    }
 }
 //////////////////////////////////////////////////////////////////

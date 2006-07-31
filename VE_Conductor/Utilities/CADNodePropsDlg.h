@@ -79,6 +79,7 @@ public:
       TRANSFORM_PANEL_ID,///<The transform panel ID.
       EDIT_ATTRIBUTE,///<The edit attribute ID.
       REMOVE_ATTRIBUTE,///<The remove attribute ID.
+      RESTORE_DEFAULT_ATTRIBUTE,///<The restore attribute ID.
       ADD_ATTRIBUTE,///<The add attribute button ID.
       ACTIVE_ANIMATION,///<The active attribute ID.
       ANIMATION_PANEL_ID,///<The animation panel ID.
@@ -160,6 +161,10 @@ protected:
    ///\param event The wxCommand event.
    void _removeAttribute(wxCommandEvent& event);
 
+   ///Remove an attribute from the node.
+   ///\param event The wxCommand event.
+   void _restoreDefaultAttribute(wxCommandEvent& event);
+
    ///Show the color selector dialog
    ///\param event wxCommand event
    void _showColorDialog(wxCommandEvent& event);
@@ -239,6 +244,7 @@ protected:
    wxListCtrl* _attributeSelection;///<The box listing the available attributes.
    wxButton* _addAttributeButton;///<The button for adding attributes.
    wxButton* _removeAttributeButton;///<The button for adding attributes.
+   wxButton* _restoreDefaultAttributeButton;///The button to restore default attributes.
    wxButton* _editAttributeButton;///<The button for removing attributes.
    wxArrayString _availableShaders;///<The shader names.
    wxArrayString _availableMaterials;///<The material names.
