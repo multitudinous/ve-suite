@@ -46,6 +46,7 @@ namespace VE_SceneGraph
 {
    class cfdDCS;
    class cfdGroup;
+   class cfdSwitch;
 }
 
 #ifdef _PERFORMER
@@ -69,6 +70,10 @@ public:
    cfdGroup* GetRootNode( void );
    cfdDCS*   GetWorldDCS( void );
 
+   ///Switch the logo on and off
+   ///\param trueFalse Turn the logo on and off.
+   void ViewLogo(bool trueFalse);
+
 private:
    // Required so that vpr::Singleton can instantiate this class.
    //friend class vpr::Singleton< cfdPfSceneManagement >;
@@ -80,12 +85,19 @@ private:
 
    //std::string    param;
    std::string _param;
-   cfdGroup* rootNode;  
+   cfdGroup* rootNode;
+   cfdDCS* _logoNode;
+   cfdSwitch* _logoSwitch;///<Node to switch between the logo and the worldDCS
    cfdDCS* worldDCS;
 #ifdef _PERFORMER
    pfLightModel*  sunModel;
    pfLightSource* sun;
    pfLightSource* lit;
+#endif
+protected:
+   ///create the model for the logo.
+#ifdef _OSG
+   void _createLogo();
 #endif
 };
 }

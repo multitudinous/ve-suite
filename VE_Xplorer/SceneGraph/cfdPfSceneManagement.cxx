@@ -31,7 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-
+#include "VE_Xplorer/SceneGraph/Text.h"
+#include "VE_Xplorer/SceneGraph/Triangles.h"
 /// Performer libraries
 #ifdef _PERFORMER
 #include <Performer/pf/pfLightSource.h>
@@ -41,9 +42,12 @@
 #elif _OSG
 #include <osg/Group>
 #include <osg/Node>
+#include <osgDB/Registry>
+#include <osgDB/ReaderWriter>
 #endif
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 
 #ifndef WIN32
 #ifdef _PERFORMER
@@ -58,6 +62,9 @@
 
 
 #include <iostream>
+#include <string>
+#include <istream>
+#include <sstream>
 
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
@@ -69,18 +76,19 @@ cfdPfSceneManagement::cfdPfSceneManagement( void )
    this->_param.erase();// = 0;
    this->rootNode = 0;
    this->worldDCS = 0;
+   _logoSwitch = 0;
+   _logoNode = 0;
 #ifdef _PERFORMER
    this->sunModel = 0;
    this->sun = 0;
    this->lit = 0;
 #endif
 }
-
+//////////////////////////////////////////////////////////
 void cfdPfSceneManagement::Initialize( std::string param )
 {
    _param = param;
 }
-
 ///////////////////////////////////////////////////
 void cfdPfSceneManagement::CleanUp( void )
 {
@@ -101,6 +109,10 @@ void cfdPfSceneManagement::InitScene( void )
    // Establish Iris Performer Scenegraph.
    //
    std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
+   
+   //create the switch for our logo
+   _createLogo();
+
    // Setup performer pipeline
 #ifdef _PERFORMER
    this->sunModel = new pfLightModel();
@@ -123,8 +135,11 @@ void cfdPfSceneManagement::InitScene( void )
    this->sun->setVal(PFLS_INTENSITY, 1.0);
    this->sun->on();
 #endif
-
-   this->rootNode->AddChild( this->worldDCS );
+   _logoSwitch->AddChild(worldDCS);
+   _logoSwitch->AddChild(_logoNode);
+   
+   rootNode->AddChild(_logoSwitch);
+   //this->rootNode->AddChild( this->worldDCS );
 #ifdef _PERFORMER
    ((pfGroup*)(this->rootNode->GetRawNode()))->addChild( this->sun );
 #endif
@@ -139,3 +154,33 @@ cfdDCS* cfdPfSceneManagement::GetWorldDCS( void )
 {
    return this->worldDCS;
 }
+///////////////////////////////////////////////////
+void cfdPfSceneManagement::ViewLogo(bool trueFalse)
+{
+   if(_logoSwitch)
+   {
+      _logoSwitch->SetVal((trueFalse)?1:0);
+   }
+}
+////////////////////////////////////////
+void cfdPfSceneManagement::_createLogo()
+{
+#ifdef _OSG
+   if(!_logoSwitch)
+   {
+      _logoSwitch = new VE_SceneGraph::cfdSwitch();   
+   }
+   if(!_logoNode)
+   {
+      _logoNode = new cfdDCS();
+      std::istringstream textNodeStream(GetVESuite_Text());
+      dynamic_cast<osg::Group*>(_logoNode->GetRawNode())->addChild(osgDB::Registry::instance()->getReaderWriterForExtension("osg")->readNode(textNodeStream).getNode());
+
+      std::istringstream triangleNodeStream(GetVESuite_Triangles());
+      dynamic_cast<osg::Group*>(_logoNode->GetRawNode())->addChild(osgDB::Registry::instance()->getReaderWriterForExtension("osg")->readNode(triangleNodeStream).getNode());
+   }
+
+#elif _PERFORMER
+#endif
+}
+

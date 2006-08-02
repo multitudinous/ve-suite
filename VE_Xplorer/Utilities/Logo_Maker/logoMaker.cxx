@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <string>
 
 void StripCharacters( std::string& data, std::string character );
 
@@ -32,7 +33,7 @@ int main( int argc, char* argv[] )
          << std::endl
          << "#include <string>" << std::endl
          << std::endl
-         << "std::istream GetVESuite_" << argv[ 1 ] << "( void )" << std::endl
+         << "std::string GetVESuite_" << argv[ 1 ] << "( void )" << std::endl
          << "{" << std::endl
          << "  std::string osgData;" << std::endl;
  

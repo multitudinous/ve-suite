@@ -335,6 +335,9 @@ void cfdApp::initScene( void )
    // define the rootNode, worldDCS, and lighting
    //VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
    VE_SceneGraph::cfdPfSceneManagement::instance()->InitScene();
+#ifdef _OSG
+   VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(true);
+#endif
 
    // modelHandler stores the arrow and holds all data and geometry
    //cfdModelHandler::instance()->Initialize( this->filein_name );

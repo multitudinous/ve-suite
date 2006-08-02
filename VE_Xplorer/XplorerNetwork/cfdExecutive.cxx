@@ -382,6 +382,7 @@ void cfdExecutive::PreFrameUpdate( void )
       {
          // Get Network and parse it
          GetEverything();
+         VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(false);
       }
 
       // store the statusString in order to perform multiple operations on it...

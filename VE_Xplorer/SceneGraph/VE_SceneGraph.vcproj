@@ -562,6 +562,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Triangles.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\vtkActorToOSG.cpp"
 				>
 			</File>
@@ -637,6 +641,14 @@
 			</File>
 			<File
 				RelativePath=".\Switch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Text.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Triangles.h"
 				>
 			</File>
 			<File
