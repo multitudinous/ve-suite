@@ -562,6 +562,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Text.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\Triangles.cxx"
 				>
 			</File>
