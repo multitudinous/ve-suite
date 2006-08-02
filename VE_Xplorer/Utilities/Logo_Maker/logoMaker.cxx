@@ -1,8 +1,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "Triangles.h"
-
 void StripCharacters( std::string& data, std::string character );
 
 int main( int argc, char* argv[] )
@@ -15,6 +13,13 @@ int main( int argc, char* argv[] )
    }
    std::string filename = std::string( argv[ 1 ] ) + std::string( ".osg" );
    std::ifstream osgFile( filename.c_str() );
+
+   if ( !osgFile.good() )
+   {
+      std::cerr << filename << " could not be opened." << std::endl;
+      return 1;
+   }
+
    char lineData[ 1024 ];
 
    std::string outputFilename;
