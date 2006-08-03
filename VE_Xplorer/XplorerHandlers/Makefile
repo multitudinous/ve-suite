@@ -68,8 +68,6 @@ SRCS=\
    cfdDigitalAnalogGauge.cxx \
    cfdDisplaySettings.cxx \
    cfdEnvironmentHandler.cxx \
-   cfdFILE.cxx \
-   cfdFileInfo.cxx \
    cfdGlobalBase.cxx \
    cfdGraphicsObject.cxx \
    cfdImage.cxx \

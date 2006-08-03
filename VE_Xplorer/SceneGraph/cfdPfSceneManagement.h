@@ -47,8 +47,8 @@ namespace VE_SceneGraph
    class cfdDCS;
    class cfdGroup;
    class cfdSwitch;
+   class cfdFILE;
 }
-
 #ifdef _PERFORMER
 class pfLightModel;
 class pfLightSource;
@@ -89,6 +89,8 @@ private:
    cfdDCS* _logoNode;
    cfdSwitch* _logoSwitch;///<Node to switch between the logo and the worldDCS
    cfdDCS* worldDCS;
+   VE_SceneGraph::cfdFILE* _movingPyramidsAssembly;///<Logo Animated pyramids
+   VE_SceneGraph::cfdFILE* _textPart;///<Logo Text
 #ifdef _PERFORMER
    pfLightModel*  sunModel;
    pfLightSource* sun;

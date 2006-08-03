@@ -37,7 +37,7 @@
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdClone.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
 #include "VE_Xplorer/SceneGraph/cfdClone.h"
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
@@ -114,7 +114,7 @@ cfdModel::~cfdModel()
    vprDEBUG(vesDBG,2) << "cfdModel destructor"
                           << std::endl << vprDEBUG_FLUSH;
 
-   for ( std::map<unsigned int,VE_Xplorer::cfdFILE*>::iterator itr = _partList.begin();
+   for ( std::map<unsigned int,VE_SceneGraph::cfdFILE*>::iterator itr = _partList.begin();
                                        itr != _partList.end(); itr++ )
    {
       delete itr->second;
@@ -852,7 +852,7 @@ void cfdModel::CreatePart(std::string fileName,
                        unsigned int partID,
                        unsigned int parentID)
 {
-   _partList[partID] = new VE_Xplorer::cfdFILE(fileName,_assemblyList[parentID]);
+   _partList[partID] = new VE_SceneGraph::cfdFILE(fileName,_assemblyList[parentID]);
 }
 ////////////////////////////////////////////////////////////////
 void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
@@ -1114,7 +1114,7 @@ void cfdModel::UpdateMaterialComponent(unsigned int nodeID, std::string attribut
 #endif
 }
 ///////////////////////////////////////////////////////////
-VE_Xplorer::cfdFILE* cfdModel::GetPart(unsigned int partID)
+VE_SceneGraph::cfdFILE* cfdModel::GetPart(unsigned int partID)
 {
    return _partList[partID];
 }
@@ -1131,7 +1131,7 @@ VE_SceneGraph::cfdClone* cfdModel::GetClone(unsigned int cloneID)
 //////////////////////////////////////////////
 bool cfdModel::PartExists(unsigned int partID)
 {
-   std::map<unsigned int,VE_Xplorer::cfdFILE*>::iterator foundPart;
+   std::map<unsigned int,VE_SceneGraph::cfdFILE*>::iterator foundPart;
    foundPart = _partList.find(partID);
 
    if(foundPart != _partList.end())

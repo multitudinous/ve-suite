@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdGeomDataSet.h"
 
-#include "VE_Xplorer/XplorerHandlers/cfdFileInfo.h"  
+#include "VE_Xplorer/SceneGraph/cfdFILEInfo.h"  
 
 #include <cassert>
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"

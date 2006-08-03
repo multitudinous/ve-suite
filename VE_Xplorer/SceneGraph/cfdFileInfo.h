@@ -29,19 +29,35 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/cfdFileInfo.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#ifndef CFD_FILEINFO_H
+#define CFD_FILEINFO_H
 
-using namespace VE_Xplorer;
-
-fileInfo::fileInfo( )
+//#include <Performer/pf/pfDCS.h>
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_SceneGraph
 {
+   class cfdDCS;
 }
 
-fileInfo::~fileInfo( )
+namespace VE_SceneGraph
 {
-   vprDEBUG(vesDBG, 2) << "Deleting fileInfo"
-                           << std::endl << vprDEBUG_FLUSH;
-}
+   class VE_SCENEGRAPH_EXPORTS fileInfo
+   {
+      public:
+         fileInfo();
+         ~fileInfo();
 
+      //private:
+         char fileName[100];
+
+         //geometry-specific stuff
+         float stlColor[3];
+         int color;
+         int trans;
+         VE_SceneGraph::cfdDCS * dcs;
+   };
+}
+#endif

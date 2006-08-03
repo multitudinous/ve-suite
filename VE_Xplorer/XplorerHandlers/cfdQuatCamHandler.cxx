@@ -34,7 +34,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/QCLoadFileEH.h"
-#include "VE_Xplorer/XplorerHandlers/cfdFileInfo.h"
+#include "VE_Xplorer/SceneGraph/cfdFILEInfo.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCam.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"

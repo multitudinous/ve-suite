@@ -82,8 +82,13 @@
 #include <osg/LOD>
 #include <osg/ShadeModel>
 #include <osg/LightModel>
+#include <osgDB/ReaderWriter>
 #elif _OPENSG
 #endif
+
+#include <string>
+#include <istream>
+#include <sstream>
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include "VE_Xplorer/SceneGraph/cfdSequence.h"
@@ -228,10 +233,14 @@ void cfdNode::ToggleDisplay(std::string onOff)
 #endif
    }
 }
-/////////////////////////////////////////
-//load scene from file                 //
-/////////////////////////////////////////
-void cfdNode::LoadFile( std::string filename )
+///////////////////////////////////////////
+//load scene from file                   //
+///////////////////////////////////////////
+void cfdNode::LoadFile( std::string filename
+#ifdef _OSG
+                       ,bool isStream
+#endif
+                       )
 {
    //std::ostringstream filestring;
    //filestring << filename;
@@ -252,7 +261,15 @@ void cfdNode::LoadFile( std::string filename )
    }
 
 #elif _OSG
-   _node = osgDB::readNodeFile(filename);
+   if(!isStream)
+   {
+      _node = osgDB::readNodeFile(filename);
+   }
+   else
+   {
+      std::istringstream textNodeStream(filename);
+      _node = osgDB::Registry::instance()->getReaderWriterForExtension("osg")->readNode(textNodeStream).getNode();
+   }
    if ( twosidedlighting )
    {
       lightModel = new osg::LightModel;

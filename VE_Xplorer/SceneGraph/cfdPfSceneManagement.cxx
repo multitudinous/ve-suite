@@ -45,6 +45,7 @@
 #include <osgDB/Registry>
 #include <osgDB/ReaderWriter>
 #endif
+#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
@@ -78,6 +79,8 @@ cfdPfSceneManagement::cfdPfSceneManagement( void )
    this->worldDCS = 0;
    _logoSwitch = 0;
    _logoNode = 0;
+   _textPart = 0;
+   _movingPyramidsAssembly = 0; 
 #ifdef _PERFORMER
    this->sunModel = 0;
    this->sun = 0;
@@ -93,6 +96,21 @@ void cfdPfSceneManagement::Initialize( std::string param )
 void cfdPfSceneManagement::CleanUp( void )
 {
    // Do nothing right now
+   if(_textPart)
+   {
+      delete _textPart;
+      _textPart = 0;
+   }  
+   if(_logoNode)
+   {
+      delete _logoNode;
+      _logoNode = 0;
+   }
+   if(_movingPyramidsAssembly)
+   {
+      delete _movingPyramidsAssembly;
+      _movingPyramidsAssembly = 0;
+   }
 }
 
 void cfdPfSceneManagement::InitScene( void )
@@ -173,11 +191,16 @@ void cfdPfSceneManagement::_createLogo()
    if(!_logoNode)
    {
       _logoNode = new cfdDCS();
-      std::istringstream textNodeStream(GetVESuite_Text());
-      dynamic_cast<osg::Group*>(_logoNode->GetRawNode())->addChild(osgDB::Registry::instance()->getReaderWriterForExtension("osg")->readNode(textNodeStream).getNode());
+      float translation[3] = {0,5,4};
+      float scale[3] = {.02,.02,.02};
+      _logoNode->SetTranslationArray(translation);
+      _logoNode->SetScaleArray(scale);
 
-      std::istringstream triangleNodeStream(GetVESuite_Triangles());
-      dynamic_cast<osg::Group*>(_logoNode->GetRawNode())->addChild(osgDB::Registry::instance()->getReaderWriterForExtension("osg")->readNode(triangleNodeStream).getNode());
+      _textPart = new VE_SceneGraph::cfdFILE(GetVESuite_Text(),_logoNode,true);
+      _logoNode->AddChild(_textPart->GetDCS());
+
+      _movingPyramidsAssembly = new VE_SceneGraph::cfdFILE(GetVESuite_Triangles(),_logoNode,true);
+      _logoNode->AddChild(_movingPyramidsAssembly->GetDCS());
    }
 
 #elif _PERFORMER

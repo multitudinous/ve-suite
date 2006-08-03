@@ -50,7 +50,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
-#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdScalarBarActor.h"
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"

@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADTransformEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 

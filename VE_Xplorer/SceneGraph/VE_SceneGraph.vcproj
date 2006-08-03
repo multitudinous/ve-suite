@@ -522,6 +522,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cfdFILE.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\cfdFileInfo.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdGeode.cxx"
 				>
 			</File>
@@ -589,6 +597,14 @@
 			</File>
 			<File
 				RelativePath=".\cfdDCS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cfdFILE.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cfdFileInfo.h"
 				>
 			</File>
 			<File

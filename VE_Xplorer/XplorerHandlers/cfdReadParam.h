@@ -43,13 +43,13 @@ class vtkDataSet;
 
 namespace VE_Xplorer
 {
-   class fileInfo;
    class cfdDataSet;
    class cfdCommandArray;
 }
 
 namespace VE_SceneGraph
 {
+   class fileInfo;
    class cfdDCS;
 }
 
@@ -100,7 +100,7 @@ public:
    bool ihccModel;
    bool changeGeometry;
 
-   std::vector< VE_Xplorer::fileInfo * > files;
+   std::vector< VE_SceneGraph::fileInfo * > files;
 
    void CreateNewDataSet();
    int GetNumberOfDataSets();

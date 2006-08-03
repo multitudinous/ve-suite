@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 
@@ -44,7 +44,6 @@
 #include <osg/Fog>
 #endif
 
-using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 cfdFILE::cfdFILE( fileInfo *geomFile, VE_SceneGraph::cfdDCS *worldDCS  )
@@ -82,14 +81,14 @@ cfdFILE::cfdFILE( fileInfo *geomFile, VE_SceneGraph::cfdDCS *worldDCS  )
    }*/
 }
 
-cfdFILE::cfdFILE( std::string geomFile, VE_SceneGraph::cfdDCS* worldDCS  )
+cfdFILE::cfdFILE( std::string geomFile, VE_SceneGraph::cfdDCS* worldDCS,bool isStream  )
 {
    // Need to fix this and move some code to cfdNode
    // Leave some code here no more cfdFileInfo
 
    this->DCS = new VE_SceneGraph::cfdDCS();
    this->node = new VE_SceneGraph::cfdNode();  
-   this->node->LoadFile( geomFile.c_str() );
+   this->node->LoadFile( geomFile.c_str(),isStream );
    fileName.assign( geomFile );//strcpy( fileName, geomFile );
    this->DCS->AddChild( this->node );
    worldDCS->AddChild( this->DCS );

@@ -38,15 +38,11 @@
 #include <vector>
 #include <string>
 
-namespace VE_Xplorer
-{
-   class fileInfo;
-}
-
 namespace VE_SceneGraph
 {
    class cfdDCS;
    class cfdNode;
+   class fileInfo;
 }
 #ifdef _PERFORMER
 class pfFog;
@@ -60,13 +56,13 @@ namespace osg { class Fog; }
 //class pfMaterial;
 #include "VE_Installer/include/VEConfig.h"
 
-namespace VE_Xplorer
+namespace VE_SceneGraph
 {
-class VE_XPLORER_EXPORTS cfdFILE 
+class VE_SCENEGRAPH_EXPORTS cfdFILE 
 {
 public:
    cfdFILE( fileInfo*, VE_SceneGraph::cfdDCS* );
-   cfdFILE( std::string, VE_SceneGraph::cfdDCS* );
+   cfdFILE( std::string, VE_SceneGraph::cfdDCS*,bool isStream=false );
    cfdFILE( float, float [ 3 ], std::string );
 
    ~cfdFILE();

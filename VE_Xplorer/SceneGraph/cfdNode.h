@@ -100,7 +100,11 @@ namespace VE_SceneGraph
 #elif _OPENSG
 #endif
          void SetNodeProperties( int, float, float* );
-         void LoadFile( std::string );
+         void LoadFile( std::string
+#ifdef _OSG
+                       ,bool isStream=false
+#endif
+            );
          cfdNode* Clone( int );
    protected:
 #ifdef _PERFORMER

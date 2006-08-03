@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
@@ -221,7 +221,7 @@ void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
                                     parentID
                                   );
 
-         VE_Xplorer::cfdFILE* partNode = _activeModel->GetPart(newPart->GetID());
+         VE_SceneGraph::cfdFILE* partNode = _activeModel->GetPart(newPart->GetID());
          partNode->GetNode()->SetName(newPart->GetNodeName());
 
          vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;

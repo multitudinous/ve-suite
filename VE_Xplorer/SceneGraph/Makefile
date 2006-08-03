@@ -51,6 +51,8 @@ endif
 SRCS=\
    cfdClone.cxx \
    cfdDCS.cxx \
+   cfdFILE.cxx \
+   cfdFileInfo.cxx \
    cfdGeode.cxx \
    cfdGroup.cxx \
    cfdNode.cxx \

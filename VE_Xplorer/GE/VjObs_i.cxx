@@ -43,7 +43,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"

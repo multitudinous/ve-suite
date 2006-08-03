@@ -39,7 +39,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/XplorerHandlers/cfdFILE.h"
+#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"

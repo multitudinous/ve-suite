@@ -36,7 +36,7 @@
 #define CFD_GEOMDATASET_H
 
 #include <vector>
-#include "cfdFileInfo.h"
+#include "VE_Xplorer/SceneGraph/cfdFileInfo.h"
 #ifdef _PERFORMER
 #include "Performer/pf/pfNode.h"
 #include "Performer/pf/pfDCS.h"
@@ -68,7 +68,7 @@ namespace VE_Xplorer
    class cfdGeomDataSet 
    {
       public:
-         cfdGeomDataSet(fileInfo *geomfile, VE_SceneGraph::cfdDCS *);
+         cfdGeomDataSet(VE_SceneGraph::fileInfo *geomfile, VE_SceneGraph::cfdDCS *);
 
          cfdGeomDataSet( float, float [ 3 ], std::string );
          ~cfdGeomDataSet( );

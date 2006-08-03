@@ -67,6 +67,8 @@ namespace VE_SceneGraph
    class cfdGroup;
    class cfdClone;
    class cfdTempAnimation;
+   class cfdFILE;
+   class fileInfo;
 }
 namespace VE_EVENTS
 {
@@ -80,8 +82,6 @@ namespace VE_CAD
 namespace VE_Xplorer
 {
    class cfdDataSet;
-   class fileInfo;
-   class cfdFILE;
    class cfdCommandArray;
 }
 
@@ -162,7 +162,7 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       VE_Xplorer::cfdDataSet* GetActiveDataSet( void );
       void SetActiveDataSet( VE_Xplorer::cfdDataSet* );
 
-      VE_Xplorer::cfdFILE* GetGeomDataSet( int );
+      VE_SceneGraph::cfdFILE* GetGeomDataSet( int );
       unsigned int GetNumberOfGeomDataSets( void );
       std::string GetGeomFileName( int );
       void CreateGeomDataSet( std::string );
@@ -226,7 +226,7 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
 
       ///Get a specific part. 
       ///\param partID The ID of the part to search form
-      VE_Xplorer::cfdFILE* GetPart(unsigned int partID);
+      VE_SceneGraph::cfdFILE* GetPart(unsigned int partID);
 
       ///Get a specific assembly. 
       ///\param assemblyID The ID of the assembly to search form
@@ -302,12 +302,12 @@ public:
          VE_SceneGraph::cfdSwitch* switchNode;
          VE_SceneGraph::cfdGroup* classic;
          VE_SceneGraph::cfdGroup* textureBased;
-         typedef std::vector< VE_Xplorer::cfdFILE* > GeometoryDataSetList;
+         typedef std::vector< VE_SceneGraph::cfdFILE* > GeometoryDataSetList;
          GeometoryDataSetList mGeomDataSets;
          typedef std::vector< VE_Xplorer::cfdDataSet* > VTKDataSetList;
          VTKDataSetList mVTKDataSets;
 
-         std::map<unsigned int,VE_Xplorer::cfdFILE*> _partList;///<A list of the current parts.
+         std::map<unsigned int,VE_SceneGraph::cfdFILE*> _partList;///<A list of the current parts.
          std::map<unsigned int,VE_SceneGraph::cfdDCS*> _assemblyList;///A list of the current assemblies.
          std::map<unsigned int,VE_SceneGraph::cfdClone*> _cloneList;///A list of clones.
 
@@ -320,8 +320,8 @@ public:
          VE_SceneGraph::cfdDCS* mModelDCS;
          VE_SceneGraph::cfdDCS* _worldDCS;
          VE_SceneGraph::cfdNode* mModelNode;
-         fileInfo* mGeomFileInfo;
-         fileInfo* mVTKFileInfo;
+         VE_SceneGraph::fileInfo* mGeomFileInfo;
+         VE_SceneGraph::fileInfo* mVTKFileInfo;
          cfdDataSet* activeDataSet;
          VE_SceneGraph::cfdClone* mirrorNode;
          VE_SceneGraph::cfdGroup* mirrorGroupNode;
