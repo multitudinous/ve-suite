@@ -49,9 +49,9 @@ Name: xercesc; Description: Xerces-C++; Types: vecns vexosg  full
 Name: osg; Description: OpenSceneGraph; Types: vexosg full
 Name: juggler; Description: vrJuggler; Types: vexosg  full
 [Files]
-Source: {#OSGHOME}\..\Producer\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs; Components: depsbuildenv
-Source: {#OSGHOME}\..\OpenThreads\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs; Components: depsbuildenv
-Source: {#OSGHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs; Components: depsbuildenv
+Source: {#OSGHOME}\..\Producer\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+Source: {#OSGHOME}\..\OpenThreads\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+Source: {#OSGHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#VTKHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
 ;Source: {#VTKHOME}\bin\vtkCommon.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
 ;Source: {#VTKHOME}\bin\vtkexpat.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
@@ -192,38 +192,38 @@ Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: i
 Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#COINHOME}\bin\coin2d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler2.0.1; Flags: ignoreversion recursesubdirs; Components: juggler
-Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion recursesubdirs; Components: depsbuildenv
-Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion recursesubdirs; Components: depsbuildenv
-Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#OSGHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv; Attribs: readonly
-Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\ace\*.h; DestDir: {app}\include\ace; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\tao\utils\*.h; DestDir: {app}\include\tao\utils; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion createallsubdirs; Components: depsbuildenv
-Source: {#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#OSGHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv; Attribs: readonly
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\ace\*.h; DestDir: {app}\include\ace; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\tao\utils\*.h; DestDir: {app}\include\tao\utils; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+Source: {#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 ;Source: {#ACETAOHOME}\lib\aced.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
 ;Source: {#ACETAOHOME}\lib\TAOd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
 ;Source: {#ACETAOHOME}\lib\TAO_CosNamingd.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
 ;Source: {#ACETAOHOME}\lib\TAO_PortableServerd.lib; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv; DestDir: {app}\lib\win32
-Source: {#XERCESHOME}\src\*.c; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\ace\*.inl; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\tao\*.inl; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\tao\tao\*.i; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
+Source: {#XERCESHOME}\src\*.c; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\ace\*.inl; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\tao\*.inl; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\tao\tao\*.i; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
 ;Source: {#ACETAOHOME}\ace\*.i; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion
-Source: {#ACETAOHOME}\tao\tao\*.cpp; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#OSGHOME}\bin\osgviewerd.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly
-Source: {#OSGHOME}\bin\osgconvd.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly
-Source: {#OSGHOME}\bin\osgGAd.dll; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly
-Source: {#OSGHOME}\bin\osgProducerd.dll; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly
-Source: {#WXHOME}\lib\vc_dll\mswd\wx\setup.h; DestDir: {app}\include\wx\; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\include\TAO_IDL; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion createallsubdirs; Components: depsbuildenv
-Source: {#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion createallsubdirs; Components: depsbuildenv
-Source: {#ACETAOHOME}\tao\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly replacesameversion createallsubdirs; Components: depsbuildenv
+Source: {#ACETAOHOME}\tao\tao\*.cpp; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#OSGHOME}\bin\osgviewerd.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgconvd.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgGAd.dll; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgProducerd.dll; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+Source: {#WXHOME}\lib\vc_dll\mswd\wx\setup.h; DestDir: {app}\include\wx\; Attribs: readonly; Flags: uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\include\TAO_IDL; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+Source: {#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+Source: {#ACETAOHOME}\tao\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 
 
 [Icons]
