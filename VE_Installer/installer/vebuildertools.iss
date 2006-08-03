@@ -73,6 +73,7 @@ Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}
 Source: {#VEHOME}\VE_Installer\installer\buildershell.bat; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico; DestDir: {app}\images; DestName: Ve_icon.ico
 Source: {#VEHOME}\VE_Installer\installer\vebuilder.txt; DestDir: {app}; Attribs: readonly; Flags: isreadme overwritereadonly uninsremovereadonly; DestName: README.txt
+Source: {#VEHOME}\bin\win32\logoMaker.exe; DestDir: {app}\bin; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
