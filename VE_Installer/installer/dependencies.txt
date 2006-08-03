@@ -2,7 +2,7 @@ This is a list of the pre-compiled binaries for VE-Suite that
 are included in the install.
 
 *******************************IMPORTANT*************************************
-All dependencies, as well as VE-Suite are compiled w/ Visual Studio 7.1(2003).
+All dependencies, as well as VE-Suite are compiled w/ Visual Studio 8.0(2005).
 *****************************************************************************
 wxWidgets 2.6.3 -- Open Source GUI API.
 Visualization ToolKit (VTK) 5.0 -- Open Source data handling/visualization API.
@@ -12,12 +12,7 @@ OpenSceneGraph 1.0 -- SceneGraph handling.
 vrJuggler 2.0.1 -- graphics device handling
 ===============================================================================
 NOTES:
-- Performer has pre-compiled binaries 
-  and installers available at the website below.
 
-- performer download site -- 3.2
-http://www.sgi.com/products/software/performer/downloads.html
-http://www.sgi.com/products/software/performer/
 
 
 
