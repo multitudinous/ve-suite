@@ -1889,7 +1889,7 @@ class Launch:
         ##Cluster mode
         if self.cluster:
             print "Starting Xplorer cluster." ##TESTER
-            ##Finish building cluster file
+            ##Finish building cluster script
             launcherDir = str(os.getenv("VE_INSTALL_DIR"))
             xplorerType = XPLORER_TYPE_LIST[typeXplorer]
             taoMachine = str(os.getenv("TAO_MACHINE"))
@@ -1900,25 +1900,17 @@ class Launch:
             command = 'python velauncher.py -x %s' %(xplorerType) + \
                       ' -j "%s" -t %s -p %s' %(jconf, taoMachine, taoPort) + \
                       ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
-##            print command ##TESTER
             self.clusterScript += "cd %s\n" %(VELAUNCHER_DIR)
             self.clusterScript += "%s\n" %(command)
             self.clusterScript += "EOF\n"
             clusterFileName = "cluster.tsh"
             clusterFilePath = os.path.join(VELAUNCHER_DIR, clusterFileName)
+            ##Write cluster script
             sourceFile = file(clusterFilePath, 'w')
             sourceFile.write(self.clusterScript)
             sourceFile.close()
-            ##sourceFile.write("#!/bin/csh\n")
-            ##sourceFile.write("ssh $1 << EOF\n")
-            ##sourceFile.write("setenv LD_LIBRARY_PATH %s\n"
-            ##                 %(os.getenv("LD_LIBRARY_PATH")))
-            ##sourceFile.write("setenv PATH %s\n"
-            ##                 %(os.getenv("PATH")))
-            ##sourceFile.write("setenv VJ_BASE_DIR %s\n" %(os.getenv("VJ_BASE_DIR")))
-            ##sourceFile.write("setenv VJ_DEPS_DIR %s\n" %(os.getenv("VJ_DEPS_DIR")))
             ##Master call
-            print "***MASTER CALL: %s***" %(clusterMaster)
+            print "***MASTER CALL: %s***" %(clusterMaster) ##TESTER
             os.system("source %s %s &" %(clusterFilePath, clusterMaster))
             time.sleep(10)
             ##Slave calls
@@ -1926,18 +1918,6 @@ class Launch:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
                 os.system("source %s %s &" %(clusterFilePath, comp))
                 time.sleep(3)
-##                command = ""
-##                command = command + 'ssh %s "cd %s &&' %(comp, launcherDir)
-##                command = command + ' setenv PYTHONPATH ${PYTHONPATH};' + \
-##                          '%s &&' %(os.getenv("PYTHONPATH"))
-##                command = command + ' setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH};' + \
-##                          '%s &&' %(os.getenv("LD_LIBRARY_PATH"))
-##                command = command + ' xclock" &'
-##                command = 'ssh %s "cd %s;' %(comp, launcherDir) + \
-##                          ' python velauncher.py -x %s' %(xplorerType) + \
-##                          ' -j %s -t %s -p %s' %(jconf, taoMachine, taoPort)+ \
-##                          ' -w %s -e %s -m %s"' %(workDir, depsDir, master)
-##                os.system(command)
         ##Xplorer section
         elif runXplorer:
             print "Starting Xplorer." ##TESTER
@@ -1954,7 +1934,6 @@ class Launch:
             elif typeXplorer == 2: ##OSG VEPC selection
                 executable = "project_tao_osg_vep_cluster"
             ##Xplorer's call
-            ##Error tag: Find $$ERROR_1$$ for more details.
             os.system("%s -ORBInitRef NameService=" %(executable) +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
                       '"%s" %s &' %(jconf, desktop))
@@ -2111,8 +2090,10 @@ class Launch:
         self.EnvFill("SNX_BASE_DIR", vjBaseDir)
 
         ##Set VexMaster
+        ##Take the partially-qualified name if
+        ##clusterMaster is a fully-qualified name.
         if clusterMaster != None:
-            self.EnvFill("VEXMASTER", clusterMaster)
+            self.EnvFill("VEXMASTER", clusterMaster.split('.')[0])
         ##Python build environment variables
         if windows:
             os.environ["PYTHONPATH"] = os.path.join(os.getenv("VJ_DEPS_DIR"),
