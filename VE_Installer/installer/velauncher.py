@@ -24,7 +24,7 @@ import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
 
 ##Features enabled/disabled
-CLUSTER_ENABLED = False
+CLUSTER_ENABLED = True
 ##Miscellaneous values for launcher's UI
 XPLORER_SHELL_NAME = "Xplorer Shell"
 CONDUCTOR_SHELL_NAME = "Conductor Shell"
@@ -1762,9 +1762,11 @@ class Launch:
         if runXplorer and typeXplorer == 2 and cluster != None and \
            CLUSTER_ENABLED:
             self.cluster = True
+            ##Set up beginning of clusterScript for env setting.
             self.clusterScript = "#!/bin/csh\n"
             self.clusterScript += "ssh $1 << EOF\n"
-            self.clusterScript += "setenv PYTHONPATH %s\n" %(os.getenv("PYTHONPATH"))
+            self.clusterScript += "setenv PYTHONPATH %s\n" \
+                                  %(os.getenv("PYTHONPATH"))
         else:
             self.cluster = False
 ##        print "Cluster script set up? %s" %(self.cluster) ##TESTER
@@ -1864,6 +1866,7 @@ class Launch:
         clusterMaster -- The master of the cluster."""
         ##Name Server section
         if runName:
+            print "Starting Name Server" ##TESTER
             os.system("killall Naming_Service Exe_server")
             time.sleep(1)
             os.system("Naming_Service -ORBEndPoint" +
@@ -1874,6 +1877,7 @@ class Launch:
                       " -ORBDottedDecimalAddresses 1 &")
         ##Conductor section
         if runConductor:
+            print "Starting Conductor" ##TESTER
             ##Append argument if desktop mode selected
             if desktopMode:
                 desktop = "-VESDesktop"
@@ -1884,6 +1888,7 @@ class Launch:
                       "NameService %s &" % (desktop))
         ##Cluster mode
         if self.cluster:
+            print "Starting Xplorer cluster." ##TESTER
             ##Finish building cluster file
             launcherDir = str(os.getenv("VE_INSTALL_DIR"))
             xplorerType = XPLORER_TYPE_LIST[typeXplorer]
@@ -1912,11 +1917,14 @@ class Launch:
             ##                 %(os.getenv("PATH")))
             ##sourceFile.write("setenv VJ_BASE_DIR %s\n" %(os.getenv("VJ_BASE_DIR")))
             ##sourceFile.write("setenv VJ_DEPS_DIR %s\n" %(os.getenv("VJ_DEPS_DIR")))
+            ##Master call
+            print "***MASTER CALL: %s***" %(clusterMaster)
+            os.system("source %s %s &" %(clusterFilePath, clusterMaster))
+            time.sleep(5)
+            ##Slave calls
             for comp in cluster:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-##                print "Doing source %s %s" %(clusterFileName, comp) ##TESTER
                 os.system("source %s %s &" %(clusterFilePath, comp))
-		time.sleep(5)
 ##                command = ""
 ##                command = command + 'ssh %s "cd %s &&' %(comp, launcherDir)
 ##                command = command + ' setenv PYTHONPATH ${PYTHONPATH};' + \
@@ -1931,12 +1939,12 @@ class Launch:
 ##                os.system(command)
         ##Xplorer section
         elif runXplorer:
+            print "Starting Xplorer." ##TESTER
             ##Append argument if desktop mode selected
+            desktop = ""
             if desktopMode:
                 w, h = wx.DisplaySize()
                 desktop = "-VESDesktop %s %s" % (w, h)
-            else:
-                desktop = ""
             ##Set Xplorer's type
             if typeXplorer == 0: ##OSG selection
                 executable = "project_tao_osg"
@@ -1944,8 +1952,6 @@ class Launch:
                 executable = "project_tao_osg_vep"
             elif typeXplorer == 2: ##OSG VEPC selection
                 executable = "project_tao_osg_vep_cluster"
-            elif typeXplorer == 3: ##PF selection
-                executable = "project_tao_pf"
             ##Xplorer's call
             ##Error tag: Find $$ERROR_1$$ for more details.
             os.system("%s -ORBInitRef NameService=" %(executable) +
