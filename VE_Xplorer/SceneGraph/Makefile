@@ -65,8 +65,8 @@ SRCS=\
    cfdTempAnimation.cxx \
    vtkActorToOSG.cpp \
    vtkActorToPF.cxx \
-   Text.cxx \
-   Triangles.cxx
+   Triangles.cxx \
+   Text.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

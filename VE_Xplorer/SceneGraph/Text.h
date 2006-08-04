@@ -3,3 +3,4 @@
 #include <string>
 std::string GetVESuite_Text( void );
 #endif
+

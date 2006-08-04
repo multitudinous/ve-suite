@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/cfdFILEInfo.h"
+#include "VE_Xplorer/SceneGraph/cfdFileInfo.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 using namespace VE_SceneGraph;
