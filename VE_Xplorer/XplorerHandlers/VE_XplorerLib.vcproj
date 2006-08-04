@@ -107,7 +107,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="tao_pf_dbg|Win32"
+			Name="pf_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
 			ConfigurationType="2"
@@ -202,7 +202,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="tao_osg_dbg|Win32"
+			Name="osg_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
 			ConfigurationType="2"
@@ -297,7 +297,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="tao_osg_vep_dbg|Win32"
+			Name="osg_vep_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
 			ConfigurationType="2"
@@ -392,7 +392,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="tao_osg_vep_cluster_dbg|Win32"
+			Name="osg_vep_cluster_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
 			ConfigurationType="2"
