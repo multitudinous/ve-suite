@@ -1920,11 +1920,12 @@ class Launch:
             ##Master call
             print "***MASTER CALL: %s***" %(clusterMaster)
             os.system("source %s %s &" %(clusterFilePath, clusterMaster))
-            time.sleep(5)
+            time.sleep(10)
             ##Slave calls
             for comp in cluster:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
                 os.system("source %s %s &" %(clusterFilePath, comp))
+                time.sleep(3)
 ##                command = ""
 ##                command = command + 'ssh %s "cd %s &&' %(comp, launcherDir)
 ##                command = command + ' setenv PYTHONPATH ${PYTHONPATH};' + \
