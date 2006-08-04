@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 
+void ReplaceCharacters( std::string& data, std::string character );
 void StripCharacters( std::string& data, std::string character );
 
 int main( int argc, char* argv[] )
@@ -38,12 +39,20 @@ int main( int argc, char* argv[] )
          << "  std::string osgData;" << std::endl;
  
 
+   std::string tempData;
    do
    {
       osgFile.get( lineData, 1024 );
-      std::string tempData( lineData );
-      StripCharacters( tempData, std::string( "\"" ) );
-      hFile << "  osgData.append( \"" << tempData << "\" );" << std::endl;
+      tempData.append( lineData );
+      //This check is here because windows cannot handle strings larger than 16380
+      if ( tempData.size() > 16000 )
+      {
+         ReplaceCharacters( tempData, std::string( "\"" ) );
+         StripCharacters( tempData, std::string( "\n" ) );
+         StripCharacters( tempData, std::string( "\r" ) );
+         hFile << "  osgData.append( \"" << tempData << "\" );" << std::endl;
+         tempData.erase();
+      }
       osgFile.getline( lineData, 1024 );
    }
    while( !osgFile.eof() );
@@ -58,7 +67,7 @@ int main( int argc, char* argv[] )
    return 0;
 }
 
-void StripCharacters( std::string& data, std::string character )
+void ReplaceCharacters( std::string& data, std::string character )
 {
    for ( size_t index = 0; index < data.length(); )
    {
@@ -70,3 +79,17 @@ void StripCharacters( std::string& data, std::string character )
       }
    }
 }
+
+void StripCharacters( std::string& data, std::string character )
+{
+   for ( size_t index = 0; index < data.length(); )
+   {
+      index = data.find( character, index );
+      if ( index != std::string::npos )
+      {
+         data.erase( index, 1 );
+         //index+=2;
+      }
+   }
+}
+
