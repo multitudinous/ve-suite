@@ -96,7 +96,7 @@ protected:
 
    wxDirDialog* _dirDialog;
    
-   wxArrayString _gridFiles;
+   //wxArrayString _gridFiles;
    std::vector< std::string > gridFiles;
 
    wxButton* _browseInputDir;

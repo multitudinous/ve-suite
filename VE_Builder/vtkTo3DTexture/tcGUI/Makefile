@@ -1,5 +1,6 @@
 # Create the OS-dependent directory name
-MPI_APP = FALSE 
+#MPI_APP = FALSE 
+MPI_APP = TRUE
 ifeq ($(MPI_APP), TRUE)
    APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/vtkTo3DTextureMPI
 else
@@ -37,9 +38,12 @@ DEBUG_APP?= TRUE
 EXTRA_CXXFLAGS+= -I$(VJ_DEPS_DIR)/include
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_UtilLib
 ifeq ($(MPI_APP), TRUE)
-   EXTRA_LIBS+= -lmpi
+   EXTRA_LIBS+= -L/usr/local/lib -lmpi
    EXTRA_CXXFLAGS+= -DUSE_MPI
    CXX = mpiCC
+ifeq ($(CFDHOSTTYPE), Darwin)
+   CXX = mpic++
+endif
 endif
 
 LINKALL_ON= -all

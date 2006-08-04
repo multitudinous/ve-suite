@@ -168,7 +168,7 @@ TCFrame::~TCFrame()
       delete _gridTypeBox;
       _gridTypeBox = 0;
    }
-   _gridFiles.Clear();
+   //_gridFiles.Clear();
      
    if(!_inputFiles.empty()){
       for ( unsigned int i = 0; i < _inputFiles.size(); ++i )
@@ -346,7 +346,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    for(int i = 0; i < _numFiles; i++)
    {
       _currentFile = i;
-      statusMsg = wxString("Translating ") + _gridFiles[i];
+      statusMsg = wxString("Translating ") + wxString( gridFiles.at( i ).c_str() );
       UpdateStatus( statusMsg.c_str() );
       _fileProgress->Update(i, statusMsg);
       _translator->reset();
@@ -356,7 +356,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << i;
       std::string dirString = dirStringStream.str();
       //oname = (char*)dirString.c_str();
-      _translator->createDataSetFromFile(_gridFiles[i].c_str());
+      _translator->createDataSetFromFile( gridFiles.at( i ) );
       _translator->setOutputResolution(_resolution[0],
                                        _resolution[1],
                                        _resolution[2]);
@@ -422,7 +422,7 @@ void TCFrame::_chooseDirectory(int style, int browseID)
    {
       if ( browseID == INPUT_BROWSE)
       {
-         _gridFiles.Clear();
+         //_gridFiles.Clear();
          _numFiles = 0;
          _inputDir = wxT(_dirDialog->GetPath().c_str());
          
@@ -461,10 +461,10 @@ void TCFrame::SetInputDirectory(const std::string inDirectory)
 {
    if ( !inDirectory.empty() )
    {
-      if ( !_gridFiles.IsEmpty() )
+      /*if ( !_gridFiles.IsEmpty() )
       {
         _gridFiles.Clear();
-      }
+      }*/
       _numFiles = 0;
 
       wxDir inputFileDirectory;
