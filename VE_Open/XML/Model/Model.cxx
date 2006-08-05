@@ -38,6 +38,9 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
+
+#include <sstream>
+
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 using namespace VE_CAD;
@@ -223,12 +226,31 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 
       {
          dataValueStringName = GetSubElement( currentElement, "name", 0 );
-         modelName = ExtractDataStringFromSimpleElement( dataValueStringName );
+         if ( !dataValueStringName )
+         {
+            modelName = ExtractDataStringFromSimpleElement( dataValueStringName );
+            dataValueStringName = 0;            
+         }
+         else
+         {
+            GetAttribute( currentElement, "name", modelName );
+         }
       }
 
       {
          dataValueStringName = GetSubElement( currentElement, "ID", 0 );
-         uniqueModelID = ExtractIntegerDataNumberFromSimpleElement( dataValueStringName );
+         if ( !dataValueStringName )
+         {
+            uniqueModelID = ExtractIntegerDataNumberFromSimpleElement( dataValueStringName );
+         }
+         else
+         {
+            std::string idString;
+            GetAttribute( currentElement, "ID", idString );  
+            std::istringstream inputStream( idString );
+            inputStream >> uniqueModelID;
+
+         }
       }
 
       {
@@ -563,8 +585,12 @@ void Model::_updateVEElement( std::string input )
    }
 
    SetSubElement( "iconLocation", iconLocation );
-   SetSubElement( "name", modelName );
-   SetSubElement( "ID", uniqueModelID );
+   SetAttribute( "name", modelName );
+   //SetSubElement( "name", modelName );
+   std::ostringstream dirStringStream;
+   dirStringStream << uniqueModelID;
+   SetAttribute( "ID", dirStringStream.str() );
+   //SetSubElement( "ID", uniqueModelID );
    SetSubElement( "icon", iconFileName );
 
    for ( size_t i = 0; i < results.size(); ++i )

@@ -29,14 +29,15 @@ export VE_PATENTED=TRUE
 export VEXMASTER=ids7
 
 export PFNFYLEVEL=2
-export VPR_DEBUG_NFY_LEVEL=2
+export VPR_DEBUG_NFY_LEVEL=1
 export VPR_DEBUG_ENABLE=1
 #export VPR_DEBUG_ALLOW_CATEGORIES="VES_DBG"
 #export VPR_DEBUG_DISALLOW_CATEGORIES ="VES_DBG DBG_KERNEL"
 export NO_RTRC_PLUGIN=TRUE
 export NO_PERF_PLUGIN=TRUE
 export OSG_THREAD_SAFE_REF_UNREF=1
-export OSGNOTIFYLEVEL=DEBUG_INFO
+#export OSGNOTIFYLEVEL=DEBUG_INFO
+export OSGNOTIFYLEVEL=
 export PFSHAREDSIZE=534773700
 export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
@@ -155,8 +156,8 @@ export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
 export SNX_BASE_DIR=${VJ_BASE_DIR}
 export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin:${PATH}
 export PATH=${WX_HOME}/bin:${PATH}
-if [ $?OSG_HOME ]; then
-   export PATH=${OSG_HOME}/OpenSceneGraph/bin:${PATH}
+if [ $OSG_HOME ]; then
+   export PATH=${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
    export OSG_FILE_PATH=${OSG_HOME}/share/OpenSceneGraph-Data
 fi
 

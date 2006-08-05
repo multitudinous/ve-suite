@@ -71,6 +71,8 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    wxString veSuiteHome;
    wxString hostType;
    wxString libDir;
+   ::wxGetEnv( wxString( "CFDHOSTTYPE" ), &hostType );
+   
    if(::wxGetEnv( wxString( "VE_SUITE_HOME" ), &veSuiteHome ))
    {
       libDir = wxString("/bin/Plugins/UI/");
@@ -79,7 +81,6 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    else if(::wxGetEnv( wxString( "VE_INSTALL_DIR" ), &veSuiteHome ))
    {  
       libDir = wxString("/bin/Plugins/UI/");
-      ::wxGetEnv( wxString( "CFDHOSTTYPE" ), &hostType );
    }
    if ( !(hostType.IsEmpty()) && (!veSuiteHome.IsEmpty()) )
    {
@@ -97,6 +98,8 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
 
    // Try to laod custom plugins
    const wxString ext = wxString("*") + wxPluginLibrary::GetDllExt();
+   lib_dir.Append( "/" );
+   lib_dir.Append( hostType );
    wxLogDebug ("Loading plugins from [%s]\n", lib_dir.c_str());
 
    /* Create a directory object we can scan for plugins */
