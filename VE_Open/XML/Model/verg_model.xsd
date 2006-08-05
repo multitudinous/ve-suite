@@ -60,13 +60,13 @@
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="veModel">
+    <xs:attribute name="ID" type="xs:ID" use="required"/> 
+    <xs:attribute name="name" type="xs:string" use="required"/> 
     <xs:complexContent>
       <xs:restriction base="veXMLObject">
         <xs:sequence>
           <xs:element name="ports" type="vePort" minOccurs="0" maxOccurs="unbounded" />
           <xs:element name="iconLocation" type="vePoint" maxOccurs="1" minOccurs="1" />
-          <xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="1" />
-          <xs:element name="ID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" />
           <xs:element name="icon" type="xs:string" maxOccurs="1" minOccurs="0" />
           <xs:element name="results" type="vecommand" maxOccurs="unbounded" minOccurs="0" />
           <xs:element name="inputs" type="vecommand" maxOccurs="unbounded" minOccurs="0" />
