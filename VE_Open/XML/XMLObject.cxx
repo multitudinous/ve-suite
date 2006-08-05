@@ -302,7 +302,7 @@ DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElem
    DOMElement* foundElement = dynamic_cast<DOMElement*>(baseElement->getElementsByTagName(xercesString(subElementTagName))->item(itemIndex));
    if ( foundElement )
    {
-      if(foundElement->getParentNode() != baseElement)
+      if ( foundElement->getParentNode() != baseElement )
       {
          XMLSize_t nChildren = baseElement->getElementsByTagName(xercesString(subElementTagName))->getLength();
          for(XMLSize_t i = 0; i < nChildren; i++)
@@ -312,7 +312,7 @@ DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElem
                return foundElement;
          }   
       }
-      else
+      else if ( foundElement->getParentNode() == baseElement )
       {
          return foundElement;
       }

@@ -226,7 +226,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 
       {
          dataValueStringName = GetSubElement( currentElement, "name", 0 );
-         if ( !dataValueStringName )
+         if ( dataValueStringName )
          {
             modelName = ExtractDataStringFromSimpleElement( dataValueStringName );
             dataValueStringName = 0;            
@@ -239,7 +239,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 
       {
          dataValueStringName = GetSubElement( currentElement, "ID", 0 );
-         if ( !dataValueStringName )
+         if ( dataValueStringName )
          {
             uniqueModelID = ExtractIntegerDataNumberFromSimpleElement( dataValueStringName );
          }
