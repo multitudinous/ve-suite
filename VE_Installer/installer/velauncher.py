@@ -23,8 +23,10 @@ import getopt ##Cleans up command line arguments
 
 import wx ##Used for GUI
 
-##Features enabled/disabled
+##Cluster features
 CLUSTER_ENABLED = True
+MASTER_WAIT = 10 ##Seconds to wait after starting Master to start Slaves
+SLAVE_WAIT = 3 ##Seconds to wait between each Slave start
 ##Miscellaneous values for launcher's UI
 XPLORER_SHELL_NAME = "Xplorer Shell"
 CONDUCTOR_SHELL_NAME = "Conductor Shell"
@@ -701,7 +703,7 @@ class LauncherWindow(wx.Dialog):
         else:
             self.conductor = False
         ##Set Desktop Mode
-        if config.Read("DesktopMode", "True") == "True":
+        if config.Read("DesktopMode", "False") == "True":
             self.desktop = True
         else:
             self.desktop = False
@@ -1959,12 +1961,12 @@ class Launch:
             ##Master call
             print "***MASTER CALL: %s***" %(clusterMaster) ##TESTER
             os.system("source %s %s &" %(clusterFilePath, clusterMaster))
-            time.sleep(10)
+            time.sleep(MASTER_WAIT)
             ##Slave calls
             for comp in cluster:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
                 os.system("source %s %s &" %(clusterFilePath, comp))
-                time.sleep(3)
+                time.sleep(SLAVE_WAIT)
         ##Xplorer section
         elif runXplorer:
             print "Starting Xplorer." ##TESTER
@@ -2162,53 +2164,83 @@ class Launch:
 
         ##Update PATH (and the Library Path for Unix)
         if windows:
-            os.environ["PATH"] = str(os.getenv("PATH")) + ";" + \
-                                 os.path.join(str(os.getenv("VJ_DEPS_DIR")),
-                                              "bin") + ";" + \
-                                 os.path.join(str(os.getenv("VJ_DEPS_DIR")),
-                                              "lib") + ";" + \
-                                 os.path.join(str(os.getenv("VJ_BASE_DIR")),
-                                              "lib") + ";" + \
-                                 os.path.join(str(os.getenv("VE_INSTALL_DIR")),
-                                              "bin") + ";" + \
-                                 os.path.join(str(os.getenv("VE_DEPS_DIR")),
-                                              "bin") + ";" + \
-                                 os.path.join(str(os.getenv("CD")),
-                                              "bin")
+            pathList = [os.path.join(str(os.getenv("VJ_DEPS_DIR")), "bin"),
+                        os.path.join(str(os.getenv("VJ_DEPS_DIR")), "lib"),
+                        os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
+                        os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
+                        os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
+                        os.path.join(str(os.getenv("CD")), "bin")]
+            self.EnvAppend("PATH", pathList, ';')
+##            os.environ["PATH"] = str(os.getenv("PATH")) + ";" + \
+##                                 os.path.join(str(os.getenv("VJ_DEPS_DIR")),
+##                                              "bin") + ";" + \
+##                                 os.path.join(str(os.getenv("VJ_DEPS_DIR")),
+##                                              "lib") + ";" + \
+##                                 os.path.join(str(os.getenv("VJ_BASE_DIR")),
+##                                              "lib") + ";" + \
+##                                 os.path.join(str(os.getenv("VE_INSTALL_DIR")),
+##                                              "bin") + ";" + \
+##                                 os.path.join(str(os.getenv("VE_DEPS_DIR")),
+##                                              "bin") + ";" + \
+##                                 os.path.join(str(os.getenv("CD")),
+##                                              "bin")
         elif unix:
             ##Determine name of library path
-            if os.getenv("CFDHOSTTYPE") == "IRIX64":
-                libraryPath = "LD_LIBRARYN32_PATH"
-                lib = "lib32"
+            if os.getenv("CFDHOSTTYPE")[-2:] == "64":
+                libraryPath = "LD_LIBRARY_PATH"
+                lib = "lib64"
             else:
                 libraryPath = "LD_LIBRARY_PATH"
                 lib = "lib"
+
             ##Prepare the current library path
-            currentLibraryPath = str(os.getenv(libraryPath)) + ":"
-            if currentLibraryPath == "None:":
-                currentLibraryPath = ""
+##            currentLibraryPath = str(os.getenv(libraryPath)) + ":"
+##            if currentLibraryPath == "None:":
+##                currentLibraryPath = ""
             ##Update the library path
-            os.environ[libraryPath] = currentLibraryPath + \
-                       os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")+ \
-                       ":" + \
-                       os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin")+ \
-                       ":" + \
-                       os.path.join(str(os.getenv("VJ_BASE_DIR")), lib)
+            libList= [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
+                      os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
+                      os.path.join(str(os.getenv("VJ_BASE_DIR")), lib)]
+            self.EnvAppend(libraryPath, libList, ':')
+##            os.environ[libraryPath] = currentLibraryPath + \
+##                       os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")+ \
+##                       ":" + \
+##                       os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin")+\
+##                       ":" + \
+##                       os.path.join(str(os.getenv("VJ_BASE_DIR")), lib)
             ##Update the path
-            os.environ["PATH"] = str(os.getenv("PATH")) + ":" + \
-                                 os.path.join(str(os.getenv("VE_INSTALL_DIR")),
-                                              "bin") + ":" + \
-                                 os.path.join(str(os.getenv("VE_DEPS_DIR")),
-                                              "bin") + ":" + \
-                                 os.path.join(str(os.getenv("VJ_BASE_DIR")),
-                                              "bin")
-            ##Do a call to EnvFill to fill in the vars for the cluster file.
-            self.EnvFill(libraryPath, "ERROR")
-            self.EnvFill("PATH", "ERROR")
+            pathList= [os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
+                       os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
+                       os.path.join(str(os.getenv("VJ_BASE_DIR")), "bin")]
+            self.EnvAppend("PATH", pathList, ':')
+##            os.environ["PATH"] = str(os.getenv("PATH")) + ":" + \
+##                                 os.path.join(str(os.getenv("VE_INSTALL_DIR")),
+##                                              "bin") + ":" + \
+##                                 os.path.join(str(os.getenv("VE_DEPS_DIR")),
+##                                              "bin") + ":" + \
+##                                 os.path.join(str(os.getenv("VJ_BASE_DIR")),
+##                                              "bin")
+
+    def EnvAppend(self, var, appendages, sep):
+        """Appends appendages (list) to var, using sep to separate them."""
+        modifiedVar = os.getenv(var, None)
+        empty = (modifiedVar == None)
+        for app in appendages:
+            if empty:
+                modifiedVar = app
+                empty = False
+            else:
+                modifiedVar = modifiedVar + sep + app
+        os.environ[var] = modifiedVar
+        ##Put var in clusterScript
+        if self.cluster:
+            self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
+##        print var + ": " + os.getenv(var) ##TESTER
 
     def EnvFill(self, var, default):
         """Sets environmental variable var to default if it is empty."""
         os.environ[var] = os.getenv(var, default)
+        ##Put var in clusterScript
         if self.cluster:
             self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
 ##        print var + ": " + os.getenv(var) ##TESTER
