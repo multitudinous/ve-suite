@@ -392,3 +392,20 @@ DOMDocument* XMLObject::GetRootDocument()
 {
    return _rootDocument;
 }
+////////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetID( unsigned int idVar )
+{
+   std::ostringstream dirStringStream;
+   dirStringStream << idVar;
+   uuid = dirStringStream.str();
+}
+////////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetID( std::string idVar )
+{
+   uuid = idVar;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string XMLObject::GetID( void )
+{
+   return uuid;
+}

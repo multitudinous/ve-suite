@@ -248,8 +248,8 @@ void DataValuePair::_updateVEElement( std::string input )
    //Add code here to update the specific sub elements
    _updateDataName();
 
-   //SetSubElement("dataType",_dataType);
-
+   SetAttribute( "id", uuid );
+   
    //update the value held in the pair
    if ( _dataType == std::string("FLOAT") )
    {
@@ -358,6 +358,8 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
 
    if(currentElement)
    {
+      GetAttribute( currentElement, "id", uuid );
+      
       {
          //get variables by tags
          DOMNodeList* subElements = currentElement->getChildNodes();

@@ -44,6 +44,7 @@
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
@@ -610,6 +611,19 @@ Model* REI_Plugin::GetVEModel( void )
       }      
    }
 
+   // This shoudl be removed after veopen uuids are implemented
+   for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
+   {
+      Command* tempCommand = veModel->GetInput( i );
+      for ( size_t j = 0; j < tempCommand->GetNumberOfDataValuePairs(); ++j )
+      {
+         if ( tempCommand->GetDataValuePair( j )->GetID().empty() )
+         {
+            tempCommand->GetDataValuePair( j )->SetID( ::wxNewId() );
+         }
+      }
+   }
+   
    // EPRI TAG
    if ( financial_dlg != NULL ) 
    {

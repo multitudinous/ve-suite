@@ -159,13 +159,19 @@ public:
    ///\param attrib The attribute value
    void SetSubElement( std::string subElementTagName, XMLObject* dataValue, 
                         std::string attribName, std::string attrib );
-
    ///utility functions for creating attribute on _veElement.
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
    void SetAttribute(std::string attirbuteName,std::string attribute);
-
-
+   ///Method to set id object
+   ///\param idVar new id
+   void SetID( unsigned int idVar );
+   ///Method to set id object
+   ///\param idVar new id
+   void SetID( std::string idVar );
+   ///Method to get id for object
+   std::string GetID( void );
+   
    class VE_XML_EXPORTS VEStr
    {
    public:
@@ -216,6 +222,7 @@ protected:
    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* _rootDocument;///<The owning document for this element.
    std::string _objectType;///<The type of object;
    std::string _objectNamespace;///<The namespace for this object;
+   std::string uuid;///<Data holder for id
 private:
    unsigned int _nChildren;///<The number of childern for this element.
 };
