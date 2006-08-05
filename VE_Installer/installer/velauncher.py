@@ -80,6 +80,15 @@ VERTICAL_SPACE = (-1, BORDER)
 HORIZONTAL_SPACE = (BORDER, -1)
 LEFT_MARGIN = HORIZONTAL_SPACE
 NULL_SPACE = (0, 0)
+KILL_WINDOW_SIZE = (200, 100)
+##Set up the system ID
+windows = False
+unix = False
+if os.name == "nt":
+    windows = True
+elif os.name == "posix":
+    unix = True
+    
 ##Set up the config
 config = wx.Config(CONFIG_FILE)
 config.SetPath(DEFAULT_CONFIG)
@@ -757,9 +766,6 @@ class LauncherWindow(wx.Dialog):
             desktop = modeRules["desktop"][1]
         else:
             desktop = self.desktop
-##        print "Cluster slaves selected:" ##TESTER
-##        for loc in self.clusterDict.GetCheckedLocations(): ##TESTER
-##            print loc ##TESTER
         ##ERROR CHECK:  Are any programs selected?
         ##              If not, abort launch.
         if not (conductor or nameServer or xplorer):
@@ -852,6 +858,8 @@ class LauncherWindow(wx.Dialog):
                self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()),
                desktop, cluster = self.clusterDict.GetCheckedLocations(),
                master = self.clusterMaster)
+        print "Moving back!" ##TESTER
+        win = ServerKillWindow()
 
     def OnClose(self, event):
         """Saves launcher's current configuration and quits the launcher.
@@ -1524,7 +1532,6 @@ class ClusterDict:
         Duplicates GetNames()."""
         return self.GetNames()
 
-
 class ClusterWindow(wx.Dialog):
     """A window for editing a list of clustered computers.
 
@@ -1715,6 +1722,45 @@ class ClusterWindow(wx.Dialog):
         self.Destroy()
 
 
+class ServerKillWindow(wx.Frame):
+    """A window to kill the Nameserver after launch."""
+    def __init__(self, parent = None, title = "Kill Name Server"):
+        """Creates the Server Kill Window."""
+        wx.Frame.__init__(self, parent, wx.ID_ANY, title,
+                          style = wx.DEFAULT_FRAME_STYLE &
+                          ~ (wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
+        lblMsg = wx.StaticText(self, -1, "After you're done with VE-Suite,\n"+\
+                                         "press the button below to kill\n"+\
+                                         "the Name Server.")
+        bDone = wx.Button(self, -1, "Kill Name Server")
+        self.Bind(wx.EVT_BUTTON, self.KillNameserver, bDone)
+        rowSizer = wx.BoxSizer(wx.VERTICAL)
+        border = 10
+        rowSizer.Add(lblMsg, 2, wx.ALL, border)
+        rowSizer.Add(bDone, 1, wx.EXPAND)
+        rowSizer.SetMinSize(KILL_WINDOW_SIZE)
+        rowSizer.SetSizeHints(self)
+        Style(self)
+        self.SetSizer(rowSizer)
+        self.SetSize(KILL_WINDOW_SIZE)
+        self.CentreOnScreen()
+        self.Show()
+    
+    def KillNameserver(self, event):
+        """Kills any Nameservers running on this computer."""
+        if windows:
+            os.system("taskkill /F /IM Naming_Service.exe")
+            os.system("taskkill /F /IM WinServerd.exe")
+        elif unix:
+            os.system("killall Naming_Service Exe_server")
+        self.OnClose("this event doesn't exist")
+
+    def OnClose(self, event):
+        """Closes ServerKillWindow."""
+        self.Hide()
+        self.Destroy()
+        
+
 class Launch:
     """Prepares the environment and launches the chosen programs.
 
@@ -1788,7 +1834,7 @@ class Launch:
                       typeXplorer, jconf, desktopMode, cluster, master)
         else:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
-        return
+
 
     def Windows(self, runName, runConductor, runXplorer, typeXplorer, jconf,
                 desktopMode):
@@ -1806,6 +1852,8 @@ class Launch:
         ##Name Server's running, though.
         ##Do we need to give Name Server its own window?
         if runName:
+            self.KillNameserver()
+            time.sleep(1)
             os.system("start /B Naming_Service.exe -ORBEndPoint" +
                       " iiop://%TAO_MACHINE%:%TAO_PORT%")
             time.sleep(5)
@@ -1866,8 +1914,7 @@ class Launch:
         clusterMaster -- The master of the cluster."""
         ##Name Server section
         if runName:
-            print "Starting Name Server" ##TESTER
-            os.system("killall Naming_Service Exe_server")
+            self.KillNameserver()
             time.sleep(1)
             os.system("Naming_Service -ORBEndPoint" +
                       " iiop://${TAO_MACHINE}:${TAO_PORT} &")
@@ -1938,6 +1985,14 @@ class Launch:
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
                       '"%s" %s &' %(jconf, desktop))
         return
+
+    def KillNameserver(self):
+        """Kills any Nameservers running on this computer."""
+        if windows:
+            os.system("taskkill /F /IM Naming_Service.exe")
+            os.system("taskkill /F /IM WinServerd.exe")
+        elif unix:
+            os.system("killall Naming_Service Exe_server")            
 
     def EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
                  clusterMaster = None):
