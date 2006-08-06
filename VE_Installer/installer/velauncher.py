@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Takes VE-Suite settings input and launches chosen VE-Suite programs.
 
 --v1.0 coded by Jeff Groves
@@ -19,6 +20,7 @@ executing the launcher on its last command.
 import os ##Used for setting environmental variables, running programs
 import time ##Used only for sleep() func in the NameServer call
 import sys ##Gets command line arguments
+import platform ##Used for architecture() func to test if 32/64-bit
 import getopt ##Cleans up command line arguments
 
 import wx ##Used for GUI
@@ -1085,7 +1087,7 @@ class SettingsWindow(wx.Dialog):
                                   self.jconfList,
                                   self.chJconf.GetStringSelection())
         jconfWindow.ShowModal()
-        jconfWindow.Destroy()        
+        ##jconfWindow.Destroy()        
 
     def GetSelectedJconf(self):
         """Returns the path of the selected Jconf file."""
@@ -1097,7 +1099,7 @@ class SettingsWindow(wx.Dialog):
         clusterWindow = ClusterWindow(self, self.clusterDict,
                                       self.clusterMaster)
         clusterWindow.ShowModal()
-        clusterWindow.Destroy()
+        ##clusterWindow.Destroy()
 
     ##Saves the current configuration under the prefs file before closing.
     def OnClose(self, event):
@@ -2170,6 +2172,9 @@ class Launch:
                         os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("CD")), "bin")]
+            ##TEST to append 64-bit libraries:
+            ##if platform.architecture()[0] == "64bit":
+            ##    pathList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
             self.EnvAppend("PATH", pathList, ';')
 ##            os.environ["PATH"] = str(os.getenv("PATH")) + ";" + \
 ##                                 os.path.join(str(os.getenv("VJ_DEPS_DIR")),
@@ -2185,13 +2190,9 @@ class Launch:
 ##                                 os.path.join(str(os.getenv("CD")),
 ##                                              "bin")
         elif unix:
-            ##Determine name of library path
-            if os.getenv("CFDHOSTTYPE")[-2:] == "64":
-                libraryPath = "LD_LIBRARY_PATH"
-                lib = "lib64"
-            else:
-                libraryPath = "LD_LIBRARY_PATH"
-                lib = "lib"
+            ##Set name of library path
+            libraryPath = "LD_LIBRARY_PATH"
+            lib = "lib"
 
             ##Prepare the current library path
 ##            currentLibraryPath = str(os.getenv(libraryPath)) + ":"
@@ -2201,6 +2202,9 @@ class Launch:
             libList= [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                       os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
                       os.path.join(str(os.getenv("VJ_BASE_DIR")), lib)]
+            ##TEST to append 64-bit libraries:
+            ##if platform.architecture()[0] == "64bit":
+            ##    libList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
             self.EnvAppend(libraryPath, libList, ':')
 ##            os.environ[libraryPath] = currentLibraryPath + \
 ##                       os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")+ \
@@ -2235,7 +2239,7 @@ class Launch:
         ##Put var in clusterScript
         if self.cluster:
             self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
-##        print var + ": " + os.getenv(var) ##TESTER
+        print var + ": " + os.getenv(var) ##TESTER
 
     def EnvFill(self, var, default):
         """Sets environmental variable var to default if it is empty."""
