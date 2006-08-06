@@ -18,11 +18,10 @@ with it, create a batch/shell file to set the extra environmental variables,
 executing the launcher on its last command.
 """
 import os ##Used for setting environmental variables, running programs
-import time ##Used only for sleep() func in the NameServer call
+from time import sleep ##Used for delays in launch
 import sys ##Gets command line arguments
-import platform ##Used for architecture() func to test if 32/64-bit
+from platform import architecture ##Used to test if 32/64-bit
 import getopt ##Cleans up command line arguments
-
 import wx ##Used for GUI
 
 ##Cluster features
@@ -30,10 +29,11 @@ CLUSTER_ENABLED = True
 MASTER_WAIT = 10 ##Seconds to wait after starting Master to start Slaves
 SLAVE_WAIT = 3 ##Seconds to wait between each Slave start
 ##Miscellaneous values for launcher's UI
-XPLORER_SHELL_NAME = "Xplorer Shell"
-CONDUCTOR_SHELL_NAME = "Conductor Shell"
+XPLORER_SHELL_NAME = "VE-Xplorer Shell"
+CONDUCTOR_SHELL_NAME = "VE-Conductor Shell"
+BUILDER_SHELL_NAME = "VE-Builder Shell"
 FIXED = False ##Constant var used in MODE_DICT
-devMode = False ##Run VE-Suite in dev mode?
+devMode = False ##Run VE-Suite in dev mode? Turned to True if --dev passed.
 ##File/Folder settings.
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
@@ -43,9 +43,10 @@ LOGO_LOCATION = os.path.join(os.getcwd(), "installerImages", "ve_logo.xpm")
 CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
 RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
-                      "OSG Patented Cluster"] ##, "Performer"]
-XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC"] ##, "PF"]
-MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization", "Custom"]
+                      "OSG Patented Cluster"]
+XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC"]
+MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization",
+             "Builder Shell", "Custom"]
 MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                          "nameServer": [FIXED, True],
                          "xplorer": [FIXED, True],
@@ -68,6 +69,10 @@ MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                                "nameServer": [FIXED, False],
                                "xplorer": [FIXED, True],
                                "desktop": [FIXED, False]},
+             "Builder Shell": {"conductor": [FIXED, False],
+                               "nameServer": [FIXED, False],
+                               "xplorer": [FIXED, False],
+                               "shell": [FIXED, True]},
              "Custom": {}}
 JCONF_CONFIG = "JconfList"
 CLUSTER_CONFIG = "Cluster"
@@ -770,9 +775,13 @@ class LauncherWindow(wx.Dialog):
             desktop = modeRules["desktop"][1]
         else:
             desktop = self.desktop
+        if ("shell" in modeRules) and (modeRules["shell"][0] == FIXED):
+            shell = modeRules["shell"][1]
+        else:
+            shell = False
         ##ERROR CHECK:  Are any programs selected?
         ##              If not, abort launch.
-        if not (conductor or nameServer or xplorer):
+        if not (conductor or nameServer or xplorer or shell):
             dlg = wx.MessageDialog(self,
                                    "The launch won't do anything because you"+
                                    " haven't chosen any programs to launch.\n"+
@@ -853,6 +862,20 @@ class LauncherWindow(wx.Dialog):
             dlg.ShowModal()
             dlg.Destroy()
             return
+        ##Set the builderDir, if necessary.
+        builderDir = None
+        if shell:
+            dlg = wx.DirDialog(None,
+                       "Choose the VE-Builder directory:",
+                       os.getcwd(),
+                       style=wx.DD_DEFAULT_STYLE)
+            if dlg.ShowModal() == wx.ID_OK:
+                ##If a directory's chosen, go ahead.
+                builderDir = dlg.GetPath()
+                dlg.Destroy()
+            else: ##If not, cancel Builder Shell Launch.
+                dlg.Destroy()
+                return
         ##Go into the Launch
         Launch(self,
                self.txDirectory.GetValue(),
@@ -861,9 +884,10 @@ class LauncherWindow(wx.Dialog):
                GetJconfPath,
                self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()),
                desktop, cluster = self.clusterDict.GetCheckedLocations(),
-               master = self.clusterMaster)
-        print "Moving back!" ##TESTER
-        win = ServerKillWindow()
+               master = self.clusterMaster,
+               shell = shell, builderDir = builderDir)
+        if nameServer:
+            win = ServerKillWindow()
 
     def OnClose(self, event):
         """Saves launcher's current configuration and quits the launcher.
@@ -1753,8 +1777,8 @@ class ServerKillWindow(wx.Frame):
     def KillNameserver(self, event):
         """Kills any Nameservers running on this computer."""
         if windows:
-            os.system("taskkill /F /IM Naming_Service.exe")
-            os.system("taskkill /F /IM WinServerd.exe")
+            os.system("tskill Naming_Service")
+            os.system("tskill WinServerd")
         elif unix:
             os.system("killall Naming_Service Exe_server")
         self.OnClose("this event doesn't exist")
@@ -1785,13 +1809,15 @@ class Launch:
         EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
                  clusterMaster)
         EnvFill(var, default)"""
-    def __init__(self, launcherWindow,
-                 workingDir,
-                 runName, runConductor, runXplorer, typeXplorer,
-                 jconf,
-                 taoMachine, taoPort,
-                 desktopMode,
-                 dependenciesDir = None, cluster = None, master = None):
+    def __init__(self, launcherWindow = None,
+                 workingDir = DIRECTORY_DEFAULT,
+                 runName = False, runConductor = False,
+                 runXplorer = False, typeXplorer = 0,
+                 jconf = DEFAULT_JCONF,
+                 taoMachine = "localhost", taoPort = "1239",
+                 desktopMode = False,
+                 dependenciesDir = None, cluster = None, master = None,
+                 shell = False, builderDir = None):
         """Sets environmental vars and calls OS-specific launch code.
 
         Keyword arguments:
@@ -1801,7 +1827,9 @@ class Launch:
         typeXplorer, jconf, desktopMode -- Used for launch code.
         dependenciesDir -- Optional, used for environmental vars.
         cluster -- Optional, unused at the moment.
-        master -- Optional, used for sending VEXMASTER to slave nodes."""
+        master -- Optional, used for sending VEXMASTER to slave nodes.
+        shell -- Starts up a VE-Builder shell.
+        builderDir -- Sets a path to the builderDir/bin."""
         ##The launch is the final step.
         ##Destroy launcher window before beginning the actual launch.
         if launcherWindow != None:
@@ -1819,29 +1847,31 @@ class Launch:
                                   %(os.getenv("PYTHONPATH"))
         else:
             self.cluster = False
-##        print "Cluster script set up? %s" %(self.cluster) ##TESTER
         ##Get dependenciesDir for setting environmental variables.
         if dependenciesDir == None:
             dependenciesDir = config.Read("DependenciesDir", "ERROR")
         ##Set the environmental variables
         self.EnvSetup(dependenciesDir, workingDir, taoMachine, taoPort,
-                      master)
+                      master, builderDir)
         ##Use the user's defined directory as Current Working Dir
         os.chdir(os.getenv("VE_WORKING_DIR"))
         ##Checks the OS and routes the launcher to the proper subfunction
         ##NOTE: Code out separate Setups, code in the combined Setup
-        if os.name == "nt":
+        if shell: ##Special builder shell case.
+            self.BuilderShell()
+        elif windows:
             self.Windows(runName, runConductor, runXplorer,
                          typeXplorer, jconf, desktopMode)
-        elif os.name == "posix":
+        elif unix:
             self.Unix(runName, runConductor, runXplorer,
                       typeXplorer, jconf, desktopMode, cluster, master)
         else:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
 
 
-    def Windows(self, runName, runConductor, runXplorer, typeXplorer, jconf,
-                desktopMode):
+    def Windows(self, runName = False, runConductor = False,
+                runXplorer = False, typeXplorer = 0, jconf = DEFAULT_JCONF,
+                desktopMode = False):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -1857,10 +1887,10 @@ class Launch:
         ##Do we need to give Name Server its own window?
         if runName:
             self.KillNameserver()
-            time.sleep(1)
+            sleep(1)
             os.system("start /B Naming_Service.exe -ORBEndPoint" +
                       " iiop://%TAO_MACHINE%:%TAO_PORT%")
-            time.sleep(5)
+            sleep(5)
             os.system("start /B WinServerd.exe -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
@@ -1905,8 +1935,9 @@ class Launch:
                       " -ORBDottedDecimalAddresses 1" + desktop)
         return
 
-    def Unix(self, runName, runConductor, runXplorer, typeXplorer, jconf,
-             desktopMode, cluster = None, clusterMaster = None):
+    def Unix(self, runName = False, runConductor = False, runXplorer = False,
+             typeXplorer = 0, jconf = DEFAULT_JCONF,
+             desktopMode = False, cluster = None, clusterMaster = None):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -1919,16 +1950,15 @@ class Launch:
         ##Name Server section
         if runName:
             self.KillNameserver()
-            time.sleep(1)
+            sleep(1)
             os.system("Naming_Service -ORBEndPoint" +
                       " iiop://${TAO_MACHINE}:${TAO_PORT} &")
-            time.sleep(5)
+            sleep(5)
             os.system("Exe_server -ORBInitRef NameService=" +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService" +
                       " -ORBDottedDecimalAddresses 1 &")
         ##Conductor section
         if runConductor:
-            print "Starting Conductor" ##TESTER
             ##Append argument if desktop mode selected
             if desktopMode:
                 desktop = "-VESDesktop"
@@ -1939,7 +1969,6 @@ class Launch:
                       "NameService %s &" % (desktop))
         ##Cluster mode
         if self.cluster:
-            print "Starting Xplorer cluster." ##TESTER
             ##Finish building cluster script
             launcherDir = str(os.getenv("VE_INSTALL_DIR"))
             xplorerType = XPLORER_TYPE_LIST[typeXplorer]
@@ -1963,15 +1992,14 @@ class Launch:
             ##Master call
             print "***MASTER CALL: %s***" %(clusterMaster) ##TESTER
             os.system("source %s %s &" %(clusterFilePath, clusterMaster))
-            time.sleep(MASTER_WAIT)
+            sleep(MASTER_WAIT)
             ##Slave calls
             for comp in cluster:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
                 os.system("source %s %s &" %(clusterFilePath, comp))
-                time.sleep(SLAVE_WAIT)
+                sleep(SLAVE_WAIT)
         ##Xplorer section
         elif runXplorer:
-            print "Starting Xplorer." ##TESTER
             ##Append argument if desktop mode selected
             desktop = ""
             if desktopMode:
@@ -1992,14 +2020,24 @@ class Launch:
 
     def KillNameserver(self):
         """Kills any Nameservers running on this computer."""
+        print "Killing any previous nameservers:"
         if windows:
-            os.system("taskkill /F /IM Naming_Service.exe")
-            os.system("taskkill /F /IM WinServerd.exe")
+            os.system("tskill Naming_Service")
+            os.system("tskill WinServerd")
         elif unix:
-            os.system("killall Naming_Service Exe_server")            
+            os.system("killall Naming_Service Exe_server")
+        print "Previous nameservers killed."
+
+    def BuilderShell(self):
+        if windows:
+            os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
+        elif unix:
+            os.system("xterm &")
+        else:
+            print "ERROR! This OS isn't supported."
 
     def EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
-                 clusterMaster = None):
+                 clusterMaster = None, builderDir = None):
         """Sets up the environmental variables to launch VE-Suite's programs.
 
         Only takes care of basic variables. Coders with custom builds can set
@@ -2164,6 +2202,7 @@ class Launch:
                                                   "bin") + ":" + \
                                      str(os.getenv("PATH"))
 
+
         ##Update PATH (and the Library Path for Unix)
         if windows:
             pathList = [os.path.join(str(os.getenv("VJ_DEPS_DIR")), "bin"),
@@ -2172,8 +2211,10 @@ class Launch:
                         os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("CD")), "bin")]
+            if builderDir != None:
+                pathList[:0] = [os.path.join(builderDir, "bin")]
             ##TEST to append 64-bit libraries:
-            ##if platform.architecture()[0] == "64bit":
+            ##if architecture()[0] == "64bit":
             ##    pathList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
             self.EnvAppend("PATH", pathList, ';')
 ##            os.environ["PATH"] = str(os.getenv("PATH")) + ";" + \
@@ -2216,6 +2257,8 @@ class Launch:
             pathList= [os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
                        os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                        os.path.join(str(os.getenv("VJ_BASE_DIR")), "bin")]
+            if builderDir != None:
+                pathList[:0] = [os.path.join(builderDir, "bin")]
             self.EnvAppend("PATH", pathList, ':')
 ##            os.environ["PATH"] = str(os.getenv("PATH")) + ":" + \
 ##                                 os.path.join(str(os.getenv("VE_INSTALL_DIR")),
@@ -2239,7 +2282,7 @@ class Launch:
         ##Put var in clusterScript
         if self.cluster:
             self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
-        print var + ": " + os.getenv(var) ##TESTER
+##        print var + ": " + os.getenv(var) ##TESTER
 
     def EnvFill(self, var, default):
         """Sets environmental variable var to default if it is empty."""
