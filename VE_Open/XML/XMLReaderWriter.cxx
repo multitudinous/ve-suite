@@ -154,6 +154,13 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
             _xmlObjects.push_back( newXMLobj );
             _xmlObjects[i]->SetObjectFromXMLData( xmlObjects->item(i) );
          }
+         /*
+         else if ( newXMLobj == include )
+         {
+            Call new creator mehtod which returns a vector of XMLObjects
+            Append vector of objects to ones already asked for
+         }
+         */
          else
          {
             std::cerr << "VE-Open XMLReaderWriter Error : No creator method for tagname = " << tagName << std::endl;
@@ -161,32 +168,28 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
       }
    }
 }
-
-///////////////////////////////////////////////////////////
-void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
-                                    std::string& xmlData,
-                                    std::string documentType )
+////////////////////////////////////////////////////////////////////////////////
+void XMLReaderWriter::WriteMultipleXMLDocuments( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+                                                 std::string& xmlData )
 {
-   if ( _domDocumentManager )
+   /*
+   if ( !_domDocumentManager )
    {
-      ///If you wanted to return a string you can pass in returnString for xmlData
-      if ( xmlData.compare("returnString") )
-      {
-         _domDocumentManager->SetOuputXMLFile(xmlData);
-         _domDocumentManager->SetWriteXMLFileOn();
-      }
-  
+      return;
+   }
+
+   
+   //loop over all nodes and figure out what types of documents to write   
+      _domDocumentManager->SetOuputXMLFile(xmlData);
+      _domDocumentManager->SetWriteXMLFileOn();
       _domDocumentManager->CreateCommandDocument( documentType );
       DOMDocument* doc = _domDocumentManager->GetCommandDocument();
-      
-      /// should put in an assert to verify tagnames == nodes
-      ///Loop over all the objects that are passed in
       for ( size_t i = 0; i < nodes.size(); ++i )
       {   
          nodes.at( i ).first->SetOwnerDocument( doc );
          doc->getDocumentElement()->appendChild( nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );  
       }
-
+      
       if( !xmlData.compare("returnString") )
       {
          xmlData = _domDocumentManager->WriteAndReleaseCommandDocument();
@@ -196,5 +199,42 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObjec
          _domDocumentManager->WriteAndReleaseCommandDocument();
       }
       _domDocumentManager->UnLoadParser();
+   */
+}
+///////////////////////////////////////////////////////////
+void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+                                    std::string& xmlData,
+                                    std::string documentType )
+{
+   if ( !_domDocumentManager )
+   {
+      return;
    }
+   ///If you wanted to return a string you can pass in returnString for xmlData
+   if ( xmlData.compare("returnString") )
+   {
+      _domDocumentManager->SetOuputXMLFile(xmlData);
+      _domDocumentManager->SetWriteXMLFileOn();
+   }
+
+   _domDocumentManager->CreateCommandDocument( documentType );
+   DOMDocument* doc = _domDocumentManager->GetCommandDocument();
+   
+   /// should put in an assert to verify tagnames == nodes
+   ///Loop over all the objects that are passed in
+   for ( size_t i = 0; i < nodes.size(); ++i )
+   {   
+      nodes.at( i ).first->SetOwnerDocument( doc );
+      doc->getDocumentElement()->appendChild( nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );  
+   }
+
+   if( !xmlData.compare("returnString") )
+   {
+      xmlData = _domDocumentManager->WriteAndReleaseCommandDocument();
+   }
+   else
+   {
+      _domDocumentManager->WriteAndReleaseCommandDocument();
+   }
+   _domDocumentManager->UnLoadParser();
 }

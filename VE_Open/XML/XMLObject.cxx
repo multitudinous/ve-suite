@@ -36,6 +36,9 @@
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include <sstream>
 #include <iomanip>
+
+#include <apr_uuid.h>
+
 XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_XML;
@@ -48,7 +51,13 @@ XMLObject::XMLObject()
    _nChildren = 0;
    _objectType = std::string("XMLObject");
    _objectNamespace = std::string("XML");
-
+   
+   apr_uuid_t tempUUID;
+   apr_uuid_get( &tempUUID );
+   char* buffer = new char[ APR_UUID_FORMATTED_LENGTH + 1 ];
+   apr_uuid_format( buffer, &tempUUID );
+   uuid.assign( buffer );
+   delete [] buffer;
    //This may need to be somewhere else
    /*if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
    {
@@ -64,6 +73,7 @@ XMLObject::XMLObject( const XMLObject& input )
    _nChildren = input._nChildren;
    _objectType = input._objectType;
    _objectNamespace = input._objectNamespace;
+   uuid = input.uuid;
 }
 //////////////////////////////////////////////////////////////
 XMLObject& XMLObject::operator=( const XMLObject& input)
@@ -76,6 +86,7 @@ XMLObject& XMLObject::operator=( const XMLObject& input)
       _nChildren = input._nChildren;
       _objectType = input._objectType;
       _objectNamespace = input._objectNamespace;
+      uuid = input.uuid;
    }
    return *this;
 }

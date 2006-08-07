@@ -89,6 +89,14 @@ public:
                                  std::string& xmlFile,
                                  std::string documentType );
 
+   ///Write the current XML document out to multiple documents
+   ///This will allow future extension to parallel reading of domcouments
+   ///as well as provide support for web based extensions
+   ///Note that this method only works for writing to disk no to memory
+   ///\param xmlFile The base XML document to write to.
+   ///\param nodes The XML node to write. 
+   void XMLReaderWriter::WriteMultipleXMLDocuments( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+                                                    std::string& xmlData );
    ///Set the Active DOMDocumentManager
    void SetDOMDocumentManager(VE_XML::DOMDocumentManager* ddManager);
 
