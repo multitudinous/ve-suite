@@ -217,7 +217,8 @@ void CADNode::_updateVEElement(std::string input)
    _updateNodeType();
    _updateNodeName();
 
-   //SetSubElement(std::string("nodeID"),_uID);   
+   //SetSubElement(std::string("nodeID"),_uID);
+   SetAttribute("id",uuid);
    SetSubElement(std::string("parent"),_parent);
 
 
@@ -295,6 +296,8 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                //_uID = ExtractIntegerDataNumberFromSimpleElement(idNode );
                _uID = std::atoi(uuid.c_str());
             }*/
+            //yes there is
+            VE_XML::XMLObject::GetAttribute(currentElement, "id",uuid);
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {

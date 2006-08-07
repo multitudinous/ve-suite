@@ -8,4 +8,6 @@
 #define WXHOME "C:\devEnv\VES.1.0-Deps\wxWidgets-2.6.3"
 #define XERCESHOME "C:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0"
 #define JUGGLERINSTHOME "C:\devEnv\VES.1.0-Deps\juggler_2.0.1_install_vc80"
-#define COINHOME "C:\devEnv\installs"
+#define COINHOME "C:\devEnv\VES.1.0-Deps\Coin-2.4.5"
+#define APRHOME "C:\devEnv\VES.1.0-Deps\apr"
+#define APRUTILHOME "C:\devEnv\VES.1.0-Deps\apr-util"

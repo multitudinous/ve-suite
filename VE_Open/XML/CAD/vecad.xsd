@@ -14,6 +14,7 @@
           <xs:element name="activeAttributeName" type="xs:string" />
           <xs:element name="animation" type="CADNodeAnimation" />
         </xs:sequence>
+        <xs:attribute name="id" type="xs:string" />
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>

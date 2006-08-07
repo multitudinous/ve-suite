@@ -14,10 +14,14 @@ set TAO_ROOT=%ACE_ROOT%\TAO
 set XERCESCROOT=C:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0
 set OSGHOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.0\OpenSceneGraph
 set DEMETER_HOME=C:\devEnv\demeter-3.21
- set TAO_MACHINE=localhost
+set APR_HOME=C:\devEnv\VES.1.0-Deps\apr
+set APR_UTIL_HOME=C:\devEnv\VES.1.0-Deps\apr-util
+set APR_ICONV_HOME=C:\devEnv\VES.1.0-Deps\apr-iconv
+set COIN_HOME=C:\devEnv\VES.1.0-Deps\Coin-2.4.5
+set TAO_MACHINE=localhost
 REM set TAO_MACHINE=costello.vrac.iastate.edu
 REM set TAO_MACHINE=keymaker.vrac.iastate.edu
-
+set VEXMASTER=costello
 set TAO_PORT=1237
 set SNX_BASE_DIR=%VJ_BASE_DIR%
 
@@ -63,3 +67,6 @@ set Path=%Path%;%TAO_ROOT%\orbsvcs\Naming_Service
 set Path=%Path%;%VE_SUITE_HOME%\bin\win32
 set Path=%Path%;%OSGHOME%\bin;%VE_SUITE_HOME%\lib\win32
 set Path=%Path%;%DEMETER_HOME%\bin;
+set Path=%Path%;%APR_HOME%\Debug;
+set Path=%Path%;%APR_UTIL_HOME%\Debug;
+set Path=%Path%;%APR_ICONV_HOME%\Debug;

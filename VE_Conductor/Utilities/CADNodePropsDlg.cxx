@@ -453,9 +453,8 @@ void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
                _commandName = std::string("CAD_ADD_ANIMATION_TO_NODE");
                   
                VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-               nodeID->SetDataType("UNSIGNED INT");
-               nodeID->SetDataName(std::string("Node ID"));
-               nodeID->SetDataValue(_cadNode->GetID());
+               nodeID->SetDataType("STRING");
+               nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
                _instructions.push_back(nodeID);
       
                VE_XML::DataValuePair* addAnimation = new VE_XML::DataValuePair();
@@ -608,9 +607,8 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxListEvent& event)
       _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
 
       VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-      nodeID->SetDataType("UNSIGNED INT");
-      nodeID->SetDataName(std::string("Node ID"));
-      nodeID->SetDataValue(_cadNode->GetID());
+      nodeID->SetDataType("STRING");
+      nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
       _instructions.push_back(nodeID);
 
       VE_XML::DataValuePair* activeAttribute = new VE_XML::DataValuePair();
@@ -638,9 +636,8 @@ void CADNodePropertiesDlg::_restoreDefaultAttribute(wxCommandEvent& event)
       _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
 
       VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-      nodeID->SetDataType("UNSIGNED INT");
-      nodeID->SetDataName(std::string("Node ID"));
-      nodeID->SetDataValue(_cadNode->GetID());
+      nodeID->SetDataType("STRING");
+      nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
       _instructions.push_back(nodeID);
 
       VE_XML::DataValuePair* activeAttribute = new VE_XML::DataValuePair();
@@ -669,9 +666,8 @@ void CADNodePropertiesDlg::_removeAttribute(wxCommandEvent& event)
       _updateAvailableAttributes();
       
       VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-      nodeID->SetDataType("UNSIGNED INT");
-      nodeID->SetDataName(std::string("Node ID"));
-      nodeID->SetDataValue(_cadNode->GetID());
+      nodeID->SetDataType("STRING");
+      nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
       _instructions.push_back(nodeID);
 
       VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
@@ -725,9 +721,8 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
          _commandName = std::string("CAD_ADD_ATTRIBUTE_TO_NODE");
                         
          VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-         nodeID->SetDataType("UNSIGNED INT");
-         nodeID->SetDataName(std::string("Node ID"));
-         nodeID->SetDataValue(_cadNode->GetID());
+         nodeID->SetDataType("STRING");
+         nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
          _instructions.push_back(nodeID);
       
          VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
@@ -782,9 +777,8 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
                         _commandName = std::string("CAD_ADD_ATTRIBUTE_TO_NODE");
                         
                         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-                        nodeID->SetDataType("UNSIGNED INT");
-                        nodeID->SetDataName(std::string("Node ID"));
-                        nodeID->SetDataValue(_cadNode->GetID());
+                        nodeID->SetDataType("STRING");
+                        nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
                         _instructions.push_back(nodeID);
       
                         VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
@@ -874,9 +868,8 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
       _commandName = std::string("CAD_TRANSFORM_UPDATE");
 
       VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-      nodeID->SetDataType("UNSIGNED INT");
-      nodeID->SetDataName(std::string("Node ID"));
-      nodeID->SetDataValue(_cadNode->GetID());
+      nodeID->SetDataType("STRING");
+      nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
       _instructions.push_back(nodeID);
       
       VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
@@ -928,9 +921,8 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& WXUNUSED(event)
          _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_MODE");
 
          VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-         nodeID->SetDataType("UNSIGNED INT");
-         nodeID->SetDataName(std::string("Node ID"));
-         nodeID->SetDataValue(_cadNode->GetID());
+         nodeID->SetDataType("STRING");
+         nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
          _instructions.push_back(nodeID);
 
          VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
@@ -993,9 +985,8 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(e
          _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_MODE");
 
          VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-         nodeID->SetDataType("UNSIGNED INT");
-         nodeID->SetDataName(std::string("Node ID"));
-         nodeID->SetDataValue(_cadNode->GetID());
+         nodeID->SetDataType("STRING");
+         nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
          _instructions.push_back(nodeID);
 
          VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
@@ -1084,9 +1075,7 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
          _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE");
 
          VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-         nodeID->SetDataType("UNSIGNED INT");
-         nodeID->SetDataName(std::string("Node ID"));
-         nodeID->SetDataValue(_cadNode->GetID());
+         nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
          _instructions.push_back(nodeID);
 
          VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();

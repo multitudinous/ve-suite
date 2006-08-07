@@ -104,7 +104,7 @@ void MaterialUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
       }
 
        values.push_back(rawMaterial->GetOpacity());
-      _activeModel->UpdateMaterialComponent(nodeId->GetUIntData(),rawMaterial->GetMaterialName(),
+      _activeModel->UpdateMaterialComponent(nodeId->GetDataString(),rawMaterial->GetMaterialName(),
                                             rawComponent,
                                             rawMaterial->GetFace(),values);
       

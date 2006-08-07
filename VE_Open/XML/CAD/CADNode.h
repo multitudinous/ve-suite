@@ -153,9 +153,6 @@ public:
    ///Get attributes for this node.
    std::vector<CADAttribute> GetAttributeList();
 
-   ///Get the ID
-   //unsigned int GetID();
-
    ///Copy constructor
    CADNode(const CADNode& rhs);
 

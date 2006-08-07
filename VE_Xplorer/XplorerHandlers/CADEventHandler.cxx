@@ -145,7 +145,7 @@ void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
 {
    //set the transform
    cfdDCS* transform = 0;
-   unsigned int nodeID = activeNode->GetID();
+   std::string nodeID = activeNode->GetID();
    if(activeNode->GetNodeType() == "Assembly")
    {
       //std::cout<<"Setting transform on Assembly: "<<nodeID<<std::endl;
@@ -173,7 +173,7 @@ void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
    }
 }
 /////////////////////////////////////////////////////////////////////////
-void CADEventHandler::_addNodeToNode(unsigned int parentID, CADNode* activeNode)
+void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 {
    cfdDCS* parentAssembly = 0;
    parentAssembly = _activeModel->GetAssembly(parentID);

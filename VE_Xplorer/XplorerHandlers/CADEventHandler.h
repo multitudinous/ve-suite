@@ -56,7 +56,7 @@ namespace VE_Xplorer
    class cfdModel;
 }
 #include "VE_Installer/include/VEConfig.h"
-
+#include <string>
 namespace VE_EVENTS{
 class VE_XPLORER_EXPORTS CADEventHandler : public EventHandler{
 public:
@@ -90,7 +90,7 @@ protected:
    ///Internal method to add nodes.
    ///\param parentID The ID of the node to add the new node to.
    ///\param node The new CADNode to add to the model
-   void _addNodeToNode(unsigned int parentID, VE_CAD::CADNode* node);
+   void _addNodeToNode(std::string parentID, VE_CAD::CADNode* node);
    
    ///Internal method to extract attribtutes from CADNodes.
    ///\param node CADNode to extra attributes from.

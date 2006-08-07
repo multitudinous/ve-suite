@@ -86,15 +86,15 @@ void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       if(nodeType->GetDataString() == std::string("Assembly"))
       {
          std::cout<<"Setting name: "<<newName->GetDataString()<<std::endl;
-         _activeModel->GetAssembly(nodeID->GetUIntData())->SetName(newName->GetDataString());
+         _activeModel->GetAssembly(nodeID->GetDataString())->SetName(newName->GetDataString());
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
-         _activeModel->GetPart(nodeID->GetUIntData())->GetNode()->SetName(newName->GetDataString());
+         _activeModel->GetPart(nodeID->GetDataString())->GetNode()->SetName(newName->GetDataString());
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         _activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph()->SetName(newName->GetDataString());
+         _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph()->SetName(newName->GetDataString());
       }
    }
    catch(...)

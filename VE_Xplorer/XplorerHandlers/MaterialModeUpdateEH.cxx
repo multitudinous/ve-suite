@@ -89,7 +89,7 @@ void MaterialModeUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObje
       {
          value = rawMaterial->GetColorMode();
       }
-      _activeModel->UpdateMaterialMode(nodeId->GetUIntData(),
+      _activeModel->UpdateMaterialMode(nodeId->GetDataString(),
                                        rawMaterial->GetMaterialName(),
                                        newMode,value);
       

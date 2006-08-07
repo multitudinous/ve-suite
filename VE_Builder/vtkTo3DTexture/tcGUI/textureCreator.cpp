@@ -1166,7 +1166,7 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    nameString.append( _scalarNames[whichScalar] );
    try
    {
-      boost::filesystem::path scalarNamePath( nameString );
+      boost::filesystem::path scalarNamePath( nameString, boost::filesystem::no_check );
       try
       {
          boost::filesystem::is_directory( scalarNamePath );

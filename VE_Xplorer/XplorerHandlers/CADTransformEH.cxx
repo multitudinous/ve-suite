@@ -91,29 +91,32 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_SceneGraph::cfdDCS* transform = 0;
       if(nodeType->GetDataString() == std::string("Part"))
       {
-         if(_activeModel->PartExists(nodeID->GetUIntData()))
+         if(_activeModel->PartExists(nodeID->GetDataString()))
          {
-            transform = _activeModel->GetPart(nodeID->GetUIntData())->GetDCS();
+            transform = _activeModel->GetPart(nodeID->GetDataString())->GetDCS();
          }
       }
       else if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         if(_activeModel->AssemblyExists(nodeID->GetUIntData()))
+         if(_activeModel->AssemblyExists(nodeID->GetDataString()))
          {
-            transform = _activeModel->GetAssembly(nodeID->GetUIntData());
+            transform = _activeModel->GetAssembly(nodeID->GetDataString());
          }
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         if(_activeModel->CloneExists(nodeID->GetUIntData()))
+         if(_activeModel->CloneExists(nodeID->GetDataString()))
          {
-            transform = _activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph();
+            transform = _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph();
          }
       }
-      VE_XML::Transform* rawTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());
-      transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );
-      transform->SetRotationArray( rawTransform->GetRotationArray()->GetArray() );
-      transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );
+      if(transform)
+      {
+         VE_XML::Transform* rawTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());
+         transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );
+         transform->SetRotationArray( rawTransform->GetRotationArray()->GetArray() );
+         transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );
+      }
    }
    catch(...)
    {

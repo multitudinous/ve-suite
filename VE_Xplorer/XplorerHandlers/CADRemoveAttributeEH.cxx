@@ -84,7 +84,7 @@ void CADRemoveAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
       VE_XML::DataValuePair* activeAttribute = command->GetDataValuePair("Attribute Name");
 
-      _activeModel->RemoveAttributeFromNode(nodeID->GetUIntData(),
+      _activeModel->RemoveAttributeFromNode(nodeID->GetDataString(),
                                             nodeType->GetDataString(),
                                             activeAttribute->GetDataString());
    }

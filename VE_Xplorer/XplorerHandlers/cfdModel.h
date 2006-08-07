@@ -180,33 +180,33 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       ///\param nodeID The ID of the node to add Attribute to.
       ///\param nodeType The node type.
       ///\param The CADAttribute to add to the node.
-      void AddAttributeToNode(unsigned int nodeID,
+      void AddAttributeToNode(std::string nodeID,
                            VE_CAD::CADAttribute* newAttribute);
 	   ///Add a new attribute to a node
       ///\param nodeID The ID of the node to add Attribute to.
       ///\param nodeType The node type.
       ///\param neAttribute The name of the CADAttribute to remove from the node.
-      void RemoveAttributeFromNode(unsigned int nodeID,std::string nodeType,
+      void RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
                                    std::string newAttribute);
       ///Add a new attribute to a node
       ///\param nodeID The ID of the node to add Attribute to.
       ///\param nodeType The node type.
       ///\param attributeName The name of the CADAttribute to activate on the CADNode.
-      void SetActiveAttributeOnNode(unsigned int nodeID,
+      void SetActiveAttributeOnNode(std::string nodeID,
                                     std::string nodeType,
                                     std::string attributeName);
       ///Create a new assembly
-      void CreateAssembly(unsigned int assemblyID);
+      void CreateAssembly(std::string assemblyID);
       
       ///Create a new clone
-      void CreateClone(unsigned int cloneID,
-                     unsigned int originalID,
-                     std::string orignalType);
+      void CreateClone(std::string cloneID,
+                       std::string originalID,
+                       std::string orignalType);
 
       ///Create a new part
       void CreatePart(std::string fileName,
-                    unsigned int partID,
-                    unsigned int parentID);
+                      std::string partID,
+                      std::string parentID);
 
       ///Get a specified CADAttribute for a specified CADNode
       ///\param nodeID The CADNode  
@@ -214,7 +214,7 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       ///\param component The name of the CADMaterial component to update.
       ///\param face The face to apply the update to.
       ///\param values The new values.
-      void UpdateMaterialComponent(unsigned int nodeID,std::string attributeName,std::string component,
+      void UpdateMaterialComponent(std::string nodeID,std::string attributeName,std::string component,
                                     std::string face,std::vector<double> values);
 
       ///Get a specified CADAttribute for a specified CADNode
@@ -222,28 +222,28 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       ///\param attributeName The name of the CADAttribute to find.
       ///\param type The type of mode to update.
       ///\param mode The new mode.
-      void UpdateMaterialMode(unsigned int nodeID,std::string attributeName,std::string type,std::string mode);
+      void UpdateMaterialMode(std::string nodeID,std::string attributeName,std::string type,std::string mode);
 
       ///Get a specific part. 
       ///\param partID The ID of the part to search form
-      VE_SceneGraph::cfdFILE* GetPart(unsigned int partID);
+      VE_SceneGraph::cfdFILE* GetPart(std::string partID);
 
       ///Get a specific assembly. 
       ///\param assemblyID The ID of the assembly to search form
-      VE_SceneGraph::cfdDCS* GetAssembly(unsigned int assemblyID);
+      VE_SceneGraph::cfdDCS* GetAssembly(std::string assemblyID);
 
       ///Get a specific assembly. 
       ///\param assemblyID The ID of the assembly to search form
-      VE_SceneGraph::cfdClone* GetClone(unsigned int cloneID);
+      VE_SceneGraph::cfdClone* GetClone(std::string cloneID);
 
       ///\param cloneID The part ID to search for.
-      bool CloneExists(unsigned int clone);
+      bool CloneExists(std::string clone);
 
       ///\param partID The part ID to search for.
-      bool PartExists(unsigned int partID);
+      bool PartExists(std::string partID);
 
       ///\param assemblyID The assembly ID to search for.
-      bool AssemblyExists(unsigned int assemblyID);
+      bool AssemblyExists(std::string assemblyID);
 
       ///Get the node for the cfd data set
       VE_SceneGraph::cfdNode* GetCfdNode( void );
@@ -307,9 +307,9 @@ public:
          typedef std::vector< VE_Xplorer::cfdDataSet* > VTKDataSetList;
          VTKDataSetList mVTKDataSets;
 
-         std::map<unsigned int,VE_SceneGraph::cfdFILE*> _partList;///<A list of the current parts.
-         std::map<unsigned int,VE_SceneGraph::cfdDCS*> _assemblyList;///A list of the current assemblies.
-         std::map<unsigned int,VE_SceneGraph::cfdClone*> _cloneList;///A list of clones.
+         std::map<std::string,VE_SceneGraph::cfdFILE*> _partList;///<A list of the current parts.
+         std::map<std::string,VE_SceneGraph::cfdDCS*> _assemblyList;///A list of the current assemblies.
+         std::map<std::string,VE_SceneGraph::cfdClone*> _cloneList;///A list of clones.
 
       #ifdef _OSG
          typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;
@@ -337,7 +337,7 @@ public:
          VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
    unsigned int modelID;
 #ifdef _OSG
-         std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
+         std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
 #endif
    };
 }

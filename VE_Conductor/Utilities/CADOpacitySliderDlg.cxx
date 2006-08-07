@@ -49,7 +49,7 @@ END_EVENT_TABLE()
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////
 CADOpacitySliderDlg::CADOpacitySliderDlg(wxWindow* parent, int id,
-                                         unsigned int cadNodeID,
+                                         std::string cadNodeID,
                                          CADMaterial* material)
 :wxDialog(parent,id,wxString("CADMaterial Opacity"),wxDefaultPosition,wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX),wxString("CADMaterial Opacity"))
@@ -110,9 +110,8 @@ void CADOpacitySliderDlg::_onSlider(wxScrollEvent& WXUNUSED(event))
     _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE");
 
     VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-    nodeID->SetDataType("UNSIGNED INT");
-    nodeID->SetDataName(std::string("Node ID"));
-    nodeID->SetDataValue(_cadID);
+    nodeID->SetDataType("STRING");
+    nodeID->SetData(std::string("Node ID"),_cadID);
     _instructions.push_back(nodeID);
 
     VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
@@ -127,23 +126,6 @@ void CADOpacitySliderDlg::_onSlider(wxScrollEvent& WXUNUSED(event))
 
     _sendCommandsToXplorer();
   
-   /*VE_XML::DataValuePair* opacityData = new VE_XML::DataValuePair();
-   opacityData->SetData(std::string("Opacity"),opacityValue);
-   _instructions.push_back(opacityData);
-
-   VE_XML::DataValuePair* materialName = new VE_XML::DataValuePair();
-   materialName->SetDataType("STRING");
-   materialName->SetDataName(std::string("Material Name"));
-   materialName->SetDataString(_material->GetMaterialName());
-   _instructions.push_back(materialName);
-
-   VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
-   nodeID->SetDataType("UNSIGNED INT");
-   nodeID->SetDataValue(_cadID);
-   nodeID->SetDataName(std::string("Node ID"));
-   _instructions.push_back(nodeID);
-
-   _sendCommandsToXplorer();*/
    _clearInstructions();
 }
 //////////////////////////////////////////////

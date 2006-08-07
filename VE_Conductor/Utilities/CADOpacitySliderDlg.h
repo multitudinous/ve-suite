@@ -76,7 +76,7 @@ public:
    ///Constructor
    ///\param parent The parent wxWindow.
    ///\param id The unique id for this window.
-   CADOpacitySliderDlg(wxWindow* parent, int id,unsigned int cadID,VE_CAD::CADMaterial* material);
+   CADOpacitySliderDlg(wxWindow* parent, int id,std::string cadID,VE_CAD::CADMaterial* material);
 
    ///Destructor 
    virtual ~CADOpacitySliderDlg();
@@ -101,8 +101,7 @@ protected:
 
    ///Build the dialog internally.
    void _buildDialog();
-
-   unsigned int _cadID;///<The id of the CADNode the material belongs to.
+   std::string _cadID;///<The id of the CADNode the material belongs to.
    std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
    std::string _commandName;///<The command name.
    VE_CAD::CADMaterial* _material;///<The CADMaterial we are updating.

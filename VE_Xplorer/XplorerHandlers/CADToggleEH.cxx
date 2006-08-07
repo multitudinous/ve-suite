@@ -85,18 +85,18 @@ void CADToggleEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       //This assumes the part/assembly is there already
       if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         _activeModel->GetAssembly(nodeID->GetUIntData())->ToggleDisplay(toggleValue->GetDataString());
+         _activeModel->GetAssembly(nodeID->GetDataString())->ToggleDisplay(toggleValue->GetDataString());
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
          std::cout<<"---Toggle part---"<<std::endl;
          std::cout<<"---"<<toggleValue->GetDataString()<<"---"<<std::endl;
-         _activeModel->GetPart(nodeID->GetUIntData())->GetDCS()->ToggleDisplay(toggleValue->GetDataString());
+         _activeModel->GetPart(nodeID->GetDataString())->GetDCS()->ToggleDisplay(toggleValue->GetDataString());
          std::cout<<"---Toggled part---"<<std::endl;
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         _activeModel->GetClone(nodeID->GetUIntData())->GetClonedGraph()->ToggleDisplay(toggleValue->GetDataString());
+         _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph()->ToggleDisplay(toggleValue->GetDataString());
       }
    }
    catch(...)

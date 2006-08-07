@@ -114,20 +114,20 @@ cfdModel::~cfdModel()
    vprDEBUG(vesDBG,2) << "cfdModel destructor"
                           << std::endl << vprDEBUG_FLUSH;
 
-   for ( std::map<unsigned int,VE_SceneGraph::cfdFILE*>::iterator itr = _partList.begin();
+   for ( std::map<std::string,VE_SceneGraph::cfdFILE*>::iterator itr = _partList.begin();
                                        itr != _partList.end(); itr++ )
    {
       delete itr->second;
    }
    _partList.clear();
-   for ( std::map<unsigned int,VE_SceneGraph::cfdDCS*>::iterator itr = _assemblyList.begin();
+   for ( std::map<std::string,VE_SceneGraph::cfdDCS*>::iterator itr = _assemblyList.begin();
                                        itr != _assemblyList.end(); itr++ )
    {
       delete itr->second;
    }
    _assemblyList.clear();
 
-   for ( std::map<unsigned int,VE_SceneGraph::cfdClone*>::iterator itr = _cloneList.begin();
+   for ( std::map<std::string,VE_SceneGraph::cfdClone*>::iterator itr = _cloneList.begin();
                                        itr != _cloneList.end(); itr++ )
    {
       delete itr->second;
@@ -828,8 +828,8 @@ VE_CAD::CADNode* cfdModel::GetRootCADNode()
    return _rootCADNode;
 }
 ///////////////////////////////////////////////////////
-void cfdModel::CreateClone(unsigned int cloneID,
-                        unsigned int originalID,
+void cfdModel::CreateClone(std::string cloneID,
+                        std::string originalID,
                         std::string originalType)
 {
    if(originalType == std::string("Assembly"))
@@ -843,24 +843,24 @@ void cfdModel::CreateClone(unsigned int cloneID,
    
 }
 ///////////////////////////////////////////////////////
-void cfdModel::CreateAssembly(unsigned int assemblyID)
+void cfdModel::CreateAssembly(std::string assemblyID)
 {
    _assemblyList[assemblyID] = new VE_SceneGraph::cfdDCS();
 }
 //////////////////////////////////////////////
 void cfdModel::CreatePart(std::string fileName,
-                       unsigned int partID,
-                       unsigned int parentID)
+                       std::string partID,
+                       std::string parentID)
 {
    _partList[partID] = new VE_SceneGraph::cfdFILE(fileName,_assemblyList[parentID]);
 }
 ////////////////////////////////////////////////////////////////
-void cfdModel::SetActiveAttributeOnNode(unsigned int nodeID,
+void cfdModel::SetActiveAttributeOnNode(std::string nodeID,
                                        std::string nodeType,
                                        std::string attributeName)
 {
 #ifdef _OSG
-   std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+   std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
    attributeList = _nodeAttributes.find(nodeID);
    
    if(attributeList != _nodeAttributes.end())
@@ -950,11 +950,11 @@ void cfdModel::MakeCADRootOpaque()
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void cfdModel::RemoveAttributeFromNode(unsigned int nodeID,std::string nodeType,
+void cfdModel::RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
                                        std::string attributeName)
 {
 #ifdef _OSG
-	std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+	std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
    attributeList = _nodeAttributes.find(nodeID);
    
    if(attributeList != _nodeAttributes.end())
@@ -1000,7 +1000,7 @@ void cfdModel::RemoveAttributeFromNode(unsigned int nodeID,std::string nodeType,
 #endif
 }
 //////////////////////////////////////////////
-void cfdModel::AddAttributeToNode(unsigned int nodeID,
+void cfdModel::AddAttributeToNode(std::string nodeID,
                               VE_CAD::CADAttribute* newAttribute)
 {
 #ifdef _OSG
@@ -1012,7 +1012,7 @@ void cfdModel::AddAttributeToNode(unsigned int nodeID,
    attributeInfo.first = newAttribute->GetAttributeName();
    attributeInfo.second = attribute.get();
    
-   std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+   std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
    attributeList = _nodeAttributes.find(nodeID);
    
    if(attributeList != _nodeAttributes.end())
@@ -1039,10 +1039,10 @@ void cfdModel::AddAttributeToNode(unsigned int nodeID,
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void cfdModel::UpdateMaterialMode(unsigned int nodeID,std::string attributeName,std::string type,std::string mode)
+void cfdModel::UpdateMaterialMode(std::string nodeID,std::string attributeName,std::string type,std::string mode)
 {
 #ifdef _OSG
-   std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+   std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
    attributeList = _nodeAttributes.find(nodeID);
    
    if(attributeList != _nodeAttributes.end())
@@ -1074,11 +1074,11 @@ void cfdModel::UpdateMaterialMode(unsigned int nodeID,std::string attributeName,
 #endif
 }
 //////////////////////////////////////////////////////////////////////////////////////
-void cfdModel::UpdateMaterialComponent(unsigned int nodeID, std::string attributeName,
+void cfdModel::UpdateMaterialComponent(std::string nodeID, std::string attributeName,
                                        std::string component,std::string face,std::vector<double> values)
 {
 #ifdef _OSG
-   std::map< unsigned int, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+   std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
    attributeList = _nodeAttributes.find(nodeID);
    
    if(attributeList != _nodeAttributes.end())
@@ -1114,24 +1114,24 @@ void cfdModel::UpdateMaterialComponent(unsigned int nodeID, std::string attribut
 #endif
 }
 ///////////////////////////////////////////////////////////
-VE_SceneGraph::cfdFILE* cfdModel::GetPart(unsigned int partID)
+VE_SceneGraph::cfdFILE* cfdModel::GetPart(std::string partID)
 {
    return _partList[partID];
 }
 /////////////////////////////////////////////////////////////////////
-VE_SceneGraph::cfdDCS* cfdModel::GetAssembly(unsigned int assemblyID)
+VE_SceneGraph::cfdDCS* cfdModel::GetAssembly(std::string assemblyID)
 {
    return _assemblyList[assemblyID];
 }
 /////////////////////////////////////////////////////////////////////
-VE_SceneGraph::cfdClone* cfdModel::GetClone(unsigned int cloneID)
+VE_SceneGraph::cfdClone* cfdModel::GetClone(std::string cloneID)
 {
    return _cloneList[cloneID];
 }
 //////////////////////////////////////////////
-bool cfdModel::PartExists(unsigned int partID)
+bool cfdModel::PartExists(std::string partID)
 {
-   std::map<unsigned int,VE_SceneGraph::cfdFILE*>::iterator foundPart;
+   std::map<std::string,VE_SceneGraph::cfdFILE*>::iterator foundPart;
    foundPart = _partList.find(partID);
 
    if(foundPart != _partList.end())
@@ -1141,9 +1141,9 @@ bool cfdModel::PartExists(unsigned int partID)
    return false;
 }
 /////////////////////////////////////////////////////
-bool cfdModel::AssemblyExists(unsigned int assemblyID)
+bool cfdModel::AssemblyExists(std::string assemblyID)
 {
-   std::map<unsigned int,VE_SceneGraph::cfdDCS*>::iterator foundAssembly;
+   std::map<std::string,VE_SceneGraph::cfdDCS*>::iterator foundAssembly;
    foundAssembly = _assemblyList.find(assemblyID);
 
    if(foundAssembly != _assemblyList.end())
@@ -1153,9 +1153,9 @@ bool cfdModel::AssemblyExists(unsigned int assemblyID)
    return false;
 }
 /////////////////////////////////////////////////////
-bool cfdModel::CloneExists(unsigned int cloneID)
+bool cfdModel::CloneExists(std::string cloneID)
 {
-   std::map<unsigned int,VE_SceneGraph::cfdClone*>::iterator foundClone;
+   std::map<std::string,VE_SceneGraph::cfdClone*>::iterator foundClone;
    foundClone = _cloneList.find(cloneID);
 
    if(foundClone!= _cloneList.end())
