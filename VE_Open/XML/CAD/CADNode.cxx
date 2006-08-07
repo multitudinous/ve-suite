@@ -221,7 +221,6 @@ void CADNode::_updateVEElement(std::string input)
    SetAttribute("id",uuid);
    SetSubElement(std::string("parent"),_parent);
 
-
    if(!_transform)
    {
       _transform = new Transform();
@@ -289,15 +288,16 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             {
               _name = ExtractDataStringFromSimpleElement( nameNode );
             }
-            //Is there a better way to do this
-            /*DOMElement* idNode = GetSubElement(currentElement,std::string("nodeID"),0);
+            
+            DOMElement* idNode = GetSubElement(currentElement,std::string("nodeID"),0);
             if(idNode)
             {
-               //_uID = ExtractIntegerDataNumberFromSimpleElement(idNode );
-               _uID = std::atoi(uuid.c_str());
-            }*/
-            //yes there is
-            VE_XML::XMLObject::GetAttribute(currentElement, "id",uuid);
+               VE_XML::XMLObject::SetID(ExtractIntegerDataNumberFromSimpleElement(idNode) );
+            }
+            else
+            {
+               VE_XML::XMLObject::GetAttribute(currentElement, "id",uuid);
+            }
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {
