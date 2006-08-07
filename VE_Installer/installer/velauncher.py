@@ -705,7 +705,8 @@ class LauncherWindow(wx.Dialog):
         config.SetPath('..')
         config.SetPath(name)
         ##Save the current configuration under name
-        config.Write("DependenciesDir", self.dependencies)
+        if self.dependencies != None:
+            config.Write("DependenciesDir", self.dependencies)
         config.Write("Directory", self.txDirectory.GetValue())
         config.Write("JconfSelection", self.jconfSelection)
         config.Write("NameServer", str(self.nameServer))
