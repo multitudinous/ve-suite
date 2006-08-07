@@ -128,16 +128,17 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-linux-rhel4-i686
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-linux-rhel4-i686-deps
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.0/Linux-RHEL_4
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.1/Linux-RHEL_4
+   setenv COIN_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/Coin-2.4.5/Linux-RHEL_4
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
-
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${COIN_HOME}/lib
+  
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-TAO-5.5/Linux-RHEL_4
-      #setenv TAO_HOME /mnt/rigby/home11/users/mccdo/ACE_TAO/5.4.9/RHEL_4_Install
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/lib
       setenv PATH ${TAO_HOME}/bin:${PATH}
 
@@ -153,17 +154,19 @@ else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_*64 ) then
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/Linux64-SuSE_10
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux64-SuSE_10
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux64-SuSE_10
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.0/Linux64-SuSE_10
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.1/Linux64-SuSE_10
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
+   setenv COIN_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/Coin-2.4.5/Linux64-SuSE_10
 
    setenv LD_LIBRARY_PATH ${WX_HOME}/lib:${VJ_BASE_DIR}/lib:${VJ_BASE_DIR}/lib64:${VTK_BASE_DIR}/lib/vtk
-   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VJ_DEPS_DIR}/lib
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VJ_DEPS_DIR}/lib:${VJ_DEPS_DIR}/lib64
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib64:${OSG_HOME}/lib64/osgPlugins
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CORONA_HOME}/lib:${HOME}/usr/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${COIN_HOME}/lib
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE_TAO/Linux64-SuSE_10
+      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-TAO-5.5/Linux64-SuSE10
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/lib
       setenv PATH ${TAO_HOME}/bin:${PATH}
 
@@ -179,14 +182,16 @@ else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_i* ) then
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/Linux-SuSE_10
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux-SuSE_10
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux-SuSE_10
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.0/Linux-SuSE_10
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.1/Linux-SuSE_10
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
+   setenv COIN_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/Coin-2.4.5/Linux-SuSE_10
 
    setenv LD_LIBRARY_PATH ${WX_HOME}/lib:${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CORONA_HOME}/lib:${HOME}/usr/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${COIN_HOME}/lib
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       #setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE_TAO/Linux-SuSE_10
