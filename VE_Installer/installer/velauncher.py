@@ -24,6 +24,7 @@ from platform import architecture ##Used to test if it's 32/64-bit
 import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
 
+UNIX_SHELL = "xterm" ##Shell program for the Shell mode
 ##Cluster features
 CLUSTER_ENABLED = True
 MASTER_WAIT = 10 ##Seconds to wait after starting Master to start Slaves
@@ -46,7 +47,7 @@ RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
                       "OSG Patented Cluster"]
 XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC"]
 MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization",
-             "Builder Shell", "Custom"]
+             "Shell", "Custom"]
 MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                          "nameServer": [FIXED, True],
                          "xplorer": [FIXED, True],
@@ -69,10 +70,10 @@ MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                                "nameServer": [FIXED, False],
                                "xplorer": [FIXED, True],
                                "desktop": [FIXED, False]},
-             "Builder Shell": {"conductor": [FIXED, False],
-                               "nameServer": [FIXED, False],
-                               "xplorer": [FIXED, False],
-                               "shell": [FIXED, True]},
+             "Shell": {"conductor": [FIXED, False],
+                       "nameServer": [FIXED, False],
+                       "xplorer": [FIXED, False],
+                       "shell": [FIXED, True]},
              "Custom": {}}
 JCONF_CONFIG = "JconfList"
 CLUSTER_CONFIG = "Cluster"
@@ -282,6 +283,7 @@ class LauncherWindow(wx.Dialog):
         self.taoMachine = ""
         self.taoPort = ""
         self.dependencies = None
+        self.builderDir = None
 
         ##Prepare the logo.
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
@@ -707,6 +709,8 @@ class LauncherWindow(wx.Dialog):
         ##Save the current configuration under name
         if self.dependencies != None:
             config.Write("DependenciesDir", self.dependencies)
+        if self.builderDir != None:
+            config.Write("BuilderDir", self.builderDir)
         config.Write("Directory", self.txDirectory.GetValue())
         config.Write("JconfSelection", self.jconfSelection)
         config.Write("NameServer", str(self.nameServer))
@@ -810,6 +814,9 @@ class LauncherWindow(wx.Dialog):
         ##Set Mode
         self.rbMode.SetSelection(config.ReadInt("Mode", 0))
         self.UpdateDisplay()
+        ##Set Builder Dir
+        if config.Exists("BuilderDir"):
+            self.builderDir = config.Read("BuilderDir", "ErrOr")
         ##Return to default config
         config.SetPath('..')
         config.SetPath(DEFAULT_CONFIG)
@@ -960,19 +967,50 @@ class LauncherWindow(wx.Dialog):
             dlg.Destroy()
             return
         ##Set the builderDir, if necessary.
-        builderDir = None
-        if shell:
-            dlg = wx.DirDialog(None,
-                       "Choose the VE-Builder directory:",
-                       os.getcwd(),
-                       style=wx.DD_DEFAULT_STYLE)
-            if dlg.ShowModal() == wx.ID_OK:
-                ##If a directory's chosen, go ahead.
-                builderDir = dlg.GetPath()
+        passedBuilderDir = None
+        loop = True
+        if shell and loop:
+            dlg = wx.MessageDialog(self,
+                                    "Do you want to use this shell\n" +
+                                    "to run VE-Builder?",
+                                    "Running VE-Builder",
+                                    wx.YES_NO)
+            choice = dlg.ShowModal()
+            dlg.Destroy()
+            loop = False
+            if choice == wx.ID_YES:
+                ##Ask for the builder directory.
+                if self.builderDir == None:
+                    startBuilderDir = os.getcwd()
+                else:
+                    startBuilderDir = self.builderDir
+                dlg = wx.DirDialog(None,
+                                   "Choose the VE-Builder directory:",
+                                   startBuilderDir,
+                                   style=wx.DD_DEFAULT_STYLE)
+                choice = dlg.ShowModal()
+                if choice == wx.ID_OK:
+                    ##If a directory's chosen, go ahead.
+                    self.builderDir = dlg.GetPath()
+                    passedBuilderDir = self.builderDir
+                    loop = False
+                else: ##If not, ask if they want to run VE-Builder again.
+                    pass
                 dlg.Destroy()
-            else: ##If not, cancel Builder Shell Launch.
-                dlg.Destroy()
-                return
+            else:
+                loop = False
+        ##BANDAGE
+        ##This DirDialog is used to purge dlg of previous MessageDialogs.
+        ##Without it, having a MessageDialog w/o a DirDialog after it
+        ##hangs the program's end.
+        ##Figure out the cause later so we can remove this.
+        dlg = wx.DirDialog(None,
+                           "Purges dlg; temporary workaround",
+                           "",
+                           style=wx.DD_DEFAULT_STYLE)
+        dlg.Destroy()
+        ##Hide the Launcher.
+        self.Hide()
         ##Go into the Launch
         Launch(self,
                self.txDirectory.GetValue(),
@@ -982,9 +1020,10 @@ class LauncherWindow(wx.Dialog):
                self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()),
                desktop, cluster = self.clusterDict.GetCheckedLocations(),
                master = self.clusterMaster,
-               shell = shell, builderDir = builderDir)
+               shell = shell, builderDir = passedBuilderDir)
         if nameServer:
             win = ServerKillWindow()
+        self.OnClose("bright side of life")
 
     def OnClose(self, event):
         """Saves launcher's current configuration and quits the launcher.
@@ -1947,8 +1986,8 @@ class Launch:
         builderDir -- Sets a path to the builderDir/bin."""
         ##The launch is the final step.
         ##Destroy launcher window before beginning the actual launch.
-        if launcherWindow != None:
-            launcherWindow.Close()
+##        if launcherWindow != None:
+##            launcherWindow.Close()
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
         ##Used in EnvSetup and Windows/Unix.
@@ -1973,7 +2012,7 @@ class Launch:
         ##Checks the OS and routes the launcher to the proper subfunction
         ##NOTE: Code out separate Setups, code in the combined Setup
         if shell: ##Special builder shell case.
-            self.BuilderShell()
+            self.Shell()
         elif windows:
             self.Windows(runName, runConductor, runXplorer,
                          typeXplorer, jconf, desktopMode)
@@ -2143,11 +2182,11 @@ class Launch:
             os.system("killall Naming_Service Exe_server")
         print "Previous nameservers killed."
 
-    def BuilderShell(self):
+    def Shell(self):
         if windows:
             os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
         elif unix:
-            os.system("xterm &")
+            os.system("%s &" % UNIX_SHELL)
         else:
             print "ERROR! This OS isn't supported."
 
