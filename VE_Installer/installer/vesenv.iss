@@ -11,3 +11,4 @@
 #define COINHOME "C:\devEnv\VES.1.0-Deps\Coin-2.4.5"
 #define APRHOME "C:\devEnv\VES.1.0-Deps\apr"
 #define APRUTILHOME "C:\devEnv\VES.1.0-Deps\apr-util"
+#define APRICONVHOME "C:\devEnv\VES.1.0-Deps\apr-iconv"
