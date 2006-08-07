@@ -77,7 +77,11 @@ public:
 
    ///Set the parent for this node.
    ///\param parentID The parent ID of this node.
-   void SetParent(unsigned int parentID);
+   //void SetParent(unsigned int parentID);
+
+   ///Set the parent for this node.
+   ///\param parentID The parent ID of this node.
+   void SetParent(std::string parentID);
 
    ///Set the transform for this node.
    ///\param transform The transform of this node.
@@ -116,7 +120,10 @@ public:
    std::string GetNodeName();
 
    ///Get the parent of this CAD node.
-   unsigned int GetParent();
+   //unsigned int GetParent();
+
+   ///Get the parent of this CAD node.
+   std::string GetParent();
 
    ///Check if this CADNode has any animation information.
    bool HasAnimation();
@@ -147,7 +154,7 @@ public:
    std::vector<CADAttribute> GetAttributeList();
 
    ///Get the ID
-   unsigned int GetID();
+   //unsigned int GetID();
 
    ///Copy constructor
    CADNode(const CADNode& rhs);
@@ -168,8 +175,8 @@ protected:
    void _updateNodeType();
 
    std::string _activeAttributeName;///<The name of the active attribute.
-   unsigned int _uID;///<A "unique" id for the node.
-   unsigned int  _parent;  ///< Parent node ID.
+   //unsigned int _uID;///<A "unique" id for the node.
+   std::string  _parent;  ///< Parent node ID.
    VE_XML::Transform* _transform; ///< Transform for the node.
    std::vector<VE_CAD::CADAttribute> _attributeList;///<A list of attributes for this node
    std::vector<VE_CAD::CADNodeAnimation> _animations;//<A list of animation path files for this node.

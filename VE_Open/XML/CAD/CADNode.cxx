@@ -55,10 +55,10 @@ CADNode::CADNode(std::string name)
 :VE_XML::XMLObject()
 {
    _name = name;
-   _parent = 0;
+   _parent = "";
    _transform = new Transform(); 
    _type = std::string("Node");
-   _uID = static_cast<unsigned int>(time(NULL));
+   //_uID = std::atoi(uuid.c_str());//static_cast<unsigned int>(time(NULL));
    _activeAttributeName = std::string("");
    SetObjectType("CADNode");
    SetObjectNamespace("CAD");
@@ -110,7 +110,7 @@ void CADNode::SetNodeName(std::string name)
    _name = name;
 }
 ////////////////////////////////////////////////////
-void CADNode::SetParent(unsigned int parent)
+void CADNode::SetParent(std::string parent)
 {
    _parent = parent;
 }
@@ -164,7 +164,7 @@ std::string CADNode::GetNodeName()
    return _name;
 }
 /////////////////////////////////////////
-unsigned int CADNode::GetParent()
+std::string CADNode::GetParent()
 {
    return _parent;
 }
@@ -207,17 +207,17 @@ VE_CAD::CADAttribute& CADNode::GetActiveAttribute()
    return GetAttribute(_activeAttributeName);
 }
 /////////////////////////////
-unsigned int CADNode::GetID()
+/*unsigned int CADNode::GetID()
 {
    return _uID;
-}
+}*/
 /////////////////////////////////////////////////
 void CADNode::_updateVEElement(std::string input)
 {
    _updateNodeType();
    _updateNodeName();
 
-   SetSubElement(std::string("nodeID"),_uID);   
+   //SetSubElement(std::string("nodeID"),_uID);   
    SetSubElement(std::string("parent"),_parent);
 
 
@@ -289,11 +289,12 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
               _name = ExtractDataStringFromSimpleElement( nameNode );
             }
             //Is there a better way to do this
-            DOMElement* idNode = GetSubElement(currentElement,std::string("nodeID"),0);
+            /*DOMElement* idNode = GetSubElement(currentElement,std::string("nodeID"),0);
             if(idNode)
             {
-               _uID = ExtractIntegerDataNumberFromSimpleElement(idNode );
-            }
+               //_uID = ExtractIntegerDataNumberFromSimpleElement(idNode );
+               _uID = std::atoi(uuid.c_str());
+            }*/
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {
@@ -302,7 +303,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
             if(parentNode)
             {
-               _parent = ExtractIntegerDataNumberFromSimpleElement(parentNode);
+               _parent = ExtractDataStringFromSimpleElement(parentNode);
             }
             size_t nOldAttributes = _attributeList.size();
             if(nOldAttributes > 0)
@@ -406,7 +407,7 @@ size_t CADNode::GetNumberOfAnimations()
 CADNode::CADNode(const CADNode& rhs)
 :VE_XML::XMLObject(rhs)
 {
-   _parent = 0;
+   _parent = "";
    _transform = 0;;
 
    if(rhs._transform)
@@ -434,7 +435,7 @@ CADNode::CADNode(const CADNode& rhs)
    _parent = rhs._parent;
    _name = rhs._name;
    _type = rhs._type;
-   _uID = rhs._uID;
+   //_uID = rhs._uID;
    
 }
 ////////////////////////////////////////////////
@@ -472,7 +473,7 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       _transform = new Transform(*rhs._transform);
       _activeAttributeName = rhs._activeAttributeName;
       
-      _uID = rhs._uID;
+      //_uID = rhs._uID;
       _parent = rhs._parent;
       _name = rhs._name;
    }

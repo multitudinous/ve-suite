@@ -11,7 +11,6 @@
           <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" default="Assembly" />
           <xs:element name="type" type="xs:string" />
           <xs:element name="attribute" type="CADAttribute" maxOccurs="unbounded" minOccurs="0" />
-          <xs:element name="nodeID" type="xs:unsignedInt" />
           <xs:element name="activeAttributeName" type="xs:string" />
           <xs:element name="animation" type="CADNodeAnimation" />
         </xs:sequence>

@@ -76,7 +76,7 @@ public:
 
    ///\param whichChildID The ID of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails 
-   bool RemoveChild(unsigned int whichChildID); 
+   bool RemoveChild(std::string whichChildID); 
 
    ///Get the number of children of this assembly
    unsigned int GetNumberOfChildren();
