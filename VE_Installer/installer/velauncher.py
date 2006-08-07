@@ -20,7 +20,7 @@ executing the launcher on its last command.
 import os ##Used for setting environmental variables, running programs
 from time import sleep ##Used for delays in launch
 import sys ##Gets command line arguments
-from platform import architecture ##Used to test if 32/64-bit
+from platform import architecture ##Used to test if it's 32/64-bit
 import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
 
@@ -91,12 +91,8 @@ LEFT_MARGIN = HORIZONTAL_SPACE
 NULL_SPACE = (0, 0)
 KILL_WINDOW_SIZE = (200, 100)
 ##Set up the system ID
-windows = False
-unix = False
-if os.name == "nt":
-    windows = True
-elif os.name == "posix":
-    unix = True
+windows = (os.name == "nt")
+unix = (os.name == "posix")
     
 ##Set up the config
 config = wx.Config(CONFIG_FILE)
@@ -214,7 +210,6 @@ class CommandLaunch:
                 self.xplorerType = data
             else:
                 self.xplorerType = 0
-        
         ##Launch
         Launch(None, self.workDir,
                self.nameServer, self.conductor, self.xplorer, self.xplorerType,
@@ -255,6 +250,8 @@ class LauncherWindow(wx.Dialog):
         GetSelectedJconf
         ChangeMode(event)
         ChooseDirectory(event)
+        ChooseSaveConfig(event)
+        ChooseLoadConfig(event)
         SaveConfig(config, name)
         LoadConfig(config, name)
         Settings(event)
@@ -278,12 +275,13 @@ class LauncherWindow(wx.Dialog):
         self.xplorer = False
         self.xplorerType = 0
         self.desktop = False
-        self.jconfList = []
+        self.jconfList = None
         self.jconfSelection = None
         self.clusterDict = None
         self.clusterMaster = None
         self.taoMachine = ""
         self.taoPort = ""
+        self.dependencies = None
 
         ##Prepare the logo.
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
@@ -320,6 +318,11 @@ class LauncherWindow(wx.Dialog):
         self.bCustom = wx.Button(self, -1, "Mode Settings")
         self.bCustom.SetToolTip(wx.ToolTip("View and change settings for" +
                                            " the current mode."))
+        ##Build Config buttons.
+        bLoadConf = wx.Button(self, -1, "Load Config")
+        bLoadConf.SetToolTip(wx.ToolTip("Load a different configuration."))
+        bSaveConf = wx.Button(self, -1, "Save Config")
+        bSaveConf.SetToolTip(wx.ToolTip("Save this configuration."))
         ##Build Launch button.
         bLaunch = wx.Button(self, -1, "Launch VE Suite")
         bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
@@ -353,15 +356,16 @@ class LauncherWindow(wx.Dialog):
                 legitDeps = self.DependenciesCheck(dependenciesDir)
                 if not legitDeps:
                     self.DependenciesChange("dead parrot sketch")
+            self.dependencies = config.Read("DependenciesDir", ":::")
         ##Event bindings.
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
+        self.Bind(wx.EVT_BUTTON, self.ChooseLoadConfig, bLoadConf)
+        self.Bind(wx.EVT_BUTTON, self.ChooseSaveConfig, bSaveConf)
         self.Bind(wx.EVT_RADIOBOX, self.ModeChanged, self.rbMode)
         self.Bind(wx.EVT_BUTTON, self.DependenciesChange, bDepChange)
-        ##self.Bind(wx.EVT_MENU, self.DependenciesChange, id=110)
-        ##self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_EXIT)
         ##Restore config values from last time.
         self.LoadConfig(DEFAULT_CONFIG)
         
@@ -396,6 +400,9 @@ class LauncherWindow(wx.Dialog):
                              HORIZONTAL_SPACE])
         columnSizer.Add(self.bCustom, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
         columnSizer.Add(HORIZONTAL_SPACE)
+        columnSizer.Add(bLoadConf, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
+        columnSizer.Add(HORIZONTAL_SPACE)
+        columnSizer.Add(bSaveConf, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
         rowSizer.AddMany([VERTICAL_SPACE,
                           columnSizer])
         ##Add the title graphic space
@@ -492,6 +499,7 @@ class LauncherWindow(wx.Dialog):
             legitimateDependenciesDir = self.DependenciesCheck(dependenciesDir)
         ##Write the new Dependencies directory to default config.
         config.Write("DependenciesDir", dependenciesDir)
+        self.dependencies = dependenciesDir
         return
 
     def DependenciesGet(self):
@@ -614,6 +622,78 @@ class LauncherWindow(wx.Dialog):
             self.txDirectory.SetInsertionPointEnd()
         dlg.Destroy()
 
+    def ChooseSaveConfig(self, event):
+        """Lets the user choose which name to save a configuration under."""
+        dlg = wx.TextEntryDialog(self,
+                                 "Enter your configuration's name:",
+                                 "Save Configuration")
+        if dlg.ShowModal() == wx.ID_OK:
+            name = dlg.GetValue()
+            dlg.Destroy()
+            ##Don't overwrite the default config.
+            if name == "previous":
+                err = wx.MessageDialog(self,
+                                       "You can't name it 'previous'.\n" +
+                                       "The default config uses that.",
+                                       "Error: Reserved Name Chosen",
+                                       wx.OK)
+                err.ShowModal()
+                err.Destroy()
+                return
+            ##Check for slashes
+            if name.count('/') > 0 or name.count('\\') > 0:
+                err = wx.MessageDialog(self,
+                                       "You can't use a name with\n" +
+                                       "slashes in it.\n",
+                                       "Error: Name Contains Slashes",
+                                       wx.OK)
+                err.ShowModal()
+                err.Destroy()
+                return
+            ##Check if it's empty/spaces
+            elif name.isspace() or name == '':
+                err = wx.MessageDialog(self,
+                                       "You can't use an empty name.",
+                                       "Error: Name is Empty",
+                                       wx.OK)
+                err.ShowModal()
+                err.Destroy()
+                return
+            self.SaveConfig(name)
+        else:
+            dlg.Destroy()
+
+    def ChooseLoadConfig(self, event):
+        """Lets the user choose a confiuration to load."""
+        message = "Please choose a\n" + "configuration to load."
+        choices = []
+        config.SetPath("..")
+        configEntry = config.GetFirstGroup()
+        while (configEntry[0]):
+            if configEntry[1] != DEFAULT_CONFIG:
+                choices.append(configEntry[1])
+            configEntry = config.GetNextGroup(configEntry[2])
+        config.SetPath(DEFAULT_CONFIG)
+        ##Return if no configurations are saved.
+        if len(choices) <= 0:
+            dlg = wx.MessageDialog(self,
+                                   "You don't have any\n" +
+                                   "saved configurations\n" +
+                                   "to choose from.",
+                                   "No Configs Saved", wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+        ##Else ask the user to select a configuration.
+        dlg = wx.SingleChoiceDialog(self, message, "Load Configuration",
+                                    choices)
+        dlg.SetSelection(0)
+        if dlg.ShowModal() == wx.ID_OK:
+            choice = dlg.GetStringSelection()
+            self.LoadConfig(choice)
+        dlg.Destroy()
+
+        
     def SaveConfig(self, name):
         """Saves the current configuration under name.
 
@@ -621,7 +701,11 @@ class LauncherWindow(wx.Dialog):
         name -- What to name this configuration"""
         ##Update the launcher's data
         self.UpdateData()
+        ##Set config
+        config.SetPath('..')
+        config.SetPath(name)
         ##Save the current configuration under name
+        config.Write("DependenciesDir", self.dependencies)
         config.Write("Directory", self.txDirectory.GetValue())
         config.Write("JconfSelection", self.jconfSelection)
         config.Write("NameServer", str(self.nameServer))
@@ -633,6 +717,14 @@ class LauncherWindow(wx.Dialog):
         config.Write("DesktopMode", str(self.desktop))
         config.WriteInt("Mode", self.rbMode.GetSelection())
         config.Write("ClusterMaster", self.clusterMaster)
+        ##Redo the Jconf/Cluster configs
+        config.DeleteGroup(JCONF_CONFIG)
+        self.jconfList.WriteConfig()
+        config.DeleteGroup(CLUSTER_CONFIG)
+        self.clusterDict.WriteConfig()
+        ##Return to default config
+        config.SetPath('..')
+        config.SetPath(DEFAULT_CONFIG)
         return
     
     def LoadConfig(self, name):
@@ -717,6 +809,10 @@ class LauncherWindow(wx.Dialog):
         ##Set Mode
         self.rbMode.SetSelection(config.ReadInt("Mode", 0))
         self.UpdateDisplay()
+        ##Return to default config
+        config.SetPath('..')
+        config.SetPath(DEFAULT_CONFIG)
+        return
 
     def Settings(self, event):
         """Launches the Custom Settings window."""
@@ -1164,6 +1260,7 @@ class JconfList:
         GetPath(name)
         Length() / __len__
         GetNames()
+        WriteConfig()
     """
     def __init__(self):
         """Creates a list of .jconf names/paths from the Launcher's Config."""
@@ -1248,6 +1345,13 @@ class JconfList:
             nList.append(name)
         nList.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return nList
+
+    def WriteConfig(self):
+        """Writes the entire list to config."""
+        config.SetPath(JCONF_CONFIG)
+        for name in self.jDict:
+            config.Write(name, self.jDict[name])
+        config.SetPath('..')
 
 class JconfWindow(wx.Dialog):
     """A window for editing a list of Jconf files.
@@ -1492,6 +1596,7 @@ class ClusterDict:
         GetNames()
         GetLocations()
         GetCheckedLocations()
+        WriteConfig()
     """
     def __init__(self):
         """Creates a dict of cluster names/locations from Launcher's Config."""
@@ -1559,6 +1664,15 @@ class ClusterDict:
 
         Duplicates GetNames()."""
         return self.GetNames()
+
+    def WriteConfig(self):
+        """Writes the entire list to config."""
+        config.SetPath(CLUSTER_CONFIG)
+        for location in self.cluster:
+            config.SetPath(location)
+            config.Write("location", location)
+            config.SetPath('..')
+        config.SetPath('..')
 
 class ClusterWindow(wx.Dialog):
     """A window for editing a list of clustered computers.
