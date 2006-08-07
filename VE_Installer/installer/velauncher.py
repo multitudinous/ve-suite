@@ -838,7 +838,7 @@ class LauncherWindow(wx.Dialog):
                                      modeRules, mode,
                                      position = position)
         frame.ShowModal()
-        frame.Destroy()
+        ##frame.Destroy()
 
     def Launch(self, event):
         """Checks input, begins launch if error-free."""
