@@ -2263,13 +2263,13 @@ class Launch:
 
         Only takes care of basic variables. Coders with custom builds can set
         advanced variables by creating a batch/shell file to set the extra
-        variables, then execute the launcher as its last command.
+        variables, then execute the launcher in --dev mode as its last command.
         The environmental settings will carry over.
 
         Variables overwritten by this class:
         CFDHOSTTYPE (removes parantheses from CFDHOSTTYPE)
 
-        Variables not overwritten, but set to a default value if empty:
+        Variables overwritten (when not in dev mode):
         VE_INSTALL_DIR
         VE_DEPS_DIR
         VE_WORKING_DIR
@@ -2294,10 +2294,6 @@ class Launch:
         PYTHON_PATH (Windows systems only)
         PATH
         LD_LIBRARY_PATH or LD_LIBRARYN32_PATH (Unix systems only)"""
-
-        ##Determine the OS
-        windows = (os.name == "nt")
-        unix = (os.name == "posix")
         ##Set where VE-Suite's installed
         if devMode:
              self.EnvFill("VE_INSTALL_DIR", os.getenv("VE_SUITE_HOME"))
@@ -2438,28 +2434,10 @@ class Launch:
             ##if architecture()[0] == "64bit":
             ##    pathList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
             self.EnvAppend("PATH", pathList, ';')
-##            os.environ["PATH"] = str(os.getenv("PATH")) + ";" + \
-##                                 os.path.join(str(os.getenv("VJ_DEPS_DIR")),
-##                                              "bin") + ";" + \
-##                                 os.path.join(str(os.getenv("VJ_DEPS_DIR")),
-##                                              "lib") + ";" + \
-##                                 os.path.join(str(os.getenv("VJ_BASE_DIR")),
-##                                              "lib") + ";" + \
-##                                 os.path.join(str(os.getenv("VE_INSTALL_DIR")),
-##                                              "bin") + ";" + \
-##                                 os.path.join(str(os.getenv("VE_DEPS_DIR")),
-##                                              "bin") + ";" + \
-##                                 os.path.join(str(os.getenv("CD")),
-##                                              "bin")
         elif unix:
             ##Set name of library path
             libraryPath = "LD_LIBRARY_PATH"
             lib = "lib"
-
-            ##Prepare the current library path
-##            currentLibraryPath = str(os.getenv(libraryPath)) + ":"
-##            if currentLibraryPath == "None:":
-##                currentLibraryPath = ""
             ##Update the library path
             libList= [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                       os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
@@ -2468,12 +2446,6 @@ class Launch:
             ##if platform.architecture()[0] == "64bit":
             ##    libList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
             self.EnvAppend(libraryPath, libList, ':')
-##            os.environ[libraryPath] = currentLibraryPath + \
-##                       os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")+ \
-##                       ":" + \
-##                       os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin")+\
-##                       ":" + \
-##                       os.path.join(str(os.getenv("VJ_BASE_DIR")), lib)
             ##Update the path
             pathList= [os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
                        os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
@@ -2481,13 +2453,7 @@ class Launch:
             if builderDir != None:
                 pathList[:0] = [os.path.join(builderDir, "bin")]
             self.EnvAppend("PATH", pathList, ':')
-##            os.environ["PATH"] = str(os.getenv("PATH")) + ":" + \
-##                                 os.path.join(str(os.getenv("VE_INSTALL_DIR")),
-##                                              "bin") + ":" + \
-##                                 os.path.join(str(os.getenv("VE_DEPS_DIR")),
-##                                              "bin") + ":" + \
-##                                 os.path.join(str(os.getenv("VJ_BASE_DIR")),
-##                                              "bin")
+
 
     def EnvAppend(self, var, appendages, sep):
         """Appends appendages (list) to var, using sep to separate them."""
@@ -2506,8 +2472,14 @@ class Launch:
 ##        print var + ": " + os.getenv(var) ##TESTER
 
     def EnvFill(self, var, default):
-        """Sets environmental variable var to default if it is empty."""
-        os.environ[var] = os.getenv(var, default)
+        """Overwrites environmental var in normal mode, fills it in dev mode.
+
+        Does not overwrite a filled variable in devMode.
+        Overwrites a filled variable in normal mode."""
+        if devMode:
+            os.environ[var] = os.getenv(var, default)
+        else:
+            os.environ[var] = default
         ##Put var in clusterScript
         if self.cluster:
             self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
