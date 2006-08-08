@@ -51,7 +51,7 @@ MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization",
 MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                          "nameServer": [FIXED, True],
                          "xplorer": [FIXED, True],
-                         "xplorerType": [FIXED, 1],
+                         "xplorerType": [FIXED, 0],
                          "desktop": [FIXED, True],
                          "jconf": [FIXED, "Desktop",
                                    os.path.join(os.getenv("VE_INSTALL_DIR",
@@ -2431,8 +2431,8 @@ class Launch:
             if builderDir != None:
                 pathList[:0] = [os.path.join(builderDir, "bin")]
             ##TEST to append 64-bit libraries:
-            ##if architecture()[0] == "64bit":
-            ##    pathList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
+            if architecture()[0] == "64bit":
+                pathList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
             self.EnvAppend("PATH", pathList, ';')
         elif unix:
             ##Set name of library path
@@ -2443,8 +2443,8 @@ class Launch:
                       os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
                       os.path.join(str(os.getenv("VJ_BASE_DIR")), lib)]
             ##TEST to append 64-bit libraries:
-            ##if platform.architecture()[0] == "64bit":
-            ##    libList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
+            if architecture()[0] == "64bit":
+                libList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
             self.EnvAppend(libraryPath, libList, ':')
             ##Update the path
             pathList= [os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
