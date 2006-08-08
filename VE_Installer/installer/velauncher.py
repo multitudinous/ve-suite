@@ -286,6 +286,7 @@ class LauncherWindow(wx.Dialog):
         self.taoPort = ""
         self.dependencies = None
         self.builderDir = None
+        self.shell = None
 
         ##Prepare the logo.
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
