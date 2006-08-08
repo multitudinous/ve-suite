@@ -253,6 +253,7 @@ class LauncherWindow(wx.Dialog):
         ChooseDirectory(event)
         ChooseSaveConfig(event)
         ChooseLoadConfig(event)
+        DeleteConfig(event)
         SaveConfig(config, name)
         LoadConfig(config, name)
         Settings(event)
@@ -325,6 +326,8 @@ class LauncherWindow(wx.Dialog):
         bLoadConf.SetToolTip(wx.ToolTip("Load a different configuration."))
         bSaveConf = wx.Button(self, -1, "Save Config")
         bSaveConf.SetToolTip(wx.ToolTip("Save this configuration."))
+        bDeleteConf = wx.Button(self, -1, "Delete Config")
+        bDeleteConf.SetToolTip(wx.ToolTip("Delete a configuration."))
         ##Build Launch button.
         bLaunch = wx.Button(self, -1, "Launch VE Suite")
         bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
@@ -366,6 +369,7 @@ class LauncherWindow(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_BUTTON, self.ChooseLoadConfig, bLoadConf)
         self.Bind(wx.EVT_BUTTON, self.ChooseSaveConfig, bSaveConf)
+        self.Bind(wx.EVT_BUTTON, self.DeleteConfig, bDeleteConf)
         self.Bind(wx.EVT_RADIOBOX, self.ModeChanged, self.rbMode)
         self.Bind(wx.EVT_BUTTON, self.DependenciesChange, bDepChange)
         ##Restore config values from last time.
@@ -401,10 +405,14 @@ class LauncherWindow(wx.Dialog):
         columnSizer.AddMany([self.rbMode,
                              HORIZONTAL_SPACE])
         columnSizer.Add(self.bCustom, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
+        rowSizer2 = wx.BoxSizer(wx.VERTICAL)
+        rowSizer2.Add(bLoadConf, 0, wx.EXPAND)
+        rowSizer2.Add(VERTICAL_SPACE)
+        rowSizer2.Add(bSaveConf, 0, wx.EXPAND)
+        rowSizer2.Add(VERTICAL_SPACE)
+        rowSizer2.Add(bDeleteConf, 0, wx.EXPAND)
         columnSizer.Add(HORIZONTAL_SPACE)
-        columnSizer.Add(bLoadConf, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
-        columnSizer.Add(HORIZONTAL_SPACE)
-        columnSizer.Add(bSaveConf, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
+        columnSizer.Add(rowSizer2, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
         rowSizer.AddMany([VERTICAL_SPACE,
                           columnSizer])
         ##Add the title graphic space
@@ -661,9 +669,25 @@ class LauncherWindow(wx.Dialog):
                 err.ShowModal()
                 err.Destroy()
                 return
+            ##Confirm if it'll overwrite another file.
+            config.SetPath("..")
+            overwrite = config.Exists(name)
+            config.SetPath(DEFAULT_CONFIG)
+            if overwrite:
+                confirm = wx.MessageDialog(self,
+                                           "%s already exists.\n" % name +
+                                           "Do you want to overwrite it?",
+                                           "Confirm Overwrite",
+                                           wx.YES_NO | wx.YES_DEFAULT)
+                choice = confirm.ShowModal()
+                confirm.Destroy()
+                if choice == wx.ID_NO:
+                    return
+            ##Save the config.
             self.SaveConfig(name)
         else:
             dlg.Destroy()
+
 
     def ChooseLoadConfig(self, event):
         """Lets the user choose a confiuration to load."""
@@ -695,6 +719,44 @@ class LauncherWindow(wx.Dialog):
             self.LoadConfig(choice)
         dlg.Destroy()
 
+    def DeleteConfig(self, event):
+        """Lets the user choose a confiuration to delete."""
+        message = "Choose a configuration to delete."
+        choices = []
+        config.SetPath("..")
+        configEntry = config.GetFirstGroup()
+        while (configEntry[0]):
+            if configEntry[1] != DEFAULT_CONFIG:
+                choices.append(configEntry[1])
+            configEntry = config.GetNextGroup(configEntry[2])
+        config.SetPath(DEFAULT_CONFIG)
+        ##Return if no configurations are saved.
+        if len(choices) <= 0:
+            dlg = wx.MessageDialog(self,
+                                   "You don't have any\n" +
+                                   "saved configurations\n" +
+                                   "to delete!",
+                                   "No Configs Saved", wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+        ##Else ask the user to select a configuration.
+        dlg = wx.SingleChoiceDialog(self, message, "Delete Configuration",
+                                    choices)
+        dlg.SetSelection(0)
+        if dlg.ShowModal() == wx.ID_OK:
+            choice = dlg.GetStringSelection()
+            confirm = wx.MessageDialog(self,
+                                       "Are you sure you want to\n" +
+                                       "delete the %s configuration?" % choice,
+                                       "Confirm Deletion",
+                                       wx.YES_NO | wx.NO_DEFAULT)
+            if confirm.ShowModal() == wx.ID_YES:
+                config.SetPath("..")
+                config.DeleteGroup(choice)
+                config.SetPath(DEFAULT_CONFIG)
+            confirm.Destroy()
+        dlg.Destroy()
         
     def SaveConfig(self, name):
         """Saves the current configuration under name.
@@ -756,6 +818,7 @@ class LauncherWindow(wx.Dialog):
         ##Set ClusterMaster
         self.clusterMaster = config.Read("ClusterMaster", "")
         ##Set choices for Jconf list.
+        defaultSelection = "None"
         if config.HasGroup(JCONF_CONFIG):
             self.jconfList = JconfList()
         ##Set default choices if JCONF_CONFIG doesn't exist,
@@ -763,7 +826,8 @@ class LauncherWindow(wx.Dialog):
         elif config.Read("DependenciesDir", ":::") != ":::":
             p = DEFAULT_JCONF
             config.SetPath(JCONF_CONFIG)
-            config.Write(os.path.split(p)[1][:-6], p)
+            defaultSelection = os.path.split(p)[1][:-6]
+            config.Write(defaultSelection, p)
             config.SetPath('..')
             self.jconfList = JconfList()
         ##If neither exists, bring up an error. NOTE: Should never be reached.
@@ -772,12 +836,15 @@ class LauncherWindow(wx.Dialog):
                   " default Jconf from Dependencies dir."
             print "Substituting dev .jconf path instead."
             config.SetPath(JCONF_CONFIG)
-            config.Write("DevDesktop", os.path.join(os.getcwd(), "..", "..",
-                         "VE_Xplorer", "stereo_desktop", "desktop.jconf"))
+            defaultSelection = "DevDesktop"
+            path = os.path.join(os.getcwd(), "..", "..",
+                                "VE_Xplorer", "stereo_desktop", "desktop.jconf")
+            config.Write(defaultSelection, path)
             config.SetPath('..')
             self.jconfList = JconfList()
         ##Set Jconf cursor.
-        self.jconfSelection = config.Read("JconfSelection", "None")
+        self.jconfSelection = config.Read("JconfSelection",
+                                          defaultSelection)
         ##Set Tao Machine & Port.
         self.taoMachine = config.Read("TaoMachine", "localhost")
         ##Temporary workaround for error w/ Int TaoPort in last version
