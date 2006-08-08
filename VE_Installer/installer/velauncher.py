@@ -24,7 +24,7 @@ from platform import architecture ##Used to test if it's 32/64-bit
 import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
 
-UNIX_SHELL = "xterm" ##Shell program for the Shell mode
+UNIX_SHELL = os.getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster features
 CLUSTER_ENABLED = True
 MASTER_WAIT = 10 ##Seconds to wait after starting Master to start Slaves
@@ -147,6 +147,7 @@ class CommandLaunch:
         self.jconf = None
         self.cluster = None
         self.clusterMaster = None
+        self.shell = False
 
         ##Set vars from the command line.
         for opt, arg in opts:
@@ -947,12 +948,12 @@ class LauncherWindow(wx.Dialog):
         else:
             desktop = self.desktop
         if ("shell" in modeRules) and (modeRules["shell"][0] == FIXED):
-            shell = modeRules["shell"][1]
+            self.shell = modeRules["shell"][1]
         else:
-            shell = False
+            self.shell = False
         ##ERROR CHECK:  Are any programs selected?
         ##              If not, abort launch.
-        if not (conductor or nameServer or xplorer or shell):
+        if not (conductor or nameServer or xplorer or self.shell):
             dlg = wx.MessageDialog(self,
                                    "The launch won't do anything because you"+
                                    " haven't chosen any programs to launch.\n"+
@@ -1036,7 +1037,7 @@ class LauncherWindow(wx.Dialog):
         ##Set the builderDir, if necessary.
         passedBuilderDir = None
         loop = True
-        if shell and loop:
+        if self.shell and loop:
             dlg = wx.MessageDialog(self,
                                     "Do you want to use this shell\n" +
                                     "to run VE-Builder?",
@@ -1087,7 +1088,7 @@ class LauncherWindow(wx.Dialog):
                self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()),
                desktop, cluster = self.clusterDict.GetCheckedLocations(),
                master = self.clusterMaster,
-               shell = shell, builderDir = passedBuilderDir)
+               shell = self.shell, builderDir = passedBuilderDir)
         if nameServer:
             win = ServerKillWindow()
         self.OnClose("bright side of life")
@@ -1101,7 +1102,19 @@ class LauncherWindow(wx.Dialog):
         ##Update default config file.
         self.SaveConfig(DEFAULT_CONFIG)
         self.Hide()
+        shell = self.shell
         self.Destroy()
+        ##If a shell's launched, start it once the program's destroyed.
+        if shell:
+            if windows:
+                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
+            elif unix:
+                print "VE-Suite subshell started."
+                print "Type exit to return to your previous" + \
+                      " shell once you're done."
+                os.execl(UNIX_SHELL, "")
+            else:
+                print "SHELL ERROR! This OS isn't supported."
 
 
 class SettingsWindow(wx.Dialog):
@@ -2078,8 +2091,8 @@ class Launch:
         os.chdir(os.getenv("VE_WORKING_DIR"))
         ##Checks the OS and routes the launcher to the proper subfunction
         ##NOTE: Code out separate Setups, code in the combined Setup
-        if shell: ##Special builder shell case.
-            self.Shell()
+        if shell: ##Shell is activated after destroy VE-Launcher.
+            return
         elif windows:
             self.Windows(runName, runConductor, runXplorer,
                          typeXplorer, jconf, desktopMode)
@@ -2253,6 +2266,7 @@ class Launch:
         if windows:
             os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
         elif unix:
+            print "VE-Suite shell started."
             os.system("%s &" % UNIX_SHELL)
         else:
             print "ERROR! This OS isn't supported."
