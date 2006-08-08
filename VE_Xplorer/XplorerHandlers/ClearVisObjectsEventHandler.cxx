@@ -97,5 +97,8 @@ void ClearVisObjectsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 #ifdef VE_PATENTED
    cfdTextureBasedVizHandler::instance()->ClearAll();
 #endif
-   cfdModelHandler::instance()->GetActiveModel()->MakeCADRootOpaque();
+   if ( cfdModelHandler::instance()->GetActiveModel() )
+   {
+      cfdModelHandler::instance()->GetActiveModel()->MakeCADRootOpaque();
+   }
 }
