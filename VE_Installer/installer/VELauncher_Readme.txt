@@ -7,7 +7,7 @@ sites.
 See www.vesuite.org
 for information on obtaining VE-Suites dependendcies.
 =========================================================================
-VE-Suite1.0.0 Launcher
+VE-Suite1.0.2 Launcher
 
 This is the beta of the VE-Suite Launcher. Current features include:
 -Setting the Dependencies directory.
@@ -19,11 +19,17 @@ from one window.
 -Choosing preset modes to run in.
 -Can run the Launcher from the command line for quick launches.
 -Can run the Launcher in Dev mode for developer builds.
--Environmental variables set externally will override the Launcher's variable
-defaults, letting it work with custom builds as well.
+-Start up Xplorer on multiple clustered computers.
+-Start up shells for VE-Builder.
 
 =========================================================================
 Version List
+
+1.0.2:
+-Can launch shells with VE-Suite environmental variables.
+-Can launch VE-Builder shells.
+-Can save, load, and delete configurations of VE-Launcher.
+-Cluster launching enabled for Unix.
 
 1.0.1:
 -Can now start the Launcher in Dev mode.
@@ -79,7 +85,6 @@ be launched. You can also set up cluster nodes to call if you're on a Unix clust
 Once you've chosen your settings, click the Launch button and wait. The Launcher
 will automatically close once all the programs have launched.
 
-
 ========================================================================
 Using VE-Suite Launcher, Custom Builds
 
@@ -89,13 +94,8 @@ non-existant variables (except when it appends the PATH variables). If you set
 them outside the Launcher, they'll be passed to the VE-Suite programs untouched.
 I recommend making a batch/shell file that sets all of the variables you want
 changed, then call:
-    python velauncher.py
-as its last line. Run the batch/shell whenever you want to use the custom build.
-
-You can also run velauncher.py in dev mode by calling:
     python velauncher.py --dev
-This will get rid of the annoying "Dependencies file doesn't exist" errors for
-dev builds.
+as its last line. Run the batch/shell whenever you want to use the custom build.
 
 ========================================================================
 Using VE_Suite Launcher, Command Line Launch
@@ -109,11 +109,18 @@ other arguments.
 
 -c, --conductor: Launch VE Conductor.
 -n, --nameserver: Launch VE NameServer.
--x <xplorer type>, --xplorer=<xplorer type>: Launch VE Xplorer in <xplorer type> mode.
-You can choose OSG, OSG-VEP, or OSG-VEPC.
+-x <xplorer type>, --xplorer=<xplorer type>: Launch VE Xplorer in
+<xplorer type> mode. You can choose OSG, OSG-VEP, or OSG-VEPC.
+
+-s, --shell: Launches a subshell with the VE-Suite environmental
+variables set. Overrides -c, -n, and -x.
+-b <builder dir>, --builder=<builder dir>: Launches a subshell
+with the VE-Suite environmental variables set, including a path
+to the VE-Builder directory. Overrides -c, -n, -x and -s.
 
 -k, --desktop: Set VE Conductor and VE Xplorer to Desktop mode.
--j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's Juggler configuration.
+-j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's
+Juggler configuration.
 -w <dir>, --dir=<dir>: Set the Working directory to <dir>.
 
 -t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.
@@ -131,13 +138,13 @@ The Launcher's Current Status
 
 The VE-Suite Launcher runs on Windows as a standalone executable.
 It runs on Unix machines with Python 2.3 and the last public releases of
-VE-Suite and wxPython. Mac compatibility and cluster functionality are
-slated for future versions.
+VE-Suite and wxPython. Mac compatibility and Windows cluster functionality
+are slated for future versions.
 
 ========================================================================
 Launcher Code Documentation
 
-All of the launcher's classes and functions should have docstring documentation.
+The launcher's classes and functions have docstring documentation.
 
 ========================================================================
 Reporting Bugs/Suggestions:

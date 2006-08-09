@@ -118,6 +118,12 @@ other arguments.
 -x <xplorer type>, --xplorer=<xplorer type>: Launch VE Xplorer in
 <xplorer type> mode. You can choose OSG, OSG-VEP, or OSG-VEPC.
 
+-s, --shell: Launches a subshell with the VE-Suite environmental
+variables set. Overrides -c, -n, and -x.
+-b <builder dir>, --builder=<builder dir>: Launches a subshell
+with the VE-Suite environmental variables set, including a path
+to the VE-Builder directory. Overrides -c, -n, -x and -s.
+
 -k, --desktop: Set VE Conductor and VE Xplorer to Desktop mode.
 -j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's
 Juggler configuration.
@@ -147,7 +153,9 @@ class CommandLaunch:
         self.jconf = None
         self.cluster = None
         self.clusterMaster = None
+        self.builderDir = None
         self.shell = False
+        self.builderDir = None
 
         ##Set vars from the command line.
         for opt, arg in opts:
@@ -170,15 +178,20 @@ class CommandLaunch:
             ##NOTE: --setup will be used to set up working directories &
             ##dependencies folders without going into the GUI.
             ##Not implemented yet.
-            elif opt in ('-s', "--setup"):
-                print "ERROR: Setup isn't implemented yet." + \
-                      " Wait until next version."
+            ##elif opt in ('-s', "--setup"):
+            ##    print "ERROR: Setup isn't implemented yet." + \
+            ##          " Wait until next version."
             elif opt in ('-w', "--dir="):
                 self.workDir = arg
             elif opt in ('-e', "--dep="):
                 self.depDir = arg
             elif opt in ('-m', "--master="):
                 self.clusterMaster = arg
+            elif opt in ('-s', "--shell"):
+                self.shell = True
+            elif opt in ('-b', "--builder="):
+                self.shell = True
+                self.builderDir = arg
 
         ##Fill in any args left out from the default config settings.
         if self.depDir == None:
@@ -218,7 +231,24 @@ class CommandLaunch:
                self.jconf,
                self.taoMachine, self.taoPort,
                self.desktop,
-               self.depDir, master = self.clusterMaster)
+               self.depDir, master = self.clusterMaster,
+               shell = self.shell, builderDir = self.builderDir)
+        ##Bring up the the Name Server Kill window.
+        ##ERROR: ServerKillWindow() doesn't work outside of app.MainLoop()
+        ##if self.nameServer and not self.shell:
+        ##    win = ServerKillWindow()
+        ##
+        ##Launch the shell here, if needed.
+        if self.shell:
+            if windows:
+                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
+            elif unix:
+                print "VE-Suite subshell started."
+                print "Type exit to return to your previous" + \
+                      " shell once you're done."
+                os.execl(UNIX_SHELL, "")
+            else:
+                print "SHELL ERROR! This OS isn't supported."
 
 
 class LauncherWindow(wx.Dialog):
@@ -286,7 +316,7 @@ class LauncherWindow(wx.Dialog):
         self.taoPort = ""
         self.dependencies = None
         self.builderDir = None
-        self.shell = None
+        self.shell = False
 
         ##Prepare the logo.
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
@@ -331,8 +361,8 @@ class LauncherWindow(wx.Dialog):
         bDeleteConf = wx.Button(self, -1, "Delete Config")
         bDeleteConf.SetToolTip(wx.ToolTip("Delete a configuration."))
         ##Build Launch button.
-        bLaunch = wx.Button(self, -1, "Launch VE Suite")
-        bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
+        self.bLaunch = wx.Button(self, -1, "Launch VE Suite")
+        self.bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
         ##Build menu bar
         ##menuBar = wx.MenuBar()
@@ -367,7 +397,7 @@ class LauncherWindow(wx.Dialog):
         ##Event bindings.
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
-        self.Bind(wx.EVT_BUTTON, self.Launch, bLaunch)
+        self.Bind(wx.EVT_BUTTON, self.Launch, self.bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_BUTTON, self.ChooseLoadConfig, bLoadConf)
         self.Bind(wx.EVT_BUTTON, self.ChooseSaveConfig, bSaveConf)
@@ -431,7 +461,7 @@ class LauncherWindow(wx.Dialog):
         ##Set the main sizer, add Launch button.
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer2, 0, wx.ALL | wx.EXPAND, BORDER)
-        mainSizer.Add(bLaunch, 1, wx.EXPAND)
+        mainSizer.Add(self.bLaunch, 1, wx.EXPAND)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
 ##        self.SetSize(INITIAL_WINDOW_SIZE)
@@ -1068,7 +1098,7 @@ class LauncherWindow(wx.Dialog):
                 dlg.Destroy()
             else:
                 loop = False
-        ##BANDAGE
+        ##BANDAID
         ##This DirDialog is used to purge dlg of previous MessageDialogs.
         ##Without it, having a MessageDialog w/o a DirDialog after it
         ##hangs the program's end.
@@ -1080,6 +1110,9 @@ class LauncherWindow(wx.Dialog):
         dlg.Destroy()
         ##Hide the Launcher.
         self.Hide()
+        ##Bring up the Launch progress window.
+        ##progress = LaunchStartedWindow(self)
+        ##progress.Show()
         ##Go into the Launch
         Launch(self,
                self.txDirectory.GetValue(),
@@ -1090,9 +1123,13 @@ class LauncherWindow(wx.Dialog):
                desktop, cluster = self.clusterDict.GetCheckedLocations(),
                master = self.clusterMaster,
                shell = self.shell, builderDir = passedBuilderDir)
+        ##Destroy the Launch progress window.
+        ##progress.OnClose("this message does not matter")
+        ##Show NameServer kill window if NameServer was started.
         if nameServer:
             win = ServerKillWindow()
-        self.OnClose("bright side of life")
+        ##Close the Launcher
+        self.OnClose("this message does not matter")
 
     def OnClose(self, event):
         """Saves launcher's current configuration and quits the launcher.
@@ -1102,11 +1139,11 @@ class LauncherWindow(wx.Dialog):
         ##(Add & to the end of its command.)
         ##Update default config file.
         self.SaveConfig(DEFAULT_CONFIG)
+        config.Flush()
         self.Hide()
-        shell = self.shell
         self.Destroy()
-        ##If a shell's launched, start it once the program's destroyed.
-        if shell:
+        ##If a shell's launched, start it here, after cleanup.
+        if self.shell:
             if windows:
                 os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
             elif unix:
@@ -1116,6 +1153,28 @@ class LauncherWindow(wx.Dialog):
                 os.execl(UNIX_SHELL, "")
             else:
                 print "SHELL ERROR! This OS isn't supported."
+
+
+##class LaunchStartedWindow(wx.Frame):
+##    """A window to tell the user the launch is progressing."""
+##    def __init__(self, parent = None, title = "Launching Now..."):
+##        """Creates the Launch Started Window."""
+##        wx.Frame.__init__(self, parent, wx.ID_ANY, title,
+##                          style = wx.DEFAULT_FRAME_STYLE &
+##                          ~ (wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
+##        lblMsg = wx.StaticText(self, -1, "VE-Suite is sending the launch code\n"+\
+##                                         "to the computer now. Please wait.\n")
+##        rowSizer = wx.BoxSizer(wx.VERTICAL)
+##        border = 10
+##        rowSizer.Add(lblMsg, 2, wx.ALL, border)
+##        rowSizer.SetSizeHints(self)
+##        Style(self)
+##        self.SetSizer(rowSizer)
+##        self.CentreOnScreen()
+##
+##    def OnClose(self, event):
+##        self.Hide()
+##        self.Destroy()
 
 
 class SettingsWindow(wx.Dialog):
@@ -2089,7 +2148,8 @@ class Launch:
         self.EnvSetup(dependenciesDir, workingDir, taoMachine, taoPort,
                       master, builderDir)
         ##Use the user's defined directory as Current Working Dir
-        os.chdir(os.getenv("VE_WORKING_DIR"))
+        if not shell:
+            os.chdir(os.getenv("VE_WORKING_DIR"))
         ##Checks the OS and routes the launcher to the proper subfunction
         ##NOTE: Code out separate Setups, code in the combined Setup
         if shell: ##Shell is activated after destroy VE-Launcher.
@@ -2123,6 +2183,7 @@ class Launch:
         if runName:
             self.KillNameserver()
             sleep(1)
+            print "Starting Name Server."
             os.system("start /B Naming_Service.exe -ORBEndPoint" +
                       " iiop://%TAO_MACHINE%:%TAO_PORT%")
             sleep(5)
@@ -2132,6 +2193,7 @@ class Launch:
                       " -ORBDottedDecimalAddresses 1")
         ##Conductor section
         if runConductor:
+            print "Starting Conductor."
             ##Append argument if desktop mode selected
             if desktopMode:
                 desktop = " -VESDesktop"
@@ -2144,6 +2206,7 @@ class Launch:
                       " -ORBDottedDecimalAddresses 1" + desktop)
         ##Xplorer section
         if runXplorer:
+            print "Starting Xplorer."
             ##Append argument if desktop mode selected
             if desktopMode:
                 w, h = wx.DisplaySize()
@@ -2168,6 +2231,7 @@ class Launch:
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
                       " -ORBDottedDecimalAddresses 1" + desktop)
+        print "Finished sending launch commands."
         return
 
     def Unix(self, runName = False, runConductor = False, runXplorer = False,
@@ -2186,6 +2250,7 @@ class Launch:
         if runName:
             self.KillNameserver()
             sleep(1)
+            print "Starting Name Server."
             os.system("Naming_Service -ORBEndPoint" +
                       " iiop://${TAO_MACHINE}:${TAO_PORT} &")
             sleep(5)
@@ -2194,6 +2259,7 @@ class Launch:
                       " -ORBDottedDecimalAddresses 1 &")
         ##Conductor section
         if runConductor:
+            print "Starting Conductor."
             ##Append argument if desktop mode selected
             if desktopMode:
                 desktop = "-VESDesktop"
@@ -2204,6 +2270,7 @@ class Launch:
                       "NameService %s &" % (desktop))
         ##Cluster mode
         if self.cluster:
+            print "Starting Xplorer on the cluster."
             ##Finish building cluster script
             launcherDir = str(os.getenv("VE_INSTALL_DIR"))
             xplorerType = XPLORER_TYPE_LIST[typeXplorer]
@@ -2235,6 +2302,7 @@ class Launch:
                 sleep(SLAVE_WAIT)
         ##Xplorer section
         elif runXplorer:
+            print "Starting Xplorer."
             ##Append argument if desktop mode selected
             desktop = ""
             if desktopMode:
@@ -2251,17 +2319,18 @@ class Launch:
             os.system("%s -ORBInitRef NameService=" %(executable) +
                       "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
                       '"%s" %s &' %(jconf, desktop))
+        print "Finished sending launch commands."
         return
 
     def KillNameserver(self):
-        """Kills any Nameservers running on this computer."""
-        print "Killing any previous nameservers:"
+        """Kills any Name Servers running on this computer."""
+        print "Killing any previous name servers."
         if windows:
             os.system("tskill Naming_Service")
             os.system("tskill WinServerd")
         elif unix:
             os.system("killall Naming_Service Exe_server")
-        print "Previous nameservers killed."
+        print "Previous name servers killed."
 
     def Shell(self):
         if windows:
@@ -2505,10 +2574,11 @@ class Launch:
 arguments = sys.argv[1:]
 try:
     opts, args = getopt.getopt(arguments,
-                               "cnx:kj:t:p:sw:e:m:",
+                               "cnx:kj:t:p:w:e:m:sb:",
                                ["conductor", "nameserver", "xplorer=",
                                 "desktop", "jconf=", "taomachine=", "port=",
-                                "setup", "dir=", "dep=", "master=", "dev"])
+                                "dir=", "dep=", "master=", "dev", "shell",
+                                "builder="])
 except getopt.GetoptError:
     usage()
     sys.exit(2)
