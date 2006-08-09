@@ -2511,7 +2511,7 @@ class Launch:
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
                         os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
-                        os.path.join(str(os.getenv("CD")), "bin")]
+                        os.path.join(os.getcwd(), "bin")]
             if builderDir != None:
                 pathList[:0] = [os.path.join(builderDir, "bin")]
             ##TEST to append 64-bit libraries:

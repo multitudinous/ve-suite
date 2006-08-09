@@ -86,6 +86,54 @@ Once you've chosen your settings, click the Launch button and wait. The Launcher
 will automatically close once all the programs have launched.
 
 ========================================================================
+Using VE-Suite Launcher, Clusters
+
+VE-Launcher versions 1.0.2+ have extra features for automatically starting up
+VE-Suite on other computers in a Unix cluster. (Cluster functions are slated
+for Windows in the future.) VE-Launcher writes an automated script during
+launch to ssh to each node, set up a duplicate environment, and start up Xplorer.
+
+To use the cluster functions of VE-Launcher, your cluster must satisfy
+these requirements:
+1. VE-Launcher's user has permission to ssh to each node.
+2. The file structure of each node is the same.
+3. The user has manually sshed into each node and authenticated its name.
+
+The last requirement needs some explanation. The first time you ssh into an
+unknown host, you need to manually authenticate its name. If it isn't
+authenticated and VE-Launcher tries to connect to it, it will hang the program.
+Therefore, you must manually ssh into each node on the cluster (including your
+current computer) and authenticate it before you can start the cluster using
+VE-Launcher. Furthermore, you must use the exact name you'll use in VE-Launcher;
+ssh treats partially-qualified (francis) and fully-qualified (francis.iastate.edu)
+names as separate authentications. Luckily, once you authenticate the other nodes,
+the authentication stays in the user's profile permentantly.
+
+Once you have all the nodes authenticated, you can run the cluster from VE-Launcher:
+
+1. If you're running NameServer or Conductor on a certain node, open VE-Launcher
+from that node. (VE-Launcher runs NameServer and Conductor from the current computer.)
+
+2. Set the settings. When you select the Xplorer type OSG Patented Cluster,
+the Set Cluster Computers button will be enabled.
+
+3. Click Set Cluster Computers. A window will pop up showing the master and
+slaves listed. Put the master's name in, then add each slave's name to the list.
+Click OK when you're done.
+
+Inputting Cluster Nodes
+
+4. Launch VE-Suite by clicking the Launch button. The cluster computers
+will start up VE-Suite.
+
+Note there's a slight delay between each node launched. That's because
+simultaneous launching caused erratic behavior in the cluster. The delay's
+determined by the MASTER_WAIT and SLAVE_WAIT variables set at the top of the
+velauncher.py code. If you're encountering problems with sync or unconnected
+nodes using VE-Launcher, try lengthening the delays. If it's taking too long
+to launch the cluster, try shortening them.
+
+========================================================================
 Using VE-Suite Launcher, Custom Builds
 
 VE-Suite Launcher can also be used with custom builds by externally overriding
@@ -122,14 +170,13 @@ to the VE-Builder directory. Overrides -c, -n, -x and -s.
 -j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's
 Juggler configuration.
 -w <dir>, --dir=<dir>: Set the Working directory to <dir>.
-
 -t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.
 -p <port>, --port=<port>: Set TAOPORT to <port>.
 -e <dir>, --dep=<dir>: Set the Dependencies directory to <dir>.
 -m <name>, --master=<name>: Set VEXMASTER to <name>.
 
-If you leave out -c, -n, -x, or -k, the Launcher will set those options to
-False. If you leave out -j, -t, -p, -w, or -e, the Launcher will use their
+If you leave out -c, -n, -x, -s, -b or -k, the Launcher will set those options
+to False. If you leave out -j, -t, -p, -w, or -e, the Launcher will use their
 saved custom values. (This will cause errors if you try to use a command line
 launch without setting a Dependencies directory in GUI mode, for example.)
 
