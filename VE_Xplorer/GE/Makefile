@@ -57,10 +57,8 @@ ifeq ($(VE_PATENTED), TRUE)
    PATENTED_TAG=_vep
 endif
 
-# for xercese includes
-ifdef XERCESCROOT
-   include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
-endif
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.apr.mk
 
 # IRIX needs these flags
 ifeq (${CFDUNAME},IRIX64)
