@@ -278,20 +278,16 @@ void cfdExecutive::GetEverything( void )
             cfdModel* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
             tempCFDModel->SetID( iter->first );
             cfdModelHandler::instance()->AddModel( tempCFDModel );
-            std::map< int, VE_Model::Model* >::iterator modelIter;
-            // this call always returns something because it is up to date with the id map
-            modelIter = idToModel.find( iter->first );
-            _plugins[ iter->first ]->SetXMLModel( modelIter->second );
             // Give graphical plugins access to wand position, wand buttons, and gui variables
             _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
             _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
             _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
          }
-
+         std::map< int, VE_Model::Model* >::iterator modelIter;
+         // this call always returns something because it is up to date with the id map
+         modelIter = idToModel.find( iter->first );
+         _plugins[ iter->first ]->SetXMLModel( modelIter->second );
          _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
-         /*vprDEBUG(vesDBG,2) << "|\tModule results: " 
-                              << this->_exec->GetModuleResult( iter->first )
-                              << std::endl << vprDEBUG_FLUSH;*/
          _plugins[ iter->first ]->PreFrameUpdate();
          vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                               << " ]-> " << iter->second 
