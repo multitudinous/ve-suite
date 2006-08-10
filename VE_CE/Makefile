@@ -55,6 +55,7 @@ EXTRA_LIBS+= -lVE_OpenModuleLib
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.apr.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
@@ -67,7 +68,7 @@ cxx: $(OBJS)
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 ${APP_NAME}: $(OBJS)
 	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
-	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(LIBS)
 
 #install:
 #	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans

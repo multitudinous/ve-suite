@@ -101,6 +101,7 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.apr.mk
 
 
 EXTRA_CXXFLAGS+= -g
