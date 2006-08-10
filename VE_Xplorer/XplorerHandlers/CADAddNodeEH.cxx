@@ -95,18 +95,31 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 
       if(nodeType == "Assembly")
       {
+         
          assembly = dynamic_cast<VE_CAD::CADAssembly*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(assembly);
+         if(_activeModel->AssemblyExists(node->GetID()))
+         {
+            throw("Assembly already exists");
+         }
       }
       else if(nodeType == "Part")
       {
          part = dynamic_cast<VE_CAD::CADPart*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(part);
+         if(_activeModel->PartExists(node->GetID()))
+         {
+            throw("Part already exists");
+         }
       }
       else if(nodeType == "Clone")
       {
          clone = dynamic_cast<VE_CAD::CADClone*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(clone);
+         if(_activeModel->CloneExists(node->GetID()))
+         {
+            throw "Clone already exists";
+         }
       }
       parentAssembly = _activeModel->GetAssembly(node->GetParent());
 
@@ -125,7 +138,12 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       else if(nodeType == "Clone")
          _addNodeToNode(node->GetParent(),clone);
    }
+   catch(char* str)
+   {
+      std::cout<<str<<std::endl;
+   }
    catch(...)
    {
    }
+   
 }

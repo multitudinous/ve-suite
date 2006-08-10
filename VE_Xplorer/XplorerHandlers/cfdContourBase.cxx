@@ -319,9 +319,13 @@ void cfdContourBase::SetFillType( const int type )
 }
 void cfdContourBase::CreatePlane( void )
 {
-   cuttingPlane = new cfdCuttingPlane( 
+   if(!cuttingPlane)
+   {
+      cuttingPlane = new cfdCuttingPlane( 
          GetActiveDataSet()->GetDataSet()->GetBounds(),
          xyz, numSteps );
+   }
+   
 
    // insure that we are using correct bounds for the given data set...
    cuttingPlane->SetBounds( 
@@ -371,4 +375,9 @@ void cfdContourBase::CreatePlane( void )
                                      ->GetUserRange() );
    mapper->SetLookupTable( GetActiveDataSet()
                                      ->GetLookupTable() );
+   if(cuttingPlane)
+   {
+      delete cuttingPlane;
+      cuttingPlane = NULL;
+   }
 }
