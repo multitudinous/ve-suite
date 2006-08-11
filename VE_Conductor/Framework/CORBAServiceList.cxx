@@ -144,7 +144,7 @@ bool CORBAServiceList::ConnectToCE( void )
       } 
       catch ( CORBA::Exception& ex ) 
       {
-         GetMessageLog()->SendMessage( "Can't find executive or UI registration error\n");
+         GetMessageLog()->SetMessage( "Can't find executive or UI registration error\n");
          return false;
       }
    }
@@ -179,14 +179,14 @@ bool CORBAServiceList::ConnectToXplorer( void )
 
       //Create the VE Tab
       //con_menu->Enable(v21ID_DISCONNECT_VE, true);
-      GetMessageLog()->SendMessage( "Connected to VE server.\n");
+      GetMessageLog()->SetMessage( "Connected to VE server.\n");
       //connectToVE = true;
       //network->SetXplorerInterface( vjobs.in() );
    } 
    catch ( CORBA::Exception& ex ) 
    {
-      GetMessageLog()->SendMessage( "Can't find VE server\n");
-      GetMessageLog()->SendMessage( ex._info().c_str() );
+      GetMessageLog()->SetMessage( "Can't find VE server\n");
+      GetMessageLog()->SetMessage( ex._info().c_str() );
       return false;
    }
   
@@ -241,7 +241,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
 		    return false;
 		    }
       */
-      GetMessageLog()->SendMessage( "Initialized ORB and connection to the Naming Service\n");
+      GetMessageLog()->SetMessage( "Initialized ORB and connection to the Naming Service\n");
       
       return true;
    }
@@ -250,8 +250,8 @@ bool CORBAServiceList::ConnectToNamingService( void )
       //		poa->destroy (1, 1);
       // Finally destroy the ORB
       orb->destroy();
-      GetMessageLog()->SendMessage( "CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
-      GetMessageLog()->SendMessage( ex._info().c_str() );
+      GetMessageLog()->SetMessage( "CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
+      GetMessageLog()->SetMessage( ex._info().c_str() );
       return false;
    }
 }
@@ -271,12 +271,12 @@ bool CORBAServiceList::DisconnectFromCE( void )
       // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
       frame->con_menu->Enable(v21ID_DISCONNECT, false);
     
-      GetMessageLog()->SendMessage( "Disconnect successful.\n");
+      GetMessageLog()->SetMessage( "Disconnect successful.\n");
    }
    catch (CORBA::SystemException& ex ) 
    {
-      GetMessageLog()->SendMessage( "Disconnect failed.\n");
-      GetMessageLog()->SendMessage( ex._info().c_str() );
+      GetMessageLog()->SetMessage( "Disconnect failed.\n");
+      GetMessageLog()->SetMessage( ex._info().c_str() );
       return false;
    }
 
@@ -309,7 +309,7 @@ bool CORBAServiceList::DisconnectFromXplorer( void )
       soundsPane->Close( false );
    }
 */
-   GetMessageLog()->SendMessage( "Disconnect VE suceeded.\n");
+   GetMessageLog()->SetMessage( "Disconnect VE suceeded.\n");
 
    //connectToVE = false;
    return true;
@@ -428,8 +428,8 @@ void CORBAServiceList::CreateCORBAModule( void )
          }
          catch ( CORBA::Exception& ex ) 
          {
-            GetMessageLog()->SendMessage( "Can't find executive or UI registration error.\n" );
-            GetMessageLog()->SendMessage( ex._info().c_str() );
+            GetMessageLog()->SetMessage( "Can't find executive or UI registration error.\n" );
+            GetMessageLog()->SetMessage( ex._info().c_str() );
          }
       }
       else
@@ -450,15 +450,15 @@ void CORBAServiceList::CreateCORBAModule( void )
          }
          catch (CORBA::Exception& ex ) 
          {
-            GetMessageLog()->SendMessage( "Can't find executive or UI registration error.\n");
-            GetMessageLog()->SendMessage( ex._info().c_str() );
+            GetMessageLog()->SetMessage( "Can't find executive or UI registration error.\n");
+            GetMessageLog()->SetMessage( ex._info().c_str() );
          }
       }
    }
    catch (CORBA::Exception& ex )
    {
-      GetMessageLog()->SendMessage( "Can't find executive or UI registration error.\n");
-      GetMessageLog()->SendMessage( ex._info().c_str() );
+      GetMessageLog()->SetMessage( "Can't find executive or UI registration error.\n");
+      GetMessageLog()->SetMessage( ex._info().c_str() );
    }
 }
 //////////////////////////////////////////////////
