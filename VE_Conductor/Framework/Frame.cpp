@@ -1367,7 +1367,8 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
 {
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("FLOAT") );
+   VE_XML::DataValuePair* dataValuePair = 
+                           new VE_XML::DataValuePair(  std::string("FLOAT") );
    dataValuePair->SetDataName( "Stereo" );
    dataValuePair->SetDataValue( 1.0 );
    VE_XML::Command* veCommand = new VE_XML::Command();
@@ -1397,7 +1398,8 @@ CORBAServiceList* AppFrame::GetCORBAServiceList( void )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )
 {
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("STRING") );
+   VE_XML::DataValuePair* dataValuePair = 
+                           new VE_XML::DataValuePair( std::string("STRING") );
    dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
    VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );

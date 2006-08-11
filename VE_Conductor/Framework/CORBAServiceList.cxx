@@ -144,7 +144,7 @@ bool CORBAServiceList::ConnectToCE( void )
       } 
       catch ( CORBA::Exception& ex ) 
       {
-         frame->Log("Can't find executive or UI registration error\n");
+         GetMessageLog()->SendMessage( "Can't find executive or UI registration error\n");
          return false;
       }
    }
@@ -175,21 +175,18 @@ bool CORBAServiceList::ConnectToXplorer( void )
       orb->resolve_initial_references ("NameService");
       CosNaming::NamingContext_var naming_context1 = CosNaming::NamingContext::_narrow (naming_context_object.in ());
       CORBA::Object_var ve_object = naming_context1->resolve(name);
-      vjobs = VjObs::_narrow(ve_object.in());
+      vjobs = VjObs::_narrow( ve_object.in() );
 
-      if ( CORBA::is_nil( vjobs.in() ) )
-         std::cerr<<"VjObs is Nill"<<std::endl;
-    
       //Create the VE Tab
       //con_menu->Enable(v21ID_DISCONNECT_VE, true);
-      frame->Log("Connected to VE server.\n");
+      GetMessageLog()->SendMessage( "Connected to VE server.\n");
       //connectToVE = true;
       //network->SetXplorerInterface( vjobs.in() );
    } 
    catch ( CORBA::Exception& ex ) 
    {
-      frame->Log("Can't find VE server\n");
-      frame->Log( ex._info().c_str() );
+      GetMessageLog()->SendMessage( "Can't find VE server\n");
+      GetMessageLog()->SendMessage( ex._info().c_str() );
       return false;
    }
   
@@ -221,7 +218,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
    try 
    {
       // First initialize the ORB, 
-      orb = CORBA::ORB_init (argc, argv,""); // the ORB name, it can be anything! 
+      orb = CORBA::ORB_init( argc, argv,""); // the ORB name, it can be anything! 
       //delete the left over char*
       for ( int i = 0; i < argc; ++ i )
       {
@@ -244,7 +241,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
 		    return false;
 		    }
       */
-      frame->Log("Initialized ORB and connection to the Naming Service\n");
+      GetMessageLog()->SendMessage( "Initialized ORB and connection to the Naming Service\n");
       
       return true;
    }
@@ -253,8 +250,8 @@ bool CORBAServiceList::ConnectToNamingService( void )
       //		poa->destroy (1, 1);
       // Finally destroy the ORB
       orb->destroy();
-      frame->Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
-      frame->Log( ex._info().c_str() );
+      GetMessageLog()->SendMessage( "CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
+      GetMessageLog()->SendMessage( ex._info().c_str() );
       return false;
    }
 }
@@ -274,12 +271,12 @@ bool CORBAServiceList::DisconnectFromCE( void )
       // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
       frame->con_menu->Enable(v21ID_DISCONNECT, false);
     
-      frame->Log("Disconnect successful.\n");
+      GetMessageLog()->SendMessage( "Disconnect successful.\n");
    }
    catch (CORBA::SystemException& ex ) 
    {
-      frame->Log("Disconnect failed.\n");
-      frame->Log( ex._info().c_str() );
+      GetMessageLog()->SendMessage( "Disconnect failed.\n");
+      GetMessageLog()->SendMessage( ex._info().c_str() );
       return false;
    }
 
@@ -312,7 +309,7 @@ bool CORBAServiceList::DisconnectFromXplorer( void )
       soundsPane->Close( false );
    }
 */
-   frame->Log("Disconnect VE suceeded.\n");
+   GetMessageLog()->SendMessage( "Disconnect VE suceeded.\n");
 
    //connectToVE = false;
    return true;
@@ -431,8 +428,8 @@ void CORBAServiceList::CreateCORBAModule( void )
          }
          catch ( CORBA::Exception& ex ) 
          {
-            frame->Log( "Can't find executive or UI registration error.\n" );
-            frame->Log( ex._info().c_str() );
+            GetMessageLog()->SendMessage( "Can't find executive or UI registration error.\n" );
+            GetMessageLog()->SendMessage( ex._info().c_str() );
          }
       }
       else
@@ -453,15 +450,15 @@ void CORBAServiceList::CreateCORBAModule( void )
          }
          catch (CORBA::Exception& ex ) 
          {
-            frame->Log("Can't find executive or UI registration error.\n");
-            frame->Log( ex._info().c_str() );
+            GetMessageLog()->SendMessage( "Can't find executive or UI registration error.\n");
+            GetMessageLog()->SendMessage( ex._info().c_str() );
          }
       }
    }
    catch (CORBA::Exception& ex )
    {
-      frame->Log("Can't find executive or UI registration error.\n");
-      frame->Log( ex._info().c_str() );
+      GetMessageLog()->SendMessage( "Can't find executive or UI registration error.\n");
+      GetMessageLog()->SendMessage( ex._info().c_str() );
    }
 }
 //////////////////////////////////////////////////
