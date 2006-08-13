@@ -54,6 +54,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeCursorEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/StoredSceneEH.h"
+#include "VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -105,7 +106,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 
    _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();
    _eventHandlers[ std::string("Stored Scenes") ] = new VE_EVENTS::StoredSceneEventHandler();
-
+   _eventHandlers[ std::string("Change Working Directory") ] = new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
 }
 
 void cfdEnvironmentHandler::Initialize( std::string param )

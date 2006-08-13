@@ -55,6 +55,7 @@
 #include <boost/filesystem/path.hpp>
 
 #include <iostream>
+#include <sstream>
 
 using namespace VE_EVENTS;
 ////////////////////////////////////////////////////////////////////////////
@@ -125,7 +126,19 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
             // Assume only one model for now
             // Flexibilty to have multiply models
             if ( !_activeModel )
+            {
                return;
+            }
+            //check to see if dataset is already on this particular model
+            for ( size_t j = 0; j < _activeModel->GetNumberOfCfdDataSets(); ++j )
+            {
+               if ( tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() == 
+                    _activeModel->GetCfdDataSet( j )->GetUUID( "VTK_DATA_FILE" ) )
+               {
+                  continue;
+               }
+            }
+            //If not already there lets create a new dataset
             _activeModel->CreateCfdDataSet();
 
             vprDEBUG(vesDBG,0) << "|\t************************************* "
@@ -139,6 +152,7 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
             _activeModel->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( tempInfoPacket->GetTransform()->GetTranslationArray()->GetArray() );
             _activeModel->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( tempInfoPacket->GetTransform()->GetRotationArray()->GetArray() );
 
+            //////////////////////////////////////////////////////////////
             // get vtk data set name...
             std::string vtk_filein = tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetDataString();
 
@@ -148,6 +162,7 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
                                 << ", dcs = "  << _activeModel->GetCfdDataSet( -1 )->GetDCS()
                                 << std::endl << vprDEBUG_FLUSH;
                _activeModel->GetCfdDataSet( -1 )->SetFileName( vtk_filein );
+               _activeModel->GetCfdDataSet( -1 )->SetUUID( "VTK_DATA_FILE", tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() );
             }
             else
             {
@@ -156,20 +171,23 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
                            << std::endl;
                exit(1);
             }
-
+            //////////////////////////////////////////////////////////////
             if ( tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" ) )
             {
                std::string precomputedDataSliceDir = tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->GetDataString();
                _activeModel->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( precomputedDataSliceDir );
+               _activeModel->GetCfdDataSet( -1 )->SetUUID( "VTK_PRECOMPUTED_DIR_PATH", tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->GetID() );
             }
-
+            //////////////////////////////////////////////////////////////
             if ( tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" ) )
             {
                std::string precomputedSurfaceDir = tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->GetDataString();
                _activeModel->GetCfdDataSet( -1 )->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
+               _activeModel->GetCfdDataSet( -1 )->SetUUID( "VTK_SURFACE_DIR_PATH", tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->GetID() );
             }
 
             LoadSurfaceFiles( _activeModel->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
+            //////////////////////////////////////////////////////////////
             //Load texture datasets
             if ( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
             {
@@ -184,6 +202,9 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
                         std::string( "VTK_TEXTURE_DIR_PATH" ) )
                   {
                      _activeModel->AddDataSetToTextureDataSet( 0, tempInfoPacket->GetProperty( j )->GetDataString() );
+                     std::ostringstream textId;
+                     textId << "VTK_SURFACE_DIR_PATH_" << j;
+                     _activeModel->GetCfdDataSet( -1 )->SetUUID( textId.str(), tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
                   }
                }
 #endif

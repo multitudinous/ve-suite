@@ -142,10 +142,11 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
    DOMNodeList* xmlObjects = rootDocument->getElementsByTagName( xercesString(tagName) );
 
    unsigned int nXMLObjects = xmlObjects->getLength();
+   //In case we use the same readerwriter more than once for a read
+   _xmlObjects.clear();
+
    if ( nXMLObjects )
    {
-      //In case we use the same readerwriter more than once for a read
-      _xmlObjects.clear();
       for ( unsigned int i = 0; i < nXMLObjects; ++i )
       {
          VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->CreateXMLObject(tagName,objectNamespace);

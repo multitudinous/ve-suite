@@ -1779,4 +1779,23 @@ void cfdDataSet::Print()
          << std::endl;
    }
 }
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::SetUUID( std::string attribute, std::string uuid )
+{
+   dataSetUUIDMap[ attribute ] = uuid;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string cfdDataSet::GetUUID( std::string attribute )
+{
+   std::map< std::string, std::string >::iterator iter;
+   iter = dataSetUUIDMap.find( attribute );
+   if ( iter == dataSetUUIDMap.end() )
+   {
+      return 0;
+   }
+   else
+   {
+      return iter->second;
+   }
+}
 

@@ -58,7 +58,7 @@ PEThread::PEThread(AppFrame* frame)
 PEThread::~PEThread()
 {
    ShutDownThread();
-   ACE_OS::sleep(3); 
+   ACE_OS::sleep(1); 
 }
 ////////////////////////////////////////////////////////////////////////////////
 int PEThread::svc (void)

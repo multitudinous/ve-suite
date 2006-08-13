@@ -39,6 +39,7 @@
 #define MAX_DATA 20
 #endif
 #include <string>
+#include <map>
 #include <vector>
 
 class vtkLookupTable;
@@ -218,8 +219,14 @@ namespace VE_Xplorer
          void SetAsPartOfTransientSeries();
 
          void Print();
+         ///Accessor methods to store and query the uuids for specfic
+         ///attributes of a cfdDataSet
+         void SetUUID( std::string attribute, std::string uuid );
+         std::string GetUUID( std::string attribute );
 
-      private:
+private:
+         std::map< std::string, std::string > dataSetUUIDMap;
+         
          double** actualScalarRange;
          double** displayedScalarRange;
 

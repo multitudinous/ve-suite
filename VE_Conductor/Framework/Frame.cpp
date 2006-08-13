@@ -203,14 +203,19 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    viewlocPane = 0;
 
    _cadDialog = 0;
-
-   domManager = new VE_XML::DOMDocumentManager();
    
+   domManager = new VE_XML::DOMDocumentManager();
    ///Initialize VE-Open
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_Shader::ShaderCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_Model::ModelCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
+   
+   //Try and laod netweok from server if one is already present
+   wxCommandEvent event;
+   LoadFromServer( event );
+   //Process command line args to see if ves file needs to be loaded
+   ProcessCommandLineArgs();   
 }
 ///////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
@@ -848,25 +853,47 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
                      _T("Network files (*.ves)|*.ves"),
                      wxOPEN|wxFILE_MUST_EXIST
                   );
-
-   //if ( directory=="" )
-   //   dialog.SetDirectory(wxGetHomeDir());
-
+   
    if (dialog.ShowModal() == wxID_OK)
    {
-      path=dialog.GetPath();
-      directory=dialog.GetDirectory();
+      wxFileName vesFileName( dialog.GetPath() );
+      bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+      if ( !success )
+      {
+         wxMessageBox( "Can't open a VES file on another drive.", 
+                       "VES File Read Error", wxOK | wxICON_INFORMATION );
+         return;
+      }
+      
+      path = vesFileName.GetFullPath();
+      path.Replace( "\\", "/", true );
+      directory = vesFileName.GetPath();
+      //change conductor working dir
+      ::wxSetWorkingDirectory( directory );
+      path = vesFileName.GetFullName();
+      
+      //Send Command to change xplorer working dir
+      // Create the command and data value pairs
+      VE_XML::DataValuePair* dataValuePair = 
+                        new VE_XML::DataValuePair(  std::string("STRING") );
+      dataValuePair->SetData( "WORKING_DIRECTORY", directory.c_str() );
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName( std::string("Change Working Directory") );
+      veCommand->AddDataValuePair( dataValuePair );
+      serviceList->SendCommandStringToXplorer( veCommand );
+      delete veCommand;
+      
+      //Now laod the xml data now that we are in the correct directory
       fname=dialog.GetFilename();
+      wxCommandEvent event;
+      New( event );
+      SubmitToServer( event );      
       network->Load( path.c_str() );
    }
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
-   //ConExeServer();
-   // If not sucessful
-   //if ( !is_orb_init )
-   //   return;
    if ( !serviceList->IsConnectedToCE() )
    {
       return;
@@ -876,14 +903,13 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    try
    {
       nw_str=network->exec->GetNetwork();
+      network->Load( nw_str );
+      delete nw_str;
    }
    catch ( CORBA::Exception& )
    {
       Log("No VE_CE found!\n");
    }
-
-   network->Load( nw_str );
-   delete nw_str;
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
@@ -1413,4 +1439,60 @@ void AppFrame::ExitXplorer( void )
 void AppFrame::OnExitXplorer( wxCommandEvent& WXUNUSED(event) )
 {
    ExitXplorer();
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ProcessCommandLineArgs( void )
+{
+   int argc = ::wxGetApp().argc;
+   char** argv = new char*[ argc ];
+   std::string vesFile;
+   for ( int i = 0; i < argc; ++ i )
+   {
+      if ( (std::string( ::wxGetApp().argv[ i ] ) == std::string( "--VESFile" )) &&
+           ( (i + 1) < argc )
+         )
+      {
+         vesFile.assign( ::wxGetApp().argv[ i + 1 ] );
+         break;
+      }
+   }
+   
+   if ( vesFile.empty() )
+   {
+      return;
+   }
+   
+   wxFileName vesFileName( vesFile.c_str() );
+   bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+   if ( !success )
+   {
+      wxMessageBox( "Can't open a VES file on another drive.", 
+                    "VES File Read Error", wxOK | wxICON_INFORMATION );
+      return;
+   }
+
+   path = vesFileName.GetFullPath();
+   path.Replace( "\\", "/", true );
+   directory = vesFileName.GetPath();
+   //change conductor working dir
+   ::wxSetWorkingDirectory( directory );
+   path = vesFileName.GetFullName();
+   
+   //Send Command to change xplorer working dir
+   // Create the command and data value pairs
+   VE_XML::DataValuePair* dataValuePair = 
+      new VE_XML::DataValuePair(  std::string("STRING") );
+   dataValuePair->SetData( "WORKING_DIRECTORY", directory.c_str() );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("Change Working Directory") );
+   veCommand->AddDataValuePair( dataValuePair );
+   serviceList->SendCommandStringToXplorer( veCommand );
+   delete veCommand;
+   
+   //Now laod the xml data now that we are in the correct directory
+   fname=vesFileName.GetFullName();
+   wxCommandEvent event;
+   New( event );
+   SubmitToServer( event );
+   network->Load( path.c_str() );
 }

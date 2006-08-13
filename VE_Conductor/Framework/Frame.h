@@ -32,6 +32,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+/*!\file Frame.h
+Frame API
+*/
+/*!\class Frame
+* Main wx frame for conductor.
+*/
 #ifndef APP_FRAME_H
 #define APP_FRAME_H
 
@@ -188,24 +194,22 @@ public:
    bool f_financial;
    bool f_geometry;
    bool f_visualization;
-   //cyang
-
-   //wxMenu *config_menu;
-   //PEThread* pelog;
 
    void Log(const char* msg);
-   //ACE_Thread_Mutex _mutex; //public mutex for the execution order
    void CloseVE();
 
-   //void ConExeServer( void );
-   //void ConVEServer( void );
    ///Returns pointer to xplorer corba object
    VjObs_ptr GetXplorerObject( void );
 
-   //cyang
+   ///cyang
    void GetConfig(wxConfig* config);
    void StoreConfig(wxConfig* config);
 
+   ///Function to process command line args to conductor and specifically
+   ///to load a ves file and set the working directory appropriatley for a
+   ///particular application
+   void ProcessCommandLineArgs( void );
+   
 protected:
 
 

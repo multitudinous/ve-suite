@@ -131,7 +131,8 @@ SRCS=\
    TBActivateEH.cxx\
    TBUpdateSolutionEH.cxx\
    QCLoadFileEH.cxx\
-   StoredSceneEH.cxx
+   StoredSceneEH.cxx\
+   ChangeWorkingDirectoryEventHandler.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g
