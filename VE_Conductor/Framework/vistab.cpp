@@ -325,19 +325,19 @@ void Vistab::CreateControls()
     wxBoxSizer* spinnerSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* scalarSizer = new wxBoxSizer(wxVERTICAL);
 
-    wxStaticText* _space1 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
+//    wxStaticText* _space1 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
     wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T("Min"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
-    _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
-    wxStaticText* _space2 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
-    wxStaticText* _space3 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    _minSpinner = new wxSpinCtrlDbl( *itemDialog1, MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+//    wxStaticText* _space2 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
+//    wxStaticText* _space3 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T("Max"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
+    _maxSpinner = new wxSpinCtrlDbl( *itemDialog1, MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
 
-    spinnerSizer->Add(_space1, 0, wxALIGN_LEFT|wxALL, 5);
+//    spinnerSizer->Add(_space1, 1, wxALIGN_LEFT|wxALL, 5);
     spinnerSizer->Add(_min, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);   
     spinnerSizer->Add(_minSpinner, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
-    spinnerSizer->Add(_space2, 0, wxALIGN_LEFT|wxALL, 5);
-    spinnerSizer->Add(_space3, 0, wxALIGN_LEFT, 5);
+//    spinnerSizer->Add(_space2, 1, wxALIGN_LEFT|wxALL, 5);
+//    spinnerSizer->Add(_space3, 1, wxALIGN_LEFT|wxALL, 5);
     spinnerSizer->Add(_max, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);    
     spinnerSizer->Add(_maxSpinner, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
@@ -346,9 +346,12 @@ void Vistab::CreateControls()
 //    scalarSizer->Add(scalarRange,1,wxALIGN_CENTER|wxEXPAND);
 
     _minSlider = new wxSlider( itemDialog1, MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    wxStaticText* _space4 = new wxStaticText( itemDialog1, wxID_STATIC, _T(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE ); 
     _maxSlider = new wxSlider( itemDialog1, MAX_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    scalarSizer->Add(_minSlider,1,wxALIGN_CENTER|wxEXPAND);
-    scalarSizer->Add(_maxSlider,1,wxALIGN_CENTER|wxEXPAND);
+
+    scalarSizer->Add(_minSlider,0,wxALIGN_CENTER|wxEXPAND);
+    scalarSizer->Add(_space4, 0, wxALIGN_LEFT|wxALL);
+    scalarSizer->Add(_maxSlider,0,wxALIGN_CENTER|wxEXPAND);
 
 
     scalarBoundsSizer->Add(spinnerSizer,1,wxALIGN_CENTER|wxEXPAND);
@@ -366,10 +369,11 @@ void Vistab::CreateControls()
     clearAllButton = new wxButton( itemDialog1, ID_CLEAR_ALL_BUTTON, _T("Clear All"), wxDefaultPosition, wxDefaultSize, 0 );
     lastRowButtons->Add( clearAllButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-   wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
 //    wxButton* _closeButton = new wxButton( itemDialog1, CLOSE_BUTTON, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
     lastRowButtons->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+   
 
 ///@end Vistab content construction
 }
