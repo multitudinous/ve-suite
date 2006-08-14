@@ -79,8 +79,13 @@ void ChangeWorkingDirectoryEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
    std::string newWorkingDir;
    activeModelDVP->GetData( newWorkingDir );
-std::cout << newWorkingDir << std::endl;
-   boost::filesystem::path dir_path( newWorkingDir.c_str() );
+   std::cout << newWorkingDir << std::endl;
+
+   if(newWorkingDir.empty())
+   {
+      newWorkingDir.assign("./");
+   }
+   boost::filesystem::path dir_path( newWorkingDir, boost::filesystem::native  );
    if ( !boost::filesystem::is_directory( dir_path ) )
    {
       return;

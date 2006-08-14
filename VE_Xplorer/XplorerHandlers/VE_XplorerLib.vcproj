@@ -743,6 +743,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ChangeWorkingDirectoryEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ClearVisObjectsEventHandler.cxx"
 				>
 			</File>
@@ -1073,6 +1077,10 @@
 			</File>
 			<File
 				RelativePath=".\ChangeCursorEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ChangeWorkingDirectoryEventHandler.h"
 				>
 			</File>
 			<File
