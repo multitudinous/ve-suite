@@ -652,6 +652,7 @@ void CADNodePropertiesDlg::_restoreDefaultAttribute(wxCommandEvent& event)
       _instructions.push_back(nodeType);
 
       _sendCommandsToXplorer();
+      _updateAvailableAttributes();
    }
 }
 //////////////////////////////////////////////////////////////////

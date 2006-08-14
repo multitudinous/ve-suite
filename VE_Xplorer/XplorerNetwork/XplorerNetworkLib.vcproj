@@ -473,7 +473,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/XplorerNetworkLib_tao_osg_d.pdb"
 				SubSystem="0"
-				ImportLibrary="$(OutDir)/XplorerNetworkLib_tao_osg_vep_d.lib"
+				ImportLibrary="$(OutDir)/XplorerNetworkLib_tao_osg_vep_cluster_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool

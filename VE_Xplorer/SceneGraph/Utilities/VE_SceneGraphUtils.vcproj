@@ -559,7 +559,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VE_SceneGraphUtils.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/VE_SceneGraphUtils_osg_vep_d.lib"
+				ImportLibrary="$(OutDir)/VE_SceneGraphUtils_osg_vep_cluster_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool

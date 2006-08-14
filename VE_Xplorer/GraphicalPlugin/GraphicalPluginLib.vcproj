@@ -373,7 +373,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/GraphicalPlugin_tao_osg_d.pdb"
 				SubSystem="0"
-				ImportLibrary="$(OutDir)/GraphicalPlugin_tao_osg_d.lib"
+				ImportLibrary="$(OutDir)/GraphicalPlugin_tao_osg_vep_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -473,7 +473,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/GraphicalPlugin_tao_osg_d.pdb"
 				SubSystem="0"
-				ImportLibrary="$(OutDir)/GraphicalPlugin_tao_osg_d.lib"
+				ImportLibrary="$(OutDir)/GraphicalPlugin_tao_osg_vep_cluster_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool

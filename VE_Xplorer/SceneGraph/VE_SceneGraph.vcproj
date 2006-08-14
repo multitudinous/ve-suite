@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_PATENTED;VE_SCENEGRAPH_LIBRARY;_OSG"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -559,7 +559,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VE_SceneGraph.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/VE_SceneGraph_osg_vep_d.lib"
+				ImportLibrary="$(OutDir)/VE_SceneGraph_osg_vep_cluster_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool

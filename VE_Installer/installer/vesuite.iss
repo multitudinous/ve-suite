@@ -102,7 +102,7 @@ Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}; Fl
 ;Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly overwritereadonly; Attribs: readonly hidden
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion confirmoverwrite
-Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.cluster.bat; DestDir: {app}\bin; Components: vexplorer\osgvepcluster; Flags: ignoreversion confirmoverwrite
+Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.cluster.bat; DestDir: {app}; Components: vexplorer\osgvepcluster; Flags: ignoreversion confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\shaders\; Components: examples

@@ -458,7 +458,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VEXplorerLib_tao_osg_vep_d.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)\VE_XplorerLib_tao_osg_vep_d.lib"
+				ImportLibrary="$(OutDir)\VE_XplorerLib_tao_osg_vep_cluster_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
