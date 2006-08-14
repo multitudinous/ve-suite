@@ -78,7 +78,7 @@ NURBS::Point NURBSCurve::_calculatePointOnCurve(double parameter,
    {
       resutlingWeightedPoint = resutlingWeightedPoint.GetWeigthedPoint() 
                              + _controlPoints[span - _degree["U"] +i].GetWeigthedPoint()
-                             *_derivativeBasisFunctions["U"][i].at(_degree["U"]);
+                             *_derivativeBasisFunctions["U"][0].at(i);
    }
    double invWeight = 1.0f/resutlingWeightedPoint.Weight();
    return resutlingWeightedPoint.GetWeigthedPoint()*invWeight;

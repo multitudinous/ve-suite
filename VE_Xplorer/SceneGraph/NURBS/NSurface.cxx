@@ -113,7 +113,7 @@ NURBS::Point NURBSSurface::_calculatePointOnSurface(double u,
          
          tempUContribution[l] = tempUContribution[l] 
                                + _controlPoints[vindex*_nControlPoints["U"] + uindex]
-                               *_derivativeBasisFunctions["U"][k].at(_degree["U"]);
+                               *_derivativeBasisFunctions["U"][0].at(k);
       }
 
       
@@ -122,7 +122,7 @@ NURBS::Point NURBSSurface::_calculatePointOnSurface(double u,
    {
       resutlingWeightedPoint = resutlingWeightedPoint.GetWeigthedPoint() 
                              + tempUContribution[l]
-                             *_derivativeBasisFunctions["V"][l].at(_degree["V"]);
+                             *_derivativeBasisFunctions["V"][0].at(l);
    }
    double invWeight = 1.0f/resutlingWeightedPoint.Weight();
    return resutlingWeightedPoint.GetWeigthedPoint()*invWeight;

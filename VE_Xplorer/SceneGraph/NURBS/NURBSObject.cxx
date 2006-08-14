@@ -48,7 +48,7 @@ NURBSObject::NURBSObject(const NURBSObject& rhs)
    _needsRetessellation = rhs._needsRetessellation;
    _interpolationStepSize = rhs._interpolationStepSize;
    _currentSpan = rhs._currentSpan;
-   _basisFunctions = rhs._basisFunctions;
+   _knotDifferences = rhs._knotDifferences;
    _knotVectors = rhs._knotVectors;
    _uBasisFunctionsDerivatives = rhs._uBasisFunctionsDerivatives;
    _vBasisFunctionsDerivatives = rhs._vBasisFunctionsDerivatives;
@@ -61,7 +61,7 @@ NURBSObject::~NURBSObject()
    _nControlPoints.clear();
    _interpolationStepSize.clear();
    _currentSpan.clear();
-   _basisFunctions.clear();
+   _knotDifferences.clear();
    _knotVectors.clear();
    _uBasisFunctionsDerivatives.clear();
    _vBasisFunctionsDerivatives.clear();
@@ -87,7 +87,7 @@ NURBSObject& NURBSObject::operator=(const NURBSObject& rhs)
    
       _currentSpan = rhs._currentSpan;
 
-      _basisFunctions = rhs._basisFunctions;
+      _knotDifferences = rhs._knotDifferences;
 
       _knotVectors = rhs._knotVectors;
 
@@ -193,11 +193,13 @@ void NURBSObject::Interpolate()
 void NURBSObject::_calculateBasisFunctions(double parameter, 
                                            std::string direction)
 {
-   _currentSpan[direction] = _knotVectors[direction].FindKnotSpan(parameter,
+   std::cout<<"Not implemented!!"<<std::endl;
+   std::cout<<"Use NURBSObject::_calculateBasisFunctionsAndDerivatives"<<std::endl;
+   /*_currentSpan[direction] = _knotVectors[direction].FindKnotSpan(parameter,
                                                    _nControlPoints[direction]-1,
                                                    _degree[direction]);
-   _basisFunctions[direction].clear();
-   _basisFunctions[direction].push_back(1.0);
+   _knotDifferences[direction].clear();
+   _knotDifferences[direction][0].push_back(1.0);
   
    std::vector<double> left;
    std::vector<double> right;
@@ -219,12 +221,12 @@ void NURBSObject::_calculateBasisFunctions(double parameter,
       
       for(size_t r = 0; r < j; r++)
       {
-         temp = _basisFunctions[direction][r]/(right[r+1] + left[j-r]);
-         _basisFunctions[direction][r] = saved + right[r+1]*temp;
+         temp = _knotDifferences[direction][r]/(right[r+1] + left[j-r]);
+         _knotDifferences[direction][r] = saved + right[r+1]*temp;
          saved = left[j-r]*temp;
       }
-      _basisFunctions[direction].push_back(saved);
-   }
+      _knotDifferences[direction].push_back(saved);
+   }*/
 }
 ////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter, 
@@ -234,8 +236,8 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
                                                    _nControlPoints[direction]-1,
                                                    _degree[direction]);
    
-   _derivativeBasisFunctions[direction].clear();
-   _derivativeBasisFunctions[direction][0].push_back(1.0);
+   _knotDifferences[direction].clear();
+   _knotDifferences[direction][0].push_back(1.0);
 
    std::vector<double> left;
    std::vector<double> right;
@@ -258,13 +260,107 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
       for(size_t r = 0; r < j; r++)
       {
          //Lower triangle for basis function table
-         _derivativeBasisFunctions[direction][j].push_back(right[r+1] + left[j-r]);
-         temp = _derivativeBasisFunctions[direction][r][j-1]/_derivativeBasisFunctions[direction][j][r];
+         _knotDifferences[direction][j].push_back(right[r+1] + left[j-r]);
+         temp = _knotDifferences[direction][r][j-1]/_knotDifferences[direction][j][r];
          
          //Upper triangle for basis function table
-         _derivativeBasisFunctions[direction][r].push_back(saved + (right[r+1]*temp));
+         _knotDifferences[direction][r].push_back(saved + (right[r+1]*temp));
          saved = left[j-r]*temp;
       }
-      _derivativeBasisFunctions[direction][j].push_back(saved);
+      _knotDifferences[direction][j].push_back(saved);
    }
+   _derivativeBasisFunctions[direction].clear();
+   
+   //Initialize the "0th" derivative in our derivative map
+   for(size_t j = 0; j <= _degree[direction]; j++)
+   {
+      _derivativeBasisFunctions[direction][0].push_back(_knotDifferences[direction][j].at(_degree[direction]));
+   }
+
+   int row1 = 0;
+   int row2 = 0;
+   int rk = 0;
+   int pk = 0;
+
+   int jone = 0;
+   int jtwo = 0;
+   int tempRow =0;
+
+   unsigned int jthree = 0;
+   double d = 0.0;
+   double* a = new double [2*(_degree[direction]+1)];
+   //Compute the derivatives
+   for( int r = 0; r <= _degree[direction]; r++)
+   {
+      row1 = 0;
+      row2 = 1;
+
+      a[0] = 1.0;
+
+      for( int k = 1; k <= _degree[direction]-1; k++)
+      {
+          d = 0.0;
+          rk = r-k;
+          pk = _degree[direction]-k;
+
+          if(r >=k)
+          {
+             //a[s2][0] = a[s1][0]/ndu[pk+1][rk]
+             a[row2*(_degree[direction])] = a[row1*(_degree[direction])]/_knotDifferences[direction][pk+1][rk];
+
+             d = a[row2*(_degree[direction])]*_knotDifferences[direction][rk][pk];
+          }
+
+          if(rk >= -1)
+          {
+             jone = 1;
+          }
+          else
+          {
+             jone = (-rk);
+          }
+
+          if(r-1 <= pk)
+          {
+             jtwo = k-1;
+          }
+          else
+          {
+             jtwo = _degree[direction]-r;
+          }
+
+          for( int j = jone; j <= jtwo; j++)
+          {
+             a[row2*(_degree[direction]) + j] = (a[row1*(_degree[direction]) +(j)] 
+                                                 - a[row1*(_degree[direction]) +(j-1)])
+                                                  /_knotDifferences[direction][pk+1][rk+1];
+
+             d+= a[row2*(_degree[direction]) + j]*_knotDifferences[direction][rk+j][pk];
+          }
+
+          if(r<=pk)
+          {
+             a[row2*(_degree[direction]) + k] = -a[row1*(_degree[direction]) + (k-1)]/_knotDifferences[direction][pk+1][r];
+             d+= a[row2*(_degree[direction]) + k]*_knotDifferences[direction][r][pk];
+          }
+          _derivativeBasisFunctions[direction][k].push_back(d);
+          
+          //check this if things go bad!!!
+          tempRow = row1;
+          row1 = row2;
+          row2 = tempRow;
+      } 
+      
+   }
+   int r= _degree[direction];
+      for(size_t t=1; t <= (_degree[direction]-1); t++)
+      {
+         for(size_t m =0; m <=_degree[direction]; m++)
+         {
+            _derivativeBasisFunctions[direction][t][m]*=r;
+         }
+         r*=(_degree[direction]-t);
+      }
+   delete [] a;
+   a = 0;
 }

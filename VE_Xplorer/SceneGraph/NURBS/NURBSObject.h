@@ -126,7 +126,7 @@ protected:
 
    std::map<std::string, NURBS::KnotVector> _knotVectors;///<The raw u/v knot vectors
  
-   std::map<std::string, std::vector<double> > _basisFunctions;///<The u/v basis functions
+   std::map<std::string, std::map< unsigned int, std::vector<double> > > _knotDifferences;///<Knot differences
    std::map<std::string, std::map< unsigned int, std::vector<double> > > _derivativeBasisFunctions;///<The u/v derivatives of basis functions
 
    std::map<unsigned int, std::vector<double> > _uBasisFunctionsDerivatives;///<The kth derivative u basis functions
