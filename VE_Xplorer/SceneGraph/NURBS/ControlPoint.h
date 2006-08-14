@@ -1,5 +1,5 @@
-#ifndef THIRD_EYE_POINT_H
-#define THIRD_EYE_POINT_H
+#ifndef VE_POINT_H
+#define VE_POINT_H
 
 /*!\file ControlPoint.h
   ControlPoint API
@@ -173,4 +173,4 @@ protected:
    double _weight;///<The weight for this coordinate.
 };
 }
-#endif //THIRD_EYE_POINT_H
+#endif //VE_POINT_H

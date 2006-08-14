@@ -43,4 +43,4 @@ protected:
    NURBS::Point _calculatePointOnCurve(double parameter, unsigned int span);
 };
 }
-#endif //THIRD_EYE_POINT_H
+#endif //VE_POINT_H

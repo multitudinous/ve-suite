@@ -1,5 +1,5 @@
-#ifndef THIRD_EYE_NURBS_OBJECT_H
-#define THIRD_EYE_NURBS_OBJECT_H
+#ifndef VE_NURBS_OBJECT_H
+#define VE_NURBS_OBJECT_H
 
 /*!\file NURBSObject.h
   NURBS Surface API
