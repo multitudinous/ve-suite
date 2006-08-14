@@ -100,6 +100,13 @@ protected:
    void _calculateBasisFunctions(double parameter, 
                                  std::string direction);
 
+   ///Calculate the basis functions and derivatives that affect a given parameter.\n
+   ///Modification of the _calculateBasisFunctions algorithm
+   ///\param parameter The interpolating parameter
+   ///\param direction "U" or "V" direction
+   void _calculateBasisFunctionsAndDerivatives(double parameter, 
+                                 std::string direction);
+
    Type _type; ///<The NURBSObject type.
 
    bool _needsRetessellation;///<Means the paramaters have changed.
@@ -120,6 +127,7 @@ protected:
    std::map<std::string, NURBS::KnotVector> _knotVectors;///<The raw u/v knot vectors
  
    std::map<std::string, std::vector<double> > _basisFunctions;///<The u/v basis functions
+   std::map<std::string, std::map< unsigned int, std::vector<double> > > _derivativeBasisFunctions;///<The u/v derivatives of basis functions
 
    std::map<unsigned int, std::vector<double> > _uBasisFunctionsDerivatives;///<The kth derivative u basis functions
    std::map<unsigned int, std::vector<double> > _vBasisFunctionsDerivatives;///<The kth derivative v basis functions

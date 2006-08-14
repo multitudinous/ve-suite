@@ -62,6 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="osgd.lib Producerd.lib osgProducerd.lib"
+				OutputFile="$(OutDir)\$(ProjectName)d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(OSGHOME)\lib&quot;"
 				GenerateDebugInformation="true"

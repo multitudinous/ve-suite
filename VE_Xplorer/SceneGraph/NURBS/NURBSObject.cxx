@@ -204,10 +204,11 @@ void NURBSObject::_calculateBasisFunctions(double parameter,
    double saved = 0.0;
    double temp = 0.0;
 
-   ///this will be ignored
+   
    left.push_back(0.0);
    right.push_back(0.0);
 
+   ///Compute the basis functions -- Algo A2.2 Pigel
    for(size_t j = 1; j <= _degree[direction]; j++)
    {
       left.push_back(parameter - _knotVectors[direction].Knot(_currentSpan[direction] + 1 - j));
@@ -223,5 +224,47 @@ void NURBSObject::_calculateBasisFunctions(double parameter,
          saved = left[j-r]*temp;
       }
       _basisFunctions[direction].push_back(saved);
+   }
+}
+////////////////////////////////////////////////////////////
+void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter, 
+                                                         std::string direction)
+{
+   _currentSpan[direction] = _knotVectors[direction].FindKnotSpan(parameter,
+                                                   _nControlPoints[direction]-1,
+                                                   _degree[direction]);
+   
+   _derivativeBasisFunctions[direction].clear();
+   _derivativeBasisFunctions[direction][0].push_back(1.0);
+
+   std::vector<double> left;
+   std::vector<double> right;
+   double saved = 0.0;
+   double temp = 0.0;
+
+   
+   left.push_back(0.0);
+   right.push_back(0.0);
+
+   ///Compute the basis functions and derivatives -- Algo A2.3 Pigel
+   for(size_t j = 1; j <= _degree[direction]; j++)
+   {
+      left.push_back(parameter - _knotVectors[direction].Knot(_currentSpan[direction] + 1 - j));
+      right.push_back(_knotVectors[direction].Knot(_currentSpan[direction] + j) - parameter);
+      
+      saved = 0.0;
+      temp = 0.0;
+
+      for(size_t r = 0; r < j; r++)
+      {
+         //Lower triangle for basis function table
+         _derivativeBasisFunctions[direction][j].push_back(right[r+1] + left[j-r]);
+         temp = _derivativeBasisFunctions[direction][r][j-1]/_derivativeBasisFunctions[direction][j][r];
+         
+         //Upper triangle for basis function table
+         _derivativeBasisFunctions[direction][r].push_back(saved + (right[r+1]*temp));
+         saved = left[j-r]*temp;
+      }
+      _derivativeBasisFunctions[direction][j].push_back(saved);
    }
 }

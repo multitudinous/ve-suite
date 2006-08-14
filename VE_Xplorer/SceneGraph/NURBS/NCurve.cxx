@@ -63,7 +63,7 @@ void NURBSCurve::Interpolate()
    double param = 0.0;
    for(unsigned int i = 0; i < _meshDimensions["U"]; i++)
    {
-      _calculateBasisFunctions(param,"U");
+      _calculateBasisFunctionsAndDerivatives(param,"U");
       _interpolatedPoints.push_back(_calculatePointOnCurve(param,_currentSpan["U"]));
       param += _interpolationStepSize["U"];
    }
@@ -78,7 +78,7 @@ NURBS::Point NURBSCurve::_calculatePointOnCurve(double parameter,
    {
       resutlingWeightedPoint = resutlingWeightedPoint.GetWeigthedPoint() 
                              + _controlPoints[span - _degree["U"] +i].GetWeigthedPoint()
-                             *_basisFunctions["U"].at(i);
+                             *_derivativeBasisFunctions["U"][i].at(_degree["U"]);
    }
    double invWeight = 1.0f/resutlingWeightedPoint.Weight();
    return resutlingWeightedPoint.GetWeigthedPoint()*invWeight;

@@ -77,11 +77,10 @@ void NURBSSurface::Interpolate()
 
    for(unsigned int v = 0;v < _meshDimensions["V"]; v++)
    {
-      _calculateBasisFunctions(vparam,"V");
-
+      _calculateBasisFunctionsAndDerivatives(vparam,"V");
       for(unsigned int u = 0;u < _meshDimensions["U"]; u++)
       {
-         _calculateBasisFunctions(uparam,"U");
+         _calculateBasisFunctionsAndDerivatives(uparam,"U");
          _interpolatedPoints.push_back(_calculatePointOnSurface(uparam,vparam,
                                                                _currentSpan["U"],_currentSpan["V"]));
          uparam += _interpolationStepSize["U"];
@@ -114,7 +113,7 @@ NURBS::Point NURBSSurface::_calculatePointOnSurface(double u,
          
          tempUContribution[l] = tempUContribution[l] 
                                + _controlPoints[vindex*_nControlPoints["U"] + uindex]
-                               *_basisFunctions["U"].at(k);
+                               *_derivativeBasisFunctions["U"][k].at(_degree["U"]);
       }
 
       
@@ -123,7 +122,7 @@ NURBS::Point NURBSSurface::_calculatePointOnSurface(double u,
    {
       resutlingWeightedPoint = resutlingWeightedPoint.GetWeigthedPoint() 
                              + tempUContribution[l]
-                             *_basisFunctions["V"].at(l);
+                             *_derivativeBasisFunctions["V"][l].at(_degree["V"]);
    }
    double invWeight = 1.0f/resutlingWeightedPoint.Weight();
    return resutlingWeightedPoint.GetWeigthedPoint()*invWeight;
