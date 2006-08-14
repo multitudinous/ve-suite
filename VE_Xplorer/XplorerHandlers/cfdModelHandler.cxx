@@ -252,8 +252,11 @@ void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
    {  
       if ( (*iter) == modelToBeRemoved )
       {
-         delete (*iter);
+         //delete (*iter);
+         cfdModel* tempModel = (*iter);
          _modelList.erase( iter++ ); 
+         delete tempModel;
+         tempModel = 0;
          break;     
       }
       else

@@ -141,22 +141,30 @@ cfdModel::~cfdModel()
    }
    _eventHandlers.clear();*/
    // the following block allows the program to get to pfExit
-   for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
+   /*for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); itr++ )
    {
       vprDEBUG(vesDBG,2) << "deleting a cfdModel"
                              << std::endl << vprDEBUG_FLUSH;
       delete *itr;
+   }*/
+   for(unsigned int i = 0; i < mVTKDataSets.size(); i++)
+   {
+      delete mVTKDataSets.at(i);
    }
    mVTKDataSets.clear();
 
    //texture data cleanup
 #ifdef _OSG
 #ifdef VE_PATENTED
-   TextureDataSetList::iterator tDataSet;
+   /*TextureDataSetList::iterator tDataSet;
    for ( tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end();tDataSet++ )
    {
          delete *tDataSet;
+   }*/
+   for(unsigned int i = 0; i < mTextureDataSets.size(); i++)
+   {
+      delete mVTKDataSets.at(i);
    }
    mTextureDataSets.clear();
 #endif
