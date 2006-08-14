@@ -2548,7 +2548,7 @@ class Launch:
                 modifiedVar = app
                 empty = False
             else:
-                modifiedVar = modifiedVar + sep + app
+                modifiedVar = app + sep + modifiedVar 
         os.environ[var] = modifiedVar
         ##Put var in clusterScript
         if self.cluster:
