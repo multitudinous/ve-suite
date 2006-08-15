@@ -23,19 +23,24 @@ import sys ##Gets command line arguments
 import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
 
-##Code divisions:
-##velauncher: Contains Launcher window, command line code, and server killer.
+##Classes:
+##velauncher: Main window and boot code.
 ##velBase: Contains constants and shared functions. 
-##velSettingWin: Contains the Settings Window.
-##velJconf: Contains data structure & window for Jconfiguration lists.
-##velCluster: Contains data structure & window for Cluster slave lists.
+##velSettingWin: Settings Window.
+##velJconfDict: Jconfiguration data structure.
+##velClusterDict: Cluster slave data structure.
+##velJconfWindow: Jconfiguration Window.
+##velClusterWindow: Cluster Window.
 ##velDependencies: Contains code for checking & choosing the Dependencies.
 ##velLaunchCode: Contains environmental var settings & OS-specific launch code.
+##velServerKillWindow: Server Kill Window.
 from velBase import *
-from velJconf import JconfDict
-from velCluster import ClusterDict
+from velJconfDict import *
+from velClusterDict import *
 from velLaunchCode import *
 from velSettingWin import *
+from velCommandLaunch import *
+from velServerKillWindow import *
 import velDependencies
 
 ##Set up the config
@@ -43,108 +48,7 @@ config = wx.Config(CONFIG_FILE)
 config.SetPath(DEFAULT_CONFIG)
 wx.Config.Set(config)
 
-class CommandLaunch:
-    """Launches VE Suite using arguments from the command line."""
-    def __init__(self, opts):
-        ##Set up vars.
-        self.conductor = False
-        self.nameServer = False
-        self.xplorer = False
-        self.xplorerType = None
-        self.desktop = False
-        self.taoMachine = config.Read("TaoMachine", DEFAULT_TAO_MACHINE)
-        self.taoPort = config.Read("TaoPort", DEFAULT_TAO_PORT)
-        self.mode = None
-        self.depDir = config.Read("DependenciesDir", "None")
-        self.workDir = config.Read("Directory", DIRECTORY_DEFAULT)
-        self.jconf = None
-        self.cluster = None
-        self.clusterMaster = None
-        self.builderDir = None
-        self.shell = False
-        self.builderDir = None
-
-        ##Set vars from the command line.
-        for opt, arg in opts:
-            if opt in ('-c', "--conductor"):
-                self.conductor = True
-            elif opt in ('-n', "--nameserver"):
-                self.nameServer = True
-            elif opt in ('-x', "--xplorer="):
-                self.xplorer = True
-                if arg in XPLORER_TYPE_LIST:
-                    self.xplorerType = XPLORER_TYPE_LIST.index(arg)
-                else:
-                    self.xplorerType = 0
-            elif opt in ('-k', "--desktop"):
-                self.desktop = True
-            elif opt in ('-j', "--jconf="):
-                self.jconf = arg
-            elif opt in ('-t', "--taomachine="):
-                self.taoMachine = arg
-            elif opt in ('-p', "--port="):
-                self.taoPort = arg
-            ##NOTE: --setup will be used to set up working directories &
-            ##dependencies folders without going into the GUI.
-            ##Not implemented yet.
-            ##elif opt in ('-s', "--setup"):
-            ##    print "ERROR: Setup isn't implemented yet." + \
-            ##          " Wait until next version."
-            elif opt in ('-w', "--dir="):
-                self.workDir = arg
-            elif opt in ('-e', "--dep="):
-                self.depDir = arg
-            elif opt in ('-m', "--master="):
-                self.clusterMaster = arg
-            elif opt in ('-s', "--shell"):
-                self.shell = True
-            elif opt in ('-b', "--builder="):
-                self.shell = True
-                self.builderDir = arg
-
-        ##Fill in any args left out from the default config settings.
-        if self.jconf == None:
-            if config.HasGroup(JCONF_CONFIG):
-                selection = config.Read("JconfSelection", "None")
-                config.SetPath(JCONF_CONFIG)
-                self.jconf= config.Read(selection, "None")
-                config.SetPath('..')
-            else:
-                self.jconf = DEFAULT_JCONF
-        ##Set Xplorer Type
-        if self.xplorerType == None:
-            data = config.ReadInt("XplorerType", 0)
-            if data in range(len(RADIO_XPLORER_LIST)):
-                self.xplorerType = data
-            else:
-                self.xplorerType = 0
-        ##Launch
-        Launch(None, self.workDir,
-               self.nameServer, self.conductor, self.xplorer, self.xplorerType,
-               self.jconf,
-               self.taoMachine, self.taoPort,
-               self.desktop,
-               self.depDir, master = self.clusterMaster,
-               shell = self.shell, builderDir = self.builderDir)
-        ##Bring up the the Name Server Kill window.
-        ##ERROR: ServerKillWindow() doesn't work outside of app.MainLoop()
-        ##if self.nameServer and not self.shell:
-        ##    win = ServerKillWindow()
-        ##
-        ##Launch the shell here, if needed.
-        if self.shell:
-            if windows:
-                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
-            elif unix:
-                print "VE-Suite subshell started."
-                print "Type exit to return to your previous" + \
-                      " shell once you're done."
-                os.execl(UNIX_SHELL, "")
-            else:
-                print "SHELL ERROR! This OS isn't supported."
-
-
-class LauncherWindow(wx.Dialog):
+class LauncherWindow(wx.Frame):
     """Manages the launcher's window and the use of data from it.
 
     LauncherWindow manages the launcher's GUI, saving/loading the
@@ -186,12 +90,10 @@ class LauncherWindow(wx.Dialog):
     """
     def __init__(self, parent, ID, title):
         """Builds the launcher's window and loads the last configuration."""
-        wx.Dialog.__init__(self, parent, -1, title,
-                           style = wx.DEFAULT_FRAME_STYLE &
-                           ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
-                           wx.MAXIMIZE_BOX) | wx.TAB_TRAVERSAL)
-        ##NOTE: wx.TAB_TRAVERSAL disabled until radio box tabbing works.
-        ##NOTE: Menu doesn't work with dialog.
+        wx.Frame.__init__(self, parent, -1, title,
+                          style = wx.DEFAULT_FRAME_STYLE &
+                          ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
+                          wx.MAXIMIZE_BOX))
 
         ##Prepare data storage
         ##NOTE: JconfDict is a local copy of the Jconf list stored in the
@@ -215,10 +117,6 @@ class LauncherWindow(wx.Dialog):
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
         sbmLogo = wx.StaticBitmap(self, -1, bmLogo)
 
-        ##Build Dependencies Change button.
-        bDepChange = wx.Button(self, -1, "Change Dependencies Folder")
-        bDepChange.SetToolTip(wx.ToolTip("Change the VE-Suite Dependencies" +
-                                         " folder."))
         ##Build Directory text ctrl.
         self.txDirectory = wx.TextCtrl(self, -1,
                                        DIRECTORY_DEFAULT)
@@ -246,35 +144,39 @@ class LauncherWindow(wx.Dialog):
         self.bCustom = wx.Button(self, -1, "Mode Settings")
         self.bCustom.SetToolTip(wx.ToolTip("View and change settings for" +
                                            " the current mode."))
-        ##Build Config buttons.
-        bLoadConf = wx.Button(self, -1, "Load Config")
-        bLoadConf.SetToolTip(wx.ToolTip("Load a different configuration."))
-        bSaveConf = wx.Button(self, -1, "Save Config")
-        bSaveConf.SetToolTip(wx.ToolTip("Save this configuration."))
-        bDeleteConf = wx.Button(self, -1, "Delete Config")
-        bDeleteConf.SetToolTip(wx.ToolTip("Delete a configuration."))
         ##Build Launch button.
         self.bLaunch = wx.Button(self, -1, "Launch VE Suite")
         self.bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
         ##Build menu bar
-        ##menuBar = wx.MenuBar()
-        ##menu = wx.Menu()
-        ##menu.Append(110, "Change &Dependencies")
-        ##menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
-        ##menuBar.Append(menu, "&File")
-        ##self.SetMenuBar(menuBar)
+        menuBar = wx.MenuBar()
+        menu = wx.Menu()
+        menu.Append(500, "Change De&pendencies\tCtrl+P")
+        if devMode:
+            ##Disable Change Dependencies in devMode.
+            menu.Enable(500, False)
+        menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
+        menuBar.Append(menu, "&File")
+        menu = wx.Menu()
+        menu.Append(510, "&Load\tCtrl+L")
+        menu.Append(511, "&Save\tCtrl+S")
+        menu.AppendSeparator()
+        menu.Append(512, "&Delete\tCtrl+D")
+        menuBar.Append(menu, "&Configurations")
+        self.SetMenuBar(menuBar)
 
         ##Event bindings.
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, self.bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
-        self.Bind(wx.EVT_BUTTON, self.ChooseLoadConfig, bLoadConf)
-        self.Bind(wx.EVT_BUTTON, self.ChooseSaveConfig, bSaveConf)
-        self.Bind(wx.EVT_BUTTON, self.DeleteConfig, bDeleteConf)
         self.Bind(wx.EVT_RADIOBOX, self.ModeChanged, self.rbMode)
-        self.Bind(wx.EVT_BUTTON, self.DependenciesChange, bDepChange)
+        self.Bind(wx.EVT_MENU, self.DependenciesChange, id = 500)
+        self.Bind(wx.EVT_MENU, self.ChooseLoadConfig, id = 510)
+        self.Bind(wx.EVT_MENU, self.ChooseSaveConfig, id = 511)
+        self.Bind(wx.EVT_MENU, self.DeleteConfig, id = 512)
+        self.Bind(wx.EVT_MENU, self.OnClose, id = wx.ID_EXIT)
+        
         ##Layout format settings
         ##Create the overall layout box
         rowSizer = wx.BoxSizer(wx.VERTICAL)
@@ -305,14 +207,6 @@ class LauncherWindow(wx.Dialog):
         columnSizer.AddMany([self.rbMode,
                              HORIZONTAL_SPACE])
         columnSizer.Add(self.bCustom, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
-        rowSizer2 = wx.BoxSizer(wx.VERTICAL)
-        rowSizer2.Add(bLoadConf, 0, wx.EXPAND)
-        rowSizer2.Add(VERTICAL_SPACE)
-        rowSizer2.Add(bSaveConf, 0, wx.EXPAND)
-        rowSizer2.Add(VERTICAL_SPACE)
-        rowSizer2.Add(bDeleteConf, 0, wx.EXPAND)
-        columnSizer.Add(HORIZONTAL_SPACE)
-        columnSizer.Add(rowSizer2, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
         rowSizer.AddMany([VERTICAL_SPACE,
                           columnSizer])
         ##Add the title graphic space
@@ -320,9 +214,6 @@ class LauncherWindow(wx.Dialog):
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         columnSizer.Add(sbmLogo)
         columnSizer.Add(HORIZONTAL_SPACE)
-        columnSizer.Add(bDepChange, 0, wx.ALIGN_LEFT | wx.ALIGN_BOTTOM)
-        if devMode:
-            bDepChange.Hide()
         rowSizer2.Add(columnSizer)
         rowSizer2.Add(VERTICAL_SPACE)
         rowSizer2.Add(rowSizer, 0, wx.EXPAND)
@@ -375,118 +266,6 @@ class LauncherWindow(wx.Dialog):
             dlg.ShowModal()
             dlg.Destroy()
 
-##    def DependenciesCheck(self, dependenciesDir):
-##        """Returns true if Dependencies folder checks out, false if it doesn't.
-##
-##        Checks if dependenciesDir exists,
-##        then checks if it looks like the Dependencies directory.
-##        If any check fails, it returns False. Else it returns True."""
-##        ##Set name of the file to check in the Dependencies folder
-##        if unix:
-##            nameServiceFile = "Naming_Service"
-##        elif windows:
-##            nameServiceFile = "Naming_Service.exe"
-##        else:
-##            nameServiceFile = "None"
-##        ##Check if DependenciesDir's path exists.
-##        if not os.path.exists(dependenciesDir):
-##            dlg = wx.MessageDialog(None,
-##                                   "I can't find the " +
-##                                   "It may have been moved, renamed," +
-##                                   " or deleted.\n" +
-##                                   "Please find it for me.",
-##                                   "Error: Dependencies Directory" +
-##                                   " Not Found",
-##                                   wx.OK)
-##            dlg.ShowModal()
-##            dlg.Destroy()
-##            return False
-##        ##Check if DependenciesDir's contents look legitimate.
-##        elif not os.path.exists(os.path.join(dependenciesDir,
-##                                "bin", nameServiceFile)):
-##            dlg = wx.MessageDialog(None,
-##                                   "%s\n" % str(dependenciesDir) +
-##                                   "doesn't look like the Dependencies " +
-##                                   "directory I need.\n" +
-##                                   "Are you sure you want to use it?",
-##                                   "Warning: Dependencies Directory" +
-##                                   " Looks Unfamiliar",
-##                                   wx.YES_NO | wx.NO_DEFAULT)
-##            response = dlg.ShowModal()
-##            dlg.Destroy()
-##            ##Did the user choose to still use it or not?
-##            if response == wx.ID_NO:
-##                return False
-##            else:
-##                return True
-##        ##If all checks passed, return True.
-##        return True
-##
-##    def DependenciesChange(self, event):
-##        """Asks user for a new DependenciesDir."""
-##        legitimateDependenciesDir = False
-##        while not legitimateDependenciesDir:
-##            dependenciesDir = self.DependenciesGet()
-##            if dependenciesDir == None:
-##                return
-##            legitimateDependenciesDir = self.DependenciesCheck(dependenciesDir)
-##        ##Write the new Dependencies directory to default config.
-##        config.Write("DependenciesDir", dependenciesDir)
-##        self.dependencies = dependenciesDir
-##        return
-##
-##    def DependenciesGet(self):
-##        """Ask user for DependenciesDir. Called by DependenciesChange.
-##
-##        Returns the directory path the user chose.
-##        Helper function for DependenciesCheck."""
-##        ##Go up a directory if it's a Unix os to get out
-##        ##of the VE_Suite directory.
-##        if config.Read("DependenciesDir", ":::") != ":::":
-##            searchDir = config.Read("DependenciesDir")
-##        elif os.name == "nt":
-##            searchDir = os.getcwd()
-##        elif os.name == "posix":
-##            searchDir = os.path.split(os.getcwd())[0]
-##        else:
-##            searchDir = "dead parrot sketch"
-##        ##User chooses the directory.
-##        dlg = wx.DirDialog(None,
-##                           "Choose the VE Dependencies directory:",
-##                           searchDir,
-##                           style=wx.DD_DEFAULT_STYLE)
-##        if dlg.ShowModal() == wx.ID_OK:
-##            ##If a directory's chosen, exit the loop and return it.
-##            searchDir = dlg.GetPath()
-##            dirChosen = True
-##            dlg.Destroy()
-##        elif config.Read("DependenciesDir", ":::") == ":::":
-##            ##If not, and no existing DependenciesDir exists,
-##            ##show an error message and ask the user to choose
-##            ##another directory or quit the launcher.
-##            dlg.Destroy()
-##            dlg = wx.MessageDialog(None,
-##                                   "You didn't choose a Dependencies" +
-##                                   " directory.\n" +
-##                                   "VE Suite Launcher won't run" +
-##                                   " without one.\n" +
-##                                   "Press OK to find the directory" +
-##                                   " or Cancel to quit VE Suite Launcher.",
-##                                   "Error: Directory Not Chosen",
-##                                   wx.OK | wx.CANCEL)
-##            ##Quit if the user refuses to choose a Dependencies directory.
-##            if dlg.ShowModal() == wx.ID_CANCEL:
-##                self.Hide()
-##                self.Destroy()
-##                sys.exit(0)
-##            else:
-##                return self.DependenciesChange("")
-##        else:
-##            ##Else if none chosen & one already exists,
-##            ##return None.
-##            searchDir = None
-##            dlg.Destroy()
-##        return searchDir
 
     def DependenciesChange(self, event):
         newDeps = velDependencies.Change(self)
@@ -1052,66 +831,6 @@ class LauncherWindow(wx.Dialog):
             else:
                 print "SHELL ERROR! This OS isn't supported."
 
-
-##class LaunchStartedWindow(wx.Frame):
-##    """A window to tell the user the launch is progressing."""
-##    def __init__(self, parent = None, title = "Launching Now..."):
-##        """Creates the Launch Started Window."""
-##        wx.Frame.__init__(self, parent, wx.ID_ANY, title,
-##                          style = wx.DEFAULT_FRAME_STYLE &
-##                          ~ (wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
-##        lblMsg = wx.StaticText(self, -1, "VE-Suite is sending the launch code\n"+\
-##                                         "to the computer now. Please wait.\n")
-##        rowSizer = wx.BoxSizer(wx.VERTICAL)
-##        border = 10
-##        rowSizer.Add(lblMsg, 2, wx.ALL, border)
-##        rowSizer.SetSizeHints(self)
-##        Style(self)
-##        self.SetSizer(rowSizer)
-##        self.CentreOnScreen()
-##
-##    def OnClose(self, event):
-##        self.Hide()
-##        self.Destroy()
-
-
-class ServerKillWindow(wx.Frame):
-    """A window to kill the Nameserver after launch."""
-    def __init__(self, parent = None, title = "Kill Name Server"):
-        """Creates the Server Kill Window."""
-        wx.Frame.__init__(self, parent, wx.ID_ANY, title,
-                          style = wx.DEFAULT_FRAME_STYLE &
-                          ~ (wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
-        lblMsg = wx.StaticText(self, -1, "After you're done with VE-Suite,\n"+\
-                                         "press the button below to kill\n"+\
-                                         "the Name Server.")
-        bDone = wx.Button(self, -1, "Kill Name Server")
-        self.Bind(wx.EVT_BUTTON, self.KillNameserver, bDone)
-        rowSizer = wx.BoxSizer(wx.VERTICAL)
-        border = 10
-        rowSizer.Add(lblMsg, 2, wx.ALL, border)
-        rowSizer.Add(bDone, 1, wx.EXPAND)
-        rowSizer.SetMinSize(KILL_WINDOW_SIZE)
-        rowSizer.SetSizeHints(self)
-        Style(self)
-        self.SetSizer(rowSizer)
-        self.SetSize(KILL_WINDOW_SIZE)
-        self.CentreOnScreen()
-        self.Show()
-    
-    def KillNameserver(self, event):
-        """Kills any Nameservers running on this computer."""
-        if windows:
-            os.system("tskill Naming_Service")
-            os.system("tskill WinServerd")
-        elif unix:
-            os.system("killall Naming_Service Exe_server")
-        self.OnClose("this event doesn't exist")
-
-    def OnClose(self, event):
-        """Closes ServerKillWindow."""
-        self.Hide()
-        self.Destroy()
 
 ##Get & clean up command line arguments.
 arguments = sys.argv[1:]

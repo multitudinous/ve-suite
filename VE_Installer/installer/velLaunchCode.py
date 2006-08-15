@@ -57,8 +57,7 @@ class Launch:
             ##Set up beginning of clusterScript for env setting.
             self.clusterScript = "#!/bin/csh\n"
             self.clusterScript += "ssh $1 << EOF\n"
-            self.clusterScript += "setenv PYTHONPATH %s\n" \
-                                  %(os.getenv("PYTHONPATH"))
+            self.WriteToClusterScript("PYTHONPATH")
         else:
             self.cluster = False
         ##Set the environmental variables
@@ -248,15 +247,6 @@ class Launch:
         elif unix:
             os.system("killall Naming_Service Exe_server")
         print "Previous name servers killed."
-
-    def Shell(self):
-        if windows:
-            os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
-        elif unix:
-            print "VE-Suite shell started."
-            os.system("%s &" % UNIX_SHELL)
-        else:
-            print "ERROR! This OS isn't supported."
 
     def EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
                  clusterMaster = None, builderDir = None):
@@ -468,8 +458,7 @@ class Launch:
                 modifiedVar = app + sep + modifiedVar 
         os.environ[var] = modifiedVar
         ##Put var in clusterScript
-        if self.cluster:
-            self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
+        self.WriteToClusterScript(var)
 ##        print var + ": " + os.getenv(var) ##TESTER
 
     def EnvFill(self, var, default):
@@ -482,6 +471,16 @@ class Launch:
         else:
             os.environ[var] = default
         ##Put var in clusterScript
-        if self.cluster:
-            self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
+        self.WriteToClusterScript(var)
 ##        print var + ": " + os.getenv(var) ##TESTER
+
+    def WriteToClusterScript(self, var):
+        """Writes an environmental setting to clusterScript.
+
+        Exact function determined by cluster's default shell."""
+        if not self.cluster:
+            return
+        if os.getenv('SHELL', 'None')[-4:] == 'bash':
+            self.clusterScript += "export %s=%s\n" %(var, os.getenv(var))
+        else:
+            self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))

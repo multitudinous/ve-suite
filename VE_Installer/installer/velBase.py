@@ -72,7 +72,7 @@ NULL_SPACE = (0, 0)
 KILL_WINDOW_SIZE = (200, 100)
 ##Set up the system ID
 windows = (name == "nt")
-unix = (name == "posix")
+unix = (name == "posix" or name == "mac")
     
 def Style(window):
     """The uniform style of each window in VE Launcher."""
