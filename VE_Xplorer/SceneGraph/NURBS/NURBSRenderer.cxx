@@ -4,6 +4,7 @@
 #include <osgUtil/Optimizer>
 #include <osg/Geometry>
 #include <osg/PolygonMode>
+#include <osg/Point>
 #include <osg/Geode>
 #include <osg/Array>
 #include <osg/ShadeModel>
@@ -90,8 +91,10 @@ void NURBSRenderer::_updateControlMesh()
    for(unsigned int u = 0; u < nUPoints; u++)
    {
       //new tristrip
-      osg::ref_ptr<osg::Vec3Array> vertStrip = new osg::Vec3Array();
+      osg::ref_ptr<osg::Vec3Array> verts = new osg::Vec3Array();
       osg::ref_ptr<osg::Geometry> lineStrip = new osg::Geometry();
+      osg::ref_ptr<osg::Geometry> vertStrip = new osg::Geometry();
+
       for(unsigned int v = 0; v < nVPoints; v++)
       {
          osg::Vec3 nextPoint;
@@ -99,14 +102,24 @@ void NURBSRenderer::_updateControlMesh()
          nextPoint.set(_nurbsObject->GetControlPoint(u*nVPoints + v).X(),
                        _nurbsObject->GetControlPoint(u*nVPoints + v).Y(),
                        _nurbsObject->GetControlPoint(u*nVPoints + v).Z());
-         vertStrip->push_back(nextPoint);
+         verts->push_back(nextPoint);
       }
-      //set the verts for the tri-strip
-      lineStrip->setVertexArray(vertStrip.get());
+      //set the verts for the line-strip
+      lineStrip->setVertexArray(verts.get());
       lineStrip->setNormalBinding(osg::Geometry::BIND_PER_PRIMITIVE);
-      lineStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINE_STRIP,0,vertStrip->size()));
+      lineStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINE_STRIP,0,verts->size()));
       
+      //set the verts for the actual points
+      osg::ref_ptr<osg::StateSet> vertState = vertStrip->getOrCreateStateSet();
+      osg::ref_ptr<osg::Point> pointSize = new osg::Point();
+      pointSize->setSize(5.0);
+      vertState->setAttribute(pointSize.get(),osg::StateAttribute::ON);
+      vertStrip->setVertexArray(verts.get());
+      vertStrip->setNormalBinding(osg::Geometry::BIND_PER_PRIMITIVE);
+      vertStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS,0,verts->size()));
+
       _controlMesh->addDrawable(lineStrip.get());
+      _controlMesh->addDrawable(vertStrip.get());
    }
 
    if(_nurbsObject->GetType() == NURBSObject::Surface)
