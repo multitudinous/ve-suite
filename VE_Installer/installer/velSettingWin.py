@@ -2,8 +2,10 @@ import os ##Used for setting environmental variables, running programs
 import wx ##Used for GUI
 
 from velBase import *
-from velJconf import *
-from velCluster import *
+from velJconfWindow import *
+from velClusterWindow import *
+from velJconfDict import *
+from velClusterDict import *
 
 class SettingsWindow(wx.Dialog):
     """Subwindow for viewing/changing mode settings."""

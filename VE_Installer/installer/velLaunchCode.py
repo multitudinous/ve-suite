@@ -195,9 +195,11 @@ class Launch:
             workDir = str(os.getenv("VE_WORKING_DIR"))
             depsDir = str(os.getenv("VE_DEPS_DIR"))
             master = str(os.getenv("VEXMASTER"))
-            command = 'python velauncher.py -x %s' %(xplorerType) + \
-                      ' -j "%s" -t %s -p %s' %(jconf, taoMachine, taoPort) + \
-                      ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
+            command = os.system(self.XplorerCall(typeXplorer,
+                                                 jconf, desktopMode))
+##            command = 'python velauncher.py -x %s' %(xplorerType) + \
+##                      ' -j "%s" -t %s -p %s' %(jconf, taoMachine, taoPort) + \
+##                      ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
             self.clusterScript += "cd %s\n" %(VELAUNCHER_DIR)
             self.clusterScript += "%s\n" %(command)
             self.clusterScript += "EOF\n"
@@ -219,6 +221,30 @@ class Launch:
         ##Xplorer section
         elif runXplorer:
             print "Starting Xplorer."
+            os.system(self.XplorerCall(typeXplorer, jconf, desktopMode))
+##            ##Append argument if desktop mode selected
+##            desktop = ""
+##            if desktopMode:
+##                w, h = DisplaySize()
+##                desktop = "-VESDesktop %s %s" % (w, h)
+##            ##Set Xplorer's type
+##            if typeXplorer == 0: ##OSG selection
+##                executable = "project_tao_osg"
+##            elif typeXplorer == 1: ##OSG VEP selection
+##                executable = "project_tao_osg_vep"
+##            elif typeXplorer == 2: ##OSG VEPC selection
+##                executable = "project_tao_osg_vep_cluster"
+##            ##Xplorer's call
+##            os.system("%s -ORBInitRef NameService=" %(executable) +
+##                      "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
+##                      '"%s" %s &' %(jconf, desktop))
+        print "Finished sending launch commands."
+        return
+
+    def XplorerCall(self, typeXplorer, jconf, desktopMode):
+        if windows:
+            return
+        elif unix:
             ##Append argument if desktop mode selected
             desktop = ""
             if desktopMode:
@@ -231,12 +257,15 @@ class Launch:
                 executable = "project_tao_osg_vep"
             elif typeXplorer == 2: ##OSG VEPC selection
                 executable = "project_tao_osg_vep_cluster"
-            ##Xplorer's call
-            os.system("%s -ORBInitRef NameService=" %(executable) +
-                      "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService " +
-                      '"%s" %s &' %(jconf, desktop))
-        print "Finished sending launch commands."
-        return
+            ##Construct the call
+            xplorerCall = "%s -ORBInitRef NameService=" %(executable) + \
+                          "corbaloc:iiop:${TAO_MACHINE}:" + \
+                          "${TAO_PORT}/NameService " + \
+                          '"%s" %s &' %(jconf, desktop)
+            ##Return the call
+            return xplorerCall
+        else:
+            print "Strange occurance in velLaunchCode.Launch.XplorerCall."
 
     def KillNameserver(self):
         """Kills any Name Servers running on this computer."""

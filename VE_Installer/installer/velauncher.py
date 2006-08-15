@@ -37,6 +37,8 @@ import wx ##Used for GUI
 from velBase import *
 from velJconfDict import *
 from velClusterDict import *
+from velJconfWindow import *
+from velClusterWindow import *
 from velLaunchCode import *
 from velSettingWin import *
 from velCommandLaunch import *
