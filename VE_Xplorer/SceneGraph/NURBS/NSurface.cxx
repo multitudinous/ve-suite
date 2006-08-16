@@ -74,23 +74,14 @@ void NURBSSurface::Interpolate()
    double uparam = 0.0;
    double vparam = 0.0;
 
-   int uDims = ceil(1.0/(_interpolationStepSize["U"]));
-   int vDims = ceil(1.0/(_interpolationStepSize["V"]));
-
-   _meshDimensions["U"] = static_cast<unsigned int>(uDims+1);
-   _meshDimensions["V"] = static_cast<unsigned int>(vDims+1);
-
-   //std::cout<<"Division u: "<<1.0/_interpolationStepSize["U"]<<std::endl;
-   //std::cout<<"Mesh u dimensions: "<<_meshDimensions["U"]++<<std::endl;
-
-   ////std::cout<<"Division v: "<<1.0/_interpolationStepSize["V"]<<std::endl;
-   //std::cout<<"Mesh v dimensions: "<<_meshDimensions["V"]++<<std::endl;
+   _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]);
+   _interpolationStepSize["V"] = 1.0/(_meshDimensions["V"]);
 
    std::map<unsigned int,std::vector<NURBS::ControlPoint> > surfaceInfo;
-   for(unsigned int v = 0;v < _meshDimensions["V"]; v++)
+   for(unsigned int v = 0;v < _meshDimensions["V"]+1; v++)
    {
       _calculateBasisFunctionsAndDerivatives(vparam,"V");
-      for(unsigned int u = 0;u < _meshDimensions["U"]; u++)
+      for(unsigned int u = 0;u < _meshDimensions["U"]+1; u++)
       {
          _calculateBasisFunctionsAndDerivatives(uparam,"U");
          surfaceInfo = _calculatePointOnSurface(uparam,vparam,_currentSpan["U"],_currentSpan["V"]);

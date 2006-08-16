@@ -59,7 +59,7 @@ public:
    ///Set the size between u/v parameters when calculating the surface.
    ///\param stepSize The tessellation step size.
    ///\param direction "U" or "V" direction
-   void SetInterpolationStepSize(double stepSize,std::string direction="U");
+   void SetInterpolationGridSize(unsigned int stepSize,std::string direction="U");
 
    ///Interpolate the NURBS object.
    virtual void Interpolate()=0;

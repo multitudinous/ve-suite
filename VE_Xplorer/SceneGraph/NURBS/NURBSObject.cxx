@@ -129,11 +129,12 @@ void NURBSObject::SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
    _needsRetessellation = true;
 }
 //////////////////////////////////////////////////////////
-void NURBSObject::SetInterpolationStepSize(double stepSize,
+void NURBSObject::SetInterpolationGridSize(unsigned int stepSize,
                                            std::string direction)
 {
-   if(stepSize < .5)
-      _interpolationStepSize[direction] = stepSize;
+   //if(stepSize < .5)
+   //_interpolationStepSize[direction] = stepSize;
+   _meshDimensions[direction] = stepSize;
    
    _needsRetessellation = true;
 }

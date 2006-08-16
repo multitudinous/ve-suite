@@ -112,7 +112,7 @@ int main(int argc, char** argv)
    NURBS::NURBSCurve ncurve(3);
    ncurve.SetControlPoints(controlPoints,controlPoints.size());
    ncurve.SetKnotVector(knots);
-   ncurve.SetInterpolationStepSize(.05);
+   ncurve.SetInterpolationGridSize(20);
    ncurve.Interpolate();
 
    /*std::fstream fout("./testPoints.txt",std::ios::out);
@@ -172,8 +172,8 @@ int main(int argc, char** argv)
    surface.SetControlPoints(surfaceCtrlPts,4,4);
    surface.SetKnotVector(uKnots,"U");
    surface.SetKnotVector(vKnots,"V");
-   surface.SetInterpolationStepSize(.1,"U");
-   surface.SetInterpolationStepSize(.01,"V");
+   surface.SetInterpolationGridSize(10,"U");
+   surface.SetInterpolationGridSize(10,"V");
    surface.Interpolate();
 
    /*std::fstream fout3("./testSurfacePoints.txt",std::ios::out);

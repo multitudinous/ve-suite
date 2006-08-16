@@ -2,7 +2,6 @@
 #include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
 #include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
 #include <iostream>
-#include <cmath>
 
 using namespace NURBS;
 ////////////////////////
@@ -59,14 +58,12 @@ void NURBSCurve::Interpolate()
 
    _interpolatedPoints.clear();
    
-   int uDims =  ceil(1.0/_interpolationStepSize["U"]);
-   //std::cout<<"udims: "<<uDims<<std::endl;
-   _meshDimensions["U"] = static_cast<unsigned int>(uDims+1);
- 
+   //_meshDimensions["U"] = static_cast<unsigned int>(1.0/(_interpolationStepSize["U"])+1);
+   _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]); 
    double param = 0.0;
    std::vector<NURBS::ControlPoint> curveInfo;
 
-   for(unsigned int i = 0; i < _meshDimensions["U"]; i++)
+   for(unsigned int i = 0; i < _meshDimensions["U"]+1; i++)
    {
       _calculateBasisFunctionsAndDerivatives(param,"U");
       curveInfo = _calculatePointOnCurve(param,_currentSpan["U"]);
