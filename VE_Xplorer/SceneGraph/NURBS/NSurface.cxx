@@ -73,6 +73,7 @@ void NURBSSurface::Interpolate()
  
    double uparam = 0.0;
    double vparam = 0.0;
+
    _meshDimensions["U"] = static_cast<unsigned int>(1.0/(_interpolationStepSize["U"])+1);
    _meshDimensions["V"] = static_cast<unsigned int>(1.0/(_interpolationStepSize["V"])+1);
 

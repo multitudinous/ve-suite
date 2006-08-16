@@ -364,3 +364,4 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
    delete [] a;
    a = 0;
 }
+

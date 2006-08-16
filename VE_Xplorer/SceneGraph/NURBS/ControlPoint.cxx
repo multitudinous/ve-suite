@@ -150,3 +150,4 @@ ControlPoint& ControlPoint::operator=(const ControlPoint& rhs)
    }
    return *this;
 }
+

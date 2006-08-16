@@ -11,6 +11,7 @@
 #include "VE_Xplorer/SceneGraph/NURBS/Export.h"
 #include <vector>
 #include <map>
+#include <string>
 namespace NURBS
 {
 class VE_NURBS_EXPORTS KnotVector

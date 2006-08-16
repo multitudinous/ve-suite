@@ -346,3 +346,4 @@ osg::Vec3 NURBSRenderer::_calculateSurfaceNormalAtPoint(unsigned int index)
    }
    return normal;
 }
+
