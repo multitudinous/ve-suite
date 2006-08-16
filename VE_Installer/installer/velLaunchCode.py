@@ -502,7 +502,7 @@ class Launch:
             os.environ[var] = default
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-        print var + ": " + os.getenv(var) ##TESTER
+        ##print var + ": " + os.getenv(var) ##TESTER
 
     def WriteToClusterScript(self, var):
         """Writes an environmental setting to clusterScript.
