@@ -172,7 +172,7 @@ int main(int argc, char** argv)
    surface.SetControlPoints(surfaceCtrlPts,4,4);
    surface.SetKnotVector(uKnots,"U");
    surface.SetKnotVector(vKnots,"V");
-   surface.SetInterpolationStepSize(.01,"U");
+   surface.SetInterpolationStepSize(.1,"U");
    surface.SetInterpolationStepSize(.01,"V");
    surface.Interpolate();
 
