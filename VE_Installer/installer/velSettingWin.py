@@ -1,3 +1,4 @@
+"""VE-Launcher's Settings window."""
 import os ##Used for setting environmental variables, running programs
 import wx ##Used for GUI
 

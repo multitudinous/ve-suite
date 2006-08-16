@@ -1,3 +1,4 @@
+"""Contains constant variables and shared functions for VE-Launcher."""
 from os import getenv, getcwd, name ##Used for getting system values
 from os.path import join ##Used for building paths.
 import wx ##Used for GUI

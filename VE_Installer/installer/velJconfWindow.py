@@ -1,3 +1,4 @@
+"""VE-Launcher's Jconf window."""
 import wx
 import os
 from velBase import *

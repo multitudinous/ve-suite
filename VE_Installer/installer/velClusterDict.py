@@ -1,3 +1,4 @@
+"""Data structure for VE-Launcher's Cluster dictionary."""
 import wx
 import os
 from velBase import *

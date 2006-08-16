@@ -1,3 +1,4 @@
+"""VE-Launcher's Cluster window."""
 import wx
 import os
 from velBase import *

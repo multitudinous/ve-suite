@@ -750,7 +750,7 @@ class LauncherWindow(wx.Frame):
         ##Set the builderDir, if necessary.
         passedBuilderDir = None
         loop = True
-        if self.shell and loop:
+        if self.shell and loop and not devMode:
             dlg = wx.MessageDialog(self,
                                     "Do you want to use this shell\n" +
                                     "to run VE-Builder?",

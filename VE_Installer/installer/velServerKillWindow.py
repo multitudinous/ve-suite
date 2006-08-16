@@ -1,3 +1,4 @@
+"""VE-Launcher's Name Server Kill window."""
 import wx
 import os
 

@@ -1,3 +1,4 @@
+"""Handles immediate startups from VE-Launcher's command line."""
 import wx
 import os
 from velBase import *

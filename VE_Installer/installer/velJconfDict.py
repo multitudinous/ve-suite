@@ -1,3 +1,4 @@
+"""Data structure for VE-Launcher's Jconf dictionary."""
 import wx
 import os
 from velBase import *

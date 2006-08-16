@@ -1,3 +1,4 @@
+"""Handles checking and choosing the Dependencies folder for VE-Launcher."""
 from velBase import *
 import os
 import wx

@@ -33,7 +33,8 @@ class Launch:
                  taoPort = DEFAULT_TAO_MACHINE,
                  desktopMode = False,
                  dependenciesDir = None, cluster = None, master = None,
-                 shell = False, builderDir = None, devMode = False):
+                 shell = False, builderDir = None, devMode = False,
+                 vesFile = None):
         """Sets environmental vars and calls OS-specific launch code.
 
         Keyword arguments:
@@ -55,7 +56,7 @@ class Launch:
            CLUSTER_ENABLED:
             self.cluster = True
             ##Set up beginning of clusterScript for env setting.
-            self.clusterScript = "#!/bin/csh\n"
+            self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
             self.clusterScript += "ssh $1 << EOF\n"
             self.WriteToClusterScript("PYTHONPATH")
         else:
@@ -510,7 +511,8 @@ class Launch:
         Exact function determined by cluster's default shell."""
         if not self.cluster:
             return
-        if os.getenv('SHELL', 'None')[-4:] == 'bash':
+        shellName = os.getenv('SHELL', 'None')
+        if shellName[-4:] == 'bash' or shellName[-3:] == '/sh':
             self.clusterScript += "export %s=%s\n" %(var, os.getenv(var))
         else:
             self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
