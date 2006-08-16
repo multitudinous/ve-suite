@@ -489,7 +489,7 @@ class Launch:
             os.environ[var] = modifiedVar
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-        print var + ": " + os.getenv(var) ##TESTER
+##        print var + ": " + os.getenv(var) ##TESTER
 
     def EnvFill(self, var, default):
         """Overwrites environmental var in normal mode, fills it in dev mode.
@@ -502,7 +502,7 @@ class Launch:
             os.environ[var] = default
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-        ##print var + ": " + os.getenv(var) ##TESTER
+##        print var + ": " + os.getenv(var) ##TESTER
 
     def WriteToClusterScript(self, var):
         """Writes an environmental setting to clusterScript.
