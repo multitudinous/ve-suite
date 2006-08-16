@@ -805,7 +805,8 @@ class LauncherWindow(wx.Frame):
                desktop, dependenciesDir = dependenciesDir,
                cluster = self.clusterDict.GetLocations(),
                master = self.clusterMaster,
-               shell = self.shell, builderDir = passedBuilderDir)
+               shell = self.shell, builderDir = passedBuilderDir,
+               devMode = devMode)
         ##Destroy the Launch progress window.
         ##progress.OnClose("this message does not matter")
         ##Show NameServer kill window if NameServer was started.

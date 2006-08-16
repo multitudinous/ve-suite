@@ -477,18 +477,19 @@ class Launch:
 
     def EnvAppend(self, var, appendages, sep):
         """Appends appendages (list) to var, using sep to separate them."""
-        modifiedVar = os.getenv(var, None)
-        empty = (modifiedVar == None)
-        for app in appendages:
-            if empty:
-                modifiedVar = app
-                empty = False
-            else:
-                modifiedVar = app + sep + modifiedVar 
-        os.environ[var] = modifiedVar
+        if not self.devMode:
+            modifiedVar = os.getenv(var, None)
+            empty = (modifiedVar == None)
+            for app in appendages:
+                if empty:
+                    modifiedVar = app
+                    empty = False
+                else:
+                    modifiedVar = app + sep + modifiedVar 
+            os.environ[var] = modifiedVar
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-##        print var + ": " + os.getenv(var) ##TESTER
+        print var + ": " + os.getenv(var) ##TESTER
 
     def EnvFill(self, var, default):
         """Overwrites environmental var in normal mode, fills it in dev mode.
@@ -501,7 +502,7 @@ class Launch:
             os.environ[var] = default
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-##        print var + ": " + os.getenv(var) ##TESTER
+        print var + ": " + os.getenv(var) ##TESTER
 
     def WriteToClusterScript(self, var):
         """Writes an environmental setting to clusterScript.
