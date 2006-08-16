@@ -195,12 +195,12 @@ class Launch:
             workDir = str(os.getenv("VE_WORKING_DIR"))
             depsDir = str(os.getenv("VE_DEPS_DIR"))
             master = str(os.getenv("VEXMASTER"))
-            command = os.system(self.XplorerCall(typeXplorer,
-                                                 jconf, desktopMode))
+            command = self.XplorerCall(typeXplorer,
+                                       jconf, desktopMode)
 ##            command = 'python velauncher.py -x %s' %(xplorerType) + \
 ##                      ' -j "%s" -t %s -p %s' %(jconf, taoMachine, taoPort) + \
 ##                      ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
-            self.clusterScript += "cd %s\n" %(VELAUNCHER_DIR)
+##            self.clusterScript += "cd %s\n" %(VELAUNCHER_DIR)
             self.clusterScript += "%s\n" %(command)
             self.clusterScript += "EOF\n"
             clusterFileName = "cluster.tsh"

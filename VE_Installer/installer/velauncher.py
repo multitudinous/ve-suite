@@ -142,7 +142,7 @@ class LauncherWindow(wx.Frame):
         ##Build Mode radio box.
         self.rbMode = wx.RadioBox(panel, -1, "Launch Mode",
                                   wx.DefaultPosition, wx.DefaultSize,
-                                  MODE_LIST, 1, wx.RA_SPECIFY_COLS)
+                                  MODE_LIST, 3, wx.RA_SPECIFY_COLS)
         self.rbMode.SetToolTip(wx.ToolTip("Choose which mode you want to" +
                                           " launch in?"))
         ##Build Mode Settings button.
