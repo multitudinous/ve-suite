@@ -10,18 +10,18 @@ endif
 
 ifeq (${CFDPLATFORM},x86_64)
    EXTRA_LIBS+= -L$(OSG_HOME)/lib -L$(OSG_HOME)/lib64 -losg -losgDB -losgGA -losgUtil \
-            -lOpenThreads -losgFX -losgText -losgSim
+            -lOpenThreads -losgFX -losgText -losgSim -losgProducer
    DSO_PLUGIN_DEPS+= -L$(OSG_HOME)/lib -L$(OSG_HOME)/lib64 -losg -losgDB -losgGA -losgUtil \
-            -lOpenThreads -losgFX -losgText -losgSim
+            -lOpenThreads -losgFX -losgText -losgSim -losgProducer
 else
    ifeq (${CFDUNAME},IRIX64)
       EXTRA_LIBS+= -L$(OSG_HOME)/lib32 -losg -losgDB -losgGA -losgUtil \
-            -lOpenThreads -losgFX -losgText -losgSim
+            -lOpenThreads -losgFX -losgText -losgSim -losgProducer
    else
       EXTRA_LIBS+= -L$(OSG_HOME)/lib -losg -losgDB -losgGA -losgUtil \
-            -lOpenThreads -losgText -losgSim
+            -lOpenThreads -losgText -losgSim -losgProducer
       DSO_PLUGIN_DEPS+= -L$(OSG_HOME)/lib -losg -losgDB -losgGA -losgUtil \
-            -lOpenThreads -losgText -losgSim
+            -lOpenThreads -losgText -losgSim -losgProducer
    endif
 
 endif
