@@ -55,6 +55,10 @@ protected:
    ///Draw the control mesh
    void _updateControlMesh();
 
+   ///Calculate the surface normal at a point
+   ///\param index The index of the point to calculate the normal
+   osg::Vec3 _calculateSurfaceNormalAtPoint(unsigned int index);
+
    NURBS::NURBSObject* _nurbsObject;///<The NURBSurface
    osg::ref_ptr<osg::Geode> _triangulatedSurface;///<The triangulated surface
    osg::ref_ptr<osg::Geode> _controlMesh;///<The control mesh

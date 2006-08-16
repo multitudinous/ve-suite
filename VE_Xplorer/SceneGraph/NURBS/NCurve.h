@@ -37,10 +37,10 @@ public:
    virtual void Interpolate();
 
 protected:
-   ///Calculate a point on a curve
+   ///Calculate a point and it's derivatives on a curve
    ///\param parameter The interpolating parameter
    ///\param span The knot span to interpolate the parameter on
-   NURBS::Point _calculatePointOnCurve(double parameter, unsigned int span);
+   std::vector<NURBS::ControlPoint> _calculatePointOnCurve(double parameter, unsigned int span);
 };
 }
 #endif //VE_POINT_H

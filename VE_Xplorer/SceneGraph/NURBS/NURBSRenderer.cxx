@@ -1,4 +1,5 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
 #include <osgUtil/SmoothingVisitor>
 #include <osgUtil/Optimizer>
@@ -212,12 +213,17 @@ void NURBSRenderer::_tessellateSurface()
    {
       //new tristrip
       osg::ref_ptr<osg::Vec3Array> vertStrip = new osg::Vec3Array();
+      osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array();
       osg::ref_ptr<osg::Geometry> triStrip = new osg::Geometry();
 
       //Handle the special case for the first triangle in the strip
       osg::Vec3 rightCornerPoint;
       osg::Vec3 bottomCornerPoint;
       osg::Vec3 nextTopPoint;
+
+      osg::Vec3 rightCornerNormal = _calculateSurfaceNormalAtPoint(u*nVPoints);
+      osg::Vec3 bottomCornerNormal = _calculateSurfaceNormalAtPoint((u+1)*nVPoints);
+      osg::Vec3 nextTopNormal = _calculateSurfaceNormalAtPoint(u*nVPoints+1);
 
       bottomCornerPoint.set(_nurbsObject->InterpolatedPoints().at(u*nVPoints).X(),
                             _nurbsObject->InterpolatedPoints().at(u*nVPoints).Y(),
@@ -239,11 +245,18 @@ void NURBSRenderer::_tessellateSurface()
       vertStrip->push_back(rightCornerPoint);
       vertStrip->push_back(nextTopPoint);
 
+      normals->push_back(rightCornerNormal);
+      normals->push_back(bottomCornerNormal);
+      normals->push_back(nextTopNormal);
+
       //interior points
       for(unsigned int v = 1; v < nVPoints - 1; v++)
       {
          osg::Vec3 nextBottomCornerPoint;
          osg::Vec3 oppositeTopCornerPoint;
+
+         osg::Vec3 nextBottomCornerNormal = _calculateSurfaceNormalAtPoint((u+1)*nVPoints+v);
+         osg::Vec3 oppositeTopCornerNormal = _calculateSurfaceNormalAtPoint((u)*nVPoints+(v+1));
      
          nextBottomCornerPoint.set(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).X(),
                                    _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).Y(),
@@ -255,6 +268,9 @@ void NURBSRenderer::_tessellateSurface()
 
          vertStrip->push_back(nextBottomCornerPoint);
          vertStrip->push_back(oppositeTopCornerPoint);
+
+         normals->push_back(nextBottomCornerNormal);
+         normals->push_back(oppositeTopCornerNormal);
       }
       //handle last point
       osg::Vec3 lastBottomPoint;
@@ -264,9 +280,14 @@ void NURBSRenderer::_tessellateSurface()
       
       vertStrip->push_back(lastBottomPoint);
 
+      
+      osg::Vec3 lastBottomNormal = _calculateSurfaceNormalAtPoint((u+1)*nVPoints+(nVPoints - 1));
+      normals->push_back(lastBottomNormal);
+
       //set the verts for the tri-strip
       triStrip->setVertexArray(vertStrip.get());
-      triStrip->setNormalBinding(osg::Geometry::BIND_PER_PRIMITIVE);
+      triStrip->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
+      triStrip->setNormalArray(normals.get());
       triStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::TRIANGLE_STRIP,0,vertStrip->size()));
       
       _triangulatedSurface->addDrawable(triStrip.get());
@@ -287,16 +308,41 @@ void NURBSRenderer::_tessellateSurface()
    surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
    surfaceState->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
    
-   surfaceState->setMode(GL_AUTO_NORMAL,osg::StateAttribute::ON);
+   //surfaceState->setMode(GL_AUTO_NORMAL,osg::StateAttribute::ON);
 
    if(_triangulatedSurface.valid())
    {
-      osgUtil::SmoothingVisitor autoNormals;
-      autoNormals.apply(*_triangulatedSurface.get());
+      //osgUtil::SmoothingVisitor autoNormals;
+      //autoNormals.apply(*_triangulatedSurface.get());
 
-      osgUtil::Optimizer optimizer;
-      optimizer.optimize(_triangulatedSurface.get(),osgUtil::Optimizer::ALL_OPTIMIZATIONS);
+      //osgUtil::Optimizer optimizer;
+      //optimizer.optimize(_triangulatedSurface.get(),osgUtil::Optimizer::ALL_OPTIMIZATIONS);
       
    }
    _retessellate = false;
+}
+///////////////////////////////////////////////////////////////////////////
+osg::Vec3 NURBSRenderer::_calculateSurfaceNormalAtPoint(unsigned int index)
+{
+   osg::Vec3 normal(0,1,0);
+
+   if(_nurbsObject->GetType() == NURBSObject::Surface)
+   {
+      try
+      {
+         NURBS::NURBSSurface* surface = dynamic_cast<NURBS::NURBSSurface*>(_nurbsObject);
+      
+         NURBS::Point dSdU = surface->GetSurfaceDerivatives()[1][0].at(index);
+         NURBS::Point dSdV = surface->GetSurfaceDerivatives()[0][1].at(index);
+         NURBS::Point cross = dSdV^dSdU; 
+         normal.set(cross.X(),cross.Y(),cross.Z());
+         normal.normalize();
+      }
+      catch(...)
+      {
+         std::cout<<"Invalid surface!!!"<<std::endl;
+         std::cout<<"NURBSRenderer::_calculateSurfaceNormalAtPoint"<<std::endl;
+      }
+   }
+   return normal;
 }

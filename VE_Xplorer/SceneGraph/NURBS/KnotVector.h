@@ -67,7 +67,7 @@ public:
 protected:
    size_t _nKnots;///< Number of knots
    std::map< double , unsigned int > _knotMultiplicityMap;///<The map values and multiplicity 
-   std::string _spacing;///Type of KnotVector, describes the spacing of the knots.
+   std::string _spacing;///<Type of KnotVector, describes the spacing of the knots.
    std::map< double, unsigned int >::iterator _currentSpan;///<The current span we are investigating
 };
 }

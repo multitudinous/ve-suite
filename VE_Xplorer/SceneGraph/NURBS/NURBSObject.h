@@ -20,10 +20,11 @@ class ControlPoint;
 class VE_NURBS_EXPORTS NURBSObject
 {
 public:
+   ///\enum Type
    enum Type
    {
-      Curve,
-      Surface
+      Curve,///<A NURBSCurve
+      Surface///<A NURBSSurface
    };
    ///Constructor
    NURBSObject(Type type=Curve,unsigned int uDegree=3,unsigned int vDegree=3);
@@ -86,8 +87,9 @@ public:
    ///\param index The key to search for in the control point list
    NURBS::ControlPoint& GetControlPoint(size_t index);
 
-   ///Get the ControlPoint for this surface.
-   std::vector<NURBS::ControlPoint>& ControlPoints();
+   ///Get the ControlPoint s for this surface.
+   ///\param derivative The kth derivative control point mesh
+   std::vector<NURBS::ControlPoint>& ControlPoints(unsigned int derivative = 0);
 
    ///Get the tessellated points.
    std::vector<NURBS::Point>& InterpolatedPoints();
@@ -132,8 +134,8 @@ protected:
    std::map<unsigned int, std::vector<double> > _uBasisFunctionsDerivatives;///<The kth derivative u basis functions
    std::map<unsigned int, std::vector<double> > _vBasisFunctionsDerivatives;///<The kth derivative v basis functions
 
-   std::vector<NURBS::ControlPoint> _controlPoints;///<The raw ControlPoint data
-   std::vector<NURBS::Point> _interpolatedPoints;///<The tesselated points.
+   std::map<unsigned int, std::vector<NURBS::ControlPoint> > _controlPoints;///<The raw ControlPoint data
+   std::map<unsigned int, std::vector<NURBS::Point> > _interpolatedPoints;///<The tesselated points.
 };
 }
 #endif //NURBS_OBJECT_H

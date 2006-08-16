@@ -39,7 +39,7 @@ void NURBSCurve::Interpolate()
 
    if(!_needsRetessellation)
       return;
-   if(!_controlPoints.size())
+   if(!_controlPoints[0].size())
    {
       std::cout<<"No control points specified!!"<<std::endl;
       std::cout<<"NURBSCurve::Interpolate()"<<std::endl;
@@ -54,32 +54,43 @@ void NURBSCurve::Interpolate()
    }
    //Check our curve condition
    //m + 1 = (n + 1) + (p + 1)
-   SetDegree(static_cast<unsigned int>(_knotVectors["U"].NumberOfKnots() - _controlPoints.size()) - 1);
+   SetDegree(static_cast<unsigned int>(_knotVectors["U"].NumberOfKnots() - _controlPoints[0].size()) - 1);
 
    _interpolatedPoints.clear();
    
    _meshDimensions["U"] = static_cast<unsigned int>(1.0/(_interpolationStepSize["U"])+1);
  
    double param = 0.0;
+   std::vector<NURBS::ControlPoint> curveInfo;
+
    for(unsigned int i = 0; i < _meshDimensions["U"]; i++)
    {
       _calculateBasisFunctionsAndDerivatives(param,"U");
-      _interpolatedPoints.push_back(_calculatePointOnCurve(param,_currentSpan["U"]));
+      curveInfo = _calculatePointOnCurve(param,_currentSpan["U"]);
+      for(size_t k = 0; k < curveInfo.size(); k++)
+      {
+         _interpolatedPoints[k].push_back(curveInfo.at(k));
+      }
       param += _interpolationStepSize["U"];
    }
 }
-////////////////////////////////////////////////////////////////
-NURBS::Point NURBSCurve::_calculatePointOnCurve(double parameter, 
-                                                unsigned int span)
+/////////////////////////////////////////////////////////////////////////////////////
+std::vector<NURBS::ControlPoint> NURBSCurve::_calculatePointOnCurve(double parameter, 
+                                                                   unsigned int span)
 {
-   NURBS::ControlPoint resutlingWeightedPoint(0,0,0);
-
-   for(unsigned int i = 0; i <= _degree["U"]; i++)
+   std::vector<NURBS::ControlPoint> resutlingWeightedPoint;
+   double invWeight = 1.0f;
+   for(unsigned int k = 0; k < _degree["U"]; k++)
    {
-      resutlingWeightedPoint = resutlingWeightedPoint.GetWeigthedPoint() 
-                             + _controlPoints[span - _degree["U"] +i].GetWeigthedPoint()
-                             *_derivativeBasisFunctions["U"][0].at(i);
+      resutlingWeightedPoint.push_back(ControlPoint());
+      for(unsigned int i = 0; i <= _degree["U"]; i++)
+      {
+         resutlingWeightedPoint[k] = resutlingWeightedPoint[k].GetWeigthedPoint() 
+                                + _controlPoints[0][span - _degree["U"] +i].GetWeigthedPoint()
+                                *_derivativeBasisFunctions["U"][k].at(i);
+      }
+      invWeight/=resutlingWeightedPoint[k].Weight();
+      resutlingWeightedPoint[k].GetWeigthedPoint()*invWeight;
    }
-   double invWeight = 1.0f/resutlingWeightedPoint.Weight();
-   return resutlingWeightedPoint.GetWeigthedPoint()*invWeight;
+   return resutlingWeightedPoint;
 }

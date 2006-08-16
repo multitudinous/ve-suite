@@ -64,6 +64,20 @@ public:
    ///Get the value of the third directional coordinate.
    double Z();
 
+   ///Dot product
+   inline double operator*(const Point& rhs) const
+   {
+      return _x*rhs._x + _y*rhs._x + _z*rhs._z;
+   }
+
+   ///Cross product. 
+   inline const Point operator ^ (const Point& rhs) const
+   {
+      return Point(_y*rhs._z - _z*rhs._y,
+                   _z*rhs._x - _x*rhs._z,
+                   _x*rhs._y - _y*rhs._x);
+   }
+   ///override ostream operator
    inline friend std::ostream& operator<<(std::ostream& os,
                                           const Point& fpd)
    {
@@ -71,6 +85,7 @@ public:
       return os;
    }
 
+   ///override ">" operator
    friend bool operator>(const Point& lhs,const Point& rhs)
    {
       if(lhs._x > rhs._x ||
@@ -81,6 +96,7 @@ public:
       }
       return false;
    };
+   ///addition operator
    Point operator+(const Point& lhs)
    {
       Point newPoint(lhs._x + _x,
@@ -91,6 +107,7 @@ public:
 
    };
 
+   ///multiplicaiton with a scalar operator
    Point operator*(const double& lhs)
    {
       Point newPoint(lhs*_x,
@@ -138,6 +155,20 @@ public:
    ///Returns P*weight
    NURBS::ControlPoint GetWeigthedPoint();
 
+   ///Dot product
+   inline double operator*(const ControlPoint& rhs) const
+   {
+      return _x*rhs._x + _y*rhs._x + _z*rhs._z;
+   }
+
+   ///Cross product. 
+   inline const ControlPoint operator ^ (const ControlPoint& rhs) const
+   {
+      return ControlPoint(_y*rhs._z - _z*rhs._y,
+                   _z*rhs._x - _x*rhs._z,
+                   _x*rhs._y - _y*rhs._x);
+   }
+   ///override "<<"operator
    inline friend std::ostream& operator<<(std::ostream& os,
                                           const ControlPoint& fpd)
    {
@@ -145,6 +176,7 @@ public:
       return os;
    }
 
+   ///override "+" operator
    ControlPoint operator+(const ControlPoint& lhs)
    {
       //not sure how to handle the weights here!!!
@@ -157,6 +189,7 @@ public:
 
    };
 
+   /// multiplication with a scalar
    ControlPoint operator*(const double& lhs)
    {
       //not sure how to handle the weights here!!!

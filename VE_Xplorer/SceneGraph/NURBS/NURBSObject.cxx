@@ -121,11 +121,11 @@ void NURBSObject::SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
    _controlPoints.clear();
    for(size_t i = 0; i < ctrlPts.size(); i++)
    {
-      _controlPoints.push_back(ctrlPts.at(i));
+      _controlPoints[0].push_back(ctrlPts.at(i));
    }
    _nControlPoints["U"] = nUCtlPts;
    _nControlPoints["V"] = nVCtlPts;
-   _nTotalControlPoints = static_cast<unsigned int>(_controlPoints.size());
+   _nTotalControlPoints = static_cast<unsigned int>(_controlPoints[0].size());
    _needsRetessellation = true;
 }
 //////////////////////////////////////////////////////////
@@ -162,20 +162,20 @@ unsigned int NURBSObject::GetOrder(std::string direction)
 {
    return _order[direction];
 }
-///////////////////////////////////////////////////////////////////////
-std::vector<NURBS::ControlPoint>& NURBSObject::ControlPoints()
+/////////////////////////////////////////////////////////////////////////////////////
+std::vector<NURBS::ControlPoint>& NURBSObject::ControlPoints(unsigned int derivative)
 {
-   return _controlPoints;
+   return _controlPoints[derivative];
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 std::vector<NURBS::Point>& NURBSObject::InterpolatedPoints()
 {
-   return _interpolatedPoints;
+   return _interpolatedPoints[0];
 }
 //////////////////////////////////////////////////////////////
 NURBS::ControlPoint& NURBSObject::GetControlPoint(size_t index)
 {
-   return _controlPoints[index];
+   return _controlPoints[0][index];
 }
 ///////////////////////////////
 void NURBSObject::Interpolate()

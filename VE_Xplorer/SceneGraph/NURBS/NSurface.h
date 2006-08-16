@@ -36,17 +36,22 @@ public:
    ///Interpolate the surface.
    virtual void Interpolate();
 
+   std::map<unsigned int, std::map<unsigned int,std::vector<NURBS::Point> > > GetSurfaceDerivatives();
+
 protected:
 
-   ///Calculate a point on a surface
+   ///Calculate a point on a surface and the derivatives
    ///\param uparameter The interpolating u parameter
    ///\param vparameter The interpolating v parameter
    ///\param uspan The knot u span to interpolate the parameter on
    ///\param vspan The knot v span to interpolate the parameter on
-   NURBS::Point _calculatePointOnSurface(double uparameter,
+   std::map<unsigned int,std::vector<NURBS::ControlPoint> > _calculatePointOnSurface(double uparameter,
                                          double vparameter,
                                          unsigned int uspan,
                                          unsigned int vspan);
+
+   
+   std::map<unsigned int, std::map<unsigned int,std::vector<NURBS::Point> > > _surfDerivatives;///<The surfaceDerivatives.
 
 };
 }
