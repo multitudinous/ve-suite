@@ -143,16 +143,16 @@ module Body{
     string GetImportData(in long module_id, in long port_id) raises(Error::EUnknown);
     
     //This is to Set the Flow out Data for Modle moduel_id, port port_i, Called by the Unit
-    void SetExportData(in long module_id, in long port_id, in string data) raises(Error::EUnknown);
+    //void SetExportData(in long module_id, in long port_id, in string data) raises(Error::EUnknown);
     
     //This is to Get the Flow out Data for Modle moduel_id, port port_i, Called by the UI to display the port data
-    string GetExportData(in long module_id, in long port_id) raises(Error::EUnknown);
+    //string GetExportData(in long module_id, in long port_id) raises(Error::EUnknown);
 
     //This is to set the Multi Dimention Profile Data, call by the upstream Unit Module
-    void SetProfileData(in long module_id, in long port_id, in Types::Profile data) raises(Error::EUnknown);
+    //void SetProfileData(in long module_id, in long port_id, in Types::Profile data) raises(Error::EUnknown);
 
     //This is to get the Multi Dimention Profile Data, call by the upstream Unit Module, put the result in the out parameter to save data copying
-    void GetProfileData(in long module_id, in long port_id, out Types::Profile data) raises(Error::EUnknown);
+    //void GetProfileData(in long module_id, in long port_id, out Types::Profile data) raises(Error::EUnknown);
 
     //This is the Set the Module Message, called by Unit
     void SetModuleMessage(in long module_id, in string msg) raises(Error::EUnknown);

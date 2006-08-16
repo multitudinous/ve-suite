@@ -2383,7 +2383,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 //////////////////////////////////////////////////////
 void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 {
-   char *linkresult;
+   char* linkresult = 0;
    //The to Mod are actually the from module for the data flow
    int mod = links[ m_selLink ].GetFromModule();
    int port = links[ m_selLink ].GetFromPort();
@@ -2396,7 +2396,7 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 
    try 
    {
-      linkresult = exec->GetExportData(mod, port);
+      //linkresult = exec->GetExportData(mod, port);
    }
    catch ( CORBA::Exception& ) 
    {
