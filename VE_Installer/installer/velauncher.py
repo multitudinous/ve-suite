@@ -115,39 +115,42 @@ class LauncherWindow(wx.Frame):
         self.builderDir = None
         self.shell = False
 
+        ##Prepare the panel.
+        panel = wx.Panel(self)
+        
         ##Prepare the logo.
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
-        sbmLogo = wx.StaticBitmap(self, -1, bmLogo)
+        sbmLogo = wx.StaticBitmap(panel, -1, bmLogo)
 
         ##Build Directory text ctrl.
-        self.txDirectory = wx.TextCtrl(self, -1,
+        self.txDirectory = wx.TextCtrl(panel, -1,
                                        DIRECTORY_DEFAULT)
         self.txDirectory.SetToolTip(wx.ToolTip("The path of the" +
                                                " working directory."))
         ##Build Directory button.
-        bDirectory = wx.Button(self, -1, "Choose Working Directory")
+        bDirectory = wx.Button(panel, -1, "Choose Working Directory")
         bDirectory.SetToolTip(wx.ToolTip("Choose the working directory for" +
                                          " the programs."))
         ##Build Tao Machine text ctrl.
-        self.txTaoMachine = wx.TextCtrl(self, -1)
+        self.txTaoMachine = wx.TextCtrl(panel, -1)
         self.txTaoMachine.SetToolTip(wx.ToolTip("Enter the computing" +
                                                 "engine's name."))
         ##Build Tao Port text ctrl.
-        self.txTaoPort = wx.TextCtrl(self, -1)
+        self.txTaoPort = wx.TextCtrl(panel, -1)
         self.txTaoPort.SetToolTip(wx.ToolTip("Enter the computing" +
                                              " engine's port."))
         ##Build Mode radio box.
-        self.rbMode = wx.RadioBox(self, -1, "Launch Mode",
+        self.rbMode = wx.RadioBox(panel, -1, "Launch Mode",
                                   wx.DefaultPosition, wx.DefaultSize,
                                   MODE_LIST, 1, wx.RA_SPECIFY_COLS)
         self.rbMode.SetToolTip(wx.ToolTip("Choose which mode you want to" +
                                           " launch in?"))
         ##Build Mode Settings button.
-        self.bCustom = wx.Button(self, -1, "Mode Settings")
+        self.bCustom = wx.Button(panel, -1, "Mode Settings")
         self.bCustom.SetToolTip(wx.ToolTip("View and change settings for" +
                                            " the current mode."))
         ##Build Launch button.
-        self.bLaunch = wx.Button(self, -1, "Launch VE Suite")
+        self.bLaunch = wx.Button(panel, -1, "Launch VE Suite")
         self.bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
                                       " close the Launcher."))
         ##Build menu bar
@@ -188,16 +191,16 @@ class LauncherWindow(wx.Frame):
         columnSizer.AddMany([HORIZONTAL_SPACE,
                              bDirectory])
         ##Insert the Directory column.
-        rowSizer.Add(wx.StaticText(self, -1, "Working Directory:"))
+        rowSizer.Add(wx.StaticText(panel, -1, "Working Directory:"))
         rowSizer.Add(columnSizer, 0, wx.EXPAND) 
         ##Construct the Tao column.
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.Add(wx.StaticText(self, -1, "CE Name:"),
+        columnSizer.Add(wx.StaticText(panel, -1, "CE Name:"),
                         0, wx.ALIGN_CENTER_VERTICAL)
         columnSizer.Add(HORIZONTAL_SPACE)
         columnSizer.Add(self.txTaoMachine, 2)
         columnSizer.Add((HORIZONTAL_SPACE[0]*3, -1))
-        columnSizer.Add(wx.StaticText(self, -1, "CE Port:"),
+        columnSizer.Add(wx.StaticText(panel, -1, "CE Port:"),
                         0, wx.ALIGN_CENTER_VERTICAL)
         columnSizer.Add(HORIZONTAL_SPACE)
         columnSizer.Add(self.txTaoPort, 1)
@@ -224,7 +227,8 @@ class LauncherWindow(wx.Frame):
         mainSizer.Add(rowSizer2, 0, wx.ALL | wx.EXPAND, BORDER)
         mainSizer.Add(self.bLaunch, 1, wx.EXPAND)
         mainSizer.SetSizeHints(self)
-        self.SetSizer(mainSizer)
+        panel.SetSizer(mainSizer)
+        panel.Layout()
         ##Set the background color.
         Style(self)
         ##Set tool tip popup delay to 2 seconds.
