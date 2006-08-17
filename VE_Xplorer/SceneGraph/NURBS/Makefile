@@ -30,6 +30,11 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 CFDUNAME = $(shell uname)
 #__________________________________________________________
+ifeq ($(SCENE_GRAPH), OSG)
+   OSG = _osg
+else
+   OSG = _pf
+endif
 # list the source files that are in current directory
 SRCS=\
    ControlPoint.cxx \
@@ -53,12 +58,12 @@ endif
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_NURBSLib
+PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_NURBSLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 #OBJDIR is the place that the object files are stored.
-OBJDIR= $(CFDHOSTTYPE)_VE_NURBSLib
+OBJDIR= $(CFDHOSTTYPE)_VE_NURBSLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 #DEPDIR is the place that the dependency files are stored.
-DEPDIR= $(CFDHOSTTYPE)_VE_NURBSLib
+DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 #BUILD_TYPE=	dbg
 
