@@ -32,6 +32,7 @@
 
 DIRS= ${VE_SUITE_HOME}/VE_Xplorer/Utilities \
    ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph \
+   ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/NURBS \
    ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/Utilities \
    ${VE_SUITE_HOME}/VE_Xplorer/TextureBased \
    ${VE_SUITE_HOME}/VE_Xplorer/XplorerHandlers\
@@ -49,6 +50,7 @@ all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Xplorer/Utilities \
 ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph \
+${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/NURBS \
 ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/Utilities \
 ${VE_SUITE_HOME}/VE_Xplorer/TextureBased \
 ${VE_SUITE_HOME}/VE_Xplorer/XplorerHandlers \
