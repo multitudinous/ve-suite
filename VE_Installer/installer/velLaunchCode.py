@@ -73,17 +73,18 @@ class Launch:
             return
         elif windows:
             self.Windows(runName, runConductor, runXplorer,
-                         typeXplorer, jconf, desktopMode)
+                         typeXplorer, jconf, desktopMode, vesFile)
         elif unix:
             self.Unix(runName, runConductor, runXplorer,
-                      typeXplorer, jconf, desktopMode, cluster, master)
+                      typeXplorer, jconf, desktopMode, cluster, master,
+                      vesFile)
         else:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
 
 
     def Windows(self, runName = False, runConductor = False,
                 runXplorer = False, typeXplorer = 0, jconf = DEFAULT_JCONF,
-                desktopMode = False):
+                desktopMode = False, vesFile = None):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -112,6 +113,10 @@ class Launch:
         if runConductor:
             print "Starting Conductor."
             ##Append argument if desktop mode selected
+            if vesFile != None:
+                ves = " -VESFile %s" % (vesFile)
+            else:
+                ves = ""
             if desktopMode:
                 desktop = " -VESDesktop"
             else:
@@ -120,7 +125,7 @@ class Launch:
                       " WinClientd.exe -ORBInitRef" +
                       " NameService=" +
                       "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
-                      " -ORBDottedDecimalAddresses 1" + desktop)
+                      " -ORBDottedDecimalAddresses 1" + desktop + ves)
         ##Xplorer section
         if runXplorer:
             print "Starting Xplorer."
@@ -137,8 +142,6 @@ class Launch:
                 executable = "project_tao_osg_vep_d.exe"
             elif typeXplorer == 2: ##OSG VEPC selection
                 executable = "project_tao_osg_vep_cluster_d.exe"
-            elif typeXplorer == 3: ##PF selection
-                executable = "project_taod.exe"
             else:
                 executable = "ERROR"
             ##Xplorer's start call
@@ -153,7 +156,8 @@ class Launch:
 
     def Unix(self, runName = False, runConductor = False, runXplorer = False,
              typeXplorer = 0, jconf = DEFAULT_JCONF,
-             desktopMode = False, cluster = None, clusterMaster = None):
+             desktopMode = False, cluster = None, clusterMaster = None,
+             vesFile = None):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -168,40 +172,48 @@ class Launch:
             self.KillNameserver()
             sleep(1)
             print "Starting Name Server."
-            os.system("Naming_Service -ORBEndPoint" +
-                      " iiop://${TAO_MACHINE}:${TAO_PORT} &")
+##            os.system("Naming_Service -ORBEndPoint" +
+##                      " iiop://${TAO_MACHINE}:${TAO_PORT} &")
+            os.system("%s &" %(self.NameServiceCall()))
             sleep(5)
-            os.system("Exe_server -ORBInitRef NameService=" +
-                      "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService" +
-                      " -ORBDottedDecimalAddresses 1 &")
+##            os.system("Exe_server -ORBInitRef NameService=" +
+##                      "corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService" +
+##                      " -ORBDottedDecimalAddresses 1 &")
+            os.system("%s &" %(self.ServerCall()))
         ##Conductor section
         if runConductor:
             print "Starting Conductor."
-            ##Append argument if desktop mode selected
-            if desktopMode:
-                desktop = "-VESDesktop"
-            else:
-                desktop = ""
-            os.system("WinClient -ORBInitRef NameService=corbaloc:iiop:" +
-                      "${TAO_MACHINE}:${TAO_PORT}/" +
-                      "NameService %s &" % (desktop))
+##            ##Append ves arguments if needed.
+##            if vesFile != None:
+##                ves = " -VESFile %s" % (vesFile)
+##            else:
+##                ves = ""
+##            ##Append argument if desktop mode selected.
+##            if desktopMode:
+##                desktop = "-VESDesktop"
+##            else:
+##                desktop = ""
+##            os.system("WinClient -ORBInitRef NameService=corbaloc:iiop:" +
+##                      "${TAO_MACHINE}:${TAO_PORT}/" +
+##                      "NameService %s %s &" % (desktop, ves))
+            os.system("%s &" %(self.ConductorCall(desktopMode, vesFile)))
         ##Cluster mode
         if self.cluster:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
             launcherDir = str(os.getenv("VE_INSTALL_DIR"))
-            xplorerType = XPLORER_TYPE_LIST[typeXplorer]
-            taoMachine = str(os.getenv("TAO_MACHINE"))
-            taoPort = str(os.getenv("TAO_PORT"))
-            workDir = str(os.getenv("VE_WORKING_DIR"))
-            depsDir = str(os.getenv("VE_DEPS_DIR"))
-            master = str(os.getenv("VEXMASTER"))
-            command = self.XplorerCall(typeXplorer,
-                                       jconf, desktopMode)
+##            xplorerType = XPLORER_TYPE_LIST[typeXplorer]
+##            taoMachine = str(os.getenv("TAO_MACHINE"))
+##            taoPort = str(os.getenv("TAO_PORT"))
+##            workDir = str(os.getenv("VE_WORKING_DIR"))
+##            depsDir = str(os.getenv("VE_DEPS_DIR"))
+##            master = str(os.getenv("VEXMASTER"))
+            command = "%s &" %(self.XplorerCall(typeXplorer,
+                                                jconf, desktopMode))
 ##            command = 'python velauncher.py -x %s' %(xplorerType) + \
 ##                      ' -j "%s" -t %s -p %s' %(jconf, taoMachine, taoPort) + \
 ##                      ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
-##            self.clusterScript += "cd %s\n" %(VELAUNCHER_DIR)
+            self.clusterScript += "cd %s\n" %(VE_WORKING_DIR)
             self.clusterScript += "%s\n" %(command)
             self.clusterScript += "EOF\n"
             clusterFileName = "cluster.tsh"
@@ -222,7 +234,8 @@ class Launch:
         ##Xplorer section
         elif runXplorer:
             print "Starting Xplorer."
-            os.system(self.XplorerCall(typeXplorer, jconf, desktopMode))
+            os.system("%s &" %(self.XplorerCall(typeXplorer,
+                                                jconf, desktopMode)))
 ##            ##Append argument if desktop mode selected
 ##            desktop = ""
 ##            if desktopMode:
@@ -242,31 +255,84 @@ class Launch:
         print "Finished sending launch commands."
         return
 
-    def XplorerCall(self, typeXplorer, jconf, desktopMode):
+
+    def TaoPair(self):
+        """Returns TAO_MACHINE:TAO_PORT."""
+        taoMachine = os.getenv("TAO_MACHINE", "None")
+        taoPort = os.getenv("TAO_PORT", "None")
+        return "%s:%s" %(taoMachine, taoPort)
+
+    def ServiceArg(self):
+        """Returns the 'NameService=...' statement."""
+        s ="NameService=corbaloc:iiop:%s/NameService" %(self.TaoPair())
+        return s
+
+    def NameServiceCall(self):
+        """Returns a generic Naming_Service call."""
+        exe = "Naming_Service"
         if windows:
-            return
-        elif unix:
-            ##Append argument if desktop mode selected
-            desktop = ""
-            if desktopMode:
-                w, h = DisplaySize()
-                desktop = "-VESDesktop %s %s" % (w, h)
-            ##Set Xplorer's type
-            if typeXplorer == 0: ##OSG selection
-                executable = "project_tao_osg"
-            elif typeXplorer == 1: ##OSG VEP selection
-                executable = "project_tao_osg_vep"
-            elif typeXplorer == 2: ##OSG VEPC selection
-                executable = "project_tao_osg_vep_cluster"
-            ##Construct the call
-            xplorerCall = "%s -ORBInitRef NameService=" %(executable) + \
-                          "corbaloc:iiop:${TAO_MACHINE}:" + \
-                          "${TAO_PORT}/NameService " + \
-                          '"%s" %s &' %(jconf, desktop)
-            ##Return the call
-            return xplorerCall
+            exe += ".exe"
+        c = "%s -ORBEndPoint iiop://%s" %(exe, self.TaoPair())
+        print c ##TESTER
+        return c
+
+    def ServerCall(self):
+        """Returns a generic Server call."""
+        if unix:
+            exe = "Exe_server"
+        elif windows:
+            exe = "Winserverd.exe"
         else:
-            print "Strange occurance in velLaunchCode.Launch.XplorerCall."
+            exe = "Error"
+        c = "%s -ORBInitRef %s" %(exe, self.ServiceArg()) + \
+            " -ORBDottedDecimalAddresses 1"
+        print c ##TESTER
+        return c
+
+    def ConductorCall(self, desktopMode = False, vesFile = None):
+        """Returns a generic Conductor call."""
+        exe = "WinClient"
+        if windows:
+            exe += "d.exe"
+        ##Append ves arguments if needed.
+        if vesFile != None:
+            ves = " -VESFile %s" %(vesFile)
+        else:
+            ves = ""
+        ##Append argument if desktop mode selected.
+        if desktopMode:
+            desktop = " -VESDesktop"
+        else:
+            desktop = ""
+        ##Construct the call.
+        s = "%s -ORBInitRef %s" %(exe, self.ServiceArg())
+        if windows:
+            s += " -ORBDottedDecimalAddresses 1"
+        s += "%s%s" %(desktop, ves)
+        print s ##TESTER
+        return s
+
+    def XplorerCall(self, typeXplorer, jconf, desktopMode = False):
+        """Returns a generic Xplorer call."""
+        ##Append argument if desktop mode selected
+        desktop = ""
+        if desktopMode:
+            w, h = DisplaySize()
+            desktop = " -VESDesktop %s %s" % (w, h)
+        ##Set Xplorer's type
+        if typeXplorer == 0: ##OSG selection
+            exe = "project_tao_osg"
+        elif typeXplorer == 1: ##OSG VEP selection
+            exe = "project_tao_osg_vep"
+        elif typeXplorer == 2: ##OSG VEPC selection
+            exe = "project_tao_osg_vep_cluster"
+        ##Tack on the Windows suffix.
+        if windows:
+            exe += "_d.exe"
+        ##Construct the call
+        s = '%s -ORBInitRef %s "%s"%s' %(exe, self.ServiceArg(), jconf, desktop)
+        print s ##TESTER
+        return s
 
     def KillNameserver(self):
         """Kills any Name Servers running on this computer."""
@@ -291,6 +357,7 @@ class Launch:
         CFDHOSTTYPE (removes parantheses from CFDHOSTTYPE)
 
         Variables overwritten (when not in dev mode):
+        VE_SUITE_HOME
         VE_INSTALL_DIR
         VE_DEPS_DIR
         VE_WORKING_DIR
@@ -316,10 +383,8 @@ class Launch:
         PATH
         LD_LIBRARY_PATH or LD_LIBRARYN32_PATH (Unix systems only)"""
         ##Set where VE-Suite's installed
-        if self.devMode:
-             self.EnvFill("VE_INSTALL_DIR", os.getenv("VE_SUITE_HOME"))
-        else:
-             self.EnvFill("VE_INSTALL_DIR", os.getcwd())
+        self.EnvFill("VE_SUITE_HOME", os.getcwd())
+        self.EnvFill("VE_INSTALL_DIR", os.getenv("VE_SUITE_HOME"))
         ##Set where VE-Suite pre-complied dependencies are installed
         ##NOTE: Receives this from the launcher.
         self.EnvFill("VE_DEPS_DIR", dependenciesDir)

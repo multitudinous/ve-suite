@@ -90,7 +90,7 @@ class LauncherWindow(wx.Frame):
         Launch(event)
         OnClose(event)        
     """
-    def __init__(self, parent, ID, title):
+    def __init__(self, parent, ID, title, arguments):
         """Builds the launcher's window and loads the last configuration."""
         wx.Frame.__init__(self, parent, -1, title,
                           style = wx.DEFAULT_FRAME_STYLE &
@@ -104,6 +104,7 @@ class LauncherWindow(wx.Frame):
         self.nameServer = False
         self.xplorer = False
         self.xplorerType = 0
+        self.workingDir = None
         self.desktop = False
         self.JconfDict = None
         self.jconfSelection = None
@@ -114,6 +115,9 @@ class LauncherWindow(wx.Frame):
         self.dependencies = None
         self.builderDir = None
         self.shell = False
+        self.ves = None
+        if len(arguments) > 0:
+            self.ves = arguments[0]
 
         ##Prepare the panel.
         panel = wx.Panel(self)
@@ -256,6 +260,13 @@ class LauncherWindow(wx.Frame):
             self.dependencies = config.Read("DependenciesDir", ":::")
         ##Restore config values from last time.
         self.LoadConfig(DEFAULT_CONFIG)
+        ##Modify Directory controls if VES file passed.
+        if self.ves != None:
+            self.txDirectory.SetValue(os.path.dirname(self.ves))
+            if unix:
+                self.txDirectory.SetInsertionPointEnd()
+            self.txDirectory.Enable(False)
+            bDirectory.Enable(False)
         ##Show the window.
         self.Show(True)
         ##ERROR CHECK: Is there a /bin folder in the launcher's directory?
@@ -487,7 +498,10 @@ class LauncherWindow(wx.Frame):
             config.Write("DependenciesDir", self.dependencies)
         if self.builderDir != None:
             config.Write("BuilderDir", self.builderDir)
-        config.Write("Directory", self.txDirectory.GetValue())
+        if self.ves == None:
+            config.Write("Directory", self.txDirectory.GetValue())
+        else:
+            config.Write("Directory", self.workingDir)
         config.Write("JconfSelection", self.jconfSelection)
         config.Write("NameServer", str(self.nameServer))
         config.Write("Xplorer", str(self.xplorer))
@@ -522,7 +536,9 @@ class LauncherWindow(wx.Frame):
             defaultDirectory = os.getcwd()
         else:
             defaultDirectory = DIRECTORY_DEFAULT
-        self.txDirectory.SetValue(config.Read("Directory", defaultDirectory))
+        self.workingDir = config.Read("Directory", defaultDirectory)
+        if self.ves == None:
+            self.txDirectory.SetValue(self.workingDir)
         ##Sets txDirectory's cursor to end in Unix systems for easier reading.
         ##Acts strange in Windows for some reason; investigate.
         if unix:
@@ -806,7 +822,7 @@ class LauncherWindow(wx.Frame):
                cluster = self.clusterDict.GetLocations(),
                master = self.clusterMaster,
                shell = self.shell, builderDir = passedBuilderDir,
-               devMode = devMode)
+               devMode = devMode, vesFile = self.ves)
         ##Destroy the Launch progress window.
         ##progress.OnClose("this message does not matter")
         ##Show NameServer kill window if NameServer was started.
@@ -863,13 +879,13 @@ if len(opts) == 0 or (len(opts) == 1 and opts[0] == ("--dev", "")):
     else:
         devMode = False
     app = wx.PySimpleApp()
-    frame = LauncherWindow(None,-1,'VE Suite Launcher')
+    frame = LauncherWindow(None,-1,'VE Suite Launcher', args)
     app.MainLoop()
     ##Delete the config link to avoid memory leakage.
     del config
 ##Command line boot
 ##Takes arguments passed, uses defaults for the rest, launches immediately.
 else:
-    CommandLaunch(opts)
+    CommandLaunch(opts, args)
 
 

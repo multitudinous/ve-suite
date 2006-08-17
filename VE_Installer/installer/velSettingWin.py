@@ -115,6 +115,7 @@ class SettingsWindow(wx.Dialog):
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckXplorer, self.cbXplorer)
         self.Bind(wx.EVT_RADIOBOX, self.EvtCheckCluster, self.rbXplorer)
         self.Bind(wx.EVT_CHECKBOX, self.EvtCheckDesktop, self.cbConductor)
+        self.Bind(wx.EVT_CHECKBOX, self.UpdateDesktop, self.cbDesktop)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
         self.Bind(wx.EVT_BUTTON, self.EditJconf, self.bEditJconf)
@@ -190,8 +191,16 @@ class SettingsWindow(wx.Dialog):
         if self.desktopFixed == True:
             self.cbDesktop.Enable(False)
         else:
-            self.cbDesktop.Enable(self.cbConductor.IsChecked() or
-                                  self.cbXplorer.IsChecked())
+            self.cbDesktop.Enable((self.cbConductor.IsChecked() or
+                                  self.cbXplorer.IsChecked()) and
+                                  self.rbXplorer.GetSelection() != 2)
+            if self.cbDesktop.IsEnabled() == False:
+                self.cbDesktop.SetValue(False)
+            else:
+                self.cbDesktop.SetValue(self.desktop)
+
+    def UpdateDesktop(self, event):
+        self.desktop = self.cbDesktop.GetValue()
 
     def UpdateChJconf(self, selection):
         """Updates the Jconf choice window in the Launcher.
@@ -247,7 +256,7 @@ class SettingsWindow(wx.Dialog):
             parent.xplorerType = self.rbXplorer.GetSelection()
         if self.cbXplorer.IsEnabled() or self.cbConductor.IsEnabled() or \
            self.cbDesktop.IsEnabled():
-            parent.desktop = self.cbDesktop.GetValue()
+            parent.desktop = self.desktop
         if self.chJconf.IsEnabled():
             parent.JconfDict = self.JconfDict
             parent.jconfSelection = self.chJconf.GetStringSelection()
