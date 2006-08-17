@@ -856,6 +856,10 @@ if len(opts) == 0 or (len(opts) == 1 and opts[0] == ("--dev", "")):
     if len(opts) == 1 and opts[0] == ("--dev", ""):
         ##Run VE-Suite in dev mode? Turned to True if --dev passed.
         devMode = True
+        desktopJconf = os.path.join(os.getcwd(), "..", "..", "VE_Xplorer",
+                                    "stereo_desktop", "desktop.jconf")
+        MODE_DICT["Desktop"]["jconf"][1] = "Dev Desktop"
+        MODE_DICT["Desktop"]["jconf"][2] = desktopJconf
     else:
         devMode = False
     app = wx.PySimpleApp()
