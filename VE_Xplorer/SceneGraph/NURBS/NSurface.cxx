@@ -74,14 +74,14 @@ void NURBSSurface::Interpolate()
    double uparam = 0.0;
    double vparam = 0.0;
 
-   _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]);
-   _interpolationStepSize["V"] = 1.0/(_meshDimensions["V"]);
+   _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]-1);
+   _interpolationStepSize["V"] = 1.0/(_meshDimensions["V"]-1);
 
    std::map<unsigned int,std::vector<NURBS::ControlPoint> > surfaceInfo;
-   for(unsigned int v = 0;v < _meshDimensions["V"]+1; v++)
+   for(unsigned int v = 0;v < _meshDimensions["V"]; v++)
    {
       _calculateBasisFunctionsAndDerivatives(vparam,"V");
-      for(unsigned int u = 0;u < _meshDimensions["U"]+1; u++)
+      for(unsigned int u = 0;u < _meshDimensions["U"]; u++)
       {
          _calculateBasisFunctionsAndDerivatives(uparam,"U");
          surfaceInfo = _calculatePointOnSurface(uparam,vparam,_currentSpan["U"],_currentSpan["V"]);

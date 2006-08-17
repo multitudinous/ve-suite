@@ -58,12 +58,11 @@ void NURBSCurve::Interpolate()
 
    _interpolatedPoints.clear();
    
-   //_meshDimensions["U"] = static_cast<unsigned int>(1.0/(_interpolationStepSize["U"])+1);
-   _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]); 
+   _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]-1); 
    double param = 0.0;
    std::vector<NURBS::ControlPoint> curveInfo;
 
-   for(unsigned int i = 0; i < _meshDimensions["U"]+1; i++)
+   for(unsigned int i = 0; i < _meshDimensions["U"]; i++)
    {
       _calculateBasisFunctionsAndDerivatives(param,"U");
       curveInfo = _calculatePointOnCurve(param,_currentSpan["U"]);

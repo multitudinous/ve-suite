@@ -171,7 +171,7 @@ void NURBSRenderer::_tessellateCurve()
    {
       _triangulatedSurface = new osg::Geode();
    }
-   unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("U")+1;
+   unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("U");
    
    //new linestrip
    osg::ref_ptr<osg::Vec3Array> vertStrip = new osg::Vec3Array();
@@ -206,8 +206,8 @@ void NURBSRenderer::_tessellateSurface()
    {
       _triangulatedSurface = new osg::Geode();
    }
-   unsigned int nVPoints = _nurbsObject->NumInterpolatedPoints("U")+1;
-   unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("V")+1;
+   unsigned int nVPoints = _nurbsObject->NumInterpolatedPoints("U");
+   unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("V");
 
    for(unsigned int u = 0; u </*2;*/nUPoints - 1; u++)
    {
