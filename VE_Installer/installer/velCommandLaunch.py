@@ -2,10 +2,11 @@
 import wx
 import os
 from velBase import *
+from velLaunchCode import *
 
 class CommandLaunch:
     """Launches VE Suite using arguments from the command line."""
-    def __init__(self, opts):
+    def __init__(self, opts, args):
         config = wx.Config.Get()
         ##Set up vars.
         self.conductor = False
@@ -80,6 +81,10 @@ class CommandLaunch:
             else:
                 self.xplorerType = 0
         del config
+        ##Set VES file
+        vesFile = None
+        if len(args) > 0:
+            vesFile = args[0]
         ##Launch
         Launch(None, self.workDir,
                self.nameServer, self.conductor, self.xplorer, self.xplorerType,
@@ -87,7 +92,8 @@ class CommandLaunch:
                self.taoMachine, self.taoPort,
                self.desktop,
                self.depDir, master = self.clusterMaster,
-               shell = self.shell, builderDir = self.builderDir)
+               shell = self.shell, builderDir = self.builderDir,
+               vesFile = vesFile)
         ##Bring up the the Name Server Kill window.
         ##ERROR: ServerKillWindow() doesn't work outside of app.MainLoop()
         ##if self.nameServer and not self.shell:

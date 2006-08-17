@@ -30,7 +30,7 @@ class Launch:
                  runXplorer = False, typeXplorer = 0,
                  jconf = DEFAULT_JCONF,
                  taoMachine = DEFAULT_TAO_MACHINE,
-                 taoPort = DEFAULT_TAO_MACHINE,
+                 taoPort = DEFAULT_TAO_PORT,
                  desktopMode = False,
                  dependenciesDir = None, cluster = None, master = None,
                  shell = False, builderDir = None, devMode = False,
