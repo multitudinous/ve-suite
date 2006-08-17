@@ -39,6 +39,7 @@ WizardImageStretch=false
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WindowVisible=true
 WizardImageBackColor=clGray
+ChangesAssociations=yes
 
 [Types]
 Name: full; Description: Full installation
@@ -63,8 +64,8 @@ Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdel
 Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Flags: uninsdeletekey; Components: " examples vebuildenv veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver"; Tasks: " desktopVELauncherIcon"
 Root: HKCR; SubKey: .ves; ValueType: string; ValueData: VESNetworkfile; Flags: uninsdeletekey createvalueifdoesntexist
 Root: HKCR; SubKey: VESNetworkfile; ValueType: string; ValueData: VE-Suite Network file; Flags: uninsdeletekey
-Root: HKCR; SubKey: VESNetworkfile\Shell\Open\Command; ValueType: string; ValueData: """{app}\velauncher.exe"" ""--VES %1"""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\installerImages\VE_icon.ico,0; Flags: uninsdeletevalue; Components: ; Tasks: 
+Root: HKCR; SubKey: VESNetworkfile\shell\open\command; ValueType: string; ValueData: """{app}\velauncher.exe"" ""%1"""; Flags: uninsdeletevalue
+Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\installerImages\VE_icon.ico; Flags: uninsdeletevalue; Components: ; Tasks: 
 Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher; ValueType: string; ValueData: Open with &VE-Launcher
 [Tasks]
 ;Name: desktopNSIcon; Description: Name Server; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: nameserver
