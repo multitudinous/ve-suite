@@ -121,7 +121,7 @@ void AdvancedContours::CreateControls()
     itemBoxSizer6->Add(itemStaticText7, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Opaque"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    itemBoxSizer6->Add(itemStaticText8, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    itemBoxSizer6->Add(itemStaticText8, 1, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Warped Contour Scale"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText9, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
@@ -130,13 +130,13 @@ void AdvancedContours::CreateControls()
     itemStaticBoxSizer3->Add(_warpedScaleSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer3->Add(itemBoxSizer11, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer3->Add(itemBoxSizer11, 0, wxGROW|wxALL, 5);
 
     wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Lower"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer11->Add(itemStaticText12, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Higher"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    itemBoxSizer11->Add(itemStaticText13, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    itemBoxSizer11->Add(itemStaticText13, 1, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Contour LOD"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
@@ -145,13 +145,13 @@ void AdvancedContours::CreateControls()
     itemStaticBoxSizer3->Add(_LODSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer3->Add(itemBoxSizer16, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer3->Add(itemBoxSizer16, 0, wxGROW|wxALL, 5);
 
     wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Higher Detail"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemBoxSizer16->Add(itemStaticText17, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Lower Detail"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    itemBoxSizer16->Add(itemStaticText18, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM|wxADJUST_MINSIZE, 5);
+    itemBoxSizer16->Add(itemStaticText18, 1, wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxString itemRadioBox6Strings[] = {
         _T("Graduated"),
