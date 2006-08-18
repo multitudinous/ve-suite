@@ -43,6 +43,7 @@ from velLaunchCode import *
 from velSettingWin import *
 from velCommandLaunch import *
 from velServerKillWindow import *
+from velCoveredConfig import *
 import velDependencies
 
 ##Set up the config

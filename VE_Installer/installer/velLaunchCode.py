@@ -3,6 +3,8 @@ from wx import DisplaySize
 from time import sleep ##Used for delays in launch
 from platform import architecture ##Used to test if it's 32/64-bit
 from velBase import *
+if windows:
+    import subprocess ##Testing
 
 class Launch:
     """Prepares the environment and launches the chosen programs.
@@ -72,8 +74,9 @@ class Launch:
         if shell: ##Shell is activated after destroy VE-Launcher.
             return
         elif windows:
-            self.Windows(runName, runConductor, runXplorer,
-                         typeXplorer, jconf, desktopMode, vesFile)
+            pids = self.Windows(runName, runConductor, runXplorer,
+                                typeXplorer, jconf, desktopMode, vesFile)
+            print pids
         elif unix:
             self.Unix(runName, runConductor, runXplorer,
                       typeXplorer, jconf, desktopMode, cluster, master,
@@ -98,61 +101,71 @@ class Launch:
         ##Closing the Launcher doesn't close the Launcher's DOS window while
         ##Name Server's running, though.
         ##Do we need to give Name Server its own window?
+        ret = []
         if runName:
-            self.KillNameserver()
+##            self.KillNameserver()
             sleep(1)
             print "Starting Name Server."
-            os.system("start /B Naming_Service.exe -ORBEndPoint" +
-                      " iiop://%TAO_MACHINE%:%TAO_PORT%")
+            taoCall = "iiop://%s" %(self.TaoPair())
+            ret.append(subprocess.Popen(["Naming_Service.exe", "-ORBEndPoint",
+                                  taoCall]).pid)
+##            os.system("start /B Naming_Service.exe -ORBEndPoint" +
+##                      " iiop://%TAO_MACHINE%:%TAO_PORT%")
             sleep(5)
-            os.system("start /B WinServerd.exe -ORBInitRef" +
-                      " NameService=" +
-                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
-                      " -ORBDottedDecimalAddresses 1")
+            ret.append(subprocess.Popen(["WinServerd.exe", "-ORBInitRef",
+                                  self.ServiceArg(),
+                                  "-ORBDottedDecimalAddresses", "1"]).pid)
+##            os.system("start /B WinServerd.exe -ORBInitRef" +
+##                      " NameService=" +
+##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
+##                      " -ORBDottedDecimalAddresses 1")
         ##Conductor section
         if runConductor:
             print "Starting Conductor."
             ##Append argument if desktop mode selected
-            if vesFile != None:
-                ves = " -VESFile %s" % (vesFile)
-            else:
-                ves = ""
-            if desktopMode:
-                desktop = " -VESDesktop"
-            else:
-                desktop = ""
-            os.system('start "%s" /B' % (CONDUCTOR_SHELL_NAME) +
-                      " WinClientd.exe -ORBInitRef" +
-                      " NameService=" +
-                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
-                      " -ORBDottedDecimalAddresses 1" + desktop + ves)
+##POPEN CALL: Reenable once fixed.
+            subprocess.Popen(self.ConductorCall(desktopMode, vesFile))
+##            if vesFile != None:
+##                ves = " -VESFile %s" % (vesFile)
+##            else:
+##                ves = ""
+##            if desktopMode:
+##                desktop = " -VESDesktop"
+##            else:
+##                desktop = ""
+##            os.system('start "%s" /B' % (CONDUCTOR_SHELL_NAME) +
+##                      " WinClientd.exe -ORBInitRef" +
+##                      " NameService=" +
+##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
+##                      " -ORBDottedDecimalAddresses 1" + desktop + ves)
         ##Xplorer section
         if runXplorer:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
-            if desktopMode:
-                w, h = DisplaySize()
-                desktop = " -VESDesktop %s %s" % (w, h)
-            else:
-                desktop = ""
-            ##Set Xplorer's type
-            if typeXplorer == 0: ##OSG selection
-                executable = "project_tao_osg_d.exe"
-            elif typeXplorer == 1: ##OSG VEP selection
-                executable = "project_tao_osg_vep_d.exe"
-            elif typeXplorer == 2: ##OSG VEPC selection
-                executable = "project_tao_osg_vep_cluster_d.exe"
-            else:
-                executable = "ERROR"
-            ##Xplorer's start call
-            os.system('start "%s" /B' %(XPLORER_SHELL_NAME) +
-                      ' %s "%s"' %(executable, jconf) +
-                      " -ORBInitRef" +
-                      " NameService=" +
-                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
-                      " -ORBDottedDecimalAddresses 1" + desktop)
+            subprocess.Popen(self.XplorerCall(typeXplorer, jconf, desktopMode))
+##            if desktopMode:
+##                w, h = DisplaySize()
+##                desktop = " -VESDesktop %s %s" % (w, h)
+##            else:
+##                desktop = ""
+##            ##Set Xplorer's type
+##            if typeXplorer == 0: ##OSG selection
+##                executable = "project_tao_osg_d.exe"
+##            elif typeXplorer == 1: ##OSG VEP selection
+##                executable = "project_tao_osg_vep_d.exe"
+##            elif typeXplorer == 2: ##OSG VEPC selection
+##                executable = "project_tao_osg_vep_cluster_d.exe"
+##            else:
+##                executable = "ERROR"
+##            ##Xplorer's start call
+##            os.system('start "%s" /B' %(XPLORER_SHELL_NAME) +
+##                      ' %s "%s"' %(executable, jconf) +
+##                      " -ORBInitRef" +
+##                      " NameService=" +
+##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
+##                      " -ORBDottedDecimalAddresses 1" + desktop)
         print "Finished sending launch commands."
-        return
+        return ret
 
     def Unix(self, runName = False, runConductor = False, runXplorer = False,
              typeXplorer = 0, jconf = DEFAULT_JCONF,
@@ -169,7 +182,7 @@ class Launch:
         clusterMaster -- The master of the cluster."""
         ##Name Server section
         if runName:
-            self.KillNameserver()
+##            self.KillNameserver()
             sleep(1)
             print "Starting Name Server."
 ##            os.system("Naming_Service -ORBEndPoint" +
@@ -307,7 +320,9 @@ class Launch:
         ##Construct the call.
         s = "%s -ORBInitRef %s" %(exe, self.ServiceArg())
         if windows:
-            s += " -ORBDottedDecimalAddresses 1"
+            s = [exe, "-ORBInitRef", self.ServiceArg(),
+                 desktop[1:], ves[1:]]
+##            s += " -ORBDottedDecimalAddresses 1"
         s += "%s%s" %(desktop, ves)
         print s ##TESTER
         return s
@@ -331,18 +346,21 @@ class Launch:
             exe += "_d.exe"
         ##Construct the call
         s = '%s -ORBInitRef %s "%s"%s' %(exe, self.ServiceArg(), jconf, desktop)
+        if windows:
+            s = [exe, "-ORBInitRef", self.ServiceArg(), jconf,
+                 "-VESDesktop", str(w), str(h)]
         print s ##TESTER
         return s
 
-    def KillNameserver(self):
-        """Kills any Name Servers running on this computer."""
-        print "Killing any previous name servers."
-        if windows:
-            os.system("tskill Naming_Service")
-            os.system("tskill WinServerd")
-        elif unix:
-            os.system("killall Naming_Service Exe_server")
-        print "Previous name servers killed."
+##    def KillNameserver(self):
+##        """Kills any Name Servers running on this computer."""
+##        print "Killing any previous name servers."
+##        if windows:
+##            os.system("tskill Naming_Service")
+##            os.system("tskill WinServerd")
+##        elif unix:
+##            os.system("killall Naming_Service Exe_server")
+##        print "Previous name servers killed."
 
     def EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
                  clusterMaster = None, builderDir = None):

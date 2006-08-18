@@ -148,3 +148,132 @@ class VelDict:
 
     def WriteConfig(self, name, value):
         return
+
+##NOTE: Currently under testing. Not implemented in actual code yet.
+class CoveredState:
+    """Base class of the configuration. Saves base & cover vars.
+
+    Base vars are the only ones saved; cover vars are temporary vars that
+    override the base vars."""
+    def __init__(self, dictionary = {}, coverLayers = 1):
+        self.base = dictionary
+        self.coverSheet = []
+        for height in range(coverLayers):
+            self.coverSheet.append({})
+
+    def BuildRange(self, layer = None):
+        """Returns an array of layers to check. Private function.
+
+        int -> Just that layer.
+        None -> All layers."""
+        if layer == None:
+            fields = range(len(self.coverSheet))
+        else:
+            fields = [layer]
+        return fields
+        
+    def Edit(self, name, value):
+        """Add/edit a variable in the base."""
+        self.base[name] = value
+
+    def Cover(self, name, value, layer = 0):
+        """Covers [name] var with [value] in cover layer [layer]."""
+        if name not in self.base:
+            self.Edit(name, None)
+        self.coverSheet[layer][name] = value
+
+    def ImportCover(self, cover, layer = 0):
+        """Replaces the old cover in [layer] with the new [cover]."""
+        for name in cover:
+            if name not in self.base:
+                self.Edit(name, None)
+        self.coverSheet[layer] = cover
+
+    def Uncover(self, name, layer = None):
+        fields = self.BuildRange(layer)
+        for field in fields:
+            if name in self.coverSheet[field]:
+                del self.coverSheet[field][name]
+
+    def UncoverAll(self, layer = None):
+        fields = self.BuildRange(layer)
+        for field in fields:
+            self.coverSheet[field] = {}
+
+    def IsCovered(self, name, value = None):
+        covered = False
+        for cover in self.coverSheet:
+            if name in cover:
+                covered = True
+        return covered
+
+    def GetBase(self):
+        return self.base
+
+    def GetCover(self, layer = None):
+        cover = {}
+        fields = self.BuildRange(layer)
+        fields.reverse()
+        for field in fields:
+            for name in self.coverSheet[field]:
+                if name not in cover:
+                    cover[name] = self.coverSheet[field][name]
+        return cover
+
+    def GetSurface(self):
+        surface = self.GetCover()
+        for name in self.base:
+            if name not in surface: 
+                surface[name] = self.base[name]
+        return surface
+
+BASE_CONFIG = {"DependenciesDir": None,
+               "BuilderDir": getcwd(),
+               "WorkingDir": getcwd(),
+               "NameServer": True,
+               "Conductor": True,
+               "Xplorer": True,
+               "XplorerType": 0,
+               "TaoMachine": DEFAULT_TAO_MACHINE,
+               "TaoPort": DEFAULT_TAO_PORT,
+               "DesktopMode": False,
+               "Mode": MODE_LIST[0],
+               "ClusterMaster": None,
+               "JconfSelection": 0,
+               "JconfDict": None,
+               "ClusterDict": None}
+
+UNAVAILABLE_COVER = 0
+DEV_COVER = UNAVAILABLE_COVER + 1
+VES_COVER = DEV_COVER + 1
+##velCoveredConfig assumes MODE_COVER's the highest one.
+MODE_COVER = VES_COVER + 1
+
+ALT_MODE_DICT = {"Desktop": {"Conductor": True,
+                             "NameServer": True,
+                             "Xplorer": True,
+                             "XplorerType": 0,
+                             "DesktopMode": True,
+                             "jconf": [FIXED, "Desktop",
+                                       join(getenv("VE_INSTALL_DIR",
+                                                   getcwd()),
+                                                   "stereo_desktop",
+                                                   "desktop.jconf")],
+                             "TaoMachine": "localhost"},
+             "Tablet": {"Conductor": True,
+                        "NameServer": False,
+                        "Xplorer": False,
+                        "DesktopMode": False},
+             "Computation": {"Conductor": False,
+                             "NameServer": True,
+                             "Xplorer": False},
+             "Visualization": {"Conductor": False,
+                               "NameServer": False,
+                               "Xplorer": True,
+                               "DesktopMode": False},
+             "Shell": {"Conductor": False,
+                       "NameServer": False,
+                       "Xplorer": False,
+                       "Shell": True},
+             "Custom": {}}
+               
