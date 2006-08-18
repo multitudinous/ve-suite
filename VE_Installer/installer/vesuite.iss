@@ -67,6 +67,7 @@ Root: HKCR; SubKey: VESNetworkfile; ValueType: string; ValueData: VE-Suite Netwo
 Root: HKCR; SubKey: VESNetworkfile\shell\open\command; ValueType: string; ValueData: """{app}\velauncher.exe"" ""%1"""; Flags: uninsdeletevalue
 Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\installerImages\VE_icon.ico; Flags: uninsdeletevalue; Components: ; Tasks: 
 Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher; ValueType: string; ValueData: Open with &VE-Launcher
+Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: string; ValueData: """{app}\velauncher.exe"" ""%1"""; Flags: createvalueifdoesntexist uninsdeletekey
 [Tasks]
 ;Name: desktopNSIcon; Description: Name Server; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: nameserver
 ;Name: desktopVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create Desktop Icon; Flags: unchecked; Components: veconductor
