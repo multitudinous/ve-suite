@@ -121,6 +121,14 @@ vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
       }
       return 0;
    }
+   
+   std::map< std::string, cfdTranslatorToVTK* >::iterator iter;
+   iter = translatorMap.find( fileExtension );
+   if ( iter == translatorMap.end() )
+   {
+      std::cout << " Loader " << fileExtension << " not supported." << std::endl;
+      return 0;
+   }
    // process data with appropriate loader
    activeLoader = translatorMap[ fileExtension ];
    if ( argc < 1 )
