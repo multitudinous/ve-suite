@@ -85,6 +85,6 @@ void StarCDTranslator::DisplayHelp( void )
 {
    std::cout << "|\tStarCD Translator Usage:" << std::endl
                << "\t -singleFile <filename_to_load> -o <output_dir> "
-               << "-outFileName <output_filename> -loader param -w file" << std::endl;
+               << "-outFileName <output_filename> -loader star -w file" << std::endl;
 }
 
