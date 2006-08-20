@@ -1,16 +1,18 @@
 """VE-Launcher's Name Server Kill window."""
 import wx
 import os
-
 from velBase import *
+if windows:
+    import win32api
 
 class ServerKillWindow(wx.Frame):
     """A window to kill the Nameserver after launch."""
-    def __init__(self, parent = None, title = "Kill Name Server"):
+    def __init__(self, pids = [], parent = None, title = "Kill Name Server"):
         """Creates the Server Kill Window."""
         wx.Frame.__init__(self, parent, wx.ID_ANY, title,
                           style = wx.DEFAULT_FRAME_STYLE &
                           ~ (wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
+        self.pids = pids
         lblMsg = wx.StaticText(self, -1, "After you're done with VE-Suite,\n"+\
                                          "press the button below to kill\n"+\
                                          "the Name Server.")
@@ -31,8 +33,12 @@ class ServerKillWindow(wx.Frame):
     def KillNameserver(self, event):
         """Kills any Nameservers running on this computer."""
         if windows:
-            os.system("tskill Naming_Service")
-            os.system("tskill WinServerd")
+            PROCESS_TERMINATE = 1
+            for pid in self.pids:
+                handle = win32api.OpenProcess(PROCESS_TERMINATE,
+                                              False, pid)
+                win32api.TerminateProcess(handle, -1)
+                win32api.CloseHandle(handle)
         elif unix:
             os.system("killall Naming_Service Exe_server")
         self.OnClose("this event doesn't exist")

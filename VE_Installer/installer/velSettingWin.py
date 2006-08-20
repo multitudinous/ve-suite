@@ -192,8 +192,9 @@ class SettingsWindow(wx.Dialog):
             self.cbDesktop.Enable(False)
         else:
             self.cbDesktop.Enable((self.cbConductor.IsChecked() or
-                                  self.cbXplorer.IsChecked()) and
-                                  self.rbXplorer.GetSelection() != 2)
+                                   self.cbXplorer.IsChecked()) and
+                                  (not self.cbXplorer.IsChecked() or
+                                   self.rbXplorer.GetSelection() != 2))
             if self.cbDesktop.IsEnabled() == False:
                 self.cbDesktop.SetValue(False)
             else:

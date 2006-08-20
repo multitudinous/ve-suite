@@ -49,8 +49,9 @@ class Launch:
         master -- Optional, used for sending VEXMASTER to slave nodes.
         shell -- Starts up a VE-Builder shell.
         builderDir -- Sets a path to the builderDir/bin."""
-        ##Set devMode
+        ##Set self's variables
         self.devMode = devMode
+        self.nameserverPids = []
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
         ##Used in EnvSetup and Windows/Unix.
@@ -85,6 +86,9 @@ class Launch:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
 
 
+    def getNameserverPids(self):
+        return self.nameserverPids
+
     def Windows(self, runName = False, runConductor = False,
                 runXplorer = False, typeXplorer = 0, jconf = DEFAULT_JCONF,
                 desktopMode = False, vesFile = None):
@@ -101,20 +105,23 @@ class Launch:
         ##Closing the Launcher doesn't close the Launcher's DOS window while
         ##Name Server's running, though.
         ##Do we need to give Name Server its own window?
-        ret = []
         if runName:
 ##            self.KillNameserver()
             sleep(1)
             print "Starting Name Server."
             taoCall = "iiop://%s" %(self.TaoPair())
-            ret.append(subprocess.Popen(["Naming_Service.exe", "-ORBEndPoint",
-                                  taoCall]).pid)
+            pids = []
+            pids.append(subprocess.Popen(["Naming_Service.exe",
+                                          "-ORBEndPoint", taoCall]).pid)
 ##            os.system("start /B Naming_Service.exe -ORBEndPoint" +
 ##                      " iiop://%TAO_MACHINE%:%TAO_PORT%")
             sleep(5)
-            ret.append(subprocess.Popen(["WinServerd.exe", "-ORBInitRef",
-                                  self.ServiceArg(),
-                                  "-ORBDottedDecimalAddresses", "1"]).pid)
+            pids.append(subprocess.Popen(["WinServerd.exe",
+                                          "-ORBInitRef", self.ServiceArg(),
+                                          "-ORBDottedDecimalAddresses",
+                                          "1"]).pid)
+            self.nameserverPids = pids
+            print self.nameserverPids ##TESTER
 ##            os.system("start /B WinServerd.exe -ORBInitRef" +
 ##                      " NameService=" +
 ##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
@@ -165,7 +172,7 @@ class Launch:
 ##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
 ##                      " -ORBDottedDecimalAddresses 1" + desktop)
         print "Finished sending launch commands."
-        return ret
+        return
 
     def Unix(self, runName = False, runConductor = False, runXplorer = False,
              typeXplorer = 0, jconf = DEFAULT_JCONF,

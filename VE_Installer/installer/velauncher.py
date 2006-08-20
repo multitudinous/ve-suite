@@ -813,22 +813,24 @@ class LauncherWindow(wx.Frame):
         ##progress = LaunchStartedWindow(self)
         ##progress.Show()
         ##Go into the Launch
-        Launch(self,
-               self.txDirectory.GetValue(),
-               nameServer, conductor,
-               xplorer, xplorerType,
-               GetJconfPath,
-               self.txTaoMachine.GetValue(), int(self.txTaoPort.GetValue()),
-               desktop, dependenciesDir = dependenciesDir,
-               cluster = self.clusterDict.GetLocations(),
-               master = self.clusterMaster,
-               shell = self.shell, builderDir = passedBuilderDir,
-               devMode = devMode, vesFile = self.ves)
+        launchInstance = Launch(self,
+                                self.txDirectory.GetValue(),
+                                nameServer, conductor,
+                                xplorer, xplorerType,
+                                GetJconfPath,
+                                self.txTaoMachine.GetValue(),
+                                int(self.txTaoPort.GetValue()),
+                                desktop, dependenciesDir = dependenciesDir,
+                                cluster = self.clusterDict.GetLocations(),
+                                master = self.clusterMaster,
+                                shell = self.shell,
+                                builderDir = passedBuilderDir,
+                                devMode = devMode, vesFile = self.ves)
         ##Destroy the Launch progress window.
         ##progress.OnClose("this message does not matter")
         ##Show NameServer kill window if NameServer was started.
         if nameServer:
-            win = ServerKillWindow()
+            window = ServerKillWindow(pids = launchInstance.getNameserverPids())
         ##Close the Launcher
         self.OnClose("this message does not matter")
 
