@@ -2,7 +2,7 @@
 #copies the appropriate libs/dlls from ve-suite for installs 
 #in the future cmd line args will specify VE-Suite home 
 
-setenv VE_VERSION 1.0.1
+setenv VE_VERSION 1.0.2
 #set vesuitedir $1
 #if(vesuitedir)
 #   setenv VE_SUITE_HOME $1
@@ -11,7 +11,7 @@ setenv VE_VERSION 1.0.1
 if ( $?VE_SUITE_HOME ) then
    echo $VE_SUITE_HOME
 else 
-   setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_1.0.0/VE_Suite
+   setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_current_dev/VE_Suite
 endif
 
 #determine the platform
@@ -55,6 +55,39 @@ echo "to: " ${VE_PLAT_INSTALL_DIR}
 #need to check somehow to see if the directory already exists
 mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/SceneGraph
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/SceneGraph/Utilities
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/TextureBased
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/Utilities
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/DefaultGraphicalPlugin
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/GraphicalPlugin
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/GE
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/XplorerNetwork
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/XplorerHandlers
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/VoiceCommand
+
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Conductor
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Conductor/DefaultPlugin
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Conductor/Framework
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Conductor/GUIPlugin
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Conductor/Network
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Conductor/UIWizard
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Conductor/Utilities
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Conductor/xpm
+
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Open
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Open/idl
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Open/skel
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Open/XML
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Open/XML/CAD
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Open/XML/Shader
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Open/XML/Model
+
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_CE
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_CE/UnitWrapper
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_CE/Utilities
+
 mkdir -p ${VE_PLAT_INSTALL_DIR}/lib
 mkdir -p ${VE_PLAT_INSTALL_DIR}/shaders
 mkdir -p ${VE_PLAT_INSTALL_DIR}/installerImages
@@ -77,13 +110,69 @@ echo "Copying Default Plugin..."
 cp -rf ${VE_SUITE_HOME}/bin/Plugins ./bin/.
 
 echo "Copying new dlls..."
-cp ${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}/* ./bin
+cp ${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}/*.so ./bin
 
 echo "Copying includes..."
-cp ${VE_SUITE_HOME}/*.h ./include
+echo "===Xplorer includes==="
+echo "      XplorerHandlers"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/XplorerHandlers/*.h ./include/VE_Xplorer/XplorerHandlers/.
+echo "      Utilities"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/Utilities/*.h ./include/VE_Xplorer/Utilities/.
+echo "      SceneGraph"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/*.h ./include/VE_Xplorer/SceneGraph/.
+echo "      SceneGraph Utilities"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/*.h ./include/VE_Xplorer/SceneGraph/Utilities/.
+echo "      TextureBased"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/TextureBased/*.h ./include/VE_Xplorer/TextureBased/.
+echo "      GraphicalPlugin"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/GraphicalPlugin/*.h ./include/VE_Xplorer/GraphicalPlugin/.
+echo "      XplorerNetwork"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/XplorerNetwork/*.h ./include/VE_Xplorer/XplorerNetwork/.
+echo "      DefaultGraphicalPlugin"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/DefaultGraphicalPlugin/*.h ./include/VE_Xplorer/DefaultGraphicalPlugin/.
+echo "      GE"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/GE/*.h ./include/VE_Xplorer/GE/.
 
-echo "Copying libraries..."
-cp ${VE_SUITE_HOME}/lib*.lib ./lib
+echo "===Conductor includes==="
+echo "      GUIPlugin"
+cp -r ${VE_SUITE_HOME}/VE_Conductor/GUIPlugin/*.h ./include/VE_Conductor/GUIPlugin/.
+echo "      Network"
+cp -r ${VE_SUITE_HOME}/VE_Conductor/Network/*.h ./include/VE_Conductor/Network/.
+echo "      Utilities"
+cp -r ${VE_SUITE_HOME}/VE_Conductor/Utilities/*.h ./include/VE_Conductor/Utilities/.
+echo "      Framework"
+cp -r ${VE_SUITE_HOME}/VE_Conductor/Framework/*.h ./include/VE_Conductor/Framework/.
+echo "      UIWizard"
+cp -r ${VE_SUITE_HOME}/VE_Conductor/UIWizard/*.h ./include/VE_Conductor/UIWizard/.
+echo "      DefaultPlugin"
+cp -r ${VE_SUITE_HOME}/VE_Conductor/DefaultPlugin/*.h ./include/VE_Conductor/DefaultPlugin/.
+echo "      xpm"
+cp -r ${VE_SUITE_HOME}/VE_Conductor/xpm/*.xpm ./include/VE_Conductor/xpm/.
+
+echo "===CE includes==="
+echo "      CE"
+cp -r ${VE_SUITE_HOME}/VE_CE/*.h ./include/VE_CE/.
+echo "      UnitWrapper"
+cp -r ${VE_SUITE_HOME}/VE_CE/UnitWrapper/*.h ./include/VE_CE/UnitWrapper/.
+echo "      Utilities"
+cp -r ${VE_SUITE_HOME}/VE_CE/Utilities/*.h ./include/VE_CE/Utilities/.
+
+echo "===Open includes==="
+echo "      idl"
+cp -r ${VE_SUITE_HOME}/VE_Open/idl/* ./include/VE_Open/idl/.
+echo "      skel"
+cp -r ${VE_SUITE_HOME}/VE_Open/skel/*.h ./include/VE_Open/skel/.
+echo "      XML"
+cp -r ${VE_SUITE_HOME}/VE_Open/XML/*.h ./include/VE_Open/XML/.
+echo "      CAD"
+cp -r ${VE_SUITE_HOME}/VE_Open/XML/CAD/*.h ./include/VE_Open/XML/CAD/.
+echo "      Shader"
+cp -r ${VE_SUITE_HOME}/VE_Open/XML/Shader/*.h ./include/VE_Open/XML/Shader/.
+echo "      Model"
+cp -r ${VE_SUITE_HOME}/VE_Open/XML/Model/*.h ./include/VE_Open/XML/Model/.
+
+#echo "Copying libraries..."
+#cp ${VE_SUITE_HOME}/${CFDHOSTTYPE}/lib*.lib ./lib
 
 echo "Copying Sample shader files..."
 cp ${VE_SUITE_HOME}/VE_TestSuite/brick.vea ./shaders/brick.vea
@@ -141,7 +230,7 @@ cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VES.run ./bin/VES
 
 echo "Copying VE-Launcher script..."
-cp -f ${VE_SUITE_HOME}/VE_Installer/installer/velauncher.py ./velauncher.py
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/vel*.py ./.
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_logo.xpm ./installerImages/.
 
 echo "Copying Desktop configuration file..."
