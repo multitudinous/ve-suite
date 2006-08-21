@@ -115,7 +115,7 @@ class JconfWindow(wx.Dialog):
         ##Default directory for the search is the
         ##DepsDir/JUGGLER_FOLDER/configFiles.
         config = wx.Config.Get()
-        f = config.Read("DependenciesDir", os.getcwd())
+        f = config.Read("DependenciesDir", VELAUNCHER_DIR)
         del config
         f = os.path.join(f, JUGGLER_FOLDER, "configFiles")
         dlg = wx.FileDialog(self,

@@ -12,7 +12,7 @@ class CoveredConfig(CoveredState):
         self.Cover("BuilderDir", None, layer = DEV_COVER)
         self.Cover("BuilderShell", False, layer = DEV_COVER)
 
-    def VesArgument(self, vesFile = os.getcwd()):
+    def VesArgument(self, vesFile = VELAUNCHER_DIR):
         self.Cover("WorkingDir", os.path.dirname(vesFile), layer = VES_COVER)
 
     def ChangeMode(self, mode):

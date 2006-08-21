@@ -534,7 +534,7 @@ class LauncherWindow(wx.Frame):
         config.SetPath(name)
         ##Set directory, set insertion pt. to end for better initial view.
         if devMode:
-            defaultDirectory = os.getcwd()
+            defaultDirectory = VELAUNCHER_DIR
         else:
             defaultDirectory = DIRECTORY_DEFAULT
         self.workingDir = config.Read("Directory", defaultDirectory)
@@ -568,7 +568,7 @@ class LauncherWindow(wx.Frame):
             print "Substituting dev .jconf path instead."
             config.SetPath(JCONF_CONFIG)
             defaultSelection = "DevDesktop"
-            path = os.path.join(os.getcwd(), "..", "..",
+            path = os.path.join(VELAUNCHER_DIR, "..", "..",
                                 "VE_Xplorer", "stereo_desktop", "desktop.jconf")
             config.Write(defaultSelection, path)
             config.SetPath('..')
@@ -781,7 +781,7 @@ class LauncherWindow(wx.Frame):
             if choice == wx.ID_YES:
                 ##Ask for the builder directory.
                 if self.builderDir == None:
-                    startBuilderDir = os.getcwd()
+                    startBuilderDir = VELAUNCHER_DIR
                 else:
                     startBuilderDir = self.builderDir
                 dlg = wx.DirDialog(None,
@@ -877,7 +877,7 @@ if len(opts) == 0 or (len(opts) == 1 and opts[0] == ("--dev", "")):
     if len(opts) == 1 and opts[0] == ("--dev", ""):
         ##Run VE-Suite in dev mode? Turned to True if --dev passed.
         devMode = True
-        desktopJconf = os.path.join(os.getcwd(), "..", "..", "VE_Xplorer",
+        desktopJconf = os.path.join(VELAUNCHER_DIR, "..", "..", "VE_Xplorer",
                                     "stereo_desktop", "desktop.jconf")
         MODE_DICT["Desktop"]["jconf"][1] = "Dev Desktop"
         MODE_DICT["Desktop"]["jconf"][2] = desktopJconf

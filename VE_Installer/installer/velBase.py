@@ -1,7 +1,10 @@
 """Contains constant variables and shared functions for VE-Launcher."""
-from os import getenv, getcwd, name ##Used for getting system values
-from os.path import join ##Used for building paths.
+from os import getenv, name ##Used for getting system values
+from os.path import join, dirname ##Used for building paths.
 import wx ##Used for GUI
+import velMarker
+##velBase doesn't actually use velMarker; it's importing it so it can
+##get the path to it and, subsequently, to velauncher.
 
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster features
@@ -16,9 +19,10 @@ FIXED = False ##Constant var used in MODE_DICT
 ##File/Folder settings.
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
-VELAUNCHER_DIR = getcwd()
-DIRECTORY_DEFAULT = join(getcwd(), "exampleDatasets")
-LOGO_LOCATION = join(getcwd(), "installerImages", "ve_logo.xpm")
+##The directory velauncher.py is in.
+VELAUNCHER_DIR  = dirname(str(velMarker).split()[3][1:-2])
+DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
+LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
 CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
 DEFAULT_TAO_MACHINE = "localhost"
@@ -35,7 +39,7 @@ MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                          "desktop": [FIXED, True],
                          "jconf": [FIXED, "Desktop",
                                    join(getenv("VE_INSTALL_DIR",
-                                               getcwd()),
+                                               VELAUNCHER_DIR),
                                                "stereo_desktop",
                                                "desktop.jconf")],
                          "taoMachine": [FIXED, "localhost"]},
@@ -57,7 +61,7 @@ MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
              "Custom": {}}
 JCONF_CONFIG = "JconfList"
 CLUSTER_CONFIG = "Cluster"
-DEFAULT_JCONF = join(getcwd(), "stereo_desktop", "desktop.jconf")
+DEFAULT_JCONF = join(VELAUNCHER_DIR, "stereo_desktop", "desktop.jconf")
 ##Values for launcher's GUI layout
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (250, 250)
@@ -153,9 +157,15 @@ class VelDict:
 class CoveredState:
     """Base class of the configuration. Saves base & cover vars.
 
-    Base vars are the only ones saved; cover vars are temporary vars that
-    override the base vars."""
+    This class is structured like sheet of paper (the base) overlapped
+    by a series of transparencies (the covers) that cover up certain values
+    with their own.
+
+    Getting the Base just returns the base's values (for saving user configs),
+    while getting the Surface returns the values once they've been overwritten
+    by the variables covering them."""
     def __init__(self, dictionary = {}, coverLayers = 1):
+        """Builds the base dictionary and a number of cover dictionaries."""
         self.base = dictionary
         self.coverSheet = []
         for height in range(coverLayers):
@@ -228,8 +238,8 @@ class CoveredState:
         return surface
 
 BASE_CONFIG = {"DependenciesDir": None,
-               "BuilderDir": getcwd(),
-               "WorkingDir": getcwd(),
+               "BuilderDir": VELAUNCHER_DIR,
+               "WorkingDir": VELAUNCHER_DIR,
                "NameServer": True,
                "Conductor": True,
                "Xplorer": True,
@@ -256,7 +266,7 @@ ALT_MODE_DICT = {"Desktop": {"Conductor": True,
                              "DesktopMode": True,
                              "jconf": [FIXED, "Desktop",
                                        join(getenv("VE_INSTALL_DIR",
-                                                   getcwd()),
+                                                   VELAUNCHER_DIR),
                                                    "stereo_desktop",
                                                    "desktop.jconf")],
                              "TaoMachine": "localhost"},

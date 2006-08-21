@@ -76,9 +76,9 @@ def Get(parent):
     if existingDepDir != ":::":
         searchDir = existingDepDir
     elif windows:
-        searchDir = os.getcwd()
+        searchDir = VELAUNCHER_DIR
     elif unix:
-        searchDir = os.path.split(os.getcwd())[0]
+        searchDir = os.path.split(VELAUNCHER_DIR)[0]
     else:
         searchDir = "None"
     ##User chooses the directory.

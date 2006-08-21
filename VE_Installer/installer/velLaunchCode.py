@@ -403,7 +403,7 @@ class Launch:
         PATH
         LD_LIBRARY_PATH or LD_LIBRARYN32_PATH (Unix systems only)"""
         ##Set where VE-Suite's installed
-        self.EnvFill("VE_SUITE_HOME", os.getcwd())
+        self.EnvFill("VE_SUITE_HOME", VELAUNCHER_DIR)
         self.EnvFill("VE_INSTALL_DIR", os.getenv("VE_SUITE_HOME"))
         ##Set where VE-Suite pre-complied dependencies are installed
         ##NOTE: Receives this from the launcher.
@@ -533,7 +533,7 @@ class Launch:
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
                         os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
-                        os.path.join(os.getcwd(), "bin")]
+                        os.path.join(VELAUNCHER_DIR, "bin")]
             if builderDir != None:
                 pathList[:0] = [os.path.join(builderDir, "bin")]
             ##TEST to append 64-bit libraries:
