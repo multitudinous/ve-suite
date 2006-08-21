@@ -121,7 +121,6 @@ class Launch:
                                           "-ORBDottedDecimalAddresses",
                                           "1"]).pid)
             self.nameserverPids = pids
-            print self.nameserverPids ##TESTER
 ##            os.system("start /B WinServerd.exe -ORBInitRef" +
 ##                      " NameService=" +
 ##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
@@ -233,7 +232,7 @@ class Launch:
 ##            command = 'python velauncher.py -x %s' %(xplorerType) + \
 ##                      ' -j "%s" -t %s -p %s' %(jconf, taoMachine, taoPort) + \
 ##                      ' -w %s -e %s -m %s' %(workDir, depsDir, clusterMaster)
-            self.clusterScript += "cd %s\n" %(VE_WORKING_DIR)
+            self.clusterScript+='cd "%s"\n' %os.getenv("VE_WORKING_DIR","None")
             self.clusterScript += "%s\n" %(command)
             self.clusterScript += "EOF\n"
             clusterFileName = "cluster.tsh"
@@ -293,7 +292,6 @@ class Launch:
         if windows:
             exe += ".exe"
         c = "%s -ORBEndPoint iiop://%s" %(exe, self.TaoPair())
-        print c ##TESTER
         return c
 
     def ServerCall(self):
@@ -306,7 +304,6 @@ class Launch:
             exe = "Error"
         c = "%s -ORBInitRef %s" %(exe, self.ServiceArg()) + \
             " -ORBDottedDecimalAddresses 1"
-        print c ##TESTER
         return c
 
     def ConductorCall(self, desktopMode = False, vesFile = None):
@@ -331,7 +328,6 @@ class Launch:
                  desktop[1:], ves[1:]]
 ##            s += " -ORBDottedDecimalAddresses 1"
         s += "%s%s" %(desktop, ves)
-        print s ##TESTER
         return s
 
     def XplorerCall(self, typeXplorer, jconf, desktopMode = False):
@@ -356,7 +352,6 @@ class Launch:
         if windows:
             s = [exe, "-ORBInitRef", self.ServiceArg(), jconf,
                  "-VESDesktop", str(w), str(h)]
-        print s ##TESTER
         return s
 
 ##    def KillNameserver(self):

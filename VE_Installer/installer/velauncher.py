@@ -677,6 +677,8 @@ class LauncherWindow(wx.Frame):
             desktop = modeRules["desktop"][1]
         else:
             desktop = self.desktop
+            if xplorer and xplorerType == 2:
+                desktop = False
         if ("shell" in modeRules) and (modeRules["shell"][0] == FIXED):
             self.shell = modeRules["shell"][1]
         else:

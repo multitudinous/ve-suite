@@ -6,8 +6,8 @@ import wx ##Used for GUI
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster features
 CLUSTER_ENABLED = True
-MASTER_WAIT = 10 ##Seconds to wait after starting Master to start Slaves
-SLAVE_WAIT = 3 ##Seconds to wait between each Slave start
+MASTER_WAIT = 15 ##Seconds to wait after starting Master to start Slaves
+SLAVE_WAIT = 15 ##Seconds to wait between each Slave start
 ##Miscellaneous values for launcher's UI
 XPLORER_SHELL_NAME = "VE-Xplorer Shell"
 CONDUCTOR_SHELL_NAME = "VE-Conductor Shell"
