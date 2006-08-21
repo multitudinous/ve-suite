@@ -57,6 +57,7 @@ mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/SceneGraph
+mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/SceneGraph/NURBS
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/SceneGraph/Utilities
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/TextureBased
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/Utilities
@@ -120,6 +121,8 @@ echo "      Utilities"
 cp -r ${VE_SUITE_HOME}/VE_Xplorer/Utilities/*.h ./include/VE_Xplorer/Utilities/.
 echo "      SceneGraph"
 cp -r ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/*.h ./include/VE_Xplorer/SceneGraph/.
+echo "      NURBS"
+cp -r ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/NURBS/*.h ./include/VE_Xplorer/SceneGraph/NURBS/.
 echo "      SceneGraph Utilities"
 cp -r ${VE_SUITE_HOME}/VE_Xplorer/SceneGraph/*.h ./include/VE_Xplorer/SceneGraph/Utilities/.
 echo "      TextureBased"
