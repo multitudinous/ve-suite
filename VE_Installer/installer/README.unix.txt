@@ -7,19 +7,21 @@ sites.
 See www.vesuite.org
 for information on obtaining VE-Suites dependendcies.
 =========================================================================
-                          VE-Suite_0.9.0
+                          VE-Suite_1.0.*
 =========================================================================
 The tarball creates a directory structure containing the binaries and exe
 needed for the core VE-Suite application and utilities.
 
 The directory structure should look like:
 ./{Platform}/bin
+./{Platform}/images
 ./{Platform}/exampleDatasets
 ./{Platform}/images
 ./{Platform}/README.txt
 ./{Platform}/setup.tsh
 
 where {Platform} corresponds to the platform that that VE-Suite was build on.
+
 
 Before running, you must edit your setup file: 
 ./{Platform}/setup.tsh

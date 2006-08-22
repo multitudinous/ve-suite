@@ -108,7 +108,8 @@ echo "Copying new exes..."
 cp ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/* ./bin
 
 echo "Copying Default Plugin..."
-cp -rf ${VE_SUITE_HOME}/bin/Plugins ./bin/.
+cp -rf ${VE_SUITE_HOME}/bin/Plugins/GE/${CFDHOSTTYPE}/* ./bin/.
+cp -rf ${VE_SUITE_HOME}/bin/Plugins/UI/${CFDHOSTTYPE}/* ./bin/.
 
 echo "Copying new dlls..."
 cp ${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}/*.so ./bin
