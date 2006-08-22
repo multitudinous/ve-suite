@@ -3,15 +3,12 @@ from os import getenv, name ##Used for getting system values
 from os.path import join, dirname ##Used for building paths.
 import wx ##Used for GUI
 import sys
-##import velMarker
-##velBase doesn't actually use velMarker; it's importing it so it can
-##get the path to it and, subsequently, to velauncher.
 
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster features
 CLUSTER_ENABLED = True
-MASTER_WAIT = 15 ##Seconds to wait after starting Master to start Slaves
-SLAVE_WAIT = 15 ##Seconds to wait between each Slave start
+MASTER_WAIT = 7 ##Seconds to wait after starting Master to start Slaves
+SLAVE_WAIT = 5 ##Seconds to wait between each Slave start
 ##Miscellaneous values for launcher's UI
 XPLORER_SHELL_NAME = "VE-Xplorer Shell"
 CONDUCTOR_SHELL_NAME = "VE-Conductor Shell"
@@ -21,7 +18,8 @@ FIXED = False ##Constant var used in MODE_DICT
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 ##The directory velauncher.py is in.
-VELAUNCHER_DIR  = sys.path[0]##(str(velMarker).split()[3][1:-2])
+VELAUNCHER_DIR  = sys.path[0]
+print VELAUNCHER_DIR
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
 LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
 CONFIG_FILE = "VE-Suite-Launcher"
@@ -36,7 +34,7 @@ MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization",
 MODE_DICT = {"Desktop": {"conductor": [FIXED, True],
                          "nameServer": [FIXED, True],
                          "xplorer": [FIXED, True],
-                         "xplorerType": [FIXED, 0],
+                         "xplorerType": [FIXED, 1],
                          "desktop": [FIXED, True],
                          "jconf": [FIXED, "Desktop",
                                    join(getenv("VE_INSTALL_DIR",
@@ -264,7 +262,7 @@ MODE_COVER = VES_COVER + 1
 ALT_MODE_DICT = {"Desktop": {"Conductor": True,
                              "NameServer": True,
                              "Xplorer": True,
-                             "XplorerType": 0,
+                             "XplorerType": 1,
                              "DesktopMode": True,
                              "jconf": [FIXED, "Desktop",
                                        join(getenv("VE_INSTALL_DIR",

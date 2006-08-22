@@ -302,8 +302,9 @@ class Launch:
             exe = "Winserverd.exe"
         else:
             exe = "Error"
-        c = "%s -ORBInitRef %s" %(exe, self.ServiceArg()) + \
-            " -ORBDottedDecimalAddresses 1"
+        c = "%s -ORBInitRef %s" %(exe, self.ServiceArg())
+        if windows:
+            c += " -ORBDottedDecimalAddresses 1"
         return c
 
     def ConductorCall(self, desktopMode = False, vesFile = None):
@@ -597,7 +598,9 @@ class Launch:
         if not self.cluster:
             return
         shellName = os.getenv('SHELL', 'None')
-        if shellName[-4:] == 'bash' or shellName[-3:] == '/sh':
-            self.clusterScript += "export %s=%s\n" %(var, os.getenv(var))
+##        if shellName[-4:] == 'bash' or shellName[-3:] == '/sh':
+##        if shellName[-2:] == 'sh' and shellName[-3:] != 'csh':
+        if shellName[-3:] != 'csh':
+            self.clusterScript += 'export %s="%s"\n' %(var, os.getenv(var))
         else:
-            self.clusterScript += "setenv %s %s\n" %(var, os.getenv(var))
+            self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
