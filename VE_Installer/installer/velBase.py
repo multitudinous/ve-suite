@@ -2,7 +2,8 @@
 from os import getenv, name ##Used for getting system values
 from os.path import join, dirname ##Used for building paths.
 import wx ##Used for GUI
-import velMarker
+import sys
+##import velMarker
 ##velBase doesn't actually use velMarker; it's importing it so it can
 ##get the path to it and, subsequently, to velauncher.
 
@@ -20,7 +21,7 @@ FIXED = False ##Constant var used in MODE_DICT
 ##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 ##The directory velauncher.py is in.
-VELAUNCHER_DIR  = dirname(str(velMarker).split()[3][1:-2])
+VELAUNCHER_DIR  = sys.path[0]##(str(velMarker).split()[3][1:-2])
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
 LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
 CONFIG_FILE = "VE-Suite-Launcher"
@@ -79,6 +80,7 @@ KILL_WINDOW_SIZE = (200, 100)
 windows = (name == "nt")
 unix = (name == "posix" or name == "mac")
     
+
 def Style(window):
     """The uniform style of each window in VE Launcher."""
     ##Set the background color.
