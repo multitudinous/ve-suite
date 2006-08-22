@@ -1,28 +1,35 @@
 #ifndef UNIT_WRAPPER_H_
 #define UNIT_WRAPPER_H_
 
-#include "VE_Open/skel/moduleS.h"
+#include <VE_Open/skel/moduleS.h>
+
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/Model/Model.h>
+
+#include <vector>
 
 class  UnitWrapper : public virtual POA_Body::Unit
 {
 public:
-   // Constructor 
+   ///Constructor 
    UnitWrapper( Body::Executive_ptr exec, std::string name );
-
-   UnitWrapper() {};
-   //Destructor 
+   ///Default constructor
+   UnitWrapper(){;}
+   ///Destructor 
    virtual ~UnitWrapper( void );
 
+protected:
+   Body::Executive_var executive_;
+   unsigned int return_state;
    std::string UnitName_;
    ::Types::ArrayLong_var id_;
    CORBA::Long activeId;
    std::string status_;
    std::string data_;
-
-protected:
-   Body::Executive_var executive_;
-   unsigned int return_state;
-  
+   std::map< std::string, VE_Model::Model* > xmlModelMap;
+   std::map< std::string, std::vector< VE_XML::Command* > > inputsMap;
+   std::map< std::string, std::vector< VE_XML::Command* > > resultsMap;
+   
 public:
 
    virtual

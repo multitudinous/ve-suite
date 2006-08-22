@@ -9,6 +9,8 @@
 #include "VE_Open/XML/Model/Port.h"
 #include "VE_Open/XML/Command.h"
 
+#include <sstream>
+
 // Implementation skeleton constructor
 UnitWrapper::UnitWrapper (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
@@ -30,8 +32,7 @@ void UnitWrapper::StartCalc (
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
-	return_state=0;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::StopCalc (
@@ -158,7 +159,9 @@ void UnitWrapper::SetID (
   ))
 {
   // Add your implementation here
-	 id_=id;
+	 //id_.length( id_.length() + 1 );
+    //id_[ id_.length() - 1 ] = id;
+    
 	 std::cout<<UnitName_<<" :SetID called"<<std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -170,7 +173,7 @@ ACE_THROW_SPEC ((
                  ::Error::EUnknown
                  ))
 {
-   // Add your implementation here
+   activeId = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ::Types::ArrayLong* UnitWrapper::GetID (
@@ -230,6 +233,13 @@ char * UnitWrapper::Query ( const char* command
     ::Error::EUnknown
   ))
 {
+
+   //if request is get inputs
+   //if request is set inputs
+   //if request is get results
+   //if request is get port data
+   //if request is set port data
+   //if request is 
 	bool firsttime=true;
 
 	std::string filename="Hyper.bkp";
@@ -244,13 +254,17 @@ char * UnitWrapper::Query ( const char* command
 	
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnitWrapper::DeleteModuleInstance (
-                                        ::CORBA::Long module_id
-                                        )
-ACE_THROW_SPEC ((
-                 ::CORBA::SystemException,
-                 ::Error::EUnknown
-                 ))
+void UnitWrapper::DeleteModuleInstance( ::CORBA::Long module_id )
+   ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ))
 {
-   // Add your implementation here
+   std::ostringstream strm;
+   strm << module_id;
+   
+   std::map< std::string, VE_Model::Model* >::iterator iter;
+   iter = xmlModelMap.find( strm.str() );
+   if ( iter != xmlModelMap.end() )
+   {
+      delete iter->second;
+      xmlModelMap.erase( iter );
+   }
 }
