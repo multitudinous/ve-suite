@@ -215,6 +215,8 @@ class Launch:
 ##            os.system("WinClient -ORBInitRef NameService=corbaloc:iiop:" +
 ##                      "${TAO_MACHINE}:${TAO_PORT}/" +
 ##                      "NameService %s %s &" % (desktop, ves))
+            if vesFile != None:
+                sleep(5)
             os.system("%s &" %(self.ConductorCall(desktopMode, vesFile)))
         ##Cluster mode
         if self.cluster:
