@@ -1448,10 +1448,11 @@ void AppFrame::ProcessCommandLineArgs( void )
    std::string vesFile;
    for ( int i = 0; i < argc; ++ i )
    {
-      if ( (std::string( ::wxGetApp().argv[ i ] ) == std::string( "--VESFile" )) &&
+      if ( (std::string( ::wxGetApp().argv[ i ] ) == std::string( "-VESFile" )) &&
            ( (i + 1) < argc )
          )
       {
+         Log(std::string(std::string("Found VES file: ") + std::string(::wxGetApp().argv[ i + 1 ])).c_str());
          vesFile.assign( ::wxGetApp().argv[ i + 1 ] );
          break;
       }
