@@ -559,11 +559,12 @@ void Vistab::SetActiveModel(VjObs::Model_var activeModel)
    if(_datasetSelection)
    {
       _datasetSelection->Clear();
-	  for(size_t i = 0; i < _datasetSelection->GetCount(); i++)
+      for(size_t i = 0; i < _availableDatasets.GetCount(); i++)
 	  {
          _datasetSelection->Append(_availableDatasets[i]);
 	  }
-      
+     //set the active dataset to the initial dataset in the model
+      _setActiveDataset(0); 
    }
 }
 ///////////////////////////////////////////////
@@ -598,8 +599,7 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
          _availableDatasets.Add(wxString(newModel->dataVector[i].datasetname));
       }
 
-      //set the active dataset to the initial dataset in the model
-      _setActiveDataset(0); 
+      
    }
 }
 //////////////////////////////////////////////////
