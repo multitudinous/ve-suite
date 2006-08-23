@@ -19,7 +19,6 @@ FIXED = False ##Constant var used in MODE_DICT
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 ##The directory velauncher.py is in.
 VELAUNCHER_DIR  = sys.path[0]
-print VELAUNCHER_DIR
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
 LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
 CONFIG_FILE = "VE-Suite-Launcher"
