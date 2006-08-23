@@ -120,30 +120,12 @@ class Launch:
                                           "-ORBInitRef", self.ServiceArg(),
                                           "-ORBDottedDecimalAddresses",
                                           "1"]).pid)
+            sleep(5)
             self.nameserverPids = pids
 ##            os.system("start /B WinServerd.exe -ORBInitRef" +
 ##                      " NameService=" +
 ##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
 ##                      " -ORBDottedDecimalAddresses 1")
-        ##Conductor section
-        if runConductor:
-            print "Starting Conductor."
-            ##Append argument if desktop mode selected
-##POPEN CALL: Reenable once fixed.
-            subprocess.Popen(self.ConductorCall(desktopMode, vesFile))
-##            if vesFile != None:
-##                ves = " -VESFile %s" % (vesFile)
-##            else:
-##                ves = ""
-##            if desktopMode:
-##                desktop = " -VESDesktop"
-##            else:
-##                desktop = ""
-##            os.system('start "%s" /B' % (CONDUCTOR_SHELL_NAME) +
-##                      " WinClientd.exe -ORBInitRef" +
-##                      " NameService=" +
-##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
-##                      " -ORBDottedDecimalAddresses 1" + desktop + ves)
         ##Xplorer section
         if runXplorer:
             print "Starting Xplorer."
@@ -170,6 +152,27 @@ class Launch:
 ##                      " NameService=" +
 ##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
 ##                      " -ORBDottedDecimalAddresses 1" + desktop)
+        ##Conductor section
+        if runConductor:
+            print "Starting Conductor."
+            ##Append argument if desktop mode selected
+##POPEN CALL: Reenable once fixed.
+            if vesFile:
+                sleep(5)
+            subprocess.Popen(self.ConductorCall(desktopMode, vesFile))
+##            if vesFile != None:
+##                ves = " -VESFile %s" % (vesFile)
+##            else:
+##                ves = ""
+##            if desktopMode:
+##                desktop = " -VESDesktop"
+##            else:
+##                desktop = ""
+##            os.system('start "%s" /B' % (CONDUCTOR_SHELL_NAME) +
+##                      " WinClientd.exe -ORBInitRef" +
+##                      " NameService=" +
+##                      "corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService" +
+##                      " -ORBDottedDecimalAddresses 1" + desktop + ves)
         print "Finished sending launch commands."
         return
 
@@ -326,11 +329,15 @@ class Launch:
             desktop = ""
         ##Construct the call.
         s = "%s -ORBInitRef %s" %(exe, self.ServiceArg())
+        s += "%s%s" %(desktop, ves)
         if windows:
             s = [exe, "-ORBInitRef", self.ServiceArg(),
-                 desktop[1:], ves[1:]]
-##            s += " -ORBDottedDecimalAddresses 1"
-        s += "%s%s" %(desktop, ves)
+                 str(desktop[1:])]
+            if vesFile:
+                s.append("-VESFile")
+                s.append("%s" %(vesFile))
+            s.append("-ORBDottedDecimalAddresses")
+            s.append("1")
         return s
 
     def XplorerCall(self, typeXplorer, jconf, desktopMode = False):

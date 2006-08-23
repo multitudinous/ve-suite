@@ -1452,7 +1452,7 @@ void AppFrame::ProcessCommandLineArgs( void )
            ( (i + 1) < argc )
          )
       {
-         Log(std::string(std::string("Found VES file: ") + std::string(::wxGetApp().argv[ i + 1 ])).c_str());
+         Log(std::string(std::string("Loading VES file: ") + std::string(::wxGetApp().argv[ i + 1 ])).c_str());
          vesFile.assign( ::wxGetApp().argv[ i + 1 ] );
          break;
       }
