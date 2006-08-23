@@ -2,6 +2,7 @@
 import wx
 import os
 from velBase import *
+from sys import exc_info
 if windows:
     import win32api
 
@@ -35,10 +36,19 @@ class ServerKillWindow(wx.Frame):
         if windows:
             PROCESS_TERMINATE = 1
             for pid in self.pids:
-                handle = win32api.OpenProcess(PROCESS_TERMINATE,
-                                              False, pid)
-                win32api.TerminateProcess(handle, -1)
-                win32api.CloseHandle(handle)
+                try:
+                    handle = win32api.OpenProcess(PROCESS_TERMINATE,
+                                                  False, pid)
+                    win32api.TerminateProcess(handle, -1)
+                    win32api.CloseHandle(handle)
+                except:
+                    pass
+##                except win32api.pywintypes.error, details:
+##                    ##Error brought up if either process is already closed.
+##                    dlg = wx.MessageDialog(None, str(details[0]),
+##                                           "Error!", wx.OK)
+##                    dlg.ShowModal()
+##                    dlg.Destroy()
         elif unix:
             os.system("killall Naming_Service Exe_server")
         self.OnClose("this event doesn't exist")
