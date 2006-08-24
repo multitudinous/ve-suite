@@ -832,7 +832,7 @@ class LauncherWindow(wx.Frame):
         ##progress.OnClose("this message does not matter")
         ##Show NameServer kill window if NameServer was started.
         if nameServer:
-            window = ServerKillWindow(pids = launchInstance.getNameserverPids())
+            window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
         ##Close the Launcher
         self.OnClose("this message does not matter")
 
