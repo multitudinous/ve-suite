@@ -104,8 +104,6 @@ class SettingsWindow(wx.Dialog):
         self.bCluster = wx.Button(self, -1, "Set Cluster Computers")
         self.bCluster.SetToolTip(wx.ToolTip("Set the computers in" +
                                             " the cluster."))
-        if os.name == "nt" or not CLUSTER_ENABLED:
-            self.bCluster.Hide()
         ##Set up OK button.
         bOk = wx.Button(self, -1, "OK")
         bOk.SetToolTip(wx.ToolTip("Return to the Launcher."))
@@ -137,10 +135,7 @@ class SettingsWindow(wx.Dialog):
         gridSizer = wx.FlexGridSizer(3, 2,
                                      VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
         gridSizer.Add(self.cbNameServer)
-        if os.name == "nt":
-            gridSizer.Add((-1, -1))
-        else:
-            gridSizer.Add((-1, self.bCluster.GetSize()[1]))
+        gridSizer.Add((-1, self.bCluster.GetSize()[1]))
         gridSizer.AddMany([self.cbConductor, columnSizer,
                            self.cbXplorer, self.rbXplorer])
         ##Insert the Programs to Launch grid.
