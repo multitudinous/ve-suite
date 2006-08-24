@@ -261,6 +261,7 @@ void cfdPolyData::Update()
 
 bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
 {
+/*
    // This is here because Dr. K. has code in 
    // cfdObjects that doesn't belong there
    // Fix this
@@ -281,13 +282,14 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
       int scale = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
       this->warpedContourScale = (scale/50.0) * 0.1 
                     * 1.0f;//this->GetActiveDataSet()->GetParent()->GetLength();///(float)(v[1]-v[0]);
-
+*/
       // contour lod control
       /*int lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
       double realLOD = (double)lod/100.0;
       this->deci->SetTargetReduction( realLOD );*/
-      return true;
-   }
+//      return true;
+//   }
+/*
    else if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
    {
       SetParticleOption((int)commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
@@ -305,6 +307,8 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
       return true;
    }
    return flag;
+*/
+   return true;
 }
 //////////////////////////////////////////////////////////
 void cfdPolyData::SetParticleOption( unsigned int option )
@@ -329,8 +333,25 @@ float cfdPolyData::GetParticleScale()
 /////////////////////////////////
 void cfdPolyData::UpdateCommand()
 {
+//   cfdObjects::UpdateCommand();
+//   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
+
+   //Call base method - currently does nothing
    cfdObjects::UpdateCommand();
-   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
+
+   //Extract the specific commands from the overall command
+   VE_XML::DataValuePair* activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+
+   //Extract the isosurface value
+   activeModelDVP = objectCommand->GetDataValuePair( "Polydata Value" );
+   double planePosition;
+   activeModelDVP->GetData( planePosition );
+   SetRequestedValue( static_cast< int >( planePosition ) );
+
+   activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
+   activeModelDVP->GetData( colorByScalar );
+
 }
 
 float cfdPolyData::GetSphereScaleFactor()

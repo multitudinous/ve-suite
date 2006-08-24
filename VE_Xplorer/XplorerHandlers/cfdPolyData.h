@@ -36,6 +36,8 @@
 #define CFD_POLYDATA_H
 
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 class vtkPolyDataMapper;
 class vtkWarpVector;
@@ -70,6 +72,8 @@ namespace VE_Xplorer
 
       private:
          float GetSphereScaleFactor();
+
+         std::string colorByScalar;
 
          vtkPolyDataMapper *map;
          vtkWarpVector* warper;
