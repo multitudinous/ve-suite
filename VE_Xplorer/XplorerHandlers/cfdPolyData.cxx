@@ -352,6 +352,17 @@ void cfdPolyData::UpdateCommand()
    activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
    activeModelDVP->GetData( colorByScalar );
 
+   activeModelDVP = objectCommand->GetDataValuePair( "Warped Surface" );
+   unsigned int surface;
+   activeModelDVP->GetData( surface );
+   if( surface == 1 )
+   {  warpSurface = true;}
+   else if( surface == 0 )
+   {  warpSurface = false;}
+   
+//   warpsurface = surface;
+//   SetRequestedValue( static_cast< int >( surface ) );
+
 }
 
 float cfdPolyData::GetSphereScaleFactor()

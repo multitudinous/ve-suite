@@ -52,7 +52,7 @@
 BEGIN_EVENT_TABLE( Polydata, wxDialog )
 ////@begin polydata event table entries
    EVT_RADIOBUTTON      (POLYDATA_RBUTTON,          Polydata::_onPolydata)
-   EVT_CHECKBOX         (PRECOMPUTED_POLY_CHK,      Polydata::_onPrecomputedPolydata)
+   EVT_CHECKBOX         (WARPED_SURFACE_CHK,        Polydata::_onWarpedSurface)
    EVT_SLIDER           (POLYDATA_PLANE_SLIDER,     Polydata::_onPolydataPlane)
    EVT_BUTTON           (ADD_POLYDATA_BUTTON,       Polydata::_onAddPolydata)
    EVT_BUTTON           (ADVANCED_POLYDATA_BUTTON,  Polydata::_onAdvanced)
@@ -80,7 +80,7 @@ bool Polydata::Create( wxWindow* parent, wxWindowID id,
                        const wxPoint& pos, 
                        const wxSize& size, long style )
 {
-   _useNearestPreComputedCheckBox = 0;
+   _useWarpedSurfaceCheckBox = 0;
    _polydataSlider = 0;
    _advancedButton = 0;
    _computeButton = 0;
@@ -92,6 +92,8 @@ bool Polydata::Create( wxWindow* parent, wxWindowID id,
    GetSizer()->Fit(this);
    GetSizer()->SetSizeHints(this);
    Centre();
+
+   _polydataSlider->Enable(false);
 
    return true;
 }
@@ -106,13 +108,12 @@ void Polydata::CreateControls()
     wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Polydata Controls"));
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
-
    
-    _useNearestPreComputedCheckBox = new wxCheckBox( itemDialog1, PRECOMPUTED_POLY_CHK, _T("Use Nearest Precomputed Polydata"), wxDefaultPosition, wxDefaultSize, 0 );
-    _useNearestPreComputedCheckBox->SetValue(false);
-    itemStaticBoxSizer3->Add(_useNearestPreComputedCheckBox, 0, wxGROW|wxALL, 5);
+    _useWarpedSurfaceCheckBox = new wxCheckBox( itemDialog1, WARPED_SURFACE_CHK, _T("Use Warped Surface"), wxDefaultPosition, wxDefaultSize, 0 );
+    _useWarpedSurfaceCheckBox->SetValue(false);
+    itemStaticBoxSizer3->Add(_useWarpedSurfaceCheckBox, 0, wxGROW|wxALL, 5);
 
-    wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Polydata"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Scale Factor"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText6, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
     _polydataSlider = new wxSlider( itemDialog1, POLYDATA_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
@@ -167,13 +168,17 @@ void Polydata::_onPolydata( wxCommandEvent& WXUNUSED(event) )
 
 }
 ////////////////////////////////////////////////////////////////////
-void Polydata::_onPrecomputedPolydata( wxCommandEvent& WXUNUSED(event) )
+void Polydata::_onWarpedSurface( wxCommandEvent& WXUNUSED(event) )
 {
-
+   if( _useWarpedSurfaceCheckBox->GetValue() == false )
+   {  _polydataSlider->Enable(false);}
+   else if( _useWarpedSurfaceCheckBox->GetValue() == true )
+   {  _polydataSlider->Enable(true);}
 }
 /////////////////////////////////////////////////////////////
 void Polydata::_onPolydataPlane( wxCommandEvent& WXUNUSED(event) )
 {
+
 }
 ///////////////////////////////////////////////////////////
 void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED(event) )
@@ -189,18 +194,18 @@ void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED(event) )
    colorByScalar->SetData("Color By Scalar",_colorByScalarName);
    newCommand->AddDataValuePair(colorByScalar);
 
-   VE_XML::DataValuePair* nearestPrecomputed = new VE_XML::DataValuePair();
-   nearestPrecomputed->SetDataName("Use Nearest Precomputed");
-   nearestPrecomputed->SetDataType("UNSIGNED INT");
-   if(_useNearestPreComputedCheckBox->GetValue())
+   VE_XML::DataValuePair* warpSurface = new VE_XML::DataValuePair();
+   warpSurface->SetDataName("Warped Surface");
+   warpSurface->SetDataType("UNSIGNED INT");
+   if(_useWarpedSurfaceCheckBox->GetValue())
    {
-      nearestPrecomputed->SetDataValue(static_cast<unsigned int>(1));
+      warpSurface->SetDataValue(static_cast<unsigned int>(1));
    }
    else
    {
-      nearestPrecomputed->SetDataValue(static_cast<unsigned int>(0));
+      warpSurface->SetDataValue(static_cast<unsigned int>(0));
    }
-   newCommand->AddDataValuePair(nearestPrecomputed);
+   newCommand->AddDataValuePair(warpSurface);
 
    try
    {

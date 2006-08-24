@@ -67,7 +67,7 @@ class wxStaticBox;
 enum POLYDATA_IDS
 {
    POLYDATA_RBUTTON,
-   PRECOMPUTED_POLY_CHK,
+   WARPED_SURFACE_CHK,
    POLYDATA_PLANE_SLIDER,
    ADD_POLYDATA_BUTTON,
    ADVANCED_POLYDATA_BUTTON
@@ -122,7 +122,7 @@ protected:
    std::string _colorByScalarName;///<The name of the scalar to color by.
    std::string _activeScalar;///The scalar that is active on the vistab
    wxArrayString _scalarNames;///<The available scalars.
-   wxCheckBox* _useNearestPreComputedCheckBox;
+   wxCheckBox* _useWarpedSurfaceCheckBox;
    wxSlider* _polydataSlider;///<Set the value of the iso-surface
    wxButton* _advancedButton;///<Display the color by scalar dialog
    wxButton* _computeButton;///<Compute the iso-surface
@@ -130,7 +130,7 @@ protected:
    void _onPolydata( wxCommandEvent& event );
 
    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
-   void _onPrecomputedPolydata( wxCommandEvent& event );
+   void _onWarpedSurface( wxCommandEvent& event );
 
    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
    void _onPolydataPlane( wxCommandEvent& event );
