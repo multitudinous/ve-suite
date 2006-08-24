@@ -212,8 +212,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
    
    //Try and laod netweok from server if one is already present
-   wxCommandEvent event;
-   LoadFromServer( event );
+   //wxCommandEvent event;
+   //LoadFromServer( event );
    //Process command line args to see if ves file needs to be loaded
    ProcessCommandLineArgs();   
 }
@@ -965,7 +965,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
    // write the domdoc to the string above
    try 
    {
-      network->exec->SetNetwork( nw_str.c_str() );
+      network->exec->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
       run_menu->Enable( v21ID_START_CALC, true );
    }
    catch ( CORBA::Exception& ) 
@@ -1495,6 +1495,6 @@ void AppFrame::ProcessCommandLineArgs( void )
    fname=vesFileName.GetFullName();
    wxCommandEvent event;
    New( event );
-   SubmitToServer( event );
    network->Load( path.c_str() );
+   SubmitToServer( event );
 }
