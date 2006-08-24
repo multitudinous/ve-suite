@@ -124,7 +124,7 @@ class Launch:
             print "Starting Conductor."
             ##Append argument if desktop mode selected
             if vesFile:
-                sleep(5)
+                sleep(10)
             subprocess.Popen(self.ConductorCall(desktopMode, vesFile))
         print "Finished sending launch commands."
         return
