@@ -739,6 +739,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ChangeBackgroundColorEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ChangeCursorEventHandler.cxx"
 				>
 			</File>
@@ -1073,6 +1077,10 @@
 			</File>
 			<File
 				RelativePath=".\cfdWriteTraverser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ChangeBackgroundColorEventHandler.h"
 				>
 			</File>
 			<File

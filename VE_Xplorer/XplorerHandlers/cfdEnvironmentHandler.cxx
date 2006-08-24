@@ -55,7 +55,7 @@
 #include "VE_Xplorer/XplorerHandlers/ChangeCursorEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/StoredSceneEH.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h"
-
+#include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -104,9 +104,14 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    desktopWidth = 0;
    desktopHeight = 0;
 
+   _clearColor.push_back(0);
+   _clearColor.push_back(0);
+   _clearColor.push_back(0);
+
    _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();
    _eventHandlers[ std::string("Stored Scenes") ] = new VE_EVENTS::StoredSceneEventHandler();
    _eventHandlers[ std::string("Change Working Directory") ] = new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
+   _eventHandlers[ std::string("CHANGE_BACKGROUND_COLOR") ] = new VE_EVENTS::ChangeBackgroundColorEventHandler();
 }
 
 void cfdEnvironmentHandler::Initialize( std::string param )
@@ -184,6 +189,15 @@ void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
 }
+////////////////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
+{
+   _clearColor.clear();
+   for(size_t i =0; i < color.size(); i++)
+   {
+      _clearColor.push_back(static_cast<float>(color.at(i)));
+   }
+}
 /////////////////////////////////////////////////////////////////////
 cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
 {
@@ -199,6 +213,11 @@ cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
 {
    return _camHandler;
 }*/
+/////////////////////////////////////////////////////////////
+std::vector<float> cfdEnvironmentHandler::GetBackgroundColor()
+{
+   return _clearColor;
+}
 /////////////////////////////////////////////////////////////////////
 cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
 {

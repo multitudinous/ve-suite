@@ -119,7 +119,9 @@ class cfdApp: public vrj::OsgApp
       virtual void bufferPreDraw( void );
       virtual void draw();
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
-      virtual void contextPreDraw( void );   	
+      virtual void contextPreDraw( void );   
+      ///Signal to change the background color
+      void ChangeBackgroundColor();
 #ifdef VE_PATENTED
       virtual void contextInit( void );
       virtual void contextClose( void );
@@ -187,6 +189,7 @@ private:
 	double time_since_start;
    int argc;
    char** argv;
+   std::vector<float> _clearColor;///<The clear color
 	   //web interface stuff for writing the image file
 	   //to be viewed over the web
 #ifdef _WEB_INTERFACE

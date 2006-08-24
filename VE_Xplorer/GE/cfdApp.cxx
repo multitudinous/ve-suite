@@ -129,7 +129,7 @@ cfdApp::cfdApp( int argc, char* argv[] )
    mUpdateVisitor = new osgUtil::UpdateVisitor();
    _frameStamp->setReferenceTime(0.0);
    _frameStamp->setFrameNumber(0);
-   //svUpdate = true;
+   svUpdate = false;
 #ifdef VE_PATENTED
    _tbvHandler = 0;
    _pbuffer = 0;
@@ -279,7 +279,7 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 /////////////////////////////////////////////////////////////////////////////
 void cfdApp::bufferPreDraw()
 {
-   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glClearColor(1.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 #endif //_OSG
@@ -585,7 +585,10 @@ void cfdApp::contextPreDraw( void )
    if ( svUpdate )
    {
       svUpdate = false;
-
+      osg::ref_ptr<osgUtil::SceneView> sv;
+      sv = (*sceneViewer);    // Get context specific scene viewer
+      std::vector<float> clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackGroundColor();
+      sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
       //std::vector< osg::ref_ptr<osgUtil::SceneView>* >* tempSvVector = sceneViewer.getDataVector();
       /*for ( size_t i = 0; i < tempSvVector.size(); ++i )
       {
@@ -736,5 +739,10 @@ void cfdApp::update( void )
 	// call all node update callbacks and animations. This is equivalent to calling
 	// SceneView::update
 	getScene()->accept(*mUpdateVisitor);
+}
+////////////////////////////////////
+void cfdApp::ChangeBackgroundColor()
+{
+   svUpdate = true;
 }
 #endif //_OSG

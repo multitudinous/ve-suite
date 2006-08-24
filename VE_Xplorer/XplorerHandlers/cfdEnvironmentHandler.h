@@ -39,7 +39,7 @@
 #include "VE_Installer/include/VEConfig.h"
 
 #include <map>
-
+#include <vector>
 namespace VE_Xplorer
 {
 	class cfdNavigate;
@@ -92,7 +92,10 @@ public:
    void PreFrameUpdate( void );
    void SetCommandArray( cfdCommandArray* );
    void CreateObjects( void );
-	
+
+   ///Update the background color
+   ///\param color The background color
+   void SetBackgroundColor(std::vector<double> color);
    ///Accessor for cfdNavigate
    cfdNavigate* GetNavigate( void );
 	///Accessor for cfdTrackball
@@ -107,6 +110,9 @@ public:
    //cfdQuatCamHandler* GetQuatCamHandler( void );
    ///Accessor for cfdDisplaySettings
    cfdDisplaySettings* GetDisplaySettings( void );
+
+   ///Get the background color
+   std::vector<float> GetBackgroundColor();
    ///Accessor to set desktop size information for
    /// runtime reconfiguration of desktop windows
    void SetDesktopSize( int width, int height );
@@ -132,6 +138,8 @@ private:
    bool _activeGeomPicking;
 #endif // VE_PATENTED
 #endif //_OSG
+
+   std::vector<float> _clearColor;///<The background color;
    cfdCursor* cursor;
    std::string _param;
    cfdCommandArray* _commandArray;
