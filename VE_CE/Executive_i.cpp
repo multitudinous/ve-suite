@@ -309,6 +309,7 @@ void Body_Executive_i::GetProfileData (
 /////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute_next_mod( long module_id )
 {
+   //id is module jsut executed
    std::string msg( "" );
 
    std::string mod_type = _network->GetModule(_network->moduleIdx(module_id))->GetModuleName();

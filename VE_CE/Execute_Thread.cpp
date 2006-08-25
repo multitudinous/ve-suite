@@ -40,8 +40,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 Execute_Thread::Execute_Thread (Body::Unit_var m, Body_Executive_i* ex) :
   _mod       ( m ),
   _is_exec   ( false),
@@ -49,12 +47,12 @@ Execute_Thread::Execute_Thread (Body::Unit_var m, Body_Executive_i* ex) :
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Execute_Thread::~Execute_Thread ()
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Execute_Thread::svc (void)
 {
    while ( true ) 
@@ -77,7 +75,7 @@ int Execute_Thread::svc (void)
       } 
       catch (CORBA::Exception &) 
       {
-         cout <<"Module Execution Messed up.\n";
+         std::cout <<"Module Execution Messed up." << std::endl;
       }
     
       _mutex.acquire();
@@ -86,39 +84,43 @@ int Execute_Thread::svc (void)
     
       try 
       {
-         long id = (long)(_mod->GetID());
+         // This function returns the id of the currently executed module
+         long id = static_cast< long >( _mod->GetCurID() );
          _executive->execute_next_mod( id );
       }
       catch (CORBA::Exception &) 
       {
-         cout <<"Module GetID Messed up.\n";
+         std::cout <<"Module GetID Messed up." << std::endl;
       }
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Execute_Thread::lock ()
 {
   _mutex.acquire();
-
   return 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Execute_Thread::unlock ()
 {
   _mutex.release();
-  
   return 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int Execute_Thread::needexecute ()
 {
-  int ret = 1;
+   int ret = 1;
+   _mutex.acquire();
+   if ( _is_exec == true )
+   {
+      ret = 0;
+   }
+   else
+   {
+      _is_exec = true;
+   }
+   _mutex.release();
 
-  _mutex.acquire();
-  if(_is_exec == true) ret = 0;
-  else                 _is_exec = true;
-  _mutex.release();
-
-  return ret;
+   return ret;
 }
 
