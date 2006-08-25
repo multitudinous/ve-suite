@@ -385,7 +385,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
                {
                   long int tempID = static_cast< long int >(  _network->GetModule(rt)->get_id() );
                   _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetParams( tempID, fileName.c_str() );
-                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetID( tempID );
+                  _mod_units[ _network->GetModule(rt)->GetModuleName() ]->SetCurID( tempID );
                   execute( _network->GetModule(rt)->GetModuleName() );
                }
                catch(CORBA::Exception &)
@@ -701,12 +701,14 @@ void Body_Executive_i::StartCalc (
 {
    //_scheduler->reset();
 
-   if(_scheduler->snodes_size()==0) return;
+   if(_scheduler->snodes_size()==0)
+   {
+      return;
+   }
 
    _mutex.acquire();
   
    int rt = _scheduler->execute(0)-1;
-   //int module_id = _network->GetModule(rt)->get_id();
   
    if(rt<0) 
    {
@@ -714,72 +716,52 @@ void Body_Executive_i::StartCalc (
    }
    else 
    {
-      //bool        rv2;
-      //std::string str2;
-    
-      //Package p2;
-      //p2.SetSysId("temp.xml");
-      //p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
-      //p2.intfs.push_back(_network->GetModule(rt)->_inputs);
-      /*if(_network->module(rt)->hasGeomInfo())
+      std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+      std::vector< VE_XML::Command* > inputList = _network->GetModule( rt )->GetInputData();
+      for ( size_t k = 0; k < inputList.size(); ++k )
       {
-         p2.intfs.push_back(_network->module(rt)->_geominputs);
-      }*/
-      //str2 = p2.Save(rv2);
-            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-            std::vector< VE_XML::Command* > inputList = _network->GetModule( rt )->GetInputData();
-            for ( size_t k = 0; k < inputList.size(); ++k )
-            {
-               nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
-                                 inputList.at( k ), std::string( "vecommand" ) ) 
-                              );
-            }
+         nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+                           inputList.at( k ), std::string( "vecommand" ) ) 
+                        );
+      }
 
-            std::string fileName( "returnString" );
-            VE_XML::XMLReaderWriter netowrkWriter;
-            netowrkWriter.UseStandaloneDOMDocumentManager();
-            netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-    
-      //if(rv2) 
+      std::string fileName( "returnString" );
+      VE_XML::XMLReaderWriter netowrkWriter;
+      netowrkWriter.UseStandaloneDOMDocumentManager();
+      netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+
+      try 
       {
-         //std::cout << _network->module(rt)->_name << "\n" << str2 << std::endl;
-         
-          try 
-          {
-            std::cerr << "Initial Execute" << std::endl;
-            if ( !_mod_units.empty() )
+         std::cout << "Initial Execute" << std::endl;
+         if ( !_mod_units.empty() )
+         {
+            std::string moduleName = _network->GetModule( rt )->GetModuleName();
+            if ( _mod_units.find( moduleName ) != _mod_units.end() )
             {
-               if(_mod_units.find( _network->GetModule(rt)->GetModuleName() )!=_mod_units.end())
-               {
-                  long int tempID = static_cast< long >( _network->GetModule( rt )->get_id() );
-                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetParams( tempID, fileName.c_str() );
-                  _mod_units[_network->GetModule( rt )->GetModuleName()]->SetID( tempID );
-                  // This starts a chain reaction which eventually leads to Execute_Thread
-                  // which calls executenextmod in this class
-                  // by having the thread do that all subsequent modules get executed
-                  execute( _network->GetModule(rt)->GetModuleName() );
-               }
-               else
-               {
-                  std::cerr << "Initial Execute, module " << _network->GetModule(rt)->GetModuleName() 
-                              << " is not registered yet" << std::endl;
-               }
+               long int tempID = static_cast< long >( _network->GetModule( rt )->get_id() );
+               _mod_units[ moduleName ]->SetParams( tempID, fileName.c_str() );
+               _mod_units[ moduleName ]->SetCurID( tempID );
+               // This starts a chain reaction which eventually leads to Execute_Thread
+               // which calls executenextmod in this class
+               // by having the thread do that all subsequent modules get executed
+               execute( moduleName );
             }
             else
             {
-               std::cerr << " No Module Units connected to the VE-CE, skipping execution " << std::endl;
+               std::cerr << "Initial Execute, module " << moduleName 
+                           << " is not registered yet" << std::endl;
             }
          }
-         catch(CORBA::Exception &) 
+         else
          {
-            std::cerr << "Initial Execute, cannot contact Module " 
-                        << _network->GetModule(rt)->GetModuleName() << std::endl;
+            std::cerr << " No Module Units connected to the VE-CE, skipping execution " << std::endl;
          }
       }
-      //else 
-      //{
-      //   std::cerr << "Initial Execute, error packing " << module_id << "'s Inputs" << std::endl;
-      //}
+      catch(CORBA::Exception &) 
+      {
+         std::cerr << "Initial Execute, cannot contact Module " 
+                     << _network->GetModule(rt)->GetModuleName() << std::endl;
+      }
    }
    
    _mutex.release();
@@ -975,26 +957,16 @@ void Body_Executive_i::RegisterUnit (
     , Error::EUnknown
   ))
 {
-  //_mutex.acquire();
-
-  //static long unit_id;
-  // When this is called, a unit is already binded to the name service, 
-  // so this call can get it's reference from the name service
+   // When this is called, a unit is already binded to the name service, 
+   // so this call can get it's reference from the name service
    std::string message =  std::string("Going to RegisterUnit ") + std::string( UnitName ) + std::string("\n" );
    ClientMessage( message.c_str() );
-  //CosNaming::Name name(1);
-  //name.length(1);
-  //name[0].id = CORBA::string_dup(UnitName);
-  //CORBA::Object_var unit_object = naming_context_->resolve(name);
-  
-  //std::cerr << "RegisterUnit " << UnitName << std::endl;
 
    _mod_units[std::string(UnitName)] = Body::Unit::_duplicate(unit);
-   //_mod_units[std::string(UnitName)]->SetID(unit_id++);
-  
+
    std::map<std::string, Execute_Thread*>::iterator iter;
    iter = _exec_thread.find( std::string(UnitName) );
-   
+
    if( iter == _exec_thread.end() ) 
    {
       // CLEAN THIS UP IN UNREGISTER UNIT !
@@ -1006,12 +978,12 @@ void Body_Executive_i::RegisterUnit (
    {
       ACE_Task_Base::cleanup(iter->second, NULL);
       if (iter->second)
+      {
          delete iter->second;
+      }
       Execute_Thread *ex = new Execute_Thread( _mod_units[std::string(UnitName)], (Body_Executive_i*)this);
       ex->activate();
-      //iter->second=ex;
    }
-   //_mutex.release();
    message = std::string( "Successfully registered " ) + std::string( UnitName ) + std::string("\n" );
    ClientMessage( message.c_str() );
 }
