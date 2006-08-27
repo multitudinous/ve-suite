@@ -124,6 +124,7 @@ ViewLocPane::ViewLocPane(  )
 /////////////////////////////////
 ViewLocPane::~ViewLocPane( void )
 {
+   ;
 }
 /////////////////////////////////////////////////////////////////
 void ViewLocPane::_onLoadStoredPointsFile(wxCommandEvent& event)

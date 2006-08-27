@@ -361,7 +361,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
 				int rt = _scheduler->execute(_network->GetModule(_network->moduleIdx(module_id)))-1;
 				if(rt<0) 
 				{
-               ClientMessage("Network execution complete\n");
+               ClientMessage("VES Network Execution Complete\n");
             }
             else if(_mod_units.find(_network->GetModule(rt)->GetModuleName())==_mod_units.end()) 
             {
@@ -562,12 +562,12 @@ void Body_Executive_i::SetNetwork (
       // Make the new schedule
       if ( !_scheduler->schedule(0) )
       {
-         ClientMessage( "Error in Schedule\n" );
+         ClientMessage( "Error in VES Schedule\n" );
          return;
       }
       else 
       {
-         ClientMessage( "Successfully Scheduled Network\n" );
+         ClientMessage( "Successfully Scheduled VES Network\n" );
          _scheduler->print_schedule();
       }
    }
@@ -592,7 +592,7 @@ char * Body_Executive_i::GetNetwork (
    _mutex.release();
 
    if ( xmlNetwork.empty() )
-      ClientMessage( "No current network present in VE-CE.\n" );
+      ClientMessage( "No Current VES Network Present In VE-CE.\n" );
   
    return CORBA::string_dup( xmlNetwork.c_str() );
 }
@@ -712,7 +712,7 @@ void Body_Executive_i::StartCalc (
   
    if(rt<0) 
    {
-      std::cerr << "Network execution complete" << std::endl;
+      std::cerr << "VES Network Execution Complete" << std::endl;
    }
    else 
    {

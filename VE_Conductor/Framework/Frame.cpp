@@ -889,6 +889,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       New( event );
       SubmitToServer( event );      
       network->Load( path.c_str() );
+      SubmitToServer( event );      
    }
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -1495,6 +1496,9 @@ void AppFrame::ProcessCommandLineArgs( void )
    fname=vesFileName.GetFullName();
    wxCommandEvent event;
    New( event );
+   // we submit after new to make sure that the ce and ge ar cleared
+   SubmitToServer( event );      
    network->Load( path.c_str() );
+   // we submit after load to give ce and ge the new network
    SubmitToServer( event );
 }

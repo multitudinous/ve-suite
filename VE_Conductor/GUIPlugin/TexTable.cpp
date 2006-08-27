@@ -174,19 +174,21 @@ void TexTable::DoChangeFont(const wxFont &font)
 
 void TexTable::AddRow(const std::vector<wxString>& vals)
 {
-/*  int i;
-   
-  SetBackgroundColour(*wxWHITE);
-  for (i=0; i<num_cols; i++)
-    {
-      if (i<(int)vals.size())
-	AppendText(padding(vals[i], i));
-      else
-	AppendText(padding(" ", i));
-    }
-  AppendText("\n");*/
+   /*  
+   int i;
 
-   AppendRows (1);
+   SetBackgroundColour(*wxWHITE);
+   for (i=0; i<num_cols; i++)
+   {
+   if (i<(int)vals.size())
+   AppendText(padding(vals[i], i));
+   else
+   AppendText(padding(" ", i));
+   }
+   AppendText("\n");
+   */
+
+   AppendRows( 1 );
    for ( int i=0; i<GetNumberCols(); ++i )
    {
       wxString temp;
@@ -205,8 +207,8 @@ void TexTable::AddRow(const std::vector<wxString>& vals)
       SetCellAlignment(GetNumberRows()-1, i, m_align[i], wxALIGN_CENTER);
    }
    SetRowMinimalHeight(GetNumberRows()-1, 9);
-   AutoSizeColumns(FALSE);
-   AutoSizeRows(FALSE);
+   //AutoSizeColumns( FALSE );
+   //AutoSizeRows( FALSE );
 }
 
 void TexTable::AddSeperator(char pad)
