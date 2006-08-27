@@ -132,7 +132,8 @@ SRCS=\
    TBUpdateSolutionEH.cxx\
    QCLoadFileEH.cxx\
    StoredSceneEH.cxx\
-   ChangeWorkingDirectoryEventHandler.cxx
+   ChangeWorkingDirectoryEventHandler.cxx\
+   ChangeBackgroundColorEventHandler.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g

@@ -579,25 +579,13 @@ void cfdApp::writeImageFileForWeb(void*)
 #ifdef _OSG
 void cfdApp::contextPreDraw( void )
 {
-   // For osg the update call is only supposed to be called by one application
-   // thread
-   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    if ( svUpdate )
    {
       svUpdate = false;
       osg::ref_ptr<osgUtil::SceneView> sv;
       sv = (*sceneViewer);    // Get context specific scene viewer
-      std::vector<float> clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackGroundColor();
-      sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
-      //std::vector< osg::ref_ptr<osgUtil::SceneView>* >* tempSvVector = sceneViewer.getDataVector();
-      /*for ( size_t i = 0; i < tempSvVector.size(); ++i )
-      {
-         //osg::ref_ptr<osgUtil::SceneView> sv;
-         //sv = (*sceneViewer);    // Get context specific scene viewer
-         //tempSvVector->at( i )->get();
-         vprASSERT(tempSvVector.at( i ).get() != NULL);
-         tempSvVector.at( i )->update();
-      }*/
+      //std::vector<float> clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackGroundColor();
+      //sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
    }
 }
 ///////////////////////////////////////////////////
