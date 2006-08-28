@@ -120,8 +120,9 @@ class Launch:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
             self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
-            clusterFileName = "cluster.tsh"
+            clusterFileName = "cluster.bat"
             clusterFilePath = os.path.join(VELAUNCHER_DIR, clusterFileName)
+            print clusterFilePath ##TESTER
             ##Write cluster script
             sourceFile = file(clusterFilePath, 'w')
             sourceFile.write(self.clusterScript)
@@ -286,8 +287,11 @@ class Launch:
         ##Construct the call
         s = '%s -ORBInitRef %s "%s"%s' %(exe, self.ServiceArg(), jconf, desktop)
         if windows:
-            s = [exe, "-ORBInitRef", self.ServiceArg(), jconf,
-                 "-VESDesktop", str(w), str(h)]
+            s = [exe, "-ORBInitRef", self.ServiceArg(), jconf]
+            if desktopMode:
+                 s.append("-VESDesktop")
+                 s.append(str(w))
+                 s.append(str(h))
         return s
 
     def WriteClusterScriptPrefix(self):
@@ -298,6 +302,8 @@ class Launch:
             self.WriteToClusterScript("PYTHONPATH")
         elif windows:
             self.clusterScript = ""
+            self.clusterScript += "psexec \\\\abbott -u IASTATE\\mccdo -i -e cmd\n" ##TESTER
+            self.clusterScript += "net use H: \\samba.vrac.iastate.edu\home \users\mccdo\n" ##TESTER
             self.WriteToClusterScript("PYTHONPATH")
         else:
             self.clusterScript = "ERROR: Unsupported OS type."
@@ -323,16 +329,19 @@ class Launch:
         else:
             self.clusterScript += "ERROR: OS not supported."
 
-    def ExecuteClusterNode(self, nodeName, scriptPath,
-                           typeXplorer, jconf, desktopMode):
+    def ExecuteClusterScript(self, nodeName, scriptPath,
+                             typeXplorer, jconf, desktopMode):
         if windows:
+            print "Executing %s!" %nodeName
             ##Do a regular call if the initial machine's the node.
             if gethostname() == nodeName.split('.')[0]:
+                print "It is this computer!"
                 subprocess.Popen(self.XplorerCall(typeXplorer, jconf,
                                                   desktopMode))
                 return
             ##Else call the script on the other computer in psexec.
-            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
+##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
+            subprocess.Popen([scriptPath])
         else:
             print "Error!"
 
@@ -573,4 +582,4 @@ class Launch:
             else:
                 self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
         elif windows:
-            self.clusterScript += 'set %s="%s"\n' %(var. os.getenv(var))
+            self.clusterScript += 'set %s="%s"\n' %(var, os.getenv(var))
