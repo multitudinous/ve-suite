@@ -186,10 +186,10 @@ void Body_UI_i::Raise (
          }
          
          std::string temp( notification );
-         if ( !temp.compare(0,26,"VES Network Execution Complete") ||
-              !temp.compare(0,30,"Successfully Scheduled VES Network" ) ||
+         if ( !temp.compare(0,30,"VES Network Execution Complete") ||
+              !temp.compare(0,34,"Successfully Scheduled VES Network" ) ||
               !temp.compare(0,22,"Connected to Executive") ||
-              !temp.compare(0,17,"Error in VES Schedule") )
+              !temp.compare(0,21,"Error in VES Schedule") )
          {
             try 
             { 
