@@ -140,7 +140,8 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 
       //Call the Executive CORBA call to register it to the Executive
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
-      std::cout << "|\tConnected to the Executive " << std::endl;   
+      std::cout << "|\tConnected to the Executive " << std::endl;
+      ui_i->GetNetworkFromCE();
       //this->thread = new cfdThread();
       //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
    } 
@@ -336,17 +337,7 @@ void cfdExecutive::GetEverything( void )
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::InitModules( void )
 {
-   // Initiallize the dashboard
-   std::cout << "|  4. Initializing.............................. Dashboard Display |" << std::endl;
-   //this->_dashBoard = new cfdDashboard( this->_param->GetParameterFilename(), this->_masterNode );
-
-   // Initiallize all the Digital Text gauges
-   std::cout << "|  4. Initializing.............................. Gauges Display |" << std::endl;
-   //this->_gauges = new cfdGauges( this->_param->GetParameterFilename(), this->_masterNode );
-   
-   // Initiallize each piece of geometry   
-   std::cout << "|  4. Initializing.............................. Interactive Geometry |" << std::endl;
-   //this->_geometry = new cfdInteractiveGeometry( this->_param->GetParameterFilename(), this->_masterNode );
+   ;
 }
 
 void cfdExecutive::PreFrameUpdate( void )
@@ -387,7 +378,7 @@ void cfdExecutive::PreFrameUpdate( void )
                              << std::endl << vprDEBUG_FLUSH;
 
       // record position of some key phrases...
-      size_t pos1 = statusString.find("Network execution complete");
+      size_t pos1 = statusString.find( "VES Network Execution Complete" );
       
       //*******************************************************************//
       //For multiple model apps this implementation has to be changed      //

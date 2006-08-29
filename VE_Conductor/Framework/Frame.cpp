@@ -212,8 +212,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
    
    //Try and laod netweok from server if one is already present
-   //wxCommandEvent event;
-   //LoadFromServer( event );
+   wxCommandEvent event;
+   LoadFromServer( event );
    //Process command line args to see if ves file needs to be loaded
    ProcessCommandLineArgs();   
 }

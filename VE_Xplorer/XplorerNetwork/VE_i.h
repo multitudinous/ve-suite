@@ -54,6 +54,7 @@ public:
    std::string GetNetworkString( void );
    std::string GetStatusString( void );
    bool GetNetworkFlag( void );
+   void GetNetworkFromCE( void );
 
 protected:
    Body::Executive_var executive_;

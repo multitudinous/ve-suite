@@ -175,41 +175,47 @@ void Body_UI_i::Raise (
   ))
   {
       // Add your implementation here
-      if (notification!=NULL)
+      if ( notification == NULL )
       {
-         std::cout << "|\tNotification Message : " << notification
-                     << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
-         
-         {
-            vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
-            statusStringBuffer.push_back( std::string( notification ) );
-         }
-         
-         std::string temp( notification );
-         if ( !temp.compare(0,30,"VES Network Execution Complete") ||
-              !temp.compare(0,34,"Successfully Scheduled VES Network" ) ||
-              !temp.compare(0,22,"Connected to Executive") ||
-              !temp.compare(0,21,"Error in VES Schedule") )
-         {
-            try 
-            { 
-               std::string network( executive_->GetNetwork() );
-               if ( !network.empty() )
-               {
-                  this->SetNetworkString( network );
-                  std::cout << "|\tGoing To Do Something" << std::endl;
-               }
-            } 
-            catch (CORBA::Exception &) 
-            {
-               std::cerr << "CFD DEBUG: cfdExecutive : no exec found! " << std::endl;
-            }
-         }
-         else
-         {
-            std::cout << "|\tNot Going To Do Anything" << std::endl;
-         }
-         std::cout << "|\tEnd Raise " << std::endl;  
+         return;
       }
+      
+      std::cout << "|\tNotification Message : " << notification
+                  << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
+      
+      {
+         vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
+         statusStringBuffer.push_back( std::string( notification ) );
+      }
+      
+      std::string temp( notification );
+      if ( !temp.compare(0,30,"VES Network Execution Complete") ||
+           !temp.compare(0,34,"Successfully Scheduled VES Network" ) ||
+           //!temp.compare(0,22,"Connected to Executive") ||
+           !temp.compare(0,21,"Error in VES Schedule") )
+      {
+         GetNetworkFromCE();
+      }
+      else
+      {
+         std::cout << "|\tNot Going To Do Anything" << std::endl;
+      }
+      std::cout << "|\tEnd Raise " << std::endl;  
    }
-  
+////////////////////////////////////////////////////////////////////////////////  
+void Body_UI_i::GetNetworkFromCE( void )
+{
+   try 
+   { 
+      std::string network( executive_->GetNetwork() );
+      if ( !network.empty() )
+      {
+         this->SetNetworkString( network );
+         std::cout << "|\tGoing To Do Something" << std::endl;
+      }
+   } 
+   catch (CORBA::Exception &) 
+   {
+      std::cerr << "Bod_UI_i::GetNetworkFromCE : no exec found! " << std::endl;
+   }
+}
