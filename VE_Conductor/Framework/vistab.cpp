@@ -89,6 +89,7 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_COMMAND_SCROLL( MIN_MAX_SLIDERS, Vistab::_onMinMaxSlider )
    EVT_COMMAND_SCROLL( MIN_SLIDER,      Vistab::_onMinSlider )
    EVT_COMMAND_SCROLL( MAX_SLIDER,      Vistab::_onMaxSlider )
+
 ////@end Vistab event table entries
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
@@ -279,7 +280,7 @@ void Vistab::CreateControls()
     itemToolBar3->AddTool(POLYDATA_BUTTON, _T("Polydata"), itemtool9Bitmap, itemtool8BitmapDisabled, wxITEM_NORMAL/*wxITEM_RADIO*/, _T("Polydata"), wxEmptyString);
 
     itemToolBar3->Realize();
-    itemBoxSizer2->Add(itemToolBar3, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(itemToolBar3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     //itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 
     wxBoxSizer* itemBoxSizer10 = new wxBoxSizer(wxHORIZONTAL);
@@ -320,7 +321,9 @@ void Vistab::CreateControls()
     itemStaticBoxSizer14->Add(_vectorSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxStaticBox* scalarBoundsStatic = new wxStaticBox(itemDialog1, wxID_ANY, _T("Scalar Range"));
+/*
     wxStaticBoxSizer* scalarBoundsSizer = new wxStaticBoxSizer( scalarBoundsStatic, wxHORIZONTAL );
+
 //    wxBoxSizer* scalarBoundsSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer* spinnerSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* scalarSizer = new wxBoxSizer(wxVERTICAL);
@@ -356,8 +359,36 @@ void Vistab::CreateControls()
 
     scalarBoundsSizer->Add(spinnerSizer,1,wxALIGN_CENTER|wxEXPAND);
     scalarBoundsSizer->Add(scalarSizer,3,wxALIGN_CENTER|wxEXPAND);
-    
-    itemBoxSizer2->Add(scalarBoundsSizer, 3, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
+*/    
+
+    wxStaticBoxSizer* scalarBoundsSizer = new wxStaticBoxSizer( scalarBoundsStatic, wxVERTICAL );
+
+    wxBoxSizer* minSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* maxSizer = new wxBoxSizer(wxHORIZONTAL);  
+
+    _minSpinner = new wxSpinCtrlDbl( *itemDialog1, MIN_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+    _minSlider = new wxSlider( itemDialog1, MIN_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+
+    _maxSpinner = new wxSpinCtrlDbl( *itemDialog1, MAX_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 100, 0.1, -1, wxEmptyString );
+    _maxSlider = new wxSlider( itemDialog1, MAX_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+   
+    wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T("Min"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT ); 
+    wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T("Max"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT ); 
+
+
+
+    minSizer->Add( _minSpinner, 0, wxALIGN_LEFT|wxTOP|wxLEFT|wxRIGHT, 5 );
+    minSizer->Add( _minSlider, 1, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM|wxEXPAND, 5 );
+
+    maxSizer->Add( _maxSpinner, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5 );
+    maxSizer->Add( _maxSlider, 1, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM|wxEXPAND, 5 );
+
+    scalarBoundsSizer->Add( _min,0,wxALL|wxGROW );
+    scalarBoundsSizer->Add( minSizer,0,wxALL|wxGROW );
+    scalarBoundsSizer->Add( _max,0,wxALL|wxGROW );
+    scalarBoundsSizer->Add( maxSizer,0,wxALL|wxGROW );
+
+    itemBoxSizer2->Add(scalarBoundsSizer, 0, wxALIGN_CENTER|wxGROW|wxALL, 5);
    
     //Last row buttons - advanced, clear all, ...
     wxBoxSizer* lastRowButtons = new wxBoxSizer( wxHORIZONTAL );
@@ -411,7 +442,14 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {
-   if(!scalarContour)
+
+   if( _activeScalarName.empty() )
+   {
+      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+                     wxOK | wxICON_INFORMATION );
+   }
+
+   else if(!scalarContour)
    {
       scalarContour = new Contours(this,                
                   /*SYMBOL_CONTOURS_IDNAME*/-1, 
@@ -420,22 +458,27 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
       scalarContour->SetSize(_vistabPosition);
+
+      scalarContour->ShowModal();
    }
    
    //if(scalarSelect || vectorSelect)
-   {
-      scalarContour->ShowModal();
-   }
-   /*else
-   {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
-                     wxOK | wxICON_INFORMATION );
-   }*/
+   //{
+      //scalarContour->ShowModal();
+   //}
+
+
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 {
-   if(!vectorContour)
+   if( _activeScalarName.empty() )
+   {
+      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+                     wxOK | wxICON_INFORMATION );
+   }
+
+   else if(!vectorContour)
    {
       vectorContour = new Contours (this,                
                   /*SYMBOL_CONTOURS_IDNAME*/-1, 
@@ -444,22 +487,25 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE,"VECTOR" );
       vectorContour->SetSize(_vistabPosition);
+
+      vectorContour->ShowModal();
    }
 
    //if(scalarSelect || vectorSelect)
-   {
-      vectorContour->ShowModal();
-   }
-   /*else
-   {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
-                     wxOK | wxICON_INFORMATION );
-   }*/
+   //{
+      //vectorContour->ShowModal();
+   //}
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
 {
-   if(!streamline)
+   if( _activeScalarName.empty() )
+   {
+      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+                     wxOK | wxICON_INFORMATION );
+   }
+
+   else if(!streamline)
    {
       streamline = new Streamlines ( this,                
                   /*SYMBOL_CONTOURS_IDNAME*/-1, 
@@ -468,23 +514,26 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_STREAMLINES_SIZE, 
                   SYMBOL_STREAMLINES_STYLE );
       streamline->SetSize(_vistabPosition);
-   }
 
-   if(scalarSelect || vectorSelect)
-   {
       streamline->ShowModal();
    }
-   else
-   {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
-                     wxOK | wxICON_INFORMATION );
-   }
+
+   //if(scalarSelect || vectorSelect)
+   //{
+      //streamline->ShowModal();
+   //}
    //itemToolBar3->ToggleTool(STREAMLINE_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
-   if(!isosurface)
+   if( _activeScalarName.empty() )
+   {
+      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+                     wxOK | wxICON_INFORMATION );
+   }
+
+   else if(!isosurface)
    {
       isosurface = new Isosurfaces ( this,                
                   /*SYMBOL_CONTOURS_IDNAME*/-1, 
@@ -493,43 +542,55 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
       isosurface->SetSize(_vistabPosition);
+
+      isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
+      isosurface->SetActiveScalar(_activeScalarName);
+      isosurface->ShowModal();
    }
-   
+/*   
    if(scalarSelect || vectorSelect)
    {
       isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
       isosurface->SetActiveScalar(_activeScalarName);
       isosurface->ShowModal();
    }
-   else
-   {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
-                     wxOK | wxICON_INFORMATION );
-   }
-
+*/
    //itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 {
-   if(!_tbTools)
+   if( _activeScalarName.empty() )
+   {
+      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+                     wxOK | wxICON_INFORMATION );
+   }
+
+   else if(!_tbTools)
    {
    
       _tbTools = new TextureBasedToolBar (this,-1);
       _tbTools->SetSize(_vistabPosition.x, _vistabPosition.y, -1, -1, wxSIZE_USE_EXISTING);
-   }
-   _tbTools->SetVjObsPtr(xplorerPtr);
-   _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
-   _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
-   if(_tbTools->ActivateTextureVisualization())
-   {
-      _tbTools->ShowModal();
+   
+      _tbTools->SetVjObsPtr(xplorerPtr);
+      _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
+      _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
+      if(_tbTools->ActivateTextureVisualization())
+      {
+         _tbTools->ShowModal();
+      }
    }
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
 {
-   if(!polydata)
+   if( _activeScalarName.empty() )
+   {
+      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+                     wxOK | wxICON_INFORMATION );
+   }
+
+   else if(!polydata)
    {
       polydata = new Polydata ( this,                
                   /*SYMBOL_CONTOURS_IDNAME*/-1, 
@@ -538,18 +599,20 @@ void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_POLYDATA_SIZE, 
                   SYMBOL_POLYDATA_STYLE );
       polydata->SetSize(_vistabPosition);
+
+      polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
+      polydata->SetActiveScalar(_activeScalarName);
+      polydata->ShowModal();
    }
+/*
    if(scalarSelect || vectorSelect)
    {
       polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
       polydata->SetActiveScalar(_activeScalarName);
       polydata->ShowModal();
    }
-   else
-   {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
-                     wxOK | wxICON_INFORMATION );
-   }   
+*/
+  
 }
 ///////////////////////////////////////////////////////
 void Vistab::SetActiveModel(VjObs::Model_var activeModel)
@@ -931,17 +994,12 @@ void Vistab::_onMinSpinCtrl( wxScrollEvent& WXUNUSED(event) )
    minValue = ( ( _minSpinner->GetValue() - _activeScalarRange.at(0) ) / ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 100);
 
    if( minValue == 100 )
-   {
-//      scalarRange->SetMaximumSliderValue( (int)minValue+1 );    
-//      scalarRange->SetMinimumSliderValue( (int)minValue );   
+   {  
       _minSlider->SetValue( (int)minValue );
       _maxSlider->SetValue( (int)minValue+1 );   
    }
-//   else if( scalarRange->GetMaxSliderValue() <= (int)minValue )
    else if( _maxSlider->GetValue() <= (int)minValue )
    {
-//      scalarRange->SetMaximumSliderValue( (int)minValue+1 );
-//      scalarRange->SetMinimumSliderValue( (int)minValue );
       _minSlider->SetValue( (int)minValue );
       _maxSlider->SetValue( (int)minValue+1 );   
       _maxSpinner->SetValue( _activeScalarRange.at(1) - ( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) )
@@ -949,10 +1007,8 @@ void Vistab::_onMinSpinCtrl( wxScrollEvent& WXUNUSED(event) )
    }
    else
    {
-//      scalarRange->SetMinimumSliderValue( (int)minValue );
       _minSlider->SetValue( (int)minValue );  
    }
-
 } 
 ///////////////////////////////////////////////////////////////////////////
 void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) )
@@ -965,17 +1021,12 @@ void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) )
                / ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 100);
 
    if( maxValue == 0 )
-   {
-//      scalarRange->SetMaximumSliderValue( (int)maxValue+1 );    
-//      scalarRange->SetMinimumSliderValue( (int)maxValue );  
+   {  
       _minSlider->SetValue( (int)maxValue+1 );
       _maxSlider->SetValue( (int)maxValue );     
    }
-//   else if( scalarRange->GetMinSliderValue() >= (int)maxValue )
    else if( _minSlider->GetValue() >= (int)maxValue )
    {
-//      scalarRange->SetMinimumSliderValue( (int)maxValue-1 );
-//      scalarRange->SetMaximumSliderValue( (int)maxValue );
       _minSlider->SetValue( (int)maxValue-1 );
       _maxSlider->SetValue( (int)maxValue );   
       _minSpinner->SetValue( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) )
@@ -983,9 +1034,8 @@ void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) )
    } 
    else
    {  
-//      scalarRange->SetMaximumSliderValue( (int)maxValue );
       _maxSlider->SetValue( (int)maxValue );   
-   }
+   } 
 } 
 //////////////////////////////////////////////////////////////////////////
 void Vistab::_onMinMaxSlider( wxScrollEvent& WXUNUSED(event) )
@@ -1006,7 +1056,7 @@ void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED(event) )
    }
 
    _minSpinner->SetValue( range * (double)_minSlider->GetValue() / 100  + _activeScalarRange.at(0) );
-   _maxSpinner->SetValue( _activeScalarRange.at(1) - ( range * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
+   _maxSpinner->SetValue( _activeScalarRange.at(1) - ( range * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) ); 
 }
 //////////////////////////////////////////////////////////////////////////
 void Vistab::_onMaxSlider( wxScrollEvent& WXUNUSED(event) )
@@ -1060,4 +1110,5 @@ void Vistab::_onClose( wxCommandEvent& event )
 //   vistab->Show(false);
    scalarSelect = false;
    vectorSelect = false;
+//   _activeDataSetName.erase();
 }
