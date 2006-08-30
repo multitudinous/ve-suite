@@ -255,9 +255,11 @@ void Avail_Modules::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 
 bool Avail_Modules::LoadModules()
 {
-  pl_loader->LoadPlugins("GUIPlugins");
+  pl_loader->LoadPlugins( "Plugins/UI" );
   for ( unsigned int i=0; i<pl_loader->plugins.size(); i++)
-    AddModule(pl_loader->plugins[i], pl_loader->plugin_cls[i]);
+  {  
+     AddModule( pl_loader->plugins[i], pl_loader->plugin_cls[i] );
+  }
 
   return true;
 }
