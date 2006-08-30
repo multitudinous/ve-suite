@@ -98,12 +98,12 @@ char * UnitWrapper::GetStatusMessage (
 	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 
 	nodes.push_back( 
-                  std::pair< VE_XML::XMLObject*, std::string >( &returnState, "Command" ) 
+                  std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
                      );
 	VE_XML::XMLReaderWriter commandWriter;
 	std::string status="returnString";
 	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "vecommand" );
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return CORBA::string_dup(status.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////

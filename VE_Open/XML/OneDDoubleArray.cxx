@@ -46,7 +46,7 @@ OneDDoubleArray::OneDDoubleArray(unsigned int nElements)
    _nElements  = nElements;
    // These should match the schema for min and max occurances 
    // of the float array
-   minIndex = 2;
+   minIndex = 1;
    SetObjectType("OneDDoubleArray");
 }
 /////////////////////////////
