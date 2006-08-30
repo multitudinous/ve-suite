@@ -159,8 +159,8 @@ void UnitWrapper::SetID (
   ))
 {
   // Add your implementation here
-	 //id_.length( id_.length() + 1 );
-    //id_[ id_.length() - 1 ] = id;
+	 id_->length( id_->length() + 1 );
+    id_[ id_->length() - 1 ] = id;
     
 	 std::cout<<UnitName_<<" :SetID called"<<std::endl;
 }
@@ -185,7 +185,7 @@ ACE_THROW_SPEC ((
   ))
 {
 	std::cout<<UnitName_<<" :GetID called"<<std::endl;
-    return id_.out() ;
+    return id_.out();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ::CORBA::Long UnitWrapper::GetCurID (
@@ -196,7 +196,7 @@ ACE_THROW_SPEC ((
                  ::Error::EUnknown
                  ))
 {
-   // Add your implementation here
+   // This function returns the id of the currently executed module
    return activeId;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,22 +233,40 @@ char * UnitWrapper::Query ( const char* command
     ::Error::EUnknown
   ))
 {
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+   networkWriter.ReadXMLData( param, "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   
+   for (size_t i=0; i<objectVector.size(); i++)
+   {
+		VE_XML::Command* params = dynamic_cast< VE_XML::Command* >( objectVector.at( i ) );
+      std::string commandName = params->GetCommandName();
+      
+      if ( commandName == "Set Inputs" )
+      {
+         
+      }
+      else if ( commandName == "Set Results" )
+      {
+         
+      }
+      else 
+		unsigned int num = params->GetNumberOfDataValuePairs();
+		for ( size_t j = 0; j < num; j++ )
+		{
+         std::string dataName = params->GetDataName();
+         //if request is get inputs
+         //if request is set inputs
+         //if request is get results
+         //if request is get port data
+         //if request is set port data
+         //if request is 
+      }
+   }
+     
 
-   //if request is get inputs
-   //if request is set inputs
-   //if request is get results
-   //if request is get port data
-   //if request is set port data
-   //if request is 
-	bool firsttime=true;
-
-	std::string filename="Hyper.bkp";
-	if (firsttime)
-	{
-		//bkp.openFile(filename.c_str());
-		firsttime=false;
-	}
-	//std::string network = bkp.CreateNetwork();
    std::string network;
 	return CORBA::string_dup(network.c_str());
 	
