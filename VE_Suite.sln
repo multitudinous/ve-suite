@@ -1112,8 +1112,8 @@ Global
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.Release|Win32.Build.0 = Release|Win32
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_dbg|Win32.ActiveCfg = osg_dbg|Win32
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_dbg|Win32.Build.0 = osg_dbg|Win32
-		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_vep_cluster_dbg|Win32
-		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_vep_cluster_dbg|Win32
+		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_dbg|Win32
+		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_dbg|Win32
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_vep_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_osg_vep_dbg|Win32.Build.0 = osg_vep_dbg|Win32
 		{0884BEF3-A2B6-4F47-A24B-C3E1AAA0FF0B}.tao_pf_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
@@ -1185,8 +1185,8 @@ Global
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.Release|Win32.Build.0 = Release|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_dbg|Win32.ActiveCfg = osg_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_dbg|Win32.Build.0 = osg_dbg|Win32
-		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_vep_cluster_dbg|Win32
-		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_vep_cluster_dbg|Win32
+		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_dbg|Win32
+		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_vep_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_osg_vep_dbg|Win32.Build.0 = osg_vep_dbg|Win32
 		{B5039180-C3C2-4D37-8B6C-004E58627DF8}.tao_pf_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
@@ -1212,8 +1212,8 @@ Global
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.Release|Win32.Build.0 = Release|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_dbg|Win32.ActiveCfg = osg_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_dbg|Win32.Build.0 = osg_dbg|Win32
-		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_vep_cluster_dbg|Win32
-		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_vep_cluster_dbg|Win32
+		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_dbg|Win32
+		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_vep_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_osg_vep_dbg|Win32.Build.0 = osg_vep_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC9200}.tao_pf_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
@@ -1239,8 +1239,8 @@ Global
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.Release|Win32.Build.0 = Release|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_dbg|Win32.ActiveCfg = osg_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_dbg|Win32.Build.0 = osg_dbg|Win32
-		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_vep_cluster_dbg|Win32
-		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_vep_cluster_dbg|Win32
+		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_dbg|Win32
+		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_dbg|Win32.Build.0 = osg_vep_dbg|Win32
 		{398FF31C-58CE-4A0A-A288-BC3917FC920A}.tao_pf_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
@@ -1266,8 +1266,8 @@ Global
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.Release|Win32.Build.0 = Release|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_dbg|Win32.ActiveCfg = osg_dbg|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_dbg|Win32.Build.0 = osg_dbg|Win32
-		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_vep_cluster_dbg|Win32
-		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_vep_cluster_dbg|Win32
+		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_dbg|Win32
+		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_dbg|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_osg_vep_dbg|Win32.Build.0 = osg_vep_dbg|Win32
 		{398FF33A-58CE-4A0A-A288-BC3917FC920A}.tao_pf_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
@@ -1320,8 +1320,8 @@ Global
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release|Win32.Build.0 = Release|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_dbg|Win32.ActiveCfg = osg_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_dbg|Win32.Build.0 = osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_vep_cluster_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_vep_cluster_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_dbg|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_vep_dbg|Win32.Build.0 = osg_vep_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_pf_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
@@ -1347,8 +1347,8 @@ Global
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.Release|Win32.Build.0 = Release|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_dbg|Win32.ActiveCfg = osg_dbg|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_dbg|Win32.Build.0 = osg_dbg|Win32
-		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_vep_cluster_dbg|Win32
-		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_vep_cluster_dbg|Win32
+		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_dbg|Win32
+		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_dbg|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_vep_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_vep_dbg|Win32.Build.0 = osg_vep_dbg|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_pf_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
@@ -1374,8 +1374,8 @@ Global
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.Release|Win32.Build.0 = Release|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_dbg|Win32.ActiveCfg = osg_dbg|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_dbg|Win32.Build.0 = osg_dbg|Win32
-		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_vep_cluster_dbg|Win32
-		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_vep_cluster_dbg|Win32
+		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = osg_dbg|Win32
+		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_vep_cluster_dbg|Win32.Build.0 = osg_dbg|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_vep_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_vep_dbg|Win32.Build.0 = osg_vep_dbg|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_pf_dbg|Win32.ActiveCfg = osg_vep_dbg|Win32
@@ -1531,10 +1531,8 @@ Global
 		{26D74E56-5E2A-4664-9675-AB4A4C788982}.Release|Win32.Build.0 = Release|Win32
 		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_osg_dbg|Win32.ActiveCfg = Debug|Win32
 		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_osg_dbg|Win32.Build.0 = Debug|Win32
-		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = Release|Win32
-		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_osg_vep_cluster_dbg|Win32.Build.0 = Release|Win32
+		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_osg_vep_cluster_dbg|Win32.ActiveCfg = Debug|Win32
 		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_osg_vep_dbg|Win32.ActiveCfg = Debug|Win32
-		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_osg_vep_dbg|Win32.Build.0 = Debug|Win32
 		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_pf_dbg|Win32.ActiveCfg = Release|Win32
 		{26D74E56-5E2A-4664-9675-AB4A4C788982}.tao_pf_dbg|Win32.Build.0 = Release|Win32
 	EndGlobalSection
