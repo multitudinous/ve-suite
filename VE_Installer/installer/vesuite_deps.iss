@@ -239,6 +239,9 @@ Source: {#JUGGLERINSTHOME}\configFiles\*; DestDir: {app}\vrJuggler2.0.1\configFi
 Source: {#JUGGLERINSTHOME}\definitions\*; DestDir: {app}\vrJuggler2.0.1\definitions; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
 Source: {#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\vrJuggler2.0.1\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\vrJuggler2.0.1\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
 
 
 [Icons]

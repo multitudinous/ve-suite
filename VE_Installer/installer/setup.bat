@@ -73,10 +73,10 @@ set SNX_BASE_DIR=%VJ_BASE_DIR%
 REM Python build environment variables
 set PYTHONPATH=%VJ_DEPS_DIR%\lib\python
 
-set Path=%Path%;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib
-REM set Path=%Path%;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll
-REM set Path=%Path%;%ACE_ROOT%\bin;%XERCESCROOT%\Build\Win32\VC7\Debug
-REM set Path=%Path%;%OSGHOME%\bin
-set Path=%Path%;%VE_INSTALL_DIR%\bin
-set Path=%Path%;%VE_DEPS_DIR%\bin
-set Path=%Path%;%CD%\bin
+set Path=%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib;%Path%
+REM set Path=%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll;%Path%
+REM set Path=%ACE_ROOT%\bin;%XERCESCROOT%\Build\Win32\VC7\Debug;%Path%;
+REM set Path=%OSGHOME%\bin;%Path%
+set Path=%VE_INSTALL_DIR%\bin%Path%
+set Path=%VE_DEPS_DIR%\bin;%Path%
+set Path=%CD%\bin;%Path%
