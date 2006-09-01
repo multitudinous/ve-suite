@@ -45,6 +45,9 @@ class CoveredConfig(CoveredState):
         path joinings."""
         surface = self.GetSurface()
         for var in surface:
-            if var == None:
+            print "Checking %s" %var ##TESTER
+            if surface[var] == None:
+                print "%s is None" %var ##TESTER
                 surface[var] = "None"
+        print surface ##TESTER
         return surface

@@ -106,7 +106,6 @@ class Launch:
         else:
             print "ERROR: VE-Suite-Launcher doesn't support this OS."
 
-
     def GetNameserverPids(self):
         return self.nameserverPids
 
