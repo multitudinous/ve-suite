@@ -2,6 +2,7 @@ import os
 from wx import DisplaySize
 from time import sleep ##Used for delays in launch
 from platform import architecture ##Used to test if it's 32/64-bit
+from socket import gethostname ##Used to get hostname
 from velBase import *
 from velJconfDict import *
 from velClusterDict import *
@@ -80,9 +81,7 @@ class Launch:
            CLUSTER_ENABLED:
             self.cluster = True
             ##Set up beginning of clusterScript for env setting.
-            self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
-            self.clusterScript += "ssh $1 << EOF\n"
-            self.WriteToClusterScript("PYTHONPATH")
+            self.WriteClusterScriptPrefix()
         else:
             self.cluster = False
         ##Set the environmental variables
@@ -97,7 +96,8 @@ class Launch:
             return
         elif windows:
             pids = self.Windows(runName, runConductor, runXplorer,
-                                typeXplorer, jconf, desktopMode, vesFile)
+                                typeXplorer, jconf, desktopMode, vesFile,
+                                cluster, master)
             print pids
         elif unix:
             self.Unix(runName, runConductor, runXplorer,
@@ -112,7 +112,8 @@ class Launch:
 
     def Windows(self, runName = False, runConductor = False,
                 runXplorer = False, typeXplorer = 0, jconf = DEFAULT_JCONF,
-                desktopMode = False, vesFile = None):
+                desktopMode = False, vesFile = None,
+                cluster = None, clusterMaster = None):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -136,7 +137,29 @@ class Launch:
             sleep(5)
             self.nameserverPids = pids
         ##Xplorer section
-        if runXplorer:
+        if self.cluster:
+            print "Starting Xplorer on the cluster."
+            ##Finish building cluster script
+            self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
+            clusterFileName = "cluster.bat"
+            clusterFilePath = os.path.join(VELAUNCHER_DIR, clusterFileName)
+            print clusterFilePath ##TESTER
+            ##Write cluster script
+            sourceFile = file(clusterFilePath, 'w')
+            sourceFile.write(self.clusterScript)
+            sourceFile.close()
+            ##Master call
+            print "***MASTER CALL: %s***" %(clusterMaster) ##TESTER
+            self.ExecuteClusterScript(clusterMaster, clusterFilePath,
+                                      typeXplorer, jconf, desktopMode)
+            sleep(MASTER_WAIT)
+            ##Slave calls
+            for comp in cluster:
+                print "***CLUSTER CALL: %s***" %(comp) ##TESTER
+                self.ExecuteClusterScript(comp, clusterFilePath,
+                                          typeXplorer, jconf, desktopMode)
+                sleep(SLAVE_WAIT)
+        elif runXplorer:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
             subprocess.Popen(self.XplorerCall(typeXplorer, jconf, desktopMode))
@@ -145,7 +168,7 @@ class Launch:
             print "Starting Conductor."
             ##Append argument if desktop mode selected
             if vesFile:
-                sleep(5)
+                sleep(10)
             subprocess.Popen(self.ConductorCall(desktopMode, vesFile))
         print "Finished sending launch commands."
         return
@@ -180,12 +203,7 @@ class Launch:
         if self.cluster:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
-            launcherDir = str(os.getenv("VE_INSTALL_DIR"))
-            command = "%s &" %(self.XplorerCall(typeXplorer,
-                                                jconf, desktopMode))
-            self.clusterScript+='cd "%s"\n' %os.getenv("VE_WORKING_DIR","None")
-            self.clusterScript += "%s\n" %(command)
-            self.clusterScript += "EOF\n"
+            self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
             clusterFileName = "cluster.tsh"
             clusterFilePath = os.path.join(VELAUNCHER_DIR, clusterFileName)
             ##Write cluster script
@@ -290,9 +308,64 @@ class Launch:
         ##Construct the call
         s = '%s -ORBInitRef %s "%s"%s' %(exe, self.ServiceArg(), jconf, desktop)
         if windows:
-            s = [exe, "-ORBInitRef", self.ServiceArg(), jconf,
-                 "-VESDesktop", str(w), str(h)]
+            s = [exe, "-ORBInitRef", self.ServiceArg(), jconf]
+            if desktopMode:
+                 s.append("-VESDesktop")
+                 s.append(str(w))
+                 s.append(str(h))
         return s
+
+    def WriteClusterScriptPrefix(self):
+        """Writes the cluster script section before the environment setting."""
+        if unix:
+            self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
+            self.clusterScript += "ssh $1 << EOF\n"
+            self.WriteToClusterScript("PYTHONPATH")
+        elif windows:
+            self.clusterScript = ""
+            self.clusterScript += "psexec \\\\abbott -u IASTATE\\mccdo -i -e cmd\n" ##TESTER
+            self.clusterScript += "net use H: \\samba.vrac.iastate.edu\home \users\mccdo\n" ##TESTER
+            self.WriteToClusterScript("PYTHONPATH")
+        else:
+            self.clusterScript = "ERROR: Unsupported OS type."
+        return
+            
+
+    def WriteClusterScriptPost(self, typeXplorer, jconf, desktopMode):
+        """Writes the cluster script section after the environment setting."""
+        if unix:
+            command = "%s &" %(self.XplorerCall(typeXplorer,
+                                                jconf, desktopMode))
+            self.clusterScript+='cd "%s"\n' %os.getenv("VE_WORKING_DIR","None")
+            self.clusterScript += "%s\n" %(command)
+            self.clusterScript += "EOF\n"
+        elif windows:
+            commandList = self.XplorerCall(typeXplorer, jconf, desktopMode)
+            command = ""
+            for word in commandList:
+                command += "%s " %str(word)
+            command += "\n"
+            self.clusterScript+='cd "%s"\n' %os.getenv("VE_WORKING_DIR","None")
+            self.clusterScript += "%s\n" %(command)
+        else:
+            self.clusterScript += "ERROR: OS not supported."
+
+    def ExecuteClusterScript(self, nodeName, scriptPath,
+                             typeXplorer, jconf, desktopMode):
+        if windows:
+            print "Executing %s!" %nodeName
+            ##Do a regular call if the initial machine's the node.
+            if gethostname() == nodeName.split('.')[0]:
+                print "It is this computer!"
+                subprocess.Popen(self.XplorerCall(typeXplorer, jconf,
+                                                  desktopMode))
+                return
+            ##Else call the script on the other computer in psexec.
+##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
+            subprocess.Popen([scriptPath])
+        else:
+            print "Error!"
+
 
     def EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
                  clusterMaster = None, builderDir = None):
@@ -488,8 +561,8 @@ class Launch:
 
     def EnvAppend(self, var, appendages, sep):
         """Appends appendages (list) to var, using sep to separate them."""
-        if not self.devMode and appendanges != None:
-            modifiedVar = os.getenv(var)
+        if not self.devMode:
+            modifiedVar = os.getenv(var, None)
             empty = (modifiedVar == None)
             for app in appendages:
                 if empty:
@@ -507,12 +580,11 @@ class Launch:
 
         Does not overwrite a filled variable in devMode.
         Overwrites a filled variable in normal mode."""
-        if default != None:
-            if self.devMode:
-                os.environ[var] = os.getenv(var, default)
-            else:
-                os.environ[var] = default
-            ##Put var in clusterScript
+        if self.devMode:
+            os.environ[var] = os.getenv(var, default)
+        else:
+            os.environ[var] = default
+        ##Put var in clusterScript
         self.WriteToClusterScript(var)
 ##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
 
@@ -520,12 +592,15 @@ class Launch:
         """Writes an environmental setting to clusterScript.
 
         Exact function determined by cluster's default shell."""
-        if not self.cluster or os.getenv(var) == None:
+        if not self.cluster:
             return
-        shellName = os.getenv('SHELL', 'None')
-##        if shellName[-4:] == 'bash' or shellName[-3:] == '/sh':
-##        if shellName[-2:] == 'sh' and shellName[-3:] != 'csh':
-        if shellName[-3:] != 'csh':
-            self.clusterScript += 'export %s="%s"\n' %(var, os.getenv(var))
-        else:
-            self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
+        if unix:
+            shellName = os.getenv('SHELL', 'None')
+##              if shellName[-4:] == 'bash' or shellName[-3:] == '/sh':
+##              if shellName[-2:] == 'sh' and shellName[-3:] != 'csh':
+            if shellName[-3:] != 'csh':
+                self.clusterScript += 'export %s="%s"\n' %(var, os.getenv(var))
+            else:
+                self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
+        elif windows:
+            self.clusterScript += 'set %s="%s"\n' %(var, os.getenv(var))

@@ -607,7 +607,8 @@ class LauncherWindow(wx.Frame):
 ##            config.SetPath('..')
         ##Set the configs read in.
         strReads = {"Directory": defaultDirectory,
-                    "ClusterMaster": "",
+                    "ClusterMaster": None,
+                    "DependenciesDir": None,
                     "JconfSelection": defaultSelection,
                     "TaoMachine": BASE_CONFIG["TaoMachine"],
                     "BuilderDir": BASE_CONFIG["BuilderDir"]}
@@ -624,34 +625,40 @@ class LauncherWindow(wx.Frame):
             strReads["TaoPort"] = BASE_CONFIG["TaoPort"]
         ##Read in the configs.
         for var in strReads:
-            self.state.Edit(var, config.Read(var, str(strReads[var])))
-        for var in intReads:
-            self.state.Edit(var, config.ReadInt(var, int(intReads[var])))
-        for var in boolReads:
-            if config.Read(var, str(boolReads[var])) == "True":
-                result = True
-            elif config.Read(var, str(boolReads[var])) == "False":
-                result = False
+            if config.Exists(var):
+                self.state.Edit(var, config.Read(var))
             else:
-                print 'ERROR! Saved boolean var not "True" or "False".'
-                result = None
+                self.state.Edit(var, strReads[var])
+        for var in intReads:
+            if config.Exists(var):
+                self.state.Edit(var, config.ReadInt(var))
+            else:
+                self.state.Edit(var, strReads[var])
+        for var in boolReads:
+            result = boolReads[var]
+            if config.Exists(var):
+                if config.Read(var) == "True":
+                    result = True
+                elif config.Read(var) == "False":
+                    result = False
+                else:
+                    print 'ERROR! Saved boolean var not "True" or "False".'
+                    result = None
             self.state.Edit(var, result)
         ##Set Cluster list.
+##        if config.HasGroup(CLUSTER_CONFIG):
         self.state.Edit("ClusterDict", ClusterDict())
         ##Set Jconf dictionary.
-        if config.HasGroup(JCONF_CONFIG):
-            self.state.Edit("JconfDict", JconfDict())
-
+##        if config.HasGroup(JCONF_CONFIG):
+        self.state.Edit("JconfDict", JconfDict())
         ##Restrict XplorerType's value.
         test = self.state.GetBase(var = "XplorerType")
         if test < 0 or test >= len(RADIO_XPLORER_LIST):
             self.state.Edit("XplorerType", 0)
-        
         ##Sets txDirectory's cursor to end in Unix systems for easier reading.
         ##Acts strange in Windows for some reason; investigate.
         if unix:
             self.txDirectory.SetInsertionPointEnd()
-
         ##Return to default config
         config.SetPath('..')
         config.SetPath(DEFAULT_CONFIG)
@@ -892,22 +899,22 @@ class LauncherWindow(wx.Frame):
         ##Without it, having a MessageDialog w/o a DirDialog after it
         ##hangs the program's end.
         ##Figure out the cause later so we can remove this.
-        dlg = wx.DirDialog(None,
-                           "Purges dlg; temporary workaround",
-                           "",
-                           style=wx.DD_DEFAULT_STYLE)
-        dlg.Destroy()
+##        dlg = wx.DirDialog(None,
+##                           "Purges dlg; temporary workaround",
+##                           "",
+##                           style=wx.DD_DEFAULT_STYLE)
+##        dlg.Destroy()
         ##Hide the Launcher.
         self.Hide()
         ##Bring up the Launch progress window.
         ##progress = LaunchStartedWindow(self)
         ##progress.Show()
         ##Go into the Launch
-        launchInstance = Launch(self.state.GetSurface())
+        launchInstance = Launch(self.state.GetLaunchSurface())
         ##Destroy the Launch progress window.
         ##progress.OnClose("this message does not matter")
         ##Show NameServer kill window if NameServer was started.
-        if nameServer:
+        if v("NameServer"):
             window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
         ##Close the Launcher
         self.OnClose("this message does not matter")

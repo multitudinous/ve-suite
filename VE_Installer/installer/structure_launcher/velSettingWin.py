@@ -268,7 +268,6 @@ class SettingsWindow(wx.Dialog):
         self.chJconf.Clear()
         for name in self.state.GetSurface("JconfDict").GetNames():
             self.chJconf.Append(name)
-        print "Selection: %s" %self.state.GetSurface("JconfSelection") ##TESTER
         self.chJconf.SetStringSelection(self.state.GetSurface("JconfSelection"))
         self.chJconf.Enable(self.state.IsEnabled("JconfDict") and
                             self.state.IsEnabled("JconfSelection") and
@@ -303,7 +302,6 @@ class SettingsWindow(wx.Dialog):
         self.UpdateData(None)
         jconfWindow = JconfWindow(self, self.state)
         jconfWindow.ShowModal()
-        print "Meanwhile on the ranch."
         self.React()
         ##jconfWindow.Destroy()        
 
