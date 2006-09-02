@@ -33,7 +33,9 @@ CFDUNAME = $(shell uname)
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   UnitWrapper.cxx
+   UnitWrapper.cxx\
+   SetInputsEventHandler.cxx\
+   GetResultsEventHandler.cxx
 
 #$NO_DEPEND= YES 
 			
@@ -47,6 +49,8 @@ EXTRA_CXXFLAGS+= -Wall
 DSO_PLUGIN_DEPS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
 DSO_PLUGIN_DEPS+= -lVE_XMLLib
 DSO_PLUGIN_DEPS+= -lVE_ModelLib
+DSO_PLUGIN_DEPS+= -lVE_CADLib
+DSO_PLUGIN_DEPS+= -lVE_ShaderLib
 DSO_PLUGIN_DEPS+= -lVE_OpenModuleLib
 
 

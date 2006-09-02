@@ -866,38 +866,73 @@ void Body_Executive_i::Resume (
 char *  Body_Executive_i::Query (  const char * command
     ACE_ENV_SINGLE_ARG_DECL
   )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
+  ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 {
+   // read the command to get the module name and module id
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+   networkWriter.ReadXMLData( command, "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+
+   std::string moduleName;
+   unsigned int moduleId;
+   VE_XML::Command* tempCommand = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+   VE_XML::Command passCommand;
+   passCommand.SetCommandName( tempCommand->GetCommandName() );
+   size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
+   for ( size_t i = 0; i < numDVP; ++i )
+   {
+      VE_XML::DataValuePair* tempPair = tempCommand->GetDataValuePair( i );
+      if ( tempPair->GetDataName() == "moduleName" )
+      {
+         tempPair->GetData( moduleName );
+      }
+      else if ( tempPair->GetDataName() == "moduleId" )
+      {
+         tempPair->GetData( moduleId );
+      }
+      else
+      {
+         passCommand.GetDataValuePair(-1)->SetData( tempPair->GetDataName(), tempPair );
+      }
+   }
+        
    ///string used to hold query data
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back( 
+                   std::pair< VE_XML::XMLObject*, std::string >( &passCommand, "vecommand" ) 
+                   );
+                   
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
    std::string queryString;
 
    _mutex.acquire();
    // Resume all the modules
    std::map<std::string, Body::Unit_var>::iterator iter;
-   for ( iter = _mod_units.begin(); iter != _mod_units.end(); )
+   iter = _mod_units.find( moduleName );
+   if ( iter == _mod_units.end() )
    {
-	   try 
-      {
-         // this may not work
-         // I think we actually need to grab all the sub elements from under the root document 
-         // and then append those
-   	   queryString.append( iter->second->Query( CORBA::string_dup( command ) ) );
-         ++iter;
-	   }
-      catch (CORBA::Exception &) 
-      {
-         // std::cout << iter->first <<" is obsolete." << std::endl;
-         // it seems this call should be blocked as we are messing with 
-         // a map that is used everywhere
-         UnRegisterUnit( iter->first.c_str() );
-         // Not sure if increment here or not
-         _mod_units.erase( iter++ );
-	   }
+      _mutex.release();
+      return 0;
    }
-   _mutex.release();
+   
+   try 
+   {
+      iter->second->_non_existent();
+      iter->second->SetCurID( moduleId );
+      queryString.assign( iter->second->Query( CORBA::string_dup( status.c_str() ) ) );
+   }
+   catch (CORBA::Exception &) 
+   {
+      UnRegisterUnit( moduleName.c_str() );
+      // Not sure if increment here or not
+      _mod_units.erase( iter );
+   }
 
    return CORBA::string_dup( queryString.c_str() );
 }

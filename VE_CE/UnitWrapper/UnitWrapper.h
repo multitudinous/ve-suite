@@ -8,6 +8,11 @@
 
 #include <vector>
 
+namespace VE_CE
+{
+   class EventHandler;
+}
+
 class  UnitWrapper : public virtual POA_Body::Unit
 {
 public:
@@ -27,8 +32,8 @@ protected:
    std::string status_;
    std::string data_;
    std::map< std::string, VE_Model::Model* > xmlModelMap;
-   std::map< std::string, std::vector< VE_XML::Command* > > inputsMap;
-   std::map< std::string, std::vector< VE_XML::Command* > > resultsMap;
+   std::map< std::string, std::vector< VE_XML::XMLObject* > > inputsMap;
+   std::map< std::string, std::vector< VE_XML::XMLObject* > > resultsMap;
    std::map< std::string, VE_CE::EventHandler* > eventHandlerMap;
    
 public:

@@ -9,14 +9,35 @@
 #include "VE_Open/XML/Model/Port.h"
 #include "VE_Open/XML/Command.h"
 
-#include <sstream>
+#include "VE_Open/XML/XMLObjectFactory.h"
+#include "VE_Open/XML/XMLCreator.h"
+#include "VE_Open/XML/CAD/CADCreator.h"
+#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include "VE_Open/XML/Model/ModelCreator.h"
 
-// Implementation skeleton constructor
+// Event handlers
+#include "VE_CE/UnitWrapper/SetInputsEventHandler.h"
+#include "VE_CE/UnitWrapper/EventHandler.h"
+
+#include <sstream>
+////////////////////////////////////////////////////////////////////////////////
 UnitWrapper::UnitWrapper (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
 {
-  UnitName_=name;
-  return_state = 0;
+   UnitName_=name;
+   return_state = 0;
+   
+   ///Initialize VE-Open
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_Shader::ShaderCreator() );
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_Model::ModelCreator() );
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
+
+   eventHandlerMap[ "Set XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
+   //eventHandlerMap[ "Get XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
+   eventHandlerMap[ "Get XML Model Results" ] = new VE_CE::SetInputsEventHandler();
+   //eventHandlerMap[ "Get XML Model Port Data" ] = new VE_CE::SetInputsEventHandler();
+   //eventHandlerMap[ "Set XML Model Port Data" ] = new VE_CE::SetInputsEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
@@ -43,11 +64,10 @@ void UnitWrapper::StopCalc (
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
-	std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage( activeId, msg.c_str() );
-
+   // Add your implementation here
+   std::string msg;
+   msg = UnitName_+" : Instant calculation, already finished\n";
+   executive_->SetModuleMessage( activeId, msg.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::PauseCalc (
@@ -58,10 +78,10 @@ void UnitWrapper::PauseCalc (
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
-	std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage( activeId, msg.c_str() );
+   // Add your implementation here
+   std::string msg;
+   msg = UnitName_+" : Instant calculation, already finished\n";
+   executive_->SetModuleMessage( activeId, msg.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::Resume (
@@ -72,10 +92,10 @@ void UnitWrapper::Resume (
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
-	std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage( activeId, msg.c_str());
+   // Add your implementation here
+   std::string msg;
+   msg = UnitName_+" : Instant calculation, already finished\n";
+   executive_->SetModuleMessage( activeId, msg.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::GetStatusMessage (
@@ -86,25 +106,25 @@ char * UnitWrapper::GetStatusMessage (
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
-	VE_XML::Command returnState;
+   // Add your implementation here
+   VE_XML::Command returnState;
 
-	returnState.SetCommandName("statusmessage");
-	VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
-	data->SetDataName("RETURN_STATE");
-	data->SetDataType("UNSIGNED INT");
-	data->SetDataValue(return_state);
-	
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   returnState.SetCommandName("statusmessage");
+   VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+   data->SetDataName("RETURN_STATE");
+   data->SetDataType("UNSIGNED INT");
+   data->SetDataValue(return_state);
 
-	nodes.push_back( 
-                  std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
-                     );
-	VE_XML::XMLReaderWriter commandWriter;
-	std::string status="returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
-    return CORBA::string_dup(status.c_str());
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+
+   nodes.push_back( 
+         std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
+            );
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   return CORBA::string_dup(status.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::GetUserData (
@@ -126,28 +146,18 @@ void UnitWrapper::SetParams ( ::CORBA::Long id, const char * param )
     ::Error::EUnknown
   ))
 {
+   //just send a sinlge command to SetParams
+   // the eventhandler will handle the rest
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( param, "Command", "vecommand" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-
-   for (size_t i=0; i<objectVector.size(); i++)
-   {
-		VE_XML::Command* params = dynamic_cast< VE_XML::Command* >( objectVector.at( i ) );
-		unsigned int num = params->GetNumberOfDataValuePairs();
-		//for (j=0; j<num; j++)
-		//{
-			VE_XML::DataValuePair* curPair= params->GetDataValuePair("NodePath");
-			//CString nodepath = curPair->GetDataString().c_str();
-			curPair = params->GetDataValuePair("Value");
-			//CString nodevalue = curPair->GetDataString().c_str();
-
-			//CASI::Variable cur_var=bkp.aspendoc.getVarByNodePath(nodepath);
-			//cur_var.setValue(nodevalue);
-			
-		//}
-   }
+   std::ostringstream idString;
+   idString << id;
+   //inputsMap[ idString.str() ] = objectVector;
+   eventHandlerMap[ "Set XML Model Inputs" ]->SetBaseObject( xmlModelMap[ idString.str() ] );
+   eventHandlerMap[ "Set XML Model Inputs" ]->Execute( objectVector.at( 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::SetID (
@@ -158,43 +168,34 @@ void UnitWrapper::SetID (
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
-	 id_->length( id_->length() + 1 );
-    id_[ id_->length() - 1 ] = id;
-    
-	 std::cout<<UnitName_<<" :SetID called"<<std::endl;
+   std::ostringstream strm;
+   strm << id;
+   
+   std::map< std::string, VE_Model::Model* >::iterator iter;
+   iter = xmlModelMap.find( strm.str() );
+   if ( iter == xmlModelMap.end() )
+   {
+      xmlModelMap[ strm.str() ] = new VE_Model::Model();
+   }
+
+   std::cout<<UnitName_<<" :SetID called"<<std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnitWrapper::SetCurID (
-                            ::CORBA::Long id
-                            )
-ACE_THROW_SPEC ((
-                 ::CORBA::SystemException,
-                 ::Error::EUnknown
-                 ))
+void UnitWrapper::SetCurID( ::CORBA::Long id )
+   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
 {
    activeId = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-::Types::ArrayLong* UnitWrapper::GetID (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
+::Types::ArrayLong* UnitWrapper::GetID()
+   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
 {
 	std::cout<<UnitName_<<" :GetID called"<<std::endl;
-    return id_.out();
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-::CORBA::Long UnitWrapper::GetCurID (
-                                     
-                                     )
-ACE_THROW_SPEC ((
-                 ::CORBA::SystemException,
-                 ::Error::EUnknown
-                 ))
+::CORBA::Long UnitWrapper::GetCurID ()
+   ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ))
 {
    // This function returns the id of the currently executed module
    return activeId;
@@ -236,40 +237,31 @@ char * UnitWrapper::Query ( const char* command
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
-   networkWriter.ReadXMLData( param, "Command", "vecommand" );
+   networkWriter.ReadXMLData( command, "Command", "vecommand" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    
-   for (size_t i=0; i<objectVector.size(); i++)
-   {
-		VE_XML::Command* params = dynamic_cast< VE_XML::Command* >( objectVector.at( i ) );
-      std::string commandName = params->GetCommandName();
-      
-      if ( commandName == "Set Inputs" )
-      {
-         
-      }
-      else if ( commandName == "Set Results" )
-      {
-         
-      }
-      else 
-		unsigned int num = params->GetNumberOfDataValuePairs();
-		for ( size_t j = 0; j < num; j++ )
-		{
-         std::string dataName = params->GetDataName();
-         //if request is get inputs
-         //if request is set inputs
-         //if request is get results
-         //if request is get port data
-         //if request is set port data
-         //if request is 
-      }
-   }
-     
-
    std::string network;
-	return CORBA::string_dup(network.c_str());
-	
+   //The query function assumes 1 command to be processed at a time
+   if ( objectVector.size() > 1)
+   {
+      network.assign( "Must send 1 command at a time" );
+      return CORBA::string_dup( network.c_str() );
+   }
+   
+   std::ostringstream strm;
+   strm << activeId;
+
+   VE_XML::Command* params = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+   std::string commandName = params->GetCommandName();
+   std::map< std::string, VE_CE::EventHandler* >::iterator currentEventHandler;
+   currentEventHandler = eventHandlerMap.find( commandName );
+   if ( currentEventHandler != eventHandlerMap.end() )
+   {
+      currentEventHandler->second->SetBaseObject( xmlModelMap[ strm.str() ] );
+      network = currentEventHandler->second->Execute( objectVector.at( 0 ) );
+   }
+
+	return CORBA::string_dup( network.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::DeleteModuleInstance( ::CORBA::Long module_id )
