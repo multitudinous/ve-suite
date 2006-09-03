@@ -20,9 +20,10 @@ env = baseEnv.Copy()
 env.Append(CPPPATH = ['#'])
 for lib in xerces:
     env.Append(LIBS = lib)
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    for lib in osg:
-        env.Append(LIBS = lib)
+##if os.getenv('SCENE_GRAPH') == 'OSG':
+##    for lib in osg:
+##        env.Append(LIBS = lib)
+env.ParseConfig('flagpoll osg --libs --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')
 

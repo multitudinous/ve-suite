@@ -11,6 +11,8 @@ Import('libPath')
 srcs = Split("""
     cfdClone.cxx
     cfdDCS.cxx
+    cfdFILE.cxx
+    cfdFileInfo.cxx
     cfdGeode.cxx
     cfdGroup.cxx
     cfdNode.cxx
@@ -28,10 +30,11 @@ srcs = Split("""
 srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
 
 env = baseEnv.Copy()
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    osg_tag = "_osg"
-else:
-    osg_tag = "_pf"
+osg_tag = "_osg"
+##if os.getenv('SCENE_GRAPH') == 'OSG':
+##    osg_tag = "_osg"
+##else:
+##    osg_tag = "_pf"
 if os.getenv('VE_PATENTED') == 'TRUE':
     env.Append(CXXFLAGS = '-DVE_PATENTED')
     patented_tag = "_vep"
@@ -39,18 +42,21 @@ else:
     patented_tag = ''
 exec_tag = ''
 env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+env.Append(CPPPATH = [os.getcwd()])
+##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
 ##env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
 env.Append(LIBPATH = libPath)
-for lib in vtk:
-    env.Append(LIBS = lib)
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    for lib in osg:
-        env.Append(LIBS = lib)
+##for lib in vtk:
+##    env.Append(LIBS = lib)
+env.ParseConfig('flagpoll osg --libs --cflags')
+env.ParseConfig('flagpoll tao --libs')
+env.ParseConfig('flagpoll vtk --libs --cflags')
+##    for lib in osg:
+##        env.Append(LIBS = lib)
 env.ParseConfig('flagpoll gmtl --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')
 
-targetLib = pj(libPath, 'VE_SceneGraph%s%s%s' %(exec_tag, osg_tag,
+targetLib = pj(libPath, 'VE_SceneGraphLib%s%s%s' %(exec_tag, osg_tag,
                                                 patented_tag))
 env.SharedLibrary(target = targetLib, source = srcs)

@@ -21,8 +21,6 @@ for i in range(len(idlFile)):
     env.Append(BUILDERS = {'tao_idl': bld})
     env.tao_idl(target[i], list())
 
-print "IDLFile: %s" % idlFile ##TESTER
-
 ######
 #tao_idl -o ./skel -GI -I./idl  ./idl/module.idl
 #tao_idl -o ./skel -GI -I./idl  ./idl/VjObs.idl

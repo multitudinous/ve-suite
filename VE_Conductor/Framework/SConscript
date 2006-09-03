@@ -41,7 +41,7 @@ framework_srcs = Split("""
     ScalarToolsDlg.cxx
    UI_i.cpp 
    UI_TeacherTab.cpp
-   UI_TransientDialog.cxx 
+   UI_TransientDialog.cxx
 """)
 
 utility_srcs = Split("""
@@ -65,7 +65,6 @@ frameworks_srcs.extend(utility_srcs)
 frameworks_srcs.extend(framework_srcs)
 frameworks_srcs.extend(gui_srcs)
 
-
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
@@ -82,8 +81,9 @@ for lib in xerces:
    env.Append(LIBS = lib)
 for lib in ace_tao:
    env.Append(LIBS = lib)
-for lib in vtk:
-   env.Append(LIBS = lib)
+##for lib in vtk:
+##   env.Append(LIBS = lib)
+##env.ParseConfig('flagpoll vtk --libs --cflags') ##Not needed?
 for lib in osg:
    env.Append(LIBS = lib)
 for lib in boost:

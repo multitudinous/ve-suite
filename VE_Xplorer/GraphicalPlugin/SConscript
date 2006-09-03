@@ -15,10 +15,11 @@ srcs = Split("""
 srcs = map(lambda s: pj('#', 'VE_Xplorer', 'GraphicalPlugin', s), srcs)
 
 env = baseEnv.Copy()
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    osg_tag = "_osg"
-else:
-    osg_tag = "_pf"
+osg_tag = "_osg"
+##if os.getenv('SCENE_GRAPH') == 'OSG':
+##    osg_tag = "_osg"
+##else:
+##    osg_tag = "_pf"
 if os.getenv('VE_PATENTED') == 'TRUE':
     env.Append(CXXFLAGS = '-DVE_PATENTED')
     patented_tag = "_vep"
@@ -33,15 +34,17 @@ env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
 ##env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
 env.Append(LIBPATH = libPath,
               LIBS = ['VE_SceneGraphLib%s%s' %(osg_tag, patented_tag),
-                      'VE_XplorerLib%s%s' %(osg_tag, patented_tag),
+                      'VE_XplorerLib%s%s%s' %(exec_tag, osg_tag, patented_tag),
                       'VE_UtilLib', 'VE_ModelLib', 'VE_XMLLib', 'VE_CADLib'])
-for lib in vtk:
-    env.Append(LIBS = lib)
+env.ParseConfig('flagpoll vtk --libs')
+##for lib in vtk:
+##    env.Append(LIBS = lib)
 for lib in xerces:
     env.Append(LIBS = lib)
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    for lib in osg:
-        env.Append(LIBS = lib)
+##if os.getenv('SCENE_GRAPH') == 'OSG':
+##    for lib in osg:
+##        env.Append(LIBS = lib)
+env.ParseConfig('flagpoll osg --libs --cflags')
 env.ParseConfig('flagpoll gmtl --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')

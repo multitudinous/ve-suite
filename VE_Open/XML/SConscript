@@ -6,6 +6,7 @@ Import( 'xerces' )
 
 Import('baseEnv')
 Import('libPath')
+Import('cfdHostType')
 
 xml_srcs = Split("""
    CreationEventHandler.cxx 
@@ -40,7 +41,16 @@ env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
 #env.Append(LIBPATH = libPath,
 #              LIBS = 'vrshares')
 for lib in xerces:
-   env.Append(LIBS = lib)
+    env.Append(LIBS = lib)
+
+##Imitates dzr.apr.mk
+if cfdHostType == "Darwin":
+    suffix = "-1-config"
+else:
+    suffix = "-config"
+env.ParseConfig('apr%s --includes --cppflags --link-ld --libs' %suffix)
+env.ParseConfig('apu%s --includes --link-ld --libs' %suffix)
+##End dzr.apr.mk imitation.
 
 targetLib = pj(libPath, 'VE_XMLLib')
 env.SharedLibrary(target = targetLib, source = xml_srcs)

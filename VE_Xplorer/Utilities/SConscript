@@ -25,9 +25,9 @@ env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
 env.Append(LIBPATH = libPath)
 for lib in boost:
     env.Append(LIBS = lib)
-for lib in vtk:
-    env.Append(LIBS = lib)
-##env.ParseConfig('flagpoll vtk --cflags --libs') ##FIX
+##for lib in vtk:
+##    env.Append(LIBS = lib)
+env.ParseConfig('flagpoll vtk --cflags --libs') ##FIX
 ##env.ParseConfig('flagpoll boost --cflags --libs') ##FIX
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')

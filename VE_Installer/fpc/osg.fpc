@@ -10,8 +10,7 @@ Version:
 Provides: osg
 Requires: 
 Arch: i686
-Libs: -L${prefix}/lib -losg -losgDB -losgGA -losgUtil \
-      -lOpenThreads
+Libs: -L${prefix}/lib -losg -losgDB -losgGA -losgUtil -lOpenThreads -losgText -losgSim -losgProducer -lProducer
 Libs.private: 
 Cflags: -D_OSG -I${prefix}/include
 

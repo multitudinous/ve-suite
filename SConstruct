@@ -201,13 +201,14 @@ ceSubdirs = Split("""
 xplorerSubdirs = Split("""
     Utilities  
     SceneGraph
+    SceneGraph/NURBS
     SceneGraph/Utilities
     TextureBased
     XplorerHandlers
     GraphicalPlugin
-""")##    XplorerNetwork
-##    GE
-##    DefaultGraphicalPlugin
+    XplorerNetwork
+    GE
+""")##    DefaultGraphicalPlugin
 ##""")
 
 builderSubdirs = Split("""
@@ -227,7 +228,8 @@ xplorerSubdirs = map(lambda s: pj(buildDir, 'VE_Xplorer', s), xplorerSubdirs)
 ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
 
 ##Run SConscript files in all of those folders.
-##REDUNDANT: SConscript(['#/VE_Conductor/Network/SConscript'])
+##REDUNDANT: (Cond/Network line)
+##SConscript(['#/VE_Conductor/Network/SConscript'])
 SConscript(dirs = openSubdirs)
 SConscript(dirs = ceSubdirs)
 SConscript(dirs = conductorSubdirs)

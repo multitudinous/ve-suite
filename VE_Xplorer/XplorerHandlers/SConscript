@@ -20,8 +20,6 @@ xplorer_srcs = Split("""
    cfdDigitalAnalogGauge.cxx 
    cfdDisplaySettings.cxx 
    cfdEnvironmentHandler.cxx 
-   cfdFILE.cxx 
-   cfdFileInfo.cxx 
    cfdGlobalBase.cxx 
    cfdGraphicsObject.cxx 
    cfdImage.cxx 
@@ -86,17 +84,21 @@ xplorer_srcs = Split("""
     TBUpdateSolutionEH.cxx
     QCLoadFileEH.cxx
     StoredSceneEH.cxx
+    ChangeWorkingDirectoryEventHandler.cxx
+    ChangeBackgroundColorEventHandler.cxx
 """)
 ##REMOVED: DeleteObjectFromNetworkEventHandler.cxx
-
+##         cfdFILE.cxx 
+##         cfdFileInfo.cxx 
 xplorer_srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s),
                              xplorer_srcs)
 
 env = baseEnv.Copy()
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    osg_tag = "_osg"
-else:
-    osg_tag = "_pf"
+osg_tag = "_osg"
+##if os.getenv('SCENE_GRAPH') == 'OSG':
+##    osg_tag = "_osg"
+##else:
+##    osg_tag = "_pf"
 if os.getenv('VE_PATENTED') == 'TRUE':
     env.Append(CXXFLAGS = '-DVE_PATENTED')
     patented_tag = "_vep"
@@ -112,25 +114,28 @@ env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
 env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
 env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
 env.Append(CPPPATH = pj( os.getenv('OSG_HOME',''), 'include') )
-env.Append(LIBPATH = '#',
+env.Append(LIBPATH = libPath,
               LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib',
                       'VE_SceneGraph_UtilitiesLib', 
                       'VE_SceneGraphLib%s%s' %(osg_tag, patented_tag),
                       'VE_UtilLib',
                       'VE_TextureBasedLib%s%s' %(osg_tag, patented_tag)])
 
-for lib in ace_tao:
-   env.Append(LIBS = lib)
-for lib in vtk:
-   env.Append(LIBS = lib)
+##for lib in ace_tao:
+##   env.Append(LIBS = lib)
+##for lib in vtk:
+##   env.Append(LIBS = lib)
+env.ParseConfig('flagpoll vtk --libs --cflags')
 for lib in xerces:
    env.Append(LIBS = lib)
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    for lib in osg:
-        env.Append(LIBS = lib)
-env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
+##if os.getenv('SCENE_GRAPH') == 'OSG':
+##    for lib in osg:
+##        env.Append(LIBS = lib)
+env.ParseConfig('flagpoll osg --libs')
+env.ParseConfig('vpr-config --libs --extra-libs --includes')
+env.ParseConfig('flagpoll tao --libs')
 env.ParseConfig('flagpoll gmtl --cflags --libs')
-##env.ParseConfig( 'vrjuggler-config vrj --extra-libs' )
+env.ParseConfig( 'vrjuggler-config vrj --extra-libs' )
 
 targetLib = pj(libPath, 'VE_XplorerLib%s%s%s' %(exec_tag, osg_tag,
                                                 patented_tag))

@@ -45,6 +45,7 @@
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 #include <vtkDataArray.h>
+#include <vtkPolyData.h>
 
 //#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"

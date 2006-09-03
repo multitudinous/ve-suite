@@ -54,13 +54,15 @@ env.Append(LIBPATH = libPath,
               LIBS = 'VE_UtilLib')
 env.Append(LIBPATH = pj('usr', 'X11R6', 'lib'),
               LIBS = ['X11', 'GL'])
-for lib in vtk:
-    env.Append(LIBS = lib)
+##for lib in vtk:
+##    env.Append(LIBS = lib)
 for lib in boost:
     env.Append(LIBS = lib)
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    for lib in osg:
-        env.Append(LIBS = lib)
+##if os.getenv('SCENE_GRAPH') == 'OSG':
+##    for lib in osg:
+##        env.Append(LIBS = lib)
+env.ParseConfig('flagpoll vtk --libs --cflags')
+env.ParseConfig('flagpoll osg --libs --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('vrjuggler-config --libs --extra-libs \
                  --includes --cxxflags')
