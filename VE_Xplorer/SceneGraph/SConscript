@@ -25,6 +25,8 @@ srcs = Split("""
     cfdTempAnimation.cxx
     vtkActorToOSG.cpp
     vtkActorToPF.cxx
+    Triangles.cxx
+    Text.cxx
 """)
 
 srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)

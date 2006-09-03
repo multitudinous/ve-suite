@@ -153,6 +153,7 @@ def BuildBaseEnvironment():
 
 baseEnv = BuildBaseEnvironment()
 Platform = GetPlatform()
+clusterApp = os.getenv('CLUSTER_APP', 'FALSE')
 Export('baseEnv')
 Export('Platform')
 buildDir = 'build.' + GetPlatform()
@@ -208,17 +209,17 @@ xplorerSubdirs = Split("""
     GraphicalPlugin
     XplorerNetwork
     GE
-""")##    DefaultGraphicalPlugin
-##""")
+    DefaultGraphicalPlugin
+""")
 
 builderSubdirs = Split("""
     Translator/cfdTranslatorToVTK
     Translator/DataLoader
     Translator/DataLoader/TestLoader
-    Preprocessor
-    vtkTo3DTexture/tcGUI
-    Utilities
-""") 
+""")##    Preprocessor
+##    vtkTo3DTexture/tcGUI
+##    Utilities
+##""") 
 
 ##Tack on path prefixes to subdirs specified above.
 builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)
@@ -234,7 +235,7 @@ SConscript(dirs = openSubdirs)
 SConscript(dirs = ceSubdirs)
 SConscript(dirs = conductorSubdirs)
 SConscript(dirs = xplorerSubdirs)
-##SConscript(dirs = builderSubdirs)
+SConscript(dirs = builderSubdirs)
 
 ##SConscript(['#/VE_Switcher/SConscript'])
 

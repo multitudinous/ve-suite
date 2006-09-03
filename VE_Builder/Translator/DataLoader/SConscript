@@ -1,0 +1,46 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import( 'vtk' )
+Import( 'boost' )
+Import('libPath')
+
+srcs = Split("""
+    DataLoader.cxx
+    EnSightTranslator.cxx
+    AVSTranslator.cxx
+    cfdDICOMTranslator.cxx
+    cfdREITranslator.cxx
+    converter.cpp
+    gridConversion.cxx
+    plot3dReader.cxx
+    StarCDTranslator.cxx
+    starReader.cxx
+""")
+if os.getenv('FLUENT_MFIX') == 'TRUE':
+    srcs.Append('FluentTranslator.cxx')
+    srcs.Append('MFIXTranslator.cxx')
+    env.Append(CXXFLAGS = ['-DFLUENT_MFIX'])
+srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
+
+env = baseEnv.Copy()
+env.Append(CPPPATH = [os.getcwd()])
+##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+env.Append(CPPPATH = ['#'])
+##env.Append(CPPPATH = ['#/VE_Builder/Translator'])
+env.Append(LIBPATH = libPath,
+              LIBS = ['VE_UtilLib', 'TranslatorToVTKLib'])
+
+env.ParseConfig('flagpoll vtk --libs --cflags')
+env.ParseConfig('flagpoll boost --libs')
+##for lib in vtk:
+##   env.Append(LIBS = lib)
+##for lib in boost:
+##   env.Append(LIBS = lib)
+env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
+env.ParseConfig( 'vrjuggler-config vrj_ogl --libs' )
+
+targetLib = pj(libPath, 'DataLoaderLib')
+env.SharedLibrary(target = targetLib, source = srcs)
