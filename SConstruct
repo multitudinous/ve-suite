@@ -19,7 +19,7 @@ fromAddress = 'mikelem@iastate.edu'
 def EmailResults() :
 	s = smtplib.SMTP()
 	s.connect(smtpServer) 
-	s.sendmail(fromAddress, peopleToEmail, 'Guess what I did, Gerrick.  Thats right, I just built SCons, AGAIN.  HA HA!! ')
+	s.sendmail(fromAddress, peopleToEmail, 'Guess what I did, Gerrick.  That"s right, I just built SCons, AGAIN.  HA HA!!')
 	s.close()
 
 ##Placeholder for cfdHostType function.
@@ -152,7 +152,8 @@ def BuildBaseEnvironment():
         sys.exit(1)
 
 baseEnv = BuildBaseEnvironment()
-Platform = GetPlatform()
+##Platform = GetPlatform()
+Platform = "RHEL_4" ##Temporary setup
 clusterApp = os.getenv('CLUSTER_APP', 'FALSE')
 Export('baseEnv')
 Export('Platform')
@@ -216,10 +217,10 @@ builderSubdirs = Split("""
     Translator/cfdTranslatorToVTK
     Translator/DataLoader
     Translator/DataLoader/TestLoader
-""")##    Preprocessor
-##    vtkTo3DTexture/tcGUI
-##    Utilities
-##""") 
+    Preprocessor
+    vtkTo3DTexture/tcGUI
+    Utilities
+""") 
 
 ##Tack on path prefixes to subdirs specified above.
 builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)

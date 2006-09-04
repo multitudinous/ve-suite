@@ -3,8 +3,9 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('Platform')
-Import( 'vtk' )
-Import( 'boost' )
+Import('vtk')
+Import('boost')
+Import('libPath')
 
 addNormals2Poly = Split("""
    addNormals2Poly.cpp
@@ -83,18 +84,20 @@ whatIsScalarRange = Split("""
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
 env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
-env.Append(LIBPATH = '#',
+env.Append(LIBPATH = libPath,
               LIBS = 'VE_UtilLib')
 
 env.Append(CPPPATH = pj('#', 'VE_Builder', 'Translator'))
 
 
-for lib in vtk:
-   env.Append(LIBS = lib)
-for lib in boost:
-   env.Append(LIBS = lib)
+##for lib in vtk:
+##   env.Append(LIBS = lib)
+##for lib in boost:
+##   env.Append(LIBS = lib)
+env.ParseConfig('flagpoll vtk --libs --cflags')
+env.ParseConfig('flagpoll boost --libs')
 env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
 env.ParseConfig( 'vrjuggler-config --libs --extra-libs --includes' )
 
@@ -106,7 +109,7 @@ env.Program(pj('#','bin',Platform,'convertCellDataToPointData'), source = conver
 env.Program(pj('#','bin',Platform,'convertSurfaceFileToStl'), source = convertSurfaceFileToStl)
 env.Program(pj('#','bin',Platform,'convertVTK2Ascii'), source = convertVTK2Ascii)
 env.Program(pj('#','bin',Platform,'convertVTK2Binary'), source = convertVTK2Binary)
-#env.Program(pj('#','bin',Platform,'createMiniFlowdata'), source = createMiniFlowdata)
+env.Program(pj('#','bin',Platform,'createMiniFlowdata'), source = createMiniFlowdata)
 env.Program(pj('#','bin',Platform,'makeVtkSurface'), source = makeVtkSurface)
 env.Program(pj('#','bin',Platform,'mergeVertices'), source = mergeVertices)
 env.Program(pj('#','bin',Platform,'meshViewer'), source = meshViewer)

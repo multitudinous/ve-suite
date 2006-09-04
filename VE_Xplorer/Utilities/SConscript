@@ -20,7 +20,7 @@ srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), srcs)
 
 env = baseEnv.Copy()
 env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
 env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
 env.Append(LIBPATH = libPath)
 for lib in boost:
