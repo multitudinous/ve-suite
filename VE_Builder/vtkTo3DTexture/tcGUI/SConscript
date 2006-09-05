@@ -1,12 +1,9 @@
+##Builds vtkTo3DTexture
 import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
 Import('cfdHostType')
-##Import('Platform')
-##Import('vtk')
-##Import('boost')
-##Import('libPath')
 
 srcs = Split("""
    flowTexture.cpp 
@@ -14,21 +11,10 @@ srcs = Split("""
    tcFrame.cpp 
    textureCreator.cpp
 """)
-
 srcs = map(lambda s: pj('#', 'VE_Builder', 'vtkTo3DTexture', 'tcGUI', s), srcs)
 
 env = baseEnv.Copy()
-#env.Append(CPPPATH = [os.getcwd()])
-##env.Append(CPPPATH = ['#'])
-##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
-##env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
-##env.Append(LIBPATH = libPath,
 env.Append(LIBS = ['VE_UtilLib'])
-
-##for lib in vtk:
-##   env.Append(LIBS = lib)
-##for lib in boost:
-##   env.Append(LIBS = lib)
 env.ParseConfig('flagpoll vtk --libs --cflags')
 env.ParseConfig('flagpoll boost --libs --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')

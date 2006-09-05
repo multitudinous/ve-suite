@@ -1,54 +1,23 @@
+##Builds Exe_server
 import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-##Import('Platform')
-##Import( '*' )
-##Import('libPath')
 Import('cfdHostType')
-
 
 srcs = Split("""
    Exe_server.cpp 
    Executive_i.cpp 
    Execute_Thread.cpp  
 """)
-
-##REDUNDANT.
-##skel_srcs = Split("""
-##   moduleC.cpp 
-##   moduleS.cpp  
-##""")
-
 srcs = map(lambda s: pj('#', 'VE_CE', s), srcs)
-##skel_srcs = map(lambda s: pj('#', 'VE_Open', 'skel', s), skel_srcs)
-
-##ce_srcs = list()
-##ce_srcs.extend(ces_srcs)
-##ce_srcs.extend(skel_srcs)
 
 env = baseEnv.Copy()
-##env.Append(CPPPATH = [os.getcwd()])
-##env.Append(CPPPATH = ['#'])
-##env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
-##env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
-##env.Append(LIBPATH = libPath,
 env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
                    'VE_ShaderLib', 'VE_CE_UtilitiesLib', 'VE_OpenModuleLib'])
-##for lib in xerces:
-##   env.Append(LIBS = lib)
-##for lib in ace_tao:
-##    env.Append(LIBS = lib) 
-##for lib in vtk:
-##   env.Append(LIBS = lib)
-##for lib in osg:
-##   env.Append(LIBS = lib) 
-##for lib in boost:
-##   env.Append(LIBS = lib)  
-env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
-#env.ParseConfig( 'corona-config --libs' )
-env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
-env.ParseConfig( 'wx-config --cxxflags --libs' )
+env.ParseConfig('vpr-config --libs --extra-libs --includes')
+env.ParseConfig('vrjuggler-config vrj --libs --extra-libs --includes')
+env.ParseConfig('wx-config --cxxflags --libs' )
 env.ParseConfig('flagpoll tao --libs --cflags')
 env.ParseConfig('flagpoll xerces --libs --cflags')
 

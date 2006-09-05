@@ -1,10 +1,8 @@
+##Builds VE_Conductor_UtilitiesLib
 import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-##Import('Platform')
-##Import('xerces')
-##Import('ace_tao')
 Import('libPath')
 
 frameworkutil_srcs = Split("""
@@ -26,29 +24,15 @@ frameworkutil_srcs = Split("""
 gui_srcs = Split("""
     spinctld.cpp
 """)
-
 frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), frameworkutil_srcs)
 gui_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', 'gui', s), gui_srcs)
-
 srcs = list()
 srcs.extend(frameworkutil_srcs)
 srcs.extend(gui_srcs)
 
-##guiplugins_srcs = list()
-##guiplugins_srcs.extend(framework_srcs)
-
 env = baseEnv.Copy()
-#env.Append(CPPPATH = [os.getcwd()])
-##env.Append(CPPPATH = ['#'])
-##env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
-##env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') ) ##ADDITION
-##env.Append(LIBPATH = libPath,
 env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
-##for lib in xerces:
-##   env.Append(LIBS = lib)
-##for lib in ace_tao:
-##   env.Append(LIBS = lib)
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('vrjuggler-config --extra-libs')
 env.ParseConfig('flagpoll tao --cflags --libs')
@@ -56,6 +40,3 @@ env.ParseConfig('flagpoll xerces --libs')
 
 targetLib = pj(libPath, 'VE_Conductor_UtilitiesLib')
 env.SharedLibrary(target = targetLib, source = srcs)
-
-#env.Program(pj('#','bin',Platform,'VE_CE'), source = frameworkutil_srcs)
-

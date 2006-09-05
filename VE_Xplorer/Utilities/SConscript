@@ -1,10 +1,8 @@
+##Builds VE_UtilLib
 import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-##Import('Platform')
-##Import('boost')
-##Import('vtk')
 Import('libPath')
 
 srcs = Split("""
@@ -19,14 +17,6 @@ srcs = Split("""
 srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), srcs)
 
 env = baseEnv.Copy()
-##env.Append(CPPPATH = ['#'])
-##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
-##env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
-##env.Append(LIBPATH = libPath)
-##for lib in boost:
-##    env.Append(LIBS = lib)
-##for lib in vtk:
-##    env.Append(LIBS = lib)
 env.ParseConfig('flagpoll vtk --cflags --libs')
 env.ParseConfig('flagpoll boost --cflags --libs')
 env.ParseConfig('wx-config --cxxflags --libs')

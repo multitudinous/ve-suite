@@ -1,8 +1,8 @@
+##Builds ???
 import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-##Import('Platform')
 
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
@@ -13,38 +13,8 @@ target = ['module.h', 'VjObs.h']
 
 idlCmd = 'tao_idl -o ./VE_Open/skel -GI -I./VE_Open/idl ./VE_Open/idl/'
 srcs = ['module.idl', 'VjObs.idl']
-idlFile = ['','']
+idlFile = [idlCmd + srcs[0], idlCmd + srcs[1]]
 for i in range(len(idlFile)):
-    idlFile[i] = idlCmd + srcs[i]
     bld = Builder(action = idlFile[i])
     env.Append(BUILDERS = {'tao_idl': bld})
     env.tao_idl(target[i], list())
-
-######
-#tao_idl -o ./skel -GI -I./idl  ./idl/module.idl
-#tao_idl -o ./skel -GI -I./idl  ./idl/VjObs.idl
-#
-#srcs = list()
-#srcs.extend(['./VE_Open/idl/module.idl'])
-#srcs.extend(['./VE_Open/idl/VjObs.idl'])
-#
-#target = list()
-#target.extend(['moduleC.h'])
-#target.extend(['VjObs.h'])
-#target.extend(['moduleC.inl'])
-######################################
-#target1 = "module.h"
-#target2 = "VjObs.h"
-#
-#idlCmd1 = 'tao_idl -o ./VE_Open/skel -GI -I./VE_Open/idl ./VE_Open/idl/module.idl'
-#bld1 = Builder(action = idlCmd1,
-#              src_suffix = '.idl')
-#env.Append(BUILDERS={'tao_idl':bld1}) 
-#env.tao_idl(target1, srcs)
-#
-#idlCmd2 = 'tao_idl -o ./VE_Open/skel -GI -I./VE_Open/idl ./VE_Open/idl/VjObs.idl'
-#bld2 = Builder(action = idlCmd2,
-#              src_suffix = '.idl')
-#env.Append(BUILDERS={'tao_idl':bld2}) 
-#env.tao_idl(target2, srcs)
-#########################################

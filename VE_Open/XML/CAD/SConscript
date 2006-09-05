@@ -1,9 +1,9 @@
+##Builds VE_CADLib
 import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
 Import('libPath')
-##Import( 'xerces' )
 
 srcs = Split("""
    CADAssembly.cxx
@@ -20,15 +20,7 @@ srcs = Split("""
 srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'CAD', s), srcs)
 
 env = baseEnv.Copy()
-#env.Append(CPPPATH = [os.getcwd()])
-##env.Append(CPPPATH = ['#'])
-##env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
-##env.Append(LIBPATH = libPath,
 env.Append(LIBS = ['VE_XMLLib', 'VE_ShaderLib'])
-##for lib in xerces:
-##   env.Append(LIBS = lib)
-
 
 targetLib = pj(libPath, 'VE_CADLib')
 env.SharedLibrary(target = targetLib, source = srcs)
-#env.Program(pj('#','bin',Platform,'VE_Open','VE_XML'), source = cad_srcs)

@@ -1,12 +1,9 @@
+##Builds preprocessor program
 import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
 Import('cfdHostType')
-##Import('Platform')
-##Import('vtk')
-##Import('boost')
-##Import('libPath')
 
 preprocess_srcs = Split("""
    multiPlaneVtkOutput.cxx
@@ -16,25 +13,14 @@ preprocess_srcs = Split("""
 utilities_srcs = Split("""
    setScalarAndVector.cpp
 """)
-
 preprocess_srcs = map(lambda s: pj('#', 'VE_Builder', 'Preprocessor', s), preprocess_srcs)
 utilities_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', s), utilities_srcs)
-
 srcs = list()
 srcs.extend(preprocess_srcs)
 srcs.extend(utilities_srcs)
 
 env = baseEnv.Copy()
-#env.Append(CPPPATH = [os.getcwd()])
-##env.Append(CPPPATH = ['#'])
-##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
-##env.Append(LIBPATH = libPath,
 env.Append(LIBS = ['VE_UtilLib'])
-
-##for lib in vtk:
-##   env.Append(LIBS = lib)
-##for lib in boost:
-##    env.Append(LIBS = lib)
 env.ParseConfig('flagpoll boost --libs')
 env.ParseConfig('flagpoll vtk --libs --cflags')
 env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )

@@ -1,12 +1,9 @@
+##Builds GraphicalPlugin<tag>
 import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
 Import('execOsgPatTag')
-##Import('Platform')
-##Import('osg')
-##Import('xerces')
-##Import('vtk')
 Import('libPath')
 
 srcs = Split("""
@@ -16,36 +13,11 @@ srcs = Split("""
 srcs = map(lambda s: pj('#', 'VE_Xplorer', 'GraphicalPlugin', s), srcs)
 
 env = baseEnv.Copy()
-##osg_tag = "_osg"
-##if os.getenv('SCENE_GRAPH') == 'OSG':
-##    osg_tag = "_osg"
-##else:
-##    osg_tag = "_pf"
-##if os.getenv('VE_PATENTED') == 'TRUE':
-##    env.Append(CXXFLAGS = '-DVE_PATENTED')
-##    patented_tag = "_vep"
-##else:
-##    patented_tag = ''
-##if os.getenv('TAO_BUILD') == 'TRUE':
-##    exec_tag = '_tao'
-##else:
-##    exec_tag = ''
-##env.Append(CPPPATH = ['#'])
-##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
-##env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
-##env.Append(LIBPATH = libPath,
 env.Append(LIBS = ['VE_SceneGraphLib%s' %(execOsgPatTag),
                    'VE_XplorerLib%s' %(execOsgPatTag),
                    'VE_UtilLib', 'VE_ModelLib', 'VE_XMLLib', 'VE_CADLib'])
 env.ParseConfig('flagpoll vtk --libs --cflags')
-##for lib in vtk:
-##    env.Append(LIBS = lib)
 env.ParseConfig('flagpoll xerces --libs --cflags')
-##for lib in xerces:
-##    env.Append(LIBS = lib)
-##if os.getenv('SCENE_GRAPH') == 'OSG':
-##    for lib in osg:
-##        env.Append(LIBS = lib)
 env.ParseConfig('flagpoll osg --libs --cflags')
 env.ParseConfig('flagpoll gmtl --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')

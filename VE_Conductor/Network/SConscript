@@ -1,10 +1,9 @@
+##Builds VE_ConductorLib
 import os, sys, string
-#import xerces
 pj = os.path.join
 
 Import('baseEnv')
 Import('libPath')
-##Import('xerces')
 
 srcs = Split("""
    interface.cpp 
@@ -15,23 +14,12 @@ srcs = Split("""
 
 srcs = map(lambda s: pj('#', 'VE_Conductor', 'Network', s), srcs)
 
-##srcs = list()
-##srcs.extend(srcs)
-
 env = baseEnv.Copy()
-#env.Append(CPPPATH = [os.getcwd()])
-##env.Append(CPPPATH = ['#'])
-##env.Append(LIBPATH = libPath,
 env.Append(LIBS = 'VE_XMLLib')
-##for lib in xerces:
-##   env.Append(LIBS = lib)
 env.ParseConfig('flagpoll xerces --libs')
 
 targetLib = pj(libPath, 'VE_ConductorLib')
 env.SharedLibrary(target = targetLib, source = srcs)
-
-#env.Program(pj('#','bin',Platform,'VE_CE'), source = srcs)
-
 
 
 
