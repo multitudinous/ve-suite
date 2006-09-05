@@ -2,12 +2,12 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
-Import('xerces')
-Import('ace_tao')
+##Import('Platform')
 Import('libPath')
+##Import('xerces')
+##Import('ace_tao')
 
-framework_srcs = Split("""
+srcs = Split("""
    FinancialDialog.cpp 
    ListTable.cpp 
    Plugin_base.cpp 
@@ -24,29 +24,31 @@ framework_srcs = Split("""
    UIDialog.cpp 
 """)
 
-framework_srcs = map(lambda s: pj('#', 'VE_Conductor', 'GUIPlugin', s), framework_srcs)
+srcs = map(lambda s: pj('#', 'VE_Conductor', 'GUIPlugin', s), srcs)
 
-guiplugins_srcs = list()
-guiplugins_srcs.extend(framework_srcs)
+##guiplugins_srcs = list()
+##guiplugins_srcs.extend(framework_srcs)
 
 env = baseEnv.Copy()
 #env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = ['#'])
+##env.Append(CPPPATH = ['#'])
 ##env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
 ##env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
-env.Append(LIBPATH = libPath,
-              LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
-                     'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
-for lib in xerces:
-   env.Append(LIBS = lib)
-for lib in ace_tao:
-   env.Append(LIBS = lib)
+##env.Append(LIBPATH = libPath,
+env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
+                   'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
+##for lib in xerces:
+##   env.Append(LIBS = lib)
+##for lib in ace_tao:
+##   env.Append(LIBS = lib)
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('vrjuggler-config --extra-libs')
-env.ParseConfig('flagpoll tao --cflags')
+env.ParseConfig('flagpoll tao --libs --cflags')
+env.ParseConfig('flagpoll xerces --libs')
+
 
 targetLib = pj(libPath, 'GUIPluginLib')
-env.SharedLibrary(target = targetLib, source = guiplugins_srcs)
+env.SharedLibrary(target = targetLib, source = srcs)
 
 #env.Program(pj('#','bin',Platform,'VE_CE'), source = network_srcs)
 

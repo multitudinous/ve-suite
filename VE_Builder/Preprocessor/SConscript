@@ -2,10 +2,11 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
-Import('vtk')
-Import('boost')
-Import('libPath')
+Import('cfdHostType')
+##Import('Platform')
+##Import('vtk')
+##Import('boost')
+##Import('libPath')
 
 preprocess_srcs = Split("""
    multiPlaneVtkOutput.cxx
@@ -19,16 +20,16 @@ utilities_srcs = Split("""
 preprocess_srcs = map(lambda s: pj('#', 'VE_Builder', 'Preprocessor', s), preprocess_srcs)
 utilities_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', s), utilities_srcs)
 
-preprocessor_srcs = list()
-preprocessor_srcs.extend(preprocess_srcs)
-preprocessor_srcs.extend(utilities_srcs)
+srcs = list()
+srcs.extend(preprocess_srcs)
+srcs.extend(utilities_srcs)
 
 env = baseEnv.Copy()
 #env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = ['#'])
+##env.Append(CPPPATH = ['#'])
 ##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
-env.Append(LIBPATH = libPath,
-              LIBS = 'VE_UtilLib')
+##env.Append(LIBPATH = libPath,
+env.Append(LIBS = ['VE_UtilLib'])
 
 ##for lib in vtk:
 ##   env.Append(LIBS = lib)
@@ -38,4 +39,4 @@ env.ParseConfig('flagpoll boost --libs')
 env.ParseConfig('flagpoll vtk --libs --cflags')
 env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
 
-env.Program(pj('#','bin',Platform,'preprocessor'), source = preprocessor_srcs)
+env.Program(pj('#', 'bin', cfdHostType, 'preprocessor'), source = srcs)

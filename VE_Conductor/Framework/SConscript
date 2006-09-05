@@ -2,9 +2,10 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
-Import( '*' )  ##Imports all; previous Imports redundant.
-Import('libPath')
+Import('cfdHostType')
+##Import('Platform')
+##Import( '*' )  ##Imports all; previous Imports redundant.
+##Import('libPath')
 
 ##Check for Redundancy
 ##skel_srcs = Split("""
@@ -44,56 +45,59 @@ framework_srcs = Split("""
    UI_TransientDialog.cxx
 """)
 
-utility_srcs = Split("""
-   BaseDialog.cxx
-   ROIDialog.cxx""")
+##utility_srcs = Split("""
+##   BaseDialog.cxx
+##   ROIDialog.cxx""")
 
-gui_srcs = Split("""
-   spinctld.cpp
-""")
+##gui_srcs = Split("""
+##   spinctld.cpp
+##""")
 
 ##Tacks on paths to the srcs lists above.
 ##skel_srcs = map(lambda s: pj('#', 'VE_Open', 'skel', s), skel_srcs)
 framework_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Framework', s), framework_srcs)
-utility_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), utility_srcs)
-gui_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', 'gui', s), gui_srcs)
+##utility_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), utility_srcs)
+##gui_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', 'gui', s), gui_srcs)
 
 ##Combines all of the srcs lists into frameworks_srcs
-frameworks_srcs = list()
+srcs = list()
 ##frameworks_srcs.extend(skel_srcs)
-frameworks_srcs.extend(utility_srcs)
-frameworks_srcs.extend(framework_srcs)
-frameworks_srcs.extend(gui_srcs)
+##frameworks_srcs.extend(utility_srcs)
+srcs.extend(framework_srcs)
+##frameworks_srcs.extend(gui_srcs)
 
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = ['#'])
+##env.Append(CPPPATH = ['#'])
 env.Append(CPPPATH = pj('#', 'VE_Open', 'skel'))
-env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
-env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
+##env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+##env.Append(CPPPATH = pj( os.getenv('TAO_HOME',''), 'include') )
 env.Append(CPPPATH = pj(os.getenv('VJ_BASE_DIR', ''), 'bin'))
-env.Append(LIBPATH = libPath,
-              LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XMLLib', 'VE_ModelLib',
-                      'VE_CADLib', 'VE_ShaderLib', 'VE_Conductor_UtilitiesLib',
-                      'VE_OpenModuleLib'])
+##env.Append(LIBPATH = libPath,
+env.Append(LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XMLLib', 'VE_ModelLib',
+                   'VE_CADLib', 'VE_ShaderLib', 'VE_Conductor_UtilitiesLib',
+                   'VE_OpenModuleLib'])
 
-for lib in xerces:
-   env.Append(LIBS = lib)
-for lib in ace_tao:
-   env.Append(LIBS = lib)
+##for lib in xerces:
+##   env.Append(LIBS = lib)
+##for lib in ace_tao:
+##   env.Append(LIBS = lib)
 ##for lib in vtk:
 ##   env.Append(LIBS = lib)
-##env.ParseConfig('flagpoll vtk --libs --cflags') ##Not needed?
-for lib in osg:
-   env.Append(LIBS = lib)
-for lib in boost:
-   env.Append(LIBS = lib)
+##for lib in osg:
+##   env.Append(LIBS = lib)
+##for lib in boost:
+##   env.Append(LIBS = lib)
 env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
 #env.ParseConfig( 'corona-config --libs' )
 env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
 env.ParseConfig( 'wx-config --cxxflags --libs' )
-env.ParseConfig('flagpoll tao --cflags')
+env.ParseConfig('flagpoll tao --cflags --libs')
+env.ParseConfig('flagpoll xerces --libs')
+env.ParseConfig('flagpoll osg --libs')
+env.ParseConfig('flagpoll boost --libs')
+##env.ParseConfig('flagpoll vtk --libs --cflags') ##Not needed? Check.
 
 #env.SharedLibrary(target = '#/Framework', source = frameworks_srcs)
-env.Program(pj('#','bin',Platform,'WinClient'), source = frameworks_srcs)
+env.Program(pj('#','bin',cfdHostType,'WinClient'), source = srcs)
 

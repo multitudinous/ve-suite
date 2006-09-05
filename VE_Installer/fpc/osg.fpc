@@ -1,4 +1,4 @@
-prefix=/home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.0/Linux-RHEL_4
+prefix=/home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.1/Linux-RHEL_4
 exec_prefix=${prefix}/bin
 share_dir=${prefix}/share
 man_dir=${prefix}/man

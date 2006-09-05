@@ -2,11 +2,12 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
-Import('osg')
-Import('boost')
-Import('vtk')
+##Import('Platform')
+##Import('osg')
+##Import('boost')
+##Import('vtk')
 Import('libPath')
+Import('execOsgPatTag')
 
 srcs = Split("""
    cfd3DTextureCullCallback.cxx
@@ -38,35 +39,36 @@ srcs = Split("""
 srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)
 
 env = baseEnv.Copy()
-if os.getenv('SCENE_GRAPH') == 'OSG':
-    osg_tag = "_osg"
-else:
-    osg_tag = "_pf"
-if os.getenv('VE_PATENTED') == 'TRUE':
-    env.Append(CXXFLAGS = '-DVE_PATENTED')
-    patented_tag = "_vep"
-else:
-    patented_tag = ''
-exec_tag = ''
-env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
-env.Append(LIBPATH = libPath,
-              LIBS = 'VE_UtilLib')
-env.Append(LIBPATH = pj('usr', 'X11R6', 'lib'),
-              LIBS = ['X11', 'GL'])
+##if os.getenv('SCENE_GRAPH') == 'OSG':
+##    osg_tag = "_osg"
+##else:
+##    osg_tag = "_pf"
+##if os.getenv('VE_PATENTED') == 'TRUE':
+##    env.Append(CXXFLAGS = '-DVE_PATENTED')
+##    patented_tag = "_vep"
+##else:
+##    patented_tag = ''
+##exec_tag = ''
+##env.Append(CPPPATH = ['#'])
+##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
+##env.Append(LIBPATH = libPath,
+env.Append(LIBS = 'VE_UtilLib')
 ##for lib in vtk:
 ##    env.Append(LIBS = lib)
-for lib in boost:
-    env.Append(LIBS = lib)
+##for lib in boost:
+##    env.Append(LIBS = lib)
 ##if os.getenv('SCENE_GRAPH') == 'OSG':
 ##    for lib in osg:
 ##        env.Append(LIBS = lib)
 env.ParseConfig('flagpoll vtk --libs --cflags')
 env.ParseConfig('flagpoll osg --libs --cflags')
+env.ParseConfig('flagpoll boost --libs')
 env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('vrjuggler-config --libs --extra-libs \
-                 --includes --cxxflags')
+env.ParseConfig('vrjuggler-config --libs --extra-libs --includes --cxxflags')
+##For non-64-bit systems: (64-bits need 'lib64')
+env.Append(LIBPATH = [pj('usr', 'X11R6', 'lib')])
+env.Append(LIBS = ['X11', 'GL'])
 
-targetLib = pj(libPath, 'VE_TextureBasedLib%s%s%s'
-                        %(exec_tag, osg_tag, patented_tag))
+
+targetLib = pj(libPath, 'VE_TextureBasedLib%s' %(execOsgPatTag))
 env.SharedLibrary(target = targetLib, source = srcs)

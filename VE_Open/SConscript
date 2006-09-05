@@ -2,13 +2,12 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
+##Import('Platform')
 
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
 
 env.Append(CPPPATH = ['idl'])
-print "CPPPATH: %s" % str(env["CPPPATH"]) ##TESTER
 
 target = ['module.h', 'VjObs.h']
 

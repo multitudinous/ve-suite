@@ -2,10 +2,11 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
-Import('vtk')
-Import('boost')
-Import('libPath')
+Import('cfdHostType')
+##Import('Platform')
+##Import('vtk')
+##Import('boost')
+##Import('libPath')
 
 addNormals2Poly = Split("""
    addNormals2Poly.cpp
@@ -83,13 +84,12 @@ whatIsScalarRange = Split("""
 
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = ['#'])
+##env.Append(CPPPATH = ['#'])
 ##env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
-env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
-env.Append(LIBPATH = libPath,
-              LIBS = 'VE_UtilLib')
-
-env.Append(CPPPATH = pj('#', 'VE_Builder', 'Translator'))
+##env.Append(CPPPATH = pj( os.getenv('VJ_DEPS_DIR',''), 'include') )
+##env.Append(LIBPATH = libPath,
+env.Append(LIBS = ['VE_UtilLib'])
+env.Append(CPPPATH = [pj('#', 'VE_Builder', 'Translator')])
 
 
 ##for lib in vtk:
@@ -97,25 +97,25 @@ env.Append(CPPPATH = pj('#', 'VE_Builder', 'Translator'))
 ##for lib in boost:
 ##   env.Append(LIBS = lib)
 env.ParseConfig('flagpoll vtk --libs --cflags')
-env.ParseConfig('flagpoll boost --libs')
+env.ParseConfig('flagpoll boost --libs --cflags')
 env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
 env.ParseConfig( 'vrjuggler-config --libs --extra-libs --includes' )
 
-env.Program(pj('#','bin',Platform,'addNormals2Poly'), source = addNormals2Poly)
-env.Program(pj('#','bin',Platform,'appendVTK'), source = appendVTK)
-env.Program(pj('#','bin',Platform,'combineFluentParticleFile'), source = combineFluentParticleFile)
-env.Program(pj('#','bin',Platform,'compareScalars'), source = compareScalars)
-env.Program(pj('#','bin',Platform,'convertCellDataToPointData'), source = convertCellDataToPointData)
-env.Program(pj('#','bin',Platform,'convertSurfaceFileToStl'), source = convertSurfaceFileToStl)
-env.Program(pj('#','bin',Platform,'convertVTK2Ascii'), source = convertVTK2Ascii)
-env.Program(pj('#','bin',Platform,'convertVTK2Binary'), source = convertVTK2Binary)
-env.Program(pj('#','bin',Platform,'createMiniFlowdata'), source = createMiniFlowdata)
-env.Program(pj('#','bin',Platform,'makeVtkSurface'), source = makeVtkSurface)
-env.Program(pj('#','bin',Platform,'mergeVertices'), source = mergeVertices)
-env.Program(pj('#','bin',Platform,'meshViewer'), source = meshViewer)
-env.Program(pj('#','bin',Platform,'moveFieldToPointData'), source = moveFieldToPointData)
-env.Program(pj('#','bin',Platform,'removeVtkCellsOutsideBox'), source = removeVtkCellsOutsideBox)
-env.Program(pj('#','bin',Platform,'removeVtkPointData'), source = removeVtkPointData)
-env.Program(pj('#','bin',Platform,'scaleVTK'), source = scaleVTK)
-env.Program(pj('#','bin',Platform,'transformVTK'), source = transformVTK)
-env.Program(pj('#','bin',Platform,'whatIsScalarRange'), source = whatIsScalarRange)
+env.Program(pj('#','bin',cfdHostType,'addNormals2Poly'), source = addNormals2Poly)
+env.Program(pj('#','bin',cfdHostType,'appendVTK'), source = appendVTK)
+env.Program(pj('#','bin',cfdHostType,'combineFluentParticleFile'), source = combineFluentParticleFile)
+env.Program(pj('#','bin',cfdHostType,'compareScalars'), source = compareScalars)
+env.Program(pj('#','bin',cfdHostType,'convertCellDataToPointData'), source = convertCellDataToPointData)
+env.Program(pj('#','bin',cfdHostType,'convertSurfaceFileToStl'), source = convertSurfaceFileToStl)
+env.Program(pj('#','bin',cfdHostType,'convertVTK2Ascii'), source = convertVTK2Ascii)
+env.Program(pj('#','bin',cfdHostType,'convertVTK2Binary'), source = convertVTK2Binary)
+env.Program(pj('#','bin',cfdHostType,'createMiniFlowdata'), source = createMiniFlowdata)
+env.Program(pj('#','bin',cfdHostType,'makeVtkSurface'), source = makeVtkSurface)
+env.Program(pj('#','bin',cfdHostType,'mergeVertices'), source = mergeVertices)
+env.Program(pj('#','bin',cfdHostType,'meshViewer'), source = meshViewer)
+env.Program(pj('#','bin',cfdHostType,'moveFieldToPointData'), source = moveFieldToPointData)
+env.Program(pj('#','bin',cfdHostType,'removeVtkCellsOutsideBox'), source = removeVtkCellsOutsideBox)
+env.Program(pj('#','bin',cfdHostType,'removeVtkPointData'), source = removeVtkPointData)
+env.Program(pj('#','bin',cfdHostType,'scaleVTK'), source = scaleVTK)
+env.Program(pj('#','bin',cfdHostType,'transformVTK'), source = transformVTK)
+env.Program(pj('#','bin',cfdHostType,'whatIsScalarRange'), source = whatIsScalarRange)

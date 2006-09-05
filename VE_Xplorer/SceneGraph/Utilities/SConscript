@@ -2,9 +2,9 @@ import os, sys, string
 pj = os.path.join
 
 Import('baseEnv')
-Import('Platform')
-Import('osg')
-Import('xerces')
+##Import('Platform')
+##Import('osg')
+##Import('xerces')
 Import('libPath')
 
 srcs = Split("""
@@ -15,15 +15,15 @@ srcs = Split("""
 
 srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
                         'Utilities', s), srcs)
-
 env = baseEnv.Copy()
-env.Append(CPPPATH = ['#'])
-for lib in xerces:
-    env.Append(LIBS = lib)
+##env.Append(CPPPATH = ['#'])
+##for lib in xerces:
+##    env.Append(LIBS = lib)
 ##if os.getenv('SCENE_GRAPH') == 'OSG':
 ##    for lib in osg:
 ##        env.Append(LIBS = lib)
 env.ParseConfig('flagpoll osg --libs --cflags')
+env.ParseConfig('flagpoll xerces --libs')
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')
 

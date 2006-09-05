@@ -2,13 +2,13 @@ import os, sys, string
 import practice
 pj = os.path.join
 
-Import( 'xerces' )
+##Import( 'xerces' )
 
 Import('baseEnv')
 Import('libPath')
 Import('cfdHostType')
 
-xml_srcs = Split("""
+srcs = Split("""
    CreationEventHandler.cxx 
    Command.cxx
    DataValuePair.cxx
@@ -30,28 +30,27 @@ xml_srcs = Split("""
    XMLReaderWriter.cxx
    DOMDocumentManager.cxx
 """)
-
-xml_srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), xml_srcs)
+srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
 
 env = baseEnv.Copy()
 #VE_SUITE_HOME = os.getenv('VE_SUITE_HOME','')
 #env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
+##env.Append(CPPPATH = ['#'])
+##env.Append(CPPPATH = pj( os.getenv('XERCESCROOT',''), 'include') )
 #env.Append(LIBPATH = libPath,
 #              LIBS = 'vrshares')
-for lib in xerces:
-    env.Append(LIBS = lib)
+##for lib in xerces:
+##    env.Append(LIBS = lib)
 
-##Imitates dzr.apr.mk
+env.ParseConfig('flagpoll xerces --libs')
+##Get apr config.
 if cfdHostType == "Darwin":
     suffix = "-1-config"
 else:
     suffix = "-config"
 env.ParseConfig('apr%s --includes --cppflags --link-ld --libs' %suffix)
 env.ParseConfig('apu%s --includes --link-ld --libs' %suffix)
-##End dzr.apr.mk imitation.
 
 targetLib = pj(libPath, 'VE_XMLLib')
-env.SharedLibrary(target = targetLib, source = xml_srcs)
+env.SharedLibrary(target = targetLib, source = srcs)
 #env.Program(pj('#','bin',Platform,'VE_Open','VE_XML'), source = srcs)
