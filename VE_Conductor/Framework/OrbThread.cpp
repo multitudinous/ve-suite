@@ -88,7 +88,6 @@ void PEThread::ShutDownThread( void )
 ////////////////////////////////////////////////////////////////////////////////
 void PEThread::SetMessage(const char* msg)
 {
-   ::wxWakeUpIdle();
    _mutex.acquire();
    message+=msg;
    _mutex.release();

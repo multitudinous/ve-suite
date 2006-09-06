@@ -80,6 +80,7 @@
 #include <wx/bitmap.h>
 #include <wx/splash.h>
 #include <wx/utils.h>
+#include <wx/app.h>
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
@@ -169,10 +170,16 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    ///It allows printing text to the message box below conductor
    EVT_UPDATE_UI(7777, AppFrame::OnUpdateUIPop)
    EVT_IDLE( AppFrame::IdleEvent )
+   EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
-  :wxFrame(parent, id, title), m_frameNr(0), f_financial(true), f_geometry(true), f_visualization(true)
+  :wxFrame(parent, id, title), 
+   m_frameNr(0), 
+   f_financial(true), 
+   f_geometry(true), 
+   f_visualization(true),
+   timer( this, TIMER_ID )
 {
    serviceList = new CORBAServiceList( this );
   
@@ -215,7 +222,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    wxCommandEvent event;
    LoadFromServer( event );
    //Process command line args to see if ves file needs to be loaded
-   ProcessCommandLineArgs();   
+   ProcessCommandLineArgs();
+   timer.Start( 3000 );
 }
 ///////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
@@ -1416,6 +1424,11 @@ void AppFrame::IdleEvent( wxIdleEvent& event )
 {
    if ( serviceList )
       serviceList->CheckORBWorkLoad();
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::TimerEvent( wxTimerEvent& WXUNUSED(event) )
+{
+   ::wxWakeUpIdle();
 }
 ///////////////////////////////////////////////////////////////////
 CORBAServiceList* AppFrame::GetCORBAServiceList( void )

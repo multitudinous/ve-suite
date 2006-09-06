@@ -53,7 +53,7 @@ Frame API
 #include <wx/sizer.h>
 #include <wx/config.h> 
 #include <wx/splitter.h>
-
+#include <wx/timer.h>
 //Frame size
 const wxString LOCATION = _T("Framesize");
 const wxString LOCATION_X = _T("LocationX");
@@ -104,7 +104,8 @@ enum
    JUGGLER_SETTINGS,
    CAD_NODE_DIALOG,
    XPLORER_SCENES,
-   XPLORER_EXIT
+   XPLORER_EXIT,
+   TIMER_ID
 };
 //      XPLORER_VISTAB,
 
@@ -287,6 +288,7 @@ protected:
 private:
      void ExitXplorer( void );
    void IdleEvent( wxIdleEvent& event );
+   void TimerEvent( wxTimerEvent& event );
    NavigationPane* navPane;
    SoundsPane* soundsPane;
    ViewLocPane* viewlocPane;
@@ -294,6 +296,7 @@ private:
 //   wxDialog* visTabs;
 //   Vistab* vistab;
    wxDialog* _treeView;
+   wxTimer timer;
    std::string _displayMode;///<Desktop or Tablet.
 
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
