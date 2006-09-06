@@ -302,8 +302,7 @@ class Launch:
             self.WriteToClusterScript("PYTHONPATH")
         elif windows:
             self.clusterScript = ""
-            self.clusterScript += "psexec \\\\abbott -u IASTATE\\mccdo -i -e cmd\n" ##TESTER
-            self.clusterScript += "net use H: \\samba.vrac.iastate.edu\home \users\mccdo\n" ##TESTER
+            self.clusterScript += "net use H: \\\\samba.vrac.iastate.edu\\home \\users\\biv\n" ##TESTER
             self.WriteToClusterScript("PYTHONPATH")
         else:
             self.clusterScript = "ERROR: Unsupported OS type."
@@ -324,6 +323,7 @@ class Launch:
             for word in commandList:
                 command += "%s " %str(word)
             command += "\n"
+            self.clusterScript += "H:\n"
             self.clusterScript+='cd "%s"\n' %os.getenv("VE_WORKING_DIR","None")
             self.clusterScript += "%s\n" %(command)
         else:
@@ -341,7 +341,8 @@ class Launch:
                 return
             ##Else call the script on the other computer in psexec.
 ##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
-            subprocess.Popen([scriptPath])
+##            self.clusterScript +=  ##TESTER
+            subprocess.Popen("psexec \\\\abbott -u IASTATE\\biv -i -e %s\n" %scriptPath) ##TESTER
         else:
             print "Error!"
 
@@ -582,4 +583,4 @@ class Launch:
             else:
                 self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
         elif windows:
-            self.clusterScript += 'set %s="%s"\n' %(var, os.getenv(var))
+            self.clusterScript += 'set %s=%s\n' %(var, os.getenv(var))
