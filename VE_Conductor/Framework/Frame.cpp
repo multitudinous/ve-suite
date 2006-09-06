@@ -223,7 +223,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    LoadFromServer( event );
    //Process command line args to see if ves file needs to be loaded
    ProcessCommandLineArgs();
-   timer.Start( 3000 );
+   timer.Start( 1000 );
 }
 ///////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
@@ -1042,7 +1042,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    unsigned int i;
    std::vector<wxString> titles;
    //TextResultDialog * result_dlg;
-   SummaryResultDialog * result_dlg;
+   SummaryResultDialog * result_dlg = 0;
    std::vector<wxString> v_desc, v_value;
    std::vector<std::string> descs;
    std::vector<int> alignments;
