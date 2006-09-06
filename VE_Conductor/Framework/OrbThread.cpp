@@ -38,8 +38,8 @@
 #include "OrbThread.h"
 #include "Frame.h"
 #include "Network.h"
-//#include "ace/OS.h"
-//#include <ace/Task.h>
+
+#include <wx/app.h>
 #include <ace/OS.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <iostream>
@@ -88,7 +88,8 @@ void PEThread::ShutDownThread( void )
 ////////////////////////////////////////////////////////////////////////////////
 void PEThread::SetMessage(const char* msg)
 {
-  _mutex.acquire();
-  message+=msg;
-  _mutex.release();
+   ::wxWakeUpIdle();
+   _mutex.acquire();
+   message+=msg;
+   _mutex.release();
 }
