@@ -267,7 +267,7 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    newSceneViewer->getLight()->setAmbient(osg::Vec4(0.4f,0.4f,0.4f,1.0f));
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
    newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-   newSceneViewer->setClearColor(osg::Vec4(0,0,0,1));
+   newSceneViewer->setClearColor(osg::Vec4(0,.5,.5,1));
 
    //newSceneViewer->getLight()->setConstantAttenuation( 1.0f );
    osg::Vec4 lPos = osg::Vec4(100,-100,100,0); 
@@ -425,6 +425,7 @@ void cfdApp::latePreFrame( void )
    cfdModelHandler::instance()->PreFrameUpdate();
    ///////////////////////
    cfdEnvironmentHandler::instance()->PreFrameUpdate();
+   svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
    ///////////////////////
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
    ///////////////////////
@@ -506,7 +507,8 @@ void cfdApp::postFrame()
    vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
    
 #ifdef _OSG
-   svUpdate = true;
+   svUpdate = false;
+   cfdEnvironmentHandler::instance()->ResetBackgroundColorUpdateFlag();
    time_since_start = _timer.delta_s(_start_tick,_timer.tick());
 #ifdef _WEB_INTERfACE
    if(time_since_start - timeOfLastCapture >= 5.0)      //if it's been five seconds since the last image cap
@@ -581,11 +583,14 @@ void cfdApp::contextPreDraw( void )
 {
    if ( svUpdate )
    {
-      svUpdate = false;
       osg::ref_ptr<osgUtil::SceneView> sv;
       sv = (*sceneViewer);    // Get context specific scene viewer
-      //std::vector<float> clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackGroundColor();
-      //sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
+      if(sv.valid())
+      {
+         std::vector<float> clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
+         sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
+         std::cout<<"Setting clear color!"<<std::endl;
+      }
    }
 }
 ///////////////////////////////////////////////////
@@ -727,10 +732,5 @@ void cfdApp::update( void )
 	// call all node update callbacks and animations. This is equivalent to calling
 	// SceneView::update
 	getScene()->accept(*mUpdateVisitor);
-}
-////////////////////////////////////
-void cfdApp::ChangeBackgroundColor()
-{
-   svUpdate = true;
 }
 #endif //_OSG
