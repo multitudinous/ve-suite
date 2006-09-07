@@ -71,9 +71,9 @@ ChangeBackgroundColorEventHandler::~ChangeBackgroundColorEventHandler()
 void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
 {
 }
-///////////////////////////////////////////////////////
-///Exectute the event                                //
-///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///Exectute the event                                                        //
+///////////////////////////////////////////////////////////////////////////////
 void ChangeBackgroundColorEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
@@ -90,6 +90,7 @@ ChangeBackgroundColorEventHandler& ChangeBackgroundColorEventHandler::operator=(
 {
    if(this != &rhs)
    {
+      VE_EVENTS::EventHandler::operator=(rhs);
    }
    return *this;
 }

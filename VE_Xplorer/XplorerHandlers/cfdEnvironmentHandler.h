@@ -119,6 +119,14 @@ public:
 	void SetWindowDimensions( unsigned int width, unsigned int height );
 	void SetFrustumValues(float _top,float _bottom,float _near);
 	void PostFrameUpdate();
+
+   ///Check if the background color has changed
+   bool BackgroundColorChanged();
+
+   ///Reset the background changed color flag
+   void ResetBackgroundColorUpdateFlag();
+
+   
 #ifdef _OSG 
 #ifdef VE_PATENTED 
    void ActivateGeometryPicking();
@@ -165,6 +173,7 @@ private:
 	float _frustumBottom;
 	float _frustumNear;
 
+   bool _updateBackgroundColor;///<The flag for updating the background color in xplorer
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }

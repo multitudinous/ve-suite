@@ -74,12 +74,12 @@ using namespace VE_Util;
 
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
-	nav            = 0;
-	trackball		= 0;
+   nav = 0;
+   trackball = 0;
    _teacher       = 0;
    _soundHandler  = 0;
    //_camHandler    = 0;
-   cursor         = 0;
+   cursor = 0;
    _param.erase();//         = 0;
    _commandArray  = 0;
    _readParam     = 0;
@@ -107,6 +107,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _clearColor.push_back(0);
    _clearColor.push_back(0);
    _clearColor.push_back(0);
+   _updateBackgroundColor = false;
 
    _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();
    _eventHandlers[ std::string("Stored Scenes") ] = new VE_EVENTS::StoredSceneEventHandler();
@@ -184,10 +185,20 @@ void cfdEnvironmentHandler::CleanUp( void )
 
    delete displaySettings;
 }
+////////////////////////////////////////////////////
+bool cfdEnvironmentHandler::BackgroundColorChanged()
+{
+   return _updateBackgroundColor;
+}
 /////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
+}
+////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::ResetBackgroundColorUpdateFlag()
+{
+   _updateBackgroundColor = false;
 }
 ////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
@@ -197,6 +208,7 @@ void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
    {
       _clearColor.push_back(static_cast<float>(color.at(i)));
    }
+   _updateBackgroundColor = true;
 }
 /////////////////////////////////////////////////////////////////////
 cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
