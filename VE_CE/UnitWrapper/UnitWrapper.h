@@ -27,7 +27,7 @@ protected:
    Body::Executive_var executive_;
    unsigned int return_state;
    std::string UnitName_;
-   ::Types::ArrayLong_var id_;
+   //::Types::ArrayLong_var id_;
    CORBA::Long activeId;
    std::string status_;
    std::string data_;

@@ -248,19 +248,10 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
    }
    else
    {
-      if ( _network.empty() )// != NULL )
-         //delete _network;
-      //_network = new char[ strlen( network ) + 1 ];
-      _network.assign( network );//strcpy( _network, network );
+      _network.assign( network );
    }
-  
-   /*Package p;
-   p.SetSysId("veresult.xml");
-   p.Load(_network.c_str(), strlen(_network.c_str()));
-
-   this->UnPackResult(&p.intfs[0]);
-   //delete _network;
-   _network.erase();// = NULL;*/
+   //add inputs to xml model
+   //
 }
 //////////////////////////////////////////////////////////////////////
 // Viz feature for the devloper to define
