@@ -447,8 +447,8 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
+      return;
    }
-
    else if(!scalarContour)
    {
       scalarContour = new Contours(this,                
@@ -457,17 +457,9 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
-      scalarContour->SetSize(_vistabPosition);
-
-      scalarContour->ShowModal();
    }
-   
-   //if(scalarSelect || vectorSelect)
-   //{
-      //scalarContour->ShowModal();
-   //}
-
-
+   scalarContour->SetSize(_vistabPosition);
+   scalarContour->ShowModal();
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
@@ -476,8 +468,8 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
+      return;
    }
-
    else if(!vectorContour)
    {
       vectorContour = new Contours (this,                
@@ -486,15 +478,9 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_POSITION,
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE,"VECTOR" );
-      vectorContour->SetSize(_vistabPosition);
-
-      vectorContour->ShowModal();
    }
-
-   //if(scalarSelect || vectorSelect)
-   //{
-      //vectorContour->ShowModal();
-   //}
+   vectorContour->SetSize(_vistabPosition);
+   vectorContour->ShowModal();
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
@@ -503,8 +489,8 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
+      return;
    }
-
    else if(!streamline)
    {
       streamline = new Streamlines ( this,                
@@ -513,16 +499,9 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_STREAMLINES_POSITION,
                   SYMBOL_STREAMLINES_SIZE, 
                   SYMBOL_STREAMLINES_STYLE );
-      streamline->SetSize(_vistabPosition);
-
-      streamline->ShowModal();
    }
-
-   //if(scalarSelect || vectorSelect)
-   //{
-      //streamline->ShowModal();
-   //}
-   //itemToolBar3->ToggleTool(STREAMLINE_BUTTON, false);
+   streamline->SetSize(_vistabPosition);
+   streamline->ShowModal();
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
@@ -531,8 +510,8 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
+      return;
    }
-
    else if(!isosurface)
    {
       isosurface = new Isosurfaces ( this,                
@@ -541,21 +520,12 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ISOSURFACES_POSITION,
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
-      isosurface->SetSize(_vistabPosition);
+   }
 
-      isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
-      isosurface->SetActiveScalar(_activeScalarName);
-      isosurface->ShowModal();
-   }
-/*   
-   if(scalarSelect || vectorSelect)
-   {
-      isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
-      isosurface->SetActiveScalar(_activeScalarName);
-      isosurface->ShowModal();
-   }
-*/
-   //itemToolBar3->ToggleTool(ISOSURFACE_BUTTON, false);
+   isosurface->SetSize(_vistabPosition);
+   isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
+   isosurface->SetActiveScalar(_activeScalarName);
+   isosurface->ShowModal();
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
@@ -564,21 +534,21 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
+      return;
    }
-
    else if(!_tbTools)
    {
-   
       _tbTools = new TextureBasedToolBar (this,-1);
-      _tbTools->SetSize(_vistabPosition.x, _vistabPosition.y, -1, -1, wxSIZE_USE_EXISTING);
-   
-      _tbTools->SetVjObsPtr(xplorerPtr);
-      _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
-      _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
-      if(_tbTools->ActivateTextureVisualization())
-      {
-         _tbTools->ShowModal();
-      }
+   }
+
+   _tbTools->SetSize(_vistabPosition.x, _vistabPosition.y, -1, -1, wxSIZE_USE_EXISTING);
+   _tbTools->SetVjObsPtr(xplorerPtr);
+   _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
+   _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
+
+   if(_tbTools->ActivateTextureVisualization())
+   {
+      _tbTools->ShowModal();
    }
 }
 ////////////////////////////////////////////////////////////
@@ -588,8 +558,8 @@ void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
+      return;
    }
-
    else if(!polydata)
    {
       polydata = new Polydata ( this,                
@@ -598,21 +568,11 @@ void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_POLYDATA_POSITION,
                   SYMBOL_POLYDATA_SIZE, 
                   SYMBOL_POLYDATA_STYLE );
-      polydata->SetSize(_vistabPosition);
-
-      polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
-      polydata->SetActiveScalar(_activeScalarName);
-      polydata->ShowModal();
-   }
-/*
-   if(scalarSelect || vectorSelect)
-   {
-      polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
-      polydata->SetActiveScalar(_activeScalarName);
-      polydata->ShowModal();
-   }
-*/
-  
+   } 
+   polydata->SetSize(_vistabPosition);
+   polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
+   polydata->SetActiveScalar(_activeScalarName);
+   polydata->ShowModal();
 }
 ///////////////////////////////////////////////////////
 void Vistab::SetActiveModel(VjObs::Model_var activeModel)
