@@ -589,7 +589,6 @@ void cfdApp::contextPreDraw( void )
       {
          std::vector<float> clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
          sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
-         std::cout<<"Setting clear color!"<<std::endl;
       }
    }
 }
