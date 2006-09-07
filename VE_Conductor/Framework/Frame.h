@@ -105,7 +105,8 @@ enum
    CAD_NODE_DIALOG,
    XPLORER_SCENES,
    XPLORER_EXIT,
-   TIMER_ID
+   TIMER_ID,
+   XPLORER_COLOR
 };
 //      XPLORER_VISTAB,
 
@@ -270,6 +271,11 @@ protected:
    void LaunchSoundsPane(wxCommandEvent& event);
    void LaunchStreamlinePane(wxCommandEvent& event);
    void LaunchRecordScenes( wxCommandEvent& event );
+
+   ///Set the background color in xplorer
+   ///\param The command event
+   void SetBackgroundColor(wxCommandEvent& event); 
+
    void OnExitXplorer( wxCommandEvent& event );
 //   void LaunchVisTabs( wxCommandEvent& event );
 //   void LaunchVistab( wxCommandEvent& event );

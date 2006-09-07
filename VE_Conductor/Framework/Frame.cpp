@@ -81,6 +81,9 @@
 #include <wx/splash.h>
 #include <wx/utils.h>
 #include <wx/app.h>
+#include <wx/cmndata.h>
+#include <wx/colordlg.h>
+
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
@@ -151,6 +154,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
    EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
    EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
+   EVT_MENU( XPLORER_COLOR, AppFrame::SetBackgroundColor )
    EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
    //  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
    EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
@@ -342,6 +346,7 @@ bool AppFrame::Show(bool value)
    {
       int displayWidth, displayHeight = 0;
       ::wxDisplaySize(&displayWidth,&displayHeight);
+      std::cout<<"Width: "<<displayWidth<<" Height: "<<displayHeight<<std::endl;
       wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
 
       wxRect dialogPosition( 2*displayWidth/3, 
@@ -686,6 +691,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
 	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
 	xplorerMenu->Append( XPLORER_SCENES, _("Record Scenes") );
+	xplorerMenu->Append( XPLORER_COLOR, _("Xplorer Background Color") );
 	xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
 //	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
 	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
@@ -1333,6 +1339,39 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
    }
    // now show it
    navPane->Show();
+}
+////////////////////////////////////////////////////////////////////
+void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
+{
+   //this is kinda confusing...thanks wx!!!
+   wxColourData data;
+   data.SetChooseFull(true);
+
+   wxColourDialog colorDlg(this,&data);
+   colorDlg.SetTitle(wxString("Xplorer Background Color"));
+
+   if (colorDlg.ShowModal() == wxID_OK)
+   {
+      wxColourData retData = colorDlg.GetColourData();
+      wxColour col = retData.GetColour();
+
+      std::vector<double> newColor;
+      newColor.push_back(static_cast<double>(col.Red())/255.0);
+      newColor.push_back(static_cast<double>(col.Green())/255.0);
+      newColor.push_back(static_cast<double>(col.Blue())/255.0);
+      newColor.push_back(1.0);
+
+      // Create the command and data value pairs
+      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
+      dataValuePair->SetData(std::string("Background Color"),newColor);
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
+      veCommand->AddDataValuePair(dataValuePair);
+
+      serviceList->SendCommandStringToXplorer( veCommand );
+   
+      delete veCommand;
+   }
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED(event) )
