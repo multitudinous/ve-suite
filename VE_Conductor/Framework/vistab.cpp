@@ -413,8 +413,6 @@ bool Vistab::ShowToolTips()
 {
     return true;
 }
-
-
 //////////////////////////////////////////////////////////
 wxBitmap Vistab::GetBitmapResource( const wxString& name )
 {
@@ -423,7 +421,6 @@ wxBitmap Vistab::GetBitmapResource( const wxString& name )
     return wxNullBitmap;
 ////@end Vistab bitmap retrieval
 }
-
 /*!
  * Get icon resources
  */
@@ -442,7 +439,6 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {
-
    if( _activeScalarName.empty() )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
@@ -614,15 +610,12 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
    _nDatasetsInActiveModel =  newModel->dataVector.length();   
    if(_nDatasetsInActiveModel > 0 )
    {
-   std::cout<<"nDatasetsInActiveModel: "<< _nDatasetsInActiveModel<<std::endl;
       //get all the dataset names in this model
       _availableDatasets.Clear();
       for(unsigned int i = 0; i < _nDatasetsInActiveModel; i++)
       {
          _availableDatasets.Add(wxString(newModel->dataVector[i].datasetname));
       }
-
-      
    }
 }
 //////////////////////////////////////////////////
@@ -670,7 +663,6 @@ void Vistab::SetTextureData(wxArrayString textureData,
 ////////////////////////////////////////////////////////////////////
 void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
 {
-   std::cout<<"udpateDatasetInformation"<<std::endl;
    _nScalarsInActiveDataset = datasetInfo.scalarVector.length();
    if(_nScalarsInActiveDataset)
    {
@@ -683,10 +675,10 @@ void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
       _updateAvailableSolutions("MESH_VECTORS",datasetInfo.vectornames);
    }
 }
-////////////////////////////////////////////////////////////////////////
-//We need this extra method because the data info is stored differenly//
-//for scalars                                                         // 
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+//We need this extra method because the data info is stored differenly   //
+//for scalars                                                            // 
+///////////////////////////////////////////////////////////////////////////
 void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
 {
    ///clear out the scalar ranges from before
