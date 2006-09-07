@@ -56,6 +56,7 @@
 #include "VE_Xplorer/XplorerHandlers/StoredSceneEH.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -125,6 +126,7 @@ void cfdEnvironmentHandler::Initialize( std::string param )
 	this->trackball = new cfdTrackball();
    //_readParam = new cfdReadParam();
    this->arrow = cfdModelHandler::instance()->GetArrow();
+   this->keyboard_mouse = new KeyboardMouse();
    //CreateObjects();
 
 #ifdef VE_PATENTED
@@ -148,6 +150,7 @@ void cfdEnvironmentHandler::CleanUp( void )
 	{
 		vprDEBUG(vesDBG,2)
 			<< "|		  deleting this->trackball" << std::endl << vprDEBUG_FLUSH;
+      delete this->trackball;
 	}
    
    if ( this->_readParam )
@@ -181,6 +184,13 @@ void cfdEnvironmentHandler::CleanUp( void )
       vprDEBUG(vesDBG,2)  
         << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
       delete this->_teacher;
+   }
+
+   if ( this->keyboard_mouse)
+   {
+      vprDEBUG(vesDBG,2)  
+        << "|       deleting this->keyboard_mouse" << std::endl << vprDEBUG_FLUSH;
+      delete this->keyboard_mouse;
    }
 
    delete displaySettings;
@@ -245,6 +255,15 @@ cfdTrackball* cfdEnvironmentHandler::GetTrackball( void )
 {
 	return this->trackball;
 }
+/////////////////////////////////////////////////////////////////////
+
+
+KeyboardMouse* cfdEnvironmentHandler::GetKeyboardMouse( void )
+{
+   return this->keyboard_mouse;
+}
+
+
 /////////////////////////////////////////////////////////////////////
 cfdCursor* cfdEnvironmentHandler::GetCursor( void )
 {
@@ -362,8 +381,34 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
       }
    }
 
-	// Update Trackball
-	trackball->preFrame();
+
+
+   
+   // Update "Keyboard" and "Mouse" events
+   keyboard_mouse->preFrame();
+
+   static int nav_mode=0;
+
+   // Use trackball if nav_mode==1
+   if(keyboard_mouse->GetKey()==113){
+      nav_mode++;
+
+      if(nav_mode==2){
+         nav_mode=0;
+      }
+
+      keyboard_mouse->SetKey(-1);
+   }
+
+   if(nav_mode==1){
+      // Update Trackball
+	   trackball->Matrix();
+      
+      std::cout<<"Trackball is active!"<<std::endl;
+   }
+
+
+
 	
 #ifdef _OSG
 #ifdef VE_PATENTED

@@ -52,6 +52,9 @@ namespace VE_Xplorer
    class cfdSoundHandler;
    class cfdQuatCamHandler;
    class cfdDisplaySettings;
+
+   class KeyboardMouse;
+
 #ifdef VE_PATENTED
 #ifdef _OSG
    class cfdObjectHandler;
@@ -108,6 +111,10 @@ public:
    cfdTeacher* GetTeacher( void );
    ///Accessor for cfdQuatCamHandler
    //cfdQuatCamHandler* GetQuatCamHandler( void );
+
+   ///Accessor for KeyboardMouse
+   KeyboardMouse* GetKeyboardMouse( void );
+
    ///Accessor for cfdDisplaySettings
    cfdDisplaySettings* GetDisplaySettings( void );
 
@@ -140,6 +147,8 @@ private:
    cfdSoundHandler* _soundHandler;
    cfdQuatCamHandler* _camHandler;
 
+   KeyboardMouse* keyboard_mouse;
+
 #ifdef _OSG 
 #ifdef VE_PATENTED 
    cfdObjectHandler* objectHandler;
@@ -159,8 +168,10 @@ private:
    float worldScale[ 3 ];
    float worldTrans[ 3 ];
    float worldRot[ 3 ];
+
    ///<The class used to change juggler configuration settings during runtime
    cfdDisplaySettings* displaySettings;
+
    ///<Desktop width
    int desktopWidth;
    ///<Desktop height

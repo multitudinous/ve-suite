@@ -759,6 +759,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KeyboardMouse.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialModeUpdateEH.cxx"
 				>
 			</File>
@@ -812,10 +816,6 @@
 			</File>
 			<File
 				RelativePath=".\TextureBasedEventHandler.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\trackball.cxx"
 				>
 			</File>
 		</Filter>
@@ -1108,6 +1108,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KeyboardMouse.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialModeUpdateEH.h"
 				>
 			</File>
@@ -1161,10 +1165,6 @@
 			</File>
 			<File
 				RelativePath=".\TextureBasedEventHandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\trackball.h"
 				>
 			</File>
 			<File
