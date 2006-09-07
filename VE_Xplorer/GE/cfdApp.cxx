@@ -267,7 +267,7 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    newSceneViewer->getLight()->setAmbient(osg::Vec4(0.4f,0.4f,0.4f,1.0f));
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
    newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-   newSceneViewer->setClearColor(osg::Vec4(0,.5,.5,1));
+   newSceneViewer->setClearColor(osg::Vec4(0,0,0,1));
 
    //newSceneViewer->getLight()->setConstantAttenuation( 1.0f );
    osg::Vec4 lPos = osg::Vec4(100,-100,100,0); 
