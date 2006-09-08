@@ -137,6 +137,13 @@ void DataValuePair::SetDataValue(unsigned int data)
     _dataUInt = data;
 
 }
+/////////////////////////////////////////////////////
+void DataValuePair::SetData(std::string dataName, unsigned int data)
+{
+   _dataName = dataName;
+   SetDataType( std::string("UNSIGNED INT") );
+   _dataUInt = data;
+}
 ////////////////////////////////////////////
 void DataValuePair::SetDataType(std::string type)
 {

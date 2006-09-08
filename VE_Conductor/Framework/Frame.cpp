@@ -690,11 +690,11 @@ void AppFrame::CreateMenu()
 
 	xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
 	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
-	xplorerMenu->Append( XPLORER_SCENES, _("Record Scenes") );
-	xplorerMenu->Append( XPLORER_COLOR, _("Background Color...") );
-	xplorerMenu->Append( XPLORER_SOUNDS, _("Sounds Pane") );
-//	xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-	xplorerMenu->Append( JUGGLER_SETTINGS, _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
+	xplorerMenu->Append( XPLORER_SCENES,     _("Record Scenes") );
+	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
+	xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
+   //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
+	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    //If the display mode is desktop then we will disconnect when exit is selected
    //and in other modes we will give the user the ability to exit
    if ( GetDisplayMode() != "Desktop" )

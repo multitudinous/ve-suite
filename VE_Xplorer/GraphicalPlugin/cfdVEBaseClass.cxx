@@ -50,6 +50,7 @@
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 
@@ -245,13 +246,25 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
    if ( network.empty() )// == NULL )
    {
       std::cout << " No results for " << _objectName << std::endl;
-   }
-   else
-   {
-      _network.assign( network );
+      return;
    }
    //add inputs to xml model
    //
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+   networkWriter.ReadXMLData( network, "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   
+   VE_XML::Command* tempCommand = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+   size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
+   for ( size_t i = 0; i < numDVP; ++i )
+   {
+      VE_XML::Command* command = xmlModel->GetResult( i );
+      VE_XML::DataValuePair* tempPair = tempCommand->GetDataValuePair( i );
+      VE_XML::Command* copyCommand = dynamic_cast< VE_XML::Command* >( tempPair->GetDataXMLObject() );
+      *command = *copyCommand;
+   }
 }
 //////////////////////////////////////////////////////////////////////
 // Viz feature for the devloper to define

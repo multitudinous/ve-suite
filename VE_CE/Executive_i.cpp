@@ -476,67 +476,8 @@ char * Body_Executive_i::GetModuleResult (
     , Error::EUnknown
   ))
 {
-   _mutex.acquire();
-
-   std::string fileName( "returnString" );
-   VE_XML::XMLReaderWriter netowrkWriter;
-   netowrkWriter.UseStandaloneDOMDocumentManager();
-
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   std::vector< VE_XML::Command* > resultList = _network->GetModule( _network->moduleIdx( module_id ) )->GetResultsData();
-   for ( size_t k = 0; k < resultList.size(); ++k )
-   {
-      nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
-                        resultList.at( k ), std::string( "vecommand" ) ) 
-                     );
-   }
-
-   netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-   _mutex.release();
+   std::cout << "Body_Executive_i::GetModuleResult has been replaced with the query function." << std::endl;
    return CORBA::string_dup("");
-   /*Interface intf;
-  
-   if ( module_id == -1 ) 
-   {
-      // Calculate efficiency
-      double tot_power = 0.0;
-      double tot_thermo = 0.0;
-
-      std::map<long, double>::iterator iter;
-      for(iter=_module_powers.begin(); iter!=_module_powers.end(); iter++)
-         tot_power += iter->second;
-      
-      for(iter=_thermal_input.begin(); iter!=_thermal_input.end(); iter++)
-         tot_thermo += iter->second;
-      
-      intf.setString("Power (MW)", to_string(tot_power));
-      
-      if(tot_thermo != 0.0) 
-      {
-         intf.setString("Thermal Input (MW)", to_string(tot_thermo));
-         intf.setString("Efficiency (%)", to_string(tot_power / tot_thermo * 100));
-      }
-   }
-   else if ( !_network->getOutput(module_id, intf) ) 
-   {
-      
-      std::cerr << "Unable to get mod id# " << module_id << "'s ouput data" << std::endl;
-   }
-  
-   bool        rv;
-   std::string str;
-  
-   Package p;
-   p.SetSysId("temp.xml");
-   p.intfs.push_back(intf);
-  
-   str = p.Save(rv);
-   _mutex.release();
-
-   if ( rv ) 
-      return CORBA::string_dup(str.c_str());
-
-   return CORBA::string_dup("");//str.c_str());//"yang";//0;*/
 }
 ////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetNetwork (

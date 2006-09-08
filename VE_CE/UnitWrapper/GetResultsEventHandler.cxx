@@ -82,13 +82,18 @@ std::string GetResultsEventHandler::Execute( VE_XML::XMLObject* objectToProcess 
    resultsCommand.SetCommandName("Model Results");
    
    size_t numInputs = baseModel->GetNumberOfResults();
+   if ( numInputs == 0 )
+   {
+      return std::string();
+   }
+   
    for ( size_t i = 0; i < numInputs; ++i )
    {
       VE_XML::Command* tempResult = baseModel->GetResult( i );
       VE_XML::DataValuePair* tempPair = resultsCommand.GetDataValuePair(-1);
       tempPair->SetData( tempResult->GetCommandName(), tempResult );
    }
-
+   
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    nodes.push_back( 
                     std::pair< VE_XML::XMLObject*, std::string >( &resultsCommand, "vecommand" ) 

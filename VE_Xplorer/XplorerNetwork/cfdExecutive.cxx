@@ -47,6 +47,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
@@ -288,7 +289,24 @@ void cfdExecutive::GetEverything( void )
          // this call always returns something because it is up to date with the id map
          modelIter = idToModel.find( iter->first );
          _plugins[ iter->first ]->SetXMLModel( modelIter->second );
-         _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
+         //send command to get results
+         VE_XML::Command returnState;
+         returnState.SetCommandName("Get XML Model Results");
+         VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+         data->SetData("moduleName", iter->second );
+         data=returnState.GetDataValuePair(-1);
+         data->SetData("moduleId", static_cast< unsigned int >( iter->first ) );
+         
+         std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+         nodes.push_back( 
+                          std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
+                          );
+         VE_XML::XMLReaderWriter commandWriter;
+         std::string status="returnString";
+         commandWriter.UseStandaloneDOMDocumentManager();
+         commandWriter.WriteXMLDocument( nodes, status, "Command" );
+         //Get results 
+         _plugins[ iter->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
          _plugins[ iter->first ]->PreFrameUpdate();
          vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                               << " ]-> " << iter->second 
@@ -397,12 +415,30 @@ void cfdExecutive::PreFrameUpdate( void )
             pos3 != std::string::npos )
       {
          std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+         std::map< int, std::string >::iterator idMap;
          for ( foundPlugin=_plugins.begin(); 
                foundPlugin!=_plugins.end(); 
                foundPlugin++ )
          {  
+            idMap = _id_map.find( foundPlugin->first );
+            VE_XML::Command returnState;
+            returnState.SetCommandName("Get XML Model Results");
+            VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+            data->SetData("moduleName", idMap->second );
+            data=returnState.GetDataValuePair(-1);
+            data->SetData("moduleId", static_cast< unsigned int >( idMap->first ) );
+            
+            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+            nodes.push_back( 
+                             std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
+                           );
+            VE_XML::XMLReaderWriter commandWriter;
+            std::string status="returnString";
+            commandWriter.UseStandaloneDOMDocumentManager();
+            commandWriter.WriteXMLDocument( nodes, status, "Command" );
+            
+            _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
             int dummyVar = 0;
-            _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
             _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
          }
       }
@@ -434,26 +470,6 @@ void cfdExecutive::PreFrameUpdate( void )
 }
 bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 {
-#ifdef _TAO
-      if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR )
-      {
-         //this->SetCalculationsFlag( true );
-         return true;
-      }
-/*      else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ACT_CUSTOM_VIZ )
-      {
-         vprDEBUG(vesDBG,1) << " Custom Viz" << std::endl << vprDEBUG_FLUSH;
-         std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-         for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
-         {  
-            int dummyVar = 0;
-            _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
-            _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
-         }
-         return true;
-      }      
-*/         
-#endif // _TAO
    return false;
 }
 

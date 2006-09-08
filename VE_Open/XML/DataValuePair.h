@@ -142,6 +142,11 @@ public:
    ///\param data XMLObject being passed in. Can be a broad range of data types
    void SetData(std::string dataName, VE_XML::XMLObject* data);
 
+   ///Helper functions to set data easily
+   ///\param dataName Name of the data being passed in
+   ///\param data unsgined int being passed in.
+   void SetData(std::string dataName, unsigned int data);
+
    ///String data
    ///Helper functions to set data easily
    ///\param dataName Name of the data being passed in
