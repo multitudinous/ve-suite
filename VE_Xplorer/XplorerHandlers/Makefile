@@ -114,7 +114,7 @@ SRCS=\
    CADTransformEH.cxx \
    MaterialModeUpdateEH.cxx \
    MaterialUpdateEH.cxx\
-   trackball.cxx\
+   KeyboardMouse.cxx\
    cfdTrackball.cxx\
    cfdObjectHandler.cxx\
    CreateVisObjectEventHandler.cxx\
