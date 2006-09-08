@@ -121,7 +121,7 @@ class Launch:
             ##Finish building cluster script
             self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
             clusterFileName = "cluster.bat"
-            clusterFilePath = os.path.join(VELAUNCHER_DIR, clusterFileName)
+            clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', clusterFileName)
             print clusterFilePath ##TESTER
             ##Write cluster script
             sourceFile = file(clusterFilePath, 'w')
@@ -302,7 +302,9 @@ class Launch:
             self.WriteToClusterScript("PYTHONPATH")
         elif windows:
             self.clusterScript = ""
-            self.clusterScript += "net use H: \\\\samba.vrac.iastate.edu\\home \\users\\biv\n" ##TESTER
+            self.clusterScript += "@ECHO OFF\n"
+            workingDrive = "%s:" %os.getenv("VE_WORKING_DIR","None").split(':')[0]
+            self.clusterScript += "net use %s \\\\samba.vrac.iastate.edu\\home \\users\\mikelem\n" %workingDrive ##TESTER
             self.WriteToClusterScript("PYTHONPATH")
         else:
             self.clusterScript = "ERROR: Unsupported OS type."
@@ -323,8 +325,10 @@ class Launch:
             for word in commandList:
                 command += "%s " %str(word)
             command += "\n"
-            self.clusterScript += "H:\n"
-            self.clusterScript+='cd "%s"\n' %os.getenv("VE_WORKING_DIR","None")
+            workingDir = os.getenv("VE_WORKING_DIR","None")
+            workingDrive = "%s:" %workingDir.split(':')[0]
+            self.clusterScript += "%s\n" %workingDrive
+            self.clusterScript+='cd "%s"\n' %workingDir
             self.clusterScript += "%s\n" %(command)
         else:
             self.clusterScript += "ERROR: OS not supported."
@@ -342,7 +346,7 @@ class Launch:
             ##Else call the script on the other computer in psexec.
 ##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
 ##            self.clusterScript +=  ##TESTER
-            subprocess.Popen("psexec \\\\abbott -u IASTATE\\biv -i -e %s\n" %scriptPath) ##TESTER
+            subprocess.Popen("psexec \\\\abbott -u IASTATE\\mikelem -i -e -c %s\n" %scriptPath) ##TESTER
         else:
             print "Error!"
 
@@ -358,14 +362,15 @@ class Launch:
 
         Variables overwritten by this class:
         CFDHOSTTYPE (removes parantheses from CFDHOSTTYPE)
+        TAO_MACHINE
+        TAO_PORT
+        VEXMASTER
 
         Variables overwritten (when not in dev mode):
         VE_SUITE_HOME
         VE_INSTALL_DIR
         VE_DEPS_DIR
         VE_WORKING_DIR
-        TAO_MACHINE
-        TAO_PORT
         PHSHAREDSIZE
         VPR_DEBUG_ENABLE
         VPR_DEBUG_NFY_LEVEL
@@ -377,7 +382,6 @@ class Launch:
         VJ_CFG_PATH
         NSPR_ROOT
         SNX_BASE_DIR
-        VEXMASTER
         VJ_BASE_DIR
         VJ_DEPS_DIR
 
@@ -403,8 +407,8 @@ class Launch:
                                                  JUGGLER_FOLDER))
 
         ##Set TAO variables
-        self.EnvFill("TAO_MACHINE", taoMachine)
-        self.EnvFill("TAO_PORT", str(taoPort))
+        self.EnvFill("TAO_MACHINE", taoMachine, True)
+        self.EnvFill("TAO_PORT", str(taoPort), True)
 
         ##Set CFDHOSTNAME
         if windows:
@@ -491,7 +495,7 @@ class Launch:
         ##Take the partially-qualified name if
         ##clusterMaster is a fully-qualified name.
         if clusterMaster != None:
-            self.EnvFill("VEXMASTER", clusterMaster.split('.')[0])
+            self.EnvFill("VEXMASTER", clusterMaster.split('.')[0], True)
         ##Python build environment variables
         if windows:
             os.environ["PYTHONPATH"] = os.path.join(os.getenv("VJ_DEPS_DIR"),
@@ -555,15 +559,20 @@ class Launch:
         self.WriteToClusterScript(var)
 ##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
 
-    def EnvFill(self, var, default):
-        """Overwrites environmental var in normal mode, fills it in dev mode.
+    def EnvFill(self, var, default, overwrite = False):
+        """Overwrites env var in normal mode, ensures it's filled in dev mode.
 
         Does not overwrite a filled variable in devMode.
-        Overwrites a filled variable in normal mode."""
-        if self.devMode:
+        Overwrites a filled variable in normal mode.
+        If overwrite == True, overwrites the variable in both modes."""
+        if self.devMode and not overwrite:
             os.environ[var] = os.getenv(var, default)
         else:
             os.environ[var] = default
+##        if overwrite: ##TESTER
+##            print "%s overwrite == True!" %var ##TESTER
+##        else: ##TESTER
+##            print "%s overwrite is False!" %var ##TESTER
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
 ##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
