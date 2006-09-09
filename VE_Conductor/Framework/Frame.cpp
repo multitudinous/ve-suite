@@ -801,9 +801,6 @@ void AppFrame::Save( wxCommandEvent& event )
    }
    else
    {
-      //domManager->CreateCommandDocument();
-      //DOMDocument* doc = domManager->GetCommandDocument();
-      //network->Save( doc );
       ///now write the file out from domdocument manager
       //wrtie to path
       std::string data = network->Save( std::string( path.c_str() ) );
@@ -929,11 +926,6 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 {
-   /*ConExeServer();
-   // If not sucessful
-   if ( !is_orb_init )
-      return;
-   */
    if ( !serviceList->IsConnectedToCE() )
    {
       return;
@@ -962,15 +954,12 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
+   path.clear();
    network->New();
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
-   //ConExeServer();
-   // If not sucessful
-   //if ( !is_orb_init )
-   //   return;
    if ( !serviceList->IsConnectedToCE() )
    {
       return;
