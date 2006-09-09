@@ -304,7 +304,7 @@ class Launch:
             self.clusterScript = ""
             self.clusterScript += "@ECHO OFF\n"
             workingDrive = "%s:" %os.getenv("VE_WORKING_DIR","None").split(':')[0]
-            self.clusterScript += "net use %s \\\\samba.vrac.iastate.edu\\home \\users\\mikelem\n" %workingDrive ##TESTER
+            self.clusterScript += "net use %s \\\\samba.vrac.iastate.edu\\home\\users\\biv\n" %workingDrive ##TESTER
             self.WriteToClusterScript("PYTHONPATH")
         else:
             self.clusterScript = "ERROR: Unsupported OS type."
@@ -346,7 +346,7 @@ class Launch:
             ##Else call the script on the other computer in psexec.
 ##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
 ##            self.clusterScript +=  ##TESTER
-            subprocess.Popen("psexec \\\\abbott -u IASTATE\\mikelem -i -e -c %s\n" %scriptPath) ##TESTER
+            subprocess.Popen("psexec \\\\abbott -u IASTATE\\biv -i -e -c %s\n" %scriptPath) ##TESTER
         else:
             print "Error!"
 
