@@ -203,13 +203,16 @@ void cfdTrackball::FitToScreen()
 	float h=fabs((bs._max.z()-bs._min.z())*0.5f);
 	float depth=fabs((bs._max.y()-bs._min.y())*0.5f);
 	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
-   if(w>h&&w>depth){
+   if(w>h&&w>depth)
+   {
 		d=(w/tan(Theta));
    }
-   else if(h>w&&h>depth){
+   else if(h>w&&h>depth)
+   {
 		d=(h/tan(Theta))*tb_aspectRatio;
    }
-   else{
+   else
+   {
 		d=(depth/tan(Theta))*tb_aspectRatio;
    }
 
