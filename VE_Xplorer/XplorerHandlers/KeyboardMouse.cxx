@@ -1,9 +1,5 @@
 #include <iostream>
 
-#include <vrj/Draw/OGL/GlDrawManager.h>
-#include <vrj/Draw/OGL/GlWindow.h>
-#include <vrj/Display/Viewport.h>
-
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 using namespace VE_Xplorer;
@@ -31,6 +27,12 @@ void KeyboardMouse::preFrame(){
 			gadget::KeyEventPtr key_evt=dynamic_pointer_cast<gadget::KeyEvent>(*i);
          _key=key_evt->getKey();
 		}
+
+      // Use this call if you want to hold a key for it to be active
+      /*else if(type==gadget::KeyReleaseEvent){
+         _key=-1;
+      }*/
+
       /*
 		else if(type==gadget::MouseButtonPressEvent){
 			gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);

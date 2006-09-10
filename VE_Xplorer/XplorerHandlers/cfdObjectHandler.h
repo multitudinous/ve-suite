@@ -95,7 +95,7 @@ class VE_XPLORER_EXPORTS cfdObjectHandler
       void ProcessHit(osgUtil::IntersectVisitor::HitList);
       void ActivateGeometryPicking();
       void DeactivateGeometryPicking();
-      cfdNavigate * navigator;
+      cfdNavigate* navigator;
    
    private:
 

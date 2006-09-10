@@ -1,6 +1,9 @@
 #include <cmath>
 #include <cassert>
 
+#include <osg/Group>
+#include <osg/BoundingSphere>
+#include <osg/BoundingBox>
 
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
@@ -43,8 +46,14 @@ void cfdTrackball::Update(){
        i!=cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.end();++i){
        
       const gadget::EventType type=(*i)->type();
+
+      if(type==gadget::KeyPressEvent){
+         gadget::KeyEventPtr key_evt=dynamic_pointer_cast<gadget::KeyEvent>(*i);
+         Keyboard(key_evt->getKey());
+         std::cout<<key_evt->getKey()<<std::endl;
+      }
       
-      if(type==gadget::MouseButtonPressEvent){
+      else if(type==gadget::MouseButtonPressEvent){
          gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
          Mouse(mouse_evt->getButton(),1,mouse_evt->getX(),mouse_evt->getY());
       }
@@ -68,9 +77,9 @@ void cfdTrackball::Matrix(){
       return;
    }
 
-   Update();
-
 	tb_accuTransform=cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+
+   Update();
 
    Matrix44f mat;
    Matrix44f accRotation;
@@ -117,6 +126,13 @@ void cfdTrackball::SetFOVy(float _top,float _bottom,float _near){
 	tb_FOVy=topAngle+bottomAngle;
 }
 
+void cfdTrackball::Keyboard(int key){
+   // If "r" is pressed
+   if(key==35){
+      ResetTransforms();
+   }
+}
+
 void cfdTrackball::Mouse(int button,int state,int x,int y){
 	assert(tb_button!=-1);
 	tb_button=button;
@@ -153,11 +169,23 @@ void cfdTrackball::Motion(int x,int y){
 	tb_prevPos[1]=tb_currPos[1];
 }
 
-/*void cfdTrackball::ResetTransforms(){
+void cfdTrackball::ResetTransforms(){
+   identity(tb_accuTransform);
+}
+
+void cfdTrackball::FitToScreen(){
+   osg::BoundingBox bs;
+
+   bs.expandBy(cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->getBound());
+
+   //for(int i=0;i<(int)cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->asGroup()->getNumChildren();i++){
+      //bs.expandBy(cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->asGroup()->getChild(i)->getBound());
+   //}
+
 	float d;
-	float w=fabs((tb_max[0]-tb_min[0])*0.5f);
-	float h=fabs((tb_max[1]-tb_min[1])*0.5f);
-	float depth=fabs((tb_max[2]-tb_min[2])*0.5f);
+	float w=fabs((bs._max.x()-bs._min.x())*0.5f);
+	float h=fabs((bs._max.z()-bs._min.z())*0.5f);
+	float depth=fabs((bs._max.y()-bs._min.y())*0.5f);
 	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
 	if(w>h&&w>depth)
 		d=(w/tan(Theta));
@@ -165,7 +193,9 @@ void cfdTrackball::Motion(int x,int y){
 		d=(h/tan(Theta))*tb_aspectRatio;
 	else
 		d=(depth/tan(Theta))*tb_aspectRatio;
-}*/
+
+   
+}
 
 void cfdTrackball::RotateView(float dx,float dy){
    float mag=sqrtf(dx*dx+dy*dy);

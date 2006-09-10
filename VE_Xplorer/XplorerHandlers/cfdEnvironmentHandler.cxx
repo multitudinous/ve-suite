@@ -389,7 +389,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 
    static int nav_mode=0;
 
-   // Use trackball if nav_mode==1
+   // Use spacebar( "113" ) to cycle through navigation modes
    if(keyboard_mouse->GetKey()==113){
       nav_mode++;
 
@@ -400,11 +400,12 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
       keyboard_mouse->SetKey(-1);
    }
 
+   // Use trackball if nav_mode==1
    if(nav_mode==1){
       // Update Trackball
 	   trackball->Matrix();
       
-      std::cout<<"Trackball is active!"<<std::endl;
+      //std::cout<<"Trackball is active!"<<std::endl;
    }
 
 

@@ -19,6 +19,7 @@ namespace VE_Xplorer
 	      ~KeyboardMouse();
 
 	      void preFrame();
+
          void SetKey(int key);
          int GetKey();
 
