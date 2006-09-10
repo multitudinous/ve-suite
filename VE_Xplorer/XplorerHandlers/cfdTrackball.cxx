@@ -31,15 +31,17 @@ cfdTrackball::cfdTrackball(){
 
    Init();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdTrackball::~cfdTrackball(){;}
-
-void cfdTrackball::Init(){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Init()
+{
 	identity(tb_transform);
 	identity(tb_accuTransform);
 }
-
-void cfdTrackball::Update(){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Update()
+{
    gadget::KeyboardMouse::EventQueue::iterator i;
 
    for(i=cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.begin();
@@ -69,8 +71,9 @@ void cfdTrackball::Update(){
       }
    }
 }
-
-void cfdTrackball::Matrix(){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Matrix()
+{
 	assert(tb_button!=-1);
 
    if(cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.empty()){
@@ -111,22 +114,25 @@ void cfdTrackball::Matrix(){
 	//completely zeroing out the translation of the tb_transform.
 	tb_transform[0][3]=tb_transform[1][3]=tb_transform[2][3]=0.0;
 }
-
-void cfdTrackball::Reshape(unsigned int width,unsigned int height){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Reshape(unsigned int width,unsigned int height)
+{
 	assert(tb_button!=-1);
 	tb_width=width;
 	tb_height=height;
    tb_aspectRatio=(float)width/(float)height;
 }
-
-void cfdTrackball::SetFOVy(float _top,float _bottom,float _near){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::SetFOVy(float _top,float _bottom,float _near)
+{
 	float topAngle=(OneEightyDivPI)*atan(_top/_near);
    float tempDiv=fabs(_bottom)/_near;
 	float bottomAngle=(OneEightyDivPI)*atan(tempDiv);
 	tb_FOVy=topAngle+bottomAngle;
 }
-
-void cfdTrackball::Keyboard(int key){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Keyboard(int key)
+{
    // If "r" is pressed
    if(key==35){
       ResetTransforms();
@@ -138,8 +144,9 @@ void cfdTrackball::Keyboard(int key){
       return;
    }
 }
-
-void cfdTrackball::Mouse(int button,int state,int x,int y){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Mouse(int button,int state,int x,int y)
+{
 	assert(tb_button!=-1);
 	tb_button=button;
 	if(state==1){
@@ -152,8 +159,9 @@ void cfdTrackball::Mouse(int button,int state,int x,int y){
 	else if(state==0)
 		tb_moving=false;
 }
-
-void cfdTrackball::Motion(int x,int y){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Motion(int x,int y)
+{
 	if(!tb_moving)
 		return;
 	tb_currPos[0]=(float)x/(float)tb_width;
@@ -174,12 +182,14 @@ void cfdTrackball::Motion(int x,int y){
 	tb_prevPos[0]=tb_currPos[0];
 	tb_prevPos[1]=tb_currPos[1];
 }
-
-void cfdTrackball::ResetTransforms(){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::ResetTransforms()
+{
    identity(tb_accuTransform);
 }
-
-void cfdTrackball::FitToScreen(){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::FitToScreen()
+{
    osg::BoundingBox bs;
 
    bs.expandBy(cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->getBound());
@@ -207,8 +217,9 @@ void cfdTrackball::FitToScreen(){
    tb_accuTransform[1][3]=d;
    tb_accuTransform[2][3]=0.0f;
 }
-
-void cfdTrackball::RotateView(float dx,float dy){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::RotateView(float dx,float dy)
+{
    float mag=sqrtf(dx*dx+dy*dy);
    tb_angle=mag*400.0f;
 
@@ -220,8 +231,9 @@ void cfdTrackball::RotateView(float dx,float dy){
 	tb_axis[2]=mat[0][2]*dy+mat[2][2]*dx;
 	Rotate(tb_axis[0],tb_axis[1],tb_axis[2],tb_angle);
 }
-
-void cfdTrackball::Twist(float dx,float dy){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Twist(float dx,float dy)
+{
    Matrix44f mat;
 	identity(mat);
 	float mag=sqrtf(dx*dx+dy*dy);
@@ -230,8 +242,9 @@ void cfdTrackball::Twist(float dx,float dy){
 	tb_angle=(OneEightyDivPI)*(Theta-newTheta);
 	Rotate(mat[1][0],mat[1][1],mat[1][2],tb_angle);
 }
-
-void cfdTrackball::Zoom(float dy){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Zoom(float dy)
+{
 	float viewlength=fabs(tb_accuTransform[1][3]);
 	float d=(viewlength*(1/(1+dy*2)))-viewlength;
 
@@ -249,8 +262,9 @@ void cfdTrackball::Zoom(float dy){
    //*********************************//
 
 }
-
-void cfdTrackball::Pan(float dx,float dy){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Pan(float dx,float dy)
+{
 
    //**********Temporary Fix**********//
    if((tb_accuTransform[1][3]>-offset)&&(tb_accuTransform[1][3]<offset)){
@@ -272,8 +286,9 @@ void cfdTrackball::Pan(float dx,float dy){
 	tb_transform[0][3]=dwx;
 	tb_transform[2][3]=dwy;
 }
-
-void cfdTrackball::Rotate(float x,float y,float z,float angle){
+////////////////////////////////////////////////////////////////////////////////
+void cfdTrackball::Rotate(float x,float y,float z,float angle)
+{
 	float rad=(float)(angle*PIDivOneEighty);
 	float cosAng=(float)(cos(rad));
 	float sinAng=(float)(sin(rad));
