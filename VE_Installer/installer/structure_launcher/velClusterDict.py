@@ -20,7 +20,7 @@ class ClusterDict(VelDict):
         GetCheckedLocations()
         WriteConfig()
     """
-    def __init__(self, preset = {}):
+    def __init__(self, preset = None):
         """Creates a dict of cluster names/locations from Launcher's Config."""
         VelDict.__init__(self, preset)
 

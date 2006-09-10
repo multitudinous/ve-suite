@@ -17,7 +17,7 @@ class CoveredConfig(CoveredState):
         self.Cover("BuilderShell", False, layer = DEV_COVER)
         self.Cover("DevMode", True, layer = DEV_COVER)
 
-    def VesArgument(self, vesFile = VELAUNCHER_DIR):
+    def VesArgument(self, vesFile):
         """Applies a .ves argument to the launcher."""
         self.Cover("Directory", os.path.dirname(vesFile), layer = VES_COVER)
         self.Cover("VESFile", vesFile)
@@ -45,9 +45,7 @@ class CoveredConfig(CoveredState):
         path joinings."""
         surface = self.GetSurface()
         for var in surface:
-            print "Checking %s" %var ##TESTER
             if surface[var] == None:
-                print "%s is None" %var ##TESTER
                 surface[var] = "None"
         print surface ##TESTER
         return surface

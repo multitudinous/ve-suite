@@ -58,8 +58,8 @@ def usage():
     print """
 LEGAL ARGUMENTS FOR VELAUNCHER.PY
 <none>: Start the velauncher GUI.
---dev: Start the velauncher GUI in developer mode. Doesn't work with any
-other arguments.
+--dev: If passed alone, starts the velauncher GUI in developer mode.
+If passed with other options, sets the launch environment to developer mode.
 
 -c, --conductor: Launch VE Conductor.
 -n, --nameserver: Launch VE NameServer.
@@ -76,6 +76,7 @@ to the VE-Builder directory. Overrides -c, -n, -x and -s.
 -j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's
 Juggler configuration.
 -w <dir>, --dir=<dir>: Set the Working directory to <dir>.
+-v <file>, --ves=<file>: Sets the VES file to pass in. Overrides -w.
 
 -t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.
 -p <port>, --port=<port>: Set TAOPORT to <port>.

@@ -582,11 +582,11 @@ class LauncherWindow(wx.Frame):
         config.SetPath('..')
         config.SetPath(name)
         ##Set directory, set insertion pt. to end for better initial view.
-        if devMode:
-            defaultDirectory = VELAUNCHER_DIR
-        else:
-            defaultDirectory = DIRECTORY_DEFAULT
-        defaultSelection = defaultDirectory[0]
+##        if devMode:
+##            defaultDirectory = VELAUNCHER_DIR
+##        else:
+##            defaultDirectory = DIRECTORY_DEFAULT
+##        defaultSelection = defaultDirectory[0]
         ##Set up the default Jconf list, if it isn't in the config.
 ##        defaultSelection = "None"
 ##        if config.HasGroup(JCONF_CONFIG):
@@ -606,36 +606,31 @@ class LauncherWindow(wx.Frame):
 ##            config.Write(defaultSelection, path)
 ##            config.SetPath('..')
         ##Set the configs read in.
-        strReads = {"Directory": defaultDirectory,
-                    "ClusterMaster": None,
-                    "DependenciesDir": None,
-                    "JconfSelection": defaultSelection,
-                    "TaoMachine": BASE_CONFIG["TaoMachine"],
-                    "BuilderDir": BASE_CONFIG["BuilderDir"]}
-        intReads = {"XplorerType": BASE_CONFIG["XplorerType"],
-                    "Mode": BASE_CONFIG["Mode"]}
-        boolReads = {"NameServer": BASE_CONFIG["NameServer"],
-                     "Conductor": BASE_CONFIG["Conductor"],
-                     "Xplorer": BASE_CONFIG["Xplorer"],
-                     "DesktopMode": BASE_CONFIG["DesktopMode"]}
+        strReads = ["Directory",
+                    "ClusterMaster",
+                    "DependenciesDir",
+                    "JconfSelection",
+                    "TaoMachine",
+                    "BuilderDir"]
+        intReads = ["XplorerType",
+                    "Mode"]
+        boolReads = ["NameServer",
+                     "Conductor",
+                     "Xplorer",
+                     "DesktopMode"]
         ##Workaround for error w/ Int TaoPort in earlier version
         if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
-            intReads["TaoPort"] = int(BASE_CONFIG["TaoPort"])
+            intReads.append("TaoPort")
         else:
-            strReads["TaoPort"] = BASE_CONFIG["TaoPort"]
+            strReads.append("TaoPort")
         ##Read in the configs.
         for var in strReads:
             if config.Exists(var):
                 self.state.Edit(var, config.Read(var))
-            else:
-                self.state.Edit(var, strReads[var])
         for var in intReads:
             if config.Exists(var):
                 self.state.Edit(var, config.ReadInt(var))
-            else:
-                self.state.Edit(var, strReads[var])
         for var in boolReads:
-            result = boolReads[var]
             if config.Exists(var):
                 if config.Read(var) == "True":
                     result = True
@@ -644,7 +639,7 @@ class LauncherWindow(wx.Frame):
                 else:
                     print 'ERROR! Saved boolean var not "True" or "False".'
                     result = None
-            self.state.Edit(var, result)
+                self.state.Edit(var, result)
         ##Set Cluster list.
 ##        if config.HasGroup(CLUSTER_CONFIG):
         self.state.Edit("ClusterDict", ClusterDict())
@@ -910,7 +905,7 @@ class LauncherWindow(wx.Frame):
         ##progress = LaunchStartedWindow(self)
         ##progress.Show()
         ##Go into the Launch
-        launchInstance = Launch(self.state.GetLaunchSurface())
+        launchInstance = Launch(self.state.GetLaunchSurface(), devMode)
         ##Destroy the Launch progress window.
         ##progress.OnClose("this message does not matter")
         ##Show NameServer kill window if NameServer was started.
@@ -948,30 +943,35 @@ class LauncherWindow(wx.Frame):
 arguments = sys.argv[1:]
 try:
     opts, args = getopt.getopt(arguments,
-                               "cnx:kj:t:p:w:e:m:sb:",
+                               "cnx:kj:t:p:w:e:m:sb:v:",
                                ["conductor", "nameserver", "xplorer=",
                                 "desktop", "jconf=", "taomachine=", "port=",
                                 "dir=", "dep=", "master=", "dev", "shell",
-                                "builder="])
+                                "builder=", "ves="])
 except getopt.GetoptError:
     usage()
     sys.exit(2)
+
+##Check if dev mode's on
+if ("--dev", "") in opts:
+    ##Run VE-Suite in dev mode? Turned to True if --dev passed.
+    devMode = True
+    ##Change Desktop mode's jconf for dev mode.
+    devDesktopName = "DevDesktop"
+    devDesktop = JconfDict({devDesktopName: DEFAULT_DEV_JCONF})
+    MODE_DICT["Desktop"]["JconfDict"] = devDesktop
+    MODE_DICT["Desktop"]["JconfSelection"] = devDesktopName
+    BASE_CONFIG["JconfDict"] = devDesktop
+    BASE_CONFIG["JconfSelection"] = devDesktopName
+    BASE_CONFIG["Directory"] = VELAUNCHER_DIR
+else:
+    devMode = False
+
 ##Window boot
-if len(opts) == 0 or (len(opts) == 1 and opts[0] == ("--dev", "")):
-    if len(opts) == 1 and opts[0] == ("--dev", ""):
-        ##Run VE-Suite in dev mode? Turned to True if --dev passed.
-        devMode = True
-        ##Change Desktop mode's jconf for dev mode.
-        devDesktopName = "DevDesktop"
-        devDesktop = JconfDict({devDesktopName: DEFAULT_DEV_JCONF})
-        MODE_DICT["Desktop"]["JconfDict"] = devDesktop
-        MODE_DICT["Desktop"]["JconfSelection"] = devDesktopName
-        BASE_CONFIG["JconfDict"] = devDesktop
-        BASE_CONFIG["JconfSelection"] = devDesktopName
-    else:
-        devMode = False
+if len(opts) == 0 or (len(opts) == 1 and devMode):
+    ##Launch the application
     app = wx.PySimpleApp()
-    frame = LauncherWindow(None,-1,'VE Suite Launcher', args)
+    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args)
     app.MainLoop()
     ##Delete the config link to avoid memory leakage.
     del config

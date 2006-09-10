@@ -31,8 +31,7 @@ class Launch:
         EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
                  clusterMaster)
         EnvFill(var, default)"""
-    def __init__(self, settings, vesFile = None,
-                 devMode = False, launcherWindow = None):
+    def __init__(self, settings, devMode = False):
 ##                 workingDir = DIRECTORY_DEFAULT,
 ##                 runName = False, runConductor = False,
 ##                 runXplorer = False, typeXplorer = 0,
@@ -70,6 +69,9 @@ class Launch:
         master = settings["ClusterMaster"]
         shell = settings["Shell"]
         builderDir = settings["BuilderDir"]
+        vesFile = settings["VESFile"]
+        if vesFile == "None":
+            vesFile = None
         ##END settings -> variables
         ##Set self's variables
         self.devMode = devMode

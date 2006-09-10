@@ -1,8 +1,8 @@
 class VelDict:
     """Parent class of the Jconf & Cluster dictionary data classes."""
-    def __init__(self, preset = {}):
+    def __init__(self, preset = None):
         """Initializes dictionary to Config if no presets are sent."""
-        if len(preset) == 0:
+        if preset == None:
             self.dictionary = self.ReadEntries()
         else:
             self.dictionary = {}

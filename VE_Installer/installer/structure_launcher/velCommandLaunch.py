@@ -4,13 +4,42 @@ import os
 from velBase import *
 from velLaunchCode import *
 from velModes import *
+from velCoveredConfig import *
+from velServerKillWindow import *
+from velJconfDict import *
+from velClusterDict import *
 
 class CommandLaunch:
     """Launches VE Suite using arguments from the command line."""
     def __init__(self, opts, args):
         config = wx.Config.Get()
-        ##Set up vars.
+        ##Set up default vars.
         self.state = CoveredConfig()
+        if ("--dev", "") in opts:
+            devMode = True
+            self.state.DevMode()
+        else:
+            devMode = False
+        for var in COMMAND_COVER:
+            self.state.Edit(var, COMMAND_COVER[var])
+        strReads = ["Directory",
+                    "DependenciesDir",
+                    "JconfSelection",
+                    "TaoMachine",
+                    "BuilderDir"]
+        intReads = ["XplorerType"]
+        if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
+            intReads.append("TaoPort")
+        else:
+            strReads.append("TaoPort")
+        for var in strReads:
+            if config.Exists(var):
+                self.state.Edit(var, config.Read(var))
+        for var in intReads:
+            if config.Exists(var):
+                self.state.Edit(var, config.ReadInt(var))
+        self.state.Edit("JconfDict", JconfDict())
+        self.state.Edit("ClusterDict", ClusterDict(preset = {}))
 
         ##Set vars from the command line.
         for opt, arg in opts:
@@ -25,18 +54,26 @@ class CommandLaunch:
                 else:
                     self.state.Edit("XplorerType", 0)
             elif opt in ('-k', "--desktop"):
-                self.state.Edit("Desktop", True)
+                self.state.Edit("DesktopMode", True)
             elif opt in ('-s', "--shell"):
                 self.state.Edit("Shell", True)
+                self.state.Cover("Conductor", False)
+                self.state.Cover("Xplorer", False)
+                self.state.Cover("NameServer", False)
             elif opt in ('-b', "--builder="):
                 self.state.Edit("Shell", True)
                 self.state.Edit("BuilderDir", arg)
+                self.state.Cover("Conductor", False)
+                self.state.Cover("Xplorer", False)
+                self.state.Cover("NameServer", False)
             elif opt in ('-j', "--jconf="):
                 self.state.Edit("JconfDict", {"Default": arg})
             elif opt in ('-t', "--taomachine="):
                 self.state.Edit("TaoMachine", arg)
             elif opt in ('-p', "--port="):
                 self.state.Edit("TaoPort", arg)
+            elif opt in ('-v', "--ves="):
+                self.state.VesArgument(arg)
             ##NOTE: --setup will be used to set up working directories &
             ##dependencies folders without going into the GUI.
             ##Not implemented yet.
@@ -72,7 +109,14 @@ class CommandLaunch:
 ##        if len(args) > 0:
 ##            vesFile = args[0]
         ##Launch
-        Launch(self.state, vesFile)
+        launchInstance = Launch(self.state.GetLaunchSurface())
+        ##Destroy the Launch progress window.
+        ##progress.OnClose("this message does not matter")
+        ##Show NameServer kill window if NameServer was started.
+        if self.state.GetSurface("NameServer"):
+            app = wx.PySimpleApp()
+            window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+            app.MainLoop()
 ##        Launch(None, self.workDir,
 ##               self.nameServer, self.conductor, self.xplorer, self.xplorerType,
 ##               self.jconf,

@@ -1,5 +1,5 @@
-##from velBase import *
-##from velClusterDict import *
+from velBase import *
+from velClusterDict import *
 from velJconfDict import *
 
 DEFAULT_JCONF = join(VELAUNCHER_DIR, "stereo_desktop", "desktop.jconf")
@@ -31,10 +31,17 @@ MODE_DICT = {"Desktop": {"Conductor": True,
                        "Xplorer": False,
                        "Shell": True},
              "Custom": {}}
+
+COMMAND_COVER = {"Conductor": False,
+                 "NameServer": False,
+                 "Xplorer": False,
+                 "DesktopMode": False,
+                 "Shell": False}
+
 BASE_CONFIG = {"DependenciesDir": None,
                "BuilderDir": VELAUNCHER_DIR,
                "Shell": False,
-               "Directory": VELAUNCHER_DIR,
+               "Directory": DIRECTORY_DEFAULT,
                "NameServer": True,
                "Conductor": True,
                "Xplorer": True,
@@ -46,4 +53,5 @@ BASE_CONFIG = {"DependenciesDir": None,
                "ClusterMaster": None,
                "JconfDict": JconfDict({"Desktop": DEFAULT_JCONF}),
                "JconfSelection": "Desktop",
-               "ClusterDict": None}
+               "ClusterDict": ClusterDict({}),
+               "VESFile": None}
