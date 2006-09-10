@@ -131,6 +131,12 @@ void cfdTrackball::Keyboard(int key){
    if(key==35){
       ResetTransforms();
    }
+   else if(key==23){
+      FitToScreen();
+   }
+   else{
+      return;
+   }
 }
 
 void cfdTrackball::Mouse(int button,int state,int x,int y){
@@ -187,14 +193,19 @@ void cfdTrackball::FitToScreen(){
 	float h=fabs((bs._max.z()-bs._min.z())*0.5f);
 	float depth=fabs((bs._max.y()-bs._min.y())*0.5f);
 	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
-	if(w>h&&w>depth)
+   if(w>h&&w>depth){
 		d=(w/tan(Theta));
-	else if(h>w&&h>depth)
+   }
+   else if(h>w&&h>depth){
 		d=(h/tan(Theta))*tb_aspectRatio;
-	else
+   }
+   else{
 		d=(depth/tan(Theta))*tb_aspectRatio;
+   }
 
-   
+   tb_accuTransform[0][3]=0.0f;
+   tb_accuTransform[1][3]=d;
+   tb_accuTransform[2][3]=0.0f;
 }
 
 void cfdTrackball::RotateView(float dx,float dy){
