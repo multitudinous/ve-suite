@@ -60,7 +60,7 @@ class Launch:
            CLUSTER_ENABLED:
             self.cluster = True
             ##Set up beginning of clusterScript for env setting.
-            self.WriteClusterScriptPrefix()
+            self.WriteClusterScriptPrefix(workingDir)
         else:
             self.cluster = False
         ##Set the environmental variables
@@ -294,7 +294,7 @@ class Launch:
                  s.append(str(h))
         return s
 
-    def WriteClusterScriptPrefix(self):
+    def WriteClusterScriptPrefix(self, workingDir):
         """Writes the cluster script section before the environment setting."""
         if unix:
             self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
@@ -303,7 +303,7 @@ class Launch:
         elif windows:
             self.clusterScript = ""
             self.clusterScript += "@ECHO OFF\n"
-            workingDrive = "%s:" %os.getenv("VE_WORKING_DIR","None").split(':')[0]
+            workingDrive = "%s:" %workingDir.split(':')[0]
             self.clusterScript += "net use %s \\\\samba.vrac.iastate.edu\\home\\users\\biv\n" %workingDrive ##TESTER
             self.WriteToClusterScript("PYTHONPATH")
         else:
@@ -346,7 +346,9 @@ class Launch:
             ##Else call the script on the other computer in psexec.
 ##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
 ##            self.clusterScript +=  ##TESTER
-            subprocess.Popen("psexec \\\\abbott -u IASTATE\\biv -i -e -c %s\n" %scriptPath) ##TESTER
+            subprocess.Popen(["psexec", "\\\\abbott", "-u", "IASTATE\\biv", "-i", "-e", "-c", scriptPath]) ##TESTER
+##            self.ExecuteClusterScript(clusterMaster, clusterFilePath,
+##                                      typeXplorer, jconf, desktopMode)
         else:
             print "Error!"
 
