@@ -77,7 +77,9 @@ class CoveredState:
             return self.base
 
     def GetCover(self, layer = None, var = None):
-        """Returns [var]'s value in [layer] or [layer] itself."""
+        """Returns [var]'s value in [layer] or [layer] itself.
+
+        Values in higher-numbered layers override lower-numbered layers."""
         cover = {}
         fields = self.BuildRange(layer)
         fields.reverse()

@@ -8,38 +8,39 @@ from velCoveredConfig import *
 from velServerKillWindow import *
 from velJconfDict import *
 from velClusterDict import *
+from velConfigFunctions import *
 
 class CommandLaunch:
     """Launches VE Suite using arguments from the command line."""
     def __init__(self, opts, args):
-        config = wx.Config.Get()
+##        config = wx.Config.Get()
         ##Set up default vars.
         self.state = CoveredConfig()
+        LoadConfig(CONFIG_DEFAULT, self.state)
+        self.state.CommandLaunch()
         if ("--dev", "") in opts:
             devMode = True
             self.state.DevMode()
         else:
             devMode = False
-        for var in COMMAND_COVER:
-            self.state.Edit(var, COMMAND_COVER[var])
-        strReads = ["Directory",
-                    "DependenciesDir",
-                    "JconfSelection",
-                    "TaoMachine",
-                    "BuilderDir"]
-        intReads = ["XplorerType"]
-        if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
-            intReads.append("TaoPort")
-        else:
-            strReads.append("TaoPort")
-        for var in strReads:
-            if config.Exists(var):
-                self.state.Edit(var, config.Read(var))
-        for var in intReads:
-            if config.Exists(var):
-                self.state.Edit(var, config.ReadInt(var))
-        self.state.Edit("JconfDict", JconfDict())
-        self.state.Edit("ClusterDict", ClusterDict(preset = {}))
+##        strReads = ["Directory",
+##                    "DependenciesDir",
+##                    "JconfSelection",
+##                    "TaoMachine",
+##                    "BuilderDir"]
+##        intReads = ["XplorerType"]
+##        if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
+##            intReads.append("TaoPort")
+##        else:
+##            strReads.append("TaoPort")
+##        for var in strReads:
+##            if config.Exists(var):
+##                self.state.Edit(var, config.Read(var))
+##        for var in intReads:
+##            if config.Exists(var):
+##                self.state.Edit(var, config.ReadInt(var))
+##        self.state.Edit("JconfDict", JconfDict())
+##        self.state.Edit("ClusterDict", ClusterDict(preset = {}))
 
         ##Set vars from the command line.
         for opt, arg in opts:

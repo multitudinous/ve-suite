@@ -41,10 +41,12 @@ from velJconfWindow import *
 from velClusterWindow import *
 from velLaunchCode import *
 from velSettingWin import *
-from velCommandLaunch import *
+from velCommandLine import *
 from velServerKillWindow import *
 from velCoveredConfig import *
 from velModes import *
+from velConfigFunctions import *
+from velSaveConfigWindow import *
 import velDependencies
 
 ##Set up the master config file
@@ -161,7 +163,8 @@ class LauncherWindow(wx.Frame):
         ##Build menu bar
         menuBar = wx.MenuBar()
         menu = wx.Menu()
-        menu.Append(MENU_DEP_ID, "Change De&pendencies\tCtrl+P")
+        menu.Append(500, "Choose De&pendencies\tCtrl+P")
+        menu.Append(501, "Choose &Builder Folder\tCtrl+B")
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         menuBar.Append(menu, "&File")
         menu = wx.Menu()
@@ -178,7 +181,8 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.Launch, self.bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_RADIOBOX, self.ModeChanged, self.rbMode)
-        self.Bind(wx.EVT_MENU, self.DependenciesChange, id = MENU_DEP_ID)
+        self.Bind(wx.EVT_MENU, self.DependenciesChange, id = 500)
+        self.Bind(wx.EVT_MENU, self.BuilderChange, id = 501)
         self.Bind(wx.EVT_MENU, self.ChooseLoadConfig, id = 510)
         self.Bind(wx.EVT_MENU, self.ChooseSaveConfig, id = 511)
         self.Bind(wx.EVT_MENU, self.DeleteConfig, id = 512)
@@ -243,7 +247,8 @@ class LauncherWindow(wx.Frame):
         if devMode:
             self.state.DevMode()
         ##Restore config values from last time.
-        self.LoadConfig(DEFAULT_CONFIG)
+        LoadConfig(DEFAULT_CONFIG, self.state)
+        self.React()
         ##Check the dependencies.
         if not devMode:
             dependenciesDir = config.Read("DependenciesDir", ":::")
@@ -295,6 +300,25 @@ class LauncherWindow(wx.Frame):
             config.Write("DependenciesDir", newDeps)
             self.UpdateData(newDeps)
 
+    def BuilderChange(self, event = None):
+        ##Ask for the builder directory.
+        startBuilderDir = self.state.GetBase("BuilderDir")
+        if startBuilderDir == None:
+            startBuilderDir = VELAUNCHER_DIR
+        dlg = wx.DirDialog(None,
+                           "Choose the VE-Builder directory:",
+                           startBuilderDir,
+                           style=wx.DD_DEFAULT_STYLE)
+        choice = dlg.ShowModal()
+        builderDir = dlg.GetPath()
+        dlg.Destroy()
+        if choice == wx.ID_OK:
+            ##If a directory's chosen, change it and return True.
+            self.state.Edit("BuilderDir", builderDir)
+            return True
+        else: ##If not, return False.
+            return False        
+        
     def ModeChanged(self, event):
         """Saves data & changes settings to match the selected mode."""
         ##Save data entered by user.
@@ -352,8 +376,9 @@ class LauncherWindow(wx.Frame):
         ##If a rule isn't given, it uses its regular value.
             
         ##DependenciesDir
-        self.GetMenuBar().Enable(MENU_DEP_ID,
-                                 self.state.IsEnabled("DependenciesDir"))
+        self.GetMenuBar().Enable(500, self.state.IsEnabled("DependenciesDir"))
+        ##BuilderDir
+        self.GetMenuBar().Enable(501, self.state.IsEnabled("BuilderDir"))
         ##Directory
         self.txDirectory.SetValue(self.state.GetSurface("Directory"))
         self.txDirectory.Enable(self.state.IsEnabled("Directory"))
@@ -398,60 +423,62 @@ class LauncherWindow(wx.Frame):
 
     def ChooseSaveConfig(self, event):
         """Lets the user choose which name to save a configuration under."""
-        dlg = wx.TextEntryDialog(self,
-                                 "Enter your configuration's name:",
-                                 "Save Configuration")
-        if dlg.ShowModal() == wx.ID_OK:
-            name = dlg.GetValue()
-            dlg.Destroy()
-            ##Don't overwrite the default config.
-            if name == "previous":
-                err = wx.MessageDialog(self,
-                                       "You can't name it 'previous'.\n" +
-                                       "The default config uses that.",
-                                       "Error: Reserved Name Chosen",
-                                       wx.OK)
-                err.ShowModal()
-                err.Destroy()
-                return
-            ##Check for slashes
-            if name.count('/') > 0 or name.count('\\') > 0:
-                err = wx.MessageDialog(self,
-                                       "You can't use a name with\n" +
-                                       "slashes in it.\n",
-                                       "Error: Name Contains Slashes",
-                                       wx.OK)
-                err.ShowModal()
-                err.Destroy()
-                return
-            ##Check if it's empty/spaces
-            elif name.isspace() or name == '':
-                err = wx.MessageDialog(self,
-                                       "You can't use an empty name.",
-                                       "Error: Name is Empty",
-                                       wx.OK)
-                err.ShowModal()
-                err.Destroy()
-                return
-            ##Confirm if it'll overwrite another file.
-            config.SetPath("..")
-            overwrite = config.Exists(name)
-            config.SetPath(DEFAULT_CONFIG)
-            if overwrite:
-                confirm = wx.MessageDialog(self,
-                                           "%s already exists.\n" % name +
-                                           "Do you want to overwrite it?",
-                                           "Confirm Overwrite",
-                                           wx.YES_NO | wx.YES_DEFAULT)
-                choice = confirm.ShowModal()
-                confirm.Destroy()
-                if choice == wx.ID_NO:
-                    return
-            ##Save the config.
-            self.SaveConfig(name)
-        else:
-            dlg.Destroy()
-
+##        dlg = wx.TextEntryDialog(self,
+##                                 "Enter your configuration's name:",
+##                                 "Save Configuration")
+        self.UpdateData()
+        dlg = SaveConfigWindow(self, self.state)
+        dlg.ShowModal()
+##        if dlg.ShowModal() == wx.ID_OK:
+##            name = dlg.GetValue()
+##            dlg.Destroy()
+##            ##Don't overwrite the default config.
+##            if name == "previous":
+##                err = wx.MessageDialog(self,
+##                                       "You can't name it 'previous'.\n" +
+##                                       "The default config uses that.",
+##                                       "Error: Reserved Name Chosen",
+##                                       wx.OK)
+##                err.ShowModal()
+##                err.Destroy()
+##                return
+##            ##Check for slashes
+##            if name.count('/') > 0 or name.count('\\') > 0:
+##                err = wx.MessageDialog(self,
+##                                       "You can't use a name with\n" +
+##                                       "slashes in it.\n",
+##                                       "Error: Name Contains Slashes",
+##                                       wx.OK)
+##                err.ShowModal()
+##                err.Destroy()
+##                return
+##            ##Check if it's empty/spaces
+##            elif name.isspace() or name == '':
+##                err = wx.MessageDialog(self,
+##                                       "You can't use an empty name.",
+##                                       "Error: Name is Empty",
+##                                       wx.OK)
+##                err.ShowModal()
+##                err.Destroy()
+##                return
+##            ##Confirm if it'll overwrite another file.
+##            config.SetPath("..")
+##            overwrite = config.Exists(name)
+##            config.SetPath(DEFAULT_CONFIG)
+##            if overwrite:
+##                confirm = wx.MessageDialog(self,
+##                                           "%s already exists.\n" % name +
+##                                           "Do you want to overwrite it?",
+##                                           "Confirm Overwrite",
+##                                           wx.YES_NO | wx.YES_DEFAULT)
+##                choice = confirm.ShowModal()
+##                confirm.Destroy()
+##                if choice == wx.ID_NO:
+##                    return
+##            ##Save the config.
+##            SaveConfig(name, self.state)
+##        else:
+##            dlg.Destroy()
 
     def ChooseLoadConfig(self, event):
         """Lets the user choose a confiuration to load."""
@@ -480,7 +507,8 @@ class LauncherWindow(wx.Frame):
         dlg.SetSelection(0)
         if dlg.ShowModal() == wx.ID_OK:
             choice = dlg.GetStringSelection()
-            self.LoadConfig(choice)
+            LoadConfig(choice, self.state)
+            self.React()
         dlg.Destroy()
 
     def DeleteConfig(self, event):
@@ -521,192 +549,6 @@ class LauncherWindow(wx.Frame):
                 config.SetPath(DEFAULT_CONFIG)
             confirm.Destroy()
         dlg.Destroy()
-        
-    def SaveConfig(self, name):
-        """Saves the current configuration under name.
-
-        Keyword arguments:
-        name -- What to name this configuration"""
-        ##Update the launcher's data
-        self.UpdateData()
-        ##Set config
-        config.SetPath('..')
-        config.SetPath(name)
-        ##Save the current configuration under name
-        strWrites = ["DependenciesDir", "BuilderDir", "Directory",
-                     "JconfSelection", "NameServer", "Xplorer",
-                     "Conductor", "TaoMachine", "TaoPort", "DesktopMode",
-                     "ClusterMaster"]
-        intWrites = ["XplorerType", "Mode"]
-        for var in strWrites:
-            if self.state.GetBase(var) != None:
-                config.Write(var, str(self.state.GetBase(var)))
-        for var in intWrites:
-            if self.state.GetBase(var) != None:
-                config.WriteInt(var, self.state.GetBase(var))
-##        if self.state.GetBase("DependenciesDir") != None:
-##            config.Write("DependenciesDir", self.state.GetBase("DependenciesDir"))
-##        if self.state.GetBase("BuilderDir" != None:
-##            config.Write("BuilderDir", self.builderDir)
-##        if self.state.GetBase("Directory") != None:
-##            config.Write("Directory", self.txDirectory.GetValue())
-##        else:
-##            config.Write("Directory", self.workingDir)
-##        config.Write("JconfSelection", self.jconfSelection)
-##        config.Write("NameServer", str(self.nameServer))
-##        config.Write("Xplorer", str(self.xplorer))
-##        config.WriteInt("XplorerType", self.xplorerType)
-##        config.Write("Conductor", str(self.conductor))
-##        config.Write("TaoMachine", self.taoMachine)
-##        config.Write("TaoPort", self.taoPort)
-##        config.Write("DesktopMode", str(self.desktop))
-##        config.WriteInt("Mode", self.rbMode.GetSelection())
-##        config.Write("ClusterMaster", self.clusterMaster)
-        ##Redo the Jconf/Cluster configs
-        config.DeleteGroup(JCONF_CONFIG)
-        self.state.GetBase("JconfDict").WriteConfig()
-        config.DeleteGroup(CLUSTER_CONFIG)
-        self.state.GetBase("ClusterDict").WriteConfig()
-        ##Return to default config
-        config.SetPath('..')
-        config.SetPath(DEFAULT_CONFIG)
-        return
-    
-    def LoadConfig(self, name):
-        """Loads the configuration under name.
-
-        Keyword arguments:
-        name -- Name of configuration to load
-        """
-        ##Set config
-        config.SetPath('..')
-        config.SetPath(name)
-        ##Set directory, set insertion pt. to end for better initial view.
-##        if devMode:
-##            defaultDirectory = VELAUNCHER_DIR
-##        else:
-##            defaultDirectory = DIRECTORY_DEFAULT
-##        defaultSelection = defaultDirectory[0]
-        ##Set up the default Jconf list, if it isn't in the config.
-##        defaultSelection = "None"
-##        if config.HasGroup(JCONF_CONFIG):
-##            pass
-##        ##Build a default Desktop jconf entry if DependenciesDir exists.
-##        elif config.HasEntry("DependenciesDir"):
-##            config.SetPath(JCONF_CONFIG)
-##            path = DEFAULT_JCONF
-##            defaultSelection = os.path.split(path)[1][:-6]
-##            config.Write(defaultSelection, path)
-##            config.SetPath('..')
-##        ##Build a DevDesktop jconf entry if DependenciesDir doesn't exist.
-##        else:
-##            config.SetPath(JCONF_CONFIG)
-##            path = DEFAULT_DEV_JCONF
-##            defaultSelection = "DevDesktop"
-##            config.Write(defaultSelection, path)
-##            config.SetPath('..')
-        ##Set the configs read in.
-        strReads = ["Directory",
-                    "ClusterMaster",
-                    "DependenciesDir",
-                    "JconfSelection",
-                    "TaoMachine",
-                    "BuilderDir"]
-        intReads = ["XplorerType",
-                    "Mode"]
-        boolReads = ["NameServer",
-                     "Conductor",
-                     "Xplorer",
-                     "DesktopMode"]
-        ##Workaround for error w/ Int TaoPort in earlier version
-        if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
-            intReads.append("TaoPort")
-        else:
-            strReads.append("TaoPort")
-        ##Read in the configs.
-        for var in strReads:
-            if config.Exists(var):
-                self.state.Edit(var, config.Read(var))
-        for var in intReads:
-            if config.Exists(var):
-                self.state.Edit(var, config.ReadInt(var))
-        for var in boolReads:
-            if config.Exists(var):
-                if config.Read(var) == "True":
-                    result = True
-                elif config.Read(var) == "False":
-                    result = False
-                else:
-                    print 'ERROR! Saved boolean var not "True" or "False".'
-                    result = None
-                self.state.Edit(var, result)
-        ##Set Cluster list.
-##        if config.HasGroup(CLUSTER_CONFIG):
-        self.state.Edit("ClusterDict", ClusterDict())
-        ##Set Jconf dictionary.
-##        if config.HasGroup(JCONF_CONFIG):
-        self.state.Edit("JconfDict", JconfDict())
-        ##Restrict XplorerType's value.
-        test = self.state.GetBase(var = "XplorerType")
-        if test < 0 or test >= len(RADIO_XPLORER_LIST):
-            self.state.Edit("XplorerType", 0)
-        ##Sets txDirectory's cursor to end in Unix systems for easier reading.
-        ##Acts strange in Windows for some reason; investigate.
-        if unix:
-            self.txDirectory.SetInsertionPointEnd()
-        ##Return to default config
-        config.SetPath('..')
-        config.SetPath(DEFAULT_CONFIG)
-        ##React to the new config.
-        self.React()
-        return
-
-##        self.state.Edit("Directory", config.Read("Directory", defaultDirectory))
-##        if self.ves == None:
-##            self.txDirectory.SetValue(self.workingDir)
-        ##Set ClusterMaster
-##        self.state.Edit("ClusterMaster", config.Read("ClusterMaster", ""))
-        ##Set Jconf cursor.
-##        self.state.Edit = config.Read("JconfSelection",
-##                                          defaultSelection)
-        ##Set Tao Machine & Port.
-##        self.taoMachine = config.Read("TaoMachine", "localhost")
-        ##Workaround for error w/ Int TaoPort in last version
-##        if config.GetEntryType("TaoPort") == 3: ##3: Int entry type",
-##            self.taoPort = str(config.ReadInt("TaoPort", 1239))
-##        else:
-##            self.taoPort = config.Read("TaoPort", "1239")
-        ##Set Name Server
-##        if config.Read("NameServer", "True") == "True":
-##            self.nameServer = True
-##        else:
-##            self.nameServer = False            
-        ##Set Xplorer
-##        if config.Read("Xplorer", "True") == "True":
-##            self.xplorer = True
-##        else:
-##            self.xplorer = False
-        ##Set Xplorer Type
-##        data = config.ReadInt("XplorerType", -1)
-##        if data >= 0 and data < len(RADIO_XPLORER_LIST):
-##            self.xplorerType = data
-##        else:
-##            self.xplorerType = 0
-        ##Set Conductor
-##        if config.Read("Conductor", "True") == "True":
-##            self.conductor = True
-##        else:
-##            self.conductor = False
-        ##Set Desktop Mode
-##        if config.Read("DesktopMode", "False") == "True":
-##            self.desktop = True
-##        else:
-##            self.desktop = False
-        ##Set Mode
-##        self.rbMode.SetSelection(config.ReadInt("Mode", 0))
-        ##Set Builder Dir
-##        if config.Exists("BuilderDir"):
-##            self.builderDir = config.Read("BuilderDir", "ErrOr")
 
     def Settings(self, event):
         """Launches the Custom Settings window."""
@@ -864,50 +706,31 @@ class LauncherWindow(wx.Frame):
             dlg = wx.MessageDialog(self,
                                     "Do you want to use this shell\n" +
                                     "to run VE-Builder?",
-                                    "Running VE-Builder",
+                                    "Create a VE-Builder Shell?",
                                     wx.YES_NO)
             choice = dlg.ShowModal()
             dlg.Destroy()
-            loop = False
             if choice == wx.ID_YES:
-                ##Ask for the builder directory.
-                if v("BuilderDir") == None:
-                    startBuilderDir = VELAUNCHER_DIR
-                else:
-                    startBuilderDir = v("BuilderDir")
-                dlg = wx.DirDialog(None,
-                                   "Choose the VE-Builder directory:",
-                                   startBuilderDir,
-                                   style=wx.DD_DEFAULT_STYLE)
-                choice = dlg.ShowModal()
-                if choice == wx.ID_OK:
-                    ##If a directory's chosen, go ahead.
-                    self.state.Edit("BuilderDir", dlg.GetPath())
-                else: ##If not, ask if they want to run VE-Builder again.
-                    pass
-                dlg.Destroy()
+                while v("BuilderDir") == None:
+                    ##Force the user to choose a Builder directory if he
+                    ##hasn't chosen one yet.
+                    dirChosen = self.BuilderChange()
+                    if dirChosen:
+                        pass
+                    else:
+                        dlg = wx.MessageDialog(self,
+                                               "You didn't choose a\n" +
+                                               "directory for the Builder.\n" +
+                                               "Please choose one.",
+                                               "Error: No Directory Chosen",
+                                                wx.OK)
             else:
                 ##Cover up the BuilderDir
                 self.state.React(True, "BuilderDir", None)
-        ##BANDAID
-        ##This DirDialog is used to purge dlg of previous MessageDialogs.
-        ##Without it, having a MessageDialog w/o a DirDialog after it
-        ##hangs the program's end.
-        ##Figure out the cause later so we can remove this.
-##        dlg = wx.DirDialog(None,
-##                           "Purges dlg; temporary workaround",
-##                           "",
-##                           style=wx.DD_DEFAULT_STYLE)
-##        dlg.Destroy()
         ##Hide the Launcher.
         self.Hide()
-        ##Bring up the Launch progress window.
-        ##progress = LaunchStartedWindow(self)
-        ##progress.Show()
         ##Go into the Launch
         launchInstance = Launch(self.state.GetLaunchSurface(), devMode)
-        ##Destroy the Launch progress window.
-        ##progress.OnClose("this message does not matter")
         ##Show NameServer kill window if NameServer was started.
         if v("NameServer"):
             window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
@@ -922,7 +745,7 @@ class LauncherWindow(wx.Frame):
         ##(Add & to the end of its command.)
         ##Update default config file.
         self.UpdateData()
-        self.SaveConfig(DEFAULT_CONFIG)
+        SaveConfig(DEFAULT_CONFIG, self.state)
         config.Flush()
         self.Hide()
         self.Destroy()

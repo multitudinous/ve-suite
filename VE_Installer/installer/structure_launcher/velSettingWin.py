@@ -268,6 +268,7 @@ class SettingsWindow(wx.Dialog):
         self.chJconf.Clear()
         for name in self.state.GetSurface("JconfDict").GetNames():
             self.chJconf.Append(name)
+        print "Test: %s" %self.state.GetSurface("JconfSelection") ##TESTER
         self.chJconf.SetStringSelection(self.state.GetSurface("JconfSelection"))
         self.chJconf.Enable(self.state.IsEnabled("JconfDict") and
                             self.state.IsEnabled("JconfSelection") and

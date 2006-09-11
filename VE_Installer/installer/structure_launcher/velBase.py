@@ -31,9 +31,9 @@ XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC"]
 JCONF_CONFIG = "JconfList"
 CLUSTER_CONFIG = "Cluster"
 ##Values for launcher's GUI layout
-MENU_DEP_ID = 500
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (250, 250)
+INITIAL_DIALOG_SIZE = INITIAL_JCONF_WINDOW_SIZE
 BACKGROUND_COLOR = wx.Colour(200, 200, 200)
 JCONF_LIST_DISPLAY_MIN_SIZE = (100, 50)
 TOP_SPACE = (75, 75)
@@ -84,8 +84,10 @@ Juggler configuration.
 -m <name>, --master=<name>: Set VEXMASTER to <name>."""
     return
 
-UNAVAILABLE_COVER = 0
-DEV_COVER = UNAVAILABLE_COVER + 1
-VES_COVER = DEV_COVER + 1
-MODE_COVER = VES_COVER + 1
-TOTAL_COVERS = MODE_COVER + 1
+##Covers for the CoveredConfig.
+##Higher-numbered covers "cover up" lower-numbered covers.
+UNAVAILABLE_LAYER = 0
+DEV_LAYER = UNAVAILABLE_LAYER + 1
+VES_LAYER = DEV_LAYER + 1
+MODE_LAYER = VES_LAYER + 1
+TOTAL_LAYERS = MODE_LAYER + 1
