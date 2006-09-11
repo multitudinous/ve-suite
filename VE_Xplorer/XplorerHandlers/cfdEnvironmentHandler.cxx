@@ -387,7 +387,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    // Update "Keyboard" and "Mouse" events
    keyboard_mouse->preFrame();
 
-   static int nav_mode=0;
+   static int nav_mode=1;
 
    // Use spacebar( "113" ) to cycle through navigation modes
    if(keyboard_mouse->GetKey()==113){
