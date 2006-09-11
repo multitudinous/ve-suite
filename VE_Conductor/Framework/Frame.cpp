@@ -876,6 +876,11 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
          return;
       }
       
+      //We must make this call here 
+      //because we set path to null in the New call
+      wxCommandEvent event;
+      New( event );
+
       path = vesFileName.GetFullPath();
       path.Replace( "\\", "/", true );
       directory = vesFileName.GetPath();
@@ -896,8 +901,6 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       
       //Now laod the xml data now that we are in the correct directory
       fname=dialog.GetFilename();
-      wxCommandEvent event;
-      New( event );
       SubmitToServer( event );      
       network->Load( path.c_str() );
       SubmitToServer( event );      
@@ -1515,6 +1518,11 @@ void AppFrame::ProcessCommandLineArgs( void )
       return;
    }
 
+   // we must make this call here because
+   // new sets the path to null
+   wxCommandEvent event;
+   New( event );
+
    path = vesFileName.GetFullPath();
    path.Replace( "\\", "/", true );
    directory = vesFileName.GetPath();
@@ -1535,8 +1543,6 @@ void AppFrame::ProcessCommandLineArgs( void )
    
    //Now laod the xml data now that we are in the correct directory
    fname=vesFileName.GetFullName();
-   wxCommandEvent event;
-   New( event );
    // we submit after new to make sure that the ce and ge ar cleared
    SubmitToServer( event );      
    network->Load( path.c_str() );
