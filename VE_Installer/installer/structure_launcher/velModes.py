@@ -39,7 +39,7 @@ COMMAND_COVER = {"Conductor": False,
                  "Shell": False}
 
 BASE_CONFIG = {"DependenciesDir": None,
-               "BuilderDir": VELAUNCHER_DIR,
+               "BuilderDir": None,
                "Shell": False,
                "Directory": DIRECTORY_DEFAULT,
                "NameServer": True,
