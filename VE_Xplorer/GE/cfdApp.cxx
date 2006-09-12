@@ -632,14 +632,14 @@ void cfdApp::draw()
    int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
    gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
    gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
-	
-	cfdEnvironmentHandler::instance()->SetWindowDimensions(w_width,w_height);
 
    // compute unsigned versions of the viewport info (for passing to glViewport)
    unsigned ll_x = unsigned( vp_ox*float( w_width ) );
    unsigned ll_y = unsigned( vp_oy*float( w_height) );
    unsigned x_size = unsigned( vp_sx*float( w_width) );
    unsigned y_size = unsigned( vp_sy*float( w_height) );
+
+   cfdEnvironmentHandler::instance()->SetWindowDimensions(x_size,y_size);
 
    // Add the tree to the scene viewer and set properties
    sv->setSceneData(getScene());
