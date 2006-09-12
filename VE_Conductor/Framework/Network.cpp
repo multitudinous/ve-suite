@@ -1833,10 +1833,7 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
   sbboxes.push_back(bbox);
   //  for (i=0; i<modules.size(); i++)
   
-  wxClientDC dc(this);
-  PrepareDC(dc);
-  dc.SetUserScale( userScale.first, userScale.second );
-  ReDraw(dc);
+  ReDrawAll();
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 
