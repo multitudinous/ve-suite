@@ -212,9 +212,9 @@ cfdDataSet::~cfdDataSet()
  
    if ( _vtkFHndlr )
    {
-      vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
       delete _vtkFHndlr;
       _vtkFHndlr = 0;
+      vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
    }
 }
 

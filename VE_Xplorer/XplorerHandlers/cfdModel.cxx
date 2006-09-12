@@ -148,11 +148,14 @@ cfdModel::~cfdModel()
                              << std::endl << vprDEBUG_FLUSH;
       delete *itr;
    }*/
-   for(unsigned int i = 0; i < mVTKDataSets.size(); i++)
+   size_t dataSetSize = mVTKDataSets.size();
+   for ( size_t i = 0; i < dataSetSize; i++)
    {
       delete mVTKDataSets.at(i);
    }
    mVTKDataSets.clear();
+   vprDEBUG(vesDBG,2) << "deleting mVTKDataSets"
+      << std::endl << vprDEBUG_FLUSH;
 
    //texture data cleanup
 #ifdef _OSG
@@ -164,9 +167,11 @@ cfdModel::~cfdModel()
    }*/
    for(unsigned int i = 0; i < mTextureDataSets.size(); i++)
    {
-      delete mVTKDataSets.at(i);
+      delete mTextureDataSets.at(i);
    }
    mTextureDataSets.clear();
+   vprDEBUG(vesDBG,2) << "deleting mTextureDataSets"
+      << std::endl << vprDEBUG_FLUSH;
 #endif
 #endif
  

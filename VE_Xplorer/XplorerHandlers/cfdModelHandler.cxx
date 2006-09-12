@@ -162,14 +162,21 @@ void cfdModelHandler::CleanUp( void )
    }
    _modelList.clear();
 
-   if ( _scalarBar ) 
+   if ( _scalarBar )
+   {
       delete _scalarBar;
+      vprDEBUG(vesDBG,2) << "delete _scalarBar"
+         << std::endl << vprDEBUG_FLUSH;
+   }
 
    if ( this->arrow ) 
    {
       this->arrow->Delete();
       arrow = 0;
+      vprDEBUG(vesDBG,2) << "this->arrow->Delete()"
+         << std::endl << vprDEBUG_FLUSH;
    }
+   
    for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
                                        itr != _eventHandlers.end(); itr++ )
    {
@@ -177,6 +184,8 @@ void cfdModelHandler::CleanUp( void )
       itr->second = 0;
    }
    _eventHandlers.clear();
+   vprDEBUG(vesDBG,2) << "cfdModelHandler end destructor"
+      << std::endl << vprDEBUG_FLUSH;
 }
 
 ///////////////////////
