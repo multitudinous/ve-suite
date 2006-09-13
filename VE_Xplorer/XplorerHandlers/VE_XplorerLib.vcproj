@@ -771,7 +771,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MouseSelection.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\QCLoadFileEH.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectionHandler.cxx"
 				>
 			</File>
 			<File
@@ -816,6 +824,10 @@
 			</File>
 			<File
 				RelativePath=".\TextureBasedEventHandler.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\WandSelection.cxx"
 				>
 			</File>
 		</Filter>
@@ -1120,7 +1132,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MouseSelection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\QCLoadFileEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectionHandler.h"
 				>
 			</File>
 			<File
@@ -1169,6 +1189,10 @@
 			</File>
 			<File
 				RelativePath=".\vtkSmartPtr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WandSelection.h"
 				>
 			</File>
 		</Filter>

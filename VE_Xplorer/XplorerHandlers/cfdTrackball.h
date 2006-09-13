@@ -30,14 +30,12 @@ namespace VE_Xplorer
          float tb_currPos[2];
          float tb_prevPos[2];
 	      float tb_aspectRatio;
+         float tb_FOVyRatio;
          unsigned int tb_width;
          unsigned int tb_height;
 	      float tb_FOVy;
 	      int tb_key;
 	      int tb_button;
-         float tb_angle;
-	      float tb_max[3];
-	      float tb_min[3];
          Matrix44f tb_transform;
          Matrix44f tb_accuTransform;
 

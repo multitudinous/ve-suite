@@ -25,25 +25,39 @@ void KeyboardMouse::preFrame(){
 
 		if(type==gadget::KeyPressEvent){
 			gadget::KeyEventPtr key_evt=dynamic_pointer_cast<gadget::KeyEvent>(*i);
+
          _key=key_evt->getKey();
 		}
 
       // Use this call if you want to hold a key for it to be active
-      /*else if(type==gadget::KeyReleaseEvent){
-         _key=-1;
-      }*/
+      //else if(type==gadget::KeyReleaseEvent){
+         //_key=-1;
+      //}
 
-      /*
 		else if(type==gadget::MouseButtonPressEvent){
 			gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+
+         _button=mouse_evt->getButton();
+         _state=1;
+         _x=mouse_evt->getX();
+         _y=mouse_evt->getY();
 		}
 		else if(type==gadget::MouseButtonReleaseEvent){
 			gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+
+         _button=mouse_evt->getButton();
+         _state=0;
+         _x=mouse_evt->getX();
+         _y=mouse_evt->getY();
 		}
 		else if(type==gadget::MouseMoveEvent){
 			gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+         
+         _button=mouse_evt->getButton();
+         _x=mouse_evt->getX();
+         _y=mouse_evt->getY();
 		}
-      */
+      
 	}
 }
 
@@ -53,5 +67,21 @@ void KeyboardMouse::SetKey(int key){
 
 int KeyboardMouse::GetKey(){
    return _key;
+}
+
+int KeyboardMouse::GetButton(){
+   return _button;
+}
+
+int KeyboardMouse::GetState(){
+   return _state;
+}
+
+int KeyboardMouse::GetX(){
+   return _x;
+}
+
+int KeyboardMouse::GetY(){
+   return _y;
 }
 

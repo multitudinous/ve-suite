@@ -57,6 +57,7 @@
 #include "VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
+#include "VE_Xplorer/XplorerHandlers/MouseSelection.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -77,6 +78,8 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
    nav = 0;
    trackball = 0;
+   keyboard_mouse = 0;
+   mouse_selection = 0;
    _teacher       = 0;
    _soundHandler  = 0;
    //_camHandler    = 0;
@@ -92,8 +95,9 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
       worldTrans[ i ] = 0.0f;
       worldRot[ i ] = 0.0f;
    }
+
    this->nav = 0;
-	this->trackball=0;
+
 #ifdef VE_PATENTED
 #ifdef _OSG
    this->objectHandler = 0;
@@ -123,10 +127,12 @@ void cfdEnvironmentHandler::Initialize( std::string param )
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    displaySettings = new cfdDisplaySettings();
    this->nav = new cfdNavigate();
-	this->trackball = new cfdTrackball();
+	trackball = new cfdTrackball();
+   keyboard_mouse = new KeyboardMouse();
+   mouse_selection = new MouseSelection();
    //_readParam = new cfdReadParam();
    this->arrow = cfdModelHandler::instance()->GetArrow();
-   this->keyboard_mouse = new KeyboardMouse();
+   
    //CreateObjects();
 
 #ifdef VE_PATENTED
@@ -146,12 +152,26 @@ void cfdEnvironmentHandler::CleanUp( void )
       delete nav;
    }
 
-	if ( this->trackball )
+	if ( trackball )
 	{
 		vprDEBUG(vesDBG,2)
 			<< "|		  deleting this->trackball" << std::endl << vprDEBUG_FLUSH;
-      delete this->trackball;
+      delete trackball;
 	}
+
+   if ( keyboard_mouse )
+   {
+      vprDEBUG(vesDBG,2)  
+        << "|       deleting this->keyboard_mouse" << std::endl << vprDEBUG_FLUSH;
+      delete keyboard_mouse;
+   }
+
+   if ( mouse_selection )
+   {
+      vprDEBUG(vesDBG,2)
+         << "|       deleting this->mouse_selection" << std::endl << vprDEBUG_FLUSH;
+      delete mouse_selection;
+   }
    
    if ( this->_readParam )
    {  
@@ -184,13 +204,6 @@ void cfdEnvironmentHandler::CleanUp( void )
       vprDEBUG(vesDBG,2)  
         << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
       delete this->_teacher;
-   }
-
-   if ( this->keyboard_mouse)
-   {
-      vprDEBUG(vesDBG,2)  
-        << "|       deleting this->keyboard_mouse" << std::endl << vprDEBUG_FLUSH;
-      delete this->keyboard_mouse;
    }
 
    delete displaySettings;
@@ -253,17 +266,18 @@ cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
 /////////////////////////////////////////////////////////////////////
 cfdTrackball* cfdEnvironmentHandler::GetTrackball( void )
 {
-	return this->trackball;
+	return trackball;
 }
 /////////////////////////////////////////////////////////////////////
-
-
 KeyboardMouse* cfdEnvironmentHandler::GetKeyboardMouse( void )
 {
-   return this->keyboard_mouse;
+   return keyboard_mouse;
 }
-
-
+/////////////////////////////////////////////////////////////////////
+MouseSelection* cfdEnvironmentHandler::GetMouseSelection( void )
+{
+   return mouse_selection;
+}
 /////////////////////////////////////////////////////////////////////
 cfdCursor* cfdEnvironmentHandler::GetCursor( void )
 {
@@ -382,10 +396,12 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    }
 
 
-
    
-   // Update "Keyboard" and "Mouse" events
+   // Update KeyboardMouse events
    keyboard_mouse->preFrame();
+
+   // Update MouseSelection events
+   //mouse_selection->SelectObjects();
 
    static int nav_mode=1;
 
@@ -407,7 +423,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
       
       //std::cout<<"Trackball is active!"<<std::endl;
    }
-
 
 
 	
@@ -464,7 +479,8 @@ void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
 	_windowHeight = h;
 }
 
-void cfdEnvironmentHandler::SetFrustumValues(float _top,float _bottom,float _near){
+void cfdEnvironmentHandler::SetFrustumValues(float _top,float _bottom,float _near)
+{
 	_frustumTop=_top;
 	_frustumBottom=_bottom;
 	_frustumNear=_near;
@@ -472,9 +488,12 @@ void cfdEnvironmentHandler::SetFrustumValues(float _top,float _bottom,float _nea
 ///////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
-	//Update the values in the trackball
+	//Update the values in trackball
 	trackball->Reshape(_windowWidth,_windowHeight);
 	trackball->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
+
+   //Update the values in mouse_selection
+   mouse_selection->Reshape(_windowWidth,_windowHeight);
 }
 
 void cfdEnvironmentHandler::CreateObjects( void )

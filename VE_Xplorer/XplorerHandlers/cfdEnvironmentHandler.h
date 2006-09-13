@@ -54,6 +54,7 @@ namespace VE_Xplorer
    class cfdDisplaySettings;
 
    class KeyboardMouse;
+   class MouseSelection;
 
 #ifdef VE_PATENTED
 #ifdef _OSG
@@ -115,6 +116,9 @@ public:
    ///Accessor for KeyboardMouse
    KeyboardMouse* GetKeyboardMouse( void );
 
+   ///Accessor for MouseSelection
+   MouseSelection* GetMouseSelection( void );
+
    ///Accessor for cfdDisplaySettings
    cfdDisplaySettings* GetDisplaySettings( void );
 
@@ -148,6 +152,7 @@ private:
    cfdQuatCamHandler* _camHandler;
 
    KeyboardMouse* keyboard_mouse;
+   MouseSelection* mouse_selection;
 
 #ifdef _OSG 
 #ifdef VE_PATENTED 

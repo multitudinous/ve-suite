@@ -19,7 +19,9 @@ const double OneEightyDivPI=57.29577951;
 const double PIDivOneEighty=.0174532925;
 const float offset=0.5f;
 
-cfdTrackball::cfdTrackball(){
+////////////////////////////////////////////////////////////////////////////////
+cfdTrackball::cfdTrackball()
+{
    tb_currPos[0]=0.0f;
 	tb_currPos[1]=0.0f;
 	tb_prevPos[0]=0.0f;
@@ -32,7 +34,9 @@ cfdTrackball::cfdTrackball(){
    Init();
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdTrackball::~cfdTrackball(){;}
+cfdTrackball::~cfdTrackball(){
+   ;
+}
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTrackball::Init()
 {
@@ -52,7 +56,7 @@ void cfdTrackball::Update()
       if(type==gadget::KeyPressEvent){
          gadget::KeyEventPtr key_evt=dynamic_pointer_cast<gadget::KeyEvent>(*i);
          Keyboard(key_evt->getKey());
-         std::cout<<key_evt->getKey()<<std::endl;
+         //std::cout<<key_evt->getKey()<<std::endl;
       }
       
       else if(type==gadget::MouseButtonPressEvent){
@@ -128,6 +132,7 @@ void cfdTrackball::SetFOVy(float _top,float _bottom,float _near)
 	float topAngle=(OneEightyDivPI)*atan(_top/_near);
    float tempDiv=fabs(_bottom)/_near;
 	float bottomAngle=(OneEightyDivPI)*atan(tempDiv);
+   tb_FOVyRatio=topAngle/bottomAngle;
 	tb_FOVy=topAngle+bottomAngle;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,6 +142,7 @@ void cfdTrackball::Keyboard(int key)
    if(key==35){
       ResetTransforms();
    }
+   // If "f" is pressed
    else if(key==23){
       FitToScreen();
    }
@@ -190,31 +196,13 @@ void cfdTrackball::ResetTransforms()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTrackball::FitToScreen()
 {
-   osg::BoundingBox bs;
+   osg::BoundingSphere bs;
 
    bs.expandBy(cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->getBound());
 
-   //for(int i=0;i<(int)cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->asGroup()->getNumChildren();i++){
-      //bs.expandBy(cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->asGroup()->getChild(i)->getBound());
-   //}
-
-	float d;
-	float w=fabs((bs._max.x()-bs._min.x())*0.5f);
-	float h=fabs((bs._max.z()-bs._min.z())*0.5f);
-	float depth=fabs((bs._max.y()-bs._min.y())*0.5f);
 	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
-   if(w>h&&w>depth)
-   {
-		d=(w/tan(Theta));
-   }
-   else if(h>w&&h>depth)
-   {
-		d=(h/tan(Theta))*tb_aspectRatio;
-   }
-   else
-   {
-		d=(depth/tan(Theta))*tb_aspectRatio;
-   }
+   float z=bs.radius()*tb_FOVyRatio;
+   float d=(bs.radius()/tan(Theta))*tb_aspectRatio;  
 
    tb_accuTransform[0][3]=0.0f;
    tb_accuTransform[1][3]=d;
@@ -224,7 +212,7 @@ void cfdTrackball::FitToScreen()
 void cfdTrackball::RotateView(float dx,float dy)
 {
    float mag=sqrtf(dx*dx+dy*dy);
-   tb_angle=mag*400.0f;
+   float angle=mag*400.0f;
 
    Matrix44f mat;
 	identity(mat);
@@ -232,7 +220,7 @@ void cfdTrackball::RotateView(float dx,float dy)
 	tb_axis[0]=mat[0][0]*dy+mat[2][0]*dx;
 	tb_axis[1]=mat[0][1]*dy+mat[2][1]*dx;
 	tb_axis[2]=mat[0][2]*dy+mat[2][2]*dx;
-	Rotate(tb_axis[0],tb_axis[1],tb_axis[2],tb_angle);
+	Rotate(tb_axis[0],tb_axis[1],tb_axis[2],angle);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTrackball::Twist(float dx,float dy)
@@ -242,8 +230,8 @@ void cfdTrackball::Twist(float dx,float dy)
 	float mag=sqrtf(dx*dx+dy*dy);
 	float Theta=atan2f(tb_prevPos[0]-0.5,tb_prevPos[1]-0.5);
 	float newTheta=atan2f(tb_currPos[0]-0.5,tb_currPos[1]-0.5);
-	tb_angle=(OneEightyDivPI)*(Theta-newTheta);
-	Rotate(mat[1][0],mat[1][1],mat[1][2],tb_angle);
+	float angle=(OneEightyDivPI)*(Theta-newTheta);
+	Rotate(mat[1][0],mat[1][1],mat[1][2],angle);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTrackball::Zoom(float dy)
@@ -315,3 +303,4 @@ void cfdTrackball::Rotate(float x,float y,float z,float angle)
 	tb_transform[2][2]=(z*z)+(cosAng*(1-(z*z)));
 	tb_transform[3][3]=1.0f;
 }
+////////////////////////////////////////////////////////////////////////////////
