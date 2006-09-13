@@ -90,6 +90,8 @@
         </xs:sequence>
         <xs:attribute name="fileType" type="xs:string" />
         <xs:attribute name="playMode" type="xs:string" />
+        <xs:attribute name="hasHeader" type="xs:boolean" />
+        <xs:attribute name="numHeaderLines" type="xs:unsignedInt" maxOccurs="unbounded" minOccurs="0" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

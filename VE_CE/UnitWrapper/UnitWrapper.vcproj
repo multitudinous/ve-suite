@@ -184,11 +184,18 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\GetResultsEventHandler.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\SetInputsEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\UnitWrapper.cxx"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -201,6 +208,18 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\EventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GetResultsEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SetInputsEventHandler.h"
+				>
+			</File>
 			<File
 				RelativePath=".\UnitWrapper.h"
 				>

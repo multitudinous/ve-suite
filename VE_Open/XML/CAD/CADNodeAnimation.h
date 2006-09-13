@@ -79,6 +79,13 @@ public:
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlNode);
 
+   ///Specify if we have a header
+   ///\param hasHeader The header flag
+   void SetHasHeader(bool hasHeader);
+
+   ///Set the number of lines in the header, if it exists
+   ///\param nHeaderLines Number of lines the header contains
+   void SetNumberOfHeaderLines(unsigned int nHeaderLines);
 
    ///Get the file type. 
    std::string GetFileType();
@@ -91,6 +98,12 @@ public:
 
    ///Get the name of animation file.
    std::string GetAnimationFileName();
+
+   ///Check for a header
+   bool HasHeader();
+
+   ///Get the number of lines in the header
+   unsigned int GetNumberOfHeaderLines();
 
    ///Copy constructor
    CADNodeAnimation(const CADNodeAnimation& rhs);
@@ -108,6 +121,9 @@ protected:
    std::string _animationFileName;///<The actual name of the file.
    std::string _playMode;///<The play mode of the animation.
    std::string _name;///<The name of the animation.
+   
+   bool _hasHeader;///<Flag specifying header lines in file
+   unsigned int _numberOfHeaderLines;///<The number of line in the header
 };
 }
 #endif// CAD_NODE_ANIMATION_H

@@ -48,6 +48,8 @@ CADNodeAnimation::CADNodeAnimation()
    _animationFileName = " ";
    _playMode = "Once";
    _name = "VE-Animation";
+   _hasHeader = false;
+   _numberOfHeaderLines = 0;
    SetObjectNamespace("CAD");
    SetObjectType("CADNodeAnimation");
 }
@@ -81,6 +83,16 @@ void CADNodeAnimation::SetPlayMode(std::string playMode)
 {
    _playMode = playMode;
 }
+////////////////////////////////////////////////////////////////////////
+void CADNodeAnimation::SetNumberOfHeaderLines(unsigned int nHeaderLines)
+{
+   _numberOfHeaderLines = nHeaderLines;
+}
+///////////////////////////////////////////////////
+void CADNodeAnimation::SetHasHeader(bool hasHeader)
+{
+   _hasHeader = hasHeader;
+}
 ///////////////////////////////////////////////////////////////////////////
 void CADNodeAnimation::SetObjectFromXMLData( DOMNode* xmlNode)
 {
@@ -93,8 +105,11 @@ void CADNodeAnimation::SetObjectFromXMLData( DOMNode* xmlNode)
    if(currentElement)
    {
       //Get the attributes
-      GetAttribute(currentElement, "fileType",_fileSourceType);
+      //GetAttribute(currentElement, "fileType",_fileSourceType);
       GetAttribute(currentElement, "playMode",_playMode);
+      GetAttribute(currentElement, "hasHeader",_hasHeader);
+      GetAttribute(currentElement, "numberHeaderLines",_numberOfHeaderLines);
+
       DOMElement* animationFile = GetSubElement(currentElement,"fileName",0);
       if(animationFile)
       {
@@ -105,7 +120,23 @@ void CADNodeAnimation::SetObjectFromXMLData( DOMNode* xmlNode)
       {
          _name = ExtractDataStringFromSimpleElement(name);
       }
+
+      /*DOMElement* nHeaderLines = GetSubElement(currentElement,"numberOfHeaderLines",0);
+      if(nHeaderLines)
+      {
+         _numberOfHeaderLines = XMLObject::ExtractIntegerDataNumberFromSimpleElement(hasHeader);
+      }
+      DOMElement* hasHeader = GetSubElement(currentElement,"hasHeader",0);
+      if(hasHeader)
+      {
+         _hasHeader = ExtractBooleanFromSimpleElement(hasHeader);
+      }*/
    }
+}
+//////////////////////////////////
+bool CADNodeAnimation::HasHeader()
+{
+   return _hasHeader;
 }
 ////////////////////////////////////////////////
 std::string CADNodeAnimation::GetAnimationName()
@@ -135,6 +166,8 @@ CADNodeAnimation::CADNodeAnimation(const CADNodeAnimation& rhs)
    _animationFileName = rhs._animationFileName;
    _playMode = rhs._playMode;
    _name = rhs._name;
+   _hasHeader = rhs._hasHeader;
+   _numberOfHeaderLines = rhs._numberOfHeaderLines;
 }
 //////////////////////////////////////////////////////////////////////////
 CADNodeAnimation& CADNodeAnimation::operator=(const CADNodeAnimation& rhs)
@@ -146,6 +179,8 @@ CADNodeAnimation& CADNodeAnimation::operator=(const CADNodeAnimation& rhs)
       _animationFileName = rhs._animationFileName;
       _playMode = rhs._playMode;
       _name = rhs._name;
+      _hasHeader = rhs._hasHeader;
+      _numberOfHeaderLines = rhs._numberOfHeaderLines;
    }
    return *this;
 }
@@ -156,5 +191,7 @@ void CADNodeAnimation::_updateVEElement(std::string input)
    SetSubElement("name",_name);
    SetAttribute("fileType",_fileSourceType);
    SetAttribute("playMode",_playMode);
+   SetAttribute("hasHeader",_hasHeader);
+   SetAttribute("numberOfHeaderLines",_numberOfHeaderLines);
 }
 

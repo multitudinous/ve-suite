@@ -280,6 +280,22 @@ void XMLObject::SetAttribute(std::string attirbuteName,std::string attribute)
 {
    _veElement->setAttribute( xercesString( attirbuteName ), xercesString( attribute ) );
 }
+/////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetAttribute(std::string attirbuteName,unsigned int attribute)
+{
+   std::stringstream int2string;
+   int2string << attribute;
+   _veElement->setAttribute( xercesString( attirbuteName ), xercesString( int2string.str().c_str() )  );
+}
+/////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetAttribute(std::string attirbuteName,bool attribute)
+{
+   std::string bool2String("false");
+
+   if(attribute)
+      bool2String ="true";
+   _veElement->setAttribute( xercesString( attirbuteName ), xercesString( bool2String.c_str() )  );
+}
 ////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue,
                               std::string attribName, std::string attrib )
@@ -289,10 +305,53 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
    xmlObjectElement->setAttribute( xercesString( attribName ), xercesString( attrib ) );
    _veElement->appendChild( xmlObjectElement );
 }
+//////////////////////////////////////////////////////////////////////////////////////
+void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, 
+                             std::string attributeName, bool& attribute)
+{
+   try
+   {
+       DOMText* rawText = dynamic_cast< DOMText* >( baseElement->getFirstChild() );
+       std::string tmp;
+       char* fUnicodeForm  = XMLString::transcode( rawText->getData() );
+       tmp.assign( fUnicodeForm );
+       delete fUnicodeForm;
+
+       if(tmp == "true")
+         attribute = true;
+       else
+         attribute = false;
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid element!!"<<std::endl;
+      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
+   }
+}
+/////////////////////////////////////////////////////////////////////////////////////
+void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
+                             std::string attributeName, unsigned int& attribute)
+{
+   try
+   {
+      DOMText* rawText = dynamic_cast< DOMText* >( baseElement->getFirstChild() );
+      std::string tmp;
+
+      char* fUnicodeForm = XMLString::transcode( rawText->getData() );
+      tmp.assign( fUnicodeForm );
+      delete fUnicodeForm;
+   
+      attribute = std::atoi( tmp.c_str() );
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid element!!"<<std::endl;
+      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
+   }
+}
 //////////////////////////////////////////////////////////////////////////////
 void XMLObject::GetAttribute( DOMElement* baseElement, std::string attributeName,std::string& attribute)
 {
-
    attribute.clear();
    try
    {

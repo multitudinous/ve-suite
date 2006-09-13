@@ -121,6 +121,18 @@ public:
    ///\param attribute The attribute to retrive.
    void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, std::string& attribute);
 
+   ///Get a bool attribute by name
+   ///\param baseElement The element to extract it from
+   ///\param attributeName The name of the attribute
+   ///\param attribute The attribute to retrive.
+   void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, bool& attribute);
+
+   ///Get an unsigned int attribute by name
+   ///\param baseElement The element to extract it from
+   ///\param attributeName The name of the attribute
+   ///\param attribute The attribute to retrive.
+   void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, unsigned int& attribute);
+
    ///utility functions for extracting subElement itemIndex from a complex element.
    ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
@@ -163,6 +175,16 @@ public:
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
    void SetAttribute(std::string attirbuteName,std::string attribute);
+
+   ///utility functions for creating attribute on _veElement.
+   ///\param attirbuteName The name of the atrribute to be set
+   ///\param attribute The attribute value
+   void SetAttribute(std::string attirbuteName,unsigned int attribute);
+
+   ///utility functions for creating attribute on _veElement.
+   ///\param attirbuteName The name of the atrribute to be set
+   ///\param attribute The attribute value
+   void SetAttribute(std::string attirbuteName,bool attribute);
    ///Method to set id object
    ///\param idVar new id
    void SetID( unsigned int idVar );

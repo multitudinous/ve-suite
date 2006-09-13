@@ -400,7 +400,7 @@ void CADNodePropertiesDlg::_buildAnimationPanel()
    animationPropSizer->Add(_addAnimationButton,0,wxALIGN_CENTER);
 
    _removeAnimationButton = new wxButton(_animationPanel, REMOVE_ANIMATION,wxString("Remove..."));
-   animationPropSizer->Add(_removeAttributeButton,0,wxALIGN_CENTER);
+   animationPropSizer->Add(_removeAnimationButton,0,wxALIGN_CENTER);
    
    activeAnimationSizer->Add(_animationSelection,1,wxEXPAND|wxALIGN_CENTER);
 
@@ -425,7 +425,7 @@ void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
 		          _T("Add New Animation File"), 
 		          _T(""), 
 		          _T(""),
-		          _T("Animation Files(*.*)|*.*;"),
+		          _T("Animation Files(*.txt)|*.txt;"),
 		          wxOPEN|wxFILE_MUST_EXIST); 
          try
          {
