@@ -294,6 +294,52 @@ class Launch:
                  s.append(str(h))
         return s
 
+    def ClusterTemplate(self, workingDir, typeXplorer, jconf):
+        """Prepares the cluster template (for Windows)."""
+        if os.path.exists(templatePath):
+            COMMENT_NOTE = '##'
+            VAR_SEP = '%'
+            execPassed = False
+            clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', "cluster.bat")
+            variables = {"SLAVE".upper(): "%1",
+                         "USER".upper(): "biv", ##Placeholder
+                         "SCRIPT".upper(): clusterFilePath,
+                         "WORKDIR".upper(): workingDir,
+                         "DRIVE".upper(): workingDir.split(':')[0],
+                         "ENVIRONMENT".upper(): self.clusterScript,
+                         "XPLORER".upper(): XplorerCall(typeXplorer, jconf).join()}
+            self.clusterTemplate = ""
+            f = file(templatePath)
+            for line in f:
+                line = line.lstrip()
+                ##Toss comments & blank lines.
+                if len(line) == 0 or line[:2] == COMMENT_NOTE:
+                    continue
+                ##Check for %VAR% and replace them.
+                lineArray = line.split(VAR_SEP)
+                for wordNumber in range(len(lineArray)):
+                    word = lineArray[wordNumber].upper()
+                    ##Turn %% into %.
+                    if word == "":
+                        wordNumber[lineArray] = "%"
+                        pass
+                    ##Replace variables.
+                    if word in variables:
+                        lineArray[wordNumber] = variables[word]
+                ##Recombine.
+                line = line.join(lineArray)
+                ##Turn the first line into the psexec call.
+                if not execPassed:
+                    call = line.rstrip()
+                    call = line.split()
+                    self.clusterCall = call
+                    execPassed = True
+                ##Add the rest to the cluster.bat.
+                self.clusterTemplate += line
+        else:
+            print "Error! Cluster template doesn't exist!"
+            print "Attempting to substitute default template instead."
+
     def WriteClusterScriptPrefix(self, workingDir):
         """Writes the cluster script section before the environment setting."""
         if unix:
