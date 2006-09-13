@@ -12,7 +12,7 @@ import sys
 def Check(dependenciesDir):
     """Returns true if Dependencies folder checks out, false if it doesn't.
 
-    Automatically called during __init__.
+    Automatically called during velauncher's __init__.
     Checks if dependenciesDir exists,
     then checks if it looks like the Dependencies directory.
     If any check fails, it returns False. Else it returns True."""

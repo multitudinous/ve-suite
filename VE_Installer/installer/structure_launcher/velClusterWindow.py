@@ -9,17 +9,14 @@ class ClusterWindow(wx.Dialog):
     """A window for editing a list of clustered computers.
 
     Functions:
-        __init__(parent, ID, title, L, cursor=0)
-        DisplayJconfFile(event)
-        DeleteEnabledCheck
-        Update(cursor)
+        __init__(parent, state)
+        UpdateData()
+        UpdateDisplay(cursor)
         AddNew(event)
         Delete(event)
-        Rename(event)
         OnClose(event)
     """
-    def __init__(self, parent, state,
-                 ID = -1, title = "Cluster Settings"):
+    def __init__(self, parent, state, title = "Cluster Settings"):
         """Sets up the Jconf window.
 
         Keyword arguments:
@@ -30,8 +27,6 @@ class ClusterWindow(wx.Dialog):
                            style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
         ##Data storage.
         self.state = state
-##        self.cDict = state.GetSurface("ClusterDict")
-##        self.clusterMaster = state.GetSurface("ClusterMaster")
         ##Build displays.
         self.clustList = wx.ListBox(self, -1,
                                          size=JCONF_LIST_DISPLAY_MIN_SIZE)
@@ -42,15 +37,12 @@ class ClusterWindow(wx.Dialog):
         self.bDelete.SetToolTip(wx.ToolTip("Delete a slave listing."))
         ##Build master display.
         self.masterCtrl = wx.TextCtrl(self, -1)
-##        self.masterCtrl.SetValue(self.clusterMaster)
         self.masterCtrl.SetToolTip(wx.ToolTip("Name the master computer."))
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
         bOk.SetToolTip(wx.ToolTip("Return to Settings."))
         ##Fill in info.
         self.UpdateDisplay()
-##        ##Check if Delete's enabled.
-##        self.DeleteEnabledCheck()
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
@@ -83,26 +75,14 @@ class ClusterWindow(wx.Dialog):
         ##Set the background color.
         Style(self)
 
-##    def DeleteEnabledCheck(self):
-##        """Disables/Enables the Delete button based on number of entries.
-##
-##        Disabled if entries <= 1
-##        Enabled if entries > 1"""
-##        if self.cDict.Length() <= 0:
-##            self.bDelete.Enable(False)
-##        else:
-##            self.bDelete.Enable(True)
-
     def UpdateData(self):
+        """Updates data to match the display."""
         if self.masterCtrl.IsEnabled():
             self.state.Edit("ClusterMaster", self.masterCtrl.GetValue())
         return
-
-    def React(self):
-        return
     
     def UpdateDisplay(self, cursor = None):
-        """Updates the shown entries list & checks to match recent changes."""
+        """Updates display to match the data.."""
         ##Set cursor if it's blank.
         ##Master Node
         self.masterCtrl.SetValue(self.state.GetSurface("ClusterMaster"))
@@ -118,16 +98,6 @@ class ClusterWindow(wx.Dialog):
         self.bAdd.Enable(self.state.IsEnabled("ClusterDict"))
         self.bDelete.Enable(self.state.IsEnabled("ClusterDict") and
                             len(self.state.GetSurface("ClusterDict")) > 0)
-##        if cursor == "":
-##            cursor = self.clustList.GetStringSelection()
-##        nameList = self.cDict.GetNames()
-##        self.clustList.Set(nameList)
-##        if cursor == wx.NOT_FOUND or self.clustList.GetCount() == 0:
-##            self.clustList.SetSelection(wx.NOT_FOUND)
-##        elif self.clustList.FindString(str(cursor)) == wx.NOT_FOUND:
-##            self.clustList.SetSelection(wx.NOT_FOUND)
-##        else:
-##            self.clustList.SetStringSelection(cursor)
 
     def AddNew(self, event):
         """User chooses a new cluster computer to add to the list.
@@ -174,7 +144,6 @@ class ClusterWindow(wx.Dialog):
                     self.state.GetBase("ClusterDict").Add(location, location)
                     self.UpdateData()
                     self.UpdateDisplay()
-##                    self.DeleteEnabledCheck()
                     break
             else:
                 dlg.Destroy()
@@ -203,12 +172,9 @@ class ClusterWindow(wx.Dialog):
             self.state.GetBase("ClusterDict").Delete(name)
             ##Update display.
             self.UpdateDisplay()
-##            self.DeleteEnabledCheck()
 
     def OnClose(self, event):
         """Closes ClusterWindow."""
-##        self.GetParent().clusterMaster = self.masterCtrl.GetValue()
-##        self.cDict.WriteConfig()
         self.UpdateData()
         self.Hide()
         self.Destroy()

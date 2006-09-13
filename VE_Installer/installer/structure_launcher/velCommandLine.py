@@ -13,7 +13,6 @@ from velConfigFunctions import *
 class CommandLine:
     """Launches VE Suite using arguments from the command line."""
     def __init__(self, opts, args):
-##        config = wx.Config.Get()
         ##Set up default vars.
         self.state = CoveredConfig()
         LoadConfig(CONFIG_DEFAULT, self.state)
@@ -23,25 +22,6 @@ class CommandLine:
             self.state.DevMode()
         else:
             devMode = False
-##        strReads = ["Directory",
-##                    "DependenciesDir",
-##                    "JconfSelection",
-##                    "TaoMachine",
-##                    "BuilderDir"]
-##        intReads = ["XplorerType"]
-##        if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
-##            intReads.append("TaoPort")
-##        else:
-##            strReads.append("TaoPort")
-##        for var in strReads:
-##            if config.Exists(var):
-##                self.state.Edit(var, config.Read(var))
-##        for var in intReads:
-##            if config.Exists(var):
-##                self.state.Edit(var, config.ReadInt(var))
-##        self.state.Edit("JconfDict", JconfDict())
-##        self.state.Edit("ClusterDict", ClusterDict(preset = {}))
-
         ##Set vars from the command line.
         for opt, arg in opts:
             if opt in ('-c', "--conductor"):
@@ -75,62 +55,26 @@ class CommandLine:
                 self.state.Edit("TaoPort", arg)
             elif opt in ('-v', "--ves="):
                 self.state.VesArgument(arg)
-            ##NOTE: --setup will be used to set up working directories &
-            ##dependencies folders without going into the GUI.
-            ##Not implemented yet.
-            ##elif opt in ('-s', "--setup"):
-            ##    print "ERROR: Setup isn't implemented yet." + \
-            ##          " Wait until next version."
             elif opt in ('-w', "--dir="):
                 self.state.Edit("Directory", arg)
             elif opt in ('-e', "--dep="):
                 self.state.Edit("DependenciesDir", arg)
             elif opt in ('-m', "--master="):
                 self.state.Edit("ClusterMaster", arg)
+            ##NOTE: --setup will be used to set up working directories &
+            ##dependencies folders without going into the GUI.
+            ##Not implemented yet.
+            ##elif opt in ('-s', "--setup"):
+            ##    print "ERROR: Setup isn't implemented yet." + \
+            ##          " Wait until next version."
 
-        ##Fill in any args left out from the default config settings.
-##        if self.jconf == None:
-##            if config.HasGroup(JCONF_CONFIG):
-##                selection = config.Read("JconfSelection", "None")
-##                config.SetPath(JCONF_CONFIG)
-##                self.jconf= config.Read(selection, "None")
-##                config.SetPath('..')
-##            else:
-##                self.jconf = DEFAULT_JCONF
-##        ##Set Xplorer Type
-##        if self.xplorerType == None:
-##            data = config.ReadInt("XplorerType", 0)
-##            if data in range(len(RADIO_XPLORER_LIST)):
-##                self.xplorerType = data
-##            else:
-##                self.xplorerType = 0
-##        del config
-##        ##Set VES file
-##        vesFile = None
-##        if len(args) > 0:
-##            vesFile = args[0]
         ##Launch
         launchInstance = Launch(self.state.GetLaunchSurface())
-        ##Destroy the Launch progress window.
-        ##progress.OnClose("this message does not matter")
         ##Show NameServer kill window if NameServer was started.
         if self.state.GetSurface("NameServer"):
             app = wx.PySimpleApp()
             window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
             app.MainLoop()
-##        Launch(None, self.workDir,
-##               self.nameServer, self.conductor, self.xplorer, self.xplorerType,
-##               self.jconf,
-##               self.taoMachine, self.taoPort,
-##               self.desktop,
-##               self.depDir, master = self.clusterMaster,
-##               shell = self.shell, builderDir = self.builderDir,
-##               vesFile = vesFile)
-        ##Bring up the the Name Server Kill window.
-        ##ERROR: ServerKillWindow() doesn't work outside of app.MainLoop()
-        ##if self.nameServer and not self.shell:
-        ##    win = ServerKillWindow()
-        ##
         ##Launch the shell here, if needed.
         if self.state.GetSurface("Shell") == True:
             if windows:
