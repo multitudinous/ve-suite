@@ -10,7 +10,7 @@ from velJconfDict import *
 from velClusterDict import *
 from velConfigFunctions import *
 
-class CommandLaunch:
+class CommandLine:
     """Launches VE Suite using arguments from the command line."""
     def __init__(self, opts, args):
 ##        config = wx.Config.Get()

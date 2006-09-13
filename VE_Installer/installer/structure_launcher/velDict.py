@@ -1,5 +1,15 @@
 class VelDict:
-    """Parent class of the Jconf & Cluster dictionary data classes."""
+    """Parent class of the Jconf & Cluster dictionary data classes.
+
+    Functions:
+        __init__([preset])
+        Add(name, value)
+        Delete(name)
+        Length / __len__
+        GetNames
+        ReadEntries [empty]
+        UniqueName(name) [empty]
+        WriteConfig [empty]"""
     def __init__(self, preset = None):
         """Initializes dictionary to Config if no presets are sent."""
         if preset == None:
@@ -10,11 +20,13 @@ class VelDict:
                 self.dictionary[entry] = preset[entry]
 
     def Add(self, name, value):
+        """Adds name: value to self.dictionary."""
         name = self.UniqueName(name)
         self.dictionary[name] = value
         return name
 
     def Delete(self, name):
+        """Deletes name from self.dictionary."""
         del self.dictionary[name]
 
     def Length(self):
@@ -34,10 +46,13 @@ class VelDict:
         return nList
 
     def ReadEntries(self):
+        """Reads entries into self.dictionary from config. Empty."""
         return {}      
 
     def UniqueName(self, name):
+        """Returns a unique name for name in self.dictionary. Empty."""
         return
 
-    def WriteConfig(self, name, value):
+    def WriteConfig(self):
+        """Writes entries into config from self.dictionary. Empty."""
         return

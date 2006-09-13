@@ -1,49 +1,55 @@
-"""Contains constant variables and shared functions for VE-Launcher."""
+"""Contains constant variables and basic shared functions for VE-Launcher."""
 from os import getenv, name ##Used for getting system values
-from os.path import join, dirname ##Used for building paths.
+from os.path import join ##Used for building paths.
 import wx ##Used for GUI
 import sys
-import getopt
 
+##Shell variables.
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
-##Cluster features
+##Cluster variables.
 CLUSTER_ENABLED = True
-MASTER_WAIT = 7 ##Seconds to wait after starting Master to start Slaves
-SLAVE_WAIT = 5 ##Seconds to wait between each Slave start
-##Miscellaneous values for launcher's UI
-XPLORER_SHELL_NAME = "VE-Xplorer Shell"
-CONDUCTOR_SHELL_NAME = "VE-Conductor Shell"
-BUILDER_SHELL_NAME = "VE-Builder Shell"
+MASTER_WAIT = 7 ##Seconds to wait after starting Master to start Slaves.
+SLAVE_WAIT = 5 ##Seconds to wait between each Slave.
 ##File/Folder settings.
-##Note: The HOME_BASE variable will be the one the installer needs to modify.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
-##The directory velauncher.py is in.
-VELAUNCHER_DIR  = sys.path[0]
+VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
 LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
+##Config settings.
 CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
+JCONF_CONFIG = "JconfList"
+CLUSTER_CONFIG = "Cluster"
+##Default setting values.
 DEFAULT_TAO_MACHINE = "localhost"
 DEFAULT_TAO_PORT = "1239"
 RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
                       "OSG Patented Cluster"]
 XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC"]
-JCONF_CONFIG = "JconfList"
-CLUSTER_CONFIG = "Cluster"
-##Values for launcher's GUI layout
+##Settings for launcher's GUI layout.
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (250, 250)
 INITIAL_DIALOG_SIZE = INITIAL_JCONF_WINDOW_SIZE
-BACKGROUND_COLOR = wx.Colour(200, 200, 200)
+KILL_WINDOW_SIZE = (200, 100)
 JCONF_LIST_DISPLAY_MIN_SIZE = (100, 50)
+XPLORER_SHELL_NAME = "VE-Xplorer Shell"
+CONDUCTOR_SHELL_NAME = "VE-Conductor Shell"
+BUILDER_SHELL_NAME = "VE-Builder Shell"
+BACKGROUND_COLOR = wx.Colour(200, 200, 200)
 TOP_SPACE = (75, 75)
 BORDER = 5
 VERTICAL_SPACE = (-1, BORDER)
 HORIZONTAL_SPACE = (BORDER, -1)
 LEFT_MARGIN = HORIZONTAL_SPACE
 NULL_SPACE = (0, 0)
-KILL_WINDOW_SIZE = (200, 100)
-##Set up the system ID
+##Covers for the CoveredConfig.
+##Higher-numbered covers "cover up" lower-numbered covers.
+UNAVAILABLE_LAYER = 0
+DEV_LAYER = UNAVAILABLE_LAYER + 1
+VES_LAYER = DEV_LAYER + 1
+MODE_LAYER = VES_LAYER + 1
+TOTAL_LAYERS = MODE_LAYER + 1
+##Set up the system's ID.
 windows = (name == "nt")
 unix = (name == "posix" or name == "mac")
 
@@ -83,11 +89,3 @@ Juggler configuration.
 -e <dir>, --dep=<dir>: Set the Dependencies directory to <dir>.
 -m <name>, --master=<name>: Set VEXMASTER to <name>."""
     return
-
-##Covers for the CoveredConfig.
-##Higher-numbered covers "cover up" lower-numbered covers.
-UNAVAILABLE_LAYER = 0
-DEV_LAYER = UNAVAILABLE_LAYER + 1
-VES_LAYER = DEV_LAYER + 1
-MODE_LAYER = VES_LAYER + 1
-TOTAL_LAYERS = MODE_LAYER + 1

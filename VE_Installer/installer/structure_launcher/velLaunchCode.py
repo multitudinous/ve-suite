@@ -55,6 +55,7 @@ class Launch:
         shell -- Starts up a VE-Builder shell.
         builderDir -- Sets a path to the builderDir/bin."""
         ##Adapt settings to variables.
+        print settings ##TESTER
         workingDir = settings["Directory"]
         runName = settings["NameServer"]
         runConductor = settings["Conductor"]

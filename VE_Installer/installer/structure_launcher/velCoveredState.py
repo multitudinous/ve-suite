@@ -1,3 +1,4 @@
+"""Contains CoveredState, data structure base class."""
 class CoveredState:
     """Base class of the configuration. Saves base & cover vars.
 
@@ -7,7 +8,20 @@ class CoveredState:
 
     Getting the Base just returns the base's values (for saving user configs),
     while getting the Surface returns the values once they've been overwritten
-    by the variables covering them."""
+    by the variables covering them.
+
+    Functions:
+        __init__([dictionary, coverLayers])
+        BuildRange([layer])
+        Edit(name, value)
+        Cover(name, value, [layer])
+        ImportCover(cover, [layer])
+        Uncover(name, [layer])
+        UncoverAll([layer])
+        IsCovered(name)
+        GetBase([var])
+        GetCover([layer, var])
+        GetSurface([var])"""
     def __init__(self, dictionary = {}, coverLayers = 1):
         """Builds the base dictionary and a number of cover dictionaries."""
         self.base = dictionary

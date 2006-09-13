@@ -7,8 +7,13 @@ if windows:
     import win32api
 
 class ServerKillWindow(wx.Frame):
-    """A window to kill the Nameserver after launch."""
-    def __init__(self, pids = [], parent = None, title = "Kill Name Server"):
+    """A window to kill the Nameserver after launch.
+
+    Functions:
+        __init__(pids, [parent, title])
+        KillNameserver(event)
+        OnClose(event)"""
+    def __init__(self, pids, parent = None, title = "Kill Name Server"):
         """Creates the Server Kill Window."""
         wx.Frame.__init__(self, parent, wx.ID_ANY, title,
                           style = wx.DEFAULT_FRAME_STYLE &
@@ -43,12 +48,6 @@ class ServerKillWindow(wx.Frame):
                     win32api.CloseHandle(handle)
                 except:
                     pass
-##                except win32api.pywintypes.error, details:
-##                    ##Error brought up if either process is already closed.
-##                    dlg = wx.MessageDialog(None, str(details[0]),
-##                                           "Error!", wx.OK)
-##                    dlg.ShowModal()
-##                    dlg.Destroy()
         elif unix:
             os.system("killall Naming_Service Exe_server")
         self.OnClose("this event doesn't exist")

@@ -7,7 +7,15 @@ from velCoveredConfig import *
 from velConfigFunctions import *
 
 class SaveConfigWindow(wx.Dialog):
+    """Lets user choose name to save config under.
+
+    Functions:
+        __init__(parent, state)
+        ChangeName([event])
+        SaveConfig([event])
+        OnClose([event])"""
     def __init__(self, parent, state):
+        """Builds the Save Configuration window."""
         wx.Dialog.__init__(self, parent, -1, "Choose a Save Name",
                            style = wx.DEFAULT_FRAME_STYLE &
                            ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
@@ -62,17 +70,22 @@ class SaveConfigWindow(wx.Dialog):
         self.SetSizer(mainSizer)
         self.SetSize(INITIAL_DIALOG_SIZE)
         self.CenterOnParent(wx.BOTH)
-        ##Set the background color.
-##        Style(self)
         return
 
     def ChangeName(self, event = None):
+        """Changes the configuration name displayed in the text box."""
         newName = self.configList.GetStringSelection()
         if newName != "":
             self.txtSaveName.SetValue(newName)
         return
 
     def SaveConfig(self, event = None):
+        """Saves the configuration under the name in the text box.
+
+        Ensures the new name:
+        -Contains no slashes.
+        -Isn't empty spaces.
+        -Doesn't overwrite an existing name w/o confirmation."""
         name = self.txtSaveName.GetValue()
         ##Don't overwrite the default config.
         if name == DEFAULT_CONFIG:
@@ -125,6 +138,7 @@ class SaveConfigWindow(wx.Dialog):
         return
 
     def OnClose(self, event = None):
+        """Closes the window."""
         self.Hide()
         self.Destroy()
 

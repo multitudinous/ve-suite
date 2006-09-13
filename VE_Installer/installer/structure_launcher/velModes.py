@@ -1,3 +1,4 @@
+"""Constants defining VE-Launcher's modes."""
 from velBase import *
 from velClusterDict import *
 from velJconfDict import *

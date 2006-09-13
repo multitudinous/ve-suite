@@ -9,10 +9,10 @@ class JconfWindow(wx.Dialog):
     """A window for editing a list of Jconf files.
 
     Functions:
-        __init__(parent, ID, title, L, cursor=0)
-        DisplayJconfFile(event)
-        DeleteEnabledCheck()
-        Update(selection)
+        __init__(parent, state, [iD, title])
+        UpdateData([event])
+        React
+        UpdateDisplay([selection, refreshList])
         AddNew(event)
         Delete(event)
         Rename(event)
@@ -21,11 +21,7 @@ class JconfWindow(wx.Dialog):
     """
     def __init__(self, parent, state, iD = wx.ID_ANY,
                  title = "Xplorer Configurations"):
-        """Sets up the Jconf window.
-
-        Keyword arguments:
-        L: The linked Jconf dict this window modifies.
-        cursor: Name of the current selection in L."""
+        """Sets up the Jconf window."""
         wx.Dialog.__init__(self, parent, iD, title,
                            style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
         ##Data storage.
@@ -33,10 +29,7 @@ class JconfWindow(wx.Dialog):
         ##Build displays.
         self.lblPath = wx.StaticText(self, -1)
         self.confList = wx.ListBox(self, -1, size=JCONF_LIST_DISPLAY_MIN_SIZE)
-##                                   choices=self.dictionary.GetNames())
-##        self.confList.SetStringSelection(cursor)
         self.display = wx.TextCtrl(self, -1, style=wx.TE_READONLY)
-        self.DisplayJconfFile("")
         ##Build buttons.
         self.bAdd = wx.Button(self, -1, "Add")
         self.bAdd.SetToolTip(wx.ToolTip("Add a configuration listing."))
@@ -46,8 +39,6 @@ class JconfWindow(wx.Dialog):
         self.bDelete.SetToolTip(wx.ToolTip("Delete a configuration listing."))
         bOk = wx.Button(self, -1, "Ok")
         bOk.SetToolTip(wx.ToolTip("Return to Settings."))
-##        ##Check if Delete's enabled.
-##        self.DeleteEnabledCheck()
         self.UpdateDisplay(self.state.GetSurface("JconfSelection"), True)
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
@@ -84,32 +75,11 @@ class JconfWindow(wx.Dialog):
         ##Set the background color.
         Style(self)
 
-    def DisplayJconfFile(self, event):
-        """Shows the .jconf file of the selection in the text field."""
-        self.UpdateDisplay(self.confList.GetStringSelection())
-##        s = self.confList.GetStringSelection()
-##        if s in self.state.GetSurface("JconfDict").GetNames():
-##            f = self.state.GetSurface("JconfDict").GetPath(s)
-##        else:
-##            f = "ERROR: Entry missing from list."
-##        self.display.SetValue(f)
-##        self.display.SetInsertionPointEnd()
-##        self.lblPath.SetLabel("%s's path:" %(s))
-        
-##    def DeleteEnabledCheck(self):
-##        """Disables/Enables the Delete button based on number of entries.
-##
-##        Disabled if entries <= 1
-##        Enabled if entries > 1"""
-##        if self.dictionary.Length() <= 1:
-##            self.bDelete.Enable(False)
-##        else:
-##            self.bDelete.Enable(True)
-
-    def UpdateData(self, event):
+    def UpdateData(self, event = None):
         """Updates the data to match recent user changes.
 
-        Only covers selecting a new Jconf, not adding/deleting one."""
+        Only covers selecting a new Jconf;
+        the functions for adding/deleting one directly changes the data."""
         currentSelection = self.confList.GetStringSelection()
         self.state.Edit("JconfSelection", currentSelection)
         self.React()
@@ -117,6 +87,7 @@ class JconfWindow(wx.Dialog):
         return
     
     def React(self):
+        """Covers/uncovers data based on user input. Unused for now."""
         return
 
     def UpdateDisplay(self, selection = None, refreshList = False):
@@ -144,9 +115,6 @@ class JconfWindow(wx.Dialog):
         Default name: Name of Jconf file."""
         ##Default directory for the search is the
         ##DepsDir/JUGGLER_FOLDER/configFiles.
-##        config = wx.Config.Get()
-##        f = config.Read("DependenciesDir", VELAUNCHER_DIR)
-##        del config
         f = self.state.GetSurface("DependenciesDir")
         if f != None:
             f = os.path.join(f, JUGGLER_FOLDER, "configFiles")
@@ -185,10 +153,7 @@ class JconfWindow(wx.Dialog):
                 cursor -= 1
             else:
                 cursor += 1
-##            if cursor >= self.dictionary.Length():
-##                cursor = self.dictionary.Length() - 1
             self.UpdateDisplay(self.confList.GetString(cursor), True)
-##            self.DeleteEnabledCheck()
         dlg.Destroy()
 
     def Rename(self, event):
@@ -258,7 +223,6 @@ class JconfWindow(wx.Dialog):
 
     def OnClose(self, event):
         """Closes JconfWindow."""
-##        self.GetParent().UpdateChJconf(self.confList.GetStringSelection())
         selection = self.confList.GetStringSelection()
         if selection != "":
             self.state.Edit("JconfSelection", selection)

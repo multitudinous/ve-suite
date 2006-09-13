@@ -9,7 +9,8 @@ def SaveConfig(name, state):
     """Saves the current configuration under name.
 
     Keyword arguments:
-    name -- What to name this configuration"""
+    name -- What to name this configuration
+    state -- Launcher's data"""
     ##Set config
     config = wx.Config.Get()
     config.SetPath('..')
@@ -41,7 +42,7 @@ def LoadConfig(name, state):
 
     Keyword arguments:
     name -- Name of configuration to load
-    """
+    state -- Launcher's data"""
     ##Set config
     config = wx.Config.Get()
     config.SetPath('..')

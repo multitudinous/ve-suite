@@ -10,17 +10,19 @@ class JconfDict(VelDict):
     under the variable self.dictionary.
 
     Functions:
-        __init__()
-        Add(name, path)
+        __init__([preset])
+        ReadEntries
+        *Add(name, path)
         Rename(oldName, newName)
-        Delete(name)
+        *Delete(name)
+        *Length / *__len__
+        *GetNames
         UniqueName(name)
         GetPath(name)
-        Length() / __len__
-        GetNames()
-        WriteConfig()
+        WriteConfig
+    * Defined in VelDict.
     """
-    def __init__(self, preset = {}):
+    def __init__(self, preset = None):
         """Creates a list of .jconf names/paths from the Launcher's Config."""
         VelDict.__init__(self, preset)
 

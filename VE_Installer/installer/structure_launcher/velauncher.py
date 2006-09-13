@@ -7,7 +7,8 @@ parts of VE-Suite to launch:
 -Name Server
 -Conductor
 -Xplorer (user also chooses format and configuration)
-The user can also select VE-Suite's working directory.
+The user can also select VE-Suite's working & builder directories,
+launch a shell with the VE-Suite variables set.
 
 When the user has decided the settings and hits the Launch button,
 the module sets up the system's environmental variables and executes
@@ -15,7 +16,7 @@ the chosen programs. The launcher automatically quits after Launch.
 
 The launcher is made for standard builds of VE-Suite. To launch a custom build
 with it, create a batch/shell file to set the extra environmental variables,
-executing the launcher on its last command.
+executing the launcher on its last command in dev mode (--dev).
 """
 
 import os ##Used for setting environmental variables, running programs
@@ -23,31 +24,20 @@ import sys ##Gets command line arguments
 import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
 
-##Classes:
-##velauncher: Main window and boot code.
-##velBase: Contains constants and shared functions. 
-##velSettingWin: Settings Window.
-##velJconfDict: Jconfiguration data structure.
-##velClusterDict: Cluster slave data structure.
-##velJconfWindow: Jconfiguration Window.
-##velClusterWindow: Cluster Window.
-##velDependencies: Contains code for checking & choosing the Dependencies.
-##velLaunchCode: Contains environmental var settings & OS-specific launch code.
-##velServerKillWindow: Server Kill Window.
 from velBase import *
+from velModes import *
+from velCoveredConfig import *
+import velDependencies
+from velConfigFunctions import *
+from velSaveConfigWindow import *
 from velJconfDict import *
 from velClusterDict import *
 from velJconfWindow import *
 from velClusterWindow import *
-from velLaunchCode import *
 from velSettingWin import *
-from velCommandLine import *
 from velServerKillWindow import *
-from velCoveredConfig import *
-from velModes import *
-from velConfigFunctions import *
-from velSaveConfigWindow import *
-import velDependencies
+from velCommandLine import *
+from velLaunchCode import *
 
 ##Set up the master config file
 config = wx.Config(CONFIG_FILE)
@@ -55,10 +45,7 @@ config.SetPath(DEFAULT_CONFIG)
 wx.Config.Set(config)
 
 class LauncherWindow(wx.Frame):
-    """Manages the launcher's window and the use of data from it.
-
-    LauncherWindow manages the launcher's GUI, saving/loading the
-    configuration settings, and the commands to launch the VE-Suite programs.
+    """Manages the launcher's main window and its data.
 
     Order of steps:
         __init__ & LoadConfig(previous)
@@ -76,23 +63,19 @@ class LauncherWindow(wx.Frame):
             quit
 
     Functions:
-        __init__(parent, ID, title)
-        DependenciesGet
-        DependenciesCheck
-        ModeChanged(event)
-        UpdateData
+        __init__(parent, ID, title, arguments)
+        DependenciesChange(event)
+        BuilderChange([event])
+        UpdateData([depDir])
+        React
         UpdateDisplay
-        GetSelectedJconf
-        ChangeMode(event)
-        ChooseDirectory(event)
-        ChooseSaveConfig(event)
-        ChooseLoadConfig(event)
-        DeleteConfig(event)
-        SaveConfig(config, name)
-        LoadConfig(config, name)
-        Settings(event)
-        Launch(event)
-        OnClose(event)        
+        ChooseDirectory([event])
+        ChooseSaveConfig([event])
+        ChooseLoadConfig([event])
+        DeleteConfig([event])
+        Settings([event])
+        Launch([event])
+        OnClose([event])        
     """
     def __init__(self, parent, ID, title, arguments):
         """Builds the launcher's window and loads the last configuration."""
@@ -102,29 +85,10 @@ class LauncherWindow(wx.Frame):
                           wx.MAXIMIZE_BOX))
 
         ##Prepare data storage
-        ##NOTE: JconfDict is a local copy of the Jconf list stored in the
-        ##program's config. Changes to JconfDict are mirrored in the config.
         self.state = CoveredConfig()
-##        self.conductor = False
-##        self.nameServer = False
-##        self.xplorer = False
-##        self.xplorerType = 0
-##        self.workingDir = None
-##        self.desktop = False
-##        self.JconfDict = None
-##        self.jconfSelection = None
-##        self.clusterDict = None
-##        self.clusterMaster = None
-##        self.taoMachine = ""
-##        self.taoPort = ""
-##        self.dependencies = None
-##        self.builderDir = None
-##        self.shell = False
-##        self.ves = None
 
         ##Prepare the panel.
         panel = wx.Panel(self)
-        
         ##Prepare the logo.
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
         sbmLogo = wx.StaticBitmap(panel, -1, bmLogo)
@@ -180,7 +144,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, self.bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, self.bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
-        self.Bind(wx.EVT_RADIOBOX, self.ModeChanged, self.rbMode)
+        self.Bind(wx.EVT_RADIOBOX, self.UpdateData, self.rbMode)
         self.Bind(wx.EVT_MENU, self.DependenciesChange, id = 500)
         self.Bind(wx.EVT_MENU, self.BuilderChange, id = 501)
         self.Bind(wx.EVT_MENU, self.ChooseLoadConfig, id = 510)
@@ -270,13 +234,6 @@ class LauncherWindow(wx.Frame):
                     self.DependenciesChange("")
             self.dependencies = config.Read("DependenciesDir", ":::")
 
-        ##Modify Directory controls if VES file passed.
-##        if self.ves != None:
-##            self.txDirectory.SetValue(os.path.dirname(self.ves))
-##            if unix:
-##                self.txDirectory.SetInsertionPointEnd()
-##            self.txDirectory.Enable(False)
-##            self.bDirectory.Enable(False)
         ##Show the window.
         self.Show(True)
         ##ERROR CHECK: Is there a /bin folder in the launcher's directory?
@@ -294,13 +251,15 @@ class LauncherWindow(wx.Frame):
             dlg.Destroy()
 
 
-    def DependenciesChange(self, event):
+    def DependenciesChange(self, event = None):
+        """Asks the user to choose a new Dependencies folder."""
         newDeps = velDependencies.Change(self)
         if newDeps != None:
             config.Write("DependenciesDir", newDeps)
-            self.UpdateData(newDeps)
+            self.UpdateData(depDir = newDeps)
 
     def BuilderChange(self, event = None):
+        """Asks the user to choose a new Builder folder."""
         ##Ask for the builder directory.
         startBuilderDir = self.state.GetBase("BuilderDir")
         if startBuilderDir == None:
@@ -319,18 +278,14 @@ class LauncherWindow(wx.Frame):
         else: ##If not, return False.
             return False        
         
-    def ModeChanged(self, event):
-        """Saves data & changes settings to match the selected mode."""
-        ##Save data entered by user.
-        self.UpdateData()
-        return
+    def UpdateData(self, event = None, depDir = None):
+        """Saves the user's input to the launcher's data.
 
-    def UpdateData(self, depDir = None):
-        """Saves the user's input to the launcher's data variables."""
+        Will React & UpdateDisplay if mode's changed.
+        Call before data is saved to file."""
         ##NOTE: Will have to change way user's variables are saved if 
         ##modes allow users to change these in the future.
         ##Probably by grabbing the oldMode and checking its settings.
-
         react = False
         ##DependenciesDir
         if depDir != None:
@@ -360,21 +315,12 @@ class LauncherWindow(wx.Frame):
         ##Change Mode cover.
         mode = MODE_LIST[self.state.GetSurface("Mode")]
         self.state.ChangeMode(mode)
+        ##UpdateDisplay
         self.UpdateDisplay()
         return
     
     def UpdateDisplay(self):
-        """Changes settings to match the selected mode."""
-##        newMode = self.rbMode.GetStringSelection()
-##        if newMode in MODE_DICT:
-##            modeRules = MODE_DICT[newMode]
-##        else:
-##            modeRules = {}
-        ##Go through each rule listed in modeRules.
-        ##Change the corresponding controls to the value given.
-        ##If it's FIXED, prevent the user from changing it.
-        ##If a rule isn't given, it uses its regular value.
-            
+        """Changes GUI to match changes made by React."""
         ##DependenciesDir
         self.GetMenuBar().Enable(500, self.state.IsEnabled("DependenciesDir"))
         ##BuilderDir
@@ -394,20 +340,7 @@ class LauncherWindow(wx.Frame):
         self.rbMode.Enable(self.state.IsEnabled("Mode"))
         return
 
-##    def GetSelectedJconf(self):
-##        """Returns the path of the selected Jconf file."""
-##        mode = self.rbMode.GetStringSelection()
-##        if mode in MODE_DICT:
-##            modeRules = MODE_DICT[mode] 
-##        else:
-##            modeRules = {}
-##        if ("jconf" in modeRules) and (modeRules["jconf"][0] == FIXED):
-##            xplorerConfig = modeRules["jconf"][2]
-##        else:
-##            xplorerConfig = self.JconfDict.GetPath(self.jconfSelection)
-##        return xplorerConfig
-
-    def ChooseDirectory(self, event):
+    def ChooseDirectory(self, event = None):
         """The user chooses the working directory through a dialog."""
         curDir = self.txDirectory.GetValue()
         ##NOTE: If curDir doesn't exist, it automatically goes
@@ -421,66 +354,13 @@ class LauncherWindow(wx.Frame):
         dlg.Destroy()
         self.UpdateData()
 
-    def ChooseSaveConfig(self, event):
+    def ChooseSaveConfig(self, event = None):
         """Lets the user choose which name to save a configuration under."""
-##        dlg = wx.TextEntryDialog(self,
-##                                 "Enter your configuration's name:",
-##                                 "Save Configuration")
         self.UpdateData()
         dlg = SaveConfigWindow(self, self.state)
         dlg.ShowModal()
-##        if dlg.ShowModal() == wx.ID_OK:
-##            name = dlg.GetValue()
-##            dlg.Destroy()
-##            ##Don't overwrite the default config.
-##            if name == "previous":
-##                err = wx.MessageDialog(self,
-##                                       "You can't name it 'previous'.\n" +
-##                                       "The default config uses that.",
-##                                       "Error: Reserved Name Chosen",
-##                                       wx.OK)
-##                err.ShowModal()
-##                err.Destroy()
-##                return
-##            ##Check for slashes
-##            if name.count('/') > 0 or name.count('\\') > 0:
-##                err = wx.MessageDialog(self,
-##                                       "You can't use a name with\n" +
-##                                       "slashes in it.\n",
-##                                       "Error: Name Contains Slashes",
-##                                       wx.OK)
-##                err.ShowModal()
-##                err.Destroy()
-##                return
-##            ##Check if it's empty/spaces
-##            elif name.isspace() or name == '':
-##                err = wx.MessageDialog(self,
-##                                       "You can't use an empty name.",
-##                                       "Error: Name is Empty",
-##                                       wx.OK)
-##                err.ShowModal()
-##                err.Destroy()
-##                return
-##            ##Confirm if it'll overwrite another file.
-##            config.SetPath("..")
-##            overwrite = config.Exists(name)
-##            config.SetPath(DEFAULT_CONFIG)
-##            if overwrite:
-##                confirm = wx.MessageDialog(self,
-##                                           "%s already exists.\n" % name +
-##                                           "Do you want to overwrite it?",
-##                                           "Confirm Overwrite",
-##                                           wx.YES_NO | wx.YES_DEFAULT)
-##                choice = confirm.ShowModal()
-##                confirm.Destroy()
-##                if choice == wx.ID_NO:
-##                    return
-##            ##Save the config.
-##            SaveConfig(name, self.state)
-##        else:
-##            dlg.Destroy()
 
-    def ChooseLoadConfig(self, event):
+    def ChooseLoadConfig(self, event = None):
         """Lets the user choose a confiuration to load."""
         message = "Please choose a\n" + "configuration to load."
         choices = []
@@ -511,7 +391,7 @@ class LauncherWindow(wx.Frame):
             self.React()
         dlg.Destroy()
 
-    def DeleteConfig(self, event):
+    def DeleteConfig(self, event = None):
         """Lets the user choose a confiuration to delete."""
         message = "Choose a configuration to delete."
         choices = []
@@ -543,6 +423,7 @@ class LauncherWindow(wx.Frame):
                                        "delete the %s configuration?" % choice,
                                        "Confirm Deletion",
                                        wx.YES_NO | wx.NO_DEFAULT)
+            ##Delete the config if confirmed.
             if confirm.ShowModal() == wx.ID_YES:
                 config.SetPath("..")
                 config.DeleteGroup(choice)
@@ -550,18 +431,13 @@ class LauncherWindow(wx.Frame):
             confirm.Destroy()
         dlg.Destroy()
 
-    def Settings(self, event):
+    def Settings(self, event = None):
         """Launches the Custom Settings window."""
-##        mode = self.rbMode.GetStringSelection()
-##        if mode in MODE_DICT:
-##            modeRules = MODE_DICT[mode]
-##        else:
-##            modeRules = {}
         x, y = self.GetPosition()
         x2, y2 = self.rbMode.GetPosition()
         x3 = self.rbMode.GetSize()[0]
         ##Sets the upper-left corner of the Settings window to be just
-        ##right of the Mode radio box. Needs some nudging to avoid covering
+        ##right of the Mode radio box. Is nudged to avoid covering
         ##up important info.
         OFFSET = 20 ##Pixels
         position = wx.Point(x + x2 + x3 + OFFSET,
@@ -569,53 +445,14 @@ class LauncherWindow(wx.Frame):
         frame = SettingsWindow(self, self.state, position = position)
         frame.ShowModal()
 
-    def Launch(self, event):
+    def Launch(self, event = None):
         """Checks input, begins launch if error-free."""
-        ##Set mode
-##        mode = self.rbMode.GetStringSelection()
-##        if mode in MODE_DICT:
-##            modeRules = MODE_DICT[mode]
-##        else:
-##            modeRules = {}
-##        ##Set variables
-##        dependenciesDir = config.Read("DependenciesDir", "ERROR")
-##        if ("conductor" in modeRules) and (modeRules["conductor"][0] == FIXED):
-##            conductor = modeRules["conductor"][1]
-##        else:
-##            conductor = self.conductor
-##        if ("nameServer" in modeRules) and \
-##           (modeRules["nameServer"][0] == FIXED):
-##            nameServer = modeRules["nameServer"][1]
-##        else:
-##            nameServer = self.nameServer
-##        if ("xplorer" in modeRules) and (modeRules["xplorer"][0] == FIXED):
-##            xplorer = modeRules["xplorer"][1]
-##        else:
-##            xplorer = self.xplorer
-##        if ("xplorerType" in modeRules) and \
-##           (modeRules["xplorerType"][0] == FIXED):
-##            xplorerType = modeRules["xplorerType"][1]
-##        else:
-##            xplorerType = self.xplorerType
-##        if ("desktop" in modeRules) and (modeRules["desktop"][0] == FIXED):
-##            desktop = modeRules["desktop"][1]
-##        else:
-##            desktop = self.desktop
-##            if xplorer and xplorerType == 2:
-##                desktop = False
-##        if ("shell" in modeRules) and (modeRules["shell"][0] == FIXED):
-##            self.shell = modeRules["shell"][1]
-##        else:
-##            self.shell = False
-##        if len(arguments) > 0:
-##            vesFile = arguments[0]
-##        else:
-##            vesFile = None
+        self.UpdateData()
+        ##Launch data retrieved from the Surface;
+        ##Save data retrieved from the Base. (See velCoveredState.)
+        v = self.state.GetSurface
         ##ERROR CHECK:  Are any programs selected?
         ##              If not, abort launch.
-        self.UpdateData()
-        v = self.state.GetSurface
-##        if not (conductor or nameServer or xplorer or self.shell):
         if not (v("Conductor") or v("NameServer")
                 or v("Xplorer") or v("Shell")):
             dlg = wx.MessageDialog(self,
@@ -641,8 +478,6 @@ class LauncherWindow(wx.Frame):
             return
         ##ERROR CHECK:  Is the Tao Port between 0 and 65535?
         ##              If not, abort launch.
-##        if not (self.txTaoPort.GetValue().isdigit() and
-##                int(self.txTaoPort.GetValue()) <= 65535):
         if not (v("TaoPort").isdigit() and
                 int(v("TaoPort")) <= 65535):
             dlg = wx.MessageDialog(self,
@@ -725,7 +560,7 @@ class LauncherWindow(wx.Frame):
                                                "Error: No Directory Chosen",
                                                 wx.OK)
             else:
-                ##Cover up the BuilderDir
+                ##Hide the BuilderDir
                 self.state.React(True, "BuilderDir", None)
         ##Hide the Launcher.
         self.Hide()
@@ -735,14 +570,13 @@ class LauncherWindow(wx.Frame):
         if v("NameServer"):
             window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
         ##Close the Launcher
-        self.OnClose("this message does not matter")
+        self.OnClose()
 
-    def OnClose(self, event):
+    def OnClose(self, event = None):
         """Saves launcher's current configuration and quits the launcher.
 
         Called after a successful Launch or when the user manually closes
         the launcher window."""
-        ##(Add & to the end of its command.)
         ##Update default config file.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state)
@@ -761,7 +595,7 @@ class LauncherWindow(wx.Frame):
             else:
                 print "SHELL ERROR! This OS isn't supported."
 
-
+##START MAIN PROGRAM
 ##Get & clean up command line arguments.
 arguments = sys.argv[1:]
 try:
@@ -801,6 +635,6 @@ if len(opts) == 0 or (len(opts) == 1 and devMode):
 ##Command line boot
 ##Takes arguments passed, uses defaults for the rest, launches immediately.
 else:
-    CommandLaunch(opts, args)
+    CommandLine(opts, args)
 
 

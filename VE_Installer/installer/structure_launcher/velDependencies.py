@@ -1,4 +1,9 @@
-"""Handles checking and choosing the Dependencies folder for VE-Launcher."""
+"""Handles checking and choosing the Dependencies folder for VE-Launcher.
+
+Functions:
+    Check(dependenciesDir)
+    Change(parent)
+    Get(parent)"""
 from velBase import *
 import os
 import wx
@@ -107,9 +112,6 @@ def Get(parent):
                                wx.OK | wx.CANCEL)
         ##Quit if the user refuses to choose a Dependencies directory.
         if dlg.ShowModal() == wx.ID_CANCEL:
-            ##TESTER necessity of parent.Hide/Destroy
-            ##parent.Hide()
-            ##parent.Destroy()
             sys.exit(0)
         else:
             return Change()
