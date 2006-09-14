@@ -117,6 +117,9 @@ SRCS=\
    KeyboardMouse.cxx\
    cfdTrackball.cxx\
    cfdObjectHandler.cxx\
+	SelectionHandler.cxx\
+	MouseSelection.cxx\
+	WandSelection.cxx\
    CreateVisObjectEventHandler.cxx\
    ClearVisObjectsEventHandler.cxx\
    ChangeCursorEventHandler.cxx\
