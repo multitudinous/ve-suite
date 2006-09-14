@@ -1,0 +1,24 @@
+## Template used to make cluster.bat for Windows clusters.
+## ##: Denotes comment when used at the beginning of a line.
+## %%: Denotes an actual %. (Due to the template splicing.)
+## %SLAVE%: Slave's name
+## %USER%: Current user
+## %SCRIPT%: Command to call the slave script
+## %WORKDIR%: The working directory
+## %DRIVE%: The drive WORKDIR is on
+## %ENVIRONMENT%: The commands that set the environment
+## %XPLORER%: Command to execute VE-Xplorer
+
+## The first line must be the psexec call; it isn't included in cluster.bat
+psexec \\%SLAVE% -u IASTATE\%USER% -i -e -c %SCRIPT%
+
+@ECHO OFF
+net use %DRIVE% \\samba.vrac.iastate.edu\home\users\%USER%
+%DRIVE%
+cd %WORKDIR%
+
+##The commands to set the environment take multiple lines.
+##Therefore, %ENVIRONMENT% should be on its own line.
+%ENVIRONMENT%
+
+%XPLORER%

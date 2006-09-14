@@ -4,6 +4,7 @@ from time import sleep ##Used for delays in launch
 from platform import architecture ##Used to test if it's 32/64-bit
 from socket import gethostname ##Used to get hostname
 from velBase import *
+import string
 if windows:
     import subprocess
 
@@ -58,9 +59,11 @@ class Launch:
         ##Used in EnvSetup and Windows/Unix.
         if runXplorer and typeXplorer == 2 and cluster != None and \
            CLUSTER_ENABLED:
+            self.clusterScript = ""
             self.cluster = True
             ##Set up beginning of clusterScript for env setting.
-            self.WriteClusterScriptPrefix(workingDir)
+            if unix:
+                self.WriteClusterScriptPrefix(workingDir)
         else:
             self.cluster = False
         ##Set the environmental variables
@@ -74,10 +77,9 @@ class Launch:
         if shell: ##Shell is activated after destroy VE-Launcher.
             return
         elif windows:
-            pids = self.Windows(runName, runConductor, runXplorer,
-                                typeXplorer, jconf, desktopMode, vesFile,
-                                cluster, master)
-            print pids
+            self.Windows(runName, runConductor, runXplorer,
+                         typeXplorer, jconf, desktopMode, vesFile,
+                         cluster, master, workingDir)
         elif unix:
             self.Unix(runName, runConductor, runXplorer,
                       typeXplorer, jconf, desktopMode, cluster, master,
@@ -92,7 +94,7 @@ class Launch:
     def Windows(self, runName = False, runConductor = False,
                 runXplorer = False, typeXplorer = 0, jconf = DEFAULT_JCONF,
                 desktopMode = False, vesFile = None,
-                cluster = None, clusterMaster = None):
+                cluster = None, clusterMaster = None, workingDir = None):
         """Launches the chosen programs under an Unix OS.
 
         Keyword arguments:
@@ -119,13 +121,15 @@ class Launch:
         if self.cluster:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
-            self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
+##            self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
+            self.ReadClusterTemplate(workingDir, typeXplorer, jconf)
             clusterFileName = "cluster.bat"
             clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', clusterFileName)
             print clusterFilePath ##TESTER
             ##Write cluster script
             sourceFile = file(clusterFilePath, 'w')
-            sourceFile.write(self.clusterScript)
+##            sourceFile.write(self.clusterScript)
+            sourceFile.write(self.clusterTemplate)
             sourceFile.close()
             ##Master call
             print "***MASTER CALL: %s***" %(clusterMaster) ##TESTER
@@ -294,8 +298,10 @@ class Launch:
                  s.append(str(h))
         return s
 
-    def ClusterTemplate(self, workingDir, typeXplorer, jconf):
+    def ReadClusterTemplate(self, workingDir, typeXplorer, jconf):
         """Prepares the cluster template (for Windows)."""
+        templatePath = os.path.join(VELAUNCHER_DIR, "clusterTemplate.txt")
+        print templatePath ##TESTER
         if os.path.exists(templatePath):
             COMMENT_NOTE = '##'
             VAR_SEP = '%'
@@ -305,9 +311,9 @@ class Launch:
                          "USER".upper(): "biv", ##Placeholder
                          "SCRIPT".upper(): clusterFilePath,
                          "WORKDIR".upper(): workingDir,
-                         "DRIVE".upper(): workingDir.split(':')[0],
+                         "DRIVE".upper(): "%s:" %workingDir.split(':')[0],
                          "ENVIRONMENT".upper(): self.clusterScript,
-                         "XPLORER".upper(): XplorerCall(typeXplorer, jconf).join()}
+                         "XPLORER".upper(): string.join(self.XplorerCall(typeXplorer, jconf))}
             self.clusterTemplate = ""
             f = file(templatePath)
             for line in f:
@@ -319,21 +325,22 @@ class Launch:
                 lineArray = line.split(VAR_SEP)
                 for wordNumber in range(len(lineArray)):
                     word = lineArray[wordNumber].upper()
-                    ##Turn %% into %.
-                    if word == "":
-                        wordNumber[lineArray] = "%"
-                        pass
+                    ##Turn %% into %. NEEDS WORK.
+##                    if word == "":
+##                        lineArray[wordNumber] = "%"
+##                        pass
                     ##Replace variables.
                     if word in variables:
                         lineArray[wordNumber] = variables[word]
                 ##Recombine.
-                line = line.join(lineArray)
+                line = string.join(lineArray, '')
                 ##Turn the first line into the psexec call.
                 if not execPassed:
                     call = line.rstrip()
                     call = line.split()
                     self.clusterCall = call
                     execPassed = True
+                    continue
                 ##Add the rest to the cluster.bat.
                 self.clusterTemplate += line
         else:
@@ -392,7 +399,8 @@ class Launch:
             ##Else call the script on the other computer in psexec.
 ##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
 ##            self.clusterScript +=  ##TESTER
-            subprocess.Popen(["psexec", "\\\\abbott", "-u", "IASTATE\\biv", "-i", "-e", "-c", scriptPath]) ##TESTER
+##            subprocess.Popen(["psexec", "\\\\abbott", "-u", "IASTATE\\biv", "-i", "-e", "-c", scriptPath]) ##TESTER
+            subprocess.Popen(self.clusterCall) ##TESTER
 ##            self.ExecuteClusterScript(clusterMaster, clusterFilePath,
 ##                                      typeXplorer, jconf, desktopMode)
         else:
