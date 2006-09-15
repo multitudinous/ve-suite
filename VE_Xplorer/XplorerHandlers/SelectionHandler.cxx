@@ -1,4 +1,3 @@
-#ifdef VE_PATENTED
 #ifdef _OSG
 
 #include <osg/Group>
@@ -79,5 +78,4 @@ void SelectionHandler::SelectObjects()
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif
 #endif
