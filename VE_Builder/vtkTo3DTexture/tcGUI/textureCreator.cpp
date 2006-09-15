@@ -740,8 +740,8 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
          weights = new double[cell->GetNumberOfPoints()];
 	      //check to see if this point is in
 	      //the returned cell
-         //cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
-         cell->EvaluateLocation(subId,pcoords,pt,weights);
+         cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+         //cell->EvaluateLocation(subId,pcoords,pt,weights);
          _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
          if ( weights )
          {
