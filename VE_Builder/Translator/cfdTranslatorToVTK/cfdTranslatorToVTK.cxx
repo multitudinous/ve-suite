@@ -241,7 +241,7 @@ vtkDataSet* cfdTranslatorToVTK::GetVTKFile( unsigned int fileNum )
    else
    {
       std::cout<<"Invalid output vtk dataset!!!"<<std::endl;
-      std::cout<<"cfdTranslatorToVTK::_writeToVTK"<<std::endl;
+      std::cout<<"cfdTranslatorToVTK::GetVTKFile"<<std::endl;
       return 0;
    }
 }
