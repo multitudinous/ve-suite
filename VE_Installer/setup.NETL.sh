@@ -36,8 +36,8 @@ export VPR_DEBUG_ENABLE=1
 export NO_RTRC_PLUGIN=TRUE
 export NO_PERF_PLUGIN=TRUE
 export OSG_THREAD_SAFE_REF_UNREF=1
-#export OSGNOTIFYLEVEL=DEBUG_INFO
-export OSGNOTIFYLEVEL=
+export OSGNOTIFYLEVEL=DEBUG_INFO
+#export OSGNOTIFYLEVEL=
 export PFSHAREDSIZE=534773700
 export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
@@ -124,7 +124,7 @@ case "$CFDHOSTTYPE" in
 ;;
 	Darwin*)
    #setenv JDK_HOME /usr/java
-   export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk/install
+   export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk-cvs/install
    export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install
    #export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install-cocoa
    export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj

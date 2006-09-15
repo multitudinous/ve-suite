@@ -16,7 +16,8 @@ case $1 in
   -sim)
     project_tao_osg_vep \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
-    ${VE_SUITE_HOME}/VE_Xplorer/stereo_desktop/desktop.jconf -VESDesktop 1440 900
+    /Volumes/apps/Users/mccdo/Desktop/dualhead_config/dualhead.jconf -VESDesktop 1440 900
+    #${VE_SUITE_HOME}/VE_Xplorer/stereo_desktop/desktop.jconf -VESDesktop 1440 900
     ;;
 
   -wall)
