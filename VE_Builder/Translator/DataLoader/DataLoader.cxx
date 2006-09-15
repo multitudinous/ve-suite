@@ -121,7 +121,7 @@ vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
       }
       return 0;
    }
-   
+   //Check and see if we have a loader
    std::map< std::string, cfdTranslatorToVTK* >::iterator iter;
    iter = translatorMap.find( fileExtension );
    if ( iter == translatorMap.end() )
