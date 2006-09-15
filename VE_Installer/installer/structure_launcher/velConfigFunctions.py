@@ -35,6 +35,7 @@ def SaveConfig(name, state):
     ##Return to default config
     config.SetPath('..')
     config.SetPath(DEFAULT_CONFIG)
+    config.Flush()
     return
 
 def LoadConfig(name, state):

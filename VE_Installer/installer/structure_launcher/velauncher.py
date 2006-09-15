@@ -564,6 +564,9 @@ class LauncherWindow(wx.Frame):
                 self.state.React(True, "BuilderDir", None)
         ##Hide the Launcher.
         self.Hide()
+        ##Save data before launching.
+        self.UpdateData()
+        SaveConfig(DEFAULT_CONFIG, self.state)
         ##Go into the Launch
         launchInstance = Launch(self.state.GetLaunchSurface(), devMode)
         ##Show NameServer kill window if NameServer was started.
@@ -580,7 +583,6 @@ class LauncherWindow(wx.Frame):
         ##Update default config file.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state)
-        config.Flush()
         self.Hide()
         self.Destroy()
         ##If a shell's launched, start it here, after cleanup.
