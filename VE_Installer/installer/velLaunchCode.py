@@ -400,6 +400,10 @@ class Launch:
 ##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
 ##            self.clusterScript +=  ##TESTER
 ##            subprocess.Popen(["psexec", "\\\\abbott", "-u", "IASTATE\\biv", "-i", "-e", "-c", scriptPath]) ##TESTER
+            print self.clusterCall ##TESTER
+            for argNum in range(len(self.clusterCall)): ##TESTER
+                if "%1" in self.clusterCall[argNum]: ##TESTER
+                    self.clusterCall[argNum] = "\\\\%s" %nodeName ##TESTER
             subprocess.Popen(self.clusterCall) ##TESTER
 ##            self.ExecuteClusterScript(clusterMaster, clusterFilePath,
 ##                                      typeXplorer, jconf, desktopMode)
