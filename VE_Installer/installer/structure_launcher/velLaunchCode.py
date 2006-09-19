@@ -10,6 +10,8 @@ from velModes import DEFAULT_JCONF
 import string
 if windows:
     import subprocess
+    Popen = subprocess.Popen
+    PIPE = subprocess.PIPE
 
 class Launch:
     """Prepares the environment and launches the chosen programs.
@@ -56,12 +58,13 @@ class Launch:
         builderDir -- Sets a path to the builderDir/bin."""
         ##Adapt settings to variables.
         print settings ##TESTER
+        self.settings = settings
         workingDir = settings["Directory"]
         runName = settings["NameServer"]
         runConductor = settings["Conductor"]
         runXplorer = settings["Xplorer"]
         typeXplorer = settings["XplorerType"]
-        jconf = settings["JconfDict"].GetPath(settings["JconfSelection"])
+        jconf = settings["JconfPath"]
         taoMachine = settings["TaoMachine"]
         taoPort = settings["TaoPort"]
         desktopMode = settings["DesktopMode"]
@@ -148,6 +151,7 @@ class Launch:
             self.ReadClusterTemplate(workingDir, typeXplorer, jconf)
             clusterFileName = "cluster.bat"
             clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', clusterFileName)
+            clusterFilePath = 'H:\\cluster.bat' ##TESTER
             print clusterFilePath ##TESTER
             ##Write cluster script
             sourceFile = file(clusterFilePath, 'w')
@@ -323,21 +327,28 @@ class Launch:
 
     def ReadClusterTemplate(self, workingDir, typeXplorer, jconf):
         """Prepares the cluster template (for Windows)."""
+        clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', "cluster.bat")
+        drive = "%s:" %workingDir.split(':')[0]
+        user = self.GrabOutput(['set', 'USERNAME']).split('=')[1]
+        domain = self.GrabOutput(['set', 'USERDOMAIN']).split('=')[1]
+        location = os.path.join(domain, user)
+        self.clusterCall = ["psexec", "INSERT SLAVE HERE", "-u", location,
+                            "-i", "-e", "-c", clusterFilePath]
+        self.clusterTemplate = ""
+        self.clusterTemplate += "@ECHO OFF\n"
         templatePath = os.path.join(VELAUNCHER_DIR, "clusterTemplate.txt")
-        print templatePath ##TESTER
+##        print templatePath ##TESTER
         if os.path.exists(templatePath):
             COMMENT_NOTE = '##'
             VAR_SEP = '%'
-            execPassed = False
-            clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', "cluster.bat")
-            variables = {"SLAVE".upper(): "%1",
-                         "USER".upper(): "biv", ##Placeholder
-                         "SCRIPT".upper(): clusterFilePath,
-                         "WORKDIR".upper(): workingDir,
-                         "DRIVE".upper(): "%s:" %workingDir.split(':')[0],
-                         "ENVIRONMENT".upper(): self.clusterScript,
-                         "XPLORER".upper(): string.join(self.XplorerCall(typeXplorer, jconf))}
-            self.clusterTemplate = ""
+##            execPassed = False
+            variables = {"USER".upper(): user, ##Placeholder
+                         ##"SCRIPT".upper(): clusterFilePath,
+                         ##"WORKDIR".upper(): workingDir,
+                         "DRIVE".upper(): "%s:" %workingDir.split(':')[0]##,
+                         ##"ENVIRONMENT".upper(): self.clusterScript,
+                         ##"XPLORER".upper(): string.join(self.XplorerCall(typeXplorer, jconf))}
+                        }
             f = file(templatePath)
             for line in f:
                 line = line.lstrip()
@@ -358,17 +369,24 @@ class Launch:
                 ##Recombine.
                 line = string.join(lineArray, '')
                 ##Turn the first line into the psexec call.
-                if not execPassed:
-                    call = line.rstrip()
-                    call = line.split()
-                    self.clusterCall = call
-                    execPassed = True
-                    continue
+##                if not execPassed:
+##                    call = line.rstrip()
+##                    call = line.split()
+##                    self.clusterCall = call
+##                    execPassed = True
+##                    continue
                 ##Add the rest to the cluster.bat.
                 self.clusterTemplate += line
         else:
             print "Error! Cluster template doesn't exist!"
             print "Attempting to substitute default template instead."
+        self.clusterTemplate += "%s\n" %drive
+        self.clusterTemplate += "cd %s\n" %workingDir
+        self.clusterTemplate += "\n"
+        self.clusterTemplate += self.clusterScript
+        self.clusterTemplate += "\n"
+        self.clusterTemplate += string.join(self.XplorerCall(typeXplorer, jconf))
+        return
 
     def WriteClusterScriptPrefix(self, workingDir):
         """Writes the cluster script section before the environment setting."""
@@ -404,7 +422,7 @@ class Launch:
             workingDir = os.getenv("VE_WORKING_DIR","None")
             workingDrive = "%s:" %workingDir.split(':')[0]
             self.clusterScript += "%s\n" %workingDrive
-            self.clusterScript+='cd "%s"\n' %workingDir
+            self.clusterScript += 'cd "%s"\n' %workingDir
             self.clusterScript += "%s\n" %(command)
         else:
             self.clusterScript += "ERROR: OS not supported."
@@ -423,10 +441,8 @@ class Launch:
 ##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
 ##            self.clusterScript +=  ##TESTER
 ##            subprocess.Popen(["psexec", "\\\\abbott", "-u", "IASTATE\\biv", "-i", "-e", "-c", scriptPath]) ##TESTER
+            self.clusterCall[1] = "\\\\%s" %nodeName ##TESTER
             print self.clusterCall ##TESTER
-            for argNum in range(len(self.clusterCall)): ##TESTER
-                if "%1" in self.clusterCall[argNum]: ##TESTER
-                    self.clusterCall[argNum] = "\\\\%s" %nodeName ##TESTER
             subprocess.Popen(self.clusterCall) ##TESTER
 ##            self.ExecuteClusterScript(clusterMaster, clusterFilePath,
 ##                                      typeXplorer, jconf, desktopMode)
@@ -642,6 +658,7 @@ class Launch:
         self.WriteToClusterScript(var)
 ##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
 
+
     def EnvFill(self, var, default, overwrite = False):
         """Overwrites env var in normal mode, ensures it's filled in dev mode.
 
@@ -659,6 +676,12 @@ class Launch:
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
 ##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
+
+
+    def GrabOutput(self, commandArray):
+        """Returns output from a shell command."""
+        return Popen(commandArray, stdout = PIPE).communicate()[0]
+
 
     def WriteToClusterScript(self, var):
         """Writes an environmental setting to clusterScript.

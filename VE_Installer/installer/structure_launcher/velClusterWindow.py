@@ -38,6 +38,9 @@ class ClusterWindow(wx.Dialog):
         ##Build master display.
         self.masterCtrl = wx.TextCtrl(self, -1)
         self.masterCtrl.SetToolTip(wx.ToolTip("Name the master computer."))
+##        ##Build user display. Displayed in Windows only.
+##        self.userCtrl = wx.TextCtrl(self, -1)
+##        self.userCtrl.SetToolTip(wx.ToolTip("Username for logging into the cluster."))
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
         bOk.SetToolTip(wx.ToolTip("Return to Settings."))
@@ -57,13 +60,18 @@ class ClusterWindow(wx.Dialog):
         ##List field + buttons.
         columnSizer.Add(self.clustList, 1, wx.EXPAND)
         columnSizer.AddMany([HORIZONTAL_SPACE, rowSizer])
-        ##List field + Path display
+        ##Path display
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         rowSizer.Add(wx.StaticText(self, -1, "Slave names:"))
         rowSizer.Add(columnSizer, 1, wx.EXPAND)
         rowSizer.AddMany([VERTICAL_SPACE,
                           wx.StaticText(self, -1, "Master's name:")])
         rowSizer.Add(self.masterCtrl, 0, wx.EXPAND)
+##        ##User name display (Windows only)
+##        if windows:
+##            rowSizer.AddMany([VERTICAL_SPACE,
+##                              wx.StaticText(self, -1, "User name:")])
+##            rowSizer.Add(self.userCtrl, 0, wx.EXPAND)
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
         mainSizer.Add(bOk, 0, wx.EXPAND)
@@ -79,6 +87,8 @@ class ClusterWindow(wx.Dialog):
         """Updates data to match the display."""
         if self.masterCtrl.IsEnabled():
             self.state.Edit("ClusterMaster", self.masterCtrl.GetValue())
+##        if self.userCtrl.IsEnabled():
+##            self.state.Edit("User", self.userCtrl.GetValue())
         return
     
     def UpdateDisplay(self, cursor = None):
@@ -87,6 +97,9 @@ class ClusterWindow(wx.Dialog):
         ##Master Node
         self.masterCtrl.SetValue(self.state.GetSurface("ClusterMaster"))
         self.masterCtrl.Enable(self.state.IsEnabled("ClusterMaster"))
+##        ##User Name
+##        self.userCtrl.SetValue(self.state.GetSurface("User"))
+##        self.userCtrl.Enable(self.state.IsEnabled("User"))
         ##Slave Nodes
         if cursor == None:
             cursor = self.clustList.GetStringSelection()

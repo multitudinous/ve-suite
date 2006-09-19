@@ -72,13 +72,21 @@ class CoveredConfig(CoveredState):
         else:
             self.Uncover(name, layer = UNAVAILABLE_LAYER)
 
+    def JconfPath(self):
+        """Returns the path of the currently-selected Juggler configuration."""
+        return self.GetSurface("JconfDict").GetPath(self.GetSurface("JconfSelection"))
+
     def GetLaunchSurface(self):
         """Specialized GetSurface for the Launch.
 
         Replaces all None in surface with "None" to avoid errors in
-        path joinings."""
+        path joinings.
+        Appends JconfPath and ClusterNodes to the dictionary."""
         surface = self.GetSurface()
         for var in surface:
             if surface[var] == None:
                 surface[var] = "None"
+        surface["JconfPath"] = self.JconfPath()
+        surface["ClusterNodes"] = surface["ClusterDict"].GetNames()
+        surface["ClusterNodes"].append(surface["ClusterMaster"])
         return surface
