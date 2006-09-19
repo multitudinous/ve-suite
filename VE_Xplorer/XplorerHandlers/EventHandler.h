@@ -43,6 +43,7 @@
 /*!\namespace VE_EVENTS
  * Namespace for ve-event handlers.
  */
+#include <boost/shared_ptr.hpp>
 
 namespace VE_XML
 {
@@ -74,5 +75,6 @@ public:
 protected:
    VE_Xplorer::cfdGlobalBase* _baseObject;
 };
+typedef boost::shared_ptr< EventHandler > EventHandlerPtr;
 }
 #endif// VE_EVENT_HANDLER_H
