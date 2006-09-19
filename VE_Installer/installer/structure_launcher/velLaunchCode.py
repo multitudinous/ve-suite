@@ -151,7 +151,6 @@ class Launch:
             self.ReadClusterTemplate(workingDir, typeXplorer, jconf)
             clusterFileName = "cluster.bat"
             clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', clusterFileName)
-            clusterFilePath = 'H:\\cluster.bat' ##TESTER
             print clusterFilePath ##TESTER
             ##Write cluster script
             sourceFile = file(clusterFilePath, 'w')
