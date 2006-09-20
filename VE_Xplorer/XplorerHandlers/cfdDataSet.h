@@ -56,6 +56,7 @@ namespace VE_SceneGraph
 {
    class cfdDCS;
    class cfdGroup;
+   class cfdGeode;
    class cfdSwitch;
    class cfdTempAnimation;
 }
@@ -224,6 +225,10 @@ namespace VE_Xplorer
          void SetUUID( std::string attribute, std::string uuid );
          std::string GetUUID( std::string attribute );
 
+         ///Create the bbox geode for the dataset
+         void CreateBoundingBoxGeode( void );
+         ///Create the wireframe geode for the dataset
+         void CreateWireframeGeode( void );
 private:
          std::map< std::string, std::string > dataSetUUIDMap;
          
@@ -278,6 +283,8 @@ private:
          std::vector< std::string > vectorName;
 
          VE_SceneGraph::cfdDCS* dcs;
+         VE_SceneGraph::cfdGeode* bboxGeode;
+         VE_SceneGraph::cfdGeode* wireframeGeode;
          VE_SceneGraph::cfdTempAnimation* animation;
          VE_SceneGraph::cfdSwitch* switchNode;
          VE_SceneGraph::cfdGroup* classic;

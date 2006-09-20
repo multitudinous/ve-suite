@@ -44,6 +44,7 @@
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
@@ -62,6 +63,11 @@
 #include <vtkCellTypes.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkCellData.h>
+#include <vtkOutlineFilter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkActor.h>
+#include <vtkProperty.h>
+#include <vtkGeometryFilter.h>
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
@@ -102,6 +108,8 @@ cfdDataSet::cfdDataSet( )
    // use its own range to determine color mapping.
    this->parent = this;
    this->dcs = NULL;
+   this->bboxGeode = new VE_SceneGraph::cfdGeode();
+   this->wireframeGeode = new VE_SceneGraph::cfdGeode();
    this->switchNode = new VE_SceneGraph::cfdSwitch();
    this->switchNode->SetName( "switch_for_data_viz" );
    this->classic = new VE_SceneGraph::cfdGroup();
@@ -216,6 +224,12 @@ cfdDataSet::~cfdDataSet()
       _vtkFHndlr = 0;
       vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
    }
+   
+   delete bboxGeode;
+   bboxGeode = 0;
+   
+   delete wireframeGeode;
+   wireframeGeode = 0;
 }
 
 void cfdDataSet::SetRange( double * dataRange )
@@ -788,6 +802,10 @@ void cfdDataSet::LoadData()
    }
 
    this->SetType();
+   //Create the bbox for the dataset
+   //this->CreateBoundingBoxGeode();
+   //Create the wireframe for the dataset
+   //this->CreateWireframeGeode();
 }
 
 int cfdDataSet::CountNumberOfParameters( const int numComponents )
@@ -1798,4 +1816,50 @@ std::string cfdDataSet::GetUUID( std::string attribute )
       return iter->second;
    }
 }
+////////////////////////////////////////////////////////////////////////////////
+//create visual representation of bounding box
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::CreateBoundingBoxGeode( void )
+{
+   vtkOutlineFilter* outlineData = vtkOutlineFilter::New();
+   outlineData->SetInput( this->GetDataSet() );
+   
+   vtkPolyDataMapper* mapOutline = vtkPolyDataMapper::New();
+   mapOutline->SetInput( outlineData->GetOutput() );
+   
+   vtkActor* outline = vtkActor::New();
+   outline->SetMapper( mapOutline );
+   outline->GetProperty()->SetColor(0,0,0);
+   
+   bboxGeode->TranslateTocfdGeode( outline );
+   GetDCS()->AddChild( bboxGeode );
+   
+   outlineData->Delete();
+   mapOutline->Delete();
+   outline->Delete();
+}
+////////////////////////////////////////////////////////////////////////////////
+//create wireframe to ensure accurate representation
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::CreateWireframeGeode( void )
+{
+   vtkGeometryFilter* wireframe = vtkGeometryFilter::New();
+   wireframe->SetInput( this->GetDataSet() );
+   wireframe->Update();
 
+   vtkPolyDataMapper *wireframeMapper = vtkPolyDataMapper::New();
+   wireframeMapper->SetInput(wireframe->GetOutput());
+
+   vtkActor *wireframeActor = vtkActor::New();
+   wireframeActor->SetMapper(wireframeMapper);
+   wireframeActor->GetProperty()->SetColor(0,0,1);
+   wireframeActor->GetProperty()->SetOpacity(0.1);
+   wireframeActor->GetProperty()->SetRepresentationToWireframe();
+
+   wireframeGeode->TranslateTocfdGeode( wireframeActor );
+   GetDCS()->AddChild( wireframeGeode );
+   
+   wireframe->Delete();
+   wireframeMapper->Delete();
+   wireframeActor->Delete();
+}
