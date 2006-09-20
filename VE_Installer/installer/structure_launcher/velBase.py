@@ -4,6 +4,9 @@ from os.path import join ##Used for building paths.
 import wx ##Used for GUI
 import sys
 
+##Set up the system's ID.
+windows = (name == "nt")
+unix = (name == "posix" or name == "mac")
 ##Shell variables.
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster variables.
@@ -15,6 +18,11 @@ JUGGLER_FOLDER = "vrJuggler2.0.1"
 VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
 LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
+if windows:
+    CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")
+else:
+    CLUSTER_FILE_PATH = join(VELAUNCHER_DIR, "cluster.tsh")
+TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
 ##Config settings.
 CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
@@ -49,9 +57,6 @@ DEV_LAYER = UNAVAILABLE_LAYER + 1
 VES_LAYER = DEV_LAYER + 1
 MODE_LAYER = VES_LAYER + 1
 TOTAL_LAYERS = MODE_LAYER + 1
-##Set up the system's ID.
-windows = (name == "nt")
-unix = (name == "posix" or name == "mac")
 
 def Style(window):
     """The uniform style of each window in VE Launcher."""

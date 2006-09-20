@@ -10,8 +10,6 @@ from velModes import DEFAULT_JCONF
 import string
 if windows:
     import subprocess
-    Popen = subprocess.Popen
-    PIPE = subprocess.PIPE
 
 class Launch:
     """Prepares the environment and launches the chosen programs.
@@ -148,24 +146,26 @@ class Launch:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
 ##            self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
+            print "Starting read template." ##TESTER
             self.ReadClusterTemplate(workingDir, typeXplorer, jconf)
-            clusterFileName = "cluster.bat"
-            clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', clusterFileName)
-            print clusterFilePath ##TESTER
+            print "Ending read template." ##TESTER
+##            clusterFileName = "cluster.bat"
+##            clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', clusterFileName)
+##            print clusterFilePath ##TESTER
             ##Write cluster script
-            sourceFile = file(clusterFilePath, 'w')
+            sourceFile = file(CLUSTER_FILE_PATH, 'w')
 ##            sourceFile.write(self.clusterScript)
             sourceFile.write(self.clusterTemplate)
             sourceFile.close()
             ##Master call
             print "***MASTER CALL: %s***" %(clusterMaster) ##TESTER
-            self.ExecuteClusterScript(clusterMaster, clusterFilePath,
+            self.ExecuteClusterScript(clusterMaster, CLUSTER_FILE_PATH,
                                       typeXplorer, jconf, desktopMode)
             sleep(MASTER_WAIT)
             ##Slave calls
             for comp in cluster:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-                self.ExecuteClusterScript(comp, clusterFilePath,
+                self.ExecuteClusterScript(comp, CLUSTER_FILE_PATH,
                                           typeXplorer, jconf, desktopMode)
                 sleep(SLAVE_WAIT)
         elif runXplorer:
@@ -328,16 +328,15 @@ class Launch:
         """Prepares the cluster template (for Windows)."""
         clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', "cluster.bat")
         drive = "%s:" %workingDir.split(':')[0]
-        user = self.GrabOutput(['set', 'USERNAME']).split('=')[1]
-        domain = self.GrabOutput(['set', 'USERDOMAIN']).split('=')[1]
+        user = os.getenv('USERNAME')
+        domain = os.getenv('USERDOMAIN')
         location = os.path.join(domain, user)
         self.clusterCall = ["psexec", "INSERT SLAVE HERE", "-u", location,
-                            "-i", "-e", "-c", clusterFilePath]
+                            "-i", "-e", "-c", CLUSTER_FILE_PATH]
         self.clusterTemplate = ""
         self.clusterTemplate += "@ECHO OFF\n"
-        templatePath = os.path.join(VELAUNCHER_DIR, "clusterTemplate.txt")
 ##        print templatePath ##TESTER
-        if os.path.exists(templatePath):
+        if os.path.exists(TEMPLATE_PATH):
             COMMENT_NOTE = '##'
             VAR_SEP = '%'
 ##            execPassed = False
@@ -348,7 +347,7 @@ class Launch:
                          ##"ENVIRONMENT".upper(): self.clusterScript,
                          ##"XPLORER".upper(): string.join(self.XplorerCall(typeXplorer, jconf))}
                         }
-            f = file(templatePath)
+            f = file(TEMPLATE_PATH)
             for line in f:
                 line = line.lstrip()
                 ##Toss comments & blank lines.
@@ -376,6 +375,7 @@ class Launch:
 ##                    continue
                 ##Add the rest to the cluster.bat.
                 self.clusterTemplate += line
+            f.close()
         else:
             print "Error! Cluster template doesn't exist!"
             print "Attempting to substitute default template instead."
@@ -384,7 +384,7 @@ class Launch:
         self.clusterTemplate += "\n"
         self.clusterTemplate += self.clusterScript
         self.clusterTemplate += "\n"
-        self.clusterTemplate += string.join(self.XplorerCall(typeXplorer, jconf))
+        self.clusterTemplate+= string.join(self.XplorerCall(typeXplorer, jconf))
         return
 
     def WriteClusterScriptPrefix(self, workingDir):
@@ -677,9 +677,9 @@ class Launch:
 ##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
 
 
-    def GrabOutput(self, commandArray):
-        """Returns output from a shell command."""
-        return Popen(commandArray, stdout = PIPE).communicate()[0]
+##    def GrabOutput(self, commandArray):
+##        """Returns output from a shell command."""
+##        return Popen(commandArray, stdout = PIPE).communicate()[0]
 
 
     def WriteToClusterScript(self, var):
