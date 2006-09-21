@@ -18,6 +18,8 @@ JUGGLER_FOLDER = "vrJuggler2.0.1"
 VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
 LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
+SPLASH_IMAGE = join(VELAUNCHER_DIR, "installerImages", "ve_banner_1.0.bmp")
+SPLASH_TIME = 7000 ##milliseconds before auto-close
 if windows:
     CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")
 else:

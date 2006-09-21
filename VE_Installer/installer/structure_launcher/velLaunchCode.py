@@ -463,6 +463,9 @@ class Launch:
         TAO_MACHINE
         TAO_PORT
         VEXMASTER
+        VPR_DEBUG_ENABLE
+        VPR_DEBUG_NFY_LEVEL
+        OSGNOTIFYLEVEL
 
         Variables overwritten (when not in dev mode):
         VE_SUITE_HOME
@@ -470,8 +473,6 @@ class Launch:
         VE_DEPS_DIR
         VE_WORKING_DIR
         PHSHAREDSIZE
-        VPR_DEBUG_ENABLE
-        VPR_DEBUG_NFY_LEVEL
         NO_PERF_PLUGIN
         NO_RTRC_PLUGIN
         PFNFYLEVEL
@@ -573,8 +574,15 @@ class Launch:
         self.EnvFill("PHSHAREDSIZE", "534773700")
 
         ##Juggler debug output level
-        self.EnvFill("VPR_DEBUG_ENABLE", "0")
-        self.EnvFill("VPR_DEBUG_NFY_LEVEL", "1")
+        if self.settings["VPRDebug"] < 0:
+            self.EnvFill("VPR_DEBUG_ENABLE", "0", overwrite = True)
+            self.EnvFill("VPR_DEBUG_NFY_LEVEL", "1", overwrite = True)
+        else:
+            self.EnvFill("VPR_DEBUG_ENABLE", "1", overwrite = True)
+            self.EnvFill("VPR_DEBUG_NFY_LEVEL", str(self.settings["VPRDebug"]),
+                         overwrite = True)
+        self.EnvFill("OSGNOTIFYLEVEL", self.settings["OSGNotifyLevel"],
+                     overwrite = True)        
         self.EnvFill("NO_PERF_PLUGIN", "TRUE")
         self.EnvFill("NO_RTRC_PLUGIN", "TRUE")
         self.EnvFill("PFNFYLEVEL", "0")
@@ -668,13 +676,9 @@ class Launch:
             os.environ[var] = os.getenv(var, default)
         else:
             os.environ[var] = default
-##        if overwrite: ##TESTER
-##            print "%s overwrite == True!" %var ##TESTER
-##        else: ##TESTER
-##            print "%s overwrite is False!" %var ##TESTER
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
+        print "%s: %s" %(var, os.getenv(var)) ##TESTER
 
 
 ##    def GrabOutput(self, commandArray):

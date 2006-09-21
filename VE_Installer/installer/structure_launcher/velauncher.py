@@ -38,6 +38,8 @@ from velSettingWin import *
 from velServerKillWindow import *
 from velCommandLine import *
 from velLaunchCode import *
+import velLaunchSplash
+from velDebugWindow import *
 
 ##Set up the master config file
 config = wx.Config(CONFIG_FILE)
@@ -137,6 +139,9 @@ class LauncherWindow(wx.Frame):
         menu.AppendSeparator()
         menu.Append(512, "&Delete\tCtrl+D")
         menuBar.Append(menu, "&Configurations")
+        menu = wx.Menu()
+        menu.Append(520, "&Change Debug Level\tCtrl+C")
+        menuBar.Append(menu, "&Options")
         self.SetMenuBar(menuBar)
 
         ##Event bindings.
@@ -151,6 +156,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.ChooseSaveConfig, id = 511)
         self.Bind(wx.EVT_MENU, self.DeleteConfig, id = 512)
         self.Bind(wx.EVT_MENU, self.OnClose, id = wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU, self.DebugOptions, id = 520)
         
         ##Layout format settings
         ##Create the overall layout box
@@ -250,6 +256,9 @@ class LauncherWindow(wx.Frame):
             dlg.ShowModal()
             dlg.Destroy()
 
+
+    def DebugOptions(self, event = None):
+        DebugWindow(self, self.state)
 
     def DependenciesChange(self, event = None):
         """Asks the user to choose a new Dependencies folder."""
@@ -567,6 +576,8 @@ class LauncherWindow(wx.Frame):
         ##Save data before launching.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state)
+        ##Launch splash screen
+        velLaunchSplash.LaunchSplash()
         ##Go into the Launch
         launchInstance = Launch(self.state.GetLaunchSurface(), devMode)
         ##Show NameServer kill window if NameServer was started.

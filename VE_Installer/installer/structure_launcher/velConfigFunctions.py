@@ -16,11 +16,21 @@ def SaveConfig(name, state):
     config.SetPath('..')
     config.SetPath(name)
     ##Save the current configuration under name
-    strWrites = ["DependenciesDir", "BuilderDir", "Directory",
-                 "JconfSelection", "NameServer", "Xplorer",
-                 "Conductor", "TaoMachine", "TaoPort", "DesktopMode",
-                 "ClusterMaster"]
-    intWrites = ["XplorerType", "Mode"]
+    strWrites = ["DependenciesDir",
+                 "BuilderDir",
+                 "Directory",
+                 "JconfSelection",
+                 "NameServer",
+                 "Xplorer",
+                 "Conductor",
+                 "TaoMachine",
+                 "TaoPort",
+                 "DesktopMode",
+                 "ClusterMaster",
+                 "OSGNotifyLevel"]
+    intWrites = ["XplorerType",
+                 "Mode",
+                 "VPRDebug"]
     for var in strWrites:
         if state.GetBase(var) != None:
             config.Write(var, str(state.GetBase(var)))
@@ -54,9 +64,11 @@ def LoadConfig(name, state):
                 "DependenciesDir",
                 "JconfSelection",
                 "TaoMachine",
-                "BuilderDir"]
+                "BuilderDir",
+                "OSGNotifyLevel"]
     intReads = ["XplorerType",
-                "Mode"]
+                "Mode",
+                "VPRDebug"]
     boolReads = ["NameServer",
                  "Conductor",
                  "Xplorer",

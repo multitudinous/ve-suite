@@ -55,4 +55,6 @@ BASE_CONFIG = {"DependenciesDir": None,
                "JconfDict": JconfDict({"Desktop": DEFAULT_JCONF}),
                "JconfSelection": "Desktop",
                "ClusterDict": ClusterDict({}),
-               "VESFile": None}
+               "VESFile": None,
+               "VPRDebug": -1,
+               "OSGNotifyLevel": ""}
