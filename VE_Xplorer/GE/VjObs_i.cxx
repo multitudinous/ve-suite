@@ -65,6 +65,7 @@ using namespace VE_TextureBased;
 
 #include <vpr/System.h>
 #include <vpr/Util/Debug.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 #include <iostream>
 #include <map>
@@ -966,6 +967,13 @@ void VjObs_i::SetCommandString( const char* value)
 void VjObs_i::SetCommandString( const char* value)
 #endif
 {
+   //When starting xplorer it is possible to connect and send a command before 
+   // xplorer is ready to receive it
+   while ( !jccl::ConfigManager::instance()->isPendingStale() )
+   {
+      vpr::System::msleep( 50 );  // 50 milli-second delay
+   }
+   
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
 
    std::string commandString( value );
