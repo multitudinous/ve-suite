@@ -188,7 +188,7 @@ protected:
    std::vector<double*> _vectorRanges;
    // This holds data for a valid point
    // the second pair holds the cellId and the subId for vtk
-   std::vector< std::pair< bool, std::pair< int, int > > > _validPt;
+   std::vector< std::pair< bool, std::pair< int, double* > > > _validPt;
    char** _scalarNames;
    char** _vectorNames;
 
@@ -196,7 +196,7 @@ protected:
 
    vtkDataSet* _dataSet;
    vtkCellLocator* _cLocator;
-   //vtkOBBTree* _cLocator;
+   vtkOBBTree* bbLocator;
    vtkCellDataToPointData* _dataConvertCellToPoint;
    vtkUnstructuredGridReader* _usgrid;
    vtkStructuredGridReader* _sgrid;

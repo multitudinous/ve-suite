@@ -64,6 +64,11 @@
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
+
+#include <sys/types.h>
+#include <sys/timeb.h>
+
+
 ////////////////////////////////////
 //Constructor                     // 
 ////////////////////////////////////
@@ -137,12 +142,28 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
    //_maxDistFromCenter = v._maxDistFromCenter;
    setVelocityFileName(v._vFileName);
    setOutputDirectory(v._outputDir);
-   if(_validPt.size()){
-      _validPt.clear();
+   for ( size_t i = 0; i < _validPt.size(); ++i )
+   {
+      if ( _validPt.at( i ).second.second )
+         delete [] _validPt.at( i ).second.second;
    }
+   _validPt.clear();
+
    unsigned int nPts = v._validPt.size();
-   for(unsigned int i = 0; i < nPts; i++){
+   for(unsigned int i = 0; i < nPts; i++)
+   {
       _validPt.push_back(v._validPt.at(i));
+      if ( v._validPt.at(i).second.second )
+      {
+         _validPt.back().second.second = new double[ 3 ];
+         _validPt.back().second.second[ 0 ] = v._validPt.at(i).second.second[ 0 ];
+         _validPt.back().second.second[ 1 ] = v._validPt.at(i).second.second[ 1 ];
+         _validPt.back().second.second[ 2 ] = v._validPt.at(i).second.second[ 2 ];
+      }
+      else
+      {
+         _validPt.back().second.second = 0;
+      }
    }
    /* nPts = v._distance.size();
    for(unsigned int i = 0; i < nPts; i++){
@@ -193,10 +214,12 @@ VTKDataToTexture::~VTKDataToTexture()
    if(_sgrid)
       _sgrid->Delete();
    
-   if ( _validPt.size() )
+   for ( size_t i = 0; i < _validPt.size(); ++i )
    {
-      _validPt.clear();
+      if ( _validPt.at( i ).second.second )
+         delete [] _validPt.at( i ).second.second;
    }
+   _validPt.clear();
    
    if ( _dataConvertCellToPoint )
    {
@@ -243,7 +266,13 @@ void VTKDataToTexture::reset()
    _vectorRanges.clear();
   
    _nPtDataArrays = 0;
-   if(_validPt.size() && _recreateValidityBetweenTimeSteps){
+   if(_validPt.size() && _recreateValidityBetweenTimeSteps)
+   {
+      for ( size_t i = 0; i < _validPt.size(); ++i )
+      {
+         if ( _validPt.at( i ).second.second )
+            delete [] _validPt.at( i ).second.second;
+      }
       _validPt.clear();
    }
 
@@ -489,10 +518,19 @@ void VTKDataToTexture::createTextures()
       msg = wxString("Sampling valid domain. . .");
       _updateTranslationStatus(msg.c_str());
       //build the octree
-      //long timeID = (long)time( NULL );
-      //std::cout << timeID << std::endl;
+      long timeID = (long)time( NULL );
+      std::cout << timeID << std::endl;
+      /*bbLocator = vtkOBBTree::New();
+      bbLocator->CacheCellBoundsOn();
+      bbLocator->AutomaticOn();
+      //bbLocator->SetNumberOfCellsPerBucket( 50 );
+      //bbLocator->SetMaxLevel( 10 )
+      vtkDataSet* polyData = VE_Util::readVtkThing( "./step1_0.vtp" );
+      bbLocator->SetDataSet( polyData );
+      //build the octree
+      bbLocator->BuildLocator();*/
+      
       _cLocator = vtkCellLocator::New();
-      //_cLocator = vtkOBBTree::New();
       _cLocator->CacheCellBoundsOn();
       _cLocator->AutomaticOn();
       _cLocator->SetNumberOfCellsPerBucket( 50 );
@@ -500,10 +538,11 @@ void VTKDataToTexture::createTextures()
       _cLocator->SetDataSet(_dataSet);
       //build the octree
       _cLocator->BuildLocator();
-      //long endtimeID = (long)time( NULL );
+      long endtimeID = (long)time( NULL );
       //std::cout << endtimeID - timeID << std::endl;
       //Now use it...
       _createValidityTexture();
+      //bbLocator->Delete();
       _cLocator->Delete();
    }
 
@@ -595,6 +634,7 @@ void VTKDataToTexture::_createValidityTexture()
    double closestPt[3];
    double pcoords[3];
    double* weights = 0;
+   weights = new double[24];
    unsigned int i=0;
    unsigned int j=0;
    unsigned int k = 0;
@@ -617,8 +657,23 @@ void VTKDataToTexture::_createValidityTexture()
       pt[1] = bbox[2] + j*delta[1];
       pt[0] = bbox[0] + (i++)*delta[0];
          
+      /*timeb timeOneB;
+      timeb timeTwoB;
+      timeb timeThreeB;*/
+      
+      //ftime( &timeOneB );
+      
+      //long timeOne = (long)time( NULL );
       _cLocator->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
-      //std::cout << _cLocator->InsideOrOutside( pt ) << std::endl;
+      //ftime( &timeTwoB );
+      //long timeTwo = (long)time( NULL );
+      //std::cout << bbLocator->InsideOrOutside( pt ) << " : " << dist << std::endl;
+      //bbLocator->InsideOrOutside( pt );
+      //ftime( &timeThreeB );
+      //long timeThree = (long)time( NULL );
+      //std::cout << timeTwoB.millitm << " : " << timeOneB.millitm << " : " << timeThreeB.millitm << std::endl; 
+      //std::cout << timeTwoB.millitm - timeOneB.millitm << " : " << timeThreeB.millitm - timeTwoB.millitm << std::endl;
+       
       //_cLocator->InsideOrOutside( pt );
       //weights = new double[cell->GetNumberOfPoints()];
       //check to see if this point is in
@@ -629,17 +684,23 @@ void VTKDataToTexture::_createValidityTexture()
          //weights = 0;
       //}
 
-      if( dist == 0 )
+      if( dist == 0.0f )
       {
          //std::cout << "good " << l << " : " <<  dist << " : " << cellId << " : " << subId << " : " <<  closestPt[ 0 ] << " : " <<  closestPt[ 1 ] << " : " <<  closestPt[ 2 ] << std::endl;
+         //_dataSet->GetCell( cellId, cell );
+         cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
          _validPt.at( l ).first = true;
          _validPt.at( l ).second.first = cellId;
-         _validPt.at( l ).second.second = subId;
+         _validPt.at( l ).second.second = new double[ 3 ];
+         _validPt.at( l ).second.second[ 0 ] = pcoords[ 0 ];
+         _validPt.at( l ).second.second[ 1 ] = pcoords[ 1 ];
+         _validPt.at( l ).second.second[ 2 ] = pcoords[ 2 ];
       }
       else
       {
          //std::cout << dist << " : " << cellId << " : " << subId << " : " <<  closestPt[ 0 ] << " : " <<  closestPt[ 1 ] << " : " <<  closestPt[ 2 ] << std::endl;
          _validPt.at( l ).first = false;
+         _validPt.at( l ).second.second = 0;
       }
 
       if ( (unsigned int)i > (unsigned int)nX )
@@ -670,6 +731,7 @@ void VTKDataToTexture::_createValidityTexture()
    }
    cell->Delete();
    _madeValidityStructure = true;
+   delete [] weights;
    long endTime = (long)time( NULL );
    std::cout << "Total Time = " << endTime - timeID << std::endl;
 }
@@ -727,21 +789,21 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
       // merge the map after the texture has been created. 
       // this would allow this function to be much faster. This function
       // is where the majority of the time is spent currently.
-      pt[2] = bbox[4] + k*delta[2];
+      /*pt[2] = bbox[4] + k*delta[2];
       pt[1] = bbox[2] + j*delta[1];
-      pt[0] = bbox[0] + (i++)*delta[0];
+      pt[0] = bbox[0] + (i++)*delta[0];*/
       if ( _validPt.at(l).first )
       {
          //_cLocator->FindClosestPoint(pt,closestPt,
 		   //                     cell,cellId,subId, dist);
          cellId = _validPt.at(l).second.first;
-         subId = _validPt.at(l).second.second;
+         //subId = _validPt.at(l).second.second;
          _dataSet->GetCell( cellId, cell );
          weights = new double[cell->GetNumberOfPoints()];
 	      //check to see if this point is in
 	      //the returned cell
-         cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
-         //cell->EvaluateLocation(subId,pcoords,pt,weights);
+         //cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+         cell->EvaluateLocation(subId,_validPt.at(l).second.second ,pt,weights);
          _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
          if ( weights )
          {
