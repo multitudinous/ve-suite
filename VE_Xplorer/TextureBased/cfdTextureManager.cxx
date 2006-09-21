@@ -35,6 +35,7 @@
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 #include <fstream>
+#include <cmath>
 //#include <vtkZLibDataCompressor.h>
 #include <vtkImageData.h>
 //#include <vtkXMLImageDataReader.h>
@@ -63,7 +64,12 @@ cfdTextureManager::cfdTextureManager()
    _direction = 1;
    _mode = PLAY;
    _useShaders = false;
-   
+   _bbox[0] = 0;
+   _bbox[1] = 0;
+   _bbox[2] = 0;
+   _bbox[3] = 0;
+   _bbox[4] = 0;
+   _bbox[5] = 0;
 }
 /////////////////////////////////////////////////////////////////
 cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
@@ -271,10 +277,11 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       _transientRange[1] = (_range[1] > _transientRange[1])?_range[1]:_transientRange[1];
       //bounding box
       double* bbox = flowImage->GetBounds(); 
-      for ( unsigned int i = 0; i < 6; ++i )
+      _ensureBBox(bbox);
+      /*for ( unsigned int i = 0; i < 6; ++i )
       {
          _bbox[ i ] = bbox[ i ];
-      }
+      }*/
 
       int oldResolution[3] = {0,0,0};
       if ( !_resolution )
@@ -386,6 +393,33 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
       std::cout<<"cfdTextureManager couldn't load new vector field!!"<<std::endl;
       return;
    }
+}
+///////////////////////////////////////////////////
+void cfdTextureManager::_ensureBBox(double* newBBox)
+{
+   ///why doesn't dynamic cast work???
+   float fBBox[6];
+   fBBox[0] = newBBox[0];
+   fBBox[1] = newBBox[1];
+   fBBox[2] = newBBox[2];
+   fBBox[3] = newBBox[3];
+   fBBox[4] = newBBox[4];
+   fBBox[5] = newBBox[5];
+   if(_lengthOfBBox(fBBox) > _lengthOfBBox(_bbox))
+   {  
+      for ( unsigned int i = 0; i < 6; ++i )
+      {
+         _bbox[ i ] = newBBox[ i ];
+      }
+   }
+}
+/////////////////////////////////////////////////////
+double cfdTextureManager::_lengthOfBBox(float* bbox)
+{
+   double xSquared = (bbox[0]-bbox[1])*(bbox[0]-bbox[1]);
+   double ySquared = (bbox[2]-bbox[3])*(bbox[2]-bbox[3]);
+   double zSquared = (bbox[4]-bbox[5])*(bbox[4]-bbox[5]);
+   return sqrt(xSquared + ySquared + zSquared);
 }
 /////////////////////////////////////
 bool cfdTextureManager::TimeToUpdate()

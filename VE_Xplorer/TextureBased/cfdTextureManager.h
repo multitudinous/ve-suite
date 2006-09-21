@@ -125,6 +125,14 @@ public:
 
    std::string GetDataName( void ); 
 protected:
+   ///calculate the length of the diagonal of the bbox
+   ///\param bbox the bbox parameters
+   double _lengthOfBBox(float* bbox);
+
+   ///Make sure we have the largest bbox
+   ///\param bbox the bbox parameters
+   void _ensureBBox(double* bbox);
+
    bool _useShaders;
    bool _timeToUpdate;
    int _curField;
