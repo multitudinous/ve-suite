@@ -12,7 +12,9 @@ set JAVA_HOME=C:\j2sdk1.4.2_06
 set ACE_ROOT=C:\devEnv\VES.1.0-Deps\ACE_wrappers
 set TAO_ROOT=%ACE_ROOT%\TAO
 set XERCESCROOT=C:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0
-set OSGHOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.0\OpenSceneGraph
+set OSGHOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenSceneGraph
+set PRODUCER_HOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\Producer
+set OPENTHREADS_HOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenThreads
 set DEMETER_HOME=C:\devEnv\demeter-3.21
 set APR_HOME=C:\devEnv\VES.1.0-Deps\apr
 set APR_UTIL_HOME=C:\devEnv\VES.1.0-Deps\apr-util
@@ -41,7 +43,7 @@ REM set PHSHAREDSIZE=534773700
 
 REM juggler debug output level
 set VPR_DEBUG_ENABLE=1
-set VPR_DEBUG_NFY_LEVEL=2
+set VPR_DEBUG_NFY_LEVEL=1
 set NO_PERF_PLUGIN=TRUE
 set NO_RTRC_PLUGIN=TRUE
 set PFNFYLEVEL=0
@@ -58,15 +60,15 @@ set OMNINAMES_LOGDIR=%VE_SUITE_HOME%\VE_Installer
 REM Python build environment variables
 set PYTHONPATH=%VJ_DEPS_DIR%\lib\python
 
-set Path=%Path%;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib
-set Path=%Path%;%VE_SUITE_HOME%\bin;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll
-set Path=%Path%;%VE_SUITE_HOME%\bin\Plugins\UI\win32;
-set Path=%Path%;%VE_SUITE_HOME%\bin\Plugins\GE\win32;
-set Path=%Path%;%ACE_ROOT%\bin;%ACE_ROOT%\lib;%XERCESCROOT%\Build\Win32\VC7.1\Debug
-set Path=%Path%;%TAO_ROOT%\orbsvcs\Naming_Service
-set Path=%Path%;%VE_SUITE_HOME%\bin\win32
-set Path=%Path%;%OSGHOME%\bin;%VE_SUITE_HOME%\lib\win32
-set Path=%Path%;%DEMETER_HOME%\bin;
-set Path=%Path%;%APR_HOME%\Debug;
-set Path=%Path%;%APR_UTIL_HOME%\Debug;
-set Path=%Path%;%APR_ICONV_HOME%\Debug;
+set Path=%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib;%Path%
+set Path=%VE_SUITE_HOME%\bin;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll;%Path%
+set Path=%VE_SUITE_HOME%\bin\Plugins\UI\win32;%Path%
+set Path=%VE_SUITE_HOME%\bin\Plugins\GE\win32;%Path%
+set Path=%ACE_ROOT%\bin;%ACE_ROOT%\lib;%XERCESCROOT%\Build\Win32\VC7.1\Debug;%Path%
+set Path=%TAO_ROOT%\orbsvcs\Naming_Service;%Path%
+set Path=%VE_SUITE_HOME%\bin\win32;%Path%
+set Path=%OSGHOME%\bin\win32;%PRODUCER_HOME%\bin\win32;%OPENTHREADS_HOME%\bin\win32;%VE_SUITE_HOME%\lib\win32;%Path%
+set Path=%DEMETER_HOME%\bin;%Path%
+set Path=;%APR_HOME%\Debug;%Path%
+set Path=%APR_UTIL_HOME%\Debug;%Path%
+set Path=%APR_ICONV_HOME%\Debug;%Path%
