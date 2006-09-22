@@ -89,4 +89,6 @@ class CoveredConfig(CoveredState):
         surface["JconfPath"] = self.JconfPath()
         surface["ClusterNodes"] = surface["ClusterDict"].GetNames()
         surface["ClusterNodes"].append(surface["ClusterMaster"])
+        if surface["OSGNotifyLevel"] == "None":
+            surface["OSGNotifyLevel"] = ""
         return surface

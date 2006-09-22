@@ -4,6 +4,7 @@ import os
 from velBase import *
 from velClusterDict import *
 from velCoveredConfig import *
+from string import strip
 
 class ClusterWindow(wx.Dialog):
     """A window for editing a list of clustered computers.
@@ -38,9 +39,14 @@ class ClusterWindow(wx.Dialog):
         ##Build master display.
         self.masterCtrl = wx.TextCtrl(self, -1)
         self.masterCtrl.SetToolTip(wx.ToolTip("Name the master computer."))
-##        ##Build user display. Displayed in Windows only.
-##        self.userCtrl = wx.TextCtrl(self, -1)
-##        self.userCtrl.SetToolTip(wx.ToolTip("Username for logging into the cluster."))
+        ##Build user display. Displayed in Windows only.
+        self.userCtrl = wx.TextCtrl(self, -1)
+        self.userCtrl.SetToolTip(wx.ToolTip("Username for logging into" +
+                                            " the cluster."))
+        self.userExampleText = wx.StaticText(self, -1,
+                                             style=wx.ST_NO_AUTORESIZE)
+        self.userExampleText.SetToolTip(wx.ToolTip("Code example" +
+                                                   " for username."))
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
         bOk.SetToolTip(wx.ToolTip("Return to Settings."))
@@ -49,6 +55,7 @@ class ClusterWindow(wx.Dialog):
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
+        self.Bind(wx.EVT_TEXT, self.UpdateExampleCode, self.userCtrl)
         self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         ##Construct layout.
@@ -67,11 +74,17 @@ class ClusterWindow(wx.Dialog):
         rowSizer.AddMany([VERTICAL_SPACE,
                           wx.StaticText(self, -1, "Master's name:")])
         rowSizer.Add(self.masterCtrl, 0, wx.EXPAND)
-##        ##User name display (Windows only)
-##        if windows:
-##            rowSizer.AddMany([VERTICAL_SPACE,
-##                              wx.StaticText(self, -1, "User name:")])
-##            rowSizer.Add(self.userCtrl, 0, wx.EXPAND)
+        ##User name display (Windows only)
+        if windows:
+            rowSizer.Add(VERTICAL_SPACE)
+            rowSizer.Add(wx.StaticText(self, -1, "User name:"))
+            rowSizer.Add(self.userCtrl, 0, wx.EXPAND)
+            rowSizer.Add(VERTICAL_SPACE)
+            rowSizer.Add(wx.StaticText(self, -1, "Example:"))
+            rowSizer.Add(self.userExampleText, 0, wx.EXPAND)
+        else:
+            self.userExampleText.Hide()
+            self.userCtrl.Hide()
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
         mainSizer.Add(bOk, 0, wx.EXPAND)
@@ -87,19 +100,28 @@ class ClusterWindow(wx.Dialog):
         """Updates data to match the display."""
         if self.masterCtrl.IsEnabled():
             self.state.Edit("ClusterMaster", self.masterCtrl.GetValue())
-##        if self.userCtrl.IsEnabled():
-##            self.state.Edit("User", self.userCtrl.GetValue())
+        if self.userCtrl.IsEnabled():
+            self.state.Edit("User", strip(self.userCtrl.GetValue()))
         return
-    
+
+    def UpdateExampleCode(self, event = None):
+        user = strip(self.userCtrl.GetValue())
+        if user == "":
+            phrase = ""
+        else:
+            phrase = "-u %s" %(user)
+        self.userExampleText.SetLabel("psexec slave %s -i..." %phrase)
+
     def UpdateDisplay(self, cursor = None):
         """Updates display to match the data.."""
         ##Set cursor if it's blank.
         ##Master Node
         self.masterCtrl.SetValue(self.state.GetSurface("ClusterMaster"))
         self.masterCtrl.Enable(self.state.IsEnabled("ClusterMaster"))
-##        ##User Name
-##        self.userCtrl.SetValue(self.state.GetSurface("User"))
-##        self.userCtrl.Enable(self.state.IsEnabled("User"))
+        ##User Name
+        self.userCtrl.SetValue(self.state.GetSurface("User"))
+        self.userCtrl.Enable(self.state.IsEnabled("User"))
+        self.UpdateExampleCode()
         ##Slave Nodes
         if cursor == None:
             cursor = self.clustList.GetStringSelection()

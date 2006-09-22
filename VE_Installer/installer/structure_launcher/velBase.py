@@ -11,8 +11,8 @@ unix = (name == "posix" or name == "mac")
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster variables.
 CLUSTER_ENABLED = True
-MASTER_WAIT = 7 ##Seconds to wait after starting Master to start Slaves.
-SLAVE_WAIT = 5 ##Seconds to wait between each Slave.
+##MASTER_WAIT = 7 ##Seconds to wait after starting Master to start Slaves.
+##SLAVE_WAIT = 5 ##Seconds to wait between each Slave.
 ##File/Folder settings.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.

@@ -57,4 +57,7 @@ BASE_CONFIG = {"DependenciesDir": None,
                "ClusterDict": ClusterDict({}),
                "VESFile": None,
                "VPRDebug": -1,
-               "OSGNotifyLevel": ""}
+               "OSGNotifyLevel": "None",
+               "MasterWait": 7,
+               "SlaveWait": 5,
+               "User": ""}

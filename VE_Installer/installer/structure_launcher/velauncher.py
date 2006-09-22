@@ -40,6 +40,7 @@ from velCommandLine import *
 from velLaunchCode import *
 import velLaunchSplash
 from velDebugWindow import *
+from velSetWaitWindow import *
 
 ##Set up the master config file
 config = wx.Config(CONFIG_FILE)
@@ -134,13 +135,14 @@ class LauncherWindow(wx.Frame):
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         menuBar.Append(menu, "&File")
         menu = wx.Menu()
-        menu.Append(510, "&Load\tCtrl+L")
+        menu.Append(510, "&Open\tCtrl+O")
         menu.Append(511, "&Save\tCtrl+S")
         menu.AppendSeparator()
         menu.Append(512, "&Delete\tCtrl+D")
         menuBar.Append(menu, "&Configurations")
         menu = wx.Menu()
-        menu.Append(520, "&Change Debug Level\tCtrl+C")
+        menu.Append(520, "Debug &Level\tCtrl+L")
+        menu.Append(521, "Cluster &Wait Times\tCtrl+W")
         menuBar.Append(menu, "&Options")
         self.SetMenuBar(menuBar)
 
@@ -157,6 +159,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.DeleteConfig, id = 512)
         self.Bind(wx.EVT_MENU, self.OnClose, id = wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, self.DebugOptions, id = 520)
+        self.Bind(wx.EVT_MENU, self.WaitOptions, id = 521)
         
         ##Layout format settings
         ##Create the overall layout box
@@ -259,6 +262,9 @@ class LauncherWindow(wx.Frame):
 
     def DebugOptions(self, event = None):
         DebugWindow(self, self.state)
+
+    def WaitOptions(self, event = None):
+        SetWaitWindow(self, self.state)
 
     def DependenciesChange(self, event = None):
         """Asks the user to choose a new Dependencies folder."""

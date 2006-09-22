@@ -27,10 +27,13 @@ def SaveConfig(name, state):
                  "TaoPort",
                  "DesktopMode",
                  "ClusterMaster",
-                 "OSGNotifyLevel"]
+                 "OSGNotifyLevel",
+                 "User"]
     intWrites = ["XplorerType",
                  "Mode",
-                 "VPRDebug"]
+                 "VPRDebug",
+                 "MasterWait",
+                 "SlaveWait"]
     for var in strWrites:
         if state.GetBase(var) != None:
             config.Write(var, str(state.GetBase(var)))
@@ -65,10 +68,13 @@ def LoadConfig(name, state):
                 "JconfSelection",
                 "TaoMachine",
                 "BuilderDir",
-                "OSGNotifyLevel"]
+                "OSGNotifyLevel",
+                "User"]
     intReads = ["XplorerType",
                 "Mode",
-                "VPRDebug"]
+                "VPRDebug",
+                "MasterWait",
+                "SlaveWait"]
     boolReads = ["NameServer",
                  "Conductor",
                  "Xplorer",

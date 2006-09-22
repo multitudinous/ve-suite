@@ -8,8 +8,7 @@ from velJconfDict import *
 from velClusterDict import *
 from velModes import DEFAULT_JCONF
 import string
-if windows:
-    import subprocess
+import subprocess
 
 class Launch:
     """Prepares the environment and launches the chosen programs.
@@ -161,13 +160,13 @@ class Launch:
             print "***MASTER CALL: %s***" %(clusterMaster) ##TESTER
             self.ExecuteClusterScript(clusterMaster, CLUSTER_FILE_PATH,
                                       typeXplorer, jconf, desktopMode)
-            sleep(MASTER_WAIT)
+            sleep(self.settings["MasterWait"])
             ##Slave calls
             for comp in cluster:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
                 self.ExecuteClusterScript(comp, CLUSTER_FILE_PATH,
                                           typeXplorer, jconf, desktopMode)
-                sleep(SLAVE_WAIT)
+                sleep(self.settings["SlaveWait"])
         elif runXplorer:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
@@ -222,12 +221,12 @@ class Launch:
             ##Master call
             print "***MASTER CALL: %s***" %(clusterMaster) ##TESTER
             os.system("source %s %s &" %(clusterFilePath, clusterMaster))
-            sleep(MASTER_WAIT)
+            sleep(self.settings["MasterWait"])
             ##Slave calls
             for comp in cluster:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
                 os.system("source %s %s &" %(clusterFilePath, comp))
-                sleep(SLAVE_WAIT)
+                sleep(self.settings["SlaveWait"])
         ##Xplorer section
         elif runXplorer:
             print "Starting Xplorer."
@@ -329,10 +328,14 @@ class Launch:
         clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', "cluster.bat")
         drive = "%s:" %workingDir.split(':')[0]
         user = os.getenv('USERNAME')
-        domain = os.getenv('USERDOMAIN')
-        location = os.path.join(domain, user)
-        self.clusterCall = ["psexec", "INSERT SLAVE HERE", "-u", location,
+##        domain = os.getenv('USERDOMAIN')
+##        location = settings["User"]
+        self.clusterCall = ["psexec", "<SLAVE GOES HERE>",
                             "-i", "-e", "-c", CLUSTER_FILE_PATH]
+        ##Insert username directory if specified
+        if settings["User"] != "":
+            self.clusterCall[1:1] = ["-u", settings["User"]]
+        ##Begin cluster template
         self.clusterTemplate = ""
         self.clusterTemplate += "@ECHO OFF\n"
 ##        print templatePath ##TESTER
@@ -340,45 +343,44 @@ class Launch:
             COMMENT_NOTE = '##'
             VAR_SEP = '%'
 ##            execPassed = False
-            variables = {"USER".upper(): user, ##Placeholder
-                         ##"SCRIPT".upper(): clusterFilePath,
-                         ##"WORKDIR".upper(): workingDir,
-                         "DRIVE".upper(): "%s:" %workingDir.split(':')[0]##,
-                         ##"ENVIRONMENT".upper(): self.clusterScript,
-                         ##"XPLORER".upper(): string.join(self.XplorerCall(typeXplorer, jconf))}
-                        }
+##            variables = {"USER".upper(): user, ##Placeholder
+##                         ##"SCRIPT".upper(): clusterFilePath,
+##                         ##"WORKDIR".upper(): workingDir,
+##                         "DRIVE".upper(): "%s:" %workingDir.split(':')[0]##,
+##                         ##"ENVIRONMENT".upper(): self.clusterScript,
+##                         ##"XPLORER".upper(): string.join(self.XplorerCall(typeXplorer, jconf))}
+##                        }
             f = file(TEMPLATE_PATH)
             for line in f:
                 line = line.lstrip()
                 ##Toss comments & blank lines.
                 if len(line) == 0 or line[:2] == COMMENT_NOTE:
                     continue
-                ##Check for %VAR% and replace them.
-                lineArray = line.split(VAR_SEP)
-                for wordNumber in range(len(lineArray)):
-                    word = lineArray[wordNumber].upper()
-                    ##Turn %% into %. NEEDS WORK.
-##                    if word == "":
-##                        lineArray[wordNumber] = "%"
-##                        pass
-                    ##Replace variables.
-                    if word in variables:
-                        lineArray[wordNumber] = variables[word]
-                ##Recombine.
-                line = string.join(lineArray, '')
-                ##Turn the first line into the psexec call.
-##                if not execPassed:
-##                    call = line.rstrip()
-##                    call = line.split()
-##                    self.clusterCall = call
-##                    execPassed = True
-##                    continue
-                ##Add the rest to the cluster.bat.
-                self.clusterTemplate += line
+##                ##Check for %VAR% and replace them.
+##                lineArray = line.split(VAR_SEP)
+##                for wordNumber in range(len(lineArray)):
+##                    word = lineArray[wordNumber].upper()
+##                    ##Turn %% into %. NEEDS WORK.
+####                    if word == "":
+####                        lineArray[wordNumber] = "%"
+####                        pass
+##                    ##Replace variables.
+##                    if word in variables:
+##                        lineArray[wordNumber] = variables[word]
+##                ##Recombine.
+##                line = string.join(lineArray, '')
+##                ##Turn the first line into the psexec call.
+####                if not execPassed:
+####                    call = line.rstrip()
+####                    call = line.split()
+####                    self.clusterCall = call
+####                    execPassed = True
+####                    continue
+##                ##Add the rest to the cluster.bat.
+##                self.clusterTemplate += line
             f.close()
         else:
-            print "Error! Cluster template doesn't exist!"
-            print "Attempting to substitute default template instead."
+            pass
         self.clusterTemplate += "%s\n" %drive
         self.clusterTemplate += "cd %s\n" %workingDir
         self.clusterTemplate += "\n"

@@ -9,6 +9,14 @@ VPR_LIST = ["None",
             "3",
             "4",
             "5 (Verbose)"]
+OSG_LIST = ["None",
+            "ALWAYS",
+            "FATAL",
+            "WARN",
+            "NOTICE",
+            "INFO",
+            "DEBUG_INFO",
+            "DEBUG_FP"]
 READ = True
 WRITE = False
 
@@ -23,12 +31,13 @@ class DebugWindow(wx.Dialog):
         self.vprMenu = wx.Choice(self, -1, choices = VPR_LIST)
         self.vprMenu.SetToolTip(wx.ToolTip("Choose the VPR debug level" +
                                            " for VE-Suite."))
-        ##Build OSG text field.
-        self.osgCtrl = wx.TextCtrl(self, -1)
-        self.osgCtrl.SetToolTip(wx.ToolTip("Set arguments for OSG debug."))
+        ##Build OSG menu.
+        self.osgMenu = wx.Choice(self, -1, choices = OSG_LIST)
+        self.osgMenu.SetToolTip(wx.ToolTip("Choose the OSG debug level" +
+                                           " for VE-Suite."))
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
-        bOk.SetToolTip(wx.ToolTip("Return to Settings."))
+        bOk.SetToolTip(wx.ToolTip("Return to Launcher."))
         ##Fill in info.
         self.UpdateDisplay()
         ##Bind buttons.
@@ -38,16 +47,18 @@ class DebugWindow(wx.Dialog):
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         columnSizer.Add(wx.StaticText(self, -1, "VPR Debug Level:"))
         columnSizer.Add(HORIZONTAL_SPACE)
-        columnSizer.Add(self.vprMenu, 0, wx.EXPAND)
+        columnSizer.Add(self.vprMenu, 1)
         rowSizer = wx.BoxSizer(wx.VERTICAL)
-        rowSizer.Add(columnSizer)
+        rowSizer.Add(columnSizer, 0, wx.EXPAND)
+        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        columnSizer.Add(wx.StaticText(self, -1, "OSG Debug Level:"))
+        columnSizer.Add(HORIZONTAL_SPACE)
+        columnSizer.Add(self.osgMenu, 1)
         rowSizer.Add(VERTICAL_SPACE)
-        rowSizer.Add(wx.StaticText(self, -1, "OSG Debug Arguments:"))
-        rowSizer.Add(self.osgCtrl, 0, wx.EXPAND)
-        rowSizer.Add(VERTICAL_SPACE)
-        rowSizer.Add(bOk, 0, wx.EXPAND)
+        rowSizer.Add(columnSizer, 0, wx.EXPAND)
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
+        mainSizer.Add(bOk, 0, wx.EXPAND)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
         self.CenterOnParent(wx.BOTH)
@@ -63,16 +74,16 @@ class DebugWindow(wx.Dialog):
     def UpdateData(self):
         if self.vprMenu.IsEnabled():
             self.state.Edit("VPRDebug", self.VPRDebug(WRITE))
-        if self.osgCtrl.IsEnabled():
-            self.state.Edit("OSGNotifyLevel", self.osgCtrl.GetValue())
+        if self.osgMenu.IsEnabled():
+            self.state.Edit("OSGNotifyLevel", self.osgMenu.GetStringSelection())
 
     def UpdateDisplay(self):
         ##VPR Menu
         self.vprMenu.SetSelection(self.VPRDebug(READ))
         self.vprMenu.Enable(self.state.IsEnabled("VPRDebug"))
         ##OSG Field
-        self.osgCtrl.SetValue(self.state.GetSurface("OSGNotifyLevel"))
-        self.osgCtrl.Enable(self.state.IsEnabled("OSGNotifyLevel"))
+        self.osgMenu.SetStringSelection(self.state.GetSurface("OSGNotifyLevel"))
+        self.osgMenu.Enable(self.state.IsEnabled("OSGNotifyLevel"))
 
     def OnClose(self, event = None):
         self.UpdateData()

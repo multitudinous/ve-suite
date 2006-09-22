@@ -30,6 +30,7 @@ class JconfWindow(wx.Dialog):
         self.lblPath = wx.StaticText(self, -1)
         self.confList = wx.ListBox(self, -1, size=JCONF_LIST_DISPLAY_MIN_SIZE)
         self.display = wx.TextCtrl(self, -1, style=wx.TE_READONLY)
+        self.display.SetBackgroundColour(BACKGROUND_COLOR)
         ##Build buttons.
         self.bAdd = wx.Button(self, -1, "Add")
         self.bAdd.SetToolTip(wx.ToolTip("Add a configuration listing."))
