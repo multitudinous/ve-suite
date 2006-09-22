@@ -739,14 +739,15 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
       osg::Vec3f yaw(0,0,1);
       
       osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
+      osg::Matrixd translation = osg::Matrixd::translate(_trans[0], _trans[1], _trans[2]);
+      osg::Matrixd inverseTranslation = osg::Matrixd::translate(-_trans[0], -_trans[1], -_trans[2]);
+      scale = inverseTranslation*scale*translation;
+
       osg::Matrixd rotateMat;
 
       rotateMat.makeRotate( quat );
 
-      osg::Vec3f transMat( _trans[0], _trans[1], _trans[2] );
-      scale.setTrans(transMat);
-
-      dcs->setMatrix(rotateMat*scale);
+      dcs->setMatrix(rotateMat*translation*scale);
       traverse(node,nv);
    }
 }
