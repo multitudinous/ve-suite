@@ -333,8 +333,8 @@ class Launch:
         self.clusterCall = ["psexec", "<SLAVE GOES HERE>",
                             "-i", "-e", "-c", CLUSTER_FILE_PATH]
         ##Insert username directory if specified
-        if settings["User"] != "":
-            self.clusterCall[1:1] = ["-u", settings["User"]]
+        if self.settings["User"] != "":
+            self.clusterCall[1:1] = ["-u", self.settings["User"]]
         ##Begin cluster template
         self.clusterTemplate = ""
         self.clusterTemplate += "@ECHO OFF\n"
