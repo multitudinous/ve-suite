@@ -185,6 +185,7 @@ void UnitWrapper::SetCurID( ::CORBA::Long id )
    ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
 {
    activeId = id;
+   std::cout<<UnitName_<<" :SetCurID called"<<std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ::Types::ArrayLong* UnitWrapper::GetID()
@@ -234,6 +235,7 @@ char * UnitWrapper::Query ( const char* command
     ::Error::EUnknown
   ))
 {
+   std::cout << "UnitWrapper::Query called = " << command << std::endl;
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
