@@ -117,13 +117,15 @@ public:
    void UpdateModules( void );
    ///Update function called from within latePreFrame
    void PreFrameUpdate( void );
+   ///Update function called from within latePreFrame
+   void PostFrameUpdate( void );
    ///Function called within preFrame to allow cfdExecutive
    ///to have access to scalar information
    void UnbindORB( void );
    ///compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray* );
+   virtual bool CheckCommandId( cfdCommandArray* ){ ; }
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+   virtual void UpdateCommand(){ ; }
    ///This function returns the map of the current plugins 
    ///so that evehenthandlers can manipulate the plugins while
    ///with commands from the gui
@@ -131,7 +133,9 @@ public:
    ///Loading the Available Modules
    cfdVEAvail_Modules* av_modules; 
 private:
-   
+   ///Laod data from CE
+   void LoadDataFromCE( void );
+
    std::string _activeScalarName;
    cfdGauges* _gauges;
    cfdDashboard* _dashBoard;

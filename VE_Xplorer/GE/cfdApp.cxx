@@ -258,11 +258,6 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 
 	newSceneViewer->setDefaults(osgUtil::SceneView::NO_SCENEVIEW_LIGHT);
 
-   {
-   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //tempSvVector = newSceneViewer;
-   //tempSvVector.push_back( new_sv );
-   }
    //newSceneViewer->setBackgroundColor( osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f) );
    newSceneViewer->getLight()->setAmbient(osg::Vec4(0.4f,0.4f,0.4f,1.0f));
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
@@ -305,20 +300,6 @@ void cfdApp::initScene( void )
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_Shader::ShaderCreator());
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new VE_Model::ModelCreator());
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
-
-   //enter the parameter file which will soon disappear
-   /*
-   do
-   {
-      std::cout << "|   Enter VE_Xplorer parameter filename: ";
-      std::cin >> filein_name;
-      if ( ! fileIO::isFileReadable( filein_name ) )
-      {
-         std::cerr << "\n\"" << filein_name << "\" is not readable." << std::endl;
-      }
-   }
-   while ( ! fileIO::isFileReadable( filein_name ) );
-   */
 
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
@@ -451,36 +432,9 @@ void cfdApp::latePreFrame( void )
       vrj::Kernel::instance()->stop(); // Stopping kernel 
    }
 
-#ifdef _TAO
-   cfdExecutive::instance()->CheckCommandId( _vjobsWrapper->GetCommandArray() );
    cfdExecutive::instance()->PreFrameUpdate();
-#endif // _TAO
-
    this->_vjobsWrapper->PreFrameUpdate();
    vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
-
-//std::cout << tempSvVector.size() << std::endl;
-   //for ( size_t i = 0; i < tempSvVector.size(); ++i )
-      {
-         //osg::ref_ptr<osgUtil::SceneView> sv;
-         //sv = (*sceneViewer);    // Get context specific scene viewer
-         //tempSvVector->at( i )->get();
-         //vprASSERT(tempSvVector.get() != NULL);
-         //if ( i == 0 )
-         //if ( tempSvVector.get() )
-         //tempSvVector->update();
-      }
-      /*std::vector< osg::ref_ptr<osgUtil::SceneView>* >* tempSvVector = sceneViewer.getDataVector();
-      for ( size_t i = 0; i < tempSvVector->size(); ++i )
-      {
-         //osg::ref_ptr<osgUtil::SceneView> sv;
-         //sv = (*sceneViewer);    // Get context specific scene viewer
-         //tempSvVector->at( i )->get();
-         vprASSERT(tempSvVector->at( i )->get() != NULL);
-         tempSvVector->at( i )->get()->update();
-      }*/
-   // this call must be the last call in latePreframe so that
-   // osg get's updated properly
 #ifdef _OSG
    this->update();
 #endif
@@ -528,6 +482,7 @@ void cfdApp::postFrame()
 	cfdEnvironmentHandler::instance()->PostFrameUpdate();
    //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
 #endif   //_OSG
+	cfdExecutive::instance()->PostFrameUpdate();
    this->_vjobsWrapper->GetCfdStateVariables();
    vprDEBUG(vesDBG,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }

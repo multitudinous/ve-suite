@@ -251,113 +251,112 @@ void cfdExecutive::GetNetwork( void )
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::GetEverything( void )
 {
-   if ( !CORBA::is_nil( this->_exec) )
-   {
-      vprDEBUG(vesDBG,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
-      GetNetwork();
- 
-      std::map< int, std::string >::iterator iter;
-      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-      // Add any plugins that are present in the current network
-      for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
-      {
-         foundPlugin = _plugins.find( iter->first );
-         if ( (foundPlugin == _plugins.end()) || _plugins.empty() )
-         {
-            // if a new module is on the id map but not on the plugins map
-            // create it...
-            cfdVEBaseClass* temp = dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( iter->second ) );
-            if ( temp == 0 )
-            {
-               //load the default plugin
-               temp = dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
-            }
-
-            _plugins[ iter->first ] = temp;
-            // When we create the _plugin map here we will do the following
-            _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
-            _plugins[ iter->first ]->AddSelfToSG();
-            cfdModel* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
-            tempCFDModel->SetID( iter->first );
-            cfdModelHandler::instance()->AddModel( tempCFDModel );
-            // Give graphical plugins access to wand position, wand buttons, and gui variables
-            _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
-            _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
-            _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
-         }
-         std::map< int, VE_Model::Model* >::iterator modelIter;
-         // this call always returns something because it is up to date with the id map
-         modelIter = idToModel.find( iter->first );
-         _plugins[ iter->first ]->SetXMLModel( modelIter->second );
-         //send command to get results
-         VE_XML::Command returnState;
-         returnState.SetCommandName("Get XML Model Results");
-         VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
-         data->SetData("moduleName", iter->second );
-         data=returnState.GetDataValuePair(-1);
-         data->SetData("moduleId", static_cast< unsigned int >( iter->first ) );
-         
-         std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-         nodes.push_back( 
-                          std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
-                          );
-         VE_XML::XMLReaderWriter commandWriter;
-         std::string status="returnString";
-         commandWriter.UseStandaloneDOMDocumentManager();
-         commandWriter.WriteXMLDocument( nodes, status, "Command" );
-         //Get results 
-         _plugins[ iter->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
-         _plugins[ iter->first ]->PreFrameUpdate();
-         vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
-                              << " ]-> " << iter->second 
-                              << " is updated."
-                              << std::endl << vprDEBUG_FLUSH;
-      }
-              
-      // Remove any plugins that aren't present in the current network
-      for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); )
-      {  
-         // When we clear the _plugin map will
-         // loop over all plugins
-         iter = _id_map.find( foundPlugin->first );
-         if ( iter == _id_map.end() )
-         {
-            // if a module is on the pugins map but not on the id map
-            foundPlugin->second->RemoveSelfFromSG();
-            cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
-            // Must delete current instance of vebaseclass object
-            delete _plugins[ foundPlugin->first ];
-            _plugins.erase( foundPlugin++ );
-         }
-         else
-         {
-            // plugin already present...
-            vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
-                                    << " ]-> " << iter->second 
-                                    << " is already on the plugin and id map."
-                                    << std::endl << vprDEBUG_FLUSH;
-            ++foundPlugin;
-         }
-         // The above code is from : The C++ Standard Library by:Josuttis pg. 205
-      }
-      //Set active model to null so that if the previous active model is deleted
-      //that we don't get errors in our code other places.
-      cfdModelHandler::instance()->SetActiveModel( 0 );
-      vprDEBUG(vesDBG,0) << "|\tDone Getting Network From Executive"
-                             << std::endl << vprDEBUG_FLUSH;    
-   }
-   else
+   if ( CORBA::is_nil( this->_exec ) )
    {
       vprDEBUG(vesDBG,3) << "ERROR : The Executive has not been intialized!"
-                             << std::endl << vprDEBUG_FLUSH;     
+      << std::endl << vprDEBUG_FLUSH;
+      return;
    }
+   
+   vprDEBUG(vesDBG,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
+   GetNetwork();
+
+   std::map< int, std::string >::iterator iter;
+   std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+   // Add any plugins that are present in the current network
+   for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
+   {
+      foundPlugin = _plugins.find( iter->first );
+      if ( (foundPlugin == _plugins.end()) || _plugins.empty() )
+      {
+         // if a new module is on the id map but not on the plugins map
+         // create it...
+         cfdVEBaseClass* temp = dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( iter->second ) );
+         if ( temp == 0 )
+         {
+            //load the default plugin
+            temp = dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
+         }
+
+         _plugins[ iter->first ] = temp;
+         // When we create the _plugin map here we will do the following
+         _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
+         _plugins[ iter->first ]->AddSelfToSG();
+         cfdModel* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
+         tempCFDModel->SetID( iter->first );
+         cfdModelHandler::instance()->AddModel( tempCFDModel );
+         // Give graphical plugins access to wand position, wand buttons, and gui variables
+         _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
+         _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
+         _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
+      }
+      std::map< int, VE_Model::Model* >::iterator modelIter;
+      // this call always returns something because it is up to date with the id map
+      modelIter = idToModel.find( iter->first );
+      _plugins[ iter->first ]->SetXMLModel( modelIter->second );
+      //send command to get results
+      VE_XML::Command returnState;
+      returnState.SetCommandName("Get XML Model Results");
+      VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+      data->SetData("moduleName", iter->second );
+      data=returnState.GetDataValuePair(-1);
+      data->SetData("moduleId", static_cast< unsigned int >( iter->first ) );
+      
+      std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+      nodes.push_back( 
+                       std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
+                       );
+      VE_XML::XMLReaderWriter commandWriter;
+      std::string status="returnString";
+      commandWriter.UseStandaloneDOMDocumentManager();
+      commandWriter.WriteXMLDocument( nodes, status, "Command" );
+      //Get results 
+      _plugins[ iter->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
+      _plugins[ iter->first ]->PreFrameUpdate();
+      vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
+                           << " ]-> " << iter->second 
+                           << " is updated."
+                           << std::endl << vprDEBUG_FLUSH;
+   }
+           
+   // Remove any plugins that aren't present in the current network
+   for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); )
+   {  
+      // When we clear the _plugin map will
+      // loop over all plugins
+      iter = _id_map.find( foundPlugin->first );
+      if ( iter == _id_map.end() )
+      {
+         // if a module is on the pugins map but not on the id map
+         foundPlugin->second->RemoveSelfFromSG();
+         cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
+         // Must delete current instance of vebaseclass object
+         delete _plugins[ foundPlugin->first ];
+         _plugins.erase( foundPlugin++ );
+      }
+      else
+      {
+         // plugin already present...
+         vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
+                                 << " ]-> " << iter->second 
+                                 << " is already on the plugin and id map."
+                                 << std::endl << vprDEBUG_FLUSH;
+         ++foundPlugin;
+      }
+      // The above code is from : The C++ Standard Library by:Josuttis pg. 205
+   }
+   //Set active model to null so that if the previous active model is deleted
+   //that we don't get errors in our code other places.
+   cfdModelHandler::instance()->SetActiveModel( 0 );
+   vprDEBUG(vesDBG,0) << "|\tDone Getting Network From Executive"
+                          << std::endl << vprDEBUG_FLUSH;    
 }
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::InitModules( void )
 {
    ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::PreFrameUpdate( void )
 {
    vprDEBUG(vesDBG,3) << " cfdExecutive::PreFrameUpdate"
@@ -381,68 +380,8 @@ void cfdExecutive::PreFrameUpdate( void )
       }
    }
 
-   if ( !CORBA::is_nil( this->_exec ) )
-   {
-      if ( ui_i->GetNetworkFlag() )
-      {
-         // Get Network and parse it
-         GetEverything();
-         VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(false);
-      }
-
-      // store the statusString in order to perform multiple operations on it...
-      std::string statusString = ui_i->GetStatusString();
-      vprDEBUG(vesDBG,3) << "cfdExecutive::PreFrameUpdate statusString = " << statusString 
-                             << std::endl << vprDEBUG_FLUSH;
-
-      // record position of some key phrases...
-      size_t pos1 = statusString.find( "VES Network Execution Complete" );
-      
-      //*******************************************************************//
-      //For multiple model apps this implementation has to be changed      //
-      //We need to be able to grab the id of of the currently completed    //
-      //model and then in the loop below rather than iterating across      //
-      //all plugins set the result and activate custom viz for the         //
-      //current model id                                                   //
-      //*******************************************************************//
-      //unsigned int pos2 = statusString.find("Execution is done");
-      
-      size_t pos3 = statusString.find("Time Step Complete");
-
-      // If either of the positions are valid positions, 
-      // then make results available to the graphical plugins...
-      if ( pos1 != std::string::npos || 
-            pos3 != std::string::npos )
-      {
-         std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-         std::map< int, std::string >::iterator idMap;
-         for ( foundPlugin=_plugins.begin(); 
-               foundPlugin!=_plugins.end(); 
-               foundPlugin++ )
-         {  
-            idMap = _id_map.find( foundPlugin->first );
-            VE_XML::Command returnState;
-            returnState.SetCommandName("Get XML Model Results");
-            VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
-            data->SetData("moduleName", idMap->second );
-            data=returnState.GetDataValuePair(-1);
-            data->SetData("moduleId", static_cast< unsigned int >( idMap->first ) );
-            
-            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-            nodes.push_back( 
-                             std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
-                           );
-            VE_XML::XMLReaderWriter commandWriter;
-            std::string status="returnString";
-            commandWriter.UseStandaloneDOMDocumentManager();
-            commandWriter.WriteXMLDocument( nodes, status, "Command" );
-            
-            _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
-            int dummyVar = 0;
-            _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
-         }
-      }
-   }
+   ///Load the data from ce
+   LoadDataFromCE();
 
    ///process the standard plugin stuff
    std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
@@ -468,13 +407,79 @@ void cfdExecutive::PreFrameUpdate( void )
       foundPlugin->second->PreFrameUpdate();
    }
 }
-bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::PostFrameUpdate( void )
 {
-   return false;
+   vprDEBUG(vesDBG,3) << " cfdExecutive::PostFrameUpdate"
+                        << std::endl << vprDEBUG_FLUSH;
+   
+   LoadDataFromCE();
 }
-
-void cfdExecutive::UpdateCommand()
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::LoadDataFromCE( void )
 {
-   vprDEBUG(vesDBG,0) << "doing nothing in cfdExecutive::UpdateCommand()"
-                          << std::endl << vprDEBUG_FLUSH;
+   if ( CORBA::is_nil( this->_exec ) )
+   {
+      return;
+   }
+   
+   if ( ui_i->GetNetworkFlag() )
+   {
+      // Get Network and parse it
+      GetEverything();
+      VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(false);
+   }
+   
+   // store the statusString in order to perform multiple operations on it...
+   std::string statusString = ui_i->GetStatusString();
+   vprDEBUG(vesDBG,3) << "cfdExecutive::PreFrameUpdate statusString = " << statusString 
+      << std::endl << vprDEBUG_FLUSH;
+   
+   // record position of some key phrases...
+   size_t pos1 = statusString.find( "VES Network Execution Complete" );
+   
+   //*******************************************************************//
+   //For multiple model apps this implementation has to be changed      //
+   //We need to be able to grab the id of of the currently completed    //
+   //model and then in the loop below rather than iterating across      //
+   //all plugins set the result and activate custom viz for the         //
+   //current model id                                                   //
+   //*******************************************************************//
+   //unsigned int pos2 = statusString.find("Execution is done");
+   
+   size_t pos3 = statusString.find("Time Step Complete");
+   
+   // If either of the positions are valid positions, 
+   // then make results available to the graphical plugins...
+   if ( pos1 != std::string::npos || 
+        pos3 != std::string::npos )
+   {
+      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+      std::map< int, std::string >::iterator idMap;
+      for ( foundPlugin=_plugins.begin(); 
+            foundPlugin!=_plugins.end(); 
+            foundPlugin++ )
+      {  
+         idMap = _id_map.find( foundPlugin->first );
+         VE_XML::Command returnState;
+         returnState.SetCommandName("Get XML Model Results");
+         VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+         data->SetData("moduleName", idMap->second );
+         data=returnState.GetDataValuePair(-1);
+         data->SetData("moduleId", static_cast< unsigned int >( idMap->first ) );
+         
+         std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+         nodes.push_back( 
+                          std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
+                          );
+         VE_XML::XMLReaderWriter commandWriter;
+         std::string status="returnString";
+         commandWriter.UseStandaloneDOMDocumentManager();
+         commandWriter.WriteXMLDocument( nodes, status, "Command" );
+         
+         _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
+         int dummyVar = 0;
+         _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
+      }
+   } 
 }
