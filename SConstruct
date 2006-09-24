@@ -1,9 +1,96 @@
 import os, sys, string, smtplib
-import practice
+##import practice
+from subprocess import *
+
+WX_HOME_DIR = '/home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/'
 
 pj = os.path.join
-
+opts = Options()
+opts.Add(BoolOption('VE_PATENTED', 'Set for Patent', 1))
+opts.Add(BoolOption('TAO_BUILD', 'Set for Tao', 1))
+opts.Add(BoolOption('CLUSTER_APP', 'Set for Cluster', 0))
 ##NOTE: Put in path to flagpoll & flagpoll files.
+
+def GetPlatform():
+    """Determines what platform this build is being run on."""
+    if string.find(sys.platform, 'irix') != -1:
+        return 'irix'
+    elif string.find(sys.platform, 'linux') != -1:
+        return 'linux'
+    elif string.find(sys.platform, 'freebsd') != -1:
+        return 'linux'
+    elif string.find(sys.platform, 'cygwin') != -1:
+        return 'win32'
+    elif string.find(os.name, 'win32') != -1:
+        return 'win32'
+    elif string.find(sys.platform, 'sun') != -1:
+        return 'sun'
+    else:
+        return sys.platform
+
+def GetCFDHostType():
+    """Determines which hosttype this build is being run on."""
+    if windows:
+        return "WIN32"
+    elif unix:
+        if (os.path.exists("/etc/redhat-release")):
+            piped = os.popen("""cat /etc/redhat-release """ +
+                             """| awk -F" " '{print $1}'""", 'r')
+            firstWord = piped.read()[:-1]
+            ##NOTE: [:-1] is to remove the line break from the read()
+            piped.close()
+            if firstWord == "Red":
+                piped = os.popen("""cat /etc/redhat-release """ +
+                                 """| awk -F" " '{print $3}'""", 'r')
+                thirdWord = piped.read()[:-1]
+                piped.close()
+                if thirdWord == "Enterprise":
+                    ##Extract words from file to create similar to RHEL_3
+                    piped= os.popen("""cat /etc/redhat-release """ +
+                                    """| awk -F" " '{print "RHEL_" $7}'""",
+                                    'r')
+                    cfdHostType = piped.read()[:-1]
+                    piped.close()
+                else:
+                    ##Extract words from file to create
+                    ##something like RedHat_8.0
+                    piped = os.popen("""cat /etc/redhat-release """ +
+                                     """| awk -F" " '""" +
+                                     """{print $1 $2 "_" $5}'""",
+                                     'r')
+                    cfdHostType = piped.read()[:-1]
+                    piped.close()
+            elif firstWord == "Fedora":
+                ##Extract words from file to create something like Fedora_1
+                piped= os.popen("""cat /etc/redhat-release """ +
+                                """| awk -F" " '{print $1 "_" $4}'""", 'r')
+                cfdHostType = piped.read()[:-1]
+                piped.close()
+            else:
+                ##NOTE: If the program couldn't identify this type of
+                ##Redhat, just use uname.
+                piped = os.popen("uname")
+                cfdHostType = piped.read()[:-1]
+                piped.close()
+        elif os.path.exists("/etc/SuSE-release"):
+            ##Extract words from file to create
+            ##something like SuSE_9.2_x86-64
+            piped = os.popen("""head -1 /etc/SuSE-release """ +
+                             """| awk -F" " '{print $1 "_" $3 "_" $4}'""",
+                             'r')
+            cfdHostType = piped.read()[:-1]
+            piped.close()
+        else:
+            piped = os.popen("uname")
+            cfdHostType = piped.read()[:-1]
+            piped.close()
+        ##If CFDHOSTTYPE has parentheses, remove them.
+        piped = os.popen("""echo \"%s\" """ %cfdHostType +
+                         """| sed -e 's/(//g' | sed -e 's/)//g' """ + 
+                         """| sed -e 's/"//g'""", 'r')
+        cfdHostType = piped.read()[:-1]
+        piped.close()
+    return cfdHostType
 
 def GetTag(execTag = False, osgTag = False,
            patentedTag = False, clusterTag = False):
@@ -32,42 +119,18 @@ def GetTag(execTag = False, osgTag = False,
         cluster_tag = ''
     return finalTag
 
-execTag = GetTag(True)
-execOsgTag = GetTag(True, True)
-execOsgPatTag = GetTag(True, True, True)
-execOsgPatClusterTag = GetTag(True, True, True, True)
-
-Export('execTag')
-Export('execOsgTag')
-Export('execOsgPatTag')
-Export('execOsgPatClusterTag')
-
-def GetPlatform():
-    """Determines what platform this build is being run on."""
-    if string.find(sys.platform, 'irix') != -1:
-        return 'irix'
-    elif string.find(sys.platform, 'linux') != -1:
-        return 'linux'
-    elif string.find(sys.platform, 'freebsd') != -1:
-        return 'linux'
-    elif string.find(sys.platform, 'cygwin') != -1:
-        return 'win32'
-    elif string.find(os.name, 'win32') != -1:
-        return 'win32'
-    elif string.find(sys.platform, 'sun') != -1:
-        return 'sun'
-    else:
-        return sys.platform
-
-def GetCFDHostType():
-    """Determines which hosttype this build is being run on."""
-    return "RHEL_4"
-
-##Placeholder for cfdHostType function.
+##execTag = GetTag(True)
+##execOsgTag = GetTag(True, True)
+##Export('execTag')
+##Export('execOsgTag')
 cfdHostType = GetCFDHostType()
 libPath = pj('#', 'lib', cfdHostType)
+execOsgPatTag = GetTag(True, True, True)
+execOsgPatClusterTag = GetTag(True, True, True, True)
 Export('cfdHostType')
 Export('libPath')
+Export('execOsgPatTag')
+Export('execOsgPatClusterTag')
 
 def BuildLinuxEnvironment():
     """Builds a base environment for other modules to build on set up for Linux"""
@@ -75,10 +138,11 @@ def BuildLinuxEnvironment():
     profile = 'no'
     optimize = 'no'
     env = Environment(ENV = os.environ,
-                            CXX = 'g++',
-                            LINK = 'g++')
+                      options = opts,
+                      CXX = 'g++',
+                      LINK = 'g++')
     CXXFLAGS = ['-g']
-    if os.getenv('VE_PATENTED') == 'TRUE':
+    if env['VE_PATENTED'] == 'true':
         CXXFLAGS.extend(['-DVE_PATENTED'])
     CPPDEFINES = ['HAVE_CONFIG_H', '_LINUX', 'VTK_STREAMS_FWD_ONLY', '_TAO',
                   '_REENTRANT', 'ACE_HAS_AIO_CALLS', '_GNU_SOURCE',
@@ -87,12 +151,10 @@ def BuildLinuxEnvironment():
     LINKFLAGS = CXXFLAGS
     LIBS = []
     CPPPATH = ['#']
-
     # Enable profiling?
     if profile != 'no':
         CXXFLAGS.extend([])   ##Does nothing.
         LINKFLAGS.extend([])  ##Ditto.
-
     # Debug or optimize build?
     if optimize != 'no': ##Debug mode
         CPPDEFINES.extend(['NDEBUG'])
@@ -101,11 +163,85 @@ def BuildLinuxEnvironment():
         #CPPDEFINES.append('_DEBUG')
         CXXFLAGS.extend(['-g'])
     env.Append(CXXFLAGS = CXXFLAGS,
-                  CPPDEFINES = CPPDEFINES,
-                  LINKFLAGS = LINKFLAGS,
-                  CPPPATH = CPPPATH,
-                  LIBPATH = libPath,
-                  LIBS = LIBS)
+               CPPDEFINES = CPPDEFINES,
+               LINKFLAGS = LINKFLAGS,
+               CPPPATH = CPPPATH,
+               LIBPATH = libPath,
+               LIBS = LIBS)
+    ##Build VE-env from setup.tsh
+    env['VE_SUITE_HOME'] = sys.path[0]
+    env['CFDHOSTTYPE'] = GetCFDHostType()
+##    uname_LIB = "Linux"
+##    env['CFD_LIBS'] = uname_LIB
+    env['PFNFYLEVEL'] = '0'
+    env['PFSHAREDSIZE'] = '534773700'
+    env['VPR_DEBUG_NFY_LEVEL'] = '0'
+    env['VPR_DEBUG_ENABLE'] = '1'
+    env['NO_RTRC_PLUGIN'] = 'TRUE'
+    env['NO_PERF_PLUGIN'] = 'TRUE'
+    env['OSGTHREAD_SAFE_REF_UNREF'] = '1'
+    env['OSGNOTIFYLEVEL'] = 'DEBUG_INFO'
+    env['OMNINAMES_LOGDIR'] = '%s/VE_Installer' %env['VE_SUITE_HOME']
+    env['OMNIORB_CONFIG'] = '%s/omniORB4.cfd' %env['OMNINAMES_LOGDIR']
+    ##CFDHostType specific settings
+    changes = {}
+    appends = {}
+    appends['PATH'] = []
+    cfdHostType = env['CFDHOSTTYPE']
+    if cfdHostType.split('_')[0] in ["RedHat", "Fedora", "RHEL"]:
+        vtkBase = Popen(['flagpoll', 'vtk', '--variable=prefix'], stdout=PIPE).communicate[0]
+        osgHome = Popen(['flagpoll', 'osg', '--variable=prefix'], stdout=PIPE).communicate[0]
+        xercesRoot = Popen(['flagpoll', 'xerces', '--variable=prefix'], stdout=PIPE).communicate[0]
+        changes = {"JDK_HOME": "/usr/java",
+                   "VTK_BASE_DIR": vtkBase,
+                   "WX_HOME": "/home/users/mccdo/wxWindows/wxGTK-2.6.2/install-rhel_4",
+                   "VJ_BASE_DIR": "/home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-linux-rhel4-i686",
+                   "VJ_DEPS_DIR": "/home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-linux-rhel4-i686-deps",
+                   "CORONA_HOME": "/home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92",
+                   "OSG_HOME": osgHome,
+                   "COIN_HOME": "/home/vr/Applications/TSVEG/Libraries/Release/Opt/Coin-2.4.5/Linux-RHEL_4"}
+        if env['TAO_BUILD'] == 'TRUE':
+            taoHome = Popen(['flagpoll', 'tao', '--variable=prefix'], stdout=PIPE).communicate[0]
+            changes['TAO_HOME'] = taoHome
+            changes['XERCESROOT'] = xercesRoot
+            appends['LD_LIBRARY_PATH'] = ["%s/lib" %taoHome, "%s/lib" %xercesRoot]
+            appends['PATH'] = ["%s/bin" %taoHome]
+    elif cfdHostType[0] == 'S' and cfdHostType[2:3] == 'SE':
+        if cfdHostType[-2:] == '64': ##S*SE*64
+            pass
+        else:
+            pass
+    elif cfdHostType == "SunOS":
+        pass
+    elif cfdHostType == "Darwin":
+        changes = {"JDK_HOME": "/usr/java/jdk1.5.0_04",
+                   "VTK_BASE_DIR": "/home/users/mccdo/VTK/vtk-5.0/install-rhel4_release",
+                   "WX_HOME": "/home/vr/Applications/TSVEG/Libraries/Release/Opt/wxMac-2.6.2",
+                   "VJ_BASE_DIR": "/usr/local",
+                   "VJ_DEPS_DIR": "/usr/local/vrjuggler-deps",
+                   "OSG_HOME": "/home/users/mccdo/OSG/install-powermac"}
+    else:
+        print "ERROR!"
+    ##Change vars in changes
+    for var in changes:
+        env[var] = changes[var]
+    env['TWEEK_BASE_DIR'] = env['VJ_BASE_DIR']
+    env['DZR_BASE_DIR'] = "%s/share/Doozer" %env['VJ_BASE_DIR']
+    env['SNX_BASE_DIR'] = env['VJ_BASE_DIR']
+    appends['PATH'].append("%s/bin" %env['VJ_BASE_DIR'])
+    appends['PATH'].append("%s/bin" %env['VE_SUITE_HOME'])
+    appends['PATH'].append("%s/bin/%s" %(env['VE_SUITE_HOME'], env['CFDHOSTTYPE']))
+    appends['PATH'].append("%s/bin" %env['VJ_DEPS_DIR'])
+    appends['PATH'].append("%s/bin" %env['WX_HOME'])
+    pathSep = ':'
+    ##Append paths in appends
+    for var in appends:
+        for entry in appends[var]:
+            env[var] = "%s%s%s" %(entry, pathSep, env[var])
+    if env['OSG_HOME'] == 'TRUE':
+        osgHome = Popen(['flagpoll', 'osg', '--variable=prefix'], stdout=PIPE).communicate[0]
+        appends['PATH'].append("%s/share/OpenSceneGraph/bin" %osgHome)
+        env['OSG_FILE_PATH'] = "%s/share/OpenSceneGraph-Data" %osgHome
     return env
 
 def BuildBaseEnvironment():
@@ -125,7 +261,7 @@ BuildDir(buildDir, '.', duplicate = 0)
 
 env = baseEnv.Copy()
 
-
+##Set the Sconscript files to build.
 openSubdirs = Split("""
     VE_Open
     VE_Open/XML

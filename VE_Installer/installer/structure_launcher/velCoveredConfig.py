@@ -83,12 +83,21 @@ class CoveredConfig(CoveredState):
         path joinings.
         Appends JconfPath and ClusterNodes to the dictionary."""
         surface = self.GetSurface()
-        for var in surface:
-            if surface[var] == None:
-                surface[var] = "None"
+##        for var in surface:
+##            if surface[var] == None:
+##                surface[var] = "None"
+        ##Determine the JconfPath.
         surface["JconfPath"] = self.JconfPath()
-        surface["ClusterNodes"] = surface["ClusterDict"].GetNames()
-        surface["ClusterNodes"].append(surface["ClusterMaster"])
-        if surface["OSGNotifyLevel"] == "None":
+        ##Set ClusterNodes to list of cluster nodes if a cluster is launched.
+        if surface["Xplorer"] and surface["XplorerType"] == 2 \
+           and surface["ClusterMaster"] != "":
+            surface["ClusterSlaves"] = surface["ClusterDict"].GetNames()
+            surface["Cluster"] = True
+##            surface["ClusterNodes"].append(surface["ClusterMaster"])
+        else:
+            surface["ClusterSlaves"] = None
+            surface["Cluster"] = False
+        ##If OSGNotifyLevel = None, change it to ""
+        if surface["OSGNotifyLevel"] == None:
             surface["OSGNotifyLevel"] = ""
         return surface

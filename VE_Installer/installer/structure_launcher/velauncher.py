@@ -585,7 +585,7 @@ class LauncherWindow(wx.Frame):
         ##Launch splash screen
         velLaunchSplash.LaunchSplash()
         ##Go into the Launch
-        launchInstance = Launch(self.state.GetLaunchSurface(), devMode)
+        launchInstance = Launch(self.state.GetLaunchSurface())
         ##Show NameServer kill window if NameServer was started.
         if v("NameServer"):
             window = ServerKillWindow(pids = launchInstance.GetNameserverPids())

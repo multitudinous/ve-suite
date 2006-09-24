@@ -60,4 +60,5 @@ BASE_CONFIG = {"DependenciesDir": None,
                "OSGNotifyLevel": "None",
                "MasterWait": 7,
                "SlaveWait": 5,
-               "User": ""}
+               "User": "",
+               "DevMode": False}

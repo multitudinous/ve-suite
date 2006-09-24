@@ -1,8 +1,9 @@
 """Contains constant variables and basic shared functions for VE-Launcher."""
 from os import getenv, name ##Used for getting system values
-from os.path import join ##Used for building paths.
+import os.path ##Used for building paths.
 import wx ##Used for GUI
 import sys
+join = os.path.join
 
 ##Set up the system's ID.
 windows = (name == "nt")
@@ -16,6 +17,10 @@ CLUSTER_ENABLED = True
 ##File/Folder settings.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
+print VELAUNCHER_DIR ##TESTER
+##Fixes directory passed for velauncher frozen.
+if os.path.basename(VELAUNCHER_DIR) == "velauncher":
+    VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
 LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
 SPLASH_IMAGE = join(VELAUNCHER_DIR, "installerImages", "ve_banner_1.0.bmp")
