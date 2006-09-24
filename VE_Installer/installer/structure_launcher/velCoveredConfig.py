@@ -48,13 +48,22 @@ class CoveredConfig(CoveredState):
 
     def CommandLineMode(self):
         """Applies changes to base for Command Line mode."""
-        for var in COMMAND_LAYER:
-            self.state.Edit(var, COMMAND_LAYER[var])
+        for var in COMMAND_CONFIG:
+            self.Edit(var, COMMAND_CONFIG[var])
 
     def VesArgument(self, vesFile):
         """Applies a .ves argument to the launcher."""
         self.Cover("Directory", os.path.dirname(vesFile), layer = VES_LAYER)
         self.Cover("VESFile", vesFile)
+        return
+
+    def ScriptArgument(self, scriptFile):
+        """Applies a script (.bat, .tsh, .sh) argument to the launcher."""
+        self.Cover("ShellScript", scriptFile, layer = SCRIPT_LAYER)
+        self.Cover("Shell", True, layer = SCRIPT_LAYER)
+        self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
+        self.Cover("Mode", 4) ##SHELL MODE
+        return
 
     def ChangeMode(self, mode):
         """Changes the launcher's mode."""

@@ -41,6 +41,7 @@ from velLaunchCode import *
 import velLaunchSplash
 from velDebugWindow import *
 from velSetWaitWindow import *
+import velShell
 
 ##Set up the master config file
 config = wx.Config(CONFIG_FILE)
@@ -89,7 +90,7 @@ class LauncherWindow(wx.Frame):
 
         ##Prepare data storage
         self.state = CoveredConfig()
-
+        self.launch = False
         ##Prepare the panel.
         panel = wx.Panel(self)
         ##Prepare the logo.
@@ -213,9 +214,13 @@ class LauncherWindow(wx.Frame):
         ##Set tool tip popup delay to 2 seconds.
         wx.ToolTip.SetDelay(2000)
         
-        ##Set arguments for passed .ves file.
-        if len(arguments) > 0:
-            self.state.VesArgument(arguments[0])
+        ##Set arguments for passed .ves & script files.
+        velArguments.Interpret(self.state, arguments)
+##        for arg in arguments:
+##            if arg[-4:] == '.ves':
+##                self.state.VesArgument(arg)
+##            else:
+##                self.state.ScriptArgument(arg)
         ##Set arguments for developer mode.
         if devMode:
             self.state.DevMode()
@@ -463,6 +468,7 @@ class LauncherWindow(wx.Frame):
     def Launch(self, event = None):
         """Checks input, begins launch if error-free."""
         self.UpdateData()
+        self.launch = True
         ##Launch data retrieved from the Surface;
         ##Save data retrieved from the Base. (See velCoveredState.)
         v = self.state.GetSurface
@@ -603,27 +609,29 @@ class LauncherWindow(wx.Frame):
         self.Hide()
         self.Destroy()
         ##If a shell's launched, start it here, after cleanup.
-        if self.state.GetSurface("Shell") == True:
-            if windows:
-                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
-            elif unix:
-                print "VE-Suite subshell started."
-                print "Type exit to return to your previous" + \
-                      " shell once you're done."
-                os.execl(UNIX_SHELL, "")
-            else:
-                print "SHELL ERROR! This OS isn't supported."
+        if self.state.GetSurface("Shell") == True and self.launch == True:
+            velShell.Start(self.state.GetSurface("ShellScript"))
+##            if windows:
+##                os
+##                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
+##            elif unix:
+##                print "VE-Suite subshell started."
+##                print "Type exit to return to your previous" + \
+##                      " shell once you're done."
+##                os.execl(UNIX_SHELL, "")
+##            else:
+##                print "SHELL ERROR! This OS isn't supported."
 
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.
 arguments = sys.argv[1:]
 try:
     opts, args = getopt.getopt(arguments,
-                               "cnx:kj:t:p:w:e:m:sb:v:",
+                               "cnx:kj:t:p:w:e:m:sb:f:",
                                ["conductor", "nameserver", "xplorer=",
                                 "desktop", "jconf=", "taomachine=", "port=",
                                 "dir=", "dep=", "master=", "dev", "shell",
-                                "builder=", "ves="])
+                                "builder=", "file="])
 except getopt.GetoptError:
     usage()
     sys.exit(2)

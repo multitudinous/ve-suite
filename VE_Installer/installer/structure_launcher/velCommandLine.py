@@ -9,14 +9,16 @@ from velServerKillWindow import *
 from velJconfDict import *
 from velClusterDict import *
 from velConfigFunctions import *
+import velShell
+import velArguments
 
 class CommandLine:
     """Launches VE Suite using arguments from the command line."""
-    def __init__(self, opts, args):
+    def __init__(self, opts, arguments):
         ##Set up default vars.
         self.state = CoveredConfig()
-        LoadConfig(CONFIG_DEFAULT, self.state)
-        self.state.CommandLaunch()
+        LoadConfig(DEFAULT_CONFIG, self.state)
+        self.state.CommandLineMode()
         if ("--dev", "") in opts:
             devMode = True
             self.state.DevMode()
@@ -36,6 +38,8 @@ class CommandLine:
                     self.state.Edit("XplorerType", 0)
             elif opt in ('-k', "--desktop"):
                 self.state.Edit("DesktopMode", True)
+            elif opt in ('-f', "--file"):
+                velArguments.Interpret(self.state, [arg])
             elif opt in ('-s', "--shell"):
                 self.state.Edit("Shell", True)
                 self.state.Cover("Conductor", False)
@@ -77,12 +81,13 @@ class CommandLine:
             app.MainLoop()
         ##Launch the shell here, if needed.
         if self.state.GetSurface("Shell") == True:
-            if windows:
-                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
-            elif unix:
-                print "VE-Suite subshell started."
-                print "Type exit to return to your previous" + \
-                      " shell once you're done."
-                os.execl(UNIX_SHELL, "")
-            else:
-                print "SHELL ERROR! This OS isn't supported."
+            velShell.Start(self.state.GetSurface("ShellScript"))
+##            if windows:
+##                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
+##            elif unix:
+##                print "VE-Suite subshell started."
+##                print "Type exit to return to your previous" + \
+##                      " shell once you're done."
+##                os.execl(UNIX_SHELL, "")
+##            else:
+##                print "SHELL ERROR! This OS isn't supported."

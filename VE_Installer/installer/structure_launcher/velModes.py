@@ -33,7 +33,7 @@ MODE_DICT = {"Desktop": {"Conductor": True,
                        "Shell": True},
              "Custom": {}}
 
-COMMAND_COVER = {"Conductor": False,
+COMMAND_CONFIG = {"Conductor": False,
                  "NameServer": False,
                  "Xplorer": False,
                  "DesktopMode": False,
@@ -61,4 +61,5 @@ BASE_CONFIG = {"DependenciesDir": None,
                "MasterWait": 7,
                "SlaveWait": 5,
                "User": "",
+               "ShellScript": None,
                "DevMode": False}
