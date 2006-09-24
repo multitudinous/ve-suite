@@ -128,7 +128,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-linux-rhel4-i686
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-linux-rhel4-i686-deps
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.1/Linux-RHEL_4
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.2/Linux-RHEL_4
    setenv COIN_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/Coin-2.4.5/Linux-RHEL_4
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib:${VJ_DEPS_DIR}/lib
@@ -154,7 +154,7 @@ else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_*64 ) then
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/Linux64-SuSE_10
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux64-SuSE_10
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux64-SuSE_10
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.1/Linux64-SuSE_10
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.2/Linux64-SuSE_10
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
    setenv COIN_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/Coin-2.4.5/Linux64-SuSE_10
 
@@ -182,7 +182,7 @@ else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_i* ) then
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/Linux-SuSE_10
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux-SuSE_10
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux-SuSE_10
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.1/Linux-SuSE_10
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.2/Linux-SuSE_10
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
    setenv COIN_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/Coin-2.4.5/Linux-SuSE_10
 
