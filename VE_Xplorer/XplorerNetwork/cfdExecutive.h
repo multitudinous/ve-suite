@@ -123,7 +123,7 @@ public:
    ///to have access to scalar information
    void UnbindORB( void );
    ///compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray* ){ ; }
+   virtual bool CheckCommandId( cfdCommandArray* ){ return true; }
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand(){ ; }
    ///This function returns the map of the current plugins 
