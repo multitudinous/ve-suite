@@ -114,13 +114,13 @@ class Launch:
         jconf -- Which .jconf file to use for Xplorer's settings.
         desktopMode -- Run in Desktop mode."""
         ##Name Server section
-        if self.settings("NameServer"):
+        if self.settings["NameServer"]:
             sleep(1)
             print "Starting Name Server."
             pids = []
-            pids.append(subprocess.Popen(NameServiceCall()).pid)
+            pids.append(subprocess.Popen(self.NameServiceCall()).pid)
             sleep(5)
-            pids.append(subprocess.Popen(ServerCall()).pid)
+            pids.append(subprocess.Popen(self.ServerCall()).pid)
             sleep(5)
             self.nameserverPids = pids
         ##Cluster Xplorer section
@@ -366,7 +366,7 @@ class Launch:
         else:
             pass
         self.clusterTemplate += "%s\n" %drive
-        self.clusterTemplate += "cd %s\n" %self.settings("Directory")
+        self.clusterTemplate += "cd %s\n" %self.settings["Directory"]
         self.clusterTemplate += "\n"
         self.clusterTemplate += self.clusterScript
         self.clusterTemplate += "\n"

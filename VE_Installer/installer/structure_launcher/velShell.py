@@ -10,7 +10,7 @@ def Start(shellScript = None):
         if shellScript:
             os.system("start %s" %shellScript)
         else:
-            os.system("start %s cmd" %LAUNCHER_SHELL_NAME)
+            os.system('start "%s" cmd' %LAUNCHER_SHELL_NAME)
     elif unix:
         if shellScript:
             print "VE-Suite script started in subshell."
