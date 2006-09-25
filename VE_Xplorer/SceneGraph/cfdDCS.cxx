@@ -746,8 +746,9 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
       osg::Matrixd rotateMat;
 
       rotateMat.makeRotate( quat );
+      rotateMat = inverseTranslation*rotateMat*translation;
 
-      dcs->setMatrix(rotateMat*translation*scale);
+      dcs->setMatrix(translation*scale*rotateMat);
       traverse(node,nv);
    }
 }
