@@ -60,8 +60,8 @@ Name: vebuildenv; Description: Headers and Libs; Types: full
 Name: examples; Description: Example datasets; Types: full
 ;Name: velauncher; Description: wxPython Launcher; Types: full
 [Registry]
-Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdeletekey
-Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Flags: uninsdeletekey; Components: " examples vebuildenv veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver"; Tasks: " desktopVELauncherIcon"
+Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdeletekeyifempty
+Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Components: " examples vebuildenv veconductor vexplorer\osgvepcluster vexplorer\osgvep vexplorer\osg vexplorer nameserver"; Tasks: " desktopVELauncherIcon"; Flags: uninsdeletekeyifempty
 Root: HKCR; SubKey: .ves; ValueType: string; ValueData: VESNetworkfile; Flags: uninsdeletekey createvalueifdoesntexist
 Root: HKCR; SubKey: VESNetworkfile; ValueType: string; ValueData: VE-Suite Network file; Flags: uninsdeletekey
 Root: HKCR; SubKey: VESNetworkfile\shell\open\command; ValueType: string; ValueData: """{app}\velauncher.exe"" ""%1"""; Flags: uninsdeletevalue
@@ -143,6 +143,7 @@ Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; F
 Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Builder\*.h; DestDir: {app}\include\VE_Builder; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: ..\..\..\deere\optimalMachineConfigurator\SuspensionCABDesign\Suspension_Configurator_install\*; DestDir: {app}\exampleDatasets\Suspension_Configurator; Flags: recursesubdirs ignoreversion uninsremovereadonly createallsubdirs
+Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp; DestDir: {app}\installerImages; Flags: replacesameversion; DestName: ve_banner_1.0.bmp
 
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico

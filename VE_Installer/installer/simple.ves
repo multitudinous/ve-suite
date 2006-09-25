@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veNetwork>
+    <conductorState id="76568581-a29c-4442-99b7-300a934b8aa2">
+      <dataName>m_xUserScale</dataName>
+      <dataValue type="xs:double">1</dataValue>
+    </conductorState>
+    <conductorState id="22fc8d04-d28f-734c-bf6c-e3646f058d28">
+      <dataName>m_yUserScale</dataName>
+      <dataValue type="xs:double">1</dataValue>
+    </conductorState>
+    <conductorState id="32554c86-43c0-dd48-8712-bee05134d2b6">
+      <dataName>nPixX</dataName>
+      <dataValue type="xs:integer">10</dataValue>
+    </conductorState>
+    <conductorState id="0cb96330-e297-ce4f-9b1e-9b65b3653326">
+      <dataName>nPixY</dataName>
+      <dataValue type="xs:integer">10</dataValue>
+    </conductorState>
+    <conductorState id="0dcba897-aba5-fa48-b8ef-ecfb6f8f6cea">
+      <dataName>nUnitX</dataName>
+      <dataValue type="xs:integer">240</dataValue>
+    </conductorState>
+    <conductorState id="26621844-e51d-894b-8473-968d5f77c23b">
+      <dataName>nUnitY</dataName>
+      <dataValue type="xs:integer">240</dataValue>
+    </conductorState>
+  </veNetwork>
+
+  <veModel ID="102" name="DefaultPlugin">
+    <iconLocation>
+      <xLocation type="xs:unsignedInt">10</xLocation>
+      <yLocation type="xs:unsignedInt">10</yLocation>
+    </iconLocation>
+    <icon type="xs:string">iconFilename</icon>
+    <informationPackets>
+      <blockID type="xs:unsignedInt">105</blockID>
+      <blockName type="xs:string">simple</blockName>
+      <transform>
+        <translation>
+          <value>0</value>
+          <value>0</value>
+          <value>0</value>
+        </translation>
+        <scale>
+          <value>1</value>
+          <value>1</value>
+          <value>1</value>
+        </scale>
+        <rotation>
+          <value>0</value>
+          <value>0</value>
+          <value>0</value>
+        </rotation>
+      </transform>
+      <properties id="b55e4c6c-2ad8-044e-aa1c-862b7bf8f040">
+        <dataName>VTK_DATA_FILE</dataName>
+        <dataValue type="xs:string">3scl2vec.vtu</dataValue>
+      </properties>
+      <properties id="9a96837e-722f-b847-ade6-eccdc9d1619b">
+        <dataName>VTK_TEXTURE_DIR_PATH</dataName>
+        <dataValue type="xs:string">texture-based/scalars/200_to_1000</dataValue>
+      </properties>
+      <properties id="2c3aa880-6cb0-b541-a758-d9cbfb398a2e">
+        <dataName>VTK_TEXTURE_DIR_PATH</dataName>
+        <dataValue type="xs:string">texture-based/scalars/first-scalar</dataValue>
+      </properties>
+      <properties id="b24898ca-1bfc-e94b-8a6f-3d1d071f677d">
+        <dataName>VTK_TEXTURE_DIR_PATH</dataName>
+        <dataValue type="xs:string">texture-based/scalars/fourth_param_is_a_scalar</dataValue>
+      </properties>
+    </informationPackets>
+    <geometry id="5593f230-9f76-3449-acca-41bdeb92bc7a">
+      <type>Assembly</type>
+      <name>Model_Geometry</name>
+      <parent type="xs:string"></parent>
+      <transform>
+        <translation>
+          <value>0</value>
+          <value>0</value>
+          <value>0</value>
+        </translation>
+        <scale>
+          <value>1</value>
+          <value>1</value>
+          <value>1</value>
+        </scale>
+        <rotation>
+          <value>30</value>
+          <value>0</value>
+          <value>0</value>
+        </rotation>
+      </transform>
+      <numChildren>3</numChildren>
+      <children>
+        <child id="1cfa8fb2-b11b-0645-8a2e-7ddc3fc7c582">
+          <type>Part</type>
+          <name>eightCorners</name>
+          <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
+          <transform>
+            <translation>
+              <value>0</value>
+              <value>0</value>
+              <value>0</value>
+            </translation>
+            <scale>
+              <value>1</value>
+              <value>1</value>
+              <value>1</value>
+            </scale>
+            <rotation>
+              <value>0</value>
+              <value>0</value>
+              <value>0</value>
+            </rotation>
+          </transform>
+          <attribute>
+            <type type="xs:string">Material</type>
+            <blending type="xs:boolean">true</blending>
+            <material>
+              <kDiffuse>
+                <value>1</value>
+                <value>0</value>
+                <value>0</value>
+                <value>1</value>
+              </kDiffuse>
+              <kEmissive>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+                <value>1</value>
+              </kEmissive>
+              <kAmbient>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </kAmbient>
+              <specular>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </specular>
+              <opacity>1</opacity>
+              <shininess>50</shininess>
+              <materialName>red</materialName>
+              <face>Front_and_Back</face>
+              <colorMode>Ambient_and_Diffuse</colorMode>
+            </material>
+          </attribute>
+          <activeAttributeName type="xs:string">red</activeAttributeName>
+          <fileName>eightCorners.stl</fileName>
+        </child>
+        <child id="6382ac8c-ebe1-5543-85b8-2f511424db9d">
+          <type>Part</type>
+          <name>Surface0.75</name>
+          <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
+          <transform>
+            <translation>
+              <value>0</value>
+              <value>0</value>
+              <value>0</value>
+            </translation>
+            <scale>
+              <value>1</value>
+              <value>1</value>
+              <value>1</value>
+            </scale>
+            <rotation>
+              <value>0</value>
+              <value>0</value>
+              <value>0</value>
+            </rotation>
+          </transform>
+          <fileName>Surface0.75.stl</fileName>
+        </child>
+        <child id="72bd0eb4-bac9-9f4e-894d-2bb98e5c7bef">
+          <type>Clone</type>
+          <name>Surface0.75_cloned</name>
+          <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
+          <transform>
+            <translation>
+              <value>-4</value>
+              <value>0</value>
+              <value>0</value>
+            </translation>
+            <scale>
+              <value>1</value>
+              <value>1</value>
+              <value>1</value>
+            </scale>
+            <rotation>
+              <value>40</value>
+              <value>40</value>
+              <value>0</value>
+            </rotation>
+          </transform>
+          <originalNode id="6382ac8c-ebe1-5543-85b8-2f511424db9d">
+            <type>Part</type>
+            <name>Surface0.75</name>
+            <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Surface0.75.stl</fileName>
+          </originalNode>
+        </child>
+      </children>
+    </geometry>
+  </veModel>
+
+</network>
