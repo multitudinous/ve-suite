@@ -141,12 +141,12 @@ class Launch:
             sourceFile.close()
             ##Master call
             print "***MASTER CALL: %s***" %(self.settings["ClusterMaster"]) ##TESTER
-            self.ExecuteClusterScript()
+            self.ExecuteClusterScript(self.settings["ClusterMaster"])
             sleep(self.settings["MasterWait"])
             ##Slave calls
             for comp in self.settings["ClusterSlaves"]:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-                self.ExecuteClusterScript()
+                self.ExecuteClusterScript(comp)
                 sleep(self.settings["SlaveWait"])
         ##Xplorer section
         elif self.settings["Xplorer"]:
@@ -318,12 +318,13 @@ class Launch:
                             "-i", "-e", "-c", CLUSTER_FILE_PATH]
         ##Insert username directory if specified
         if self.settings["User"] != "":
-            self.clusterCall[1:1] = ["-u", self.settings["User"]]
+            self.clusterCall[2:2] = ["-u", self.settings["User"]]
         ##Begin cluster template
         self.clusterTemplate = ""
         self.clusterTemplate += "@ECHO OFF\n"
 ##        print templatePath ##TESTER
         if os.path.exists(TEMPLATE_PATH):
+            print "---GOT TEMPLATE---" ##TESTER
             COMMENT_NOTE = '##'
             VAR_SEP = '%'
 ##            execPassed = False
@@ -360,8 +361,8 @@ class Launch:
 ####                    self.clusterCall = call
 ####                    execPassed = True
 ####                    continue
-##                ##Add the rest to the cluster.bat.
-##                self.clusterTemplate += line
+                ##Add the rest to the cluster.bat.
+                self.clusterTemplate += line
             f.close()
         else:
             pass
@@ -370,7 +371,7 @@ class Launch:
         self.clusterTemplate += "\n"
         self.clusterTemplate += self.clusterScript
         self.clusterTemplate += "\n"
-        self.clusterTemplate+= string.join(self.XplorerCall(typeXplorer, jconf))
+        self.clusterTemplate+= string.join(self.XplorerCall())
         return
 
     def WriteClusterScriptPrefix(self):
@@ -390,7 +391,7 @@ class Launch:
         return
             
 
-    def WriteClusterScriptPost(self, typeXplorer, jconf, desktopMode):
+    def WriteClusterScriptPost(self):
         """Writes the cluster script section after the environment setting."""
         if unix:
             command = "%s &" %(string.join(self.XplorerCall()))
@@ -398,7 +399,7 @@ class Launch:
             self.clusterScript += "%s\n" %(command)
             self.clusterScript += "EOF\n"
         elif windows:
-            commandList = self.XplorerCall(typeXplorer, jconf, desktopMode)
+            commandList = self.XplorerCall()
             command = ""
             for word in commandList:
                 command += "%s " %str(word)
@@ -411,15 +412,13 @@ class Launch:
         else:
             self.clusterScript += "ERROR: OS not supported."
 
-    def ExecuteClusterScript(self, nodeName, scriptPath,
-                             typeXplorer, jconf, desktopMode):
+    def ExecuteClusterScript(self, nodeName):
         if windows:
             print "Executing %s!" %nodeName
             ##Do a regular call if the initial machine's the node.
             if gethostname() == nodeName.split('.')[0]:
                 print "It is this computer!"
-                subprocess.Popen(self.XplorerCall(typeXplorer, jconf,
-                                                  desktopMode))
+                subprocess.Popen(self.XplorerCall())
                 return
             ##Else call the script on the other computer in psexec.
 ##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
