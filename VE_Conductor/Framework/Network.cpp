@@ -70,6 +70,7 @@
 #include <cmath>
 
 using namespace VE_Conductor::GUI_Utilities;
+using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    // see the docs on wxScrolledWindow for more info on this
@@ -2818,4 +2819,17 @@ void Network::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
    }
    // Here we launch a dialog for a specific plugins input values
    modules[m_selMod].GetPlugin()->SetPluginNameDialog();   
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::SetIDOnAllActiveModules( void )
+{
+   CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+
+   std::map< int, Module >::iterator iter;
+   for ( iter=modules.begin(); iter!=modules.end(); ++iter )
+   {
+      std::string moduleName = iter->second.GetClassName();
+      int moduleId = iter->first;
+      serviceList->SetID( moduleId, moduleName );
+   }
 }

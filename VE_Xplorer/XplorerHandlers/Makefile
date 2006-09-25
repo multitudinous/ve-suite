@@ -117,9 +117,9 @@ SRCS=\
    KeyboardMouse.cxx\
    cfdTrackball.cxx\
    cfdObjectHandler.cxx\
-	SelectionHandler.cxx\
-	MouseSelection.cxx\
-	WandSelection.cxx\
+   SelectionHandler.cxx\
+   MouseSelection.cxx\
+   WandSelection.cxx\
    CreateVisObjectEventHandler.cxx\
    ClearVisObjectsEventHandler.cxx\
    ChangeCursorEventHandler.cxx\
@@ -136,7 +136,8 @@ SRCS=\
    QCLoadFileEH.cxx\
    StoredSceneEH.cxx\
    ChangeWorkingDirectoryEventHandler.cxx\
-   ChangeBackgroundColorEventHandler.cxx
+   ChangeBackgroundColorEventHandler.cxx\
+   DataSetAxis.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g

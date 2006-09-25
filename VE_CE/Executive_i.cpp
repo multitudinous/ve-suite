@@ -1036,7 +1036,33 @@ ACE_THROW_SPEC ((
                  ::Error::EUnknown
                  ))
 {
-   // Add your implementation here
+   std::map< std::string, Body::Unit_var >::iterator iter;
+   _mutex.acquire();
+
+   iter = _mod_units.find( std::string( moduleName ) );
+   if ( iter == _mod_units.end() )
+   {
+      _mutex.release();
+      return;
+   }
+
+   try 
+   {
+      iter->second->_non_existent();
+      iter->second->SetID( id );
+      _mutex.release();
+   }
+   catch (CORBA::Exception &) 
+   {
+      std::cout << iter->first <<" is obsolete." << std::endl;
+      _mod_units.erase( iter );
+      _mutex.release();
+      UnRegisterUnit( moduleName );
+   }
+   catch (...)
+   {
+      std::cout << "another kind of exception " << std::endl;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::DeleteModuleInstance (

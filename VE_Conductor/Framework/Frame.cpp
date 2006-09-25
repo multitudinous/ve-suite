@@ -972,6 +972,11 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
    // write the domdoc to the string above
    try 
    {
+      //first make sure all the units have been initialized with the current
+      //ids to get an active xml model
+      network->SetIDOnAllActiveModules();
+      //Now that we have an active xml model in all units
+      // set the network
       network->exec->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
       run_menu->Enable( v21ID_START_CALC, true );
    }

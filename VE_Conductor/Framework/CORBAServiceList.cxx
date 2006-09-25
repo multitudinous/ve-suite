@@ -355,6 +355,7 @@ void CORBAServiceList::CreateCORBAModule( void )
       
       CORBA::Object_var exec_object = naming_context->resolve(name);
       frame->network->exec = Body::Executive::_narrow(exec_object.in());
+      module = Body::Executive::_duplicate( frame->network->exec.in() );
       
       //Create the Servant
       if ( p_ui_i == NULL )
@@ -416,14 +417,14 @@ void CORBAServiceList::CreateCORBAModule( void )
          //   }
          
          //(frame_->_mutex).release();
-         try {
+         try 
+         {
             frame->network->exec->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
             frame->con_menu->Enable(v21ID_SUBMIT,true);
             frame->con_menu->Enable(v21ID_LOAD, true);
             //frame_->con_menu->Enable(v21ID_CONNECT, false);
             frame->run_menu->Enable(v21ID_VIEW_RESULT, true);
             frame->con_menu->Enable(v21ID_DISCONNECT, true);
-            
             //frame_->orb->run();
          }
          catch ( CORBA::Exception& ex ) 
@@ -434,7 +435,8 @@ void CORBAServiceList::CreateCORBAModule( void )
       }
       else
       {
-         try {
+         try 
+         {
             PortableServer::ObjectId_var idObject = PortableServer::string_to_ObjectId( CORBA::string_dup( UINAME.c_str() ) );
             
             //Activate it to obtain the object reference
@@ -507,12 +509,12 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
    //delete veCommand;
    return true;
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VjObs_ptr CORBAServiceList::GetXplorerPointer( void )
 {
    return vjobs.in();
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 PEThread* CORBAServiceList::GetMessageLog( void )
 {
    if ( pelog == NULL )
@@ -522,4 +524,22 @@ PEThread* CORBAServiceList::GetMessageLog( void )
    }
    
    return pelog;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
+{
+   if ( !CORBAServiceList::IsConnectedToCE() )
+   {
+      return false;
+   }
+   
+   try
+   {
+      module->SetID( CORBA::string_dup( moduleName.c_str() ), moduleId );
+   }
+   catch ( ... )
+   {
+      return false;
+   }
+   return true;
 }

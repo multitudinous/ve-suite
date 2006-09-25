@@ -96,7 +96,9 @@ public:
    VjObs_ptr GetXplorerPointer( void );
    ///Return log pointer
    PEThread* GetMessageLog( void );
-
+   ///Call set id on all modules in the current network
+   bool SetID( int moduleId, std::string moduleName );
+   
 private:
    void CreateCORBAModule( void );
       
