@@ -4,7 +4,7 @@
 #define VEHOME "C:\devEnv\VE_Suite_1.0"
 #define ACETAOHOME "C:\devEnv\VES.1.0-Deps\ACE_wrappers"
 #define VTKHOME "C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8"
-#define OSGHOME "C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.0\OpenSceneGraph"
+#define OSGHOME "C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenSceneGraph"
 #define WXHOME "C:\devEnv\VES.1.0-Deps\wxWidgets-2.6.3"
 #define XERCESHOME "C:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0"
 #define JUGGLERINSTHOME "C:\devEnv\VES.1.0-Deps\juggler_2.0.1_install_vc80"

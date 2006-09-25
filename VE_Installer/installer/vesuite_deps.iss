@@ -144,56 +144,56 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-depdom_2_7D.dll; DestDir: {
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
 Source: {#VEHOME}\VE_Installer\installer\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
-Source: {#OSGHOME}\bin\Producerd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\gdal12.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\OpenThreadsWin32d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_3dcd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_3dsd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_acd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_bmpd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_ddsd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_dwd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_fltd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_freetyped.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_gdald.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_geod.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_gifd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_hdrd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_ived.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_jpegd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_logod.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_lwod.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_lwsd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_md2d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_netd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_objd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_osgd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_osgad.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_osgtgzd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_picd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_pngd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_pnmd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_rgbd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_rotd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_scaled.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_stld.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_tgad.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_tgzd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_tiffd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_transd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_txpd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_xd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_zipd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgDBd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgIntrospectiond.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgUtild.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgwrapper_osgd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_pfbd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgSimd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgTextd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#OSGHOME}\bin\win32\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#OSGHOME}\..\3rdParty\bin\gdal*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#OSGHOME}\..\OpenThreads\bin\win32\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#OSGHOME}\..\Producer\bin\win32\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_3dcd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_3dsd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_acd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_bmpd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_ddsd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_dwd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_fltd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_freetyped.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_gdald.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_geod.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_gifd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_hdrd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_ived.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_jpegd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_logod.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_lwod.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_lwsd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_md2d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_netd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_objd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_osgd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_osgad.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_osgtgzd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_picd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_pngd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_pnmd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_rgbd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_rotd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_scaled.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_stld.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_tgad.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_tgzd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_tiffd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_transd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_txpd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_xd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_zipd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgDBd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgIntrospectiond.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgUtild.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgwrapper_osgd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_pfbd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgSimd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgTextd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#COINHOME}\bin\coin2d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\vrJuggler2.0.1\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
@@ -227,10 +227,10 @@ Source: {#ACETAOHOME}\tao\tao\*.i; DestDir: {app}\include\tao\tao; Attribs: read
 Source: {#ACETAOHOME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
 ;Source: {#ACETAOHOME}\ace\*.i; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly replacesameversion
 Source: {#ACETAOHOME}\tao\tao\*.cpp; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#OSGHOME}\bin\osgviewerd.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
-Source: {#OSGHOME}\bin\osgconvd.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
-Source: {#OSGHOME}\bin\osgGAd.dll; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
-Source: {#OSGHOME}\bin\osgProducerd.dll; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+Source: {#OSGHOME}\bin\win32\osgviewer*.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+Source: {#OSGHOME}\bin\win32\osgconv*.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+;Source: {#OSGHOME}\bin\osgGAd.dll; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+;Source: {#OSGHOME}\bin\osgProducerd.dll; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
 Source: {#WXHOME}\lib\vc_dll\mswd\wx\setup.h; DestDir: {app}\include\wx\; Attribs: readonly; Flags: uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\include\TAO_IDL; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
