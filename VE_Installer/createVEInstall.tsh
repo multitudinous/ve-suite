@@ -53,12 +53,12 @@ echo "from:" ${VE_SUITE_HOME}
 echo "to: " ${VE_PLAT_INSTALL_DIR}
 
 #need to check somehow to see if the directory already exists
-mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin
-mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins
-mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins/GE
-mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins/GE/${CFDHOSTTYPE}
-mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins/UI
-mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins/UI/${CFDHOSTTYPE}
+mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
+mkdir -p ${VE_PLAT_INSTALL_DIR}/bin/Plugins
+mkdir -p ${VE_PLAT_INSTALL_DIR}/bin/Plugins/GE
+mkdir -p ${VE_PLAT_INSTALL_DIR}/bin/Plugins/GE/${CFDHOSTTYPE}
+mkdir -p ${VE_PLAT_INSTALL_DIR}/bin/Plugins/UI
+mkdir -p ${VE_PLAT_INSTALL_DIR}/bin/Plugins/UI/${CFDHOSTTYPE}
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/SceneGraph
@@ -239,6 +239,7 @@ cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VES.run ./bin/VES
 echo "Copying VE-Launcher script..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/vel*.py ./.
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_logo.xpm ./installerImages/.
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_banner_1.0.bmp ./installerImages/.
 
 echo "Copying Desktop configuration file..."
 mkdir ./stereo_desktop
