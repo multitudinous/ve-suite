@@ -133,6 +133,9 @@ public:
    ///Set current command whatever it is
    ///\param command Current command from conductor
    virtual void SetCurrentCommand( VE_XML::Command* command );
+   ///Allow the users to process new inputs after a job has 
+   ///been submitted for all plugins
+   virtual void ProcessOnSubmitJob( void ){ ; }
 private:
    // This needs to be vector of geometry nodes
    //cfdModuleGeometry*  geometryNode;

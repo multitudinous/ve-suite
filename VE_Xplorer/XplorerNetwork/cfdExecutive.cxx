@@ -312,6 +312,7 @@ void cfdExecutive::GetEverything( void )
       commandWriter.WriteXMLDocument( nodes, status, "Command" );
       //Get results 
       _plugins[ iter->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
+      _plugins[ iter->first ]->ProcessOnSubmitJob();
       _plugins[ iter->first ]->PreFrameUpdate();
       vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                            << " ]-> " << iter->second 
