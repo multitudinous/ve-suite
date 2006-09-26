@@ -76,7 +76,7 @@ std::string SetInputsEventHandler::Execute( VE_XML::XMLObject* objectToProcess )
       std::cerr << "Must call SetInputsEventHandler::SetBaseObject first" << std::endl;
       return std::string();
    }
-   
+
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( objectToProcess );

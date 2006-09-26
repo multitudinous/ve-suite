@@ -155,9 +155,11 @@ void UnitWrapper::SetParams ( ::CORBA::Long id, const char * param )
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    std::ostringstream idString;
    idString << id;
-   //inputsMap[ idString.str() ] = objectVector;
    eventHandlerMap[ "Set XML Model Inputs" ]->SetBaseObject( xmlModelMap[ idString.str() ] );
-   eventHandlerMap[ "Set XML Model Inputs" ]->Execute( objectVector.at( 0 ) );
+   if ( !objectVector.empty() )
+   {
+      eventHandlerMap[ "Set XML Model Inputs" ]->Execute( objectVector.at( 0 ) );
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::SetID (

@@ -376,13 +376,21 @@ unsigned int REI_Plugin::GetID()
 {
   return mod_pack._id;
 }
-
+/////////////////////////////////////////////////////////////////////////////
+wxString REI_Plugin::GetConductorName()
+{
+   return wxString( "PleaseDefineConductorName" );
+}
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetName()
 {
-  return _T("Default Module");
-}
+   if ( name.IsEmpty() )
+   {
+      name = "PleaseDefineClassName";
+   }
 
+   return name;
+}
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetHelp()
 {

@@ -115,7 +115,9 @@ public:
    ///This is the ID to identify the module
    unsigned int GetID();
    ///This returns the name of the module
-   virtual wxString GetName();
+   wxString GetName();
+   ///This returns the name used by conductor to construct the plugin tree
+   virtual wxString GetConductorName();
    ///This sets the name of the module
    virtual void SetName( wxString pluginName );
    ///This returns the description of the module, This should be a short description

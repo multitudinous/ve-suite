@@ -1094,13 +1094,6 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
                
                v_desc.clear();
                v_value.clear();
-               /*
-               v_desc.push_back(iter->second.GetPlugin()->GetName());
-               std::ostringstream dirStringStream;
-               dirStringStream << "   " << iter->first;
-               std::string dirString = dirStringStream.str();
-               v_value.push_back(dirString.c_str());
-               */
                wxString str;
                str = iter->second.GetPlugin()->GetName();
                str << " (" << iter->first << ")";

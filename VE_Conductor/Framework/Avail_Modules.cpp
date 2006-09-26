@@ -81,7 +81,7 @@ void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
 {
   std::vector<wxString> lnames;
   wxTreeItemIdValue cookie;
-  wxString plname = plugin->GetName();
+  wxString plname = plugin->GetConductorName();
   wxTreeItemId id, lastid;
   int image1, image2, image3, image4;
   int i, lsize;

@@ -2828,7 +2828,7 @@ void Network::SetIDOnAllActiveModules( void )
    std::map< int, Module >::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
-      std::string moduleName = iter->second.GetClassName();
+      std::string moduleName = iter->second.GetPlugin()->GetName().c_str();//GetClassName();
       int moduleId = iter->first;
       serviceList->SetID( moduleId, moduleName );
    }

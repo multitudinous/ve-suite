@@ -143,7 +143,6 @@ void Body_Executive_i::execute (std::string mn)
       if ( !_exec_thread[mn]->needexecute() ) 
       {
          msg = "Failed to execute " + mn +"\n";
-         std::cerr << msg;
          ClientMessage(msg.c_str());
       }
       else 
@@ -673,7 +672,7 @@ void Body_Executive_i::StartCalc (
 
       try 
       {
-         std::cout << "Initial Execute" << std::endl;
+         ClientMessage( "Initial Execute" );
          if ( !_mod_units.empty() )
          {
             std::string moduleName = _network->GetModule( rt )->GetModuleName();
@@ -1042,6 +1041,8 @@ ACE_THROW_SPEC ((
    iter = _mod_units.find( std::string( moduleName ) );
    if ( iter == _mod_units.end() )
    {
+      std::string msg = "Failed to find " + std::string( moduleName ) +"\n";
+      ClientMessage( msg.c_str() );
       _mutex.release();
       return;
    }

@@ -135,7 +135,7 @@ UIDialog* DefaultPlugin::UI(wxWindow* parent)
   return dlg;
 }
 /////////////////////////////////////////////////////////////////////////////
-wxString DefaultPlugin::GetName()
+wxString DefaultPlugin::GetConductorName()
 {
   wxString result ="DefaultPlugin";
   
