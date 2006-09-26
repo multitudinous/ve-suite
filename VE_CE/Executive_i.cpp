@@ -672,7 +672,7 @@ void Body_Executive_i::StartCalc (
 
       try 
       {
-         ClientMessage( "Initial Execute" );
+         ClientMessage( "Initial Execute\n" );
          if ( !_mod_units.empty() )
          {
             std::string moduleName = _network->GetModule( rt )->GetModuleName();
