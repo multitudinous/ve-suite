@@ -53,7 +53,12 @@ echo "from:" ${VE_SUITE_HOME}
 echo "to: " ${VE_PLAT_INSTALL_DIR}
 
 #need to check somehow to see if the directory already exists
-mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
+mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin
+mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins
+mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins/GE
+mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins/GE/${CFDHOSTTYPE}
+mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins/UI
+mkdir -pv ${VE_PLAT_INSTALL_DIR}/bin/Plugins/UI/${CFDHOSTTYPE}
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer
 mkdir -p ${VE_PLAT_INSTALL_DIR}/include/VE_Xplorer/SceneGraph
@@ -96,8 +101,6 @@ mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simple
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/PrISUm
 
-echo "Removing old dlls and exes files..."
-rm -rf ${VE_PLAT_INSTALL_DIR}/bin/*
 
 #go into the directory
 cd ${VE_PLAT_INSTALL_DIR}
@@ -108,8 +111,8 @@ echo "Copying new exes..."
 cp ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/* ./bin
 
 echo "Copying Default Plugin..."
-cp -rf ${VE_SUITE_HOME}/bin/Plugins/GE/${CFDHOSTTYPE}/* ./bin/.
-cp -rf ${VE_SUITE_HOME}/bin/Plugins/UI/${CFDHOSTTYPE}/* ./bin/.
+cp -rf ${VE_SUITE_HOME}/bin/Plugins/GE/${CFDHOSTTYPE}/*.so ./bin/Plugins/GE/${CFDHOSTTYPE}
+cp -rf ${VE_SUITE_HOME}/bin/Plugins/UI/${CFDHOSTTYPE}/*.so ./bin/Plugins/UI/${CFDHOSTTYPE}
 
 echo "Copying new dlls..."
 cp ${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}/*.so ./bin
