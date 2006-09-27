@@ -13,10 +13,8 @@ def Start(shellScript = None):
             os.system('start "%s" cmd' %LAUNCHER_SHELL_NAME)
     elif unix:
         if shellScript:
-            print "VE-Suite script started in subshell."
-            print "Type exit to return to your previous" + \
-                  " shell once you're done."
-            execl("source", shellScript)
+            print "VE-Suite script started."
+            execl(shellScript)
         else:
             print "VE-Suite subshell started."
             print "Type exit to return to your previous" + \
