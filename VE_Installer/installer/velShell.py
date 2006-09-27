@@ -8,7 +8,7 @@ from velCoveredConfig import *
 def Start(shellScript = None):
     if windows:
         if shellScript:
-            os.system("start %s" %shellScript)
+            Popen([shellScript])
         else:
             os.system('start "%s" cmd' %LAUNCHER_SHELL_NAME)
     elif unix:
