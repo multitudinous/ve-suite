@@ -35,14 +35,11 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
+
 #include "VE_Conductor/Framework/OrbThread.h"
+#include "VE_Conductor/Framework/UI_i.h"
 
 #include <orbsvcs/CosNamingC.h>
-#include "VE_Conductor/Framework/UI_i.h"
-#include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/Network.h"
-#include "VE_Conductor/Framework/App.h"
-
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <ace/SString.h>
 #include <ace/SStringfwd.h>
@@ -56,22 +53,32 @@
 using namespace VE_XML;
 using namespace VE_Conductor;
 
-/////////////////////////////////////////////////////////////
-CORBAServiceList::CORBAServiceList( AppFrame* frame )
+////////////////////////////////////////////////////////////////////////////////
+CORBAServiceList::CORBAServiceList( int argc, char** argv )
 {
-   this->frame = frame;
+   //Copy the command line args because tao deletes them after processing them
+   peArgc = argc;
+   peArgv = new char*[ argc ];
+   for ( int i = 0; i < peArgc; ++ i )
+   {
+      int stringLength = strlen( argv[ i ] );
+      peArgv[ i ] = new char[ stringLength + 1 ];
+      strcpy(peArgv[ i ], argv[ i ] );
+   }
+
    p_ui_i = 0;
    pelog = 0;
 }
-/////////////////////////////////////////////////////////////
-CORBAServiceList::~CORBAServiceList( void )
+////////////////////////////////////////////////////////////////////////////////
+CORBAServiceList::~CORBAServiceList()
 {
-   if ( pelog )
+   //Gets deleted by wx now
+   /*if ( pelog )
    {
       delete pelog;
-   }
+   }*/
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetNamingContext( CosNaming::NamingContext_ptr naming_context )
 {
    namingContext = naming_context;
@@ -98,14 +105,14 @@ bool CORBAServiceList::IsConnectedToXplorer( void )
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::IsConnectedToCE( void )
 {
-   if ( CORBA::is_nil( module.in() ) )
+   if ( CORBA::is_nil( veCE.in() ) )
    {
       return ConnectToCE();
    }
    
    try
    {
-      module->_non_existent();
+      veCE->_non_existent();
    }
    catch (...)
    {
@@ -127,7 +134,7 @@ bool CORBAServiceList::ConnectToCE( void )
 {
    if ( pelog == NULL )
    {
-	   pelog = new PEThread( frame );
+	   pelog = new PEThread();
 	   pelog->activate();
    }
 
@@ -155,7 +162,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
 {
    if ( pelog == NULL )
    {
-	   pelog = new PEThread( frame );
+	   pelog = new PEThread();
 	   pelog->activate();
    }
    
@@ -173,7 +180,8 @@ bool CORBAServiceList::ConnectToXplorer( void )
       name[0].kind = CORBA::string_dup ("VE_Xplorer");
       CORBA::Object_var naming_context_object =
       orb->resolve_initial_references ("NameService");
-      CosNaming::NamingContext_var naming_context1 = CosNaming::NamingContext::_narrow (naming_context_object.in ());
+      CosNaming::NamingContext_var naming_context1 = 
+               CosNaming::NamingContext::_narrow( naming_context_object.in() );
       CORBA::Object_var ve_object = naming_context1->resolve(name);
       vjobs = VjObs::_narrow( ve_object.in() );
 
@@ -206,13 +214,13 @@ bool CORBAServiceList::IsConnectedToNamingService( void )
 bool CORBAServiceList::ConnectToNamingService( void )
 {
    //Copy the command line args because tao deletes them after processing them
-   int argc = ::wxGetApp().argc;
+   int argc = peArgc;
    char** argv = new char*[ argc ];
    for ( int i = 0; i < argc; ++ i )
    {
-      int stringLength = strlen( ::wxGetApp().argv[ i ] );
+      int stringLength = strlen( peArgv[ i ] );
       argv[ i ] = new char[ stringLength + 1 ];
-      strcpy(argv[ i ], ::wxGetApp().argv[ i ] );
+      strcpy(argv[ i ], peArgv[ i ] );
    }
 
    try 
@@ -242,7 +250,6 @@ bool CORBAServiceList::ConnectToNamingService( void )
 		    }
       */
       GetMessageLog()->SetMessage( "Initialized ORB and connection to the Naming Service\n");
-      
       return true;
    }
    catch ( CORBA::Exception& ex ) 
@@ -260,17 +267,10 @@ bool CORBAServiceList::DisconnectFromCE( void )
 {
    try
    {
-      frame->network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
+      veCE->UnRegisterUI(p_ui_i->UIName_.c_str());
       delete p_ui_i;
       p_ui_i = NULL;
 
-      //con_menu->Enable(v21ID_SUBMIT,false);
-      //con_menu->Enable(v21ID_LOAD, false);
-      //con_menu->Enable(v21ID_CONNECT, true);
-      frame->run_menu->Enable(v21ID_START_CALC, false);
-      // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
-      frame->con_menu->Enable(v21ID_DISCONNECT, false);
-    
       GetMessageLog()->SetMessage( "Disconnect successful.\n");
    }
    catch (CORBA::SystemException& ex ) 
@@ -285,33 +285,8 @@ bool CORBAServiceList::DisconnectFromCE( void )
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::DisconnectFromXplorer( void )
 {
-   // delete m_frame;
-   //m_frame = NULL;
-   frame->con_menu->Enable(v21ID_DISCONNECT_VE, false);
-/*
-   if ( navPane )
-   {
-      navPane->Close( false );
-   }
-
-   if ( viewlocPane )
-   {
-      viewlocPane->Close( false );
-   }
-
-   if ( streamlinePane )
-   {
-	   streamlinePane->Close( false );
-   }
-
-   if ( soundsPane )
-   {
-      soundsPane->Close( false );
-   }
-*/
+   VjObs::_tao_release( vjobs );
    GetMessageLog()->SetMessage( "Disconnect VE suceeded.\n");
-
-   //connectToVE = false;
    return true;
 }
 /////////////////////////////////////////////////////////////
@@ -349,21 +324,17 @@ void CORBAServiceList::CreateCORBAModule( void )
       CosNaming::Name name(1);
       name.length(1);
       name[0].id = CORBA::string_dup ("Executive");
-      
       CORBA::Object_var naming_context_object = orb->resolve_initial_references ("NameService");
       naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
       
       CORBA::Object_var exec_object = naming_context->resolve(name);
-      frame->network->exec = Body::Executive::_narrow(exec_object.in());
-      module = Body::Executive::_duplicate( frame->network->exec.in() );
-      
+      veCE = Body::Executive::_narrow(exec_object.in());
       //Create the Servant
       if ( p_ui_i == NULL )
       {
-         p_ui_i= new Body_UI_i(frame->network->exec.in(), UINAME);
-         
+         p_ui_i= new Body_UI_i( veCE.in(), UINAME);
          //pass the Frame's pointer to the UI corba implementation
-         p_ui_i->SetUIFrame( frame );
+         p_ui_i->SetLogWindow( GetMessageLog() );
          //Here is the code to set up the ROOT POA
          CORBA::Object_var poa_object = orb->resolve_initial_references ("RootPOA"); // get the root poa
          poa_root = PortableServer::POA::_narrow(poa_object.in());
@@ -395,7 +366,7 @@ void CORBAServiceList::CreateCORBAModule( void )
          // Creation of childPOA is over. Destroy the Policy objects.
          for (CORBA::ULong i = 0; i < policies.length (); ++i)
          {
-            policies[i]->destroy ();
+            policies[i]->destroy();
          }
          
          poa_manager->activate();
@@ -404,28 +375,12 @@ void CORBAServiceList::CreateCORBAModule( void )
          
          //Activate it to obtain the object reference
          Body::UI_var ui = Body::UI::_narrow( poa->id_to_reference( idObject.in() ) );
-         
-         //CosNaming::Name UIname(1);
-         //UIname.length(1);
-         //UIname[0].id = CORBA::string_dup (UINAME.c_str());
-         
-         //Bind the object
-         //try   {
-         //      frame_->naming_context->bind(UIname, ui.in());
-         //   }catch(CosNaming::NamingContext::AlreadyBound& ex){
-         //      frame_->naming_context->rebind(UIname, ui.in());
-         //   }
-         
-         //(frame_->_mutex).release();
+        
          try 
          {
-            frame->network->exec->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
-            frame->con_menu->Enable(v21ID_SUBMIT,true);
-            frame->con_menu->Enable(v21ID_LOAD, true);
-            //frame_->con_menu->Enable(v21ID_CONNECT, false);
-            frame->run_menu->Enable(v21ID_VIEW_RESULT, true);
-            frame->con_menu->Enable(v21ID_DISCONNECT, true);
-            //frame_->orb->run();
+            //std::cout << "corba 6 " << std::endl;      
+            veCE->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
+            //std::cout << "corba 7 " << std::endl;      
          }
          catch ( CORBA::Exception& ex ) 
          {
@@ -442,13 +397,7 @@ void CORBAServiceList::CreateCORBAModule( void )
             //Activate it to obtain the object reference
             Body::UI_var ui = Body::UI::_narrow( poa->id_to_reference( idObject.in() ) );
             
-            frame->network->exec->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
-            frame->con_menu->Enable(v21ID_SUBMIT,true);
-            frame->con_menu->Enable(v21ID_LOAD, true);
-            frame->con_menu->Enable(v21ID_CONNECT, false);
-            frame->run_menu->Enable(v21ID_VIEW_RESULT, true);
-            frame->con_menu->Enable(v21ID_DISCONNECT, true);
-            
+            veCE->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
          }
          catch (CORBA::Exception& ex ) 
          {
@@ -519,7 +468,7 @@ PEThread* CORBAServiceList::GetMessageLog( void )
 {
    if ( pelog == NULL )
    {
-	   pelog = new PEThread( frame );
+	   pelog = new PEThread();
 	   pelog->activate();
    }
    
@@ -535,11 +484,132 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
    
    try
    {
-      module->SetID( CORBA::string_dup( moduleName.c_str() ), moduleId );
+      veCE->SetID( CORBA::string_dup( moduleName.c_str() ), moduleId );
    }
    catch ( ... )
    {
       return false;
    }
    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string CORBAServiceList::GetNetwork( void )
+{
+   if ( !CORBAServiceList::IsConnectedToCE() )
+   {
+      return std::string();
+   }
+   
+   try
+   {
+      std::string network = veCE->GetNetwork();
+      return network;
+   }
+   catch ( ... )
+   {
+      return std::string();
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CORBAServiceList::StopCalc( void )
+{
+   if ( !CORBAServiceList::IsConnectedToCE() )
+   {
+      return;
+   }
+   
+   try
+   {
+      veCE->StopCalc();
+   }
+   catch ( ... )
+   {
+      return;
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CORBAServiceList::StartCalc( void )
+{
+   if ( !CORBAServiceList::IsConnectedToCE() )
+   {
+      return;
+   }
+   
+   try
+   {
+      veCE->StartCalc();
+   }
+   catch ( ... )
+   {
+      return;
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CORBAServiceList::PauseCalc( void )
+{
+   if ( !CORBAServiceList::IsConnectedToCE() )
+   {
+      return;
+   }
+   
+   try
+   {
+      veCE->PauseCalc();
+   }
+   catch ( ... )
+   {
+      return;
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CORBAServiceList::Resume( void )
+{
+   if ( !CORBAServiceList::IsConnectedToCE() )
+   {
+      return;
+   }
+   
+   try
+   {
+      veCE->Resume();
+   }
+   catch ( ... )
+   {
+      return;
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string CORBAServiceList::Query( std::string command )
+{
+   if ( !CORBAServiceList::IsConnectedToCE() )
+   {
+      return std::string();
+   }
+   
+   try
+   {
+      std::string network = veCE->Query( CORBA::string_dup( command.c_str() ) );
+      return network;
+   }
+   catch ( ... )
+   {
+      return std::string();
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CORBAServiceList::SetNetwork( std::string command )
+{
+   if ( !CORBAServiceList::IsConnectedToCE() )
+   {
+      return;
+   }
+   
+   try
+   {
+      veCE->SetNetwork( CORBA::string_dup( command.c_str() ) );
+   }
+   catch ( ... )
+   {
+      return;
+   }
 }

@@ -48,6 +48,7 @@
 #include "VE_Open/XML/Command.h"
 
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
+#include "VE_Conductor/Framework/CORBAServiceList.h"
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>
@@ -1150,4 +1151,9 @@ void REI_Plugin::SetPluginNameDialog( void )
    {
       name = newPluginName.GetValue(); 
    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList )
+{
+   this->serviceList = serviceList;
 }

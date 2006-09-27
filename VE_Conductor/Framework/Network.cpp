@@ -1829,7 +1829,8 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
    newPolygon.TransPoly( bbox.x, bbox.y, *(modules[id].GetPolygon()) ); //Make the network recognize its polygon 
    modules[id].SetClassName( cls_name );
 
-  modules[id].GetPlugin()->SetID(id);  
+  modules[id].GetPlugin()->SetID(id);
+  modules[id].GetPlugin()->SetCORBAService( frame->GetCORBAServiceList() );
   //modules.push_back(mod);
   sbboxes.push_back(bbox);
   //  for (i=0; i<modules.size(); i++)
@@ -2386,9 +2387,8 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
    int mod = links[ m_selLink ].GetFromModule();
    int port = links[ m_selLink ].GetFromPort();
 
-   if ( CORBA::is_nil( exec.in() ) )
+   if ( !frame->GetCORBAServiceList()->IsConnectedToCE() )
    {
-      frame->Log( "Not Connected to CE yet!\n" );
       return;
    }
 
@@ -2424,15 +2424,14 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
    if ( m_selMod < 0 )
       return;
 
-   if ( CORBA::is_nil( exec.in() ) )
+   if ( !frame->GetCORBAServiceList()->IsConnectedToCE() )
    {
-      frame->Log( "Not Connected yet!\n" );
       return;
    }
   
    try 
    {
-      result = exec->GetModuleResult( m_selMod );
+      //result = exec->GetModuleResult( m_selMod );
    }
    catch (CORBA::Exception &) 
    {

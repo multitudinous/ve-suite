@@ -32,19 +32,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/Frame.h"
+//#include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/UI_i.h"
-#include "VE_Conductor/Network/package.h"
-#include "VE_Conductor/Framework/Network.h"
+//#include "VE_Conductor/Network/package.h"
+#include "VE_Conductor/Framework/OrbThread.h"
 
   
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
-  : UIName_(name), executive_(Body::Executive::_duplicate(exec)), 
-    frame_(0), ui_network_(0)
-  {
+  : UIName_(name), executive_(Body::Executive::_duplicate(exec))
+{
     UIName_=name;
-  }
+}
   
 // Implementation skeleton destructor
 Body_UI_i::~Body_UI_i (void)
@@ -65,7 +64,7 @@ void Body_UI_i::UpdateNetwork (
       std::cout<<network<<std::endl;
     std::cout<<UIName_<<" :UpdateNetwork called"<<std::endl;
     
-    ui_network_->Load(network);
+    //ui_network_->Load(network);
      
   }
   
@@ -85,14 +84,14 @@ void Body_UI_i::UpdateModuleUI (
     std::cout<<UIName_<<" :UpdateModuleUI called"<<std::endl;
 
     //Real code the update UI
-    Package p;
-    p.SetSysId("moduleUI.xml");
-    p.Load(msg, strlen(msg));
+    //Package p;
+    //p.SetSysId("moduleUI.xml");
+    //p.Load(msg, strlen(msg));
 
-    ui_network_->s_mutexProtect.Lock();
-    ui_network_->modules[module_id].GetPlugin()->UnPack(&(p.GetInterfaceVector())[0]);
-    ui_network_->s_mutexProtect.Unlock();
-    ui_network_->Refresh();
+    //ui_network_->s_mutexProtect.Lock();
+    //ui_network_->modules[module_id].GetPlugin()->UnPack(&(p.GetInterfaceVector())[0]);
+    //ui_network_->s_mutexProtect.Unlock();
+    //ui_network_->Refresh();
   }
   
 void Body_UI_i::UpdateModuleResult (
@@ -139,11 +138,12 @@ void Body_UI_i::Raise (
     // Add your implementation here
 	
     if (std::string(notification)!="")
-      frame_->Log(notification);
+    {
+       logWindow->SetMessage( notification );
+    }
   }
   
-void Body_UI_i::SetUIFrame(AppFrame* frame)
- { 
-	  frame_ = frame;
-	  ui_network_=frame_->network; 
-  }
+void Body_UI_i::SetLogWindow( PEThread* logWindow )
+{ 
+	  this->logWindow = logWindow;
+}

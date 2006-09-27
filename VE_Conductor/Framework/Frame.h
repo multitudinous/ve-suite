@@ -171,7 +171,6 @@ public:
    wxToolBar* toolbar;
    wxIcon* icon;
   
-   wxTextCtrl* logwindow;
    Avail_Modules* av_modules;
    Network* network;
 
@@ -179,11 +178,7 @@ public:
    UI_Frame *m_frame;
 
    wxImageList *m_imageList;
-   //CORBA::ORB_var orb;
-   //PortableServer::POA_var poa;
-   //PortableServer::POA_var poa_root;
-   //CosNaming::NamingContext_var naming_context;
-   //Body_UI_i* p_ui_i;
+
    wxMenu *file_menu;
    wxMenu *con_menu;
    wxMenu *run_menu;
@@ -285,14 +280,13 @@ protected:
 
    void JugglerSettings( wxCommandEvent& event );
 
-  //bool init_orb_naming();
   void CreateVETab();
-  void OnUpdateUIPop(wxUpdateUIEvent& event);
   
   wxBoxSizer *sizerTab;
 
 private:
      void ExitXplorer( void );
+     void EnableCEGUIMenuItems( void );
    void IdleEvent( wxIdleEvent& event );
    void TimerEvent( wxTimerEvent& event );
    NavigationPane* navPane;

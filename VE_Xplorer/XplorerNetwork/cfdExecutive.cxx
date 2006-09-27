@@ -140,6 +140,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
       // to get the ref for Executive
 
       //Call the Executive CORBA call to register it to the Executive
+      std::cout << "|\tRegistering " << UINAME << std::endl;
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << "|\tConnected to the Executive " << std::endl;
       ui_i->GetNetworkFromCE();

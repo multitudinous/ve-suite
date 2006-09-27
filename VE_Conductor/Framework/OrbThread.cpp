@@ -36,23 +36,24 @@
 //
 //////////////////////////////////////////////////////////////////////
 #include "OrbThread.h"
-#include "Frame.h"
-#include "Network.h"
 
-#include <wx/app.h>
 #include <ace/OS.h>
-#include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <iostream>
 #include <sstream>
+
+BEGIN_EVENT_TABLE( PEThread, wxTextCtrl )
+   EVT_UPDATE_UI(7777, PEThread::OnUpdateUIPop)
+END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-PEThread::PEThread(AppFrame* frame)
+PEThread::PEThread()
 {
-   frame_ = frame;
+   //frame_ = frame;
    //Create();
    shutdown = true;
+   //logWindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
 }
 
 PEThread::~PEThread()
@@ -72,7 +73,7 @@ int PEThread::svc (void)
          u.SetId(7777);
          u.SetText(message.c_str());
          std::cout<<"LOG: "<<message;
-         ::wxPostEvent(frame_, u);
+         ::wxPostEvent(this, u);
          message="";
       }
       _mutex.release();
@@ -91,4 +92,9 @@ void PEThread::SetMessage(const char* msg)
    _mutex.acquire();
    message+=msg;
    _mutex.release();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PEThread::OnUpdateUIPop( wxUpdateUIEvent& event )
+{
+   this->AppendText( event.GetText() );
 }

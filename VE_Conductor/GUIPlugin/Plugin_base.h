@@ -34,8 +34,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLUGIN_BASE_H
 #define PLUGIN_BASE_H
-#include "VE_Open/skel/VjObsC.h"
-//#include <xercesc/dom/DOM.hpp>
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/Model/Port.h"
 
@@ -64,6 +62,10 @@ class GeometryDialog;
 class FinancialDialog;
 class GeometryDataBuffer;
 class SummaryResultDialog;
+namespace VE_Conductor
+{
+   class CORBAServiceList;
+}
 
 namespace VE_Model
 {
@@ -170,6 +172,10 @@ public:
    ///Launches the geometry dialogs
    //void ViewCADInfo( VjObs_ptr vjObjs );
 
+   ///Set the corba servicelist so that the plugin can talk with the graphical
+   ///engine
+   void SetCORBAService( VE_Conductor::CORBAServiceList* serviceList );
+   
 protected:
    void GetDataTables( VE_XML::Command* inputCommand, 
                         std::vector< wxString >& tagNames, 
@@ -221,7 +227,7 @@ protected:
    wxDialog* portsDialog;
    SummaryResultDialog* inputsDialog;
 
-   VjObs_var vjObsPtr;///<The VjObj ptr.
+   VE_Conductor::CORBAServiceList* serviceList;
 
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
 };

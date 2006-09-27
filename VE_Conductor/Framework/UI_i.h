@@ -35,17 +35,12 @@
 #ifndef UI_I_H_
 #define UI_I_H_
 
-//#include "Frame.h"
 #include "VE_Open/skel/moduleS.h"
 #include <iostream>
 #include <string>
 
-#if !defined (ACE_LACKS_PRAGMA_ONCE)
-#pragma once
-#endif /* ACE_LACKS_PRAGMA_ONCE */
-
-class AppFrame;
-class Network;
+class PEThread;
+//class Network;
 
 //Class Body_UI_i
 class  Body_UI_i : public virtual POA_Body::UI
@@ -61,13 +56,11 @@ class  Body_UI_i : public virtual POA_Body::UI
 
  protected:
   Body::Executive_var executive_;
-  AppFrame * frame_;
-  Network* ui_network_;
-  
+  PEThread* logWindow;
  public:
 
-  void SetUIFrame(AppFrame* frame);
-  
+     void SetLogWindow( PEThread* logWindow );
+     
 virtual void UpdateNetwork (
     const char * network
     ACE_ENV_ARG_DECL

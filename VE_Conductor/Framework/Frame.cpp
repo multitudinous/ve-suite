@@ -169,10 +169,6 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    //  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
    //  EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
    //  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
-
-   ///This call back is used by OrbThread
-   ///It allows printing text to the message box below conductor
-   EVT_UPDATE_UI(7777, AppFrame::OnUpdateUIPop)
    EVT_IDLE( AppFrame::IdleEvent )
    EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
 END_EVENT_TABLE()
@@ -185,7 +181,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    f_visualization(true),
    timer( this, TIMER_ID )
 {
-   serviceList = new CORBAServiceList( this );
+   timer.Start( 1000 );
+   serviceList = new VE_Conductor::CORBAServiceList( ::wxGetApp().argc, ::wxGetApp().argv );
   
    xplorerMenu = 0;
    recordScenes = 0;
@@ -227,7 +224,6 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    LoadFromServer( event );
    //Process command line args to see if ves file needs to be loaded
    ProcessCommandLineArgs();
-   timer.Start( 1000 );
 }
 ///////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
@@ -254,12 +250,12 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
    {
       wx_log_splitter = new wxSplitterWindow(parent, -1);
       wx_log_splitter->SetMinimumPaneSize( 40 );
-      logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+      serviceList->GetMessageLog()->Create( wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
       wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
    }
    else
    {
-      logwindow = new wxTextCtrl(this, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+      serviceList->GetMessageLog()->Create( this, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
       wx_nw_splitter = new wxSplitterWindow(parent, -1);
    }
 
@@ -271,7 +267,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
 
    if ( GetDisplayMode() == "Tablet")
    {
-      wx_log_splitter->SplitHorizontally(wx_nw_splitter, logwindow, -100);
+      wx_log_splitter->SplitHorizontally(wx_nw_splitter, serviceList->GetMessageLog(), -100);
    }
 
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
@@ -913,18 +909,11 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    {
       return;
    }
-   
-   char* nw_str = 0;
-   try
-   {
-      nw_str=network->exec->GetNetwork();
-      network->Load( nw_str );
-      delete nw_str;
-   }
-   catch ( CORBA::Exception& )
-   {
-      Log("No VE_CE found!\n");
-   }
+   EnableCEGUIMenuItems();
+
+   std::string nw_str;
+   nw_str = serviceList->GetNetwork();
+   network->Load( nw_str );
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
@@ -933,11 +922,13 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    {
       return;
    }
+   EnableCEGUIMenuItems();
+
    std::string nw_str;
 
    try
    {
-      nw_str.assign( network->exec->Query( 0 ) );
+      nw_str.assign( serviceList->Query( 0 ) );
    }
    catch ( CORBA::Exception& )
    {
@@ -967,6 +958,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
    {
       return;
    }
+   EnableCEGUIMenuItems();
    
    std::string nw_str = network->Save( std::string( "returnString" ) );
    // write the domdoc to the string above
@@ -977,7 +969,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
       network->SetIDOnAllActiveModules();
       //Now that we have an active xml model in all units
       // set the network
-      network->exec->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
+      serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
       run_menu->Enable( v21ID_START_CALC, true );
    }
    catch ( CORBA::Exception& ) 
@@ -990,7 +982,7 @@ void AppFrame::StartCalc( wxCommandEvent& WXUNUSED(event) )
 {
    try	
    { 
-      network->exec->StartCalc();
+      serviceList->StartCalc();
       run_menu->Enable(v21ID_START_CALC, false);
    }
    catch ( CORBA::Exception& ) 
@@ -1003,7 +995,7 @@ void AppFrame::StopCalc(wxCommandEvent& WXUNUSED(event) )
 {
    try
    {
-      network->exec->StopCalc();
+      serviceList->StopCalc();
    }
    catch ( CORBA::Exception& )
    {
@@ -1015,7 +1007,7 @@ void AppFrame::PauseCalc(wxCommandEvent& WXUNUSED(event) )
 {
    try
    {
-      network->exec->PauseCalc();
+      serviceList->PauseCalc();
    }
    catch ( CORBA::Exception& )
    {
@@ -1027,7 +1019,7 @@ void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 {
    try
    { 
-      network->exec->Resume();
+      serviceList->Resume();
    }
    catch ( CORBA::Exception& )
    {
@@ -1038,7 +1030,8 @@ void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
    serviceList->IsConnectedToCE();
-   
+   EnableCEGUIMenuItems();
+
    char* result;
    //char buf[80];
    std::map<int, Module>::iterator iter;
@@ -1071,13 +1064,13 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    result_dlg->syngas->SetColTitles( titles );
    result_dlg->syngas->SetColAlignments( alignments );
 
-   if (!CORBA::is_nil( network->exec.in() )) 
+   //if (!CORBA::is_nil( network->exec.in() )) 
    {
       try 
       {
          for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) 
          {
-	         result = network->exec->GetModuleResult(iter->first);
+	         //result = network->exec->GetModuleResult(iter->first);
 	
 	         if ( std::string(result) != "" ) 
             {
@@ -1120,7 +1113,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	         }
          }
     
-         result = network->exec->GetModuleResult(-1); //Global result
+         //result = network->exec->GetModuleResult(-1); //Global result
       
          if (std::string(result)!="") 
          {
@@ -1152,7 +1145,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
          return;
       }
    }
-   else 
+   /*else 
    {
       titles.clear();
       titles.push_back("No Plant Results");
@@ -1160,7 +1153,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
   
       result_dlg->syngas->AddSeperator('+');
       result_dlg->syngas->AddRow(titles);
-   }
+   }*/
        
    // EPRI TAG
    std::vector<wxString> v_desc2, v_value2;
@@ -1295,19 +1288,21 @@ void AppFrame::Log(const char* msg)
    serviceList->GetMessageLog()->SetMessage( msg );
 }
 ///////////////////////////////////////////////////////////////////
-void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event )
-{
-  logwindow->AppendText(event.GetText());
-}
-///////////////////////////////////////////////////////////////////
 void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
 {
    serviceList->DisconnectFromCE();
+   //con_menu->Enable(v21ID_SUBMIT,false);
+   //con_menu->Enable(v21ID_LOAD, false);
+   //con_menu->Enable(v21ID_CONNECT, true);
+   run_menu->Enable(v21ID_START_CALC, false);
+   // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
+   con_menu->Enable(v21ID_DISCONNECT, false);
 }
 //////////////////////////////////////////////////////////////////
 void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 {
    serviceList->DisconnectFromXplorer();
+   con_menu->Enable(v21ID_DISCONNECT_VE, false);
 }
 //////////////////////////////////////////////////////////////////
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
@@ -1546,4 +1541,13 @@ void AppFrame::ProcessCommandLineArgs( void )
    network->Load( path.c_str() );
    // we submit after load to give ce and ge the new network
    SubmitToServer( event );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::EnableCEGUIMenuItems( void )
+{
+   con_menu->Enable(v21ID_SUBMIT,true);
+   con_menu->Enable(v21ID_LOAD, true);
+   //frame_->con_menu->Enable(v21ID_CONNECT, false);
+   run_menu->Enable(v21ID_VIEW_RESULT, true);
+   con_menu->Enable(v21ID_DISCONNECT, true);
 }

@@ -104,7 +104,7 @@ public:
    ///modules to the CE
    void SetIDOnAllActiveModules( void );
 
-   Body::Executive_var exec; //put this reference here, so ther frame work can still access it YANG
+   //Body::Executive_var exec; //put this reference here, so ther frame work can still access it YANG
 
    wxMutex s_mutexProtect;
 

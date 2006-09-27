@@ -29,56 +29,33 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-// OrbThread.h: interface for the OrbThread class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #if !defined(AFX_ORBTHREAD_H__1A5E5D0F_8D34_4791_87BC_3C2CEB837A2F__INCLUDED_)
 #define AFX_ORBTHREAD_H__1A5E5D0F_8D34_4791_87BC_3C2CEB837A2F__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
 #include <ace/Task.h>
-#include "VE_Open/skel/moduleS.h"
 #include <string>
 #include <wx/menu.h>
+#include <wx/textctrl.h>
 
 class AppFrame;
+class wxUpdateUIEvent;
 
-
-
-class OrbThread : public ACE_Task_Base //wxThread  
+class PEThread : public ACE_Task_Base, public wxTextCtrl
 {
 public:
-	OrbThread(AppFrame* frame);
-	virtual ~OrbThread();
-	virtual int svc (void);
-	//bool Do();
-	//virtual ExitCode Entry() { return (ExitCode) this->Do(); };
-protected:
-	AppFrame *frame_;
-};
-
-
-class PEThread : public ACE_Task_Base //wxThread  
-{
-public:
-	PEThread(AppFrame* frame);
+	PEThread( void );
 	virtual ~PEThread();
 	virtual int svc (void);
 	void SetMessage(const char* msg);
    void ShutDownThread( void );
-	//bool Do();
-	//virtual ExitCode Entry() { return (ExitCode) this->Do(); };
+   void OnUpdateUIPop( wxUpdateUIEvent& event );
+
 protected:
-	AppFrame *frame_;
+	//wxTextCtrl* logWindow;
 	ACE_Thread_Mutex _mutex;
 	std::string message;
    bool shutdown;
+DECLARE_EVENT_TABLE()
 };
 #endif // !defined(AFX_ORBTHREAD_H__1A5E5D0F_8D34_4791_87BC_3C2CEB837A2F__INCLUDED_)

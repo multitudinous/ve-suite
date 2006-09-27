@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CORBA_SERVICE_LIST
 #define CORBA_SERVICE_LIST
@@ -43,9 +41,12 @@
 #include <vector>
 #include <string>
 
+#include <wx/object.h>
+
 class PEThread;
-class AppFrame;
 class Body_UI_i;
+class wxTextCtrl;
+class wxUpdateUIEvent;
 
 namespace VE_XML
 {
@@ -54,11 +55,11 @@ namespace VE_XML
 
 namespace VE_Conductor
 {
-class CORBAServiceList //: public wxDialog
+class CORBAServiceList : public wxObject
 {
 public:
    ///Constructor
-   CORBAServiceList( AppFrame* frame );
+   CORBAServiceList( int argc, char** argv );
    ///Destructor
    ~CORBAServiceList( void );
 
@@ -98,6 +99,17 @@ public:
    PEThread* GetMessageLog( void );
    ///Call set id on all modules in the current network
    bool SetID( int moduleId, std::string moduleName );
+   ///Event to update the text feedback window
+   void OnUpdateUIPop( wxUpdateUIEvent& event );
+
+   ///Excutive wrapper functions
+   std::string GetNetwork( void );
+   void SetNetwork( std::string );
+   void StopCalc( void );
+   void StartCalc( void );
+   void PauseCalc( void );
+   void Resume( void );
+   std::string Query( std::string command );
    
 private:
    void CreateCORBAModule( void );
@@ -112,12 +124,13 @@ private:
    PortableServer::POA_var poa_root;
    CosNaming::NamingContext_var naming_context;
    VjObs_var vjobs;
-   Body::Executive_var module;
+   //Body::Executive_var module;
    Body::VEEngine_var veXplorer;
    Body::Executive_var veCE;
    Body_UI_i* p_ui_i;
    PEThread* pelog;
-   AppFrame* frame;
+   int peArgc;
+   char** peArgv;
 };
 }
 #endif

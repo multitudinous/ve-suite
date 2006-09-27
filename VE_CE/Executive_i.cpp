@@ -889,27 +889,19 @@ void Body_Executive_i::RegisterUI (
 { 
    _mutex.acquire();
   
-   //CosNaming::Name name(1);
-   //name.length(1);
-   //name[0].id = CORBA::string_dup(UIName);
-  
    try 
    {
-      //  CORBA::Object_var ui_object = naming_context_->resolve(name); 
-      //  if (CORBA::is_nil(ui_object))
-      //   std::cerr << "NULL UI_OBJ" << std::endl;
-    
-      //Body::UI_var ui = Body::UI::_narrow(ui_object.in());
-    
       Body::UI_var ui = Body::UI::_duplicate(ui_ptr);
       if ( CORBA::is_nil(ui) )
          std::cerr << "NULL UI" << std::endl;
 
-      //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
-      uis_[ std::string(UIName) ] = ui;
-
+      std::string tempName(UIName);
+      uis_[ tempName ] = ui;
+ 
       _mutex.release();
-      ui->Raise("Connected to Executive\n");
+      std::string msg = tempName + " Connected to Executive\n";
+      ui->Raise( msg.c_str() );
+      //ClientMessage( msg.c_str() );
       std::cerr << UIName << " : registered a UI" << std::endl;
    }
    catch (CORBA::Exception &ex) 
@@ -973,14 +965,12 @@ void Body_Executive_i::UnRegisterUI (
 {
 	std::map<std::string, Body::UI_var>::iterator iter;
 	_mutex.acquire();
-
-  
 	// Add your implementation here
-	iter = uis_.find(std::string(UIName));
-	if (iter!= uis_.end())
+	iter = uis_.find( std::string(UIName) );
+	if ( iter != uis_.end() )
 	{
 		uis_.erase(iter);
-      std::cout<<UIName<<" Unregistered!\n";
+      std::cout << UIName << " Unregistered!\n";
 	}
   _mutex.release();
 }
@@ -1041,7 +1031,7 @@ ACE_THROW_SPEC ((
    iter = _mod_units.find( std::string( moduleName ) );
    if ( iter == _mod_units.end() )
    {
-      std::string msg = "Failed to find " + std::string( moduleName ) +"\n";
+      std::string msg = "Failed to find " + std::string( moduleName ) +" Unit\n";
       ClientMessage( msg.c_str() );
       _mutex.release();
       return;
