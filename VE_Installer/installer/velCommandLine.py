@@ -39,7 +39,7 @@ class CommandLine:
             elif opt in ('-k', "--desktop"):
                 self.state.Edit("DesktopMode", True)
             elif opt in ('-f', "--file"):
-                velArguments.Interpret(self.state, [arg])
+                self.state.InterpretArgument(arg)
             elif opt in ('-s', "--shell"):
                 self.state.Edit("Shell", True)
                 self.state.Cover("Conductor", False)

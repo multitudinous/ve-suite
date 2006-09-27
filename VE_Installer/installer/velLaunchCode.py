@@ -31,31 +31,8 @@ class Launch:
                  clusterMaster)
         EnvFill(var, default)"""
     def __init__(self, settings):
-##                 workingDir = DIRECTORY_DEFAULT,
-##                 runName = False, runConductor = False,
-##                 runXplorer = False, typeXplorer = 0,
-##                 jconf = DEFAULT_JCONF,
-##                 taoMachine = DEFAULT_TAO_MACHINE,
-##                 taoPort = DEFAULT_TAO_PORT,
-##                 desktopMode = False,
-##                 dependenciesDir = None, cluster = None, master = None,
-##                 shell = False, builderDir = None, devMode = False,
-##                 vesFile = None):
-        """Sets environmental vars and calls OS-specific launch code.
-
-        Keyword arguments:
-        launcherWindow -- The caller. Used to close it after the call.
-        workingDir, taoMachine, taoPort -- Used for environmental vars.
-        runName, runConductor, runXplorer,
-        typeXplorer, jconf, desktopMode -- Used for launch code.
-        dependenciesDir -- Optional, used for environmental vars.
-        cluster -- Optional, unused at the moment.
-        master -- Optional, used for sending VEXMASTER to slave nodes.
-        shell -- Starts up a VE-Builder shell.
-        builderDir -- Sets a path to the builderDir/bin."""
+        """Sets environmental vars and calls OS-specific launch code."""
         ##Adapt settings to variables.
-        print settings ##TESTER
-        self.settings = settings
 ##        workingDir = self.settings["Directory"]
 ##        runName = self.settings["NameServer"]
 ##        runConductor = self.settings["Conductor"]
@@ -73,8 +50,8 @@ class Launch:
 ##        vesFile = self.settings["VESFile"]
 ##        if vesFile == None:
 ##            vesFile = None
-        ##END settings -> variables
         ##Set self's variables
+        self.settings = settings
         self.nameserverPids = []
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
@@ -664,7 +641,7 @@ class Launch:
             os.environ[var] = default
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-        print "%s: %s" %(var, os.getenv(var)) ##TESTER
+##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
 
 
 ##    def GrabOutput(self, commandArray):

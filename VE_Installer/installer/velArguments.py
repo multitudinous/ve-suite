@@ -1,4 +1,6 @@
-"""Handles arguments sent to velauncher."""
+"""Handles arguments sent to velauncher.
+
+OBSOLETE."""
 from velCoveredConfig import *
 
 def Interpret(state, arguments):

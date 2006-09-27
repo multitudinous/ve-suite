@@ -51,20 +51,45 @@ class CoveredConfig(CoveredState):
         for var in COMMAND_CONFIG:
             self.Edit(var, COMMAND_CONFIG[var])
 
-    def VesArgument(self, vesFile):
-        """Applies a .ves argument to the launcher."""
-        self.Cover("Directory", os.path.dirname(vesFile), layer = VES_LAYER)
-        self.Cover("VESFile", vesFile)
+    def InterpretArgument(self, argument):
+        if argument:
+            if argument[-4:] == '.ves':
+                self.SetVesFile(argument)
+            else:
+                self.SetScript(argument)
+        else:
+            self.SetVesFile(None)
+            self.SetScript(None)
         return
 
-    def ScriptArgument(self, scriptFile):
+    def SetVesFile(self, vesFile):
+        """Applies a .ves argument to the launcher."""
+        if vesFile:
+            self.Cover("Directory", os.path.dirname(os.path.abspath(vesFile)),
+                       layer = VES_LAYER)
+            self.Cover("VESFile", vesFile, layer = VES_LAYER)
+            ##Ensure only one file loaded at a time.
+            self.SetScript(None)
+        else:
+            self.UncoverAll(VES_LAYER)
+        self.ChangeMode(MODE_LIST[self.GetSurface("Mode")])
+        return
+
+    def SetScript(self, scriptFile):
         """Applies a script (.bat, .tsh, .sh) argument to the launcher."""
-        self.Cover("Directory", os.path.dirname(scriptFile),
-                   layer = SCRIPT_LAYER)
-        self.Cover("ShellScript", scriptFile, layer = SCRIPT_LAYER)
-        self.Cover("Shell", True, layer = SCRIPT_LAYER)
-        self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
-        self.Cover("Mode", 4) ##SHELL MODE
+        if scriptFile:
+            self.Cover("Directory",
+                       os.path.dirname(os.path.abspath(scriptFile)),
+                       layer = SCRIPT_LAYER)
+            self.Cover("ShellScript", scriptFile, layer = SCRIPT_LAYER)
+            self.Cover("Shell", True, layer = SCRIPT_LAYER)
+            self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
+            self.Cover("Mode", 4, layer = SCRIPT_LAYER)
+            ##Ensure only one file loaded at a time.
+            self.SetVesFile(None)
+        else:
+            self.UncoverAll(SCRIPT_LAYER)
+        self.ChangeMode(MODE_LIST[self.GetSurface("Mode")])
         return
 
     def ChangeMode(self, mode):

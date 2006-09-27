@@ -96,7 +96,11 @@ class LauncherWindow(wx.Frame):
         ##Prepare the logo.
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
         sbmLogo = wx.StaticBitmap(panel, -1, bmLogo)
-
+        ##Build file name display. Under construction.
+##        self.fileTypeText = wx.StaticText(self, -1, "TestLabel")
+##        self.fileTypeText.SetToolTip(wx.ToolTip("Test."))
+##        self.fileNameText = wx.StaticText(self, -1, "TestLabel")
+##        self.fileNameText.SetToolTip(wx.ToolTip("Test."))
         ##Build Directory text ctrl.
         self.txDirectory = wx.TextCtrl(panel, -1,
                                        DIRECTORY_DEFAULT)
@@ -131,19 +135,21 @@ class LauncherWindow(wx.Frame):
         ##Build menu bar
         menuBar = wx.MenuBar()
         menu = wx.Menu()
-        menu.Append(500, "Choose De&pendencies\tCtrl+P")
-        menu.Append(501, "Choose &Builder Folder\tCtrl+B")
+        menu.Append(500, "&Open...\tCtrl+O")
+        menu.Append(501, "&Close Files\tCtrl+W")
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         menuBar.Append(menu, "&File")
         menu = wx.Menu()
-        menu.Append(510, "&Open\tCtrl+O")
+        menu.Append(510, "&Load\tCtrl+L")
         menu.Append(511, "&Save\tCtrl+S")
         menu.AppendSeparator()
         menu.Append(512, "&Delete\tCtrl+D")
         menuBar.Append(menu, "&Configurations")
         menu = wx.Menu()
-        menu.Append(520, "Debug &Level\tCtrl+L")
-        menu.Append(521, "Cluster &Wait Times\tCtrl+W")
+        menu.Append(520, "Choose De&pendencies\tCtrl+P")
+        menu.Append(521, "Choose &Builder Folder\tCtrl+B")
+        menu.Append(522, "Debu&g Level\tCtrl+G")
+        menu.Append(523, "&Cluster Wait Times\tCtrl+C")
         menuBar.Append(menu, "&Options")
         self.SetMenuBar(menuBar)
 
@@ -153,14 +159,16 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.Launch, self.bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_RADIOBOX, self.UpdateData, self.rbMode)
-        self.Bind(wx.EVT_MENU, self.DependenciesChange, id = 500)
-        self.Bind(wx.EVT_MENU, self.BuilderChange, id = 501)
+        self.Bind(wx.EVT_MENU, self.DependenciesChange, id = 520)
+        self.Bind(wx.EVT_MENU, self.BuilderChange, id = 521)
         self.Bind(wx.EVT_MENU, self.ChooseLoadConfig, id = 510)
         self.Bind(wx.EVT_MENU, self.ChooseSaveConfig, id = 511)
         self.Bind(wx.EVT_MENU, self.DeleteConfig, id = 512)
         self.Bind(wx.EVT_MENU, self.OnClose, id = wx.ID_EXIT)
-        self.Bind(wx.EVT_MENU, self.DebugOptions, id = 520)
-        self.Bind(wx.EVT_MENU, self.WaitOptions, id = 521)
+        self.Bind(wx.EVT_MENU, self.DebugOptions, id = 522)
+        self.Bind(wx.EVT_MENU, self.WaitOptions, id = 523)
+        self.Bind(wx.EVT_MENU, self.OpenFile, id = 500)
+        self.Bind(wx.EVT_MENU, self.CloseFiles, id = 501)
         
         ##Layout format settings
         ##Create the overall layout box
@@ -199,6 +207,11 @@ class LauncherWindow(wx.Frame):
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         columnSizer.Add(sbmLogo)
         columnSizer.Add(HORIZONTAL_SPACE)
+        ##Work on later.
+##        rowSizer3 = wx.BoxSizer(wx.VERTICAL)
+##        rowSizer3.Add(self.fileTypeText, 0, wx.EXPAND)
+##        rowSizer3.Add(self.fileNameText, 0, wx.EXPAND)
+##        columnSizer.Add(rowSizer3, 1)
         rowSizer2.Add(columnSizer)
         rowSizer2.Add(VERTICAL_SPACE)
         rowSizer2.Add(rowSizer, 0, wx.EXPAND)
@@ -215,7 +228,8 @@ class LauncherWindow(wx.Frame):
         wx.ToolTip.SetDelay(2000)
         
         ##Set arguments for passed .ves & script files.
-        velArguments.Interpret(self.state, arguments)
+        if arguments:
+            self.state.InterpretArgument(arguments[0])
 ##        for arg in arguments:
 ##            if arg[-4:] == '.ves':
 ##                self.state.VesArgument(arg)
@@ -264,6 +278,45 @@ class LauncherWindow(wx.Frame):
             dlg.ShowModal()
             dlg.Destroy()
 
+    def OpenFile(self, event = None):
+        types = "VES files (*.ves)|*.ves"
+        if windows:
+            types += "|Batch files (*.bat)|*.bat"
+        elif unix:
+            types += "|Script files (*.sh;*.tsh)|*.sh;*.tsh"
+        dlg = wx.FileDialog(self,
+                            "Choose a file.",
+                            wildcard = types,
+                            style=wx.OPEN)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            self.state.InterpretArgument(path)
+        dlg.Destroy()
+        self.UpdateDisplay()
+        return
+
+    def CloseFiles(self, event = None):
+        if not self.state.GetSurface("VESFile") and \
+           not self.state.GetSurface("ShellScript"):
+            ##No files to close notification.
+            dlg = wx.MessageDialog(self,
+                                   "You don't have any files opened.",
+                                   "No Files to Close", wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+        else:
+            confirm = wx.MessageDialog(self,
+                                       "Are you sure you want to\n" +
+                                       "close any .ves or script\n" +
+                                       "files you have opened?",
+                                       "Confirm File Close",
+                                       wx.YES_NO | wx.NO_DEFAULT)
+            if confirm.ShowModal() == wx.ID_YES:
+                self.state.InterpretArgument(None)
+                self.UpdateDisplay()
+            confirm.Destroy()
+        return
 
     def DebugOptions(self, event = None):
         DebugWindow(self, self.state)
@@ -342,9 +395,9 @@ class LauncherWindow(wx.Frame):
     def UpdateDisplay(self):
         """Changes GUI to match changes made by React."""
         ##DependenciesDir
-        self.GetMenuBar().Enable(500, self.state.IsEnabled("DependenciesDir"))
+        self.GetMenuBar().Enable(520, self.state.IsEnabled("DependenciesDir"))
         ##BuilderDir
-        self.GetMenuBar().Enable(501, self.state.IsEnabled("BuilderDir"))
+        self.GetMenuBar().Enable(521, self.state.IsEnabled("BuilderDir"))
         ##Directory
         self.txDirectory.SetValue(self.state.GetSurface("Directory"))
         self.txDirectory.Enable(self.state.IsEnabled("Directory"))
@@ -358,6 +411,18 @@ class LauncherWindow(wx.Frame):
         ##Mode
         self.rbMode.SetSelection(self.state.GetSurface("Mode"))
         self.rbMode.Enable(self.state.IsEnabled("Mode"))
+        ##Loaded file name. Under work.
+##        if self.state.GetSurface("VESFile"):
+##            self.fileTypeText.SetLabel("VES File:")
+##            fileName = os.path.basename(self.state.GetSurface("VESFile"))
+##            self.fileNameText.SetLabel(fileName)
+##        elif self.state.GetSurface("ShellScript"):
+##            self.fileTypeText.SetLabel("Script File:")
+##            fileName = os.path.basename(self.state.GetSurface("ShellScript"))
+##            self.fileNameText.SetLabel(fileName)
+##        else:
+##            self.fileTypeText.SetLabel("")
+##            self.fileNameText.SetLabel("")            
         return
 
     def ChooseDirectory(self, event = None):
