@@ -59,6 +59,8 @@ class CoveredConfig(CoveredState):
 
     def ScriptArgument(self, scriptFile):
         """Applies a script (.bat, .tsh, .sh) argument to the launcher."""
+        self.Cover("Directory", os.path.dirname(scriptFile),
+                   layer = SCRIPT_LAYER)
         self.Cover("ShellScript", scriptFile, layer = SCRIPT_LAYER)
         self.Cover("Shell", True, layer = SCRIPT_LAYER)
         self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
