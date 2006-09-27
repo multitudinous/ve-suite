@@ -190,6 +190,7 @@ cp ${VE_SUITE_HOME}/VE_TestSuite/toon.vea ./shaders/toon.vea
 cp ${VE_SUITE_HOME}/VE_TestSuite/x-ray.vea ./shaders/x-ray.vea
 
 echo "======Copying simple example model files======"
+cp ${VE_SUITE_HOME}/VE_Installer/installer/simple.ves ./exampleDatasets/simple/.
 echo "   simple VTK files..."
 cp ${VE_SUITE_HOME}/VE_TestSuite/2scl.vtu ./exampleDatasets/simple/.
 cp ${VE_SUITE_HOME}/VE_TestSuite/3scl2vec.vtu ./exampleDatasets/simple/.
@@ -233,7 +234,7 @@ rm -rf ./bin/Plugins/GE/.svn
 #echo "Copying setup file..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
 
-#echo "Copying VES file..."
+#echo "Copying VES script file..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VES.run ./bin/VES
 
 echo "Copying VE-Launcher script..."
@@ -243,7 +244,9 @@ cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_banner_1.0.bmp 
 
 echo "Copying Desktop configuration file..."
 mkdir ./stereo_desktop
+mkdir ./dualhead_configs
 cp -rf ${VE_SUITE_HOME}/VE_Xplorer/stereo_desktop/* ./stereo_desktop
+cp -rf ${VE_SUITE_HOME}/VE_Xplorer/dualhead_configs/* ./dualhead_configs
 
 echo "Creating tar.gz file..."
 #write the tar file in the install directory
