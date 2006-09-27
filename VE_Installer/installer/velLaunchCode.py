@@ -88,12 +88,12 @@ class Launch:
             self.cluster = False
         ##Set the environmental variables
         self.EnvSetup()
-        ##Checks the OS and routes the launcher to the proper subfunction
-        ##NOTE: Code out separate Setups, code in the combined Setup
+        ##Change the directory.
+        os.chdir(self.settings["Directory"])
         if self.settings["Shell"]: ##Shell is activated after destroy VE-Launcher.
             return
-        ##Continue if shell isn't activated.
-        os.chdir(self.settings["Directory"])
+        ##Checks the OS and routes the launcher to the proper subfunction
+        ##NOTE: Code out separate Setups, code in the combined Setup
         if windows:
             self.Windows()
         elif unix:
