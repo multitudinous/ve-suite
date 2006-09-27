@@ -35,7 +35,7 @@
 #include "VE_Conductor/Framework/TBToolBar.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/CORBAServiceList.h"
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"

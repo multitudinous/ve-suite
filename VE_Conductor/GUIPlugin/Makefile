@@ -45,7 +45,10 @@ SRCS=\
    SummaryResultDialog.cpp \
    TexTable.cpp \
    TextResultDialog.cpp \
-   UIDialog.cpp
+   UIDialog.cpp\
+   OrbThread.cxx\
+   CORBAServiceList.cxx\
+   UI_i.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

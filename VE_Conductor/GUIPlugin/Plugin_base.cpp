@@ -48,7 +48,7 @@
 #include "VE_Open/XML/Command.h"
 
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
-#include "VE_Conductor/Framework/CORBAServiceList.h"
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>

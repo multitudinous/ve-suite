@@ -43,7 +43,7 @@
 #include "VE_Conductor/Framework/UI_TeacherTab.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/CORBAServiceList.h"
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 

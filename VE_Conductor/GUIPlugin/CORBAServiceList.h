@@ -36,7 +36,7 @@
 #include <orbsvcs/CosNamingC.h>
 #include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_i.h"
+#include "VE_Conductor/GUIPlugin/UI_i.h"
 
 #include <vector>
 #include <string>
@@ -53,9 +53,10 @@ namespace VE_XML
    class Command;
 }
 
+#include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
 {
-class CORBAServiceList : public wxObject
+class VE_GUIPLUGINS_EXPORTS CORBAServiceList : public wxObject
 {
 public:
    ///Constructor

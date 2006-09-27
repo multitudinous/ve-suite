@@ -41,7 +41,7 @@
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Network/package.h"
-#include "VE_Conductor/Framework/OrbThread.h"
+#include "VE_Conductor/GUIPlugin/OrbThread.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
 #include "VE_Conductor/Framework/UI_TeacherTab.h"
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"
@@ -71,7 +71,7 @@
 //#include "VE_Conductor/VE_UI/UI_Tabs.h"
 //#include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/Framework/Network.h"
-#include "VE_Conductor/Framework/CORBAServiceList.h"
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include "VE_Conductor/Utilities/Module.h"
 #include "VE_Conductor/Utilities/Tag.h"

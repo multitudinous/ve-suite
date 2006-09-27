@@ -44,7 +44,7 @@ Frame API
 #include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
 #include <orbsvcs/CosNamingC.h>
-#include "VE_Conductor/Framework/UI_i.h"
+#include "VE_Conductor/GUIPlugin/UI_i.h"
 
 #include <wx/frame.h>
 #include <wx/icon.h>

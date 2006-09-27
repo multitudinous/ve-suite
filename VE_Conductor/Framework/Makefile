@@ -21,10 +21,8 @@ SRCS=\
    Frame.cpp \
    Network.cpp \
    NavigationPane.cxx \
-   OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
-   UI_i.cpp \
    UI_TransientDialog.cxx\
    SoundsPane.cpp \
    ViewLocPane.cxx\
@@ -39,7 +37,6 @@ SRCS=\
    advancedstreamlines.cpp\
    isosurfaces.cpp\
    polydata.cpp\
-   CORBAServiceList.cxx\
    ScalarToolsDlg.cxx\
 	UI_TeacherTab.cpp
 

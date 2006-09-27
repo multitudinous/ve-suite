@@ -29,33 +29,87 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#if !defined(AFX_ORBTHREAD_H__1A5E5D0F_8D34_4791_87BC_3C2CEB837A2F__INCLUDED_)
-#define AFX_ORBTHREAD_H__1A5E5D0F_8D34_4791_87BC_3C2CEB837A2F__INCLUDED_
+#ifndef UI_I_H_
+#define UI_I_H_
 
-#include <ace/Task.h>
+#include "VE_Open/skel/moduleS.h"
+#include <iostream>
 #include <string>
-#include <wx/menu.h>
-#include <wx/textctrl.h>
 
-class AppFrame;
-class wxUpdateUIEvent;
+class PEThread;
+//class Network;
 
-class PEThread : public ACE_Task_Base, public wxTextCtrl
+//Class Body_UI_i
+#include "VE_Installer/include/VEConfig.h"
+class VE_GUIPLUGINS_EXPORTS Body_UI_i : public virtual POA_Body::UI
 {
-public:
-	PEThread( void );
-	virtual ~PEThread();
-	virtual int svc (void);
-	void SetMessage(const char* msg);
-   void ShutDownThread( void );
-   void OnUpdateUIPop( wxUpdateUIEvent& event );
+ public:
+  //Constructor 
+  Body_UI_i (Body::Executive_ptr exec, std::string name);
+  
+  //Destructor 
+  virtual ~Body_UI_i (void);
+  
+  std::string UIName_;
 
-protected:
-	//wxTextCtrl* logWindow;
-	ACE_Thread_Mutex _mutex;
-	std::string message;
-   bool shutdown;
-DECLARE_EVENT_TABLE()
+ protected:
+  Body::Executive_var executive_;
+  PEThread* logWindow;
+ public:
+
+     void SetLogWindow( PEThread* logWindow );
+     
+virtual void UpdateNetwork (
+    const char * network
+    ACE_ENV_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));
+
+virtual void UpdateModuleUI (
+    CORBA::Long module_id,
+    const char * msg
+    ACE_ENV_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));
+
+virtual void UpdateModuleResult (
+    CORBA::Long module_id,
+    const char * msg
+    ACE_ENV_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));
+
+virtual void UpdateLinkContent (
+    CORBA::Long id,
+    const char * msg
+    ACE_ENV_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));
+
+virtual void Raise (
+    const char * notification
+    ACE_ENV_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));
 };
-#endif // !defined(AFX_ORBTHREAD_H__1A5E5D0F_8D34_4791_87BC_3C2CEB837A2F__INCLUDED_)
+
+
+#endif

@@ -41,7 +41,7 @@
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/Framework/CORBAServiceList.h"
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
