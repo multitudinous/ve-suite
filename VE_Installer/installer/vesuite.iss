@@ -146,6 +146,7 @@ Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp; Dest
 Source: {#VEHOME}\VE_Xplorer/dualhead_configs/*.jconf; DestDir: {app}/dualhead_configs/; Components: nameserver; Flags: ignoreversion recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\simple.ves; DestDir: {app}\exampleDatasets\simple; Components: examples; Flags: overwritereadonly replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\clusterTemplate.txt; DestDir: {app}; Flags: ignoreversion
 
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico
