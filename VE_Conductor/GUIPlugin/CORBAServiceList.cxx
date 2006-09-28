@@ -135,7 +135,7 @@ bool CORBAServiceList::ConnectToCE( void )
    if ( pelog == NULL )
    {
 	   pelog = new PEThread();
-	   pelog->activate();
+	   //pelog->activate();
    }
 
    if ( !IsConnectedToNamingService() )
@@ -163,7 +163,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
    if ( pelog == NULL )
    {
 	   pelog = new PEThread();
-	   pelog->activate();
+//	   pelog->activate();
    }
    
    if ( !IsConnectedToNamingService() )
@@ -469,7 +469,7 @@ PEThread* CORBAServiceList::GetMessageLog( void )
    if ( pelog == NULL )
    {
 	   pelog = new PEThread();
-	   pelog->activate();
+//	   pelog->activate();
    }
    
    return pelog;

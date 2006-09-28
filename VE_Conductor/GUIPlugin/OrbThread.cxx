@@ -42,7 +42,7 @@
 #include <sstream>
 
 BEGIN_EVENT_TABLE( PEThread, wxTextCtrl )
-   EVT_UPDATE_UI(7777, PEThread::OnUpdateUIPop)
+   //EVT_UPDATE_UI(7777, PEThread::OnUpdateUIPop)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////
@@ -58,16 +58,16 @@ PEThread::PEThread()
 
 PEThread::~PEThread()
 {
-   ShutDownThread();
-   ACE_OS::sleep(1); 
+   //ShutDownThread();
+   //ACE_OS::sleep(1); 
 }
 ////////////////////////////////////////////////////////////////////////////////
-int PEThread::svc (void)
+/*int PEThread::svc (void)
 {
    while( shutdown )
    {
       _mutex.acquire();
-      if (message!="")
+      if ((message!="") && (this->GetParent()))
       {
          wxUpdateUIEvent u;
          u.SetId(7777);
@@ -85,16 +85,13 @@ int PEThread::svc (void)
 void PEThread::ShutDownThread( void )
 {
    shutdown = false;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void PEThread::SetMessage(const char* msg)
 {
    _mutex.acquire();
-   message+=msg;
+   //message+=msg;
+   this->AppendText( wxString( msg ) );
    _mutex.release();
 }
-////////////////////////////////////////////////////////////////////////////////
-void PEThread::OnUpdateUIPop( wxUpdateUIEvent& event )
-{
-   this->AppendText( event.GetText() );
-}
+

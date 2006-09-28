@@ -38,19 +38,15 @@
 #include <wx/menu.h>
 #include <wx/textctrl.h>
 
-class AppFrame;
 class wxUpdateUIEvent;
 
 #include "VE_Installer/include/VEConfig.h"
-class VE_GUIPLUGINS_EXPORTS PEThread : public ACE_Task_Base, public wxTextCtrl
+class VE_GUIPLUGINS_EXPORTS PEThread : /*public ACE_Task_Base,*/ public wxTextCtrl
 {
 public:
 	PEThread( void );
 	virtual ~PEThread();
-	virtual int svc (void);
 	void SetMessage(const char* msg);
-   void ShutDownThread( void );
-   void OnUpdateUIPop( wxUpdateUIEvent& event );
 
 protected:
 	//wxTextCtrl* logWindow;
