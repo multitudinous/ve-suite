@@ -280,10 +280,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CORBAServiceList.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\DataSetLoaderUI.cxx"
 				>
 			</File>
@@ -342,18 +338,6 @@
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\OrbThread.cpp"
-				>
-				<FileConfiguration
-					Name="dbg|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="..\IDL"
 					/>
 				</FileConfiguration>
 			</File>
@@ -419,10 +403,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UI_i.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\UI_TeacherTab.cpp"
 				>
 			</File>
@@ -472,10 +452,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CORBAServiceList.h"
-				>
-			</File>
-			<File
 				RelativePath=".\DataSetLoaderUI.h"
 				>
 			</File>
@@ -493,10 +469,6 @@
 			</File>
 			<File
 				RelativePath="Network.h"
-				>
-			</File>
-			<File
-				RelativePath=".\OrbThread.h"
 				>
 			</File>
 			<File

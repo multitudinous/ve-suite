@@ -33,6 +33,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include <iostream>
 #include "VE_Conductor/Network/string_ops.h"
 #include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
@@ -48,7 +49,7 @@
 #include "VE_Open/XML/Command.h"
 
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>

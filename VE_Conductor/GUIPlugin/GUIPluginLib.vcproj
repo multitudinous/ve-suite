@@ -166,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib wxmsw26d_adv.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_BiDirGIOPd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib wxmsw26d_adv.lib"
 				OutputFile="$(OutDir)\GUIPlugin_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -210,6 +210,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
 			>
 			<File
+				RelativePath=".\CORBAServiceList.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\FinancialDialog.cpp"
 				>
 			</File>
@@ -231,6 +235,10 @@
 			</File>
 			<File
 				RelativePath=".\ListTable.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OrbThread.cxx"
 				>
 			</File>
 			<File
@@ -262,6 +270,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UI_i.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\UIDialog.cpp"
 				>
 			</File>
@@ -270,6 +282,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
+			<File
+				RelativePath=".\CORBAServiceList.h"
+				>
+			</File>
 			<File
 				RelativePath=".\FinancialDialog.h"
 				>
@@ -292,6 +308,10 @@
 			</File>
 			<File
 				RelativePath=".\ListTable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OrbThread.h"
 				>
 			</File>
 			<File
@@ -320,6 +340,10 @@
 			</File>
 			<File
 				RelativePath=".\TextResultDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UI_i.h"
 				>
 			</File>
 			<File
