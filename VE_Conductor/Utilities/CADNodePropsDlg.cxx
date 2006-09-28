@@ -217,19 +217,19 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    wxStaticBoxSizer* transSizer = new wxStaticBoxSizer(translation, wxHORIZONTAL);
    _xTransformCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _xTransformCtrl->SetValue(0);
-   _xTransformCtrl->SetRange(-3000.0,3000.0);
+   _xTransformCtrl->SetRange(-30000.0,30000.0);
    _xTransformCtrl->SetIncrement(1.0);
    _xTransformCtrl->Raise();
    
    _yTransformCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _yTransformCtrl->SetValue(0);
-   _yTransformCtrl->SetRange(-3000.0,3000.0);
+   _yTransformCtrl->SetRange(-30000.0,30000.0);
    _yTransformCtrl->SetIncrement(1.0);
    _yTransformCtrl->Raise();
 
    _zTransformCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _zTransformCtrl->SetValue(0);
-   _zTransformCtrl->SetRange(-3000.0,3000.0);
+   _zTransformCtrl->SetRange(-30000.0,30000.0);
    _zTransformCtrl->SetIncrement(1.0);
    _zTransformCtrl->Raise();
 
@@ -274,17 +274,17 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    _zScaleCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    
    _xScaleCtrl->SetValue(1.0);
-   _xScaleCtrl->SetRange(0.0,3000.0);
+   _xScaleCtrl->SetRange(0.0,30000.0);
    _xScaleCtrl->SetIncrement(1.0);
    _xScaleCtrl->Raise();
 
    _yScaleCtrl->SetValue(1.0);
-   _yScaleCtrl->SetRange(0.0,3000.0);
+   _yScaleCtrl->SetRange(0.0,30000.0);
    _yScaleCtrl->SetIncrement(1.0);
    _yScaleCtrl->Raise();
 
    _zScaleCtrl->SetValue(1.0);
-   _zScaleCtrl->SetRange(0.0,3000.0);
+   _zScaleCtrl->SetRange(0.0,30000.0);
    _zScaleCtrl->SetIncrement(1.0);
    _zScaleCtrl->Raise();
 
