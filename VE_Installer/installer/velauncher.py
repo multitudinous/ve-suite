@@ -296,6 +296,7 @@ class LauncherWindow(wx.Frame):
         return
 
     def CloseFiles(self, event = None):
+        """Closes any VES/script files the user has slated to run."""
         if not self.state.GetSurface("VESFile") and \
            not self.state.GetSurface("ShellScript"):
             ##No files to close notification.
@@ -411,6 +412,10 @@ class LauncherWindow(wx.Frame):
         ##Mode
         self.rbMode.SetSelection(self.state.GetSurface("Mode"))
         self.rbMode.Enable(self.state.IsEnabled("Mode"))
+        ##VES/script files.
+        fileLoaded = self.state.GetSurface("VESFile") or \
+                     self.state.GetSurface("ShellScript")
+        self.GetMenuBar().Enable(501, bool(fileLoaded))
         ##Loaded file name. Under work.
 ##        if self.state.GetSurface("VESFile"):
 ##            self.fileTypeText.SetLabel("VES File:")

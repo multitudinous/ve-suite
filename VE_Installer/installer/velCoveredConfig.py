@@ -133,7 +133,7 @@ class CoveredConfig(CoveredState):
         else:
             surface["ClusterSlaves"] = None
             surface["Cluster"] = False
-        ##If OSGNotifyLevel = None, change it to ""
-        if surface["OSGNotifyLevel"] == None:
-            surface["OSGNotifyLevel"] = ""
+        ##If OSGNotifyLevel == "None", change it to None
+        if surface["OSGNotifyLevel"] == "None":
+            surface["OSGNotifyLevel"] = None
         return surface

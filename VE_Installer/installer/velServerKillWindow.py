@@ -3,6 +3,7 @@ import wx
 import os
 from velBase import *
 from sys import exc_info
+from subprocess import *
 if windows:
     import win32api
 
@@ -17,7 +18,7 @@ class ServerKillWindow(wx.Frame):
         """Creates the Server Kill Window."""
         wx.Frame.__init__(self, parent, wx.ID_ANY, title,
                           style = wx.DEFAULT_FRAME_STYLE &
-                          ~ (wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
+                          ~(wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
         self.pids = pids
         lblMsg = wx.StaticText(self, -1, "After you're done with VE-Suite,\n"+\
                                          "press the button below to kill\n"+\
@@ -49,10 +50,13 @@ class ServerKillWindow(wx.Frame):
                 except:
                     pass
         elif unix:
-            os.system("killall Naming_Service Exe_server")
-        self.OnClose("this event doesn't exist")
+            killArray = ["kill"]
+            for pid in self.pids:
+                killArray[len(killArray):] = [str(pid)]
+            Popen(killArray)
+        self.OnClose()
 
-    def OnClose(self, event):
+    def OnClose(self, event = None):
         """Closes ServerKillWindow."""
         self.Hide()
         self.Destroy()

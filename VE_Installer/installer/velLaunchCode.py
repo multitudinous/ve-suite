@@ -80,6 +80,7 @@ class Launch:
 
 
     def GetNameserverPids(self):
+        print self.nameserverPids ##TESTER
         return self.nameserverPids
 
     def Windows(self):
@@ -540,8 +541,10 @@ class Launch:
             self.EnvFill("VPR_DEBUG_ENABLE", "1", overwrite = True)
         self.EnvFill("VPR_DEBUG_NFY_LEVEL", str(self.settings["VPRDebug"]),
                      overwrite = True)
-        self.EnvFill("OSGNOTIFYLEVEL", str(self.settings["OSGNotifyLevel"]),
-                     overwrite = True)        
+        if self.settings["OSGNotifyLevel"]:
+            self.EnvFill("OSGNOTIFYLEVEL",
+                         str(self.settings["OSGNotifyLevel"]),
+                         overwrite = True)        
         self.EnvFill("NO_PERF_PLUGIN", "TRUE")
         self.EnvFill("NO_RTRC_PLUGIN", "TRUE")
         self.EnvFill("PFNFYLEVEL", "0")

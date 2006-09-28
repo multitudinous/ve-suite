@@ -14,7 +14,7 @@ def Start(shellScript = None):
     elif unix:
         if shellScript:
             print "VE-Suite script started."
-            execl(shellScript)
+            execl(shellScript, "")
         else:
             print "VE-Suite subshell started."
             print "Type exit to return to your previous" + \

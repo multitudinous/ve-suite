@@ -5,7 +5,7 @@ from velBase import *
 
 class LaunchSplash(wx.SplashScreen):
     def __init__(self):
-        image = wx.Image(SPLASH_IMAGE).ConvertToBitmap()
+        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_BMP)
         wx.SplashScreen.__init__(self, image,
                                  wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
                                  SPLASH_TIME, None, -1)

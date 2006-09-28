@@ -22,7 +22,8 @@ if os.path.basename(VELAUNCHER_DIR) == "velauncher":
     VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")
 LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
-SPLASH_IMAGE = join(VELAUNCHER_DIR, "installerImages", "ve_banner_1.0.bmp")
+SPLASH_IMAGE = join(VELAUNCHER_DIR, "installerImages", "velauncher_banner.bmp")
+##"velauncher_banner.bmp")
 SPLASH_TIME = 7000 ##milliseconds before auto-close
 if windows:
     CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")

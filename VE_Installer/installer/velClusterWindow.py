@@ -205,7 +205,8 @@ class ClusterWindow(wx.Dialog):
         if dlg.ShowModal() == wx.ID_YES:
             name = self.clustList.GetStringSelection()
             self.state.GetBase("ClusterDict").Delete(name)
-            ##Update display.
+            ##Update other data & display.
+            self.UpdateData()
             self.UpdateDisplay()
 
     def OnClose(self, event):
