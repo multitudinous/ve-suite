@@ -631,7 +631,12 @@ void AppFrame::CreateMenu()
    //con_menu->AppendSeparator();
    con_menu->Append(v21ID_SUBMIT, _("Sub&mit Job\tCtrl+M"));
    con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
-   con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
+   //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
+   wxMenu* queryMenu = new wxMenu();
+   queryMenu->Append( QUERY_NETWORK, _("Query For Network") );
+   queryMenu->Append( QUERY_FOR_INPUTS, _("Query For Inputs") );
+   queryMenu->Append( QUERY_FOR_RESULTS, _("Query For Results") );
+	con_menu->Append( QUERY_FROM_SERVER,   _("Query Menu"), queryMenu, _("Used to query units for various information") );
    con_menu->AppendSeparator();
    con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
    con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
