@@ -2,7 +2,7 @@
 #copies the appropriate libs/dlls from ve-suite for installs 
 #in the future cmd line args will specify VE-Suite home 
 
-setenv VE_VERSION 1.0.2
+setenv VE_VERSION _1.0.2
 #set vesuitedir $1
 #if(vesuitedir)
 #   setenv VE_SUITE_HOME $1
