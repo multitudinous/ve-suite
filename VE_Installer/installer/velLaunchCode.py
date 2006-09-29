@@ -80,7 +80,6 @@ class Launch:
 
 
     def GetNameserverPids(self):
-        print self.nameserverPids ##TESTER
         return self.nameserverPids
 
     def Windows(self):
@@ -106,9 +105,7 @@ class Launch:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
 ##            self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
-            print "Starting read template." ##TESTER
             self.ReadClusterTemplate()
-            print "Ending read template." ##TESTER
 ##            clusterFileName = "cluster.bat"
 ##            clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', clusterFileName)
 ##            print clusterFilePath ##TESTER
@@ -215,8 +212,6 @@ class Launch:
         if windows:
             exe += ".exe"
         c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
-##        if unix:
-##            c[len(c):] = "&"
         return c
 
     def ServerCall(self):
@@ -230,8 +225,6 @@ class Launch:
         c = [exe, "-ORBInitRef", self.ServiceArg()]
         if windows:
             c[len(c):] = ["-ORBDottedDecimalAddresses", "1"]
-##        if unix:
-##            c[len(c):] = "&"
         return c
 
     def ConductorCall(self):
@@ -255,8 +248,6 @@ class Launch:
         s[len(s):] = ves
         if windows:
             s[len(s):] = ["-ORBDottedDecimalAddresses", "1"]
-##        if unix:
-##            s[len(s):] = "&"
         return s
 
     def XplorerCall(self):
@@ -281,8 +272,6 @@ class Launch:
         s = [exe, "-ORBInitRef", self.ServiceArg(),
              "%s" %self.settings["JconfPath"]]
         s[len(s):] = desktop
-##        if unix:
-##            c[len(c):] = "&"
         return s
 
     def ReadClusterTemplate(self):
@@ -290,8 +279,6 @@ class Launch:
         clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', "cluster.bat")
         drive = "%s:" %self.settings["Directory"].split(':')[0]
         user = os.getenv('USERNAME')
-##        domain = os.getenv('USERDOMAIN')
-##        location = settings["User"]
         self.clusterCall = ["psexec", "<SLAVE GOES HERE>",
                             "-i", "-e", "-c", CLUSTER_FILE_PATH]
         ##Insert username directory if specified
@@ -300,45 +287,15 @@ class Launch:
         ##Begin cluster template
         self.clusterTemplate = ""
         self.clusterTemplate += "@ECHO OFF\n"
-##        print templatePath ##TESTER
         if os.path.exists(TEMPLATE_PATH):
-            print "---GOT TEMPLATE---" ##TESTER
             COMMENT_NOTE = '##'
             VAR_SEP = '%'
-##            execPassed = False
-##            variables = {"USER".upper(): user, ##Placeholder
-##                         ##"SCRIPT".upper(): clusterFilePath,
-##                         ##"WORKDIR".upper(): workingDir,
-##                         "DRIVE".upper(): "%s:" %workingDir.split(':')[0]##,
-##                         ##"ENVIRONMENT".upper(): self.clusterScript,
-##                         ##"XPLORER".upper(): string.join(self.XplorerCall(typeXplorer, jconf))}
-##                        }
             f = file(TEMPLATE_PATH)
             for line in f:
                 line = line.lstrip()
                 ##Toss comments & blank lines.
                 if len(line) == 0 or line[:2] == COMMENT_NOTE:
                     continue
-##                ##Check for %VAR% and replace them.
-##                lineArray = line.split(VAR_SEP)
-##                for wordNumber in range(len(lineArray)):
-##                    word = lineArray[wordNumber].upper()
-##                    ##Turn %% into %. NEEDS WORK.
-####                    if word == "":
-####                        lineArray[wordNumber] = "%"
-####                        pass
-##                    ##Replace variables.
-##                    if word in variables:
-##                        lineArray[wordNumber] = variables[word]
-##                ##Recombine.
-##                line = string.join(lineArray, '')
-##                ##Turn the first line into the psexec call.
-####                if not execPassed:
-####                    call = line.rstrip()
-####                    call = line.split()
-####                    self.clusterCall = call
-####                    execPassed = True
-####                    continue
                 ##Add the rest to the cluster.bat.
                 self.clusterTemplate += line
             f.close()
@@ -399,14 +356,8 @@ class Launch:
                 subprocess.Popen(self.XplorerCall())
                 return
             ##Else call the script on the other computer in psexec.
-##            subprocess.Popen(['psexec', '\\\\%s' %nodeName, scriptPath])
-##            self.clusterScript +=  ##TESTER
-##            subprocess.Popen(["psexec", "\\\\abbott", "-u", "IASTATE\\biv", "-i", "-e", "-c", scriptPath]) ##TESTER
-            self.clusterCall[1] = "\\\\%s" %nodeName ##TESTER
-            print self.clusterCall ##TESTER
-            subprocess.Popen(self.clusterCall) ##TESTER
-##            self.ExecuteClusterScript(clusterMaster, clusterFilePath,
-##                                      typeXplorer, jconf, desktopMode)
+            self.clusterCall[1] = "\\\\%s" %nodeName
+            subprocess.Popen(self.clusterCall)
         else:
             print "Error!"
 
