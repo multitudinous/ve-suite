@@ -53,6 +53,7 @@ void UnitWrapper::StartCalc (
     ::Error::EUnknown
   ))
 {
+   std::cout<<UnitName_<<" :Start Calc called"<<std::endl;
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +147,7 @@ void UnitWrapper::SetParams ( ::CORBA::Long id, const char * param )
     ::Error::EUnknown
   ))
 {
-   //just send a sinlge command to SetParams
+   //just send a list command to SetParams
    // the eventhandler will handle the rest
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
@@ -158,7 +159,7 @@ void UnitWrapper::SetParams ( ::CORBA::Long id, const char * param )
    eventHandlerMap[ "Set XML Model Inputs" ]->SetBaseObject( xmlModelMap[ idString.str() ] );
    if ( !objectVector.empty() )
    {
-      eventHandlerMap[ "Set XML Model Inputs" ]->Execute( objectVector.at( 0 ) );
+      eventHandlerMap[ "Set XML Model Inputs" ]->Execute( objectVector );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,7 +263,7 @@ char * UnitWrapper::Query ( const char* command
    if ( currentEventHandler != eventHandlerMap.end() )
    {
       currentEventHandler->second->SetBaseObject( xmlModelMap[ strm.str() ] );
-      network = currentEventHandler->second->Execute( objectVector.at( 0 ) );
+      network = currentEventHandler->second->Execute( objectVector );
    }
 
 	return CORBA::string_dup( network.c_str() );

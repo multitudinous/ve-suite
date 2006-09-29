@@ -69,7 +69,7 @@ void SetInputsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string SetInputsEventHandler::Execute( VE_XML::XMLObject* objectToProcess )
+std::string SetInputsEventHandler::Execute( std::vector< VE_XML::XMLObject* > objectToProcess )
 {
    if ( !baseModel )
    {
@@ -79,22 +79,23 @@ std::string SetInputsEventHandler::Execute( VE_XML::XMLObject* objectToProcess )
 
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( objectToProcess );
-      size_t numInputs = command->GetNumberOfDataValuePairs();
+      
+      size_t numInputs = objectToProcess.size();
       for ( size_t i = 0; i < numInputs; ++i )
       {
-         VE_XML::DataValuePair* veModelDVP = command->GetDataValuePair( i );
-         std::string dataName = veModelDVP->GetDataName();
-         VE_XML::Command* tempCommandInput = 
-               dynamic_cast< VE_XML::Command* >( veModelDVP->GetDataXMLObject() );
+         VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( objectToProcess.at( i ) );
+         //VE_XML::DataValuePair* veModelDVP = command->GetDataValuePair( i );
+         std::string dataName = command->GetCommandName();
+         //VE_XML::Command* tempCommandInput = 
+         //      dynamic_cast< VE_XML::Command* >( veModelDVP->GetDataXMLObject() );
          VE_XML::Command* tempInput = baseModel->GetInput( dataName );
          if ( tempInput )
          {
-            (*tempInput) = (*tempCommandInput);
+            (*tempInput) = (*command);
          }
          else
          {
-            *(baseModel->GetInput()) = (*tempCommandInput);
+            *(baseModel->GetInput()) = (*command);
          }
       }
    }

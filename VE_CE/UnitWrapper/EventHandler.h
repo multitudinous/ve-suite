@@ -47,6 +47,7 @@ namespace VE_XML
 }
 //#include "VE_Installer/include/VEConfig.h"
 #include <string>
+#include <vector>
 
 namespace VE_CE
 {
@@ -61,7 +62,7 @@ public:
 
    ///The call to handle the event
    ///\param objectToProcess The xml Object to process
-   virtual std::string Execute(VE_XML::XMLObject* objectToProcess=0) = 0;
+   virtual std::string Execute(std::vector< VE_XML::XMLObject* > objectToProcess ) = 0;
 
    ///Function to set the xml object to work on
    ///\param baseObject The base object to apply the command to.

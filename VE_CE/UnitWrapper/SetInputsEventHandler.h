@@ -65,7 +65,7 @@ public:
 
    ///The call to handle the event
    ///\param objectToProcess The xml Object to process
-   virtual std::string Execute(VE_XML::XMLObject* objectToProcess );
+   virtual std::string Execute( std::vector< VE_XML::XMLObject* > objectToProcess );
 
    ///Function to set the xml object to work on
    ///\param baseObject The base object to apply the command to.

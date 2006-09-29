@@ -70,7 +70,7 @@ void GetResultsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string GetResultsEventHandler::Execute( VE_XML::XMLObject* objectToProcess )
+std::string GetResultsEventHandler::Execute( std::vector< VE_XML::XMLObject* > objectToProcess )
 {
    if ( !baseModel )
    {
