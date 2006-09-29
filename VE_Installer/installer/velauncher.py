@@ -279,6 +279,7 @@ class LauncherWindow(wx.Frame):
             dlg.Destroy()
 
     def OpenFile(self, event = None):
+        self.UpdateData()
         types = "VES files (*.ves)|*.ves"
         if windows:
             types += "|Batch files (*.bat)|*.bat"
@@ -286,6 +287,7 @@ class LauncherWindow(wx.Frame):
             types += "|Script files (*.sh;*.tsh)|*.sh;*.tsh"
         dlg = wx.FileDialog(self,
                             "Choose a file.",
+                            defaultDir = self.state.GetSurface("Directory"),
                             wildcard = types,
                             style=wx.OPEN)
         if dlg.ShowModal() == wx.ID_OK:

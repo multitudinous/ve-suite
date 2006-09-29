@@ -29,7 +29,7 @@ OutputDir={#VEHOME}\VE_Installer\installer
 OutputBaseFilename=vesuite{#VEVERSION}
 Compression=lzma
 SolidCompression=true
-ChangesEnvironment=false
+ChangesEnvironment=true
 ShowLanguageDialog=yes
 AlwaysRestart=false
 UninstallFilesDir={app}\bin
@@ -39,7 +39,9 @@ WizardImageStretch=false
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WindowVisible=true
 WizardImageBackColor=clGray
-ChangesAssociations=yes
+ChangesAssociations=true
+BackColor=clBlack
+BackColor2=$0080ff
 
 [Types]
 Name: full; Description: Full installation
