@@ -242,11 +242,14 @@ cp -f ${VE_SUITE_HOME}/VE_Installer/installer/vel*.py ./.
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/ve_logo.xpm ./installerImages/.
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/installerImages/velaunher_banner.bmp ./installerImages/.
 
-echo "Copying Desktop configuration file..."
+echo "Copying juggler configuration files..."
 mkdir ./stereo_desktop
 mkdir ./dualhead_configs
 cp -rf ${VE_SUITE_HOME}/VE_Xplorer/stereo_desktop/* ./stereo_desktop
 cp -rf ${VE_SUITE_HOME}/VE_Xplorer/dualhead_configs/* ./dualhead_configs
+
+echo "Copying VE-Launcher README..."
+cp -rf ${VE_SUITE_HOME}/VE_Installer/installer/VELauncher_Readme.txt ./README
 
 echo "Creating tar.gz file..."
 #write the tar file in the install directory
