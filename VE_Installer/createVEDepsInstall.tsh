@@ -2,7 +2,7 @@
 #copies the appropriate libs/dlls from ve-suite for installs 
 #in the future cmd line args will specify VE-Suite home 
 
-setenv VE_VERSION 1.0.2 
+setenv VE_VERSION _1.0 
 #set vesuitedir $1
 #if(vesuitedir)
 #   setenv VE_SUITE_HOME $1
@@ -11,7 +11,7 @@ setenv VE_VERSION 1.0.2
 if ( $?VE_SUITE_HOME ) then
    echo $VE_SUITE_HOME
 else
-   setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_1.0.0/VE_Suite
+   setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_current_dev/VE_Suite
 endif
 
 #determine the hosttype
