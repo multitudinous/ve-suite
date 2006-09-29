@@ -866,11 +866,12 @@ char *  Body_Executive_i::Query (  const char * command
       iter->second->_non_existent();
       iter->second->SetCurID( moduleId );
       queryString.assign( iter->second->Query( CORBA::string_dup( status.c_str() ) ) );
+      _mutex.release();
    }
    catch (CORBA::Exception &) 
    {
+      _mutex.release();
       UnRegisterUnit( moduleName.c_str() );
-      // Not sure if increment here or not
       _mod_units.erase( iter );
    }
 
