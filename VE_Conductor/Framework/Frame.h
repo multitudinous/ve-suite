@@ -111,8 +111,6 @@ enum
    TIMER_ID,
    XPLORER_COLOR
 };
-//      XPLORER_VISTAB,
-
 
 class OrbThread;
 class PEThread;
