@@ -144,11 +144,12 @@ Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; F
 Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Builder\*.h; DestDir: {app}\include\VE_Builder; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion overwritereadonly
-Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp; DestDir: {app}\installerImages; DestName: ve_banner_1.0.bmp
+Source: {#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp; DestDir: {app}\installerImages; DestName: velauncher_banner.bmp
 Source: {#VEHOME}\VE_Xplorer/dualhead_configs/*.jconf; DestDir: {app}/dualhead_configs/; Components: nameserver; Flags: ignoreversion recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\simple.ves; DestDir: {app}\exampleDatasets\simple; Components: examples; Flags: overwritereadonly replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\clusterTemplate.txt; DestDir: {app}; Flags: ignoreversion
+Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; Flags: ignoreversion replacesameversion
 
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico
@@ -158,7 +159,7 @@ Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 ;Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\VE_icon.ico
 ;Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
 ;Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {group}\VE-Suite; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico
+Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico
 ;Name: {group}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app}; IconFilename: {app}\images\VE_icon.ico
 
 ;Name: {commondesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\VE_icon.ico; Tasks: desktopNSIcon
@@ -167,7 +168,7 @@ Name: {group}\VE-Suite; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFi
 ;Name: {commondesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\VE_icon.ico; Tasks: desktopVXOVEPIcon
 ;Name: {commondesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\VE_icon.ico; Tasks: desktopVXOVEPCIcon
 ;Name: {commondesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXPFIcon
-Name: {commondesktop}\VE-Suite; Filename: {app}\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
+Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
 
 ;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\VE_icon.ico
 ;Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
