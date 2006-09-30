@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_AVAIL_MODULES_H
 #define CFD_AVAIL_MODULES_H
+/*!\file cfdVEAvailModules.h
+cfdVEAvailModules API
+*/
+/*!\class VE_Xplorer::cfdVEAvailModules
+* 
+*/
 
 #include "VE_Xplorer/XplorerNetwork/cfdVEPluginLoader.h"
 #include "VE_Installer/include/VEConfig.h"

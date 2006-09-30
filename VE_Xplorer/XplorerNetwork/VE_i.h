@@ -32,6 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_I_H_
 #define VE_I_H_
+/*!\file Body_UI_i.h
+Body_UI_i API
+*/
+/*!\class VE_Xplorer::Body_UI_i
+* 
+*/
 #include "VE_Open/skel/moduleS.h"
 #include "VE_Installer/include/VEConfig.h"
 #include <vpr/Sync/Mutex.h>

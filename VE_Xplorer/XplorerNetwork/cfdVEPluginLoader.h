@@ -29,13 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef CFD_PLUGINLOADER_H
 #define CFD_PLUGINLOADER_H
+/*!\file cfdVEPluginLoader.h
+cfdVEPluginLoader API
+*/
+/*!\class VE_Xplorer::cfdVEPluginLoader
+* 
+*/
 
 #include <vpr/DynLoad/LibraryFinder.h>
 

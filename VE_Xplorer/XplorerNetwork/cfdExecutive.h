@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_EXECUTIVE_H
 #define CFD_EXECUTIVE_H
+/*!\file cfdExecutive.h
+cfdExecutive API
+*/
+/*!\class VE_Xplorer::cfdExecutive
+* 
+*/
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Installer/include/VEConfig.h"

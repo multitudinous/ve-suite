@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DELETE_OBJECT_FROM_NETWORK_EVENT_HANDLER_H
 #define DELETE_OBJECT_FROM_NETWORK_EVENT_HANDLER_H
