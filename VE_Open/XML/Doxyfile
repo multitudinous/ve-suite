@@ -30,7 +30,7 @@ PROJECT_NUMBER         = 1.0.1
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       =  
+OUTPUT_DIRECTORY       =  html
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
 # 4096 sub-directories (in 2 levels) under the output directory of each output 
@@ -450,7 +450,8 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = ./ ./CAD ./Model ./Shader
+#INPUT                  = ./ ./CAD ./Model ./Shader
+INPUT                  = ./VE_Xplorer/GE ./VE_Xplorer/DefaultGraphicalPlugin ./VE_Xplorer/GraphicalPlugin ./VE_Xplorer/SceneGraph ./VE_Xplorer/TextureBased ./VE_Xplorer/VoiceCommand ./VE_Xplorer/Utilities ./VE_Xplorer/XplorerNetwork ./VE_Xplorer/XplorerHandlers ./VE_Open/XML ./VE_Open/XML/CAD ./VE_Open/XML/Model ./VE_Open/XML/Shader ./VE_Conductor/Framework ./VE_Conductor/Network ./VE_Conductor/GUIPlugin
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -459,7 +460,7 @@ INPUT                  = ./ ./CAD ./Model ./Shader
 # *.c *.cc *.cxx *.cpp *.c++ *.java *.ii *.ixx *.ipp *.i++ *.inl *.h *.hh *.hxx 
 # *.hpp *.h++ *.idl *.odl *.cs *.php *.php3 *.inc *.m *.mm
 
-FILE_PATTERNS          = *.h *.cxx
+FILE_PATTERNS          = *.h *.cxx *.cpp
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories 
 # should be searched for input files as well. Possible values are YES and NO. 
