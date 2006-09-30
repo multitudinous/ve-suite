@@ -34,7 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_COMMAND_OBJECTS_H
 #define CFD_COMMAND_OBJECTS_H
-
+/*!\file cfdCommandObjects.h
+cfdCommandObjects API
+*/
+/*!\class VE_XPlorer::cfdCommandObjects
+* 
+*/
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 namespace VE_Xplorer
 {

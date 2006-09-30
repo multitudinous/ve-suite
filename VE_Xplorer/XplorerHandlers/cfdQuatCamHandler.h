@@ -29,12 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _CFD_QUAT_CAM_HANDLER_H_
 #define _CFD_QUAT_CAM_HANDLER_H_
+/*!\file cfdQuatCamHandler.h
+cfdQuatCamHandler API
+*/
+/*!\class VE_Xplorer::cfdQuatCamHandler
+* 
+*/
 
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>

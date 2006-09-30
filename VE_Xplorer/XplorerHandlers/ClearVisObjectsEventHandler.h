@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CLEAR_VIS_OBJECTS_EVENT_HANDLER_H
 #define CLEAR_VIS_OBJECTS_EVENT_HANDLER_H

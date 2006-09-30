@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CHANGE_CURSOR_EVENT_HANDLER_H
 #define CHANGE_CURSOR_EVENT_HANDLER_H

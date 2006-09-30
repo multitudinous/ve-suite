@@ -1,6 +1,11 @@
 #ifndef MOUSE_SELECTION_H
 #define MOUSE_SELECTION_H
-
+/*!\file MouseSelection.h
+MouseSelection API
+*/
+/*!\class VE_XPlorer::MouseSelection
+* 
+*/
 #include <osg/ref_ptr>
 #include <osg/Matrix>
 

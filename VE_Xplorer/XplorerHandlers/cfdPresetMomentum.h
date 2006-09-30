@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PRESET_MOMENTUM_H
 #define CFD_PRESET_MOMENTUM_H
+/*!\file cfdPresetMomentum.h
+cfdPresetMomentum API
+*/
+/*!\class VE_Xplorer::cfdPresetMomentum
+* 
+*/
 
 #include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
 

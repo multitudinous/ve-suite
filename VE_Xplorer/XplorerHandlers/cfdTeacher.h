@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_TEACHER_H
 #define CFD_TEACHER_H
-
+/*!\file cfdTeacher.h
+cfdTeacher API
+*/
+/*!\class VE_Xplorer::cfdTeacher
+* 
+*/
 #include <vector>
 #include <string>
 namespace VE_Xplorer

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef MATERIAL_UPDATE_EVENT_HANDLER_H
 #define MATERIAL_UPDATE_EVENT_HANDLER_H

@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_OBJECTS_H
 #define CFD_OBJECTS_H
+/*!\file cfdObjects.h
+cfdObjects API
+*/
+/*!\class VE_Xplorer::cfdObjects
+* 
+*/
 
 namespace VE_Xplorer
 {

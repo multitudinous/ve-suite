@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_GRAPHICSOBJECT_H
 #define CFD_GRAPHICSOBJECT_H
+/*!\file cfdGraphicsObject.h
+cfdGraphicsObject API
+*/
+/*!\class VE_Xplorer::cfdGraphicsObject
+* 
+*/
 
 #include <vector>
 namespace VE_SceneGraph

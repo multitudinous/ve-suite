@@ -1,6 +1,11 @@
 #ifndef KEYBOARD_MOUSE_H
 #define KEYBOARD_MOUSE_H
-
+/*!\file KeyboardMouse.h
+KeyboardMouse API
+*/
+/*!\class VE_XPlorer::KeyboardMouse
+* 
+*/
 #include <boost/shared_ptr.hpp>
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef STORED_SCENE_LOAD_FILE_H
 #define STORED_SCENE_LOAD_FILE_H

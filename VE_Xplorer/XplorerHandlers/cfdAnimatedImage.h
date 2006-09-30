@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ANIMATED_IMAGE_H
 #define CFD_ANIMATED_IMAGE_H
-
+/*!\file cfdAnimatedImage.h
+cfdAnimatedImage API
+*/
+/*!\class VE_XPlorer::cfdAnimatedImage
+* 
+*/
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkPolyDataMapper;

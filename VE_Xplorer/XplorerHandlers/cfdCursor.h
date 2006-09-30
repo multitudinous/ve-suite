@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CURSOR_H
 #define CFD_CURSOR_H
-
+/*!\file cfdCursor.h
+cfdCursor API
+*/
+/*!\class VE_XPlorer::cfdCursor
+* 
+*/
 namespace VE_SceneGraph
 {
    class cfdDCS;

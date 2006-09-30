@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DEFAULT_GRAPHICAL_PLUGIN_H
 #define DEFAULT_GRAPHICAL_PLUGIN_H

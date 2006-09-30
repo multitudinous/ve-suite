@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_1DTEXTINPUT_H
 #define CFD_1DTEXTINPUT_H
-
+/*!\file cfd1DTextInput.h
+cfd1DTextInput API
+*/
+/*!\class VE_XPlorer::cfd1DTextInput
+* 
+*/
 #include <string>
 namespace VE_SceneGraph
 {

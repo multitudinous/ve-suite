@@ -34,6 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_POLYDATA_H
 #define CFD_POLYDATA_H
+/*!\file cfdPolyData.h
+cfdPolyData API
+*/
+/*!\class VE_Xplorer::cfdPolyData
+* 
+*/
 
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 #include "VE_Open/XML/Command.h"

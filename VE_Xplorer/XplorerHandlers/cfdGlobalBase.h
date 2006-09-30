@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_GLOBAL_BASE_H
 #define CFD_GLOBAL_BASE_H
+/*!\file cfdGlobalBase.h
+cfdGlobalBase API
+*/
+/*!\class VE_Xplorer::cfdGlobalBase
+* 
+*/
 
 namespace VE_Xplorer
 {

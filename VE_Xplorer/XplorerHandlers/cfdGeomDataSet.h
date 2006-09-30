@@ -34,6 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_GEOMDATASET_H
 #define CFD_GEOMDATASET_H
+/*!\file cfdGeomDataSet.h
+cfdGeomDataSet API
+*/
+/*!\class VE_Xplorer::cfdGeomDataSet
+* 
+*/
 
 #include <vector>
 #include "VE_Xplorer/SceneGraph/cfdFileInfo.h"

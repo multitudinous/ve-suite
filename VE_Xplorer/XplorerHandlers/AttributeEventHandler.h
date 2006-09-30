@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef ATTRIBUTE_EVENT_HANDLER_H
 #define ATTRIBUTE_EVENT_HANDLER_H

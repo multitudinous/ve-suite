@@ -32,7 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DATASET_AXIS_H
 #define DATASET_AXIS_H
-
+/*!\file DataSetAxis.h
+DataSetAxis API
+*/
+/*!\class VE_Xplorer::DataSetAxis
+* 
+*/
 #include <string>
 #include <vector>
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"

@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_TEXTURE_BASED_MODEL_HANDLER_H
 #define CFD_TEXTURE_BASED_MODEL_HANDLER_H
+/*!\file cfdTextureBasedVizHandler.h
+cfdTextureBasedVizHandler API
+*/
+/*!\class VE_TextureBased::cfdTextureBasedVizHandler
+* 
+*/
 #ifdef VE_PATENTED
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"

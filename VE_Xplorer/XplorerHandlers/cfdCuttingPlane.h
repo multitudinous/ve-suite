@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CUTTING_PLANE
 #define CFD_CUTTING_PLANE
+/*!\file cfdCuttingPlane.h
+cfdCuttingPlane API
+*/
+/*!\class VE_XPlorer::cfdCuttingPlane
+* 
+*/
 #include "VE_Installer/include/VEConfig.h"
 class vtkPlane;
 class vtkDataSet;

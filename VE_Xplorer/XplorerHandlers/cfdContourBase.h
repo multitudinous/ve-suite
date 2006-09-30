@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CONTOUR_BASE_H
 #define CFD_CONTOUR_BASE_H
-
+/*!\file cfdContourBase.h
+cfdContourBase API
+*/
+/*!\class VE_XPlorer::cfdContourBase
+* 
+*/
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkPolyData;

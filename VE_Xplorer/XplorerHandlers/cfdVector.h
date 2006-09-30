@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VECTOR_H
 #define CFD_VECTOR_H
+/*!\file cfdVector.h
+cfdVector API
+*/
+/*!\class VE_Xplorer::cfdVector
+* 
+*/
 
 #ifdef USE_OMP
 class vtkAppendFilter;

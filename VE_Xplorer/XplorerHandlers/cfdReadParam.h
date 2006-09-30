@@ -34,7 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_READPARAM_H
 #define CFD_READPARAM_H
-
+/*!\file cfdReadParam.h
+cfdReadParam API
+*/
+/*!\class VE_Xplorer::cfdReadParam
+* 
+*/
 #include <vector>
 #include <string>
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"

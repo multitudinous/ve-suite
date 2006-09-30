@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef CFD_MODEL_H
 #define CFD_MODEL_H
+/*!\file cfdModel.h
+cfdModel API
+*/
+/*!\class VE_Xplorer::cfdModel
+* 
+*/
 
 /*
 1.The difference between the concept of multiple models and multiple datasets 

@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_SCALAR_BAR_ACTOR_H
 #define CFD_SCALAR_BAR_ACTOR_H
+/*!\file cfdScalarBarActor.h
+cfdScalarBarActor API
+*/
+/*!\class VE_Xplorer::cfdScalarBarActor
+* 
+*/
 
 #include <string>
 #include <vector>

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CREATE_VIS_OBJECT_EVENT_HANDLER_H
 #define CREATE_VIS_OBJECT_EVENT_HANDLER_H

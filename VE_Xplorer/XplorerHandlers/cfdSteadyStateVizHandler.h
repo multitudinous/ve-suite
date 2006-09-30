@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_STEADYSTATEVIZHANDLER_H
 #define CFD_STEADYSTATEVIZHANDLER_H
+/*!\file cfdSteadyStateVizHandler.h
+cfdSteadyStateVizHandler API
+*/
+/*!\class VE_Xplorer::cfdSteadyStateVizHandler
+* 
+*/
 
 #include <vector>
 #include <map>

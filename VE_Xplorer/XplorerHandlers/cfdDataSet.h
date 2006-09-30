@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_DATA_H
 #define CFD_DATA_H
+/*!\file cfdDataSet.h
+cfdDataSet API
+*/
+/*!\class VE_XPlorer::cfdDataSet
+* 
+*/
 
 #ifdef USE_OMP
 #define MAX_DATA 20

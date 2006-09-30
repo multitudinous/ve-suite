@@ -32,6 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VE_BASECLASS_H
 #define CFD_VE_BASECLASS_H
+/*!\file cfdVEBaseClass.h
+cfdVEBaseClass API
+*/
+
+/*!\class ::cfdVEBaseClass
+*
+*/
 
 #include <string>
 #include <vector>

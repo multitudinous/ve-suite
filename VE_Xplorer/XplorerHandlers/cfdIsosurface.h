@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ISOSURFACE_H
 #define CFD_ISOSURFACE_H
+/*!\file cfdIsosurface.h
+cfdIsosurface API
+*/
+/*!\class VE_Xplorer::cfdIsosurface
+* 
+*/
 
 #ifdef USE_OMP
 #define MAX_ISOSURFACE 20

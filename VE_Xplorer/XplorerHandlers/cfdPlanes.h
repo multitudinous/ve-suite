@@ -34,6 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PLANES_H
 #define CFD_PLANES_H
+/*!\file cfdPlanes.h
+cfdPlanes API
+*/
+/*!\class VE_Xplorer::cfdPlanes
+* 
+*/
 
 class vtkPolyData;
 

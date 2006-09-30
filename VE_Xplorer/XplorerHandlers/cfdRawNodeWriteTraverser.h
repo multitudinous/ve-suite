@@ -35,6 +35,12 @@
 
 #ifndef _CFD_RAW_NODE_WRITE_TRAVERSER_H_
 #define _CFD_RAW_NODE_WRITE_TRAVERSER_H_
+/*!\file cfdRawNodeWriteTraverser.h
+cfdRawNodeWriteTraverser API
+*/
+/*!\class VE_Xplorer::cfdRawNodeWriteTraverser
+* 
+*/
 
 #include <vector>
 #include "VE_Xplorer/SceneGraph/cfdNode.h"

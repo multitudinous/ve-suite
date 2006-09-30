@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CONTOUR_H
 #define CFD_CONTOUR_H
-
+/*!\file cfdContour.h
+cfdContour API
+*/
+/*!\class VE_XPlorer::cfdContour
+* 
+*/
 #include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
 
 class vtkPlane;

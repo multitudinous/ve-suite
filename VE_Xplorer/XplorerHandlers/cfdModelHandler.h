@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_MODELHANDLER_H
 #define CFD_MODELHANDLER_H
+/*!\file cfdModelHandler.h
+cfdModelHandler API
+*/
+/*!\class VE_Xplorer::cfdModelHandler
+* 
+*/
 
 #include <vpr/Util/Singleton.h>
 #include <map>

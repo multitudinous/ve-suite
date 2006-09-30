@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXT_PROMPT_H
 #define TEXT_PROMPT_H
+/*!\file cfdTextOutput.h
+cfdTextOutput API
+*/
+/*!\class VE_Xplorer::cfdTextOutput
+* 
+*/
 #ifdef _PERFORMER
 #include <Performer/pf/pfText.h>
 #include <Performer/pr/pfString.h>

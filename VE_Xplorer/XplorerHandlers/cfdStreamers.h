@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_STREAMERS_H
 #define CFD_STREAMERS_H
+/*!\file cfdStreamers.h
+cfdStreamers API
+*/
+/*!\class VE_Xplorer::cfdStreamers
+* 
+*/
 
 class vtkStreamLine;
 class vtkTubeFilter;

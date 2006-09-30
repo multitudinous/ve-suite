@@ -29,12 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef _CFD_WRITE_TRAVERSER_H_
 #define _CFD_WRITE_TRAVERSER_H_
+/*!\file cfdWriteTraverser.h
+cfdWriteTraverser API
+*/
+
+/*!\class VE_Xplorer::cfdWriteTraverser
+*
+*/
 
 #include <vector>
 #include "VE_Xplorer/SceneGraph/cfdNode.h"

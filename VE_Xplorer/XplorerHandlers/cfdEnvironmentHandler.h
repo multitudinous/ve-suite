@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ENVIRONMENTHANDLER_H
 #define CFD_ENVIRONMENTHANDLER_H
+/*!\file cfdEnvironmentHandler.h
+cfdEnvironmentHandler API
+*/
+/*!\class VE_Xplorer::cfdEnvironmentHandler
+* 
+*/
 
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"

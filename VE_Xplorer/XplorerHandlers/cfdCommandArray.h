@@ -29,13 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef CFD_COMMAND_ARRAY_H
 #define CFD_COMMAND_ARRAY_H
-
+/*!\file cfdCommandArray.h
+cfdCommandArray API
+*/
+/*!\class VE_XPlorer::cfdCommandArray
+* 
+*/
 // cfdApp side variables declared in VjObs_i.h
 #include "VE_Installer/include/VEConfig.h"
 

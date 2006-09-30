@@ -29,8 +29,6 @@
  * Id:            $Id: ActiveModelEventHandler.h 4905 2006-07-09 03:04:36Z mccdo $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CHANGE_WORKING_DIRECTORY_EVENT_HANDLER_H
 #define CHANGE_WORKING_DIRECTORY_EVENT_HANDLER_H

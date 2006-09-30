@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PRESET_CONTOUR_H
 #define CFD_PRESET_CONTOUR_H
+/*!\file cfdPresetContour.h
+cfdPresetContour API
+*/
+/*!\class VE_Xplorer::cfdPresetContour
+* 
+*/
 
 #include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
 

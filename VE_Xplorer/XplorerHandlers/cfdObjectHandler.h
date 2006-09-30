@@ -37,6 +37,12 @@
 
 #ifndef CFD_OBJECTHANDLER_H
 #define CFD_OBJECTHANDLER_H
+/*!\file cfdObjectHandler.h
+cfdObjectHandler API
+*/
+/*!\class VE_Xplorer::cfdObjectHandler
+* 
+*/
 
 
 #include <gmtl/Vec.h>

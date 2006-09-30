@@ -1,5 +1,4 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
-
  * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
  *
  * Original Development Team:
@@ -22,19 +21,22 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- *
+ * -----------------------------------------------------------------
  * Date modified: $Date$
  * Version:       $Rev$
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_SOUNDHANDLER
 #define CFD_SOUNDHANDLER
+/*!\file cfdSoundHandler.h
+cfdSoundHandler API
+*/
+/*!\class VE_Xplorer::cfdSoundHandler
+*
+*/
 
 #include <string>
 #include <vector>

@@ -29,8 +29,6 @@
  * Id:            $Id: cfdCursor.h 4905 2006-07-09 03:04:36Z mccdo $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef BBOXVOLUMEPOINTS_H
 #define BBOXVOLUMEPOINTS_H

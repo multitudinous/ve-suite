@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VECTORS_H
 #define CFD_VECTORS_H
+/*!\file cfdVectors.h
+cfdVectors API
+*/
+
+/*!\class VE_Xplorer::cfdVectors
+*
+*/
 
 #include "VE_Xplorer/XplorerHandlers/cfdVectorBase.h"
 

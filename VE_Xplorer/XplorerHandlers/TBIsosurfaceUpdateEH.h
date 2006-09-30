@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTURE_BASED_ISOSURFACE_UPDATE_EVENT_HANDLER_H
 #define TEXTURE_BASED_ISOSURFACE_UPDATE_EVENT_HANDLER_H

@@ -1,5 +1,11 @@
 #ifndef CFD_TRACKBALL_H
 #define CFD_TRACKBALL_H
+/*!\file cfdTrackball.h
+cfdTrackball API
+*/
+/*!\class VE_Xplorer::cfdTrackball
+* 
+*/
 
 #include <gmtl/Matrix.h>
 

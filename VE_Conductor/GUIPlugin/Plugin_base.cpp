@@ -29,9 +29,9 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include <iostream>

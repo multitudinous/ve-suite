@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ANIMATED_STREAMLINE_CONE_H
 #define CFD_ANIMATED_STREAMLINE_CONE_H
-
+/*!\file cfdAnimatedStreamlineCone.h
+cfdAnimatedStreamlineCone API
+*/
+/*!\class VE_XPlorer::cfdAnimatedStreamlineCone
+* 
+*/
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkPolyDataMapper;

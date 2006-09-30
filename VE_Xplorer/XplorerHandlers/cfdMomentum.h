@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_MOMENTUM_H
 #define CFD_MOMENTUM_H
+/*!\file cfdMomentum.h
+cfdMomentum API
+*/
+/*!\class VE_Xplorer::cfdMomentum
+* 
+*/
 
 #ifdef USE_OMP
 #include <vtkAppendPolyData.h>

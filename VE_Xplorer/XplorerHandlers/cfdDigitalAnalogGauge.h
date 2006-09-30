@@ -32,7 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_DIGITALANALOGGAUGE_H
 #define CFD_DIGITALANALOGGAUGE_H
-
+/*!\file cfdDigitalAnalogGauge.h
+cfdDigitalAnalogGauge API
+*/
+/*!\class VE_Xplorer::cfdDigitalAnalogGauge
+* 
+*/
 #include <utility>
 #include <string>
 

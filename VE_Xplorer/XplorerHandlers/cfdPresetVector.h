@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PRESET_VECTOR_H
 #define CFD_PRESET_VECTOR_H
+/*!\file cfdPresetVector.h
+cfdPresetVector API
+*/
+/*!\class VE_Xplorer::cfdPresetVector
+* 
+*/
 
 #include "VE_Xplorer/XplorerHandlers/cfdVectorBase.h"
 

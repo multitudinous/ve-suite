@@ -34,6 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef GEOMETRY_DIALOG
 #define GEOMETRY_DIALOG
+/*!\file GeometryDialog.h
+GeometryDialog API
+*/
+
+/*!\class GeometryDialog
+*
+*/
 #include <wx/dialog.h>
 #include <wx/statbox.h>
 

@@ -32,6 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_NAVIGATE_H
 #define CFD_NAVIGATE_H
+/*!\file cfdNavigate.h
+cfdNavigate API
+*/
+/*!\class VE_Xplorer::cfdNavigate
+* 
+*/
 
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>

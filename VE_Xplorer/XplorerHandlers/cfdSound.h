@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFDSOUND_H
 #define CFDSOUND_H
+/*!\file cfdSound.h
+cfdSound API
+*/
+/*!\class VE_Xplorer::cfdSound
+*
+*/
 
 #include <snx/SoundHandle.h>
 #include "VE_Installer/include/VEConfig.h"

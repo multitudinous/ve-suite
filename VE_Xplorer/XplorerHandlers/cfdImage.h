@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_IMAGE_H
 #define CFD_IMAGE_H
+/*!\file cfdImage.h
+cfdImage API
+*/
+/*!\class VE_Xplorer::cfdImage
+* 
+*/
 
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 

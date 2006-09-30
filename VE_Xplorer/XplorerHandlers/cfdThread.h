@@ -29,14 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
- * Version:       $Rev$
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_THREAD_H
 #define CFD_THREAD_H
+/*!\file cfdThread.h
+cfdThread API
+*/
+/*!\class VE_Xplorer::cfdThread
+* 
+*/
 
 #include <vpr/Thread/Thread.h>
 

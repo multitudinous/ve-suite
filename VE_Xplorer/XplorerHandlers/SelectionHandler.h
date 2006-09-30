@@ -1,6 +1,11 @@
 #ifndef SELECTION_HANDLER_H
 #define SELECTION_HANDLER_H
-
+/*!\file SelectionHandler.h
+SelectionHandler API
+*/
+/*!\class VE_XPlorer::SelectionHandler
+* 
+*/
 #include <osg/ref_ptr>
 
 #include "VE_Installer/include/VEConfig.h"

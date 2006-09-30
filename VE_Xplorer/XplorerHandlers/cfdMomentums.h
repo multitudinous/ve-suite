@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_MOMENTUMS_H
 #define CFD_MOMENTUMS_H
+/*!\file cfdMomentums.h
+cfdMomentums API
+*/
+/*!\class VE_Xplorer::cfdMomentums
+* 
+*/
 
 #include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
 
