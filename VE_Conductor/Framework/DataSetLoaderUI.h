@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _DATASETLOADERUI_H_
 #define _DATASETLOADERUI_H_
+/*!\file DataSetLoaderUI.h
+DataSetLoaderUI API
+*/
+/*!\class DataSetLoaderUI
+* 
+*/
 #include <wx/string.h>
 #include <wx/gdicmn.h>
 #include <wx/dialog.h>

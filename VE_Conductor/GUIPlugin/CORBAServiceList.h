@@ -32,6 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CORBA_SERVICE_LIST
 #define CORBA_SERVICE_LIST
+/*!\file CORBAServiceList.h
+CORBAServiceList API
+*/
+/*!\class VE_Conductor::CORBAServiceList
+* 
+*/
 
 #include <orbsvcs/CosNamingC.h>
 #include "VE_Open/skel/moduleC.h"

@@ -29,13 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VISTAB_H_
 #define _VISTAB_H_
-
-
+/*!\file vistab.h
+*Vistab API
+*/
+/*!\class Vistab
+* 
+*/
 #include "wx/toolbar.h"
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"

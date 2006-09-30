@@ -35,12 +35,12 @@
 
 #ifndef _STREAMLINES_H_
 #define _STREAMLINES_H_
-
-/*!
- * Includes
- */
-
-////@begin includes
+/*!\file streamlines.h
+*streamlines API
+*/
+/*!\class Streamlines
+* 
+*/
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/advancedstreamlines.h"

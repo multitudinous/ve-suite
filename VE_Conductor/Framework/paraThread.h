@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PARATHREAD
 #define PARATHREAD
-
+/*!\file paraThread.h
+*paraThread API
+*/
+/*!\class paraThread
+* 
+*/
 #include <wx/thread.h>
 
 

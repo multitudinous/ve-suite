@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef GLOBALPARAMDIALOG_H
 #define GLOBALPARAMDIALOG_H
+/*!\file GlobalParamDialog.h
+GlobalParamDialog API
+*/
+/*!\class GlobalParamDialog
+* 
+*/
 
 #include <wx/dialog.h>
 #include <wx/string.h>

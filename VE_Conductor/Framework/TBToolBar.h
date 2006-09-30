@@ -29,13 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef TEXTURE_BASED_TOOL_BAR_H
 #define TEXTURE_BASED_TOOL_BAR_H
-
+/*!\file TextureBasedToolBar.h
+TextureBasedToolBar API
+*/
+/*!\class TextureBasedToolBar
+* 
+*/
 #ifndef STAND_ALONE
 #include "VE_Open/skel/VjObsC.h"
 #endif

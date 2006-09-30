@@ -35,18 +35,12 @@
 
 #ifndef _ADVANCEDSTREAMLINES_H_
 #define _ADVANCEDSTREAMLINES_H_
-
-/*
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "advancedstreamlines.h"
-#endif
+/*!\file advancedstreamlines.h
+*advancedstreamlines API
 */
-
-/*!
- * Includes
- */
-
-////@begin includes
+/*!\class AdvancedStreamlines
+* 
+*/
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include <xercesc/dom/DOM.hpp>

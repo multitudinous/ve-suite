@@ -29,19 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-// ListTable.h: interface for the ListTable class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #if !defined(AFX_LISTTABLE_H__745B1AA2_D560_41C1_AC10_748693B1A8EF__INCLUDED_)
 #define AFX_LISTTABLE_H__745B1AA2_D560_41C1_AC10_748693B1A8EF__INCLUDED_
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+/*!\file ListTable.h
+ListTable API
+*/
+/*!\class ListTable
+* 
+*/
 
 #include <wx/listctrl.h>
 class wxWindow;

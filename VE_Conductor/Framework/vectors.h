@@ -34,12 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VECTORS_H_
 #define _VECTORS_H_
-
-/*!
- * Includes
- */
-
-////@begin includes
+/*!\file vectors.h
+*vectors API
+*/
+/*!\class Vectors
+* 
+*/
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/advancedvectors.h"

@@ -30,7 +30,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_TRANSIENT_DIALOG_H_
 #define _VE_UI_TRANSIENT_DIALOG_H_
-
+/*!\file UI_TransientDialog.h
+*UI_TransientDialog API
+*/
+/*!\class UI_TransientDialog
+* 
+*/
 #include "VE_Conductor/Utilities/BaseDialog.h"
 
 class wxSizer;

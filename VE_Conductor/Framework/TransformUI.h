@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _TRANSFORM_UI_H
 #define _TRANSFORM_UI_H
+/*!\file TransformUI.h
+TransformUI API
+*/
+/*!\class VE_Conductor::GUI_Utilities::TransformUI
+* 
+*/
 #include <wx/panel.h>
 #include <wx/spinctrl.h>
 

@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef SUMMARYRESULTDIALOG_H
 #define SUMMARYRESULTDIALOG_H
+/*!\file SummaryResultDialog.h
+SummaryResultDialog API
+*/
+/*!\class SummaryResultDialog
+* 
+*/
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/TexTable.h"
 #include "VE_Installer/include/VEConfig.h"

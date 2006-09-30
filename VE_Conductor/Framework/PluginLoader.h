@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLUGINLOADER_H
 #define PLUGINLOADER_H
-
+/*!\file PluginLoader.h
+PluginLoader API
+*/
+/*!\class PluginLoader
+* 
+*/
 #include <vector>
 #include <wx/string.h>
 #include <wx/msgdlg.h>

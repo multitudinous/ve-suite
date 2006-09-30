@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_TEACHER_TAB_H_
 #define _VE_UI_TEACHER_TAB_H_
+/*!\file UI_TeacherTab.h
+UI_TeacherTab API
+*/
+/*!\class UI_TeacherTab
+* 
+*/
 #include <wx/dialog.h>
 
 class wxWindow;

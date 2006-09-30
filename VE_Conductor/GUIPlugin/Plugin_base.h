@@ -34,6 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLUGIN_BASE_H
 #define PLUGIN_BASE_H
+/*!\file Plugin_base.h
+Plugin_base API
+*/
+/*!\class Plugin_base
+* 
+*/
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/Model/Port.h"
 

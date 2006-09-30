@@ -34,7 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_SOUNDS_TAB_H_
 #define _VE_UI_SOUNDS_TAB_H_
-
+/*!\file SoundsPane.h
+SoundsPane API
+*/
+/*!\class SoundsPane
+* 
+*/
 #include "VE_Open/skel/VjObsC.h"
 
 #include <wx/panel.h>

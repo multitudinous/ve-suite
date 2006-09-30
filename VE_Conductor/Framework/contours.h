@@ -29,18 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CONTOURS_H_
 #define _CONTOURS_H_
-
-
-/*!
- * Includes
- */
-
-////@begin includes
+/*!\file contours.h
+*contours API
+*/
+/*!\class contours
+* 
+*/
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/advancedcontours.h"

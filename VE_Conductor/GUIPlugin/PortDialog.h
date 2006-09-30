@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PORTDIALOG_H
 #define PORTDIALOG_H
+/*!\file PortDialog.h
+PortDialog API
+*/
+/*!\class PortDialog
+* 
+*/
 
 #include <wx/dialog.h>
 

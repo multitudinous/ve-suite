@@ -34,6 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTRESULTDIALOG_H
 #define TEXTRESULTDIALOG_H
+/*!\file TextResultDialog.h
+TextResultDialog API
+*/
+/*!\class TextResultDialog
+* 
+*/
 
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include <vector>

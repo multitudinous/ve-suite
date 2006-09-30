@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXT_TABLE_H
 #define TEXT_TABLE_H
+/*!\file TexTable.h
+TexTable API
+*/
+/*!\class TexTable
+* 
+*/
 #include <vector>
 #include <wx/grid.h>
 #include <wx/fontenum.h>

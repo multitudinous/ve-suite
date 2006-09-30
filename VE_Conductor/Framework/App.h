@@ -34,6 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef REIAPP_H
 #define REIAPP_H
+/*!\file App.h
+REIApp API
+*/
+/*!\class REIApp
+* 
+*/
 #include <wx/app.h>
 
 class AppFrame;

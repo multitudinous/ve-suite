@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef NETWORK_H
 #define NETWORK_H
+/*!\file Network.h
+Network API
+*/
+/*!\class Network
+* 
+*/
 #include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
 

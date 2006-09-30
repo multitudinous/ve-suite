@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef RESULT_PANEL_H
 #define RESULT_PANEL_H
+/*!\file ResultPanel.h
+ResultPanel API
+*/
+/*!\class ResultPanel
+* 
+*/
 #include <wx/dialog.h>
 
 class wxTextCtrl;

@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef UIDIALOG_H
 #define UIDIALOG_H
-
+/*!\file UIDialog.h
+UIDialog API
+*/
+/*!\class UIDialog
+* 
+*/
 #include <wx/dialog.h>
 #include <wx/string.h>
 

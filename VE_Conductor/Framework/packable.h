@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PACKABLE_H
 #define PACKABLE_H
-
+/*!\file packable.h
+*packable API
+*/
+/*!\class packable
+* 
+*/
 #include <string>
 #include "string_ops.h"
 

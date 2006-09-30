@@ -35,7 +35,12 @@
 
 #ifndef _ADVANCEDVECTORS_H_
 #define _ADVANCEDVECTORS_H_
-
+/*!\file advancedvectors.h
+*advancedvectors API
+*/
+/*!\class AdvancedVectors
+* 
+*/
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Utilities/DualSlider.h"

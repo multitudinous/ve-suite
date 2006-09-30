@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef FINANCIALDIALOG_H
 #define FINANCIALDIALOG_H
+/*!\file FinancialDialog.h
+FinancialDialog API
+*/
+/*!\class FinancialDialog
+* 
+*/
 
 #include <wx/dialog.h>
 #include <wx/string.h>

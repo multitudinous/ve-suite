@@ -29,10 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef _VE_UI_VIEWLOC_H
 #define _VE_UI_VIEWLOC_H
 /*!\file ViewLocPane.h

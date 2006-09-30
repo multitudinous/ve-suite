@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef GEOMETRY_DATAMANAGER_H
 #define GEOMETRY_DATAMANAGER_H
+/*!\file GeometryDataManager.h
+GeometryDataManager API
+*/
+/*!\class GeometryDataManager
+* 
+*/
 
 class GeometryDataBuffer;
 

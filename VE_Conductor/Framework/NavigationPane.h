@@ -29,12 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UI_NAV_H_
 #define _VE_UI_NAV_H_
-
+/*!\file NavigationPane.h
+NavigationPane API
+*/
+/*!\class NavigationPane
+* 
+*/
 #include <wx/image.h>
 #include <wx/dialog.h>
 #include <wx/bmpbuttn.h>

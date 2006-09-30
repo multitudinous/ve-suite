@@ -34,8 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef UI_I_H_
 #define UI_I_H_
-
-#include "VE_Open/skel/moduleS.h"
+/*!\file UI_i.h
+Body_UI_i API
+*/
+/*!\class Body_UI_i
+* 
+*/
+include "VE_Open/skel/moduleS.h"
 #include <iostream>
 #include <string>
 

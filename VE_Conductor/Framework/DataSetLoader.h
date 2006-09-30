@@ -35,25 +35,12 @@
 #ifndef _DATASETLOADER_H_
 #define _DATASETLOADER_H_
 #include "wx/image.h"
-////@end includes
-
-/*!
- * Forward declarations
- */
-
-////@begin forward declarations
-////@end forward declarations
-
-/*!
- * Control identifiers
- */
-
-////@begin control identifiers
-////@end control identifiers
-
-/*!
- * DataSetLoader class declaration
- */
+/*!\file DataSetLoader.h
+DataSetLoader API
+*/
+/*!\class DataSetLoader
+* 
+*/
 
 class DataSetLoader: public wxApp
 {    

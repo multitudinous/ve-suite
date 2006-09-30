@@ -29,17 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _ISOSURFACES_H_
 #define _ISOSURFACES_H_
-
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "isosurfaces.h"
-#endif
-
+/*!\file isosurfaces.h
+*isosurfaces API
+*/
+/*!\class isosurfaces
+* 
+*/
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include <xercesc/dom/DOM.hpp>

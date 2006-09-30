@@ -34,6 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef AVAIL_MODULES_H
 #define AVAIL_MODULES_H
+/*!\file Avail_Modules.h
+Avail_Modules API
+*/
+/*!\class Avail_Modules
+* 
+*/
 #include <wx/wx.h>
 #include <vector>
 #include <wx/image.h>

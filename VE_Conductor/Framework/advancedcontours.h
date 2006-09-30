@@ -35,13 +35,12 @@
 
 #ifndef _ADVANCEDCONTOURS_H_
 #define _ADVANCEDCONTOURS_H_
-
-
-/*!
- * Includes
- */
-
-////@begin includes
+/*!\file advancedcontours.h
+*advancedcontours API
+*/
+/*!\class AdvancedContours
+* 
+*/
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include <xercesc/dom/DOM.hpp>
