@@ -29,12 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef TextureBasedIsosurfaceDlg_H_
 #define TextureBasedIsosurfaceDlg_H_
+/*!\file TBIsosurface.h
+TBIsosurface API
+*/
+/*!\class TBIsosurface
+*
+*/
 #include "VE_Conductor/Utilities/BaseDialog.h"
 
 #include "VE_Open/skel/VjObsC.h"

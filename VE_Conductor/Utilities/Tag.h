@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_CONDUCTOR_GUI_UTILITIES_TAG_
 #define _VE_CONDUCTOR_GUI_UTILITIES_TAG_
+/*!\file Tag.h
+Tag API
+*/
+/*!\class Tag
+*
+*/
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Link.h"
 #include "VE_Installer/include/VEConfig.h"

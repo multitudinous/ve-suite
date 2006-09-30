@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_CONDUCTOR_GUI_UTILITIES_LINK_
 #define _VE_CONDUCTOR_GUI_UTILITIES_LINK_
+/*!\file Link.h
+Link API
+*/
+/*!\class VE_Conductor::GUI_Utilities::Link
+*
+*/
 #include <vector>
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Conductor/Utilities/Polygon.h"

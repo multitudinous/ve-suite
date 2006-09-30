@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
 #define _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
+/*!\file Module.h
+Module API
+*/
+/*!\class Module
+*
+*/
 #include <vector>
 #include <string>
 

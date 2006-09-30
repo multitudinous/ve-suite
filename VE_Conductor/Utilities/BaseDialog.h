@@ -35,6 +35,12 @@
 
 #ifndef BASE_DIALOG_H
 #define BASE_DIALOG_H
+/*!\file BaseDialog.h
+BaseDialog API
+*/
+/*!\class VE_Conductor::GUI_Utilities::BaseDialog
+*
+*/
 #ifndef STAND_ALONE
 #include "VE_Open/skel/VjObsC.h"
 #endif

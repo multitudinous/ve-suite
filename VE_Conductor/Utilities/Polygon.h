@@ -29,11 +29,15 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_CONDUCTOR_GUI_UTILITIES_POLYGON_
 #define _VE_CONDUCTOR_GUI_UTILITIES_POLYGON_
+/*!\file Polygon.h
+Polygon API
+*/
+/*!\class Polygon
+*
+*/
 #include <vector>
 #include <wx/gdicmn.h>
 #include "VE_Installer/include/VEConfig.h"

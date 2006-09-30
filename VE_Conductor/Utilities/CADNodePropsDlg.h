@@ -29,12 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef CAD_PROPERTIES_DIALOG_H
 #define CAD_PROPERTIES_DIALOG_H
+/*!\file CADNodePropsDlg.h
+CADNodePropsDlg API
+*/
+/*!\class VE_Conductor::GUI_Utilities::CADNodePropsDlg
+*
+*/
 #ifndef STAND_ALONE
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Installer/include/VEConfig.h"

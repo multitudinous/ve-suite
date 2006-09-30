@@ -29,12 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef CAD_OPACITY_SLIDER_H
 #define CAD_OPACITY_SLIDER_H
+/*!\file CADOpacitySliderDlg.h
+CADOpacitySliderDlg API
+*/
+/*!\class VE_Conductor::GUI_Utilities::CADOpacitySliderDlg
+*
+*/
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Installer/include/VEConfig.h"
 
