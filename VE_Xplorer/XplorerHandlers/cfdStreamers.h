@@ -36,7 +36,9 @@
 cfdStreamers API
 */
 /*!\class VE_Xplorer::cfdStreamers
-* 
+*   A class to takes input data set(s) and generates streamlines 
+*   based on the active glyph. Update member function will update
+*   the position and direction.
 */
 
 class vtkStreamLine;
@@ -57,12 +59,6 @@ namespace VE_XML
    class Command;
 }
 
-//! VTK streamers plane renderer.
-/*!
-  A class to takes input data set(s) and generates streamlines 
-  based on the active glyph. Update member function will update
-  the position and direction.
-*/
 namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS cfdStreamers : public cfdObjects

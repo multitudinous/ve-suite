@@ -36,7 +36,10 @@
 cfdVector API
 */
 /*!\class VE_Xplorer::cfdVector
-* 
+* A class to takes input data set(s) and generates a 
+* cutting planes of vector profile based on the position 
+* and direction selected. Update member function will update
+* the position and direction as each "Update" being called.
 */
 
 #ifdef USE_OMP
@@ -51,13 +54,6 @@ class vtkCutter;
 class vtkGlyph3D;
 class vtkMaskPoints;
 
-//! VTK vector plane renderer.
-/*!
-  A class to takes input data set(s) and generates a 
-  cutting planes of vector profile based on the position 
-  and direction selected. Update member function will update
-  the position and direction as each "Update" being called.
-*/
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdVector : public cfdVectorBase

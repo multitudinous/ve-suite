@@ -36,7 +36,10 @@
 cfdPresetMomentum API
 */
 /*!\class VE_Xplorer::cfdPresetMomentum
-* 
+*  A class that takes input data set(s) and generates a 
+*  cutting plane of momentum profile based on the position 
+*  and direction selected. Update member function will update
+*  the plane position and direction.
 */
 
 #include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
@@ -47,14 +50,6 @@ namespace VE_Xplorer
 {
    class cfdCuttingPlane;
 }
-
-//! VTK momentum plane renderer.
-/*!
-  A class that takes input data set(s) and generates a 
-  cutting plane of momentum profile based on the position 
-  and direction selected. Update member function will update
-  the plane position and direction.
-*/
 
 namespace VE_Xplorer
 {

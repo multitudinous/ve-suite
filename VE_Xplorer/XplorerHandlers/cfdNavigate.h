@@ -36,7 +36,8 @@
 cfdNavigate API
 */
 /*!\class VE_Xplorer::cfdNavigate
-* 
+*   A class to track the wand location, object translation,
+and virtual cursor location in virtual environment.
 */
 
 #include <gmtl/Vec.h>
@@ -53,12 +54,6 @@ namespace VE_XML
 {
    class Command;
 }
-
-//! Navigation tracker
-/*!
-  A class to track the wand location, object translation,
-  and virtual cursor location in virtual environment.
-*/
 
 #include "VE_Installer/include/VEConfig.h"
 

@@ -36,7 +36,9 @@
 cfdDataSet API
 */
 /*!\class VE_XPlorer::cfdDataSet
-* 
+* A class to load data set and pre-compute flow parameters 
+* or properties for virtual environment interactive 
+* computation.
 */
 
 #ifdef USE_OMP
@@ -69,12 +71,6 @@ namespace VE_Util
 {
    class cfdVTKFileHandler;
 }
-//! CFD data set loader and handler.
-/*!
-   A class to load data set and pre-compute flow parameters 
-   or properties for virtual environment interactive 
-   computation.
-*/
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Xplorer

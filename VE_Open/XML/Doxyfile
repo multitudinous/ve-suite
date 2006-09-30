@@ -451,7 +451,12 @@ WARN_LOGFILE           =
 # with spaces.
 
 #INPUT                  = ./ ./CAD ./Model ./Shader
-INPUT                  = ./VE_Xplorer/GE ./VE_Xplorer/DefaultGraphicalPlugin ./VE_Xplorer/GraphicalPlugin ./VE_Xplorer/SceneGraph ./VE_Xplorer/TextureBased ./VE_Xplorer/VoiceCommand ./VE_Xplorer/Utilities ./VE_Xplorer/XplorerNetwork ./VE_Xplorer/XplorerHandlers ./VE_Open/XML ./VE_Open/XML/CAD ./VE_Open/XML/Model ./VE_Open/XML/Shader ./VE_Conductor/Framework ./VE_Conductor/Network ./VE_Conductor/GUIPlugin
+INPUT = ./VE_Xplorer/GE ./VE_Xplorer/DefaultGraphicalPlugin 
+INPUT += ./VE_Xplorer/GraphicalPlugin ./VE_Xplorer/SceneGraph ./VE_Xplorer/TextureBased 
+INPUT += ./VE_Xplorer/VoiceCommand ./VE_Xplorer/Utilities ./VE_Xplorer/XplorerNetwork 
+INPUT += ./VE_Xplorer/XplorerHandlers ./VE_Open/XML ./VE_Open/XML/CAD 
+INPUT += ./VE_Open/XML/Model ./VE_Open/XML/Shader ./VE_Conductor/Framework 
+INPUT += ./VE_Conductor/Network ./VE_Conductor/GUIPlugin
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 

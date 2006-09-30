@@ -38,7 +38,9 @@
 cfdPlanes API
 */
 /*!\class VE_Xplorer::cfdPlanes
-* 
+*   A class that reads in precomputed plane data files corresponding to a 
+*   specific axis direction.  The files are located in a specified directory.
+*   The plane files were created by the preprocessor acting on a flowdata.vtk.
 */
 
 class vtkPolyData;
@@ -47,12 +49,6 @@ namespace VE_Xplorer
 {
    class cfdCuttingPlane;
 }
-//! VTK contour plane renderer.
-/*!
-  A class that reads in precomputed plane data files corresponding to a 
-  specific axis direction.  The files are located in a specified directory.
-  The plane files were created by the preprocessor acting on a flowdata.vtk.
-*/
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Xplorer

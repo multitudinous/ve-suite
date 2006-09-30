@@ -33,6 +33,16 @@
 #include "VE_Xplorer/XplorerHandlers/DataSetAxis.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+
+#include <osg/Node>
+#include <osg/Geode>
+#include <osg/Group>
+#include <osg/Geometry>
+#include <osg/Array>
+#include <osg/LineWidth>
+#include <osgText/Font>
+#include <osgText/Text>
 
 #include <fstream>
 #include <sstream>
@@ -52,7 +62,7 @@ DataSetAxis::DataSetAxis( void )
    xAxisLabel = "X Axis";
    xAxisLabel = "Y Axis";
    xAxisLabel = "Z Axis";
-   axisGroup = 0;
+   axisGroup = new cfdGroup;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataSetAxis::~DataSetAxis()
@@ -84,10 +94,84 @@ void DataSetAxis::SetAxisLabels( std::string xAxis,
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetAxis::CreateAxis( void )
 {
-   //do all the osg stuff here
+   //Now add the labels
+   osg::Group* tempGroup = dynamic_cast< osg::Group* >( axisGroup->GetRawNode() );
+   tempGroup->addChild( CreateAxisLabels( xAxisLabel, bbox[ 1 ], bbox[ 2 ], bbox[ 4 ] ).get() );
+   tempGroup->addChild( CreateAxisLabels( yAxisLabel, bbox[ 0 ], bbox[ 3 ], bbox[ 4 ] ).get() );
+   tempGroup->addChild( CreateAxisLabels( zAxisLabel, bbox[ 0 ], bbox[ 2 ], bbox[ 5 ] ).get() );
+   
+   //Now add the lines
+   tempGroup->addChild( CreateAxisLines().get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdGroup* DataSetAxis::GetAxis( void )
 {
    return axisGroup;
+}
+//////////////////////////////////////////////////////////////////////////////////
+osg::ref_ptr< osg::Geode > DataSetAxis::CreateAxisLines( void )
+{
+   // create LINES
+   osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+   // create Geometry object to store all the vetices and lines primtive.
+   osg::ref_ptr< osg::Geometry > linesGeom = new osg::Geometry();
+   
+   // this time we'll prealloacte the vertex array to the size we
+   // need and then simple set them as array elements, 8 points
+   // makes 4 line segments.
+   osg::Vec3Array* vertices = new osg::Vec3Array( 6 );
+   (*vertices)[0].set( bbox[ 0 ], bbox[ 2 ], bbox[ 4 ] );
+   (*vertices)[1].set( bbox[ 1 ], bbox[ 2 ], bbox[ 4 ] );
+   (*vertices)[2].set( bbox[ 0 ], bbox[ 2 ], bbox[ 4 ] );
+   (*vertices)[3].set( bbox[ 0 ], bbox[ 3 ], bbox[ 4 ] );
+   (*vertices)[4].set( bbox[ 0 ], bbox[ 2 ], bbox[ 4 ] );
+   (*vertices)[5].set( bbox[ 0 ], bbox[ 2 ], bbox[ 5 ] );
+   
+   // pass the created vertex array to the points geometry object.
+   linesGeom->setVertexArray(vertices);
+   
+   // set the colors as before, plus using the aobve
+   osg::Vec4Array* colors = new osg::Vec4Array;
+   colors->push_back(osg::Vec4(1.0f,1.0f,0.0f,1.0f));
+   linesGeom->setColorArray(colors);
+   linesGeom->setColorBinding(osg::Geometry::BIND_OVERALL);
+   
+   // set the normal in the same way color.
+   osg::Vec3Array* normals = new osg::Vec3Array;
+   normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
+   linesGeom->setNormalArray(normals);
+   linesGeom->setNormalBinding(osg::Geometry::BIND_OVERALL);
+   
+   // This time we simply use primitive, and hardwire the number of coords to use 
+   // since we know up front,
+   linesGeom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES,0,6));
+   
+   //Set the line width
+   osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+   osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth;
+   lineWidth->setWidth( 5.0f );
+   stateset->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
+   geode->setStateSet( stateset.get() );
+   
+   // add the points geomtry to the geode.
+   geode->addDrawable( linesGeom.get() );
+   return geode;
+}
+//////////////////////////////////////////////////////////////////////////////////
+osg::ref_ptr< osg::Geode > DataSetAxis::CreateAxisLabels( std::string textIn, double x, double y, double z )
+{
+   osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+   float characterSizeFont = 0.05f;
+   osgText::Text* text1 = new osgText::Text;
+   text1->setFont("fonts/times.ttf");
+   text1->setCharacterSize( characterSizeFont );
+   osg::Vec3 pos1( x, y, z );
+   text1->setPosition(pos1);
+   osg::Vec4 color(0, 0, 0, 1);
+   text1->setColor( color );
+   text1->setAxisAlignment( osgText::Text::SCREEN );
+   text1->setText( textIn );
+   text1->setLayout( osgText::Text::LEFT_TO_RIGHT );
+   geode->addDrawable( text1 );
+   return geode;
 }

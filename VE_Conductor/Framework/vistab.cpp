@@ -899,6 +899,21 @@ void Vistab::_updateBaseInformation()
    scalarMax->SetData("Scalar Max",maximumValue);
    
    _vistabBaseInformation.push_back(scalarMax);
+
+   //Store the axes display value
+   VE_XML::DataValuePair* axes= new VE_XML::DataValuePair();
+   axes->SetData( std::string("Show Axes"), static_cast< unsigned int >( 0 ) );
+   _vistabBaseInformation.push_back( axes );
+
+   //Store the axes display value
+   VE_XML::DataValuePair* bbox = new VE_XML::DataValuePair();
+   bbox->SetData( std::string("Show Bounding Box"), static_cast< unsigned int >( 0 ) );
+   _vistabBaseInformation.push_back( bbox );
+
+   //Store the axes display value
+   VE_XML::DataValuePair* wireMesh= new VE_XML::DataValuePair();
+   wireMesh->SetData( std::string("Show Wire Mesh"), static_cast< unsigned int >( 0 ) );
+   _vistabBaseInformation.push_back( wireMesh );
 }
 ////////////////////////////////////////////////////////////////////////////
 void Vistab::OnClearAll( wxCommandEvent& WXUNUSED(event) )

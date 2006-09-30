@@ -36,7 +36,8 @@
 cfdCursor API
 */
 /*!\class VE_XPlorer::cfdCursor
-* 
+*  A class to build virtual cursors. Type of virtual
+*  cursor built are single point, arrow, and multiple points.
 */
 namespace VE_SceneGraph
 {
@@ -70,11 +71,6 @@ namespace VE_XML
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
-//! Virtual cursors
-/*!
-   A class to build virtual cursors. Type of virtual
-   cursor built are single point, arrow, and multiple points.
-*/
 namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS cfdCursor : public cfdGlobalBase

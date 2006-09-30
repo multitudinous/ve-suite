@@ -36,11 +36,13 @@
 DataSetAxis API
 */
 /*!\class VE_Xplorer::DataSetAxis
-* 
+*   Renders an axis for a given dataset
 */
 #include <string>
 #include <vector>
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
+#include <osg/Geode>
 
 namespace VE_SceneGraph
 {
@@ -48,8 +50,6 @@ namespace VE_SceneGraph
    class cfdGeode;
    class cfdGroup;
 }
-class vtkLookupTable;
-class vtkVectorText;
 
 namespace VE_Xplorer
 {
@@ -58,18 +58,15 @@ namespace VE_Xplorer
    class cfdReadParam;
 }
 
-//! osg dataset axis
-/*!
-  Renders an axis for a given dataset
-*/
 namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS DataSetAxis : public cfdGlobalBase
 {
 public:
+   ///Default Constructor
    DataSetAxis( void );
-   ~DataSetAxis();
-
+   ///Destructor
+   virtual ~DataSetAxis( void );
    /// compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ){ return true; }
    /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
@@ -82,6 +79,14 @@ public:
    void CreateAxis( void );
    /// Get the axis that was created
    VE_SceneGraph::cfdGroup* GetAxis( void );
+   ///Create the labels for the axes
+   ///\param terxtIn The text for the axis
+   ///\param x the x location for the label
+   ///\param y the y location for the label
+   ///\param z the z location for the label
+   osg::ref_ptr< osg::Geode > CreateAxisLabels( std::string textIn, double x, double y, double z );
+   ///Create the lines to represent the axes
+   osg::ref_ptr< osg::Geode > CreateAxisLines( void );
    
 private:
    double bbox[ 6 ];

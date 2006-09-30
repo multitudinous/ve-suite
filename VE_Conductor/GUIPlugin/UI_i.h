@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef UI_I_H_
 #define UI_I_H_
@@ -40,7 +38,7 @@ Body_UI_i API
 /*!\class Body_UI_i
 * 
 */
-include "VE_Open/skel/moduleS.h"
+#include "VE_Open/skel/moduleS.h"
 #include <iostream>
 #include <string>
 
@@ -69,7 +67,6 @@ class VE_GUIPLUGINS_EXPORTS Body_UI_i : public virtual POA_Body::UI
      
 virtual void UpdateNetwork (
     const char * network
-    ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -79,7 +76,6 @@ virtual void UpdateNetwork (
 virtual void UpdateModuleUI (
     CORBA::Long module_id,
     const char * msg
-    ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -89,7 +85,6 @@ virtual void UpdateModuleUI (
 virtual void UpdateModuleResult (
     CORBA::Long module_id,
     const char * msg
-    ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -99,7 +94,6 @@ virtual void UpdateModuleResult (
 virtual void UpdateLinkContent (
     CORBA::Long id,
     const char * msg
-    ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -108,7 +102,6 @@ virtual void UpdateLinkContent (
 
 virtual void Raise (
     const char * notification
-    ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((
     CORBA::SystemException

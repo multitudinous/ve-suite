@@ -36,7 +36,9 @@
 cfdIsosurface API
 */
 /*!\class VE_Xplorer::cfdIsosurface
-* 
+*   A class that takes input data set(s) and generates an isosurface
+*   based on the value selected.  Update member function will
+*   update the value.
 */
 
 #ifdef USE_OMP
@@ -56,12 +58,6 @@ class vtkPolyDataMapper;
 
 #include <string>
 
-//! VTK isosurface renderer
-/*!
-  A class that takes input data set(s) and generates an isosurface
-  based on the value selected.  Update member function will
-  update the value.
-*/
 namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS cfdIsosurface : public cfdObjects

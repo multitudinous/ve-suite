@@ -36,7 +36,8 @@
 cfdScalarBarActor API
 */
 /*!\class VE_Xplorer::cfdScalarBarActor
-* 
+* A rebuilt class from vtkScalarBarActor(2-D) for use in the
+* 3-D space.
 */
 
 #include <string>
@@ -60,11 +61,6 @@ namespace VE_Xplorer
    class cfdReadParam;
 }
 
-//! VTK scalar bar render
-/*!
-  A rebuilt class from vtkScalarBarActor(2-D) for use in the
-  3-D space.
-*/
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdScalarBarActor : public cfdGlobalBase
