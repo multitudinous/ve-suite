@@ -72,6 +72,8 @@
 #include "VE_Xplorer/XplorerHandlers/MaterialUpdateEH.h"
 #include "VE_Xplorer/XplorerHandlers/MaterialModeUpdateEH.h"
 #include "VE_Xplorer/XplorerHandlers/AddVTKDataSetEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/BBoxEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/WireframeEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -133,6 +135,8 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_MODE") ] = new VE_EVENTS::MaterialModeUpdateEventHandler();
    _eventHandlers[ std::string("CAD_REMOVE_ATTRIBUTE") ] = new VE_EVENTS::CADRemoveAttributeEventHandler();
    _eventHandlers[ std::string("UPDATE_MODEL_DATASETS") ] = new VE_EVENTS::AddVTKDataSetEventHandler();
+   _eventHandlers[ std::string("Change Bounding Box State") ] = new VE_EVENTS::BBoxEventHandler();
+   _eventHandlers[ std::string("Change Wire Frame State") ] = new VE_EVENTS::WireframeEventHandler();
    
 #ifdef _OSG
 #ifdef VE_PATENTED

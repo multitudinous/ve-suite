@@ -39,6 +39,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
+#include "VE_Xplorer/XplorerHandlers/DataSetAxis.h"
 #include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
@@ -128,6 +129,7 @@ cfdDataSet::cfdDataSet( )
    this->meanCellBBLength = 0.0;
    //this->intRange[0] = 0;
    //this->intRange[1] =1000000;
+   dataSetAxes = 0;
    this->animation = 0;
    _vtkFHndlr = 0;
 }
@@ -1832,7 +1834,6 @@ void cfdDataSet::CreateBoundingBoxGeode( void )
    outline->GetProperty()->SetColor(0,0,0);
    
    bboxGeode->TranslateTocfdGeode( outline );
-   GetDCS()->AddChild( bboxGeode );
    
    outlineData->Delete();
    mapOutline->Delete();
@@ -1857,9 +1858,57 @@ void cfdDataSet::CreateWireframeGeode( void )
    wireframeActor->GetProperty()->SetRepresentationToWireframe();
 
    wireframeGeode->TranslateTocfdGeode( wireframeActor );
-   GetDCS()->AddChild( wireframeGeode );
    
    wireframe->Delete();
    wireframeMapper->Delete();
    wireframeActor->Delete();
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::SetBoundingBoxState( unsigned int state )
+{
+   if ( state = 0 )
+   {
+      GetDCS()->RemoveChild( bboxGeode );
+   }
+   else
+   {
+      if ( bboxGeode == 0 )
+      {
+         CreateBoundingBoxGeode();
+      }
+      GetDCS()->AddChild( bboxGeode );
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::SetWireframeState( unsigned int state )
+{
+   if ( state = 0 )
+   {
+      GetDCS()->RemoveChild( wireframeGeode );
+   }
+   else
+   {
+      if ( wireframeGeode == 0 )
+      {
+         CreateWireframeGeode();
+      }
+      GetDCS()->AddChild( wireframeGeode );
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::SetAxesState( unsigned int state )
+{
+   if ( state = 0 )
+   {
+      //remove axes
+   }
+   else
+   {
+      // add axes
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_Xplorer::DataSetAxis* cfdDataSet::GetDataSetAxes( void )
+{
+   return dataSetAxes;
 }

@@ -56,6 +56,7 @@ class vtkDataSet;
 namespace VE_Xplorer
 {
    class cfdPlanes;
+   class DataSetAxis;
 }
 
 namespace VE_SceneGraph
@@ -229,6 +230,17 @@ namespace VE_Xplorer
          void CreateBoundingBoxGeode( void );
          ///Create the wireframe geode for the dataset
          void CreateWireframeGeode( void );
+         ///Set the bounding box for this dataset
+         ///\param state The state of the bounding box 0 or 1 
+         void SetBoundingBoxState( unsigned int state );
+         ///Set the wireframe state for this dataset
+         ///\param state The state of the wireframe 0 or 1 
+         void SetWireframeState( unsigned int state );
+         ///Set the axes state for this dataset
+         ///\param state The state of the axes state 0 or 1 
+         void SetAxesState( unsigned int state );
+         ///Set the bounding box for this dataset
+         VE_Xplorer::DataSetAxis* GetDataSetAxes( void );
 private:
          std::map< std::string, std::string > dataSetUUIDMap;
          
@@ -290,6 +302,7 @@ private:
          VE_SceneGraph::cfdGroup* classic;
          VE_SceneGraph::cfdGroup* textureBased; 
 
+         VE_Xplorer::DataSetAxis* dataSetAxes;
          VE_Util::cfdVTKFileHandler* _vtkFHndlr;
          int partOfTransientSeries;
          //int intRange[2];

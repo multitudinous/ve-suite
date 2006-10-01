@@ -137,7 +137,9 @@ SRCS=\
    StoredSceneEH.cxx\
    ChangeWorkingDirectoryEventHandler.cxx\
    ChangeBackgroundColorEventHandler.cxx\
-   DataSetAxis.cxx
+   DataSetAxis.cxx\
+   BBoxEventHandler.cxx\
+   WireframeEventHandler.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g
