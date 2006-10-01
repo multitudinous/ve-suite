@@ -1904,11 +1904,17 @@ void cfdDataSet::SetAxesState( unsigned int state )
 {
    if ( state == 0 )
    {
-      //remove axes
+      GetDCS()->RemoveChild( dataSetAxes->GetAxis() );
    }
    else
    {
-      // add axes
+      if ( dataSetAxes == 0 )
+      {
+         dataSetAxes = new DataSetAxis();
+         dataSetAxes->SetBoundingBox( GetDataSet()->GetBounds() );
+      }
+      dataSetAxes->CreateAxis();
+      GetDCS()->AddChild( dataSetAxes->GetAxis() );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

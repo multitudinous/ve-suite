@@ -139,7 +139,8 @@ SRCS=\
    ChangeBackgroundColorEventHandler.cxx\
    DataSetAxis.cxx\
    BBoxEventHandler.cxx\
-   WireframeEventHandler.cxx
+   WireframeEventHandler.cxx\
+   AxesEventHandler.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g

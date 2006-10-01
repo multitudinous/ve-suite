@@ -74,6 +74,7 @@
 #include "VE_Xplorer/XplorerHandlers/AddVTKDataSetEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/BBoxEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/WireframeEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/AxesEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -137,7 +138,7 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("UPDATE_MODEL_DATASETS") ] = new VE_EVENTS::AddVTKDataSetEventHandler();
    _eventHandlers[ std::string("Change Bounding Box State") ] = new VE_EVENTS::BBoxEventHandler();
    _eventHandlers[ std::string("Change Wire Frame State") ] = new VE_EVENTS::WireframeEventHandler();
-   
+   _eventHandlers[ std::string("Change Axes State") ] = new VE_EVENTS::AxesEventHandler();
 #ifdef _OSG
 #ifdef VE_PATENTED
    _activeTDSet = 0;

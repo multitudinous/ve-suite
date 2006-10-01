@@ -953,8 +953,6 @@ void Vistab::_updateBaseInformation()
    VE_XML::DataValuePair* wireMesh= new VE_XML::DataValuePair();
    wireMesh->SetData( std::string("Show Wire Mesh"), static_cast< unsigned int >( wireFrameCB->GetValue() ) );
    _vistabBaseInformation.push_back( wireMesh );
-   
-   axesCB->Disable();
 }
 ////////////////////////////////////////////////////////////////////////////
 void Vistab::OnClearAll( wxCommandEvent& WXUNUSED(event) )

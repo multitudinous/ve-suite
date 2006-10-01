@@ -60,9 +60,9 @@ DataSetAxis::DataSetAxis( void )
    bbox[ 1 ] = bbox[ 3 ] = bbox[ 5 ] = 1.0f;
    
    xAxisLabel = "X Axis";
-   xAxisLabel = "Y Axis";
-   xAxisLabel = "Z Axis";
-   axisGroup = new cfdGroup;
+   yAxisLabel = "Y Axis";
+   zAxisLabel = "Z Axis";
+   axisGroup = new cfdGroup();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataSetAxis::~DataSetAxis()
@@ -96,6 +96,11 @@ void DataSetAxis::CreateAxis( void )
 {
    //Now add the labels
    osg::Group* tempGroup = dynamic_cast< osg::Group* >( axisGroup->GetRawNode() );
+   for ( size_t i = 0; i < tempGroup->getNumChildren(); ++i )
+   {
+      tempGroup->removeChild( i );
+   }
+   
    tempGroup->addChild( CreateAxisLabels( xAxisLabel, bbox[ 1 ], bbox[ 2 ], bbox[ 4 ] ).get() );
    tempGroup->addChild( CreateAxisLabels( yAxisLabel, bbox[ 0 ], bbox[ 3 ], bbox[ 4 ] ).get() );
    tempGroup->addChild( CreateAxisLabels( zAxisLabel, bbox[ 0 ], bbox[ 2 ], bbox[ 5 ] ).get() );
@@ -167,7 +172,7 @@ osg::ref_ptr< osg::Geode > DataSetAxis::CreateAxisLabels( std::string textIn, do
    text1->setCharacterSize( characterSizeFont );
    osg::Vec3 pos1( x, y, z );
    text1->setPosition(pos1);
-   osg::Vec4 color(0, 0, 0, 1);
+   osg::Vec4 color(1.0f, 1.0f, 0.0f, 1.0f);
    text1->setColor( color );
    text1->setAxisAlignment( osgText::Text::SCREEN );
    text1->setText( textIn );
