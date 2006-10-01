@@ -114,8 +114,7 @@ void BBoxEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    
    unsigned int state = 0;
    activeModelDVP->GetData( state );
-   
-   if ( cfdModelHandler::instance()->GetActiveModel() )
+   if ( _activeModel )
    {
       cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )

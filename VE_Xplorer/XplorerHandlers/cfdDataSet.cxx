@@ -109,8 +109,8 @@ cfdDataSet::cfdDataSet( )
    // use its own range to determine color mapping.
    this->parent = this;
    this->dcs = NULL;
-   this->bboxGeode = new VE_SceneGraph::cfdGeode();
-   this->wireframeGeode = new VE_SceneGraph::cfdGeode();
+   this->bboxGeode = 0;//new VE_SceneGraph::cfdGeode();
+   this->wireframeGeode = 0;//new VE_SceneGraph::cfdGeode();
    this->switchNode = new VE_SceneGraph::cfdSwitch();
    this->switchNode->SetName( "switch_for_data_viz" );
    this->classic = new VE_SceneGraph::cfdGroup();
@@ -227,11 +227,17 @@ cfdDataSet::~cfdDataSet()
       vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
    }
    
-   delete bboxGeode;
-   bboxGeode = 0;
+   if ( bboxGeode )
+   {
+      delete bboxGeode;
+      bboxGeode = 0;
+   }
    
-   delete wireframeGeode;
-   wireframeGeode = 0;
+   if ( wireframeGeode )
+   {
+      delete wireframeGeode;
+      wireframeGeode = 0;
+   }
 }
 
 void cfdDataSet::SetRange( double * dataRange )
@@ -804,10 +810,6 @@ void cfdDataSet::LoadData()
    }
 
    this->SetType();
-   //Create the bbox for the dataset
-   //this->CreateBoundingBoxGeode();
-   //Create the wireframe for the dataset
-   //this->CreateWireframeGeode();
 }
 
 int cfdDataSet::CountNumberOfParameters( const int numComponents )
@@ -1831,8 +1833,9 @@ void cfdDataSet::CreateBoundingBoxGeode( void )
    
    vtkActor* outline = vtkActor::New();
    outline->SetMapper( mapOutline );
-   outline->GetProperty()->SetColor(0,0,0);
+   outline->GetProperty()->SetColor(1,0,0);
    
+   bboxGeode = new cfdGeode();
    bboxGeode->TranslateTocfdGeode( outline );
    
    outlineData->Delete();
@@ -1857,6 +1860,7 @@ void cfdDataSet::CreateWireframeGeode( void )
    wireframeActor->GetProperty()->SetOpacity(0.1);
    wireframeActor->GetProperty()->SetRepresentationToWireframe();
 
+   wireframeGeode = new cfdGeode();
    wireframeGeode->TranslateTocfdGeode( wireframeActor );
    
    wireframe->Delete();
@@ -1866,7 +1870,7 @@ void cfdDataSet::CreateWireframeGeode( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetBoundingBoxState( unsigned int state )
 {
-   if ( state = 0 )
+   if ( state == 0 )
    {
       GetDCS()->RemoveChild( bboxGeode );
    }
@@ -1882,7 +1886,7 @@ void cfdDataSet::SetBoundingBoxState( unsigned int state )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetWireframeState( unsigned int state )
 {
-   if ( state = 0 )
+   if ( state == 0 )
    {
       GetDCS()->RemoveChild( wireframeGeode );
    }
@@ -1898,7 +1902,7 @@ void cfdDataSet::SetWireframeState( unsigned int state )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetAxesState( unsigned int state )
 {
-   if ( state = 0 )
+   if ( state == 0 )
    {
       //remove axes
    }

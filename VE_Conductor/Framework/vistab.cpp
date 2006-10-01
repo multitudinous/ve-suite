@@ -171,6 +171,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
       _setActiveDataset(0);
    }
    _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
+   _vistabPosition.height =  _vistabPosition.height + 20;
    SetSize( _vistabPosition );
    wxSize tempRect = GetSize();
    //std::cout << tempRect.GetWidth() << " " << tempRect.GetHeight() << std::endl;
