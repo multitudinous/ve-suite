@@ -140,7 +140,8 @@ SRCS=\
    DataSetAxis.cxx\
    BBoxEventHandler.cxx\
    WireframeEventHandler.cxx\
-   AxesEventHandler.cxx
+   AxesEventHandler.cxx\
+   AxesLabelsEventHandler.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g

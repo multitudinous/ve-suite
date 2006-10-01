@@ -96,9 +96,12 @@ void DataSetAxis::CreateAxis( void )
 {
    //Now add the labels
    osg::Group* tempGroup = dynamic_cast< osg::Group* >( axisGroup->GetRawNode() );
-   for ( size_t i = 0; i < tempGroup->getNumChildren(); ++i )
+   size_t numChildren = tempGroup->getNumChildren();
+   for ( size_t i = 0; i < numChildren; ++i )
    {
-      tempGroup->removeChild( i );
+      //we always remove 0 because once we start removing there are no longer
+      // n number of children but 1 less so always remove 0
+      tempGroup->removeChild( 0, 1 );
    }
    
    tempGroup->addChild( CreateAxisLabels( xAxisLabel, bbox[ 1 ], bbox[ 2 ], bbox[ 4 ] ).get() );

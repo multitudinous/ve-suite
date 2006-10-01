@@ -1170,24 +1170,29 @@ void Vistab::UpdateAxes( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateAxesLabels( wxCommandEvent& event )
 {
-   wxTextCtrl* tempTextCtrl = dynamic_cast< wxTextCtrl* >( event.GetEventObject() );
+   //wxTextCtrl* tempTextCtrl = dynamic_cast< wxTextCtrl* >( event.GetEventObject() );
    
-   std::string activeAxesLAbel = "INVALID AXIS";
-   if ( tempTextCtrl == xAxisEntry )
+   std::string activeAxesLAbel = "Axes Labels";
+   std::vector< std::string > labels;
+   labels.push_back( xAxisEntry->GetValue().c_str() );
+   labels.push_back( yAxisEntry->GetValue().c_str() );
+   labels.push_back( zAxisEntry->GetValue().c_str() );
+   
+   /*if ( tempTextCtrl == xAxisEntry )
    {
       activeAxesLAbel = "X Axis Label";
    }
    else if ( tempTextCtrl == yAxisEntry )
    {
-      activeAxesLAbel = "Z Axis Label";
+      activeAxesLAbel = "Y Axis Label";
    }
    else if ( tempTextCtrl == zAxisEntry )
    {
       activeAxesLAbel = "Z Axis Label";
-   }
+   }*/
 
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
-   dataValuePair->SetData( activeAxesLAbel, std::string( tempTextCtrl->GetValue() ) );
+   dataValuePair->SetData( activeAxesLAbel, labels );
    VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("Change Axes Labels") );
    veCommand->AddDataValuePair( dataValuePair );
