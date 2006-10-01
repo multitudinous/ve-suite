@@ -53,7 +53,7 @@ public:
    DefaultGraphicalPlugin( void );
    virtual ~DefaultGraphicalPlugin( void );
 
-   virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
+   virtual void InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS );
 private:
 };
 

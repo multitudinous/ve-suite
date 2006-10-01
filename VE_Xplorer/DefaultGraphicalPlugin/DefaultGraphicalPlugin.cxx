@@ -50,7 +50,7 @@ DefaultGraphicalPlugin::~DefaultGraphicalPlugin( void )
    ;
 }
 
-void DefaultGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
+void DefaultGraphicalPlugin::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    //this->_param = "Plugins/hummer.param";

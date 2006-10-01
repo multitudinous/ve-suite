@@ -60,6 +60,9 @@
 #include <wx/app.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
+#include <wx/checkbox.h>
+#include <wx/intl.h>
+#include <wx/textctrl.h>
 
 #include <iostream>
 #include <string>
@@ -72,7 +75,6 @@
 ////@end XPM images
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
-////@begin Vistab event table entries
    EVT_TOOL     ( CONTOUR_BUTTON,       Vistab::_onContour )
    EVT_TOOL     ( VECTOR_BUTTON,        Vistab::_onVector )
    EVT_TOOL     ( STREAMLINE_BUTTON,    Vistab::_onStreamline )
@@ -89,8 +91,10 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_COMMAND_SCROLL( MIN_MAX_SLIDERS, Vistab::_onMinMaxSlider )
    EVT_COMMAND_SCROLL( MIN_SLIDER,      Vistab::_onMinSlider )
    EVT_COMMAND_SCROLL( MAX_SLIDER,      Vistab::_onMaxSlider )
-
-////@end Vistab event table entries
+   EVT_TEXT_ENTER( ID_DATA_UPDATE_AXES, Vistab::UpdateAxesLabels )
+   EVT_CHECKBOX( ID_DATA_BBOX_CB,       Vistab::UpdateBoundingBox)
+   EVT_CHECKBOX( ID_DATA_WIREFRAME_CB,  Vistab::UpdateWireFrame)
+   EVT_CHECKBOX( ID_DATA_AXES_CB,       Vistab::UpdateAxes)
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
 
@@ -283,24 +287,58 @@ void Vistab::CreateControls()
     itemBoxSizer2->Add(itemToolBar3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     //itemToolBar3->ToggleTool(CONTOUR_BUTTON, false);
 
-    wxBoxSizer* itemBoxSizer10 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer10, 0, wxGROW|wxALL, 5);
+    {
+       //Setup the dataset section of the gui
+       wxStaticBox* dataSetStaticBox = new wxStaticBox(itemDialog1, wxID_ANY, _T("Data Set Chooser"));
+       wxStaticBoxSizer* dataSetSBSizer = new wxStaticBoxSizer( dataSetStaticBox, wxVERTICAL);
+       itemBoxSizer2->Add( dataSetSBSizer, 0, wxGROW|wxALL, 5);
+       
+       _datasetSelection = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxDefaultSize, _availableDatasets, wxCB_DROPDOWN );
+       
+       if (ShowToolTips())
+          _datasetSelection->SetToolTip(_T("Data Sets"));
+       dataSetSBSizer->Add(_datasetSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5);
+       
+       //setup checkboxes for datasets
+       wxBoxSizer* itemBoxSizer10 = new wxBoxSizer(wxHORIZONTAL);
+       dataSetSBSizer->Add( itemBoxSizer10, 0, wxGROW|wxALL, 5);
+       
+       wireFrameCB = new wxCheckBox( itemDialog1, ID_DATA_WIREFRAME_CB, 
+            _("Wire Frame"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+       itemBoxSizer10->Add( wireFrameCB, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       bboxCB = new wxCheckBox( itemDialog1, ID_DATA_BBOX_CB, 
+            _("Bounding Box"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+       itemBoxSizer10->Add( bboxCB, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    _datasetSelection = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxDefaultSize, _availableDatasets, wxCB_DROPDOWN );
-    
-    if (ShowToolTips())
-        _datasetSelection->SetToolTip(_T("Data Sets"));
-    itemBoxSizer10->Add(_datasetSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       //wxBoxSizer* axesBS = new wxBoxSizer(wxHORIZONTAL);
+       //dataSetSBSizer->Add( axesBS, 0, wxGROW|wxALL, 5);
+       axesCB = new wxCheckBox( itemDialog1, ID_DATA_AXES_CB, 
+            _("Axes"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+       itemBoxSizer10->Add( axesCB, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       //updateAxes = new wxButton( itemDialog1, ID_DATA_UPDATE_AXES, _T("Axes"), wxDefaultPosition, wxDefaultSize, 0 );
+       //itemBoxSizer10->Add( updateAxes, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    /*wxString itemComboBox12Strings[] = {
-        _T("DataSet1"),
-        _T("DataSet2"),
-        _T("DataSet3")
-    };
-    itemComboBox12 = new wxComboBox( itemDialog1, ID_COMBOBOX1, _T(""), wxDefaultPosition, wxDefaultSize, 3, itemComboBox12Strings, wxCB_DROPDOWN );
+       // add text input for axes
+       wxBoxSizer* axesTextBS = new wxBoxSizer(wxHORIZONTAL);
+       dataSetSBSizer->Add( axesTextBS, 0, wxGROW|wxALL, 5);
+       xAxisEntry = new wxTextCtrl( itemDialog1, ID_DATA_UPDATE_AXES, 
+                                    _("X Axis"), wxDefaultPosition, 
+                                    wxDefaultSize, wxHSCROLL|wxTE_PROCESS_ENTER );
+       xAxisEntry->Disable();
+       axesTextBS->Add( xAxisEntry, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       yAxisEntry = new wxTextCtrl( itemDialog1, ID_DATA_UPDATE_AXES, 
+                                    _("Y Axis"), wxDefaultPosition, 
+                                    wxDefaultSize, wxHSCROLL|wxTE_PROCESS_ENTER );
+       yAxisEntry->Disable();
+       axesTextBS->Add( yAxisEntry, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       zAxisEntry = new wxTextCtrl( itemDialog1, ID_DATA_UPDATE_AXES, 
+                                    _("Z Axis"), wxDefaultPosition, 
+                                    wxDefaultSize, wxHSCROLL|wxTE_PROCESS_ENTER );
+       axesTextBS->Add( zAxisEntry, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       zAxisEntry->Disable();
+    }
 
-    itemBoxSizer10->Add(itemComboBox12, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);*/
-
+    //Setup the scalars section
     wxBoxSizer* itemBoxSizer11 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer11, 0, wxGROW|wxALL, 5);
 
@@ -901,19 +939,21 @@ void Vistab::_updateBaseInformation()
    _vistabBaseInformation.push_back(scalarMax);
 
    //Store the axes display value
-   VE_XML::DataValuePair* axes= new VE_XML::DataValuePair();
-   axes->SetData( std::string("Show Axes"), static_cast< unsigned int >( 0 ) );
-   _vistabBaseInformation.push_back( axes );
+   /*VE_XML::DataValuePair* axes= new VE_XML::DataValuePair();
+   axes->SetData( std::string("Show Axes"), static_cast< unsigned int >( axesCB->GetValue() ) );
+   _vistabBaseInformation.push_back( axes );*/
 
    //Store the axes display value
    VE_XML::DataValuePair* bbox = new VE_XML::DataValuePair();
-   bbox->SetData( std::string("Show Bounding Box"), static_cast< unsigned int >( 0 ) );
+   bbox->SetData( std::string("Show Bounding Box"), static_cast< unsigned int >( bboxCB->GetValue() ) );
    _vistabBaseInformation.push_back( bbox );
 
    //Store the axes display value
    VE_XML::DataValuePair* wireMesh= new VE_XML::DataValuePair();
-   wireMesh->SetData( std::string("Show Wire Mesh"), static_cast< unsigned int >( 0 ) );
+   wireMesh->SetData( std::string("Show Wire Mesh"), static_cast< unsigned int >( wireFrameCB->GetValue() ) );
    _vistabBaseInformation.push_back( wireMesh );
+   
+   axesCB->Disable();
 }
 ////////////////////////////////////////////////////////////////////////////
 void Vistab::OnClearAll( wxCommandEvent& WXUNUSED(event) )
@@ -1070,7 +1110,7 @@ bool Vistab::_ensureSliders(int activeSliderID)
    return false;
 }
 ////////////////////////////////////////////////////////////////////////
-void Vistab::_onClose( wxCommandEvent& event )
+void Vistab::_onClose( wxCommandEvent& WXUNUSED(event) )
 {
 //   vistab->EndModal(-1);
 //   vistab->OnOK(EVT_BUTTON);
@@ -1078,4 +1118,81 @@ void Vistab::_onClose( wxCommandEvent& event )
    scalarSelect = false;
    vectorSelect = false;
 //   _activeDataSetName.erase();
+}
+////////////////////////////////////////////////////////////////////////
+void Vistab::UpdateBoundingBox( wxCommandEvent& WXUNUSED(event) )
+{
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   dataValuePair->SetData( "Bounding Box State", static_cast< unsigned int >( bboxCB->GetValue() ) );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("Change Bounding Box State") );
+   veCommand->AddDataValuePair( dataValuePair );
+   
+   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////
+void Vistab::UpdateWireFrame( wxCommandEvent& WXUNUSED(event) )
+{
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   dataValuePair->SetData( "Wire Frame State", static_cast< unsigned int >( wireFrameCB->GetValue() ) );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("Change Wire Frame State") );
+   veCommand->AddDataValuePair( dataValuePair );
+   
+   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////
+void Vistab::UpdateAxes( wxCommandEvent& WXUNUSED(event) )
+{
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   dataValuePair->SetData( "Axes State", static_cast< unsigned int >( axesCB->GetValue() ) );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("Change Axes State") );
+   veCommand->AddDataValuePair( dataValuePair );
+   
+   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   delete veCommand;
+   
+   if ( axesCB->IsChecked() )
+   {
+      xAxisEntry->Enable();
+      yAxisEntry->Enable();
+      zAxisEntry->Enable();
+   }
+   else
+   {
+      xAxisEntry->Disable();
+      yAxisEntry->Disable();
+      zAxisEntry->Disable();
+   }
+}
+////////////////////////////////////////////////////////////////////////
+void Vistab::UpdateAxesLabels( wxCommandEvent& event )
+{
+   wxTextCtrl* tempTextCtrl = dynamic_cast< wxTextCtrl* >( event.GetEventObject() );
+   
+   std::string activeAxesLAbel = "INVALID AXIS";
+   if ( tempTextCtrl == xAxisEntry )
+   {
+      activeAxesLAbel = "X Axis Label";
+   }
+   else if ( tempTextCtrl == yAxisEntry )
+   {
+      activeAxesLAbel = "Z Axis Label";
+   }
+   else if ( tempTextCtrl == zAxisEntry )
+   {
+      activeAxesLAbel = "Z Axis Label";
+   }
+
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   dataValuePair->SetData( activeAxesLAbel, std::string( tempTextCtrl->GetValue() ) );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("Change Axes Labels") );
+   veCommand->AddDataValuePair( dataValuePair );
+   
+   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   delete veCommand;
 }

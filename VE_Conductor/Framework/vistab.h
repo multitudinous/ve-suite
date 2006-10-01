@@ -76,6 +76,7 @@ class TextureBasedToolBar;
 class wxComboBox;
 class wxListBox;
 class wxSpinCtrlDbl;
+class wxCheckBox;
 
 #define ID_DIALOG 10000
 #define SYMBOL_VISTAB_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -116,7 +117,11 @@ enum VISTAB_IDS
    MIN_MAX_SLIDERS,
    MIN_SLIDER,
    MAX_SLIDER,
-   CLOSE_BUTTON
+   CLOSE_BUTTON,
+   ID_DATA_WIREFRAME_CB,
+   ID_DATA_BBOX_CB,
+   ID_DATA_AXES_CB,
+   ID_DATA_UPDATE_AXES
 };
 ////@end control identifiers
 
@@ -220,6 +225,7 @@ public:
    wxSlider* _minSlider;
    wxSlider* _maxSlider;
 
+
 protected:
    /*!\class ScalarRangeMinSliderCallback
     *Class that allows the user to do operations based on the min slider events
@@ -280,6 +286,11 @@ protected:
    void _onIsosurface(wxCommandEvent& );
    void _onTextureBased(wxCommandEvent& );
    void _onPolydata(wxCommandEvent& );
+
+   void UpdateBoundingBox( wxCommandEvent& event );
+   void UpdateWireFrame( wxCommandEvent& event );
+   void UpdateAxes( wxCommandEvent& event );
+   void UpdateAxesLabels( wxCommandEvent& event );
 
    ///update the base info for the dataset ie. active vector,scalar,dataset,range 
    void _updateBaseInformation();
@@ -364,11 +375,18 @@ protected:
    wxRect _vistabPosition;///<The bounding box of the vistab dialog.
    
    wxButton* clearAllButton;///<The clear all button for vis objects
+   wxButton* updateAxes;///<The clear all button for vis objects
 
    wxComboBox* _datasetSelection;///<The box listing the available datasets.
    wxListBox* _scalarSelection;///<The box listing the available scalars in the current dataset.
    wxListBox* _vectorSelection;///<The box listing the available vectors in the current dataset.
-   
+   wxCheckBox* wireFrameCB;///<The checkbox to turn wireframe on/off
+   wxCheckBox* bboxCB;///<The checkbox to turn bounding box on/off
+   wxCheckBox* axesCB;///<The checkbox to turn axes on/off
+   wxTextCtrl* xAxisEntry;///< The text entry for axes labels
+   wxTextCtrl* yAxisEntry;///< The text entry for axes labels
+   wxTextCtrl* zAxisEntry;///< The text entry for axes labels
+
    std::string _activeScalarName;///<The selected scalar
    std::string _activeVectorName;///<The selected vector
    std::string _activeDataSetName;///<Thea active dataset's name
