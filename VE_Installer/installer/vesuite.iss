@@ -17,7 +17,7 @@
 
 [Setup]
 AppName={#MyAppName}
-AppVerName={#MyAppVerName}
+AppVerName={#MyAppVerName}_{#SVNVERSION}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
