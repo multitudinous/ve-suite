@@ -257,7 +257,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_d.dll"
 				LinkIncremental="1"
@@ -352,7 +352,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgSimd.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_vep_d.dll"
 				LinkIncremental="1"
@@ -447,7 +447,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgTextd.lib osgSimd.lib osgUtild.lib osgDBd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib cppdom_d.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_vep_cluster_d.dll"
 				LinkIncremental="1"
@@ -504,6 +504,18 @@
 			</File>
 			<File
 				RelativePath=".\AttributeEventHandler.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\AxesEventHandler.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\AxesLabelsEventHandler.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\BBoxEventHandler.cxx"
 				>
 			</File>
 			<File
@@ -759,6 +771,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DataSetAxis.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\DataSetScalarBar.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\KeyboardMouse.cxx"
 				>
 			</File>
@@ -776,6 +796,10 @@
 			</File>
 			<File
 				RelativePath=".\QCLoadFileEH.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\ScalarBarEventHandler.cxx"
 				>
 			</File>
 			<File
@@ -830,6 +854,10 @@
 				RelativePath=".\WandSelection.cxx"
 				>
 			</File>
+			<File
+				RelativePath=".\WireframeEventHandler.cxx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="headers"
@@ -845,6 +873,22 @@
 			</File>
 			<File
 				RelativePath=".\AttributeEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AxesEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AxesLabelsEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BBoxEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BBoxVolumePoints.h"
 				>
 			</File>
 			<File
@@ -1112,6 +1156,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DataSetAxis.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataSetScalarBar.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EventHandler.h"
 				>
 			</File>
@@ -1137,6 +1189,10 @@
 			</File>
 			<File
 				RelativePath=".\QCLoadFileEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ScalarBarEventHandler.h"
 				>
 			</File>
 			<File
@@ -1193,6 +1249,10 @@
 			</File>
 			<File
 				RelativePath=".\WandSelection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WireframeEventHandler.h"
 				>
 			</File>
 		</Filter>
