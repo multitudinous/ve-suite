@@ -131,6 +131,7 @@ cfdDataSet::cfdDataSet( )
    //this->intRange[0] = 0;
    //this->intRange[1] =1000000;
    dataSetAxes = 0;
+   dataSetScalarBar = 0;
    this->animation = 0;
    _vtkFHndlr = 0;
 }
@@ -1932,11 +1933,11 @@ void cfdDataSet::SetDataSetScalarState( unsigned int state )
    }
    else
    {
-      if ( dataSetAxes == 0 )
+      if ( dataSetScalarBar == 0 )
       {
          dataSetScalarBar = new DataSetScalarBar();
       }
-      dataSetScalarBar->CreateScalarBar();
+      dataSetScalarBar->AddScalarBarToGroup();
       GetDCS()->AddChild( dataSetScalarBar->GetScalarBar() );
    }
 }

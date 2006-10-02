@@ -81,7 +81,7 @@ DataSetScalarBar::~DataSetScalarBar()
                           << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSetScalarBar::CreateAxis( void )
+void DataSetScalarBar::AddScalarBarToGroup( void )
 {
    //Now add the labels
    osg::MatrixTransform* tempDCS = dynamic_cast< osg::MatrixTransform* >( scalarBarDCS->GetRawNode() );
@@ -126,14 +126,14 @@ osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
    // Create a custom color set
    std::vector<osg::Vec4> cs;
    cs.push_back(osg::Vec4(1.0f,0.0f,0.0f,1.0f));   // R
-   //cs.push_back(osg::Vec4(1.0f,1.0f,0.0f,1.0f));   // G
+   cs.push_back(osg::Vec4(1.0f,1.0f,0.0f,1.0f));   // G
    cs.push_back(osg::Vec4(0.0f,1.0f,0.0f,1.0f));   // G
-   //cs.push_back(osg::Vec4(0.0f,1.0f,1.0f,1.0f));   // B
+   cs.push_back(osg::Vec4(0.0f,1.0f,1.0f,1.0f));   // B
    cs.push_back(osg::Vec4(0.0f,0.0f,1.0f,1.0f));   // Cyan
 
    //Set the font
    osgSim::ScalarBar::TextProperties textProps;
-   textProps._characterSize = 0.025f;
+   textProps._characterSize = 0.07f;
    osg::Vec4 color(1, 1, 0, 1);
    textProps._color = ( color );
    textProps._fontFile = "fonts/times.ttf";

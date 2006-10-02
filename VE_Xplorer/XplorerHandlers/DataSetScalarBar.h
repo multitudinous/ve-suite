@@ -79,23 +79,11 @@ public:
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ){ return true; }
    /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand(){ ; }
-   /// Create the scalar bar
-   //void SetBoundingBox( double* inBBox );
-   /// Set the active dataset for scalar bar computations
-   //void SetAxisLabels( std::string xAxis, std::string yAxis, std::string zAxis );
-   /// Read parameter file
-   void CreateAxis( void );
-   /// Get the axis that was created
+   /// cleanup and add the scalar bar to the dcs
+   void AddScalarBarToGroup( void );
+   /// Get the scalar bar that was created
    VE_SceneGraph::cfdDCS* GetScalarBar( void );
-   ///Create the labels for the axes
-   ///\param terxtIn The text for the axis
-   ///\param x the x location for the label
-   ///\param y the y location for the label
-   ///\param z the z location for the label
-   //osg::ref_ptr< osg::Geode > CreateAxisLabels( std::string textIn, double x, double y, double z );
-   ///Create the lines to represent the axes
-   //osg::ref_ptr< osg::Geode > CreateAxisLines( void );
-   
+   ///Create the osg scalar bar
    osg::ref_ptr< ScalarBar > CreateScalarBar( void );
    // Create a custom scalar printer
    struct MyScalarPrinter: public ScalarBar::ScalarPrinter
