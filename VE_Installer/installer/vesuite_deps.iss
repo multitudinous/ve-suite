@@ -26,6 +26,8 @@ WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bm
 WindowVisible=true
 WizardImageStretch=false
 WizardImageBackColor=clGray
+BackColor=clBlack
+BackColor2=$0080ff
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
