@@ -62,8 +62,8 @@ DataSetScalarBar::DataSetScalarBar( void )
 {
    vprDEBUG(vesDBG,2) << "constructing cfdScalarBarActor" 
                           << std::endl << vprDEBUG_FLUSH;
-   //bbox[ 0 ] = bbox[ 2 ] = bbox[ 4 ] = 0.0f;
-   //bbox[ 1 ] = bbox[ 3 ] = bbox[ 5 ] = 1.0f;
+   bbox[ 0 ] = bbox[ 2 ] = bbox[ 4 ] = 0.0f;
+   bbox[ 1 ] = bbox[ 3 ] = bbox[ 5 ] = 1.0f;
    
    //xAxisLabel = "X Axis";
    //yAxisLabel = "Y Axis";
@@ -79,6 +79,14 @@ DataSetScalarBar::~DataSetScalarBar()
    // may note need to delete anything
    vprDEBUG(vesDBG,2) << "   finished deconstructing cfdScalarBarActor"
                           << std::endl << vprDEBUG_FLUSH;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataSetScalarBar::SetBoundingBox( double* inBBox )
+{
+   for ( size_t i = 0; i < 6; ++i )
+   {
+      bbox[ i ] = inBBox[ i ];
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetScalarBar::AddScalarBarToGroup( void )
@@ -97,6 +105,12 @@ void DataSetScalarBar::AddScalarBarToGroup( void )
    
    //Now add the lines
    tempDCS->addChild( CreateScalarBar().get() );
+   // set position of scalar bar
+   std::vector< double > trans;
+   trans.push_back( bbox[ 0 ] );
+   trans.push_back( bbox[ 2 ] );
+   trans.push_back( bbox[ 4 ] - 0.3f );
+   scalarBarDCS->SetTranslationArray( trans );
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdDCS* DataSetScalarBar::GetScalarBar( void )
@@ -125,11 +139,11 @@ osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
    
    // Create a custom color set
    std::vector<osg::Vec4> cs;
-   cs.push_back(osg::Vec4(1.0f,0.0f,0.0f,1.0f));   // R
-   cs.push_back(osg::Vec4(1.0f,1.0f,0.0f,1.0f));   // G
-   cs.push_back(osg::Vec4(0.0f,1.0f,0.0f,1.0f));   // G
-   cs.push_back(osg::Vec4(0.0f,1.0f,1.0f,1.0f));   // B
    cs.push_back(osg::Vec4(0.0f,0.0f,1.0f,1.0f));   // Cyan
+   cs.push_back(osg::Vec4(0.0f,1.0f,1.0f,1.0f));   // B
+   cs.push_back(osg::Vec4(0.0f,1.0f,0.0f,1.0f));   // G
+   cs.push_back(osg::Vec4(1.0f,1.0f,0.0f,1.0f));   // G
+   cs.push_back(osg::Vec4(1.0f,0.0f,0.0f,1.0f));   // R
 
    //Set the font
    osgSim::ScalarBar::TextProperties textProps;
@@ -139,10 +153,10 @@ osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
    textProps._fontFile = "fonts/times.ttf";
 
    //setup the scalar printer
-   double* scalarRange = activeDataSet->GetUserRange();
+   double* scalarRange = activeDataSet->GetDisplayedScalarRange();
    MyScalarPrinter* myPrinter = new MyScalarPrinter();
    myPrinter->SetMinMax( scalarRange[ 0 ], scalarRange[ 1 ] );
-   
+   //std::cout << scalarRange[ 0 ] << " " <<  scalarRange[ 1 ] <<std::endl;
    ColorRange* cr = new ColorRange( scalarRange[ 0 ], scalarRange[ 1 ], cs);
    osg::ref_ptr< ScalarBar > sb = new ScalarBar( 100, 3, cr, activeScalarName, 
                                   ScalarBar::VERTICAL, 0.1f, myPrinter );

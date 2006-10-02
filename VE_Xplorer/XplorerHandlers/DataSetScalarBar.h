@@ -41,6 +41,7 @@ DataSetScalarBar API
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iostream>
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 #include <osgSim/ScalarsToColors>
@@ -79,6 +80,8 @@ public:
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ){ return true; }
    /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand(){ ; }
+   /// Create the scalar bar
+   void SetBoundingBox( double* inBBox );
    /// cleanup and add the scalar bar to the dcs
    void AddScalarBarToGroup( void );
    /// Get the scalar bar that was created
@@ -99,32 +102,38 @@ public:
       
       std::string printScalar(float scalar)
       {
-         //std::cout<<"In MyScalarPrinter::printScalar"<<std::endl;
+         //std::cout<<"In MyScalarPrinter::printScalar "<< scalar <<std::endl;
          std::ostringstream numStream;
-         if ( scalar == min )
+         if ( ( (scalar > (min - (min * 0.001f)) ) && 
+                (scalar < (min + (min * 0.001f)) ) ) ||
+              (scalar == min) )
          {
             numStream << min;
             return numStream.str();
          }
-         else if( scalar == mid )
+         else if ( (scalar > (mid - (mid * 0.001f)) ) && 
+                   (scalar < (mid + (mid * 0.001f)) ) )
          { 
             numStream << mid;
             return numStream.str();
          }
-         else if( scalar == max )
+         else if ( (scalar > (max - (max * 0.001f)) ) && 
+                   (scalar < (max + (max * 0.001f)) ) )
          { 
             numStream << max;
             return numStream.str();
          }
          else
          { 
-            return " "; //ScalarBar::ScalarPrinter::printScalar(scalar);
+            return " "; 
          }
+         //std::cout << ScalarBar::ScalarPrinter::printScalar(scalar) << std::endl;
       }
    };
 
 private:
    VE_SceneGraph::cfdDCS* scalarBarDCS;
+   double bbox[ 6 ];
 };
 }
 #endif //DATASET_SCALARBAR_H

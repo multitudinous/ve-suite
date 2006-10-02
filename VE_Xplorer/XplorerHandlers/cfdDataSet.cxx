@@ -1936,6 +1936,7 @@ void cfdDataSet::SetDataSetScalarState( unsigned int state )
       if ( dataSetScalarBar == 0 )
       {
          dataSetScalarBar = new DataSetScalarBar();
+         dataSetScalarBar->SetBoundingBox( GetDataSet()->GetBounds() );
       }
       dataSetScalarBar->AddScalarBarToGroup();
       GetDCS()->AddChild( dataSetScalarBar->GetScalarBar() );
