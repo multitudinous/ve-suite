@@ -1872,49 +1872,52 @@ void cfdDataSet::CreateWireframeGeode( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetBoundingBoxState( unsigned int state )
 {
-   if ( state == 0 )
+   if ( (state == 0) && bboxGeode )
    {
       GetDCS()->RemoveChild( bboxGeode );
    }
-   else
+   else if ( state == 1 )
    {
       if ( bboxGeode == 0 )
       {
          CreateBoundingBoxGeode();
       }
+      GetDCS()->RemoveChild( bboxGeode );
       GetDCS()->AddChild( bboxGeode );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetWireframeState( unsigned int state )
 {
-   if ( state == 0 )
+   if ( (state == 0) && wireframeGeode )
    {
       GetDCS()->RemoveChild( wireframeGeode );
    }
-   else
+   else if ( state == 1 )
    {
       if ( wireframeGeode == 0 )
       {
          CreateWireframeGeode();
       }
+      GetDCS()->RemoveChild( wireframeGeode );
       GetDCS()->AddChild( wireframeGeode );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetAxesState( unsigned int state )
 {
-   if ( state == 0 )
+   if ( (state == 0) && dataSetAxes )
    {
       GetDCS()->RemoveChild( dataSetAxes->GetAxis() );
    }
-   else
+   else if ( state == 1 )
    {
       if ( dataSetAxes == 0 )
       {
          dataSetAxes = new DataSetAxis();
          dataSetAxes->SetBoundingBox( GetDataSet()->GetBounds() );
       }
+      GetDCS()->RemoveChild( dataSetAxes->GetAxis() );
       dataSetAxes->CreateAxis();
       GetDCS()->AddChild( dataSetAxes->GetAxis() );
    }
@@ -1927,17 +1930,18 @@ VE_Xplorer::DataSetAxis* cfdDataSet::GetDataSetAxes( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetDataSetScalarState( unsigned int state )
 {
-   if ( state == 0 )
+   if ( (state == 0) && dataSetScalarBar )
    {
       GetDCS()->RemoveChild( dataSetScalarBar->GetScalarBar() );
    }
-   else
+   else if ( state == 1 )
    {
       if ( dataSetScalarBar == 0 )
       {
          dataSetScalarBar = new DataSetScalarBar();
          dataSetScalarBar->SetBoundingBox( GetDataSet()->GetBounds() );
       }
+      GetDCS()->RemoveChild( dataSetScalarBar->GetScalarBar() );
       dataSetScalarBar->AddScalarBarToGroup();
       GetDCS()->AddChild( dataSetScalarBar->GetScalarBar() );
    }

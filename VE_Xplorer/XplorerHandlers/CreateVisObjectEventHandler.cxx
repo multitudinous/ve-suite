@@ -706,6 +706,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    this->SetActiveVector( xmlObject );
    // Get the active object
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
+   VE_XML::DataValuePair* scalarDVP = command->GetDataValuePair( "Scalar Bar State" );
    VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
    VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
    
@@ -780,6 +781,12 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    cfdSteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
    cfdSteadyStateVizHandler::instance()->SetActorsAreReady( true );
 
+   unsigned int scalarBarState = 0;
+   if ( scalarDVP )
+   {
+      scalarDVP->GetData( scalarBarState );
+      cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetDataSetScalarState( scalarBarState );
+   }
 }
 //////////////////////////////////////////////////////////////////   
 void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject )

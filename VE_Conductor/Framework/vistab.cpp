@@ -957,6 +957,11 @@ void Vistab::_updateBaseInformation()
    VE_XML::DataValuePair* wireMesh= new VE_XML::DataValuePair();
    wireMesh->SetData( std::string("Show Wire Mesh"), static_cast< unsigned int >( wireFrameCB->GetValue() ) );
    _vistabBaseInformation.push_back( wireMesh );
+
+   //set scalar bar state
+   VE_XML::DataValuePair* scalarBarDVP = new VE_XML::DataValuePair();
+   scalarBarDVP->SetData( "Scalar Bar State", static_cast< unsigned int >( scalarBarCB->GetValue() ) );
+   _vistabBaseInformation.push_back( scalarBarDVP );
 }
 ////////////////////////////////////////////////////////////////////////////
 void Vistab::OnClearAll( wxCommandEvent& WXUNUSED(event) )
