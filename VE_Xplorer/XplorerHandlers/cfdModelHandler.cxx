@@ -76,6 +76,7 @@
 #include "VE_Xplorer/XplorerHandlers/WireframeEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/AxesEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/AxesLabelsEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/ScalarBarEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -141,6 +142,7 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("Change Wire Frame State") ] = new VE_EVENTS::WireframeEventHandler();
    _eventHandlers[ std::string("Change Axes State") ] = new VE_EVENTS::AxesEventHandler();
    _eventHandlers[ std::string("Change Axes Labels") ] = new VE_EVENTS::AxesLabelsEventHandler();
+   _eventHandlers[ std::string("Change Scalar Bar State") ] = new VE_EVENTS::ScalarBarEventHandler();
 #ifdef _OSG
 #ifdef VE_PATENTED
    _activeTDSet = 0;

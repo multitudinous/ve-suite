@@ -57,6 +57,7 @@ namespace VE_Xplorer
 {
    class cfdPlanes;
    class DataSetAxis;
+   class DataSetScalarBar;
 }
 
 namespace VE_SceneGraph
@@ -241,6 +242,9 @@ namespace VE_Xplorer
          void SetAxesState( unsigned int state );
          ///Set the bounding box for this dataset
          VE_Xplorer::DataSetAxis* GetDataSetAxes( void );
+         ///Set the scalar for this dataset
+         ///\param state The state of the scalar bar 0 or 1 
+        void SetDataSetScalarState( unsigned int state );
 private:
          std::map< std::string, std::string > dataSetUUIDMap;
          
@@ -303,6 +307,7 @@ private:
          VE_SceneGraph::cfdGroup* textureBased; 
 
          VE_Xplorer::DataSetAxis* dataSetAxes;
+         VE_Xplorer::DataSetScalarBar* dataSetScalarBar;
          VE_Util::cfdVTKFileHandler* _vtkFHndlr;
          int partOfTransientSeries;
          //int intRange[2];

@@ -121,7 +121,8 @@ enum VISTAB_IDS
    ID_DATA_WIREFRAME_CB,
    ID_DATA_BBOX_CB,
    ID_DATA_AXES_CB,
-   ID_DATA_UPDATE_AXES
+   ID_DATA_UPDATE_AXES,
+   ID_DATA_SCALAR_BAR
 };
 ////@end control identifiers
 
@@ -291,6 +292,7 @@ protected:
    void UpdateWireFrame( wxCommandEvent& event );
    void UpdateAxes( wxCommandEvent& event );
    void UpdateAxesLabels( wxCommandEvent& event );
+   void UpdateScalarBar( wxCommandEvent& event );
 
    ///update the base info for the dataset ie. active vector,scalar,dataset,range 
    void _updateBaseInformation();
@@ -383,6 +385,7 @@ protected:
    wxCheckBox* wireFrameCB;///<The checkbox to turn wireframe on/off
    wxCheckBox* bboxCB;///<The checkbox to turn bounding box on/off
    wxCheckBox* axesCB;///<The checkbox to turn axes on/off
+   wxCheckBox* scalarBarCB;///<The checkbox to turn scalar bar on/off
    wxTextCtrl* xAxisEntry;///< The text entry for axes labels
    wxTextCtrl* yAxisEntry;///< The text entry for axes labels
    wxTextCtrl* zAxisEntry;///< The text entry for axes labels

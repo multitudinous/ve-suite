@@ -40,6 +40,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
 #include "VE_Xplorer/XplorerHandlers/DataSetAxis.h"
+#include "VE_Xplorer/XplorerHandlers/DataSetScalarBar.h"
 #include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
@@ -1921,4 +1922,21 @@ void cfdDataSet::SetAxesState( unsigned int state )
 VE_Xplorer::DataSetAxis* cfdDataSet::GetDataSetAxes( void )
 {
    return dataSetAxes;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdDataSet::SetDataSetScalarState( unsigned int state )
+{
+   if ( state == 0 )
+   {
+      GetDCS()->RemoveChild( dataSetScalarBar->GetScalarBar() );
+   }
+   else
+   {
+      if ( dataSetAxes == 0 )
+      {
+         dataSetScalarBar = new DataSetScalarBar();
+      }
+      dataSetScalarBar->CreateScalarBar();
+      GetDCS()->AddChild( dataSetScalarBar->GetScalarBar() );
+   }
 }

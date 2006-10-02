@@ -95,6 +95,7 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_CHECKBOX( ID_DATA_BBOX_CB,       Vistab::UpdateBoundingBox)
    EVT_CHECKBOX( ID_DATA_WIREFRAME_CB,  Vistab::UpdateWireFrame)
    EVT_CHECKBOX( ID_DATA_AXES_CB,       Vistab::UpdateAxes)
+   EVT_CHECKBOX( ID_DATA_SCALAR_BAR,    Vistab::UpdateScalarBar)
 END_EVENT_TABLE()
 using namespace VE_Conductor::GUI_Utilities;
 
@@ -306,22 +307,25 @@ void Vistab::CreateControls()
        
        wireFrameCB = new wxCheckBox( itemDialog1, ID_DATA_WIREFRAME_CB, 
             _("Wire Frame"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-       itemBoxSizer10->Add( wireFrameCB, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       itemBoxSizer10->Add( wireFrameCB, 1, wxALIGN_CENTER_VERTICAL);
        bboxCB = new wxCheckBox( itemDialog1, ID_DATA_BBOX_CB, 
             _("Bounding Box"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-       itemBoxSizer10->Add( bboxCB, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       itemBoxSizer10->Add( bboxCB, 1, wxALIGN_CENTER_VERTICAL );
 
+       scalarBarCB = new wxCheckBox( itemDialog1, ID_DATA_SCALAR_BAR, 
+                                     _("Scalar Bar"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+       itemBoxSizer10->Add( scalarBarCB, 1, wxALIGN_CENTER_VERTICAL);
        //wxBoxSizer* axesBS = new wxBoxSizer(wxHORIZONTAL);
        //dataSetSBSizer->Add( axesBS, 0, wxGROW|wxALL, 5);
        axesCB = new wxCheckBox( itemDialog1, ID_DATA_AXES_CB, 
             _("Axes"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-       itemBoxSizer10->Add( axesCB, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+       itemBoxSizer10->Add( axesCB, 1, wxALIGN_CENTER_VERTICAL);
        //updateAxes = new wxButton( itemDialog1, ID_DATA_UPDATE_AXES, _T("Axes"), wxDefaultPosition, wxDefaultSize, 0 );
        //itemBoxSizer10->Add( updateAxes, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
        // add text input for axes
        wxBoxSizer* axesTextBS = new wxBoxSizer(wxHORIZONTAL);
-       dataSetSBSizer->Add( axesTextBS, 0, wxGROW|wxALL, 5);
+       dataSetSBSizer->Add( axesTextBS, 0, wxGROW);
        xAxisEntry = new wxTextCtrl( itemDialog1, ID_DATA_UPDATE_AXES, 
                                     _("X Axis"), wxDefaultPosition, 
                                     wxDefaultSize, wxHSCROLL|wxTE_PROCESS_ENTER );
@@ -1170,31 +1174,28 @@ void Vistab::UpdateAxes( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateAxesLabels( wxCommandEvent& event )
 {
-   //wxTextCtrl* tempTextCtrl = dynamic_cast< wxTextCtrl* >( event.GetEventObject() );
-   
    std::string activeAxesLAbel = "Axes Labels";
    std::vector< std::string > labels;
    labels.push_back( xAxisEntry->GetValue().c_str() );
    labels.push_back( yAxisEntry->GetValue().c_str() );
    labels.push_back( zAxisEntry->GetValue().c_str() );
    
-   /*if ( tempTextCtrl == xAxisEntry )
-   {
-      activeAxesLAbel = "X Axis Label";
-   }
-   else if ( tempTextCtrl == yAxisEntry )
-   {
-      activeAxesLAbel = "Y Axis Label";
-   }
-   else if ( tempTextCtrl == zAxisEntry )
-   {
-      activeAxesLAbel = "Z Axis Label";
-   }*/
-
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
    dataValuePair->SetData( activeAxesLAbel, labels );
    VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("Change Axes Labels") );
+   veCommand->AddDataValuePair( dataValuePair );
+   
+   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////
+void Vistab::UpdateScalarBar( wxCommandEvent& event )
+{
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   dataValuePair->SetData( "Scalar Bar State", static_cast< unsigned int >( scalarBarCB->GetValue() ) );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("Change Scalar Bar State") );
    veCommand->AddDataValuePair( dataValuePair );
    
    bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );

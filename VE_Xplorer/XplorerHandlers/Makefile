@@ -142,7 +142,8 @@ SRCS=\
    WireframeEventHandler.cxx\
    AxesEventHandler.cxx\
    AxesLabelsEventHandler.cxx\
-   DataSetScalarBar.cxx
+   DataSetScalarBar.cxx\
+   ScalarBarEventHandler.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g

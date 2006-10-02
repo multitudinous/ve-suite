@@ -95,10 +95,6 @@ void DataSetScalarBar::CreateAxis( void )
       //delete tempNode;
    }
    
-   //tempGroup->addChild( CreateAxisLabels( xAxisLabel, bbox[ 1 ], bbox[ 2 ], bbox[ 4 ] ).get() );
-   //tempGroup->addChild( CreateAxisLabels( yAxisLabel, bbox[ 0 ], bbox[ 3 ], bbox[ 4 ] ).get() );
-   //tempGroup->addChild( CreateAxisLabels( zAxisLabel, bbox[ 0 ], bbox[ 2 ], bbox[ 5 ] ).get() );
-   
    //Now add the lines
    tempDCS->addChild( CreateScalarBar().get() );
 }
