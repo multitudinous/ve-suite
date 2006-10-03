@@ -245,6 +245,8 @@ namespace VE_Xplorer
          ///Set the scalar for this dataset
          ///\param state The state of the scalar bar 0 or 1 
         void SetDataSetScalarState( unsigned int state );
+        ///Get the scalar bar
+        VE_Xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
 private:
          std::map< std::string, std::string > dataSetUUIDMap;
          

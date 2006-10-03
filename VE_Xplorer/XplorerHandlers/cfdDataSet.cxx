@@ -1928,6 +1928,11 @@ VE_Xplorer::DataSetAxis* cfdDataSet::GetDataSetAxes( void )
    return dataSetAxes;
 }
 ////////////////////////////////////////////////////////////////////////////////
+VE_Xplorer::DataSetScalarBar* cfdDataSet::GetDataSetScalarBar( void )
+{
+   return dataSetScalarBar;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetDataSetScalarState( unsigned int state )
 {
    if ( (state == 0) && dataSetScalarBar )

@@ -33,7 +33,9 @@
 
 #include "VE_Xplorer/XplorerHandlers/TBUpdateSolutionEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/DataSetScalarBar.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 
 #include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
@@ -102,6 +104,20 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(VE_XML::XMLObject* v
             floatRange[1] = scalarRange[1];
             VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateScalarRange(floatRange);
             //need to pass the scalar range command to update it
+            
+            //if ( _activeModel )
+            {
+               cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+               //if ( dataSet )
+               {
+                  DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+                  if ( scalarBar )
+                  {
+                     dataSet->SetActiveScalar( dataName );
+                     scalarBar->AddScalarBarToGroup();
+                  }
+               }
+            }            
          }
 	       else if(dataType == "Vector")
           {

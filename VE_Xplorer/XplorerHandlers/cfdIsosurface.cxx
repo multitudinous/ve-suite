@@ -32,6 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdIsosurface.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/DataSetScalarBar.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
@@ -246,4 +249,20 @@ void cfdIsosurface::UpdateCommand()
 
    activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
    activeModelDVP->GetData( colorByScalar );
+
+   //if ( _activeModel )
+   {
+      cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      //if ( dataSet )
+      {
+         unsigned int activeTempScalar = dataSet->GetActiveScalar();
+         dataSet->SetActiveScalar( colorByScalar );
+         DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+         if ( scalarBar )
+         {
+            scalarBar->AddScalarBarToGroup();
+         }
+         dataSet->SetActiveScalar( activeTempScalar );
+      }
+   }            
 }

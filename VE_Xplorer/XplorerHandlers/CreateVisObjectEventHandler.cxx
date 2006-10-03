@@ -747,6 +747,13 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
       std::cerr << "ERROR: selected vis option is not in the CreateVisObjectEventHandler. " << std::endl;
    }
 
+   unsigned int scalarBarState = 0;
+   if ( scalarDVP )
+   {
+      scalarDVP->GetData( scalarBarState );
+      cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetDataSetScalarState( scalarBarState );
+   }
+
    // Check to see if any of the objectss need updated before we
    // create actors
    if ( cfdModelHandler::instance()->GetActiveModel() )
@@ -780,13 +787,6 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    cfdSteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
    cfdSteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
    cfdSteadyStateVizHandler::instance()->SetActorsAreReady( true );
-
-   unsigned int scalarBarState = 0;
-   if ( scalarDVP )
-   {
-      scalarDVP->GetData( scalarBarState );
-      cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetDataSetScalarState( scalarBarState );
-   }
 }
 //////////////////////////////////////////////////////////////////   
 void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject )
