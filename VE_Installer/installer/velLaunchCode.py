@@ -301,6 +301,7 @@ class Launch:
             f.close()
         else:
             pass
+        self.clusterTemplate += "\n"
         self.clusterTemplate += "%s\n" %drive
         self.clusterTemplate += "cd %s\n" %self.settings["Directory"]
         self.clusterTemplate += "\n"
