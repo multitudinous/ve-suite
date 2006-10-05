@@ -66,6 +66,9 @@ protected:
    ///Draw the v iso-curves
    void _drawVCurves()const;
 
+   ///Draw the UV Control Points
+   void _drawUVPoints()const;
+
    bool _isSurface;///<Flag for determining NURBS type.
    unsigned int _numUControlPoints;///<The number of control points in U direction.
    unsigned int _numVControlPoints;///<The number of control points in V direction.
@@ -99,12 +102,34 @@ void NURBSControlMesh::_drawVCurves()const
       for(unsigned int u = 0; u < _numUControlPoints; u++)
       {
          glVertex3f(_controlPoints->at(u*_numVControlPoints + v).X(),
-                       _controlPoints->at(u*_numVControlPoints + v).Y(),
-                       _controlPoints->at(u*_numVControlPoints + v).Z());
+                    _controlPoints->at(u*_numVControlPoints + v).Y(),
+                    _controlPoints->at(u*_numVControlPoints + v).Z());
       }
       glEnd();
         
    }
+}
+//////////////////////////////////////////
+void NURBSControlMesh::_drawUVPoints()const
+{
+   //u iso-curves     
+   glEnable(GL_POINT_SMOOTH);
+   glPointSize(5.0);
+   glBegin(GL_POINTS);
+
+   for(unsigned int u = 0; u < _numUControlPoints; u++)
+   {
+      for(unsigned int v = 0; v < _numVControlPoints; v++)
+      {
+         //osg::Vec3 nextPoint;
+         glVertex3f(_controlPoints->at(u*_numVControlPoints + v).X(),
+                    _controlPoints->at(u*_numVControlPoints + v).Y(),
+                    _controlPoints->at(u*_numVControlPoints + v).Z());
+      }
+   }
+   
+   glEnd();
+   glDisable(GL_POINT_SMOOTH);
 }
 ////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::drawImplementation(osg::State& currentState)const
@@ -125,6 +150,7 @@ void NURBSControlMesh::drawImplementation(osg::State& currentState)const
          _drawUCurves();
       }
    }
+   _drawUVPoints();
        //set the verts for the actual points
     
     /*  osg::ref_ptr<osg::StateSet> vertState = vertStrip->getOrCreateStateSet();

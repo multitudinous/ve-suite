@@ -35,6 +35,7 @@
 
 #include <osg/Geode>
 #include <osg/Node>
+#include <osg/Group>
 #include <osg/BoundingSphere>
 
 #include "VE_Xplorer/SceneGraph/NURBS/Export.h"

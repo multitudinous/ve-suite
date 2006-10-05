@@ -43,8 +43,7 @@ void render(int argc, char** argv,NURBS::NURBSRenderer surface)
         return ;
     }
     
-    
-        // any option left unread are converted into errors to write out later.
+    // any option left unread are converted into errors to write out later.
     arguments.reportRemainingOptionsAsUnrecognized();
 
     // report any errors if they have occured when parsing the program aguments.
