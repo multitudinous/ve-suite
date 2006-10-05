@@ -51,6 +51,7 @@ class Launch:
 ##        if vesFile == None:
 ##            vesFile = None
         ##Set self's variables
+##        print settings ##TESTER
         self.settings = settings
         self.nameserverPids = []
         ##Set self.cluster to True if there's cluster functionality.

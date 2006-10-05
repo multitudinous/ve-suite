@@ -4,7 +4,7 @@ import os
 from velBase import *
 from velClusterDict import *
 from velCoveredConfig import *
-from string import strip
+from string import strip, replace
 
 class ClusterWindow(wx.Dialog):
     """A window for editing a list of clustered computers.
@@ -101,11 +101,15 @@ class ClusterWindow(wx.Dialog):
         if self.masterCtrl.IsEnabled():
             self.state.Edit("ClusterMaster", self.masterCtrl.GetValue())
         if self.userCtrl.IsEnabled():
-            self.state.Edit("User", strip(self.userCtrl.GetValue()))
+            self.state.Edit("User", self.GetUser())
         return
 
+    def GetUser(self):
+        """Returns the username input with slashes corrected."""
+        return replace(strip(self.userCtrl.GetValue()), '/', '\\')
+
     def UpdateExampleCode(self, event = None):
-        user = strip(self.userCtrl.GetValue())
+        user = self.GetUser()
         if user == "":
             phrase = ""
         else:
