@@ -12,6 +12,7 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NCurve.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
 
 /////////////render the NURBSurface in OSG
 void render(int argc, char** argv,NURBS::NURBSRenderer surface)
@@ -54,7 +55,9 @@ void render(int argc, char** argv,NURBS::NURBSRenderer surface)
     }
     osg::ref_ptr<osg::PositionAttitudeTransform> root = new osg::PositionAttitudeTransform();
     root->addChild(surface.GetTriangulatedSurface());
-    root->addChild(surface.GetControlMesh());
+    osg::ref_ptr<NURBS::NURBSNode> controlMeshTest = new NURBS::NURBSNode(surface.GetNURBS());
+    root->addChild(controlMeshTest.get());
+    //root->addChild(surface.GetControlMesh());
 
     // add model to viewer.
     viewer.setSceneData( root.get());

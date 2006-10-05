@@ -33,6 +33,7 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NURBSObject.h"
 #include <osgUtil/SmoothingVisitor>
 #include <osgUtil/Optimizer>
 #include <osg/Geometry>
@@ -113,6 +114,13 @@ osg::Geode* NURBSRenderer::GetControlMesh()
       return _controlMesh.get();
 
    return 0;
+}
+/////////////////////////////////////////////
+///Get the original surface                //
+/////////////////////////////////////////////
+NURBS::NURBSObject* NURBSRenderer::GetNURBS()
+{
+   return _nurbsObject;
 }
 ///////////////////////////////////////////////
 void NURBSRenderer::_updateControlMesh()
@@ -360,8 +368,8 @@ osg::Vec3 NURBSRenderer::_calculateSurfaceNormalAtPoint(unsigned int index)
 
    if(_nurbsObject->GetType() == NURBSObject::Surface)
    {
-      try
-      {
+      /*try
+      {*/
          NURBS::NURBSSurface* surface = dynamic_cast<NURBS::NURBSSurface*>(_nurbsObject);
       
          NURBS::Point dSdU = surface->GetSurfaceDerivatives()[1][0].at(index);
@@ -369,12 +377,12 @@ osg::Vec3 NURBSRenderer::_calculateSurfaceNormalAtPoint(unsigned int index)
          NURBS::Point cross = dSdV^dSdU; 
          normal.set(cross.X(),cross.Y(),cross.Z());
          normal.normalize();
-      }
+ /*     }
       catch(...)
       {
          std::cout<<"Invalid surface!!!"<<std::endl;
          std::cout<<"NURBSRenderer::_calculateSurfaceNormalAtPoint"<<std::endl;
-      }
+      }*/
    }
    return normal;
 }

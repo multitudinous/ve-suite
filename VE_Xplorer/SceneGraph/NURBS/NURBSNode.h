@@ -30,32 +30,36 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NURBS_SURFACE_RENDER_H
-#define NURBS_SURFACE_RENDER_H
+#ifndef NURBS_NODE_H
+#define NURBS_NODE_H
 
 #include <osg/Geode>
-#include "VE_Xplorer/SceneGraph/NURBS/Export.h"
-//#include "VE_Xplorer/SceneGraph/NURBS/NURBSObject.h"
+#include <osg/Node>
+#include <osg/BoundingSphere>
 
-/*!\file NURBSRenderer.h
+#include "VE_Xplorer/SceneGraph/NURBS/Export.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NURBSObject.h"
+
+/*!\file NURBSNode.h
   NURBS Object OSG Renderer API
   */
-/*!\class NURBS::NURBSRenderer
- * Class defining the interface between NURBS object and osg::Geometry.
- */
 
 namespace NURBS
 {
-class NURBSObject;
+   class NURBSControlMesh;
+   class NURBSTessellatedSurface;
 
-class VE_NURBS_EXPORTS NURBSRenderer
+/*!\class NURBS::NURBSNode
+ * Class defining the interface between NURBS object and osg::Geometry.
+ */
+class VE_NURBS_EXPORTS NURBSNode : public osg::Group
 {
 public:
    ///Constructor
-   NURBSRenderer(NURBS::NURBSObject* object);
+   NURBSNode(NURBS::NURBSObject* object);
 
    ///Destructor
-   virtual ~NURBSRenderer();
+   virtual ~NURBSNode();
 
    ///Set the NURBS::NURBSObject
    ///\param object The NURBS::NURBSObject
@@ -73,7 +77,11 @@ public:
 
    ///Get the osg::Geometry for the control mesh
    osg::Geode* GetControlMesh();
+
+   ///compute the bounding box
+   virtual osg::BoundingSphere computeBound()const;
 protected:
+
    bool _retessellate;///<Update the mesh
 
    bool _wireframeView;///<View the wireframe (tessellation)
@@ -92,8 +100,11 @@ protected:
    osg::Vec3 _calculateSurfaceNormalAtPoint(unsigned int index);
 
    NURBS::NURBSObject* _nurbsObject;///<The NURBSurface
-   osg::ref_ptr<osg::Geode> _triangulatedSurface;///<The triangulated surface
-   osg::ref_ptr<osg::Geode> _controlMesh;///<The control mesh
+   osg::ref_ptr<osg::Geode> _triangulatedSurfaceGeode;///<The triangulated surface
+   osg::ref_ptr<osg::Geode> _controlMeshGeode;///<The control mesh geode
+
+   osg::ref_ptr<NURBS::NURBSControlMesh> _controlMeshDrawable;///<The control mesh drawable
+   osg::ref_ptr<NURBS::NURBSTessellatedSurface> _triangulatedSurfaceDrawable;///<The control mesh drawable
 
 }
 ;

@@ -44,6 +44,7 @@
 #include <map>
 #include <string>
 #include <VE_Xplorer/SceneGraph/NURBS/KnotVector.h>
+
 namespace NURBS
 {
 class Point;

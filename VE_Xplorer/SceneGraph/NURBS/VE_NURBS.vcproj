@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgUtild.lib"
+				AdditionalDependencies="osgd.lib osgUtild.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)/VE_NURBS_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(OSGHOME)\lib\win32&quot;"
@@ -143,7 +143,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osg.lib osgUtil.lib"
+				AdditionalDependencies="osg.lib osgUtil.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)\VE_NURBS.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(OSGHOME)\lib\win32&quot;"
@@ -205,6 +205,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NURBSNode.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\NURBSObject.cxx"
 				>
 			</File>
@@ -232,6 +236,10 @@
 			</File>
 			<File
 				RelativePath=".\NSurface.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NURBSNode.h"
 				>
 			</File>
 			<File
