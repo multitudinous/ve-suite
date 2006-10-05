@@ -151,19 +151,6 @@ void NURBSControlMesh::drawImplementation(osg::State& currentState)const
       }
    }
    _drawUVPoints();
-       //set the verts for the actual points
-    
-    /*  osg::ref_ptr<osg::StateSet> vertState = vertStrip->getOrCreateStateSet();
-      osg::ref_ptr<osg::Point> pointSize = new osg::Point();
-      pointSize->setSize(5.0);
-      vertState->setAttribute(pointSize.get(),osg::StateAttribute::ON);
-      vertStrip->setVertexArray(verts.get());
-      vertStrip->setNormalBinding(osg::Geometry::BIND_PER_PRIMITIVE);
-      vertStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS,0,verts->size()));
-
-      _controlMesh->addDrawable(lineStrip.get());
-      _controlMesh->addDrawable(vertStrip.get());*/
-   
 }
 //////////////////////////////////////////////////////
 osg::BoundingBox NURBSControlMesh::computeBound()const
