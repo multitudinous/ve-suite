@@ -246,6 +246,7 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib\win32;
 Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
 Source: {#OSGHOME}\..\Producer\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#OSGHOME}\..\OpenThreads\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#OSGHOME}\..\OpenSceneGraph-Data\fonts\*; DestDir: {app}\osg-fonts; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 
 
 [Icons]
