@@ -27,7 +27,7 @@
                <accum_green_size>1</accum_green_size>
                <accum_blue_size>1</accum_blue_size>
                <accum_alpha_size>1</accum_alpha_size>
-               <fsaa_enable>false</fsaa_enable>
+               <fsaa_enable>true</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>

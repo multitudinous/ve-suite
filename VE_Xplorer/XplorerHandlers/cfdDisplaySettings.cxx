@@ -99,20 +99,52 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
 
          //if ( !newCommand.compare( "Desktop_Size" ) )    
          {
+            //Process the resolution
             VE_XML::DataValuePair* desktopData = veCommand->GetDataValuePair( "desktop_width" );
             // 2/3 the width
-            int xSize = desktopData->GetDataValue() * 0.667; 
+            int xSize = static_cast< int >( desktopData->GetDataValue() * 0.667f ); 
             elements.at(i)->setProperty(  "size", 0, xSize );
             desktopData = veCommand->GetDataValuePair( "desktop_height" );
             // 50 for the menu bar height
 #ifdef WIN32
-            int ySize = desktopData->GetDataValue() - 125; 
+            int ySize = static_cast< int >( desktopData->GetDataValue() - 125 ); 
 #else
-            int ySize = desktopData->GetDataValue() - 150;
+            int ySize = static_cast< int >( desktopData->GetDataValue() - 150 );
 #endif
             elements.at(i)->setProperty(  "size", 1, ySize );
             elements.at(i)->setProperty(  "origin", 0, 0 );
             elements.at(i)->setProperty(  "origin", 1, 0 );
+            //Process the physical corners of the window
+            // process x first
+            double xmin = elements.at(i)->getProperty< double >(  "lower_left_corner", 0 );
+            double xmax = elements.at(i)->getProperty< double >(  "lower_right_corner", 0 );
+            double xScreenDim = xmax - xmin;
+            //this constant number is meters / pixel
+            double newXScreenDim = 0.0019050f * xSize;
+            double xScreenDif = newXScreenDim - xScreenDim;
+            double xScreenDifHalf = xScreenDif * 0.5f;
+            double newXmin = xmin - xScreenDifHalf;
+            double newXmax = xmax + xScreenDifHalf;
+            
+            elements.at(i)->setProperty(  "lower_left_corner", 0, newXmin );
+            elements.at(i)->setProperty(  "lower_right_corner", 0, newXmax );
+            elements.at(i)->setProperty(  "upper_left_corner", 0, newXmin );
+            elements.at(i)->setProperty(  "upper_right_corner", 0, newXmax );
+            // now process y
+            double ymin = elements.at(i)->getProperty< double >(  "lower_left_corner", 1 );
+            double ymax = elements.at(i)->getProperty< double >(  "upper_left_corner", 1 );
+            double yScreenDim = ymax - ymin;
+            //this constant number is meters / pixel
+            double newYScreenDim = 0.001786f * ySize;
+            double yScreenDif = newYScreenDim - yScreenDim;
+            double yScreenDifHalf = yScreenDif * 0.5f;
+            double newYmin = ymin - yScreenDifHalf;
+            double newYmax = ymax + yScreenDifHalf;
+            
+            elements.at(i)->setProperty(  "lower_left_corner", 1, newYmin );
+            elements.at(i)->setProperty(  "lower_right_corner", 1, newYmin );
+            elements.at(i)->setProperty(  "upper_left_corner", 1, newYmax );
+            elements.at(i)->setProperty(  "upper_right_corner", 1, newYmax );
          }
 
          ChangeDisplayElements( false, elements.at(i) );
@@ -122,7 +154,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
    veCommand = 0;
    return true;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdDisplaySettings::ChangeDisplayElements( bool remove, 
                                jccl::ConfigElementPtr element )
 {
@@ -150,3 +182,4 @@ void cfdDisplaySettings::ChangeDisplayElements( bool remove,
       jccl::ConfigManager::instance()->addConfigurationAdditions( configuration );
    }
 }
+////////////////////////////////////////////////////////////////////////////////
