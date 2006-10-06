@@ -53,9 +53,9 @@ void render(int argc, char** argv,NURBS::NURBSRenderer surface)
         return ;
     }
     osg::ref_ptr<osg::PositionAttitudeTransform> root = new osg::PositionAttitudeTransform();
-    root->addChild(surface.GetTriangulatedSurface());
-    osg::ref_ptr<NURBS::NURBSNode> controlMeshTest = new NURBS::NURBSNode(surface.GetNURBS());
-    root->addChild(controlMeshTest.get());
+    //root->addChild(surface.GetTriangulatedSurface());
+    osg::ref_ptr<NURBS::NURBSNode> nurbsNodeTest = new NURBS::NURBSNode(surface.GetNURBS());
+    root->addChild(nurbsNodeTest.get());
     //root->addChild(surface.GetControlMesh());
 
     // add model to viewer.

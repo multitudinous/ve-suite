@@ -1,8 +1,11 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h" 
 #include <osg/Drawable>
 #include <osg/BoundingBox>
 #include <osg/BoundingSphere>
+#include <osg/ShadeModel>
+#include <iostream>
 
 using namespace NURBS;
 namespace NURBS{
@@ -121,7 +124,6 @@ void NURBSControlMesh::_drawUVPoints()const
    {
       for(unsigned int v = 0; v < _numVControlPoints; v++)
       {
-         //osg::Vec3 nextPoint;
          glVertex3f(_controlPoints->at(u*_numVControlPoints + v).X(),
                     _controlPoints->at(u*_numVControlPoints + v).Y(),
                     _controlPoints->at(u*_numVControlPoints + v).Z());
@@ -201,12 +203,31 @@ public:
 protected:
    ///Destructor
    virtual ~NURBSTessellatedSurface(){}
+
+   ///Tessellate the surface
+   void _tessellateSurface()const;
+
+   ///Tessellate the curve
+   void _tessellateCurve() const;
+
+   //Calculate the normal on the surface at point
+   //Should this be in the NURBS::NURBSSurface class?
+   osg::Vec3 _calculateSurfaceNormalAtPoint(unsigned int index)const;
+
    NURBS::NURBSObject* _nurbsObject;///The NURBS representation
 };
 }
 ///////////////////////////////////////////////////////////////////////////////
 void NURBSTessellatedSurface::drawImplementation(osg::State& currentState)const
 {
+   if(_nurbsObject->GetType() == NURBSObject::Surface)
+   {
+      _tessellateSurface();
+   }
+   else
+   {
+      _tessellateCurve();
+   }
 }
 /////////////////////////////////////////////////////////////
 osg::BoundingBox NURBSTessellatedSurface::computeBound()const
@@ -223,6 +244,164 @@ osg::BoundingBox NURBSTessellatedSurface::computeBound()const
    }
    return bbox;
 }
+//////////////////////////////////////////////////   
+///Tessellate the surface                       //
+//////////////////////////////////////////////////
+void NURBSTessellatedSurface::_tessellateSurface()const
+{
+   if(_nurbsObject->InterpolatedPoints().empty())
+   {
+      std::cout<<"Invalid NURBSObject!!"<<std::endl;
+      std::cout<<"NURBSRenderer::_tessellateSurface()"<<std::endl;
+      return;
+   }
+
+   unsigned int nVPoints = _nurbsObject->NumInterpolatedPoints("U");
+   unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("V");
+
+   for(unsigned int u = 0; u </*2;*/nUPoints - 1; u++)
+   {
+      //new tristrip
+      glBegin(GL_TRIANGLE_STRIP);
+      //Handle the special case for the first triangle in the strip
+      
+      //bottom corner vert
+      glNormal3fv(_calculateSurfaceNormalAtPoint(u*nVPoints).ptr());
+      glVertex3f(_nurbsObject->InterpolatedPoints().at(u*nVPoints).X(),
+                 _nurbsObject->InterpolatedPoints().at(u*nVPoints).Y(),
+                 _nurbsObject->InterpolatedPoints().at(u*nVPoints).Z());
+
+      //right corner vert
+      glNormal3fv(_calculateSurfaceNormalAtPoint((u+1)*nVPoints).ptr());
+      glVertex3f(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints).X(),
+                 _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints).Y(),
+                 _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints).Z());
+
+      //next top vert 
+      glNormal3fv(_calculateSurfaceNormalAtPoint(u*nVPoints+1).ptr());
+      glVertex3f(_nurbsObject->InterpolatedPoints().at((u)*nVPoints + 1).X(),
+                 _nurbsObject->InterpolatedPoints().at((u)*nVPoints + 1).Y(),
+                 _nurbsObject->InterpolatedPoints().at((u)*nVPoints + 1).Z());
+
+      //interior points
+      for(unsigned int v = 1; v < nVPoints - 1; v++)
+      {
+         glNormal3fv(_calculateSurfaceNormalAtPoint((u+1)*nVPoints+v).ptr());
+         //nextBottomCornerPoint.set(
+         glVertex3f(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).X(),
+                    _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).Y(),
+                    _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).Z());
+
+
+         //osg::Vec3 oppositeTopCornerNormal = 
+         glNormal3fv(_calculateSurfaceNormalAtPoint((u)*nVPoints+(v+1)).ptr());
+         //oppositeTopCornerPoint.set(
+         glVertex3f(_nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).X(),
+                    _nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).Y(),
+                    _nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).Z());
+
+         //vertStrip->push_back(nextBottomCornerPoint);
+         //vertStrip->push_back(oppositeTopCornerPoint);
+
+         //normals->push_back(nextBottomCornerNormal);
+         //normals->push_back(oppositeTopCornerNormal);
+      }
+      //handle last point
+
+      //osg::Vec3 lastBottomPoint;
+      //osg::Vec3 lastBottomNormal = 
+      glNormal3fv(_calculateSurfaceNormalAtPoint((u+1)*nVPoints+(nVPoints - 1)).ptr());
+      //lastBottomPoint.set
+      glVertex3f(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).X(),
+                 _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).Y(),
+                 _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).Z());
+      
+      //vertStrip->push_back(lastBottomPoint);
+
+      
+      
+      //normals->push_back(lastBottomNormal);
+
+      //set the verts for the tri-strip
+      //triStrip->setVertexArray(vertStrip.get());
+      //triStrip->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
+      //triStrip->setNormalArray(normals.get());
+      //triStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::TRIANGLE_STRIP,0,vertStrip->size()));
+      glEnd();
+      //_triangulatedSurface->addDrawable(triStrip.get());
+
+   }
+   
+   /*if(_wireframeView)
+   {
+      osg::ref_ptr<osg::PolygonMode> polygonMode = new osg::PolygonMode;
+      polygonMode->setMode(osg::PolygonMode::FRONT_AND_BACK,osg::PolygonMode::LINE);
+      _triangulatedSurface->getOrCreateStateSet()->setAttributeAndModes(polygonMode.get(), osg::StateAttribute::ON);
+   }
+
+   osg::ref_ptr<osg::ShadeModel> shadeModel = new osg::ShadeModel();
+   shadeModel->setMode(osg::ShadeModel::SMOOTH);
+
+   osg::ref_ptr<osg::StateSet> surfaceState = _triangulatedSurface->getOrCreateStateSet();
+   surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
+   surfaceState->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+   */
+   
+}
+////////////////////////////////////////////////
+///Tessellate the curve                       //
+////////////////////////////////////////////////
+void NURBSTessellatedSurface::_tessellateCurve()const
+{
+   if(_nurbsObject->InterpolatedPoints().empty())
+   {
+      std::cout<<"Invalid NURBSObject!!"<<std::endl;
+      std::cout<<"NURBSTessellatedSurface::_tessellateCurve()"<<std::endl;
+      return;
+   }
+
+  
+   unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("U");
+   
+   //new linestrip
+   //osg::ref_ptr<osg::Vec3Array> vertStrip = new osg::Vec3Array();
+   //osg::ref_ptr<osg::Geometry> lineStrip = new osg::Geometry();
+   glBegin(GL_LINE_STRIP);
+   for(unsigned int u = 0; u < nUPoints; u++)
+   {
+      //osg::Vec3 nextPoint;
+      //nextPoint.set(
+      glVertex3f(_nurbsObject->InterpolatedPoints().at(u).X(),
+                    _nurbsObject->InterpolatedPoints().at(u).Y(),
+                    _nurbsObject->InterpolatedPoints().at(u).Z());
+      //vertStrip->push_back(nextPoint);
+   }
+   glEnd();
+   //set the verts for the tri-strip
+   //lineStrip->setVertexArray(vertStrip.get());
+   //lineStrip->setNormalBinding(osg::Geometry::BIND_OFF);
+   //lineStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINE_STRIP,0,vertStrip->size()));
+      
+   //_triangulatedSurface->addDrawable(lineStrip.get());
+}	
+///////////////////////////////////////////////////////////////////////////
+osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int index)const 
+{
+   osg::Vec3 normal(0,1,0);
+
+   if(_nurbsObject->GetType() == NURBSObject::Surface)
+   {
+      NURBS::NURBSSurface* surface = dynamic_cast<NURBS::NURBSSurface*>(_nurbsObject);
+      
+      NURBS::Point dSdU = surface->GetSurfaceDerivatives()[1][0].at(index);
+      NURBS::Point dSdV = surface->GetSurfaceDerivatives()[0][1].at(index);
+      NURBS::Point cross = dSdV^dSdU; 
+      normal.set(cross.X(),cross.Y(),cross.Z());
+      normal.normalize();
+   }
+   return normal;
+}
+
 ////////////////////////////////////////////////
 ///Constructor                                //
 ////////////////////////////////////////////////
@@ -231,7 +410,7 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
    _nurbsObject = object;
    if(_nurbsObject)
    {
-      //_triangulatedSurfaceGeode = new osg::Geode();
+      
       _controlMeshGeode = new osg::Geode();
 
       _controlMeshDrawable = new NURBS::NURBSControlMesh(&_nurbsObject->ControlPoints(),
@@ -241,7 +420,18 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
 
       _controlMeshGeode->addDrawable(_controlMeshDrawable.get());
       addChild(_controlMeshGeode.get());
-      //_triangulatedSurfaceDrawable;///<The control mesh drawable
+
+      _triangulatedSurfaceGeode = new osg::Geode();
+      _triangulatedSurfaceDrawable = new NURBS::NURBSTessellatedSurface(_nurbsObject);
+      _triangulatedSurfaceGeode->addDrawable(_triangulatedSurfaceDrawable.get());
+
+      /*osg::ref_ptr<osg::ShadeModel> shadeModel = new osg::ShadeModel();
+      shadeModel->setMode(osg::ShadeModel::SMOOTH);
+
+      osg::ref_ptr<osg::StateSet> surfaceState = _triangulatedSurfaceGeode->getOrCreateStateSet();
+      surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
+      */
+      addChild(_triangulatedSurfaceGeode.get());
    }
 }
 ///////////////////////////////
@@ -286,18 +476,7 @@ osg::Geode* NURBSNode::GetControlMesh()
    }
    return 0;
 }
-////////////////////////////////////   
-///Tessellate the surface         //
-////////////////////////////////////
-void NURBSNode::_tessellateSurface()
-{
-}
-//////////////////////////////////
-///Tessellate the curve         //
-//////////////////////////////////
-void NURBSNode::_tessellateCurve()
-{
-}	
+
 ////////////////////////////////////
 ///Draw the control mesh          //   
 ////////////////////////////////////

@@ -87,12 +87,6 @@ protected:
 
    bool _wireframeView;///<View the wireframe (tessellation)
    
-   ///Tessellate the surface
-   void _tessellateSurface();
-
-   ///Tessellate the curve
-   void _tessellateCurve();
-   
    ///Draw the control mesh
    void _updateControlMesh();
 
