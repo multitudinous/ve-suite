@@ -381,7 +381,12 @@ unsigned int REI_Plugin::GetID()
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetConductorName()
 {
-   return wxString( "PleaseDefineConductorName" );
+   if ( name.IsEmpty() )
+   {
+      name = "PleaseDefineConductorName";
+   }
+
+   return name;
 }
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetName()

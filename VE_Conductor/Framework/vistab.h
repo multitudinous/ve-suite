@@ -77,6 +77,7 @@ class wxComboBox;
 class wxListBox;
 class wxSpinCtrlDbl;
 class wxCheckBox;
+class wxTextCtrl;
 
 #define ID_DIALOG 10000
 #define SYMBOL_VISTAB_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
