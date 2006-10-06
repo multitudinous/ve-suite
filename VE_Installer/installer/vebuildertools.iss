@@ -17,7 +17,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\VE_BuilderTools.1.0.2
 DefaultGroupName=VE-Builder_Tools 1.0.2
 AllowNoIcons=true
-OutputBaseFilename=vebuildertools{#VEVERSION}
+OutputBaseFilename=vebuildertools{#VEVERSION}_{#SVNVERSION}
 Compression=lzma
 SolidCompression=true
 WindowVisible=true
@@ -32,6 +32,8 @@ ShowLanguageDialog=yes
 VersionInfoVersion=1.0.2
 VersionInfoCompany=Virtual Engineering Research Group
 VersionInfoDescription=VES Builder Tools
+BackColor=clBlack
+BackColor2=$0080ff
 [Types]
 ;Name: optional; Description: VE-Util Library
 [Components]
@@ -74,10 +76,12 @@ Source: {#VEHOME}\VE_Installer\installer\buildershell.bat; DestDir: {app}\bin; F
 Source: {#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico; DestDir: {app}\images; DestName: Ve_icon.ico
 Source: {#VEHOME}\VE_Installer\installer\vebuilder.txt; DestDir: {app}; Attribs: readonly; Flags: isreadme overwritereadonly uninsremovereadonly; DestName: README.txt
 Source: {#VEHOME}\bin\win32\logoMaker.exe; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#VEHOME}\bin\win32\testNURBSd.exe; DestDir: {app}\bin; Flags: ignoreversion; DestName: testNURBS.exe
+Source: {#VEHOME}\lib\win32\VE_NURBS_d.dll; DestDir: {app}\bin; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-Name: {group}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\Ve_icon.ico
-Name: {userdesktop}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\Ve_icon.ico
+;Name: {group}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\Ve_icon.ico
+;Name: {userdesktop}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\Ve_icon.ico
 [Tasks]
-Name: BuilderShell; Description: VE-Builder Tools Shell; GroupDescription: Create Desktop Icon; Flags: unchecked
+;Name: BuilderShell; Description: VE-Builder Tools Shell; GroupDescription: Create Desktop Icon; Flags: unchecked
