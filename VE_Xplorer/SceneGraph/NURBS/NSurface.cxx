@@ -164,7 +164,7 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
             uindex = _currentSpan["U"] - _degree["U"] + k;
          
             tempUContribution[l] = tempUContribution[l] 
-                                 + _controlPoints[0][vindex*_nControlPoints["U"] + uindex]
+            + _controlPoints[0][vindex*_nControlPoints["U"] + uindex].GetWeigthedPoint()
                                  *_derivativeBasisFunctions["U"][n].at(k);
          }
       }
@@ -175,13 +175,13 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
          resutlingWeightedPoint[n].push_back(ControlPoint());
          for(unsigned int l = 0; l <= _degree["V"]; l++)
          {
-            resutlingWeightedPoint[n][j] = resutlingWeightedPoint[n][j].GetWeigthedPoint() 
+            resutlingWeightedPoint[n][j] = resutlingWeightedPoint[n][j] 
                                       + tempUContribution[l]
                                       *_derivativeBasisFunctions["V"][j].at(l);
          }
       
          invWeight /= resutlingWeightedPoint[n][j].Weight();
-         resutlingWeightedPoint[n][j].GetWeigthedPoint()*invWeight;
+         resutlingWeightedPoint[n][j]= resutlingWeightedPoint[n][j]*invWeight;
       }
    }
    return resutlingWeightedPoint;

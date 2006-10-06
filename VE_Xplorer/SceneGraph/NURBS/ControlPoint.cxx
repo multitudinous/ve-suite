@@ -172,6 +172,30 @@ ControlPoint ControlPoint::GetWeigthedPoint()
 {
    return NURBS::ControlPoint(_x*_weight,_y*_weight,_z*_weight,_weight);
 }
+///////////////////////////////////////////////////////
+ControlPoint ControlPoint::operator*(const double& lhs)
+{
+      //not sure how to handle the weights here!!!
+      ControlPoint newPoint(lhs*_x,
+                            lhs*_y,
+                            lhs*_z,
+                            lhs*_weight);
+      
+      return newPoint;
+}
+////////////////////////////////////////////////////////////
+///override "+" operator                                  //
+////////////////////////////////////////////////////////////
+ControlPoint ControlPoint::operator+(const ControlPoint& lhs)
+{
+   //not sure how to handle the weights here!!!
+   ControlPoint newPoint(lhs._x + _x,
+                         lhs._y + _y,
+                         lhs._z + _z,
+                         (lhs._weight+_weight));
+      
+   return newPoint;
+}
 //////////////////////////////////////////////////////////////
 ControlPoint& ControlPoint::operator=(const ControlPoint& rhs)
 {

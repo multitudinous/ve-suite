@@ -107,7 +107,7 @@ void NURBSCurve::Interpolate()
 }
 /////////////////////////////////////////////////////////////////////////////////////
 std::vector<NURBS::ControlPoint> NURBSCurve::_calculatePointOnCurve(double parameter, 
-                                                                   unsigned int span)
+                                                                    unsigned int span)
 {
    std::vector<NURBS::ControlPoint> resutlingWeightedPoint;
    double invWeight = 1.0f;
@@ -121,7 +121,7 @@ std::vector<NURBS::ControlPoint> NURBSCurve::_calculatePointOnCurve(double param
                                 *_derivativeBasisFunctions["U"][k].at(i);
       }
       invWeight/=resutlingWeightedPoint[k].Weight();
-      resutlingWeightedPoint[k].GetWeigthedPoint()*invWeight;
+      resutlingWeightedPoint[k] = resutlingWeightedPoint[k].GetWeigthedPoint()*invWeight;
    }
    return resutlingWeightedPoint;
 }

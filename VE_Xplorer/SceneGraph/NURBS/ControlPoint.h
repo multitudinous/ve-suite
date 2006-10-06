@@ -208,31 +208,10 @@ public:
       return os;
    }
 
-   ///override "+" operator
-   ControlPoint operator+(const ControlPoint& lhs)
-   {
-      //not sure how to handle the weights here!!!
-      ControlPoint newPoint(lhs._x + _x,
-                            lhs._y + _y,
-                            lhs._z + _z,
-                            (lhs._weight+_weight)*.5f);
-      
-      return newPoint;
-
-   };
+  ControlPoint operator+(const ControlPoint& lhs);
 
    /// multiplication with a scalar
-   ControlPoint operator*(const double& lhs)
-   {
-      //not sure how to handle the weights here!!!
-      ControlPoint newPoint(lhs*_x,
-                            lhs*_y,
-                            lhs*_z,
-                            _weight);
-      
-      return newPoint;
-
-   };
+   ControlPoint operator*(const double& lhs);
    
 protected:
    double _weight;///<The weight for this coordinate.

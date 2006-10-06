@@ -106,7 +106,7 @@ int main(int argc, char** argv)
    //Control points
    std::vector<NURBS::ControlPoint> controlPoints;
    controlPoints.push_back(NURBS::ControlPoint(0,0,0));   
-   controlPoints.push_back(NURBS::ControlPoint(.25,1.0,0));
+   controlPoints.push_back(NURBS::ControlPoint(.25,1.0,0,2.0));
    controlPoints.push_back(NURBS::ControlPoint(.75,1.0,0));
    controlPoints.push_back(NURBS::ControlPoint(1.0,0.0,0));
 
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
    NURBS::NURBSCurve ncurve(3);
    ncurve.SetControlPoints(controlPoints,controlPoints.size());
    ncurve.SetKnotVector(knots);
-   ncurve.SetInterpolationGridSize(20);
+   ncurve.SetInterpolationGridSize(10);
    ncurve.Interpolate();
 
    /*std::fstream fout("./testPoints.txt",std::ios::out);
@@ -140,7 +140,7 @@ int main(int argc, char** argv)
 
       for(unsigned int cols = 0; cols < 4; cols++)
       {
-         surfaceCtrlPts.push_back(NURBS::ControlPoint(2.0*rows - 1.5,2.0*cols-1.5,3.0));
+         surfaceCtrlPts.push_back(NURBS::ControlPoint(2.0*rows - 1.5,2.0*cols-1.5,3.0,1.0));
          if((rows == 0 || rows == 3) || (cols == 0 || cols == 3))
          {
             surfaceCtrlPts[rows*4 + cols].SetZ(-3.0);
@@ -193,8 +193,8 @@ int main(int argc, char** argv)
    NURBS::NURBSRenderer osgCurve(&ncurve);
    render(argc,argv,osgCurve);
 
-   NURBS::NURBSRenderer osgSurface(&surface);
+   //NURBS::NURBSRenderer osgSurface(&surface);
    //osgSurface.ViewWireframe(true);
-   render(argc,argv,osgSurface);
+   //render(argc,argv,osgSurface);
    return 0;
 }

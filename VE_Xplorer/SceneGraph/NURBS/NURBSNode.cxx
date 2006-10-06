@@ -287,66 +287,22 @@ void NURBSTessellatedSurface::_tessellateSurface()const
       for(unsigned int v = 1; v < nVPoints - 1; v++)
       {
          glNormal3fv(_calculateSurfaceNormalAtPoint((u+1)*nVPoints+v).ptr());
-         //nextBottomCornerPoint.set(
          glVertex3f(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).X(),
                     _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).Y(),
                     _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).Z());
 
-
-         //osg::Vec3 oppositeTopCornerNormal = 
          glNormal3fv(_calculateSurfaceNormalAtPoint((u)*nVPoints+(v+1)).ptr());
-         //oppositeTopCornerPoint.set(
          glVertex3f(_nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).X(),
                     _nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).Y(),
                     _nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).Z());
-
-         //vertStrip->push_back(nextBottomCornerPoint);
-         //vertStrip->push_back(oppositeTopCornerPoint);
-
-         //normals->push_back(nextBottomCornerNormal);
-         //normals->push_back(oppositeTopCornerNormal);
       }
       //handle last point
-
-      //osg::Vec3 lastBottomPoint;
-      //osg::Vec3 lastBottomNormal = 
       glNormal3fv(_calculateSurfaceNormalAtPoint((u+1)*nVPoints+(nVPoints - 1)).ptr());
-      //lastBottomPoint.set
       glVertex3f(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).X(),
                  _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).Y(),
                  _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).Z());
-      
-      //vertStrip->push_back(lastBottomPoint);
-
-      
-      
-      //normals->push_back(lastBottomNormal);
-
-      //set the verts for the tri-strip
-      //triStrip->setVertexArray(vertStrip.get());
-      //triStrip->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
-      //triStrip->setNormalArray(normals.get());
-      //triStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::TRIANGLE_STRIP,0,vertStrip->size()));
       glEnd();
-      //_triangulatedSurface->addDrawable(triStrip.get());
-
    }
-   
-   /*if(_wireframeView)
-   {
-      osg::ref_ptr<osg::PolygonMode> polygonMode = new osg::PolygonMode;
-      polygonMode->setMode(osg::PolygonMode::FRONT_AND_BACK,osg::PolygonMode::LINE);
-      _triangulatedSurface->getOrCreateStateSet()->setAttributeAndModes(polygonMode.get(), osg::StateAttribute::ON);
-   }
-
-   osg::ref_ptr<osg::ShadeModel> shadeModel = new osg::ShadeModel();
-   shadeModel->setMode(osg::ShadeModel::SMOOTH);
-
-   osg::ref_ptr<osg::StateSet> surfaceState = _triangulatedSurface->getOrCreateStateSet();
-   surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
-   surfaceState->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
-   */
-   
 }
 ////////////////////////////////////////////////
 ///Tessellate the curve                       //
@@ -359,30 +315,17 @@ void NURBSTessellatedSurface::_tessellateCurve()const
       std::cout<<"NURBSTessellatedSurface::_tessellateCurve()"<<std::endl;
       return;
    }
-
-  
    unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("U");
    
    //new linestrip
-   //osg::ref_ptr<osg::Vec3Array> vertStrip = new osg::Vec3Array();
-   //osg::ref_ptr<osg::Geometry> lineStrip = new osg::Geometry();
    glBegin(GL_LINE_STRIP);
    for(unsigned int u = 0; u < nUPoints; u++)
    {
-      //osg::Vec3 nextPoint;
-      //nextPoint.set(
       glVertex3f(_nurbsObject->InterpolatedPoints().at(u).X(),
                     _nurbsObject->InterpolatedPoints().at(u).Y(),
                     _nurbsObject->InterpolatedPoints().at(u).Z());
-      //vertStrip->push_back(nextPoint);
    }
    glEnd();
-   //set the verts for the tri-strip
-   //lineStrip->setVertexArray(vertStrip.get());
-   //lineStrip->setNormalBinding(osg::Geometry::BIND_OFF);
-   //lineStrip->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINE_STRIP,0,vertStrip->size()));
-      
-   //_triangulatedSurface->addDrawable(lineStrip.get());
 }	
 ///////////////////////////////////////////////////////////////////////////
 osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int index)const 
