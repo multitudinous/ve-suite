@@ -61,11 +61,13 @@ namespace VE_XML
    class XMLObject;
    class VEStr;
 }
-///Utility function to convert strings to Xerces compatible strings
-#define xercesString(str) VE_XML::XMLObject::VEStr(str).unicodeForm()
 
 namespace VE_XML
 {
+
+///Utility function to convert strings to Xerces compatible strings
+#define xercesString(str) VE_XML::XMLObject::VEStr(str).unicodeForm()
+
 class VE_XML_EXPORTS XMLObject
 {
 public:
