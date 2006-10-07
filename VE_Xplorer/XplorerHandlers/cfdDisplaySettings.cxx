@@ -61,7 +61,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
    {
       // Get datavalue pair from current command
       VE_XML::DataValuePair* commandData = veCommand->GetDataValuePair( 0 );
-      double size = commandData->GetDataValue();
+      double stereoToggle = commandData->GetDataValue();
       std::string newCommand = commandData->GetDataName();
 
       // Get current list of display elements
@@ -71,15 +71,29 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
 
       for ( size_t i = 0; i < elements.size(); ++i )
       {
-         //std::cout << " node 1" << std::endl;
          //elements.at(0)->getNode()->save( std::cout );
          ChangeDisplayElements( true, elements.at(i) );
 
-         if ( !newCommand.compare( "Stereo" ) )
+         if ( stereoToggle == 1.0f )
          {  
             // just for testing purposes can be changed to stereo later
-            size+=1;
-            elements.at(i)->setProperty(  "size", 1, 512 );
+            elements.at(i)->setProperty(  "stereo", 0, stereoToggle );
+            size_t numSvPtrs = elements.at(i)->getNum( "surface_viewports" );
+            for ( size_t j = 0; j < numSvPtrs; ++j )
+            {
+               jccl::ConfigElementPtr svPtr = elements.at( i )->getProperty< jccl::ConfigElementPtr >( "surface_viewports", j );
+               svPtr->setProperty(  "view", 0, std::string( "Both Eyes" ) );
+            }
+         }
+         else
+         {
+            elements.at(i)->setProperty(  "stereo", 0, stereoToggle );
+            size_t numSvPtrs = elements.at(i)->getNum( "surface_viewports" );
+            for ( size_t j = 0; j < numSvPtrs; ++j )
+            {
+               jccl::ConfigElementPtr svPtr = elements.at( i )->getProperty< jccl::ConfigElementPtr >( "surface_viewports", j );
+               svPtr->setProperty(  "view", 0, std::string( "Left Eye" ) );
+            }
          }
 
          ChangeDisplayElements( false, elements.at(i) );
@@ -97,59 +111,56 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
       {
          ChangeDisplayElements( true, elements.at(i) );
 
-         //if ( !newCommand.compare( "Desktop_Size" ) )    
-         {
-            //Process the resolution
-            VE_XML::DataValuePair* desktopData = veCommand->GetDataValuePair( "desktop_width" );
-            // 2/3 the width
-            int xSize = static_cast< int >( desktopData->GetDataValue() * 0.667f ); 
-            elements.at(i)->setProperty(  "size", 0, xSize );
-            desktopData = veCommand->GetDataValuePair( "desktop_height" );
-            // 50 for the menu bar height
+         //Process the resolution
+         VE_XML::DataValuePair* desktopData = veCommand->GetDataValuePair( "desktop_width" );
+         // 2/3 the width
+         int xSize = static_cast< int >( desktopData->GetDataValue() * 0.667f ); 
+         elements.at(i)->setProperty(  "size", 0, xSize );
+         desktopData = veCommand->GetDataValuePair( "desktop_height" );
+         // 50 for the menu bar height
 #ifdef WIN32
-            int ySize = static_cast< int >( desktopData->GetDataValue() - 125 ); 
+         int ySize = static_cast< int >( desktopData->GetDataValue() - 125 ); 
 #else
-            int ySize = static_cast< int >( desktopData->GetDataValue() - 150 );
+         int ySize = static_cast< int >( desktopData->GetDataValue() - 150 );
 #endif
-            elements.at(i)->setProperty(  "size", 1, ySize );
-            elements.at(i)->setProperty(  "origin", 0, 0 );
-            elements.at(i)->setProperty(  "origin", 1, 0 );
-            //Process the physical corners of the window
-            size_t numSvPtrs = elements.at(i)->getNum( "surface_viewports" );
-            for ( size_t j = 0; j < numSvPtrs; ++j )
-            {
-               jccl::ConfigElementPtr svPtr = elements.at( i )->getProperty< jccl::ConfigElementPtr >( "surface_viewports", j );
-               // process x first
-               double xmin = svPtr->getProperty< double >(  "lower_left_corner", 0 );
-               double xmax = svPtr->getProperty< double >(  "lower_right_corner", 0 );
-               double xScreenDim = xmax - xmin;
-               //this constant number is meters / pixel
-               double newXScreenDim = 0.0019050f * xSize;
-               double xScreenDif = newXScreenDim - xScreenDim;
-               double xScreenDifHalf = xScreenDif * 0.5f;
-               double newXmin = xmin - xScreenDifHalf;
-               double newXmax = xmax + xScreenDifHalf;
-            
-               svPtr->setProperty(  "lower_left_corner", 0, newXmin );
-               svPtr->setProperty(  "lower_right_corner", 0, newXmax );
-               svPtr->setProperty(  "upper_left_corner", 0, newXmin );
-               svPtr->setProperty(  "upper_right_corner", 0, newXmax );
-               // now process y
-               double ymin = svPtr->getProperty< double >(  "lower_left_corner", 1 );
-               double ymax = svPtr->getProperty< double >(  "upper_left_corner", 1 );
-               double yScreenDim = ymax - ymin;
-               //this constant number is meters / pixel
-               double newYScreenDim = 0.001786f * ySize;
-               double yScreenDif = newYScreenDim - yScreenDim;
-               double yScreenDifHalf = yScreenDif * 0.5f;
-               double newYmin = ymin - yScreenDifHalf;
-               double newYmax = ymax + yScreenDifHalf;
-            
-               svPtr->setProperty(  "lower_left_corner", 1, newYmin );
-               svPtr->setProperty(  "lower_right_corner", 1, newYmin );
-               svPtr->setProperty(  "upper_left_corner", 1, newYmax );
-               svPtr->setProperty(  "upper_right_corner", 1, newYmax );
-            }
+         elements.at(i)->setProperty(  "size", 1, ySize );
+         elements.at(i)->setProperty(  "origin", 0, 0 );
+         elements.at(i)->setProperty(  "origin", 1, 0 );
+         //Process the physical corners of the window
+         size_t numSvPtrs = elements.at(i)->getNum( "surface_viewports" );
+         for ( size_t j = 0; j < numSvPtrs; ++j )
+         {
+            jccl::ConfigElementPtr svPtr = elements.at( i )->getProperty< jccl::ConfigElementPtr >( "surface_viewports", j );
+            // process x first
+            double xmin = svPtr->getProperty< double >(  "lower_left_corner", 0 );
+            double xmax = svPtr->getProperty< double >(  "lower_right_corner", 0 );
+            double xScreenDim = xmax - xmin;
+            //this constant number is meters / pixel
+            double newXScreenDim = 0.0019050f * xSize;
+            double xScreenDif = newXScreenDim - xScreenDim;
+            double xScreenDifHalf = xScreenDif * 0.5f;
+            double newXmin = xmin - xScreenDifHalf;
+            double newXmax = xmax + xScreenDifHalf;
+         
+            svPtr->setProperty(  "lower_left_corner", 0, newXmin );
+            svPtr->setProperty(  "lower_right_corner", 0, newXmax );
+            svPtr->setProperty(  "upper_left_corner", 0, newXmin );
+            svPtr->setProperty(  "upper_right_corner", 0, newXmax );
+            // now process y
+            double ymin = svPtr->getProperty< double >(  "lower_left_corner", 1 );
+            double ymax = svPtr->getProperty< double >(  "upper_left_corner", 1 );
+            double yScreenDim = ymax - ymin;
+            //this constant number is meters / pixel
+            double newYScreenDim = 0.001786f * ySize;
+            double yScreenDif = newYScreenDim - yScreenDim;
+            double yScreenDifHalf = yScreenDif * 0.5f;
+            double newYmin = ymin - yScreenDifHalf;
+            double newYmax = ymax + yScreenDifHalf;
+         
+            svPtr->setProperty(  "lower_left_corner", 1, newYmin );
+            svPtr->setProperty(  "lower_right_corner", 1, newYmin );
+            svPtr->setProperty(  "upper_left_corner", 1, newYmax );
+            svPtr->setProperty(  "upper_right_corner", 1, newYmax );
          }
 
          ChangeDisplayElements( false, elements.at(i) );

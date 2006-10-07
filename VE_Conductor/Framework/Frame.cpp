@@ -159,6 +159,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    //  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
    EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
    EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
+   EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
 //   EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
 //   EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
@@ -1428,13 +1429,20 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
    _cadDialog->Show();
 }
 ///////////////////////////////////////////////////////////////////
-void AppFrame::JugglerSettings( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::JugglerSettings( wxCommandEvent& event )
 {
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = 
                            new VE_XML::DataValuePair(  std::string("FLOAT") );
    dataValuePair->SetDataName( "Stereo" );
-   dataValuePair->SetDataValue( 1.0 );
+   if ( event.GetId() == JUGGLER_STEREO )
+   {
+      dataValuePair->SetDataValue( 1.0 );
+   }
+   else
+   {
+      dataValuePair->SetDataValue( 0.0 );
+   }
    VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("Juggler_Display_Data") );
    veCommand->AddDataValuePair( dataValuePair );
