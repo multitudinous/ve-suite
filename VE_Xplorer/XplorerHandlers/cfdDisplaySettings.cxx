@@ -115,36 +115,41 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
             elements.at(i)->setProperty(  "origin", 0, 0 );
             elements.at(i)->setProperty(  "origin", 1, 0 );
             //Process the physical corners of the window
-            // process x first
-            double xmin = elements.at(i)->getProperty< double >(  "lower_left_corner", 0 );
-            double xmax = elements.at(i)->getProperty< double >(  "lower_right_corner", 0 );
-            double xScreenDim = xmax - xmin;
-            //this constant number is meters / pixel
-            double newXScreenDim = 0.0019050f * xSize;
-            double xScreenDif = newXScreenDim - xScreenDim;
-            double xScreenDifHalf = xScreenDif * 0.5f;
-            double newXmin = xmin - xScreenDifHalf;
-            double newXmax = xmax + xScreenDifHalf;
+            size_t numSvPtrs = elements.at(i)->getNum( "surface_viewports" );
+            for ( size_t j = 0; j < numSvPtrs; ++j )
+            {
+               jccl::ConfigElementPtr svPtr = elements.at( i )->getProperty< jccl::ConfigElementPtr >( "surface_viewports", j );
+               // process x first
+               double xmin = svPtr->getProperty< double >(  "lower_left_corner", 0 );
+               double xmax = svPtr->getProperty< double >(  "lower_right_corner", 0 );
+               double xScreenDim = xmax - xmin;
+               //this constant number is meters / pixel
+               double newXScreenDim = 0.0019050f * xSize;
+               double xScreenDif = newXScreenDim - xScreenDim;
+               double xScreenDifHalf = xScreenDif * 0.5f;
+               double newXmin = xmin - xScreenDifHalf;
+               double newXmax = xmax + xScreenDifHalf;
             
-            elements.at(i)->setProperty(  "lower_left_corner", 0, newXmin );
-            elements.at(i)->setProperty(  "lower_right_corner", 0, newXmax );
-            elements.at(i)->setProperty(  "upper_left_corner", 0, newXmin );
-            elements.at(i)->setProperty(  "upper_right_corner", 0, newXmax );
-            // now process y
-            double ymin = elements.at(i)->getProperty< double >(  "lower_left_corner", 1 );
-            double ymax = elements.at(i)->getProperty< double >(  "upper_left_corner", 1 );
-            double yScreenDim = ymax - ymin;
-            //this constant number is meters / pixel
-            double newYScreenDim = 0.001786f * ySize;
-            double yScreenDif = newYScreenDim - yScreenDim;
-            double yScreenDifHalf = yScreenDif * 0.5f;
-            double newYmin = ymin - yScreenDifHalf;
-            double newYmax = ymax + yScreenDifHalf;
+               svPtr->setProperty(  "lower_left_corner", 0, newXmin );
+               svPtr->setProperty(  "lower_right_corner", 0, newXmax );
+               svPtr->setProperty(  "upper_left_corner", 0, newXmin );
+               svPtr->setProperty(  "upper_right_corner", 0, newXmax );
+               // now process y
+               double ymin = svPtr->getProperty< double >(  "lower_left_corner", 1 );
+               double ymax = svPtr->getProperty< double >(  "upper_left_corner", 1 );
+               double yScreenDim = ymax - ymin;
+               //this constant number is meters / pixel
+               double newYScreenDim = 0.001786f * ySize;
+               double yScreenDif = newYScreenDim - yScreenDim;
+               double yScreenDifHalf = yScreenDif * 0.5f;
+               double newYmin = ymin - yScreenDifHalf;
+               double newYmax = ymax + yScreenDifHalf;
             
-            elements.at(i)->setProperty(  "lower_left_corner", 1, newYmin );
-            elements.at(i)->setProperty(  "lower_right_corner", 1, newYmin );
-            elements.at(i)->setProperty(  "upper_left_corner", 1, newYmax );
-            elements.at(i)->setProperty(  "upper_right_corner", 1, newYmax );
+               svPtr->setProperty(  "lower_left_corner", 1, newYmin );
+               svPtr->setProperty(  "lower_right_corner", 1, newYmin );
+               svPtr->setProperty(  "upper_left_corner", 1, newYmax );
+               svPtr->setProperty(  "upper_right_corner", 1, newYmax );
+            }
          }
 
          ChangeDisplayElements( false, elements.at(i) );
