@@ -41,6 +41,8 @@
 
 #include <iostream>
 #include <string>
+#include <typeinfo>
+#include <sstream>
 
 #include "VE_Installer/include/VEConfig.h"
 /*!\file XMLObject.h
@@ -53,6 +55,14 @@
 /*!\namespace VE_XML
  * Contains nodes for creating/managing a XML Objects.
  */
+
+namespace VE_XML
+{
+   class XMLObject;
+   class VEStr;
+}
+///Utility function to convert strings to Xerces compatible strings
+#define xercesString(str) VE_XML::XMLObject::VEStr(str).unicodeForm()
 
 namespace VE_XML
 {
@@ -116,6 +126,30 @@ public:
    ///\param element Element to extract long integer from.
    long int ExtractLongIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
 
+   /*template<class T>
+   inline T ExtractFromSimpleElement(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
+   {
+      T ret_val = T();
+      try
+      {
+         std::istringstream iss;
+         // in case the element does not contain data
+         XERCES_CPP_NAMESPACE_QUALIFIER DOMText* rawText = 
+            dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >( element->getFirstChild() );
+         if ( rawText )
+         {
+            char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( rawText->getData() );
+            iss.str( fUnicodeForm );
+            delete fUnicodeForm;
+         }
+         iss >> ret_val;
+      }
+      catch ( ... )
+      {
+      }
+      return ret_val;
+   }*/
+   
    ///Get a string attribute by name
    ///\param attributeName The name of the attribute
    ///\param attribute The attribute to retrive.
@@ -171,6 +205,35 @@ public:
    ///\param attrib The attribute value
    void SetSubElement( std::string subElementTagName, XMLObject* dataValue, 
                         std::string attribName, std::string attrib );
+   ///playing with templates
+   /*template<class T>
+   inline void SetSubElement(const std::string subElementTagName, T val)
+   {
+      std::type_info tempInfo = 
+      typeid( val );
+      //bool
+      if ( ( typeid( bool ) == tempInfo ) ||
+           ( typeid( double ) == tempInfo ) ||
+           ( typeid( std::string ) == tempInfo ) ||
+           ( typeid( unsigned int ) == tempInfo ) ||
+           ( typeid( long int ) == tempInfo )
+         )
+      {
+         XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+         dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:integer") );
+         std::stringstream float2string;
+         float2string << val;
+         XERCES_CPP_NAMESPACE_QUALIFIER DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
+         
+         dataValueNumElement->appendChild( dataValueText );
+         _veElement->appendChild( dataValueNumElement );         
+      }
+      else
+      {
+         val->SetOwnerDocument( _rootDocument );
+         _veElement->appendChild( val->GetXMLData( subElementTagName ) );
+      }      
+   }*/
    ///utility functions for creating attribute on _veElement.
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
@@ -248,7 +311,5 @@ protected:
 private:
    unsigned int _nChildren;///<The number of childern for this element.
 };
-///Utility function to convert strings to Xerces compatible strings
-#define xercesString(str) VE_XML::XMLObject::VEStr(str).unicodeForm()
 }
 #endif// _VE_XML_OBJECT_H_
