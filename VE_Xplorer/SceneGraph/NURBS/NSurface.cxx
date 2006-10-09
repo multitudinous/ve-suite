@@ -95,7 +95,7 @@ void NURBSSurface::Interpolate()
    }
    //Check our U surface conditions eq 3.12 NURBS Book
    //r + 1 = (n + 1) + (p + 1)
-   SetDegree(static_cast<unsigned int>(_knotVectors["U"].NumberOfKnots() - _nControlPoints["V"]) - 1,"U");
+   SetDegree(static_cast<unsigned int>(_knotVectors["U"].NumberOfKnots() - _nControlPoints["U"]) - 1,"U");
 
    //ensure our v surface conditions
    //s + 1 = (m + 1) + (q + 1)

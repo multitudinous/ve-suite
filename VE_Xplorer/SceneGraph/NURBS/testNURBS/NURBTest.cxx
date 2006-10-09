@@ -1,6 +1,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 #include <osg/Geode>
 #include <osg/PositionAttitudeTransform>
@@ -13,6 +14,9 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
+
+void createTestNURBS(int argc, char** argv);
+int parseOCCNURBSFile(int argc, char** argv);
 
 /////////////render the NURBSurface in OSG
 void render(int argc, char** argv,NURBS::NURBSRenderer surface)
@@ -90,6 +94,108 @@ void render(int argc, char** argv,NURBS::NURBSRenderer surface)
 
 int main(int argc, char** argv)
 {
+   
+
+   if(argc >1)
+   {
+      return parseOCCNURBSFile(argc,argv);
+   }
+   else
+   {
+      createTestNURBS(argc,argv);
+   }
+
+   return 0;
+}
+////////////////////////////////////////////
+int parseOCCNURBSFile(int argc, char** argv)
+{
+   std::string nurbsfile(argv[1]);
+   std::fstream occNURBSFile(nurbsfile.c_str(),std::ios::in);
+   if(occNURBSFile.is_open())
+   {
+      char descriptorLine[ 2048 ];
+      std::cout<<"Opened file: "<<nurbsfile<<std::endl;
+      
+      //U knots descriptor
+      occNURBSFile.getline(descriptorLine,2048);
+
+      //U knot values
+      occNURBSFile.getline(descriptorLine,2048);
+
+      std::istringstream strm( descriptorLine );
+
+      double knot = 0;
+      NURBS::KnotVector uKnots;      
+   
+      while(strm >> knot)
+      {
+         uKnots.AddKnot(knot);
+      }
+      //V knots descriptor
+      occNURBSFile.getline(descriptorLine,2048);
+
+      //V knot values
+      occNURBSFile.getline(descriptorLine,2048);
+      strm.clear();
+      strm.str(descriptorLine);
+      NURBS::KnotVector vKnots;
+      while(strm >> knot)
+      {
+         vKnots.AddKnot(knot);
+      }
+        
+      std::vector<NURBS::ControlPoint> surfaceCtrlPts;
+      double x = 0;
+      double y = 0;
+      double z = 0;
+      double w = 0;
+      //Control points descriptor
+      occNURBSFile.getline(descriptorLine,2048);
+
+      //control points
+      char delimChar[256];
+      unsigned int nU = 0;
+      unsigned int nV = 0;
+      while(occNURBSFile.getline(descriptorLine,2048))
+      {
+         nV = 0;
+         strm.clear();
+         strm.str(descriptorLine);
+         while(strm >> delimChar)
+         {
+            strm>>x>>y>>z>>w;
+            surfaceCtrlPts.push_back(NURBS::ControlPoint(x,y,z,w));
+            nV++;
+            //")"
+            strm>>delimChar;
+         }
+         nU++;
+      }
+
+      //the NURBS Surface (a patch)
+      NURBS::NURBSSurface surface;
+      surface.SetControlPoints(surfaceCtrlPts,nU,nV);
+      surface.SetKnotVector(uKnots,"U");
+      surface.SetKnotVector(vKnots,"V");
+      surface.SetInterpolationGridSize(10,"U");
+      surface.SetInterpolationGridSize(10,"V");
+      surface.Interpolate();
+   
+      NURBS::NURBSRenderer osgSurface(&surface);
+      //osgSurface.ViewWireframe(true);
+      render(argc,argv,osgSurface);
+      return 0;
+   }
+   else
+   {
+      std::cout<<"Could not open file: "<<nurbsfile<<std::endl;
+      return -1;
+   }
+}
+///////////////////////////////////////////
+void createTestNURBS(int argc, char** argv)
+{
    //Knot vector
    //U = {0,0,0,0,1,1,1,1}
    NURBS::KnotVector knots;
@@ -106,7 +212,7 @@ int main(int argc, char** argv)
    //Control points
    std::vector<NURBS::ControlPoint> controlPoints;
    controlPoints.push_back(NURBS::ControlPoint(0,0,0));   
-   controlPoints.push_back(NURBS::ControlPoint(.25,1.0,0,2.0));
+   controlPoints.push_back(NURBS::ControlPoint(.25,1.0,0));
    controlPoints.push_back(NURBS::ControlPoint(.75,1.0,0));
    controlPoints.push_back(NURBS::ControlPoint(1.0,0.0,0));
 
@@ -116,19 +222,6 @@ int main(int argc, char** argv)
    ncurve.SetKnotVector(knots);
    ncurve.SetInterpolationGridSize(10);
    ncurve.Interpolate();
-
-   /*std::fstream fout("./testPoints.txt",std::ios::out);
-   for(size_t i = 0; i < ncurve.InterpolatedPoints().size(); i++)
-   {
-      fout<<ncurve.InterpolatedPoints().at(i)<<std::endl;
-   }
-
-   std::fstream fout2("./controlPoints.txt",std::ios::out);
-   for(size_t i = 0; i < ncurve.ControlPoints().size(); i++)
-   {
-      fout2<<ncurve.GetControlPoint(i)<<std::endl;
-   }*/
-
 
    float x = 0.0;
    float y = 0.0;
@@ -193,8 +286,8 @@ int main(int argc, char** argv)
    NURBS::NURBSRenderer osgCurve(&ncurve);
    render(argc,argv,osgCurve);
 
-   //NURBS::NURBSRenderer osgSurface(&surface);
+   NURBS::NURBSRenderer osgSurface(&surface);
    //osgSurface.ViewWireframe(true);
-   //render(argc,argv,osgSurface);
-   return 0;
+   render(argc,argv,osgSurface);
 }
+
