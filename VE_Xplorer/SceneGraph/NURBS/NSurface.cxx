@@ -110,12 +110,14 @@ void NURBSSurface::Interpolate()
    _interpolationStepSize["V"] = 1.0/(_meshDimensions["V"]-1);
 
    std::map<unsigned int,std::vector<NURBS::ControlPoint> > surfaceInfo;
-   for(unsigned int v = 0;v < _meshDimensions["V"]; v++)
+   for(unsigned int u = 0;u < _meshDimensions["U"]; u++)
    {
-      _calculateBasisFunctionsAndDerivatives(vparam,"V");
-      for(unsigned int u = 0;u < _meshDimensions["U"]; u++)
+      _calculateBasisFunctionsAndDerivatives(uparam,"U");
+      for(unsigned int v = 0;v < _meshDimensions["V"]; v++)
       {
-         _calculateBasisFunctionsAndDerivatives(uparam,"U");
+         //don't need to calculate this every time through!!!!
+         //need to look into moving this calculateBasisFunctionsAndDerivatives out...
+         _calculateBasisFunctionsAndDerivatives(vparam,"V");
          surfaceInfo = _calculatePointOnSurface(uparam,vparam,_currentSpan["U"],_currentSpan["V"]);
          _interpolatedPoints[0].push_back(surfaceInfo[0].at(0));
 
@@ -132,11 +134,11 @@ void NURBSSurface::Interpolate()
          {
             _surfDerivatives[k] = surfaceInfo[k];
          }*/
-         uparam += _interpolationStepSize["U"];
+         vparam += _interpolationStepSize["V"];
       }
 
-      uparam = 0.0;
-      vparam += _interpolationStepSize["V"];
+      vparam = 0.0;
+      uparam += _interpolationStepSize["U"];
    }
 }
 ////////////////////////////////////////////////////////////////
@@ -163,8 +165,8 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
          {
             uindex = _currentSpan["U"] - _degree["U"] + k;
          
-            tempUContribution[l] = tempUContribution[l] 
-            + _controlPoints[0][vindex*_nControlPoints["U"] + uindex].GetWeigthedPoint()
+            tempUContribution[l] = tempUContribution[l].GetWeigthedPoint() 
+            + _controlPoints[0][uindex*_nControlPoints["V"] + vindex].GetWeigthedPoint()
                                  *_derivativeBasisFunctions["U"][n].at(k);
          }
       }
@@ -175,8 +177,8 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
          resutlingWeightedPoint[n].push_back(ControlPoint());
          for(unsigned int l = 0; l <= _degree["V"]; l++)
          {
-            resutlingWeightedPoint[n][j] = resutlingWeightedPoint[n][j] 
-                                      + tempUContribution[l]
+            resutlingWeightedPoint[n][j] = resutlingWeightedPoint[n][j].GetWeigthedPoint() 
+                                      + tempUContribution[l].GetWeigthedPoint()
                                       *_derivativeBasisFunctions["V"][j].at(l);
          }
       

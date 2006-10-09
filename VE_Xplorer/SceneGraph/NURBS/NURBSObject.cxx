@@ -266,7 +266,7 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
                                                          std::string direction)
 {
    _currentSpan[direction] = _knotVectors[direction].FindKnotSpan(parameter,
-                                                   _nControlPoints[direction]-1,
+                                                   _nControlPoints[direction],
                                                    _degree[direction]);
    
    _knotDifferences[direction].clear();

@@ -256,10 +256,10 @@ void NURBSTessellatedSurface::_tessellateSurface()const
       return;
    }
 
-   unsigned int nVPoints = _nurbsObject->NumInterpolatedPoints("U");
-   unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("V");
+   unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("U");
+   unsigned int nVPoints = _nurbsObject->NumInterpolatedPoints("V");
 
-   for(unsigned int u = 0; u </*2;*/nUPoints - 1; u++)
+   for(unsigned int u = 0; u </*2;*/ nUPoints - 1;u++)
    {
       //new tristrip
       glBegin(GL_TRIANGLE_STRIP);
@@ -338,7 +338,7 @@ osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int i
       
       NURBS::Point dSdU = surface->GetSurfaceDerivatives()[1][0].at(index);
       NURBS::Point dSdV = surface->GetSurfaceDerivatives()[0][1].at(index);
-      NURBS::Point cross = dSdV^dSdU; 
+      NURBS::Point cross = dSdU^dSdV; 
       normal.set(cross.X(),cross.Y(),cross.Z());
       normal.normalize();
    }
@@ -362,18 +362,19 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
                                 (_nurbsObject->GetType()== NURBS::NURBSObject::Surface)?true:false);
 
       _controlMeshGeode->addDrawable(_controlMeshDrawable.get());
+      _controlMeshGeode->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
       addChild(_controlMeshGeode.get());
 
       _triangulatedSurfaceGeode = new osg::Geode();
       _triangulatedSurfaceDrawable = new NURBS::NURBSTessellatedSurface(_nurbsObject);
       _triangulatedSurfaceGeode->addDrawable(_triangulatedSurfaceDrawable.get());
 
-      /*osg::ref_ptr<osg::ShadeModel> shadeModel = new osg::ShadeModel();
+      osg::ref_ptr<osg::ShadeModel> shadeModel = new osg::ShadeModel();
       shadeModel->setMode(osg::ShadeModel::SMOOTH);
 
       osg::ref_ptr<osg::StateSet> surfaceState = _triangulatedSurfaceGeode->getOrCreateStateSet();
       surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
-      */
+      
       addChild(_triangulatedSurfaceGeode.get());
    }
 }
