@@ -139,6 +139,9 @@ double Point::Z()
 ControlPoint::ControlPoint()
 :NURBS::Point()
 {
+   _xW = _x;
+   _yW = _y;
+   _zW = _z;
    _weight = 1.0;
 }
 ///////////////////////////////////////////////////////////////
@@ -161,6 +164,9 @@ ControlPoint::~ControlPoint()
 void ControlPoint::SetWeight(double weight)
 {
    _weight = weight;
+   _xW = _x*_weight;
+   _yW = _y*_weight;
+   _zW = _z*_weight;
 }
 ////////////////////////////
 double ControlPoint::Weight()
@@ -168,18 +174,39 @@ double ControlPoint::Weight()
    return _weight;
 }
 //////////////////////////////////////////////
-ControlPoint ControlPoint::GetWeigthedPoint()
+ControlPoint ControlPoint::GetWeightedPoint()
 {
-   return NURBS::ControlPoint(_x*_weight,_y*_weight,_z*_weight,_weight);
+   return NURBS::ControlPoint(_xW,_yW,_zW,_weight);
+}
+////////////////////////////////
+///Weighted component X       //
+////////////////////////////////
+double ControlPoint::WeightedX()
+{
+   return _xW;
+}
+////////////////////////////////
+///Weighted component Y       //
+////////////////////////////////
+double ControlPoint::WeightedY()
+{
+   return _yW;
+}
+////////////////////////////////
+///Weighted component Z       //
+////////////////////////////////
+double ControlPoint::WeightedZ()
+{
+   return _zW;
 }
 ///////////////////////////////////////////////////////
 ControlPoint ControlPoint::operator*(const double& lhs)
 {
-      //not sure how to handle the weights here!!!
-      ControlPoint newPoint(lhs*_x,
-                            lhs*_y,
-                            lhs*_z,
-                            _weight);
+    //not sure how to handle the weights here!!!
+    ControlPoint newPoint(lhs*_x,
+                          lhs*_y,
+                          lhs*_z,
+                          _weight);
       
       return newPoint;
 }

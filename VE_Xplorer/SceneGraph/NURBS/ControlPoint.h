@@ -184,8 +184,14 @@ public:
    ///Get the weight of this point.
    double Weight();
 
+   ///Weighted component X
+   double WeightedX();
+   ///Weighted component Y
+   double WeightedY();
+   ///Weighted component Z
+   double WeightedZ();
    ///Returns P*weight
-   NURBS::ControlPoint GetWeigthedPoint();
+   NURBS::ControlPoint GetWeightedPoint();
 
    ///Dot product
    inline double operator*(const ControlPoint& rhs) const
@@ -214,6 +220,10 @@ public:
    ControlPoint operator*(const double& lhs);
    
 protected:
+   double _xW;///<Weighted x-coord
+   double _yW;///<Weighted y-coord
+   double _zW;///<Weighted z-coord
+
    double _weight;///<The weight for this coordinate.
 };
 }

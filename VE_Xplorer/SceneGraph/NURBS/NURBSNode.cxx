@@ -322,8 +322,8 @@ void NURBSTessellatedSurface::_tessellateCurve()const
    for(unsigned int u = 0; u < nUPoints; u++)
    {
       glVertex3f(_nurbsObject->InterpolatedPoints().at(u).X(),
-                    _nurbsObject->InterpolatedPoints().at(u).Y(),
-                    _nurbsObject->InterpolatedPoints().at(u).Z());
+                 _nurbsObject->InterpolatedPoints().at(u).Y(),
+                 _nurbsObject->InterpolatedPoints().at(u).Z());
    }
    glEnd();
 }	

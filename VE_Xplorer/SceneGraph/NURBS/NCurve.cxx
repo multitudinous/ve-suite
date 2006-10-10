@@ -113,17 +113,32 @@ std::vector<NURBS::ControlPoint> NURBSCurve::_calculatePointOnCurve(double param
    double invWeight = 1.0f;
    double ctrlPtWeight = 1.0;
    double resultPtWeight = 1.0;
+   double cw[3] = {0,0,0};
    for(unsigned int k = 0; k < _degree["U"]; k++)
    {
-      resutlingWeightedPoint.push_back(ControlPoint());
+      cw[0] = 0.0;
+      cw[1] = 0.0;
+      cw[2] = 0.0;
+      resultPtWeight=0.0;
       for(unsigned int j = 0; j <= _degree["U"]; j++)
-      {
-         resutlingWeightedPoint[k] = resutlingWeightedPoint[k]
-                                   + (_controlPoints[0][span - _degree["U"] +j].GetWeigthedPoint())
-                                   * _derivativeBasisFunctions["U"][k].at(j);
+      {                 
+         cw[0] += (_controlPoints[0][span - _degree["U"] +j].WeightedX()
+                   *_derivativeBasisFunctions["U"][k].at(j));
+      
+         cw[1] += (_controlPoints[0][span - _degree["U"] +j].WeightedY()
+                   *_derivativeBasisFunctions["U"][k].at(j));
+      
+         cw[2] +=(_controlPoints[0][span - _degree["U"] +j].WeightedZ()
+                  *_derivativeBasisFunctions["U"][k].at(j));
+
+         resultPtWeight += _controlPoints[0][span - _degree["U"] +j].Weight()
+                           *_derivativeBasisFunctions["U"][k].at(j);
       }
-      invWeight = 1.0/resutlingWeightedPoint[k].Weight();
-      resutlingWeightedPoint[k] = resutlingWeightedPoint[k]*invWeight;
+      invWeight = 1.0/resultPtWeight;
+      resutlingWeightedPoint.push_back(ControlPoint(cw[0]*invWeight,
+                                                    cw[1]*invWeight,
+                                                    cw[2]*invWeight,
+                                                    resultPtWeight));
    }
    return resutlingWeightedPoint;
 }

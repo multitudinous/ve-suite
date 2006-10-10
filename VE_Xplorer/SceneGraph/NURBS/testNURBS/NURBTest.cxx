@@ -213,9 +213,9 @@ void createTestNURBS(int argc, char** argv)
    //Control points
    std::vector<NURBS::ControlPoint> controlPoints;
    controlPoints.push_back(NURBS::ControlPoint(0,0,0));   
-   controlPoints.push_back(NURBS::ControlPoint(.25,1.0,0));
-   controlPoints.push_back(NURBS::ControlPoint(.5,0.0,0));
-   controlPoints.push_back(NURBS::ControlPoint(.75,1.0,0));
+   controlPoints.push_back(NURBS::ControlPoint(.25,1.0,0,2.0));
+   controlPoints.push_back(NURBS::ControlPoint(.5,0.0,0,2.0));
+   controlPoints.push_back(NURBS::ControlPoint(.75,1.0,0,1.0));
    controlPoints.push_back(NURBS::ControlPoint(1.0,0.0,0));
 
    //NURBSCurve
@@ -235,13 +235,14 @@ void createTestNURBS(int argc, char** argv)
 
       for(unsigned int cols = 0; cols < 5; cols++)
       {
-         surfaceCtrlPts.push_back(NURBS::ControlPoint(2.0*rows - 1.5,2.0*cols-1.5,3.0,1.0));
+         surfaceCtrlPts.push_back(NURBS::ControlPoint(2.0*rows - 1.5,2.0*cols-1.5,3.0,.5));
          if((rows == 0 || rows == 3) || (cols == 0 || cols == 4))
          {
             surfaceCtrlPts[rows*5 + cols].SetZ(-3.0);
          }
       }
    }
+   surfaceCtrlPts.at(7).SetWeight(10.0);
    NURBS::KnotVector uKnots;
    uKnots.AddKnot(0.0);
    uKnots.AddKnot(0.0);
@@ -271,7 +272,7 @@ void createTestNURBS(int argc, char** argv)
    surface.SetKnotVector(uKnots,"U");
    surface.SetKnotVector(vKnots,"V");
    surface.SetInterpolationGridSize(10,"U");
-   surface.SetInterpolationGridSize(20,"V");
+   surface.SetInterpolationGridSize(10,"V");
    surface.Interpolate();
 
    /*std::fstream fout3("./testSurfacePoints.txt",std::ios::out);

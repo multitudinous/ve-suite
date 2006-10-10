@@ -154,38 +154,60 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
    double invWeight = 1.0;///resutlingWeightedPoint.Weight();
    
    double ctrlPtWeight = 1.0;
-
+   double ucontrib [4] = {0.,0.,0.,0.0};
    for(unsigned int n = 0; n < _degree["U"]; n++)
    {
       tempUContribution.clear();
       for(unsigned int l = 0; l <= _degree["V"]; l++)
       {
-         tempUContribution.push_back(NURBS::ControlPoint(0,0,0));
          vindex = _currentSpan["V"] - _degree["V"] + l;
-
+         ucontrib[0] = 0;
+         ucontrib[1] = 0;
+         ucontrib[2] = 0;
+         ucontrib[3] = 0.0;
          for(unsigned int k = 0; k <= _degree["U"]; k++)
          {
             uindex = _currentSpan["U"] - _degree["U"] + k;
          
-            tempUContribution[l] = tempUContribution[l]/*.GetWeigthedPoint()*/ 
-                                 + (_controlPoints[0][uindex*_nControlPoints["V"] + vindex].GetWeigthedPoint())
-                                 *_derivativeBasisFunctions["U"][n].at(k);
+            ucontrib[0]+=(_controlPoints[0][uindex*_nControlPoints["V"] + vindex].WeightedX()
+                         *_derivativeBasisFunctions["U"][n].at(k));
+            ucontrib[1]+=(_controlPoints[0][uindex*_nControlPoints["V"] + vindex].WeightedY()
+                         *_derivativeBasisFunctions["U"][n].at(k));
+            ucontrib[2]+=(_controlPoints[0][uindex*_nControlPoints["V"] + vindex].WeightedZ()
+                         *_derivativeBasisFunctions["U"][n].at(k));
+            ucontrib[3]+=_controlPoints[0][uindex*_nControlPoints["V"] + vindex].Weight()
+                          *_derivativeBasisFunctions["U"][n].at(k);
          }
+         invWeight = 1.0/ucontrib[3];
+         tempUContribution.push_back(NURBS::ControlPoint(ucontrib[0]*invWeight,
+                                                         ucontrib[1]*invWeight,
+                                                         ucontrib[2]*invWeight,
+                                                         ucontrib[3]));
       }
-   
 
+      double sw [4] = {0.,0.,0.,0.0};
       for(unsigned int j = 0; j < _degree["V"]; j++)
       {
-         resutlingWeightedPoint[n].push_back(ControlPoint());
+         sw[0] = 0;
+         sw[1] = 0;
+         sw[2] = 0;
+         sw[3] = 0.0;
          for(unsigned int l = 0; l <= _degree["V"]; l++)
          {
-            resutlingWeightedPoint[n][j] = resutlingWeightedPoint[n][j]/*.GetWeigthedPoint()*/ 
-                                      + tempUContribution[l]/*.GetWeigthedPoint()*/
-                                      *_derivativeBasisFunctions["V"][j].at(l);
+            sw[0]+=(tempUContribution[l].WeightedX()
+                    *_derivativeBasisFunctions["V"][j].at(l));
+            sw[1]+=(tempUContribution[l].WeightedY()
+                    *_derivativeBasisFunctions["V"][j].at(l));
+            sw[2]+=(tempUContribution[l].WeightedZ()
+                    *_derivativeBasisFunctions["V"][j].at(l));
+            sw[3]+=(tempUContribution[l].Weight()
+                    *_derivativeBasisFunctions["V"][j].at(l));
          }
-      
-         invWeight /= resutlingWeightedPoint[n][j].Weight();
-         resutlingWeightedPoint[n][j]= resutlingWeightedPoint[n][j]*invWeight;
+         invWeight = 1.0/sw[3];
+         resutlingWeightedPoint[n].push_back(ControlPoint(sw[0]*invWeight,
+                                                          sw[1]*invWeight,
+                                                          sw[2]*invWeight,
+                                                          sw[3]));
       }
    }
    return resutlingWeightedPoint;
