@@ -117,7 +117,7 @@ unsigned int KnotVector::FindKnotSpan(double parameterValue,
    }
 
    unsigned int low = degree;
-   unsigned int high = nControlPts;
+   unsigned int high = nControlPts+1;
    unsigned int mid = (low+high)/2;
    while(parameterValue < Knot(mid) || 
          parameterValue >= Knot(mid +1))

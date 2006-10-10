@@ -179,7 +179,7 @@ ControlPoint ControlPoint::operator*(const double& lhs)
       ControlPoint newPoint(lhs*_x,
                             lhs*_y,
                             lhs*_z,
-                            /*lhs*/_weight);
+                            _weight);
       
       return newPoint;
 }
@@ -192,7 +192,7 @@ ControlPoint ControlPoint::operator+(const ControlPoint& lhs)
    ControlPoint newPoint(lhs._x + _x,
                          lhs._y + _y,
                          lhs._z + _z,
-                         (lhs._weight+_weight)*.5);
+                         _weight);
       
    return newPoint;
 }

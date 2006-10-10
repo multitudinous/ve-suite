@@ -111,17 +111,19 @@ std::vector<NURBS::ControlPoint> NURBSCurve::_calculatePointOnCurve(double param
 {
    std::vector<NURBS::ControlPoint> resutlingWeightedPoint;
    double invWeight = 1.0f;
+   double ctrlPtWeight = 1.0;
+   double resultPtWeight = 1.0;
    for(unsigned int k = 0; k < _degree["U"]; k++)
    {
       resutlingWeightedPoint.push_back(ControlPoint());
-      for(unsigned int i = 0; i <= _degree["U"]; i++)
+      for(unsigned int j = 0; j <= _degree["U"]; j++)
       {
-         resutlingWeightedPoint[k] = resutlingWeightedPoint[k].GetWeigthedPoint() 
-                                + _controlPoints[0][span - _degree["U"] +i].GetWeigthedPoint()
-                                *_derivativeBasisFunctions["U"][k].at(i);
+         resutlingWeightedPoint[k] = resutlingWeightedPoint[k]
+                                   + (_controlPoints[0][span - _degree["U"] +j].GetWeigthedPoint())
+                                   * _derivativeBasisFunctions["U"][k].at(j);
       }
-      invWeight/=resutlingWeightedPoint[k].Weight();
-      resutlingWeightedPoint[k] = resutlingWeightedPoint[k].GetWeigthedPoint()*invWeight;
+      invWeight = 1.0/resutlingWeightedPoint[k].Weight();
+      resutlingWeightedPoint[k] = resutlingWeightedPoint[k]*invWeight;
    }
    return resutlingWeightedPoint;
 }
