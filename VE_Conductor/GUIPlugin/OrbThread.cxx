@@ -58,22 +58,23 @@ PEThread::PEThread()
 
 PEThread::~PEThread()
 {
-   //ShutDownThread();
-   //ACE_OS::sleep(1); 
+   ShutDownThread();
+   ACE_OS::sleep(1); 
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*int PEThread::svc (void)
+int PEThread::svc (void)
 {
    while( shutdown )
    {
       _mutex.acquire();
-      if ((message!="") && (this->GetParent()))
+      if ((message!="") )//&& (this->GetParent()))
       {
-         wxUpdateUIEvent u;
-         u.SetId(7777);
-         u.SetText(message.c_str());
+         //wxUpdateUIEvent u;
+         //u.SetId(7777);
+         //u.SetText(message.c_str());
+         this->AppendText( wxString( message ) );
          std::cout<<"LOG: "<<message;
-         ::wxPostEvent(this, u);
+         //::wxPostEvent(this, u);
          message="";
       }
       _mutex.release();
@@ -85,13 +86,13 @@ PEThread::~PEThread()
 void PEThread::ShutDownThread( void )
 {
    shutdown = false;
-}*/
+}
 ////////////////////////////////////////////////////////////////////////////////
 void PEThread::SetMessage(const char* msg)
 {
    _mutex.acquire();
-   //message+=msg;
-   this->AppendText( wxString( msg ) );
+   message+=msg;
+   //this->AppendText( wxString( msg ) );
    _mutex.release();
 }
 

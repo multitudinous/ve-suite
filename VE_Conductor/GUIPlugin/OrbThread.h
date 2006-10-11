@@ -48,12 +48,14 @@ PEThread API
 class wxUpdateUIEvent;
 
 #include "VE_Installer/include/VEConfig.h"
-class VE_GUIPLUGINS_EXPORTS PEThread : /*public ACE_Task_Base,*/ public wxTextCtrl
+class VE_GUIPLUGINS_EXPORTS PEThread : public ACE_Task_Base, public wxTextCtrl
 {
 public:
 	PEThread( void );
 	virtual ~PEThread();
 	void SetMessage(const char* msg);
+   virtual int svc( void );
+   void ShutDownThread( void );
 
 protected:
 	//wxTextCtrl* logWindow;
