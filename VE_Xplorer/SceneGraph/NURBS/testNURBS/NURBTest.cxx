@@ -14,12 +14,15 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
+#include "VE_Xplorer/SceneGraph/NURBS/testNURBS/OCCNURBSFileReader.h"
+#include "VE_Xplorer/Utilities/fileIO.h"
 
 void createTestNURBS(int argc, char** argv);
 int parseOCCNURBSFile(int argc, char** argv);
 
 /////////////render the NURBSurface in OSG
-void render(int argc, char** argv,NURBS::NURBSRenderer surface)
+void render(int argc, char** argv,
+            std::vector< osg::ref_ptr<NURBS::NURBSNode> > surfacePatches)
 {
    // use an ArgumentParser object to manage the program arguments.
     osg::ArgumentParser arguments(&argc,argv);
@@ -57,10 +60,10 @@ void render(int argc, char** argv,NURBS::NURBSRenderer surface)
         return ;
     }
     osg::ref_ptr<osg::PositionAttitudeTransform> root = new osg::PositionAttitudeTransform();
-    //root->addChild(surface.GetTriangulatedSurface());
-    osg::ref_ptr<NURBS::NURBSNode> nurbsNodeTest = new NURBS::NURBSNode(surface.GetNURBS());
-    root->addChild(nurbsNodeTest.get());
-    //root->addChild(surface.GetControlMesh());
+    for(size_t i = 0; i < surfacePatches.size(); i++)
+    {
+       root->addChild(surfacePatches.at(i).get());
+    }
 
     // add model to viewer.
     viewer.setSceneData( root.get());
@@ -110,88 +113,34 @@ int main(int argc, char** argv)
 ////////////////////////////////////////////
 int parseOCCNURBSFile(int argc, char** argv)
 {
-   std::string nurbsfile(argv[1]);
-   std::fstream occNURBSFile(nurbsfile.c_str(),std::ios::in);
-   if(occNURBSFile.is_open())
+   std::vector< osg::ref_ptr<NURBS::NURBSNode> >nurbsPatches;
+   //std::string nurbsfile(argv[1]);
+   std::vector< std::string > patchFiles = VE_Util::fileIO::GetFilesInDirectory(argv[1],".txt");
+   size_t nPatches = patchFiles.size();
+   OCCNURBSFileReader patchReader;
+
+   for(size_t i = 0; i < nPatches;i++)
    {
-      char descriptorLine[ 2048 ];
-      std::cout<<"Opened file: "<<nurbsfile<<std::endl;
-      
-      //U knots descriptor
-      occNURBSFile.getline(descriptorLine,2048);
-
-      //U knot values
-      occNURBSFile.getline(descriptorLine,2048);
-
-      std::istringstream strm( descriptorLine );
-
-      double knot = 0;
-      NURBS::KnotVector uKnots;      
-   
-      while(strm >> knot)
+      NURBS::NURBSSurface* surface = patchReader.ReadPatchFile(patchFiles.at(i));
+      if(surface)
       {
-         uKnots.AddKnot(knot);
-      }
-      //V knots descriptor
-      occNURBSFile.getline(descriptorLine,2048);
+         surface->SetInterpolationGridSize(10,"U");
+         surface->SetInterpolationGridSize(10,"V");
+         surface->Interpolate();
 
-      //V knot values
-      occNURBSFile.getline(descriptorLine,2048);
-      strm.clear();
-      strm.str(descriptorLine);
-      NURBS::KnotVector vKnots;
-      while(strm >> knot)
+         osg::ref_ptr<NURBS::NURBSNode> renderablePatch = new NURBS::NURBSNode(surface);
+         nurbsPatches.push_back(renderablePatch.get());
+      }
+      else
       {
-         vKnots.AddKnot(knot);
+         std::cout<<"Could not open file: "<<patchFiles.at(i)<<std::endl;
       }
-        
-      std::vector<NURBS::ControlPoint> surfaceCtrlPts;
-      double x = 0;
-      double y = 0;
-      double z = 0;
-      double w = 0;
-      //Control points descriptor
-      occNURBSFile.getline(descriptorLine,2048);
-
-      //control points
-      char delimChar[256];
-      unsigned int nU = 0;
-      unsigned int nV = 0;
-      while(occNURBSFile.getline(descriptorLine,2048))
-      {
-         nV = 0;
-         strm.clear();
-         strm.str(descriptorLine);
-         while(strm >> delimChar)
-         {
-            strm>>x>>y>>z>>w;
-            surfaceCtrlPts.push_back(NURBS::ControlPoint(x,y,z,w));
-            nV++;
-            //")"
-            strm>>delimChar;
-         }
-         nU++;
-      }
-
-      //the NURBS Surface (a patch)
-      NURBS::NURBSSurface surface;
-      surface.SetControlPoints(surfaceCtrlPts,nU,nV);
-      surface.SetKnotVector(uKnots,"U");
-      surface.SetKnotVector(vKnots,"V");
-      surface.SetInterpolationGridSize(5,"U");
-      surface.SetInterpolationGridSize(5,"V");
-      surface.Interpolate();
-   
-      NURBS::NURBSRenderer osgSurface(&surface);
-      //osgSurface.ViewWireframe(true);
-      render(argc,argv,osgSurface);
-      return 0;
    }
-   else
+   if(nurbsPatches.size())
    {
-      std::cout<<"Could not open file: "<<nurbsfile<<std::endl;
-      return -1;
+      render(argc,argv,nurbsPatches);
    }
+   return 0;
 }
 ///////////////////////////////////////////
 void createTestNURBS(int argc, char** argv)
@@ -242,7 +191,7 @@ void createTestNURBS(int argc, char** argv)
          }
       }
    }
-   surfaceCtrlPts.at(7).SetWeight(10.0);
+   //surfaceCtrlPts.at(7).SetWeight(1.0);
    NURBS::KnotVector uKnots;
    uKnots.AddKnot(0.0);
    uKnots.AddKnot(0.0);
@@ -288,10 +237,10 @@ void createTestNURBS(int argc, char** argv)
    }*/
 
    NURBS::NURBSRenderer osgCurve(&ncurve);
-   render(argc,argv,osgCurve);
+   //render(argc,argv,osgCurve);
 
    NURBS::NURBSRenderer osgSurface(&surface);
    //osgSurface.ViewWireframe(true);
-   render(argc,argv,osgSurface);
+   //render(argc,argv,osgSurface);
 }
 

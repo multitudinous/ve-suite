@@ -261,7 +261,7 @@ void NURBSObject::_calculateBasisFunctions(double parameter,
       _knotDifferences[direction].push_back(saved);
    }*/
 }
-////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter, 
                                                          std::string direction)
 {
@@ -330,7 +330,7 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
 
       a[0] = 1.0;
 
-      for( int k = 1; k <= _degree[direction]-1; k++)
+      for( int k = 1; k <= _degree[direction]; k++)
       {
           d = 0.0;
           rk = r-k;
@@ -339,9 +339,9 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
           if(r >=k)
           {
              //a[s2][0] = a[s1][0]/ndu[pk+1][rk]
-             a[row2*(_degree[direction])] = a[row1*(_degree[direction])]/_knotDifferences[direction][pk+1][rk];
+             a[row2*(_degree[direction]+1)] = a[row1*(_degree[direction]+1)]/_knotDifferences[direction][pk+1][rk];
 
-             d = a[row2*(_degree[direction])]*_knotDifferences[direction][rk][pk];
+             d = a[row2*(_degree[direction]+1)]*_knotDifferences[direction][rk][pk];
           }
 
           if(rk >= -1)
@@ -364,17 +364,17 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
 
           for( int j = jone; j <= jtwo; j++)
           {
-             a[row2*(_degree[direction]) + j] = (a[row1*(_degree[direction]) +(j)] 
-                                                 - a[row1*(_degree[direction]) +(j-1)])
-                                                  /_knotDifferences[direction][pk+1][rk+1];
+             a[row2*(_degree[direction]+1) + j] = (a[row1*(_degree[direction]+1) +(j)] 
+                                                 - a[row1*(_degree[direction]+1) +(j-1)])
+                                                  /_knotDifferences[direction][pk+1][rk+j];
 
-             d+= a[row2*(_degree[direction]) + j]*_knotDifferences[direction][rk+j][pk];
+             d+= a[row2*(_degree[direction]+1) + j]*_knotDifferences[direction][rk+j][pk];
           }
 
           if(r<=pk)
           {
-             a[row2*(_degree[direction]) + k] = -a[row1*(_degree[direction]) + (k-1)]/_knotDifferences[direction][pk+1][r];
-             d+= a[row2*(_degree[direction]) + k]*_knotDifferences[direction][r][pk];
+             a[row2*(_degree[direction]+1) + k] = -a[row1*(_degree[direction]+1) + (k-1)]/_knotDifferences[direction][pk+1][r];
+             d+= a[row2*(_degree[direction]+1) + k]*_knotDifferences[direction][r][pk];
           }
           _derivativeBasisFunctions[direction][k].push_back(d);
           
@@ -386,14 +386,14 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
       
    }
    int r= _degree[direction];
-      for(size_t t=1; t <= (_degree[direction]-1); t++)
+   for(int k=1; k <= (_degree[direction]); k++)
+   {
+      for(int j =0; j <=_degree[direction]; j++)
       {
-         for(size_t m =0; m <=_degree[direction]; m++)
-         {
-            _derivativeBasisFunctions[direction][t][m]*=r;
-         }
-         r*=(_degree[direction]-t);
+         _derivativeBasisFunctions[direction][k][j]*=r;
       }
+      r*=((_degree[direction])-k);
+   }
    delete [] a;
    a = 0;
 }

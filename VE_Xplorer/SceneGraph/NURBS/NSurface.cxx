@@ -129,11 +129,7 @@ void NURBSSurface::Interpolate()
          _surfDerivatives[1][0].push_back(surfaceInfo[1].at(0));
          //ds/dudv
          _surfDerivatives[1][1].push_back(surfaceInfo[1].at(1));
-         
-         /*for(size_t k = 1; k < surfaceInfo.size(); k++)
-         {
-            _surfDerivatives[k] = surfaceInfo[k];
-         }*/
+
          vparam += _interpolationStepSize["V"];
       }
 
@@ -151,7 +147,7 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
    std::vector<NURBS::ControlPoint> tempUContribution;
    unsigned int uindex = 0;
    unsigned int vindex = 0;
-   double invWeight = 1.0;///resutlingWeightedPoint.Weight();
+   double invWeight = 0.0;///resutlingWeightedPoint.Weight();
    
    double ctrlPtWeight = 1.0;
    double ucontrib [4] = {0.,0.,0.,0.0};
