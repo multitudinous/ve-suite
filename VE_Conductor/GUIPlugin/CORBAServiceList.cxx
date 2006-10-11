@@ -469,7 +469,7 @@ PEThread* CORBAServiceList::GetMessageLog( void )
    if ( pelog == NULL )
    {
       pelog = new PEThread();
-      pelog->activate();
+      //pelog->activate();
    }
    
    return pelog;

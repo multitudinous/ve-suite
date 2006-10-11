@@ -296,7 +296,7 @@ void cfdExecutive::GetEverything( void )
       modelIter = idToModel.find( iter->first );
       _plugins[ iter->first ]->SetXMLModel( modelIter->second );
       //send command to get results
-      VE_XML::Command returnState;
+      /*VE_XML::Command returnState;
       returnState.SetCommandName("Get XML Model Results");
       VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
       data->SetData("moduleName", iter->second );
@@ -313,6 +313,7 @@ void cfdExecutive::GetEverything( void )
       commandWriter.WriteXMLDocument( nodes, status, "Command" );
       //Get results 
       _plugins[ iter->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
+      */
       _plugins[ iter->first ]->ProcessOnSubmitJob();
       _plugins[ iter->first ]->PreFrameUpdate();
       vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
@@ -462,7 +463,7 @@ void cfdExecutive::LoadDataFromCE( void )
             foundPlugin!=_plugins.end(); 
             foundPlugin++ )
       {  
-         idMap = _id_map.find( foundPlugin->first );
+         /*idMap = _id_map.find( foundPlugin->first );
          VE_XML::Command returnState;
          returnState.SetCommandName("Get XML Model Results");
          VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
@@ -480,6 +481,7 @@ void cfdExecutive::LoadDataFromCE( void )
          commandWriter.WriteXMLDocument( nodes, status, "Command" );
          
          _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
+         */
          int dummyVar = 0;
          _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
       }

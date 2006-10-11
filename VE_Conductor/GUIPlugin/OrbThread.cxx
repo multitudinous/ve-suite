@@ -75,7 +75,7 @@ int PEThread::svc (void)
          this->AppendText( wxString( message ) );
          std::cout<<"LOG: "<<message;
          //::wxPostEvent(this, u);
-         message="";
+         //message="";
       }
       _mutex.release();
       ACE_OS::sleep(1); 
@@ -91,8 +91,8 @@ void PEThread::ShutDownThread( void )
 void PEThread::SetMessage(const char* msg)
 {
    _mutex.acquire();
-   message+=msg;
-   //this->AppendText( wxString( msg ) );
+   //message+=msg;
+   this->AppendText( wxString( msg ) );
    _mutex.release();
 }
 

@@ -143,12 +143,12 @@ void Body_Executive_i::execute (std::string mn)
       if ( !_exec_thread[mn]->needexecute() ) 
       {
          msg = "Failed to execute " + mn +"\n";
-         ClientMessage(msg.c_str());
+         //ClientMessage(msg.c_str());
       }
       else 
       {
          msg = "Executing " + mn +"\n";
-         ClientMessage(msg.c_str());
+         //ClientMessage(msg.c_str());
       }
    }
 }
@@ -1091,8 +1091,13 @@ void Body_Executive_i::ClientMessage(const char *msg)
       std::cout << msg << " to -> " << iter->first << std::endl;
 	   try 
       {
+         //if ( iter->first.at( 0 ) != 'V' )
+         {
          iter->second->_non_existent();
+std::cout << " here 1 " << std::endl;
    	   iter->second->Raise(msg);
+std::cout << " here 2 " << std::endl;
+         }
          ++iter;
 	   }
       catch (CORBA::Exception &) 
