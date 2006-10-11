@@ -1094,9 +1094,7 @@ void Body_Executive_i::ClientMessage(const char *msg)
          //if ( iter->first.at( 0 ) != 'V' )
          {
          iter->second->_non_existent();
-std::cout << " here 1 " << std::endl;
    	   iter->second->Raise(msg);
-std::cout << " here 2 " << std::endl;
          }
          ++iter;
 	   }
