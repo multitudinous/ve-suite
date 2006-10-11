@@ -60,7 +60,7 @@ public:
       Surface///<A NURBSSurface
    };
    ///Constructor
-   NURBSObject(Type type=Curve,unsigned int uDegree=3,unsigned int vDegree=3);
+   NURBSObject(Type type=Curve,unsigned int uDegree=3,unsigned int vDegree=1);
 
    ///Copy constructor
    NURBSObject(const NURBSObject& rhs);
@@ -116,6 +116,8 @@ public:
    ///\param direction "U" or "V" direction
    unsigned int NumInterpolatedPoints(std::string direction="U");
 
+   ///Get the minimum degree of the NURBSObject
+   unsigned int GetMinimumDegree();
    ///Get a specified control point
    ///\param index The key to search for in the control point list
    NURBS::ControlPoint& GetControlPoint(size_t index);

@@ -261,13 +261,24 @@ void NURBSObject::_calculateBasisFunctions(double parameter,
       _knotDifferences[direction].push_back(saved);
    }*/
 }
+/////////////////////////////////////
+unsigned int NURBSObject::GetMinimumDegree()
+{
+   if(_type==NURBSObject::Curve)
+   {
+      return _degree["U"];
+   }
+   if(_degree["U"] < _degree["V"])
+      return _degree["U"];
+   else
+      return _degree["V"];
+}
 /////////////////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter, 
                                                          std::string direction)
 {
    _currentSpan[direction] = _knotVectors[direction].FindKnotSpan(parameter,
-                                                   _nControlPoints[direction],
-                                                   _degree[direction]);
+                                                          _degree[direction]);
    
    _knotDifferences[direction].clear();
    _knotDifferences[direction][0].push_back(1.0);
@@ -276,14 +287,18 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
    std::vector<double> right;
    double saved = 0.0;
    double temp = 0.0;
-
-   
+   //double* ndu = new double[(_degree[direction]+1)*2];
+//   ndu[0] = 0.0;
+   int rIndex = 0;
+   int jIndex = 0;
    left.push_back(0.0);
    right.push_back(0.0);
 
    ///Compute the basis functions and derivatives -- Algo A2.3 Pigel
    for(size_t j = 1; j <= _degree[direction]; j++)
    {
+      jIndex = j*(_degree[direction]+1);
+
       left.push_back(parameter - _knotVectors[direction].Knot(_currentSpan[direction] + 1 - j));
       right.push_back(_knotVectors[direction].Knot(_currentSpan[direction] + j) - parameter);
       
@@ -292,15 +307,20 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
 
       for(size_t r = 0; r < j; r++)
       {
+         rIndex = r*(_degree[direction]+1);
          //Lower triangle for basis function table
          _knotDifferences[direction][j].push_back(right[r+1] + left[j-r]);
          temp = _knotDifferences[direction][r][j-1]/_knotDifferences[direction][j][r];
          
+         //ndu[jIndex + r] = right[r+1] + left[j-r];
+
          //Upper triangle for basis function table
          _knotDifferences[direction][r].push_back(saved + (right[r+1]*temp));
+         //ndu[rIndex + j] = saved + (right[r+1]*temp);
          saved = left[j-r]*temp;
       }
       _knotDifferences[direction][j].push_back(saved);
+      //ndu[jIndex + j] = saved;
    }
    _derivativeBasisFunctions[direction].clear();
    
@@ -396,5 +416,7 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
    }
    delete [] a;
    a = 0;
+//   delete [] ndu;
+   //ndu = 0;
 }
 

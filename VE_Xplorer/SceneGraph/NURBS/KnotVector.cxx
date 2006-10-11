@@ -94,6 +94,7 @@ void KnotVector::AddKnot(double knot)
    {
       _knotMultiplicityMap[knot] = 1;
    }
+
    _currentSpan = _knotMultiplicityMap.begin();
    _nKnots++;
 }
@@ -106,18 +107,16 @@ std::string KnotVector::KnotSpacing()
 //should this be in the NURBSCurve class???         //
 //////////////////////////////////////////////////////
 unsigned int KnotVector::FindKnotSpan(double parameterValue, 
-                                unsigned int nControlPts,
-                                unsigned int degree )
-{
-   if(fabs(parameterValue - (--_knotMultiplicityMap.end())->first) <= 1.0e-6)
+                                      unsigned int p )
+{  
+   unsigned int n = (_nKnots-1) - p -1;
+   if(fabs(parameterValue - Knot(n+1)) <= 1.0e-6)
    {
-      //this might not be correct!!!!!
-      return static_cast<unsigned int>(_nKnots)-degree-2;
-      //return _knotMultiplicityMap.size() - 2; 
+      return (n);
    }
 
-   unsigned int low = degree;
-   unsigned int high = nControlPts+1;
+   unsigned int low = p;
+   unsigned int high = n+1;
    unsigned int mid = (low+high)/2;
    while(parameterValue < Knot(mid) || 
          parameterValue >= Knot(mid +1))

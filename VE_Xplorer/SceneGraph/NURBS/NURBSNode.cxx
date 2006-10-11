@@ -331,8 +331,8 @@ void NURBSTessellatedSurface::_tessellateCurve()const
 osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int index)const 
 {
    osg::Vec3 normal(0,1,0);
-
-   if(_nurbsObject->GetType() == NURBSObject::Surface)
+   if(_nurbsObject->GetMinimumDegree() > 1)
+   //if(_nurbsObject->GetType() == NURBSObject::Surface)
    {
       NURBS::NURBSSurface* surface = dynamic_cast<NURBS::NURBSSurface*>(_nurbsObject);
       

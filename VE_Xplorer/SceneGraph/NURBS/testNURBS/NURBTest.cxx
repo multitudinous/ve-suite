@@ -220,8 +220,8 @@ void createTestNURBS(int argc, char** argv)
    surface.SetControlPoints(surfaceCtrlPts,4,5);
    surface.SetKnotVector(uKnots,"U");
    surface.SetKnotVector(vKnots,"V");
-   surface.SetInterpolationGridSize(10,"U");
-   surface.SetInterpolationGridSize(10,"V");
+   surface.SetInterpolationGridSize(60,"U");
+   surface.SetInterpolationGridSize(20,"V");
    surface.Interpolate();
 
    /*std::fstream fout3("./testSurfacePoints.txt",std::ios::out);

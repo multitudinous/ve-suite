@@ -82,11 +82,9 @@ public:
    std::map< double, unsigned int >::iterator FindSpan(double parameterValue);
 
    ///Find the span that a parameter lies in within the knot vector
-   ///\param parameterValue The value to search the span for
-   ///\param nControlPts The number of total control points.
+   ///\param parameterValue The value to search the span for.
    ///\param degree The degree of the curve this knot vector is associated with.
-   unsigned int FindKnotSpan(double parameterValue, 
-                             unsigned int nControlPts,
+   unsigned int FindKnotSpan(double parameterValue,
                              unsigned int degree );
    
    ///Get a knot value at the specified index.

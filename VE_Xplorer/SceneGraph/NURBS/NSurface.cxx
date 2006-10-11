@@ -101,6 +101,9 @@ void NURBSSurface::Interpolate()
    //s + 1 = (m + 1) + (q + 1)
    SetDegree(static_cast<unsigned int>(_knotVectors["V"].NumberOfKnots() - _nControlPoints["V"]) - 1,"V");
 
+   bool hasUderivative = (_degree["U"] >1)?true:false;
+   bool hasVderivative = (_degree["V"] >1)?true:false;
+   bool hasUVderivative = (hasVderivative&&hasUderivative)?true:false;
    _interpolatedPoints.clear();
  
    double uparam = 0.0;
@@ -123,13 +126,21 @@ void NURBSSurface::Interpolate()
 
          //S(u,v)
          _surfDerivatives[0][0].push_back(surfaceInfo[0].at(0));
-         //dS/du
-         _surfDerivatives[0][1].push_back(surfaceInfo[0].at(1));
-         //dS/dv
-         _surfDerivatives[1][0].push_back(surfaceInfo[1].at(0));
-         //ds/dudv
-         _surfDerivatives[1][1].push_back(surfaceInfo[1].at(1));
-
+         if(hasVderivative)
+         {
+            //dS/dv
+            _surfDerivatives[0][1].push_back(surfaceInfo[0].at(1));
+         }
+         if(hasUderivative)
+         {
+            //dS/dU
+            _surfDerivatives[1][0].push_back(surfaceInfo[1].at(0));
+         }
+         if(hasUVderivative)
+         {
+            //ds/dudv
+            _surfDerivatives[1][1].push_back(surfaceInfo[1].at(1));
+         }
          vparam += _interpolationStepSize["V"];
       }
 
