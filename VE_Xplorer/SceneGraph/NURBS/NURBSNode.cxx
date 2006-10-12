@@ -5,6 +5,7 @@
 #include <osg/BoundingBox>
 #include <osg/BoundingSphere>
 #include <osg/ShadeModel>
+#include <osg/Material>
 #include <iostream>
 
 using namespace NURBS;
@@ -363,6 +364,9 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
 
       _controlMeshGeode->addDrawable(_controlMeshDrawable.get());
       _controlMeshGeode->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+      osg::ref_ptr<osg::Material> yellow = new osg::Material();
+      yellow->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(1,1,0,0));
+      _controlMeshGeode->getOrCreateStateSet()->setAttribute(yellow.get());
       addChild(_controlMeshGeode.get());
 
       _triangulatedSurfaceGeode = new osg::Geode();
