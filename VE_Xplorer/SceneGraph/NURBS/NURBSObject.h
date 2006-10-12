@@ -131,6 +131,12 @@ public:
 
 protected:
 
+   ///Calculate the binomail coefficients using a recursive algorithm
+   ///for Pascal's Triangle
+   ///\param row The top input integer
+   ///\param column The bottom input integer
+   unsigned int _calculateBinomialCoefficients(unsigned int row, unsigned int column);
+
    ///Calculate the basis functions that affect a given parameter
    ///\param parameter The interpolating parameter
    ///\param direction "U" or "V" direction
@@ -147,7 +153,7 @@ protected:
    Type _type; ///<The NURBSObject type.
 
    bool _needsRetessellation;///<Means the paramaters have changed.
-
+   
    std::map<std::string, double> _interpolationStepSize;///<The tessellation u/v step size
 
    std::map<std::string, unsigned int> _meshDimensions;///<The number of interpolated mesh points in the u/v direction

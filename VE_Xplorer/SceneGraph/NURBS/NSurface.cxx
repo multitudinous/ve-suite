@@ -126,18 +126,14 @@ void NURBSSurface::Interpolate()
 
          //S(u,v)
          _surfDerivatives[0][0].push_back(surfaceInfo[0].at(0));
-         if(hasVderivative)
+         if(hasUVderivative)
          {
             //dS/dv
             _surfDerivatives[0][1].push_back(surfaceInfo[0].at(1));
-         }
-         if(hasUderivative)
-         {
+        
             //dS/dU
             _surfDerivatives[1][0].push_back(surfaceInfo[1].at(0));
-         }
-         if(hasUVderivative)
-         {
+
             //ds/dudv
             _surfDerivatives[1][1].push_back(surfaceInfo[1].at(1));
          }
@@ -155,6 +151,7 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
                                                                         unsigned int vspan)
 {
    std::map<unsigned int,std::vector<NURBS::ControlPoint> > resutlingWeightedPoint;//(0,0,0);
+   std::map<unsigned int,std::vector<NURBS::ControlPoint> > aDerivatives;
    std::vector<NURBS::ControlPoint> tempUContribution;
    unsigned int uindex = 0;
    unsigned int vindex = 0;
@@ -185,10 +182,10 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
             ucontrib[3]+=_controlPoints[0][uindex*_nControlPoints["V"] + vindex].Weight()
                           *_derivativeBasisFunctions["U"][n].at(k);
          }
-         invWeight = 1.0/ucontrib[3];
-         tempUContribution.push_back(NURBS::ControlPoint(ucontrib[0]*invWeight,
-                                                         ucontrib[1]*invWeight,
-                                                         ucontrib[2]*invWeight,
+         //invWeight = 1.0/ucontrib[3];
+         tempUContribution.push_back(NURBS::ControlPoint(ucontrib[0]/*invWeight*/,
+                                                         ucontrib[1]/*invWeight*/,
+                                                         ucontrib[2]/*invWeight*/,
                                                          ucontrib[3]));
       }
 
@@ -201,22 +198,85 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
          sw[3] = 0.0;
          for(unsigned int l = 0; l <= _degree["V"]; l++)
          {
-            sw[0]+=(tempUContribution[l].WeightedX()
+            sw[0]+=(tempUContribution[l].X()
                     *_derivativeBasisFunctions["V"][j].at(l));
-            sw[1]+=(tempUContribution[l].WeightedY()
+            sw[1]+=(tempUContribution[l].Y()
                     *_derivativeBasisFunctions["V"][j].at(l));
-            sw[2]+=(tempUContribution[l].WeightedZ()
+            sw[2]+=(tempUContribution[l].Z()
                     *_derivativeBasisFunctions["V"][j].at(l));
             sw[3]+=(tempUContribution[l].Weight()
                     *_derivativeBasisFunctions["V"][j].at(l));
          }
-         invWeight = 1.0/sw[3];
-         resutlingWeightedPoint[n].push_back(ControlPoint(sw[0]*invWeight,
-                                                          sw[1]*invWeight,
-                                                          sw[2]*invWeight,
+         //invWeight = 1.0/sw[3];
+         aDerivatives[n].push_back(ControlPoint(sw[0]/*invWeight*/,
+                                                          sw[1]/*invWeight*/,
+                                                          sw[2]/*invWeight*/,
                                                           sw[3]));
       }
    }
+   ///only calculate the 1st derivative for now
+   unsigned int d = GetMinimumDegree()-1;
+   double vContrib[3] = {0.,0.,0.};
+   double v2[3] = {0.,0.,0.};
+   unsigned int bcoeff = 1;
+   for(unsigned int k=0; k <=d;k++)
+   {
+      for(unsigned int l = 0; l <= d-k;l++)
+      {
+         vContrib[0] = aDerivatives[k][l].X();
+         vContrib[1] = aDerivatives[k][l].Y();
+         vContrib[2] = aDerivatives[k][l].Z();
+         for(unsigned int j =1; j<=l; j++)
+         {
+            bcoeff = _calculateBinomialCoefficients(l,j);
+            vContrib[0]-=(bcoeff*aDerivatives[0][j].Weight()
+                   *resutlingWeightedPoint[k][l-j].X());
+            
+            vContrib[1]-=(bcoeff*aDerivatives[0][j].Weight()
+                   *resutlingWeightedPoint[k][l-j].Y());
+
+            vContrib[2]-=(bcoeff*aDerivatives[0][j].Weight()
+                   *resutlingWeightedPoint[k][l-j].Z());
+         }
+         for(unsigned int i=1; i<=k; i++)
+         {
+            bcoeff = _calculateBinomialCoefficients(k,i);
+            vContrib[0]-=(bcoeff*aDerivatives[i][0].Weight()
+                   *resutlingWeightedPoint[k-i][l].X());
+            
+            vContrib[1]-=(bcoeff*aDerivatives[i][0].Weight()
+                   *resutlingWeightedPoint[k-i][l].Y());
+
+            vContrib[2]-=(bcoeff*aDerivatives[i][0].Weight()
+                   *resutlingWeightedPoint[k-i][l].Z());
+
+            v2[0] = 0.0;
+            v2[1] = 0.0;
+            v2[2] = 0.0;
+            for(unsigned int j=1; j<=l; j++)
+            {
+               bcoeff = _calculateBinomialCoefficients(l,j);
+               v2[0]-=(bcoeff*aDerivatives[i][j].Weight()
+                   *resutlingWeightedPoint[k-i][l-j].X());
+            
+               v2[1]-=(bcoeff*aDerivatives[i][j].Weight()
+                   *resutlingWeightedPoint[k-i][l-j].Y());
+
+               v2[2]-=(bcoeff*aDerivatives[i][j].Weight()
+                   *resutlingWeightedPoint[k-i][l-j].Z());
+
+            }
+            bcoeff = _calculateBinomialCoefficients(k,i);
+            vContrib[0] -= bcoeff*v2[0];
+            vContrib[1] -= bcoeff*v2[1];
+            vContrib[2] -= bcoeff*v2[2];
+         }
+         resutlingWeightedPoint[k].push_back(NURBS::ControlPoint(vContrib[0]/aDerivatives[0][0].Weight(),
+                                                                 vContrib[1]/aDerivatives[0][0].Weight(),
+                                                                 vContrib[2]/aDerivatives[0][0].Weight()));
+      }
+   }
+
    return resutlingWeightedPoint;
 }
 //////////////////////////////////////////////////////////////////////////

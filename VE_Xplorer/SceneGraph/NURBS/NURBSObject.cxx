@@ -273,6 +273,15 @@ unsigned int NURBSObject::GetMinimumDegree()
    else
       return _degree["V"];
 }
+///////////////////////////////////////////////////////////////////////
+unsigned int NURBSObject::_calculateBinomialCoefficients(unsigned int row, 
+                                                 unsigned int column)
+{
+   if((row ==0||column ==0|| row==column+1))
+      return 1;
+   return _calculateBinomialCoefficients(row-1,column-1) 
+         + _calculateBinomialCoefficients(row-1,column);
+}
 /////////////////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter, 
                                                          std::string direction)
