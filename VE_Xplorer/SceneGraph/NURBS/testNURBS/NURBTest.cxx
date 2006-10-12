@@ -97,14 +97,13 @@ void render(int argc, char** argv,
 
 int main(int argc, char** argv)
 {
-   
-
    if(argc >1)
    {
       return parseOCCNURBSFile(argc,argv);
    }
    else
    {
+      std::cout<<"Creating Test Scenario for NURBS"<<std::endl;
       createTestNURBS(argc,argv);
    }
 
@@ -145,6 +144,8 @@ int parseOCCNURBSFile(int argc, char** argv)
 ///////////////////////////////////////////
 void createTestNURBS(int argc, char** argv)
 {
+   std::vector< osg::ref_ptr<NURBS::NURBSNode> >testNURBSSurface;
+   std::vector< osg::ref_ptr<NURBS::NURBSNode> >testNURBSCurve;
    //Knot vector
    //U = {0,0,0,0,.5,1,1,1,1}
    NURBS::KnotVector knots;
@@ -174,6 +175,10 @@ void createTestNURBS(int argc, char** argv)
    ncurve.SetInterpolationGridSize(30);
    ncurve.Interpolate();
 
+   osg::ref_ptr<NURBS::NURBSNode> renderableCurve = new NURBS::NURBSNode(&ncurve);
+   testNURBSCurve.push_back(renderableCurve.get());
+   render(argc,argv,testNURBSCurve);
+
    float x = 0.0;
    float y = 0.0;
    float z = 0.0;
@@ -184,14 +189,16 @@ void createTestNURBS(int argc, char** argv)
 
       for(unsigned int cols = 0; cols < 5; cols++)
       {
-         surfaceCtrlPts.push_back(NURBS::ControlPoint(2.0*rows - 1.5,2.0*cols-1.5,3.0,.5));
+         surfaceCtrlPts.push_back(NURBS::ControlPoint(2.0*rows - 1.5,2.0*cols-1.5,3.0));
          if((rows == 0 || rows == 3) || (cols == 0 || cols == 4))
          {
             surfaceCtrlPts[rows*5 + cols].SetZ(-3.0);
          }
       }
    }
-   //surfaceCtrlPts.at(7).SetWeight(1.0);
+   surfaceCtrlPts.at(7).SetWeight(5);
+   
+   surfaceCtrlPts.at(11).SetWeight(3);
    NURBS::KnotVector uKnots;
    uKnots.AddKnot(0.0);
    uKnots.AddKnot(0.0);
@@ -220,26 +227,16 @@ void createTestNURBS(int argc, char** argv)
    surface.SetControlPoints(surfaceCtrlPts,4,5);
    surface.SetKnotVector(uKnots,"U");
    surface.SetKnotVector(vKnots,"V");
-   surface.SetInterpolationGridSize(60,"U");
-   surface.SetInterpolationGridSize(20,"V");
+   surface.SetInterpolationGridSize(10,"U");
+   surface.SetInterpolationGridSize(10,"V");
    surface.Interpolate();
 
-   /*std::fstream fout3("./testSurfacePoints.txt",std::ios::out);
-   for(size_t i = 0; i < surface.InterpolatedPoints().size(); i++)
-   {
-      fout3<<surface.InterpolatedPoints().at(i)<<std::endl;
-   }
+   osg::ref_ptr<NURBS::NURBSNode> renderablePatch = new NURBS::NURBSNode(&surface);
+   testNURBSSurface.push_back(renderablePatch.get());
 
-   std::fstream fout4("./surfaceontrolPoints.txt",std::ios::out);
-   for(size_t i = 0; i < surface.ControlPoints().size(); i++)
-   {
-      fout4<<surface.GetControlPoint(i)<<std::endl;
-   }*/
+   render(argc,argv,testNURBSSurface);
 
-   NURBS::NURBSRenderer osgCurve(&ncurve);
-   //render(argc,argv,osgCurve);
-
-   NURBS::NURBSRenderer osgSurface(&surface);
+   //NURBS::NURBSRenderer osgSurface(&surface);
    //osgSurface.ViewWireframe(true);
    //render(argc,argv,osgSurface);
 }
