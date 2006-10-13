@@ -96,36 +96,35 @@ void NURBSSurface::_interpolateWithinRange(double umin,double umax,
    bool hasVderivative = (_degree["V"] >1)?true:false;
    bool hasUVderivative = (hasVderivative&&hasUderivative)?true:false;
 
-   for(unsigned int u = uIndexMin; u < uIndexMax; u++)
+   for(unsigned int v = vIndexMin; v < vIndexMax; v++)
    {
-      
-      _calculateBasisFunctionsAndDerivatives(uparam,"U");
-      for(unsigned int v = vIndexMin; v < vIndexMax; v++)
+      _calculateBasisFunctionsAndDerivatives(vparam,"V");
+      for(unsigned int u = uIndexMin; u < uIndexMax; u++)
       {
-         _calculateBasisFunctionsAndDerivatives(vparam,"V");
+         _calculateBasisFunctionsAndDerivatives(uparam,"U");
          surfaceInfo = _calculatePointOnSurface(uparam,vparam,_currentSpan["U"],_currentSpan["V"]);
          
          //_interpolatedPoints[0].push_back(surfaceInfo[0].at(0));
-         _interpolatedPoints[0][u*_meshDimensions["V"]+ v] = surfaceInfo[0].at(0);
+         _interpolatedPoints[0][v*_meshDimensions["U"]+ u] = surfaceInfo[0].at(0);
 
          //S(u,v)
-         _surfDerivatives[0][0][u*_meshDimensions["V"]+ v] = surfaceInfo[0].at(0);
+         _surfDerivatives[0][0][v*_meshDimensions["U"]+ u] = surfaceInfo[0].at(0);
          if(hasUVderivative)
          {
             //dS/dv
-            _surfDerivatives[0][1][u*_meshDimensions["V"]+ v] =surfaceInfo[0].at(1);
+            _surfDerivatives[0][1][v*_meshDimensions["U"]+ u] =surfaceInfo[0].at(1);
         
             //dS/dU
-            _surfDerivatives[1][0][u*_meshDimensions["V"]+ v] =surfaceInfo[1].at(0);
+            _surfDerivatives[1][0][v*_meshDimensions["U"]+ u] =surfaceInfo[1].at(0);
 
             //ds/dudv
-            _surfDerivatives[1][1][u*_meshDimensions["V"]+ v] =surfaceInfo[1].at(1);
+            _surfDerivatives[1][1][v*_meshDimensions["U"]+ u] =surfaceInfo[1].at(1);
          }
-         vparam += _interpolationStepSize["V"];
+         uparam += _interpolationStepSize["U"];
       }
 
-      vparam = vmin;
-      uparam += _interpolationStepSize["U"];
+      uparam = umin;
+      vparam += _interpolationStepSize["V"];
    }
 
 }
@@ -175,17 +174,17 @@ void NURBSSurface::Interpolate()
    _interpolationStepSize["V"] = 1.0/(_meshDimensions["V"]-1);
 
    std::map<unsigned int,std::vector<NURBS::ControlPoint> > surfaceInfo;
-   for(unsigned int u = 0;u < _meshDimensions["U"]; u++)
+   for(unsigned int v = 0;v < _meshDimensions["V"]; v++)
    {
-      _parameterValues["U"][uparam] = u;
-      _calculateBasisFunctionsAndDerivatives(uparam,"U");
-      for(unsigned int v = 0;v < _meshDimensions["V"]; v++)
+      _parameterValues["V"][vparam] = v;
+      _calculateBasisFunctionsAndDerivatives(vparam,"V");
+      for(unsigned int u = 0;u < _meshDimensions["U"]; u++)
       {
-         if(!u)
+         if(!v)
          {
-            _parameterValues["V"][vparam] = v;
+            _parameterValues["U"][uparam] = u;
          }
-         _calculateBasisFunctionsAndDerivatives(vparam,"V");
+         _calculateBasisFunctionsAndDerivatives(uparam,"U");
          
          surfaceInfo = _calculatePointOnSurface(uparam,vparam,_currentSpan["U"],_currentSpan["V"]);
          _interpolatedPoints[0].push_back(surfaceInfo[0].at(0));
@@ -194,20 +193,20 @@ void NURBSSurface::Interpolate()
          _surfDerivatives[0][0].push_back(surfaceInfo[0].at(0));
          if(hasUVderivative)
          {
-            //dS/dv
+            //dS/du
             _surfDerivatives[0][1].push_back(surfaceInfo[0].at(1));
         
-            //dS/dU
+            //dS/dV
             _surfDerivatives[1][0].push_back(surfaceInfo[1].at(0));
 
             //ds/dudv
             _surfDerivatives[1][1].push_back(surfaceInfo[1].at(1));
          }
-         vparam += _interpolationStepSize["V"];
+         uparam += _interpolationStepSize["U"];
       }
 
-      vparam = 0.0;
-      uparam += _interpolationStepSize["U"];
+      uparam = 0.0;
+      vparam += _interpolationStepSize["V"];
    }
 }
 ////////////////////////////////////////////////////////////////

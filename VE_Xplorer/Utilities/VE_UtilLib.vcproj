@@ -45,9 +45,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE;VTK4"
+				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE;VE_UTIL_LIBRARY;VTK44;TABLET;_WIN32;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
 				StringPooling="true"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
@@ -71,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gadget_d.lib"
+				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib comctl32.lib ws2_32.lib libboost_filesystem-vc80-mt-gd-1_33_1.lib"
 				ShowProgress="2"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="1"

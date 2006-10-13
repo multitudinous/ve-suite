@@ -186,10 +186,9 @@ void createTestNURBS(int argc, char** argv)
    std::vector<NURBS::ControlPoint> surfaceCtrlPts;
    for(unsigned int rows = 0; rows < 4; rows++)
    {
-
       for(unsigned int cols = 0; cols < 5; cols++)
       {
-         surfaceCtrlPts.push_back(NURBS::ControlPoint(2.0*rows - 1.5,2.0*cols-1.5,3.0));
+         surfaceCtrlPts.push_back(NURBS::ControlPoint(2.0*cols - 1.5,2.0*rows-1.5,3.0));
          if((rows == 0 || rows == 3) || (cols == 0 || cols == 4))
          {
             surfaceCtrlPts[rows*5 + cols].SetZ(-3.0);

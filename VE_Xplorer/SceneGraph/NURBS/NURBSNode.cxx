@@ -121,13 +121,13 @@ void NURBSControlMesh::_drawUVPoints()const
    glPointSize(5.0);
    glBegin(GL_POINTS);
 
-   for(unsigned int u = 0; u < _numUControlPoints; u++)
+   for(unsigned int v = 0; v < _numVControlPoints; v++)
    {
-      for(unsigned int v = 0; v < _numVControlPoints; v++)
+      for(unsigned int u = 0; u < _numUControlPoints; u++)
       {
-         glVertex3f(_controlPoints->at(u*_numVControlPoints + v).X(),
-                    _controlPoints->at(u*_numVControlPoints + v).Y(),
-                    _controlPoints->at(u*_numVControlPoints + v).Z());
+         glVertex3f(_controlPoints->at(v*_numUControlPoints + u).X(),
+                    _controlPoints->at(v*_numUControlPoints + u).Y(),
+                    _controlPoints->at(v*_numUControlPoints + u).Z());
       }
    }
    
@@ -337,8 +337,8 @@ osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int i
    {
       NURBS::NURBSSurface* surface = dynamic_cast<NURBS::NURBSSurface*>(_nurbsObject);
       
-      NURBS::Point dSdU = surface->GetSurfaceDerivatives()[1][0].at(index);
-      NURBS::Point dSdV = surface->GetSurfaceDerivatives()[0][1].at(index);
+      NURBS::Point dSdV = surface->GetSurfaceDerivatives()[1][0].at(index);
+      NURBS::Point dSdU = surface->GetSurfaceDerivatives()[0][1].at(index);
       NURBS::Point cross = dSdU^dSdV; 
       normal.set(cross.X(),cross.Y(),cross.Z());
       normal.normalize();
