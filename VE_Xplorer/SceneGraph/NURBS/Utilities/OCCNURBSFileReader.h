@@ -44,7 +44,10 @@ namespace NURBS
    class NURBSSurface;
 }
 #include <string>
-class OCCNURBSFileReader
+
+#include <VE_Installer/include/VEConfig.h>
+
+class VE_NURBS_UTILS_EXPORTS OCCNURBSFileReader
 {
 public:
    ///Constructor
