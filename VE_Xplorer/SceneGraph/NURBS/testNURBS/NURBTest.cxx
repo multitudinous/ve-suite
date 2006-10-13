@@ -14,7 +14,7 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
-#include "VE_Xplorer/SceneGraph/NURBS/testNURBS/OCCNURBSFileReader.h"
+#include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 
 void createTestNURBS(int argc, char** argv);
@@ -116,15 +116,15 @@ int parseOCCNURBSFile(int argc, char** argv)
    //std::string nurbsfile(argv[1]);
    std::vector< std::string > patchFiles = VE_Util::fileIO::GetFilesInDirectory(argv[1],".txt");
    size_t nPatches = patchFiles.size();
-   OCCNURBSFileReader patchReader;
+   NURBS::Utilities::OCCNURBSFileReader patchReader;
 
    for(size_t i = 0; i < nPatches;i++)
    {
       NURBS::NURBSSurface* surface = patchReader.ReadPatchFile(patchFiles.at(i));
       if(surface)
       {
-         surface->SetInterpolationGridSize(10,"U");
-         surface->SetInterpolationGridSize(10,"V");
+         surface->SetInterpolationGridSize(20,"U");
+         surface->SetInterpolationGridSize(20,"V");
          surface->Interpolate();
 
          osg::ref_ptr<NURBS::NURBSNode> renderablePatch = new NURBS::NURBSNode(surface);
@@ -170,7 +170,7 @@ void createTestNURBS(int argc, char** argv)
 
    //NURBSCurve
    NURBS::NURBSCurve ncurve(3);
-   ncurve.SetControlPoints(controlPoints,controlPoints.size());
+   ncurve.SetControlPoints(controlPoints,1,controlPoints.size());
    ncurve.SetKnotVector(knots);
    ncurve.SetInterpolationGridSize(30);
    ncurve.Interpolate();

@@ -188,10 +188,6 @@
 				RelativePath=".\NURBTest.cxx"
 				>
 			</File>
-			<File
-				RelativePath=".\OCCNURBSFileReader.cxx"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

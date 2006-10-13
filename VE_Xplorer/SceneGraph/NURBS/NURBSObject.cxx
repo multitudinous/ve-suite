@@ -147,8 +147,8 @@ void NURBSObject::SetKnotVector(NURBS::KnotVector knots,
 }
 ///////////////////////////////////////////////////////////////////////////
 void NURBSObject::SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
-                                    unsigned int nUCtlPts,
-                                    unsigned int nVCtlPts)
+                                    unsigned int rows,
+                                    unsigned int columns)
 {
    _controlPoints.clear();
    unsigned int row = 0;
@@ -160,14 +160,14 @@ void NURBSObject::SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
       _controlPoints[0].push_back(ctrlPts.at(i));
       column++;
 
-      if(column == nVCtlPts)
+      if(column == columns)
       { 
          column=0;
          row++;
       }
    }
-   _nControlPoints["U"] = nUCtlPts;
-   _nControlPoints["V"] = nVCtlPts;
+   _nControlPoints["U"] = rows;
+   _nControlPoints["V"] = columns;
    _nTotalControlPoints = static_cast<unsigned int>(_controlPoints[0].size());
    _needsRetessellation = true;
 }
@@ -232,6 +232,11 @@ unsigned int NURBSObject::GetDegree(std::string direction)
 unsigned int NURBSObject::GetOrder(std::string direction)
 {
    return _order[direction];
+}
+/////////////////////////////////////////////////////////////////
+NURBS::KnotVector& NURBSObject::KnotVector(std::string direction)
+{
+   return _knotVectors[direction];
 }
 /////////////////////////////////////////////////////////////////////////////////////
 std::vector<NURBS::ControlPoint>& NURBSObject::ControlPoints(unsigned int derivative)

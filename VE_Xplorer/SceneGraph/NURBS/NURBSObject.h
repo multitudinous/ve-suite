@@ -83,11 +83,11 @@ public:
    void SetKnotVector(NURBS::KnotVector knots, std::string direction="U");
 
    ///Set the ControlPoint s for this NURBSObject.\n
-   ///uSize and vSize are at least 1.
-   ///1 <= uSize, 1 == vSize: NURBSCurve.\n
+   ///rows and columns are at least 1.
+   ///1 <= columns, 1 == rows: NURBSCurve.\n
    ///Otherwise a NURBSSurface is created
    void SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
-                         unsigned int uSize,unsigned int vSize=1);
+                         unsigned int columns,unsigned int rows=1);
 
    ///Set the size between u/v parameters when calculating the surface.
    ///\param stepSize The tessellation step size.
@@ -128,6 +128,10 @@ public:
    ///Get the ControlPoint s for this surface.
    ///\param derivative The kth derivative control point mesh
    std::vector<NURBS::ControlPoint>& ControlPoints(unsigned int derivative = 0);
+
+   ///Get a KnotVector for a specified direction
+   ///\param  direction The direction for the knot vector
+   NURBS::KnotVector& KnotVector(std::string direction);
 
    ///Get the tessellated points.
    std::vector<NURBS::Point>& InterpolatedPoints();
