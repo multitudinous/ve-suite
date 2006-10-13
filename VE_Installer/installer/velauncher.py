@@ -652,6 +652,8 @@ class LauncherWindow(wx.Frame):
                                                "Please choose one.",
                                                "Error: No Directory Chosen",
                                                 wx.OK)
+                        dlg.ShowModal()
+                        dlg.Destroy()
             else:
                 ##Hide the BuilderDir
                 self.state.React(True, "BuilderDir", None)
