@@ -199,16 +199,16 @@ void NURBSObject::UpdateMesh(/*std::vector<*/NURBS::ControlPoint modifiedControl
     
    }*/
 
-   unsigned int uIndex = modifiedControlPoint.GetRowIndex();
-   unsigned int vIndex = modifiedControlPoint.GetColumnIndex();
+   unsigned int vIndex = modifiedControlPoint.GetRowIndex();
+   unsigned int uIndex = modifiedControlPoint.GetColumnIndex();
 
    ubounds[0] = _knotVectors["U"].Knot(uIndex);
    ubounds[1] = _knotVectors["U"].Knot(uIndex+_degree["U"]+1);
 
    if(_type == NURBS::NURBSObject::Surface)
    {
-      vbounds[0] = _knotVectors["V"].Knot(vIndex);
-      vbounds[1] = _knotVectors["V"].Knot(vIndex+_degree["V"]+1);
+      ubounds[0] = _knotVectors["U"].Knot(vIndex);
+      ubounds[1] = _knotVectors["U"].Knot(vIndex+_degree["U"]+1);
    }
    _interpolateWithinBounds(ubounds,vbounds);
 
@@ -249,9 +249,9 @@ std::vector<NURBS::Point>& NURBSObject::InterpolatedPoints()
    return _interpolatedPoints[0];
 }
 //////////////////////////////////////////////////////////////
-NURBS::ControlPoint& NURBSObject::GetControlPoint(size_t index)
+NURBS::ControlPoint* NURBSObject::GetControlPoint(size_t index)
 {
-   return _controlPoints[0][index];
+   return &_controlPoints[0][index];
 }
 ///////////////////////////////
 void NURBSObject::Interpolate()

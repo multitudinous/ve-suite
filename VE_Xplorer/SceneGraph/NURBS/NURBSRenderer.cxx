@@ -140,9 +140,9 @@ void NURBSRenderer::_updateControlMesh()
       {
          osg::Vec3 nextPoint;
 
-         nextPoint.set(_nurbsObject->GetControlPoint(u*nVPoints + v).X(),
-                       _nurbsObject->GetControlPoint(u*nVPoints + v).Y(),
-                       _nurbsObject->GetControlPoint(u*nVPoints + v).Z());
+         nextPoint.set(_nurbsObject->GetControlPoint(u*nVPoints + v)->X(),
+                       _nurbsObject->GetControlPoint(u*nVPoints + v)->Y(),
+                       _nurbsObject->GetControlPoint(u*nVPoints + v)->Z());
          verts->push_back(nextPoint);
       }
       //set the verts for the line-strip
@@ -175,9 +175,9 @@ void NURBSRenderer::_updateControlMesh()
          {
             osg::Vec3 nextPoint;
 
-            nextPoint.set(_nurbsObject->GetControlPoint(u*nVPoints + v).X(),
-                          _nurbsObject->GetControlPoint(u*nVPoints + v).Y(),
-                          _nurbsObject->GetControlPoint(u*nVPoints + v).Z());
+            nextPoint.set(_nurbsObject->GetControlPoint(u*nVPoints + v)->X(),
+                          _nurbsObject->GetControlPoint(u*nVPoints + v)->Y(),
+                          _nurbsObject->GetControlPoint(u*nVPoints + v)->Z());
             vertStrip->push_back(nextPoint);
          }
          //set the verts for the tri-strip

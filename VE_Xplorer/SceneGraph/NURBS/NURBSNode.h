@@ -79,6 +79,9 @@ public:
    ///Get the osg::Geometry for the control mesh
    osg::Geode* GetControlMesh();
 
+   ///Update the control mesh and the surface
+   void UpdateControlMesh();
+
    ///compute the bounding box
    virtual osg::BoundingSphere computeBound()const;
 protected:
@@ -86,9 +89,6 @@ protected:
    bool _retessellate;///<Update the mesh
 
    bool _wireframeView;///<View the wireframe (tessellation)
-   
-   ///Draw the control mesh
-   void _updateControlMesh();
 
    ///Calculate the surface normal at a point
    ///\param index The index of the point to calculate the normal

@@ -123,7 +123,7 @@ public:
    unsigned int GetMinimumDegree();
    ///Get a specified control point
    ///\param index The key to search for in the control point list
-   NURBS::ControlPoint& GetControlPoint(size_t index);
+   NURBS::ControlPoint* GetControlPoint(size_t index);
 
    ///Get the ControlPoint s for this surface.
    ///\param derivative The kth derivative control point mesh

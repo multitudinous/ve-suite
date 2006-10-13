@@ -10,6 +10,7 @@
 
 using namespace NURBS;
 namespace NURBS{
+
 /////////////////////////////////////////////////////////////
 ///Class for the control mesh drawable                     //
 /////////////////////////////////////////////////////////////
@@ -56,6 +57,9 @@ public:
    // of OpenGL primitives.
    virtual void drawImplementation(osg::State& currentState) const;
 
+   ///Get the indexed control point
+   NURBS::ControlPoint& GetControlPoint(unsigned int index);
+
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
    virtual osg::BoundingBox computeBound() const;
@@ -78,6 +82,11 @@ protected:
    unsigned int _numVControlPoints;///<The number of control points in V direction.
    std::vector<NURBS::ControlPoint>* _controlPoints;///<The control points
 };
+}
+//////////////////////////////////////////////////////////////////////////
+NURBS::ControlPoint& NURBSControlMesh::GetControlPoint(unsigned int index)
+{
+   return _controlPoints->at(index);
 }
 //////////////////////////////////////////
 void NURBSControlMesh::_drawUCurves()const
@@ -169,6 +178,58 @@ osg::BoundingBox NURBSControlMesh::computeBound()const
    }
    return bbox;
 }
+///////////////////////////////////////////////
+namespace NURBS
+{
+class TestControlPointCallback : public osg::NodeCallback 
+{
+    public:
+    
+        TestControlPointCallback(double period):
+            _firstCall(true),
+            _startTime(0.0),
+            _time(0.0),
+            _period(period)
+            {}
+    
+        virtual void operator()(osg::Node* node,osg::NodeVisitor* nv)
+        {
+
+           osg::ref_ptr<NURBSNode> nurbsData = dynamic_cast<NURBSNode*>(node);
+           if(nurbsData.valid())
+           {
+              const osg::FrameStamp* fs = nv->getFrameStamp();
+              double referenceTime = fs->getReferenceTime();
+              if (_firstCall)
+              {
+                 _firstCall = false;
+                 _startTime = referenceTime;
+              }
+            
+               _time = referenceTime-_startTime;
+               const float TwoPI=2.0f*osg::PI;
+               const float phase = -_time/_period;
+               NURBS::ControlPoint* movingPoint =
+                       nurbsData->GetNURBS()->GetControlPoint(3);
+
+               double dz = sinf(TwoPI*phase);
+               nurbsData->GetNURBS()->GetControlPoint(3)->Translate(0,0,dz);
+               nurbsData->UpdateControlMesh();
+
+               nurbsData->GetNURBS()->UpdateMesh(*(nurbsData->GetNURBS()->GetControlPoint(3)));
+           }
+        }
+        
+        bool    _firstCall;
+
+        double  _startTime;
+        double  _time;
+        
+        double  _period;
+        double  _xphase;
+        float   _amplitude;       
+};
+   }
 namespace NURBS
 {
 ////////////////////////////////////////////////////////////////////
@@ -192,6 +253,9 @@ public:
    }
 
    META_Object(VE_NURBS,NURBS::NURBSTessellatedSurface)
+
+   ///Get the raw NURBS data
+   NURBS::NURBSObject* GetNURBSData();
 
    // the draw immediate mode method is where the OSG wraps up the drawing of
    // of OpenGL primitives.
@@ -218,6 +282,12 @@ protected:
    NURBS::NURBSObject* _nurbsObject;///The NURBS representation
 };
 }
+///////////////////////////////////////////////////////////
+NURBS::NURBSObject* NURBSTessellatedSurface::GetNURBSData()
+{
+   return _nurbsObject;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void NURBSTessellatedSurface::drawImplementation(osg::State& currentState)const
 {
@@ -380,6 +450,7 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
       surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
       
       addChild(_triangulatedSurfaceGeode.get());
+      setUpdateCallback(new TestControlPointCallback(1.0));
    }
 }
 ///////////////////////////////
@@ -428,8 +499,13 @@ osg::Geode* NURBSNode::GetControlMesh()
 ////////////////////////////////////
 ///Draw the control mesh          //   
 ////////////////////////////////////
-void NURBSNode::_updateControlMesh()
+void NURBSNode::UpdateControlMesh()
 {
+   _triangulatedSurfaceDrawable->dirtyBound();
+   _triangulatedSurfaceDrawable->dirtyDisplayList();
+   _controlMeshDrawable->dirtyBound();
+   _controlMeshDrawable->dirtyDisplayList();
+               
 }
 ///////////////////////////////////////////////////////////////////////
 ///Calculate the surface normal at a point                           //

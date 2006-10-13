@@ -208,21 +208,21 @@ ControlPoint ControlPoint::GetWeightedPoint()
 ////////////////////////////////
 double ControlPoint::WeightedX()
 {
-   return _xW;
+   return _x*_weight;
 }
 ////////////////////////////////
 ///Weighted component Y       //
 ////////////////////////////////
 double ControlPoint::WeightedY()
 {
-   return _yW;
+   return _y*_weight;
 }
 ////////////////////////////////
 ///Weighted component Z       //
 ////////////////////////////////
 double ControlPoint::WeightedZ()
 {
-   return _zW;
+   return _z*_weight;
 }
 ///////////////////////////////////////////////////////
 ControlPoint ControlPoint::operator*(const double& lhs)
