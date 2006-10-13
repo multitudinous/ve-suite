@@ -94,6 +94,9 @@ public:
    ///\param direction "U" or "V" direction
    void SetInterpolationGridSize(unsigned int stepSize,std::string direction="U");
 
+   ///Update the object as an effect of moving a control point
+   void UpdateMesh(/*std::vector<*/NURBS::ControlPoint modifiedControlPoint);
+
    ///Interpolate the NURBS object.
    virtual void Interpolate()=0;
 

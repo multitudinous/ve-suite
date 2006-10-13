@@ -40,6 +40,8 @@ Point::Point()
    _x = 0.0;
    _y = 0.0;
    _z = 0.0;
+   _row = 0;
+   _column = 0;
 }
 ///////////////////////////////////////
 //Constructor                        //
@@ -49,6 +51,8 @@ Point::Point(double x,double y, double z)
    _x = x;
    _y = y;
    _z = z;
+   _row = 0;
+   _column = 0;
 }
 ///////////////////////////////////////////////////
 ///Copy constructor                              //
@@ -58,6 +62,8 @@ Point::Point(const Point& rhs)
    _x = rhs._x;
    _y = rhs._y;
    _z = rhs._z;
+   _row = rhs._row;
+   _column = rhs._column;
 }
 ///////////////
 //Destructor //
@@ -75,6 +81,8 @@ Point& Point::operator=(const Point& rhs)
       _x = rhs._x;
       _y = rhs._y;
       _z = rhs._z;
+      _row = rhs._row;
+      _column = rhs._column;
    }
    return *this;
 }
@@ -108,6 +116,23 @@ void Point::Translate(double dx,double dy, double dz)
    _x += dx;
    _y += dy;
    _z += dz;
+}
+//////////////////////////////////////////////
+void Point::SetRowColumnIndex(unsigned int row,
+                              unsigned int column)
+{
+   _row = row;
+   _column = column;
+}
+////////////////////////////////////
+unsigned int Point::GetRowIndex()
+{
+   return _row;
+}
+////////////////////////////////////
+unsigned int Point::GetColumnIndex()
+{
+   return _column;
 }
 ///////////////////////
 //Get the weight of  //

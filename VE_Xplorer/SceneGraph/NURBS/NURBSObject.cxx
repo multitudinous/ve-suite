@@ -151,9 +151,20 @@ void NURBSObject::SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
                                     unsigned int nVCtlPts)
 {
    _controlPoints.clear();
+   unsigned int row = 0;
+   unsigned int column = 0;
+
    for(size_t i = 0; i < ctrlPts.size(); i++)
    {
+      ctrlPts.at(i).SetRowColumnIndex(row,column );
       _controlPoints[0].push_back(ctrlPts.at(i));
+      column++;
+
+      if(column == nVCtlPts)
+      { 
+         column=0;
+         row++;
+      }
    }
    _nControlPoints["U"] = nUCtlPts;
    _nControlPoints["V"] = nVCtlPts;
@@ -174,6 +185,33 @@ void NURBSObject::SetInterpolationGridSize(unsigned int stepSize,
 NURBSObject::Type NURBSObject::GetType()
 {
    return _type;
+}
+//////////////////////////////////////////////////////////////////////////////////////
+void NURBSObject::UpdateMesh(/*std::vector<*/NURBS::ControlPoint modifiedControlPoint)
+{
+   ///This assumes the control point data has already been updated!!!
+   double ubounds[2] = {0.0,1.0};
+   double vbounds[2] = {0.0,1.0};
+
+   /*size_t nMovedControlPoints = controlPointIndecies.size();
+   for(size_t i = 0; i < nMovedControlPoints; i++)
+   {
+    
+   }*/
+
+   unsigned int uIndex = modifiedControlPoint.GetRowIndex();
+   unsigned int vIndex = modifiedControlPoint.GetColumnIndex();
+
+   ubounds[0] = _knotVectors["U"].Knot(uIndex);
+   ubounds[1] = _knotVectors["U"].Knot(uIndex+_degree["U"]+1);
+
+   if(_type == NURBS::NURBSObject::Surface)
+   {
+      vbounds[0] = _knotVectors["V"].Knot(vIndex);
+      vbounds[1] = _knotVectors["V"].Knot(vIndex+_degree["V"]+1);
+   }
+   _interpolateWithinBounds(ubounds,vbounds);
+
 }
 //////////////////////////////////////////////////////////////////////
 unsigned int NURBSObject::NumInterpolatedPoints(std::string direction)

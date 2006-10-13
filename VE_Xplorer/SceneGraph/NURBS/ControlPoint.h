@@ -87,6 +87,9 @@ public:
    ///\param z The new value.
    void SetZ(double z);
 
+   ///Set the (Row,Column) position of this control point int the mesh
+   void SetRowColumnIndex(unsigned int row, unsigned int col);
+
    ///Get the value of the first directional coordinate.
    double X();
 
@@ -96,6 +99,12 @@ public:
    ///Get the value of the third directional coordinate.
    double Z();
 
+   ///Get the u Index of this control point in the overall mesh
+   unsigned int GetRowIndex();
+   
+   ///Get the v Index of this control point in the overall mesh
+   unsigned int GetColumnIndex();
+   
    ///Dot product
    inline double operator*(const Point& rhs) const
    {
@@ -154,6 +163,9 @@ protected:
    double _x;///<The raw coordianate data
    double _y;///<The raw coordianate data
    double _z;///<The raw coordianate data
+
+   unsigned int _row;///<The row of this control point in the overall mesh
+   unsigned int _column;///<The column of this control point in the overall mesh
 };
 class VE_NURBS_EXPORTS ControlPoint : public NURBS::Point
 {
