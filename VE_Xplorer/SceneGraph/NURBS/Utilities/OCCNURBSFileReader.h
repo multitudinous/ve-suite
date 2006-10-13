@@ -39,14 +39,16 @@
  * Class that reads a NURBS patch file 
  *created by the Star-2-OCC utility
  */
+#include "VE_Installer/include/VEConfig.h"
 namespace NURBS
 {
    class NURBSSurface;
 }
 #include <string>
-
-#include <VE_Installer/include/VEConfig.h>
-
+namespace NURBS
+{
+namespace Utilities
+{
 class VE_NURBS_UTILS_EXPORTS OCCNURBSFileReader
 {
 public:
@@ -64,5 +66,7 @@ protected:
    std::string _patchFile;///<The original star-to-occ data file.
    NURBS::NURBSSurface* _surfacePatch;///<The surface patch
 };
+}
+}
 #endif //OCC_NURBS_FILE_READER_H
 

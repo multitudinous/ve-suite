@@ -37,6 +37,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+using namespace NURBS::Utilities;
 ////////////////////////////////////////
 ///Constructor                        //
 ////////////////////////////////////////
