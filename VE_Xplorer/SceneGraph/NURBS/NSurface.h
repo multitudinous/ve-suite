@@ -71,6 +71,20 @@ public:
    std::map<unsigned int, std::map<unsigned int,std::vector<NURBS::Point> > > GetSurfaceDerivatives();
 
 protected:
+   ///Interpolate with a range of values...\n
+   ///Used internally for re-tessellation when moving control points
+   ///\param uBounds The min[0] and max[1] u params to interpolate between
+   ///\param vBounds The min[0] and max v[1] params to interpolate between
+   virtual void _interpolateWithinBounds(double* uBounds,double* vBounds);
+
+   ///Interpolate with a range of values...\n
+   ///Used internally for re-tessellation when moving control points
+   ///\param umin The min u param to interpolate between
+   ///\param umax The max u param to interpolate between
+   ///\param vmin The min v param to interpolate between
+   ///\param vmax The max v param to interpolate between
+   virtual void _interpolateWithinRange(double umin,double umax,
+                                        double vmin,double vmax);
 
    ///Calculate a point on a surface and the derivatives
    ///\param uparameter The interpolating u parameter

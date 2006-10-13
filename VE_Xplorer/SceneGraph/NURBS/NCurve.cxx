@@ -65,6 +65,32 @@ NURBSCurve& NURBSCurve::operator=(const NURBSCurve& rhs)
    }
    return *this;
 }
+///////////////////////////////////////////////////////////////////
+void NURBSCurve::_interpolateWithinRange(double umin,double umax,
+                                         double vmin,double vmax)
+{
+
+   //This function assumes all the proper checks have been made
+   //before entering!!!!!
+   double uparam = umin;
+   double vparam = vmin;
+   unsigned int uIndexMin = _findNearestParameterIndex("U",umin);
+   unsigned int uIndexMax = _findNearestParameterIndex("U",umax);
+
+   std::vector<NURBS::ControlPoint> curveInfo;
+
+   for(unsigned int u = uIndexMin; u < uIndexMax; u++)
+   {
+      _calculateBasisFunctionsAndDerivatives(uparam,"U");
+      curveInfo = _calculatePointOnCurve(uparam,_currentSpan["U"]);
+      for(size_t k = 0; k < curveInfo.size(); k++)
+      {
+         _interpolatedPoints[k][u] = curveInfo.at(k);
+      }
+      uparam += _interpolationStepSize["U"];
+   }
+
+}
 //////////////////////////////
 void NURBSCurve::Interpolate()
 {
@@ -103,6 +129,7 @@ void NURBSCurve::Interpolate()
          _interpolatedPoints[k].push_back(curveInfo.at(k));
       }
       param += _interpolationStepSize["U"];
+      _parameterValues["U"][param]=i;
    }
 }
 /////////////////////////////////////////////////////////////////////////////////////

@@ -222,6 +222,12 @@ void NURBSObject::Interpolate()
       return;
    }
 }
+////////////////////////////////////////////////////////////////////////////
+void NURBSObject::_interpolateWithinBounds(double* uBounds,double* vBounds)
+{
+   
+   _interpolateWithinRange(uBounds[0],uBounds[1],vBounds[0],vBounds[1]);
+}
 ////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctions(double parameter, 
                                            std::string direction)
@@ -296,17 +302,13 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
    std::vector<double> right;
    double saved = 0.0;
    double temp = 0.0;
-   //double* ndu = new double[(_degree[direction]+1)*2];
-//   ndu[0] = 0.0;
-   int rIndex = 0;
-   int jIndex = 0;
+
    left.push_back(0.0);
    right.push_back(0.0);
 
    ///Compute the basis functions and derivatives -- Algo A2.3 Pigel
    for(size_t j = 1; j <= _degree[direction]; j++)
    {
-      jIndex = j*(_degree[direction]+1);
 
       left.push_back(parameter - _knotVectors[direction].Knot(_currentSpan[direction] + 1 - j));
       right.push_back(_knotVectors[direction].Knot(_currentSpan[direction] + j) - parameter);
@@ -316,21 +318,17 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
 
       for(size_t r = 0; r < j; r++)
       {
-         rIndex = r*(_degree[direction]+1);
-         //Lower triangle for basis function table
+        //Lower triangle for basis function table
          _knotDifferences[direction][j].push_back(right[r+1] + left[j-r]);
          temp = _knotDifferences[direction][r][j-1]/_knotDifferences[direction][j][r];
          
-         //ndu[jIndex + r] = right[r+1] + left[j-r];
-
+       
          //Upper triangle for basis function table
          _knotDifferences[direction][r].push_back(saved + (right[r+1]*temp));
-         //ndu[rIndex + j] = saved + (right[r+1]*temp);
          saved = left[j-r]*temp;
       }
       _knotDifferences[direction][j].push_back(saved);
-      //ndu[jIndex + j] = saved;
-   }
+    }
    _derivativeBasisFunctions[direction].clear();
    
    //Initialize the "0th" derivative in our derivative map
@@ -424,8 +422,14 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
       r*=((_degree[direction])-k);
    }
    delete [] a;
-   a = 0;
-//   delete [] ndu;
-   //ndu = 0;
+}
+//////////////////////////////////////////////////////////////////////////
+unsigned int NURBSObject::_findNearestParameterIndex(std::string direction,
+                                                     double parameter)
+{
+   std::map<double, unsigned int >::iterator lowerNearestValue;
+   lowerNearestValue = _parameterValues[direction].lower_bound(parameter);
+   
+   return lowerNearestValue->second;
 }
 

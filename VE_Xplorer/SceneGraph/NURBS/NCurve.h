@@ -69,6 +69,17 @@ public:
    virtual void Interpolate();
 
 protected:
+  
+
+   ///Interpolate with a range of values...\n
+   ///Used internally for re-tessellation when moving control points
+   ///\param umin The min u param to interpolate between
+   ///\param umax The max u param to interpolate between
+   ///\param vmin The min v param to interpolate between
+   ///\param vmax The max v param to interpolate between
+   virtual void _interpolateWithinRange(double umin,double umax,
+                                        double vmin,double vmax);
+
    ///Calculate a point and it's derivatives on a curve
    ///\param parameter The interpolating parameter
    ///\param span The knot span to interpolate the parameter on

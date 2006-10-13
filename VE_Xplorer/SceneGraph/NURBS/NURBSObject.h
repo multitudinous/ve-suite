@@ -148,12 +148,32 @@ protected:
    ///\param parameter The interpolating parameter
    ///\param direction "U" or "V" direction
    void _calculateBasisFunctionsAndDerivatives(double parameter, 
-                                 std::string direction);
+                                               std::string direction);
+
+   ///Find the nearest parameter index in a given direction
+   ///\param direction "U" or "V" direction
+   ///\param parameter The input parameter
+   unsigned int _findNearestParameterIndex(std::string direction,double parameter);
+
+   ///Interpolate with a range of values...\n
+   ///Used internally for re-tessellation when moving control points
+   ///\param uBounds The min[0] and max[1] u params to interpolate between
+   ///\param vBounds The min[0] and max v[1] params to interpolate between
+   void _interpolateWithinBounds(double* uBounds,double* vBounds);
+
+   ///Interpolate with a range of values...\n
+   ///Used internally for re-tessellation when moving control points
+   ///\param umin The min u param to interpolate between
+   ///\param umax The max u param to interpolate between
+   ///\param vmin The min v param to interpolate between
+   ///\param vmax The max v param to interpolate between
+   virtual void _interpolateWithinRange(double umin,double umax,
+                                        double vmin,double vmax)=0;
 
    Type _type; ///<The NURBSObject type.
 
    bool _needsRetessellation;///<Means the paramaters have changed.
-   
+   std::map<std::string, std::map<double, unsigned int > >_parameterValues;///<Map holding the actual parameter values in each direction and it's index
    std::map<std::string, double> _interpolationStepSize;///<The tessellation u/v step size
 
    std::map<std::string, unsigned int> _meshDimensions;///<The number of interpolated mesh points in the u/v direction
