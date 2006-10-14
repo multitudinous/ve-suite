@@ -43,49 +43,69 @@
 ////////////////////////////////////////
 VENURBS2OCCNURBS::VENURBS2OCCNURBS()
 {
-   _surfacePatch = 0;
+   ;
 }
 /////////////////////////////////////////
 ///Destructor                          //
 /////////////////////////////////////////
 VENURBS2OCCNURBS::~VENURBS2OCCNURBS()
 {
-   if(_surfacePatch)
-   {
-      delete _surfacePatch;
-   }
-   _surfacePatch = 0;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Handle_Geom_BSplineSurface VENURBS2OCCNURBS::GetOCCNURBSSurface( NURBS::NURBSSurface* veNURBSSurface )
+Geom_BSplineSurface* VENURBS2OCCNURBS::GetOCCNURBSSurface( NURBS::NURBSSurface* veNURBSSurface )
 {
-   std::vector< std::vector<NURBS::ControlPoint> > points = veNURBSSurface->GetControlPoints();
-   NURBS::KnotVector uKnotVector = _knotVectors[ "U" ];
-   NURBS::KnotVector vKnotVector = _knotVectors[ "V" ];
-   
+   NURBS::KnotVector uKnotVector = veNURBSSurface->KnotVector( "U" );
+   NURBS::KnotVector vKnotVector = veNURBSSurface->KnotVector( "V" );
    std::map< double , unsigned int > uKnots = uKnotVector.GetKnotMap();
    std::map< double , unsigned int > vKnots = vKnotVector.GetKnotMap();
 
-   std::vector< unsigned int > uMultiplicity;
-   std::vector< unsigned int > vMultiplicity;
-   std::vector< double > uKnot;
-   std::vector< double > vKnot;
-   
+   TColStd_Array1OfInteger UMults( 1, uKnots.size() );
+   TColStd_Array1OfReal UKnots( 1, uKnots.size() );
    // get u info
    std::map< double , unsigned int >::iterator iter;
+   size_t count = 1;
    for ( iter = uKnots.begin(); iter != uKnots.end(); ++iter )
    {
-      uMultiplicity.push_back( iter.second );
-      uKnot.push_back( iter.first );
+      UMults( count ) = iter.second;
+      UKnots( count ) = iter.first;
+      count++;
    }
 
    // get v info
+   TColStd_Array1OfReal VKnots( 1, vKnots.size() );
+   TColStd_Array1OfInteger VMults( 1, vKnots.size() );
+   count = 0;
    for ( iter = vKnots.begin(); iter != vKnots.end(); ++iter )
    {
-      vMultiplicity.push_back( iter.second );
-      vKnot.push_back( iter.first );
+      VMults( count ) = iter.second;
+      VKnots( count ) = iter.first;
+      count++;
    }
 
-   return 0;
+   //Get control points
+   std::vector< std::vector<NURBS::ControlPoint> > points = veNURBSSurface->GetControlPoints();
+   TColgp_Array2OfPnt Poles( 1, points.at( 0 ).size(), 1, points.size() );
+   TColStd_Array2OfReal Weights( 1, points.at( 0 ).size(), 1, points.size() );
+   for ( size_t j = 0; j < points.size(); ++j )
+   {
+      for ( size_t i = 0; i < points.at( j ).size(); ++i )
+      {
+         double X = points( j ).at( i ).X();
+         double Y = points( j ).at( i ).Y();
+         double Z = points( j ).at( i ).Z();
+         Weights( i, j ) = points( j ).at( i ).Weight();
+         Poles( i, j ).SetCoord( X, Y, Z );
+      }
+   }
+
+   int UDegree = surface->GetDegree( "U" );
+   int VDegree = surface->GetDegree( "V" );
+   //Now create occ nurb surface
+   Geom_BSplineSurface* surface = new Geom_BSplineSurface ( Poles,  Weights, 
+                                                            UKnots, VKnots, 
+                                                            UMults, VMults, 
+                                                            UDegree, VDegree );
+   return surface;
 }
 

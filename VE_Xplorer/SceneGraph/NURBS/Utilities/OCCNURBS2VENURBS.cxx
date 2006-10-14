@@ -34,30 +34,82 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
 #include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
-#include <fstream>
-#include <iostream>
-#include <sstream>
+
 ////////////////////////////////////////
 ///Constructor                        //
 ////////////////////////////////////////
 OCCNURBS2VENURBS::OCCNURBS2VENURBS()
 {
-   _surfacePatch = 0;
+   ;
 }
 /////////////////////////////////////////
 ///Destructor                          //
 /////////////////////////////////////////
 OCCNURBS2VENURBS::~OCCNURBS2VENURBS()
 {
-   if(_surfacePatch)
-   {
-      delete _surfacePatch;
-   }
-   _surfacePatch = 0;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-NURBS::NURBSSurface* OCCNURBS2VENURBS::GetOCCNURBSSurface( Handle_Geom_BSplineSurface occNURBSSurface )
+NURBS::NURBSSurface* OCCNURBS2VENURBS::GetOCCNURBSSurface( Geom_BSplineSurface* occNURBSSurface )
 {
-   return 0;
-}
+   NURBS::KnotVector uKnots;      
+   // get the know uknots
+   TColStd_Array1OfReal Ku( 1, occNURBSSurface->NbUKnots() );
+   occNURBSSurface->UKnots( Ku );
+   //Get u multiplicities
+   TColStd_Array1OfInteger Mu( 1, occNURBSSurface->NbUKnots() );
+   occNURBSSurface->UMultiplicities( Mu );
+   for ( size_t i = Ku.Lower(); i <= Ku.Upper(); ++i )
+   {
+      for ( size_t j = 1; j <= Mu( i ); ++j )
+      {
+         uKnots.AddKnot( Ku( i ) );
+      }
+   }
 
+   NURBS::KnotVector vKnots;      
+   // get the vknots
+   TColStd_Array1OfReal Kv( 1, occNURBSSurface->NbVKnots() );
+   occNURBSSurface->VKnots( Kv );
+   //Get v multiplicities
+   TColStd_Array1OfInteger Mv( 1, occNURBSSurface->NbVKnots() );
+   occNURBSSurface->VMultiplicities( Mv );
+   for ( size_t i = Kv.Lower(); i <= Kv.Upper(); ++i )
+   {
+      for ( size_t j = 1; j <= Mv( i ); ++j )
+      {
+         vKnots.AddKnot( Kv( i ) );
+      }
+   }
+
+   // get the weights
+   TColStd_Array2OfReal W( 1, occNURBSSurface->NbUPoles(), 1, occNURBSSurface->NbVPoles() );
+   occNURBSSurface->Weights( W );
+   // get poles/control
+   TColgp_Array2OfPnt Poles( 1, occNURBSSurface->NbUPoles(), 1, occNURBSSurface->NbVPoles() );
+   occNURBSSurface->Poles( Poles );
+   std::vector<NURBS::ControlPoint> surfaceCtrlPts;
+   double x = 0;
+   double y = 0;
+   double z = 0;
+   double w = 0;
+   for ( size_t j = W.LowerRow(); j <= W.UpperRow(); ++j )
+   {
+      for ( size_t i = W.LowerCol(); i <= W.UpperCol(); ++i )
+      {
+         x = Poles( i, j ).X();
+         y = Poles( i, j ).Y(); 
+         z = Poles( i, j ).Z();
+         w = W( i, j );
+         surfaceCtrlPts.push_back(NURBS::ControlPoint(x,y,z,w));
+      }
+   }
+
+   ///User responsible for deleting memory!!!
+   NURBS::NURBSSurface* surfacePatch = new NURBS::NURBSSurface();
+   surfacePatch->SetControlPoints(surfaceCtrlPts,nU,nV);
+   surfacePatch->SetKnotVector(uKnots,"U");
+   surfacePatch->SetKnotVector(vKnots,"V");
+   
+   return surfacePatch;
+}

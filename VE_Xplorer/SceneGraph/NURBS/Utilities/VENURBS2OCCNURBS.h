@@ -54,10 +54,7 @@ public:
 
    ///Get a VE NURBS patch and return an OCC BSpline Surface
    ///\param veNURBSSurface NURBS surface to be converted
-   Handle_Geom_BSplineSurface GetOCCNURBSSurface( NURBS::NURBSSurface* veNURBSSurface );
-   
-protected:
-   NURBS::NURBSSurface* veNURBSSurfacePatch;///<The surface patch
+   Geom_BSplineSurface* GetOCCNURBSSurface( NURBS::NURBSSurface* veNURBSSurface );
 };
 }
 #endif //VE_NURBS_2_OCC_NURBS_H
