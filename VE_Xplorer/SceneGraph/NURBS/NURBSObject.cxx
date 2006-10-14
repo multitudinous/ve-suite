@@ -475,4 +475,23 @@ unsigned int NURBSObject::_findNearestParameterIndex(std::string direction,
    
    return lowerNearestValue->second;
 }
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::vector<NURBS::ControlPoint> > NURBSObject::GetControlPoints( unsigned int derivative )
+{
+   size_t numUPoints = _nControlPoints["U"];
+   size_t numVPoints = _nControlPoints["V"];
+   std::vector< NURBS::ControlPoint > tempPoints = _controlPoints[ derivative ];
+   std::vector< std::vector< NURBS::ControlPoint > > controlPoints;
+
+   for ( size_t i =0; i < numVPoints; ++i )
+   {
+      std::vector< NURBS::ControlPoint > points;
+      for ( size_t j = 0; j < numUPoints; ++j )
+      {
+         points.push_back( tempPoints.at( (i * numUPoints) + j ) );
+      }
+      controlPoints.push_back( points );
+   }
+   return controlPoints;
+}
 

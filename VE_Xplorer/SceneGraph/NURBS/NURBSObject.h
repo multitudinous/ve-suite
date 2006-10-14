@@ -129,6 +129,10 @@ public:
    ///\param derivative The kth derivative control point mesh
    std::vector<NURBS::ControlPoint>& ControlPoints(unsigned int derivative = 0);
 
+   ///Get the ControlPoint 2d array
+   ///\param derivative The kth derivative control point mesh
+   std::vector< std::vector<NURBS::ControlPoint> > GetControlPoints( unsigned int derivative = 0);
+   
    ///Get a KnotVector for a specified direction
    ///\param  direction The direction for the knot vector
    NURBS::KnotVector& KnotVector(std::string direction);
