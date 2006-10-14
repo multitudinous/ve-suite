@@ -128,7 +128,7 @@ public:
    ///\param element Element to extract long integer from.
    long int ExtractLongIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
 
-   /*template<class T>
+   template<class T>
    inline T ExtractFromSimpleElement(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
    {
       T ret_val = T();
@@ -150,7 +150,7 @@ public:
       {
       }
       return ret_val;
-   }*/
+   }
    
    ///Get a string attribute by name
    ///\param attributeName The name of the attribute
