@@ -37,9 +37,13 @@ else
 endif
 # list the source files that are in current directory
 SRCS=\
-   OCCNURBSFileReader.cxx\
+   OCCNURBSFileReader.cxx
+
+ifneq ($(CASROOT),)
+SRCS+=\
    VENURBS2OCCNURBS.cxx\
    OCCNURBS2VENURBS.cxx
+endif
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
@@ -50,8 +54,9 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.osg.mk
 else
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.pf.mk
 endif
+ifneq (${CASROOT},)
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.occ.mk
-
+endif
 # -----------------------------------------------------------------------------
 
 PLUGIN_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_NURBSUtilsLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
