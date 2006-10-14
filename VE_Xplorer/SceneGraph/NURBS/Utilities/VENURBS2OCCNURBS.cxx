@@ -57,29 +57,31 @@ Geom_BSplineSurface* VENURBS2OCCNURBS::GetOCCNURBSSurface( NURBS::NURBSSurface* 
 {
    NURBS::KnotVector uKnotVector = veNURBSSurface->KnotVector( "U" );
    NURBS::KnotVector vKnotVector = veNURBSSurface->KnotVector( "V" );
-   std::map< double , unsigned int > uKnots = uKnotVector.GetKnotMap();
-   std::map< double , unsigned int > vKnots = vKnotVector.GetKnotMap();
+   std::vector< double > uMultiplicity = uKnotVector.GetMultiplicityVector();
+   std::vector< unsigned int > uKnots = uKnotVector.GetKnotVector();
+   std::vector< double > vMultiplicity = vKnotVector.GetMultiplicityVector();
+   std::vector< unsigned int > vKnots = vKnotVector.GetKnotVector();
 
    TColStd_Array1OfInteger UMults( 1, uKnots.size() );
    TColStd_Array1OfReal UKnots( 1, uKnots.size() );
    // get u info
-   std::map< double , unsigned int >::iterator iter;
+   //std::map< double , unsigned int >::iterator iter;
    size_t count = 1;
-   for ( iter = uKnots.begin(); iter != uKnots.end(); ++iter )
+   for ( size_t i = 0; i < uKnots.size(); ++i )
    {
-      UMults( count ) = iter.second;
-      UKnots( count ) = iter.first;
+      UMults( count ) = uMultiplicity.at( i );
+      UKnots( count ) = uKnots.at( i );
       count++;
    }
 
    // get v info
    TColStd_Array1OfReal VKnots( 1, vKnots.size() );
    TColStd_Array1OfInteger VMults( 1, vKnots.size() );
-   count = 0;
-   for ( iter = vKnots.begin(); iter != vKnots.end(); ++iter )
+   count = 1;
+   for ( size_t i = 0; i < vKnots.size(); ++i )
    {
-      VMults( count ) = iter.second;
-      VKnots( count ) = iter.first;
+      VMults( count ) = vMultiplicity.at( i );
+      VKnots( count ) = vKnots.at( i );
       count++;
    }
 
@@ -87,13 +89,16 @@ Geom_BSplineSurface* VENURBS2OCCNURBS::GetOCCNURBSSurface( NURBS::NURBSSurface* 
    std::vector< std::vector<NURBS::ControlPoint> > points = veNURBSSurface->GetControlPoints();
    TColgp_Array2OfPnt Poles( 1, points.at( 0 ).size(), 1, points.size() );
    TColStd_Array2OfReal Weights( 1, points.at( 0 ).size(), 1, points.size() );
+   double X = 0;
+   double Y = 0;
+   double Z = 0;   
    for ( size_t j = 0; j < points.size(); ++j )
    {
       for ( size_t i = 0; i < points.at( j ).size(); ++i )
       {
-         double X = points( j ).at( i ).X();
-         double Y = points( j ).at( i ).Y();
-         double Z = points( j ).at( i ).Z();
+         X = points( j ).at( i ).X();
+         Y = points( j ).at( i ).Y();
+         Z = points( j ).at( i ).Z();
          Weights( i, j ) = points( j ).at( i ).Weight();
          Poles( i, j ).SetCoord( X, Y, Z );
       }

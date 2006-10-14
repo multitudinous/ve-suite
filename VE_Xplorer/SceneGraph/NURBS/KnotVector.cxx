@@ -183,3 +183,29 @@ size_t KnotVector::NumberOfKnots()
 {
    return _nKnots;
 }
+////////////////////////////////////////////////////////////////////////////////
+std::vector< unsigned int > KnotVector::GetMultiplicityVector( void )
+{
+   std::vector< unsigned int > multiVector;
+   std::map< double, unsigned int >::iterator iter;
+   for ( iter = _knotMultiplicityMap.begin(); 
+         iter != _knotMultiplicityMap.end(); 
+         ++iter )
+   {
+      multiVector.push_back( iter->second );
+   }
+   return multiVector;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< double > KnotVector::GetKnotVector( void )
+{
+   std::vector< double > knotVector;
+   std::map< double, unsigned int >::iterator iter;
+   for ( iter = _knotMultiplicityMap.begin(); 
+         iter != _knotMultiplicityMap.end(); 
+         ++iter )
+   {
+      knotVector.push_back( iter->first );
+   }
+   return knotVector;
+}

@@ -98,6 +98,11 @@ public:
 
    ///Get the number of knots currently in the vector.
    size_t NumberOfKnots();
+   ///Get multiplicity vector
+   std::vector< unsigned int > GetMultiplicityVector( void );
+   ///Get knot vector
+   std::vector< double > GetKnotVector( void );
+   
 protected:
    size_t _nKnots;///< Number of knots
    std::map< double , unsigned int > _knotMultiplicityMap;///<The map values and multiplicity 
