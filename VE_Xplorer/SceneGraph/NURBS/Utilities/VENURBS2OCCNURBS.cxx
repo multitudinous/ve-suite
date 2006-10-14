@@ -38,6 +38,14 @@
 #include <vector>
 #include <iostream>
 
+#include <TColStd_Array1OfInteger.hxx>
+#include <TColStd_Array1OfReal.hxx>
+#include <TColStd_Array2OfReal.hxx>
+#include <TColgp_Array2OfPnt.hxx>
+#include <Geom_BSplineSurface.hxx>
+
+using namespace NURBS_Utilities;
+
 ////////////////////////////////////////
 ///Constructor                        //
 ////////////////////////////////////////
@@ -57,10 +65,10 @@ Geom_BSplineSurface* VENURBS2OCCNURBS::GetOCCNURBSSurface( NURBS::NURBSSurface* 
 {
    NURBS::KnotVector uKnotVector = veNURBSSurface->KnotVector( "U" );
    NURBS::KnotVector vKnotVector = veNURBSSurface->KnotVector( "V" );
-   std::vector< double > uMultiplicity = uKnotVector.GetMultiplicityVector();
-   std::vector< unsigned int > uKnots = uKnotVector.GetKnotVector();
-   std::vector< double > vMultiplicity = vKnotVector.GetMultiplicityVector();
-   std::vector< unsigned int > vKnots = vKnotVector.GetKnotVector();
+   std::vector< unsigned int > uMultiplicity = uKnotVector.GetMultiplicityVector();
+   std::vector< double > uKnots = uKnotVector.GetKnotVector();
+   std::vector< unsigned int > vMultiplicity = vKnotVector.GetMultiplicityVector();
+   std::vector< double > vKnots = vKnotVector.GetKnotVector();
 
    TColStd_Array1OfInteger UMults( 1, uKnots.size() );
    TColStd_Array1OfReal UKnots( 1, uKnots.size() );
@@ -96,16 +104,16 @@ Geom_BSplineSurface* VENURBS2OCCNURBS::GetOCCNURBSSurface( NURBS::NURBSSurface* 
    {
       for ( size_t i = 0; i < points.at( j ).size(); ++i )
       {
-         X = points( j ).at( i ).X();
-         Y = points( j ).at( i ).Y();
-         Z = points( j ).at( i ).Z();
-         Weights( i, j ) = points( j ).at( i ).Weight();
+         X = points.at( j ).at( i ).X();
+         Y = points.at( j ).at( i ).Y();
+         Z = points.at( j ).at( i ).Z();
+         Weights( i, j ) = points.at( j ).at( i ).Weight();
          Poles( i, j ).SetCoord( X, Y, Z );
       }
    }
 
-   int UDegree = surface->GetDegree( "U" );
-   int VDegree = surface->GetDegree( "V" );
+   int UDegree = veNURBSSurface->GetDegree( "U" );
+   int VDegree = veNURBSSurface->GetDegree( "V" );
    //Now create occ nurb surface
    Geom_BSplineSurface* surface = new Geom_BSplineSurface ( Poles,  Weights, 
                                                             UKnots, VKnots, 

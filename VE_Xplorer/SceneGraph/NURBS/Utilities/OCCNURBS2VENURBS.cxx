@@ -30,10 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/NURBS/Utilities/VENURBS2OCCNURBS.h"
+#include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBS2VENURBS.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
 #include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
+
+#include <Geom_BSplineSurface.hxx>
+#include <TColStd_Array1OfReal.hxx>
+#include <TColStd_Array1OfInteger.hxx>
+#include <TColStd_Array2OfReal.hxx>
+#include <TColgp_Array2OfPnt.hxx>
+
+using namespace NURBS_Utilities;
 
 ////////////////////////////////////////
 ///Constructor                        //
@@ -50,7 +58,7 @@ OCCNURBS2VENURBS::~OCCNURBS2VENURBS()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-NURBS::NURBSSurface* OCCNURBS2VENURBS::GetOCCNURBSSurface( Geom_BSplineSurface* occNURBSSurface )
+NURBS::NURBSSurface* OCCNURBS2VENURBS::GetVENURBSSurface( Geom_BSplineSurface* occNURBSSurface )
 {
    NURBS::KnotVector uKnots;      
    // get the know uknots
@@ -89,6 +97,8 @@ NURBS::NURBSSurface* OCCNURBS2VENURBS::GetOCCNURBSSurface( Geom_BSplineSurface* 
    TColgp_Array2OfPnt Poles( 1, occNURBSSurface->NbUPoles(), 1, occNURBSSurface->NbVPoles() );
    occNURBSSurface->Poles( Poles );
    std::vector<NURBS::ControlPoint> surfaceCtrlPts;
+   unsigned int nU = occNURBSSurface->NbUPoles();
+   unsigned int nV = occNURBSSurface->NbVPoles();
    double x = 0;
    double y = 0;
    double z = 0;

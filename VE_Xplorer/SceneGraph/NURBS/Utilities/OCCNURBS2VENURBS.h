@@ -41,6 +41,9 @@ namespace NURBS
 {
    class NURBSSurface;
 }
+
+class Geom_BSplineSurface;
+
 #include <VE_Installer/include/VEConfig.h>
 namespace NURBS_Utilities
 {

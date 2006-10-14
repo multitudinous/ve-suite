@@ -37,7 +37,9 @@ else
 endif
 # list the source files that are in current directory
 SRCS=\
-   OCCNURBSFileReader.cxx
+   OCCNURBSFileReader.cxx\
+   VENURBS2OCCNURBS.cxx\
+   OCCNURBS2VENURBS.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
@@ -48,6 +50,7 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.osg.mk
 else
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.pf.mk
 endif
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.occ.mk
 
 # -----------------------------------------------------------------------------
 
