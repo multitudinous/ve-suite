@@ -45,7 +45,9 @@ namespace NURBS
 class Geom_BSplineSurface;
 
 #include <VE_Installer/include/VEConfig.h>
-namespace NURBS_Utilities
+namespace NURBS
+{
+namespace Utilities
 {
 class VE_NURBS_UTILS_EXPORTS OCCNURBS2VENURBS
 {
@@ -59,6 +61,7 @@ public:
    ///\param occNURBSSurface NURBS surface to be converted
    NURBS::NURBSSurface* GetVENURBSSurface( Geom_BSplineSurface* occNURBSSurface );
 };
+}
 }
 #endif //OCC_NURBS_2_VE_NURBS_H
 

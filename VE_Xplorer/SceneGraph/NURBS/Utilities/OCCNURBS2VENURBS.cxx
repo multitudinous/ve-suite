@@ -41,7 +41,7 @@
 #include <TColStd_Array2OfReal.hxx>
 #include <TColgp_Array2OfPnt.hxx>
 
-using namespace NURBS_Utilities;
+using namespace NURBS::Utilities;
 
 ////////////////////////////////////////
 ///Constructor                        //

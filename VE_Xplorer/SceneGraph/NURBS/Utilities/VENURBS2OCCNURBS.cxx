@@ -44,7 +44,7 @@
 #include <TColgp_Array2OfPnt.hxx>
 #include <Geom_BSplineSurface.hxx>
 
-using namespace NURBS_Utilities;
+using namespace NURBS::Utilities;
 
 ////////////////////////////////////////
 ///Constructor                        //
