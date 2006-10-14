@@ -72,7 +72,7 @@ int PEThread::svc (void)
          //wxUpdateUIEvent u;
          //u.SetId(7777);
          //u.SetText(message.c_str());
-         this->AppendText( wxString( message ) );
+         this->AppendText( wxString( message.c_str() ) );
          std::cout<<"LOG: "<<message;
          //::wxPostEvent(this, u);
          //message="";
