@@ -34,9 +34,10 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
 #include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
-#include <fstream>
+#include <map>
+#include <vector>
 #include <iostream>
-#include <sstream>
+
 ////////////////////////////////////////
 ///Constructor                        //
 ////////////////////////////////////////
@@ -58,6 +59,33 @@ VENURBS2OCCNURBS::~VENURBS2OCCNURBS()
 ////////////////////////////////////////////////////////////////////////////////
 Handle_Geom_BSplineSurface VENURBS2OCCNURBS::GetOCCNURBSSurface( NURBS::NURBSSurface* veNURBSSurface )
 {
+   std::vector< std::vector<NURBS::ControlPoint> > points = veNURBSSurface->GetControlPoints();
+   NURBS::KnotVector uKnotVector = _knotVectors[ "U" ];
+   NURBS::KnotVector vKnotVector = _knotVectors[ "V" ];
+   
+   std::map< double , unsigned int > uKnots = uKnotVector.GetKnotMap();
+   std::map< double , unsigned int > vKnots = vKnotVector.GetKnotMap();
+
+   std::vector< unsigned int > uMultiplicity;
+   std::vector< unsigned int > vMultiplicity;
+   std::vector< double > uKnot;
+   std::vector< double > vKnot;
+   
+   // get u info
+   std::map< double , unsigned int >::iterator iter;
+   for ( iter = uKnots.begin(); iter != uKnots.end(); ++iter )
+   {
+      uMultiplicity.push_back( iter.second );
+      uKnot.push_back( iter.first );
+   }
+
+   // get v info
+   for ( iter = vKnots.begin(); iter != vKnots.end(); ++iter )
+   {
+      vMultiplicity.push_back( iter.second );
+      vKnot.push_back( iter.first );
+   }
+
    return 0;
 }
 

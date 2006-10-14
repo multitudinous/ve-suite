@@ -91,7 +91,10 @@ public:
    double Knot(unsigned int index);
 
    ///Get the current span
-   std::map< double , unsigned int >::iterator GetCurrentSpan();
+   std::map< double , unsigned int >::iterator GetCurrentSpan( void );
+
+   ///Get the current knots
+   std::map< double , unsigned int > GetKnotMap( void );
 
    ///Get the number of knots currently in the vector.
    size_t NumberOfKnots();
