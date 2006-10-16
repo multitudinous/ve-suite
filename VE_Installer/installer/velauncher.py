@@ -657,6 +657,9 @@ class LauncherWindow(wx.Frame):
             else:
                 ##Hide the BuilderDir
                 self.state.React(True, "BuilderDir", None)
+        ##If the DependenciesDir is generic, change it to system-specific.
+        alternateDep = velDependencies.GetSpecific(v("DependenciesDir"))
+        self.state.React(alternateDep, "DependenciesDir", alternateDep)
         ##Hide the Launcher.
         self.Hide()
         ##Save data before launching.

@@ -180,7 +180,8 @@ class Launch:
             ##Slave calls
             for comp in self.settings["ClusterSlaves"]:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-                os.system("source %s %s &" %(clusterFilePath, comp))
+                os.system("source %s %s &" %(clusterFilePath,
+                                             self.settings["ClusterMaster"]))
                 sleep(self.settings["SlaveWait"])
         ##Xplorer section
         elif self.settings["Xplorer"]:
@@ -424,66 +425,67 @@ class Launch:
         self.EnvFill("TAO_PORT", str(self.settings["TaoPort"]), True)
 
         ##Set CFDHOSTNAME
-        if windows:
-            self.EnvFill("CFDHOSTTYPE", "WIN32")
-        elif unix:
-            if (os.path.exists("/etc/redhat-release")):
-                piped = os.popen("""cat /etc/redhat-release """ +
-                                 """| awk -F" " '{print $1}'""", 'r')
-                firstWord = piped.read()[:-1]
-                ##NOTE: [:-1] is to remove the line break from the read()
-                piped.close()
-                if firstWord == "Red":
-                    piped = os.popen("""cat /etc/redhat-release """ +
-                                     """| awk -F" " '{print $3}'""", 'r')
-                    thirdWord = piped.read()[:-1]
-                    piped.close()
-                    if thirdWord == "Enterprise":
-                        ##Extract words from file to create similar to RHEL_3
-                        piped= os.popen("""cat /etc/redhat-release """ +
-                                        """| awk -F" " '{print "RHEL_" $7}'""",
-                                        'r')
-                        self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-                        piped.close()
-                    else:
-                        ##Extract words from file to create
-                        ##something like RedHat_8.0
-                        piped = os.popen("""cat /etc/redhat-release """ +
-                                         """| awk -F" " '""" +
-                                         """{print $1 $2 "_" $5}'""",
-                                         'r')
-                        self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-                        piped.close()
-                elif firstWord == "Fedora":
-                    ##Extract words from file to create something like Fedora_1
-                    piped= os.popen("""cat /etc/redhat-release """ +
-                                    """| awk -F" " '{print $1 "_" $4}'""", 'r')
-                    self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-                    piped.close()
-                else:
-                    ##NOTE: If the program couldn't identify this type of
-                    ##Redhat, just use uname.
-                    piped = os.popen("uname")
-                    self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-                    piped.close()
-            elif os.path.exists("/etc/SuSE-release"):
-                ##Extract words from file to create
-                ##something like SuSE_9.2_x86-64
-                piped = os.popen("""head -1 /etc/SuSE-release """ +
-                                 """| awk -F" " '{print $1 "_" $3 "_" $4}'""",
-                                 'r')
-                self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-                piped.close()
-            else:
-                piped = os.popen("uname")
-                self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-                piped.close()
-            ##If CFDHOSTTYPE has parentheses, remove them.
-            piped = os.popen("""echo \"$CFDHOSTTYPE\" """ +
-                             """| sed -e 's/(//g' | sed -e 's/)//g' """ + 
-                             """| sed -e 's/"//g'""", 'r')
-            os.environ["CFDHOSTTYPE"] = piped.read()[:-1]
-            piped.close()
+        self.EnvFill("CFDHOSTTYPE", CFD_HOST_TYPE)
+##        if windows:
+##            self.EnvFill("CFDHOSTTYPE", "WIN32")
+##        elif unix:
+##            if (os.path.exists("/etc/redhat-release")):
+##                piped = os.popen("""cat /etc/redhat-release """ +
+##                                 """| awk -F" " '{print $1}'""", 'r')
+##                firstWord = piped.read()[:-1]
+##                ##NOTE: [:-1] is to remove the line break from the read()
+##                piped.close()
+##                if firstWord == "Red":
+##                    piped = os.popen("""cat /etc/redhat-release """ +
+##                                     """| awk -F" " '{print $3}'""", 'r')
+##                    thirdWord = piped.read()[:-1]
+##                    piped.close()
+##                    if thirdWord == "Enterprise":
+##                        ##Extract words from file to create similar to RHEL_3
+##                        piped= os.popen("""cat /etc/redhat-release """ +
+##                                        """| awk -F" " '{print "RHEL_" $7}'""",
+##                                        'r')
+##                        self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
+##                        piped.close()
+##                    else:
+##                        ##Extract words from file to create
+##                        ##something like RedHat_8.0
+##                        piped = os.popen("""cat /etc/redhat-release """ +
+##                                         """| awk -F" " '""" +
+##                                         """{print $1 $2 "_" $5}'""",
+##                                         'r')
+##                        self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
+##                        piped.close()
+##                elif firstWord == "Fedora":
+##                    ##Extract words from file to create something like Fedora_1
+##                    piped= os.popen("""cat /etc/redhat-release """ +
+##                                    """| awk -F" " '{print $1 "_" $4}'""", 'r')
+##                    self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
+##                    piped.close()
+##                else:
+##                    ##NOTE: If the program couldn't identify this type of
+##                    ##Redhat, just use uname.
+##                    piped = os.popen("uname")
+##                    self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
+##                    piped.close()
+##            elif os.path.exists("/etc/SuSE-release"):
+##                ##Extract words from file to create
+##                ##something like SuSE_9.2_x86-64
+##                piped = os.popen("""head -1 /etc/SuSE-release """ +
+##                                 """| awk -F" " '{print $1 "_" $3 "_" $4}'""",
+##                                 'r')
+##                self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
+##                piped.close()
+##            else:
+##                piped = os.popen("uname")
+##                self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
+##                piped.close()
+##            ##If CFDHOSTTYPE has parentheses, remove them.
+##            piped = os.popen("""echo \"$CFDHOSTTYPE\" """ +
+##                             """| sed -e 's/(//g' | sed -e 's/)//g' """ + 
+##                             """| sed -e 's/"//g'""", 'r')
+##            os.environ["CFDHOSTTYPE"] = piped.read()[:-1]
+##            piped.close()
 
         self.EnvFill("PHSHAREDSIZE", "534773700")
 

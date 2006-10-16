@@ -9,8 +9,25 @@ import os
 import wx
 import sys
 
+def GetSpecific(dependenciesDir):
+    """Returns a hosttype-specific dependencies dir if generic one's passed."""
+    if unix:
+        nameServiceFile = "Naming_Service"
+    elif windows:
+        nameServiceFile = "Naming_Service.exe"
+    else:
+        nameServiceFile = "None"
+    if not os.path.exists(os.path.join(dependenciesDir,
+                                       "bin", nameServiceFile)):
+        alternate = os.path.join(dependenciesDir, CFD_HOST_TYPE)
+        if os.path.exists(alternate):
+            if os.path.exists(os.path.join(alternate,
+                                           "bin", nameServiceFile)):
+                return alternate
+    return False
+
 def Check(dependenciesDir):
-    """Returns true if Dependencies folder checks out, false if it doesn't.
+    """Returns True if Dependencies folder checks out, false if it doesn't.
 
     Automatically called during velauncher's __init__.
     Checks if dependenciesDir exists,
@@ -39,7 +56,8 @@ def Check(dependenciesDir):
         return False
     ##Check if DependenciesDir's contents look legitimate.
     elif not os.path.exists(os.path.join(dependenciesDir,
-                            "bin", nameServiceFile)):
+                            "bin", nameServiceFile)) and \
+         not GetSpecific(dependenciesDir):
         dlg = wx.MessageDialog(None,
                                "%s\n" % str(dependenciesDir) +
                                "doesn't look like the Dependencies " +
@@ -54,9 +72,9 @@ def Check(dependenciesDir):
         if response == wx.ID_NO:
             return False
         else:
-            return True
-    ##If all checks passed, return True.
-    return True
+            return dependenciesDir
+    ##If all checks passed, return dependenciesDir (True).
+    return dependenciesDir
 
 def Change(parent):
     """Asks user for a new DependenciesDir."""

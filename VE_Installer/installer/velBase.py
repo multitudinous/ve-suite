@@ -8,6 +8,7 @@ join = os.path.join
 ##Set up the system's ID.
 windows = (name == "nt")
 unix = (name == "posix" or name == "mac")
+##CFD_HOST_TYPE: Set below.
 ##Shell variables.
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster variables.
@@ -64,6 +65,72 @@ VES_LAYER = DEV_LAYER + 1
 SCRIPT_LAYER = VES_LAYER + 1
 MODE_LAYER = SCRIPT_LAYER + 1
 TOTAL_LAYERS = MODE_LAYER + 1
+
+def CFDHostType():
+    ##Set CFDHOSTNAME
+    if windows:
+        cfdHostType = "WIN32"
+    elif unix:
+        if (os.path.exists("/etc/redhat-release")):
+            piped = os.popen("""cat /etc/redhat-release """ +
+                             """| awk -F" " '{print $1}'""", 'r')
+            firstWord = piped.read()[:-1]
+            ##NOTE: [:-1] is to remove the line break from the read()
+            piped.close()
+            if firstWord == "Red":
+                piped = os.popen("""cat /etc/redhat-release """ +
+                                 """| awk -F" " '{print $3}'""", 'r')
+                thirdWord = piped.read()[:-1]
+                piped.close()
+                if thirdWord == "Enterprise":
+                    ##Extract words from file to create similar to RHEL_3
+                    piped= os.popen("""cat /etc/redhat-release """ +
+                                    """| awk -F" " '{print "RHEL_" $7}'""",
+                                    'r')
+                    cfdHostType = piped.read()[:-1]
+                    piped.close()
+                else:
+                    ##Extract words from file to create
+                    ##something like RedHat_8.0
+                    piped = os.popen("""cat /etc/redhat-release """ +
+                                     """| awk -F" " '""" +
+                                     """{print $1 $2 "_" $5}'""",
+                                     'r')
+                    cfdHostType = piped.read()[:-1]
+                    piped.close()
+            elif firstWord == "Fedora":
+                ##Extract words from file to create something like Fedora_1
+                piped= os.popen("""cat /etc/redhat-release """ +
+                                """| awk -F" " '{print $1 "_" $4}'""", 'r')
+                cfdHostType = piped.read()[:-1]
+                piped.close()
+            else:
+                ##NOTE: If the program couldn't identify this type of
+                ##Redhat, just use uname.
+                piped = os.popen("uname")
+                cfdHostType = piped.read()[:-1]
+                piped.close()
+        elif os.path.exists("/etc/SuSE-release"):
+            ##Extract words from file to create
+            ##something like SuSE_9.2_x86-64
+            piped = os.popen("""head -1 /etc/SuSE-release """ +
+                             """| awk -F" " '{print $1 "_" $3 "_" $4}'""",
+                             'r')
+            cfdHostType = piped.read()[:-1]
+            piped.close()
+        else:
+            piped = os.popen("uname")
+            cfdHostType = piped.read()[:-1]
+            piped.close()
+        ##If CFDHOSTTYPE has parentheses, remove them.
+        piped = os.popen("""echo \"%s\" """ %cfdHostType+
+                         """| sed -e 's/(//g' | sed -e 's/)//g' """ + 
+                         """| sed -e 's/"//g'""", 'r')
+        cfdHostType = piped.read()[:-1]
+        piped.close()
+    return cfdHostType
+CFD_HOST_TYPE = CFDHostType()
+print CFD_HOST_TYPE ##TESTER
 
 def Style(window):
     """The uniform style of each window in VE Launcher."""
