@@ -197,7 +197,7 @@ std::vector< unsigned int > KnotVector::GetMultiplicityVector( void )
    return multiVector;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< double > KnotVector::GetKnotVector( void )
+std::vector< double > KnotVector::GetDistinctKnotVector( void )
 {
    std::vector< double > knotVector;
    std::map< double, unsigned int >::iterator iter;

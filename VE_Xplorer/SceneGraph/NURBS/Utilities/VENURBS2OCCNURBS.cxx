@@ -66,9 +66,9 @@ Geom_BSplineSurface* VENURBS2OCCNURBS::GetOCCNURBSSurface( NURBS::NURBSSurface* 
    NURBS::KnotVector uKnotVector = veNURBSSurface->KnotVector( "U" );
    NURBS::KnotVector vKnotVector = veNURBSSurface->KnotVector( "V" );
    std::vector< unsigned int > uMultiplicity = uKnotVector.GetMultiplicityVector();
-   std::vector< double > uKnots = uKnotVector.GetKnotVector();
+   std::vector< double > uKnots = uKnotVector.GetDistinctKnotVector();
    std::vector< unsigned int > vMultiplicity = vKnotVector.GetMultiplicityVector();
-   std::vector< double > vKnots = vKnotVector.GetKnotVector();
+   std::vector< double > vKnots = vKnotVector.GetDistinctKnotVector();
 
    TColStd_Array1OfInteger UMults( 1, uKnots.size() );
    TColStd_Array1OfReal UKnots( 1, uKnots.size() );

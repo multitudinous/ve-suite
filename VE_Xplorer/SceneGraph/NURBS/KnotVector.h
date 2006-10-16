@@ -101,11 +101,11 @@ public:
 
    ///Get a vector containing multiplicity for each unique knot
    std::vector< unsigned int > GetMultiplicityVector( void );
-   
    ///Get a vector with all knot values (including multiplicty)
    ///as a single 1D array
-   std::vector< double > GetKnotVector( void );
-   
+   //std::vector< double > GetKnotVector( void );
+   /// Get knot vector WITHOUT multiplicity
+   std::vector< double > GetDistinctKnotVector( void );
 protected:
    size_t _nKnots;///< Number of knots
    std::map< double , unsigned int > _knotMultiplicityMap;///<The map values and multiplicity 
