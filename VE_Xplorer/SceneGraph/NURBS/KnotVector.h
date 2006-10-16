@@ -98,9 +98,12 @@ public:
 
    ///Get the number of knots currently in the vector.
    size_t NumberOfKnots();
-   ///Get multiplicity vector
+
+   ///Get a vector containing multiplicity for each unique knot
    std::vector< unsigned int > GetMultiplicityVector( void );
-   ///Get knot vector
+   
+   ///Get a vector with all knot values (including multiplicty)
+   ///as a single 1D array
    std::vector< double > GetKnotVector( void );
    
 protected:
