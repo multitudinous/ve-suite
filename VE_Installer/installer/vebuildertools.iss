@@ -71,8 +71,6 @@ Source: {#VEHOME}\bin\win32\vtkTo3DTextured.exe; DestDir: {app}\bin; Flags: igno
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;Source: {#VEHOME}\bin\win32\AVSTranslatord.exe; DestDir: {app}\bin; Flags: ignoreversion; DestName: AVSTranslator.exe
 ;Source: {#VEHOME}\bin\win32\cfdDICOMTranslator_d.exe; DestDir: {app}\bin; Flags: ignoreversion; DestName: cfdDICOMTranslator.exe
-Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}
-Source: {#VEHOME}\VE_Installer\installer\buildershell.bat; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico; DestDir: {app}\images; DestName: Ve_icon.ico
 Source: {#VEHOME}\VE_Installer\installer\vebuilder.txt; DestDir: {app}; Attribs: readonly; Flags: isreadme overwritereadonly uninsremovereadonly; DestName: README.txt
 Source: {#VEHOME}\bin\win32\logoMaker.exe; DestDir: {app}\bin; Flags: ignoreversion
@@ -83,5 +81,3 @@ Source: {#VEHOME}\lib\win32\VE_NURBS_d.dll; DestDir: {app}\bin; Flags: ignorever
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 ;Name: {group}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\Ve_icon.ico
 ;Name: {userdesktop}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\Ve_icon.ico
-[Tasks]
-;Name: BuilderShell; Description: VE-Builder Tools Shell; GroupDescription: Create Desktop Icon; Flags: unchecked
