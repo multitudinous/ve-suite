@@ -42,6 +42,7 @@ Point::Point()
    _z = 0.0;
    _row = 0;
    _column = 0;
+   _isSelected = false;
 }
 ///////////////////////////////////////
 //Constructor                        //
@@ -53,6 +54,7 @@ Point::Point(double x,double y, double z)
    _z = z;
    _row = 0;
    _column = 0;
+   _isSelected = false;
 }
 ///////////////////////////////////////////////////
 ///Copy constructor                              //
@@ -64,6 +66,7 @@ Point::Point(const Point& rhs)
    _z = rhs._z;
    _row = rhs._row;
    _column = rhs._column;
+   _isSelected = rhs._isSelected;
 }
 ///////////////
 //Destructor //
@@ -83,8 +86,14 @@ Point& Point::operator=(const Point& rhs)
       _z = rhs._z;
       _row = rhs._row;
       _column = rhs._column;
+      _isSelected = rhs._isSelected;
    }
    return *this;
+}
+///////////////////////////////////////
+void Point::SetSelected(bool trueFalse)
+{
+   _isSelected = trueFalse;
 }
 /////////////////////////////////
 ///Set the x coord of          //
@@ -157,6 +166,11 @@ double Point::Y()
 double Point::Z()
 {
    return _z;
+}
+////////////////////////
+bool Point::IsSelected()
+{
+   return _isSelected;
 }
 ////////////////////////////
 //ControlPoint class      //

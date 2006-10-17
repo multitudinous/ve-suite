@@ -90,6 +90,10 @@ public:
    ///Set the (Row,Column) position of this control point int the mesh
    void SetRowColumnIndex(unsigned int row, unsigned int col);
 
+   ///Set the selection status of this point
+   ///\param trueFalse true == selected\n false == not selected 
+   void SetSelected(bool trueFalse=true);
+
    ///Get the value of the first directional coordinate.
    double X();
 
@@ -105,6 +109,9 @@ public:
    ///Get the v Index of this control point in the overall mesh
    unsigned int GetColumnIndex();
    
+   ///Query selection status
+   bool IsSelected();
+
    ///Dot product
    inline double operator*(const Point& rhs) const
    {
@@ -160,6 +167,7 @@ public:
    };
 
 protected:
+   bool _isSelected;///<Selection status
    double _x;///<The raw coordianate data
    double _y;///<The raw coordianate data
    double _z;///<The raw coordianate data
