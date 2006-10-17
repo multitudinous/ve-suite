@@ -244,6 +244,9 @@ protected:
    void SubmitToServer(wxCommandEvent &event);
    void LoadFromServer(wxCommandEvent &event);
    void QueryFromServer( wxCommandEvent& event );
+   void QueryNetwork( wxCommandEvent& event );
+   void QueryForInputs( wxCommandEvent& event );
+   void QueryForResults( wxCommandEvent& event );
    void StartCalc(wxCommandEvent &event);	
    void StopCalc(wxCommandEvent &event);	
    void PauseCalc(wxCommandEvent &event);	

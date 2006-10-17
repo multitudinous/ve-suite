@@ -172,6 +172,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    //  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
    EVT_IDLE( AppFrame::IdleEvent )
    EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
+   EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
+   EVT_MENU( QUERY_FOR_INPUTS, AppFrame::QueryForInputs )
+   EVT_MENU( QUERY_FOR_RESULTS, AppFrame::QueryForResults )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -934,7 +937,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 
    try
    {
-      nw_str.assign( serviceList->Query( 0 ) );
+	   nw_str.assign( serviceList->Query( 0 ));
    }
    catch ( CORBA::Exception& )
    {
@@ -950,6 +953,40 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    {
       Log("No ves network available\n");
    }
+}
+///////////////////////////////////////////////////////////////////////////
+void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
+{
+	//Log("Query Network.\n");
+	//std::string result = serviceList->Query(std::string("getNetwork") );
+	//Log((std::string("result = ")+result+std::string(".\n")).c_str());
+	//Log("Network Queried.\n");
+VE_XML::Command returnState;
+returnState.SetCommandName("getNetwork");
+VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+data->SetData("moduleName", "Aspen" );
+data=returnState.GetDataValuePair(-1);
+data->SetData("moduleId", static_cast< unsigned int >( 101 ) );
+
+std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+VE_XML::XMLReaderWriter commandWriter;
+std::string status="returnString";
+commandWriter.UseStandaloneDOMDocumentManager();
+commandWriter.WriteXMLDocument( nodes, status, "Command" );
+//Get results
+serviceList->Query( status );
+
+}
+///////////////////////////////////////////////////////////////////////////
+void AppFrame::QueryForInputs( wxCommandEvent& WXUNUSED(event) )
+{
+	Log("Query Inputs\n");
+}
+///////////////////////////////////////////////////////////////////////////
+void AppFrame::QueryForResults( wxCommandEvent& WXUNUSED(event) )
+{
+	Log("Query Results\n");
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )

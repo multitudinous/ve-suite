@@ -583,7 +583,8 @@ std::string CORBAServiceList::Query( std::string command )
 {
    if ( !CORBAServiceList::IsConnectedToCE() )
    {
-      return std::string();
+	  
+      return std::string("Not Connected");
    }
    
    try
@@ -593,7 +594,7 @@ std::string CORBAServiceList::Query( std::string command )
    }
    catch ( ... )
    {
-      return std::string();
+      return std::string("Error");
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
