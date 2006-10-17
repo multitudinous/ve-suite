@@ -11,6 +11,9 @@ import sys
 
 def GetSpecific(dependenciesDir):
     """Returns a hosttype-specific dependencies dir if generic one's passed."""
+    ##If depDir == None, return.
+    if not dependenciesDir:
+        return False
     if unix:
         nameServiceFile = "Naming_Service"
     elif windows:
