@@ -91,7 +91,7 @@ void cfdTranslatorToVTK::SetOutputDirectory(std::string outDir)
 ///////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::SetFileName( std::string fileName )
 {
-   //baseFileName = fileName;
+   //_outfileNames.push_back( fileName );
 }
 //////////////////////////////////////////////////////////////////////////////// 
 void cfdTranslatorToVTK::SetPreTranslateCallback( cfdTranslatorToVTK::PreTranslateCallback* preTCbk)

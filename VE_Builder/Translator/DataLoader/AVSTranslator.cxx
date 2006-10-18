@@ -58,19 +58,7 @@ AVSTranslator::~AVSTranslator()
 void AVSTranslator::AVSPreTranslateCbk::Preprocess(int argc,char** argv,
                                                VE_Builder::cfdTranslatorToVTK* toVTK)
 {
-   if(toVTK)
-   {
-      std::string singleFile;
-      if(toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile))
-      {
-         toVTK->AddFoundFile(singleFile);
-      }
-      std::string outDir;
-      if(toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-o"),outDir))
-      {
-         toVTK->SetOutputDirectory(outDir);
-      }
-   }
+   PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AVSTranslator::AVSTranslateCbk::Translate(vtkDataSet*& outputDataset,
