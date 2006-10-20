@@ -27,6 +27,7 @@ SPLASH_IMAGE = join(VELAUNCHER_DIR, "installerImages", "velauncher_banner.bmp")
 SPLASH_TIME = 7000 ##milliseconds before auto-close
 if windows:
     CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")
+##    CLUSTER_FILE_PATH = "C:\\Documents and Settings\\mikelem\\My Documents\\cluster.bat"
 else:
     CLUSTER_FILE_PATH = join(VELAUNCHER_DIR, "cluster.tsh")
 TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
@@ -130,7 +131,7 @@ def CFDHostType():
         piped.close()
     return cfdHostType
 CFD_HOST_TYPE = CFDHostType()
-print CFD_HOST_TYPE ##TESTER
+##print CFD_HOST_TYPE ##TESTER
 
 def Style(window):
     """The uniform style of each window in VE Launcher."""

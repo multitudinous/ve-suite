@@ -149,6 +149,9 @@ class Launch:
         desktopMode -- Run in Desktop mode.
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
+        ##Kill any screen savers.
+        subprocess.Popen(["/usr/X11R6/bin/xset", "-display", ":0.0", "-dpms",
+                          "s", "reset", "s", "off"])
         ##Name Server section
         if self.settings["NameServer"]:
             sleep(1)
@@ -282,13 +285,16 @@ class Launch:
         drive = "%s:" %self.settings["Directory"].split(':')[0]
         user = os.getenv('USERNAME')
         self.clusterCall = ["psexec", "<SLAVE GOES HERE>",
-                            "-i", "-e", "-c", CLUSTER_FILE_PATH]
+                            "-i", "-e", "-c", CLUSTER_FILE_PATH, "\\k"]
         ##Insert username directory if specified
         if self.settings["User"] != "":
             self.clusterCall[2:2] = ["-u", self.settings["User"]]
         ##Begin cluster template
         self.clusterTemplate = ""
-        self.clusterTemplate += "@ECHO OFF\n"
+        if self.settings["Debug"]:
+            self.clusterTemplate += "@ECHO ON\n"
+        else:
+            self.clusterTemplate += "@ECHO OFF\n"
         if os.path.exists(TEMPLATE_PATH):
             COMMENT_NOTE = '##'
             VAR_SEP = '%'
@@ -309,7 +315,9 @@ class Launch:
         self.clusterTemplate += "\n"
         self.clusterTemplate += self.clusterScript
         self.clusterTemplate += "\n"
-        self.clusterTemplate+= string.join(self.XplorerCall())
+        self.clusterTemplate += "%s\n" %string.join(self.XplorerCall())
+        if self.settings["Debug"]:
+            self.clusterTemplate += "pause\n"
         return
 
     def WriteClusterScriptPrefix(self):
@@ -317,6 +325,9 @@ class Launch:
         if unix:
             self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
             self.clusterScript += "ssh $1 << EOF\n"
+            ##Turn off comp's screen saver
+            self.clusterScript += "/usr/X11R6/bin/xset -display :0.0 -dpms s "+\
+                                  "reset s off\n"
             self.WriteToClusterScript("PYTHONPATH")
         elif windows:
             self.clusterScript = ""
@@ -360,7 +371,11 @@ class Launch:
                 return
             ##Else call the script on the other computer in psexec.
             self.clusterCall[1] = "\\\\%s" %nodeName
-            subprocess.Popen(self.clusterCall)
+            ##Sets the psexec window to stay up after it quits (Debug mode).
+            if self.settings["Debug"]:
+                subprocess.Popen(["cmd", "/k"] + self.clusterCall)
+            else:
+                subprocess.Popen(self.clusterCall)
         else:
             print "Error!"
 
@@ -426,66 +441,6 @@ class Launch:
 
         ##Set CFDHOSTNAME
         self.EnvFill("CFDHOSTTYPE", CFD_HOST_TYPE)
-##        if windows:
-##            self.EnvFill("CFDHOSTTYPE", "WIN32")
-##        elif unix:
-##            if (os.path.exists("/etc/redhat-release")):
-##                piped = os.popen("""cat /etc/redhat-release """ +
-##                                 """| awk -F" " '{print $1}'""", 'r')
-##                firstWord = piped.read()[:-1]
-##                ##NOTE: [:-1] is to remove the line break from the read()
-##                piped.close()
-##                if firstWord == "Red":
-##                    piped = os.popen("""cat /etc/redhat-release """ +
-##                                     """| awk -F" " '{print $3}'""", 'r')
-##                    thirdWord = piped.read()[:-1]
-##                    piped.close()
-##                    if thirdWord == "Enterprise":
-##                        ##Extract words from file to create similar to RHEL_3
-##                        piped= os.popen("""cat /etc/redhat-release """ +
-##                                        """| awk -F" " '{print "RHEL_" $7}'""",
-##                                        'r')
-##                        self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-##                        piped.close()
-##                    else:
-##                        ##Extract words from file to create
-##                        ##something like RedHat_8.0
-##                        piped = os.popen("""cat /etc/redhat-release """ +
-##                                         """| awk -F" " '""" +
-##                                         """{print $1 $2 "_" $5}'""",
-##                                         'r')
-##                        self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-##                        piped.close()
-##                elif firstWord == "Fedora":
-##                    ##Extract words from file to create something like Fedora_1
-##                    piped= os.popen("""cat /etc/redhat-release """ +
-##                                    """| awk -F" " '{print $1 "_" $4}'""", 'r')
-##                    self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-##                    piped.close()
-##                else:
-##                    ##NOTE: If the program couldn't identify this type of
-##                    ##Redhat, just use uname.
-##                    piped = os.popen("uname")
-##                    self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-##                    piped.close()
-##            elif os.path.exists("/etc/SuSE-release"):
-##                ##Extract words from file to create
-##                ##something like SuSE_9.2_x86-64
-##                piped = os.popen("""head -1 /etc/SuSE-release """ +
-##                                 """| awk -F" " '{print $1 "_" $3 "_" $4}'""",
-##                                 'r')
-##                self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-##                piped.close()
-##            else:
-##                piped = os.popen("uname")
-##                self.EnvFill("CFDHOSTTYPE", piped.read()[:-1])
-##                piped.close()
-##            ##If CFDHOSTTYPE has parentheses, remove them.
-##            piped = os.popen("""echo \"$CFDHOSTTYPE\" """ +
-##                             """| sed -e 's/(//g' | sed -e 's/)//g' """ + 
-##                             """| sed -e 's/"//g'""", 'r')
-##            os.environ["CFDHOSTTYPE"] = piped.read()[:-1]
-##            piped.close()
 
         self.EnvFill("PHSHAREDSIZE", "534773700")
 
@@ -584,7 +539,8 @@ class Launch:
             os.environ[var] = modifiedVar
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
+        if self.settings["Debug"]:
+            print "%s: %s" %(var, os.getenv(var))
 
 
     def EnvFill(self, var, default, overwrite = False):
@@ -599,13 +555,8 @@ class Launch:
             os.environ[var] = default
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
-##        print "%s: %s" %(var, os.getenv(var)) ##TESTER
-
-
-##    def GrabOutput(self, commandArray):
-##        """Returns output from a shell command."""
-##        return Popen(commandArray, stdout = PIPE).communicate()[0]
-
+        if self.settings["Debug"]:
+            print "%s: %s" %(var, os.getenv(var))
 
     def WriteToClusterScript(self, var):
         """Writes an environmental setting to clusterScript.

@@ -34,10 +34,11 @@ MODE_DICT = {"Desktop": {"Conductor": True,
              "Custom": {}}
 
 COMMAND_CONFIG = {"Conductor": False,
-                 "NameServer": False,
-                 "Xplorer": False,
-                 "DesktopMode": False,
-                 "Shell": False}
+                  "NameServer": False,
+                  "Xplorer": False,
+                  "DesktopMode": False,
+                  "Shell": False,
+                  "Debug": False}
 
 BASE_CONFIG = {"DependenciesDir": None,
                "BuilderDir": None,
@@ -62,4 +63,5 @@ BASE_CONFIG = {"DependenciesDir": None,
                "SlaveWait": 5,
                "User": "",
                "ShellScript": None,
-               "DevMode": False}
+               "DevMode": False,
+               "Debug": False}

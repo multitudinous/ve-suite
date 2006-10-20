@@ -116,11 +116,12 @@ class JconfWindow(wx.Dialog):
         Default name: Name of Jconf file."""
         ##Default directory for the search is the
         ##DepsDir/JUGGLER_FOLDER/configFiles.
-        f = self.state.GetSurface("DependenciesDir")
-        if f != None:
-            f = os.path.join(f, JUGGLER_FOLDER, "configFiles")
-        else:
-            f = VELAUNCHER_DIR
+##        f = self.state.GetSurface("DependenciesDir")
+##        if f != None:
+##            f = os.path.join(f, JUGGLER_FOLDER, "configFiles")
+##        else:
+##            f = VELAUNCHER_DIR
+        f = self.state.GetSurface("Directory")
         dlg = wx.FileDialog(self,
                             "Choose a configuration file.",
                             defaultDir = f,

@@ -5,7 +5,7 @@ from velClusterDict import *
 from velCoveredConfig import *
 from velBase import *
 
-def SaveConfig(name, state):
+def SaveConfig(name, state, saveLastConfig = False):
     """Saves the current configuration under name.
 
     Keyword arguments:
@@ -18,7 +18,6 @@ def SaveConfig(name, state):
     ##Save the current configuration under name
     strWrites = ["DependenciesDir",
                  "BuilderDir",
-                 "Directory",
                  "JconfSelection",
                  "NameServer",
                  "Xplorer",
@@ -29,6 +28,9 @@ def SaveConfig(name, state):
                  "ClusterMaster",
                  "OSGNotifyLevel",
                  "User"]
+    if saveLastConfig:
+        strWrites.append("Directory")
+        strWrites.append("Debug")
     intWrites = ["XplorerType",
                  "Mode",
                  "VPRDebug",
@@ -51,7 +53,7 @@ def SaveConfig(name, state):
     config.Flush()
     return
 
-def LoadConfig(name, state):
+def LoadConfig(name, state, loadLastConfig = False):
     """Loads the configuration under name.
 
     Keyword arguments:
@@ -62,8 +64,7 @@ def LoadConfig(name, state):
     config.SetPath('..')
     config.SetPath(name)
     ##Set the configs read in.
-    strReads = ["Directory",
-                "ClusterMaster",
+    strReads = ["ClusterMaster",
                 "DependenciesDir",
                 "JconfSelection",
                 "TaoMachine",
@@ -79,6 +80,9 @@ def LoadConfig(name, state):
                  "Conductor",
                  "Xplorer",
                  "DesktopMode"]
+    if loadLastConfig:
+        strReads.append("Directory")
+        boolReads.append("Debug")
     ##Workaround for error w/ Int TaoPort in earlier version
     if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
         intReads.append("TaoPort")

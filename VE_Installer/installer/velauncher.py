@@ -23,6 +23,7 @@ import os ##Used for setting environmental variables, running programs
 import sys ##Gets command line arguments
 import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
+import thread ##Used for the splash banner's thread
 
 from velBase import *
 from velModes import *
@@ -148,7 +149,10 @@ class LauncherWindow(wx.Frame):
         menu = wx.Menu()
         menu.Append(520, "Choose De&pendencies\tCtrl+P")
         menu.Append(521, "Choose &Builder Folder\tCtrl+B")
-        menu.Append(522, "Debu&g Level\tCtrl+G")
+        menu.Append(522, "VE-Suite Debu&g Level\tCtrl+G")
+        self.menuDebugLaunch = wx.MenuItem(menu, 524, "D&ebug Launch\tCtrl+E",
+                                           kind = wx.ITEM_CHECK)
+        menu.AppendItem(self.menuDebugLaunch)
         menu.Append(523, "&Cluster Wait Times\tCtrl+C")
         menuBar.Append(menu, "&Options")
         self.SetMenuBar(menuBar)
@@ -169,6 +173,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.WaitOptions, id = 523)
         self.Bind(wx.EVT_MENU, self.OpenFile, id = 500)
         self.Bind(wx.EVT_MENU, self.CloseFiles, id = 501)
+        self.Bind(wx.EVT_MENU, self.UpdateData, id = 524)
         
         ##Layout format settings
         ##Create the overall layout box
@@ -239,7 +244,7 @@ class LauncherWindow(wx.Frame):
         if devMode:
             self.state.DevMode()
         ##Restore config values from last time.
-        LoadConfig(DEFAULT_CONFIG, self.state)
+        LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
         self.React()
         ##Check the dependencies.
         if not devMode:
@@ -381,6 +386,9 @@ class LauncherWindow(wx.Frame):
             if modeChosen != self.state.GetBase("Mode"):
                 self.state.Edit("Mode", modeChosen)
                 react = True
+        ##Launch Debug Mode
+        if self.menuDebugLaunch.IsEnabled():
+            self.state.Edit("Debug", self.menuDebugLaunch.IsChecked())
         ##React, then Update Display
         if react:
             self.React()
@@ -417,7 +425,11 @@ class LauncherWindow(wx.Frame):
         ##VES/script files.
         fileLoaded = self.state.GetSurface("VESFile") or \
                      self.state.GetSurface("ShellScript")
+        ##Remove Files menu.
         self.GetMenuBar().Enable(501, bool(fileLoaded))
+        ##Debug Launch menu.
+        self.menuDebugLaunch.Enable(self.state.IsEnabled("Debug"))
+        self.menuDebugLaunch.Check(self.state.GetSurface("Debug"))
         ##Loaded file name. Under work.
 ##        if self.state.GetSurface("VESFile"):
 ##            self.fileTypeText.SetLabel("VES File:")
@@ -664,9 +676,10 @@ class LauncherWindow(wx.Frame):
         self.Hide()
         ##Save data before launching.
         self.UpdateData()
-        SaveConfig(DEFAULT_CONFIG, self.state)
+        SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
         ##Launch splash screen
         velLaunchSplash.LaunchSplash()
+        ##thread.start_new_thread(velLaunchSplash.LaunchSplash, ())
         ##Go into the Launch
         launchInstance = Launch(self.state.GetLaunchSurface())
         ##Show NameServer kill window if NameServer was started.
@@ -682,7 +695,7 @@ class LauncherWindow(wx.Frame):
         the launcher window."""
         ##Update default config file.
         self.UpdateData()
-        SaveConfig(DEFAULT_CONFIG, self.state)
+        SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
         self.Hide()
         self.Destroy()
         ##If a shell's launched, start it here, after cleanup.
