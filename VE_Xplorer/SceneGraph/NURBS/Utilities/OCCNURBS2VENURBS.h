@@ -42,7 +42,7 @@ namespace NURBS
    class NURBSSurface;
 }
 
-class Geom_BSplineSurface;
+class Handle_Geom_BSplineSurface;
 
 #include <VE_Installer/include/VEConfig.h>
 namespace NURBS
@@ -59,7 +59,7 @@ public:
 
    ///Get a OCC NURBS patch and return an VE NURBS Surface
    ///\param occNURBSSurface NURBS surface to be converted
-   NURBS::NURBSSurface* GetVENURBSSurface( Geom_BSplineSurface* occNURBSSurface );
+   NURBS::NURBSSurface* GetVENURBSSurface( Handle_Geom_BSplineSurface occNURBSSurface );
 };
 }
 }

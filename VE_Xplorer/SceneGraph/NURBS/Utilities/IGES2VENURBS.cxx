@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/NURBS/Utilities/IGES2VENURBS.h"
+#include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBS2VENURBS.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
 #include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
 #include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"

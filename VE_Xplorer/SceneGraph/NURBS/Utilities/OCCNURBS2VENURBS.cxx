@@ -58,7 +58,7 @@ OCCNURBS2VENURBS::~OCCNURBS2VENURBS()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-NURBS::NURBSSurface* OCCNURBS2VENURBS::GetVENURBSSurface( Geom_BSplineSurface* occNURBSSurface )
+NURBS::NURBSSurface* OCCNURBS2VENURBS::GetVENURBSSurface( Handle_Geom_BSplineSurface occNURBSSurface )
 {
    NURBS::KnotVector uKnots;      
    // get the know uknots
@@ -89,7 +89,7 @@ NURBS::NURBSSurface* OCCNURBS2VENURBS::GetVENURBSSurface( Geom_BSplineSurface* o
          vKnots.AddKnot( Kv( i ) );
       }
    }
-
+   
    // get the weights
    TColStd_Array2OfReal W( 1, occNURBSSurface->NbUPoles(), 1, occNURBSSurface->NbVPoles() );
    occNURBSSurface->Weights( W );
@@ -103,14 +103,15 @@ NURBS::NURBSSurface* OCCNURBS2VENURBS::GetVENURBSSurface( Geom_BSplineSurface* o
    double y = 0;
    double z = 0;
    double w = 0;
+   //This for loop may be wrong because the occ is row then column
    for ( size_t j = W.LowerRow(); j <= W.UpperRow(); ++j )
    {
       for ( size_t i = W.LowerCol(); i <= W.UpperCol(); ++i )
       {
-         x = Poles( i, j ).X();
-         y = Poles( i, j ).Y(); 
-         z = Poles( i, j ).Z();
-         w = W( i, j );
+         x = Poles( j, i ).X();
+         y = Poles( j, i ).Y(); 
+         z = Poles( j, i ).Z();
+         w = W( j, i );
          surfaceCtrlPts.push_back(NURBS::ControlPoint(x,y,z,w));
       }
    }
