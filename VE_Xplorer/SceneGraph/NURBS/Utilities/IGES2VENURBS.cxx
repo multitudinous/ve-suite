@@ -44,6 +44,9 @@
 #include <IGESControl_Reader.hxx>
 #include <IGESData_IGESModel.hxx>
 #include <IGESData_IGESEntity.hxx>
+#include <IGESToBRep_BasicSurface.hxx>
+#include <IGESGeom_BSplineSurface.hxx>
+#include <GeomConvert.hxx>
 
 using namespace NURBS::Utilities;
 
@@ -69,7 +72,7 @@ std::vector< NURBS::NURBSSurface* > IGES2VENURBS::GetVectorOfVENURBSSurface( std
    IGESControl_Reader reader;
    IGESToBRep_BasicSurface surfaceConverter;
    
-   IGESGeom_BSplineSurface
+   //IGESGeom_BSplineSurface
    
    reader.ReadFile( const_cast< char* >( igesFileName.c_str() ) );
    Handle_IGESData_IGESModel model = reader.IGESModel();
