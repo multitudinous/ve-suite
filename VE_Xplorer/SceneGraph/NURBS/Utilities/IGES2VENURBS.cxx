@@ -67,10 +67,10 @@ std::vector< NURBS::NURBSSurface* > IGES2VENURBS::GetVectorOfVENURBSSurface( std
    // Read the file
    IGESControl_Controller::Init();
    IGESControl_Reader reader;
-   reader.ReadFile( igesFileName.c_str() );
+   reader.ReadFile( const_cast< char* >( igesFileName.c_str() ) );
    Handle_IGESData_IGESModel model = reader.IGESModel();
    int nbEntities = model->NbEntities();
-   for ( size_t i = 0; i < nbEntities; ++i )
+   for ( size_t i = 1; i <= nbEntities; ++i )
    {
       Handle_IGESData_IGESEntity igesData = model->Entity( i );
       std::cout << "Type NB = " << igesData->TypeNumber() << " Form NB = " << igesData->FormNumber() << std::endl;
