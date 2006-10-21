@@ -40,6 +40,10 @@
 #include <TColStd_Array1OfInteger.hxx>
 #include <TColStd_Array2OfReal.hxx>
 #include <TColgp_Array2OfPnt.hxx>
+#include <IGESControl_Controller.hxx>
+#include <IGESControl_Reader.hxx>
+#include <IGESData_IGESModel.hxx>
+#include <IGESData_IGESEntity.hxx>
 
 using namespace NURBS::Utilities;
 
@@ -64,11 +68,11 @@ std::vector< NURBS::NURBSSurface* > IGES2VENURBS::GetVectorOfVENURBSSurface( std
    IGESControl_Controller::Init();
    IGESControl_Reader reader;
    Handle_IGESData_IGESModel model = reader.IGESModel();
-   int nbEntities = model.NbEntities();
+   int nbEntities = model->NbEntities();
    for ( size_t i = 0; i < nbEntities; ++i )
    {
-      Handle_IGESData_IGESEntity igesData = model.Entity( i );
-      std::cout << "Type NB = " << igesData.TypeNumber() << " Form NB = " << igesData.FormNumber() << std::endl;
+      Handle_IGESData_IGESEntity igesData = model->Entity( i );
+      std::cout << "Type NB = " << igesData->TypeNumber() << " Form NB = " << igesData->FormNumber() << std::endl;
    }
 //IGESConvGeom
    /*bsplineSurface = IGESToBRep_BasicSurface.TransferBSplineSurface();
