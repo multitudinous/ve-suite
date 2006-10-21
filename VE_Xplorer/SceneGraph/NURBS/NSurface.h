@@ -70,6 +70,9 @@ public:
 
    std::map<unsigned int, std::map<unsigned int,std::vector<NURBS::Point> > > GetSurfaceDerivatives();
 
+   ///Write the surface out in the VE-NURBS format
+   ///\param stream ostrem to write to
+   void Write( std::ostream& stream );
 protected:
    ///Interpolate with a range of values...\n
    ///Used internally for re-tessellation when moving control points

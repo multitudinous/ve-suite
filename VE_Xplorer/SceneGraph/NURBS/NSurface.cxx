@@ -346,3 +346,55 @@ NURBSSurface::GetSurfaceDerivatives()
 {
    return _surfDerivatives;
 }
+////////////////////////////////////////////////////////////////////////////////
+void NURBSSurface::Write( std::ostream& stream )
+{
+   NURBS::KnotVector uKnotVector = this->KnotVector( "U" );
+   NURBS::KnotVector vKnotVector = this->KnotVector( "V" );
+   std::vector< unsigned int > uMultiplicity = uKnotVector.GetMultiplicityVector();
+   std::vector< double > uKnots = uKnotVector.GetDistinctKnotVector();
+   std::vector< unsigned int > vMultiplicity = vKnotVector.GetMultiplicityVector();
+   std::vector< double > vKnots = vKnotVector.GetDistinctKnotVector();
+   
+   // get the uknots
+   stream << " Knots U " << std::endl;
+   for ( size_t i = 0; i < uKnots.size(); ++i )
+   {
+      for ( size_t j = 0; j < uMultiplicity.at( i ); ++j )
+      {
+         stream << uKnots.at( i ) << " ";
+      }
+   }
+   stream << std::endl;
+   // get the vknots
+   stream << " Knots V " << std::endl;
+   for ( size_t i = 0; i < vKnots.size(); ++i )
+   {
+      for ( size_t j = 0; j < vMultiplicity.at( i ); ++j )
+      {
+         stream << vKnots.at( i ) << " ";
+      }
+   }
+   stream << std::endl;
+
+   //Get poles and weights
+   std::vector< std::vector<NURBS::ControlPoint> > points = this->GetControlPoints();
+   double X;
+   double Y;
+   double Z;
+   double W;
+   stream << " Poles & Weights " << std::endl;
+   for ( size_t j = 0; j < points.size(); ++j )
+   {
+      for ( size_t i = 0; i < points.at( j ).size(); ++i )
+      {
+         X = points.at( j ).at( i ).X();
+         Y = points.at( j ).at( i ).Y();
+         Z = points.at( j ).at( i ).Z();
+         W = points.at( j ).at( i ).Weight();
+         stream <<"( "<< X << " " << Y 
+            << " " << Z << " " << W << " ) ";
+      }
+      stream << std::endl;
+   }
+}
