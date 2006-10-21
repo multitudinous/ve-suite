@@ -67,13 +67,12 @@ IGES2VENURBS::~IGES2VENURBS()
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< NURBS::NURBSSurface* > IGES2VENURBS::GetVectorOfVENURBSSurface( std::string igesFileName )
 {
+   std::vector< NURBS::NURBSSurface* > surfaceVector;
+   OCCNURBS2VENURBS occConverter;
+   IGESToBRep_BasicSurface surfaceConverter;
    // Read the file
    IGESControl_Controller::Init();
-   IGESControl_Reader reader;
-   IGESToBRep_BasicSurface surfaceConverter;
-   
-   //IGESGeom_BSplineSurface
-   
+   IGESControl_Reader reader;   
    reader.ReadFile( const_cast< char* >( igesFileName.c_str() ) );
    Handle_IGESData_IGESModel model = reader.IGESModel();
    int nbEntities = model->NbEntities();
@@ -84,18 +83,12 @@ std::vector< NURBS::NURBSSurface* > IGES2VENURBS::GetVectorOfVENURBSSurface( std
       Handle_Geom_Surface tempGeomSurface = surfaceConverter.TransferBasicSurface( igesData );
       Handle_Geom_BSplineSurface tempPointer = GeomConvert::SurfaceToBSplineSurface( tempGeomSurface );
       //Handle_Geom_BSplineSurface tempPointer = surfaceConverter.TransferBSplineSurface( Handle(IGESGeom_BSplineSurface) igesData );
+      //IGESConvGeom
+      NURBS::NURBSSurface* temp = occConverter.GetVENURBSSurface( tempPointer );
+      surfaceVector.push_back( temp );
    }
-//IGESConvGeom
    /*bsplineSurface = IGESToBRep_BasicSurface.TransferBSplineSurface();
    IGESToBRep.IsBasicSurface();
-*/
-   //pass the surfaces off to converter
-   std::vector< NURBS::NURBSSurface* > surfaceVector;
-   /*OCCNURBS2VENURBS occConverter;
-   for ( size_t i = 0; i < numberOfSurfaces; ++i )
-   {
-      NURBS::NURBSSurface* temp = occConverter.GetVENURBSSurface( surface );
-      surfaceVector.push_back( temp );
-   }*/
+   */
    return surfaceVector;
 }
