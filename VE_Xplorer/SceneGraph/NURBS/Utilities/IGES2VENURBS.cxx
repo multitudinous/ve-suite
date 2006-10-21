@@ -78,7 +78,9 @@ std::vector< NURBS::NURBSSurface* > IGES2VENURBS::GetVectorOfVENURBSSurface( std
    {
       Handle_IGESData_IGESEntity igesData = model->Entity( i );
       std::cout << "Type NB = " << igesData->TypeNumber() << " Form NB = " << igesData->FormNumber() << std::endl;
-      Handle_Geom_BSplineSurface tempPointer = surfaceConverter.TransferBSplineSurface( Handle(IGESGeom_BSplineSurface) igesData );
+      Handle_Geom_Surface tempGeomSurface = surfaceConverter.TransferBasicSurface( igesData );
+      Handle_Geom_BSplineSurface tempPointer = GeomConvert::SurfaceToBSplineSurface( tempGeomSurface );
+      //Handle_Geom_BSplineSurface tempPointer = surfaceConverter.TransferBSplineSurface( Handle(IGESGeom_BSplineSurface) igesData );
    }
 //IGESConvGeom
    /*bsplineSurface = IGESToBRep_BasicSurface.TransferBSplineSurface();
