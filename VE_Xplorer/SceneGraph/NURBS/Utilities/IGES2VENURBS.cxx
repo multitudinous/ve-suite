@@ -67,6 +67,7 @@ std::vector< NURBS::NURBSSurface* > IGES2VENURBS::GetVectorOfVENURBSSurface( std
    // Read the file
    IGESControl_Controller::Init();
    IGESControl_Reader reader;
+   reader.ReadFile( igesFileName.c_str() );
    Handle_IGESData_IGESModel model = reader.IGESModel();
    int nbEntities = model->NbEntities();
    for ( size_t i = 0; i < nbEntities; ++i )
