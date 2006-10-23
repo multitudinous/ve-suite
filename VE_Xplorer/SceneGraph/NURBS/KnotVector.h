@@ -44,6 +44,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <iostream>
 namespace NURBS
 {
 class VE_NURBS_EXPORTS KnotVector
