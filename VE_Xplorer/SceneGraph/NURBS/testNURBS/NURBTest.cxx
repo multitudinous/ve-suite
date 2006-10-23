@@ -123,7 +123,7 @@ int parseOCCNURBSFile(int argc, char** argv)
       NURBS::NURBSSurface* surface = patchReader.ReadPatchFile(patchFiles.at(i));
       if(surface)
       {
-         surface->SetInterpolationGridSize(20,"U");
+         surface->SetInterpolationGridSize(10,"U");
          surface->SetInterpolationGridSize(20,"V");
          surface->Interpolate();
 
@@ -203,6 +203,7 @@ void createTestNURBS(int argc, char** argv)
    uKnots.AddKnot(0.0);
    uKnots.AddKnot(0.0);
    uKnots.AddKnot(0.0);
+   uKnots.AddKnot(0.5);
 
    uKnots.AddKnot(1.0);
    uKnots.AddKnot(1.0);
@@ -214,7 +215,6 @@ void createTestNURBS(int argc, char** argv)
    vKnots.AddKnot(0.0);
    vKnots.AddKnot(0.0);
    vKnots.AddKnot(0.0);
-   vKnots.AddKnot(0.5);
 
    vKnots.AddKnot(1.0);
    vKnots.AddKnot(1.0);
