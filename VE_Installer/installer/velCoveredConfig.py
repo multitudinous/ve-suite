@@ -126,11 +126,12 @@ class CoveredConfig(CoveredState):
         surface["JconfPath"] = self.JconfPath()
         ##Set ClusterNodes to list of cluster nodes if a cluster is launched.
         if surface["Xplorer"] and surface["XplorerType"] == 2 \
-           and surface["ClusterMaster"] != "":
+           and surface["ClusterMaster"] and surface["ClusterDict"]:
             surface["ClusterSlaves"] = surface["ClusterDict"].GetNames()
             surface["Cluster"] = True
 ##            surface["ClusterNodes"].append(surface["ClusterMaster"])
         else:
+            print "No slaves found!" ##TESTER
             surface["ClusterSlaves"] = None
             surface["Cluster"] = False
         ##If OSGNotifyLevel == "None", change it to None
