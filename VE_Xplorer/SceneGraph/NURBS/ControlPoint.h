@@ -233,6 +233,13 @@ public:
       os<<fpd._x<<" "<<fpd._y<<" "<<fpd._z<<" "<<fpd._weight<<" ";
       return os;
    }
+    ///override "<<"operator
+   inline friend std::ostream& operator<<(std::ostream& os,
+                                          const ControlPoint* fpd)
+   {
+      os<<fpd->_x<<" "<<fpd->_y<<" "<<fpd->_z<<" "<<fpd->_weight<<" ";
+      return os;
+   }
 
   ControlPoint operator+(const ControlPoint& lhs);
 
