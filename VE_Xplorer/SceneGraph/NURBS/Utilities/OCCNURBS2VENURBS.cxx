@@ -104,14 +104,14 @@ NURBS::NURBSSurface* OCCNURBS2VENURBS::GetVENURBSSurface( Handle_Geom_BSplineSur
    double z = 0;
    double w = 0;
    //This for loop may be wrong because the occ is row then column
-   for ( size_t j = W.LowerRow(); j <= W.UpperRow(); ++j )
+   for ( size_t j = W.LowerCol(); j <= W.UpperCol(); ++j )
    {
-      for ( size_t i = W.LowerCol(); i <= W.UpperCol(); ++i )
+      for ( size_t i = W.LowerRow(); i <= W.UpperRow(); ++i )
       {
-         x = Poles( j, i ).X();
-         y = Poles( j, i ).Y(); 
-         z = Poles( j, i ).Z();
-         w = W( j, i );
+         x = Poles( i, j ).X();
+         y = Poles( i, j ).Y(); 
+         z = Poles( i, j ).Z();
+         w = W( i, j );
          surfaceCtrlPts.push_back(NURBS::ControlPoint(x,y,z,w));
       }
    }
