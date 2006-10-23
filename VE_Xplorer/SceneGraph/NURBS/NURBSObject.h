@@ -140,6 +140,34 @@ public:
    ///Get the tessellated points.
    std::vector<NURBS::Point>& InterpolatedPoints();
 
+   ///write out the NURBSObject
+   inline friend std::ostream& operator<<(std::ostream& os,NURBS::NURBSObject& nurbsObject)
+   {
+      bool isSurface = (nurbsObject.GetType() == NURBS::NURBSObject::Surface)?true:false;
+      os<<"Knots U"<<std::endl;
+      os<<nurbsObject.KnotVector("U")<<std::endl;
+
+      if(isSurface)
+      {   
+         os<<"Knots V"<<std::endl;
+         os<<nurbsObject.KnotVector("V")<<std::endl;
+      }
+
+      unsigned int nCtrlPtsU = nurbsObject.NumControlPoints("U");
+      unsigned int nCtrlPtsV = nurbsObject.NumControlPoints("V");
+
+      os<<"Control Points"<<std::endl;
+      for(unsigned int v = 0; v < nCtrlPtsV; v++)
+      {
+         for(unsigned int u = 0; u < nCtrlPtsU; u++)
+         {
+            os<<"("<<nurbsObject.GetControlPoint(v*nCtrlPtsU + u)<<") ";
+         }
+         os<<std::endl;
+      }
+      return os;
+   }
+
 protected:
 
    ///Calculate the binomail coefficients using a recursive algorithm

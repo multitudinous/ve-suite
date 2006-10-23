@@ -106,6 +106,19 @@ public:
    //std::vector< double > GetKnotVector( void );
    /// Get knot vector WITHOUT multiplicity
    std::vector< double > GetDistinctKnotVector( void );
+
+   ///write out the knot vector
+   inline friend std::ostream& operator<<(std::ostream& os,NURBS::KnotVector& knotVector)
+   {
+      size_t nKnots = knotVector.NumberOfKnots();
+      for(size_t i = 0; i < nKnots; i++)
+      {
+         os<<knotVector.Knot(i)<<" ";
+      }
+      os<<std::endl;
+      return os;
+   }
+   
 protected:
    size_t _nKnots;///< Number of knots
    std::map< double , unsigned int > _knotMultiplicityMap;///<The map values and multiplicity 

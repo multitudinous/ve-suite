@@ -166,8 +166,8 @@ void NURBSObject::SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
          row++;
       }
    }
-   _nControlPoints["U"] = rows;
-   _nControlPoints["V"] = columns;
+   _nControlPoints["U"] = columns;
+   _nControlPoints["V"] = rows;
    _nTotalControlPoints = static_cast<unsigned int>(_controlPoints[0].size());
    _needsRetessellation = true;
 }
