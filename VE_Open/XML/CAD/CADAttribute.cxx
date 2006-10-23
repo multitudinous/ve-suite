@@ -36,7 +36,7 @@
 #include "VE_Open/XML/CAD/CADCreator.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/Shader/Program.h"
-using namespace VE_Shader;
+using namespace VE_XML::VE_Shader;
 using namespace VE_CAD;
 using namespace VE_XML;
 /////////////////////////////////////////////////////////////////////////////////////

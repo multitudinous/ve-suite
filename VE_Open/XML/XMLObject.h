@@ -211,31 +211,43 @@ public:
    /*template<class T>
    inline void SetSubElement(const std::string subElementTagName, T val)
    {
-      std::type_info tempInfo = 
-      typeid( val );
-      //bool
-      if ( ( typeid( bool ) == tempInfo ) ||
-           ( typeid( double ) == tempInfo ) ||
-           ( typeid( std::string ) == tempInfo ) ||
-           ( typeid( unsigned int ) == tempInfo ) ||
-           ( typeid( long int ) == tempInfo )
-         )
-      {
-         XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
-         dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:integer") );
-         std::stringstream float2string;
-         float2string << val;
-         XERCES_CPP_NAMESPACE_QUALIFIER DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
-         
-         dataValueNumElement->appendChild( dataValueText );
-         _veElement->appendChild( dataValueNumElement );         
+      std::type_info tempInfo = typeid( val );
+      std::string xmlTag = tempInfo.name();
+      if ( typeid( bool ) == tempInfo )
+      { 
+         xmlTag = "xs:boolean";
       }
-      else
+      else if ( typeid( double ) == tempInfo )
       {
-         val->SetOwnerDocument( _rootDocument );
-         _veElement->appendChild( val->GetXMLData( subElementTagName ) );
-      }      
+         xmlTag = "xs:double";
+      }
+      else if ( typeid( std::string ) == tempInfo )
+      {
+         xmlTag = "xs:string";
+      }
+      else if ( typeid( unsigned int ) == tempInfo )
+      {
+         xmlTag = "xs:unsignedInt";
+      }
+      else if ( typeid( long int ) == tempInfo )
+      {
+         xmlTag = "xs:integer";
+      }
+      XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* dataValueNumElement = 
+               _rootDocument->createElement( xercesString( subElementTagName ) );
+
+      dataValueNumElement->setAttribute( xercesString("type"),
+                                         xercesString( xmlTag.c_str() ) );
+      std::stringstream float2string;
+      float2string << val;
+      XERCES_CPP_NAMESPACE_QUALIFIER DOMText* dataValueText = 
+                        _rootDocument->createTextNode( 
+                                    xercesString( float2string.str().c_str() ) );
+      
+      dataValueNumElement->appendChild( dataValueText );
+      _veElement->appendChild( dataValueNumElement );         
    }*/
+
    ///utility functions for creating attribute on _veElement.
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
@@ -313,5 +325,11 @@ protected:
 private:
    unsigned int _nChildren;///<The number of childern for this element.
 };
+/*template<>
+inline void XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::XMLObject* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   _veElement->appendChild( val->GetXMLData( subElementTagName ) );
+}*/
 }
 #endif// _VE_XML_OBJECT_H_

@@ -45,7 +45,7 @@
 
 #include <ctime>
 using namespace VE_CAD;
-using namespace VE_Shader;
+using namespace VE_XML::VE_Shader;
 using namespace VE_XML;
 
 //////////////////////////////////

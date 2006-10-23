@@ -33,7 +33,7 @@
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 using namespace VE_SceneGraph::Utilities;
 using namespace VE_CAD;
-using namespace VE_Shader;
+using namespace VE_XML::VE_Shader;
 
 #ifdef _PERFORMER
 #include <Performer/pf.h>
@@ -139,7 +139,7 @@ void Attribute::UpdateMaterialMode(std::string type, std::string mode)
 #endif
 }
 ////////////////////////////////////////////////////////////////////////
-void Attribute::UpdateShaderUniform(VE_Shader::Uniform* uniformToUpdate)
+void Attribute::UpdateShaderUniform(VE_XML::VE_Shader::Uniform* uniformToUpdate)
 {
 #ifdef _OSG
    ShaderHelper shaderHelper;

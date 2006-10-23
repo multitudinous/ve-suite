@@ -53,6 +53,7 @@ namespace VE_XML
 }
 #include "VE_Open/XML/Command.h"
 
+namespace VE_XML{
 namespace VE_Shader{
 class VE_SHADER_EXPORTS TextureImage:public VE_XML::XMLObject{
 public:
@@ -161,5 +162,6 @@ protected:
    VE_XML::Command _textureDescription;///<Data package containing the information about the texture map.
    
 };
+}
 }
 #endif//VE_TEXTURE_IMAGE_H

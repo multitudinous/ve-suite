@@ -51,7 +51,7 @@
  * Contains classes that describe GLSL shaders and programs.
  */
 
-
+namespace VE_XML{
 namespace VE_Shader{
 class VE_SHADER_EXPORTS Uniform : public VE_XML::XMLObject{
 public:
@@ -131,5 +131,6 @@ protected:
    std::vector<float> _values;///<The value of the uniform
    unsigned int _textureUnit;///<Optional texture unit if the data is a sampler.
 };
+}
 }
 #endif //_VE_UNIFORM_H_

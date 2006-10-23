@@ -74,7 +74,7 @@
 #include "VE_Open/XML/Shader/Program.h"
 
 using namespace VE_CAD;
-using namespace VE_Shader;
+using namespace VE_XML::VE_Shader;
 using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_BUTTON(ADD_ANIMATION,CADNodePropertiesDlg::_addAnimation)
@@ -757,12 +757,12 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
                   shaderLoader.ReadFromFile();
                   shaderLoader.ReadXMLData( std::string( veaFileNamePath ),"Shader","Program");
               
-                  VE_Shader::Program* loadedShader = 0;
+                  VE_XML::VE_Shader::Program* loadedShader = 0;
                   if(shaderLoader.GetLoadedXMLObjects().at(0))
                   {
                      try
                      {
-                        loadedShader = dynamic_cast<VE_Shader::Program*>(shaderLoader.GetLoadedXMLObjects().at(0));
+                        loadedShader = dynamic_cast<VE_XML::VE_Shader::Program*>(shaderLoader.GetLoadedXMLObjects().at(0));
                         if(AttributeExists(loadedShader->GetProgramName().c_str()))
                         {
                            wxMessageBox( "Attribute with this name is already loaded.", 

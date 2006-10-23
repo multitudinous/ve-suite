@@ -36,7 +36,7 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_Shader;
+using namespace VE_XML::VE_Shader;
 using namespace VE_XML;
 ////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                     //
@@ -298,7 +298,7 @@ void TextureImage::SetTextureImageType(std::string textureType)
 void TextureImage::_updateVEElement(std::string input)
 {
    std::cout<<"Setting subelement..."<<std::endl;
-   SetSubElement("textureDescriptionData",&_textureDescription);
+   SetSubElement("textureDescriptionData", &_textureDescription );
    std::cout<<"---done---"<<std::endl;
 }
 //////////////////////////////////////////////////////////

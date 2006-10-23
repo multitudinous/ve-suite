@@ -36,7 +36,7 @@
 #include "VE_Open/XML/Shader/Uniform.h"
 #include "VE_Open/XML/Shader/Program.h"
 
-using namespace VE_Shader;
+using namespace VE_XML::VE_Shader;
 ////////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* ShaderCreator::CreateNewXMLObject(std::string objectType)
 {

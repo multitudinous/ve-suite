@@ -52,7 +52,7 @@
 #include "VE_Open/XML/Shader/Program.h"
 #include "VE_Open/XML/Shader/Uniform.h"
 #include "VE_Open/XML/Shader/TextureImage.h"
-using namespace VE_Shader;
+using namespace VE_XML::VE_Shader;
 using namespace VE_SceneGraph::Utilities;
 //////////////////////////////////////
 //Constructors                      //
@@ -134,7 +134,7 @@ void ShaderHelper::SetStateSet(osg::StateSet* shader)
 void ShaderHelper::LoadTransparencyProgram()
 {
 #ifdef _OSG
-   VE_Shader::Shader* vertShader = new VE_Shader::Shader();
+   VE_XML::VE_Shader::Shader* vertShader = new VE_XML::VE_Shader::Shader();
    vertShader->SetShaderType("Vertex");
    std::string vertexSource("	varying vec3 N;\n"
 		                    "varying vec3 I;\n"
@@ -150,7 +150,7 @@ void ShaderHelper::LoadTransparencyProgram()
 		                     "}\n");
    vertShader->SetShaderSource(vertexSource);
    
-   VE_Shader::Shader* fragShader = new VE_Shader::Shader();
+   VE_XML::VE_Shader::Shader* fragShader = new VE_XML::VE_Shader::Shader();
    fragShader->SetShaderType("Fragment");
    std::string fragmentSource("varying vec3 N;\n"
 		                     " varying vec3 I;\n"
@@ -166,7 +166,7 @@ void ShaderHelper::LoadTransparencyProgram()
                             );
    fragShader->SetShaderSource(fragmentSource);
 
-   VE_Shader::Program* glslProgram = new VE_Shader::Program();
+   VE_XML::VE_Shader::Program* glslProgram = new VE_XML::VE_Shader::Program();
    glslProgram->SetProgramName("Dataset Transparency");
    glslProgram->SetVertexShader(vertShader);
    glslProgram->SetFragmentShader(fragShader);
@@ -175,7 +175,7 @@ void ShaderHelper::LoadTransparencyProgram()
 #endif
 }
 ///////////////////////////////////////////////////////////////////
-void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
+void ShaderHelper::LoadGLSLProgram(VE_XML::VE_Shader::Program* glslProgram)
 {
 #ifdef _OSG
    //std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
@@ -209,7 +209,7 @@ void ShaderHelper::LoadGLSLProgram(VE_Shader::Program* glslProgram)
    _attachGLSLProgramToStateSet();
 }
 ///////////////////////////////////////////////////////////////
-void ShaderHelper::_createGLSLShader(VE_Shader::Shader* shader)
+void ShaderHelper::_createGLSLShader(VE_XML::VE_Shader::Shader* shader)
 {
    if(shader->GetShaderSource().empty())
    {
@@ -240,7 +240,7 @@ void ShaderHelper::_createGLSLShader(VE_Shader::Shader* shader)
 #endif
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void ShaderHelper::_extractTextureFromShader(VE_Shader::TextureImage textureImage)
+void ShaderHelper::_extractTextureFromShader(VE_XML::VE_Shader::TextureImage textureImage)
 {
 #ifdef _OSG
    //create the image
@@ -393,7 +393,7 @@ void ShaderHelper::_setWrapOnTexture(osg::Texture* texture,
 }
 #endif
 /////////////////////////////////////////////////////////////////
-void ShaderHelper::UpdateUniform(VE_Shader::Uniform* uniformData)
+void ShaderHelper::UpdateUniform(VE_XML::VE_Shader::Uniform* uniformData)
 {
 #ifdef _OSG
    std::string uniformName("");
@@ -497,10 +497,10 @@ void ShaderHelper::UpdateUniform(VE_Shader::Uniform* uniformData)
 #endif
 }
 ////////////////////////////////////////////////////////////////////////
-void ShaderHelper::_extractUniformsFromShader(VE_Shader::Shader* shader)
+void ShaderHelper::_extractUniformsFromShader(VE_XML::VE_Shader::Shader* shader)
 {
    size_t nUniforms = shader->GetNumberOfUniforms();
-   VE_Shader::Uniform* uniformData = 0;
+   VE_XML::VE_Shader::Uniform* uniformData = 0;
    std::string uniformName("");
    std::string uniformType("");
    unsigned int uniformSize = 0;

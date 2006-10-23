@@ -49,12 +49,15 @@
  * Class that stores an data and information neccessary to create a glsl shader.
  */
 
+namespace VE_XML{
 namespace VE_Shader
 {
    class TextureImage;
    class Uniform;
 }
+}
 
+namespace VE_XML{
 namespace VE_Shader{
 class VE_SHADER_EXPORTS Shader:public VE_XML::XMLObject{
 public:
@@ -140,5 +143,6 @@ protected:
    std::vector<Uniform> _uniformList;///<The list of uniforms.
 
 };
+}
 }
 #endif//VE_SHADER_H

@@ -115,5 +115,11 @@ protected:
    std::vector< VE_XML::DataValuePair* > _dataValuePairs;///<The list of DataValuePair s in this command.  
    std::map< std::string, VE_XML::DataValuePair* > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
 };
+/*template<>
+inline void XMLObject::SetSubElement(const std::string subElementTagName, Command* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   _veElement->appendChild( val->GetXMLData( subElementTagName ) );
+}*/
 }
 #endif// _XML_VE_COMMAND_H_

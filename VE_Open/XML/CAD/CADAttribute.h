@@ -46,10 +46,11 @@
  * This class holds data for describing attributes for a CADNode.
  */
 
-
+namespace VE_XML{
 namespace VE_Shader
 {
    class Program;
+}
 }
 
 namespace VE_CAD
@@ -74,7 +75,7 @@ public:
 
    ///Set the GLSL program for this node.
    ///\param glslProgram The GLSL program.
-   void SetProgram(VE_Shader::Program glslProgram);
+   void SetProgram( VE_XML::VE_Shader::Program glslProgram);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
@@ -96,7 +97,7 @@ public:
    VE_CAD::CADMaterial* GetMaterial();
   
    ///Get the GLSL program for this node.
-   VE_Shader::Program* GetGLSLProgram();
+   VE_XML::VE_Shader::Program* GetGLSLProgram();
 
    ///Get the name of a specific attribute.
    std::string GetAttributeName();
@@ -118,7 +119,7 @@ protected:
    bool _blending;///<Enable or disable blending;
 
    VE_CAD::CADMaterial* _material; ///< Material for this node.
-   VE_Shader::Program* _glslProgram;///<The glsl program.
+   VE_XML::VE_Shader::Program* _glslProgram;///<The glsl program.
 };
 }
 #endif// _CAD_ATTRIBUTE_H_

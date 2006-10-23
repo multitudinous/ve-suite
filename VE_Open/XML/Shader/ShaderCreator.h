@@ -48,6 +48,7 @@ namespace VE_XML
 #include "VE_Open/XML/CreationEventHandler.h"
 #include "VE_Installer/include/VEConfig.h"
 
+namespace VE_XML{
 namespace VE_Shader{
 class VE_SHADER_EXPORTS ShaderCreator : public VE_XML::CreationEventHandler{
 public:
@@ -67,6 +68,7 @@ public:
    virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy);
 protected:
 };
+}
 }
 #endif// SHADER_CREATOR_H
 

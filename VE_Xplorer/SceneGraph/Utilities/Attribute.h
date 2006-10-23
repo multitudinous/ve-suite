@@ -55,10 +55,13 @@ namespace VE_CAD
 {
    class CADAttribute;
 }
+namespace VE_XML{
 namespace VE_Shader
 {
    class Uniform;
 }
+}
+
 namespace VE_SceneGraph
 {
 namespace Utilities
@@ -102,7 +105,7 @@ public:
 
    ///Update a Uniform value.
    ///\param uniformToUpdate The new uniform information.
-   void UpdateShaderUniform(VE_Shader::Uniform* uniformToUpdate);
+   void UpdateShaderUniform(VE_XML::VE_Shader::Uniform* uniformToUpdate);
 
    ///Update a the components of a CADMaterial
    ///\param componentName The name of the component to update

@@ -54,12 +54,19 @@ namespace osg
 #include <osg/Texture>
 #elif _PERFORMER
 #endif
+namespace VE_XML{
 namespace VE_Shader
 {
    class Program;
-   class Shader;
    class Uniform;
    class TextureImage;
+}
+}
+
+namespace VE_XML{
+   namespace VE_Shader{
+      class Shader;
+   }
 }
 #include <string>
 #include <vector>
@@ -82,7 +89,7 @@ public:
    virtual ~ShaderHelper();
 
    ///Load and create the stateset from the input XML data
-   void LoadGLSLProgram(VE_Shader::Program* glslProgram);
+   void LoadGLSLProgram(VE_XML::VE_Shader::Program* glslProgram);
    
    ///Load and create the stateset for transparency shader
    void LoadTransparencyProgram();
@@ -98,7 +105,7 @@ public:
 #endif
    ///Update a uniform.
    ///\param The uniform to update.
-   void UpdateUniform(VE_Shader::Uniform* uniformToUpdate);
+   void UpdateUniform(VE_XML::VE_Shader::Uniform* uniformToUpdate);
 
    ///Equal operator
    ///\param rhs Right hand side.
@@ -107,7 +114,7 @@ protected:
    ///helper functions
    ///Utility function to create a shader.
    ///\param shaderData The XML shader data.
-   void _createGLSLShader(VE_Shader::Shader* shaderData);
+   void _createGLSLShader(VE_XML::VE_Shader::Shader* shaderData);
   
    ///Attach the program to the stateset
    ///\param override Flag to override the stateset above
@@ -115,11 +122,11 @@ protected:
 
    ///Extract uniforms from the shader.
    ///\param The shader to extract uniforms from.
-   void _extractUniformsFromShader(VE_Shader::Shader* shader);
+   void _extractUniformsFromShader(VE_XML::VE_Shader::Shader* shader);
 
    ///Extract the texture images from the shader information.
    ///\param textureImage The texture image data.
-   void _extractTextureFromShader(VE_Shader::TextureImage textureImage);
+   void _extractTextureFromShader(VE_XML::VE_Shader::TextureImage textureImage);
 
 #ifdef _OSG
    ///Extract the wrap modes for the texture images
