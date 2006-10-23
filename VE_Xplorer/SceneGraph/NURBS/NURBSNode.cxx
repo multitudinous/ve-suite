@@ -92,15 +92,15 @@ NURBS::ControlPoint& NURBSControlMesh::GetControlPoint(unsigned int index)
 void NURBSControlMesh::_drawUCurves()const
 {
    //u iso-curves
-   for(unsigned int u = 0; u < _numUControlPoints; u++)
+   for(unsigned int v = 0; v < _numVControlPoints; v++)
    {
       glBegin(GL_LINE_STRIP);
-      for(unsigned int v = 0; v < _numVControlPoints; v++)
+      for(unsigned int u = 0; u < _numUControlPoints; u++)
       {
          //osg::Vec3 nextPoint;
-         glVertex3f(_controlPoints->at(u*_numVControlPoints + v).X(),
-                    _controlPoints->at(u*_numVControlPoints + v).Y(),
-                    _controlPoints->at(u*_numVControlPoints + v).Z());
+         glVertex3f(_controlPoints->at(v*_numUControlPoints + u).X(),
+                    _controlPoints->at(v*_numUControlPoints + u).Y(),
+                    _controlPoints->at(v*_numUControlPoints + u).Z());
       }
       glEnd();
    }
@@ -109,14 +109,14 @@ void NURBSControlMesh::_drawUCurves()const
 void NURBSControlMesh::_drawVCurves()const
 {
    //v iso-curves
-   for(unsigned int v = 0; v < _numVControlPoints; v++)
+   for(unsigned int u = 0; u < _numUControlPoints; u++)
    {
       glBegin(GL_LINE_STRIP);
-      for(unsigned int u = 0; u < _numUControlPoints; u++)
+      for(unsigned int v = 0; v < _numVControlPoints; v++)
       {
-         glVertex3f(_controlPoints->at(u*_numVControlPoints + v).X(),
-                    _controlPoints->at(u*_numVControlPoints + v).Y(),
-                    _controlPoints->at(u*_numVControlPoints + v).Z());
+         glVertex3f(_controlPoints->at(v*_numUControlPoints + u).X(),
+                    _controlPoints->at(v*_numUControlPoints + u).Y(),
+                    _controlPoints->at(v*_numUControlPoints + u).Z());
       }
       glEnd();
         
@@ -155,11 +155,11 @@ void NURBSControlMesh::drawImplementation(osg::State& currentState)const
    {
       if(_numUControlPoints > _numVControlPoints)
       {
-         _drawVCurves();
+         _drawUCurves();
       }
       else
       {
-         _drawUCurves();
+         _drawVCurves();
       }
    }
    _drawUVPoints();
@@ -409,7 +409,7 @@ osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int i
       
       NURBS::Point dSdV = surface->GetSurfaceDerivatives()[1][0].at(index);
       NURBS::Point dSdU = surface->GetSurfaceDerivatives()[0][1].at(index);
-      NURBS::Point cross = dSdU^dSdV; 
+      NURBS::Point cross = dSdV^dSdU; 
       normal.set(cross.X(),cross.Y(),cross.Z());
       normal.normalize();
    }
@@ -450,7 +450,7 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
       surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
       
       addChild(_triangulatedSurfaceGeode.get());
-      setUpdateCallback(new TestControlPointCallback(1.0));
+      //setUpdateCallback(new TestControlPointCallback(1.0));
    }
 }
 ///////////////////////////////

@@ -212,10 +212,6 @@
 				RelativePath=".\NURBSObject.cxx"
 				>
 			</File>
-			<File
-				RelativePath=".\NURBSRenderer.cxx"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -244,10 +240,6 @@
 			</File>
 			<File
 				RelativePath=".\NURBSObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NURBSRenderer.h"
 				>
 			</File>
 		</Filter>

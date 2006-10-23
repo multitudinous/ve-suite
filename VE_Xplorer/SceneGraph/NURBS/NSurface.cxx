@@ -238,13 +238,13 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
          {
             uindex = _currentSpan["U"] - _degree["U"] + k;
          
-            ucontrib[0]+=(_controlPoints[0][uindex*_nControlPoints["V"] + vindex].WeightedX()
+            ucontrib[0]+=(_controlPoints[0][vindex*_nControlPoints["U"] + uindex].WeightedX()
                          *_derivativeBasisFunctions["U"][n].at(k));
-            ucontrib[1]+=(_controlPoints[0][uindex*_nControlPoints["V"] + vindex].WeightedY()
+            ucontrib[1]+=(_controlPoints[0][vindex*_nControlPoints["U"] + uindex].WeightedY()
                          *_derivativeBasisFunctions["U"][n].at(k));
-            ucontrib[2]+=(_controlPoints[0][uindex*_nControlPoints["V"] + vindex].WeightedZ()
+            ucontrib[2]+=(_controlPoints[0][vindex*_nControlPoints["U"] + uindex].WeightedZ()
                          *_derivativeBasisFunctions["U"][n].at(k));
-            ucontrib[3]+=_controlPoints[0][uindex*_nControlPoints["V"] + vindex].Weight()
+            ucontrib[3]+=_controlPoints[0][vindex*_nControlPoints["U"] + uindex].Weight()
                           *_derivativeBasisFunctions["U"][n].at(k);
          }
          //invWeight = 1.0/ucontrib[3];

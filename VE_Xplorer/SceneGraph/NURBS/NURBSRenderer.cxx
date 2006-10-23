@@ -125,24 +125,24 @@ NURBS::NURBSObject* NURBSRenderer::GetNURBS()
 ///////////////////////////////////////////////
 void NURBSRenderer::_updateControlMesh()
 {
-   unsigned int nVPoints = _nurbsObject->NumControlPoints("U");
-   unsigned int nUPoints = _nurbsObject->NumControlPoints("V");
+   unsigned int nUPoints = _nurbsObject->NumControlPoints("U");
+   unsigned int nVPoints = _nurbsObject->NumControlPoints("V");
    
    //u iso-curves
-   for(unsigned int u = 0; u < nUPoints; u++)
+   for(unsigned int v = 0; v < nVPoints; v++)
    {
       //new tristrip
       osg::ref_ptr<osg::Vec3Array> verts = new osg::Vec3Array();
       osg::ref_ptr<osg::Geometry> lineStrip = new osg::Geometry();
       osg::ref_ptr<osg::Geometry> vertStrip = new osg::Geometry();
 
-      for(unsigned int v = 0; v < nVPoints; v++)
+      for(unsigned int u = 0; u < nUPoints; u++)
       {
          osg::Vec3 nextPoint;
 
-         nextPoint.set(_nurbsObject->GetControlPoint(u*nVPoints + v)->X(),
-                       _nurbsObject->GetControlPoint(u*nVPoints + v)->Y(),
-                       _nurbsObject->GetControlPoint(u*nVPoints + v)->Z());
+         nextPoint.set(_nurbsObject->GetControlPoint(v*nUPoints + u)->X(),
+                       _nurbsObject->GetControlPoint(v*nUPoints + u)->Y(),
+                       _nurbsObject->GetControlPoint(v*nUPoints + u)->Z());
          verts->push_back(nextPoint);
       }
       //set the verts for the line-strip
@@ -166,12 +166,12 @@ void NURBSRenderer::_updateControlMesh()
    if(_nurbsObject->GetType() == NURBSObject::Surface)
    {
       //v iso-curves
-      for(unsigned int v = 0; v < nVPoints; v++)
+      for(unsigned int u = 0; u < nUPoints; u++)
       {
          //new linestrip
          osg::ref_ptr<osg::Vec3Array> vertStrip = new osg::Vec3Array();
          osg::ref_ptr<osg::Geometry> lineStrip = new osg::Geometry();
-         for(unsigned int u = 0; u < nUPoints; u++)
+         for(unsigned int v = 0; v < nVPoints; v++)
          {
             osg::Vec3 nextPoint;
 

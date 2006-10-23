@@ -207,8 +207,8 @@ void NURBSObject::UpdateMesh(/*std::vector<*/NURBS::ControlPoint modifiedControl
 
    if(_type == NURBS::NURBSObject::Surface)
    {
-      ubounds[0] = _knotVectors["U"].Knot(vIndex);
-      ubounds[1] = _knotVectors["U"].Knot(vIndex+_degree["U"]+1);
+      vbounds[0] = _knotVectors["V"].Knot(vIndex);
+      vbounds[1] = _knotVectors["V"].Knot(vIndex+_degree["V"]+1);
    }
    _interpolateWithinBounds(ubounds,vbounds);
 
