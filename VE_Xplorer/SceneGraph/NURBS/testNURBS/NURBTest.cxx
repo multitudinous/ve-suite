@@ -67,7 +67,7 @@ public:
          }
          case(osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON):
          {
-            //if(_isSelecting)
+            if(_isSelecting)
             {
                std::cout<<"Left Mouse:"<< (ea.getX()+1.0)*.5<<","<<(ea.getY()+1.0)*.5<<std::endl;
                for(size_t i =0; i < _nPatches; i++)

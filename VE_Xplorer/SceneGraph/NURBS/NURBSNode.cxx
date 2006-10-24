@@ -161,7 +161,7 @@ void NURBSControlMesh::_drawVCurves()const
 void NURBSControlMesh::_drawUVPoints()const
 {
    //u iso-curves  
-   if(!_selection)
+   //if(!_selection)
    {
       glEnable(GL_POINT_SMOOTH);
       
@@ -183,7 +183,7 @@ void NURBSControlMesh::_drawUVPoints()const
    }
    
    
-   if(!_selection)
+   //if(!_selection)
    {
       glDisable(GL_POINT_SMOOTH);
    }
@@ -200,40 +200,54 @@ void NURBSControlMesh::Selection()const
 {
 	GLint viewport[4];
    GLuint selectionBuffer[512]; 
-   int hits;
+   GLint hits;
+   GLfloat modelview[16];
+   GLfloat projectionMatrix[16];
+	glSelectBuffer((GLsizei)64,selectionBuffer);
 
-	glSelectBuffer(512,selectionBuffer);
-	glRenderMode(GL_SELECT);
-
+   //get the current modelview matrix
+   glGetFloatv(GL_MODELVIEW_MATRIX,modelview);
+  
+   //get the current viewport
+   glGetIntegerv(GL_VIEWPORT,viewport);
+   
+   //push the projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-	glLoadIdentity();
-
-	glGetIntegerv(GL_VIEWPORT,viewport);
-	gluPickMatrix(viewport[2]*_mouse[0],viewport[3]*_mouse[1],
-			150.0,150.0,viewport);
-	gluPerspective(45,(GLfloat) (viewport[2]-viewport[0])/(GLfloat) (viewport[3]-viewport[1]),0.1,1000);
-	glMatrixMode(GL_MODELVIEW);
-	glInitNames();
-
-	_drawUVPoints();
-
-	// restoring the original projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glFlush();
 	
-	// returning to normal rendering mode
-	hits = glRenderMode(GL_RENDER);							
-	GLenum  glerr = glGetError();
-   while(glerr != GL_NO_ERROR) {
-      std::cout<<"glGetError:"<<gluErrorString(glerr)<<std::endl;
-     glerr = glGetError();
-   }															
-	if (hits > 0)												
-	{
-      std::cout<<"Hit a ctrl point"<<std::endl;
+      hits = glRenderMode(GL_SELECT);
+      //clear the projection matrix
+      glLoadIdentity(); 
+
+      glInitNames();
+      glPushName(0);
+   
+      std::cout<<viewport[2]*_mouse[0]<<","<<viewport[3]*_mouse[1]<<std::endl;
+	   gluPickMatrix(viewport[2]*_mouse[0],viewport[3]*_mouse[1],
+			           10.0,10.0,viewport);
+	   gluPerspective(45.0,(GLfloat) (viewport[2]-viewport[0])/(GLfloat) (viewport[3]-viewport[1]),0.01,1000);
+	   //push the modelview matrix
+      
+      glMatrixMode(GL_MODELVIEW);
+      glPushMatrix();
+         
+         //clear the model view matrix
+         //glLoadIdentity();
+         
+         //call selection with the original modelview matrix 
+         glLoadMatrix(modelview);
+
+	      _drawUVPoints();
+      //pop the modelview matrix
+      glPopMatrix();
+       
+     //returning to normal rendering mode
+	  hits = glRenderMode(GL_RENDER);							
+															
+	  if (hits != 0)												
+	  {
+            std::cout<<"Hit a ctrl point"<<std::endl;
+														
 		/*int choose = selectionBuffer[3];									
 		int depth = selectionBuffer[1];									
 
@@ -246,7 +260,24 @@ void NURBSControlMesh::Selection()const
 				depth = selectionBuffer[loop*4+1];						
 			}       
 		}*/
-    }
+     }
+	   //restoring the original projection matrix
+	   glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+   //call selection with the original modelview matrix 
+   //glLoadMatrix(projectionMatrix);
+
+	glMatrixMode(GL_MODELVIEW);
+   //call selection with the original modelview matrix 
+   //glLoadMatrix(modelview);
+   GLenum  glerr = glGetError();
+   while(glerr != GL_NO_ERROR) {
+      std::cout<<"glGetError:"<<gluErrorString(glerr)<<std::endl;
+     glerr = glGetError();
+   }	
+	glFlush();
+	
+	
 }
 ////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::drawImplementation(osg::State& currentState)const
