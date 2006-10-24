@@ -70,6 +70,18 @@ public:
    ///\param trueFalse turn off/on wireframe
    void ViewWireframe(bool trueFalse);
 
+   ///Update the control mesh and the surface
+   void UpdateControlMesh();
+
+   ///Turn on/off selection mode
+   ///\param trueFalse Flag for on/off of selection
+   void SetSelectionStatus(bool trueFalse);
+
+   ///Set the mouse position
+   ///\param xPosition The x mouse position
+   ///\param yPosition The y mouse position
+   void SetMousePosition(float xPosition,float yPosition);
+
    ///Get the original surface
    NURBS::NURBSObject* GetNURBS();
 
@@ -79,12 +91,14 @@ public:
    ///Get the osg::Geometry for the control mesh
    osg::Geode* GetControlMesh();
 
-   ///Update the control mesh and the surface
-   void UpdateControlMesh();
+   ///Get selection status
+   bool IsSelecting();
 
    ///compute the bounding box
    virtual osg::BoundingSphere computeBound()const;
 protected:
+
+   bool _isSelecting;///<Selection flag
 
    bool _retessellate;///<Update the mesh
 

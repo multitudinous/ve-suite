@@ -20,6 +20,73 @@
 void createTestNURBS(int argc, char** argv);
 int parseOCCNURBSFile(int argc, char** argv);
 
+
+class KeyboardEventHandler : public osgGA::GUIEventHandler
+{
+public:
+    
+   KeyboardEventHandler(std::vector< osg::ref_ptr<NURBS::NURBSNode> > surfacePatches)
+      :_isSelecting(false)
+   {
+      _patches.clear();
+      for(size_t i = 0; i < surfacePatches.size(); i++)
+      {
+         _patches.push_back(surfacePatches.at(i));
+      }
+      _nPatches = _patches.size();
+   }
+    
+   virtual bool handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter&)
+   {
+      switch(ea.getEventType())
+      {
+         case(osgGA::GUIEventAdapter::KEYDOWN):
+         {
+            if(ea.getKey() == 'P')
+            {
+               _isSelecting = (!_isSelecting);
+               if(_isSelecting)
+               {
+                  for(size_t i =0; i < _nPatches; i++)
+                  {
+                     _patches.at(i)->SetSelectionStatus(true);
+                  }
+                  std::cout<<"Selection Mode Active"<<std::endl;
+                  
+               }
+               else
+               {
+                  for(size_t i =0; i < _nPatches; i++)
+                  {
+                     _patches.at(i)->SetSelectionStatus(false);
+                  }
+                  std::cout<<"Selection Mode Inactive"<<std::endl;
+               }
+               return _isSelecting;
+            }
+         }
+         case(osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON):
+         {
+            //if(_isSelecting)
+            {
+               std::cout<<"Left Mouse:"<< (ea.getX()+1.0)*.5<<","<<(ea.getY()+1.0)*.5<<std::endl;
+               for(size_t i =0; i < _nPatches; i++)
+               {
+                  _patches.at(i)->SetMousePosition(ea.getX(),ea.getY());
+               }
+               return _isSelecting;
+            }
+         }
+         default:
+            return _isSelecting;
+      }
+   }
+protected:
+   bool _isSelecting;///< Indicates selection
+   size_t _nPatches;///<The number of patches
+   std::vector< osg::ref_ptr<NURBS::NURBSNode> > _patches;///<The surface patches
+        
+};
 /////////////render the NURBSurface in OSG
 void render(int argc, char** argv,
             std::vector< osg::ref_ptr<NURBS::NURBSNode> > surfacePatches)
@@ -36,6 +103,11 @@ void render(int argc, char** argv,
    
     // construct the viewer.
     osgProducer::Viewer viewer(arguments);
+
+    
+
+    KeyboardEventHandler* keh = new KeyboardEventHandler(surfacePatches);
+    viewer.getEventHandlerList().push_front(keh);
 
     // set up the value with sensible default event handlers.
     viewer.setUpViewer(osgProducer::Viewer::STANDARD_SETTINGS);
@@ -116,7 +188,7 @@ int parseOCCNURBSFile(int argc, char** argv)
    //std::string nurbsfile(argv[1]);
    std::vector< std::string > patchFiles = VE_Util::fileIO::GetFilesInDirectory(argv[1],".txt");
    size_t nPatches = patchFiles.size();
-   NURBS::Utilities::OCCNURBSFileReader patchReader;
+   /*NURBS::Utilities::OCCNURBSFileReader patchReader;
 
    for(size_t i = 0; i < nPatches;i++)
    {
@@ -134,7 +206,7 @@ int parseOCCNURBSFile(int argc, char** argv)
       {
          std::cout<<"Could not open file: "<<patchFiles.at(i)<<std::endl;
       }
-   }
+   }*/
    if(nurbsPatches.size())
    {
       render(argc,argv,nurbsPatches);
@@ -233,8 +305,9 @@ void createTestNURBS(int argc, char** argv)
    osg::ref_ptr<NURBS::NURBSNode> renderablePatch = new NURBS::NURBSNode(&surface);
    testNURBSSurface.push_back(renderablePatch.get());
 
+   //std::fstream fout("./testOut.ven",std::ios::out);
    render(argc,argv,testNURBSSurface);
-
+   //fout<<surface<<std::endl;
    //NURBS::NURBSRenderer osgSurface(&surface);
    //osgSurface.ViewWireframe(true);
    //render(argc,argv,osgSurface);

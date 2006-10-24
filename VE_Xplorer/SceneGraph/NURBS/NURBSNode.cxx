@@ -6,6 +6,7 @@
 #include <osg/BoundingSphere>
 #include <osg/ShadeModel>
 #include <osg/Material>
+#include <osg/GLU>
 #include <iostream>
 
 using namespace NURBS;
@@ -52,10 +53,28 @@ public:
       _numUControlPoints = numU;
       _numVControlPoints = numV;
       _isSurface = isSurface;
+      _selection = false;
+      _mouse[0] = 0;
+      _mouse[1] = 0;
    }
+
+   ///Turn on/off selection of control points
+   void SetSelection(bool trueFalse);
+
+   ///Update the current mouse position
+   ///\param xPosition X mouse position
+   ///\param yPosition Y mouse position
+   void SetMousePosition(float xPosition,float yPosition);
+
+   ///Do the selection
+   void Selection()const;
+
    // the draw immediate mode method is where the OSG wraps up the drawing of
    // of OpenGL primitives.
    virtual void drawImplementation(osg::State& currentState) const;
+
+   ///Are we in selection mode?
+   bool IsSelecting();
 
    ///Get the indexed control point
    NURBS::ControlPoint& GetControlPoint(unsigned int index);
@@ -77,11 +96,26 @@ protected:
    ///Draw the UV Control Points
    void _drawUVPoints()const;
 
+   bool _selection;///<Flag for selecting ctrl points;
+
    bool _isSurface;///<Flag for determining NURBS type.
+   GLfloat _mouse[2];//<The mouse position.
+   GLuint _selectionBuffer[512];///<Set Up A Selection Buffer
+	GLint	_hits;///<Selected primitives	
    unsigned int _numUControlPoints;///<The number of control points in U direction.
    unsigned int _numVControlPoints;///<The number of control points in V direction.
    std::vector<NURBS::ControlPoint>* _controlPoints;///<The control points
 };
+}
+///////////////////////////////////////////////////
+void NURBSControlMesh::SetSelection(bool trueFalse)
+{
+   _selection = trueFalse;
+}
+///////////////////////////////////////////////////
+bool NURBSControlMesh::IsSelecting()
+{
+   return _selection;
 }
 //////////////////////////////////////////////////////////////////////////
 NURBS::ControlPoint& NURBSControlMesh::GetControlPoint(unsigned int index)
@@ -108,6 +142,7 @@ void NURBSControlMesh::_drawUCurves()const
 //////////////////////////////////////////
 void NURBSControlMesh::_drawVCurves()const
 {
+   
    //v iso-curves
    for(unsigned int u = 0; u < _numUControlPoints; u++)
    {
@@ -125,27 +160,101 @@ void NURBSControlMesh::_drawVCurves()const
 //////////////////////////////////////////
 void NURBSControlMesh::_drawUVPoints()const
 {
-   //u iso-curves     
-   glEnable(GL_POINT_SMOOTH);
+   //u iso-curves  
+   if(!_selection)
+   {
+      glEnable(GL_POINT_SMOOTH);
+      
+   }
    glPointSize(5.0);
-   glBegin(GL_POINTS);
+   
 
    for(unsigned int v = 0; v < _numVControlPoints; v++)
    {
       for(unsigned int u = 0; u < _numUControlPoints; u++)
       {
+         glLoadName(v*_numUControlPoints + u);
+         glBegin(GL_POINTS);
          glVertex3f(_controlPoints->at(v*_numUControlPoints + u).X(),
                     _controlPoints->at(v*_numUControlPoints + u).Y(),
                     _controlPoints->at(v*_numUControlPoints + u).Z());
+         glEnd();
       }
    }
    
-   glEnd();
-   glDisable(GL_POINT_SMOOTH);
+   
+   if(!_selection)
+   {
+      glDisable(GL_POINT_SMOOTH);
+   }
+}
+//////////////////////////////////////////////////////////////
+void NURBSControlMesh::SetMousePosition(float xPosition,
+                                        float yPosition)
+{
+   _mouse[0] = (xPosition+1.0)*.5;
+   _mouse[1] = (yPosition+1.0)*.5;
+}
+///////////////////////////////////////
+void NURBSControlMesh::Selection()const											
+{
+	GLint viewport[4];
+   GLuint selectionBuffer[512]; 
+   int hits;
+
+	glSelectBuffer(512,selectionBuffer);
+	glRenderMode(GL_SELECT);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glGetIntegerv(GL_VIEWPORT,viewport);
+	gluPickMatrix(viewport[2]*_mouse[0],viewport[3]*_mouse[1],
+			150.0,150.0,viewport);
+	gluPerspective(45,(GLfloat) (viewport[2]-viewport[0])/(GLfloat) (viewport[3]-viewport[1]),0.1,1000);
+	glMatrixMode(GL_MODELVIEW);
+	glInitNames();
+
+	_drawUVPoints();
+
+	// restoring the original projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glFlush();
+	
+	// returning to normal rendering mode
+	hits = glRenderMode(GL_RENDER);							
+	GLenum  glerr = glGetError();
+   while(glerr != GL_NO_ERROR) {
+      std::cout<<"glGetError:"<<gluErrorString(glerr)<<std::endl;
+     glerr = glGetError();
+   }															
+	if (hits > 0)												
+	{
+      std::cout<<"Hit a ctrl point"<<std::endl;
+		/*int choose = selectionBuffer[3];									
+		int depth = selectionBuffer[1];									
+
+		for (int loop = 1; loop < hits; loop++)					
+		{
+			// If This Object Is Closer To Us Than The One We Have Selected
+			if (selectionBuffer[loop*4+1] < GLuint(depth))
+			{
+				choose = selectionBuffer[loop*4+3];						
+				depth = selectionBuffer[loop*4+1];						
+			}       
+		}*/
+    }
 }
 ////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::drawImplementation(osg::State& currentState)const
 {
+   if(_selection)
+   {
+      Selection();
+   }
    if(_isSurface)
    {
       _drawUCurves();
@@ -196,7 +305,7 @@ class TestControlPointCallback : public osg::NodeCallback
         {
 
            osg::ref_ptr<NURBSNode> nurbsData = dynamic_cast<NURBSNode*>(node);
-           if(nurbsData.valid())
+           if(nurbsData.valid()&&nurbsData->IsSelecting())
            {
               const osg::FrameStamp* fs = nv->getFrameStamp();
               double referenceTime = fs->getReferenceTime();
@@ -216,7 +325,7 @@ class TestControlPointCallback : public osg::NodeCallback
                nurbsData->GetNURBS()->GetControlPoint(3)->Translate(0,0,dz);
                nurbsData->UpdateControlMesh();
 
-               nurbsData->GetNURBS()->UpdateMesh(*(nurbsData->GetNURBS()->GetControlPoint(3)));
+               //nurbsData->GetNURBS()->UpdateMesh(*(nurbsData->GetNURBS()->GetControlPoint(3)));
            }
         }
         
@@ -422,6 +531,7 @@ osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int i
 NURBSNode::NURBSNode(NURBS::NURBSObject* object)
 {
    _nurbsObject = object;
+   _isSelecting = false;
    if(_nurbsObject)
    {
       
@@ -450,7 +560,7 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
       surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
       
       addChild(_triangulatedSurfaceGeode.get());
-      //setUpdateCallback(new TestControlPointCallback(1.0));
+      setUpdateCallback(new TestControlPointCallback(1.0));
    }
 }
 ///////////////////////////////
@@ -505,7 +615,25 @@ void NURBSNode::UpdateControlMesh()
    _triangulatedSurfaceDrawable->dirtyDisplayList();
    _controlMeshDrawable->dirtyBound();
    _controlMeshDrawable->dirtyDisplayList();
-               
+}
+//////////////////////////////////////////////////
+void NURBSNode::SetSelectionStatus(bool trueFalse)
+{
+   _isSelecting = trueFalse;
+}
+////////////////////////////////////////////////////////
+void NURBSNode::SetMousePosition(float xPosition,
+                                 float yPosition)
+{
+   if(_controlMeshDrawable.valid())
+   {
+      _controlMeshDrawable->SetMousePosition(xPosition,yPosition);
+   }
+}
+/////////////////////////////
+bool NURBSNode::IsSelecting()
+{
+   return _isSelecting;
 }
 ///////////////////////////////////////////////////////////////////////
 ///Calculate the surface normal at a point                           //
