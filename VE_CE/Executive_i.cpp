@@ -808,13 +808,14 @@ char *  Body_Executive_i::Query (  const char * command
   )
   ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 {
+std::cout << command << std::endl;
    // read the command to get the module name and module id
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( command, "Command", "vecommand" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-
+   
    std::string moduleName;
    unsigned int moduleId;
    VE_XML::Command* tempCommand = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
@@ -837,29 +838,42 @@ char *  Body_Executive_i::Query (  const char * command
          passCommand.GetDataValuePair(-1)->SetData( tempPair->GetDataName(), tempPair );
       }
    }
-        
+   
    ///string used to hold query data
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    nodes.push_back( 
-                   std::pair< VE_XML::XMLObject*, std::string >( &passCommand, "vecommand" ) 
-                   );
-                   
+                    std::pair< VE_XML::XMLObject*, std::string >( &passCommand, "vecommand" ) 
+                    );
+   
    VE_XML::XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-   std::string queryString;
-
+   
    _mutex.acquire();
    // Resume all the modules
    std::map<std::string, Body::Unit_var>::iterator iter;
-   iter = _mod_units.find( moduleName );
+   if ( !moduleName.empty() )
+   {
+      //find the unit the normal way
+      iter = _mod_units.find( moduleName );
+   }
+   else
+   {
+      // if we are doing an aspen type query and do not have 
+      // a unit name or module id
+      std::cout << "aspen query" << std::endl;
+      iter = _mod_units.begin();
+   }
+
    if ( iter == _mod_units.end() )
    {
+      std::cout << "no units to query" << std::endl;
       _mutex.release();
       return 0;
    }
+      
+   std::string queryString;
    
    try 
    {
@@ -874,7 +888,7 @@ char *  Body_Executive_i::Query (  const char * command
       UnRegisterUnit( moduleName.c_str() );
       _mod_units.erase( iter );
    }
-
+   
    return CORBA::string_dup( queryString.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////

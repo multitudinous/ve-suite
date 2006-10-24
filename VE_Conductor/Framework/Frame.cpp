@@ -961,22 +961,21 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 	//std::string result = serviceList->Query(std::string("getNetwork") );
 	//Log((std::string("result = ")+result+std::string(".\n")).c_str());
 	//Log("Network Queried.\n");
-VE_XML::Command returnState;
-returnState.SetCommandName("getNetwork");
-VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
-data->SetData("moduleName", "Aspen" );
-data=returnState.GetDataValuePair(-1);
-data->SetData("moduleId", static_cast< unsigned int >( 101 ) );
+   VE_XML::Command returnState;
+   returnState.SetCommandName("getNetwork");
+   VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+   data->SetData("NetworkQuery", "getNetwork" );
+   //data=returnState.GetDataValuePair(-1);
+   //data->SetData("moduleId", static_cast< unsigned int >( 101 ) );
 
-std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-VE_XML::XMLReaderWriter commandWriter;
-std::string status="returnString";
-commandWriter.UseStandaloneDOMDocumentManager();
-commandWriter.WriteXMLDocument( nodes, status, "Command" );
-//Get results
-serviceList->Query( status );
-
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   //Get results
+   serviceList->Query( status );
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryForInputs( wxCommandEvent& WXUNUSED(event) )
