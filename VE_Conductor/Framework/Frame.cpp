@@ -957,10 +957,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 {
-	//Log("Query Network.\n");
-	//std::string result = serviceList->Query(std::string("getNetwork") );
-	//Log((std::string("result = ")+result+std::string(".\n")).c_str());
-	//Log("Network Queried.\n");
+   Log("Query Network.\n");
    VE_XML::Command returnState;
    returnState.SetCommandName("getNetwork");
    VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
@@ -975,7 +972,16 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
    //Get results
-   serviceList->Query( status );
+   std::string nw_str = serviceList->Query( status );
+   // If there is nothing on the CE
+   if ( !nw_str.empty() )
+   {
+      network->Load( nw_str );
+   }
+   else
+   {
+      Log("No ves network available\n");
+   }
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryForInputs( wxCommandEvent& WXUNUSED(event) )
