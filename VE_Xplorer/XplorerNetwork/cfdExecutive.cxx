@@ -244,7 +244,7 @@ void cfdExecutive::GetNetwork( void )
    idToModel.clear();
    for ( size_t i = 0; i < currentModels.size(); ++i )
    {
-      VE_Model::Model* model = dynamic_cast< VE_Model::Model* >( currentModels.at( i ) );
+      VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( currentModels.at( i ) );
       _id_map[  model->GetModelID() ] = model->GetModelName();
       idToModel[ model->GetModelID() ] = model;
    }
@@ -291,7 +291,7 @@ void cfdExecutive::GetEverything( void )
          _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
          _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
       }
-      std::map< int, VE_Model::Model* >::iterator modelIter;
+      std::map< int, VE_XML::VE_Model::Model* >::iterator modelIter;
       // this call always returns something because it is up to date with the id map
       modelIter = idToModel.find( iter->first );
       _plugins[ iter->first ]->SetXMLModel( modelIter->second );

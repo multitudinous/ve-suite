@@ -73,21 +73,20 @@ namespace VE_Conductor
    class CORBAServiceList;
 }
 
-namespace VE_Model
-{
-   class Model;
-   class Port;
-}
-
 namespace VE_XML
 {
    class Command;
+   namespace VE_Model
+   {
+      class Model;
+      class Port;
+   }
 }
 
 class Interface;
 
 typedef std::vector< wxPoint > POLY;
-typedef std::vector< VE_Model::Port > PORT;
+typedef std::vector< VE_XML::VE_Model::Port > PORT;
 
 class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
 {
@@ -143,11 +142,11 @@ public:
    virtual Interface* Pack();
    //This is the load function of the module, 
    ///unpack the input string and fill up the UI according to this
-   VE_Model::Model* GetVEModel( void );
+   VE_XML::VE_Model::Model* GetVEModel( void );
    ///Set the ve model
-   void SetVEModel( VE_Model::Model* tempModel );
+   void SetVEModel( VE_XML::VE_Model::Model* tempModel );
    ///Get the model constructed by the dialog
-   VE_Model::Model* GetModel( void );
+   VE_XML::VE_Model::Model* GetModel( void );
    ///This is to unpack the result from the 
    virtual void UnPackResult(Interface * intf);
    ///method to start a dialog to ask the user for a plugin name so that the 
@@ -203,7 +202,7 @@ protected:
    Interface mod_pack;
    wxPoint pos; //The Position to draw Icon;
 
-   VE_Model::Model* veModel;
+   VE_XML::VE_Model::Model* veModel;
    wxString name;
 
    //That's the for default implementation of the DrawIcon. Not part of the general interface
@@ -213,8 +212,8 @@ protected:
    ///Port data info
    int numberOfInputPorts;
    int numberOfOutputPorts;
-   std::vector< VE_Model::Port* > inputPort;
-   std::vector< VE_Model::Port* > outputPort;
+   std::vector< VE_XML::VE_Model::Port* > inputPort;
+   std::vector< VE_XML::VE_Model::Port* > outputPort;
    
    //data storage types
    std::vector< wxString > v_desc;

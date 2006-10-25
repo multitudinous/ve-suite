@@ -31,7 +31,7 @@ protected:
    CORBA::Long activeId;
    std::string status_;
    std::string data_;
-   std::map< std::string, VE_Model::Model* > xmlModelMap;
+   std::map< std::string, VE_XML::VE_Model::Model* > xmlModelMap;
    std::map< std::string, std::vector< VE_XML::XMLObject* > > inputsMap;
    std::map< std::string, std::vector< VE_XML::XMLObject* > > resultsMap;
    std::map< std::string, VE_CE::EventHandler* > eventHandlerMap;

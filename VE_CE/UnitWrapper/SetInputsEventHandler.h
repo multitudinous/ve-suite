@@ -45,10 +45,10 @@
 namespace VE_XML
 {
    class XMLObject;
-}
-namespace VE_Model
-{
-   class Model;
+   namespace VE_Model
+   {
+      class Model;
+   }
 }
 //#include "VE_Installer/include/VEConfig.h"
 
@@ -71,7 +71,7 @@ public:
    ///\param baseObject The base object to apply the command to.
    virtual void SetBaseObject(VE_XML::XMLObject* baseObject );
 private:
-   VE_Model::Model* baseModel;
+   VE_XML::VE_Model::Model* baseModel;
 };
 }
 #endif// SET_INPUTS_EVENT_HANDLER_H

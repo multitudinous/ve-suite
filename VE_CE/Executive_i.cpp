@@ -56,7 +56,7 @@ Body_Executive_i::Body_Executive_i (CosNaming::NamingContext_ptr nc)
    //Initialize all the XML objects
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_XML::VE_Shader::ShaderCreator());
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new VE_Model::ModelCreator());
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new VE_XML::VE_Model::ModelCreator());
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_CAD::CADCreator());
 }
 
@@ -817,7 +817,7 @@ std::cout << command << std::endl;
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    
    std::string moduleName;
-   unsigned int moduleId;
+   unsigned int moduleId = 0;
    VE_XML::Command* tempCommand = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
    VE_XML::Command passCommand;
    passCommand.SetCommandName( tempCommand->GetCommandName() );

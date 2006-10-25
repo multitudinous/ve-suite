@@ -49,6 +49,8 @@
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
 
+namespace VE_XML
+{
 namespace VE_Model
 {
 class VE_MODEL_EXPORTS Point : public VE_XML::XMLObject
@@ -83,5 +85,6 @@ protected:
    ///The first component is x, the second component is y
    std::pair< unsigned int, unsigned int > point;///<Raw data.
 };
+}
 }
 #endif// _XML_VE_POINT_H_

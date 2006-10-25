@@ -50,13 +50,14 @@
 namespace VE_XML
 {
    class DataValuePair;
+   namespace VE_Model
+   {
+      class Link;
+   }
 }
 
-namespace VE_Model
+namespace VE_XML
 {
-   class Link;
-}
-
 namespace VE_Model
 {
 class VE_MODEL_EXPORTS Network : public VE_XML::XMLObject
@@ -95,4 +96,6 @@ private:
    std::vector< VE_XML::DataValuePair* > conductorState;///<Vector of data value pairs that hold conductor info.
 };
 }
+}
+
 #endif// _VE_NETWORK_H_

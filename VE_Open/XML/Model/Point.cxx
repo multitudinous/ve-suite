@@ -37,7 +37,7 @@
 #include "VE_Open/XML/Model/Point.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
-using namespace VE_Model;
+using namespace VE_XML::VE_Model;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////

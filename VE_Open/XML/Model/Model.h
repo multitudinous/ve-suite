@@ -57,11 +57,11 @@ namespace VE_XML
    class DataValuePair;
    class Command;
    class ParameterBlock;
-}
-namespace VE_Model
-{
-   class Port;
-   class Point;
+   namespace VE_Model
+   {
+      class Port;
+      class Point;
+   }
 }
 
 namespace VE_CAD
@@ -70,6 +70,8 @@ namespace VE_CAD
    class CADAssembly;
 }
 
+namespace VE_XML
+{
 namespace VE_Model
 {
 class VE_MODEL_EXPORTS Model : public VE_XML::XMLObject
@@ -180,4 +182,6 @@ private:
    VE_CAD::CADAssembly* geometry;///<The classes hold the geometry for the model.
 };
 }
+}
+
 #endif// _VE_MODEL_H_

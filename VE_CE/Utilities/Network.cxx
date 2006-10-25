@@ -46,6 +46,8 @@
 #include <iostream>
 
 using namespace VE_CE::Utilities;
+//using namespace VE_XML::VE_Model;
+
 Network::Network ()
 {
    veNetwork = 0;
@@ -87,7 +89,7 @@ int Network::parse( std::string xmlNetwork )
    // now lets create a list of them
    for ( size_t i = 0; i < objectVector.size(); ++i )
    {
-      VE_Model::Model* model = dynamic_cast< VE_Model::Model* >( objectVector.at( i ) );
+      VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
       add_module( model->GetModelID(), model->GetModelName() );
       GetModule( i )->SetVEModel( model );
    }
@@ -109,7 +111,7 @@ int Network::parse( std::string xmlNetwork )
    // we are expecting that a network will be found
    if ( !objectVector.empty() )
    {
-      veNetwork = dynamic_cast< VE_Model::Network* >( objectVector.at( 0 ) );
+      veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
    }
    else
    {

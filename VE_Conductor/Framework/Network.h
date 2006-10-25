@@ -59,10 +59,14 @@ Network API
 #include <iostream>
 class GlobalParamDialog;
 class wxProgressDialog;
+namespace VE_XML
+{
 namespace VE_Model
 {
    class Network;
 }
+}
+
 class Vistab;
 class AppFrame;
 
@@ -258,7 +262,7 @@ private:
    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
-   VE_Model::Network* veNetwork;
+   VE_XML::VE_Model::Network* veNetwork;
    ///Parent window pointer to the splitter in AppFrame
    wxWindow* parent;
    ///wxframe pointer for frame.cxx

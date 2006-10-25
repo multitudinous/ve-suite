@@ -47,6 +47,8 @@ namespace VE_XML
 }
 #include "VE_Open/XML/CreationEventHandler.h"
 
+namespace VE_XML
+{
 namespace VE_Model
 {
 class VE_MODEL_EXPORTS ModelCreator : public VE_XML::CreationEventHandler
@@ -69,6 +71,8 @@ public:
 protected:
 };
 }
+}
+
 #endif// MODEL_CREATOR_H
 
 

@@ -41,14 +41,14 @@
 #include <vector>
 #include <map>
 
-namespace VE_Model
-{
-   class Network;
-}
 
 namespace VE_XML
 {
    class Command;
+   namespace VE_Model
+   {
+      class Network;
+   }
 }
 
 namespace VE_CE
@@ -109,7 +109,7 @@ protected:
    /// easy access to modules from conductor ids.
    std::map< int, Module* > moduleIDMap;
    /// Holder of the network
-   VE_Model::Network* veNetwork;
+   VE_XML::VE_Model::Network* veNetwork;
 };
 }
 }

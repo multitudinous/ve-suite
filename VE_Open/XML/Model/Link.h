@@ -54,13 +54,14 @@
 namespace VE_XML
 {
    class DataValuePair;
+   namespace VE_Model
+   {
+      class Point;
+   }
 }
 
-namespace VE_Model
+namespace VE_XML
 {
-   class Point;
-}
-
 namespace VE_Model
 {
 class VE_MODEL_EXPORTS Link : public VE_XML::XMLObject
@@ -106,4 +107,6 @@ private:
    std::pair< long int, long int > portInfo;///<The classes hold the fromPort in first and the toPort in second.
 };
 }
+}
+
 #endif// _VE_LINK_H_

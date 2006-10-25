@@ -2079,7 +2079,7 @@ std::string Network::Save( std::string fileName )
    if ( veNetwork )
       delete veNetwork;
    
-   veNetwork = new VE_Model::Network();
+   veNetwork = new VE_XML::VE_Model::Network();
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veNetwork, "veNetwork" ) );
 
    veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
@@ -2091,7 +2091,7 @@ std::string Network::Save( std::string fileName )
 
    for ( size_t i = 0; i < links.size(); ++i )
    {
-      VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
+      VE_XML::VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
       //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
       //xmlLink->GetToPort()->SetData( modules[ links[i].GetToModule() ].pl_mod->GetModelName(), links[i].GetToPort() );
       xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
@@ -2254,7 +2254,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    // we are expecting that a network will be found
    if ( !objectVector.empty() )
    {
-      veNetwork = dynamic_cast< VE_Model::Network* >( objectVector.at( 0 ) );
+      veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
    }
    else
    {
@@ -2314,7 +2314,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    for ( size_t i = 0; i < objectVector.size(); ++i )
    {
       _fileProgress->Update( 75 + (i*timeCalc), "Loading data" );
-      VE_Model::Model* model = dynamic_cast< VE_Model::Model* >( objectVector.at( i ) );
+      VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
 
       wxClassInfo* cls = wxClassInfo::FindClass( model->GetModelName().c_str() );
       // If the class has not had a custom module been created
@@ -2518,7 +2518,7 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
    }
 
    // Here we launch a dialog for a specific plugins input values
-   VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+   VE_XML::VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
 
    if( !cadDialog )
    {
@@ -2550,7 +2550,7 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
    }
    
    // Here we launch a dialog for a specific plugins input values
-   VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+   VE_XML::VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
    //DataSetLoaderUI* dataSetLoaderDlg = 0;
    /*if ( CORBA::is_nil( xplorerPtr.in() ) )
    {
@@ -2599,7 +2599,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    }
   
    //Get the active model ID from the xml data
-   VE_Model::Model* activeXMLModel = modules[m_selMod].GetPlugin()->GetModel();
+   VE_XML::VE_Model::Model* activeXMLModel = modules[m_selMod].GetPlugin()->GetModel();
    unsigned int modelID = activeXMLModel->GetModelID();
 
    //Get the active model from the CORBA side

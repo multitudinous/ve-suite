@@ -43,6 +43,7 @@
 #include "VE_Open/XML/DataValuePair.h"
 
 using namespace VE_CE::Utilities;
+using namespace VE_XML;
 
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module()
@@ -50,12 +51,12 @@ Module::Module()
     _return_state( 0 ),
     _is_feedback( 0 )
 {
-   veModel = new VE_Model::Model();
+   veModel = new VE_XML::VE_Model::Model();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module( const Module &m )
 {
-   veModel = new VE_Model::Model();
+   veModel = new VE_XML::VE_Model::Model();
    copy(m);
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +109,7 @@ void Module::copy( const Module &m )
 
    for ( size_t i = 0; i < m.ports.size(); ++i )
    {
-      ports.push_back( new VE_Model::Port( *(m.ports.at( i )) ) );
+      ports.push_back( new VE_XML::VE_Model::Port( *(m.ports.at( i )) ) );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -276,13 +277,13 @@ std::string Module::GetModuleName( void )
    return _name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_Model::Model* Module::GetVEModel( void )
+VE_XML::VE_Model::Model* Module::GetVEModel( void )
 {
    //Set the input, results, port data data structures
    return veModel;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::SetVEModel( VE_Model::Model* mod )
+void Module::SetVEModel( VE_XML::VE_Model::Model* mod )
 {
    if ( veModel )
    {

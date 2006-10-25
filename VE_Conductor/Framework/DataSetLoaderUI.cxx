@@ -98,7 +98,7 @@ DataSetLoaderUI::DataSetLoaderUI( )
    paramBlock = 0;
 }
 
-DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_Model::Model* veModel )
+DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_XML::VE_Model::Model* veModel )
 {
    Create(parent, id, caption, pos, size, style, veModel );
 }
@@ -107,7 +107,7 @@ DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxStrin
  * DataSetLoaderUI creator
  */
 
-bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_Model::Model* veModel )
+bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_XML::VE_Model::Model* veModel )
 {
 ////@begin DataSetLoaderUI member initialisation
    this->veModel = veModel;

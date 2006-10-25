@@ -52,14 +52,16 @@
 
 namespace VE_XML
 {
-   class DataValuePair;
-}
-
+class DataValuePair;
 namespace VE_Model
 {
-   class Point;
+class Point;
+}
 }
 
+
+namespace VE_XML
+{
 namespace VE_Model
 {
 class VE_MODEL_EXPORTS Port : public VE_XML::XMLObject
@@ -128,5 +130,6 @@ protected:
    Point* portLocation;///<Physical location of the port on the wx design canvas.
    std::string portType;///<DataType of the port, in case the data is strong Typed
 };
+}
 }
 #endif// _VE_PORT_H_

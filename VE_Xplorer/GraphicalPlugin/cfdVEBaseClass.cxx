@@ -384,7 +384,7 @@ VE_SceneGraph::cfdDCS* cfdVEBaseClass::GetWorldDCS()
    return this->worldDCS;
 }
 //////////////////////////////////////////////////////////////////   
-void cfdVEBaseClass::SetXMLModel( VE_Model::Model* tempModel )
+void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::Model* tempModel )
 {
    xmlModel = tempModel;
 

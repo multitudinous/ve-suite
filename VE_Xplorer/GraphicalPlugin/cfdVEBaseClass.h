@@ -61,14 +61,13 @@ namespace VE_Xplorer
    class cfdSoundHandler;
 }
 
-namespace VE_Model
-{
-   class Model;
-}
-
 namespace VE_XML
 {
    class Command;
+   namespace VE_Model
+   {
+      class Model;
+   }
 }
 
 #include "VE_Installer/include/VEConfig.h"
@@ -136,7 +135,7 @@ public:
 
    ///Set the VE_Model to be used by this plugin
    ///\param tempModel Pointer to VE_Model
-   void SetXMLModel( VE_Model::Model* tempModel );
+   void SetXMLModel( VE_XML::VE_Model::Model* tempModel );
    ///Set current command whatever it is
    ///\param command Current command from conductor
    virtual void SetCurrentCommand( VE_XML::Command* command );
@@ -184,7 +183,7 @@ protected:
    cfdNavigate* _navigate;
    cfdSoundHandler* soundHandler;
    
-   VE_Model::Model* xmlModel;
+   VE_XML::VE_Model::Model* xmlModel;
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;
 };

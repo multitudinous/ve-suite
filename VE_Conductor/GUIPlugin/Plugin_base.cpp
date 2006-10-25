@@ -54,7 +54,7 @@
 #include <wx/dc.h>
 #include <wx/msgdlg.h>
 #include <wx/wx.h>
-using namespace VE_Model;
+using namespace VE_XML::VE_Model;
 using namespace VE_XML;
 
 IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxObject )
@@ -754,7 +754,7 @@ void REI_Plugin::UnPack(Interface * intf)
   }
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
+void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
 {
    if ( veModel != NULL )
    {
@@ -869,7 +869,7 @@ void REI_Plugin::SetVEModel( VE_Model::Model* tempModel )
    //Setup the ports so that the plugin can access them.
    for ( size_t i = 0; i < veModel->GetNumberOfPorts(); ++i )
    {
-      VE_Model::Port* tempPort = veModel->GetPort( i );
+      VE_XML::VE_Model::Port* tempPort = veModel->GetPort( i );
       if ( tempPort->GetDataFlowDirection() == std::string( "input" ) )
       {
          inputPort.push_back( tempPort );

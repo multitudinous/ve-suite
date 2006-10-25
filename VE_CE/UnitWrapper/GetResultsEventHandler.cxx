@@ -60,7 +60,7 @@ void GetResultsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
    {
       if ( model )
       {
-         baseModel = dynamic_cast< VE_Model::Model* >( model );
+         baseModel = dynamic_cast< VE_XML::VE_Model::Model* >( model );
       }
    }
    catch(...)

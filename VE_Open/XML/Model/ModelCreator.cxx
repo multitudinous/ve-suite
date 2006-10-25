@@ -39,7 +39,7 @@
 #include "VE_Open/XML/Model/Port.h"
 #include "VE_Open/XML/Model/Tag.h"
 
-using namespace VE_Model;
+using namespace VE_XML::VE_Model;
 //////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
 {

@@ -29,8 +29,8 @@ UnitWrapper::UnitWrapper (Body::Executive_ptr exec, std::string name)
    
    ///Initialize VE-Open
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_Shader::ShaderCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_Model::ModelCreator() );
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_XML::VE_Shader::ShaderCreator() );
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_XML::VE_Model::ModelCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
 
    eventHandlerMap[ "Set XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
@@ -174,11 +174,11 @@ void UnitWrapper::SetID (
    std::ostringstream strm;
    strm << id;
    
-   std::map< std::string, VE_Model::Model* >::iterator iter;
+   std::map< std::string, VE_XML::VE_Model::Model* >::iterator iter;
    iter = xmlModelMap.find( strm.str() );
    if ( iter == xmlModelMap.end() )
    {
-      xmlModelMap[ strm.str() ] = new VE_Model::Model();
+      xmlModelMap[ strm.str() ] = new VE_XML::VE_Model::Model();
    }
 
    std::cout<<UnitName_<<" :SetID called"<<std::endl;
@@ -275,7 +275,7 @@ void UnitWrapper::DeleteModuleInstance( ::CORBA::Long module_id )
    std::ostringstream strm;
    strm << module_id;
    
-   std::map< std::string, VE_Model::Model* >::iterator iter;
+   std::map< std::string, VE_XML::VE_Model::Model* >::iterator iter;
    iter = xmlModelMap.find( strm.str() );
    if ( iter != xmlModelMap.end() )
    {

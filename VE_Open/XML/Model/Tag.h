@@ -50,11 +50,16 @@
 
 #include <xercesc/dom/DOM.hpp>
 
+namespace VE_XML
+{
 namespace VE_Model
 {
    class Point;
 }
+}
 
+namespace VE_XML
+{
 namespace VE_Model
 {
 class VE_MODEL_EXPORTS Tag : public VE_XML::XMLObject
@@ -92,5 +97,6 @@ private:
    std::vector< Point* > tagPoints;///<Vector of Points.
    std::string tagText;///<string that contains text for the tag
 };
+}
 }
 #endif// _VE_Tag_H_

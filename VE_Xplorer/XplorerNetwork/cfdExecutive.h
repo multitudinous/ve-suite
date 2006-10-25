@@ -70,11 +70,10 @@ namespace VE_Xplorer
 namespace VE_XML
 {
    class XMLObject;
-}
-
-namespace VE_Model
-{
-   class Model;
+   namespace VE_Model
+   {
+      class Model;
+   }
 }
 
 namespace VE_EVENTS
@@ -167,7 +166,7 @@ private:
 
    // _name_map : maps a module id to it's module name.
    std::map< int, std::string> _id_map;
-   std::map< int, VE_Model::Model* > idToModel;
+   std::map< int, VE_XML::VE_Model::Model* > idToModel;
 
    // _name_map : maps a module name to it's module id.
    std::map<int, cfdVEBaseClass* > _plugins;

@@ -44,7 +44,7 @@
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 using namespace VE_CAD;
-using namespace VE_Model;
+using namespace VE_XML::VE_Model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////

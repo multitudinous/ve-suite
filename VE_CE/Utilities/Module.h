@@ -39,10 +39,13 @@
 #include "VE_Open/skel/moduleS.h"
 #include <vector>
 #include <string>
+namespace VE_XML
+{
 namespace VE_Model
 {
    class Model;
    class Port;
+}
 }
 
 namespace VE_XML
@@ -113,9 +116,9 @@ public:
    ///Get the modules name
    std::string GetModuleName( void );
    ///Get the VE_Model for this module
-   VE_Model::Model* GetVEModel( void );
+   VE_XML::VE_Model::Model* GetVEModel( void );
    ///Set the VE_Model for this module
-   void SetVEModel( VE_Model::Model* mod );
+   void SetVEModel( VE_XML::VE_Model::Model* mod );
 
    int _need_execute;
    int _return_state;
@@ -142,13 +145,13 @@ private:
    
    // The holder of the raw data for this class
    // This class is responsible for the memory management here
-   VE_Model::Model* veModel;
+   VE_XML::VE_Model::Model* veModel;
    //Container for input data
    std::vector< VE_XML::Command* > inputs;
    //Container for results data
    std::vector< VE_XML::Command* > results;
    //Container for port data
-   std::vector< VE_Model::Port* > ports;
+   std::vector< VE_XML::VE_Model::Port* > ports;
    ///Do we need to keep track of messages?
 };
 }
