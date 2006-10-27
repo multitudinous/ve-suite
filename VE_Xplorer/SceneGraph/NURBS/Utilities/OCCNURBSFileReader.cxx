@@ -115,18 +115,18 @@ NURBS::NURBSSurface* OCCNURBSFileReader::ReadPatchFile(std::string star2occFile)
       unsigned int nV = 0;
       while(occNURBSFile.getline(descriptorLine,fileLength,'\n'))
       {
-         nV = 0;
+         nU = 0;
          strm.clear();
          strm.str(descriptorLine);
          while(strm >> delimChar)
          {
             strm>>x>>y>>z>>w;
             surfaceCtrlPts.push_back(NURBS::ControlPoint(x,y,z,w));
-            nV++;
+            nU++;
             //")"
             strm>>delimChar;
          }
-         nU++;
+         nV++;
       }
 
       occNURBSFile.close();

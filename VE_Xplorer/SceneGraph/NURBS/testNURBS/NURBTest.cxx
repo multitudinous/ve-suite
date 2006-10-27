@@ -34,56 +34,113 @@ public:
          _patches.push_back(surfacePatches.at(i));
       }
       _nPatches = _patches.size();
+      _lastMousePosition[0] = 0;
+      _lastMousePosition[1] = 0;
+      _lastMousePosition[2] = 0;
    }
     
    virtual bool handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter&)
    {
-      switch(ea.getEventType())
+      if(_isSelecting)
       {
-         case(osgGA::GUIEventAdapter::KEYDOWN):
+         switch(ea.getEventType())
          {
-            if(ea.getKey() == 'P')
+            case(osgGA::GUIEventAdapter::PUSH):
             {
-               _isSelecting = (!_isSelecting);
-               if(_isSelecting)
+               if(ea.getButtonMask()== osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
                {
+                  //std::cout<<"Left Mouse:"<< (ea.getX()+1.0)*.5<<","<<(ea.getY()+1.0)*.5<<std::endl;
+                  UpdateLastMousePosition(ea.getX(),ea.getY());
                   for(size_t i =0; i < _nPatches; i++)
                   {
+                     _patches.at(i)->SetMousePosition(ea.getX(),ea.getY());
                      _patches.at(i)->SetSelectionStatus(true);
                   }
-                  std::cout<<"Selection Mode Active"<<std::endl;
-                  
+                  //to process drag events...
+                  return false;
                }
-               else
+               break;
+            }
+            case(osgGA::GUIEventAdapter::RELEASE):
+            {
+               if(ea.getButtonMask()== osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
                {
+                  //std::cout<<"Left Mouse release"<<std::endl;
                   for(size_t i =0; i < _nPatches; i++)
                   {
                      _patches.at(i)->SetSelectionStatus(false);
                   }
-                  std::cout<<"Selection Mode Inactive"<<std::endl;
                }
-               return _isSelecting;
+               break;
             }
-         }
-         case(osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON):
-         {
-            if(_isSelecting)
+            case(osgGA::GUIEventAdapter::DRAG):
             {
-               std::cout<<"Left Mouse:"<< (ea.getX()+1.0)*.5<<","<<(ea.getY()+1.0)*.5<<std::endl;
-               for(size_t i =0; i < _nPatches; i++)
+               float dx = 0;
+               float dy = 0;
+               float dz = 0;
+               if(ea.getButtonMask() == osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
                {
-                  _patches.at(i)->SetMousePosition(ea.getX(),ea.getY());
+                  //x mouse move == X direction (left/right)
+                  //y mouse move == Z direction (up/down)
+                  dx = ea.getX() - _lastMousePosition[0];
+                  dz = ea.getY() - _lastMousePosition[1];
+                  if((fabs(dx) > .05)||(fabs(dz) > .05))
+                  {
+                  //std::cout<<"Dragging left mouse in selection mode"<<std::endl;
+                     for(size_t i =0; i < _nPatches; i++)
+                     {
+                        _patches.at(i)->MoveSelectedControlPoint(dx,0,dz);
+                     }
+                     UpdateLastMousePosition(ea.getX(),ea.getY());
+                  }
+                  
                }
-               return _isSelecting;
+               else if(ea.getButtonMask() == osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON)
+               {
+                  //y mouse move == zoom direction (in/out)
+                  dy = ea.getY() - _lastMousePosition[2];
+                  //std::cout<<"Dragging left mouse in selection mode"<<std::endl;
+                  if((fabs(dy) > .05))
+                  {
+                     for(size_t i =0; i < _nPatches; i++)
+                     {
+                        _patches.at(i)->MoveSelectedControlPoint(0,dy,0);
+                     }
+                     UpdateLastMousePosition(ea.getX(),ea.getY());
+                  }
+               }
+               break;
+ 
             }
-         }
-         default:
-            return _isSelecting;
+            default:
+               break;
+         };
+         
       }
+      if((ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN) && 
+            (ea.getKey() == 'P'))
+      {
+         _isSelecting = (!_isSelecting);
+      }
+     
+      ///only need to check if we are turning on selection
+      
+      return _isSelecting;
+   }
+
+   ///Update the latest mouse position
+   ///\param lastX The last x position
+   ///\param lastY The last y position
+   void UpdateLastMousePosition(float lastX,float lastY)
+   {
+      _lastMousePosition[0] = lastX;
+      _lastMousePosition[1] = lastY;
+      _lastMousePosition[2] = lastY;
    }
 protected:
    bool _isSelecting;///< Indicates selection
    size_t _nPatches;///<The number of patches
+   float _lastMousePosition[3];///<The change in mouse position.
    std::vector< osg::ref_ptr<NURBS::NURBSNode> > _patches;///<The surface patches
         
 };
@@ -188,7 +245,7 @@ int parseOCCNURBSFile(int argc, char** argv)
    //std::string nurbsfile(argv[1]);
    std::vector< std::string > patchFiles = VE_Util::fileIO::GetFilesInDirectory(argv[1],".txt");
    size_t nPatches = patchFiles.size();
-   /*NURBS::Utilities::OCCNURBSFileReader patchReader;
+   NURBS::Utilities::OCCNURBSFileReader patchReader;
 
    for(size_t i = 0; i < nPatches;i++)
    {
@@ -206,7 +263,7 @@ int parseOCCNURBSFile(int argc, char** argv)
       {
          std::cout<<"Could not open file: "<<patchFiles.at(i)<<std::endl;
       }
-   }*/
+   }
    if(nurbsPatches.size())
    {
       render(argc,argv,nurbsPatches);

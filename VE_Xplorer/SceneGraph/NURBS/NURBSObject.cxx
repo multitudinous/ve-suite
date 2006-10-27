@@ -471,8 +471,20 @@ unsigned int NURBSObject::_findNearestParameterIndex(std::string direction,
                                                      double parameter)
 {
    std::map<double, unsigned int >::iterator lowerNearestValue;
+   //endpoints
+   if(parameter == 0.f)
+   {
+      return _parameterValues[direction].begin()->second;
+   }
+   if(parameter == 1.f)
+   {
+      return _parameterValues[direction].rbegin()->second;
+   }
+
    lowerNearestValue = _parameterValues[direction].lower_bound(parameter);
    
+   while((float)parameter <(float)lowerNearestValue->first)
+      lowerNearestValue--;
    return lowerNearestValue->second;
 }
 ////////////////////////////////////////////////////////////////////////////////

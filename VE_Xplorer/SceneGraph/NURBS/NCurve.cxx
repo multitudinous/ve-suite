@@ -79,9 +79,9 @@ void NURBSCurve::_interpolateWithinRange(double umin,double umax,
 
    std::vector<NURBS::ControlPoint> curveInfo;
 
-   for(unsigned int u = uIndexMin; u < uIndexMax; u++)
+   for(unsigned int u = uIndexMin; u <= uIndexMax; u++)
    {
-      _calculateBasisFunctionsAndDerivatives(uparam,"U");
+      _calculateBasisFunctionsAndDerivatives(std::min(uparam,umax),"U");
       curveInfo = _calculatePointOnCurve(uparam,_currentSpan["U"]);
       for(size_t k = 0; k < curveInfo.size(); k++)
       {
@@ -141,24 +141,25 @@ std::vector<NURBS::ControlPoint> NURBSCurve::_calculatePointOnCurve(double param
    double ctrlPtWeight = 1.0;
    double resultPtWeight = 1.0;
    double cw[3] = {0,0,0};
-   for(unsigned int k = 0; k < _degree["U"]; k++)
+   unsigned int udegree = _degree["U"];
+   for(unsigned int k = 0; k < udegree; k++)
    {
       cw[0] = 0.0;
       cw[1] = 0.0;
       cw[2] = 0.0;
       resultPtWeight=0.0;
-      for(unsigned int j = 0; j <= _degree["U"]; j++)
+      for(unsigned int j = 0; j <= udegree; j++)
       {                 
-         cw[0] += (_controlPoints[0][span - _degree["U"] +j].WeightedX()
+         cw[0] += (_controlPoints[0][span - udegree +j].WeightedX()
                    *_derivativeBasisFunctions["U"][k].at(j));
       
-         cw[1] += (_controlPoints[0][span - _degree["U"] +j].WeightedY()
+         cw[1] += (_controlPoints[0][span - udegree +j].WeightedY()
                    *_derivativeBasisFunctions["U"][k].at(j));
       
-         cw[2] +=(_controlPoints[0][span - _degree["U"] +j].WeightedZ()
+         cw[2] +=(_controlPoints[0][span - udegree +j].WeightedZ()
                   *_derivativeBasisFunctions["U"][k].at(j));
 
-         resultPtWeight += _controlPoints[0][span - _degree["U"] +j].Weight()
+         resultPtWeight += _controlPoints[0][span - udegree +j].Weight()
                            *_derivativeBasisFunctions["U"][k].at(j);
       }
       invWeight = 1.0/resultPtWeight;

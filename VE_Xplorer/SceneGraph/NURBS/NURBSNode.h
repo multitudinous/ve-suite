@@ -82,6 +82,10 @@ public:
    ///\param yPosition The y mouse position
    void SetMousePosition(float xPosition,float yPosition);
 
+   ///
+   void MoveSelectedControlPoint(float dx,
+                                 float dy,
+                                 float dz);
    ///Get the original surface
    NURBS::NURBSObject* GetNURBS();
 

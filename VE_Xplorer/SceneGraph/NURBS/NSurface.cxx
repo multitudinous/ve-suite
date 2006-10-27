@@ -96,10 +96,10 @@ void NURBSSurface::_interpolateWithinRange(double umin,double umax,
    bool hasVderivative = (_degree["V"] >1)?true:false;
    bool hasUVderivative = (hasVderivative&&hasUderivative)?true:false;
 
-   for(unsigned int v = vIndexMin; v < vIndexMax; v++)
+   for(unsigned int v = vIndexMin; v <= vIndexMax; v++)
    {
       _calculateBasisFunctionsAndDerivatives(vparam,"V");
-      for(unsigned int u = uIndexMin; u < uIndexMax; u++)
+      for(unsigned int u = uIndexMin; u <= uIndexMax; u++)
       {
          _calculateBasisFunctionsAndDerivatives(uparam,"U");
          surfaceInfo = _calculatePointOnSurface(uparam,vparam,_currentSpan["U"],_currentSpan["V"]);
@@ -120,11 +120,13 @@ void NURBSSurface::_interpolateWithinRange(double umin,double umax,
             //ds/dudv
             _surfDerivatives[1][1][v*_meshDimensions["U"]+ u] =surfaceInfo[1].at(1);
          }
-         uparam += _interpolationStepSize["U"];
+         //uparam += _interpolationStepSize["U"];
+         uparam = std::min(uparam + _interpolationStepSize["U"],umax);
       }
 
       uparam = umin;
-      vparam += _interpolationStepSize["V"];
+      //vparam += _interpolationStepSize["V"];
+      vparam = std::min(vparam + _interpolationStepSize["V"],vmax);
    }
 
 }
@@ -224,19 +226,21 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
    
    double ctrlPtWeight = 1.0;
    double ucontrib [4] = {0.,0.,0.,0.0};
-   for(unsigned int n = 0; n < _degree["U"]; n++)
+   unsigned int udegree = _degree["U"];
+   unsigned int vdegree = _degree["V"];
+   for(unsigned int n = 0; n < udegree; n++)
    {
       tempUContribution.clear();
-      for(unsigned int l = 0; l <= _degree["V"]; l++)
+      for(unsigned int l = 0; l <= vdegree; l++)
       {
-         vindex = _currentSpan["V"] - _degree["V"] + l;
+         vindex = _currentSpan["V"] - vdegree + l;
          ucontrib[0] = 0;
          ucontrib[1] = 0;
          ucontrib[2] = 0;
          ucontrib[3] = 0.0;
-         for(unsigned int k = 0; k <= _degree["U"]; k++)
+         for(unsigned int k = 0; k <= udegree; k++)
          {
-            uindex = _currentSpan["U"] - _degree["U"] + k;
+            uindex = _currentSpan["U"] - udegree + k;
          
             ucontrib[0]+=(_controlPoints[0][vindex*_nControlPoints["U"] + uindex].WeightedX()
                          *_derivativeBasisFunctions["U"][n].at(k));
@@ -255,13 +259,13 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
       }
 
       double sw [4] = {0.,0.,0.,0.0};
-      for(unsigned int j = 0; j < _degree["V"]; j++)
+      for(unsigned int j = 0; j < vdegree; j++)
       {
          sw[0] = 0;
          sw[1] = 0;
          sw[2] = 0;
          sw[3] = 0.0;
-         for(unsigned int l = 0; l <= _degree["V"]; l++)
+         for(unsigned int l = 0; l <= vdegree; l++)
          {
             sw[0]+=(tempUContribution[l].X()
                     *_derivativeBasisFunctions["V"][j].at(l));
