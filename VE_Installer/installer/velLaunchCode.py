@@ -150,8 +150,8 @@ class Launch:
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
         ##Kill any screen savers.
-        subprocess.Popen(["/usr/X11R6/bin/xset", "-display", ":0.0", "-dpms",
-                          "s", "reset", "s", "off"])
+        ##subprocess.Popen(["/usr/X11R6/bin/xset", "-display", ":0.0", "-dpms",
+        ##                  "s", "reset", "s", "off"])
         ##Name Server section
         if self.settings["NameServer"]:
             sleep(1)
@@ -183,8 +183,7 @@ class Launch:
             ##Slave calls
             for comp in self.settings["ClusterSlaves"]:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-                os.system("source %s %s &" %(clusterFilePath,
-                                             self.settings["ClusterMaster"]))
+                os.system("source %s %s &" %(clusterFilePath, comp))
                 sleep(self.settings["SlaveWait"])
         ##Xplorer section
         elif self.settings["Xplorer"]:
@@ -326,8 +325,8 @@ class Launch:
             self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
             self.clusterScript += "ssh $1 << EOF\n"
             ##Turn off comp's screen saver
-            self.clusterScript += "/usr/X11R6/bin/xset -display :0.0 -dpms s "+\
-                                  "reset s off\n"
+            ##self.clusterScript += "/usr/X11R6/bin/xset -display :0.0 -dpms s "+\
+            ##                      "reset s off\n"
             self.WriteToClusterScript("PYTHONPATH")
         elif windows:
             self.clusterScript = ""
