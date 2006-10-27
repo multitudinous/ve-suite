@@ -41,8 +41,8 @@ SRCS=\
    KnotVector.cxx \
    NCurve.cxx \
    NSurface.cxx \
+   NURBSNode.cxx \
    NURBSObject.cxx \
-   NURBSRenderer.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 

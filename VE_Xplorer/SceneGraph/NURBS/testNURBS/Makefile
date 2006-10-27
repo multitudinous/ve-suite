@@ -1,3 +1,9 @@
+ifeq ($(SCENE_GRAPH), OSG)
+   OSG = _osg
+else
+   OSG = _pf
+endif
+
 # Create the OS-dependent directory name
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/testNURBS
 
@@ -39,7 +45,8 @@ STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 EXTRA_LIBS+= -lm -L$(VJ_DEPS_DIR)/lib
-EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_NURBSLib 
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_NURBSLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG) -lVE_NURBSUtilsLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_UtilLib 
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator/DataLoader
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
 #vrj.appdefs.mk 

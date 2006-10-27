@@ -89,6 +89,8 @@ public:
                   //std::cout<<"Dragging left mouse in selection mode"<<std::endl;
                      for(size_t i =0; i < _nPatches; i++)
                      {
+                  //std::cout<<"Moving control point "<<std::endl;
+                        
                         _patches.at(i)->MoveSelectedControlPoint(dx,0,dz);
                      }
                      UpdateLastMousePosition(ea.getX(),ea.getY());
@@ -99,7 +101,7 @@ public:
                {
                   //y mouse move == zoom direction (in/out)
                   dy = ea.getY() - _lastMousePosition[2];
-                  //std::cout<<"Dragging left mouse in selection mode"<<std::endl;
+                  //std::cout<<"Dragging right mouse in selection mode"<<std::endl;
                   if((fabs(dy) > .05))
                   {
                      for(size_t i =0; i < _nPatches; i++)

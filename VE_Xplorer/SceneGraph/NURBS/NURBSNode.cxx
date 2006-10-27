@@ -243,7 +243,7 @@ void NURBSControlMesh::SetMousePosition(float xPosition,
 ////////////////////////////////////////
 void NURBSControlMesh::Selection()const											
 {
-	GLint viewport[4];
+   GLint viewport[4];
    GLuint* selectionBuffer = new GLuint[_controlPoints->size()<<2]; 
    GLint hits;
 
@@ -256,29 +256,29 @@ void NURBSControlMesh::Selection()const
    glPushName(0);
 
    //push the projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
+   glMatrixMode(GL_PROJECTION);
+   glPushMatrix();
 	
-      //clear the projection matrix
-      glLoadIdentity(); 
+     //clear the projection matrix
+     glLoadIdentity(); 
 
-      gluPickMatrix(viewport[2]*_mouse[0],viewport[3]*_mouse[1],
+     gluPickMatrix(viewport[2]*_mouse[0],viewport[3]*_mouse[1],
 			           10.0,10.0,viewport);
-	   glMultMatrixd(_projectionMatrix);
+     glMultMatrixd(_projectionMatrix);
       
-      glMatrixMode(GL_MODELVIEW);
-      //push the modelview matrix
-      glPushMatrix();
-         glLoadMatrix(_modelViewMatrix);
-	      _drawUVPoints();
+     glMatrixMode(GL_MODELVIEW);
+     //push the modelview matrix
+     glPushMatrix();
+        glLoadMatrix(_modelViewMatrix);
+        _drawUVPoints();
 
-      //pop the modelview matrix
-      glPopMatrix();
+     //pop the modelview matrix
+     glPopMatrix();
        
      //returning to normal rendering mode
-	  hits = glRenderMode(GL_RENDER);							
-															
-	  if (hits != 0)												
+     hits = glRenderMode(GL_RENDER);							
+     
+     if (hits != 0)												
      {
 
         _selectedControlPointIndex = selectionBuffer[3];									
@@ -323,6 +323,7 @@ bool NURBSControlMesh::TranslateSelectedControlPoint(float dx,
                                                      float dy,
                                                      float dz)
 {
+  
    if(_selection)
    {
       if(_selectedControlPointIndex > -1)
@@ -725,9 +726,13 @@ void NURBSNode::SetSelectionStatus(bool trueFalse)
 {
    _isSelecting = trueFalse;
 
-   if(_controlMeshDrawable.valid()&& (!_isSelecting))
+   if(_controlMeshDrawable.valid())
    {
-      _controlMeshDrawable->ResetSelection();
+      if(!_isSelecting)
+      {
+         _controlMeshDrawable->ResetSelection();
+      }
+      _controlMeshDrawable->SetSelection(_isSelecting);
    }
 }
 ////////////////////////////////////////////////////////
