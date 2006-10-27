@@ -49,12 +49,14 @@ EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_NURBSLib$(EXEC_TAG)$(OSG
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_UtilLib 
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator/DataLoader
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.occ.mk
 #vrj.appdefs.mk 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 #include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.osg.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.occ.mk
 
 
 # -----------------------------------------------------------------------------

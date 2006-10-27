@@ -15,10 +15,12 @@
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
 #include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h"
+#include "VE_Xplorer/SceneGraph/NURBS/Utilities/IGES2VENURBS.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 
 void createTestNURBS(int argc, char** argv);
 int parseOCCNURBSFile(int argc, char** argv);
+int parseIGESFile(int argc, char** argv);
 
 
 class KeyboardEventHandler : public osgGA::GUIEventHandler
@@ -230,7 +232,17 @@ int main(int argc, char** argv)
 {
    if(argc >1)
    {
-      return parseOCCNURBSFile(argc,argv);
+      std::string firstArg(argv[1]);
+      if(std::string::npos != firstArg.find(".iges"))
+      {
+         std::cout<<"Found Iges file: "<<firstArg<<std::endl;    
+         parseIGESFile(argc,argv);
+         return 0;
+      }
+      else
+      {
+         return parseOCCNURBSFile(argc,argv);
+      }
    }
    else
    {
@@ -238,6 +250,39 @@ int main(int argc, char** argv)
       createTestNURBS(argc,argv);
    }
 
+   return 0;
+}
+///////////////////////////////////////
+int parseIGESFile(int argc,char** argv)
+{
+   std::string igesFile(argv[1]);
+   std::vector< osg::ref_ptr<NURBS::NURBSNode> >nurbsPatches;
+   NURBS::Utilities::IGES2VENURBS igesReader;
+   std::vector<NURBS::NURBSSurface*> surfaces = igesReader.GetVectorOfVENURBSSurface(igesFile);
+   size_t nPatches = surfaces.size();
+   for(size_t i = 0; i < nPatches;i++)
+   {
+       //std::cout<<" patch:"<< i <<std::endl;
+       surfaces.at(i)->SetInterpolationGridSize(10,"U");
+       surfaces.at(i)->SetInterpolationGridSize(20,"V");
+       //std::cout<<"patch info: "<<std::endl;
+       //std::cout<<*surfaces.at(i)<<std::endl;
+       //std::cout<<surfaces.at(i)->NumControlPoints("U")<<std::endl;
+       //std::cout<<surfaces.at(i)->NumControlPoints("V")<<std::endl;
+       //std::cout<<surfaces.at(i)->KnotVector("U").NumberOfKnots()<<std::endl;
+       //std::cout<<surfaces.at(i)->KnotVector("V").NumberOfKnots()<<std::endl;
+       //std::cout<<" interpolating patch:"<< i <<std::endl;
+       surfaces.at(i)->Interpolate();
+       //std::cout<<" Done:"<< i <<std::endl;
+
+       osg::ref_ptr<NURBS::NURBSNode> renderablePatch = new NURBS::NURBSNode(surfaces.at(i));
+       nurbsPatches.push_back(renderablePatch.get());
+   }
+   if(nurbsPatches.size())
+   {
+      //std::cout<<"rendering patches"<<std::endl;
+      render(argc,argv,nurbsPatches);
+   }
    return 0;
 }
 ////////////////////////////////////////////
@@ -354,7 +399,7 @@ void createTestNURBS(int argc, char** argv)
 
    //the NURBS Surface (a patch)
    NURBS::NURBSSurface surface;
-   surface.SetControlPoints(surfaceCtrlPts,4,5);
+   surface.SetControlPoints(surfaceCtrlPts,5,4);
    surface.SetKnotVector(uKnots,"U");
    surface.SetKnotVector(vKnots,"V");
    surface.SetInterpolationGridSize(10,"U");

@@ -147,8 +147,8 @@ void NURBSObject::SetKnotVector(NURBS::KnotVector knots,
 }
 ///////////////////////////////////////////////////////////////////////////
 void NURBSObject::SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
-                                    unsigned int rows,
-                                    unsigned int columns)
+                                    unsigned int columns,
+                                    unsigned int rows)
 {
    _controlPoints.clear();
    unsigned int row = 0;

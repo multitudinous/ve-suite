@@ -247,7 +247,7 @@ void NURBSControlMesh::Selection()const
    GLuint* selectionBuffer = new GLuint[_controlPoints->size()<<2]; 
    GLint hits;
 
-	glSelectBuffer(_controlPoints->size()<<2,selectionBuffer);
+   glSelectBuffer(_controlPoints->size()<<2,selectionBuffer);
 
    //get the current viewport
    glGetIntegerv(GL_VIEWPORT,viewport);
@@ -263,7 +263,7 @@ void NURBSControlMesh::Selection()const
      glLoadIdentity(); 
 
      gluPickMatrix(viewport[2]*_mouse[0],viewport[3]*_mouse[1],
-			           10.0,10.0,viewport);
+			           5.0,5.0,viewport);
      glMultMatrixd(_projectionMatrix);
       
      glMatrixMode(GL_MODELVIEW);
@@ -278,33 +278,33 @@ void NURBSControlMesh::Selection()const
      //returning to normal rendering mode
      hits = glRenderMode(GL_RENDER);							
      
-     if (hits != 0)												
-     {
+   if (hits != 0)												
+   {
+      _selectedControlPointIndex = selectionBuffer[3];									
+      int depth = selectionBuffer[1];									
 
-        _selectedControlPointIndex = selectionBuffer[3];									
-		  int depth = selectionBuffer[1];									
+       for (int loop = 1; loop < hits; loop++)					
+       {
+          // If This Object Is Closer To Us Than The One We Have Selected
+          if (selectionBuffer[loop*4+1] < GLuint(depth))
+          {
+             _selectedControlPointIndex = selectionBuffer[loop*4+3];						
+             depth = selectionBuffer[loop*4+1];						
+          }       
+      }
+   } 
+   //restoring the original projection matrix
+   glMatrixMode(GL_PROJECTION);
+   glPopMatrix();
 
-		   for (int loop = 1; loop < hits; loop++)					
-         {
-			   // If This Object Is Closer To Us Than The One We Have Selected
-			   if (selectionBuffer[loop*4+1] < GLuint(depth))
-            {
-				   _selectedControlPointIndex = selectionBuffer[loop*4+3];						
-				   depth = selectionBuffer[loop*4+1];						
-            }       
-         }
-     }
-	   //restoring the original projection matrix
-	   glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+   glMatrixMode(GL_MODELVIEW); 
+   glFlush();
 
-	glMatrixMode(GL_MODELVIEW); 
-	glFlush();
-
-	GLenum  glerr = glGetError();
-   while(glerr != GL_NO_ERROR) {
+   GLenum  glerr = glGetError();
+   while(glerr != GL_NO_ERROR)
+   {
       std::cout<<"glGetError:"<<gluErrorString(glerr)<<std::endl;
-     glerr = glGetError();
+      glerr = glGetError();
    }	
    if(selectionBuffer)
    {
