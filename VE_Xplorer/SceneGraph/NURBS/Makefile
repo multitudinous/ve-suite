@@ -75,8 +75,9 @@ EXTRA_CXXFLAGS+= -g
 EXTRA_LDFLAGS+= -g
 endif
 
+
 srcdir= .
-DSO_PLUGIN_DEPS+= 
+DSO_PLUGIN_DEPS+= -L/usr/X11R6/lib -lGLU -lGL
 
 ifeq (${CFDUNAME},Darwin)
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.mac.lib.mk
