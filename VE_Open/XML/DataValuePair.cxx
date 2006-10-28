@@ -341,10 +341,8 @@ void DataValuePair::_extractXMLObject(DOMElement* baseElement,std::string object
       std::string attr = XMLString::transcode( genericObject->getAttribute(xercesString("objectType")));
       if ( !attr.empty() )
       {
-         {
-            _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject( attr, "new" );
-            _veXMLObject->SetObjectFromXMLData(genericObject);
-         } 
+         _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject( attr, "new" );
+         _veXMLObject->SetObjectFromXMLData(genericObject);
       }
       else
       {
@@ -413,7 +411,6 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          {
             try
             {
-               //subElements = currentElement->getElementsByTagName(xercesString("genericObject"));
                _extractXMLObject( currentElement, "genericObject" );
             }
             catch(...)

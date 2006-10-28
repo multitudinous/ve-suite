@@ -150,6 +150,7 @@ public:
       }
       catch ( ... )
       {
+         std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
       }
       return ret_val;
    }
@@ -333,6 +334,8 @@ inline void XMLObject::SetSubElement(const std::string subElementTagName, VE_XML
    val->SetOwnerDocument( _rootDocument );
    _veElement->appendChild( val->GetXMLData( subElementTagName ) );
 }*/
+///this is for the special case where bools are stored as strings in 
+///the elements because 0 or 1 is not stored
 template<>
 inline bool XMLObject::ExtractFromSimpleElement< bool >(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
 {
@@ -346,6 +349,32 @@ inline bool XMLObject::ExtractFromSimpleElement< bool >(const XERCES_CPP_NAMESPA
       return true;
    else
       return false;
+}
+///This is to account for spaces in element values because just reading a string
+/// does not get the whole line from the istringstream
+template<>
+inline std::string XMLObject::ExtractFromSimpleElement< std::string >(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
+{
+   std::string ret_val = std::string();
+   try
+   {
+      std::istringstream iss;
+      // in case the element does not contain data
+      XERCES_CPP_NAMESPACE_QUALIFIER DOMText* rawText = 
+         dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >( element->getFirstChild() );
+      if ( rawText )
+      {
+         char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( rawText->getData() );
+         iss.str( fUnicodeForm );
+         delete fUnicodeForm;
+      }
+      ret_val = iss.str();
+   }
+   catch ( ... )
+   {
+      std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
+   }
+   return ret_val;
 }
 
 }
