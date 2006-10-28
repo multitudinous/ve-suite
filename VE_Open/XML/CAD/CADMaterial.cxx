@@ -303,16 +303,16 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode)
          
          _specular->SetObjectFromXMLData(GetSubElement(currentElement,std::string("specular"),0));
          
-         _shininess = ExtractDataNumberFromSimpleElement(GetSubElement(currentElement,std::string("shininess"),0));
+         _shininess = ExtractFromSimpleElement< double >(GetSubElement(currentElement,std::string("shininess"),0));
          //this is only needed to check with files that were created before we added opacity but won't be needed by the public
          //for 1.0 release.
          if(GetSubElement(currentElement, std::string("opacity"),0))
          {
-            _opacity = ExtractDataNumberFromSimpleElement(GetSubElement(currentElement,std::string("opacity"),0));
+            _opacity = ExtractFromSimpleElement< double >(GetSubElement(currentElement,std::string("opacity"),0));
          }
-         _materialName = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("materialName"),0));
-         _face = ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("face"),0));
-         _colorMode= ExtractDataStringFromSimpleElement(GetSubElement(currentElement,std::string("colorMode"),0));
+         _materialName = ExtractFromSimpleElement< std::string >(GetSubElement(currentElement,std::string("materialName"),0));
+         _face = ExtractFromSimpleElement< std::string >(GetSubElement(currentElement,std::string("face"),0));
+         _colorMode= ExtractFromSimpleElement< std::string >(GetSubElement(currentElement,std::string("colorMode"),0));
       }
    }
 }

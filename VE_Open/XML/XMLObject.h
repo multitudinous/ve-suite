@@ -110,24 +110,26 @@ public:
 
    ///utility functions for reading data from an element
    ///\param element Element to extract string from.
-   bool ExtractBooleanFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element );
+   //bool ExtractBooleanFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element );
 
    ///utility functions for reading data from an element
    ///\param element Element to extract string from.
-   std::string ExtractDataStringFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element );
+   //std::string ExtractDataStringFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element );
    
    ///utility functions for reading data from an element
    ///\param element Element to extract double from.
-   double ExtractDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
+   //double ExtractDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
    
    ///utility functions for reading data from an element
    ///\param element Element to extract unsigned integer from.
-   unsigned int ExtractIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
+   //unsigned int ExtractIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
 
    ///utility functions for reading data from an element
    ///\param element Element to extract long integer from.
-   long int ExtractLongIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
+   //long int ExtractLongIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
 
+   ///Usage is unsigned int data = ExtractFromSimpleElement< unsigned int >( element );
+   ///Not sure how to document this
    template<class T>
    inline T ExtractFromSimpleElement(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
    {
@@ -331,5 +333,20 @@ inline void XMLObject::SetSubElement(const std::string subElementTagName, VE_XML
    val->SetOwnerDocument( _rootDocument );
    _veElement->appendChild( val->GetXMLData( subElementTagName ) );
 }*/
+template<>
+inline bool XMLObject::ExtractFromSimpleElement< bool >(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
+{
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMText* rawText = dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >( element->getFirstChild() );
+   std::string tmp;
+   char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( rawText->getData() );
+   tmp.assign( fUnicodeForm );
+   delete fUnicodeForm;
+   
+   if(tmp == "true")
+      return true;
+   else
+      return false;
+}
+
 }
 #endif// _VE_XML_OBJECT_H_

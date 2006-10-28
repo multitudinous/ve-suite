@@ -226,7 +226,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
       //get the new number of children
       {
           DOMElement* nChildrenElement = GetSubElement(currentElement,std::string("numChildren"),0);
-          _numChildren = ExtractIntegerDataNumberFromSimpleElement(nChildrenElement);
+          _numChildren = ExtractFromSimpleElement< unsigned int >(nChildrenElement);
       }
       //populate the childList
       {
@@ -252,7 +252,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
                k++;
             }
             if(nodeType){
-               if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
+               if(ExtractFromSimpleElement< std::string >(nodeType) == std::string("Assembly"))
                {
                   //this is an Assembly
                   VE_CAD::CADAssembly* newAssembly = new VE_CAD::CADAssembly();
@@ -260,14 +260,14 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
                   newAssembly->SetObjectFromXMLData(cadNode);
                   newAssembly->SetParent(uuid);
                   _children.push_back(newAssembly);
-               }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
+               }else if(ExtractFromSimpleElement< std::string >(nodeType) == std::string("Part")){
                   //this is a Part
                   VE_CAD::CADPart* newPart = new VE_CAD::CADPart();
                   //VE_CAD::CADPart newPart;// = new VE_CAD::CADPart();
                   newPart->SetObjectFromXMLData(cadNode);
                   newPart->SetParent(uuid);
                   _children.push_back(newPart);
-               }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Clone")){
+               }else if(ExtractFromSimpleElement< std::string >(nodeType) == std::string("Clone")){
                   //this is a Clone
                   VE_CAD::CADClone* newClone = new VE_CAD::CADClone();
                   //VE_CAD::CADClone newClone;// = new VE_CAD::CADClone();
@@ -276,7 +276,8 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
                   _children.push_back(newClone);
                }else{
                   std::cout<<"ERROR!"<<std::endl;
-                  std::cout<<"Unknown node type:"<<ExtractDataStringFromSimpleElement(nodeType)<<std::endl;    
+                  std::cout<<"Unknown node type:"
+                           << ExtractFromSimpleElement< std::string >(nodeType)<<std::endl;    
                }
             }
          }

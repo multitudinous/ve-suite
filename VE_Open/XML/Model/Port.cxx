@@ -201,17 +201,17 @@ void Port::SetObjectFromXMLData(DOMNode* element)
       // for port number
       {
          dataValueStringName = GetSubElement( currentElement, "number", 0 );
-         portNumber = ExtractIntegerDataNumberFromSimpleElement(dataValueStringName);
+         portNumber = ExtractFromSimpleElement< unsigned int >(dataValueStringName);
       }
       // for model name
       {
          dataValueStringName = GetSubElement( currentElement, "name", 0 );
-         modelName = ExtractDataStringFromSimpleElement( dataValueStringName );
+         modelName = ExtractFromSimpleElement< std::string >( dataValueStringName );
       }
       // for data flow
       {
          dataValueStringName = GetSubElement( currentElement, "dataFlow", 0 );
-         dataFlow = ExtractDataStringFromSimpleElement( dataValueStringName );
+         dataFlow = ExtractFromSimpleElement< std::string >( dataValueStringName );
       }
       // for port location
       {

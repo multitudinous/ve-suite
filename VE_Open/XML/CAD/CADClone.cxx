@@ -121,12 +121,12 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
                delete _originalNode;
                _originalNode = 0;
             }
-            if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Assembly"))
+            if(ExtractFromSimpleElement< std::string >(nodeType) == std::string("Assembly"))
             {
                //this is an Assembly
                _originalNode = new VE_CAD::CADAssembly();
                
-            }else if(ExtractDataStringFromSimpleElement(nodeType) == std::string("Part")){
+            }else if(ExtractFromSimpleElement< std::string >(nodeType) == std::string("Part")){
                //this is a Part
                _originalNode = new VE_CAD::CADPart();
             }

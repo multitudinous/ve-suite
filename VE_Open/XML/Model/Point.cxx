@@ -110,12 +110,12 @@ void Point::SetObjectFromXMLData(DOMNode* xmlInput)
       // Let's get the X location
       DOMElement* xNode = GetSubElement( currentElement, "xLocation", 0 );
       //We know this about the node so we can cast it...
-      point.first = ExtractIntegerDataNumberFromSimpleElement( xNode );
+      point.first = ExtractFromSimpleElement< unsigned int >( xNode );
 
       // Let's get the Y location
       DOMElement* yNode = GetSubElement( currentElement, "yLocation", 0 );
       //We know this about the node so we can cast it...
-      point.second = ExtractIntegerDataNumberFromSimpleElement( yNode );
+      point.second = ExtractFromSimpleElement< unsigned int >( yNode );
    }
    else
    {

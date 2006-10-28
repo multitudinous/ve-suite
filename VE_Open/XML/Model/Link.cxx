@@ -199,9 +199,9 @@ void Link::SetObjectFromXMLData(DOMNode* element)
       }
 
       dataValueStringName = GetSubElement( currentElement, "fromPort", 0 );
-      portInfo.first = ExtractLongIntegerDataNumberFromSimpleElement( dataValueStringName );
+      portInfo.first = ExtractFromSimpleElement< long int >( dataValueStringName );
       dataValueStringName = GetSubElement( currentElement, "toPort", 0 );
-      portInfo.second = ExtractLongIntegerDataNumberFromSimpleElement( dataValueStringName );
+      portInfo.second = ExtractFromSimpleElement< long int >( dataValueStringName );
 
       // for link points
       {

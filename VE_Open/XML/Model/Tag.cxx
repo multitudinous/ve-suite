@@ -145,7 +145,7 @@ void Tag::SetObjectFromXMLData(DOMNode* element)
 
       {
          dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
-         tagText = ExtractDataStringFromSimpleElement( dataValueStringName );
+         tagText = ExtractFromSimpleElement< std::string >( dataValueStringName );
       }
       // for Tag points
       {

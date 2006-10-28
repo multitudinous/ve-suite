@@ -98,14 +98,14 @@ void Shader::SetObjectFromXMLData(DOMNode* xmlInput)
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {
-               _shaderType = ExtractDataStringFromSimpleElement( typeNode );
+               _shaderType = ExtractFromSimpleElement< std::string >( typeNode );
             }
 
             //Get the source
             DOMElement* sourceNode = GetSubElement(currentElement,std::string("shaderCode"),0);
             if(sourceNode)
             {
-               _shaderSource = ExtractDataStringFromSimpleElement( sourceNode );
+               _shaderSource = ExtractFromSimpleElement< std::string >( sourceNode );
             }
             //clear out the current list of uniforms
             if(_uniformList.size()){

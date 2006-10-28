@@ -393,7 +393,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          DOMElement* dataName = dynamic_cast<DOMElement*>(subElements->item(0));
          if(dataName)
          {
-            _dataName = ExtractDataStringFromSimpleElement(dataName);
+            _dataName = ExtractFromSimpleElement< std::string >(dataName);
          }
       }
 
@@ -430,7 +430,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             DOMElement* dataValueStringName = dynamic_cast<DOMElement*>(subElements->item(0));
             if(dataValueStringName)
             {
-               this->_dataString = ExtractDataStringFromSimpleElement(dataValueStringName);
+               this->_dataString = ExtractFromSimpleElement< std::string >(dataValueStringName);
                SetDataType(std::string("STRING"));
             }
          }
@@ -438,14 +438,14 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          //_dataType == "UNSIGNED INT")
          {
             DOMElement* dataUnsignedValue = GetSubElement( currentElement, "dataValueUInt", 0 );
-            _dataUInt = ExtractIntegerDataNumberFromSimpleElement( dataUnsignedValue  );
+            _dataUInt = ExtractFromSimpleElement< unsigned int >( dataUnsignedValue  );
             _dataType = "UNSIGNED INT";
          }
          //else if(_dataType == "LONG")
          else if ( currentElement->getElementsByTagName(xercesString("dataValueInt"))->getLength() )
          {
             DOMElement* dataLongdValue = GetSubElement( currentElement, "dataValueInt", 0 );
-            intDataValue = ExtractIntegerDataNumberFromSimpleElement( dataLongdValue  );
+            intDataValue = ExtractFromSimpleElement< long int >( dataLongdValue  );
             _dataType = "LONG";
          }
          //else if(_dataType == "FLOAT" )
@@ -458,12 +458,10 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
             DOMElement* dataValueNum = dynamic_cast<DOMElement*>(subElements->item(0));
             if(dataValueNum)
             {
-               _dataValue  = ExtractDataNumberFromSimpleElement(dataValueNum);
+               _dataValue  = ExtractFromSimpleElement< double >(dataValueNum);
                SetDataType(std::string("FLOAT"));
             }
          }
-         
-         
          else if ( currentElement->getElementsByTagName(xercesString("dataValue"))->getLength() )
          {
             DOMElement* dataValueTemp = GetSubElement( currentElement, "dataValue", 0 );
@@ -472,22 +470,22 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
 
             if ( type == "xs:string" )
             {
-               this->_dataString = ExtractDataStringFromSimpleElement( dataValueTemp );
+               this->_dataString = ExtractFromSimpleElement< std::string >( dataValueTemp );
                SetDataType(std::string("STRING"));
             }
             else if ( type == "xs:unsignedInt" )
             {
-               _dataUInt = ExtractIntegerDataNumberFromSimpleElement( dataValueTemp  );
+               _dataUInt = ExtractFromSimpleElement< unsigned int >( dataValueTemp  );
                _dataType = "UNSIGNED INT";
             }
             else if ( type == "xs:integer" )
             {
-               intDataValue = ExtractIntegerDataNumberFromSimpleElement( dataValueTemp  );
+               intDataValue = ExtractFromSimpleElement< long int >( dataValueTemp  );
                _dataType = "LONG";
             }
             else if( type == "xs:double" )
             {
-               _dataValue  = ExtractDataNumberFromSimpleElement( dataValueTemp );
+               _dataValue  = ExtractFromSimpleElement< double >( dataValueTemp );
                SetDataType(std::string("FLOAT"));
             }
             else
@@ -572,7 +570,7 @@ void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std
    delete threeDDouble;
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, long data )
+void DataValuePair::SetData( std::string dataName, long int data )
 {
    _dataName = dataName;
    SetDataType( std::string("LONG") );
@@ -676,7 +674,7 @@ void DataValuePair::GetData( std::vector< std::vector< std::vector< double > > >
    }
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::GetData( long& data )
+void DataValuePair::GetData( long int & data )
 {
    data = intDataValue;
 }

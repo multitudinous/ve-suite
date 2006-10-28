@@ -143,10 +143,10 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
       _dcs->SetObjectFromXMLData( dataValueStringName );
       //Get the block id
       dataValueStringName = GetSubElement( currentElement, "blockID", 0 );
-      _id = ExtractIntegerDataNumberFromSimpleElement( dataValueStringName );
+      _id = ExtractFromSimpleElement< unsigned int >( dataValueStringName );
       //Get the block name
       dataValueStringName = GetSubElement( currentElement, "blockName", 0 );
-      paramName = ExtractDataStringFromSimpleElement( dataValueStringName );
+      paramName = ExtractFromSimpleElement< std::string >( dataValueStringName );
       //Get the properties
       for ( size_t i = 0; i < _properties.size(); ++i )
       {

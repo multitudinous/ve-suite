@@ -232,20 +232,20 @@ void Uniform::SetObjectFromXMLData(DOMNode* xmlNode)
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
             if(nameNode)
             {
-                _name = ExtractDataStringFromSimpleElement( nameNode );
+                _name = ExtractFromSimpleElement< std::string >( nameNode );
             }
             //get the type
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {
-               _type = ExtractDataStringFromSimpleElement( typeNode );
+               _type = ExtractFromSimpleElement< std::string >( typeNode );
                //if it is a texture get the texture unit
                if(_type == std::string("Sampler"))
                {
                   DOMElement* tUnitNode = GetSubElement(currentElement,std::string("textureUnit"),0);
                   if(tUnitNode)
                   {
-                      _textureUnit = ExtractIntegerDataNumberFromSimpleElement(tUnitNode );
+                      _textureUnit = ExtractFromSimpleElement< unsigned int >(tUnitNode );
                   }
                }
             }
@@ -253,7 +253,7 @@ void Uniform::SetObjectFromXMLData(DOMNode* xmlNode)
             DOMElement* lengthNode = GetSubElement(currentElement,std::string("size"),0);
             if(lengthNode)
             {
-                _variableSize = ExtractIntegerDataNumberFromSimpleElement( lengthNode );
+                _variableSize = ExtractFromSimpleElement< unsigned int >( lengthNode );
             }
             //get the values for this uniform
             if(_type != std::string("Sampler"))
@@ -265,7 +265,7 @@ void Uniform::SetObjectFromXMLData(DOMNode* xmlNode)
                   uniformValue = GetSubElement(currentElement,std::string("value"),i);
                   if(uniformValue)
                   {
-                     _values.push_back(static_cast<float>(ExtractDataNumberFromSimpleElement( uniformValue)));
+                     _values.push_back(static_cast<float>(ExtractFromSimpleElement< double >( uniformValue)));
                   }
                }
             }

@@ -198,7 +198,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
 /////////////////////////////////////////////////////////////////////
 void Command::ExtractCmdNameFromElement(DOMElement* commandElement)
 {
-   _cmdName = ExtractDataStringFromSimpleElement( commandElement );
+   _cmdName = ExtractFromSimpleElement< std::string >( commandElement );
 }
 ///////////////////////////////////////
 std::string Command::GetCommandName()

@@ -286,13 +286,13 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
             if(nameNode)
             {
-              _name = ExtractDataStringFromSimpleElement( nameNode );
+              _name = ExtractFromSimpleElement< std::string >( nameNode );
             }
             
             DOMElement* idNode = GetSubElement(currentElement,std::string("nodeID"),0);
             if(idNode)
             {
-               VE_XML::XMLObject::SetID(ExtractIntegerDataNumberFromSimpleElement(idNode) );
+               VE_XML::XMLObject::SetID(ExtractFromSimpleElement< unsigned int >(idNode) );
             }
             else
             {
@@ -301,12 +301,12 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {
-              _type = ExtractDataStringFromSimpleElement( typeNode );
+              _type = ExtractFromSimpleElement< std::string >( typeNode );
             }
             DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
             if(parentNode)
             {
-               _parent = ExtractDataStringFromSimpleElement(parentNode);
+               _parent = ExtractFromSimpleElement< std::string >(parentNode);
             }
             size_t nOldAttributes = _attributeList.size();
             if(nOldAttributes > 0)
@@ -352,7 +352,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* activeAttribNode = GetSubElement(currentElement,std::string("activeAttributeName"),0);
             if(activeAttribNode)
             {
-               _activeAttributeName = ExtractDataStringFromSimpleElement(activeAttribNode);
+               _activeAttributeName = ExtractFromSimpleElement< std::string >(activeAttribNode);
                SetActiveAttribute(_activeAttributeName);
             }
 

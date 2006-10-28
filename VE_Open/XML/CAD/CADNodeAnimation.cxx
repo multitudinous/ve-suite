@@ -113,12 +113,12 @@ void CADNodeAnimation::SetObjectFromXMLData( DOMNode* xmlNode)
       DOMElement* animationFile = GetSubElement(currentElement,"fileName",0);
       if(animationFile)
       {
-         _animationFileName = ExtractDataStringFromSimpleElement(animationFile);
+         _animationFileName = ExtractFromSimpleElement< std::string >(animationFile);
       }
       DOMElement* name = GetSubElement(currentElement,"name",0);
       if(name)
       {
-         _name = ExtractDataStringFromSimpleElement(name);
+         _name = ExtractFromSimpleElement< std::string >(name);
       }
 
       /*DOMElement* nHeaderLines = GetSubElement(currentElement,"numberOfHeaderLines",0);
