@@ -365,7 +365,6 @@ void XMLObject::GetAttribute( DOMElement* baseElement, std::string attributeName
       std::cout<<"XMLObject::GetAttribute()"<<std::endl;
    }
 }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex)
 {
@@ -390,74 +389,6 @@ DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElem
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*bool XMLObject::ExtractBooleanFromSimpleElement(DOMElement* element)
-{
-   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
-   std::string tmp;
-   char* fUnicodeForm = XMLString::transcode( rawText->getData() );
-   tmp.assign( fUnicodeForm );
-   delete fUnicodeForm;
-   
-   if(tmp == "true")
-      return true;
-   else
-      return false;
-}*/
-////////////////////////////////////////////////////////////////////////////////
-/*std::string XMLObject::ExtractDataStringFromSimpleElement(DOMElement* element)
-{
-   std::string tmp;
-
-   try
-   {
-      // in case the element does not contain data
-      DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
-      if ( rawText )
-      {
-         char* fUnicodeForm = XMLString::transcode( rawText->getData() );
-         tmp.assign( fUnicodeForm );
-         delete fUnicodeForm;
-      }
-   }
-   catch ( ... )
-   {
-   }
-   return tmp;
-}*/
-//////////////////////////////////////////////////////////////////////////
-/*double XMLObject::ExtractDataNumberFromSimpleElement(DOMElement* element)
-{
-   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
-   std::string tmp;
-   char* fUnicodeForm = XMLString::transcode( rawText->getData() );
-   tmp.assign( fUnicodeForm );
-   delete fUnicodeForm;
-
-   return std::atof( tmp.c_str() );
-}*/
-//////////////////////////////////////////////////////////////////////////
-/*unsigned int XMLObject::ExtractIntegerDataNumberFromSimpleElement(DOMElement* element)
-{
-   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
-   std::string tmp;
-   char* fUnicodeForm = XMLString::transcode( rawText->getData() );
-   tmp.assign( fUnicodeForm );
-   delete fUnicodeForm;
-   
-   return std::atoi( tmp.c_str() );
-}*/
-//////////////////////////////////////////////////////////////////////////
-/*long int XMLObject::ExtractLongIntegerDataNumberFromSimpleElement(DOMElement* element)
-{
-   DOMText* rawText = dynamic_cast< DOMText* >( element->getFirstChild() );
-   std::string tmp;
-   char* fUnicodeForm  = XMLString::transcode( rawText->getData() );
-   tmp.assign( fUnicodeForm );
-   delete fUnicodeForm;
-
-   return std::atoi( tmp.c_str() );
-}*/
-///////////////////////////////////////////
 DOMDocument* XMLObject::GetRootDocument()
 {
    return _rootDocument;
