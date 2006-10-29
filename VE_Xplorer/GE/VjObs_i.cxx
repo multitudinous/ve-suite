@@ -148,12 +148,13 @@ VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
 VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
 #endif
 {
-   VjObs::Model_var tempModel = new VjObs::Model();
+   VjObs::Model_var tempModel = 0;
+   tempModel = new VjObs::Model();
    //Make sure we have some models
    int numberOfModels = cfdModelHandler::instance()->GetNumberOfModels();
    if ( numberOfModels == 0 )
    {
-      return 0;
+      return tempModel._retn();
    }
    
    // find the right model
@@ -173,7 +174,7 @@ VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
    if ( tempCfdModel == 0 )
    {
       std::cout<<"Didn't find model: "<<modelID<<std::endl;
-      return 0;
+      return tempModel._retn();
    }
    
    // now lets pass the model back

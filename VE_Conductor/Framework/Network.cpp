@@ -2608,107 +2608,105 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    VjObs::Model* activeCORBAModel; 
 
    //Does this need to be wrapped in something else?
-   if ( !CORBA::is_nil( xplorerPtr.in() ) )
+   if ( CORBA::is_nil( xplorerPtr.in() ) )
    {
-      try
-      {
-         if(xplorerPtr->GetModel(modelID))
-         {
-            activeCORBAModel = xplorerPtr->GetModel(modelID);
-            if(!vistab)
-            {
-               vistab = new Vistab (activeCORBAModel,this,
-                                SYMBOL_VISTAB_IDNAME,
-                                activeXMLModel->GetModelName().c_str(),
-                                SYMBOL_VISTAB_POSITION,
-                                SYMBOL_VISTAB_SIZE,
-                                SYMBOL_VISTAB_STYLE );
-            }
-            else
-            {
-               vistab->SetActiveModel(activeCORBAModel);
-            }
-            vistab->SetCommInstance(xplorerPtr);
-            size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
-            if(nInformationPackets)
-            {
-               wxArrayString scalarTextureDatasets;
-               wxArrayString vectorTextureDatasets;
-               bool hasScalarTextures = false;
-               bool hasVectorTextures = false;
-
-               for(size_t i = 0; i < nInformationPackets; i++)
-               {
-                  VE_XML::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket(i);
-                  size_t numProperties = paramBlock->GetNumberOfProperties();
-                                       
-                  for ( size_t i = 0; i < numProperties; ++i )
-                  {
-                     VE_XML::DataValuePair* dataValuePair = paramBlock->GetProperty( i );
-                     if ( dataValuePair->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
-                     {
-                        
-                        size_t textureDataType = dataValuePair->GetDataString().find("scalars");
-                        if(textureDataType < dataValuePair->GetDataString().size())
-                        {
-                           scalarTextureDatasets.Add(dataValuePair->GetDataString().c_str());
-                           hasScalarTextures = true;
-                        }
-                        else 
-                        {
-                           textureDataType = dataValuePair->GetDataString().find("vectors");
-                           if(textureDataType < dataValuePair->GetDataString().size())
-                           {
-                               vectorTextureDatasets.Add(dataValuePair->GetDataString().c_str());
-                               hasVectorTextures = true;
-                           }
-                        }
-                     }
-
-                     isDataSet = true;
-                  }
-
-               }
-
-               if(hasScalarTextures)
-               {
-                  //std::cout<<"Found scalar texture directory"<<std::endl;
-                  vistab->SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
-               }
-               if(hasVectorTextures)
-               {
-                  //std::cout<<"Found vector texture directory"<<std::endl;
-                  vistab->SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
-               }
-
-            }
-
-            if(isDataSet)
-            {
-               int error = vistab->ShowModal(); 
-            }
-            else
-            {
-               wxMessageBox( "Open a dataset","Dataset Failure", 
-                              wxOK | wxICON_INFORMATION );
-            }
-         }
-         else
-         { 
-            frame->Log( " Model contains no datasets: \n" );//<< modelID<<std::endl;
-            return;
-         }
-      }
-      catch ( CORBA::Exception& )
-      {
-         frame->Log( " Couldn't find model: \n" );//<< modelID<<std::endl;
+      frame->Log( "Not connected to VE-Server\n" );//<< std::endl;
+      return;
+   }
+   
+   try
+   {
+      activeCORBAModel = xplorerPtr->GetModel(modelID);
+   }
+   catch ( CORBA::Exception& )
+   {
+         frame->Log( "Couldn't find model\n" );//<< modelID<<std::endl;
          return;
-      }
+   }
+      
+   if ( activeCORBAModel->dataVector.length() == 0 )
+   {
+      frame->Log( "Model contains no datasets\n" );//<< modelID<<std::endl;
+      return;
+   }
+
+   if(!vistab)
+   {
+      vistab = new Vistab (activeCORBAModel,this,
+                       SYMBOL_VISTAB_IDNAME,
+                       activeXMLModel->GetModelName().c_str(),
+                       SYMBOL_VISTAB_POSITION,
+                       SYMBOL_VISTAB_SIZE,
+                       SYMBOL_VISTAB_STYLE );
    }
    else
    {
-      frame->Log( " Not connected to VE-Server \n" );//<< std::endl;
+      vistab->SetActiveModel(activeCORBAModel);
+   }
+   
+   vistab->SetCommInstance(xplorerPtr);
+   size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
+   if ( nInformationPackets == 0 )
+   {
       return;
+   }
+   
+   wxArrayString scalarTextureDatasets;
+   wxArrayString vectorTextureDatasets;
+   bool hasScalarTextures = false;
+   bool hasVectorTextures = false;
+
+   for(size_t i = 0; i < nInformationPackets; i++)
+   {
+      VE_XML::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket(i);
+      size_t numProperties = paramBlock->GetNumberOfProperties();
+                           
+      for ( size_t i = 0; i < numProperties; ++i )
+      {
+         VE_XML::DataValuePair* dataValuePair = paramBlock->GetProperty( i );
+         if ( dataValuePair->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
+         {
+            
+            size_t textureDataType = dataValuePair->GetDataString().find("scalars");
+            if(textureDataType < dataValuePair->GetDataString().size())
+            {
+               scalarTextureDatasets.Add(dataValuePair->GetDataString().c_str());
+               hasScalarTextures = true;
+            }
+            else 
+            {
+               textureDataType = dataValuePair->GetDataString().find("vectors");
+               if(textureDataType < dataValuePair->GetDataString().size())
+               {
+                   vectorTextureDatasets.Add(dataValuePair->GetDataString().c_str());
+                   hasVectorTextures = true;
+               }
+            }
+         }
+         isDataSet = true;
+      }
+   }
+
+   if(hasScalarTextures)
+   {
+      //std::cout<<"Found scalar texture directory"<<std::endl;
+      vistab->SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
+   }
+   if(hasVectorTextures)
+   {
+      //std::cout<<"Found vector texture directory"<<std::endl;
+      vistab->SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
+   }
+
+
+   if(isDataSet)
+   {
+      int error = vistab->ShowModal(); 
+   }
+   else
+   {
+      wxMessageBox( "Open a dataset","Dataset Failure", 
+                     wxOK | wxICON_INFORMATION );
    }
 }
 ///////////////////////////////////////////
