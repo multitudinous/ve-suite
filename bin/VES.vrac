@@ -154,6 +154,15 @@ switch ($1)
     vtkTo3DTexture
   breaksw
 
+  case -clearPorts:
+    fuser -k 7000 localhost
+  breaksw
+
+  case -check:
+# Check if the vrjuggler communication ports are hung open or closed and ready to use
+# nmap -p7000 master slave1 slave2 slave3 slave4 slave5 slave6 slave7 slave8
+  breaksw   
+ 
   case -h:
   default:
   echo ""
