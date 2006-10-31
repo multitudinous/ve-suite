@@ -2476,7 +2476,7 @@ void  Network::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
 //////////////////////////////////////////////////////
 void  Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 {  
-	VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+	VE_XML::VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
 	wxString title;
 	title << wxT("Aspen Name");
 	wxString desc = veModel->GetModelName().c_str();
