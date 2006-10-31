@@ -134,7 +134,11 @@ public:
    ///with commands from the gui
    std::map<int, cfdVEBaseClass* >* GetTheCurrentPlugins( void );
    ///Loading the Available Modules
-   cfdVEAvail_Modules* av_modules; 
+   cfdVEAvail_Modules* av_modules;
+   ///Register plugin specific eh's so that cfdexecutive only calls the correct
+   ///plugin for a specific command
+   //bool RegisterEHForGEPlugin( std::string commandName, cfdVEBaseClass* baseClass );
+   
 private:
    ///Laod data from CE
    void LoadDataFromCE( void );
@@ -171,6 +175,9 @@ private:
    // _name_map : maps a module name to it's module id.
    std::map<int, cfdVEBaseClass* > _plugins;
 
+   // map to hold unique plugin command names and associated plugin pointers
+   std::map< int, std::map< std::string, cfdVEBaseClass* > > pluginEHMap;
+   
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }

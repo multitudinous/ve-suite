@@ -142,6 +142,9 @@ public:
    ///Allow the users to process new inputs after a job has 
    ///been submitted for all plugins
    virtual void ProcessOnSubmitJob( void ){ ; }
+   ///Return map that maps command names to this plugin
+   std::map< std::string, cfdVEBaseClass* > GetCommandNameMap( void );
+   
 private:
    // This needs to be vector of geometry nodes
    //cfdModuleGeometry*  geometryNode;
@@ -186,6 +189,7 @@ protected:
    VE_XML::VE_Model::Model* xmlModel;
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;
+   std::map< std::string, cfdVEBaseClass* > ehMap;
 };
 }
 

@@ -290,6 +290,7 @@ void cfdExecutive::GetEverything( void )
          _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
          _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
          _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
+         pluginEHMap[ iter->first ] = _plugins[ iter->first ]->GetCommandNameMap();
       }
       std::map< int, VE_XML::VE_Model::Model* >::iterator modelIter;
       // this call always returns something because it is up to date with the id map
@@ -336,6 +337,9 @@ void cfdExecutive::GetEverything( void )
          // Must delete current instance of vebaseclass object
          delete _plugins[ foundPlugin->first ];
          _plugins.erase( foundPlugin++ );
+         std::map< int, std::map< std::string, cfdVEBaseClass* > >::iterator cmdIter;
+         cmdIter = pluginEHMap.find( foundPlugin->first );
+         pluginEHMap.erase( cmdIter );
       }
       else
       {
@@ -393,16 +397,26 @@ void cfdExecutive::PreFrameUpdate( void )
          ++foundPlugin )
    {
       //1. Set the current command on all plugins
-      if ( cfdModelHandler::instance()->GetActiveModel() )
+      /*if ( cfdModelHandler::instance()->GetActiveModel() )
       {
          VE_XML::Command* tempCommand = 
                   cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
          foundPlugin->second->SetCurrentCommand( tempCommand );
-      }
+      }*/
       //2. if active model is the plugin's model...
       if ( cfdModelHandler::instance()->GetActiveModel() == 
             foundPlugin->second->GetCFDModel() )
-      {
+      {  
+         //Process a special plugin command
+         VE_XML::Command* tempCommand = 
+         cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
+         std::string cmdName = tempCommand->GetCommandName();
+         cfdVEBaseClass* tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
+         if ( tempBase )
+         {
+            tempBase->SetCurrentCommand( tempCommand );
+         }
+         //Update the draw function
          //only if you are selected
          foundPlugin->second->SelectedPreFrameUpdate();
       }
@@ -487,3 +501,17 @@ void cfdExecutive::LoadDataFromCE( void )
       }
    } 
 }
+////////////////////////////////////////////////////////////////////////////////
+/*bool cfdExecutive::RegisterEHForGEPlugin( std::string commandName, cfdVEBaseClass* baseClass )
+{
+   std::map< std::string, cfdVEBaseClass* >::iterator iter;
+   iter = pluginEHMap.find( commandName );
+   if ( iter == pluginEHMap.end() )
+   {
+      std::cerr << "RegisterEHForGEPlugin : Command already registered with another plugin" << std::endl;
+      return false;
+   }
+   
+   pluginEHMap[ commandName ] = baseClass;
+   return true;
+}*/

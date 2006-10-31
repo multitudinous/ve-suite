@@ -446,3 +446,8 @@ void cfdVEBaseClass::SetCurrentCommand( VE_XML::Command* command )
       vprDEBUG(vesDBG,4) << command->GetCommandName() << std::endl << vprDEBUG_FLUSH;
    }
 }
+////////////////////////////////////////////////////////////////////////////////
+std::map< std::string, cfdVEBaseClass* > cfdVEBaseClass::GetCommandNameMap( void )
+{
+   return ehMap;
+}
