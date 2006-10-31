@@ -1,4 +1,4 @@
-"""VE-Launcher's Name Server Kill window."""
+"""VE-Launcher's Name Server Shutdown window"""
 import wx
 import os
 from velBase import *
@@ -8,22 +8,22 @@ if windows:
     import win32api
 
 class ServerKillWindow(wx.Frame):
-    """A window to kill the Nameserver after launch.
+    """A window to shutdown the Nameserver after launch.
 
     Functions:
         __init__(pids, [parent, title])
         KillNameserver(event)
         OnClose(event)"""
-    def __init__(self, pids, parent = None, title = "Kill Name Server"):
-        """Creates the Server Kill Window."""
+    def __init__(self, pids, parent = None, title = "Shutdown Name Server"):
+        """Creates the Server Shutdown Window"""
         wx.Frame.__init__(self, parent, wx.ID_ANY, title,
                           style = wx.DEFAULT_FRAME_STYLE &
                           ~(wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
         self.pids = pids
         lblMsg = wx.StaticText(self, -1, "After you're done with VE-Suite,\n"+\
-                                         "press the button below to kill\n"+\
+                                         "press the button below to shutdown\n"+\
                                          "the Name Server.")
-        bDone = wx.Button(self, -1, "Kill Name Server")
+        bDone = wx.Button(self, -1, "Shutdown Name Server")
         self.Bind(wx.EVT_BUTTON, self.KillNameserver, bDone)
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         border = 10
@@ -38,7 +38,7 @@ class ServerKillWindow(wx.Frame):
         self.Show()
     
     def KillNameserver(self, event):
-        """Kills any Nameservers running on this computer."""
+        """Shutdown any Nameservers running on this computer."""
         if windows:
             PROCESS_TERMINATE = 1
             for pid in self.pids:
@@ -57,6 +57,6 @@ class ServerKillWindow(wx.Frame):
         self.OnClose()
 
     def OnClose(self, event = None):
-        """Closes ServerKillWindow."""
+        """Closes Server Shutdown Window"""
         self.Hide()
         self.Destroy()
