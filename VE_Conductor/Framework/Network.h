@@ -84,6 +84,9 @@ enum
    SHOW_DESC,
    PARAVIEW,
    SHOW_FINANCIAL, /* EPRI TAG */
+   ASPEN_MENU,
+   SHOW_ASPEN_NAME,
+   QUERY_INPUTS,
    GEOMETRY,
    MODEL_INPUTS,
    MODEL_RESULTS,
@@ -150,6 +153,8 @@ public:
    void OnSetActiveXplorerModel( wxCommandEvent& event );
    // EPRI TAG
    void OnShowFinancial(wxCommandEvent &event);
+   void OnShowAspenName(wxCommandEvent &event);
+   void OnQueryInputs(wxCommandEvent &event);
 
    //Add to network fuctions
    void AddtoNetwork(REI_Plugin *new_mod, std::string cls_name);

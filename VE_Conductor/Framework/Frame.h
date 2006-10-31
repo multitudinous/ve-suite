@@ -75,9 +75,7 @@ enum
    v21ID_SUBMIT,
    v21ID_LOAD, 
    QUERY_FROM_SERVER, 
-   QUERY_NETWORK, 
-   QUERY_FOR_INPUTS, 
-   QUERY_FOR_RESULTS, 
+   QUERY_NETWORK,  
    v21ID_DISCONNECT,
    v21ID_DISCONNECT_VE, 
    v21ID_UNDO, 
@@ -245,8 +243,6 @@ protected:
    void LoadFromServer(wxCommandEvent &event);
    void QueryFromServer( wxCommandEvent& event );
    void QueryNetwork( wxCommandEvent& event );
-   void QueryForInputs( wxCommandEvent& event );
-   void QueryForResults( wxCommandEvent& event );
    void StartCalc(wxCommandEvent &event);	
    void StopCalc(wxCommandEvent &event);	
    void PauseCalc(wxCommandEvent &event);	

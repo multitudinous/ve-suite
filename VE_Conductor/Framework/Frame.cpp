@@ -173,8 +173,6 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_IDLE( AppFrame::IdleEvent )
    EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
    EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
-   EVT_MENU( QUERY_FOR_INPUTS, AppFrame::QueryForInputs )
-   EVT_MENU( QUERY_FOR_RESULTS, AppFrame::QueryForResults )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -636,11 +634,7 @@ void AppFrame::CreateMenu()
    con_menu->Append(v21ID_SUBMIT, _("Sub&mit Job\tCtrl+M"));
    con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
    //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
-   wxMenu* queryMenu = new wxMenu();
-   queryMenu->Append( QUERY_NETWORK, _("Query For Network") );
-   queryMenu->Append( QUERY_FOR_INPUTS, _("Query For Inputs") );
-   queryMenu->Append( QUERY_FOR_RESULTS, _("Query For Results") );
-	con_menu->Append( QUERY_FROM_SERVER,   _("Query Menu"), queryMenu, _("Used to query units for various information") );
+   con_menu->Append( QUERY_NETWORK, _("Query For Network") );
    con_menu->AppendSeparator();
    con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
    con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
@@ -962,8 +956,6 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
    returnState.SetCommandName("getNetwork");
    VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
    data->SetData("NetworkQuery", "getNetwork" );
-   //data=returnState.GetDataValuePair(-1);
-   //data->SetData("moduleId", static_cast< unsigned int >( 101 ) );
 
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -982,16 +974,6 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
    {
       Log("No ves network available\n");
    }
-}
-///////////////////////////////////////////////////////////////////////////
-void AppFrame::QueryForInputs( wxCommandEvent& WXUNUSED(event) )
-{
-	Log("Query Inputs\n");
-}
-///////////////////////////////////////////////////////////////////////////
-void AppFrame::QueryForResults( wxCommandEvent& WXUNUSED(event) )
-{
-	Log("Query Results\n");
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )

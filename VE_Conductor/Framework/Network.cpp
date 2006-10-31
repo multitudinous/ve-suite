@@ -102,6 +102,8 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(SHOW_DESC, Network::OnShowDesc)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
    EVT_MENU(SHOW_FINANCIAL, Network::OnShowFinancial) /* EPRI TAG */
+   EVT_MENU(SHOW_ASPEN_NAME, Network::OnShowAspenName)
+   EVT_MENU(QUERY_INPUTS, Network::OnQueryInputs)
    EVT_MENU(GEOMETRY, Network::OnGeometry)
    EVT_MENU(DATASET, Network::OnDataSet)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
@@ -497,6 +499,14 @@ void Network::OnMRightDown(wxMouseEvent& event)
 	pop_menu.Append(SHOW_FINANCIAL, "Financial Data");
 	pop_menu.Enable(SHOW_FINANCIAL, true);
    }
+   
+   //Aspen Unit Name
+   wxMenu * aspen_menu = new wxMenu();
+   aspen_menu->Append(SHOW_ASPEN_NAME, "Aspen Name");
+   aspen_menu->Enable(SHOW_ASPEN_NAME, true);
+   aspen_menu->Append(QUERY_INPUTS, "Query Inputs");
+   aspen_menu->Enable(QUERY_INPUTS, true);
+   pop_menu.Append( ASPEN_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
 
    //if (p_frame->f_geometry)
    {
@@ -2310,7 +2320,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 
    _fileProgress->Update( 75, "done create models" );
    // now lets create a list of them
-   int timeCalc = objectVector.size()/25;
+   int timeCalc = 25/objectVector.size();
    for ( size_t i = 0; i < objectVector.size(); ++i )
    {
       _fileProgress->Update( 75 + (i*timeCalc), "Loading data" );
@@ -2461,6 +2471,39 @@ void  Network::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
    if (m_selMod<0) 
       return;
    modules[m_selMod].GetPlugin()->FinancialData();
+}
+
+//////////////////////////////////////////////////////
+void  Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
+{  
+	VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+	wxString title;
+	title << wxT("Aspen Name");
+	wxString desc = veModel->GetModelName().c_str();
+	wxMessageDialog(this, desc, title).ShowModal();
+}
+
+//////////////////////////////////////////////////////
+void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
+{  
+	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	
+	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
+
+	VE_XML::Command returnState;
+	returnState.SetCommandName("getModuleParamList");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData(std::string("ModuleName"), compName);
+	
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	//Get results
+	serviceList->Query( status );
 }
 
 //////////////////////////////////////////////////////
