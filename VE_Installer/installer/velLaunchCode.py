@@ -150,8 +150,8 @@ class Launch:
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
         ##Kill any screen savers.
-        ##subprocess.Popen(["/usr/X11R6/bin/xset", "-display", ":0.0", "-dpms",
-        ##                  "s", "reset", "s", "off"])
+        subprocess.Popen(["/usr/X11R6/bin/xset", "-display", ":0.0", "-dpms",
+                          "s", "reset", "s", "off"])
         ##Name Server section
         if self.settings["NameServer"]:
             sleep(1)
@@ -177,13 +177,16 @@ class Launch:
             sourceFile.close()
             ##Master call
             print "***MASTER CALL: %s***" %self.settings["ClusterMaster"] ##TESTER
-            os.system("source %s %s &" %(clusterFilePath,
-                                         self.settings["ClusterMaster"]))
+            self.ExecuteClusterScriptUnix(self.settings["ClusterMaster"],
+                                          clusterFilePath)
+##            os.system("source %s %s &" %(clusterFilePath,
+##                                         self.settings["ClusterMaster"]))
             sleep(self.settings["MasterWait"])
             ##Slave calls
             for comp in self.settings["ClusterSlaves"]:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-                os.system("source %s %s &" %(clusterFilePath, comp))
+##                os.system("source %s %s &" %(clusterFilePath, comp))
+                self.ExecuteClusterScriptUnix(comp, clusterFilePath)
                 sleep(self.settings["SlaveWait"])
         ##Xplorer section
         elif self.settings["Xplorer"]:
@@ -360,12 +363,26 @@ class Launch:
         else:
             self.clusterScript += "ERROR: OS not supported."
 
+    def ExecuteClusterScriptUnix(self, nodeName, clusterFilePath):
+        """Executes the ClusterScript for nodeName on Unix."""
+        if unix:
+            if gethostname().split('.')[0] == nodeName.split('.')[0]:
+##                print "It is this computer!" ##TESTER
+                subprocess.Popen(self.XplorerCall())
+                return
+            else:
+                os.system("source %s %s &" %(clusterFilePath, nodeName))
+                return
+        else:
+            print "Error! Windows linking into Unix cluster function."
+        
     def ExecuteClusterScript(self, nodeName):
+        """Executes the ClusterScript for nodeName on Windows."""
         if windows:
             print "Executing %s!" %nodeName
             ##Do a regular call if the initial machine's the node.
             if gethostname() == nodeName.split('.')[0]:
-                print "It is this computer!"
+##              print "It is this computer!" ##TESTER
                 subprocess.Popen(self.XplorerCall())
                 return
             ##Else call the script on the other computer in psexec.
