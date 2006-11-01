@@ -166,11 +166,6 @@ void Body_Executive_i::SetExportData (
 {
   _mutex.acquire();
   
-  //std::cout << "SetExportData "<< module_id << " " << port_id << std::endl;
-
-  //Package p;
-  //p.SetSysId("temp.xml");
-  //p.Load(data, strlen(data));
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
@@ -178,18 +173,13 @@ void Body_Executive_i::SetExportData (
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
   
    // Should only be one item. But, maybe later...
-   //std::vector<Interface>::iterator iter;
-   //for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   if ( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortData( 
+         port_id, dynamic_cast< VE_XML::Command* >( objectVector.at(0) ) ) 
+      )
    {
-      if ( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortData( 
-            port_id, dynamic_cast< VE_XML::Command* >( objectVector.at(0) ) ) 
-         )
-      {
-         std::string msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
-         ClientMessage(msg.c_str());
-      }
+      std::string msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+      ClientMessage(msg.c_str());
    }
-   _mutex.release();
 }
   
 char * Body_Executive_i::GetExportData (
@@ -352,7 +342,13 @@ void Body_Executive_i::execute_next_mod( long module_id )
 			{
             returnState->GetDataValuePair( "return_state" )->GetData( rs );
          }
-    
+         //delete the object vector 
+         for ( size_t i = 0; i < objectVector.size(); ++i )
+         {
+            delete objectVector.at( i );
+         }
+         objectVector.clear();
+         
 			_network->GetModule(_network->moduleIdx(module_id))->_return_state = rs;
     
 			if(rs!=1) 
@@ -815,6 +811,8 @@ std::cout << command << std::endl;
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( command, "Command", "vecommand" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   //I think the above is a memory leak
+   // we need to cleanup the vector of objects
    
    std::string moduleName;
    unsigned int moduleId = 0;
@@ -835,9 +833,18 @@ std::cout << command << std::endl;
       }
       else
       {
-         passCommand.GetDataValuePair(-1)->SetData( tempPair->GetDataName(), tempPair );
+         // the copy constructor is needed here because
+         // the tempCommand owns the memory as well as the passcommand
+         // each of these commands would then delete the same memory
+         passCommand.AddDataValuePair( new VE_XML::DataValuePair( *tempPair ) );
       }
    }
+   //delete the object vector 
+   for ( size_t i = 0; i < objectVector.size(); ++i )
+   {
+      delete objectVector.at( i );
+   }
+   objectVector.clear();
    
    ///string used to hold query data
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
