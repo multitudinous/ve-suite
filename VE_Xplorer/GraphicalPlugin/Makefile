@@ -66,6 +66,7 @@ DSO_PLUGIN_DEPS+= -lVE_UtilLib
 DSO_PLUGIN_DEPS+= -lVE_ModelLib
 DSO_PLUGIN_DEPS+= -lVE_XMLLib
 DSO_PLUGIN_DEPS+= -lVE_CADLib
+DSO_PLUGIN_DEPS+= $(shell vrjuggler-config vrj --extra-libs)
 $(shell mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE))
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
