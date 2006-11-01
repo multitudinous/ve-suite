@@ -3,7 +3,7 @@
 # sets up environment to build and/or run VE-Xplorer
 
 #this is typically defined in your .cshrc file
-export VE_SUITE_HOME=/Volumes/data/TSVEG//VE_Suite
+export VE_SUITE_HOME=/Volumes/data/TSVEG/VE_Suite
 
 if [ -e /etc/redhat-release ]; then
    #echo "found /etc/redhat-release"
@@ -127,19 +127,19 @@ case "$CFDHOSTTYPE" in
    export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk-cvs/install
    export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install
    #export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install-cocoa
-   export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj
+   export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/build-darwin/instlinks
    export VJ_DEPS_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj-deps
-   export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.1/install
+   export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.2/install
 	#setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   export APR_HOME=/Volumes/data/VE_Suite_Deps/apr-1.2.7/install
-   export APU_HOME=/Volumes/data/VE_Suite_Deps/apr-util-1.2.7/install
+   #export APR_HOME=/Volumes/data/VE_Suite_Deps/apr-1.2.7/install
+   #export APU_HOME=/Volumes/data/VE_Suite_Deps/apr-util-1.2.7/install
 
    export DYLD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib:${VJ_DEPS_DIR}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${WX_HOME}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
-   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${APR_HOME}/lib
-   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${APU_HOME}/lib
+   #export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${APR_HOME}/lib
+   #export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${APU_HOME}/lib
 
       export TAO_HOME=/Volumes/data/VE_Suite_Deps/ACE_TAO/install
       export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${TAO_HOME}/lib
