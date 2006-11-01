@@ -156,7 +156,11 @@ public:
    /// if there is already geometry then the function will return that pointer
    VE_CAD::CADNode* Model::AddGeometry( void );
    ///Delete the geometry for this model
-   void Model::DeleteGeometry( void );
+   void DeleteGeometry( void );
+   ///Set the vendor name on the model
+   void SetVendorName( std::string vendorName );
+   ///Get the vendor name of the model
+   std::string GetVendorName( void );
 
 protected:
    ///Internally update the data.
@@ -180,6 +184,8 @@ private:
    std::vector< VE_XML::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
    ///The CADNode contains the tree structure for the geometry
    VE_CAD::CADAssembly* geometry;///<The classes hold the geometry for the model.
+   ///The vendor name for the model
+   std::string vendorUnit;///<The string that stores the unit name that this model maps to
 };
 }
 }

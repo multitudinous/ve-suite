@@ -815,6 +815,7 @@ std::cout << command << std::endl;
    // we need to cleanup the vector of objects
    
    std::string moduleName;
+   std::string vendorUnit;
    unsigned int moduleId = 0;
    VE_XML::Command* tempCommand = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
    VE_XML::Command passCommand;
@@ -823,13 +824,18 @@ std::cout << command << std::endl;
    for ( size_t i = 0; i < numDVP; ++i )
    {
       VE_XML::DataValuePair* tempPair = tempCommand->GetDataValuePair( i );
-      if ( tempPair->GetDataName() == "moduleName" )
+      /*if ( tempPair->GetDataName() == "moduleName" )
       {
          tempPair->GetData( moduleName );
       }
-      else if ( tempPair->GetDataName() == "moduleId" )
+      else */
+      if ( tempPair->GetDataName() == "moduleId" )
       {
          tempPair->GetData( moduleId );
+      }
+      else if ( tempPair->GetDataName() == "vendorUnit" )
+      {
+         tempPair->GetData( vendorUnit );
       }
       else
       {
@@ -860,17 +866,17 @@ std::cout << command << std::endl;
    _mutex.acquire();
    // Resume all the modules
    std::map<std::string, Body::Unit_var>::iterator iter;
-   if ( !moduleName.empty() )
+   //if ( !moduleName.empty() )
    {
       //find the unit the normal way
-      iter = _mod_units.find( moduleName );
+      iter = _mod_units.find( vendorUnit );
    }
-   else
+   //else
    {
       // if we are doing an aspen type query and do not have 
       // a unit name or module id
-      std::cout << "aspen query" << std::endl;
-      iter = _mod_units.begin();
+      //std::cout << "aspen query" << std::endl;
+      //iter = _mod_units.begin();
    }
 
    if ( iter == _mod_units.end() )

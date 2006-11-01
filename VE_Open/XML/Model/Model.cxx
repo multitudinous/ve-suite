@@ -58,6 +58,7 @@ Model::Model()
    geometry = 0;
    SetObjectType("Model");
    SetObjectNamespace("Model");
+   vendorUnit = '\0';
 }
 ///////////////////////////////////
 Model::~Model()
@@ -98,6 +99,7 @@ Model::Model( const Model& input )
    modelName = input.modelName;
    uniqueModelID = input.uniqueModelID;
    iconFileName = input.iconFileName;
+   vendorUnit = input.vendorUnit;
 
    for ( size_t i = 0; i < input.ports.size(); ++i )
    {
@@ -137,6 +139,7 @@ Model& Model::operator=( const Model& input)
       modelName = input.modelName;
       uniqueModelID = input.uniqueModelID;
       iconFileName = input.iconFileName;
+      vendorUnit = input.vendorUnit;
 
       for ( size_t i = 0; i < ports.size(); ++i )
       {
@@ -236,6 +239,8 @@ void Model::SetObjectFromXMLData(DOMNode* element)
             GetAttribute( currentElement, "name", modelName );
          }
       }
+
+      GetAttribute( currentElement, "vendorUnit", vendorUnit );
 
       {
          dataValueStringName = GetSubElement( currentElement, "ID", 0 );
@@ -562,7 +567,7 @@ void Model::DeleteGeometry( void )
       geometry = 0;
    }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Model::RemoveInformationPacket( unsigned int i )
 {
    std::vector< VE_XML::ParameterBlock* >::iterator iter;
@@ -575,7 +580,7 @@ void Model::RemoveInformationPacket( unsigned int i )
       }
    }
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Model::_updateVEElement( std::string input )
 {
    // write all the elements according to verg_model.xsd
@@ -586,6 +591,12 @@ void Model::_updateVEElement( std::string input )
 
    SetSubElement( "iconLocation", iconLocation );
    SetAttribute( "name", modelName );
+
+   if ( vendorUnit.empty() )
+   {
+      vendorUnit = modelName;
+   }
+   SetAttribute( "vendorUnit", vendorUnit );
    //SetSubElement( "name", modelName );
    std::ostringstream dirStringStream;
    dirStringStream << uniqueModelID;
@@ -610,4 +621,14 @@ void Model::_updateVEElement( std::string input )
 
    if ( geometry )
       SetSubElement( "geometry", geometry );   
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetVendorName( std::string vendorName )
+{
+   vendorUnit = vendorName;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string Model::GetVendorName( void )
+{
+   return vendorUnit;
 }
