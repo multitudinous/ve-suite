@@ -78,11 +78,11 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
       reader->SetCaseFileName( EnSightToVTK->GetFile(0).c_str() );
       reader->Update();
       // used for multiple part ensight files
-      int numberOfOutputs = 0;//reader->GetNumberOfOutputs();
+      int numberOfOutputs = reader->GetNumberOfOutputs();
       vtkAppendFilter* appendFilter = vtkAppendFilter::New();
       for ( int i = 0; i < numberOfOutputs; ++i )
       {
-         //appendFilter->AddInput( reader->GetOutput( i ) );
+         appendFilter->AddInput( reader->GetOutput( i ) );
       }
       appendFilter->Update();
 
