@@ -42,6 +42,8 @@
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/GUIPlugin/OrbThread.h"
+#include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
@@ -2502,8 +2504,31 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	std::string status="returnString";
 	commandWriter.UseStandaloneDOMDocumentManager();
 	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	
 	//Get results
-	serviceList->Query( status );
+	std::string nw_str = serviceList->Query( status );
+	wxString title = compName.c_str();
+	TextResultDialog * results = new TextResultDialog(this, title);
+	VE_XML::XMLReaderWriter networkReader;
+	networkReader.UseStandaloneDOMDocumentManager();
+	networkReader.ReadFromString();
+	//serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
+	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	//std::ostringstream output;
+	//output << objectVector.size()<<std::endl;
+	//serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	std::vector< std::string > temp_vector;
+	pair->GetData(temp_vector);
+	std::vector< wxString > temp_vector2;
+	for (int i=0; i < temp_vector.size(); i++) 
+	{
+		temp_vector2.push_back(temp_vector[i].c_str());
+	}
+	results->Set2Cols(temp_vector2, temp_vector2);
+	results->ShowModal();
 }
 
 //////////////////////////////////////////////////////

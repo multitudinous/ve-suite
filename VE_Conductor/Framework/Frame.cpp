@@ -634,7 +634,7 @@ void AppFrame::CreateMenu()
    con_menu->Append(v21ID_SUBMIT, _("Sub&mit Job\tCtrl+M"));
    con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
    //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
-   con_menu->Append( QUERY_NETWORK, _("Query For Network") );
+   con_menu->Append( QUERY_NETWORK, _("Aspen Network") );
    con_menu->AppendSeparator();
    con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
    con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
