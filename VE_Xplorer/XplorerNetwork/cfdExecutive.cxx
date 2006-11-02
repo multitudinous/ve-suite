@@ -404,17 +404,22 @@ void cfdExecutive::PreFrameUpdate( void )
          foundPlugin->second->SetCurrentCommand( tempCommand );
       }*/
       //2. if active model is the plugin's model...
-      if ( cfdModelHandler::instance()->GetActiveModel() == 
+      if ( cfdModelHandler::instance()->GetActiveModel() &&
+           ( cfdModelHandler::instance()->GetActiveModel() == 
             foundPlugin->second->GetCFDModel() )
+         )
       {  
          //Process a special plugin command
          VE_XML::Command* tempCommand = 
          cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
-         std::string cmdName = tempCommand->GetCommandName();
-         cfdVEBaseClass* tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
-         if ( tempBase )
+         if( tempCommand )
          {
-            tempBase->SetCurrentCommand( tempCommand );
+            std::string cmdName = tempCommand->GetCommandName();
+            cfdVEBaseClass* tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
+            if ( tempBase )
+            {
+               tempBase->SetCurrentCommand( tempCommand );
+            }
          }
          //Update the draw function
          //only if you are selected
