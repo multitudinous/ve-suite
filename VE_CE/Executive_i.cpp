@@ -866,17 +866,17 @@ std::cout << command << std::endl;
    _mutex.acquire();
    // Resume all the modules
    std::map<std::string, Body::Unit_var>::iterator iter;
-   //if ( !moduleName.empty() )
+   if ( !vendorUnit.empty() )
    {
       //find the unit the normal way
       iter = _mod_units.find( vendorUnit );
    }
-   //else
+   else
    {
       // if we are doing an aspen type query and do not have 
       // a unit name or module id
       //std::cout << "aspen query" << std::endl;
-      //iter = _mod_units.begin();
+      iter = _mod_units.begin();
    }
 
    if ( iter == _mod_units.end() )
