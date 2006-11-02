@@ -107,7 +107,8 @@ enum
    XPLORER_SCENES,
    XPLORER_EXIT,
    TIMER_ID,
-   XPLORER_COLOR
+   XPLORER_COLOR,
+   ID_PREFERENCES
 };
 
 class OrbThread;
@@ -121,7 +122,7 @@ class SoundsPane;
 class ViewLocPane;
 class StreamlinePane;
 class UI_TeacherTab;
-//class Vectors;
+class UserPreferences;
 //class Vistab;
 
 namespace VE_Conductor
@@ -237,7 +238,8 @@ protected:
    void ZoomOut(wxCommandEvent &evetn);
    void Save(wxCommandEvent &event);
    void SaveAs(wxCommandEvent &event);
-
+   void OnPreferences(wxCommandEvent &event);
+   
    void Open(wxCommandEvent &event);
    void SubmitToServer(wxCommandEvent &event);
    void LoadFromServer(wxCommandEvent &event);
@@ -278,9 +280,12 @@ protected:
    ///\param event The wxCommand event.
    void LaunchCADNodePane(wxCommandEvent& event);
 
+   ///Process Juggler settings
    void JugglerSettings( wxCommandEvent& event );
-
-  void CreateVETab();
+   ///Get the user preferences class
+   UserPreferences* GetUserPreferences( void );
+   ///Create the ve tabs
+   void CreateVETab();
   
   wxBoxSizer *sizerTab;
 
@@ -304,7 +309,8 @@ private:
    StreamlinePane* streamlinePane;
    VE_Conductor::CORBAServiceList* serviceList;
    VE_XML::DOMDocumentManager* domManager;
-
+   UserPreferences* preferences;
+   
    DECLARE_EVENT_TABLE()
 };
 #endif

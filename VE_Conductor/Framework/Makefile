@@ -38,7 +38,8 @@ SRCS=\
    isosurfaces.cpp\
    polydata.cpp\
    ScalarToolsDlg.cxx\
-	UI_TeacherTab.cpp
+   UI_TeacherTab.cpp\
+   UserPreferences.cxx
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)

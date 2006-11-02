@@ -40,6 +40,7 @@
 
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/UserPreferences.h"
 #include "VE_Conductor/Network/package.h"
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
@@ -136,6 +137,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU(wxID_NEW, AppFrame::New)
    // this is probably a bug and needs to be fixed
    EVT_MENU(wxID_EXIT, AppFrame::FrameClose)
+   EVT_MENU( ID_PREFERENCES, AppFrame::OnPreferences)
    EVT_MENU(wxID_OPEN, AppFrame::Open)
    EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
    EVT_MENU(QUERY_FROM_SERVER, AppFrame::QueryFromServer)
@@ -185,7 +187,9 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 {
    timer.Start( 1000 );
    serviceList = new VE_Conductor::CORBAServiceList( ::wxGetApp().argc, ::wxGetApp().argv );
-  
+   preferences = new UserPreferences(this, ::wxNewId(), 
+                                     SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
+                                     SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
    xplorerMenu = 0;
    recordScenes = 0;
 
@@ -620,6 +624,8 @@ void AppFrame::CreateMenu()
    file_menu->Append (wxID_PRINT_SETUP, _("Print Set&up .."));
    file_menu->Append (wxID_PREVIEW, _("Print Pre&view\tCtrl+Shift+P"));
    file_menu->Append (wxID_PRINT, _("&Print ..\tCtrl+P"));
+   file_menu->AppendSeparator();
+   file_menu->Append ( ID_PREFERENCES, _("Preferences") );
    file_menu->AppendSeparator();
    file_menu->Append (wxID_EXIT, _("&Quit\tCtrl+Q"));
 
@@ -1587,4 +1593,14 @@ void AppFrame::EnableCEGUIMenuItems( void )
    //frame_->con_menu->Enable(v21ID_CONNECT, false);
    run_menu->Enable(v21ID_VIEW_RESULT, true);
    con_menu->Enable(v21ID_DISCONNECT, true);
+}
+////////////////////////////////////////////////////////////////////////////////
+UserPreferences* AppFrame::GetUserPreferences( void )
+{
+   return preferences;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnPreferences( wxCommandEvent& WXUNUSED(event) )
+{
+   preferences->ShowModal();
 }
