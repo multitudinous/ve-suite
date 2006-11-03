@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<book>
+  <title>VE-Suite Documentation</title>
+
+  <preface>
+    <title>Introduction to VE-Suite</title>
+
+    <para>VE-Suite is an open source toolkit that enables virtual engineering
+    analysis and design. This open source framework includes distributed
+    computing, platform independence, extensibility for component models,
+    support for a hierarchy of component models, and comprehensive graphics
+    capabilities, including support for immersive facilities.</para>
+
+    <para>VE-Suite is a software package built upon VRJuggler &lt;link&gt;,
+    Open Scene Graph&lt;link&gt;, Kitware’s Visualization ToolKit
+    (VTK)&lt;link&gt;, CORBA compliant libraries (ACE/TAO)&lt;link&gt;, and
+    wxWidgets&lt;link&gt;. Initially developed as a CFD visualization package,
+    VE-Suite has matured into a software toolset which enhances engineers
+    decision making capabilities. By integrating computational results from
+    multiple disciplines into a common framework, VE-Suite helps the engineer
+    analyze problems and make more complete solutions.</para>
+  </preface>
+
+  <part>
+    <title>Users Guide</title>
+
+    <chapter>
+      <title>Installation and Setup</title>
+
+      <para>Installation of VE-Suite is fairly straight forward. Visit the
+      Downloads &lt;link&gt; section and locate your OS. Two installers are
+      provided for Windows which guide you through the process of selecting
+      various options. One installer (vesuite.1.0.0.exe) contains the core
+      VE-Suite binaries and .dll files. The other (vesuite_deps.1.0.0.exe)
+      contains the binaries and .dll files of the dependencies for the current
+      release of VE-Suite.</para>
+
+      <para>On UNIX/Linux, two tar.gz files are provided for the core VE-Suite
+      files and its dependencies.</para>
+
+      <para>In either case, extracting the files creates two directory
+      structures:</para>
+
+      <para>VE_Suite.1.0.0/</para>
+
+      <para>VE_Suite.1.0.0_Dependencies/</para>
+
+      <section>
+        <title>Windows Installation</title>
+
+        <para>Installing VE-Suite and its dependencies follows the same
+        procedure as other installations. You'll choose their locations, which
+        components to install, their Start Menu folder, and whether to have a
+        desktop icon.</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="veimages/windowsinstall.png" />
+          </imageobject>
+        </mediaobject>
+
+        <para>Of particular note is which components to install. In large
+        setups, certain computers will run the NameServer while others handle
+        the Conductor and Xplorer. Since you're only running it on a single
+        desktop, you'll want to install everything. Just leave all the
+        checkboxes checked.</para>
+
+        <para>Go through the same process for VE-Suite's dependencies.</para>
+      </section>
+
+      <section>
+        <title>UNIX Installation</title>
+
+        <para>On Unix, the installers are compressed tar.gz files. You can
+        open them using these commands:</para>
+
+        <para><emphasis role="bold">Using GNU tar:</emphasis> gtar xvzf
+        vesuite_1.0.1_RHEL_4.tar.gz gtar xvzf
+        vesuite_deps1.0.1_RHEL_4.tar.gz</para>
+
+        <para><emphasis role="bold">Using gzip:</emphasis> gunzip &lt;
+        vesuite_1.0.1_RHEL_4.tar.gz | tar xvf - gunzip &lt;
+        vesuite_deps1.0.1_RHEL_4.tar.gz | tar xvf -</para>
+
+        <para><emphasis role="bold">Note</emphasis>: These examples use
+        VE-Suite 1.0.1. Be sure to change the version number in the commands
+        for later versions.</para>
+      </section>
+
+      <section>
+        <title>Setting the Runtime Environment</title>
+
+        <para>In previous versions, VE-Suite's runtime environment was set
+        through text scripts. Now it uses VE-Launcher to set up the
+        environment. Most of it is automated, but you need to be aware of two
+        important variables it sets: VE-Suite's directory and VE-Suite's
+        Dependencies' directory.</para>
+
+        <para>VE-Launcher automatically determines VE-Suite's directory from
+        the current working directory. Moving the Launcher out of VE-Suite's
+        directory or starting it from a different directory will pass the
+        wrong value to VE-Suite, causing errors.</para>
+
+        <para>The Dependencies directory is the only variable you need to set
+        manually. The first time you start VE-Launcher, it will ask you to
+        find the Dependencies directory. On Windows, it's simply the
+        VE_Suite.1.#.#_Dependencies folder.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>On Unix/Linux, the dependencies folder holds one folder for each
+        system supported. You need to choose your system's corresponding
+        folder as the Dependencies folder.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>If you're upgrading from an earlier version of VE-Suite, you can
+        also reset the Dependencies directory by clicking the Change
+        Dependencies Folder button in VE-Launcher.</para>
+      </section>
+    </chapter>
+
+    <chapter>
+      <title>Launcher</title>
+
+      <section>
+        <title>Introduction</title>
+
+        <para>Starting VE-Suite has been simplified with the release of
+        version 1.0.0 via VE-Launcher. VE-Launcher is a quick, easy way to
+        launch any configuration of VE-Suite. It helps you save your
+        configuration, choose which programs to run, and launch them without
+        entering text commands. Even with all of the options and
+        configurations available, choosing the one you need can still take
+        some work. Here, we explain how to use the Launcher and provide an
+        example of setting it up.</para>
+      </section>
+
+      <section>
+        <title>The Basics</title>
+
+        <para>You start VE Launcher by double-clicking VE-Suite's desktop
+        icon, double-clicking the velauncher program in VE-Suite's folder, or
+        typing "python velauncher.py" into an Unix terminal. On your first
+        time running VE-Launcher, it will ask you to choose the VE-Suite's
+        Dependencies folder. On Windows, this folder is named
+        VE_Suite.#.#.#_Dependencies.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>On Unix, the Dependencies folder contains folders for each
+        system; you need to choose the one corresponding to your
+        system.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Once VE-Launcher confirms it's a dependencies folder, it will
+        show you the main window.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para> * The Working Directory contains the files you want to load.
+        Set it to the files' directory. * The Computation Engine Name and Port
+        tell VE-Suite which computer and port to connect to. * The Launch Mode
+        lists five modes you can launch VE-Suite in:</para>
+
+        <para> 1. Desktop mode launches Conductor, Name Server, and Xplorer on
+        your machine in Desktop mode. 2. Tablet mode launches Conductor. It's
+        made for use on tablets. 3. Computation mode launches the Name Server.
+        It's made for use on computational engines. 4. Visualization mode
+        launches Xplorer. It's made for viewing projects. It uses Custom's
+        settings to choose VR Juggler's configuration and which type of
+        Xplorer to run. 5. New in 1.0.2: Shell mode lets the user work in a
+        new shell with the VE-Suite environment set up. If you choose to
+        launch in Shell mode, it'll ask you whether you want set up this shell
+        for VE-Builder or not. If you do, it will add the VE-Builder directory
+        you choose to the path. On Windows, launching Shell creates the shell
+        in a window; simply close it to exit. On Unix, launching Shell makes
+        the shell a child of your current terminal; type in "exit" to return
+        to your original shell. 6. Custom mode lets the user choose their own
+        settings. &lt;format&gt;</para>
+
+        <para>The settings for every mode can be viewed and changed by
+        clicking the Mode Settings button. Once you're done setting those,
+        click the Launch VE-Suite button to close VE-Launcher and start
+        VE-Suite.</para>
+
+        <para><emphasis role="bold">New in 1.0.2:</emphasis> The main window
+        now has a menu bar with the following menus:</para>
+
+        <para># File menu: * Open...: Pick a .ves or script shell file for
+        launch. * Close Files: Remove any .ves or script shell files from the
+        launch. * Quit # Configurations menu: * Load: Load a previously-saved
+        configuration. * Save: Save the current configuration. * Delete:
+        Delete a previously-saved configuration. &lt;format&gt;</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para># Options menu: * Choose Dependencies: Change the Dependencies
+        directory. * Choose Builder Folder: Change the Builder directory. *
+        Debug Level: Choose the debug levels passed to VE-Suite. * Cluster
+        Wait Times: Customize the time VE-Suite waits between starting the
+        master node and its slaves. &lt;format&gt;</para>
+      </section>
+
+      <section>
+        <title>Mode Settings</title>
+
+        <para>&lt;img&gt;</para>
+
+        <para>You use the Mode Settings window to view and change settings.
+        The Desktop, Tablet, and Computation modes only let you view their
+        settings, while Visualization and Custom modes let you change some of
+        them. Choices are faded out if you can't change them or if they
+        wouldn't do anything. (For example, you can't choose which type of
+        Xplorer to run if you're not running Xplorer.)</para>
+
+        <para>Options you can set include: * Which VR Juggler configuration to
+        use from the pulldown list. You can edit the list by clicking Edit
+        Configuration List. We go into the List in more detail below. * Which
+        programs to run. You can choose to run Name Server, Conductor, and
+        Xplorer. If you don't select any of them, VE-Suite won't launch (since
+        it won't do anything without a program to launch). * Whether to run
+        Conductor and Xplorer in Desktop Mode. This checkbox is disabled if
+        you're launching neither Conductor nor Xplorer. * Which type of
+        Xplorer to run. OpenSceneGraph and OSG Patented will work for most
+        projects, while OSG Patented Cluster is made for use on clustered
+        computers. This radio list is disabled if you aren't launching
+        Xplorer. &lt;format&gt;</para>
+
+        <para><emphasis role="bold">Edit Configuration List</emphasis></para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>VE-Suite has over two dozen configuration files available. To
+        help you keep track of them, VE-Launcher provides you with a
+        configuration list you can add, rename, and delete entries from. The
+        path to the currently selected entry is listed below, so you can tell
+        which name stands for which file.</para>
+
+        <para>When you add a new configuration to the list, its initial name
+        is its file name. You'll want to rename it to something more
+        descriptive.</para>
+      </section>
+
+      <section>
+        <title>UNIX Clusters</title>
+
+        <para>VE-Launcher versions 1.0.2+ have extra features for
+        automatically starting up VE-Xplorer on other computers in a
+        cluster.</para>
+
+        <para>To use the cluster functions of VE-Launcher on Unix, your
+        cluster must satisfy these requirements: 1. The path to VE-Suite, its
+        dependencies, and the working directory is the same on every cluster
+        node. 2. VE-Launcher's user has permission to ssh &lt;link&gt; to each
+        node. 3. The user has manually sshed into each node and authenticated
+        its name.</para>
+
+        <para>The last requirement needs some explanation. The first time you
+        ssh into an unknown host, you need to manually authenticate its name.
+        If it isn't authenticated and VE-Launcher tries to connect to it, it
+        will hang the program. Therefore, you must manually ssh into each node
+        on the cluster (including your current computer) and authenticate it
+        before you can start the cluster using VE-Launcher. You must use the
+        exact name you'll use in VE-Launcher; ssh treats partially-qualified
+        (francis) and fully-qualified (francis.iastate.edu) names as separate
+        users. Once you authenticate the other nodes, the authentication stays
+        in your user profile permentantly.</para>
+
+        <para>Once you have all the nodes authenticated, you can run the
+        cluster from VE-Launcher:</para>
+
+        <para>1. If you're running NameServer or Conductor on a certain node,
+        open VE-Launcher from that node. (VE-Launcher runs NameServer and
+        Conductor from the current computer.)</para>
+
+        <para>2. Set the settings. When you select the Xplorer type OSG
+        Patented Cluster, the Set Cluster Computers button will be
+        enabled.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>3. Click Set Cluster Computers. A window will pop up showing the
+        master and slaves listed. Put the master's name in, then add each
+        slave's name to the list. Click OK when you're done.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>4. Launch VE-Suite by clicking the Launch button. The cluster
+        computers will start up VE-Suite.</para>
+
+        <para><emphasis role="bold">Note:</emphasis> There's a slight delay
+        between each node launched. That's because simultaneous launching
+        caused erratic behavior in the cluster. The delay can be changed
+        through the Options-&gt;Cluster Wait Times menu. If you're
+        encountering problems with sync or unconnected nodes using
+        VE-Launcher, try lengthening the delays. If it's taking too long to
+        launch the cluster, try shortening them.</para>
+      </section>
+
+      <section>
+        <title>Windows Clusters</title>
+
+        <para>VE-Launcher versions 1.0.2+ can start VE-Suite across a Windows
+        cluster through PsExec &lt;link&gt;.</para>
+
+        <para>To use the cluster functions of VE-Launcher on Unix, your
+        cluster must satisfy these requirements: 1. The path to VE-Suite, its
+        dependencies, and the working directory is the same on every cluster
+        node. 2. PsExec &lt;link&gt; is installed on the computer you're
+        running VE-Launcher on.</para>
+
+        <para>To launch the cluster:</para>
+
+        <para>1. If you're running NameServer or Conductor on a certain
+        computer, open VE-Launcher from that computer. (VE-Launcher runs
+        NameServer and Conductor from the current computer.)</para>
+
+        <para>2. Select Custom mode and set your settings as usual. When you
+        choose which Xplorer Type to run, select OSG Patented Cluster. This
+        enables the Set Cluster Computers button.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>3. Click Set Cluster Computers. A window will pop up showing the
+        master and slaves listed, plus an optional username field. Put the
+        master's name in, then add each slave's name to the list.</para>
+
+        <para>Some clusters might require you to connect as a certain user; if
+        so, just enter your username into the User Name field. The username's
+        domain may need to be included as well, depending on your cluster's
+        setup. If you pass your username, you will have to manually enter your
+        password in each Psexec window when it launchers; VE-Launcher doesn't
+        send passwords for security reasons.</para>
+
+        <para>Click OK when you're done.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>4. Launch VE-Suite by clicking the Launch button. The cluster
+        computers will start up VE-Suite.</para>
+
+        <para><emphasis role="bold">Note:</emphasis> There's a slight delay
+        between each node launched. That's because simultaneous launching can
+        cause erratic behavior in the cluster. The delay can be changed
+        through the Options-&gt;Cluster Wait Times menu. If you're
+        encountering problems with sync or unconnected nodes using
+        VE-Launcher, try lengthening the delays. If it's taking too long to
+        launch the cluster, try shortening them.</para>
+
+        <para><emphasis role="bold">The cluster template: </emphasis>If your
+        cluster needs extra code to launch (for example, a net use command to
+        set up a remote drive), you can enter the code into the
+        clusterTemplate.txt file. Any terminal code in the clusterTemplate.txt
+        file will run on the cluster's other computers before Xplorer is
+        launched. Please read the comments in clusterTemplate.txt for more
+        details.</para>
+
+        <para><emphasis role="bold">Note: </emphasis>There is a bug in
+        VE-Launcher 1.0.2 where the cluster template code isn't separated from
+        the standard code by a line break. Be sure to put in a line break
+        after the last line of code in the template to avoid errors from a
+        merged line.</para>
+      </section>
+
+      <section>
+        <title>Example</title>
+
+        <para>John Doe wants to set up VE-Suite to look at a virtual power
+        plant design. He needs to set it in Visualization mode, using the VR
+        Juggler configuration "standalone" and the Open Scene Graph Xplorer.
+        It also has to connect to computer kiwi on port 1239.</para>
+
+        <para>When he starts VE-Launcher, he sees this:</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>First he types the path to the plant design data folder in the
+        Working Directory field. (He could also use the Choose Working
+        Directory button to find it.)</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>He needs to change the CE's name, but he can't because the
+        Launcher's currently in Desktop mode, which automatically sets the
+        CE's name to localhost. To unlock the CE's name, he switches to
+        Visualization mode. (Any mode besides Desktop will let you change the
+        CE's name.)</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Switching modes unlocks the CE name and sets it to the last
+        user-inputted value. Now John can change the CE name and port.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>To finish setting up the Launcher, John has to change the mode's
+        settings. He clicks on the Mode Settings button to bring up the
+        Settings window.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Visualization mode sets most of the options, and Open Scene
+        Graph is already selected. That just leaves changing the Xplorer
+        configuration. The configuration he needs isn't on the list yet,
+        though. John clicks the Edit Configuration List button.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Since it isn't on the list, he adds it.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>It's automatically added to the list as standalone. John renames
+        it to Plant Design so he can remember which project it's for.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Now that he's done editing the list, John exits the Xplorer
+        Configuration window. Since he had Plant Design selected when he left,
+        it's automatically set as his current configuration file. With
+        everything set as he wanted, John can now click Launch VE-Suite to
+        look at the design.</para>
+      </section>
+    </chapter>
+
+    <chapter>
+      <title>Running VE-Suite</title>
+
+      <para>VE-Suite contains three programs you can run: the Naming Service,
+      which allows you to connect to VE-CE; VE-Conductor, which provides the
+      controls; and VE-Xplorer, which displays the scene. All three can be
+      launched from VE-Launcher. The final step is connecting VE-Conductor to
+      the naming server. This lets you process and manipulate the chosen
+      dataset.</para>
+
+      <section>
+        <title>Starting VE-Suite</title>
+
+        <para>VE-Launcher is the gateway to VE-Suite. To open VE-Launcher,
+        Windows users should double-click the VE-Suite desktop icon or
+        velauncher.exe in the VE_Suite folder. Unix/Linux users should go into
+        the VE_Suite folder and enter:</para>
+
+        <para>python velauncher.py </para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>If this is your first time running VE-Launcher, it will ask for
+        the Dependencies folder (see Chapter 1.2&lt;link&gt;) before bringing
+        you to the main window.</para>
+
+        <para>The launcher has some advanced commands, but we can ignore them
+        for now. Make sure Desktop mode is selected and click the Launch
+        button. VE-Launcher will launch the Naming Service, VE-Conductor, and
+        VE-Xplorer in Desktop mode.</para>
+
+        <para>If you want to learn more about how to use VE-Launcher, check
+        out the VE-Launcher guide here&lt;link&gt;.</para>
+      </section>
+
+      <section>
+        <title>Loading Data and Connecting</title>
+
+        <para>VE-Suite loads objects through plug-ins. Here we will show you
+        how to load a geometry file through a plug-in; other data files may be
+        loaded in the same manner.</para>
+
+        <para>You set up plug-ins through the "Available Objects" window on
+        the right side of the screen. To create a new plugin, double-click on
+        the red "Available Modules" folder, then double-click on the
+        DefaultPlugin. A gray box will appear next to it. Right click on this
+        box to access the plugin's menu. Select the "Geometry Config" option
+        as shown.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>A new window will open on the design canvas, the CADTree
+        Manager. This holds the objects you insert into your plugin. To select
+        a geometry file, right-click on the Model_Geometry folder in the
+        canvas and select Add Node-&gt;Load CAD file.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Another window will appear. Choose the file's type, select the
+        file, then click Open.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>The program will ask you to name the object you loaded, then
+        insert it into the plugin. Add any other objects you want to include
+        in the same way. Once this is completed, click Close on the design
+        canvas.</para>
+
+        <para>The information for the plug-in's node needs to be loaded to the
+        rest of VE-Suite. This is done by choosing Submit job from the
+        Connection menu.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>The starting logo in VE-Xplorer should be replaced by the
+        objects in the plugins you submitted.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>If the object is not initially found in the VE-Xplorer window,
+        it may be outside the viewing region. If so, hold down the right mouse
+        button and drag down in the VE-Xplorer window to pull back the camera;
+        continue doing so until you can see the scene.</para>
+      </section>
+
+      <section>
+        <title>Navigation</title>
+
+        <para>There are two ways to manipulate VE-Suite's view using just the
+        mouse: dragging in the Xplorer window itself or using the Navigation
+        Pane.</para>
+
+        <section>
+          <title>Xplorer Window</title>
+
+          <para>If you have a 3-button mouse, you can do every translation and
+          rotation within the Xplorer window itself.</para>
+
+          <para>&lt;img&gt;</para>
+
+          <para>To rotate the scene, drag along the screen while holding the
+          left button. To rotate along the X- and Z-axes, drag in the center
+          of the screen. To rotate along the Y-axis, drag along the border of
+          the screen.</para>
+
+          <para>The right mouse button handles Y-axis translations. Hold the
+          right button and drag the mouse up or down to push the scene away or
+          pull it closer.</para>
+
+          <para>The mouse wheel button handles the other translations. Hold it
+          down to drag the scene left, right, up, or down across the
+          screen.</para>
+        </section>
+
+        <section>
+          <title>Navigation Pane</title>
+
+          <para>To open the Navigation pane, select Navigation Pane from the
+          VE-Xplorer menu:</para>
+
+          <para>&lt;img&gt;</para>
+
+          <para>The Navigation pane will appear below:</para>
+
+          <para>&lt;img&gt;</para>
+
+          <para>Experiment with the movement buttons (the ones with arrows on
+          them) to see how they change the scene. Note that they move the
+          camera, not the object; clicking the left X-axis button, for
+          example, will move the camera left, making the object shift
+          right.</para>
+
+          <para>Most of the other controls modify how the movement buttons
+          act:</para>
+
+          <para> * The Step Size sliders control the speed of translations and
+          rotations. The farther to the right they are, the faster
+          translations and rotations occur. * Rotate About Users Head controls
+          how the camera reacts to Yaw Rotation commands. If it's checked, the
+          camera rotates in place. If it isn't, the camera rotates around the
+          environment center, like the roll and pitch rotations. * Reset Nav
+          Position resets the camera to its initial position.
+          &lt;format&gt;</para>
+        </section>
+      </section>
+
+      <section>
+        <title>Quitting VE-Suite</title>
+
+        <para>Ending your VE-Suite session takes two steps:</para>
+
+        <para> 1. Select Quit from VE-Conductor's File menu. This quits
+        Conductor and Xplorer. 2. Select the shell window running the Name
+        Server. Close it or press Ctrl-C to break the program.</para>
+      </section>
+    </chapter>
+
+    <chapter>
+      <title>Visualizations</title>
+
+      <para>This chapter describes how to make visualizations using the
+      VE-Suite toolkit and a sample dataset. If you want to follow this
+      example, download and unzip the sample PrISUm car dataset: PrISUm.zip
+      &lt;link&gt; (138MB)</para>
+
+      <para>&lt;img&gt;</para>
+
+      <section>
+        <title>Setup</title>
+
+        <para>Visualizations requires two files: a geometry config file and a
+        dataset file. Both have properties, such as scale and translation,
+        that can be modified to ensure they line up.</para>
+
+        <para>First, open VE-Launcher and set the working directory to the
+        PrISUm folder. Next, open up VE-Suite in Desktop mode from
+        VE-Launcher. Load the PrISUmblend.obj CAD file, but don't close the
+        CADTree Manager window yet. (See Chapter 2.2) </para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Right-click on the Model_Geometry folder again and choose
+        Properties. A CAD Properties window will pop up. We can use this to
+        change PrISUm's properties. We need to know what to change them to,
+        though.</para>
+
+        <para>Open the PrISUm folder from the desktop and look for the
+        vrxpr.param file. This file contains parameter info for PrISUm, which
+        we'll enter into the Properties window. Open it using a text editor,
+        look for the 3x3 block underneath the number 9, and enter the values
+        into the Properties window. Be sure to note the rows go in a different
+        order in the Properties window than in the .param file:</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Once the parameters are entered, close the CAD Properties and
+        CADTree Manager window. Now right-click on our grey plugin box again
+        and chose Data Set Config. We need to add the dataset to it.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>First, click Add Dataset to name your dataset configuration.
+        Then click Open under DataSet Filename and choose the outFile3.vtk
+        file as your dataset. You don't need to change any of the other
+        settings for PrISUm, so just click Load to load the dataset and exit
+        the window. </para>
+
+        <para>Once that's done, choose Submit Job from the Connection menu to
+        display the PrISUm car. Use the navigation pane to adjust the view
+        until you get a good view of it.</para>
+
+        <para>&lt;img&gt;</para>
+      </section>
+
+      <section>
+        <title>Scalar Planes</title>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Now that the plugin is set up, we can use the Visualization
+        interface to show scalar planes, like the one above. Visualization not
+        only lets you access scalar contours, but vector planes, isosurfaces,
+        and more.</para>
+
+        <para>To bring up the Visualization interface, right-click on the
+        plug-in to access the menu and select Visualization. This window will
+        appear:</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Click on the Scalar Contours button (the leftmost icon) to bring
+        up the Scalar Contours interface.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Notice you can choose the plane's orientation and position. For
+        now, set the Direction to Y and the plane's position to 50 and click
+        Add Plane. This should appear on your screen: </para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Once you're done looking at the contour planes, you can remove
+        them from the screen by clicking Clear All on the Visualization
+        interface. This will clear any Visualization features from
+        VE-Xplorer.</para>
+      </section>
+
+      <section>
+        <title>Vector Planes</title>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Showing vector planes is almost exactly like showing scalar
+        planes. First, open up the Visualization interface again by
+        right-clicking on the plug-in and selecting Visualization.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>This time, click on the Vector button (the 2nd-to-left icon) to
+        open the Vector Contour window.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>The Vector Contour window is very similar to the Scalar Contour
+        window. This time, set the Direction to Z and the plane's position to
+        20 and click Add Plane. This should appear on your screen:</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Just like the scalar plane, you can remove the vector plane by
+        clicking Clear All on the Visualization interface.</para>
+      </section>
+
+      <section>
+        <title>Isosurfaces</title>
+
+        <para>&lt;img&gt;</para>
+
+        <para>To generate an isosurface, go back to the Visualization
+        interface (right-click on the plug-in, select Visualization).</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Before you can open the Isosurfaces window, you'll also need to
+        choose a scalar or vector file. Choose scalars under Scalars and click
+        the Isosurfaces button (the 3rd-from-right icon) to open the
+        Isosurfaces window.</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>The Isosurfaces window only has one setting. Set the Isosurface
+        pressure to 50 and click Compute Isosurface. This should appear on
+        your screen:</para>
+
+        <para>&lt;img&gt;</para>
+
+        <para>Exit Visualization and examine the isosurface by using the mouse
+        or the Navigation pane. Once you're done, reenter Visualization and
+        click Clear All.</para>
+      </section>
+    </chapter>
+
+    <chapter>
+      <title>VE-Builder</title>
+
+      <para></para>
+
+      <section>
+        <title>Introduction</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Launching VE-Builder</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Importing Files</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Importing from StarCD</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Importing from Fluent (AVS)</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Creating Preprocessed Data</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Creating Texture-Based Datasets</title>
+
+        <para></para>
+      </section>
+    </chapter>
+  </part>
+
+  <part>
+    <title>Developer Information</title>
+
+    <chapter>
+      <title>Code Guidelines</title>
+
+      <para></para>
+    </chapter>
+
+    <chapter>
+      <title>Support</title>
+
+      <para></para>
+    </chapter>
+
+    <chapter>
+      <title>Building VE-Suite</title>
+
+      <para></para>
+
+      <section>
+        <title>UNIX/Linux Build Instructions</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Windows Build Instructions</title>
+
+        <para></para>
+      </section>
+    </chapter>
+
+    <chapter>
+      <title>Dependencies</title>
+
+      <para></para>
+
+      <section>
+        <title>Building Dependencies on Windows</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>Building Dependencies on UNIX/Linux</title>
+
+        <para></para>
+      </section>
+
+      <section>
+        <title>VE-Suite Component Dependencies</title>
+
+        <para></para>
+      </section>
+    </chapter>
+
+    <chapter>
+      <title>Setting the Environment</title>
+
+      <para></para>
+    </chapter>
+
+    <chapter>
+      <title>Description of the Engines</title>
+
+      <para></para>
+    </chapter>
+
+    <chapter>
+      <title>Software Development Documents</title>
+
+      <para></para>
+    </chapter>
+
+    <chapter>
+      <title>Software Development Tools</title>
+
+      <para></para>
+    </chapter>
+  </part>
+</book>
