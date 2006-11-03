@@ -1,4 +1,3 @@
-# $Id: Makefile 16737 2005-02-03 19:47:26Z patrickh $
 
 default: html
 
@@ -11,9 +10,7 @@ default: html
 #XML_FILES=	$(VESUITE).xml
 
 XML_FILES=\
- vesuite.xml \
- README.xml \
- INSTALL.xml
+ vesuite.xml 
 
 XSLT_TOOL=Saxon 
 #FO_VERSION=XEP
@@ -28,4 +25,4 @@ XSLT_TOOL=Saxon
 # $(INSTALL).txt: $(INSTALL).html
 # $(INSTALL).pdf: $(INSTALL).fo
 
-include docbook.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/docbook.mk
