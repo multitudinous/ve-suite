@@ -131,24 +131,18 @@ case "$CFDHOSTTYPE" in
    export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/build-darwin/instlinks
    export VJ_DEPS_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj-deps
    export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.2/install
-	#setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   #export APR_HOME=/Volumes/data/VE_Suite_Deps/apr-1.2.7/install
-   #export APU_HOME=/Volumes/data/VE_Suite_Deps/apr-util-1.2.7/install
+   #setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
    export DYLD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib:${VJ_DEPS_DIR}/lib
+   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${WX_HOME}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
-   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
-   #export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${APR_HOME}/lib
-   #export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${APU_HOME}/lib
 
-      export TAO_HOME=/Volumes/data/VE_Suite_Deps/ACE_TAO/install
-      export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${TAO_HOME}/lib
-      export PATH=${TAO_HOME}/bin:${PATH}
-
-      #setenv XERCESCROOT /sw
-      export XERCESCROOT=/Volumes/data/VE_Suite_Deps/xerces/install
-      export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${XERCESCROOT}/lib
+   export TAO_HOME=/Volumes/data/VE_Suite_Deps/ACE_TAO/install
+   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${TAO_HOME}/lib
+   export PATH=${TAO_HOME}/bin:${PATH}
+   export XERCESCROOT=/opt/local
+   #export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${XERCESCROOT}/lib
 ;;
    *)
    echo "ERROR: Unsupported operating system"
