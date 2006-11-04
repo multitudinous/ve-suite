@@ -1,0 +1,196 @@
+// !$*UTF8*$!
+{
+	25B31F200AFD25CF00601DFF /* ActiveModelEventHandler.cxx */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1239, 1176}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {1239, 663}}";
+			sepNavWindowFrame = "{{15, 81}, {1284, 792}}";
+		};
+	};
+	25B320B40AFD25F600601DFF /* xplorer */ = {
+		isa = PBXExecutable;
+		activeArgIndex = 2147483647;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 25B320B50AFD25F600601DFF /* project_tao_osg_vep */;
+		libgmallocEnabled = 0;
+		name = xplorer;
+		sourceDirectories = (
+		);
+	};
+	25B320B50AFD25F600601DFF /* project_tao_osg_vep */ = {
+		isa = PBXFileReference;
+		explicitFileType = "compiled.mach-o.executable";
+		name = project_tao_osg_vep;
+		path = /Volumes/data/TSVEG/VE_Suite/bin/Darwin/project_tao_osg_vep;
+		sourceTree = "<absolute>";
+	};
+	25B320B60AFD260F00601DFF /* ce */ = {
+		isa = PBXExecutable;
+		activeArgIndex = 2147483647;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 25B320B70AFD260F00601DFF /* Exe_server */;
+		libgmallocEnabled = 0;
+		name = ce;
+		sourceDirectories = (
+		);
+	};
+	25B320B70AFD260F00601DFF /* Exe_server */ = {
+		isa = PBXFileReference;
+		explicitFileType = "compiled.mach-o.executable";
+		name = Exe_server;
+		path = /Volumes/data/TSVEG/VE_Suite/bin/Darwin/Exe_server;
+		sourceTree = "<absolute>";
+	};
+	25B320B80AFD262400601DFF /* conductor */ = {
+		isa = PBXExecutable;
+		activeArgIndex = 2147483647;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 25B320B90AFD262400601DFF /* WinClient */;
+		libgmallocEnabled = 0;
+		name = conductor;
+		sourceDirectories = (
+		);
+	};
+	25B320B90AFD262400601DFF /* WinClient */ = {
+		isa = PBXFileReference;
+		explicitFileType = "compiled.mach-o.executable";
+		name = WinClient;
+		path = /Volumes/data/TSVEG/VE_Suite/bin/Darwin/WinClient;
+		sourceTree = "<absolute>";
+	};
+	25B3ED690AFD25AB00601DFF /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 25B320B40AFD25F600601DFF /* xplorer */;
+		addToTargets = (
+		);
+		codeSenseManager = 25B3ED6E0AFD25AB00601DFF /* Code sense */;
+		executables = (
+			25B320B40AFD25F600601DFF /* xplorer */,
+			25B320B60AFD260F00601DFF /* ce */,
+			25B320B80AFD262400601DFF /* conductor */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					131,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					243,
+					20,
+					48.1626,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					200,
+					63,
+					20,
+					48.1626,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 184362411;
+			PBXWorkspaceStateSaveDate = 184362411;
+		};
+		sourceControlManager = 25B3ED6D0AFD25AB00601DFF /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	25B3ED6D0AFD25AB00601DFF /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+		scmType = "";
+	};
+	25B3ED6E0AFD25AB00601DFF /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}
