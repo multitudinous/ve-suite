@@ -55,7 +55,7 @@ EXTRA_CXXFLAGS+=	-fno-common  -pipe -Wno-long-double $(OPTIMIZER) $(CXXFLAGS_DYN
 EXTRA_DEFS= 
 EXTRA_DEPENDFLAGS+= $(EXTRA_INCLUDES)
 EXTRA_INCLUDES+=	
-EXTRA_LDFLAGS+=		 
+EXTRA_LDFLAGS+=
 EXTRA_LIBS+=		
 
 # -----------------------------------------------------------------------------
