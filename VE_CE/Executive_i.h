@@ -97,6 +97,7 @@ protected:
   Types::ArrayLong watch_list_;
 
   ACE_Thread_Mutex _mutex;
+  ACE_Thread_Mutex query;
 
 public:
 

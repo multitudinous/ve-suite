@@ -885,6 +885,7 @@ std::cout << command << std::endl;
       _mutex.release();
       return 0;
    }
+   _mutex.release();
       
    std::string queryString;
    
@@ -893,11 +894,10 @@ std::cout << command << std::endl;
       iter->second->_non_existent();
       iter->second->SetCurID( moduleId );
       queryString.assign( iter->second->Query( CORBA::string_dup( status.c_str() ) ) );
-      _mutex.release();
    }
    catch (CORBA::Exception &) 
    {
-      _mutex.release();
+      //_mutex.release();
       UnRegisterUnit( moduleName.c_str() );
       _mod_units.erase( iter );
    }
