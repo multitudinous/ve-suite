@@ -367,7 +367,7 @@ class Launch:
         """Executes the ClusterScript for nodeName on Unix."""
         if unix:
             if gethostname().split('.')[0] == nodeName.split('.')[0]:
-##                print "It is this computer!" ##TESTER
+                print "Found myself!" ##TESTER
                 subprocess.Popen(self.XplorerCall())
                 return
             else:
