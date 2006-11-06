@@ -242,21 +242,34 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    //rotation
    wxStaticBox* rotation = new wxStaticBox(_transformPanel, -1, wxT("Rotation (deg)"));
    wxStaticBoxSizer* rotationSizer = new wxStaticBoxSizer(rotation, wxHORIZONTAL);
-   _xRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
+   _xRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID,
+                    wxEmptyString,
+                    wxDefaultPosition,
+                    wxSize(95,-1),
+                    wxSP_ARROW_KEYS|wxSP_WRAP);
+   //_xRotationCtrl->SetStyle(wxSP_ARROW_KEYS|wxSP_WRAP);
    _xRotationCtrl->SetValue(0);
-   _xRotationCtrl->SetRange(0.0,360.0);
+   _xRotationCtrl->SetRange(-360.0,360.0);
    _xRotationCtrl->SetIncrement(1.0);
    _xRotationCtrl->Raise();
 
-   _yRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
+   _yRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID,
+                    wxEmptyString,
+                    wxDefaultPosition,
+                    wxSize(95,-1),
+                    wxSP_ARROW_KEYS|wxSP_WRAP);
    _yRotationCtrl->SetValue(0);
-   _yRotationCtrl->SetRange(0.0,360.0);
+   _yRotationCtrl->SetRange(-360.0,360.0);
    _yRotationCtrl->SetIncrement(1.0);
    _yRotationCtrl->Raise();
 
-   _zRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
+   _zRotationCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID,
+                    wxEmptyString,
+                    wxDefaultPosition,
+                    wxSize(95,-1),
+                    wxSP_ARROW_KEYS|wxSP_WRAP);
    _zRotationCtrl->SetValue(0);
-   _zRotationCtrl->SetRange(0.0,360.0);
+   _zRotationCtrl->SetRange(-360.0,360.0);
    _zRotationCtrl->SetIncrement(1.0);
    _zRotationCtrl->Raise();
 
