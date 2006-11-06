@@ -203,7 +203,7 @@ Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags:
 Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#OSGHOME}\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#OSGHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv; Attribs: readonly
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib\win32; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
@@ -244,8 +244,8 @@ Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\vrJuggler2.0.1\include; Fla
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#OSGHOME}\..\Producer\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#OSGHOME}\..\OpenThreads\lib\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#OSGHOME}\..\Producer\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#OSGHOME}\..\OpenThreads\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#OSGHOME}\..\OpenSceneGraph-Data\fonts\*; DestDir: {app}\osg-fonts; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 
 
