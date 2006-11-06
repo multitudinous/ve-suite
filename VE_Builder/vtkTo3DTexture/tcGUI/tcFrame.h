@@ -53,7 +53,9 @@ enum TCFrameIDs{
    ZRES_BOX,
    NUM_FILES,
    GRID_RBOX,
-   QUIT_BUTTON
+   QUIT_BUTTON,
+   GRID_PROPERTY,
+   TIME_STEP_RANGE
 };
 class TCFrame: public wxFrame{
 public:
@@ -119,7 +121,7 @@ protected:
 
    VTKDataToTexture* _translator;
 
-   
+   wxMenuBar* _menuBar;
    //event callbacks
    void _onQuitCallback(wxCommandEvent& event);
    void _onTranslateCallback(wxCommandEvent& event);
@@ -128,6 +130,7 @@ protected:
    void _onResolutionCallback(wxCommandEvent& event);
    void _onNumFilesCallback(wxSpinEvent& event);
    void _onGridTypeCallback(wxCommandEvent& event);
+   void _transientGridTypeSelection(wxCommandEvent& event);
 private:
    int numProcessors;
    int rank;

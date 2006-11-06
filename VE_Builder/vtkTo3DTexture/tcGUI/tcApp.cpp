@@ -61,7 +61,9 @@ bool TCApp::OnInit()
    //Create the main window
    if(_isBatch){
       return (_translateFromCmdLine()); 
-   }else{
+   }
+   else
+   {
        _frame = new TCFrame(0,-1,wxT("Texture Creator"));
       // Problem with generic wxNotebook implementation whereby it doesn't size
       // properly unless you set the size again

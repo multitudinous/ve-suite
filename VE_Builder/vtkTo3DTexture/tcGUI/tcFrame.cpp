@@ -50,6 +50,7 @@ BEGIN_EVENT_TABLE(TCFrame,wxFrame)
    EVT_COMBOBOX(ZRES_BOX,TCFrame::_onResolutionCallback)
    EVT_SPINCTRL(NUM_FILES,TCFrame::_onNumFilesCallback)
    EVT_RADIOBOX(GRID_RBOX,TCFrame::_onGridTypeCallback)
+   EVT_MENU(GRID_PROPERTY,TCFrame::_transientGridTypeSelection)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Constructor                                     //
@@ -97,6 +98,7 @@ TCFrame::TCFrame(wxWindow* parent,
    _currentFile = 0;
 
    rank = -1;
+   _menuBar = 0;
    numProcessors = -1;
    _buildGUI();
 
@@ -280,10 +282,19 @@ void TCFrame::_buildGUI()
    frameSizer->Layout();
    SetSizer(frameSizer);
 
-   SetAutoLayout(true); 
-   frameSizer->Fit(this);
+   
    SetStatusBar(new wxStatusBar(this,-1)); 
    GetStatusBar()->SetStatusText(wxString("..."));
+
+   _menuBar = new wxMenuBar();
+   wxMenu* transientPropertiesMenu = new wxMenu();
+   transientPropertiesMenu->Append(GRID_PROPERTY,_("Grid Property..."));
+   transientPropertiesMenu->Append(TIME_STEP_RANGE,_("Time Steps..."));
+   _menuBar->Append(transientPropertiesMenu,_("&Transient Properties"));
+   SetMenuBar(_menuBar);
+
+   SetAutoLayout(true); 
+   frameSizer->Fit(this);
 }
 ///////////////////////////////////////////////////
 void TCFrame::UpdateProgressDialog(const std::string msg)
@@ -291,6 +302,30 @@ void TCFrame::UpdateProgressDialog(const std::string msg)
    if(_fileProgress){
       _fileProgress->Update(_currentFile,msg.c_str() );
    }
+}
+////////////////////////////////////////////////////////////////
+void TCFrame::_transientGridTypeSelection(wxCommandEvent& event)
+{
+    wxArrayString transientType;
+    transientType.Add("Static");
+    transientType.Add("Dynamic");
+    wxSingleChoiceDialog typeSelector(this,
+                                      _T("Select trasient grid type"),
+                                      _T("Grid Type"),
+                                      transientType);
+
+      if (typeSelector.ShowModal() == wxID_OK)
+      {
+         //std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
+         if(typeSelector.GetStringSelection()== "Dynamic")
+         {
+            _translator->TurnOnDynamicGridResampling();
+         }
+         else
+         {
+            _translator->TurnOffDynamicGridResampling();
+         }
+      }
 }
 /////////////////////////////////////////////////////
 void TCFrame::UpdateStatus(const std::string statusString)
