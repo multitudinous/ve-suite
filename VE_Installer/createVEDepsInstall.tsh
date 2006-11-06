@@ -173,6 +173,16 @@ else
    cp ${OSG_HOME}/lib/osgPlugins/*.so ./bin
 endif
 
+echo "Copying COIN from: " ${COIN_HOME}
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
+   cp ${COIN_HOME}/lib32/*.so ./bin
+else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_*64 ) then
+   cp ${COIN_HOME}/lib64/*.so ./bin
+   cp ${COIN_HOME}/lib/*.so ./bin
+else 
+   cp ${COIN_HOME}/lib/*.so ./bin
+endif
+
 echo "Creating tar.gz file..."
 #write the tar file in the install directory
 cd ${VE_TEMP_DEPS_INST_DIR}
