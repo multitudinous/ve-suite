@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE(TCFrame,wxFrame)
    EVT_SPINCTRL(NUM_FILES,TCFrame::_onNumFilesCallback)
    EVT_RADIOBOX(GRID_RBOX,TCFrame::_onGridTypeCallback)
    EVT_MENU(GRID_PROPERTY,TCFrame::_transientGridTypeSelection)
+   EVT_MENU(TIME_STEP_RANGE,TCFrame::_onTransientMinimum)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Constructor                                     //
@@ -64,6 +65,8 @@ TCFrame::TCFrame(wxWindow* parent,
 :wxFrame(parent, -1, title,pos, size, style)
 {
    _numFiles = 0;
+   
+   _minTimeStepIndex = 0;
    _inputDir = wxT("./");
    _outputDir = wxT("./");
 
@@ -299,9 +302,20 @@ void TCFrame::_buildGUI()
 ///////////////////////////////////////////////////
 void TCFrame::UpdateProgressDialog(const std::string msg)
 {
-   if(_fileProgress){
+   if(_fileProgress)
+   {
       _fileProgress->Update(_currentFile,msg.c_str() );
    }
+}
+/////////////////////////////////////////////////////////
+void TCFrame::_onTransientMinimum(wxCommandEvent& event)
+{
+   wxTextEntryDialog minimumDlg(this, 
+                        wxString("Beginning Transient Time Step"),
+                        wxString("Enter the minimum timestep:"),
+                        "0",wxOK);
+   minimumDlg.ShowModal();
+   minimumDlg.GetValue().ToULong(&_minTimeStepIndex);
 }
 ////////////////////////////////////////////////////////////////
 void TCFrame::_transientGridTypeSelection(wxCommandEvent& event)
@@ -314,18 +328,18 @@ void TCFrame::_transientGridTypeSelection(wxCommandEvent& event)
                                       _T("Grid Type"),
                                       transientType);
 
-      if (typeSelector.ShowModal() == wxID_OK)
+   if (typeSelector.ShowModal() == wxID_OK)
+   {
+      //std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
+      if(typeSelector.GetStringSelection()== "Dynamic")
       {
-         //std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
-         if(typeSelector.GetStringSelection()== "Dynamic")
-         {
-            _translator->TurnOnDynamicGridResampling();
-         }
-         else
-         {
-            _translator->TurnOffDynamicGridResampling();
-         }
+         _translator->TurnOnDynamicGridResampling();
       }
+      else
+      {
+         _translator->TurnOffDynamicGridResampling();
+      }
+   }
 }
 /////////////////////////////////////////////////////
 void TCFrame::UpdateStatus(const std::string statusString)
@@ -388,7 +402,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       _translator->setOutputDirectory((char*)_outputDir.c_str());
       //sprintf(oname,"_%d",i);
       std::ostringstream dirStringStream;
-      dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << i;
+      dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << _minTimeStepIndex+i;
       std::string dirString = dirStringStream.str();
       //oname = (char*)dirString.c_str();
       _translator->createDataSetFromFile( gridFiles.at( i ) );
@@ -563,7 +577,7 @@ void TCFrame::BatchTranslation()
       _translator->setOutputDirectory((char*)_outputDir.c_str());
 
       std::ostringstream dirStringStream;
-      dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << i;
+      dirStringStream << "_" << std::setfill( '0' ) << std::setw( 6 ) << _minTimeStepIndex + i;
       std::string dirString = dirStringStream.str();
       //std::string tempString( _gridFiles[ i ].c_str() );   
       std::string tempString = gridFiles.at( i );   

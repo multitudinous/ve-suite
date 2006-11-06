@@ -90,6 +90,7 @@ protected:
    int _numFiles;
    int _resolution[3];
    int _currentFile;
+   unsigned long _minTimeStepIndex;
    std::vector<const char*> _inputFiles;
    wxString _inputDir;
    wxString _outputDir;
@@ -131,6 +132,7 @@ protected:
    void _onNumFilesCallback(wxSpinEvent& event);
    void _onGridTypeCallback(wxCommandEvent& event);
    void _transientGridTypeSelection(wxCommandEvent& event);
+   void _onTransientMinimum(wxCommandEvent& event);
 private:
    int numProcessors;
    int rank;
