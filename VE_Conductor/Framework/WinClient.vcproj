@@ -411,6 +411,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UserPreferences.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\vectors.cpp"
 				>
 			</File>
@@ -509,6 +513,10 @@
 			</File>
 			<File
 				RelativePath=".\UI_TransientDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UserPreferences.h"
 				>
 			</File>
 			<File
