@@ -6,6 +6,23 @@
 	objectVersion = 42;
 	objects = {
 
+/* Begin PBXBuildStyle section */
+		251E91FA0AFE4C0600B2A2DC /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		251E91FB0AFE4C0600B2A2DC /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
 /* Begin PBXFileReference section */
 		25B300010AFD25C900601DFF /* classvtkutil_1_1VTKStoragePolicy-members.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = "classvtkutil_1_1VTKStoragePolicy-members.html"; sourceTree = "<group>"; };
 		25B300030AFD25C900601DFF /* classNURBS__Utilities_1_1VENURBS2OCCNURBS.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = classNURBS__Utilities_1_1VENURBS2OCCNURBS.html; sourceTree = "<group>"; };
@@ -76951,7 +76968,11 @@
 		25B3ED690AFD25AB00601DFF /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 25B3ED6A0AFD25AB00601DFF /* Build configuration list for PBXProject "vesuite" */;
+			buildSettings = {
+			};
 			buildStyles = (
+				251E91FA0AFE4C0600B2A2DC /* Development */,
+				251E91FB0AFE4C0600B2A2DC /* Deployment */,
 			);
 			hasScannedForEncodings = 0;
 			mainGroup = 25B3ED670AFD25AB00601DFF;

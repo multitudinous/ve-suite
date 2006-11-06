@@ -1,5 +1,32 @@
 // !$*UTF8*$!
 {
+	251E92030AFE4C3700B2A2DC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 25B31B580AFD25CE00601DFF /* module.idl */;
+		name = "module.idl: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1909;
+		vrLoc = 0;
+	};
+	25291CBD0AFF6FFA00FB825D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 25B31B580AFD25CE00601DFF /* module.idl */;
+		name = "module.idl: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1909;
+		vrLoc = 0;
+	};
+	25B31B580AFD25CE00601DFF /* module.idl */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1886, 4298}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {835, 652}}";
+		};
+	};
 	25B31F200AFD25CF00601DFF /* ActiveModelEventHandler.cxx */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1239, 1176}}";
@@ -106,6 +133,7 @@
 	};
 	25B3ED690AFD25AB00601DFF /* Project object */ = {
 		activeBuildConfigurationName = Debug;
+		activeBuildStyle = 251E91FA0AFE4C0600B2A2DC /* Development */;
 		activeExecutable = 25B320B40AFD25F600601DFF /* xplorer */;
 		addToTargets = (
 		);
@@ -135,9 +163,9 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					243,
+					643,
 					20,
-					48.1626,
+					48,
 					43,
 					43,
 					20,
@@ -160,7 +188,7 @@
 					200,
 					63,
 					20,
-					48.1626,
+					48,
 					43,
 					43,
 				);
@@ -174,8 +202,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 184362411;
-			PBXWorkspaceStateSaveDate = 184362411;
+			PBXPerProjectTemplateStateSaveDate = 184512503;
+			PBXWorkspaceStateSaveDate = 184512503;
+		};
+		perUserProjectItems = {
+			251E92030AFE4C3700B2A2DC /* PBXTextBookmark */ = 251E92030AFE4C3700B2A2DC /* PBXTextBookmark */;
+			25291CBD0AFF6FFA00FB825D /* PBXTextBookmark */ = 25291CBD0AFF6FFA00FB825D /* PBXTextBookmark */;
 		};
 		sourceControlManager = 25B3ED6D0AFD25AB00601DFF /* Source Control */;
 		userBuildSettings = {
