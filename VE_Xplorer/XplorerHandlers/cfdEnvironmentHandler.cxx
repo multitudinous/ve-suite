@@ -453,7 +453,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    if( cfdModelHandler::instance()->GetActiveModel() )
    {
       this->cursor->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-      this->cursor->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
+      this->cursor->SetVECommand( cfdModelHandler::instance()->GetXMLCommand() );
       this->cursor->CheckCommandId( _commandArray );
    }
    this->cursor->Update( this->nav->GetCursorLocation(),

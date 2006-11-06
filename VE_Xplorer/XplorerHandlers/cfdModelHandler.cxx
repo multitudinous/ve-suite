@@ -124,6 +124,10 @@ cfdModelHandler::cfdModelHandler( void )
    _activeModel   = 0;
    activeCommand  = 0;
 
+   //create null command to be returned when a command is not active
+   nullCommand = new VE_XML::Command();
+   nullCommand->SetCommandName( "NULL" );
+   
    tbased = false;
    _eventHandlers[std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();
    
@@ -161,6 +165,8 @@ void cfdModelHandler::CleanUp( void )
 {
    vprDEBUG(vesDBG,2) << "cfdModelHandler destructor"
                           << std::endl << vprDEBUG_FLUSH;
+   delete nullCommand;
+   nullCommand = 0;
 
    for( std::vector< cfdModel* >::iterator itr = _modelList.begin();
                                            itr != _modelList.end(); itr++)
@@ -209,7 +215,14 @@ void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
 /////////////////////////////////////////////////////////////
 void cfdModelHandler::SetXMLCommand( VE_XML::Command* inputCommand )
 {
-   activeCommand = inputCommand;
+   //if ( inputCommand )
+   {
+      activeCommand = inputCommand;
+   }
+   /*else
+   {
+      activeCommand = nullCommand;
+   }*/
 }
 /////////////////////////////////////////////////////////////
 VE_XML::Command* cfdModelHandler::GetXMLCommand( void )

@@ -515,12 +515,12 @@ void cfdTextureBasedVizHandler::UpdateActiveTextureManager()
 ////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::PreFrameUpdate()
 {
-   if ( cfdModelHandler::instance()->GetActiveModel() )
+   //if ( cfdModelHandler::instance()->GetActiveModel() )
    {
-      if( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() )
+      if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
       {
          std::map<std::string,VE_EVENTS::TextureBasedEventHandler*>::iterator currentEventHandler;
-         VE_XML::Command* tbvizCommand = cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
+         VE_XML::Command* tbvizCommand = cfdModelHandler::instance()->GetXMLCommand();
          currentEventHandler = _eventHandlers.find( tbvizCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )
          {

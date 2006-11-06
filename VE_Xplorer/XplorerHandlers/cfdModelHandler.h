@@ -130,6 +130,7 @@ private:
    cfdDataSet* activeDataset;
    cfdCommandArray* commandArray;
    VE_XML::Command* activeCommand;
+   VE_XML::Command* nullCommand;
    cfdReadParam* _readParam;
    cfdScalarBarActor* _scalarBar;
    cfdModel* _activeModel;

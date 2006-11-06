@@ -303,7 +303,6 @@ void cfdApp::initScene( void )
 
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
-   std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
    _vjobsWrapper->InitCluster();
 
 #ifdef _WEB_INTERFACE

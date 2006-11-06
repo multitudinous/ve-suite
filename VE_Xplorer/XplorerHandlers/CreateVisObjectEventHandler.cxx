@@ -759,7 +759,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    if ( cfdModelHandler::instance()->GetActiveModel() )
    {
       activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-      activeObject->SetVECommand( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() );
+      activeObject->SetVECommand( cfdModelHandler::instance()->GetXMLCommand() );
       activeObject->UpdateCommand();
       cfdModelHandler::instance()->GetActiveModel()->MakeCADRootTransparent();
    }

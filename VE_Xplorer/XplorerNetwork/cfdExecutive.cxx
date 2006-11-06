@@ -370,12 +370,12 @@ void cfdExecutive::PreFrameUpdate( void )
                           << std::endl << vprDEBUG_FLUSH;
 
    //process the current command form the gui
-   if ( cfdModelHandler::instance()->GetActiveModel() )
+   //if ( cfdModelHandler::instance()->GetActiveModel() )
    {
-      if( cfdModelHandler::instance()->GetActiveModel()->GetVECommand() )
+      if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare("wait") )
       {
          std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
-         VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
+         VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
          currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )
          {
@@ -411,8 +411,8 @@ void cfdExecutive::PreFrameUpdate( void )
       {  
          //Process a special plugin command
          VE_XML::Command* tempCommand = 
-         cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
-         if( tempCommand )
+         cfdModelHandler::instance()->GetXMLCommand();
+         //if( tempCommand )
          {
             std::string cmdName = tempCommand->GetCommandName();
             cfdVEBaseClass* tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
