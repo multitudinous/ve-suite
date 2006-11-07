@@ -48,8 +48,10 @@ SRCS=\
    UIDialog.cpp\
    OrbThread.cxx\
    CORBAServiceList.cxx\
-   UI_i.cxx
-
+   UI_i.cxx\
+	ParamsDlg.cpp\
+	QueryInputsDlg.cpp
+    
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include

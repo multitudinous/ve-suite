@@ -41,8 +41,8 @@ class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
 		wxPanel *WxPanel1;
 		//std::map<const char *, std::vector< std::string >> ParamNames;
 		//std::map<const char *, std::vector< std::string >> ParamValues;
-		std::map<std::string, std::vector< std::string >> ParamNames;
-		std::map<std::string, std::vector< std::string >> ParamValues;
+		std::map<std::string, std::vector< std::string > > ParamNames;
+		std::map<std::string, std::vector< std::string > > ParamValues;
 		
 		int sizeName;
 		int sizeValue;
