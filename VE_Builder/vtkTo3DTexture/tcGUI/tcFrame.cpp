@@ -341,6 +341,23 @@ void TCFrame::_transientGridTypeSelection(wxCommandEvent& event)
       }
    }
 }
+///////////////////////////////////////////////////////////////
+void TCFrame::SetMinimumTimeStep(unsigned long minimumTimestep)
+{
+   _minTimeStepIndex = minimumTimestep;
+}
+/////////////////////////////////////////////////////
+void TCFrame::SetTransientGridProperty(long int type)
+{
+   if(type)
+   {
+      _translator->TurnOnDynamicGridResampling();
+   }
+   else
+   {
+      _translator->TurnOffDynamicGridResampling();
+   }
+}
 /////////////////////////////////////////////////////
 void TCFrame::UpdateStatus(const std::string statusString)
 {

@@ -83,6 +83,14 @@ public:
    void BatchTranslation();
 
    void SetMPIVariables( int, int );
+
+   ///Set the minimum timestep 
+   ///\param minimumTimestep The minimum output timestep
+   void SetMinimumTimeStep(unsigned long minimumTimestep);
+
+   ///Set the transient grid property
+   ///\param type Static == 0\n Dynamic == 1\n
+   void SetTransientGridProperty(long int type);
    
 protected:
    GridType _type;

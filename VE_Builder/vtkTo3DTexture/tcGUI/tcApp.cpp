@@ -132,6 +132,16 @@ void TCApp::OnInitCmdLine(wxCmdLineParser& parser)
         _T("z"), _T("zRes"),
         _T("z texture resolution specified in power of two. Default is 32."),
         wxCMD_LINE_VAL_NUMBER},
+
+      { wxCMD_LINE_OPTION,
+        _T("tgp"), _T("tGridProp"),
+        _T("Transient Grid Property (Static=0,Dynamic=1). Default is 0(Static)."),
+        wxCMD_LINE_VAL_NUMBER},
+
+      { wxCMD_LINE_OPTION,
+        _T("ms"), _T("minStep"),
+        _T("Minimum Time Step to begin translations.  Default is 0."),
+        wxCMD_LINE_VAL_NUMBER},
        
       { wxCMD_LINE_PARAM,
         0, 0,
@@ -155,27 +165,42 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
       wxString inputDir("./");
       wxString outputDir("./");
       long int resolution[3] = {32,32,32};
-      /*if(!parser.Found(wxString("i"),&inputDir)){
-         return false;
-      }*/
+      long int transientGridProp = 0;
+      long int minStep = 0;
       
       /**/
       inputDir = parser.GetParam(0);
       _frame->SetInputDirectory(inputDir.c_str());
-      if(!parser.Found(wxString("y"),&resolution[1])){
+      if(!parser.Found(wxString("y"),&resolution[1]))
+      {
         return false;
       }
-      if(!parser.Found(wxString("x"),&resolution[0])){
+      if(!parser.Found(wxString("x"),&resolution[0]))
+      {
         return false;
       }
-      if(!parser.Found(wxString("z"),&resolution[2])){
+      if(!parser.Found(wxString("z"),&resolution[2]))
+      {
         return false;
       }
-      if(!parser.Found(wxString("o"),&outputDir)){
+      if(!parser.Found(wxString("ms"),&minStep))
+      {
+        return false;
+      }
+      if(!parser.Found(wxString("tgp"),&transientGridProp))
+      {
+        return false;
+      }
+      if(!parser.Found(wxString("o"),&outputDir))
+      {
          _frame->SetOutputDirectory(inputDir.c_str());
-      }else{
+      }
+      else
+      {
          _frame->SetOutputDirectory(outputDir.c_str());
       }
+      _frame->SetTransientGridProperty(transientGridProp);
+      _frame->SetMinimumTimeStep(minStep);
       _frame->SetTextureResolution(resolution[0],resolution[1],resolution[2]);
       
    }
