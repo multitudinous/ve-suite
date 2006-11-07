@@ -155,6 +155,7 @@ public:
    void OnShowFinancial(wxCommandEvent &event);
    void OnShowAspenName(wxCommandEvent &event);
    void OnQueryInputs(wxCommandEvent &event);
+   void OnQueryModuleProperties(std::vector< std::string >, std::string);
 
    //Add to network fuctions
    void AddtoNetwork(REI_Plugin *new_mod, std::string cls_name);

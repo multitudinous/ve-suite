@@ -44,6 +44,8 @@
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
+#include "VE_Conductor/GUIPlugin/QueryInputsDlg.h"
+#include "VE_Conductor/GUIPlugin/ParamsDlg.h"
 
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
@@ -2508,7 +2510,8 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	//Get results
 	std::string nw_str = serviceList->Query( status );
 	wxString title = compName.c_str();
-	TextResultDialog * results = new TextResultDialog(this, title);
+	//TextResultDialog * results = new TextResultDialog(this, title);
+	QueryInputsDlg * results = new QueryInputsDlg(this);
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
@@ -2522,13 +2525,117 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
-	std::vector< wxString > temp_vector2;
 	for (int i=0; i < temp_vector.size(); i++) 
-	{
-		temp_vector2.push_back(temp_vector[i].c_str());
-	}
-	results->Set2Cols(temp_vector2, temp_vector2);
+		results->AppendList(temp_vector[i].c_str());
 	results->ShowModal();
+	
+	//serviceList->GetMessageLog()->SetMessage("gather");
+	//gather requested inputs
+	std::vector< std::string > temp_vector2;
+	for(int testing = 0; testing < results->GetDataSize(); testing++)
+		temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
+	
+	//serviceList->GetMessageLog()->SetMessage("submit or not");
+	//if it is submit launch request
+	//if(results->IsSubmit())
+		this->OnQueryModuleProperties(temp_vector2, compName);
+}
+//////////////////////////////////////////////////////
+void  Network::OnQueryModuleProperties(std::vector< std::string > requestedInputs, std::string compName)
+{  
+	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	//serviceList->GetMessageLog()->SetMessage("mods");
+	//std::string testParam1("DP FLOW");
+	//std::string compName("COMP");
+	//serviceList->GetMessageLog()->SetMessage("comp");
+	//std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
+	//serviceList->GetMessageLog()->SetMessage("dlg");
+	wxString title = compName.c_str();
+	ParamsDlg * paramDialog = new ParamsDlg(this);
+
+	//serviceList->GetMessageLog()->SetMessage("loop");
+	std::ostringstream output2;
+	output2 << requestedInputs.size() <<std::endl;
+    serviceList->GetMessageLog()->SetMessage(output2.str().c_str());
+	for(int i = 0; i < requestedInputs.size(); i++)
+	{
+	    //serviceList->GetMessageLog()->SetMessage("iter");
+		VE_XML::Command returnState;
+	    //serviceList->GetMessageLog()->SetMessage("modpro");
+		returnState.SetCommandName("getModuleProperties");
+	    //serviceList->GetMessageLog()->SetMessage("vp");
+		VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	    //serviceList->GetMessageLog()->SetMessage("cmpname");
+		data->SetData(std::string("ModuleName"), compName);
+	    //serviceList->GetMessageLog()->SetMessage("getda");
+		data = returnState.GetDataValuePair(-1);
+	    //serviceList->GetMessageLog()->SetMessage("input");
+		data->SetData(std::string("ParamName"), requestedInputs[i]);
+		paramDialog->AddToList(requestedInputs[i].c_str());
+		
+		std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+		nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+		
+	    //serviceList->GetMessageLog()->SetMessage("cmdwriter");
+		VE_XML::XMLReaderWriter commandWriter;
+		std::string status="returnString";
+		commandWriter.UseStandaloneDOMDocumentManager();
+		commandWriter.WriteXMLDocument( nodes, status, "Command" );
+		std::string nw_str = serviceList->Query( status );
+		//serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
+
+	    //serviceList->GetMessageLog()->SetMessage("wx");
+		VE_XML::XMLReaderWriter networkReader;
+	    serviceList->GetMessageLog()->SetMessage("dom");
+		networkReader.UseStandaloneDOMDocumentManager();
+	    serviceList->GetMessageLog()->SetMessage("read");
+		networkReader.ReadFromString();
+	    serviceList->GetMessageLog()->SetMessage("read");
+		networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+	    serviceList->GetMessageLog()->SetMessage("objV");
+		std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	    serviceList->GetMessageLog()->SetMessage("cmd");
+		VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+
+	    serviceList->GetMessageLog()->SetMessage("dvps");
+		unsigned int num = cmd->GetNumberOfDataValuePairs();		
+		std::vector< std::string > dataName;
+		std::vector< std::string > dataValue;
+	std::ostringstream output;
+	output << num <<std::endl;
+    serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+		for(int j = 0; j < num; j++)
+		{
+			VE_XML::DataValuePair * pair = cmd->GetDataValuePair(j);
+			serviceList->GetMessageLog()->SetMessage(pair->GetDataType().c_str());
+			serviceList->GetMessageLog()->SetMessage("\n");
+			serviceList->GetMessageLog()->SetMessage(pair->GetDataName().c_str());
+			serviceList->GetMessageLog()->SetMessage("\n");
+			//serviceList->GetMessageLog()->SetMessage(pair->GetDataString().c_str());
+			//serviceList->GetMessageLog()->SetMessage("\n");
+			if(pair->GetDataType() == "STRING")
+			{
+			dataName.push_back(pair->GetDataName().c_str());
+			dataValue.push_back(pair->GetDataString().c_str());
+			}
+			else if(pair->GetDataType() == "UNSIGNED INT")
+			{
+				unsigned int intValue;
+				dataName.push_back(pair->GetDataName().c_str());
+				pair->GetData(intValue);
+				dataValue.push_back("int");			
+			}
+		}
+		//results->Set2Cols(dataName, dataValue);
+ 		//results->ShowModal();
+		serviceList->GetMessageLog()->SetMessage(requestedInputs[i].c_str());
+	std::ostringstream output3;
+	output3 << dataName.size()<<" : "<< dataValue.size() <<std::endl;
+    serviceList->GetMessageLog()->SetMessage(output3.str().c_str());
+		paramDialog->AddResults(requestedInputs[i], dataName, dataValue);
+	}
+	serviceList->GetMessageLog()->SetMessage("show dialog");
+	paramDialog->ShowModal();
 }
 
 //////////////////////////////////////////////////////
