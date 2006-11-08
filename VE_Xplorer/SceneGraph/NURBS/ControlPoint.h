@@ -73,7 +73,12 @@ public:
    virtual Point& operator=(const Point& rhs);
 
    ///Translate the point by a delta
+   ///\param inverseModelViewMatrix The inverse modelview matrix
    void Translate(double dx,double dy, double dz);
+
+   ///Set the point coordinates
+   ///\param pt The new point values
+   void SetCoordinates(double* pt);
 
    ///Set the x value.
    ///\param x The new value.
@@ -201,6 +206,13 @@ public:
    ///\param weight The weight of this control point
    void SetWeight(double weight);
 
+   ///Set the translation values to be performed in eye space
+   ///\param deltaPt The translation in eye space
+   void SetEyeSpaceTranslation(double* deltaPt);
+
+   ///Get the eye space translation.
+   double* GetEyeSpaceTranslation();
+
    ///Get the weight of this point.
    double Weight();
 
@@ -247,6 +259,7 @@ public:
    ControlPoint operator*(const double& lhs);
    
 protected:
+   double _eyeSpaceTranslation[3];///<Eye space translation
    double _xW;///<Weighted x-coord
    double _yW;///<Weighted y-coord
    double _zW;///<Weighted z-coord

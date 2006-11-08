@@ -95,6 +95,13 @@ void Point::SetSelected(bool trueFalse)
 {
    _isSelected = trueFalse;
 }
+//////////////////////////////////////
+void Point::SetCoordinates(double* pt)
+{
+   _x = pt[0];
+   _y = pt[1];
+   _z = pt[2];
+}
 /////////////////////////////////
 ///Set the x coord of          //
 /// this control point.        //
@@ -182,6 +189,9 @@ ControlPoint::ControlPoint()
    _yW = _y;
    _zW = _z;
    _weight = 1.0;
+   _eyeSpaceTranslation[0] = 0;
+   _eyeSpaceTranslation[1] = 0;
+   _eyeSpaceTranslation[2] = 0;
 }
 ///////////////////////////////////////////////////////////////
 ControlPoint::ControlPoint(double x, double y, double z, double w)
@@ -194,6 +204,9 @@ ControlPoint::ControlPoint(const ControlPoint& rhs)
 :NURBS::Point(rhs)
 {
    SetWeight(rhs._weight);
+   _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
+   _eyeSpaceTranslation[1] = rhs._eyeSpaceTranslation[1];
+   _eyeSpaceTranslation[2] = rhs._eyeSpaceTranslation[2];
 }
 /////////////////////////////
 ControlPoint::~ControlPoint()
@@ -206,6 +219,18 @@ void ControlPoint::SetWeight(double weight)
    _xW = _x*_weight;
    _yW = _y*_weight;
    _zW = _z*_weight;
+}
+//////////////////////////////////////////////////////////
+void ControlPoint::SetEyeSpaceTranslation(double* deltaPt)
+{
+   _eyeSpaceTranslation[0] = deltaPt[0];
+   _eyeSpaceTranslation[1] = deltaPt[1];
+   _eyeSpaceTranslation[2] = deltaPt[2];
+}
+//////////////////////////////////////////////
+double* ControlPoint::GetEyeSpaceTranslation()
+{
+   return _eyeSpaceTranslation;
 }
 ////////////////////////////
 double ControlPoint::Weight()
@@ -269,6 +294,9 @@ ControlPoint& ControlPoint::operator=(const ControlPoint& rhs)
    {
       NURBS::Point::operator=(rhs);
       SetWeight(rhs._weight);
+      _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
+      _eyeSpaceTranslation[1] = rhs._eyeSpaceTranslation[1];
+      _eyeSpaceTranslation[2] = rhs._eyeSpaceTranslation[2];
    }
    return *this;
 }

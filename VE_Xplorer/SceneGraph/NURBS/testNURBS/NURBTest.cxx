@@ -49,9 +49,9 @@ public:
          {
             case(osgGA::GUIEventAdapter::PUSH):
             {
-               if(ea.getButtonMask()== osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
+               if((ea.getButtonMask()== osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)||
+                 (ea.getButtonMask()== osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON))
                {
-                  //std::cout<<"Left Mouse:"<< (ea.getX()+1.0)*.5<<","<<(ea.getY()+1.0)*.5<<std::endl;
                   UpdateLastMousePosition(ea.getX(),ea.getY());
                   for(size_t i =0; i < _nPatches; i++)
                   {
@@ -65,7 +65,7 @@ public:
             }
             case(osgGA::GUIEventAdapter::RELEASE):
             {
-               if(ea.getButtonMask()== osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
+               //if(ea.getButtonMask()== osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
                {
                   //std::cout<<"Left Mouse release"<<std::endl;
                   for(size_t i =0; i < _nPatches; i++)
@@ -73,6 +73,7 @@ public:
                      _patches.at(i)->SetSelectionStatus(false);
                   }
                }
+               UpdateLastMousePosition(ea.getX(),ea.getY());
                break;
             }
             case(osgGA::GUIEventAdapter::DRAG):
@@ -88,33 +89,27 @@ public:
                   dz = ea.getY() - _lastMousePosition[1];
                   if((fabs(dx) > .05)||(fabs(dz) > .05))
                   {
-                  //std::cout<<"Dragging left mouse in selection mode"<<std::endl;
                      for(size_t i =0; i < _nPatches; i++)
                      {
-                  //std::cout<<"Moving control point "<<std::endl;
-                        
                         _patches.at(i)->MoveSelectedControlPoint(dx,0,dz);
                      }
                      UpdateLastMousePosition(ea.getX(),ea.getY());
                   }
-                  
                }
                else if(ea.getButtonMask() == osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON)
                {
                   //y mouse move == zoom direction (in/out)
                   dy = ea.getY() - _lastMousePosition[2];
-                  //std::cout<<"Dragging right mouse in selection mode"<<std::endl;
                   if((fabs(dy) > .05))
                   {
                      for(size_t i =0; i < _nPatches; i++)
                      {
-                        _patches.at(i)->MoveSelectedControlPoint(0,dy,0);
+                        _patches.at(i)->MoveSelectedControlPoint(0,-dy,0);
                      }
                      UpdateLastMousePosition(ea.getX(),ea.getY());
                   }
                }
                break;
- 
             }
             default:
                break;
@@ -402,7 +397,7 @@ void createTestNURBS(int argc, char** argv)
    surface.SetControlPoints(surfaceCtrlPts,5,4);
    surface.SetKnotVector(uKnots,"U");
    surface.SetKnotVector(vKnots,"V");
-   surface.SetInterpolationGridSize(10,"U");
+   surface.SetInterpolationGridSize(11,"U");
    surface.SetInterpolationGridSize(10,"V");
    surface.Interpolate();
 

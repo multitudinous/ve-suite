@@ -203,7 +203,7 @@ void NURBSObject::UpdateMesh(/*std::vector<*/NURBS::ControlPoint modifiedControl
    unsigned int uIndex = modifiedControlPoint.GetColumnIndex();
 
    ubounds[0] = _knotVectors["U"].Knot(uIndex);
-   ubounds[1] = _knotVectors["U"].Knot(uIndex+_degree["U"]+1);
+   ubounds[1] = _knotVectors["U"].Knot(uIndex + _degree["U"] + 1);
 
    if(_type == NURBS::NURBSObject::Surface)
    {

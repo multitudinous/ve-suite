@@ -50,6 +50,8 @@ public:
       _mouse[0] = controlMesh._mouse[0];
       _mouse[1] = controlMesh._mouse[1];
       _modelViewMatrix = controlMesh._modelViewMatrix;
+      _inverseModelViewMatrix = controlMesh._inverseModelViewMatrix;
+      _inverseProjectionMatrix = controlMesh._inverseProjectionMatrix;
       _projectionMatrix = controlMesh._projectionMatrix;
       _selectedControlPointIndex = controlMesh._selectedControlPointIndex;
    }
@@ -130,10 +132,12 @@ protected:
    bool _isSurface;///<Flag for determining NURBS type.
    mutable double* _projectionMatrix;///<The current projection matrix
    mutable double* _modelViewMatrix;///<The current modelview matrix
+   mutable osg::Matrixf _inverseModelViewMatrix;///<The current inverse modelview matrix
+   mutable osg::Matrixf _inverseProjectionMatrix;///<The current inverse modelview matrix
    mutable int _selectedControlPointIndex;///<The currently selected control point
    GLfloat _mouse[2];//<The mouse position.
    GLuint _selectionBuffer[512];///<Set Up A Selection Buffer
-	GLint	_hits;///<Selected primitives	
+   GLint _hits;///<Selected primitives	
    unsigned int _numUControlPoints;///<The number of control points in U direction.
    unsigned int _numVControlPoints;///<The number of control points in V direction.
    std::vector<NURBS::ControlPoint>* _controlPoints;///<The control points
@@ -323,12 +327,28 @@ bool NURBSControlMesh::TranslateSelectedControlPoint(float dx,
                                                      float dy,
                                                      float dz)
 {
-  
+   /*double eyeSpaceTranslation[3] = {0,0,0};
+   eyeSpaceTranslation[0] = dx;
+   eyeSpaceTranslation[1] = dy;
+   eyeSpaceTranslation[2] = dz;*/
    if(_selection)
    {
       if(_selectedControlPointIndex > -1)
       {
-         _controlPoints->at(_selectedControlPointIndex).Translate(dx,dy,dz);
+         osg::Vec3 currentPt( _controlPoints->at(_selectedControlPointIndex).X(),
+                              _controlPoints->at(_selectedControlPointIndex).Y(),
+                              _controlPoints->at(_selectedControlPointIndex).Z());
+         //transform the point into eye space for translation
+         currentPt = currentPt*osg::Matrix(_modelViewMatrix);
+         currentPt[0] += dx;
+         currentPt[1] += dz;
+         currentPt[2] += dy;
+         //transform the point back into model space
+         currentPt = currentPt*_inverseModelViewMatrix;
+         _controlPoints->at(_selectedControlPointIndex).SetX(currentPt[0]);
+         _controlPoints->at(_selectedControlPointIndex).SetY(currentPt[1]);
+         _controlPoints->at(_selectedControlPointIndex).SetZ(currentPt[2]);
+         
          return true;
       }
    }
@@ -342,6 +362,8 @@ void NURBSControlMesh::drawImplementation(osg::State& currentState)const
    {
       _projectionMatrix = const_cast<double*>(currentState.getProjectionMatrix().ptr());
       _modelViewMatrix = const_cast<double*>(currentState.getModelViewMatrix().ptr());
+      _inverseModelViewMatrix.invert(currentState.getModelViewMatrix());
+      _inverseProjectionMatrix.invert(currentState.getProjectionMatrix());
       Selection();
    }
    if(_isSurface)
@@ -529,48 +551,51 @@ void NURBSTessellatedSurface::_tessellateSurface()const
    unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("U");
    unsigned int nVPoints = _nurbsObject->NumInterpolatedPoints("V");
 
-   for(unsigned int u = 0; u </*2;*/ nUPoints - 1;u++)
+   std::cout<<"Num u interpolated points:"<<nUPoints<<std::endl;
+   std::cout<<"Num v interpolated points:"<<nVPoints<<std::endl;
+
+   for(unsigned int v = 0; v </*2;*/ nVPoints - 1;v++)
    {
       //new tristrip
       glBegin(GL_TRIANGLE_STRIP);
       //Handle the special case for the first triangle in the strip
       
       //bottom corner vert
-      glNormal3fv(_calculateSurfaceNormalAtPoint(u*nVPoints).ptr());
-      glVertex3f(_nurbsObject->InterpolatedPoints().at(u*nVPoints).X(),
-                 _nurbsObject->InterpolatedPoints().at(u*nVPoints).Y(),
-                 _nurbsObject->InterpolatedPoints().at(u*nVPoints).Z());
+      glNormal3fv(_calculateSurfaceNormalAtPoint(v*nUPoints).ptr());
+      glVertex3f(_nurbsObject->InterpolatedPoints().at(v*nUPoints).X(),
+                 _nurbsObject->InterpolatedPoints().at(v*nUPoints).Y(),
+                 _nurbsObject->InterpolatedPoints().at(v*nUPoints).Z());
 
       //right corner vert
-      glNormal3fv(_calculateSurfaceNormalAtPoint((u+1)*nVPoints).ptr());
-      glVertex3f(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints).X(),
-                 _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints).Y(),
-                 _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints).Z());
+      glNormal3fv(_calculateSurfaceNormalAtPoint((v+1)*nUPoints).ptr());
+      glVertex3f(_nurbsObject->InterpolatedPoints().at((v+1)*nUPoints).X(),
+                 _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints).Y(),
+                 _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints).Z());
 
       //next top vert 
-      glNormal3fv(_calculateSurfaceNormalAtPoint(u*nVPoints+1).ptr());
-      glVertex3f(_nurbsObject->InterpolatedPoints().at((u)*nVPoints + 1).X(),
-                 _nurbsObject->InterpolatedPoints().at((u)*nVPoints + 1).Y(),
-                 _nurbsObject->InterpolatedPoints().at((u)*nVPoints + 1).Z());
+      glNormal3fv(_calculateSurfaceNormalAtPoint(v*nUPoints+1).ptr());
+      glVertex3f(_nurbsObject->InterpolatedPoints().at((v)*nUPoints + 1).X(),
+                 _nurbsObject->InterpolatedPoints().at((v)*nUPoints + 1).Y(),
+                 _nurbsObject->InterpolatedPoints().at((v)*nUPoints + 1).Z());
 
       //interior points
-      for(unsigned int v = 1; v < nVPoints - 1; v++)
+      for(unsigned int u = 1; u < nUPoints - 1; u++)
       {
-         glNormal3fv(_calculateSurfaceNormalAtPoint((u+1)*nVPoints+v).ptr());
-         glVertex3f(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).X(),
-                    _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).Y(),
-                    _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + v).Z());
+         glNormal3fv(_calculateSurfaceNormalAtPoint((v+1)*nUPoints+u).ptr());
+         glVertex3f(_nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + u).X(),
+                    _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + u).Y(),
+                    _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + u).Z());
 
-         glNormal3fv(_calculateSurfaceNormalAtPoint((u)*nVPoints+(v+1)).ptr());
-         glVertex3f(_nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).X(),
-                    _nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).Y(),
-                    _nurbsObject->InterpolatedPoints().at(u*nVPoints + (v+1)).Z());
+         glNormal3fv(_calculateSurfaceNormalAtPoint((v)*nUPoints+(u+1)).ptr());
+         glVertex3f(_nurbsObject->InterpolatedPoints().at(v*nUPoints + (u+1)).X(),
+                    _nurbsObject->InterpolatedPoints().at(v*nUPoints + (u+1)).Y(),
+                    _nurbsObject->InterpolatedPoints().at(v*nUPoints + (u+1)).Z());
       }
       //handle last point
-      glNormal3fv(_calculateSurfaceNormalAtPoint((u+1)*nVPoints+(nVPoints - 1)).ptr());
-      glVertex3f(_nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).X(),
-                 _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).Y(),
-                 _nurbsObject->InterpolatedPoints().at((u+1)*nVPoints + nVPoints - 1).Z());
+      glNormal3fv(_calculateSurfaceNormalAtPoint((v+1)*nUPoints+(nUPoints - 1)).ptr());
+      glVertex3f(_nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + nUPoints - 1).X(),
+                 _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + nUPoints - 1).Y(),
+                 _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + nUPoints - 1).Z());
       glEnd();
    }
 }
@@ -650,7 +675,7 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
       surfaceState->setAttributeAndModes(shadeModel.get(),osg::StateAttribute::ON);
       
       addChild(_triangulatedSurfaceGeode.get());
-      setUpdateCallback(new TestControlPointCallback(1.0));
+      //setUpdateCallback(new TestControlPointCallback(1.0));
    }
 }
 ///////////////////////////////
