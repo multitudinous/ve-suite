@@ -34,6 +34,7 @@
 #define QUERY_THREAD_H
 
 #include <ace/Task.h>
+#include <string>
 
 #include "VE_Open/skel/moduleS.h"
 
