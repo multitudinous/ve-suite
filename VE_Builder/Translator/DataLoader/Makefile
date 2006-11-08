@@ -30,7 +30,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 CFDUNAME = $(shell uname)
 
-#FLUENT_MFIX= TRUE
+FLUENT_MFIX= TRUE
 
 #__________________________________________________________
 # list the source files that are in current directory
@@ -44,7 +44,9 @@ SRCS=\
    gridConversion.cpp\
    plot3dReader.cpp\
    StarCDTranslator.cxx\
-   starReader.cpp
+   starReader.cpp\
+   ansysReader.cxx\
+   AnsysTranslator.cxx
 
 ifeq (${FLUENT_MFIX}, TRUE)
 SRCS+=\
