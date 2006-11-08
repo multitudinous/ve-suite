@@ -13,7 +13,8 @@ all:
 SRCS=\
    Exe_server.cpp \
    Executive_i.cpp \
-   Execute_Thread.cpp
+   Execute_Thread.cpp\
+   QueryThread.cxx
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)

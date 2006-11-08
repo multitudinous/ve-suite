@@ -35,8 +35,6 @@
 #ifndef EXECUTIVE_I_H_
 #define EXECUTIVE_I_H_
 
-#include "VE_CE/Execute_Thread.h"
-
 #include "VE_CE/Utilities/Network.h"
 #include "VE_CE/Utilities/Scheduler.h"
 #include "VE_CE/Utilities/Module.h"
@@ -63,6 +61,10 @@ typedef struct {
 } MODULE_DATA;
 */
 //Class Body_Executive_i
+
+class QueryThread;
+class Execute_Thread;
+
 class  Body_Executive_i : public virtual POA_Body::Executive
 {
 public:
@@ -80,6 +82,7 @@ protected:
 
   std::map<std::string, Body::Unit_var> _mod_units;
   std::map<std::string, Execute_Thread*> _exec_thread;
+  std::map<std::string, QueryThread*> queryThreads;
 
   CosNaming::NamingContext_var naming_context_;
   std::map<std::string, Body::UI_var> uis_;

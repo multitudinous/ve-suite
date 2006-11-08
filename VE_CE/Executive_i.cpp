@@ -44,6 +44,11 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
+#include "VE_CE/Execute_Thread.h"
+#include "VE_CE/QueryThread.h"
+
+#include <ace/OS.h>
+
 #include <iostream>
 
 // Implementation skeleton constructor
@@ -805,6 +810,7 @@ char *  Body_Executive_i::Query (  const char * command
   ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 {
 std::cout << command << std::endl;
+     _mutex.acquire();
    // read the command to get the module name and module id
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
@@ -863,7 +869,6 @@ std::cout << command << std::endl;
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
    
-   _mutex.acquire();
    // Resume all the modules
    std::map<std::string, Body::Unit_var>::iterator iter;
    if ( !vendorUnit.empty() )
@@ -885,22 +890,30 @@ std::cout << command << std::endl;
       _mutex.release();
       return 0;
    }
-   _mutex.release();
       
    std::string queryString;
    
-   try 
+   std::map< std::string, QueryThread* >::iterator queryIter;
+   queryIter = queryThreads.find( iter->first );
+   //try 
    {
-      iter->second->_non_existent();
-      iter->second->SetCurID( moduleId );
-      queryString.assign( iter->second->Query( CORBA::string_dup( status.c_str() ) ) );
+      queryIter->second->QueryData( status, moduleId );
+      //iter->second->SetCurID( moduleId );
+      //queryString.assign( iter->second->Query( CORBA::string_dup( status.c_str() ) ) );
+      while ( queryIter->second->GettingData() )
+      {
+         ACE_OS::sleep( 1 );
+      }
+      
+      queryString.assign( queryIter->second->GetQueryData() );
    }
-   catch (CORBA::Exception &) 
+   //catch (CORBA::Exception &) 
    {
       //_mutex.release();
-      UnRegisterUnit( moduleName.c_str() );
-      _mod_units.erase( iter );
+      //UnRegisterUnit( moduleName.c_str() );
+      //_mod_units.erase( iter );
    }
+   _mutex.release();
    
    return CORBA::string_dup( queryString.c_str() );
 }
@@ -972,13 +985,36 @@ void Body_Executive_i::RegisterUnit (
    else //replace it with new reference
    {
       ACE_Task_Base::cleanup(iter->second, NULL);
-      if (iter->second)
+      if ( iter->second )
       {
          delete iter->second;
       }
       Execute_Thread *ex = new Execute_Thread( _mod_units[std::string(UnitName)], (Body_Executive_i*)this);
       ex->activate();
+      _exec_thread[ std::string(UnitName) ] = ex;
    }
+
+   std::map<std::string, QueryThread* >::iterator iterQuery;
+   iterQuery = queryThreads.find( std::string(UnitName) );
+
+   if ( iterQuery == queryThreads.end() )
+   { 
+      QueryThread* query = new QueryThread( _mod_units[std::string(UnitName)] );
+      query->activate();
+      queryThreads[ std::string(UnitName) ] = query;      
+   }
+   else
+   {
+      ACE_Task_Base::cleanup( iterQuery->second, NULL);
+      if ( iterQuery->second)
+      {
+         delete iterQuery->second;
+      }
+      QueryThread* query = new QueryThread( _mod_units[std::string(UnitName)] );
+      query->activate();      
+      queryThreads[ std::string(UnitName) ] = query;      
+   }
+   
    message = std::string( "Successfully registered " ) + std::string( UnitName ) + std::string("\n" );
    ClientMessage( message.c_str() );
 }
@@ -1024,6 +1060,17 @@ void Body_Executive_i::UnRegisterUnit (
 	   _exec_thread.erase(iter);
    }   
   
+   std::map< std::string, QueryThread* >::iterator iterQuery;
+   iterQuery = queryThreads.find( std::string(UnitName) );
+   if ( iterQuery != queryThreads.end())
+   {
+	   ACE_Task_Base::cleanup( iterQuery->second, NULL);
+	   if ( iterQuery->second )
+		   delete iterQuery->second;
+      
+	   queryThreads.erase( iterQuery );
+   }   
+
    _mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
