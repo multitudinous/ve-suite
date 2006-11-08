@@ -89,7 +89,7 @@ class Launch:
         Keyword arguments:
         runName, runConductor, runXplorer -- Run NameServer/Conductor/Xplorer?
         typeXplorer -- Which Xplorer program to run.
-        jconf -- Which .jconf file to use for Xplorer's settings.
+        jconf -- Which .jconf file to use for Xplorer's settings.Naming_Service -ORBEndpoint htiop
         desktopMode -- Run in Desktop mode."""
         ##Name Server section
         if self.settings["NameServer"]:
@@ -211,6 +211,7 @@ class Launch:
     def ServiceArg(self):
         """Returns the 'NameService=...' statement."""
         s = "NameService=corbaloc:iiop:%s/NameService" %(self.TaoPair())
+##        s = "NameService=corbaloc:htiop:%s/NameService" %(self.TaoPair())
         return s
 
     def NameServiceCall(self):
@@ -219,6 +220,7 @@ class Launch:
         if windows:
             exe += ".exe"
         c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
+        ##c = [exe, "-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf", "-ORBEndPoint",  "htiop://%s" %self.TaoPair()]
         return c
 
     def ServerCall(self):
@@ -230,6 +232,13 @@ class Launch:
         else:
             exe = "Error"
         c = [exe, "-ORBInitRef", self.ServiceArg()]
+##        svc = ["-ORBSvcConf"]
+##        svcfile = ["/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf"]
+##       c[len(c):] = svc
+        ##c[len(c):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf"]
+        ##taoMachine = os.getenv("TAO_MACHINE", "None")
+        ##c[len(c):] = ["-ORBEndPoint",  "htiop://%s:8088" %(taoMachine)]
+
         if windows:
             c[len(c):] = ["-ORBDottedDecimalAddresses", "1"]
         return c
@@ -251,6 +260,9 @@ class Launch:
             desktop = []
         ##Construct the call.
         s = [exe, "-ORBInitRef", self.ServiceArg()]
+        ##taoMachine = gethostname()
+        ##s[len(s):] = ["-ORBEndPoint",  "htiop://%s:8090" %(taoMachine)]
+        ##s[len(s):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf"]
         s[len(s):] = desktop
         s[len(s):] = ves
         if windows:
@@ -276,8 +288,12 @@ class Launch:
         if windows:
             exe += "_d.exe"
         ##Construct the call
-        s = [exe, "-ORBInitRef", self.ServiceArg(),
-             "%s" %self.settings["JconfPath"]]
+        s = [exe, "-ORBInitRef", self.ServiceArg(), 
+               "%s" %self.settings["JconfPath"]]
+        ##taoMachine = gethostname()
+        ##s[len(s):] = ["-ORBEndPoint",  "htiop://%s:8089" %(taoMachine)]
+        ##s[len(s):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf",
+        ##     "%s" %self.settings["JconfPath"]]
         s[len(s):] = desktop
         return s
 
