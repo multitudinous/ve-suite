@@ -341,7 +341,7 @@ void createTestNURBS(int argc, char** argv)
 
    //NURBSCurve
    NURBS::NURBSCurve ncurve(3);
-   ncurve.SetControlPoints(controlPoints,1,controlPoints.size());
+   ncurve.SetControlPoints(controlPoints,controlPoints.size(),1);
    ncurve.SetKnotVector(knots);
    ncurve.SetInterpolationGridSize(30);
    ncurve.Interpolate();
