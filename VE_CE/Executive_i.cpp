@@ -809,8 +809,8 @@ char *  Body_Executive_i::Query (  const char * command
   )
   ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 {
-std::cout << command << std::endl;
-     _mutex.acquire();
+//std::cout << command << std::endl;
+   _mutex.acquire();
    // read the command to get the module name and module id
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();

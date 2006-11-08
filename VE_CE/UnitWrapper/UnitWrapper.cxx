@@ -238,7 +238,7 @@ char * UnitWrapper::Query ( const char* command
     ::Error::EUnknown
   ))
 {
-   std::cout << "UnitWrapper::Query called = " << command << std::endl;
+   //std::cout << "UnitWrapper::Query called = " << command << std::endl;
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
