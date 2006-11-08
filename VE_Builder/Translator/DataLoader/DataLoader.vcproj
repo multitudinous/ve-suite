@@ -189,6 +189,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\ansysReader.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\AnsysTranslator.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\AVSTranslator.cxx"
 				>
 			</File>
@@ -246,6 +254,14 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\ansysReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AnsysTranslator.h"
+				>
+			</File>
 			<File
 				RelativePath=".\AVSTranslator.h"
 				>

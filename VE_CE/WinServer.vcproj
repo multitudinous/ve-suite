@@ -278,6 +278,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\QueryThread.cxx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -289,6 +293,10 @@
 			</File>
 			<File
 				RelativePath="Executive_i.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QueryThread.h"
 				>
 			</File>
 		</Filter>

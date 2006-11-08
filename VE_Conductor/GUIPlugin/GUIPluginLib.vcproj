@@ -242,11 +242,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ParamsDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Plugin_base.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\PortDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QueryInputsDlg.cpp"
 				>
 			</File>
 			<File
@@ -315,11 +323,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ParamsDlg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Plugin_base.h"
 				>
 			</File>
 			<File
 				RelativePath=".\PortDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QueryInputsDlg.h"
 				>
 			</File>
 			<File
