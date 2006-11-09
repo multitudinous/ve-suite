@@ -265,6 +265,10 @@ char * UnitWrapper::Query ( const char* command
       currentEventHandler->second->SetBaseObject( xmlModelMap[ strm.str() ] );
       network = currentEventHandler->second->Execute( objectVector );
    }
+   else
+   {
+      network = "NULL";
+   }
 
 	return CORBA::string_dup( network.c_str() );
 }
