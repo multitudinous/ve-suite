@@ -1136,7 +1136,7 @@
         VE-Suite. Here is a list of functions we provide documentation
         for:</para>
 
-        <para><link linkend="???">Importing Files</link> &lt;link&gt;</para>
+        <para><link linkend="importing_files">Importing Files</link> &lt;link&gt;</para>
 
         <para>Importing from StarCD &lt;link&gt;</para>
 
@@ -1764,7 +1764,7 @@
         <para>VE_Suite, as well as its dependencies, is currently built and
         tested using Visual Studio 7.1(2003).</para>
 
-        <section id="building_vesuite">
+        <section id="building_vesuite_on_windows">
           <title>Building VE-Suite</title>
 
           <para><link linkend="setting_the_environment">Set the environment
