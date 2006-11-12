@@ -317,11 +317,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       int cellType = 0;
       int numberOfVertsPerCell = 0;
       int tempData;
-      int pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8;
       int numberOfFaces = 0;
       int currentPos = 0;
       vtkIdList* vertList = vtkIdList::New();
-      //std::istringstream sstrm;
+
       while ( !cellFile.eof() )
       {
          cellFile >> cellNumber >> cellType >> numberOfVertsPerCell >> tempData >> tempData;
@@ -351,15 +350,13 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                }
             }
             //now read the vertices for all the faces
-            std::vector< int > polyVerts;
-            
-            for ( size_t i = 0; i < numberOfVertsPerCell - numberOfFaces; ++i )
+            size_t numPolyPoints = numberOfVertsPerCell - numberOfFaces;
+            for ( size_t i = 0; i < numPolyPoints; ++i )
             {
                cellFile >> tempData;
-               //polyVerts.push_back( tempData );
                currentPos += 1;
-               vertList->InsertUniqueId( tempData );
-               if ( currentPos%8 == 0 && (( i + 1 ) < (numberOfVertsPerCell - numberOfFaces)) )
+               vertList->InsertUniqueId( tempData - vShift );
+               if ( currentPos%8 == 0 && (( i + 1 ) < numPolyPoints) )
                {
                   //reset counter
                   currentPos = 0;
@@ -380,32 +377,24 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             std::cout << "Unsupported cell type " << cellType << " " << numberOfVertsPerCell << " " << cellNumber << std::endl;
             cellFile.getline( tempLine, charSize );
             if ( numberOfVertsPerCell > 8 )
+            {   
                cellFile.getline( tempLine, charSize );
+            }
                
             if ( cellFile.peek() == '\n' )
+            {   
                cellFile.getline( tempLine, charSize );
+            }
          }
       }
       vertList->Delete();
+      delete [] tempLine;
    }
    std::cout << "\tTotal no. of cells in star-cd model  = " << numStarCells << std::endl;
    std::cout << "\tTotal no. of vtk cells to be created = " << numVtkCells << std::endl;
 
-   //int cMemSize = numVtkCells;
-   //uGrid->Allocate(numVtkCells, cMemSize);
-   //VE_Util::writeVtkThing( uGrid, "test.vtu" ,1);
-
    // Read the cell vertex connectivity and write vtk cells...  
    rewind( fcells );
-   //Read the header information again from the star 4 files
-   /*if ( starcdVersion == 4 )
-   {
-      char* tempBuffer = new char[ 512 ];
-      std::fgets( tempBuffer, 512, fvertices );
-      std::fgets( tempBuffer, 512, fvertices );
-      delete [] tempBuffer;
-   }*/
-
    if ( starcdVersion == 324 )
    {
       while( ! feof(fcells) )
@@ -958,100 +947,87 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    }
 
    int numSolns = 0;
-
-   //Read the header information again from the star 4 files
-   if ( starcdVersion == 4 )
-   {
-      char* tempBuffer = new char[ 512 ];
-      fsolns.getline( tempBuffer, 512 );
-      fsolns.getline( tempBuffer, 512 );
-      delete [] tempBuffer;
-   }
-
    // read the first term in the first line of data...
-   if ( starcdVersion == 324 )
+   fsolns >> sId;
+   while( ! fsolns.eof() )
    {
-      fsolns >> sId;
-      while( ! fsolns.eof() )
+      // read all of the data columns in that line...
+      for ( i = 0; i < numColumns; i++)
+         fsolns >> data[ i ];
+      fsolns.getline( textline, 256 );   //skip past remainder of line
+      
+      if ( this->debug > 1) 
       {
-         // read all of the data columns in that line...
+         std::cout << "raw data: " << sId << "\t";
          for ( i = 0; i < numColumns; i++)
-            fsolns >> data[ i ];
-         fsolns.getline( textline, 256 );   //skip past remainder of line
-         
-         if ( this->debug > 1) 
-         {
-            std::cout << "raw data: " << sId << "\t";
-            for ( i = 0; i < numColumns; i++)
-               std::cout <<  data[ i ] << "\t";        
-            std::cout << std::endl;
-         }
-         
-         // if solution pertains to a vertex higher than the range already defined,
-         // then skip...
-         if ( sId > maxOrigVertexId )
-         {
-            if ( this->debug ) 
-               std::cout << "skipping solution " << sId << std::endl;
-            
-            // try to read the first term in the next line of data
-            // (failure will get us out of loop)...
-            fsolns >> sId;
-            continue;
-         }
-         
-         sId -= vShift;
-         
-         if ( sId < 0 )
-         {
-            if ( this->debug ) 
-               std::cout << "Invalid sId = " << sId << std::endl;
-            
-            // try to read the first term in the next line of data
-            // (failure will get us out of loop)...
-            fsolns >> sId;
-            continue;
-         }
-         
-         // assumes that the vector is in first three columns
-         int scalarStartIndex = 0;
-         if ( this->numVectors )
-         {
-            if ( this->debug > 1 )
-            {
-               std::cout << "VECTOR: " << sId;
-               for ( i=0; i<3; i++ ) 
-                  std::cout << "\t" << data[ i ];
-               std::cout << std::endl;
-            }
-            
-            vec->SetTuple( sId, data );
-            scalarStartIndex = 3;
-         }
-         
-         // add in all of the scalar data...
-         for ( i = 0; i < this->numScalars; i++ )
-         {
-            scalarData[ i ]->SetTuple1( sId, data[ scalarStartIndex + i ] );
-         }
-         
-         // if there is a vector, create an extra scalar term consisting of the
-         // vector magnitude
-         if ( vec != NULL )
-         {
-            // NOTE: scalarData array is zero-based therefore numScalars is
-            // the last index for vmag
-            float inputVmag = sqrt( (data[ 0 ] * data[ 0 ]) + 
-                                    (data[ 1 ] * data[ 1 ]) + 
-                                    (data[ 2 ] * data[ 2 ]) );
-            scalarData[ this->numScalars ]->SetTuple1( sId, inputVmag );
-         }
-         numSolns++;
+            std::cout <<  data[ i ] << "\t";        
+         std::cout << std::endl;
+      }
+      
+      // if solution pertains to a vertex higher than the range already defined,
+      // then skip...
+      if ( sId > maxOrigVertexId )
+      {
+         if ( this->debug ) 
+            std::cout << "skipping solution " << sId << std::endl;
          
          // try to read the first term in the next line of data
          // (failure will get us out of loop)...
          fsolns >> sId;
+         continue;
       }
+      
+      sId -= vShift;
+      
+      if ( sId < 0 )
+      {
+         if ( this->debug ) 
+            std::cout << "Invalid sId = " << sId << std::endl;
+         
+         // try to read the first term in the next line of data
+         // (failure will get us out of loop)...
+         fsolns >> sId;
+         continue;
+      }
+      
+      // assumes that the vector is in first three columns
+      int scalarStartIndex = 0;
+      if ( this->numVectors )
+      {
+         if ( this->debug > 1 )
+         {
+            std::cout << "VECTOR: " << sId;
+            for ( i=0; i<3; i++ ) 
+               std::cout << "\t" << data[ i ];
+            std::cout << std::endl;
+         }
+         
+         vec->SetTuple( sId, data );
+         scalarStartIndex = 3;
+      }
+      
+      // add in all of the scalar data...
+      for ( i = 0; i < this->numScalars; i++ )
+      {
+         scalarData[ i ]->SetTuple1( sId, data[ scalarStartIndex + i ] );
+      }
+      
+      // if there is a vector, create an extra scalar term consisting of the
+      // vector magnitude
+      if ( vec != NULL )
+      {
+         // NOTE: scalarData array is zero-based therefore numScalars is
+         // the last index for vmag
+         float inputVmag = sqrt( (data[ 0 ] * data[ 0 ]) + 
+                                 (data[ 1 ] * data[ 1 ]) + 
+                                 (data[ 2 ] * data[ 2 ]) );
+         scalarData[ this->numScalars ]->SetTuple1( sId, inputVmag );
+      }
+      numSolns++;
+      
+      // try to read the first term in the next line of data
+      // (failure will get us out of loop)...
+      fsolns >> sId;
    }
 
    delete [] data;      
