@@ -36,17 +36,17 @@
 #include <fstream>
 
 #include <cstdio>
-#include <cstdlib>
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkPoints.h>
 #include <vtkFloatArray.h> // this code requires VTK4
 #include <vtkPointData.h>
 #include <vtkCellType.h>
+#include <vtkIdList.h>
+
 #include "VE_Builder/Translator/DataLoader/converter.h"     // for "letUsersAddParamsToField"
 #include "VE_Xplorer/Utilities/fileIO.h"        // for "getTagAndValue"
-
-//#include "getline.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 using namespace VE_Util;
 using std::istringstream;
@@ -108,6 +108,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    }
 
    int starcdVersion = 0;
+   //Read the header information again from the star files to get version
    int tempGet = std::getc( fvertices );
    if ( tempGet == 'P' )
    {
@@ -120,6 +121,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    std::putc( tempGet, fvertices );
    std::cout << "StarCD Version " << starcdVersion << std::endl;
    std::cout << "\nReading vertex data from " << this->starVertFileName << std::endl;
+   //Read the header information again from the star 4 files
    if ( starcdVersion == 4 )
    {
       char* tempBuffer = new char[ 512 ];
@@ -318,6 +320,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       int pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8;
       int numberOfFaces = 0;
       int currentPos = 0;
+      vtkIdList* vertList = vtkIdList::New();
       //std::istringstream sstrm;
       while ( !cellFile.eof() )
       {
@@ -349,11 +352,13 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             }
             //now read the vertices for all the faces
             std::vector< int > polyVerts;
+            
             for ( size_t i = 0; i < numberOfVertsPerCell - numberOfFaces; ++i )
             {
                cellFile >> tempData;
-               polyVerts.push_back( tempData );
+               //polyVerts.push_back( tempData );
                currentPos += 1;
+               vertList->InsertUniqueId( tempData );
                if ( currentPos%8 == 0 && (( i + 1 ) < (numberOfVertsPerCell - numberOfFaces)) )
                {
                   //reset counter
@@ -365,6 +370,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                }
             }
             cellFile.getline( tempLine, charSize );
+            uGrid->InsertNextCell( VTK_CONVEX_POINT_SET, vertList );
+            vertList->Reset();
+            numStarCells++;
+            numVtkCells++;
          }
          else
          {
@@ -377,499 +386,505 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                cellFile.getline( tempLine, charSize );
          }
       }
+      vertList->Delete();
    }
    std::cout << "\tTotal no. of cells in star-cd model  = " << numStarCells << std::endl;
    std::cout << "\tTotal no. of vtk cells to be created = " << numVtkCells << std::endl;
 
-   int cMemSize = numVtkCells;
-   uGrid->Allocate(numVtkCells, cMemSize);
+   //int cMemSize = numVtkCells;
+   //uGrid->Allocate(numVtkCells, cMemSize);
+   //VE_Util::writeVtkThing( uGrid, "test.vtu" ,1);
 
    // Read the cell vertex connectivity and write vtk cells...  
    rewind( fcells );
-   if ( starcdVersion == 4 )
+   //Read the header information again from the star 4 files
+   /*if ( starcdVersion == 4 )
    {
       char* tempBuffer = new char[ 512 ];
       std::fgets( tempBuffer, 512, fvertices );
       std::fgets( tempBuffer, 512, fvertices );
       delete [] tempBuffer;
-   }
+   }*/
 
-   while( ! feof(fcells) )
+   if ( starcdVersion == 324 )
    {
-      fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
-      &cId, 
-      &cPt[0], &cPt[1], &cPt[2], &cPt[3], &cPt[4], &cPt[5], &cPt[6], &cPt[7], 
-      &cGroup, &cType); 
-
-      // reject all types except for cells or samm cells
-      if ( cType != 1 && cType != -1) continue;
-
-      for ( i=0; i<8; i++ ) cPt[i] -= vShift;
-
-      if ( this->debug > 1 ) 
-         std::cout << "After vShift adjustment, just read cell " << cId 
-              << " with vertices: " 
-              << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2] 
-              << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5] 
-              << "\t" << cPt[6] << "\t" << cPt[7] << std::endl;
-
-      // Skip the cell if all vertices are zero...
-      if ( cPt[0] == 0 && cPt[1] == 0 && cPt[2] == 0 && cPt[3] == 0 && 
-           cPt[4] == 0 && cPt[5] == 0 && cPt[6] == 0 && cPt[7] == 0   )
+      while( ! feof(fcells) )
       {
-         if ( this->debug ) 
-            std::cout << "***Skipping cell " << cId << " with vertices: " 
+         fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
+         &cId, 
+         &cPt[0], &cPt[1], &cPt[2], &cPt[3], &cPt[4], &cPt[5], &cPt[6], &cPt[7], 
+         &cGroup, &cType); 
+
+         // reject all types except for cells or samm cells
+         if ( cType != 1 && cType != -1) continue;
+
+         for ( i=0; i<8; i++ ) cPt[i] -= vShift;
+
+         if ( this->debug > 1 ) 
+            std::cout << "After vShift adjustment, just read cell " << cId 
+                 << " with vertices: " 
                  << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2] 
-                 << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
+                 << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5] 
                  << "\t" << cPt[6] << "\t" << cPt[7] << std::endl;
-         continue;    // to next cell record
-      }
 
-      if ( cType == -1 )                // star-cd samm cells
-      {
-         // read second line of this record...
-         fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
-         &sId, 
-         &sPt[0], &sPt[1], &sPt[2], &sPt[3], &sPt[4], &sPt[5], &sPt[6], &sPt[7],
-         &sGroup, &sType);
-
-         for ( i=0; i<8; i++ ) sPt[i] -= vShift;
-
-         if ( this->debug ) 
-            std::cout << "               After vShift adjustment, line 2 vertices: " 
-                 << "\t" << sPt[0] << "\t" << sPt[1] << "\t" << sPt[2]
-                 << "\t" << sPt[3] << "\t" << sPt[4] << "\t" << sPt[5]
-                 << "\t" << sPt[6] << "\t" << sPt[7] << std::endl;
-                   
-         // read third line of this record...
-         fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
-                &sId, &tPt[0], &tPt[1], &tPt[2], &tPt[3],
-                &tPt[4], &tPt[5], &tPt[6], &tPt[7], 
-                &sGroup, &sType);
-
-         if ( this->debug ) 
-            std::cout << "                                    On line 3, vertices: " 
-                 << "\t" << tPt[0] << "\t" << tPt[1] << "\t" << tPt[2]
-                 << "\t" << tPt[3] << "\t" << tPt[4] << "\t" << tPt[5]
-                 << "\t" << tPt[6] << "\t" << tPt[7] << std::endl;
-
-         resolutionType = tPt[5];
-         REG = tPt[6];
-         //PERM = tPt[7];                 // not used at this point
-
-         if ( resolutionType == 1 )       // hex with one corner cut away
+         // Skip the cell if all vertices are zero...
+         if ( cPt[0] == 0 && cPt[1] == 0 && cPt[2] == 0 && cPt[3] == 0 && 
+              cPt[4] == 0 && cPt[5] == 0 && cPt[6] == 0 && cPt[7] == 0   )
          {
-            if ( REG == 0 )               // the corner (a tetrahedron)
-            {
-               temp[0] = cPt[0];
-               temp[1] = sPt[3];
-               temp[2] = sPt[4];
-               temp[3] = sPt[1];
-               uGrid->InsertNextCell( VTK_TETRA, 4, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices:  " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << std::endl;
-            }        
-            else if ( REG == 1 )    // write the [hex with corner cut away] as a hexahedron and two tetrahedrons
-            {
-               temp[0] = sPt[1];
-               temp[1] = cPt[1];
-               temp[2] = cPt[2];
-               temp[3] = cPt[3];
-               temp[4] = cPt[4];
-               temp[5] = cPt[5];
-               temp[6] = cPt[6];
-               temp[7] = cPt[7];
-               uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 1, inserted hexahedron cell w/ vertices:  " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << std::endl;
-               temp[0] = sPt[1];
-               temp[1] = sPt[3];
-               temp[2] = sPt[4];
-               temp[3] = cPt[3];
-               uGrid->InsertNextCell( VTK_TETRA, 4, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << std::endl; 
-               temp[0] = sPt[1];
-               temp[1] = cPt[3];
-               temp[2] = cPt[4];
-               temp[3] = sPt[4];
-               uGrid->InsertNextCell( VTK_TETRA, 4, temp );
-               if ( this->debug )
-                  std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << std::endl; 
-            }
-            else 
-               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
-                    << resolutionType << ", invalid REG=" << REG << std::endl;
+            if ( this->debug ) 
+               std::cout << "***Skipping cell " << cId << " with vertices: " 
+                    << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2] 
+                    << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
+                    << "\t" << cPt[6] << "\t" << cPt[7] << std::endl;
+            continue;    // to next cell record
          }
 
-         else if ( resolutionType == 2 )  // hex with wedge cut away
+         if ( cType == -1 )                // star-cd samm cells
          {
-            if ( REG == 0 )               // the wedge
+            // read second line of this record...
+            fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
+            &sId, 
+            &sPt[0], &sPt[1], &sPt[2], &sPt[3], &sPt[4], &sPt[5], &sPt[6], &sPt[7],
+            &sGroup, &sType);
+
+            for ( i=0; i<8; i++ ) sPt[i] -= vShift;
+
+            if ( this->debug ) 
+               std::cout << "               After vShift adjustment, line 2 vertices: " 
+                    << "\t" << sPt[0] << "\t" << sPt[1] << "\t" << sPt[2]
+                    << "\t" << sPt[3] << "\t" << sPt[4] << "\t" << sPt[5]
+                    << "\t" << sPt[6] << "\t" << sPt[7] << std::endl;
+                      
+            // read third line of this record...
+            fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
+                   &sId, &tPt[0], &tPt[1], &tPt[2], &tPt[3],
+                   &tPt[4], &tPt[5], &tPt[6], &tPt[7], 
+                   &sGroup, &sType);
+
+            if ( this->debug ) 
+               std::cout << "                                    On line 3, vertices: " 
+                    << "\t" << tPt[0] << "\t" << tPt[1] << "\t" << tPt[2]
+                    << "\t" << tPt[3] << "\t" << tPt[4] << "\t" << tPt[5]
+                    << "\t" << tPt[6] << "\t" << tPt[7] << std::endl;
+
+            resolutionType = tPt[5];
+            REG = tPt[6];
+            //PERM = tPt[7];                 // not used at this point
+
+            if ( resolutionType == 1 )       // hex with one corner cut away
             {
-               temp[0] = cPt[0];
-               temp[1] = sPt[3];
-               temp[2] = sPt[4];
-               temp[3] = cPt[1];
-               temp[4] = sPt[2];
-               temp[5] = sPt[5];
-               uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell resolutionType 2, inserted wedge cell with vertices: " 
-                  << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                  << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                  << std::endl;
-            }        
-            else if ( REG == 1 )    // write the [hex with wedge cut away] as a hexahedron and a wedge
-            {
-               temp[0] = cPt[3];
-               temp[1] = cPt[7];
-               temp[2] = sPt[3];
-               temp[3] = cPt[2];
-               temp[4] = cPt[6];
-               temp[5] = sPt[2];
-               uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell resolutionType 2, inserted wedge cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << std::endl;
-               temp[0] = sPt[3];
-               temp[1] = cPt[7];
-               temp[2] = cPt[4];
-               temp[3] = sPt[4];
-               temp[4] = sPt[2];
-               temp[5] = cPt[6];
-               temp[6] = cPt[5];
-               temp[7] = sPt[5];
-               uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell resolutionType 2, inserted hex cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
-            }
-            else std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" << resolutionType
-                 << ", invalid REG=" << REG << std::endl;
+               if ( REG == 0 )               // the corner (a tetrahedron)
+               {
+                  temp[0] = cPt[0];
+                  temp[1] = sPt[3];
+                  temp[2] = sPt[4];
+                  temp[3] = sPt[1];
+                  uGrid->InsertNextCell( VTK_TETRA, 4, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices:  " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << std::endl;
+               }        
+               else if ( REG == 1 )    // write the [hex with corner cut away] as a hexahedron and two tetrahedrons
+               {
+                  temp[0] = sPt[1];
+                  temp[1] = cPt[1];
+                  temp[2] = cPt[2];
+                  temp[3] = cPt[3];
+                  temp[4] = cPt[4];
+                  temp[5] = cPt[5];
+                  temp[6] = cPt[6];
+                  temp[7] = cPt[7];
+                  uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 1, inserted hexahedron cell w/ vertices:  " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << "\t" << temp[6] << "\t" << temp[7] << std::endl;
+                  temp[0] = sPt[1];
+                  temp[1] = sPt[3];
+                  temp[2] = sPt[4];
+                  temp[3] = cPt[3];
+                  uGrid->InsertNextCell( VTK_TETRA, 4, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << std::endl; 
+                  temp[0] = sPt[1];
+                  temp[1] = cPt[3];
+                  temp[2] = cPt[4];
+                  temp[3] = sPt[4];
+                  uGrid->InsertNextCell( VTK_TETRA, 4, temp );
+                  if ( this->debug )
+                     std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << std::endl; 
+               }
+               else 
+                  std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
+                       << resolutionType << ", invalid REG=" << REG << std::endl;
             }
 
-            else if ( resolutionType == 3 )   // samm hexahedron
+            else if ( resolutionType == 2 )  // hex with wedge cut away
             {
-            if ( REG == 0 )            // convert samm hexahedron into vtk hexahedron
-            {
-               temp[0] = cPt[0];
-               temp[1] = cPt[1];
-               temp[2] = cPt[2];
-               temp[3] = cPt[3];
-               temp[4] = sPt[4];
-               temp[5] = sPt[5];
-               temp[6] = sPt[6];
-               temp[7] = sPt[7];
-               uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell resolutionType 3, inserted hex cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
+               if ( REG == 0 )               // the wedge
+               {
+                  temp[0] = cPt[0];
+                  temp[1] = sPt[3];
+                  temp[2] = sPt[4];
+                  temp[3] = cPt[1];
+                  temp[4] = sPt[2];
+                  temp[5] = sPt[5];
+                  uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell resolutionType 2, inserted wedge cell with vertices: " 
+                     << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                     << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                     << std::endl;
+               }        
+               else if ( REG == 1 )    // write the [hex with wedge cut away] as a hexahedron and a wedge
+               {
+                  temp[0] = cPt[3];
+                  temp[1] = cPt[7];
+                  temp[2] = sPt[3];
+                  temp[3] = cPt[2];
+                  temp[4] = cPt[6];
+                  temp[5] = sPt[2];
+                  uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell resolutionType 2, inserted wedge cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << std::endl;
+                  temp[0] = sPt[3];
+                  temp[1] = cPt[7];
+                  temp[2] = cPt[4];
+                  temp[3] = sPt[4];
+                  temp[4] = sPt[2];
+                  temp[5] = cPt[6];
+                  temp[6] = cPt[5];
+                  temp[7] = sPt[5];
+                  uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell resolutionType 2, inserted hex cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
+               }
+               else std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" << resolutionType
+                    << ", invalid REG=" << REG << std::endl;
+               }
+
+               else if ( resolutionType == 3 )   // samm hexahedron
+               {
+               if ( REG == 0 )            // convert samm hexahedron into vtk hexahedron
+               {
+                  temp[0] = cPt[0];
+                  temp[1] = cPt[1];
+                  temp[2] = cPt[2];
+                  temp[3] = cPt[3];
+                  temp[4] = sPt[4];
+                  temp[5] = sPt[5];
+                  temp[6] = sPt[6];
+                  temp[7] = sPt[7];
+                  uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell resolutionType 3, inserted hex cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
+               }
+               else                    // samm hexahedron will only be "inside"
+               {
+                  std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
+                       << resolutionType << ", invalid REG=" << REG << std::endl;
+               }
             }
-            else                    // samm hexahedron will only be "inside"
+
+            else if ( resolutionType == 7 )   // hex with plane cutting three corners 
             {
-               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
-                    << resolutionType << ", invalid REG=" << REG << std::endl;
+               if ( REG == 0 )         // divide the piece with the five original corners into two wedges, a pyr, and a tet
+               {
+                  temp[0] = cPt[0];
+                  temp[1] = cPt[1];
+                  temp[2] = cPt[2];
+                  temp[3] = sPt[0];
+                  temp[4] = sPt[1];
+                  temp[5] = sPt[2];
+                  uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 7, inserted 1st wedge cell with vertices:  " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << std::endl; 
+                  temp[0] = cPt[0];
+                  temp[1] = cPt[2];
+                  temp[2] = cPt[3];
+                  temp[3] = sPt[4];
+                  temp[4] = sPt[2];
+                  temp[5] = sPt[3];
+                  uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
+                  if ( this->debug )
+                     std::cout << "For samm cell 7, inserted 2nd wedge cell with vertices:  " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << std::endl; 
+                  temp[0] = cPt[0];
+                  temp[1] = cPt[2];
+                  temp[2] = sPt[2];
+                  temp[3] = sPt[0];
+                  temp[4] = sPt[4];
+                  uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 7, inserted pyramid cell with vertices:    " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
+                  temp[0] = cPt[0];
+                  temp[1] = sPt[0];
+                  temp[2] = sPt[4];
+                  temp[3] = cPt[4];
+                  uGrid->InsertNextCell( VTK_TETRA, 4, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 7, inserted tetrahedron cell w/ vertices:  " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << std::endl; 
+               }
+               else if ( REG == 1 )    // divide the piece with the three original corners into two pyramids and a tet
+               {
+                  temp[0] = sPt[1];
+                  temp[1] = sPt[2];
+                  temp[2] = cPt[6];
+                  temp[3] = cPt[5];
+                  temp[4] = sPt[0];
+                  uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 7, inserted 1st pyramid cell w/ vertices:  " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
+                  temp[0] = sPt[2];
+                  temp[1] = sPt[3];
+                  temp[2] = cPt[7];
+                  temp[3] = cPt[6];
+                  temp[4] = sPt[4];
+                  uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
+                  if ( this->debug )
+                     std::cout << "For samm cell 7, inserted 2nd pyramid cell w/ vertices:  " 
+                     << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                     << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
+                  temp[0] = sPt[0];
+                  temp[1] = cPt[6];
+                  temp[2] = sPt[2];
+                  temp[3] = sPt[4];
+                  uGrid->InsertNextCell( VTK_TETRA, 4, temp );
+                  if ( this->debug )
+                     std::cout << "For samm cell 7, inserted tetrahedron cell w/ vertices:  " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << std::endl; 
+               }
+            }
+
+            else if ( resolutionType == 8 )// hex with plane cutting four corners 
+            {
+               if ( REG == 0 )         // divide the piece containing the original 0th vertex into 2 pyrs, and 3 tets
+               {
+                  temp[0] = sPt[0];
+                  temp[1] = sPt[1];
+                  temp[2] = sPt[4];
+                  temp[3] = sPt[5];
+                  temp[4] = cPt[0];
+                  uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 8, inserted 1st pyramid cell with vertices:" 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
+                  temp[0] = sPt[1];
+                  temp[1] = sPt[2];
+                  temp[2] = sPt[3];
+                  temp[3] = sPt[4];
+                  temp[4] = cPt[0];
+                  uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
+                  if ( this->debug )
+                     std::cout << "For samm cell 8, inserted 2nd pyramid cell with vertices:" 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
+                  temp[0] = cPt[1];
+                  temp[1] = sPt[0];
+                  temp[2] = sPt[5];
+                  temp[3] = cPt[0];
+                  uGrid->InsertNextCell( VTK_TETRA, 4, temp );
+                  if ( this->debug )
+                     std::cout << "For samm cell 8, inserted 1st tetra cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << std::endl; 
+                  temp[0] = cPt[3];
+                  temp[1] = sPt[2];
+                  temp[2] = sPt[1];
+                  temp[3] = cPt[0];
+                  uGrid->InsertNextCell( VTK_TETRA, 4, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 8, inserted 2nd tetra cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << std::endl; 
+                  temp[0] = cPt[4];
+                  temp[1] = sPt[4];
+                  temp[2] = sPt[3];
+                  temp[3] = cPt[0];
+                  uGrid->InsertNextCell( VTK_TETRA, 4, temp );
+                  if ( this->debug )
+                     std::cout << "For samm cell 8, inserted 3rd tetra cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << std::endl; 
+               }
+               else                     // Wayne Oaks of adapco says resolution type 8 cells will only be "inside"
+               {
+                  std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
+                       << resolutionType << ", invalid REG=" << REG << std::endl;
+               }
+            }
+
+            else if ( resolutionType == 85 )   // hex with two opposing edges removed can be a six-sided cylinder or 2 wedges
+            {
+               if ( REG == 0 )             // specify two wedges
+               {
+                  temp[0] = cPt[0];
+                  temp[1] = sPt[3];
+                  temp[2] = sPt[0];
+                  temp[3] = cPt[1];
+                  temp[4] = sPt[2];
+                  temp[5] = sPt[1];
+                  uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell resolutionType 85, inserted first wedge cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << std::endl; 
+                  temp[0] = cPt[7];
+                  temp[1] = sPt[4];
+                  temp[2] = sPt[7];
+                  temp[3] = cPt[6];
+                  temp[4] = sPt[5];
+                  temp[5] = sPt[6];
+                  uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell resolutionType 85, inserted second wedge cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << std::endl; 
+               }
+               else if ( REG == 1 )        // write the six-sided cylinder as two hexahedrons
+               {
+                  temp[0] = sPt[0];
+                  temp[1] = sPt[3];
+                  temp[2] = cPt[3];
+                  temp[3] = sPt[7];
+                  temp[4] = sPt[1];
+                  temp[5] = sPt[2];
+                  temp[6] = cPt[2];
+                  temp[7] = sPt[6];
+                  uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell resolutionType 85, inserted first hex cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << "\t" << temp[6] << "\t" << temp[7] << std::endl;
+                  temp[0] = sPt[0];
+                  temp[1] = sPt[7];
+                  temp[2] = sPt[4];
+                  temp[3] = cPt[4];
+                  temp[4] = sPt[1];
+                  temp[5] = sPt[6];
+                  temp[6] = sPt[5];
+                  temp[7] = cPt[5];
+                  uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
+                  if ( this->debug ) 
+                     std::cout << "For samm cell resolutionType 85, inserted second hex cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
+                          << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
+               }
+               else 
+                  std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" 
+                       << resolutionType << ", invalid REG=" << REG << std::endl;
+            }
+            else if ( resolutionType == 275 )  // samm pyramid
+            {
+               if ( REG == 0 )         // convert samm pyramid into vtk pyramid
+               {
+                  temp[0] = cPt[0];
+                  temp[1] = cPt[1];
+                  temp[2] = cPt[2];
+                  temp[3] = cPt[3];
+                  temp[4] = sPt[0];
+                  uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
+                  
+                  if ( this->debug ) 
+                     std::cout << "For samm cell 275, inserted a pyramid cell with vertices: " 
+                          << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
+                          << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
+               }
+               else                    // samm pyramid will only be "inside"
+               {
+                  std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" 
+                       << resolutionType << ", invalid REG=" << REG << std::endl;
+               }
             }
          }
 
-         else if ( resolutionType == 7 )   // hex with plane cutting three corners 
+         // StarCD tetrahedron cell vertex connectivity:      12334444 
+         // use a tet if third and fourth are same and the last four are equal and non-zero
+         else if (cPt[2]==cPt[3] && (cPt[4]==cPt[5] && cPt[5]==cPt[6] && cPt[6]==cPt[7] && cPt[4]!=0))
          {
-            if ( REG == 0 )         // divide the piece with the five original corners into two wedges, a pyr, and a tet
-            {
-               temp[0] = cPt[0];
-               temp[1] = cPt[1];
-               temp[2] = cPt[2];
-               temp[3] = sPt[0];
-               temp[4] = sPt[1];
-               temp[5] = sPt[2];
-               uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 7, inserted 1st wedge cell with vertices:  " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << std::endl; 
-               temp[0] = cPt[0];
-               temp[1] = cPt[2];
-               temp[2] = cPt[3];
-               temp[3] = sPt[4];
-               temp[4] = sPt[2];
-               temp[5] = sPt[3];
-               uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
-               if ( this->debug )
-                  std::cout << "For samm cell 7, inserted 2nd wedge cell with vertices:  " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << std::endl; 
-               temp[0] = cPt[0];
-               temp[1] = cPt[2];
-               temp[2] = sPt[2];
-               temp[3] = sPt[0];
-               temp[4] = sPt[4];
-               uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 7, inserted pyramid cell with vertices:    " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
-               temp[0] = cPt[0];
-               temp[1] = sPt[0];
-               temp[2] = sPt[4];
-               temp[3] = cPt[4];
-               uGrid->InsertNextCell( VTK_TETRA, 4, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 7, inserted tetrahedron cell w/ vertices:  " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << std::endl; 
-            }
-            else if ( REG == 1 )    // divide the piece with the three original corners into two pyramids and a tet
-            {
-               temp[0] = sPt[1];
-               temp[1] = sPt[2];
-               temp[2] = cPt[6];
-               temp[3] = cPt[5];
-               temp[4] = sPt[0];
-               uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 7, inserted 1st pyramid cell w/ vertices:  " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
-               temp[0] = sPt[2];
-               temp[1] = sPt[3];
-               temp[2] = cPt[7];
-               temp[3] = cPt[6];
-               temp[4] = sPt[4];
-               uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
-               if ( this->debug )
-                  std::cout << "For samm cell 7, inserted 2nd pyramid cell w/ vertices:  " 
-                  << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                  << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
-               temp[0] = sPt[0];
-               temp[1] = cPt[6];
-               temp[2] = sPt[2];
-               temp[3] = sPt[4];
-               uGrid->InsertNextCell( VTK_TETRA, 4, temp );
-               if ( this->debug )
-                  std::cout << "For samm cell 7, inserted tetrahedron cell w/ vertices:  " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << std::endl; 
-            }
+            cPt[3] = cPt[4]; 
+            uGrid->InsertNextCell(VTK_TETRA, 4, cPt);
+            if ( this->debug > 1 )
+               std::cout << "Inserted tetrahedron cell with vertices: " << "\t\t\t" 
+                    << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
+                    << "\t" << cPt[3] << std::endl; 
+         }
+         // use a tet if third and fourth are unique and the last four are zero
+         else if ( cPt[2]!=cPt[3] && (cPt[4]==cPt[5] && cPt[5]==cPt[6] && cPt[6]==cPt[7] && cPt[7]==0))
+         {
+            uGrid->InsertNextCell(VTK_TETRA, 4, cPt);
+            if ( this->debug > 1 )
+               std::cout << "Inserted tetrahed. cell with vertices: " << "\t\t\t" 
+                    << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
+                    << "\t" << cPt[3] << std::endl; 
          }
 
-         else if ( resolutionType == 8 )// hex with plane cutting four corners 
+         // StarCD pyramid cell vertex connectivity:  12345555
+         else if ( cPt[4]==cPt[5] && cPt[5]==cPt[6] && cPt[6]==cPt[7] && cPt[7]!=0 )
          {
-            if ( REG == 0 )         // divide the piece containing the original 0th vertex into 2 pyrs, and 3 tets
-            {
-               temp[0] = sPt[0];
-               temp[1] = sPt[1];
-               temp[2] = sPt[4];
-               temp[3] = sPt[5];
-               temp[4] = cPt[0];
-               uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 8, inserted 1st pyramid cell with vertices:" 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
-               temp[0] = sPt[1];
-               temp[1] = sPt[2];
-               temp[2] = sPt[3];
-               temp[3] = sPt[4];
-               temp[4] = cPt[0];
-               uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
-               if ( this->debug )
-                  std::cout << "For samm cell 8, inserted 2nd pyramid cell with vertices:" 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
-               temp[0] = cPt[1];
-               temp[1] = sPt[0];
-               temp[2] = sPt[5];
-               temp[3] = cPt[0];
-               uGrid->InsertNextCell( VTK_TETRA, 4, temp );
-               if ( this->debug )
-                  std::cout << "For samm cell 8, inserted 1st tetra cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << std::endl; 
-               temp[0] = cPt[3];
-               temp[1] = sPt[2];
-               temp[2] = sPt[1];
-               temp[3] = cPt[0];
-               uGrid->InsertNextCell( VTK_TETRA, 4, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell 8, inserted 2nd tetra cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << std::endl; 
-               temp[0] = cPt[4];
-               temp[1] = sPt[4];
-               temp[2] = sPt[3];
-               temp[3] = cPt[0];
-               uGrid->InsertNextCell( VTK_TETRA, 4, temp );
-               if ( this->debug )
-                  std::cout << "For samm cell 8, inserted 3rd tetra cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << std::endl; 
-            }
-            else                     // Wayne Oaks of adapco says resolution type 8 cells will only be "inside"
-            {
-               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
-                    << resolutionType << ", invalid REG=" << REG << std::endl;
-            }
+            uGrid->InsertNextCell(VTK_PYRAMID, 5, cPt);
+            if ( this->debug > 1 )
+               std::cout << "Inserted pyramid cell with vertices: " << "\t\t\t" 
+                    << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
+                    << "\t" << cPt[3] << "\t" << cPt[4] << std::endl; 
          }
 
-         else if ( resolutionType == 85 )   // hex with two opposing edges removed can be a six-sided cylinder or 2 wedges
+         // StarCD prism (wedge) cell vertex connectivity:  12334566  
+         else if ( cPt[2]==cPt[3] && cPt[2]!=0 && cPt[6]==cPt[7]  && cPt[6]!=0 )
          {
-            if ( REG == 0 )             // specify two wedges
-            {
-               temp[0] = cPt[0];
-               temp[1] = sPt[3];
-               temp[2] = sPt[0];
-               temp[3] = cPt[1];
-               temp[4] = sPt[2];
-               temp[5] = sPt[1];
-               uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell resolutionType 85, inserted first wedge cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << std::endl; 
-               temp[0] = cPt[7];
-               temp[1] = sPt[4];
-               temp[2] = sPt[7];
-               temp[3] = cPt[6];
-               temp[4] = sPt[5];
-               temp[5] = sPt[6];
-               uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell resolutionType 85, inserted second wedge cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << std::endl; 
-            }
-            else if ( REG == 1 )        // write the six-sided cylinder as two hexahedrons
-            {
-               temp[0] = sPt[0];
-               temp[1] = sPt[3];
-               temp[2] = cPt[3];
-               temp[3] = sPt[7];
-               temp[4] = sPt[1];
-               temp[5] = sPt[2];
-               temp[6] = cPt[2];
-               temp[7] = sPt[6];
-               uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell resolutionType 85, inserted first hex cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << std::endl;
-               temp[0] = sPt[0];
-               temp[1] = sPt[7];
-               temp[2] = sPt[4];
-               temp[3] = cPt[4];
-               temp[4] = sPt[1];
-               temp[5] = sPt[6];
-               temp[6] = sPt[5];
-               temp[7] = cPt[5];
-               uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
-               if ( this->debug ) 
-                  std::cout << "For samm cell resolutionType 85, inserted second hex cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
-            }
-            else 
-               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" 
-                    << resolutionType << ", invalid REG=" << REG << std::endl;
+            cPt[3] = cPt[4]; 
+            cPt[4] = cPt[5];
+            cPt[5] = cPt[6];
+            uGrid->InsertNextCell(VTK_WEDGE, 6, cPt);
+            if ( this->debug > 1 )
+               std::cout << "Inserted wedge cell with vertices: " 
+                    << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
+                    << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
+                    << std::endl; 
          }
-         else if ( resolutionType == 275 )  // samm pyramid
+
+         // StarCD hexahedron cell vertex connectivity:    12345678
+         else
          {
-            if ( REG == 0 )         // convert samm pyramid into vtk pyramid
-            {
-               temp[0] = cPt[0];
-               temp[1] = cPt[1];
-               temp[2] = cPt[2];
-               temp[3] = cPt[3];
-               temp[4] = sPt[0];
-               uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
-               
-               if ( this->debug ) 
-                  std::cout << "For samm cell 275, inserted a pyramid cell with vertices: " 
-                       << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
-            }
-            else                    // samm pyramid will only be "inside"
-            {
-               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" 
-                    << resolutionType << ", invalid REG=" << REG << std::endl;
-            }
+            uGrid->InsertNextCell(VTK_HEXAHEDRON, 8, cPt);
+            if ( this->debug > 1 )
+               std::cout << "Inserted hex cell with vertices: " << "\t\t\t" 
+                    << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
+                    << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
+                    << "\t" << cPt[6] << "\t" << cPt[7] << std::endl; 
          }
-      }
-
-      // StarCD tetrahedron cell vertex connectivity:      12334444 
-      // use a tet if third and fourth are same and the last four are equal and non-zero
-      else if (cPt[2]==cPt[3] && (cPt[4]==cPt[5] && cPt[5]==cPt[6] && cPt[6]==cPt[7] && cPt[4]!=0))
-      {
-         cPt[3] = cPt[4]; 
-         uGrid->InsertNextCell(VTK_TETRA, 4, cPt);
-         if ( this->debug > 1 )
-            std::cout << "Inserted tetrahedron cell with vertices: " << "\t\t\t" 
-                 << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
-                 << "\t" << cPt[3] << std::endl; 
-      }
-      // use a tet if third and fourth are unique and the last four are zero
-      else if ( cPt[2]!=cPt[3] && (cPt[4]==cPt[5] && cPt[5]==cPt[6] && cPt[6]==cPt[7] && cPt[7]==0))
-      {
-         uGrid->InsertNextCell(VTK_TETRA, 4, cPt);
-         if ( this->debug > 1 )
-            std::cout << "Inserted tetrahed. cell with vertices: " << "\t\t\t" 
-                 << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
-                 << "\t" << cPt[3] << std::endl; 
-      }
-
-      // StarCD pyramid cell vertex connectivity:  12345555
-      else if ( cPt[4]==cPt[5] && cPt[5]==cPt[6] && cPt[6]==cPt[7] && cPt[7]!=0 )
-      {
-         uGrid->InsertNextCell(VTK_PYRAMID, 5, cPt);
-         if ( this->debug > 1 )
-            std::cout << "Inserted pyramid cell with vertices: " << "\t\t\t" 
-                 << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
-                 << "\t" << cPt[3] << "\t" << cPt[4] << std::endl; 
-      }
-
-      // StarCD prism (wedge) cell vertex connectivity:  12334566  
-      else if ( cPt[2]==cPt[3] && cPt[2]!=0 && cPt[6]==cPt[7]  && cPt[6]!=0 )
-      {
-         cPt[3] = cPt[4]; 
-         cPt[4] = cPt[5];
-         cPt[5] = cPt[6];
-         uGrid->InsertNextCell(VTK_WEDGE, 6, cPt);
-         if ( this->debug > 1 )
-            std::cout << "Inserted wedge cell with vertices: " 
-                 << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
-                 << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
-                 << std::endl; 
-      }
-
-      // StarCD hexahedron cell vertex connectivity:    12345678
-      else
-      {
-         uGrid->InsertNextCell(VTK_HEXAHEDRON, 8, cPt);
-         if ( this->debug > 1 )
-            std::cout << "Inserted hex cell with vertices: " << "\t\t\t" 
-                 << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
-                 << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
-                 << "\t" << cPt[6] << "\t" << cPt[7] << std::endl; 
       }
    }
    fclose( fcells );
@@ -944,87 +959,99 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    int numSolns = 0;
 
-   // read the first term in the first line of data...
-   fsolns >> sId;
-   while( ! fsolns.eof() )
+   //Read the header information again from the star 4 files
+   if ( starcdVersion == 4 )
    {
-      // read all of the data columns in that line...
-      for ( i = 0; i < numColumns; i++)
-         fsolns >> data[ i ];
-      fsolns.getline( textline, 256 );   //skip past remainder of line
+      char* tempBuffer = new char[ 512 ];
+      fsolns.getline( tempBuffer, 512 );
+      fsolns.getline( tempBuffer, 512 );
+      delete [] tempBuffer;
+   }
 
-      if ( this->debug > 1) 
+   // read the first term in the first line of data...
+   if ( starcdVersion == 324 )
+   {
+      fsolns >> sId;
+      while( ! fsolns.eof() )
       {
-         std::cout << "raw data: " << sId << "\t";
+         // read all of the data columns in that line...
          for ( i = 0; i < numColumns; i++)
-            std::cout <<  data[ i ] << "\t";        
-         std::cout << std::endl;
-      }
-   
-      // if solution pertains to a vertex higher than the range already defined,
-      // then skip...
-      if ( sId > maxOrigVertexId )
-      {
-         if ( this->debug ) 
-            std::cout << "skipping solution " << sId << std::endl;
+            fsolns >> data[ i ];
+         fsolns.getline( textline, 256 );   //skip past remainder of line
+         
+         if ( this->debug > 1) 
+         {
+            std::cout << "raw data: " << sId << "\t";
+            for ( i = 0; i < numColumns; i++)
+               std::cout <<  data[ i ] << "\t";        
+            std::cout << std::endl;
+         }
+         
+         // if solution pertains to a vertex higher than the range already defined,
+         // then skip...
+         if ( sId > maxOrigVertexId )
+         {
+            if ( this->debug ) 
+               std::cout << "skipping solution " << sId << std::endl;
+            
+            // try to read the first term in the next line of data
+            // (failure will get us out of loop)...
+            fsolns >> sId;
+            continue;
+         }
+         
+         sId -= vShift;
+         
+         if ( sId < 0 )
+         {
+            if ( this->debug ) 
+               std::cout << "Invalid sId = " << sId << std::endl;
+            
+            // try to read the first term in the next line of data
+            // (failure will get us out of loop)...
+            fsolns >> sId;
+            continue;
+         }
+         
+         // assumes that the vector is in first three columns
+         int scalarStartIndex = 0;
+         if ( this->numVectors )
+         {
+            if ( this->debug > 1 )
+            {
+               std::cout << "VECTOR: " << sId;
+               for ( i=0; i<3; i++ ) 
+                  std::cout << "\t" << data[ i ];
+               std::cout << std::endl;
+            }
+            
+            vec->SetTuple( sId, data );
+            scalarStartIndex = 3;
+         }
+         
+         // add in all of the scalar data...
+         for ( i = 0; i < this->numScalars; i++ )
+         {
+            scalarData[ i ]->SetTuple1( sId, data[ scalarStartIndex + i ] );
+         }
+         
+         // if there is a vector, create an extra scalar term consisting of the
+         // vector magnitude
+         if ( vec != NULL )
+         {
+            // NOTE: scalarData array is zero-based therefore numScalars is
+            // the last index for vmag
+            float inputVmag = sqrt( (data[ 0 ] * data[ 0 ]) + 
+                                    (data[ 1 ] * data[ 1 ]) + 
+                                    (data[ 2 ] * data[ 2 ]) );
+            scalarData[ this->numScalars ]->SetTuple1( sId, inputVmag );
+         }
+         numSolns++;
          
          // try to read the first term in the next line of data
          // (failure will get us out of loop)...
          fsolns >> sId;
-         continue;
       }
-
-      sId -= vShift;
-
-      if ( sId < 0 )
-      {
-         if ( this->debug ) 
-            std::cout << "Invalid sId = " << sId << std::endl;
-
-         // try to read the first term in the next line of data
-         // (failure will get us out of loop)...
-         fsolns >> sId;
-         continue;
-      }
-
-      // assumes that the vector is in first three columns
-      int scalarStartIndex = 0;
-      if ( this->numVectors )
-      {
-         if ( this->debug > 1 )
-         {
-            std::cout << "VECTOR: " << sId;
-            for ( i=0; i<3; i++ ) 
-               std::cout << "\t" << data[ i ];
-            std::cout << std::endl;
-         }
-
-         vec->SetTuple( sId, data );
-         scalarStartIndex = 3;
-      }
-
-      // add in all of the scalar data...
-      for ( i = 0; i < this->numScalars; i++ )
-      {
-         scalarData[ i ]->SetTuple1( sId, data[ scalarStartIndex + i ] );
-      }
-
-      // if there is a vector, create an extra scalar term consisting of the
-      // vector magnitude
-      if ( vec != NULL )
-      {
-         // NOTE: scalarData array is zero-based therefore numScalars is
-         // the last index for vmag
-         float inputVmag = sqrt( (data[ 0 ] * data[ 0 ]) + 
-                                 (data[ 1 ] * data[ 1 ]) + 
-                                 (data[ 2 ] * data[ 2 ]) );
-         scalarData[ this->numScalars ]->SetTuple1( sId, inputVmag );
-      }
-      numSolns++;
-
-      // try to read the first term in the next line of data
-      // (failure will get us out of loop)...
-      fsolns >> sId;
    }
 
    delete [] data;      
