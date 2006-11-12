@@ -35,6 +35,9 @@
 #include <iostream>
 #include <fstream>
 
+#include <cstdio>
+#include <cstdlib>
+
 #include <vtkUnstructuredGrid.h>
 #include <vtkPoints.h>
 #include <vtkFloatArray.h> // this code requires VTK4
@@ -42,6 +45,8 @@
 #include <vtkCellType.h>
 #include "VE_Builder/Translator/DataLoader/converter.h"     // for "letUsersAddParamsToField"
 #include "VE_Xplorer/Utilities/fileIO.h"        // for "getTagAndValue"
+
+//#include "getline.h"
 
 using namespace VE_Util;
 using std::istringstream;
@@ -102,8 +107,27 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       return uGrid;
    }
 
+   int starcdVersion = 0;
+   int tempGet = std::getc( fvertices );
+   if ( tempGet == 'P' )
+   {
+      starcdVersion = 4;
+   }
+   else
+   {
+      starcdVersion = 324;
+   }
+   std::putc( tempGet, fvertices );
+   std::cout << "StarCD Version " << starcdVersion << std::endl;
    std::cout << "\nReading vertex data from " << this->starVertFileName << std::endl;
-
+   if ( starcdVersion == 4 )
+   {
+      char* tempBuffer = new char[ 512 ];
+      std::fgets( tempBuffer, 512, fvertices );
+      std::fgets( tempBuffer, 512, fvertices );
+      delete [] tempBuffer;
+   }
+   
    // The first thing we do is count the vertices and compute the minimum
    // and maximum vertex IDs
 
@@ -139,7 +163,15 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    // Rewind the file and reread all of the vertex lines and store the vertex
    // info in the vertices array using shifted vertex numbering
-   rewind( fvertices );
+   std::rewind( fvertices );
+   if ( starcdVersion == 4 )
+   {
+      char* tempBuffer = new char[ 512 ];
+      std::fgets( tempBuffer, 512, fvertices );
+      std::fgets( tempBuffer, 512, fvertices );
+      delete [] tempBuffer;
+   }
+   
    while( ! feof(fvertices) )
    {
       fscanf(fvertices, "%d %f %f %f\n", &vertexId, &vx, &vy, &vz);
@@ -176,94 +208,174 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    int numVtkCells = 0;
    int numStarCells = 0;
    int i;
-
+   
    // First compute the number of cells needed for the data set...
-   while( !feof(fcells) )
+   if ( starcdVersion == 324 )
    {
-      fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
-      &cId, 
-      &cPt[0], &cPt[1], &cPt[2], &cPt[3], &cPt[4], &cPt[5], &cPt[6], &cPt[7], 
-      &cGroup, &cType); 
-
-      // reject all types except for fluid cells or samm cells
-      if ( cType != 1 && cType != -1) continue;
-
-      if ( cType == -1 )                // star-cd samm cells
+      while( !feof(fcells) )
       {
-         numStarCells++;
-         // read second line of this record...
          fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
-         &sId, 
-         &sPt[0], &sPt[1], &sPt[2], &sPt[3], &sPt[4], &sPt[5], &sPt[6], &sPt[7],
-         &sGroup, &sType);
-         if ( sId != cId ) std::cerr << "ERROR: On reading line 2 of samm cell "
-                                << cId << ", sId=" << sId << std::endl;
-         if ( sType != 0 ) std::cerr << "ERROR: For cell " << sId 
-                                << ", record line 2, sType=" << sType 
-                                << ".  Expected sType != 0" << std::endl;
-                           
-         // read third line of this record...
-         fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
-         &sId, 
-         &tPt[0], &tPt[1], &tPt[2], &tPt[3], &tPt[4], &tPt[5], &tPt[6], &tPt[7], 
-         &sGroup, &sType);
-         if ( sId != cId ) std::cerr << "ERROR: On reading line 3 of samm cell " 
-                                << cId << ", sId=" << sId << std::endl;
-         if ( sType != 0 ) std::cerr << "ERROR: For cell " << sId 
-                                << ", record line 3, sType=" << sType 
-                                << ".  Expected sType != 0" << std::endl;
-         resolutionType = tPt[5];
-         REG = tPt[6];
-
-         if ( resolutionType == 1 )                   // hex with one corner cut away
+                &cId, 
+                &cPt[0], &cPt[1], &cPt[2], &cPt[3], &cPt[4], &cPt[5], &cPt[6], &cPt[7], 
+                &cGroup, &cType); 
+         
+         // reject all types except for fluid cells or samm cells
+         if ( cType != 1 && cType != -1) continue;
+         
+         if ( cType == -1 )                // star-cd samm cells
          {
-            if      ( REG == 0 ) numVtkCells += 1;    // the corner (a tetrahedron)
-            else if ( REG == 1 ) numVtkCells += 3;    // remainder to be a hexahedron and 2 tets
-            else    
-               std::cerr << "ERROR: samm cell resolutionType " << resolutionType
-                    << ", REG=" << REG << " is not handled" << std::endl;
+            numStarCells++;
+            // read second line of this record...
+            fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
+                   &sId, 
+                   &sPt[0], &sPt[1], &sPt[2], &sPt[3], &sPt[4], &sPt[5], &sPt[6], &sPt[7],
+                   &sGroup, &sType);
+            if ( sId != cId ) std::cerr << "ERROR: On reading line 2 of samm cell "
+               << cId << ", sId=" << sId << std::endl;
+            if ( sType != 0 ) std::cerr << "ERROR: For cell " << sId 
+               << ", record line 2, sType=" << sType 
+               << ".  Expected sType != 0" << std::endl;
+            
+            // read third line of this record...
+            fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
+                   &sId, 
+                   &tPt[0], &tPt[1], &tPt[2], &tPt[3], &tPt[4], &tPt[5], &tPt[6], &tPt[7], 
+                   &sGroup, &sType);
+            if ( sId != cId ) std::cerr << "ERROR: On reading line 3 of samm cell " 
+               << cId << ", sId=" << sId << std::endl;
+            if ( sType != 0 ) std::cerr << "ERROR: For cell " << sId 
+               << ", record line 3, sType=" << sType 
+               << ".  Expected sType != 0" << std::endl;
+            resolutionType = tPt[5];
+            REG = tPt[6];
+            
+            if ( resolutionType == 1 )                   // hex with one corner cut away
+            {
+               if      ( REG == 0 ) numVtkCells += 1;    // the corner (a tetrahedron)
+               else if ( REG == 1 ) numVtkCells += 3;    // remainder to be a hexahedron and 2 tets
+               else    
+                  std::cerr << "ERROR: samm cell resolutionType " << resolutionType
+                     << ", REG=" << REG << " is not handled" << std::endl;
+            }
+            
+            else if ( resolutionType == 2 )              // hex with two corners (wedge) cut away
+            {
+               if      ( REG == 0 ) numVtkCells += 1;    // the wedge
+               else if ( REG == 1 ) numVtkCells += 2;    // hex with wedge cut away
+               else    
+                  std::cerr << "ERROR: samm cell resolutionType " << resolutionType
+                     << ", REG=" << REG << " is not handled" << std::endl;
+            }
+            
+            else if ( resolutionType == 3 )              // samm hexahedron
+            {
+               if      ( REG == 0 ) numVtkCells += 1;
+               else    
+                  std::cerr << "ERROR: samm cell resolutionType " << resolutionType
+                     << ", REG=" << REG << " is not handled" << std::endl;
+            }
+            
+            else if ( resolutionType == 7 )              // hex with plane cutting three corners 
+            {
+               if      ( REG == 0 ) numVtkCells += 4;    // 
+               else if ( REG == 1 ) numVtkCells += 3;    // 
+               else    
+                  std::cerr << "ERROR: samm cell resolutionType " << resolutionType
+                     << ", REG=" << REG << " is not handled" << std::endl;
+            }
+            
+            else if ( resolutionType == 8 ) numVtkCells += 5;    // hex with plane cutting four corners 
+            
+            else if ( resolutionType == 85) numVtkCells += 2;    // hex with two opposing edges removed
+            
+            else if ( resolutionType == 275 && REG == 0 ) numVtkCells += 1;    // samm pyramid
+            
+            else
+               std::cerr << "ERROR: samm cell resolutionType=" << resolutionType
+                  << " with REG=" << REG << " is not yet handled" << std::endl;
          }
-
-         else if ( resolutionType == 2 )              // hex with two corners (wedge) cut away
-         {
-            if      ( REG == 0 ) numVtkCells += 1;    // the wedge
-            else if ( REG == 1 ) numVtkCells += 2;    // hex with wedge cut away
-            else    
-               std::cerr << "ERROR: samm cell resolutionType " << resolutionType
-                    << ", REG=" << REG << " is not handled" << std::endl;
-         }
-
-         else if ( resolutionType == 3 )              // samm hexahedron
-         {
-            if      ( REG == 0 ) numVtkCells += 1;
-            else    
-               std::cerr << "ERROR: samm cell resolutionType " << resolutionType
-                    << ", REG=" << REG << " is not handled" << std::endl;
-         }
-
-         else if ( resolutionType == 7 )              // hex with plane cutting three corners 
-         {
-            if      ( REG == 0 ) numVtkCells += 4;    // 
-            else if ( REG == 1 ) numVtkCells += 3;    // 
-            else    
-               std::cerr << "ERROR: samm cell resolutionType " << resolutionType
-                    << ", REG=" << REG << " is not handled" << std::endl;
-         }
-
-         else if ( resolutionType == 8 ) numVtkCells += 5;    // hex with plane cutting four corners 
-
-         else if ( resolutionType == 85) numVtkCells += 2;    // hex with two opposing edges removed
-
-         else if ( resolutionType == 275 && REG == 0 ) numVtkCells += 1;    // samm pyramid
-
          else
-            std::cerr << "ERROR: samm cell resolutionType=" << resolutionType
-                 << " with REG=" << REG << " is not yet handled" << std::endl;
+         {
+            numStarCells++;
+            numVtkCells++;
+         }
       }
-      else
+   }
+   else if ( starcdVersion == 4 )
+   {
+      std::ifstream cellFile( this->starCellFileName.c_str() );
+      int charSize = 512;
+      char* tempLine = new char[ charSize ];
+      cellFile.getline( tempLine, charSize );
+      int firstInt = 0;
+      int secondInt = 0;
+      cellFile >> firstInt >> secondInt;
+      cellFile.getline( tempLine, charSize );
+      int cellNumber = 0;
+      int cellType = 0;
+      int numberOfVertsPerCell = 0;
+      int tempData;
+      int pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8;
+      int numberOfFaces = 0;
+      int currentPos = 0;
+      //std::istringstream sstrm;
+      while ( !cellFile.eof() )
       {
-         numStarCells++;
-         numVtkCells++;
+         cellFile >> cellNumber >> cellType >> numberOfVertsPerCell >> tempData >> tempData;
+         cellFile.getline( tempLine, charSize );
+         if ( cellType == 255 )
+         {
+            cellFile >> tempData;
+            cellFile >> numberOfFaces;
+            currentPos = 1;
+            //std::cout << "cellnumber " << cellNumber << " " << numberOfVertsPerCell << " " << numberOfFaces<<  std::endl;
+            
+            //Read the start positions for the faces for this particular
+            //polyhedral cell
+            for ( size_t i = 0; i < numberOfFaces - 1; ++i )
+            {
+               cellFile >> tempData;
+               //std::cout << tempData << " ";
+               currentPos += 1;
+               if ( currentPos%8 == 0 )
+               {
+                  //reset counter
+                  currentPos = 0;
+                  //get the end of line and go to the next one
+                  cellFile.getline( tempLine, charSize );
+                  //ignore the cell number
+                  cellFile >> tempData;
+               }
+            }
+            //now read the vertices for all the faces
+            std::vector< int > polyVerts;
+            for ( size_t i = 0; i < numberOfVertsPerCell - numberOfFaces; ++i )
+            {
+               cellFile >> tempData;
+               polyVerts.push_back( tempData );
+               currentPos += 1;
+               if ( currentPos%8 == 0 && (( i + 1 ) < (numberOfVertsPerCell - numberOfFaces)) )
+               {
+                  //reset counter
+                  currentPos = 0;
+                  //get the end of line and go to the next one
+                  cellFile.getline( tempLine, charSize );
+                  //ignore the cell number
+                  cellFile >> tempData;
+               }
+            }
+            cellFile.getline( tempLine, charSize );
+         }
+         else
+         {
+            std::cout << "Unsupported cell type " << cellType << " " << numberOfVertsPerCell << " " << cellNumber << std::endl;
+            cellFile.getline( tempLine, charSize );
+            if ( numberOfVertsPerCell > 8 )
+               cellFile.getline( tempLine, charSize );
+               
+            if ( cellFile.peek() == '\n' )
+               cellFile.getline( tempLine, charSize );
+         }
       }
    }
    std::cout << "\tTotal no. of cells in star-cd model  = " << numStarCells << std::endl;
@@ -274,6 +386,14 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    // Read the cell vertex connectivity and write vtk cells...  
    rewind( fcells );
+   if ( starcdVersion == 4 )
+   {
+      char* tempBuffer = new char[ 512 ];
+      std::fgets( tempBuffer, 512, fvertices );
+      std::fgets( tempBuffer, 512, fvertices );
+      delete [] tempBuffer;
+   }
+
    while( ! feof(fcells) )
    {
       fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
