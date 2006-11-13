@@ -200,6 +200,12 @@ void TextureBasedToolBar::_buildGUI()
                         wxITEM_NORMAL,_T("Edit Transfer Functions") );
 
    _tbToolButtons->Realize();
+
+   ///the sub dialogs
+   ///ROI Dialog
+   _roiDlg = new VE_Conductor::GUI_Utilities::ROIDialog(this,-1,"Volume Clipping Bounds");
+   _roiDlg->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
+   _scalarToolsDlg = new ScalarToolsDialog(this,-1,"Scalar Tools");
    
 }
 /////////////////////////////////////////////////////////////
@@ -246,10 +252,9 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          {
             if(_availableScalars.GetCount())
             {
-               ScalarToolsDialog stDlg(this,-1,"Scalar Tools");
-               stDlg.SetVjObsPtr(_vjObsPtr);
-               stDlg.UpdateScalarList(_availableScalars);
-               if(stDlg.ShowModal() == wxID_OK)
+               _scalarToolsDlg->SetVjObsPtr(_vjObsPtr);
+               _scalarToolsDlg->UpdateScalarList(_availableScalars);
+               if(_scalarToolsDlg->ShowModal() == wxID_OK)
                {
                }
             }
@@ -272,11 +277,8 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          break;
       case ROI_ID:
          {
-            ROIDialog roiDlg(this,-1,"Volume Clipping Bounds");
-           
-            roiDlg.SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
-            roiDlg.SetVjObsPtr(_vjObsPtr);
-            if(roiDlg.ShowModal() == wxID_OK)
+            _roiDlg->SetVjObsPtr(_vjObsPtr);
+            if(_roiDlg->ShowModal() == wxID_OK)
             {
                ;
             }

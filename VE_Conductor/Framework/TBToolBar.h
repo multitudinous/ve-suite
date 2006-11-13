@@ -59,6 +59,15 @@ class wxToolBar;
 class wxComboBox;
 class wxCheckBox;
 
+class ScalarToolsDialog;
+namespace VE_Conductor
+{
+   namespace GUI_Utilities
+   {
+      class ROIDialog;
+   }
+
+}
 class TextureBasedToolBar : public VE_Conductor::GUI_Utilities::BaseDialog
 {
 public:
@@ -95,6 +104,8 @@ protected:
    wxComboBox* _solutionSelection;///<The list of active solutions.
    wxCheckBox* _bboxCheckBox;///<The check box to activate the Bounding Box
    UI_TransientDialog* _transientControls;///<The "radio-like" controls for transient visualiation.
+   VE_Conductor::GUI_Utilities::ROIDialog* _roiDlg;///<The ROI dialog;
+   ScalarToolsDialog* _scalarToolsDlg;///<The scalar tools dialog;
   
    wxArrayString _availableScalars;///<Scalar names
    wxArrayString _availableVectors;///<Vector names
