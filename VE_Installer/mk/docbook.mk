@@ -108,8 +108,13 @@ ifeq ($(FO_TOOL), PASSIVE_TEX)
    SAXON_FO_PARAMS=	passivetex.extensions=1 tex.math.in.alt=latex
 endif
 
-SAXON_HTML_PARAMS=	html.stylesheet=base_style.css
-XALAN_HTML_PARAMS=	-PARAM html.stylesheet "base_style.css"
+IMG_PATH?=		../
+SAXON_HTML_PARAMS=	html.stylesheet=base_style.css img.src.path=$(IMG_PATH)
+XALAN_HTML_PARAMS=	-PARAM html.stylesheet "base_style.css" \
+		        -PARAM img.src.path=$(IMG_PATH)
+CHUNK_DIR=		$*-chunk/
+SAXON_HTML_CHUNK_PARAMS=	base.dir=$(CHUNK_DIR)
+XALAN_HTML_CHUNK_PARAMS=	-PARAM base.dir $(CHUNK_DIR)
 
 XALAN_TXT_PARAMS=	-PARAM page.margin.bottom "0in"	\
 			        -PARAM page.margin.inner "0in"	\
@@ -137,7 +142,7 @@ LINK_DEPS=	images
 endif
 
 HTML_FILES=		$(XML_FILES:.xml=.html)
-CHUNK_HTML_FILES=	$(XML_FILES:.xml=/index.html)
+CHUNK_HTML_FILES=	$(XML_FILES:.xml=-chunk/index.html)
 FO_FILES=		$(XML_FILES:.xml=.fo)
 PDF_FILES=		$(XML_FILES:.xml=.pdf)
 TXT_FILES=		$(XML_FILES:.xml=.txt)
@@ -148,6 +153,7 @@ txt: $(TXT_FILES)
 pdf: $(LINK_DEPS) $(PDF_FILES)
 all:
 	$(MAKE) html
+	$(MAKE) chunk-html
 	$(MAKE) txt
 	$(MAKE) pdf
 
@@ -241,22 +247,32 @@ else
 endif
 
 # XML to index.HTML
-%/index.html: %.xml
-	for file in $(XML_FILES) ; do \
-            dir=`echo $$file | sed -e 's/\.xml//'` ; \
-            if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
-            if [ ! -z "$(INSTALL_FILES)" ]; then \
-                cp $(INSTALL_FILES) $$dir ; \
-            fi ; \
-            if [ ! -z "$(INSTALL_DIRS)" ]; then \
-                $(call recursive_copy, $(INSTALL_DIRS), $$dir) ; \
-            fi ; \
-            cur_dir=`pwd` ; \
-            cd $$dir ; \
-            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(CHUNK_HTML_XSL) \
-              $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
-            cd $$cur_dir ; \
-          done
+%-chunk/index.html: %.xml
+	mkdir $(CHUNK_DIR)
+ifeq ($(XSLT_TOOL), Xalan)
+	$(ENV) $(XALAN) -in $< -xsl $(CHUNK_HTML_XSL) -out $@	\
+          $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)	\
+          $(XALAN_HTML_CHUNK_PARAMS)
+else
+	$(ENV) $(SAXON) -i $< -xsl $(CHUNK_HTML_XSL) -o $@	\
+          $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS)	\
+          $(SAXON_HTML_CHUNK_PARAMS)
+endif
+#	for file in $(XML_FILES) ; do \
+#            dir=`echo $$file | sed -e 's/\.xml//'` ; \
+#            if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
+#            if [ ! -z "$(INSTALL_FILES)" ]; then \
+#                cp $(INSTALL_FILES) $$dir ; \
+#            fi ; \
+#            if [ ! -z "$(INSTALL_DIRS)" ]; then \
+#                $(call recursive_copy, $(INSTALL_DIRS), $$dir) ; \
+#            fi ; \
+#            cur_dir=`pwd` ; \
+#            cd $$dir ; \
+#            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(CHUNK_HTML_XSL) \
+#              $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
+#            cd $$cur_dir ; \
+#          done
 
 # HTML to TXT
 %.txt: %.html
@@ -364,7 +380,7 @@ endif
 #directories. Do not put anything valuable in them.
 clobber:
 	@$(MAKE) clean
-	$(RM) -fr $(XML_FILES:.xml=)
+	$(RM) -fr $(XML_FILES:.xml=) $(XML_FILES:.xml=-chunk)
 ifneq ($(CLOBBER_DIRS), )
 	$(RM) -r $(CLOBBER_DIRS)
 endif
