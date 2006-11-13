@@ -304,18 +304,23 @@ void cfdTranslatorToVTK::ExtractBaseName(std::string fileName)
 #endif
    AddBaseName(std::string(outfileMinusExtension,slash+1,period));
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::AddBaseName(std::string baseName)
 {
    baseFileNames.push_back(baseName);
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+std::string cfdTranslatorToVTK::GetBaseName( unsigned int whichFile )
+{
+   return baseFileNames.at( whichFile );
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::AddFoundFile(std::string singleFile)
 {
    _infileNames.push_back(singleFile);
    _nFoundFiles = static_cast< int >( _infileNames.size() );
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdTranslatorToVTK::_extractOptionFromCmdLine(int argc,char** argv,
                                                    std::string optionFlag,
                                                    std::string& optionArg)

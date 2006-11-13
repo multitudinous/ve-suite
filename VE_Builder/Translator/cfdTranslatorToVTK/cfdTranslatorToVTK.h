@@ -121,6 +121,9 @@ public:
 
    void AddFoundFile(std::string singleFile);
    void AddBaseName(std::string baseName);
+   ///Get the basename of the file used for setting the output filename
+   std::string GetBaseName( unsigned int whichFile = 0 );
+   ///Extract the basename for a file path
    void ExtractBaseName(std::string fileName);
    /////////////////////////////////////////
    //main translation calling method      //

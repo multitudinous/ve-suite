@@ -41,8 +41,13 @@
 #include <vtkPointData.h>
 #include <vtkFloatArray.h>
 #include <vtkAppendFilter.h>
+#include <vtkDataArrayCollection.h>
+#include <vtkDataArray.h>
+
+#include <VE_Xplorer/Utilities/cfdVTKFileHandler.h>
 
 #include <iostream>
+#include <sstream>
 
 using namespace VE_Builder;
 ////////////////////////////////////////
@@ -71,52 +76,77 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
 {
    VE_Builder::EnSightTranslator* EnSightToVTK =
               dynamic_cast< VE_Builder::EnSightTranslator* >( toVTK );
-   if ( EnSightToVTK )
+   if ( !EnSightToVTK )
    {
-      vtkGenericEnSightReader* reader = vtkGenericEnSightReader::New();
-      //reader->DebugOn();
-      reader->SetCaseFileName( EnSightToVTK->GetFile(0).c_str() );
-      reader->Update();
-      // used for multiple part ensight files
-      int numberOfOutputs = reader->GetNumberOfOutputs();
-      vtkAppendFilter* appendFilter = vtkAppendFilter::New();
-      for ( int i = 0; i < numberOfOutputs; ++i )
-      {
-         appendFilter->AddInput( reader->GetOutput( i ) );
-      }
-      appendFilter->Update();
-
-      if ( !outputDataset )
-      {
-         outputDataset = vtkUnstructuredGrid::New();
-      }
-      vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-      tmpDSet->DeepCopy( appendFilter->GetOutput() );
-      reader->Delete();
-      appendFilter->Delete();
-
-      //get the info about the data in the data set
-      if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
-      {
-         //std::cout<<"Warning!!!"<<std::endl;
-         //std::cout<<"No point data found!"<<std::endl;
-         //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
-
-         vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-         dataConvertCellToPoint->SetInput(tmpDSet);
-         dataConvertCellToPoint->PassCellDataOff();
-         dataConvertCellToPoint->Update();
-         outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
-         dataConvertCellToPoint->Delete();
-      }
-      else
-      {
-         outputDataset->DeepCopy(tmpDSet);
-      }
-      outputDataset->Update();
-      tmpDSet->Delete();
-      AddScalarsFromVectors( outputDataset );
+      return;
    }
+   
+   vtkGenericEnSightReader* reader = vtkGenericEnSightReader::New();
+   //reader->DebugOn();
+   reader->SetCaseFileName( EnSightToVTK->GetFile(0).c_str() );
+   reader->Update();
+   vtkDataArrayCollection* tempArray = reader->GetTimeSets();
+   //this must be an int because i goes negative
+   for ( int i = tempArray->GetNumberOfItems() - 1; i >= 0; --i )
+   {
+      std::cout << "Number of Timesteps = " << tempArray->GetItem( i )->GetNumberOfTuples() << std::endl;
+      //this must be an int because j goes negative
+      for ( int j = tempArray->GetItem( i )->GetNumberOfTuples() - 1; j >= 0; --j )
+      {
+         std::cout << "Translating Timestep = " << tempArray->GetItem( i )->GetTuple1( j ) << std::endl;
+         reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
+         //reader->Update();
+         // used for multiple part ensight files
+         int numberOfOutputs = reader->GetNumberOfOutputs();
+         vtkAppendFilter* appendFilter = vtkAppendFilter::New();
+         for ( int i = 0; i < numberOfOutputs; ++i )
+         {
+            appendFilter->AddInput( reader->GetOutput( i ) );
+         }
+         appendFilter->Update();
+         
+         if ( !outputDataset )
+         {
+            outputDataset = vtkUnstructuredGrid::New();
+         }
+         vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
+         tmpDSet->DeepCopy( appendFilter->GetOutput() );
+         appendFilter->Delete();
+         
+         //get the info about the data in the data set
+         if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
+         {
+            //std::cout<<"Warning!!!"<<std::endl;
+            //std::cout<<"No point data found!"<<std::endl;
+            //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+            
+            vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
+            dataConvertCellToPoint->SetInput(tmpDSet);
+            dataConvertCellToPoint->PassCellDataOff();
+            dataConvertCellToPoint->Update();
+            outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
+            dataConvertCellToPoint->Delete();
+         }
+         else
+         {
+            outputDataset->DeepCopy(tmpDSet);
+         }
+         outputDataset->Update();
+         tmpDSet->Delete();
+         AddScalarsFromVectors( outputDataset );
+         
+         if ( j > 0 )
+         {
+            std::ostringstream strm;
+            strm << EnSightToVTK->GetBaseName()<< "_" << j << ".vtu";
+            VE_Util::cfdVTKFileHandler trans;
+            trans.WriteDataSet( outputDataset, strm.str() );
+            outputDataset->Delete();
+            outputDataset = 0;
+         }
+      }
+   }
+   reader->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnSightTranslator::EnSightTranslateCbk::AddScalarsFromVectors( vtkDataSet*& outputDataset )
