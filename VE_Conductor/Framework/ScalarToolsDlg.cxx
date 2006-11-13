@@ -79,7 +79,9 @@ void ScalarToolsDialog::_buildGUI()
    wxStaticBox* scalarToolsGroup = new wxStaticBox(this, -1, wxT("Scalar Tools"));
    wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer(scalarToolsGroup,wxVERTICAL);
    
-   _scalarSelection = new wxComboBox(this,AVAILABLE_SCALARS,wxEmptyString, wxDefaultPosition, wxSize(150,wxDefaultCoord) );
+   _scalarSelection = new wxComboBox(this,AVAILABLE_SCALARS,
+                                     wxString(""), wxDefaultPosition, 
+                                     wxSize(150,wxDefaultCoord) );
  
    wxStaticBox* isoSliderBox = new wxStaticBox(this, -1, _T("Isosurface"));
    wxStaticBoxSizer* isoSizer = new wxStaticBoxSizer(isoSliderBox,wxVERTICAL);
@@ -155,7 +157,7 @@ void ScalarToolsDialog::UpdateScalarList(wxArrayString scalarNames)
    }
    if(scalarNames.GetCount())
    {
-      _scalarSelection->SetValue(scalarNames[0]);
+      //_scalarSelection->SetValue(scalarNames[0]);
    }
 }
 ////////////////////////////////////////////////////////////////////
