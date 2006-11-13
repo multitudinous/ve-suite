@@ -112,7 +112,7 @@ IMG_PATH?=		../
 SAXON_HTML_PARAMS=	html.stylesheet=base_style.css img.src.path=$(IMG_PATH)
 XALAN_HTML_PARAMS=	-PARAM html.stylesheet "base_style.css" \
 		        -PARAM img.src.path=$(IMG_PATH)
-CHUNK_DIR=		$*-chunk/
+CHUNK_DIR=		$*-multipage/
 SAXON_HTML_CHUNK_PARAMS=	base.dir=$(CHUNK_DIR)
 XALAN_HTML_CHUNK_PARAMS=	-PARAM base.dir $(CHUNK_DIR)
 
@@ -142,7 +142,7 @@ LINK_DEPS=	images
 endif
 
 HTML_FILES=		$(XML_FILES:.xml=.html)
-CHUNK_HTML_FILES=	$(XML_FILES:.xml=-chunk/index.html)
+CHUNK_HTML_FILES=	$(XML_FILES:.xml=-multipage/index.html)
 FO_FILES=		$(XML_FILES:.xml=.fo)
 PDF_FILES=		$(XML_FILES:.xml=.pdf)
 TXT_FILES=		$(XML_FILES:.xml=.txt)
@@ -247,7 +247,7 @@ else
 endif
 
 # XML to index.HTML
-%-chunk/index.html: %.xml
+%-multipage/index.html: %.xml
 	mkdir $(CHUNK_DIR)
 ifeq ($(XSLT_TOOL), Xalan)
 	$(ENV) $(XALAN) -in $< -xsl $(CHUNK_HTML_XSL) -out $@	\
@@ -380,7 +380,7 @@ endif
 #directories. Do not put anything valuable in them.
 clobber:
 	@$(MAKE) clean
-	$(RM) -fr $(XML_FILES:.xml=) $(XML_FILES:.xml=-chunk)
+	$(RM) -fr $(XML_FILES:.xml=) $(XML_FILES:.xml=-multipage)
 ifneq ($(CLOBBER_DIRS), )
 	$(RM) -r $(CLOBBER_DIRS)
 endif

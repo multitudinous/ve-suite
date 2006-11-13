@@ -42,10 +42,10 @@ all: Makes all of the above
 clean: Remove .fo files
 clobber: Remove the made documentation and the directories storing them.
 
-All output except chunk-html is put in a directory named after the .xml file used. Chunk-html output is put in the <name>-chunk directory instead. For example:
+All output except chunk-html is put in a directory named after the .xml file used. Chunk-html output is put in the <name>-multipage directory instead. For example:
 If you build documentation from vrjuggler.xml:
 -HTML, TXT, and PDF documentation goes into the vrjuggler directory.
--Chunked HTML documentation goes into the vrjuggler-chunk directory.
+-Chunked HTML documentation goes into the vrjuggler-multipage directory.
 
 REQUIREMENTS
 
