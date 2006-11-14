@@ -851,6 +851,7 @@ int Network::SelectMod( int x, int y )
          }
          // lets draw some ports sense the module is selected
 	      DrawPorts( modules[i].GetPlugin(), true );
+		  HighlightSelectedIcon( modules[i].GetPlugin());
          // now we are officially selected
 	      m_selMod = i;
 
@@ -2020,6 +2021,36 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
    dc.SetPen(old_pen);
 }
 
+/////////////////////////////////////////////////////////////////////
+void Network::HighlightSelectedIcon (REI_Plugin* cur_module)
+{
+   if (!cur_module)
+      return;
+
+   size_t i;
+   wxPoint bport[5];
+   wxCoord xoff, yoff;
+   int num;
+   wxPoint tempPoint  = cur_module->GetBBox().GetPosition();
+   int tempHeight = cur_module->GetBBox().GetHeight();
+   int tempWidth = cur_module->GetBBox().GetWidth();
+   int highlightBoxWidth = tempWidth;// + 10;
+   int highlightBoxHeight = tempHeight;// + 10;
+
+   wxClientDC dc(this);
+   PrepareDC(dc);
+   dc.SetUserScale( userScale.first, userScale.second );
+   bport[0] = wxPoint(tempPoint.x, tempPoint.y);
+   bport[1] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y);
+   bport[2] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y + highlightBoxHeight);
+   bport[3] = wxPoint(tempPoint.x, tempPoint.y + highlightBoxHeight);
+   bport[4] = wxPoint(tempPoint.x, tempPoint.y);
+   wxPen old_pen = dc.GetPen();
+   dc.SetPen(*wxRED_PEN);
+   dc.DrawLines(5, bport);
+   dc.SetPen(old_pen);
+}
+
 ///////////////////////////////////////////////////////////////////////
 void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
 {
@@ -2556,7 +2587,7 @@ void  Network::OnQueryModuleProperties(std::vector< std::string > requestedInput
 	//serviceList->GetMessageLog()->SetMessage("loop");
 	std::ostringstream output2;
 	output2 << requestedInputs.size() <<std::endl;
-    serviceList->GetMessageLog()->SetMessage(output2.str().c_str());
+    //serviceList->GetMessageLog()->SetMessage(output2.str().c_str());
 	for(int i = 0; i < requestedInputs.size(); i++)
 	{
 	    //serviceList->GetMessageLog()->SetMessage("iter");
@@ -2586,31 +2617,31 @@ void  Network::OnQueryModuleProperties(std::vector< std::string > requestedInput
 
 	    //serviceList->GetMessageLog()->SetMessage("wx");
 		VE_XML::XMLReaderWriter networkReader;
-	    serviceList->GetMessageLog()->SetMessage("dom");
+	    //serviceList->GetMessageLog()->SetMessage("dom");
 		networkReader.UseStandaloneDOMDocumentManager();
-	    serviceList->GetMessageLog()->SetMessage("read");
+	    //serviceList->GetMessageLog()->SetMessage("read");
 		networkReader.ReadFromString();
-	    serviceList->GetMessageLog()->SetMessage("read");
+	    //serviceList->GetMessageLog()->SetMessage("read");
 		networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	    serviceList->GetMessageLog()->SetMessage("objV");
+	    //serviceList->GetMessageLog()->SetMessage("objV");
 		std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-	    serviceList->GetMessageLog()->SetMessage("cmd");
+	    //serviceList->GetMessageLog()->SetMessage("cmd");
 		VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
 
-	    serviceList->GetMessageLog()->SetMessage("dvps");
+	    //serviceList->GetMessageLog()->SetMessage("dvps");
 		unsigned int num = cmd->GetNumberOfDataValuePairs();		
 		std::vector< std::string > dataName;
 		std::vector< std::string > dataValue;
-	std::ostringstream output;
-	output << num <<std::endl;
-    serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+	//std::ostringstream output;
+	//output << num <<std::endl;
+    //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
 		for(int j = 0; j < num; j++)
 		{
 			VE_XML::DataValuePair * pair = cmd->GetDataValuePair(j);
-			serviceList->GetMessageLog()->SetMessage(pair->GetDataType().c_str());
-			serviceList->GetMessageLog()->SetMessage("\n");
-			serviceList->GetMessageLog()->SetMessage(pair->GetDataName().c_str());
-			serviceList->GetMessageLog()->SetMessage("\n");
+			//serviceList->GetMessageLog()->SetMessage(pair->GetDataType().c_str());
+			//serviceList->GetMessageLog()->SetMessage("\n");
+			//serviceList->GetMessageLog()->SetMessage(pair->GetDataName().c_str());
+			//serviceList->GetMessageLog()->SetMessage("\n");
 			//serviceList->GetMessageLog()->SetMessage(pair->GetDataString().c_str());
 			//serviceList->GetMessageLog()->SetMessage("\n");
 			if(pair->GetDataType() == "STRING")
@@ -2628,13 +2659,13 @@ void  Network::OnQueryModuleProperties(std::vector< std::string > requestedInput
 		}
 		//results->Set2Cols(dataName, dataValue);
  		//results->ShowModal();
-		serviceList->GetMessageLog()->SetMessage(requestedInputs[i].c_str());
-	std::ostringstream output3;
-	output3 << dataName.size()<<" : "<< dataValue.size() <<std::endl;
-    serviceList->GetMessageLog()->SetMessage(output3.str().c_str());
+		//serviceList->GetMessageLog()->SetMessage(requestedInputs[i].c_str());
+	//std::ostringstream output3;
+	//output3 << dataName.size()<<" : "<< dataValue.size() <<std::endl;
+    //serviceList->GetMessageLog()->SetMessage(output3.str().c_str());
 		paramDialog->AddResults(requestedInputs[i], dataName, dataValue);
 	}
-	serviceList->GetMessageLog()->SetMessage("show dialog");
+	//serviceList->GetMessageLog()->SetMessage("show dialog");
 	paramDialog->ShowModal();
 }
 

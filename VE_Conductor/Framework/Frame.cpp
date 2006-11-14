@@ -175,6 +175,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_IDLE( AppFrame::IdleEvent )
    EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
    EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
+   EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
+   EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
+   EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -639,8 +642,15 @@ void AppFrame::CreateMenu()
    //con_menu->AppendSeparator();
    con_menu->Append(v21ID_SUBMIT, _("Sub&mit Job\tCtrl+M"));
    con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
+   
    //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
-   con_menu->Append( QUERY_NETWORK, _("Aspen Network") );
+   wxMenu * aspenMenu = new wxMenu();
+   aspenMenu->Append( QUERY_NETWORK, _("Connect to Simulation") );
+   aspenMenu->Append( SHOW_ASPEN_SIMULATION, _("Show Simulation") );
+   aspenMenu->Append( HIDE_ASPEN_SIMULATION, _("Hide Simulation") );
+   aspenMenu->Append( RUN_ASPEN_NETWORK, _("Run Simulation") );
+   con_menu->Append( ASPEN_CONNECTION_MENU,   _("Aspen"), aspenMenu, _("Aspen connection") );
+
    con_menu->AppendSeparator();
    con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
    con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
@@ -958,29 +968,106 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 {
    Log("Query Network.\n");
+   wxFileName bkpFileName;
+   wxTextEntryDialog newDataSetName(this, 
+	   wxString("Enter the prefix for *.bkp filename:"),
+	   wxString("Open BKP Filename"),
+	   wxString(""),wxOK|wxCANCEL);
+   if ( newDataSetName.ShowModal() == wxID_OK )
+   {
+	   bkpFileName.ClearExt();
+	   bkpFileName.SetName( newDataSetName.GetValue() ); 
+	   bkpFileName.SetExt( wxString( "bkp" ) );
+
+	   VE_XML::Command returnState;
+	   returnState.SetCommandName("getNetwork");
+	   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	   data->SetData("NetworkQuery", "getNetwork" );
+	   data = returnState.GetDataValuePair(-1);
+	   data->SetData("BKPFileName",  bkpFileName.GetFullName().c_str());
+
+	   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	   VE_XML::XMLReaderWriter commandWriter;
+	   std::string status="returnString";
+	   commandWriter.UseStandaloneDOMDocumentManager();
+	   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	   //Get results
+	   std::string nw_str = serviceList->Query( status );
+	   Log(nw_str.c_str());
+	   // If there is nothing on the CE
+	   if ( !nw_str.empty() )
+	   {
+		   Log("Load Network");
+		  network->Load( nw_str );
+	   }
+	   else
+	   {
+		  Log("No ves network available\n");
+	   }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////
+void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
+{
+   Log("Show Simulation.\n");
    VE_XML::Command returnState;
-   returnState.SetCommandName("getNetwork");
-   VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
-   data->SetData("NetworkQuery", "getNetwork" );
+   returnState.SetCommandName("showSimulation");
+   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+   data->SetData("NetworkQuery", "showSimulation" );
 
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   
    VE_XML::XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-   //Get results
-   std::string nw_str = serviceList->Query( status );
-   // If there is nothing on the CE
-   if ( !nw_str.empty() )
-   {
-      network->Load( nw_str );
-   }
-   else
-   {
-      Log("No ves network available\n");
-   }
+   
+   serviceList->Query( status );
 }
+
+///////////////////////////////////////////////////////////////////////////
+void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
+{
+   Log("Hide Simulation.\n");
+   VE_XML::Command returnState;
+   returnState.SetCommandName("hideSimulation");
+   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+   data->SetData("NetworkQuery", "hideSimulation" );
+
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   
+   serviceList->Query( status );
+}
+
+///////////////////////////////////////////////////////////////////////////
+void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED(event) )
+{
+   Log("Run Simulation.\n");
+   VE_XML::Command returnState;
+   returnState.SetCommandName("runNetwork");
+   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+   data->SetData("NetworkQuery", "runNetwork" );
+
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   
+   serviceList->Query( status );
+}
+
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {

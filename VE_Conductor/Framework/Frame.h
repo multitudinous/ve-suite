@@ -76,6 +76,10 @@ enum
    v21ID_LOAD, 
    QUERY_FROM_SERVER, 
    QUERY_NETWORK,  
+   RUN_ASPEN_NETWORK,
+   ASPEN_CONNECTION_MENU,
+   SHOW_ASPEN_SIMULATION,
+   HIDE_ASPEN_SIMULATION,
    v21ID_DISCONNECT,
    v21ID_DISCONNECT_VE, 
    v21ID_UNDO, 
@@ -245,6 +249,9 @@ protected:
    void LoadFromServer(wxCommandEvent &event);
    void QueryFromServer( wxCommandEvent& event );
    void QueryNetwork( wxCommandEvent& event );
+   void RunAspenNetwork( wxCommandEvent& event );
+   void ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) );
+   void HideAspenSimulation( wxCommandEvent& WXUNUSED(event) );
    void StartCalc(wxCommandEvent &event);	
    void StopCalc(wxCommandEvent &event);	
    void PauseCalc(wxCommandEvent &event);	
