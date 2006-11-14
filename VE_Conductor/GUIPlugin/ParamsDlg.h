@@ -6,8 +6,6 @@
 #include <wx/choice.h>
 #include <wx/grid.h>
 #include <wx/panel.h>
-//#include <iostream>
-//#include <iomanip>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -35,12 +33,11 @@ class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
 		virtual ~ParamsDlg();
 		void WxChoice1Selected(wxCommandEvent& event );
 		void AddToList(const char *);
+		void SetDefaultSelection();
 		void AddResults(std::string, std::vector< std::string >, std::vector< std::string >);
 		wxChoice *WxChoice1;
 		wxGrid *WxGrid1;
 		wxPanel *WxPanel1;
-		//std::map<const char *, std::vector< std::string >> ParamNames;
-		//std::map<const char *, std::vector< std::string >> ParamValues;
 		std::map<std::string, std::vector< std::string > > ParamNames;
 		std::map<std::string, std::vector< std::string > > ParamValues;
 		

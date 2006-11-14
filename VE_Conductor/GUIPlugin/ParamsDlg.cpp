@@ -29,7 +29,7 @@ void ParamsDlg::CreateGUIControls()
 	WxChoice1->SetSelection(-1);
 	SetTitle(wxT("Project2"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,236,749);
+	SetSize(8,8,254,709);
 	Center();
 }
 
@@ -46,6 +46,7 @@ void ParamsDlg::AddResults(std::string dataName, std::vector< std::string > para
 {
 	ParamNames[dataName] = paramName;
 	ParamValues[dataName] = paramData;
+    //WxChoice1->SetSelection(0);
 }
 
 void ParamsDlg::WxChoice1Selected(wxCommandEvent& event )
@@ -57,4 +58,9 @@ void ParamsDlg::WxChoice1Selected(wxCommandEvent& event )
 		WxGrid1->SetCellValue(i, 0, wxT(ParamNames[name][i].c_str()));
 		WxGrid1->SetCellValue(i, 1, wxT(ParamValues[name][i].c_str()));
 	}
+}
+
+void ParamsDlg::SetDefaultSelection()
+{
+    //WxChoice1->SetSelection(0);
 }

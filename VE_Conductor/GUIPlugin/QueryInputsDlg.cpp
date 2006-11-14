@@ -55,7 +55,8 @@ void QueryInputsDlg::WxButton1Click(wxCommandEvent& event)
 
 void QueryInputsDlg::WxButton2Click(wxCommandEvent& event)
 {
-    WxListBox2->Delete(WxListBox2->GetSelection());
+	if(WxListBox2->GetSelection() != wxNOT_FOUND)
+		WxListBox2->Delete(WxListBox2->GetSelection());
 }
 
 void QueryInputsDlg::WxButton3Click(wxCommandEvent& event)
