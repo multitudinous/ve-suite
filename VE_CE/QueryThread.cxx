@@ -49,7 +49,7 @@ QueryThread::~QueryThread ()
 }
 ////////////////////////////////////////////////////////////////////////////////
 int QueryThread::svc( void )
-{
+{		  
    while ( !shutdown ) 
    {
       while ( isComplete ) 
@@ -66,8 +66,8 @@ int QueryThread::svc( void )
       } 
       catch (CORBA::Exception &) 
       {
-         std::cout <<"Module Query Messed up." << std::endl;
-         queryData.erase();
+		  std::cout<< "Module Query Messed up." << std::endl;
+		  queryData.erase();
       }
       _mutex.release();
       isComplete = true;
@@ -91,9 +91,9 @@ bool QueryThread::GettingData( void )
 ////////////////////////////////////////////////////////////////////////////////
 std::string QueryThread::GetQueryData( void )
 {
-   _mutex.acquire();
-   std::string tempData = queryData;
-   _mutex.release();
-   return tempData;
+	_mutex.acquire();
+	std::string tempData = queryData;
+	_mutex.release();
+	return tempData;
 }
 

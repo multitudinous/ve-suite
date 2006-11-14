@@ -50,6 +50,8 @@
 #include <ace/OS.h>
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 // Implementation skeleton constructor
 Body_Executive_i::Body_Executive_i (CosNaming::NamingContext_ptr nc)
@@ -897,15 +899,18 @@ char *  Body_Executive_i::Query (  const char * command
    queryIter = queryThreads.find( iter->first );
    //try 
    {
-      queryIter->second->QueryData( status, moduleId );
-      //iter->second->SetCurID( moduleId );
-      //queryString.assign( iter->second->Query( CORBA::string_dup( status.c_str() ) ) );
-      while ( queryIter->second->GettingData() )
-      {
-         ACE_OS::sleep( 1 );
-      }
-      
-      queryString.assign( queryIter->second->GetQueryData() );
+	   queryIter->second->QueryData( status, moduleId );
+	   //iter->second->SetCurID( moduleId );
+	   //queryString.assign( iter->second->Query( CORBA::string_dup( status.c_str() ) ) );
+	   //while ( queryIter->second->GettingData() )
+	   std::string returnString;
+	   while(returnString.empty())
+	   {
+		   ACE_OS::sleep( 1 );
+		   returnString = queryIter->second->GetQueryData();
+	   }
+	   //queryString.assign( queryIter->second->GetQueryData() );
+	   queryString.assign(returnString);
    }
    //catch (CORBA::Exception &) 
    {

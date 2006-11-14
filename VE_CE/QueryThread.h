@@ -39,7 +39,6 @@
 #include "VE_Open/skel/moduleS.h"
 
 //class Body_Executive_i;
-
 class QueryThread : public ACE_Task_Base 
 {
 public:
