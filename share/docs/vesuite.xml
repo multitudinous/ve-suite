@@ -22,9 +22,9 @@
     url="http://www.cs.wustl.edu/%7Eschmidt/TAO.html">ACE/TAO</ulink>), and
     <ulink url="http://www.wxwidgets.org/">wxWidgets</ulink>. Initially
     developed as a CFD visualization package, VE-Suite has matured into a
-    software toolset which enhances engineers decision making capabilities. By
+    software toolset that enhances engineers' decision-making capabilities. By
     integrating computational results from multiple disciplines into a common
-    framework, VE-Suite helps the engineer analyze problems and make more
+    framework, VE-Suite helps engineers analyze problems and make more
     complete solutions.</para>
   </preface>
 
@@ -34,41 +34,47 @@
     <chapter id="vesuiteinstallsetup">
       <title>Installation and Setup</title>
 
-      <para>Support is provided at the following locations: <ulink
-      url="http://www.vesuite.org/forum/">VE-Suite Forums</ulink> -
-      Users/developers can go here to access forums..</para>
+      <para>Support is provided at the following locations: </para>
 
-      <para><ulink
-      url="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">VE-Suite
-      Bugzilla</ulink> - VE-Suite's interface for bug tracking.
-      Users/developers can submit/view bugs.</para>
+      <itemizedlist>
+        <listitem>
+          <para><ulink url="http://www.vesuite.org/forum/">VE-Suite
+          Forums</ulink> - Users/developers can go here to access
+          forums.</para>
+        </listitem>
 
-      <para>Installation of VE-Suite is fairly straight forward. Visit the
+        <listitem>
+          <para><ulink
+          url="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">VE-Suite
+          Bugzilla</ulink> - VE-Suite's interface for bug tracking. Users and
+          developers can view and submit bugs.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Installation of VE-Suite is fairly straightforward. Visit the
       <ulink url="http://www.vesuite.org/download.php">Downloads</ulink>
-      section and locate your OS. Two installers are provided for Windows
-      which guide you through the process of selecting various options. One
-      installer (vesuite.1.0.0.exe) contains the core VE-Suite binaries and
-      .dll files. The other (vesuite_deps.1.0.0.exe) contains the binaries and
-      .dll files of the dependencies for the current release of
+      section and locate your operating system. Two installers, which guide
+      you through the process of selecting various options, are provided for
+      Windows. One installer, vesuite.x.x.x.exe, contains the core VE-Suite
+      binaries and .dll files, while vesuite_deps.x.x.x.exe contains the
+      binaries and .dll files of the dependencies for the current release of
       VE-Suite.</para>
 
       <para>On UNIX/Linux, two tar.gz files are provided for the core VE-Suite
-      files and its dependencies.</para>
+      files and its dependencies. In either case, extracting the files creates
+      two directory structures:</para>
 
-      <para>In either case, extracting the files creates two directory
-      structures:</para>
+      <para><code> VE-Suite.x.x.x/</code></para>
 
-      <para><code>VE-Suite.x.x.x/</code></para>
-
-      <para><code>VE_Suite.x.x.x_Dependencies/</code></para>
+      <para><code> VE_Suite.x.x.x_Dependencies/</code></para>
 
       <section>
         <title>Windows Installation</title>
 
         <para>Installing VE-Suite and its dependencies follows the same
-        procedure as other installations. You'll choose their locations, which
-        components to install, their Start Menu folder, and whether to have a
-        desktop icon.</para>
+        procedure as other installations. You'll choose which components to
+        install, their locations, their Start Menu folder, and whether to have
+        a desktop icon.</para>
 
         <mediaobject>
           <imageobject>
@@ -77,9 +83,9 @@
         </mediaobject>
 
         <para>Of particular note is which components to install. In large
-        setups, certain computers will run the NameServer while others handle
-        the Conductor and Xplorer. Since you're only running it on a single
-        desktop, you'll want to install everything. Just leave all the
+        setups, certain computers will run the NameServer while others will
+        handle the Conductor and Xplorer. If you only plan to run it on a
+        single desktop, you'll want to install everything. Just leave all the
         checkboxes checked.</para>
 
         <para>Go through the same process for VE-Suite's dependencies.</para>
@@ -95,26 +101,27 @@
           <listitem>
             <para>Using GNU tar:</para>
 
-            <para><code>gtar xvzf vesuite_1.0.1_RHEL_4.tar.gz </code></para>
+            <para><code>gtar xvzf vesuite_x.x.x_RHEL_4.tar.gz </code></para>
 
             <para><code>gtar xvzf
-            vesuite_deps1.0.1_RHEL_4.tar.gz</code></para>
+            vesuite_depsx.x.x_RHEL_4.tar.gz</code></para>
           </listitem>
 
           <listitem>
             <para>Using gzip:</para>
 
-            <para><code>gunzip &lt; vesuite_1.0.1_RHEL_4.tar.gz | tar xvf
+            <para><code>gunzip &lt; vesuite_x.x.x_RHEL_4.tar.gz | tar xvf
             -</code></para>
 
-            <para><code>gunzip &lt; vesuite_deps1.0.1_RHEL_4.tar.gz | tar xvf
+            <para><code>gunzip &lt; vesuite_depsx.x.x_RHEL_4.tar.gz | tar xvf
             -</code></para>
           </listitem>
         </itemizedlist>
 
-        <para><emphasis role="bold">Note</emphasis>: These examples use
-        VE-Suite 1.0.1. Be sure to change the version number in the commands
-        for later versions.</para>
+        <para><emphasis role="bold">NOTE</emphasis>: These examples use
+        vesuite_x.x.x as a general placeholder for any version of VE-Suite. Be
+        sure to change the version number to the specific version you are
+        installing.</para>
       </section>
 
       <section id="setting_runtime_environment">
@@ -124,7 +131,7 @@
         through text scripts. Now it uses VE-Launcher to set up the
         environment. Most of it is automated, but you need to be aware of two
         important variables it sets: VE-Suite's directory and VE-Suite's
-        Dependencies' directory.</para>
+        Dependencies directory.</para>
 
         <para>VE-Launcher automatically determines VE-Suite's directory from
         the current working directory. Moving the Launcher out of VE-Suite's
@@ -132,9 +139,9 @@
         wrong value to VE-Suite, causing errors.</para>
 
         <para>The Dependencies directory is the only variable you need to set
-        manually. The first time you start VE-Launcher, it will ask you to
-        find the Dependencies directory. On Windows, it's simply the
-        VE_Suite.1.#.#_Dependencies folder.</para>
+        manually. The first time you start VE-Launcher, you will be asked to
+        find the Dependencies directory. On Windows, it is the
+        VE_Suite.x.x.x_Dependencies folder.</para>
 
         <mediaobject>
           <imageobject>
@@ -164,25 +171,25 @@
       <section id="launcher_intro">
         <title>Introduction</title>
 
-        <para>Starting VE-Suite has been simplified with the release of
-        version 1.0.0 via VE-Launcher. VE-Launcher is a quick, easy way to
-        launch any configuration of VE-Suite. It helps you save your
-        configuration, choose which programs to run, and launch them without
-        entering text commands. Even with all of the options and
-        configurations available, choosing the one you need can still take
-        some work. Here, we explain how to use the Launcher and provide an
-        example of setting it up.</para>
+        <para>Starting VE-Suite was simplified with the release of version
+        1.0.0 via VE-Launcher. VE-Launcher is a quick, easy way to launch any
+        configuration of VE-Suite. It helps you save your configuration,
+        choose which programs to run, and launch them without entering text
+        commands. Even with all of the options and configurations available,
+        choosing the one you need can still take some work. Here, we explain
+        how to use the Launcher and provide an example of setting it
+        up.</para>
       </section>
 
       <section id="launcher_basics">
         <title>The Basics</title>
 
-        <para>You start VE Launcher by double-clicking VE-Suite's desktop
+        <para>VE-Launcher is started by double-clicking VE-Suite's desktop
         icon, double-clicking the velauncher program in VE-Suite's folder, or
-        typing "python velauncher.py" into an Unix terminal. On your first
-        time running VE-Launcher, it will ask you to choose the VE-Suite's
+        typing <code>python velauncher.py</code> into a Unix terminal. The
+        first time you run VE-Launcher, you will be asked to choose VE-Suite's
         Dependencies folder. On Windows, this folder is named
-        VE_Suite.#.#.#_Dependencies.</para>
+        VE_Suite.x.x.x_Dependencies.</para>
 
         <mediaobject>
           <imageobject>
@@ -200,8 +207,8 @@
           </imageobject>
         </mediaobject>
 
-        <para>Once VE-Launcher confirms it's a dependencies folder, it will
-        show you the main window.</para>
+        <para>Once VE-Launcher confirms that you have chosen the dependencies
+        folder, you will be shown the main window.</para>
 
         <mediaobject>
           <imageobject>
@@ -211,18 +218,18 @@
 
         <itemizedlist>
           <listitem>
-            <para>The Working Directory contains the fies you want to load.
-            Set it to the files' directory.</para>
+            <para>Working Directory: Ensure that the location of the directory
+            containing the files you want to load is entered. </para>
           </listitem>
 
           <listitem>
-            <para>The Computation Engine Name and Port tell VE-Suite which
-            computer and port to connect to.</para>
+            <para>Computation Engine (CE) Name and Port: Enter the computer
+            and port you want to connect to.</para>
           </listitem>
 
           <listitem>
-            <para>The Launch Mode lists five modes you can launch VE-Suite
-            in:</para>
+            <para>Launch Mode: Select which mode you would like to launch
+            VE-Suite in. You have six options, including custom mode:</para>
 
             <orderedlist>
               <listitem>
@@ -231,17 +238,17 @@
               </listitem>
 
               <listitem>
-                <para>Tablet mode launches Conductor. It's made for use on
-                tablets.</para>
+                <para>Tablet mode launches Conductor. It is designed for use
+                on tablets.</para>
               </listitem>
 
               <listitem>
-                <para>Computation mode launches the Name Server. It's made for
-                use on computational engines.</para>
+                <para>Computation mode launches the Name Server. It is
+                designed for use on computational engines.</para>
               </listitem>
 
               <listitem>
-                <para>Visualization mode launches Xplorer. It's made for
+                <para>Visualization mode launches Xplorer. It is designed for
                 viewing projects. It uses Custom's settings to choose VR
                 Juggler's configuration and which type of Xplorer to
                 run.</para>
@@ -251,8 +258,8 @@
                 <para>As of 1.0.2: Shell mode lets the user work in a new
                 shell with the VE-Suite environment set up. If you choose to
                 launch in Shell mode, it will ask you whether you want to set
-                up this shell for VE-Builder or not. If you do, it will add
-                the VE-Builder directory you choose to the path. On Windows,
+                up this shell for VE-Builder. If you do, it will add the
+                VE-Builder directory you choose to the path. On Windows,
                 launching Shell creates the shell in a window; simply close it
                 to exit. On Unix, launching Shell makes the shell a child of
                 your current terminal; type in "exit" to return to your
@@ -268,9 +275,9 @@
         </itemizedlist>
 
         <para>The settings for every mode can be viewed and changed by
-        clicking the Mode Settings button. Once you're done setting those,
-        click the Launch VE-Suite button to close VE-Launcher and start
-        VE-Suite.</para>
+        clicking the Mode Settings button. Once you finish choosing the
+        settings, click <guibutton>Launch VE-Suite</guibutton> to close
+        VE-Launcher and start VE-Suite.</para>
 
         <para>As of 1.0.2, the main window has a menu bar with the following
         menus:</para>
@@ -362,9 +369,9 @@
         <para>You use the Mode Settings window to view and change settings.
         The Desktop, Tablet, and Computation modes only let you view their
         settings, while Visualization and Custom modes let you change some of
-        them. Choices are faded out if you can't change them or if they
-        wouldn't do anything. (For example, you can't choose which type of
-        Xplorer to run if you're not running Xplorer.)</para>
+        them. Choices are faded out if you can't change them or if changing
+        them wouldn't do anything. (For example, you can't choose which type
+        of Xplorer to run if you're not running Xplorer.)</para>
 
         <para>Options you can set include:</para>
 
@@ -372,14 +379,14 @@
           <listitem>
             <para>Which VR Juggler configuration to use from the pulldown
             list. You can edit the list by clicking Edit Configuration List.
-            We go into the List in more detail below.</para>
+            We will go into the List in more detail below.</para>
           </listitem>
 
           <listitem>
             <para>Which programs to run. You can choose to run Name Server,
             Conductor, and Xplorer. If you don't select any of them, VE-Suite
-            won't launch (since it won't do anything without a program to
-            launch.)</para>
+            won't launch because it won't do anything without a program to
+            launch.</para>
           </listitem>
 
           <listitem>
@@ -406,9 +413,9 @@
 
         <para>VE-Suite has over two dozen configuration files available. To
         help you keep track of them, VE-Launcher provides you with a
-        configuration list you can add, rename, and delete entries from. The
-        path to the currently selected entry is listed below, so you can tell
-        which name stands for which file.</para>
+        configuration list that allows you to add, rename, and delete entries.
+        The path to the currently selected entry is listed below, so you can
+        tell which name stands for which file.</para>
 
         <para>When you add a new configuration to the list, its initial name
         is its file name. You'll want to rename it to something more
@@ -450,12 +457,12 @@
         on the cluster (including your current computer) and authenticate it
         before you can start the cluster using VE-Launcher. You must use the
         exact name you'll use in VE-Launcher; ssh treats partially-qualified
-        (francis) and fully-qualified (francis.iastate.edu) names as separate
-        users. Once you authenticate the other nodes, the authentication stays
-        in your user profile permentantly.</para>
+        (e.g., francis) and fully-qualified (e.g., francis.iastate.edu) names
+        as separate users. Once you authenticate the other nodes, the
+        authentication stays in your user profile permentantly.</para>
 
-        <para>Once you have all the nodes authenticated, you can run the
-        cluster from VE-Launcher:</para>
+        <para>Once you have authenticated all nodes, you can run the cluster
+        from VE-Launcher:</para>
 
         <orderedlist>
           <listitem>
@@ -466,8 +473,8 @@
 
           <listitem>
             <para>Set the settings. When you select the Xplorer type OSG
-            Patented Cluster, the Set Cluster Computers button will be
-            enabled.</para>
+            Patented Cluster, the <guibutton>Set Cluster Computers</guibutton>
+            button will be enabled.</para>
 
             <mediaobject>
               <imageobject>
@@ -477,9 +484,10 @@
           </listitem>
 
           <listitem>
-            <para>Click Set Cluster Computers. A window will pop up showing
-            the master and slaves listed. Put the master's name in, then add
-            each slave's name to the list. Click OK when you're done.</para>
+            <para>Click <guibutton>Set Cluster Computers</guibutton>. A window
+            will pop up showing the master and slaves listed. Put the master's
+            name in, then add each slave's name to the list. Click
+            <guibutton>OK</guibutton> when you're done.</para>
 
             <mediaobject>
               <imageobject>
@@ -489,18 +497,18 @@
           </listitem>
 
           <listitem>
-            <para>Launch VE-Suite by clicking the Launch button. The cluster
-            computers will start up VE-Suite.</para>
+            <para>Launch VE-Suite by clicking <guibutton>Launch</guibutton>.
+            The cluster computers will start up VE-Suite.</para>
           </listitem>
         </orderedlist>
 
-        <para><emphasis role="bold">Note:</emphasis> There's a slight delay
-        between each node launched. That's because simultaneous launching
-        caused erratic behavior in the cluster. The delay can be changed
-        through the Options-&gt;Cluster Wait Times menu. If you're
-        encountering problems with sync or unconnected nodes using
-        VE-Launcher, try lengthening the delays. If it's taking too long to
-        launch the cluster, try shortening them.</para>
+        <para><emphasis role="bold">NOTE:</emphasis> There is a slight delay
+        between each node launched because simultaneous launching caused
+        erratic behavior in the cluster. The delay can be changed through the
+        Options-&gt;Cluster Wait Times menu. If you encounter problems with
+        sync or unconnected nodes using VE-Launcher, try lengthening the
+        delays. If launching the cluster is taking too long, try shortening
+        them.</para>
       </section>
 
       <section id="launcher_windows_clusters">
@@ -538,7 +546,8 @@
           <listitem>
             <para>Select Custom mode and set your settings as usual. When you
             choose which Xplorer Type to run, select OSG Patented Cluster.
-            This enables the Set Cluster Computers button.</para>
+            This enables the <guibutton>Set Cluster Computers</guibutton>
+            button.</para>
 
             <mediaobject>
               <imageobject>
@@ -548,20 +557,20 @@
           </listitem>
 
           <listitem>
-            <para>Click Set Cluster Computers. A window will pop up showing
-            the master and slaves listed, plus an optional username field. Put
-            the master's name in, then add each slave's name to the
-            list.</para>
+            <para>Click <emphasis role="bold">Set Cluster
+            Computers</emphasis>. A window will pop up showing the master and
+            slaves listed, plus an optional username field. Put the master's
+            name in, then add each slave's name to the list.</para>
 
             <para>Some clusters might require you to connect as a certain
             user; if so, just enter your username into the User Name field.
             The username's domain may need to be included as well, depending
             on your cluster's setup. If you pass your username, you will have
             to manually enter your password in each Psexec window when it
-            launchers; VE-Launcher doesn't send passwords for security
+            launches; VE-Launcher doesn't send passwords for security
             reasons.</para>
 
-            <para>Click OK when you're done.</para>
+            <para>Click <guibutton>OK</guibutton> when you're done.</para>
 
             <mediaobject>
               <imageobject>
@@ -571,18 +580,18 @@
           </listitem>
 
           <listitem>
-            <para>Launch VE-Suite by clicking the Launch button. The cluster
-            computers will start up VE-Suite.</para>
+            <para>Launch VE-Suite by clicking <guibutton>Launch</guibutton>.
+            The cluster computers will start up VE-Suite.</para>
           </listitem>
         </orderedlist>
 
-        <para><emphasis role="bold">Note:</emphasis> There's a slight delay
-        between each node launched. That's because simultaneous launching can
-        cause erratic behavior in the cluster. The delay can be changed
-        through the Options-&gt;Cluster Wait Times menu. If you're
-        encountering problems with sync or unconnected nodes using
-        VE-Launcher, try lengthening the delays. If it's taking too long to
-        launch the cluster, try shortening them.</para>
+        <para><emphasis role="bold">NOTE:</emphasis> There is a slight delay
+        between each node launched because simultaneous launching can cause
+        erratic behavior in the cluster. The delay can be changed through the
+        Options-&gt;Cluster Wait Times menu. If you encounter problems with
+        sync or unconnected nodes using VE-Launcher, try lengthening the
+        delays. If it's taking too long to launch the cluster, try shortening
+        them.</para>
 
         <para><emphasis role="bold">The cluster template: </emphasis>If your
         cluster needs extra code to launch (for example, a net use command to
@@ -592,9 +601,9 @@
         launched. Please read the comments in clusterTemplate.txt for more
         details.</para>
 
-        <para><emphasis role="bold">Note: </emphasis>There is a bug in
+        <para><emphasis role="bold">NOTE: </emphasis>There is a bug in
         VE-Launcher 1.0.2 where the cluster template code isn't separated from
-        the standard code by a line break. Be sure to put in a line break
+        the standard code by a line break. Be sure to insert a line break
         after the last line of code in the template to avoid errors from a
         merged line.</para>
       </section>
@@ -616,8 +625,8 @@
         </mediaobject>
 
         <para>First he types the path to the plant design data folder in the
-        Working Directory field. (He could also use the Choose Working
-        Directory button to find it.)</para>
+        Working Directory field. (He could also use the <guibutton>Choose
+        Working Directory </guibutton>button to find it.)</para>
 
         <mediaobject>
           <imageobject>
@@ -625,11 +634,11 @@
           </imageobject>
         </mediaobject>
 
-        <para>He needs to change the CE's name, but he can't because the
-        Launcher's currently in Desktop mode, which automatically sets the
-        CE's name to localhost. To unlock the CE's name, he switches to
-        Visualization mode. (Any mode besides Desktop will let you change the
-        CE's name.)</para>
+        <para>He needs to change the computational engine (CE) name, but he
+        can't because the Launcher is currently in Desktop mode, which
+        automatically sets the CE name to "localhost". To unlock the CE name,
+        he switches to Visualization mode. (Any mode besides Desktop will let
+        you change the CE name.)</para>
 
         <mediaobject>
           <imageobject>
@@ -646,9 +655,9 @@
           </imageobject>
         </mediaobject>
 
-        <para>To finish setting up the Launcher, John has to change the mode's
-        settings. He clicks on the Mode Settings button to bring up the
-        Settings window.</para>
+        <para>To finish setting up the Launcher, John must change the mode's
+        settings. He clicks the <guibutton>Mode Settings</guibutton> button to
+        bring up the Settings window.</para>
 
         <mediaobject>
           <imageobject>
@@ -657,9 +666,10 @@
         </mediaobject>
 
         <para>Visualization mode sets most of the options, and Open Scene
-        Graph is already selected. That just leaves changing the Xplorer
-        configuration. The configuration he needs isn't on the list yet,
-        though. John clicks the Edit Configuration List button.</para>
+        Graph is already selected. That leaves changing the Xplorer
+        configuration. However, the configuration he needs isn't on the list
+        yet. John clicks <guibutton>Edit Configuration
+        List</guibutton>.</para>
 
         <mediaobject>
           <imageobject>
@@ -667,7 +677,7 @@
           </imageobject>
         </mediaobject>
 
-        <para>Since it isn't on the list, he adds it.</para>
+        <para>Because it isn't on the list, he adds it.</para>
 
         <mediaobject>
           <imageobject>
@@ -675,8 +685,9 @@
           </imageobject>
         </mediaobject>
 
-        <para>It's automatically added to the list as standalone. John renames
-        it to Plant Design so he can remember which project it's for.</para>
+        <para>It is automatically added to the list as standalone. John
+        renames it "Plant Design" so he can remember which project it is
+        for.</para>
 
         <mediaobject>
           <imageobject>
@@ -685,10 +696,10 @@
         </mediaobject>
 
         <para>Now that he's done editing the list, John exits the Xplorer
-        Configuration window. Since he had Plant Design selected when he left,
-        it's automatically set as his current configuration file. With
-        everything set as he wanted, John can now click Launch VE-Suite to
-        look at the design.</para>
+        Configuration window. Because he had Plant Design selected when he
+        left, it is automatically set as his current configuration file. With
+        everything set as he wanted, John can now click <guibutton>Launch
+        VE-Suite</guibutton> to look at the design.</para>
       </section>
     </chapter>
 
@@ -710,7 +721,7 @@
         velauncher.exe in the VE_Suite folder. Unix/Linux users should go into
         the VE_Suite folder and enter:</para>
 
-        <para>python velauncher.py</para>
+        <para><code> python velauncher.py</code></para>
 
         <mediaobject>
           <imageobject>
@@ -718,32 +729,33 @@
           </imageobject>
         </mediaobject>
 
-        <para>If this is your first time running VE-Launcher, it will ask for
-        the Dependencies folder (see Chapter 1.2&lt;link&gt;) before bringing
-        you to the main window.</para>
+        <para>If this is your first time running VE-Launcher, you will be
+        asked for the Dependencies folder (see <link
+        linkend="setting_runtime_environment">Setting the Runtime
+        Environment</link>) before being shown the main window.</para>
 
-        <para>The launcher has some advanced commands, but we can ignore them
-        for now. Make sure Desktop mode is selected and click the Launch
-        button. VE-Launcher will launch the Naming Service, VE-Conductor, and
-        VE-Xplorer in Desktop mode.</para>
+        <para>Launcher has some advanced commands, but we can ignore them for
+        now. Make sure Desktop mode is selected and click
+        <guibutton>Launch</guibutton>. VE-Launcher will launch the Naming
+        Service, VE-Conductor, and VE-Xplorer in Desktop mode.</para>
 
-        <para>If you want to learn more about how to use VE-Launcher, check
-        out the VE-Launcher guide here&lt;link&gt;.</para>
+        <para>If you want to learn more about how to use VE-Launcher, read the
+        <link linkend="launcher">VE-Launcher section</link> of this
+        guide.</para>
       </section>
 
       <section id="loading_data_and_connecting">
         <title>Loading Data and Connecting</title>
 
-        <para>VE-Suite loads objects through plug-ins. Here we will show you
-        how to load a geometry file through a plug-in; other data files may be
+        <para>VE-Suite loads objects through plugins. Here we will show you
+        how to load a geometry file through a plugin; other data files may be
         loaded in the same manner.</para>
 
-        <para>You set up plug-ins through the "Available Objects" window on
-        the right side of the screen. To create a new plugin, double-click on
-        the red "Available Modules" folder, then double-click on the
-        DefaultPlugin. A gray box will appear next to it. Right click on this
-        box to access the plugin's menu. Select the "Geometry Config" option
-        as shown.</para>
+        <para>You set up plugins through the "Available Objects" window on the
+        right side of the screen. To create a new plugin, double-click the red
+        "Available Modules" folder, then double-click "DefaultPlugin". A gray
+        box will appear. Right-click on this box to access the plugin's menu.
+        Select the "Geometry Config" option as shown.</para>
 
         <mediaobject>
           <imageobject>
@@ -753,7 +765,7 @@
 
         <para>A new window will open on the design canvas, the CADTree
         Manager. This holds the objects you insert into your plugin. To select
-        a geometry file, right-click on the Model_Geometry folder in the
+        a geometry file, right-click on the "Model_Geometry" folder in the
         canvas and select Add Node-&gt;Load CAD file.</para>
 
         <mediaobject>
@@ -763,7 +775,7 @@
         </mediaobject>
 
         <para>Another window will appear. Choose the file's type, select the
-        file, then click Open.</para>
+        file, then click <guibutton>Open</guibutton>.</para>
 
         <mediaobject>
           <imageobject>
@@ -773,11 +785,11 @@
 
         <para>The program will ask you to name the object you loaded, then
         insert it into the plugin. Add any other objects you want to include
-        in the same way. Once this is completed, click Close on the design
-        canvas.</para>
+        in the same way. Once this is completed, click
+        <guibutton>Close</guibutton> on the design canvas.</para>
 
-        <para>The information for the plug-in's node needs to be loaded to the
-        rest of VE-Suite. This is done by choosing Submit job from the
+        <para>The information for the plugin's node needs to be loaded to the
+        rest of VE-Suite. This is done by choosing "Submit Job" from the
         Connection menu.</para>
 
         <mediaobject>
@@ -837,7 +849,7 @@
         <section id="navigatio_npane">
           <title>Navigation Pane</title>
 
-          <para>To open the Navigation pane, select Navigation Pane from the
+          <para>To open the Navigation pane, select "Navigation Pane" from the
           VE-Xplorer menu:</para>
 
           <mediaobject>
@@ -846,7 +858,7 @@
             </imageobject>
           </mediaobject>
 
-          <para>The Navigation pane will appear below:</para>
+          <para>The Navigation Pane will appear below:</para>
 
           <mediaobject>
             <imageobject>
@@ -865,23 +877,23 @@
 
           <itemizedlist>
             <listitem>
-              <para>The Step Size sliders control the speed of translations
-              and rotations. The farther to the right they are, the faster
-              translations and rotations occur.</para>
+              <para>The <emphasis role="bold">Step Size sliders</emphasis>
+              control the speed of translations and rotations. The farther to
+              the right they are, the faster translations and rotations
+              occur.</para>
             </listitem>
 
             <listitem>
-              <para>Rotate About Users Head controls how the camera reacts to
-              Yaw Rotation commands. If it's checked, the camera rotates in
-              place. If it isn't, the camera rotates around the environment
-              center, like the roll and pitch rotations.</para>
+              <para><emphasis role="bold">Rotate About Users Head
+              </emphasis>controls how the camera reacts to Yaw Rotation
+              commands. If it is checked, the camera rotates in place. If it
+              is not, the camera rotates around the environment center, like
+              the roll and pitch rotations.</para>
             </listitem>
-          </itemizedlist>
 
-          <itemizedlist>
             <listitem>
-              <para>Reset Nav Position resets the camera to its initial
-              position.</para>
+              <para><guibutton>Reset Nav Position</guibutton> resets the
+              camera to its initial position.</para>
             </listitem>
           </itemizedlist>
         </section>
@@ -894,7 +906,7 @@
 
         <orderedlist>
           <listitem>
-            <para>Select Quit from VE-Conductor's File menu. This quits
+            <para>Select "Quit" from VE-Conductor's File menu. This quits
             Conductor and Xplorer.</para>
           </listitem>
 
@@ -924,14 +936,14 @@
       <section id="visualization_setup">
         <title>Setup</title>
 
-        <para>Visualizations requires two files: a geometry config file and a
+        <para>Visualizations require two files: a geometry config file and a
         dataset file. Both have properties, such as scale and translation,
         that can be modified to ensure they line up.</para>
 
         <para>First, open VE-Launcher and set the working directory to the
-        PrISUm folder. Next, open up VE-Suite in Desktop mode from
-        VE-Launcher. Load the PrISUmblend.obj CAD file, but don't close the
-        CADTree Manager window yet. (See Chapter 2.2)</para>
+        PrISUm folder. Next, open VE-Suite in Desktop mode from VE-Launcher.
+        Load the PrISUmblend.obj CAD file, but don't close the CADTree Manager
+        window yet. (See Chapter 2.2)</para>
 
         <mediaobject>
           <imageobject>
@@ -940,16 +952,17 @@
         </mediaobject>
 
         <para>Right-click on the Model_Geometry folder again and choose
-        Properties. A CAD Properties window will pop up. We can use this to
-        change PrISUm's properties. We need to know what to change them to,
-        though.</para>
+        Properties. A CAD Properties window will pop up. This can be used to
+        change PrISUm's properties, but you must know what to change them
+        to.</para>
 
         <para>Open the PrISUm folder from the desktop and look for the
-        vrxpr.param file. This file contains parameter info for PrISUm, which
-        we'll enter into the Properties window. Open it using a text editor,
-        look for the 3x3 block underneath the number 9, and enter the values
-        into the Properties window. Be sure to note the rows go in a different
-        order in the Properties window than in the .param file:</para>
+        vrxpr.param file. This file contains parameter information for PrISUm,
+        which we'll enter into the Properties window. Open vrxpr.param using a
+        text editor, look for the 3x3 block underneath the number 9, and enter
+        the values into the Properties window. <emphasis
+        role="bold">NOTE:</emphasis> The rows go in a different order in the
+        Properties window than in the .param file:</para>
 
         <mediaobject>
           <imageobject>
@@ -958,8 +971,8 @@
         </mediaobject>
 
         <para>Once the parameters are entered, close the CAD Properties and
-        CADTree Manager window. Now right-click on our grey plugin box again
-        and chose Data Set Config. We need to add the dataset to it.</para>
+        CADTree Manager window. Now right-click on the gray plugin box again
+        and chose Data Set Config. Add the dataset to it.</para>
 
         <mediaobject>
           <imageobject>
@@ -973,13 +986,14 @@
           </imageobject>
         </mediaobject>
 
-        <para>First, click Add Dataset to name your dataset configuration.
-        Then click Open under DataSet Filename and choose the outFile3.vtk
-        file as your dataset. You don't need to change any of the other
-        settings for PrISUm, so just click Load to load the dataset and exit
-        the window.</para>
+        <para>First, click <guibutton>Add Dataset </guibutton>to name your
+        dataset configuration. Then click <emphasis
+        role="bold">Open</emphasis> under DataSet Filename and choose
+        outFile3.vtk file as your dataset. You don't need to change any other
+        setting for PrISUm, so just click <guibutton>Load</guibutton> to load
+        the dataset and exit the window.</para>
 
-        <para>Once that's done, choose Submit Job from the Connection menu to
+        <para>Once that is done, choose Submit Job from the Connection menu to
         display the PrISUm car. Use the navigation pane to adjust the view
         until you get a good view of it.</para>
 
@@ -1000,12 +1014,12 @@
         </mediaobject>
 
         <para>Now that the plugin is set up, we can use the Visualization
-        interface to show scalar planes, like the one above. Visualization not
-        only lets you access scalar contours, but vector planes, isosurfaces,
-        and more.</para>
+        interface to show scalar planes like the one pictured above.
+        Visualization not only lets you access scalar contours, but vector
+        planes, isosurfaces, and more.</para>
 
         <para>To bring up the Visualization interface, right-click on the
-        plug-in to access the menu and select Visualization. This window will
+        plugin to access the menu and select Visualization. This window will
         appear:</para>
 
         <mediaobject>
@@ -1014,8 +1028,8 @@
           </imageobject>
         </mediaobject>
 
-        <para>Click on the Scalar Contours button (the leftmost icon) to bring
-        up the Scalar Contours interface.</para>
+        <para>Click on the <guibutton>Scalar Contours</guibutton> button (the
+        leftmost icon) to bring up the Scalar Contours interface.</para>
 
         <mediaobject>
           <imageobject>
@@ -1023,9 +1037,10 @@
           </imageobject>
         </mediaobject>
 
-        <para>Notice you can choose the plane's orientation and position. For
-        now, set the Direction to Y and the plane's position to 50 and click
-        Add Plane. This should appear on your screen:</para>
+        <para>Notice that you can choose the plane's orientation and position.
+        For now, set the Direction to Y and the plane's position to 50 and
+        click <guibutton>Add Plane</guibutton>. This should appear on your
+        screen:</para>
 
         <mediaobject>
           <imageobject>
@@ -1034,9 +1049,9 @@
         </mediaobject>
 
         <para>Once you're done looking at the contour planes, you can remove
-        them from the screen by clicking Clear All on the Visualization
-        interface. This will clear any Visualization features from
-        VE-Xplorer.</para>
+        them from the screen by clicking <guibutton>Clear All </guibutton>on
+        the Visualization interface. This will clear any Visualization
+        features from VE-Xplorer.</para>
       </section>
 
       <section id="visualization_vector_planes">
@@ -1050,7 +1065,7 @@
 
         <para>Showing vector planes is almost exactly like showing scalar
         planes. First, open up the Visualization interface again by
-        right-clicking on the plug-in and selecting Visualization.</para>
+        right-clicking on the plugin and selecting Visualization.</para>
 
         <mediaobject>
           <imageobject>
@@ -1058,8 +1073,8 @@
           </imageobject>
         </mediaobject>
 
-        <para>This time, click on the Vector button (the 2nd-to-left icon) to
-        open the Vector Contour window.</para>
+        <para>This time, click on the <guibutton>Vector</guibutton> button
+        (the 2nd-to-left icon) to open the Vector Contour window.</para>
 
         <mediaobject>
           <imageobject>
@@ -1069,7 +1084,8 @@
 
         <para>The Vector Contour window is very similar to the Scalar Contour
         window. This time, set the Direction to Z and the plane's position to
-        20 and click Add Plane. This should appear on your screen:</para>
+        20 and click <guibutton>Add Plane</guibutton>. This should appear on
+        your screen:</para>
 
         <mediaobject>
           <imageobject>
@@ -1078,7 +1094,8 @@
         </mediaobject>
 
         <para>Just like the scalar plane, you can remove the vector plane by
-        clicking Clear All on the Visualization interface.</para>
+        clicking <guibutton>Clear All</guibutton> on the Visualization
+        interface.</para>
       </section>
 
       <section id="visualization_isosurfaces">
@@ -1091,7 +1108,7 @@
         </mediaobject>
 
         <para>To generate an isosurface, go back to the Visualization
-        interface (right-click on the plug-in, select Visualization).</para>
+        interface (right-click on the plugin, select Visualization).</para>
 
         <mediaobject>
           <imageobject>
@@ -1101,8 +1118,8 @@
 
         <para>Before you can open the Isosurfaces window, you'll also need to
         choose a scalar or vector file. Choose scalars under Scalars and click
-        the Isosurfaces button (the 3rd-from-right icon) to open the
-        Isosurfaces window.</para>
+        the <guibutton>Isosurfaces</guibutton> button (the 3rd-from-right
+        icon) to open the Isosurfaces window.</para>
 
         <mediaobject>
           <imageobject>
@@ -1111,8 +1128,8 @@
         </mediaobject>
 
         <para>The Isosurfaces window only has one setting. Set the Isosurface
-        pressure to 50 and click Compute Isosurface. This should appear on
-        your screen:</para>
+        pressure to 50 and click <guibutton>Compute Isosurface</guibutton>.
+        This should appear on your screen:</para>
 
         <mediaobject>
           <imageobject>
@@ -1122,7 +1139,7 @@
 
         <para>Exit Visualization and examine the isosurface by using the mouse
         or the Navigation pane. Once you're done, reenter Visualization and
-        click Clear All.</para>
+        click <guibutton>Clear All</guibutton>.</para>
       </section>
     </chapter>
 
@@ -1132,19 +1149,24 @@
       <section id="vebuilder_intro">
         <title>Introduction</title>
 
-        <para>VE-Builder is a set of tools for modifying 3D data files for
-        VE-Suite. Here is a list of functions we provide documentation
-        for:</para>
+        <para>VE-Builder is a set of tools for modifying three-dimensional
+        data files for VE-Suite. Here is a list of functions we provide
+        documentation for:</para>
 
-        <para><link linkend="importing_files">Importing Files</link> &lt;link&gt;</para>
+        <para><link linkend="???"><link linkend="importing_files">Importing
+        Files</link></link> </para>
 
-        <para>Importing from StarCD &lt;link&gt;</para>
+        <para><link linkend="importing_from_starcd">Importing from
+        StarCD</link> </para>
 
-        <para>Importing from Fluent (.avs) &lt;link&gt;</para>
+        <para><link linkend="importing_from_fluent">Importing from Fluent
+        (.avs)</link></para>
 
-        <para>Creating Preprocessed Data &lt;link&gt;</para>
+        <para><link linkend="creating_preprocess_data">Creating Preprocessed
+        Data</link></para>
 
-        <para>Creating Texture-Based Datasets &lt;link&gt;</para>
+        <para><link linkend="creating_texture_based_datasets">Creating
+        Texture-Based Datasets</link></para>
       </section>
 
       <section id="launching_vebuilder">
@@ -1161,11 +1183,12 @@
           </imageobject>
         </mediaobject>
 
-        <para>Select Yes. If you haven't chosen the VE-Builder directory
-        before, it will ask you to choose it. Otherwise, it will bring up a
-        shell with the VE-Builder environment. If you want to change the
-        VE-Builder directory, choose Change Builder Folder from under the
-        Options menu and select the VE_BuilderTolls directory.</para>
+        <para>Select <guibutton>Yes</guibutton>. If you haven't chosen the
+        VE-Builder directory before, you will be asked to choose it.
+        Otherwise, a shell with the VE-Builder environment will be shown. If
+        you want to change the VE-Builder directory, choose Change Builder
+        Folder from under the Options menu and select the VE_BuilderTolls
+        directory.</para>
 
         <mediaobject>
           <imageobject>
@@ -1177,17 +1200,17 @@
       <section id="importing_files">
         <title>Importing Files</title>
 
-        <para>The loaderToVtkd program transforms prepared 3D data files from
-        other programs into VE-Suite files. First, prepare the environment for
-        it by launching a Builder Shell from <link
+        <para>The loaderToVtkd program transforms prepared three-dimensional
+        data files from other programs into VE-Suite files. First, prepare the
+        environment for it by launching a Builder Shell from <link
         linkend="launching_vebuilder">VE-Launcher</link>. Then you can use
         loaderToVtkd to import files into VE-Suite formats. The general syntax
         of the program is:</para>
 
-        <para><code>loaderToVtkd -singleFile [input filename] -loader [loader
+        <para><code> loaderToVtkd -singleFile [input filename] -loader [loader
         type]</code></para>
 
-        <para><code>-o [full path to the output directory] -w file
+        <para><code> -o [full path to the output directory] -w file
         </code></para>
 
         <para>(The name of the output file isn't set in the command line
@@ -1196,7 +1219,7 @@
 
         <para>To see loaderToVtkd's options, type in:</para>
 
-        <para><code>loaderToVtkd</code></para>
+        <para><code> loaderToVtkd</code></para>
 
         <para>loaderToVtkd supports the following loader types:</para>
 
@@ -1226,13 +1249,13 @@
             </listitem>
           </itemizedlist>It also supports Plot3D, but with this syntax:</para>
 
-        <para><code>loaderToVtkd -geometryFileXYZ [input filename] -dataFileQ
+        <para><code> loaderToVtkd -geometryFileXYZ [input filename] -dataFileQ
         [input filename2] </code></para>
 
-        <para><code>-o [full path to the output directory] -multiGrid Flag
+        <para><code> -o [full path to the output directory] -multiGrid Flag
         [0:1] -iblankFlag [0:1] -numberofDimensions [0:1] </code></para>
 
-        <para><code>-outFileName [output file] -loader xyz -w file
+        <para><code> -outFileName [output file] -loader xyz -w file
         </code></para>
 
         <para>We also have detailed instructions for preparing and importing
@@ -1249,43 +1272,43 @@
         <section id="preparing_starcd_files">
           <title>Preparing the StarCD Files</title>
 
-          <para>First, you need star.cel. star.vrt. and a star.usr files from
+          <para>First, you need star.cel, star.vrt, and a star.usr files from
           StarCD. If you need help getting them from StarCD, look at the
-          instructions here &lt;link&gt;. [This file needs to be added to xml
-          file]</para>
+          instructions <link
+          linkend="building_files_from_starcd">here</link>.</para>
 
           <para>Next, you need to make a star.param file to point to the
-          star.cel. star.vrt. and a star.usr files. Save our template (<ulink
+          star.cel, star.vrt, and star.usr files. Save our template (<ulink
           url="http://www.vesuite.org/File/star.param">star.param</ulink>) to
           your working directory and follow the instructions below to modify
           it for your data:</para>
 
-          <para><code>STARCEL=/your_directory/star.cel // a *.cel file is
+          <para><code> STARCEL=/your_directory/star.cel // a *.cel file is
           required </code></para>
 
-          <para><code>STARVRT=/your_directory/star.vrt // a *.vrt file is
+          <para><code> STARVRT=/your_directory/star.vrt // a *.vrt file is
           required </code></para>
 
-          <para><code>STARUSR=/your_directory/star.usr // a *.usr file is
+          <para><code> STARUSR=/your_directory/star.usr // a *.usr file is
           required</code></para>
 
           <para>Set these to point to your .cel, .vrt, and .usr files.</para>
 
-          <para><code>VECTORNAME=Velocity // the columns of the *.usr file
+          <para><code> VECTORNAME=Velocity // the columns of the *.usr file
           must be labeled </code></para>
 
-          <para><code>SCALARNAME=scalar1 // the columns of the *.usr file must
-          be labeled </code></para>
+          <para><code> SCALARNAME=scalar1 // the columns of the *.usr file
+          must be labeled </code></para>
 
-          <para><code>SCALARNAME=scalar2 // the columns of the *.usr file must
-          be labeled </code></para>
+          <para><code> SCALARNAME=scalar2 // the columns of the *.usr file
+          must be labeled </code></para>
 
-          <para><code>SCALARNAME=scalar3 // the columns of the *.usr file must
-          be labeled</code></para>
+          <para><code> SCALARNAME=scalar3 // the columns of the *.usr file
+          must be labeled</code></para>
 
           <para>Change these lines to their respective scalars.</para>
 
-          <para><code>SCALEINDEX=1 // optional: uses integer indices defined
+          <para><code> SCALEINDEX=1 // optional: uses integer indices defined
           in translateToVtk.cpp to set scale factor </code></para>
 
           <para>Enter an integer option on the SCALEINDEX:</para>
@@ -1321,14 +1344,14 @@
             </listitem>
           </itemizedlist>
 
-          <para><code>SCALEFACTOR=.083333333 // optional: the scale factor
+          <para><code> SCALEFACTOR=.083333333 // optional: the scale factor
           (default = 1, unless SCALEINDEX &gt;1)</code></para>
 
           <para>VR space is always in feet, so the scale factor tag must be in
           feet. If you chose a SCALEINDEX of 0 or 1, comment out this
           line.</para>
 
-          <para><code>WRITEOPTION=1 // optional: 0=let vtk write the
+          <para><code> WRITEOPTION=1 // optional: 0=let vtk write the
           file(default), 1=directly write ascii to disk </code></para>
 
           <para>The Writeoption is no longer needed. Set it to 0 or remove
@@ -1343,10 +1366,10 @@
           working directory to the star.param's directory. Then enter the
           following code:</para>
 
-          <para><code>loaderToVtkd -singleFile star.param -loader star -o
+          <para><code> loaderToVtkd -singleFile star.param -loader star -o
           [full path to the output directory] -w file</code></para>
 
-          <para><emphasis role="bold">Note: </emphasis>There is currently a
+          <para><emphasis role="bold">NOTE: </emphasis>There is currently a
           bug for renaming the file, so don't set it in the command line or
           the star.param file. This will be fixed later. After the code
           executes, it will dump a .vtu file of the data in the directory you
@@ -1363,7 +1386,7 @@
         sure to set the working directory to the avs file's directory. You can
         then convert it with this command:</para>
 
-        <para><code>loaderToVtkd –singleFile [AVS filename] –loader avs –o
+        <para><code> loaderToVtkd –singleFile [AVS filename] –loader avs –o
         [working directory] –w file</code></para>
       </section>
 
@@ -1373,11 +1396,11 @@
         <para>You will need a .vtu file to create preprocessed data. Start a
         Builder Shell from <link
         linkend="launching_vebuilder">VE-Launcher</link>. Be sure to set the
-        working directory to the .vtu file's directory. Check if there's a
-        directory called POST_DATA in it. If not, make the POST_DATA
-        directory. Once it's ready, type in:</para>
+        working directory to the .vtu file's directory. Verify that there is a
+        directory called POST_DATA in the .vtu file's directory. If there is
+        not, create one. Once it's ready, type in:</para>
 
-        <para><code>preprocessor </code></para>
+        <para><code> preprocessor </code></para>
 
         <para>The first prompt will ask for a filename. Type in the .vtu's
         filename. The second prompt will ask for a directory to dump the data
@@ -1394,7 +1417,7 @@
         linkend="launching_vebuilder">VE-Launcher</link> and enter the
         following:</para>
 
-        <para><code>vtkTo3DTexture</code></para>
+        <para><code> vtkTo3DTexture</code></para>
 
         <para>This will launch the translator interface:</para>
 
@@ -1404,8 +1427,8 @@
           </imageobject>
         </mediaobject>
 
-        <para>Select the desired parameters from the GUI and press the
-        "Translate" button. Input parameters include:</para>
+        <para>Select the desired parameters from the GUI and click
+        <guibutton>Translate</guibutton>. Input parameters include:</para>
 
         <para><itemizedlist>
             <listitem>
@@ -1427,8 +1450,8 @@
               <para>Grid type: Input vtk datasets' grid structure.</para>
             </listitem>
           </itemizedlist>A progress dialog will appear as the input vtk files
-        are translated to 3d texture data files that are useable in
-        VE-Suite.</para>
+        are translated to three-dimensional texture data files that are
+        useable in VE-Suite.</para>
 
         <mediaobject>
           <imageobject>
@@ -1438,13 +1461,13 @@
 
         <para><emphasis role="bold">Batch Mode</emphasis></para>
 
-        <para>The translator can also be run in a “batch” mode. To run in
+        <para>The translator can also be run in a "batch" mode. To run in
         batch mode, enter this on the command line:</para>
 
-        <para><code>vtkTo3DTexture -o
+        <para><code> vtkTo3DTexture -o
         /home/users/mcdoe/LTN/3D_Jets_Test/jets_vti </code></para>
 
-        <para><code>-x 32 -y 64 -z 32
+        <para><code> -x 32 -y 64 -z 32
         /home/users/mcdoe/LTN/3D_Jets_Test/Jets_Data</code></para>
 
         <para>where:</para>
@@ -1473,26 +1496,187 @@
           </listitem>
         </itemizedlist>
 
-        <para>The batch mode also supports parallel processing (MPI) which is
+        <para>The batch mode also supports parallel processing (MPI), which is
         convenient for large transient datasets. To run in batch mode with MPI
-        you must first install the mpi library. We recommend <ulink
+        you must first install the MPI library. We recommend <ulink
         url="http://www.lam-mpi.org/7.1/download.php">LAM/MPI</ulink>. This is
-        available for most linux platforms. To run with LAM/MPI a script
+        available for most linux platforms. To run with LAM/MPI, a script
         should be created similar to:</para>
 
-        <para><code>#!/bin/tcsh</code></para>
+        <para><code> #!/bin/tcsh</code></para>
 
-        <para><code>setenv VE_SUITE_HOME
+        <para><code> setenv VE_SUITE_HOME
         /home/users/mcdoe/svn_VE_Suite/VE_Suite &amp;&amp; source
         $VE_SUITE_HOME/VE_Installer/setup.tsh </code></para>
 
-        <para><code>vtkTo3DTextureMPI -o
+        <para><code> vtkTo3DTextureMPI -o
         /home/users/mcdoe/LTN/3D_Jets_Test/jets_vti -x 32 -y 64 -z 32
         /home/users/mcdoe/LTN/3D_Jets_Test/Jets_Data </code></para>
 
-        <para>Which should then be executed like:</para>
+        <para>Which should then be executed as follows:</para>
 
-        <para><code>mpirun –np 2 ./ </code></para>
+        <para><code> mpirun –np 2 ./ </code></para>
+      </section>
+
+      <section id="building_files_from_starcd">
+        <title>Building Files from StarCD</title>
+
+        <para>If you need to write out star.cel, star.vrt, and star.usr files
+        from StarCD, follow these instructions:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Launch StarCD</para>
+          </listitem>
+
+          <listitem>
+            <para>Ensure that a *.vrt and *.cel file is written of the region
+            of interest. This region can either be a complete CFD model or a
+            subsection of the model.</para>
+          </listitem>
+
+          <listitem>
+            <para>Analyze data</para>
+          </listitem>
+
+          <listitem>
+            <para>Post-processing -&gt;Load data</para>
+
+            <orderedlist>
+              <listitem>
+                <para>In "File(s)" tab, click "open post file"</para>
+              </listitem>
+
+              <listitem>
+                <para>In "Data" tab:</para>
+
+                <orderedlist>
+                  <listitem>
+                    <para>Scalar Data -&gt;Turb Kinetic Energy</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>Vector Data -&gt;Velocity Components UVW</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+
+          <listitem>
+            <para>Click <guibutton>Get Data</guibutton></para>
+          </listitem>
+
+          <listitem>
+            <para>Click <guibutton>View Post Registers</guibutton></para>
+          </listitem>
+
+          <listitem>
+            <para>To add other scalar values to store:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>Click <guibutton>Operate</guibutton> at the bottom of
+                the Post Registers window</para>
+              </listitem>
+
+              <listitem>
+                <para>Function -&gt; Load vertex data -&gt; turbulent energy
+                (Registers 1-3 must contain vector data. Registers 4-6 must
+                contain scalar data.)</para>
+              </listitem>
+
+              <listitem>
+                <para>Select register</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="bold">NOTE:</emphasis> Although it is
+                necessary to use vertex data rather than cell data, using
+                vertex data might return an error. To solve this problem, copy
+                the previous command line and add the register number, e.g.
+                "enter oper, getv, te, 5,"</para>
+              </listitem>
+
+              <listitem>
+                <para>Ensure that "using relative values" is selected</para>
+              </listitem>
+
+              <listitem>
+                <para>Click <guibutton>Apply</guibutton> to put data in an
+                empty register</para>
+              </listitem>
+
+              <listitem>
+                <para>Click <guibutton>Update list</guibutton></para>
+              </listitem>
+
+              <listitem>
+                <para>Repeat steps 7.1-7.6 to add data to registers 5 and 6
+                (pressure and viscosity)</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+
+          <listitem>
+            <para>The data is now stored.</para>
+          </listitem>
+
+          <listitem>
+            <para>In pro-STAR window:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>Post -&gt; save user data</para>
+              </listitem>
+
+              <listitem>
+                <para>Registers: all</para>
+              </listitem>
+
+              <listitem>
+                <para>File type: coded</para>
+              </listitem>
+
+              <listitem>
+                <para>Range: all vertices</para>
+              </listitem>
+
+              <listitem>
+                <para>Click <guibutton>Apply</guibutton></para>
+              </listitem>
+
+              <listitem>
+                <para>Click <guibutton>Close</guibutton></para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+
+          <listitem>
+            <para>Manually close file (enter "close *.usr")</para>
+          </listitem>
+
+          <listitem>
+            <para>File -&gt; save as coded</para>
+          </listitem>
+
+          <listitem>
+            <para>Unclick boundary file</para>
+          </listitem>
+
+          <listitem>
+            <para>Click <guibutton>Apply</guibutton></para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">NOTE:</emphasis> Checked files are
+            written out</para>
+          </listitem>
+
+          <listitem>
+            <para>Enter "Close All"</para>
+          </listitem>
+        </orderedlist>
       </section>
     </chapter>
   </part>
@@ -1506,13 +1690,13 @@
       <section id="class_structure_guidelines">
         <title>Class Structure</title>
 
-        <para>We only put one public class per file. Every class name, macro,
-        etc. starts with either "cfd" or "CFD" to avoid name clashes with
-        other libraries. Classes should all start with "cfd" and macros or
-        constants can start with either. Class names and file names are the
+        <para>Only one public class is allowed per file. Every class name,
+        macro, etc. starts with either "cfd" or "CFD" to avoid name clashes
+        with other libraries. Classes should all start with "cfd" and macros
+        or constants can start with either. Class names and file names are the
         same (e.g., cfdContours class is declared in cfdContours.h and
         implemented in cfdContours.cpp). This makes it easier to find the
-        correct file for a specific class. All instance variables are delcared
+        correct file for a specific class. All instance variables are declared
         as protected. The user and application developer should access
         instance variables through Set/Get methods.</para>
 
@@ -1527,11 +1711,11 @@
         abbreviations. This leads to longer names but it makes using the
         software easier because you know that the SetRasterFontRange method
         will always be called that, not SetRFRange or SetRFontRange or SetRFR.
-        When the name includes a natural abbreviation such as OpenGL, we keep
-        the abbreviation and capitalize the abbreviated letters. We only use
-        alphanumeric characters in names, [a-zA-z0-9]. We do not use
-        underscores ("_"), so names like exterior_Surface or _exteriorSurface
-        are not welcome. We use capitalization to indicate words within a
+        When the name includes a natural abbreviation such as OpenGL, keep the
+        abbreviation and capitalize the abbreviated letters. Only use
+        alphanumeric characters in names, [a-zA-z0-9]. Do not use underscores
+        ("_"). For example, use exteriorSurface rather than exterior_Surface
+        or _exteriorSurface. Use capitalization to indicate words within a
         name. For example, a class could be called cfdVectorTopologyFilter.
         Use "this" inside of methods even though C++ does not require you to.
         This really seems to make the code more readable because it
@@ -1563,9 +1747,9 @@
       <section id="functions_and_arguments_guidelines">
         <title>Functions and Function Arguments</title>
 
-        <para>Use const on any member function that does not change any data.
-        It enforces the purpose of a function and allows for better compiler
-        optimizations.</para>
+        <para>Use "const" on any member function that does not change any
+        data. It enforces the purpose of a function and allows for better
+        compiler optimizations.</para>
       </section>
 
       <section id="variable_usage_guidelines">
@@ -1579,7 +1763,7 @@
       <section id="braces_guidelines">
         <title>Braces</title>
 
-        <para>Place brace under and inline with keywords: </para>
+        <para>Place brace under and inline with keywords:</para>
 
         <para><code> if ( condition ) while ( condition ) </code></para>
 
@@ -1587,9 +1771,9 @@
 
         <para><code> ... ... </code></para>
 
-        <para><code> } }</code> </para>
+        <para><code> } }</code></para>
 
-        <para>Use braces for all if, while and do statements even if there is
+        <para>Use braces for all if, while, and do statements even if there is
         only a single statement within the braces.</para>
       </section>
 
@@ -1597,20 +1781,20 @@
         <title>Header Files</title>
 
         <para>Header files are for declarations only. It is difficult to read
-        code and find code if source is in the declarations. </para>
+        and find code if source is in the declarations.</para>
 
         <para>The header file of the class should include only the superclass
         header file. If you need any other includes, include comment at each
-        one describing why it should be included. </para>
+        one describing why it should be included.</para>
 
-        <para>Forward declare classes when possible in header files. </para>
+        <para>Forward declare classes when possible in header files.</para>
 
         <para>Header files should use guards to prevent multiple inclusion.
         These guards should be defined in the style FILENAME_H, which is the
         filename written in all upper case with punctuation such as dots (".")
-        replaced by underscores ("_"). </para>
+        replaced by underscores ("_").</para>
 
-        <para><code> #ifndef CFDHEADER_H </code></para>
+        <para><code> #ifdef CFDHEADER_H </code></para>
 
         <para><code> #define CFDHEADER_H </code></para>
 
@@ -1618,20 +1802,20 @@
 
         <para><code> #endif // CFDHEADER_H</code></para>
 
-        <para>Comment the end of every #endif, as shown above. Nested #ifdef
-        can be difficult to follow. </para>
+        <para>Comment the end of every <code>#endif</code>, as shown above.
+        Nested <code>#ifdef</code> can be difficult to follow.</para>
 
-        <para>A new line after the last endif if is required by some
-        compilers.</para>
+        <para>A new line after the last <code>#endif</code> is required by
+        some compilers.</para>
       </section>
 
       <section id="text_formatting_guidelines">
         <title>Text Formatting</title>
 
-        <para>Limit lines to 80 characters. </para>
+        <para>Limit lines to 80 characters.</para>
 
         <para>Three (3) space indentation – Set your editor to insert three
-        spaces every time you hit the tab key. </para>
+        spaces every time you hit the tab key.</para>
 
         <para>Insert whitespace for readability. This means that one blank
         line should occur between function definitions or between different
@@ -1644,10 +1828,10 @@
         <para>Do not place the "using namespace" directive at global scope in
         a header file. This can cause lots of invisible conflicts that are
         hard to track. Keep "using" statements to implementation files (if at
-        all). </para>
+        all).</para>
 
         <para>For standard namespace keywords (cout, cin, cerr, endl, vector,
-        string), You must do "std::cout," etc.</para>
+        string), you must use "std::cout," etc.</para>
       </section>
 
       <section id="comments_guidelines">
@@ -1662,14 +1846,14 @@
         <title>Parens () with Key Words and Functions Policy</title>
 
         <para>Do not put parens next to keywords. Put a space between keywords
-        and parens. </para>
+        and parens.</para>
 
-        <para>Do not use parens in return statements when it is not necessary.
-        </para>
+        <para>Do not use parens in return statements when it is not
+        necessary.</para>
 
-        <para>Do put parens next to function names. </para>
+        <para>Do put parens next to function names.</para>
 
-        <para>Example: </para>
+        <para>Example:</para>
 
         <para><code> if ( condition ) while ( condition ) </code></para>
 
@@ -1687,7 +1871,7 @@
 
         <para>Single-character variable names can easily be mistaken for
         numbers ("i"s can sometimes look a lot like ones). Make the array
-        index stand out with whitespace: </para>
+        index stand out with whitespace:</para>
 
         <para><code> array[ i ] = 0.0; </code></para>
 
@@ -1709,15 +1893,15 @@
 
         <para>VE-Suite, as well as its dependencies, is currently being tested
         on a broad range of unix/linux platforms including: IRIX 6.5, SuSE,
-        and RedHat Enterprise. </para>
+        and RedHat Enterprise.</para>
 
         <para><link linkend="setting_the_environment">Set the environment
         variables</link> and source the setup file included with the VE-Suite
         project: $(VE_SUITE_HOME)/VE_Installer/setup.{.sh,tsh}. Once this file
-        has been properly edited type gmake. The unix build system is based on
-        Doozer which is included with VR Juggler. </para>
+        has been properly edited, type <code>gmake</code>. The unix build
+        system is based on Doozer which is included with VR Juggler.</para>
 
-        <para>Supported base configurations available: </para>
+        <para>Supported base configurations available:</para>
 
         <orderedlist>
           <listitem>
@@ -1764,16 +1948,16 @@
         <para>VE_Suite, as well as its dependencies, is currently built and
         tested using Visual Studio 7.1(2003).</para>
 
-        <section id="building_vesuite_on_windows">
+        <section id="building_vesuite_section">
           <title>Building VE-Suite</title>
 
           <para><link linkend="setting_the_environment">Set the environment
           variables</link> and launch a session of Visual Studio with the
-          VE-Suite project loaded, run the batch file: </para>
+          VE-Suite project loaded, run the batch file:</para>
 
-          <para><code>$(VE_SUITE_HOME)VE_Installerbuild.bat </code></para>
+          <para><code> $(VE_SUITE_HOME)VE_Installerbuild.bat </code></para>
 
-          <para>Supported base configurations available: </para>
+          <para>Supported base configurations available:</para>
 
           <orderedlist>
             <listitem>
@@ -1818,18 +2002,18 @@
           change the working directory in the Configuration Properties tab to
           point to the directory where your VE-Suite parameter file is located
           (for example, change the working directory to
-          $(VE_SUITE_HOME)VE_TestSuite). </para>
+          $(VE_SUITE_HOME)VE_TestSuite).</para>
 
           <para>You will also need to pass in your VR juggler config files as
           command arguments on the configuration properties tab. With the two
           projects still open, right-click on the VE_Xplorer project file, and
           select properties. For simulation mode, you add the following to
-          your command arguments section: </para>
+          your command arguments section:</para>
 
-          <para><code>$(VJ_BASE_DIR)sharevrjugglerdataconfigFiles
+          <para><code> $(VJ_BASE_DIR)sharevrjugglerdataconfigFiles
           sim.base.jconf </code></para>
 
-          <para><code>$(VJ_BASE_DIR)sharevrjugglerdataconfigFiles
+          <para><code> $(VJ_BASE_DIR)sharevrjugglerdataconfigFiles
           sim.wand.mixin.jconf </code></para>
 
           <para>After you enter a parameter file name and the scene loads,
@@ -1847,9 +2031,68 @@
       links or the pre-compiled binaries can be installed from the download
       page.</para>
 
-      <para>&lt;format&gt;&lt;check dependencies page at
-      http://www.vesuite.org/content.php?id=259 for graphics, links, etc. for
-      dependencies&gt;</para>
+      <para>&lt;OpenSceneGraph image&gt;</para>
+
+      <para><ulink url="http://www.openscenegraph.org/">OpenSceneGraph
+      (OSG)</ulink> can be used to manage the scenegraph instead of OpenGL
+      Performer.</para>
+
+      <para>&lt;VTK image&gt;</para>
+
+      <para><ulink url="http://vtk.org/get-software.php#interim">VTK</ulink>
+      is used to render the visualization objects.</para>
+
+      <para>&lt;CMake image&gt;</para>
+
+      <para><ulink url="http://www.cmake.org/HTML/Index.html">CMake</ulink> is
+      needed to build the VTK.</para>
+
+      <para>&lt;VRJuggler image&gt;</para>
+
+      <para><ulink
+      url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler</ulink>
+      is used for management of the virtual environment.</para>
+
+      <para><ulink
+      url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler
+      dependencies zip file</ulink></para>
+
+      <para><ulink url="http://java.sun.com/j2se/1.4.2/download.html">Java 2
+      SDK</ulink> is needed for Juggler's java-based VRJconfig program.</para>
+
+      <para>&lt;wxWidgets image&gt;</para>
+
+      <para><ulink url="http://www.wxwidgets.org/">wxWidgets</ulink> is used
+      to compile and run the gui. (Click "download" on the left side menu to
+      get to the files.)</para>
+
+      <para><ulink
+      url="http://xml.apache.org/xerces-c/download.cgi">Xerces</ulink> is used
+      to read and write XML. (Download <ulink
+      url="http://xml.apache.org/xerces-c/download.cgi">xerces-c-current</ulink>)</para>
+
+      <para>&lt;ACE/TAO image&gt;</para>
+
+      <para><ulink
+      url="http://deuce.doc.wustl.edu/Download.html">ACE/TAO</ulink> is used
+      for cross-platform communications.</para>
+
+      <para>&lt;python image&gt;</para>
+
+      <para>VE-Launcher was coded using <ulink
+      url="http://www.python.org/">Python</ulink>. It can run in Python2.3 or
+      higher. If you are running it from Python, you need to install these
+      extensions for Python as well:</para>
+
+      <para>Windows: VE-Launcher requires these <ulink
+      url="https://sourceforge.net/project/showfiles.php?group_id=78018">Win32
+      extensions</ulink> if you're running it in Python for Windows.</para>
+
+      <para>&lt;wxPython image&gt;</para>
+
+      <para>VE-Launcher requires <ulink
+      url="http://wxpython.org/">wxPython</ulink> 2.6.3.3 if you're running it
+      in Python.</para>
 
       <section id="building_dependencies_on_windows">
         <title>Building Dependencies on Windows</title>
@@ -1859,25 +2102,25 @@
         provided is for specific details to allow VE-Suite to build/run
         correctly.</para>
 
-        <para>VE_Suite, as well as it's dependencies, is currently built and
-        tested using Visual Studio 7.1(2003).</para>
+        <para>VE-Suite and its dependencies are currently built and tested
+        using Visual Studio 7.1(2003).</para>
 
         <para><emphasis role="bold">Notes on installation of
         dependencies</emphasis></para>
 
         <itemizedlist>
           <listitem>
-            <para>TortoiseSVN &lt;link&gt; - Used to check out and update
-            VE_Suite from ISU's code repository.</para>
+            <para><ulink
+            url="http://tortoisesvn.tigris.org/">TortoiseSVN</ulink> - Used to
+            check out and update VE-Suite from ISU's code repository.</para>
           </listitem>
 
           <listitem>
             <para>After TortoiseSVN is installed, you can check out the code
-            provided you have an account registered with ISU's repository.
-            Create a VE_Suite folder. Go to VE_Suite folder and right-mouse
-            click, choose "Checkout...". For URL, enter
-            https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite.
-            &lt;link&gt;</para>
+            if you have an account registered with ISU's repository. Create a
+            VE-Suite folder. Right-click on the VE-Suite folder and choose
+            "Checkout...". For URL, enter <ulink
+            url="https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite">https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite</ulink>.</para>
           </listitem>
 
           <listitem>
@@ -1909,10 +2152,14 @@
           <listitem>
             <para>Go to C:VTK-4.4-LatestRelease. You will have a "VTK" folder
             containing the vtk source code. Create two additional folders:
-            "build" and "install". * Run CMakeSetup, and enter
-            C:VTK-4.4-LatestReleaseVTK as source code location and
-            C:VTK-4.4-LatestReleasebuild as the place to build the binaries.
-            Check the box "Show Advanced Values" and press "Configure".</para>
+            "build" and "install".</para>
+          </listitem>
+
+          <listitem>
+            <para>Run CMakeSetup, and enter C:VTK-4.4-LatestReleaseVTK as
+            source code location and C:VTK-4.4-LatestReleasebuild as the place
+            to build the binaries. Check the box "Show Advanced Values" and
+            press <guibutton>Configure</guibutton>.</para>
           </listitem>
 
           <listitem>
@@ -1937,16 +2184,24 @@
               </listitem>
 
               <listitem>
-                <para>VTK_USE_PARALLEL to ON </para>
+                <para>VTK_USE_PARALLEL to ON</para>
               </listitem>
             </orderedlist>
           </listitem>
 
           <listitem>
-            <para>Press "Configure" (possibly need to do it twice), then "OK".
-            * Go to C:VTK-4.4-LatestReleasebuild. Double click on "VTK.sln". *
-            Left-click on ALL_BUILD, then right-click and select "Build".
-            </para>
+            <para>Press <emphasis role="bold">Configure</emphasis> (you may
+            need to do it twice), then <guibutton>OK</guibutton>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Go to C:VTK-4.4-LatestReleasebuild. Double click on
+            "VTK.sln". </para>
+          </listitem>
+
+          <listitem>
+            <para>Left-click on ALL_BUILD, then right-click and select
+            "Build".</para>
           </listitem>
 
           <listitem>
@@ -1959,29 +2214,49 @@
         <para><emphasis role="bold">When building ACE and
         TAO</emphasis></para>
 
-        <para>* You need to create a file called "config.h" in the
-        ACE_wrappersace directory, with the line '#include
-        "ace/config-win32.h"' in the file. * The workspace file
-        ACE_wrappersTAOTAOACE.dsw will need to be converted to solution (.sln)
-        files. * ACE_ROOT and TAO_ROOT must be established and ACE_ROOTbin
-        placed in your $PATH before building ACE and TAO. This can be done
-        using a batch file (.BAT) with these lines: set
-        ACE_ROOT=C:ACE_wrappers set TAO_ROOT=%ACE_ROOT%TAO set
-        Path=%Path%;%ACE_ROOT%bin "C:Program FilesMicrosoft Visual Studio .NET
-        2003Common7IDEdevenv.exe" ./TAOACE.sln &lt;format&gt;</para>
+        <itemizedlist>
+          <listitem>
+            <para>You need to create a file called "config.h" in the
+            ACE_wrappersace directory, with the line '#include
+            "ace/config-win32.h"' in the file. </para>
+          </listitem>
+
+          <listitem>
+            <para>The workspace file ACE_wrappersTAOTAOACE.dsw will need to be
+            converted to solution (.sln) files.</para>
+          </listitem>
+
+          <listitem>
+            <para>ACE_ROOT and TAO_ROOT must be established and ACE_ROOTbin
+            placed in your $PATH before building ACE and TAO. This can be done
+            using a batch file (.BAT) with these lines:</para>
+
+            <para><code> set ACE_ROOT=C:ACE_wrappers </code></para>
+
+            <para><code> set TAO_ROOT=%ACE_ROOT%TAO </code></para>
+
+            <para><code> set Path=%Path%;%ACE_ROOT%bin </code></para>
+
+            <para><code> "C:Program FilesMicrosoft Visual Studio .NET
+            2003Common7IDEdevenv.exe" ./TAOACE.sln</code></para>
+          </listitem>
+        </itemizedlist>
 
         <para><emphasis role="bold">Other dependency notes</emphasis></para>
 
         <para>For wxWidgets, load the .dsw file build/msw/wx_dll.dsw and build
-        using the DLL Debug configuration. <emphasis
-        role="bold">Note:</emphasis> For openGL support change this flag,
-        wxUSE_GLCANVAS, to 1 in the file include/wx/msw/setup.h. For Xerces,
-        the .sln file is Projects/Win32/VC7.1/xerces-all/xerces-all.sln.
-        PLEASE NOTE!! Xerces 2.7 has the Run Time Type Information (RTTI)
-        configuration off by default. Therefore, right-click on the XercesLib
-        project, select properties-&gt;C/C++-&gt;Language and change the
-        "Enable Run-Time Type Info" setting to "Yes(/GR)" Then proceed
-        building the solution.</para>
+        using the DLL Debug configuration. </para>
+
+        <para><emphasis role="bold">NOTE:</emphasis> For openGL support change
+        this flag, wxUSE_GLCANVAS, to 1 in the file include/wx/msw/setup.h.
+        For Xerces, the .sln file is
+        Projects/Win32/VC7.1/xerces-all/xerces-all.sln.</para>
+
+        <para><emphasis role="bold">NOTE:</emphasis> Xerces 2.7 has the Run
+        Time Type Information (RTTI) configuration off by default. Therefore,
+        right-click on the XercesLib project, select
+        properties-&gt;C/C++-&gt;Language and change the "Enable Run-Time Type
+        Info" setting to "Yes(/GR)" Then proceed building the solution.</para>
       </section>
 
       <section id="building_dependencies_on_unix">
@@ -1998,34 +2273,51 @@
           <para>To build wxWidgets on a UNIX style platform, the library must
           be configured before it can be built. This is platform specific. To
           do this first read the INSTALL.txt file in the wxWidgets directory.
-          When downloading wxWdigets download the wxGTK package. Note:
-          VE-Suite should now build against most distributed versions of
-          wxGTK. Also, be sure to have gtk2-devel packages installed on your
-          system before trying to build wxGTK.</para>
+          When downloading wxWdigets download the wxGTK package. <emphasis
+          role="bold">NOTE:</emphasis> VE-Suite should now build against most
+          distributed versions of wxGTK. Also, be sure to have gtk2-devel
+          packages installed on your system before trying to build
+          wxGTK.</para>
 
           <para>To configure wxWidgets properly for a VE-Suite build the
           following options should be specified w/ the configure
           command:</para>
 
-          <para>enable-shared This creates shared libraries enable-log This
-          enables logging support within wxWidgets with-opengl This enables
-          opengl support within wxWidgets prefix=/myInstallDirectory/wxGTK
-          This specifies the install directory &lt;format&gt;</para>
+          <itemizedlist>
+            <listitem>
+              <para><code>enable-shared</code> creates shared libraries</para>
+            </listitem>
 
-          <para>Following the instructions in INSTALL.txt, configure command
-          would be:</para>
+            <listitem>
+              <para><code>enable-log</code> enables logging support within
+              wxWidgets</para>
+            </listitem>
 
-          <para>../configure --enable-shared --with-opengl --enable-log
-          --prefix=/ &lt;format&gt;</para>
+            <listitem>
+              <para><code>with-opengl </code>enables opengl support within
+              wxWidgets</para>
+            </listitem>
 
-          <para>This will setup wx properly for building with VE-Suite. When
+            <listitem>
+              <para><code>prefix=/myInstallDirectory/wxGTK </code>specifies
+              the install directory</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Following the instructions in INSTALL.txt, the configure
+          command would be:</para>
+
+          <para><code> ../configure --enable-shared --with-opengl --enable-log
+          --prefix=/</code></para>
+
+          <para>This will set up wx properly for building with VE-Suite. When
           the configuration is complete, type:</para>
 
-          <para>gmake &lt;format&gt;</para>
+          <para><code> gmake </code></para>
 
           <para>After the build finishes type:</para>
 
-          <para>gmake install &lt;format&gt;</para>
+          <para><code> gmake install</code></para>
 
           <para>This will install the libraries and includes in the directory
           specified by --prefix option.</para>
@@ -2036,56 +2328,94 @@
 
           <para>Download the lastest beta release of ACE+TAO. With this
           particular version of ACE+TAO it is possible to use configure. To
-          build ACE+TAO create a build dir (e.g. build-linux-rhel3). Then:
-          &gt; cd &lt;build-dir&gt; &gt; ../configure --prefix=&lt;location
-          where ace+tao will be installed&gt; &gt; gmake &gt; gmake install
-          &lt;format&gt; This will create an dir with the appropriate include,
-          lib, and bin dir for ACE+TAO.</para>
+          build ACE+TAO create a build dir (e.g. build-linux-rhel3).
+          Then:</para>
+
+          <para><code> &gt; cd &lt;build-dir&gt; </code></para>
+
+          <para><code> &gt; ../configure --prefix=&lt;location where ace+tao
+          will be installed&gt; </code></para>
+
+          <para><code> &gt; gmake </code></para>
+
+          <para><code> &gt; gmake install</code></para>
+
+          <para>This will create an dir with the appropriate include, lib, and
+          bin dir for ACE+TAO.</para>
         </section>
 
         <section id="osg_buid_instructions_on_unix">
           <title>OpenSceneGraph Build Instructions on UNIX</title>
 
-          <para>For OpenSceneGraph download the latest release version.
+          <para>For OpenSceneGraph, download the latest release version.
           OpenSceneGraph is dependent on Producer and OpenThreads. Producer is
           dependent on OpenThreads, therefore OpenThreads must be built first.
           To build OpenThreads, go into the OpenThreads directory. The
           following environment variables should be set either on the command
           line (or through a setup script):</para>
 
-          <para>OSG_HOME ==&gt; the location of the OpenSceneGraph directory
-          OPENTHREADS_INC_DIR ==&gt; the location of OpenThreads/include
-          OPENTHREADS_LIB_DIR ==&gt; the location of OpenThreads/lib
-          PRODUCER_INC_DIR ==&gt; the location of Producer/include
-          PRODUCER_LIB_DIR ==&gt; the location of Producer/lib INST_LOCATION
-          ==&gt; this is where to install the libraries. &lt;format&gt;</para>
+          <para><code> OSG_HOME:</code> the location of the OpenSceneGraph
+          directory </para>
+
+          <para><code> OPENTHREADS_INC_DIR:</code> the location of
+          OpenThreads/include </para>
+
+          <para><code> OPENTHREADS_LIB_DIR:</code> the location of
+          OpenThreads/lib </para>
+
+          <para><code> PRODUCER_INC_DIR:</code> the location of
+          Producer/include </para>
+
+          <para><code> PRODUCER_LIB_DIR:</code> the location of Producer/lib
+          </para>
+
+          <para><code> INST_LOCATION:</code> this is where to install the
+          libraries.</para>
 
           <para>These will all be specific to where you downloaded and
-          extracted each dependency directory. To set these environment
-          variables from the command line type something like: &gt;setenv
-          OSG_HOME /home/users/myaccount/ve_depends/OSG/OpenSceneGraph
-          &lt;format&gt;</para>
+          extracted each dependency directory. </para>
+
+          <para>To set these environment variables from the command line type
+          something like: </para>
+
+          <para><code> &gt;setenv OSG_HOME
+          /home/users/myaccount/ve_depends/OSG/OpenSceneGraph </code></para>
 
           <para>After setting the environment variables are set, go into the
           OpenThreads directory and type:</para>
 
-          <para>&gt;make or &gt;gmake &lt;format&gt;</para>
+          <para><code> &gt;make</code> or &gt;<code>gmake </code></para>
 
-          <para>This will compile OpenThreads. Once it is built, install the
-          libraries using: &gt; make
-          INST_LOCATION=/home/myInstallDirectory/OSG install
-          &lt;format&gt;</para>
+          <para>This will compile OpenThreads. </para>
+
+          <para>Once it is built, install the libraries using: </para>
+
+          <para><code> &gt; make INST_LOCATION=/home/myInstallDirectory/OSG
+          install</code></para>
 
           <para>Where /home/myInstallDirectory is the desired directory to
-          create the install. Next go into the Producer directory: &gt;cd
-          Producer &gt;gmake &gt;gmake
-          INST_LOCATION=/home/myInstallDirectory/OSG install
-          &lt;format&gt;</para>
+          create the install. </para>
 
-          <para>And finally: &gt;cd OpenSceneGraph &gt;gmake &gt;gmake
-          INST_LOCATION=/home/myInstallDirectory/OSG install &lt;format&gt;
-          Check to see that libraries and headers are created in INST_LOCATION
-          properly.</para>
+          <para>Next go into the Producer directory: </para>
+
+          <para><code> &gt;cd Producer </code></para>
+
+          <para><code> &gt;gmake </code></para>
+
+          <para><code> &gt;gmake INST_LOCATION=/home/myInstallDirectory/OSG
+          install</code></para>
+
+          <para>And finally: </para>
+
+          <para><code> &gt;cd OpenSceneGraph </code></para>
+
+          <para><code> &gt;gmake </code></para>
+
+          <para><code> &gt;gmake INST_LOCATION=/home/myInstallDirectory/OSG
+          install </code></para>
+
+          <para>Check to see that libraries and headers are created in
+          INST_LOCATION properly.</para>
         </section>
 
         <section id="vtk_build_instructions_on_unix_cmake">
@@ -2095,13 +2425,41 @@
           <para>To build vtk, CMake must be used to set the following values.
           To best utilize CMake it is suggested that ccmake be used. To begin,
           create a build dir in the VTK directory (e.g. build-linux-rhel3).
-          Then do the following: &gt; cd &lt;build dir&gt; &gt; ccmake ../.
-          &gt; gmake &gt; gmake install &lt;format&gt;</para>
+          Then do the following: </para>
+
+          <para><code> &gt; cd &lt;build dir&gt; </code></para>
+
+          <para><code> &gt; ccmake ../. </code></para>
+
+          <para><code> &gt; gmake </code></para>
+
+          <para><code> &gt; gmake install</code></para>
 
           <para>Please change these default settings for your CMake build
-          setup: 1. CMAKE_INSTALL_DIR to &lt;location where vtk is to be
-          installed&gt; 2. BUILD_SHARED_LIBS to ON 3. BUILD_TESTING to OFF 4.
-          VTK_USE_HYBRID to ON 5. VTK_USE_PARALLEL to ON &lt;format&gt;</para>
+          setup: </para>
+
+          <orderedlist>
+            <listitem>
+              <para><code>CMAKE_INSTALL_DIR</code> to <code>&lt;location where
+              vtk is to be installed&gt;</code></para>
+            </listitem>
+
+            <listitem>
+              <para><code>BUILD_SHARED_LIBS</code> to <code>ON</code></para>
+            </listitem>
+
+            <listitem>
+              <para><code>BUILD_TESTING</code> to <code>OFF</code></para>
+            </listitem>
+
+            <listitem>
+              <para><code>VTK_USE_HYBRID</code> to <code>ON</code></para>
+            </listitem>
+
+            <listitem>
+              <para><code>VTK_USE_PARALLEL</code> to <code>ON</code></para>
+            </listitem>
+          </orderedlist>
 
           <para><emphasis role="bold">NOTE: </emphasis>Be sure that vtk is
           using the proper gl drivers as well.</para>
@@ -2114,14 +2472,32 @@
         <para>If you are installing individual components of VE-Suite on
         different desktops, it is only necessary to install the dependencies
         for that specific component. Below is a table listing the individual
-        components and its specific dependencies.</para>
+        components and their specific dependencies.</para>
 
-        <para>Name Service: ACE/TAO, xerces-c</para>
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>Name/Service</entry>
 
-        <para>VE-Conductor (GUI): ACE/TAO, xerces-c, wxWidgets</para>
+                <entry>ACE/TAO, xerces-c</entry>
+              </row>
 
-        <para>VE-Xplorer: ACE/TAO, OpenSceneGraph* or Performer*, VTK,
-        VRJuggler &lt;format&gt;</para>
+              <row>
+                <entry>VE-Conductor (GUI)</entry>
+
+                <entry>ACE/TAO, xerces-c, wxWidgets</entry>
+              </row>
+
+              <row>
+                <entry>VE-Xplorer</entry>
+
+                <entry>ACE/TAO, OpenSceneGraph* or Performer*, VTK,
+                VRJuggler</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
 
         <para>*depends on the desired scenegraph management</para>
       </section>
@@ -2136,25 +2512,52 @@
       of your environment variables contain spaces, you need to put the
       directory containing the spaces in quotation marks.</para>
 
-      <para>Example: set VTK_HOME=C:"Documents and Settings"userDesktopvtk
-      &lt;format&gt;</para>
+      <para>Example: </para>
+
+      <para><code> set VTK_HOME=C:"Documents and
+      Settings"userDesktopvtk</code></para>
 
       <para><emphasis role="bold">Important variables for UNIX/Linux platforms
-      only:</emphasis> SCENE_GRAPH Set to PF or OSG to define which scene
-      graph to build for VE-Xplorer. TAO_BUILD Always set to TRUE. In the
-      future this flag can be used to support other CORBA ORBs as well.
-      CLUSTER_APP Set to TRUE if VE-Xplorer will be used on a graphics
-      cluster. &lt;format&gt;</para>
+      only:</emphasis> </para>
+
+      <para><code> SCENE_GRAPH Set to PF or OSG to define which scene graph to
+      build for VE-Xplorer. </code></para>
+
+      <para><code> TAO_BUILD Always set to TRUE. In the future this flag can
+      be used to support other CORBA ORBs as well. </code></para>
+
+      <para><code> CLUSTER_APP Set to TRUE if VE-Xplorer will be used on a
+      graphics cluster.</code></para>
 
       <para><emphasis role="bold">Important variables include:</emphasis>
-      VE_SUITE_HOME The location of the top level VE_Suite directory.
-      VJ_BASE_DIR The location of VR Juggler. VJ_DEPS_DIR The location of VR
-      Juggler dependencies. VTK_HOME Visualization ToolKit (VTK) directory.
-      WX_HOME The wxWidgets install. XERCESCROOT The location of the xerces
-      build. WX_ROOT The location of wxWidgets install (should be same as
-      WX_HOME). OSGHOME The location of OpenSceneGraph (if OSG version is
-      built). ACE_HOME The location of the ACE_wrappers directory. TAO_HOME
-      TAO location within ACE/TAO. &lt;format&gt;</para>
+      </para>
+
+      <para><code> VE_SUITE_HOME</code> The location of the top level VE_Suite
+      directory. </para>
+
+      <para><code> VJ_BASE_DIR</code> The location of VR Juggler. </para>
+
+      <para><code> VJ_DEPS_DIR</code> The location of VR Juggler dependencies.
+      </para>
+
+      <para><code> VTK_HOME</code> Visualization ToolKit (VTK) directory.
+      </para>
+
+      <para><code> WX_HOME</code> The wxWidgets install. </para>
+
+      <para><code> XERCESCROOT</code> The location of the xerces build.
+      </para>
+
+      <para><code> WX_ROOT</code> The location of wxWidgets install (should be
+      same as <code>WX_HOME</code>). </para>
+
+      <para><code> OSGHOME</code> The location of OpenSceneGraph (if OSG
+      version is built). </para>
+
+      <para><code> ACE_HOME</code> The location of the ACE_wrappers directory.
+      </para>
+
+      <para><code> TAO_HOME</code> TAO location within ACE/TAO. </para>
     </chapter>
 
     <chapter id="description_of_the_engines">
@@ -2166,7 +2569,11 @@
       these engines and describe how they contribute to the overall framework
       functionality.</para>
 
-      <para>&lt;img&gt; (from Clearwater paper)</para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/descriptionofengines1.JPG" />
+        </imageobject>
+      </mediaobject>
 
       <section id="gui_veconductor">
         <title>Graphical User Interface (VE-Conductor)</title>
@@ -2187,14 +2594,14 @@
           handheld computing devices inside of immersive environments (e.g.,
           cave-like systems at ISU-VRAC and NETL).</para>
 
-          <para>After reviewing a number of different UI libraries, WxWidgets
-          (www.wxwidgets.org) was chosen. WxWidgets is one of the best
-          cross-platform GUI packages available. It is well-maintained, has a
-          large user base, and has ports for Windows, Unix/X11, Unix/Motif,
-          OS2, Mac, and GTK. It also has an alpha version of a Windows CE
-          port, which is under active development. This ensures that the user
-          interface will run on all major platforms and even on Pocket
-          PC-based PDAs.</para>
+          <para>After reviewing a number of different UI libraries, <ulink
+          url="www.wxwidgets.org">WxWidgets</ulink> was chosen. WxWidgets is
+          one of the best cross-platform GUI packages available. It is
+          well-maintained, has a large user base, and has ports for Windows,
+          Unix/X11, Unix/Motif, OS2, Mac, and GTK. It also has an alpha
+          version of a Windows CE port, which is under active development.
+          This ensures that the user interface will run on all major platforms
+          and even on Pocket PC-based PDAs.</para>
         </section>
 
         <section id="conductor_detachable_location_transparency">
@@ -2209,8 +2616,8 @@
           the simulation, and regain monitoring and control functions.</para>
 
           <para>To accomplish this functionality a CORBA IDL interface between
-          the UI and the computational engine (See Figure 1) was defined. This
-          CORBA interface provides all the necessary communication mechanisms
+          the UI and the computational engine was defined. This CORBA
+          interface provides all the necessary communication mechanisms
           between these components. The communication link is bidirectional
           and handles items such as model parameters passed to the
           computational engine and receives items such as execution status and
@@ -2240,8 +2647,8 @@
 
           <para>The dynamic discover and load capability is accomplished by
           loading user developed module UIs from dynamic link libraries (DLL
-          in Windows) or shared libraries (SO lib in Linux/Unix). A plug-in
-          C++ base class defining this UI-module interface is provided to all
+          in Windows) or shared libraries (SO lib in Linux/Unix). A plugin C++
+          base class defining this UI-module interface is provided to all
           module developers. Developers can inherit from this class to create
           their own module UIs and then compile the resulting code into a
           DLL/shared library. The UI framework’s plug loader code will
@@ -2262,7 +2669,7 @@
 
           <para>To provide this functionality, the UI is designed to
           communicate via CORBA to not only the computational engine, but also
-          to the graphical engine (see Figure 1). As was discussed for the
+          to the graphical engine. As was discussed for the
           UI-to-computational engine link, the use of CORBA with an
           appropriate IDL provides a flexible, detachable, and platform
           independent communication mechanism for this link as well.</para>
@@ -2272,7 +2679,11 @@
           of the window, while the main canvas area shows the current
           simulation network.</para>
 
-          <para>&lt;img&gt; (from Clearwater paper)</para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="veimages/descriptionofengines2.JPG" />
+            </imageobject>
+          </mediaobject>
         </section>
       </section>
 
@@ -2374,12 +2785,12 @@
         functionality for the virtual engineering aspect of the framework.
         VE-Xplorer enables the engineering analysis and design process to take
         place in a virtual environment. For maximum graphical performance on
-        multiple operating systems, it is built upon VRJuggler&lt;link&gt;,
-        OpenGL Performer&lt;link&gt;, and Kitware’s Visualization ToolKit
-        &lt;link&gt;. This visual interface, controlled by the UI and the
-        computational engine, is a graphical representation of the simulation
-        under review. Figure 3 shows the immersive interface capabilities of
-        the graphical engine.</para>
+        multiple operating systems, it is built upon <ulink
+        url="www.vrjuggler.org">VRJuggler</ulink>, <ulink
+        url="www.sgi.com">OpenGL Performer</ulink>, and <ulink
+        url="www.kitware.com">Kitware’s Visualization ToolKit</ulink>. This
+        visual interface, controlled by the UI and the computational engine,
+        is a graphical representation of the simulation under review. </para>
 
         <para>The graphical engine is generalized to load data not only from
         comprehensive models, but also from other engineering sources,
@@ -2391,30 +2802,129 @@
         with the component models, computational engine, and UI. To
         communicate with the graphical engine there is an external socket
         connection that is made between individual component models and the
-        respective graphical objects (described below). This connection allows
-        large high fidelity datasets to be transferred to the graphical
-        environment without interrupting the overall communication
-        network.</para>
+        respective graphical objects. This connection allows large high
+        fidelity datasets to be transferred to the graphical environment
+        without interrupting the overall communication network.</para>
 
         <para>The graphical engine is also designed to allow graphics objects
         to be added to the virtual environment just like the objects are added
         in the GUI. This allows the graphical environment to be a direct
         representation of the system being designed by the engineer. In much
-        the same way that the GUI auto-discovers the plug-ins for use by the
-        engineer, the graphical engine also dynamically discovers plug-ins.
+        the same way that the GUI auto-discovers the plugins for use by the
+        engineer, the graphical engine also dynamically discovers plugins.
         Unlike the GUI, the graphical engine is controlled by the network
         string that is created by the GUI. This represents a significant
         capability since the graphical engine has no a priori knowledge of the
         system under interrogation.</para>
-
-        <para>&lt;img&gt; (get from Clearwater paper)</para>
       </section>
     </chapter>
 
     <chapter id="software_development_documents">
       <title>Software Development Documents</title>
 
-      <para></para>
+      <para>The Department of Energy is funding a collaborative effort to
+      develop new computer simulation tools that are capable of modeling
+      advanced, next-generation power plants. As part of this effort, Reaction
+      Engineering International, Iowa State University, and Carnegie Mellon
+      University have begun development of a virtual engineering-based
+      computational framework to facilitate these demanding modeling
+      efforts.</para>
+
+      <para>This new, open source framework provides significant features and
+      capabilities including:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Distributed computing capabilities</para>
+        </listitem>
+
+        <listitem>
+          <para>Platform independence</para>
+        </listitem>
+
+        <listitem>
+          <para>Extensibility for component models</para>
+        </listitem>
+
+        <listitem>
+          <para>Modern user interface</para>
+        </listitem>
+
+        <listitem>
+          <para>Support for a hierarchy of component models (from detailed to
+          simple)</para>
+        </listitem>
+
+        <listitem>
+          <para>Comprehensive graphics capabilities including support for
+          immersive facilities </para>
+        </listitem>
+
+        <listitem>
+          <para>Component architecture software design</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The VE-Suite framework provides capabilities to fundamentally
+      alter the traditional simulation process. Instead of engineers working
+      with a number of disparate computational models, it is now possible to
+      have a tightly integrated modeling environment where models interact in
+      a seamless manner. A sophisticated user interface provides easy user
+      interaction, and comprehensive two-dimensional and three-dimensional
+      graphics capabilities exist for viewing plant configurations and
+      simulation results.</para>
+
+      <para>VE-Suite’s extensible software design allows users to easily
+      incorporate component models and corresponding two-dimensional and
+      three-dimensional graphical representations to create new, plug-and-play
+      framework components. By design, the framework components can be
+      distributed across computational resources (different computers
+      connected to the internet or a local area network) to make the most
+      efficient use of resources. </para>
+
+      <para>Additional details about VE-Suite are available in:</para>
+
+      <para>Swensen, D.A., Maguire, M., Yang, C., and Bockelie, M.J.,
+      “Computational Frameworks for Practical, Engineering Applications,”
+      presented at the SIAM Computational Sciences and Engineering Conference
+      2005, Orlando, Florida, USA, February 12-15, 2005.</para>
+
+      <para>Bockelie, M., Swensen, D.A., Denison, M.K., Maguire, M., Yang, C.,
+      Chen, Z., Sadler, B., Senior, C.L., Sarofim, A.F. “A Computational
+      Workbench Environment for Virtual Power Plant Simulation”, Contract
+      DE-FC26-00NT41047, Final Report, December, 2004.</para>
+
+      <para>Huang, G., Bryden, K. M., and McCorkle, D. S., “Interactive Design
+      using CFD and Virtual Engineering,” In the Proceedings of the 10th
+      AIAA/ISSMO Multidisciplinary Analysis and Optimization Conference,
+      AIAA-2004-4364, September 2004.</para>
+
+      <para>Bryden, K. M., Ashlock, D. A., Corns, S. M.. Graph based
+      evolutionary algorithms. submitted to the IEEE Trans Evol Comput.</para>
+
+      <para>Bryden, K. M., and McCorkle, D. S., “Virtual Engineering,” in
+      preparation to submit to the Journal of Computing and Information
+      Science in Engineering,.</para>
+
+      <para>Bryden, K. M. and McCorkle, D. S., “VE-Suite: A Foundation for
+      Building Virtual Engineering Models of High Performance, Low Emission
+      Power Plants,” 29th International Technical Conference on Coal
+      Utilization &amp; Fuel Systems, Clearwater, Florida, 38-46
+      (2004).</para>
+
+      <para>McCorkle, D. S., Bryden, K. M., and Kirstukas, S. J.., “Building a
+      Foundation for Power Plant Virtual Engineering,” 28th International
+      Technical Conference on Coal Utilization &amp; Fuel Systems, Clearwater,
+      Florida, 63-71 (2003).</para>
+
+      <para>McCorkle, D. S., Bryden, K. M., and Ashlock, D. A., “Planned
+      Tournament Selection,” Intelligent Engineering Systems Through
+      Artificial Neural Networks - Proceedings of the Artificial Neural
+      Networks in Engineering Conference, 13: pp 385-390 (2003).</para>
+
+      <para>McCorkle, D. S., Bryden, K. M., and Swensen, D. A., “Using Virtual
+      Engineering Tools to Reduce NOx Emissions,” in the Proceedings of ASME
+      Power 2004, POWER2004-52021, pp 441-446, March 2004.</para>
     </chapter>
 
     <chapter id="software_development_tools">
@@ -2453,12 +2963,6 @@
       <para>rpm</para>
 
       <para>dmg builder</para>
-
-      <para>&lt;format&gt;</para>
-
-      <para>&lt;note: Check capitalization. Also, should these be linked to
-      anything? Docbook will have a readme file eventually, but what about the
-      rest?&gt;</para>
     </chapter>
   </part>
 </book>
