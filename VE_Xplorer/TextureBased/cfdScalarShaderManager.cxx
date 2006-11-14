@@ -233,14 +233,31 @@ void cfdScalarShaderManager::_updateTransferFunction()
             isoRange[1] = isoVal + 10.0;
             if(i >= isoRange[0] && i <= isoRange[1]){
                alpha = (i - newRange[0])*invSRange;
-               if(alpha <= .5){
+               if(alpha <= .25)
+               {
                   R = 0;
-                  G = (2.0*alpha)*255,      
-                  B = (1.0-2.0*alpha)*255;
+                  G = (4.0*alpha)*255,      
+                  B = (1.0)*255;
                   A = alpha*255.0*.5;
-               }else{
-                  R = (2.0*alpha-1.0)*255;
-                  G = (2.0 - 2.0*alpha)*255;       
+               }
+               else if(alpha <= .5)
+               {
+                  R = 0;
+                  G = (1.0)*255,      
+                  B = (2.0-4.0*alpha)*255;
+                  A = alpha*255.0*.5;
+               }
+               else if(alpha <= .75)
+               {
+                  R = (4.0*alpha-2.0)*255;
+                  G = (1.0)*255;       
+                  B = 0.;
+                  A = alpha*255.0*.5;
+               }
+               else if(alpha <= 1.0)
+               {
+                  R = (1.0)*255;
+                  G = (4.0-4.0*alpha)*255;       
                   B = 0.;
                   A = alpha*255.0*.5;
                }
@@ -252,7 +269,35 @@ void cfdScalarShaderManager::_updateTransferFunction()
             }
          }else{
             alpha = (i - newRange[0])*invSRange;
-            if(alpha <= .5){
+               if(alpha <= .25)
+               {
+                  R = 0;
+                  G = (4.0*alpha)*255,      
+                  B = (1.0)*255;
+                  A = alpha*255.0*.5;
+               }
+               else if(alpha <= .5)
+               {
+                  R = 0;
+                  G = (1.0)*255,      
+                  B = (2.0-4.0*alpha)*255;
+                  A = alpha*255.0*.5;
+               }
+               else if(alpha <= .75)
+               {
+                  R = (4.0*alpha-2.0)*255;
+                  G = (1.0)*255;       
+                  B = 0.;
+                  A = alpha*255.0*.5;
+               }
+               else if(alpha <= 1.0)
+               {
+                  R = (1.0)*255;
+                  G = (4.0-4.0*alpha)*255;       
+                  B = 0.;
+                  A = alpha*255.0*.5;
+               }
+            /*if(alpha <= .5){
                R = 0;
                G = (2.0*alpha)*255,      
                B = (1.0-2.0*alpha)*255;
@@ -262,7 +307,7 @@ void cfdScalarShaderManager::_updateTransferFunction()
                G = (2.0 - 2.0*alpha)*255;       
                B = 0.;
                A = alpha*255.0*.5;
-            }
+            }*/
          }
          lutex[i*4   ]  = (unsigned char)R;
          lutex[i*4 + 1] = (unsigned char)G;
