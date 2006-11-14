@@ -79,8 +79,9 @@ void QueryThread::QueryData( std::string command, CORBA::Long modId )
 {
    _mutex.acquire();
    queryCommand = command;
-   isComplete = false;
+   queryData.erase();
    moduleId = modId;
+   isComplete = false;
    _mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
