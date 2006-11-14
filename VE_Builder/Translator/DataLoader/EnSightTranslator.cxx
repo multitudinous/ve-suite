@@ -87,62 +87,107 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
    reader->Update();
    vtkDataArrayCollection* tempArray = reader->GetTimeSets();
    //this must be an int because i goes negative
-   for ( int i = tempArray->GetNumberOfItems() - 1; i >= 0; --i )
+   if ( tempArray->GetNumberOfItems() == 0 )
    {
-      std::cout << "Number of Timesteps = " << tempArray->GetItem( i )->GetNumberOfTuples() << std::endl;
-      //this must be an int because j goes negative
-      for ( int j = tempArray->GetItem( i )->GetNumberOfTuples() - 1; j >= 0; --j )
+      //necessary for ensight files that do not have timesteps
+      int numberOfOutputs = reader->GetNumberOfOutputs();
+      vtkAppendFilter* appendFilter = vtkAppendFilter::New();
+      for ( int i = 0; i < numberOfOutputs; ++i )
       {
-         std::cout << "Translating Timestep = " << tempArray->GetItem( i )->GetTuple1( j ) << std::endl;
-         reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
-         //reader->Update();
-         // used for multiple part ensight files
-         int numberOfOutputs = reader->GetNumberOfOutputs();
-         vtkAppendFilter* appendFilter = vtkAppendFilter::New();
-         for ( int i = 0; i < numberOfOutputs; ++i )
-         {
-            appendFilter->AddInput( reader->GetOutput( i ) );
-         }
-         appendFilter->Update();
+         appendFilter->AddInput( reader->GetOutput( i ) );
+      }
+      appendFilter->Update();
+      
+      if ( !outputDataset )
+      {
+         outputDataset = vtkUnstructuredGrid::New();
+      }
+      vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
+      tmpDSet->DeepCopy( appendFilter->GetOutput() );
+      appendFilter->Delete();
+      
+      //get the info about the data in the data set
+      if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
+      {
+         //std::cout<<"Warning!!!"<<std::endl;
+         //std::cout<<"No point data found!"<<std::endl;
+         //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
          
-         if ( !outputDataset )
+         vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
+         dataConvertCellToPoint->SetInput(tmpDSet);
+         dataConvertCellToPoint->PassCellDataOff();
+         dataConvertCellToPoint->Update();
+         outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
+         dataConvertCellToPoint->Delete();
+      }
+      else
+      {
+         outputDataset->DeepCopy(tmpDSet);
+      }
+      outputDataset->Update();
+      tmpDSet->Delete();
+      AddScalarsFromVectors( outputDataset );
+   }
+   else
+   {
+      //can still work with new datasets where there is only one timestep
+      for ( int i = tempArray->GetNumberOfItems() - 1; i >= 0; --i )
+      {
+         std::cout << "Number of Timesteps = " << tempArray->GetItem( i )->GetNumberOfTuples() << std::endl;
+         //this must be an int because j goes negative
+         for ( int j = tempArray->GetItem( i )->GetNumberOfTuples() - 1; j >= 0; --j )
          {
-            outputDataset = vtkUnstructuredGrid::New();
-         }
-         vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-         tmpDSet->DeepCopy( appendFilter->GetOutput() );
-         appendFilter->Delete();
-         
-         //get the info about the data in the data set
-         if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
-         {
-            //std::cout<<"Warning!!!"<<std::endl;
-            //std::cout<<"No point data found!"<<std::endl;
-            //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+            std::cout << "Translating Timestep = " << tempArray->GetItem( i )->GetTuple1( j ) << std::endl;
+            reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
+            //reader->Update();
+            // used for multiple part ensight files
+            int numberOfOutputs = reader->GetNumberOfOutputs();
+            vtkAppendFilter* appendFilter = vtkAppendFilter::New();
+            for ( int i = 0; i < numberOfOutputs; ++i )
+            {
+               appendFilter->AddInput( reader->GetOutput( i ) );
+            }
+            appendFilter->Update();
             
-            vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-            dataConvertCellToPoint->SetInput(tmpDSet);
-            dataConvertCellToPoint->PassCellDataOff();
-            dataConvertCellToPoint->Update();
-            outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
-            dataConvertCellToPoint->Delete();
-         }
-         else
-         {
-            outputDataset->DeepCopy(tmpDSet);
-         }
-         outputDataset->Update();
-         tmpDSet->Delete();
-         AddScalarsFromVectors( outputDataset );
-         
-         if ( j > 0 )
-         {
-            std::ostringstream strm;
-            strm << EnSightToVTK->GetBaseName()<< "_" << j << ".vtu";
-            VE_Util::cfdVTKFileHandler trans;
-            trans.WriteDataSet( outputDataset, strm.str() );
-            outputDataset->Delete();
-            outputDataset = 0;
+            if ( !outputDataset )
+            {
+               outputDataset = vtkUnstructuredGrid::New();
+            }
+            vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
+            tmpDSet->DeepCopy( appendFilter->GetOutput() );
+            appendFilter->Delete();
+            
+            //get the info about the data in the data set
+            if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
+            {
+               //std::cout<<"Warning!!!"<<std::endl;
+               //std::cout<<"No point data found!"<<std::endl;
+               //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+               
+               vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
+               dataConvertCellToPoint->SetInput(tmpDSet);
+               dataConvertCellToPoint->PassCellDataOff();
+               dataConvertCellToPoint->Update();
+               outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
+               dataConvertCellToPoint->Delete();
+            }
+            else
+            {
+               outputDataset->DeepCopy(tmpDSet);
+            }
+            outputDataset->Update();
+            tmpDSet->Delete();
+            AddScalarsFromVectors( outputDataset );
+            
+            if ( j > 0 )
+            {
+               std::ostringstream strm;
+               strm << EnSightToVTK->GetBaseName()<< "_" << j << ".vtu";
+               VE_Util::cfdVTKFileHandler trans;
+               trans.WriteDataSet( outputDataset, strm.str() );
+               outputDataset->Delete();
+               outputDataset = 0;
+            }
          }
       }
    }
