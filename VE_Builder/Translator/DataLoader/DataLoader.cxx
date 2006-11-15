@@ -41,6 +41,7 @@
 #include "VE_Builder/Translator/DataLoader/cfdDICOMTranslator.h"
 #include "VE_Builder/Translator/DataLoader/plot3dReader.h"
 #include "VE_Builder/Translator/DataLoader/StarCDTranslator.h"
+#include "VE_Builder/Translator/DataLoader/AnsysTranslator.h"
 
 #include "VE_Xplorer/Utilities/fileIO.h"
 
@@ -73,6 +74,8 @@ DataLoader::DataLoader()
    translatorMap[ "xyz" ] = new VE_Builder::plot3dReader();
    // StarCD
    translatorMap[ "star" ] = new VE_Builder::StarCDTranslator();
+   // ANSYS
+   translatorMap[ "rst" ] = new VE_Builder::AnsysTranslator();
 }
 ///////////////////////////////////////////////////////////////////////////
 DataLoader::~DataLoader()

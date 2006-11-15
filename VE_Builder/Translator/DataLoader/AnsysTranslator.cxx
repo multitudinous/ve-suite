@@ -82,6 +82,6 @@ void AnsysTranslator::DisplayHelp( void )
 {
    std::cout << "|\tAnsys Translator Usage:" << std::endl
                << "\t -singleFile <rst_filename_to_load> -o <output_dir> "
-               << "-outFileName <output_filename> -loader star -w file" << std::endl;
+               << "-outFileName <output_filename> -loader rst -w file" << std::endl;
 }
 
