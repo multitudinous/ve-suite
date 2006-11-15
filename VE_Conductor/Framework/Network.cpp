@@ -2024,31 +2024,57 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
 /////////////////////////////////////////////////////////////////////
 void Network::HighlightSelectedIcon (REI_Plugin* cur_module)
 {
-   if (!cur_module)
-      return;
+	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	//serviceList->GetMessageLog()->SetMessage(cur_module->GetName().c_str());
+	//if (!cur_module)
+	//  return;
 
-   size_t i;
-   wxPoint bport[5];
-   wxCoord xoff, yoff;
-   int num;
-   wxPoint tempPoint  = cur_module->GetBBox().GetPosition();
-   int tempHeight = cur_module->GetBBox().GetHeight();
-   int tempWidth = cur_module->GetBBox().GetWidth();
-   int highlightBoxWidth = tempWidth;// + 10;
-   int highlightBoxHeight = tempHeight;// + 10;
-
-   wxClientDC dc(this);
-   PrepareDC(dc);
-   dc.SetUserScale( userScale.first, userScale.second );
-   bport[0] = wxPoint(tempPoint.x, tempPoint.y);
-   bport[1] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y);
-   bport[2] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y + highlightBoxHeight);
-   bport[3] = wxPoint(tempPoint.x, tempPoint.y + highlightBoxHeight);
-   bport[4] = wxPoint(tempPoint.x, tempPoint.y);
-   wxPen old_pen = dc.GetPen();
-   dc.SetPen(*wxRED_PEN);
-   dc.DrawLines(5, bport);
-   dc.SetPen(old_pen);
+	size_t i;
+	wxPoint bport[5];
+	wxCoord xoff, yoff;
+	int num;
+	serviceList->GetMessageLog()->SetMessage("tp\n");
+	wxPoint tempPoint  = cur_module->GetBBox().GetPosition();
+	serviceList->GetMessageLog()->SetMessage("th\n");
+	int tempHeight = cur_module->GetBBox().GetHeight();
+	serviceList->GetMessageLog()->SetMessage("tw\n");
+	int tempWidth = cur_module->GetBBox().GetWidth();
+	serviceList->GetMessageLog()->SetMessage("hw\n");
+	int highlightBoxWidth = tempWidth;// + 10;
+	serviceList->GetMessageLog()->SetMessage("hh\n");
+	int highlightBoxHeight = tempHeight;// + 10;
+	
+	serviceList->GetMessageLog()->SetMessage("dc\n");
+	wxClientDC dc(this);
+	serviceList->GetMessageLog()->SetMessage("pre\n");
+	PrepareDC(dc);
+	serviceList->GetMessageLog()->SetMessage("ss\n");
+	dc.SetUserScale( userScale.first, userScale.second );
+	serviceList->GetMessageLog()->SetMessage("bport");
+	bport[0] = wxPoint(tempPoint.x, tempPoint.y);
+	bport[1] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y);
+	bport[2] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y + highlightBoxHeight);
+	bport[3] = wxPoint(tempPoint.x, tempPoint.y + highlightBoxHeight);
+	bport[4] = wxPoint(tempPoint.x, tempPoint.y);
+	serviceList->GetMessageLog()->SetMessage("pen");
+	wxPen old_pen = dc.GetPen();
+	serviceList->GetMessageLog()->SetMessage("setpen");
+	dc.SetPen(*wxRED_PEN);
+	serviceList->GetMessageLog()->SetMessage("drawline");
+	dc.DrawLines(5, bport);
+	serviceList->GetMessageLog()->SetMessage("oldpen");
+	dc.SetPen(old_pen);
+}
+void Network::HighlightSelectedIcon2 (int selected)
+{
+	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	std::stringstream output;
+	output<<selected<<std::endl;
+	serviceList->GetMessageLog()->SetMessage("high");
+	serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+	serviceList->GetMessageLog()->SetMessage("block");
+	//serviceList->GetMessageLog()->SetMessage(modules[selected].GetClassName().c_str());
+	HighlightSelectedIcon(modules[selected].GetPlugin());
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -2522,7 +2548,6 @@ void  Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 {  
 	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
-	
 	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
 
 	VE_XML::Command returnState;

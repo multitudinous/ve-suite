@@ -178,12 +178,13 @@ public:
    
    void SetXplorerInterface( VjObs_ptr veEngine );
    bool SetActiveModel( void );
+   void HighlightSelectedIcon2( int);
 
 protected:
 
    //Draw functions
-   void DrawPorts( REI_Plugin* cur_module, bool flag);
    void HighlightSelectedIcon( REI_Plugin* cur_module);
+   void DrawPorts( REI_Plugin* cur_module, bool flag);
    void DrawPorti( REI_Plugin* cur_module, int index, bool flag);
    //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
    //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);

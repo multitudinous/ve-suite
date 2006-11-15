@@ -80,6 +80,7 @@ enum
    ASPEN_CONNECTION_MENU,
    SHOW_ASPEN_SIMULATION,
    HIDE_ASPEN_SIMULATION,
+   FIND,
    v21ID_DISCONNECT,
    v21ID_DISCONNECT_VE, 
    v21ID_UNDO, 
@@ -247,15 +248,18 @@ protected:
    void Open(wxCommandEvent &event);
    void SubmitToServer(wxCommandEvent &event);
    void LoadFromServer(wxCommandEvent &event);
+   
    void QueryFromServer( wxCommandEvent& event );
    void QueryNetwork( wxCommandEvent& event );
    void RunAspenNetwork( wxCommandEvent& event );
    void ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) );
    void HideAspenSimulation( wxCommandEvent& WXUNUSED(event) );
+   void FindBlocks( wxCommandEvent& WXUNUSED(event) );
    void StartCalc(wxCommandEvent &event);	
    void StopCalc(wxCommandEvent &event);	
    void PauseCalc(wxCommandEvent &event);	
    void ResumeCalc(wxCommandEvent &event);	
+   
    void ViewResult(wxCommandEvent &event);
    void ViewHelp(wxCommandEvent &event);
    void GlobalParam(wxCommandEvent &event);
