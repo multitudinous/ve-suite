@@ -129,6 +129,6 @@ void cfdDICOMTranslator::DICOMTranslateCbk::Translate(vtkDataSet*& outputDataset
 void cfdDICOMTranslator::DisplayHelp( void )
 {
    std::cout << "|\tDICOM Translator Usage:" << std::endl
-               << "\t -singleFile <filename_to_load> -o <output_dir> "
+               << "\t -i <input_directory> -o <output_dir> "
                << "-outFileName <output_filename> -loader dcm -w file" << std::endl;
 }

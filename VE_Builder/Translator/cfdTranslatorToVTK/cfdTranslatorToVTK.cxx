@@ -265,6 +265,7 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
       {
          toVTK->SetInputDirectory(inDir);
          toVTK->SetNumberOfFoundFiles(1);
+         toVTK->AddBaseName("outdata");
       }
       std::string outDir;
       if( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-o"),outDir))
