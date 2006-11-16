@@ -828,6 +828,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
 
 int Network::SelectMod( int x, int y )
 {
+	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
    // This function checks to see which module your mouse is over based
    // on the x and y location of your mouse on the design canvas
    std::map< int, Module >::iterator iter;
@@ -851,6 +852,9 @@ int Network::SelectMod( int x, int y )
          }
          // lets draw some ports sense the module is selected
 	      DrawPorts( modules[i].GetPlugin(), true );
+		  std::stringstream output;
+		  output << i << std::endl;
+		  serviceList->GetMessageLog()->SetMessage(output.str().c_str());
 		  HighlightSelectedIcon( modules[i].GetPlugin());
          // now we are officially selected
 	      m_selMod = i;
@@ -1957,9 +1961,14 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
    wxString text;
    int w, h;
    
+   CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+
    for (i=0; i<(int)ports.size(); i++)
    {
-       wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+	   std::stringstream output;
+	   output << ports[i].GetPortLocation()->GetPoint().first<< " "<<ports[i].GetPortLocation()->GetPoint().second<<std::endl;
+	   serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+	   wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
       // I believe this means move the points in from the edge of the icon
       // by 3 pixles
       // bbox.x returns the global x location and the ports.x returns the x location with respect to bbox.x
@@ -2024,58 +2033,52 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
 /////////////////////////////////////////////////////////////////////
 void Network::HighlightSelectedIcon (REI_Plugin* cur_module)
 {
-	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	//CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
 	//serviceList->GetMessageLog()->SetMessage(cur_module->GetName().c_str());
-	//if (!cur_module)
-	//  return;
+	if (!cur_module)
+	  return;
 
 	size_t i;
 	wxPoint bport[5];
 	wxCoord xoff, yoff;
 	int num;
-	serviceList->GetMessageLog()->SetMessage("tp\n");
+	//serviceList->GetMessageLog()->SetMessage("tp\n");
 	wxPoint tempPoint  = cur_module->GetBBox().GetPosition();
-	serviceList->GetMessageLog()->SetMessage("th\n");
-	int tempHeight = cur_module->GetBBox().GetHeight();
-	serviceList->GetMessageLog()->SetMessage("tw\n");
-	int tempWidth = cur_module->GetBBox().GetWidth();
-	serviceList->GetMessageLog()->SetMessage("hw\n");
+	//minus 10 because the icon size seems to be smaller than the bbox size
+	//serviceList->GetMessageLog()->SetMessage("th\n");
+	int tempHeight = cur_module->GetBBox().GetHeight() - 10;
+	//serviceList->GetMessageLog()->SetMessage("tw\n");
+	int tempWidth = cur_module->GetBBox().GetWidth() - 10;
+	//serviceList->GetMessageLog()->SetMessage("hw\n");
 	int highlightBoxWidth = tempWidth;// + 10;
-	serviceList->GetMessageLog()->SetMessage("hh\n");
+	//serviceList->GetMessageLog()->SetMessage("hh\n");
 	int highlightBoxHeight = tempHeight;// + 10;
 	
-	serviceList->GetMessageLog()->SetMessage("dc\n");
+	//serviceList->GetMessageLog()->SetMessage("dc\n");
 	wxClientDC dc(this);
-	serviceList->GetMessageLog()->SetMessage("pre\n");
+	//serviceList->GetMessageLog()->SetMessage("pre\n");
 	PrepareDC(dc);
-	serviceList->GetMessageLog()->SetMessage("ss\n");
+	//serviceList->GetMessageLog()->SetMessage("ss\n");
 	dc.SetUserScale( userScale.first, userScale.second );
-	serviceList->GetMessageLog()->SetMessage("bport");
+	//serviceList->GetMessageLog()->SetMessage("bport");
 	bport[0] = wxPoint(tempPoint.x, tempPoint.y);
 	bport[1] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y);
 	bport[2] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y + highlightBoxHeight);
 	bport[3] = wxPoint(tempPoint.x, tempPoint.y + highlightBoxHeight);
 	bport[4] = wxPoint(tempPoint.x, tempPoint.y);
-	serviceList->GetMessageLog()->SetMessage("pen");
+	//serviceList->GetMessageLog()->SetMessage("pen");
 	wxPen old_pen = dc.GetPen();
-	serviceList->GetMessageLog()->SetMessage("setpen");
+	//serviceList->GetMessageLog()->SetMessage("setpen");
 	dc.SetPen(*wxRED_PEN);
-	serviceList->GetMessageLog()->SetMessage("drawline");
+	//serviceList->GetMessageLog()->SetMessage("drawline");
 	dc.DrawLines(5, bport);
-	serviceList->GetMessageLog()->SetMessage("oldpen");
+	//serviceList->GetMessageLog()->SetMessage("oldpen");
 	dc.SetPen(old_pen);
 }
-void Network::HighlightSelectedIcon2 (int selected)
-{
-	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
-	std::stringstream output;
-	output<<selected<<std::endl;
-	serviceList->GetMessageLog()->SetMessage("high");
-	serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-	serviceList->GetMessageLog()->SetMessage("block");
-	//serviceList->GetMessageLog()->SetMessage(modules[selected].GetClassName().c_str());
-	HighlightSelectedIcon(modules[selected].GetPlugin());
-}
+//void Network::HighlightSelectedIcon2 (unsigned int selected)
+//{
+//	HighlightSelectedIcon( modules[selected].GetPlugin());
+//}
 
 ///////////////////////////////////////////////////////////////////////
 void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)

@@ -69,6 +69,7 @@
 #include "VE_Open/XML/CAD/CADCreator.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
+#include "VE_Open/XML/Model/Model.h"
 
 //#include "VE_Conductor/VE_UI/UI_Tabs.h"
 //#include "VE_Conductor/VE_UI/UI_Frame.h"
@@ -1078,23 +1079,28 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
    FindDialog * fd = new FindDialog(this);
    std::map<int, Module>::iterator iter;
    std::vector< std::string > moduleNames;
+   std::vector< unsigned int > moduleIDs;
    for (iter=network->modules.begin(); iter!=network->modules.end(); iter++)
+   {
 	   moduleNames.push_back(network->modules[iter->first].GetClassName());
+	   moduleIDs.push_back(network->modules[iter->first].GetPlugin()->GetModel()->GetModelID());
+   }
    fd->SetModuleList(moduleNames);
    fd->ShowModal();
-   std::string selectedModule(fd->GetSelectedModule());
+   //std::string selectedModule(fd->GetSelectedModule());
    int selectedModulePos = fd->GetSelectedModulePos();
-   Log(selectedModule.c_str());
-   std::stringstream output;
-   output << selectedModulePos << std::endl;
-   Log(output.str().c_str());
-   std::string tester;
-   Log("getname\n");
-   tester = network->modules[selectedModulePos].GetClassName();
-   Log("log\n");
-   Log(tester.c_str());
-   Log("plugin");
-   network->HighlightSelectedIcon2(selectedModulePos);
+   //Log(selectedModule.c_str());
+   //std::stringstream output;
+   //output << selectedModulePos << std::endl;
+   //Log(output.str().c_str());
+   //std::string tester;
+   //Log("getname\n");
+   //tester = network->modules[selectedModulePos].GetClassName();
+   //Log("log\n");
+   //Log(tester.c_str());
+   //Log("plugin");
+   //network->HighlightSelectedIcon2(moduleIDs[selectedModulePos]);
+   network->HighlightSelectedIcon(network->modules[moduleIDs[selectedModulePos]].GetPlugin());
 }
 
 ///////////////////////////////////////////////////////////////////////////
