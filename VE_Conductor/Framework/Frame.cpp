@@ -179,7 +179,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
    EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
    EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
-   EVT_MENU( FIND, AppFrame::FindBlocks )
+   EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -651,7 +651,7 @@ void AppFrame::CreateMenu()
    aspenMenu->Append( SHOW_ASPEN_SIMULATION, _("Show Simulation") );
    aspenMenu->Append( HIDE_ASPEN_SIMULATION, _("Hide Simulation") );
    aspenMenu->Append( RUN_ASPEN_NETWORK, _("Run Simulation") );
-   aspenMenu->Append( FIND, _("Find") );
+   aspenMenu->Append( CONDUCTOR_FIND, _("Find") );
    con_menu->Append( ASPEN_CONNECTION_MENU,   _("Aspen"), aspenMenu, _("Aspen connection") );
 
    con_menu->AppendSeparator();
