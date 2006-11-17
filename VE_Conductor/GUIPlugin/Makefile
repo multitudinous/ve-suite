@@ -49,8 +49,9 @@ SRCS=\
    OrbThread.cxx\
    CORBAServiceList.cxx\
    UI_i.cxx\
-	ParamsDlg.cpp\
-	QueryInputsDlg.cpp
+   ParamsDlg.cpp\
+   QueryInputsDlg.cpp\
+   FindDialog.cpp
     
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
