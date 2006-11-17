@@ -45,14 +45,14 @@
   NURBS Object OSG Renderer API
   */
 
+/*!\class NURBS::NURBSNode
+ * Class defining the interface between NURBS object and osg::Geometry.
+ */
 namespace NURBS
 {
    class NURBSControlMesh;
    class NURBSTessellatedSurface;
 
-/*!\class NURBS::NURBSNode
- * Class defining the interface between NURBS object and osg::Geometry.
- */
 class VE_NURBS_EXPORTS NURBSNode : public osg::Group
 {
 public:
