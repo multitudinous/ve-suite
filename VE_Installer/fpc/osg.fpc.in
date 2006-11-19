@@ -13,5 +13,3 @@ Arch: i686
 Libs: -L${prefix}/lib -losg -losgDB -losgGA -losgUtil -lOpenThreads -losgText -losgSim -losgProducer -lProducer
 Libs.private: 
 Cflags: -D_OSG -I${prefix}/include
-
-## NOTE: Need to cover "include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk"
