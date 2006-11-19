@@ -124,25 +124,27 @@ case "$CFDHOSTTYPE" in
 
 ;;
 	Darwin*)
+   export FLAGPOLL_PATH=${VE_SUITE_HOME}/VE_Installer/fpc:/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/build-darwin/instlinks/lib/flagpoll
+   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/vrjuggler/cppdom-0.6.6/lib/flagpoll
+   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/vrjuggler/gmtl-0.4.12-install/share/pkgconfig
+   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/ACE_TAO/install/lib/pkgconfig:/opt/local/lib/pkgconfig
+
    #setenv JDK_HOME /usr/java
-   export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk-cvs/install
+   export VTK_BASE_DIR=`flagpoll vtk --get-prefix`
+   export TAO_HOME=`flagpoll TAO --get-prefix`
    export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install
-   #export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install-cocoa
-   export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/build-darwin/instlinks
-   export VJ_DEPS_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler/install-vrj-deps
-   export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.2/install
+   export VJ_BASE_DIR=`flagpoll vrjuggler --get-prefix`
+   export OSG_HOME=`flagpoll osg --get-prefix`
    #setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
-   export DYLD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib:${VJ_DEPS_DIR}/lib
+   export DYLD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${WX_HOME}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
-
-   export TAO_HOME=/Volumes/data/VE_Suite_Deps/ACE_TAO/install
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${TAO_HOME}/lib
+
    export PATH=${TAO_HOME}/bin:${PATH}
-   export XERCESCROOT=/opt/local
-   #export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${XERCESCROOT}/lib
+
 ;;
    *)
    echo "ERROR: Unsupported operating system"
@@ -153,10 +155,9 @@ esac
 export TWEEK_BASE_DIR=${VJ_BASE_DIR}
 export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
 export SNX_BASE_DIR=${VJ_BASE_DIR}
-export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin:${PATH}
+export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${PATH}
 export PATH=${WX_HOME}/bin:${PATH}
-export PATH=${APR_HOME}/bin:${PATH}
-export PATH=${APU_HOME}/bin:${PATH}
+
 if [ $OSG_HOME ]; then
    export PATH=${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
    export OSG_FILE_PATH=${OSG_HOME}/share/OpenSceneGraph-Data
