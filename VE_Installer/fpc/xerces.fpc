@@ -1,4 +1,4 @@
-prefix=/home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Linux-RHEL_4
+prefix=/opt/local
 exec_prefix=${prefix}/bin
 share_dir=${prefix}/share
 man_dir=${prefix}/man
