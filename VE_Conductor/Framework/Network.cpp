@@ -852,9 +852,6 @@ int Network::SelectMod( int x, int y )
          }
          // lets draw some ports sense the module is selected
 	      DrawPorts( modules[i].GetPlugin(), true );
-		  std::stringstream output;
-		  output << i << std::endl;
-		  serviceList->GetMessageLog()->SetMessage(output.str().c_str());
 		  HighlightSelectedIcon( modules[i].GetPlugin());
          // now we are officially selected
 	      m_selMod = i;
