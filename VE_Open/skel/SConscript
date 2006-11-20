@@ -11,11 +11,12 @@ srcs = Split("""
    VjObsC.cpp
    VjObsS.cpp
 """)
-srcs = map(lambda s: pj('#', 'VE_Open', 'skel', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Open', 'skel', s), srcs)
 
 env = baseEnv.Copy()
-env.Append(LIBS = ['VE_XMLLib', 'VE_ShaderLib'])
-env.ParseConfig('flagpoll tao --cflags --libs')
+env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+                              TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
+                              TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --cflags --libs')
 
 targetLib = pj(libPath, 'VE_OpenModuleLib')
 env.SharedLibrary(target = targetLib, source = srcs)

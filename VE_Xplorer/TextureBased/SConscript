@@ -33,18 +33,15 @@ srcs = Split("""
    cfdVolumeVisualization.cxx
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)
 
 env = baseEnv.Copy()
 env.Append(LIBS = 'VE_UtilLib')
-env.ParseConfig('flagpoll vtk --libs --cflags')
-env.ParseConfig('flagpoll osg --libs --cflags')
-env.ParseConfig('flagpoll boost --libs')
-env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('vrjuggler-config --libs --extra-libs --includes --cxxflags')
+env.ParseConfig('flagpoll vtk osg vrjuggler Boost.Filesystem --libs --cflags')
+##env.ParseConfig('wx-config --cxxflags --libs')
 ##For non-64-bit systems: (64-bits need 'lib64')
-env.Append(LIBPATH = [pj('usr', 'X11R6', 'lib')])
-env.Append(LIBS = ['X11', 'GL'])
+##env.Append(LIBPATH = [pj('usr', 'X11R6', 'lib')])
+##env.Append(LIBS = ['X11', 'GL'])
 
 
 targetLib = pj(libPath, 'VE_TextureBasedLib%s' %(execOsgPatTag))

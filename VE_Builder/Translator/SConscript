@@ -3,8 +3,8 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('Platform')
-Import( 'vtk' )
-Import( 'boost' )
+#Import( 'vtk' )
+#Import( 'boost' )
 
 srcs = Split("""
 	translateToVtk.cpp
@@ -36,7 +36,6 @@ srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', s), srcs)
 env = baseEnv.Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#'])
-env.Append(CPPPATH = pj( os.getenv('VTK_BASE_DIR',''), 'include', 'vtk') )
 env.Append(CPPPATH = ['#/VE_Builder/Utilities'])
 env.Append(LIBPATH = '#',
               LIBS = 'VE_UtilLib')
@@ -45,6 +44,5 @@ for lib in vtk:
    env.Append(LIBS = lib)
 for lib in boost:
    env.Append(LIBS = lib)
-env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
-env.ParseConfig( 'vrjuggler-config vrj_ogl --libs' )
+env.ParseConfig( 'flagpoll vtk --cflags --libs' )
 env.Program(pj('#','bin',Platform,'Translator'), source = srcs)

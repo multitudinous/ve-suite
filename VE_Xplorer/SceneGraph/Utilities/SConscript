@@ -11,13 +11,11 @@ srcs = Split("""
     ShaderHelper.cxx
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
-                        'Utilities', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
+##                        'Utilities', s), srcs)
 env = baseEnv.Copy()
-env.ParseConfig('flagpoll osg --libs --cflags')
-env.ParseConfig('flagpoll xerces --libs')
-env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')
+env.Append(LIBS = ['VE_CADLib', 'VE_ShaderLib', 'VE_XMLLib'])
+env.ParseConfig('flagpoll osg xerces --libs --cflags')
 
 targetLib = pj(libPath, 'VE_SceneGraph_UtilitiesLib')
 env.SharedLibrary(target = targetLib, source = srcs)

@@ -17,10 +17,11 @@ srcs = Split("""
    CADNodeAnimation.cxx
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'CAD', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'CAD', s), srcs)
 
 env = baseEnv.Copy()
 env.Append(LIBS = ['VE_XMLLib', 'VE_ShaderLib'])
+env.ParseConfig('flagpoll xerces --libs --cflags')
 
 targetLib = pj(libPath, 'VE_CADLib')
 env.SharedLibrary(target = targetLib, source = srcs)

@@ -5,7 +5,7 @@ pj = os.path.join
 Import('baseEnv')
 Import('libPath')
 
-shader_srcs = Split("""
+srcs = Split("""
    TextureImage.cxx
    Uniform.cxx
    Program.cxx
@@ -13,11 +13,11 @@ shader_srcs = Split("""
    ShaderCreator.cxx 
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'Shader', s), shader_srcs)
+##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'Shader', s), shader_srcs)
 
 env = baseEnv.Copy()
 env.Append(LIBS = 'VE_XMLLib')
-env.ParseConfig('flagpoll xerces --libs')
+env.ParseConfig('flagpoll xerces --libs --cflags')
 
 targetLib = pj(libPath, 'VE_ShaderLib')
 env.SharedLibrary(target = targetLib, source = srcs)

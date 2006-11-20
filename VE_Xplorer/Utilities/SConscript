@@ -5,7 +5,7 @@ pj = os.path.join
 Import('baseEnv')
 Import('libPath')
 
-srcs = Split("""
+util_srcs = Split("""
    cfdAccessoryFunctions.cxx
    cfdGrid2Surface.cxx
    cfdVTKFileHandler.cxx
@@ -14,13 +14,10 @@ srcs = Split("""
    readWriteVtkThings.cxx
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), srcs)
+srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), util_srcs)
 
 env = baseEnv.Copy()
-env.ParseConfig('flagpoll vtk --cflags --libs')
-env.ParseConfig('flagpoll boost --cflags --libs')
-env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')
+env.ParseConfig('flagpoll Boost.Filesystem vtk --cflags --libs')
 
 targetLib = pj(libPath, 'VE_UtilLib')
 env.SharedLibrary(target = targetLib, source = srcs)

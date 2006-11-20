@@ -15,11 +15,12 @@ srcs = Split("""
    ModelCreator.cxx 
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'Model', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'Model', s), srcs)
 
 env = baseEnv.Copy()
-env.Append(LIBS = 'VE_XMLLib')
-env.ParseConfig('flagpoll xerces --libs')
+env.Append(LIBS = ['VE_XMLLib',
+                   'VE_CADLib', 'VE_ShaderLib'])
+env.ParseConfig('flagpoll xerces --libs --cflags')
 
 targetLib = pj(libPath, 'VE_ModelLib')
 env.SharedLibrary(target = targetLib, source = srcs)

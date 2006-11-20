@@ -17,20 +17,26 @@ srcs = Split("""
    ResultPanel.cpp 
    StringParse.cpp 
    SummaryResultDialog.cpp 
+    CORBAServiceList.cxx
+   OrbThread.cxx 
    TexTable.cpp 
    TextResultDialog.cpp 
    UIDialog.cpp 
+   UI_i.cxx
+   ParamsDlg.cpp
+   QueryInputsDlg.cpp
+   FindDialog.cpp
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Conductor', 'GUIPlugin', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Conductor', 'GUIPlugin', s), srcs)
 
 env = baseEnv.Copy()
 env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
 env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('vrjuggler-config --extra-libs')
-env.ParseConfig('flagpoll tao --libs --cflags')
-env.ParseConfig('flagpoll xerces --libs')
+env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+                              TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
+                              TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
 
 targetLib = pj(libPath, 'GUIPluginLib')

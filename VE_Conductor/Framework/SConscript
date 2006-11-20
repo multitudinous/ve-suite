@@ -5,14 +5,13 @@ pj = os.path.join
 Import('baseEnv')
 Import('cfdHostType')
 
-framework_srcs = Split("""
+srcs = Split("""
    App.cpp 
    Avail_Modules.cpp
     DataSetLoaderUI.cxx
    Frame.cpp 
    Network.cpp 
    NavigationPane.cxx 
-   OrbThread.cpp 
    paraThread.cpp 
    PluginLoader.cpp 
    SoundsPane.cpp 
@@ -28,29 +27,25 @@ framework_srcs = Split("""
     advancedstreamlines.cpp
     isosurfaces.cpp
     polydata.cpp
-    CORBAServiceList.cxx
     ScalarToolsDlg.cxx
-   UI_i.cpp 
    UI_TeacherTab.cpp
    UI_TransientDialog.cxx
+   UserPreferences.cxx
 """)
-srcs = map(lambda s: pj('#', 'VE_Conductor', 'Framework', s), framework_srcs)
+##srcs = map(lambda s: pj('#', 'VE_Conductor', 'Framework', s), framework_srcs)
 
 env = baseEnv.Copy()
-env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = pj('#', 'VE_Open', 'skel'))
-env.Append(CPPPATH = pj(os.getenv('VJ_BASE_DIR', ''), 'bin'))
+##env.Append(CPPPATH = [os.getcwd()])
+##env.Append(CPPPATH = pj('#', 'VE_Open', 'skel'))
+##env.Append(CPPPATH = pj(os.getenv('VJ_BASE_DIR', ''), 'bin'))
 env.Append(LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_Conductor_UtilitiesLib',
                    'VE_OpenModuleLib'])
 
-env.ParseConfig( 'vpr-config --libs --extra-libs --includes' )
-env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
 env.ParseConfig( 'wx-config --cxxflags --libs' )
-env.ParseConfig('flagpoll tao --cflags --libs')
-env.ParseConfig('flagpoll xerces --libs')
-env.ParseConfig('flagpoll osg --libs')
-env.ParseConfig('flagpoll boost --libs')
+env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+                              TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
+                              TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --cflags --libs')
 
 env.Program(pj('#','bin',cfdHostType,'WinClient'), source = srcs)
 

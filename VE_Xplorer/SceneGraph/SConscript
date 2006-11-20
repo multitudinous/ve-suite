@@ -28,16 +28,11 @@ srcs = Split("""
     Text.cxx
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
 
 env = baseEnv.Copy()
-env.Append(CPPPATH = [os.getcwd()])
-env.ParseConfig('flagpoll osg --libs --cflags')
-env.ParseConfig('flagpoll tao --libs')
-env.ParseConfig('flagpoll vtk --libs --cflags')
-env.ParseConfig('flagpoll gmtl --cflags')
-env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('vrjuggler-config --libs --extra-libs --includes')
+##env.Append(CPPPATH = [os.getcwd()])
+env.ParseConfig('flagpoll osg gmtl vtk vrjuggler --libs --cflags')
 
 targetLib = pj(libPath, 'VE_SceneGraphLib%s' %(execOsgPatTag))
 env.SharedLibrary(target = targetLib, source = srcs)

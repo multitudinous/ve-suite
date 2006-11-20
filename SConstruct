@@ -2,6 +2,18 @@ import os, sys, string, smtplib
 ##import practice
 from subprocess import *
 
+import SConsAddons.Util as sca_util
+import SConsAddons.Options as asc_opt
+##import SConsAddons.Options.CppUnit
+##import SConsAddons.Options.Boost
+import SConsAddons.AutoDist as sca_auto_dist
+from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
+
+GetPlatform = sca_util.GetPlatform
+Export('GetPlatform')
+GetArch = sca_util.GetArch
+Export('GetArch')
+
 WX_HOME_DIR = '/home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/'
 
 pj = os.path.join
@@ -10,23 +22,6 @@ opts.Add(BoolOption('VE_PATENTED', 'Set for Patent', 1))
 opts.Add(BoolOption('TAO_BUILD', 'Set for Tao', 1))
 opts.Add(BoolOption('CLUSTER_APP', 'Set for Cluster', 0))
 ##NOTE: Put in path to flagpoll & flagpoll files.
-
-def GetPlatform():
-    """Determines what platform this build is being run on."""
-    if string.find(sys.platform, 'irix') != -1:
-        return 'irix'
-    elif string.find(sys.platform, 'linux') != -1:
-        return 'linux'
-    elif string.find(sys.platform, 'freebsd') != -1:
-        return 'linux'
-    elif string.find(sys.platform, 'cygwin') != -1:
-        return 'win32'
-    elif string.find(os.name, 'win32') != -1:
-        return 'win32'
-    elif string.find(sys.platform, 'sun') != -1:
-        return 'sun'
-    else:
-        return sys.platform
 
 def GetCFDHostType():
     """Determines which hosttype this build is being run on."""
@@ -123,8 +118,9 @@ def GetTag(execTag = False, osgTag = False,
 ##execOsgTag = GetTag(True, True)
 ##Export('execTag')
 ##Export('execOsgTag')
-cfdHostType = GetCFDHostType()
+cfdHostType = GetPlatform() + GetArch()
 libPath = pj('#', 'lib', cfdHostType)
+binDir = pj('#', 'bin', cfdHostType)
 execOsgPatTag = GetTag(True, True, True)
 execOsgPatClusterTag = GetTag(True, True, True, True)
 Export('cfdHostType')
@@ -252,12 +248,29 @@ def BuildBaseEnvironment():
         print '[ERR] Unsupported Platform ' + GetPlatform()
         sys.exit(1)
 
-baseEnv = BuildBaseEnvironment()
+base_bldr = EnvironmentBuilder()
+baseEnv = base_bldr.buildEnvironment()
+baseEnv.Append(CPPPATH = ['#'])
+##taoHome = Popen(['flagpoll', 'TAO', '--get-prefix'], stdout=PIPE).communicate[0]
+piped = os.popen("flagpoll TAO --get-prefix")
+taoHome = piped.read()[:-1]
+piped.close()
+baseEnv.Append(PATH = ["%s/bin" %taoHome])
+##baseEnv = BuildBaseEnvironment()
 Platform = GetPlatform() ##Temporary setup
+buildDir = 'build.' + GetPlatform() + "." + GetArch()
+baseEnv.BuildDir(buildDir, '.', duplicate = 0)
+
+##See scons users guide section 15 on variant builds
+##include = "#export/$PLATFORM/include"
+lib = libPath
+bin = binDir
+baseEnv.Append( BINDIR = bin, 
+            LIBDIR = lib, 
+            LIBPATH = [lib]) 
+
 Export('baseEnv')
 Export('Platform')
-buildDir = 'build.' + GetPlatform()
-BuildDir(buildDir, '.', duplicate = 0)
 
 env = baseEnv.Copy()
 

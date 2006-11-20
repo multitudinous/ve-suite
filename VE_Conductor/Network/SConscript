@@ -12,11 +12,11 @@ srcs = Split("""
    GeometryDataBuffer.cpp
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Conductor', 'Network', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Conductor', 'Network', s), srcs)
 
 env = baseEnv.Copy()
 env.Append(LIBS = 'VE_XMLLib')
-env.ParseConfig('flagpoll xerces --libs')
+env.ParseConfig('flagpoll xerces --libs --cflags')
 
 targetLib = pj(libPath, 'VE_ConductorLib')
 env.SharedLibrary(target = targetLib, source = srcs)

@@ -1,5 +1,7 @@
 ##Builds DefaultPlugin_UI_Dialog
-import os, sys, string
+import os, sys, string, smtplib
+#from subprocess import *
+
 pj = os.path.join
 
 Import('baseEnv')
@@ -11,13 +13,13 @@ srcs = Split("""
 """)
 
 env = baseEnv.Copy()
-env.Append(CPPPATH = pj('#', 'VE_Conductor', 'Framework') )
+##env.Append(CPPPATH = pj('#', 'VE_Conductor', 'Framework') )
 env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'GUIPluginLib',
                    'VE_OpenModuleLib'])
+
 env.ParseConfig( 'wx-config --cxxflags --libs' )
-env.ParseConfig('flagpoll tao --cflags --libs')
-env.ParseConfig('flagpoll xerces --libs')
+env.ParseConfig('flagpoll TAO xerces --cflags --libs')
 
 targetLib = pj(libPath, 'DefaultPlugin_UI_Dialog')
 env.SharedLibrary(targetLib, source = srcs)

@@ -16,21 +16,20 @@ srcs = Split("""
     plot3dReader.cxx
     StarCDTranslator.cxx
     starReader.cxx
+    AnsysTranslator.cxx
+    ansysReader.cxx
 """)
 
 if os.getenv('FLUENT_MFIX') == 'TRUE':
     srcs.Append('FluentTranslator.cxx')
     srcs.Append('MFIXTranslator.cxx')
     env.Append(CXXFLAGS = ['-DFLUENT_MFIX'])
-srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
 
 env = baseEnv.Copy()
-env.Append(CPPPATH = [os.getcwd()])
+##env.Append(CPPPATH = [os.getcwd()])
 env.Append(LIBS = ['VE_UtilLib', 'TranslatorToVTKLib'])
-env.ParseConfig('flagpoll vtk --libs --cflags')
-env.ParseConfig('flagpoll boost --libs')
-env.ParseConfig( 'vrjuggler-config vrj --libs --extra-libs --includes' )
-env.ParseConfig( 'vrjuggler-config vrj_ogl --libs' )
+env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
 
 targetLib = pj(libPath, 'DataLoaderLib')
 env.SharedLibrary(target = targetLib, source = srcs)

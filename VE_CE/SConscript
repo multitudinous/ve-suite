@@ -8,17 +8,18 @@ Import('cfdHostType')
 srcs = Split("""
    Exe_server.cpp 
    Executive_i.cpp 
-   Execute_Thread.cpp  
+   Execute_Thread.cpp
+   QueryThread.cxx
 """)
-srcs = map(lambda s: pj('#', 'VE_CE', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_CE', s), srcs)
 
 env = baseEnv.Copy()
 env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
                    'VE_ShaderLib', 'VE_CE_UtilitiesLib', 'VE_OpenModuleLib'])
-env.ParseConfig('vpr-config --libs --extra-libs --includes')
-env.ParseConfig('vrjuggler-config vrj --libs --extra-libs --includes')
-env.ParseConfig('wx-config --cxxflags --libs' )
-env.ParseConfig('flagpoll tao --libs --cflags')
-env.ParseConfig('flagpoll xerces --libs --cflags')
+env.Append(LINKFLAGS = [pj('-L.', 'lib', 'Darwin')])
+
+env.ParseConfig('flagpoll TAO apr-1 apr-util-1 xerces TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+                              TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
+                              TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
 env.Program(pj('#', 'bin', cfdHostType, 'Exe_server'), source = srcs)

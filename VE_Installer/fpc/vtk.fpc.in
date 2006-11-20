@@ -3,7 +3,7 @@ exec_prefix=${prefix}/bin
 share_dir=${prefix}/share
 man_dir=${prefix}/man
 vtk_version=5.0
-
+##look at vtkConfigure.h for the installed version of vtk
 Name: VTK
 Description: 
 URL: 

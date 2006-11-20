@@ -5,7 +5,7 @@ pj = os.path.join
 Import('baseEnv')
 Import('libPath')
 
-frameworkutil_srcs = Split("""
+utils_srcs = Split("""
    Link.cxx
    Module.cxx
    Polygon.cxx
@@ -24,19 +24,18 @@ frameworkutil_srcs = Split("""
 gui_srcs = Split("""
     spinctld.cpp
 """)
-frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), frameworkutil_srcs)
+##frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), frameworkutil_srcs)
 gui_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', 'gui', s), gui_srcs)
 srcs = list()
-srcs.extend(frameworkutil_srcs)
+srcs.extend(utils_srcs)
 srcs.extend(gui_srcs)
 
 env = baseEnv.Copy()
+env.Append(CPPPATH = pj('#', 'VE_Builder', 'Utilities', 'gui'))
 env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
 env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('vrjuggler-config --extra-libs')
-env.ParseConfig('flagpoll tao --cflags --libs')
-env.ParseConfig('flagpoll xerces --libs')
+env.ParseConfig('flagpoll TAO xerces --cflags --libs')
 
 targetLib = pj(libPath, 'VE_Conductor_UtilitiesLib')
 env.SharedLibrary(target = targetLib, source = srcs)

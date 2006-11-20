@@ -1,6 +1,6 @@
 ##Builds VE_XMLLib
 import os, sys, string
-import practice
+##import practice
 pj = os.path.join
 
 Import('baseEnv')
@@ -29,18 +29,18 @@ srcs = Split("""
    XMLReaderWriter.cxx
    DOMDocumentManager.cxx
 """)
-srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
 
 env = baseEnv.Copy()
 
-env.ParseConfig('flagpoll xerces --libs')
+env.ParseConfig('flagpoll xerces apr-1 apr-util-1 --libs --cflags')
 ##Get apr config.
-if cfdHostType == "Darwin":
-    suffix = "-1-config"
-else:
-    suffix = "-config"
-env.ParseConfig('apr%s --includes --cppflags --link-ld --libs' %suffix)
-env.ParseConfig('apu%s --includes --link-ld --libs' %suffix)
+##if cfdHostType == "Darwin":
+##    suffix = "-1-config"
+##else:
+##    suffix = "-config"
+#env.ParseConfig('apr%s --includes --cppflags --link-ld --libs' %suffix)
+#env.ParseConfig('apu%s --includes --link-ld --libs' %suffix)
 
 targetLib = pj(libPath, 'VE_XMLLib')
 env.SharedLibrary(target = targetLib, source = srcs)
