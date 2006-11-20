@@ -271,6 +271,7 @@ baseEnv.Append( BINDIR = bin,
 
 Export('baseEnv')
 Export('Platform')
+Export('buildDir')
 
 env = baseEnv.Copy()
 

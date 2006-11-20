@@ -11,14 +11,11 @@ srcs = Split("""
    tcFrame.cpp 
    textureCreator.cpp
 """)
-srcs = map(lambda s: pj('#', 'VE_Builder', 'vtkTo3DTexture', 'tcGUI', s), srcs)
+##srcs = map(lambda s: pj('#', 'VE_Builder', 'vtkTo3DTexture', 'tcGUI', s), srcs)
 
 env = baseEnv.Copy()
 env.Append(LIBS = ['VE_UtilLib'])
-env.ParseConfig('flagpoll vtk --libs --cflags')
-env.ParseConfig('flagpoll boost --libs --cflags')
+env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig( 'flagpoll vpr --libs --cflags' )
-env.ParseConfig( 'flagpoll vrjuggler --libs --cflags' )
 
 env.Program(pj('#', 'bin', cfdHostType, 'vtkTo3DTexture'), source = srcs)

@@ -1,0 +1,18 @@
+##Builds VE-Builder translator base class
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('libPath')
+
+srcs = Split("""
+   cfdTranslatorToVTK.cxx 
+""")
+##srcs = map(lambda s: pj('#', 'VE_CE', 'Utilities', s), srcs)
+
+env = baseEnv.Copy()
+env.Append(LIBS = ['VE_UtilLib'])
+env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
+
+targetLib = pj(libPath, 'TranslatorToVTKLib')
+env.SharedLibrary(target = targetLib, source = srcs)

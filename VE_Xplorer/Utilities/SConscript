@@ -5,7 +5,7 @@ pj = os.path.join
 Import('baseEnv')
 Import('libPath')
 
-util_srcs = Split("""
+srcs = Split("""
    cfdAccessoryFunctions.cxx
    cfdGrid2Surface.cxx
    cfdVTKFileHandler.cxx
@@ -14,7 +14,7 @@ util_srcs = Split("""
    readWriteVtkThings.cxx
 """)
 
-srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), util_srcs)
+##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), util_srcs)
 
 env = baseEnv.Copy()
 env.ParseConfig('flagpoll Boost.Filesystem vtk --cflags --libs')

@@ -25,7 +25,7 @@ gui_srcs = Split("""
     spinctld.cpp
 """)
 ##frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), frameworkutil_srcs)
-gui_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', 'gui', s), gui_srcs)
+gui_srcs = map(lambda s: pj('..','..','VE_Builder', 'Utilities', 'gui', s), gui_srcs)
 srcs = list()
 srcs.extend(utils_srcs)
 srcs.extend(gui_srcs)
