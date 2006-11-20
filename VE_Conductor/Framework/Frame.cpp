@@ -1028,8 +1028,7 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-   
-   serviceList->Query( status );
+   Log(serviceList->Query( status ).c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////
