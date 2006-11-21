@@ -23,5 +23,5 @@ env = baseEnv.Copy()
 env.Append(LIBS = ['VE_ModelLib', 'VE_XMLLib', 'VE_OpenModuleLib'])
 env.ParseConfig('flagpoll xerces TAO TAO_PortableServer --libs --cflags')
 
-targetLib = pj(libPath, 'VE_CE_UtilitiesLib')
+targetLib = pj(env[ 'LIBDIR' ], 'VE_CE_UtilitiesLib')
 env.SharedLibrary(target = targetLib, source = srcs)

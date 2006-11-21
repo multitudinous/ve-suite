@@ -19,5 +19,5 @@ env = baseEnv.Copy()
 env.Append(LIBS = 'VE_XMLLib')
 env.ParseConfig('flagpoll xerces --libs --cflags')
 
-targetLib = pj(libPath, 'VE_ShaderLib')
+targetLib = pj( env[ 'LIBDIR' ], 'VE_ShaderLib')
 env.SharedLibrary(target = targetLib, source = srcs)

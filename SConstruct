@@ -1,4 +1,5 @@
 import os, sys, string, smtplib
+##import SCons
 ##import practice
 from subprocess import *
 
@@ -118,7 +119,7 @@ def GetTag(execTag = False, osgTag = False,
 ##execOsgTag = GetTag(True, True)
 ##Export('execTag')
 ##Export('execOsgTag')
-cfdHostType = GetPlatform() + GetArch()
+cfdHostType = GetPlatform() + '.' + GetArch()
 libPath = pj('#', 'lib', cfdHostType)
 binDir = pj('#', 'bin', cfdHostType)
 execOsgPatTag = GetTag(True, True, True)
@@ -250,24 +251,34 @@ def BuildBaseEnvironment():
 
 base_bldr = EnvironmentBuilder()
 baseEnv = base_bldr.buildEnvironment()
+## load environment of the shell that scons is launched from
+baseEnv[ 'ENV' ] = os.environ
+
 baseEnv.Append(CPPPATH = ['#'])
 ##taoHome = Popen(['flagpoll', 'TAO', '--get-prefix'], stdout=PIPE).communicate[0]
-piped = os.popen("flagpoll TAO --get-prefix")
-taoHome = piped.read()[:-1]
-piped.close()
-baseEnv.Append(PATH = ["%s/bin" %taoHome])
+##piped = os.popen("flagpoll TAO --get-prefix")
+##taoHome = piped.read()[:-1]
+##piped.close()
+##baseEnv.Append(PATH = ["%s/bin" %taoHome])
 ##baseEnv = BuildBaseEnvironment()
 Platform = GetPlatform() ##Temporary setup
-buildDir = 'build.' + GetPlatform() + "." + GetArch()
+buildDir = 'build.' + GetPlatform() + '.' + GetArch()
 baseEnv.BuildDir(buildDir, '.', duplicate = 0)
 
 ##See scons users guide section 15 on variant builds
 ##include = "#export/$PLATFORM/include"
-lib = libPath
-bin = binDir
+lib = pj( '#' + buildDir, 'lib' )
+bin = pj( '#' + buildDir, 'bin' )
 baseEnv.Append( BINDIR = bin, 
             LIBDIR = lib, 
             LIBPATH = [lib]) 
+
+## make the temp bin and lib dirs in the build dir
+if not os.path.exists( pj( buildDir, 'lib' ) ):
+   baseEnv.Execute(Mkdir( pj( buildDir, 'lib' ) ))
+
+if not os.path.exists( pj( buildDir, 'bin' ) ):
+   baseEnv.Execute(Mkdir( pj( buildDir, 'bin' ) ))
 
 Export('baseEnv')
 Export('Platform')

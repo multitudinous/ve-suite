@@ -18,4 +18,4 @@ env.Append(LIBS = ['VE_UtilLib'])
 env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')
 
-env.Program(pj('#', 'bin', cfdHostType, 'vtkTo3DTexture'), source = srcs)
+env.Program(pj( env[ 'BINDIR' ], 'vtkTo3DTexture'), source = srcs)

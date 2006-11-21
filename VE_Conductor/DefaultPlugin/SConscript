@@ -21,5 +21,5 @@ env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
 env.ParseConfig( 'wx-config --cxxflags --libs' )
 env.ParseConfig('flagpoll TAO xerces --cflags --libs')
 
-targetLib = pj(libPath, 'DefaultPlugin_UI_Dialog')
+targetLib = pj(env[ 'LIBDIR' ], 'DefaultPlugin_UI_Dialog')
 env.SharedLibrary(targetLib, source = srcs)

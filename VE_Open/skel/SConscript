@@ -18,5 +18,5 @@ env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valu
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --cflags --libs')
 
-targetLib = pj(libPath, 'VE_OpenModuleLib')
+targetLib = pj(env[ 'LIBDIR' ], 'VE_OpenModuleLib')
 env.SharedLibrary(target = targetLib, source = srcs)

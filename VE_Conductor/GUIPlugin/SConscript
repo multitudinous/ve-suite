@@ -39,5 +39,5 @@ env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate T
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
 
-targetLib = pj(libPath, 'GUIPluginLib')
+targetLib = pj(env[ 'LIBDIR' ], 'GUIPluginLib')
 env.SharedLibrary(target = targetLib, source = srcs)

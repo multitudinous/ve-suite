@@ -42,5 +42,5 @@ env.ParseConfig('flagpoll xerces apr-1 apr-util-1 --libs --cflags')
 #env.ParseConfig('apr%s --includes --cppflags --link-ld --libs' %suffix)
 #env.ParseConfig('apu%s --includes --link-ld --libs' %suffix)
 
-targetLib = pj(libPath, 'VE_XMLLib')
+targetLib = pj(env[ 'LIBDIR' ], 'VE_XMLLib')
 env.SharedLibrary(target = targetLib, source = srcs)

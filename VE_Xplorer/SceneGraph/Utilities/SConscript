@@ -17,5 +17,5 @@ env = baseEnv.Copy()
 env.Append(LIBS = ['VE_CADLib', 'VE_ShaderLib', 'VE_XMLLib'])
 env.ParseConfig('flagpoll osg xerces --libs --cflags')
 
-targetLib = pj(libPath, 'VE_SceneGraph_UtilitiesLib')
+targetLib = pj( env[ 'LIBDIR' ], 'VE_SceneGraph_UtilitiesLib')
 env.SharedLibrary(target = targetLib, source = srcs)

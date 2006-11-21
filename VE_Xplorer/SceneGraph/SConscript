@@ -34,5 +34,5 @@ env = baseEnv.Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
 env.ParseConfig('flagpoll osg gmtl vtk vrjuggler --libs --cflags')
 
-targetLib = pj(libPath, 'VE_SceneGraphLib%s' %(execOsgPatTag))
+targetLib = pj(env[ 'LIBDIR' ], 'VE_SceneGraphLib%s' %(execOsgPatTag))
 env.SharedLibrary(target = targetLib, source = srcs)

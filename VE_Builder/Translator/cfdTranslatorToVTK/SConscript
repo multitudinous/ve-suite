@@ -14,5 +14,5 @@ env = baseEnv.Copy()
 env.Append(LIBS = ['VE_UtilLib'])
 env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
 
-targetLib = pj(libPath, 'TranslatorToVTKLib')
+targetLib = pj(env[ 'LIBDIR' ], 'TranslatorToVTKLib')
 env.SharedLibrary(target = targetLib, source = srcs)

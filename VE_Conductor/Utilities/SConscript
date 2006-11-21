@@ -37,5 +37,5 @@ env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
 env.ParseConfig('wx-config --cxxflags --libs')
 env.ParseConfig('flagpoll TAO xerces --cflags --libs')
 
-targetLib = pj(libPath, 'VE_Conductor_UtilitiesLib')
+targetLib = pj(env[ 'LIBDIR' ], 'VE_Conductor_UtilitiesLib')
 env.SharedLibrary(target = targetLib, source = srcs)

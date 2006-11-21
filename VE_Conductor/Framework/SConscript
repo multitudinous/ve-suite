@@ -47,5 +47,5 @@ env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate T
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --cflags --libs')
 
-env.Program(pj('#','bin',cfdHostType,'WinClient'), source = srcs)
+env.Program(pj( env[ 'BINDIR' ],'WinClient'), source = srcs)
 

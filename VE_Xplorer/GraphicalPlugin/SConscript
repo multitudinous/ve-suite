@@ -20,5 +20,5 @@ env.Append(LIBS = ['VE_SceneGraphLib%s' %(execOsgPatTag),
 env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
 env.ParseConfig('flagpoll osg vtk xerces vrjuggler --libs --cflags')
 
-targetLib = pj(libPath, 'GraphicalPlugin%s' %(execOsgPatTag))
+targetLib = pj(env[ 'LIBDIR' ], 'GraphicalPlugin%s' %(execOsgPatTag))
 env.SharedLibrary(target = targetLib, source = srcs)

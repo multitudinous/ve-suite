@@ -18,7 +18,7 @@ env = baseEnv.Copy()
 env.Append(LIBS = 'VE_XMLLib')
 env.ParseConfig('flagpoll xerces --libs --cflags')
 
-targetLib = pj(libPath, 'VE_ConductorLib')
+targetLib = pj(env[ 'LIBDIR' ], 'VE_ConductorLib')
 env.SharedLibrary(target = targetLib, source = srcs)
 
 

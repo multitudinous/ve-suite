@@ -44,5 +44,5 @@ env.ParseConfig('flagpoll vtk osg vrjuggler Boost.Filesystem --libs --cflags')
 ##env.Append(LIBS = ['X11', 'GL'])
 
 
-targetLib = pj(libPath, 'VE_TextureBasedLib%s' %(execOsgPatTag))
+targetLib = pj(env[ 'LIBDIR' ], 'VE_TextureBasedLib%s' %(execOsgPatTag))
 env.SharedLibrary(target = targetLib, source = srcs)

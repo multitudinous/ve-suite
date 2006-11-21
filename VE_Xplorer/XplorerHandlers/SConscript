@@ -109,6 +109,6 @@ env.Append(LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib',
 env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
 env.ParseConfig('flagpoll vtk xerces osg vrjuggler --libs --cflags')
 
-targetLib = pj(libPath, 'VE_XplorerLib%s' %(execOsgPatTag))
+targetLib = pj(env[ 'LIBDIR' ], 'VE_XplorerLib%s' %(execOsgPatTag))
 env.SharedLibrary(target = targetLib, source = xplorer_srcs)
 
