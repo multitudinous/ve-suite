@@ -12,6 +12,7 @@ srcs = Split("""
    cleanVtk.cxx
    fileIO.cxx
    readWriteVtkThings.cxx
+   setScalarAndVector.cxx
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), util_srcs)

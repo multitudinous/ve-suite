@@ -35,11 +35,13 @@
 #ifndef setScalarAndVector_H
 #define setScalarAndVector_H
 
+#include "VE_Installer/include/VEConfig.h"
+
 // class declarations
 class vtkDataSet;
 
 // function declarations
-void activateScalar( vtkDataSet * dataSet );
-void activateVector( vtkDataSet * dataSet );
+void VE_UTIL_EXPORTS activateScalar( vtkDataSet * dataSet );
+void VE_UTIL_EXPORTS activateVector( vtkDataSet * dataSet );
 #endif //setScalarAndVector_H
 

@@ -42,7 +42,8 @@ SRCS=\
    cfdVTKFileHandler.cxx \
    cleanVtk.cxx \
    fileIO.cxx \
-   readWriteVtkThings.cxx
+   readWriteVtkThings.cxx\
+   setScalarAndVector.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

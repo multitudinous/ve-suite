@@ -10,7 +10,6 @@ srcdir= ../../.
 
 SRCS=\
    makeVtkSurface.cpp \
-   setScalarAndVector.cpp \
    viewCells.cpp
 
 # Specify the OS-dependent directory name for object files and depends

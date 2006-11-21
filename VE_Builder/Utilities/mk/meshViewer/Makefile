@@ -25,7 +25,6 @@ srcdir= ../../
 
 SRCS=\
    meshViewer.cpp \
-   setScalarAndVector.cpp \
    viewCells.cpp 
 
 # Specify the OS-dependent directory name for object files and depends
