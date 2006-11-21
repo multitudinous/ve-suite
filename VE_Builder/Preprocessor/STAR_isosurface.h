@@ -45,7 +45,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "VE_Builder/Utilities/setScalarAndVector.h"
+#include "VE_Xplorer/Utilities/setScalarAndVector.h"
 
 class isosurfaceVtkOutput
 {

@@ -10,8 +10,7 @@ srcdir= .
 
 SRCS=\
    preprocessor.cxx \
-   multiPlaneVtkOutput.cxx \
-   setScalarAndVector.cpp
+   multiPlaneVtkOutput.cxx
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)

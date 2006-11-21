@@ -43,7 +43,6 @@ createMiniFlowdata = Split("""
 
 makeVtkSurface = Split("""
    makeVtkSurface.cpp
-   setScalarAndVector.cpp
    ../Translator/viewCells.cpp""")
 
 mergeVertices = Split("""
@@ -52,7 +51,6 @@ mergeVertices = Split("""
 
 meshViewer = Split("""
    meshViewer.cpp
-   setScalarAndVector.cpp
    ../Translator/viewCells.cpp""")
 
 moveFieldToPointData = Split("""

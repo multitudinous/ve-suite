@@ -5,19 +5,16 @@ pj = os.path.join
 Import('baseEnv')
 Import('cfdHostType')
 
-preprocess_srcs = Split("""
+srcs = Split("""
    multiPlaneVtkOutput.cxx
    preprocessor.cxx
 """)
 
-utilities_srcs = Split("""
-   setScalarAndVector.cpp
-""")
 ##preprocess_srcs = map(lambda s: pj('#', 'VE_Builder', 'Preprocessor', s), preprocess_srcs)
-utilities_srcs = map(lambda s: pj('..', '..', 'VE_Builder', 'Utilities', s), utilities_srcs)
-srcs = list()
-srcs.extend(preprocess_srcs)
-srcs.extend(utilities_srcs)
+##utilities_srcs = map(lambda s: pj('..', '..', 'VE_Builder', 'Utilities', s), utilities_srcs)
+##srcs = list()
+##srcs.extend(preprocess_srcs)
+##srcs.extend(utilities_srcs)
 
 env = baseEnv.Copy()
 env.Append(LIBS = ['VE_UtilLib'])

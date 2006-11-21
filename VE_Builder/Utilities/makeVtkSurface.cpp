@@ -38,7 +38,7 @@
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Builder/Translator/viewCells.h"
 #include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
-#include "VE_Builder/Utilities/setScalarAndVector.h"
+#include "VE_Xplorer/Utilities/setScalarAndVector.h"
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
