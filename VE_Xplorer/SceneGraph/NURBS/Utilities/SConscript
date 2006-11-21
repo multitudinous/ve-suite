@@ -1,0 +1,20 @@
+##Builds VE_SceneGraphLib<tag>
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+Import('libPath')
+Import('execOsgPatTag')
+
+srcs = Split("""
+   OCCNURBSFileReader.cxx
+""")
+
+env = baseEnv.Copy()
+##env.Append(CPPPATH = [os.getcwd()])
+env.Append(LIBS = ['VE_NURBSLib%s' %(execOsgPatTag)])
+env.ParseConfig('flagpoll osg --libs --cflags')
+
+targetLib = pj(env[ 'LIBDIR' ], 'VE_NURBSUtilsLib%s' %(execOsgPatTag))
+env.SharedLibrary(target = targetLib, source = srcs)

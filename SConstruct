@@ -271,7 +271,8 @@ lib = pj( '#' + buildDir, 'lib' )
 bin = pj( '#' + buildDir, 'bin' )
 baseEnv.Append( BINDIR = bin, 
             LIBDIR = lib, 
-            LIBPATH = [lib]) 
+            LIBPATH = [lib],
+            CPPDEFINES = ['_TAO', 'VE_PATENTED'] )
 
 ## make the temp bin and lib dirs in the build dir
 if not os.path.exists( pj( buildDir, 'lib' ) ):
@@ -313,6 +314,7 @@ xplorerSubdirs = Split("""
     Utilities  
     SceneGraph
     SceneGraph/NURBS
+    SceneGraph/NURBS/Utilities
     SceneGraph/Utilities
     TextureBased
     XplorerHandlers

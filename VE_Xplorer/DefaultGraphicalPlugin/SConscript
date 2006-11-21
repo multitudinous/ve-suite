@@ -1,0 +1,23 @@
+##Builds DefaultGraphicalPlugin<tag>
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('execOsgPatTag')
+Import('libPath')
+
+srcs = Split("""
+    DefaultGraphicalPlugin.cxx
+""")
+
+env = baseEnv.Copy()
+env.Append(LIBS = ['VE_SceneGraphLib%s' %(execOsgPatTag),
+                   'VE_XplorerLib%s' %(execOsgPatTag),
+                   'GraphicalPlugin%s' %(execOsgPatTag),
+                   'VE_TextureBasedLib%s' %(execOsgPatTag),
+                   'VE_UtilLib', 'VE_ModelLib', 'VE_XMLLib', 'VE_CADLib'])
+env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+env.ParseConfig('flagpoll vtk xerces vrjuggler osg --libs --cflags')
+
+targetLib = pj(env[ 'LIBDIR' ], 'DefaultGraphicalPlugin%s' %(execOsgPatTag))
+env.SharedLibrary(target = targetLib, source = srcs)
