@@ -29,11 +29,10 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VIEWCELLS_H
 #define VIEWCELLS_H
+#include "VE_Installer/include/VEConfig.h"
 
 class vtkUnstructuredGrid;
 class vtkDataSet;
@@ -42,11 +41,11 @@ class vtkActor;
 class vtkFollower;
 class vtkRenderer;
 
-vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output );
-void viewCells( vtkDataSet *output, const float shrinkFactor = 0.95 );
-void viewXSectionOfRectilinearGrid( vtkRectilinearGrid *output );
-void GetAxesSymbol( vtkActor * axesActor );
-void GetAxesLabels( vtkFollower * xActor, vtkFollower * yActor, vtkFollower * zActor );
-void AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFactor = 1.0 );
+VE_UTIL_EXPORTS vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output );
+VE_UTIL_EXPORTS void viewCells( vtkDataSet *output, const float shrinkFactor = 0.95 );
+VE_UTIL_EXPORTS void viewXSectionOfRectilinearGrid( vtkRectilinearGrid *output );
+VE_UTIL_EXPORTS void GetAxesSymbol( vtkActor * axesActor );
+VE_UTIL_EXPORTS void GetAxesLabels( vtkFollower * xActor, vtkFollower * yActor, vtkFollower * zActor );
+VE_UTIL_EXPORTS void AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFactor = 1.0 );
 
 #endif    // VIEWCELLS_H
