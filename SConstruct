@@ -1,6 +1,9 @@
+#!python
+EnsureSConsVersion(0,96)
+SConsignFile()
+
 import os, sys, string, smtplib
-##import SCons
-##import practice
+
 from subprocess import *
 
 import SConsAddons.Util as sca_util
@@ -241,14 +244,6 @@ def BuildLinuxEnvironment():
         env['OSG_FILE_PATH'] = "%s/share/OpenSceneGraph-Data" %osgHome
     return env
 
-def BuildBaseEnvironment():
-    "Builds a base environment for other modules to build on."
-    if GetPlatform() == 'linux':
-        return BuildLinuxEnvironment()
-    else:
-        print '[ERR] Unsupported Platform ' + GetPlatform()
-        sys.exit(1)
-
 base_bldr = EnvironmentBuilder()
 baseEnv = base_bldr.buildEnvironment()
 ## load environment of the shell that scons is launched from
@@ -277,6 +272,9 @@ baseEnv.Append( BINDIR = bin,
 ## make the temp bin and lib dirs in the build dir
 if not os.path.exists( pj( buildDir, 'lib' ) ):
    baseEnv.Execute(Mkdir( pj( buildDir, 'lib' ) ))
+
+if not os.path.exists( pj( buildDir, 'lib', 'flagpoll' ) ):
+   baseEnv.Execute(Mkdir( pj( buildDir, 'lib', 'flagpoll' ) ))
 
 if not os.path.exists( pj( buildDir, 'bin' ) ):
    baseEnv.Execute(Mkdir( pj( buildDir, 'bin' ) ))

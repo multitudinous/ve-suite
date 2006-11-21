@@ -1,0 +1,20 @@
+##Builds loaderToVtk program
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('cfdHostType')
+Import('buildDir')
+
+srcs = Split("""
+   main.cxx
+""")
+srcs = map(lambda s: pj('#', buildDir, 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
+
+env = baseEnv.Copy()
+env.Append(LIBS = ['VE_UtilLib', 'DataLoaderLib', 'TranslatorToVTKLib'])
+
+env.ParseConfig('flagpoll Boost.Filesystem vtk --cflags --libs')
+
+env.Program(pj( env[ 'BINDIR' ],'loaderToVtk'), source = srcs)
+
