@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter>
+  <title>Code Guidelines</title>
+
+  <section id="class_structure_guidelines">
+    <title>Class Structure</title>
+
+    <para>Only one public class is allowed per file. Every class name, macro,
+    etc. starts with either "cfd" or "CFD" to avoid name clashes with other
+    libraries. Classes should all start with "cfd" and macros or constants can
+    start with either. Class names and file names are the same (e.g.,
+    cfdContours class is declared in cfdContours.h and implemented in
+    cfdContours.cpp). This makes it easier to find the correct file for a
+    specific class. All instance variables are declared as protected. The user
+    and application developer should access instance variables through Set/Get
+    methods.</para>
+
+    <para><emphasis role="bold">Always</emphasis> initialize member variables
+    in the constructor.</para>
+  </section>
+
+  <section id="names_guidelines">
+    <title>Names</title>
+
+    <para>Make names clear. Try to spell out a name and not use abbreviations.
+    This leads to longer names but it makes using the software easier because
+    you know that the SetRasterFontRange method will always be called that,
+    not SetRFRange or SetRFontRange or SetRFR. When the name includes a
+    natural abbreviation such as OpenGL, keep the abbreviation and capitalize
+    the abbreviated letters. Only use alphanumeric characters in names,
+    [a-zA-z0-9]. Do not use underscores ("_"). For example, use
+    exteriorSurface rather than exterior_Surface or _exteriorSurface. Use
+    capitalization to indicate words within a name. For example, a class could
+    be called cfdVectorTopologyFilter. Use "this" inside of methods even
+    though C++ does not require you to. This really seems to make the code
+    more readable because it disambiguates between instance variables and
+    local or global variables. It also disambiguates between member functions
+    and other functions.</para>
+  </section>
+
+  <section id="class_names_guidelines">
+    <title>Class Names</title>
+
+    <para>Class names are nouns and usually start with "cfd".</para>
+  </section>
+
+  <section id="variable_names_guidelines">
+    <title>Variable Names</title>
+
+    <para>Variable names are nouns and should begin with a lower case
+    character.</para>
+  </section>
+
+  <section id="function_names_guidelines">
+    <title>Function Names</title>
+
+    <para>Function names are verbs (e.g., SetRasterFontRange) and start with
+    an upper case letter.</para>
+  </section>
+
+  <section id="functions_and_arguments_guidelines">
+    <title>Functions and Function Arguments</title>
+
+    <para>Use "const" on any member function that does not change any data. It
+    enforces the purpose of a function and allows for better compiler
+    optimizations.</para>
+  </section>
+
+  <section id="variable_usage_guidelines">
+    <title>C++ Style Variable Usage</title>
+
+    <para>Declare variables where they are first used. C++ lifted this
+    restriction from C for a reason. It makes code more modular and easier to
+    understand, modify, and debug.</para>
+  </section>
+
+  <section id="braces_guidelines">
+    <title>Braces</title>
+
+    <para>Place brace under and inline with keywords:</para>
+
+    <para><code> if ( condition ) while ( condition ) </code></para>
+
+    <para><code> { { </code></para>
+
+    <para><code> ... ... </code></para>
+
+    <para><code> } }</code></para>
+
+    <para>Use braces for all if, while, and do statements even if there is
+    only a single statement within the braces.</para>
+  </section>
+
+  <section id="header_files_guidelines">
+    <title>Header Files</title>
+
+    <para>Header files are for declarations only. It is difficult to read and
+    find code if source is in the declarations.</para>
+
+    <para>The header file of the class should include only the superclass
+    header file. If you need any other includes, include comment at each one
+    describing why it should be included.</para>
+
+    <para>Forward declare classes when possible in header files.</para>
+
+    <para>Header files should use guards to prevent multiple inclusion. These
+    guards should be defined in the style FILENAME_H, which is the filename
+    written in all upper case with punctuation such as dots (".") replaced by
+    underscores ("_").</para>
+
+    <para><code> #ifdef CFDHEADER_H </code></para>
+
+    <para><code> #define CFDHEADER_H </code></para>
+
+    <para><code> ... </code></para>
+
+    <para><code> #endif // CFDHEADER_H</code></para>
+
+    <para>Comment the end of every <code>#endif</code>, as shown above. Nested
+    <code>#ifdef</code> can be difficult to follow.</para>
+
+    <para>A new line after the last <code>#endif</code> is required by some
+    compilers.</para>
+  </section>
+
+  <section id="text_formatting_guidelines">
+    <title>Text Formatting</title>
+
+    <para>Limit lines to 80 characters.</para>
+
+    <para>Three (3) space indentation – Set your editor to insert three spaces
+    every time you hit the tab key.</para>
+
+    <para>Insert whitespace for readability. This means that one blank line
+    should occur between function definitions or between different blocks of
+    code.</para>
+  </section>
+
+  <section id="namespaces_guidelines">
+    <title>Namespaces</title>
+
+    <para>Do not place the "using namespace" directive at global scope in a
+    header file. This can cause lots of invisible conflicts that are hard to
+    track. Keep "using" statements to implementation files (if at all).</para>
+
+    <para>For standard namespace keywords (cout, cin, cerr, endl, vector,
+    string), you must use "std::cout," etc.</para>
+  </section>
+
+  <section id="comments_guidelines">
+    <title>Comments</title>
+
+    <para>Comments must tell "why", not "what is happening." At every point
+    where you had a choice of what to do, place a comment describing which
+    choice you made and why.</para>
+  </section>
+
+  <section id="parens_guidelines">
+    <title>Parens () with Key Words and Functions Policy</title>
+
+    <para>Do not put parens next to keywords. Put a space between keywords and
+    parens.</para>
+
+    <para>Do not use parens in return statements when it is not
+    necessary.</para>
+
+    <para>Do put parens next to function names.</para>
+
+    <para>Example:</para>
+
+    <para><code> if ( condition ) while ( condition ) </code></para>
+
+    <para><code> { { </code></para>
+
+    <para><code> ... ... </code></para>
+
+    <para><code> } } </code></para>
+
+    <para><code> strcpy( s, s1 ); return 1;</code></para>
+  </section>
+
+  <section id="array_indexing_guidelines">
+    <title>Array Indexing</title>
+
+    <para>Single-character variable names can easily be mistaken for numbers
+    ("i"s can sometimes look a lot like ones). Make the array index stand out
+    with whitespace:</para>
+
+    <para><code> array[ i ] = 0.0; </code></para>
+
+    <para><code> array[ 1 ] = 0.0; </code></para>
+
+    <para><code> array[ 2 ] = 0.0;</code></para>
+  </section>
+
+  <section>
+    <title>Documentation</title>
+
+    <para>The following sections provide guidelines for editing the VE-Suite
+    documentation using Docbook.</para>
+
+    <section>
+      <title>GUI Buttons</title>
+
+      <para>When referring to GUI buttons, use the Docbook "guibutton" tag,
+      i.e., enter this:</para>
+
+      <para><code> Click &lt;guibutton&gt;Launch VE-Suite&lt;/guibutton&gt; to
+      close VE-Launcher and start VE-Suite.</code></para>
+
+      <para>to yield this:</para>
+
+      <para>Click <guibutton>Launch VE-Suite </guibutton>to close VE-Launcher
+      and start VE-Suite.</para>
+    </section>
+
+    <section>
+      <title>Notes</title>
+
+      <para>When including an important note that you want to draw users'
+      attention to, type "NOTE:" and tag it with Docbook "emphasis
+      role='bold'" tag, i.e., enter this:</para>
+
+      <para><code> &lt;emphasis
+      role="bold"&gt;NOTE:&lt;/emphasis&gt;</code></para>
+
+      <para>to yield this:</para>
+
+      <para><emphasis role="bold">NOTE:</emphasis></para>
+    </section>
+
+    <section>
+      <title>Referring to VE-Suite Versions</title>
+
+      <para>When referring to a general version of VE-Suite or any application
+      within VE-Suite, such as in a command, use "x.x.x" to refer to the
+      version number rather than a number so the reference does not become
+      outdated with future release versions. For example, in the following
+      sentence, "vesuite.x.x.x.exe" and "vesuite_deps.x.x.x.exe" refer to
+      whichever version of VE-Suite is being used, and the user would change
+      "x.x.x" to the appropriate version number.</para>
+
+      <para><code> One installer, vesuite.x.x.x.exe, contains the core
+      VE-Suite binaries and .dll files, while vesuite_deps.x.x.x.exe contains
+      the binaries and .dll files of the dependencies for the current release
+      of VE-Suite.</code></para>
+
+      <para>In some cases, you might need to refer to a specific version of
+      VE-Suite, as in the following example:</para>
+
+      <para><code> Starting VE-Suite was simplified with the release of
+      version 1.0.0 via VE-Launcher. </code></para>
+    </section>
+  </section>
+</chapter>

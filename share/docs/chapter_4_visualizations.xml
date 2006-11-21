@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter>
+  <title>Visualizations</title>
+
+  <para>This chapter describes how to make visualizations using the VE-Suite
+  toolkit and a sample dataset. If you want to follow this example, download
+  and unzip the sample PrISUm car dataset: <ulink
+  url="http://www.vesuite.org/File/PrISUm.zip">PrISUm.zip</ulink>
+  (138MB)</para>
+
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="veimages/visualization1.jpg" />
+    </imageobject>
+  </mediaobject>
+
+  <section id="visualization_setup">
+    <title>Setup</title>
+
+    <para>Visualizations require two files: a geometry config file and a
+    dataset file. Both have properties, such as scale and translation, that
+    can be modified to ensure they line up.</para>
+
+    <para>First, open VE-Launcher and set the working directory to the PrISUm
+    folder. Next, open VE-Suite in Desktop mode from VE-Launcher. Load the
+    PrISUmblend.obj CAD file, but don't close the CADTree Manager window yet.
+    (See Chapter 2.2)</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/visualizationsetup1.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Right-click on the Model_Geometry folder again and choose
+    Properties. A CAD Properties window will pop up. This can be used to
+    change PrISUm's properties, but you must know what to change them
+    to.</para>
+
+    <para>Open the PrISUm folder from the desktop and look for the vrxpr.param
+    file. This file contains parameter information for PrISUm, which we'll
+    enter into the Properties window. Open vrxpr.param using a text editor,
+    look for the 3x3 block underneath the number 9, and enter the values into
+    the Properties window. <emphasis role="bold">NOTE:</emphasis> The rows go
+    in a different order in the Properties window than in the .param
+    file:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/visualizationsetup2.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Once the parameters are entered, close the CAD Properties and
+    CADTree Manager window. Now right-click on the gray plugin box again and
+    chose Data Set Config. Add the dataset to it.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/visualizationsetup3.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/visualizationsetup4.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>First, click <guibutton>Add Dataset </guibutton>to name your dataset
+    configuration. Then click <emphasis role="bold">Open</emphasis> under
+    DataSet Filename and choose outFile3.vtk file as your dataset. You don't
+    need to change any other setting for PrISUm, so just click
+    <guibutton>Load</guibutton> to load the dataset and exit the
+    window.</para>
+
+    <para>Once that is done, choose Submit Job from the Connection menu to
+    display the PrISUm car. Use the navigation pane to adjust the view until
+    you get a good view of it.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/visualizationsetup5.jpg" />
+      </imageobject>
+    </mediaobject>
+  </section>
+
+  <section id="visualization_scalar_planes">
+    <title>Scalar Planes</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/scalarplanes1.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Now that the plugin is set up, we can use the Visualization
+    interface to show scalar planes like the one pictured above. Visualization
+    not only lets you access scalar contours, but vector planes, isosurfaces,
+    and more.</para>
+
+    <para>To bring up the Visualization interface, right-click on the plugin
+    to access the menu and select Visualization. This window will
+    appear:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/scalarplanes2.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Click on the <guibutton>Scalar Contours</guibutton> button (the
+    leftmost icon) to bring up the Scalar Contours interface.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/scalarplanes3.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Notice that you can choose the plane's orientation and position. For
+    now, set the Direction to Y and the plane's position to 50 and click
+    <guibutton>Add Plane</guibutton>. This should appear on your
+    screen:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/scalarplanes4.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Once you're done looking at the contour planes, you can remove them
+    from the screen by clicking <guibutton>Clear All </guibutton>on the
+    Visualization interface. This will clear any Visualization features from
+    VE-Xplorer.</para>
+  </section>
+
+  <section id="visualization_vector_planes">
+    <title>Vector Planes</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/vectorplanes1.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Showing vector planes is almost exactly like showing scalar planes.
+    First, open up the Visualization interface again by right-clicking on the
+    plugin and selecting Visualization.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/vectorplanes2.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>This time, click on the <guibutton>Vector</guibutton> button (the
+    2nd-to-left icon) to open the Vector Contour window.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/vectorplanes3.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>The Vector Contour window is very similar to the Scalar Contour
+    window. This time, set the Direction to Z and the plane's position to 20
+    and click <guibutton>Add Plane</guibutton>. This should appear on your
+    screen:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/vectorplanes4.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Just like the scalar plane, you can remove the vector plane by
+    clicking <guibutton>Clear All</guibutton> on the Visualization
+    interface.</para>
+  </section>
+
+  <section id="visualization_isosurfaces">
+    <title>Isosurfaces</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/isosurfaces1.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>To generate an isosurface, go back to the Visualization interface
+    (right-click on the plugin, select Visualization).</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/isosurfaces2.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Before you can open the Isosurfaces window, you'll also need to
+    choose a scalar or vector file. Choose scalars under Scalars and click the
+    <guibutton>Isosurfaces</guibutton> button (the 3rd-from-right icon) to
+    open the Isosurfaces window.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/isosurfaces3.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>The Isosurfaces window only has one setting. Set the Isosurface
+    pressure to 50 and click <guibutton>Compute Isosurface</guibutton>. This
+    should appear on your screen:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/isosurfaces4.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Exit Visualization and examine the isosurface by using the mouse or
+    the Navigation pane. Once you're done, reenter Visualization and click
+    <guibutton>Clear All</guibutton>.</para>
+  </section>
+</chapter>

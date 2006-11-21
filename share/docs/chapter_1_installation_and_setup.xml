@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter>
+  <title>Installation and Setup</title>
+
+  <para>Support is provided at the following locations:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para><ulink url="http://www.vesuite.org/forum/">VE-Suite Forums</ulink>
+      - Users/developers can go here to access forums.</para>
+    </listitem>
+
+    <listitem>
+      <para><ulink
+      url="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">VE-Suite
+      Bugzilla</ulink> - VE-Suite's interface for bug tracking. Users and
+      developers can view and submit bugs.</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>Installation of VE-Suite is fairly straightforward. Visit the <ulink
+  url="http://www.vesuite.org/download.php">Downloads</ulink> section and
+  locate your operating system. Two installers, which guide you through the
+  process of selecting various options, are provided for Windows. One
+  installer, vesuite.x.x.x.exe, contains the core VE-Suite binaries and .dll
+  files, while vesuite_deps.x.x.x.exe contains the binaries and .dll files of
+  the dependencies for the current release of VE-Suite.</para>
+
+  <para>On UNIX/Linux, two tar.gz files are provided for the core VE-Suite
+  files and its dependencies. In either case, extracting the files creates two
+  directory structures:</para>
+
+  <para><code> VE-Suite.x.x.x/</code></para>
+
+  <para><code> VE_Suite.x.x.x_Dependencies/</code></para>
+
+  <section>
+    <title>Windows Installation</title>
+
+    <para>Installing VE-Suite and its dependencies follows the same procedure
+    as other installations. You'll choose which components to install, their
+    locations, their Start Menu folder, and whether to have a desktop
+    icon.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/windowsinstall.png" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Of particular note is which components to install. In large setups,
+    certain computers will run the NameServer while others will handle the
+    Conductor and Xplorer. If you only plan to run it on a single desktop,
+    you'll want to install everything. Just leave all the checkboxes
+    checked.</para>
+
+    <para>Go through the same process for VE-Suite's dependencies.</para>
+  </section>
+
+  <section id="unix_installation">
+    <title>UNIX Installation</title>
+
+    <para>On Unix, the installers are compressed tar.gz files. You can open
+    them using these commands:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Using GNU tar:</para>
+
+        <para><code>gtar xvzf vesuite_x.x.x_RHEL_4.tar.gz </code></para>
+
+        <para><code>gtar xvzf vesuite_depsx.x.x_RHEL_4.tar.gz</code></para>
+      </listitem>
+
+      <listitem>
+        <para>Using gzip:</para>
+
+        <para><code>gunzip &lt; vesuite_x.x.x_RHEL_4.tar.gz | tar xvf
+        -</code></para>
+
+        <para><code>gunzip &lt; vesuite_depsx.x.x_RHEL_4.tar.gz | tar xvf
+        -</code></para>
+      </listitem>
+    </itemizedlist>
+
+    <para><emphasis role="bold">NOTE</emphasis>: These examples use
+    vesuite_x.x.x as a general placeholder for any version of VE-Suite. Be
+    sure to change the version number to the specific version you are
+    installing.</para>
+  </section>
+
+  <section id="setting_runtime_environment">
+    <title>Setting the Runtime Environment</title>
+
+    <para>In previous versions, VE-Suite's runtime environment was set through
+    text scripts. Now it uses VE-Launcher to set up the environment. Most of
+    it is automated, but you need to be aware of two important variables it
+    sets: VE-Suite's directory and VE-Suite's Dependencies directory.</para>
+
+    <para>VE-Launcher automatically determines VE-Suite's directory from the
+    current working directory. Moving the Launcher out of VE-Suite's directory
+    or starting it from a different directory will pass the wrong value to
+    VE-Suite, causing errors.</para>
+
+    <para>The Dependencies directory is the only variable you need to set
+    manually. The first time you start VE-Launcher, you will be asked to find
+    the Dependencies directory. On Windows, it is the
+    VE_Suite.x.x.x_Dependencies folder.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/runtimeenv1.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>On Unix/Linux, the dependencies folder holds one folder for each
+    system supported. You need to choose your system's corresponding folder as
+    the Dependencies folder.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/runtimeenv2.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>If you're upgrading from an earlier version of VE-Suite, you can
+    also reset the Dependencies directory by clicking the Change Dependencies
+    Folder button in VE-Launcher.</para>
+  </section>
+</chapter>

@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter>
+  <title>Launcher</title>
+
+  <section id="launcher_intro">
+    <title>Introduction</title>
+
+    <para>Starting VE-Suite was simplified with the release of version 1.0.0
+    via VE-Launcher. VE-Launcher is a quick, easy way to launch any
+    configuration of VE-Suite. It helps you save your configuration, choose
+    which programs to run, and launch them without entering text commands.
+    Even with all of the options and configurations available, choosing the
+    one you need can still take some work. Here, we explain how to use the
+    Launcher and provide an example of setting it up.</para>
+  </section>
+
+  <section id="launcher_basics">
+    <title>The Basics</title>
+
+    <para>VE-Launcher is started by double-clicking VE-Suite's desktop icon,
+    double-clicking the velauncher program in VE-Suite's folder, or typing
+    <code>python velauncher.py</code> into a Unix terminal. The first time you
+    run VE-Launcher, you will be asked to choose VE-Suite's Dependencies
+    folder. On Windows, this folder is named
+    VE_Suite.x.x.x_Dependencies.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherbasics1.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>On Unix, the Dependencies folder contains folders for each system;
+    you need to choose the one corresponding to your system.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherbasics2.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Once VE-Launcher confirms that you have chosen the dependencies
+    folder, you will be shown the main window.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherbasics3.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <itemizedlist>
+      <listitem>
+        <para>Working Directory: Ensure that the location of the directory
+        containing the files you want to load is entered.</para>
+      </listitem>
+
+      <listitem>
+        <para>Computation Engine (CE) Name and Port: Enter the computer and
+        port you want to connect to.</para>
+      </listitem>
+
+      <listitem>
+        <para>Launch Mode: Select which mode you would like to launch VE-Suite
+        in. You have six options, including custom mode:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Desktop mode launches Conductor, Name Server, and Xplorer on
+            your machine in Desktop mode.</para>
+          </listitem>
+
+          <listitem>
+            <para>Tablet mode launches Conductor. It is designed for use on
+            tablets.</para>
+          </listitem>
+
+          <listitem>
+            <para>Computation mode launches the Name Server. It is designed
+            for use on computational engines.</para>
+          </listitem>
+
+          <listitem>
+            <para>Visualization mode launches Xplorer. It is designed for
+            viewing projects. It uses Custom's settings to choose VR Juggler's
+            configuration and which type of Xplorer to run.</para>
+          </listitem>
+
+          <listitem>
+            <para>As of 1.0.2: Shell mode lets the user work in a new shell
+            with the VE-Suite environment set up. If you choose to launch in
+            Shell mode, it will ask you whether you want to set up this shell
+            for VE-Builder. If you do, it will add the VE-Builder directory
+            you choose to the path. On Windows, launching Shell creates the
+            shell in a window; simply close it to exit. On Unix, launching
+            Shell makes the shell a child of your current terminal; type in
+            "exit" to return to your original shell.</para>
+          </listitem>
+
+          <listitem>
+            <para>Custom mode lets the user choose their own settings.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+    </itemizedlist>
+
+    <para>The settings for every mode can be viewed and changed by clicking
+    the Mode Settings button. Once you finish choosing the settings, click
+    <guibutton>Launch VE-Suite</guibutton> to close VE-Launcher and start
+    VE-Suite.</para>
+
+    <para>As of 1.0.2, the main window has a menu bar with the following
+    menus:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>File menu:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Open...: Pick a .ves or script shell file for launch.</para>
+          </listitem>
+
+          <listitem>
+            <para>Close Files: Remove any .ves or script shell files from the
+            launch.</para>
+          </listitem>
+
+          <listitem>
+            <para>Quit.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Configurations menu:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Load: Load a previously-saved configuration.</para>
+          </listitem>
+
+          <listitem>
+            <para>Save: Save the current configuration.</para>
+          </listitem>
+
+          <listitem>
+            <para>Delete: Delete a previously-saved configuration.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherbasics4.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <itemizedlist>
+      <listitem>
+        <para>Options menu:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Choose Dependencies: Change the Dependencies
+            directory.</para>
+          </listitem>
+
+          <listitem>
+            <para>Choose Builder Folder: Change the Builder directory.</para>
+          </listitem>
+
+          <listitem>
+            <para>Debug Level: Choose the debug levels passed to
+            VE-Suite.</para>
+          </listitem>
+
+          <listitem>
+            <para>Cluster Wait Times: Customize the time VE-Suite waits
+            between starting the master node and its slaves.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="launcher_mode_settings">
+    <title>Mode Settings</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launchermodesettings1.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>You use the Mode Settings window to view and change settings. The
+    Desktop, Tablet, and Computation modes only let you view their settings,
+    while Visualization and Custom modes let you change some of them. Choices
+    are faded out if you can't change them or if changing them wouldn't do
+    anything. (For example, you can't choose which type of Xplorer to run if
+    you're not running Xplorer.)</para>
+
+    <para>Options you can set include:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Which VR Juggler configuration to use from the pulldown list.
+        You can edit the list by clicking Edit Configuration List. We will go
+        into the List in more detail below.</para>
+      </listitem>
+
+      <listitem>
+        <para>Which programs to run. You can choose to run Name Server,
+        Conductor, and Xplorer. If you don't select any of them, VE-Suite
+        won't launch because it won't do anything without a program to
+        launch.</para>
+      </listitem>
+
+      <listitem>
+        <para>Whether to run Conductor and Xplorer in Desktop Mode. This
+        checkbox is disabled if you're launching neither Conductor nor
+        Xplorer.</para>
+      </listitem>
+
+      <listitem>
+        <para>Which type of Xplorer to run. OpenSceneGraph and OSG Patented
+        will work for most projects, while OSG Patented Cluster is made for
+        use on clustered computers. This radio list is disabled if you aren't
+        launching Xplorer.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><emphasis role="bold">Edit Configuration List</emphasis></para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launchermodesettings2.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>VE-Suite has over two dozen configuration files available. To help
+    you keep track of them, VE-Launcher provides you with a configuration list
+    that allows you to add, rename, and delete entries. The path to the
+    currently selected entry is listed below, so you can tell which name
+    stands for which file.</para>
+
+    <para>When you add a new configuration to the list, its initial name is
+    its file name. You'll want to rename it to something more
+    descriptive.</para>
+  </section>
+
+  <section id="launcher_unix_clusters">
+    <title>UNIX Clusters</title>
+
+    <para>VE-Launcher versions 1.0.2+ have extra features for automatically
+    starting up VE-Xplorer on other computers in a cluster.</para>
+
+    <para>To use the cluster functions of VE-Launcher on Unix, your cluster
+    must satisfy these requirements:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>The path to VE-Suite, its dependencies, and the working
+        directory are the same on every cluster node.</para>
+      </listitem>
+
+      <listitem>
+        <para>VE-Launcher's user has permission to <ulink
+        url="http://www.employees.org/%7Esatch/ssh/faq/ssh-faq.html">ssh</ulink>
+        to each node.</para>
+      </listitem>
+
+      <listitem>
+        <para>The user has manually sshed into each node and authenticated its
+        name.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>The last requirement needs some explanation. The first time you ssh
+    into an unknown host, you need to manually authenticate its name. If it
+    isn't authenticated and VE-Launcher tries to connect to it, it will hang
+    the program. Therefore, you must manually ssh into each node on the
+    cluster (including your current computer) and authenticate it before you
+    can start the cluster using VE-Launcher. You must use the exact name
+    you'll use in VE-Launcher; ssh treats partially-qualified (e.g., francis)
+    and fully-qualified (e.g., francis.iastate.edu) names as separate users.
+    Once you authenticate the other nodes, the authentication stays in your
+    user profile permentantly.</para>
+
+    <para>Once you have authenticated all nodes, you can run the cluster from
+    VE-Launcher:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>If you're running NameServer or Conductor on a certain node,
+        open VE-Launcher from that node. (VE-Launcher runs NameServer and
+        Conductor from the current computer.)</para>
+      </listitem>
+
+      <listitem>
+        <para>Set the settings. When you select the Xplorer type OSG Patented
+        Cluster, the <guibutton>Set Cluster Computers</guibutton> button will
+        be enabled.</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="veimages/unixcluster1.jpg" />
+          </imageobject>
+        </mediaobject>
+      </listitem>
+
+      <listitem>
+        <para>Click <guibutton>Set Cluster Computers</guibutton>. A window
+        will pop up showing the master and slaves listed. Put the master's
+        name in, then add each slave's name to the list. Click
+        <guibutton>OK</guibutton> when you're done.</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="veimages/unixcluster2.jpg" />
+          </imageobject>
+        </mediaobject>
+      </listitem>
+
+      <listitem>
+        <para>Launch VE-Suite by clicking <guibutton>Launch</guibutton>. The
+        cluster computers will start up VE-Suite.</para>
+      </listitem>
+    </orderedlist>
+
+    <para><emphasis role="bold">NOTE:</emphasis> There is a slight delay
+    between each node launched because simultaneous launching caused erratic
+    behavior in the cluster. The delay can be changed through the
+    Options-&gt;Cluster Wait Times menu. If you encounter problems with sync
+    or unconnected nodes using VE-Launcher, try lengthening the delays. If
+    launching the cluster is taking too long, try shortening them.</para>
+  </section>
+
+  <section id="launcher_windows_clusters">
+    <title>Windows Clusters</title>
+
+    <para>VE-Launcher versions 1.0.2+ can start VE-Suite across a Windows
+    cluster through <ulink
+    url="http://www.sysinternals.com/Utilities/PsExec.html">PsExec</ulink>.</para>
+
+    <para>To use the cluster functions of VE-Launcher on Unix, your cluster
+    must satisfy these requirements:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>The path to VE-Suite, its dependencies, and the working
+        directory are the same on every cluster node.</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink
+        url="http://www.sysinternals.com/Utilities/PsExec.html">PsExec</ulink>
+        is installed on the computer you're running VE-Launcher on.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>To launch the cluster:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>If you're running NameServer or Conductor on a certain computer,
+        open VE-Launcher from that computer. (VE-Launcher runs NameServer and
+        Conductor from the current computer.)</para>
+      </listitem>
+
+      <listitem>
+        <para>Select Custom mode and set your settings as usual. When you
+        choose which Xplorer Type to run, select OSG Patented Cluster. This
+        enables the <guibutton>Set Cluster Computers</guibutton>
+        button.</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="veimages/windowscluster1.jpg" />
+          </imageobject>
+        </mediaobject>
+      </listitem>
+
+      <listitem>
+        <para>Click <emphasis role="bold">Set Cluster Computers</emphasis>. A
+        window will pop up showing the master and slaves listed, plus an
+        optional username field. Put the master's name in, then add each
+        slave's name to the list.</para>
+
+        <para>Some clusters might require you to connect as a certain user; if
+        so, just enter your username into the User Name field. The username's
+        domain may need to be included as well, depending on your cluster's
+        setup. If you pass your username, you will have to manually enter your
+        password in each Psexec window when it launches; VE-Launcher doesn't
+        send passwords for security reasons.</para>
+
+        <para>Click <guibutton>OK</guibutton> when you're done.</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="veimages/windowscluster2.jpg" />
+          </imageobject>
+        </mediaobject>
+      </listitem>
+
+      <listitem>
+        <para>Launch VE-Suite by clicking <guibutton>Launch</guibutton>. The
+        cluster computers will start up VE-Suite.</para>
+      </listitem>
+    </orderedlist>
+
+    <para><emphasis role="bold">NOTE:</emphasis> There is a slight delay
+    between each node launched because simultaneous launching can cause
+    erratic behavior in the cluster. The delay can be changed through the
+    Options-&gt;Cluster Wait Times menu. If you encounter problems with sync
+    or unconnected nodes using VE-Launcher, try lengthening the delays. If
+    it's taking too long to launch the cluster, try shortening them.</para>
+
+    <para><emphasis role="bold">The cluster template: </emphasis>If your
+    cluster needs extra code to launch (for example, a net use command to set
+    up a remote drive), you can enter the code into the clusterTemplate.txt
+    file. Any terminal code in the clusterTemplate.txt file will run on the
+    cluster's other computers before Xplorer is launched. Please read the
+    comments in clusterTemplate.txt for more details.</para>
+
+    <para><emphasis role="bold">NOTE: </emphasis>There is a bug in VE-Launcher
+    1.0.2 where the cluster template code isn't separated from the standard
+    code by a line break. Be sure to insert a line break after the last line
+    of code in the template to avoid errors from a merged line.</para>
+  </section>
+
+  <section id="launcher_example">
+    <title>Example</title>
+
+    <para>John Doe wants to set up VE-Suite to look at a virtual power plant
+    design. He needs to set it in Visualization mode, using the VR Juggler
+    configuration "standalone" and the Open Scene Graph Xplorer. It also has
+    to connect to computer kiwi on port 1239.</para>
+
+    <para>When he starts VE-Launcher, he sees this:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherexample1.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>First he types the path to the plant design data folder in the
+    Working Directory field. (He could also use the <guibutton>Choose Working
+    Directory </guibutton>button to find it.)</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherexample2.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>He needs to change the computational engine (CE) name, but he can't
+    because the Launcher is currently in Desktop mode, which automatically
+    sets the CE name to "localhost". To unlock the CE name, he switches to
+    Visualization mode. (Any mode besides Desktop will let you change the CE
+    name.)</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherexample3.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Switching modes unlocks the CE name and sets it to the last
+    user-inputted value. Now John can change the CE name and port.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherexample4.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>To finish setting up the Launcher, John must change the mode's
+    settings. He clicks the <guibutton>Mode Settings</guibutton> button to
+    bring up the Settings window.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherexample5.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Visualization mode sets most of the options, and Open Scene Graph is
+    already selected. That leaves changing the Xplorer configuration. However,
+    the configuration he needs isn't on the list yet. John clicks
+    <guibutton>Edit Configuration List</guibutton>.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherexample6.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Because it isn't on the list, he adds it.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherexample7.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>It is automatically added to the list as standalone. John renames it
+    "Plant Design" so he can remember which project it is for.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/launcherexample8.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Now that he's done editing the list, John exits the Xplorer
+    Configuration window. Because he had Plant Design selected when he left,
+    it is automatically set as his current configuration file. With everything
+    set as he wanted, John can now click <guibutton>Launch
+    VE-Suite</guibutton> to look at the design.</para>
+  </section>
+</chapter>

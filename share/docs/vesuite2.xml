@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<book>
+  <title>VE-Suite Documentation</title>
+
+  <preface>
+    <title>Introduction to VE-Suite</title>
+
+    <para>VE-Suite is an open source toolkit that enables virtual engineering
+    analysis and design. This open source framework includes distributed
+    computing, platform independence, extensibility for component models,
+    support for a hierarchy of component models, and comprehensive graphics
+    capabilities, including support for immersive facilities.</para>
+
+    <para>VE-Suite is a software package built upon <ulink
+    url="http://www.vrjuggler.org">VRJuggler</ulink>, <ulink
+    url="www.openscenegraph.org"><ulink
+    url="http://www.openscenegraph.org/">Open Scene Graph</ulink></ulink>,
+    <ulink url="http://www.vtk.org/">Kitware’s Visualization ToolKit
+    (VTK)</ulink>, CORBA compliant libraries (<ulink
+    url="http://www.cs.wustl.edu/%7Eschmidt/TAO.html">ACE/TAO</ulink>), and
+    <ulink url="http://www.wxwidgets.org/">wxWidgets</ulink>. Initially
+    developed as a CFD visualization package, VE-Suite has matured into a
+    software toolset that enhances engineers' decision-making capabilities. By
+    integrating computational results from multiple disciplines into a common
+    framework, VE-Suite helps engineers analyze problems and make more
+    complete solutions.</para>
+  </preface>
+
+  <part>
+    <title>User's Guide</title>
+
+    <xi:include href="chapter_1_installation_and_setup.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_2_launcher.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_3_running_vesuite.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_4_visualizations.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_5_vebuilder.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </part>
+
+  <part>
+    <title>Developer Information</title>
+
+    <xi:include href="chapter_6_code_guidelines.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_7_building_vesuite.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_8_dependencies.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_9_setting_the_environment.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_10_description_of_the_engines.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_11_software_development_documents.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <xi:include href="chapter_12_software_development_tools.xml"
+                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </part>
+</book>
