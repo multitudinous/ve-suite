@@ -13,6 +13,7 @@ srcs = Split("""
    fileIO.cxx
    readWriteVtkThings.cxx
    setScalarAndVector.cxx
+   viewCells.cxx
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), util_srcs)

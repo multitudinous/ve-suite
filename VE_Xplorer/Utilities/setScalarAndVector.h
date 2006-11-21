@@ -41,7 +41,7 @@
 class vtkDataSet;
 
 // function declarations
-void VE_UTIL_EXPORTS activateScalar( vtkDataSet * dataSet );
-void VE_UTIL_EXPORTS activateVector( vtkDataSet * dataSet );
+VE_UTIL_EXPORTS void activateScalar( vtkDataSet* dataSet );
+VE_UTIL_EXPORTS void activateVector( vtkDataSet* dataSet );
 #endif //setScalarAndVector_H
 

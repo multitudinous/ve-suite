@@ -1,0 +1,22 @@
+##Builds Unit Wrapper for ce units
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('cfdHostType')
+
+srcs = Split("""
+   UnitWrapper.cxx
+   SetInputsEventHandler.cxx
+   GetResultsEventHandler.cxx
+""")
+
+env = baseEnv.Copy()
+env.Append(LIBS = ['VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
+                   'VE_ShaderLib', 'VE_OpenModuleLib'])
+
+env.ParseConfig('flagpoll TAO xerces TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+                              TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
+                              TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
+
+env.SharedLibrary(pj( env[ 'LIBDIR' ], 'VE_CE_UnitWrapperLib'), source = srcs)

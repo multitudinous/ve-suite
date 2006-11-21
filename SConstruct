@@ -265,7 +265,8 @@ baseEnv.BuildDir(buildDir, '.', duplicate = 0)
 lib = pj( '#' + buildDir, 'lib' )
 bin = pj( '#' + buildDir, 'bin' )
 baseEnv.Append( BINDIR = bin, 
-            LIBDIR = lib, 
+            LIBDIR = lib,
+            BUILDDIR = buildDir,
             LIBPATH = [lib],
             CPPDEFINES = ['_TAO', 'VE_PATENTED'] )
 
@@ -296,8 +297,9 @@ openSubdirs = Split("""
 """)
 
 ceSubdirs = Split("""
-    VE_CE/Utilities
-    VE_CE
+   VE_CE/Utilities
+   VE_CE
+   VE_CE/UnitWrapper
 """)
 
 conductorSubdirs = Split("""

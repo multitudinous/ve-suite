@@ -43,7 +43,7 @@ createMiniFlowdata = Split("""
 
 makeVtkSurface = Split("""
    makeVtkSurface.cpp
-   ../Translator/viewCells.cpp""")
+""")
 
 mergeVertices = Split("""
    mergeVertices.cpp
@@ -51,7 +51,7 @@ mergeVertices = Split("""
 
 meshViewer = Split("""
    meshViewer.cpp
-   ../Translator/viewCells.cpp""")
+""")
 
 moveFieldToPointData = Split("""
    moveFieldToPointData.cpp
@@ -78,9 +78,9 @@ whatIsScalarRange = Split("""
 """)
 
 env = baseEnv.Copy()
-env.Append(CPPPATH = [os.getcwd()])
+##env.Append(CPPPATH = [os.getcwd()])
 env.Append(LIBS = ['VE_UtilLib'])
-env.Append(CPPPATH = [pj('#', 'VE_Builder', 'Translator')])
+##env.Append(CPPPATH = [pj('#', 'VE_Builder', 'Translator')])
 ##env.Append(CPPPATH = ['#'])
 env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
 
@@ -95,7 +95,7 @@ env.Program(pj( env[ 'BINDIR' ],'convertVTK2Binary'), source = convertVTK2Binary
 env.Program(pj( env[ 'BINDIR' ],'createMiniFlowdata'), source = createMiniFlowdata)
 env.Program(pj( env[ 'BINDIR' ],'makeVtkSurface'), source = makeVtkSurface)
 env.Program(pj( env[ 'BINDIR' ],'mergeVertices'), source = mergeVertices)
-#env.Program(pj( env[ 'BINDIR' ],'meshViewer'), source = meshViewer)
+env.Program(pj( env[ 'BINDIR' ],'meshViewer'), source = meshViewer)
 env.Program(pj( env[ 'BINDIR' ],'moveFieldToPointData'), source = moveFieldToPointData)
 env.Program(pj( env[ 'BINDIR' ],'removeVtkCellsOutsideBox'), source = removeVtkCellsOutsideBox)
 env.Program(pj( env[ 'BINDIR' ],'removeVtkPointData'), source = removeVtkPointData)

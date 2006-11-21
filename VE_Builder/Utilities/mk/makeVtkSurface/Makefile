@@ -9,8 +9,7 @@ all:
 srcdir= ../../.
 
 SRCS=\
-   makeVtkSurface.cpp \
-   viewCells.cpp
+   makeVtkSurface.cpp
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR=../../$(CFDHOSTTYPE)
@@ -49,10 +48,6 @@ include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
-
-vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer $(VE_SUITE_HOME)/VE_Builder/Translator
-vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Translator
-#vpath %.h   $(VE_SUITE_HOME)/VE_Xplorer $(VE_SUITE_HOME)/VE_Builder/Translator
 
 # -----------------------------------------------------------------------------
 # Application build targets.

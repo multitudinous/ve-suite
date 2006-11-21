@@ -24,8 +24,7 @@ all:
 srcdir= ../../
 
 SRCS=\
-   meshViewer.cpp \
-   viewCells.cpp 
+   meshViewer.cpp 
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR=../../$(CFDHOSTTYPE)
@@ -57,7 +56,7 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) 
 EXTRA_LIBS+= -lVE_UtilLib
 
-EXTRA_PATH_FOR_SOURCES+=$(VE_SUITE_HOME)/VE_Builder/Translator
+EXTRA_PATH_FOR_SOURCES+=
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS

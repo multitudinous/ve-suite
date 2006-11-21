@@ -36,7 +36,7 @@
 
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
-#include "VE_Builder/Translator/viewCells.h"
+#include "VE_Xplorer/Utilities/viewCells.h"
 #include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
 #include "VE_Xplorer/Utilities/setScalarAndVector.h"
 

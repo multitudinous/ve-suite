@@ -37,13 +37,14 @@ endif
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   cfdAccessoryFunctions.cxx \
-   cfdGrid2Surface.cxx \
-   cfdVTKFileHandler.cxx \
-   cleanVtk.cxx \
-   fileIO.cxx \
+   cfdAccessoryFunctions.cxx\
+   cfdGrid2Surface.cxx\
+   cfdVTKFileHandler.cxx\
+   cleanVtk.cxx\
+   fileIO.cxx\
    readWriteVtkThings.cxx\
-   setScalarAndVector.cxx
+   setScalarAndVector.cxx\
+   viewCells.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
