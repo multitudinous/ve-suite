@@ -44,15 +44,13 @@
 #include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
+#include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
-#include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
-
-
-//#include "cleanVtk.h"    // for dumpVerticesNotUsedByCells()
 
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
@@ -1849,23 +1847,26 @@ void cfdDataSet::CreateBoundingBoxGeode( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::CreateWireframeGeode( void )
 {
-   vtkGeometryFilter* wireframe = vtkGeometryFilter::New();
-   wireframe->SetInput( this->GetDataSet() );
-   wireframe->Update();
+   //vtkGeometryFilter* wireframe = vtkGeometryFilter::New();
+   //wireframe->SetInput( this->GetDataSet() );
+   //wireframe->Update();
 
    vtkPolyDataMapper *wireframeMapper = vtkPolyDataMapper::New();
-   wireframeMapper->SetInput(wireframe->GetOutput());
-
+   //wireframeMapper->SetInput(wireframe->GetOutput());
+   vtkPolyData* poly = VE_Util::cfdGrid2Surface( this->GetDataSet(), 0.8f );
+   wireframeMapper->SetInput( poly );
+   
    vtkActor *wireframeActor = vtkActor::New();
    wireframeActor->SetMapper(wireframeMapper);
    wireframeActor->GetProperty()->SetColor(0,0,1);
-   wireframeActor->GetProperty()->SetOpacity(0.1);
+   wireframeActor->GetProperty()->SetOpacity(0.7f);
    wireframeActor->GetProperty()->SetRepresentationToWireframe();
 
    wireframeGeode = new cfdGeode();
    wireframeGeode->TranslateTocfdGeode( wireframeActor );
    
-   wireframe->Delete();
+   //wireframe->Delete();
+   poly->Delete();
    wireframeMapper->Delete();
    wireframeActor->Delete();
 }
