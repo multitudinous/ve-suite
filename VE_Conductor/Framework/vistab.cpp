@@ -306,7 +306,7 @@ void Vistab::CreateControls()
        dataSetSBSizer->Add( itemBoxSizer10, 0, wxGROW|wxALL, 5);
        
        wireFrameCB = new wxCheckBox( itemDialog1, ID_DATA_WIREFRAME_CB, 
-            _("Wire Frame"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+            _("Surface Wrap"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
        itemBoxSizer10->Add( wireFrameCB, 1, wxALIGN_CENTER_VERTICAL);
        bboxCB = new wxCheckBox( itemDialog1, ID_DATA_BBOX_CB, 
             _("Bounding Box"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );

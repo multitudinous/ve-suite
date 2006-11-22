@@ -4,6 +4,7 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('cfdHostType')
+Import('GetPlatform')
 
 srcs = Split("""
    App.cpp 
@@ -32,12 +33,8 @@ srcs = Split("""
    UI_TransientDialog.cxx
    UserPreferences.cxx
 """)
-##srcs = map(lambda s: pj('#', 'VE_Conductor', 'Framework', s), framework_srcs)
 
 env = baseEnv.Copy()
-##env.Append(CPPPATH = [os.getcwd()])
-##env.Append(CPPPATH = pj('#', 'VE_Open', 'skel'))
-##env.Append(CPPPATH = pj(os.getenv('VJ_BASE_DIR', ''), 'bin'))
 env.Append(LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_Conductor_UtilitiesLib',
                    'VE_OpenModuleLib'])
@@ -49,3 +46,14 @@ env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate T
 
 env.Program(pj( env[ 'BINDIR' ],'WinClient'), source = srcs)
 
+if GetPlatform() == "darwin":
+   conductorTarget = pj( env[ 'BINDIR' ],'Conductor')
+   winTarget = pj( env[ 'BUILDDIR' ], 'bin', 'WinClient')
+   target = [ conductorTarget ]
+   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o '
+   srcs = [ winTarget ]
+   idlFile = [idlCmd + srcs[0]]
+   for i in range(len(idlFile)):
+      bld = Builder(action = idlFile[i])
+      env.Append(BUILDERS = {'apple_rez': bld})
+      env. apple_rez(target[i], list())
