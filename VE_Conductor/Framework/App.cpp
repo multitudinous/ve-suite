@@ -56,7 +56,6 @@ bool REIApp::OnInit()
       return 1;
    }
 
-
    SetAppName("VE-Conductor");
    // this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
    mainFrame= new AppFrame(NULL, 1023, "VE-Conductor");

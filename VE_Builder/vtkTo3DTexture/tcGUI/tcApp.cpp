@@ -38,6 +38,8 @@
 #ifdef USE_MPI
 #include <mpi.h>
 #endif
+//#include <omp.h>
+
 IMPLEMENT_APP(TCApp)
 
 #include <iostream>
@@ -53,6 +55,10 @@ bool TCApp::OnInit()
    int ierror;
    p = 1;
    rank = 0;
+   //void omp_set_num_threads( 2 );
+   //void omp_set_dynamic( 0 );
+   //void omp_set_nested( 0 );
+   
   /* // Initialize MPI
    ierror = MPI_Init( &(wxGetApp().argc), &(wxGetApp().argv) );
    ierror = MPI_Comm_size( MPI_COMM_WORLD, &p  );
