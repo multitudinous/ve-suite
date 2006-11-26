@@ -2,21 +2,36 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('cfdHostType')
+Import('baseEnv libPath ves_pkg LIBDIR')
 
-srcs = Split("""
+sources = Split("""
    UnitWrapper.cxx
    SetInputsEventHandler.cxx
    GetResultsEventHandler.cxx
 """)
 
-env = baseEnv.Copy()
-env.Append(LIBS = ['VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
+headers = Split("""
+   UnitWrapper.h
+   SetInputsEventHandler.h
+   GetResultsEventHandler.h
+""")
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
                    'VE_ShaderLib', 'VE_OpenModuleLib'])
 
-env.ParseConfig('flagpoll TAO xerces TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+lib_env.ParseConfig('flagpoll TAO xerces TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
-env.SharedLibrary(pj( env[ 'LIBDIR' ], 'VE_CE_UnitWrapperLib'), source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_CE_UnitWrapperLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_CE_UnitWrapperLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_CE', 'UnitWrapper'))
+lib.build()

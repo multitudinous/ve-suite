@@ -2,8 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('cfdHostType')
+Import('ves_pkg LIBDIR PREFIX')
 
 srcs = Split("""
    Exe_server.cpp 
@@ -11,15 +10,16 @@ srcs = Split("""
    Execute_Thread.cpp
    QueryThread.cxx
 """)
-##srcs = map(lambda s: pj('#', 'VE_CE', s), srcs)
 
-env = baseEnv.Copy()
+env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
                    'VE_ShaderLib', 'VE_CE_UtilitiesLib', 'VE_OpenModuleLib'])
-#env.Append(LINKFLAGS = [pj('-L.', 'lib', 'Darwin')])
+env.Append(LIBPATH = [pj( PREFIX, LIBDIR)])
 
 env.ParseConfig('flagpoll TAO apr-1 apr-util-1 xerces TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
-env.Program(pj( env[ 'BINDIR' ], 'Exe_server'), source = srcs)
+ce_prog = ves_pkg.createProgram('Exe_server', env, 'bin')
+ce_prog.addSources( srcs )
+ce_prog.build()
