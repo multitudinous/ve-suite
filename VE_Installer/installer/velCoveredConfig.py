@@ -53,6 +53,7 @@ class CoveredConfig(CoveredState):
 
     def InterpretArgument(self, argument):
         if argument:
+            self.Edit("FileDir", os.path.dirname(os.path.abspath(argument)))
             if argument[-4:] == '.ves':
                 self.SetVesFile(argument)
             else:
@@ -131,7 +132,7 @@ class CoveredConfig(CoveredState):
             surface["Cluster"] = True
 ##            surface["ClusterNodes"].append(surface["ClusterMaster"])
         else:
-            print "No slaves found!" ##TESTER
+##            print "No slaves found!" ##TESTER
             surface["ClusterSlaves"] = None
             surface["Cluster"] = False
         ##If OSGNotifyLevel == "None", change it to None

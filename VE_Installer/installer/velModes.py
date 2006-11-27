@@ -64,4 +64,5 @@ BASE_CONFIG = {"DependenciesDir": None,
                "User": "",
                "ShellScript": None,
                "DevMode": False,
-               "Debug": False}
+               "Debug": False,
+               "FileDir": DIRECTORY_DEFAULT}

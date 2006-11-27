@@ -27,7 +27,8 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "DesktopMode",
                  "ClusterMaster",
                  "OSGNotifyLevel",
-                 "User"]
+                 "User",
+                 "FileDir"]
     if saveLastConfig:
         strWrites.append("Directory")
         strWrites.append("Debug")
@@ -70,7 +71,8 @@ def LoadConfig(name, state, loadLastConfig = False):
                 "TaoMachine",
                 "BuilderDir",
                 "OSGNotifyLevel",
-                "User"]
+                "User",
+                "FileDir"]
     intReads = ["XplorerType",
                 "Mode",
                 "VPRDebug",

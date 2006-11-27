@@ -292,7 +292,7 @@ class LauncherWindow(wx.Frame):
             types += "|Script files (*.sh;*.tsh)|*.sh;*.tsh"
         dlg = wx.FileDialog(self,
                             "Choose a file.",
-                            defaultDir = self.state.GetSurface("Directory"),
+                            defaultDir = self.state.GetSurface("FileDir"),
                             wildcard = types,
                             style=wx.OPEN)
         if dlg.ShowModal() == wx.ID_OK:
