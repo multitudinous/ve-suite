@@ -2,23 +2,34 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('execOsgPatTag')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
 
-srcs = Split("""
+sources = Split("""
     cfdVEBaseClass.cxx
+""")
+
+headers = Split("""
+    cfdVEBaseClass.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'GraphicalPlugin', s), srcs)
 
-env = baseEnv.Copy()
-env.Append(LIBS = ['VE_SceneGraphLib%s' %(execOsgPatTag),
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['VE_SceneGraphLib%s' %(execOsgPatTag),
                    'VE_XplorerLib%s' %(execOsgPatTag),
                    'VE_TextureBasedLib%s' %(execOsgPatTag),
                    'VE_UtilLib', 'VE_ModelLib', 'VE_XMLLib', 'VE_CADLib'])
-env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-env.ParseConfig('flagpoll osg vtk xerces vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+lib_env.ParseConfig('flagpoll osg vtk xerces vrjuggler --libs --cflags')
 
-targetLib = pj(env[ 'LIBDIR' ], 'GraphicalPlugin%s' %(execOsgPatTag))
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('GraphicalPlugin%s' %(execOsgPatTag),
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('GraphicalPlugin%s' %(execOsgPatTag), lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Xplorer', 'GraphicalPlugin'))
+lib.build()

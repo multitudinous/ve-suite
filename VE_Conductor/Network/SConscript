@@ -2,24 +2,39 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR')
 
-srcs = Split("""
+sources = Split("""
    interface.cpp 
    package.cpp 
    string_ops.cpp 
    GeometryDataBuffer.cpp
 """)
 
+headers = Split("""
+   interface.h 
+   package.h 
+   string_ops.h 
+   GeometryDataBuffer.h
+""")
+
 ##srcs = map(lambda s: pj('#', 'VE_Conductor', 'Network', s), srcs)
 
-env = baseEnv.Copy()
-env.Append(LIBS = 'VE_XMLLib')
-env.ParseConfig('flagpoll xerces --libs --cflags')
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = 'VE_XMLLib')
+lib_env.ParseConfig('flagpoll xerces --libs --cflags')
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_ConductorLib')
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_ConductorLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_ConductorLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Conductor', 'Network'))
+lib.build()
 
 
 

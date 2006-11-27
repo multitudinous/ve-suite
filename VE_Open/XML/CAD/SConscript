@@ -2,10 +2,9 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR')
 
-srcs = Split("""
+sources = Split("""
    CADAssembly.cxx
    CADAttribute.cxx
    CADClone.cxx
@@ -17,11 +16,32 @@ srcs = Split("""
    CADNodeAnimation.cxx
 """)
 
+headers = Split("""
+   CADAssembly.h
+   CADAttribute.h
+   CADClone.h
+   CADCreator.h
+   CADMaterial.h
+   CADNode.h
+   CADNodeTraverser.h
+   CADPart.h
+   CADNodeAnimation.h
+""")
+
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'CAD', s), srcs)
 
-env = baseEnv.Copy()
-env.Append(LIBS = ['VE_XMLLib', 'VE_ShaderLib'])
-env.ParseConfig('flagpoll xerces --libs --cflags')
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['VE_XMLLib', 'VE_ShaderLib'])
+lib_env.ParseConfig('flagpoll xerces --libs --cflags')
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_CADLib')
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_CADLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_CADLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Open', 'XML', 'CAD'))
+lib.build()

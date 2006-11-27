@@ -2,11 +2,9 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
-Import('execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform execOsgPatTag')
 
-xplorer_srcs = Split("""
+srcs = Split("""
    cfdApp.cxx
    cfdAppWrapper.cxx
    cfdVEXplorer.cxx
@@ -14,7 +12,7 @@ xplorer_srcs = Split("""
    VjObs_i.cxx 
 """)
 
-env = baseEnv.Copy()
+env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib', 'VE_ShaderLib',
                    'VE_SceneGraph_UtilitiesLib', 
                    'VE_SceneGraphLib%s' %(execOsgPatTag),
@@ -33,6 +31,7 @@ env.ParseConfig('flagpoll vtk xerces osg vrjuggler TAO \
                           apr-1 apr-util-1 --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --get-vrj-ogl-libs')
 
-targetExe = pj(env[ 'BINDIR' ], 'project%s' %(execOsgPatTag))
-env. Program(target = targetExe, source = xplorer_srcs)
+prog = ves_pkg.createProgram('project%s' %(execOsgPatTag), env, 'bin')
+prog.addSources( srcs )
+prog.build()
 

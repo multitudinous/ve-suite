@@ -2,10 +2,9 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR')
 
-srcs = Split("""
+sources = Split("""
    Point.cxx
    Port.cxx
    Link.cxx
@@ -15,12 +14,31 @@ srcs = Split("""
    ModelCreator.cxx 
 """)
 
+headers = Split("""
+   Point.h
+   Port.h
+   Link.h
+   Network.h
+   Model.h
+   Tag.h
+   ModelCreator.h 
+""")
+
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'Model', s), srcs)
 
-env = baseEnv.Copy()
-env.Append(LIBS = ['VE_XMLLib',
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['VE_XMLLib',
                    'VE_CADLib', 'VE_ShaderLib'])
-env.ParseConfig('flagpoll xerces --libs --cflags')
+lib_env.ParseConfig('flagpoll xerces --libs --cflags')
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_ModelLib')
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_ModelLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_ModelLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Open', 'XML', 'Model'))
+lib.build()

@@ -2,20 +2,34 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
 
-srcs = Split("""
+sources = Split("""
     Attribute.cxx
     MaterialHelper.cxx
     ShaderHelper.cxx
 """)
 
+headers = Split("""
+    Attribute.h
+    MaterialHelper.h
+    ShaderHelper.h
+""")
+
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
 ##                        'Utilities', s), srcs)
-env = baseEnv.Copy()
-env.Append(LIBS = ['VE_CADLib', 'VE_ShaderLib', 'VE_XMLLib'])
-env.ParseConfig('flagpoll osg xerces --libs --cflags')
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['VE_CADLib', 'VE_ShaderLib', 'VE_XMLLib'])
+lib_env.ParseConfig('flagpoll osg xerces --libs --cflags')
 
-targetLib = pj( env[ 'LIBDIR' ], 'VE_SceneGraph_UtilitiesLib')
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_SceneGraph_UtilitiesLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_SceneGraph_UtilitiesLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Xplorer', 'SceneGraph', 'Utilities'))
+lib.build()

@@ -2,8 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('cfdHostType')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform')
 
 srcs = Split("""
    flowTexture.cpp 
@@ -13,9 +12,11 @@ srcs = Split("""
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Builder', 'vtkTo3DTexture', 'tcGUI', s), srcs)
 
-env = baseEnv.Copy()
+env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['VE_UtilLib'])
 env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
 env.ParseConfig('wx-config --cxxflags --libs')
 
-env.Program(pj( env[ 'BINDIR' ], 'vtkTo3DTexture'), source = srcs)
+prog = ves_pkg.createProgram('vtkTo3DTexture', env, 'bin')
+prog.addSources( srcs )
+prog.build()

@@ -2,12 +2,9 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('Platform')
-Import('libPath')
-Import('execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
 
-srcs = Split("""
+sources = Split("""
    ControlPoint.cxx
    KnotVector.cxx
    NCurve.cxx
@@ -16,9 +13,27 @@ srcs = Split("""
    NURBSObject.cxx
 """)
 
-env = baseEnv.Copy()
-##env.Append(CPPPATH = [os.getcwd()])
-env.ParseConfig('flagpoll osg --libs --cflags')
+headers = Split("""
+   ControlPoint.h
+   KnotVector.h
+   NCurve.h
+   NSurface.h
+   NURBSNode.h
+   NURBSObject.h
+""")
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_NURBSLib%s' %(execOsgPatTag))
-env.SharedLibrary(target = targetLib, source = srcs)
+lib_env = ves_pkg.getEnv().Copy()
+##env.Append(CPPPATH = [os.getcwd()])
+lib_env.ParseConfig('flagpoll osg --libs --cflags')
+
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_NURBSLib%s' %(execOsgPatTag),
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_NURBSLib%s' %(execOsgPatTag), lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Xplorer', 'SceneGraph', 'NURBS'))
+lib.build()

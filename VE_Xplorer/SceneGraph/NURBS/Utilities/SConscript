@@ -2,19 +2,32 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('Platform')
-Import('libPath')
-Import('execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
 
-srcs = Split("""
+sources = Split("""
    OCCNURBSFileReader.cxx
 """)
 
-env = baseEnv.Copy()
-##env.Append(CPPPATH = [os.getcwd()])
-env.Append(LIBS = ['VE_NURBSLib%s' %(execOsgPatTag)])
-env.ParseConfig('flagpoll osg --libs --cflags')
+headers = Split("""
+   OCCNURBSFileReader.h
+   IGES2VENURBS.h
+   VENURBS2OCCNURBS.h
+   OCCNURBS2VENURBS.h
+""")
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_NURBSUtilsLib%s' %(execOsgPatTag))
-env.SharedLibrary(target = targetLib, source = srcs)
+lib_env = ves_pkg.getEnv().Copy()
+##env.Append(CPPPATH = [os.getcwd()])
+lib_env.Append(LIBS = ['VE_NURBSLib%s' %(execOsgPatTag)])
+lib_env.ParseConfig('flagpoll osg --libs --cflags')
+
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_NURBSUtilsLib%s' %(execOsgPatTag),
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_NURBSUtilsLib%s' %(execOsgPatTag), lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Xplorer', 'SceneGraph', 'NURBS', 'Utilities'))
+lib.build()

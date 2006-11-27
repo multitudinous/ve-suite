@@ -2,8 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('cfdHostType')
+Import('ves_pkg LIBDIR PREFIX')
 
 srcs = Split("""
    multiPlaneVtkOutput.cxx
@@ -16,8 +15,10 @@ srcs = Split("""
 ##srcs.extend(preprocess_srcs)
 ##srcs.extend(utilities_srcs)
 
-env = baseEnv.Copy()
+env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['VE_UtilLib'])
 env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
 
-env.Program(pj( env[ 'BINDIR' ], 'preprocessor'), source = srcs)
+prog = ves_pkg.createProgram('preprocessor', env, 'bin')
+prog.addSources( srcs )
+prog.build()

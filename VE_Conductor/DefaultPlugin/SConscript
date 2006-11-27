@@ -4,22 +4,34 @@ import os, sys, string, smtplib
 
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR')
 
-srcs = Split("""
+sources = Split("""
     DefaultPlugin.cxx
     DefaultPlugin_UI_Dialog.cxx
 """)
 
-env = baseEnv.Copy()
-##env.Append(CPPPATH = pj('#', 'VE_Conductor', 'Framework') )
-env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
+headers = Split("""
+    DefaultPlugin.h
+    DefaultPlugin_UI_Dialog.h
+""")
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'GUIPluginLib',
                    'VE_OpenModuleLib'])
 
-env.ParseConfig( 'wx-config --cxxflags --libs' )
-env.ParseConfig('flagpoll TAO xerces --cflags --libs')
+lib_env.ParseConfig( 'wx-config --cxxflags --libs' )
+lib_env.ParseConfig('flagpoll TAO xerces --cflags --libs')
 
-targetLib = pj(env[ 'LIBDIR' ], 'DefaultPlugin_UI_Dialog')
-env.SharedLibrary(targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('DefaultPlugin_UI_Dialog',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('DefaultPlugin_UI_Dialog', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Conductor', 'DefaultPlugin'))
+lib.build()

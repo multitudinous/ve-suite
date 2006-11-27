@@ -2,14 +2,12 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('cfdHostType')
-Import('GetPlatform')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform')
 
 srcs = Split("""
    App.cpp 
    Avail_Modules.cpp
-    DataSetLoaderUI.cxx
+   DataSetLoaderUI.cxx
    Frame.cpp 
    Network.cpp 
    NavigationPane.cxx 
@@ -17,24 +15,24 @@ srcs = Split("""
    PluginLoader.cpp 
    SoundsPane.cpp 
    ViewLocPane.cxx
-    TBToolBar.cxx
-    TransformUI.cxx
-    vistab.cpp
-    vectors.cpp
-    advancedvectors.cpp
-    contours.cpp
-    advancedcontours.cpp
-    streamlines.cpp
-    advancedstreamlines.cpp
-    isosurfaces.cpp
-    polydata.cpp
-    ScalarToolsDlg.cxx
+   TBToolBar.cxx
+   TransformUI.cxx
+   vistab.cpp
+   vectors.cpp
+   advancedvectors.cpp
+   contours.cpp
+   advancedcontours.cpp
+   streamlines.cpp
+   advancedstreamlines.cpp
+   isosurfaces.cpp
+   polydata.cpp
+   ScalarToolsDlg.cxx
    UI_TeacherTab.cpp
    UI_TransientDialog.cxx
    UserPreferences.cxx
 """)
 
-env = baseEnv.Copy()
+env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_Conductor_UtilitiesLib',
                    'VE_OpenModuleLib'])
@@ -44,11 +42,13 @@ env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate T
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --cflags --libs')
 
-env.Program(pj( env[ 'BINDIR' ],'WinClient'), source = srcs)
+prog = ves_pkg.createProgram('WinClient', env, 'bin')
+prog.addSources( srcs )
+prog.build()
 
 if GetPlatform() == "darwin":
-   conductorTarget = pj( env[ 'BINDIR' ],'Conductor')
-   winTarget = pj( env[ 'BUILDDIR' ], 'bin', 'WinClient')
+   conductorTarget = pj( baseEnv['prefix'],'Conductor')
+   winTarget = pj( baseEnv['prefix'], 'bin', 'WinClient')
    target = [ conductorTarget ]
    idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o '
    srcs = [ winTarget ]

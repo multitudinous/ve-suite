@@ -3,11 +3,9 @@ import os, sys, string
 ##import practice
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
-Import('cfdHostType')
+Import('baseEnv libPath ves_pkg LIBDIR')
 
-srcs = Split("""
+sources = Split("""
    CreationEventHandler.cxx 
    Command.cxx
    DataValuePair.cxx
@@ -29,11 +27,33 @@ srcs = Split("""
    XMLReaderWriter.cxx
    DOMDocumentManager.cxx
 """)
+
+headers = Split("""
+   CreationEventHandler.h 
+   Command.h
+   DataValuePair.h
+   FloatArray.h
+   OneDDoubleArray.h
+   TwoDDoubleArray.h
+   ThreeDDoubleArray.h
+   OneDIntArray.h
+   TwoDIntArray.h
+   ThreeDIntArray.h
+   OneDStringArray.h
+   ParameterBlock.h
+   StateInfo.h
+   Transform.h
+   User.h
+   XMLCreator.h
+   XMLObject.h
+   XMLObjectFactory.h
+   XMLReaderWriter.h
+   DOMDocumentManager.h
+""")
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
 
-env = baseEnv.Copy()
-
-env.ParseConfig('flagpoll xerces apr-1 apr-util-1 --libs --cflags')
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.ParseConfig('flagpoll xerces apr-1 apr-util-1 --libs --cflags')
 ##Get apr config.
 ##if cfdHostType == "Darwin":
 ##    suffix = "-1-config"
@@ -42,5 +62,14 @@ env.ParseConfig('flagpoll xerces apr-1 apr-util-1 --libs --cflags')
 #env.ParseConfig('apr%s --includes --cppflags --link-ld --libs' %suffix)
 #env.ParseConfig('apu%s --includes --link-ld --libs' %suffix)
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_XMLLib')
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_XMLLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_XMLLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Open', 'XML'))
+lib.build()

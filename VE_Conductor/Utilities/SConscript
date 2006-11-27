@@ -2,8 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR')
 
 utils_srcs = Split("""
    Link.cxx
@@ -24,18 +23,52 @@ utils_srcs = Split("""
 gui_srcs = Split("""
     spinctld.cpp
 """)
+
+utils_h = Split("""
+   Link.h
+   Module.h
+   Polygon.h
+   Tag.h
+   CADTreeBuilder.h
+   CADNodeManagerDlg.h
+   CADMaterialEditMenu.h
+   CADNodeMenu.h 
+   CADNodePropsDlg.h
+   CADOpacitySliderDlg.h
+   DualSlider.h
+   ROIDialog.h
+   BaseDialog.h
+""")
+
+gui_h = Split("""
+    spinctld.h
+""")
 ##frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), frameworkutil_srcs)
 gui_srcs = map(lambda s: pj('..','..','VE_Builder', 'Utilities', 'gui', s), gui_srcs)
-srcs = list()
-srcs.extend(utils_srcs)
-srcs.extend(gui_srcs)
+sources = list()
+sources.extend(utils_srcs)
+sources.extend(gui_srcs)
 
-env = baseEnv.Copy()
-env.Append(CPPPATH = pj('#', 'VE_Builder', 'Utilities', 'gui'))
-env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
+##gui_h = map(lambda s: pj('..','..','VE_Builder', 'Utilities', 'gui', s), gui_h)
+headers = list()
+headers.extend(utils_h)
+##headers.extend(gui_h)
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(CPPPATH = pj('#', 'VE_Builder', 'Utilities', 'gui'))
+lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
-env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('flagpoll TAO xerces --cflags --libs')
+lib_env.ParseConfig('wx-config --cxxflags --libs')
+lib_env.ParseConfig('flagpoll TAO xerces --cflags --libs')
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_Conductor_UtilitiesLib')
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_Conductor_UtilitiesLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_Conductor_UtilitiesLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Conductor', 'Utilities'))
+lib.build()

@@ -2,10 +2,9 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
 
-srcs = Split("""
+sources = Split("""
    cfdAccessoryFunctions.cxx
    cfdGrid2Surface.cxx
    cfdVTKFileHandler.cxx
@@ -16,10 +15,30 @@ srcs = Split("""
    viewCells.cxx
 """)
 
+headers = Split("""
+   cfdAccessoryFunctions.h
+   cfdGrid2Surface.h
+   cfdVTKFileHandler.h
+   cleanVtk.h
+   fileIO.h
+   readWriteVtkThings.h
+   setScalarAndVector.h
+   viewCells.h
+""")
+
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'Utilities', s), util_srcs)
 
-env = baseEnv.Copy()
-env.ParseConfig('flagpoll Boost.Filesystem vtk --cflags --libs')
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.ParseConfig('flagpoll Boost.Filesystem vtk --cflags --libs')
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_UtilLib')
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_UtilLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_UtilLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Xplorer', 'Utilities'))
+lib.build()

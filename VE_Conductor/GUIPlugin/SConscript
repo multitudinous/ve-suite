@@ -2,10 +2,9 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
+Import('baseEnv libPath ves_pkg LIBDIR')
 
-srcs = Split("""
+sources = Split("""
    FinancialDialog.cpp 
    ListTable.cpp 
    Plugin_base.cpp 
@@ -17,7 +16,7 @@ srcs = Split("""
    ResultPanel.cpp 
    StringParse.cpp 
    SummaryResultDialog.cpp 
-    CORBAServiceList.cxx
+   CORBAServiceList.cxx
    OrbThread.cxx 
    TexTable.cpp 
    TextResultDialog.cpp 
@@ -28,16 +27,46 @@ srcs = Split("""
    FindDialog.cpp
 """)
 
-##srcs = map(lambda s: pj('#', 'VE_Conductor', 'GUIPlugin', s), srcs)
+headers = Split("""
+   FinancialDialog.h 
+   ListTable.h 
+   Plugin_base.h 
+   GlobalParamDialog.h 
+   Geometry.h 
+   GeometryDialog.h 
+   GeometryDataManager.h 
+   PortDialog.h 
+   ResultPanel.h 
+   StringParse.h 
+   SummaryResultDialog.h 
+   CORBAServiceList.h
+   OrbThread.h 
+   TexTable.h 
+   TextResultDialog.h 
+   UIDialog.h 
+   UI_i.h
+   ParamsDlg.h
+   QueryInputsDlg.h
+   FindDialog.h
+""")
 
-env = baseEnv.Copy()
-env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
-env.ParseConfig('wx-config --cxxflags --libs')
-env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+lib_env.ParseConfig('wx-config --cxxflags --libs')
+lib_env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
 
-targetLib = pj(env[ 'LIBDIR' ], 'GUIPluginLib')
-env.SharedLibrary(target = targetLib, source = srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('GUIPluginLib',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('GUIPluginLib', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Conductor', 'GUIPlugin'))
+lib.build()

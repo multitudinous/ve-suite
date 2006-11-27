@@ -2,11 +2,9 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('libPath')
-Import('execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
 
-xplorer_srcs = Split("""
+sources = Split("""
    cfd1DTextInput.cxx 
    cfdAnimatedImage.cxx 
    cfdAnimatedStreamlineCone.cxx 
@@ -53,43 +51,43 @@ xplorer_srcs = Split("""
    cfdVectors.cxx 
    cfdRawNodeWriteTraverser.cxx 
    cfdWriteTraverser.cxx
-    ActiveModelEventHandler.cxx
-    AddVTKDataSetEventHandler.cxx
-    AttributeEventHandler.cxx 
+   ActiveModelEventHandler.cxx
+   AddVTKDataSetEventHandler.cxx
+   AttributeEventHandler.cxx 
    CADEventHandler.cxx 
    CADDeleteNodeEH.cxx
-    CADRemoveAttributeEH.cxx
+   CADRemoveAttributeEH.cxx
    CADAddNodeEH.cxx 
    CADAddAttributeEH.cxx 
    CADSetActiveAttributeEH.cxx 
    CADSetNameEH.cxx
-    CADToggleEH.cxx
+   CADToggleEH.cxx
    CADTransformEH.cxx
-    MaterialModeUpdateEH.cxx
-    MaterialUpdateEH.cxx
-    KeyboardMouse.cxx
-    cfdTrackball.cxx
-    cfdObjectHandler.cxx
-    SelectionHandler.cxx
-    MouseSelection.cxx
-    WandSelection.cxx
-    CreateVisObjectEventHandler.cxx
-    ClearVisObjectsEventHandler.cxx
-    ChangeCursorEventHandler.cxx
-    TBTransientModeUpdateEH.cxx
-    TBTransientDurationUpdateEH.cxx
-    TBIsosurfaceEnableEH.cxx
-    TBIsosurfaceUpdateEH.cxx
-    TBUpdateScalarRangeEH.cxx
-    TBBBoxEH.cxx
-    TBClipPlaneEH.cxx
-    TextureBasedEventHandler.cxx
-    TBActivateEH.cxx
-    TBUpdateSolutionEH.cxx
-    QCLoadFileEH.cxx
-    StoredSceneEH.cxx
-    ChangeWorkingDirectoryEventHandler.cxx
-    ChangeBackgroundColorEventHandler.cxx
+   MaterialModeUpdateEH.cxx
+   MaterialUpdateEH.cxx
+   KeyboardMouse.cxx
+   cfdTrackball.cxx
+   cfdObjectHandler.cxx
+   SelectionHandler.cxx
+   MouseSelection.cxx
+   WandSelection.cxx
+   CreateVisObjectEventHandler.cxx
+   ClearVisObjectsEventHandler.cxx
+   ChangeCursorEventHandler.cxx
+   TBTransientModeUpdateEH.cxx
+   TBTransientDurationUpdateEH.cxx
+   TBIsosurfaceEnableEH.cxx
+   TBIsosurfaceUpdateEH.cxx
+   TBUpdateScalarRangeEH.cxx
+   TBBBoxEH.cxx
+   TBClipPlaneEH.cxx
+   TextureBasedEventHandler.cxx
+   TBActivateEH.cxx
+   TBUpdateSolutionEH.cxx
+   QCLoadFileEH.cxx
+   StoredSceneEH.cxx
+   ChangeWorkingDirectoryEventHandler.cxx
+   ChangeBackgroundColorEventHandler.cxx
    DataSetAxis.cxx
    BBoxEventHandler.cxx
    WireframeEventHandler.cxx
@@ -98,17 +96,119 @@ xplorer_srcs = Split("""
    DataSetScalarBar.cxx
    ScalarBarEventHandler.cxx
 """)
+
+headers = Split("""
+   cfd1DTextInput.h 
+   cfdAnimatedImage.h 
+   cfdAnimatedStreamlineCone.h 
+   cfdCommandArray.h 
+   cfdCommandObjects.h 
+   cfdContour.h 
+   cfdContourBase.h 
+   cfdContours.h 
+   cfdCursor.h 
+   cfdCuttingPlane.h 
+   cfdDataSet.h
+   cfdDigitalAnalogGauge.h 
+   cfdDisplaySettings.h 
+   cfdEnvironmentHandler.h 
+   cfdGlobalBase.h 
+   cfdGraphicsObject.h 
+   cfdImage.h 
+   cfdIsosurface.h 
+   cfdModel.h 
+   cfdModelHandler.h 
+   cfdMomentum.h 
+   cfdMomentums.h
+   cfdNavigate.h 
+   cfdObjects.h 
+   cfdPlanes.h 
+   cfdPolyData.h 
+   cfdPresetContour.h 
+   cfdPresetMomentum.h 
+   cfdPresetVector.h 
+   cfdQuatCamHandler.h 
+   cfdQuatCam.h 
+   cfdReadParam.h 
+   cfdScalarBarActor.h 
+   cfdSound.h 
+   cfdSoundHandler.h 
+   cfdSteadyStateVizHandler.h 
+   cfdStreamers.h 
+   cfdTeacher.h 
+   cfdTextOutput.h
+   cfdTextureBasedVizHandler.h
+   cfdThread.h 
+   cfdVectorBase.h
+   cfdVector.h 
+   cfdVectors.h 
+   cfdRawNodeWriteTraverser.h 
+   cfdWriteTraverser.h
+   ActiveModelEventHandler.h
+   AddVTKDataSetEventHandler.h
+   AttributeEventHandler.h 
+   CADEventHandler.h 
+   CADDeleteNodeEH.h
+   CADRemoveAttributeEH.h
+   CADAddNodeEH.h 
+   CADAddAttributeEH.h 
+   CADSetActiveAttributeEH.h 
+   CADSetNameEH.h
+   CADToggleEH.h
+   CADTransformEH.h
+   MaterialModeUpdateEH.h
+   MaterialUpdateEH.h
+   KeyboardMouse.h
+   cfdTrackball.h
+   cfdObjectHandler.h
+   SelectionHandler.h
+   MouseSelection.h
+   WandSelection.h
+   CreateVisObjectEventHandler.h
+   ClearVisObjectsEventHandler.h
+   ChangeCursorEventHandler.h
+   TBTransientModeUpdateEH.h
+   TBTransientDurationUpdateEH.h
+   TBIsosurfaceEnableEH.h
+   TBIsosurfaceUpdateEH.h
+   TBUpdateScalarRangeEH.h
+   TBBBoxEH.h
+   TBClipPlaneEH.h
+   TextureBasedEventHandler.h
+   TBActivateEH.h
+   TBUpdateSolutionEH.h
+   QCLoadFileEH.h
+   StoredSceneEH.h
+   ChangeWorkingDirectoryEventHandler.h
+   ChangeBackgroundColorEventHandler.h
+   DataSetAxis.h
+   BBoxEventHandler.h
+   WireframeEventHandler.h
+   AxesEventHandler.h
+   AxesLabelsEventHandler.h
+   DataSetScalarBar.h
+   ScalarBarEventHandler.h
+""")
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 
-env = baseEnv.Copy()
-env.Append(LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib',
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib',
                    'VE_SceneGraph_UtilitiesLib', 
                    'VE_SceneGraphLib%s' %(execOsgPatTag),
                    'VE_UtilLib',
                    'VE_TextureBasedLib%s' %(execOsgPatTag)])
-env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-env.ParseConfig('flagpoll vtk xerces osg vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+lib_env.ParseConfig('flagpoll vtk xerces osg vrjuggler --libs --cflags')
 
-targetLib = pj(env[ 'LIBDIR' ], 'VE_XplorerLib%s' %(execOsgPatTag))
-env.SharedLibrary(target = targetLib, source = xplorer_srcs)
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_XplorerLib%s' %(execOsgPatTag),
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('VE_XplorerLib%s' %(execOsgPatTag), lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'VE_Xplorer', 'XplorerHandlers'))
+lib.build()
 

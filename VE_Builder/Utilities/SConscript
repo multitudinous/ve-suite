@@ -2,8 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
-Import('cfdHostType')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform')
 
 addNormals2Poly = Split("""
    addNormals2Poly.cpp
@@ -77,28 +76,81 @@ whatIsScalarRange = Split("""
    whatIsScalarRange.cpp
 """)
 
-env = baseEnv.Copy()
+env = ves_pkg.getEnv().Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
 env.Append(LIBS = ['VE_UtilLib'])
 ##env.Append(CPPPATH = [pj('#', 'VE_Builder', 'Translator')])
 ##env.Append(CPPPATH = ['#'])
 env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
 
-env.Program(pj( env[ 'BINDIR' ],'addNormals2Poly'), source = addNormals2Poly)
-env.Program(pj( env[ 'BINDIR' ],'appendVTK'), source = appendVTK)
-env.Program(pj( env[ 'BINDIR' ],'combineFluentParticleFile'), source = combineFluentParticleFile)
-env.Program(pj( env[ 'BINDIR' ],'compareScalars'), source = compareScalars)
-env.Program(pj( env[ 'BINDIR' ],'convertCellDataToPointData'), source = convertCellDataToPointData)
-env.Program(pj( env[ 'BINDIR' ],'convertSurfaceFileToStl'), source = convertSurfaceFileToStl)
-env.Program(pj( env[ 'BINDIR' ],'convertVTK2Ascii'), source = convertVTK2Ascii)
-env.Program(pj( env[ 'BINDIR' ],'convertVTK2Binary'), source = convertVTK2Binary)
-env.Program(pj( env[ 'BINDIR' ],'createMiniFlowdata'), source = createMiniFlowdata)
-env.Program(pj( env[ 'BINDIR' ],'makeVtkSurface'), source = makeVtkSurface)
-env.Program(pj( env[ 'BINDIR' ],'mergeVertices'), source = mergeVertices)
-env.Program(pj( env[ 'BINDIR' ],'meshViewer'), source = meshViewer)
-env.Program(pj( env[ 'BINDIR' ],'moveFieldToPointData'), source = moveFieldToPointData)
-env.Program(pj( env[ 'BINDIR' ],'removeVtkCellsOutsideBox'), source = removeVtkCellsOutsideBox)
-env.Program(pj( env[ 'BINDIR' ],'removeVtkPointData'), source = removeVtkPointData)
-env.Program(pj( env[ 'BINDIR' ],'scaleVTK'), source = scaleVTK)
-env.Program(pj( env[ 'BINDIR' ],'transformVTK'), source = transformVTK)
-env.Program(pj( env[ 'BINDIR' ],'whatIsScalarRange'), source = whatIsScalarRange)
+norm2poly = ves_pkg.createProgram('addNormals2Poly', env, 'bin')
+norm2poly.addSources( addNormals2Poly )
+norm2poly.build()
+
+append = ves_pkg.createProgram('appendVTK', env, 'bin')
+append.addSources( appendVTK )
+append.build()
+
+fluentPart = ves_pkg.createProgram('combineFluentParticleFile', env, 'bin')
+fluentPart.addSources( combineFluentParticleFile )
+fluentPart.build()
+
+comparScal = ves_pkg.createProgram('compareScalars', env, 'bin')
+comparScal.addSources( compareScalars )
+comparScal.build()
+
+cel2point = ves_pkg.createProgram('convertCellDataToPointData', env, 'bin')
+cel2point.addSources( convertCellDataToPointData )
+cel2point.build()
+
+surf2stl = ves_pkg.createProgram('convertSurfaceFileToStl', env, 'bin')
+surf2stl.addSources( convertSurfaceFileToStl )
+surf2stl.build()
+
+vtk2ascii = ves_pkg.createProgram('convertVTK2Ascii', env, 'bin')
+vtk2ascii.addSources( convertVTK2Ascii )
+vtk2ascii.build()
+
+vtk2bin = ves_pkg.createProgram('convertVTK2Binary', env, 'bin')
+vtk2bin.addSources( convertVTK2Binary )
+vtk2bin.build()
+
+mini = ves_pkg.createProgram('createMiniFlowdata', env, 'bin')
+mini.addSources( createMiniFlowdata )
+mini.build()
+
+vtkSurf = ves_pkg.createProgram('makeVtkSurface', env, 'bin')
+vtkSurf.addSources( makeVtkSurface )
+vtkSurf.build()
+
+merge = ves_pkg.createProgram('mergeVertices', env, 'bin')
+merge.addSources( mergeVertices )
+merge.build()
+
+mesh = ves_pkg.createProgram('meshViewer', env, 'bin')
+mesh.addSources( meshViewer )
+mesh.build()
+
+fieldData = ves_pkg.createProgram('moveFieldToPointData', env, 'bin')
+fieldData.addSources( moveFieldToPointData )
+fieldData.build()
+
+removeCells = ves_pkg.createProgram('removeVtkCellsOutsideBox', env, 'bin')
+removeCells.addSources( removeVtkCellsOutsideBox )
+removeCells.build()
+
+removePoint = ves_pkg.createProgram('removeVtkPointData', env, 'bin')
+removePoint.addSources( removeVtkPointData )
+removePoint.build()
+
+scale = ves_pkg.createProgram('scaleVTK', env, 'bin')
+scale.addSources( scaleVTK )
+scale.build()
+
+trans = ves_pkg.createProgram('transformVTK', env, 'bin')
+trans.addSources( transformVTK )
+trans.build()
+
+scaleRange = ves_pkg.createProgram('whatIsScalarRange', env, 'bin')
+scaleRange.addSources( whatIsScalarRange )
+scaleRange.build()
