@@ -992,9 +992,7 @@ void cfdModel::RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
             }
             else if(nodeType == "Part")
             {
-               //vprDEBUG(vesDBG,1) <<"|\tSetting Part attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
                GetPart(nodeID)->GetDCS()->GetRawNode()->getStateSet()->clear();
-               vprDEBUG(vesDBG,1) <<"|\tvalid: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
             }
             else if(nodeType == "Clone")
             {
