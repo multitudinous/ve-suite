@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR')
+Import('baseEnv libPath ves_pkg LIBDIR buildDir')
 
 sources = Split("""
    Point.cxx
@@ -27,8 +27,10 @@ headers = Split("""
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'Model', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_XMLLib',
-                   'VE_CADLib', 'VE_ShaderLib'])
+lib_env.Append(LIBS = ['VE_XMLLib','VE_CADLib', 'VE_ShaderLib'])
+lib_env.Append(LIBPATH = [  pj('#', buildDir, 'VE_Open','XML'),
+                        pj('#', buildDir, 'VE_Open','XML','CAD'),
+                        pj('#', buildDir, 'VE_Open','XML','Shader')])
 lib_env.ParseConfig('flagpoll xerces --libs --cflags')
 
 if baseEnv['StaticOnly'] == "no":

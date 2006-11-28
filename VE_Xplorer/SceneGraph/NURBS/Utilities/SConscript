@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag osg_options buildDir')
 
 sources = Split("""
    OCCNURBSFileReader.cxx
@@ -18,8 +18,9 @@ headers = Split("""
 lib_env = ves_pkg.getEnv().Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
 lib_env.Append(LIBS = ['VE_NURBSLib%s' %(execOsgPatTag)])
-lib_env.ParseConfig('flagpoll osg --libs --cflags')
-
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph','NURBS')])
+##lib_env.ParseConfig('flagpoll osg --libs --cflags')
+osg_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_NURBSUtilsLib%s' %(execOsgPatTag),
                                                         lib_env,

@@ -5,7 +5,7 @@
 // this is a workaround for compiling VTK with stlport
 // stlport is required for compiling OSG on MSVS60 - (try .NET?)
 #ifdef _OSG
-#define _INC_STRSTREAM
+//#define _INC_STRSTREAM
 //#include <strstream.h>
 // workaround end
 
@@ -178,7 +178,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 #ifdef VTK4
 		   unsigned char *aColor = colorArray->GetPointer(4*prim);
 #else
-         unsigned char *aColor = colorArray->GetPointer(prim);
+         unsigned char *aColor = colorArray->GetColor(prim);
 #endif
          colors->push_back(osg::Vec4(aColor[0]/255.0f, aColor[1]/255.0f,
 										aColor[2]/255.0f, aColor[3]/255.0f));
@@ -207,7 +207,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 #ifdef VTK4
 				unsigned char *aColor = colorArray->GetPointer(4*pts[i]);
 #else
-            unsigned char *aColor = colorArray->GetPointer(pts[i]);
+            unsigned char *aColor = colorArray->GetColor(pts[i]);
 #endif
             colors->push_back(osg::Vec4(aColor[0]/255.0f, aColor[1]/255.0f,
 											aColor[2]/255.0f, aColor[3]/255.0f));

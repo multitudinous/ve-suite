@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR')
+Import('baseEnv libPath ves_pkg LIBDIR buildDir')
 
 headers = Split("""
    Connection.h
@@ -31,20 +31,23 @@ sources = Split("""
 """)
 ##srcs = map(lambda s: pj('#', 'VE_CE', 'Utilities', s), srcs)
 
-vece_lib_env = ves_pkg.getEnv().Copy()
+lib_env = ves_pkg.getEnv().Copy()
 ##env = baseEnv.Copy()
-vece_lib_env.Append(LIBS = ['VE_ModelLib', 'VE_XMLLib', 'VE_OpenModuleLib'])
-vece_lib_env.ParseConfig('flagpoll xerces TAO TAO_PortableServer --libs --cflags')
+lib_env.Append(LIBS = ['VE_ModelLib', 'VE_XMLLib', 'VE_OpenModuleLib'])
+lib_env.Append(LIBPATH = [  pj('#', buildDir, 'VE_Open','XML'),
+                        pj('#', buildDir, 'VE_Open','XML','Model'),
+                        pj('#', buildDir, 'VE_Open','skel')])
+lib_env.ParseConfig('flagpoll xerces TAO TAO_PortableServer --libs --cflags')
 
 ##targetLib = pj(env[ 'LIBDIR' ], 'VE_CE_UtilitiesLib')
 ##env.SharedLibrary(target = targetLib, source = srcs)
 
 if baseEnv['StaticOnly'] == "no":
    vece_util_lib = ves_pkg.createStaticAndSharedLibrary('VE_CE_UtilitiesLib',
-                                                        vece_lib_env,
+                                                        lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   vece_util_lib = ves_pkg.createStaticLibrary('VE_CE_UtilitiesLib', vece_lib_env,
+   vece_util_lib = ves_pkg.createStaticLibrary('VE_CE_UtilitiesLib', lib_env,
                                                installPrefix = LIBDIR)
    
 vece_util_lib.addSources(sources)

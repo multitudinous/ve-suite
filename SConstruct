@@ -9,9 +9,10 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 import SConsAddons.Options as asc_opt
 import SConsAddons.Options.Options 
-##import SConsAddons.Options.CppUnit
-import SConsAddons.Options.Boost
+import SConsAddons.Options.VTK
+import SConsAddons.Options.OSG
 import SConsAddons.AutoDist as sca_auto_dist
+import SConsAddons.Options.FlagPollBasedOption as fp_opt
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
 
 GetPlatform = sca_util.GetPlatform
@@ -20,8 +21,6 @@ GetArch = sca_util.GetArch
 Export('GetArch')
 
 WX_HOME_DIR = '/home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/'
-
-Default('.')
 
 def GetTag(execTag = False, osgTag = False,
            patentedTag = False, clusterTag = False):
@@ -110,19 +109,19 @@ baseEnv.Append( BINDIR = bin,
             LIBDIR = lib,
             BUILDDIR = buildDir,
             LIBPATH = [lib],
-            CPPDEFINES = ['_TAO', 'VE_PATENTED'] )
+            CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
 
 ## make the temp bin and lib dirs in the build dir
 if not os.path.exists( pj( buildDir, 'lib' ) ):
-   baseEnv.Execute(Mkdir( pj( buildDir, 'lib' ) ))
+   ##baseEnv.Execute(Mkdir( pj( buildDir, 'lib' ) ))
    os.makedirs( pj( buildDir, 'lib' ) )
 
 if not os.path.exists( pj( buildDir, 'lib', 'flagpoll' ) ):
-   baseEnv.Execute(Mkdir( pj( buildDir, 'lib', 'flagpoll' ) ))
+   ##baseEnv.Execute(Mkdir( pj( buildDir, 'lib', 'flagpoll' ) ))
    os.makedirs( pj( buildDir, 'lib', 'flagpoll' ) )
 
 if not os.path.exists( pj( buildDir, 'bin' ) ):
-   baseEnv.Execute(Mkdir( pj( buildDir, 'bin' ) ))
+   ##baseEnv.Execute(Mkdir( pj( buildDir, 'bin' ) ))
    os.makedirs( pj( buildDir, 'bin' ) )
 
 
@@ -163,10 +162,13 @@ options_cache = 'options.cache.' + GetPlatform()
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
-##cppunit_options = SConsAddons.Options.CppUnit.CppUnit("cppunit", "1.9.10", required=0)
-boost_options = SConsAddons.Options.Boost.Boost("boost","1.31.0",required=0)
-##opts.AddOption( cppunit_options )
-opts.AddOption( boost_options )
+opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.0')
+vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.0", True, True)
+opts.AddOption( vtk_options )
+osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True)
+opts.AddOption( osg_options )
+##xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
+##opts.AddOption( xerces_options )
 opts.Add('prefix', 'Installation prefix', '/usr/local')
 ##opts.Add('libdir', 'Library installation directory under <prefix>')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
@@ -175,15 +177,15 @@ opts.Add('MakeDist', 'If true, make the distribution packages as part of the bui
 opts.Add('Patented', 'If true, make the patented version of VE-Suite', 'yes')
 opts.Add('tao', 'If true, use TAO in the build', 'yes')
 opts.Add('cluster', 'If true, build the cluster version of VE-Xplorer', 'no')
+opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
-Export('opts', 'boost_options')
+Export('opts', 'vtk_options', 'osg_options')
   
 help_text = """--- VE-Suite Build system ---
 Targets:
-   install - Install this puppy
-      ex: 'scons install prefix=$HOME/software' to install in your account
-   Type 'scons' to just build it
+   install - Install VE-Suite
+      ex: 'scons install prefix=build/test' to install in a test build directory
  
 """
 
@@ -204,7 +206,8 @@ help_text = help_text + opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
 
 if not SConsAddons.Util.hasHelpFlag():
-   opts.Update(baseEnv)                   # Update the options
+   ##opts.Apply(baseEnv,True)
+   opts.Process(baseEnv, None, True)                   # Update the options
 
    try:                                   # Try to save the options if possible
       opts.Save(options_cache, baseEnv)
@@ -212,8 +215,11 @@ if not SConsAddons.Util.hasHelpFlag():
       pass
    
    # Update environment for boost options
-   if boost_options.isAvailable():
-      boost_options.updateEnv(baseEnv)
+   ##if boost_options.isAvailable():
+   ##   boost_options.updateEnv(baseEnv)
+   # Update environment for vtk options
+   ##if vtk_options.isAvailable():
+   ##   vtk_options.apply(baseEnv)
 
    # Setup file paths
    PREFIX = os.path.abspath(baseEnv['prefix'])
@@ -336,7 +342,7 @@ if not SConsAddons.Util.hasHelpFlag():
    xplorerSubdirs = map(lambda s: pj(buildDir, 'VE_Xplorer', s), xplorerSubdirs)
    ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
 
-   ves_dirs = [ builderSubdirs, openSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs]
+   ves_dirs = [ openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs]
 
    ##Run SConscript files in all of those folders.
    for d in ves_dirs:
@@ -344,3 +350,5 @@ if not SConsAddons.Util.hasHelpFlag():
 
    ves_pkg.build()
    baseEnv.Alias('install',PREFIX)
+   Default('.')
+

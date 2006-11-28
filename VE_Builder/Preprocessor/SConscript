@@ -2,22 +2,18 @@
 import os, sys, string
 pj = os.path.join
 
-Import('ves_pkg LIBDIR PREFIX')
+Import('ves_pkg LIBDIR PREFIX buildDir vtk_options')
 
 srcs = Split("""
    multiPlaneVtkOutput.cxx
    preprocessor.cxx
 """)
 
-##preprocess_srcs = map(lambda s: pj('#', 'VE_Builder', 'Preprocessor', s), preprocess_srcs)
-##utilities_srcs = map(lambda s: pj('..', '..', 'VE_Builder', 'Utilities', s), utilities_srcs)
-##srcs = list()
-##srcs.extend(preprocess_srcs)
-##srcs.extend(utilities_srcs)
-
 env = ves_pkg.getEnv().Copy()
-env.Append(LIBS = ['VE_UtilLib'])
-env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
+env.Append( LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
+            LIBS = ['VE_UtilLib'])
+env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+vtk_options.apply( env )
 
 prog = ves_pkg.createProgram('preprocessor', env, 'bin')
 prog.addSources( srcs )

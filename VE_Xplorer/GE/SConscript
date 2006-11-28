@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR GetPlatform execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options')
 
 srcs = Split("""
    cfdApp.cxx
@@ -13,7 +13,8 @@ srcs = Split("""
 """)
 
 env = ves_pkg.getEnv().Copy()
-env.Append(LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib', 'VE_ShaderLib',
+env.Append(
+            LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib', 'VE_ShaderLib',
                    'VE_SceneGraph_UtilitiesLib', 
                    'VE_SceneGraphLib%s' %(execOsgPatTag),
                    'VE_UtilLib',
@@ -22,15 +23,31 @@ env.Append(LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib', 'VE_ShaderLib',
                    'VE_XplorerLib%s' %(execOsgPatTag),
                    'VE_XplorerNetworkLib%s' %(execOsgPatTag),
                    'GraphicalPlugin%s' %(execOsgPatTag)])
-
+env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
+                        pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
+                        pj('#', buildDir, 'VE_Xplorer','Utilities'),
+                        pj('#', buildDir, 'VE_Xplorer','SceneGraph','Utilities'),
+                        pj('#', buildDir, 'VE_Xplorer','TextureBased'),
+                        pj('#', buildDir, 'VE_Xplorer','GraphicalPlugin'),
+                        pj('#', buildDir, 'VE_Xplorer','XplorerNetwork'),
+                        pj('#', buildDir, 'VE_Open','skel'),
+                        pj('#', buildDir, 'VE_Open','XML'),
+                        pj('#', buildDir, 'VE_Open','XML','Model'),
+                        pj('#', buildDir, 'VE_Open','XML','Shader'),
+                        pj('#', buildDir, 'VE_Open','XML','CAD')])
+vtk_options.apply( env )
+osg_options.apply( env )
 env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-env.ParseConfig('flagpoll vtk xerces osg vrjuggler TAO \
+env.ParseConfig('flagpoll xerces vrjuggler vpr TAO \
                           ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                           TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
-                          apr-1 apr-util-1 --libs --cflags')
+                          --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --get-vrj-ogl-libs')
-
+if baseEnv[ 'cluster' ] != "no":
+   execOsgPatTag += "_cluster"
+   env.Append( CPPDEFINES = ['_CLUSTER' ])
+   
 prog = ves_pkg.createProgram('project%s' %(execOsgPatTag), env, 'bin')
 prog.addSources( srcs )
 prog.build()

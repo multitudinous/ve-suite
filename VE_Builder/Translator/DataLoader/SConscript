@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR')
+Import('baseEnv libPath ves_pkg LIBDIR vtk_options buildDir')
 
 sources = Split("""
     DataLoader.cxx
@@ -41,10 +41,11 @@ if os.getenv('FLUENT_MFIX') == 'TRUE':
 ##srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
-##env.Append(CPPPATH = [os.getcwd()])
-lib_env.Append(LIBS = ['VE_UtilLib', 'TranslatorToVTKLib'])
-lib_env.ParseConfig('flagpoll vtk Boost.Filesystem --libs --cflags')
-
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities'),
+                          pj('#', buildDir, 'VE_Builder','Translator','cfdTranslatorToVTK') ],
+               LIBS = ['VE_UtilLib', 'TranslatorToVTKLib'])
+lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+vtk_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('DataLoaderLib',
                                                         lib_env,

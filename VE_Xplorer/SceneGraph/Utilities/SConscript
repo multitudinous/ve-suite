@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag buildDir osg_options')
 
 sources = Split("""
     Attribute.cxx
@@ -20,8 +20,11 @@ headers = Split("""
 ##                        'Utilities', s), srcs)
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_CADLib', 'VE_ShaderLib', 'VE_XMLLib'])
-lib_env.ParseConfig('flagpoll osg xerces --libs --cflags')
-
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML'),
+                        pj('#', buildDir, 'VE_Open','XML','CAD'),
+                        pj('#', buildDir, 'VE_Open','XML','Shader')])
+lib_env.ParseConfig('flagpoll xerces --libs --cflags')
+osg_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_SceneGraph_UtilitiesLib',
                                                         lib_env,

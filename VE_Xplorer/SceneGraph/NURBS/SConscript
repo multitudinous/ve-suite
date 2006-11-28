@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag osg_options')
 
 sources = Split("""
    ControlPoint.cxx
@@ -23,9 +23,9 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
-##env.Append(CPPPATH = [os.getcwd()])
-lib_env.ParseConfig('flagpoll osg --libs --cflags')
-
+lib_env.Append(LIBS = ['GLU','GL'])
+lib_env.ParseConfig('flagpoll vrjuggler --get-extra_libs')
+osg_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_NURBSLib%s' %(execOsgPatTag),
                                                         lib_env,

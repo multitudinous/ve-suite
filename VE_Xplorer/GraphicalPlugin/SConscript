@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag buildDir vtk_options osg_options')
 
 sources = Split("""
     cfdVEBaseClass.cxx
@@ -19,8 +19,19 @@ lib_env.Append(LIBS = ['VE_SceneGraphLib%s' %(execOsgPatTag),
                    'VE_XplorerLib%s' %(execOsgPatTag),
                    'VE_TextureBasedLib%s' %(execOsgPatTag),
                    'VE_UtilLib', 'VE_ModelLib', 'VE_XMLLib', 'VE_CADLib'])
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
+                        pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
+                        pj('#', buildDir, 'VE_Xplorer','Utilities'),
+                        pj('#', buildDir, 'VE_Xplorer','TextureBased'),
+                        pj('#', buildDir, 'VE_Open','XML'),
+                        pj('#', buildDir, 'VE_Open','XML','Model'),
+                        pj('#', buildDir, 'VE_Open','XML','CAD'),
+                        pj('#', buildDir, 'VE_Open','XML','Shader')])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-lib_env.ParseConfig('flagpoll osg vtk xerces vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll xerces vrjuggler --libs --cflags')
+
+vtk_options.apply( lib_env )
+osg_options.apply( lib_env )
 
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('GraphicalPlugin%s' %(execOsgPatTag),

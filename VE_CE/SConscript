@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('ves_pkg LIBDIR PREFIX')
+Import('ves_pkg LIBDIR PREFIX buildDir')
 
 srcs = Split("""
    Exe_server.cpp 
@@ -14,9 +14,15 @@ srcs = Split("""
 env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
                    'VE_ShaderLib', 'VE_CE_UtilitiesLib', 'VE_OpenModuleLib'])
-env.Append(LIBPATH = [pj( PREFIX, LIBDIR)])
+env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
+                        pj('#', buildDir, 'VE_CE','Utilities'),
+                        pj('#', buildDir, 'VE_Open','skel'),
+                        pj('#', buildDir, 'VE_Open','XML'),
+                        pj('#', buildDir, 'VE_Open','XML','Model'),
+                        pj('#', buildDir, 'VE_Open','XML','CAD'),
+                        pj('#', buildDir, 'VE_Open','XML','Shader')])
 
-env.ParseConfig('flagpoll TAO apr-1 apr-util-1 xerces TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+env.ParseConfig('flagpoll TAO xerces TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 

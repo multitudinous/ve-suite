@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options')
 
 sources = Split("""
    cfd3DTextureCullCallback.cxx
@@ -62,12 +62,12 @@ headers = Split("""
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = 'VE_UtilLib')
-lib_env.ParseConfig('flagpoll vtk osg vrjuggler Boost.Filesystem --libs --cflags')
-##env.ParseConfig('wx-config --cxxflags --libs')
-##For non-64-bit systems: (64-bits need 'lib64')
-##env.Append(LIBPATH = [pj('usr', 'X11R6', 'lib')])
-##env.Append(LIBS = ['X11', 'GL'])
-
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')])
+lib_env.ParseConfig('flagpoll vrjuggler Boost.Filesystem --libs --cflags')
+lib_env.Append(LIBS = ['GLU','GL'])
+lib_env.ParseConfig('flagpoll vrjuggler --get-extra_libs')
+osg_options.apply( lib_env )
+vtk_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_TextureBasedLib%s' %(execOsgPatTag),
                                                         lib_env,

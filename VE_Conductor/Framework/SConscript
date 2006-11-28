@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR GetPlatform')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform buildDir')
 
 srcs = Split("""
    App.cpp 
@@ -36,6 +36,14 @@ env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_Conductor_UtilitiesLib',
                    'VE_OpenModuleLib'])
+env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
+                        pj('#', buildDir, 'VE_Conductor','Utilities'),
+                        pj('#', buildDir, 'VE_Conductor','GUIPlugin'),
+                        pj('#', buildDir, 'VE_Open','skel'),
+                        pj('#', buildDir, 'VE_Open','XML'),
+                        pj('#', buildDir, 'VE_Open','XML','Model'),
+                        pj('#', buildDir, 'VE_Open','XML','CAD'),
+                        pj('#', buildDir, 'VE_Open','XML','Shader')])
 
 env.ParseConfig( 'wx-config --cxxflags --libs' )
 env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
@@ -46,14 +54,14 @@ prog = ves_pkg.createProgram('WinClient', env, 'bin')
 prog.addSources( srcs )
 prog.build()
 
-if GetPlatform() == "darwin":
-   conductorTarget = pj( baseEnv['prefix'],'Conductor')
-   winTarget = pj( baseEnv['prefix'], 'bin', 'WinClient')
-   target = [ conductorTarget ]
-   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o '
-   srcs = [ winTarget ]
-   idlFile = [idlCmd + srcs[0]]
-   for i in range(len(idlFile)):
-      bld = Builder(action = idlFile[i])
-      env.Append(BUILDERS = {'apple_rez': bld})
-      env. apple_rez(target[i], list())
+##if GetPlatform() == "darwin":
+##   conductorTarget = pj( baseEnv['prefix'],'Conductor')
+##   winTarget = pj( baseEnv['prefix'], 'bin', 'WinClient')
+##   target = [ conductorTarget ]
+##   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o '
+##   srcs = [ winTarget ]
+##   idlFile = [idlCmd + srcs[0]]
+##   for i in range(len(idlFile)):
+##      bld = Builder(action = idlFile[i])
+##      env.Append(BUILDERS = {'apple_rez': bld})
+##      env. apple_rez(target[i], list())

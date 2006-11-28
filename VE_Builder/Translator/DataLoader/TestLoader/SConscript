@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR GetPlatform buildDir')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform buildDir vtk_options')
 
 srcs = Split("""
    main.cxx
@@ -10,10 +10,13 @@ srcs = Split("""
 srcs = map(lambda s: pj('#', buildDir, 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
 
 env = ves_pkg.getEnv().Copy()
-env.Append(LIBS = ['VE_UtilLib', 'DataLoaderLib', 'TranslatorToVTKLib'])
+env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities'),
+                      pj('#', buildDir, 'VE_Builder','Translator','cfdTranslatorToVTK'),
+                      pj('#', buildDir, 'VE_Builder','Translator','DataLoader') ],
+           LIBS = ['VE_UtilLib', 'DataLoaderLib', 'TranslatorToVTKLib'])
 
-env.ParseConfig('flagpoll Boost.Filesystem vtk --cflags --libs')
-
+env.ParseConfig('flagpoll Boost.Filesystem --cflags --libs')
+vtk_options.apply( env )
 prog = ves_pkg.createProgram('loaderToVtk', env, 'bin')
 prog.addSources( srcs )
 prog.build()

@@ -33,6 +33,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <vpr/IO/SerializableObject.h>
+#include <vpr/IO/BufferObjectReader.h>
+#include <vpr/IO/BufferObjectWriter.h>
 #include <string>
 /*!\file cfdStateInfo.h
 StateVariables API

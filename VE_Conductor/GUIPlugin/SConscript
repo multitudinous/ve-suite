@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR')
+Import('baseEnv libPath ves_pkg LIBDIR buildDir')
 
 sources = Split("""
    FinancialDialog.cpp 
@@ -53,6 +53,12 @@ headers = Split("""
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
                    'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
+                        pj('#', buildDir, 'VE_Open','skel'),
+                        pj('#', buildDir, 'VE_Open','XML'),
+                        pj('#', buildDir, 'VE_Open','XML','Model'),
+                        pj('#', buildDir, 'VE_Open','XML','CAD'),
+                        pj('#', buildDir, 'VE_Open','XML','Shader')])
 lib_env.ParseConfig('wx-config --cxxflags --libs')
 lib_env.ParseConfig('flagpoll TAO xerces ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \

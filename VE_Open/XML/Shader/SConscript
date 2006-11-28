@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR')
+Import('baseEnv libPath ves_pkg LIBDIR buildDir')
 
 sources = Split("""
    TextureImage.cxx
@@ -24,6 +24,7 @@ headers = Split("""
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = 'VE_XMLLib')
+lib_env.Append(LIBPATH = [  pj('#', buildDir, 'VE_Open','XML')])
 lib_env.ParseConfig('flagpoll xerces --libs --cflags')
 
 if baseEnv['StaticOnly'] == "no":
