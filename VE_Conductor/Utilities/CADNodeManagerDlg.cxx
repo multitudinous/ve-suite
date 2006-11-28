@@ -269,7 +269,7 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData( item ));
 
       CADNodeMenu* cadNodeMenu = new CADNodeMenu();
-      cadNodeMenu->SetToggleNodeValue(_toggleNodeOnOff[cadNode->GetNode()->GetID()]);
+      cadNodeMenu->SetToggleNodeValue(cadNode->GetNode()->GetVisibility()/*_toggleNodeOnOff[cadNode->GetNode()->GetID()]*/);
       if(cadNode)
       {
          if(cadNode->GetNode()->GetNodeType() == std::string("Assembly"))
@@ -304,7 +304,8 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
    if(!_rootNode)
    {
      _rootNode = new CADAssembly();
-     _toggleNodeOnOff[_rootNode->GetID()] = true;
+     //_toggleNodeOnOff[_rootNode->GetID()] = true;
+     _rootNode->SetVisibility(true);
      SetRootCADNode(_rootNode);
      /*_activeCADNode = _rootNode;
      
@@ -325,7 +326,8 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          assemblyNameDlg.ShowModal();
          CADAssembly* newAssembly = new CADAssembly((assemblyNameDlg.GetValue().GetData()));
          newAssembly->SetParent(_activeCADNode->GetID());
-         _toggleNodeOnOff[newAssembly->GetID()] = true;
+         //_toggleNodeOnOff[newAssembly->GetID()] = true;
+         newAssembly->SetVisibility(true);
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
  
          _geometryTree->AppendItem(_activeTreeNode->GetId(),
@@ -378,13 +380,15 @@ void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
       {
          //std::cout<<"Toggle on!!"<<std::endl;
          toggleValue->SetData(std::string("Toggle Value"),std::string("ON"));
-		   _toggleNodeOnOff[_activeCADNode->GetID()] = true;
+		   //_toggleNodeOnOff[_activeCADNode->GetID()] = true;
+         _activeCADNode->SetVisibility(true);
       }
       else if(event.GetId() == CADNodeMenu::GEOM_TOGGLE_OFF)
       {
          //std::cout<<"Toggle off!!"<<std::endl;
          toggleValue->SetData(std::string("Toggle Value"),std::string("OFF"));
-         _toggleNodeOnOff[_activeCADNode->GetID()] = false;
+         //_toggleNodeOnOff[_activeCADNode->GetID()] = false;
+         _activeCADNode->SetVisibility(false);
 	  }
       _dataValuePairList.push_back(toggleValue);
 
@@ -475,7 +479,8 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
    {
       //std::cout<<"---Loaded Assembly---"<<std::endl;
       newAssembly = new CADAssembly(*dynamic_cast<CADAssembly*>(loadedNodes.at(0)));
-      _toggleNodeOnOff[newAssembly->GetID()] = true;
+      //_toggleNodeOnOff[newAssembly->GetID()] = true;
+      //newAssembly->SetVisibility(true);
    }
    else
    {
@@ -485,7 +490,8 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
       {
          //std::cout<<"---Loaded Part---"<<std::endl;
          newPart = new CADPart(*dynamic_cast<CADPart*>(loadedNodes.at(0)));
-         _toggleNodeOnOff[newPart->GetID()] = true;
+         //_toggleNodeOnOff[newPart->GetID()] = true;
+         //newPart->SetVisibility(true);
       }
    }
    if(newAssembly || newPart)
@@ -567,7 +573,8 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
 
    CADPart* newCADPart = new CADPart(partNameDlg.GetValue().GetData());
    newCADPart->SetCADFileName( vegFileNamePath.c_str() );
-   _toggleNodeOnOff[newCADPart->GetID()] = true;
+   //_toggleNodeOnOff[newCADPart->GetID()] = true;
+   newCADPart->SetVisibility(true);
    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 
    _geometryTree->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str()),
