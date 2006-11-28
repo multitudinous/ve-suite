@@ -207,6 +207,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             //std::cout<<"      Adding child: "<<newAssembly->GetChild(i)->GetNodeName()<<std::endl;
             _addNodeToNode(newAssembly->GetID(), newAssembly->GetChild(i));
          }
+         _activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
       }
       else if(activeNode->GetNodeType() == "Part")
       {
@@ -223,6 +224,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 
          VE_SceneGraph::cfdFILE* partNode = _activeModel->GetPart(newPart->GetID());
          partNode->GetNode()->SetName(newPart->GetNodeName());
+         
+         partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
 
          vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
          _setTransformOnNode(newPart);
@@ -243,6 +246,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          _setAttributesOnNode(clone);
          //std::cout<<"      ---Set Attributes---"<<std::endl;
          parentAssembly->AddChild(_activeModel->GetClone(clone->GetID())->GetClonedGraph());
+         _activeModel->GetClone(clone->GetID())->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
       }
    }
    else
@@ -250,4 +254,4 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
       std::cout<<"No parent found!"<<std::endl;
    }
    //std::cout<<"---Done---"<<std::endl;
-}   
+}
