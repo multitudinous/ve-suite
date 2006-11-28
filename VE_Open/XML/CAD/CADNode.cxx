@@ -58,6 +58,7 @@ CADNode::CADNode(std::string name)
    _parent = "";
    _transform = new Transform(); 
    _type = std::string("Node");
+   _visibility = true;
    //_uID = std::atoi(uuid.c_str());//static_cast<unsigned int>(time(NULL));
    _activeAttributeName = std::string("");
    SetObjectType("CADNode");
@@ -219,6 +220,7 @@ void CADNode::_updateVEElement(std::string input)
 
    //SetSubElement(std::string("nodeID"),_uID);
    SetAttribute("id",uuid);
+   SetAttribute("visibility",_visibility);
    SetSubElement(std::string("parent"),_parent);
 
    if(!_transform)
@@ -282,6 +284,14 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
       {
          if(currentElement->hasChildNodes())
          {
+            if(currentElement->getAttributeNode(xercesString("visibility")))
+            {
+               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,"visibility",_visibility);
+            }
+            else
+            {
+               _visibility = true;
+            }
             //Is there a better way to do this
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
             if(nameNode)
@@ -371,6 +381,16 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
       }
    }
 }
+///////////////////////////////////////
+void CADNode::SetVisibility(bool onOff)
+{
+   _visibility = onOff;
+}
+/////////////////////////////
+bool CADNode::GetVisibility()
+{
+   return _visibility;
+}
 /////////////////////////////////////////////////////
 std::vector<CADAttribute> CADNode::GetAttributeList()
 {
@@ -438,6 +458,7 @@ CADNode::CADNode(const CADNode& rhs)
    _parent = rhs._parent;
    _name = rhs._name;
    _type = rhs._type;
+   _visibility = rhs._visibility;
    //_uID = rhs._uID;
    
 }
@@ -475,7 +496,7 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       }
       _transform = new Transform(*rhs._transform);
       _activeAttributeName = rhs._activeAttributeName;
-      
+      _visibility = rhs._visibility;
       //_uID = rhs._uID;
       _parent = rhs._parent;
       _name = rhs._name;

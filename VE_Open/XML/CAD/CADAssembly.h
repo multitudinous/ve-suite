@@ -49,6 +49,7 @@
  * this is more of an organization node.
  */
 XERCES_CPP_NAMESPACE_USE
+
 namespace VE_CAD{
 class VE_CAD_EXPORTS CADAssembly: public VE_CAD::CADNode{
 public:
@@ -110,4 +111,5 @@ protected:
    ChildList _children; ///<A list of the children
 };
 }
+
 #endif// _CAD_ASSEMBLY_H_

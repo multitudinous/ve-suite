@@ -105,9 +105,16 @@ public:
    ///\param attributeName The name of the active attribute.
    void SetActiveAttribute(std::string attributeName); 
 
+   ///Toggle this node "ON" or "OFF"
+   ///\param onOff Flag for visibility\n true == "ON"\n false== "OFF"
+   void SetVisibility(bool onOff);
+
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlNode);
+
+   ///Determine if the node is visible or not
+   bool GetVisibility();
 
    ///Get the active attribute
    VE_CAD::CADAttribute& GetActiveAttribute();
@@ -179,6 +186,7 @@ protected:
    std::vector<VE_CAD::CADNodeAnimation> _animations;//<A list of animation path files for this node.
    std::string _name;///< The name of this node.
    std::string _type;///< The type of node;
+   bool _visibility;///<Node visibilty.
 };
 }
 #endif// _CAD_NODE_H_
