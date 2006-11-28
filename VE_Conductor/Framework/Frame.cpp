@@ -1028,7 +1028,9 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-   Log(serviceList->Query( status ).c_str());
+   Log("ServiceList");
+   serviceList->Query( status );
+   Log("Simulation Shown");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1086,20 +1088,16 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
    }
    fd->SetModuleList(moduleNames);
    fd->ShowModal();
-   //std::string selectedModule(fd->GetSelectedModule());
    int selectedModulePos = fd->GetSelectedModulePos();
-   //Log(selectedModule.c_str());
-   //std::stringstream output;
-   //output << selectedModulePos << std::endl;
-   //Log(output.str().c_str());
-   //std::string tester;
-   //Log("getname\n");
-   //tester = network->modules[selectedModulePos].GetClassName();
-   //Log("log\n");
-   //Log(tester.c_str());
-   //Log("plugin");
-   //network->HighlightSelectedIcon2(moduleIDs[selectedModulePos]);
+   
+   //highlight the selected icon
    network->HighlightSelectedIcon(network->modules[moduleIDs[selectedModulePos]].GetPlugin());
+   
+   //recenter the flowsheet around the icon
+   int xPix, yPix;
+   network->GetScrollPixelsPerUnit(&xPix, &yPix);
+   network->Scroll(network->modules[moduleIDs[selectedModulePos]].GetPlugin()->GetBBox().GetX()/(xPix),
+                   network->modules[moduleIDs[selectedModulePos]].GetPlugin()->GetBBox().GetY()/(yPix));
 }
 
 ///////////////////////////////////////////////////////////////////////////
