@@ -311,16 +311,17 @@ void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseEle
 {
    try
    {
-       DOMText* rawText = dynamic_cast< DOMText* >( baseElement->getFirstChild() );
-       std::string tmp;
-       char* fUnicodeForm  = XMLString::transcode( rawText->getData() );
-       tmp.assign( fUnicodeForm );
-       delete fUnicodeForm;
-
-       if(tmp == "true")
+      char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
+      std::string value( fUnicodeForm );
+      delete fUnicodeForm;
+      if(value == "true")
+      {
          attribute = true;
-       else
-         attribute = false;
+      }
+      else
+      {
+        attribute = false;            
+      }
    }
    catch(...)
    {
