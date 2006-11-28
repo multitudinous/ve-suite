@@ -218,6 +218,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FindDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Geometry.cpp"
 				>
 			</File>
