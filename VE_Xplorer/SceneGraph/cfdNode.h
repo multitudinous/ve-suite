@@ -84,6 +84,10 @@ namespace VE_SceneGraph
          ///OFF == hide this node\n
          void ToggleDisplay(std::string onOff);
 
+         ///Toggle the display of this node on/off
+         ///\param onOff Turn on/off rendering of this node\n
+         void ToggleDisplay(bool onOff);
+
 #ifdef _PERFORMER
          virtual pfNode* GetRawNode( void );
 #elif _OSG

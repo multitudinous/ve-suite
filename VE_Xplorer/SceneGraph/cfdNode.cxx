@@ -210,6 +210,12 @@ void cfdNode::SetName(std::string name)
    if ( GetRawNode() )
       GetRawNode()->setName(name.c_str());
 }
+///////////////////////////////////////
+void cfdNode::ToggleDisplay(bool onOff)
+{
+   std::string value = (onOff==true)?"ON":"OFF";
+   ToggleDisplay(value);
+}
 //////////////////////////////////////////////
 void cfdNode::ToggleDisplay(std::string onOff)
 {
