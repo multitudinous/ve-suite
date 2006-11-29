@@ -84,25 +84,51 @@ void plot3dReader::Plot3DPreTranslateCbk::Preprocess(int argc,char** argv,
    {
       toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-geometryFileXYZ"), xyzFilename );
       toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-dataFileQ"), qFilename );
+      toVTK->AddFoundFile(qFilename);
+      toVTK->ExtractBaseName(qFilename);
       toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-multiGridFlag"), multiGridFlag );
       toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-iblankFlag"), iblankFlag);
-      toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-numberofDimensions"), numberOfDimensions);
+      toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-bigEndian"), byteFlag);
+      toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-binaryFile"), binaryFlag);
+      toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-bytePad"), byteCountFlag);
+      toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-forceRead"), forceReadFlag);
+      toVTK->_extractOptionFromCmdLine( argc, argv, std::string("-twoDimensions"), numberOfDimensions);
       toVTK->SetNumberOfFoundFiles( 1 );
    }
 
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string plot3dReader::Plot3DPreTranslateCbk::GetIBlankFlag( void )
 {
    return iblankFlag;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+std::string plot3dReader::Plot3DPreTranslateCbk::GetByteFlag( void )
+{
+   return byteFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string plot3dReader::Plot3DPreTranslateCbk::GetBinaryFlag( void )
+{
+   return binaryFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string plot3dReader::Plot3DPreTranslateCbk::GetByteCountFlag( void )
+{
+   return byteCountFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string plot3dReader::Plot3DPreTranslateCbk::GetForceReadFlag( void )
+{
+   return forceReadFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
 std::string plot3dReader::Plot3DPreTranslateCbk::GetNumberOfDimensions( void )
 {
    return numberOfDimensions;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string plot3dReader::Plot3DPreTranslateCbk::GetMultigridFlag( void )
 {
    return multiGridFlag;
@@ -128,7 +154,7 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
    {
       writer      = vtkStructuredGridWriter::New();
       reader      = vtkPLOT3DReader::New();
-      reader->DebugOn();
+      //reader->DebugOn();
       //reader->ReleaseDataFlagOn();   
       unswriter   = vtkUnstructuredGridWriter::New();
       unsgrid     = vtkUnstructuredGrid::New();
@@ -136,33 +162,28 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
       filter      = vtkAppendFilter::New();
       //filter->ReleaseDataFlagOn();
       numOfSurfaceGrids = 0;
-      //const std::string grid( "grid-C1.iris" );
-      //const std::string solution( "q-C1-S1.iris" );//qheat-C1-NS.iris
-      //std::string prefix( "test" );
-      //std::string suffix( "vtk" );
-      //std::string vtkFilename;
-      //std::string number("012345");
-      //std::ostringstream number;
       
-      //const char *gridName = grid.c_str();
-      //const char *solutionName = solution.c_str();
-      //const char *Filename; 
-      //if ( numOfSurfaceGrids > 0 )
-      //   return ( MakeVTKSurfaceFromGeomFiles() );
-      
-      
-      if ( reader->GetByteOrder() == 0 )
+      std::string byteOrder = 
+         dynamic_cast< VE_Builder:: plot3dReader::Plot3DPreTranslateCbk* >( plot3DToVTK->GetPreTranslateCallback() )->GetByteFlag();
+      if ( byteOrder == "1" )
       {
          reader->SetByteOrderToBigEndian();
       }
-      else if ( reader->GetByteOrder() == 1 )
+      else
       {
          reader->SetByteOrderToLittleEndian();   
       }
       
-      //reader->DebugOn();
-      reader->BreakOnError();
-      reader->BinaryFileOn();
+      std::string binary = 
+         dynamic_cast< VE_Builder:: plot3dReader::Plot3DPreTranslateCbk* >( plot3DToVTK->GetPreTranslateCallback() )->GetBinaryFlag();
+      if ( binary == "1" )
+      {
+         reader->BinaryFileOn();
+      }
+      else
+      {
+         reader->BinaryFileOff();
+      }
       
       std::string multiGrid = 
          dynamic_cast< VE_Builder:: plot3dReader::Plot3DPreTranslateCbk* >( plot3DToVTK->GetPreTranslateCallback() )->GetMultigridFlag();
@@ -186,9 +207,27 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
          reader->IBlankingOff();
       }   
       
-      reader->HasByteCountOff();
-      reader->ForceReadOff();
-      reader->DoNotReduceNumberOfOutputsOn();
+      std::string byteCount = 
+         dynamic_cast< VE_Builder:: plot3dReader::Plot3DPreTranslateCbk* >( plot3DToVTK->GetPreTranslateCallback() )->GetByteCountFlag();
+      if ( byteCount == "1" )
+      {
+         reader->HasByteCountOn();
+      }
+      else
+      {
+         reader->HasByteCountOff();
+      }   
+
+      std::string forceRead = 
+         dynamic_cast< VE_Builder:: plot3dReader::Plot3DPreTranslateCbk* >( plot3DToVTK->GetPreTranslateCallback() )->GetForceReadFlag();
+      if ( forceRead == "1" )
+      {
+         reader->ForceReadOn();
+      }
+      else
+      {
+         reader->ForceReadOff();
+      }   
       
       std::string dimensions = 
          dynamic_cast< VE_Builder:: plot3dReader::Plot3DPreTranslateCbk* >( plot3DToVTK->GetPreTranslateCallback() )->GetNumberOfDimensions();
@@ -200,6 +239,8 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
       {
          reader->TwoDimensionalGeometryOff();
       }   
+      reader->DoNotReduceNumberOfOutputsOn();
+      
       
       //reader->CanReadBinaryFile( gridName );
       reader->SetXYZFileName( dynamic_cast< VE_Builder:: plot3dReader::Plot3DPreTranslateCbk* >( plot3DToVTK->GetPreTranslateCallback() )->GetXYZFilename().c_str() );
@@ -213,13 +254,12 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
       reader->AddFunction( 144 );
       reader->AddFunction( 153 );
       reader->AddFunction( 184 );
-      //reader->Print( cout );
       reader->Update();
       
       numGrids = reader->GetNumberOfGrids();
       grids = new vtkStructuredGrid*[ numGrids ];
       
-      reader->Print( std::cout );
+      //reader->Print( std::cout );
       std::cout << "|   Number of grids in " << 
          numGrids << std::endl;
       //writer->DebugOn();
@@ -228,19 +268,20 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
       {
          grids[ i ] = vtkStructuredGrid::New();
          grids[ i ]->ShallowCopy ( (vtkStructuredGrid * ) reader->GetOutput( i ) );
+         //std::ostringstream number;
          //number << i;
-         //vtkFilename = prefix + '_' + number.str() + '.' + suffix;
-         //Filename = vtkFilename.c_str();
+         //std::string testname = "test_" + number.str() + '.' + "vts";
+         //const char* Filename = testname.c_str();
          //writer->SetFileName( Filename );
          //if (!debug)
          //writer->SetFileTypeToBinary();
          //writer->SetInput( grids[ i ] );
-         //writer->Print( cout );
+         //writer->Print( std::cout );
          //writer->Write();
       }
       
       //filter->DebugOn();
-      filter->BreakOnError();
+      //filter->BreakOnError();
       
       for ( size_t i = 0; i < numGrids; i++ )
       {
@@ -287,8 +328,14 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
       unswriter->SetFileTypeToBinary();
       unswriter->Write(); 
       */
+      if ( !outputDataset )
+      {
+         outputDataset = vtkUnstructuredGrid::New();
+      }
+
       outputDataset->DeepCopy( unsgrid );
       outputDataset->Update();
+      //outputDataset->Print( std::cout );
 
       if ( writer != NULL )
          writer->Delete();
@@ -317,8 +364,9 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
 void plot3dReader::DisplayHelp( void )
 {
    std::cout << "|\tPlot3D Translator Usage:" << std::endl
-               << "\t -geometryFileXYZ <filename_to_load> -dataFileQ <filename_to_load> "
-               << "-o <output_dir> -multiGridFlag <0|1> -iblankFlag <0|1> -numberofDimensions <0|1> "
+               << "\t -geometryFileXYZ <filename_to_load> -dataFileQ <filename_to_load> " << std::endl
+               << "-o <output_dir> -multiGridFlag <0|1> -iblankFlag <0|1> -twoDimensions <0|1> " << std::endl
+               << "-forceRead <0|1> -bigEndian <0|1> -bytePad <0|1> -binaryFile <0|1> " << std::endl
                << "-outFileName <output_filename> -loader xyz -w file" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////

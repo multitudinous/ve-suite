@@ -87,7 +87,7 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-EXTRA_PATH_FOR_SOURCES+= $(VE_UI_HOME) $(IDL_HOME)/skel \
+#EXTRA_PATH_FOR_SOURCES+= $(VE_UI_HOME) $(IDL_HOME)/skel \
                         $(VE_SUITE_HOME)/VE_Conductor/Framework \
                         $(VE_SUITE_HOME)/VE_Builder/Utilities/gui \
                         $(VE_SUITE_HOME)/VE_Conductor/Utilities
@@ -97,7 +97,7 @@ include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
+#include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.boost.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.apr.mk
 

@@ -94,12 +94,20 @@ public:
       std::string GetMultigridFlag( void );
       std::string GetXYZFilename( void );
       std::string GetQFilename( void );
+      std::string GetByteFlag( void );
+      std::string GetBinaryFlag( void );
+      std::string GetByteCountFlag( void );
+      std::string GetForceReadFlag( void );
    private:
       std::string numberOfDimensions;
       std::string iblankFlag;
       std::string multiGridFlag;
       std::string xyzFilename;
       std::string qFilename;
+      std::string byteFlag;
+      std::string binaryFlag;
+      std::string byteCountFlag;
+      std::string forceReadFlag;
    };
    
    //void writeParticlePolyData( void );
