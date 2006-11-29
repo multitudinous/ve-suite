@@ -47,7 +47,7 @@ cfdEnvironmentHandler API
 namespace VE_Xplorer
 {
 	class cfdNavigate;
-	class cfdTrackball;
+	class Trackball;
    class cfdCursor;
    class cfdCommandArray;
    class cfdReadParam;
@@ -106,8 +106,8 @@ public:
    void SetBackgroundColor(std::vector<double> color);
    ///Accessor for cfdNavigate
    cfdNavigate* GetNavigate( void );
-	///Accessor for cfdTrackball
-	cfdTrackball* GetTrackball( void );
+	///Accessor for Trackball
+	Trackball* GetTrackball( void );
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
    ///Accessor for cfdSoundHandler
@@ -150,7 +150,7 @@ public:
 #endif //_OSG 
 private:
    cfdNavigate* nav;
-	cfdTrackball* trackball;
+	Trackball* trackball;
    cfdTeacher* _teacher;
    cfdSoundHandler* _soundHandler;
    cfdQuatCamHandler* _camHandler;

@@ -115,7 +115,7 @@ SRCS=\
    MaterialModeUpdateEH.cxx \
    MaterialUpdateEH.cxx\
    KeyboardMouse.cxx\
-   cfdTrackball.cxx\
+   Trackball.cxx\
    cfdObjectHandler.cxx\
    SelectionHandler.cxx\
    MouseSelection.cxx\

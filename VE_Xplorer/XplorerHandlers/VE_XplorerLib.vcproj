@@ -731,10 +731,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdTrackball.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdVector.cxx"
 				>
 			</File>
@@ -848,6 +844,10 @@
 			</File>
 			<File
 				RelativePath=".\TextureBasedEventHandler.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\Trackball.cxx"
 				>
 			</File>
 			<File
@@ -1116,10 +1116,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdTrackball.h"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdVector.h"
 				>
 			</File>
@@ -1241,6 +1237,10 @@
 			</File>
 			<File
 				RelativePath=".\TextureBasedEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Trackball.h"
 				>
 			</File>
 			<File

@@ -1,9 +1,9 @@
-#ifndef CFD_TRACKBALL_H
-#define CFD_TRACKBALL_H
-/*!\file cfdTrackball.h
-cfdTrackball API
+#ifndef TRACKBALL_H
+#define TRACKBALL_H
+/*!\file Trackball.h
+Trackball API
 */
-/*!\class VE_Xplorer::cfdTrackball
+/*!\class VE_Xplorer::Trackball
 * 
 */
 
@@ -15,12 +15,13 @@ using namespace gmtl;
 
 namespace VE_Xplorer
 {
-	class VE_XPLORER_EXPORTS cfdTrackball
+	class VE_XPLORER_EXPORTS Trackball
    {
       public:
-	      cfdTrackball();
-	      ~cfdTrackball();
-	      void Init();
+	      Trackball();
+	      ~Trackball();
+
+         void Animate(bool animate);
          void Update();
 	      void Matrix();
 	      void Reshape(unsigned int width,unsigned int height);
@@ -33,15 +34,22 @@ namespace VE_Xplorer
 
       protected:
          bool tb_moving;
-         float tb_currPos[2];
-         float tb_prevPos[2];
-	      float tb_aspectRatio;
-         float tb_FOVyRatio;
+         bool tb_animate;
+
          unsigned int tb_width;
          unsigned int tb_height;
-	      float tb_FOVy;
-	      int tb_key;
+
+         int tb_key;
 	      int tb_button;
+
+         float tb_currPos[2];
+         float tb_prevPos[2];
+         float tb_magnitude;
+         float tb_sensitivity;
+	      float tb_aspectRatio;
+         float tb_FOVyRatio;
+	      float tb_FOVy;
+
          Matrix44f tb_transform;
          Matrix44f tb_accuTransform;
 

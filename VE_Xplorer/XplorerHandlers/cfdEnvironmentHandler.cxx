@@ -35,7 +35,7 @@
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
-#include "VE_Xplorer/XplorerHandlers/cfdTrackball.h"
+#include "VE_Xplorer/XplorerHandlers/Trackball.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
@@ -127,7 +127,7 @@ void cfdEnvironmentHandler::Initialize( std::string param )
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    displaySettings = new cfdDisplaySettings();
    this->nav = new cfdNavigate();
-	trackball = new cfdTrackball();
+	trackball = new Trackball();
    keyboard_mouse = new KeyboardMouse();
    mouse_selection = new MouseSelection();
    //_readParam = new cfdReadParam();
@@ -264,7 +264,7 @@ cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
    return this->nav;
 }
 /////////////////////////////////////////////////////////////////////
-cfdTrackball* cfdEnvironmentHandler::GetTrackball( void )
+Trackball* cfdEnvironmentHandler::GetTrackball( void )
 {
 	return trackball;
 }

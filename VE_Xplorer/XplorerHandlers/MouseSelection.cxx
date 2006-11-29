@@ -1,13 +1,20 @@
 #include <iostream>
 
 #include <osg/Vec3>
+#include <osg/Vec4>
+#include <osg/Geometry>
+#include <osg/Group>
+#include <osg/Geode>
 #include <osg/LineSegment>
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 #include "VE_Xplorer/XplorerHandlers/MouseSelection.h"
 
 using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 MouseSelection::MouseSelection()
@@ -22,16 +29,16 @@ MouseSelection::~MouseSelection()
 ////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::LineSegment> MouseSelection::CreateLineSegment()
 {
+   if(cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.empty()){
+      return 0;
+   }
+
    Update();
    return ProjectNormalizedXYIntoObjectCoordinates(ms_projection_matrix,ms_view_matrix,ms_normalized_x,ms_normalized_y);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MouseSelection::Update()
 {
-   if(cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.empty()){
-      return;
-   }
-
    gadget::KeyboardMouse::EventQueue::iterator i;
 
    for(i=cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.begin();
@@ -89,6 +96,24 @@ osg::ref_ptr<osg::LineSegment> MouseSelection::ProjectNormalizedXYIntoObjectCoor
    osg::Vec3 far_point=osg::Vec3(x,y,1.0f)*inverseVP;
 
    osg::ref_ptr<osg::LineSegment> lineSegment=new osg::LineSegment(near_point,far_point);
+
+   osg::ref_ptr<osg::Geometry> line=new osg::Geometry;
+   osg::ref_ptr<osg::Vec3Array> vertices=new osg::Vec3Array;
+   osg::ref_ptr<osg::Vec4Array> colors=new osg::Vec4Array;
+   vertices->push_back(near_point);
+   vertices->push_back(far_point);
+   colors->push_back(osg::Vec4(1.0f,0.0f,0.0f,1.0f));
+   line->setVertexArray(vertices.get());
+   line->setColorArray(colors.get());
+   line->setColorBinding(osg::Geometry::BIND_OVERALL);
+
+   line->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES,0,vertices->size()));
+
+   osg::ref_ptr<osg::Geode> geode=new osg::Geode;
+   geode->addDrawable(line.get());
+
+   
+   cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->asGroup()->addChild(geode.get());
 
    return lineSegment;
 }
