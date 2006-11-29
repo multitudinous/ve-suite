@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options xerces_options')
 
 sources = Split("""
    cfdExecutive.cxx
@@ -41,14 +41,14 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Open','XML','CAD')])
 
 lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-lib_env.ParseConfig('flagpoll xerces vrjuggler TAO \
+lib_env.ParseConfig('flagpoll vrjuggler TAO \
                           ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                           TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
                           --libs --cflags')
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
-
+xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_XplorerNetworkLib%s' %(execOsgPatTag),
                                                         lib_env,

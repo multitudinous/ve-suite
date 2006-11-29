@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag buildDir vtk_options osg_options')
+Import('baseEnv libPath ves_pkg LIBDIR execOsgPatTag buildDir vtk_options osg_options xerces_options')
 
 sources = Split("""
     DefaultGraphicalPlugin.cxx
@@ -28,9 +28,11 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Open','XML','CAD'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-lib_env.ParseConfig('flagpoll xerces vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
+xerces_options.apply( lib_env )
+
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag),
                                                         lib_env,

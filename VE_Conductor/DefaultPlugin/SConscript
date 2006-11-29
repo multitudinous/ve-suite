@@ -4,7 +4,7 @@ import os, sys, string, smtplib
 
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR buildDir')
+Import('baseEnv libPath ves_pkg LIBDIR buildDir xerces_options')
 
 sources = Split("""
     DefaultPlugin.cxx
@@ -29,8 +29,8 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
 
 lib_env.ParseConfig( 'wx-config --cxxflags --libs' )
-lib_env.ParseConfig('flagpoll TAO xerces --cflags --libs')
-
+lib_env.ParseConfig('flagpoll TAO --cflags --libs')
+xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('DefaultPlugin_UI_Dialog',
                                                         lib_env,

@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR buildDir')
+Import('baseEnv libPath ves_pkg LIBDIR buildDir xerces_options')
 
 sources = Split("""
    CADAssembly.cxx
@@ -34,8 +34,7 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_XMLLib', 'VE_ShaderLib'])
 lib_env.Append(LIBPATH = [  pj('#', buildDir, 'VE_Open','XML'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
-lib_env.ParseConfig('flagpoll xerces --libs --cflags')
-
+xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_CADLib',
                                                         lib_env,

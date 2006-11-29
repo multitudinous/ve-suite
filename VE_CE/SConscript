@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('ves_pkg LIBDIR PREFIX buildDir')
+Import('ves_pkg LIBDIR PREFIX buildDir xerces_options')
 
 srcs = Split("""
    Exe_server.cpp 
@@ -22,10 +22,11 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Open','XML','CAD'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
 
-env.ParseConfig('flagpoll TAO xerces TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+env.ParseConfig('flagpoll TAO TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
+xerces_options.apply( env )
 ce_prog = ves_pkg.createProgram('Exe_server', env, 'bin')
 ce_prog.addSources( srcs )
 ce_prog.build()

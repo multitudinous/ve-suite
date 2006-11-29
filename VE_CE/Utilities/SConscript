@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR buildDir')
+Import('baseEnv libPath ves_pkg LIBDIR buildDir xerces_options')
 
 headers = Split("""
    Connection.h
@@ -37,10 +37,8 @@ lib_env.Append(LIBS = ['VE_ModelLib', 'VE_XMLLib', 'VE_OpenModuleLib'])
 lib_env.Append(LIBPATH = [  pj('#', buildDir, 'VE_Open','XML'),
                         pj('#', buildDir, 'VE_Open','XML','Model'),
                         pj('#', buildDir, 'VE_Open','skel')])
-lib_env.ParseConfig('flagpoll xerces TAO TAO_PortableServer --libs --cflags')
-
-##targetLib = pj(env[ 'LIBDIR' ], 'VE_CE_UtilitiesLib')
-##env.SharedLibrary(target = targetLib, source = srcs)
+lib_env.ParseConfig('flagpoll TAO TAO_PortableServer --libs --cflags')
+xerces_options.apply( lib_env )
 
 if baseEnv['StaticOnly'] == "no":
    vece_util_lib = ves_pkg.createStaticAndSharedLibrary('VE_CE_UtilitiesLib',

@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options xerces_options')
 
 srcs = Split("""
    cfdApp.cxx
@@ -37,13 +37,15 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Open','XML','CAD')])
 vtk_options.apply( env )
 osg_options.apply( env )
+xerces_options.apply( env )
 env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-env.ParseConfig('flagpoll xerces vrjuggler vpr TAO \
+env.ParseConfig('flagpoll vrjuggler vpr TAO \
                           ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                           TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
                           --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --get-vrj-ogl-libs')
+
 if baseEnv[ 'cluster' ] != "no":
    execOsgPatTag += "_cluster"
    env.Append( CPPDEFINES = ['_CLUSTER' ])
