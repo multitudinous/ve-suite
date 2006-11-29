@@ -11,6 +11,7 @@ import SConsAddons.Options as asc_opt
 import SConsAddons.Options.Options 
 import SConsAddons.Options.VTK
 import SConsAddons.Options.OSG
+import SConsAddons.Options.Xerces
 import SConsAddons.AutoDist as sca_auto_dist
 import SConsAddons.Options.FlagPollBasedOption as fp_opt
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
@@ -112,17 +113,17 @@ baseEnv.Append( BINDIR = bin,
             CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
 
 ## make the temp bin and lib dirs in the build dir
-if not os.path.exists( pj( buildDir, 'lib' ) ):
+##if not os.path.exists( pj( buildDir, 'lib' ) ):
    ##baseEnv.Execute(Mkdir( pj( buildDir, 'lib' ) ))
-   os.makedirs( pj( buildDir, 'lib' ) )
+   ##os.makedirs( pj( buildDir, 'lib' ) )
 
-if not os.path.exists( pj( buildDir, 'lib', 'flagpoll' ) ):
+##if not os.path.exists( pj( buildDir, 'lib', 'flagpoll' ) ):
    ##baseEnv.Execute(Mkdir( pj( buildDir, 'lib', 'flagpoll' ) ))
-   os.makedirs( pj( buildDir, 'lib', 'flagpoll' ) )
+   ##os.makedirs( pj( buildDir, 'lib', 'flagpoll' ) )
 
-if not os.path.exists( pj( buildDir, 'bin' ) ):
+##if not os.path.exists( pj( buildDir, 'bin' ) ):
    ##baseEnv.Execute(Mkdir( pj( buildDir, 'bin' ) ))
-   os.makedirs( pj( buildDir, 'bin' ) )
+   ##os.makedirs( pj( buildDir, 'bin' ) )
 
 
 Export('baseEnv')
@@ -163,12 +164,20 @@ opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
 opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.0')
-vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.0", True, True)
+vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.0", True, True,
+                        ['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
+                         'vtkIO','vtkexpat','vtkFiltering','vtkRendering', 
+                         'vtkParallel','vtkpng','vtktiff','vtksys','vtkjpeg', 
+                         'vtkexoIIc','vtkftgl','vtkfreetype','vtkDICOMParser', 
+                         'vtkzlib','vtkMPEG2Encode','vtkNetCDF'])
 opts.AddOption( vtk_options )
-osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True)
+osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
+                        ['osgText', 'osgProducer', 'Producer', 'osgText',
+                         'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
+                         'osgSim', 'osgFX'])
 opts.AddOption( osg_options )
-##xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
-##opts.AddOption( xerces_options )
+xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
+opts.AddOption( xerces_options )
 opts.Add('prefix', 'Installation prefix', '/usr/local')
 ##opts.Add('libdir', 'Library installation directory under <prefix>')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
@@ -180,7 +189,7 @@ opts.Add('cluster', 'If true, build the cluster version of VE-Xplorer', 'no')
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
-Export('opts', 'vtk_options', 'osg_options')
+Export('opts', 'vtk_options', 'osg_options','xerces_options')
   
 help_text = """--- VE-Suite Build system ---
 Targets:
@@ -348,7 +357,13 @@ if not SConsAddons.Util.hasHelpFlag():
    for d in ves_dirs:
       SConscript( dirs = d )
 
-   ves_pkg.build()
+   ##Setup the install flag to install VE-Suite
+   if 'install' in COMMAND_LINE_TARGETS:
+      ves_pkg.build( install=True )
+   else:
+      ves_pkg.build( install=False )
+   
+   ##Install it if the packages have been setup to do so
    baseEnv.Alias('install',PREFIX)
    Default('.')
 

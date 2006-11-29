@@ -3,7 +3,7 @@ import os, sys, string
 ##import practice
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR')
+Import('baseEnv libPath ves_pkg LIBDIR xerces_options')
 
 sources = Split("""
    CreationEventHandler.cxx 
@@ -53,16 +53,16 @@ headers = Split("""
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
-##lib_env.ParseConfig('flagpoll xerces apr-1 apr-util-1 --libs --cflags' )
 ##Get apr config.
 if baseEnv.has_key('AprVersion'):
    if baseEnv[ 'AprVersion' ] >= "1.0":
-      lib_env.ParseConfig('flagpoll xerces apr-1 apr-util-1 --libs --cflags' )
+      lib_env.ParseConfig('flagpoll apr-1 apr-util-1 --libs --cflags' )
    else:
-      lib_env.ParseConfig('flagpoll xerces apr apr-util --libs --cflags' )
+      lib_env.ParseConfig('flagpoll apr apr-util --libs --cflags' )
 else:
-   lib_env.ParseConfig('flagpoll xerces apr apr-util --libs --cflags' )
+   lib_env.ParseConfig('flagpoll apr apr-util --libs --cflags' )
 
+xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_XMLLib',
                                                         lib_env,
