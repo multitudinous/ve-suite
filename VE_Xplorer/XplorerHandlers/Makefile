@@ -112,6 +112,7 @@ SRCS=\
    CADSetNameEH.cxx \
    CADToggleEH.cxx \
    CADTransformEH.cxx \
+   DeviceHandler.cpp \
    MaterialModeUpdateEH.cxx \
    MaterialUpdateEH.cxx\
    KeyboardMouse.cxx\

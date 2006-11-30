@@ -91,8 +91,6 @@ void Trackball::Update()
          gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
          Motion(mouse_evt->getX(),mouse_evt->getY());
       }
-
-      
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

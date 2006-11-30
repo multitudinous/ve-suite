@@ -775,6 +775,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DeviceHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\KeyboardMouse.cxx"
 				>
 			</File>
@@ -1157,6 +1161,10 @@
 			</File>
 			<File
 				RelativePath=".\DataSetScalarBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DeviceHandler.h"
 				>
 			</File>
 			<File
