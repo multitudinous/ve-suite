@@ -101,6 +101,12 @@ enum
    v21ID_CO_DISPOSAL,
    MYLOG,
    v21ID_HELP,
+
+   XPLORER_DEVICES,
+   TRACKBALL_MODE,
+   WAND_MODE,
+   DEVICE_PREFERENCES,
+
    XPLORER_NAVIGATION,
    XPLORER_VIEWPOINTS,
    XPLORER_SOUNDS,
@@ -123,6 +129,7 @@ class UI_Tabs;
 class UI_Frame;
 class Network;
 class NavigationPane;
+class DevicePreferences;
 class SoundsPane;
 class ViewLocPane;
 class StreamlinePane;
@@ -190,6 +197,7 @@ public:
    wxMenu *edit_menu;
    wxMenu *help_menu;
    wxMenu* xplorerMenu;
+   wxMenu* xplorerDeviceMenu;
    wxMenu* xplorerJugglerMenu;
 
    //configuration flags   //cyang
@@ -274,6 +282,7 @@ protected:
 
    // Controls for VE-Xplorer
    // These are the callbacks for the pull down menu
+   void LaunchDevicePreferences(wxCommandEvent& event);
    void LaunchNavigationPane(wxCommandEvent& event);
    void LaunchViewpointsPane(wxCommandEvent& event);
    void LaunchSoundsPane(wxCommandEvent& event);
@@ -291,6 +300,8 @@ protected:
    ///\param event The wxCommand event.
    void LaunchCADNodePane(wxCommandEvent& event);
 
+   ///Process Navigation settings
+   void NavigationSettings( wxCommandEvent& event);
    ///Process Juggler settings
    void JugglerSettings( wxCommandEvent& event );
    ///Get the user preferences class
@@ -298,14 +309,15 @@ protected:
    ///Create the ve tabs
    void CreateVETab();
   
-  wxBoxSizer *sizerTab;
+   wxBoxSizer *sizerTab;
 
 private:
-     void ExitXplorer( void );
-     void EnableCEGUIMenuItems( void );
+   void ExitXplorer( void );
+   void EnableCEGUIMenuItems( void );
    void IdleEvent( wxIdleEvent& event );
    void TimerEvent( wxTimerEvent& event );
    NavigationPane* navPane;
+   DevicePreferences* devicePreferences;
    SoundsPane* soundsPane;
    ViewLocPane* viewlocPane;
    UI_TeacherTab* recordScenes;

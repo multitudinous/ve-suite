@@ -284,6 +284,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DevicePreferences.cpp"
+				>
+			</File>
+			<File
 				RelativePath="Frame.cpp"
 				>
 				<FileConfiguration
@@ -457,6 +461,10 @@
 			</File>
 			<File
 				RelativePath=".\DataSetLoaderUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DevicePreferences.h"
 				>
 			</File>
 			<File

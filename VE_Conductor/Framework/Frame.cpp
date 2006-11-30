@@ -51,6 +51,7 @@
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
 #include "VE_Conductor/GUIPlugin/FindDialog.h"
+#include "VE_Conductor/Framework/DevicePreferences.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
 //#include "VE_Conductor/Framework/StreamersPane.h"
@@ -155,6 +156,10 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
    EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 
+   EVT_MENU( TRACKBALL_MODE, AppFrame::NavigationSettings )
+   EVT_MENU( WAND_MODE, AppFrame::NavigationSettings )
+
+   EVT_MENU( DEVICE_PREFERENCES, AppFrame::LaunchDevicePreferences )
    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
    EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
    EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
@@ -218,6 +223,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    CreateStatusBar();
    SetStatusText("VE-Conductor Status");
 
+   devicePreferences = 0;
    navPane = 0;
    soundsPane = 0;
    viewlocPane = 0;
@@ -571,6 +577,12 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 
    delete domManager;
    domManager = 0;
+
+   if ( devicePreferences )
+   {
+      devicePreferences->Destroy();
+      devicePreferences = 0;
+   }
    
    if ( navPane )
    {
@@ -699,20 +711,30 @@ void AppFrame::CreateMenu()
 
    //if (f_visualization)
    {
+
 	xplorerMenu = new wxMenu();
+   xplorerDeviceMenu = new wxMenu();
 	xplorerJugglerMenu = new wxMenu();
+
+   xplorerDeviceMenu->AppendRadioItem( TRACKBALL_MODE, _("Trackball") );
+   xplorerDeviceMenu->AppendRadioItem( WAND_MODE,      _("Wand") );
+   xplorerDeviceMenu->Check( TRACKBALL_MODE, true);
+   xplorerDeviceMenu->AppendSeparator();
+   xplorerDeviceMenu->Append( DEVICE_PREFERENCES, _("Properties") );
 
 	xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
 	xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
 	xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
 	xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
 
+   
 	xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
 	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
 	xplorerMenu->Append( XPLORER_SCENES,     _("Record Scenes") );
 	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
 	xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
+   xplorerMenu->Append( XPLORER_DEVICES,    _("Devices"),          xplorerDeviceMenu,  _("Used to change device modes and preferences") );
 	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    //If the display mode is desktop then we will disconnect when exit is selected
    //and in other modes we will give the user the ability to exit
@@ -1470,6 +1492,17 @@ void AppFrame::CloseVE()
    ;
 }
 ///////////////////////////////////////////////////////////////////
+void AppFrame::LaunchDevicePreferences( wxCommandEvent& WXUNUSED(event) )
+{
+   if ( devicePreferences == 0 )
+   {
+      // create pane and set appropriate vars
+      devicePreferences = new DevicePreferences();
+   }
+   // now show it
+   devicePreferences->Show();
+}
+////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( navPane == 0 )
@@ -1576,6 +1609,29 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
    */
    _cadDialog->SetVjObsPtr( GetXplorerObject() );
    _cadDialog->Show();
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::NavigationSettings( wxCommandEvent& event )
+{
+   // Create the command and data value pairs
+   VE_XML::DataValuePair* dataValuePair=new VE_XML::DataValuePair();
+   dataValuePair->SetDataName( "Mode" );
+   if( event.GetId() == TRACKBALL_MODE )
+   {
+      dataValuePair->SetDataValue((unsigned int) 0 );
+   }
+   else if( event.GetId() == WAND_MODE )
+   {
+      dataValuePair->SetDataValue( (unsigned int) 1 );
+   }
+
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("Navigation_Mode_Settings") );
+   veCommand->AddDataValuePair( dataValuePair );
+
+   serviceList->SendCommandStringToXplorer( veCommand );
+   
+   delete veCommand;
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& event )

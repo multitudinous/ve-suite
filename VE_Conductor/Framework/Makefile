@@ -20,6 +20,7 @@ SRCS=\
    DataSetLoaderUI.cxx\
    Frame.cpp \
    Network.cpp \
+   DevicePreferences.cpp \
    NavigationPane.cxx \
    paraThread.cpp \
    PluginLoader.cpp \
