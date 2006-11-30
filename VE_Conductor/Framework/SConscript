@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR GetPlatform buildDir xerces_options')
+Import('baseEnv libPath ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options')
 
 srcs = Split("""
    App.cpp 
@@ -45,23 +45,22 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Open','XML','CAD'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
 
-env.ParseConfig( 'wx-config --cxxflags --libs' )
 env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --cflags --libs')
 xerces_options.apply( env )
+wxwidgets_options.apply( env )
 prog = ves_pkg.createProgram('WinClient', env, 'bin')
 prog.addSources( srcs )
 prog.build()
 
-##if GetPlatform() == "darwin":
-##   conductorTarget = pj( baseEnv['prefix'],'Conductor')
-##   winTarget = pj( baseEnv['prefix'], 'bin', 'WinClient')
-##   target = [ conductorTarget ]
-##   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o '
-##   srcs = [ winTarget ]
-##   idlFile = [idlCmd + srcs[0]]
-##   for i in range(len(idlFile)):
-##      bld = Builder(action = idlFile[i])
-##      env.Append(BUILDERS = {'apple_rez': bld})
-##      env. apple_rez(target[i], list())
+if GetPlatform() == "darwin":
+   conductorTarget = pj( '#', buildDir,'VE_Conductor','Framework','Conductor')
+   winTarget = pj( '#',buildDir,'VE_Conductor','Framework','WinClient')
+   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o ${SOURCE}'
+   bld = Builder(action = idlCmd )
+   env.Append(BUILDERS = {'apple_rez': bld})
+   env.apple_rez( conductorTarget, winTarget)
+   if os.path.isfile('WinClient'):
+      if not os.path.isfile('Conductor'):
+         Execute(Copy('Conductor', 'WinClient'))

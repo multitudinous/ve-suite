@@ -2,21 +2,23 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
+Import('baseEnv buildDir')
 
 env = baseEnv.Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
 ##env.Append(CPPPATH = ['idl'])
 
-target = ['module.h', 'VjObs.h']
+target = [pj('#','VE_Open','skel','moduleS.h'), 
+          pj('#','VE_Open','skel','VjObsS.h')]
 
 ##taoPrefix = "/Volumes/data/VE_Suite_Deps/ACE_TAO/install/bin/"
 ##Popen(['flagpoll', 'TAO', '--variable=prefix'], stdout=PIPE).communicate[0] + "/bin/tao_idl"
 ##idlCmd = taoPrefix + 'tao_idl -o ./VE_Open/skel -GI -I./VE_Open/idl ./VE_Open/idl/'
-idlCmd = 'tao_idl -o ./VE_Open/skel -in -GI -I./VE_Open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h ./VE_Open/idl/'
-srcs = ['module.idl', 'VjObs.idl']
-idlFile = [idlCmd + srcs[0], idlCmd + srcs[1]]
-for i in range(len(idlFile)):
-    bld = Builder(action = idlFile[i])
-    env.Append(BUILDERS = {'tao_idl': bld})
-    env.tao_idl(target[i], list())
+idlCmd = 'tao_idl -o ./VE_Open/skel -in -GI -I./VE_Open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h ${SOURCES}'
+srcs = [pj('#',buildDir,'VE_Open','idl','module.idl'), 
+        pj('#',buildDir,'VE_Open','idl','VjObs.idl')]
+##idlFile = [idlCmd + srcs[0], idlCmd + srcs[1]]
+bld = Builder(action = idlCmd)
+env.Append(BUILDERS = {'tao_idl': bld})
+for i in range(len(srcs)):
+    env.tao_idl(target[i], srcs[i])

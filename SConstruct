@@ -12,6 +12,7 @@ import SConsAddons.Options.Options
 import SConsAddons.Options.VTK
 import SConsAddons.Options.OSG
 import SConsAddons.Options.Xerces
+import SConsAddons.Options.WxWidgets
 import SConsAddons.AutoDist as sca_auto_dist
 import SConsAddons.Options.FlagPollBasedOption as fp_opt
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
@@ -21,7 +22,7 @@ Export('GetPlatform')
 GetArch = sca_util.GetArch
 Export('GetArch')
 
-WX_HOME_DIR = '/home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/'
+##WX_HOME_DIR = '/home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/'
 
 def GetTag(execTag = False, osgTag = False,
            patentedTag = False, clusterTag = False):
@@ -178,6 +179,8 @@ osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True,
 opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
+wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.6", True, True)
+opts.AddOption( wxwidgets_options )
 opts.Add('prefix', 'Installation prefix', '/usr/local')
 ##opts.Add('libdir', 'Library installation directory under <prefix>')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
@@ -189,7 +192,7 @@ opts.Add('cluster', 'If true, build the cluster version of VE-Xplorer', 'no')
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
-Export('opts', 'vtk_options', 'osg_options','xerces_options')
+Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options')
   
 help_text = """--- VE-Suite Build system ---
 Targets:

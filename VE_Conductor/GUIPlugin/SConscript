@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR buildDir xerces_options')
+Import('baseEnv libPath ves_pkg LIBDIR buildDir xerces_options wxwidgets_options')
 
 sources = Split("""
    FinancialDialog.cpp 
@@ -59,12 +59,12 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Open','XML','Model'),
                         pj('#', buildDir, 'VE_Open','XML','CAD'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
-lib_env.ParseConfig('wx-config --cxxflags --libs')
 lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
 xerces_options.apply( lib_env )
+wxwidgets_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('GUIPluginLib',
                                                         lib_env,
