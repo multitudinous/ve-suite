@@ -105,7 +105,7 @@ enum
    XPLORER_DEVICES,
    TRACKBALL_MODE,
    WAND_MODE,
-   DEVICE_PREFERENCES,
+   DEVICE_PROPERTIES,
 
    XPLORER_NAVIGATION,
    XPLORER_VIEWPOINTS,
@@ -129,7 +129,7 @@ class UI_Tabs;
 class UI_Frame;
 class Network;
 class NavigationPane;
-class DevicePreferences;
+class DeviceProperties;
 class SoundsPane;
 class ViewLocPane;
 class StreamlinePane;
@@ -282,7 +282,7 @@ protected:
 
    // Controls for VE-Xplorer
    // These are the callbacks for the pull down menu
-   void LaunchDevicePreferences(wxCommandEvent& event);
+   void LaunchDeviceProperties(wxCommandEvent& event);
    void LaunchNavigationPane(wxCommandEvent& event);
    void LaunchViewpointsPane(wxCommandEvent& event);
    void LaunchSoundsPane(wxCommandEvent& event);
@@ -317,7 +317,7 @@ private:
    void IdleEvent( wxIdleEvent& event );
    void TimerEvent( wxTimerEvent& event );
    NavigationPane* navPane;
-   DevicePreferences* devicePreferences;
+   DeviceProperties* deviceProperties;
    SoundsPane* soundsPane;
    ViewLocPane* viewlocPane;
    UI_TeacherTab* recordScenes;

@@ -51,7 +51,7 @@
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
 #include "VE_Conductor/GUIPlugin/FindDialog.h"
-#include "VE_Conductor/Framework/DevicePreferences.h"
+#include "VE_Conductor/Framework/DeviceProperties.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
 //#include "VE_Conductor/Framework/StreamersPane.h"
@@ -159,7 +159,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( TRACKBALL_MODE, AppFrame::NavigationSettings )
    EVT_MENU( WAND_MODE, AppFrame::NavigationSettings )
 
-   EVT_MENU( DEVICE_PREFERENCES, AppFrame::LaunchDevicePreferences )
+   EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
    EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
    EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
@@ -223,7 +223,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    CreateStatusBar();
    SetStatusText("VE-Conductor Status");
 
-   devicePreferences = 0;
+   deviceProperties = 0;
    navPane = 0;
    soundsPane = 0;
    viewlocPane = 0;
@@ -578,10 +578,10 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
    delete domManager;
    domManager = 0;
 
-   if ( devicePreferences )
+   if ( deviceProperties )
    {
-      devicePreferences->Destroy();
-      devicePreferences = 0;
+      deviceProperties->Destroy();
+      deviceProperties = 0;
    }
    
    if ( navPane )
@@ -720,7 +720,7 @@ void AppFrame::CreateMenu()
    xplorerDeviceMenu->AppendRadioItem( WAND_MODE,      _("Wand") );
    xplorerDeviceMenu->Check( TRACKBALL_MODE, true);
    xplorerDeviceMenu->AppendSeparator();
-   xplorerDeviceMenu->Append( DEVICE_PREFERENCES, _("Properties") );
+   xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
 
 	xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
 	xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
@@ -1492,15 +1492,15 @@ void AppFrame::CloseVE()
    ;
 }
 ///////////////////////////////////////////////////////////////////
-void AppFrame::LaunchDevicePreferences( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::LaunchDeviceProperties( wxCommandEvent& WXUNUSED(event) )
 {
-   if ( devicePreferences == 0 )
+   if ( deviceProperties == 0 )
    {
       // create pane and set appropriate vars
-      devicePreferences = new DevicePreferences();
+      deviceProperties = new DeviceProperties();
    }
    // now show it
-   devicePreferences->Show();
+   deviceProperties->Show();
 }
 ////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
