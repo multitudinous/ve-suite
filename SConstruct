@@ -51,17 +51,8 @@ def GetTag(execTag = False, osgTag = False,
         cluster_tag = ''
     return finalTag
 
-##execTag = GetTag(True)
-##execOsgTag = GetTag(True, True)
-##Export('execTag')
-##Export('execOsgTag')
-cfdHostType = GetPlatform() + '.' + GetArch()
-libPath = pj('#', 'lib', cfdHostType)
-binDir = pj('#', 'bin', cfdHostType)
 execOsgPatTag = GetTag(True, True, True)
 execOsgPatClusterTag = GetTag(True, True, True, True)
-Export('cfdHostType')
-Export('libPath')
 Export('execOsgPatTag')
 Export('execOsgPatClusterTag')
 
@@ -99,19 +90,13 @@ baseEnv.Append(CPPPATH = ['#'])
 ##taoHome = piped.read()[:-1]
 ##piped.close()
 ##baseEnv.Append(PATH = ["%s/bin" %taoHome])
-Platform = GetPlatform() ##Temporary setup
 buildDir = 'build.' + GetPlatform() + '.' + GetArch()
 baseEnv.BuildDir(buildDir, '.', duplicate = 0)
 
 ##See scons users guide section 15 on variant builds
-##include = "#export/$PLATFORM/include"
-lib = pj( '#' + buildDir, 'lib' )
-bin = pj( '#' + buildDir, 'bin' )
-baseEnv.Append( BINDIR = bin, 
-            LIBDIR = lib,
-            BUILDDIR = buildDir,
-            LIBPATH = [lib],
-            CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
+##Setup some project defaults
+baseEnv.Append( BUILDDIR = buildDir,
+                CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
 
 ## make the temp bin and lib dirs in the build dir
 ##if not os.path.exists( pj( buildDir, 'lib' ) ):
@@ -196,9 +181,16 @@ Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options'
   
 help_text = """--- VE-Suite Build system ---
 Targets:
+   To build VE-Suite:
+   > scons
+   
+   To install VE-Suite:
    install - Install VE-Suite
-      ex: 'scons install prefix=build/test' to install in a test build directory
+   > scons install prefix=build/test' to install in a test build directory
  
+   Make sure that vrjuggler, Boost.Filesystem, ACE/TAO, and apr/apr-util are
+   in your FLAGPOLL_PATH or PKGCONFIG_PATH or (DY)LD_LIBRARY_PATH. This is
+   necessaary to auto-detect the dependencies.
 """
 
 help_text += """

@@ -3,8 +3,6 @@ pj = os.path.join
 
 Import('baseEnv')
 Import('Platform')
-#Import( 'vtk' )
-#Import( 'boost' )
 
 srcs = Split("""
 	translateToVtk.cpp

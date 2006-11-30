@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv libPath ves_pkg LIBDIR')
+Import('baseEnv ves_pkg LIBDIR')
 
 headers = Split("""
    moduleS.h
