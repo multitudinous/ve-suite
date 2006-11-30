@@ -107,13 +107,19 @@ enum
    WAND_MODE,
    DEVICE_PROPERTIES,
 
+   XPLORER_VIEW,
+   FRAME_ALL,
+   FRAME_SELECTION,
+
    XPLORER_NAVIGATION,
    XPLORER_VIEWPOINTS,
    XPLORER_SOUNDS,
    XPLORER_STREAMLINE,
+
    JUGGLER_STEREO,
    JUGGLER_MONO, 
    JUGGLER_SETTINGS,
+
    CAD_NODE_DIALOG,
    XPLORER_SCENES,
    XPLORER_EXIT,
@@ -199,6 +205,7 @@ public:
    wxMenu* xplorerMenu;
    wxMenu* xplorerDeviceMenu;
    wxMenu* xplorerJugglerMenu;
+   wxMenu* xplorerViewMenu;
 
    //configuration flags   //cyang
    bool f_financial;

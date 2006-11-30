@@ -51,17 +51,17 @@ void DeviceProperties::BuildGUI()
     wxListBox* list_box_1=new wxListBox(device_splitter,DEVICE_LISTBOX,wxDefaultPosition,wxDefaultSize,2,list_box_strings,wxLB_SINGLE);
     list_box_1->SetStringSelection("Trackball");
 
-    wxPanel* panel_1=new wxPanel(device_splitter,DEVICE_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
+    wxPanel* panel_trackball=new wxPanel(device_splitter,DEVICE_TRACKBALL_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
     wxBoxSizer* box_sizer_3=new wxBoxSizer(wxVERTICAL);
-    panel_1->SetSizer(box_sizer_3);
+    panel_trackball->SetSizer(box_sizer_3);
 
     wxBoxSizer* box_sizer_4=new wxBoxSizer(wxHORIZONTAL);
     box_sizer_3->Add(box_sizer_4,0,wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-    wxCheckBox* check_box_animate=new wxCheckBox(panel_1,ANIMATE_CHECKBOX,"Animate",wxDefaultPosition,wxDefaultSize,0);
+    wxCheckBox* check_box_animate=new wxCheckBox(panel_trackball,ANIMATE_CHECKBOX,"Animate",wxDefaultPosition,wxDefaultSize,0);
     check_box_animate->SetValue(false);
     box_sizer_4->Add(check_box_animate,0,wxALIGN_CENTER_VERTICAL|wxALL,5);
 
-    device_splitter->SplitVertically(list_box_1,panel_1,150);
+    device_splitter->SplitVertically(list_box_1,panel_trackball,150);
     box_sizer_1->Add(device_splitter,1,wxGROW|wxLEFT|wxRIGHT,5);
 
     wxBoxSizer* box_sizer_5=new wxBoxSizer(wxHORIZONTAL);

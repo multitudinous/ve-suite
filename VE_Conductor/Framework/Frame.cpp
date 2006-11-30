@@ -715,6 +715,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu = new wxMenu();
    xplorerDeviceMenu = new wxMenu();
 	xplorerJugglerMenu = new wxMenu();
+   xplorerViewMenu = new wxMenu();
 
    xplorerDeviceMenu->AppendRadioItem( TRACKBALL_MODE, _("Trackball") );
    xplorerDeviceMenu->AppendRadioItem( WAND_MODE,      _("Wand") );
@@ -722,11 +723,13 @@ void AppFrame::CreateMenu()
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
 
+   xplorerViewMenu->Append( FRAME_ALL,       _("Frame All") );
+   xplorerViewMenu->Append( FRAME_SELECTION, _("Frame Selection      f") );
+
 	xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
 	xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
 	xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
 	xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
-
    
 	xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
 	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
@@ -734,8 +737,9 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
 	xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-   xplorerMenu->Append( XPLORER_DEVICES,    _("Devices"),          xplorerDeviceMenu,  _("Used to change device modes and preferences") );
+   xplorerMenu->Append( XPLORER_DEVICES,    _("Devices"),          xplorerDeviceMenu,  _("Used to change device modes and properties") );
 	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
+   xplorerMenu->Append( XPLORER_VIEW,       _("View"),             xplorerViewMenu,    _("Used to change the view") );
    //If the display mode is desktop then we will disconnect when exit is selected
    //and in other modes we will give the user the ability to exit
    if ( GetDisplayMode() != "Desktop" )
