@@ -695,12 +695,16 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
    
    std::vector< Tag >::iterator iter;
    int i;
-   for ( iter = tags.begin(), i=0; iter != tags.end(); iter++, i++)
+   for ( iter = tags.begin(), i=0; iter != tags.end(); i++)
       if ( i == m_selTag )
       {
-         tags.erase( iter );
+         tags.erase( iter++ );
          m_selTag=-1;
          break;
+      }
+      else
+      {
+         ++iter;
       }
    
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
@@ -717,15 +721,19 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
    
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
 
-   int i;
    std::vector< Link >::iterator iter;
-   for (iter=links.begin(), i=0; iter!=links.end(); iter++, i++)
+   int i;
+   for (iter=links.begin(), i=0; iter!=links.end(); i++)
    {
       if (i==m_selLink)
       {
-         links.erase(iter);
+         links.erase(iter++);
          m_selLink=-1;
          break;
+      }
+      else
+      {
+         ++iter;
       }
    }
 
@@ -751,10 +759,14 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
    for (iter=links[m_selLink].GetPoints()->begin(), i=0; iter!=links[m_selLink].GetPoints()->end(); iter++, i++)
       if ( i == m_selLinkCon )
       {
-         links[m_selLink].GetPoints()->erase(iter);
+         links[m_selLink].GetPoints()->erase(iter++);
          links[m_selLink].CalcLinkPoly();
          m_selLinkCon=-1;
          break;
+      }
+      else
+      {
+         ++iter;
       }
 
    links[m_selLink].DrawLinkCon( true, userScale );
@@ -782,7 +794,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
             (iter3->GetToModule() == m_selMod) 
          )
       {
-	      links.erase( iter3 );
+	      links.erase( iter3++ );
 	   }
       else
          ++iter3;
