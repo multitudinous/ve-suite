@@ -62,6 +62,4 @@ if GetPlatform() == "darwin":
    bld = Builder(action = idlCmd )
    env.Append(BUILDERS = {'apple_rez': bld})
    env.apple_rez( conductorTarget, winTarget)
-   if os.path.isfile('WinClient'):
-      if not os.path.isfile('Conductor'):
-         Execute(Copy('Conductor', 'WinClient'))
+   env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))
