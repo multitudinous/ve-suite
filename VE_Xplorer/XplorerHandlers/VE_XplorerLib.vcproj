@@ -775,6 +775,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DeviceEventHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DeviceHandler.cpp"
 				>
 			</File>
@@ -1165,6 +1169,10 @@
 			</File>
 			<File
 				RelativePath=".\DataSetScalarBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DeviceEventHandler.h"
 				>
 			</File>
 			<File

@@ -6,6 +6,7 @@
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include "VE_XPlorer/XplorerHandlers/DeviceEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/TrackballEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
@@ -21,6 +22,9 @@ DeviceHandler::DeviceHandler()
    trackball=new VE_Xplorer::Trackball();
    keyboard_mouse=new VE_Xplorer::KeyboardMouse();
 
+   device_mode=0;
+
+   _eventHandlers[std::string("CHANGE_DEVICE_MODE")]=new VE_EVENTS::DeviceEventHandler();
    _eventHandlers[std::string("TRACKBALL_PROPERTIES")]=new VE_EVENTS::TrackballEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +49,38 @@ void DeviceHandler::ExecuteCommands()
          currentEventHandler->second->Execute(cfdModelHandler::instance()->GetXMLCommand());
       }
    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::ProcessDeviceEvents()
+{
+   //Update KeyboardMouse events
+   keyboard_mouse->ProcessKeyboardMouseEvents();
+
+   //Update Device Properties
+   ExecuteCommands();
+
+   //Update Device events
+   switch(device_mode){
+   
+      //Update Trackball events
+      case 0: trackball->ProcessTrackballEvents();
+
+      //case 1:
+   
+
+      //Update MouseSelection events
+      //mouse_selection->SelectObjects();
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::SetMode(unsigned int mode)
+{
+   device_mode=mode;
+}
+////////////////////////////////////////////////////////////////////////////////
+unsigned int DeviceHandler::GetMode()
+{
+   return device_mode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Trackball* DeviceHandler::GetTrackball()

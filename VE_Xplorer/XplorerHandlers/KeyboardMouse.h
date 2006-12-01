@@ -19,8 +19,6 @@ KeyboardMouse API
 
 #include "VE_Installer/include/VEConfig.h"
 
-//using namespace boost;
-
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS KeyboardMouse

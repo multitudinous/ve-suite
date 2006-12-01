@@ -56,7 +56,6 @@
 #include "VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
-#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 #include "VE_Xplorer/XplorerHandlers/Trackball.h"
 #include "VE_Xplorer/XplorerHandlers/MouseSelection.h"
 #include "VE_Open/XML/Command.h"
@@ -371,19 +370,10 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
       }
    }
 
-   //Update Device Properties
-   VE_Xplorer::DeviceHandler::instance()->ExecuteCommands();
+   //Process all events for active device
+   VE_Xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
+
    
-   //Update KeyboardMouse events
-   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->ProcessKeyboardMouseEvents();
-
-   //Update Trackball
-   VE_Xplorer::DeviceHandler::instance()->GetTrackball()->Matrix();
-
-   //Update MouseSelection events
-   //mouse_selection->SelectObjects();
-
-	
 #ifdef _OSG
 #ifdef VE_PATENTED
    this->objectHandler->UpdateObjectHandler();

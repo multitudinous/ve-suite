@@ -36,7 +36,12 @@ namespace VE_Xplorer
          vprSingletonHeader(DeviceHandler);
 
          void CleanUp();
-         void ExecuteCommands();
+         void ExecuteCommands();                                           //Execute commands from VE_Conductor
+         void ProcessDeviceEvents();                                       //Process all events for active device
+
+         void SetMode(unsigned int mode);                                  //Set the selected device mode
+
+         unsigned int GetMode();                                           //Return the selected device mode
 
 	      Trackball* GetTrackball();                                        //Accessor for Trackball
          KeyboardMouse* GetKeyboardMouse();                                //Accessor for KeyboardMouse
@@ -44,6 +49,8 @@ namespace VE_Xplorer
       private:
          Trackball* trackball;
          KeyboardMouse* keyboard_mouse;
+
+         unsigned int device_mode;                                         //Tells which device is selected
 
          std::map<std::string,VE_EVENTS::EventHandler*> _eventHandlers;    //The event handler for commands
 

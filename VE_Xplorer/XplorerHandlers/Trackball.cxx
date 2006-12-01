@@ -55,7 +55,7 @@ void Trackball::Animate(bool animate)
    tb_animate=animate;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Trackball::Update()
+void Trackball::UpdateKeyboardMouse()
 {
    gadget::KeyboardMouse::EventQueue::iterator i;
 
@@ -94,11 +94,11 @@ void Trackball::Update()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Trackball::Matrix()
+void Trackball::ProcessTrackballEvents()
 {
    tb_accuTransform=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
-   Update();
+   UpdateKeyboardMouse();
 
    Matrix44f mat;
    Matrix44f accRotation;
