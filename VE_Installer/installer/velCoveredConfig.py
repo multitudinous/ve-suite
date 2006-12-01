@@ -53,7 +53,7 @@ class CoveredConfig(CoveredState):
 
     def InterpretArgument(self, argument):
         if argument:
-            self.Edit("FileDir", os.path.dirname(os.path.abspath(argument)))
+##            self.Edit("FileDir", os.path.dirname(os.path.abspath(argument)))
             if argument[-4:] == '.ves':
                 self.SetVesFile(argument)
             else:
@@ -66,8 +66,9 @@ class CoveredConfig(CoveredState):
     def SetVesFile(self, vesFile):
         """Applies a .ves argument to the launcher."""
         if vesFile:
-            self.Cover("Directory", os.path.dirname(os.path.abspath(vesFile)),
-                       layer = VES_LAYER)
+##            self.Cover("Directory", os.path.dirname(os.path.abspath(vesFile)),
+##                       layer = VES_LAYER)
+            self.Edit("Directory", os.path.dirname(os.path.abspath(vesFile)))
             self.Cover("VESFile", vesFile, layer = VES_LAYER)
             ##Ensure only one file loaded at a time.
             self.SetScript(None)
@@ -79,9 +80,10 @@ class CoveredConfig(CoveredState):
     def SetScript(self, scriptFile):
         """Applies a script (.bat, .tsh, .sh) argument to the launcher."""
         if scriptFile:
-            self.Cover("Directory",
-                       os.path.dirname(os.path.abspath(scriptFile)),
-                       layer = SCRIPT_LAYER)
+##            self.Cover("Directory",
+##                       os.path.dirname(os.path.abspath(scriptFile)),
+##                       layer = SCRIPT_LAYER)
+            self.Edit("Directory", os.path.dirname(os.path.abspath(scriptFile)))
             self.Cover("ShellScript", scriptFile, layer = SCRIPT_LAYER)
             self.Cover("Shell", True, layer = SCRIPT_LAYER)
             self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
