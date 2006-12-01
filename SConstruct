@@ -3,6 +3,7 @@ EnsureSConsVersion(0,96)
 SConsignFile()
 
 import os, sys, string, smtplib
+import distutils.util
 from subprocess import *
 pj = os.path.join
 
@@ -21,6 +22,7 @@ GetPlatform = sca_util.GetPlatform
 Export('GetPlatform')
 GetArch = sca_util.GetArch
 Export('GetArch')
+buildPlatform = distutils.util.get_platform()
 
 ##WX_HOME_DIR = '/home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/'
 
@@ -90,7 +92,7 @@ baseEnv.Append(CPPPATH = ['#'])
 ##taoHome = piped.read()[:-1]
 ##piped.close()
 ##baseEnv.Append(PATH = ["%s/bin" %taoHome])
-buildDir = 'build.' + GetPlatform() + '.' + GetArch()
+buildDir = 'build.' + buildPlatform + '.' + GetArch()
 baseEnv.BuildDir(buildDir, '.', duplicate = 0)
 
 ##See scons users guide section 15 on variant builds
@@ -145,7 +147,7 @@ builders = {
    
 
 ################################################################################
-options_cache = 'options.cache.' + GetPlatform()
+options_cache = 'options.cache.' + buildPlatform
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
