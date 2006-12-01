@@ -19,7 +19,7 @@ namespace osg
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS MouseSelection:public SelectionHandler
+   class MouseSelection//:public SelectionHandler
    {
       public:
          MouseSelection();

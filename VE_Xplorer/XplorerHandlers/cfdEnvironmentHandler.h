@@ -47,7 +47,6 @@ cfdEnvironmentHandler API
 namespace VE_Xplorer
 {
 	class cfdNavigate;
-	class Trackball;
    class cfdCursor;
    class cfdCommandArray;
    class cfdReadParam;
@@ -57,7 +56,6 @@ namespace VE_Xplorer
    class cfdQuatCamHandler;
    class cfdDisplaySettings;
 
-   class KeyboardMouse;
    class MouseSelection;
 
 #ifdef VE_PATENTED
@@ -106,8 +104,6 @@ public:
    void SetBackgroundColor(std::vector<double> color);
    ///Accessor for cfdNavigate
    cfdNavigate* GetNavigate( void );
-	///Accessor for Trackball
-	Trackball* GetTrackball( void );
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
    ///Accessor for cfdSoundHandler
@@ -117,8 +113,6 @@ public:
    ///Accessor for cfdQuatCamHandler
    //cfdQuatCamHandler* GetQuatCamHandler( void );
 
-   ///Accessor for KeyboardMouse
-   KeyboardMouse* GetKeyboardMouse( void );
 
    ///Accessor for MouseSelection
    MouseSelection* GetMouseSelection( void );
@@ -150,12 +144,10 @@ public:
 #endif //_OSG 
 private:
    cfdNavigate* nav;
-	Trackball* trackball;
    cfdTeacher* _teacher;
    cfdSoundHandler* _soundHandler;
    cfdQuatCamHandler* _camHandler;
 
-   KeyboardMouse* keyboard_mouse;
    MouseSelection* mouse_selection;
 
 #ifdef _OSG 

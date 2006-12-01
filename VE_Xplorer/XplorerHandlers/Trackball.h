@@ -1,5 +1,10 @@
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//Don't implement this class; it is handled through DeviceHandler
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 #ifndef TRACKBALL_H
 #define TRACKBALL_H
+
 /*!\file Trackball.h
 Trackball API
 */

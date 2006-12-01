@@ -1,5 +1,12 @@
 #include <iostream>
 
+#include "VE_Xplorer/XplorerHandlers/MouseSelection.h"
+
+#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+
 #include <osg/Vec3>
 #include <osg/Vec4>
 #include <osg/Geometry>
@@ -7,14 +14,7 @@
 #include <osg/Geode>
 #include <osg/LineSegment>
 
-#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
-#include "VE_Xplorer/XplorerHandlers/MouseSelection.h"
-
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 MouseSelection::MouseSelection()
@@ -29,7 +29,7 @@ MouseSelection::~MouseSelection()
 ////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::LineSegment> MouseSelection::CreateLineSegment()
 {
-   if(cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.empty()){
+   if(VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->evt_queue.empty()){
       return 0;
    }
 
@@ -41,29 +41,29 @@ void MouseSelection::Update()
 {
    gadget::KeyboardMouse::EventQueue::iterator i;
 
-   for(i=cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.begin();
-       i!=cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.end();++i){
+   for(i=VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->evt_queue.begin();
+       i!=VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->evt_queue.end();++i){
        
       const gadget::EventType type=(*i)->type();
 
       if(type==gadget::KeyPressEvent){
-         gadget::KeyEventPtr key_evt=dynamic_pointer_cast<gadget::KeyEvent>(*i);
+         gadget::KeyEventPtr key_evt=boost::dynamic_pointer_cast<gadget::KeyEvent>(*i);
          
          //std::cout<<key_evt->getKey()<<std::endl;
       }
       
       else if(type==gadget::MouseButtonPressEvent){
-         gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+         gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
          NormalizeXY(mouse_evt->getX(),mouse_evt->getY());
       }
 
       else if(type==gadget::MouseButtonReleaseEvent){
-         gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+         gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
          NormalizeXY(mouse_evt->getX(),mouse_evt->getY());
       }
 
       else if(type==gadget::MouseMoveEvent){
-         gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+         gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
          NormalizeXY(mouse_evt->getX(),mouse_evt->getY());
       }
       std::cout<<ms_normalized_x<<std::endl;
@@ -113,7 +113,7 @@ osg::ref_ptr<osg::LineSegment> MouseSelection::ProjectNormalizedXYIntoObjectCoor
    geode->addDrawable(line.get());
 
    
-   cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->asGroup()->addChild(geode.get());
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->asGroup()->addChild(geode.get());
 
    return lineSegment;
 }

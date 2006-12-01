@@ -1,11 +1,17 @@
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//Don't implement this class; it is handled through DeviceHandler
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 #ifndef KEYBOARD_MOUSE_H
 #define KEYBOARD_MOUSE_H
+
 /*!\file KeyboardMouse.h
 KeyboardMouse API
 */
 /*!\class VE_XPlorer::KeyboardMouse
 * 
 */
+
 #include <boost/shared_ptr.hpp>
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
@@ -13,7 +19,7 @@ KeyboardMouse API
 
 #include "VE_Installer/include/VEConfig.h"
 
-using namespace boost;
+//using namespace boost;
 
 namespace VE_Xplorer
 {
@@ -23,7 +29,7 @@ namespace VE_Xplorer
          KeyboardMouse();
 	      ~KeyboardMouse();
 
-	      void preFrame();
+	      void ProcessKeyboardMouseEvents();
 
          void SetKey(int key);
 
@@ -37,7 +43,7 @@ namespace VE_Xplorer
 
       private:
          gadget::KeyboardMouseInterface mKeyboard;
-
+         
          int _key;
          int _button;
          int _state;

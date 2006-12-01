@@ -855,6 +855,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TrackballEventHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\WandSelection.cxx"
 				>
 			</File>
@@ -1249,6 +1253,10 @@
 			</File>
 			<File
 				RelativePath=".\Trackball.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TrackballEventHandler.h"
 				>
 			</File>
 			<File

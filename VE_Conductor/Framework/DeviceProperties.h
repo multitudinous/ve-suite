@@ -8,9 +8,23 @@ DeviceProperties API
 * 
 */
 
+#include <vector>
+#include <string>
+
 #include <wx/dialog.h>
 
 class wxSplitterWindow;
+class wxCheckBox;
+
+namespace VE_XML
+{
+   class DataValuePair;
+}
+
+namespace VE_Conductor
+{
+   class CORBAServiceList;
+}
 
 enum DEVICE_IDS 
 {
@@ -33,8 +47,18 @@ class DeviceProperties:public wxDialog
       void BuildGUI();
 
       wxSplitterWindow* device_splitter;
+      wxCheckBox* animate_check_box;
 
       void OnAnimate(wxCommandEvent& event);
+
+      bool animate;
+
+      std::vector<VE_XML::DataValuePair*> instructions;        //The DataValuePairs for the current command
+
+      void SendCommandsToXplorer();
+      void ClearInstructions();
+
+      VE_Conductor::CORBAServiceList* serviceList;
 
       DECLARE_EVENT_TABLE()
 };

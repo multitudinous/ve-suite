@@ -587,6 +587,8 @@ void cfdApp::draw()
    gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
    gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
 
+   gl_manager->currentUserData()->getProjection()->getViewMatrix();
+  
    // compute unsigned versions of the viewport info (for passing to glViewport)
    unsigned ll_x = unsigned( vp_ox*float( w_width ) );
    unsigned ll_y = unsigned( vp_oy*float( w_height) );

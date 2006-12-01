@@ -1,23 +1,23 @@
 #include <iostream>
 #include <cmath>
 
+#include "VE_Xplorer/XplorerHandlers/Trackball.h"
+
+#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
+#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+
 #include <osg/Group>
 #include <osg/BoundingSphere>
 #include <osg/BoundingBox>
 
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
-#include "VE_Xplorer/XplorerHandlers/Trackball.h"
-
-using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
-
 const double OneEightyDivPI=57.29577951;
 const double PIDivOneEighty=.0174532925;
 const float offset=0.5f;
+
+using namespace VE_Xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 Trackball::Trackball()
@@ -59,18 +59,18 @@ void Trackball::Update()
 {
    gadget::KeyboardMouse::EventQueue::iterator i;
 
-   for(i=cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.begin();
-       i!=cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.end();++i){
+   for(i=VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->evt_queue.begin();
+       i!=VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->evt_queue.end();++i){
        
       const gadget::EventType type=(*i)->type();
 
       if(type==gadget::KeyPressEvent){
-         gadget::KeyEventPtr key_evt=dynamic_pointer_cast<gadget::KeyEvent>(*i);
+         gadget::KeyEventPtr key_evt=boost::dynamic_pointer_cast<gadget::KeyEvent>(*i);
          Keyboard(key_evt->getKey());
       }
       
       else if(type==gadget::MouseButtonPressEvent){
-         gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+         gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
          Mouse(mouse_evt->getButton(),1,mouse_evt->getX(),mouse_evt->getY());
 
          if(tb_animate){
@@ -83,12 +83,12 @@ void Trackball::Update()
       }
 
       else if(type==gadget::MouseButtonReleaseEvent){
-         gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+         gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
          Mouse(mouse_evt->getButton(),0,mouse_evt->getX(),mouse_evt->getY());
       }
 
       else if(type==gadget::MouseMoveEvent){
-         gadget::MouseEventPtr mouse_evt=dynamic_pointer_cast<gadget::MouseEvent>(*i);
+         gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
          Motion(mouse_evt->getX(),mouse_evt->getY());
       }
    }
@@ -96,11 +96,7 @@ void Trackball::Update()
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::Matrix()
 {
-   //if(cfdEnvironmentHandler::instance()->GetKeyboardMouse()->evt_queue.empty()){
-      //return;
-   //}
-
-	tb_accuTransform=cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+   tb_accuTransform=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
    Update();
 
@@ -126,8 +122,8 @@ void Trackball::Matrix()
 		accTranslation[i]=tb_accuTransform[i][3];
 	}
 
-	cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray((float *)accTranslation);
-	cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix(tb_accuTransform);
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray((float *)accTranslation);
+	VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix(tb_accuTransform);
 
    if(!tb_animate){
 	   identity(tb_transform);
@@ -217,7 +213,7 @@ void Trackball::FitToScreen()
 {
    osg::BoundingSphere bs;
 
-   bs.expandBy(cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->getBound());
+   bs.expandBy(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->getBound());
 
 	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
    float d=bs.radius()+(bs.radius()/tan(Theta))*tb_aspectRatio;
