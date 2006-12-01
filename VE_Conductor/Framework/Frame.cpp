@@ -156,8 +156,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
    EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 
-   EVT_MENU( TRACKBALL_MODE, AppFrame::NavigationSettings )
-   EVT_MENU( WAND_MODE, AppFrame::NavigationSettings )
+   EVT_MENU( TRACKBALL_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( WAND_MODE, AppFrame::ChangeDeviceMode )
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
@@ -718,7 +718,7 @@ void AppFrame::CreateMenu()
    xplorerViewMenu = new wxMenu();
 
    xplorerDeviceMenu->AppendRadioItem( TRACKBALL_MODE, _("Trackball") );
-   xplorerDeviceMenu->AppendRadioItem( WAND_MODE,      _("Wand") );
+   xplorerDeviceMenu->AppendRadioItem( WAND_MODE, _("Wand") );
    xplorerDeviceMenu->Check( TRACKBALL_MODE, true);
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
@@ -1551,6 +1551,32 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
    }
 }
 ///////////////////////////////////////////////////////////////////
+void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
+{
+   //Create the command and data value pairs
+   VE_XML::DataValuePair* DVP=new VE_XML::DataValuePair();
+   VE_XML::Command* command=new VE_XML::Command();
+
+   if(xplorerDeviceMenu->IsChecked(TRACKBALL_MODE)){
+      DVP->SetData(std::string("DeviceMode"),(unsigned int)(0));
+   }
+
+   else if(xplorerDeviceMenu->IsChecked(WAND_MODE)){
+      DVP->SetData(std::string("DeviceMode"),(unsigned int)(1));
+   }
+
+   else{
+      DVP->SetData(std::string("DeviceMode"),(unsigned int)(-1));
+   }
+   
+   command->SetCommandName(std::string("CHANGE_DEVICE_MODE"));
+   command->AddDataValuePair(DVP);
+
+   serviceList->SendCommandStringToXplorer(command);
+   
+   delete command;
+}
+///////////////////////////////////////////////////////////////////
 void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED(event) )
 {
    if ( recordScenes == 0 )
@@ -1613,29 +1639,6 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
    */
    _cadDialog->SetVjObsPtr( GetXplorerObject() );
    _cadDialog->Show();
-}
-///////////////////////////////////////////////////////////////////
-void AppFrame::NavigationSettings( wxCommandEvent& event )
-{
-   // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair=new VE_XML::DataValuePair();
-   dataValuePair->SetDataName( "Mode" );
-   if( event.GetId() == TRACKBALL_MODE )
-   {
-      dataValuePair->SetDataValue((unsigned int) 0 );
-   }
-   else if( event.GetId() == WAND_MODE )
-   {
-      dataValuePair->SetDataValue( (unsigned int) 1 );
-   }
-
-   VE_XML::Command* veCommand = new VE_XML::Command();
-   veCommand->SetCommandName( std::string("Navigation_Mode_Settings") );
-   veCommand->AddDataValuePair( dataValuePair );
-
-   serviceList->SendCommandStringToXplorer( veCommand );
-   
-   delete veCommand;
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& event )

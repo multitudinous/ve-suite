@@ -296,6 +296,9 @@ protected:
    void LaunchStreamlinePane(wxCommandEvent& event);
    void LaunchRecordScenes( wxCommandEvent& event );
 
+   //Change the device mode in xplorer
+   void ChangeDeviceMode(wxCommandEvent& event);
+
    ///Set the background color in xplorer
    ///\param The command event
    void SetBackgroundColor(wxCommandEvent& event); 
@@ -307,8 +310,6 @@ protected:
    ///\param event The wxCommand event.
    void LaunchCADNodePane(wxCommandEvent& event);
 
-   ///Process Navigation settings
-   void NavigationSettings( wxCommandEvent& event);
    ///Process Juggler settings
    void JugglerSettings( wxCommandEvent& event );
    ///Get the user preferences class
