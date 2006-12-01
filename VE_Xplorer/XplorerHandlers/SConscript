@@ -68,6 +68,7 @@ sources = Split("""
    MaterialUpdateEH.cxx
    KeyboardMouse.cxx
    Trackball.cxx
+   TrackballEventHandler.cpp
    cfdObjectHandler.cxx
    SelectionHandler.cxx
    MouseSelection.cxx
@@ -162,6 +163,7 @@ headers = Split("""
    MaterialUpdateEH.h
    KeyboardMouse.h
    Trackball.h
+   TrackballEventHandler.h
    cfdObjectHandler.h
    SelectionHandler.h
    MouseSelection.h

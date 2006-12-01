@@ -117,6 +117,7 @@ SRCS=\
    MaterialUpdateEH.cxx\
    KeyboardMouse.cxx\
    Trackball.cxx\
+   TrackballEventHandler.cpp\
    cfdObjectHandler.cxx\
    SelectionHandler.cxx\
    MouseSelection.cxx\
