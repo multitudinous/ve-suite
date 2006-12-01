@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: VEConfig.h,v $
- * Date modified: $Date: 2005-05-25 23:32:59 -0500 (Wed, 25 May 2005) $
- * Version:       $Rev: 2321 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
