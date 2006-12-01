@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options')
+Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options PREFIX')
 
 srcs = Split("""
    App.cpp 
@@ -56,10 +56,15 @@ prog.addSources( srcs )
 prog.build()
 
 if GetPlatform() == "darwin":
-   conductorTarget = pj( '#', buildDir,'VE_Conductor','Framework','Conductor')
-   winTarget = pj( '#',buildDir,'VE_Conductor','Framework','WinClient')
    idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o ${SOURCE}'
    bld = Builder(action = idlCmd )
    env.Append(BUILDERS = {'apple_rez': bld})
+   if 'install' in COMMAND_LINE_TARGETS:
+      conductorTarget = pj(PREFIX,'bin','Conductor')
+      winTarget = pj(PREFIX,'bin','WinClient')
+   else:
+      conductorTarget = pj( '#', buildDir,'VE_Conductor','Framework','Conductor')
+      winTarget = pj( '#',buildDir,'VE_Conductor','Framework','WinClient')
+
    env.apple_rez( conductorTarget, winTarget)
    env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))
