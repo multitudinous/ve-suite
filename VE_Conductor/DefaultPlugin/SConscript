@@ -4,7 +4,7 @@ import os, sys, string, smtplib
 
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options')
+Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options GetPlatform')
 
 sources = Split("""
     DefaultPlugin.cxx
@@ -31,13 +31,14 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
 lib_env.ParseConfig('flagpoll TAO --cflags --libs')
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
-##if baseEnv['StaticOnly'] == "no":
+#create a bundle instead of a shared library
+if GetPlatform() == 'darwin':
+   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
+   lib_env['SHLIBSUFFIX'] = '.bundle'
+
 lib = ves_pkg.createSharedLibrary('DefaultPlugin_UI_Dialog',
                                                         lib_env,
                                                         installPrefix = pj('bin','Plugins','UI'))
-##else:
-##   lib = ves_pkg.createStaticLibrary('DefaultPlugin_UI_Dialog', lib_env,
-##                                               installPrefix = pj('bin','Plugins','UI'))
    
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'VE_Conductor', 'DefaultPlugin'))
