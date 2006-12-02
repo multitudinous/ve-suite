@@ -166,9 +166,25 @@ Targets:
    > scons
    
    To install VE-Suite:
-   install - Install VE-Suite
-   > scons install prefix=build/test' to install in a test build directory
+      install - Install VE-Suite
+      > scons install prefix=build/test' to install in a test build directory
  
+   To build a specific component of VE-Suite:
+      builder - Build VE-Builder
+      > scons builder
+
+      open - Build VE-Open
+      > scons open
+
+      conductor - Build VE-Conductor
+      > scons conductor
+
+      xplorer - Build VE-Xplorer
+      > scons xplorer
+
+      ce - Build VE-CE
+      > scons ce
+
    Make sure that vrjuggler, Boost.Filesystem, ACE/TAO, and apr/apr-util are
    in your FLAGPOLL_PATH or PKGCONFIG_PATH or (DY)LD_LIBRARY_PATH. This is
    necessaary to auto-detect the dependencies.
@@ -180,13 +196,7 @@ This file will be loaded each time.  Note: Options are cached in the file
 %s
 """ % options_cache
 
-##help_text = help_text + """Options:
-##   optimize=yes    Generate optimized code.
-##   profile=yes     Turn on generation of profiling code.
-##   
-##"""
-
-help_text = help_text + opts.GenerateHelpText(baseEnv)
+help_text += opts.GenerateHelpText(baseEnv)
 
 baseEnv.Help(help_text)
 
