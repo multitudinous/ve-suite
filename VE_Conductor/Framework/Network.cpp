@@ -797,7 +797,9 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
 	      links.erase( iter3++ );
 	   }
       else
+      {
          ++iter3;
+      }
    }
    
    //Now delete the plugin from the module and then remove from the map

@@ -47,7 +47,7 @@ Link::Link( wxWindow* designCanvas )
    To_mod = 1000000;
    Fr_port = 1000000;
    To_port = 1000000;
-//cons.resize( 2 );
+   //cons.resize( 2 );
    canvas = designCanvas;
 }
 ////////////////////////////////////////////////

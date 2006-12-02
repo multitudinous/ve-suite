@@ -33,13 +33,13 @@ vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
-if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag),
+##if baseEnv['StaticOnly'] == "no":
+lib = ves_pkg.createSharedLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag),
                                                         lib_env,
-                                                        installPrefix = LIBDIR)
-else:
-   lib = ves_pkg.createStaticLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag), lib_env,
-                                               installPrefix = LIBDIR)
+                                                        installPrefix = pj('bin','Plugins','GE'))
+##else:
+##   lib = ves_pkg.createStaticLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag), lib_env,
+##                                               installPrefix = pj('bin','Plugins','GE'))
    
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'VE_Xplorer', 'DefaultGraphicalPlugin'))

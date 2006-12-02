@@ -31,13 +31,13 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
 lib_env.ParseConfig('flagpoll TAO --cflags --libs')
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('DefaultPlugin_UI_Dialog',
+##if baseEnv['StaticOnly'] == "no":
+lib = ves_pkg.createSharedLibrary('DefaultPlugin_UI_Dialog',
                                                         lib_env,
-                                                        installPrefix = LIBDIR)
-else:
-   lib = ves_pkg.createStaticLibrary('DefaultPlugin_UI_Dialog', lib_env,
-                                               installPrefix = LIBDIR)
+                                                        installPrefix = pj('bin','Plugins','UI'))
+##else:
+##   lib = ves_pkg.createStaticLibrary('DefaultPlugin_UI_Dialog', lib_env,
+##                                               installPrefix = pj('bin','Plugins','UI'))
    
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'VE_Conductor', 'DefaultPlugin'))

@@ -81,24 +81,8 @@ def CreateConfig(target, source, env):
       os.chmod(targets[0], 0755)
    return 0
 
-base_bldr = EnvironmentBuilder()
-baseEnv = base_bldr.buildEnvironment()
-## load environment of the shell that scons is launched from
-baseEnv[ 'ENV' ] = os.environ
-
-baseEnv.Append(CPPPATH = ['#'])
-##taoHome = Popen(['flagpoll', 'TAO', '--get-prefix'], stdout=PIPE).communicate[0]
-##piped = os.popen("flagpoll TAO --get-prefix")
-##taoHome = piped.read()[:-1]
-##piped.close()
-##baseEnv.Append(PATH = ["%s/bin" %taoHome])
-buildDir = 'build.' + buildPlatform + '.' + GetArch()
-baseEnv.BuildDir(buildDir, '.', duplicate = 0)
-
 ##See scons users guide section 15 on variant builds
 ##Setup some project defaults
-baseEnv.Append( BUILDDIR = buildDir,
-                CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
 
 ## make the temp bin and lib dirs in the build dir
 ##if not os.path.exists( pj( buildDir, 'lib' ) ):
@@ -112,13 +96,6 @@ baseEnv.Append( BUILDDIR = buildDir,
 ##if not os.path.exists( pj( buildDir, 'bin' ) ):
    ##baseEnv.Execute(Mkdir( pj( buildDir, 'bin' ) ))
    ##os.makedirs( pj( buildDir, 'bin' ) )
-
-
-Export('baseEnv')
-Export('Platform')
-Export('buildDir')
-
-env = baseEnv.Copy()
 
 ################################################################################
 ################################################################################
@@ -180,7 +157,11 @@ opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config fi
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
 Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options')
-  
+
+base_bldr = EnvironmentBuilder()
+base_bldr.addOptions( opts )
+baseEnv = base_bldr.buildEnvironment()
+
 help_text = """--- VE-Suite Build system ---
 Targets:
    To build VE-Suite:
@@ -212,7 +193,6 @@ help_text = help_text + opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
 
 if not SConsAddons.Util.hasHelpFlag():
-   ##opts.Apply(baseEnv,True)
    opts.Process(baseEnv, None, True)                   # Update the options
 
    try:                                   # Try to save the options if possible
@@ -220,6 +200,22 @@ if not SConsAddons.Util.hasHelpFlag():
    except LookupError, le:
       pass
    
+   ## read the builder options after they have been added to the env
+   base_bldr.readOptions( baseEnv )
+   ##base_bldr = base_bldr.clone()
+   baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
+   ## load environment of the shell that scons is launched from
+   baseEnv[ 'ENV' ] = os.environ
+   baseEnv.Append(CPPPATH = ['#'])
+   baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
+   #setup the build dir
+   buildDir = 'build.' + buildPlatform + '.' + GetArch()
+   baseEnv.BuildDir(buildDir, '.', duplicate = 0)
+
+   Export('Platform')
+   Export('buildDir')
+   Export('baseEnv')
+
    # Update environment for boost options
    ##if boost_options.isAvailable():
    ##   boost_options.updateEnv(baseEnv)
