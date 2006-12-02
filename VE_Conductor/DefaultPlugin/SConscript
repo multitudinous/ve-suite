@@ -31,6 +31,7 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
 lib_env.ParseConfig('flagpoll TAO --cflags --libs')
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
+##lib_env.LoadableModule
 #create a bundle instead of a shared library
 if GetPlatform() == 'darwin':
    lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'

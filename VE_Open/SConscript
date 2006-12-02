@@ -1,0 +1,15 @@
+#!python
+openSubdirs = Split("""
+    idl
+    XML
+    XML/Shader
+    XML/CAD
+    XML/Model
+    skel
+""")
+
+
+##Run SConscript files in all of those folders.
+for d in openSubdirs:
+   #print " dir ", d
+   SConscript( dirs = d )

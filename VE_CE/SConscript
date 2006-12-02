@@ -30,3 +30,12 @@ xerces_options.apply( env )
 ce_prog = ves_pkg.createProgram('Exe_server', env, 'bin')
 ce_prog.addSources( srcs )
 ce_prog.build()
+
+ceSubdirs = Split("""
+   Utilities
+   UnitWrapper
+""")
+
+##Run SConscript files in all of those folders.
+for d in ceSubdirs:
+   SConscript( dirs = d )

@@ -1,0 +1,20 @@
+#!python
+
+xplorerSubdirs = Split("""
+    Utilities  
+    SceneGraph
+    SceneGraph/NURBS
+    SceneGraph/NURBS/Utilities
+    SceneGraph/Utilities
+    TextureBased
+    XplorerHandlers
+    GraphicalPlugin
+    XplorerNetwork
+    GE
+    DefaultGraphicalPlugin
+""")
+
+##Run SConscript files in all of those folders.
+for d in xplorerSubdirs:
+   #print " dir ", d
+   SConscript( dirs = d )

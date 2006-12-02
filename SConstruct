@@ -24,8 +24,6 @@ GetArch = sca_util.GetArch
 Export('GetArch')
 buildPlatform = distutils.util.get_platform()
 
-##WX_HOME_DIR = '/home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/'
-
 def GetTag(execTag = False, osgTag = False,
            patentedTag = False, clusterTag = False):
     """Creates a combined tag for libraries and programs."""
@@ -290,61 +288,36 @@ if not SConsAddons.Util.hasHelpFlag():
       else:
          cppdom_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
    
-   ##Set the Sconscript files to build.
-   openSubdirs = Split("""
-       VE_Open
-       VE_Open/XML
-       VE_Open/XML/Shader
-       VE_Open/XML/CAD
-       VE_Open/XML/Model
-       VE_Open/skel
-   """)
-
-   ceSubdirs = Split("""
-      VE_CE/Utilities
-      VE_CE
-      VE_CE/UnitWrapper
-   """)
-
-   conductorSubdirs = Split("""
-       Network
-       GUIPlugin
-       Utilities
-       Framework
-       DefaultPlugin
-   """)
-
-   xplorerSubdirs = Split("""
-       Utilities  
-       SceneGraph
-       SceneGraph/NURBS
-       SceneGraph/NURBS/Utilities
-       SceneGraph/Utilities
-       TextureBased
-       XplorerHandlers
-       GraphicalPlugin
-       XplorerNetwork
-       GE
-       DefaultGraphicalPlugin
-   """)
-
-   builderSubdirs = Split("""
-       Translator/cfdTranslatorToVTK
-       Translator/DataLoader
-       Translator/DataLoader/TestLoader
-       Preprocessor
-       vtkTo3DTexture/tcGUI
-       Utilities
-   """) 
-
    ##Tack on path prefixes to subdirs specified above.
-   builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)
-   openSubdirs = map(lambda s: pj(buildDir, s), openSubdirs)
-   conductorSubdirs = map(lambda s: pj(buildDir, 'VE_Conductor', s), conductorSubdirs)
-   xplorerSubdirs = map(lambda s: pj(buildDir, 'VE_Xplorer', s), xplorerSubdirs)
-   ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
+   builderSubdirs=pj(buildDir, 'VE_Builder')
+   ##builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)
+   openSubdirs = pj(buildDir,'VE_Open')
+   ##openSubdirs = map(lambda s: pj(buildDir, s), openSubdirs)
+   conductorSubdirs = pj(buildDir, 'VE_Conductor')
+   ##conductorSubdirs = map(lambda s: pj(buildDir, 'VE_Conductor', s), conductorSubdirs)
+   xplorerSubdirs = pj(buildDir, 'VE_Xplorer')
+   ##xplorerSubdirs = map(lambda s: pj(buildDir, 'VE_Xplorer', s), xplorerSubdirs)
+   ceSubdirs = pj(buildDir,'VE_CE')
+   ##ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
 
-   ves_dirs = [ openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs]
+   ##Set the Sconscript files to build.
+   if 'xplorer' in COMMAND_LINE_TARGETS:
+      ves_dirs = [ xplorerSubdirs ]
+      baseEnv.Alias('xplorer', xplorerSubdirs)
+   elif 'builder' in COMMAND_LINE_TARGETS:
+      ves_dirs = [ builderSubdirs ]
+      baseEnv.Alias('builder', builderSubdirs)
+   elif 'ce' in COMMAND_LINE_TARGETS:
+      ves_dirs = [ ceSubdirs ]
+      baseEnv.Alias('ce', ceSubdirs)
+   elif 'open' in COMMAND_LINE_TARGETS:
+      ves_dirs = [ openSubdirs ]
+      baseEnv.Alias('open', openSubdirs)
+   elif 'conductor' in COMMAND_LINE_TARGETS:
+      ves_dirs = [ conductorSubdirs ]
+      baseEnv.Alias('conductor', conductorSubdirs)
+   else:
+      ves_dirs = [ openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs]
 
    ##Run SConscript files in all of those folders.
    for d in ves_dirs:
