@@ -1018,12 +1018,9 @@ wxPoint Network::GetFreePos(wxRect bbox)
  
    return result;
 }
-
-
 ////////////////////////////////////////////////////
 ////////// Move and Drop Functions /////////////////
 ////////////////////////////////////////////////////
-
 void Network::MoveModule(int x, int y, int mod, wxDC &dc)
 {
   REI_Plugin *cur_module;
@@ -1082,7 +1079,7 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
       scroll = true;
    }
 
-  cur_module->SetPos(wxPoint(x-relative_pt.x, y-relative_pt.y));
+   cur_module->SetPos(wxPoint(x-relative_pt.x, y-relative_pt.y));
    //wipe off the old link connects with this module
    //Draw the links for a particular module
    for ( size_t i=0; i< links.size(); ++i )
@@ -1115,19 +1112,20 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
   bbox.width+=(int)( 3.0/userScale.first );
   bbox.height+=(int)( 3.0/userScale.first );
 
-  CleanRect(bbox, dc);  
-  if (oldxpos!=xpos||oldypos!=ypos||scroll)
-    {
+   CleanRect(bbox, dc);  
+   if (oldxpos!=xpos||oldypos!=ypos||scroll)
+   {
       xpos = (int)( 1.0 * xpos * userScale.first );
       ypos = (int)( 1.0 * ypos * userScale.first );
       Scroll(xpos, ypos);
       ReDrawAll();
-    }
-  else
-    ReDraw(dc);
+   }
+   else
+   {
+      ReDraw(dc);
+   }
  
 }
-
 /////////////////////////////////////////////////////////////
 void Network::DropModule(int ix, int iy, int mod )
 {
@@ -2997,15 +2995,30 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
 
    if ( num > 0 )
    {
-      size_t index = 0;
+      int index = -1;
       for ( size_t i = 0; i < ports.size(); ++i )
       {
+         /*std::cout << "this module id " << moduleID << " " << portNumber << " " 
+                  << i << " " << ports.at( i ).GetPortNumber() << " " 
+                  << ports[ i ].GetPortLocation()->GetPoint().first << " " 
+                  << ports[ i ].GetPortLocation()->GetPoint().second << std::endl;*/
          if ( ports.at( i ).GetPortNumber() == portNumber )
          {
             index = i;
             break;
          }
       }
+      
+      if ( index == -1 )
+      {
+         std::ostringstream msg;
+         msg << "Could not find port " << portNumber << " in module " << moduleID << std::endl;
+         CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+         serviceList->GetMessageLog()->SetMessage( msg.str().c_str() );
+         index = 0;
+      }
+      
+      std::cout << portNumber << " " << ports[ index ].GetPortLocation()->GetPoint().first << " " << ports[ index ].GetPortLocation()->GetPoint().second << std::endl;
       wxPoint portPoint( ports[ index ].GetPortLocation()->GetPoint().first, ports[ index ].GetPortLocation()->GetPoint().second );
       tempPoint.x = bbox.x+portPoint.x;
       tempPoint.y = bbox.y+portPoint.y;

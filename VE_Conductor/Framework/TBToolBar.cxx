@@ -60,7 +60,7 @@
 #include <iostream>
 BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
    EVT_TOOL_RANGE(SCALAR_ID,TRANSFER_FUNCS_ID,TextureBasedToolBar::_handleToolButtons)
-   EVT_CHECKBOX(BBOX_CHECK_BOX,TextureBasedToolBar::_onBBoxCheck)
+   //EVT_CHECKBOX(BBOX_CHECK_BOX,TextureBasedToolBar::_onBBoxCheck)
    EVT_BUTTON(TRANSIENT_BUTTON,TextureBasedToolBar::_onTransient)
 END_EVENT_TABLE()
 
@@ -76,10 +76,10 @@ TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
 
    mainSizer->Add(_tbToolButtons,2,wxALIGN_CENTER);
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
-   _bboxCheckBox = new wxCheckBox(this,BBOX_CHECK_BOX,"Display Bounds");
-   _bboxCheckBox->SetValue(true);
+   //_bboxCheckBox = new wxCheckBox(this,BBOX_CHECK_BOX,"Display Bounds");
+   //_bboxCheckBox->SetValue(true);
 
-   buttonRowSizer->Add(_bboxCheckBox,0,wxALIGN_CENTER);
+   //buttonRowSizer->Add(_bboxCheckBox,0,wxALIGN_CENTER);
    buttonRowSizer->Add(new wxButton(this,TRANSIENT_BUTTON,_T("Transient")),0,wxALIGN_CENTER);
    _addOKButton(buttonRowSizer);
    
@@ -209,7 +209,7 @@ void TextureBasedToolBar::_buildGUI()
    
 }
 /////////////////////////////////////////////////////////////
-void TextureBasedToolBar::_onBBoxCheck(wxCommandEvent& event)
+/*void TextureBasedToolBar::_onBBoxCheck(wxCommandEvent& event)
 {
    ClearInstructions();
    _commandName = "TB_BBOX_DISPLAY";
@@ -231,7 +231,7 @@ void TextureBasedToolBar::_onBBoxCheck(wxCommandEvent& event)
    _instructions.push_back(showBBox);
    _sendCommandsToXplorer();
    ClearInstructions();
-}
+}*/
 //////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_onTransient(wxCommandEvent& event)
 {

@@ -28,8 +28,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 module Types{
   // Array type def
   

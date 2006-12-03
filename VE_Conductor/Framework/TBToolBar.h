@@ -102,7 +102,7 @@ public:
 protected:
    wxToolBar* _tbToolButtons;///<The toolbar buttons;
    wxComboBox* _solutionSelection;///<The list of active solutions.
-   wxCheckBox* _bboxCheckBox;///<The check box to activate the Bounding Box
+   //wxCheckBox* _bboxCheckBox;///<The check box to activate the Bounding Box
    UI_TransientDialog* _transientControls;///<The "radio-like" controls for transient visualiation.
    VE_Conductor::GUI_Utilities::ROIDialog* _roiDlg;///<The ROI dialog;
    ScalarToolsDialog* _scalarToolsDlg;///<The scalar tools dialog;
@@ -129,7 +129,7 @@ protected:
    
    ///Handle bounding box check box event
    ///\param event wxCommand event
-   void _onBBoxCheck(wxCommandEvent& event);
+   //void _onBBoxCheck(wxCommandEvent& event);
    
    ///Launch transient controls
    ///\param event wxCommand event

@@ -245,12 +245,16 @@ void Link::DrawLink( bool flag, std::pair< double, double > scale )
 
    wxPoint* points = new wxPoint[ cons.size() ];
 
+
+   //std::cout << Fr_mod << " " <<  To_mod << " " << Fr_port << " " <<  To_port <<std::endl;
    //reverse the order of the points
    size_t j = 0;
    std::vector< wxPoint >::iterator iter;
-   //for ( iter = cons.end()-1; iter >= cons.begin(); --iter, j++ )
    for ( int i = cons.size()-1; i >= 0; i--, j++ )
+   {   
       points[ j ] = cons[i];
+      //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
+   }
 
    if (!flag)
    {
