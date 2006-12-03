@@ -2,7 +2,7 @@
 EnsureSConsVersion(0,96)
 SConsignFile()
 
-import os, sys, string, smtplib
+import os, sys, string, smtplib, platform
 import distutils.util
 from subprocess import *
 pj = os.path.join
@@ -23,6 +23,15 @@ Export('GetPlatform')
 GetArch = sca_util.GetArch
 Export('GetArch')
 buildPlatform = distutils.util.get_platform()
+##setup platform specific information
+pt = platform
+machineType = pt.machine()
+if GetPlatform() == 'linux':
+   kernelVersion = pt.libc_ver()[1]+'-'+pt.dist()[0]+'-'+pt.dist()[1]
+else:
+   kernelVersion = pt.release()
+
+buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
 
 def GetTag(execTag = False, osgTag = False,
            patentedTag = False, clusterTag = False):
@@ -122,7 +131,7 @@ builders = {
    
 
 ################################################################################
-options_cache = 'options.cache.' + buildPlatform
+options_cache = 'options.cache.' + buildUUID
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
@@ -217,10 +226,9 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append(CPPPATH = ['#'])
    baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
    #setup the build dir
-   buildDir = 'build.' + buildPlatform + '.' + GetArch()
+   buildDir = 'build.'+buildUUID
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
 
-   Export('Platform')
    Export('buildDir')
    Export('baseEnv')
 
