@@ -196,7 +196,7 @@ Source: {#OSGHOME}\..\Producer\bin\win32\*.dll; DestDir: {app}\bin; Components: 
 ;Source: {#OSGHOME}\bin\osgTextd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 ;Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 ;Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#COINHOME}\bin\coin2d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\vrJuggler2.0.1\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
@@ -247,6 +247,7 @@ Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags
 Source: {#OSGHOME}\..\Producer\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#OSGHOME}\..\OpenThreads\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#OSGHOME}\..\OpenSceneGraph-Data\fonts\*; DestDir: {app}\osg-fonts; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 
 
 [Icons]
