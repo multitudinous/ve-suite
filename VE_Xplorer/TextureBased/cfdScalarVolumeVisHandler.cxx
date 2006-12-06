@@ -90,34 +90,39 @@ void cfdScalarVolumeVisHandler::_setUpDecorator()
 ///////////////////////////////////////////////////////
 void cfdScalarVolumeVisHandler::_createTransferShader()
 {
-   if(!GetShaderManager("SCALAR_SHADER") && _tm){
+   if(!GetShaderManager("SCALAR_SHADER") && _tm)
+   {
       int* fieldSize = _tm->fieldResolution();
       //_transferSM = new cfdScalarShaderManager();
       AddShaderManager("SCALAR_SHADER",new cfdScalarShaderManager());
-      dynamic_cast<cfdScalarShaderManager*>(GetShaderManager("SCALAR_SHADER"))->SetUseTextureManagerForProperty(true);
+      /*dynamic_cast<cfdScalarShaderManager*>(GetShaderManager("SCALAR_SHADER"))->SetUseTextureManagerForProperty(true);
       dynamic_cast<cfdScalarShaderManager*>(GetShaderManager("SCALAR_SHADER"))->SetFieldSize(fieldSize[0],fieldSize[1],fieldSize[2]);
       dynamic_cast<cfdScalarShaderManager*>(GetShaderManager("SCALAR_SHADER"))->InitTextureManager(_tm);
-      GetShaderManager("SCALAR_SHADER")->Init();
-      if(_decoratorGroup.valid())
-      {
-         _decoratorGroup->setStateSet(GetShaderManager("SCALAR_SHADER")->GetShaderStateSet()/*_transferSM->GetShaderStateSet()*/);
-      }
+      GetShaderManager("SCALAR_SHADER")->Init();*/
+      SetActiveShader("SCALAR_SHADER");
    }
 }
 ////////////////////////////////////////////////////////////////////////
 void cfdScalarVolumeVisHandler::SetTextureManager(cfdTextureManager* tm)
 {
    cfdVolumeVisNodeHandler::SetTextureManager(tm);
-   if(GetShaderManager("SCALAR_SHADER"))
-   {
-      dynamic_cast<cfdScalarShaderManager*>(GetShaderManager("SCALAR_SHADER"))->UpdateTextureManager(_tm);
+   size_t nShaderManagers = _shaderManagers.size();
+   if(nShaderManagers)
+   { 
+      size_t nShaderManagers = _shaderManagers.size();
+      for ( std::map<std::string ,
+         VE_TextureBased::cfdOSGShaderManager*>::iterator itr = _shaderManagers.begin();
+         itr != _shaderManagers.end(); itr++ )
+      {
+         dynamic_cast<VE_TextureBased::cfdScalarShaderManager*>(itr->second)->UpdateTextureManager(_tm);
+      }
    }
 }
 /////////////////////////////////////////////////////
 void cfdScalarVolumeVisHandler::_applyTextureMatrix()
 {
    unsigned int tUnit = 0;
-   tUnit = GetShaderManager("SCALAR_SHADER")->GetAutoGenTextureUnit();
+   tUnit = GetShaderManager(_activeShader)->GetAutoGenTextureUnit();
 
    osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
    tMat->setMatrix(osg::Matrix::identity());

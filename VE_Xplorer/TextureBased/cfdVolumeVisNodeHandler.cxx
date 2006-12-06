@@ -43,6 +43,7 @@
 #include <osg/Vec3f>
 #include "VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h"
 #include "VE_Xplorer/TextureBased/cfdOSGShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 #include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
 using namespace VE_TextureBased;
@@ -62,11 +63,13 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler()
    _scale[1] = 1;
    _scale[2] = 1;
    _autoTexGen = true;
+   _activeShader = "";
 }
 //////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
                           cfdVolumeVisNodeHandler& vvnh)
 {
+   _activeShader = vvnh._activeShader;
    _bbox = vvnh._bbox;
    _bboxSwitch = new osg::Switch(*vvnh._bboxSwitch);
    _byPassNode = new osg::Group(*vvnh._byPassNode);
@@ -269,7 +272,9 @@ void cfdVolumeVisNodeHandler::SetActiveShader(std::string name)
 {
    if((!name.empty()) && _decoratorGroup.valid())
    {
+      _activeShader = name;
       _decoratorGroup->setStateSet(GetShaderManager(name)->GetShaderStateSet());
+      _applyTextureMatrix();
    }
 }
 ///////////////////////////////////////////////
@@ -357,8 +362,17 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
 }
 ////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::AddShaderManager(std::string name,
-                               VE_TextureBased::cfdOSGShaderManager* newShader)
+                               VE_TextureBased::cfdOSGShaderManager* newShader,
+                               bool isScalar)
 {
+   int* fieldSize = _tm->fieldResolution();
+   if(isScalar)
+   {
+      dynamic_cast<cfdScalarShaderManager*>(newShader)->SetUseTextureManagerForProperty(true);
+      dynamic_cast<cfdScalarShaderManager*>(newShader)->SetFieldSize(fieldSize[0],fieldSize[1],fieldSize[2]);
+      dynamic_cast<cfdScalarShaderManager*>(newShader)->InitTextureManager(_tm);
+   }
+   newShader->Init();
    _shaderManagers[name] = newShader;
 }
 //////////////////////////////////////////////////////////
@@ -374,6 +388,11 @@ cfdVolumeVisNodeHandler::GetShaderManager(std::string name)
       std::cout<<"The shader:"<<name<<" was not added!!"<<std::endl; 
    }
    return 0;
+}
+//////////////////////////////////////////////////////////
+std::string cfdVolumeVisNodeHandler::GetActiveShaderName()
+{
+   return _activeShader;
 }
 ///////////////////////////////////////////////////////////////////////
 //equal operator                                                     //
@@ -395,6 +414,7 @@ cfdVolumeVisNodeHandler::operator=(const cfdVolumeVisNodeHandler& vvnh)
       _scale[2] = vvnh._scale[2];
       _texGenParams = vvnh._texGenParams;
       _shaderManagers = vvnh._shaderManagers;
+      _activeShader = vvnh._activeShader;
    }
    return *this;
 }

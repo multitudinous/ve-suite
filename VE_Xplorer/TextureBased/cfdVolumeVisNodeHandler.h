@@ -91,7 +91,11 @@ namespace VE_TextureBased
          ///\param name The name of the shader
          ///\param newShader The shader manager
          void AddShaderManager(std::string name,
-                               VE_TextureBased::cfdOSGShaderManager* newShader);
+                               VE_TextureBased::cfdOSGShaderManager* newShader,
+                               bool isScalar=true);
+         
+         ///Get the active shader
+         std::string GetActiveShaderName();
          
          ///Get a shader manager
          ///\param name The name of the shader
@@ -119,6 +123,7 @@ namespace VE_TextureBased
          osg::Vec3f _center;
          float _scale[3];
 
+         std::string _activeShader;///<The active shader
          std::map<std::string,VE_TextureBased::cfdOSGShaderManager*> _shaderManagers;///<The shaders.
    };
 }
