@@ -69,7 +69,7 @@ namespace VE_TextureBased
       protected:
          void _setupStateSetForGLSL();
          bool _isoSurface;
-         void _updateTransferFunction();
+         virtual void _updateTransferFunction();
          float _scalarRange[2];
          float _percentScalarRange;
          void _initTransferFunctions();
