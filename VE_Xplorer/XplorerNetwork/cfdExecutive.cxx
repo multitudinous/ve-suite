@@ -58,7 +58,7 @@
 #include <sstream>
 
 #include <vpr/System.h>
-
+#include <vpr/Util/GUID.h>
 #include <orbsvcs/CosNamingC.h>
 
 #include <xercesc/dom/DOM.hpp>
@@ -101,10 +101,9 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 
    av_modules = new cfdVEAvail_Modules();
 
-   //time_t* timeVal;
-   long timeID = (long)time( NULL );
    std::ostringstream dirStringStream;
-   dirStringStream << "VEClient" << timeID;
+   dirStringStream << "VEClient-" << vpr::System::getHostname() 
+                     << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
    std::string UINAME = dirStringStream.str();
 
    _exec = NULL;
@@ -144,8 +143,6 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << "|\tConnected to the Executive " << std::endl;
       ui_i->GetNetworkFromCE();
-      //this->thread = new cfdThread();
-      //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
    } 
    catch ( CORBA::Exception& ) 
    {      

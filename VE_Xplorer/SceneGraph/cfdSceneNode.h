@@ -120,7 +120,6 @@ public:
    //set internal cfd node type
    virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
 
-   //vpr::GUID guid;
 protected:
    //our scene graph specific nodes
    int _numParents;
