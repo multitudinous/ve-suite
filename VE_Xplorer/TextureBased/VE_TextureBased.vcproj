@@ -624,6 +624,10 @@
 					RelativePath=".\cfdVolumeVisualization.cxx"
 					>
 				</File>
+				<File
+					RelativePath=".\TBVolumeSlices.cxx"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="headers"
@@ -650,6 +654,10 @@
 				</File>
 				<File
 					RelativePath=".\cfdVolumeVisualization.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TBVolumeSlices.h"
 					>
 				</File>
 			</Filter>

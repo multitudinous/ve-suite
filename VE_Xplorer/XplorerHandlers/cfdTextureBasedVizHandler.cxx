@@ -194,7 +194,7 @@ void cfdTextureBasedVizHandler::UpdateIsosurface(double value)
 {
    if(_svvh)
    {
-      cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
       if(sShader)
       {
          sShader->ActivateIsoSurface();
@@ -207,7 +207,7 @@ void cfdTextureBasedVizHandler::EnsureIsosurface(bool onOff)
 {
    if(_svvh)
    {
-      cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
       if(sShader)
       {
          if(onOff)
@@ -320,7 +320,7 @@ void cfdTextureBasedVizHandler::UpdateTransientDuration(double duration)
          ///duration calculation
          unsigned int nTimesteps = _activeTM->numberOfFields();
          _animationDelay = duration/((double)nTimesteps); 
-         cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+         cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
          if(sShader)
          {
             sShader->SetDelayTime(_animationDelay);
@@ -339,7 +339,7 @@ void cfdTextureBasedVizHandler::StepTransientVisualization(std::string direction
       int curFrame = _activeTM->getNextFrame();
       if(_svvh)
       {
-         cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+         cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
          if(sShader)
          {
             sShader->SetCurrentTransientTexture(curFrame,false);
@@ -597,7 +597,7 @@ void cfdTextureBasedVizHandler::UpdateScalarRange(float* range)
 {
    if(_svvh)
    {
-      cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
       if(sShader)
       {
          sShader->DeactivateIsoSurface();
@@ -671,8 +671,11 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
       _svvh->SetAttachNode(_activeVolumeVizNode->GetDecoratorAttachNode().get());
       _svvh->SetTextureManager(_activeTM);
       _svvh->Init();
+      _svvh->SetActiveShader("SCALAR_SHADER");
       if(!_svvh->IsThisActive())
+      {
          _svvh->EnableDecorator();
+      } 
    }
 }
 /////////////////////////////////////////////////////////

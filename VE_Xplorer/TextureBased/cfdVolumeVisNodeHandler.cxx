@@ -42,6 +42,7 @@
 #include <iostream>
 #include <osg/Vec3f>
 #include "VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h"
+#include "VE_Xplorer/TextureBased/cfdOSGShaderManager.h"
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 #include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
 using namespace VE_TextureBased;
@@ -80,13 +81,21 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
    _scale[2] = vvnh._scale[2];
    _texGenParams = new osg::TexGenNode(*vvnh._texGenParams);
    _autoTexGen = vvnh._autoTexGen;
+   _shaderManagers = vvnh._shaderManagers;
 }
 ///////////////////////////////////////////////////
 //Destructor                                     //
 ///////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::~cfdVolumeVisNodeHandler()
 {
-   
+   for ( std::map<std::string ,
+         VE_TextureBased::cfdOSGShaderManager*>::iterator itr = _shaderManagers.begin();
+         itr != _shaderManagers.end(); itr++ )
+   {
+      delete itr->second;
+      itr->second = 0;
+   }
+   _shaderManagers.clear();
 }
 ////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetBoundingBox(float* bbox)
@@ -205,7 +214,8 @@ void cfdVolumeVisNodeHandler::SetTextureScale(float* scale,bool isInverted)
 ///////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::_updateTexGenUnit(unsigned int unit)
 {
-   if(_texGenParams.valid()){
+   if(_texGenParams.valid())
+   {
       _texGenParams->setTextureUnit(unit);
    }
 }
@@ -214,7 +224,8 @@ void cfdVolumeVisNodeHandler::_updateTexGenUnit(unsigned int unit)
 ////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::_createTexGenNode()
 {
-   if(!_texGenParams.valid()){
+   if(!_texGenParams.valid())
+   {
       osg::Vec4 sPlane(1,0,0,0);
       osg::Vec4 tPlane(0,1,0,0);
       osg::Vec4 rPlane(0,0,1,0);
@@ -230,7 +241,8 @@ void cfdVolumeVisNodeHandler::_createTexGenNode()
 ////////////////////////////////////////////
 bool cfdVolumeVisNodeHandler::IsThisActive()
 {
-   if(_vvN.valid()){
+   if(_vvN.valid())
+   {
       int index = _whichChildIsThis ;
       return _vvN->getValue(index);
    }
@@ -239,35 +251,48 @@ bool cfdVolumeVisNodeHandler::IsThisActive()
 ////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetBoundingBoxName(std::string name)
 {
-   if((!name.empty()) && _bboxSwitch.valid()){
+   if((!name.empty()) && _bboxSwitch.valid())
+   {
       _bboxSwitch->setName(name);
    }
 }
 ////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetDecoratorName(std::string name)
 {
-   if((!name.empty()) && _decoratorGroup.valid()){
+   if((!name.empty()) && _decoratorGroup.valid())
+   {
       _decoratorGroup->setName(name);
+   }
+}
+///////////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::SetActiveShader(std::string name)
+{
+   if((!name.empty()) && _decoratorGroup.valid())
+   {
+      _decoratorGroup->setStateSet(GetShaderManager(name)->GetShaderStateSet());
    }
 }
 ///////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::EnableDecorator()
 {
-   if(_vvN.valid()){
+   if(_vvN.valid())
+   {
       _vvN->setSingleChildOn(_whichChildIsThis);
    }
 }
 //////////////////////////////////////////
 void cfdVolumeVisNodeHandler::TurnOnBBox()
 {
-   if(_bboxSwitch.valid()){
+   if(_bboxSwitch.valid())
+   {
       _bboxSwitch->setSingleChildOn(0);
    } 
 }
 ///////////////////////////////////////////
 void cfdVolumeVisNodeHandler::TurnOffBBox()
 {
-   if(_bboxSwitch.valid()){
+   if(_bboxSwitch.valid())
+   {
       _bboxSwitch->setSingleChildOn(1);
    } 
 }
@@ -330,7 +355,26 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
       std::cout<<"Invalid bbox in cfdVolumeVisNodeHandler::_createVisualBBox!"<<std::endl;
    }
 }
-
+////////////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::AddShaderManager(std::string name,
+                               VE_TextureBased::cfdOSGShaderManager* newShader)
+{
+   _shaderManagers[name] = newShader;
+}
+//////////////////////////////////////////////////////////
+VE_TextureBased::cfdOSGShaderManager* 
+cfdVolumeVisNodeHandler::GetShaderManager(std::string name)
+{
+   try
+   {
+      return _shaderManagers[name];
+   }
+   catch(...)
+   {
+      std::cout<<"The shader:"<<name<<" was not added!!"<<std::endl; 
+   }
+   return 0;
+}
 ///////////////////////////////////////////////////////////////////////
 //equal operator                                                     //
 ///////////////////////////////////////////////////////////////////////
@@ -350,6 +394,7 @@ cfdVolumeVisNodeHandler::operator=(const cfdVolumeVisNodeHandler& vvnh)
       _scale[1] = vvnh._scale[1];
       _scale[2] = vvnh._scale[2];
       _texGenParams = vvnh._texGenParams;
+      _shaderManagers = vvnh._shaderManagers;
    }
    return *this;
 }

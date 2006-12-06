@@ -16,9 +16,9 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
-			ConfigurationType="1"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			IntermediateDirectory="./VE_UtilLib/$(ConfigurationName)"
+			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -74,12 +74,13 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib comctl32.lib ws2_32.lib libboost_filesystem-vc80-mt-gd-1_33_1.lib"
 				ShowProgress="2"
-				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
+				OutputFile="$(OutDir)\VE_UtilLib.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\bin\bin\release&quot;;&quot;$(VJ_BASE_DIR)\vrjuggler-2.0-alpha4.win32-vc71\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				ProgramDatabaseFile=".\Release/VE_Xplorer.pdb"
 				SubSystem="1"
+				ImportLibrary="$(OutDir)\VE_UtilLib.lib"
 				TargetMachine="1"
 			/>
 			<Tool

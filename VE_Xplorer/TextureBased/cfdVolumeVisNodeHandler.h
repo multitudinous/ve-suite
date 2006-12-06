@@ -45,6 +45,7 @@
 #ifdef _OSG
 #include <osg/BoundingBox>
 #include <osg/ref_ptr>
+#include <map>
 namespace osg
 {
    class Group;
@@ -54,6 +55,7 @@ namespace osg
 namespace VE_TextureBased
 {
    class cfdTextureManager;
+   class cfdOSGShaderManager;
 }
 #include "VE_Installer/include/VEConfig.h"
 
@@ -74,6 +76,9 @@ namespace VE_TextureBased
          void SetBoundingBox(float* bbox);
          void SetBoundingBoxName(std::string name);
          void SetDecoratorName(std::string name);
+         ///Update which scalar shader is active
+         ///\param name The shader name
+         void SetActiveShader(std::string name);
          bool IsThisActive();
          virtual void Init();
    
@@ -82,6 +87,16 @@ namespace VE_TextureBased
 
          void EnableDecorator();
    
+         ///Add new shader manager.
+         ///\param name The name of the shader
+         ///\param newShader The shader manager
+         void AddShaderManager(std::string name,
+                               VE_TextureBased::cfdOSGShaderManager* newShader);
+         
+         ///Get a shader manager
+         ///\param name The name of the shader
+         VE_TextureBased::cfdOSGShaderManager* GetShaderManager(std::string name);
+
          cfdVolumeVisNodeHandler& operator=(const cfdVolumeVisNodeHandler& vvnh);
       protected:
          void _createVisualBBox();
@@ -103,6 +118,8 @@ namespace VE_TextureBased
          osg::BoundingBox _bbox;
          osg::Vec3f _center;
          float _scale[3];
+
+         std::map<std::string,VE_TextureBased::cfdOSGShaderManager*> _shaderManagers;///<The shaders.
    };
 }
 #endif //_OSG
