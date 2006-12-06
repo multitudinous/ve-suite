@@ -62,7 +62,7 @@ namespace VE_TextureBased
          virtual ~cfdScalarVolumeVisHandler();
          virtual void Init();
          virtual void SetTextureManager(cfdTextureManager* tm);
-         cfdScalarShaderManager* GetScalarShaderManager();
+         //cfdScalarShaderManager* GetScalarShaderManager();
          cfdScalarVolumeVisHandler& operator=(const cfdScalarVolumeVisHandler& vvnh);
 
       protected:
