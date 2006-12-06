@@ -47,6 +47,7 @@ Frame API
 #include "VE_Conductor/GUIPlugin/UI_i.h"
 
 #include <wx/frame.h>
+#include <wx/toolbar.h>
 #include <wx/icon.h>
 #include <wx/textctrl.h>
 #include <wx/image.h>
@@ -119,6 +120,9 @@ enum
    JUGGLER_STEREO,
    JUGGLER_MONO, 
    JUGGLER_SETTINGS,
+
+   ID_SELECTION_TOOLBAR,
+   ID_NAVIGATION_TOOLBAR,
 
    CAD_NODE_DIALOG,
    XPLORER_SCENES,
@@ -254,6 +258,7 @@ protected:
    wxRect DetermineFrameSize (wxConfig* config);
    void StoreFrameSize (wxRect rect, wxConfig* config);
    void CreateMenu();
+   void CreateTB();
    void ZoomIn(wxCommandEvent &event);
    void ZoomOut(wxCommandEvent &evetn);
    void Save(wxCommandEvent &event);

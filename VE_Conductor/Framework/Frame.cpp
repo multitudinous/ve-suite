@@ -91,6 +91,8 @@
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
+#include "VE_Conductor/xpm/selection32x32.xpm"
+#include "VE_Conductor/xpm/navigation32x32.xpm"
 #include <sstream>
 #include <iomanip>
 
@@ -220,6 +222,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    GetConfig(NULL);
    
    CreateMenu();
+   CreateTB();
    CreateStatusBar();
    SetStatusText("VE-Conductor Status");
 
@@ -308,7 +311,7 @@ void AppFrame::_configureDesktop()
    int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);
 
-   SetSize(wxSize(displayWidth,125/*displayHeight*0.0732421875*/));
+   SetSize(wxSize(displayWidth,160/*displayHeight*0.0732421875*/));
    SetPosition(wxPoint(0,0));
    //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
    //wxRegion desktopSize(0,0,displayWidth,displayHeight);
@@ -778,6 +781,21 @@ void AppFrame::CreateMenu()
    menubar->Append( xplorerMenu, _("&VE-Xplorer") );
 
    SetMenuBar(menubar);
+}
+
+void AppFrame::CreateTB()
+{
+   toolbar=CreateToolBar(wxTB_FLAT|wxTB_HORIZONTAL);
+   toolbar->SetBackgroundColour(wxColour(192,192,192));
+   toolbar->SetToolBitmapSize(wxSize(32,32));
+   wxBitmap selection_bitmap(selection32x32_xpm);
+   toolbar->AddTool(ID_SELECTION_TOOLBAR,"",selection_bitmap,"Selection",wxITEM_RADIO);
+   wxBitmap navigation_bitmap(navigation32x32_xpm);
+   toolbar->AddTool(ID_NAVIGATION_TOOLBAR,"",navigation_bitmap,"Navigation",wxITEM_RADIO);
+   toolbar->AddSeparator();
+   toolbar->Realize();
+
+   this->SetToolBar(toolbar);
 }
 
 void AppFrame::ZoomIn(wxCommandEvent& WXUNUSED(event) )
@@ -1556,18 +1574,22 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    //Create the command and data value pairs
    VE_XML::DataValuePair* DVP=new VE_XML::DataValuePair();
    VE_XML::Command* command=new VE_XML::Command();
+   
+   unsigned int mode;
 
    if(xplorerDeviceMenu->IsChecked(TRACKBALL_MODE)){
-      DVP->SetData(std::string("DeviceMode"),(unsigned int)(0));
+      mode=0;
    }
 
    else if(xplorerDeviceMenu->IsChecked(WAND_MODE)){
-      DVP->SetData(std::string("DeviceMode"),(unsigned int)(1));
+      mode=1;
    }
 
    else{
-      DVP->SetData(std::string("DeviceMode"),(unsigned int)(-1));
+      mode=-1;
    }
+
+   DVP->SetData(std::string("DeviceMode"),mode);
    
    command->SetCommandName(std::string("CHANGE_DEVICE_MODE"));
    command->AddDataValuePair(DVP);
