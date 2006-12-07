@@ -698,7 +698,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
    for ( iter = tags.begin(), i=0; iter != tags.end(); i++)
       if ( i == m_selTag )
       {
-         tags.erase( iter++ );
+         iter = tags.erase( iter );
          m_selTag=-1;
          break;
       }
@@ -727,7 +727,7 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
    {
       if (i==m_selLink)
       {
-         links.erase(iter++);
+         iter = links.erase( iter );
          m_selLink=-1;
          break;
       }
@@ -759,7 +759,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
    for (iter=links[m_selLink].GetPoints()->begin(), i=0; iter!=links[m_selLink].GetPoints()->end(); iter++, i++)
       if ( i == m_selLinkCon )
       {
-         links[m_selLink].GetPoints()->erase(iter++);
+         iter = links[m_selLink].GetPoints()->erase( iter );
          links[m_selLink].CalcLinkPoly();
          m_selLinkCon=-1;
          break;
@@ -794,7 +794,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
             (iter3->GetToModule() == m_selMod) 
          )
       {
-	      links.erase( iter3++ );
+	      iter3 = links.erase( iter3 );
 	   }
       else
       {
@@ -809,7 +809,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
       if ( iter->first==m_selMod )
       {
 	      //delete modules[m_selMod].GetPlugin();
-	      modules.erase( iter++ );
+	      iter = modules.erase( iter );
          //if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
          //{
             VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
