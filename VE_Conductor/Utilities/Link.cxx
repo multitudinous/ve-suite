@@ -53,7 +53,7 @@ Link::Link( wxWindow* designCanvas )
 ////////////////////////////////////////////////
 Link::~Link( void )
 {
-   ;//Do nothing since this class doesn't manage any of the pointers memory
+   cons.clear();
 }
 ////////////////////////////////////////////////
 Link::Link( const Link& input )

@@ -45,7 +45,7 @@ Polygon::Polygon( void )
 ////////////////////////////////////////////////
 Polygon::~Polygon( void )
 {
-   ;//Do nothing since this class doesn't manage any of the pointers memory
+   poly.clear();
 }
 ////////////////////////////////////////////////
 Polygon::Polygon( const Polygon& input )
