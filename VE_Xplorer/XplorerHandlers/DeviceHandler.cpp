@@ -6,7 +6,7 @@
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
-#include "VE_XPlorer/XplorerHandlers/DeviceEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/DeviceEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/TrackballEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
