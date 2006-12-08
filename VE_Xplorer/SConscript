@@ -1,5 +1,7 @@
 #!python
-
+import os, sys, string
+pj = os.path.join
+Import('baseEnv buildDir')
 xplorerSubdirs = Split("""
     Utilities  
     SceneGraph
@@ -18,3 +20,6 @@ xplorerSubdirs = Split("""
 for d in xplorerSubdirs:
    #print " dir ", d
    SConscript( dirs = d )
+
+baseEnv[ 'cluster' ] = 'yes'
+SConscript( dirs = "GE", build_dir=pj(buildDir,'VE_Xplorer','GE','cluster'))
