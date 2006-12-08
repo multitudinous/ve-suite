@@ -178,7 +178,7 @@ void cfdVolumeVisNodeHandler::Init()
 
       _visualBoundingBox->addChild(_decoratorGroup.get());
       _bboxSwitch->addChild(_decoratorGroup.get());
-      _bboxSwitch->setSingleChildOn(0);
+      _bboxSwitch->setSingleChildOn(1);
       _decoratorGroup->addChild(_texGenParams.get());
       _texGenParams->addChild(_byPassNode.get());
      
