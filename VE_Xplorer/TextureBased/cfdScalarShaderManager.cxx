@@ -186,13 +186,20 @@ void cfdScalarShaderManager::_updateTransferFunction()
       }
    }
    origRange = _tm->dataRange(_tm->GetCurrentFrame());
-   newRange[0] = (_scalarRange[0] - origRange.range[0])/
+   if((origRange.range[1]-origRange.range[0]) == 0.0)
+   {
+      newRange[0] = 0.0;
+      newRange[1] = 255.0;
+   }
+   else
+   {
+      newRange[0] = (_scalarRange[0] - origRange.range[0])/
                 (origRange.range[1]-origRange.range[0]);
-   newRange[0] *= 255.0;
-   newRange[1] = (_scalarRange[1] - origRange.range[0])/
+      newRange[0] *= 255.0;
+      newRange[1] = (_scalarRange[1] - origRange.range[0])/
                 (origRange.range[1]-origRange.range[0]);
-   newRange[1] *= 255.0;
-
+      newRange[1] *= 255.0;
+   }
    newMid = newRange[0] + .5*(newRange[1] - newRange[0]);
    invSRange =  1.0/(newRange[1]-newRange[0]);
    
