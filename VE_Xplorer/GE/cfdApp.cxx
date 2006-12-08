@@ -256,8 +256,9 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {
    vrj::OsgApp::configSceneView(newSceneViewer);
 
-	newSceneViewer->setDefaults(osgUtil::SceneView::NO_SCENEVIEW_LIGHT);
-
+   newSceneViewer->setDefaults(osgUtil::SceneView::NO_SCENEVIEW_LIGHT);
+   newSceneViewer->setSmallFeatureCullingPixelSize( 20 );
+      
    //newSceneViewer->setBackgroundColor( osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f) );
    newSceneViewer->getLight()->setAmbient(osg::Vec4(0.4f,0.4f,0.4f,1.0f));
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
