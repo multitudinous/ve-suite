@@ -809,7 +809,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
       if ( iter->first==m_selMod )
       {
 	      //delete modules[m_selMod].GetPlugin();
-	      iter = modules.erase( iter );
+	      modules.erase( iter++ );
          //if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
          //{
             VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
