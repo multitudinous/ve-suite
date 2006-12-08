@@ -2,6 +2,7 @@
 import os, sys, string
 pj = os.path.join
 Import('baseEnv buildDir')
+
 xplorerSubdirs = Split("""
     Utilities  
     SceneGraph

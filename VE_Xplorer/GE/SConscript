@@ -46,7 +46,7 @@ env.ParseConfig('flagpoll vrjuggler vpr TAO \
                           --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --get-vrj-ogl-libs')
 
-if baseEnv[ 'cluster' ] != "no":
+if baseEnv['cluster'] != 'no':
    execOsgPatTag += "_cluster"
    env.Append( CPPDEFINES = ['_CLUSTER' ])
    

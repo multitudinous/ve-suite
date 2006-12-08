@@ -18,6 +18,7 @@ import SConsAddons.AutoDist as sca_auto_dist
 import SConsAddons.Options.FlagPollBasedOption as fp_opt
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
 
+########### Setup build dir and name
 GetPlatform = sca_util.GetPlatform
 Export('GetPlatform')
 GetArch = sca_util.GetArch
@@ -33,6 +34,7 @@ else:
 
 buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
 
+########### Some utility functions
 def GetTag(execTag = False, osgTag = False,
            patentedTag = False, clusterTag = False):
     """Creates a combined tag for libraries and programs."""
@@ -87,6 +89,14 @@ def CreateConfig(target, source, env):
       open(targets[0], 'w').write(contents)
       os.chmod(targets[0], 0755)
    return 0
+
+def CheckPackageVersion(context, name, version):
+   context.Message( 'Checking for '+name+' >= '+version+'... ')
+   fp = 'flagpoll '+name+' --atleast-version='+version
+   fp = 'flagpoll '+name+' --modversion'
+   ret = context.TryAction(fp)[0]
+   context.Result( ret )
+   return ret
 
 ##See scons users guide section 15 on variant builds
 ##Setup some project defaults
@@ -170,7 +180,25 @@ Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options'
 base_bldr = EnvironmentBuilder()
 base_bldr.addOptions( opts )
 baseEnv = base_bldr.buildEnvironment()
+baseEnv[ 'ENV' ] = os.environ
 
+##check for flagpoll packages
+conf = Configure(baseEnv, custom_tests = {'CheckPackageVersion' : CheckPackageVersion })
+
+if not conf.CheckPackageVersion('flagpoll','0.8.1'):
+   print 'flagpoll >= 0.8.1 not found.'
+   Exit(1)
+
+if not conf.CheckPackageVersion('TAO','1.5'):
+   print 'TAO >= 1.5 not found.'
+   Exit(1)
+
+if not conf.CheckPackageVersion('vrjuggler','2.0.1'):
+   print 'vrjuggler >= 2.0.1 not found.'
+   Exit(1)
+baseEnv = conf.Finish()
+
+##Display some help
 help_text = """--- VE-Suite Build system ---
 Targets:
    To build VE-Suite:
@@ -223,23 +251,15 @@ if not SConsAddons.Util.hasHelpFlag():
    base_bldr.readOptions( baseEnv )
    ##base_bldr = base_bldr.clone()
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
-   ## load environment of the shell that scons is launched from
-   baseEnv[ 'ENV' ] = os.environ
+   ## load environment of the shell that scons is launched from   
    baseEnv.Append(CPPPATH = ['#'])
    baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
    #setup the build dir
    buildDir = 'build.'+buildUUID
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
-
+   baseEnv[ 'cluster' ] = 'no'
    Export('buildDir')
    Export('baseEnv')
-
-   # Update environment for boost options
-   ##if boost_options.isAvailable():
-   ##   boost_options.updateEnv(baseEnv)
-   # Update environment for vtk options
-   ##if vtk_options.isAvailable():
-   ##   vtk_options.apply(baseEnv)
 
    # Setup file paths
    PREFIX = os.path.abspath(baseEnv['prefix'])
