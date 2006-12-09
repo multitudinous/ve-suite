@@ -347,10 +347,23 @@ void cfdEnvironmentHandler::InitScene( void )
       delete displayCommand;
    }
 }
-
+//////////////////////////////////////////////////////////////
+//This function sets the dcs based on any input device
+//(i.e) trackball, wand, gui nav,...
 void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
-	// Update Navigation variables   
+   //Process all events for active device
+   VE_Xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
+
+
+   this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
+                        (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+   this->nav->updateNavigationFromGUI();
+}
+///////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::LatePreFrameUpdate()
+{
+   // Update Navigation variables   
    vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
    std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
@@ -370,10 +383,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
       }
    }
 
-   //Process all events for active device
-   VE_Xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
-
-   
 #ifdef _OSG
 #ifdef VE_PATENTED
    this->objectHandler->UpdateObjectHandler();
@@ -392,11 +401,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 #endif
 #endif
 
-   this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
-                        (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-   this->nav->updateNavigationFromGUI();
-	
-   // Need to get these values from the appropriate classes
+      // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
    if( cfdModelHandler::instance()->GetActiveModel() )
    {
@@ -407,20 +412,22 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    this->cursor->Update( this->nav->GetCursorLocation(),
                            this->nav->GetDirection(), this->nav->worldTrans );
 
-   // fix later	
-   /*if ( cursorId == CUBE)
+   // Fix later
+   /*
+   if( cursorId == CUBE)
    {
        this->cursor->getExtent( this->cur_box );   //record current box cursor position
    }
-*/
+   */
+
    VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
    VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
+
 }
 ///////////////////////////////////////////////////////////////
-//Set values for trackball
 void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
 {
 	_windowWidth = w;

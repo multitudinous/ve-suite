@@ -48,21 +48,22 @@ namespace ClusterVariables
 {
 struct StateVariables
 {
-   double   clusterIso_value;
-   double   clusterSc;
-   double   clusterMin;
-   double   clusterMax;
-   double   clusterId;
-   double   clusterGeo_state;
-   double   clusterPostdata_state;
-   bool     clusterPre_state;
-   double   clusterTimesteps;
-   double   clusterTeacher_state; 
-   short    clusterClientInfoFlag; 
-   int      currentFrame; // the index of the current frame
-   float    clusterTime_since_start;
-   long     clusterFrameNumber;
-   float    clusterQuatCamIncrement;
+   double      clusterIso_value;
+   double      clusterSc;
+   double      clusterMin;
+   double      clusterMax;
+   double      clusterId;
+   double      clusterGeo_state;
+   double      clusterPostdata_state;
+   bool        clusterPre_state;
+   double      clusterTimesteps;
+   double      clusterTeacher_state; 
+   short       clusterClientInfoFlag; 
+   int         currentFrame; // the index of the current frame
+   float       clusterTime_since_start;
+   long        clusterFrameNumber;
+   float       clusterQuatCamIncrement;
+   float       clusterMatrix[16];
    std::string clusterXMLCommands;
 };
 }
@@ -86,6 +87,11 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    writer->writeFloat( clusterTime_since_start );
    writer->writeUint32( clusterFrameNumber );
    writer->writeFloat( clusterQuatCamIncrement );
+
+   for(int i=0;i<16;i++){
+      writer->writeFloat(clusterMatrix[i]);
+   }
+
    //writer->writeString( clusterXMLCommands );
    vpr::BufferObjectWriter* bufwriter =
       static_cast< vpr::BufferObjectWriter* >( writer );
@@ -116,6 +122,12 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    clusterTime_since_start = reader->readFloat();
    clusterFrameNumber      = reader->readUint32();
    clusterQuatCamIncrement = reader->readFloat();
+
+   for(int i=0;i<16;i++){
+      clusterMatrix[i]=reader->readFloat();
+   }
+
+
    //clusterXMLCommands      = reader->readString();
    vpr::BufferObjectReader* bufreader =
       static_cast< vpr::BufferObjectReader* >( reader );

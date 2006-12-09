@@ -372,7 +372,8 @@ void cfdApp::initScene( void )
 /////////////////////////////////////////////////////////////////////////////
 void cfdApp::preFrame( void )
 {
-   ;
+   //Sets the worldDCS before it is synced
+   cfdEnvironmentHandler::instance()->PreFrameUpdate();
 }
 /////////////////////////////////////////////////////////////////////////////
 void cfdApp::latePreFrame( void )
@@ -405,7 +406,7 @@ void cfdApp::latePreFrame( void )
    ///////////////////////
    cfdModelHandler::instance()->PreFrameUpdate();
    ///////////////////////
-   cfdEnvironmentHandler::instance()->PreFrameUpdate();
+   cfdEnvironmentHandler::instance()->LatePreFrameUpdate();
    svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
    ///////////////////////
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();

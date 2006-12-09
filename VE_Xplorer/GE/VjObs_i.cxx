@@ -49,6 +49,9 @@
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+
 
 #include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 
@@ -630,6 +633,12 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
       this->mStates->clusterTime_since_start = time_since_start;
 
+      gmtl::Matrix44f matrix=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+
+      for(int i=0;i<16;i++){
+         this->mStates->clusterMatrix[i]=matrix.mData[i];
+      }
+
       if ( !commandStringQueue.empty() )
       {
          std::vector< std::string >::iterator iter;
@@ -696,6 +705,13 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 
    if ( !mStates.isLocal() )
    {
+      gmtl::Matrix44f matrix;
+
+      for(int i=0;i<16;i++){
+         matrix.mData[i]=this->mStates->clusterMatrix[i];
+      }
+      VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( matrix );
+
       if ( cfdSteadyStateVizHandler::instance()->GetActiveAnimation() != NULL )
       {
          cfdTempAnimation* the_sequence = cfdSteadyStateVizHandler::instance()->GetActiveAnimation();

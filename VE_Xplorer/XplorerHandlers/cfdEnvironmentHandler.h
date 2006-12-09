@@ -96,6 +96,7 @@ public:
    void CleanUp( void );
    void InitScene( void );
    void PreFrameUpdate( void );
+   void LatePreFrameUpdate( void );
    void SetCommandArray( cfdCommandArray* );
    void CreateObjects( void );
 
