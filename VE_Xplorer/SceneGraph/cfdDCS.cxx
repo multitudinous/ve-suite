@@ -338,7 +338,25 @@ Matrix44f cfdDCS::GetMat( void )
    this->_dcs->getMat( temp );
    _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
-   osg::Matrixf osgMat= _dcs->getMatrix();
+   // we need to create the dcs matrix here because the dcs matrix is not updated until
+   // the draw function is call which is much too late
+   osg::Vec3f pitch(1,0,0);
+   osg::Vec3f roll(0,1,0);
+   osg::Vec3f yaw(0,0,1);
+
+   osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
+   osg::Matrixd translation = osg::Matrixd::translate(_translation[0], _translation[1], _translation[2]);
+   osg::Matrixd inverseTranslation = osg::Matrixd::translate(-_translation[0], -_translation[1], -_translation[2]);
+   scale = inverseTranslation*scale*translation;
+
+   osg::Matrixd rotateMat;
+
+   rotateMat.makeRotate( dcsQuat );
+   rotateMat = inverseTranslation*rotateMat*translation;
+
+   //_dcs->setMatrix(translation*scale*rotateMat);
+
+   osg::Matrixf osgMat= translation*scale*rotateMat;//_dcs->getMatrix();
    if( osgMat.valid() )
    {
       _vjMatrix.set( osgMat.ptr() );
@@ -417,7 +435,12 @@ void cfdDCS::SetMat( Matrix44f& input )
          osg::Matrix inMat;
          inMat.set( input.getData() );
          osg::Vec3d trans = inMat.getTrans();
-         SetTranslationArray( (float*)trans.ptr() );
+         std::vector < double > tempTrans;
+         for ( size_t i = 0; i < 3; ++i )
+         {
+            tempTrans.push_back( trans[ i ] );
+         }
+         SetTranslationArray( tempTrans );
       }
    }
    else

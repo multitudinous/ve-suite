@@ -243,9 +243,9 @@ void cfdVEBaseClass::SetSoundHandler( cfdSoundHandler* input )
 // viz features
 void cfdVEBaseClass::SetModuleResults( const std::string network )
 {
-   if ( network.empty() )// == NULL )
+   if ( network.empty() || network == "NULL" )
    {
-      std::cout << " No results for " << _objectName << std::endl;
+      std::cout << "|\tNo results for " << _objectName << std::endl;
       return;
    }
    //add inputs to xml model
@@ -256,6 +256,12 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
    networkWriter.ReadXMLData( network, "Command", "vecommand" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    
+   if ( objectVector.empty() )
+   {
+      std::cerr << "|\tBad command sent to graphical plugin : " << network << std::endl;
+      return;
+   }
+
    VE_XML::Command* tempCommand = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
    size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
    for ( size_t i = 0; i < numDVP; ++i )

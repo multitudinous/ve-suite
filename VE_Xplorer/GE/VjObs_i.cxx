@@ -635,6 +635,7 @@ void VjObs_i::GetCfdStateVariables( void )
 
       gmtl::Matrix44f matrix=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
+      //std::cout << "master: " << std::endl << matrix << std::endl;
       for(int i=0;i<16;i++){
          this->mStates->clusterMatrix[i]=matrix.mData[i];
       }
@@ -710,6 +711,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       for(int i=0;i<16;i++){
          matrix.mData[i]=this->mStates->clusterMatrix[i];
       }
+      //std::cout << "slave: " << std::endl << matrix << std::endl;
       VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( matrix );
 
       if ( cfdSteadyStateVizHandler::instance()->GetActiveAnimation() != NULL )
