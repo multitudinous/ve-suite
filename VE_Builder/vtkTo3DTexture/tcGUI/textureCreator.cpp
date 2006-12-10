@@ -67,7 +67,7 @@
 
 #include <sys/types.h>
 #include <sys/timeb.h>
-
+#include <omp.h>
 
 ////////////////////////////////////
 //Constructor                     // 
@@ -600,6 +600,11 @@ void VTKDataToTexture::createTextures()
 ///////////////////////////////////////////////
 void VTKDataToTexture::_createValidityTexture()
 {
+	//get number of processors and set number of threads
+	int numThreads;
+	numThreads = omp_get_num_procs( );
+	omp_set_num_threads( numThreads );
+
    long timeID = (long)time( NULL );
 
    double bbox[6] = {0,0,0,0,0,0};

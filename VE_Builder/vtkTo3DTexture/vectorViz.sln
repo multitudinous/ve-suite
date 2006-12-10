@@ -1,21 +1,22 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcGUI", "tcGUI\tcGUI.vcproj", "{EDEEFC20-C5B2-4070-89D7-F5472115E585}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtkTo3DTexture", "tcGUI\tcGUI.vcproj", "{EDEEFC20-C5B2-4070-89D7-F5472115E585}"
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		OpenMP_Install_Dbg|Win32 = OpenMP_Install_Dbg|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Debug.ActiveCfg = Debug|Win32
-		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Debug.Build.0 = Debug|Win32
-		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Release.ActiveCfg = Release|Win32
-		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Release.Build.0 = Release|Win32
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Debug|Win32.Build.0 = Debug|Win32
+		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.OpenMP_Install_Dbg|Win32.ActiveCfg = OpenMP_Install_Dbg|Win32
+		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.OpenMP_Install_Dbg|Win32.Build.0 = OpenMP_Install_Dbg|Win32
+		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Release|Win32.ActiveCfg = Release|Win32
+		{EDEEFC20-C5B2-4070-89D7-F5472115E585}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
