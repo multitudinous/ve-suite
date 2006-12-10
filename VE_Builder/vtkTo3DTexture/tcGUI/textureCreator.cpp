@@ -67,7 +67,9 @@
 
 #include <sys/types.h>
 #include <sys/timeb.h>
+#ifdef WIN32
 #include <omp.h>
+#endif
 
 ////////////////////////////////////
 //Constructor                     // 
@@ -600,10 +602,12 @@ void VTKDataToTexture::createTextures()
 ///////////////////////////////////////////////
 void VTKDataToTexture::_createValidityTexture()
 {
+#ifdef WIN32
 	//get number of processors and set number of threads
 	int numThreads;
 	numThreads = omp_get_num_procs( );
 	omp_set_num_threads( numThreads );
+#endif
 
    long timeID = (long)time( NULL );
 
