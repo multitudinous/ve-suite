@@ -55,7 +55,7 @@ void Trackball::Animate(bool animate)
    tb_animate=animate;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Trackball::UpdateKeyboardMouse()
+void Trackball::UpdateTransform()
 {
    gadget::KeyboardMouse::EventQueue::iterator i;
 
@@ -73,12 +73,9 @@ void Trackball::UpdateKeyboardMouse()
          gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
          Mouse(mouse_evt->getButton(),1,mouse_evt->getX(),mouse_evt->getY());
 
+         //If in animation mode, stop the animation with mouse press event
          if(tb_animate){
             identity(tb_transform);
-
-            //Shouldn't need this line, but for some reason the identity call is not
-	         //completely zeroing out the translation of the tb_transform.
-	         tb_transform[0][3]=tb_transform[1][3]=tb_transform[2][3]=0.0;
          }
       }
 
@@ -96,41 +93,21 @@ void Trackball::UpdateKeyboardMouse()
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::ProcessTrackballEvents()
 {
+   //Get the current matrix
    tb_accuTransform=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
-   UpdateKeyboardMouse();
+   //Get the transform
+   UpdateTransform();
 
-   Matrix44f mat;
-   Matrix44f accRotation;
+   //Multiply by the transform
+   tb_accuTransform*=tb_transform;
 
-	identity(mat);
-	accRotation=tb_accuTransform;
-   float accTranslation[3];
-	
-	for(int i=0;i<3;i++){
-		accRotation[i][3]=0.0;
-	}
+   //Set the current matrix
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat(tb_accuTransform);
 
-	for(int i=0;i<3;i++){
-		mat[i][3]=tb_accuTransform[i][3];
-	}
-	mat=mat*tb_transform;
-	mat=mat*accRotation;
-	tb_accuTransform=mat;
-
-	for(int i=0;i<3;i++){
-		accTranslation[i]=tb_accuTransform[i][3];
-	}
-
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray((float *)accTranslation);
-	VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationMatrix(tb_accuTransform);
-
+   //If not in animation mode, reset the transform
    if(!tb_animate){
 	   identity(tb_transform);
-
-	   //Shouldn't need this line, but for some reason the identity call is not
-	   //completely zeroing out the translation of the tb_transform.
-	   tb_transform[0][3]=tb_transform[1][3]=tb_transform[2][3]=0.0;
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -312,13 +289,13 @@ void Trackball::Rotate(float x,float y,float z,float angle)
 	zero(tb_transform);
 
 	tb_transform[0][0]=(x*x)+(cosAng*(1-(x*x)));
-	tb_transform[1][0]=(x*y)-(cosAng*(x*y))+(sinAng*z);
-	tb_transform[2][0]=(x*z)-(cosAng*(x*z))-(sinAng*y);
-	tb_transform[0][1]=(x*y)-(cosAng*(x*y))-(sinAng*z);
+	tb_transform[1][0]=(x*y)-(cosAng*   (x*y))+(sinAng*z);
+	tb_transform[2][0]=(x*z)-(cosAng*   (x*z))-(sinAng*y);
+	tb_transform[0][1]=(y*x)-(cosAng*   (y*x))-(sinAng*z);
 	tb_transform[1][1]=(y*y)+(cosAng*(1-(y*y)));
-	tb_transform[2][1]=(y*z)-(cosAng*(y*z))+(sinAng*x);
-	tb_transform[0][2]=(x*z)-(cosAng*(x*z))+(sinAng*y);
-	tb_transform[1][2]=(y*z)-(cosAng*(y*z))-(sinAng*x);
+	tb_transform[2][1]=(y*z)-(cosAng*   (y*z))+(sinAng*x);
+	tb_transform[0][2]=(z*x)-(cosAng*   (z*x))+(sinAng*y);
+	tb_transform[1][2]=(z*y)-(cosAng*   (z*y))-(sinAng*x);
 	tb_transform[2][2]=(z*z)+(cosAng*(1-(z*z)));
 	tb_transform[3][3]=1.0f;
 }

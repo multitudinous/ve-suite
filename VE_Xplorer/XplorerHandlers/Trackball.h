@@ -34,7 +34,7 @@ namespace VE_Xplorer
          void FitToScreen();
 
       private:
-         void UpdateKeyboardMouse();
+         void UpdateTransform();
          void Keyboard(int key);
 	      void Mouse(int button,int state,int x,int y);
 	      void Motion(int x,int y);
