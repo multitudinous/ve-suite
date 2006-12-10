@@ -67,7 +67,7 @@
 
 #include <sys/types.h>
 #include <sys/timeb.h>
-#ifdef WIN32
+#ifdef _OPENMP
 #include <omp.h>
 #endif
 
@@ -602,7 +602,7 @@ void VTKDataToTexture::createTextures()
 ///////////////////////////////////////////////
 void VTKDataToTexture::_createValidityTexture()
 {
-#ifdef WIN32
+#ifdef _OPENMP
 	//get number of processors and set number of threads
 	int numThreads;
 	numThreads = omp_get_num_procs( );
