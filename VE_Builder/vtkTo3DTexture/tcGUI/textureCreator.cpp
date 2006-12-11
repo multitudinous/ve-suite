@@ -288,7 +288,7 @@ void VTKDataToTexture::reset()
       _dataSet->Delete();
       _dataSet = 0;
    }
-   
+ 
 }
 ///////////////////////////////////////////////////
 void VTKDataToTexture::setDataset(vtkDataSet* dSet)
@@ -432,13 +432,19 @@ void VTKDataToTexture::setOutputDirectory(const std::string outDir)
 //////////////////////////////////////////////////////////////////
 //create a dataset from a file                                  //
 //////////////////////////////////////////////////////////////////
-void VTKDataToTexture::createDataSetFromFile(const std::string filename)
+bool VTKDataToTexture::createDataSetFromFile(const std::string filename)
 {
    wxString msg = wxString("Reading Dataset: ") + wxString(filename.c_str());
    _updateTranslationStatus(msg.c_str());
    //_confirmFileType(filename);
    vtkDataSet* tmpDSet = VE_Util::readVtkThing(filename);
-
+   int dataObjectType = tmpDSet->GetDataObjectType();
+   if ( dataObjectType == VTK_POLY_DATA )
+   {
+      std::cout<<"Invalid dataset: Polydata!!"<<std::endl;
+      tmpDSet->Delete(); 
+      return false;
+   }
    //get the info about the data in the data set
    _nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
    if(!_nPtDataArrays){
@@ -447,16 +453,20 @@ void VTKDataToTexture::createDataSetFromFile(const std::string filename)
       std::cout<<"Attempting to convert cell data to point data."<<std::endl;*/
 
       if ( !_dataConvertCellToPoint )
+      {
          _dataConvertCellToPoint = vtkCellDataToPointData::New();
+      }
       _dataConvertCellToPoint->SetInput( tmpDSet);
       _dataConvertCellToPoint->PassCellDataOff();
       _dataConvertCellToPoint->Update();
       setDataset(_dataConvertCellToPoint->GetOutput());
       tmpDSet->Delete();
+      return true;
    }
    else
    {
      setDataset(tmpDSet);
+     return true;
    }
 }
 /////////////////////////////////////////////////////////////

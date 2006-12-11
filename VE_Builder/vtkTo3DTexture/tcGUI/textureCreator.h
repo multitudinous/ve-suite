@@ -95,7 +95,7 @@ public:
    void setDataset(vtkDataSet* dSet);
 
    //create a dataset from a file
-   void createDataSetFromFile(const std::string filename);
+   bool createDataSetFromFile(const std::string filename);
   
    //create the textures for this data set
    void createTextures();
