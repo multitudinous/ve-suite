@@ -617,6 +617,7 @@ void VTKDataToTexture::_createValidityTexture()
 	int numThreads;
 	numThreads = omp_get_num_procs( );
 	omp_set_num_threads( numThreads );
+	int currentThread;
 #endif
 
    long timeID = (long)time( NULL );
@@ -647,7 +648,7 @@ void VTKDataToTexture::_createValidityTexture()
    //the data as a texture
    //our original cell that contains our cartesian point
    vtkGenericCell* cell = vtkGenericCell::New();
-   
+
    vtkIdType cellId,subId;
    double dist = 0;
    double closestPt[3];
@@ -666,12 +667,27 @@ void VTKDataToTexture::_createValidityTexture()
    _validPt.resize( nPixels );
    long lasttime = (long)time( NULL );
 
-   for(unsigned int l = 0; l < nPixels; l++)
+#ifdef _OPENMP
+#pragma omp parallel for private( i, j, k, pt, closestPt, currentThread, cellId, subId, dist )
+#endif
+   for( int l = 0; l < nPixels; l++)
    {
+
+#ifdef _OPENMP
+
+	   currentThread = omp_get_thread_num( );
+#endif
+
       // we can parallelize this for loop by using a map to store the data and then
       // merge the map after the texture has been created. 
       // this would allow this function to be much faster. This function
       // is where the majority of the time is spent currently.
+	   
+	   //set i, j, and k based on the l values
+	   i = l % nX;
+	   j = l / nX;
+	   k = (l-i-j*nX)/(nX*nY);
+
       pt[2] = bbox[4] + k*delta[2];
       pt[1] = bbox[2] + j*delta[1];
       pt[0] = bbox[0] + (i++)*delta[0];
@@ -683,7 +699,17 @@ void VTKDataToTexture::_createValidityTexture()
       //ftime( &timeOneB );
       
       //long timeOne = (long)time( NULL );
-      _cLocator->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
+	  //old stuff
+      //_cLocator->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
+	  //new stuff
+#ifdef _OPENMP
+#pragma omp critical
+#endif	//_OPENMP
+	  {
+		  _cLocator->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
+	  }
+
+
       //ftime( &timeTwoB );
       //long timeTwo = (long)time( NULL );
       //std::cout << bbLocator->InsideOrOutside( pt ) << " : " << dist << std::endl;
