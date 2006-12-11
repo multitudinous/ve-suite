@@ -54,7 +54,6 @@ static const char* scalarFragSource = {
       "//dependent texture look up in transfer function\n"
       "float scalar = texture3D(volumeData,gl_TexCoord[0].xyz).a;\n"
       "gl_FragColor = texture1D(transferFunction,scalar);\n"
-      "gl_FragColor = texture1D(transferFunction,scalar);\n"
 
       "//set the opacity to .2 for all fragments\n"
       "gl_FragColor.a *= gl_Color.a;\n"
