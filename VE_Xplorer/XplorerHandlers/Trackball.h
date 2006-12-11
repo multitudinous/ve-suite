@@ -16,8 +16,6 @@ Trackball API
 
 #include "VE_Installer/include/VEConfig.h"
 
-using namespace gmtl;
-
 namespace VE_Xplorer
 {
 	class VE_XPLORER_EXPORTS Trackball
@@ -56,8 +54,9 @@ namespace VE_Xplorer
          float tb_FOVyRatio;
 	      float tb_FOVy;
 
-         Matrix44f tb_transform;
-         Matrix44f tb_accuTransform;
+         //Is of form [row][column]
+         gmtl::Matrix44f tb_transform;
+         gmtl::Matrix44f tb_accuTransform;
 
 	      void RotateView(float dx,float dy);
 	      void Twist(float dx,float dy);

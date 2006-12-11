@@ -75,7 +75,8 @@ void Trackball::UpdateTransform()
 
          //If in animation mode, stop the animation with mouse press event
          if(tb_animate){
-            identity(tb_transform);
+            gmtl::identity(tb_transform);
+            tb_transform[0][3]=tb_transform[1][3]=tb_transform[2][3]=0.0f;
          }
       }
 
@@ -99,15 +100,31 @@ void Trackball::ProcessTrackballEvents()
    //Get the transform
    UpdateTransform();
 
-   //Multiply by the transform
-   tb_accuTransform*=tb_transform;
+   //Split apart the current matrix into rotation and translation parts
+   gmtl::Matrix44f accuRotation;
+   gmtl::Matrix44f matrix;
+
+   for(int i=0;i<3;i++){
+      //Get the current rotation matrix
+      accuRotation[i][0]=tb_accuTransform[i][0];
+      accuRotation[i][1]=tb_accuTransform[i][1];
+      accuRotation[i][2]=tb_accuTransform[i][2];
+
+      //Get the current translation matrix
+      matrix[i][3]=tb_accuTransform[i][3];
+   }
+
+   //Multiply by the translation and then by the rotation
+   matrix*=tb_transform;
+   matrix*=accuRotation;
 
    //Set the current matrix
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat(tb_accuTransform);
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat(matrix);
 
    //If not in animation mode, reset the transform
    if(!tb_animate){
-	   identity(tb_transform);
+      gmtl::identity(tb_transform);
+      tb_transform[0][3]=tb_transform[1][3]=tb_transform[2][3]=0.0f;
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -211,7 +228,7 @@ void Trackball::RotateView(float dx,float dy)
 {
    float angle=tb_magnitude*400.0f;
 
-   Matrix44f mat;
+   gmtl::Matrix44f mat;
 	identity(mat);
 	float tb_axis[3];
 	tb_axis[0]=mat[0][0]*dy+mat[2][0]*dx;
@@ -222,7 +239,7 @@ void Trackball::RotateView(float dx,float dy)
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::Twist(float dx,float dy)
 {
-   Matrix44f mat;
+   gmtl::Matrix44f mat;
 	identity(mat);
 	float Theta=atan2f(tb_prevPos[0]-0.5,tb_prevPos[1]-0.5);
 	float newTheta=atan2f(tb_currPos[0]-0.5,tb_currPos[1]-0.5);
@@ -253,7 +270,6 @@ void Trackball::Zoom(float dy)
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::Pan(float dx,float dy)
 {
-
    //**********Temporary Fix**********//
    if((tb_accuTransform[1][3]>-offset)&&(tb_accuTransform[1][3]<offset)){
 		if(tb_accuTransform[1][3]==0)
@@ -289,13 +305,13 @@ void Trackball::Rotate(float x,float y,float z,float angle)
 	zero(tb_transform);
 
 	tb_transform[0][0]=(x*x)+(cosAng*(1-(x*x)));
-	tb_transform[1][0]=(x*y)-(cosAng*   (x*y))+(sinAng*z);
-	tb_transform[2][0]=(x*z)-(cosAng*   (x*z))-(sinAng*y);
-	tb_transform[0][1]=(y*x)-(cosAng*   (y*x))-(sinAng*z);
+	tb_transform[1][0]=(y*x)-(cosAng*   (y*x))+(sinAng*z);
+	tb_transform[2][0]=(z*x)-(cosAng*   (z*x))-(sinAng*y);
+	tb_transform[0][1]=(x*y)-(cosAng*   (x*y))-(sinAng*z);
 	tb_transform[1][1]=(y*y)+(cosAng*(1-(y*y)));
-	tb_transform[2][1]=(y*z)-(cosAng*   (y*z))+(sinAng*x);
-	tb_transform[0][2]=(z*x)-(cosAng*   (z*x))+(sinAng*y);
-	tb_transform[1][2]=(z*y)-(cosAng*   (z*y))-(sinAng*x);
+	tb_transform[2][1]=(z*y)-(cosAng*   (z*y))+(sinAng*x);
+	tb_transform[0][2]=(x*z)-(cosAng*   (x*z))+(sinAng*y);
+	tb_transform[1][2]=(y*z)-(cosAng*   (y*z))-(sinAng*x);
 	tb_transform[2][2]=(z*z)+(cosAng*(1-(z*z)));
 	tb_transform[3][3]=1.0f;
 }
