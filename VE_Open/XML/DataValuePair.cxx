@@ -338,7 +338,9 @@ void DataValuePair::_extractXMLObject(DOMElement* baseElement,std::string object
          _veXMLObject = 0;
       }
 
-      std::string attr = XMLString::transcode( genericObject->getAttribute(xercesString("objectType")));
+      char* tempString = XMLString::transcode( genericObject->getAttribute(xercesString("objectType")));
+      std::string attr( tempString );
+      XMLString::release( &tempString );
       if ( !attr.empty() )
       {
          _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObject( attr, "new" );

@@ -207,12 +207,14 @@ void Body_UI_i::GetNetworkFromCE( void )
 {
    try 
    { 
-      std::string network( executive_->GetNetwork() );
+      const char* tempNetwork = executive_->GetNetwork();
+      std::string network( tempNetwork );
       if ( !network.empty() )
       {
          this->SetNetworkString( network );
          std::cout << "|\tGoing To Do Something" << std::endl;
       }
+      delete tempNetwork;
    } 
    catch (CORBA::Exception &) 
    {

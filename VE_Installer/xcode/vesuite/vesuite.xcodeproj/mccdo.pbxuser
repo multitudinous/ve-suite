@@ -1,28 +1,18 @@
 // !$*UTF8*$!
 {
-	25291CBD0AFF6FFA00FB825D /* PBXTextBookmark */ = {
+	258AD0EF0B2A65E600BFD07B /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 25B31B580AFD25CE00601DFF /* module.idl */;
 		name = "module.idl: 1";
 		rLen = 0;
 		rLoc = 0;
 		rType = 0;
-		vrLen = 1909;
-		vrLoc = 0;
-	};
-	255F97A70AFF70E60068E4E9 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 25B31B580AFD25CE00601DFF /* module.idl */;
-		name = "module.idl: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1909;
+		vrLen = 2009;
 		vrLoc = 0;
 	};
 	25B31B580AFD25CE00601DFF /* module.idl */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1886, 4298}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1886, 4270}}";
 			sepNavSelRange = "{0, 0}";
 			sepNavVisRect = "{{0, 0}, {835, 652}}";
 		};
@@ -57,6 +47,8 @@
 		launchableReference = 25B320B50AFD25F600601DFF /* project_tao_osg_vep */;
 		libgmallocEnabled = 0;
 		name = xplorer;
+		savedGlobals = {
+		};
 		sourceDirectories = (
 		);
 	};
@@ -202,12 +194,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 184512737;
-			PBXWorkspaceStateSaveDate = 184512737;
+			PBXPerProjectTemplateStateSaveDate = 187328107;
+			PBXWorkspaceStateSaveDate = 187328107;
 		};
 		perUserProjectItems = {
-			25291CBD0AFF6FFA00FB825D /* PBXTextBookmark */ = 25291CBD0AFF6FFA00FB825D /* PBXTextBookmark */;
-			255F97A70AFF70E60068E4E9 /* PBXTextBookmark */ = 255F97A70AFF70E60068E4E9 /* PBXTextBookmark */;
+			258AD0EF0B2A65E600BFD07B /* PBXTextBookmark */ = 258AD0EF0B2A65E600BFD07B /* PBXTextBookmark */;
+			25C23C760B2A66D900933057 /* PBXTextBookmark */ = 25C23C760B2A66D900933057 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 25B3ED6D0AFD25AB00601DFF /* Source Control */;
 		userBuildSettings = {
@@ -224,5 +216,15 @@
 	25B3ED6E0AFD25AB00601DFF /* Code sense */ = {
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
+	};
+	25C23C760B2A66D900933057 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 25B31B580AFD25CE00601DFF /* module.idl */;
+		name = "module.idl: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2009;
+		vrLoc = 0;
 	};
 }

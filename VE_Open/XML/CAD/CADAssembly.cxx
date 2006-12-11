@@ -51,11 +51,11 @@ CADAssembly::CADAssembly(std::string name)
 ///////////////////////////
 CADAssembly::~CADAssembly()
 {
-/*   for(unsigned int i = 0; i < _numChildren; i++)
+   for(unsigned int i = 0; i < _numChildren; i++)
    { 
       try
       {
-         if(_children.at(i))
+         //if(_children.at(i))
          {
         
             delete _children.at(i);
@@ -68,7 +68,7 @@ CADAssembly::~CADAssembly()
          std::cout<<"Child deleted!"<<std::endl;
       }
    }
- */ 
+
    _children.clear();
    _numChildren = 0;
 }
@@ -300,10 +300,10 @@ CADAssembly& CADAssembly::operator=(const CADAssembly& rhs)
    if ( this != &rhs )
    {
       VE_CAD::CADNode::operator =(rhs);
-      /*for(unsigned int i = _numChildren -1; i >= 0; i--)
+      for(int i = _numChildren -1; i >= 0; i--)
       {
          delete _children.at(i);
-      }*/
+      }
       _children.clear();
       _numChildren = rhs._numChildren;
 

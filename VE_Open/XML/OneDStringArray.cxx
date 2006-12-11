@@ -164,8 +164,10 @@ void OneDStringArray::SetObjectFromXMLData(DOMNode* xmlInput)
       {
          //We know this about the node so we can cast it...
          DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
-         std::string stringVal( XMLString::transcode( temp->getData() ) );
+         char* tempText = XMLString::transcode( temp->getData() );
+         std::string stringVal( tempText );
          _array.push_back( stringVal );
+         XMLString::release( &tempText );
       }
    }
    else

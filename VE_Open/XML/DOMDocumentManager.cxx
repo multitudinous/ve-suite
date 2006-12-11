@@ -262,7 +262,8 @@ std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( xercesString( "LS" ) );
    DOMWriter* theSerializer = dynamic_cast< DOMImplementationLS* >( impl )->createDOMWriter();
    theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
-   char* message;
+   char* message = 0;
+   char* tempResultString = 0;
    std::string result;
 
    try 
@@ -276,7 +277,11 @@ std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
       else
       {
          // do the serialization through DOMWriter::writeNode();
-         result = XMLString::transcode( theSerializer->writeToString( (*commandDocument) ) );
+         XMLCh* xXml = theSerializer->writeToString( (*commandDocument) );
+         tempResultString = XMLString::transcode( xXml );
+         result = tempResultString;
+         XMLString::release( &tempResultString );
+         XMLString::release( &xXml );
       }
    }
    catch (const XMLException& toCatch) 

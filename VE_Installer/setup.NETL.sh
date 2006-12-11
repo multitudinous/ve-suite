@@ -43,6 +43,7 @@ export PFSHAREDSIZE=534773700
 export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
 #export DYLD_INSERT_LIBRARIES=/usr/lib/libMallocDebug.A.dylib
+#:/usr/lib/libgmalloc.dylib
 case "$CFDHOSTTYPE" in
    IRIX*) 
    #echo "CFDHOSTTYPE contains IRIX"
@@ -140,7 +141,7 @@ case "$CFDHOSTTYPE" in
    export DYLD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${WX_HOME}/lib
-   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
+   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/test_two/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${TAO_HOME}/lib
 
    export PATH=${TAO_HOME}/bin:${PATH}
@@ -155,7 +156,7 @@ esac
 export TWEEK_BASE_DIR=${VJ_BASE_DIR}
 export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
 export SNX_BASE_DIR=${VJ_BASE_DIR}
-export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${PATH}
+export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/test_two/bin:${PATH}
 export PATH=${WX_HOME}/bin:${PATH}
 
 if [ $OSG_HOME ]; then

@@ -129,8 +129,8 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
       child_poa->activate_object_with_id( id.in(), &(*ui_i) );
 
       // obtain the object reference
-      Body::UI_var unit =  
-      Body::UI::_narrow( child_poa->id_to_reference( id.in() ) );
+      CORBA::Object_var objectRef = child_poa->id_to_reference( id.in() );
+      Body::UI_var unit = Body::UI::_narrow( objectRef.in() );
 
       // Don't register it to the naming service anymore
       // the bind call will hang if you try to register
@@ -312,7 +312,10 @@ void cfdExecutive::GetEverything( void )
       commandWriter.UseStandaloneDOMDocumentManager();
       commandWriter.WriteXMLDocument( nodes, status, "Command" );
       //Get results 
-      _plugins[ iter->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
+      const char* tempResult = this->_exec->Query( status.c_str() );
+      std::string resultData = tempResult;
+      _plugins[ iter->first ]->SetModuleResults( resultData );
+      delete tempResult;
       _plugins[ iter->first ]->ProcessOnSubmitJob();
       _plugins[ iter->first ]->PreFrameUpdate();
       vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
@@ -498,8 +501,10 @@ void cfdExecutive::LoadDataFromCE( void )
          std::string status="returnString";
          commandWriter.UseStandaloneDOMDocumentManager();
          commandWriter.WriteXMLDocument( nodes, status, "Command" );
-         
-         _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->Query( CORBA::string_dup( status.c_str() ) ) );
+         const char* tempResult = this->_exec->Query( status.c_str() );
+         std::string tempResultString = tempResult;
+         _plugins[ foundPlugin->first ]->SetModuleResults( tempResultString );
+         delete tempResult;
          
          int dummyVar = 0;
          _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
