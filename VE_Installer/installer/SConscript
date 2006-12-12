@@ -1,0 +1,11 @@
+##Builds idl skeleton files for veopen
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg')
+
+launcherBundle = ves_pkg.createFileBundle( 'bin' )
+pyFile = sca_util.getFilesRecursiveByExt( '.', ['.py'] )
+launcherBundle.addFiles( pyFile )
+   

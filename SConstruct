@@ -344,6 +344,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ##xplorerSubdirs = map(lambda s: pj(buildDir, 'VE_Xplorer', s), xplorerSubdirs)
    ceSubdirs = pj(buildDir,'VE_CE')
    ##ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
+   veiSubdirs = pj(buildDir,'VE_Installer','installer')
 
    ##Set the Sconscript files to build.
    if 'xplorer' in COMMAND_LINE_TARGETS:
@@ -362,7 +363,7 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_dirs = [ conductorSubdirs ]
       baseEnv.Alias('conductor', conductorSubdirs)
    else:
-      ves_dirs = [ openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs]
+      ves_dirs = [ openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs, veiSubdirs]
 
    ##Run SConscript files in all of those folders.
    for d in ves_dirs:
