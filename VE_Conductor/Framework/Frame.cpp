@@ -187,6 +187,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
    EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
    EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
+   EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::CloseAspenSimulation )
    EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
 END_EVENT_TABLE()
 
@@ -663,9 +664,10 @@ void AppFrame::CreateMenu()
    
    //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
    wxMenu * aspenMenu = new wxMenu();
-   aspenMenu->Append( QUERY_NETWORK, _("Connect to Simulation") );
+   aspenMenu->Append( QUERY_NETWORK, _("Open Simulation") );
    aspenMenu->Append( SHOW_ASPEN_SIMULATION, _("Show Simulation") );
    aspenMenu->Append( HIDE_ASPEN_SIMULATION, _("Hide Simulation") );
+   aspenMenu->Append( CLOSE_ASPEN_SIMULATION, _("Close Simulation") );
    aspenMenu->Append( RUN_ASPEN_NETWORK, _("Run Simulation") );
    aspenMenu->Append( CONDUCTOR_FIND, _("Find") );
    con_menu->Append( ASPEN_CONNECTION_MENU,   _("Aspen"), aspenMenu, _("Aspen connection") );
@@ -1085,6 +1087,26 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    returnState.SetCommandName("hideSimulation");
    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
    data->SetData("NetworkQuery", "hideSimulation" );
+
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   
+   serviceList->Query( status );
+}
+
+///////////////////////////////////////////////////////////////////////////
+void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
+{
+   Log("Hide Simulation.\n");
+   VE_XML::Command returnState;
+   returnState.SetCommandName("closeSimulation");
+   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+   data->SetData("NetworkQuery", "closeSimulation" );
 
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));

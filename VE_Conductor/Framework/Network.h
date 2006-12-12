@@ -87,6 +87,9 @@ enum
    ASPEN_MENU,
    SHOW_ASPEN_NAME,
    QUERY_INPUTS,
+   QUERY_OUTPUTS,
+   SET_INPUT,
+   ASPEN_ICON,
    GEOMETRY,
    MODEL_INPUTS,
    MODEL_RESULTS,
@@ -155,7 +158,10 @@ public:
    void OnShowFinancial(wxCommandEvent &event);
    void OnShowAspenName(wxCommandEvent &event);
    void OnQueryInputs(wxCommandEvent &event);
-   void OnQueryModuleProperties(std::vector< std::string >, std::string);
+   void OnQueryOutputs(wxCommandEvent &event);
+   void OnSetInput(wxCommandEvent &event);
+   void OnQueryInputModuleProperties(std::vector< std::string >, std::string);
+   void OnQueryOutputModuleProperties(std::vector< std::string >, std::string);
 
    //Add to network fuctions
    void AddtoNetwork(REI_Plugin *new_mod, std::string cls_name);
