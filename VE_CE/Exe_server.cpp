@@ -111,7 +111,8 @@ int main (int argc, char* argv[])
       child_poa->activate_object_with_id (id.in(), &exec_i);
 
       //Activate it to obtain the object reference
-      Body::Executive_var exec = Body::Executive::_narrow(child_poa->id_to_reference (id.in () ));
+      CORBA::Object_var objectRef = child_poa->id_to_reference( id.in () );
+      Body::Executive_var exec = Body::Executive::_narrow( objectRef.in() );
 
       CosNaming::Name name(1);
       name.length(1);

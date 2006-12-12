@@ -136,7 +136,7 @@ char * Body_Executive_i::GetImportData (
   
    return CORBA::string_dup(str.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute (std::string mn)
 {
    std::string msg;
@@ -159,7 +159,7 @@ void Body_Executive_i::execute (std::string mn)
       }
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetExportData (
     CORBA::Long module_id,
     CORBA::Long port_id,
@@ -177,6 +177,7 @@ void Body_Executive_i::SetExportData (
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( std::string( data ), "Command", "vecommand" );
+   //delete data;
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
   
    // Should only be one item. But, maybe later...
@@ -428,41 +429,14 @@ void Body_Executive_i::SetModuleResult (
 {
    _mutex.acquire();
 
-   //Package p;
-   //p.SetSysId("temp.xml");
-   //p.Load(result, strlen(result));
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+   networkWriter.ReadXMLData( std::string( result ), "Command", "vecommand" );
+   //delete result;
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
-   // Should only be one item. But, maybe later...
-   //std::vector<Interface>::iterator iter;
-   //for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-   {
-      VE_XML::XMLReaderWriter networkWriter;
-      networkWriter.UseStandaloneDOMDocumentManager();
-      networkWriter.ReadFromString();
-      networkWriter.ReadXMLData( std::string( result ), "Command", "vecommand" );
-      std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-
-      _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( objectVector );
-      /*if ( _network->setOutput( module_id, &(*iter) ) ) 
-      {
-         // Keep track of power requirements
-         bool f = false;
-         std::string p = iter->getString(std::string("Power (MW)"), &f);
-         if(f) 
-            _module_powers[module_id] = atof(p.c_str());
-
-         std::string ti = iter->getString(std::string("Thermal Input (MW)"), &f);
-
-         if(f) 
-            _thermal_input[module_id] = atof(ti.c_str()); //changed by yang
-         //original code is  //if(f) _thermal_input = atof(ti.c_str());
-      } 
-      else 
-      {
-         std::string msg = "Unable to set mod id# " + to_string(module_id) + "'s Output data\n";
-         ClientMessage(msg.c_str());
-      }*/
-   }
+   _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( objectVector );
 
    std::string msg = "Mod id# "+ to_string(module_id) + "'s Execution is done\n";
    ClientMessage(msg.c_str());
@@ -499,7 +473,9 @@ void Body_Executive_i::SetNetwork (
    // Keep track of power requirements
    //_module_powers.clear();
    //_thermal_input.clear();
-   if ( _network->parse( std::string( network ) ) )
+   std::string strNetwork( network );
+   //delete network;
+   if ( _network->parse( strNetwork ) )
    {
       _mutex.release();
       // Make the new schedule
@@ -583,7 +559,7 @@ void Body_Executive_i::SetModuleUI (
    }*/
    _mutex.release();
 }
-  
+////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::SetWatchList (
     const Types::ArrayLong & id
     ACE_ENV_ARG_DECL
@@ -599,7 +575,7 @@ void Body_Executive_i::SetWatchList (
   
   _mutex.release();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 ::Types::ArrayLong * Body_Executive_i::GetWatchList (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -616,7 +592,7 @@ void Body_Executive_i::SetWatchList (
   
   return new ::Types::ArrayLong(watch_list_);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char * Body_Executive_i::GetStatus (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -818,6 +794,7 @@ char *  Body_Executive_i::Query (  const char * command
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( command, "Command", "vecommand" );
+   //delete command;
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    //I think the above is a memory leak
    // we need to cleanup the vector of objects
@@ -935,26 +912,27 @@ void Body_Executive_i::RegisterUI (
 { 
    _mutex.acquire();
   
+   std::string tempName(UIName);
+   //delete UIName;
    try 
    {
       Body::UI_var ui = Body::UI::_duplicate(ui_ptr);
       if ( CORBA::is_nil(ui) )
          std::cerr << "NULL UI" << std::endl;
 
-      std::string tempName(UIName);
       uis_[ tempName ] = ui;
  
       _mutex.release();
       std::string msg = tempName + " Connected to Executive\n";
       ui->Raise( msg.c_str() );
       //ClientMessage( msg.c_str() );
-      std::cerr << UIName << " : registered a UI" << std::endl;
+      std::cerr << tempName << " : registered a UI" << std::endl;
    }
    catch (CORBA::Exception &ex) 
    {
       //std::cerr << "CORBA exception raised! : " <<ex._name<< std::endl;
       //std::cerr << ex._info<<std::endl;
-      std::cerr<<"Can't call UI name "<<UIName<< std::endl;
+      std::cerr<<"Can't call UI name "<< tempName<< std::endl;
       _mutex.release();
    }
    return;
@@ -972,20 +950,23 @@ void Body_Executive_i::RegisterUnit (
 {
    // When this is called, a unit is already binded to the name service, 
    // so this call can get it's reference from the name service
-   std::string message =  std::string("Going to RegisterUnit ") + std::string( UnitName ) + std::string("\n" );
+   std::string strUnitName( UnitName );
+   //delete UnitName;
+   
+   std::string message =  std::string("Going to RegisterUnit ") + strUnitName + std::string("\n" );
    ClientMessage( message.c_str() );
 
-   _mod_units[std::string(UnitName)] = Body::Unit::_duplicate(unit);
+   _mod_units[ strUnitName ] = Body::Unit::_duplicate(unit);
 
    std::map<std::string, Execute_Thread*>::iterator iter;
-   iter = _exec_thread.find( std::string(UnitName) );
+   iter = _exec_thread.find( strUnitName );
 
    if( iter == _exec_thread.end() ) 
    {
       // CLEAN THIS UP IN UNREGISTER UNIT !
-      Execute_Thread *ex = new Execute_Thread( _mod_units[std::string(UnitName)], (Body_Executive_i*)this);
+      Execute_Thread *ex = new Execute_Thread( _mod_units[ strUnitName ], (Body_Executive_i*)this);
       ex->activate();
-      _exec_thread[ std::string(UnitName) ] = ex;
+      _exec_thread[ strUnitName ] = ex;
    }
    else //replace it with new reference
    {
@@ -994,19 +975,19 @@ void Body_Executive_i::RegisterUnit (
       {
          delete iter->second;
       }
-      Execute_Thread *ex = new Execute_Thread( _mod_units[std::string(UnitName)], (Body_Executive_i*)this);
+      Execute_Thread *ex = new Execute_Thread( _mod_units[ strUnitName ], (Body_Executive_i*)this);
       ex->activate();
-      _exec_thread[ std::string(UnitName) ] = ex;
+      _exec_thread[ strUnitName ] = ex;
    }
 
    std::map<std::string, QueryThread* >::iterator iterQuery;
-   iterQuery = queryThreads.find( std::string(UnitName) );
+   iterQuery = queryThreads.find( strUnitName );
 
    if ( iterQuery == queryThreads.end() )
    { 
-      QueryThread* query = new QueryThread( _mod_units[std::string(UnitName)] );
+      QueryThread* query = new QueryThread( _mod_units[ strUnitName ] );
       query->activate();
-      queryThreads[ std::string(UnitName) ] = query;      
+      queryThreads[ strUnitName ] = query;      
    }
    else
    {
@@ -1015,12 +996,12 @@ void Body_Executive_i::RegisterUnit (
       {
          delete iterQuery->second;
       }
-      QueryThread* query = new QueryThread( _mod_units[std::string(UnitName)] );
+      QueryThread* query = new QueryThread( _mod_units[ strUnitName ] );
       query->activate();      
-      queryThreads[ std::string(UnitName) ] = query;      
+      queryThreads[ strUnitName ] = query;      
    }
    
-   message = std::string( "Successfully registered " ) + std::string( UnitName ) + std::string("\n" );
+   message = std::string( "Successfully registered " ) + strUnitName + std::string("\n" );
    ClientMessage( message.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////  
@@ -1035,11 +1016,13 @@ void Body_Executive_i::UnRegisterUI (
 	std::map<std::string, Body::UI_var>::iterator iter;
 	_mutex.acquire();
 	// Add your implementation here
-	iter = uis_.find( std::string(UIName) );
+   std::string strUI(UIName);
+   //delete UIName;
+	iter = uis_.find( strUI );
 	if ( iter != uis_.end() )
 	{
 		uis_.erase(iter);
-      std::cout << UIName << " Unregistered!\n";
+      std::cout << strUI << " Unregistered!\n";
 	}
   _mutex.release();
 }
@@ -1170,11 +1153,8 @@ void Body_Executive_i::ClientMessage(const char *msg)
       std::cout << msg << " to -> " << iter->first << std::endl;
 	   try 
       {
-         //if ( iter->first.at( 0 ) != 'V' )
-         {
          iter->second->_non_existent();
    	   iter->second->Raise(msg);
-         }
          ++iter;
 	   }
       catch (CORBA::Exception &) 

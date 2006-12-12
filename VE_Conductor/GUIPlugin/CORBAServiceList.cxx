@@ -338,7 +338,7 @@ void CORBAServiceList::CreateCORBAModule( void )
          //Here is the code to set up the ROOT POA
          CORBA::Object_var poa_object = orb->resolve_initial_references ("RootPOA"); // get the root poa
          poa_root = PortableServer::POA::_narrow(poa_object.in());
-         PortableServer::POAManager_var poa_manager = poa_root->the_POAManager ();
+         PortableServer::POAManager_var poa_manager = poa_root->the_POAManager();
          
          CORBA::PolicyList policies (1);
          policies.length (1);
@@ -370,11 +370,13 @@ void CORBAServiceList::CreateCORBAModule( void )
          }
          
          poa_manager->activate();
-         PortableServer::ObjectId_var idObject = PortableServer::string_to_ObjectId (CORBA::string_dup (UINAME.c_str()));
+         PortableServer::ObjectId_var idObject = 
+                           PortableServer::string_to_ObjectId( UINAME.c_str() );
          poa->activate_object_with_id( idObject.in() , p_ui_i );
          
          //Activate it to obtain the object reference
-         Body::UI_var ui = Body::UI::_narrow( poa->id_to_reference( idObject.in() ) );
+         CORBA::Object_var objectRef = poa->id_to_reference( idObject.in() );
+         Body::UI_var ui = Body::UI::_narrow( objectRef.in() );
         
          try 
          {
@@ -392,10 +394,11 @@ void CORBAServiceList::CreateCORBAModule( void )
       {
          try 
          {
-            PortableServer::ObjectId_var idObject = PortableServer::string_to_ObjectId( CORBA::string_dup( UINAME.c_str() ) );
+            PortableServer::ObjectId_var idObject = PortableServer::string_to_ObjectId( UINAME.c_str() );
             
             //Activate it to obtain the object reference
-            Body::UI_var ui = Body::UI::_narrow( poa->id_to_reference( idObject.in() ) );
+            CORBA::Object_var objectRef = poa->id_to_reference( idObject.in() );
+            Body::UI_var ui = Body::UI::_narrow( objectRef.in() );
             
             veCE->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
          }
@@ -441,7 +444,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
       try
       {
          // CORBA releases the allocated memory so we do not have to
-         vjobs->SetCommandString( CORBA::string_dup( xmlDocument.c_str() ) );
+         vjobs->SetCommandString( xmlDocument.c_str() );
       }
       catch ( ... )
       {
@@ -484,7 +487,7 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
    
    try
    {
-      veCE->SetID( CORBA::string_dup( moduleName.c_str() ), moduleId );
+      veCE->SetID( moduleName.c_str(), moduleId );
    }
    catch ( ... )
    {
@@ -589,7 +592,7 @@ std::string CORBAServiceList::Query( std::string command )
    
    try
    {
-      std::string network = veCE->Query( CORBA::string_dup( command.c_str() ) );
+      std::string network = veCE->Query( command.c_str() );
       return network;
    }
    catch ( ... )
@@ -607,7 +610,7 @@ void CORBAServiceList::SetNetwork( std::string command )
    
    try
    {
-      veCE->SetNetwork( CORBA::string_dup( command.c_str() ) );
+      veCE->SetNetwork( command.c_str() );
    }
    catch ( ... )
    {
