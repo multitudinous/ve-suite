@@ -108,6 +108,8 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(SHOW_FINANCIAL, Network::OnShowFinancial) /* EPRI TAG */
    EVT_MENU(SHOW_ASPEN_NAME, Network::OnShowAspenName)
    EVT_MENU(QUERY_INPUTS, Network::OnQueryInputs)
+   EVT_MENU(QUERY_OUTPUTS, Network::OnQueryOutputs)
+   EVT_MENU(SET_INPUT, Network::OnSetInput)
    EVT_MENU(GEOMETRY, Network::OnGeometry)
    EVT_MENU(DATASET, Network::OnDataSet)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
@@ -510,6 +512,10 @@ void Network::OnMRightDown(wxMouseEvent& event)
    aspen_menu->Enable(SHOW_ASPEN_NAME, true);
    aspen_menu->Append(QUERY_INPUTS, "Query Inputs");
    aspen_menu->Enable(QUERY_INPUTS, true);
+   aspen_menu->Append(QUERY_OUTPUTS, "Query Outputs");
+   aspen_menu->Enable(QUERY_OUTPUTS, true);
+   aspen_menu->Append(SET_INPUT, "Set Input");
+   aspen_menu->Enable(SET_INPUT, true);
    pop_menu.Append( ASPEN_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
 
    //if (p_frame->f_geometry)
@@ -2566,7 +2572,7 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
-	returnState.SetCommandName("getModuleParamList");
+	returnState.SetCommandName("getInputModuleParamList");
 	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
 	data->SetData(std::string("ModuleName"), compName);
 	
@@ -2608,11 +2614,11 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	
 	//serviceList->GetMessageLog()->SetMessage("submit or not");
 	//if it is submit launch request
-	//if(results->IsSubmit())
-		this->OnQueryModuleProperties(temp_vector2, compName);
+	if(results->IsSubmit())
+		this->OnQueryInputModuleProperties(temp_vector2, compName);
 }
 //////////////////////////////////////////////////////
-void  Network::OnQueryModuleProperties(std::vector< std::string > requestedInputs, std::string compName)
+void  Network::OnQueryInputModuleProperties(std::vector< std::string > requestedInputs, std::string compName)
 {  
 	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
 	//serviceList->GetMessageLog()->SetMessage("mods");
@@ -2633,7 +2639,7 @@ void  Network::OnQueryModuleProperties(std::vector< std::string > requestedInput
 	    //serviceList->GetMessageLog()->SetMessage("iter");
 		VE_XML::Command returnState;
 	    //serviceList->GetMessageLog()->SetMessage("modpro");
-		returnState.SetCommandName("getModuleProperties");
+		returnState.SetCommandName("getInputModuleProperties");
 	    //serviceList->GetMessageLog()->SetMessage("vp");
 		VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
 	    //serviceList->GetMessageLog()->SetMessage("cmpname");
@@ -2708,6 +2714,131 @@ void  Network::OnQueryModuleProperties(std::vector< std::string > requestedInput
 	//serviceList->GetMessageLog()->SetMessage("show dialog");
 	paramDialog->ShowModal();
 }
+
+//////////////////////////////////////////////////////
+void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
+{  
+	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
+
+	VE_XML::Command returnState;
+	returnState.SetCommandName("getOutputModuleParamList");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData(std::string("ModuleName"), compName);
+	
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	
+	//Get results
+	std::string nw_str = serviceList->Query( status );
+	wxString title = compName.c_str();
+	QueryInputsDlg * results = new QueryInputsDlg(this);
+	VE_XML::XMLReaderWriter networkReader;
+	networkReader.UseStandaloneDOMDocumentManager();
+	networkReader.ReadFromString();
+	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	std::vector< std::string > temp_vector;
+	pair->GetData(temp_vector);
+	for (int i=0; i < temp_vector.size(); i++) 
+		results->AppendList(temp_vector[i].c_str());
+	results->ShowModal();
+	
+	std::vector< std::string > temp_vector2;
+	for(int testing = 0; testing < results->GetDataSize(); testing++)
+		temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
+
+	if(results->IsSubmit())
+		this->OnQueryOutputModuleProperties(temp_vector2, compName);
+}
+//////////////////////////////////////////////////////
+void  Network::OnQueryOutputModuleProperties(std::vector< std::string > requestedOutputs, std::string compName)
+{  
+	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	wxString title = compName.c_str();
+	ParamsDlg * paramDialog = new ParamsDlg(this);
+
+	for(int i = 0; i < requestedOutputs.size(); i++)
+	{
+		VE_XML::Command returnState;
+		returnState.SetCommandName("getOutputModuleProperties");
+		VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+		data->SetData(std::string("ModuleName"), compName);
+		data = returnState.GetDataValuePair(-1);
+		data->SetData(std::string("ParamName"), requestedOutputs[i]);
+		paramDialog->AddToList(requestedOutputs[i].c_str());
+		
+		std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+		nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+		
+		VE_XML::XMLReaderWriter commandWriter;
+		std::string status="returnString";
+		commandWriter.UseStandaloneDOMDocumentManager();
+		commandWriter.WriteXMLDocument( nodes, status, "Command" );
+		std::string nw_str = serviceList->Query( status );
+
+		VE_XML::XMLReaderWriter networkReader;
+		networkReader.UseStandaloneDOMDocumentManager();
+		networkReader.ReadFromString();
+		networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+		std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+		VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+
+		unsigned int num = cmd->GetNumberOfDataValuePairs();		
+		std::vector< std::string > dataName;
+		std::vector< std::string > dataValue;
+		for(int j = 0; j < num; j++)
+		{
+			VE_XML::DataValuePair * pair = cmd->GetDataValuePair(j);
+			if(pair->GetDataType() == "STRING")
+			{
+			dataName.push_back(pair->GetDataName().c_str());
+			dataValue.push_back(pair->GetDataString().c_str());
+			}
+			else if(pair->GetDataType() == "UNSIGNED INT")
+			{
+				unsigned int intValue;
+				dataName.push_back(pair->GetDataName().c_str());
+				pair->GetData(intValue);
+				dataValue.push_back("int");			
+			}
+		}
+		paramDialog->AddResults(requestedOutputs[i], dataName, dataValue);
+	}
+	paramDialog->ShowModal();
+}
+
+//////////////////////////////////////////////////////
+void  Network::OnSetInput(wxCommandEvent& WXUNUSED(event))
+{  
+	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
+	VE_XML::Command returnState;
+	returnState.SetCommandName("setParam");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData("ModuleName", compName);
+	data = returnState.GetDataValuePair(-1);
+	data->SetData("ParamName", "P_DROP");
+	data = returnState.GetDataValuePair(-1);
+	data->SetData("ParamValue", "0.2");
+
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	std::string nw_str = serviceList->Query( status );
+}
+
 
 //////////////////////////////////////////////////////
 void Network::OnShowDesc(wxCommandEvent& WXUNUSED(event))
