@@ -162,6 +162,7 @@ public:
    void OnSetInput(wxCommandEvent &event);
    void OnQueryInputModuleProperties(std::vector< std::string >, std::string);
    void OnQueryOutputModuleProperties(std::vector< std::string >, std::string);
+   void OnQueryModuleProperties(std::vector< std::string > requestedInputs, std::string compName);
 
    //Add to network fuctions
    void AddtoNetwork(REI_Plugin *new_mod, std::string cls_name);
