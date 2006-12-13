@@ -2588,7 +2588,8 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	std::string nw_str = serviceList->Query( status );
 	wxString title = compName.c_str();
 	//TextResultDialog * results = new TextResultDialog(this, title);
-	QueryInputsDlg * results = new QueryInputsDlg(this);
+	//QueryInputsDlg * results = new QueryInputsDlg(this);
+	ParamsDlg * params = new ParamsDlg(this);
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
@@ -2603,22 +2604,22 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
 	for (int i=0; i < temp_vector.size(); i++) 
-		results->AppendList(temp_vector[i].c_str());
-	results->ShowModal();
+		params->AppendList(temp_vector[i].c_str());
+	params->ShowModal();
 	
 	//serviceList->GetMessageLog()->SetMessage("gather");
 	//gather requested inputs
-	std::vector< std::string > temp_vector2;
-	for(int testing = 0; testing < results->GetDataSize(); testing++)
-		temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
+	//std::vector< std::string > temp_vector2;
+	//for(int testing = 0; testing < results->GetDataSize(); testing++)
+	//	temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
 	
 	//serviceList->GetMessageLog()->SetMessage("submit or not");
 	//if it is submit launch request
-	if(results->IsSubmit())
-		this->OnQueryInputModuleProperties(temp_vector2, compName);
+	//if(results->IsSubmit())
+	//	this->OnQueryInputModuleProperties(temp_vector2, compName);
 }
 //////////////////////////////////////////////////////
-void  Network::OnQueryInputModuleProperties(std::vector< std::string > requestedInputs, std::string compName)
+/*void  Network::OnQueryInputModuleProperties(std::vector< std::string > requestedInputs, std::string compName)
 {  
 	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
 	//serviceList->GetMessageLog()->SetMessage("mods");
@@ -2713,7 +2714,7 @@ void  Network::OnQueryInputModuleProperties(std::vector< std::string > requested
 	}
 	//serviceList->GetMessageLog()->SetMessage("show dialog");
 	paramDialog->ShowModal();
-}
+}*/
 
 //////////////////////////////////////////////////////
 void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
@@ -2737,7 +2738,8 @@ void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	//Get results
 	std::string nw_str = serviceList->Query( status );
 	wxString title = compName.c_str();
-	QueryInputsDlg * results = new QueryInputsDlg(this);
+	//QueryInputsDlg * results = new QueryInputsDlg(this);
+	ParamsDlg * params = new ParamsDlg(this);
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
@@ -2748,18 +2750,18 @@ void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
 	for (int i=0; i < temp_vector.size(); i++) 
-		results->AppendList(temp_vector[i].c_str());
-	results->ShowModal();
+		params->AppendList(temp_vector[i].c_str());
+	params->ShowModal();
 	
-	std::vector< std::string > temp_vector2;
-	for(int testing = 0; testing < results->GetDataSize(); testing++)
-		temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
+	//std::vector< std::string > temp_vector2;
+	//for(int testing = 0; testing < results->GetDataSize(); testing++)
+	//	temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
 
-	if(results->IsSubmit())
-		this->OnQueryOutputModuleProperties(temp_vector2, compName);
+	//if(results->IsSubmit())
+	//	this->OnQueryOutputModuleProperties(temp_vector2, compName);
 }
 //////////////////////////////////////////////////////
-void  Network::OnQueryOutputModuleProperties(std::vector< std::string > requestedOutputs, std::string compName)
+/*void  Network::OnQueryOutputModuleProperties(std::vector< std::string > requestedOutputs, std::string compName)
 {  
 	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
 	wxString title = compName.c_str();
@@ -2813,7 +2815,7 @@ void  Network::OnQueryOutputModuleProperties(std::vector< std::string > requeste
 		paramDialog->AddResults(requestedOutputs[i], dataName, dataValue);
 	}
 	paramDialog->ShowModal();
-}
+}*/
 
 //////////////////////////////////////////////////////
 void  Network::OnSetInput(wxCommandEvent& WXUNUSED(event))
