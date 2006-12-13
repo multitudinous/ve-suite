@@ -69,6 +69,9 @@ public:
 
    cfdGroup* GetRootNode( void );
    cfdDCS*   GetWorldDCS( void );
+   ///Set the node on the switch node that is active
+   ///\param activeNode node to activate
+   void SetActiveSwitchNode( int activeNode );
 
    ///Switch the logo on and off
    ///\param trueFalse Turn the logo on and off.
@@ -88,7 +91,8 @@ private:
    cfdGroup* rootNode;
    cfdDCS* _logoNode;
    cfdSwitch* _logoSwitch;///<Node to switch between the logo and the worldDCS
-   cfdDCS* worldDCS;
+   cfdDCS* worldDCS;///<Node to control navigation
+   cfdDCS* networkDCS;///<Node to hold a network view of the system under investigation
    VE_SceneGraph::cfdFILE* _movingPyramidsAssembly;///<Logo Animated pyramids
    VE_SceneGraph::cfdFILE* _textPart;///<Logo Text
 #ifdef _PERFORMER

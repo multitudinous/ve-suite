@@ -128,18 +128,9 @@ void cfdPfSceneManagement::InitScene( void )
    //
    std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
    
-   //create the switch for our logo
-   _createLogo();
-
    // Setup performer pipeline
 #ifdef _PERFORMER
    this->sunModel = new pfLightModel();
-#endif
-   this->rootNode = new cfdGroup();
-   this->rootNode->SetName( "Root Node" );
-   this->worldDCS = new cfdDCS();
-   this->worldDCS->SetName( "World DCS" );
-#ifdef _PERFORMER
    this->sun      = new pfLightSource();
    // Create lights
    this->sun->setPos( 100.0f, -100.0f, 100.0f, 0.0f );
@@ -153,11 +144,23 @@ void cfdPfSceneManagement::InitScene( void )
    this->sun->setVal(PFLS_INTENSITY, 1.0);
    this->sun->on();
 #endif
+   this->rootNode = new cfdGroup();
+   this->rootNode->SetName( "Root Node" );
+   this->worldDCS = new cfdDCS();
+   this->worldDCS->SetName( "World DCS" );
+   networkDCS  = new cfdDCS();
+   networkDCS->SetName( "Network DCS" );
+
+   //create the switch for our logo
+   _createLogo();
    _logoSwitch->AddChild(worldDCS);
    _logoSwitch->AddChild(_logoNode);
+   _logoSwitch->AddChild( networkDCS );
    
+   //Now lets put it on the main group node
+   //remember that the logo switch is right below the group node 
+   //NOT the world dcs
    rootNode->AddChild(_logoSwitch);
-   //this->rootNode->AddChild( this->worldDCS );
 #ifdef _PERFORMER
    ((pfGroup*)(this->rootNode->GetRawNode()))->addChild( this->sun );
 #endif
@@ -172,15 +175,19 @@ cfdDCS* cfdPfSceneManagement::GetWorldDCS( void )
 {
    return this->worldDCS;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPfSceneManagement::ViewLogo(bool trueFalse)
 {
-   if(_logoSwitch)
+   if ( trueFalse )
    {
-      _logoSwitch->SetVal((trueFalse)?1:0);
+      SetActiveSwitchNode( 1 );
+   }
+   else
+   {
+      SetActiveSwitchNode( 0 );
    }
 }
-////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdPfSceneManagement::_createLogo()
 {
 #ifdef _OSG
@@ -206,4 +213,8 @@ void cfdPfSceneManagement::_createLogo()
 #elif _PERFORMER
 #endif
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void cfdPfSceneManagement::SetActiveSwitchNode( int activeNode )
+{
+   _logoSwitch->SetVal( activeNode );
+}

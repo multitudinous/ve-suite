@@ -440,7 +440,7 @@ void cfdEnvironmentHandler::SetFrustumValues(float _top,float _bottom,float _nea
 	_frustumBottom=_bottom;
 	_frustumNear=_near;
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball
@@ -450,7 +450,7 @@ void cfdEnvironmentHandler::PostFrameUpdate()
    //Update the values in mouse_selection
    mouse_selection->Reshape(_windowWidth,_windowHeight);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::CreateObjects( void )
 {  
    int numObjects;
