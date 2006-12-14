@@ -51,13 +51,11 @@ REQUIREMENTS
 
 This makefile requires an installation of the docbook programs and Version 1.4.2 or newer of the Java runtime environment. Before running it, you also need to set the JAVA_HOME variable to point to the directory containing bin/java (For example, with Java 1.5.0_08 on Linux, a likely setting would be JAVA_HOME=/usr/java/jdk1.5.0_08) and set VE_SUITE_HOME to VE Suite's directory.
 
---Java--
+--Libraries--
 
-You can download Java here:
+This makefile uses functions found in the libxml library. If you don't have it installed (i.e. if 'xmllint --help' doesn't work), you can download it here:
 
-http://java.sun.com/javase/downloads/index.jsp
-
-Set the environment variable JAVA_HOME to point to the directory containing bin/java, as explained above.
+http://www.xmlsoft.org/
 
 --Docbook Tools--
 
@@ -67,7 +65,11 @@ http://www.infiscape.com/~patrick/docbook.tar.bz2
 -or-
 http://www.infiscape.com/~patrick/docbook.7z
 
-Unpack the docbook directory. They require Version 1.4.2 or never of the Java runtime environment. You can download it here:
+Unpack the docbook directory.
+
+--Java--
+
+The docbook tools require Version 1.4.2 or never of the Java runtime environment. You can download it here:
 
 http://java.sun.com/javase/downloads/index.jsp
 

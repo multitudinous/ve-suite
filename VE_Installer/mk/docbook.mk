@@ -39,7 +39,7 @@
 
 # Software and stylesheet versions.
 DOCBOOK_XSL_VERSION?=	1.67.2
-XALAN_VERSION?=		2_7_0JA
+XALAN_VERSION?=		2_5_2
 SAXON_VERSION?=		6.5.2
 FOP_VERSION?=		0.20.5
 BATIK_VERSION?=		1.5.1
@@ -238,23 +238,25 @@ install install-all:
 
 # XML to HTML, using either Xalan or Saxon
 %.html: %.xml
+	xmllint --xinclude $< > $*-resolved.xml
 ifeq ($(XSLT_TOOL), Xalan)
-	$(ENV) $(XALAN) -in $< -xsl $(HTML_XSL) -out $*/$@	\
+	$(ENV) $(XALAN) -in $*-resolved.xml -xsl $(HTML_XSL) -out $*/$@	\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
 else
-	$(ENV) $(SAXON) -i $< -xsl $(HTML_XSL) -o $*/$@		\
+	$(ENV) $(SAXON) -i $*-resolved.xml -xsl $(HTML_XSL) -o $*/$@		\
           $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS)
 endif
 
 # XML to index.HTML
 %-multipage/index.html: %.xml
+	xmllint --xinclude $< > $*-resolved.xml
 	mkdir $(CHUNK_DIR)
 ifeq ($(XSLT_TOOL), Xalan)
-	$(ENV) $(XALAN) -in $< -xsl $(CHUNK_HTML_XSL) -out $@	\
+	$(ENV) $(XALAN) -in $*-resolved.xml -xsl $(CHUNK_HTML_XSL) -out $@	\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)	\
           $(XALAN_HTML_CHUNK_PARAMS)
 else
-	$(ENV) $(SAXON) -i $< -xsl $(CHUNK_HTML_XSL) -o $@	\
+	$(ENV) $(SAXON) -i $*-resolved.xml -xsl $(CHUNK_HTML_XSL) -o $@	\
           $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS)	\
           $(SAXON_HTML_CHUNK_PARAMS)
 endif
@@ -292,13 +294,18 @@ endif
 
 # XML to FO
 %.fo: %.xml
+	xmllint --xinclude $< > $*-resolved.xml
 ifeq ($(XSLT_TOOL), Xalan)
-	$(ENV) $(XALAN) -in $< -xsl $(FO_XSL) -out $@	\
+	$(ENV) $(XALAN) -in $*-resolved.xml -xsl $(FO_XSL) -out $@	\
           $(XALAN_FO_PARAMS) $(EXTRA_XALAN_FO_PARAMS)
 else
-	$(ENV) $(SAXON) -i $< -xsl $(FO_XSL) -o $@		\
+	$(ENV) $(SAXON) -i $*-resolved.xml -xsl $(FO_XSL) -o $@		\
           $(SAXON_FO_PARAMS) $(EXTRA_SAXON_FO_PARAMS)
 endif
+
+# Unused at moment; figure out way to implement.
+%-resolved.xml: %.xml
+	xmllint --xinclude $< > $*-resolved.xml
 
 # Generate a PDF file from an FO file using FOP.
 ifeq ($(FO_TOOL), FOP)
@@ -306,6 +313,7 @@ $(PDF_FILES): $(FO_FILES)
 $(TXT_FILES): $(FO_FILES)
 
 %.pdf: %.fo
+	if [ ! -d "$*" ]; then mkdir -p $*; fi
 	$(FOP) $< $*/$@
 
 %.txt: %.fo
