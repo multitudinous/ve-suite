@@ -51,7 +51,7 @@
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
-#include "VE_Xplorer/XplorerNetwork/SwitchXplorerView.h"
+#include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
 
 #include <iostream>
 #include <string>

@@ -10,7 +10,7 @@ sources = Split("""
    cfdVEPluginLoader.cxx
    VE_i.cpp
    DeleteObjectFromNetworkEventHandler.cxx
-   SwitchXplorerView.cxx
+   SwitchXplorerViewEventHandler.cxx
 """)
 
 headers = Split("""
