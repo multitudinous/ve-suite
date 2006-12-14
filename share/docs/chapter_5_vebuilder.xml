@@ -254,9 +254,49 @@
     <para>The first prompt will ask for a filename. Type in the .vtu's
     filename. The second prompt will ask for a directory to dump the data
     into. Type in the full path to the directory you want the preprocessed
-    data in. The program will then ask you what you want to extract; once you
-    finish making your choices, it will execute and produce your preprocessed
-    data.</para>
+    data in. The program will then ask you what you want to process. Your
+    choices include:</para>
+
+    <para><itemizedlist>
+        <listitem>
+          <para>Decompose Octrees</para>
+        </listitem>
+
+        <listitem>
+          <para>Extract Surfaces</para>
+        </listitem>
+
+        <listitem>
+          <para>Extract Isosurfaces</para>
+        </listitem>
+
+        <listitem>
+          <para>Extract Cutting Planes</para>
+        </listitem>
+      </itemizedlist>
+    </para>
+    
+    <para>Once you finish making your choices, it will execute and produce
+    your preprocessed data.</para>
+
+    <title>Specifying Cutting Planes in a .txt File</title>
+
+    <para>If you want to extract cutting planes, you can specify the planes in
+    a .txt file instead of manually typing them in each time. First, create a
+    .txt file in the same directory as the .vtu file and write your cutting
+    planes in it using this format:</para>
+
+    <code>1    //Number of x cuts
+0.0  //X cuts
+1    //Number of y cuts
+0.0  //Y cuts
+4    //Number of z cuts
+3.26 3.39 3.42 3.73    //Z cuts</code>
+
+    <para>Then, when you run preprocessor, enter (1)Yes to Extract cutting
+    planes. It will ask you how to set the number of cuts. Select (2)Specify
+    text file, then enter the name of your .txt file. Preprocessor will pull
+    the values for the cutting planes from it.</para>
   </section>
 
   <section id="creating_texture_based_datasets">

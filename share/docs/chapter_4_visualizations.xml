@@ -130,7 +130,7 @@
     </mediaobject>
 
     <para>Once you're done looking at the contour planes, you can remove them
-    from the screen by clicking <guibutton>Clear All </guibutton>on the
+    from the screen by clicking <guibutton>Clear All</guibutton> on the
     Visualization interface. This will clear any Visualization features from
     VE-Xplorer.</para>
   </section>
@@ -221,5 +221,75 @@
     <para>Exit Visualization and examine the isosurface by using the mouse or
     the Navigation pane. Once you're done, reenter Visualization and click
     <guibutton>Clear All</guibutton>.</para>
+  </section>
+
+  <section id="visualization_texture_based">
+    <title>Texture-Based Datasets</title>
+
+    <para>Texture-based datasets render 3D data without relying on primitive
+    shapes. You can view texture-based data in the Visualization interface.
+    First, display a scalar contour to prepare the texture-based data. Then
+    click the Texture Based button on the top icon bar.</para>
+
+    <mediaobject>
+      <imageobject>
+	      <imagedata fileref="veimages/texturebasedmenu.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>The texture-based data will replace the scalar contour and you will
+    get the Texture-Based Tools window. Select the Scalars icon to bring up
+    the Scalar Tools window.</para>
+
+    <mediaobject>
+      <imageobject>
+	      <imagedata fileref="veimages/scalartoolswindow.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Right now, the screen should be blank, even though you just had a
+    contour plane up. Once you select a scalar, its texture-based image should
+    appear on your viewscreen. You can adjust the scalar range shown to see
+    certain parts of it.</para>
+
+    <mediaobject>
+      <imageobject>
+	      <imagedata fileref="veimages/texturescalarrange.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>You can also Enable Isosurface to select a specific isosurface within
+    the scalar range. (The Advanced Isosurface button is currently
+    disabled.)</para>
+
+    <mediaobject>
+      <imageobject>
+	      <imagedata fileref="veimages/textureisosurface.gif" />
+      </imageobject>
+    </mediaobject>
+
+    <para>If you have time-step data, you can control its
+    movement through the Transient button on the Texture-Based Tools
+    window. From the Transient Controls window, you can:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><emphasis role="bold">Stop</emphasis> the time steps,
+        resetting the data.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Play</emphasis> the time steps.</para>
+      </listitem>
+
+      <listitem>
+	      <para>Go <emphasis role="bold">Forward/Backward</emphasis>
+              one frame.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><emphasis role="italic">Dataset in images provided courtesy of
+    National Energy Technology Laboratory, 2005.</emphasis></para>
+
   </section>
 </chapter>
