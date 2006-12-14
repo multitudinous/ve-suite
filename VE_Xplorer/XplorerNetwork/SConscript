@@ -10,6 +10,7 @@ sources = Split("""
    cfdVEPluginLoader.cxx
    VE_i.cpp
    DeleteObjectFromNetworkEventHandler.cxx
+   SwitchXplorerView.cxx
 """)
 
 headers = Split("""
@@ -18,6 +19,7 @@ headers = Split("""
    cfdVEPluginLoader.h
    VE_i.h
    DeleteObjectFromNetworkEventHandler.h
+   SwitchXplorerViewEventHandler.h
 """)
 
 lib_env = ves_pkg.getEnv().Copy()

@@ -67,7 +67,7 @@ public:
    SwitchXplorerViewEventHandler(const SwitchXplorerViewEventHandler& rhs);
 
    ///Destructor
-   virtual ~DeleteObjectFromNetworkEventHandler();
+   virtual ~SwitchXplorerViewEventHandler();
 
    ///Equal operator
    SwitchXplorerViewEventHandler& operator=(const SwitchXplorerViewEventHandler& rhs);

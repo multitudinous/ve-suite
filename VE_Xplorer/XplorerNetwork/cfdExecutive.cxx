@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include "VE_Xplorer/XplorerNetwork/VE_i.h"
@@ -52,6 +51,7 @@
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
+#include "VE_Xplorer/XplorerNetwork/SwitchXplorerView.h"
 
 #include <iostream>
 #include <string>
@@ -151,6 +151,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
    }
 
    _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::DeleteObjectFromNetworkEventHandler();
+   _eventHandlers[std::string("Switch Network View")] = new VE_EVENTS::SwitchXplorerViewEventHandler();
 }
 ///////////////////////////////////////////////////////////////////
 std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
