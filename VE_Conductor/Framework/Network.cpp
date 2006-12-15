@@ -2603,6 +2603,10 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
+
+	params->SetCompName(compName.c_str());
+	params->SetServiceList(serviceList);
+	params->SetDialogType("input");
 	for (int i=0; i < temp_vector.size(); i++) 
 		params->AppendList(temp_vector[i].c_str());
 	params->ShowModal();
@@ -2749,6 +2753,10 @@ void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
+
+	params->SetCompName(compName.c_str());
+	params->SetServiceList(serviceList);
+	params->SetDialogType("output");
 	for (int i=0; i < temp_vector.size(); i++) 
 		params->AppendList(temp_vector[i].c_str());
 	params->ShowModal();
