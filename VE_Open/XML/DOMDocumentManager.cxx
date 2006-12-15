@@ -236,11 +236,31 @@ void DOMDocumentManager::CreateCommandDocument( std::string type )
 {
    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( xercesString( "LS" ) );
 
+  char* message = 0;
    try
    {
-      commandDocument = impl->createDocument(0, xercesString( documentType[ type ].second ), 0);
+	  std::map< std::string, std::pair< std::string, std::string > >::iterator iter = 
+		   documentType.find( type );
+	  std::string tempDoc = iter->second.second;
+      commandDocument = impl->createDocument(0, xercesString( tempDoc ), 0);
    }
-   catch ( ... )
+   catch(const XMLException &toCatch)
+   {
+      message = XMLString::transcode(toCatch.getMessage());
+      std::cerr << "XMLException Exception message is: \n"
+            << message << std::endl;
+      XMLString::release( &message );
+      return;
+   }
+    catch (const DOMException& toCatch) 
+   {
+      message = XMLString::transcode(toCatch.msg);
+      std::cout << "DOMException Exception message is: \n"
+		  << message << std::endl;
+      XMLString::release(&message);
+      return;
+   }
+  catch ( ... )
    {
       std::cerr << " ERROR : not a vaild document type : " << type << std::endl;
       return;

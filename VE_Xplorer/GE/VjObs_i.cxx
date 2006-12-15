@@ -128,8 +128,6 @@ VjObs_i::VjObs_i()
    bufferCommand = new Command(  );
    bufferCommand->AddDataValuePair( new DataValuePair(  ) );
    bufferCommand->SetCommandName( "wait" );
-   domManager = new DOMDocumentManager();
-   domManager->SetParseXMLStringOn();
 }
 
 void VjObs_i::InitCluster( void )
@@ -998,8 +996,12 @@ void VjObs_i::SetCommandString( const char* value)
    std::string commandString( value );
 #ifdef _CLUSTER
    if ( mStates.isLocal() )
-      commandStringQueue.push_back( commandString );
+   {
+	   commandStringQueue.push_back( commandString );
+   }
 #endif
+   domManager = new DOMDocumentManager();
+   domManager->SetParseXMLStringOn();
    domManager->Load( commandString );
    vprDEBUG(vprDBG_ALL,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
    DOMDocument* commandDoc = domManager->GetCommandDocument();
@@ -1028,6 +1030,8 @@ void VjObs_i::SetCommandString( const char* value)
    //std::cout <<"VjObs::SetCommandString(): unloading parser "<< std::endl;
    // I am pretty sure we now need to release some memory for the domdocument
    domManager->UnLoadParser();
+   delete domManager;
+   domManager = 0;
    //std::cout <<"VjObs::SetCommandString(): Done "<< std::endl;
 }
 
