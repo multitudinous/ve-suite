@@ -1,6 +1,14 @@
 #ifndef PARAMSDLG_H
 #define PARAMSDLG_H
 
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Installer/include/VEConfig.h"
+#include <iostream>
+#include <fstream>
+
 #include <wx/wx.h>
 #include <wx/dialog.h>
 #include <wx/button.h>
@@ -8,20 +16,11 @@
 #include <wx/choice.h>
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
-#include "VE_Installer/include/VEConfig.h"
 
 #undef ParamsDlg_STYLE
 #define ParamsDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 
-class wxWindow;
-class wxDialog;
-class wxListBox;
-class wxString;
-class wxSize;
-class wxPoint;
-class wxCommandEvent;
-class wxGrid;
-
+class AppFrame;
 class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
 {
 	private:
@@ -31,13 +30,18 @@ class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
 		ParamsDlg(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("ParamsDialog"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = ParamsDlg_STYLE);
 		virtual ~ParamsDlg();
 		void WxButton1Click(wxCommandEvent& event);
-		void SetValueClick(wxCommandEvent& event);
-		void WxChoice1Selected(wxCommandEvent& event );
 		void ParamChoiceSelected(wxCommandEvent& event );
 		void SetButtonClick(wxCommandEvent& event);
 		void AppendList(const char *);
+		void SetCompName(const char *);
+		void SetServiceList(VE_Conductor::CORBAServiceList *);
+		void SetDialogType(const char *);
 	
 	private:
+		wxString CompName;
+		wxString DialogType;
+		VE_Conductor::CORBAServiceList * serviceList;
+
 		wxButton *SetButton;
 		wxTextCtrl *WxMemo3;
 		wxTextCtrl *PromptMemo;
@@ -85,7 +89,7 @@ class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
 		wxStaticText *UnitLabel;
 		wxTextCtrl *UnitEdit;
 		wxStaticText *PhysicalLabel;
-		wxTextCtrl *Quantity;
+		wxTextCtrl *QuantityEdit;
 		wxTextCtrl *ValueEdit;
 		wxStaticText *ValueLabel;
 		wxStaticBox *VARBox;

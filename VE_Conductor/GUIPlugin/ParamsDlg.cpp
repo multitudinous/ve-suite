@@ -1,4 +1,4 @@
-#include "ParamsDlg.h"
+#include "VE_Conductor/GUIPlugin/ParamsDlg.h"
 
 BEGIN_EVENT_TABLE(ParamsDlg,wxDialog)
 	EVT_CLOSE(ParamsDlg::OnClose)
@@ -160,9 +160,9 @@ void ParamsDlg::CreateGUIControls()
 
 	PhysicalLabel = new wxStaticText(this, ID_PHYSICALLABEL, wxT("Physical"), wxPoint(11,129), wxDefaultSize, 0, wxT("PhysicalLabel"));
 
-	Quantity = new wxTextCtrl(this, ID_QUANTITY, wxT(""), wxPoint(57,133), wxSize(132,21), 0, wxDefaultValidator, wxT("Quantity"));
-	Quantity->Enable(false);
-	Quantity->SetBackgroundColour(wxColour(*wxWHITE));
+	QuantityEdit = new wxTextCtrl(this, ID_QUANTITY, wxT(""), wxPoint(57,133), wxSize(132,21), 0, wxDefaultValidator, wxT("Quantity"));
+	QuantityEdit->Enable(false);
+	QuantityEdit->SetBackgroundColour(wxColour(*wxWHITE));
 
 	ValueEdit = new wxTextCtrl(this, ID_VALUEEDIT, wxT(""), wxPoint(57,107), wxSize(91,21), 0, wxDefaultValidator, wxT("ValueEdit"));
 
@@ -197,27 +197,132 @@ void ParamsDlg::OnClose(wxCloseEvent& /*event*/)
 	Destroy();
 }
 
-
-//SetValueClick
-void ParamsDlg::SetValueClick(wxCommandEvent& event)
-{
-}
-
-//WxChoice1Selected
-void ParamsDlg::WxChoice1Selected(wxCommandEvent& event )
-{
-}
-
 //ParamChoiceSelected
 void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
 {
+	std::string compName = CompName.c_str();
+
+	VE_XML::Command returnState;
+	//if(DialogType.c_str() == "input")
+		returnState.SetCommandName("getInputModuleProperties");
+	//else
+	//	returnState.SetCommandName("getOutputModuleProperties");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData(std::string("ModuleName"), compName);
+	data = returnState.GetDataValuePair(-1);
+	data->SetData(std::string("ParamName"), ParamChoice->GetStringSelection().c_str());
+	
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	std::string nw_str = serviceList->Query( status );
+	std::ofstream output("packet.txt");
+	output<<nw_str.c_str()<<std::endl;
+	output.close();
+	VE_XML::XMLReaderWriter networkReader;
+	networkReader.UseStandaloneDOMDocumentManager();
+	networkReader.ReadFromString();
+	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+
+	unsigned int num = cmd->GetNumberOfDataValuePairs();		
+	std::vector< std::string > dataName;
+	std::vector< std::string > dataValue;
+	for(int j = 0; j < num; j++)
+	{
+		VE_XML::DataValuePair * pair = cmd->GetDataValuePair(j);
+		//if(pair->GetDataName() == "Name")
+		if(pair->GetDataName() == "NodePath")
+			NodePath->SetValue(pair->GetDataString().c_str());
+		//else if(pair->GetDataName()() == "AliasName")
+		else if(pair->GetDataName() == "Basis")
+			BasisEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "CompletionStatus")
+			WxEdit16->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "DefaultValue")
+			DefaultValueEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "Gender")
+			GenderEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "InorOut")
+			InOrOutEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "Multiport")
+			MultiportEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "NumChild")
+			DimensionEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "optionList")
+			OptionListEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "Options")
+			OptionsMemo->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "PhysicalQuantity")
+			QuantityEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "PortType")
+			PortTypeEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "Prompt")
+			PromptMemo->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "RecordType")
+			RecordTypeEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "UnitOfMeasure")
+			UnitEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "Value")
+			ValueEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "hasChild")
+			HasChildrenEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "isEnterable")
+			EnterableEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "isOutput")
+			OutputEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "upLimit")
+			UpperLimitEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "lowerLimit")
+			LowerLimitEdit->SetValue(pair->GetDataString().c_str());
+		else if(pair->GetDataName() == "Multiport")
+			MultiportEdit->SetValue(pair->GetDataString().c_str());
+	}
 }
 
 //SetButtonClick
 void ParamsDlg::SetButtonClick(wxCommandEvent& event)
-{
+{	
+	std::string compName = CompName.c_str();
+	VE_XML::Command returnState;
+	returnState.SetCommandName("setParam");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData("ModuleName", compName);
+	data = returnState.GetDataValuePair(-1);
+	data->SetData("ParamName", ParamChoice->GetStringSelection().c_str());
+	data = returnState.GetDataValuePair(-1);
+	data->SetData("ParamValue", ValueEdit->GetValue().c_str());
+
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	serviceList->Query( status );
 }
 void ParamsDlg::AppendList(const char * input)
 {
 	ParamChoice->Append(wxT(input));
+}
+
+void ParamsDlg::SetCompName(const char * name)
+{
+	this->CompName = wxT(name);
+}
+
+void ParamsDlg::SetServiceList(VE_Conductor::CORBAServiceList * serviceList)
+{
+	this->serviceList = serviceList;
+}
+
+void ParamsDlg::SetDialogType(const char * type)
+{
+	this->DialogType = wxT(type);
 }
