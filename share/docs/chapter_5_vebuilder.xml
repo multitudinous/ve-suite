@@ -286,12 +286,12 @@
     .txt file in the same directory as the .vtu file and write your cutting
     planes in it using this format:</para>
 
-    <code>1    //Number of x cuts
-0.0  //X cuts
-1    //Number of y cuts
-0.0  //Y cuts
-4    //Number of z cuts
-3.26 3.39 3.42 3.73    //Z cuts</code>
+    <para><code>1    //Number of x cuts</code></para>
+    <para><code>0.0  //X cuts</code></para>
+    <para><code>1    //Number of y cuts</code></para>
+    <para><code>0.0  //Y cuts</code></para>
+    <para><code>4    //Number of z cuts</code></para>
+    <para><code>3.26 3.39 3.42 3.73    //Z cuts</code></para>
 
     <para>Then, when you run preprocessor, enter (1)Yes to Extract cutting
     planes. It will ask you how to set the number of cuts. Select (2)Specify
