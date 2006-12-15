@@ -235,6 +235,14 @@
 				RelativePath=".\readWriteVtkThings.cxx"
 				>
 			</File>
+			<File
+				RelativePath=".\setScalarAndVector.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\viewCells.cxx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="headers"
@@ -262,6 +270,14 @@
 			</File>
 			<File
 				RelativePath=".\readWriteVtkThings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\setScalarAndVector.h"
+				>
+			</File>
+			<File
+				RelativePath=".\viewCells.h"
 				>
 			</File>
 		</Filter>

@@ -61,7 +61,7 @@ public:
 void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
         std::string postDataDir, int numContours, float rangeStart, float rangeEnd )
 {
-   activateScalar( unsGrid );
+   ::activateScalar( unsGrid );
 
    // remove other point data from the isosurface...
    unsigned long len = strlen( unsGrid->GetPointData()->GetScalars()->GetName() );

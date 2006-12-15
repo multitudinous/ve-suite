@@ -184,14 +184,6 @@
 				RelativePath="..\..\makeVtkSurface.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\setScalarAndVector.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Translator\viewCells.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

@@ -64,7 +64,7 @@
 				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib"
 				OutputFile="$(OutDir)/Preprocessor.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/Preprocessor.pdb"
 				SubSystem="1"
@@ -189,10 +189,6 @@
 			</File>
 			<File
 				RelativePath=".\preprocessor.cxx"
-				>
-			</File>
-			<File
-				RelativePath="..\Utilities\setScalarAndVector.cpp"
 				>
 			</File>
 		</Filter>
