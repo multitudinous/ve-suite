@@ -109,7 +109,7 @@ void CADEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       //this is overridden in derived classes
       _operateOnNode(veXMLObject);
    }
-}
+ }
 ///////////////////////////////////////////////////////////////////////
 CADEventHandler& CADEventHandler::operator=(const CADEventHandler& rhs)
 {

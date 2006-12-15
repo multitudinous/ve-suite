@@ -37,6 +37,9 @@
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 #ifdef VE_PATENTED
@@ -70,6 +73,19 @@ void TextureBasedActivateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLOb
    {
       if(_activeModel)
       {
+         if(_activeModel->GetCfdDCS()->SearchChild(_activeModel->GetActiveDataSet()->GetDCS())< 0)
+         {
+            vprDEBUG(vesDBG,1) << "|\t\tadding active switch node to worldDCS"
+                             << std::endl << vprDEBUG_FLUSH;
+            _activeModel->GetCfdDCS()->AddChild( _activeModel->GetActiveDataSet()->GetDCS() );
+         }
+         VE_SceneGraph::cfdSwitch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
+         if (  _activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) < 0 )
+         {
+            vprDEBUG(vesDBG,1) << "|\t\tadding active dcs node to worldDCS for classic ss "
+                             << std::endl << vprDEBUG_FLUSH;
+             _activeModel->GetActiveDataSet()->GetDCS()->AddChild( temp );
+         }
          ///what happens if texture is somehow added first? Is that possible?
          _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(1);
          _activeTDSet = _activeModel->GetTextureDataSet( 0 );
