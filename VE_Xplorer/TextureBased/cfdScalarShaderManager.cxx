@@ -52,11 +52,11 @@ static const char* scalarFragSource = {
    "void main(void)\n"
    "{\n"
       "//dependent texture look up in transfer function\n"
-      "float scalar = texture3D(volumeData,gl_TexCoord[0].xyz).a;\n"
-      "gl_FragColor = texture1D(transferFunction,scalar);\n"
+      "vec2 scalar = texture3D(volumeData,gl_TexCoord[0].xyz).ga;\n"
+      "gl_FragColor = (scalar.x==0.0)?texture1D(transferFunction,scalar.y):vec4(0,0,0,0);\n"
 
       "//set the opacity to .2 for all fragments\n"
-      "gl_FragColor.a *= gl_Color.a;\n"
+      "//gl_FragColor.a *= gl_Color.a;\n"
    "}\n"
 };
 ////////////////////////////////////////////////
@@ -414,10 +414,10 @@ void cfdScalarShaderManager::_initPropertyTexture()
       propertyField->allocateImage(_fieldSize[0],
                                 _fieldSize[1],
                                 _fieldSize[2],
-                                GL_ALPHA,GL_UNSIGNED_BYTE);
+                                GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE);
       propertyField->setImage(_fieldSize[0], _fieldSize[1], _fieldSize[2],
-                           GL_ALPHA,
-	                        GL_ALPHA,
+                           GL_LUMINANCE_ALPHA,
+	                        GL_LUMINANCE_ALPHA,
 	                        GL_UNSIGNED_BYTE,
                            _tm->dataField(0),
                            osg::Image::NO_DELETE,1);
@@ -430,7 +430,7 @@ void cfdScalarShaderManager::_initPropertyTexture()
       _property->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
       _property->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
       _property->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
-      _property->setInternalFormat(GL_ALPHA);
+      _property->setInternalFormat(GL_LUMINANCE_ALPHA);
       _property->setImage(propertyField.get());
       _property->setSubloadCallback(_utCbk.get());
    } 

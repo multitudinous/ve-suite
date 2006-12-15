@@ -317,15 +317,34 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          flowImage->Delete();
          return;
       }
-   
-      
       double R,G,B,A;
       float alpha = 0;
       
       int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
       unsigned char* pixels = 0;
-      float invSRange = 1.0/(_range[1]-_range[0]);
-
+      bool crossRoot = false;
+      float deltaMinMax[2] = {0,0};
+      if(_range[0] < 0)
+      {
+         if(_range[1] > 0)
+         {
+            crossRoot = true;
+            deltaMinMax[0] = 0 -_range[0];
+            deltaMinMax[1] = _range[1] - 0;
+         }
+      }
+      float invSRange = 1.0;
+      if(!crossRoot)
+      {
+         invSRange = 1.0/(_range[1]-_range[0]);
+      }
+      else
+      {
+         //only map positive values to color
+         //invSRange = 1.0/(_range[1]);
+         invSRange = 1.0/(_range[1]-_range[0]);
+      }
+      invSRange = 1.0/(_range[1]-_range[0]);
       if(curType == VECTOR)
       {
          pixels = new unsigned char[nPixels*4];
@@ -346,21 +365,36 @@ void cfdTextureManager::addFieldTextureFromFile(std::string textureFile)
          float scalarValue = 0;
          if (_useShaders)
          {
-            pixels = new unsigned char[nPixels];
+            pixels = new unsigned char[nPixels*2];
          }
          else
          {
             pixels = new unsigned char[nPixels*4];
          }
-
+         unsigned char negValue = 0;
          for(int p = 0; p < nPixels; p++)
          {
             scalarValue = flowData->GetTuple1( p );
-            
-            alpha = (scalarValue-_range[0])*invSRange;
+            negValue=(scalarValue<=0.0)?255:0;
+            if(crossRoot)
+            {
+               if(negValue)
+               {
+                  alpha =0;//(scalarValue - _range[0])/(deltaMinMax[0]);
+               }
+               else
+               {
+                  alpha = (scalarValue -_range[0])/(deltaMinMax[1]);
+               }
+            }
+            else
+            {
+               alpha = (negValue)?0:(scalarValue -_range[0])*invSRange;
+            }
             if(_useShaders)
             {
-               pixels[p]  = (unsigned char)(255.0*alpha);
+               pixels[p*2   ]  = (unsigned char)negValue;
+               pixels[p*2 + 1]  = (unsigned char)(255.0*alpha);
             }
             else
             {

@@ -126,11 +126,11 @@ void cfdUpdateTextureCallback::load(const osg::Texture3D& texture,osg::State& st
    if(_isLuminance)
    {
       texture.getExtensions(state.getContextID(),false)->glTexImage3D(GL_TEXTURE_3D, 0, 
-                                          GL_ALPHA, 
+                                          GL_LUMINANCE_ALPHA, 
                                           _textureWidth,
                                           _textureHeight,
                                           _textureDepth,
-                                          0, GL_ALPHA, 
+                                          0, GL_LUMINANCE_ALPHA, 
                                           GL_UNSIGNED_BYTE, 
                                           (unsigned char*)_tm->dataField(0));
    
@@ -162,7 +162,7 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              _textureWidth,
                              _textureHeight,
                              _textureDepth, 
-                             GL_ALPHA, 
+                             GL_LUMINANCE_ALPHA, 
                              GL_UNSIGNED_BYTE,
                              (unsigned char*)_tm->getCurrentField());
               
@@ -187,7 +187,7 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              _textureWidth,
                              _textureHeight,
                              _textureDepth, 
-                             GL_ALPHA, 
+                             GL_LUMINANCE_ALPHA, 
                              GL_UNSIGNED_BYTE,
                              (unsigned char*)_tm->dataField(_currentFrame));
             }else{
