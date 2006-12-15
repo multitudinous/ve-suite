@@ -465,7 +465,7 @@ class LauncherWindow(wx.Frame):
         dlg.ShowModal()
 
     def ChooseLoadConfig(self, event = None):
-        """Lets the user choose a confiuration to load."""
+        """Lets the user choose a configuration to load."""
         message = "Please choose a\n" + "configuration to load."
         choices = []
         config.SetPath("..")
@@ -642,7 +642,7 @@ class LauncherWindow(wx.Frame):
             return
         ##Set the builderDir, if necessary.
         passedBuilderDir = None
-        if v("Shell") and self.state.IsEnabled("BuilderDir"):
+        if v("Shell") and v("BuilderShell") == None:
             dlg = wx.MessageDialog(self,
                                     "Do you want to use this shell\n" +
                                     "to run VE-Builder?",

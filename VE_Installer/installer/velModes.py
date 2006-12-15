@@ -42,6 +42,7 @@ COMMAND_CONFIG = {"Conductor": False,
 
 BASE_CONFIG = {"DependenciesDir": None,
                "BuilderDir": None,
+               "BuilderShell": None, ##Auto-Launch Builder?
                "Shell": False,
                "Directory": DIRECTORY_DEFAULT,
                "NameServer": True,

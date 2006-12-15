@@ -38,6 +38,8 @@ class CoveredConfig(CoveredState):
         CoveredState.__init__(self, BASE_CONFIG, coverLayers = TOTAL_LAYERS)
         for name in modifications:
             self.Edit(name, modifications[name])
+        if unix:
+            self.Cover("BuilderDir", VELAUNCHER_DIR, layer = UNAVAILABLE_LAYER)
 
     def DevMode(self):
         """Applies developer mode to the launcher."""
@@ -87,6 +89,7 @@ class CoveredConfig(CoveredState):
             self.Cover("ShellScript", scriptFile, layer = SCRIPT_LAYER)
             self.Cover("Shell", True, layer = SCRIPT_LAYER)
             self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
+            self.Cover("BuilderShell", False, layer = DEV_LAYER)
             self.Cover("Mode", 4, layer = SCRIPT_LAYER)
             ##Ensure only one file loaded at a time.
             self.SetVesFile(None)
