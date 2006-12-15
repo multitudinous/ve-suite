@@ -57,6 +57,12 @@ This makefile uses functions found in the libxml library. If you don't have it i
 
 http://www.xmlsoft.org/
 
+--HTML2Text--
+
+This makefile uses the html2text program to conversions to text files. You can download it here:
+
+http://userpage.fu-berlin.de/~mbayer/tools/html2text.html
+
 --Docbook Tools--
 
 The makefile is configured to use the docbook programs on the VRAC intranet. If you need to install a local copy of docbook, you can download them (~30 MB) from either:
