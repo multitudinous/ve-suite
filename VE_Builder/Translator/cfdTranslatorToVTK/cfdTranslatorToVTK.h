@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CFD_TRANSLATOR_TO_VTK_H_
 #define _CFD_TRANSLATOR_TO_VTK_H_
