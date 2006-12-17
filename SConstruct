@@ -7,6 +7,23 @@ import distutils.util
 from subprocess import *
 pj = os.path.join
 
+# Pull in SConsAddons from the source directory if necessary.
+try:
+   import SConsAddons
+except:
+   sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'src'))
+   sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
+
+# Add flagpoll from the source directory to the end of the path so it is found
+# LAST.
+local_fp_dir = pj(os.getcwd(), 'Tools', 'flagpoll') 
+os.environ['PATH'] += '%s%s' % (os.path.pathsep, local_fp_dir)
+sys.path.append(local_fp_dir)
+
+# Set FLAGPOLL_PATH to the local flagpoll if necessary.
+if not os.environ.has_key('FLAGPOLL_PATH'):
+   os.environ['FLAGPOLL_PATH'] = pj(os.getcwd(), 'Tools', 'flagpoll')
+
 import SConsAddons.Util as sca_util
 import SConsAddons.Options as asc_opt
 import SConsAddons.Options.Options 
