@@ -178,7 +178,7 @@ opts.Add('buildLog', 'Provide a file name for the build log if you would like a 
 Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options')
 
 base_bldr = EnvironmentBuilder()
-base_bldr.addOptions( opts )
+##base_bldr.addOptions( opts )
 baseEnv = base_bldr.buildEnvironment()
 baseEnv[ 'ENV' ] = os.environ
 
@@ -248,7 +248,7 @@ if not SConsAddons.Util.hasHelpFlag():
       pass
    
    ## read the builder options after they have been added to the env
-   base_bldr.readOptions( baseEnv )
+   ##base_bldr.readOptions( baseEnv )
    ##base_bldr = base_bldr.clone()
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
