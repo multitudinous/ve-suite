@@ -48,7 +48,7 @@ ROIDialog::ROIDialog(wxWindow* parent, int id,std::string title)
    _zBounds = 0;
    _buildGUI();
    wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
+   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-350 );
    this->SetSize( dialogPosition );
 }
 ///////////////////////
@@ -88,14 +88,14 @@ void ROIDialog::_buildGUI()
    wxBoxSizer* zdualSizer = new wxBoxSizer(wxHORIZONTAL);
    zdualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND);
 
-   mainSizer->Add(xdualSizer,1,wxALIGN_CENTER|wxEXPAND);
-   mainSizer->Add(ydualSizer,1,wxALIGN_CENTER|wxEXPAND);
-   mainSizer->Add(zdualSizer,1,wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(xdualSizer,3,wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(ydualSizer,3,wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(zdualSizer,3,wxALIGN_CENTER|wxEXPAND);
 
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
    _addOKButton(buttonRowSizer);
    
-   mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER|wxEXPAND);
+   mainSizer->Add(buttonRowSizer,0,wxALIGN_CENTER);
    _xBounds->Raise();
    _yBounds->Raise();
    _zBounds->Raise();
@@ -104,7 +104,7 @@ void ROIDialog::_buildGUI()
 
    //assign the group to the panel
    SetSizer(mainSizer);
-   mainSizer->Fit(dynamic_cast<BaseDialog*>(this));
+   mainSizer->Fit(this);
 }
 ////////////////////////////////////
 void ROIDialog::_createDualSliders()

@@ -96,6 +96,11 @@ public:
    ///Set the vectors
    void SetVectors(wxArrayString vectorNames);
 
+   ///Set the size for the subdialogs
+   ///\param subSize wxRect size for sub dialogs.\n
+   ///Should be the same as vistab
+   void SetSubDialogSize(wxRect subSize);
+
    ///Activate the texture based visualization
    bool ActivateTextureVisualization();
    
@@ -110,6 +115,7 @@ protected:
    wxArrayString _availableScalars;///<Scalar names
    wxArrayString _availableVectors;///<Vector names
 
+   wxRect _subDialogSize;//<The size for the subdialogs.
    ///Build the toolbar.  
    void _buildGUI();
 

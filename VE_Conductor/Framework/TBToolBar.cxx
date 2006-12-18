@@ -98,6 +98,11 @@ TextureBasedToolBar::~TextureBasedToolBar()
    _availableScalars.clear();
    _availableVectors.clear();
 }
+//////////////////////////////////////////////////////////
+void TextureBasedToolBar::SetSubDialogSize(wxRect subSize)
+{
+   _subDialogSize = subSize;
+}
 ////////////////////////////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_updateAvailableSolutions(wxArrayString scalarNames,
                                               wxArrayString vectorNames)
@@ -204,7 +209,7 @@ void TextureBasedToolBar::_buildGUI()
    ///the sub dialogs
    ///ROI Dialog
    _roiDlg = new VE_Conductor::GUI_Utilities::ROIDialog(this,-1,"Volume Clipping Bounds");
-   _roiDlg->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
+   //_roiDlg->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
    _scalarToolsDlg = new ScalarToolsDialog(this,-1,"Scalar Tools");
    
 }
@@ -254,6 +259,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
             {
                _scalarToolsDlg->SetVjObsPtr(_vjObsPtr);
                _scalarToolsDlg->UpdateScalarList(_availableScalars);
+               _scalarToolsDlg->SetSize(_subDialogSize);
                if(_scalarToolsDlg->ShowModal() == wxID_OK)
                {
                }
@@ -278,6 +284,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
       case ROI_ID:
          {
             _roiDlg->SetVjObsPtr(_vjObsPtr);
+            _roiDlg->SetSize(_subDialogSize);
             if(_roiDlg->ShowModal() == wxID_OK)
             {
                ;
