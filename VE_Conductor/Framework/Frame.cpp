@@ -158,8 +158,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
    EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 
-   EVT_MENU( TRACKBALL_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( WAND_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
@@ -726,9 +726,9 @@ void AppFrame::CreateMenu()
    xplorerViewMenu = new wxMenu();
    wxMenu* xplorerView = new wxMenu();
 
-   xplorerDeviceMenu->AppendRadioItem( TRACKBALL_MODE, _("Trackball") );
-   xplorerDeviceMenu->AppendRadioItem( WAND_MODE, _("Wand") );
-   xplorerDeviceMenu->Check( TRACKBALL_MODE, true);
+   xplorerDeviceMenu->AppendRadioItem( NAVIGATION_MODE, _("Navigation") );
+   xplorerDeviceMenu->AppendRadioItem( SELECTION_MODE, _("Selection") );
+   xplorerDeviceMenu->Check( NAVIGATION_MODE, true);
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
    //
@@ -750,7 +750,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
 	xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-   xplorerMenu->Append( XPLORER_DEVICES,    _("Devices"),          xplorerDeviceMenu,  _("Used to change device modes and properties") );
+   xplorerMenu->Append( XPLORER_DEVICES,    _("Device Mode"),          xplorerDeviceMenu,  _("Used to change device modes and properties") );
 	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    xplorerMenu->Append( XPLORER_VIEW,       _("View"),             xplorerViewMenu,    _("Used to change the view") );
    //add the view settings
@@ -1609,11 +1609,11 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    
    unsigned int mode;
 
-   if(xplorerDeviceMenu->IsChecked(TRACKBALL_MODE)){
+   if(xplorerDeviceMenu->IsChecked(NAVIGATION_MODE)){
       mode=0;
    }
 
-   else if(xplorerDeviceMenu->IsChecked(WAND_MODE)){
+   else if(xplorerDeviceMenu->IsChecked(SELECTION_MODE)){
       mode=1;
    }
 
