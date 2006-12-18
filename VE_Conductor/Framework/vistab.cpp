@@ -569,18 +569,20 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 {
-   if( _activeScalarName.empty() )
+   /*if( _activeScalarName.empty() )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
       return;
    }
-   else if(!_tbTools)
+   else*/ 
+   if(!_tbTools)
    {
       _tbTools = new TextureBasedToolBar (this,-1);
    }
 
    _tbTools->SetSize(_vistabPosition.x, _vistabPosition.y, -1, -1, wxSIZE_USE_EXISTING);
+   _tbTools->SetSubDialogSize(_vistabPosition);
    _tbTools->SetVjObsPtr(xplorerPtr);
    _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
    _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
