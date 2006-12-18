@@ -717,11 +717,11 @@ class LauncherWindow(wx.Frame):
 arguments = sys.argv[1:]
 try:
     opts, args = getopt.getopt(arguments,
-                               "cnx:kj:t:p:w:e:m:sb:f:",
+                               "cnx:kj:t:p:w:e:m:sb:f:v:q",
                                ["conductor", "nameserver", "xplorer=",
                                 "desktop", "jconf=", "taomachine=", "port=",
                                 "dir=", "dep=", "master=", "dev", "shell",
-                                "builder=", "file="])
+                                "builder=", "file=", "ves=", "quick"])
 except getopt.GetoptError:
     usage()
     sys.exit(2)

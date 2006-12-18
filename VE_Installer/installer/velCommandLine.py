@@ -38,8 +38,18 @@ class CommandLine:
                     self.state.Edit("XplorerType", 0)
             elif opt in ('-k', "--desktop"):
                 self.state.Edit("DesktopMode", True)
-            elif opt in ('-f', "--file"):
-                self.state.InterpretArgument(arg)
+            elif opt in ('-j', "--jconf="):
+                self.state.Edit("JconfDict", {"Default": arg})
+            elif opt in ('-t', "--taomachine="):
+                self.state.Edit("TaoMachine", arg)
+            elif opt in ('-p', "--port="):
+                self.state.Edit("TaoPort", arg)
+            elif opt in ('-w', "--dir="):
+                self.state.Edit("Directory", arg)
+            elif opt in ('-e', "--dep="):
+                self.state.Edit("DependenciesDir", arg)
+            elif opt in ('-m', "--master="):
+                self.state.Edit("ClusterMaster", arg)
             elif opt in ('-s', "--shell"):
                 self.state.Edit("Shell", True)
                 self.state.Cover("Conductor", False)
@@ -51,20 +61,16 @@ class CommandLine:
                 self.state.Cover("Conductor", False)
                 self.state.Cover("Xplorer", False)
                 self.state.Cover("NameServer", False)
-            elif opt in ('-j', "--jconf="):
-                self.state.Edit("JconfDict", {"Default": arg})
-            elif opt in ('-t', "--taomachine="):
-                self.state.Edit("TaoMachine", arg)
-            elif opt in ('-p', "--port="):
-                self.state.Edit("TaoPort", arg)
+            elif opt in ('-f', "--file"):
+                self.state.InterpretArgument(arg)
             elif opt in ('-v', "--ves="):
                 self.state.VesArgument(arg)
-            elif opt in ('-w', "--dir="):
-                self.state.Edit("Directory", arg)
-            elif opt in ('-e', "--dep="):
-                self.state.Edit("DependenciesDir", arg)
-            elif opt in ('-m', "--master="):
-                self.state.Edit("ClusterMaster", arg)
+            ## NOTE:
+            ## ('-q', '--quick'): Quick Mode
+            ## Tells VE-Launcher to immediately start up with
+            ## previous settings. Doesn't change anything by
+            ## itself.
+
             ##NOTE: --setup will be used to set up working directories &
             ##dependencies folders without going into the GUI.
             ##Not implemented yet.
