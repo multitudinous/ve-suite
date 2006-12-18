@@ -109,7 +109,6 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(SHOW_ASPEN_NAME, Network::OnShowAspenName)
    EVT_MENU(QUERY_INPUTS, Network::OnQueryInputs)
    EVT_MENU(QUERY_OUTPUTS, Network::OnQueryOutputs)
-   EVT_MENU(SET_INPUT, Network::OnSetInput)
    EVT_MENU(GEOMETRY, Network::OnGeometry)
    EVT_MENU(DATASET, Network::OnDataSet)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
@@ -514,8 +513,6 @@ void Network::OnMRightDown(wxMouseEvent& event)
    aspen_menu->Enable(QUERY_INPUTS, true);
    aspen_menu->Append(QUERY_OUTPUTS, "Query Outputs");
    aspen_menu->Enable(QUERY_OUTPUTS, true);
-   aspen_menu->Append(SET_INPUT, "Set Input");
-   aspen_menu->Enable(SET_INPUT, true);
    pop_menu.Append( ASPEN_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
 
    //if (p_frame->f_geometry)
@@ -2824,30 +2821,6 @@ void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	}
 	paramDialog->ShowModal();
 }*/
-
-//////////////////////////////////////////////////////
-void  Network::OnSetInput(wxCommandEvent& WXUNUSED(event))
-{  
-	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
-	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
-	VE_XML::Command returnState;
-	returnState.SetCommandName("setParam");
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
-	data->SetData("ModuleName", compName);
-	data = returnState.GetDataValuePair(-1);
-	data->SetData("ParamName", "P_DROP");
-	data = returnState.GetDataValuePair(-1);
-	data->SetData("ParamValue", "0.2");
-
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-	
-	VE_XML::XMLReaderWriter commandWriter;
-	std::string status="returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	std::string nw_str = serviceList->Query( status );
-}
 
 
 //////////////////////////////////////////////////////
