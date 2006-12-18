@@ -17,11 +17,13 @@ KeyboardMouse API
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
 
+#include "VE_Xplorer/XplorerHandlers/Device.h"
+
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS KeyboardMouse
+   class VE_XPLORER_EXPORTS KeyboardMouse : public Device
    {
       public:
          KeyboardMouse();

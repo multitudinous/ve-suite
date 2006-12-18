@@ -12,6 +12,7 @@
 #include <osg/Group>
 #include <osg/BoundingSphere>
 #include <osg/BoundingBox>
+#include <osg/CameraNode>
 
 const double OneEightyDivPI=57.29577951;
 const double PIDivOneEighty=.0174532925;
@@ -40,6 +41,8 @@ Trackball::Trackball()
 	tb_aspectRatio=0.0f;
    tb_FOVyRatio=0.0f;
 	tb_FOVy=0.0f;
+
+   head.init("VJHead");
 
    identity(tb_transform);
 	identity(tb_accuTransform);
@@ -154,9 +157,8 @@ void Trackball::Keyboard(int key)
    else if(key==23){
       FitToScreen();
    }
-   else{
-      return;
-   }
+   
+   key=-1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::Mouse(int button,int state,int x,int y)
@@ -205,23 +207,33 @@ void Trackball::ResetTransforms()
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::FitToScreen()
 {
+   osg::ref_ptr<osg::Group> root=new osg::Group;
+   root->addChild(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode());
+
+   //Get the selected objects and expand by their bounding box
    osg::BoundingSphere bs;
+   for(unsigned int i=0;i<root->getNumChildren();++i){
+      bs.expandBy(root->getChild(i)->getBound());
+   }
 
-   bs.expandBy(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode()->getBound());
+   gmtl::Matrix44f vjHeadMat;
+   vjHeadMat=head->getData();
 
-	float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
-   float d=bs.radius()+(bs.radius()/tan(Theta))*tb_aspectRatio;
-   //float z=-(2*d*tan(Theta)*tb_FOVyRatio);
+   float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
+   float x=bs.center().x();
+   float y=(bs.radius()/tan(Theta))*tb_aspectRatio;
+   float z=bs.center().z();
 
-   tb_accuTransform[0][3]=-bs.center().x();
-   tb_accuTransform[1][3]=d;
-   tb_accuTransform[2][3]=-bs.center().z();
+   if(bs.center().x()!=0){
+      tb_accuTransform[0][3]-=x;
+   }
+   
+   tb_accuTransform[1][3]=y;
+    
+   if(bs.center().z()!=0){
+      tb_accuTransform[2][3]-=z;
+   }
 
-   //float b=2*d*tan(Theta);
-	//float dwx=dx*b*tb_aspectRatio;
-	//float dwy=-dy*b;
-	//tb_transform[0][3]=dwx;
-	//tb_transform[2][3]=dwy;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::RotateView(float dx,float dy)

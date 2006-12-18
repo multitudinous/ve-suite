@@ -57,7 +57,6 @@
 #include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 #include "VE_Xplorer/XplorerHandlers/Trackball.h"
-#include "VE_Xplorer/XplorerHandlers/MouseSelection.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -77,7 +76,6 @@ using namespace VE_Util;
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
    nav = 0;
-   mouse_selection = 0;
    _teacher       = 0;
    _soundHandler  = 0;
    //_camHandler    = 0;
@@ -125,7 +123,6 @@ void cfdEnvironmentHandler::Initialize( std::string param )
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    displaySettings = new cfdDisplaySettings();
    this->nav = new cfdNavigate();
-   mouse_selection = new MouseSelection();
    //_readParam = new cfdReadParam();
    this->arrow = cfdModelHandler::instance()->GetArrow();
    
@@ -148,12 +145,6 @@ void cfdEnvironmentHandler::CleanUp( void )
       delete nav;
    }
 
-   if ( mouse_selection )
-   {
-      vprDEBUG(vesDBG,2)
-         << "|       deleting this->mouse_selection" << std::endl << vprDEBUG_FLUSH;
-      delete mouse_selection;
-   }
    
    if ( this->_readParam )
    {  
@@ -247,11 +238,6 @@ cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
 cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
 {
    return this->nav;
-}
-/////////////////////////////////////////////////////////////////////
-MouseSelection* cfdEnvironmentHandler::GetMouseSelection( void )
-{
-   return mouse_selection;
 }
 /////////////////////////////////////////////////////////////////////
 cfdCursor* cfdEnvironmentHandler::GetCursor( void )
@@ -447,8 +433,6 @@ void cfdEnvironmentHandler::PostFrameUpdate()
    VE_Xplorer::DeviceHandler::instance()->GetTrackball()->Reshape(_windowWidth,_windowHeight);
 	VE_Xplorer::DeviceHandler::instance()->GetTrackball()->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
 
-   //Update the values in mouse_selection
-   mouse_selection->Reshape(_windowWidth,_windowHeight);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::CreateObjects( void )

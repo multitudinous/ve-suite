@@ -56,8 +56,6 @@ namespace VE_Xplorer
    class cfdQuatCamHandler;
    class cfdDisplaySettings;
 
-   class MouseSelection;
-
 #ifdef VE_PATENTED
 #ifdef _OSG
    class cfdObjectHandler;
@@ -115,9 +113,6 @@ public:
    //cfdQuatCamHandler* GetQuatCamHandler( void );
 
 
-   ///Accessor for MouseSelection
-   MouseSelection* GetMouseSelection( void );
-
    ///Accessor for cfdDisplaySettings
    cfdDisplaySettings* GetDisplaySettings( void );
 
@@ -148,8 +143,6 @@ private:
    cfdTeacher* _teacher;
    cfdSoundHandler* _soundHandler;
    cfdQuatCamHandler* _camHandler;
-
-   MouseSelection* mouse_selection;
 
 #ifdef _OSG 
 #ifdef VE_PATENTED 

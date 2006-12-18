@@ -775,6 +775,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Device.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DeviceEventHandler.cpp"
 				>
 			</File>
@@ -792,10 +796,6 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\MouseSelection.cxx"
 				>
 			</File>
 			<File
@@ -863,10 +863,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WandSelection.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\WireframeEventHandler.cxx"
 				>
 			</File>
@@ -909,10 +905,6 @@
 			</File>
 			<File
 				RelativePath=".\CADAddNodeEH.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CADDeleteNodeEH.h"
 				>
 			</File>
 			<File
@@ -1172,6 +1164,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Device.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DeviceEventHandler.h"
 				>
 			</File>
@@ -1197,10 +1193,6 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MouseSelection.h"
 				>
 			</File>
 			<File
@@ -1272,10 +1264,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WandSelection.h"
-				>
-			</File>
-			<File
 				RelativePath=".\WireframeEventHandler.h"
 				>
 			</File>
@@ -1285,6 +1273,10 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 		</Filter>
+		<File
+			RelativePath=".\CADDeleteNodeEH.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
