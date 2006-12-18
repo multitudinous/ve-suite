@@ -69,6 +69,7 @@ public:
 
    cfdGroup* GetRootNode( void );
    cfdDCS*   GetWorldDCS( void );
+   cfdDCS*   GetNetworkDCS( void );
    ///Set the node on the switch node that is active
    ///\param activeNode node to activate
    void SetActiveSwitchNode( int activeNode );

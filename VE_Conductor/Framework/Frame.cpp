@@ -189,6 +189,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
    EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::CloseAspenSimulation )
    EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
+   EVT_MENU( CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
+   EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
+   EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -721,16 +724,21 @@ void AppFrame::CreateMenu()
    xplorerDeviceMenu = new wxMenu();
 	xplorerJugglerMenu = new wxMenu();
    xplorerViewMenu = new wxMenu();
+   wxMenu* xplorerView = new wxMenu();
 
    xplorerDeviceMenu->AppendRadioItem( TRACKBALL_MODE, _("Trackball") );
    xplorerDeviceMenu->AppendRadioItem( WAND_MODE, _("Wand") );
    xplorerDeviceMenu->Check( TRACKBALL_MODE, true);
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
-
+   //
    xplorerViewMenu->Append( FRAME_ALL,       _("Frame All") );
    xplorerViewMenu->Append( FRAME_SELECTION, _("Frame Selection      f") );
-
+   //
+   xplorerView->Append( CHANGE_XPLORER_VIEW_NETWORK, _("Network") );
+   xplorerView->Append( CHANGE_XPLORER_VIEW_CAD, _("CAD") );
+   xplorerView->Append( CHANGE_XPLORER_VIEW_LOGO, _("Logo") );
+   //
 	xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
 	xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
 	xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
@@ -745,6 +753,8 @@ void AppFrame::CreateMenu()
    xplorerMenu->Append( XPLORER_DEVICES,    _("Devices"),          xplorerDeviceMenu,  _("Used to change device modes and properties") );
 	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    xplorerMenu->Append( XPLORER_VIEW,       _("View"),             xplorerViewMenu,    _("Used to change the view") );
+   //add the view settings
+   xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"), xplorerView,  _("Used to change the view in xplorer") );
    //If the display mode is desktop then we will disconnect when exit is selected
    //and in other modes we will give the user the ability to exit
    if ( GetDisplayMode() != "Desktop" )
@@ -1829,4 +1839,32 @@ UserPreferences* AppFrame::GetUserPreferences( void )
 void AppFrame::OnPreferences( wxCommandEvent& WXUNUSED(event) )
 {
    preferences->ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
+{
+   VE_XML::DataValuePair* dataValuePair = 
+      new VE_XML::DataValuePair(  std::string("STRING") );
+   if ( event.GetId() == CHANGE_XPLORER_VIEW_NETWORK )
+   {
+      dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
+   }
+   else if ( event.GetId() == CHANGE_XPLORER_VIEW_CAD )
+   {
+      dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_CAD" );
+   }
+   else if ( event.GetId() == CHANGE_XPLORER_VIEW_LOGO )
+   {
+      dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_LOGO" );
+   }
+   else
+   {
+      dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "ERROR" );
+   }
+   
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("CHANGE_XPLORER_VIEW") );
+   veCommand->AddDataValuePair( dataValuePair );
+   serviceList->SendCommandStringToXplorer( veCommand );
+   delete veCommand;
 }

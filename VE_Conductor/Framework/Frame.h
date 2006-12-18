@@ -130,7 +130,11 @@ enum
    XPLORER_EXIT,
    TIMER_ID,
    XPLORER_COLOR,
-   ID_PREFERENCES
+   ID_PREFERENCES,
+   CHANGE_XPLORER_VIEW,
+   CHANGE_XPLORER_VIEW_NETWORK,
+   CHANGE_XPLORER_VIEW_CAD,
+   CHANGE_XPLORER_VIEW_LOGO
 };
 
 class OrbThread;
@@ -319,6 +323,8 @@ protected:
 
    ///Process Juggler settings
    void JugglerSettings( wxCommandEvent& event );
+   ///Change the visual view in xplorer 
+   void ChangeXplorerViewSettings( wxCommandEvent& event );
    ///Get the user preferences class
    UserPreferences* GetUserPreferences( void );
    ///Create the ve tabs

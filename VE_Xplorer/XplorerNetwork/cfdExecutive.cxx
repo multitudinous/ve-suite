@@ -151,7 +151,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
    }
 
    _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::DeleteObjectFromNetworkEventHandler();
-   _eventHandlers[std::string("Switch Network View")] = new VE_EVENTS::SwitchXplorerViewEventHandler();
+   _eventHandlers[std::string("CHANGE_XPLORER_VIEW")] = new VE_EVENTS::SwitchXplorerViewEventHandler();
 }
 ///////////////////////////////////////////////////////////////////
 std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )

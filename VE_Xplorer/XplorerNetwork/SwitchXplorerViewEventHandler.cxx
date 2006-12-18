@@ -35,7 +35,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
-
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -51,6 +51,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -92,41 +93,26 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBas
 //////////////////////////////////////////////////////////////////////////
 void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
-   /*// Get the active object
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Object ID" );   
-   unsigned int id = 0;
-   activeModelDVP->GetData( id );
-
-   _plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
-
-   // Remove any plugins that aren't present in the current network
-   std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-   foundPlugin = _plugins->find( id );
-
-   if ( foundPlugin != _plugins->end() )
+   VE_XML::DataValuePair* activeModelDVP = 
+      command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
+   std::string viewData;
+   activeModelDVP->GetData( viewData );
+   if ( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
    {
-      vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << foundPlugin->first 
-                              << " ]-> " << foundPlugin->second 
-                              << " is being deleted."
-                              << std::endl << vprDEBUG_FLUSH;
-      // if a module is on the plugins map then remove it
-      foundPlugin->second->RemoveSelfFromSG();
-      cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
-      // Must delete current instance of vebaseclass object
-      delete foundPlugin->second;
-      _plugins->erase( foundPlugin );
+      cfdPfSceneManagement::instance()->SetActiveSwitchNode( 2 );
+      cfdPfSceneManagement::instance()->GetNetworkDCS();
+   }
+   else if ( viewData == "CHANGE_XPLORER_VIEW_CAD" )
+   {
+      cfdPfSceneManagement::instance()->SetActiveSwitchNode( 0 );
+   }
+   else if ( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
+   {
+      cfdPfSceneManagement::instance()->SetActiveSwitchNode( 1 );
    }
    else
    {
-      vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << foundPlugin->first 
-                              << " ]-> " << foundPlugin->second 
-                              << " not present."
-                              << std::endl << vprDEBUG_FLUSH;
+      cfdPfSceneManagement::instance()->SetActiveSwitchNode( 0 );
    }
-   //Set active model to null so that if the previous active model is deleted
-   //that we don't get errors in our code other places.
-   cfdModelHandler::instance()->SetActiveModel( 0 );
-   vprDEBUG(vesDBG,1) << "|\t\tPlugin is deleted if present."
-                           << std::endl << vprDEBUG_FLUSH;*/
 }
