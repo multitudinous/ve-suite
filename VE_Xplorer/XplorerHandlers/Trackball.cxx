@@ -216,9 +216,6 @@ void Trackball::FitToScreen()
       bs.expandBy(root->getChild(i)->getBound());
    }
 
-   gmtl::Matrix44f vjHeadMat;
-   vjHeadMat=head->getData();
-
    float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
    float x=bs.center().x();
    float y=(bs.radius()/tan(Theta))*tb_aspectRatio;
