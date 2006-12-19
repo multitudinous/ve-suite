@@ -121,8 +121,6 @@ SRCS=\
    TrackballEventHandler.cpp\
    cfdObjectHandler.cxx\
    SelectionHandler.cxx\
-   MouseSelection.cxx\
-   WandSelection.cxx\
    CreateVisObjectEventHandler.cxx\
    ClearVisObjectsEventHandler.cxx\
    ChangeCursorEventHandler.cxx\

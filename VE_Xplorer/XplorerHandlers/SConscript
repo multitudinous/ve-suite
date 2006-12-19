@@ -72,8 +72,6 @@ sources = Split("""
    TrackballEventHandler.cpp
    cfdObjectHandler.cxx
    SelectionHandler.cxx
-   MouseSelection.cxx
-   WandSelection.cxx
    CreateVisObjectEventHandler.cxx
    ClearVisObjectsEventHandler.cxx
    ChangeCursorEventHandler.cxx
@@ -168,8 +166,6 @@ headers = Split("""
    TrackballEventHandler.h
    cfdObjectHandler.h
    SelectionHandler.h
-   MouseSelection.h
-   WandSelection.h
    CreateVisObjectEventHandler.h
    ClearVisObjectsEventHandler.h
    ChangeCursorEventHandler.h
