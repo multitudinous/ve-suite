@@ -294,6 +294,8 @@ protected:
    void UpdateAxes( wxCommandEvent& event );
    void UpdateAxesLabels( wxCommandEvent& event );
    void UpdateScalarBar( wxCommandEvent& event );
+   void UpdateMinSlider( wxCommandEvent& event );
+   void UpdateMaxSlider( wxCommandEvent& event );
 
    ///update the base info for the dataset ie. active vector,scalar,dataset,range 
    void _updateBaseInformation();

@@ -91,6 +91,8 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_COMMAND_SCROLL( MIN_MAX_SLIDERS, Vistab::_onMinMaxSlider )
    EVT_COMMAND_SCROLL( MIN_SLIDER,      Vistab::_onMinSlider )
    EVT_COMMAND_SCROLL( MAX_SLIDER,      Vistab::_onMaxSlider )
+   EVT_TEXT_ENTER( MIN_SPINCTRL,        Vistab::UpdateMinSlider )
+   EVT_TEXT_ENTER( MAX_SPINCTRL,        Vistab::UpdateMaxSlider )
    EVT_TEXT_ENTER( ID_DATA_UPDATE_AXES, Vistab::UpdateAxesLabels )
    EVT_CHECKBOX( ID_DATA_BBOX_CB,       Vistab::UpdateBoundingBox)
    EVT_CHECKBOX( ID_DATA_WIREFRAME_CB,  Vistab::UpdateWireFrame)
@@ -482,6 +484,7 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {
+   //scalarContour->Destroy();// = 0;
    if( _activeScalarName.empty() )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
@@ -497,13 +500,14 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
    }
+   //if( !_activeScalarName.empty() )
    scalarContour->SetSize(_vistabPosition);
    scalarContour->ShowModal();
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 {
-   if( _activeScalarName.empty() )
+   if( _activeVectorName.empty() )
    {
       wxMessageBox( "Select a scalar or vector","Dataset Failure", 
                      wxOK | wxICON_INFORMATION );
@@ -1207,4 +1211,55 @@ void Vistab::UpdateScalarBar( wxCommandEvent& event )
    
    bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////
+void Vistab::UpdateMinSlider( wxCommandEvent& event )
+{
+//   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+   double minValue = 0;
+
+   minValue = ( ( _minSpinner->GetValue() - _activeScalarRange.at(0) ) / ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 100);
+
+   if( minValue == 100 )
+   {  
+      _minSlider->SetValue( (int)minValue );
+      _maxSlider->SetValue( (int)minValue+1 );   
+   }
+   else if( _maxSlider->GetValue() <= (int)minValue )
+   {
+      _minSlider->SetValue( (int)minValue );
+      _maxSlider->SetValue( (int)minValue+1 );   
+      _maxSpinner->SetValue( _activeScalarRange.at(1) - ( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) )
+                               * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
+   }
+   else
+   {
+      _minSlider->SetValue( (int)minValue );  
+   }
+} 
+////////////////////////////////////////////////////////////////////////
+void Vistab::UpdateMaxSlider( wxCommandEvent& event )
+{
+   double maxValue = 100;
+
+   maxValue = ( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) 
+               - ( _activeScalarRange.at(1) - _maxSpinner->GetValue() ) ) 
+               / ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 100);
+
+   if( maxValue == 0 )
+   {  
+      _minSlider->SetValue( (int)maxValue+1 );
+      _maxSlider->SetValue( (int)maxValue );     
+   }
+   else if( _minSlider->GetValue() >= (int)maxValue )
+   {
+      _minSlider->SetValue( (int)maxValue-1 );
+      _maxSlider->SetValue( (int)maxValue );   
+      _minSpinner->SetValue( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) )
+                              * (double)_minSlider->GetValue() / 100 + _activeScalarRange.at(0) );
+   } 
+   else
+   {  
+      _maxSlider->SetValue( (int)maxValue );   
+   } 
 }
