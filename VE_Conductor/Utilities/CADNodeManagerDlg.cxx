@@ -129,25 +129,25 @@ void CADNodeManagerDlg::SetRootCADNode(CADNode* rootNode)
 {
    if(rootNode)
    {
-      if(_rootNode)
+      /*if(_rootNode)
       {
          delete _rootNode;
          _rootNode = 0;
-      }
+      }*/
 
       //Change this from a copy after we migrate to getting this pointer from the model
       if(rootNode->GetNodeType() == std::string("Assembly"))
       {
-         _rootNode = new CADAssembly(*dynamic_cast<CADAssembly*>(rootNode));
+         _rootNode = rootNode;//new CADAssembly(*dynamic_cast<CADAssembly*>(rootNode));
       }
       else if(rootNode->GetNodeType() == std::string("Part"))
       {
-         _rootNode = new CADPart(*dynamic_cast<CADPart*>(rootNode));
+         _rootNode = rootNode;//new CADPart(*dynamic_cast<CADPart*>(rootNode));
       }
    }
    else
    {
-      _rootNode = new CADAssembly(std::string("Empty Assembly"));
+      _rootNode = new CADAssembly(std::string("Model Geometry"));
    }
    _ensureTree();
   
