@@ -70,7 +70,7 @@
 #include <osg/StateSet>
 #include <osg/StateAttribute>
 #include <osg/ShadeModel>
-#include <osgDB/Registry>
+#include <osg/OccluderNode>
 #include <osgDB/FileUtils>
 #include <osg/Switch>
 #include <osg/Group>
@@ -97,15 +97,10 @@ namespace VE_SceneGraph{
 
 //////////////////
 ModelOccluder::ModelOccluder()
-:cfdSceneNode(CFD_NODE)
+//:cfdSceneNode(CFD_NODE)
 {
    //biv--do we need to set type for scene node in here?
    //this->_group = new pfNode();
-   op = 1.0f;
-   stlColor[ 1 ] = stlColor[ 1 ] = stlColor[ 0 ] = -1;
-   color = 0;
-   twosidedlighting = false;
-
 #ifdef _PERFORMER
    this->_node = 0;
    this->lightModel = 0;
@@ -116,15 +111,15 @@ ModelOccluder::ModelOccluder()
 }
 /////////////////////////////////////////
 ModelOccluder::ModelOccluder( const ModelOccluder& input )
-:cfdSceneNode(input)
+//:cfdSceneNode(input)
 {
 #ifdef _PERFORMER
    this->_node = input._node;
 #elif _OSG
-   if ( _node.valid() )
+   /*if ( _node.valid() )
    {
       _node = input._node;
-   }
+   }*/
 #elif _OPENSG
 #endif
 }
@@ -133,41 +128,18 @@ ModelOccluder::ModelOccluder( const ModelOccluder& input )
 ModelOccluder& ModelOccluder::operator=( const ModelOccluder& input )
 {
    if ( this != &input ){
-      //copy parent
-      cfdSceneNode::operator=(input);
 #ifdef _PERFORMER
       pfDelete( this->_node );
       this->_node = input._node;
 #elif _OSG
       //recreate the node
       //_node->unref();
-      _node = input._node;
+      //_node = input._node;
 #elif _OPENSG
 #endif
-      op = input.op;
-      stlColor[0] = input.stlColor[0];
-      stlColor[1] = input.stlColor[1];
-      stlColor[2] = input.stlColor[2];
-      color = input.color;
    }
    return *this;
 }
-
-////////////////////////////////////////////////////
-// Code that can be used at a later date
-// there are issues to be reolved on wether == should be defined
-// as below 
-/*bool ModelOccluder::operator== ( const ModelOccluder& node1 ) const
-{
-   if ( guid == node1.guid )
-   {
-      return true;
-   }
-   else
-   {
-      return false;
-   }
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 ModelOccluder::~ModelOccluder( void )
 {
@@ -188,7 +160,7 @@ ModelOccluder::~ModelOccluder( void )
 #ifdef _PERFORMER
 #elif _OSG
 ////////////////////////////////////////////////////////////////////////////////
-void ModelOccluder::TravNodeMaterial(osg::Node* node)
+void ModelOccluder::TravNodeOccluder(osg::Node* node)
 {
    if(!node)return;
 	int i  = 0;
@@ -220,18 +192,18 @@ void ModelOccluder::TravNodeMaterial(osg::Node* node)
          material = dynamic_cast<osg::Material*>(geostate->getAttribute(osg::StateAttribute::MATERIAL));
          if(material.valid())
          {
-            material->setAlpha(osg::Material::FRONT_AND_BACK,op);
+            //material->setAlpha(osg::Material::FRONT_AND_BACK,op);
          }
 
-         if ( twosidedlighting )
+         /*if ( twosidedlighting )
          {
             geostate->setAttributeAndModes(lightModel.get(), osg::StateAttribute::ON);
             vprDEBUG(vesDBG,3) << "Two-Sided Lighting Has Been Turned ON : " <<  
                                  std::endl << vprDEBUG_FLUSH;
-         }
+         }*/
          osg::Vec4Array* curColors = 0;
          
-         if(color == 1){
+         /*if(color == 1){
             curColors = new osg::Vec4Array(1);
             geoset->asGeometry()->setColorBinding(osg::Geometry::BIND_OVERALL);
          }else{
@@ -251,7 +223,7 @@ void ModelOccluder::TravNodeMaterial(osg::Node* node)
                (*curColors)[i][3] = op;
             }
             geoset->asGeometry()->setColorArray(curColors);
-         }
+         }*/
          //set up blending for opacity
          osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
          osg::ref_ptr<osg::ShadeModel> shade = new osg::ShadeModel;
@@ -259,7 +231,7 @@ void ModelOccluder::TravNodeMaterial(osg::Node* node)
          bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
 		    //osg::ref_ptr<osg::Depth> depth = new osg::Depth;	 
          //put in the appropriate bin
-         if ( op == 1 ) {
+         /*if ( op == 1 ) {
              //depth->setWriteMask(true);
              geostate->setRenderingHint(osg::StateSet::OPAQUE_BIN);
              geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
@@ -268,7 +240,7 @@ void ModelOccluder::TravNodeMaterial(osg::Node* node)
              geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
              geostate->setRenderBinDetails(99,std::string("DepthSortedBin"));
              geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
-         }
+         }*/
 
          geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
          geostate->setAttributeAndModes(shade.get(),osg::StateAttribute::ON);
@@ -290,7 +262,7 @@ void ModelOccluder::TravNodeMaterial(osg::Node* node)
       vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){
-         this->TravNodeMaterial(((osg::Group*)node)->getChild(i)) ;
+         this->TravNodeOccluder(((osg::Group*)node)->getChild(i)) ;
            
       }
    }else if(!strcmp(node->className(),"LOD")){
@@ -298,7 +270,7 @@ void ModelOccluder::TravNodeMaterial(osg::Node* node)
       vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){
-         this->TravNodeMaterial(((osg::LOD*)node)->getChild(i)) ;
+         this->TravNodeOccluder(((osg::LOD*)node)->getChild(i)) ;
            
       }
    }else if(!strcmp(node->className(),"MatrixTransform")){
@@ -306,25 +278,22 @@ void ModelOccluder::TravNodeMaterial(osg::Node* node)
       vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){
-         this->TravNodeMaterial(((osg::MatrixTransform*)node)->getChild(i)) ;
+         this->TravNodeOccluder(((osg::MatrixTransform*)node)->getChild(i)) ;
            
       }
    }
- }
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Node* createOccluder(const osg::Vec3& v1,const osg::Vec3& v2,const osg::Vec3& v3,const osg::Vec3& v4,float holeRatio=-1.0f)
+osg::ref_ptr<osg::OccluderNode> ModelOccluder::createOccluder(const osg::Vec3& v1,const osg::Vec3& v2,const osg::Vec3& v3,const osg::Vec3& v4,float holeRatio)
 {
    // create and occluder which will site along side the loadmodel model.
-   osg::OccluderNode* occluderNode = new osg::OccluderNode;
+   osg::ref_ptr<osg::OccluderNode> occluderNode = new osg::OccluderNode;
    
    // create the convex planer occluder 
-   osg::ConvexPlanarOccluder* cpo = new osg::ConvexPlanarOccluder;
+   osg::ref_ptr<osg::ConvexPlanarOccluder> cpo = new osg::ConvexPlanarOccluder;
    
    // attach it to the occluder node.
-   occluderNode->setOccluder(cpo);
+   occluderNode->setOccluder(cpo.get());
    occluderNode->setName("occluder");
    
    // set the occluder up for the front face of the bounding box.
@@ -334,69 +303,47 @@ osg::Node* createOccluder(const osg::Vec3& v1,const osg::Vec3& v2,const osg::Vec
    occluder.add(v3);
    occluder.add(v4);
    
-   // create a whole at the center of the occluder if needed.
-   if (holeRatio>0.0f)
-   {
-      // create hole.
-      float ratio = holeRatio;
-      float one_minus_ratio = 1-ratio;
-      osg::Vec3 center = (v1+v2+v3+v4)*0.25f;
-      osg::Vec3 v1dash = v1*ratio + center*one_minus_ratio;
-      osg::Vec3 v2dash = v2*ratio + center*one_minus_ratio;
-      osg::Vec3 v3dash = v3*ratio + center*one_minus_ratio;
-      osg::Vec3 v4dash = v4*ratio + center*one_minus_ratio;
-      
-      osg::ConvexPlanarPolygon hole;
-      hole.add(v1dash);
-      hole.add(v2dash);
-      hole.add(v3dash);
-      hole.add(v4dash);
-      
-      cpo->addHole(hole);
-   }    
-   
-   
    // create a drawable for occluder.
-   osg::Geometry* geom = new osg::Geometry;
+   osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
    
-   osg::Vec3Array* coords = new osg::Vec3Array(occluder.getVertexList().begin(),occluder.getVertexList().end());
-   geom->setVertexArray(coords);
+   osg::ref_ptr<osg::Vec3Array> coords = new osg::Vec3Array(occluder.getVertexList().begin(),occluder.getVertexList().end());
+   geom->setVertexArray(coords.get());
    
-   osg::Vec4Array* colors = new osg::Vec4Array(1);
-   (*colors)[0].set(1.0f,1.0f,1.0f,0.5f);
-   geom->setColorArray(colors);
+   osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(1);
+   (*colors.get())[0].set(1.0f,1.0f,1.0f,0.5f);
+   geom->setColorArray(colors.get());
    geom->setColorBinding(osg::Geometry::BIND_OVERALL);
    
    geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4));
    
-   osg::Geode* geode = new osg::Geode;
-   geode->addDrawable(geom);
+   osg::ref_ptr<osg::Geode> geode = new osg::Geode;
+   geode->addDrawable(geom.get());
    
-   osg::StateSet* stateset = new osg::StateSet;
+   osg::ref_ptr<osg::StateSet> stateset = new osg::StateSet;
    stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
    stateset->setMode(GL_BLEND,osg::StateAttribute::ON);
    stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
    
-   geom->setStateSet(stateset);
+   geom->setStateSet(stateset.get());
    
    // add the occluder geode as a child of the occluder,
    // as the occluder can't self occlude its subgraph the
    // geode will never be occluder by this occluder.
-   occluderNode->addChild(geode);    
+   occluderNode->addChild(geode.get());    
    
    return occluderNode;
-   
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* createOccludersAroundModel(osg::Node* model)
+osg::ref_ptr<osg::Group> ModelOccluder::createOccludersAroundModel(osg::Node* model)
 {
-   osg::Group* scene = new osg::Group;
-   scene->setName("rootgroup");
+   osg::ref_ptr<osg::Group> scene = new osg::Group;
+   std::string nodeName = model->getName() + "_occluder";
+   scene->setName( nodeName );
    
    
    // add the loaded model into a the scene group.
-   scene->addChild(model);
-   model->setName("model");
+   //scene->addChild(model);
+   //model->setName("model");
    
    // get the bounding volume of the model.
    const osg::BoundingSphere bs = model->getBound();
@@ -409,27 +356,40 @@ osg::Group* createOccludersAroundModel(osg::Node* model)
    scene->addChild(createOccluder(bb.corner(0),
                                   bb.corner(1),
                                   bb.corner(5),
-                                  bb.corner(4)));
+                                  bb.corner(4)).get());
    
    // right side
    scene->addChild(createOccluder(bb.corner(1),
                                   bb.corner(3),
                                   bb.corner(7),
-                                  bb.corner(5)));
+                                  bb.corner(5)).get());
    
    // left side
    scene->addChild(createOccluder(bb.corner(2),
                                   bb.corner(0),
                                   bb.corner(4),
-                                  bb.corner(6)));
+                                  bb.corner(6)).get());
    
    // back side
    scene->addChild(createOccluder(bb.corner(3),
                                   bb.corner(2),
                                   bb.corner(6),
-                                  bb.corner(7),
-                                  0.5f)); // create a hole half the size of the occluder.
+                                  bb.corner(7)).get());
    
+   // top side
+   scene->addChild(createOccluder(bb.corner(4),
+                                  bb.corner(5),
+                                  bb.corner(6),
+                                  bb.corner(7)).get());
+
+   // bottom side
+   scene->addChild(createOccluder(bb.corner(0),
+                                  bb.corner(1),
+                                  bb.corner(2),
+                                  bb.corner(3)).get());
    return scene;
 } 
+}
+#elif _OPENSG
+#endif
 

@@ -40,12 +40,24 @@ ModelOccluder API
 *
 */
 
-//#include "VE_Xplorer/SceneGraph/cfdSceneNode.h"
+#include "VE_Installer/include/VEConfig.h"
 #include <string>
 
 #ifdef _PERFORMER
 #elif _OSG
 #include <osg/ref_ptr>
+#include <osg/Vec3>
+namespace osg
+{
+   class Node;
+   class Group;
+   //class Vec3;
+   class OccluderNode;
+}
+namespace VE_SceneGraph
+{
+   class cfdNode;
+}
 #elif _OPENSG
 #endif
 
@@ -70,6 +82,9 @@ public:
    void pfTravNodeFog( pfNode* node_1, pfFog* fog );
 #elif _OSG
    void TravNodeOccluder(osg::Node*);
+   
+   osg::ref_ptr<osg::OccluderNode> createOccluder(const osg::Vec3& v1,const osg::Vec3& v2,const osg::Vec3& v3,const osg::Vec3& v4,float holeRatio=-1.0f);
+   osg::ref_ptr<osg::Group> createOccludersAroundModel(osg::Node* model);
 #elif _OPENSG
 #endif
 protected:
@@ -77,6 +92,7 @@ protected:
 #elif _OSG
    osg::ref_ptr<osg::Node> modelNode;
 #elif _OPENSG
+#endif
 };
 }
 #endif

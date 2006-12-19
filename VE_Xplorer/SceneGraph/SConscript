@@ -23,6 +23,7 @@ sources = Split("""
     vtkActorToPF.cxx
     Triangles.cxx
     Text.cxx
+    ModelOccluder.cxx
 """)
 
 headers = Split("""
@@ -44,6 +45,7 @@ headers = Split("""
     vtkActorToPF.h
     Triangles.h
     Text.h
+    ModelOccluder.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
