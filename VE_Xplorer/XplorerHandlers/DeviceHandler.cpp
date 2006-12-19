@@ -8,6 +8,7 @@
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/TrackballEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/ViewEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -24,8 +25,10 @@ DeviceHandler::DeviceHandler()
 
    device_mode=0;
 
+   _eventHandlers[std::string("VIEW_SELECTION")]=new VE_EVENTS::ViewEventHandler();
    _eventHandlers[std::string("CHANGE_DEVICE_MODE")]=new VE_EVENTS::DeviceEventHandler();
    _eventHandlers[std::string("TRACKBALL_PROPERTIES")]=new VE_EVENTS::TrackballEventHandler();
+   
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()

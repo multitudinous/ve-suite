@@ -35,7 +35,7 @@ namespace VE_Xplorer
 	      void Reshape(unsigned int width,unsigned int height);
 	      void SetFOVy(float _top,float _bottom,float _near);
          void ResetTransforms();
-         void FitToScreen();
+         void FrameAll();
 
       private:
          void UpdateTransform();

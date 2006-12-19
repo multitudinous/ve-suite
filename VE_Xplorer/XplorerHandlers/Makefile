@@ -145,7 +145,8 @@ SRCS=\
    AxesEventHandler.cxx\
    AxesLabelsEventHandler.cxx\
    DataSetScalarBar.cxx\
-   ScalarBarEventHandler.cxx
+   ScalarBarEventHandler.cxx\
+   ViewEventHandler.cpp
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g

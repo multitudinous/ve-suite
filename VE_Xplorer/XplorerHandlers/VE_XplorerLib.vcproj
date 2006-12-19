@@ -863,6 +863,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ViewEventHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\WireframeEventHandler.cxx"
 				>
 			</File>
@@ -1257,6 +1261,10 @@
 			</File>
 			<File
 				RelativePath=".\TrackballEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ViewEventHandler.h"
 				>
 			</File>
 			<File

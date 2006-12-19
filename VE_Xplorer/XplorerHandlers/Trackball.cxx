@@ -97,6 +97,11 @@ void Trackball::UpdateTransform()
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::ProcessTrackballEvents()
 {
+   //If there are no keyboard or mouse events, return
+   if(VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->evt_queue.empty()){
+      return;
+   }
+
    //Get the current matrix
    tb_accuTransform=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
@@ -117,7 +122,7 @@ void Trackball::ProcessTrackballEvents()
       matrix[i][3]=tb_accuTransform[i][3];
    }
 
-   //Multiply by the translation and then by the rotation
+   //Multiply by the transform and then by the rotation
    matrix*=tb_transform;
    matrix*=accuRotation;
 
@@ -155,7 +160,7 @@ void Trackball::Keyboard(int key)
    }
    // If "f" is pressed
    else if(key==23){
-      FitToScreen();
+      FrameAll();
    }
    
    key=-1;
@@ -202,13 +207,15 @@ void Trackball::Motion(int x,int y)
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::ResetTransforms()
 {
-   identity(tb_accuTransform);
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat(identity(tb_accuTransform));
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Trackball::FitToScreen()
+void Trackball::FrameAll()
 {
    osg::ref_ptr<osg::Group> root=new osg::Group;
    root->addChild(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode());
+
+   tb_accuTransform=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
    //Get the selected objects and expand by their bounding box
    osg::BoundingSphere bs;
@@ -218,7 +225,15 @@ void Trackball::FitToScreen()
 
    float Theta=(tb_FOVy*0.5f)*(PIDivOneEighty);
    float x=bs.center().x();
-   float y=(bs.radius()/tan(Theta))*tb_aspectRatio;
+
+   float y;
+   if(tb_aspectRatio<=1.0f){
+      y=(bs.radius()/tan(Theta))*tb_aspectRatio;
+   }
+   else{
+      y=(bs.radius()/tan(Theta));
+   }
+
    float z=bs.center().z();
 
    if(bs.center().x()!=0){
@@ -231,6 +246,7 @@ void Trackball::FitToScreen()
       tb_accuTransform[2][3]-=z;
    }
 
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat(tb_accuTransform);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::RotateView(float dx,float dy)
