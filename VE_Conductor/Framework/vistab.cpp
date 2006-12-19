@@ -351,7 +351,7 @@ void Vistab::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer(itemStaticBoxSizer12Static, wxHORIZONTAL);
     itemBoxSizer11->Add(itemStaticBoxSizer12, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    _scalarSelection = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize(125, -1), _availableSolutions["MESH_SCALARS"] , wxLB_SINGLE );
+    _scalarSelection = new wxListBox( itemDialog1, ID_LISTBOX, wxDefaultPosition, wxSize(125, 75), _availableSolutions["MESH_SCALARS"] , wxLB_SINGLE );
     _scalarSelection->SetSelection(0);    
     itemStaticBoxSizer12->Add(_scalarSelection, 1, wxGROW|wxALL, 5);
 
@@ -359,7 +359,7 @@ void Vistab::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer14 = new wxStaticBoxSizer(itemStaticBoxSizer14Static, wxHORIZONTAL);
     itemBoxSizer11->Add(itemStaticBoxSizer14, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    _vectorSelection = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, -1), _availableSolutions["MESH_VECTORS"], wxLB_SINGLE );
+    _vectorSelection = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, 75), _availableSolutions["MESH_VECTORS"], wxLB_SINGLE );
     _vectorSelection->SetSelection(0);
     itemStaticBoxSizer14->Add(_vectorSelection, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
