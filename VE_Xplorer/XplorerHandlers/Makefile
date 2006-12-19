@@ -112,6 +112,7 @@ SRCS=\
    CADSetNameEH.cxx \
    CADToggleEH.cxx \
    CADTransformEH.cxx \
+   Device.cpp \
    DeviceHandler.cpp \
    DeviceEventHandler.cpp \
    MaterialModeUpdateEH.cxx \

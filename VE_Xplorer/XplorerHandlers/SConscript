@@ -63,6 +63,7 @@ sources = Split("""
    CADSetNameEH.cxx
    CADToggleEH.cxx
    CADTransformEH.cxx
+   Device.cpp
    DeviceHandler.cpp
    DeviceEventHandler.cpp
    MaterialModeUpdateEH.cxx
@@ -157,6 +158,7 @@ headers = Split("""
    CADSetNameEH.h
    CADToggleEH.h
    CADTransformEH.h
+   Device.h
    DeviceHandler.h
    DeviceEventHandler.h
    MaterialModeUpdateEH.h
