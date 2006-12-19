@@ -162,6 +162,11 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
+
+   EVT_MENU( FRAME_ALL, AppFrame::ViewSelection )
+   EVT_MENU( FRAME_SELECTION, AppFrame::ViewSelection )
+   EVT_MENU( RESET, AppFrame::ViewSelection )
+
    EVT_MENU( XPLORER_NAVIGATION, AppFrame::LaunchNavigationPane )
    EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
    EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
@@ -732,8 +737,9 @@ void AppFrame::CreateMenu()
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
    //
-   xplorerViewMenu->Append( FRAME_ALL,       _("Frame All") );
-   xplorerViewMenu->Append( FRAME_SELECTION, _("Frame Selection      f") );
+   xplorerViewMenu->Append( FRAME_ALL,       _("Frame All            [f]") );
+   xplorerViewMenu->Append( FRAME_SELECTION, _("Frame Selection") );
+   xplorerViewMenu->Append( RESET,           _("Reset                  [r]") );
    //
    xplorerView->Append( CHANGE_XPLORER_VIEW_NETWORK, _("Network") );
    xplorerView->Append( CHANGE_XPLORER_VIEW_CAD, _("CAD") );
@@ -1624,6 +1630,40 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    DVP->SetData(std::string("DeviceMode"),mode);
    
    command->SetCommandName(std::string("CHANGE_DEVICE_MODE"));
+   command->AddDataValuePair(DVP);
+
+   serviceList->SendCommandStringToXplorer(command);
+   
+   delete command;
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::ViewSelection( wxCommandEvent& event )
+{
+   //Create the command and data value pairs
+   VE_XML::DataValuePair* DVP=new VE_XML::DataValuePair();
+   VE_XML::Command* command=new VE_XML::Command();
+   
+   unsigned int value;
+
+   if(event.GetId() == FRAME_ALL){
+      value=0;
+   }
+
+   else if(event.GetId() == FRAME_SELECTION){
+      value=1;
+   }
+
+   else if(event.GetId() == RESET){
+      value=2;
+   }
+
+   else{
+      value=-1;
+   }
+
+   DVP->SetData(std::string("ViewID"),value);
+   
+   command->SetCommandName(std::string("VIEW_SELECTION"));
    command->AddDataValuePair(DVP);
 
    serviceList->SendCommandStringToXplorer(command);

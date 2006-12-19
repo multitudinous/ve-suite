@@ -112,6 +112,7 @@ enum
    XPLORER_VIEW,
    FRAME_ALL,
    FRAME_SELECTION,
+   RESET,
 
    XPLORER_NAVIGATION,
    XPLORER_VIEWPOINTS,
@@ -309,6 +310,8 @@ protected:
 
    //Change the device mode in xplorer
    void ChangeDeviceMode(wxCommandEvent& event);
+
+   void ViewSelection(wxCommandEvent& event);
 
    ///Set the background color in xplorer
    ///\param The command event
