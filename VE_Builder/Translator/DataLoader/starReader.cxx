@@ -373,6 +373,57 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             numStarCells++;
             numVtkCells++;
          }
+
+         // cell type 11 (8 vertex cell hexahedron, aka brick) 
+         else if ( cellType == 11 )
+         {
+            cellFile >> tempData;
+            numberOfFaces = 6;
+            currentPos = 1;
+            //std::cout << "cellnumber " << cellNumber << " " << numberOfVertsPerCell << " " << numberOfFaces<<  std::endl;
+            
+            //Read the start positions for the faces for this particular
+            //polyhedral cell
+            for ( size_t i = 0; i < numberOfFaces - 1; ++i )
+            {
+               cellFile >> tempData;
+               //std::cout << tempData << " ";
+               currentPos += 1;
+               if ( currentPos%8 == 0 )
+               {
+                  //reset counter
+                  currentPos = 0;
+                  //get the end of line and go to the next one
+                  cellFile.getline( tempLine, charSize );
+                  //ignore the cell number
+                  cellFile >> tempData;
+               }
+            }
+            //now read the vertices for all the faces
+            size_t numPolyPoints = numberOfVertsPerCell - numberOfFaces;
+            for ( size_t i = 0; i < numPolyPoints; ++i )
+            {
+               cellFile >> tempData;
+               currentPos += 1;
+               vertList->InsertUniqueId( tempData - vShift );
+               if ( currentPos%8 == 0 && (( i + 1 ) < numPolyPoints) )
+               {
+                  //reset counter
+                  currentPos = 0;
+                  //get the end of line and go to the next one
+                  cellFile.getline( tempLine, charSize );
+                  //ignore the cell number
+                  cellFile >> tempData;
+               }
+            }
+            cellFile.getline( tempLine, charSize );
+            uGrid->InsertNextCell( VTK_CONVEX_POINT_SET, vertList );
+            vertList->Reset();
+            numStarCells++;
+            numVtkCells++;
+         }
+         // end cell type 11
+
          else
          {
             std::cout << "Unsupported cell type " << cellType << " " << numberOfVertsPerCell << " " << cellNumber << std::endl;
