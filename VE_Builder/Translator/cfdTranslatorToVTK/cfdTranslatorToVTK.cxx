@@ -92,6 +92,9 @@ void cfdTranslatorToVTK::SetOutputDirectory(std::string outDir)
 void cfdTranslatorToVTK::SetFileName( std::string fileName )
 {
    //_outfileNames.push_back( fileName );
+//std::cout<<"SIZE:"<<_outfileNames.size()<<std::endl;
+   _outputFile = fileName;
+std::cout<<"SIZE:"<<_outputFile<<std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////// 
 void cfdTranslatorToVTK::SetPreTranslateCallback( cfdTranslatorToVTK::PreTranslateCallback* preTCbk)
@@ -153,6 +156,12 @@ unsigned int cfdTranslatorToVTK::GetNumberOfFoundFiles()
 {
    return _nFoundFiles;
 }
+///////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::SetBaseFileName( std::string baseFileName )
+{
+   baseFileName.clear();
+   AddBaseName(baseFileName);
+}
 //////////////////////////////////////////////////////////////
 bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
 {
@@ -212,13 +221,24 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
 {
    if(_outputDataset)
    {
-      if(_outfileNames.empty())
+      if(_outfileNames.empty() && fileNum == 0)
       {
          std::stringstream tempName;
          tempName << _outputDir << "/" 
-                  << baseFileNames[fileNum] << "_" 
+                  << _outputFile << ".vtu";
+         _outfileNames.push_back(tempName.str());
+std::cout<<"HERE HERE: "<<_outfileNames[0]<<std::endl;
+std::cout<<"HERE HERE: "<<fileNum<<std::endl;
+      }
+      else
+      {
+         std::stringstream tempName;
+         tempName << _outputDir << "/" 
+                  << _outputFile << "_" 
                   << fileNum << ".vtu";
          _outfileNames.push_back(tempName.str());
+std::cout<<"HERE HERE: "<<_outfileNames[0]<<std::endl;
+std::cout<<"HERE HERE: "<<fileNum<<std::endl;
       }
       VE_Util::writeVtkThing(_outputDataset, 
                           (char*)_outfileNames.at(fileNum).c_str(),1);
@@ -276,8 +296,8 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
       if( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-outFileName"),outFileName))
       {
          toVTK->SetFileName( outFileName );
-      }
-      
+         //toVTK->SetBaseFileName(outFileName);         
+      }      
    }
 }
 //////////////////////////////////////////////////////////////

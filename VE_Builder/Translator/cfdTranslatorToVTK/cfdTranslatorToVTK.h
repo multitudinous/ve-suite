@@ -51,6 +51,7 @@ public:
    void SetInputDirectory(std::string inDir);
    void SetOutputDirectory(std::string inDir);
    void SetFileName( std::string fileName );
+   void SetBaseFileName( std::string baseFileName );
    ///Function to list all the features of a respective translator
    ///when the -h option is specified
    virtual void DisplayHelp( void ) = 0;
@@ -154,6 +155,7 @@ protected:
    std::vector<std::string> _infileNames;
 
    std::vector<std::string> _outfileNames;
+   std::string _outputFile;
 
    PreTranslateCallback* _preTCbk;
    PostTranslateCallback* _postTCbk;
