@@ -377,17 +377,16 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          // cell type 11 (8 vertex cell hexahedron, aka brick) 
          else if ( cellType == 11 )
          {
-            cellFile >> tempData;
-            numberOfFaces = 6;
+            cellFile >> tempData;  //first entry on the second line
             currentPos = 1;
-         
             size_t numVertsPerCell = 8;
-            for ( size_t i = 0; i < numVertsPerCell-2; ++i )   
+            
+            for ( size_t i = 0; i<numVertsPerCell; ++i)
             {
                cellFile >> tempData;
-               currentPos += 1;
-               vertList->InsertUniqueId( tempData - vShift );
-               if ( currentPos%8 == 0 )
+               vertList->InsertUniqueId(tempData-vShift);
+
+               if(currentPos%8 ==0)
                {
                   //reset counter
                   currentPos = 0;
@@ -398,6 +397,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                }
             }
             cellFile.getline( tempLine, charSize );
+            vertList->InsertUniqueId( tempData - vShift );
             uGrid->InsertNextCell( VTK_CONVEX_POINT_SET, vertList );
             vertList->Reset();
             numStarCells++;
