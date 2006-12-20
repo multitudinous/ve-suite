@@ -380,8 +380,6 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             cellFile >> tempData;
             numberOfFaces = 6;
             currentPos = 1;
-            // std::cout << "cellnumber " << cellNumber << " " << numberOfVertsPerCell << " " << numberOfFaces <<  std::endl;
-            // should be   "cellnumber"     whatever                     8                         6   
          
             size_t numVertsPerCell = 8;
             for ( size_t i = 0; i < numVertsPerCell-2; ++i )   
