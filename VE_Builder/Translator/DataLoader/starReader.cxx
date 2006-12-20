@@ -352,7 +352,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             }
             //now read the vertices for all the faces
             size_t numPolyPoints = numberOfVertsPerCell - numberOfFaces;
-            for ( size_t i = 0; i < numPolyPoints; ++i )
+            for ( size_t i = 0; i < numPolyPoints - 1; ++i )
             {
                cellFile >> tempData;
                currentPos += 1;
@@ -380,33 +380,16 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             cellFile >> tempData;
             numberOfFaces = 6;
             currentPos = 1;
-            //std::cout << "cellnumber " << cellNumber << " " << numberOfVertsPerCell << " " << numberOfFaces<<  std::endl;
-            
-            //Read the start positions for the faces for this particular
-            //polyhedral cell
-            for ( size_t i = 0; i < numberOfFaces - 1; ++i )
-            {
-               cellFile >> tempData;
-               //std::cout << tempData << " ";
-               currentPos += 1;
-               if ( currentPos%8 == 0 )
-               {
-                  //reset counter
-                  currentPos = 0;
-                  //get the end of line and go to the next one
-                  cellFile.getline( tempLine, charSize );
-                  //ignore the cell number
-                  cellFile >> tempData;
-               }
-            }
-            //now read the vertices for all the faces
-            size_t numPolyPoints = numberOfVertsPerCell - numberOfFaces;
-            for ( size_t i = 0; i < numPolyPoints; ++i )
+            // std::cout << "cellnumber " << cellNumber << " " << numberOfVertsPerCell << " " << numberOfFaces <<  std::endl;
+            // should be   "cellnumber"     whatever                     8                         6   
+         
+            size_t numVertsPerCell = 8;
+            for ( size_t i = 0; i < numVertsPerCell-2; ++i )   
             {
                cellFile >> tempData;
                currentPos += 1;
                vertList->InsertUniqueId( tempData - vShift );
-               if ( currentPos%8 == 0 && (( i + 1 ) < numPolyPoints) )
+               if ( currentPos%8 == 0 )
                {
                   //reset counter
                   currentPos = 0;
