@@ -279,8 +279,7 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
       int width,height = 0;
       GetSize(&width,&height);
 
-      adVector.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        width, height));
+      adVector.SetSize(GetRect());
       adVector.SetScaleByMagFlag(_lastScaleByMagnitude);
       adVector.SetVectorRatio(_lastVectorRatio);
       adVector.SetVectorScale(_lastVectorScale);
