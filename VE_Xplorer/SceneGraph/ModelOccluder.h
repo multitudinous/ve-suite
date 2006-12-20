@@ -83,6 +83,7 @@ public:
 #elif _OSG
    void TravNodeOccluder(osg::Node*);
    
+   osg::ref_ptr<osg::Group> GetOccluderNode( osg::Node* node );
    osg::ref_ptr<osg::OccluderNode> createOccluder(const osg::Vec3& v1,const osg::Vec3& v2,const osg::Vec3& v3,const osg::Vec3& v4,float holeRatio=-1.0f);
    osg::ref_ptr<osg::Group> createOccludersAroundModel(osg::Node* model);
 #elif _OPENSG

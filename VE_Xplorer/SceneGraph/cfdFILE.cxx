@@ -34,6 +34,7 @@
 #include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/ModelOccluder.h"
 
 #include <cassert>
 
@@ -42,24 +43,32 @@
 #include <Performer/pr/pfFog.h>
 #elif _OSG
 #include <osg/Fog>
+#include <osg/Node>
+#include <osg/Group>
+#include <osg/MatrixTransform>
 #endif
 
 using namespace VE_SceneGraph;
 
-cfdFILE::cfdFILE( std::string geomFile, VE_SceneGraph::cfdDCS* worldDCS,bool isStream  )
+cfdFILE::cfdFILE( std::string geomFile, VE_SceneGraph::cfdDCS* worldDCS, bool isStream  )
 {
    // Need to fix this and move some code to cfdNode
    // Leave some code here no more cfdFileInfo
-
    this->DCS = new VE_SceneGraph::cfdDCS();
    this->node = new VE_SceneGraph::cfdNode();  
    this->node->LoadFile( geomFile.c_str(),isStream );
-   fileName.assign( geomFile );//strcpy( fileName, geomFile );
+   fileName.assign( geomFile );
    this->DCS->AddChild( this->node );
    worldDCS->AddChild( this->DCS );
+
 #ifdef _PERFORMER
    fog = new pfFog();
 #elif _OSG
+   //setup occluder node
+   //ModelOccluder occluder;
+   //dynamic_cast< osg::MatrixTransform* >( this->DCS->GetRawNode() )->
+   //            addChild( occluder.GetOccluderNode( node->GetRawNode() ).get() );
+   //setup fog
    fog = new osg::Fog();
 #endif
 }

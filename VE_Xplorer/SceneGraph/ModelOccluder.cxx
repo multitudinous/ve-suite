@@ -109,7 +109,7 @@ ModelOccluder::ModelOccluder()
 #elif _OPENSG
 #endif
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ModelOccluder::ModelOccluder( const ModelOccluder& input )
 //:cfdSceneNode(input)
 {
@@ -123,8 +123,7 @@ ModelOccluder::ModelOccluder( const ModelOccluder& input )
 #elif _OPENSG
 #endif
 }
-
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ModelOccluder& ModelOccluder::operator=( const ModelOccluder& input )
 {
    if ( this != &input ){
@@ -155,6 +154,11 @@ ModelOccluder::~ModelOccluder( void )
    //_node->unref();
 #elif _OPENSG
 #endif
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::ref_ptr<osg::Group> ModelOccluder::GetOccluderNode( osg::Node* node )
+{
+   return createOccludersAroundModel( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _PERFORMER
@@ -340,7 +344,8 @@ osg::ref_ptr<osg::Group> ModelOccluder::createOccludersAroundModel(osg::Node* mo
    std::string nodeName = model->getName() + "_occluder";
    scene->setName( nodeName );
    
-   
+   //Traverse node of model to create occluder
+   //TravNodeOccluder( model );
    // add the loaded model into a the scene group.
    //scene->addChild(model);
    //model->setName("model");
@@ -379,14 +384,14 @@ osg::ref_ptr<osg::Group> ModelOccluder::createOccludersAroundModel(osg::Node* mo
    // top side
    scene->addChild(createOccluder(bb.corner(4),
                                   bb.corner(5),
-                                  bb.corner(6),
-                                  bb.corner(7)).get());
+                                  bb.corner(7),
+                                  bb.corner(6)).get());
 
    // bottom side
    scene->addChild(createOccluder(bb.corner(0),
                                   bb.corner(1),
-                                  bb.corner(2),
-                                  bb.corner(3)).get());
+                                  bb.corner(3),
+                                  bb.corner(2)).get());
    return scene;
 } 
 }
