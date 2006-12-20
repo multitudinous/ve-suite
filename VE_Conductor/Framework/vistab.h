@@ -299,7 +299,6 @@ protected:
 
    ///update the base info for the dataset ie. active vector,scalar,dataset,range 
    void _updateBaseInformation();
-
    ///Update the active dataset
    void _OnSelectDataset(wxCommandEvent& event);
    ///Update the active scalar
@@ -323,6 +322,8 @@ protected:
    ///Update the available solutions for a particular give dataset type
    ///\param newNames The list of new names to update
    void _updateAvailableScalarMeshSolutions(VjObs::Scalars newNames);
+   ///Selects first scalar and vector if they exist
+   void InitialScalarVector();
 
    void _onClose( wxCommandEvent& event );
    ///Update the available solutions for a particular give dataset type
