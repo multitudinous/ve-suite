@@ -11,6 +11,7 @@ sources = Split("""
    VE_i.cpp
    DeleteObjectFromNetworkEventHandler.cxx
    SwitchXplorerViewEventHandler.cxx
+   NetworkSystemView.cxx
 """)
 
 headers = Split("""
@@ -20,6 +21,7 @@ headers = Split("""
    VE_i.h
    DeleteObjectFromNetworkEventHandler.h
    SwitchXplorerViewEventHandler.h
+   NetworkSystemView.h
 """)
 
 lib_env = ves_pkg.getEnv().Copy()

@@ -59,7 +59,9 @@ SRCS=\
    cfdVEPluginLoader.cxx\
    VE_i.cpp\
    DeleteObjectFromNetworkEventHandler.cxx\
-   SwitchXplorerViewEventHandler.cxx
+   SwitchXplorerViewEventHandler.cxx\
+   NetworkSystemView.cxx
+
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g
