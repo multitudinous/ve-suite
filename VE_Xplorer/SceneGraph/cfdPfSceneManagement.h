@@ -77,6 +77,7 @@ public:
    ///Switch the logo on and off
    ///\param trueFalse Turn the logo on and off.
    void ViewLogo(bool trueFalse);
+   void PreFrameUpdate();
 
 private:
    // Required so that vpr::Singleton can instantiate this class.

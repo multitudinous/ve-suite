@@ -153,8 +153,8 @@ void cfdPfSceneManagement::InitScene( void )
 
    //create the switch for our logo
    _createLogo();
-   _logoSwitch->AddChild(worldDCS);
-   _logoSwitch->AddChild(_logoNode);
+   _logoSwitch->AddChild( worldDCS );
+   _logoSwitch->AddChild( _logoNode );
    _logoSwitch->AddChild( networkDCS );
    
    //Now lets put it on the main group node
@@ -222,4 +222,10 @@ void cfdPfSceneManagement::_createLogo()
 void cfdPfSceneManagement::SetActiveSwitchNode( int activeNode )
 {
    _logoSwitch->SetVal( activeNode );
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdPfSceneManagement::PreFrameUpdate( void )
+{
+   networkDCS->SetTranslationArray( worldDCS->GetVETranslationArray() );
+   networkDCS->SetRotationArray( worldDCS->GetRotationArray() );
 }
