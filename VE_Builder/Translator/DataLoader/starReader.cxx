@@ -378,18 +378,13 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          else if ( cellType == 11 )
          {
             cellFile >> tempData;  //first entry on the second line
-            currentPos = 1;
-            size_t numVertsPerCell = 8;
-            
-            for ( size_t i = 0; i<numVertsPerCell; ++i)
+            for ( size_t i = 0; i<8; ++i)
             {
                cellFile >> tempData;
                vertList->InsertUniqueId(tempData-vShift);
 
                if(currentPos%8 ==0)
                {
-                  //reset counter
-                  currentPos = 0;
                   //get the end of line and go to the next one
                   cellFile.getline( tempLine, charSize );
                   //ignore the cell number
@@ -397,7 +392,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                }
             }
             cellFile.getline( tempLine, charSize );
-            vertList->InsertUniqueId( tempData - vShift );
+            //vertList->InsertUniqueId( tempData - vShift );
             uGrid->InsertNextCell( VTK_CONVEX_POINT_SET, vertList );
             vertList->Reset();
             numStarCells++;
