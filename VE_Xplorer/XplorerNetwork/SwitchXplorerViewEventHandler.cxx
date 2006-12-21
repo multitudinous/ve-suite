@@ -34,8 +34,10 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
+#include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -46,6 +48,9 @@
 #include "VE_Open/XML/Model/Model.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
+#include <osg/MatrixTransform>
+#include <osg/Group>
 
 #include <iostream>
 
@@ -101,7 +106,9 @@ void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    if ( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
    {
       cfdPfSceneManagement::instance()->SetActiveSwitchNode( 2 );
-      cfdPfSceneManagement::instance()->GetNetworkDCS();
+      cfdDCS* tempDCS = cfdPfSceneManagement::instance()->GetNetworkDCS();
+	  NetworkSystemView networkLayout;
+	  dynamic_cast< osg::MatrixTransform* >( tempDCS->GetRawNode() )->addChild( networkLayout.DrawNetwork().get() );
    }
    else if ( viewData == "CHANGE_XPLORER_VIEW_CAD" )
    {

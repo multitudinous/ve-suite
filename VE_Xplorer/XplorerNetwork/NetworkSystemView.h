@@ -53,6 +53,8 @@ public:
    virtual ~NetworkSystemView( void );
    NetworkSystemView& operator=( const NetworkSystemView& );
    
+   bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){return true;}
+   void UpdateCommand( void ){;}
    void SetNetwork( std::string network );
    osg::ref_ptr< osg::Group > DrawNetwork( void );
 private:

@@ -31,7 +31,16 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
-
+#include "temp/bkpparser.h"
+#include <osgDB/ReadFile>
+#include <osgUtil/Optimizer>
+#include <osgProducer/Viewer>
+#include <osg/CoordinateSystemNode>
+#include <osg/MatrixTransform>
+#include <osgText/Text>
+#include <osg/Vec3>
+#include <osg/Vec4>
+#include <osg/AutoTransform>
 #include <osg/Group>
 
 using namespace VE_Xplorer;
@@ -68,5 +77,138 @@ void NetworkSystemView::SetNetwork( std::string network )
 ////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 {
-   return new osg::Group();
+	osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
+	
+	//instatiate the parser
+	BKPParser bkpp;
+//	bkpp.openFile(argv[1]);
+	bkpp.openFile("Hyper.bkp");
+	//bkpp.openFile("igcc.bkp");
+	// read the scene from the list of file specified commandline args.
+	//read blocks
+	int count = 0;
+
+	//if(bkpp.getNumComponents()<1)
+	//	std::cout<<"No Blocks available."<<std::endl;
+	
+	//add blocks and id to node
+	while(count<bkpp.getNumComponents())
+	{
+		//Add id text
+		osg::ref_ptr<osg::Geode> textGeode = new osg::Geode();
+		osg::ref_ptr<osgText::Text> text = new  osgText::Text;
+		textGeode.get()->addDrawable(text.get());
+		text.get()->setColor(osg::Vec4(1.0, 1.0, 0.0, 1.0));
+		text.get()->setCharacterSize(6.0);
+		text.get()->setAlignment(osgText::Text::CENTER_CENTER);
+		text.get()->setText(bkpp.getBlockID(count));
+		textGeode.get()->setName(bkpp.getBlockID(count));
+
+		osg::ref_ptr<osg::AutoTransform> at = new osg::AutoTransform;
+		at.get()->setPosition(osg::Vec3(bkpp.getXCoord(count)*30, bkpp.getYCoord(count)*30, 15.0f));
+		at.get()->setAutoRotateMode(osg::AutoTransform::ROTATE_TO_SCREEN);
+		at.get()->addChild(textGeode.get());
+		loadedModels.get()->addChild(at.get());
+
+		//add 3d blocks
+		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("osg/"+bkpp.getBlockType(count)+".ive");
+		
+		//add red block id if block .ive file is not found
+		if(loadedModel.get() == NULL)
+		{
+			//std::cout<<"Unsupported Component: "<<count<<" : "<<bkpp.getBlockType(count)<<std::endl;
+			loadedModel = osgDB::readNodeFile("osg/UnsupportedComponent.ive");
+			//std::cout<<"Rendering Aborted!"<<std::endl;
+			//return 1;
+		}
+		
+		//set the blocks name
+		loadedModel.get()->setName(bkpp.getBlockID(count));
+		
+		//move the block to its correct location
+		osg::ref_ptr<osg::MatrixTransform> mModelTrans = new osg::MatrixTransform();
+		mModelTrans.get()->addChild(loadedModel.get());
+		mModelTrans.get()->preMult(osg::Matrix::translate(bkpp.getXCoord(count)*30, bkpp.getYCoord(count)*30, 0.0));
+		mModelTrans.get()->setName(bkpp.getBlockID(count));
+		loadedModels.get()->addChild(mModelTrans.get());
+		
+		count++;
+	}
+
+	//add streams to node
+	int streamCount=0;
+	count=0;
+	//create colors for each type of stream
+	osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
+	colorBlack->push_back(osg::Vec4(0.0f,0.0f,0.0f,1.0f));
+	osg::ref_ptr<osg::Vec4Array> colorRed = new osg::Vec4Array;
+	colorRed->push_back(osg::Vec4(1.0f,0.0f,0.0f,1.0f));
+	osg::ref_ptr<osg::Vec4Array> colorGreen = new osg::Vec4Array;
+	colorGreen->push_back(osg::Vec4(0.0f,1.0f,0.0f,1.0f));
+
+	// same trick for shared normal.
+	osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
+	shared_normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
+	
+	osg::Geode* geode = new osg::Geode();
+
+	//if there are no streams
+	//if(bkpp.getNumStream()<1)
+	//	std::cout<<"No Streams available."<<std::endl;
+	
+	
+	while(streamCount < bkpp.getNumStream())
+	{
+		osg::Vec3Array* vertices = new osg::Vec3Array(bkpp.getStreamSize(streamCount));
+        osg::Geometry* linesGeom = new osg::Geometry();
+		while(count < bkpp.getStreamSize(streamCount))
+		{	
+        	(*vertices)[count].set(bkpp.getStreamXCoord(streamCount, count)*30.0, bkpp.getStreamYCoord(streamCount, count)*30.0, 0.0);
+			count++;
+		}
+		linesGeom->setVertexArray(vertices);
+		
+		// apply correct color to line
+		// Material - Type 0 - black
+		// Heat - Type 1 - Red
+		// Work - Type 2 - Green
+		if(bkpp.getStreamType(streamCount)==0)
+			linesGeom->setColorArray(colorBlack.get());
+		else if(bkpp.getStreamType(streamCount)==1)
+			linesGeom->setColorArray(colorRed.get());
+		else if(bkpp.getStreamType(streamCount)==2)
+			linesGeom->setColorArray(colorGreen.get());
+		//else
+		//	std::cout<<"Stream Type Error: Stream Type - "<<bkpp.getStreamType(streamCount)<<std::endl;
+		
+		linesGeom->setColorBinding(osg::Geometry::BIND_OVERALL);
+		// use the shared normal array.
+		linesGeom->setNormalArray(shared_normals.get());
+		linesGeom->setNormalBinding(osg::Geometry::BIND_OVERALL);
+
+	        linesGeom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINE_STRIP,0,bkpp.getStreamSize(streamCount)));
+		
+		geode->addDrawable(linesGeom);
+
+		//Add id text
+		osg::Geode* textGeode = new osg::Geode();
+		osg::ref_ptr<osgText::Text> text = new  osgText::Text;
+		textGeode->addDrawable(text.get());
+		text.get()->setColor(osg::Vec4(1.0, 1.0, 0.0, 1.0));
+		text.get()->setCharacterSize(6.0);
+		text.get()->setAlignment(osgText::Text::CENTER_CENTER);
+		text.get()->setText(bkpp.getStreamId(streamCount));
+		textGeode->setName(bkpp.getStreamId(streamCount));
+
+		osg::AutoTransform* at = new osg::AutoTransform;
+		at->setPosition(osg::Vec3(bkpp.getStreamXCoord(streamCount, 0)*30.0, bkpp.getStreamYCoord(streamCount, 0)*30.0, 3.0f));
+		at->setAutoRotateMode(osg::AutoTransform::ROTATE_TO_SCREEN);
+		at->addChild(textGeode);
+		loadedModels.get()->addChild(at);
+
+		streamCount++;
+		count = 0;
+	}
+	loadedModels.get()->addChild(geode);
+	return loadedModels.get();
 }
