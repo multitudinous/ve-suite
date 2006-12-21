@@ -55,6 +55,7 @@ cfdTranslatorToVTK::cfdTranslatorToVTK()
    _translateCbk = 0;
 
    _outputDataset = 0;
+   _outputFile = "star";
 }
 /////////////////////////////////////////
 cfdTranslatorToVTK::~cfdTranslatorToVTK()
@@ -92,9 +93,8 @@ void cfdTranslatorToVTK::SetOutputDirectory(std::string outDir)
 void cfdTranslatorToVTK::SetFileName( std::string fileName )
 {
    //_outfileNames.push_back( fileName );
-//std::cout<<"SIZE:"<<_outfileNames.size()<<std::endl;
    _outputFile = fileName;
-std::cout<<"SIZE:"<<_outputFile<<std::endl;
+//std::cout<<"SIZE:"<<_outputFile<<std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////// 
 void cfdTranslatorToVTK::SetPreTranslateCallback( cfdTranslatorToVTK::PreTranslateCallback* preTCbk)
@@ -221,14 +221,67 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
 {
    if(_outputDataset)
    {
-      if(_outfileNames.empty() && fileNum == 0)
+/*      if(_outfileNames.empty())
+      {
+         std::stringstream tempName;
+         tempName << _outputDir << "/" 
+                  << baseFileNames[fileNum] << "_" 
+                  << fileNum << ".vtu";
+         _outfileNames.push_back(tempName.str());
+      }
+      VE_Util::writeVtkThing(_outputDataset, 
+                          (char*)_outfileNames.at(fileNum).c_str(),1);
+      return true;
+   }
+   else
+   {
+      std::cout<<"Invalid output vtk dataset!!!"<<std::endl;
+      std::cout<<"cfdTranslatorToVTK::_writeToVTK"<<std::endl;
+      return false;
+   }*/
+      if( !_outputFile.compare(baseFileNames[fileNum]) )
+      {
+         _outputFile.assign(baseFileNames[fileNum]);
+      }
+//   std::cout<<"HERE1 HERE1: "<<_outputFile<<std::endl;
+      if(_outputDataset)
+      {
+         if( _outfileNames.empty() && fileNum == 0 )
+         {
+            std::stringstream tempName;
+            tempName << _outputDir << "/" 
+                     << _outputFile << ".vtu";
+            _outfileNames.push_back(tempName.str());
+//   std::cout<<"HERE2 HERE2: "<<_outfileNames[fileNum]<<std::endl;
+         }
+         else if( _outfileNames.empty() && fileNum != 0 )
+         {
+            std::stringstream tempName;
+            tempName << _outputDir << "/" 
+                     << _outputFile << "_" 
+                     << fileNum << ".vtu";
+            _outfileNames.push_back(tempName.str());
+//   std::cout<<"HERE3 HERE3: "<<_outfileNames[fileNum]<<std::endl;
+         }  
+      }
+/*
+      if( _outfileNames.empty() && !_outputFile.compare(baseFileNames[fileNum]) )
+      {
+         std::stringstream tempName;
+         tempName << _outputDir << "/" 
+                  << baseFileNames[fileNum] << "_" 
+                  << fileNum << ".vtu";
+         _outfileNames.push_back(tempName.str());
+std::cout<<"HERE1 HERE1: "<<fileNum<<std::endl;
+      }
+      else if(_outfileNames.empty() && fileNum == 0)
       {
          std::stringstream tempName;
          tempName << _outputDir << "/" 
                   << _outputFile << ".vtu";
          _outfileNames.push_back(tempName.str());
-std::cout<<"HERE HERE: "<<_outfileNames[0]<<std::endl;
-std::cout<<"HERE HERE: "<<fileNum<<std::endl;
+//std::cout<<"HERE HERE: "<<_outfileNames[0]<<std::endl;
+std::cout<<"HERE2 HERE2: "<<fileNum<<std::endl;
       }
       else
       {
@@ -237,9 +290,9 @@ std::cout<<"HERE HERE: "<<fileNum<<std::endl;
                   << _outputFile << "_" 
                   << fileNum << ".vtu";
          _outfileNames.push_back(tempName.str());
-std::cout<<"HERE HERE: "<<_outfileNames[0]<<std::endl;
-std::cout<<"HERE HERE: "<<fileNum<<std::endl;
-      }
+//std::cout<<"HERE HERE: "<<_outfileNames[0]<<std::endl;
+std::cout<<"HERE3 HERE3: "<<fileNum<<std::endl;
+      }*/
       VE_Util::writeVtkThing(_outputDataset, 
                           (char*)_outfileNames.at(fileNum).c_str(),1);
       return true;
@@ -296,7 +349,6 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
       if( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-outFileName"),outFileName))
       {
          toVTK->SetFileName( outFileName );
-         //toVTK->SetBaseFileName(outFileName);         
       }      
    }
 }
