@@ -109,6 +109,9 @@ enum
    SELECTION_MODE,
    DEVICE_PROPERTIES,
 
+   XPLORER_DISPLAY,
+   FRAME_RATE,
+
    XPLORER_VIEW,
    FRAME_ALL,
    FRAME_SELECTION,
@@ -216,6 +219,7 @@ public:
    wxMenu* xplorerDeviceMenu;
    wxMenu* xplorerJugglerMenu;
    wxMenu* xplorerViewMenu;
+   wxMenu* xplorerDisplayMenu;
 
    //configuration flags   //cyang
    bool f_financial;
@@ -310,6 +314,8 @@ protected:
 
    //Change the device mode in xplorer
    void ChangeDeviceMode(wxCommandEvent& event);
+
+   void DisplaySelection(wxCommandEvent& event);
 
    void ViewSelection(wxCommandEvent& event);
 

@@ -163,6 +163,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
+   EVT_MENU( FRAME_RATE, AppFrame::DisplaySelection )
+
    EVT_MENU( FRAME_ALL, AppFrame::ViewSelection )
    EVT_MENU( FRAME_SELECTION, AppFrame::ViewSelection )
    EVT_MENU( RESET, AppFrame::ViewSelection )
@@ -728,6 +730,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu = new wxMenu();
    xplorerDeviceMenu = new wxMenu();
 	xplorerJugglerMenu = new wxMenu();
+   xplorerDisplayMenu = new wxMenu();
    xplorerViewMenu = new wxMenu();
    wxMenu* xplorerView = new wxMenu();
 
@@ -736,6 +739,8 @@ void AppFrame::CreateMenu()
    xplorerDeviceMenu->Check( NAVIGATION_MODE, true);
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
+   //
+   xplorerDisplayMenu->AppendCheckItem( FRAME_RATE, _("Frame Rate") );
    //
    xplorerViewMenu->Append( FRAME_ALL,       _("Frame All            [f]") );
    xplorerViewMenu->Append( FRAME_SELECTION, _("Frame Selection") );
@@ -756,11 +761,12 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
 	xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-   xplorerMenu->Append( XPLORER_DEVICES,    _("Device Mode"),          xplorerDeviceMenu,  _("Used to change device modes and properties") );
-	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"), xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
-   xplorerMenu->Append( XPLORER_VIEW,       _("View"),             xplorerViewMenu,    _("Used to change the view") );
+   xplorerMenu->Append( XPLORER_DEVICES,    _("Device Mode"),        xplorerDeviceMenu,  _("Used to change device modes and properties") );
+	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
+   xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),            xplorerDisplayMenu, _("Used to change display preferences") );
+   xplorerMenu->Append( XPLORER_VIEW,       _("View"),               xplorerViewMenu,    _("Used to change the view") );
    //add the view settings
-   xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"), xplorerView,  _("Used to change the view in xplorer") );
+   xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    xplorerView,        _("Used to change the view in xplorer") );
    //If the display mode is desktop then we will disconnect when exit is selected
    //and in other modes we will give the user the ability to exit
    if ( GetDisplayMode() != "Desktop" )
@@ -1630,6 +1636,27 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    DVP->SetData(std::string("DeviceMode"),mode);
    
    command->SetCommandName(std::string("CHANGE_DEVICE_MODE"));
+   command->AddDataValuePair(DVP);
+
+   serviceList->SendCommandStringToXplorer(command);
+   
+   delete command;
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::DisplaySelection( wxCommandEvent& event )
+{
+   //Create the command and data value pairs
+   VE_XML::DataValuePair* DVP=new VE_XML::DataValuePair();
+   VE_XML::Command* command=new VE_XML::Command();
+
+   unsigned int value;
+
+   if(event.GetId() == FRAME_RATE){
+      value=xplorerDisplayMenu->IsChecked(FRAME_RATE);
+      DVP->SetData(std::string("FrameRateID"),value);
+   }
+   
+   command->SetCommandName(std::string("DISPLAY_SELECTION"));
    command->AddDataValuePair(DVP);
 
    serviceList->SendCommandStringToXplorer(command);
