@@ -403,6 +403,7 @@ void cfdApp::latePreFrame( void )
    }
 #endif
 
+   VE_SceneGraph::cfdPfSceneManagement::instance()->PreFrameUpdate();
    ///////////////////////
    cfdModelHandler::instance()->PreFrameUpdate();
    ///////////////////////
