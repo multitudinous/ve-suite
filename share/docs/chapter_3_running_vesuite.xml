@@ -239,6 +239,12 @@
 	  its assembly ON will not reveal that member.</para>
         </listitem>
       </itemizedlist>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/cadtree.jpg" />
+        </imageobject>
+      </mediaobject>
     </section>
   </section>
 

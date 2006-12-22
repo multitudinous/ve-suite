@@ -36,6 +36,7 @@
   <para>VEJuggler has its own set of dependencies, if you are building it
   yourself. They are:</para>
   <itemizedlist>
+  <?dbfo label-width="0.25in"?>
     <listitem>
       <para>GMTL 0.4.12+</para>
     </listitem>
