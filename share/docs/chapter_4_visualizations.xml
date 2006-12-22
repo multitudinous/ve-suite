@@ -17,14 +17,18 @@
   <section id="visualization_setup">
     <title>Setup</title>
 
-    <para>Visualizations require two files: a geometry config file and a
-    dataset file. Both have properties, such as scale and translation, that
-    can be modified to ensure they line up.</para>
+    <para>Visualizations require two files: a geometry config file (which
+    models the physical object) and a dataset file (which models the technical
+    data). Once you upload these two files and translate them so their scale
+    and translation match, you can use visualization to analyze the data.
+    We will use the PrISUm car example that comes with VE-Suite to show you
+    how to use visualization.</para>
 
-    <para>First, open VE-Launcher and set the working directory to the PrISUm
-    folder. Next, open VE-Suite in Desktop mode from VE-Launcher. Load the
-    PrISUmblend.obj CAD file, but don't close the CADTree Manager window yet.
-    (See Chapter 2.2)</para>
+    <para>First, open VE-Launcher and set the working directory to the
+    project's (PrISUm) folder. Next, open VE-Suite in Desktop mode from
+    VE-Launcher. Load the geometry file (PrISUmblend.obj)
+    (<link linkend="loading_data_and_connecting">instructions here</link>),
+    but don't close the CADTree Manager window yet.</para>
 
     <mediaobject>
       <imageobject>
@@ -34,16 +38,8 @@
 
     <para>Right-click on the Model_Geometry folder again and choose
     Properties. A CAD Properties window will pop up. This can be used to
-    change PrISUm's properties, but you must know what to change them
-    to.</para>
-
-    <para>Open the PrISUm folder from the desktop and look for the vrxpr.param
-    file. This file contains parameter information for PrISUm, which we'll
-    enter into the Properties window. Open vrxpr.param using a text editor,
-    look for the 3x3 block underneath the number 9, and enter the values into
-    the Properties window. <emphasis role="bold">NOTE:</emphasis> The rows go
-    in a different order in the Properties window than in the .param
-    file:</para>
+    transform the file's dimensions. To fit PrISUm's geometry file with its
+    dataset file, you'll need to give it the following transformation:</para>
 
     <mediaobject>
       <imageobject>
@@ -52,8 +48,18 @@
     </mediaobject>
 
     <para>Once the parameters are entered, close the CAD Properties and
-    CADTree Manager window. Now right-click on the gray plugin box again and
-    chose Data Set Config. Add the dataset to it.</para>
+    CADTree Manager window. Next, you need to load the datasets, which
+    is covered in the next section.</para>
+  </section>
+
+  <section id="visualization_dataset_setup">
+    <para>The dataset contains the technical data about the model, such as
+    pressure and airflow. Visualization turns that data into a map
+    for easier viewing. You load datasets in a way similar to the geometry
+    config file:</para>
+
+    <para>First, right-click on the gray plugin box again. Choose Data Set
+    Config.</para>
 
     <mediaobject>
       <imageobject>
@@ -67,16 +73,34 @@
       </imageobject>
     </mediaobject>
 
-    <para>First, click <guibutton>Add Dataset </guibutton>to name your dataset
-    configuration. Then click <emphasis role="bold">Open</emphasis> under
-    DataSet Filename and choose outFile3.vtk file as your dataset. You don't
-    need to change any other setting for PrISUm, so just click
-    <guibutton>Load</guibutton> to load the dataset and exit the
-    window.</para>
+    <para>Click <guibutton>Add Dataset</guibutton> to create a new dataset and
+    name it. Then click <emphasis role="bold">Open</emphasis> under
+    DataSet Filename and choose your dataset file (in this case, outFile3.vtk).
+    If you're just loading the PrISUm dataset, you don't need to load anything
+    else, so just click <guibutton>Load</guibutton> to load the dataset and
+    exit the window.</para>
 
-    <para>Once that is done, choose Submit Job from the Connection menu to
-    display the PrISUm car. Use the navigation pane to adjust the view until
-    you get a good view of it.</para>
+    <para>If you need to load more info than just that, though, you can load
+    more files through the other fields. The Precomputed Data Directory and
+    Surface Data Directory fields take data files created by the VE-Builder
+    preprocessor to speed up calculations. The Volumetric Data Directories
+    field takes <link linkend="visualization_texture_based">texture-based</link>
+    data files.</para>
+
+    <para>Finally, you may need to transform the dataset to match up with the
+    geometry data. The <guibutton>Transform</guibutton> button brings up a
+    Transformation window, like the one used to transform the geometry
+    data.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/datasettransform.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Once you are done selecting the dataset files, choose Submit Job
+    from the Connection menu to display the PrISUm car. Use the navigation
+    pane to adjust the view until you get a good view of it.</para>
 
     <mediaobject>
       <imageobject>

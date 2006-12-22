@@ -152,6 +152,7 @@ chunk-html: $(CHUNK_HTML_FILES)
 txt: $(TXT_FILES)
 pdf: $(LINK_DEPS) $(PDF_FILES)
 all:
+	$(MAKE) clean
 	$(MAKE) html
 	$(MAKE) chunk-html
 	$(MAKE) txt
@@ -295,6 +296,7 @@ endif
 # XML to FO
 %.fo: %.xml
 	xmllint --xinclude $< > $*-resolved.xml
+	$(RM) *.fo
 ifeq ($(XSLT_TOOL), Xalan)
 	$(ENV) $(XALAN) -in $*-resolved.xml -xsl $(FO_XSL) -out $@	\
           $(XALAN_FO_PARAMS) $(EXTRA_XALAN_FO_PARAMS)

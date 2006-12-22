@@ -11,12 +11,12 @@
 
   <para><ulink url="http://www.openscenegraph.org/">OpenSceneGraph
   (OSG)</ulink> can be used to manage the scenegraph instead of OpenGL
-  Performer.</para>
+  Performer. (version 1.2+)</para>
 
   <para>&lt;VTK image&gt;</para>
 
   <para><ulink url="http://vtk.org/get-software.php#interim">VTK</ulink> is
-  used to render the visualization objects.</para>
+  used to render the visualization objects. (version 5.0+)</para>
 
   <para>&lt;CMake image&gt;</para>
 
@@ -27,11 +27,34 @@
 
   <para><ulink
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler</ulink>
-  is used for management of the virtual environment.</para>
-
+  is used for management of the virtual environment. (version 2.0.1+)</para>
+  
   <para><ulink
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler
   dependencies zip file</ulink></para>
+
+  <para>VEJuggler has its own set of dependencies, if you are building it
+  yourself. They are:</para>
+  <itemizedlist>
+    <listitem>
+      <para>GMTL 0.4.12+</para>
+    </listitem>
+    <listitem>
+      <para>Boost 1.33.1+</para>
+    </listitem>
+    <listitem>
+      <para>Cppdom 0.6.6+</para>
+    </listitem>
+    <listitem>
+      <para>openAL 0.0.8+</para>
+    </listitem>
+    <listitem>
+      <para>omniORB 4.1.0+</para>
+    </listitem>
+    <listitem>
+      <para>VRPN 0.7.03+</para>
+    </listitem>
+  </itemizedlist>
 
   <para><ulink url="http://java.sun.com/j2se/1.4.2/download.html">Java 2
   SDK</ulink> is needed for Juggler's java-based VRJconfig program.</para>
@@ -40,17 +63,19 @@
 
   <para><ulink url="http://www.wxwidgets.org/">wxWidgets</ulink> is used to
   compile and run the gui. (Click "download" on the left side menu to get to
-  the files.)</para>
+  the files.) (version 2.6.2+)</para>
 
   <para><ulink
   url="http://xml.apache.org/xerces-c/download.cgi">Xerces</ulink> is used to
   read and write XML. (Download <ulink
-  url="http://xml.apache.org/xerces-c/download.cgi">xerces-c-current</ulink>)</para>
+  url="http://xml.apache.org/xerces-c/download.cgi">xerces-c-current</ulink>)
+  (version 2.7.0+)</para>
 
   <para>&lt;ACE/TAO image&gt;</para>
 
   <para><ulink url="http://deuce.doc.wustl.edu/Download.html">ACE/TAO</ulink>
-  is used for cross-platform communications.</para>
+  is used for cross-platform communications. (ACE version 5.5+, TAO version
+  1.5+)</para>
 
   <para>&lt;python image&gt;</para>
 

@@ -106,6 +106,141 @@
     and drag down in the VE-Xplorer window to pull back the camera; continue
     doing so until you can see the scene.</para>
   </section>
+  
+  <section id="geometry-indepth">
+    <title>Geometry In-Depth</title>
+    <para>VE-Suite can not only load multiple geometry objects, but it can
+    transform, shade, and texture them as well.</para>
+    
+    <section id="loading_geometry">
+      <title>Loading Objects and Assemblies</title>
+      <para>VE-Suite can load multiple geometry objects. To do so, just keep
+      adding CAD file nodes, just like you did with the single CAD file.</para>
+      
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/loadingdata2.jpg" />
+        </imageobject>
+      </mediaobject>
+      
+      <para>If you want to load multiple instances of the same object, you
+      could Load its CAD File multiple times, but that wastes memory. It's
+      better to load it into the scene once, then clone the other instances from
+      it to save memory. Right-click on the object to clone and select
+      <guibutton>Clone Node...</guibutton>.</para>
+      
+      <para>You can also create a new assembly to group geometry objects in.
+      Right-click the assembly you want to create your new assembly in,
+      then select Add Node-&gt;Create Assembly.</para>
+      
+      <para>If you want to populate an assembly fast, you can load the entire
+      geometry object tree from another project. First, open the geometry tree
+      you want to move, then select Save from the File menu to save it as a
+      .veg file. Next, open the geometry tree you want to move it to,
+      right-click the assembly you want to move it to, then select Add
+      Node-&gt;Load VEG File.</para>
+    </section>
+    
+    <section id="transforming_geometry">
+      <title>Transforming Geometric Objects</title>
+      
+      <para>Geometric objects can be moved, rotated, and scaled in the scene
+      by using the Transformation dialog. Open the CADTree Manager, right-click
+      the object you want to transform, and select Properties from the pulldown
+      menu that appears. This will bring up the CAD Properties window. The
+      Transformation dialog is its first tag.</para>
+      
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/visualizationsetup2.jpg" />
+        </imageobject>
+      </mediaobject>
+      
+      <para>As you edit the Transform properties, the scene will be updated in
+      real-time. Once you're happy with the object's size and placement, click
+      OK.</para>
+      
+      <para>You can also edit an assembly's Transform properties. An assembly's
+      Transformations affect its members as well; see the Assembly section for
+      more information.</para>
+    </section>
+
+    <section id="toggling_geometry">
+      <title>Togging Geometric Objects</title>
+      <para>You can toggle the visibility of geometric objects ON and OFF.
+      To do so, right-click the object in the CADtree Manager and select
+      Toggle Node-&gt;On or Off.</para>
+    </section>
+    
+    <section id="materials_shaders">
+      <title>Materials &amp; Shaders</title>
+      <para>You can apply custom materials and shaders to geometric objects.
+      Right-click the object and select <guibutton>Properties</guibutton>.
+      When the CAD Properties window appears, select the Attributes tag. Choose
+      whether you want a Material or a Shader, then click
+      <guibutton>Add</guibutton>.</para>
+      
+      <para>If you chose a Material, you'll be asked to name it. Once it's in
+      the list, you can apply it to the object by left-clicking it. To change
+      a material's properties, right-click its name; a menu will appear, with
+      options to change its lighting, shininess, opacity, and how the lighting
+      and material are applied to the object.</para>
+      
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/material.jpg" />
+        </imageobject>
+      </mediaobject>
+
+      <para>If you chose a Shader, you'll be asked to load one. (Example shaders
+      can be found in the shaders directory.) You can apply it by left-clicking
+      its name.</para>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/shading.jpg" />
+        </imageobject>
+      </mediaobject>
+      
+      <para>You can't apply a material &amp; and a shader to an object at the same
+      time. If you want to remove the material or shader from your object, click
+      <guibutton>Restore Defaults</guibutton>. Finally, if you want to remove
+      the material/shader from the Available Attributes list, select its name
+      and click <guibutton>Remove...</guibutton>.</para>
+    </section>
+
+    <section id="using assemblies">
+      <title>Using Assemblies</title>
+      
+      <para>Assemblies group geometric objects together so you can modify all of
+      them at once. An assembly's properties are passed to its members. Here's
+      how modifying an assembly's properties changes its members:</para>
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Transformation:</emphasis> Member
+	  translations are relative to their assembly's axes, not the world's
+	  axes. Member scalings are relative to their assembly's scalings
+	  (Ex: If you double the scale of a member whose assembly is already
+	  double-scaled, the member will be scaled 4x original size.) Assembly
+	  rotations are around the assembly's origin point, not members' origin
+	  points.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Materials &amp; Shaders:</emphasis>
+	  Materials &amp; shaders applied to assemblies are applied to its
+	  members. If a member is assigned a material or shader as well, the
+	  member's material or shader overrides its assembly's material or
+	  shader.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Toggle Node:</emphasis> Toggling an
+	  assembly OFF hides all of its members. Toggling an assembly ON shows
+	  any members who are toggled ON. If a member is toggled OFF, toggling
+	  its assembly ON will not reveal that member.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
 
   <section id="navigation">
     <title>Navigation</title>
@@ -140,7 +275,7 @@
       screen.</para>
     </section>
 
-    <section id="navigatio_npane">
+    <section id="navigation_pane">
       <title>Navigation Pane</title>
 
       <para>To open the Navigation pane, select "Navigation Pane" from the
