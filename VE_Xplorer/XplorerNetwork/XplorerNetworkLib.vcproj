@@ -332,7 +332,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(OPENTHREADS_HOME)\include&quot;;&quot;$(PRODUCER_HOME)\include&quot;"
 				PreprocessorDefinitions="_DEBUG;_USRDLL;_OSG;VE_PATENTED;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;XPLORER_NETWORK_LIBRARY;_TAO"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -362,9 +362,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib wxbase26d.lib wxmsw26d_core.lib VE_Model_d.lib VE_Shader_d.lib VE_XML_d.lib VE_CAD_d.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib wxbase26d.lib wxmsw26d_core.lib VE_Model_d.lib VE_Shader_d.lib VE_XML_d.lib VE_CAD_d.lib"
 				ShowProgress="0"
-				OutputFile="$(OutDir)/XplorerNewtworkLib_tao_osg_vep_d.dll"
+				OutputFile="$(OutDir)/XplorerNetworkLib_tao_osg_vep_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;"
@@ -510,6 +510,37 @@
 			Filter=".cpp"
 			>
 			<File
+				RelativePath=".\temp\bkpparser.cpp"
+				>
+				<FileConfiguration
+					Name="osg_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="osg_vep_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="osg_vep_cluster_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\cfdExecutive.cxx"
 				>
 			</File>
@@ -629,6 +660,37 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\temp\StringTokenizer.cpp"
+				>
+				<FileConfiguration
+					Name="osg_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="osg_vep_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="osg_vep_cluster_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\SwitchXplorerViewEventHandler.cxx"
 				>
 				<FileConfiguration
@@ -693,6 +755,10 @@
 			Filter=".h"
 			>
 			<File
+				RelativePath=".\temp\bkpparser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdExecutive.h"
 				>
 			</File>
@@ -710,6 +776,10 @@
 			</File>
 			<File
 				RelativePath=".\NetworkSystemView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\temp\StringTokenizer.h"
 				>
 			</File>
 			<File
