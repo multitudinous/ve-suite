@@ -77,7 +77,8 @@ public:
    ///Switch the logo on and off
    ///\param trueFalse Turn the logo on and off.
    void ViewLogo(bool trueFalse);
-   void PreFrameUpdate();
+   ///PreFrameUpdate call to sync dcs information across cluster
+   void PreFrameUpdate( void );
 
 private:
    // Required so that vpr::Singleton can instantiate this class.

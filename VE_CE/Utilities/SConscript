@@ -37,7 +37,7 @@ lib_env.Append(LIBS = ['VE_ModelLib', 'VE_XMLLib', 'VE_OpenModuleLib'])
 lib_env.Append(LIBPATH = [  pj('#', buildDir, 'VE_Open','XML'),
                         pj('#', buildDir, 'VE_Open','XML','Model'),
                         pj('#', buildDir, 'VE_Open','skel')])
-lib_env.ParseConfig('flagpoll TAO TAO_PortableServer --libs --cflags')
+lib_env.ParseConfig('flagpoll TAO TAO_PortableServer TAO_Messaging TAO_Valuetype --libs --cflags')
 xerces_options.apply( lib_env )
 
 if baseEnv['StaticOnly'] == "no":
