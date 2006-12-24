@@ -32,8 +32,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_SCENENODE_H
-#define CFD_SCENENODE_H
+#ifndef SCENENODE_H
+#define SCENENODE_H
 /*!\file SceneNode.h
 This is the base calss for all scenegraph nodes so that they
 can be passed around vesuite generically

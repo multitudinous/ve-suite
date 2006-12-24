@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/cfdSceneNode.h"
+#include "VE_Xplorer/SceneGraph/SceneNode.h"
 #include <iostream>
 using namespace VE_SceneGraph;
 //////////////////////////////////
