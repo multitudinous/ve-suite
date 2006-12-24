@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #include <iostream>
 
@@ -57,32 +57,8 @@
 using namespace gmtl;
 using namespace VE_SceneGraph;
 //////////////////////
-cfdDCS::cfdDCS( void )
-:cfdGroup()
+DCS::DCS( void )
 {
-#ifdef _PERFORMER
-   _dcs = new pfDCS();
-#elif _OSG
-   _dcs = new osg::MatrixTransform();
-   _dcs->setMatrix(osg::Matrix::identity());
-   _dcs->setDataVariance(osg::Object::DYNAMIC);
-   _udcb =new cfdUpdateDCSCallback();
-   _dcs->setUpdateCallback(_udcb);
-#elif _OPENSG
-#endif
-   _scale[0] = 1;
-   _scale[1] = 1;
-   _scale[2] = 1;
-   _translation[0] = 0;
-   _translation[1] = 0;
-   _translation[2] = 0;
-   vrjTranslation[0] = 0;
-   vrjTranslation[1] = 0;
-   vrjTranslation[2] = 0;
-   _rotation[0] = 0;
-   _rotation[1] = 0;
-   _rotation[2] = 0;
-
    float temp[ 3 ];
    for ( unsigned int i = 0; i < 3; i++ )
       temp[ i ] = 0.0f;
@@ -93,10 +69,10 @@ cfdDCS::cfdDCS( void )
    for ( unsigned int i = 0; i < 3; i++ )
       temp[ i ] = 1.0f;
    SetScaleArray( temp );
+
    SetCFDNodeType(CFD_DCS);
 }
-cfdDCS::cfdDCS( float* scale, float* trans, float* rot )
-:cfdGroup()
+DCS::DCS( float* scale, float* trans, float* rot )
 {
 #ifdef _PERFORMER
    _dcs = new pfDCS();
@@ -113,19 +89,8 @@ cfdDCS::cfdDCS( float* scale, float* trans, float* rot )
    SetCFDNodeType(CFD_DCS);
 }
 /////////////////////////////////////
-cfdDCS::cfdDCS( const cfdDCS& input )
-:cfdGroup(input)
+DCS::DCS( const DCS& input )
 {
-   for ( int i = 0; i < 3; i++ )
-   {
-      this->_translation[ i ] = input._translation[ i ];
-      this->vrjTranslation[ i ] = input.vrjTranslation[ i ];
-      this->_rotation[ i ] = input._rotation[ i ];
-      this->_scale[ i ] = input._scale[ i ];
-   }
-   
-   this->_vjMatrix = input._vjMatrix;
-   
 #ifdef _PERFORMER
    _dcs = new pfDCS(*input._dcs);
 #elif _OSG 
@@ -137,7 +102,7 @@ cfdDCS::cfdDCS( const cfdDCS& input )
    SetCFDNodeType(CFD_DCS);
 }
 ///////////////////////////////////////////////
-cfdDCS& cfdDCS::operator=( const cfdDCS& input)
+DCS& DCS::operator=( const DCS& input)
 {
    if ( this != &input )
    {
@@ -173,7 +138,7 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
    return *this;
 }
 /*
-bool cfdDCS::operator== ( const cfdDCS& node1 )
+bool DCS::operator== ( const DCS& node1 )
 {
    if ( _dcs != node1._dcs )
    {
@@ -186,23 +151,21 @@ bool cfdDCS::operator== ( const cfdDCS& node1 )
 }
 */
 ///////////////////////
-cfdDCS::~cfdDCS( void )
+DCS::~DCS( void )
 {
    // If neccesary
 #ifdef _PERFORMER
-   //pfDelete ( this->_dcs );
 #elif _OSG
-   
 #elif _OPENSG
 #endif
 }
 //////////////////////////////////////////
-/*float* cfdDCS::GetTranslationArray( void )
+/*float* DCS::GetTranslationArray( void )
 {
    return this->_translation;
 }*/
 //////////////////////////////////////////
-float* cfdDCS::GetVRJTranslationArray( void )
+float* DCS::GetVRJTranslationArray( void )
 {
    vrjTranslation[ 0 ] = _translation[ 0 ];
    vrjTranslation[ 1 ] = _translation[ 2 ];
@@ -211,100 +174,68 @@ float* cfdDCS::GetVRJTranslationArray( void )
    return vrjTranslation;
 }
 //////////////////////////////////////////
-float* cfdDCS::GetVETranslationArray( void )
+float* DCS::GetVETranslationArray( void )
 {
    return _translation;
 }
 ///////////////////////////////////////
-float* cfdDCS::GetRotationArray( void )
+float* DCS::GetRotationArray( void )
 {
    return this->_rotation;
 }
 ////////////////////////////////////
-float* cfdDCS::GetScaleArray( void )
+float* DCS::GetScaleArray( void )
 {
    return this->_scale;
 }
 /////////////////////////////////////////////////////////////
-void cfdDCS::SetTranslationArray( std::vector<double> array )
+void DCS::SetTranslationArray( std::vector<double> array )
 {
-   for (unsigned int i = 0; i < 3; i++ )
-   {
-      this->_translation[ i ] = array[ i ];
-      //std::cout << this->_translation[ i ] << " ";
-   }
-   //std::cout << std::endl;
 #ifdef _PERFORMER
-
    this->_dcs->setTrans( this->_translation[ 0 ],
                        this->_translation[ 1 ],
                        this->_translation[ 2 ] );
 #elif _OSG           
-   //update the specified transform
-   if ( _udcb )
-   {
-      _udcb->setTranslation(_translation);
-   }
-   
+   this->setPosition( osg::Vec3d( array[0], array[1], array[2]) );
 #elif _OPENSG
 #endif
 }
 /////////////////////////////////////////////////////////////
-void cfdDCS::SetRotationArray( std::vector<double> array)
+void DCS::SetRotationArray( std::vector<double> array)
 {
-   for (unsigned int i = 0; i < 3; i++ )
-   {
-      this->_rotation[ i ] = array[ i ];
-      //std::cout << this->_rotation[ i ] << " ";
-   }
-   //std::cout << std::endl;
 #ifdef _PERFORMER
    this->_dcs->setRot(this->_rotation[ 0 ],
                     this->_rotation[ 1 ],
                     this->_rotation[ 2 ]);
 #elif _OSG
-   if ( _udcb )
-   {
-      _udcb->setRotationDegreeAngles(_rotation[0],_rotation[1],_rotation[2]);
-      osg::Vec3f pitch(1,0,0);
-      osg::Vec3f roll(0,1,0);
-      osg::Vec3f yaw(0,0,1);
-   
-      osg::Matrixd rotateMat;
+   osg::Vec3f pitch(1,0,0);
+   osg::Vec3f roll(0,1,0);
+   osg::Vec3f yaw(0,0,1);
+   //rph              
+   osg::Matrixd rotateMat;
+   rotateMat.makeRotate(_rotation[2],roll,
+                        _rotation[1],pitch,
+                        _rotation[0],yaw);
 
-      //rph              
-      rotateMat.makeRotate(_rotation[2],roll,
-                         _rotation[1],pitch,
-                         _rotation[0],yaw);
-
-      rotateMat.get( dcsQuat );
-   }
+   rotateMat.get( dcsQuat );
+   this->setAttitude( dcsQuat );
 #elif _OPENSG
 #endif
 }
 /////////////////////////////////////////////////////////////
-void cfdDCS::SetScaleArray( std::vector<double> array )
+void DCS::SetScaleArray( std::vector<double> array )
 {
-   for (unsigned int i = 0; i < 3; i++ )
-   {
-      this->_scale[ i ] = array[ i ];
-      //std::cout << this->_scale[ i ] << " ";
-   }
-   //std::cout << std::endl;
 #ifdef _PERFORMER
    this->_dcs->setScale( this->_scale[ 0 ],
                            this->_scale[ 1 ],
                            this->_scale[ 2 ] );
 #elif _OSG
-   if(_udcb)
-   {
-      _udcb->setScaleValues(_scale);
-   }
+   this->setScale( osg::Vec3d( array[0], array[1], array[2]) );
 #elif _OPENSG
 #endif
 }
 ////////////////////////////////////////////////
-void cfdDCS::SetTranslationArray( float* trans )
+void DCS::SetTranslationArray( float* trans )
 {
    std::vector< double > temp;
    temp.push_back( trans[ 0 ] );
@@ -313,7 +244,7 @@ void cfdDCS::SetTranslationArray( float* trans )
    SetTranslationArray( temp );
 }
 ///////////////////////////////////////////
-void cfdDCS::SetRotationArray( float* rot )
+void DCS::SetRotationArray( float* rot )
 {
    std::vector< double > temp;
    temp.push_back( rot[ 0 ] );
@@ -322,7 +253,7 @@ void cfdDCS::SetRotationArray( float* rot )
    SetRotationArray( temp );
 }
 //////////////////////////////////////////
-void cfdDCS::SetScaleArray( float* scale )
+void DCS::SetScaleArray( float* scale )
 {
    std::vector< double > temp;
    temp.push_back( scale[ 0 ] );
@@ -331,14 +262,26 @@ void cfdDCS::SetScaleArray( float* scale )
    SetScaleArray( temp );
 }
 ////////////////////////////////
-Matrix44f cfdDCS::GetMat( void )
+Matrix44f DCS::GetMat( void )
 {
 #ifdef _PERFORMER
    pfMatrix temp;
    this->_dcs->getMat( temp );
    _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
-   osg::Matrixf osgMat = _dcs->getMatrix();
+   osg::Matrixd scale = osg::Matrixd::scale(this->getScale());
+   osg::Matrixd translation = osg::Matrixd::translate(this->getPostion());
+   osg::Matrixd inverseTranslation = 
+                     osg::Matrixd::translate(-this->getPostion()[0],
+                                             -this->getPostion()[1],
+                                             -this->getPostion()[2]);
+   scale = inverseTranslation*scale*translation;
+   
+   osg::Matrixd rotateMat;   
+   rotateMat.makeRotate( this->getAttitude() );
+   rotateMat = inverseTranslation*rotateMat*translation;
+   
+   osg::Matrixf osgMat = translation*scale*rotateMat;
    if( osgMat.valid() )
    {
       _vjMatrix.set( osgMat.ptr() );
@@ -346,17 +289,17 @@ Matrix44f cfdDCS::GetMat( void )
    else
    {
       std::cout<<"Invalid matrix!!"<<std::endl;
-      std::cout<<"cfdDCS::GetMat()"<<std::endl;
+      std::cout<<"DCS::GetMat()"<<std::endl;
    }
 #elif _OPENSG
    // GetVjMatrix
-   cerr << " ERROR: cfdDCS::GetMat is NOT implemented " << endl;
+   cerr << " ERROR: DCS::GetMat is NOT implemented " << endl;
    exit( 1 );
 #endif
    return _vjMatrix;
 }
 ///////////////////////////////////////
-void cfdDCS::SetMat( Matrix44f& input )
+void DCS::SetMat( Matrix44f& input )
 {
 #ifdef _PERFORMER
    pfMatrix temp = vrj::GetPfMatrix( input );
@@ -378,64 +321,43 @@ void cfdDCS::SetMat( Matrix44f& input )
    // Add functionality to get scale from pfmatrix
    // by taking the length of each of the column vectors
 #elif _OSG
-   if ( _dcs.valid() )
-   {
-      if ( _udcb )
-      {
-         /*
-         std::cout << input << std::endl;
-         std::cout << input[ 0 ][ 0 ] << " " << input[ 0 ][ 1 ] << " " << input[ 0 ][ 2 ] << " " << input[ 0 ][ 3 ] << std::endl;
-         std::cout << input[ 1 ][ 0 ] << " " << input[ 1 ][ 1 ] << " " << input[ 1 ][ 2 ] << " " << input[ 1 ][ 3 ] << std::endl;
-         std::cout << input[ 2 ][ 0 ] << " " << input[ 2 ][ 1 ] << " " << input[ 2 ][ 2 ] << " " << input[ 2 ][ 3 ] << std::endl;
-         std::cout << input[ 3 ][ 0 ] << " " << input[ 3 ][ 1 ] << " " << input[ 3 ][ 2 ] << " " << input[ 3 ][ 3 ] << std::endl;
-         */
-         gmtl::Vec3f scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
-         gmtl::Vec3f scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
-         gmtl::Vec3f scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
-         float tempScale = 1.0f/gmtl::length( scaleXVec );
-         gmtl::Matrix44f tempScaleMat;
-         gmtl::setScale( tempScaleMat, tempScale );
-         gmtl::Matrix44f unScaleInput = tempScaleMat * input;
+   gmtl::Vec3f scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
+   gmtl::Vec3f scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
+   gmtl::Vec3f scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
+   float tempScale = 1.0f/gmtl::length( scaleXVec );
+   gmtl::Matrix44f tempScaleMat;
+   gmtl::setScale( tempScaleMat, tempScale );
+   gmtl::Matrix44f unScaleInput = tempScaleMat * input;
 
-         // Set scale values
-         _scale[ 0 ] = gmtl::length( scaleXVec );
-         _scale[ 1 ] = gmtl::length( scaleYVec );
-         _scale[ 2 ] = gmtl::length( scaleZVec );
+   // Set scale values
+   _scale[ 0 ] = gmtl::length( scaleXVec );
+   _scale[ 1 ] = gmtl::length( scaleYVec );
+   _scale[ 2 ] = gmtl::length( scaleZVec );
+   this->setScale( osg::Vec3d( _scale[ 0 ], _scale[ 1 ], _scale[ 2 ] );
 
-         // set rotation values
-         gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
-         gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
-         _rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
-         _rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
-         _rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
+   // set rotation values
+   gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
+   gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
+   _rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
+   _rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
+   _rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
 
-         osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
-         dcsQuat = quat;
-         _udcb->setQuat( quat );
-      
-         // Set translation array
-         osg::Matrix inMat;
-         inMat.set( input.getData() );
-         osg::Vec3d trans = inMat.getTrans();
-         std::vector < double > tempTrans;
-         for ( size_t i = 0; i < 3; ++i )
-         {
-            tempTrans.push_back( trans[ i ] );
-         }
-         SetTranslationArray( tempTrans );
-      }
-   }
-   else
-   {
-      ;   
-   }
+   osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
+   dcsQuat = quat;
+   this->setAttitude( quat );
+
+   // Set translation array
+   osg::Matrix inMat;
+   inMat.set( input.getData() );
+   osg::Vec3d trans = inMat.getTrans();
+   this->setPosition( trans );
 #elif _OPENSG
-   std::cerr << " ERROR: cfdDCS::SetMat is NOT implemented " << std::endl;
+   std::cerr << " ERROR: DCS::SetMat is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 }
 //////////////////////////////////////////////////
-void cfdDCS::SetRotationMatrix( Matrix44f& input )
+void DCS::SetRotationMatrix( Matrix44f& input )
 {
 // There is currently a bug here.
 // We need to set the roation array so that 
@@ -472,115 +394,75 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    //std::cout << coord->hpr[ 0 ] << " :" << coord->hpr[ 1 ] << " : " <<  coord->hpr[ 2 ] <<std::endl;
    delete coord;
 #elif _OSG
-   if ( _udcb )
-   {
-      // Remove the scale from the rotation
-      gmtl::Vec3f scaleVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
-      float tempScale = 1.0f/gmtl::length( scaleVec );
-      gmtl::Matrix44f tempScaleMat;
-      gmtl::setScale( tempScaleMat, tempScale );
-      gmtl::Matrix44f unScaleInput = tempScaleMat * input;
+   // Remove the scale from the rotation
+   gmtl::Vec3f scaleVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
+   float tempScale = 1.0f/gmtl::length( scaleVec );
+   gmtl::Matrix44f tempScaleMat;
+   gmtl::setScale( tempScaleMat, tempScale );
+   gmtl::Matrix44f unScaleInput = tempScaleMat * input;
 
-      // Create the quat for rotataion
-      gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
-      gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
-      _rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
-      _rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
-      _rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
-      osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
-      dcsQuat = quat;
-      _udcb->setQuat( quat );
-   }
+   // Create the quat for rotataion
+   gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
+   gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
+   _rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
+   _rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
+   _rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
+   osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
+   dcsQuat = quat;
+   _udcb->setQuat( quat );
+   this->setAttitude ( quat );
 #elif _OPENSG
-   std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
+   std::cerr << " ERROR: DCS::SetRotationMatrix is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 }
 ////////////////////////////////////////////////
-int cfdDCS::RemoveChild( cfdNode* child )
+int DCS::RemoveChild( SceneNode* child )
 {
 #ifdef _OPENSG
-   std::cerr << " ERROR: cfdDCS::RemoveChild is NOT implemented " << std::endl;
+   cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
+   return -1;
+#elif _OSF
+   return this->removeChild( dynamic_cast< Node* >( child ))
 #endif
-   std::vector< cfdNode* >::iterator oldChild;
-   oldChild = std::find( childNodes.begin(), childNodes.end(), child );
-   
-   // Check to make sure he is on this node
-   if ( oldChild != childNodes.end() )
-   {
-      this->_dcs->removeChild( child->GetRawNode() );
-      childNodes.erase( oldChild );
-      child->SetParent( NULL );
-      return 1;  
-   }
-   else
-   {
-      std::cout << " Child Not found " << std::endl;
-      return -1;
-   }
 }
 /////////////////////////////////////////////
-int cfdDCS::AddChild( cfdNode* child )
+int DCS::AddChild( SceneNode* child )
 {
 #ifdef _OPENSG
-   std::cerr << " ERROR: cfdDCS::AddChild is NOT implemented " << std::endl;
+   cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
+#elif _OSF
+   return this->addChild( dynamic_cast< Node* >( child ))
 #endif
-
-   //add node to real graph rep
-   int good = this->_dcs->addChild( child->GetRawNode() );
-   if ( good )
-   {
-      //add the child to cfdscene
-      childNodes.push_back( child );
-      //set the parent in the cfdApp side
-      child->SetParent( this );
-      return 1;
-   }
-   
-   return -1;
 }
 ///////////////////////////////////////////////////////////////
-void cfdDCS::InsertChild( int position, cfdNode* child )
+void DCS::InsertChild( int position, SceneNode* child )
 {
 #ifdef _OPENSG
-   std::cerr << " ERROR: cfdDCS::InsertChild is NOT implemented " << std::endl;
+   cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
+   return -1;
+#elif _OSF
+   this->insertChild( position, dynamic_cast< Node* >( newChild ))
 #endif
-
-   this->_dcs->insertChild( position, child->GetRawNode() );
-  
-   std::vector< cfdNode* >::iterator newPosition;
-
-   newPosition = std::find( childNodes.begin(), childNodes.end(), childNodes[ position ] );
-
-   childNodes.insert( newPosition, child );
-   child->SetParent( this );
 }
 
 /////////////////////////////////////
-int cfdDCS::GetNumChildren( void )
+int DCS::GetNumChildren( void )
 {
-   
 #ifdef _OPENSG
-   std::cerr << " ERROR: cfdDCS::GetNumChildren is NOT implemented " << std::endl;
+   cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
+#elif _OSF
+   return this->getNumChildren();
 #endif
-
-   int numChildren = this->_dcs->getNumChildren(); 
-   if ( numChildren!=(int)childNodes.size() )
-   {
-      std::cout << " cfdDCS::ERROR: Number of children don't equal " 
-               << numChildren << " : " << childNodes.size() << std::endl;
-      exit( 1 );
-   }
-   return numChildren;
 }
 //////////////////////////////////////
-const std::string cfdDCS::GetName( void )
+const std::string DCS::GetName( void )
 {
 #ifdef _OPENSG
    return 0;
@@ -588,104 +470,37 @@ const std::string cfdDCS::GetName( void )
 #ifdef _PERFORMER
    return _dcs->getName();
 #elif _OSG
-    return _dcs->getName().data();
+    return this->getName().data();
 #endif
 }
 ////////////////////////////////////
-void cfdDCS::SetName( std::string name )
+void DCS::SetName( std::string name )
 {
 #ifdef _OPENSG
-   std::cerr << " ERROR: cfdDCS::SetName is NOT implemented " << std::endl;
+   std::cerr << " ERROR: DCS::SetName is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 #ifdef _PERFORMER
    _dcs->setName( name.c_str() );
 #elif _OSG
-   _dcs.get()->setName( name );
+  this->setName( name );
 #endif
 }
 ////////////////////////////////////////////////////////////
-int cfdDCS::ReplaceChild( cfdNode* childToBeReplaced,
-                         cfdNode* newChild)
+int DCS::ReplaceChild( SceneNode* childToBeReplaced,
+                         SceneNode* newChild)
 {
 #ifdef _OPENSG
-   cerr << " ERROR: cfdDCS::ReplaceChild is NOT implemented " << endl;
+   cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
+#elif _OSF
+   return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), 
+                       dynamic_cast< Node* >( newChild ) );
 #endif
-   std::vector< cfdNode* >::iterator oldChild;
-   oldChild = std::find( childNodes.begin(), childNodes.end(), childToBeReplaced );
-   
-   // Check to make sure he is on this node
-   if ( oldChild != childNodes.end() )
-   {
-      // Just erases from the vector doesn't delete memory
-      childNodes.erase( oldChild );
-      this->_dcs->replaceChild( childToBeReplaced->GetRawNode(), 
-                                      newChild->GetRawNode() );
-
-      //add the child to cfdscene
-      childNodes.push_back( newChild );
-      // Set new parent for the new child
-      newChild->SetParent( this );
-      // Show that he no longer has a parent
-      childToBeReplaced->SetParent( NULL );
-      return 1;
-   }
-   else
-   {
-      std::cout << " Error : Child not found " << std::endl;
-      return -1;
-   }
-}
-// Reimplement for other graphs
-#ifdef _PERFORMER
-pfNode* cfdDCS::GetRawNode( void )
-#elif _OSG
-osg::Node* cfdDCS::GetRawNode(void)
-#elif _OPENSG
-#endif
-{
-#ifdef _PERFORMER
-   return _dcs;
-#elif _OSG
-   return _dcs.get();
-#elif _OPENSG
-#endif
-}
-#ifdef _OSG
-////////////////////////////////////////////
-//Constructor                             //
-////////////////////////////////////////////
-cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback()
-{
-   _scale[0] = 1.;
-   _scale[1] = 1.;
-   _scale[2] = 1.;
-   _trans[0] = 0;
-   _trans[1] = 0;
-   _trans[2] = 0;
-   _h = 0;
-   _p = 0;
-   _r = 0;
 }
 //////////////////////////////////////////////////////////////////
-cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback( const cfdUpdateDCSCallback& input )
-:osg::Object( input ), osg::NodeCallback( input )
-{
-   _scale[0] = input._scale[0];
-   _scale[1] = input._scale[1];
-   _scale[2] = input._scale[2];
-   _trans[0] = input._trans[0];
-   _trans[1] = input._trans[1];
-   _trans[2] = input._trans[2];
-   _h = input._h;
-   _p = input._p;
-   _r = input._r;
-   quat = input.quat;
-}
-//////////////////////////////////////////////////////////////////
-void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
+void DCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
                                                      float p,
                                                      float r)
 {
@@ -708,12 +523,12 @@ void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
    rotateMat.get( quat );
 }
 //////////////////////////////////////////////////////////////////
-void cfdDCS::cfdUpdateDCSCallback::setQuat( osg::Quat& input )
+void DCS::cfdUpdateDCSCallback::setQuat( osg::Quat& input )
 {
    quat = input;
 }
 ///////////////////////////////////////////////////////////////
-void cfdDCS::cfdUpdateDCSCallback::setTranslation(float* trans)
+void DCS::cfdUpdateDCSCallback::setTranslation(float* trans)
 {
    if ( trans )
    {
@@ -723,7 +538,7 @@ void cfdDCS::cfdUpdateDCSCallback::setTranslation(float* trans)
    }
 }
 ////////////////////////////////////////////////////////////////
-void cfdDCS::cfdUpdateDCSCallback::setScaleValues(float* scale)
+void DCS::cfdUpdateDCSCallback::setScaleValues(float* scale)
 {
    if ( scale )
    {
@@ -733,7 +548,7 @@ void cfdDCS::cfdUpdateDCSCallback::setScaleValues(float* scale)
    }
 }
 //////////////////////////////////////////////////////////////////////////////////////
-void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
+void DCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
    osg::ref_ptr<osg::MatrixTransform> dcs = dynamic_cast<osg::MatrixTransform*>(node);
 

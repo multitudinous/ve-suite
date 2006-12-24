@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_DCS_H
 #define VE_DCS_H
@@ -51,16 +49,16 @@ class pfDCS;
 namespace VE_SceneGraph
 {
 #ifdef _OSG
-class VE_SCENEGRAPH_EXPORTS DCS: public osg::PositionAttitudeTransform
+class VE_SCENEGRAPH_EXPORTS DCS: public osg::PositionAttitudeTransform, SceneNode
 #elif _PERFORMER
-class VE_SCENEGRAPH_EXPORTS DCS: public pfDCS
+class VE_SCENEGRAPH_EXPORTS DCS: public pfDCS, SceneNode
 #endif
 {
 public:
-   DCS(){}
-   virtual ~DCS(){}
-
+   DCS(){;}
+   virtual ~DCS(){;}
 protected:
+
 };
 }
 #endif
