@@ -24,6 +24,8 @@ sources = Split("""
     Triangles.cxx
     Text.cxx
     ModelOccluder.cxx
+    DCS.cxx
+    SceneNode.cxx
 """)
 
 headers = Split("""
@@ -46,6 +48,8 @@ headers = Split("""
     Triangles.h
     Text.h
     ModelOccluder.h
+    DCS.h
+    SceneNode.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)

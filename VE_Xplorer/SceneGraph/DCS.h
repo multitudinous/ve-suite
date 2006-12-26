@@ -39,6 +39,13 @@
 /*!\class VE_SceneGraph::DCS
 *
 */
+#include <vector>
+#include <string>
+
+#include "VE_Xplorer/SceneGraph/SceneNode.h"
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Quat.h>
 
 #ifdef _PERFORMER
 class pfDCS;
@@ -49,16 +56,43 @@ class pfDCS;
 namespace VE_SceneGraph
 {
 #ifdef _OSG
-class VE_SCENEGRAPH_EXPORTS DCS: public osg::PositionAttitudeTransform, SceneNode
+class VE_SCENEGRAPH_EXPORTS DCS: public osg::PositionAttitudeTransform, public SceneNode
 #elif _PERFORMER
 class VE_SCENEGRAPH_EXPORTS DCS: public pfDCS, SceneNode
 #endif
 {
 public:
-   DCS(){;}
-   virtual ~DCS(){;}
-protected:
+   DCS();
+   virtual ~DCS();
+   DCS( float* scale, float* trans, float* rot );
+   DCS( const DCS& input );
+   DCS& operator=( const DCS& input);
 
+   float* GetVETranslationArray( void );
+   float* GetRotationArray( void );
+   float* GetScaleArray( void );
+   void SetTranslationArray( std::vector<double> array );
+   void SetRotationArray( std::vector<double> array);
+   void SetScaleArray( std::vector<double> array );
+   void SetTranslationArray( float* trans );
+   void SetRotationArray( float* rot );
+   void SetScaleArray( float* scale );
+   gmtl::Matrix44f GetMat( void );
+   void SetMat( gmtl::Matrix44f& input );
+   void SetRotationMatrix( gmtl::Matrix44f& input );
+   int RemoveChild( SceneNode* child );
+   int AddChild( SceneNode* child );
+   void InsertChild( int position, SceneNode* child );
+   int GetNumChildren( void );
+   const std::string GetName( void );
+   void SetName( std::string name );
+   int ReplaceChild( SceneNode* childToBeReplaced,
+                          SceneNode* newChild);
+
+protected:
+   float translation[ 3 ];
+   float scale[ 3 ];
+   float rotation[ 3 ];
 };
 }
 #endif

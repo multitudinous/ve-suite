@@ -34,27 +34,27 @@
 #include <iostream>
 using namespace VE_SceneGraph;
 //////////////////////////////////
-cfdSceneNode::cfdSceneNode( void )
+SceneNode::SceneNode( void )
 {
    this->_nt = CFD_OTHER;
 }
 //////////////////////////////////////////
-cfdSceneNode::cfdSceneNode(cfdNodeType nt)
+SceneNode::SceneNode(cfdNodeType nt)
 {
    this->_nt = nt;
 }
 ///////////////////////////////////
-cfdSceneNode::~cfdSceneNode( void )
+SceneNode::~SceneNode( void )
 {
    ;
 }
 ////////////////////////////////////////////////////////
-cfdSceneNode::cfdSceneNode( const cfdSceneNode& input )
+SceneNode::SceneNode( const SceneNode& input )
 {
    _nt = input._nt;
 }
 //////////////////////////////////////////////////////////////////
-cfdSceneNode& cfdSceneNode::operator=( const cfdSceneNode& input )
+SceneNode& SceneNode::operator=( const SceneNode& input )
 {
    if ( this != &input )
    {

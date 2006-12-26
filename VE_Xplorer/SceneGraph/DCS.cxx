@@ -56,7 +56,7 @@
 
 using namespace gmtl;
 using namespace VE_SceneGraph;
-//////////////////////
+////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( void )
 {
    float temp[ 3 ];
@@ -72,15 +72,11 @@ DCS::DCS( void )
 
    SetCFDNodeType(CFD_DCS);
 }
+////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
 {
 #ifdef _PERFORMER
-   _dcs = new pfDCS();
 #elif _OSG
-   _dcs = new osg::MatrixTransform();
-   _dcs->setMatrix(osg::Matrix::identity());
-   _udcb =new cfdUpdateDCSCallback();
-   _dcs->setUpdateCallback(_udcb);
 #elif _OPENSG
 #endif
    this->SetTranslationArray( trans );
@@ -88,55 +84,31 @@ DCS::DCS( float* scale, float* trans, float* rot )
    this->SetScaleArray( scale );
    SetCFDNodeType(CFD_DCS);
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& input )
 {
 #ifdef _PERFORMER
-   _dcs = new pfDCS(*input._dcs);
 #elif _OSG 
-   this->_dcs = new osg::MatrixTransform(*input._dcs);
-  _udcb = new cfdUpdateDCSCallback( (*input._udcb) );
 #elif _OPENSG
-#endif
-  
+#endif  
    SetCFDNodeType(CFD_DCS);
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 DCS& DCS::operator=( const DCS& input)
 {
    if ( this != &input )
    {
       //parents input
-      cfdGroup::operator =(input);
-      for ( int i = 0; i < 3; i++ )
-      {
-         this->_translation[ i ] = input._translation[ i ];
-         this->vrjTranslation[ i ] = input.vrjTranslation[ i ];
-         this->_rotation[ i ] = input._rotation[ i ];
-         this->_scale[ i ] = input._scale[ i ];
-      }
-   
-      /*for ( unsigned int i = 0; i < childNodes.size(); i++ )
-      {
-         delete childNodes.at( i );
-      }
-      childNodes.clear();
-   
-      this->childNodes = input.childNodes;*/
-      this->_vjMatrix = input._vjMatrix;
+      //cfdGroup::operator =(input);
 #ifdef _PERFORMER
-      pfDelete( this->_dcs );
-      this->_dcs = input._dcs;
 #elif _OSG
-      _dcs = input._dcs;
-      _udcb = input._udcb;
 #elif _OPENSG
 #endif
-      //_group = _dcs;
       SetCFDNodeType(CFD_DCS);
    }
    return *this;
 }
+////////////////////////////////////////////////////////////////////////////////
 /*
 bool DCS::operator== ( const DCS& node1 )
 {
@@ -150,7 +122,7 @@ bool DCS::operator== ( const DCS& node1 )
    }
 }
 */
-///////////////////////
+////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS( void )
 {
    // If neccesary
@@ -159,36 +131,55 @@ DCS::~DCS( void )
 #elif _OPENSG
 #endif
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /*float* DCS::GetTranslationArray( void )
 {
    return this->_translation;
 }*/
-//////////////////////////////////////////
-float* DCS::GetVRJTranslationArray( void )
+////////////////////////////////////////////////////////////////////////////////
+/*float* DCS::GetVRJTranslationArray( void )
 {
    vrjTranslation[ 0 ] = _translation[ 0 ];
    vrjTranslation[ 1 ] = _translation[ 2 ];
    vrjTranslation[ 2 ] = -_translation[ 1 ];
 
    return vrjTranslation;
-}
-//////////////////////////////////////////
+}*/
+////////////////////////////////////////////////////////////////////////////////
 float* DCS::GetVETranslationArray( void )
 {
-   return _translation;
+   osg::Vec3d trans = this->getPosition();
+   for ( size_t i = 0; i < 3; ++i )
+   {
+      translation[ i ] = trans[ i ];
+   }
+   return translation;
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 float* DCS::GetRotationArray( void )
 {
-   return this->_rotation;
+   osg::Quat quat = this->getAttitude();
+
+   gmtl::Quatf tempQuat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
+   gmtl::Matrix44f _vjMatrix = gmtl::makeRot< gmtl::Matrix44f >( tempQuat );
+   gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( _vjMatrix );
+   rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
+   rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
+   rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
+   
+   return rotation;
 }
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 float* DCS::GetScaleArray( void )
 {
-   return this->_scale;
+   osg::Vec3d tempScale = this->getScale();
+   for ( size_t i = 0; i < 3; ++i )
+   {
+      scale[ i ] = tempScale[ i ];
+   }
+   return scale;
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( std::vector<double> array )
 {
 #ifdef _PERFORMER
@@ -200,7 +191,7 @@ void DCS::SetTranslationArray( std::vector<double> array )
 #elif _OPENSG
 #endif
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( std::vector<double> array)
 {
 #ifdef _PERFORMER
@@ -213,16 +204,16 @@ void DCS::SetRotationArray( std::vector<double> array)
    osg::Vec3f yaw(0,0,1);
    //rph              
    osg::Matrixd rotateMat;
-   rotateMat.makeRotate(_rotation[2],roll,
-                        _rotation[1],pitch,
-                        _rotation[0],yaw);
-
-   rotateMat.get( dcsQuat );
-   this->setAttitude( dcsQuat );
+   rotateMat.makeRotate(osg::DegreesToRadians(array[2]),roll,
+                        osg::DegreesToRadians(array[1]),pitch,
+                        osg::DegreesToRadians(array[0]),yaw);
+   osg::Quat quat;
+   rotateMat.get( quat );
+   this->setAttitude( quat );
 #elif _OPENSG
 #endif
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetScaleArray( std::vector<double> array )
 {
 #ifdef _PERFORMER
@@ -234,7 +225,7 @@ void DCS::SetScaleArray( std::vector<double> array )
 #elif _OPENSG
 #endif
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( float* trans )
 {
    std::vector< double > temp;
@@ -243,7 +234,7 @@ void DCS::SetTranslationArray( float* trans )
    temp.push_back( trans[ 2 ] );
    SetTranslationArray( temp );
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( float* rot )
 {
    std::vector< double > temp;
@@ -252,7 +243,7 @@ void DCS::SetRotationArray( float* rot )
    temp.push_back( rot[ 2 ] );
    SetRotationArray( temp );
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetScaleArray( float* scale )
 {
    std::vector< double > temp;
@@ -261,7 +252,7 @@ void DCS::SetScaleArray( float* scale )
    temp.push_back( scale[ 2 ] );
    SetScaleArray( temp );
 }
-////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Matrix44f DCS::GetMat( void )
 {
 #ifdef _PERFORMER
@@ -270,11 +261,11 @@ Matrix44f DCS::GetMat( void )
    _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
    osg::Matrixd scale = osg::Matrixd::scale(this->getScale());
-   osg::Matrixd translation = osg::Matrixd::translate(this->getPostion());
+   osg::Matrixd translation = osg::Matrixd::translate(this->getPosition());
    osg::Matrixd inverseTranslation = 
-                     osg::Matrixd::translate(-this->getPostion()[0],
-                                             -this->getPostion()[1],
-                                             -this->getPostion()[2]);
+                     osg::Matrixd::translate(-this->getPosition()[0],
+                                             -this->getPosition()[1],
+                                             -this->getPosition()[2]);
    scale = inverseTranslation*scale*translation;
    
    osg::Matrixd rotateMat;   
@@ -282,6 +273,7 @@ Matrix44f DCS::GetMat( void )
    rotateMat = inverseTranslation*rotateMat*translation;
    
    osg::Matrixf osgMat = translation*scale*rotateMat;
+   gmtl::Matrix44f _vjMatrix;
    if( osgMat.valid() )
    {
       _vjMatrix.set( osgMat.ptr() );
@@ -298,7 +290,7 @@ Matrix44f DCS::GetMat( void )
 #endif
    return _vjMatrix;
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetMat( Matrix44f& input )
 {
 #ifdef _PERFORMER
@@ -333,17 +325,16 @@ void DCS::SetMat( Matrix44f& input )
    _scale[ 0 ] = gmtl::length( scaleXVec );
    _scale[ 1 ] = gmtl::length( scaleYVec );
    _scale[ 2 ] = gmtl::length( scaleZVec );
-   this->setScale( osg::Vec3d( _scale[ 0 ], _scale[ 1 ], _scale[ 2 ] );
+   this->setScale( osg::Vec3d( _scale[ 0 ], _scale[ 1 ], _scale[ 2 ] ) );
 
    // set rotation values
    gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
    gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
-   _rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
-   _rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
-   _rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
+   //_rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
+   //_rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
+   //_rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
 
    osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
-   dcsQuat = quat;
    this->setAttitude( quat );
 
    // Set translation array
@@ -356,7 +347,7 @@ void DCS::SetMat( Matrix44f& input )
    exit( 1 );
 #endif
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationMatrix( Matrix44f& input )
 {
 // There is currently a bug here.
@@ -404,19 +395,17 @@ void DCS::SetRotationMatrix( Matrix44f& input )
    // Create the quat for rotataion
    gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
    gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
-   _rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
-   _rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
-   _rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
+   //_rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
+   //_rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
+   //_rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
    osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
-   dcsQuat = quat;
-   _udcb->setQuat( quat );
    this->setAttitude ( quat );
 #elif _OPENSG
    std::cerr << " ERROR: DCS::SetRotationMatrix is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int DCS::RemoveChild( SceneNode* child )
 {
 #ifdef _OPENSG
@@ -427,7 +416,7 @@ int DCS::RemoveChild( SceneNode* child )
    return this->removeChild( dynamic_cast< Node* >( child ))
 #endif
 }
-/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int DCS::AddChild( SceneNode* child )
 {
 #ifdef _OPENSG
@@ -438,7 +427,7 @@ int DCS::AddChild( SceneNode* child )
    return this->addChild( dynamic_cast< Node* >( child ))
 #endif
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::InsertChild( int position, SceneNode* child )
 {
 #ifdef _OPENSG
@@ -449,8 +438,7 @@ void DCS::InsertChild( int position, SceneNode* child )
    this->insertChild( position, dynamic_cast< Node* >( newChild ))
 #endif
 }
-
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int DCS::GetNumChildren( void )
 {
 #ifdef _OPENSG
@@ -461,7 +449,7 @@ int DCS::GetNumChildren( void )
    return this->getNumChildren();
 #endif
 }
-//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 const std::string DCS::GetName( void )
 {
 #ifdef _OPENSG
@@ -470,10 +458,10 @@ const std::string DCS::GetName( void )
 #ifdef _PERFORMER
    return _dcs->getName();
 #elif _OSG
-    return this->getName().data();
+   return this->getName().data();
 #endif
 }
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetName( std::string name )
 {
 #ifdef _OPENSG
@@ -486,7 +474,7 @@ void DCS::SetName( std::string name )
   this->setName( name );
 #endif
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int DCS::ReplaceChild( SceneNode* childToBeReplaced,
                          SceneNode* newChild)
 {
@@ -499,77 +487,3 @@ int DCS::ReplaceChild( SceneNode* childToBeReplaced,
                        dynamic_cast< Node* >( newChild ) );
 #endif
 }
-//////////////////////////////////////////////////////////////////
-void DCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
-                                                     float p,
-                                                     float r)
-{
-   _h = osg::DegreesToRadians(h);
-   _p = osg::DegreesToRadians(p);
-   _r = osg::DegreesToRadians(r);
-
-   //quat make quat from rotations
-   osg::Vec3f pitch(1,0,0);
-   osg::Vec3f roll(0,1,0);
-   osg::Vec3f yaw(0,0,1);
-   
-   osg::Matrixd rotateMat;
-
-   //rph              
-   rotateMat.makeRotate(_r,roll,
-                         _p,pitch,
-                         _h,yaw);
-
-   rotateMat.get( quat );
-}
-//////////////////////////////////////////////////////////////////
-void DCS::cfdUpdateDCSCallback::setQuat( osg::Quat& input )
-{
-   quat = input;
-}
-///////////////////////////////////////////////////////////////
-void DCS::cfdUpdateDCSCallback::setTranslation(float* trans)
-{
-   if ( trans )
-   {
-      _trans[0] = trans[0];
-      _trans[1] = trans[1];
-      _trans[2] = trans[2];
-   }
-}
-////////////////////////////////////////////////////////////////
-void DCS::cfdUpdateDCSCallback::setScaleValues(float* scale)
-{
-   if ( scale )
-   {
-      _scale[0] = scale[0];
-      _scale[1] = scale[1];
-      _scale[2] = scale[2];
-   }
-}
-//////////////////////////////////////////////////////////////////////////////////////
-void DCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
-{
-   osg::ref_ptr<osg::MatrixTransform> dcs = dynamic_cast<osg::MatrixTransform*>(node);
-
-   if ( dcs.valid() )
-   {
-      osg::Vec3f pitch(1,0,0);
-      osg::Vec3f roll(0,1,0);
-      osg::Vec3f yaw(0,0,1);
-      
-      osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
-      osg::Matrixd translation = osg::Matrixd::translate(_trans[0], _trans[1], _trans[2]);
-      osg::Matrixd inverseTranslation = osg::Matrixd::translate(-_trans[0], -_trans[1], -_trans[2]);
-      scale = inverseTranslation*scale*translation;
-
-      osg::Matrixd rotateMat;
-
-      rotateMat.makeRotate( quat );
-      rotateMat = inverseTranslation*rotateMat*translation;
-
-      dcs->setMatrix(translation*scale*rotateMat);
-      traverse(node,nv);
-   }
-}
-#endif
