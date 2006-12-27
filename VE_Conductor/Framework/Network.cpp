@@ -550,6 +550,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
    pop_menu.Enable(DEL_MOD, false);
    pop_menu.Enable(SHOW_RESULT, false);
    pop_menu.Enable(PARAVIEW, false);
+   pop_menu.Enable(ASPEN_MENU, false);
 
    pop_menu.Enable(SHOW_LINK_CONT, false);
 
@@ -575,6 +576,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
       pop_menu.Enable(SHOW_RESULT, true);
       if (modules[m_selMod].GetPlugin()->Has3Ddata())
          pop_menu.Enable(PARAVIEW, true);
+	  pop_menu.Enable(ASPEN_MENU, true);
    }
 
    action_point = event.GetLogicalPosition(dc);
