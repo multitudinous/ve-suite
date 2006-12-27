@@ -116,6 +116,10 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
    {
       _dataValuePairList.clear();
    }
+   if(_loadedCAD.size())
+   {
+      _loadedCAD.clear();
+   }
 }
 #ifndef STAND_ALONE
 //////////////////////////////////////////////////////////
@@ -385,12 +389,19 @@ void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
 /////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 {
-   if(_activeCADNode &&  (_activeTreeNode->GetId() != _geometryTree->GetRootItem()))
+   if(_activeCADNode /*&&  (_activeTreeNode->GetId() != _geometryTree->GetRootItem())*/)
    {
       CADClone* newClone = new CADClone(_activeCADNode->GetNodeName()+std::string("_cloned"),_activeCADNode);
 
-      wxTreeItemId parentID = _geometryTree->GetItemParent(_activeTreeNode->GetId());
-
+      wxTreeItemId parentID;
+      if(_activeTreeNode->GetId() == _geometryTree->GetRootItem())
+      {
+         parentID = _geometryTree->GetRootItem();
+      }
+      else
+      {
+         parentID = _geometryTree->GetItemParent(_activeTreeNode->GetId());
+      }
       CADTreeBuilder::TreeNodeData* parentCADNode = 
          dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(parentID));
 
@@ -398,15 +409,33 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 
      if(newClone->GetOriginalNode()->GetNodeType() == std::string("Assembly"))
      {
-        _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
+        if(parentID != _geometryTree->GetRootItem())
+        {
+           _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
                                wxString(newClone->GetNodeName().c_str())
                                ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
+        }
+        else
+        {
+           _geometryTree->AppendItem(_geometryTree->GetRootItem(),
+                               wxString(newClone->GetNodeName().c_str())
+                               ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
+        }
      }
      else if(newClone->GetOriginalNode()->GetNodeType() == std::string("Part"))
      {
-        _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
+        if(parentID != _geometryTree->GetRootItem())
+        {
+           _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
                                wxString(newClone->GetNodeName().c_str())
                                ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
+        }
+        else
+        {
+           _geometryTree->AppendItem(_geometryTree->GetRootItem(),
+                               wxString(newClone->GetNodeName().c_str())
+                               ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
+        }
      }
 
       _commandName = std::string("CAD_ADD_NODE");
@@ -421,7 +450,7 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
    }
    else
    {
-       wxMessageBox( "Error! Can't Clone root node!!!.", 
+       wxMessageBox( "Error! Invalid node!!!.", 
                         "CAD Clone Failure", wxOK | wxICON_INFORMATION );
    }
 }
@@ -440,12 +469,35 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
    {
       wxArrayString fileNamesVector;
       dialog.GetPaths( fileNamesVector );
+      
       for ( size_t i = 0; i < fileNamesVector.GetCount(); ++i )
       {
-         SendVEGNodesToXplorer( fileNamesVector.Item( i ) );
+         if(!_ensureClones(fileNamesVector.Item(i)))
+         {
+            SendVEGNodesToXplorer( fileNamesVector.Item( i ) );
+         }
       }
    }
    _expandNode(_activeTreeNode->GetId());
+}
+///////////////////////////////////////////////////////
+bool CADNodeManagerDlg::_ensureClones(wxString filename)
+{
+   std::map<wxString,VE_CAD::CADNode*>::iterator loadedFile;
+   loadedFile = _loadedCAD.find(filename);
+   if(loadedFile != _loadedCAD.end())
+   {
+      //Clone this node
+      //Just need to set the node we are going to clone
+      //and call the cloneNode event
+      VE_CAD::CADNode* originalActiveNode = _activeCADNode;
+      _activeCADNode = loadedFile->second;
+      wxCommandEvent emptyEvent;
+      _cloneNode(emptyEvent);
+      _activeCADNode = originalActiveNode;
+      return true;
+   }
+   return false;
 }
 ////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
@@ -485,6 +537,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
       //std::cout<<"Number of children on current root: "<<dynamic_cast<CADAssembly*>(_rootNode)->GetNumberOfChildren()<<std::endl;
       if(newAssembly)
       {
+         _loadedCAD[fileName] = newAssembly;
          if(dynamic_cast<CADAssembly*>(_rootNode)->GetNumberOfChildren() == 0)
          {
             //std::cout<<"Reseting root CADNode"<<std::endl;
@@ -498,6 +551,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
       }
       else if(newPart)
       {
+         _loadedCAD[fileName] = newPart;
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newPart);
          SetRootCADNode(_rootNode);
       }
@@ -535,7 +589,10 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
       dialog.GetPaths( fileNamesVector );
       for ( size_t i = 0; i < fileNamesVector.GetCount(); ++i )
       {
-         SendNewNodesToXplorer( fileNamesVector.Item( i ) );
+         if(!_ensureClones(fileNamesVector.Item(i)))
+         {
+            SendNewNodesToXplorer( fileNamesVector.Item( i ) );
+         }
       }
    }
    _expandNode(_activeTreeNode->GetId());
@@ -568,7 +625,7 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
    _commandName = std::string("CAD_ADD_NODE");
 
    newCADPart->SetParent(_activeCADNode->GetID());
-
+   _loadedCAD[fileName] = newCADPart;
    VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
    cadNode->SetDataType(std::string("XMLOBJECT"));
    cadNode->SetData("New Node",newCADPart);

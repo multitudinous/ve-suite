@@ -159,6 +159,11 @@ public:
    ///Toggle a node on/off.
    ///\param event The command event.
    void _toggleNode(wxCommandEvent& event);
+
+   ///Ensure that we haven't loaded this file already.
+   ///If we have, create a CADClone.
+   ///\param filename The filename to check
+   bool _ensureClones(wxString filename);
 #ifndef STAND_ALONE
    ///Send CAD commands back to VE-Xplorer
    void _sendCommandsToXplorer();
@@ -191,6 +196,7 @@ public:
    VE_CAD::CADNode* _activeCADNode;///<The active CADNode.
    VE_CAD::CADNode* _rootNode;///<The active CADNode.
    VE_Conductor::GUI_Utilities::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.
+   std::map<wxString,VE_CAD::CADNode*> _loadedCAD;///<The list of CAD/VEG files already loaded.
    //wxButton* _loadButton;
    DECLARE_EVENT_TABLE()
 };
