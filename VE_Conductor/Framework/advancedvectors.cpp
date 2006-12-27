@@ -53,7 +53,7 @@ AdvancedVectors::AdvancedVectors(wxWindow* parent, wxWindowID id,
                              const wxPoint& pos, 
                              const wxSize& size, long style )
 {
-    Create(parent, id, caption, pos, size, style);
+   Create(parent, id, caption, pos, size, style);
    wxSize displaySize = ::wxGetDisplaySize();
    int tempH = displaySize.GetHeight()-480;
    wxRect dialogPosition( displaySize.GetWidth()-427, displaySize.GetHeight()-tempH, 427, tempH );

@@ -97,48 +97,7 @@ enum VECTOR_IDS
    ADD_VECTOR_PLANE_BUTTON,
    ADVANCED_VECTOR_BUTTON
 };
-////@end control identifiers
 
-/*!
- * VectorsApp class declaration
- */
-/*
-class VectorsApp: public wxApp
-{    
-//    DECLARE_CLASS( VectorsApp )
-    DECLARE_EVENT_TABLE()
-
-public:
-    /// Constructor
-    VectorsApp();
-
-    /// Initialises the application
-    virtual bool OnInit();
-
-    /// Called on exit
-    virtual int OnExit();
-
-////@begin VectorsApp event handler declarations
-////@end VectorsApp event handler declarations
-
-////@begin VectorsApp member function declarations
-////@end VectorsApp member function declarations
-
-////@begin VectorsApp member variables
-////@end VectorsApp member variables
-};
-*/
-/*!
- * Application instance declaration 
- */
-
-////@begin declare app
-/////////////////////////////////DECLARE_APP(VectorsApp)
-////@end declare app
-
-/*!
- * Vectors class declaration
- */
 
 class Vectors: public wxDialog
 {    

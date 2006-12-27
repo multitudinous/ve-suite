@@ -176,7 +176,9 @@ Vectors::Vectors( wxWindow* parent, wxWindowID id, const wxString& caption, cons
  * Vectors creator
  */
 
-bool Vectors::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+bool Vectors::Create( wxWindow* parent, wxWindowID id,
+                  const wxString& caption, const wxPoint& pos, 
+                  const wxSize& size, long style )
 {
 ////@begin Vectors member initialisation
    itemRadioBox5 = 0;
@@ -200,10 +202,6 @@ bool Vectors::Create( wxWindow* parent, wxWindowID id, const wxString& caption, 
 ////@end Vectors creation
     return true;
 }
-
-/*!
- * Control creation for Vectors
- */
 
 void Vectors::CreateControls()
 {    

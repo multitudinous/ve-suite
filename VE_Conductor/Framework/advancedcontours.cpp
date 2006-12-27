@@ -55,7 +55,9 @@
 END_EVENT_TABLE()*/
 
 
-AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, 
+                              const wxString& caption, const wxPoint& pos,
+                              const wxSize& size, long style )
 {
    Create(parent, id, caption, pos, size, style);
    wxSize displaySize = ::wxGetDisplaySize();
@@ -64,7 +66,9 @@ AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, const wxStr
    this->SetSize( dialogPosition );
 }
 
-bool AdvancedContours::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+bool AdvancedContours::Create( wxWindow* parent, wxWindowID id,
+                           const wxString& caption, const wxPoint& pos,
+                           const wxSize& size, long style )
 {
 ////@begin AdvancedContours member initialisation
    _opacitySlider = 0;

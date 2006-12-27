@@ -177,6 +177,11 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _vistabPosition.height =  _vistabPosition.height + 20;
    SetSize( _vistabPosition );
    wxSize tempRect = GetSize();
+   
+   _minSpinner->Enable(false);
+   _minSlider->Enable(false);
+   _maxSpinner->Enable(false);
+   _maxSlider->Enable(false);
    //std::cout << tempRect.GetWidth() << " " << tempRect.GetHeight() << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -419,8 +424,6 @@ void Vistab::CreateControls()
     wxStaticText* _min = new wxStaticText( itemDialog1, wxID_STATIC, _T("Min"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT ); 
     wxStaticText* _max = new wxStaticText( itemDialog1, wxID_STATIC, _T("Max"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT ); 
 
-
-
     minSizer->Add( _minSpinner, 0, wxALIGN_LEFT|wxTOP|wxLEFT|wxRIGHT, 5 );
     minSizer->Add( _minSlider, 1, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM|wxEXPAND, 5 );
 
@@ -434,6 +437,7 @@ void Vistab::CreateControls()
 
     itemBoxSizer2->Add(scalarBoundsSizer, 0, wxALIGN_CENTER|wxGROW|wxALL, 5);
    
+    scalarBoundsStatic->Enable(false);
     //Last row buttons - advanced, clear all, ...
     wxBoxSizer* lastRowButtons = new wxBoxSizer( wxHORIZONTAL );
     itemBoxSizer2->Add( lastRowButtons, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
@@ -872,6 +876,43 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
 {
    _activeVectorName = _vectorSelection->GetStringSelection();
+
+   if( _scalarSelection->IsEmpty() )
+   {
+      wxMessageBox( "Scalar must be present","Dataset Failure", 
+                     wxOK | wxICON_INFORMATION );
+      return;
+   }
+
+   _scalarSelection->Select(0);
+   _activeScalarName = _scalarSelection->GetStringSelection();
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
+
+   double minBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.99;
+   double maxBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.01;
+
+   _minSpinner->SetRange( _activeScalarRange.at(0), minBoundRange );   
+   _minSpinner->SetValue( _activeScalarRange.at(0) );
+   _maxSpinner->SetRange( maxBoundRange, _activeScalarRange.at(1) );
+   _maxSpinner->SetValue( _activeScalarRange.at(1) );
+
+   if( _activeScalarRange.at(1) == _activeScalarRange.at(0) )
+   {
+      _minSpinner->Enable(false);
+      _maxSpinner->Enable(false);
+      _minSlider->Enable(false);
+      _maxSlider->Enable(false);
+   }
+   else
+   {
+      _minSpinner->Enable(true);
+      _maxSpinner->Enable(true);
+      _minSlider->Enable(true);
+      _maxSlider->Enable(true);
+   }
+   _minSlider->SetValue( 0 );
+   _maxSlider->SetValue( 100 );
+
    vectorSelect = true;
 }
 /*
