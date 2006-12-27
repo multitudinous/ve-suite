@@ -413,9 +413,9 @@ void Body_Executive_i::SetModuleMessage (
 {  
    // send a unit message to all uis
    std::string message = std::string( "SetModuleMessage ") + std::string( msg );
-   _mutex.acquire();
+   //_mutex.acquire();
    ClientMessage( message.c_str() );
-   _mutex.release();
+   //_mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////  
 void Body_Executive_i::SetModuleResult (
