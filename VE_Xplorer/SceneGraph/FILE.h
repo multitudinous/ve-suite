@@ -6,12 +6,8 @@
 
 #include "VE_Installer/include/VEConfig.h"
 
-namespace VE_SceneGraph
-{
-   class DCS;
-   class Node;
-   class fileInfo;
-}
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Node.h"
 
 namespace opal
 {
@@ -27,86 +23,79 @@ namespace opal
    }
 #endif
 
-//Need to fix this class
-//BIG PROBLEMS here
-//class pfNode;
-//class pfMaterial;
-
 namespace VE_SceneGraph
 {
-   class VE_SCENEGRAPH_EXPORTS FILE 
-   {
-      public:
-         FILE(std::string, VE_SceneGraph::DCS*, bool isStream=false);
-         ~FILE();
+class VE_SCENEGRAPH_EXPORTS FILE 
+{
+public:
+   FILE(std::string, VE_SceneGraph::DCS*, bool isStream=false);
+   ~FILE();
 
-         void Initialize(float);
+   void Initialize(float);
 
-         //void pfTravNodeMaterial(pfNode*, pfMaterial*, int);
+   //void pfTravNodeMaterial(pfNode*, pfMaterial*, int);
 
-         VE_SceneGraph::DCS* GetDCS();
-         VE_SceneGraph::Node* GetNode();
+   VE_SceneGraph::DCS* GetDCS();
+   VE_SceneGraph::Node* GetNode();
 
-         opal::Solid* GetSolid();
+   opal::Solid* GetSolid();
 
-         void SetFILEProperties(int, int, float*);
-         int GetTransparentFlag();
-         void setOpac(float op_val);
-         float getOpacity();
-         void setFog(double dist);
+   void SetFILEProperties(int, int, float*);
+   int GetTransparentFlag();
+   void setOpac(float op_val);
+   float getOpacity();
+   void setFog(double dist);
 
-         std::string GetFilename();
-         //pfLightModel *matLight;
-         //pfMaterial *fmaterial;
-         //pfMaterial *bmaterial;
-         //std::vector<pfMaterial*> matList;
+   std::string GetFilename();
+   //pfLightModel *matLight;
+   //pfMaterial *fmaterial;
+   //pfMaterial *bmaterial;
+   //std::vector<pfMaterial*> matList;
+   void SetRGBAColorArray(double*);
+   void GetColorArray();
+   void SetGeometryFilename(std::string);
+   void SetModuleName(std::string);
+   void SetTransparencyFlag(bool);
+   void SetColorFlag(int);
+   int GetColorFlag();
+   std::string GetModuleName();
+   void SetColorOfGeometry(VE_SceneGraph::Node*);
+   void Update();
+   void SetOpacity(float);
 
-         
-   //These should be private, I would think
-         VE_SceneGraph::Node* node;
-         VE_SceneGraph::DCS* DCS;
+private:
+      //These should be private, I would think
+      osg::ref_ptr< VE_SceneGraph::Node > node;
+   osg::ref_ptr< VE_SceneGraph::DCS > DCS;
    ////////////////////////////////////////
+   
+   //pfMaterial *mat1, *mat0;
+   int mat_count;
+   int color;
+   int transparent;
+   float stlColor[3];
+   //char* fileName;
+   std::string fileName;//[512];
+      
+      float op;
 
-         //pfMaterial *mat1, *mat0;
-         int mat_count;
-         int color;
-         int transparent;
-         float stlColor[3];
-         //char* fileName;
-         std::string fileName;//[512];
+   #ifdef _PERFORMER
+      pfFog* fog;
+   #elif _OSG
+      osg::Fog* fog;
+   #endif
 
-         void SetRGBAColorArray(double*);
-         void GetColorArray();
-         void SetGeometryFilename(std::string);
-         void SetModuleName(std::string);
-         void SetTransparencyFlag(bool);
-         void SetColorFlag(int);
-         int GetColorFlag();
-         std::string GetModuleName();
-         void SetColorOfGeometry(VE_SceneGraph::Node*);
-         void Update();
-         void SetOpacity(float);
+   double _rgba[4];
+   bool _transparencyFlag;
+   float _opacityLevel;
+   int _colorFlag;
+   osg::ref_ptr< VE_SceneGraph::Node > _node;
+   //Group* _masterNode;
+   std::string _filename;
+   std::string _moduleName;
 
-      private:
-         float op;
-
-         #ifdef _PERFORMER
-            pfFog* fog;
-         #elif _OSG
-            osg::Fog* fog;
-         #endif
-
-         double _rgba[4];
-         bool _transparencyFlag;
-         float _opacityLevel;
-         int _colorFlag;
-         VE_SceneGraph::Node* _node;
-         //Group* _masterNode;
-         std::string _filename;
-         std::string _moduleName;
-
-         opal::Solid* solid;
-   };
+   opal::Solid* solid;
+};
 }
 
 #endif
