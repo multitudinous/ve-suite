@@ -787,6 +787,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DisplayEventHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\KeyboardMouse.cxx"
 				>
 			</File>
@@ -1177,6 +1181,10 @@
 			</File>
 			<File
 				RelativePath=".\DeviceHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DisplayEventHandler.h"
 				>
 			</File>
 			<File
