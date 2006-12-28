@@ -11,16 +11,26 @@ PhysicsSimulator API
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
-namespace VE_Xplorer
+namespace opal
 {
-   class VE_XPLORER_EXPORTS PhysicsSimulator                //: public vpr::Singleton< PhysicsSimulator >
+   class Simulator;
+}
+
+namespace VE_SceneGraph
+{
+   class VE_SCENEGRAPH_EXPORTS PhysicsSimulator                //: public vpr::Singleton< PhysicsSimulator >
    {
       public:
-         PhysicsSimulator();
-         ~PhysicsSimulator(){;}                             //Never gets called, don't implement
-         vprSingletonHeader(PhysicsSimulator);
+
+         opal::Simulator* GetSimulator();
 
       private:
+         PhysicsSimulator();
+         ~PhysicsSimulator(){;}                                //Never gets called, don't implement
+         vprSingletonHeader(PhysicsSimulator);
+
+
+         opal::Simulator* simulator;
 
    };
 }
