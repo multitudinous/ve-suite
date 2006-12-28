@@ -41,6 +41,8 @@ Node API
 /*!\class VE_SceneGraph::Node
 *
 */
+#include "VE_Xplorer/SceneGraph/SceneNode.h"
+#include "VE_Installer/include/VEConfig.h"
 
 #ifdef _PERFORMER
 class pfNode;
@@ -60,7 +62,7 @@ namespace osg
 namespace VE_SceneGraph
 {
 #ifdef _OSG
-   class VE_SCENEGRAPH_EXPORTS Node: public osg::Node
+   class VE_SCENEGRAPH_EXPORTS Node: public osg::Node, public SceneNode
 #else
    class VE_SCENEGRAPH_EXPORTS Node: public pfNode
 #endif

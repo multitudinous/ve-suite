@@ -9,10 +9,10 @@
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Node.h"
 
-namespace opal
+/*namespace opal
 {
    class Solid;
-}
+}*/
 
 #ifdef _PERFORMER
    class pfFog;
@@ -25,11 +25,11 @@ namespace opal
 
 namespace VE_SceneGraph
 {
-class VE_SCENEGRAPH_EXPORTS FILE 
+class VE_SCENEGRAPH_EXPORTS File
 {
 public:
-   FILE(std::string, VE_SceneGraph::DCS*, bool isStream=false);
-   ~FILE();
+   File(std::string, VE_SceneGraph::DCS*, bool isStream=false);
+   ~File();
 
    void Initialize(float);
 
@@ -89,7 +89,7 @@ private:
    bool _transparencyFlag;
    float _opacityLevel;
    int _colorFlag;
-   osg::ref_ptr< VE_SceneGraph::Node > _node;
+   //osg::ref_ptr< VE_SceneGraph::Node > _node;
    //Group* _masterNode;
    std::string _filename;
    std::string _moduleName;

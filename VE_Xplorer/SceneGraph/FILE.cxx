@@ -4,6 +4,7 @@
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Node.h"
+#include "VE_Xplorer/SceneGraph/SceneNode.h"
 #include "VE_Xplorer/SceneGraph/ModelOccluder.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
@@ -40,7 +41,7 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-FILE::FILE(std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream)
+File::File(std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream)
 {
    // Need to fix this and move some code to Node
    // Leave some code here no more FILEInfo
@@ -48,8 +49,8 @@ FILE::FILE(std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream)
    this->node=new VE_SceneGraph::Node();  
    this->node->LoadFile(geomFile.c_str(),isStream);
    fileName.assign(geomFile);
-   this->DCS->AddChild(this->node);
-   worldDCS->AddChild(this->DCS);
+   this->DCS->AddChild( this->node.get() );
+   worldDCS->AddChild( this->DCS.get() );
 
    #ifdef _PERFORMER
       fog = new pfFog();
@@ -63,24 +64,17 @@ FILE::FILE(std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream)
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-FILE::~FILE()
+File::~File()
 {
-   vprDEBUG(vesDBG,2) << "FILE Destructor" << std::endl << vprDEBUG_FLUSH;
-
-   delete this->DCS;
-
-   #ifndef _OSG
-      delete this->node;
-   #endif
-      //delete fog;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string FILE::GetFilename()
+std::string File::GetFilename()
 {
    return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::SetFILEProperties( int color, int trans, float* stlColor )
+void File::SetFILEProperties( int color, int trans, float* stlColor )
 {
    this->color = color;
    this->_colorFlag = color;
@@ -90,38 +84,38 @@ void FILE::SetFILEProperties( int color, int trans, float* stlColor )
    this->stlColor[ 2 ] = stlColor[ 2 ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-int FILE::GetTransparentFlag()
+int File::GetTransparentFlag()
 {
    return transparent;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::Initialize( float op_val )
+void File::Initialize( float op_val )
 {
    this->op = op_val;
    setOpac( op_val );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Node* FILE::GetNode()
+VE_SceneGraph::Node* File::GetNode()
 {
-   return this->node;
+   return this->node.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* FILE::GetDCS()
+VE_SceneGraph::DCS* File::GetDCS()
 {
-   return this->DCS;
+   return this->DCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-opal::Solid* FILE::GetSolid()
+opal::Solid* File::GetSolid()
 {
    return this->solid;
 }
 ////////////////////////////////////////////////////////////////////////////////
-float FILE::getOpacity()
+float File::getOpacity()
 {
    return this->op;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::setOpac(float op_val)
+void File::setOpac(float op_val)
 {
    this->op = op_val;
    this->node->SetNodeProperties( _colorFlag, op, stlColor );
@@ -133,7 +127,7 @@ void FILE::setOpac(float op_val)
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::setFog(double dist)
+void File::setFog(double dist)
 {
    #ifdef _PERFORMER
       fog->setColor( 0.6f, 0.6f, 0.6f);
@@ -153,7 +147,7 @@ void FILE::setFog(double dist)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /// Functions taken from module geometry for future merging
-void FILE::SetRGBAColorArray(double* color)
+void File::SetRGBAColorArray(double* color)
 {
    for(int i=0;i<4;i++)
    {
@@ -162,42 +156,42 @@ void FILE::SetRGBAColorArray(double* color)
    vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::GetColorArray()
+void File::GetColorArray()
 {
    vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::SetTransparencyFlag( bool x )
+void File::SetTransparencyFlag( bool x )
 {
    this->_transparencyFlag = x;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::SetOpacity( float x )
+void File::SetOpacity( float x )
 {
    this->_opacityLevel = x;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::SetColorFlag( int x )
+void File::SetColorFlag( int x )
 {
    this->_colorFlag = x;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int FILE::GetColorFlag()
+int File::GetColorFlag()
 {
    return this->_colorFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::SetModuleName( std::string filename )
+void File::SetModuleName( std::string filename )
 {
    this->_moduleName = filename;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string FILE::GetModuleName()
+std::string File::GetModuleName()
 {
    return this->_moduleName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::SetGeometryFilename( std::string filename )
+void File::SetGeometryFilename( std::string filename )
 {
    this->_filename = filename;
    this->_node = new VE_SceneGraph::Node();
@@ -211,7 +205,7 @@ void FILE::SetGeometryFilename( std::string filename )
    //this->_masterNode->AddChild( this );   
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FILE::Update()
+void File::Update()
 {
    std::cout << "Update Filename : " << this->_filename << std::endl
                << "trans : " << this->_transparencyFlag << std::endl
