@@ -15,6 +15,24 @@
    #include <osg/Node>
    #include <osg/Group>
    #include <osg/MatrixTransform>
+   #include <osg/TriangleIndexFunctor>
+
+   class TriIndexFunc
+   {
+      public:
+         TriIndexFunc(){;}
+         ~TriIndexFunc(){;}
+
+         void inline operator()(unsigned int pos1,unsigned int pos2,unsigned int pos3)
+         {
+            triangleIndex.push_back(pos1);
+            triangleIndex.push_back(pos2);
+            triangleIndex.push_back(pos3);
+         }
+
+         std::vector<osg::Vec3> vertexIndex;
+         std::vector<unsigned int> triangleIndex;
+   };
 #endif
 
 #include <opal.h>
@@ -91,6 +109,11 @@ VE_SceneGraph::Node* FILE::GetNode()
 VE_SceneGraph::DCS* FILE::GetDCS()
 {
    return this->DCS;
+}
+////////////////////////////////////////////////////////////////////////////////
+opal::Solid* FILE::GetSolid()
+{
+   return this->solid;
 }
 ////////////////////////////////////////////////////////////////////////////////
 float FILE::getOpacity()
