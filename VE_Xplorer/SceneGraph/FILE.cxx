@@ -6,6 +6,7 @@
 #include "VE_Xplorer/SceneGraph/Node.h"
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 #include "VE_Xplorer/SceneGraph/ModelOccluder.h"
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
@@ -46,7 +47,9 @@ File::File(std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream)
    // Need to fix this and move some code to Node
    // Leave some code here no more FILEInfo
    this->DCS=new VE_SceneGraph::DCS();
-   this->node=new VE_SceneGraph::Node();  
+   this->node=new VE_SceneGraph::Node();
+   this->solid=VE_SceneGraph::PhysicsSimulator::instance()->GetSimulator()->createSolid();
+
    this->node->LoadFile(geomFile.c_str(),isStream);
    fileName.assign(geomFile);
    this->DCS->AddChild( this->node.get() );

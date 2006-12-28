@@ -4,7 +4,7 @@
 /*!\file PhysicsSimulator.h
 PhysicsSimulator API
 */
-/*!\class VE_Xplorer::PhysicsSimulator
+/*!\class VE_SceneGraph::PhysicsSimulator
 * 
 */
 
@@ -21,6 +21,7 @@ namespace VE_SceneGraph
    class VE_SCENEGRAPH_EXPORTS PhysicsSimulator                //: public vpr::Singleton< PhysicsSimulator >
    {
       public:
+         void CleanUp();                                       //Functions like a destructor
 
          opal::Simulator* GetSimulator();
 
@@ -31,7 +32,6 @@ namespace VE_SceneGraph
 
 
          opal::Simulator* simulator;
-
    };
 }
 
