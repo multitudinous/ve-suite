@@ -47,6 +47,8 @@
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
+#include <wx/string.h>
+
 ////@end includes
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
@@ -323,7 +325,7 @@ void DataSetLoaderUI::InitializeWidgets( void )
 
       for ( size_t i = 0; i < numParamBlocks; ++i )
       {
-		  dataSetList->Append( veModel->GetInformationPacket( i )->GetName().c_str() );
+		  dataSetList->Append( wxString( veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ) );
       }
    }
 }
@@ -347,23 +349,23 @@ void DataSetLoaderUI::SetTextCtrls( void )
          if ( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
          {
             //clear...then append
-            itemListBox24->Append( tempDVP->GetDataString().c_str() );
-            itemTextCtrl21->SetValue( tempDVP->GetDataString().c_str() );
+            itemListBox24->Append( wxString( tempDVP->GetDataString().c_str(), wxConvUTF8 ) );
+            itemTextCtrl21->SetValue( wxString( tempDVP->GetDataString().c_str(), wxConvUTF8 ) );
          }
          else if ( tempDVP->GetDataName() == "VTK_DATA_FILE" )
          {
             //clear...then append
-            dataSetTextEntry->SetValue( tempDVP->GetDataString().c_str() );
+            dataSetTextEntry->SetValue( wxString( tempDVP->GetDataString().c_str(), wxConvUTF8 ) );
          }
          else if ( tempDVP->GetDataName() == "VTK_SURFACE_DIR_PATH" )
          {
             //clear...then append
-            surfaceDataText->SetValue( tempDVP->GetDataString().c_str() );
+            surfaceDataText->SetValue( wxString( tempDVP->GetDataString().c_str(), wxConvUTF8 ) );
          }
          else if ( tempDVP->GetDataName() == "VTK_PRECOMPUTED_DIR_PATH" )
          {
             //clear...then append
-            preComputDirTextEntry->SetValue( tempDVP->GetDataString().c_str() );
+            preComputDirTextEntry->SetValue( wxString( tempDVP->GetDataString().c_str(), wxConvUTF8 ) );
          }
       }
    }
@@ -426,14 +428,15 @@ void DataSetLoaderUI::OnButtonClick( wxCommandEvent& WXUNUSED(event) )
       wxFileName datasetFilename( dialog.GetPath() );
       datasetFilename.MakeRelativeTo( ::wxGetCwd() );
       wxString relativeDataSetPath( datasetFilename.GetFullPath() );
-      relativeDataSetPath.Replace( "\\", "/", true );
+      relativeDataSetPath.Replace( _("\\"), _("/"), true );
       dataSetTextEntry->SetValue( relativeDataSetPath );
       VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_DATA_FILE" );
       if ( !tempDVP )
       {
          tempDVP = paramBlock->GetProperty( -1 );
       }
-      tempDVP->SetData( "VTK_DATA_FILE", relativeDataSetPath.c_str() );
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) ) );
+      tempDVP->SetData( "VTK_DATA_FILE", tempStr );
    }
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI. 
 }
@@ -464,26 +467,28 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
       if ( event.GetId() == ID_BUTTON4 )
       {
          wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
-         relativeSurfaceDirPath.Replace( "\\", "/", true );
+         relativeSurfaceDirPath.Replace( _("\\"), _("/"), true );
          surfaceDataText->SetValue( relativeSurfaceDirPath );
          VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
          if ( !tempDVP )
          {
             tempDVP = paramBlock->GetProperty( -1 );
          }
-         tempDVP->SetData( "VTK_SURFACE_DIR_PATH", relativeSurfaceDirPath.c_str() );
+         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeSurfaceDirPath.c_str() ) ) );
+         tempDVP->SetData( "VTK_SURFACE_DIR_PATH", tempStr );
       }
       else if ( event.GetId() == ID_BUTTON3 )
       {
          wxString relativePrecomputedDirPath( surfaceDir.GetPath() );
-         relativePrecomputedDirPath.Replace( "\\", "/", true );
+         relativePrecomputedDirPath.Replace( _("\\"), _("/"), true );
          preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
          VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" );
          if ( !tempDVP )
          {
             tempDVP = paramBlock->GetProperty( -1 );
          }
-         tempDVP->SetData( "VTK_PRECOMPUTED_DIR_PATH", relativePrecomputedDirPath.c_str() );
+         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativePrecomputedDirPath.c_str() ) ) );
+         tempDVP->SetData( "VTK_PRECOMPUTED_DIR_PATH", tempStr );
          preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
       }
    }
@@ -562,7 +567,7 @@ void DataSetLoaderUI::OnButton2Click( wxCommandEvent& WXUNUSED(event) )
          wxFileName textureDir( dialog.GetPath() );
          textureDir.MakeRelativeTo( cwd );
          wxString relativeTextureDirPath( textureDir.GetPath() );
-         relativeTextureDirPath.Replace( "\\", "/", true );
+         relativeTextureDirPath.Replace( _("\\"), _("/"), true );
          itemTextCtrl21->SetValue( relativeTextureDirPath );
          textureDirs.insert( relativeTextureDirPath );
       }
@@ -580,8 +585,9 @@ void DataSetLoaderUI::OnButton2Click( wxCommandEvent& WXUNUSED(event) )
    for ( iter = textureDirs.begin(); iter != textureDirs.end(); ++iter )
    {
       VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( -1 );
-      tempDVP->SetData( "VTK_TEXTURE_DIR_PATH", (*iter).c_str() );
-      wxString* dirString = new wxString( (*iter).c_str() );
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( (*iter).c_str() ) ) );
+      tempDVP->SetData( "VTK_TEXTURE_DIR_PATH", tempStr );
+      wxString* dirString = new wxString( (*iter) );
       itemListBox24->InsertItems( 1, dirString, 0 );
    }
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2 in DataSetLoaderUI. 
@@ -599,8 +605,9 @@ void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& WXUNUSED(event) )
    for ( size_t i = 0; i < numProperties; ++i )
    {
       VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( i );
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( itemListBox24->GetStringSelection().c_str() ) ) );
       if ( ( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" ) && 
-            ( tempDVP->GetDataString() == std::string( itemListBox24->GetStringSelection().c_str() ) ) 
+            ( tempDVP->GetDataString() == tempStr ) 
          )
       {
          paramBlock->RemoveProperty( i );
@@ -619,7 +626,7 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED(event)
    // appropriate info
    wxString selection = dataSetList->GetStringSelection();
 
-   if ( selection == wxString("Add Dataset") )
+   if ( selection == wxString( _("Add Dataset") ) )
    {
       lastAddition = dataSetList->Append( _("Type new data block name here") );
       dataSetList->SetStringSelection( _("Type new data block name here") );
@@ -628,7 +635,7 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED(event)
       return;
    }
 
-   if ( selection == wxString("Unselect") )
+   if ( selection == wxString( _("Unselect") ) )
    {
       paramBlock = 0;
       // disable all other guis
@@ -640,7 +647,8 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED(event)
 
    for ( size_t i = 0; i < numParamBlocks; ++i )
    {
-      if ( veModel->GetInformationPacket( i )->GetName() == std::string( selection.c_str() ) )
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
+      if ( veModel->GetInformationPacket( i )->GetName() == tempStr )
       {
          paramBlock = veModel->GetInformationPacket( i );
          EnableUI( true );
@@ -656,13 +664,14 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
    // When enter is pushed on the combox and new entry is specifiy and
    // the appropriate widgets should be updated
    wxTextEntryDialog newDataSetName(this, 
-                                wxString("New Dataset"),
-                                        wxString("Enter name for new Dataset:"),
-                                        wxString("Dataset"),wxOK);
+                                wxString( _("New Dataset") ),
+                                        wxString( _("Enter name for new Dataset:") ),
+                                        wxString( _("Dataset") ),wxOK);
    newDataSetName.ShowModal();
-   if(DatasetExists(newDataSetName.GetValue().GetData()))
+   std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue().GetData() ) ) );
+   if(DatasetExists( tempStr ) )
    {
-      wxMessageBox( "Data with this name is already loaded.", 
+      wxMessageBox( _("Data with this name is already loaded."), 
                           newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
                               return;
    }
@@ -673,7 +682,8 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
       dataSetList->SetSelection(0);
       
       paramBlock = veModel->GetInformationPacket( -1 );
-      paramBlock->SetName( newDataSetName.GetValue().c_str() );
+      tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
+      paramBlock->SetName( tempStr );
       paramBlock->SetId( ::wxNewId() );
       EnableUI( true );
    }
@@ -689,7 +699,8 @@ void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED(ev
    {
       int selection = dataSetList->GetSelection();
       dataSetList->SetString( selection, dataSetList->GetValue() );
-      paramBlock->SetName( dataSetList->GetValue().c_str() );
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( dataSetList->GetValue().c_str() ) ) );
+      paramBlock->SetName( tempStr );
       //std::cout << "OnInformationPacketChangeName " << paramBlock->GetName() << std::endl;
    }
 }
@@ -715,7 +726,7 @@ bool DataSetLoaderUI::DatasetExists(std::string name)
 {
    for(size_t i = 0; i < _availableDatasets.GetCount(); i++)
    {
-      if(name.c_str() == _availableDatasets[i])
+      if( wxString( name.c_str(), wxConvUTF8 ) == _availableDatasets[i])
          return true;
    }
    return false;

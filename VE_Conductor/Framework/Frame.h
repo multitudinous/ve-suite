@@ -156,6 +156,7 @@ class ViewLocPane;
 class StreamlinePane;
 class UI_TeacherTab;
 class UserPreferences;
+class wxImageList;
 //class Vistab;
 
 namespace VE_Conductor
@@ -207,10 +208,10 @@ public:
    Avail_Modules* av_modules;
    Network* network;
 
-   UI_Tabs *m_tabs; 
-   UI_Frame *m_frame;
+   UI_Tabs* m_tabs; 
+   UI_Frame* m_frame;
 
-   wxImageList *m_imageList;
+   wxImageList* m_imageList;
 
    wxMenu *file_menu;
    wxMenu *con_menu;
@@ -343,6 +344,12 @@ protected:
   
    wxBoxSizer *sizerTab;
 
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }
+         
 private:
    void ExitXplorer( void );
    void EnableCEGUIMenuItems( void );
@@ -369,3 +376,4 @@ private:
    DECLARE_EVENT_TABLE()
 };
 #endif
+

@@ -210,7 +210,14 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    timer( this, TIMER_ID )
 {
    timer.Start( 1000 );
-   serviceList = new VE_Conductor::CORBAServiceList( ::wxGetApp().argc, ::wxGetApp().argv );
+   
+   char** tempArray = new char*[ ::wxGetApp().argc ];
+   for ( size_t i = 0; i < ::wxGetApp().argc; ++i )
+   {
+      tempArray[ i ] = new char[ strlen( ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() ) + 1 ];
+      strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
+   }
+   serviceList = new VE_Conductor::CORBAServiceList( ::wxGetApp().argc, tempArray );
    preferences = new UserPreferences(this, ::wxNewId(), 
                                      SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
                                      SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
@@ -235,7 +242,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    CreateMenu();
    CreateTB();
    CreateStatusBar();
-   SetStatusText("VE-Conductor Status");
+   SetStatusText( _("VE-Conductor Status") );
 
    deviceProperties = 0;
    navPane = 0;
@@ -267,7 +274,7 @@ void AppFrame::_detectDisplay()
 {
    for ( int i = 1; i < wxTheApp->argc ; ++i )
    {
-      if ( (std::string( wxTheApp->argv[i] ) == std::string("-VESDesktop")))
+      if ( ConvertUnicode( wxTheApp->argv[i] ) == std::string("-VESDesktop") )
       {
          _displayMode = std::string("Desktop");
          break;
@@ -282,12 +289,12 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
    {
       wx_log_splitter = new wxSplitterWindow(parent, -1);
       wx_log_splitter->SetMinimumPaneSize( 40 );
-      serviceList->GetMessageLog()->Create( wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
+      serviceList->GetMessageLog()->Create( wx_log_splitter, MYLOG, _(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
       wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
    }
    else
    {
-      serviceList->GetMessageLog()->Create( this, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
+      serviceList->GetMessageLog()->Create( this, MYLOG, _(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
       wx_nw_splitter = new wxSplitterWindow(parent, -1);
    }
 
@@ -307,8 +314,8 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
 //////////////////////////////////
 void AppFrame::_configureDesktop()
 {
-   SetTitle("VE-Suite: www.vesuite.org");
-   _treeView = new wxDialog(this, -1, "Available Objects", 
+   SetTitle( _("VE-Suite: www.vesuite.org") );
+   _treeView = new wxDialog(this, -1, _("Available Objects"), 
                                  wxDefaultPosition, wxDefaultSize,
                                  (wxDEFAULT_DIALOG_STYLE&~ (wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));//|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
    wxBoxSizer* treeViewSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -359,7 +366,7 @@ void AppFrame::_detectDisplayAndCreate()
    }
    else
    {
-      wxMessageBox( "Unable to create GUI.","Unknown display request!", 
+      wxMessageBox( _("Unable to create GUI."), _("Unknown display request!"), 
             wxOK | wxICON_INFORMATION );
       _exit(1);
    }
@@ -512,7 +519,7 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   int i;
   //for (i = 0; i <= m_frameNr; i++) { //cyang only 1 frame
     //wxString key = LOCATION + wxString::Format ("%d", m_frameNr - i);
-  wxString key = LOCATION + wxString::Format ("%d", 0);
+  wxString key = LOCATION + wxString::Format(_("%d"), 0);
   if (cfg->Exists (key)) 
   {
       rect.x = cfg->Read (key + _T("/") + LOCATION_X, rect.x);
@@ -539,7 +546,7 @@ void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
   // store size
   wxConfig* cfg = config;
   if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
-  wxString key = LOCATION + wxString::Format ("%d", m_frameNr);
+  wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr);
   cfg->Write (key + _T("/") + LOCATION_X, rect.x);
   cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
   cfg->Write (key + _T("/") + LOCATION_W, rect.width);
@@ -813,9 +820,9 @@ void AppFrame::CreateTB()
    toolbar->SetBackgroundColour(wxColour(192,192,192));
    toolbar->SetToolBitmapSize(wxSize(32,32));
    wxBitmap selection_bitmap(selection32x32_xpm);
-   toolbar->AddTool(ID_SELECTION_TOOLBAR,"",selection_bitmap,"Selection",wxITEM_RADIO);
+   toolbar->AddTool(ID_SELECTION_TOOLBAR, _(""),selection_bitmap,_("Selection"),wxITEM_RADIO);
    wxBitmap navigation_bitmap(navigation32x32_xpm);
-   toolbar->AddTool(ID_NAVIGATION_TOOLBAR,"",navigation_bitmap,"Navigation",wxITEM_RADIO);
+   toolbar->AddTool(ID_NAVIGATION_TOOLBAR, _(""),navigation_bitmap, _("Navigation"),wxITEM_RADIO);
    toolbar->AddSeparator();
    toolbar->Realize();
 
@@ -882,7 +889,7 @@ void AppFrame::ZoomOut(wxCommandEvent& WXUNUSED(event))
 void AppFrame::Save( wxCommandEvent& event )
 {
    //First time call save will be the same as SaveAs
-   if ( path == wxString("") ) 
+   if ( path == wxString("", wxConvUTF8) ) 
    {
       SaveAs( event );
    }
@@ -890,7 +897,7 @@ void AppFrame::Save( wxCommandEvent& event )
    {
       ///now write the file out from domdocument manager
       //wrtie to path
-      std::string data = network->Save( std::string( path.c_str() ) );
+      std::string data = network->Save( ConvertUnicode( path.c_str() ) );
    }
 }
 
@@ -901,15 +908,15 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
    do
    {
       wxTextEntryDialog newDataSetName(this, 
-                                       wxString("Enter the prefix for *.ves filename:"),
-                                       wxString("Save VES file as..."),
-                                       wxString("network"),wxOK|wxCANCEL);
+                                       _("Enter the prefix for *.ves filename:"),
+                                       _("Save VES file as..."),
+                                       _("network"),wxOK|wxCANCEL);
       
       if ( newDataSetName.ShowModal() == wxID_OK )
       {
          vesFileName.ClearExt();
          vesFileName.SetName( newDataSetName.GetValue() ); 
-         vesFileName.SetExt( wxString( "ves" ) );
+         vesFileName.SetExt( _("ves") );
       }
       else
       {
@@ -936,7 +943,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
       fname = vesFileName.GetFullName();
       ///now write the file out from domdocument manager
       //wrtie to path
-      std::string data = network->Save( std::string( path.c_str() ) );
+      std::string data = network->Save( ConvertUnicode( path.c_str() ) );
    }
 }
 
@@ -958,8 +965,8 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
       if ( !success )
       {
-         wxMessageBox( "Can't open a VES file on another drive.", 
-                       "VES File Read Error", wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Can't open a VES file on another drive."), 
+                       _("VES File Read Error"), wxOK | wxICON_INFORMATION );
          return;
       }
       
@@ -969,7 +976,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       New( event );
 
       path = vesFileName.GetFullPath();
-      path.Replace( "\\", "/", true );
+      path.Replace( _("\\"), _("/"), true );
       directory = vesFileName.GetPath();
       //change conductor working dir
       ::wxSetWorkingDirectory( directory );
@@ -979,7 +986,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       // Create the command and data value pairs
       VE_XML::DataValuePair* dataValuePair = 
                         new VE_XML::DataValuePair(  std::string("STRING") );
-      dataValuePair->SetData( "WORKING_DIRECTORY", directory.c_str() );
+      dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
       VE_XML::Command* veCommand = new VE_XML::Command();
       veCommand->SetCommandName( std::string("Change Working Directory") );
       veCommand->AddDataValuePair( dataValuePair );
@@ -989,7 +996,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       //Now laod the xml data now that we are in the correct directory
       fname=dialog.GetFilename();
       SubmitToServer( event );      
-      network->Load( path.c_str() );
+      network->Load( ConvertUnicode( path.c_str() ) );
       SubmitToServer( event );      
    }
 }
@@ -1042,21 +1049,21 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
    Log("Query Network.\n");
    wxFileName bkpFileName;
    wxTextEntryDialog newDataSetName(this, 
-	   wxString("Enter the prefix for *.bkp filename:"),
-	   wxString("Open BKP Filename"),
-	   wxString(""),wxOK|wxCANCEL);
+	   wxString("Enter the prefix for *.bkp filename:", wxConvUTF8),
+	   wxString("Open BKP Filename", wxConvUTF8),
+	   wxString("", wxConvUTF8),wxOK|wxCANCEL);
    if ( newDataSetName.ShowModal() == wxID_OK )
    {
 	   bkpFileName.ClearExt();
 	   bkpFileName.SetName( newDataSetName.GetValue() ); 
-	   bkpFileName.SetExt( wxString( "bkp" ) );
+	   bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
 	   VE_XML::Command returnState;
 	   returnState.SetCommandName("getNetwork");
 	   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
 	   data->SetData("NetworkQuery", "getNetwork" );
 	   data = returnState.GetDataValuePair(-1);
-	   data->SetData("BKPFileName",  bkpFileName.GetFullName().c_str());
+	   data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
 
 	   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1286,9 +1293,9 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    std::vector<std::string> descs;
    std::vector<int> alignments;
 
-   titles.push_back("Description");
+   titles.push_back( _("Description") );
    alignments.push_back (wxALIGN_LEFT);
-   titles.push_back("Value");
+   titles.push_back( _("Value") );
    alignments.push_back (wxALIGN_RIGHT);
 
    /*
@@ -1332,7 +1339,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
                v_value.clear();
                wxString str;
                str = iter->second.GetPlugin()->GetName();
-               str << " (" << iter->first << ")";
+               str << _(" (") << iter->first << _(")");
                result_dlg->NewTab( str );
 
                for (i=0; i<descs.size(); i++) 
@@ -1345,8 +1352,8 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
                      desc = desc.substr(9,desc.size()-9);
                   }
 
-                  v_desc.push_back( desc.c_str() );
-                  v_value.push_back( value.c_str() );
+                  v_desc.push_back( wxString( desc.c_str(), wxConvUTF8 ) );
+                  v_value.push_back( wxString( value.c_str(), wxConvUTF8 ) );
                }
 
                /*result_dlg->syngas->AddSeperator(' ');
@@ -1373,8 +1380,8 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 
 	         for (i=0; i<descs.size(); i++) 
             {
-	            v_desc.push_back(descs[i].c_str());
-	            v_value.push_back((p.GetInterfaceVector()[0].getString(descs[i])).c_str());
+	            v_desc.push_back( wxString( descs[i].c_str(), wxConvUTF8 ) );
+	            v_value.push_back( wxString( (p.GetInterfaceVector()[0].getString(descs[i])).c_str(), wxConvUTF8 ) );
 	         }
 	         /*result_dlg->syngas->AddSeperator(' ');
 	         result_dlg->syngas->AddSeperator('+');
@@ -1431,7 +1438,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
             dirStringStream << std::setprecision(2) << cccost;
             std::string dirString = dirStringStream.str();
 
-	         v_value.push_back(dirString.c_str());
+	         v_value.push_back( wxString( dirString.c_str(), wxConvUTF8) );
 
 	         double TMC = TPC * iter->second.GetPlugin()->financial_dlg->_om00_d / 100;
 	
@@ -1445,7 +1452,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	         v_desc2.push_back(wxString(iter->second.GetPlugin()->GetName()));
 	         //sprintf(buf,"%.2f", omcost);
             dirStringStream << std::setprecision(2) << omcost;
-	         v_value2.push_back(dirString.c_str());
+	         v_value2.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
          }
       }
    }
@@ -1456,18 +1463,18 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
       result_dlg->syngas->AddSeperator(' ');
 
       titles.clear();
-      titles.push_back("Plant Component");
-      titles.push_back("Capital Required (M$)");
+      titles.push_back( _("Plant Component") );
+      titles.push_back( _("Capital Required (M$)") );
 
       result_dlg->syngas->AddRow(titles);
       result_dlg->syngas->AddSeperator('+');
 
-      v_desc.push_back("Total");
+      v_desc.push_back( _("Total") );
       //sprintf(buf,"%.2f", total_cccost);
       std::ostringstream dirStringStream;
       dirStringStream << std::setprecision(2) << total_cccost;
       std::string dirString = dirStringStream.str();
-      v_value.push_back(dirString.c_str());
+      v_value.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
 
       result_dlg->Set2Cols(v_desc, v_value);
 
@@ -1476,16 +1483,16 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
       result_dlg->syngas->AddSeperator(' ');
 
       titles.clear();
-      titles.push_back("Plant Component");
-      titles.push_back("Revenue Required (M$)");
+      titles.push_back( _("Plant Component") );
+      titles.push_back( _("Revenue Required (M$)") );
 
       result_dlg->syngas->AddRow(titles);
       result_dlg->syngas->AddSeperator('+');
 
-      v_desc2.push_back("Total");
+      v_desc2.push_back( _("Total") );
       //sprintf(buf,"%.2f", total_omcost);
       dirStringStream << std::setprecision(2) << total_omcost;
-      v_value2.push_back(dirString.c_str());
+      v_value2.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
 
       result_dlg->Set2Cols(v_desc2, v_value2);
    }
@@ -1550,7 +1557,7 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 //////////////////////////////////////////////////////////////////
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
 {
-   ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php" ) );
+   ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php", wxConvUTF8 ) );
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::CloseVE()
@@ -1587,7 +1594,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
    data.SetChooseFull(true);
 
    wxColourDialog colorDlg(this,&data);
-   colorDlg.SetTitle(wxString("Xplorer Background Color"));
+   colorDlg.SetTitle(wxString("Xplorer Background Color", wxConvUTF8));
 
    if (colorDlg.ShowModal() == wxID_OK)
    {
@@ -1832,13 +1839,13 @@ void AppFrame::ProcessCommandLineArgs( void )
    std::string vesFile;
    for ( int i = 0; i < argc; ++ i )
    {
-      if ( (std::string( ::wxGetApp().argv[ i ] ) == std::string( "-VESFile" )) &&
+      if ( ( ConvertUnicode( ::wxGetApp().argv[ i ] ) == std::string( "-VESFile" )) &&
            ( (i + 1) < argc )
          )
       {
-         Log(std::string(std::string("Loading VES file: ") + std::string(::wxGetApp().argv[ i + 1 ])).c_str());
+         Log(std::string(std::string("Loading VES file: ") + ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) ).c_str() );
          Log("\n");
-         vesFile.assign( ::wxGetApp().argv[ i + 1 ] );
+         vesFile.assign( ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) );
          break;
       }
    }
@@ -1848,12 +1855,12 @@ void AppFrame::ProcessCommandLineArgs( void )
       return;
    }
    
-   wxFileName vesFileName( vesFile.c_str() );
+   wxFileName vesFileName( wxString( vesFile.c_str(), wxConvUTF8 ) );
    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
    if ( !success )
    {
-      wxMessageBox( "Can't open a VES file on another drive.", 
-                    "VES File Read Error", wxOK | wxICON_INFORMATION );
+      wxMessageBox( _("Can't open a VES file on another drive."), 
+                    _("VES File Read Error"), wxOK | wxICON_INFORMATION );
       return;
    }
 
@@ -1863,7 +1870,7 @@ void AppFrame::ProcessCommandLineArgs( void )
    New( event );
 
    path = vesFileName.GetFullPath();
-   path.Replace( "\\", "/", true );
+   path.Replace( _("\\"), _("/"), true );
    directory = vesFileName.GetPath();
    //change conductor working dir
    ::wxSetWorkingDirectory( directory );
@@ -1873,7 +1880,7 @@ void AppFrame::ProcessCommandLineArgs( void )
    // Create the command and data value pairs
    VE_XML::DataValuePair* dataValuePair = 
       new VE_XML::DataValuePair(  std::string("STRING") );
-   dataValuePair->SetData( "WORKING_DIRECTORY", directory.c_str() );
+   dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
    VE_XML::Command* veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("Change Working Directory") );
    veCommand->AddDataValuePair( dataValuePair );
@@ -1884,7 +1891,7 @@ void AppFrame::ProcessCommandLineArgs( void )
    fname=vesFileName.GetFullName();
    // we submit after new to make sure that the ce and ge ar cleared
    SubmitToServer( event );      
-   network->Load( path.c_str() );
+   network->Load( ConvertUnicode( path.c_str() ) );
    // we submit after load to give ce and ge the new network
    SubmitToServer( event );
 }

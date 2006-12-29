@@ -39,6 +39,7 @@
 #include <wx/dirdlg.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
+#include <wx/string.h>
 
 IMPLEMENT_APP(REIApp);
 
@@ -56,9 +57,9 @@ bool REIApp::OnInit()
       return 1;
    }
 
-   SetAppName("VE-Conductor");
+   SetAppName(_("VE-Conductor"));
    // this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
-   mainFrame= new AppFrame(NULL, 1023, "VE-Conductor");
+   mainFrame= new AppFrame(NULL, 1023, _("VE-Conductor"));
 
    // Problem with generic wxNotebook implementation whereby it doesn't size
    // properly unless you set the size again

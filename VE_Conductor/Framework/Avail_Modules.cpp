@@ -44,6 +44,8 @@
 #include "VE_Conductor/xpm/icon4.xpm"
 #include "VE_Conductor/xpm/icon5.xpm"
 
+#include <wx/intl.h>
+
 #ifdef WIN32
 #include <shellapi.h>
 #endif
@@ -156,7 +158,7 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
    if ( info )
    {
       object = dynamic_cast< REI_Plugin* >( info->CreateObject() );
-      network->AddtoNetwork( object, info->GetClassName());
+      network->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
       //      std::cout<<"a moduel size : "<<network->modules.size()<<std::endl;
       //(network->modules).push_back(object);
       //wxString title, desc;
@@ -203,7 +205,7 @@ void Avail_Modules::getLeveledName(wxString name, std::vector<wxString> & lnames
   s = new char[len+1];
 
   lnames.clear();
-  strcpy(s, name.c_str());
+  strcpy(s, name.mb_str() );
   get_tokens(s, lnames, "_");
   delete [] s;
   
@@ -255,7 +257,7 @@ void Avail_Modules::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 
 bool Avail_Modules::LoadModules()
 {
-  pl_loader->LoadPlugins( "Plugins/UI" );
+  pl_loader->LoadPlugins( _("Plugins/UI") );
   for ( unsigned int i=0; i<pl_loader->plugins.size(); i++)
   {  
      AddModule( pl_loader->plugins[i], pl_loader->plugin_cls[i] );
@@ -303,7 +305,7 @@ void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
 
   pl = item_data->plugin;
   pl = item_data->plugin;
-  fgroot = getenv("FGROOT");
+  /*fgroot = getenv("FGROOT");
   
 #ifdef WIN32
   docdir=fgroot+"\\Framework\\doc";
@@ -316,5 +318,5 @@ void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
   cmd+=help;
   cmd+="\"";
   
-  ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+  ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);*/
 }
