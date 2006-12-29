@@ -13,8 +13,6 @@ unix = (name == "posix" or name == "mac")
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster variables.
 CLUSTER_ENABLED = True
-##MASTER_WAIT = 7 ##Seconds to wait after starting Master to start Slaves.
-##SLAVE_WAIT = 5 ##Seconds to wait between each Slave.
 ##File/Folder settings.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
@@ -27,7 +25,6 @@ SPLASH_IMAGE = join(VELAUNCHER_DIR, "installerImages", "velauncher_banner.bmp")
 SPLASH_TIME = 7000 ##milliseconds before auto-close
 if windows:
     CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")
-##    CLUSTER_FILE_PATH = "C:\\Documents and Settings\\mikelem\\My Documents\\cluster.bat"
 else:
     CLUSTER_FILE_PATH = join(VELAUNCHER_DIR, "cluster.tsh")
 TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
@@ -36,6 +33,9 @@ CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
 JCONF_CONFIG = "JconfList"
 CLUSTER_CONFIG = "Cluster"
+RECENTFILES_CONFIG = "RecentFiles"
+RECENT_COUNT = 10
+RECENT_MENU_ID = 600
 ##Default setting values.
 DEFAULT_TAO_MACHINE = "localhost"
 DEFAULT_TAO_PORT = "1239"

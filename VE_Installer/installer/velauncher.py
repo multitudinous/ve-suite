@@ -43,6 +43,7 @@ import velLaunchSplash
 from velDebugWindow import *
 from velSetWaitWindow import *
 import velShell
+from velRecentFiles import *
 
 ##Set up the master config file
 config = wx.Config(CONFIG_FILE)
@@ -92,6 +93,8 @@ class LauncherWindow(wx.Frame):
         ##Prepare data storage
         self.state = CoveredConfig()
         self.launch = False
+        ##Restore config values from last time.
+        LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
         ##Prepare the panel.
         panel = wx.Panel(self)
         ##Prepare the logo.
@@ -155,6 +158,9 @@ class LauncherWindow(wx.Frame):
         menu.AppendItem(self.menuDebugLaunch)
         menu.Append(523, "&Cluster Wait Times\tCtrl+C")
         menuBar.Append(menu, "&Options")
+        self.recentMenu = wx.Menu()
+        self.ConstructRecentMenu()
+        menuBar.Append(self.recentMenu, "&Recent Files")
         self.SetMenuBar(menuBar)
 
         ##Event bindings.
@@ -243,8 +249,6 @@ class LauncherWindow(wx.Frame):
         ##Set arguments for developer mode.
         if devMode:
             self.state.DevMode()
-        ##Restore config values from last time.
-        LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
         self.React()
         ##Check the dependencies.
         if not devMode:
@@ -405,6 +409,8 @@ class LauncherWindow(wx.Frame):
     
     def UpdateDisplay(self):
         """Changes GUI to match changes made by React."""
+        ##RecentFiles menu
+        ##self.recentMenu.Enable(not self.state.GetSurface("RecentFiles").IsEmpty())
         ##DependenciesDir
         self.GetMenuBar().Enable(520, self.state.IsEnabled("DependenciesDir"))
         ##BuilderDir
@@ -443,6 +449,41 @@ class LauncherWindow(wx.Frame):
 ##            self.fileTypeText.SetLabel("")
 ##            self.fileNameText.SetLabel("")            
         return
+
+    def ConstructRecentMenu(self, event = None):
+        """Constructs the recent items menu.
+        NOTE: IDs idStart+ used for these."""
+        self.recentMenu = wx.Menu()
+        nameList = self.state.GetSurface("RecentFiles").GetNames()
+        currentId = RECENT_MENU_ID
+        ##If no recent items, put a disabled None in the menu.
+        if len(nameList) == 0:
+            self.recentMenu.Append(currentId, "None")
+            self.recentMenu.Enable(currentId, False)
+            return
+        ##Else put every name in the list in the menu.
+        for name in nameList:
+            self.recentMenu.Append(currentId, name)
+            self.Bind(wx.EVT_MENU, self.ChooseRecentFile, id = currentId)
+            currentId += 1
+        return
+
+    def ChooseRecentFile(self, event):
+        """Gets the path for the Recent Files item chosen
+        and loads it into the program."""
+        placeChosen = event.GetId() - RECENT_MENU_ID
+        path = self.state.GetSurface("RecentFiles").GetPath(placeChosen)
+        self.state.InterpretArgument(path)
+        self.React()
+        return
+        
+##UNDER CONSTRUCTION
+##    def ClearRecentMenu(self, event = None):
+##        """Clears the recent items menu."""
+##        self.recentMenu = wx.Menu()
+##        self.recentMenu.
+##
+##    def Append
 
     def ChooseDirectory(self, event = None):
         """The user chooses the working directory through a dialog."""
@@ -674,6 +715,11 @@ class LauncherWindow(wx.Frame):
         self.state.React(alternateDep, "DependenciesDir", alternateDep)
         ##Hide the Launcher.
         self.Hide()
+        ##Add any user-chosen launched files to RecentFiles list.
+        fileVariables = ["ShellScript", "VESFile"]
+        for fileVar in fileVariables:
+            if self.state.IsEnabled(fileVar) and v(fileVar) != None:
+                self.state.GetBase("RecentFiles").Add(v(fileVar))
         ##Save data before launching.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
@@ -701,16 +747,6 @@ class LauncherWindow(wx.Frame):
         ##If a shell's launched, start it here, after cleanup.
         if self.state.GetSurface("Shell") == True and self.launch == True:
             velShell.Start(self.state.GetSurface("ShellScript"))
-##            if windows:
-##                os
-##                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
-##            elif unix:
-##                print "VE-Suite subshell started."
-##                print "Type exit to return to your previous" + \
-##                      " shell once you're done."
-##                os.execl(UNIX_SHELL, "")
-##            else:
-##                print "SHELL ERROR! This OS isn't supported."
 
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.

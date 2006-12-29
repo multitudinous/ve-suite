@@ -3,6 +3,7 @@ import wx
 from velJconfDict import *
 from velClusterDict import *
 from velCoveredConfig import *
+from velRecentFiles import *
 from velBase import *
 
 def SaveConfig(name, state, saveLastConfig = False):
@@ -10,7 +11,8 @@ def SaveConfig(name, state, saveLastConfig = False):
 
     Keyword arguments:
     name -- What to name this configuration
-    state -- Launcher's data"""
+    state -- Launcher's data
+    saveLastConfig -- Is it saving the default configuration?"""
     ##Set config
     config = wx.Config.Get()
     config.SetPath('..')
@@ -32,6 +34,7 @@ def SaveConfig(name, state, saveLastConfig = False):
     if saveLastConfig:
         strWrites.append("Directory")
         strWrites.append("Debug")
+        state.GetBase("RecentFiles").WriteConfig() ##Has config.DeleteGroup
     intWrites = ["XplorerType",
                  "Mode",
                  "VPRDebug",
@@ -59,7 +62,8 @@ def LoadConfig(name, state, loadLastConfig = False):
 
     Keyword arguments:
     name -- Name of configuration to load
-    state -- Launcher's data"""
+    state -- Launcher's data
+    loadLastConfig -- Is it loading the default configuration?"""
     ##Set config
     config = wx.Config.Get()
     config.SetPath('..')
@@ -82,9 +86,12 @@ def LoadConfig(name, state, loadLastConfig = False):
                  "Conductor",
                  "Xplorer",
                  "DesktopMode"]
+    ##Load these if it's loading the initial configuration.
     if loadLastConfig:
         strReads.append("Directory")
         boolReads.append("Debug")
+        if config.Exists(RECENTFILES_CONFIG):
+            state.Edit("RecentFiles", RecentFiles())
     ##Workaround for error w/ Int TaoPort in earlier version
     if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
         intReads.append("TaoPort")
@@ -113,6 +120,7 @@ def LoadConfig(name, state, loadLastConfig = False):
     ##Set Cluster list.
     if config.Exists(CLUSTER_CONFIG):
         state.Edit("ClusterDict", ClusterDict())
+    ##Set RecentFiles list.
     ##Restrict XplorerType's value.
     test = state.GetBase(var = "XplorerType")
     if test < 0 or test >= len(RADIO_XPLORER_LIST):

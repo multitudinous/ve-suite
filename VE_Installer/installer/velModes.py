@@ -2,6 +2,7 @@
 from velBase import *
 from velClusterDict import *
 from velJconfDict import *
+from velRecentFiles import *
 
 DEFAULT_JCONF = join(VELAUNCHER_DIR, "stereo_desktop", "desktop.jconf")
 DEFAULT_DEV_JCONF = join(VELAUNCHER_DIR, "..", "..", "VE_Xplorer",
@@ -65,5 +66,6 @@ BASE_CONFIG = {"DependenciesDir": None,
                "User": "",
                "ShellScript": None,
                "DevMode": False,
-               "Debug": False}
+               "Debug": False,
+               "RecentFiles": RecentFiles([])}
 ##               "FileDir": DIRECTORY_DEFAULT}

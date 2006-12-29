@@ -71,7 +71,7 @@ class CoveredConfig(CoveredState):
 ##            self.Cover("Directory", os.path.dirname(os.path.abspath(vesFile)),
 ##                       layer = VES_LAYER)
             self.Edit("Directory", os.path.dirname(os.path.abspath(vesFile)))
-            self.Cover("VESFile", vesFile, layer = VES_LAYER)
+            self.Edit("VESFile", vesFile)
             ##Ensure only one file loaded at a time.
             self.SetScript(None)
         else:
@@ -86,7 +86,7 @@ class CoveredConfig(CoveredState):
 ##                       os.path.dirname(os.path.abspath(scriptFile)),
 ##                       layer = SCRIPT_LAYER)
             self.Edit("Directory", os.path.dirname(os.path.abspath(scriptFile)))
-            self.Cover("ShellScript", scriptFile, layer = SCRIPT_LAYER)
+            self.Edit("ShellScript", scriptFile)
             self.Cover("Shell", True, layer = SCRIPT_LAYER)
             self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
             self.Cover("BuilderShell", False, layer = DEV_LAYER)
