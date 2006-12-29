@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opal-ode_d.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib"
 				OutputFile="$(OutDir)/VE_SceneGraph_osg_vep_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(OPAL_HOME)\lib&quot;"

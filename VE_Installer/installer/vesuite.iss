@@ -106,7 +106,7 @@ Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}; Fl
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.cluster.bat; DestDir: {app}; Components: vexplorer\osgvepcluster; Flags: ignoreversion confirmoverwrite
-Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}; Flags: confirmoverwrite
+Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}\bin; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\shaders\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\simpleScalars\*.vti; DestDir: {app}\exampleDatasets\simple\texture-based; Components: examples; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs

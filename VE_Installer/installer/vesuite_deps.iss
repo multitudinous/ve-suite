@@ -46,7 +46,7 @@ Name: custom; Description: Custom; Flags: iscustom
 Name: depsbuildenv; Description: Headers and Libs; Types: full
 Name: vtk; Description: Visualiztion ToolKit; Types: vexosg  full
 Name: acetao; Description: ACE/TAO; Types: vecns vexosg  full
-Name: wxwidgets; Description: wxWidgets 2.6.3; Types: vecns full
+Name: wxwidgets; Description: wxWidgets 2.8.0; Types: vecns full
 Name: xercesc; Description: Xerces-C++; Types: vecns vexosg  full
 Name: osg; Description: OpenSceneGraph; Types: vexosg full
 Name: juggler; Description: vrJuggler; Types: vexosg  full
@@ -74,10 +74,10 @@ Source: {#VTKHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion; Componen
 ;Source: {#VTKHOME}\bin\vtkpng.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
 ;Source: {#VTKHOME}\bin\vtkRendering.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
 ;Source: {#VTKHOME}\bin\vtktiff.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-Source: {#WXHOME}\lib\vc_dll\wxbase26d_vc_custom.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: wxwidgets
-Source: {#WXHOME}\lib\vc_dll\wxmsw26d_core_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
-Source: {#WXHOME}\lib\vc_dll\wxmsw26d_gl_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
-Source: {#WXHOME}\lib\vc_dll\wxmsw26d_adv_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
+Source: {#WXHOME}\lib\vc_dll\wxbase28d_vc_custom.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: wxwidgets
+Source: {#WXHOME}\lib\vc_dll\wxmsw28d_core_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
+Source: {#WXHOME}\lib\vc_dll\wxmsw28d_gl_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
+Source: {#WXHOME}\lib\vc_dll\wxmsw28d_adv_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#ACETAOHOME}\lib\TAO*.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: acetao
 ;Source: {#ACETAOHOME}\bin\gperf.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
 Source: {#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
