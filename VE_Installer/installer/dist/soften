@@ -1,0 +1,9 @@
+#!/bin/sh
+for i in *.so
+do
+	if chrpath $i 2>/dev/null | grep = >/dev/null
+	then
+		echo "Fixing $i"
+		chrpath -d $i
+	fi
+done
