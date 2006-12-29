@@ -14,6 +14,7 @@
 #include <wx/scrolwin.h>
 #include <wx/listbox.h>
 #include <wx/splitter.h>
+#include <wx/button.h>
 
 BEGIN_EVENT_TABLE(DeviceProperties,wxDialog)
    EVT_CHECKBOX(ANIMATE_CHECKBOX,DeviceProperties::OnAnimate)

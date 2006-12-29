@@ -66,6 +66,6 @@ private:
    wxSize tsize;
    int first_tab;
 
-   DECLARE_EVENT_TABLE()
+   //DECLARE_EVENT_TABLE()
 };
 #endif

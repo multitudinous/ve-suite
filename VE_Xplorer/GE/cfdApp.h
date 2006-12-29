@@ -55,13 +55,20 @@ const float SAMPLE_TIME = 1.0f;
 // Declare my application class
 #elif _OSG
 	#include <osg/Timer>
+   #include <osg/Geode>
+   #include <osgText/Text>
 	#include <vrj/Draw/OSG/OsgApp.h>
 	#include <vpr/Sync/Mutex.h>
+
 	namespace osg
-	{   
+	{  
 		class Group;
 		class FrameStamp;
-	} 
+	}
+   namespace osgText
+   {
+      class Text;
+   }
 	namespace osgUtil 
    { 
       class SceneView;
@@ -117,9 +124,14 @@ class cfdApp: public vrj::OsgApp
       virtual void bufferPreDraw( void );
       virtual void draw();
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
-      virtual void contextPreDraw( void );   
+      virtual void contextPreDraw( void );
+
+      ///Initialize the text layout for framerate
+      void InitFrameRateText();
+
       ///Signal to change the background color
       void ChangeBackgroundColor();
+
 #ifdef VE_PATENTED
       virtual void contextInit( void );
       virtual void contextClose( void );
@@ -206,6 +218,8 @@ private:
 #ifdef _OSG
    osg::ref_ptr< osg::NodeVisitor > mUpdateVisitor;
    osg::ref_ptr< osg::FrameStamp > frameStamp;
+   osg::ref_ptr< osg::Geode > framerate_geode;
+   osg::ref_ptr< osgText::Text > framerate_text;
 #endif
 };
 }

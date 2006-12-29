@@ -166,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_BiDirGIOPd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib wxmsw26d_adv.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_BiDirGIOPd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib"
 				OutputFile="$(OutDir)\GUIPlugin_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

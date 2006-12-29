@@ -62,7 +62,7 @@ class PortDialog : public wxDialog
   wxTextCtrl *flrt;
   wxButton *ok;
   void SetVal(const wxString &var, const wxString &val);
-  DECLARE_EVENT_TABLE()
+  //DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -63,6 +63,7 @@
 #include <wx/checkbox.h>
 #include <wx/intl.h>
 #include <wx/textctrl.h>
+#include <wx/button.h>
 
 #include <iostream>
 #include <string>

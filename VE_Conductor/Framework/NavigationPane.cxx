@@ -234,19 +234,19 @@ void NavigationPane::BuildPane( void )
    _image12 = new wxImage(yaw_cw_xpm);
    _imagecoord = new wxImage(coordinates_xpm);
 
-   _bitmap1 = new wxBitmap(_image1, -1);
-   _bitmap2 = new wxBitmap(_image2, -1);
-   _bitmap3 = new wxBitmap(_image3, -1);
-   _bitmap4 = new wxBitmap(_image4, -1);
-   _bitmap5 = new wxBitmap(_image5, -1);
-   _bitmap6 = new wxBitmap(_image6, -1);
-   _bitmap7 = new wxBitmap(_image7, -1);
-   _bitmap8 = new wxBitmap(_image8, -1);
-   _bitmap9 = new wxBitmap(_image9, -1);
-   _bitmap10 = new wxBitmap(_image10, -1);
-   _bitmap11 = new wxBitmap(_image11, -1);
-   _bitmap12 = new wxBitmap(_image12, -1);
-   _bitmapcoord = new wxBitmap(_imagecoord, -1);
+   _bitmap1 = new wxBitmap(*_image1, -1);
+   _bitmap2 = new wxBitmap(*_image2, -1);
+   _bitmap3 = new wxBitmap(*_image3, -1);
+   _bitmap4 = new wxBitmap(*_image4, -1);
+   _bitmap5 = new wxBitmap(*_image5, -1);
+   _bitmap6 = new wxBitmap(*_image6, -1);
+   _bitmap7 = new wxBitmap(*_image7, -1);
+   _bitmap8 = new wxBitmap(*_image8, -1);
+   _bitmap9 = new wxBitmap(*_image9, -1);
+   _bitmap10 = new wxBitmap(*_image10, -1);
+   _bitmap11 = new wxBitmap(*_image11, -1);
+   _bitmap12 = new wxBitmap(*_image12, -1);
+   _bitmapcoord = new wxBitmap(*_imagecoord, -1);
 
 
    //Assign the bitmaps to the respective buttons

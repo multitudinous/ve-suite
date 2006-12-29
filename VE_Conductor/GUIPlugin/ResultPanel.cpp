@@ -37,6 +37,7 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <wx/sizer.h>
+#include <wx/button.h>
 
 ResultPanel_Dialog::ResultPanel_Dialog(wxWindow* parent, int id)
   : wxDialog((wxWindow *) parent, id, "Result Panel", 

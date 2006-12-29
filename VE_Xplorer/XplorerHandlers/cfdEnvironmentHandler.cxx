@@ -55,6 +55,7 @@
 #include "VE_Xplorer/XplorerHandlers/StoredSceneEH.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/DisplayEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 #include "VE_Xplorer/XplorerHandlers/Trackball.h"
 #include "VE_Open/XML/Command.h"
@@ -114,6 +115,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _eventHandlers[ std::string("Stored Scenes") ] = new VE_EVENTS::StoredSceneEventHandler();
    _eventHandlers[ std::string("Change Working Directory") ] = new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
    _eventHandlers[ std::string("CHANGE_BACKGROUND_COLOR") ] = new VE_EVENTS::ChangeBackgroundColorEventHandler();
+   _eventHandlers[ std::string("DISPLAY_SELECTION") ] = new VE_EVENTS::DisplayEventHandler();
 }
 
 void cfdEnvironmentHandler::Initialize( std::string param )
@@ -190,6 +192,11 @@ bool cfdEnvironmentHandler::BackgroundColorChanged()
    return _updateBackgroundColor;
 }
 /////////////////////////////////////////////////////////////////////
+bool cfdEnvironmentHandler::GetDisplayFrameRate()
+{
+   return display_framerate;
+}
+/////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
@@ -208,6 +215,11 @@ void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
       _clearColor.push_back(static_cast<float>(color.at(i)));
    }
    _updateBackgroundColor = true;
+}
+/////////////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::SetDisplayFrameRate(bool display)
+{
+   display_framerate=display;
 }
 /////////////////////////////////////////////////////////////////////
 cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )

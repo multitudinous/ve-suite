@@ -151,7 +151,7 @@ bool TexTable::ChooseFixedFont(int size)
 #endif
    wxString facename;
    // choose the first
-   faces = fontEnumerator.GetFacenames();
+   faces = &fontEnumerator.GetFacenames();
 
    facename = faces->Item(0);
    //  std::cout<<facename<<" : A Font"<<std::endl;

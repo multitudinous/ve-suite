@@ -101,6 +101,8 @@ public:
    ///Update the background color
    ///\param color The background color
    void SetBackgroundColor(std::vector<double> color);
+   ///Set display framerate on/off
+   void SetDisplayFrameRate(bool display);
    ///Accessor for cfdNavigate
    cfdNavigate* GetNavigate( void );
    ///Accessor for cfdCursor
@@ -127,6 +129,9 @@ public:
 
    ///Check if the background color has changed
    bool BackgroundColorChanged();
+
+   ///Check if the framerate should be displayed in xplorer
+   bool GetDisplayFrameRate();
 
    ///Reset the background changed color flag
    void ResetBackgroundColorUpdateFlag();
@@ -180,6 +185,7 @@ private:
 	float _frustumNear;
 
    bool _updateBackgroundColor;///<The flag for updating the background color in xplorer
+   bool display_framerate;///<The flag for displaying the framerate in xplorer
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }

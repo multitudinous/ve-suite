@@ -40,6 +40,7 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 #include <wx/checkbox.h>
+#include <wx/button.h>
 
 #include "VE_Conductor/xpm/ROItb.xpm"
 

@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxbase26d.lib wxmsw26d_core.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib VE_UtilLib_d.lib libboost_filesystem-vc80-mt-gd-1_33_1.lib"
+				AdditionalDependencies="wxbase28d.lib wxmsw28d_core.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib VE_UtilLib_d.lib libboost_filesystem-vc80-mt-gd-1_33_1.lib"
 				OutputFile="$(OutDir)/vtkTo3DTextured.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"

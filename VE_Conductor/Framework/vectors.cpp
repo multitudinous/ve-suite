@@ -40,7 +40,7 @@
 #include <wx/slider.h>
 #include <wx/icon.h>
 #include <wx/statbmp.h>
-
+#include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <iostream>

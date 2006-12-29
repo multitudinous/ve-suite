@@ -40,10 +40,11 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <wx/sizer.h>
+#include <wx/button.h>
 
-BEGIN_EVENT_TABLE(TextResultDialog, wxDialog)
-  EVT_BUTTON(wxID_OK, TextResultDialog::OnOK)
-END_EVENT_TABLE()
+//BEGIN_EVENT_TABLE(TextResultDialog, wxDialog)
+   //EVT_BUTTON(wxID_OK, TextResultDialog::SetAffirmativeId(wxID_OK))
+//END_EVENT_TABLE()
 
 TextResultDialog::TextResultDialog(wxWindow * parent, const wxString& title, wxSize tabsize)
     : UIDialog((wxWindow *)parent, -1, title)
@@ -66,7 +67,9 @@ TextResultDialog::TextResultDialog(wxWindow * parent, const wxString& title, wxS
   syngas = new TexTable(this, -1, wxDefaultPosition, 
 			 tabsize);
 
+  //TextResultDialog::SetAffirmativeId(wxID_OK);
   ok = new wxButton(this, wxID_OK, "OK");
+
   top_sizer->Add(10, 10, 0);
   top_sizer->Add(
          new wxStaticText(this, -1, wxString(), wxDefaultPosition, wxDefaultSize), 
@@ -80,7 +83,6 @@ TextResultDialog::TextResultDialog(wxWindow * parent, const wxString& title, wxS
   SetSizer(toptop);
   SetAutoLayout(TRUE);
   toptop->Fit(this);
-  
 }
 
 

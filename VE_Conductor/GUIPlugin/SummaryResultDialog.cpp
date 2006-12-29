@@ -37,11 +37,12 @@
 #include <wx/statbox.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
+#include <wx/notebook.h>
 
 
-BEGIN_EVENT_TABLE(SummaryResultDialog, wxDialog)
-  EVT_BUTTON(wxID_OK, SummaryResultDialog::OnOK)
-END_EVENT_TABLE()
+//BEGIN_EVENT_TABLE(SummaryResultDialog, wxDialog)
+  //EVT_BUTTON(wxID_OK, SummaryResultDialog::OnOK)
+//END_EVENT_TABLE()
 
 SummaryResultDialog::SummaryResultDialog(wxWindow * parent, const wxString& title, wxSize tabsize)
     : UIDialog((wxWindow *)parent, -1, title)
@@ -65,7 +66,9 @@ SummaryResultDialog::SummaryResultDialog(wxWindow * parent, const wxString& titl
    NewTab();
    first_tab = TRUE;
 
+   //SummaryResultDialog::SetAffirmativeId(wxID_OK);
    ok = new wxButton(this, wxID_OK, "OK");
+
    top_sizer->Add(10, 10, 0);
    //top_sizer->Add(new wxStaticText(this, -1, "Summary Data   ", wxDefaultPosition, wxDefaultSize), 0, wxALIGN_CENTER_HORIZONTAL);
    //top_sizer->Add(10, 5, 0);

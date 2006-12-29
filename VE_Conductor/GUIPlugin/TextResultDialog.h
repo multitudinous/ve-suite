@@ -58,7 +58,7 @@ class VE_GUIPLUGINS_EXPORTS TextResultDialog : public UIDialog
   TexTable *syngas;
   wxButton *ok;
 
-  DECLARE_EVENT_TABLE()
+  //DECLARE_EVENT_TABLE()
 };
 
 #endif

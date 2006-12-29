@@ -34,9 +34,10 @@
 #include "VE_Conductor/Utilities/BaseDialog.h"
 
 #include <iostream>
+
 #include <wx/msgdlg.h>
 #include <wx/image.h>
-
+#include <wx/button.h>
 #include <wx/icon.h>
 
 #include "VE_Open/XML/XMLReaderWriter.h"

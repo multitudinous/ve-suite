@@ -40,9 +40,9 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
-BEGIN_EVENT_TABLE(PortDialog, wxDialog)
-  EVT_BUTTON(wxID_OK, PortDialog::OnOK)
-END_EVENT_TABLE()
+//BEGIN_EVENT_TABLE(PortDialog, wxDialog)
+  //EVT_BUTTON(wxID_OK, PortDialog::OnOK)
+//END_EVENT_TABLE()
 
 PortDialog::PortDialog(const wxString& title)
     : wxDialog((wxWindow *) NULL, -1, title, wxDefaultPosition, wxDefaultSize)
@@ -60,7 +60,9 @@ PortDialog::PortDialog(const wxString& title)
   syngas = new ListTable(this, -1, wxDefaultPosition, 
 			 sz2);
 
+  //PortDialog::SetAffirmativeId(wxID_OK);
   ok = new wxButton(this, wxID_OK, "OK");
+
   top_sizer->Add(first_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(second_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(third_row, 0, wxALIGN_CENTER_HORIZONTAL);

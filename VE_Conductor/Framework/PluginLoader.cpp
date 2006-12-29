@@ -161,7 +161,7 @@ void PluginLoader::RegisterPlugins()
 
     This is a real rip off from the wxModule initialisation code
    */
-   node = wxClassInfo::sm_classTable->Next();
+   node = (wxNode*)wxClassInfo::sm_classTable->Next();
    while ( node )
    {
       wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
@@ -171,7 +171,7 @@ void PluginLoader::RegisterPlugins()
          RegisterPlugin(classInfo);
          wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());
       }
-      node = wxClassInfo::sm_classTable->Next();
+      node = (wxNode*)wxClassInfo::sm_classTable->Next();
    }
 }
 

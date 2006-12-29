@@ -47,6 +47,7 @@
 
 #include <wx/stattext.h>
 #include <wx/statbox.h>
+#include <wx/button.h>
 
 #include <iostream>
 

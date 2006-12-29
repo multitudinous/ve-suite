@@ -55,6 +55,8 @@ Frame API
 #include <wx/config.h> 
 #include <wx/splitter.h>
 #include <wx/timer.h>
+#include <wx/dialog.h>
+
 //Frame size
 const wxString LOCATION = _T("Framesize");
 const wxString LOCATION_X = _T("LocationX");

@@ -45,6 +45,7 @@
 #include <wx/sizer.h>
 #include <wx/window.h>
 #include <wx/image.h>
+#include <wx/bitmap.h>
 #include <wx/bmpbuttn.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
@@ -83,7 +84,7 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
    _stopImage = new wxImage(stop_xpm);
    
    _playButton = new wxBitmapButton(this, PLAY_BUTTON,
-		                           wxBitmap(_playImage),
+		                           wxBitmap(*_playImage),
 				                      wxDefaultPosition, 
 				                      wxSize(35,40)
 #ifdef WIN32
@@ -92,7 +93,7 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
                                   );
 
    _stopButton = new wxBitmapButton(this, STOP_BUTTON,
-		                           wxBitmap(_stopImage),
+		                           wxBitmap(*_stopImage),
 				                      wxDefaultPosition, 
 				                      wxSize(35,40)
 #ifdef WIN32
@@ -100,7 +101,7 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
 #endif
                                  );
    _nextButton = new wxBitmapButton(this, FORWARD_STEP_BUTTON,
-		                           wxBitmap(_forwardImage),
+		                           wxBitmap(*_forwardImage),
 				                      wxDefaultPosition, 
 				                      wxSize(35,40)
 #ifdef WIN32
@@ -108,7 +109,7 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
 #endif
                                  );
    _prevButton = new wxBitmapButton(this, BACKWARD_STEP_BUTTON,
-		                           wxBitmap(_backwardImage),
+		                           wxBitmap(*_backwardImage),
 				                      wxDefaultPosition, 
 				                      wxSize(35,40)
 #ifdef WIN32

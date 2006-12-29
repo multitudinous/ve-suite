@@ -36,6 +36,7 @@
 // It is derived by using the VTK and VRJuggler classes.
 
 #include "VE_Xplorer/GE/cfdApp.h"
+
 #ifdef _OSG
 #ifdef VE_PATENTED
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
@@ -130,6 +131,9 @@ cfdApp::cfdApp( int argc, char* argv[] )
    _frameStamp->setReferenceTime(0.0);
    _frameStamp->setFrameNumber(0);
    svUpdate = false;
+
+   InitFrameRateText();
+
 #ifdef VE_PATENTED
    _tbvHandler = 0;
    _pbuffer = 0;
@@ -138,6 +142,22 @@ cfdApp::cfdApp( int argc, char* argv[] )
 #endif
    this->argc = argc;
    this->argv = argv;
+}
+
+void cfdApp::InitFrameRateText()
+{
+   framerate_geode=new osg::Geode;
+   framerate_text=new osgText::Text;
+
+   //framerate_text->setFont(font);
+   framerate_text->setColor(osg::Vec4f(1.0f,0.0f,0.0f,1.0f));
+   framerate_text->setCharacterSize(20.0f);
+   framerate_text->setPosition(osg::Vec3(100.0f,10.0f,0.0f));
+   framerate_text->setFontResolution(40,40);
+
+   framerate_geode->addDrawable(framerate_text.get());
+
+   //dynamic_cast<osg::Group*>(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode())->addChild(framerate_geode.get());
 }
 
 void cfdApp::exit()
@@ -386,6 +406,9 @@ void cfdApp::latePreFrame( void )
    _vjobsWrapper->GetUpdateClusterStateVariables();
 #endif // _CLUSTER
 #ifdef _OSG
+
+
+
    // This is order dependent
    // don't move above function call
    if ( _frameStamp.valid() )
@@ -396,18 +419,28 @@ void cfdApp::latePreFrame( void )
       float deltaTime = this->_vjobsWrapper->GetSetAppTime(-1) - lastTime;
       if ( deltaTime >= 1.0f )
       {
+
+         float framerate;
+         framerate=_frameNumber-lastFrame;
+         framerate_text->setText("60.0");
+         
          //std::cout << "|\tFrameRate = " << _frameNumber - lastFrame << std::endl;
+
+
          lastTime = this->_vjobsWrapper->GetSetAppTime(-1);
          lastFrame = _frameNumber;
       }
    }
+
+
 #endif
 
    VE_SceneGraph::cfdPfSceneManagement::instance()->PreFrameUpdate();
    ///////////////////////
    cfdModelHandler::instance()->PreFrameUpdate();
    ///////////////////////
-   cfdEnvironmentHandler::instance()->LatePreFrameUpdate();
+   cfdEnvironmentHandler::instance()->LatePreFrameUpdate(); 
+   ///////////////////////
    svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
    ///////////////////////
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
