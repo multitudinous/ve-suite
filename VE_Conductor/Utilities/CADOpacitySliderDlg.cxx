@@ -51,8 +51,8 @@ END_EVENT_TABLE()
 CADOpacitySliderDlg::CADOpacitySliderDlg(wxWindow* parent, int id,
                                          std::string cadNodeID,
                                          CADMaterial* material)
-:wxDialog(parent,id,wxString("CADMaterial Opacity"),wxDefaultPosition,wxDefaultSize,
-(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX),wxString("CADMaterial Opacity"))
+:wxDialog(parent,id,_("CADMaterial Opacity"),wxDefaultPosition,wxDefaultSize,
+(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX),_("CADMaterial Opacity"))
 {
    _cadID = cadNodeID;
    _material = material;
@@ -168,8 +168,8 @@ void CADOpacitySliderDlg::_sendCommandsToXplorer()
       }
       catch ( ... )
       {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.",
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."),
+                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
       }
    }
    //Clean up memory

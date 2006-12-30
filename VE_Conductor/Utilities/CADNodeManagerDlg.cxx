@@ -82,8 +82,8 @@ END_EVENT_TABLE()
 /////////////////////////////////////////////////////////////////////
 CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent, 
                        wxWindowID id)
-:wxDialog(parent,id,wxString("CADTree Manager"),wxDefaultPosition,wxDefaultSize,
-(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("CADTree Manager"))
+:wxDialog(parent,id,_("CADTree Manager"),wxDefaultPosition,wxDefaultSize,
+(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),_("CADTree Manager"))
 {
    _rootNode = 0;
    _propsDlg = 0;
@@ -186,8 +186,8 @@ void CADNodeManagerDlg::_buildDialog()
 
    wxBoxSizer* treeSizer = new wxBoxSizer(wxHORIZONTAL);
   
-   _quitButton = new wxButton(this,wxID_OK,wxString("Close"));
-   _saveButton = new wxButton(this,GEOM_SAVE,wxString("Save As..."));
+   _quitButton = new wxButton(this,wxID_OK,_("Close"));
+   _saveButton = new wxButton(this,GEOM_SAVE,_("Save As..."));
 
    treeSizer->Add(_geometryTree,1,wxALIGN_CENTER|wxEXPAND); 
    cadTreePropSizer->Add(treeSizer,1,wxALIGN_CENTER|wxEXPAND);
@@ -209,7 +209,7 @@ void CADNodeManagerDlg::_editLabel(wxTreeEvent& event)
    if(event.GetItem().IsOk()&& (!event.IsEditCancelled()))
    {
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(event.GetItem()));
-      cadNode->GetNode()->SetNodeName(event.GetLabel().GetData());
+      cadNode->GetNode()->SetNodeName( ConvertUnicode( event.GetLabel().GetData() ) );
 
       _commandName = std::string("CAD_SET_NODE_NAME");
 
@@ -310,18 +310,18 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
       {
          //pop a text dialog to enter the name of the new assembly
          wxTextEntryDialog assemblyNameDlg(this, 
-                                       wxString("New Assembly Name"),
-                                       wxString("Enter name for new assembly:"),
-                                       wxString("Assembly"),wxOK);
+                                       _("New Assembly Name"),
+                                       _("Enter name for new assembly:"),
+                                       _("Assembly"),wxOK);
          assemblyNameDlg.ShowModal();
-         CADAssembly* newAssembly = new CADAssembly((assemblyNameDlg.GetValue().GetData()));
+         CADAssembly* newAssembly = new CADAssembly( ConvertUnicode(assemblyNameDlg.GetValue().GetData() ) );
          newAssembly->SetParent(_activeCADNode->GetID());
          //_toggleNodeOnOff[newAssembly->GetID()] = true;
          newAssembly->SetVisibility(true);
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
  
          _geometryTree->AppendItem(_activeTreeNode->GetId(),
-                                 wxString(newAssembly->GetNodeName().c_str()),
+                                 wxString(newAssembly->GetNodeName().c_str(),wxConvUTF8),
                                  2,4,new CADTreeBuilder::TreeNodeData(newAssembly)); 
          ClearInstructions();
 
@@ -342,7 +342,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
       }
       else
       {
-         wxMessageDialog errorDlg(this, wxString("Cannot add children to a Part node!!"),wxString("Error"));
+         wxMessageDialog errorDlg(this, _("Cannot add children to a Part node!!"),_("Error"));
          errorDlg.ShowModal();
       }
    }
@@ -412,13 +412,13 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
         if(parentID != _geometryTree->GetRootItem())
         {
            _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
-                               wxString(newClone->GetNodeName().c_str())
+                               wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
                                ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
         }
         else
         {
            _geometryTree->AppendItem(_geometryTree->GetRootItem(),
-                               wxString(newClone->GetNodeName().c_str())
+                               wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
                                ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
         }
      }
@@ -427,13 +427,13 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
         if(parentID != _geometryTree->GetRootItem())
         {
            _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
-                               wxString(newClone->GetNodeName().c_str())
+                               wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
                                ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
         }
         else
         {
            _geometryTree->AppendItem(_geometryTree->GetRootItem(),
-                               wxString(newClone->GetNodeName().c_str())
+                               wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
                                ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
         }
      }
@@ -450,8 +450,8 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
    }
    else
    {
-       wxMessageBox( "Error! Invalid node!!!.", 
-                        "CAD Clone Failure", wxOK | wxICON_INFORMATION );
+       wxMessageBox( _("Error! Invalid node!!!"), 
+                        _("CAD Clone Failure"), wxOK | wxICON_INFORMATION );
    }
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -505,7 +505,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
    VE_XML::XMLReaderWriter cadReader;
    cadReader.UseStandaloneDOMDocumentManager();
    cadReader.ReadFromFile();
-   cadReader.ReadXMLData(std::string( fileName.c_str() ),"CAD","CADAssembly");
+   cadReader.ReadXMLData( ConvertUnicode( fileName.c_str() ),"CAD","CADAssembly");
 
    //CADNode* loadedNode = 0;
    CADAssembly* newAssembly = 0;
@@ -522,7 +522,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
    }
    else
    {
-      cadReader.ReadXMLData(std::string( fileName.c_str() ),"CAD","CADPart");
+      cadReader.ReadXMLData( ConvertUnicode( fileName.c_str() ),"CAD","CADPart");
       loadedNodes = cadReader.GetLoadedXMLObjects();
       if(loadedNodes.size())
       {
@@ -604,23 +604,23 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
    wxFileName vegFileName( fileName);
    vegFileName.MakeRelativeTo( ::wxGetCwd());
    wxString vegFileNamePath( vegFileName.GetFullPath() );
-   vegFileNamePath.Replace( "\\", "/", true );
+   vegFileNamePath.Replace( _("\\"), _("/"), true );
    wxFileName cadFileName( vegFileNamePath.c_str());
    //pop a text dialog to enter the name of the new assembly
    wxTextEntryDialog partNameDlg(this, 
-                        wxString("New Part Name"),
-                        wxString("Enter name for new part:"),
+                        _("New Part Name"),
+                        _("Enter name for new part:"),
                         cadFileName.GetName(),wxOK);
    partNameDlg.ShowModal();
 
 
-   CADPart* newCADPart = new CADPart(partNameDlg.GetValue().GetData());
-   newCADPart->SetCADFileName( vegFileNamePath.c_str() );
+   CADPart* newCADPart = new CADPart( ConvertUnicode( partNameDlg.GetValue().GetData() ) );
+   newCADPart->SetCADFileName( ConvertUnicode( vegFileNamePath.c_str() ) );
    //_toggleNodeOnOff[newCADPart->GetID()] = true;
    newCADPart->SetVisibility(true);
    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 
-   _geometryTree->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str()),
+   _geometryTree->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str(), wxConvUTF8),
                                              0,1,new CADTreeBuilder::TreeNodeData(newCADPart));
    _commandName = std::string("CAD_ADD_NODE");
 
@@ -642,15 +642,15 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
    do
    {
       wxTextEntryDialog newDataSetName(this, 
-                                       wxString("Enter the prefix for *.veg filename:"),
-                                       wxString("Save VEG file as..."),
-                                       wxString("geometry"),wxOK|wxCANCEL);
+                                       _("Enter the prefix for *.veg filename:"),
+                                       _("Save VEG file as..."),
+                                       _("geometry"),wxOK|wxCANCEL);
 
       if ( newDataSetName.ShowModal() == wxID_OK )
       {
          vegFileName.ClearExt();
          vegFileName.SetName( newDataSetName.GetValue() ); 
-         vegFileName.SetExt( wxString( "veg" ) );
+         vegFileName.SetExt( wxString( "veg", wxConvUTF8 ) );
       }
       else
       {
@@ -689,7 +689,7 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
          tagName = std::string("CADPart");
       }
 
-      std::string outputFile = std::string( vegFileName.GetFullPath( wxPATH_NATIVE ).c_str() );
+      std::string outputFile = ConvertUnicode( vegFileName.GetFullPath( wxPATH_NATIVE ).c_str() );
 
       std::pair<CADNode*,std::string> nodeTagPair;
       nodeTagPair.first = rootCADNode->GetNode();
@@ -795,8 +795,8 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
       }
       catch ( ... )
       {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
       }
    }
    //Clean up memory

@@ -55,7 +55,7 @@ END_EVENT_TABLE()
 DefaultPlugin_UI_Dialog
 ::DefaultPlugin_UI_Dialog
 (wxWindow* parent, int id, long int* height)
-: UIDialog((wxWindow *) parent, id, "DefaultPlugin")
+: UIDialog((wxWindow *) parent, id, _("DefaultPlugin") )
 {
 
    this->height = height;

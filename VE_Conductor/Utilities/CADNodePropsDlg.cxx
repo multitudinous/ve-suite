@@ -100,8 +100,8 @@ END_EVENT_TABLE()
 CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
                                        int id,CADNode* activeNode)
 
-:wxDialog((wxWindow *) parent, id, "CAD Properties",wxDefaultPosition,wxDefaultSize,
-(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),wxString("CADTree Properties"))
+:wxDialog((wxWindow *) parent, id, _("CAD Properties"),wxDefaultPosition,wxDefaultSize,
+(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),_("CADTree Properties"))
 {
    if(activeNode)
    {
@@ -154,7 +154,7 @@ void CADNodePropertiesDlg::_buildGUI()
    
    mainSizer->Add(notebookSizer,3,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   bottomRow->Add(new wxButton(this,wxID_OK,"OK"),0,wxALIGN_CENTER);
+   bottomRow->Add(new wxButton(this,wxID_OK,_("OK")),0,wxALIGN_CENTER);
 
    mainSizer->Add(bottomRow,0,wxALIGN_CENTER);
    //set this flag and let wx handle alignment  
@@ -340,16 +340,16 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    wxStaticBox* attributeType = new wxStaticBox(_attributePanel, -1, wxT("Attribute Type"));
    wxStaticBoxSizer* attributeTypeSizer = new wxStaticBoxSizer(attributeType, wxVERTICAL);
   
-   wxString choices [] = {"Materials","Shaders"};
+   wxString choices [] = {_("Materials"),_("Shaders")};
    _attributeType = new wxComboBox(_attributePanel, ATTRIBUTE_TYPE, 
-                               wxString("Materials"), 
+                               _("Materials"), 
                                wxDefaultPosition, 
                                wxDefaultSize,
                                2, 
                                choices,wxCB_DROPDOWN);
    attributeTypeSizer->Add(_attributeType,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
     
-   _addAttributeButton = new wxButton(_attributePanel, ADD_ATTRIBUTE,wxString("Add..."));
+   _addAttributeButton = new wxButton(_attributePanel, ADD_ATTRIBUTE,_("Add..."));
    /*_associateWithDataCheck = new wxCheckBox(_attributePanel, ASSOCIATE_CHECKBOX,
 	                                        _T("Use Last Seed Point"), 
 											wxDefaultPosition, wxDefaultSize, 0 );
@@ -357,10 +357,10 @@ void CADNodePropertiesDlg::_buildAttributePanel()
    attributeTypeSizer->Add(_addAttributeButton,0,wxALIGN_CENTER);
 
    
-   _removeAttributeButton = new wxButton(_attributePanel, REMOVE_ATTRIBUTE,wxString("Remove..."));
+   _removeAttributeButton = new wxButton(_attributePanel, REMOVE_ATTRIBUTE,_("Remove..."));
    attributeTypeSizer->Add(_removeAttributeButton,0,wxALIGN_CENTER);
 
-   _restoreDefaultAttributeButton = new wxButton(_attributePanel, RESTORE_DEFAULT_ATTRIBUTE,wxString("Restore Defaults"));
+   _restoreDefaultAttributeButton = new wxButton(_attributePanel, RESTORE_DEFAULT_ATTRIBUTE,_("Restore Defaults"));
    attributeTypeSizer->Add(_restoreDefaultAttributeButton ,0,wxALIGN_CENTER);
 
    //_editAttributeButton = new wxButton(_attributePanel, EDIT_ATTRIBUTE,wxString("Edit..."));
@@ -410,10 +410,10 @@ void CADNodePropertiesDlg::_buildAnimationPanel()
       _updateAvailableAnimations();
       
    }
-   _addAnimationButton = new wxButton(_animationPanel, ADD_ANIMATION,wxString("Add..."));
+   _addAnimationButton = new wxButton(_animationPanel, ADD_ANIMATION,_("Add..."));
    animationPropSizer->Add(_addAnimationButton,0,wxALIGN_CENTER);
 
-   _removeAnimationButton = new wxButton(_animationPanel, REMOVE_ANIMATION,wxString("Remove..."));
+   _removeAnimationButton = new wxButton(_animationPanel, REMOVE_ANIMATION,_("Remove..."));
    animationPropSizer->Add(_removeAnimationButton,0,wxALIGN_CENTER);
    
    activeAnimationSizer->Add(_animationSelection,1,wxEXPAND|wxALIGN_CENTER);
@@ -447,21 +447,21 @@ void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
             {
                wxFileName animationFileName( dialog.GetPath() );
                animationFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
-               wxString animationFileNamePath( wxString( "./" ) + animationFileName.GetFullPath() );
+               wxString animationFileNamePath( wxString( "./",wxConvUTF8 ) + animationFileName.GetFullPath() );
 
                wxTextEntryDialog animationNameDlg(this, 
-                        wxString("New Animation Name"),
-                        wxString("Enter name for new node animation:"),
+                        _("New Animation Name"),
+                        _("Enter name for new node animation:"),
                         animationFileName.GetName(),wxOK);
                animationNameDlg.ShowModal();
             
                while(AnimationExists(animationNameDlg.GetValue().GetData()))
                {
-                  wxMessageBox( "Animation with this name is already loaded.", 
+                  wxMessageBox( _("Animation with this name is already loaded."), 
                   animationNameDlg.GetValue(), wxOK | wxICON_INFORMATION );
                }
-               _cadNode->AddAnimation(animationNameDlg.GetValue().GetData(),
-                                   animationFileNamePath.c_str());
+               _cadNode->AddAnimation( ConvertUnicode( animationNameDlg.GetValue().GetData() ),
+                                   ConvertUnicode( animationFileNamePath.c_str() ) );
                _updateAvailableAnimations();
                   
                _commandName = std::string("CAD_ADD_ANIMATION_TO_NODE");
@@ -474,7 +474,7 @@ void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
                VE_XML::DataValuePair* addAnimation = new VE_XML::DataValuePair();
                addAnimation->SetDataType("XMLOBJECT");
                addAnimation->SetData("Animation Info",
-                                  &_cadNode->GetAnimation(animationNameDlg.GetValue().GetData()));
+                                  &_cadNode->GetAnimation( ConvertUnicode( animationNameDlg.GetValue().GetData() ) ) );
                _instructions.push_back(addAnimation);
 
               _sendCommandsToXplorer();
@@ -483,7 +483,7 @@ void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
       
          catch(...)
          {
-            wxMessageBox( "Couldn't load animation file.", 
+            wxMessageBox( _("Couldn't load animation file."), 
                        dialog.GetPath(), wxOK | wxICON_INFORMATION );
                      return;
          }
@@ -520,7 +520,7 @@ void CADNodePropertiesDlg::_updateAvailableAnimations()
 
       for(size_t i = 0; i < nAnimations; i++)
       {
-         _animationFiles.Add(_cadNode->GetAnimation(i).GetAnimationName().c_str());   
+         _animationFiles.Add( wxString( _cadNode->GetAnimation(i).GetAnimationName().c_str(), wxConvUTF8 ) );   
       }
       
    }
@@ -559,22 +559,22 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
          if( attributeType == std::string("Material"))
          {   
             _nMaterials++;
-            _availableMaterials.Add(attributes.at(i).GetAttributeName().c_str());
+            _availableMaterials.Add( wxString( attributes.at(i).GetAttributeName().c_str(), wxConvUTF8 ) );
          }
          else if( attributeType == std::string("Program"))
          {
             _nShaders++;
-            _availableShaders.Add(attributes.at(i).GetAttributeName().c_str());
+            _availableShaders.Add( wxString(attributes.at(i).GetAttributeName().c_str(), wxConvUTF8) );
          }
       }
       
    }
-   if(_attributeType->GetValue() == wxString("Materials"))
+   if(_attributeType->GetValue() == wxString("Materials",wxConvUTF8))
    {
       //_attributeSelection->Set(_availableMaterials);
       _updateAttributeList(_availableMaterials);
    }
-   else if(_attributeType->GetValue() == wxString("Shaders"))
+   else if(_attributeType->GetValue() == wxString("Shaders",wxConvUTF8))
    {
        //_attributeSelection->Set(_availableShaders);
        _updateAttributeList(_availableShaders);
@@ -583,12 +583,12 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
 //////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateAttributeType(wxCommandEvent& WXUNUSED(event))
 {
-   if(_attributeType->GetValue() == wxString("Materials"))
+   if(_attributeType->GetValue() == wxString("Materials",wxConvUTF8))
    {
       _updateAttributeList(_availableMaterials);
       //_attributeSelection->Set(_availableMaterials);
    }
-   else if(_attributeType->GetValue() == wxString("Shaders"))
+   else if(_attributeType->GetValue() == wxString("Shaders",wxConvUTF8))
    {
       //_attributeSelection->Set(_availableShaders);
       _updateAttributeList(_availableShaders);
@@ -602,7 +602,7 @@ void CADNodePropertiesDlg::_editAttribute(wxListEvent& event)
       ClearInstructions();
       wxString attributeName = event.GetText();
       //std::cout<<"Editting attribute"<<attributeName<<std::endl;
-      if(_attributeType->GetValue() == wxString("Materials"))
+      if(_attributeType->GetValue() == wxString("Materials",wxConvUTF8))
       {
          CADMaterialEditMenu* materialMenu = new CADMaterialEditMenu();
          PopupMenu(materialMenu);
@@ -617,7 +617,7 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxListEvent& event)
       ClearInstructions();
       wxString attributeName = event.GetText();
       //wxString attributeName = _attributeSelection->GetStringSelection();
-      _cadNode->SetActiveAttribute(attributeName.GetData());
+      _cadNode->SetActiveAttribute( ConvertUnicode( attributeName.GetData() ) );
       _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
 
       VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
@@ -704,8 +704,8 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
    if(_cadNode)
    {
       ClearInstructions();
-      wxString newAttributeName("Attribute");
-      if(_attributeType->GetValue() == wxString("Materials"))
+      wxString newAttributeName("Attribute",wxConvUTF8);
+      if(_attributeType->GetValue() == wxString("Materials",wxConvUTF8))
       {
          std::stringstream nMaterials;
          nMaterials<<_nMaterials;
@@ -716,18 +716,18 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
          VE_CAD::CADMaterial newMaterial;
          
          wxTextEntryDialog materialNameDlg(this, 
-                                       wxString("New Material Name"),
-                                       wxString("Enter name for new material:"),
-                                       wxString("Material")+wxString(nMaterials.str().c_str()),wxOK);
+                                       _("New Material Name"),
+                                       _("Enter name for new material:"),
+                                       _("Material")+wxString(nMaterials.str().c_str(),wxConvUTF8),wxOK);
          materialNameDlg.ShowModal();
-         if(AttributeExists(materialNameDlg.GetValue().GetData()))
+         if(AttributeExists( ConvertUnicode( materialNameDlg.GetValue().GetData() ) ) )
          {
-            wxMessageBox( "Attribute with this name is already loaded.", 
+            wxMessageBox( _("Attribute with this name is already loaded."), 
                           materialNameDlg.GetValue(), wxOK | wxICON_INFORMATION );
                               return;
          }
          
-         newMaterial.SetMaterialName(materialNameDlg.GetValue().GetData());
+         newMaterial.SetMaterialName( ConvertUnicode( materialNameDlg.GetValue().GetData() ) );
          newAttribute.SetMaterial(newMaterial);
          _cadNode->AddAttribute(newAttribute);
          _updateAvailableAttributes();
@@ -747,7 +747,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
 
          _sendCommandsToXplorer();
       }
-      else if(_attributeType->GetValue() == wxString("Shaders"))
+      else if(_attributeType->GetValue() == wxString("Shaders",wxConvUTF8))
       {
          wxFileDialog dialog(this,
 		       _T("Add New Attribute"), 
@@ -764,12 +764,12 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
                   
                   wxFileName veaFileName( dialog.GetPath() );
                   veaFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
-                  wxString veaFileNamePath( wxString( "./" ) + veaFileName.GetFullPath() );
+                  wxString veaFileNamePath( wxString( "./", wxConvUTF8 ) + veaFileName.GetFullPath() );
 
                   VE_XML::XMLReaderWriter shaderLoader;
                   shaderLoader.UseStandaloneDOMDocumentManager();
                   shaderLoader.ReadFromFile();
-                  shaderLoader.ReadXMLData( std::string( veaFileNamePath ),"Shader","Program");
+                  shaderLoader.ReadXMLData( ConvertUnicode( veaFileNamePath ),"Shader","Program");
               
                   VE_XML::VE_Shader::Program* loadedShader = 0;
                   if(shaderLoader.GetLoadedXMLObjects().at(0))
@@ -779,7 +779,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
                         loadedShader = dynamic_cast<VE_XML::VE_Shader::Program*>(shaderLoader.GetLoadedXMLObjects().at(0));
                         if(AttributeExists(loadedShader->GetProgramName().c_str()))
                         {
-                           wxMessageBox( "Attribute with this name is already loaded.", 
+                           wxMessageBox( _("Attribute with this name is already loaded."), 
                                   dialog.GetPath(), wxOK | wxICON_INFORMATION );
                               return;
                         }
@@ -805,7 +805,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
                      }
                      catch(...)
                      {
-                        wxMessageBox( "Couldn't load shader file.", 
+                        wxMessageBox( _("Couldn't load shader file."), 
                                       dialog.GetPath(), wxOK | wxICON_INFORMATION );
                         return;
                      }
@@ -833,13 +833,13 @@ bool CADNodePropertiesDlg::AttributeExists(std::string name)
 {
    for(unsigned int i = 0; i < _nShaders; i++)
    {
-      if(name.c_str() == _availableShaders[i])
+      if(name.c_str() == ConvertUnicode( _availableShaders[i]) )
          return true;
    }
    
    for(unsigned int i = 0; i < _nMaterials; i++)
    {
-      if(name.c_str() == _availableMaterials[i])
+      if(name.c_str() ==ConvertUnicode( _availableMaterials[i]) )
          return true;
    }
    return false;
@@ -919,9 +919,9 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& WXUNUSED(event)
    if(_cadNode)
    {
       wxArrayString faceModes;
-      faceModes.Add("Front");
-      faceModes.Add("Front_and_Back");
-      faceModes.Add("Back");
+      faceModes.Add(_("Front"));
+      faceModes.Add(_("Front_and_Back"));
+      faceModes.Add(_("Back"));
 
       CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
       wxSingleChoiceDialog faceSelector(this, _T("Select Face to apply material"), _T("Material Face"),
@@ -930,7 +930,7 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& WXUNUSED(event)
       if (faceSelector.ShowModal() == wxID_OK)
       {
          //std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
-         material->SetFace(std::string(faceSelector.GetStringSelection().GetData()));     
+         material->SetFace( ConvertUnicode(faceSelector.GetStringSelection().GetData()));     
          //send the data to Xplorer
          ClearInstructions(); 
          _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_MODE");
@@ -976,12 +976,12 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(e
    if(_cadNode)
    {
       wxArrayString colorModes;
-      colorModes.Add("Ambient");
-      colorModes.Add("Ambient_and_Diffuse");
-      colorModes.Add("Diffuse");
-      colorModes.Add("Emissive");
-      colorModes.Add("Specular");
-      colorModes.Add("Off");
+      colorModes.Add( _("Ambient") );
+      colorModes.Add( _("Ambient_and_Diffuse") );
+      colorModes.Add( _("Diffuse") );
+      colorModes.Add( _("Emissive") );
+      colorModes.Add( _("Specular") );
+      colorModes.Add( _("Off") );
 
       CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
       CADMaterial* material = activeAttribute.GetMaterial();
@@ -992,7 +992,7 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(e
       if (colorSelector.ShowModal() == wxID_OK)
       {
          //std::cout<<"Selecting color mode: "<<colorSelector.GetStringSelection()<<std::endl;
-         material->SetColorMode(std::string(colorSelector.GetStringSelection().GetData()));     
+         material->SetColorMode( ConvertUnicode(colorSelector.GetStringSelection().GetData()));     
 
          //send the data to Xplorer
          ClearInstructions(); 
@@ -1073,7 +1073,7 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
 
       wxColourDialog colorDlg(this,&data);
 
-      colorDlg.SetTitle(wxString(updateComponent.c_str()));
+      colorDlg.SetTitle(wxString(updateComponent.c_str(),wxConvUTF8));
       if (colorDlg.ShowModal() == wxID_OK)
       {
          wxColourData retData = colorDlg.GetColourData();
@@ -1151,8 +1151,8 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
       }
       catch ( ... )
       {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
          delete [] tempDoc;
       }
    }

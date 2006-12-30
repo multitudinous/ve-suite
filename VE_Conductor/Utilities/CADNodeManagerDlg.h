@@ -198,6 +198,11 @@ public:
    VE_Conductor::GUI_Utilities::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.
    std::map<wxString,VE_CAD::CADNode*> _loadedCAD;///<The list of CAD/VEG files already loaded.
    //wxButton* _loadButton;
+   std::string ConvertUnicode( const wxChar* data )
+   {
+         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+         return tempStr;
+   }
    DECLARE_EVENT_TABLE()
 };
 }

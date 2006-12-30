@@ -50,7 +50,7 @@ using namespace VE_Conductor::GUI_Utilities;
 //Here is the constructor with passed in pointers //
 ////////////////////////////////////////////////////
 BaseDialog::BaseDialog (wxWindow* parent, int id,std::string title)
-:wxDialog((wxWindow*) parent, id, title.c_str(), wxDefaultPosition, wxDefaultSize,
+:wxDialog((wxWindow*) parent, id, wxString(title.c_str(), wxConvUTF8), wxDefaultPosition, wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX))
 {
    _vjObsPtr = 0;
@@ -77,12 +77,12 @@ void BaseDialog::ClearInstructions()
 //////////////////////////////////////////////////////
 void BaseDialog::_addOKButton(wxSizer* buttonRowSizer)
 {
-   buttonRowSizer->Add(new wxButton(this,wxID_OK,"OK"),0,wxALIGN_CENTER);
+   buttonRowSizer->Add(new wxButton(this,wxID_OK,_("OK")),0,wxALIGN_CENTER);
 }
 /////////////////////////////////////////////////////////
 void BaseDialog::_addCancelButton(wxSizer* buttonRowSizer)
 {
-   buttonRowSizer->Add(new wxButton(this,wxID_CANCEL,"Cancel"),0,wxALIGN_CENTER);
+   buttonRowSizer->Add(new wxButton(this,wxID_CANCEL,_("Cancel")),0,wxALIGN_CENTER);
 }
 /////////////////////////////////////////
 void BaseDialog::_sendCommandsToXplorer()
@@ -125,8 +125,8 @@ void BaseDialog::_sendCommandsToXplorer()
       }
       catch ( ... )
       {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
          delete [] tempDoc;
       }
    }

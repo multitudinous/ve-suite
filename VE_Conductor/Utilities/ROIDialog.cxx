@@ -110,7 +110,7 @@ void ROIDialog::_buildGUI()
 void ROIDialog::_createDualSliders()
 {
    _xBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("X Bounds"));
+                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,_("X Bounds"));
    ROIMinSliderCallback* minX = new ROIMinSliderCallback(this,"X");
    ROIMaxSliderCallback* maxX = new ROIMaxSliderCallback(this,"X");
    ROIBothMoveCallback* bothX = new ROIBothMoveCallback(this,"X");
@@ -120,7 +120,7 @@ void ROIDialog::_createDualSliders()
    _xBounds->SetBothSliderUpdateCallback(bothX);
 
    _yBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Y Bounds"));
+                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,_("Y Bounds"));
 
    ROIMinSliderCallback* minY = new ROIMinSliderCallback(this,"Y");
    ROIMaxSliderCallback* maxY = new ROIMaxSliderCallback(this,"Y");
@@ -131,7 +131,7 @@ void ROIDialog::_createDualSliders()
    _yBounds->SetBothSliderUpdateCallback(bothY);
 
    _zBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Z Bounds"));
+                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,_("Z Bounds"));
 
    ROIMinSliderCallback* minZ = new ROIMinSliderCallback(this,"Z");
    ROIMaxSliderCallback* maxZ = new ROIMaxSliderCallback(this,"Z");

@@ -59,7 +59,7 @@ DefaultPlugin::DefaultPlugin()
    //RegistVar("height", &height );
 
    dlg = 0;
-   name = "DefaultPlugin";
+   name = _("DefaultPlugin");
 //#define TESTPORT
 #ifdef TESTPORT
    VE_Model::Port* Aport = new VE_Model::Port();
@@ -137,14 +137,14 @@ UIDialog* DefaultPlugin::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString DefaultPlugin::GetConductorName()
 {
-  wxString result ="DefaultPlugin";
+  wxString result =_("DefaultPlugin");
   
   return result;
 }
 /////////////////////////////////////////////////////////////////////////////
 wxString DefaultPlugin::GetDesc()
 {
-  wxString result="DefaultPlugin for VE-Conductor."; //your description
+  wxString result= _("DefaultPlugin for VE-Conductor"); //your description
 
   return result;
 }

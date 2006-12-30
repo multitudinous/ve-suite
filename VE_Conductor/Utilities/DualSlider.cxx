@@ -68,10 +68,10 @@ DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
    }
 
    _minSlider = new wxSlider(this, MIN_SLIDER, minSliderValue ,_range[0], _range[1], wxDefaultPosition,
-                             wxDefaultSize, style, wxDefaultValidator,"minSlider");
+                             wxDefaultSize, style, wxDefaultValidator,_("minSlider") );
 
    _maxSlider = new wxSlider(this, MAX_SLIDER, maxSliderValue ,_range[0], _range[1], wxDefaultPosition,
-                             wxDefaultSize, style, wxDefaultValidator,"maxSlider");
+                             wxDefaultSize, style, wxDefaultValidator,_("maxSlider") );
    _ensureSliders(MIN_SLIDER);
    dualSliderSizer->Add(_minSlider,1,wxALIGN_CENTER|wxEXPAND);
    dualSliderSizer->Add(_maxSlider,1,wxALIGN_CENTER|wxEXPAND);

@@ -268,8 +268,12 @@ protected:
 
    std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 
+   std::string ConvertUnicode( const wxChar* data )
+   {
+         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+         return tempStr;
+   }
    DECLARE_EVENT_TABLE()
-
 };
 }
 }

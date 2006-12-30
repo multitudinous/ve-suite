@@ -273,7 +273,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
    //Forth, check if any tag is selected
    for ( unsigned int i=0; i<tags.size(); i++)
    {
-      if ( tags[i].GetBoundingBox()->Inside(evtpos) )
+      if ( tags[i].GetBoundingBox()->Contains(evtpos) )
 	   {
 	      m_selTag=i;
 	      tag_rpt.x = evtpos.x - tags[i].GetBoundingBox()->x;
