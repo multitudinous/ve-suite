@@ -41,6 +41,7 @@
 #include <vtkDataSet.h>
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
+
 using namespace VE_Util;
 
 int main( int argc, char *argv[] )
@@ -50,8 +51,7 @@ int main( int argc, char *argv[] )
    std::string inFileName;
    if ( argc > 1 )
    {
-      //inFileName = new char [ strlen(argv[ 1 ])+1 ];
-      inFileName.assign( argv[ 1 ] );//strcpy( inFileName, argv[ 1 ] );
+      inFileName.assign( argv[ 1 ] );
    }
    else  // then get filename from user...
    {
@@ -62,9 +62,8 @@ int main( int argc, char *argv[] )
 
    // read the data set ("1" means print info to screen)
    vtkDataSet * dataset = readVtkThing( inFileName, 1 );
-
+   
    int numArrays = dataset->GetPointData()->GetNumberOfArrays();
-   //std::cout << "numArrays = " << numArrays << std::endl;
    double minMax[ 2 ];
    for ( int i = 0; i < numArrays; i++ )
    {
