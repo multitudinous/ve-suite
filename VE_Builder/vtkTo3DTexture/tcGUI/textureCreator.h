@@ -201,5 +201,10 @@ protected:
    vtkUnstructuredGridReader* _usgrid;
    vtkStructuredGridReader* _sgrid;
    vtkRectilinearGridReader* _rgrid;
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }
 };
 #endif// _BIV_VTK_TO_TEXTURE_H_

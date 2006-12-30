@@ -189,7 +189,7 @@ void TCFrame::_buildGUI()
 
    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
    
-   wxStaticBox* dimensionsGroup = new wxStaticBox(this, -1,"Texture Dimensions");
+   wxStaticBox* dimensionsGroup = new wxStaticBox(this, -1, _("Texture Dimensions") );
    wxStaticBoxSizer* textureDimensionsSizer = new wxStaticBoxSizer(dimensionsGroup,
                                                             wxHORIZONTAL);
 
@@ -200,51 +200,51 @@ void TCFrame::_buildGUI()
 
    wxArrayString factorsOfTwo;
 
-   factorsOfTwo.Add("2");
-   factorsOfTwo.Add("4");
-   factorsOfTwo.Add("8");
-   factorsOfTwo.Add("16");
-   factorsOfTwo.Add("32");
-   factorsOfTwo.Add("64");
-   factorsOfTwo.Add("128");
-   factorsOfTwo.Add("256");
-   factorsOfTwo.Add("512");
+   factorsOfTwo.Add(_("2") );
+   factorsOfTwo.Add(_("4") );
+   factorsOfTwo.Add(_("8") );
+   factorsOfTwo.Add(_("16") );
+   factorsOfTwo.Add(_("32") );
+   factorsOfTwo.Add(_("64") );
+   factorsOfTwo.Add(_("128") );
+   factorsOfTwo.Add(_("256") );
+   factorsOfTwo.Add(_("512") );
 
-   wxString choices[] = {"Rectilinear","Structured","Unstructured"};
+   wxString choices[] = {_("Rectilinear"),_("Structured"),_("Unstructured")};
    wxBoxSizer* rBoxSizer = new wxBoxSizer(wxHORIZONTAL);
    _gridTypeBox = new wxRadioBox(this, 
                               GRID_RBOX, 
-                              wxString("Grid Type"), 
+                              _("Grid Type"), 
                               wxDefaultPosition, 
                               wxDefaultSize, 
                               3, choices,wxRA_SPECIFY_COLS);
    rBoxSizer->Add(_gridTypeBox,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    //the resolution input boxes
-   _xResBox = new wxComboBox(this, XRES_BOX, "", 
+   _xResBox = new wxComboBox(this, XRES_BOX, _(""), 
                                 wxDefaultPosition,
                                 wxDefaultSize,
                                 factorsOfTwo,
                                 wxCB_READONLY,
                                 wxDefaultValidator,
-                                  "X");
+                                  _("X") );
    _xResBox->SetSelection(0);
    
-   _yResBox = new wxComboBox(this, YRES_BOX, "", 
+   _yResBox = new wxComboBox(this, YRES_BOX, _(""), 
                                 wxDefaultPosition,
                                 wxDefaultSize,
                                 factorsOfTwo,
                                 wxCB_READONLY,
                                 wxDefaultValidator,
-                                  "Y");
+                                  _("Y") );
    _yResBox->SetSelection(0);
    
-   _zResBox = new wxComboBox(this, ZRES_BOX, "", 
+   _zResBox = new wxComboBox(this, ZRES_BOX, _(""), 
                                 wxDefaultPosition,
                                 wxDefaultSize,
                                 factorsOfTwo,
                                 wxCB_READONLY,
                                 wxDefaultValidator,
-                                  "Z");
+                                  _("Z") );
    _zResBox->SetSelection(0);
    
    //resolution row
@@ -287,7 +287,7 @@ void TCFrame::_buildGUI()
 
    
    SetStatusBar(new wxStatusBar(this,-1)); 
-   GetStatusBar()->SetStatusText(wxString("..."));
+   GetStatusBar()->SetStatusText(_("..."));
 
    _menuBar = new wxMenuBar();
    wxMenu* transientPropertiesMenu = new wxMenu();
@@ -304,16 +304,16 @@ void TCFrame::UpdateProgressDialog(const std::string msg)
 {
    if(_fileProgress)
    {
-      _fileProgress->Update(_currentFile,msg.c_str() );
+      _fileProgress->Update(_currentFile, wxString( msg.c_str(), wxConvUTF8) );
    }
 }
 /////////////////////////////////////////////////////////
 void TCFrame::_onTransientMinimum(wxCommandEvent& event)
 {
    wxTextEntryDialog minimumDlg(this, 
-                        wxString("Beginning Transient Time Step"),
-                        wxString("Enter the minimum timestep:"),
-                        "0",wxOK);
+                        _("Beginning Transient Time Step"),
+                        _("Enter the minimum timestep:"),
+                        _("0"),wxOK);
    minimumDlg.ShowModal();
    minimumDlg.GetValue().ToULong(&_minTimeStepIndex);
 }
@@ -321,8 +321,8 @@ void TCFrame::_onTransientMinimum(wxCommandEvent& event)
 void TCFrame::_transientGridTypeSelection(wxCommandEvent& event)
 {
     wxArrayString transientType;
-    transientType.Add("Static");
-    transientType.Add("Dynamic");
+    transientType.Add( _("Static") );
+    transientType.Add( _("Dynamic") );
     wxSingleChoiceDialog typeSelector(this,
                                       _T("Select trasient grid type"),
                                       _T("Grid Type"),
@@ -331,7 +331,7 @@ void TCFrame::_transientGridTypeSelection(wxCommandEvent& event)
    if (typeSelector.ShowModal() == wxID_OK)
    {
       //std::cout<<"Selecting face: "<<faceSelector.GetStringSelection()<<std::endl;
-      if(typeSelector.GetStringSelection()== "Dynamic")
+      if(typeSelector.GetStringSelection()== _("Dynamic") )
       {
          _translator->TurnOnDynamicGridResampling();
       }
@@ -361,7 +361,7 @@ void TCFrame::SetTransientGridProperty(long int type)
 /////////////////////////////////////////////////////
 void TCFrame::UpdateStatus(const std::string statusString)
 {
-   GetStatusBar()->SetStatusText(wxString(statusString.c_str()));
+   GetStatusBar()->SetStatusText(wxString(statusString.c_str(), wxConvUTF8 ));
 }
 /////////////////////////////////////////////////////////
 void TCFrame::SetMPIVariables( int iRank, int inumProcessors )
@@ -400,20 +400,20 @@ void TCFrame::_onGridTypeCallback(wxCommandEvent& event)
 void TCFrame::_onTranslateCallback(wxCommandEvent& event)
 {
    _translator->setBatchOff();
-   UpdateStatus("Translating to 3D texture files. . .");
+   UpdateStatus( "Translating to 3D texture files. . ." );
    //char* oname;
-   wxString statusMsg = "";
+   wxString statusMsg = _("");
 
-   _fileProgress = new wxProgressDialog(wxString("Translation Progress"),
-                  " ", 
+   _fileProgress = new wxProgressDialog(_("Translation Progress"),
+                  _(" "), 
                   _numFiles,this,
                   wxPD_AUTO_HIDE|wxPD_SMOOTH|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME);
    //process the files
    for(int i = 0; i < _numFiles; i++)
    {
       _currentFile = i;
-      statusMsg = wxString("Translating ") + wxString( gridFiles.at( i ).c_str() );
-      UpdateStatus( statusMsg.c_str() );
+      statusMsg = wxString("Translating ", wxConvUTF8) + wxString( gridFiles.at( i ).c_str(), wxConvUTF8 );
+      UpdateStatus( ConvertUnicode( statusMsg.c_str() ) );
       _fileProgress->Update(i, statusMsg);
       _translator->reset();
       _translator->setOutputDirectory((char*)_outputDir.c_str());
@@ -429,13 +429,13 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
                                           _resolution[2]);
          _translator->setVelocityFileName((char*)dirString.c_str());
          _translator->createTextures();
-         statusMsg = wxString("Files written to: ") + _outputDir;
-         UpdateStatus( statusMsg.c_str() );
+         statusMsg = wxString("Files written to: ", wxConvUTF8) + _outputDir;
+         UpdateStatus( ConvertUnicode( statusMsg.c_str() ) );
       }
       else
       { 
-         statusMsg = wxString("Invalide file: ") + gridFiles.at( i ).c_str() ;
-         UpdateStatus( statusMsg.c_str() );
+         statusMsg = wxString("Invalide file: ", wxConvUTF8) + wxString( gridFiles.at( i ).c_str(), wxConvUTF8) ;
+         UpdateStatus( ConvertUnicode( statusMsg.c_str() ) );
       }
    }
    
@@ -498,17 +498,17 @@ void TCFrame::_chooseDirectory(int style, int browseID)
       {
          //_gridFiles.Clear();
          _numFiles = 0;
-         _inputDir = wxT(_dirDialog->GetPath().c_str());
+         _inputDir = wxString(_dirDialog->GetPath().c_str(), wxConvUTF8);
          
          //make the output dir == to the current input directory
-         _outputDir = wxT(_inputDir.c_str());
+         _outputDir = wxString(_inputDir.c_str(), wxConvUTF8);
 
          inputFileDirectory.Open(wxString(_inputDir));
          if ( inputFileDirectory.IsOpened() )
          {
-           gridFiles = VE_Util::fileIO::GetFilesInDirectory( _inputDir.c_str(), "vtu" );
+           gridFiles = VE_Util::fileIO::GetFilesInDirectory( ConvertUnicode( _inputDir.c_str() ), "vtu" );
            if ( gridFiles.size() == 0 )
-              gridFiles = VE_Util::fileIO::GetFilesInDirectory( _inputDir.c_str(), "vtk" );
+              gridFiles = VE_Util::fileIO::GetFilesInDirectory( ConvertUnicode( _inputDir.c_str() ), "vtk" );
          }
          _numFiles = gridFiles.size();
          //set the text in the text box
@@ -516,7 +516,7 @@ void TCFrame::_chooseDirectory(int style, int browseID)
       }
       else
       {
-         _outputDir = wxT(_dirDialog->GetPath().c_str());
+         _outputDir = wxString(_dirDialog->GetPath().c_str(), wxConvUTF8);
          _outputDirBox->SetValue(_outputDir);
       }
    }
@@ -542,11 +542,11 @@ void TCFrame::SetInputDirectory(const std::string inDirectory)
       _numFiles = 0;
 
       wxDir inputFileDirectory;
-      inputFileDirectory.Open( wxString( inDirectory.c_str() ) );
+      inputFileDirectory.Open( wxString( inDirectory.c_str(), wxConvUTF8 ) );
 
       if ( inputFileDirectory.IsOpened() )
       {
-        _inputDir = wxT(inDirectory.c_str() );
+        _inputDir = wxString(inDirectory.c_str(), wxConvUTF8 );
 
         gridFiles = VE_Util::fileIO::GetFilesInDirectory( inDirectory, "vtu" );
         if ( gridFiles.size() == 0 )
@@ -562,7 +562,7 @@ void TCFrame::SetInputDirectory(const std::string inDirectory)
 //////////////////////////////////////////////////////////
 void TCFrame::SetOutputDirectory(const std::string outDirectory)
 {
-   _outputDir = wxString( outDirectory.c_str() );
+   _outputDir = wxString( outDirectory.c_str(), wxConvUTF8 );
 }
 //////////////////////////////////////////////////////
 void TCFrame::SetTextureResolution(int x,int y, int z)

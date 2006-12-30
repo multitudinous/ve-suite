@@ -50,6 +50,11 @@ protected:
 private:
    int p;
    int rank;
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }
 };
 DECLARE_APP(TCApp)
  

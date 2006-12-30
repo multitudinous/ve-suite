@@ -38,14 +38,14 @@ Differences to wxSpinCtrl:
 #ifndef __wxSPINCTRLDBL_H__
 #define __wxSPINCTRLDBL_H__
 
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-    #pragma interface "spinctld.h"
-#endif
+//#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
+//    #pragma interface "spinctld.h"
+//#endif
 
-#include "wx/spinbutt.h"
-#include "wx/spinctrl.h" // for EVT_SPINCTRL
+#include <wx/spinbutt.h>
+#include <wx/spinctrl.h> // for EVT_SPINCTRL
 
-class WXDLLEXPORT wxTextCtrl;
+class wxTextCtrl;
 class wxSpinCtrlDblTextCtrl;
 #include "VE_Installer/include/VEConfig.h"
 enum
@@ -56,7 +56,7 @@ enum
 class VE_CONDUCTOR_UTILS_EXPORTS wxSpinCtrlDbl: public wxControl
 {
 public:
-    wxSpinCtrlDbl() : wxControl() { Init(); }
+    wxSpinCtrlDbl();
     
     // Native constructor - note &parent, this is to avoid ambiguity
     wxSpinCtrlDbl( wxWindow &parent, wxWindowID id,
@@ -67,13 +67,8 @@ public:
                    double min = 0.0, double max = 100.0,
                    double initial = 0.0,
                    double increment = 1.0, int digits = wxSPINCTRLDBL_AUTODIGITS,
-                   const wxString& name = _T("wxSpinCtrlDbl") )
-    {
-        Init();
-        Create(&parent, id, value, pos, size, style,
-               min, max, initial, increment, digits, name);
-    }
-
+                   const wxString& name = _T("wxSpinCtrlDbl") );
+                   
     // wxSpinCtrl compatibility, call SetIncrement(increment,digits) after
     wxSpinCtrlDbl( wxWindow *parent, wxWindowID id = wxID_ANY,
                    const wxString &value = wxEmptyString,
@@ -82,13 +77,8 @@ public:
                    long style = 0,
                    int min = 0, int max = 100,
                    int initial = 0,
-                   const wxString& name = _T("wxSpinCtrlDbl") )
-    {
-        Init();
-        Create(parent, id, value, pos, size, style,
-               (double)min, (double)max, (double)initial, 1.0, -1, name);
-    }
-
+                   const wxString& name = _T("wxSpinCtrlDbl") );
+                   
     bool Create( wxWindow *parent,
                  wxWindowID id = wxID_ANY,
                  const wxString &value = wxEmptyString,
@@ -140,7 +130,7 @@ public:
     //   when the increment is very small.
     void SetSnapToTicks(bool forceTicks);
 
-    double   GetValue() const { return m_value; }
+    double   GetValue() const;// { return m_value; }
     double   GetMin() const { return m_min; }
     double   GetMax() const { return m_max; }
     virtual bool HasRange() const { return m_max >= m_min; }
@@ -194,7 +184,7 @@ private:
     friend class wxSpinCtrlDblTextCtrl;
 
     void Init();
-    DECLARE_DYNAMIC_CLASS(wxSpinCtrlDbl)
+    //DECLARE_DYNAMIC_CLASS(wxSpinCtrlDbl)
     DECLARE_EVENT_TABLE()
 };
 

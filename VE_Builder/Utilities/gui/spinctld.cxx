@@ -133,7 +133,7 @@ void wxSpinCtrlDblTextCtrl::OnKillFocus( wxFocusEvent &event )
 // wxSpinCtrlDbl
 //----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS( wxSpinCtrlDbl, wxControl )
+//IMPLEMENT_DYNAMIC_CLASS( wxSpinCtrlDbl, wxControl )
 
 BEGIN_EVENT_TABLE(wxSpinCtrlDbl,wxControl)
     EVT_SPIN_UP   ( wxID_ANY, wxSpinCtrlDbl::OnSpinUp    )
@@ -183,7 +183,7 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
                       wxSize(width-m_spinButton->GetSize().GetWidth(), height));
 
     DoSetSize( pos.x, pos.y, width, height );
-    SetBestSize(wxSize(width, height));
+    SetInitialSize(wxSize(width, height));
     
     m_min = min;
     m_max = max;
@@ -241,6 +241,8 @@ void wxSpinCtrlDbl::DoSetSize(int x, int y, int width, int height, int sizeFlags
 }
 
 static wxSize s_spinctrl_bestSize(-999,-999);
+
+double   wxSpinCtrlDbl::GetValue() const { return m_value; }
 
 wxSize wxSpinCtrlDbl::DoGetBestSize() const
 {   
@@ -559,4 +561,37 @@ wxFont wxSpinCtrlDbl::GetFont() const
 {
     if (!m_textCtrl) return GetFont();
     return m_textCtrl->GetFont();
+}
+
+wxSpinCtrlDbl::wxSpinCtrlDbl() : wxControl() { Init(); }
+
+// Native constructor - note &parent, this is to avoid ambiguity
+wxSpinCtrlDbl::wxSpinCtrlDbl( wxWindow &parent, wxWindowID id,
+               const wxString &value,
+               const wxPoint& pos,
+               const wxSize& size,
+               long style,
+               double min, double max,
+               double initial,
+               double increment, int digits,
+               const wxString& name)
+{
+   Init();
+   Create(&parent, id, value, pos, size, style,
+          min, max, initial, increment, digits, name);
+}
+
+// wxSpinCtrl compatibility, call SetIncrement(increment,digits) after
+wxSpinCtrlDbl::wxSpinCtrlDbl( wxWindow *parent, wxWindowID id ,
+               const wxString &value,
+               const wxPoint& pos ,
+               const wxSize& size,
+               long style,
+               int min, int max,
+               int initial,
+               const wxString& name )
+{
+   Init();
+   Create(parent, id, value, pos, size, style,
+          (double)min, (double)max, (double)initial, 1.0, -1, name);
 }

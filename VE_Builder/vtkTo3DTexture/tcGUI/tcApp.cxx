@@ -168,42 +168,42 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
       _frame->SetMPIVariables( rank, p );
       wxApp::OnCmdLineParsed(parser);
       //set all the options on the translator
-      wxString inputDir("./");
-      wxString outputDir("./");
+      wxString inputDir(_("./") );
+      wxString outputDir(_("./") );
       long int resolution[3] = {32,32,32};
       long int transientGridProp = 0;
       long int minStep = 0;
       
       /**/
       inputDir = parser.GetParam(0);
-      _frame->SetInputDirectory(inputDir.c_str());
-      if(!parser.Found(wxString("y"),&resolution[1]))
+      _frame->SetInputDirectory( ConvertUnicode( inputDir.c_str() ) );
+      if(!parser.Found(_("y"),&resolution[1]))
       {
         return false;
       }
-      if(!parser.Found(wxString("x"),&resolution[0]))
+      if(!parser.Found(_("x"),&resolution[0]))
       {
         return false;
       }
-      if(!parser.Found(wxString("z"),&resolution[2]))
+      if(!parser.Found(_("z"),&resolution[2]))
       {
         return false;
       }
-      if(!parser.Found(wxString("ms"),&minStep))
+      if(!parser.Found(_("ms"),&minStep))
       {
         return false;
       }
-      if(!parser.Found(wxString("tgp"),&transientGridProp))
+      if(!parser.Found(_("tgp"),&transientGridProp))
       {
         return false;
       }
-      if(!parser.Found(wxString("o"),&outputDir))
+      if(!parser.Found(_("o"),&outputDir))
       {
-         _frame->SetOutputDirectory(inputDir.c_str());
+         _frame->SetOutputDirectory( ConvertUnicode( inputDir.c_str() ) );
       }
       else
       {
-         _frame->SetOutputDirectory(outputDir.c_str());
+         _frame->SetOutputDirectory( ConvertUnicode( outputDir.c_str() ) );
       }
       _frame->SetTransientGridProperty(transientGridProp);
       _frame->SetMinimumTimeStep(minStep);

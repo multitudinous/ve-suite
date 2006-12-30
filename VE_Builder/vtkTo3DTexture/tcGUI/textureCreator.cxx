@@ -434,8 +434,8 @@ void VTKDataToTexture::setOutputDirectory(const std::string outDir)
 //////////////////////////////////////////////////////////////////
 bool VTKDataToTexture::createDataSetFromFile(const std::string filename)
 {
-   wxString msg = wxString("Reading Dataset: ") + wxString(filename.c_str());
-   _updateTranslationStatus(msg.c_str());
+   wxString msg = wxString("Reading Dataset: ", wxConvUTF8) + wxString(filename.c_str(), wxConvUTF8);
+   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
    //_confirmFileType(filename);
    vtkDataSet* tmpDSet = VE_Util::readVtkThing(filename);
    int dataObjectType = tmpDSet->GetDataObjectType();
@@ -491,8 +491,8 @@ void VTKDataToTexture::_confirmFileType(const std::string fileName)
 /////////////////////////////////////////
 void VTKDataToTexture::createTextures()
 {
-   wxString msg = wxString("Creating textures.");
-   _updateTranslationStatus(msg.c_str());
+   wxString msg = wxString("Creating textures.", wxConvUTF8);
+   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
    //check for a dataset
    if(!_dataSet){
       if(_vFileName){
@@ -512,8 +512,8 @@ void VTKDataToTexture::createTextures()
       std::cout<<"WARNING: Resolution set to the min!:"<<std::endl;
       std::cout<<" : VTKDataToTexture::createTextures()"<<std::endl;
    }
-   msg = wxString("Building octree.");
-   _updateTranslationStatus(msg.c_str());
+   msg = wxString("Building octree.", wxConvUTF8);
+   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
 
    //get the info about the data in the data set
    _nPtDataArrays = _dataSet->GetPointData()->GetNumberOfArrays();
@@ -527,8 +527,8 @@ void VTKDataToTexture::createTextures()
    //by default, _recreateValidityBetweenTimeSteps is false
    if(!_madeValidityStructure || _recreateValidityBetweenTimeSteps)
    {
-      msg = wxString("Sampling valid domain. . .");
-      _updateTranslationStatus(msg.c_str());
+      msg = wxString("Sampling valid domain. . .", wxConvUTF8);
+      _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
       //build the octree
       long timeID = (long)time( NULL );
       std::cout << timeID << std::endl;
@@ -558,8 +558,8 @@ void VTKDataToTexture::createTextures()
       _cLocator->Delete();
    }
 
-   msg = wxString("Processing scalars. . .");
-   _updateTranslationStatus(msg.c_str());
+   msg = wxString("Processing scalars. . .", wxConvUTF8);
+   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
 
    for ( int i = 0; i < _nScalars; ++i )
    {
@@ -568,15 +568,15 @@ void VTKDataToTexture::createTextures()
       _dataSet->GetBounds(bbox);
       
       FlowTexture texture;
-      msg = wxString("Scalar: ") + wxString(_scalarNames[i]);
-      _updateTranslationStatus(msg.c_str());
+      msg = wxString("Scalar: ", wxConvUTF8) + wxString(_scalarNames[i], wxConvUTF8);
+      _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
 
       texture.setTextureDimension(_resolution[0],_resolution[1],_resolution[2]);
       texture.setBoundingBox(bbox);
       _curScalar.push_back(texture);
 
-      msg = wxString("Resampling scalar data.");
-      _updateTranslationStatus(msg.c_str());
+      msg = wxString("Resampling scalar data.", wxConvUTF8);
+      _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
       _resampleData(i,1);
       //std::cout<<"Writing data to texture."<<std::endl;
       writeScalarTexture(i);
@@ -584,23 +584,23 @@ void VTKDataToTexture::createTextures()
       _curScalar.clear();
    }
    //std::cout<<"Processing vectors:"<<std::endl;
-    msg = wxString("Processing vectors. . .");
-   _updateTranslationStatus(msg.c_str());
+    msg = wxString("Processing vectors. . .", wxConvUTF8);
+   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
 
    for(int i = 0; i < _nVectors; i++){ 
        double bbox[6] = {0,0,0,0,0,0};
       //a bounding box
       _dataSet->GetBounds(bbox);
       FlowTexture texture;
-      wxString msg = wxString("Vector: ") + wxString(_vectorNames[i]);
-      _updateTranslationStatus(msg.c_str());
+      wxString msg = wxString("Vector: ", wxConvUTF8) + wxString(_vectorNames[i], wxConvUTF8);
+      _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
 
       texture.setTextureDimension(_resolution[0],_resolution[1],_resolution[2]);
       texture.setBoundingBox(bbox);
       _velocity.push_back(texture);
       
-      msg = wxString("Resampling vector data.");
-      _updateTranslationStatus(msg.c_str());
+      msg = wxString("Resampling vector data", wxConvUTF8);
+      _updateTranslationStatus( ConvertUnicode( msg.c_str()) );
       _resampleData(i,0);
       
       //std::cout<<"         Writing data to texture."<<std::endl;
@@ -1240,8 +1240,8 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    double velRange[2] = {0,0};
    velRange[0] = _vectorRanges.at(whichVector)[0];
    velRange[1] = _vectorRanges.at(whichVector)[1];
-   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(nameString.c_str());
-   _updateTranslationStatus(msg.c_str());
+   wxString msg = wxString("Writing file: ", wxConvUTF8) + wxString("\n", wxConvUTF8) + wxString(nameString.c_str(), wxConvUTF8);
+   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
    _velocity.at(0).writeFlowTexture( nameString, std::string( _vectorNames[whichVector] ) );
 }
 ///////////////////////////////////////////
@@ -1308,8 +1308,8 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    double scalarRange[2] = {0,0};
    scalarRange[0] = _scalarRanges.at(whichScalar)[0];
    scalarRange[1] = _scalarRanges.at(whichScalar)[1];
-   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(nameString.c_str());
-   _updateTranslationStatus( msg.c_str() );
+   wxString msg = wxString("Writing file: ", wxConvUTF8) + wxString("\n", wxConvUTF8) + wxString(nameString.c_str(), wxConvUTF8);
+   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
    _curScalar.at(0).writeFlowTexture( nameString, std::string( _scalarNames[whichScalar] ) );  
 }
 	
