@@ -53,7 +53,7 @@ bool paraThread::Do()
   //system("paraview");
   //::wxShell("paraview");
   wxArrayString output;
-  ::wxExecute("paraview", output);
+  ::wxExecute( _("paraview"), output);
 
   nw->paraview = false;
   return true;

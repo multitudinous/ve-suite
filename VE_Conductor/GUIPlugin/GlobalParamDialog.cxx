@@ -85,10 +85,10 @@ GlobalParamDialog::GlobalParamDialog(wxWindow *parent, wxWindowID id)
   toptop->Add(top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL);
   toptop->Add(right_margin, 0, wxALIGN_RIGHT);
 
-  wxStaticBox *glb_lbl = new wxStaticBox(this, -1, "Global Parameters");
+  wxStaticBox *glb_lbl = new wxStaticBox(this, -1, _("Global Parameters") );
   wxStaticBoxSizer *glb_sizer = new wxStaticBoxSizer(glb_lbl, wxHORIZONTAL);
 
-  wxStaticBox *finance_lbl = new wxStaticBox(this, -1, "Financial Parameters");
+  wxStaticBox *finance_lbl = new wxStaticBox(this, -1, _("Financial Parameters") );
   wxStaticBoxSizer *finance_sizer = new wxStaticBoxSizer(finance_lbl, wxVERTICAL);
 
   wxBoxSizer *ok_row=new wxBoxSizer(wxHORIZONTAL);
@@ -137,16 +137,16 @@ GlobalParamDialog::GlobalParamDialog(wxWindow *parent, wxWindowID id)
 
   fin_lbl[0] = new wxStaticText(this, -1, _T("Year Costs Reported"), wxDefaultPosition, tag_size);
   
-  wxString years[]={"1977", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", 
-		    "1987", "1988", "1989", "1990", "1991", "1992", "1993", "1994", "1995", "1996", 
-		    "1997", "1998", "1999", "2000", "2001", "2002", "2003"};
+  wxString years[]={_("1977"), _("1978"), _("1979"), _("1980"), _("1981"), _("1982"), _("1983"), _("1984"), _("1985"), _("1986"), 
+		    _("1987"), _("1988"), _("1989"), _("1990"), _("1991"), _("1992"), _("1993"), _("1994"), _("1995"), _("1996"), 
+		    _("1997"), _("1998"), _("1999"), _("2000"), _("2001"), _("2002"), _("2003")};
   
   year_costs = new wxComboBox(this, YEAR_COSTS, _T("2002"), wxDefaultPosition, entry_size, 27, years, wxCB_DROPDOWN|wxCB_READONLY);
 
   fin_sizer[0]->Add(fin_lbl[0],0,wxALIGN_CENTER_HORIZONTAL);
   fin_sizer[0]->Add(year_costs,0,wxALIGN_CENTER_HORIZONTAL);
 
-  wxString dollars[]={"Constant", "Current"};
+  wxString dollars[]={_("Constant"), _("Current")};
 
   fin_lbl[1] = new wxStaticText(this, -1, _T("Constant or Current Dollars?"), wxDefaultPosition, tag_size);
   cst_cur_dollar = new wxComboBox(this, CST_CUR_DOLLAR, _T("Constant"), wxDefaultPosition, entry_size, 2, dollars, wxCB_DROPDOWN|wxCB_READONLY);
@@ -225,8 +225,8 @@ GlobalParamDialog::GlobalParamDialog(wxWindow *parent, wxWindowID id)
   fin_sizer[15]->Add(invest_tax_credit,0,wxALIGN_CENTER_HORIZONTAL);
 
  //The ok row
-  ok_b = new wxButton(this, wxID_OK, "OK");
-  cancel_b = new wxButton(this, wxID_CANCEL, "Cancel");
+  ok_b = new wxButton(this, wxID_OK, _("OK"));
+  cancel_b = new wxButton(this, wxID_CANCEL, _("Cancel"));
   ok_row->Add(ok_b, 0, wxALIGN_CENTER_HORIZONTAL);
   ok_row->Add(cancel_b, 0, wxALIGN_CENTER_HORIZONTAL);
 
@@ -320,7 +320,7 @@ void GlobalParamDialog::OnChange(wxCommandEvent& WXUNUSED(event) )
 
 bool GlobalParamDialog::TransferDataFromWindow()
 {
-  entry2double(plant_capacity, &plant_capacity_d);
+/*  entry2double(plant_capacity, &plant_capacity_d);
 
   year_costs_s=year_costs->GetValue();
   cst_cur_dollar_s=cst_cur_dollar->GetValue();
@@ -412,7 +412,7 @@ bool GlobalParamDialog::TransferDataFromWindow()
   if (specify_a->GetValue())
     use_l = 1;
   else
-    use_l = 0;
+    use_l = 0;*/
   return true;
 }
 
@@ -427,7 +427,7 @@ void GlobalParamDialog::entry2double(wxTextCtrl* entry, double * value)
 {
   wxString txt;
   txt=entry->GetValue();
-  (*value) = atof(txt.c_str());
+  (*value) = atof( ConvertUnicode( txt.c_str() ).c_str());
 }
 
 void GlobalParamDialog::UnPack(Interface *intf)
@@ -438,9 +438,9 @@ void GlobalParamDialog::UnPack(Interface *intf)
   globalparam_intf=*intf;
   globalparam_intf.getVal("plant_capacity", plant_capacity_d);
   globalparam_intf.getVal("year_costs", temp);
-  year_costs_s = temp.c_str();
+  year_costs_s = wxString( temp.c_str(), wxConvUTF8);
   globalparam_intf.getVal("cst_cur_dollar", temp);
-  cst_cur_dollar_s = temp.c_str();
+  cst_cur_dollar_s = wxString(temp.c_str(), wxConvUTF8);
   globalparam_intf.getVal("fixed_charge", fixed_charge_d);
   globalparam_intf.getVal("discnt_rate", discnt_rate_d);
   globalparam_intf.getVal("inflation_rate", inflation_rate_d);
@@ -466,9 +466,9 @@ Interface *GlobalParamDialog::Pack()
   globalparam_intf._id= 100000 ; //The id for the globalparam
 
   globalparam_intf.setVal("plant_capacity", plant_capacity_d);
-  temp = year_costs_s.c_str();
+  temp = ConvertUnicode( year_costs_s.c_str());
   globalparam_intf.setVal("year_costs", temp);
-  temp = cst_cur_dollar_s.c_str();  
+  temp = ConvertUnicode(cst_cur_dollar_s.c_str());  
   globalparam_intf.setVal("cst_cur_dollar", temp);
   globalparam_intf.setVal("fixed_charge", fixed_charge_d);
   globalparam_intf.setVal("discnt_rate", discnt_rate_d);

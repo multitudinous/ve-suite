@@ -166,6 +166,11 @@ class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
 	private:
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+      std::string ConvertUnicode( const wxChar* data )
+      {
+         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+         return tempStr;
+      }
 };
 
 #endif

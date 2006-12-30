@@ -328,7 +328,7 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    adStreamline.SetSize(GetRect());
    adStreamline.SetIntegrationStepSize(_lastIntegrationStepSize);
    adStreamline.SetPropagationSize(_lastPropagationSize);
-   adStreamline.SetLineDiameter(_lastLineDiameter);
+   adStreamline.SetLineDiameter( _lastLineDiameter );
    adStreamline.SetSphereArrowParticleSize(_lastSphereArrowParticleSize);
    adStreamline.SetStep(_lastStep);
    adStreamline.SetUseLastSeedPt(_lastSeedPtFlag);
@@ -381,7 +381,7 @@ void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))
    catch(...)
    {
       {
-         wxMessageBox( "Invalid Parent","Communication Failure", 
+         wxMessageBox( _("Invalid Parent"),_("Communication Failure"), 
             wxOK | wxICON_INFORMATION );
          if(newCommand)
          {
@@ -393,17 +393,17 @@ void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))
 //////////////////////////////////////////////////////////
 void Streamlines::_onCursorSelect(wxCommandEvent& WXUNUSED(event))
 {
-   _cursorType = _cursorRBox->GetStringSelection();
+   _cursorType = ConvertUnicode( _cursorRBox->GetStringSelection() );
 }
 //////////////////////////////////////////////////////////
 void Streamlines::_onDirection(wxCommandEvent& WXUNUSED(event))
 {
-   _streamlineDirection = _directionRBox->GetStringSelection();
+   _streamlineDirection = ConvertUnicode( _directionRBox->GetStringSelection() );
 }
 //////////////////////////////////////////////////////////
 void Streamlines::_onIntegrateDir(wxCommandEvent& WXUNUSED(event))
 {
-   _integrationDirection = _integrationRBox->GetStringSelection();
+   _integrationDirection = ConvertUnicode( _integrationRBox->GetStringSelection() );
 }
 ///////////////////////////////////////////////////////////////
 void Streamlines::_onSizeSlider(wxScrollEvent& WXUNUSED(event))

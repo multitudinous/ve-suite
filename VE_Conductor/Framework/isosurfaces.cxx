@@ -209,8 +209,9 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
    catch(...)
    {
       {
-         wxMessageBox( "Invalid Parent","Communication Failure", 
-            wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Invalid Parent"), 
+                       _("Communication Failure"), 
+                       wxOK | wxICON_INFORMATION );
          if(newCommand)
          {
             delete newCommand;
@@ -225,7 +226,7 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    int selectionIndex = 0;
    for(size_t i = 0; i < _scalarNames.Count(); i++)
    {
-      if(!_scalarNames[i].Cmp(_colorByScalarName.c_str()) )
+      if(!_scalarNames[i].Cmp( wxString( _colorByScalarName.c_str(), wxConvUTF8) ) )
       {
          selectionIndex = i;
          break;
@@ -246,7 +247,7 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    scalarSelector.SetSelection(selectionIndex);
    if (scalarSelector.ShowModal() == wxID_OK)
    {
-      _colorByScalarName = scalarSelector.GetStringSelection();
+      _colorByScalarName = ConvertUnicode( scalarSelector.GetStringSelection() );
    }
 }
 

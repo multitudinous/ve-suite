@@ -67,7 +67,7 @@ SummaryResultDialog::SummaryResultDialog(wxWindow * parent, const wxString& titl
    first_tab = TRUE;
 
    //SummaryResultDialog::SetAffirmativeId(wxID_OK);
-   ok = new wxButton(this, wxID_OK, "OK");
+   ok = new wxButton(this, wxID_OK, _("OK"));
 
    top_sizer->Add(10, 10, 0);
    //top_sizer->Add(new wxStaticText(this, -1, "Summary Data   ", wxDefaultPosition, wxDefaultSize), 0, wxALIGN_CENTER_HORIZONTAL);

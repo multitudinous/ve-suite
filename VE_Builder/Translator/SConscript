@@ -5,26 +5,26 @@ Import('baseEnv')
 Import('Platform')
 
 srcs = Split("""
-	translateToVtk.cpp
-   starReader.cpp
-   avsReader.cpp
-   reiReader.cpp
-   en7Reader.cpp
-   mfixReader.cpp
-   converter.cpp
-   gridConversion.cpp
-   viewCells.cpp
-   fireReader.cpp
-   cfdGrid2Surface.cpp
-   particle.cpp
-   fluentParticles.cpp
-   reiParticles.cpp
-   plot3dReader.cpp
-   jdMAPReader.cpp
-   enSightGoldReader.cpp
-   ansysReader.cpp
-   ansysReader10.cpp
-   tecplotReader.cpp
+   translateToVtk.cxx
+   starReader.cxx
+   avsReader.cxx
+   reiReader.cxx
+   en7Reader.cxx
+   mfixReader.cxx
+   converter.cxx
+   gridConversion.cxx
+   viewCells.cxx
+   fireReader.cxx
+   cfdGrid2Surface.cxx
+   particle.cxx
+   fluentParticles.cxx
+   reiParticles.cxx
+   plot3dReader.cxx
+   jdMAPReader.cxx
+   enSightGoldReader.cxx
+   ansysReader.cxx
+   ansysReader10.cxx
+   tecplotReader.cxx
    vtkCleanUnstructuredGrid.cxx
 """)
 ## REMOVED: vtkEnSightFortranBinaryReader.cxx

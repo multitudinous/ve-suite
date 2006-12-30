@@ -72,7 +72,7 @@ void QueryInputsDlg::WxButton4Click(wxCommandEvent& event)
 
 void QueryInputsDlg::AppendList(const char * input)
 {
-	WxListBox1->Append(wxT(input));
+	WxListBox1->Append(wxString(input, wxConvUTF8 ));
 }
 
 bool QueryInputsDlg::IsSubmit()

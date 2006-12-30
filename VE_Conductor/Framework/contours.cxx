@@ -202,11 +202,11 @@ void Contours::SetDataType(std::string type)
    
    if(_dataType == "SCALAR")
    {
-      SetTitle("Scalar Contour");
+      SetTitle( _("Scalar Contour") );
    }
    else if(_dataType == "VECTOR")
    {
-      SetTitle("Vector Contour");
+      SetTitle( _("Vector Contour") );
    }
 }
 /////////////////////////////
@@ -299,14 +299,14 @@ void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    }
    else
    {
-      wxMessageBox( _dataType.c_str(),"Unknown Data Type!", 
+      wxMessageBox( wxString( _dataType.c_str(), wxConvUTF8 ), _("Unknown Data Type!"), 
             wxOK | wxICON_INFORMATION );
    }
 }
 /////////////////////////////////////////////////////
 void Contours::_onDirection( wxCommandEvent& WXUNUSED(event) )
 {
-   _planeDirection = _directionRBox->GetStringSelection();
+   _planeDirection = ConvertUnicode( _directionRBox->GetStringSelection() );
 }
 ///////////////////////////////////////////////////////
 /*void Contours::_onContourType( wxCommandEvent& WXUNUSED(event) )
@@ -327,7 +327,7 @@ void Contours::_onMultiplePlanes( wxCommandEvent& WXUNUSED(event) )
 //////////////////////////////////////////////////////
 void Contours::_onCyclePlanes( wxCommandEvent& WXUNUSED(event) )
 {
-   _planeOption = _cyclePrecomputedCBox->GetLabel();
+   _planeOption = ConvertUnicode( _cyclePrecomputedCBox->GetLabel() );
 }
 ///////////////////////////////////////////////////////
 void Contours::_onSinglePlane( wxCommandEvent& WXUNUSED(event) )
@@ -343,7 +343,7 @@ void Contours::_onSinglePlane( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////
 void Contours::_onPrecomputedPlane( wxCommandEvent& WXUNUSED(event) )
 {
-   _planeOption = _nearestPrecomputedCBox->GetLabel();
+   _planeOption = ConvertUnicode( _nearestPrecomputedCBox->GetLabel() );
 }
 /////////////////////////////////////////////////
 void Contours::_onPlane( wxCommandEvent& WXUNUSED(event) )
@@ -417,7 +417,8 @@ void Contours::_updateAdvancedSettings()
    }
    else
    {
-      wxMessageBox( _dataType.c_str(),"Unknown Data Type", 
+      wxMessageBox( wxString( _dataType.c_str(), wxConvUTF8), 
+                    _("Unknown Data Type"), 
             wxOK | wxICON_INFORMATION );
    }
 }
@@ -503,7 +504,7 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED(event) )
    catch(...)
    {
       {
-         wxMessageBox( "Invalid Parent","Communication Failure", 
+         wxMessageBox( _("Invalid Parent"), _("Communication Failure"), 
             wxOK | wxICON_INFORMATION );
          if(newCommand)
          {

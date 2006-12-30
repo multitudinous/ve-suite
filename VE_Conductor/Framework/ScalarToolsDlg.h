@@ -130,6 +130,13 @@ protected:
    wxSlider* _isoSlider;///<The isosurface slider.
    wxComboBox* _scalarSelection;///<The available scalars.
    VE_Conductor::GUI_Utilities::DualSlider* _scalarRange;///<DualSlider for x bounds
+   
+   std::string ConvertUnicode( const wxChar* data )
+   {
+         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+         return tempStr;
+   }
+
    DECLARE_EVENT_TABLE()
 };
 

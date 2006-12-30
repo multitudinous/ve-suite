@@ -132,11 +132,11 @@ void UI_TransientDialog::_buildGUI()
    wxBoxSizer* controlSizer = new wxBoxSizer(wxHORIZONTAL);
    
    wxStaticBox* timeStep = new wxStaticBox(this,-1,
-                                wxString("Current Timestep"));
+                                _("Current Timestep"));
    wxStaticBoxSizer* tStepSizer = new wxStaticBoxSizer(timeStep,wxHORIZONTAL);
 
    wxStaticBox* duration = new wxStaticBox(this,-1,
-                                wxString("Duration (s)"));
+                                _("Duration (s)"));
    wxStaticBoxSizer* dSizer = new wxStaticBoxSizer(duration,wxHORIZONTAL);
    //wxBoxSizer* dSizer = new wxBoxSizer(wxHORIZONTAL);
 

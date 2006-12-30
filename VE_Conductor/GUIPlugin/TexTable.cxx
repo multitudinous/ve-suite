@@ -42,8 +42,8 @@ TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxS
 //wxTextCtrl(parent, id, "x", pos, size, wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL|wxTE_DONTWRAP)
 {
   CreateGrid (0,2);
-  SetColLabelValue (0, "Description");
-  SetColLabelValue (1, "Value");
+  SetColLabelValue (0, _("Description") );
+  SetColLabelValue (1, _("Value") );
   SetRowMinimalAcceptableHeight (9);
   SetColMinimalAcceptableWidth (27);
   SetColMinimalWidth (0, 27);
@@ -198,7 +198,7 @@ void TexTable::AddRow(const std::vector<wxString>& vals)
       }
       else
       {
-         temp = "";
+         temp = _("");
       }
 
       SetCellValue( GetNumberRows()-1, i, temp);
@@ -227,7 +227,7 @@ void TexTable::AddSeperator(char pad)
 
    for ( int i=0; i < GetNumberCols(); ++i )
    {
-      wxString s = "";
+      wxString s = _("");
       s.Pad( 10, pad );
       vals.push_back( s );
    }

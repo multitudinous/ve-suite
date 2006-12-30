@@ -61,7 +61,7 @@ PortDialog::PortDialog(const wxString& title)
 			 sz2);
 
   //PortDialog::SetAffirmativeId(wxID_OK);
-  ok = new wxButton(this, wxID_OK, "OK");
+  ok = new wxButton(this, wxID_OK, _("OK"));
 
   top_sizer->Add(first_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(second_row, 0, wxALIGN_CENTER_HORIZONTAL);
@@ -69,16 +69,16 @@ PortDialog::PortDialog(const wxString& title)
   top_sizer->Add(syngas, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(ok, 0, wxALIGN_CENTER_HORIZONTAL);
 
-  first_row->Add(new wxStaticText(this, -1, "Temperature (F): ", wxDefaultPosition, sz1), 1, wxALIGN_LEFT);
-  temp = new wxTextCtrl(this, -1, "", wxDefaultPosition, sz1, wxTE_READONLY);
+  first_row->Add(new wxStaticText(this, -1, _("Temperature (F): "), wxDefaultPosition, sz1), 1, wxALIGN_LEFT);
+  temp = new wxTextCtrl(this, -1, _(""), wxDefaultPosition, sz1, wxTE_READONLY);
   first_row->Add(temp, 0, wxALIGN_CENTER_HORIZONTAL);
   
-  second_row->Add(new wxStaticText(this, -1, "Pressure (psi): ", wxDefaultPosition, sz1), 1, wxALIGN_LEFT);
-  pres = new wxTextCtrl(this, -1, "", wxDefaultPosition, sz1, wxTE_READONLY);
+  second_row->Add(new wxStaticText(this, -1, _("Pressure (psi): "), wxDefaultPosition, sz1), 1, wxALIGN_LEFT);
+  pres = new wxTextCtrl(this, -1, _(""), wxDefaultPosition, sz1, wxTE_READONLY);
   second_row->Add(pres, 0, wxALIGN_CENTER_HORIZONTAL);
   
-  third_row->Add(new wxStaticText(this, -1, "Flow rate (ton/hr): ", wxDefaultPosition, sz1), 1, wxALIGN_LEFT);
-  flrt = new wxTextCtrl(this, -1, "", wxDefaultPosition, sz1, wxTE_READONLY);
+  third_row->Add(new wxStaticText(this, -1, _("Flow rate (ton/hr): "), wxDefaultPosition, sz1), 1, wxALIGN_LEFT);
+  flrt = new wxTextCtrl(this, -1, _(""), wxDefaultPosition, sz1, wxTE_READONLY);
   third_row->Add(flrt, 0, wxALIGN_CENTER_HORIZONTAL);
 
   SetSizer( top_sizer );
@@ -112,10 +112,10 @@ PortDialog::~PortDialog()
 
 void PortDialog::SetVal(const wxString &var, const wxString &val)
 {
-  if (var=="TEMP")
+  if (var==_("TEMP"))
     temp->SetValue(val);
-  else if (var=="PRES")
+  else if (var==_("PRES"))
     pres->SetValue(val);
-  else if (var=="FLRT")
+  else if (var==_("FLRT"))
     flrt->SetValue(val);
 }

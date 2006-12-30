@@ -5,30 +5,30 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options PREFIX')
 
 srcs = Split("""
-   App.cpp 
-   Avail_Modules.cpp
+   App.cxx 
+   Avail_Modules.cxx
    DataSetLoaderUI.cxx
-   Frame.cpp 
-   Network.cpp 
-   DeviceProperties.cpp 
+   Frame.cxx 
+   Network.cxx 
+   DeviceProperties.cxx 
    NavigationPane.cxx 
-   paraThread.cpp 
-   PluginLoader.cpp 
-   SoundsPane.cpp 
+   paraThread.cxx 
+   PluginLoader.cxx 
+   SoundsPane.cxx 
    ViewLocPane.cxx
    TBToolBar.cxx
    TransformUI.cxx
-   vistab.cpp
-   vectors.cpp
-   advancedvectors.cpp
-   contours.cpp
-   advancedcontours.cpp
-   streamlines.cpp
-   advancedstreamlines.cpp
-   isosurfaces.cpp
-   polydata.cpp
+   vistab.cxx
+   vectors.cxx
+   advancedvectors.cxx
+   contours.cxx
+   advancedcontours.cxx
+   streamlines.cxx
+   advancedstreamlines.cxx
+   isosurfaces.cxx
+   polydata.cxx
    ScalarToolsDlg.cxx
-   UI_TeacherTab.cpp
+   UI_TeacherTab.cxx
    UI_TransientDialog.cxx
    UserPreferences.cxx
 """)

@@ -68,7 +68,7 @@ TextResultDialog::TextResultDialog(wxWindow * parent, const wxString& title, wxS
 			 tabsize);
 
   //TextResultDialog::SetAffirmativeId(wxID_OK);
-  ok = new wxButton(this, wxID_OK, "OK");
+  ok = new wxButton(this, wxID_OK, _("OK"));
 
   top_sizer->Add(10, 10, 0);
   top_sizer->Add(

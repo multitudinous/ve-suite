@@ -53,7 +53,7 @@ END_EVENT_TABLE()
 //Constructor//
 ///////////////
 SoundsPane::SoundsPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
-:wxDialog(NULL,-1, wxString("Sounds Pane"), 
+:wxDialog(NULL,-1, _("Sounds Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
@@ -77,8 +77,7 @@ void SoundsPane::_buildPage()
       defaultName = new wxString[ numSounds ];
       for(CORBA::ULong i = 0; i < (unsigned int)numSounds; i++)
       {
-         defaultName[ i ] = soundNameArray[ i ];
-         std::cout << "Sound Name " << i << " : " << defaultName[ i ] << std::endl;
+         defaultName[ i ] = wxString( soundNameArray[ i ], wxConvUTF8);
       }
    }
    else
@@ -177,8 +176,8 @@ void SoundsPane::SendCommandsToXplorer( void )
       }
       catch ( ... )
       {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
          delete [] tempDoc;
       }
    }

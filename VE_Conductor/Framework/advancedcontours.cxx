@@ -250,7 +250,7 @@ double AdvancedContours::GetLOD()
 ///////////////////////////////////////////////////////
 void AdvancedContours::SetContourType(std::string type)
 {
-   _contourTypeRBox->SetStringSelection(type.c_str());
+   _contourTypeRBox->SetStringSelection( wxString(type.c_str(), wxConvUTF8 ));
 }
 /////////////////////////////////////////////////////
 void AdvancedContours::SetWarpOption(bool warpOption)
@@ -265,6 +265,6 @@ bool AdvancedContours::GetWarpOption()
 //////////////////////////////////////////////
 std::string AdvancedContours::GetContourType()
 {
-   return _contourTypeRBox->GetStringSelection().c_str();
+   return ConvertUnicode( _contourTypeRBox->GetStringSelection().c_str() );
 }
 

@@ -118,10 +118,10 @@ void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
    
    for(size_t i = 0; i < nScalars; i++)
    {
-      if(scalarNames[i] != wxString(""))
+      if(scalarNames[i] != wxString("",wxConvUTF8))
       {
          wxFileName fName(scalarNames[i]);
-         _availableScalars.Add(fName.GetName());
+         _availableScalars.Add( wxString(fName.GetName(),wxConvUTF8));
       }
       else
       {
@@ -139,10 +139,10 @@ void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
  
    for(size_t i = 0; i < nVectors; i++)
    {
-      if(vectorNames[i] != wxString(""))
+      if(vectorNames[i] != wxString("",wxConvUTF8))
       {
          wxFileName fName(vectorNames[i]);
-         _availableVectors.Add(fName.GetName());
+         _availableVectors.Add( wxString(fName.GetName(), wxConvUTF8));
       }
       else
       {
@@ -209,9 +209,9 @@ void TextureBasedToolBar::_buildGUI()
 
    ///the sub dialogs
    ///ROI Dialog
-   _roiDlg = new VE_Conductor::GUI_Utilities::ROIDialog(this,-1,"Volume Clipping Bounds");
+   _roiDlg = new VE_Conductor::GUI_Utilities::ROIDialog(this,-1, "Volume Clipping Bounds" );
    //_roiDlg->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
-   _scalarToolsDlg = new ScalarToolsDialog(this,-1,"Scalar Tools");
+   _scalarToolsDlg = new ScalarToolsDialog(this,-1, "Scalar Tools" );
    
 }
 /////////////////////////////////////////////////////////////
@@ -263,24 +263,25 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
                _scalarToolsDlg->SetSize(_subDialogSize);
                if(_scalarToolsDlg->ShowModal() == wxID_OK)
                {
+                  ;
                }
             }
             else
             {
-               wxMessageBox( "ERROR!", 
-                            "No scalar data available!!", wxOK | wxICON_ERROR);
+               wxMessageBox( _("ERROR!"), 
+                            _("No scalar data available!!"), wxOK | wxICON_ERROR);
             
             }
          }
          
          break;
       case VECTOR_ID:
-         wxMessageBox( "Unavailable!!","Vector tools.", 
+         wxMessageBox( _("Unavailable!!"),_("Vector tools"), 
                        wxOK | wxICON_INFORMATION );
          break;
       case TRANSFER_FUNCS_ID:
-         wxMessageBox( "Transfer functions tools.", 
-                        "Unavailable!!", wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Transfer functions tools."), 
+                        _("Unavailable!!"), wxOK | wxICON_INFORMATION );
          break;
       case ROI_ID:
          {
@@ -306,7 +307,7 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
       VE_XML::DataValuePair* activateCommand = new VE_XML::DataValuePair();
       activateCommand->SetDataType("STRING");
       activateCommand->SetDataName(std::string("Active Scalar"));
-      activateCommand->SetDataString(_availableScalars[0].GetData());
+      activateCommand->SetDataString( ConvertUnicode( _availableScalars[0].GetData() ) );
       _instructions.push_back(activateCommand);
       _sendCommandsToXplorer();
    }
@@ -315,13 +316,13 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
       VE_XML::DataValuePair* activateCommand = new VE_XML::DataValuePair();
       activateCommand->SetDataType("STRING");
       activateCommand->SetDataName(std::string("Active Vector"));
-      activateCommand->SetDataString(_availableVectors[0].GetData());
+      activateCommand->SetDataString( ConvertUnicode(_availableVectors[0].GetData()));
       _instructions.push_back(activateCommand);
       _sendCommandsToXplorer();
    }
    else
    {
-      wxMessageBox( "No texture-based datasets available!!","ERROR.", 
+      wxMessageBox( _("No texture-based datasets available!!"),_("ERROR"), 
                     wxOK | wxICON_ERROR );
       _tbToolButtons->Enable(false);
       return false;

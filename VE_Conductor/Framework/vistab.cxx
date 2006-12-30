@@ -123,14 +123,14 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    scalarSelect = false;
    vectorSelect = false;
 
-   _availableSolutions["MESH_SCALARS"].Add(""); 
-   _availableSolutions["MESH_VECTORS"].Add(""); 
-   _availableSolutions["TEXTURE_SCALARS"].Add("");  
-   _availableSolutions["TEXTURE_VECTORS"].Add("");
+   _availableSolutions["MESH_SCALARS"].Add( _("") ); 
+   _availableSolutions["MESH_VECTORS"].Add( _("") ); 
+   _availableSolutions["TEXTURE_SCALARS"].Add( _("") );  
+   _availableSolutions["TEXTURE_VECTORS"].Add( _("") );
    _commandName = "VISUALIZATION_TAB";
    SetActiveModel(activeModel);
-   _activeScalarName = _scalarSelection->GetStringSelection();
-   _activeVectorName = _vectorSelection->GetStringSelection();
+   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
    _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
@@ -159,16 +159,16 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    scalarSelect = false;
    vectorSelect = false;
 
-   _availableSolutions["MESH_SCALARS"].Add(""); 
-   _availableSolutions["MESH_VECTORS"].Add(""); 
-   _availableSolutions["TEXTURE_SCALARS"].Add("");  
-   _availableSolutions["TEXTURE_VECTORS"].Add(""); 
+   _availableSolutions["MESH_SCALARS"].Add( _("") ); 
+   _availableSolutions["MESH_VECTORS"].Add( _("") ); 
+   _availableSolutions["TEXTURE_SCALARS"].Add( _("") );  
+   _availableSolutions["TEXTURE_VECTORS"].Add( _("") ); 
 
    SetActiveModel(activeModel);
    Create(parent, id, caption, pos, size, style);
    _commandName = "VISUALIZATION_TAB";
-   _activeScalarName = _scalarSelection->GetStringSelection();
-   _activeVectorName = _vectorSelection->GetStringSelection();
+   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
    if(_nDatasetsInActiveModel)
    {
@@ -494,7 +494,7 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 
    if( _activeScalarName.empty() )
    {
-      wxMessageBox( "Select a scalar","Dataset Failure", 
+      wxMessageBox( _("Select a scalar"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       return;
    }
@@ -520,7 +520,7 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 {
    if( _activeVectorName.empty() )
    {
-      wxMessageBox( "Select a vector","Dataset Failure", 
+      wxMessageBox( _("Select a vector"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       return;
    }
@@ -543,7 +543,7 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
 {
    if( _activeScalarName.empty() )
    {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+      wxMessageBox( _("Select a scalar or vector"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       return;
    }
@@ -564,7 +564,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
    if( _activeScalarName.empty() )
    {
-      wxMessageBox( "Select a scalar","Dataset Failure", 
+      wxMessageBox( _("Select a scalar"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       return;
    }
@@ -615,7 +615,7 @@ void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
 {
    if( _activeScalarName.empty() )
    {
-      wxMessageBox( "Select a scalar","Dataset Failure", 
+      wxMessageBox( _("Select a scalar"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       return;
    }
@@ -659,7 +659,7 @@ void Vistab::SetActiveDataset(std::string name)
       //loop over available datasets
       for(unsigned int i = 0; i < _activeModel->dataVector.length(); i++)
       {
-         if(wxString(_activeModel->dataVector[i].datasetname) == wxString(name.c_str()))
+         if(wxString(_activeModel->dataVector[i].datasetname,wxConvUTF8) == wxString(name.c_str(), wxConvUTF8))
          {
             _setActiveDataset(i);
             return;
@@ -678,7 +678,7 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
       _availableDatasets.Clear();
       for(unsigned int i = 0; i < _nDatasetsInActiveModel; i++)
       {
-         _availableDatasets.Add(wxString(newModel->dataVector[i].datasetname));
+         _availableDatasets.Add(wxString(newModel->dataVector[i].datasetname, wxConvUTF8));
       }
    }
 }
@@ -759,7 +759,7 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
          _originalScalarRanges[std::string(newScalars[i].scalarnames)].push_back(newScalars[i].scalarrange[0]);
          _originalScalarRanges[std::string(newScalars[i].scalarnames)].push_back(newScalars[i].scalarrange[1]);
 
-         currentSolution->second.Add(wxString(newScalars[i].scalarnames));
+         currentSolution->second.Add(wxString(newScalars[i].scalarnames, wxConvUTF8));
       }
       _updateComboBoxNames("MESH_SCALARS",currentSolution->second);
    }
@@ -785,7 +785,7 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
       currentSolution->second.Clear();
       for(size_t i = 0; i < names.length(); i++)
       {
-         currentSolution->second.Add(wxString(names[i]));
+         currentSolution->second.Add(wxString(names[i], wxConvUTF8));
       }
       _updateComboBoxNames("MESH_VECTORS",currentSolution->second);
    }
@@ -836,13 +836,13 @@ DualSlider* Vistab::GetScalarRangeControls()
 ////////////////////////////////////////////////////
 void Vistab::_OnSelectDataset(wxCommandEvent& WXUNUSED(event))
 {
-   _activeDataSetName = _datasetSelection->GetValue();
+   _activeDataSetName = ConvertUnicode( _datasetSelection->GetValue() );
    SetActiveDataset(_activeDataSetName);
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 {
-   _activeScalarName = _scalarSelection->GetStringSelection();
+   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
    double minBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.99;
@@ -876,17 +876,17 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
 {
-   _activeVectorName = _vectorSelection->GetStringSelection();
+   _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
 
    if( _scalarSelection->IsEmpty() )
    {
-      wxMessageBox( "Scalar must be present","Dataset Failure", 
+      wxMessageBox( _("Scalar must be present"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       return;
    }
 
    _scalarSelection->Select(0);
-   _activeScalarName = _scalarSelection->GetStringSelection();
+   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
    double minBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.99;
@@ -1068,7 +1068,7 @@ void Vistab::_onMinSpinCtrl( wxScrollEvent& WXUNUSED(event) )
 
    if( _activeScalarName.empty() && _activeVectorName.empty() )
    {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+      wxMessageBox( _("Select a scalar or vector"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       _minSpinner->SetValue(0);
       return;
@@ -1102,7 +1102,7 @@ void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) )
 
    if( _activeScalarName.empty() && _activeVectorName.empty() )
    {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+      wxMessageBox( _("Select a scalar or vector"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       _maxSpinner->SetValue(100);
       return;
@@ -1142,7 +1142,7 @@ void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED(event) )
 {
    if( _activeScalarName.empty() && _activeVectorName.empty() )
    {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+      wxMessageBox( _("Select a scalar or vector"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       _minSlider->SetValue(0);
       return;
@@ -1163,7 +1163,7 @@ void Vistab::_onMaxSlider( wxScrollEvent& WXUNUSED(event) )
 {
    if( _activeScalarName.empty() && _activeVectorName.empty() )
    {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+      wxMessageBox( _("Select a scalar or vector"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       _maxSlider->SetValue(100);
       return;
@@ -1274,9 +1274,9 @@ void Vistab::UpdateAxesLabels( wxCommandEvent& event )
 {
    std::string activeAxesLAbel = "Axes Labels";
    std::vector< std::string > labels;
-   labels.push_back( xAxisEntry->GetValue().c_str() );
-   labels.push_back( yAxisEntry->GetValue().c_str() );
-   labels.push_back( zAxisEntry->GetValue().c_str() );
+   labels.push_back( ConvertUnicode( xAxisEntry->GetValue().c_str() ) );
+   labels.push_back( ConvertUnicode( yAxisEntry->GetValue().c_str() ) );
+   labels.push_back( ConvertUnicode( zAxisEntry->GetValue().c_str() ) );
    
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
    dataValuePair->SetData( activeAxesLAbel, labels );
@@ -1307,7 +1307,7 @@ void Vistab::UpdateMinSlider( wxCommandEvent& event )
 
    if( _activeScalarName.empty() && _activeVectorName.empty() )
    {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+      wxMessageBox( _("Select a scalar or vector"), _("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       _minSpinner->SetValue(0);
       return;
@@ -1340,7 +1340,7 @@ void Vistab::UpdateMaxSlider( wxCommandEvent& event )
 
    if( _activeScalarName.empty() && _activeVectorName.empty() )
    {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
+      wxMessageBox( _("Select a scalar or vector"), _("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
       _maxSpinner->SetValue(100);
       return;
@@ -1378,6 +1378,6 @@ void Vistab::InitialScalarVector()
 
       //_scalarSelection->UpdateWindowUI();
       //_scalarSelection->SetString(0);
-      std::cout<<"THIS WORKS: "<<_activeScalarName<<std::endl;
+      //std::cout<<"THIS WORKS: "<<_activeScalarName<<std::endl;
    }
 }

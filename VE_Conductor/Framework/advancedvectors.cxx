@@ -97,7 +97,7 @@ void AdvancedVectors::CreateControls()
 
    wxBoxSizer* vectorSizer = new wxBoxSizer(wxHORIZONTAL);
    vectorRange = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Vector Threshold"));
+                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,_("Vector Threshold"));
    vectorSizer->Add(vectorRange,1,wxALIGN_CENTER|wxEXPAND);
    itemStaticBoxSizer3->Add(vectorSizer, 5, wxALIGN_CENTER|wxEXPAND|wxALL, 5);
    //set the default values for the dual slider

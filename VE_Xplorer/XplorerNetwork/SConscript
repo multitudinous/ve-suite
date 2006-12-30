@@ -8,12 +8,12 @@ sources = Split("""
    cfdExecutive.cxx
    cfdVEAvailModules.cxx
    cfdVEPluginLoader.cxx
-   VE_i.cpp
+   VE_i.cxx
    DeleteObjectFromNetworkEventHandler.cxx
    SwitchXplorerViewEventHandler.cxx
    NetworkSystemView.cxx
-   temp/StringTokenizer.cpp
-   temp/bkpparser.cpp
+   temp/StringTokenizer.cxx
+   temp/bkpparser.cxx
 """)
 
 headers = Split("""

@@ -83,10 +83,10 @@ FinancialDialog::FinancialDialog(wxWindow *parent, wxWindowID id)
   toptop->Add(top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL);
   toptop->Add(right_margin, 0, wxALIGN_RIGHT);
 
-  wxStaticBox *cc_lbl = new wxStaticBox(this, -1, "Capital Costs");
+  wxStaticBox *cc_lbl = new wxStaticBox(this, -1, _("Capital Costs") );
   wxStaticBoxSizer *cc_sizer = new wxStaticBoxSizer(cc_lbl, wxVERTICAL);
 
-  wxStaticBox *om_lbl = new wxStaticBox(this, -1, "O and M Costs");
+  wxStaticBox *om_lbl = new wxStaticBox(this, -1, _("O and M Costs") );
   wxStaticBoxSizer *om_sizer = new wxStaticBoxSizer(om_lbl, wxVERTICAL);
 
   wxBoxSizer *ok_row=new wxBoxSizer(wxHORIZONTAL);
@@ -240,7 +240,7 @@ FinancialDialog::FinancialDialog(wxWindow *parent, wxWindowID id)
   om_var_sizer[3]->Add(om_var_unt[3], 0, wxALIGN_CENTER_HORIZONTAL);
 
   // Calculate row
-  ok_b = new wxButton(this, wxID_OK, "O.K.");
+  ok_b = new wxButton(this, wxID_OK, _("OK") );
   ok_row->Add(ok_b, 0, wxALIGN_CENTER_HORIZONTAL);
   
   this->SetAutoLayout( true );
@@ -324,5 +324,5 @@ void FinancialDialog::entry2double(wxTextCtrl* entry, double * value)
 {
   wxString txt;
   txt=entry->GetValue();
-  (*value) = atof(txt.c_str());
+  (*value) = atof( ConvertUnicode( txt.c_str() ).c_str() );
 }

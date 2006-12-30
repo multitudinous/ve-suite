@@ -197,7 +197,11 @@ protected:
    bool _lastScaleByMagnitude;///<Flag for scaling.
    bool _warpOption;///<Flag for warp contour option
 
-
+   std::string ConvertUnicode( const wxChar* data )
+   {
+         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+         return tempStr;
+   }
 };
 
 #endif

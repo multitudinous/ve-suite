@@ -71,36 +71,36 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    wxString veSuiteHome;
    wxString hostType;
    wxString libDir;
-   ::wxGetEnv( wxString( "CFDHOSTTYPE" ), &hostType );
+   ::wxGetEnv( wxString( "CFDHOSTTYPE",wxConvUTF8 ), &hostType );
    
-   if(::wxGetEnv( wxString( "VE_SUITE_HOME" ), &veSuiteHome ))
+   if(::wxGetEnv( wxString( "VE_SUITE_HOME",wxConvUTF8 ), &veSuiteHome ))
    {
-      libDir = wxString("/bin/Plugins/UI/");
-      ::wxGetEnv( wxString( "CFDHOSTTYPE" ), &hostType );
+      libDir = wxString("/bin/Plugins/UI/",wxConvUTF8);
+      ::wxGetEnv( wxString( "CFDHOSTTYPE",wxConvUTF8 ), &hostType );
    }
-   else if(::wxGetEnv( wxString( "VE_INSTALL_DIR" ), &veSuiteHome ))
+   else if(::wxGetEnv( wxString( "VE_INSTALL_DIR",wxConvUTF8 ), &veSuiteHome ))
    {  
-      libDir = wxString("/bin/Plugins/UI/");
+      libDir = _("/bin/Plugins/UI/");
    }
    if ( !(hostType.IsEmpty()) && (!veSuiteHome.IsEmpty()) )
    {
 #ifdef WIN32
-      wxString libn = veSuiteHome + libDir + hostType + wxString( "/DefaultPlugin_d" ) + wxPluginLibrary::GetDllExt();
+      wxString libn = veSuiteHome + libDir + hostType + _( "/DefaultPlugin_d" ) + wxPluginLibrary::GetDllExt();
 #else
-	   wxString libn = veSuiteHome + libDir + hostType + wxString( "/DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
+	   wxString libn = veSuiteHome + libDir + hostType + _( "/DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
 #endif
 	   if ( ::wxFileExists( libn ) )
       {
          wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
-         wxLogDebug("Loaded [ %s ]\n", libn.c_str() );
+         wxLogDebug( _("Loaded [ %s ]\n"), libn.c_str() );
       }
    }
 
    // Try to laod custom plugins
-   const wxString ext = wxString("*") + wxPluginLibrary::GetDllExt();
-   lib_dir.Append( "/" );
+   const wxString ext = wxString("*",wxConvUTF8) + wxPluginLibrary::GetDllExt();
+   lib_dir.Append( _("/") );
    lib_dir.Append( hostType );
-   wxLogDebug ("Loading plugins from [%s]\n", lib_dir.c_str());
+   wxLogDebug( _("Loading plugins from [%s]\n"), lib_dir.c_str());
 
    /* Create a directory object we can scan for plugins */
    if ( !wxDir::Exists(lib_dir) )
@@ -118,8 +118,8 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
       // Register default plugin at least
       RegisterPlugins();
       // Dispaly error
-      wxString msg( wxString("Directory ") + dir.GetName() + wxString(" is present but cannot be opened.") );
-      wxMessageBox( msg,"Plugin Loader Failure", wxOK | wxICON_INFORMATION );
+      wxString msg( _("Directory ") + dir.GetName() + _(" is present but cannot be opened.") );
+      wxMessageBox( msg, _("Plugin Loader Failure"), wxOK | wxICON_INFORMATION );
       // deal with the error here - wxDir would already log an error 
       // message explaining the exact reason of the failure
       return FALSE;
@@ -130,11 +130,11 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    while ( cont )
    {
       wxFileName  libname(lib_dir, filename);
-      wxString libn=lib_dir+"/"+libname.GetName();
+      wxString libn=lib_dir+_("/")+libname.GetName();
 
       wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
       if ( lib )
-         wxLogDebug ("Loaded [ %s ]\n", filename.c_str());
+         wxLogDebug( _("Loaded [ %s ]\n"), filename.c_str());
 
       cont = dir.GetNext(&filename);
    }
@@ -166,7 +166,7 @@ void PluginLoader::RegisterPlugins()
    {
       wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
 
-      if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "REI_Plugin" ) )
+      if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "REI_Plugin", wxConvUTF8 ) )
       {   
          RegisterPlugin(classInfo);
          wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());

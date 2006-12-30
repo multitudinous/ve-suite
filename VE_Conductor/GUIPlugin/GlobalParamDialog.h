@@ -139,8 +139,13 @@ class VE_GUIPLUGINS_EXPORTS GlobalParamDialog : public wxDialog
   double invest_tax_credit_d; 
   long use_l;
 
-  DECLARE_EVENT_TABLE()
-  
+  std::string ConvertUnicode( const wxChar* data )
+  {
+     std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+     return tempStr;
+  }
+
+  DECLARE_EVENT_TABLE()  
 };
 
 #endif

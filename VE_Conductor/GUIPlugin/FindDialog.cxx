@@ -56,12 +56,12 @@ void FindDialog::FindButtonClick(wxCommandEvent& event)
 void FindDialog::SetModuleList(std::vector< std::string > modules)
 {
 	for(int i = 0; i < (int)modules.size(); i++)
-		WxChoice1->Insert(modules[i].c_str(), i);
+		WxChoice1->Insert( wxString( modules[i].c_str(), wxConvUTF8 ), i);
 }
 
 const char * FindDialog::GetSelectedModule()
 {
-	return selectedModule.c_str();
+	return selectedModule.mb_str();
 }
 
 int FindDialog::GetSelectedModulePos()

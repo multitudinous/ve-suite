@@ -328,7 +328,7 @@ void AdvancedStreamlines::_OnParticleTracking( wxCommandEvent& WXUNUSED(event) )
    }
 
    particleControls = new UI_TransientDialog(19, this, PARTICLE_TRACKING_DIALOG );
-   particleControls->SetTitle(wxString("Particle Controls"));
+   particleControls->SetTitle(wxString("Particle Controls",wxConvUTF8));
 //   particleControls->SetTabControl( _parentLocal );
    particleControls->ShowModal();
 }

@@ -418,6 +418,12 @@ protected:
 
    bool scalarSelect;
    bool vectorSelect;
+   
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }   
 };
 
 #endif

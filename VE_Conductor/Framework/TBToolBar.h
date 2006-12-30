@@ -141,7 +141,12 @@ protected:
    ///\param event wxCommand event
    void _onTransient(wxCommandEvent& event);
    
-
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }
+   
    DECLARE_EVENT_TABLE()
 };
 #endif// TEXTURE_BASED_TOOL_BAR_H

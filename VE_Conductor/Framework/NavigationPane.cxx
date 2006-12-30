@@ -87,7 +87,7 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////  
 NavigationPane::NavigationPane()
-:wxDialog(NULL,-1, wxString("Navigation Pane"), 
+:wxDialog(NULL,-1, _("Navigation Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
@@ -264,43 +264,43 @@ void NavigationPane::BuildPane( void )
    _yawcwButton = new UI_NavButton(scrollWindow, YAW_CW, wxBitmap(*_bitmap12));
 
    //Place holders to use in filling up empty holes in the grid sizer
-   wxStaticText* blank1 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank2 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank3 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank4 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank5 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank6 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank7 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank8 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank9 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank10 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank11 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank12 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank13 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank14 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank15 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank16 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank17 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank18 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank19 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank20 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank21 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank22 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank23 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank24 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank25 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank26 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank27 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank28 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank29 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
+   wxStaticText* blank1 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank2 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank3 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank4 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank5 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank6 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank7 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank8 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank9 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank10 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank11 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank12 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank13 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank14 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank15 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank16 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank17 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank18 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank19 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank20 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank21 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank22 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank23 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank24 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank25 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank26 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank27 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank28 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
+   wxStaticText* blank29 = new wxStaticText(scrollWindow, -1, _("")); //just a place holder
 
    //The text headers for each of the three button groups
-   wxStaticText* _xaxis = new wxStaticText(scrollWindow, -1, "X-Axis"); 
-   wxStaticText* _yaxis = new wxStaticText(scrollWindow, -1, "Y-Axis"); 
-   wxStaticText* _zaxis = new wxStaticText(scrollWindow, -1, "Z-Axis"); 
-   wxStaticText* _pitch = new wxStaticText(scrollWindow, -1, "Pitch"); 
-   wxStaticText* _roll = new wxStaticText(scrollWindow, -1, "Roll"); 
-   wxStaticText* _yaw = new wxStaticText(scrollWindow, -1, "Yaw"); 
+   wxStaticText* _xaxis = new wxStaticText(scrollWindow, -1, _("X-Axis") ); 
+   wxStaticText* _yaxis = new wxStaticText(scrollWindow, -1, _("Y-Axis") ); 
+   wxStaticText* _zaxis = new wxStaticText(scrollWindow, -1, _("Z-Axis") ); 
+   wxStaticText* _pitch = new wxStaticText(scrollWindow, -1, _("Pitch") ); 
+   wxStaticText* _roll = new wxStaticText(scrollWindow, -1, _("Roll") ); 
+   wxStaticText* _yaw = new wxStaticText(scrollWindow, -1,  _("Yaw") ); 
 
    //Pull together the text headers for proper alignment
    wxBoxSizer* topDesc1 = new wxBoxSizer(wxVERTICAL);

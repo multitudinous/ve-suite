@@ -10,7 +10,7 @@ sources = Split("""
     AVSTranslator.cxx
     cfdDICOMTranslator.cxx
     cfdREITranslator.cxx
-    converter.cpp
+    converter.cxx
     gridConversion.cxx
     plot3dReader.cxx
     StarCDTranslator.cxx

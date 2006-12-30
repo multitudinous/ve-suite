@@ -171,7 +171,7 @@ void Tag::DrawTag( bool flag, std::pair< double, double > scale )
    wxBrush old_brush = dc.GetBrush();
    wxPen old_pen = dc.GetPen();
    wxPen mypen(old_pen);
-   mypen.SetColour("BLUE");
+   mypen.SetColour( _("BLUE") );
    //  mypen.SetStyle(wxDOT);
    // mypen.SetStyle(wxLONG_DASH);
 

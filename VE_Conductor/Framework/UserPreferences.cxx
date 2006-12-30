@@ -84,9 +84,9 @@ void UserPreferences::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     userPrefDialog->SetSizer(itemBoxSizer2);
     wxString choices[1];
-    choices[ 0 ] = wxString( "Interactive Mode" );
+    choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
     
-    prefChkBx = new wxCheckListBox( userPrefDialog, ID_PREFERENCE_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, "listBox");
+    prefChkBx = new wxCheckListBox( userPrefDialog, ID_PREFERENCE_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
     itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
    ///////////////////////////////////////////////////////
     wxStdDialogButtonSizer* okCancelButton = new wxStdDialogButtonSizer();

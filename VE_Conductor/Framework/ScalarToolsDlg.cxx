@@ -80,7 +80,7 @@ void ScalarToolsDialog::_buildGUI()
    wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer(scalarToolsGroup,wxVERTICAL);
    
    _scalarSelection = new wxComboBox(this,AVAILABLE_SCALARS,
-                                     wxString(""), wxDefaultPosition, 
+                                     _(""), wxDefaultPosition, 
                                      wxSize(150,wxDefaultCoord) );
  
    wxStaticBox* isoSliderBox = new wxStaticBox(this, -1, _T("Isosurface"));
@@ -124,7 +124,7 @@ void ScalarToolsDialog::_buildGUI()
 void ScalarToolsDialog::_createDualSliders()
 {
    _scalarRange = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,wxString("Scalar Range"));
+                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,_("Scalar Range"));
 
    _scalarRange->SetMinSliderCallback( new ScalarToolsSliderCallback(this));
    _scalarRange->SetMaxSliderCallback( new ScalarToolsSliderCallback(this));
@@ -168,7 +168,7 @@ void ScalarToolsDialog::_updateActiveScalar(wxCommandEvent& command)
    _commandName = "TB_ACTIVE_SOLUTION";
   
    VE_XML::DataValuePair* name = new VE_XML::DataValuePair();
-   name->SetData("Active Dataset",_scalarSelection->GetValue().GetData());
+   name->SetData("Active Dataset", ConvertUnicode( _scalarSelection->GetValue().GetData() ) );
    _instructions.push_back(name);
 
    VE_XML::DataValuePair* type = new VE_XML::DataValuePair();
@@ -219,7 +219,7 @@ void ScalarToolsDialog::_onUpdateIsosurface(wxScrollEvent& command)
    _instructions.push_back(isosurfaceValue);
 
    VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
-   colorByScalar->SetData("Color By Scalar",std::string(_colorByScalarName.GetData()));
+   colorByScalar->SetData("Color By Scalar", ConvertUnicode( _colorByScalarName.GetData() ) );
    _instructions.push_back(colorByScalar);
 
    _sendCommandsToXplorer();

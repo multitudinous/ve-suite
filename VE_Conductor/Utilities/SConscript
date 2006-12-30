@@ -21,7 +21,7 @@ utils_srcs = Split("""
 """)
 
 gui_srcs = Split("""
-    spinctld.cpp
+    spinctld.cxx
 """)
 
 utils_h = Split("""

@@ -86,7 +86,7 @@ END_EVENT_TABLE()
 //Constructor//
 ///////////////
 ViewLocPane::ViewLocPane(  )
-:wxDialog(NULL, -1, wxString("Viewing Locations Pane"),
+:wxDialog(NULL, -1, _("Viewing Locations Pane"),
          wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
@@ -142,10 +142,10 @@ void ViewLocPane::_onLoadStoredPointsFile(wxCommandEvent& event)
    {
       wxFileName viewPtsFilename( dialog.GetPath() );
       viewPtsFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
-      wxString relativeViewLocationsPath( wxString("./") + viewPtsFilename.GetFullPath() );
+      wxString relativeViewLocationsPath( wxString("./",wxConvUTF8) + viewPtsFilename.GetFullPath() );
 
       VE_XML::DataValuePair* velFileName = new VE_XML::DataValuePair();
-      velFileName->SetData("View Locations file",relativeViewLocationsPath.c_str());
+      velFileName->SetData("View Locations file", ConvertUnicode( relativeViewLocationsPath.c_str() ));
       _dataValuePairList.push_back(velFileName);
 
       _commandName = "QC_LOAD_STORED_POINTS";
@@ -162,15 +162,15 @@ void ViewLocPane::_onSaveStoredPointsFile(wxCommandEvent& event)
    do
    {
       wxTextEntryDialog viewLocationsFileDlg(this, 
-                                       wxString("Enter the prefix for *.vel filename:"),
-                                       wxString("Save VEL file as..."),
-                                       wxString("locations"),wxOK|wxCANCEL);
+                                       _("Enter the prefix for *.vel filename:"),
+                                       _("Save VEL file as..."),
+                                       _("locations"),wxOK|wxCANCEL);
 
       if ( viewLocationsFileDlg.ShowModal() == wxID_OK )
       {
          velFileName.ClearExt();
          velFileName.SetName( viewLocationsFileDlg.GetValue() ); 
-         velFileName.SetExt( wxString( "vel" ) );
+         velFileName.SetExt( _( "vel" ) );
       }
       else
       {
@@ -183,7 +183,7 @@ void ViewLocPane::_onSaveStoredPointsFile(wxCommandEvent& event)
    {
       _dataValuePairList.clear();
       VE_XML::DataValuePair* velFile = new VE_XML::DataValuePair();
-      velFile->SetData("View Points file",velFileName.GetFullPath( wxPATH_NATIVE ).c_str() );
+      velFile->SetData("View Points file", ConvertUnicode( velFileName.GetFullPath( wxPATH_NATIVE ).c_str() ) );
       _dataValuePairList.push_back(velFile);
 
       _commandName = "VL_SAVE_STORED_POINTS";
@@ -200,7 +200,7 @@ void ViewLocPane::_buildPage()
 //*******Setting up the widgets for making and naming a new view point
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
   
-   wxString choices[] = {"Choose a View Point"};
+   wxString choices[] = { _("Choose a View Point" )};
    //scrollWindow = new wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
    int nUnitX=20;
    int nUnitY=10;
@@ -208,11 +208,11 @@ void ViewLocPane::_buildPage()
    int nPixY = 10;
    //scrollWindow->SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-   wxStaticBox* _allVPCtrlBox = new wxStaticBox(this, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBox* _allVPCtrlBox = new wxStaticBox(this, -1, _("View Point Controls"), wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
-	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, _("Name the new View Point"), wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
-   wxButton* loadViewLocationButton = new wxButton(this,VIEWLOC_LOAD_FILE,"Load View Location File");
+   wxButton* loadViewLocationButton = new wxButton(this,VIEWLOC_LOAD_FILE, _("Load View Location File") );
 
    wxButton* _addnewviewptButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
    
@@ -245,8 +245,8 @@ void ViewLocPane::_buildPage()
                                  wxDefaultSize,1, 
                                  choices, wxCB_READONLY);
 
-   wxStaticText* blank1 = new wxStaticText(this, -1, ""); //just a place holder
-   wxStaticText* blank2 = new wxStaticText(this, -1, ""); //just a place holder
+   wxStaticText* blank1 = new wxStaticText(this, -1, _("") ); //just a place holder
+   wxStaticText* blank2 = new wxStaticText(this, -1, _("") ); //just a place holder
 
 
    wxBoxSizer* _newVPControlsSizer = new wxBoxSizer(wxVERTICAL);
@@ -264,7 +264,7 @@ void ViewLocPane::_buildPage()
    _allVPCtrlsGroup->Add(_newVPControlsSizer,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
 //*******Throw in the Speed Control Slider
-   wxStaticBox* _speedCtrlBox = new wxStaticBox(this, -1, "Movement Speed Control", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBox* _speedCtrlBox = new wxStaticBox(this, -1, _("Movement Speed Control"), wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
    wxStaticText* _speedctrlLabel = new wxStaticText(this, -1, wxT("Approximate Linear Speed in feet/second"));
 
@@ -460,8 +460,8 @@ void ViewLocPane::_rebuildNameArrays( void )
       for( unsigned int i=0; i<_numStoredLocations; i++)
       {
          std::ostringstream vwptstream;
-         vwptstream << "View Location " << i ;
-         _locationName.Add(vwptstream.str().c_str());
+         //vwptstream << "View Location " << i ;
+         _locationName.Add( wxString(vwptstream.str().c_str(), wxConvUTF8) );
       }
    }
    else
@@ -505,7 +505,7 @@ void ViewLocPane::_setUpActiveFlyThroughNames( int index )
    {
       std::ostringstream activeflynamestream;
       activeflynamestream << "View Location " << flyThroughList.at( index ).at( i ) ;
-      _activeFlyNames.Add(activeflynamestream.str().c_str());
+      _activeFlyNames.Add( wxString(activeflynamestream.str().c_str(),wxConvUTF8));
    }
   
 }
@@ -962,13 +962,13 @@ void ViewLocPane::SendCommandsToXplorer( void )
       }
       catch ( ... )
       {
-         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
+         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
       }
    }
    else
-   {   wxMessageBox( "Could not connect to VE-Xplorer!", 
-                        "Communication Failure", wxOK | wxICON_INFORMATION );
+   {   wxMessageBox( _("Could not connect to VE-Xplorer!"), 
+                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
       
    }
    //Clean up memory

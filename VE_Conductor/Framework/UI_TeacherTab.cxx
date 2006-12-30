@@ -58,7 +58,7 @@ END_EVENT_TABLE()
 //Constructor//
 ///////////////
 UI_TeacherTab::UI_TeacherTab(wxWindow* tControl)
-:wxDialog(tControl, -1, wxString("Stored Scenes"), 
+:wxDialog(tControl, -1, _("Stored Scenes"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP) 
 {
@@ -116,7 +116,7 @@ void UI_TeacherTab::_buildPage()
 
       for(CORBA::ULong i = 1; i < (unsigned int)numStoredScenes; ++i )
       {
-         defaultName[ i ] = fileNames[ i - 1 ];
+         defaultName[ i ] = wxString( fileNames[ i - 1 ], wxConvUTF8 );
          //std::cout << "PFB  Name " << i << " : " << defaultName[ i ] << std::endl;
       }
    }
@@ -186,8 +186,8 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& WXUNUSED(event))
    }
    catch ( ... )
    {
-      wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                     "Communication Failure", wxOK | wxICON_INFORMATION );
+      wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                     _("Communication Failure"), wxOK | wxICON_INFORMATION );
    }
 
    //Clean up memory
@@ -216,8 +216,8 @@ void UI_TeacherTab::_onClear(wxCommandEvent& event)
    }
    catch ( ... )
    {
-      wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-                     "Communication Failure", wxOK | wxICON_INFORMATION );
+      wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                     _("Communication Failure"), wxOK | wxICON_INFORMATION );
    }
    //Clean up memory
    delete veCommand;

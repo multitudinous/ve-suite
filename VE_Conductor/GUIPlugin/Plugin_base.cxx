@@ -347,7 +347,7 @@ UIDialog* REI_Plugin::UI(wxWindow* parent)
   new_id = wxNewId();
   //  std::cout<<"New id "<<new_id<<std::endl;
   
-  dlg = new UIDialog(parent, new_id, "UIDialog");
+  dlg = new UIDialog(parent, new_id, _("UIDialog") );
 
   return dlg;
 }
@@ -359,9 +359,9 @@ UIDialog* REI_Plugin::Result(wxWindow* parent)
    //std::vector<std::string> descs;
    std::vector<int> alignments;
 
-   titles.push_back( "Description" );
+   titles.push_back( wxString("Description",wxConvUTF8) );
    alignments.push_back( wxALIGN_LEFT );
-   titles.push_back("Value");
+   titles.push_back( wxString("Value",wxConvUTF8));
    alignments.push_back( wxALIGN_RIGHT );
 
    if (result_dlg==NULL)
@@ -381,14 +381,14 @@ unsigned int REI_Plugin::GetID()
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetConductorName()
 {
-   return wxString( "PleaseDefineConductorName" );
+   return wxString( "PleaseDefineConductorName",wxConvUTF8);
 }
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetName()
 {
    if ( name.IsEmpty() )
    {
-      name = "PleaseDefineClassName";
+      name = wxString("PleaseDefineClassName",wxConvUTF8);
    }
 
    return name;
@@ -499,10 +499,10 @@ Model* REI_Plugin::GetVEModel( void )
    */
    if ( name.IsEmpty() )
    {
-      name = "PleaseDefineClassName";
+      name = wxString("PleaseDefineClassName",wxConvUTF8);
    }
    
-   veModel->SetModelName( name.c_str() );
+   veModel->SetModelName( ConvertUnicode( name.c_str() ) );
    veModel->SetModelID( mod_pack._id );
    veModel->SetIconFilename( std::string( "iconFilename" ) );
    veModel->GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >( pos.x, pos.y ) );
@@ -764,7 +764,7 @@ void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
    veModel = tempModel;
 
    //veModel->SetObjectFromXMLData( modelElement );
-   name = wxString( veModel->GetModelName().c_str() );
+   name = wxString( veModel->GetModelName().c_str(),wxConvUTF8 );
    mod_pack._id = veModel->GetModelID();
    std::string tempFilename = veModel->GetIconFilename();
    pos.x = veModel->GetIconLocation()->GetPoint().first;
@@ -880,8 +880,8 @@ void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
       }
       else
       {
-         wxMessageDialog( NULL, "Improperly formated ves file.", 
-                  "VES File Read Error", wxOK | wxICON_ERROR, wxDefaultPosition );
+         wxMessageDialog( NULL, _("Improperly formated ves file."), 
+                  _("VES File Read Error"), wxOK | wxICON_ERROR, wxDefaultPosition );
       }
    }
 
@@ -905,8 +905,8 @@ void REI_Plugin::UnPackResult(Interface* intf)
       if (desc.substr(0,3) == "***") 
          desc = desc.substr( 9, desc.size()-9 );
      
-      v_desc.push_back (desc.c_str());
-      v_value.push_back (value.c_str());
+      v_desc.push_back ( wxString(desc.c_str(),wxConvUTF8));
+      v_value.push_back( wxString(value.c_str(),wxConvUTF8));
    }
 }
 
@@ -947,8 +947,8 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
   //This default implementation is for the Gas and water Interface's Data package
   //New modules can override the function to implement its own port dialog
   std::vector<wxString> titles;
-  titles.push_back("Description");
-  titles.push_back("Value");
+  titles.push_back(wxString("Description",wxConvUTF8));
+  titles.push_back(wxString("Value",wxConvUTF8));
 
   std::vector<wxString> gas_desc;
   std::vector<wxString> gas_value;
@@ -959,78 +959,78 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
    it->getDouble("ENTHALPY",    &ok);
    if (!ok)
    { //gas
-      gas_desc.push_back("COALCAL");
-      gas_value.push_back(to_string(it->getDouble("COALCAL")).c_str());
-      gas_desc.push_back("ASHCAL");
-      gas_value.push_back(to_string(it->getDouble("ASHCAL")).c_str());
-      gas_desc.push_back("ASHPH");
-      gas_value.push_back(to_string(it->getDouble("ASHPH")).c_str());
-      gas_desc.push_back("PRESSURE_DROP");
-      gas_value.push_back(to_string(it->getDouble("PRESSURE_DROP")).c_str());
-      gas_desc.push_back("TEMPERATURE");
-      gas_value.push_back(to_string(it->getDouble("TEMPERATURE")).c_str());
-	   gas_desc.push_back("MW");
-      gas_value.push_back(to_string(it->getDouble("MW")).c_str());
-      gas_desc.push_back("PRESSURE");
-      gas_value.push_back(to_string(it->getDouble("PRESSURE")).c_str());
-      gas_desc.push_back("FLOWRATE");
-      gas_value.push_back(to_string(it->getDouble("FLOWRATE")).c_str());
-      gas_desc.push_back("TAR");
-      gas_value.push_back(to_string(it->getDouble("TAR")).c_str());
-      gas_desc.push_back("SOOT");
-      gas_value.push_back(to_string(it->getDouble("SOOT")).c_str());
-      gas_desc.push_back("PT MEAN_SIZE");
-      gas_value.push_back(to_string(it->getDouble("MEAN_SIZE")).c_str());
-      gas_desc.push_back("PT SIZE_VARIANCE");
-      gas_value.push_back(to_string(it->getDouble("SIZE_VARIANCE")).c_str());
-      gas_desc.push_back("PARTICLE T");
-      gas_value.push_back(to_string(it->getDouble("T_PARTICLE")).c_str());
-      gas_desc.push_back("PARITCLE M");
-      gas_value.push_back(to_string(it->getDouble("M_PARTICLE")).c_str());
-      gas_desc.push_back("COMP NAME");
-      gas_value.push_back("COMP CONC");
+      gas_desc.push_back(wxString("COALCAL",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("COALCAL")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("ASHCAL",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("ASHCAL")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("ASHPH",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("ASHPH")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("PRESSURE_DROP",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("PRESSURE_DROP")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("TEMPERATURE",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("TEMPERATURE")).c_str(),wxConvUTF8));
+	   gas_desc.push_back(wxString("MW",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("MW")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("PRESSURE",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("PRESSURE")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("FLOWRATE",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("FLOWRATE")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("TAR",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("TAR")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("SOOT",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("SOOT")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("PT MEAN_SIZE",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("MEAN_SIZE")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("PT SIZE_VARIANCE",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("SIZE_VARIANCE")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("PARTICLE T",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("T_PARTICLE")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("PARITCLE M",wxConvUTF8));
+      gas_value.push_back(wxString(to_string(it->getDouble("M_PARTICLE")).c_str(),wxConvUTF8));
+      gas_desc.push_back(wxString("COMP NAME",wxConvUTF8));
+      gas_value.push_back(wxString("COMP CONC",wxConvUTF8));
       
       std::vector<std::string> comp_name = it->getString1D("COMP_NAME");
       std::vector<double>      comp_conc = it->getDouble1D("COMP_CONC");
       for (i=0; i<comp_name.size(); i++)
 	   {
-	      gas_desc.push_back(comp_name[i].c_str());
-	      gas_value.push_back(to_string(comp_conc[i]).c_str());
+	      gas_desc.push_back( wxString(comp_name[i].c_str(),wxConvUTF8));
+	      gas_value.push_back( wxString(to_string(comp_conc[i]).c_str(),wxConvUTF8));
 	   }
       
-      gas_desc.push_back("PART NAME");
-      gas_value.push_back("PART CONC");
+      gas_desc.push_back( wxString("PART NAME",wxConvUTF8));
+      gas_value.push_back( wxString("PART CONC",wxConvUTF8));
 
       std::vector<std::string> part_name = it->getString1D("PART_NAME");
       std::vector<double>      part_conc = it->getDouble1D("PART_CONC");
       for (i=0; i<part_name.size(); i++)
 	   {
-	      gas_desc.push_back(part_name[i].c_str());
-	      gas_value.push_back(to_string(part_conc[i]).c_str());
+	      gas_desc.push_back( wxString(part_name[i].c_str(),wxConvUTF8));
+	      gas_value.push_back( wxString(to_string(part_conc[i]).c_str(),wxConvUTF8));
 	   }
       
-      gas_desc.push_back("WIC NAME");
-      gas_value.push_back("WIC CONC");
+      gas_desc.push_back( wxString("WIC NAME",wxConvUTF8));
+      gas_value.push_back( wxString("WIC CONC",wxConvUTF8));
       std::vector<std::string> wic_name = it->getString1D("WIC_NAME", &ok);
       std::vector<double>      wic_conc = it->getDouble1D("WIC_CONC", &ok);
       for (i=0; i<wic_name.size(); i++)
 	   {
-	      gas_desc.push_back(wic_name[i].c_str());
-	      gas_value.push_back(to_string(wic_conc[i]).c_str());
+	      gas_desc.push_back( wxString(wic_name[i].c_str(),wxConvUTF8));
+	      gas_value.push_back( wxString(to_string(wic_conc[i]).c_str(),wxConvUTF8));
 	   }
    }
    else
    { //water
-      gas_desc.push_back("TEMPERATURE");
-      gas_value.push_back(to_string(it->getDouble("TEMPERATURE")).c_str());
-      gas_desc.push_back("PRESSURE");
-      gas_value.push_back(to_string(it->getDouble("PRESSURE")).c_str());
-      gas_desc.push_back("ENTHALPY");
-      gas_value.push_back(to_string(it->getDouble("ENTHALPY")).c_str());
-      gas_desc.push_back("QUALITY");
-      gas_value.push_back(to_string(it->getDouble("QUALITY")).c_str());
-      gas_desc.push_back("FLOWRATE");
-      gas_value.push_back(to_string(it->getDouble("FLOWRATE")).c_str());
+      gas_desc.push_back( wxString("TEMPERATURE",wxConvUTF8) );
+      gas_value.push_back( wxString( to_string(it->getDouble("TEMPERATURE")).c_str(), wxConvUTF8) );
+      gas_desc.push_back( wxString("PRESSURE", wxConvUTF8) );
+      gas_value.push_back( wxString( to_string(it->getDouble("PRESSURE")).c_str(), wxConvUTF8) );
+      gas_desc.push_back( wxString("ENTHALPY", wxConvUTF8) );
+      gas_value.push_back( wxString( to_string(it->getDouble("ENTHALPY")).c_str(), wxConvUTF8) );
+      gas_desc.push_back(wxString("QUALITY", wxConvUTF8) );
+      gas_value.push_back( wxString( to_string(it->getDouble("QUALITY")).c_str(), wxConvUTF8 ) );
+      gas_desc.push_back( wxString("FLOWRATE", wxConvUTF8) );
+      gas_value.push_back( wxString( to_string(it->getDouble("FLOWRATE")).c_str(), wxConvUTF8 ) );
     
    }
 
@@ -1074,7 +1074,7 @@ void REI_Plugin::ViewInputVariables( void )
       VE_XML::Command* inputCommand = veModel->GetInput( i );
       GetDataTables( inputCommand, tagNames, values );
       std::string inputParamter = inputCommand->GetCommandName();
-      inputsDialog->NewTab( wxT( inputParamter.c_str() ) );
+      inputsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
       inputsDialog->Set2Cols( tagNames, values );
    }
    // Get all the results form the model
@@ -1098,7 +1098,7 @@ void REI_Plugin::ViewResultsVariables( void )
       VE_XML::Command* inputCommand = veModel->GetResult( i );
       GetDataTables( inputCommand, tagNames, values );
       std::string inputParamter = inputCommand->GetCommandName();
-      resultsDialog->NewTab( wxT( inputParamter.c_str() ) );
+      resultsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
       resultsDialog->Set2Cols( tagNames, values );
    }
    resultsDialog->Show();
@@ -1136,17 +1136,17 @@ void REI_Plugin::GetDataTables( VE_XML::Command* inputCommand, std::vector< wxSt
          tempDVP->GetData( stringData );
       }
       // vectors of data to be displayed
-      tagNames.push_back( wxString( dataName.c_str() ) );
-      values.push_back( wxString( stringData.c_str() ) );
+      tagNames.push_back( wxString( dataName.c_str(), wxConvUTF8 ) );
+      values.push_back( wxString( stringData.c_str(), wxConvUTF8 ) );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetPluginNameDialog( void )
 {
    wxTextEntryDialog newPluginName( 0, 
-                                    wxString("Enter the name for your UI plugin:"),
-                                    wxString("Set UI Plugin Name..."),
-                                    wxString("YourPluginName"),wxOK|wxCANCEL);
+                                    _("Enter the name for your UI plugin:"),
+                                    _("Set UI Plugin Name..."),
+                                    _("YourPluginName"),wxOK|wxCANCEL);
 
    if ( newPluginName.ShowModal() == wxID_OK )
    {

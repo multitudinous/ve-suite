@@ -44,7 +44,7 @@ int get_tokens(char* s, std::vector<wxString> &toks, const char* delim)
   while( token )
     {
       i++;
-      toks.push_back(wxString(token));
+      toks.push_back(wxString(token,wxConvUTF8));
       token = strtok(NULL, delim);
     }
   

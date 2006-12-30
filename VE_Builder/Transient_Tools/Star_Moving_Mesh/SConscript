@@ -4,8 +4,8 @@ pj = os.path.join
 Import('baseEnv')
 
 sources = Split("""
-   main.cpp
-   transient.cpp
+   main.cxx
+   transient.cxx
 """)
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])

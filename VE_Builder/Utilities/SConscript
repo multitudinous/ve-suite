@@ -5,75 +5,75 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir vtk_options')
 
 addNormals2Poly = Split("""
-   addNormals2Poly.cpp
+   addNormals2Poly.cxx
 """)
 
 appendVTK = Split("""
-   appendVTK.cpp
+   appendVTK.cxx
 """)
 
 combineFluentParticleFile = Split("""
-   CombinePartFiles.cpp
+   CombinePartFiles.cxx
 """)
 
 compareScalars = Split("""
-    compareScalars.cpp
+    compareScalars.cxx
 """)
 
 convertCellDataToPointData = Split("""
-   convertCellDataToPointData.cpp
+   convertCellDataToPointData.cxx
 """)
 
 convertSurfaceFileToStl = Split("""
-   convertSurfaceFileToStl.cpp 
+   convertSurfaceFileToStl.cxx 
 """)
 
 convertVTK2Ascii = Split("""
-   convertVTK2Ascii.cpp
+   convertVTK2Ascii.cxx
 """)
 
 convertVTK2Binary = Split("""
-   convertVTK2Binary.cpp
+   convertVTK2Binary.cxx
 """)
 
 createMiniFlowdata = Split("""
-   createMiniFlowdata.cpp
+   createMiniFlowdata.cxx
 """)
 
 makeVtkSurface = Split("""
-   makeVtkSurface.cpp
+   makeVtkSurface.cxx
 """)
 
 mergeVertices = Split("""
-   mergeVertices.cpp
+   mergeVertices.cxx
 """)
 
 meshViewer = Split("""
-   meshViewer.cpp
+   meshViewer.cxx
 """)
 
 moveFieldToPointData = Split("""
-   moveFieldToPointData.cpp
+   moveFieldToPointData.cxx
 """)
 
 removeVtkCellsOutsideBox = Split("""
-   removeVtkCellsOutsideBox.cpp
+   removeVtkCellsOutsideBox.cxx
 """)
 
 removeVtkPointData = Split("""
-   removeVtkPointData.cpp
+   removeVtkPointData.cxx
 """)
 
 scaleVTK = Split("""
-   scaleVTK.cpp
+   scaleVTK.cxx
 """)
 
 transformVTK = Split("""
-   transformVTK.cpp 
+   transformVTK.cxx 
 """)
 
 whatIsScalarRange = Split("""
-   whatIsScalarRange.cpp
+   whatIsScalarRange.cxx
 """)
 
 env = ves_pkg.getEnv().Copy()

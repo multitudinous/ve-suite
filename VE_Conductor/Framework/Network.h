@@ -298,6 +298,13 @@ private:
    VjObs_var xplorerPtr;
    ///Used to operate on cad data in a plugin
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
+   
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }
+   
    DECLARE_EVENT_TABLE() // no semicolon needed
 };
 

@@ -479,67 +479,67 @@ void Network::OnMRightDown(wxMouseEvent& event)
    PrepareDC(dc);
    dc.SetUserScale( userScale.first, userScale.second );
 
-   wxMenu pop_menu(_T("Action"));
+   wxMenu pop_menu( _("Action"));
 
-   pop_menu.Append(ADD_TAG, _T("Add Tag")); //This will always be enable
+   pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
 
-   pop_menu.Append(ADD_LINK_CON, _T("Add Link Connector"));
-   pop_menu.Append(EDIT_TAG, _T("Edit Tag"));
-   pop_menu.Append(DEL_LINK_CON, _T("Delete Link Connector"));
-   pop_menu.Append(DEL_LINK, _T("Delete Link"));
-   pop_menu.Append(DEL_TAG, _T("Delete Tag"));
-   pop_menu.Append(DEL_MOD, "Del Module");
+   pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
+   pop_menu.Append(EDIT_TAG, _("Edit Tag") );
+   pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
+   pop_menu.Append(DEL_LINK, _("Delete Link") );
+   pop_menu.Append(DEL_TAG, _("Delete Tag") );
+   pop_menu.Append(DEL_MOD, _("Del Module") );
 
-   pop_menu.Append(SHOW_DESC, "Show Module Description");	
-   pop_menu.Append(SHOW_RESULT, "Show Module Result");
-   pop_menu.Append(PARAVIEW, "ParaView 3D Result");
+   pop_menu.Append(SHOW_DESC, _("Show Module Description") );	
+   pop_menu.Append(SHOW_RESULT, _("Show Module Result") );
+   pop_menu.Append(PARAVIEW, _("ParaView 3D Result") );
 
-   pop_menu.Append(SHOW_LINK_CONT, "Show Link Content");
+   pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
 
    // EPRI TAG
    AppFrame* p_frame;
    p_frame = ((AppFrame*)(parent->GetParent()->GetParent()));
    if (p_frame->f_financial)
    {
-	pop_menu.Append(SHOW_FINANCIAL, "Financial Data");
+	pop_menu.Append(SHOW_FINANCIAL, _("Financial Data") );
 	pop_menu.Enable(SHOW_FINANCIAL, true);
    }
    
    //Aspen Unit Name
    wxMenu * aspen_menu = new wxMenu();
-   aspen_menu->Append(SHOW_ASPEN_NAME, "Aspen Name");
+   aspen_menu->Append(SHOW_ASPEN_NAME, _("Aspen Name") );
    aspen_menu->Enable(SHOW_ASPEN_NAME, true);
-   aspen_menu->Append(QUERY_INPUTS, "Query Inputs");
+   aspen_menu->Append(QUERY_INPUTS, _("Query Inputs") );
    aspen_menu->Enable(QUERY_INPUTS, true);
-   aspen_menu->Append(QUERY_OUTPUTS, "Query Outputs");
+   aspen_menu->Append(QUERY_OUTPUTS, _("Query Outputs") );
    aspen_menu->Enable(QUERY_OUTPUTS, true);
    pop_menu.Append( ASPEN_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
 
    //if (p_frame->f_geometry)
    {
 	// GUI to configure geometry for graphical env
-	pop_menu.Append(GEOMETRY, "Geometry Config");
+	pop_menu.Append(GEOMETRY, _("Geometry Config") );
 	pop_menu.Enable(GEOMETRY, true);
    // GUI to configure dataset for graphical env
-   pop_menu.Append(DATASET, "Data Set Config");
+   pop_menu.Append(DATASET, _("Data Set Config") );
    pop_menu.Enable(DATASET, true);
 
 	// GUI to configure geometry for graphical env
    }
 	//UI for input variables
-   pop_menu.Append(MODEL_INPUTS, "Input Variables" );
+   pop_menu.Append(MODEL_INPUTS, _("Input Variables") );
    pop_menu.Enable(MODEL_INPUTS, true);
    //UI for results variables
-   pop_menu.Append(MODEL_RESULTS, "Result Variables" );
+   pop_menu.Append(MODEL_RESULTS, _("Result Variables") );
    pop_menu.Enable(MODEL_RESULTS, true);
    //UI for vis variables
-   pop_menu.Append(VISUALIZATION, "Visualization" );
+   pop_menu.Append(VISUALIZATION, _("Visualization") );
    pop_menu.Enable(VISUALIZATION, true);
    //Make a specific plusing active in xplorer
-   pop_menu.Append(SET_ACTIVE_MODEL, "Set Active Xplorer Model" );
+   pop_menu.Append(SET_ACTIVE_MODEL, _("Set Active Xplorer Model") );
    pop_menu.Enable(SET_ACTIVE_MODEL, true);
    //Set the plugin name for a model
-   pop_menu.Append(SET_UI_PLUGIN_NAME, "Set UI Plugin Name" );
+   pop_menu.Append(SET_UI_PLUGIN_NAME, _("Set UI Plugin Name") );
    pop_menu.Enable(SET_UI_PLUGIN_NAME, true);
 
    pop_menu.Enable(ADD_LINK_CON, false);
@@ -597,7 +597,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
 
 void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
 {
-   wxTextEntryDialog dialog(this,_T("Tag Editor"), _T("Please enter the text for the tag : "),_T("this is a tag"), wxOK);
+   wxTextEntryDialog dialog(this,_("Tag Editor"), _("Please enter the text for the tag : "),_("this is a tag"), wxOK);
 
    if (dialog.ShowModal() == wxID_OK)
       AddTag(action_point.x, action_point.y, dialog.GetValue());
@@ -669,7 +669,7 @@ void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
    dc.SetUserScale( userScale.first, userScale.second );
 
    wxString tag_text = *( tags[ m_selTag ].GetTagText() );
-   wxTextEntryDialog dialog(this,_T("Tag Editor"), _T("Please enter the text for the tag : "),tag_text, wxOK);
+   wxTextEntryDialog dialog(this,_("Tag Editor"), _("Please enter the text for the tag : "),tag_text, wxOK);
 
    if (dialog.ShowModal() == wxID_OK)
    {
@@ -690,7 +690,7 @@ void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////
 void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 {
-   int answer = wxMessageBox("Do you really want to delete this tag?", "Confirmation", wxYES_NO);
+   int answer = wxMessageBox( _("Do you really want to delete this tag?"), _("Confirmation"), wxYES_NO);
    if ( answer != wxYES )
    {
       return;
@@ -720,7 +720,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////
 void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
 {
-   int answer=wxMessageBox("Do you really want to delete this link?", "Confirmation", wxYES_NO);
+   int answer=wxMessageBox(_("Do you really want to delete this link?"), _("Confirmation"), wxYES_NO);
    if (answer!=wxYES)
       return;
    
@@ -751,11 +751,13 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
 void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
 {
    std::vector<wxPoint>::iterator iter;
-   int answer, i;
+   int i;
 
-   answer=wxMessageBox("Do you really want to delete this link connector?", "Confirmation", wxYES_NO);
+   int answer=wxMessageBox(_("Do you really want to delete this link connector?"), _("Confirmation"), wxYES_NO);
    if (answer!=wxYES)
+   {
       return;
+   }
 
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
    
@@ -783,7 +785,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////
 void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
 {
-   int answer=wxMessageBox("Do you really want to delete this module?", "Confirmation", wxYES_NO);
+   int answer=wxMessageBox(_("Do you really want to delete this module?"), _("Confirmation"), wxYES_NO);
    if (answer!=wxYES)
       return;
 
@@ -1997,7 +1999,7 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
       dc.DrawPolygon(4, bport, xoff, yoff);  
 
 	  //also, need to draw port type
-	  text = ports[i].GetPortType().c_str();
+	  text = wxString( ports[i].GetPortType().c_str(),wxConvUTF8);
 	  dc.GetTextExtent( text, &w, &h);
 	  dc.DrawText( text, xoff-w-2, yoff);
    }
@@ -2024,7 +2026,7 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
 
       dc.DrawPolygon(4, bport, xoff, yoff);      
 	  //also, need to draw port type
-	  text = ports[i].GetPortType().c_str();
+	  text = wxString( ports[i].GetPortType().c_str(), wxConvUTF8);
 	  dc.GetTextExtent( text, &w, &h);
 	  dc.DrawText( text, xoff+12, yoff );
    }
@@ -2293,8 +2295,8 @@ void Network::Load( std::string xmlNetwork )
    //Get a new canvas first to cleanup memory
    this->New();
    //Now...lets process some files
-   _fileProgress = new wxProgressDialog(wxString("Translation Progress"),
-                  "Load...", 
+   _fileProgress = new wxProgressDialog(_("Translation Progress"),
+                  _("Load..."), 
                   100,this,
                   wxPD_AUTO_HIDE|wxPD_SMOOTH|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME);
    ::wxBeginBusyCursor();
@@ -2321,7 +2323,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    // Start the busy cursor
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
-   _fileProgress->Update( 10, "start loading" );
+   _fileProgress->Update( 10, _("start loading") );
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
 
@@ -2333,10 +2335,10 @@ void Network::CreateNetwork( std::string xmlNetwork )
    {
       networkWriter.ReadFromString();
    }
-   _fileProgress->Update( 15, "start loading" );
+   _fileProgress->Update( 15, _("start loading") );
    networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-   _fileProgress->Update( 25, "start loading" );
+   _fileProgress->Update( 25, _("start loading") );
 
    // do this for network
    if ( veNetwork )
@@ -2349,11 +2351,11 @@ void Network::CreateNetwork( std::string xmlNetwork )
    }
    else
    {
-      wxMessageBox( "Improperly formated ves file.", 
-                        "VES File Read Error", wxOK | wxICON_INFORMATION );
+      wxMessageBox( _("Improperly formated ves file."), 
+                        _("VES File Read Error"), wxOK | wxICON_INFORMATION );
    }
 
-   _fileProgress->Update( 30, "start loading" );
+   _fileProgress->Update( 30, _("start loading") );
    long int tempScaleInfo;
    veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
    veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
@@ -2367,7 +2369,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    numUnit.second = tempScaleInfo;
 
    links.clear();
-   _fileProgress->Update( 35, "start loading" );
+   _fileProgress->Update( 35, _("start loading") );
 
    for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
    {
@@ -2394,25 +2396,25 @@ void Network::CreateNetwork( std::string xmlNetwork )
       // Create the polygon for links
       links.at( i ).CalcLinkPoly();
    }
-   _fileProgress->Update( 50, "create models" );
+   _fileProgress->Update( 50, _("create models") );
    // do this for models
    networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
    objectVector = networkWriter.GetLoadedXMLObjects();
 
-   _fileProgress->Update( 75, "done create models" );
+   _fileProgress->Update( 75, _("done create models") );
    // now lets create a list of them
    int timeCalc = 25/objectVector.size();
    for ( size_t i = 0; i < objectVector.size(); ++i )
    {
-      _fileProgress->Update( 75 + (i*timeCalc), "Loading data" );
+      _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
       VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
 
-      wxClassInfo* cls = wxClassInfo::FindClass( model->GetModelName().c_str() );
+      wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
       // If the class has not had a custom module been created
       if ( cls == 0 )
       {
          //Load the generic plugin for conductor
-         cls = wxClassInfo::FindClass( "DefaultPlugin" );
+         cls = wxClassInfo::FindClass( _("DefaultPlugin") );
       }
       REI_Plugin* tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
 
@@ -2465,7 +2467,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    m_selTag = -1; 
    m_selTagCon = -1; 
    xold = yold =0;
-   _fileProgress->Update( 100, "Done" );
+   _fileProgress->Update( 100, _("Done") );
    //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
    Refresh();
 }
@@ -2560,7 +2562,7 @@ void  Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 	VE_XML::VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
 	wxString title;
 	title << wxT("Aspen Name");
-	wxString desc = veModel->GetModelName().c_str();
+	wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
 	wxMessageDialog(this, desc, title).ShowModal();
 }
 
@@ -2585,7 +2587,7 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	
 	//Get results
 	std::string nw_str = serviceList->Query( status );
-	wxString title = compName.c_str();
+	wxString title( compName.c_str(),wxConvUTF8);
 	//TextResultDialog * results = new TextResultDialog(this, title);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
 	ParamsDlg * params = new ParamsDlg(this);
@@ -2740,7 +2742,7 @@ void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	
 	//Get results
 	std::string nw_str = serviceList->Query( status );
-	wxString title = compName.c_str();
+	wxString title( compName.c_str(),wxConvUTF8);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
 	ParamsDlg * params = new ParamsDlg(this);
 	VE_XML::XMLReaderWriter networkReader;
@@ -2996,7 +2998,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    {
       vistab = new Vistab (activeCORBAModel,this,
                        SYMBOL_VISTAB_IDNAME,
-                       activeXMLModel->GetModelName().c_str(),
+                       wxString(activeXMLModel->GetModelName().c_str(),wxConvUTF8),
                        SYMBOL_VISTAB_POSITION,
                        SYMBOL_VISTAB_SIZE,
                        SYMBOL_VISTAB_STYLE );
@@ -3032,7 +3034,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
             size_t textureDataType = dataValuePair->GetDataString().find("scalars");
             if(textureDataType < dataValuePair->GetDataString().size())
             {
-               scalarTextureDatasets.Add(dataValuePair->GetDataString().c_str());
+               scalarTextureDatasets.Add( wxString(dataValuePair->GetDataString().c_str(), wxConvUTF8) );
                hasScalarTextures = true;
             }
             else 
@@ -3040,7 +3042,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
                textureDataType = dataValuePair->GetDataString().find("vectors");
                if(textureDataType < dataValuePair->GetDataString().size())
                {
-                   vectorTextureDatasets.Add(dataValuePair->GetDataString().c_str());
+                   vectorTextureDatasets.Add( wxString(dataValuePair->GetDataString().c_str(),wxConvUTF8) );
                    hasVectorTextures = true;
                }
             }
@@ -3067,7 +3069,7 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    }
    else
    {
-      wxMessageBox( "Open a dataset","Dataset Failure", 
+      wxMessageBox( _("Open a dataset"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
    }
 }
@@ -3202,7 +3204,7 @@ void Network::SetIDOnAllActiveModules( void )
    std::map< int, Module >::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
-      std::string moduleName = iter->second.GetPlugin()->GetName().c_str();//GetClassName();
+      std::string moduleName = ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() );//GetClassName();
       int moduleId = iter->first;
       serviceList->SetID( moduleId, moduleName );
    }

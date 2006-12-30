@@ -42,6 +42,8 @@ FinancialDialog API
 #include <wx/dialog.h>
 #include <wx/string.h>
 
+#include <string>
+
 class wxRadioButton;
 class wxTextCtrl;
 class wxButton;
@@ -123,8 +125,13 @@ class FinancialDialog : public wxDialog
   double _om02_d;
   double _om03_d;
 
-  DECLARE_EVENT_TABLE()
+  std::string ConvertUnicode( const wxChar* data )
+  {
+     std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+     return tempStr;
+  }
   
+  DECLARE_EVENT_TABLE()  
 };
 
 #endif

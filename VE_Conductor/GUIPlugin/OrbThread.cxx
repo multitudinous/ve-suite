@@ -72,7 +72,7 @@ int PEThread::svc (void)
          //wxUpdateUIEvent u;
          //u.SetId(7777);
          //u.SetText(message.c_str());
-         this->AppendText( wxString( message.c_str() ) );
+         this->AppendText( wxString( message.c_str(), wxConvUTF8 ) );
          std::cout<<"LOG: "<<message;
          //::wxPostEvent(this, u);
          //message="";
@@ -92,7 +92,7 @@ void PEThread::SetMessage(const char* msg)
 {
    _mutex.acquire();
    //message+=msg;
-   this->AppendText( wxString( msg ) );
+   this->AppendText( wxString( msg, wxConvUTF8 ) );
    _mutex.release();
 }
 
