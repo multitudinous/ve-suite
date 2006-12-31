@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_NODE_H
 #define VE_NODE_H
@@ -62,18 +60,18 @@ namespace osg
 namespace VE_SceneGraph
 {
 #ifdef _OSG
-   class VE_SCENEGRAPH_EXPORTS Node: public osg::Node, public SceneNode
+class VE_SCENEGRAPH_EXPORTS Node: public osg::Node, public SceneNode
 #else
-   class VE_SCENEGRAPH_EXPORTS Node: public pfNode
+class VE_SCENEGRAPH_EXPORTS Node: public pfNode
 #endif
-   {
-      public:   
-         Node( ){}
-         virtual ~Node( void ){}
+{
+public:   
+   Node( ){}
+   virtual ~Node( void ){}
 
-         //equal operator
-         Node& operator= ( const Node& );
-      protected:
-   };
+   //equal operator
+   Node& operator= ( const Node& );
+protected:
+};
 }
 #endif

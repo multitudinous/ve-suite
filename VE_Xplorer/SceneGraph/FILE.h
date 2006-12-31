@@ -23,6 +23,11 @@
    }
 #endif
 
+namespace opal
+{
+  class Solid;
+}
+
 namespace VE_SceneGraph
 {
 class VE_SCENEGRAPH_EXPORTS File

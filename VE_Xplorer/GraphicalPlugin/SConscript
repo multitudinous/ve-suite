@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir vtk_options osg_options xerces_options')
+Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir vtk_options osg_options xerces_options opal_options ode_options')
 
 sources = Split("""
     cfdVEBaseClass.cxx
@@ -33,6 +33,8 @@ lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
+ode_options.apply( lib_env )
+opal_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('GraphicalPlugin%s' %(execOsgPatTag),
                                                         lib_env,

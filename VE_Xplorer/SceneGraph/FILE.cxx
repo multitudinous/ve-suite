@@ -50,7 +50,7 @@ File::File(std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream)
    this->node=new VE_SceneGraph::Node();
    this->solid=VE_SceneGraph::PhysicsSimulator::instance()->GetSimulator()->createSolid();
 
-   this->node->LoadFile(geomFile.c_str(),isStream);
+   //this->node->LoadFile(geomFile.c_str(),isStream);
    fileName.assign(geomFile);
    this->DCS->AddChild( this->node.get() );
    worldDCS->AddChild( this->DCS.get() );
@@ -121,12 +121,12 @@ float File::getOpacity()
 void File::setOpac(float op_val)
 {
    this->op = op_val;
-   this->node->SetNodeProperties( _colorFlag, op, stlColor );
+   //this->node->SetNodeProperties( _colorFlag, op, stlColor );
 
    #ifdef _PERFORMER
       this->node->pfTravNodeMaterial( this->node->GetRawNode() );
    #elif _OSG
-      node->TravNodeMaterial(node->GetRawNode());
+      //node->TravNodeMaterial(node->GetRawNode());
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +145,7 @@ void File::setFog(double dist)
       //fog->setStart( dist + 100 );
       //fog->setEnd( dist + 200 );
       //fog->setFogCoordinateSource( );
-      this->node->TravNodeFog( this->node->GetRawNode(), fog );
+      //this->node->TravNodeFog( this->node->GetRawNode(), fog );
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,9 +197,8 @@ std::string File::GetModuleName()
 void File::SetGeometryFilename( std::string filename )
 {
    this->_filename = filename;
-   this->_node = new VE_SceneGraph::Node();
-   this->_node->LoadFile( (char*)this->_filename.c_str() );
-   //this->_node->flatten( 0 );
+   this->node = new VE_SceneGraph::Node();
+   //this->node->LoadFile( (char*)this->_filename.c_str() );
    // Need to fix this
    //this->AddChild( (SceneNode*)this->_node );
    std::cout << "ModuleGeometry load geometry : " << _filename << std::endl;
