@@ -510,15 +510,33 @@
 			Filter=".cpp"
 			>
 			<File
-				RelativePath=".\temp\bkpparser.cpp"
+				RelativePath=".\temp\bkpparser.cxx"
 				>
 				<FileConfiguration
-					Name="osg_dbg|Win32"
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
 						ObjectFile="$(IntDir)\$(InputName)1.obj"
 						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="pf_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="osg_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)2.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -526,8 +544,8 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						ObjectFile="$(IntDir)\$(InputName)2.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -535,8 +553,8 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						ObjectFile="$(IntDir)\$(InputName)2.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 					/>
 				</FileConfiguration>
 			</File>
@@ -660,15 +678,33 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\temp\StringTokenizer.cpp"
+				RelativePath=".\temp\StringTokenizer.cxx"
 				>
 				<FileConfiguration
-					Name="osg_dbg|Win32"
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
 						ObjectFile="$(IntDir)\$(InputName)1.obj"
 						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="pf_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="osg_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)2.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -676,8 +712,8 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						ObjectFile="$(IntDir)\$(InputName)2.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -685,8 +721,8 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						ObjectFile="$(IntDir)\$(InputName)2.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 					/>
 				</FileConfiguration>
 			</File>
@@ -722,14 +758,33 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\VE_i.cpp"
+				RelativePath=".\VE_i.cxx"
 				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="pf_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="osg_dbg|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName).obj"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -737,7 +792,8 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName).obj"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -745,7 +801,8 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName).obj"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 					/>
 				</FileConfiguration>
 			</File>

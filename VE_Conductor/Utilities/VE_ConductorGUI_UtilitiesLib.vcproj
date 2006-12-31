@@ -258,10 +258,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Tag.cxx"
 				>
 			</File>
