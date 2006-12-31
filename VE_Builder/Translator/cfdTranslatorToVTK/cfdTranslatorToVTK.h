@@ -137,11 +137,15 @@ public:
    std::string GetFileExtension();
    std::string GetInputDirectory();
    std::string GetOutputDirectory();
+   std::string GetBaseFileName();
+   std::string GetOutputFileName();
 
    unsigned int GetNumberOfFoundFiles();
    std::string GetFile( unsigned int fileNumber );
 
    vtkDataSet* GetVTKFile( unsigned int whichFile );
+
+   void SetIsTransient();
 protected:
    bool _writeToVTK( unsigned int whichFile );
    ///Write the file to memory so that it is accessible 
@@ -152,6 +156,7 @@ protected:
    std::string _fileExtension;
    std::string _inputDir;
    std::string _outputDir;
+   std::string _baseFileName;
    std::vector<std::string> _infileNames;
 
    std::vector<std::string> _outfileNames;
@@ -162,6 +167,8 @@ protected:
    TranslateCallback* _translateCbk;
 
    vtkDataSet* _outputDataset;
+
+   bool isTransient;
 };
 }
 #endif //_CFD_TRANSLATOR_TO_VTK_H_

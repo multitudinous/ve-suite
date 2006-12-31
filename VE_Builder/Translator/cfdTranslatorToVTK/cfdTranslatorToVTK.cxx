@@ -45,7 +45,7 @@ cfdTranslatorToVTK::cfdTranslatorToVTK()
 {
    _nFoundFiles = 0;
 
-   //baseFileName = "flowdata";
+   _baseFileName = "flowdata";
    _fileExtension = "vtk";
    _inputDir = ".";
    _outputDir = ".";
@@ -55,7 +55,9 @@ cfdTranslatorToVTK::cfdTranslatorToVTK()
    _translateCbk = 0;
 
    _outputDataset = 0;
-   _outputFile = "star";
+   _outputFile = "vtkFile";
+
+   isTransient = false;
 }
 /////////////////////////////////////////
 cfdTranslatorToVTK::~cfdTranslatorToVTK()
@@ -92,9 +94,7 @@ void cfdTranslatorToVTK::SetOutputDirectory(std::string outDir)
 ///////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::SetFileName( std::string fileName )
 {
-   //_outfileNames.push_back( fileName );
    _outputFile = fileName;
-//std::cout<<"SIZE:"<<_outputFile<<std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////// 
 void cfdTranslatorToVTK::SetPreTranslateCallback( cfdTranslatorToVTK::PreTranslateCallback* preTCbk)
@@ -151,6 +151,16 @@ std::string cfdTranslatorToVTK::GetOutputDirectory()
 {
    return _outputDir;
 }
+////////////////////////////////////////////////////   
+std::string cfdTranslatorToVTK::GetBaseFileName()
+{
+   return _baseFileName;
+}
+////////////////////////////////////////////////////   
+std::string cfdTranslatorToVTK::GetOutputFileName()
+{
+   return _outputFile;
+}
 ////////////////////////////////////////////////////////
 unsigned int cfdTranslatorToVTK::GetNumberOfFoundFiles()
 {
@@ -161,6 +171,11 @@ void cfdTranslatorToVTK::SetBaseFileName( std::string baseFileName )
 {
    baseFileName.clear();
    AddBaseName(baseFileName);
+}
+///////////////////////////////////////////////////////////////
+void cfdTranslatorToVTK::SetIsTransient()
+{
+   isTransient = true;
 }
 //////////////////////////////////////////////////////////////
 bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
@@ -175,6 +190,12 @@ bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
    if(!_nFoundFiles && _infileNames.size())
    {
       _nFoundFiles = static_cast< int >( _infileNames.size() );
+   }
+
+   //so that the file name is correct for dicom data
+   if ( _nFoundFiles > 1 )
+   {
+      isTransient = true;
    }
 
    std::bitset< 16 > status;
@@ -221,67 +242,12 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
 {
    if(_outputDataset)
    {
-/*      if(_outfileNames.empty())
-      {
-         std::stringstream tempName;
-         tempName << _outputDir << "/" 
-                  << baseFileNames[fileNum] << "_" 
-                  << fileNum << ".vtu";
-         _outfileNames.push_back(tempName.str());
-      }
-      VE_Util::writeVtkThing(_outputDataset, 
-                          (char*)_outfileNames.at(fileNum).c_str(),1);
-      return true;
-   }
-   else
-   {
-      std::cout<<"Invalid output vtk dataset!!!"<<std::endl;
-      std::cout<<"cfdTranslatorToVTK::_writeToVTK"<<std::endl;
-      return false;
-   }*/
-      if( !_outputFile.compare(baseFileNames[fileNum]) )
-      {
-         _outputFile.assign(baseFileNames[fileNum]);
-      }
-//   std::cout<<"HERE1 HERE1: "<<_outputFile<<std::endl;
-      if(_outputDataset)
-      {
-         if( _outfileNames.empty() && fileNum == 0 )
-         {
-            std::stringstream tempName;
-            tempName << _outputDir << "/" 
-                     << _outputFile << ".vtu";
-            _outfileNames.push_back(tempName.str());
-//   std::cout<<"HERE2 HERE2: "<<_outfileNames[fileNum]<<std::endl;
-         }
-         else if( _outfileNames.empty() && fileNum != 0 )
-         {
-            std::stringstream tempName;
-            tempName << _outputDir << "/" 
-                     << _outputFile << "_" 
-                     << fileNum << ".vtu";
-            _outfileNames.push_back(tempName.str());
-//   std::cout<<"HERE3 HERE3: "<<_outfileNames[fileNum]<<std::endl;
-         }  
-      }
-/*
-      if( _outfileNames.empty() && !_outputFile.compare(baseFileNames[fileNum]) )
-      {
-         std::stringstream tempName;
-         tempName << _outputDir << "/" 
-                  << baseFileNames[fileNum] << "_" 
-                  << fileNum << ".vtu";
-         _outfileNames.push_back(tempName.str());
-std::cout<<"HERE1 HERE1: "<<fileNum<<std::endl;
-      }
-      else if(_outfileNames.empty() && fileNum == 0)
+      if( !isTransient )
       {
          std::stringstream tempName;
          tempName << _outputDir << "/" 
                   << _outputFile << ".vtu";
          _outfileNames.push_back(tempName.str());
-//std::cout<<"HERE HERE: "<<_outfileNames[0]<<std::endl;
-std::cout<<"HERE2 HERE2: "<<fileNum<<std::endl;
       }
       else
       {
@@ -290,9 +256,8 @@ std::cout<<"HERE2 HERE2: "<<fileNum<<std::endl;
                   << _outputFile << "_" 
                   << fileNum << ".vtu";
          _outfileNames.push_back(tempName.str());
-//std::cout<<"HERE HERE: "<<_outfileNames[0]<<std::endl;
-std::cout<<"HERE3 HERE3: "<<fileNum<<std::endl;
-      }*/
+      }  
+   
       VE_Util::writeVtkThing(_outputDataset, 
                           (char*)_outfileNames.at(fileNum).c_str(),1);
       return true;
@@ -329,6 +294,7 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
    {
       std::string inDir;
       std::string singleFile;
+
       if ( toVTK->_extractOptionFromCmdLine(argc,argv,std::string("-singleFile"),singleFile) )
       {
          toVTK->AddFoundFile(singleFile);
@@ -375,7 +341,9 @@ void cfdTranslatorToVTK::ExtractBaseName(std::string fileName)
 #else
    size_t slash = outfileMinusExtension.rfind("/");
 #endif
-   AddBaseName(std::string(outfileMinusExtension,slash+1,period));
+   _baseFileName = std::string(outfileMinusExtension,slash+1,period);
+   AddBaseName( _baseFileName );
+   SetFileName( _baseFileName );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::AddBaseName(std::string baseName)

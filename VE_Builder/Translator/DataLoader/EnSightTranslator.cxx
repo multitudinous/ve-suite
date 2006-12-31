@@ -109,10 +109,6 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
       //get the info about the data in the data set
       if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
       {
-         //std::cout<<"Warning!!!"<<std::endl;
-         //std::cout<<"No point data found!"<<std::endl;
-         //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
-         
          vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
          dataConvertCellToPoint->SetInput(tmpDSet);
          dataConvertCellToPoint->PassCellDataOff();
@@ -135,7 +131,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
       {
          std::cout << "Number of Timesteps = " << tempArray->GetItem( i )->GetNumberOfTuples() << std::endl;
          //this must be an int because j goes negative
-         for ( int j = tempArray->GetItem( i )->GetNumberOfTuples() - 1; j >= 0; --j )
+         for ( int j = tempArray->GetItem( i )->GetNumberOfTuples() - 5; j >= 0; --j )
          {
             std::cout << "Translating Timestep = " << tempArray->GetItem( i )->GetTuple1( j ) << std::endl;
             reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
@@ -160,10 +156,6 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
             //get the info about the data in the data set
             if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
             {
-               //std::cout<<"Warning!!!"<<std::endl;
-               //std::cout<<"No point data found!"<<std::endl;
-               //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
-               
                vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
                dataConvertCellToPoint->SetInput(tmpDSet);
                dataConvertCellToPoint->PassCellDataOff();
@@ -182,11 +174,12 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
             if ( j > 0 )
             {
                std::ostringstream strm;
-               strm << EnSightToVTK->GetBaseName()<< "_" << j << ".vtu";
+               strm << EnSightToVTK->GetOutputFileName() << "_" << j << ".vtu";
                VE_Util::cfdVTKFileHandler trans;
                trans.WriteDataSet( outputDataset, strm.str() );
                outputDataset->Delete();
                outputDataset = 0;
+               EnSightToVTK->SetIsTransient();
             }
          }
       }
