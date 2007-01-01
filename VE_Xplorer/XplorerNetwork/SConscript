@@ -27,8 +27,8 @@ headers = Split("""
    NetworkSystemView.h
    temp/StringTokenizer.h
    temp/bkpparser.h
-   ../DefaultGraphicalPlugin/DefaultGraphicalPlugin.h
 """)
+##   ../DefaultGraphicalPlugin/DefaultGraphicalPlugin.h
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib',
