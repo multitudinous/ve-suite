@@ -34,6 +34,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Conductor/Framework/PluginLoader.h"
+#include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
 #include <wx/hash.h>
 #include <wx/dynload.h>
@@ -68,12 +69,12 @@ PluginLoader::~PluginLoader()
 bool PluginLoader::LoadPlugins(wxString lib_dir)
 {
    // Load the default plugin no matter what
-   wxString veSuiteHome;
+   //wxString veSuiteHome;
    wxString hostType;
-   wxString libDir;
+   //wxString libDir;
    ::wxGetEnv( wxString( "CFDHOSTTYPE",wxConvUTF8 ), &hostType );
    
-   if(::wxGetEnv( wxString( "VE_SUITE_HOME",wxConvUTF8 ), &veSuiteHome ))
+   /*if(::wxGetEnv( wxString( "VE_SUITE_HOME",wxConvUTF8 ), &veSuiteHome ))
    {
       libDir = wxString("/bin/Plugins/UI/",wxConvUTF8);
       ::wxGetEnv( wxString( "CFDHOSTTYPE",wxConvUTF8 ), &hostType );
@@ -94,8 +95,12 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
          wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
          wxLogDebug( _("Loaded [ %s ]\n"), libn.c_str() );
       }
-   }
-
+   }*/
+   //Load default plugin into vectors
+   plugins.push_back( new DefaultPlugin() );
+   plugin_cls.push_back( 0 );
+   
+   
    // Try to laod custom plugins
    const wxString ext = wxString("*",wxConvUTF8) + wxPluginLibrary::GetDllExt();
    lib_dir.Append( _("/") );
@@ -103,15 +108,15 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    wxLogDebug( _("Loading plugins from [%s]\n"), lib_dir.c_str());
 
    /* Create a directory object we can scan for plugins */
-   if ( !wxDir::Exists(lib_dir) )
+   /*if ( !wxDir::Exists(lib_dir) )
    {
       // Register default plugin at least
       RegisterPlugins();
       // deal with the error here - wxDir would already log an error 
       // message explaining the exact reason of the failure
       return FALSE;
-   }
-   wxDir dir(lib_dir);// + "\\" + "plugins");
+   }*/
+   wxDir dir(lib_dir);
    
    if ( !dir.IsOpened() )
    {

@@ -31,6 +31,7 @@ srcs = Split("""
    UI_TeacherTab.cxx
    UI_TransientDialog.cxx
    UserPreferences.cxx
+   ../DefaultPlugin/DefaultPlugin.cxx
 """)
 
 env = ves_pkg.getEnv().Copy()

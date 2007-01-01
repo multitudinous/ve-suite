@@ -41,6 +41,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdThread.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
@@ -274,7 +275,8 @@ void cfdExecutive::GetEverything( void )
          if ( temp == 0 )
          {
             //load the default plugin
-            temp = dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
+            temp = new DefaultGraphicalPlugin();
+            //dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
          }
 
          _plugins[ iter->first ] = temp;

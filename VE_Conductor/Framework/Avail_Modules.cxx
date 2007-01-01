@@ -37,6 +37,7 @@
 #include "VE_Conductor/GUIPlugin/StringParse.h"
 #include "VE_Conductor/Framework/PluginLoader.h"
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
 #include "VE_Conductor/xpm/icon1.xpm"
 #include "VE_Conductor/xpm/icon2.xpm"
@@ -142,41 +143,30 @@ void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
 
 void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
 {
-   ReiTreeItemData* item_data;
-   wxClassInfo* info;
-   REI_Plugin *object;
-
    selection = GetSelection();
    if (selection<=0)
       return;
 
+   ReiTreeItemData* item_data;
    item_data = (ReiTreeItemData*) GetItemData(selection);
    if ( item_data == NULL )
       return;
 
+   wxClassInfo* info;
    info = item_data->pl_clsi;
    if ( info )
    {
+      REI_Plugin* object;
       object = dynamic_cast< REI_Plugin* >( info->CreateObject() );
       network->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
-      //      std::cout<<"a moduel size : "<<network->modules.size()<<std::endl;
-      //(network->modules).push_back(object);
-      //wxString title, desc;
-
-      //char* s;
-      //sprintf(s, "%ul", object);				//modified by scorns 7/14/05
-      //std::ostringstream  dirStringStream;
-      //dirStringStream << object;
-      //std::string dirString = dirStringStream.str();
-      //s = (char*)dirString.c_str();
-      //title << wxT("Description for ") << GetItemText(selection);
-      //title<<s;
-      // desc = object->GetDesc();
-
-      // wxMessageDialog(this, desc, title).ShowModal();
+   }
+   else
+   {
+      REI_Plugin* object = new DefaultPlugin();
+      network->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::ShowMenu(wxTreeItemId id, const wxPoint& pt)
 {
     wxString title;

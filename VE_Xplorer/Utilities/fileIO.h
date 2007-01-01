@@ -74,7 +74,6 @@ public:
 
    static int getIntegerBetween( const int min, const int max );
 
-   static std::string GetFile( std::string, std::string );
    static int ExtractIntegerFromString( std::string filename );
    static int ExtractIntegerBeforeExtension( std::string filename );
    static std::vector<std::string> fileIO::GetFilesInDirectory(std::string dir, std::string extension);

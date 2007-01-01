@@ -46,6 +46,7 @@
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/QueryInputsDlg.h"
 #include "VE_Conductor/GUIPlugin/ParamsDlg.h"
+#include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
@@ -2411,12 +2412,16 @@ void Network::CreateNetwork( std::string xmlNetwork )
 
       wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
       // If the class has not had a custom module been created
+      REI_Plugin* tempPlugin = 0;
       if ( cls == 0 )
       {
          //Load the generic plugin for conductor
-         cls = wxClassInfo::FindClass( _("DefaultPlugin") );
+         tempPlugin = new DefaultPlugin();
       }
-      REI_Plugin* tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
+      else
+      {
+         tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
+      }
 
       Module temp_mod;
       unsigned int num = model->GetModelID();

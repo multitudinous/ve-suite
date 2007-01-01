@@ -57,7 +57,7 @@ public:
 private:
 };
 
-VE_GRAPHICALPLUGIN_CLASS( DefaultGraphicalPlugin );
+//VE_GRAPHICALPLUGIN_CLASS( DefaultGraphicalPlugin );
 
 #endif // DEFAULT_GRAPHICAL_PLUGIN_H
    

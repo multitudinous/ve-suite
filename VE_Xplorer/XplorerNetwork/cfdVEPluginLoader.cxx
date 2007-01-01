@@ -114,7 +114,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    std::string libDir = path + modelPath;
 
    //std::string modelPath;
-   std::string vesuitePath;
+   /*std::string vesuitePath;
    bool vesuiteHomeDefined = false;
    //status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
    if(vpr::System::getenv( std::string("VE_SUITE_HOME"), vesuitePath ).success())
@@ -134,9 +134,8 @@ void cfdVEPluginLoader::ScanAndLoad( void )
       //Look for VE-Suite default plugin path
       path.assign("/bin/");
       vesuiteHomeDefined = false;
-   }
+   }*/
 
-   std::string vesuiteLibDir = vesuitePath + path + libDir;
    const std::string nameCheck( "native" );
    bool customPlugins = false;
    try
@@ -167,6 +166,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    }
 
    // Load the default plugin
+   /*std::string vesuiteLibDir = vesuitePath + path + libDir;
    vpr::LibraryFinder finder(vesuiteLibDir, DSO_SUFFIX);
 
    vpr::LibraryFinder::LibraryList defaultLibs = finder.getLibraries();
@@ -177,7 +177,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    for ( size_t i = 0; i < defaultLibs.size(); ++i )
    {
       libs.push_back( defaultLibs.at( i ) );
-   }
+   }*/
 
    for ( size_t i = 0; i < libs.size(); ++i )
    {
