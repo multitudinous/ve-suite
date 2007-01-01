@@ -76,22 +76,23 @@
 
 // Scene graph dependant headers
 #ifdef _PERFORMER
-#include <Performer/pf.h>
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pfdb/pfpfb.h>
-#include "VE_Xplorer/cfdNotify.h"
+   #include <Performer/pf.h>
+   #include <Performer/pf/pfGroup.h>
+   #include <Performer/pfdb/pfpfb.h>
+   #include "VE_Xplorer/cfdNotify.h"
 #elif _OSG
-#include <osg/Group>
-#include <osgDB/WriteFile>
-#include <osg/FrameStamp>
-#include <osgUtil/SceneView>
-#include <osgUtil/UpdateVisitor>
-#include <osg/MatrixTransform>
-#include <gmtl/Generate.h>
-#include <gmtl/Coord.h>
-#include <osg/Matrix>
-#include <osg/Referenced>
+   #include <osg/Group>
+   #include <osgDB/WriteFile>
+   #include <osg/FrameStamp>
+   #include <osgUtil/SceneView>
+   #include <osgUtil/UpdateVisitor>
+   #include <osg/MatrixTransform>
+   #include <gmtl/Generate.h>
+   #include <gmtl/Coord.h>
+   #include <osg/Matrix>
+   #include <osg/Referenced>
 #endif
+
 #ifdef _OSG
 #ifdef VE_PATENTED
 //#ifdef CFD_USE_SHADERS
@@ -102,6 +103,7 @@ using namespace VE_TextureBased;
 #endif
 /// C/C++ libraries
 #include <iostream>
+#include <sstream>
 //#include <omp.h>
 
 #include <vrj/Kernel/Kernel.h>
@@ -132,8 +134,6 @@ cfdApp::cfdApp( int argc, char* argv[] )
    _frameStamp->setFrameNumber(0);
    svUpdate = false;
 
-   InitFrameRateText();
-
 #ifdef VE_PATENTED
    _tbvHandler = 0;
    _pbuffer = 0;
@@ -146,18 +146,33 @@ cfdApp::cfdApp( int argc, char* argv[] )
 
 void cfdApp::InitFrameRateText()
 {
+   framerate_dcs=new VE_SceneGraph::cfdDCS;
    framerate_geode=new osg::Geode;
    framerate_text=new osgText::Text;
-
-   //framerate_text->setFont(font);
-   framerate_text->setColor(osg::Vec4f(1.0f,0.0f,0.0f,1.0f));
-   framerate_text->setCharacterSize(20.0f);
-   framerate_text->setPosition(osg::Vec3(100.0f,10.0f,0.0f));
+   framerate_font=osgText::readFontFile("../fonts/arial.ttf");
+   
+   framerate_text->setFont(framerate_font.get());
+   framerate_text->setColor(osg::Vec4f(1.0f,1.0f,1.0f,1.0f));
+   framerate_text->setCharacterSize(10.0f);
+   //framerate_text->setRotation(osg::Quat(90.0f,osg::X_AXIS));
+   framerate_text->setAlignment(osgText::Text::RIGHT_BASE_LINE);
    framerate_text->setFontResolution(40,40);
 
    framerate_geode->addDrawable(framerate_text.get());
 
-   //dynamic_cast<osg::Group*>(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode())->addChild(framerate_geode.get());
+   int windowWidth=VE_Xplorer::cfdEnvironmentHandler::instance()->GetWindowWidth();
+   int windowHeight=VE_Xplorer::cfdEnvironmentHandler::instance()->GetWindowHeight();
+
+   float position[3];
+   position[0]=0;
+   position[1]=10;
+   position[2]=20;
+
+   //framerate_text->setPosition(osg::Vec3(0.0f,10.0f,0.0f));
+   framerate_dcs->SetTranslationArray(position);
+
+   dynamic_cast<osg::Group*>(framerate_dcs->GetRawNode())->addChild(framerate_geode.get());
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->AddChild(framerate_dcs);
 }
 
 void cfdApp::exit()
@@ -166,23 +181,26 @@ void cfdApp::exit()
    cfdModelHandler::instance()->CleanUp();
    cfdEnvironmentHandler::instance()->CleanUp();
    cfdSteadyStateVizHandler::instance()->CleanUp();
-#ifdef _OSG
-#ifdef VE_PATENTED
-   cfdTextureBasedVizHandler::instance()->CleanUp();
-#endif
-#endif
 
-#ifdef _TAO
-   cfdExecutive::instance()->CleanUp();
-#endif // _TAO
+   #ifdef _OSG
+   #ifdef VE_PATENTED
+      cfdTextureBasedVizHandler::instance()->CleanUp();
+   #endif
+   #endif
+
+   #ifdef _TAO
+      cfdExecutive::instance()->CleanUp();
+   #endif // _TAO
    
-#ifdef _WEB_INTERFACE
-   runWebImageSaveThread=false;
-   //vpr::System::msleep( 1000 );  // one-second delay
-   delete writeWebImageFileThread;
-   if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
-      delete[] webImagePixelArray;   //delete the pixel array
-#endif  //_WEB_INTERFACE
+   #ifdef _WEB_INTERFACE
+      runWebImageSaveThread=false;
+      //vpr::System::msleep( 1000 );  // one-second delay
+      delete writeWebImageFileThread;
+      if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
+         delete[] webImagePixelArray;   //delete the pixel array
+   #endif  //_WEB_INTERFACE
+
+   delete framerate_dcs;
 }
 
 #ifdef _PERFORMER
@@ -309,13 +327,14 @@ void cfdApp::initScene( void )
 {
    vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
 
-# ifdef _OPENMP
-   std::cout << "\n\n\n";
-   std::cout << "|===================================================================|" << std::endl;
-   std::cout << "|          Compiled by an OpenMP-compliant implementation           |" << std::endl;
-   std::cout << "|===================================================================|" << std::endl;
-   std::cout << "|                                                                   |" << std::endl;
-# endif // _OPENMP
+   # ifdef _OPENMP
+      std::cout << "\n\n\n";
+      std::cout << "|===================================================================|" << std::endl;
+      std::cout << "|          Compiled by an OpenMP-compliant implementation           |" << std::endl;
+      std::cout << "|===================================================================|" << std::endl;
+      std::cout << "|                                                                   |" << std::endl;
+   # endif // _OPENMP
+
    //Initialize all the XML objects
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_XML::VE_Shader::ShaderCreator());
@@ -326,19 +345,20 @@ void cfdApp::initScene( void )
    std::cout << "| ***************************************************************** |" << std::endl;
    _vjobsWrapper->InitCluster();
 
-#ifdef _WEB_INTERFACE
-   timeOfLastCapture = 0;
-   runWebImageSaveThread = true;
-   readyToWriteWebImage = false;
-   writingWebImageNow = false;
-   captureNextFrameForWeb = false;
-#endif   //_WEB_INTERFACE
+   #ifdef _WEB_INTERFACE
+      timeOfLastCapture = 0;
+      runWebImageSaveThread = true;
+      readyToWriteWebImage = false;
+      writingWebImageNow = false;
+      captureNextFrameForWeb = false;
+   #endif   //_WEB_INTERFACE
+
    // define the rootNode, worldDCS, and lighting
    //VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
    VE_SceneGraph::cfdPfSceneManagement::instance()->InitScene();
-#ifdef _OSG
-   VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(true);
-#endif
+   #ifdef _OSG
+      VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(true);
+   #endif
 
    // modelHandler stores the arrow and holds all data and geometry
    //cfdModelHandler::instance()->Initialize( this->filein_name );
@@ -349,11 +369,9 @@ void cfdApp::initScene( void )
    // navigation and cursor 
    cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
    cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   for ( int i = 1; i < argc; ++i )
+   for(int i=1;i<argc;++i)
    {
-      if ( (std::string( argv[i] ) == std::string("-VESDesktop")) &&
-            (argc >= i+2) 
-         )
+      if((std::string( argv[i] ) == std::string("-VESDesktop"))&&(argc>=i+2))
       {
          cfdEnvironmentHandler::instance()->
                      SetDesktopSize( atoi( argv[i+1] ), atoi( argv[i+2] ) );
@@ -368,26 +386,29 @@ void cfdApp::initScene( void )
    cfdSteadyStateVizHandler::instance()->InitScene();
 
    //create the volume viz handler
-#ifdef _OSG
-   _start_tick = _timer.tick();
-#ifdef VE_PATENTED
-   _tbvHandler = cfdTextureBasedVizHandler::instance();
-   //_tbvHandler->SetParameterFile(filein_name);
-   _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
-   _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
-   _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   //_tbvHandler->SetSceneView(_sceneViewer.get());
-   //_tbvHandler->InitVolumeVizNodes();
-#endif
-#endif
+   #ifdef _OSG
+      _start_tick = _timer.tick();
+   #ifdef VE_PATENTED
+      _tbvHandler = cfdTextureBasedVizHandler::instance();
+      //_tbvHandler->SetParameterFile(filein_name);
+      _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
+      _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
+      _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+      //_tbvHandler->SetSceneView(_sceneViewer.get());
+      //_tbvHandler->InitVolumeVizNodes();
+   #endif
+   #endif
 
-#ifdef _TAO
-   std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-   cfdExecutive::instance()->Initialize( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
-#endif // _TAO
+   #ifdef _TAO
+      std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
+      cfdExecutive::instance()->Initialize( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
+   #endif // _TAO
 
    // This may need to be fixed
    this->_vjobsWrapper->GetCfdStateVariables();
+
+   //Initialize the text for framerate
+   this->InitFrameRateText();
 }
 /////////////////////////////////////////////////////////////////////////////
 void cfdApp::preFrame( void )
@@ -398,43 +419,47 @@ void cfdApp::preFrame( void )
 /////////////////////////////////////////////////////////////////////////////
 void cfdApp::latePreFrame( void )
 {
-   static long lastFrame = 0;
-   static float lastTime = 0.0f;
-   vprDEBUG(vesDBG,3) << "cfdApp::latePreFrame" << std::endl << vprDEBUG_FLUSH;
-#ifdef _CLUSTER
-   //call the parent method
-   _vjobsWrapper->GetUpdateClusterStateVariables();
-#endif // _CLUSTER
-#ifdef _OSG
+   static long lastFrame=0;
+   static float lastTime=0.0f;
 
+   vprDEBUG(vesDBG,3)<<"cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
 
+   #ifdef _CLUSTER
+      //call the parent method
+      _vjobsWrapper->GetUpdateClusterStateVariables();
+   #endif // _CLUSTER
 
-   // This is order dependent
-   // don't move above function call
-   if ( _frameStamp.valid() )
-   {
-      _frameStamp->setFrameNumber( _frameNumber++ );
-      _frameStamp->setReferenceTime( this->_vjobsWrapper->GetSetAppTime(-1) );
-      // This is a frame rate calculation
-      float deltaTime = this->_vjobsWrapper->GetSetAppTime(-1) - lastTime;
-      if ( deltaTime >= 1.0f )
+   #ifdef _OSG
+      //This is order dependent
+      //don't move above function call
+      if(_frameStamp.valid())
       {
-
-         float framerate;
-         framerate=_frameNumber-lastFrame;
-         framerate_text->setText("60.0");
+         _frameStamp->setFrameNumber(_frameNumber++);
+         _frameStamp->setReferenceTime(this->_vjobsWrapper->GetSetAppTime(-1));
+         //This is a frame rate calculation
+         float deltaTime=this->_vjobsWrapper->GetSetAppTime(-1)-lastTime;
+         if(deltaTime>=1.0f)
+         {
+            float framerate;
+            framerate=_frameNumber-lastFrame;
          
-         //std::cout << "|\tFrameRate = " << _frameNumber - lastFrame << std::endl;
+            if(VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayFrameRate()==true){
+               std::stringstream ss(std::stringstream::in|std::stringstream::out);
+               ss<<framerate;
+               ss<<" fps";
+               framerate_text->setText(ss.str());
+            }
 
-
-         lastTime = this->_vjobsWrapper->GetSetAppTime(-1);
-         lastFrame = _frameNumber;
+            else{
+               framerate_text->setText("");
+            }
+         
+            lastTime=this->_vjobsWrapper->GetSetAppTime(-1);
+            lastFrame=_frameNumber;
+         }
       }
-   }
-
-
-#endif
-
+   #endif
+         
    VE_SceneGraph::cfdPfSceneManagement::instance()->PreFrameUpdate();
    ///////////////////////
    cfdModelHandler::instance()->PreFrameUpdate();

@@ -125,6 +125,10 @@ public:
    void SetDesktopSize( int width, int height );
 	void SetWindowDimensions( unsigned int width, unsigned int height );
 	void SetFrustumValues(float _top,float _bottom,float _near);
+
+   unsigned int GetWindowWidth();
+   unsigned int GetWindowHeight();
+
 	void PostFrameUpdate();
 
    ///Check if the background color has changed

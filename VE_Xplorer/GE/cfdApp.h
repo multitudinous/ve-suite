@@ -39,6 +39,10 @@ cfdApp API
 /*!\class VE_Xplorer::cfdApp
 *
 */
+namespace VE_SceneGraph
+{
+   class cfdDCS;
+}
 
 namespace VE_Xplorer
 {
@@ -57,6 +61,7 @@ const float SAMPLE_TIME = 1.0f;
 	#include <osg/Timer>
    #include <osg/Geode>
    #include <osgText/Text>
+   #include <osgText/Font>
 	#include <vrj/Draw/OSG/OsgApp.h>
 	#include <vpr/Sync/Mutex.h>
 
@@ -216,10 +221,13 @@ private:
 	double timeOfLastCapture;
 #endif 
 #ifdef _OSG
-   osg::ref_ptr< osg::NodeVisitor > mUpdateVisitor;
-   osg::ref_ptr< osg::FrameStamp > frameStamp;
-   osg::ref_ptr< osg::Geode > framerate_geode;
-   osg::ref_ptr< osgText::Text > framerate_text;
+   osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;
+   osg::ref_ptr<osg::FrameStamp> frameStamp;
+
+   VE_SceneGraph::cfdDCS* framerate_dcs;
+   osg::ref_ptr<osg::Geode> framerate_geode;
+   osg::ref_ptr<osgText::Text> framerate_text;
+   osg::ref_ptr<osgText::Font> framerate_font;
 #endif
 };
 }

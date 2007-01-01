@@ -439,6 +439,16 @@ void cfdEnvironmentHandler::SetFrustumValues(float _top,float _bottom,float _nea
 	_frustumNear=_near;
 }
 ////////////////////////////////////////////////////////////////////////////////
+unsigned int cfdEnvironmentHandler::GetWindowWidth()
+{
+   return _windowWidth;
+}
+////////////////////////////////////////////////////////////////////////////////
+unsigned int cfdEnvironmentHandler::GetWindowHeight()
+{
+   return _windowHeight;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball

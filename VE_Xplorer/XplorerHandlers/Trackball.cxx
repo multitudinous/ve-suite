@@ -213,7 +213,7 @@ void Trackball::ResetTransforms()
 void Trackball::FrameAll()
 {
    osg::ref_ptr<osg::Group> root=new osg::Group;
-   root->addChild(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode());
+   root->addChild(VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetRawNode());
 
    tb_accuTransform=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
