@@ -123,8 +123,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv JDK_HOME /usr/java/jdk1.5.0_04
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK-5.0/Linux-RHEL4
    setenv VTK_BASE_DIR /home/users/mccdo/VTK/vtk-5.0/install-rhel4_release
-#   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.1/Linux-RHEL_4
-   setenv WX_HOME /home/users/mccdo/wxWindows/wxGTK-2.6.2/install-rhel_4
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.8.0/Linux-RHEL4_32
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-linux-rhel4-i686
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-linux-rhel4-i686-deps
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
@@ -155,7 +154,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
 else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_*64 ) then
    setenv JDK_HOME /usr/java/jdk1.5.0_04
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK-5.0/Linux64-SuSE_10
-   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/Linux64-SuSE_10
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.8.0/Linux-SuSE10_64
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux64-SuSE_10
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux64-SuSE_10
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.2/Linux64-SuSE_10
@@ -183,7 +182,7 @@ else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_*64 ) then
 else if ( ${CFDHOSTTYPE} =~ S*SE_*.*_i* ) then
    setenv JDK_HOME /usr/java/jdk1.5.0_02
    setenv VTK_BASE_DIR /home/users/mccdo/VTK/vtk-5.0/install-suse10_32
-   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.2/Linux-SuSE_10
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.8.0/Linux-SuSE10_32
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux-SuSE_10
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux-SuSE_10
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.2/Linux-SuSE_10
