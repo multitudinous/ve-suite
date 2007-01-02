@@ -47,10 +47,6 @@ env.ParseConfig('flagpoll vrjuggler vpr TAO \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
                           --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --get-vrj-ogl-libs')
-
-if baseEnv['cluster'] != 'no':
-   execOsgPatTag += "_cluster"
-   env.Append( CPPDEFINES = ['_CLUSTER' ])
    
 prog = ves_pkg.createProgram('project%s' %(execOsgPatTag), env, 'bin')
 prog.addSources( srcs )

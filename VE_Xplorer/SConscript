@@ -22,5 +22,5 @@ for d in xplorerSubdirs:
    #print " dir ", d
    SConscript( dirs = d )
 
-baseEnv[ 'cluster' ] = 'yes'
-SConscript( dirs = "GE", build_dir=pj(buildDir,'VE_Xplorer','GE','cluster'))
+#baseEnv[ 'cluster' ] = 'yes'
+#SConscript( dirs = "GE", build_dir=pj(buildDir,'VE_Xplorer','GE','cluster'))

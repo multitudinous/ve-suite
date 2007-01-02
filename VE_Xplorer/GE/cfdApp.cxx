@@ -124,6 +124,7 @@ cfdApp::cfdApp( int argc, char* argv[] )
 #endif
 {
    filein_name.erase();// = 0;
+   isCluster = false;
 #ifdef _OSG
    //osg::Referenced::instance()->setThreadSafeRefUnref(true);
    osg::Referenced::setThreadSafeReferenceCounting(true);
@@ -182,23 +183,23 @@ void cfdApp::exit()
    cfdEnvironmentHandler::instance()->CleanUp();
    cfdSteadyStateVizHandler::instance()->CleanUp();
 
-   #ifdef _OSG
-   #ifdef VE_PATENTED
-      cfdTextureBasedVizHandler::instance()->CleanUp();
-   #endif
-   #endif
+#ifdef _OSG
+#ifdef VE_PATENTED
+   cfdTextureBasedVizHandler::instance()->CleanUp();
+#endif
+#endif
 
-   #ifdef _TAO
-      cfdExecutive::instance()->CleanUp();
-   #endif // _TAO
-   
-   #ifdef _WEB_INTERFACE
-      runWebImageSaveThread=false;
-      //vpr::System::msleep( 1000 );  // one-second delay
-      delete writeWebImageFileThread;
-      if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
-         delete[] webImagePixelArray;   //delete the pixel array
-   #endif  //_WEB_INTERFACE
+#ifdef _TAO
+   cfdExecutive::instance()->CleanUp();
+#endif // _TAO
+
+#ifdef _WEB_INTERFACE
+   runWebImageSaveThread=false;
+   //vpr::System::msleep( 1000 );  // one-second delay
+   delete writeWebImageFileThread;
+   if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
+      delete[] webImagePixelArray;   //delete the pixel array
+#endif  //_WEB_INTERFACE
 
    delete framerate_dcs;
 }
@@ -327,13 +328,13 @@ void cfdApp::initScene( void )
 {
    vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
 
-   # ifdef _OPENMP
-      std::cout << "\n\n\n";
-      std::cout << "|===================================================================|" << std::endl;
-      std::cout << "|          Compiled by an OpenMP-compliant implementation           |" << std::endl;
-      std::cout << "|===================================================================|" << std::endl;
-      std::cout << "|                                                                   |" << std::endl;
-   # endif // _OPENMP
+# ifdef _OPENMP
+   std::cout << "\n\n\n";
+   std::cout << "|===================================================================|" << std::endl;
+   std::cout << "|          Compiled by an OpenMP-compliant implementation           |" << std::endl;
+   std::cout << "|===================================================================|" << std::endl;
+   std::cout << "|                                                                   |" << std::endl;
+# endif // _OPENMP
 
    //Initialize all the XML objects
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
@@ -345,20 +346,20 @@ void cfdApp::initScene( void )
    std::cout << "| ***************************************************************** |" << std::endl;
    _vjobsWrapper->InitCluster();
 
-   #ifdef _WEB_INTERFACE
-      timeOfLastCapture = 0;
-      runWebImageSaveThread = true;
-      readyToWriteWebImage = false;
-      writingWebImageNow = false;
-      captureNextFrameForWeb = false;
-   #endif   //_WEB_INTERFACE
+#ifdef _WEB_INTERFACE
+   timeOfLastCapture = 0;
+   runWebImageSaveThread = true;
+   readyToWriteWebImage = false;
+   writingWebImageNow = false;
+   captureNextFrameForWeb = false;
+#endif   //_WEB_INTERFACE
 
    // define the rootNode, worldDCS, and lighting
    //VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
    VE_SceneGraph::cfdPfSceneManagement::instance()->InitScene();
-   #ifdef _OSG
-      VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(true);
-   #endif
+#ifdef _OSG
+   VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(true);
+#endif
 
    // modelHandler stores the arrow and holds all data and geometry
    //cfdModelHandler::instance()->Initialize( this->filein_name );
@@ -375,7 +376,11 @@ void cfdApp::initScene( void )
       {
          cfdEnvironmentHandler::instance()->
                      SetDesktopSize( atoi( argv[i+1] ), atoi( argv[i+2] ) );
-         break;
+         //break;
+      }
+      else if ( std::string( argv[i] ) == std::string("-VESCluster") )
+      {
+         isCluster = true;
       }
    }
    cfdEnvironmentHandler::instance()->InitScene();
@@ -386,23 +391,23 @@ void cfdApp::initScene( void )
    cfdSteadyStateVizHandler::instance()->InitScene();
 
    //create the volume viz handler
-   #ifdef _OSG
-      _start_tick = _timer.tick();
-   #ifdef VE_PATENTED
-      _tbvHandler = cfdTextureBasedVizHandler::instance();
-      //_tbvHandler->SetParameterFile(filein_name);
-      _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
-      _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
-      _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-      //_tbvHandler->SetSceneView(_sceneViewer.get());
-      //_tbvHandler->InitVolumeVizNodes();
-   #endif
-   #endif
+#ifdef _OSG
+   _start_tick = _timer.tick();
+#ifdef VE_PATENTED
+   _tbvHandler = cfdTextureBasedVizHandler::instance();
+   //_tbvHandler->SetParameterFile(filein_name);
+   _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
+   _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
+   _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   //_tbvHandler->SetSceneView(_sceneViewer.get());
+   //_tbvHandler->InitVolumeVizNodes();
+#endif
+#endif
 
-   #ifdef _TAO
-      std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-      cfdExecutive::instance()->Initialize( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
-   #endif // _TAO
+#ifdef _TAO
+   std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
+   cfdExecutive::instance()->Initialize( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
+#endif // _TAO
 
    // This may need to be fixed
    this->_vjobsWrapper->GetCfdStateVariables();
@@ -424,41 +429,40 @@ void cfdApp::latePreFrame( void )
 
    vprDEBUG(vesDBG,3)<<"cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
 
-   #ifdef _CLUSTER
-      //call the parent method
-      _vjobsWrapper->GetUpdateClusterStateVariables();
-   #endif // _CLUSTER
+   //call the parent method
+   _vjobsWrapper->GetUpdateClusterStateVariables();
 
-   #ifdef _OSG
-      //This is order dependent
-      //don't move above function call
-      if(_frameStamp.valid())
+#ifdef _OSG
+   //This is order dependent
+   //don't move above function call
+   if(_frameStamp.valid())
+   {
+      _frameStamp->setFrameNumber(_frameNumber++);
+      _frameStamp->setReferenceTime(this->_vjobsWrapper->GetSetAppTime(-1));
+      //This is a frame rate calculation
+      float deltaTime=this->_vjobsWrapper->GetSetAppTime(-1)-lastTime;
+      if ( deltaTime >= 1.0f )
       {
-         _frameStamp->setFrameNumber(_frameNumber++);
-         _frameStamp->setReferenceTime(this->_vjobsWrapper->GetSetAppTime(-1));
-         //This is a frame rate calculation
-         float deltaTime=this->_vjobsWrapper->GetSetAppTime(-1)-lastTime;
-         if(deltaTime>=1.0f)
+         float framerate;
+         framerate=_frameNumber-lastFrame;
+      
+         if ( VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayFrameRate() == true )
          {
-            float framerate;
-            framerate=_frameNumber-lastFrame;
-         
-            if(VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayFrameRate()==true){
-               std::stringstream ss(std::stringstream::in|std::stringstream::out);
-               ss<<framerate;
-               ss<<" fps";
-               framerate_text->setText(ss.str());
-            }
-
-            else{
-               framerate_text->setText("");
-            }
-         
-            lastTime=this->_vjobsWrapper->GetSetAppTime(-1);
-            lastFrame=_frameNumber;
+            std::stringstream ss(std::stringstream::in|std::stringstream::out);
+            ss<<framerate;
+            ss<<" fps";
+            framerate_text->setText(ss.str());
          }
+         else
+         {
+            framerate_text->setText("");
+         }
+      
+         lastTime=this->_vjobsWrapper->GetSetAppTime(-1);
+         lastFrame=_frameNumber;
       }
-   #endif
+   }
+#endif
          
    VE_SceneGraph::cfdPfSceneManagement::instance()->PreFrameUpdate();
    ///////////////////////

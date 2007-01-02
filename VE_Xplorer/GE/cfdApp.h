@@ -54,41 +54,41 @@ namespace VE_Xplorer
 const float SAMPLE_TIME = 1.0f;
 
 #ifdef _PERFORMER
-	class pfGroup;
-	#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
+class pfGroup;
+#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
 // Declare my application class
 #elif _OSG
-	#include <osg/Timer>
-   #include <osg/Geode>
-   #include <osgText/Text>
-   #include <osgText/Font>
-	#include <vrj/Draw/OSG/OsgApp.h>
-	#include <vpr/Sync/Mutex.h>
+#include <osg/Timer>
+#include <osg/Geode>
+#include <osgText/Text>
+#include <osgText/Font>
+#include <vrj/Draw/OSG/OsgApp.h>
+#include <vpr/Sync/Mutex.h>
 
-	namespace osg
-	{  
-		class Group;
-		class FrameStamp;
-	}
-   namespace osgText
-   {
-      class Text;
-   }
-	namespace osgUtil 
-   { 
-      class SceneView;
-      class UpdateVisitor;
-   }
-	#ifdef _WEB_INTERFACE
-		#include <vpr/Thread/Thread.h>
-	#endif
-	#ifdef VE_PATENTED
-	namespace VE_TextureBased
-	{
-		class cfdPBufferManager;
-		class cfdTextureBasedVizHandler;
-	}
-	#endif
+namespace osg
+{  
+   class Group;
+   class FrameStamp;
+}
+namespace osgText
+{
+   class Text;
+}
+namespace osgUtil 
+{ 
+   class SceneView;
+   class UpdateVisitor;
+}
+#ifdef _WEB_INTERFACE
+   #include <vpr/Thread/Thread.h>
+#endif
+#ifdef VE_PATENTED
+namespace VE_TextureBased
+{
+   class cfdPBufferManager;
+   class cfdTextureBasedVizHandler;
+}
+#endif
 #endif 
 
 namespace VE_Xplorer
@@ -100,113 +100,114 @@ class cfdApp: public vrj::OsgApp
 #elif _OPENSG
 #endif
 {
-   public:
-      cfdApp( int argc, char* argv[] );
-      virtual ~cfdApp( void ) { ; }
-     
-      // Initialize the scene graph
-      virtual void initScene( void );
+public:
+   cfdApp( int argc, char* argv[] );
+   virtual ~cfdApp( void ) { ; }
+  
+   // Initialize the scene graph
+   virtual void initScene( void );
 
-      // Juggler calls before exiting
-      virtual void exit( void );
+   // Juggler calls before exiting
+   virtual void exit( void );
 
 #ifdef _PERFORMER
-      virtual void apiInit( void );
+   virtual void apiInit( void );
 
-      // Called After pfInit()
-      virtual void preForkInit( void );
-      // Called Before pfConfig()
+   // Called After pfInit()
+   virtual void preForkInit( void );
+   // Called Before pfConfig()
 
-      virtual void appChanFunc( pfChannel* chan );
+   virtual void appChanFunc( pfChannel* chan );
 
-      // Return the current scene graph
-      virtual pfGroup* getScene( void );
+   // Return the current scene graph
+   virtual pfGroup* getScene( void );
 
-      // Function called before pfSync
-      virtual void preSync( void );
+   // Function called before pfSync
+   virtual void preSync( void );
 #elif _OSG
-      virtual osg::Group* getScene( void );
-      virtual void bufferPreDraw( void );
-      virtual void draw();
-      virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
-      virtual void contextPreDraw( void );
+   virtual osg::Group* getScene( void );
+   virtual void bufferPreDraw( void );
+   virtual void draw();
+   virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
+   virtual void contextPreDraw( void );
 
-      ///Initialize the text layout for framerate
-      void InitFrameRateText();
+   ///Initialize the text layout for framerate
+   void InitFrameRateText();
 
-      ///Signal to change the background color
-      void ChangeBackgroundColor();
+   ///Signal to change the background color
+   void ChangeBackgroundColor();
 
 #ifdef VE_PATENTED
-      virtual void contextInit( void );
-      virtual void contextClose( void );
-      VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
-      virtual void contextPostDraw();
+   virtual void contextInit( void );
+   virtual void contextClose( void );
+   VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
+   virtual void contextPostDraw();
 #endif
 #elif _OPENSG
 #endif
-     
+  
 #ifdef _WEB_INTERFACE
-      void writeImageFileForWeb(void*);
+   void writeImageFileForWeb(void*);
 #endif
-      // Function called by the DEFAULT drawChan function 
-      // before clearing the channel
-      // and drawing the next frame (pfFrame( ))
-      //virtual void preDrawChan(pfChannel* chan, void* chandata);
+   // Function called by the DEFAULT drawChan function 
+   // before clearing the channel
+   // and drawing the next frame (pfFrame( ))
+   //virtual void preDrawChan(pfChannel* chan, void* chandata);
 
 
-      // Function called after pfSync and before pfDraw
-      virtual void preFrame( void );
+   // Function called after pfSync and before pfDraw
+   virtual void preFrame( void );
 
-      // Function called after pfSync and before pfDraw
-      //Function called after preFrame() and application-specific data syncronization (in a cluster configuration) but before the start of a new frame.
-      virtual void latePreFrame( void );
+   // Function called after pfSync and before pfDraw
+   //Function called after preFrame() and application-specific data syncronization (in a cluster configuration) but before the start of a new frame.
+   virtual void latePreFrame( void );
 
-      // Function called after pfDraw
-      virtual void intraFrame( void );
+   // Function called after pfDraw
+   virtual void intraFrame( void );
 
-      // Function called after intraFrame
-      virtual void postFrame( void );
+   // Function called after intraFrame
+   virtual void postFrame( void );
 
-      
+   
 
-      // Used to override getFrameBufferAttrs()
-      // Should be able to set multi sampling in the config
-      // Look for a fix in future juggler releases
-      //std::vector< int > getFrameBufferAttrs( void );
+   // Used to override getFrameBufferAttrs()
+   // Should be able to set multi sampling in the config
+   // Look for a fix in future juggler releases
+   //std::vector< int > getFrameBufferAttrs( void );
 
-      void pushDataToStateInfo( void );
+   void pushDataToStateInfo( void );
 
-      void SetWrapper( cfdVjObsWrapper* );
-      //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
+   void SetWrapper( cfdVjObsWrapper* );
+   //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
 #ifdef _OSG
-      bool svUpdate;
-      //osg::ref_ptr<osgUtil::SceneView> tempSvVector;
+   bool svUpdate;
+   //osg::ref_ptr<osgUtil::SceneView> tempSvVector;
 #ifdef VE_PATENTED
-      VE_TextureBased::cfdTextureBasedVizHandler* _tbvHandler;
-      //biv --may convert this to a singleton later
-      VE_TextureBased::cfdPBufferManager* _pbuffer;
+   VE_TextureBased::cfdTextureBasedVizHandler* _tbvHandler;
+   //biv --may convert this to a singleton later
+   VE_TextureBased::cfdPBufferManager* _pbuffer;
 #endif
-      osg::ref_ptr<osg::FrameStamp> _frameStamp;
-      osg::Timer _timer;
-      osg::Timer_t _start_tick;
-      unsigned int _frameNumber;
+   osg::ref_ptr<osg::FrameStamp> _frameStamp;
+   osg::Timer _timer;
+   osg::Timer_t _start_tick;
+   unsigned int _frameNumber;
 #endif
-      cfdVjObsWrapper*              _vjobsWrapper;
+   cfdVjObsWrapper*              _vjobsWrapper;
 
    // Only used in preframe for transient stuff
    int   lastFrame;
    void update();
 private:
+   bool isCluster;
    vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
    std::string filein_name;
 	double time_since_start;
    int argc;
    char** argv;
    std::vector<float> _clearColor;///<The clear color
-	   //web interface stuff for writing the image file
-	   //to be viewed over the web
+   //web interface stuff for writing the image file
+   //to be viewed over the web
 #ifdef _WEB_INTERFACE
 	bool runWebImageSaveThread;
 	bool readyToWriteWebImage;

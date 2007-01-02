@@ -82,6 +82,7 @@ using namespace VE_XML;
 VjObs_i::VjObs_i()
 {
    this->numOfClientInfo = 9;
+   isCluster = false;
    //int temp=0;
    //this->setClients( 0 );
    _cfdArray = new cfdCommandArray();
@@ -129,17 +130,28 @@ VjObs_i::VjObs_i()
    bufferCommand->AddDataValuePair( new DataValuePair(  ) );
    bufferCommand->SetCommandName( "wait" );
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void VjObs_i::SetClusterMode( bool clusterFlag )
+{
+   isCluster = clusterFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool VjObs_i::GetClusterMode( void )
+{
+   return isCluster;
+}
+////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::InitCluster( void )
 {
-#ifdef _CLUSTER
-  // Cluster Stuff
-   vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
-   this->mStates.init(new_guid);
-#endif // _CLUSTER
+   if ( isCluster )
+   {
+      // Cluster Stuff
+      vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
+      this->mStates.init(new_guid);
+   }
 }
-/////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #ifdef _TAO
 VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
   ACE_THROW_SPEC ((
@@ -616,7 +628,12 @@ void VjObs_i::GetCfdStateVariables( void )
       cfdShort_data_array[ i ] = mShort_data_array[ i ];
    } 
 
-#ifdef _CLUSTER
+
+   if ( !isCluster )
+   {
+      return;
+   }
+
    if ( mStates.isLocal() )
    {
       this->mStates->clusterIso_value        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
@@ -670,15 +687,15 @@ void VjObs_i::GetCfdStateVariables( void )
          this->mStates->clusterQuatCamIncrement = 0;
       }
    }
-   //this->_unusedNewData    = false;
-#else
-   //this->_unusedNewData    = false;
-#endif
 }
 
 void VjObs_i::GetUpdateClusterStateVariables( void )
 {
-#ifdef _CLUSTER
+   if ( !isCluster )
+   {
+      return;
+   }
+
    {
       vpr::Guard<vpr::Mutex> val_guard(mValueLock);
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
@@ -735,8 +752,6 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
          cfdQuatCamHandler::instance()->SetQuatCamIncrementor( this->mStates->clusterQuatCamIncrement );
       }
    }
-   //this->_unusedNewData    = false;
-#endif
 }
 
 #ifdef _TAO
@@ -994,12 +1009,11 @@ void VjObs_i::SetCommandString( const char* value)
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
 
    std::string commandString( value );
-#ifdef _CLUSTER
-   if ( mStates.isLocal() )
+   if ( mStates.isLocal() && isCluster  )
    {
 	   commandStringQueue.push_back( commandString );
    }
-#endif
+
    domManager = new DOMDocumentManager();
    domManager->SetParseXMLStringOn();
    domManager->Load( commandString );
@@ -1012,8 +1026,7 @@ void VjObs_i::SetCommandString( const char* value)
    // now lets create a list of them
    for ( unsigned int i = 0; i < numCommands; ++i )
    {
-     // std::cout <<"VjObs::numCommands(): "<< numCommands << std::endl;
-      Command* temp = new Command(  );
+      Command* temp = new Command();
       DOMElement* tempElement = 0;
       try
       {

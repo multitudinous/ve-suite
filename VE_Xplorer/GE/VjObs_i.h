@@ -42,17 +42,12 @@ VjObs_i API
 #include "VE_Open/skel/VjObsS.h"
 #include <vpr/Sync/Mutex.h>
 
-
-#ifdef _CLUSTER
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterNode.h>
 #include <plugins/ApplicationDataManager/UserData.h>
 #include <vpr/IO/SerializableObject.h>
 #include "VE_Xplorer/GE/cfdStateInfo.h"
-#endif
-
-//#include <vpr/Util/Singleton.h>
 
 namespace VE_Xplorer
 {
@@ -88,6 +83,10 @@ public:
    // Frame sync variables used by osg only at this point
    float GetSetAppTime( float );
    long GetSetFrameNumber( long );
+   ///Set the cluster mode flag
+   void SetClusterMode( bool clusterFlag );
+   bool GetClusterMode( void );
+   
 #ifdef _TAO   
    //VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
@@ -207,10 +206,9 @@ protected:
    std::vector< VE_XML::Command* > commandVectorQueue;
    std::vector< std::string > commandStringQueue;
    cfdCommandArray* _bufferArray;
-#ifdef _CLUSTER
    // Cluster Stuff for the above state variables
    cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
-#endif
+   bool isCluster;
 };
 }
 #endif

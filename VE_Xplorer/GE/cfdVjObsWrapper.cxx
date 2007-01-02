@@ -108,107 +108,83 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
 void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr orbPtr, int argc, char* argv[]  )
 #endif // _TAO
 {
-   boost::ignore_unused_variable_warning( argc );
-   boost::ignore_unused_variable_warning( argv );
+   //boost::ignore_unused_variable_warning( argc );
+   //boost::ignore_unused_variable_warning( argv );
+   bool isCluster = false;
+   for(int i=1;i<argc;++i)
+   {
+      if ( std::string( argv[i] ) == std::string("-VESCluster") )
+      {
+         isCluster = true;
+         break;
+      }
+   }
 #ifdef _TAO
    this->child_poa = child_poa;
    this->poa = poa;
 #endif // _TAO
    naming_context = input;
-   //_orbPtr = orbPtr;
-#ifdef _CLUSTER
-   std::vector<std::string> toks;
-   std::string hostfile;
-   std::string masterhost;
 
-   /*for ( unsigned int i = 1; i < argc; ++i )
+   if ( isCluster )
    {
-      if ( ( std::string("-VEXMaster") == std::string( argv[ i ] ) ) &&
-            ( (i+1) < argc )
-         )
+      std::vector<std::string> toks;
+      std::string hostfile;
+      std::string masterhost;
+      
+      if ( getenv( "VEXMASTER" ) != NULL )
       {
-         masterhost = std::string( argv[ i+1 ] );
+         masterhost = getenv( "VEXMASTER" );
          std::cout << "----------------CLUSTER INFO-------------------" << std::endl;
          std::cout << "NOTE : Be sure to specify this GUID = " << std::endl
-                   << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
-                   << "       in the application data config file." << std::endl;
-         break;
+         << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
+         << "       in the application data config file." << std::endl;
       }
-   }*/
-   
-   if ( getenv( "VEXMASTER" ) != NULL )
-   {
-      masterhost = getenv( "VEXMASTER" );
-      std::cout << "----------------CLUSTER INFO-------------------" << std::endl;
-      std::cout << "NOTE : Be sure to specify this GUID = " << std::endl
-                << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
-                << "       in the application data config file." << std::endl;
-        //break;
+      else
+      {
+         std::cerr << " ERROR : The VEXMASTER environment variable must be set to run cluster" << std::endl;
+         exit( 1 );   
+      }
+
+      char raw_hostname[256];
+      std::string hostname;
+      
+      gethostname(raw_hostname, 255); //get the host name 
+      hostname=raw_hostname;
+      std::cout<<"Host name is "<<hostname<<std::endl;   
+      getStringTokens(raw_hostname,".", toks);
+      //now toks[0] will be the short host name: the one without the domain name
+      
+      if (hostname==masterhost||toks[0]==masterhost)
+      {
+         std::cout<<"This is the master!"<<std::endl;
+         
+         VjObs_var vjobs = this->_vjObs->_this();
+         //CORBA::String_var sior(orb->object_to_string(vjobs.in()));
+         //std::cout << "|  IOR of the server(cfdApp) side : " << std::endl << sior << std::endl;
+         CosNaming::Name name;
+         name.length(1);
+         
+         name[0].id   = (const char*) "Master";
+         name[0].kind = (const char*) "VE_Xplorer";
+         //Bind the object
+         try
+         {
+            naming_context->bind(name, vjobs.in());
+         }
+         catch(CosNaming::NamingContext::AlreadyBound& ex)
+         {
+            naming_context->rebind(name, vjobs.in());
+         }
+         _vjObs->SetClusterMode( true );
+      }
    }
    else
    {
-      std::cerr << " ERROR : The VEXMASTER environment variable must be set to run cluster" << std::endl;
-      exit( 1 );   
-   }
-   /*if ( masterhost.empty() )
-   {
-      std::cerr << " ERROR : If -VEXMaster is specified a computer name must follow the flag" << std::endl;
-      exit( 1 );
-   }*/
-/*   if (argc>1)
-   {
-      strcpy(buffer, argv[1]);
-      ntoks=getStringTokens(buffer, "/", toks);
-      //Now construct the name for the host file;
-      hostfile="/";
-      for (i=0; i<ntoks-1; i++)
-      hostfile=hostfile+toks[i]+"/";
-      hostfile+="component/host.config";
-      std::cout<<"Here is the string for the hostfile :"<<hostfile<<std::endl;
-      //Now we open that file and get the host name
-      fhost=fopen(hostfile.c_str(), "r");
-      if (fhost==NULL)
-      {
-         std::cout<<"Something bad in the path"<<std::endl;
-         //return -1;
-      }
-
-      while(!feof(fhost)&&!found)
-      {
-         fgets(buffer, 1024, fhost);
-         ntoks=getStringTokens(buffer, "<>/ ", toks);
-         for (i=0; i<ntoks; i++)
-            if (toks[i]=="hostname" && i!=ntoks-1)
-            {
-               masterhost=toks[i+1];
-               found=true;
-               break;
-            }
-      }
-      fclose(fhost);
-   }*/
-  
-//   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
-//   std::cout << "|  IOR of the server side 2 : " << std::endl << sior2 << std::endl;
-   char raw_hostname[256];
-   std::string hostname;
-   
-   gethostname(raw_hostname, 255); //get the host name 
-   hostname=raw_hostname;
-   std::cout<<"Host name is "<<hostname<<std::endl;   
-   getStringTokens(raw_hostname,".", toks);
-   //now toks[0] will be the short host name: the one without the domain name
-   
-   if (hostname==masterhost||toks[0]==masterhost)
-   {
-      std::cout<<"This is the master!"<<std::endl;
-
       VjObs_var vjobs = this->_vjObs->_this();
-      //CORBA::String_var sior(orb->object_to_string(vjobs.in()));
-      //std::cout << "|  IOR of the server(cfdApp) side : " << std::endl << sior << std::endl;
+      
       CosNaming::Name name;
       name.length(1);
-
+      
       name[0].id   = (const char*) "Master";
       name[0].kind = (const char*) "VE_Xplorer";
       //Bind the object
@@ -216,32 +192,12 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
       {
          naming_context->bind(name, vjobs.in());
       }
-      catch(CosNaming::NamingContext::AlreadyBound& ex)
+      catch(CosNaming::NamingContext::AlreadyBound&)
       {
          naming_context->rebind(name, vjobs.in());
       }
+      _vjObs->SetClusterMode( false );
    }
-#else // _CLUSTER
-   
-   VjObs_var vjobs = this->_vjObs->_this();
-   if ( CORBA::is_nil( vjobs.in() ) )
-     std::cout << "is nil " << std::endl;
-
-   CosNaming::Name name;
-   name.length(1);
-   
-   name[0].id   = (const char*) "Master";
-   name[0].kind = (const char*) "VE_Xplorer";
-   //Bind the object
-   try
-   {
-      naming_context->bind(name, vjobs.in());
-   }
-   catch(CosNaming::NamingContext::AlreadyBound&)
-   {
-      naming_context->rebind(name, vjobs.in());
-   }
-#endif // _CLUSTER
 }
 //////////////////////////////////////////////////////////////////////////////
 cfdCommandArray* cfdVjObsWrapper::GetCommandArray( void )

@@ -78,6 +78,11 @@ void cfdAppWrapper::init( void * )
       {
          i = i + 2;
       }
+      else if ( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
+      {
+         //do nothing
+         ; 
+      }
       else
       {
          kernel->loadConfigFile( argv[i] );  
