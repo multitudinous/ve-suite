@@ -1009,9 +1009,12 @@ void VjObs_i::SetCommandString( const char* value)
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
 
    std::string commandString( value );
-   if ( mStates.isLocal() && isCluster  )
+   if ( isCluster )
    {
-	   commandStringQueue.push_back( commandString );
+      if ( mStates.isLocal()   )
+      {
+         commandStringQueue.push_back( commandString );
+      }
    }
 
    domManager = new DOMDocumentManager();
