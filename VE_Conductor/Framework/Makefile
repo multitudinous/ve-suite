@@ -14,33 +14,36 @@ all:
 
 srcdir= .
 
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/DefaultPlugin
+
 SRCS=\
-   App.cpp \
-   Avail_Modules.cpp \
+   App.cxx \
+   Avail_Modules.cxx \
    DataSetLoaderUI.cxx\
-   Frame.cpp \
-   Network.cpp \
-   DeviceProperties.cpp \
+   Frame.cxx \
+   Network.cxx \
+   DeviceProperties.cxx \
    NavigationPane.cxx \
-   paraThread.cpp \
-   PluginLoader.cpp \
+   paraThread.cxx \
+   PluginLoader.cxx \
    UI_TransientDialog.cxx\
-   SoundsPane.cpp \
+   SoundsPane.cxx \
    ViewLocPane.cxx\
    TBToolBar.cxx \
    TransformUI.cxx\
-   vistab.cpp\
-   vectors.cpp\
-   advancedvectors.cpp\
-   contours.cpp\
-   advancedcontours.cpp\
-   streamlines.cpp\
-   advancedstreamlines.cpp\
-   isosurfaces.cpp\
-   polydata.cpp\
+   vistab.cxx\
+   vectors.cxx\
+   advancedvectors.cxx\
+   contours.cxx\
+   advancedcontours.cxx\
+   streamlines.cxx\
+   advancedstreamlines.cxx\
+   isosurfaces.cxx\
+   polydata.cxx\
    ScalarToolsDlg.cxx\
-   UI_TeacherTab.cpp\
-   UserPreferences.cxx
+   UI_TeacherTab.cxx\
+   UserPreferences.cxx \
+   DefaultPlugin.cxx
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
@@ -105,6 +108,7 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.apr.mk
 
 EXTRA_CXXFLAGS+= -g
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)/VE_Conductor/DefaultPlugin
 
 ICONFILE=$(VE_SUITE_HOME)/VE_Conductor/wxmac.icns
 INFO_FILE=$(VE_SUITE_HOME)/VE_Conductor/Info.plist

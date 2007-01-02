@@ -32,8 +32,8 @@ CFDUNAME = $(shell uname)
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   DefaultPlugin.cpp \
-	DefaultPlugin_UI_Dialog.cpp
+   DefaultPlugin.cxx \
+	DefaultPlugin_UI_Dialog.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include

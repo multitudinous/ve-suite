@@ -32,26 +32,25 @@ CFDUNAME = $(shell uname)
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   FinancialDialog.cpp \
-   ListTable.cpp \
-   Plugin_base.cpp \
-   GlobalParamDialog.cpp \
-   Geometry.cpp \
-   GeometryDialog.cpp \
-   GeometryDataManager.cpp \
-   PortDialog.cpp \
-   ResultPanel.cpp \
-   StringParse.cpp \
-   SummaryResultDialog.cpp \
-   TexTable.cpp \
-   TextResultDialog.cpp \
-   UIDialog.cpp\
+   FinancialDialog.cxx \
+   ListTable.cxx \
+   Plugin_base.cxx \
+   GlobalParamDialog.cxx \
+   Geometry.cxx \
+   GeometryDataManager.cxx \
+   PortDialog.cxx \
+   ResultPanel.cxx \
+   StringParse.cxx \
+   SummaryResultDialog.cxx \
+   TexTable.cxx \
+   TextResultDialog.cxx \
+   UIDialog.cxx\
    OrbThread.cxx\
    CORBAServiceList.cxx\
    UI_i.cxx\
-   ParamsDlg.cpp\
-   QueryInputsDlg.cpp\
-   FindDialog.cpp
+   ParamsDlg.cxx\
+   QueryInputsDlg.cxx\
+   FindDialog.cxx
     
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)

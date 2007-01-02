@@ -32,10 +32,10 @@ CFDUNAME = $(shell uname)
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   interface.cpp\
-   package.cpp\
-   string_ops.cpp\
-   GeometryDataBuffer.cpp
+   interface.cxx\
+   package.cxx\
+   string_ops.cxx\
+   GeometryDataBuffer.cxx
 			
 #EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 #EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
