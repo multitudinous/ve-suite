@@ -51,16 +51,25 @@ ifeq (${CFDUNAME},IRIX64)
    EXTRA_CXXFLAGS+= -D_IRIX
    EXTRA_LIBS+= -L/usr/freeware/lib32
 endif
+
+srcdir= .
+
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Xplorer/DefaultGraphicalPlugin
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Xplorer/XplorerNetwork/temp
+
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
+   bkpparser.cxx\
+   StringTokenizer.cxx\
    cfdExecutive.cxx\
    cfdVEAvailModules.cxx\
    cfdVEPluginLoader.cxx\
    VE_i.cpp\
    DeleteObjectFromNetworkEventHandler.cxx\
    SwitchXplorerViewEventHandler.cxx\
-   NetworkSystemView.cxx
+   NetworkSystemView.cxx \
+   DefaultGraphicalPlugin.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
@@ -107,7 +116,7 @@ DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 #BUILD_TYPE=	dbg
 
-srcdir= ..
+# srcdir= ..
 
 ifeq (${CFDUNAME},Darwin)
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ves.mac.lib.mk
