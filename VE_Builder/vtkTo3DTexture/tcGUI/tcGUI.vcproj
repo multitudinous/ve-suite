@@ -268,11 +268,11 @@
 				Name="wxGUI"
 				>
 				<File
-					RelativePath=".\tcApp.cpp"
+					RelativePath=".\tcApp.cxx"
 					>
 				</File>
 				<File
-					RelativePath=".\tcFrame.cpp"
+					RelativePath=".\tcFrame.cxx"
 					>
 				</File>
 			</Filter>
@@ -280,11 +280,11 @@
 				Name="translator"
 				>
 				<File
-					RelativePath=".\flowTexture.cpp"
+					RelativePath=".\flowTexture.cxx"
 					>
 				</File>
 				<File
-					RelativePath=".\textureCreator.cpp"
+					RelativePath=".\textureCreator.cxx"
 					>
 				</File>
 			</Filter>

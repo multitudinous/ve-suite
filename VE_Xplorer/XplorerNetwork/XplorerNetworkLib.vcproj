@@ -619,6 +619,37 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\DefaultGraphicalPlugin\DefaultGraphicalPlugin.cxx"
+				>
+				<FileConfiguration
+					Name="osg_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="osg_vep_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="osg_vep_cluster_dbg|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\DeleteObjectFromNetworkEventHandler.cxx"
 				>
 				<FileConfiguration
@@ -825,6 +856,10 @@
 			</File>
 			<File
 				RelativePath=".\cfdVEPluginLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\DefaultGraphicalPlugin\DefaultGraphicalPlugin.h"
 				>
 			</File>
 			<File

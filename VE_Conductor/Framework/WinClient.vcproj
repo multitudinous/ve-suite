@@ -242,6 +242,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\DefaultPlugin\DefaultPlugin.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\DefaultPlugin\DefaultPlugin_UI_Dialog.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\DeviceProperties.cxx"
 				>
 			</File>
@@ -348,6 +356,14 @@
 			</File>
 			<File
 				RelativePath=".\DataSetLoaderUI.h"
+				>
+			</File>
+			<File
+				RelativePath="..\DefaultPlugin\DefaultPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\DefaultPlugin\DefaultPlugin_UI_Dialog.h"
 				>
 			</File>
 			<File

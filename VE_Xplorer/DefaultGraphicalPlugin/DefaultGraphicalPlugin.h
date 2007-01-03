@@ -47,7 +47,7 @@ namespace VE_SceneGraph
 class cfdDCS;
 }
 
-class VE_USER_PLUGIN_EXPORTS DefaultGraphicalPlugin : public VE_Xplorer::cfdVEBaseClass 
+class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public VE_Xplorer::cfdVEBaseClass 
 {
 public:
    DefaultGraphicalPlugin( void );
