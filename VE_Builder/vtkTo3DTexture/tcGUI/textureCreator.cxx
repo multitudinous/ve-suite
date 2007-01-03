@@ -104,6 +104,14 @@ VTKDataToTexture::VTKDataToTexture()
    _isRGrid = true;
    _isSGrid = false;
    _isUGrid = false;
+
+   #ifdef _OPENMP
+	//get number of processors and set number of threads
+	numThreads = 2;//omp_get_num_procs( );
+	omp_set_num_threads( numThreads );
+   #else
+   numThreads = 1;
+   #endif
 }
 /////////////////////////////////////////////////////////////
 VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
@@ -542,20 +550,28 @@ void VTKDataToTexture::createTextures()
       //build the octree
       bbLocator->BuildLocator();*/
       
-      _cLocator = vtkCellLocator::New();
-      _cLocator->CacheCellBoundsOn();
-      _cLocator->AutomaticOn();
-      _cLocator->SetNumberOfCellsPerBucket( 50 );
-      //vtkDataSet* polyData = VE_Util::readVtkThing("./tempDataDir/surface.vtp");
-      _cLocator->SetDataSet(_dataSet);
-      //build the octree
-      _cLocator->BuildLocator();
+	  vectorCellLocators.resize( numThreads );
+     for ( int i=0;i<numThreads;i++  )
+     {
+        vectorCellLocators.at( i ) = vtkCellLocator::New();
+        vectorCellLocators.at( i )->CacheCellBoundsOn();
+        vectorCellLocators.at( i )->AutomaticOn();
+        vectorCellLocators.at( i )->SetNumberOfCellsPerBucket( 50 );
+        //vtkDataSet* polyData = VE_Util::readVtkThing("./tempDataDir/surface.vtp");
+        vectorCellLocators.at( i )->SetDataSet(_dataSet);
+        //build the octree
+        vectorCellLocators.at( i )->BuildLocator();
+     }
       long endtimeID = (long)time( NULL );
       //std::cout << endtimeID - timeID << std::endl;
       //Now use it...
       _createValidityTexture();
       //bbLocator->Delete();
-      _cLocator->Delete();
+      for ( int i=0;i<numThreads;i++  )
+      {
+         vectorCellLocators.at( i )->Delete();
+      }
+
    }
 
    msg = wxString("Processing scalars. . .", wxConvUTF8);
@@ -612,13 +628,6 @@ void VTKDataToTexture::createTextures()
 ///////////////////////////////////////////////
 void VTKDataToTexture::_createValidityTexture()
 {
-#ifdef _OPENMP
-	//get number of processors and set number of threads
-	int numThreads;
-	numThreads = omp_get_num_procs( );
-	omp_set_num_threads( numThreads );
-	int currentThread;
-#endif
 
    long timeID = (long)time( NULL );
 
@@ -647,7 +656,14 @@ void VTKDataToTexture::_createValidityTexture()
    //bounding box of the data. This is so that we can represent
    //the data as a texture
    //our original cell that contains our cartesian point
-   vtkGenericCell* cell = vtkGenericCell::New();
+   //vtkGenericCell* cell = vtkGenericCell::New();
+   std::vector < vtkGenericCell* > vectorcells;
+
+
+   for ( int thrd=0;thrd<numThreads;thrd++ )
+   {
+      vectorcells.push_back( vtkGenericCell::New() );
+   }
 
    vtkIdType cellId,subId;
    double dist = 0;
@@ -655,29 +671,30 @@ void VTKDataToTexture::_createValidityTexture()
    double pcoords[3];
    double* weights = 0;
    weights = new double[24];
-   unsigned int i=0;
-   unsigned int j=0;
-   unsigned int k = 0;
+   int i=0;
+   int j=0;
+   int k = 0;
 
-   unsigned int nX = _resolution[0]-1;
-   unsigned int nY = _resolution[1]-1;
-   unsigned int nZ = _resolution[2]-1;
+   int nX = _resolution[0]-1;
+   int nY = _resolution[1]-1;
+   int nZ = _resolution[2]-1;
 
-   unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
+   int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
    _validPt.resize( nPixels );
    long lasttime = (long)time( NULL );
 
 #ifdef _OPENMP
-#pragma omp parallel for private( i, j, k, pt, closestPt, currentThread, cellId, subId, dist )
+#pragma omp parallel for private( i, j, k, pt, closestPt, cellId, subId, dist )
 #endif
    for( int l = 0; l < nPixels; l++)
    {
 
 #ifdef _OPENMP
-
-	   currentThread = omp_get_thread_num( );
+	   int currentThread = omp_get_thread_num( );
+#else
+      int currentThread = 0;
 #endif
-
+      vtkGenericCell* cell = vectorcells.at( currentThread );
       // we can parallelize this for loop by using a map to store the data and then
       // merge the map after the texture has been created. 
       // this would allow this function to be much faster. This function
@@ -690,7 +707,7 @@ void VTKDataToTexture::_createValidityTexture()
 
       pt[2] = bbox[4] + k*delta[2];
       pt[1] = bbox[2] + j*delta[1];
-      pt[0] = bbox[0] + (i++)*delta[0];
+      pt[0] = bbox[0] + i*delta[0];
          
       /*timeb timeOneB;
       timeb timeTwoB;
@@ -699,14 +716,9 @@ void VTKDataToTexture::_createValidityTexture()
       //ftime( &timeOneB );
       
       //long timeOne = (long)time( NULL );
-	  //old stuff
-      //_cLocator->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
 	  //new stuff
-#ifdef _OPENMP
-#pragma omp critical
-#endif	//_OPENMP
 	  {
-		  _cLocator->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
+		  vectorCellLocators.at( currentThread )->FindClosestPoint(pt,closestPt,cell,cellId,subId, dist);
 	  }
 
 
@@ -748,7 +760,7 @@ void VTKDataToTexture::_createValidityTexture()
          _validPt.at( l ).second.second = 0;
       }
 
-      if ( (unsigned int)i > (unsigned int)nX )
+      /*if ( (unsigned int)i > (unsigned int)nX )
       {
          i = 0;
          j++;
@@ -761,7 +773,7 @@ void VTKDataToTexture::_createValidityTexture()
                k = 0;
             }
          }
-      }
+      }*/
 
       if ( l%100000 == 0 )
       {
@@ -774,7 +786,7 @@ void VTKDataToTexture::_createValidityTexture()
          lasttime = secondTime;
       }
    }
-   cell->Delete();
+   //cell->Delete();
    _madeValidityStructure = true;
    delete [] weights;
    long endTime = (long)time( NULL );
