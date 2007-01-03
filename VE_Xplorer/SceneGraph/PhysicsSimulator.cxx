@@ -1,6 +1,9 @@
-#include <opal.h>
-
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+#include <ode/config.h>
+#if defined(dDOUBLE)
+#define OPAL_USE_DOUBLE 1
+#endif
+#include <opal.h>
 
 using namespace VE_SceneGraph;
 

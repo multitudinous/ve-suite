@@ -37,10 +37,6 @@
 #ifndef VE_SUITE_CONFIG_
 #define VE_SUITE_CONFIG_ 1
 
-#if defined(dDOUBLE)
-   #define OPAL_USE_DOUBLE 1
-#endif
-
 #if defined(_MSC_VER)
    //#pragma warning( disable : 4244 )
    #pragma warning( disable : 4251 )

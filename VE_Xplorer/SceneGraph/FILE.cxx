@@ -1,6 +1,4 @@
 #include <cassert>
-#include <opal.h>
-
 #include "VE_Xplorer/SceneGraph/FILE.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
@@ -10,6 +8,12 @@
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
+#include <ode/config.h>
+#if defined(dDOUBLE)
+#define OPAL_USE_DOUBLE 1
+#endif
+#include <opal.h>
 
 #ifdef _PERFORMER
    #include <Performer/pr/pfFog.h>
