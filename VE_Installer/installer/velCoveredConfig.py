@@ -71,7 +71,7 @@ class CoveredConfig(CoveredState):
 ##            self.Cover("Directory", os.path.dirname(os.path.abspath(vesFile)),
 ##                       layer = VES_LAYER)
             self.Edit("Directory", os.path.dirname(os.path.abspath(vesFile)))
-            self.Edit("VESFile", vesFile)
+            self.Cover("VESFile", vesFile, layer = VES_LAYER)
             ##Ensure only one file loaded at a time.
             self.SetScript(None)
         else:
@@ -86,7 +86,7 @@ class CoveredConfig(CoveredState):
 ##                       os.path.dirname(os.path.abspath(scriptFile)),
 ##                       layer = SCRIPT_LAYER)
             self.Edit("Directory", os.path.dirname(os.path.abspath(scriptFile)))
-            self.Edit("ShellScript", scriptFile)
+            self.Cover("ShellScript", scriptFile, layer = SCRIPT_LAYER)
             self.Cover("Shell", True, layer = SCRIPT_LAYER)
             self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
             self.Cover("BuilderShell", False, layer = DEV_LAYER)
@@ -117,6 +117,10 @@ class CoveredConfig(CoveredState):
     def JconfPath(self):
         """Returns the path of the currently-selected Juggler configuration."""
         return self.GetSurface("JconfDict").GetPath(self.GetSurface("JconfSelection"))
+
+    def FileLoaded(self):
+        """Returns True if a file's loaded, False if one isn't."""
+        return self.GetSurface("VESFile") or self.GetSurface("ShellScript")
 
     def GetLaunchSurface(self):
         """Specialized GetSurface for the Launch.

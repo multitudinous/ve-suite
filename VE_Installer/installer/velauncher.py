@@ -105,6 +105,8 @@ class LauncherWindow(wx.Frame):
 ##        self.fileTypeText.SetToolTip(wx.ToolTip("Test."))
 ##        self.fileNameText = wx.StaticText(self, -1, "TestLabel")
 ##        self.fileNameText.SetToolTip(wx.ToolTip("Test."))
+        ##Build Directory label.
+        self.labelDirectory = wx.StaticText(panel, -1, "Working Directory:")
         ##Build Directory text ctrl.
         self.txDirectory = wx.TextCtrl(panel, -1,
                                        DIRECTORY_DEFAULT)
@@ -140,7 +142,7 @@ class LauncherWindow(wx.Frame):
         menuBar = wx.MenuBar()
         menu = wx.Menu()
         menu.Append(500, "&Open...\tCtrl+O")
-        menu.Append(501, "&Close Files\tCtrl+W")
+        menu.Append(501, "&Close File\tCtrl+W")
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         menuBar.Append(menu, "&File")
         menu = wx.Menu()
@@ -165,7 +167,7 @@ class LauncherWindow(wx.Frame):
 
         ##Event bindings.
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.Bind(wx.EVT_BUTTON, self.ChooseDirectory, self.bDirectory)
+        self.Bind(wx.EVT_BUTTON, self.FileButtonBranch, self.bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, self.bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_RADIOBOX, self.UpdateData, self.rbMode)
@@ -190,7 +192,7 @@ class LauncherWindow(wx.Frame):
         columnSizer.AddMany([HORIZONTAL_SPACE,
                              self.bDirectory])
         ##Insert the Directory column.
-        rowSizer.Add(wx.StaticText(panel, -1, "Working Directory:"))
+        rowSizer.Add(self.labelDirectory)
         rowSizer.Add(columnSizer, 0, wx.EXPAND) 
         ##Construct the Tao column.
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -376,7 +378,7 @@ class LauncherWindow(wx.Frame):
         if depDir != None:
             self.state.Edit("DependenciesDir", depDir)
         ##Directory
-        if self.txDirectory.IsEnabled():
+        if self.txDirectory.IsEnabled() and not self.state.FileLoaded():
             self.state.Edit("Directory", self.txDirectory.GetValue())
         ##Tao Machine
         if self.txTaoMachine.IsEnabled():
@@ -416,9 +418,33 @@ class LauncherWindow(wx.Frame):
         ##BuilderDir
         self.GetMenuBar().Enable(521, self.state.IsEnabled("BuilderDir"))
         ##Directory
-        self.txDirectory.SetValue(self.state.GetSurface("Directory"))
-        self.txDirectory.Enable(self.state.IsEnabled("Directory"))
-        self.bDirectory.Enable(self.state.IsEnabled("Directory"))
+        if self.state.GetSurface("VESFile") != None:
+            self.labelDirectory.SetLabel("VES File Loaded:")
+            self.txDirectory.SetValue(self.state.GetSurface("VESFile"))
+            self.txDirectory.SetEditable(False)
+            self.txDirectory.SetBackgroundColour(wx.LIGHT_GREY)
+            self.bDirectory.SetLabel("Close File")
+            self.bDirectory.SetToolTip(wx.ToolTip("Close this file."))
+            self.bDirectory.Enable(self.state.IsEnabled("Directory"))
+        elif self.state.GetSurface("ShellScript") != None:
+            self.labelDirectory.SetLabel("Shell Script:")
+            self.txDirectory.SetValue(self.state.GetSurface("ShellScript"))
+            self.txDirectory.SetEditable(False)
+            self.txDirectory.SetBackgroundColour(wx.LIGHT_GREY)
+            self.bDirectory.SetLabel("Close File")
+            self.bDirectory.SetToolTip(wx.ToolTip("Close this file."))
+            self.bDirectory.Enable(self.state.IsEnabled("Directory"))
+        else:
+            self.labelDirectory.SetLabel("Working Directory:")
+            self.txDirectory.SetValue(self.state.GetSurface("Directory"))
+            self.txDirectory.SetEditable(True)
+            self.txDirectory.SetBackgroundColour(wx.NullColour)
+            self.txDirectory.Enable(self.state.IsEnabled("Directory"))
+            self.bDirectory.SetLabel("Choose Working Directory")
+            self.bDirectory.SetToolTip(wx.ToolTip("Choose the working" +
+                                                  " directory for the" +
+                                                  " programs."))
+            self.bDirectory.Enable(self.state.IsEnabled("Directory"))
         ##TaoMachine
         self.txTaoMachine.SetValue(self.state.GetSurface("TaoMachine"))
         self.txTaoMachine.Enable(self.state.IsEnabled("TaoMachine"))
@@ -484,6 +510,15 @@ class LauncherWindow(wx.Frame):
 ##        self.recentMenu.
 ##
 ##    def Append
+
+    def FileButtonBranch(self, event = None):
+        """Goes to Close Files function if VES/Script file's loaded,
+        ChooseDirectory if a file isn't loaded."""
+        if self.state.GetSurface("VESFile") or \
+           self.state.GetSurface("ShellScript"):
+            self.CloseFiles()
+        else:
+            self.ChooseDirectory()
 
     def ChooseDirectory(self, event = None):
         """The user chooses the working directory through a dialog."""
