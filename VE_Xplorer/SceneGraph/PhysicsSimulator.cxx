@@ -1,6 +1,6 @@
-#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-
 #include <opal.h>
+
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
 using namespace VE_SceneGraph;
 

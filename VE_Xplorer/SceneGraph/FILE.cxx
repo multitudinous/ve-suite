@@ -1,4 +1,5 @@
 #include <cassert>
+#include <opal.h>
 
 #include "VE_Xplorer/SceneGraph/FILE.h"
 
@@ -36,8 +37,6 @@
          std::vector<unsigned int> triangleIndex;
    };
 #endif
-
-#include <opal.h>
 
 using namespace VE_SceneGraph;
 
