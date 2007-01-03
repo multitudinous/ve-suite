@@ -23,8 +23,8 @@ env.Append(
                    'VE_XplorerLib%s' %(execOsgPatTag),
                    'VE_XplorerNetworkLib%s' %(execOsgPatTag),
                    'GraphicalPlugin%s' %(execOsgPatTag)])
-if not buildDir == "":
-   env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
+
+env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
                         pj('#', buildDir, 'VE_Xplorer','Utilities'),
                         pj('#', buildDir, 'VE_Xplorer','SceneGraph','Utilities'),
@@ -46,8 +46,9 @@ env.ParseConfig('flagpoll TAO \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
                           --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --get-vrj-ogl-libs --libs --cflags')
-ode_options.apply( env )
 opal_options.apply( env )
+ode_options.apply( env )
+#opal_options.apply( env )
    
 prog = ves_pkg.createProgram('project%s' %(execOsgPatTag), env, 'bin')
 prog.addSources( srcs )
