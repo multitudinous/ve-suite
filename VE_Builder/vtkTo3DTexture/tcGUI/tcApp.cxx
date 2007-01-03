@@ -116,9 +116,12 @@ void TCApp::OnInitCmdLine(wxCmdLineParser& parser)
    {
       { wxCMD_LINE_SWITCH, _T("v"), _T("verbose"), _T("be verbose") },
       { wxCMD_LINE_SWITCH, _T("q"), _T("quiet"),   _T("be quiet") },
+      { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _T("print help") },
+      
       { wxCMD_LINE_OPTION,
         _T("o"), _T("odir"),
         _T("Directory to write results,defaults to input directory. Default is current dir.")},
+      
       
       { wxCMD_LINE_OPTION,
         _T("g"), _T("gridType"),
@@ -149,8 +152,8 @@ void TCApp::OnInitCmdLine(wxCmdLineParser& parser)
         _T("Minimum Time Step to begin translations.  Default is 0."),
         wxCMD_LINE_VAL_NUMBER},
        
-      { wxCMD_LINE_PARAM,
-        0, 0,
+      { wxCMD_LINE_OPTION,//wxCMD_LINE_PARAM,
+        _T("i"), _T("inputDir"),
         _T("Input directory"),
         wxCMD_LINE_VAL_STRING },
       
@@ -175,8 +178,17 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
       long int minStep = 0;
       
       /**/
-      inputDir = parser.GetParam(0);
-      _frame->SetInputDirectory( ConvertUnicode( inputDir.c_str() ) );
+      if(parser.Found(_("i"),&inputDir))
+      {
+         //inputDir = parser.GetParam(0);
+         _frame->SetInputDirectory( ConvertUnicode( inputDir.c_str() ) );
+      }
+      else
+      {
+          parser.Usage();
+          return false;
+      }
+      
       if(!parser.Found(_("y"),&resolution[1]))
       {
         return false;
@@ -196,6 +208,11 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
       if(!parser.Found(_("tgp"),&transientGridProp))
       {
         return false;
+      }
+      if(parser.Found(_("h")))
+      {
+         parser.Usage();
+         return false;
       }
       if(!parser.Found(_("o"),&outputDir))
       {
