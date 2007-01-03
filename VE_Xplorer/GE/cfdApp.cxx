@@ -314,7 +314,7 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 /////////////////////////////////////////////////////////////////////////////
 void cfdApp::bufferPreDraw()
 {
-   glClearColor(1.0, 0.0, 0.0, 0.0);
+   glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 #endif //_OSG
@@ -327,7 +327,23 @@ void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 void cfdApp::initScene( void )
 {
    vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
-
+#ifdef _SGL
+   CSGLVector2d length( 280.0, 210.0 );
+	CSGLVector2i pixels( 1024, 768 );
+	CSGLDisplay display( 60.0, 100.0, 700.0, 62.0, length, pixels );
+	SGLContext.SetDisplay( display );
+   
+	// - set auto depth and frame cancelation flags
+	SGLContext.Enable( SGL_DEPTH_AUTO|SGL_FRAME_CANCEL );
+   
+	// - set interlacing to stencil
+	SGLContext.SetInterlacing( SGL_STENCIL );
+   
+	// - set vpi
+	CSGLVPI vpi( SGL_VPI_SOLID, 10, 20, 1, 0 );
+	SGLContext.SetVPI( vpi );
+#endif
+   
 # ifdef _OPENMP
    std::cout << "\n\n\n";
    std::cout << "|===================================================================|" << std::endl;
@@ -608,13 +624,14 @@ void cfdApp::contextPreDraw( void )
       {
          std::vector<float> clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
          sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
+         glClearColor( clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0);
       }
    }
 }
 ///////////////////////////////////////////////////
 void cfdApp::draw()
 {
-   glClear(GL_DEPTH_BUFFER_BIT);
+   glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
 
    // Users have reported problems with OpenGL reporting stack underflow
    // problems when the texture attribute bit is pushed here, so we push all
@@ -667,24 +684,15 @@ void cfdApp::draw()
    //sv->setCalcNearFar(false);
    //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
+   sv->getRenderStage()->setClearMask(GL_NONE);
 
    //Get the view matrix and the frustrum form the draw manager
    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
    vprASSERT(drawMan != NULL);
    vrj::GlUserData* userData = drawMan->currentUserData();
 
-   // Copy the matrix
+   // get the current projection
    vrj::Projection* project = userData->getProjection();
-   //const float* vj_proj_view_mat = project->getViewMatrix().mData;
-   osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
-   //osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
-
-   gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-   gmtl::Matrix44f _vjMatrix( project->getViewMatrix() );
-   gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
-   osg_proj_xform_mat->set( _vjMatrix.mData );
-
-   //osg_proj_xform_mat->set( vj_proj_view_mat );
 
    //Get the frustrum
    vrj::Frustum frustum = project->getFrustum();
@@ -700,9 +708,6 @@ void cfdApp::draw()
 																		 frustum[vrj::Frustum::VJ_BOTTOM],
                                                        frustum[vrj::Frustum::VJ_NEAR]);
 
-   // Copy the view matrix
-   sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
-   
 #ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
    if(userData->getViewport()->isSimulator())   //if this is a sim window context....
@@ -715,9 +720,43 @@ void cfdApp::draw()
    }
 #endif   //_WEB_INTERFACE
 
-   //sv->update();
+#ifdef _SGL
+   SGLContext.Begin(SGL_FORMAT_FRAME);
+   SGLContext.Begin(SGL_LEFT_FRAME);
+#endif// _SGL
+   gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+#ifdef _SGL
+   gmtl::Matrix44f _vjMatrixLeft( userData->getViewport()->getLeftProj()->getViewMatrix() );
+#else
+   gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
+#endif// _SGL
+   gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+   //copy the matrix
+   osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
+   osg_proj_xform_mat->set( _vjMatrixLeft.mData );
+   
+   // set the view matrix
+   sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
+   
    sv->cull();
    sv->draw();
+#ifdef _SGL
+   SGLContext.End();
+   
+   SGLContext.Begin(SGL_RIGHT_FRAME);
+   gmtl::Matrix44f _vjMatrixRight( userData->getViewport()->getRightProj()->getViewMatrix() );
+   gmtl::postMult(_vjMatrixRight, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+   osg_proj_xform_mat->set( _vjMatrixRight.mData );
+   
+   // Copy the view matrix
+   sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
+   
+   sv->cull();
+   sv->draw();
+   SGLContext.End();
+	
+   SGLContext.End();
+#endif// _SGL
 
 #ifdef _WEB_INTERFACE
    if(goCapture)

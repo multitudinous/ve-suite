@@ -53,6 +53,10 @@ namespace VE_Xplorer
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
 
+#ifdef _SGL
+#include <SGLContext.h>
+#endif
+
 #ifdef _PERFORMER
 class pfGroup;
 #include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
@@ -229,6 +233,9 @@ private:
    osg::ref_ptr<osg::Geode> framerate_geode;
    osg::ref_ptr<osgText::Text> framerate_text;
    osg::ref_ptr<osgText::Font> framerate_font;
+#endif
+#ifdef _SGL
+   CSGLContext SGLContext;
 #endif
 };
 }
