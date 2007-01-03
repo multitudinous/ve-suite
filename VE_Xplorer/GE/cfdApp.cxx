@@ -30,11 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-// .NAME cfdApp - An virtual reality (VRJuggler) application class.
-// .SECTION Description
-// A class to execute an CFD application in the virtual environment.
-// It is derived by using the VTK and VRJuggler classes.
-
 #include "VE_Xplorer/GE/cfdApp.h"
 
 #ifdef _OSG
