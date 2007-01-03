@@ -2,6 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #define VEVERSION "1.0.2"
 #define SVNVERSION "6403"
+#define MSVCVERSION "8.0"
 #define VEHOME "C:\devEnv\VE_Suite_1.0"
 #define ACETAOHOME "C:\devEnv\VES.1.0-Deps\ACE_wrappers"
 #define VTKHOME "C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8"
