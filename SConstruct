@@ -2,9 +2,8 @@
 EnsureSConsVersion(0,96)
 SConsignFile()
 
-import os, sys, string, smtplib, platform
+import os, sys, string, smtplib,platform
 import distutils.util
-from subprocess import *
 pj = os.path.join
 
 # Pull in SConsAddons from the source directory if necessary.
@@ -52,6 +51,8 @@ else:
    kernelVersion = pt.release()
 
 buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
+buildDir = 'build.'+buildUUID
+Export('buildDir')
 
 ########### Some utility functions
 def GetTag(execTag = False, osgTag = False,
@@ -60,25 +61,14 @@ def GetTag(execTag = False, osgTag = False,
     ##Combine the tags.
     finalTag = ''
     if execTag:
-        if os.getenv('TAO_BUILD') == 'TRUE':
-            exec_tag = '_tao'
-        else:
-            exec_tag = ''
+        exec_tag = '_tao'
         finalTag += exec_tag
     if osgTag:
-        ##if os.getenv('SCENE_GRAPH') == 'OSG':
         osg_tag = "_osg"
         finalTag += osg_tag
     if patentedTag:
-        if os.getenv('VE_PATENTED') == 'TRUE':
-            patented_tag = "_vep"
-        else:
-            patented_tag = ''
+        patented_tag = "_vep"
         finalTag += patented_tag
-    if os.getenv('CLUSTER_APP') == 'TRUE':
-        cluster_tag = '_cluster'
-    else:
-        cluster_tag = ''
     return finalTag
 
 execOsgPatTag = GetTag(True, True, True)
@@ -179,9 +169,9 @@ osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True,
 opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
-opal_options = SConsAddons.Options.OPAL.OPAL("opal","0.2", True, True)
+opal_options = SConsAddons.Options.OPAL.OPAL("opal","0.2", False, True)
 opts.AddOption( opal_options )
-ode_options = SConsAddons.Options.ODE. ODE("ode","0.4", True, True)
+ode_options = SConsAddons.Options.ODE. ODE("ode","0.4", False, True)
 opts.AddOption( ode_options )
 wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.6", True, True)
 opts.AddOption( wxwidgets_options )
@@ -278,10 +268,8 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append(CPPPATH = ['#'])
    baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
    #setup the build dir
-   buildDir = 'build.'+buildUUID
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
    baseEnv[ 'cluster' ] = 'no'
-   Export('buildDir')
    Export('baseEnv')
 
    # Setup file paths
@@ -327,7 +315,7 @@ if not SConsAddons.Util.hasHelpFlag():
          LIBDIR = 'lib'
 
    distDir = pj(buildDir, 'dist')
-   Export('buildDir', 'PREFIX', 'LIBDIR', 'distDir')
+   Export('PREFIX', 'LIBDIR', 'distDir')
    
    # Setup package
    ##CPPDOM_VERSION
