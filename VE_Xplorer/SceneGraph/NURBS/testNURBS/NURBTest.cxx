@@ -12,10 +12,10 @@
 #include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NCurve.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
-//#include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
-//#include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h"
-//#include "VE_Xplorer/SceneGraph/NURBS/Utilities/IGES2VENURBS.h"
+#include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h"
+#include "VE_Xplorer/SceneGraph/NURBS/Utilities/IGES2VENURBS.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 
 void createTestNURBS(int argc, char** argv);
@@ -252,8 +252,8 @@ int parseIGESFile(int argc,char** argv)
 {
    std::string igesFile(argv[1]);
    std::vector< osg::ref_ptr<NURBS::NURBSNode> >nurbsPatches;
-   //NURBS::Utilities::IGES2VENURBS igesReader;
-   std::vector<NURBS::NURBSSurface*> surfaces;// = igesReader.GetVectorOfVENURBSSurface(igesFile);
+   NURBS::Utilities::IGES2VENURBS igesReader;
+   std::vector<NURBS::NURBSSurface*> surfaces = igesReader.GetVectorOfVENURBSSurface(igesFile);
    size_t nPatches = surfaces.size();
    for(size_t i = 0; i < nPatches;i++)
    {
@@ -287,11 +287,11 @@ int parseOCCNURBSFile(int argc, char** argv)
    //std::string nurbsfile(argv[1]);
    std::vector< std::string > patchFiles = VE_Util::fileIO::GetFilesInDirectory(argv[1],".txt");
    size_t nPatches = patchFiles.size();
-   //NURBS::Utilities::OCCNURBSFileReader patchReader;
+   NURBS::Utilities::OCCNURBSFileReader patchReader;
 
    for(size_t i = 0; i < nPatches;i++)
    {
-      NURBS::NURBSSurface* surface = 0;//patchReader.ReadPatchFile(patchFiles.at(i));
+      NURBS::NURBSSurface* surface = patchReader.ReadPatchFile(patchFiles.at(i));
       if(surface)
       {
          surface->SetInterpolationGridSize(10,"U");
