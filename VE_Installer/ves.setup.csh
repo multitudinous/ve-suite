@@ -15,9 +15,9 @@ setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:/home/vr/Applications/TSVEG/Libraries/Rele
 #setenv JDK_HOME /usr/java
 setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK-5.0/Linux-RHEL4
 #`flagpoll vtk --get-prefix`
-setenv TAO_HOME `flagpoll TAO --get-prefix`
+setenv TAO_HOME "`flagpoll TAO --get-prefix`"
 setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.8.0/Linux-RHEL4_32
-setenv VJ_BASE_DIR `flagpoll vrjuggler --get-prefix`
+setenv VJ_BASE_DIR "`flagpoll vrjuggler --get-prefix`"
 setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.2/Linux-RHEL_4
 #`flagpoll osg --get-prefix`
 #setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
