@@ -100,7 +100,7 @@ class LauncherWindow(wx.Frame):
         ##Prepare the logo.
         bmLogo = wx.Bitmap(LOGO_LOCATION, wx.BITMAP_TYPE_XPM)
         sbmLogo = wx.StaticBitmap(panel, -1, bmLogo)
-        ##Build file name display. Under construction.
+        ##Build file name display. Unnecessary now.
 ##        self.fileTypeText = wx.StaticText(self, -1, "TestLabel")
 ##        self.fileTypeText.SetToolTip(wx.ToolTip("Test."))
 ##        self.fileNameText = wx.StaticText(self, -1, "TestLabel")
@@ -142,8 +142,15 @@ class LauncherWindow(wx.Frame):
         menuBar = wx.MenuBar()
         menu = wx.Menu()
         menu.Append(500, "&Open...\tCtrl+O")
+        ##Recent files as submenu
+        self.recentMenu = wx.Menu()
+        self.ConstructRecentMenu()
+        menu.AppendMenu(502, "Open &Recent File", self.recentMenu)
         menu.Append(501, "&Close File\tCtrl+W")
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
+        ##Recent files as separated add-on
+        ##menu.AppendSeparator()
+        ##self.ConstructRecentMenu()
         menuBar.Append(menu, "&File")
         menu = wx.Menu()
         menu.Append(510, "&Load\tCtrl+L")
@@ -160,9 +167,6 @@ class LauncherWindow(wx.Frame):
         menu.AppendItem(self.menuDebugLaunch)
         menu.Append(523, "&Cluster Wait Times\tCtrl+C")
         menuBar.Append(menu, "&Options")
-        self.recentMenu = wx.Menu()
-        self.ConstructRecentMenu()
-        menuBar.Append(self.recentMenu, "&Recent Files")
         self.SetMenuBar(menuBar)
 
         ##Event bindings.
@@ -220,7 +224,7 @@ class LauncherWindow(wx.Frame):
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         columnSizer.Add(sbmLogo)
         columnSizer.Add(HORIZONTAL_SPACE)
-        ##Work on later.
+        ##Unnecessary.
 ##        rowSizer3 = wx.BoxSizer(wx.VERTICAL)
 ##        rowSizer3.Add(self.fileTypeText, 0, wx.EXPAND)
 ##        rowSizer3.Add(self.fileNameText, 0, wx.EXPAND)
@@ -325,7 +329,7 @@ class LauncherWindow(wx.Frame):
                                        "close any .ves or script\n" +
                                        "files you have opened?",
                                        "Confirm File Close",
-                                       wx.YES_NO | wx.NO_DEFAULT)
+                                       wx.YES_NO | wx.YES_DEFAULT)
             if confirm.ShowModal() == wx.ID_YES:
                 self.state.InterpretArgument(None)
                 self.UpdateDisplay()
@@ -742,9 +746,11 @@ class LauncherWindow(wx.Frame):
                                                 wx.OK)
                         dlg.ShowModal()
                         dlg.Destroy()
-            else:
+            elif choice == wx.ID_NO:
                 ##Hide the BuilderDir
                 self.state.React(True, "BuilderDir", None)
+            else:
+                return
         ##If the DependenciesDir is generic, change it to system-specific.
         alternateDep = velDependencies.GetSpecific(v("DependenciesDir"))
         self.state.React(alternateDep, "DependenciesDir", alternateDep)

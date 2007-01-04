@@ -7,23 +7,15 @@
   links or the pre-compiled binaries can be installed from the download
   page.</para>
 
-  <para>&lt;OpenSceneGraph image&gt;</para>
-
   <para><ulink url="http://www.openscenegraph.org/">OpenSceneGraph
   (OSG)</ulink> can be used to manage the scenegraph instead of OpenGL
   Performer. (version 1.2+)</para>
 
-  <para>&lt;VTK image&gt;</para>
-
   <para><ulink url="http://vtk.org/get-software.php#interim">VTK</ulink> is
   used to render the visualization objects. (version 5.0+)</para>
 
-  <para>&lt;CMake image&gt;</para>
-
   <para><ulink url="http://www.cmake.org/HTML/Index.html">CMake</ulink> is
   needed to build the VTK.</para>
-
-  <para>&lt;VRJuggler image&gt;</para>
 
   <para><ulink
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler</ulink>
@@ -33,7 +25,7 @@
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler
   dependencies zip file</ulink></para>
 
-  <para>VEJuggler has its own set of dependencies, if you are building it
+  <para>VRJuggler has its own set of dependencies, if you are building it
   yourself. They are:</para>
   <itemizedlist>
   <?dbfo label-width="0.25in"?>
@@ -60,8 +52,6 @@
   <para><ulink url="http://java.sun.com/j2se/1.4.2/download.html">Java 2
   SDK</ulink> is needed for Juggler's java-based VRJconfig program.</para>
 
-  <para>&lt;wxWidgets image&gt;</para>
-
   <para><ulink url="http://www.wxwidgets.org/">wxWidgets</ulink> is used to
   compile and run the gui. (Click "download" on the left side menu to get to
   the files.) (version 2.6.2+)</para>
@@ -72,13 +62,17 @@
   url="http://xml.apache.org/xerces-c/download.cgi">xerces-c-current</ulink>)
   (version 2.7.0+)</para>
 
-  <para>&lt;ACE/TAO image&gt;</para>
-
   <para><ulink url="http://deuce.doc.wustl.edu/Download.html">ACE/TAO</ulink>
   is used for cross-platform communications. (ACE version 5.5+, TAO version
   1.5+)</para>
 
-  <para>&lt;python image&gt;</para>
+  <para><ulink url="http://apr.apache.org/">APR</ulink> (version 1.2.8)</para>
+
+  <para><ulink url="http://ox.slug.louisville.edu/~o0lozi01/opal_wiki/index.php/Main_Page">OPAL</ulink>
+  (version 0.4.0)</para>
+
+  <para><ulink url="http://sourceforge.net/projects/opende/">ODE</ulink>
+  (version 0.7)</para>
 
   <para>VE-Launcher was coded using <ulink
   url="http://www.python.org/">Python</ulink>. It can run in Python2.3 or
@@ -88,8 +82,6 @@
   <para>Windows: VE-Launcher requires these <ulink
   url="https://sourceforge.net/project/showfiles.php?group_id=78018">Win32
   extensions</ulink> if you're running it in Python for Windows.</para>
-
-  <para>&lt;wxPython image&gt;</para>
 
   <para>VE-Launcher requires <ulink
   url="http://wxpython.org/">wxPython</ulink> 2.6.3.3 if you're running it in

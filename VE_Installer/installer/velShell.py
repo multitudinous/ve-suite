@@ -17,7 +17,7 @@ def Start(shellScript = None):
             execl(shellScript, "")
         else:
             print "VE-Suite subshell started."
-            print "Type exit to return to your previous" + \
+            print "Type 'exit' to return to your previous" + \
                   " shell once you're done."
             execl(UNIX_SHELL, "")
     else:

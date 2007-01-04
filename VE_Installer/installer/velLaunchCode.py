@@ -280,16 +280,15 @@ class Launch:
         ##Set Xplorer's type
         if self.settings["XplorerType"] == 0: ##OSG selection
             exe = "project_tao_osg"
-        elif self.settings["XplorerType"] == 1: ##OSG VEP selection
+        elif self.settings["XplorerType"] > 0: ##OSG VEP or VEPC selection
             exe = "project_tao_osg_vep"
-        elif self.settings["XplorerType"] == 2: ##OSG VEPC selection
-            exe = "project_tao_osg_vep_cluster"
         ##Tack on the Windows suffix.
         if windows:
             exe += "_d.exe"
         ##Construct the call
-        s = [exe, "-ORBInitRef", self.ServiceArg(), 
-               "%s" %self.settings["JconfPath"]]
+        s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
+        if self.settings["XplorerType"] == 2: ##OSG VEPC selection
+             s += ["-VESCluster"]
         ##taoMachine = gethostname()
         ##s[len(s):] = ["-ORBEndPoint",  "htiop://%s:8089" %(taoMachine)]
         ##s[len(s):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf",
@@ -430,6 +429,7 @@ class Launch:
         OSGNOTIFYLEVEL
 
         Variables overwritten (when not in dev mode):
+        ##NOTE: Change to set if unset, period.
         VE_SUITE_HOME
         VE_INSTALL_DIR
         VE_DEPS_DIR
@@ -447,7 +447,7 @@ class Launch:
         VJ_DEPS_DIR
 
         Variables appended:
-        PYTHON_PATH (Windows systems only)
+        PYTHONPATH (Windows systems only)
         PATH
         LD_LIBRARY_PATH or LD_LIBRARYN32_PATH (Unix systems only)"""
         ##Set where VE-Suite's installed

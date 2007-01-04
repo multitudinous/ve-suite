@@ -5,22 +5,21 @@
   <para>This chapter describes how to make visualizations using the VE-Suite
   toolkit and a sample dataset. If you want to follow this example, download
   and unzip the sample PrISUm car dataset: <ulink
-  url="http://www.vesuite.org/File/PrISUm.zip">PrISUm.zip</ulink>
+  url="http://www.vesuite.org/download.php?file=71&amp;log=1">PrISUm.zip</ulink>
   (138MB)</para>
 
   <section id="visualization_setup">
     <title>Setup</title>
 
-    <para>Visualizations require two files: a geometry config file (which
-    models the physical object) and a dataset file (which models the technical
-    data). Once you upload these two files and translate them so their scale
-    and translation match, you can use visualization to analyze the data.
-    We will use the PrISUm car example that comes with VE-Suite to show you
-    how to use visualization.</para>
+    <para>Although visualizations only require a dataset file (which models
+    the technical data), you may want to add a geometry file to the scene to
+    view the physical object as well. Once you have set the scene, you can use
+    visualization to analyze the data. We will use the PrISUm car example from
+    the website to show you how to use visualization.</para>
 
-    <para>First, open VE-Launcher and set the working directory to the
-    project's (PrISUm) folder. Next, open VE-Suite in Desktop mode from
-    VE-Launcher. Load the geometry file (PrISUmblend.obj)
+    <para>First, let's take care of the geometry file. Open VE-Launcher and set
+    the working directory to the project's (PrISUm) folder. Next, open VE-Suite
+    in Desktop mode from VE-Launcher. Load the geometry file (PrISUmblend.obj)
     (<link linkend="loading_data_and_connecting">instructions here</link>),
     but don't close the CADTree Manager window yet.</para>
 
@@ -42,11 +41,12 @@
     </mediaobject>
 
     <para>Once the parameters are entered, close the CAD Properties and
-    CADTree Manager window. Next, you need to load the datasets, which
-    is covered in the next section.</para>
+    CADTree Manager window. Next, you need to load the datasets, the primary
+    files for visualization.</para>
   </section>
 
   <section id="visualization_dataset_setup">
+    <title>Datasets</title>
     <para>The dataset contains the technical data about the model, such as
     pressure and airflow. Visualization turns that data into a map
     for easier viewing. You load datasets in a way similar to the geometry
@@ -246,8 +246,7 @@
 
     <para>Texture-based datasets render 3D data without relying on primitive
     shapes. You can view texture-based data in the Visualization interface.
-    First, display a scalar contour to prepare the texture-based data. Then
-    click the Texture Based button on the top icon bar.</para>
+    Then click the Texture Based button on the top icon bar.</para>
 
     <mediaobject>
       <imageobject>

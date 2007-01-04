@@ -153,6 +153,7 @@ txt: $(TXT_FILES)
 pdf: $(LINK_DEPS) $(PDF_FILES)
 all:
 	$(MAKE) clean
+	$(MAKE) clobber
 	$(MAKE) html
 	$(MAKE) chunk-html
 	$(MAKE) txt
@@ -251,7 +252,7 @@ endif
 # XML to index.HTML
 %-multipage/index.html: %.xml
 	xmllint --xinclude $< > $*-resolved.xml
-	mkdir $(CHUNK_DIR)
+#	mkdir $(CHUNK_DIR)
 ifeq ($(XSLT_TOOL), Xalan)
 	$(ENV) $(XALAN) -in $*-resolved.xml -xsl $(CHUNK_HTML_XSL) -out $@	\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)	\
