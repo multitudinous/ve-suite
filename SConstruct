@@ -4,6 +4,7 @@ SConsignFile()
 
 import os, sys, string, smtplib,platform
 import distutils.util
+import commands
 pj = os.path.join
 
 # Pull in SConsAddons from the source directory if necessary.
@@ -104,6 +105,8 @@ def CheckPackageVersion(context, name, version):
    fp = 'flagpoll '+name+' --atleast-version='+version
    fp = 'flagpoll '+name+' --modversion'
    ret = context.TryAction(fp)[0]
+   if not ret:
+      print commands.getstatusoutput( fp )[1]
    context.Result( ret )
    return ret
 
@@ -131,16 +134,6 @@ VE_SUITE_VERSION = ( int('1'), int('0'), int('2') )
 print 'Building VE-Suite Version: %i.%i.%i' % VE_SUITE_VERSION
 
 help_text = "\n---- VE-Suite Build System ----\n"
-
-# Get command-line arguments
-##optimize = ARGUMENTS.get('optimize', 'no')
-##profile = ARGUMENTS.get('profile', 'no')
-##PREFIX = ARGUMENTS.get('prefix', '/usr/local')
-##Prefix(PREFIX)
-##Export('PREFIX')
-
-##Export('optimize')
-##print "Install prefix: ", Prefix()
 
 # Create the extra builders
 # Define a builder for the gmtl-config script
@@ -216,9 +209,13 @@ Targets:
       ce - Build VE-CE
       > scons ce
 
-   Make sure that vrjuggler, Boost.Filesystem, ACE/TAO, and apr/apr-util are
+   Make sure that vrjuggler, gmtl, cppdom, ACE/TAO, and apr/apr-util are
    in your FLAGPOLL_PATH or PKGCONFIG_PATH or (DY)LD_LIBRARY_PATH. This is
    necessaary to auto-detect the dependencies.
+
+   NOTE: An example environment configuration file (ves.setup.csh > csh shell
+         & ves.setup.sh > sh shell) is in the VE_Installer directory. This
+         file shows how to setup the VE-Suite build environment.
 """
 
 help_text += """
@@ -239,15 +236,12 @@ if not SConsAddons.Util.hasHelpFlag():
    conf = Configure(baseEnv, custom_tests = {'CheckPackageVersion' : CheckPackageVersion })
 
    if not conf.CheckPackageVersion('flagpoll','0.8.1'):
-      print 'flagpoll >= 0.8.1 not found.'
       Exit(1)
 
    if not conf.CheckPackageVersion('TAO','1.5'):
-      print 'TAO >= 1.5 not found.'
       Exit(1)
 
    if not conf.CheckPackageVersion('vrjuggler','2.0.1'):
-      print 'vrjuggler >= 2.0.1 not found.'
       Exit(1)
    baseEnv = conf.Finish()
 
