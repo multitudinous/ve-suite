@@ -53,9 +53,6 @@ namespace VE_Xplorer
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
 
-#ifdef _SGL
-#include <SGLContext.h>
-#endif
 
 #ifdef _PERFORMER
 class pfGroup;
@@ -94,6 +91,10 @@ namespace VE_TextureBased
 }
 #endif
 #endif 
+
+#ifdef _SGL
+#include <SGLContext.h>
+#endif
 
 namespace VE_Xplorer
 {
