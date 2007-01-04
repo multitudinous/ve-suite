@@ -232,6 +232,9 @@ help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
 
 if not SConsAddons.Util.hasHelpFlag():
+   # now lets process everything
+   opts.Process(baseEnv, None, True)                   # Update the options
+
    ##check for flagpoll packages
    conf = Configure(baseEnv, custom_tests = {'CheckPackageVersion' : CheckPackageVersion })
 
@@ -243,11 +246,26 @@ if not SConsAddons.Util.hasHelpFlag():
 
    if not conf.CheckPackageVersion('vrjuggler','2.0.1'):
       Exit(1)
+
+   # check the apr and apu utilities
+   # there is probably an easier way to do this so feel free to simplify
+   aprVersion = '0.9'
+   aprCommand = 'apr'
+   apuCommand = 'apr-util'
+   if baseEnv.has_key('AprVersion'):
+      aprVersion = baseEnv[ 'AprVersion' ]
+      if baseEnv[ 'AprVersion' ] >= "1.0":
+         aprCommand = 'apr-1'
+         apuCommand = 'apr-util-1'
+
+   if not conf.CheckPackageVersion( aprCommand, aprVersion ):
+      Exit(1)
+   if not conf.CheckPackageVersion( apuCommand, aprVersion ):
+      Exit(1)
    baseEnv = conf.Finish()
 
-   opts.Process(baseEnv, None, True)                   # Update the options
-
-   try:                                   # Try to save the options if possible
+   # Try to save the options if possible
+   try:                                   
       opts.Save(options_cache, baseEnv)
    except LookupError, le:
       pass
