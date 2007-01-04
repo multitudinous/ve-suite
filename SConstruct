@@ -190,27 +190,6 @@ opts.Add('buildLog', 'Provide a file name for the build log if you would like a 
 ##         cpu_arch_default)
 Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options','ode_options','opal_options')
 
-base_bldr = EnvironmentBuilder()
-##base_bldr.addOptions( opts )
-baseEnv = base_bldr.buildEnvironment()
-baseEnv[ 'ENV' ] = os.environ
-
-##check for flagpoll packages
-conf = Configure(baseEnv, custom_tests = {'CheckPackageVersion' : CheckPackageVersion })
-
-if not conf.CheckPackageVersion('flagpoll','0.8.1'):
-   print 'flagpoll >= 0.8.1 not found.'
-   Exit(1)
-
-if not conf.CheckPackageVersion('TAO','1.5'):
-   print 'TAO >= 1.5 not found.'
-   Exit(1)
-
-if not conf.CheckPackageVersion('vrjuggler','2.0.1'):
-   print 'vrjuggler >= 2.0.1 not found.'
-   Exit(1)
-baseEnv = conf.Finish()
-
 ##Display some help
 help_text = """--- VE-Suite Build system ---
 Targets:
@@ -248,11 +227,30 @@ This file will be loaded each time.  Note: Options are cached in the file
 %s
 """ % options_cache
 
+base_bldr = EnvironmentBuilder()
+##base_bldr.addOptions( opts )
+baseEnv = base_bldr.buildEnvironment()
+baseEnv[ 'ENV' ] = os.environ
 help_text += opts.GenerateHelpText(baseEnv)
-
 baseEnv.Help(help_text)
 
 if not SConsAddons.Util.hasHelpFlag():
+   ##check for flagpoll packages
+   conf = Configure(baseEnv, custom_tests = {'CheckPackageVersion' : CheckPackageVersion })
+
+   if not conf.CheckPackageVersion('flagpoll','0.8.1'):
+      print 'flagpoll >= 0.8.1 not found.'
+      Exit(1)
+
+   if not conf.CheckPackageVersion('TAO','1.5'):
+      print 'TAO >= 1.5 not found.'
+      Exit(1)
+
+   if not conf.CheckPackageVersion('vrjuggler','2.0.1'):
+      print 'vrjuggler >= 2.0.1 not found.'
+      Exit(1)
+   baseEnv = conf.Finish()
+
    opts.Process(baseEnv, None, True)                   # Update the options
 
    try:                                   # Try to save the options if possible
