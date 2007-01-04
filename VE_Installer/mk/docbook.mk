@@ -38,9 +38,9 @@
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
 # Software and stylesheet versions.
-DOCBOOK_XSL_VERSION?=	1.67.2
-XALAN_VERSION?=		2_5_2
-SAXON_VERSION?=		6.5.2
+DOCBOOK_XSL_VERSION?=	1.71.1
+XALAN_VERSION?=		2_7_0
+SAXON_VERSION?=		6.5.5
 FOP_VERSION?=		0.20.5
 BATIK_VERSION?=		1.5.1
 
@@ -51,7 +51,7 @@ FOP_SCRIPT=	fop
 endif
 
 # Installation paths.
-DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
+DOCBOOK_ROOT?=C:\devEnv\VE_Suite_1.0\Tools\docbook	
 BATIK_ROOT?=	$(DOCBOOK_ROOT)/batik-$(BATIK_VERSION)
 SGML_ROOT?=	/usr/share/sgml/docbook
 TEX_DIR?=	$(DOCBOOK_ROOT)/TeX

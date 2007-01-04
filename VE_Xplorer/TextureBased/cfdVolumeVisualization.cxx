@@ -83,7 +83,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _traverseDirection = FORWARD;
    _stateSet  = 0;
    _texture  = 0;
-   _nSlices = 200;
+   _nSlices = 300;
    _alpha = 0.5;
    _tUnit = 0;
    _verbose = 0;
