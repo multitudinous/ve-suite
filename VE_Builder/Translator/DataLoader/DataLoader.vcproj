@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_USER_BUILDER_LIBRARY;WINVER=0x400;VTK44;FLUENT_MFIX"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_USER_BUILDER_LIBRARY;WINVER=0x400;VTK44;FLUENT_MFIX;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -209,7 +209,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\converter.cpp"
+				RelativePath=".\converter.cxx"
 				>
 			</File>
 			<File
