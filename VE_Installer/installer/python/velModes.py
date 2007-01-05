@@ -4,8 +4,14 @@ from velClusterDict import *
 from velJconfDict import *
 from velRecentFiles import *
 
-DEFAULT_JCONF = join(VELAUNCHER_DIR, "stereo_desktop", "desktop.jconf")
-DEFAULT_DEV_JCONF = join(VELAUNCHER_DIR, "..", "..", "VE_Xplorer",
+##JCONF_BASE_PATH is a workaround so velauncher.py can be used
+##in both the base VE-Suite directory & the VE-Suite/bin directory.
+JCONF_BASE_PATH = VELAUNCHER_DIR
+if os.path.basename(JCONF_BASE_PATH) == "bin":
+    JCONF_BASE_PATH = os.path.dirname(JCONF_BASE_PATH)
+##Set default Jconf files.
+DEFAULT_JCONF = join(JCONF_BASE_PATH, "stereo_desktop", "desktop.jconf")
+DEFAULT_DEV_JCONF = join(JCONF_BASE_PATH, "..", "..", "share",
                          "stereo_desktop", "desktop.jconf")
 MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization",
              "Shell", "Custom"]

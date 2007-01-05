@@ -16,7 +16,7 @@ CLUSTER_ENABLED = True
 ##File/Folder settings.
 JUGGLER_FOLDER = "vrJuggler2.0.1"
 VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
-##Fixes directory passed for velauncher frozen.
+##Fixes directory passed for velauncher to vesuite.
 if os.path.basename(VELAUNCHER_DIR) == "velauncher":
     VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
 DIRECTORY_DEFAULT = join(VELAUNCHER_DIR, "exampleDatasets")

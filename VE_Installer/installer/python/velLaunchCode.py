@@ -382,7 +382,6 @@ class Launch:
         """Executes the ClusterScript for nodeName on Unix."""
         if unix:
             if gethostname().split('.')[0] == nodeName.split('.')[0]:
-##                print "Found myself!" ##TESTER
                 subprocess.Popen(self.XplorerCall())
                 return
             else:
@@ -397,7 +396,6 @@ class Launch:
             print "Executing %s!" %nodeName
             ##Do a regular call if the initial machine's the node.
             if gethostname() == nodeName.split('.')[0]:
-##              print "It is this computer!" ##TESTER
                 subprocess.Popen(self.XplorerCall())
                 return
             ##Else call the script on the other computer in psexec.
@@ -430,11 +428,11 @@ class Launch:
 
         Variables overwritten (when not in dev mode):
         ##NOTE: Change to set if unset, period.
-        VE_SUITE_HOME
-        VE_INSTALL_DIR
+        ##VE_SUITE_HOME
+        ##VE_INSTALL_DIR
         VE_DEPS_DIR
         VE_WORKING_DIR
-        PHSHAREDSIZE
+        ##PHSHAREDSIZE
         NO_PERF_PLUGIN
         NO_RTRC_PLUGIN
         PFNFYLEVEL
@@ -444,15 +442,15 @@ class Launch:
         NSPR_ROOT
         SNX_BASE_DIR
         VJ_BASE_DIR
-        VJ_DEPS_DIR
+        ##VJ_DEPS_DIR
 
         Variables appended:
         PYTHONPATH (Windows systems only)
         PATH
         LD_LIBRARY_PATH or LD_LIBRARYN32_PATH (Unix systems only)"""
         ##Set where VE-Suite's installed
-        self.EnvFill("VE_SUITE_HOME", VELAUNCHER_DIR)
-        self.EnvFill("VE_INSTALL_DIR", os.getenv("VE_SUITE_HOME"))
+        ##self.EnvFill("VE_SUITE_HOME", VELAUNCHER_DIR)
+        ##self.EnvFill("VE_INSTALL_DIR", os.getenv("VE_SUITE_HOME"))
         ##Set where VE-Suite pre-complied dependencies are installed
         ##NOTE: Receives this from the launcher.
         self.EnvFill("VE_DEPS_DIR", str(self.settings["DependenciesDir"]))
@@ -464,8 +462,8 @@ class Launch:
         ##change only if you are using your own build
         self.EnvFill("VJ_BASE_DIR", os.path.join(os.getenv("VE_DEPS_DIR"),
                                                  JUGGLER_FOLDER))
-        self.EnvFill("VJ_DEPS_DIR", os.path.join(os.getenv("VE_DEPS_DIR"),
-                                                 JUGGLER_FOLDER))
+        ##self.EnvFill("VJ_DEPS_DIR", os.path.join(os.getenv("VE_DEPS_DIR"),
+        ##                                         JUGGLER_FOLDER))
 
         ##Set TAO variables
         self.EnvFill("TAO_MACHINE", str(self.settings["TaoMachine"]), True)
@@ -474,7 +472,7 @@ class Launch:
         ##Set CFDHOSTNAME
         self.EnvFill("CFDHOSTTYPE", CFD_HOST_TYPE)
 
-        self.EnvFill("PHSHAREDSIZE", "534773700")
+        ##self.EnvFill("PHSHAREDSIZE", "534773700")
 
         ##Juggler debug output level
         if self.settings["VPRDebug"] < 0:
@@ -510,24 +508,31 @@ class Launch:
                          True)
         ##Python build environment variables
         if windows:
-            os.environ["PYTHONPATH"] = os.path.join(os.getenv("VJ_DEPS_DIR"),
-                                                    "lib", "python")
+            self.EnvAppend("PYTHONPATH", [os.path.join(VELAUNCHER_DIR, "bin")], ';')
+            ##self.EnvAppend("PYTHONPATH", [os.path.join(os.getenv("VJ_DEPS_DIR"),
+            ##                                           "lib", "python")], ';')
+            ##os.environ["PYTHONPATH"] = os.path.join(os.getenv("VJ_DEPS_DIR"),
+            ##                                        "lib", "python")
         elif unix:
             if os.getenv("OSG_HOME", "None") != "None":
-                os.environ["PATH"] = os.path.join(str(os.getenv("OSG_HOME")),
-                                                  "share", "OpenSceneGraph",
-                                                  "bin") + ":" + \
-                                     str(os.getenv("PATH"))
+                self.EnvAppend("PATH", [os.path.join(str(os.getenv("OSG_HOME")),
+                                                     "share", "OpenSceneGraph",
+                                                     "bin")], ":")
+                ##os.environ["PATH"] = os.path.join(str(os.getenv("OSG_HOME")),
+                ##                                  "share", "OpenSceneGraph",
+                ##                                  "bin") + ":" + \
+                ##                     str(os.getenv("PATH"))
 
 
         ##Update PATH (and the Library Path for Unix)
         if windows:
-            pathList = [os.path.join(str(os.getenv("VJ_DEPS_DIR")), "bin"),
-                        os.path.join(str(os.getenv("VJ_DEPS_DIR")), "lib"),
+            pathList = [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
-                        os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
-                        os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
-                        os.path.join(VELAUNCHER_DIR, "bin")]
+                        os.path.join(VELAUNCHER_DIR)]
+            ##Outdated paths.
+            pathList += [##os.path.join(str(os.getenv("VJ_DEPS_DIR")), "bin"),
+                         ##os.path.join(str(os.getenv("VJ_DEPS_DIR")), "lib"),
+                         os.path.join(VELAUNCHER_DIR, "bin")]
             if self.settings["BuilderDir"] != None:
                 pathList[:0] = [os.path.join(str(self.settings["BuilderDir"]),
                                              "bin")]
@@ -540,17 +545,21 @@ class Launch:
             libraryPath = "LD_LIBRARY_PATH"
             lib = "lib"
             ##Update the library path
-            libList= [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
-                      os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
-                      os.path.join(str(os.getenv("VJ_BASE_DIR")), lib)]
+            libList= [os.path.join(str(os.getenv("VJ_BASE_DIR")), lib),
+                      os.path.join(VELAUNCHER_DIR)]
+            ##Outdated paths.
+            libList += [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
+                        os.path.join(VELAUNCHER_DIR, "bin")]
             ##TEST to append 64-bit libraries:
             if architecture()[0] == "64bit":
                 libList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
             self.EnvAppend(libraryPath, libList, ':')
             ##Update the path
-            pathList= [os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin"),
-                       os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
+            pathList= [os.path.join(VELAUNCHER_DIR),
                        os.path.join(str(os.getenv("VJ_BASE_DIR")), "bin")]
+            ##Outdated paths.
+            pathList += [os.path.join(VELAUNCHER_DIR, "bin"),
+                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")]
             if self.settings["BuilderDir"] != None:
                 pathList[:0] = [os.path.join(str(self.settings["BuilderDir"]),
                                              "bin")]
