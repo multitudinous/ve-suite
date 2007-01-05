@@ -180,11 +180,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Star_Moving_Mesh\main.cpp"
+				RelativePath=".\Star_Moving_Mesh\main.cxx"
 				>
 			</File>
 			<File
-				RelativePath=".\Star_Moving_Mesh\transient.cpp"
+				RelativePath=".\Star_Moving_Mesh\transient.cxx"
 				>
 			</File>
 		</Filter>
