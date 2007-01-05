@@ -66,13 +66,15 @@
   is used for cross-platform communications. (ACE version 5.5+, TAO version
   1.5+)</para>
 
-  <para><ulink url="http://apr.apache.org/">APR</ulink> (version 1.2.8)</para>
+  <para><ulink url="http://apr.apache.org/">APR</ulink> is used to generate the
+  GUIDs. (version 1.2.8)</para>
 
   <para><ulink url="http://ox.slug.louisville.edu/~o0lozi01/opal_wiki/index.php/Main_Page">OPAL</ulink>
-  (version 0.4.0)</para>
+  (Open Physics Abstraction Layer) is used as a wrapper to ODE for physics
+  integration. (version 0.4.0)</para>
 
-  <para><ulink url="http://sourceforge.net/projects/opende/">ODE</ulink>
-  (version 0.7)</para>
+  <para><ulink url="http://sourceforge.net/projects/opende/">ODE</ulink> (Open
+  Dynamics Engine) is used for physics integration. (version 0.7)</para>
 
   <para>VE-Launcher was coded using <ulink
   url="http://www.python.org/">Python</ulink>. It can run in Python2.3 or
