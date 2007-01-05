@@ -127,13 +127,13 @@ int main( int argc, char *argv[] )
 
       if ( argc > arg )
       {
-         B_octree = atoi( argv[ arg ] );
+		  B_octree = (atoi( argv[ arg ] ))?true:false;
          arg++;
       }
       else
       {
          std::cout << "\nDecompose octrees?  (0)No (1)Yes" << std::endl;
-         B_octree = fileIO::getIntegerBetween( 0, 1 );
+		 B_octree = (fileIO::getIntegerBetween( 0, 1 ))?true:false;
       }
 
       if ( B_octree )
@@ -145,13 +145,13 @@ int main( int argc, char *argv[] )
 
       if ( argc > arg )
       {
-         B_surface = atoi( argv[ arg ] );
+         B_surface = (atoi( argv[ arg ] ))?true:false;
          arg++;
       }
       else
       {
          std::cout << "\nExtract surfaces?  (0)No (1)Yes" << std::endl;
-         B_surface = fileIO::getIntegerBetween( 0, 1 );
+         B_surface = (fileIO::getIntegerBetween( 0, 1 ))?true:false;
       }
 
       if ( B_surface )
@@ -163,7 +163,7 @@ int main( int argc, char *argv[] )
          std::cout << "\nFilename to output?" << std::endl;
          std::cout << "By default : " << postDataDir << "/surface.vtk" << std::endl;
          std::cout << "Answer (0) Use default (1) Change" << std::endl;
-         B_surfFname = fileIO::getIntegerBetween( 0, 1 );
+         B_surfFname = (fileIO::getIntegerBetween( 0, 1 ))?true:false;
 
          if ( B_surfFname )
          {
@@ -181,20 +181,20 @@ int main( int argc, char *argv[] )
 
       if ( argc > arg )
       {
-         B_iso = atoi( argv[ arg ] );
+         B_iso = (atoi( argv[ arg ] ))?true:false;
          arg++;
       }
       else
       {
          std::cout << "\nExtract isosurfaces? (0)No (1)Yes" << std::endl;
-         B_iso = fileIO::getIntegerBetween( 0, 1 );
+         B_iso = (fileIO::getIntegerBetween( 0, 1 ))?true:false;
       }
 
       if ( B_iso )
       {
          std::cout << "\nNumber of isosurface(s)?" << std::endl;
          std::cout << "Answer (0) Use default of 10 (1) Change" << std::endl;
-         B_isoNum = fileIO::getIntegerBetween( 0, 1 );
+         B_isoNum = (fileIO::getIntegerBetween( 0, 1 ))?true:false;
 
          if ( B_isoNum )
          {
@@ -230,13 +230,13 @@ int main( int argc, char *argv[] )
 
       if ( argc > arg )
       {
-         B_cont = atoi( argv[ arg ] );
+         B_cont = (atoi( argv[ arg ] ))?true:false;
          arg++;
       }
       else
       {
          std::cout << "\nExtract cutting planes? (0)No (1)Yes" << std::endl;
-         B_cont = fileIO::getIntegerBetween( 0, 1 );
+         B_cont = (fileIO::getIntegerBetween( 0, 1 ))?true:false;
       }
 
       if ( B_cont )

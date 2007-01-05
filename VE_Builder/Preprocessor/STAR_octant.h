@@ -90,15 +90,15 @@ void Octant::GetOctantsPoints( double bound[6],
 
   for( i=0; i<3; i++ )
      {
-       xout[j+0] = bound[0];           yout[j+0] = bound[2];           zout[j+0] = bound[4] + z;
-       xout[j+1] = bound[0];           yout[j+1] = bound[2] + dy*0.5f; zout[j+1] = bound[4] + z;
-       xout[j+2] = bound[0];           yout[j+2] = bound[2] + dy;      zout[j+2] = bound[4] + z;
-       xout[j+3] = bound[0] + dx*0.5f; yout[j+3] = bound[2];           zout[j+3] = bound[4] + z;
-       xout[j+4] = bound[0] + dx*0.5f; yout[j+4] = bound[2] + dy*0.5f; zout[j+4] = bound[4] + z;
-       xout[j+5] = bound[0] + dx*0.5f; yout[j+5] = bound[2] + dy;      zout[j+5] = bound[4] + z;
-       xout[j+6] = bound[0] + dx;      yout[j+6] = bound[2];           zout[j+6] = bound[4] + z;
-       xout[j+7] = bound[0] + dx;      yout[j+7] = bound[2]+ dy*0.5f;  zout[j+7] = bound[4] + z;
-       xout[j+8] = bound[0] + dx;      yout[j+8] = bound[2] + dy;      zout[j+8] = bound[4] + z;
+       xout[j+0] = float(bound[0]);           yout[j+0] = float(bound[2]);           zout[j+0] = float(bound[4]) + z;
+       xout[j+1] = float(bound[0]);           yout[j+1] = float(bound[2]) + dy*0.5f; zout[j+1] = float(bound[4]) + z;
+       xout[j+2] = float(bound[0]);           yout[j+2] = float(bound[2]) + dy;      zout[j+2] = float(bound[4]) + z;
+       xout[j+3] = float(bound[0]) + dx*0.5f; yout[j+3] = float(bound[2]);           zout[j+3] = float(bound[4]) + z;
+       xout[j+4] = float(bound[0]) + dx*0.5f; yout[j+4] = float(bound[2]) + dy*0.5f; zout[j+4] = float(bound[4]) + z;
+       xout[j+5] = float(bound[0]) + dx*0.5f; yout[j+5] = float(bound[2]) + dy;      zout[j+5] = float(bound[4]) + z;
+       xout[j+6] = float(bound[0]) + dx;      yout[j+6] = float(bound[2]);           zout[j+6] = float(bound[4]) + z;
+       xout[j+7] = float(bound[0]) + dx;      yout[j+7] = float(bound[2])+ dy*0.5f;  zout[j+7] = float(bound[4]) + z;
+       xout[j+8] = float(bound[0]) + dx;      yout[j+8] = float(bound[2]) + dy;      zout[j+8] = float(bound[4]) + z;
 
        j += 9;
        z += dz*0.5f;
