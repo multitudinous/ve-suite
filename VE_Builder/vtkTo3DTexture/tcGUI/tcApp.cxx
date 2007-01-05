@@ -50,7 +50,10 @@ bool TCApp::OnInit()
 {
    //This function is entered first and then the command line
    // parser function is called
-   wxApp::OnInit();
+   if (!wxApp::OnInit())
+   {
+      return false;
+   }
    //For commandline parsing we are returning from the command line function
    int ierror;
    p = 1;
@@ -171,7 +174,7 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
       _frame->SetMPIVariables( rank, p );
       wxApp::OnCmdLineParsed(parser);
       //set all the options on the translator
-      wxString inputDir(_("./") );
+      wxString inputDir;
       wxString outputDir(_("./") );
       long int resolution[3] = {32,32,32};
       long int transientGridProp = 0;
