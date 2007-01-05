@@ -393,14 +393,14 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
    double d = 0.0;
    double* a = new double [2*(_degree[direction]+1)];
    //Compute the derivatives
-   for( int r = 0; r <= _degree[direction]; r++)
+   for( int r = 0; r <= int(_degree[direction]); r++)
    {
       row1 = 0;
       row2 = 1;
 
       a[0] = 1.0;
 
-      for( int k = 1; k <= _degree[direction]; k++)
+      for( int k = 1; k <= int(_degree[direction]); k++)
       {
           d = 0.0;
           rk = r-k;
@@ -456,9 +456,9 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
       
    }
    int r= _degree[direction];
-   for(int k=1; k <= (_degree[direction]); k++)
+   for(int k=1; k <= int(_degree[direction]); k++)
    {
-      for(int j =0; j <=_degree[direction]; j++)
+      for(int j =0; j <= int(_degree[direction]); j++)
       {
          _derivativeBasisFunctions[direction][k][j]*=r;
       }

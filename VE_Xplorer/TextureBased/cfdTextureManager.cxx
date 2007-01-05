@@ -187,7 +187,7 @@ unsigned int cfdTextureManager::getNextFrame()
    {
       //haven't reached the end yet
       //so return the next field 
-      if(_curField < numFields-1)
+      if(size_t(_curField) < numFields-1)
       {
          _curField += _direction;
       }
@@ -480,7 +480,7 @@ unsigned char* cfdTextureManager::getNextField()
    if(_direction == 1){
       //haven't reached the end yet
       //so return the next field 
-      if(_curField < numFields-1){
+      if(size_t(_curField) < numFields-1){
          _curField += _direction;
       }else if(_curField == numFields-1){
          //we're at the end so we need to

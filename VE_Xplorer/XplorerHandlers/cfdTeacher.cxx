@@ -149,7 +149,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
 cfdTeacher::~cfdTeacher( )
 {
    int i;
-   for ( i = 0; i < this->node.size(); i++)
+   for ( i = 0; i < int(this->node.size()); i++)
    {  
       this->DCS->RemoveChild( this->node[i] );
       delete this->node[i];
@@ -178,7 +178,7 @@ int cfdTeacher::getNumberOfFiles()
 
 std::string cfdTeacher::getFileName( int i )
 {
-   if ( i >= 0 && i < this->pfbFileNames.size() )
+   if ( i >= 0 && i < int(this->pfbFileNames.size()) )
    {
 	   return this->pfbFileNames[i];
    }
