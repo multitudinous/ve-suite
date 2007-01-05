@@ -89,7 +89,7 @@ void TexTable::SetNumofCols(int num)
 void TexTable::SetColTitles(const std::vector<wxString>& titles)
 {
    for ( size_t i=0; 
-         (i < titles.size() ) && ( i < GetNumberCols() ); ++i)
+         (i < size_t(titles.size()) ) && ( i < size_t(GetNumberCols()) ); ++i)
    {
       SetColLabelValue( i, titles[i] );
    }
@@ -99,9 +99,9 @@ void TexTable::SetColAlignments(const std::vector<int>& alignments)
 {
    m_align = alignments;
    for ( size_t i=0; 
-         (i <  alignments.size() ) && ( i < GetNumberCols() ); ++i )
+         (i <  size_t(alignments.size()) ) && ( i < size_t(GetNumberCols()) ); ++i )
    {
-      for ( size_t j = 0; j <  GetNumberRows(); ++j)
+      for ( size_t j = 0; j <  size_t(GetNumberRows()); ++j)
       {
          SetCellAlignment( j, i, alignments[i], wxALIGN_CENTER);
       }

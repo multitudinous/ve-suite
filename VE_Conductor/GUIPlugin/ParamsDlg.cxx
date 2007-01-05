@@ -156,7 +156,7 @@ void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
 	std::vector< std::string > dataName;
 	std::vector< std::string > dataValue;
 	//output << "loop" << std::endl;
-	for(int j = 0; j < num; j++)
+	for(int j = 0; j < int (num); j++)
 	{
 		VE_XML::DataValuePair * pair = cmd->GetDataValuePair(j);
 		

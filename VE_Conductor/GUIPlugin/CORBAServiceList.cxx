@@ -124,7 +124,7 @@ bool CORBAServiceList::IsConnectedToCE( void )
 /////////////////////////////////////////////////////////////
 std::vector< std::string > CORBAServiceList::GetListOfServices( void )
 {
-   unsigned long numServices;
+   // unsigned long numServices;
    //namingContext.list( numServices, bindList, nameList );
    //Need to look at CORBA book for for loop
    return serviceList;
