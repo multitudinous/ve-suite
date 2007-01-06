@@ -67,33 +67,9 @@ PluginLoader::~PluginLoader()
 bool PluginLoader::LoadPlugins(wxString lib_dir)
 {
    // Load the default plugin no matter what
-   //wxString veSuiteHome;
    wxString hostType;
-   //wxString libDir;
    ::wxGetEnv( wxString( "CFDHOSTTYPE",wxConvUTF8 ), &hostType );
    
-   /*if(::wxGetEnv( wxString( "VE_SUITE_HOME",wxConvUTF8 ), &veSuiteHome ))
-   {
-      libDir = wxString("/bin/Plugins/UI/",wxConvUTF8);
-      ::wxGetEnv( wxString( "CFDHOSTTYPE",wxConvUTF8 ), &hostType );
-   }
-   else if(::wxGetEnv( wxString( "VE_INSTALL_DIR",wxConvUTF8 ), &veSuiteHome ))
-   {  
-      libDir = _("/bin/Plugins/UI/");
-   }
-   if ( !(hostType.IsEmpty()) && (!veSuiteHome.IsEmpty()) )
-   {
-#ifdef WIN32
-      wxString libn = veSuiteHome + libDir + hostType + _( "/DefaultPlugin_d" ) + wxPluginLibrary::GetDllExt();
-#else
-	   wxString libn = veSuiteHome + libDir + hostType + _( "/DefaultPlugin" ) + wxPluginLibrary::GetDllExt();
-#endif
-	   if ( ::wxFileExists( libn ) )
-      {
-         wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
-         wxLogDebug( _("Loaded [ %s ]\n"), libn.c_str() );
-      }
-   }*/
    //Load default plugin into vectors
    plugins.push_back( new DefaultPlugin() );
    plugin_cls.push_back( 0 );
