@@ -45,6 +45,7 @@
 #include <string>
 #include <sstream>
 
+#include <wx/arrstr.h>
 #include <wx/utils.h>
 #include <wx/button.h>
 #include <wx/combobox.h>
@@ -460,7 +461,7 @@ void ViewLocPane::_rebuildNameArrays( void )
       for( unsigned int i=0; i<_numStoredLocations; i++)
       {
          std::ostringstream vwptstream;
-         //vwptstream << "View Location " << i ;
+         vwptstream << "View Location " << i ;
          _locationName.Add( wxString(vwptstream.str().c_str(), wxConvUTF8) );
       }
    }
@@ -470,29 +471,29 @@ void ViewLocPane::_rebuildNameArrays( void )
       _locationName.Add(wxT("No Stored Locations"));
    }
 
-   /*if( !flyThroughList.empty() )
+   if( !flyThroughList.empty() )
    {
       _numStoredFlythroughs = flyThroughList.size();
-      _flythroughName = new wxString[ _numStoredFlythroughs ];
+      //_flythroughName = new wxArrayString[ _numStoredFlythroughs ];
 
       for( unsigned int i=0; i<_numStoredFlythroughs; i++)
       {
          std::ostringstream flynamestream;
          flynamestream << "Flythrough " << i ;
-         _flythroughName[i] = flynamestream.str().c_str();
+         _flythroughName.Add( flynamestream.str().c_str());
       }
  
    }
    else
    {
       _numStoredFlythroughs = 1;
-      _flythroughName = new wxString[1];
-      _flythroughName[0] = wxT("No Flythroughs Built");
+      //_flythroughName = new wxString[1];
+      _flythroughName.Add("No Flythroughs Built");
       _vwptsInActiveFly = 1;
-      _activeFlyNames = new wxString[ _vwptsInActiveFly ];
-      _activeFlyNames[0] = wxT("No Flythroughs Built");
+      //_activeFlyNames = new wxString[ _vwptsInActiveFly ];
+      _activeFlyNames.Add("No Flythroughs Built");
    }
-   */
+   
 }
 ///////////////////////////////////////////////////////////
 void ViewLocPane::_setUpActiveFlyThroughNames( int index )
@@ -519,7 +520,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
       {
          tempindex = i;
       }
-   }  */
+   } */
    
    flyThroughList.clear();
    VjObs::double2DArray_var  flyThroughArray;
@@ -708,7 +709,7 @@ void ViewLocPane::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
 {
-   /*if ( _numView_LocsGlobal > 0 )
+   if ( _numView_LocsGlobal > 0 )
    {
       if ( flyThroughList.size() > 0 )
       {
@@ -731,7 +732,7 @@ void ViewLocPane::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
 	      }
       }
       //_resetSelections();
-   }*/
+   }
    
 }
 //////////////////////////////////////////////////////////////////////
