@@ -418,11 +418,11 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    }
    */
 
-   //VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
+   VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
-   //VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
+   VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
 
 }
 ///////////////////////////////////////////////////////////////
