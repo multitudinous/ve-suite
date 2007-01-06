@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Conductor/Framework/PluginLoader.h"
@@ -100,7 +98,6 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    plugins.push_back( new DefaultPlugin() );
    plugin_cls.push_back( 0 );
    
-   
    // Try to laod custom plugins
    const wxString ext = wxString("*",wxConvUTF8) + wxPluginLibrary::GetDllExt();
    lib_dir.Append( _("/") );
@@ -108,20 +105,17 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    wxLogDebug( _("Loading plugins from [%s]\n"), lib_dir.c_str());
 
    /* Create a directory object we can scan for plugins */
-   /*if ( !wxDir::Exists(lib_dir) )
+   if ( !wxDir::Exists(lib_dir) )
    {
-      // Register default plugin at least
-      RegisterPlugins();
       // deal with the error here - wxDir would already log an error 
       // message explaining the exact reason of the failure
       return FALSE;
-   }*/
+   }
+   
    wxDir dir(lib_dir);
    
    if ( !dir.IsOpened() )
    {
-      // Register default plugin at least
-      RegisterPlugins();
       // Dispaly error
       wxString msg( _("Directory ") + dir.GetName() + _(" is present but cannot be opened.") );
       wxMessageBox( msg, _("Plugin Loader Failure"), wxOK | wxICON_INFORMATION );
