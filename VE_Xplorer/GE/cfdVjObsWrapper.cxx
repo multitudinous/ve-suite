@@ -151,6 +151,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
       gethostname(raw_hostname, 255); //get the host name 
       hostname=raw_hostname;
       std::cout<<"Host name is "<<hostname<<std::endl;   
+      _vjObs->SetClusterMode( true );
       getStringTokens(raw_hostname,".", toks);
       //now toks[0] will be the short host name: the one without the domain name
       
@@ -175,7 +176,6 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
          {
             naming_context->rebind(name, vjobs.in());
          }
-         _vjObs->SetClusterMode( true );
       }
    }
    else
