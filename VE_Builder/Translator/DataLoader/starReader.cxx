@@ -335,7 +335,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             
             //Read the start positions for the faces for this particular
             //polyhedral cell
-            for ( size_t i = 0; i < size_t(numberOfFaces) - 1; ++i )
+            for ( int i = 0; i < numberOfFaces - 1; ++i )
             {
                cellFile >> tempData;
                //std::cout << tempData << " ";

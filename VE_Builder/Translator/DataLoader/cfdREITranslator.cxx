@@ -243,7 +243,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       
       if (debug > 1) 
       {
-         for ( size_t i=0; i<size_t(nx); ++i )
+         for ( size_t i=0; i< static_cast<size_t>(nx); ++i )
          {
             std::cout << "xCenters[" << i << "] = " << xCenters[i] << std::endl;
          }
@@ -258,7 +258,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       
       if (debug > 1) 
       {
-         for ( size_t i=0; i< size_t(ny); i++) 
+         for ( size_t i=0; i< static_cast<size_t>(ny); i++) 
          {
             std::cout << "yCenters[" << i << "] = " << yCenters[i] << std::endl;
          }
@@ -273,7 +273,7 @@ void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
       
       if (debug > 1) 
       {
-         for ( size_t i=0; i<size_t(nz); i++) 
+         for ( size_t i=0; i< static_cast<size_t>(nz); i++) 
          {
             std::cout << "zCenters[" << i << "] = " << zCenters[i] << std::endl;
          }

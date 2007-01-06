@@ -264,10 +264,10 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
          numGrids << std::endl;
       //writer->DebugOn();
       writer->BreakOnError();
-      for ( size_t i = 0; i < size_t(numGrids); i++ )
+      for ( size_t i = 0; i < static_cast<size_t>(numGrids); i++ )
       {
          grids[ i ] = vtkStructuredGrid::New();
-         grids[ i ]->ShallowCopy ( (vtkStructuredGrid * ) reader->GetOutput( int(i) ) );
+         grids[ i ]->ShallowCopy ( (vtkStructuredGrid * ) reader->GetOutput( static_cast<int>(i) ) );
          //std::ostringstream number;
          //number << i;
          //std::string testname = "test_" + number.str() + '.' + "vts";
@@ -283,7 +283,7 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
       //filter->DebugOn();
       //filter->BreakOnError();
       
-      for ( size_t i = 0; i < size_t(numGrids); i++ )
+      for ( size_t i = 0; i < static_cast<size_t>(numGrids); i++ )
       {
          filter->AddInput( grids[ i ] );
          filter->Update();
@@ -352,7 +352,7 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
       if ( filter != NULL )
          filter->Delete();
       
-      for ( size_t i = 0; i < size_t(numGrids); i++ )
+      for ( size_t i = 0; i < static_cast<size_t>(numGrids); i++ )
       {
          grids[ i ]->Delete();
       }
