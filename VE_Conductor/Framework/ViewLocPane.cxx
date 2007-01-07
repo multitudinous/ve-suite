@@ -523,7 +523,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
    } */
    
 
-   if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
+   if ( !dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
    {
       return;
    }
