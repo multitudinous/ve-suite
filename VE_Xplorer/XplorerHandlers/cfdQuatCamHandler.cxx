@@ -101,12 +101,6 @@ cfdQuatCamHandler::cfdQuatCamHandler( /*VE_SceneGraph::cfdDCS* worldDCS,
    currentFrame = 0;
    writeFrame = 0;
 
-#ifdef _CLUSTER
-   FindMasterNode();
-   onMasterNode = false;
-#else
-   onMasterNode = true;
-#endif
    
    command = 0;
 
@@ -116,7 +110,13 @@ cfdQuatCamHandler::cfdQuatCamHandler( /*VE_SceneGraph::cfdDCS* worldDCS,
    quatCamFileName = ".stored_viewpts_flythroughs.vel";
    
    _eventHandlers[std::string("QC_LOAD_STORED_POINTS")] = new VE_EVENTS::QuatCamLoadFileEventHandler();
-   
+ 
+   ///more hacking to initialize the flythroughlist
+   ///This forces us to only have one flythrought per ves file
+   if(flyThroughList.empty())
+   {
+      AddNewFlythrough();
+   }
 }
 ///////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::SetDCS(VE_SceneGraph::cfdDCS* worldDCS)
@@ -226,7 +226,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
    // this is for cluster mode so that the master has a chance to write
    // the quat cam file and then one frame later all the slaves will
    // read that file
-   if ( !onMasterNode && ( writeFrame == currentFrame ) )
+   if ( !onMasterNode  )
    {
       return;
    }
@@ -339,15 +339,11 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
    Matrix44f vjm;
 
    if ( t == 0.0f )
+   {
       QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
-
-#ifdef _CLUSTER
-   // t is set by vjobs in cluster mode
-   // so we just use it and don't increment it
-   float temp = t;
-#else
+   }
    float temp = this->GetQuatCamIncrementor();
-#endif
+
 
 
    if ( ( t < 1.0f ) )
@@ -435,12 +431,6 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
       commandType = "wait";
    }
 
-#ifdef _CLUSTER
-   if ( writeFrame == currentFrame - 1 )
-   {
-      this->LoadFromFile( this->quatCamFileName );
-   }
-#endif
 
    if ( !commandType.compare( "ViewLoc_Data" ) )
    {
@@ -460,8 +450,9 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          writeFrame = currentFrame;
          this->TurnOffMovement();
          this->LoadData( this->_nav->worldTrans, _worldDCS );
+         AddViewPtToFlyThrough(0,QuatCams.size()-1);
          this->WriteToFile( this->quatCamFileName );
-         this->LoadFromFile( this->quatCamFileName );
+         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = LOAD_NEW_VIEWPT;
          return true;
@@ -484,7 +475,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->cam_id = (unsigned int)commandIds.at( 0 );
          this->RemoveViewPt();
          this->WriteToFile( this->quatCamFileName );
-         this->LoadFromFile( this->quatCamFileName );
+         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = REMOVE_SELECTED_VIEWPT;
          return true;
@@ -499,7 +490,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->AddViewPtToFlyThrough( (unsigned int)commandIds.at( 0 ), 
                                       (unsigned int)commandIds.at( 1 ) );
          this->WriteToFile( this->quatCamFileName );
-         this->LoadFromFile( this->quatCamFileName );
+         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = ADD_NEW_POINT_TO_FLYTHROUGH;
          return true;
@@ -516,7 +507,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
                                          (unsigned int)commandIds.at( 1 ),
                                          (unsigned int)commandIds.at( 2 ) );
          this->WriteToFile( this->quatCamFileName );
-         this->LoadFromFile( this->quatCamFileName );
+         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = INSERT_NEW_POINT_IN_FLYTHROUGH;
          return true;
@@ -531,7 +522,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->RemoveFlythroughPt( (unsigned int)commandIds.at( 0 ), 
                                    (unsigned int)commandIds.at( 1 ) );
          this->WriteToFile( this->quatCamFileName );
-         this->LoadFromFile( this->quatCamFileName );
+         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = REMOVE_POINT_FROM_FLYTHROUGH;
          return true;
@@ -544,7 +535,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          //this->DeleteEntireFlythrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
          this->DeleteEntireFlythrough( (unsigned int)commandIds.at( 0 ) );
          this->WriteToFile( this->quatCamFileName );
-         this->LoadFromFile( this->quatCamFileName );
+         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = DELETE_ENTIRE_FLYTHROUGH;
          return true;
@@ -556,7 +547,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->TurnOffMovement();
          this->AddNewFlythrough();
          this->WriteToFile( this->quatCamFileName );
-         this->LoadFromFile( this->quatCamFileName );
+         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = ADD_NEW_FLYTHROUGH;
          return true;
@@ -685,7 +676,8 @@ double cfdQuatCamHandler::getLinearDistance( gmtl::Vec3f vjVecLast, gmtl::Vec3f 
 
 int cfdQuatCamHandler::getNumLocs()
 {
-   return this->numQuatCams;
+   //this assumes there is only one flythrough!!!!--biv
+   return QuatCams.size();//this->numQuatCams;
 }
 
 std::vector< std::vector <int> > cfdQuatCamHandler::getFlyThroughs()
