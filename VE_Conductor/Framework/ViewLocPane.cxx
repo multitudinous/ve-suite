@@ -522,28 +522,33 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
       }
    } */
    
-   flyThroughList.clear();
-   VjObs::double2DArray_var  flyThroughArray;
 
    if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
    {
-      VjObs::obj_pd_var tempTest;
-      int tempTestlocal = 0;
-      
-      /*while ( tempTestlocal == 0 )
+      return;
+   }
+
+   VjObs::obj_pd_var tempTest;
+   int tempTestlocal = 0;
+   int counter = 0;
+   
+   while ( tempTestlocal == 0 )
+   {
+      tempTest = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getDouble1D( "getCompletionTest" );
+      tempTestlocal = (int)tempTest[ 0 ];       
+      wxMilliSleep( 50 );
+      ++counter;
+      if ( counter == 6 )
       {
-         tempTest = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getDouble1D( "getCompletionTest" );
-         tempTestlocal = (int)tempTest[ 0 ];       
-         wxMilliSleep( 50 );
-      }*/
-      _numStoredLocations = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getIsoValue();
+         return;
+      }
    }
+   
+   _numStoredLocations = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getIsoValue();
+   VjObs::double2DArray_var  flyThroughArray;
+   flyThroughArray = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getDouble2D( "getFlythroughData" );
  
-   if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
-   {
-      flyThroughArray = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getDouble2D( "getFlythroughData" );
-   }
-
+   flyThroughList.clear();
    for (CORBA::ULong j=0; j<flyThroughArray->length(); j++ )
    {
       std::vector<int> tempPts;

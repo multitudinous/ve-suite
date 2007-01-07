@@ -469,7 +469,7 @@ VjObs::obj_pd* VjObs_i::getDouble1D(  const char* input )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    VjObs::obj_pd_var array1dData;
-   if ( strcmp(input,"getCompletionTest") == 0 )
+   if ( std::string( input ) ==  std::string("getCompletionTest") )
    {
       std::vector< int > completionTest;
       completionTest = cfdQuatCamHandler::instance()->getCompletionTest();
