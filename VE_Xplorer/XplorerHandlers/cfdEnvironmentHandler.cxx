@@ -357,6 +357,10 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
                         (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
    this->nav->updateNavigationFromGUI();
+
+   VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
+   VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
+
 }
 ///////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::LatePreFrameUpdate()
@@ -418,11 +422,9 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    }
    */
 
-   VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
-   VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
 
 }
 ///////////////////////////////////////////////////////////////
