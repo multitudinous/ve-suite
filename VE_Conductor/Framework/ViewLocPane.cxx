@@ -540,7 +540,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
       ++counter;
       if ( counter == 6 )
       {
-         break;
+         return;
       }
    }
    
