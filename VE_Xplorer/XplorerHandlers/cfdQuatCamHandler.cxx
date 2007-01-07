@@ -322,16 +322,15 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
             delete [] numPointsInFlyThrough;
          }
       }   
-      inFile.close();  
+      inFile.close();
+      this->writeReadComplete = true;
    }
-   
    else 
    {
      std::ofstream newFile( fileName.c_str(), std::ios::out ); 
      newFile.open( fileName.c_str(), std::ios::out );
       newFile.close();
    }
-       
 }
 
 void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate* nav )
