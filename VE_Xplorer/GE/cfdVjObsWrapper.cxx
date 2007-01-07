@@ -54,6 +54,7 @@ using namespace VE_Xplorer;
 cfdVjObsWrapper::cfdVjObsWrapper( void )
 {
    _vjObs = new VjObs_i();
+   isMaster = false;
 }
 
 void cfdVjObsWrapper::InitCluster( void )
@@ -158,7 +159,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
       if (hostname==masterhost||toks[0]==masterhost)
       {
          std::cout<<"This is the master!"<<std::endl;
-         
+         isMaster = true;
          VjObs_var vjobs = this->_vjObs->_this();
          //CORBA::String_var sior(orb->object_to_string(vjobs.in()));
          //std::cout << "|  IOR of the server(cfdApp) side : " << std::endl << sior << std::endl;
@@ -196,6 +197,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
       {
          naming_context->rebind(name, vjobs.in());
       }
+      isMaster = true;
       _vjObs->SetClusterMode( false );
    }
 }
@@ -224,18 +226,18 @@ void cfdVjObsWrapper::PreFrameUpdate( void )
 {
    _vjObs->PreFrameUpdate();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 // Frame sync variables used by osg only at this point
 float cfdVjObsWrapper::GetSetAppTime( float x )
 {
    return _vjObs->GetSetAppTime( x );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 long cfdVjObsWrapper::GetSetFrameNumber( long x )
 {
    return _vjObs->GetSetFrameNumber( x );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int cfdVjObsWrapper::getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
 {
    char* token;
@@ -251,4 +253,9 @@ int cfdVjObsWrapper::getStringTokens(char* buffer, char* delim, std::vector<std:
    }
 
    return i;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool cfdVjObsWrapper::IsMaster( void )
+{
+   return isMaster;
 }

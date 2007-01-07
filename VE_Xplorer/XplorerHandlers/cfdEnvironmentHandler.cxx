@@ -118,10 +118,9 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _eventHandlers[ std::string("DISPLAY_SELECTION") ] = new VE_EVENTS::DisplayEventHandler();
 }
 
-void cfdEnvironmentHandler::Initialize( std::string param )
+void cfdEnvironmentHandler::Initialize( void )
 {
-   _param = param;
-   vprDEBUG(vesDBG,1) << "|\tcfdApp::init" << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,1) << "|\tcfdApp::init" << std::endl << vprDEBUG_FLUSH;
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    displaySettings = new cfdDisplaySettings();
    this->nav = new cfdNavigate();

@@ -85,6 +85,8 @@ public:
    void GetUpdateClusterStateVariables( void );
    float GetSetAppTime( float );
    long GetSetFrameNumber( long );
+   ///This should be removed as soon as the quat cam code is fixed
+   bool IsMaster( void );
 #ifdef _TAO
    CosNaming::NamingContext* naming_context;
    PortableServer::POA* child_poa;
@@ -96,6 +98,7 @@ public:
    VjObs_i* _vjObs;
 private:
    CORBA::ORB* _orbPtr;
+   bool isMaster;
 };
 }
 #endif

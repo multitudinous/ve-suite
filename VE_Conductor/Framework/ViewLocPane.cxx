@@ -480,7 +480,7 @@ void ViewLocPane::_rebuildNameArrays( void )
       {
          std::ostringstream flynamestream;
          flynamestream << "Flythrough " << i ;
-         _flythroughName.Add( flynamestream.str().c_str());
+         _flythroughName.Add( wxString(flynamestream.str().c_str(), wxConvUTF8) );
       }
  
    }
@@ -488,10 +488,10 @@ void ViewLocPane::_rebuildNameArrays( void )
    {
       _numStoredFlythroughs = 1;
       //_flythroughName = new wxString[1];
-      _flythroughName.Add("No Flythroughs Built");
+      _flythroughName.Add( _("No Flythroughs Built") );
       _vwptsInActiveFly = 1;
       //_activeFlyNames = new wxString[ _vwptsInActiveFly ];
-      _activeFlyNames.Add("No Flythroughs Built");
+      _activeFlyNames.Add( _("No Flythroughs Built") );
    }
    
 }

@@ -678,14 +678,6 @@ void VjObs_i::GetCfdStateVariables( void )
       }
 #endif
 #endif
-      if ( cfdQuatCamHandler::instance()->IsActive() )
-      {
-         this->mStates->clusterQuatCamIncrement = cfdQuatCamHandler::instance()->GetQuatCamIncrementor();
-      }
-      else
-      {
-         this->mStates->clusterQuatCamIncrement = 0;
-      }
    }
 }
 
@@ -747,10 +739,6 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       }
 #endif
 #endif
-      if ( cfdQuatCamHandler::instance()->IsActive() )
-      {
-         cfdQuatCamHandler::instance()->SetQuatCamIncrementor( this->mStates->clusterQuatCamIncrement );
-      }
    }
 }
 

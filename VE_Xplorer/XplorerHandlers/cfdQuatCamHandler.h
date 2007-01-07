@@ -78,129 +78,132 @@ namespace VE_XML
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdQuatCamHandler : public cfdGlobalBase
-   {
-      public:
-         //Constructors
-         //cfdQuatCamHandler( VE_SceneGraph::cfdDCS*, cfdNavigate*, std::string );
-      
-         //Destructor
-         //~cfdQuatCamHandler();
-         ///Singleton cleanup
-         void CleanUp( void );
+class VE_XPLORER_EXPORTS cfdQuatCamHandler : public cfdGlobalBase
+{
+public:
+   //Constructors
+   //cfdQuatCamHandler( VE_SceneGraph::cfdDCS*, cfdNavigate*, std::string );
 
-         // compare VjObs_i commandArray with its child's value
-         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+   //Destructor
+   //~cfdQuatCamHandler();
+   ///Singleton cleanup
+   void CleanUp( void );
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand();
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-         //void CreateObjects( void );
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
 
-         ///Set the cfdDCS 
-         ///\param newDCS The new cfdDCS
-         void SetDCS(VE_SceneGraph::cfdDCS* newDCS);
+   //void CreateObjects( void );
 
-         ///Set cfdNavigate
-         ///\param nav The new cfdNavigate
-         void SetNavigation(VE_Xplorer::cfdNavigate* nav);
+   ///Set the cfdDCS 
+   ///\param newDCS The new cfdDCS
+   void SetDCS(VE_SceneGraph::cfdDCS* newDCS);
+
+   ///Set cfdNavigate
+   ///\param nav The new cfdNavigate
+   void SetNavigation(VE_Xplorer::cfdNavigate* nav);
+   ///This function is for quatecam handler only
+   ///This should be removed once the new animation code is in place
+   void SetMasterNode( bool masterNode );
    
-         void LoadData(double*, VE_SceneGraph::cfdDCS*);
+   void LoadData(double*, VE_SceneGraph::cfdDCS*);
 
-         void WriteToFile(std::string);
+   void WriteToFile(std::string);
 
-         void LoadFromFile(std::string);
+   void LoadFromFile(std::string);
 
-         void Relocate(VE_SceneGraph::cfdDCS* worldDCS, cfdNavigate* nav); 
+   void Relocate(VE_SceneGraph::cfdDCS* worldDCS, cfdNavigate* nav); 
 
-         void RemoveViewPt( void );
+   void RemoveViewPt( void );
 
-         void RemoveFlythroughPt( unsigned int, unsigned int );
+   void RemoveFlythroughPt( unsigned int, unsigned int );
 
-         void AddViewPtToFlyThrough( unsigned int, unsigned int );
+   void AddViewPtToFlyThrough( unsigned int, unsigned int );
 
-         void InsertViewPtInFlyThrough( unsigned int, unsigned int, unsigned int );
+   void InsertViewPtInFlyThrough( unsigned int, unsigned int, unsigned int );
 
-         void DeleteEntireFlythrough( unsigned int );
+   void DeleteEntireFlythrough( unsigned int );
 
-         void AddNewFlythrough( void );
+   void AddNewFlythrough( void );
 
-         void TurnOffMovement( void );
+   void TurnOffMovement( void );
 
-         double getLinearDistance( gmtl::Vec3f, gmtl::Vec3f );
+   double getLinearDistance( gmtl::Vec3f, gmtl::Vec3f );
 
-         void FindMasterNode( void );
+   void FindMasterNode( void );
 
-         int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks);
+   int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks);
 
-         int getNumLocs();
+   int getNumLocs();
 
-         std::vector< std::vector <int> > getFlyThroughs();
+   std::vector< std::vector <int> > getFlyThroughs();
 
-         std::vector < int > getCompletionTest();
+   std::vector < int > getCompletionTest();
 
-         // If a quat is active this will move the cam to the next location
-         void PreFrameUpdate();
+   // If a quat is active this will move the cam to the next location
+   void PreFrameUpdate();
 
-         void SetQuatCamIncrementor( float );
+   void SetQuatCamIncrementor( float );
 
-         float GetQuatCamIncrementor( void );
+   float GetQuatCamIncrementor( void );
 
-         bool IsActive( void );
+   bool IsActive( void );
 
-         // New function for testing the new VECommand structure
-         void SetVECommand( VE_XML::Command* veCommand );
+   // New function for testing the new VECommand structure
+   void SetVECommand( VE_XML::Command* veCommand );
+
+   unsigned int numQuatCams;
+   unsigned int numFlyThroughs;
+   unsigned int* numPointsInFlyThrough;
+
+   int cfdId;
+   int cfdIso_value;
+protected:
+   std::map<std::string,VE_EVENTS::EventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
+
+
+private:
+   cfdQuatCam* thisQuatCam;
+   VE_SceneGraph::cfdDCS* _worldDCS;
+   cfdNavigate* _nav;
+   cfdReadParam* _readParam;
+   std::string   _param;
+   float t;
+   std::string quatCamFileName;
+   std::string quatCamDirName;
+   std::vector<cfdQuatCam*> QuatCams;
+   int run;
+   int cam_id;
+   float rotvec[3];
+   float angle;
+   bool activecam;
+   bool _runFlyThrough;
+   int activeFlyThrough;
+   unsigned int pointCounter;
+   bool writeReadComplete;
+   float movementIntervalCalc;
+   double movementSpeed;
+   bool onMasterNode;
+   int lastCommandId;
+   int currentFrame;
+   int writeFrame;
    
-         unsigned int numQuatCams;
-         unsigned int numFlyThroughs;
-         unsigned int* numPointsInFlyThrough;
+   vpr::Timer* frameTimer;
+   
+   std::vector< std::vector <int> > flyThroughList;
+   std::vector < int > completionTest;
 
-         int cfdId;
-         int cfdIso_value;
-   protected:
-      std::map<std::string,VE_EVENTS::EventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
+   // class used to store xml command
+   VE_XML::Command* command;
 
+    // Required so that vpr::Singleton can instantiate this class.
+   //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
+   cfdQuatCamHandler(/* VE_SceneGraph::cfdDCS* worldDCS,cfdNavigate* nav, std::string param */);
 
-      private:
-         cfdQuatCam* thisQuatCam;
-         VE_SceneGraph::cfdDCS* _worldDCS;
-         cfdNavigate* _nav;
-         cfdReadParam* _readParam;
-         std::string   _param;
-         float t;
-         std::string quatCamFileName;
-         std::string quatCamDirName;
-         std::vector<cfdQuatCam*> QuatCams;
-         int run;
-         int cam_id;
-         float rotvec[3];
-         float angle;
-         bool activecam;
-         bool _runFlyThrough;
-         int activeFlyThrough;
-         unsigned int pointCounter;
-         bool writeReadComplete;
-         float movementIntervalCalc;
-         double movementSpeed;
-         bool onMasterNode;
-         int lastCommandId;
-         int currentFrame;
-         int writeFrame;
-         
-         vpr::Timer* frameTimer;
-         
-         std::vector< std::vector <int> > flyThroughList;
-         std::vector < int > completionTest;
-
-         // class used to store xml command
-         VE_XML::Command* command;
-
-          // Required so that vpr::Singleton can instantiate this class.
-         //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
-         cfdQuatCamHandler(/* VE_SceneGraph::cfdDCS* worldDCS,cfdNavigate* nav, std::string param */);
-  
-         ~cfdQuatCamHandler( void ){ ; }// Never gets called, don't implement
-         vprSingletonHeader( cfdQuatCamHandler );   
-   };
+   ~cfdQuatCamHandler( void ){ ; }// Never gets called, don't implement
+   vprSingletonHeader( cfdQuatCamHandler );
+};
 }
 #endif

@@ -44,6 +44,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
@@ -377,9 +378,9 @@ void cfdApp::initScene( void )
    cfdModelHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdModelHandler::instance()->SetXMLCommand( _vjobsWrapper->GetXMLCommand() );
    cfdModelHandler::instance()->InitScene();
-
+   
    // navigation and cursor 
-   cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
+   cfdEnvironmentHandler::instance()->Initialize();
    cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    for(int i=1;i<argc;++i)
    {
@@ -395,7 +396,8 @@ void cfdApp::initScene( void )
       }
    }
    cfdEnvironmentHandler::instance()->InitScene();
-
+   cfdQuatCamHandler::instance()->SetMasterNode( _vjobsWrapper->IsMaster() );
+   
    // create steady state visualization objects
    cfdSteadyStateVizHandler::instance()->Initialize( this->filein_name );
    cfdSteadyStateVizHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );

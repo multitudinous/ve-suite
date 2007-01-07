@@ -90,14 +90,13 @@ private:
    vprSingletonHeader( cfdEnvironmentHandler );   
 
 public:
-   void Initialize( std::string );
+   void Initialize( void );
    void CleanUp( void );
    void InitScene( void );
    void PreFrameUpdate( void );
    void LatePreFrameUpdate( void );
    void SetCommandArray( cfdCommandArray* );
    void CreateObjects( void );
-
    ///Update the background color
    ///\param color The background color
    void SetBackgroundColor(std::vector<double> color);
