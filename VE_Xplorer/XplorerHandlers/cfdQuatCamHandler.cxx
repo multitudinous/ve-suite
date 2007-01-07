@@ -704,55 +704,6 @@ std::vector < int > cfdQuatCamHandler::getCompletionTest()
    }
    return this->completionTest;
 }
-
-void cfdQuatCamHandler::FindMasterNode( void )
-{
-   std::vector<std::string> toks;
-   std::string hostfile;
-   std::string masterhost;
-   vpr::System::getenv("VEXMASTER",masterhost);
-   if ( masterhost.empty() )
-   {
-      std::cerr << " ERROR : The VEXMASTER environment variable must be set to run cluster" << std::endl;
-      exit( 1 );   
-   }
-   //char raw_hostname[256];
-   std::string hostname;
-   
-   hostname = vpr::System::getHostname(); //get the host name 
-   //hostname=raw_hostname;
-   std::cout<<"Host name is "<<hostname<<std::endl;   
-   //getStringTokens(raw_hostname,".", toks);
-   //now toks[0] will be the short host name: the one without the domain name
-   
-   if (hostname==masterhost)//||toks[0]==masterhost)
-   {
-      std::cout<<"This is the master!"<<std::endl;
-      onMasterNode = true;
-   }
-}
-
-int cfdQuatCamHandler::getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
-{
-   char* token;
-   int i=0;
-   token = strtok(buffer, delim);
-
-   toks.clear();
-   while( token )
-   {
-      i++;
-      toks.push_back(std::string(token));
-      token = strtok(NULL, delim);
-   }
-
-   return i;
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::SetQuatCamIncrementor( float increment )
-{
-   t = increment;
-}
 ////////////////////////////////////////////////////////////////////////////////
 float cfdQuatCamHandler::GetQuatCamIncrementor( void )
 {

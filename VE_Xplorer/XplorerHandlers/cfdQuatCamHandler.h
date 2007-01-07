@@ -132,10 +132,6 @@ public:
 
    double getLinearDistance( gmtl::Vec3f, gmtl::Vec3f );
 
-   void FindMasterNode( void );
-
-   int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks);
-
    int getNumLocs();
 
    std::vector< std::vector <int> > getFlyThroughs();
@@ -144,8 +140,6 @@ public:
 
    // If a quat is active this will move the cam to the next location
    void PreFrameUpdate();
-
-   void SetQuatCamIncrementor( float );
 
    float GetQuatCamIncrementor( void );
 
