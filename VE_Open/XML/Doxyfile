@@ -17,13 +17,13 @@
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = VE-Open
+PROJECT_NAME           = VEML
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. 
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = 1.0.1
+PROJECT_NUMBER         = 1.0.3
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -450,13 +450,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-#INPUT                  = ./ ./CAD ./Model ./Shader
-INPUT = ./VE_Xplorer/GE ./VE_Xplorer/DefaultGraphicalPlugin 
-INPUT += ./VE_Xplorer/GraphicalPlugin ./VE_Xplorer/SceneGraph ./VE_Xplorer/TextureBased 
-INPUT += ./VE_Xplorer/VoiceCommand ./VE_Xplorer/Utilities ./VE_Xplorer/XplorerNetwork 
-INPUT += ./VE_Xplorer/XplorerHandlers ./VE_Open/XML ./VE_Open/XML/CAD 
-INPUT += ./VE_Open/XML/Model ./VE_Open/XML/Shader ./VE_Conductor/Framework 
-INPUT += ./VE_Conductor/Network ./VE_Conductor/GUIPlugin
+INPUT                  = ./ ./CAD ./Model ./Shader
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
