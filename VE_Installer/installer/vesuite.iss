@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.0.2"
-#define MyAppVerName "VE_Suite.1.0.2"
+#define MyAppName "VE_Suite.1.0.3"
+#define MyAppVerName "VE_Suite.1.0.3"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
