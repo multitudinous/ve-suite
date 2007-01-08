@@ -194,6 +194,8 @@ public:
    CADNodePropertiesDlg* _propsDlg;///<The Property dialog.
 
    VE_CAD::CADNode* _activeCADNode;///<The active CADNode.
+   
+   bool _cloneFromSameFile;///<Flag for parent checking when cloning.
    VE_CAD::CADNode* _rootNode;///<The active CADNode.
    VE_Conductor::GUI_Utilities::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.
    std::map<wxString,VE_CAD::CADNode*> _loadedCAD;///<The list of CAD/VEG files already loaded.

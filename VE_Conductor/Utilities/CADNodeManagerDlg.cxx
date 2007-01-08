@@ -60,10 +60,7 @@ using namespace VE_XML;
 BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_TREE_END_LABEL_EDIT(TREE_ID,CADNodeManagerDlg::_editLabel)
    EVT_TREE_SEL_CHANGED(TREE_ID,CADNodeManagerDlg::_setActiveNode)
-   //EVT_TREE_ITEM_MENU(TREE_ID,CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
    EVT_TREE_ITEM_RIGHT_CLICK(TREE_ID, CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
-   //EVT_RIGHT_DOWN( CADNodeManagerDlg::_popupCADNodeManipulatorMenu )
-   //EVT_CONTEXT_MENU(CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
    EVT_BUTTON(GEOM_SAVE,CADNodeManagerDlg::_saveCADFile)
    
    EVT_MENU(CADNodeMenu::GEOM_PROPERTIES,CADNodeManagerDlg::_showPropertiesDialog)
@@ -93,6 +90,7 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
    _saveButton = 0;
 
    _commandName = std::string("CAD");
+   _cloneFromSameFile = false;
    SetRootCADNode(node);
    _buildDialog();
 }
@@ -249,13 +247,12 @@ void CADNodeManagerDlg::_setActiveNode(wxTreeEvent& event)
 }
 /////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
-//void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxMouseEvent& event)
-//void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxContextMenuEvent& event)
 {
-   wxTreeItemId item = _geometryTree->GetSelection();
+   wxTreeItemId item = event.GetItem();
    CADTreeBuilder::TreeNodeData* cadNode = 0;
    if(item.IsOk())
    {
+      _geometryTree->SelectItem(item);
       cadNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData( item ));
 
       CADNodeMenu* cadNodeMenu = new CADNodeMenu();
@@ -389,14 +386,20 @@ void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
 /////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 {
-   if(_activeCADNode /*&&  (_activeTreeNode->GetId() != _geometryTree->GetRootItem())*/)
+   if(_activeCADNode)
    {
-      CADClone* newClone = new CADClone(_activeCADNode->GetNodeName()+std::string("_cloned"),_activeCADNode);
+      CADClone* newClone = new CADClone(_activeCADNode->GetNodeName()+std::string("_cloned"),
+                                        _activeCADNode);
 
       wxTreeItemId parentID;
       if(_activeTreeNode->GetId() == _geometryTree->GetRootItem())
       {
          parentID = _geometryTree->GetRootItem();
+      }
+      else if(_cloneFromSameFile)
+      {
+         //need to set the parent from as the current active node
+         parentID = _activeTreeNode->GetId();
       }
       else
       {
@@ -405,37 +408,19 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
       CADTreeBuilder::TreeNodeData* parentCADNode = 
          dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(parentID));
 
-      dynamic_cast<CADAssembly*>(parentCADNode->GetNode())->AddChild(newClone);
+     dynamic_cast<CADAssembly*>(parentCADNode->GetNode())->AddChild(newClone);
 
      if(newClone->GetOriginalNode()->GetNodeType() == std::string("Assembly"))
      {
-        if(parentID != _geometryTree->GetRootItem())
-        {
-           _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
+        _geometryTree->AppendItem(parentID,
                                wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
                                ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
-        }
-        else
-        {
-           _geometryTree->AppendItem(_geometryTree->GetRootItem(),
-                               wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
-                               ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
-        }
      }
      else if(newClone->GetOriginalNode()->GetNodeType() == std::string("Part"))
      {
-        if(parentID != _geometryTree->GetRootItem())
-        {
-           _geometryTree->AppendItem(_geometryTree->GetItemParent(_activeTreeNode->GetId()),
+        _geometryTree->AppendItem(parentID,
                                wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
                                ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
-        }
-        else
-        {
-           _geometryTree->AppendItem(_geometryTree->GetRootItem(),
-                               wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
-                               ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
-        }
      }
 
       _commandName = std::string("CAD_ADD_NODE");
@@ -491,10 +476,17 @@ bool CADNodeManagerDlg::_ensureClones(wxString filename)
       //Just need to set the node we are going to clone
       //and call the cloneNode event
       VE_CAD::CADNode* originalActiveNode = _activeCADNode;
+      ///need to keep track of the parent node
+      if(originalActiveNode->GetNodeType() == "Assembly")
+      {
+         _cloneFromSameFile = true;
+      }
       _activeCADNode = loadedFile->second;
       wxCommandEvent emptyEvent;
       _cloneNode(emptyEvent);
+      //reset our temp pointers
       _activeCADNode = originalActiveNode;
+      _cloneFromSameFile = false;
       return true;
    }
    return false;
