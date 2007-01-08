@@ -105,7 +105,12 @@ enum
    v21ID_SWEET,
    v21ID_CO_DISPOSAL,
    MYLOG,
+
    v21ID_HELP,
+   v21ID_ABOUT,
+   v21ID_REVISION,
+   v21ID_CONTACTS,
+   v21ID_PLATFORM,
 
    XPLORER_DEVICES,
    NAVIGATION_MODE,
@@ -299,7 +304,13 @@ protected:
    void ResumeCalc(wxCommandEvent &event);	
    
    void ViewResult(wxCommandEvent &event);
+
    void ViewHelp(wxCommandEvent &event);
+   void ViewAbout(wxCommandEvent &event);
+   void ViewRevision(wxCommandEvent &event);
+   void ViewContacts(wxCommandEvent &event);
+   void ViewPlatformInfo(wxCommandEvent &event);
+
    void GlobalParam(wxCommandEvent &event);
 
    void DisConExeServer(wxCommandEvent &event);

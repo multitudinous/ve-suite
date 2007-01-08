@@ -155,7 +155,13 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU(v21ID_STOP_CALC, AppFrame::StopCalc)
    EVT_MENU(v21ID_PAUSE_CALC, AppFrame::PauseCalc)
    EVT_MENU(v21ID_RESUME_CALC, AppFrame::ResumeCalc)
+
    EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
+   EVT_MENU(v21ID_ABOUT, AppFrame::ViewAbout)
+   EVT_MENU(v21ID_REVISION, AppFrame::ViewRevision)
+   EVT_MENU(v21ID_CONTACTS, AppFrame::ViewContacts)
+   EVT_MENU(v21ID_PLATFORM, AppFrame::ViewPlatformInfo)
+
    EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 
    EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
@@ -723,7 +729,11 @@ void AppFrame::CreateMenu()
    edit_menu->Enable(v21ID_REDO, false);
 
    //help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
-   help_menu->Append (v21ID_HELP, _("&Index"));
+   //help_menu->Append (v21ID_HELP, _("&Index"));
+   help_menu->Append(v21ID_ABOUT, _("&About"));
+   help_menu->Append(v21ID_REVISION, _("&Revision"));
+   help_menu->Append(v21ID_CONTACTS, _("&Contacts"));
+   help_menu->Append(v21ID_PLATFORM, _("&Platform Info"));
    //help_menu->AppendSeparator();
    //help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
 
@@ -807,9 +817,10 @@ void AppFrame::CreateMenu()
    menubar->Append(edit_menu, _("&Edit"));
    menubar->Append(con_menu, _("&Connection"));
    menubar->Append(run_menu, _("&Execution"));
+   menubar->Append( xplorerMenu, _("&VE-Xplorer") );
    menubar->Append(help_menu, _("&Help"));
    //if (f_visualization)
-   menubar->Append( xplorerMenu, _("&VE-Xplorer") );
+
 
    SetMenuBar(menubar);
 }
@@ -1558,6 +1569,28 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
 {
    ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php", wxConvUTF8 ) );
+}
+//////////////////////////////////////////////////////////////////
+void AppFrame::ViewAbout(wxCommandEvent& WXUNUSED(event))
+{
+   ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org", wxConvUTF8 ) );
+}
+//////////////////////////////////////////////////////////////////
+void AppFrame::ViewRevision(wxCommandEvent& WXUNUSED(event))
+{
+   wxMessageBox( _("Current Revision: 6491"),_("Revision"), 
+                 wxOK | wxICON_INFORMATION );
+}
+//////////////////////////////////////////////////////////////////
+void AppFrame::ViewContacts(wxCommandEvent& WXUNUSED(event))
+{
+   ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php", wxConvUTF8 ) );
+}
+//////////////////////////////////////////////////////////////////
+void AppFrame::ViewPlatformInfo(wxCommandEvent& WXUNUSED(event))
+{
+   wxMessageBox( _(::wxGetOsDescription()),_("Platform Info"), 
+                 wxOK | wxICON_INFORMATION );
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::CloseVE()
