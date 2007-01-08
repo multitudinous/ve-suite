@@ -179,10 +179,10 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    SetSize( _vistabPosition );
    wxSize tempRect = GetSize();
    
-   _minSpinner->Enable(false);
-   _minSlider->Enable(false);
-   _maxSpinner->Enable(false);
-   _maxSlider->Enable(false);
+   //_minSpinner->Enable(false);
+   //_minSlider->Enable(false);
+   //_maxSpinner->Enable(false);
+   //_maxSlider->Enable(false);
    //std::cout << tempRect.GetWidth() << " " << tempRect.GetHeight() << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -845,6 +845,8 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
+   if( !_scalarSelection->IsEmpty() )
+   {
    double minBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.99;
    double maxBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.01;
    _minSpinner->SetRange( _activeScalarRange.at(0), minBoundRange );   
@@ -872,6 +874,7 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
    _maxSlider->SetValue( 100 );
 
    scalarSelect = true;
+   }
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))

@@ -45,6 +45,7 @@ Frame API
 #include "VE_Open/skel/VjObsC.h"
 #include <orbsvcs/CosNamingC.h>
 #include "VE_Conductor/GUIPlugin/UI_i.h"
+//#include "VE_Conductor/Framework/revision.h"
 
 #include <wx/frame.h>
 #include <wx/toolbar.h>
@@ -140,7 +141,8 @@ enum
    CHANGE_XPLORER_VIEW,
    CHANGE_XPLORER_VIEW_NETWORK,
    CHANGE_XPLORER_VIEW_CAD,
-   CHANGE_XPLORER_VIEW_LOGO
+   CHANGE_XPLORER_VIEW_LOGO,
+
 };
 
 class OrbThread;
@@ -205,6 +207,8 @@ public:
    wxToolBar* toolbar;
    wxIcon* icon;
   
+   //wxPlatformInfo* platform;
+
    Avail_Modules* av_modules;
    Network* network;
 
@@ -342,7 +346,11 @@ protected:
    ///Create the ve tabs
    void CreateVETab();
   
+   ///Pop up window for build info
+   void RevisionInfo( wxCommandEvent& event );
+
    wxBoxSizer *sizerTab;
+   //revision* version;
 
    std::string ConvertUnicode( const wxChar* data )
    {
