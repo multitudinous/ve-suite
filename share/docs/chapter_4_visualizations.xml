@@ -92,9 +92,13 @@
       </imageobject>
     </mediaobject>
 
+    <para>We don't need to adjust the dataset because we already adjusted the
+    geometry objects to fit it, so just close the Transform Input Window.</para>
+    
     <para>Once you are done selecting the dataset files, choose Submit Job
     from the Connection menu to display the PrISUm car. Use the navigation
-    pane to adjust the view until you get a good view of it.</para>
+    pane, the mouse, or the VE-Xplorer->View->Frame All command to adjust
+    the camera until you get a good view of it.</para>
 
     <mediaobject>
       <imageobject>
@@ -254,9 +258,8 @@
       </imageobject>
     </mediaobject>
 
-    <para>The texture-based data will replace the scalar contour and you will
-    get the Texture-Based Tools window. Select the Scalars icon to bring up
-    the Scalar Tools window.</para>
+    <para>You will get the Texture-Based Tools window. Select the Scalars icon
+    to bring up the Scalar Tools window.</para>
 
     <mediaobject>
       <imageobject>
