@@ -75,14 +75,6 @@ cfdVTKFileHandler::cfdVTKFileHandler(const cfdVTKFileHandler& fh)
    _outFileType = fh._outFileType;
    _outFileMode = fh._outFileMode;
 
-   //_inFileName = new char[strlen(fh._inFileName)+1];
-   //_outFileName = new char[strlen(fh._outFileName)+1];
-
-   //strcpy(_inFileName,fh._inFileName);
-   //strcpy(_outFileName,fh._outFileName);
-   std::string _inFileName;
-   std::string _outFileName;
-
    _inFileName.assign( fh._inFileName );
    _outFileName.assign( fh._outFileName );
 
@@ -95,21 +87,14 @@ cfdVTKFileHandler::cfdVTKFileHandler(const cfdVTKFileHandler& fh)
 ///////////////////////////////////////
 cfdVTKFileHandler::~cfdVTKFileHandler()
 {
-   if(_xmlTester){
+   if(_xmlTester)
+   {
       _xmlTester->Delete();
    }
    
-   if(_inFileName.c_str()){
-      //delete []_inFileName;
-      //_inFileName = 0;
-      _inFileName.erase();
-      
-   }
-   if(_outFileName.c_str()){
-      //delete []_outFileName;
-      //_outFileName = 0;
-      _outFileName.erase();
-   }
+   _inFileName.erase();
+   _outFileName.erase();
+   
 }
 ////////////////////////////////////////////////////////////
 void cfdVTKFileHandler::SetVTKOutFileType(OutFileType type)
@@ -127,15 +112,8 @@ void cfdVTKFileHandler::SetInputFileName(std::string inFile)
    if( inFile.empty() )
       return;
 
-   if(_inFileName.c_str()){
-      //delete [] _inFileName;
-      //_inFileName = 0;
-      _inFileName.erase();
-   }
-
-   //_inFileName = new char[strlen(inFile)+1];
-   //strcpy(_inFileName, inFile);
-   _inFileName.assign( inFile );
+   _inFileName.clear();
+   _inFileName = inFile;
 }
 //////////////////////////////////////////////////////
 void cfdVTKFileHandler::SetOutputFileName(std::string oFile)
@@ -143,36 +121,33 @@ void cfdVTKFileHandler::SetOutputFileName(std::string oFile)
    if( oFile.empty() )
       return;
 
-   if(_outFileName.c_str()){
-      //delete [] _outFileName;
-      //_outFileName = 0;
-      _outFileName.erase();
-   }
-
-   //_outFileName = new char[strlen(oFile)+1];
-   //strcpy(_outFileName, oFile);
-   _outFileName.assign( oFile );
+   _outFileName.erase();
+   _outFileName = oFile;
 }
 ////////////////////////////////////////////////////////////////////
 vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
 {
    std::cout<<"Loading: "<<vtkFileName<<std::endl;
    if ( vtkFileName.empty() )
+   {
       return 0;
-   //SetInputFileName(vtkFileName);
+   }
    _inFileName = vtkFileName;
 
-   if(!_xmlTester){
+   if(!_xmlTester)
+   {
       _xmlTester = vtkXMLFileReadTester::New();
    }
    _xmlTester->SetFileName(vtkFileName.c_str());
 
    std::cout<<"cfdVTKFileHandler::Checking file type...";
-   if(_xmlTester->TestReadFile()){
+   if(_xmlTester->TestReadFile())
+   {
       std::cout<<" XML ";
       std::cout<< _xmlTester->GetFileDataType()<<std::endl;
       //process xml file
-      if(!strcmp(_xmlTester->GetFileDataType(),"UnstructuredGrid")){
+      if(!strcmp(_xmlTester->GetFileDataType(),"UnstructuredGrid"))
+      {
          _getXMLUGrid();
       }
       else if(!strcmp(_xmlTester->GetFileDataType(),"StructuredGrid"))
@@ -445,25 +420,13 @@ void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataSet * vtkThing,
 ////////////////////////////////////////////////////////////////////////
 cfdVTKFileHandler& cfdVTKFileHandler::operator=(const cfdVTKFileHandler& fh)
 {
-   if(this != &fh){
+   if(this != &fh)
+   {
       _outFileType = fh._outFileType;
       _outFileMode = fh._outFileMode;
 
-      if(_inFileName.c_str()){
-         //delete [] _inFileName;
-	      // _inFileName = 0;
-         _inFileName.erase();
-      }
-      if(_outFileName.c_str()){
-         //delete [] _outFileName;
-	      // _outFileName = 0;
-         _outFileName.erase();
-      }
-      //_inFileName = new char[strlen(fh._inFileName)+1];
-      //_outFileName = new char[strlen(fh._outFileName)+1];
-
-      //strcpy(_inFileName,fh._inFileName);
-      //strcpy(_outFileName,fh._outFileName);
+      _inFileName.clear();
+      _outFileName.clear();
 
       _inFileName.assign( fh._inFileName );
       _outFileName.assign( fh._outFileName );
