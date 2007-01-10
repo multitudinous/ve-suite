@@ -145,8 +145,11 @@ void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldD
 
 void cfdQuatCamHandler::WriteToFile(std::string fileName)
 {
-   if ( onMasterNode )
+   if ( !onMasterNode )
    {
+	   return;
+   }
+
       boost::filesystem::path dir_path( quatCamDirName );
       try
       {
@@ -213,12 +216,9 @@ void cfdQuatCamHandler::WriteToFile(std::string fileName)
          inFile.close();
       }
       else 
-         std::cout<<"Could Not Open QuatCam File"<<std::endl;
-   }
-   else
-   {
-      
-   }
+	  {
+		  std::cout<<"Could Not Open QuatCam File"<<std::endl;
+	  }
 }
 
 void cfdQuatCamHandler::LoadFromFile( std::string fileName)
@@ -419,6 +419,11 @@ void cfdQuatCamHandler::AddNewFlythrough( void )
 
 bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
+   if ( !onMasterNode )
+   {
+      return true;
+   }
+
    bool flag = false;
    std::string commandType;
    if ( command )

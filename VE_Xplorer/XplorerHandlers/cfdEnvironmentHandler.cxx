@@ -486,8 +486,8 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
 
-   std::cout<<this->GetDisplayCoordSys()<<std::endl;
-   std::cout<<this->GetDisplayFrameRate()<<std::endl<<std::endl;
+   //std::cout<<this->GetDisplayCoordSys()<<std::endl;
+   //std::cout<<this->GetDisplayFrameRate()<<std::endl<<std::endl;
 
    if ( this->GetDisplayFrameRate() == true )
    {
@@ -534,7 +534,7 @@ void cfdEnvironmentHandler::PostFrameUpdate()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::CreateObjects( void )
+/*void cfdEnvironmentHandler::CreateObjects( void )
 {  
    int numObjects;
    char text[ 256 ];
@@ -557,13 +557,6 @@ void cfdEnvironmentHandler::CreateObjects( void )
          _readParam->read_pf_DCS_parameters( input, 
                         this->worldScale, this->worldTrans, this->worldRot );
       }
-      /*else if ( id == 11 )
-      {
-         vprDEBUG(vesDBG,0) << " World DCS parameters:"
-                          << std::endl << vprDEBUG_FLUSH;
-         _readParam->read_pf_DCS_parameters( input, 
-                        this->worldScale, this->worldTrans, this->worldRot );
-      }*/
       else
       {
          // Skip past block
@@ -571,3 +564,4 @@ void cfdEnvironmentHandler::CreateObjects( void )
       }
    }
 }
+*/
