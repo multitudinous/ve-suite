@@ -40,7 +40,7 @@
   CADTreeBuilder API
   */
 /*!\class VE_Conductor::GUI_Utilities::CADTreeBuilder
- * Class for creating wxTreeCtrl and wxTreeItem from VE_CAD::CADNode.
+ * Class for creating wxTreeCtrl and wxTreeItem from VE_XML::VE_CAD::CADNode.
  */
 #include <wx/treectrl.h>
 #include <wx/window.h>
@@ -56,7 +56,7 @@ namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public VE_CAD::CADNodeTraverser
+   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public VE_XML::VE_CAD::CADNodeTraverser
    {
       public:
         
@@ -64,7 +64,7 @@ namespace GUI_Utilities
          ///\param cadNode The root CADNode.
          ///\param parent The parent wxWindow
          ///\param id The ID for the tree control.
-         CADTreeBuilder(VE_CAD::CADNode* cadNode,wxWindowID id,wxWindow* parent);
+         CADTreeBuilder(VE_XML::VE_CAD::CADNode* cadNode,wxWindowID id,wxWindow* parent);
          
          ///Copy Constructor
          //CADTreeBuilder(const CADTreeBuilder& cfdNT);
@@ -84,7 +84,7 @@ namespace GUI_Utilities
             ///\param cadNodeTraverser The CADTreeBuilder that is doing the traversing.
             ///\param node The CADNode that is currently being encountered.
             ///\param currentParent The CADNode that is the parent of the node being encountered.
-	         void Apply(CADNodeTraverser* sceneGraphBuilder,VE_CAD::CADNode* node,void* currentParent=0);
+	         void Apply(CADNodeTraverser* sceneGraphBuilder,VE_XML::VE_CAD::CADNode* node,void* currentParent=0);
          protected:
       };
 
@@ -101,11 +101,11 @@ namespace GUI_Utilities
             ///\param cadNodeTraverser The CADTreeBuilder that is doing the traversing.
             ///\param node The CADNode that is currently being encountered.
             ///\param currentParent The CADNode that is the parent of the node being encountered.
-	         void Apply(CADNodeTraverser* sceneGraphBuilder,VE_CAD::CADNode* node,void* currentParent=0);
+	         void Apply(CADNodeTraverser* sceneGraphBuilder,VE_XML::VE_CAD::CADNode* node,void* currentParent=0);
          protected:
       };
 
-      /*!\class VE_CAD::CADTreeBuilder::TreeNodeData
+      /*!\class VE_XML::VE_CAD::CADTreeBuilder::TreeNodeData
        * Class to pair the CADNode with and item in the tree.
        */
       class VE_CONDUCTOR_UTILS_EXPORTS TreeNodeData : public wxTreeItemData
@@ -113,15 +113,15 @@ namespace GUI_Utilities
       public:
          ///Constructor
          ///\param node The holder of the node data.
-         TreeNodeData(VE_CAD::CADNode* node);
+         TreeNodeData(VE_XML::VE_CAD::CADNode* node);
 
          ///Destructor
          virtual ~TreeNodeData();
             
          ///Get the CADNode.
-         VE_CAD::CADNode* GetNode(){return _cadNode;}
+         VE_XML::VE_CAD::CADNode* GetNode(){return _cadNode;}
       protected:
-         VE_CAD::CADNode* _cadNode;///<The pointer to the CADNode this tree item represents.
+         VE_XML::VE_CAD::CADNode* _cadNode;///<The pointer to the CADNode this tree item represents.
       };
 
       ///\param Pop the current parent.
@@ -139,7 +139,7 @@ namespace GUI_Utilities
       
       ///Search the tree for a CADNode.
       ///\param name The name to search for.
-      VE_CAD::CADNode* GetCADNode(std::string name);
+      VE_XML::VE_CAD::CADNode* GetCADNode(std::string name);
       
        ///Get the created root node.
       wxTreeCtrl* GetWXTreeCtrl();
@@ -152,7 +152,7 @@ namespace GUI_Utilities
    protected:
       ///Create the image list.
       void _createImageList();
-      std::vector<VE_CAD::CADNode*> _nodeList;///<List of all the nodes in our tree.
+      std::vector<VE_XML::VE_CAD::CADNode*> _nodeList;///<List of all the nodes in our tree.
       CADTreeBuilder::TreeGraphPreCallback* _treeCtrlCreator;///<The pre traverse callback that creates a wxTreeCtrl.
       CADTreeBuilder::TreeGraphPostCallback* _parentPopper;///<Pops the parent stack.
       wxWindow* _parentWindow;

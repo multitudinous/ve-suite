@@ -77,7 +77,7 @@ void MaterialModeUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObje
       VE_XML::DataValuePair* material = componentUpdate->GetDataValuePair("Material");
       VE_XML::DataValuePair* updateMode = componentUpdate->GetDataValuePair("Mode");
       
-      VE_CAD::CADMaterial* rawMaterial = dynamic_cast<VE_CAD::CADMaterial*>(material->GetDataXMLObject());
+      VE_XML::VE_CAD::CADMaterial* rawMaterial = dynamic_cast<VE_XML::VE_CAD::CADMaterial*>(material->GetDataXMLObject());
       std::string newMode = updateMode->GetDataString();
       std::string value = "";
     

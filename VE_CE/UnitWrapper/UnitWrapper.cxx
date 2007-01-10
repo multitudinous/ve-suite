@@ -31,7 +31,7 @@ UnitWrapper::UnitWrapper (Body::Executive_ptr exec, std::string name)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_XML::VE_Shader::ShaderCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_XML::VE_Model::ModelCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_XML::VE_CAD::CADCreator() );
 
    eventHandlerMap[ "Set XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
    //eventHandlerMap[ "Get XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();

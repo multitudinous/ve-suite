@@ -43,7 +43,7 @@
  * CADMaterial API
  */
 
-/*! \class VE_CAD::CADMaterial
+/*! \class VE_XML::VE_CAD::CADMaterial
  * Class to represent a basic material.
  */
 XERCES_CPP_NAMESPACE_USE
@@ -52,6 +52,8 @@ namespace VE_XML
    class FloatArray;
 }
 #include <vector>
+namespace VE_XML
+{
 namespace VE_CAD
 {
 class VE_CAD_EXPORTS CADMaterial: public VE_XML::XMLObject
@@ -184,5 +186,6 @@ protected:
    std::string _face;///< Face that this material is applied to.
    double _opacity;///<Opacity value
 };
+}
 }
 #endif //CAD_MATERIAL_H

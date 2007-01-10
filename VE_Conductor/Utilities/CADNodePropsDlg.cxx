@@ -73,7 +73,7 @@
 
 #include "VE_Open/XML/Shader/Program.h"
 
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_XML::VE_Shader;
 using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
@@ -714,10 +714,10 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
          std::stringstream nMaterials;
          nMaterials<<_nMaterials;
 
-         VE_CAD::CADAttribute newAttribute;
+         VE_XML::VE_CAD::CADAttribute newAttribute;
          newAttribute.SetAttributeType("Material");
          
-         VE_CAD::CADMaterial newMaterial;
+         VE_XML::VE_CAD::CADMaterial newMaterial;
          
          wxTextEntryDialog materialNameDlg(this, 
                                        _("New Material Name"),
@@ -763,7 +763,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
          {
             {
                {
-                  VE_CAD::CADAttribute newAttribute;// = new CADAttribute();
+                  VE_XML::VE_CAD::CADAttribute newAttribute;// = new CADAttribute();
                   newAttribute.SetAttributeType("Program");
                   
                   wxFileName veaFileName( dialog.GetPath() );

@@ -33,7 +33,7 @@
 
 #include "VE_Conductor/Utilities/CADNodeMenu.h"
 #include "VE_Open/XML/CAD/CADNode.h"
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_Conductor::GUI_Utilities;
 XERCES_CPP_NAMESPACE_USE
 /////////////////////////////////////////

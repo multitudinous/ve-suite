@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 using namespace VE_SceneGraph::Utilities;
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_XML::VE_Shader;
 
 #ifdef _PERFORMER
@@ -216,7 +216,7 @@ void Attribute::CreateTransparencyStateSet()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////
-void Attribute::CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute)
+void Attribute::CreateStateSetFromAttribute(VE_XML::VE_CAD::CADAttribute* attribute)
 {
    std::string attributeType = attribute->GetAttributeType();
    bool blending = attribute->NeedsBlending();

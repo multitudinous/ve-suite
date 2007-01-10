@@ -43,7 +43,7 @@
 
 using namespace VE_SceneGraph::Utilities;
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ void CADAddAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
       VE_XML::DataValuePair* newAttribute = command->GetDataValuePair("Attribute");
-      VE_CAD::CADAttribute* rawAttribute = dynamic_cast<VE_CAD::CADAttribute*>(newAttribute->GetDataXMLObject());
+      VE_XML::VE_CAD::CADAttribute* rawAttribute = dynamic_cast<VE_XML::VE_CAD::CADAttribute*>(newAttribute->GetDataXMLObject());
 
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"Node:"<<nodeID->GetDataString()<<std::endl;

@@ -395,7 +395,7 @@ void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::Model* tempModel )
    xmlModel = tempModel;
 
    //Decompose model to be utilized by the event handlers
-   VE_CAD::CADAssembly* cadNodeData = dynamic_cast< VE_CAD::CADAssembly* >( xmlModel->GetGeometry() );
+   VE_XML::VE_CAD::CADAssembly* cadNodeData = dynamic_cast< VE_XML::VE_CAD::CADAssembly* >( xmlModel->GetGeometry() );
    if ( cadNodeData )
    {
       VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();

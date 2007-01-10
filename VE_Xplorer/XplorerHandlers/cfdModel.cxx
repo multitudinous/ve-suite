@@ -831,12 +831,12 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
 }
 //Dynamic Loading Data End Here
 ////////////////////////////////////////////////////
-void cfdModel::SetRootCADNode(VE_CAD::CADNode* node)
+void cfdModel::SetRootCADNode(VE_XML::VE_CAD::CADNode* node)
 {
    _rootCADNode = node;
 }
 ///////////////////////////////////////////
-VE_CAD::CADNode* cfdModel::GetRootCADNode()
+VE_XML::VE_CAD::CADNode* cfdModel::GetRootCADNode()
 {
    return _rootCADNode;
 }
@@ -1013,7 +1013,7 @@ void cfdModel::RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
 }
 //////////////////////////////////////////////
 void cfdModel::AddAttributeToNode(std::string nodeID,
-                              VE_CAD::CADAttribute* newAttribute)
+                              VE_XML::VE_CAD::CADAttribute* newAttribute)
 {
 #ifdef _OSG
    vprDEBUG(vesDBG,1) <<"|\tcfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;

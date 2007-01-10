@@ -51,14 +51,15 @@
 #elif _OPENSG
 #endif
 #include "VE_Installer/include/VEConfig.h"
-namespace VE_CAD
-{
-   class CADAttribute;
-}
+
 namespace VE_XML{
 namespace VE_Shader
 {
    class Uniform;
+}
+namespace VE_CAD
+{
+   class CADAttribute;
 }
 }
 
@@ -98,7 +99,7 @@ public:
 
    ///Create a StateSet from a CADAttribute.
    ///\param attribute The CADAttribute.
-   void CreateStateSetFromAttribute(VE_CAD::CADAttribute* attribute);
+   void CreateStateSetFromAttribute(VE_XML::VE_CAD::CADAttribute* attribute);
 
    ///Sets this stateset to be the transparency shader.
    void CreateTransparencyStateSet();

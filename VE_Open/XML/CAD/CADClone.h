@@ -40,18 +40,21 @@
 /*!\file CADClone.h
   CADNode API
   */
-/*!\class VE_CAD::CADClone
+/*!\class VE_XML::VE_CAD::CADClone
  * This class is the base class for representing
  * the hierarchy of a CAD structure.
  */
 XERCES_CPP_NAMESPACE_USE
-namespace VE_CAD{
-class VE_CAD_EXPORTS CADClone:public VE_CAD::CADNode{
+namespace VE_XML
+{
+namespace VE_CAD
+{
+class VE_CAD_EXPORTS CADClone:public VE_XML::VE_CAD::CADNode{
 public:
    ///Constructor
    ///\param name The name of this node.
    ///\param originalNode The node we are going to clone.
-   CADClone(std::string name=std::string("Clone"),VE_CAD::CADNode* originalNode=0);
+   CADClone(std::string name=std::string("Clone"),VE_XML::VE_CAD::CADNode* originalNode=0);
    virtual ~CADClone();
 
    ///Set the object from XML data
@@ -63,7 +66,7 @@ public:
    void SetOriginalNode(CADNode* originalNode);
 
    ///Get the original node.
-   VE_CAD::CADNode* GetOriginalNode();
+   VE_XML::VE_CAD::CADNode* GetOriginalNode();
  
    ///Copy constructor
    CADClone(const CADClone& rhs);
@@ -76,7 +79,8 @@ protected:
    ///Internally update the XML data for this node;
    ///\param input The new XML data for this element;
    virtual void _updateVEElement(std::string input);
-   VE_CAD::CADNode* _originalNode;///< The node that is instanced
+   VE_XML::VE_CAD::CADNode* _originalNode;///< The node that is instanced
 };
+}
 }
 #endif// _CAD_CLONE_H_

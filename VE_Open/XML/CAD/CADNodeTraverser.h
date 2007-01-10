@@ -39,17 +39,16 @@
 /*!\file CADNodeTraverser.h
   CADNodeTraverser API
   */
-/*!\class VE_CAD::CADNodeTraverser
- * Base class for traversing VE_CAD::CADNode.
+/*!\class VE_XML::VE_CAD::CADNodeTraverser
+ * Base class for traversingVE_XML::VE_CAD::CADNode.
  */
 
-namespace VE_CAD
-{
-   class CADNode;
-}
 
 #include "VE_Installer/include/VEConfig.h"
+namespace VE_XML
+{
 namespace VE_CAD{
+   class CADNode;
    class VE_CAD_EXPORTS CADNodeTraverser
    {
       public:
@@ -76,7 +75,7 @@ namespace VE_CAD{
             ///\param cadNodeTraverser The CADNodeTraverser that is doing the traversing.
             ///\param node The CADNode that is currently being encountered.
             ///\param currentParent The CADNode that is the parent of the node being encountered.
-	    virtual void Apply(CADNodeTraverser* cadNodeTraverser,CADNode* node,void* currentParent=0)=0;
+            virtual void Apply(CADNodeTraverser* cadNodeTraverser,CADNode* node,void* currentParent=0)=0;
          protected:
       };
       ///TraversalStatus The status of the traverser.
@@ -121,5 +120,6 @@ namespace VE_CAD{
       CADNodeTraverser::CADNodeTraverseCallback* _preFunc;///<The pre traverse callback.
       CADNodeTraverser::CADNodeTraverseCallback* _postFunc;///<The post node traverse callback.
    };
+}
 }
 #endif// _CFD_NODE_TRAVERSER_H_

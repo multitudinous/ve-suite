@@ -34,12 +34,12 @@
 #include "VE_Open/XML/CAD/CADPart.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                              //
 /////////////////////////////////////////////////////////////////////////////////////////////
-CADClone::CADClone(std::string name,VE_CAD::CADNode* originalNode)
-:VE_CAD::CADNode(name)
+CADClone::CADClone(std::string name,CADNode* originalNode)
+:VE_XML::VE_CAD::CADNode(name)
 {
    _originalNode = 0;
    
@@ -82,7 +82,7 @@ void CADClone::_updateVEElement(std::string input)
 {
    
    //Get the base elements from CADNode
-   VE_CAD::CADNode::_updateVEElement(input);
+   VE_XML::VE_CAD::CADNode::_updateVEElement(input);
    
    //add the extra stuff
    _originalNode->SetOwnerDocument(_rootDocument);
@@ -90,7 +90,7 @@ void CADClone::_updateVEElement(std::string input)
 
 }
 ///////////////////////////////////////////
-VE_CAD::CADNode* CADClone::GetOriginalNode()
+VE_XML::VE_CAD::CADNode* CADClone::GetOriginalNode()
 {
    return _originalNode;
 }
@@ -108,7 +108,7 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
    if(currentElement)
    {
       //populate the base elements in node
-      VE_CAD::CADNode::SetObjectFromXMLData(xmlNode);
+      VE_XML::VE_CAD::CADNode::SetObjectFromXMLData(xmlNode);
 
       //break down the element
       {
@@ -124,11 +124,11 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
             if(ExtractFromSimpleElement< std::string >(nodeType) == std::string("Assembly"))
             {
                //this is an Assembly
-               _originalNode = new VE_CAD::CADAssembly();
+               _originalNode = new VE_XML::VE_CAD::CADAssembly();
                
             }else if(ExtractFromSimpleElement< std::string >(nodeType) == std::string("Part")){
                //this is a Part
-               _originalNode = new VE_CAD::CADPart();
+               _originalNode = new VE_XML::VE_CAD::CADPart();
             }
             _originalNode->SetObjectFromXMLData(originalNode);
          }
@@ -137,7 +137,7 @@ void CADClone::SetObjectFromXMLData( DOMNode* xmlNode)
 }
 ///////////////////////////////////////
 CADClone::CADClone(const CADClone& rhs)
-:VE_CAD::CADNode(rhs)
+:VE_XML::VE_CAD::CADNode(rhs)
 {
    if(rhs._originalNode)
    {
@@ -160,7 +160,7 @@ CADClone& CADClone::operator=(const CADClone& rhs)
 {
    if ( this != &rhs )
    {
-      VE_CAD::CADNode::operator =(rhs);
+      VE_XML::VE_CAD::CADNode::operator =(rhs);
       if(rhs._originalNode)
       {
          if(rhs._originalNode->GetNodeType() == std::string("Assembly"))

@@ -42,17 +42,19 @@
 /*!\file CADAttribute.h
   CADAttribute API
   */
-/*!\class VE_CAD::CADAttribute
+/*!\class VE_XML::VE_CAD::CADAttribute
  * This class holds data for describing attributes for a CADNode.
  */
 
-namespace VE_XML{
+namespace VE_XML
+{
 namespace VE_Shader
 {
    class Program;
 }
 }
-
+namespace VE_XML
+{
 namespace VE_CAD
 {
 class CADMaterial;
@@ -71,7 +73,7 @@ public:
 
    ///Set the material for this node.
    ///\param material The material of this node.
-   void SetMaterial(VE_CAD::CADMaterial material);
+   void SetMaterial(VE_XML::VE_CAD::CADMaterial material);
 
    ///Set the GLSL program for this node.
    ///\param glslProgram The GLSL program.
@@ -94,7 +96,7 @@ public:
    std::string GetAttributeType();
 
    ///Get the material of this CAD node
-   VE_CAD::CADMaterial* GetMaterial();
+   VE_XML::VE_CAD::CADMaterial* GetMaterial();
   
    ///Get the GLSL program for this node.
    VE_XML::VE_Shader::Program* GetGLSLProgram();
@@ -118,8 +120,9 @@ protected:
 
    bool _blending;///<Enable or disable blending;
 
-   VE_CAD::CADMaterial* _material; ///< Material for this node.
+   VE_XML::VE_CAD::CADMaterial* _material; ///< Material for this node.
    VE_XML::VE_Shader::Program* _glslProgram;///<The glsl program.
 };
+}
 }
 #endif// _CAD_ATTRIBUTE_H_

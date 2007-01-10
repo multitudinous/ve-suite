@@ -42,11 +42,12 @@
 /*!\file CADNodeAnimation.h
   CADNodeAnimation API
   */
-/*!\class VE_CAD::CADNodeAnimation
+/*!\class VE_XML::VE_CAD::CADNodeAnimation
  * This class holds data for describing animations for a CADNode.
  */
 
-
+namespace VE_XML
+{
 namespace VE_CAD
 {
 
@@ -125,5 +126,6 @@ protected:
    bool _hasHeader;///<Flag specifying header lines in file
    unsigned int _numberOfHeaderLines;///<The number of line in the header
 };
+}
 }
 #endif// CAD_NODE_ANIMATION_H

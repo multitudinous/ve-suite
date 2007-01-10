@@ -37,7 +37,7 @@
 /*!\file CADCreator.h
   CADCreator API
   */
-/*!\class VE_CAD::CADCreator
+/*!\class VE_XML::VE_CAD::CADCreator
  * Create CAD Objects.
  */
 
@@ -46,7 +46,8 @@ namespace VE_XML
    class XMLObject;
 }
 #include "VE_Open/XML/CreationEventHandler.h"
-
+namespace VE_XML
+{
 namespace VE_CAD{
 class VE_CAD_EXPORTS CADCreator : public VE_XML::CreationEventHandler{
 public:
@@ -66,6 +67,7 @@ public:
    virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy);
 protected:
 };
+}
 }
 #endif// CAD_CREATOR_H
 

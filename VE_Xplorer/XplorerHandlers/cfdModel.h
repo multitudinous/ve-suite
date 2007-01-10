@@ -77,10 +77,13 @@ namespace VE_EVENTS
 {
    class EventHandler;
 }
+namespace VE_XML
+{
 namespace VE_CAD
 {
    class CADNode;
    class CADAttribute;
+}
 }
 namespace VE_Xplorer
 {
@@ -172,7 +175,7 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       
       ///Set the root CADNode
       ///\param node The rootCADNode
-      void SetRootCADNode(VE_CAD::CADNode* node);
+      void SetRootCADNode(VE_XML::VE_CAD::CADNode* node);
       ///\param CAD goes transparent when dataset vis is active
       void MakeCADRootTransparent();
 
@@ -184,7 +187,7 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
       ///\param nodeType The node type.
       ///\param The CADAttribute to add to the node.
       void AddAttributeToNode(std::string nodeID,
-                           VE_CAD::CADAttribute* newAttribute);
+                           VE_XML::VE_CAD::CADAttribute* newAttribute);
 	   ///Add a new attribute to a node
       ///\param nodeID The ID of the node to add Attribute to.
       ///\param nodeType The node type.
@@ -291,7 +294,7 @@ public:
  
 
    ///The current graph
-   VE_CAD::CADNode* GetRootCADNode();
+   VE_XML::VE_CAD::CADNode* GetRootCADNode();
    
       private:
          vpr::Thread *loadDataTh;
@@ -337,7 +340,7 @@ public:
          bool mMoveOldGeomDataSets;
          bool mMoveOldVTKDataSets;   
 
-         VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
+         VE_XML::VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
    unsigned int modelID;
 #ifdef _OSG
          std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.

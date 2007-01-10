@@ -45,12 +45,13 @@ CADOpacitySliderDlg API
 #include <string>
 #include <vector>
 
-namespace VE_CAD
-{
-   class CADMaterial;
-}
+
 namespace VE_XML
 {
+   namespace VE_CAD
+   {
+      class CADMaterial;
+   }
    class DataValuePair;
 }
 #include <wx/dialog.h>
@@ -80,7 +81,7 @@ public:
    ///Constructor
    ///\param parent The parent wxWindow.
    ///\param id The unique id for this window.
-   CADOpacitySliderDlg(wxWindow* parent, int id,std::string cadID,VE_CAD::CADMaterial* material);
+   CADOpacitySliderDlg(wxWindow* parent, int id,std::string cadID,VE_XML::VE_CAD::CADMaterial* material);
 
    ///Destructor 
    virtual ~CADOpacitySliderDlg();
@@ -108,7 +109,7 @@ protected:
    std::string _cadID;///<The id of the CADNode the material belongs to.
    std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
    std::string _commandName;///<The command name.
-   VE_CAD::CADMaterial* _material;///<The CADMaterial we are updating.
+   VE_XML::VE_CAD::CADMaterial* _material;///<The CADMaterial we are updating.
 
    ///Send CAD commands back to VE-Xplorer
    void _sendCommandsToXplorer();

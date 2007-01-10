@@ -53,9 +53,12 @@ namespace osg
 }
 #elif _PERFORMER
 #endif
+namespace VE_XML
+{
 namespace VE_CAD
 {
    class CADMaterial;
+}
 }
 #include <string>
 ///////////////////////////////////////////////////////////////////////
@@ -73,7 +76,7 @@ public:
    virtual ~MaterialHelper();
 
    ///Load and create the stateset from the input XML data
-   void LoadMaterial(VE_CAD::CADMaterial* material);
+   void LoadMaterial(VE_XML::VE_CAD::CADMaterial* material);
 #ifdef _OSG
    ///The state set that we want to load the material into
    ///\param materialThe state set representing the material.

@@ -44,7 +44,7 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 
 #include <ctime>
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_XML::VE_Shader;
 using namespace VE_XML;
 
@@ -126,7 +126,7 @@ void CADNode::SetTransform(VE_XML::Transform* transform)
    _transform = new VE_XML::Transform(*transform);
 }
 ///////////////////////////////////////////////////////////
-void CADNode::AddAttribute(VE_CAD::CADAttribute attribute)
+void CADNode::AddAttribute(VE_XML::VE_CAD::CADAttribute attribute)
 {
    _attributeList.push_back(attribute);
 }
@@ -175,7 +175,7 @@ VE_XML::Transform* CADNode::GetTransform()
    return _transform;
 }
 ///////////////////////////////////////////////////////////////
-VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
+VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
 {
    try
    {
@@ -191,7 +191,7 @@ VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
    return _attributeList.at(0);;
 }
 ////////////////////////////////////////////////////////////
-VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
+VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
 {
    size_t nAttributes = _attributeList.size();
    for(size_t i = 0; i < nAttributes; i++)
@@ -203,7 +203,7 @@ VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
    }
 }
 ///////////////////////////////////////////////////
-VE_CAD::CADAttribute& CADNode::GetActiveAttribute()
+VE_XML::VE_CAD::CADAttribute& CADNode::GetActiveAttribute()
 {
    return GetAttribute(_activeAttributeName);
 }
@@ -397,7 +397,7 @@ std::vector<CADAttribute> CADNode::GetAttributeList()
    return _attributeList;
 }
 ///////////////////////////////////////////////////////////////////
-VE_CAD::CADNodeAnimation& CADNode::GetAnimation(unsigned int index)
+VE_XML::VE_CAD::CADNodeAnimation& CADNode::GetAnimation(unsigned int index)
 {
    try
    {

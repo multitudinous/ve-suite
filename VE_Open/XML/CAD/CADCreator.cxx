@@ -39,7 +39,7 @@
 #include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/CAD/CADNodeAnimation.h"
 
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 //////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* CADCreator::CreateNewXMLObject(std::string objectType)
 {

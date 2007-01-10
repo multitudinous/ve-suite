@@ -63,11 +63,12 @@ class wxArrayString;
 namespace VE_XML
 {
    class DataValuePair;
+   namespace VE_CAD
+   {
+      class CADNode;
+   }
 }
-namespace VE_CAD
-{
-   class CADNode;
-}
+
 namespace VE_Conductor
 {
 namespace GUI_Utilities
@@ -95,7 +96,7 @@ public:
    ///\param parent The parent window.
    ///\param id The ID for the dialog.
    ///\param node The CADNode to display properties of.
-   CADNodePropertiesDlg( wxWindow* parent, int id, VE_CAD::CADNode* node);
+   CADNodePropertiesDlg( wxWindow* parent, int id, VE_XML::VE_CAD::CADNode* node);
 
    ///Destructor
    virtual ~CADNodePropertiesDlg();
@@ -264,7 +265,7 @@ protected:
    unsigned int _nShaders;///<The number of shaders.
    std::string _commandName;///<The command name.
 
-   VE_CAD::CADNode* _cadNode;///<The current CADNode.
+   VE_XML::VE_CAD::CADNode* _cadNode;///<The current CADNode.
 
    std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 

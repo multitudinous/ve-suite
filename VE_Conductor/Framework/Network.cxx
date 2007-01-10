@@ -2906,8 +2906,8 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
       {
          veModel->AddGeometry();
       }
-      *( dynamic_cast< VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
-      *( dynamic_cast< VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
+      *( dynamic_cast< VE_XML::VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
+      *( dynamic_cast< VE_XML::VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
    }
 }
 ///////////////////////////////////////////

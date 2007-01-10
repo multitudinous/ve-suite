@@ -38,7 +38,7 @@
 #include "VE_Open/XML/CAD/CADClone.h"
 #include <iostream>
 
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 ////////////////////////////////////
 //Constructors                    //
 ////////////////////////////////////
@@ -70,7 +70,7 @@ CADNodeTraverser::~CADNodeTraverser()
 /////////////////////////////////////////////////////
 //set the node to traverse                         //
 /////////////////////////////////////////////////////
-void CADNodeTraverser::SetRootNode(VE_CAD::CADNode* root)
+void CADNodeTraverser::SetRootNode(CADNode* root)
 {
    _root = root;
 }
@@ -91,7 +91,7 @@ void CADNodeTraverser::Traverse()
 ///////////////////////////////////////////////////////////////////////////////////////////
 //depth first recursion of a node/scene graph                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////
-void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,void* currentParent)
+void CADNodeTraverser::_traverseNode(CADNode* cNode,void* currentParent)
 {
    int nChildren = 0;
    //the pre-callback
@@ -110,7 +110,7 @@ void CADNodeTraverser::_traverseNode(VE_CAD::CADNode* cNode,void* currentParent)
   
 
    if(cNode->GetNodeType() == std::string("Assembly")){
-      VE_CAD::CADAssembly* assembly = dynamic_cast<VE_CAD::CADAssembly*>(cNode);
+     VE_XML::VE_CAD::CADAssembly* assembly = dynamic_cast<VE_CAD::CADAssembly*>(cNode);
       if(assembly)
       {
          unsigned int nChildren = assembly->GetNumberOfChildren();

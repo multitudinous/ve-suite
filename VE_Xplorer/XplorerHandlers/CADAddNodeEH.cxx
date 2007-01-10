@@ -47,7 +47,7 @@
 #include "VE_Open/XML/CAD/CADClone.h"
 #include <iostream>
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -84,19 +84,19 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
       VE_XML::DataValuePair* cadNode = command->GetDataValuePair("New Node");
-      std::string nodeType = dynamic_cast<VE_CAD::CADNode*>(cadNode->GetDataXMLObject())->GetNodeType();
+      std::string nodeType = dynamic_cast<VE_XML::VE_CAD::CADNode*>(cadNode->GetDataXMLObject())->GetNodeType();
 
-      VE_CAD::CADNode* node = 0;
-      VE_CAD::CADAssembly* assembly = 0; 
-      VE_CAD::CADPart* part = 0;
-      VE_CAD::CADClone* clone = 0;
+      VE_XML::VE_CAD::CADNode* node = 0;
+      VE_XML::VE_CAD::CADAssembly* assembly = 0; 
+      VE_XML::VE_CAD::CADPart* part = 0;
+      VE_XML::VE_CAD::CADClone* clone = 0;
 
       VE_SceneGraph::cfdDCS* parentAssembly = 0;
 
       if(nodeType == "Assembly")
       {
          
-         assembly = dynamic_cast<VE_CAD::CADAssembly*>(cadNode->GetDataXMLObject());
+         assembly = dynamic_cast<VE_XML::VE_CAD::CADAssembly*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(assembly);
          if(_activeModel->AssemblyExists(node->GetID()))
          {
@@ -105,7 +105,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       else if(nodeType == "Part")
       {
-         part = dynamic_cast<VE_CAD::CADPart*>(cadNode->GetDataXMLObject());
+         part = dynamic_cast<VE_XML::VE_CAD::CADPart*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(part);
          if(_activeModel->PartExists(node->GetID()))
          {
@@ -114,7 +114,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       else if(nodeType == "Clone")
       {
-         clone = dynamic_cast<VE_CAD::CADClone*>(cadNode->GetDataXMLObject());
+         clone = dynamic_cast<VE_XML::VE_CAD::CADClone*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(clone);
          if(_activeModel->CloneExists(node->GetID()))
          {

@@ -38,7 +38,7 @@
  * CADPart API
  */
 
-/*!\class VE_CAD::CADPart 
+/*!\class VE_XML::VE_CAD::CADPart 
  * Class to represent a part file (the actual CAD geometry)
  */
 #include <xercesc/dom/DOM.hpp>
@@ -46,8 +46,10 @@
 #include <string>
 
 XERCES_CPP_NAMESPACE_USE
+namespace VE_XML
+{
 namespace VE_CAD{
-class VE_CAD_EXPORTS CADPart: public VE_CAD::CADNode{
+class VE_CAD_EXPORTS CADPart: public VE_XML::VE_CAD::CADNode{
 public:
    ///Constructor
    ///\param name The name of the part
@@ -84,5 +86,6 @@ protected:
    
    std::string _cadFileName; ///<The name of the CAD file on disk
 };
+}
 }
 #endif// _CAD_PART_H_

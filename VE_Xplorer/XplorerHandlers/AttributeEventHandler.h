@@ -43,11 +43,12 @@
 namespace VE_XML
 {
    class XMLObject;
+   namespace VE_CAD
+   {
+      class CADAttribute;
+   }
 }
-namespace VE_CAD
-{
-   class CADAttribute;
-}
+
 namespace VE_Xplorer
 {
    class cfdGlobalBase;
@@ -86,7 +87,7 @@ protected:
    virtual void _operateOnNode(VE_XML::XMLObject* veXMLObject) = 0;
 
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
-   VE_CAD::CADAttribute* _activeAttribute;///<The CADNode.
+   VE_XML::VE_CAD::CADAttribute* _activeAttribute;///<The CADNode.
 };
 }
 #endif// VE_EVENT_HANDLER_H

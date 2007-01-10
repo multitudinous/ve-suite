@@ -44,7 +44,7 @@
 /*!\file CADNode.h
   CADNode API
   */
-/*!\class VE_CAD::CADNode
+/*!\class VE_XML::VE_CAD::CADNode
  * This class is the base class for representing
  * the hierarchy of a CAD structure.
  */
@@ -58,6 +58,8 @@ namespace VE_XML
    class Transform;
 }
 
+namespace VE_XML
+{
 namespace VE_CAD
 {
 class CADAssembly;
@@ -117,7 +119,7 @@ public:
    bool GetVisibility();
 
    ///Get the active attribute
-   VE_CAD::CADAttribute& GetActiveAttribute();
+  VE_XML::VE_CAD::CADAttribute& GetActiveAttribute();
 
    ///Get the node type. 
    ///Valid types currently are Node,Assembly,Part and Clone
@@ -140,19 +142,19 @@ public:
 
    ///Get an attribute of this CAD node by a name
    ///\param name The name of the attribute to find.
-   VE_CAD::CADAttribute& GetAttribute(std::string name);
+  VE_XML::VE_CAD::CADAttribute& GetAttribute(std::string name);
   
     ///Get an attribute of this CAD node by a name
    ///\param index The index of the attribute to find.
-   VE_CAD::CADAttribute& GetAttribute(unsigned int index);
+  VE_XML::VE_CAD::CADAttribute& GetAttribute(unsigned int index);
 
    ///There is probably only one of these but internally we keep a vector of them
    ///\param name The reference name of the animation to find.
-   VE_CAD::CADNodeAnimation& GetAnimation(std::string name);
+  VE_XML::VE_CAD::CADNodeAnimation& GetAnimation(std::string name);
 
    ///There is probably only one of these but internally we keep a vector of them
    ///\param index The animation file index in the list.
-   VE_CAD::CADNodeAnimation& GetAnimation(unsigned int index);
+  VE_XML::VE_CAD::CADNodeAnimation& GetAnimation(unsigned int index);
 
    ///Get the CADNodeAnimation for this CADNode.
    size_t GetNumberOfAnimations();
@@ -188,5 +190,6 @@ protected:
    std::string _type;///< The type of node;
    bool _visibility;///<Node visibilty.
 };
+}
 }
 #endif// _CAD_NODE_H_

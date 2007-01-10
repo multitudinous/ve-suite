@@ -42,16 +42,18 @@
  * CADAssembly API
  */
 
-/*! \class VE_CAD::CADAssembly
+/*! \class VE_XML::VE_CAD::CADAssembly
  * Class to represent a CAD assembly.
  * It's children can be CADAssemblies, CADParts or CADClones.
  * There isn't an actual geometry that is represented here but instead
  * this is more of an organization node.
  */
 XERCES_CPP_NAMESPACE_USE
-
-namespace VE_CAD{
-class VE_CAD_EXPORTS CADAssembly: public VE_CAD::CADNode{
+namespace VE_XML
+{
+namespace VE_CAD
+{
+class VE_CAD_EXPORTS CADAssembly: public VE_XML::VE_CAD::CADNode{
 public:
    ///Constructor
    ///\param name Name of the assembly.
@@ -60,11 +62,11 @@ public:
 
    ///Add a child to this assembly
    ///\param node The node to add to the assembly
-   //void AddChild(VE_CAD::CADNode node);
+   //void AddChild(VE_XML::VE_CAD::CADNode node);
 
    ///Add a child to this assembly
    ///\param node The node to add to the assembly
-   void AddChild(VE_CAD::CADNode* node);
+   void AddChild(VE_XML::VE_CAD::CADNode* node);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
@@ -73,7 +75,7 @@ public:
    ///\param node The pointer of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails
    ///\todo This function is NOT implemented yet and will ALWAYS return false!!!
-   bool RemoveChild(VE_CAD::CADNode node);
+   bool RemoveChild(VE_XML::VE_CAD::CADNode node);
 
    ///\param whichChildID The ID of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails 
@@ -83,11 +85,11 @@ public:
    unsigned int GetNumberOfChildren();
 
    ///Get a specified child of this assembly
-   VE_CAD::CADNode* GetChild(unsigned int whichChild);
+   VE_XML::VE_CAD::CADNode* GetChild(unsigned int whichChild);
 
    ///Get a child by a name
    ///\param name The of the child name to search for.
-   VE_CAD::CADNode* GetChild(std::string name);
+   VE_XML::VE_CAD::CADNode* GetChild(std::string name);
    
    ///Copy constructor
    CADAssembly(const CADAssembly& rhs);
@@ -106,10 +108,10 @@ protected:
   
    unsigned int _numChildren; ///<number of children in this assembly
    ///\typedef ChildList
-   /// A vector of VE_CAD::CADNode s
-   typedef std::vector<VE_CAD::CADNode*> ChildList; 
+   /// A vector of VE_XML::VE_CAD::CADNode s
+   typedef std::vector<VE_XML::VE_CAD::CADNode*> ChildList; 
    ChildList _children; ///<A list of the children
 };
 }
-
+}
 #endif// _CAD_ASSEMBLY_H_

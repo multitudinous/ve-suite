@@ -78,7 +78,7 @@ void MaterialUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
       VE_XML::DataValuePair* material = componentUpdate->GetDataValuePair("Material");
       VE_XML::DataValuePair* component = componentUpdate->GetDataValuePair("Material Component");
       
-      VE_CAD::CADMaterial* rawMaterial = dynamic_cast<VE_CAD::CADMaterial*>(material->GetDataXMLObject());
+      VE_XML::VE_CAD::CADMaterial* rawMaterial = dynamic_cast<VE_XML::VE_CAD::CADMaterial*>(material->GetDataXMLObject());
       std::string rawComponent = component->GetDataString();
       std::vector<double> values;
       if(rawComponent == "Diffuse")

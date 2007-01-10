@@ -55,7 +55,7 @@
 #include <iostream>
 
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_SceneGraph;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //

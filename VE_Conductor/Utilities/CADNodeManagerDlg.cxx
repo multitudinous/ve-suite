@@ -54,7 +54,7 @@
 #include <wx/intl.h>
 
 using namespace VE_Conductor::GUI_Utilities;
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_XML;
 
 BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
@@ -474,14 +474,14 @@ void CADNodeManagerDlg::_addNodeFromVEGFile(wxCommandEvent& WXUNUSED(event))
 ///////////////////////////////////////////////////////
 bool CADNodeManagerDlg::_ensureClones(wxString filename)
 {
-   std::map<wxString,VE_CAD::CADNode*>::iterator loadedFile;
+   std::map<wxString,VE_XML::VE_CAD::CADNode*>::iterator loadedFile;
    loadedFile = _loadedCAD.find(filename);
    if(loadedFile != _loadedCAD.end())
    {
       //Clone this node
       //Just need to set the node we are going to clone
       //and call the cloneNode event
-      VE_CAD::CADNode* originalActiveNode = _activeCADNode;
+      VE_XML::VE_CAD::CADNode* originalActiveNode = _activeCADNode;
       ///need to keep track of the parent node
       if(originalActiveNode->GetNodeType() == "Assembly")
       {

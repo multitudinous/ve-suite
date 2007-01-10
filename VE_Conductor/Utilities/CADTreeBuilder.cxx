@@ -48,7 +48,7 @@
 #include "VE_Conductor/xpm/icon5.xpm"
 
 #include <string>
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_Conductor::GUI_Utilities;
 //////////////////////////////////////////
 ///Constructor                          //

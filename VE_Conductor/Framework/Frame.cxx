@@ -99,7 +99,7 @@
 using namespace VE_Conductor::GUI_Utilities;
 using namespace VE_Conductor;
 using namespace VE_XML;
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_Shader;
 
 #ifdef WIN32
@@ -263,7 +263,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_Shader::ShaderCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_XML::VE_Model::ModelCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_CAD::CADCreator() );
+   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_XML::VE_CAD::CADCreator() );
    
    //Try and laod netweok from server if one is already present
    wxCommandEvent event;

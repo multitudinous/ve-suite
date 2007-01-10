@@ -35,7 +35,7 @@
 #include "VE_Open/XML/CAD/CADNodeAnimation.h"
 
 #include <xercesc/dom/DOM.hpp>
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_XML;
 XERCES_CPP_NAMESPACE_USE
 ////////////////////////////////////

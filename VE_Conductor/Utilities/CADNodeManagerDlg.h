@@ -77,7 +77,7 @@ public:
    ///\param node The CADNode to manage with this dialog.
    ///\param parent The parent wxWindow.
    ///\param id The unique id for this window.
-   CADNodeManagerDlg(VE_CAD::CADNode* node, wxWindow* parent, int id);
+   CADNodeManagerDlg(VE_XML::VE_CAD::CADNode* node, wxWindow* parent, int id);
                        
    ///Destructor
    virtual ~CADNodeManagerDlg();
@@ -98,10 +98,10 @@ public:
 
    ///Set the root CADNode to display.
    ///\param rootNode The root CADNode to display.
-   void SetRootCADNode(VE_CAD::CADNode* rootNode);
+   void SetRootCADNode(VE_XML::VE_CAD::CADNode* rootNode);
 
    ///Get the root CADNode
-   VE_CAD::CADNode* GetRootCADNode();
+   VE_XML::VE_CAD::CADNode* GetRootCADNode();
 //protected:
 
    ///Create the dialog
@@ -193,12 +193,12 @@ public:
 
    CADNodePropertiesDlg* _propsDlg;///<The Property dialog.
 
-   VE_CAD::CADNode* _activeCADNode;///<The active CADNode.
+   VE_XML::VE_CAD::CADNode* _activeCADNode;///<The active CADNode.
    
    bool _cloneFromSameFile;///<Flag for parent checking when cloning.
-   VE_CAD::CADNode* _rootNode;///<The active CADNode.
+   VE_XML::VE_CAD::CADNode* _rootNode;///<The active CADNode.
    VE_Conductor::GUI_Utilities::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.
-   std::map<wxString,VE_CAD::CADNode*> _loadedCAD;///<The list of CAD/VEG files already loaded.
+   std::map<wxString,VE_XML::VE_CAD::CADNode*> _loadedCAD;///<The list of CAD/VEG files already loaded.
    //wxButton* _loadButton;
    std::string ConvertUnicode( const wxChar* data )
    {

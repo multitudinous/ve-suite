@@ -62,13 +62,14 @@ namespace VE_XML
       class Port;
       class Point;
    }
+   namespace VE_CAD
+   {
+     class CADNode;
+     class CADAssembly;
+   }
+
 }
 
-namespace VE_CAD
-{
-   class CADNode;
-   class CADAssembly;
-}
 
 namespace VE_XML
 {
@@ -148,13 +149,13 @@ public:
    ///Get info packets data
    size_t GetNumberOfInformationPackets( void );
    ///Get the geometry for the model.
-   VE_CAD::CADNode* GetGeometry( void );
+  VE_XML::VE_CAD::CADNode* GetGeometry( void );
    ///Remove the i'th information packet for a model.
    ///\param i The i'th packet you are after.
    void RemoveInformationPacket( unsigned int i );
    ///Add a geometry node and return it
    /// if there is already geometry then the function will return that pointer
-   VE_CAD::CADNode* Model::AddGeometry( void );
+  VE_XML::VE_CAD::CADNode* Model::AddGeometry( void );
    ///Delete the geometry for this model
    void DeleteGeometry( void );
    ///Set the vendor name on the model
@@ -183,7 +184,7 @@ private:
    ///The parameter block holds all the data the was formerly stored in the param file
    std::vector< VE_XML::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
    ///The CADNode contains the tree structure for the geometry
-   VE_CAD::CADAssembly* geometry;///<The classes hold the geometry for the model.
+  VE_XML::VE_CAD::CADAssembly* geometry;///<The classes hold the geometry for the model.
    ///The vendor name for the model
    std::string vendorUnit;///<The string that stores the unit name that this model maps to
 };

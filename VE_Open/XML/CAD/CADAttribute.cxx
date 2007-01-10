@@ -37,7 +37,7 @@
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/Shader/Program.h"
 using namespace VE_XML::VE_Shader;
-using namespace VE_CAD;
+using namespace VE_XML::VE_CAD;
 using namespace VE_XML;
 /////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                      //
@@ -95,7 +95,7 @@ void CADAttribute::SetAttributeType(std::string attributeType)
    _attributeType = attributeType;
 }
 /////////////////////////////////////////////////////////////
-void CADAttribute::SetMaterial(VE_CAD::CADMaterial material)
+void CADAttribute::SetMaterial(VE_XML::VE_CAD::CADMaterial material)
 {
    if(_material)
    {
@@ -184,7 +184,7 @@ std::string CADAttribute::GetAttributeType()
    return _attributeType;
 }
 ////////////////////////////////////////////////
-VE_CAD::CADMaterial* CADAttribute::GetMaterial()
+VE_XML::VE_CAD::CADMaterial* CADAttribute::GetMaterial()
 {
    return _material;
 }
