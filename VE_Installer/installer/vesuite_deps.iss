@@ -197,7 +197,7 @@ Source: {#OSGHOME}\..\Producer\bin\win32\*.dll; DestDir: {app}\bin; Components: 
 ;Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 ;Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\vrJuggler2.0.1\lib; Flags: ignoreversion recursesubdirs; Components: juggler
+Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
@@ -237,10 +237,10 @@ Source: {#WXHOME}\lib\vc_dll\mswd\wx\setup.h; DestDir: {app}\include\wx\; Attrib
 Source: {#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\include\TAO_IDL; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
-Source: {#JUGGLERINSTHOME}\configFiles\*; DestDir: {app}\vrJuggler2.0.1\configFiles; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
-Source: {#JUGGLERINSTHOME}\definitions\*; DestDir: {app}\vrJuggler2.0.1\definitions; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
-Source: {#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\vrJuggler2.0.1\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
-Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\vrJuggler2.0.1\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#JUGGLERINSTHOME}\configFiles\*; DestDir: {app}\share\configFiles; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
+Source: {#JUGGLERINSTHOME}\definitions\*; DestDir: {app}\share\definitions; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
+Source: {#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
