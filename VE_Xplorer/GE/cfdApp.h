@@ -132,7 +132,7 @@ public:
 #elif _OSG
    virtual osg::Group* getScene( void );
    ///This gets called when??
-   //virtual void bufferPreDraw( void );
+   virtual void bufferPreDraw( void );
    ///This is our gl draw function
    virtual void draw();
    ///Configure the scene view on a per context basis

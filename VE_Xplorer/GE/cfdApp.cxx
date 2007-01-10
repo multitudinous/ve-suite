@@ -314,11 +314,11 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    //newSceneViewer->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
 }
 /////////////////////////////////////////////////////////////////////////////
-/*void cfdApp::bufferPreDraw()
+void cfdApp::bufferPreDraw()
 {
-   glClearColor(0.0, 0.0, 0.0, 0.0);
+   //glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}*/
+}
 #endif //_OSG
 /////////////////////////////////////////////////////////////////////////////
 void cfdApp::SetWrapper( cfdVjObsWrapper* input )
@@ -634,7 +634,7 @@ void cfdApp::contextPreDraw( void )
 ///////////////////////////////////////////////////
 void cfdApp::draw()
 {
-   glClear(GL_DEPTH_BUFFER_BIT);
+   //glClear(GL_DEPTH_BUFFER_BIT);
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    // Users have reported problems with OpenGL reporting stack underflow
    // problems when the texture attribute bit is pushed here, so we push all
@@ -687,6 +687,7 @@ void cfdApp::draw()
    //sv->setCalcNearFar(false);
    //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
+   sv->getRenderStage()->setClearMask(GL_NONE);
 
    //Get the view matrix and the frustrum form the draw manager
    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
@@ -723,8 +724,6 @@ void cfdApp::draw()
 #endif   //_WEB_INTERFACE
 
 #ifdef _SGL
-   sv->getRenderStage()->setClearMask(GL_NONE);
-
    SGLContext.Begin(SGL_FORMAT_FRAME);
    SGLContext.Begin(SGL_LEFT_FRAME);
 #endif// _SGL
