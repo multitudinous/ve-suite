@@ -730,7 +730,7 @@ void AppFrame::CreateMenu()
    edit_menu->Enable(v21ID_REDO, false);
 
    //help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
-   //help_menu->Append (v21ID_HELP, _("&Index"));
+   help_menu->Append (v21ID_HELP, _("&VE-Suite Help"));
    help_menu->Append(v21ID_ABOUT, _("&About"));
    help_menu->Append(v21ID_REVISION, _("&Revision"));
    help_menu->Append(v21ID_CONTACTS, _("&Contacts"));
@@ -1570,7 +1570,7 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 //////////////////////////////////////////////////////////////////
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
 {
-   ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php", wxConvUTF8 ) );
+   ::wxLaunchDefaultBrowser( wxString( "http://www.vrac.iastate.edu/%7Ebiv/vesuite_installs/docs/releases/1.0.3/vesuite/vesuite.html", wxConvUTF8 ) );
 }
 //////////////////////////////////////////////////////////////////
 void AppFrame::ViewAbout(wxCommandEvent& WXUNUSED(event))
