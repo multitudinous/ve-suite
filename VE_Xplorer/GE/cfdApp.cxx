@@ -139,6 +139,12 @@ cfdApp::cfdApp( int argc, char* argv[] )
 #endif
    this->argc = argc;
    this->argv = argv;
+   //Set the deafult clear color of black
+   clearColor.push_back( 0.0f );
+   clearColor.push_back( 0.0f );
+   clearColor.push_back( 0.0f );
+   clearColor.push_back( 1.0f );
+   
 }
 
 void cfdApp::InitFrameRateText()
@@ -308,11 +314,11 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    //newSceneViewer->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
 }
 /////////////////////////////////////////////////////////////////////////////
-void cfdApp::bufferPreDraw()
+/*void cfdApp::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
+}*/
 #endif //_OSG
 /////////////////////////////////////////////////////////////////////////////
 void cfdApp::SetWrapper( cfdVjObsWrapper* input )
@@ -619,11 +625,11 @@ void cfdApp::contextPreDraw( void )
       sv = (*sceneViewer);    // Get context specific scene viewer
       if(sv.valid())
       {
-         std::vector<float> clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
+         clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
          sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
-         glClearColor( clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0);
       }
    }
+   glClearColor( clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0);
 }
 ///////////////////////////////////////////////////
 void cfdApp::draw()

@@ -131,9 +131,13 @@ public:
    virtual void preSync( void );
 #elif _OSG
    virtual osg::Group* getScene( void );
-   virtual void bufferPreDraw( void );
+   ///This gets called when??
+   //virtual void bufferPreDraw( void );
+   ///This is our gl draw function
    virtual void draw();
+   ///Configure the scene view on a per context basis
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
+   ///after the preframe calls but still have a vaild context
    virtual void contextPreDraw( void );
 
    ///Initialize the text layout for framerate
@@ -205,6 +209,7 @@ public:
    void update();
 private:
    bool isCluster;
+   
    vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
    std::string filein_name;
 	double time_since_start;
@@ -226,6 +231,7 @@ private:
 	void captureWebImage();
 	double timeOfLastCapture;
 #endif 
+   std::vector<float> clearColor; //<Container for clear color
 #ifdef _OSG
    osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;
    osg::ref_ptr<osg::FrameStamp> frameStamp;

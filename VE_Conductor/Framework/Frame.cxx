@@ -1589,7 +1589,7 @@ void AppFrame::ViewContacts(wxCommandEvent& WXUNUSED(event))
 //////////////////////////////////////////////////////////////////
 void AppFrame::ViewPlatformInfo(wxCommandEvent& WXUNUSED(event))
 {
-   wxMessageBox( _(::wxGetOsDescription()),_("Platform Info"), 
+   wxMessageBox( ::wxGetOsDescription(),_("Platform Info"), 
                  wxOK | wxICON_INFORMATION );
 }
 ///////////////////////////////////////////////////////////////////
