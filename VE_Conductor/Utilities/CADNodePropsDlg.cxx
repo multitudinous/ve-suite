@@ -457,6 +457,11 @@ void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
                         _("New Animation Name"),
                         _("Enter name for new node animation:"),
                         animationFileName.GetName(),wxOK);
+
+               wxSize displaySize = ::wxGetDisplaySize();
+               wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
+               animationNameDlg.SetSize( dialogPosition );
+
                animationNameDlg.ShowModal();
             
                while(AnimationExists(animationNameDlg.GetValue().GetData()))
@@ -723,6 +728,11 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
                                        _("New Material Name"),
                                        _("Enter name for new material:"),
                                        _("Material")+wxString(nMaterials.str().c_str(),wxConvUTF8),wxOK);
+
+         wxSize displaySize = ::wxGetDisplaySize();
+         wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
+         materialNameDlg.SetSize( dialogPosition );
+
          materialNameDlg.ShowModal();
          if(AttributeExists( ConvertUnicode( materialNameDlg.GetValue().GetData() ) ) )
          {
