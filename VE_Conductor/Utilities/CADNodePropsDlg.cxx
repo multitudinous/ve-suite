@@ -127,6 +127,10 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    //_associateWithDataCheck = 0;
    _nShaders = 0;
    _nMaterials = 0;
+
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 100, 100 );
+   this->SetSize( dialogPosition );
    
    _buildGUI();
 }

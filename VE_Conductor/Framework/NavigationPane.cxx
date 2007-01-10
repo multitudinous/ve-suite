@@ -95,7 +95,7 @@ NavigationPane::NavigationPane()
    
    wxSize displaySize = ::wxGetDisplaySize();
 
-   wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+ //  wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
 
    wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
    /*wxRect dialogPosition( 2*displaySize.GetWidth()/3, bbox.GetBottomRight().y, 

@@ -1952,6 +1952,9 @@ UserPreferences* AppFrame::GetUserPreferences( void )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnPreferences( wxCommandEvent& WXUNUSED(event) )
 {
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( 100, 50, 100, 100 );
+   preferences->SetSize( dialogPosition );
    preferences->ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////

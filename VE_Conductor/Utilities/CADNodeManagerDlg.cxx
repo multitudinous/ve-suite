@@ -73,6 +73,7 @@ BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_MENU(CADNodeMenu::GEOM_TOGGLE_OFF,CADNodeManagerDlg::_toggleNode)
 END_EVENT_TABLE()
 
+using namespace VE_Conductor::GUI_Utilities;
 
 /////////////////////////////////////////////////////////////////////
 //Constructor                                                      //
@@ -88,10 +89,10 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
    
    _quitButton = 0;
    _saveButton = 0;
-
    _commandName = std::string("CAD");
    _cloneFromSameFile = false;
    SetRootCADNode(node);
+
    _buildDialog();
 }
 /////////////////////////////////////////
@@ -310,7 +311,12 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
                                        _("New Assembly Name"),
                                        _("Enter name for new assembly:"),
                                        _("Assembly"),wxOK);
+
+         wxSize displaySize = ::wxGetDisplaySize();
+         wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
+         assemblyNameDlg.SetSize( dialogPosition );
          assemblyNameDlg.ShowModal();
+
          CADAssembly* newAssembly = new CADAssembly( ConvertUnicode(assemblyNameDlg.GetValue().GetData() ) );
          newAssembly->SetParent(_activeCADNode->GetID());
          //_toggleNodeOnOff[newAssembly->GetID()] = true;
@@ -598,13 +604,17 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
    wxString vegFileNamePath( vegFileName.GetFullPath() );
    vegFileNamePath.Replace( _("\\"), _("/"), true );
    wxFileName cadFileName( vegFileNamePath.c_str());
+
    //pop a text dialog to enter the name of the new assembly
    wxTextEntryDialog partNameDlg(this, 
                         _("New Part Name"),
                         _("Enter name for new part:"),
                         cadFileName.GetName(),wxOK);
-   partNameDlg.ShowModal();
 
+   wxSize displaySize = ::wxGetDisplaySize();
+   wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
+   partNameDlg.SetSize( dialogPosition );
+   partNameDlg.ShowModal();
 
    CADPart* newCADPart = new CADPart( ConvertUnicode( partNameDlg.GetValue().GetData() ) );
    newCADPart->SetCADFileName( ConvertUnicode( vegFileNamePath.c_str() ) );
