@@ -37,7 +37,6 @@ Name: custom; Description: Custom installation; Flags: iscustom
 
 
 Name: full; Description: All pre-compiled dependencies
-;Name: vexpf; Description: VE-Xplorer-PF (Performer based)
 Name: vexosg; Description: VE-Xplorer-OSG (OpenSceneGraph based)
 Name: vecns; Description: VE-Conductor(GUI) and Name Server
 Name: custom; Description: Custom; Flags: iscustom
@@ -51,6 +50,8 @@ Name: xercesc; Description: Xerces-C++; Types: vecns vexosg  full
 Name: osg; Description: OpenSceneGraph; Types: vexosg full
 Name: juggler; Description: vrJuggler; Types: vexosg  full
 Name: apr; Description: Apache APR; Types: vexosg vecns full
+;Name: opal; Description: Open Physics Abstraction Library OPAL; Types: vexosg full
+;Name: ode; Description: Open Dynamics Engine; Types: vexosg full
 [Files]
 Source: {#APRHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#APRUTILHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
