@@ -687,7 +687,6 @@ void cfdApp::draw()
    //sv->setCalcNearFar(false);
    //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
-   sv->getRenderStage()->setClearMask(GL_NONE);
 
    //Get the view matrix and the frustrum form the draw manager
    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
@@ -724,6 +723,8 @@ void cfdApp::draw()
 #endif   //_WEB_INTERFACE
 
 #ifdef _SGL
+   sv->getRenderStage()->setClearMask(GL_NONE);
+
    SGLContext.Begin(SGL_FORMAT_FRAME);
    SGLContext.Begin(SGL_LEFT_FRAME);
 #endif// _SGL
