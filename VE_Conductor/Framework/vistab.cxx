@@ -170,6 +170,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
+
    if(_nDatasetsInActiveModel)
    {
       _setActiveDataset(0);
@@ -488,10 +489,7 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {
-//std::cout<<"SCALAR NAME : "<<_activeScalarName<<std::endl;
-
 //   InitialScalarVector();
-
    if( _activeScalarName.empty() )
    {
       wxMessageBox( _("Select a scalar"),_("Dataset Failure"), 
@@ -507,13 +505,9 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_SIZE, 
                   SYMBOL_CONTOURS_STYLE );
    }
-   //if( !_activeScalarName.empty() )
-   //if( _scalarSelection->IsSelected(-1) )
-   {
-      scalarContour->SetSize(_vistabPosition);
-      scalarContour->ShowModal();
-   }
-   //_activeScalarName.erase();
+
+   scalarContour->SetSize(_vistabPosition);
+   scalarContour->ShowModal();
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
@@ -536,7 +530,6 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 
    vectorContour->SetSize(_vistabPosition);
    vectorContour->ShowModal();
-   //_activeVectorName.erase();
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
@@ -587,13 +580,6 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 {
-   /*if( _activeScalarName.empty() )
-   {
-      wxMessageBox( "Select a scalar or vector","Dataset Failure", 
-                     wxOK | wxICON_INFORMATION );
-      return;
-   }
-   else*/ 
    if(!_tbTools)
    {
       _tbTools = new TextureBasedToolBar (this,-1);
@@ -632,7 +618,6 @@ void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
    polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
    polydata->SetActiveScalar(_activeScalarName);
    polydata->ShowModal();
-   //_activeScalarName.erase();
 }
 ///////////////////////////////////////////////////////
 void Vistab::SetActiveModel(VjObs::Model_var activeModel)
@@ -845,35 +830,42 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
-   if( !_scalarSelection->IsEmpty() )
+   if( !_activeScalarName.empty() )
    {
-   double minBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.99;
-   double maxBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.01;
-   _minSpinner->SetRange( _activeScalarRange.at(0), minBoundRange );   
-   _minSpinner->SetValue( _activeScalarRange.at(0) );
-   _maxSpinner->SetRange( maxBoundRange, _activeScalarRange.at(1) );
-   _maxSpinner->SetValue( _activeScalarRange.at(1) );
+      double minBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.99;
+      double maxBoundRange = ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 0.01;
+      _minSpinner->SetRange( _activeScalarRange.at(0), minBoundRange );   
+      _minSpinner->SetValue( _activeScalarRange.at(0) );
+      _maxSpinner->SetRange( maxBoundRange, _activeScalarRange.at(1) );
+      _maxSpinner->SetValue( _activeScalarRange.at(1) );
 
-   if( _activeScalarRange.at(1) == _activeScalarRange.at(0) )
+      if( _activeScalarRange.at(1) == _activeScalarRange.at(0) )
+      {
+         _minSpinner->Enable(false);
+         _maxSpinner->Enable(false);
+         _minSlider->Enable(false);
+         _maxSlider->Enable(false);
+      }
+      else
+      {
+         _minSpinner->Enable(true);
+         _maxSpinner->Enable(true);
+         _minSlider->Enable(true);
+         _maxSlider->Enable(true);
+      }
+   //   scalarRange->SetMinimumSliderValue( 0 );
+   //   scalarRange->SetMaximumSliderValue( 100 );
+      _minSlider->SetValue( 0 );
+      _maxSlider->SetValue( 100 );
+
+      scalarSelect = true;
+   }
+   else
    {
       _minSpinner->Enable(false);
       _maxSpinner->Enable(false);
       _minSlider->Enable(false);
       _maxSlider->Enable(false);
-   }
-   else
-   {
-      _minSpinner->Enable(true);
-      _maxSpinner->Enable(true);
-      _minSlider->Enable(true);
-      _maxSlider->Enable(true);
-   }
-//   scalarRange->SetMinimumSliderValue( 0 );
-//   scalarRange->SetMaximumSliderValue( 100 );
-   _minSlider->SetValue( 0 );
-   _maxSlider->SetValue( 100 );
-
-   scalarSelect = true;
    }
 }
 ///////////////////////////////////////////////////
