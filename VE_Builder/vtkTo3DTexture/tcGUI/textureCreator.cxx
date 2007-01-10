@@ -67,7 +67,7 @@
 
 #include <sys/types.h>
 #include <sys/timeb.h>
-#ifdef _OPENMP
+#ifdef WIN32
 #include <omp.h>
 #endif
 
@@ -105,9 +105,15 @@ VTKDataToTexture::VTKDataToTexture()
    _isSGrid = false;
    _isUGrid = false;
 
-   #ifdef _OPENMP
+   #ifdef WIN32
 	//get number of processors and set number of threads
-	numThreads = 2;//omp_get_num_procs( );
+	numThreads = omp_get_num_procs( );
+   numThreads = numThreads - 1;
+   if ( numThreads == 0 )
+   {
+      numThreads = 1;
+   }
+
 	omp_set_num_threads( numThreads );
    #else
    numThreads = 1;
@@ -683,13 +689,13 @@ void VTKDataToTexture::_createValidityTexture()
    _validPt.resize( nPixels );
    long lasttime = (long)time( NULL );
 
-#ifdef _OPENMP
+#ifdef WIN32
 #pragma omp parallel for private( i, j, k, pt, closestPt, cellId, subId, dist )
 #endif
    for( int l = 0; l < nPixels; l++)
    {
 
-#ifdef _OPENMP
+#ifdef WIN32
 	   int currentThread = omp_get_thread_num( );
 #else
       int currentThread = 0;
