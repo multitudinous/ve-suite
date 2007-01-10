@@ -38,7 +38,7 @@
 /*!\file Point.h
   2D Point API
   */
-/*!\class VE_Model::Point
+/*!\class VE_XML::VE_Model::Point
  *This class basically manages two unsigned ints for constructing points
  *on the design canvas. 
  */

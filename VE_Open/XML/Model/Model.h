@@ -39,11 +39,11 @@
   *Model API
   */
 
-/*!\class VE_Model::Model
+/*!\class VE_XML::VE_Model::Model
  *Class that manages the model info for all of VE-Suite.
  */
 
-/*!\namespace VE_Model
+/*!\namespace VE_XML::VE_Model
  * Contains nodes for creating/managing a Model data.
  */
 #include <string>

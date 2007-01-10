@@ -39,7 +39,7 @@
   *System Network API
   */
 
-/*!\class VE_Model::Network
+/*!\class VE_XML::VE_Model::Network
  *Class that manages the system network for conductor.
  */
 #include <string>

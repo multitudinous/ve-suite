@@ -37,7 +37,7 @@
 /*!\file ModelCreator.h
   ModelCreator API
   */
-/*!\class VE_Model::ModelCreator
+/*!\class VE_XML::VE_Model::ModelCreator
  * Create Model Objects.
  */
 
