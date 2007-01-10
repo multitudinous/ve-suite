@@ -634,8 +634,8 @@ void cfdApp::contextPreDraw( void )
 ///////////////////////////////////////////////////
 void cfdApp::draw()
 {
-   glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
-
+   glClear(GL_DEPTH_BUFFER_BIT);
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    // Users have reported problems with OpenGL reporting stack underflow
    // problems when the texture attribute bit is pushed here, so we push all
    // attributes *except* GL_TEXTURE_BIT.
@@ -672,7 +672,7 @@ void cfdApp::draw()
    gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
    gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
 
-   gl_manager->currentUserData()->getProjection()->getViewMatrix();
+   //gl_manager->currentUserData()->getProjection()->getViewMatrix();
   
    // compute unsigned versions of the viewport info (for passing to glViewport)
    unsigned ll_x = unsigned( vp_ox*float( w_width ) );
@@ -687,6 +687,7 @@ void cfdApp::draw()
    //sv->setCalcNearFar(false);
    //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
+   sv->getRenderStage()->setClearMask(GL_NONE);
 
    //Get the view matrix and the frustrum form the draw manager
    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
@@ -723,8 +724,6 @@ void cfdApp::draw()
 #endif   //_WEB_INTERFACE
 
 #ifdef _SGL
-   sv->getRenderStage()->setClearMask(GL_NONE);
-
    SGLContext.Begin(SGL_FORMAT_FRAME);
    SGLContext.Begin(SGL_LEFT_FRAME);
 #endif// _SGL
