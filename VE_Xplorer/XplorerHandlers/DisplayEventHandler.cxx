@@ -46,17 +46,30 @@ void DisplayEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHa
 void DisplayEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
    VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
-   VE_XML::DataValuePair* FrameRateDVP=command->GetDataValuePair("FrameRateID");
+   VE_XML::DataValuePair* DVP;
+   unsigned int value;
+   
+   if(command->GetDataValuePair("FrameRateID")){
+      DVP=command->GetDataValuePair("FrameRateID");
+      DVP->GetData(value);
 
-   unsigned int frame_rate;
-   FrameRateDVP->GetData(frame_rate);
-
-   if(FrameRateDVP){
-      if(frame_rate==0){
+      if(value==0){
          VE_Xplorer::cfdEnvironmentHandler::instance()->SetDisplayFrameRate(false);
       }
-      else if(frame_rate==1){
+      else if(value==1){
          VE_Xplorer::cfdEnvironmentHandler::instance()->SetDisplayFrameRate(true);
+      }
+   }
+
+   else if(command->GetDataValuePair("CoordSysID")){
+      DVP=command->GetDataValuePair("CoordSysID");
+      DVP->GetData(value);
+
+      if(value==0){
+         VE_Xplorer::cfdEnvironmentHandler::instance()->SetDisplayCoordSys(false);
+      }
+      else if(value==1){
+         VE_Xplorer::cfdEnvironmentHandler::instance()->SetDisplayCoordSys(true);
       }
    }
 }

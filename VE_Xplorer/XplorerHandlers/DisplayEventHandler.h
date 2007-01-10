@@ -50,4 +50,4 @@ namespace VE_EVENTS
    };
 }
 
-#endif//TRACKBALL_EVENT_HANDLER_H
+#endif//DISPLAY_EVENT_HANDLER_H

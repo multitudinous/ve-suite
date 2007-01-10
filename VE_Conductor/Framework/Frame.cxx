@@ -170,6 +170,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
    EVT_MENU( FRAME_RATE, AppFrame::DisplaySelection )
+   EVT_MENU( COORDINATE_SYSTEM, AppFrame::DisplaySelection )
 
    EVT_MENU( FRAME_ALL, AppFrame::ViewSelection )
    EVT_MENU( FRAME_SELECTION, AppFrame::ViewSelection )
@@ -752,12 +753,13 @@ void AppFrame::CreateMenu()
    wxMenu* xplorerView = new wxMenu();
 
    xplorerDeviceMenu->AppendRadioItem( NAVIGATION_MODE, _("Navigation") );
-   xplorerDeviceMenu->AppendRadioItem( SELECTION_MODE, _("Selection") );
+   xplorerDeviceMenu->AppendRadioItem( SELECTION_MODE,  _("Selection") );
    xplorerDeviceMenu->Check( NAVIGATION_MODE, true);
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
    //
-   xplorerDisplayMenu->AppendCheckItem( FRAME_RATE, _("Frame Rate") );
+   xplorerDisplayMenu->AppendCheckItem( FRAME_RATE,        _("Frame Rate") );
+   xplorerDisplayMenu->AppendCheckItem( COORDINATE_SYSTEM, _("Coord System") );
    //
    xplorerViewMenu->Append( FRAME_ALL,       _("Frame All            [f]") );
    xplorerViewMenu->Append( FRAME_SELECTION, _("Frame Selection") );
@@ -1694,6 +1696,11 @@ void AppFrame::DisplaySelection( wxCommandEvent& event )
    if(event.GetId() == FRAME_RATE){
       value=xplorerDisplayMenu->IsChecked(FRAME_RATE);
       DVP->SetData(std::string("FrameRateID"),value);
+   }
+
+   else if(event.GetId() == COORDINATE_SYSTEM){
+      value=xplorerDisplayMenu->IsChecked(COORDINATE_SYSTEM);
+      DVP->SetData(std::string("CoordSysID"),value);
    }
    
    command->SetCommandName(std::string("DISPLAY_SELECTION"));

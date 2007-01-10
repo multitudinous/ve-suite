@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_APP_H
 #define CFD_APP_H
+
 /*!\file cfdApp.h
 cfdApp API
 */
@@ -39,6 +40,7 @@ cfdApp API
 /*!\class VE_Xplorer::cfdApp
 *
 */
+
 namespace VE_SceneGraph
 {
    class cfdDCS;
@@ -53,57 +55,54 @@ namespace VE_Xplorer
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
 
-
 #ifdef _PERFORMER
-class pfGroup;
-#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
-// Declare my application class
+   class pfGroup;
+   #include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
+   // Declare my application class
 #elif _OSG
-#include <osg/Timer>
-#include <osg/Geode>
-#include <osgText/Text>
-#include <osgText/Font>
-#include <vrj/Draw/OSG/OsgApp.h>
-#include <vpr/Sync/Mutex.h>
+   #include <osg/ref_ptr>
+   #include <osg/Timer>
 
-namespace osg
-{  
-   class Group;
-   class FrameStamp;
-}
-namespace osgText
-{
-   class Text;
-}
-namespace osgUtil 
-{ 
-   class SceneView;
-   class UpdateVisitor;
-}
-#ifdef _WEB_INTERFACE
-   #include <vpr/Thread/Thread.h>
-#endif
-#ifdef VE_PATENTED
-namespace VE_TextureBased
-{
-   class cfdPBufferManager;
-   class cfdTextureBasedVizHandler;
-}
-#endif
-#endif 
+   #include <vrj/Draw/OSG/OsgApp.h>
+   #include <vpr/Sync/Mutex.h>
+
+   namespace osg
+   {  
+      class Group;
+      class FrameStamp;
+   }
+
+   namespace osgUtil 
+   { 
+      class SceneView;
+      class UpdateVisitor;
+   }
+
+   #ifdef _WEB_INTERFACE
+      #include <vpr/Thread/Thread.h>
+   #endif //_WEB_INTERFACE
+
+   #ifdef VE_PATENTED
+      namespace VE_TextureBased
+      {
+         class cfdPBufferManager;
+         class cfdTextureBasedVizHandler;
+      }
+   #endif //VE_PATENTED
+#endif //_PERFORMER _OSG
 
 #ifdef _SGL
-#include <SGLContext.h>
-#endif
+   #include <SGLContext.h>
+#endif //_SGL
 
 namespace VE_Xplorer
 {
 #ifdef _PERFORMER
 class cfdApp : public vrj::PfApp
 #elif _OSG
-class cfdApp: public vrj::OsgApp
+class cfdApp : public vrj::OsgApp
 #elif _OPENSG
-#endif
+#endif //_PERFORMER _OSG _OPENSG
 {
 public:
    cfdApp( int argc, char* argv[] );
@@ -140,24 +139,22 @@ public:
    ///after the preframe calls but still have a vaild context
    virtual void contextPreDraw( void );
 
-   ///Initialize the text layout for framerate
-   void InitFrameRateText();
-
    ///Signal to change the background color
    void ChangeBackgroundColor();
 
-#ifdef VE_PATENTED
-   virtual void contextInit( void );
-   virtual void contextClose( void );
-   VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
-   virtual void contextPostDraw();
-#endif
+   #ifdef VE_PATENTED
+      virtual void contextInit( void );
+      virtual void contextClose( void );
+      VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
+      virtual void contextPostDraw();
+   #endif //VE_PATENTED
 #elif _OPENSG
-#endif
+#endif //_PERFORMER _OSG _OPENSG
   
 #ifdef _WEB_INTERFACE
    void writeImageFileForWeb(void*);
-#endif
+#endif //_WEB_INTERFACE
+
    // Function called by the DEFAULT drawChan function 
    // before clearing the channel
    // and drawing the next frame (pfFrame( ))
@@ -176,8 +173,6 @@ public:
 
    // Function called after intraFrame
    virtual void postFrame( void );
-
-   
 
    // Used to override getFrameBufferAttrs()
    // Should be able to set multi sampling in the config
@@ -231,16 +226,14 @@ private:
 	void captureWebImage();
 	double timeOfLastCapture;
 #endif 
+
    std::vector<float> clearColor; //<Container for clear color
+
 #ifdef _OSG
    osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;
    osg::ref_ptr<osg::FrameStamp> frameStamp;
-
-   VE_SceneGraph::cfdDCS* framerate_dcs;
-   osg::ref_ptr<osg::Geode> framerate_geode;
-   osg::ref_ptr<osgText::Text> framerate_text;
-   osg::ref_ptr<osgText::Font> framerate_font;
 #endif
+
 #ifdef _SGL
    CSGLContext SGLContext;
 #endif

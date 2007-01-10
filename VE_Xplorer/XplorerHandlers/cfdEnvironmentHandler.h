@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ENVIRONMENTHANDLER_H
 #define CFD_ENVIRONMENTHANDLER_H
+
 /*!\file cfdEnvironmentHandler.h
 cfdEnvironmentHandler API
 */
@@ -56,11 +57,11 @@ namespace VE_Xplorer
    class cfdQuatCamHandler;
    class cfdDisplaySettings;
 
-#ifdef VE_PATENTED
-#ifdef _OSG
-   class cfdObjectHandler;
-#endif // _OSG
-#endif // VE_PATENTED
+   #ifdef VE_PATENTED
+   #ifdef _OSG
+      class cfdObjectHandler;
+   #endif //_OSG
+   #endif //VE_PATENTED
 }
 
 namespace VE_SceneGraph
@@ -73,6 +74,16 @@ namespace VE_EVENTS
 {
    class EventHandler;
 }
+
+#ifdef _OSG
+   #include <osg/Geode>
+   #include <osgText/Text>
+
+   namespace osgText
+   {
+      class Font;
+   }
+#endif
 
 class vtkPolyData;
 
@@ -102,6 +113,8 @@ public:
    void SetBackgroundColor(std::vector<double> color);
    ///Set display framerate on/off
    void SetDisplayFrameRate(bool display);
+   ///Set display world coordinate system on/off
+   void SetDisplayCoordSys(bool display);
    ///Accessor for cfdNavigate
    cfdNavigate* GetNavigate( void );
    ///Accessor for cfdCursor
@@ -112,7 +125,6 @@ public:
    cfdTeacher* GetTeacher( void );
    ///Accessor for cfdQuatCamHandler
    //cfdQuatCamHandler* GetQuatCamHandler( void );
-
 
    ///Accessor for cfdDisplaySettings
    cfdDisplaySettings* GetDisplaySettings( void );
@@ -136,28 +148,46 @@ public:
    ///Check if the framerate should be displayed in xplorer
    bool GetDisplayFrameRate();
 
+   ///Check if the world coordinate system should be displayed in xplorer
+   bool GetDisplayCoordSys();
+
    ///Reset the background changed color flag
    void ResetBackgroundColorUpdateFlag();
+  
+   #ifdef _OSG 
+   #ifdef VE_PATENTED 
+      void ActivateGeometryPicking();
+      void DeactivateGeometryPicking();
+   #endif //VE_PATENTED
+   #endif //_OSG 
 
-   
-#ifdef _OSG 
-#ifdef VE_PATENTED 
-   void ActivateGeometryPicking();
-   void DeactivateGeometryPicking();
-#endif // VE_PATENTED
-#endif //_OSG 
 private:
    cfdNavigate* nav;
    cfdTeacher* _teacher;
    cfdSoundHandler* _soundHandler;
    cfdQuatCamHandler* _camHandler;
 
-#ifdef _OSG 
-#ifdef VE_PATENTED 
-   cfdObjectHandler* objectHandler;
-   bool _activeGeomPicking;
-#endif // VE_PATENTED
-#endif //_OSG
+   #ifdef _OSG
+      ///Initialize the framerate display
+      void InitFrameRateDisplay();
+
+      ///Initialize the world coordinate system display
+      void InitCoordSysDisplay();
+
+      //Framerate variables
+      VE_SceneGraph::cfdDCS* framerate_dcs;
+      osg::ref_ptr<osg::Geode> framerate_geode;
+      osg::ref_ptr<osgText::Text> framerate_text;
+      osg::ref_ptr<osgText::Font> framerate_font;
+
+      //World Coordinate System variables
+
+      #ifdef VE_PATENTED 
+         cfdObjectHandler* objectHandler;
+         bool _activeGeomPicking;
+      #endif // VE_PATENTED
+
+   #endif //_OSG
 
    std::vector<float> _clearColor;///<The background color;
    cfdCursor* cursor;
@@ -189,7 +219,9 @@ private:
 
    bool _updateBackgroundColor;///<The flag for updating the background color in xplorer
    bool display_framerate;///<The flag for displaying the framerate in xplorer
+   bool display_coord_sys;///<The flag for displaying the world coordinate system in xplorer
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }
-#endif
+
+#endif //CFD_ENVIRONMENTHANDLER_H

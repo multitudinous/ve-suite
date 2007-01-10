@@ -62,10 +62,12 @@
 #include "VE_Open/XML/DataValuePair.h"
 
 #ifdef _OSG
-#include "VE_Xplorer/XplorerHandlers/cfdObjectHandler.h"
+   #include "VE_Xplorer/XplorerHandlers/cfdObjectHandler.h"
 #endif
 
+/// C/C++ libraries
 #include <fstream>
+#include <sstream>
 #include <cstdlib>
 
 vprSingletonImp( VE_Xplorer::cfdEnvironmentHandler );
@@ -74,6 +76,7 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
 
+////////////////////////////////////////////////////////////////////////////////
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
    nav = 0;
@@ -95,12 +98,13 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 
    this->nav = 0;
 
-#ifdef VE_PATENTED
-#ifdef _OSG
-   this->objectHandler = 0;
-   _activeGeomPicking = false;
-#endif // _OSG
-#endif // VE_PATENTED
+   #ifdef VE_PATENTED
+   #ifdef _OSG
+      this->objectHandler = 0;
+      _activeGeomPicking = false;
+   #endif //_OSG
+   #endif //VE_PATENTED
+
    _readParam = 0;
    _param.erase();// = 0;
    desktopWidth = 0;
@@ -109,7 +113,10 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _clearColor.push_back(0);
    _clearColor.push_back(0);
    _clearColor.push_back(0);
+
    _updateBackgroundColor = false;
+   display_framerate = false;
+   display_coord_sys = false;
 
    _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();
    _eventHandlers[ std::string("Stored Scenes") ] = new VE_EVENTS::StoredSceneEventHandler();
@@ -117,7 +124,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _eventHandlers[ std::string("CHANGE_BACKGROUND_COLOR") ] = new VE_EVENTS::ChangeBackgroundColorEventHandler();
    _eventHandlers[ std::string("DISPLAY_SELECTION") ] = new VE_EVENTS::DisplayEventHandler();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )
 {
    //vprDEBUG(vesDBG,1) << "|\tcfdApp::init" << std::endl << vprDEBUG_FLUSH;
@@ -136,7 +143,7 @@ void cfdEnvironmentHandler::Initialize( void )
 #endif // VE_PATENTED
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::CleanUp( void )
 {
    if ( this->nav )
@@ -180,32 +187,78 @@ void cfdEnvironmentHandler::CleanUp( void )
       delete this->_teacher;
    }
 
+   if ( this->framerate_dcs )
+   {
+      delete this->framerate_dcs;
+   }
+
    delete displaySettings;
 
    //Delete all the devices in DeviceHandler
    VE_Xplorer::DeviceHandler::instance()->CleanUp();
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::InitFrameRateDisplay()
+{
+   framerate_dcs=new VE_SceneGraph::cfdDCS;
+   framerate_geode=new osg::Geode;
+   framerate_text=new osgText::Text;
+   framerate_font=osgText::readFontFile("../fonts/arial.ttf");
+   
+   framerate_text->setFont(framerate_font.get());
+   framerate_text->setColor(osg::Vec4f(1.0f,1.0f,1.0f,1.0f));
+   framerate_text->setCharacterSize(10.0f);
+   //framerate_text->setRotation(osg::Quat(90.0f,osg::X_AXIS));
+   framerate_text->setAlignment(osgText::Text::RIGHT_BASE_LINE);
+   framerate_text->setFontResolution(40,40);
+
+   framerate_geode->addDrawable(framerate_text.get());
+
+   int windowWidth=VE_Xplorer::cfdEnvironmentHandler::instance()->GetWindowWidth();
+   int windowHeight=VE_Xplorer::cfdEnvironmentHandler::instance()->GetWindowHeight();
+
+   float position[3];
+   position[0]=0;
+   position[1]=10;
+   position[2]=20;
+
+   //framerate_text->setPosition(osg::Vec3(0.0f,10.0f,0.0f));
+   framerate_dcs->SetTranslationArray(position);
+
+   dynamic_cast<osg::Group*>(framerate_dcs->GetRawNode())->addChild(framerate_geode.get());
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->AddChild(framerate_dcs);
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::InitCoordSysDisplay()
+{
+   ;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool cfdEnvironmentHandler::BackgroundColorChanged()
 {
    return _updateBackgroundColor;
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdEnvironmentHandler::GetDisplayFrameRate()
 {
    return display_framerate;
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+bool cfdEnvironmentHandler::GetDisplayCoordSys()
+{
+   return display_coord_sys;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::ResetBackgroundColorUpdateFlag()
 {
    _updateBackgroundColor = false;
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
 {
    _clearColor.clear();
@@ -215,17 +268,22 @@ void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
    }
    _updateBackgroundColor = true;
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetDisplayFrameRate(bool display)
 {
    display_framerate=display;
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::SetDisplayCoordSys(bool display)
+{
+   display_coord_sys=display;
+}
+////////////////////////////////////////////////////////////////////////////////
 cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
 {
    return _soundHandler;
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
 {
    return _teacher;
@@ -343,6 +401,9 @@ void cfdEnvironmentHandler::InitScene( void )
       displaySettings->CheckCommandId( NULL );
       delete displayCommand;
    }
+
+   //Initialize the text for framerate
+   this->InitFrameRateDisplay();
 }
 //////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
@@ -424,6 +485,21 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
+
+   std::cout<<this->GetDisplayCoordSys()<<std::endl;
+   std::cout<<this->GetDisplayFrameRate()<<std::endl<<std::endl;
+
+   if ( this->GetDisplayFrameRate() == true )
+   {
+      std::stringstream ss(std::stringstream::in|std::stringstream::out);
+      //ss<<framerate;
+      ss<<" fps";
+      framerate_text->setText(ss.str());
+   }
+   else
+   {
+      framerate_text->setText("");
+   }
 
 }
 ///////////////////////////////////////////////////////////////
