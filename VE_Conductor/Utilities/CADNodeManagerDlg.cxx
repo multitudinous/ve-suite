@@ -45,9 +45,6 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Transform.h"
 
-#include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/Framework/Frame.h" 
-
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/filedlg.h>
@@ -55,7 +52,6 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
-#include <wx/app.h>
 
 using namespace VE_Conductor::GUI_Utilities;
 using namespace VE_XML::VE_CAD;
