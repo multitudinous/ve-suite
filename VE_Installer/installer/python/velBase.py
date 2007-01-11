@@ -142,6 +142,17 @@ def Style(window):
     window.SetBackgroundColour(BACKGROUND_COLOR)
     return
 
+def EnvVarEmpty(var):
+    """Returns whether var is empty or not.
+    
+    True if var == None, var's length is 0, or var is all whitespace.
+    Otherwise False."""
+    if os.getenv(var) == None or len(str(os.getenv(var))) == 0 \
+       or str(os.getenv(var)).isspace():
+        return True
+    else:
+        return False
+
 def usage():
     """Prints a list of acceptable arguments for command line velauncher.py."""
     print """

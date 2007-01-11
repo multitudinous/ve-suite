@@ -559,8 +559,8 @@ class Launch:
             libList= [os.path.join(str(os.getenv("VJ_BASE_DIR")), lib),
                       os.path.join(VELAUNCHER_DIR)]
             ##Outdated paths.
-            libList += [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
-                        os.path.join(VELAUNCHER_DIR, "bin")]
+            ##libList += [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
+            ##            os.path.join(VELAUNCHER_DIR, "bin")]
             ##TEST to append 64-bit libraries:
             if architecture()[0] == "64bit":
                 libList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
@@ -568,8 +568,8 @@ class Launch:
             pathList= [os.path.join(VELAUNCHER_DIR),
                        os.path.join(str(os.getenv("VJ_BASE_DIR")), "bin")]
             ##Outdated paths.
-            pathList += [os.path.join(VELAUNCHER_DIR, "bin"),
-                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")]
+            ##pathList += [os.path.join(VELAUNCHER_DIR, "bin"),
+            ##             os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")]
             if self.settings["BuilderDir"] != None:
                 pathList[:0] = [os.path.join(str(self.settings["BuilderDir"]),
                                              "bin")]
@@ -612,7 +612,7 @@ class Launch:
         Overwrites a filled variable in normal mode.
         If overwrite == True, overwrites the variable in both modes."""
 ##        if self.settings["DevMode"] and not overwrite:
-        if not overwrite:
+        if not overwrite and not EnvVarEmpty(var):
             os.environ[var] = os.getenv(var, default)
         else:
             os.environ[var] = default
