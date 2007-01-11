@@ -45,6 +45,9 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Transform.h"
 
+#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/Frame.h" 
+
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/filedlg.h>
@@ -52,6 +55,7 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
+#include <wx/app.h>
 
 using namespace VE_Conductor::GUI_Utilities;
 using namespace VE_XML::VE_CAD;
@@ -92,6 +96,14 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
    _commandName = std::string("CAD");
    _cloneFromSameFile = false;
    SetRootCADNode(node);
+
+   dialogPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
+   dialogPosition.width = dialogPosition.width - 200;
+   dialogPosition.height = dialogPosition.height - 600;
+   dialogPosition.x = dialogPosition.x + 50;
+   dialogPosition.y = dialogPosition.y + 300;
+   
+   SetSize( dialogPosition );
 
    _buildDialog();
 }
@@ -312,8 +324,6 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
                                        _("Enter name for new assembly:"),
                                        _("Assembly"),wxOK);
 
-         wxSize displaySize = ::wxGetDisplaySize();
-         wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
          assemblyNameDlg.SetSize( dialogPosition );
          assemblyNameDlg.ShowModal();
 
@@ -611,8 +621,6 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
                         _("Enter name for new part:"),
                         cadFileName.GetName(),wxOK);
 
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
    partNameDlg.SetSize( dialogPosition );
    partNameDlg.ShowModal();
 
