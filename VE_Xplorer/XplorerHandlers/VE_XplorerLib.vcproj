@@ -983,6 +983,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\QCClearDataEH.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\QCLoadFileEH.cxx"
 				>
 			</File>
@@ -1479,6 +1483,10 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QCCleaDatarEH.h"
 				>
 			</File>
 			<File

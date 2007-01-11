@@ -33,6 +33,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/QCClearDataEH.h"
 #include "VE_Xplorer/XplorerHandlers/QCLoadFileEH.h"
 #include "VE_Xplorer/SceneGraph/cfdFileInfo.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
@@ -110,6 +111,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( /*VE_SceneGraph::cfdDCS* worldDCS,
    quatCamFileName = ".stored_viewpts_flythroughs.vel";
    
    _eventHandlers[std::string("QC_LOAD_STORED_POINTS")] = new VE_EVENTS::QuatCamLoadFileEventHandler();
+   _eventHandlers[std::string("QC_CLEAR_QUAT_DATA")] = new VE_EVENTS::QuatCamClearDataEventHandler();
  
    ///more hacking to initialize the flythroughlist
    ///This forces us to only have one flythrought per ves file
@@ -230,7 +232,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
    {
       return;
    }
-
+   quatCamDirName = fileName;
    boost::filesystem::path dir_path( quatCamDirName );
    try
    {
@@ -332,8 +334,26 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
       newFile.close();
    }
 }
+/////////////////////////////////////////////
+void cfdQuatCamHandler::ClearQuaternionData()
+{
+   if ( !QuatCams.empty() )
+   {
+      for ( unsigned int i=0; i<QuatCams.size(); i++ )
+      {
+         delete QuatCams.at(i);
+      } 
+      QuatCams.clear();
+   }
 
-void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate* nav )
+   if ( !flyThroughList.empty() )
+   {
+      flyThroughList.clear();
+   }
+}
+//////////////////////////////////////////////////////////////////
+void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,
+                                 cfdNavigate* nav )
 {
    Matrix44f vjm;
 
@@ -342,8 +362,6 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
       QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
    }
    float temp = this->GetQuatCamIncrementor();
-
-
 
    if ( ( t < 1.0f ) )
    {

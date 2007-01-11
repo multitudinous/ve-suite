@@ -1006,6 +1006,22 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       serviceList->SendCommandStringToXplorer( veCommand );
       delete veCommand;
       
+      //Clear the viewpoints data
+      //Since the data is "managed" by Xplorer we need to notify 
+      //Xplorer when we load a new ves file to clear viewpoints since
+      //They don't go with the new data.
+
+      //Dummy data that isn't used but I don't know if a command will work
+      //w/o a DVP 
+      VE_XML::DataValuePair* dataValuePair = 
+                        new VE_XML::DataValuePair(  std::string("STRING") );
+      dataValuePair->SetData( "Clear Quat Data", ConvertUnicode( directory.c_str() ) );
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
+      veCommand->AddDataValuePair( dataValuePair );
+      serviceList->SendCommandStringToXplorer( veCommand );
+      delete veCommand;
+
       //Now laod the xml data now that we are in the correct directory
       fname=dialog.GetFilename();
       SubmitToServer( event );      

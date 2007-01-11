@@ -108,6 +108,9 @@ public:
    ///This should be removed once the new animation code is in place
    void SetMasterNode( bool masterNode );
    
+   ///Clear out all the saved quaternions
+   void ClearQuaternionData();
+
    void LoadData(double*, VE_SceneGraph::cfdDCS*);
 
    void WriteToFile(std::string);

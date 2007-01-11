@@ -633,12 +633,12 @@ void ViewLocPane::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
                selectionIndex = i;
                break;
             }
-         }
+         } 
+         dataValueName = "REMOVE_SELECTED_VIEWPT";
+         commandInputs.push_back( selectionIndex );
+         SendCommandsToXplorer();
+         _updateWithcfdQuatCamHandler();
       }
-      dataValueName = "REMOVE_SELECTED_VIEWPT";
-      commandInputs.push_back( selectionIndex );
-      SendCommandsToXplorer();
-      _updateWithcfdQuatCamHandler();
    }
 }
 
