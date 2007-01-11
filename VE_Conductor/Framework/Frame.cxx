@@ -1013,12 +1013,12 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 
       //Dummy data that isn't used but I don't know if a command will work
       //w/o a DVP 
-      VE_XML::DataValuePair* dataValuePair = 
+      VE_XML::DataValuePair* dvp = 
                         new VE_XML::DataValuePair(  std::string("STRING") );
       dataValuePair->SetData( "Clear Quat Data", ConvertUnicode( directory.c_str() ) );
       VE_XML::Command* veCommand = new VE_XML::Command();
       veCommand->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
-      veCommand->AddDataValuePair( dataValuePair );
+      veCommand->AddDataValuePair( dvp );
       serviceList->SendCommandStringToXplorer( veCommand );
       delete veCommand;
 
