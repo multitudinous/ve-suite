@@ -96,15 +96,6 @@ CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent,
    _commandName = std::string("CAD");
    _cloneFromSameFile = false;
    SetRootCADNode(node);
-
-   dialogPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
-   dialogPosition.width = dialogPosition.width - 200;
-   dialogPosition.height = dialogPosition.height - 600;
-   dialogPosition.x = dialogPosition.x + 50;
-   dialogPosition.y = dialogPosition.y + 300;
-   
-   SetSize( dialogPosition );
-
    _buildDialog();
 }
 /////////////////////////////////////////
@@ -324,7 +315,7 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
                                        _("Enter name for new assembly:"),
                                        _("Assembly"),wxOK);
 
-         assemblyNameDlg.SetSize( dialogPosition );
+         assemblyNameDlg.CentreOnParent();
          assemblyNameDlg.ShowModal();
 
          CADAssembly* newAssembly = new CADAssembly( ConvertUnicode(assemblyNameDlg.GetValue().GetData() ) );
@@ -621,7 +612,7 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
                         _("Enter name for new part:"),
                         cadFileName.GetName(),wxOK);
 
-   partNameDlg.SetSize( dialogPosition );
+   partNameDlg.CentreOnParent();
    partNameDlg.ShowModal();
 
    CADPart* newCADPart = new CADPart( ConvertUnicode( partNameDlg.GetValue().GetData() ) );

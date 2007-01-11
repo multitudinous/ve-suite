@@ -183,7 +183,6 @@ public:
    wxButton* _quitButton;///<The button to close the dialog.
    wxButton* _saveButton;///<The button to save the current CADHierarchy.
    wxRect _geomPosition;///<The initial position of the dialog.
-   wxRect dialogPosition;///<The bounding box of the subdialogs.
 
    VE_Conductor::GUI_Utilities::CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
 

@@ -128,11 +128,10 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    _nShaders = 0;
    _nMaterials = 0;
 
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 100, 100 );
-   this->SetSize( dialogPosition );
-   
    _buildGUI();
+   
+   CentreOnParent();
+
 }
 
 /////////////////////////////////////////////////////
@@ -458,10 +457,7 @@ void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
                         _("Enter name for new node animation:"),
                         animationFileName.GetName(),wxOK);
 
-               wxSize displaySize = ::wxGetDisplaySize();
-               wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
-               animationNameDlg.SetSize( dialogPosition );
-
+               animationNameDlg.CentreOnParent();
                animationNameDlg.ShowModal();
             
                while(AnimationExists(animationNameDlg.GetValue().GetData()))
@@ -729,10 +725,7 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
                                        _("Enter name for new material:"),
                                        _("Material")+wxString(nMaterials.str().c_str(),wxConvUTF8),wxOK);
 
-         wxSize displaySize = ::wxGetDisplaySize();
-         wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
-         materialNameDlg.SetSize( dialogPosition );
-
+         materialNameDlg.CentreOnParent();
          materialNameDlg.ShowModal();
          if(AttributeExists( ConvertUnicode( materialNameDlg.GetValue().GetData() ) ) )
          {
