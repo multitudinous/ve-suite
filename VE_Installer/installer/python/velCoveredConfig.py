@@ -149,4 +149,7 @@ class CoveredConfig(CoveredState):
         ##If OSGNotifyLevel == "None", change it to None
         if surface["OSGNotifyLevel"] == "None":
             surface["OSGNotifyLevel"] = None
+        ##Change JugglerDep
+        if surface["JugglerDep"] == None:
+            surface["JugglerDep"] = "None"
         return surface

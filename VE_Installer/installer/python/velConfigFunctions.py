@@ -34,7 +34,9 @@ def SaveConfig(name, state, saveLastConfig = False):
     if saveLastConfig:
         strWrites.append("Directory")
         strWrites.append("Debug")
+        strWrites.append("JugglerDep")
         state.GetBase("RecentFiles").WriteConfig() ##Has config.DeleteGroup
+        state.GetBase("Dependencies").WriteConfig() ##Ditto.
     intWrites = ["XplorerType",
                  "Mode",
                  "VPRDebug",
@@ -90,8 +92,14 @@ def LoadConfig(name, state, loadLastConfig = False):
     if loadLastConfig:
         strReads.append("Directory")
         boolReads.append("Debug")
+        if os.getenv("VJ_BASE_DIR") == None:
+            strReads.append("JugglerDep")
+        else:
+            state.Cover("JugglerDep", os.getenv("VJ_BASE_DIR"), layer = DEV_LAYER)
         if config.Exists(RECENTFILES_CONFIG):
             state.Edit("RecentFiles", RecentFiles())
+        if config.Exists(DEPS_CONFIG):
+            state.Edit("Dependencies", DepsArray())
     ##Workaround for error w/ Int TaoPort in earlier version
     if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
         intReads.append("TaoPort")

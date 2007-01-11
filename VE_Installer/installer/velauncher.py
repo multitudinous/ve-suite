@@ -45,6 +45,8 @@ from velDebugWindow import *
 from velSetWaitWindow import *
 import velShell
 from velRecentFiles import *
+from velDepsArray import *
+from velDepsWindow import *
 
 ##Set up the master config file
 config = wx.Config(CONFIG_FILE)
@@ -258,7 +260,7 @@ class LauncherWindow(wx.Frame):
             self.state.DevMode()
         self.React()
         ##Check the dependencies.
-        if not devMode:
+        if windows and not devMode:
             dependenciesDir = config.Read("DependenciesDir", ":::")
             if dependenciesDir == ":::":
                 dlg = wx.MessageDialog(None,
@@ -345,10 +347,14 @@ class LauncherWindow(wx.Frame):
 
     def DependenciesChange(self, event = None):
         """Asks the user to choose a new Dependencies folder."""
-        newDeps = velDependencies.Change(self)
-        if newDeps != None:
-            config.Write("DependenciesDir", newDeps)
-            self.UpdateData(depDir = newDeps)
+        if windows:
+            newDeps = velDependencies.Change(self)
+            if newDeps != None:
+                config.Write("DependenciesDir", newDeps)
+                self.UpdateData(depDir = newDeps)
+        else:
+            depWindow = DepsWindow(self, self.state)
+            depWindow.ShowModal()
 
     def BuilderChange(self, event = None):
         """Asks the user to choose a new Builder folder."""
@@ -427,7 +433,7 @@ class LauncherWindow(wx.Frame):
             self.labelDirectory.SetLabel("VES File Loaded:")
             self.txDirectory.SetValue(self.state.GetSurface("VESFile"))
             self.txDirectory.SetEditable(False)
-            self.txDirectory.SetBackgroundColour(wx.LIGHT_GREY)
+            self.txDirectory.SetBackgroundColour(READONLY_COLOR)
             self.bDirectory.SetLabel("Close File")
             self.bDirectory.SetToolTip(wx.ToolTip("Close this file."))
             self.bDirectory.Enable(self.state.IsEnabled("Directory"))
@@ -435,7 +441,7 @@ class LauncherWindow(wx.Frame):
             self.labelDirectory.SetLabel("Shell Script:")
             self.txDirectory.SetValue(self.state.GetSurface("ShellScript"))
             self.txDirectory.SetEditable(False)
-            self.txDirectory.SetBackgroundColour(wx.LIGHT_GREY)
+            self.txDirectory.SetBackgroundColour(READONLY_COLOR)
             self.bDirectory.SetLabel("Close File")
             self.bDirectory.SetToolTip(wx.ToolTip("Close this file."))
             self.bDirectory.Enable(self.state.IsEnabled("Directory"))

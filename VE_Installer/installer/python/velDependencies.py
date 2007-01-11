@@ -1,5 +1,7 @@
 """Handles checking and choosing the Dependencies folder for VE-Launcher.
 
+Used only for Windows now. See velDepsWindow for Linux side.
+
 Functions:
     Check(dependenciesDir)
     Change(parent)
@@ -52,7 +54,7 @@ def Check(dependenciesDir):
                                " or deleted.\n" +
                                "Please find it for me.",
                                "Error: Dependencies Directory" +
-                               " Not Found",    
+                               " Not Found",
                                wx.OK)
         dlg.ShowModal()
         dlg.Destroy()
