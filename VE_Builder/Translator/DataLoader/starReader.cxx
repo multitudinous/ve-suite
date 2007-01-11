@@ -211,7 +211,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    int numVtkCells = 0;
    int numStarCells = 0;
    int i;
-   
+/*   
    // First compute the number of cells needed for the data set...
    if ( starcdVersion == 324 )
    {
@@ -303,8 +303,8 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             numVtkCells++;
          }
       }
-   }
-   else if ( starcdVersion == 4 )
+   }*/
+   if ( starcdVersion == 4 )
    {
       std::ifstream cellFile( this->starCellFileName.c_str() );
       int charSize = 512;
