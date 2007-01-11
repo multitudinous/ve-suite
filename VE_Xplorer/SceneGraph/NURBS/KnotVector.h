@@ -111,8 +111,8 @@ public:
    ///write out the knot vector
    inline friend std::ostream& operator<<(std::ostream& os,NURBS::KnotVector& knotVector)
    {
-      size_t nKnots = knotVector.NumberOfKnots();
-      for(size_t i = 0; i < nKnots; i++)
+      unsigned int nKnots = knotVector.NumberOfKnots();
+      for(unsigned int i = 0; i < nKnots; i++)
       {
          os<<knotVector.Knot(i)<<" ";
       }
