@@ -1016,10 +1016,10 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       VE_XML::DataValuePair* dvp = 
                         new VE_XML::DataValuePair(  std::string("STRING") );
       dataValuePair->SetData( "Clear Quat Data", ConvertUnicode( directory.c_str() ) );
-      VE_XML::Command* veCommand = new VE_XML::Command();
-      veCommand->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
-      veCommand->AddDataValuePair( dvp );
-      serviceList->SendCommandStringToXplorer( veCommand );
+      VE_XML::Command* vec = new VE_XML::Command();
+      vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
+      vec->AddDataValuePair( dvp );
+      serviceList->SendCommandStringToXplorer( vec );
       delete veCommand;
 
       //Now laod the xml data now that we are in the correct directory
