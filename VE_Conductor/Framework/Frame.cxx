@@ -206,6 +206,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
    EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
    EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
+
+   EVT_SPLITTER_DCLICK( SPLIT_WINDOW, AppFrame::OnDoubleClickSash )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -305,7 +307,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
       wx_nw_splitter = new wxSplitterWindow(parent, -1);
    }
 
-   wx_nw_splitter->SetMinimumPaneSize( 20 );
+   //wx_nw_splitter->SetMinimumPaneSize( 20 );
 
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
@@ -317,6 +319,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
    }
 
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
+std::cout<<"SASH LOCATION: "<<wx_nw_splitter->GetSashPosition()<<std::endl;
 }
 //////////////////////////////////
 void AppFrame::_configureDesktop()
@@ -324,7 +327,7 @@ void AppFrame::_configureDesktop()
    SetTitle( _("VE-Suite: www.vesuite.org") );
    _treeView = new wxDialog(this, -1, _("Available Objects"), 
                                  wxDefaultPosition, wxDefaultSize,
-                                 (wxDEFAULT_DIALOG_STYLE&~ (wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));//|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
+                                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);//wxCAPTION | wxRESIZE_BORDER);//(wxDEFAULT_DIALOG_STYLE&~ (wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));//|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
    wxBoxSizer* treeViewSizer = new wxBoxSizer(wxHORIZONTAL);
 
    _treeView->SetAutoLayout(true);
@@ -2000,4 +2003,32 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );
    delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ViewTree()
+{
+   wx_nw_splitter->Unsplit(network);
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ViewCanvas()
+{
+   wx_nw_splitter->Unsplit(av_modules);
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::SplitWindow()
+{
+   wx_nw_splitter->SplitVertically(av_modules,network,140);
+}
+////////////////////////////////////////////////////////////////////////////////
+//void AppFrame::OnDoubleClickSash( int xPos, int yPos )
+void AppFrame::OnDoubleClickSash( wxSplitterEvent& event )
+{
+//std::cout<<"WORKING"<<std::endl;
+   //wx_nw_splitter->SplitVertically(av_modules,network,140);
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::UnSplitWindow( wxSplitterEvent& event )
+{
+//std::cout<<"WORKING"<<std::endl;
+   //wx_nw_splitter->SplitVertically(av_modules,network,140);
 }
