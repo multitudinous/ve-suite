@@ -33,24 +33,6 @@ class Launch:
         EnvFill(var, default)"""
     def __init__(self, settings):
         """Sets environmental vars and calls OS-specific launch code."""
-        ##Adapt settings to variables.
-##        workingDir = self.settings["Directory"]
-##        runName = self.settings["NameServer"]
-##        runConductor = self.settings["Conductor"]
-##        runXplorer = self.settings["Xplorer"]
-##        typeXplorer = self.settings["XplorerType"]
-##        jconf = self.settings["JconfPath"]
-##        taoMachine = self.settings["TaoMachine"]
-##        taoPort = self.settings["TaoPort"]
-##        desktopMode = self.settings["DesktopMode"]
-##        dependenciesDir = self.settings["DependenciesDir"]
-##        cluster = self.settings["ClusterNodes"]
-##        master = self.settings["ClusterMaster"]
-##        shell = self.settings["Shell"]
-##        builderDir = self.settings["BuilderDir"]
-##        vesFile = self.settings["VESFile"]
-##        if vesFile == None:
-##            vesFile = None
         ##Set self's variables
 ##        print settings ##TESTER
         self.settings = settings
@@ -279,16 +261,13 @@ class Launch:
         else:
             desktop = []
         ##Set Xplorer's type
-        if self.settings["XplorerType"] == 0: ##OSG selection
-            exe = "project_tao_osg"
-        elif self.settings["XplorerType"] > 0: ##OSG VEP or VEPC selection
-            exe = "project_tao_osg_vep"
+        exe = "project_tao_osg_vep"
         ##Tack on the Windows suffix.
         if windows:
             exe += "_d.exe"
         ##Construct the call
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
-        if self.settings["XplorerType"] == 2: ##OSG VEPC selection
+        if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
              s += ["-VESCluster"]
         ##taoMachine = gethostname()
         ##s[len(s):] = ["-ORBEndPoint",  "htiop://%s:8089" %(taoMachine)]

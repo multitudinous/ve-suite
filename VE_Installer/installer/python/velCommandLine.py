@@ -33,9 +33,9 @@ class CommandLine:
             elif opt in ('-x', "--xplorer="):
                 self.state.Edit("Xplorer", True)
                 if arg in XPLORER_TYPE_LIST:
-                    self.state.Edit("XplorerType", XPLORER_TYPE_LIST.index(arg))
+                    self.state.Edit("XplorerType", arg)
                 else:
-                    self.state.Edit("XplorerType", 0)
+                    self.state.Edit("XplorerType", DEFAULT_SOLO_XPLORER)
             elif opt in ('-k', "--desktop"):
                 self.state.Edit("DesktopMode", True)
             elif opt in ('-j', "--jconf="):

@@ -40,9 +40,10 @@ RECENT_MENU_ID = 600
 ##Default setting values.
 DEFAULT_TAO_MACHINE = "localhost"
 DEFAULT_TAO_PORT = "1239"
-RADIO_XPLORER_LIST = ["OpenSceneGraph", "OSG Patented",
-                      "OSG Patented Cluster"]
-XPLORER_TYPE_LIST = ["OSG", "OSG-VEP", "OSG-VEPC"]
+RADIO_XPLORER_LIST = ["Non-Cluster", "Cluster"]
+XPLORER_TYPE_LIST = ["OSG-VEP", "OSG-VEPC"]
+DEFAULT_SOLO_XPLORER = XPLORER_TYPE_LIST[0]
+DEFAULT_CLUSTER_XPLORER = XPLORER_TYPE_LIST[1]
 ##Settings for launcher's GUI layout.
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (250, 250)

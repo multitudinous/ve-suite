@@ -137,7 +137,7 @@ class CoveredConfig(CoveredState):
         ##Determine the JconfPath.
         surface["JconfPath"] = self.JconfPath()
         ##Set ClusterNodes to list of cluster nodes if a cluster is launched.
-        if surface["Xplorer"] and surface["XplorerType"] == 2 \
+        if surface["Xplorer"] and surface["XplorerType"] == "OSG-VEPC" \
            and surface["ClusterMaster"] and surface["ClusterDict"]:
             surface["ClusterSlaves"] = surface["ClusterDict"].GetNames()
             surface["Cluster"] = True

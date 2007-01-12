@@ -124,7 +124,8 @@ class SettingsWindow(wx.Dialog):
                  "Xplorer": [self.cbXplorer, self.cbXplorer.GetValue()],
                  "Conductor": [self.cbConductor, self.cbConductor.GetValue()],
                  "DesktopMode": [self.cbDesktop, self.cbDesktop.GetValue()],
-                 "XplorerType": [self.rbXplorer, self.rbXplorer.GetSelection()]}
+                 "XplorerType": [self.rbXplorer,
+                                 XPLORER_TYPE_LIST[self.rbXplorer.GetSelection()]]}
         for var in array:
             if array[var][0].IsEnabled():
                 self.state.Edit(var, array[var][1])
@@ -165,14 +166,14 @@ class SettingsWindow(wx.Dialog):
         self.cbDesktop.SetValue(self.state.GetSurface("DesktopMode"))
         self.cbDesktop.Enable(self.state.IsEnabled("DesktopMode"))
         ##Xplorer Type
-        self.rbXplorer.SetSelection(self.state.GetSurface("XplorerType"))
+        self.rbXplorer.SetSelection(XPLORER_TYPE_LIST.index(self.state.GetSurface("XplorerType")))
         self.rbXplorer.Enable(self.state.IsEnabled("XplorerType") and
                               self.state.IsEnabled("Xplorer") and
                               self.state.GetSurface("Xplorer") == True)
         ##Cluster Node button
         self.bCluster.Enable(CLUSTER_ENABLED and
                              self.state.GetSurface("Xplorer") == True and
-                             self.state.GetSurface("XplorerType") == 2)
+                             self.state.GetSurface("XplorerType") == "OSG-VEPC")
         return
 
     def EditJconf(self, event = None):

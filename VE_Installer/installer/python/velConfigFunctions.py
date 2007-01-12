@@ -23,6 +23,7 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "JconfSelection",
                  "NameServer",
                  "Xplorer",
+                 "XplorerType",
                  "Conductor",
                  "TaoMachine",
                  "TaoPort",
@@ -37,8 +38,7 @@ def SaveConfig(name, state, saveLastConfig = False):
         strWrites.append("JugglerDep")
         state.GetBase("RecentFiles").WriteConfig() ##Has config.DeleteGroup
         state.GetBase("Dependencies").WriteConfig() ##Ditto.
-    intWrites = ["XplorerType",
-                 "Mode",
+    intWrites = ["Mode",
                  "VPRDebug",
                  "MasterWait",
                  "SlaveWait"]
@@ -79,8 +79,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                 "OSGNotifyLevel",
                 "User",
                 "FileDir"]
-    intReads = ["XplorerType",
-                "Mode",
+    intReads = ["Mode",
                 "VPRDebug",
                 "MasterWait",
                 "SlaveWait"]
@@ -99,11 +98,20 @@ def LoadConfig(name, state, loadLastConfig = False):
             state.Edit("RecentFiles", RecentFiles())
         if config.Exists(DEPS_CONFIG):
             state.Edit("Dependencies", DepsArray())
-    ##Workaround for error w/ Int TaoPort in earlier version
+    ##Workaround for error w/ Int TaoPort in earlier version (could probably be removed now)
     if config.GetEntryType("TaoPort") == 3: ##3: Int entry type
         intReads.append("TaoPort")
     else:
         strReads.append("TaoPort")
+    ##Workaround for int/str XplorerType change.
+    if config.GetEntryType("XplorerType") == 3 or \
+       str(config.Read("XplorerType")).isdigit(): ##3: Int entry type
+        if config.ReadInt("XplorerType") >= 2:
+            state.Edit("XplorerType", DEFAULT_CLUSTER_XPLORER)
+        else:
+            state.Edit("XplorerType", DEFAULT_SOLO_XPLORER)
+    else:
+        strReads.append("XplorerType")
     ##Read in the configs.
     for var in strReads:
         if config.Exists(var):
@@ -128,10 +136,6 @@ def LoadConfig(name, state, loadLastConfig = False):
     if config.Exists(CLUSTER_CONFIG):
         state.Edit("ClusterDict", ClusterDict())
     ##Set RecentFiles list.
-    ##Restrict XplorerType's value.
-    test = state.GetBase(var = "XplorerType")
-    if test < 0 or test >= len(RADIO_XPLORER_LIST):
-        state.Edit("XplorerType", 0)
     ##Return to default config
     config.SetPath('..')
     config.SetPath(DEFAULT_CONFIG)
