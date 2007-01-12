@@ -36,6 +36,52 @@
 
     <para>If you want to learn more about how to use VE-Launcher, read the
     <olink>VE-Launcher section</olink> of this guide.</para>
+    
+    <section id="command_line_xplorer">
+      <title>Xplorer from the Command Line</title>
+      
+      <para>Users who want to customize how they start up Xplorer can launch it
+      from the command line as well. The Xplorer command is set up as
+      follows:</para>
+      
+      <code><emphasis role="bold">(1)</emphasis>project_tao_osg_vep
+      <emphasis role="bold">(2)</emphasis>-ORBInitRef
+      NameService=corbaloc:iiop:localhost:1239/NameService
+      <emphasis role="bold">(3)</emphasis>/home/users/mgroves/VE_Suite1.0.3/RHEL_4/share/stereo_desktop/desktop.jconf
+      <emphasis role="bold">(4)</emphasis>-VESDesktop 1280 1024</code>
+      
+      <orderedlist>
+        <listitem>
+          <para><emphasis role="bold">project_...:</emphasis> Executable call.
+	  The name may vary, depending on how VE-Suite was built.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">CORBA Arguments:</emphasis>
+	  Xplorer accepts any CORBA arguments passed to it.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Juggler configuration files:</emphasis>
+	  If a file is passed to Xplorer, it's read as a Juggler configuration
+	  file.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Xplorer flags:</emphasis> Xplorer has two
+	  flags you can set for it:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para><emphasis role="bold">-VESDesktop [height] [width]:</emphasis>
+	      Runs Xplorer in desktop mode. [height] &amp; [width] are the dimensions
+	      of the screen.</para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis role="bold">-VESCluster:</emphasis>
+	      Runs Xplorer in cluster mode.</para>
+	    </listitem>
+	  </itemizedlist>
+        </listitem>
+      </orderedlist>
+
+    </section>
   </section>
 
   <section id="loading_data_and_connecting">
