@@ -147,8 +147,9 @@ enum
    CHANGE_XPLORER_VIEW,
    CHANGE_XPLORER_VIEW_NETWORK,
    CHANGE_XPLORER_VIEW_CAD,
-   CHANGE_XPLORER_VIEW_LOGO
+   CHANGE_XPLORER_VIEW_LOGO,
 
+   SPLIT_WINDOW
 };
 
 class OrbThread;
@@ -165,6 +166,7 @@ class StreamlinePane;
 class UI_TeacherTab;
 class UserPreferences;
 class wxImageList;
+class wxSplitterWindow;
 //class Vistab;
 
 namespace VE_Conductor
@@ -253,7 +255,12 @@ public:
    ///to load a ves file and set the working directory appropriatley for a
    ///particular application
    void ProcessCommandLineArgs( void );
-   
+
+   ///Callback to unsplit canvas
+//   void SplitWindow();
+//   void ViewTree();
+//   void ViewCanvas(); 
+
 protected:
 
 
@@ -360,6 +367,10 @@ protected:
   
    ///Pop up window for build info
    void RevisionInfo( wxCommandEvent& event );
+
+//   void OnDoubleClickSash( int, int );
+   void OnDoubleClickSash( wxSplitterEvent& event );
+   void UnSplitWindow( wxSplitterEvent& event );
 
    wxBoxSizer *sizerTab;
    //revision* version;

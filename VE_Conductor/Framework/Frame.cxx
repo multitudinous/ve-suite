@@ -207,7 +207,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
    EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
 
-   EVT_SPLITTER_DCLICK( SPLIT_WINDOW, AppFrame::OnDoubleClickSash )
+//   EVT_SPLITTER_DCLICK( SPLIT_WINDOW, AppFrame::OnDoubleClickSash )
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -307,7 +307,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
       wx_nw_splitter = new wxSplitterWindow(parent, -1);
    }
 
-   //wx_nw_splitter->SetMinimumPaneSize( 20 );
+   wx_nw_splitter->SetMinimumPaneSize( 20 );
 
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
@@ -319,7 +319,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
    }
 
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
-std::cout<<"SASH LOCATION: "<<wx_nw_splitter->GetSashPosition()<<std::endl;
+//std::cout<<"SASH LOCATION: "<<wx_nw_splitter->GetSashPosition()<<std::endl;
 }
 //////////////////////////////////
 void AppFrame::_configureDesktop()
@@ -2004,6 +2004,7 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
    serviceList->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
+/*
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewTree()
 {
@@ -2032,3 +2033,4 @@ void AppFrame::UnSplitWindow( wxSplitterEvent& event )
 //std::cout<<"WORKING"<<std::endl;
    //wx_nw_splitter->SplitVertically(av_modules,network,140);
 }
+*/
