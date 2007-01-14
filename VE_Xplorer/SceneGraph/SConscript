@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag osg_options vtk_options opal_options ode_options')
+Import('baseEnv ves_pkg LIBDIR execOsgPatTag osg_options vtk_options')
 
 sources = Split("""
     cfdClone.cxx
@@ -64,8 +64,8 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.ParseConfig('flagpoll gmtl vrjuggler --libs --cflags')
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
-ode_options.apply( lib_env )
-opal_options.apply( lib_env )
+#ode_options.apply( lib_env )
+#opal_options.apply( lib_env )
 
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_SceneGraphLib%s' %(execOsgPatTag),

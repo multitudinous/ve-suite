@@ -43,7 +43,7 @@ public:
    VE_SceneGraph::DCS* GetDCS();
    VE_SceneGraph::Node* GetNode();
 
-   opal::Solid* GetSolid();
+   //opal::Solid* GetSolid();
 
    void SetFILEProperties(int, int, float*);
    int GetTransparentFlag();
@@ -99,7 +99,7 @@ private:
    std::string _filename;
    std::string _moduleName;
 
-   opal::Solid* solid;
+   //opal::Solid* solid;
 };
 }
 

@@ -29,8 +29,8 @@ import SConsAddons.Options as asc_opt
 import SConsAddons.Options.Options 
 import SConsAddons.Options.VTK
 import SConsAddons.Options.OSG
-import SConsAddons.Options.OPAL
-import SConsAddons.Options.ODE
+#import SConsAddons.Options.OPAL
+#import SConsAddons.Options.ODE
 import SConsAddons.Options.Xerces
 import SConsAddons.Options.WxWidgets
 import SConsAddons.AutoDist as sca_auto_dist
@@ -162,10 +162,10 @@ osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True,
 opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
-opal_options = SConsAddons.Options.OPAL.OPAL("opal","0.2", False, True)
-opts.AddOption( opal_options )
-ode_options = SConsAddons.Options.ODE. ODE("ode","0.4", False, True)
-opts.AddOption( ode_options )
+#opal_options = SConsAddons.Options.OPAL.OPAL("opal","0.2", False, True)
+#opts.AddOption( opal_options )
+#ode_options = SConsAddons.Options.ODE. ODE("ode","0.4", False, True)
+#opts.AddOption( ode_options )
 wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.6", True, True)
 opts.AddOption( wxwidgets_options )
 opts.Add('prefix', 'Installation prefix', '/usr/local')
@@ -181,7 +181,7 @@ opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config fi
 opts.Add('buildLog', 'Provide a file name for the build log if you would like a log', '')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
-Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options','ode_options','opal_options')
+Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options')#,'ode_options','opal_options')
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---

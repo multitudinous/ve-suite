@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options xerces_options opal_options ode_options')
+Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options xerces_options')
 
 sources = Split("""
    cfdExecutive.cxx
@@ -59,8 +59,8 @@ lib_env.ParseConfig('flagpoll vrjuggler TAO \
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
-ode_options.apply( lib_env )
-opal_options.apply( lib_env )
+#ode_options.apply( lib_env )
+#opal_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_XplorerNetworkLib%s' %(execOsgPatTag),
                                                         lib_env,

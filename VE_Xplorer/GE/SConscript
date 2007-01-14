@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options xerces_options opal_options ode_options')
+Import('baseEnv ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options xerces_options')
 
 srcs = Split("""
    cfdApp.cxx
@@ -46,8 +46,8 @@ env.ParseConfig('flagpoll TAO \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
                           --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --get-vrj-ogl-libs --libs --cflags')
-opal_options.apply( env )
-ode_options.apply( env )
+#opal_options.apply( env )
+#ode_options.apply( env )
 #opal_options.apply( env )
    
 prog = ves_pkg.createProgram('project%s' %(execOsgPatTag), env, 'bin')

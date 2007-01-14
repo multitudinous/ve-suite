@@ -11,10 +11,10 @@ PhysicsSimulator API
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
-namespace opal
+/*namespace opal
 {
    class Simulator;
-}
+}*/
 
 namespace VE_SceneGraph
 {
@@ -23,7 +23,7 @@ namespace VE_SceneGraph
       public:
          void CleanUp();                                       //Functions like a destructor
 
-         opal::Simulator* GetSimulator();
+         //opal::Simulator* GetSimulator();
 
       private:
          PhysicsSimulator();
@@ -31,7 +31,7 @@ namespace VE_SceneGraph
          vprSingletonHeader(PhysicsSimulator);
 
 
-         opal::Simulator* simulator;
+         //opal::Simulator* simulator;
    };
 }
 

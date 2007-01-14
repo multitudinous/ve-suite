@@ -9,12 +9,12 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
-#include <ode/config.h>
+/*#include <ode/config.h>
 #if defined(dDOUBLE)
 #define OPAL_USE_DOUBLE 1
 #endif
 #include <opal.h>
-
+*/
 #ifdef _PERFORMER
    #include <Performer/pr/pfFog.h>
 #elif _OSG
@@ -51,7 +51,7 @@ File::File(std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream)
    // Leave some code here no more FILEInfo
    this->DCS=new VE_SceneGraph::DCS();
    this->node=new VE_SceneGraph::Node();
-   this->solid=VE_SceneGraph::PhysicsSimulator::instance()->GetSimulator()->createSolid();
+   //this->solid=VE_SceneGraph::PhysicsSimulator::instance()->GetSimulator()->createSolid();
 
    //this->node->LoadFile(geomFile.c_str(),isStream);
    fileName.assign(geomFile);
@@ -111,10 +111,10 @@ VE_SceneGraph::DCS* File::GetDCS()
    return this->DCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-opal::Solid* File::GetSolid()
+/*opal::Solid* File::GetSolid()
 {
    return this->solid;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 float File::getOpacity()
 {
