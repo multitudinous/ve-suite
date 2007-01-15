@@ -1,0 +1,14 @@
+To Make stand alone CD for VE_Suite:
+
+1.  Copy the contents of the VE_Suite_CD directory into a folder.
+2.  Add the models you wish to have on the CD to the folder.
+3.  Write the contents of the folder onto a CD.
+
+The models can be put anywhere on the CD, but the recommended location is:
+
+<root>\VE_Suite.1.0.3\exampleDatasets
+
+This keeps the models in the same location as the sample data sets.
+
+REMINDER:  Ensure that the contents of the folder will fit on a CD before writing!
+

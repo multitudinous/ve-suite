@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<!-- modified Shader from 3dlabs.com-->
+<Program>
+   <name>Gooch Shading</name>
+   <vertexShader>
+      <type>Vertex</type>
+      <shaderCode>
+         varying float NdotL;
+         varying vec3  ReflectVec;
+         varying vec3  ViewVec;
+         varying vec4  vertColor;
+
+         void main(void)
+         {
+            vec3 ecPos      = vec3 (gl_ModelViewMatrix * gl_Vertex);
+            vec3 tnorm      = normalize(gl_NormalMatrix * gl_Normal);
+            vec3 lightVec   = normalize(gl_LightSource[0].position.xyz - ecPos);
+            ReflectVec      = normalize(reflect(-lightVec, tnorm));
+            ViewVec         = normalize(-ecPos);
+            NdotL           = (dot(lightVec, tnorm) + 1.0) * 0.5;
+            vertColor = gl_Color;
+            gl_Position     = ftransform();
+        }
+      </shaderCode>
+   </vertexShader>
+   <fragmentShader>
+              <type>Fragment</type>
+              <uniform>
+                <name>DiffuseWarm</name>
+                <type>Float</type>
+                <size>1</size>
+                <textureUnit>0</textureUnit>
+                <value>0.45</value>
+              </uniform>
+              <uniform>
+                <name>DiffuseCool</name>
+                <type>Float</type>
+                <size>1</size>
+                <textureUnit>0</textureUnit>
+                <value>0.45</value>
+              </uniform>
+              <shaderCode>
+                          varying float NdotL;
+                          varying vec3  ReflectVec;
+                          varying vec4  vertColor;
+                          varying vec3  ViewVec;
+		          uniform float DiffuseWarm;
+		          uniform float DiffuseCool;
+
+                          void main (void)
+                          {
+                             vec3 SurfaceColor = vertColor.xyz;
+                             vec3 CoolColor = vertColor.xyz * 1.10;
+                             vec3 WarmColor = vertColor.xyz * .10;
+                            // vec3 CoolColor = vec3(0,0,0.6);
+                             //vec3 WarmColor = vec3(.6,.6,0);
+
+                             vec3 kcool    = min(CoolColor + DiffuseCool * SurfaceColor, 1.0);
+                             vec3 kwarm    = min(WarmColor + DiffuseWarm * SurfaceColor, 1.0); 
+                             vec3 kfinal   = mix(kcool, kwarm, NdotL);
+
+                             vec3 nreflect = normalize(ReflectVec);
+                             vec3 nview    = normalize(ViewVec);
+
+                             float spec    = max(dot(nreflect, nview), 0.0);
+                             spec          = pow(spec, 32.0);
+
+                             gl_FragColor = vec4 (min(kfinal + spec, 1.0), vertColor.w);
+                          }
+                          </shaderCode>
+            </fragmentShader>
+</Program>
