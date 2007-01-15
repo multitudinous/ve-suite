@@ -370,9 +370,6 @@ std::string fileIO::StripLeadingSpaces( std::string line )
 
 int fileIO::extractIntegerBeforeExtension( std::string filename )
 {
-   char * changeable_filename = new char [ strlen( filename.c_str() )+1 ];
-   strcpy( changeable_filename, filename.c_str() );
-
    std::string changeable_filname(filename);
    // last token will be the extension
    // secondLastToken will be the integer counter
