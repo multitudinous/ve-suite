@@ -95,7 +95,17 @@ int fileIO::DirectoryExists( std::string dirName )
 
 int fileIO::isDirWritable( const std::string dirname )
 {
-   fs::path file_name( dirname, fs::native );
+   std::string fullDirName(dirname);
+   fs::path dir_name( fullDirName, fs::native );
+   
+#ifdef WIN32
+   if(!dir_name.has_root_directory())
+   {
+      std::string currentDir = fs::current_path().native_directory_string();
+       fullDirName= currentDir + std::string("\\") + fullDirName;
+   }
+#endif
+   fs::path file_name( fullDirName, fs::native );
    file_name = fs::complete("testing.txt", file_name );
    //std::cout << file_name.string() << std::endl;
 
@@ -363,6 +373,7 @@ int fileIO::extractIntegerBeforeExtension( std::string filename )
    char * changeable_filename = new char [ strlen( filename.c_str() )+1 ];
    strcpy( changeable_filename, filename.c_str() );
 
+   std::string changeable_filname(filename);
    // last token will be the extension
    // secondLastToken will be the integer counter
    char lastToken[100], secondLastToken[100];
