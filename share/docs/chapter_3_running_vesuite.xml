@@ -325,6 +325,16 @@
       <para>The mouse wheel button handles the other translations. Hold it
       down to drag the scene left, right, up, or down across the
       screen.</para>
+      
+      <para><emphasis role="bold">Note:</emphasis> You may notice some trouble
+      returning to your original orientation after rotating the scene. That's
+      because the mouse controls rotate around an arbitrary axis; it lets you
+      rotate in all three dimensions, but as a tradeoff, it's harder to return
+      to a previous orientation.</para>
+      
+      <para>If you want to return to a standard orientation, use the
+      <guibutton>Reset</guibutton> and <guibutton>Frame All</guibutton>
+      commands under the VE-Xplorer->Display submenu.</para>
     </section>
 
     <section id="navigation_pane">
