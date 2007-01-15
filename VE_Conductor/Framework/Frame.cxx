@@ -207,8 +207,20 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
    EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
 
-//   EVT_SPLITTER_DCLICK( SPLIT_WINDOW, AppFrame::OnDoubleClickSash )
+//   EVT_SPLITTER_SASH_POS_CHANGED( SPLIT_WINDOW, AppFrame::UnSplitWindow )
+
 END_EVENT_TABLE()
+
+BEGIN_EVENT_TABLE(Splitter, wxSplitterWindow)
+   EVT_SPLITTER_DCLICK( SPLIT_WINDOW, Splitter::OnDClick )   
+END_EVENT_TABLE()
+
+Splitter::Splitter(wxWindow* parent, wxWindowID id)
+   :wxSplitterWindow(parent, id)
+{
+//   wxSplitterEvent split;
+//   OnDClick( split );   
+}
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title), 
@@ -267,7 +279,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_XML::VE_Model::ModelCreator() );
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_XML::VE_CAD::CADCreator() );
    
-   //Try and laod netweok from server if one is already present
+   //Try and load network from server if one is already present
    wxCommandEvent event;
    LoadFromServer( event );
    //Process command line args to see if ves file needs to be loaded
@@ -296,18 +308,18 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
 {
    if( GetDisplayMode() == "Tablet")
    {
-      wx_log_splitter = new wxSplitterWindow(parent, -1);
+      wx_log_splitter = new Splitter(parent, -1);
       wx_log_splitter->SetMinimumPaneSize( 40 );
       serviceList->GetMessageLog()->Create( wx_log_splitter, MYLOG, _(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
-      wx_nw_splitter = new wxSplitterWindow(wx_log_splitter, -1);
+      wx_nw_splitter = new Splitter(wx_log_splitter, -1);
    }
    else
    {
       serviceList->GetMessageLog()->Create( this, MYLOG, _(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
-      wx_nw_splitter = new wxSplitterWindow(parent, -1);
+      wx_nw_splitter = new Splitter(parent, -1);
    }
 
-   wx_nw_splitter->SetMinimumPaneSize( 20 );
+   //wx_nw_splitter->SetMinimumPaneSize( 20 );
 
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
@@ -1680,17 +1692,18 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    VE_XML::DataValuePair* DVP=new VE_XML::DataValuePair();
    VE_XML::Command* command=new VE_XML::Command();
    
-   unsigned int mode;
+   long int mode;
 
-   if(xplorerDeviceMenu->IsChecked(NAVIGATION_MODE)){
+   if(xplorerDeviceMenu->IsChecked(NAVIGATION_MODE))
+   {
       mode=0;
    }
-
-   else if(xplorerDeviceMenu->IsChecked(SELECTION_MODE)){
+   else if(xplorerDeviceMenu->IsChecked(SELECTION_MODE))
+   {
       mode=1;
    }
-
-   else{
+   else
+   {
       mode=-1;
    }
 
@@ -1736,21 +1749,22 @@ void AppFrame::ViewSelection( wxCommandEvent& event )
    VE_XML::DataValuePair* DVP=new VE_XML::DataValuePair();
    VE_XML::Command* command=new VE_XML::Command();
    
-   unsigned int value;
+   long int value;
 
-   if(event.GetId() == FRAME_ALL){
+   if(event.GetId() == FRAME_ALL)
+   {
       value=0;
    }
-
-   else if(event.GetId() == FRAME_SELECTION){
+   else if(event.GetId() == FRAME_SELECTION)
+   {
       value=1;
    }
-
-   else if(event.GetId() == RESET){
+   else if(event.GetId() == RESET)
+   {
       value=2;
    }
-
-   else{
+   else
+   {
       value=-1;
    }
 
@@ -2020,17 +2034,20 @@ void AppFrame::SplitWindow()
 {
    wx_nw_splitter->SplitVertically(av_modules,network,140);
 }
-////////////////////////////////////////////////////////////////////////////////
-//void AppFrame::OnDoubleClickSash( int xPos, int yPos )
-void AppFrame::OnDoubleClickSash( wxSplitterEvent& event )
-{
-//std::cout<<"WORKING"<<std::endl;
-   //wx_nw_splitter->SplitVertically(av_modules,network,140);
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::UnSplitWindow( wxSplitterEvent& event )
-{
-//std::cout<<"WORKING"<<std::endl;
-   //wx_nw_splitter->SplitVertically(av_modules,network,140);
-}
 */
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnDoubleClickSash( int xPos, int yPos )
+//void AppFrame::OnDoubleClickSash( wxSplitterEvent& event )
+{
+std::cout<<"WORKING"<<std::endl;
+   //wx_nw_splitter->SplitVertically(av_modules,network,140);
+}
+////////////////////////////////////////////////////////////////////////////////
+void Splitter::OnDClick( wxSplitterEvent& event )
+{
+   event.Veto();
+std::cout<<"WORKING"<<std::endl;
+   //wx_nw_splitter->SplitVertically(av_modules,network,140);
+//   event.GetId() == CHANGE_XPLORER_VIEW_LOGO
+}
+
