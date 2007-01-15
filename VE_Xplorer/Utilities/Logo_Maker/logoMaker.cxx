@@ -58,6 +58,16 @@ int main( int argc, char* argv[] )
    while( !osgFile.eof() );
    osgFile.close();
 
+      if ( tempData.size() > 0 )
+      {
+         ReplaceCharacters( tempData, std::string( "\"" ) );
+         StripCharacters( tempData, std::string( "\n" ) );
+         StripCharacters( tempData, std::string( "\r" ) );
+         hFile << "  osgData.append( \"" << tempData << "\" );" << std::endl;
+         tempData.erase();
+      }
+
+
    hFile << "  return osgData;" << std::endl
          << "}" << std::endl
          << "#endif" << std::endl
