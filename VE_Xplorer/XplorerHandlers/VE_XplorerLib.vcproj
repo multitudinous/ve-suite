@@ -971,6 +971,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DisplayInformation.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\KeyboardMouse.cxx"
 				>
 			</File>
@@ -1466,6 +1470,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DisplayInformation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EventHandler.h"
 				>
 			</File>
@@ -1486,7 +1494,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\QCCleaDatarEH.h"
+				RelativePath=".\QCClearDataEH.h"
 				>
 			</File>
 			<File
@@ -1559,6 +1567,10 @@
 			</File>
 			<File
 				RelativePath=".\vtkSmartPtr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WCS.h"
 				>
 			</File>
 			<File

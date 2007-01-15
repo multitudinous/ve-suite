@@ -4,23 +4,17 @@
 
 #ifndef TRACKBALL_H
 #define TRACKBALL_H
-
 /*!\file Trackball.h
 Trackball API
 */
 /*!\class VE_Xplorer::Trackball
 * 
 */
-
 #include <gmtl/Matrix.h>
 
 #include <gadget/Type/PositionInterface.h>
 
 #include "VE_Installer/include/VEConfig.h"
-
-namespace osg{
-   class CameraNode;
-}
 
 namespace VE_Xplorer
 {

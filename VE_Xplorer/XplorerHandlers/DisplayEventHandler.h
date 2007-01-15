@@ -1,18 +1,21 @@
 #ifndef DISPLAY_EVENT_HANDLER_H
 #define DISPLAY_EVENT_HANDLER_H
-
 /*!\file DisplayEventHandler.h
   DisplayEventHandler API
   */
 /*!\class DisplayEventHandler
  * Class for changing trackball properties in xplorer
  */
-
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 
 namespace VE_XML
 {
    class XMLObject;
+}
+
+namespace VE_SceneGraph
+{
+   class cfdDCS;
 }
 
 namespace VE_Xplorer
@@ -45,7 +48,7 @@ namespace VE_EVENTS
          //Equal operator
          DisplayEventHandler& operator=(const DisplayEventHandler& rhs);
    
-      protected:
+      private:
 
    };
 }

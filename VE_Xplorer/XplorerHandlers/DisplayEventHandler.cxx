@@ -13,9 +13,9 @@
 #include <boost/filesystem/path.hpp>
 
 #ifdef WIN32
-#include <direct.h>
+   #include <direct.h>
 #else
-#include <unistd.h>
+   #include <unistd.h>
 #endif
 
 using namespace VE_EVENTS;
@@ -53,24 +53,16 @@ void DisplayEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       DVP=command->GetDataValuePair("FrameRateID");
       DVP->GetData(value);
 
-      if(value==0){
-         VE_Xplorer::cfdEnvironmentHandler::instance()->SetDisplayFrameRate(false);
-      }
-      else if(value==1){
-         VE_Xplorer::cfdEnvironmentHandler::instance()->SetDisplayFrameRate(true);
-      }
+      //VE_Xplorer::cfdEnvironmentHandler::instance()->SetFrameRateFlag(value);
+      //VE_Xplorer::cfdEnvironmentHandler::instance()->FrameRateEvent();
    }
 
    else if(command->GetDataValuePair("CoordSysID")){
       DVP=command->GetDataValuePair("CoordSysID");
       DVP->GetData(value);
 
-      if(value==0){
-         VE_Xplorer::cfdEnvironmentHandler::instance()->SetDisplayCoordSys(false);
-      }
-      else if(value==1){
-         VE_Xplorer::cfdEnvironmentHandler::instance()->SetDisplayCoordSys(true);
-      }
+      //VE_Xplorer::cfdEnvironmentHandler::instance()->SetCoordSysFlag(value);
+      //VE_Xplorer::cfdEnvironmentHandler::instance()->CoordSysEvent(); 
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

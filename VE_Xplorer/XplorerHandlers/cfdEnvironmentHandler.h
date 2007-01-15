@@ -32,19 +32,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ENVIRONMENTHANDLER_H
 #define CFD_ENVIRONMENTHANDLER_H
-
 /*!\file cfdEnvironmentHandler.h
 cfdEnvironmentHandler API
 */
 /*!\class VE_Xplorer::cfdEnvironmentHandler
 * 
 */
-
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
 #include <map>
 #include <vector>
+
 namespace VE_Xplorer
 {
 	class cfdNavigate;
@@ -64,26 +63,10 @@ namespace VE_Xplorer
    #endif //VE_PATENTED
 }
 
-namespace VE_SceneGraph
-{
-   class cfdDCS;
-   class cfdGroup;
-}
-
 namespace VE_EVENTS
 {
    class EventHandler;
 }
-
-#ifdef _OSG
-   #include <osg/Geode>
-   #include <osgText/Text>
-
-   namespace osgText
-   {
-      class Font;
-   }
-#endif
 
 class vtkPolyData;
 
@@ -101,28 +84,30 @@ private:
    vprSingletonHeader( cfdEnvironmentHandler );   
 
 public:
-   void Initialize( void );
+   void Initialize();
    void CleanUp( void );
    void InitScene( void );
    void PreFrameUpdate( void );
    void LatePreFrameUpdate( void );
    void SetCommandArray( cfdCommandArray* );
+
    //void CreateObjects( void );
    ///Update the background color
    ///\param color The background color
    void SetBackgroundColor(std::vector<double> color);
-   ///Set display framerate on/off
-   void SetDisplayFrameRate(bool display);
-   ///Set display world coordinate system on/off
-   void SetDisplayCoordSys(bool display);
+
    ///Accessor for cfdNavigate
    cfdNavigate* GetNavigate( void );
+
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
+
    ///Accessor for cfdSoundHandler
    cfdSoundHandler* GetSoundHandler( void );
+
    ///Accessor for cfdTeacher
    cfdTeacher* GetTeacher( void );
+
    ///Accessor for cfdQuatCamHandler
    //cfdQuatCamHandler* GetQuatCamHandler( void );
 
@@ -130,34 +115,29 @@ public:
    cfdDisplaySettings* GetDisplaySettings( void );
 
    ///Get the background color
-   std::vector<float> GetBackgroundColor();
+   std::vector<float> GetBackgroundColor( void );
+
    ///Accessor to set desktop size information for
    /// runtime reconfiguration of desktop windows
    void SetDesktopSize( int width, int height );
 	void SetWindowDimensions( unsigned int width, unsigned int height );
-	void SetFrustumValues(float _top,float _bottom,float _near);
+	void SetFrustumValues( float _top, float _bottom, float _near );
 
-   unsigned int GetWindowWidth();
-   unsigned int GetWindowHeight();
+   unsigned int GetWindowWidth( void );
+   unsigned int GetWindowHeight( void );
 
 	void PostFrameUpdate();
 
    ///Check if the background color has changed
    bool BackgroundColorChanged();
 
-   ///Check if the framerate should be displayed in xplorer
-   bool GetDisplayFrameRate();
-
-   ///Check if the world coordinate system should be displayed in xplorer
-   bool GetDisplayCoordSys();
-
    ///Reset the background changed color flag
    void ResetBackgroundColorUpdateFlag();
   
-   #ifdef _OSG 
+   #ifdef _OSG
    #ifdef VE_PATENTED 
-      void ActivateGeometryPicking();
-      void DeactivateGeometryPicking();
+      void ActivateGeometryPicking( void );
+      void DeactivateGeometryPicking( void );
    #endif //VE_PATENTED
    #endif //_OSG 
 
@@ -168,25 +148,10 @@ private:
    cfdQuatCamHandler* _camHandler;
 
    #ifdef _OSG
-      ///Initialize the framerate display
-      void InitFrameRateDisplay();
-
-      ///Initialize the world coordinate system display
-      void InitCoordSysDisplay();
-
-      //Framerate variables
-      VE_SceneGraph::cfdDCS* framerate_dcs;
-      osg::ref_ptr<osg::Geode> framerate_geode;
-      osg::ref_ptr<osgText::Text> framerate_text;
-      osg::ref_ptr<osgText::Font> framerate_font;
-
-      //World Coordinate System variables
-
-      #ifdef VE_PATENTED 
-         cfdObjectHandler* objectHandler;
-         bool _activeGeomPicking;
-      #endif // VE_PATENTED
-
+   #ifdef VE_PATENTED 
+      cfdObjectHandler* objectHandler;
+      bool _activeGeomPicking;
+   #endif // VE_PATENTED
    #endif //_OSG
 
    std::vector<float> _clearColor;///<The background color;
@@ -194,6 +159,7 @@ private:
    std::string _param;
    cfdCommandArray* _commandArray;
    cfdReadParam* _readParam;
+
    // cur_box will eventually be used to define bounding box
    // for data interagation
    double cur_box[6];
@@ -205,10 +171,8 @@ private:
    ///<The class used to change juggler configuration settings during runtime
    cfdDisplaySettings* displaySettings;
 
-   ///<Desktop width
-   int desktopWidth;
-   ///<Desktop height
-   int desktopHeight;
+   int desktopWidth;                   ///<Desktop width
+   int desktopHeight;                  ///<Desktop height
 
 	int _windowWidth;
 	int _windowHeight;
@@ -217,9 +181,8 @@ private:
 	float _frustumBottom;
 	float _frustumNear;
 
-   bool _updateBackgroundColor;///<The flag for updating the background color in xplorer
-   bool display_framerate;///<The flag for displaying the framerate in xplorer
-   bool display_coord_sys;///<The flag for displaying the world coordinate system in xplorer
+   bool _updateBackgroundColor;        ///<The flag for updating the background color in xplorer
+   
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }
