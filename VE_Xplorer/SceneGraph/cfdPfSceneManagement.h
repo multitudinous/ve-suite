@@ -41,7 +41,6 @@ cfdPfSceneManagement API
 /*!\class VE_SceneGraph::cfdPfSceneManagement
 *
 */
-
 namespace VE_SceneGraph
 {
    class cfdDCS;
@@ -49,9 +48,10 @@ namespace VE_SceneGraph
    class cfdSwitch;
    class cfdFILE;
 }
+
 #ifdef _PERFORMER
-class pfLightModel;
-class pfLightSource;
+   class pfLightModel;
+   class pfLightSource;
 #elif _OSG
 #endif
 
@@ -70,6 +70,7 @@ public:
    cfdGroup* GetRootNode( void );
    cfdDCS*   GetWorldDCS( void );
    cfdDCS*   GetNetworkDCS( void );
+
    ///Set the node on the switch node that is active
    ///\param activeNode node to activate
    void SetActiveSwitchNode( int activeNode );
@@ -77,6 +78,7 @@ public:
    ///Switch the logo on and off
    ///\param trueFalse Turn the logo on and off.
    void ViewLogo(bool trueFalse);
+
    ///PreFrameUpdate call to sync dcs information across cluster
    void PreFrameUpdate( void );
 
@@ -87,7 +89,7 @@ private:
    //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
    cfdPfSceneManagement( void );
    ~cfdPfSceneManagement(){ ; } // Never gets called, don't implement
-   vprSingletonHeader( cfdPfSceneManagement );   
+   vprSingletonHeader( cfdPfSceneManagement );
 
    //std::string    param;
    std::string _param;
@@ -98,16 +100,18 @@ private:
    cfdDCS* networkDCS;///<Node to hold a network view of the system under investigation
    VE_SceneGraph::cfdFILE* _movingPyramidsAssembly;///<Logo Animated pyramids
    VE_SceneGraph::cfdFILE* _textPart;///<Logo Text
-#ifdef _PERFORMER
-   pfLightModel*  sunModel;
-   pfLightSource* sun;
-   pfLightSource* lit;
-#endif
+
+   #ifdef _PERFORMER
+      pfLightModel*  sunModel;
+      pfLightSource* sun;
+      pfLightSource* lit;
+   #endif
+
 protected:
    ///create the model for the logo.
-#ifdef _OSG
-   void _createLogo();
-#endif
+   #ifdef _OSG
+      void _createLogo();
+   #endif
 };
 }
 #endif

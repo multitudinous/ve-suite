@@ -41,6 +41,7 @@
 namespace VE_SceneGraph
 {
    class cfdDCS;
+   class cfdGroup;
    class cfdNode;
    class fileInfo;
 }
@@ -61,7 +62,7 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS cfdFILE 
 {
 public:
-   cfdFILE( std::string, VE_SceneGraph::cfdDCS*,bool isStream=false );
+   cfdFILE( std::string, VE_SceneGraph::cfdGroup*,bool isStream=false );
    ~cfdFILE();
 
    void Initialize(float);

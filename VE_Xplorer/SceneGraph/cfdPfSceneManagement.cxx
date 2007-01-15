@@ -209,10 +209,7 @@ void cfdPfSceneManagement::_createLogo()
       _logoNode->SetScaleArray(scale);
 
       _textPart = new VE_SceneGraph::cfdFILE(GetVESuite_Text(),_logoNode,true);
-      _logoNode->AddChild(_textPart->GetDCS());
-
       _movingPyramidsAssembly = new VE_SceneGraph::cfdFILE(GetVESuite_Triangles(),_logoNode,true);
-      _logoNode->AddChild(_movingPyramidsAssembly->GetDCS());
    }
 
 #elif _PERFORMER

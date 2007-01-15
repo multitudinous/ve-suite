@@ -50,7 +50,7 @@
 
 using namespace VE_SceneGraph;
 
-cfdFILE::cfdFILE( std::string geomFile, VE_SceneGraph::cfdDCS* worldDCS, bool isStream  )
+cfdFILE::cfdFILE( std::string geomFile, VE_SceneGraph::cfdGroup* parentNode, bool isStream  )
 {
    // Need to fix this and move some code to cfdNode
    // Leave some code here no more cfdFileInfo
@@ -59,7 +59,7 @@ cfdFILE::cfdFILE( std::string geomFile, VE_SceneGraph::cfdDCS* worldDCS, bool is
    this->node->LoadFile( geomFile.c_str(),isStream );
    fileName.assign( geomFile );
    this->DCS->AddChild( this->node );
-   worldDCS->AddChild( this->DCS );
+   parentNode->AddChild( this->DCS );
 
 #ifdef _PERFORMER
    fog = new pfFog();
