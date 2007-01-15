@@ -73,6 +73,8 @@ void TextureBasedActivateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLOb
    {
       if(_activeModel)
       {
+         //make the CAD transparent
+         _activeModel->MakeCADRootTransparent();
          if(_activeModel->GetCfdDCS()->SearchChild(_activeModel->GetActiveDataSet()->GetDCS())< 0)
          {
             vprDEBUG(vesDBG,1) << "|\t\tadding active switch node to worldDCS"
@@ -90,6 +92,7 @@ void TextureBasedActivateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLOb
          _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(1);
          _activeTDSet = _activeModel->GetTextureDataSet( 0 );
          VE_TextureBased::cfdTextureBasedVizHandler::instance()->SetActiveTextureDataSet( _activeTDSet );
+         
       } 
    }
    catch(...)
