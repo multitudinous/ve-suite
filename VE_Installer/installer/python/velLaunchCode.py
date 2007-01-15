@@ -274,7 +274,6 @@ class Launch:
         ##s[len(s):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf",
         ##     "%s" %self.settings["JconfPath"]]
         s[len(s):] = desktop
-        print s ##TESTER
         return s
 
     def ReadClusterTemplate(self):
