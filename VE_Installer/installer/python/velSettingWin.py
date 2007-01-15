@@ -54,7 +54,8 @@ class SettingsWindow(wx.Dialog):
         ##Xplorer Type radio box.
         self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Type",
                                      wx.DefaultPosition, wx.DefaultSize,
-                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_ROWS)
+                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_COLS)
+##                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_ROWS)
         self.rbXplorer.SetToolTip(wx.ToolTip("Which Xplorer format do you" +
                                              " want to launch?"))
         ##Cluster button.

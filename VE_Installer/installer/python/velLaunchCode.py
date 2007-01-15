@@ -274,6 +274,7 @@ class Launch:
         ##s[len(s):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf",
         ##     "%s" %self.settings["JconfPath"]]
         s[len(s):] = desktop
+        print s ##TESTER
         return s
 
     def ReadClusterTemplate(self):
@@ -441,7 +442,8 @@ class Launch:
         ##These are setup for using VE-Suite dependency install's location
         ##change only if you are using your own build
         if windows:
-            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"), JUGGLER_FOLDER)
+            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"))
+##            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"), JUGGLER_FOLDER)
         else:
             vjDir = self.settings["JugglerDep"]
         self.EnvFill("VJ_BASE_DIR", vjDir)
