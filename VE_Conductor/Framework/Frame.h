@@ -71,87 +71,7 @@ const wxString F_FINANCIAL = _T("Financial");
 const wxString F_GEOMETRY = _T("Geometry");
 const wxString F_VISUALIZATION = _T("Visualization");
 //cyang
-/*
-enum 
-{
-   v21ID_CONNECT,
-   v21ID_CONNECT_VE,
-   v21ID_SUBMIT,
-   v21ID_LOAD, 
-   QUERY_FROM_SERVER, 
-   QUERY_NETWORK,  
-   RUN_ASPEN_NETWORK,
-   ASPEN_CONNECTION_MENU,
-   SHOW_ASPEN_SIMULATION,
-   HIDE_ASPEN_SIMULATION,
-   CLOSE_ASPEN_SIMULATION,
-   CONDUCTOR_FIND,
-   v21ID_DISCONNECT,
-   v21ID_DISCONNECT_VE, 
-   v21ID_UNDO, 
-   v21ID_REDO, 
-   v21ID_ZOOMIN, 
-   v21ID_ZOOMOUT,
-   v21ID_START_CALC, 
-   v21ID_STOP_CALC,
-   v21ID_PAUSE_CALC,
-   v21ID_RESUME_CALC, 
-   v21ID_VIEW_RESULT,
-   v21ID_GLOBAL_PARAM,
-   v21ID_BASE,
-   v21ID_SOUR,
-   v21ID_REI_BASE,
-   v21ID_REI_SOUR,
-   v21ID_SWEET,
-   v21ID_CO_DISPOSAL,
-   MYLOG,
 
-   v21ID_HELP,
-   v21ID_ABOUT,
-   v21ID_REVISION,
-   v21ID_CONTACTS,
-   v21ID_PLATFORM,
-
-   XPLORER_DEVICES,
-   NAVIGATION_MODE,
-   SELECTION_MODE,
-   DEVICE_PROPERTIES,
-
-   XPLORER_DISPLAY,
-   FRAME_RATE,
-   COORDINATE_SYSTEM,
-
-   XPLORER_VIEW,
-   FRAME_ALL,
-   FRAME_SELECTION,
-   RESET,
-
-   XPLORER_NAVIGATION,
-   XPLORER_VIEWPOINTS,
-   XPLORER_SOUNDS,
-   XPLORER_STREAMLINE,
-
-   JUGGLER_STEREO,
-   JUGGLER_MONO, 
-   JUGGLER_SETTINGS,
-
-   ID_SELECTION_TOOLBAR,
-   ID_NAVIGATION_TOOLBAR,
-
-   CAD_NODE_DIALOG,
-   XPLORER_SCENES,
-   XPLORER_EXIT,
-   TIMER_ID,
-   XPLORER_COLOR,
-   ID_PREFERENCES,
-   CHANGE_XPLORER_VIEW,
-   CHANGE_XPLORER_VIEW_NETWORK,
-   CHANGE_XPLORER_VIEW_CAD,
-   CHANGE_XPLORER_VIEW_LOGO,
-
-   SPLIT_WINDOW
-};
-*/
 class OrbThread;
 class PEThread;
 class Avail_Modules;
@@ -167,9 +87,7 @@ class UI_TeacherTab;
 class UserPreferences;
 class wxImageList;
 class wxSplitterWindow;
-class AppFrame;
 class Splitter;
-//class Vistab;
 
 namespace VE_Conductor
 {
@@ -188,24 +106,6 @@ namespace VE_XML
 {
    class DOMDocumentManager;
 }
-
-class Splitter : public wxSplitterWindow
-{
-public:
-enum
-{
-   SPLIT_WINDOW
-};
-   Splitter(){;}
-   Splitter(wxWindow* parent, wxWindowID id);
-   virtual ~Splitter() { ; }
-   void OnDClick( wxSplitterEvent& event );
-   void SetPaneSize(void);
-
-private:
-
-   DECLARE_EVENT_TABLE()
-};
 
 class AppFrame : public wxFrame
 {

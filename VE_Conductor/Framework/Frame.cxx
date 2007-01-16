@@ -58,6 +58,7 @@
 
 #include "VE_Conductor/Framework/vectors.h"
 #include "VE_Conductor/Framework/vistab.h"
+#include "VE_Conductor/Framework/Splitter.h"
 
 #include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
@@ -210,15 +211,6 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 //   EVT_SPLITTER_SASH_POS_CHANGED( SPLIT_WINDOW, AppFrame::UnSplitWindow )
 
 END_EVENT_TABLE()
-
-BEGIN_EVENT_TABLE(Splitter, wxSplitterWindow)
-   EVT_SPLITTER_DCLICK( -1, Splitter::OnDClick )   
-END_EVENT_TABLE()
-
-Splitter::Splitter(wxWindow* parent, wxWindowID id)
-   :wxSplitterWindow(parent, id)
-{  
-}
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title), 
@@ -2014,17 +2006,4 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );
    delete veCommand;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Splitter::OnDClick( wxSplitterEvent& event )
-{
-   event.Veto();
-   if( GetSashPosition() == 140 )
-   {
-      SetSashPosition( 1, true );
-   }
-   else if( GetSashPosition() == 2 )
-   {
-      SetSashPosition( 140, true );
-   }
 }
