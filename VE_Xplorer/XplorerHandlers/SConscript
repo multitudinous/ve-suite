@@ -98,6 +98,7 @@ sources = Split("""
    DataSetScalarBar.cxx
    ScalarBarEventHandler.cxx
    ViewEventHandler.cxx
+   DisplayInformation.cxx
    DisplayEventHandler.cxx
    QCClearDataEH.cxx
 """)
@@ -196,6 +197,7 @@ headers = Split("""
    DataSetScalarBar.h
    ScalarBarEventHandler.h
    ViewEventHandler.h
+   DisplayInformation.h
    DisplayEventHandler.h
    QCClearDataEH.h
 """)

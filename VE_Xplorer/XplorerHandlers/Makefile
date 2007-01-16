@@ -112,14 +112,14 @@ SRCS=\
    CADSetNameEH.cxx \
    CADToggleEH.cxx \
    CADTransformEH.cxx \
-   Device.cpp \
-   DeviceHandler.cpp \
-   DeviceEventHandler.cpp \
+   Device.cxx \
+   DeviceHandler.cxx \
+   DeviceEventHandler.cxx \
    MaterialModeUpdateEH.cxx \
    MaterialUpdateEH.cxx\
    KeyboardMouse.cxx\
    Trackball.cxx\
-   TrackballEventHandler.cpp\
+   TrackballEventHandler.cxx\
    cfdObjectHandler.cxx\
    SelectionHandler.cxx\
    CreateVisObjectEventHandler.cxx\
@@ -146,8 +146,9 @@ SRCS=\
    AxesLabelsEventHandler.cxx\
    DataSetScalarBar.cxx\
    ScalarBarEventHandler.cxx\
-   ViewEventHandler.cpp\
-   DisplayEventHandler.cpp
+   ViewEventHandler.cxx\
+   DisplayEventHandler.cxx\
+   DisplayInformation.cxx
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LDFLAGS+= -g
