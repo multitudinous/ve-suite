@@ -477,8 +477,13 @@ class Launch:
         ##These are currently set relative to VE-Suite's install
         vjBaseDir = os.getenv("VJ_BASE_DIR")
         self.EnvFill("JCCL_BASE_DIR", vjBaseDir)
-        self.EnvFill("JCCL_DEFINITION_PATH",
-                     os.path.join(os.getenv("JCCL_BASE_DIR"), "definitions"))
+        if not windows:
+            self.EnvFill("JCCL_DEFINITION_PATH",
+                         os.path.join(os.getenv("JCCL_BASE_DIR"), "definitions"))
+        else:
+            self.EnvFill("JCCL_DEFINITION_PATH",
+                         os.path.join(os.getenv("JCCL_BASE_DIR"),
+                                      "share", "definitions"))
         ##self.EnvFill("VJ_CFG_PATH", os.path.join(vjBaseDir, "definitions")) ##Can get rid of?
         ##self.EnvFill("NSPR_ROOT", vjBaseDir) ##Can get rid of?
         self.EnvFill("SNX_BASE_DIR", vjBaseDir)
@@ -512,6 +517,7 @@ class Launch:
         if windows:
             pathList = [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
+                        os.path.join(str(os.getenv("VE_DEPS_DIR")), "share"),
                         os.path.join(VELAUNCHER_DIR)]
             ##Outdated paths.
             ##pathList += [##os.path.join(str(os.getenv("VJ_DEPS_DIR")), "bin"),
