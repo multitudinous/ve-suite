@@ -20,8 +20,13 @@ VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
 if os.path.basename(VELAUNCHER_DIR) == "velauncher":
     VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
 DIRECTORY_DEFAULT = join(os.path.dirname(VELAUNCHER_DIR), "exampleDatasets")
-LOGO_LOCATION = join(VELAUNCHER_DIR, "installerImages", "ve_logo.xpm")
-SPLASH_IMAGE = join(VELAUNCHER_DIR, "installerImages", "velauncher_banner.bmp")
+##Image settings.
+IMAGES_DIR = join(VELAUNCHER_DIR, "..", "share", "installerImages")
+if not os.path.isdir(IMAGES_DIR):
+    IMAGES_DIR = join(VELAUNCHER_DIR, "..", "..", "share", "installerImages")
+print IMAGES_DIR ##TESTER
+LOGO_LOCATION = join(IMAGES_DIR, "ve_logo.xpm")
+SPLASH_IMAGE = join(IMAGES_DIR, "velauncher_banner.bmp")
 SPLASH_TIME = 7000 ##milliseconds before auto-close
 if windows:
     CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")
