@@ -111,40 +111,6 @@ int fileIO::isDirWritable( const std::string dirname )
       result = true;
    }
    return static_cast<int>(result);
-
-
-
-/* original material
-   std::string fullDirName(dirname);
-   fs::path dir_name( fullDirName, fs::native );
-   
-#ifdef WIN32
-   if(!dir_name.has_root_directory())
-   {
-      std::string currentDir = fs::current_path().native_directory_string();
-      fullDirName= currentDir + std::string("\\") + fullDirName;
-   }
-#endif
-   fs::path file_name( fullDirName, fs::native );
-   file_name = fs::complete("testing.txt", file_name );
-   //std::cout << file_name.string() << std::endl;
-
-   fs::ofstream test_file(file_name, std::ios_base::out | std::ios_base::app);
-   test_file.close();
-   bool result(false);
-   if ( fs::exists( file_name ) )
-   {
-      fs::remove( file_name );
-      result = true;
-   }
-   return static_cast<int>(result);
-
-
-   */
-
-
-
-
 }
 
 const std::string fileIO::getWritableDir()
