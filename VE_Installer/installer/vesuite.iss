@@ -72,7 +72,7 @@ Source: {#VEHOME}\bin\win32\WinClientd.exe; DestDir: {app}\bin; Components: veco
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_d.exe; DestDir: {app}\bin; Components: vexplorer; Flags: ignoreversion
 Source: {#VEHOME}\lib\win32\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEHOME}\bin\win32\WinServerd.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}; Flags: ignoreversion
+Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\share\shaders\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\simpleScalars\*.vti; DestDir: {app}\share\exampleDatasets\simple\texture-based; Components: examples; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs
@@ -89,7 +89,6 @@ Source: {#VEHOME}\VE_TestSuite\vtkPolyData.vtk; DestDir: {app}\share\exampleData
 Source: {#VEHOME}\VE_TestSuite\SURFACE1\*; DestDir: {app}\share\exampleDatasets\simple\SURFACE1\; Components: examples; Flags: recursesubdirs
 Source: {#VEHOME}\VE_TestSuite\POST_DATA1\*; DestDir: {app}\share\exampleDatasets\simple\POST_DATA1; Components: examples; Flags: recursesubdirs
 Source: {#VEHOME}\VE_TestSuite\POST_DATA2\*; DestDir: {app}\share\exampleDatasets\simple\POST_DATA2; Components: examples; Flags: recursesubdirs
-Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {app}\images; DestName: vesSmallIcon.bmp
 Source: {#VEHOME}\VE_CE\*.h; DestDir: {app}\include\VE_CE; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Conductor\*.h; DestDir: {app}\include\VE_Conductor; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Xplorer\*.h; DestDir: {app}\include\VE_Xplorer; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
@@ -98,9 +97,9 @@ Source: {#VEHOME}\VE_Installer\include\VEConfig.h; DestDir: {app}\include\VE_Ins
 Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\share\stereo_desktop; Components: nameserver; Flags: ignoreversion recursesubdirs
-Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\installerImages; Flags: replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\share\installerImages; Flags: replacesameversion
 Source: {#VEHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\installerImages; Flags: replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\share\installerImages; Flags: replacesameversion
 Source: {#JUGGLERINSTHOME}\lib\ms*.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
@@ -112,11 +111,12 @@ Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags
 Source: {#VEHOME}\VE_Installer\installer\simple.ves; DestDir: {app}\share\exampleDatasets\simple; Components: examples; Flags: overwritereadonly replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\clusterTemplate.txt; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\share\installerImages; DestName: ve_logo.xpm
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico
-Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
+Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
 
 ;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\VE_icon.ico
 ;Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
