@@ -209,9 +209,15 @@ Targets:
       ce - Build VE-CE
       > scons ce
 
-   Make sure that vrjuggler, gmtl, cppdom, ACE/TAO, and apr/apr-util are
-   in your FLAGPOLL_PATH or PKGCONFIG_PATH or (DY)LD_LIBRARY_PATH. This is
-   necessaary to auto-detect the dependencies.
+   Make sure that:
+      vrjuggler, 
+      gmtl, 
+      cppdom, 
+      ACE/TAO, 
+      bullet, and 
+      apr/apr-util 
+   are in your FLAGPOLL_PATH or PKGCONFIG_PATH or (DY)LD_LIBRARY_PATH. 
+   This is necessaary to auto-detect the dependencies.
 
    NOTE: An example environment configuration file (ves.setup.csh > csh shell
          & ves.setup.sh > sh shell) is in the VE_Installer directory. This
@@ -247,6 +253,9 @@ if not SConsAddons.Util.hasHelpFlag():
    if not conf.CheckPackageVersion('vrjuggler','2.0.1'):
       Exit(1)
 
+   if not conf.CheckPackageVersion('bullet','2.4'):
+      Exit(1)
+   
    # check the apr and apu utilities
    # there is probably an easier way to do this so feel free to simplify
    aprVersion = '0.9'
@@ -263,6 +272,9 @@ if not SConsAddons.Util.hasHelpFlag():
    if not conf.CheckPackageVersion( apuCommand, aprVersion ):
       Exit(1)
    baseEnv = conf.Finish()
+
+   fgpBullet = sca_util.FlagPollParser('bullet')
+   fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", "bulletdynamics" )
 
    # Try to save the options if possible
    try:                                   

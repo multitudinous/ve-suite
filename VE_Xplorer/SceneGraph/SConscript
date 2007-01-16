@@ -61,7 +61,7 @@ headers = Split("""
 
 lib_env = ves_pkg.getEnv().Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
-lib_env.ParseConfig('flagpoll gmtl vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll gmtl vrjuggler bullet --libs --cflags')
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 #ode_options.apply( lib_env )

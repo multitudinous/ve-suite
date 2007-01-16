@@ -459,7 +459,8 @@ void Network::OnDClick( wxMouseEvent& event )
 
    // set the m_selMod class variable
    SelectMod( evtpos.x, evtpos.y );
-
+   //set the active model if connected to xplorer
+   SetActiveModel();
    // now use it
    if ( m_selMod >= 0 )
    {
