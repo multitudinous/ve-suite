@@ -1,5 +1,5 @@
 
-//Bullet Continuous Collision Detection and Physics Library
+//Uses Bullet Continuous Collision Detection and Physics Library
 //Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
 
 #ifndef PHYSICS_SIMULATOR_H
@@ -21,6 +21,8 @@ namespace VE_SceneGraph
    {
       public:
          void CleanUp();                                       //Functions as the destructor
+
+         void DisplayCallback();
 
          btDynamicsWorld* GetDynamicsWorld();
 
