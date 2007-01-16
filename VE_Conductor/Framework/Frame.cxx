@@ -212,14 +212,12 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Splitter, wxSplitterWindow)
-   EVT_SPLITTER_DCLICK( SPLIT_WINDOW, Splitter::OnDClick )   
+   EVT_SPLITTER_DCLICK( -1, Splitter::OnDClick )   
 END_EVENT_TABLE()
 
 Splitter::Splitter(wxWindow* parent, wxWindowID id)
    :wxSplitterWindow(parent, id)
-{
-//   wxSplitterEvent split;
-//   OnDClick( split );   
+{  
 }
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -319,7 +317,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
       wx_nw_splitter = new Splitter(parent, -1);
    }
 
-   //wx_nw_splitter->SetMinimumPaneSize( 20 );
+   wx_nw_splitter->SetMinimumPaneSize( 2 );
 
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );
@@ -331,7 +329,6 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
    }
 
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
-//std::cout<<"SASH LOCATION: "<<wx_nw_splitter->GetSashPosition()<<std::endl;
 }
 //////////////////////////////////
 void AppFrame::_configureDesktop()
@@ -2018,36 +2015,16 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
    serviceList->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
-/*
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewTree()
-{
-   wx_nw_splitter->Unsplit(network);
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewCanvas()
-{
-   wx_nw_splitter->Unsplit(av_modules);
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SplitWindow()
-{
-   wx_nw_splitter->SplitVertically(av_modules,network,140);
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnDoubleClickSash( int xPos, int yPos )
-//void AppFrame::OnDoubleClickSash( wxSplitterEvent& event )
-{
-std::cout<<"WORKING"<<std::endl;
-   //wx_nw_splitter->SplitVertically(av_modules,network,140);
-}
 ////////////////////////////////////////////////////////////////////////////////
 void Splitter::OnDClick( wxSplitterEvent& event )
 {
    event.Veto();
-std::cout<<"WORKING"<<std::endl;
-   //wx_nw_splitter->SplitVertically(av_modules,network,140);
-//   event.GetId() == CHANGE_XPLORER_VIEW_LOGO
+   if( GetSashPosition() == 140 )
+   {
+      SetSashPosition( 1, true );
+   }
+   else if( GetSashPosition() == 2 )
+   {
+      SetSashPosition( 140, true );
+   }
 }
-

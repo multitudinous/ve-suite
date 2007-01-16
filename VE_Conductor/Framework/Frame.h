@@ -167,6 +167,8 @@ class UI_TeacherTab;
 class UserPreferences;
 class wxImageList;
 class wxSplitterWindow;
+class AppFrame;
+class Splitter;
 //class Vistab;
 
 namespace VE_Conductor
@@ -198,6 +200,8 @@ enum
    Splitter(wxWindow* parent, wxWindowID id);
    virtual ~Splitter() { ; }
    void OnDClick( wxSplitterEvent& event );
+   void SetPaneSize(void);
+
 private:
 
    DECLARE_EVENT_TABLE()
@@ -302,9 +306,9 @@ enum
    ///Get an appropriate size for sub dialogs
    wxRect GetAppropriateSubDialogSize();
 
-   wxSplitterWindow* wx_log_splitter;
+   Splitter* wx_log_splitter;
    wxSplitterWindow* wx_ve_splitter;
-   wxSplitterWindow* wx_nw_splitter;
+   Splitter* wx_nw_splitter;
    wxMenuBar* menubar;
    wxToolBar* toolbar;
    wxIcon* icon;
@@ -349,11 +353,6 @@ enum
    ///to load a ves file and set the working directory appropriatley for a
    ///particular application
    void ProcessCommandLineArgs( void );
-
-   ///Callback to unsplit canvas
-//   void SplitWindow();
-//   void ViewTree();
-//   void ViewCanvas(); 
 
 protected:
 
