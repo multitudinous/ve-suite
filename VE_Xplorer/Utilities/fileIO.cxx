@@ -95,6 +95,26 @@ int fileIO::DirectoryExists( std::string dirName )
 
 int fileIO::isDirWritable( const std::string dirname )
 {
+   // create string of dirname and testing.txt file
+   std::string fullDirName = dirname + std::string("/") +std::string("testing.txt");
+
+   // boost corrects for the "/"
+   fs::path file_name(fullDirName, fs::native); 
+
+   // test the file
+   fs::ofstream test_file(file_name, std::ios_base::out | std::ios_base::app);
+   test_file.close();
+   bool result(false);
+   if ( fs::exists( file_name ) )
+   {
+      fs::remove( file_name );
+      result = true;
+   }
+   return static_cast<int>(result);
+
+
+
+/* original material
    std::string fullDirName(dirname);
    fs::path dir_name( fullDirName, fs::native );
    
@@ -102,7 +122,7 @@ int fileIO::isDirWritable( const std::string dirname )
    if(!dir_name.has_root_directory())
    {
       std::string currentDir = fs::current_path().native_directory_string();
-       fullDirName= currentDir + std::string("\\") + fullDirName;
+      fullDirName= currentDir + std::string("\\") + fullDirName;
    }
 #endif
    fs::path file_name( fullDirName, fs::native );
@@ -118,6 +138,13 @@ int fileIO::isDirWritable( const std::string dirname )
       result = true;
    }
    return static_cast<int>(result);
+
+
+   */
+
+
+
+
 }
 
 const std::string fileIO::getWritableDir()
