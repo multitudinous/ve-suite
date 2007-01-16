@@ -370,7 +370,7 @@ std::string fileIO::StripLeadingSpaces( std::string line )
 
 int fileIO::extractIntegerBeforeExtension( std::string filename )
 {
-   std::string changeable_filname(filename);
+   /*std::string changeable_filname(filename);
    // last token will be the extension
    // secondLastToken will be the integer counter
    char lastToken[100], secondLastToken[100];
@@ -387,8 +387,8 @@ int fileIO::extractIntegerBeforeExtension( std::string filename )
       pch = strtok( NULL, excludes );
    }
 
-   delete [] changeable_filename;
-   return atoi(secondLastToken);
+   delete [] changeable_filename;*/
+   return 0;//atoi(secondLastToken);
 }
 
 int fileIO::ExtractIntegerFromString( std::string filename )
