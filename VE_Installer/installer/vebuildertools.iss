@@ -34,6 +34,7 @@ VersionInfoCompany=Virtual Engineering Research Group
 VersionInfoDescription=VES Builder Tools
 BackColor=clBlack
 BackColor2=$0080ff
+SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 [Types]
 ;Name: optional; Description: VE-Util Library
 [Components]

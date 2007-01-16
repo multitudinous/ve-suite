@@ -28,6 +28,7 @@ WizardImageStretch=false
 WizardImageBackColor=clGray
 BackColor=clBlack
 BackColor2=$0080ff
+SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl

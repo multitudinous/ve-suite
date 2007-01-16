@@ -17,7 +17,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\WxWidgets_{#WXVERSION}_Pre-Compile_vc{#MSVCVERSION}
 DefaultGroupName={#MyAppName}
-AllowNoIcons=yes
+AllowNoIcons=true
 OutputBaseFilename=wx{#WXVERSION}-precompile_{#MSVCVERSION}
 SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 Compression=lzma
@@ -30,6 +30,7 @@ BackColor2=$4080ff
 WizardImageBackColor=clGray
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WizardImageStretch=false
+AppVersion=
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl

@@ -26,6 +26,10 @@ BackColor=clBlack
 BackColor2=$0080ff
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WizardImageStretch=false
+AllowRootDirectory=true
+WizardImageBackColor=clGray
+SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
+EnableDirDoesntExistWarning=true
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
@@ -47,3 +51,11 @@ Source: {#OSGHOME}\..\OpenThreads\lib\*.lib; DestDir: {app}\lib; Flags: ignoreve
 Source: {#OSGHOME}\..\OpenThreads\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSGHOME}\..\OpenThreads\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSGHOME}\..\OpenThreads\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+
+;simage
+Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
+
+;coin
+Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib\win32; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
