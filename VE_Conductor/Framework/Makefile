@@ -43,7 +43,8 @@ SRCS=\
    ScalarToolsDlg.cxx\
    UI_TeacherTab.cxx\
    UserPreferences.cxx \
-   DefaultPlugin.cxx
+   DefaultPlugin.cxx\
+   Splitter.cxx
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
