@@ -25,7 +25,12 @@ import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
 import thread ##Used for the splash banner's thread
 
-sys.path.append('python') ##Searches for other modules in python/
+try:
+   from velBase import *
+except:
+   sys.path.append(os.path.join(sys.path[0], 'python'))
+
+#sys.path.append('python') ##Searches for other modules in python/
 from velBase import *
 from velModes import *
 from velCoveredConfig import *
