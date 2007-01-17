@@ -38,6 +38,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdClone.h"
 
 #include "VE_Open/XML/CAD/CADNode.h"
@@ -54,6 +55,9 @@
 #include <boost/filesystem/path.hpp>
 #include <iostream>
 
+#ifdef _OSG
+#include <osg/Node>
+#endif
 using namespace VE_EVENTS;
 using namespace VE_XML::VE_CAD;
 using namespace VE_SceneGraph;
@@ -208,6 +212,12 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             _addNodeToNode(newAssembly->GetID(), newAssembly->GetChild(i));
          }
          _activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
+         //set the uuid on the osg node so that we can get back to vexml
+         osg::Node::DescriptionList descriptorsList;
+         descriptorsList.push_back( "VE_XML_ID" );
+         descriptorsList.push_back( newAssembly->GetID() );
+         VE_SceneGraph::cfdNode* tempFile = _activeModel->GetAssembly(newAssembly->GetID());
+         tempFile->GetRawNode()->setDescriptions( descriptorsList );
       }
       else if(activeNode->GetNodeType() == "Part")
       {
@@ -224,7 +234,12 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 
          VE_SceneGraph::cfdFILE* partNode = _activeModel->GetPart(newPart->GetID());
          partNode->GetNode()->SetName(newPart->GetNodeName());
-         
+         //set the uuid on the osg node so that we can get back to vexml
+         osg::Node::DescriptionList descriptorsList;
+         descriptorsList.push_back( "VE_XML_ID" );
+         descriptorsList.push_back( newPart->GetID() );
+         partNode->GetNode()->GetRawNode()->setDescriptions( descriptorsList );
+         //set the visibility
          partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
 
          vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
@@ -247,6 +262,12 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          //std::cout<<"      ---Set Attributes---"<<std::endl;
          parentAssembly->AddChild(_activeModel->GetClone(clone->GetID())->GetClonedGraph());
          _activeModel->GetClone(clone->GetID())->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
+         VE_SceneGraph::cfdNode* tempFile = _activeModel->GetClone(clone->GetID())->GetClonedGraph();
+         //set the uuid on the osg node so that we can get back to vexml
+         osg::Node::DescriptionList descriptorsList;
+         descriptorsList.push_back( "VE_XML_ID" );
+         descriptorsList.push_back( clone->GetID() );
+         tempFile->GetRawNode()->setDescriptions( descriptorsList );
       }
    }
    else
