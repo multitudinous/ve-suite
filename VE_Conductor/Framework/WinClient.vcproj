@@ -290,6 +290,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Splitter.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\streamlines.cxx"
 				>
 			</File>
@@ -404,6 +408,10 @@
 			</File>
 			<File
 				RelativePath=".\SoundsPane.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Splitter.h"
 				>
 			</File>
 			<File
