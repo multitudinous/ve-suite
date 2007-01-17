@@ -1079,7 +1079,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 {
-   Log("Query Network.\n");
+   Log("Openning Simulation...\n");
    wxFileName bkpFileName;
    wxTextEntryDialog newDataSetName(this, 
 	   wxString("Enter the prefix for *.bkp filename:", wxConvUTF8),
@@ -1106,12 +1106,12 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 	   commandWriter.WriteXMLDocument( nodes, status, "Command" );
 	   //Get results
 	   std::string nw_str = serviceList->Query( status );
-	   Log(nw_str.c_str());
+	   //Log(nw_str.c_str());
 	   // If there is nothing on the CE
 	   if ( !nw_str.empty() )
 	   {
-		   Log("Load Network");
 		  network->Load( nw_str );
+		  Log("Simulation Opened.\n");
 	   }
 	   else
 	   {
@@ -1136,9 +1136,8 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-   Log("ServiceList");
    serviceList->Query( status );
-   Log("Simulation Shown");
+   Log("Simulation Shown. \n");
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1159,12 +1158,13 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
    
    serviceList->Query( status );
+   Log("Simulation Hid. \n");
 }
 
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 {
-   Log("Hide Simulation.\n");
+   Log("Close Simulation.\n");
    VE_XML::Command returnState;
    returnState.SetCommandName("closeSimulation");
    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
@@ -1179,6 +1179,7 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
    
    serviceList->Query( status );
+   Log("Simulation Closed. \n");
 }
 
 ///////////////////////////////////////////////////////////////////////////

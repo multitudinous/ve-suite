@@ -1988,7 +1988,7 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
    {
 	   std::stringstream output;
 	   output << ports[i].GetPortLocation()->GetPoint().first<< " "<<ports[i].GetPortLocation()->GetPoint().second<<std::endl;
-	   serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+	   //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
 	   wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
       // I believe this means move the points in from the edge of the icon
       // by 3 pixles
