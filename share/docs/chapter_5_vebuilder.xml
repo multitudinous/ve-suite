@@ -353,15 +353,17 @@
     <para>The translator can also be run in a "batch" mode. To run in batch
     mode, enter this on the command line:</para>
 
-    <para><code> vtkTo3DTexture -o /home/users/mcdoe/LTN/3D_Jets_Test/jets_vti
-    </code></para>
-
-    <para><code> -x 32 -y 64 -z 32
+    <para><code> vtkTo3DTexture -i /home/users/mcdoe/LTN/3D_Jets_Test/vtk
+    -o /home/users/mcdoe/LTN/3D_Jets_Test/jets_vti -x 32 -y 64 -z 32
     /home/users/mcdoe/LTN/3D_Jets_Test/Jets_Data</code></para>
 
     <para>where:</para>
 
     <itemizedlist>
+      <listitem>
+        <para>-i specifies the vtk/vtu files' input directory</para>
+      </listitem>
+
       <listitem>
         <para>-o specifies the output directory for the 3d vti texture
         files</para>
