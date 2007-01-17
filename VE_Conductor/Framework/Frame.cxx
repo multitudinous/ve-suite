@@ -309,7 +309,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
       wx_nw_splitter = new Splitter(parent, -1);
    }
 
-   wx_nw_splitter->SetMinimumPaneSize( 2 );
+   wx_nw_splitter->SetMinimumPaneSize( 1 );
 
    av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
    network = new Network(wx_nw_splitter, -1 );

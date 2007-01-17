@@ -45,12 +45,16 @@ Splitter::Splitter(wxWindow* parent, wxWindowID id)
 void Splitter::OnDClick( wxSplitterEvent& event )
 {
    event.Veto();
-   if( GetSashPosition() == 140 )
-   {
-      SetSashPosition( 1, true );
-   }
-   else if( GetSashPosition() == 2 )
+   if( GetSashPosition() > 140 )
    {
       SetSashPosition( 140, true );
+   }
+   else if( GetSashPosition() == 1 )
+   {
+      SetSashPosition( 140, true );
+   }
+   else if( GetSashPosition() == 140 || GetSashPosition() < 140 )
+   {
+      SetSashPosition( 1, true );
    }
 }
