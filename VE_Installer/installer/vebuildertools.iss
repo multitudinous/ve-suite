@@ -77,6 +77,8 @@ Source: {#VEHOME}\VE_Installer\installer\vebuilder.txt; DestDir: {app}; Attribs:
 Source: {#VEHOME}\bin\win32\logoMaker.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\testNURBSd.exe; DestDir: {app}\bin; Flags: ignoreversion; DestName: testNURBS.exe
 Source: {#VEHOME}\lib\win32\VE_NURBS_d.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#VEHOME}\bin\win32\vtkTo3DTexture.exe; DestDir: {app}\bin; Flags: ignoreversion; DestName: vtkTo3DTextureOMP.exe
+Source: {#VEHOME}\lib\win32\VE_UtilLib.dll; DestDir: {app}\bin; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

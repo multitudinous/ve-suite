@@ -250,6 +250,10 @@ Source: {#OSGHOME}\..\Producer\lib\win32\*.lib; DestDir: {app}\lib\win32; Attrib
 Source: {#OSGHOME}\..\OpenThreads\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#OSGHOME}\..\OpenSceneGraph-Data\fonts\*; DestDir: {app}\osg-fonts; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#WXHOME}\lib\vc_dll\wxmsw28_adv_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
+Source: {#WXHOME}\lib\vc_dll\wxmsw28_gl_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
+Source: {#WXHOME}\lib\vc_dll\wxmsw28_core_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
+Source: {#WXHOME}\lib\vc_dll\wxbase28_vc_custom.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: wxwidgets
 
 
 [Icons]
