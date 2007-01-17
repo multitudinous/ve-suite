@@ -399,8 +399,8 @@
     <para><code> setenv VE_SUITE_HOME /home/users/mcdoe/svn_VE_Suite/VE_Suite
     &amp;&amp; source $VE_SUITE_HOME/VE_Installer/setup.tsh </code></para>
 
-    <para><code> vtkTo3DTextureMPI -o
-    /home/users/mcdoe/LTN/3D_Jets_Test/jets_vti -x 32 -y 64 -z 32
+    <para><code> vtkTo3DTextureMPI -i /home/users/mcdoe/LTN/3D_Jets_Test/vtk
+     -o /home/users/mcdoe/LTN/3D_Jets_Test/jets_vti -x 32 -y 64 -z 32
     /home/users/mcdoe/LTN/3D_Jets_Test/Jets_Data </code></para>
 
     <para>Which should then be executed as follows:</para>
