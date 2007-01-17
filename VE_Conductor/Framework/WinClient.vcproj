@@ -107,7 +107,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="dbg|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/bin/win32"
 			IntermediateDirectory="./VE_Conductor/$(ConfigurationName)"
 			ConfigurationType="1"

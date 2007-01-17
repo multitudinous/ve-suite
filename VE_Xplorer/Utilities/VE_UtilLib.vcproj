@@ -109,7 +109,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="dbg|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_UtilLib/$(ConfigurationName)"
 			ConfigurationType="2"

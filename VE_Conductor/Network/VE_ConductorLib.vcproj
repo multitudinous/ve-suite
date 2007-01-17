@@ -106,7 +106,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="dbg|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory=".\VE_ConductorLib\$(ConfigurationName)"
 			ConfigurationType="2"
@@ -222,7 +222,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32"
+					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -244,7 +244,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32"
+					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -266,7 +266,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32"
+					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -288,7 +288,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="dbg|Win32"
+					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

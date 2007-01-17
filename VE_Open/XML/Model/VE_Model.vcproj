@@ -16,7 +16,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="dbg|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory=".\VE_Model\$(ConfigurationName)"
 			ConfigurationType="2"
@@ -260,7 +260,7 @@
 				RelativePath=".\verg_model.xsd"
 				>
 				<FileConfiguration
-					Name="dbg|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool

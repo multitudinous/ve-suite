@@ -12,16 +12,19 @@
 #include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NCurve.h"
 #include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NURBSRenderer.h"
+
 #include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
+#ifndef WIN32
 #include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h"
 #include "VE_Xplorer/SceneGraph/NURBS/Utilities/IGES2VENURBS.h"
+#endif
 #include "VE_Xplorer/Utilities/fileIO.h"
 
 void createTestNURBS(int argc, char** argv);
+#ifndef WIN32
 int parseOCCNURBSFile(int argc, char** argv);
 int parseIGESFile(int argc, char** argv);
-
+#endif
 
 class KeyboardEventHandler : public osgGA::GUIEventHandler
 {
@@ -230,13 +233,17 @@ int main(int argc, char** argv)
       std::string firstArg(argv[1]);
       if(std::string::npos != firstArg.find(".iges"))
       {
-         std::cout<<"Found Iges file: "<<firstArg<<std::endl;    
+         std::cout<<"Found Iges file: "<<firstArg<<std::endl;  
+#ifndef WIN32
          parseIGESFile(argc,argv);
+#endif
          return 0;
       }
       else
       {
+#ifndef WIN32
          return parseOCCNURBSFile(argc,argv);
+#endif
       }
    }
    else
@@ -248,8 +255,10 @@ int main(int argc, char** argv)
    return 0;
 }
 ///////////////////////////////////////
+#ifndef WIN32
 int parseIGESFile(int argc,char** argv)
 {
+
    std::string igesFile(argv[1]);
    std::vector< osg::ref_ptr<NURBS::NURBSNode> >nurbsPatches;
    NURBS::Utilities::IGES2VENURBS igesReader;
@@ -280,6 +289,7 @@ int parseIGESFile(int argc,char** argv)
    }
    return 0;
 }
+
 ////////////////////////////////////////////
 int parseOCCNURBSFile(int argc, char** argv)
 {
@@ -312,6 +322,7 @@ int parseOCCNURBSFile(int argc, char** argv)
    }
    return 0;
 }
+#endif
 ///////////////////////////////////////////
 void createTestNURBS(int argc, char** argv)
 {
