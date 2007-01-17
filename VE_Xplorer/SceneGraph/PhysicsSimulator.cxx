@@ -1,10 +1,14 @@
-//#define USE_KINEMATIC_GROUND 1
 //#define PRINT_CONTACT_STATISTICS 1
-//#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
+//#define SHOW_NUM_DEEP_PENETRATIONS 1
+//#define USE_KINEMATIC_GROUND 1
 //#define USER_DEFINED_FRICTION_MODEL 1
-#define USE_CUSTOM_NEAR_CALLBACK 1
 
-#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+//#define USE_CUSTOM_NEAR_CALLBACK 1
+//#define USE_SWEEP_AND_PRUNE 1
+//#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
+#define USE_MOTIONSTATE 1
+
+#include "PhysicsSimulator.h"
 
 #include "btBulletDynamicsCommon.h"
 
@@ -24,9 +28,34 @@ PhysicsSimulator::PhysicsSimulator()
    this->InitPhysics();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::CleanUp()
+void PhysicsSimulator::ExitPhysics()
 {
-   ;
+	//Remove the rigidbodies from the dynamics world and delete them
+	for(int i=0;i<dynamics_world->getNumCollisionObjects();i++){
+		btCollisionObject* obj=dynamics_world->getCollisionObjectArray()[i];
+		dynamics_world->removeCollisionObject(obj);
+		delete obj;
+	}
+
+   /*
+	//delete collision shapes
+	for (unsigned int j=0;j<m_collisionShapes.size();j++)
+	{
+		btCollisionShape* shape=m_collisionShapes[j];
+		delete shape;
+	}
+
+	//delete broadphase
+   btOverlappingPairCache* broadphase=dynamics_world->getBroadphase();
+	delete broadphase;
+
+	//delete dispatcher
+   btCollisionDispatcher* dispatcher=dynamics_world->getDispatcher();
+	delete dispatcher;
+   */
+   
+   //delete dynamics world
+	delete dynamics_world;
 }
 ////////////////////////////////////////////////////////////////////////////////
 //By default, Bullet will use its own nearcallback, but you can override it using dispatcher->setNearCallback()
@@ -68,20 +97,22 @@ void PhysicsSimulator::InitPhysics()
    #ifdef USE_CUSTOM_NEAR_CALLBACK
 	   //This is optional
 	   dispatcher->setNearCallback(customNearCallback);
-   #endif
+   #endif //USE_CUSTOM_NEAR_CALLBACK
 
-   btVector3 worldAabbMin(-10000,-10000,-10000);
-	btVector3 worldAabbMax(10000,10000,10000);
-
-	btOverlappingPairCache* broadphase=new btAxisSweep3(worldAabbMin,worldAabbMax,maxProxies);
-   //btOverlappingPairCache* broadphase=new btSimpleBroadphase;
+   #ifdef USE_SWEEP_AND_PRUNE
+      btVector3 worldAabbMin(-10000,-10000,-10000);
+	   btVector3 worldAabbMax(10000,10000,10000);
+	   btOverlappingPairCache* broadphase=new btAxisSweep3(worldAabbMin,worldAabbMax,maxProxies);
+   #else
+      btOverlappingPairCache* broadphase=new btSimpleBroadphase;
+   #endif //USE_SWEEP_AND_PRUNE
 	
    #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
       //This is optional
-   #endif
-
-	//Default constraint solver
-	btSequentialImpulseConstraintSolver* solver=new btSequentialImpulseConstraintSolver;
+   #else
+      //Default constraint solver
+      btSequentialImpulseConstraintSolver* solver=NULL;
+   #endif //REGISTER_CUSTOM_COLLISION_ALGORITHM
 	
    dynamics_world=new btDiscreteDynamicsWorld(dispatcher,broadphase,solver);
 	dynamics_world->setGravity(btVector3(0,-10,0));
@@ -89,11 +120,81 @@ void PhysicsSimulator::InitPhysics()
 	//dynamics_world->setDebugDrawer(&debugDrawer);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::DisplayCallback()
+void PhysicsSimulator::UpdateCallback()
 {
    dynamics_world->updateAabbs();
 
    
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::ResetScene()
+{
+   #ifdef SHOW_NUM_DEEP_PENETRATIONS
+	   gNumDeepPenetrationChecks=0;
+	   gNumGjkChecks=0;
+   #endif //SHOW_NUM_DEEP_PENETRATIONS
+
+	if(dynamics_world){
+		dynamics_world->stepSimulation(1.f/60.f,0);
+	}
+
+	int numObjects=dynamics_world->getNumCollisionObjects();
+	
+	for(int i=0;i<numObjects;i++){
+		btCollisionObject* colObj=dynamics_world->getCollisionObjectArray()[i];
+		btRigidBody* body=btRigidBody::upcast(colObj);
+
+		if(body && body->getMotionState()){
+			btDefaultMotionState* myMotionState=(btDefaultMotionState*)body->getMotionState();
+			myMotionState->m_graphicsWorldTrans=myMotionState->m_startWorldTrans;
+
+			colObj->setWorldTransform(myMotionState->m_graphicsWorldTrans );
+			colObj->setInterpolationWorldTransform(myMotionState->m_startWorldTrans);
+			colObj->activate();
+
+			//Removed cached contact points
+			dynamics_world->getBroadphase()->cleanProxyFromPairs(colObj->getBroadphaseHandle());
+
+			btRigidBody* body=btRigidBody::upcast(colObj);
+
+			if(body&&!body->isStaticObject()){
+				btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));
+				btRigidBody::upcast(colObj)->setAngularVelocity(btVector3(0,0,0));
+			}
+		}
+
+	   /*
+	   //quickly search some issue at a certain simulation frame, pressing space to reset
+		int fixed=18;
+		for (int i=0;i<fixed;i++)
+		{
+			getDynamicsWorld()->stepSimulation(1./60.f,1);
+		}
+      */
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+btRigidBody* PhysicsSimulator::CreateRigidBody(float mass,const btTransform& startTransform,btCollisionShape* shape)
+{
+	//RigidBody is dynamic if and only if mass is non zero, otherwise static
+	bool isDynamic=(mass!=0.f);
+
+	btVector3 localInertia(0,0,0);
+   if(isDynamic){
+		shape->calculateLocalInertia(mass,localInertia);
+   }
+
+	//Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+   #ifdef USE_MOTIONSTATE
+	   btDefaultMotionState* myMotionState=new btDefaultMotionState(startTransform);
+	   btRigidBody* body=new btRigidBody(mass,myMotionState,shape,localInertia);
+   #else
+	   btRigidBody* body=new btRigidBody(mass,startTransform,shape,localInertia);	
+   #endif //USE_MOTIONSTATE
+
+	dynamics_world->addRigidBody(body);
+	
+	return body;
 }
 ////////////////////////////////////////////////////////////////////////////////
 btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
