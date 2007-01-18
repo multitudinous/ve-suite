@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Conductor/Framework/Splitter.h"
+#include <iostream>
 
 BEGIN_EVENT_TABLE(Splitter, wxSplitterWindow)
    EVT_SPLITTER_DCLICK( -1, Splitter::OnDClick )   
@@ -49,11 +50,11 @@ void Splitter::OnDClick( wxSplitterEvent& event )
    {
       SetSashPosition( 140, true );
    }
-   else if( GetSashPosition() == 1 )
+   else if( GetSashPosition() < 10 )
    {
       SetSashPosition( 140, true );
    }
-   else if( GetSashPosition() == 140 || GetSashPosition() < 140 )
+   else if( GetSashPosition() <= 140 || GetSashPosition() > 9 )
    {
       SetSashPosition( 1, true );
    }
