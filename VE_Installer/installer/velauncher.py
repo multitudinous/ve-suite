@@ -25,12 +25,7 @@ import getopt ##Cleans up command line arguments
 import wx ##Used for GUI
 import thread ##Used for the splash banner's thread
 
-try:
-   from velBase import *
-except:
-   sys.path.append(os.path.join(sys.path[0], 'python'))
-
-#sys.path.append('python') ##Searches for other modules in python/
+sys.path.append('python') ##Searches for other modules in python/
 from velBase import *
 from velModes import *
 from velCoveredConfig import *
@@ -734,7 +729,8 @@ class LauncherWindow(wx.Frame):
             return
         ##Set the builderDir, if necessary.
         passedBuilderDir = None
-        if v("Shell") and v("BuilderShell") == None:
+##        if v("Shell") and v("BuilderShell") == None:
+        if v("BuilderDir") == None:
             dlg = wx.MessageDialog(self,
                                     "Do you want to use this shell\n" +
                                     "to run VE-Builder?",

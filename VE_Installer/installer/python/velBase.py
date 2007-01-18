@@ -24,7 +24,6 @@ DIRECTORY_DEFAULT = join(os.path.dirname(VELAUNCHER_DIR), "exampleDatasets")
 IMAGES_DIR = join(VELAUNCHER_DIR, "..", "share", "installerImages")
 if not os.path.isdir(IMAGES_DIR):
     IMAGES_DIR = join(VELAUNCHER_DIR, "installerImages")
-print IMAGES_DIR ##TESTER
 LOGO_LOCATION = join(IMAGES_DIR, "ve_logo.xpm")
 SPLASH_IMAGE = join(IMAGES_DIR, "velauncher_banner.bmp")
 SPLASH_TIME = 7000 ##milliseconds before auto-close
