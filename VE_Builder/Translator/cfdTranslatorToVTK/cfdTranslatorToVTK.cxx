@@ -34,6 +34,8 @@
 #include <bitset>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
+
 #include <vtkDataSet.h>
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
