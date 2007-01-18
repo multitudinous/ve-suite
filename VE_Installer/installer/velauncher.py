@@ -26,10 +26,11 @@ import wx ##Used for GUI
 import thread ##Used for the splash banner's thread
 
 try:
-   from velBase import *
+    from velBase import *
 except:
-   sys.path.append(os.path.join(sys.path[0], 'python'))
-
+    sys.path.append(os.path.join(sys.path[0], 'python'))
+    from velBase import *
+#sys.path.append('python') ##Searches for other modules in python/
 from velModes import *
 from velCoveredConfig import *
 import velDependencies
@@ -166,7 +167,8 @@ class LauncherWindow(wx.Frame):
         menuBar.Append(menu, "&Configurations")
         menu = wx.Menu()
         menu.Append(520, "Choose De&pendencies\tCtrl+P")
-        menu.Append(521, "Choose &Builder Folder\tCtrl+B")
+        if not unix:
+            menu.Append(521, "Choose &Builder Folder\tCtrl+B")
         menu.Append(522, "VE-Suite Debu&g Level\tCtrl+G")
         self.menuDebugLaunch = wx.MenuItem(menu, 524, "D&ebug Launch\tCtrl+E",
                                            kind = wx.ITEM_CHECK)
@@ -182,7 +184,8 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_RADIOBOX, self.UpdateData, self.rbMode)
         self.Bind(wx.EVT_MENU, self.DependenciesChange, id = 520)
-        self.Bind(wx.EVT_MENU, self.BuilderChange, id = 521)
+        if not unix:
+            self.Bind(wx.EVT_MENU, self.BuilderChange, id = 521)
         self.Bind(wx.EVT_MENU, self.ChooseLoadConfig, id = 510)
         self.Bind(wx.EVT_MENU, self.ChooseSaveConfig, id = 511)
         self.Bind(wx.EVT_MENU, self.DeleteConfig, id = 512)
@@ -430,7 +433,8 @@ class LauncherWindow(wx.Frame):
         ##DependenciesDir
         self.GetMenuBar().Enable(520, self.state.IsEnabled("DependenciesDir"))
         ##BuilderDir
-        self.GetMenuBar().Enable(521, self.state.IsEnabled("BuilderDir"))
+        if not unix:
+            self.GetMenuBar().Enable(521, self.state.IsEnabled("BuilderDir"))
         ##Directory
         if self.state.GetSurface("VESFile") != None:
             self.labelDirectory.SetLabel("VES File Loaded:")
@@ -494,6 +498,7 @@ class LauncherWindow(wx.Frame):
         """Constructs the recent items menu.
         NOTE: IDs idStart+ used for these."""
         self.recentMenu = wx.Menu()
+        self.recentArchive = []
         nameList = self.state.GetSurface("RecentFiles").GetNames()
         currentId = RECENT_MENU_ID
         ##If no recent items, put a disabled None in the menu.
@@ -502,8 +507,9 @@ class LauncherWindow(wx.Frame):
             self.recentMenu.Enable(currentId, False)
             return
         ##Else put every name in the list in the menu.
-        for name in nameList:
-            self.recentMenu.Append(currentId, name)
+        for i in range(len(nameList)):
+            self.recentMenu.Append(currentId, nameList[i])
+            self.recentArchive.append(self.state.GetSurface("RecentFiles").GetPath(i))
             self.Bind(wx.EVT_MENU, self.ChooseRecentFile, id = currentId)
             currentId += 1
         return
@@ -512,10 +518,15 @@ class LauncherWindow(wx.Frame):
         """Gets the path for the Recent Files item chosen
         and loads it into the program."""
         placeChosen = event.GetId() - RECENT_MENU_ID
-        path = self.state.GetSurface("RecentFiles").GetPath(placeChosen)
+        path = self.recentArchive[placeChosen]
         self.state.InterpretArgument(path)
         self.React()
         return
+
+    def DeleteRecentMenuItem(self, badFile):
+        """Deletes a non-existant recent file."""
+        itemID = RECENT_MENU_ID + self.recentArchive.index(badFile)
+        self.recentMenu.Delete(itemID)
         
 ##UNDER CONSTRUCTION
 ##    def ClearRecentMenu(self, event = None):
@@ -658,7 +669,7 @@ class LauncherWindow(wx.Frame):
                                    "Launch Error: No Program Selected", wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
-            self.Settings("dead parrot sketch")
+            self.Settings()
             return
         ##ERROR CHECK:  Is the Tao Machine name blank?
         ##              If so, abort launch.
@@ -682,6 +693,34 @@ class LauncherWindow(wx.Frame):
                                    "Launch Error: Illegal CE Port", wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
+            return
+        ##ERROR CHECK:  Does the file chosen exist? If not, remove it.
+        if (v("VESFile") != None and not (os.path.exists(v("VESFile")))) or \
+           (v("ShellScript") != None and not (os.path.exists(v("ShellScript")))):
+            if v("VESFile") != None:
+                badFile = v("VESFile")
+                self.state.SetVesFile(None)
+            elif v("ShellScript") != None:
+                badFile = v("ShellScript")
+                self.state.SetScript(None)
+            else:
+                badFile = None
+            badFileName = os.path.basename(badFile)
+            dlg = wx.MessageDialog(self,
+                                   "The %s file could not be found.\n" % (badFileName) +
+                                   "Either the path is incorrect or the file\n" +
+                                   "has been moved.\n" +
+                                   "\n" +
+                                   "This file has been removed from the launcher;\n" +
+                                   "please choose another one.",
+                                   "Launch Error: Loaded File Doesn't Exist",
+                                   wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
+            if self.state.IsEnabled("RecentFiles"):
+                self.state.GetBase("RecentFiles").Delete(badFile)
+            self.DeleteRecentMenuItem(badFile)
+            self.UpdateDisplay()
             return
         ##ERROR CHECK:  Does the working directory chosen exist?
         ##              If not, let the user change it.

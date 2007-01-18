@@ -16,6 +16,9 @@ class RecentFiles:
             self.recentArray = preset
         self.Trim()
 
+    def __len__(self):
+        return len(self.recentArray)
+
     def Add(self, addition):
         """Adds the single item 'addition' to the array.
         If addition is already is array, remove it and reinsert it at the front.
@@ -24,6 +27,22 @@ class RecentFiles:
             self.recentArray.remove(addition)
         self.recentArray.insert(0, addition)
         self.Trim()
+
+    def Delete(self, entry):
+        """Deletes entry from the recent array."""
+        try:
+            index = self.recentArray.index(entry)
+        except ValueError:
+            ##print "Recent Files Error: %s not in array." % (entry)
+            return
+        self.DeleteIndex(index)
+
+    def DeleteIndex(self, index):
+        """Deletes item at index from the recent array."""
+        try:
+            self.recentArray.pop(index)
+        except IndexError:
+            print "Recent Files Error: accessing index %s out of %s." % (index, len(self.recentArray))
 
     def GetNames(self):
         """Returns an array of file names for the recent files."""
