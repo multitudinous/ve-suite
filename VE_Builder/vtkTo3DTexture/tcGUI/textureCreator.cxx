@@ -681,9 +681,8 @@ void VTKDataToTexture::_createValidityTexture()
    int j=0;
    int k = 0;
 
-   int nX = _resolution[0]-1;
-   int nY = _resolution[1]-1;
-   int nZ = _resolution[2]-1;
+   int nX = _resolution[0];
+   int nY = _resolution[1];
 
    int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
    _validPt.resize( nPixels );
