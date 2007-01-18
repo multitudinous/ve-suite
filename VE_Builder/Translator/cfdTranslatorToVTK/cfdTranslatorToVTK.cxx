@@ -254,6 +254,8 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
          std::stringstream tempName;
          tempName << _outputDir << "/" 
                   << _outputFile << "_" 
+                  << std::setfill( '0' ) 
+                  << std::setw( 6 ) 
                   << fileNum << ".vtu";
          _outfileNames.push_back(tempName.str());
       }  

@@ -174,7 +174,11 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
             if ( j > 0 )
             {
                std::ostringstream strm;
-               strm << EnSightToVTK->GetOutputFileName() << "_" << j << ".vtu";
+               strm << EnSightToVTK->GetOutputFileName() 
+                     << "_" 
+                     << std::setfill( '0' ) 
+                     << std::setw( 6 ) 
+                     <<j << ".vtu";
                VE_Util::cfdVTKFileHandler trans;
                trans.WriteDataSet( outputDataset, strm.str() );
                outputDataset->Delete();
