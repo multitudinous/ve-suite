@@ -47,6 +47,7 @@
 #include <VE_Xplorer/Utilities/cfdVTKFileHandler.h>
 
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 
 using namespace VE_Builder;
