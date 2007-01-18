@@ -1111,11 +1111,17 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 	   // If there is nothing on the CE
 	   if ( !nw_str.empty() )
 	   {
-		  network->Load( nw_str );
-		  Log("Simulation Opened.\n");
+		   if(network->modules.empty())
+		   {
+			   network->Load( nw_str );
+			   Log("Simulation Opened.\n");
+		   }
+		   else
+			   Log("Simulation is already open.\n");
 	   }
 	   else
 	   {
+	   Log("Don't\n");
 		  Log("No ves network available\n");
 	   }
    }
