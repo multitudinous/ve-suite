@@ -253,8 +253,7 @@ void DataValuePair::_updateVEElement( std::string input )
    //_nChildren = 2;
 
    //Add code here to update the specific sub elements
-   _updateDataName();
-
+   SetAttribute( "dataName", _dataName );
    SetAttribute( "id", uuid );
    
    //update the value held in the pair
@@ -368,32 +367,16 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
       GetAttribute( currentElement, "id", uuid );
       
       {
-         //get variables by tags
-         DOMNodeList* subElements = currentElement->getChildNodes();
-         ///Test code below
-         /*std::cout<< subElements->getLength() << std::endl;
-         for ( XMLSize_t i = 0; i < subElements->getLength(); ++i )
+         DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("dataName"));
+         if ( subElements->getLength() > 0 )
          {
-            DOMNode* tempNode = subElements->item( i );
-            std::cout << tempNode->getNodeType() << std::endl;
-            if (  1 == tempNode->getNodeType() )
-            {
-               DOMElement* tempElement = dynamic_cast<DOMElement*>(tempNode);
-               std::cout << "----------------" << std::endl;
-               std::cout << " Node name " << XMLString::transcode(tempElement->getNodeName()) << std::endl;
-            }
-            else if (  3 == tempNode->getNodeType() )
-            {
-               DOMText* tempElement = dynamic_cast<DOMText*>(tempNode);
-               std::cout << " text value " << XMLString::transcode(tempElement->getData()) << std::endl;
-            }
-         }*/
-         subElements = currentElement->getElementsByTagName(xercesString("dataName"));
-         //should only be the name of the command
-         DOMElement* dataName = dynamic_cast<DOMElement*>(subElements->item(0));
-         if(dataName)
-         {
+            //should only be the name of the command
+            DOMElement* dataName = dynamic_cast<DOMElement*>(subElements->item(0));
             _dataName = ExtractFromSimpleElement< std::string >(dataName);
+         }
+         else
+         {
+            GetAttribute( currentElement, "dataName", _dataName );
          }
       }
 

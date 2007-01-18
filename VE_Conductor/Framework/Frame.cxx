@@ -998,12 +998,13 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       //change conductor working dir
       ::wxSetWorkingDirectory( directory );
       path = vesFileName.GetFullName();
+      std::string tempDir = ConvertUnicode( directory.c_str() );
       
       //Send Command to change xplorer working dir
       // Create the command and data value pairs
       VE_XML::DataValuePair* dataValuePair = 
                         new VE_XML::DataValuePair(  std::string("STRING") );
-      dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
+      dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
       VE_XML::Command* veCommand = new VE_XML::Command();
       veCommand->SetCommandName( std::string("Change Working Directory") );
       veCommand->AddDataValuePair( dataValuePair );
@@ -1019,7 +1020,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       //w/o a DVP 
       VE_XML::DataValuePair* dvp = 
                         new VE_XML::DataValuePair(  std::string("STRING") );
-      dataValuePair->SetData( "Clear Quat Data", ConvertUnicode( directory.c_str() ) );
+      dvp->SetData( "Clear Quat Data", tempDir );
       VE_XML::Command* vec = new VE_XML::Command();
       vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
       vec->AddDataValuePair( dvp );
