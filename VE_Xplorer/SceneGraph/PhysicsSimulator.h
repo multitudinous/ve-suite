@@ -12,6 +12,9 @@ PhysicsSimulator API
 #include "LinearMath/btTransform.h"
 
 class	btDynamicsWorld;
+class btCollisionDispatcher;
+class btOverlappingPairCache;
+class btSequentialImpulseConstraintSolver;
 class btRigidBody;
 class btCollisionShape;
 
@@ -22,7 +25,7 @@ namespace VE_SceneGraph
       public:
          void ExitPhysics();                                   //Functions as the destructor
 
-         void UpdateCallback();
+         void UpdatePhysics(float dt);
          void ResetScene();
 
          btRigidBody* CreateRigidBody(float mass,const btTransform& startTransform,btCollisionShape* shape);
@@ -38,6 +41,10 @@ namespace VE_SceneGraph
 
          //Manages physics objects and constraints and implements update of all objects each frame
 	      btDynamicsWorld* dynamics_world;
+
+         btCollisionDispatcher* dispatcher;
+         btOverlappingPairCache* broadphase;
+         btSequentialImpulseConstraintSolver* solver;
    };
 }
 

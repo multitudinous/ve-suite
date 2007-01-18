@@ -30,32 +30,41 @@ PhysicsSimulator::PhysicsSimulator()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
-	//Remove the rigidbodies from the dynamics world and delete them
-	for(int i=0;i<dynamics_world->getNumCollisionObjects();i++){
-		btCollisionObject* obj=dynamics_world->getCollisionObjectArray()[i];
-		dynamics_world->removeCollisionObject(obj);
-		delete obj;
-	}
+	//Delete dispatcher
+   if(this->dispatcher){
+	   delete this->dispatcher;
+   }
 
-   /*
-	//delete collision shapes
-	for (unsigned int j=0;j<m_collisionShapes.size();j++)
-	{
-		btCollisionShape* shape=m_collisionShapes[j];
-		delete shape;
-	}
+   //Delete broadphase
+   if(this->broadphase){
+	   delete this->broadphase;
+   }
 
-	//delete broadphase
-   btOverlappingPairCache* broadphase=dynamics_world->getBroadphase();
-	delete broadphase;
+   //Delete solver
+   if(this->solver){
+      delete this->solver;
+   }
 
-	//delete dispatcher
-   btCollisionDispatcher* dispatcher=dynamics_world->getDispatcher();
-	delete dispatcher;
-   */
-   
-   //delete dynamics world
-	delete dynamics_world;
+   if(this->dynamics_world){
+	   //Remove the rigidbodies from the dynamics world and delete them
+	   for(int i=0;i<dynamics_world->getNumCollisionObjects();i++){
+		   btCollisionObject* obj=dynamics_world->getCollisionObjectArray()[i];
+		   dynamics_world->removeCollisionObject(obj);
+		   delete obj;
+	   }
+
+      /*
+	   //delete collision shapes
+	   for (unsigned int j=0;j<m_collisionShapes.size();j++)
+	   {
+		   btCollisionShape* shape=m_collisionShapes[j];
+		   delete shape;
+	   }
+      */
+
+      //Delete dynamics world
+	   delete dynamics_world;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 //By default, Bullet will use its own nearcallback, but you can override it using dispatcher->setNearCallback()
@@ -92,7 +101,7 @@ void customNearCallback(btBroadphasePair& collisionPair, btCollisionDispatcher& 
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitPhysics()
 {
-   btCollisionDispatcher* dispatcher=new btCollisionDispatcher();
+   dispatcher=new btCollisionDispatcher();
 
    #ifdef USE_CUSTOM_NEAR_CALLBACK
 	   //This is optional
@@ -102,29 +111,27 @@ void PhysicsSimulator::InitPhysics()
    #ifdef USE_SWEEP_AND_PRUNE
       btVector3 worldAabbMin(-10000,-10000,-10000);
 	   btVector3 worldAabbMax(10000,10000,10000);
-	   btOverlappingPairCache* broadphase=new btAxisSweep3(worldAabbMin,worldAabbMax,maxProxies);
+	   broadphase=new btAxisSweep3(worldAabbMin,worldAabbMax,maxProxies);
    #else
-      btOverlappingPairCache* broadphase=new btSimpleBroadphase;
+      broadphase=new btSimpleBroadphase;
    #endif //USE_SWEEP_AND_PRUNE
 	
    #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
       //This is optional
    #else
       //Default constraint solver
-      btSequentialImpulseConstraintSolver* solver=NULL;
+      solver=NULL;
    #endif //REGISTER_CUSTOM_COLLISION_ALGORITHM
 	
    dynamics_world=new btDiscreteDynamicsWorld(dispatcher,broadphase,solver);
-	dynamics_world->setGravity(btVector3(0,-10,0));
+	dynamics_world->setGravity(btVector3(0,0,-10));
 
 	//dynamics_world->setDebugDrawer(&debugDrawer);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::UpdateCallback()
+void PhysicsSimulator::UpdatePhysics(float dt)
 {
-   dynamics_world->updateAabbs();
-
-   
+   dynamics_world->stepSimulation(dt);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ResetScene()
