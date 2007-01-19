@@ -20,7 +20,7 @@ AllowNoIcons=true
 OutputBaseFilename=vtkPreCompile_{#VTKVERSION}_{#MSVCVERSION}
 SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 Compression=lzma
-SolidCompression=yes
+SolidCompression=true
 WindowVisible=true
 WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
 BackColor=clBlack
@@ -28,6 +28,7 @@ BackColor2=$0080ff
 WizardImageBackColor=clGray
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WizardImageStretch=false
+OutputDir={#VEHOME}\VE_Installer\installer
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
