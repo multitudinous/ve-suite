@@ -33,9 +33,9 @@ WizardImageStretch=false
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8\include\*; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8\lib\*; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8\bin\*; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ..\..\..\VES.1.0-Deps\vtk-5.0.0_Install_vc8\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ..\..\..\VES.1.0-Deps\vtk-5.0.0_Install_vc8\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ..\..\..\VES.1.0-Deps\vtk-5.0.0_Install_vc8\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
