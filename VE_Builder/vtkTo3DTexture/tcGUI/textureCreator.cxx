@@ -683,6 +683,8 @@ void VTKDataToTexture::_createValidityTexture()
 
    int nX = _resolution[0];
    int nY = _resolution[1];
+   int jInit = -1;
+   int kInit = -1;
 
    int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
    _validPt.resize( nPixels );
@@ -707,8 +709,8 @@ void VTKDataToTexture::_createValidityTexture()
 	   
 	   //set i, j, and k based on the l values
 	   i = l % nX;
-	   j = l / nX;
-	   k = (l-i-j*nX)/(nX*nY);
+      j = (i==0)?((jInit==nY-1)?jInit=0:++jInit):jInit;//(l / nX);
+	   k = (l/*-i-j*nX*/)/(nX*nY);
 
       pt[2] = bbox[4] + k*delta[2];
       pt[1] = bbox[2] + j*delta[1];
