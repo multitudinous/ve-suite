@@ -772,7 +772,8 @@ class LauncherWindow(wx.Frame):
         ##Set the builderDir, if necessary.
         passedBuilderDir = None
 ##        if v("Shell") and v("BuilderShell") == None:
-        if v("BuilderDir") == None:
+        if v("Shell") and v("BuilderDir") == None and \
+           self.state.IsEnabled("BuilderDir"):
             dlg = wx.MessageDialog(self,
                                     "Do you want to use this shell\n" +
                                     "to run VE-Builder?",
