@@ -34,10 +34,6 @@ headers = Split("""
     ansysReader.h
 """)
 
-if os.getenv('FLUENT_MFIX') == 'TRUE':
-    srcs.Append('FluentTranslator.cxx')
-    srcs.Append('MFIXTranslator.cxx')
-    env.Append(CXXFLAGS = ['-DFLUENT_MFIX'])
 ##srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
@@ -45,6 +41,13 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities'),
                           pj('#', buildDir, 'VE_Builder','Translator','cfdTranslatorToVTK') ],
                LIBS = ['VE_UtilLib', 'TranslatorToVTKLib'])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+#if os.getenv('FLUENT_MFIX') == 'TRUE':
+#    sources.Append('FluentTranslator.cxx')
+#    sources.Append('MFIXTranslator.cxx')
+#    headers.Append('FluentTranslator.h')
+#    headers.Append('MFIXTranslator.h')
+#    lib_env.Append(CXXFLAGS = ['-DFLUENT_MFIX'])
+
 vtk_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('DataLoaderLib',
