@@ -155,7 +155,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
             appendFilter->Delete();
             
             //get the info about the data in the data set
-            if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
+            if ( outputDataset->GetPointData()->GetNumberOfArrays() == 0 )
             {
                vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
                dataConvertCellToPoint->SetInput(outputDataset);
@@ -180,8 +180,9 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
                      << std::setfill( '0' ) 
                      << std::setw( 6 ) 
                      <<j << ".vtu";
-               VE_Util::cfdVTKFileHandler trans;
-               trans.WriteDataSet( outputDataset, strm.str() );
+               VE_Util::cfdVTKFileHandler* trans = new VE_Util::cfdVTKFileHandler();
+               trans->WriteDataSet( outputDataset, strm.str() );
+               delete trans;
                outputDataset->Delete();
                outputDataset = 0;
                EnSightToVTK->SetIsTransient();
