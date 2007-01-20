@@ -33,7 +33,6 @@ srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', s), srcs)
 
 env = baseEnv.Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
-env.Append(CPPPATH = ['#'])
 env.Append(CPPPATH = ['#/VE_Builder/Utilities'])
 env.Append(LIBPATH = '#',
               LIBS = 'VE_UtilLib')
