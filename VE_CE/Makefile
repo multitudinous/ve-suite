@@ -11,9 +11,9 @@ all:
 	$(MAKE) $(APP_NAME)
 
 SRCS=\
-   Exe_server.cpp \
-   Executive_i.cpp \
-   Execute_Thread.cpp\
+   Exe_server.cxx \
+   Executive_i.cxx \
+   Execute_Thread.cxx\
    QueryThread.cxx
 
 # Specify the OS-dependent directory name for object files and depends
