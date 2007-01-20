@@ -31,7 +31,7 @@ if baseEnv['StaticOnly'] == "no":
 else:
    lib = ves_pkg.createStaticLibrary('VE_OpenModuleLib', lib_env,
                                                installPrefix = LIBDIR)
-   
+
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'VE_Open', 'skel'))
 lib.build()

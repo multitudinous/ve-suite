@@ -8,16 +8,20 @@ env = baseEnv.Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
 ##env.Append(CPPPATH = ['idl'])
 
-targetModule = [pj('#','VE_Open','skel','moduleS.h'), 
-          pj('#','VE_Open','skel','moduleC.h')]
-targetVjObs = [pj('#','VE_Open','skel','VjObsS.h'), 
-               pj('#','VE_Open','skel','VjObsC.h')]
+targetModule = [pj('#', buildDir,'VE_Open','skel','moduleS.h'), 
+                pj('#', buildDir,'VE_Open','skel','moduleC.h'),
+                pj('#', buildDir,'VE_Open','skel','moduleC.cpp'), 
+                pj('#', buildDir,'VE_Open','skel','moduleS.cpp')]
+targetVjObs = [pj('#', buildDir,'VE_Open','skel','VjObsS.h'), 
+               pj('#', buildDir,'VE_Open','skel','VjObsC.h'),
+               pj('#', buildDir,'VE_Open','skel','VjObsS.cpp'), 
+               pj('#', buildDir,'VE_Open','skel','VjObsC.cpp')]
 
 taoPrefix=os.popen('flagpoll TAO --variable=prefix').read().strip()
 env.PrependENVPath( 'LD_LIBRARY_PATH',pj( taoPrefix,'lib'))
 env.PrependENVPath( 'PATH',pj( taoPrefix,'bin'))
 tao_idl ='tao_idl'
-idlCmd = tao_idl + ' -o ./VE_Open/skel -in -GC -GI  -I./VE_Open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h ${SOURCES}'
+idlCmd = '%s -o %s/VE_Open/skel -in -GC -GI  -I%s/VE_Open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h ${SOURCES}' %(tao_idl, buildDir, buildDir)
 srcs = [pj('#',buildDir,'VE_Open','idl','module.idl'), 
         pj('#',buildDir,'VE_Open','idl','VjObs.idl')]
 bld = Builder(action = idlCmd)

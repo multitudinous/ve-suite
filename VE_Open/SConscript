@@ -1,11 +1,11 @@
-#!python
+##Builds tao skel files
 openSubdirs = Split("""
     idl
+    skel
     XML
     XML/Shader
     XML/CAD
     XML/Model
-    skel
 """)
 
 
