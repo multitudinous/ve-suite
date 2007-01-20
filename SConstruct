@@ -100,16 +100,6 @@ def CreateConfig(target, source, env):
       os.chmod(targets[0], 0755)
    return 0
 
-def CheckPackageVersion(context, name, version):
-   context.Message( 'Checking for '+name+' >= '+version+'... ')
-   fp = 'flagpoll '+name+' --atleast-version='+version
-   fp = 'flagpoll '+name+' --modversion'
-   ret = context.TryAction(fp)[0]
-   if not ret:
-      print commands.getstatusoutput( fp )[1]
-   context.Result( ret )
-   return ret
-
 ##See scons users guide section 15 on variant builds
 ##Setup some project defaults
 
@@ -240,41 +230,39 @@ baseEnv.Help(help_text)
 if not SConsAddons.Util.hasHelpFlag():
    # now lets process everything
    opts.Process(baseEnv, None, True)                   # Update the options
-
-   ##check for flagpoll packages
-   conf = Configure(baseEnv, custom_tests = {'CheckPackageVersion' : CheckPackageVersion })
-
-   if not conf.CheckPackageVersion('flagpoll','0.8.1'):
-      Exit(1)
-
-   if not conf.CheckPackageVersion('TAO','1.5'):
-      Exit(1)
-
-   if not conf.CheckPackageVersion('vrjuggler','2.0.1'):
-      Exit(1)
-
-   if not conf.CheckPackageVersion('bullet','2.4'):
-      Exit(1)
    
    # check the apr and apu utilities
    # there is probably an easier way to do this so feel free to simplify
    aprVersion = '0.9'
    aprCommand = 'apr'
    apuCommand = 'apr-util'
+   apuLib = 'aprutil'
    if baseEnv.has_key('AprVersion'):
       aprVersion = baseEnv[ 'AprVersion' ]
       if baseEnv[ 'AprVersion' ] >= "1.0":
          aprCommand = 'apr-1'
          apuCommand = 'apr-util-1'
+         apuLib = 'aprutil-1'
 
-   if not conf.CheckPackageVersion( aprCommand, aprVersion ):
+   fgpApr = sca_util.FlagPollParser( aprCommand )
+   if not fgpApr.validate( baseEnv, "apr.h", aprCommand, aprVersion ):
       Exit(1)
-   if not conf.CheckPackageVersion( apuCommand, aprVersion ):
+
+   fgpApu = sca_util.FlagPollParser( apuCommand )
+   if not fgpApu.validate( baseEnv, "apu.h", apuLib, aprVersion ):
       Exit(1)
-   baseEnv = conf.Finish()
 
    fgpBullet = sca_util.FlagPollParser('bullet')
-   fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", "bulletdynamics" )
+   if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", "bulletdynamics", '0.1' ):
+      Exit(1)
+
+   fgpTAO = sca_util.FlagPollParser('TAO')
+   if not fgpTAO.validate( baseEnv, "ace/ACE.h", "TAO", '1.5' ):
+      Exit(1)
+
+   fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
+   if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", "vrj", '2.0' ):
+      Exit(1)
 
    # Try to save the options if possible
    try:                                   
