@@ -43,7 +43,7 @@ SRCS=\
    CADNodePropsDlg.cxx \
    CADOpacitySliderDlg.cxx \
    DualSlider.cxx\
-   spinctld.cpp\
+   spinctld.cxx\
    ROIDialog.cxx\
    BaseDialog.cxx
 
