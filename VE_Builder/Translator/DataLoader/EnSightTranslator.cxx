@@ -150,15 +150,15 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
             {
                outputDataset = vtkUnstructuredGrid::New();
             }
-            vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-            tmpDSet->DeepCopy( appendFilter->GetOutput() );
+            //vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
+            outputDataset->DeepCopy( appendFilter->GetOutput() );
             appendFilter->Delete();
             
             //get the info about the data in the data set
             if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
             {
                vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-               dataConvertCellToPoint->SetInput(tmpDSet);
+               dataConvertCellToPoint->SetInput(outputDataset);
                dataConvertCellToPoint->PassCellDataOff();
                dataConvertCellToPoint->Update();
                outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
@@ -166,10 +166,10 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
             }
             else
             {
-               outputDataset->DeepCopy(tmpDSet);
+               //outputDataset->DeepCopy(tmpDSet);
             }
             outputDataset->Update();
-            tmpDSet->Delete();
+            //tmpDSet->Delete();
             AddScalarsFromVectors( outputDataset );
             
             if ( j > 0 )
