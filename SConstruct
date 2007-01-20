@@ -275,11 +275,10 @@ if not SConsAddons.Util.hasHelpFlag():
    ##base_bldr = base_bldr.clone()
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
-   baseEnv.Append(CPPPATH = ['#'])
+   baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
    baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
    #setup the build dir
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
-   baseEnv[ 'cluster' ] = 'no'
    Export('baseEnv')
 
    # Setup file paths
