@@ -2,7 +2,7 @@
 EnsureSConsVersion(0,96)
 SConsignFile()
 
-import os, sys, string, smtplib,platform
+import os, sys, re,string, smtplib,platform
 import distutils.util
 import commands
 pj = os.path.join
@@ -93,7 +93,8 @@ def CreateConfig(target, source, env):
       # Go through the substitution dictionary and modify the contents read in
       # from the source file
       for key, value in submap.items():
-         contents = re.sub(re.escape(key), re.escape(value), contents)
+         #contents = re.sub(re.escape(key), re.escape(value), contents)
+         contents = re.sub(key, value, contents)
 
       # Write out the target file with the new contents
       open(targets[0], 'w').write(contents)
@@ -126,11 +127,10 @@ print 'Building VE-Suite Version: %i.%i.%i' % VE_SUITE_VERSION
 help_text = "\n---- VE-Suite Build System ----\n"
 
 # Create the extra builders
-# Define a builder for the gmtl-config script
+# Define a builder for fpc files
 builders = {
    'ConfigBuilder'   : Builder(action = CreateConfig)
 }
-   
 
 ################################################################################
 options_cache = 'options.cache.' + buildUUID
@@ -277,12 +277,25 @@ if not SConsAddons.Util.hasHelpFlag():
    ## load environment of the shell that scons is launched from   
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
    baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
+   baseEnv.Append(BUILDERS = builders)
    #setup the build dir
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
    Export('baseEnv')
 
    # Setup file paths
    PREFIX = os.path.abspath(baseEnv['prefix'])
+
+   if baseEnv.has_key('libdir'):
+      LIBDIR = baseEnv['libdir']
+   else:
+      if GetArch() == 'x86_64':
+         LIBDIR = 'lib64'
+      else:
+         LIBDIR = 'lib'
+      baseEnv['libdir'] = LIBDIR
+
+   distDir = pj(buildDir, 'dist')
+   Export('PREFIX', 'LIBDIR', 'distDir')
 
    # Create the GMTL package
    ves_pkg = sca_auto_dist.Package(name="VE_Suite", version = "%i.%i.%i"%VE_SUITE_VERSION,
@@ -294,37 +307,47 @@ if not SConsAddons.Util.hasHelpFlag():
    ##      README
    ##   """))
    Export('ves_pkg')
-   
-   # Process subdirectories
-   ##subdirs = []
-   ##SConscript(dirs = subdirs)
 
-   # Setup the builder for gmtl-config
-   ##env = baseEnv.Copy(BUILDERS = builders)
-   ##gmtl_pc_submap = {
-   ##      '@prefix@'                    : PREFIX,
-   ##      '@exec_prefix@'               : '${prefix}',
-   ##      '@gmtl_cxxflags@'             : '',
-   ##      '@includedir@'                : pj(PREFIX, 'include'),
-   ##      '@gmtl_extra_cxxflags@'       : '',
-   ##      '@gmtl_extra_include_dirs@'   : '',
-   ##      '@version_major@'             : str(GMTL_VERSION[0]),
-   ##      '@version_minor@'             : str(GMTL_VERSION[1]),
-   ##      '@version_patch@'             : str(GMTL_VERSION[2]),
-   ##   }
+   # Build up the provides vars for the .fpc files
+   provides = "osg"
+   arch = GetArch()
+   inst_paths = {}
+   inst_paths['base'] = os.path.abspath(osg_options.getSettings()[0][1])
+   inst_paths['lib'] = pj(inst_paths['base'], baseEnv['libdir'])
+   #inst_paths['flagpoll'] = pj( baseEnv['prefix'],baseEnv['libdir'], 'flagpoll')
+   inst_paths['flagpoll'] = pj( '#','VE_Installer','fpc')
+   inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
+   inst_paths['include'] = pj(inst_paths['base'], 'include')   
+   OSG_VERSION = ( int('1'), int('2'), int('0') )
+   cppdom_version_str = '1.2.0'
+   # Build up substitution map
+   submap = {
+      '@provides@'                  : provides,
+      '@prefix@'                    : inst_paths['base'],
+      '@exec_prefix@'               : '${prefix}',
+      '@cppdom_cxxflags@'           : '',
+      '@includedir@'                : inst_paths['include'],
+      '@cppdom_extra_cxxflags@'     : '',
+      '@cppdom_extra_include_dirs@' : '',
+      '@cppdom_libs@'               : '-losg -losgDB -losgGA -losgUtil -lOpenThreads -losgText -losgSim -losgProducer -lProducer',
+      '@libdir@'                    : inst_paths['lib'],
+      '@lib_subdir@'                : baseEnv['libdir'],
+      '@VERSION_MAJOR@'             : str(OSG_VERSION[0]),
+      '@VERSION_MINOR@'             : str(OSG_VERSION[1]),
+      '@VERSION_PATCH@'             : str(OSG_VERSION[2]),
+      '@arch@'                      : arch,
+      '@version@'                   : cppdom_version_str,
+   }
    ##env.ConfigBuilder('gmtl.pc','gmtl.pc.in',submap = gmtl_pc_submap)
    ##installed_targets += env.Install(pj(PREFIX, 'share', 'pkgconfig'), 'gmtl.pc')
-
-   if baseEnv.has_key('libdir'):
-      LIBDIR = baseEnv['libdir']
-   else:
-      if GetArch() == 'x86_64':
-         LIBDIR = 'lib64'
-      else:
-         LIBDIR = 'lib'
-
-   distDir = pj(buildDir, 'dist')
-   Export('PREFIX', 'LIBDIR', 'distDir')
+   name_parts = ['osg', cppdom_version_str, arch]
+   pc_filename = "-".join(name_parts) + ".fpc"
+   tempName = pj(inst_paths['flagpoll'], pc_filename)
+   cppdom_pc = baseEnv.ConfigBuilder(tempName, 
+                           pj('#','VE_Installer','fpc','osg.fpc.in'), submap = submap)
+   installed_targets = baseEnv.Install( pj( baseEnv['prefix'], baseEnv['libdir'], 'flagpoll'), tempName)
+   #baseEnv.AddPostAction(cppdom_pc, Chmod('$TARGET', 0644))
+   #baseEnv.Install(inst_paths['bin'], cppdom_pc)
    
    # Setup package
    ##CPPDOM_VERSION
@@ -397,6 +420,6 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_pkg.build( install=False )
    
    ##Install it if the packages have been setup to do so
-   baseEnv.Alias('install',PREFIX)
+   baseEnv.Alias('install',[installed_targets,PREFIX])
    Default('.')
 
