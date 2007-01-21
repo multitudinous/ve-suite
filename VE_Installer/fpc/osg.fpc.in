@@ -1,15 +1,19 @@
-prefix=/home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.1/Linux-RHEL_4
-exec_prefix=${prefix}/bin
-share_dir=${prefix}/share
-man_dir=${prefix}/man
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+cxxflags=@cppdom_cxxflags@
+includedir=@includedir@
+libs=@cppdom_libs@
+libdir=@libdir@
+version_major=@VERSION_MAJOR@
+version_minor=@VERSION_MINOR@
+version_patch=@VERSION_PATCH@
 
-Name: OSG
-Description: 
-URL: 
-Version: 
-Provides: osg
-Requires: 
-Arch: i686
-Libs: -L${prefix}/lib -losg -losgDB -losgGA -losgUtil -lOpenThreads -losgText -losgSim -losgProducer -lProducer
-Libs.private: 
-Cflags: -D_OSG -I${prefix}/include
+Name: OpenSceneGraph
+Provides: @provides@
+Version: ${version_major}.${version_minor}.${version_patch}
+Description: A scene graph for general 3D graphics development
+URL: http://www.openscenegraph.org
+Requires:
+Libs: -L${libdir} ${libs}
+Cflags: -I${includedir}
+Arch: @arch@
