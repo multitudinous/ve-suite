@@ -35,9 +35,9 @@
 #include "VE_Open/XML/StateInfo.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
-////////////////
+////////////////////////////////////////////////////////////////////////////////
 //Constructors//
-////////////////
+////////////////////////////////////////////////////////////////////////////////
 User::User()
 :XMLObject()
 {
@@ -47,56 +47,110 @@ User::User()
    SetObjectType("User");
 
 }
-/////////////////
+////////////////////////////////////////////////////////////////////////////////
 User::~User()
 {
-   
+   if ( _stateInfo )
+   {
+      delete _stateInfo;
+      _stateInfo = 0;
+   }
 }
-//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+User::User( const User& input )
+:XMLObject(input)
+{
+   _userId = input._userId;
+   _controlStatus = input._controlStatus;
+   
+   _stateInfo = 0;
+   if ( input._stateInfo )
+   {
+      _stateInfo = new StateInfo( *(input._stateInfo) );
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+User& User::operator=( const User& input)
+{
+   if ( this != &input )
+   {
+      XMLObject::operator =(input);
+      _userId = input._userId;
+      _controlStatus = input._controlStatus;
+      
+      if ( input._stateInfo )
+      {
+         if ( !_stateInfo )
+         {
+            _stateInfo = new StateInfo();
+         }
+         *_stateInfo = *(input._stateInfo);
+      }
+   }
+   return *this;
+}
+////////////////////////////////////////////////////////////////////////////////
 void User::SetUserId(std::string id)
 {
    _userId = id;
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void User::SetControlStatus(VEControlStatus cs)
 {
    _controlStatus = cs;
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void User::SetStateInfo(VE_XML::StateInfo* userState)
 {
    _stateInfo = userState;
 }
-///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string User::GetUserId()
 {
    return _userId;
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 User::VEControlStatus User::GetControlStatus()
 {
    return _controlStatus;
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::StateInfo* User::GetUserStateInfo()
 {
    return _stateInfo;
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void User::SetObjectFromXMLData(DOMNode* xmlInput)
 {
+   DOMElement* currentElement = 0;
+   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+   {
+      currentElement = dynamic_cast<DOMElement*>(xmlInput);
+   }
+   
+   if(currentElement)
+   {
+      GetAttribute( currentElement, "id", uuid );
+      GetAttribute( currentElement, "userID", _userId );
+      GetAttribute( currentElement, "veControlStatus", _controlStatus );
+      
+      if ( _stateInfo )
+      {
+         delete _stateInfo;
+      }
+      
+      DOMElement* stateInfoElement = 0;
+      stateInfoElement = GetSubElement( currentElement, "stateInfo", 0 );
+      _stateInfo = new StateInfo();
+      _stateInfo->SetObjectFromXMLData( stateInfoElement );
+   }
 }
-//////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void User::_updateVEElement( std::string input )
 {
-   //Be sure to set the number of children either here or in the updating subElements code
-   //we know this to be 3: 
-   //stateInfo element;
-   //userId element;
-   //controlStatus element;
-   //_nChildren = 3;
-
-   //Add code here to update the specific sub elements
-
+   SetAttribute( "userID", _userId );
+   SetAttribute( "id", uuid );
+   SetAttribute( "veControlStatus", _controlStatus );
+   _veElement->appendChild( _stateInfo->GetXMLData( "stateInfo" ) );
 }
 

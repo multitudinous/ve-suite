@@ -59,6 +59,10 @@ public:
    User();
    ///Destructor
    virtual ~User();
+   ///Copy Constructor
+   User( const User& );
+   ///equal operator
+   User& operator= ( const User& );
    ///The control status of this user
    ///Valid status
    ///MASTER == controlling changes of the main graphics state
