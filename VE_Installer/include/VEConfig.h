@@ -37,6 +37,8 @@
 #ifndef VE_SUITE_CONFIG_
 #define VE_SUITE_CONFIG_ 1
 
+#define VE_PHYSICS 0
+
 #if defined(_MSC_VER)
    //#pragma warning( disable : 4244 )
    #pragma warning( disable : 4251 )
