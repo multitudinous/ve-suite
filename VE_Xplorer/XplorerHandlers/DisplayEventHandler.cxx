@@ -4,6 +4,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/DisplayInformation.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -53,16 +54,16 @@ void DisplayEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       DVP=command->GetDataValuePair("FrameRateID");
       DVP->GetData(value);
 
-      //VE_Xplorer::cfdEnvironmentHandler::instance()->SetFrameRateFlag(value);
-      //VE_Xplorer::cfdEnvironmentHandler::instance()->FrameRateEvent();
+      VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag(value);
+      VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->FrameRateEvent();
    }
 
    else if(command->GetDataValuePair("CoordSysID")){
       DVP=command->GetDataValuePair("CoordSysID");
       DVP->GetData(value);
 
-      //VE_Xplorer::cfdEnvironmentHandler::instance()->SetCoordSysFlag(value);
-      //VE_Xplorer::cfdEnvironmentHandler::instance()->CoordSysEvent(); 
+      VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag(value);
+      VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->CoordSysEvent(); 
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

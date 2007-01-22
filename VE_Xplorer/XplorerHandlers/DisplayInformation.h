@@ -1,3 +1,7 @@
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//Don't implement this class; it is handled through cfdEnvironmentHandler
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 #ifdef _OSG
 
 #ifndef DISPLAY_INFORMATION_H
@@ -15,6 +19,13 @@ namespace VE_SceneGraph
    class cfdDCS;
    class cfdSwitch;
    class cfdFILE;
+}
+
+namespace osg
+{
+   class Projection;
+   class MatrixTransform;
+   class Geode;
 }
 
 namespace VE_Xplorer
@@ -36,8 +47,9 @@ namespace VE_Xplorer
          void SetCoordSysFlag(bool val);
 
       private:
-         //Initialize display items
-         void InitializeDisplay();
+         void InitializeProjection();
+
+         void InitializeTransformation();
 
          //Initialize the framerate display
          void InitFrameRateDisplay();
@@ -47,7 +59,7 @@ namespace VE_Xplorer
 
          VE_SceneGraph::cfdSwitch* display_switch;
          VE_SceneGraph::cfdDCS* framerate;
-         VE_SceneGraph::cfdFILE* coord_sys;
+         VE_SceneGraph::cfdDCS* coord_sys;
 
          bool framerate_flag;                //bool Frame Rate on/off
          bool coord_sys_flag;                //bool WCS on/off

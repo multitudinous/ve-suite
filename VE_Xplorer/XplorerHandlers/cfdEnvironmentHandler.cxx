@@ -53,6 +53,7 @@
 #include "VE_Xplorer/XplorerHandlers/StoredSceneEH.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/DisplayInformation.h"
 #include "VE_Xplorer/XplorerHandlers/DisplayEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 #include "VE_Xplorer/XplorerHandlers/Trackball.h"
@@ -81,16 +82,17 @@ using namespace VE_Util;
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
    nav = 0;
-   _teacher       = 0;
-   _soundHandler  = 0;
-   //_camHandler    = 0;
+   _teacher = 0;
+   _soundHandler = 0;
+   //_camHandler = 0;
    cursor = 0;
-   _param.erase();//         = 0;
-   _commandArray  = 0;
-   _readParam     = 0;
-   arrow          = 0;
+   _param.erase();// = 0;
+   _commandArray = 0;
+   _readParam = 0;
+   arrow = 0;
    displaySettings = 0;
-   for ( unsigned int i = 0; i < 3; i++ )
+
+   for( unsigned int i = 0; i < 3; i++ )
    {
       worldScale[ i ] = 1.0f;
       worldTrans[ i ] = 0.0f;
@@ -99,12 +101,14 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 
    this->nav = 0;
 
-   #ifdef VE_PATENTED
    #ifdef _OSG
-      this->objectHandler = 0;
-      _activeGeomPicking = false;
+      display_information = 0;
+
+      #ifdef VE_PATENTED
+         this->objectHandler = 0;
+         _activeGeomPicking = false;
+      #endif //VE_PATENTED
    #endif //_OSG
-   #endif //VE_PATENTED
 
    _readParam = 0;
    _param.erase();// = 0;
@@ -134,13 +138,12 @@ void cfdEnvironmentHandler::Initialize( void )
    this->arrow = cfdModelHandler::instance()->GetArrow();
    
    //CreateObjects();
-
-#ifdef VE_PATENTED
-#ifdef _OSG
-   this->objectHandler = new cfdObjectHandler();
-#endif // _OSG
-#endif // VE_PATENTED
-
+   
+   #ifdef _OSG
+   #ifdef VE_PATENTED
+      this->objectHandler = new cfdObjectHandler();
+   #endif //VE_PATENTED
+   #endif //_OSG
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::CleanUp( void )
@@ -185,7 +188,19 @@ void cfdEnvironmentHandler::CleanUp( void )
       delete this->_teacher;
    }
 
-   delete displaySettings;
+   if ( this->displaySettings )
+   {
+      vprDEBUG(vesDBG,2)  
+        << "|       deleting this->displaySettings" << std::endl << vprDEBUG_FLUSH;
+      delete this->displaySettings;
+   }
+
+   if ( this->display_information )
+   {
+      vprDEBUG(vesDBG,2)  
+        << "|       deleting this->display_information" << std::endl << vprDEBUG_FLUSH;
+      delete this->display_information;
+   }
 
    //Delete all the devices in DeviceHandler
    VE_Xplorer::DeviceHandler::instance()->CleanUp();
@@ -251,6 +266,13 @@ cfdCursor* cfdEnvironmentHandler::GetCursor( void )
    return this->cursor;
 }
 ////////////////////////////////////////////////////////////////////////////////
+#ifdef _OSG
+DisplayInformation* cfdEnvironmentHandler::GetDisplayInformation( void )
+{
+   return this->display_information;
+}
+#endif
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetDesktopSize( int width, int height )
 {
    desktopWidth = width;
@@ -266,7 +288,7 @@ void cfdEnvironmentHandler::InitScene( void )
 
    VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetScaleArray( this->worldScale );
 
-   for ( int i = 0; i < 3; i++)
+   for( int i = 0; i < 3; i++)
    {
       this->nav->worldTrans[ i ] = this->worldTrans[ i ];
       this->nav->worldRot[ i ] = this->worldRot[ i ];
@@ -286,7 +308,7 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    // Initiate cursors.
    //
-   std::cout << "|  8. Initializing................................. Virtual cursors |" << std::endl;
+   std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
    this->cursor = new cfdCursor( this->arrow, 
                              VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(), 
                              VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode() );
@@ -295,7 +317,7 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    // Initiate quatcam
    //
-   /*std::cout << "|  9. Initializing..................................... cfdQuatCams |" << std::endl;
+   /*std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
    this->_camHandler = new cfdQuatCamHandler( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(),
                                           , _param.c_str() );*/
    VE_Xplorer::cfdQuatCamHandler::instance()->SetNavigation(this->nav);
@@ -314,14 +336,15 @@ void cfdEnvironmentHandler::InitScene( void )
    this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
                                  VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
 
-#ifdef VE_PATENTED
-#ifdef _OSG
-   this->objectHandler->Initialize(this->nav);
-#endif //_OSG
-#endif //VE_PATENTED
-   if ( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
+   #ifdef _OSG
+   #ifdef VE_PATENTED
+      this->objectHandler->Initialize(this->nav);
+   #endif //VE_PATENTED
+   #endif //_OSG
+
+   if( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
    {
-      std::cout << "| 11. Initializing................................  Desktop Display |" << std::endl;
+      std::cout << "| 12. Initializing................................  Desktop Display |" << std::endl;
       // Create the command and data value pairs
       // to adjust the desktop settings.
       VE_XML::DataValuePair* dvpDesktopWidth = new VE_XML::DataValuePair( std::string("FLOAT") );
@@ -339,7 +362,13 @@ void cfdEnvironmentHandler::InitScene( void )
       delete displayCommand;
    }
 
-   //this->InitializeDisplay();
+   //
+   // Initialize DisplayInformation
+   //
+   #ifdef _OSG
+      std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
+      this->display_information = new VE_Xplorer::DisplayInformation;
+   #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
@@ -349,9 +378,8 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    //Process all events for active device
    VE_Xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
 
-
    this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
-                        (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+                             (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
    this->nav->updateNavigationFromGUI();
 
    VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
@@ -381,23 +409,24 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
       }
    }
 
-#ifdef _OSG
-#ifdef VE_PATENTED
-   this->objectHandler->UpdateObjectHandler();
+   #ifdef _OSG
+   #ifdef VE_PATENTED
+      this->objectHandler->UpdateObjectHandler();
 
-   if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == GEOMETRY_PICKING ) 
-   {
-      if(_commandArray->GetCommandValue( cfdCommandArray::CFD_SC))
+      if( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == GEOMETRY_PICKING ) 
       {
-         this->objectHandler->ActivateGeometryPicking();
+         if(_commandArray->GetCommandValue( cfdCommandArray::CFD_SC))
+         {
+            this->objectHandler->ActivateGeometryPicking();
+         }
+
+         else
+         {
+            this->objectHandler->DeactivateGeometryPicking();
+         }
       }
-      else
-      {
-         this->objectHandler->DeactivateGeometryPicking();
-      }
-   }
-#endif
-#endif
+   #endif
+   #endif
 
       // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
@@ -407,8 +436,9 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
       this->cursor->SetVECommand( cfdModelHandler::instance()->GetXMLCommand() );
       this->cursor->CheckCommandId( _commandArray );
    }
+
    this->cursor->Update( this->nav->GetCursorLocation(),
-                           this->nav->GetDirection(), this->nav->worldTrans );
+                         this->nav->GetDirection(), this->nav->worldTrans );
 
    // Fix later
    /*
@@ -451,7 +481,6 @@ void cfdEnvironmentHandler::PostFrameUpdate()
 	//Update the values in trackball
    VE_Xplorer::DeviceHandler::instance()->GetTrackball()->Reshape(_windowWidth,_windowHeight);
 	VE_Xplorer::DeviceHandler::instance()->GetTrackball()->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void cfdEnvironmentHandler::CreateObjects( void )

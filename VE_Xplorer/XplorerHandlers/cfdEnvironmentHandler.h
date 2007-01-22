@@ -56,6 +56,8 @@ namespace VE_Xplorer
    class cfdQuatCamHandler;
    class cfdDisplaySettings;
 
+   class DisplayInformation;
+
    #ifdef VE_PATENTED
    #ifdef _OSG
       class cfdObjectHandler;
@@ -135,10 +137,13 @@ public:
    void ResetBackgroundColorUpdateFlag();
   
    #ifdef _OSG
-   #ifdef VE_PATENTED 
-      void ActivateGeometryPicking( void );
-      void DeactivateGeometryPicking( void );
-   #endif //VE_PATENTED
+      ///Accessor for DisplayInformation
+      DisplayInformation* GetDisplayInformation( void );
+
+      #ifdef VE_PATENTED 
+         void ActivateGeometryPicking( void );
+         void DeactivateGeometryPicking( void );
+      #endif //VE_PATENTED
    #endif //_OSG 
 
 private:
@@ -148,10 +153,12 @@ private:
    cfdQuatCamHandler* _camHandler;
 
    #ifdef _OSG
-   #ifdef VE_PATENTED 
-      cfdObjectHandler* objectHandler;
-      bool _activeGeomPicking;
-   #endif // VE_PATENTED
+      DisplayInformation* display_information;
+
+      #ifdef VE_PATENTED 
+         cfdObjectHandler* objectHandler;
+         bool _activeGeomPicking;
+      #endif // VE_PATENTED
    #endif //_OSG
 
    std::vector<float> _clearColor;///<The background color;

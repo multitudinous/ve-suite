@@ -8,6 +8,7 @@
 #include "VE_Xplorer/XplorerHandlers/WCS.h"
 
 #include <osg/Geode>
+#include <osg/Projection>
 
 #include <osgText/Text>
 
@@ -21,6 +22,14 @@ DisplayInformation::DisplayInformation()
 {
    framerate_flag=false;
    coord_sys_flag=false;
+
+   display_switch=new VE_SceneGraph::cfdSwitch;
+
+   this->InitFrameRateDisplay();
+   this->InitCoordSysDisplay();
+
+   display_switch->AddChild(framerate);
+   display_switch->AddChild(coord_sys);
 }
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::~DisplayInformation()
@@ -36,23 +45,11 @@ DisplayInformation::~DisplayInformation()
    if(coord_sys){
       delete coord_sys;
    }
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void DisplayInformation::InitializeDisplay()
-{
-   display_switch=new VE_SceneGraph::cfdSwitch;
-   framerate=new VE_SceneGraph::cfdDCS;
-   coord_sys=new VE_SceneGraph::cfdFILE(GetVESuite_WCS(),VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(),true);
-
-   display_switch->AddChild(framerate);
-
-   this->InitFrameRateDisplay();
-   this->InitCoordSysDisplay();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::InitFrameRateDisplay()
 {
+   framerate=new VE_SceneGraph::cfdDCS;
    /*
    framerate_dcs=new VE_SceneGraph::cfdDCS;
    framerate_geode=new osg::Geode;
@@ -86,23 +83,24 @@ void DisplayInformation::InitFrameRateDisplay()
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::InitCoordSysDisplay()
 {
+   coord_sys=new VE_SceneGraph::cfdDCS;
+
+   //The physical model for the world coordinate system display
+   VE_SceneGraph::cfdFILE* coord_sys_model=new VE_SceneGraph::cfdFILE(GetVESuite_WCS(),coord_sys,true);
+
+   osg::ref_ptr<osg::Projection> projection=new osg::Projection;
+   projection->setMatrix(osg::Matrix::ortho(-1.2,10,-1.2,10,-2,2));
+   projection->setCullingActive(false);
+
    //wcs_stateset=new osg::StateSet(;)
    //wcs_display->GetRawNode()->setStateSet(wcs_stateset.get());
 
    //Disable depth testing so wcs is drawn regardless of depth values of geometry already drawn
    //wcs_stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
-
-   float translation[3]={0,100,0};
-   float scale[3]={1.0f,1.0f,1.0f};
-   //coord_sys->SetTranslationArray(translation);
-   //coord_sys->SetScaleArray(scale);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::LatePreFrameUpdate()
 {
-   //std::cout<<this->GetDisplayCoordSys()<<std::endl;
-   //std::cout<<this->GetDisplayFrameRate()<<std::endl<<std::endl;
-
    /*
    if(this->GetDisplayFrameRate()==true){
       std::stringstream ss(std::stringstream::in|std::stringstream::out);
@@ -110,21 +108,8 @@ void DisplayInformation::LatePreFrameUpdate()
       ss<<" fps";
       framerate_text->setText(ss.str());
    }
-   else{
-      framerate_text->setText("");
-   }
 
-   if(this->GetDisplayCoordSys()==true){
-      float wcs_translation[3];
 
-      wcs_translation[0]=0.0f;
-      wcs_translation[1]=0.0f;
-      wcs_translation[2]=0.0f;
-
-      wcs_display->SetTranslationArray(wcs_translation);
-      //Draw wcs last
-      wcs_stateset->setRenderBinDetails(1,"RenderBin");
-   }
    */
 }
 ////////////////////////////////////////////////////////////////////////////////
