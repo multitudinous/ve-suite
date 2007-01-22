@@ -274,6 +274,13 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    LoadFromServer( event );
    //Process command line args to see if ves file needs to be loaded
    ProcessCommandLineArgs();
+   
+   xplorerColor.push_back( 0.0f );
+   xplorerColor.push_back( 0.0f );
+   xplorerColor.push_back( 0.0f );
+   xplorerColor.push_back( 1.0f );
+   xplorerWxColor = new wxColourData();
+   xplorerWxColor->SetChooseFull(true);
 }
 ///////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
@@ -1653,26 +1660,26 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
 {
    //this is kinda confusing...thanks wx!!!
-   wxColourData data;
-   data.SetChooseFull(true);
+   //wxColourData data;
+   //data.SetChooseFull(true);
 
-   wxColourDialog colorDlg(this,&data);
+   wxColourDialog colorDlg(this,xplorerWxColor);
    colorDlg.SetTitle(wxString("Xplorer Background Color", wxConvUTF8));
 
    if (colorDlg.ShowModal() == wxID_OK)
    {
-      wxColourData retData = colorDlg.GetColourData();
-      wxColour col = retData.GetColour();
+      *xplorerWxColor = colorDlg.GetColourData();
+      wxColour col = xplorerWxColor->GetColour();
 
-      std::vector<double> newColor;
-      newColor.push_back(static_cast<double>(col.Red())/255.0);
-      newColor.push_back(static_cast<double>(col.Green())/255.0);
-      newColor.push_back(static_cast<double>(col.Blue())/255.0);
-      newColor.push_back(1.0);
+      xplorerColor.clear();
+      xplorerColor.push_back(static_cast<double>(col.Red())/255.0);
+      xplorerColor.push_back(static_cast<double>(col.Green())/255.0);
+      xplorerColor.push_back(static_cast<double>(col.Blue())/255.0);
+      xplorerColor.push_back(1.0);
 
       // Create the command and data value pairs
       VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
-      dataValuePair->SetData(std::string("Background Color"),newColor);
+      dataValuePair->SetData(std::string("Background Color"),xplorerColor);
       VE_XML::Command* veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
@@ -2014,4 +2021,9 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );
    delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< double >  AppFrame::GetXplorerBackgroundColor( void )
+{
+   return xplorerColor;
 }

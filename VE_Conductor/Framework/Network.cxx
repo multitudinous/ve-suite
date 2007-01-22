@@ -57,6 +57,8 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/User.h"
+#include "VE_Open/XML/StateInfo.h"
 
 #include "VE_Open/XML/CAD/CADAssembly.h"
 
@@ -2251,6 +2253,25 @@ std::string Network::Save( std::string fileName )
          );
    }*/
 
+   //Write out the veUser info for the local user
+   VE_XML::User userInfo;
+   userInfo.SetUserId( "mccdo" );
+   userInfo.SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
+   // Create the color state
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   dataValuePair->SetData(std::string("Background Color"), frame->GetXplorerBackgroundColor() );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
+   veCommand->AddDataValuePair(dataValuePair);
+   VE_XML::StateInfo* colorState = new VE_XML::StateInfo();
+   colorState->AddState( veCommand );
+   
+   userInfo.SetStateInfo( colorState );
+   nodes.push_back( 
+                    std::pair< VE_XML::XMLObject*, std::string >( 
+                    &userInfo, "User" ) 
+                  );
+   
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
    netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );

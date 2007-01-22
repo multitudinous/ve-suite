@@ -40,12 +40,13 @@ Frame API
 */
 #ifndef APP_FRAME_H
 #define APP_FRAME_H
+#include <vector>
 
 #include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
 #include <orbsvcs/CosNamingC.h>
+
 #include "VE_Conductor/GUIPlugin/UI_i.h"
-//#include "VE_Conductor/Framework/revision.h"
 
 #include <wx/frame.h>
 #include <wx/toolbar.h>
@@ -88,7 +89,7 @@ class UserPreferences;
 class wxImageList;
 class wxSplitterWindow;
 class Splitter;
-
+class wxColourData;
 namespace VE_Conductor
 {
    namespace GUI_Utilities
@@ -202,10 +203,11 @@ enum
    ///Get the active display mode of conductor
    ///\return Returns either:\n "Desktop" or"Tablet"
    std::string GetDisplayMode();
-
    ///Get an appropriate size for sub dialogs
    wxRect GetAppropriateSubDialogSize();
-
+   ///Get the background color for xplorer
+   std::vector< double > GetXplorerBackgroundColor( void );
+   
    Splitter* wx_log_splitter;
    wxSplitterWindow* wx_ve_splitter;
    Splitter* wx_nw_splitter;
@@ -394,7 +396,8 @@ private:
    VE_Conductor::CORBAServiceList* serviceList;
    VE_XML::DOMDocumentManager* domManager;
    UserPreferences* preferences;
-   
+   std::vector<double> xplorerColor;
+   wxColourData* xplorerWxColor;
    DECLARE_EVENT_TABLE()
 };
 #endif

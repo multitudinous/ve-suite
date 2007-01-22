@@ -141,8 +141,12 @@ void User::SetObjectFromXMLData(DOMNode* xmlInput)
       
       DOMElement* stateInfoElement = 0;
       stateInfoElement = GetSubElement( currentElement, "stateInfo", 0 );
-      _stateInfo = new StateInfo();
-      _stateInfo->SetObjectFromXMLData( stateInfoElement );
+      if ( stateInfoElement )
+      {
+         _stateInfo = new StateInfo();
+         _stateInfo->SetObjectFromXMLData( stateInfoElement );
+         _stateInfo->SetOwnerDocument(_rootDocument);
+      }
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +155,10 @@ void User::_updateVEElement( std::string input )
    SetAttribute( "userID", _userId );
    SetAttribute( "id", uuid );
    SetAttribute( "veControlStatus", _controlStatus );
-   _veElement->appendChild( _stateInfo->GetXMLData( "stateInfo" ) );
+   if ( _stateInfo )
+   {
+      _stateInfo->SetOwnerDocument(_rootDocument);
+      _veElement->appendChild( _stateInfo->GetXMLData( "stateInfo" ) );
+   }
 }
 
