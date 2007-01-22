@@ -1032,7 +1032,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
       vec->AddDataValuePair( dvp );
       serviceList->SendCommandStringToXplorer( vec );
-      delete veCommand;
+      delete vec;
 
       //Now laod the xml data now that we are in the correct directory
       fname=dialog.GetFilename();
