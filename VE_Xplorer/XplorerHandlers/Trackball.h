@@ -12,8 +12,6 @@ Trackball API
 */
 #include <gmtl/Matrix.h>
 
-#include <gadget/Type/PositionInterface.h>
-
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Xplorer
@@ -53,8 +51,6 @@ namespace VE_Xplorer
 	      float tb_aspectRatio;
          float tb_FOVyRatio;
 	      float tb_FOVy;
-
-         gadget::PositionInterface head;
 
          //Is of form [row][column]
          gmtl::Matrix44f tb_transform;

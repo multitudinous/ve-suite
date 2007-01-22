@@ -10,10 +10,19 @@
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
-#include <osg/Group>
-#include <osg/BoundingSphere>
-#include <osg/BoundingBox>
-#include <osg/CameraNode>
+#ifdef _OSG
+
+   #ifdef VE_PHYSICS
+      #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+
+      #include <LinearMath/btVector3.h>
+   #endif
+
+   #include <osg/Group>
+   #include <osg/BoundingSphere>
+   #include <osg/BoundingBox>
+   #include <osg/CameraNode>
+#endif
 
 const double OneEightyDivPI=57.29577951;
 const double PIDivOneEighty=.0174532925;
@@ -23,27 +32,23 @@ using namespace VE_Xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 Trackball::Trackball()
+:
+tb_moving(false),
+tb_animate(false),
+tb_width(1),
+tb_height(1),
+tb_key(-1),
+tb_button(-1),
+tb_magnitude(0.0f),
+tb_sensitivity(1.0e-06),
+tb_aspectRatio(0.0f),
+tb_FOVyRatio(0.0f),
+tb_FOVy(0.0f)
 {
-	tb_moving=false;
-   tb_animate=false;
-
-   tb_width=1;
-	tb_height=1;
-
-   tb_key=-1;
-   tb_button=-1;
-
    tb_currPos[0]=0.0f;
 	tb_currPos[1]=0.0f;
 	tb_prevPos[0]=0.0f;
 	tb_prevPos[1]=0.0f;
-   tb_magnitude=0.0f;
-   tb_sensitivity=1.0e-06;
-	tb_aspectRatio=0.0f;
-   tb_FOVyRatio=0.0f;
-	tb_FOVy=0.0f;
-
-   head.init("VJHead");
 
    identity(tb_transform);
 	identity(tb_accuTransform);
@@ -141,6 +146,7 @@ void Trackball::Reshape(unsigned int width,unsigned int height)
 {
 	tb_width=width;
 	tb_height=height;
+
    tb_aspectRatio=(float)width/(float)height;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,6 +155,7 @@ void Trackball::SetFOVy(float _top,float _bottom,float _near)
 	float topAngle=(OneEightyDivPI)*atan(_top/_near);
    float tempDiv=fabs(_bottom)/_near;
 	float bottomAngle=(OneEightyDivPI)*atan(tempDiv);
+
    tb_FOVyRatio=topAngle/bottomAngle;
 	tb_FOVy=topAngle+bottomAngle;
 }
@@ -159,6 +166,7 @@ void Trackball::Keyboard(int key)
    if(key==35){
       ResetTransforms();
    }
+
    // If "f" is pressed
    else if(key==23){
       FrameAll();
@@ -170,38 +178,61 @@ void Trackball::Keyboard(int key)
 void Trackball::Mouse(int button,int state,int x,int y)
 {
 	tb_button=button;
+
 	if(state==1){
 		tb_currPos[0]=(float)x/(float)tb_width;
 		tb_currPos[1]=(float)y/(float)tb_height;
 		tb_prevPos[0]=(float)x/(float)tb_width;
 		tb_prevPos[1]=(float)y/(float)tb_height;
 		tb_moving=true;
-	}
-	else if(state==0)
+
+
+      #ifdef VE_PHYSICS
+         //If physics is enabled, shoot a box on right-mouse click
+         if(button==51 && VE_SceneGraph::PhysicsSimulator::instance()->GetPhysicsState()){
+
+            //VE_SceneGraph::PhysicsSimulator::instance()->ShootBox();
+         }
+      #endif
+   }
+
+   else if(state==0){
 		tb_moving=false;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Trackball::Motion(int x,int y)
 {
-	if(!tb_moving)
+   if(!tb_moving){
 		return;
+   }
+
 	tb_currPos[0]=(float)x/(float)tb_width;
 	tb_currPos[1]=(float)y/(float)tb_height;
 	float dx=tb_currPos[0]-tb_prevPos[0];
 	float dy=tb_currPos[1]-tb_prevPos[1];
 
 	tb_magnitude=sqrtf(dx*dx+dy*dy);
-   if(tb_magnitude<tb_sensitivity)
+   if(tb_magnitude<tb_sensitivity){
       return;
+   }
 
-	if(tb_button==49&&(x>.1*tb_width&&x<.9*tb_width)&&(y>.1*tb_height&&y<.9*tb_height))
+   if(tb_button==49&&(x>.1*tb_width&&x<.9*tb_width)&&(y>.1*tb_height&&y<.9*tb_height)){
    	RotateView(dx,dy);
-	else if(tb_button==51)
+   }
+
+   else if(tb_button==51){
 		Zoom(dy);
-	else if(tb_button==50)
+   }
+
+   else if(tb_button==50){
       Pan(dx,dy);
-	else if(tb_button==49)
+   }
+
+   else if(tb_button==49){
 		Twist(dx,dy);
+   }
+
 	tb_prevPos[0]=tb_currPos[0];
 	tb_prevPos[1]=tb_currPos[1];
 }
@@ -231,6 +262,7 @@ void Trackball::FrameAll()
    if(tb_aspectRatio<=1.0f){
       y=(bs.radius()/tan(Theta))*tb_aspectRatio;
    }
+
    else{
       y=(bs.radius()/tan(Theta));
    }
