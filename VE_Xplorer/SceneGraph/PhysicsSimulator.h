@@ -10,7 +10,7 @@ PhysicsSimulator API
 #include "VE_Installer/include/VEConfig.h"
 
 //Temporary pound define
-#ifdef VE_PHYSICS
+#if VE_PHYSICS
 
 //PhysicsSimulator only supports OpenSceneGraph
 #ifdef _OSG

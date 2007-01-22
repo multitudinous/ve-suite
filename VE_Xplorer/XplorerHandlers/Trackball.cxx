@@ -12,7 +12,7 @@
 
 #ifdef _OSG
 
-   #ifdef VE_PHYSICS
+   #if VE_PHYSICS
       #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
       #include <LinearMath/btVector3.h>
@@ -187,7 +187,7 @@ void Trackball::Mouse(int button,int state,int x,int y)
 		tb_moving=true;
 
 
-      #ifdef VE_PHYSICS
+      #if VE_PHYSICS
          //If physics is enabled, shoot a box on right-mouse click
          if(button==51 && VE_SceneGraph::PhysicsSimulator::instance()->GetPhysicsState()){
 

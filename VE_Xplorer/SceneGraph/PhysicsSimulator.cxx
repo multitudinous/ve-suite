@@ -10,8 +10,7 @@
 
 #include "PhysicsSimulator.h"
 
-//Temporary pound define
-#ifdef VE_PHYSICS
+#if VE_PHYSICS
 
 #include "btBulletDynamicsCommon.h"
 
