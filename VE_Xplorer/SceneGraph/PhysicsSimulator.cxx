@@ -10,11 +10,16 @@
 
 #include "PhysicsSimulator.h"
 
+//Temporary pound define
+#ifdef VE_PHYSICS
+
 #include "btBulletDynamicsCommon.h"
 
 //#include "BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
 //#include "../Extras/AlternativeCollisionAlgorithms/BoxBoxCollisionAlgorithm.h"
 //#include "BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h"
+
+#include <osg/ShapeDrawable>
 
 using namespace VE_SceneGraph;
 
@@ -28,7 +33,7 @@ PhysicsSimulator::PhysicsSimulator()
 physics(true),
 shoot_speed(40.0f)
 {
-   head.init("VJHead");
+   //head.init("VJHead");
 
    this->InitPhysics();
 }
@@ -253,3 +258,5 @@ btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
    return dynamics_world;
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+#endif //VE_PHYSICS

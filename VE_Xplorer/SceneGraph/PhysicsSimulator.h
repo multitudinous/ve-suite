@@ -9,11 +9,15 @@ PhysicsSimulator API
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
+//Temporary pound define
+#ifdef VE_PHYSICS
+
+//PhysicsSimulator only supports OpenSceneGraph
+#ifdef _OSG
+
 #include <gadget/Type/PositionInterface.h>
 
 #include <LinearMath/btTransform.h>
-
-#include <osg/ref_ptr>
 
 class	btDynamicsWorld;
 class btCollisionDispatcher;
@@ -65,6 +69,10 @@ namespace VE_SceneGraph
          //******************************************//
    };
 }
+
+#endif //_OSG
+
+#endif //VE_PHYSICS
 
 #endif //PHYSICS_SIMULATOR_H
 

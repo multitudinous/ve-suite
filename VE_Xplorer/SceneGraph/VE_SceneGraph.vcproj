@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="VE_SceneGraph"
 	ProjectGUID="{398FF31C-58CE-4A0A-A288-BC3917FC920A}"
+	RootNamespace="VE_SceneGraph"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -40,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_PATENTED;VE_SCENEGRAPH_LIBRARY;_OSG;OPAL_USE_DOUBLE"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(BULLET_HOME)\src&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_PATENTED;VE_SCENEGRAPH_LIBRARY;_OSG"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,10 +63,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib gadget_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib"
 				OutputFile="$(OutDir)/VE_SceneGraph_osg_vep_d.dll"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(BULLET_HOME)\out\debug8\libs&quot;"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VE_SceneGraph.pdb"
 				SubSystem="2"
@@ -240,6 +243,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PhysicsSimulator.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\Text.cxx"
 				>
 			</File>
@@ -340,7 +347,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\FILE.h"
+				RelativePath=".\File.h"
 				>
 			</File>
 			<File
@@ -349,6 +356,10 @@
 			</File>
 			<File
 				RelativePath=".\Node.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PhysicsSimulator.h"
 				>
 			</File>
 			<File
