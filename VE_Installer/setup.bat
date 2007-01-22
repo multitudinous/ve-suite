@@ -22,6 +22,7 @@ set APR_HOME=C:\devEnv\VES.1.0-Deps\apr
 set APR_UTIL_HOME=C:\devEnv\VES.1.0-Deps\apr-util
 set APR_ICONV_HOME=C:\devEnv\VES.1.0-Deps\apr-iconv
 set COIN_HOME=C:\devEnv\VES.1.0-Deps\Coin-2.4.5
+set BULLET_HOME=C:\devEnv\VES.1.0-Deps\bullet
 set TAO_MACHINE=localhost
 REM set TAO_MACHINE=costello.vrac.iastate.edu
 REM set TAO_MACHINE=keymaker.vrac.iastate.edu
