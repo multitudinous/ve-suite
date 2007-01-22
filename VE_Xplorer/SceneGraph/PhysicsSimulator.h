@@ -9,7 +9,11 @@ PhysicsSimulator API
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
-#include "LinearMath/btTransform.h"
+#include <gadget/Type/PositionInterface.h>
+
+#include <LinearMath/btTransform.h>
+
+#include <osg/ref_ptr>
 
 class	btDynamicsWorld;
 class btCollisionDispatcher;
@@ -28,6 +32,13 @@ namespace VE_SceneGraph
          void UpdatePhysics(float dt);
          void ResetScene();
 
+         void ShootBox(const btVector3& destination);
+
+         void SetPhysicsState(bool state);
+         bool GetPhysicsState();
+
+         void SetShootSpeed(float speed);
+
          btRigidBody* CreateRigidBody(float mass,const btTransform& startTransform,btCollisionShape* shape);
 
          btDynamicsWorld* GetDynamicsWorld();
@@ -39,12 +50,19 @@ namespace VE_SceneGraph
 
          void InitPhysics();
 
+         bool physics;
+         float shoot_speed;
+
+         gadget::PositionInterface head;
+
          //Manages physics objects and constraints and implements update of all objects each frame
+         //******************************************//
 	      btDynamicsWorld* dynamics_world;
 
          btCollisionDispatcher* dispatcher;
          btOverlappingPairCache* broadphase;
          btSequentialImpulseConstraintSolver* solver;
+         //******************************************//
    };
 }
 

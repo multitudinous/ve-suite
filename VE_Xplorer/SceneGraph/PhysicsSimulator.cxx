@@ -3,8 +3,8 @@
 //#define USE_KINEMATIC_GROUND 1
 //#define USER_DEFINED_FRICTION_MODEL 1
 
-//#define USE_CUSTOM_NEAR_CALLBACK 1
-//#define USE_SWEEP_AND_PRUNE 1
+#define USE_CUSTOM_NEAR_CALLBACK 1
+#define USE_SWEEP_AND_PRUNE 1
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 #define USE_MOTIONSTATE 1
 
@@ -24,17 +24,38 @@ vprSingletonImp(PhysicsSimulator);
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
+:
+physics(true),
+shoot_speed(40.0f)
 {
+   head.init("VJHead");
+
    this->InitPhysics();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
-	//Delete dispatcher
+   if(this->dynamics_world){
+	   //Remove the rigidbodies from the dynamics world and delete them
+	   for(int i=0;i<dynamics_world->getNumCollisionObjects();i++){
+		   btCollisionObject* obj=dynamics_world->getCollisionObjectArray()[i];
+		   dynamics_world->removeCollisionObject(obj);
+		   delete obj;
+	   }
+
+      //Delete dynamics world
+	   delete dynamics_world;
+   }
+
+   //*************************************************************************//
+   //Don't know if btDynamicsWorld's destructor will clean these up in the future,
+   //but it looks like they are still hanging around, so delete them for now.
+
+   //Delete dispatcher
    if(this->dispatcher){
 	   delete this->dispatcher;
    }
-
+   
    //Delete broadphase
    if(this->broadphase){
 	   delete this->broadphase;
@@ -45,26 +66,7 @@ void PhysicsSimulator::ExitPhysics()
       delete this->solver;
    }
 
-   if(this->dynamics_world){
-	   //Remove the rigidbodies from the dynamics world and delete them
-	   for(int i=0;i<dynamics_world->getNumCollisionObjects();i++){
-		   btCollisionObject* obj=dynamics_world->getCollisionObjectArray()[i];
-		   dynamics_world->removeCollisionObject(obj);
-		   delete obj;
-	   }
-
-      /*
-	   //delete collision shapes
-	   for (unsigned int j=0;j<m_collisionShapes.size();j++)
-	   {
-		   btCollisionShape* shape=m_collisionShapes[j];
-		   delete shape;
-	   }
-      */
-
-      //Delete dynamics world
-	   delete dynamics_world;
-   }
+   //*************************************************************************//
 }
 ////////////////////////////////////////////////////////////////////////////////
 //By default, Bullet will use its own nearcallback, but you can override it using dispatcher->setNearCallback()
@@ -111,6 +113,7 @@ void PhysicsSimulator::InitPhysics()
    #ifdef USE_SWEEP_AND_PRUNE
       btVector3 worldAabbMin(-10000,-10000,-10000);
 	   btVector3 worldAabbMax(10000,10000,10000);
+
 	   broadphase=new btAxisSweep3(worldAabbMin,worldAabbMax,maxProxies);
    #else
       broadphase=new btSimpleBroadphase;
@@ -120,7 +123,7 @@ void PhysicsSimulator::InitPhysics()
       //This is optional
    #else
       //Default constraint solver
-      solver=NULL;
+      solver=new btSequentialImpulseConstraintSolver;
    #endif //REGISTER_CUSTOM_COLLISION_ALGORITHM
 	
    dynamics_world=new btDiscreteDynamicsWorld(dispatcher,broadphase,solver);
@@ -179,6 +182,47 @@ void PhysicsSimulator::ResetScene()
 		}
       */
 	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::ShootBox(const btVector3& destination)
+{
+	if(dynamics_world){
+		float mass=1.0f;
+		btTransform transform;
+		transform.setIdentity();
+      gadget::PositionData* head_pos;
+      head_pos=head->getPositionData();
+		btVector3 position;
+      position.setValue(head_pos->mPosData[0][3],head_pos->mPosData[1][3],head_pos->mPosData[2][3]);
+		transform.setOrigin(position);
+
+		btCollisionShape* box_shape=new btBoxShape(btVector3(1.0f,1.0f,1.0f));
+		btRigidBody* body=this->CreateRigidBody(mass,transform,box_shape);
+
+		btVector3 lin_vel(destination[0]-position[0],destination[1]-position[1],destination[2]-position[2]);
+		lin_vel.normalize();
+		lin_vel*=shoot_speed;
+
+		body->getWorldTransform().setOrigin(position);
+		body->getWorldTransform().setRotation(btQuaternion(0,0,0,1));
+		body->setLinearVelocity(lin_vel);
+		body->setAngularVelocity(btVector3(0,0,0));
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::SetPhysicsState(bool  state)
+{
+   physics=state;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool PhysicsSimulator::GetPhysicsState()
+{
+   return physics;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::SetShootSpeed(float speed)
+{
+   shoot_speed=speed;
 }
 ////////////////////////////////////////////////////////////////////////////////
 btRigidBody* PhysicsSimulator::CreateRigidBody(float mass,const btTransform& startTransform,btCollisionShape* shape)
