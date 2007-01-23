@@ -240,7 +240,11 @@ void Polydata::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color Polydata by."), _T("Color by Scalar"),
                                    _scalarNames);
 
+
+   scalarSelector.SetSize(GetRect());
+   scalarSelector.SetSelection(selectionIndex);
    scalarSelector.CentreOnParent();
+
 /*
    int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);
@@ -253,6 +257,7 @@ void Polydata::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
                         width, height));
    scalarSelector.SetSelection(selectionIndex);
 */
+
    if (scalarSelector.ShowModal() == wxID_OK)
    {
       _colorByScalarName = ConvertUnicode( scalarSelector.GetStringSelection() );
