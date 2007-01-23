@@ -312,4 +312,71 @@
     National Energy Technology Laboratory, 2005.</emphasis></para>
 
   </section>
+
+  <section id="visualization_polydata">
+    <title>Polydata Surfaces</title>
+
+    <para>
+      Polydata surfaces let you view technical data on the surface of objects,
+      similar to isosurfaces. However, setting up polydata functions takes a bit
+      more work than other visualization data.
+    </para>
+
+    <para>
+      Building a polydata surface requires the makeVTKSurface program under
+      VE's Builder Tools. Run a Builder Shell from VE-Launcher (see Chap. 2)
+      and run makeVTKSurface. This will build a polydata file from the .vt*
+      file you enter. Enter in your options and wait for the preview window
+      to pop up. When you hit E to exit the preview, your polydata file will be
+      created (usually as outFile.vtk).
+    </para>
+
+    <para>
+      Start VE-Suite. When you go into the Data Set Config window to load the
+      datasets, Open the Surface Data Directory option and select the polydata
+      file you just made to select it and its directory.
+    </para>
+
+    <para>
+      Submit the job and start Visualization. Pull down the Data Set Chooser
+      and select the polydata file, then select the scalar and vector you want
+      to use for the Polydata. Click the Polydata button, on the far right of
+      the button menu, to bring up the Polydata menu.
+    </para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/polydatamenu.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>
+      Once the Polydata window is up, click Update to display the surface.
+    </para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/polydataregular.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>
+      You can also choose to Warp the Surface, which stretches the surface
+      based on its data values, similar to elevating a contour map to see how
+      the terrain looks in 3D. Toggle the Scale Factor to choose how much the
+      surface is stretched.
+    </para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/polydatawarped.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>
+      Finally, the Advanced button lets you choose which scalar to use to color
+      it, just like in the Isosurfaces window.
+    </para>
+
+  </section>
 </chapter>
