@@ -1,5 +1,7 @@
 #include "VE_Xplorer/SceneGraph/CADCombo.h"
 
+#if VE_PHYSICS
+
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Node.h"
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
@@ -216,4 +218,4 @@ void File::Update()
    //this->_node->SetColorOfGeometry( this->_node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+#endif
