@@ -189,7 +189,7 @@ void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
    PrepareDC(dc);
   
    dc.SetUserScale( userScale.first, userScale.second );
-   // dc.Clear();
+   dc.Clear();
   
    ReDraw(dc); 
 
@@ -323,47 +323,46 @@ void Network::OnMouseMove(wxMouseEvent& event)
 		   OnMLeftUp(event);
 		   Refresh();
 	   }
+	   // To avoid the shortcut evaluation
+	   SelectMod(x, y, dc);
+	   SelectLink(x, y );
+	   SelectTag(x, y); 
+	   //Check if link con is selected
+	   m_selLinkCon = -1;
+	   if (m_selLink>=0)
+	   {
+	     for ( unsigned int i=0; i<links[m_selLink].GetPoints()->size(); i++)
+		   if ( computenorm( evtpos, *(links[m_selLink].GetPoint( i )) ) <= 3 )
+		   {
+		     m_selLinkCon=i;
+		     break;
+		   }
+	    }
+	 
+	    //Check if tag con is selected
+	    m_selTagCon = -1;
+	    if (m_selTag>=0)
+	    {
+	       if (computenorm( evtpos, *(tags[m_selTag].GetConnectorsPoint( 0 )) ) <= 3 )
+		       m_selTagCon=0;
+	       if (computenorm( evtpos, *(tags[m_selTag].GetConnectorsPoint( 1 )) ) <= 3 )
+		       m_selTagCon=1;
+	    }
+
+      //if (m_selMod < 0) //SelectMod(x, y)<0 ) 
+	  //	{	
+      //   UnSelectMod(dc); //Unselect only get called by state changed from something selected state to nothing selected state
+      //}
 	  
-      if (m_selMod>=0 && SelectMod(x, y)<0 ) 
-	  	{	
-         UnSelectMod(dc); //Unselect only get called by state changed from something selected state to nothing selected state
-      }
-	   else if (m_selLink>=0 && SelectLink(x, y )<0)
+	  if (m_selLink>=0 && SelectLink(x, y )<0)
 	   {   
          UnSelectLink(dc);
       }
-      else if (m_selTag>=0 && SelectTag(x, y)<0)
+      
+	  if (m_selTag>=0 && SelectTag(x, y)<0)
 	   {   
          UnSelectTag(dc);
       }
-      else
-	   {
-	      // To avoid the shortcut evaluation
-	      SelectMod(x, y);
-	      SelectLink(x, y );
-	      SelectTag(x, y); 
-	      //Check if link con is selected
-	      m_selLinkCon = -1;
-	      if (m_selLink>=0)
-	      {
-	         for ( unsigned int i=0; i<links[m_selLink].GetPoints()->size(); i++)
-		         if ( computenorm( evtpos, *(links[m_selLink].GetPoint( i )) ) <= 3 )
-		         {
-		            m_selLinkCon=i;
-		            break;
-		         }
-	      }
-	 
-	      //Check if tag con is selected
-	      m_selTagCon = -1;
-	      if (m_selTag>=0)
-	      {
-	         if (computenorm( evtpos, *(tags[m_selTag].GetConnectorsPoint( 0 )) ) <= 3 )
-		         m_selTagCon=0;
-	         if (computenorm( evtpos, *(tags[m_selTag].GetConnectorsPoint( 1 )) ) <= 3 )
-		         m_selTagCon=1;
-	      }
-	   }
    }
    else //dragging
    {
@@ -460,7 +459,7 @@ void Network::OnDClick( wxMouseEvent& event )
    wxPoint evtpos = event.GetLogicalPosition( dc );
 
    // set the m_selMod class variable
-   SelectMod( evtpos.x, evtpos.y );
+   SelectMod( evtpos.x, evtpos.y, dc );
    //set the active model if connected to xplorer
    SetActiveModel();
    // now use it
@@ -854,7 +853,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
 ///// Selection Functions ///////////
 /////////////////////////////////////
 
-int Network::SelectMod( int x, int y )
+int Network::SelectMod( int x, int y, wxDC &dc )
 {
 	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
    // This function checks to see which module your mouse is over based
@@ -887,14 +886,15 @@ int Network::SelectMod( int x, int y )
 	      return i;
 	   }
    }
-
+   m_selMod = -1;
+   //ReDraw(dc);
    return -1;
 }
 
 /////////////////////////////////////////////////////
 void Network::UnSelectMod(wxDC &dc)
 {
-  DrawPorts( modules[m_selMod].GetPlugin(), false ); // wipe the ports
+  //DrawPorts( modules[m_selMod].GetPlugin(), false ); // wipe the ports
   
   ReDraw( dc );
   m_selMod = -1;
@@ -1914,7 +1914,7 @@ void Network::ReDraw(wxDC &dc)
    dc.SetPen(*wxBLACK_PEN);
    dc.SetBrush(*wxWHITE_BRUSH);
    dc.SetBackground(*wxWHITE_BRUSH);
-   //dc.Clear();
+   dc.Clear();
    //dc.SetBackgroundMode(wxSOLID);
 
    // redraw all the active plugins

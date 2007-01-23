@@ -199,7 +199,7 @@ protected:
    void ReDraw(wxDC &dc);
 
    //Selection functions
-   int SelectMod(int x, int y);
+   int SelectMod(int x, int y, wxDC& dc);
    void UnSelectMod(wxDC& dc);
    int  SelectLink(int x, int y);
    void UnSelectLink(wxDC& dc);
