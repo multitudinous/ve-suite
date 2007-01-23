@@ -66,7 +66,8 @@ SRCS=\
    vtkActorToOSG.cpp \
    vtkActorToPF.cxx \
    Triangles.cxx \
-   Text.cxx
+   Text.cxx \
+	PhysicsSimulator.cxx
 
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
