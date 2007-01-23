@@ -57,6 +57,7 @@
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -1005,38 +1006,17 @@ void VjObs_i::SetCommandString( const char* value)
       }
    }
 
-   domManager = new DOMDocumentManager();
-   domManager->SetParseXMLStringOn();
-   domManager->Load( commandString );
    vprDEBUG(vprDBG_ALL,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
-   DOMDocument* commandDoc = domManager->GetCommandDocument();
+   VE_XML::XMLReaderWriter networkWriter;
+   networkWriter.UseStandaloneDOMDocumentManager();
+   networkWriter.ReadFromString();
+   networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
-   // Get a list of all the command elements
-   DOMNodeList* subElements = commandDoc->getDocumentElement()->getElementsByTagName( xercesString("vecommand") );
-   unsigned int numCommands = subElements->getLength();
-   // now lets create a list of them
-   for ( unsigned int i = 0; i < numCommands; ++i )
+   for ( size_t i = 0; i < objectVector.size(); ++i )
    {
-      Command* temp = new Command();
-      DOMElement* tempElement = 0;
-      try
-      {
-         tempElement = dynamic_cast< DOMElement* >( subElements->item(i) );
-      }
-      catch ( ... )
-      {
-         std::cerr << "ERROR : dynamic_cast failed. You may need to recompile xerces with RTTI enabled" << std::endl;
-         return;
-      }
-      temp->SetObjectFromXMLData( tempElement );
-      commandVectorQueue.push_back( temp );
+      commandVectorQueue.push_back( static_cast< VE_XML::Command* >( objectVector.at( i ) ) );
    }
-   //std::cout <<"VjObs::SetCommandString(): unloading parser "<< std::endl;
-   // I am pretty sure we now need to release some memory for the domdocument
-   domManager->UnLoadParser();
-   delete domManager;
-   domManager = 0;
-   //std::cout <<"VjObs::SetCommandString(): Done "<< std::endl;
 }
 
 // Frame sync variables used by osg only at this point

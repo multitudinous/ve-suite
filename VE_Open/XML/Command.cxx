@@ -112,7 +112,8 @@ void Command::_updateVEElement( std::string input )
    //update functions below to get the ndvPairs before we can calculate _nChildren
 
    //Add code here to update the specific sub elements
-   _updateCommandName();
+   //_updateCommandName();
+   SetAttribute( "commandName", _cmdName );
    _updateDataValuePairs();
 
    //_nChildren = 1 + _dataValuePairs.size();
@@ -150,13 +151,20 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
       //break down the element
       {
          //get variables by tags
-         DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("command"));
-      
-         //should only be the name of the command
-         DOMElement* name = dynamic_cast< DOMElement* >( subElements->item(0) );
-         if(name)
+         DOMNodeList* subElements = 0;
+         subElements = currentElement->getElementsByTagName(xercesString("command"));
+         if ( subElements->getLength() > 0 )
          {
-            ExtractCmdNameFromElement(name);
+            //should only be the name of the command
+            DOMElement* name = dynamic_cast< DOMElement* >( subElements->item(0) );
+            //if(name)
+            {
+               ExtractCmdNameFromElement(name);
+            }
+         }
+         else
+         {
+            GetAttribute( currentElement, "commandName", _cmdName );
          }
       }
       //break down the element

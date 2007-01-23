@@ -77,11 +77,6 @@ Module::~Module ()
    delete veModel;   
    inputs.clear();
    results.clear();
-   
-   for ( size_t i = 0; i < ports.size(); ++i )
-   {
-      delete ports.at( i );
-   }
    ports.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,12 +96,7 @@ void Module::copy( const Module &m )
    results.clear();
    results = m.results;
 
-   for ( size_t i = 0; i < ports.size(); ++i )
-   {
-      delete ports.at( i );
-   }
    ports.clear();
-
    for ( size_t i = 0; i < m.ports.size(); ++i )
    {
       ports.push_back( new VE_XML::VE_Model::Port( *(m.ports.at( i )) ) );
@@ -313,12 +303,7 @@ void Module::SetVEModel( VE_XML::VE_Model::Model* mod )
    }
 
    //Now get port data
-   for ( size_t i = 0; i < ports.size(); ++i )
-   {
-      delete ports.at( i );
-   }
    ports.clear();
-
    for ( size_t i = 0; i < veModel->GetNumberOfPorts(); ++i )
    {
       ports.push_back( veModel->GetPort( i ) );
