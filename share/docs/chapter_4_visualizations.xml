@@ -318,13 +318,13 @@
 
     <para>
       Polydata surfaces let you view technical data on the surface of objects,
-      similar to isosurfaces. However, setting up polydata functions takes a bit
-      more work than other visualization data.
+      similar to isosurfaces.
     </para>
 
     <para>
-      Building a polydata surface requires the makeVTKSurface program under
-      VE's Builder Tools. Run a Builder Shell from VE-Launcher (see Chap. 2)
+      You can use the makeVTKSurface program under VE's Builder Tools to build
+      a polydata surface. Run a Builder Shell from VE-Launcher
+      (<link linkend="launcher_basics">see Chap. 2</link>)
       and run makeVTKSurface. This will build a polydata file from the .vt*
       file you enter. Enter in your options and wait for the preview window
       to pop up. When you hit E to exit the preview, your polydata file will be

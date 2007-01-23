@@ -30,8 +30,11 @@
       </imageobject>
     </mediaobject>
 
-    <para>On Unix, the Dependencies folder contains folders for each system;
-    you need to choose the one corresponding to your system.</para>
+    <para>On Unix, the Dependencies is actually a list of folders containing
+    VE-Suite's dependencies. Add any dependencies you need to the list and
+    choose VR-Juggler's folder. (Since VE-Suite needs special settings for
+    VR-Juggler, Juggler needs to be chosen apart from the other
+    dependencies.)</para>
 
     <mediaobject>
       <imageobject>
