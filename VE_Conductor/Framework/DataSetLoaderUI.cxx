@@ -667,9 +667,8 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
                                 wxString( _("New Dataset") ),
                                         wxString( _("Enter name for new Dataset:") ),
                                         wxString( _("Dataset") ),wxOK);
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth() - 500, displaySize.GetHeight() - 600, 300, 100 );
-   newDataSetName.SetSize( dialogPosition );
+
+   newDataSetName.CentreOnParent();
    newDataSetName.ShowModal();
    std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue().GetData() ) ) );
    if(DatasetExists( tempStr ) )
