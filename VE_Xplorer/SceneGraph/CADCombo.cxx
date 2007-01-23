@@ -1,4 +1,4 @@
-#include "VE_Xplorer/SceneGraph/FILE.h"
+#include "VE_Xplorer/SceneGraph/CADCombo.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Node.h"
@@ -8,32 +8,32 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #ifdef _PERFORMER
-   #include <Performer/pr/pfFog.h>
+#include <Performer/pr/pfFog.h>
 #elif _OSG
-   #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
-   #include <osg/Fog>
-   #include <osg/Node>
-   #include <osg/Group>
-   #include <osg/MatrixTransform>
-   #include <osg/TriangleIndexFunctor>
+#include <osg/Fog>
+#include <osg/Node>
+#include <osg/Group>
+#include <osg/MatrixTransform>
+#include <osg/TriangleIndexFunctor>
 
-   class TriIndexFunc
+class TriIndexFunc
+{
+public:
+   TriIndexFunc(){;}
+   ~TriIndexFunc(){;}
+
+   void inline operator()(unsigned int pos1,unsigned int pos2,unsigned int pos3)
    {
-      public:
-         TriIndexFunc(){;}
-         ~TriIndexFunc(){;}
+      triangleIndex.push_back(pos1);
+      triangleIndex.push_back(pos2);
+      triangleIndex.push_back(pos3);
+   }
 
-         void inline operator()(unsigned int pos1,unsigned int pos2,unsigned int pos3)
-         {
-            triangleIndex.push_back(pos1);
-            triangleIndex.push_back(pos2);
-            triangleIndex.push_back(pos3);
-         }
-
-         std::vector<osg::Vec3> vertexIndex;
-         std::vector<unsigned int> triangleIndex;
-   };
+   std::vector<osg::Vec3> vertexIndex;
+   std::vector<unsigned int> triangleIndex;
+};
 #endif
 
 //C/C++ libraries
