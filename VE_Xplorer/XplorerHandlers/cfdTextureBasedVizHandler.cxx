@@ -467,8 +467,20 @@ void cfdTextureBasedVizHandler::ClearAll()
       {
          _activeVolumeVizNode->ResetClipPlanes();
          ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+         _activeVolumeVizNode = 0;
       }
       _activeTM = 0;
+      _activeVolumeVizNode = 0;
+      _parent = 0;
+      _currentBBox = 0;
+      _cleared = true;
+      _pbm = 0;
+   
+      activeVisNodeHdlr = 0;
+      _textureBaseSelected = false;
+      _activeTDSet = 0;
+      _svvh = 0;
+      _vvvh = 0;
    }
 }
 ///////////////////////////////////////////////////////////

@@ -53,10 +53,10 @@ static const char* scalarFragSource = {
    "{\n"
       "//dependent texture look up in transfer function\n"
       "vec2 scalar = texture3D(volumeData,gl_TexCoord[0].xyz).ga;\n"
-      "gl_FragColor = (scalar.x==0.0)?texture1D(transferFunction,scalar.y):vec4(0,0,0,0);\n"
+      "gl_FragColor = /*(scalar.x==0.0)?*/texture1D(transferFunction,scalar.y);//:vec4(0,0,0,0);\n"
 
       "//set the opacity to .2 for all fragments\n"
-      "//gl_FragColor.a *= gl_Color.a;\n"
+      "gl_FragColor.a *= gl_Color.a;\n"
    "}\n"
 };
 ////////////////////////////////////////////////
@@ -229,7 +229,7 @@ void cfdScalarShaderManager::_updateTransferFunction()
             lutex[i*4    ] = 255;
             lutex[i*4 + 1] = 0;
             lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 127;
+            lutex[i*4 + 3] = 0;
          }
       }else{
          if(_isoSurface)
