@@ -80,34 +80,31 @@ class wxButton;
 /*#define ID_BUTTON 10006
 #define ID_BUTTON1 10008*/
 
-enum VECTOR_IDS
-{
-   ID_V_RADIOBOX,
-   ID_V_RADIOBUTTON,
-   ID_V_CHECKBOX,
-   ID_V_RADIOBUTTON1,
-   ID_V_CHECKBOX1,
-   ID_V_SLIDER,
-   VECTOR_DIR_RBOX,
-   MULTIPLE_PREVECTOR_RBUTTON,
-   MULTIPLE_PREVECTOR_CHK,
-   SINGLE_PREVECTOR_RBUTTON,
-   SINGLE_PREVECTOR_CHK,
-   VECTOR_PLANE_SLIDER,
-   ADD_VECTOR_PLANE_BUTTON,
-   ADVANCED_VECTOR_BUTTON
-};
-
-
 class Vectors: public wxDialog
 {    
-//    DECLARE_DYNAMIC_CLASS( Vectors )
-    DECLARE_EVENT_TABLE()
-
 public:
     /// Constructors
     Vectors( );
     Vectors( wxWindow* parent, wxWindowID id = SYMBOL_VECTORS_IDNAME, const wxString& caption = SYMBOL_VECTORS_TITLE, const wxPoint& pos = SYMBOL_VECTORS_POSITION, const wxSize& size = SYMBOL_VECTORS_SIZE, long style = SYMBOL_VECTORS_STYLE );
+
+   enum VECTOR_IDS
+   {
+      ID_V_RADIOBOX,
+      ID_V_RADIOBUTTON,
+      ID_V_CHECKBOX,
+      ID_V_RADIOBUTTON1,
+      ID_V_CHECKBOX1,
+      ID_V_SLIDER,
+      VECTOR_DIR_RBOX,
+      MULTIPLE_PREVECTOR_RBUTTON,
+      MULTIPLE_PREVECTOR_CHK,
+      SINGLE_PREVECTOR_RBUTTON,
+      SINGLE_PREVECTOR_CHK,
+      VECTOR_PLANE_SLIDER,
+      ADD_VECTOR_PLANE_BUTTON,
+      ADVANCED_VECTOR_BUTTON
+   };
+
 //    Vectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
@@ -174,6 +171,8 @@ protected:
    VE_XML::DOMDocumentManager* domManager;
 
    AdvancedVectors* adVector;
+
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

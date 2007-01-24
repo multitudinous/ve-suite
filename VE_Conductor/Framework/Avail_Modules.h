@@ -50,30 +50,28 @@ class Network;
 class REI_Plugin;
 class PluginLoader;
 
-enum 
-{
-  Module_Desc,
-  Module_Help,
-  Module_Add,
-  TREE_CTRL = 1000
-};
-
 class Avail_Modules : public wxTreeCtrl
 {
  public:
-  enum
-    {
-      TreeCtrlIcon_File,
-      TreeCtrlIcon_FileSelected,
-      TreeCtrlIcon_Folder,
-      TreeCtrlIcon_FolderSelected,
-      TreeCtrlIcon_FolderOpened
-    };
 
   Avail_Modules() {;}
   Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style);
 
   virtual ~Avail_Modules();
+
+  enum
+  {
+      TreeCtrlIcon_File,
+      TreeCtrlIcon_FileSelected,
+      TreeCtrlIcon_Folder,
+      TreeCtrlIcon_FolderSelected,
+      TreeCtrlIcon_FolderOpened,
+      Module_Desc,
+      Module_Help,
+      Module_Add,
+      TREE_CTRL = 1000
+  };
+
   bool LoadModules(); //Load all the modules from the dlls 
   void OnItemRightClick(wxTreeEvent& event);
   void OnSelChanged(wxTreeEvent& event);

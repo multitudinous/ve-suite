@@ -416,8 +416,6 @@ void Vistab::CreateControls()
 //    wxButton* _closeButton = new wxButton( itemDialog1, CLOSE_BUTTON, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
     lastRowButtons->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-   
-
 ///@end Vistab content construction
 }
 ///////////////////////////

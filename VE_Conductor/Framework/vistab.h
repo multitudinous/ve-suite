@@ -98,33 +98,6 @@ class wxTextCtrl;
 #define ID_BUTTON 10015
 #define ID_COMBOBOX1 10016
 
-enum VISTAB_IDS
-{
-   CONTOUR_DLG,
-   VECTOR_DLG,
-   STREAMLINE_DLG,
-   ISOSURFACE_DLG,
-   TEXTURE_BASED_DLG,
-   POLYDATA_DLG,
-   CONTOUR_BUTTON,
-   VECTOR_BUTTON,
-   STREAMLINE_BUTTON,
-   ISOSURFACE_BUTTON,
-   TEXTURE_BASED_BUTTON,
-   POLYDATA_BUTTON,
-   ID_CLEAR_ALL_BUTTON,
-   MIN_SPINCTRL,
-   MAX_SPINCTRL,
-   MIN_MAX_SLIDERS,
-   MIN_SLIDER,
-   MAX_SLIDER,
-   CLOSE_BUTTON,
-   ID_DATA_WIREFRAME_CB,
-   ID_DATA_BBOX_CB,
-   ID_DATA_AXES_CB,
-   ID_DATA_UPDATE_AXES,
-   ID_DATA_SCALAR_BAR
-};
 ////@end control identifiers
 
 
@@ -136,8 +109,6 @@ enum VISTAB_IDS
 
 class Vistab: public wxDialog
 {    
-    DECLARE_EVENT_TABLE()
-
 public:
    ///Constructor
    ///\param activeModel The active Model information from CORBA.
@@ -153,6 +124,34 @@ public:
             const wxSize& size = SYMBOL_VISTAB_SIZE,
             long style = SYMBOL_VISTAB_STYLE );
    virtual ~Vistab();
+
+   enum VISTAB_IDS
+   {
+      CONTOUR_DLG,
+      VECTOR_DLG,
+      STREAMLINE_DLG,
+      ISOSURFACE_DLG,
+      TEXTURE_BASED_DLG,
+      POLYDATA_DLG,
+      CONTOUR_BUTTON,
+      VECTOR_BUTTON,
+      STREAMLINE_BUTTON,
+      ISOSURFACE_BUTTON,
+      TEXTURE_BASED_BUTTON,
+      POLYDATA_BUTTON,
+      ID_CLEAR_ALL_BUTTON,
+      MIN_SPINCTRL,
+      MAX_SPINCTRL,
+      MIN_MAX_SLIDERS,
+      MIN_SLIDER,
+      MAX_SLIDER,
+      CLOSE_BUTTON,
+      ID_DATA_WIREFRAME_CB,
+      ID_DATA_BBOX_CB,
+      ID_DATA_AXES_CB,
+      ID_DATA_UPDATE_AXES,
+      ID_DATA_SCALAR_BAR
+   };
 
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
@@ -424,6 +423,8 @@ protected:
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
       return tempStr;
    }   
+
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

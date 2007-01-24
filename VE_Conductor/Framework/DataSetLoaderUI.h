@@ -77,28 +77,6 @@ namespace VE_XML
 #define SYMBOL_DATASETLOADERUI_IDNAME ID_DIALOG
 #define SYMBOL_DATASETLOADERUI_SIZE wxSize(-1, 500)
 #define SYMBOL_DATASETLOADERUI_POSITION wxDefaultPosition
-enum
-{
-   ID_SCROLLEDWINDOW=10001,
-   ID_COMBOBOX,
-   ID_TEXTCTRL,
-   ID_BUTTON,
-   ID_TEXTCTRL2,
-   ID_BUTTON3,
-   ID_TEXTCTRL3,
-   ID_BUTTON4,
-   ID_BUTTON6,
-   ID_BUTTON5,
-   ID_TEXTCTRL1,
-   ID_BUTTON2,
-   ID_SCROLLEDWINDOW1,
-   ID_LISTBOX,
-   ID_INFORMATION_PACKET_LIST,
-   ID_INFORMATION_PACKET_CHANGE_NAME,
-   ID_INFORMATION_PACKET_ADD_NAME,
-   ID_ADD_DATASET,
-   ID_DELETE_DATASET
-};
 
 ////@end control identifiers
 
@@ -129,6 +107,29 @@ public:
                      const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
                      long style = SYMBOL_DATASETLOADERUI_STYLE, 
                      VE_XML::VE_Model::Model* veModel = 0);
+
+   enum
+   {
+      ID_SCROLLEDWINDOW=10001,
+      ID_COMBOBOX,
+      ID_TEXTCTRL,
+      ID_BUTTON,
+      ID_TEXTCTRL2,
+      ID_BUTTON3,
+      ID_TEXTCTRL3,
+      ID_BUTTON4,
+      ID_BUTTON6,
+      ID_BUTTON5,
+      ID_TEXTCTRL1,
+      ID_BUTTON2,
+      ID_SCROLLEDWINDOW1,
+      ID_LISTBOX,
+      ID_INFORMATION_PACKET_LIST,
+      ID_INFORMATION_PACKET_CHANGE_NAME,
+      ID_INFORMATION_PACKET_ADD_NAME,
+      ID_ADD_DATASET,
+      ID_DELETE_DATASET
+   };
 
     /// Creation
     bool Create( wxWindow* parent, 

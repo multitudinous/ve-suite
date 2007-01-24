@@ -56,10 +56,6 @@ class wxCheckListBox;
 #define SYMBOL_USERPREFERENCES_IDNAME ID_PREFERENCES_DIALOG
 #define SYMBOL_USERPREFERENCES_SIZE wxSize(-1, 500)
 #define SYMBOL_USERPREFERENCES_POSITION wxDefaultPosition
-enum
-{
-   ID_PREFERENCE_CHKBX=20001
-};
 
 ////@end control identifiers
 
@@ -77,8 +73,6 @@ enum
 
 class UserPreferences: public wxDialog
 {    
-    DECLARE_EVENT_TABLE()
-
 public:
    /// Constructors
    UserPreferences( );
@@ -88,6 +82,11 @@ public:
                   const wxPoint& pos = SYMBOL_USERPREFERENCES_POSITION, 
                   const wxSize& size = SYMBOL_USERPREFERENCES_SIZE, 
                   long style = SYMBOL_USERPREFERENCES_STYLE);
+
+   enum
+   {
+      ID_PREFERENCE_CHKBX=20001
+   };
 
    /// Creation
    bool Create( wxWindow* parent, 
@@ -110,5 +109,8 @@ public:
 private:
    wxCheckListBox* prefChkBx;///<The check box list of preferences
    bool interactiveState;
+
+    DECLARE_EVENT_TABLE()
+
 };
 #endif

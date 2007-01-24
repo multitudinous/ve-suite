@@ -45,15 +45,6 @@ class wxBitmapButton;
 class wxSpinCtrlDbl;
 #include <wx/spinctrl.h>
 //Transient control ids
-enum TRANS_DIALOG_IDS
-{
-   PLAY_BUTTON,
-   STOP_BUTTON,
-   FORWARD_STEP_BUTTON,
-   BACKWARD_STEP_BUTTON,
-   DURATION_CNTL_BOX,
-   CURRENT_FRAME
-};
 
 class UI_TransientDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
 {
@@ -63,6 +54,16 @@ public:
 		               wxWindowID id = -1, 
                      std::string title = "Transient Controls");
    ~UI_TransientDialog(){};
+
+   enum TRANS_DIALOG_IDS
+   {
+      PLAY_BUTTON,
+      STOP_BUTTON,
+      FORWARD_STEP_BUTTON,
+      BACKWARD_STEP_BUTTON,
+      DURATION_CNTL_BOX,
+      CURRENT_FRAME
+   };
 
    ///Set the command prefix so that we can use this control to
    ///send different commands.

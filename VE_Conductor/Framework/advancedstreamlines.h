@@ -88,19 +88,6 @@ class wxButton;
 #define ID_CHECKBOX1 10007
 #define ID_BUTTON 10008*/
 
-enum ADVANCED_STREAMLINE_IDS
-{
-   PARTICLE_TRACKING_BUTTON,
-   USE_SEED_POINT_CHK,
-   PROPOGATION_SLIDER,
-   INTEGRATION_STEP_SLIDER,
-   STEP_SIZE_SLIDER,
-   ARROWS_CHK,
-   SPHERE_SIZE_SLIDER,
-   LINE_DIAMETER_SLIDER,
-   PARTICLE_TRACKING,
-   PARTICLE_TRACKING_DIALOG
-};
 ////@end control identifiers
 
 
@@ -111,6 +98,20 @@ public:
     /// Constructors
     AdvancedStreamlines( );
     AdvancedStreamlines( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME, const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION, const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE, long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
+
+   enum ADVANCED_STREAMLINE_IDS
+   {
+      PARTICLE_TRACKING_BUTTON,
+      USE_SEED_POINT_CHK,
+      PROPOGATION_SLIDER,
+      INTEGRATION_STEP_SLIDER,
+      STEP_SIZE_SLIDER,
+      ARROWS_CHK,
+      SPHERE_SIZE_SLIDER,
+      LINE_DIAMETER_SLIDER,
+      PARTICLE_TRACKING,
+      PARTICLE_TRACKING_DIALOG
+   };
 
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );

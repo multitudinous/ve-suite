@@ -65,23 +65,6 @@ namespace VE_XML
    class DOMDocumentManager;
 }
 
-enum NAV_TAB_IDS 
-{
-   LEFT_B,
-   RIGHT_B,
-   UP_B,
-   DOWN_B,
-   FORWARD_B,
-   BACKWARD_B,
-   CCW_B,
-   CW_B,
-   TRANS_STEP_SLIDER,
-   ROT_STEP_SLIDER,
-   HEAD_ROTATE_CHK,
-   RESET_NAV_POSITION
-   //NONE= -1000
-};
-
 //override the buttons
 class UI_NavButton: public wxBitmapButton
 {
@@ -104,6 +87,23 @@ class NavigationPane : public wxDialog
 public:
    NavigationPane( void );
    virtual ~NavigationPane();
+
+   enum NAV_TAB_IDS 
+   {
+      LEFT_B,
+      RIGHT_B,
+      UP_B,
+      DOWN_B,
+      FORWARD_B,
+      BACKWARD_B,
+      CCW_B,
+      CW_B,
+      TRANS_STEP_SLIDER,
+      ROT_STEP_SLIDER,
+      HEAD_ROTATE_CHK,
+      RESET_NAV_POSITION
+      //NONE= -1000
+   };
 
    //turn off the navigation flag
    void onLeftMouseUp(wxMouseEvent& event);

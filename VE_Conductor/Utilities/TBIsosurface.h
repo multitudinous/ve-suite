@@ -68,25 +68,22 @@ class wxComboBox;
 #define SYMBOL_ISOSURFACES_SIZE wxSize(400, 300)
 #define SYMBOL_ISOSURFACES_POSITION wxDefaultPosition
 
-enum TBISOSURFACE_IDS
-{
-   TBISOSURFACE_RBUTTON,
-   TBPRECOMPUTED_ISO_CHK,
-   TBISOSURFACE_PLANE_SLIDER,
-   TBADD_ISOSURFACE_BUTTON,
-   TBADVANCED_ISOSURFACE_BUTTON
-};
-
 class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedIsosurfaceDlg: public VE_Conductor::GUI_Utilities::BaseDialog
 {    
-    DECLARE_EVENT_TABLE()
-
 public:
     /// Constructors
     TextureBasedIsosurfaceDlg(  wxWindow* parent, 
                   wxWindowID id =-1, 
                   std::string title = "wxDialog" );
 
+   enum TBISOSURFACE_IDS
+   {
+      TBISOSURFACE_RBUTTON,
+      TBPRECOMPUTED_ISO_CHK,
+      TBISOSURFACE_PLANE_SLIDER,
+      TBADD_ISOSURFACE_BUTTON,
+      TBADVANCED_ISOSURFACE_BUTTON
+   };
     ///The name of the available scalars.
     ///\param scalarNames all the scalars in this dataset
     void SetAvailableScalars(wxArrayString scalarNames);
@@ -104,5 +101,8 @@ protected:
    void _buildGUI( void );
    ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
    void _onAdvanced(wxCommandEvent& event);
+
+   DECLARE_EVENT_TABLE()
+
 };
 #endif // TextureBasedIsosurfaceDlg_H_

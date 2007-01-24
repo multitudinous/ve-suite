@@ -48,30 +48,30 @@ class wxRadioButton;
 class wxTextCtrl;
 class wxButton;
 
-enum 
-{
-  RADIO_FDA,
-  RADIO_FDB,
-  CC00,
-  CC01,
-  CC02,
-  CC03,
-  CC04,
-  CC05,
-  CC06,
-  CC07,
-  CC08,
-  OM00,
-  OM01,
-  OM02,
-  OM03
-};
-
 class FinancialDialog : public wxDialog
 {
  public:
   FinancialDialog(wxWindow *parent, wxWindowID id );
   virtual ~FinancialDialog();
+
+   enum 
+   {
+     RADIO_FDA,
+     RADIO_FDB,
+     CC00,
+     CC01,
+     CC02,
+     CC03,
+     CC04,
+     CC05,
+     CC06,
+     CC07,
+     CC08,
+     OM00,
+     OM01,
+     OM02,
+     OM03
+   };
 
  protected:
   

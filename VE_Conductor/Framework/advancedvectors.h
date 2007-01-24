@@ -65,16 +65,6 @@ class wxCheckBox;
 #define SYMBOL_ADVANCEDVECTORS_SIZE wxSize(400, 300)
 #define SYMBOL_ADVANCEDVECTORS_POSITION wxDefaultPosition
 
-
-enum ADVANCED_VECTOR_IDS
-{
-   VECTOR_MAX_SLIDER,
-   VECTOR_MIN_SLIDER,
-   VECTOR_SCALE_SLIDER,
-   VECTOR_RATIO_SLIDER,
-   SCALAR_BY_VECTOR_CHK
-};
-
 class AdvancedVectors: public wxDialog
 {    
 
@@ -86,6 +76,16 @@ public:
                   const wxPoint& pos = SYMBOL_ADVANCEDVECTORS_POSITION, 
                   const wxSize& size = SYMBOL_ADVANCEDVECTORS_SIZE,
                   long style = SYMBOL_ADVANCEDVECTORS_STYLE );
+
+   enum ADVANCED_VECTOR_IDS
+   {
+      VECTOR_MAX_SLIDER,
+      VECTOR_MIN_SLIDER,
+      VECTOR_SCALE_SLIDER,
+      VECTOR_RATIO_SLIDER,
+      SCALAR_BY_VECTOR_CHK
+   };
+
    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDVECTORS_IDNAME, 
               const wxString& caption = SYMBOL_ADVANCEDVECTORS_TITLE, 
               const wxPoint& pos = SYMBOL_ADVANCEDVECTORS_POSITION, 

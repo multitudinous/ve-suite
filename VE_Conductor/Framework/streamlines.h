@@ -85,18 +85,6 @@ class wxButton;
 #define ID_BUTTON 10006
 #define ID_BUTTON1 10007*/
 
-enum STREAMLINE_IDS
-{
-   CURSOR_RBOX,
-   DIRECTION_RBOX,
-   INTEGRATION_DIR_RBOX,
-   PLANE_SIZE_SLIDER,
-   NUMBER_PTS_SLIDER,
-   ADVANCED_STREAMLINE_BUTTON,
-   COMPUTE_STREAMLINE_BUTTON
-};
-
-
 class Streamlines: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Streamlines )
@@ -107,6 +95,18 @@ public:
     Streamlines( );
     Streamlines( wxWindow* parent, wxWindowID id = SYMBOL_STREAMLINES_IDNAME, const wxString& caption = SYMBOL_STREAMLINES_TITLE, const wxPoint& pos = SYMBOL_STREAMLINES_POSITION, const wxSize& size = SYMBOL_STREAMLINES_SIZE, long style = SYMBOL_STREAMLINES_STYLE );
 //    Streamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+
+   enum STREAMLINE_IDS
+   {
+      CURSOR_RBOX,
+      DIRECTION_RBOX,
+      INTEGRATION_DIR_RBOX,
+      PLANE_SIZE_SLIDER,
+      NUMBER_PTS_SLIDER,
+      ADVANCED_STREAMLINE_BUTTON,
+      COMPUTE_STREAMLINE_BUTTON
+   };
+
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation

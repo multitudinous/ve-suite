@@ -70,40 +70,12 @@ namespace VE_Model
 class Vistab;
 class AppFrame;
 
-enum 
-{
-   ADD_TAG,
-   ADD_LINK_CON,
-   EDIT_TAG,
-   DEL_TAG,
-   DEL_LINK,
-   DEL_LINK_CON,
-   DEL_MOD,
-   SHOW_LINK_CONT,
-   SHOW_RESULT,
-   SHOW_DESC,
-   PARAVIEW,
-   SHOW_FINANCIAL, /* EPRI TAG */
-   ASPEN_MENU,
-   SHOW_ASPEN_NAME,
-   QUERY_INPUTS,
-   QUERY_OUTPUTS,
-   ASPEN_ICON,
-   GEOMETRY,
-   MODEL_INPUTS,
-   MODEL_RESULTS,
-   DATASET,
-   VISUALIZATION,
-   SET_UI_PLUGIN_NAME,
-   SET_ACTIVE_MODEL
-};
-
 namespace VE_Conductor
 {
-namespace GUI_Utilities
-{
-   class CADNodeManagerDlg;
-}
+   namespace GUI_Utilities
+   {
+      class CADNodeManagerDlg;
+   }
 }
 
 class Network : public wxScrolledWindow, public wxThreadHelper
@@ -112,6 +84,34 @@ public:
    Network(){;}
    Network(wxWindow* parent, int id );
    virtual ~Network();
+
+   enum 
+   {
+      ADD_TAG,
+      ADD_LINK_CON,
+      EDIT_TAG,
+      DEL_TAG,
+      DEL_LINK,
+      DEL_LINK_CON,
+      DEL_MOD,
+      SHOW_LINK_CONT,
+      SHOW_RESULT,
+      SHOW_DESC,
+      PARAVIEW,
+      SHOW_FINANCIAL, /* EPRI TAG */
+      ASPEN_MENU,
+      SHOW_ASPEN_NAME,
+      QUERY_INPUTS,
+      QUERY_OUTPUTS,
+      ASPEN_ICON,
+      GEOMETRY,
+      MODEL_INPUTS,
+      MODEL_RESULTS,
+      DATASET,
+      VISUALIZATION,
+      SET_UI_PLUGIN_NAME,
+      SET_ACTIVE_MODEL
+   };
 
    ///Fucntion called during submit job to send the id of all active
    ///modules to the CE

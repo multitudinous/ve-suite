@@ -55,15 +55,17 @@ namespace GUI_Utilities
 class TransformUI : public wxPanel
 {
 public:
+   ///Constructor
+   TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transform* transform );
+   ///Destructor
+   virtual ~TransformUI();
+
    ///Enums used by wxwidgets
    enum TRANSFORM_UI
    {
       TRANSFORM_PANEL_ID,///<The transform panel ID.
    };
-   ///Constructor
-   TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transform* transform );
-   ///Destructor
-   virtual ~TransformUI();
+
    ///Callback for the transform ui
    void UpdateTransform( wxSpinEvent& event );
    ///Get the current transform

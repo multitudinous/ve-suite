@@ -36,13 +36,15 @@
 class Splitter : public wxSplitterWindow
 {
 public:
-enum
-{
-   SPLIT_WINDOW
-};
    Splitter(){;}
    Splitter(wxWindow* parent, wxWindowID id);
    virtual ~Splitter() { ; }
+
+   enum
+   {
+      SPLIT_WINDOW
+   };
+
    void OnDClick( wxSplitterEvent& event );
    void SetPaneSize(void);
 

@@ -55,33 +55,33 @@ class wxStaticBoxSizer;
 #include "VE_Conductor/Network/interface.h"
 #include "VE_Installer/include/VEConfig.h"
 
-enum {
-  PLANT_CAP,
-  YEAR_COSTS,
-  CST_CUR_DOLLAR,
-  FIXED_CHARGE,
-  DISCNT_RATE,
-  INFLATION_RATE,
-  PLANT_LIFE,
-  BOND_INTEREST,
-  PREFERRED_STOCK_RETURN,
-  COMMON_STOCK_RETURN,
-  PERCENT_DEBT,
-  PERCENT_P_EQUITY,
-  PERCENT_C_EQUITY,
-  FED_TAX,
-  STATE_TAX,
-  PROPERTY_TAX,
-  INVEST_TAX_CREDIT,
-  RADIO_A,
-  RADIO_B
-};
-
 class VE_GUIPLUGINS_EXPORTS GlobalParamDialog : public wxDialog
 {
  public:
   GlobalParamDialog(wxWindow *parent, wxWindowID id );
   virtual ~GlobalParamDialog();
+
+   enum {
+     PLANT_CAP,
+     YEAR_COSTS,
+     CST_CUR_DOLLAR,
+     FIXED_CHARGE,
+     DISCNT_RATE,
+     INFLATION_RATE,
+     PLANT_LIFE,
+     BOND_INTEREST,
+     PREFERRED_STOCK_RETURN,
+     COMMON_STOCK_RETURN,
+     PERCENT_DEBT,
+     PERCENT_P_EQUITY,
+     PERCENT_C_EQUITY,
+     FED_TAX,
+     STATE_TAX,
+     PROPERTY_TAX,
+     INVEST_TAX_CREDIT,
+     RADIO_A,
+     RADIO_B
+   };
 
  protected:
   wxTextCtrl* plant_capacity;

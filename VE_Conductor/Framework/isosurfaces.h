@@ -63,15 +63,6 @@ class wxStaticBox;
 #define SYMBOL_ISOSURFACES_SIZE wxSize(400, 300)
 #define SYMBOL_ISOSURFACES_POSITION wxDefaultPosition
 
-enum ISOSURFACE_IDS
-{
-   ISOSURFACE_RBUTTON,
-   PRECOMPUTED_ISO_CHK,
-   ISOSURFACE_PLANE_SLIDER,
-   ADD_ISOSURFACE_BUTTON,
-   ADVANCED_ISOSURFACE_BUTTON
-};
-
 class Isosurfaces: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
@@ -86,6 +77,16 @@ public:
                   const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION,
                   const wxSize& size = SYMBOL_ISOSURFACES_SIZE, 
                   long style = SYMBOL_ISOSURFACES_STYLE);
+
+   enum ISOSURFACE_IDS
+   {
+      ISOSURFACE_RBUTTON,
+      PRECOMPUTED_ISO_CHK,
+      ISOSURFACE_PLANE_SLIDER,
+      ADD_ISOSURFACE_BUTTON,
+      ADVANCED_ISOSURFACE_BUTTON
+   };
+
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation

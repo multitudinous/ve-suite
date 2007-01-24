@@ -79,15 +79,6 @@ class wxRadioBox;
 #define ID_SLIDER1 10002
 #define ID_SLIDER2 10003
 
-enum ADVANCED_CONTOUR_IDS
-{
-   OPACITY_SLIDER,
-   WARPED_SCALE_SLIDER,
-   LOD_SLIDER,
-   CONTOUR_TYPE_RBOX,
-   WARP_OPTION_CHK
-};
-
 class AdvancedContours: public wxDialog
 {    
 
@@ -99,6 +90,15 @@ public:
                       const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, 
                       const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, 
                       long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
+
+   enum ADVANCED_CONTOUR_IDS
+   {
+      OPACITY_SLIDER,
+      WARPED_SCALE_SLIDER,
+      LOD_SLIDER,
+      CONTOUR_TYPE_RBOX,
+      WARP_OPTION_CHK
+   };
 
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );

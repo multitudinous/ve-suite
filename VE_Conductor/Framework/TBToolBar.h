@@ -71,6 +71,14 @@ namespace VE_Conductor
 class TextureBasedToolBar : public VE_Conductor::GUI_Utilities::BaseDialog
 {
 public:
+   ///Constructor
+   TextureBasedToolBar(wxWindow* parent, int id/*,
+                     wxArrayString scalarNames,
+                     wxArrayString vectorNames*/);
+
+   ///Destructor
+   virtual ~TextureBasedToolBar();
+
    enum TBTOOLBAR_IDS
    {
       ACTIVE_SOLUTION ,///<Active scalar/vector ID
@@ -82,13 +90,6 @@ public:
       BBOX_CHECK_BOX,///<Bounding box check
       TRANSIENT_BUTTON///<Transient controls
    };
-   ///Constructor
-   TextureBasedToolBar(wxWindow* parent, int id/*,
-                     wxArrayString scalarNames,
-                     wxArrayString vectorNames*/);
-
-   ///Destructor
-   virtual ~TextureBasedToolBar();
 
    ///Set the scalars
    void SetScalars(wxArrayString scalarNames);

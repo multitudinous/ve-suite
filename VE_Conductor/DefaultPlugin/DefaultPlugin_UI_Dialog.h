@@ -38,19 +38,6 @@
 #include <vector>
 #include <string>
 
-enum Hummer_TAB_IDS
-{
-   DIRECTION_RBOX,
-   ERROR_RBOX,
-   HEIGHT_SLIDER,
-   WIDTH_SLIDER,
-   X_LOCATION_SLIDER,
-   Y_LOCATION_SLIDER,
-   Z_LOCATION_SLIDER,
-   UPDATE_BUTTON,
-   CLEAR_BUTTON,
-   EXIT_BUTTON
-};
 class wxRadioBox;
 class wxSlider;
 class wxTextCtrl;
@@ -64,6 +51,20 @@ public:
   
   virtual ~DefaultPlugin_UI_Dialog();
   
+   enum Hummer_TAB_IDS
+   {
+      DIRECTION_RBOX,
+      ERROR_RBOX,
+      HEIGHT_SLIDER,
+      WIDTH_SLIDER,
+      X_LOCATION_SLIDER,
+      Y_LOCATION_SLIDER,
+      Z_LOCATION_SLIDER,
+      UPDATE_BUTTON,
+      CLEAR_BUTTON,
+      EXIT_BUTTON
+   };
+
   virtual bool TransferDataFromWindow();
   virtual bool TransferDataToWindow();
   virtual void Lock(bool l); 

@@ -61,16 +61,18 @@ namespace VE_XML
    class DOMDocumentManager;
 }
 
-enum SOUNDS_TAB_IDS{
-   SOUND_CBOX,
-   SOUND_UPDATE_BUTTON
-};
-
 class SoundsPane : public wxDialog
 {
 public:
    SoundsPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
    virtual ~SoundsPane(){;}
+
+   enum SOUNDS_TAB_IDS
+   {
+      SOUND_CBOX,
+      SOUND_UPDATE_BUTTON
+   };
+
    void SetCommInstance( VjObs_ptr veEngine );
    //void SetDOMManager( VE_XML::DOMDocumentManager* domManagerIn );
    void SendCommandsToXplorer( void );

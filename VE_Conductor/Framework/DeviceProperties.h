@@ -26,22 +26,22 @@ namespace VE_Conductor
    class CORBAServiceList;
 }
 
-enum DEVICE_IDS 
-{
-   DEVICE_SPLITTERWINDOW,
-   DEVICE_LISTBOX,
-   DEVICE_TRACKBALL_PANEL,
-   DEVICE_WAND_PANEL,
-
-   ANIMATE_CHECKBOX,
-};
-
 class DeviceProperties:public wxDialog 
 {
    public:
       DeviceProperties();
 
       virtual ~DeviceProperties();
+
+   enum DEVICE_IDS 
+   {
+      DEVICE_SPLITTERWINDOW,
+      DEVICE_LISTBOX,
+      DEVICE_TRACKBALL_PANEL,
+      DEVICE_WAND_PANEL,
+
+      ANIMATE_CHECKBOX,
+   };
 
    protected:
       void BuildGUI();
@@ -62,5 +62,4 @@ class DeviceProperties:public wxDialog
 
       DECLARE_EVENT_TABLE()
 };
-
 #endif

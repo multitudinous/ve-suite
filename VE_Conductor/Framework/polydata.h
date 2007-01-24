@@ -63,15 +63,6 @@ class wxStaticBox;
 #define SYMBOL_POLYDATA_SIZE wxSize(400, 300)
 #define SYMBOL_POLYDATA_POSITION wxDefaultPosition
 
-enum POLYDATA_IDS
-{
-   POLYDATA_RBUTTON,
-   WARPED_SURFACE_CHK,
-   POLYDATA_PLANE_SLIDER,
-   ADD_POLYDATA_BUTTON,
-   ADVANCED_POLYDATA_BUTTON
-};
-
 class Polydata: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
@@ -86,6 +77,16 @@ public:
                   const wxPoint& pos = SYMBOL_POLYDATA_POSITION,
                   const wxSize& size = SYMBOL_POLYDATA_SIZE, 
                   long style = SYMBOL_POLYDATA_STYLE);
+
+   enum POLYDATA_IDS
+   {
+      POLYDATA_RBUTTON,
+      WARPED_SURFACE_CHK,
+      POLYDATA_PLANE_SLIDER,
+      ADD_POLYDATA_BUTTON,
+      ADVANCED_POLYDATA_BUTTON
+   };
+
     void SendCommandsToXplorer( void );
     void SetCommInstance( VjObs_ptr veEngine );
     /// Creation

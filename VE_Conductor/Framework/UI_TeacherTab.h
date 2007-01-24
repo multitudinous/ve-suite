@@ -47,19 +47,18 @@ class wxSizer;
 class wxRadioBox;
 class wxBoxSizer;
 
-enum TEACHER_TAB_IDS
-{
-   TEACHER_RBOX,
-   TEACHER_CLEAR_BUTTON,
-   RECORD_SCENE
-};
-
-
 class UI_TeacherTab : public wxDialog
 {
 public:
    UI_TeacherTab(wxWindow* tControl);
    virtual ~UI_TeacherTab( void ){ ; }
+
+   enum TEACHER_TAB_IDS
+   {
+      TEACHER_RBOX,
+      TEACHER_CLEAR_BUTTON,
+      RECORD_SCENE
+   };
 protected:
    void _buildPage();
    
