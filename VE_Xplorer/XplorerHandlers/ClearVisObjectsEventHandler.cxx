@@ -35,6 +35,8 @@
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/DataSetAxis.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -45,6 +47,8 @@
 #include "VE_Open/XML/Model/Model.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 #include <iostream>
 
@@ -100,5 +104,15 @@ void ClearVisObjectsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    if ( cfdModelHandler::instance()->GetActiveModel() )
    {
       cfdModelHandler::instance()->GetActiveModel()->MakeCADRootOpaque();
+
+      unsigned int state = 0;
+      cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      if ( dataSet )
+      {
+         dataSet->SetBoundingBoxState( state );
+         dataSet->SetDataSetScalarState( state );
+         dataSet->SetWireframeState( state );
+         dataSet->SetAxesState( state );
+      }
    }
 }
