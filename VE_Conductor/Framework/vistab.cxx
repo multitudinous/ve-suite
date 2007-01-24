@@ -165,7 +165,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _availableSolutions["TEXTURE_VECTORS"].Add( _("") ); 
 
    SetActiveModel(activeModel);
-   Create(parent, id, caption, pos, size, style);
+   Create(parent, id, caption, pos, wxDefaultSize, style);
    _commandName = "VISUALIZATION_TAB";
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
@@ -176,9 +176,11 @@ Vistab::Vistab(VjObs::Model_var activeModel,
       _setActiveDataset(0);
    }
    _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
-   _vistabPosition.height =  _vistabPosition.height + 20;
-   SetSize( _vistabPosition );
-   wxSize tempRect = GetSize();
+   //_vistabPosition.height =  _vistabPosition.height + 20;
+   SetSize( _vistabPosition.x,_vistabPosition.y,
+            _vistabPosition.width,wxDefaultCoord,
+            wxSIZE_AUTO );
+   //wxSize tempRect = GetSize();
    
    //_minSpinner->Enable(false);
    //_minSlider->Enable(false);
@@ -207,7 +209,7 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
 
 ////@begin Vistab creation
     SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
-    wxDialog::Create( parent, id, caption, pos, size, style );
+    wxDialog::Create( parent, id, caption, pos, wxDefaultSize, style );
 
     CreateControls();
     //GetSizer()->Fit(this);
@@ -404,8 +406,7 @@ void Vistab::CreateControls()
     scalarBoundsStatic->Enable(false);
     //Last row buttons - advanced, clear all, ...
     wxBoxSizer* lastRowButtons = new wxBoxSizer( wxHORIZONTAL );
-    itemBoxSizer2->Add( lastRowButtons, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
-
+    
     //wxButton* itemButton20 = new wxButton( itemDialog1, ID_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     //lastRowButtons->Add( itemButton20, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -415,7 +416,10 @@ void Vistab::CreateControls()
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
 //    wxButton* _closeButton = new wxButton( itemDialog1, CLOSE_BUTTON, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
     lastRowButtons->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
+    itemBoxSizer2->Add( lastRowButtons, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+    SetAutoLayout(true);
+    
+    itemBoxSizer2->Fit(this);
 ///@end Vistab content construction
 }
 ///////////////////////////
