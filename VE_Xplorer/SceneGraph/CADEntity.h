@@ -1,5 +1,5 @@
-#ifndef FILE_H
-#define FILE_H
+#ifndef CAD_ENTITY_H
+#define CAD_ENTITY_H
 
 #include <vector>
 #include <string>
@@ -10,23 +10,23 @@
 #include "VE_Xplorer/SceneGraph/Node.h"
 
 #ifdef _PERFORMER
-   class pfFog;
+class pfFog;
 #elif _OSG
-   namespace osg
-   {
-      class Fog;
-   }
+namespace osg
+{
+   class Fog;
+}
 #endif
 
 class btRigidBody;
 
 namespace VE_SceneGraph
 {
-class VE_SCENEGRAPH_EXPORTS File
+class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
-   File(std::string,VE_SceneGraph::DCS*,bool isStream=false);
-   ~File();
+   CADEntity(std::string,VE_SceneGraph::DCS*,bool isStream=false);
+   ~CADEntity();
 
    void Initialize(float);
 
@@ -34,12 +34,14 @@ public:
    VE_SceneGraph::Node* GetNode();
    btRigidBody* GetRigidBody();
 
+   std::string GetFilename();
+   std::string GetModuleName();
    void GetColorArray();
    int GetTransparentFlag();
    int GetColorFlag();
    float getOpacity();
-   std::string GetFilename();
-   std::string GetModuleName();
+
+   void UpdateMatTransform();
 
    void SetFILEProperties(int,int,float*);
    void setOpac(float op_val);
@@ -65,7 +67,7 @@ private:
    //Group* _masterNode;
    osg::ref_ptr<VE_SceneGraph::Node> node;
    osg::ref_ptr<VE_SceneGraph::DCS> DCS;
-   //btRigidBody* rigid_body;
+   btRigidBody* rigid_body;
 
    //pfMaterial *mat1, *mat0;
    int mat_count;
@@ -94,5 +96,5 @@ private:
 };
 }
 
-#endif //FILE_H
+#endif //CAD_ENTITY_H
 

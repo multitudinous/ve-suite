@@ -1,6 +1,4 @@
-#include "VE_Xplorer/SceneGraph/CADCombo.h"
-
-#if VE_PHYSICS
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Node.h"
@@ -44,7 +42,7 @@ public:
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-File::File(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isStream)
+CADEntity::CADEntity(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isStream)
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
@@ -57,28 +55,92 @@ File::File(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isStream)
    worldDCS->AddChild( this->DCS.get() );
 
    #ifdef _PERFORMER
-      fog = new pfFog();
+   fog = new pfFog();
    #elif _OSG
-      //setup occluder node
-      //ModelOccluder occluder;
-      //dynamic_cast< osg::MatrixTransform* >( this->DCS->GetRawNode() )->
-      //            addChild( occluder.GetOccluderNode( node->GetRawNode() ).get() );
-      //setup fog
-      fog=new osg::Fog();
+   //setup occluder node
+   //ModelOccluder occluder;
+   //dynamic_cast< osg::MatrixTransform* >( this->DCS->GetRawNode() )->
+   //            addChild( occluder.GetOccluderNode( node->GetRawNode() ).get() );
+   //setup fog
+   fog=new osg::Fog();
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-File::~File()
+CADEntity::~CADEntity()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string File::GetFilename()
+VE_SceneGraph::Node* CADEntity::GetNode()
+{
+   return this->node.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* CADEntity::GetDCS()
+{
+   return this->DCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+btRigidBody* CADEntity::GetRigidBody()
+{
+   return rigid_body;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string CADEntity::GetFilename()
 {
    return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void File::SetFILEProperties( int color, int trans, float* stlColor )
+std::string CADEntity::GetModuleName()
+{
+   return this->_moduleName;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::GetColorArray()
+{
+   vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " 
+                      <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  
+                      << std::endl << vprDEBUG_FLUSH;
+}
+////////////////////////////////////////////////////////////////////////////////
+int CADEntity::GetTransparentFlag()
+{
+   return transparent;
+}
+////////////////////////////////////////////////////////////////////////////////
+int CADEntity::GetColorFlag()
+{
+   return this->_colorFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
+float CADEntity::getOpacity()
+{
+   return this->op;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::UpdateMatTransform()
+{
+   osg::Matrix matrix;
+   osg::Quat quat;
+
+   btVector3 position;
+   btQuaternion quaternion;
+
+   if(rigid_body && rigid_body->getMotionState()){
+      position=rigid_body->getWorldTransform().getOrigin();
+      
+      matrix.setTrans(position.getX(),position.getY(),position.getZ());
+   
+      btQuaternion quaternion=solid->getWorldTransform().getRotation();
+      quat.set(quaternion.getX(),quaternion.getY(),quaternion.getZ(),quaternion.getW());
+      matrix.setRotate(quat);
+	}
+
+   matTrans->setMatrix(matrix);
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetFILEProperties( int color, int trans, float* stlColor )
 {
    this->color = color;
    this->_colorFlag = color;
@@ -87,39 +149,15 @@ void File::SetFILEProperties( int color, int trans, float* stlColor )
    this->stlColor[ 1 ] = stlColor[ 1 ];
    this->stlColor[ 2 ] = stlColor[ 2 ];
 }
+
 ////////////////////////////////////////////////////////////////////////////////
-int File::GetTransparentFlag()
-{
-   return transparent;
-}
-////////////////////////////////////////////////////////////////////////////////
-void File::Initialize( float op_val )
+void CADEntity::Initialize( float op_val )
 {
    this->op = op_val;
    setOpac( op_val );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Node* File::GetNode()
-{
-   return this->node.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* File::GetDCS()
-{
-   return this->DCS.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-btRigidBody* File::GetRidgidBody()
-{
-   ;
-}
-////////////////////////////////////////////////////////////////////////////////
-float File::getOpacity()
-{
-   return this->op;
-}
-////////////////////////////////////////////////////////////////////////////////
-void File::setOpac(float op_val)
+void CADEntity::setOpac(float op_val)
 {
    this->op = op_val;
    //this->node->SetNodeProperties( _colorFlag, op, stlColor );
@@ -131,7 +169,7 @@ void File::setOpac(float op_val)
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void File::setFog(double dist)
+void CADEntity::setFog(double dist)
 {
    #ifdef _PERFORMER
       fog->setColor( 0.6f, 0.6f, 0.6f);
@@ -151,7 +189,7 @@ void File::setFog(double dist)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /// Functions taken from module geometry for future merging
-void File::SetRGBAColorArray(double* color)
+void CADEntity::SetRGBAColorArray(double* color)
 {
    for(int i=0;i<4;i++)
    {
@@ -160,42 +198,27 @@ void File::SetRGBAColorArray(double* color)
    vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void File::GetColorArray()
-{
-   vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
-}
-////////////////////////////////////////////////////////////////////////////////
-void File::SetTransparencyFlag( bool x )
+void CADEntity::SetTransparencyFlag( bool x )
 {
    this->_transparencyFlag = x;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void File::SetOpacity( float x )
+void CADEntity::SetOpacity( float x )
 {
    this->_opacityLevel = x;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void File::SetColorFlag( int x )
+void CADEntity::SetColorFlag( int x )
 {
    this->_colorFlag = x;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int File::GetColorFlag()
-{
-   return this->_colorFlag;
-}
-////////////////////////////////////////////////////////////////////////////////
-void File::SetModuleName( std::string filename )
+void CADEntity::SetModuleName( std::string filename )
 {
    this->_moduleName = filename;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string File::GetModuleName()
-{
-   return this->_moduleName;
-}
-////////////////////////////////////////////////////////////////////////////////
-void File::SetGeometryFilename( std::string filename )
+void CADEntity::SetGeometryFilename( std::string filename )
 {
    this->_filename = filename;
    this->node = new VE_SceneGraph::Node();
@@ -208,7 +231,7 @@ void File::SetGeometryFilename( std::string filename )
    //this->_masterNode->AddChild( this );   
 }
 ////////////////////////////////////////////////////////////////////////////////
-void File::Update()
+void CADEntity::Update()
 {
    std::cout << "Update Filename : " << this->_filename << std::endl
                << "trans : " << this->_transparencyFlag << std::endl
@@ -218,4 +241,4 @@ void File::Update()
    //this->_node->SetColorOfGeometry( this->_node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-#endif
+
