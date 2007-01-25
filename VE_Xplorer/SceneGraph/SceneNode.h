@@ -65,11 +65,11 @@ public:
    virtual ~SceneNode( void );
    SceneNode& operator=( const SceneNode& );
 
-   //Get the internal cfd node type
-   virtual NodeType GetNodeType( void ){ return _nt; }
+   //Get the internal node type
+   virtual NodeType GetVENodeType( void ){ return _nt; }
 
-   //Set internal cfd node type
-   virtual void SetNodeType( NodeType nt ){ _nt = nt; }
+   //Set internal node type
+   virtual void SetVENodeType( NodeType nt ){ _nt = nt; }
 
 protected:
    //)ur scene graph specific nodes

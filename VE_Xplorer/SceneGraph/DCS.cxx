@@ -83,7 +83,7 @@ DCS::DCS( void )
 
    SetScaleArray( temp );
 
-   SetNodeType( VE_DCS );
+   SetVENodeType( VE_DCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
@@ -96,7 +96,7 @@ DCS::DCS( float* scale, float* trans, float* rot )
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
-   SetNodeType( VE_DCS );
+   SetVENodeType( VE_DCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& input )
@@ -106,7 +106,7 @@ DCS::DCS( const DCS& input )
    #elif _OPENSG
    #endif  
 
-   SetNodeType( VE_DCS );
+   SetVENodeType( VE_DCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS& DCS::operator=( const DCS& input )
@@ -120,7 +120,7 @@ DCS& DCS::operator=( const DCS& input )
       #elif _OPENSG
       #endif
 
-      SetNodeType( VE_DCS );
+      SetVENodeType( VE_DCS );
    }
 
    return *this;
