@@ -195,7 +195,7 @@ public:
 
    void OnClose( wxCloseEvent& event );
    void FrameClose( wxCommandEvent& event );
-   VE_Conductor::CORBAServiceList* GetCORBAServiceList( void );
+   //VE_Conductor::CORBAServiceList* GetCORBAServiceList( void );
 
    ///Override so we can show the tree after things are initialized.  
    virtual bool Show(bool value);

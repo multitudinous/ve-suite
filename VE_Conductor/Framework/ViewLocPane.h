@@ -39,8 +39,6 @@
  * This class builds the user interface panel which contains all of
  * the controls for the view points and flythrough functionality
  */
-#include "VE_Open/skel/VjObsC.h"
-
 #include <wx/wx.h>
 #include <wx/image.h>
 #include <wx/dialog.h>
@@ -153,7 +151,7 @@ protected:
    std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The list of DataValuePairs
    int _numView_LocsGlobal;
    std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
+   //VjObs_ptr xplorerPtr;
    int cId, cIso_value, cSc, cMin;
    DOMDocument* doc;
    VE_XML::DOMDocumentManager* domManager;

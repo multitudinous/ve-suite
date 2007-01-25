@@ -59,7 +59,7 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
 lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
-                              TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
+                              TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode vpr --libs --cflags')
 
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )

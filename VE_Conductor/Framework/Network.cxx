@@ -32,6 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/GUIPlugin/PortDialog.h"
 #include "VE_Conductor/Network/package.h"
@@ -41,7 +42,6 @@
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/QueryInputsDlg.h"
@@ -823,17 +823,15 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
       {
 	      //delete modules[m_selMod].GetPlugin();
 	      modules.erase( iter++ );
-         //if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
-         //{
-            VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
-            dataValuePair->SetDataName( "Object ID" );
-            dataValuePair->SetDataValue( static_cast< unsigned int >( m_selMod ) );
-            VE_XML::Command* veCommand = new VE_XML::Command();
-            veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
-            veCommand->AddDataValuePair( dataValuePair );
-            bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
-            //Clean up memory
-            delete veCommand;
+         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+         dataValuePair->SetDataName( "Object ID" );
+         dataValuePair->SetDataValue( static_cast< unsigned int >( m_selMod ) );
+         VE_XML::Command* veCommand = new VE_XML::Command();
+         veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
+         veCommand->AddDataValuePair( dataValuePair );
+         bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+         //Clean up memory
+         delete veCommand;
          //}         
 	      m_selLink=-1;
 	      break;
@@ -855,7 +853,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
 
 int Network::SelectMod( int x, int y, wxDC &dc )
 {
-	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
    // This function checks to see which module your mouse is over based
    // on the x and y location of your mouse on the design canvas
    std::map< int, Module >::iterator iter;
@@ -879,7 +877,7 @@ int Network::SelectMod( int x, int y, wxDC &dc )
          }
          // lets draw some ports sense the module is selected
 	      DrawPorts( modules[i].GetPlugin(), true );
-		  HighlightSelectedIcon( modules[i].GetPlugin());
+         HighlightSelectedIcon( modules[i].GetPlugin());
          // now we are officially selected
 	      m_selMod = i;
 
@@ -1872,7 +1870,7 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
    modules[id].SetClassName( cls_name );
 
   modules[id].GetPlugin()->SetID(id);
-  modules[id].GetPlugin()->SetCORBAService( frame->GetCORBAServiceList() );
+  modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
   //modules.push_back(mod);
   sbboxes.push_back(bbox);
   //  for (i=0; i<modules.size(); i++)
@@ -1967,13 +1965,13 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
    {
       dc.SetBrush(*wxRED_BRUSH);
       dc.SetPen(*wxBLACK_PEN);
-	  dc.SetTextForeground(*wxBLACK);
+      dc.SetTextForeground(*wxBLACK);
    }
    else
    {
       dc.SetBrush(*wxWHITE_BRUSH);
       dc.SetPen(*wxWHITE_PEN);
-	  dc.SetTextForeground(*wxWHITE);
+      dc.SetTextForeground(*wxWHITE);
    }
 
    PORT ports;
@@ -1984,7 +1982,7 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
    wxString text;
    int w, h;
    
-   CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+   CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 
    for (i=0; i<(int)ports.size(); i++)
    {
@@ -2056,8 +2054,6 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
 /////////////////////////////////////////////////////////////////////
 void Network::HighlightSelectedIcon (REI_Plugin* cur_module)
 {
-	//CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
-	//serviceList->GetMessageLog()->SetMessage(cur_module->GetName().c_str());
 	if (!cur_module)
 	  return;
 
@@ -2289,20 +2285,15 @@ void Network::New()
    std::map<int, Module>::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
-      //delete modules[ iter->first ].GetPlugin();
-      //Delete it from xplorer as well
-      //if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
-      {
-         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
-         dataValuePair->SetDataName( "Object ID" );
-         dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
-         VE_XML::Command* veCommand = new VE_XML::Command();
-         veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
-         veCommand->AddDataValuePair( dataValuePair );
-         bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
-         //Clean up memory
-         delete veCommand;
-      }
+      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+      dataValuePair->SetDataName( "Object ID" );
+      dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
+      veCommand->AddDataValuePair( dataValuePair );
+      bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+      //Clean up memory
+      delete veCommand;
    }
    modules.clear();
 
@@ -2507,7 +2498,7 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
    int mod = links[ m_selLink ].GetFromModule();
    int port = links[ m_selLink ].GetFromPort();
 
-   if ( !frame->GetCORBAServiceList()->IsConnectedToCE() )
+   if ( !VE_Conductor::CORBAServiceList::instance()->IsConnectedToCE() )
    {
       return;
    }
@@ -2544,7 +2535,7 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
    if ( m_selMod < 0 )
       return;
 
-   if ( !frame->GetCORBAServiceList()->IsConnectedToCE() )
+   if ( !VE_Conductor::CORBAServiceList::instance()->IsConnectedToCE() )
    {
       return;
    }
@@ -2596,7 +2587,7 @@ void  Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 //////////////////////////////////////////////////////
 void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 {  
-	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
@@ -2651,107 +2642,9 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	//	this->OnQueryInputModuleProperties(temp_vector2, compName);
 }
 //////////////////////////////////////////////////////
-/*void  Network::OnQueryInputModuleProperties(std::vector< std::string > requestedInputs, std::string compName)
-{  
-	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
-	//serviceList->GetMessageLog()->SetMessage("mods");
-	//std::string testParam1("DP FLOW");
-	//std::string compName("COMP");
-	//serviceList->GetMessageLog()->SetMessage("comp");
-	//std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
-	//serviceList->GetMessageLog()->SetMessage("dlg");
-	wxString title = compName.c_str();
-	ParamsDlg * paramDialog = new ParamsDlg(this);
-
-	//serviceList->GetMessageLog()->SetMessage("loop");
-	std::ostringstream output2;
-	output2 << requestedInputs.size() <<std::endl;
-    //serviceList->GetMessageLog()->SetMessage(output2.str().c_str());
-	for(int i = 0; i < requestedInputs.size(); i++)
-	{
-	    //serviceList->GetMessageLog()->SetMessage("iter");
-		VE_XML::Command returnState;
-	    //serviceList->GetMessageLog()->SetMessage("modpro");
-		returnState.SetCommandName("getInputModuleProperties");
-	    //serviceList->GetMessageLog()->SetMessage("vp");
-		VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
-	    //serviceList->GetMessageLog()->SetMessage("cmpname");
-		data->SetData(std::string("ModuleName"), compName);
-	    //serviceList->GetMessageLog()->SetMessage("getda");
-		data = returnState.GetDataValuePair(-1);
-	    //serviceList->GetMessageLog()->SetMessage("input");
-		data->SetData(std::string("ParamName"), requestedInputs[i]);
-		paramDialog->AddToList(requestedInputs[i].c_str());
-		
-		std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-		nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-		
-	    //serviceList->GetMessageLog()->SetMessage("cmdwriter");
-		VE_XML::XMLReaderWriter commandWriter;
-		std::string status="returnString";
-		commandWriter.UseStandaloneDOMDocumentManager();
-		commandWriter.WriteXMLDocument( nodes, status, "Command" );
-		std::string nw_str = serviceList->Query( status );
-		//serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
-
-	    //serviceList->GetMessageLog()->SetMessage("wx");
-		VE_XML::XMLReaderWriter networkReader;
-	    //serviceList->GetMessageLog()->SetMessage("dom");
-		networkReader.UseStandaloneDOMDocumentManager();
-	    //serviceList->GetMessageLog()->SetMessage("read");
-		networkReader.ReadFromString();
-	    //serviceList->GetMessageLog()->SetMessage("read");
-		networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	    //serviceList->GetMessageLog()->SetMessage("objV");
-		std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-	    //serviceList->GetMessageLog()->SetMessage("cmd");
-		VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-
-	    //serviceList->GetMessageLog()->SetMessage("dvps");
-		unsigned int num = cmd->GetNumberOfDataValuePairs();		
-		std::vector< std::string > dataName;
-		std::vector< std::string > dataValue;
-	//std::ostringstream output;
-	//output << num <<std::endl;
-    //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-		for(int j = 0; j < num; j++)
-		{
-			VE_XML::DataValuePair * pair = cmd->GetDataValuePair(j);
-			//serviceList->GetMessageLog()->SetMessage(pair->GetDataType().c_str());
-			//serviceList->GetMessageLog()->SetMessage("\n");
-			//serviceList->GetMessageLog()->SetMessage(pair->GetDataName().c_str());
-			//serviceList->GetMessageLog()->SetMessage("\n");
-			//serviceList->GetMessageLog()->SetMessage(pair->GetDataString().c_str());
-			//serviceList->GetMessageLog()->SetMessage("\n");
-			if(pair->GetDataType() == "STRING")
-			{
-			dataName.push_back(pair->GetDataName().c_str());
-			dataValue.push_back(pair->GetDataString().c_str());
-			}
-			else if(pair->GetDataType() == "UNSIGNED INT")
-			{
-				unsigned int intValue;
-				dataName.push_back(pair->GetDataName().c_str());
-				pair->GetData(intValue);
-				dataValue.push_back("int");			
-			}
-		}
-		//results->Set2Cols(dataName, dataValue);
- 		//results->ShowModal();
-		//serviceList->GetMessageLog()->SetMessage(requestedInputs[i].c_str());
-	//std::ostringstream output3;
-	//output3 << dataName.size()<<" : "<< dataValue.size() <<std::endl;
-    //serviceList->GetMessageLog()->SetMessage(output3.str().c_str());
-		paramDialog->AddResults(requestedInputs[i], dataName, dataValue);
-	}
-	//serviceList->GetMessageLog()->SetMessage("show dialog");
-	paramDialog->ShowModal();
-}*/
-
-//////////////////////////////////////////////////////
 void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 {  
-	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
@@ -2796,65 +2689,7 @@ void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	//if(results->IsSubmit())
 	//	this->OnQueryOutputModuleProperties(temp_vector2, compName);
 }
-//////////////////////////////////////////////////////
-/*void  Network::OnQueryOutputModuleProperties(std::vector< std::string > requestedOutputs, std::string compName)
-{  
-	CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
-	wxString title = compName.c_str();
-	ParamsDlg * paramDialog = new ParamsDlg(this);
-
-	for(int i = 0; i < requestedOutputs.size(); i++)
-	{
-		VE_XML::Command returnState;
-		returnState.SetCommandName("getOutputModuleProperties");
-		VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
-		data->SetData(std::string("ModuleName"), compName);
-		data = returnState.GetDataValuePair(-1);
-		data->SetData(std::string("ParamName"), requestedOutputs[i]);
-		paramDialog->AddToList(requestedOutputs[i].c_str());
-		
-		std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-		nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-		
-		VE_XML::XMLReaderWriter commandWriter;
-		std::string status="returnString";
-		commandWriter.UseStandaloneDOMDocumentManager();
-		commandWriter.WriteXMLDocument( nodes, status, "Command" );
-		std::string nw_str = serviceList->Query( status );
-
-		VE_XML::XMLReaderWriter networkReader;
-		networkReader.UseStandaloneDOMDocumentManager();
-		networkReader.ReadFromString();
-		networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-		std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-		VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-
-		unsigned int num = cmd->GetNumberOfDataValuePairs();		
-		std::vector< std::string > dataName;
-		std::vector< std::string > dataValue;
-		for(int j = 0; j < num; j++)
-		{
-			VE_XML::DataValuePair * pair = cmd->GetDataValuePair(j);
-			if(pair->GetDataType() == "STRING")
-			{
-			dataName.push_back(pair->GetDataName().c_str());
-			dataValue.push_back(pair->GetDataString().c_str());
-			}
-			else if(pair->GetDataType() == "UNSIGNED INT")
-			{
-				unsigned int intValue;
-				dataName.push_back(pair->GetDataName().c_str());
-				pair->GetData(intValue);
-				dataValue.push_back("int");			
-			}
-		}
-		paramDialog->AddResults(requestedOutputs[i], dataName, dataValue);
-	}
-	paramDialog->ShowModal();
-}*/
-
-
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnShowDesc(wxCommandEvent& WXUNUSED(event))
 {
    wxString desc;
@@ -2869,7 +2704,7 @@ void Network::OnShowDesc(wxCommandEvent& WXUNUSED(event))
   
    wxMessageDialog(this, desc, title).ShowModal();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnParaView(wxCommandEvent& WXUNUSED(event))
 {
    //wxArrayString output;
@@ -2884,7 +2719,7 @@ void Network::OnParaView(wxCommandEvent& WXUNUSED(event))
 #endif
 
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnInputsWindow(wxCommandEvent& WXUNUSED(event))
 {
    if (m_selMod<0) 
@@ -2892,7 +2727,7 @@ void Network::OnInputsWindow(wxCommandEvent& WXUNUSED(event))
    // Here we launch a dialog for a specific plugins input values
    modules[m_selMod].GetPlugin()->ViewInputVariables();
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
 {
    if (m_selMod<0) 
@@ -2900,7 +2735,7 @@ void Network::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
    // Here we launch a dialog for a specific plugins input values
    modules[m_selMod].GetPlugin()->ViewResultsVariables();
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
 {
    if ( !SetActiveModel() ) 
@@ -2971,7 +2806,7 @@ void Network::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
       veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
       veCommand->AddDataValuePair( dataValuePair );
 
-      dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 
       //Clean up memory
       delete veCommand;
@@ -3161,7 +2996,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
       {
          std::ostringstream msg;
          msg << "Could not find port " << portNumber << " in module " << moduleID << std::endl;
-         CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+         CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
          serviceList->GetMessageLog()->SetMessage( msg.str().c_str() );
          index = 0;
       }
@@ -3202,11 +3037,11 @@ bool Network::SetActiveModel()
    veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
    veCommand->AddDataValuePair( dataValuePair );
 
-   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 
    if ( connected )
    {
-      SetXplorerInterface( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer() );
+      SetXplorerInterface( VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer() );
    }
 
    //Clean up memory
@@ -3226,7 +3061,7 @@ void Network::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void Network::SetIDOnAllActiveModules( void )
 {
-   CORBAServiceList* serviceList = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList();
+   CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 
    std::map< int, Module >::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )

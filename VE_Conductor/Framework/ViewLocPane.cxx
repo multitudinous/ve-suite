@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Open/XML/DOMDocumentManager.h"
@@ -523,7 +523,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
    } */
    
 
-   if ( !dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
+   if ( !VE_Conductor::CORBAServiceList::instance()->IsConnectedToXplorer() )
    {
       return;
    }
@@ -534,7 +534,7 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
    
    while ( tempTestlocal == 0 )
    {
-      tempTest = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getDouble1D( "getCompletionTest" );
+      tempTest = VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer()->getDouble1D( "getCompletionTest" );
       tempTestlocal = (int)tempTest[ 0 ];       
       wxMilliSleep( 50 );
       ++counter;
@@ -544,9 +544,9 @@ void ViewLocPane::_updateWithcfdQuatCamHandler( void )
       }
    }
    
-   _numStoredLocations = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getIsoValue();
+   _numStoredLocations = VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer()->getIsoValue();
    VjObs::double2DArray_var  flyThroughArray;
-   flyThroughArray = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->getDouble2D( "getFlythroughData" );
+   flyThroughArray = VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer()->getDouble2D( "getFlythroughData" );
  
    flyThroughList.clear();
    for (CORBA::ULong j=0; j<flyThroughArray->length(); j++ )
@@ -959,23 +959,15 @@ void ViewLocPane::SendCommandsToXplorer( void )
       veCommand->AddDataValuePair(_dataValuePairList.at(i));
    }
 
-   if( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer())
+   try
    {
-      try
-      {
-         // CORBA releases the allocated memory so we do not have to
-         dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
-      }
-      catch ( ... )
-      {
-         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
-                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
-      }
+      // CORBA releases the allocated memory so we do not have to
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    }
-   else
-   {   wxMessageBox( _("Could not connect to VE-Xplorer!"), 
-                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
-      
+   catch ( ... )
+   {
+      wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                     _("Communication Failure"), wxOK | wxICON_INFORMATION );
    }
    //Clean up memory
    delete veCommand;

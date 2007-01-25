@@ -29,9 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Open/skel/VjObsS.h"
 #include <wx/notebook.h>
 #include <wx/button.h>
@@ -43,7 +42,6 @@
 #include "VE_Conductor/Framework/UI_TeacherTab.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -102,9 +100,9 @@ void UI_TeacherTab::_buildPage()
    int numStoredScenes = 1;
    VjObs::scalar_p_var fileNames;
 
-   if ( dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->IsConnectedToXplorer() )
+   if ( VE_Conductor::CORBAServiceList::instance()->IsConnectedToXplorer() )
    {
-      fileNames = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->GetXplorerPointer()->get_teacher_name();
+      fileNames = VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer()->get_teacher_name();
       numStoredScenes = fileNames->length() + 1;
    }   
    
@@ -182,7 +180,7 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& WXUNUSED(event))
    try
    {
       // CORBA releases the allocated memory so we do not have to
-      dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    }
    catch ( ... )
    {
@@ -211,7 +209,7 @@ void UI_TeacherTab::_onClear(wxCommandEvent& event)
    try
    {
       // CORBA releases the allocated memory so we do not have to
-      dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
       _buildPage();
    }
    catch ( ... )

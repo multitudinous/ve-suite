@@ -29,13 +29,11 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Conductor/Framework/TBToolBar.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"
@@ -990,7 +988,7 @@ void Vistab::OnClearAll( wxCommandEvent& WXUNUSED(event) )
    veCommand->SetCommandName( std::string("CLEAR_VIS_OBJECTS") );
    veCommand->AddDataValuePair( dataValuePair );
 
-   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -1012,7 +1010,7 @@ void Vistab::SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand)
 
    newCommand->SetCommandName(_commandName);
 
-   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( newCommand );
+   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 
    delete newCommand;
    newCommand = 0;
@@ -1188,7 +1186,7 @@ void Vistab::UpdateBoundingBox( wxCommandEvent& WXUNUSED(event) )
    veCommand->SetCommandName( std::string("Change Bounding Box State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
@@ -1200,7 +1198,7 @@ void Vistab::UpdateWireFrame( wxCommandEvent& WXUNUSED(event) )
    veCommand->SetCommandName( std::string("Change Wire Frame State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
@@ -1212,7 +1210,7 @@ void Vistab::UpdateAxes( wxCommandEvent& WXUNUSED(event) )
    veCommand->SetCommandName( std::string("Change Axes State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
    
    if ( axesCB->IsChecked() )
@@ -1243,7 +1241,7 @@ void Vistab::UpdateAxesLabels( wxCommandEvent& event )
    veCommand->SetCommandName( std::string("Change Axes Labels") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
@@ -1255,7 +1253,7 @@ void Vistab::UpdateScalarBar( wxCommandEvent& event )
    veCommand->SetCommandName( std::string("Change Scalar Bar State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////

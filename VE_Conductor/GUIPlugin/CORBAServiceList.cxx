@@ -53,8 +53,10 @@
 using namespace VE_XML;
 using namespace VE_Conductor;
 
+vprSingletonImp( CORBAServiceList );
+
 ////////////////////////////////////////////////////////////////////////////////
-CORBAServiceList::CORBAServiceList( int argc, char** argv )
+void CORBAServiceList::SetArgcArgv( int argc, char** argv )
 {
    //Copy the command line args because tao deletes them after processing them
    peArgc = argc;
@@ -70,7 +72,7 @@ CORBAServiceList::CORBAServiceList( int argc, char** argv )
    pelog = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CORBAServiceList::~CORBAServiceList()
+void CORBAServiceList::CleanUp()
 {
    //Gets deleted by wx now
    /*if ( pelog )

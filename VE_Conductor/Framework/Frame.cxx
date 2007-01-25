@@ -228,7 +228,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
       tempArray[ i ] = new char[ strlen( ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() ) + 1 ];
       strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
    }
-   serviceList = new VE_Conductor::CORBAServiceList( ::wxGetApp().argc, tempArray );
+   serviceList = VE_Conductor::CORBAServiceList::instance();
+   serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
    preferences = new UserPreferences(this, ::wxNewId(), 
                                      SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
                                      SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
@@ -593,7 +594,7 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       ExitXplorer();
    }
    
-   delete serviceList;
+   serviceList->CleanUp();
    serviceList = 0;
    
    if (is_orb_init)
@@ -1883,11 +1884,6 @@ void AppFrame::IdleEvent( wxIdleEvent& event )
 void AppFrame::TimerEvent( wxTimerEvent& WXUNUSED(event) )
 {
    ::wxWakeUpIdle();
-}
-///////////////////////////////////////////////////////////////////
-CORBAServiceList* AppFrame::GetCORBAServiceList( void )
-{
-   return serviceList;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )

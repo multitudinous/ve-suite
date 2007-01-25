@@ -107,13 +107,14 @@ void DeviceProperties::SendCommandsToXplorer(){
       command->AddDataValuePair(instructions.at(i));
    }
 
-   dynamic_cast<AppFrame*>(wxGetApp().GetTopWindow())->GetCORBAServiceList()->SendCommandStringToXplorer(command);
+   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(command);
 
    //Clean up memory
    delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceProperties::ClearInstructions(){
+void DeviceProperties::ClearInstructions()
+{
    instructions.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////

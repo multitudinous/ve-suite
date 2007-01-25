@@ -38,7 +38,7 @@ CORBAServiceList API
 /*!\class VE_Conductor::CORBAServiceList
 * 
 */
-
+#include <vpr/Util/Singleton.h>
 #include <orbsvcs/CosNamingC.h>
 #include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
@@ -46,8 +46,6 @@ CORBAServiceList API
 
 #include <vector>
 #include <string>
-
-#include <wx/object.h>
 
 class PEThread;
 class Body_UI_i;
@@ -62,14 +60,22 @@ namespace VE_XML
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
 {
-class VE_GUIPLUGINS_EXPORTS CORBAServiceList : public wxObject
+class VE_GUIPLUGINS_EXPORTS CORBAServiceList //: public wxObject
 {
+private:
+   // Required so that vpr::Singleton can instantiate this class.
+   //friend class vpr::Singleton< cfdPfSceneManagement >;
+   //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
+   //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
+   CORBAServiceList( void ){ ; }
+   ~CORBAServiceList(){ ; } // Never gets called, don't implement
+   vprSingletonHeader( CORBAServiceList );
 public:
    ///Constructor
-   CORBAServiceList( int argc, char** argv );
+   void SetArgcArgv( int argc, char** argv );
    ///Destructor
-   ~CORBAServiceList( void );
-
+   //~CORBAServiceList( void );
+   void CleanUp( void );
    ///Set a naming context
    ///\param naming_context
    void SetNamingContext( CosNaming::NamingContext_ptr naming_context );

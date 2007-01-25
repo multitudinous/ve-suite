@@ -517,7 +517,7 @@ void NavigationPane::SendCommandsToXplorer( void )
    veCommand->SetCommandName( std::string("Navigation_Data") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   dynamic_cast< AppFrame* >( wxGetApp().GetTopWindow() )->GetCORBAServiceList()->SendCommandStringToXplorer( veCommand );
+   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    
    //Clean up memory
    delete veCommand;
