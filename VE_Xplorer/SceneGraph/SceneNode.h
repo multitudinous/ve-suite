@@ -40,39 +40,43 @@ can be passed around vesuite generically
 /*!\class VE_SceneGraph::SceneNode
 *
 */
-
 #include "VE_Installer/include/VEConfig.h"
+
 namespace VE_SceneGraph
 {
 class VE_SCENEGRAPH_EXPORTS SceneNode
 {
 public:
-   enum cfdNodeType
+   enum NodeType
    {
-      CFD_NODE,
-      CFD_GROUP,
-      CFD_DCS,
-      CFD_GEODE,
-      CFD_SEQUENCE,
-      CFD_SWITCH,
-      CFD_OTHER
+      NODE_ID,
+      GROUP_ID,
+      DCS_ID,
+      GEODE_ID,
+      SEQUENCE_ID,
+      SWITCH_ID,
+      OTHER_ID
    };
 
    SceneNode();
-   SceneNode(cfdNodeType nt);
+   SceneNode( NodeType nt );
    SceneNode( const SceneNode& );
 
    virtual ~SceneNode( void );
    SceneNode& operator=( const SceneNode& );
-   //get the internal cfd node type
-   virtual cfdNodeType GetCFDNodeType(){return _nt;}
-   //set internal cfd node type
-   virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
+
+   //Get the internal cfd node type
+   virtual NodeType GetNodeType( void ){ return _nt; }
+
+   //Set internal cfd node type
+   virtual void SetNodeType( NodeType nt ){ _nt = nt; }
 
 protected:
-   //our scene graph specific nodes
+   //)ur scene graph specific nodes
    int _numParents;
-   cfdNodeType _nt;
+   NodeType _nt;
+
 };
 }
+
 #endif

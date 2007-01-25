@@ -70,7 +70,7 @@ DCS::DCS( void )
       temp[ i ] = 1.0f;
    SetScaleArray( temp );
 
-   SetCFDNodeType(CFD_DCS);
+   SetNodeType(DCS_ID);
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
@@ -82,7 +82,7 @@ DCS::DCS( float* scale, float* trans, float* rot )
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
-   SetCFDNodeType(CFD_DCS);
+   SetNodeType(DCS_ID);
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& input )
@@ -91,7 +91,7 @@ DCS::DCS( const DCS& input )
 #elif _OSG 
 #elif _OPENSG
 #endif  
-   SetCFDNodeType(CFD_DCS);
+   SetNodeType(DCS_ID);
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS& DCS::operator=( const DCS& input)
@@ -104,7 +104,7 @@ DCS& DCS::operator=( const DCS& input)
 #elif _OSG
 #elif _OPENSG
 #endif
-      SetCFDNodeType(CFD_DCS);
+      SetNodeType(DCS_ID);
    }
    return *this;
 }
@@ -412,8 +412,8 @@ int DCS::RemoveChild( SceneNode* child )
    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSF
-   return this->removeChild( dynamic_cast< Node* >( child ))
+#elif _OSG
+   return this->removeChild( dynamic_cast< Node* >( child ));
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -423,9 +423,10 @@ int DCS::AddChild( SceneNode* child )
    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSF
-   return this->addChild( dynamic_cast< Node* >( child ))
+#elif _OSG
+   return this->addChild( dynamic_cast< Node* >( child ));
 #endif
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::InsertChild( int position, SceneNode* child )
@@ -434,8 +435,8 @@ void DCS::InsertChild( int position, SceneNode* child )
    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSF
-   this->insertChild( position, dynamic_cast< Node* >( newChild ))
+#elif _OSG
+   this->insertChild( position, dynamic_cast< Node* >( child ));
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -445,7 +446,7 @@ int DCS::GetNumChildren( void )
    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSF
+#elif _OSG
    return this->getNumChildren();
 #endif
 }
@@ -482,7 +483,7 @@ int DCS::ReplaceChild( SceneNode* childToBeReplaced,
    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSF
+#elif _OSG
    return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), 
                        dynamic_cast< Node* >( newChild ) );
 #endif
