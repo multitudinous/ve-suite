@@ -1151,8 +1151,9 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-   serviceList->Query( status );
-   Log("Simulation Shown. \n");
+
+   std::string nw_str = serviceList->Query( status ) + "\n";
+   Log(nw_str.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1172,8 +1173,8 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
    
-   serviceList->Query( status );
-   Log("Simulation Hid. \n");
+   std::string nw_str = serviceList->Query( status ) + "\n";
+   Log(nw_str.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1193,8 +1194,8 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
    
-   serviceList->Query( status );
-   Log("Simulation Closed. \n");
+   std::string nw_str = serviceList->Query( status ) + "\n";
+   Log(nw_str.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////
