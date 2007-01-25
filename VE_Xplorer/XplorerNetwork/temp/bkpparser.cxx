@@ -26,6 +26,11 @@ std::string BKPParser::getBlockType(int num)
 	return BlockInfoList[num].type;
 }
 
+std::string BKPParser::getBlockIcon(int num)
+{
+	return BlockInfoList[num].icon;
+}
+
 std::string BKPParser::getBlockID(int num)
 {
 	return BlockInfoList[num].id;
@@ -218,12 +223,13 @@ void BKPParser::ParseFile(char * bkpFile)
 			//find the entry;remove original occurrence;push it to the back of vector
 			if(tempBlockId==BlockInfoList[entryIncr].id)
 			{
-				tempBlockInfo_2 = BlockInfoList[entryIncr];	
+				//tempBlockInfo_2 = BlockInfoList[entryIncr];	
 				//add icon value to block type
 				//allows for all variations of 3d representations of unit operations
-				tempBlockInfo_2.type +="."+iconTokenizer.nextToken();
-				BlockInfoList.erase(BlockInfoList.begin()+entryIncr);
-				BlockInfoList.push_back(tempBlockInfo_2);
+				//tempBlockInfo_2.type +="."+iconTokenizer.nextToken();
+				//BlockInfoList.erase(BlockInfoList.begin()+entryIncr);
+				//BlockInfoList.push_back(tempBlockInfo_2);
+				BlockInfoList[entryIncr].icon = iconTokenizer.nextToken();
 				entryFound = true;
 			}
 			entryIncr++;
@@ -346,6 +352,8 @@ void BKPParser::ParseFile(char * bkpFile)
 	while (count<BlockInfoList.size())
 	{
 		outFile << BlockInfoList[count].type;
+		outFile << "\t";
+		outFile << BlockInfoList[count].icon;
 		outFile << "\t";
 		outFile << BlockInfoList[count].id;
 		outFile << "\t";

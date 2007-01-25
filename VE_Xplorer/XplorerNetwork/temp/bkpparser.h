@@ -21,6 +21,7 @@ private:
 	typedef struct                                                     //struct with blocks type and id
 	{
 		std::string type;
+		std::string icon;
 		std::string id;
 	}BlockInfo;
 
@@ -50,6 +51,7 @@ public:
 	void openFile(char *);                                             //opens the given file
 	int getNumComponents();                                            //returns total components
 	std::string getBlockType(int);                                     //returns the filename of component
+	std::string getBlockIcon(int);
 	std::string getBlockID(int);                                       //returns the filename of component
 	float getXCoord(int);                                              //returns the x coordinates of component
 	float getYCoord(int);                                              //returns the y coordinates of component
