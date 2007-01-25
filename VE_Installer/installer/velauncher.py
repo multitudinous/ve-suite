@@ -819,10 +819,18 @@ class LauncherWindow(wx.Frame):
         velLaunchSplash.LaunchSplash()
         ##thread.start_new_thread(velLaunchSplash.LaunchSplash, ())
         ##Go into the Launch
-        launchInstance = Launch(self.state.GetLaunchSurface())
-        ##Show NameServer kill window if NameServer was started.
-        if v("NameServer"):
-            window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+        try:
+            launchInstance = Launch(self.state.GetLaunchSurface())
+            ##Show NameServer kill window if NameServer was started.
+            if v("NameServer"):
+                window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+        except QuitLaunchError:
+            dlg = wx.MessageDialog(self,
+                                   "Launch aborted by user.",
+                                   "Launch Aborted",
+                                   wx.OK)
+            dlg.ShowModal()
+            dlg.Destroy()
         ##Close the Launcher
         self.OnClose()
 

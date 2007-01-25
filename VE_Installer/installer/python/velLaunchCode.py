@@ -1,5 +1,5 @@
 import os
-from wx import DisplaySize
+import wx
 from time import sleep ##Used for delays in launch
 from platform import architecture ##Used to test if it's 32/64-bit
 from socket import gethostname ##Used to get hostname
@@ -256,7 +256,7 @@ class Launch:
         """Returns a generic Xplorer call."""
         ##Append argument if desktop mode selected
         if self.settings["DesktopMode"]:
-            w, h = DisplaySize()
+            w, h = wx.DisplaySize()
             desktop = ["-VESDesktop", str(w), str(h)]
         else:
             desktop = []
@@ -326,12 +326,6 @@ class Launch:
             ##self.clusterScript += "/usr/X11R6/bin/xset -display :0.0 -dpms s "+\
             ##                      "reset s off\n"
             self.WriteToClusterScript("PYTHONPATH")
-        elif windows:
-            self.clusterScript = ""
-            self.clusterScript += "@ECHO OFF\n"
-            workingDrive = "%s:" %self.settings["Directory"].split(':')[0]
-            self.clusterScript += "net use %s \\\\samba.vrac.iastate.edu\\home\\users\\biv\n" %workingDrive ##TESTER
-            self.WriteToClusterScript("PYTHONPATH")
         else:
             self.clusterScript = "ERROR: Unsupported OS type."
         return
@@ -384,9 +378,70 @@ class Launch:
             if self.settings["Debug"]:
                 subprocess.Popen(["cmd", "/k"] + self.clusterCall)
             else:
-                subprocess.Popen(self.clusterCall)
+                try:
+                    subprocess.Popen(self.clusterCall)
+                except:
+                    ##Send error & 'psexec' to error call.
+                    self.ErrorCall(sys.exc_info(), self.clusterCall[0])
         else:
             print "Error!"
+
+
+    def ErrorCall(self, errorInfo, step):
+        """Brings up the system error encountered during [step]."""
+        ##Arrays of names/errors for comparison below.
+        fileNotFoundErrors = ["[Errno 2] The system cannot find the file specified"]
+        namingServiceNames = ["Naming_Service", "Naming_Service.exe"]
+        if step == "psexec":
+            stepName = "PsExec for cluster"
+        elif step in namingServiceNames:
+            stepName = "the Name Server"
+        else:
+            stepName = step
+        ##Set extraNotes here.
+        ##extraNotes gives additional information on potential error solutions.
+        if str(errorInfo[1]) in fileNotFoundErrors:
+            if step == "psexec":
+                ##psexec not found
+                extraNotes = "Check if psexec is installed\n" + \
+                             "and on PATH."
+            elif step in namingServiceNames:
+                ##namingService not found
+                if windows:
+                    depsName = "VE-Suite's dependencies"
+                else:
+                    depsName = "ACE/TAO"
+                extraNotes = "Check if %s is in the /bin\n" % (step) + \
+                             "directory of %s." % (depsName)
+            else:
+                ##conductor or xplorer not found.
+                extraNotes = "Check if %s is in\n" + \
+                             "VE-Suite's /bin directory."
+        else:
+            extraNotes = ""
+        ##Tack line returns on extraNotes if it contains anything.
+        if extraNotes:
+            extraNotes = "\n\n" + extraNotes
+        ##Print the error warning in console.
+        print "Error encountered. Pausing launch."
+        print str(errorInfo[1])
+        ##The actual warning box.
+        dlg = wx.MessageDialog(None,
+                               "An error came up while" +
+                               " launching %s:\n\n" % (stepName) +
+                               str(errorInfo[1]) + extraNotes +
+                               "\n\nDo you want to continue launching?",
+                               "VE-Suite Launch Error",
+                               wx.YES_NO | wx.YES_DEFAULT)
+        if dlg.ShowModal() == wx.ID_NO:
+            dlg.Destroy()
+            print "Quitting launch."
+            raise QuitLaunchError
+            ##IMPROVE: Kill all other started progs?
+        else:
+            dlg.Destroy()
+            print "Resuming launch."
+        return
 
 
     def EnvSetup(self):

@@ -28,6 +28,7 @@ LOGO_LOCATION = join(IMAGES_DIR, "ve_logo.xpm")
 SPLASH_IMAGE = join(IMAGES_DIR, "velauncher_banner.bmp")
 SPLASH_TIME = 7000 ##milliseconds before auto-close
 if windows:
+    ##Change this if cluster.bat can't write to its directory.
     CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")
 else:
     CLUSTER_FILE_PATH = join(VELAUNCHER_DIR, "cluster.tsh")
@@ -140,6 +141,13 @@ def CFDHostType():
     return cfdHostType
 CFD_HOST_TYPE = CFDHostType()
 ##print CFD_HOST_TYPE ##TESTER
+
+class QuitLaunchError(Exception):
+    """Defines error raised if user manually quits launch."""
+    def __init__(self, value = "User quit launch"):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
 
 def Style(window):
     """The uniform style of each window in VE Launcher."""
