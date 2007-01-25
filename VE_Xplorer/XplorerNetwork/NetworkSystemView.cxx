@@ -111,13 +111,14 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		loadedModels.get()->addChild(at.get());
 
 		//add 3d blocks
-		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("osg/"+bkpp.getBlockType(count)+".ive");
+		//osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("osg/"+bkpp.getBlockType(count)+".ive");
+		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+bkpp.getBlockType(count)+"/"+bkpp.getBlockType(count)+"."+bkpp.getBlockIcon(count)+".obj");
 		
 		//add red block id if block .ive file is not found
 		if(loadedModel.get() == NULL)
 		{
 			//std::cout<<"Unsupported Component: "<<count<<" : "<<bkpp.getBlockType(count)<<std::endl;
-			loadedModel = osgDB::readNodeFile("osg/UnsupportedComponent.ive");
+			loadedModel = osgDB::readNodeFile("3DIcons/UnsupportedComponent.ive");
 			//std::cout<<"Rendering Aborted!"<<std::endl;
 			//return 1;
 		}
