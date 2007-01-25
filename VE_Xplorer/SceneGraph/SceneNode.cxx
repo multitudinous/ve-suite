@@ -40,10 +40,10 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::SceneNode( void )
 {
-   this->_nt = OTHER_ID;
+   this->_nt = VE_OTHER;
 }
 ////////////////////////////////////////////////////////////////////////////////
-SceneNode::SceneNode(NodeType nt)
+SceneNode::SceneNode( NodeType nt )
 {
    this->_nt = nt;
 }

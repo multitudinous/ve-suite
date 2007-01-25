@@ -68,7 +68,7 @@ public:
    virtual ~DCS();
    DCS( float* scale, float* trans, float* rot );
    DCS( const DCS& input );
-   DCS& operator=( const DCS& input);
+   DCS& operator=( const DCS& input );
 
    float* GetVETranslationArray( void );
    float* GetRotationArray( void );
@@ -100,4 +100,4 @@ protected:
 };
 }
 
-#endif //DCS_H
+#endif //VE_DCS_H

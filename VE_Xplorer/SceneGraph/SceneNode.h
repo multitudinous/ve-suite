@@ -49,13 +49,13 @@ class VE_SCENEGRAPH_EXPORTS SceneNode
 public:
    enum NodeType
    {
-      NODE_ID,
-      GROUP_ID,
-      DCS_ID,
-      GEODE_ID,
-      SEQUENCE_ID,
-      SWITCH_ID,
-      OTHER_ID
+      VE_NODE,
+      VE_GROUP,
+      VE_DCS,
+      VE_GEODE,
+      VE_SEQUENCE,
+      VE_SWITCH,
+      VE_OTHER
    };
 
    SceneNode();

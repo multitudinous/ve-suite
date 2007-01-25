@@ -32,8 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
-#include <iostream>
-
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
 #include <gmtl/EulerAngle.h>
@@ -54,68 +52,88 @@
 #elif _OPENSG
 #endif
 
+//C/C++ Libraries
+#include <iostream>
+
 using namespace gmtl;
 using namespace VE_SceneGraph;
+
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( void )
 {
-   float temp[ 3 ];
-   for ( unsigned int i = 0; i < 3; i++ )
-      temp[ i ] = 0.0f;
+   float temp[3];
+   for( unsigned int i = 0; i < 3; i++ )
+   {
+      temp[i] = 0.0f;
+   }
+
    SetTranslationArray( temp );
-   for ( unsigned int i = 0; i < 3; i++ )
-      temp[ i ] = 0.0f;
+
+   for( unsigned int i = 0; i < 3; i++ )
+   {
+      temp[i] = 0.0f;
+   }
+
    SetRotationArray( temp );
-   for ( unsigned int i = 0; i < 3; i++ )
-      temp[ i ] = 1.0f;
+
+   for( unsigned int i = 0; i < 3; i++ )
+   {
+      temp[i] = 1.0f;
+   }
+
    SetScaleArray( temp );
 
-   SetNodeType(DCS_ID);
+   SetNodeType( VE_DCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
 {
-#ifdef _PERFORMER
-#elif _OSG
-#elif _OPENSG
-#endif
+   #ifdef _PERFORMER
+   #elif _OSG
+   #elif _OPENSG
+   #endif
+
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
-   SetNodeType(DCS_ID);
+   SetNodeType( VE_DCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& input )
 {
-#ifdef _PERFORMER
-#elif _OSG 
-#elif _OPENSG
-#endif  
-   SetNodeType(DCS_ID);
+   #ifdef _PERFORMER
+   #elif _OSG 
+   #elif _OPENSG
+   #endif  
+
+   SetNodeType( VE_DCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
-DCS& DCS::operator=( const DCS& input)
+DCS& DCS::operator=( const DCS& input )
 {
-   if ( this != &input )
+   if( this != &input )
    {
       //parents input
-      //cfdGroup::operator =(input);
-#ifdef _PERFORMER
-#elif _OSG
-#elif _OPENSG
-#endif
-      SetNodeType(DCS_ID);
+      //cfdGroup::operator =( input );
+      #ifdef _PERFORMER
+      #elif _OSG
+      #elif _OPENSG
+      #endif
+
+      SetNodeType( VE_DCS );
    }
+
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
-bool DCS::operator== ( const DCS& node1 )
+bool DCS::operator==( const DCS& node1 )
 {
-   if ( _dcs != node1._dcs )
+   if( _dcs != node1._dcs )
    {
       return false;
    }
+
    else
    {
       return true;
@@ -125,34 +143,39 @@ bool DCS::operator== ( const DCS& node1 )
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS( void )
 {
-   // If neccesary
-#ifdef _PERFORMER
-#elif _OSG
-#elif _OPENSG
-#endif
+   //If neccesary
+   #ifdef _PERFORMER
+   #elif _OSG
+   #elif _OPENSG
+   #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*float* DCS::GetTranslationArray( void )
+/*
+float* DCS::GetTranslationArray( void )
 {
    return this->_translation;
-}*/
+}
+*/
 ////////////////////////////////////////////////////////////////////////////////
-/*float* DCS::GetVRJTranslationArray( void )
+/*
+float* DCS::GetVRJTranslationArray( void )
 {
-   vrjTranslation[ 0 ] = _translation[ 0 ];
-   vrjTranslation[ 1 ] = _translation[ 2 ];
-   vrjTranslation[ 2 ] = -_translation[ 1 ];
+   vrjTranslation[0] = _translation[0];
+   vrjTranslation[1] = _translation[2];
+   vrjTranslation[2] = -_translation[1];
 
    return vrjTranslation;
-}*/
+}
+*/
 ////////////////////////////////////////////////////////////////////////////////
 float* DCS::GetVETranslationArray( void )
 {
    osg::Vec3d trans = this->getPosition();
-   for ( size_t i = 0; i < 3; ++i )
+   for( size_t i = 0; i < 3; i++ )
    {
-      translation[ i ] = trans[ i ];
+      translation[i] = trans[i];
    }
+
    return translation;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -160,12 +183,13 @@ float* DCS::GetRotationArray( void )
 {
    osg::Quat quat = this->getAttitude();
 
-   gmtl::Quatf tempQuat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
+   gmtl::Quatf tempQuat( quat[0], quat[1], quat[2], quat[3] );
    gmtl::Matrix44f _vjMatrix = gmtl::makeRot< gmtl::Matrix44f >( tempQuat );
    gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( _vjMatrix );
-   rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
-   rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
-   rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
+
+   rotation[0] = gmtl::Math::rad2Deg( tempZXY[0] );
+   rotation[1] = gmtl::Math::rad2Deg( tempZXY[1] );
+   rotation[2] = gmtl::Math::rad2Deg( tempZXY[2] );
    
    return rotation;
 }
@@ -173,32 +197,29 @@ float* DCS::GetRotationArray( void )
 float* DCS::GetScaleArray( void )
 {
    osg::Vec3d tempScale = this->getScale();
-   for ( size_t i = 0; i < 3; ++i )
+   for ( size_t i = 0; i < 3; i++ )
    {
-      scale[ i ] = tempScale[ i ];
+      scale[i] = tempScale[i];
    }
+
    return scale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( std::vector<double> array )
 {
-#ifdef _PERFORMER
-   this->_dcs->setTrans( this->_translation[ 0 ],
-                       this->_translation[ 1 ],
-                       this->_translation[ 2 ] );
-#elif _OSG           
+   #ifdef _PERFORMER
+   this->_dcs->setTrans( this->_translation[0], this->_translation[1], this->_translation[2] );
+   #elif _OSG           
    this->setPosition( osg::Vec3d( array[0], array[1], array[2]) );
-#elif _OPENSG
-#endif
+   #elif _OPENSG
+   #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( std::vector<double> array)
 {
-#ifdef _PERFORMER
-   this->_dcs->setRot(this->_rotation[ 0 ],
-                    this->_rotation[ 1 ],
-                    this->_rotation[ 2 ]);
-#elif _OSG
+   #ifdef _PERFORMER
+   this->_dcs->setRot(this->_rotation[0], this->_rotation[1], this->_rotation[2]);
+   #elif _OSG
    osg::Vec3f pitch(1,0,0);
    osg::Vec3f roll(0,1,0);
    osg::Vec3f yaw(0,0,1);
@@ -210,46 +231,47 @@ void DCS::SetRotationArray( std::vector<double> array)
    osg::Quat quat;
    rotateMat.get( quat );
    this->setAttitude( quat );
-#elif _OPENSG
-#endif
+   #elif _OPENSG
+   #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetScaleArray( std::vector<double> array )
 {
-#ifdef _PERFORMER
-   this->_dcs->setScale( this->_scale[ 0 ],
-                           this->_scale[ 1 ],
-                           this->_scale[ 2 ] );
-#elif _OSG
+   #ifdef _PERFORMER
+   this->_dcs->setScale( this->_scale[0], this->_scale[1], this->_scale[2] );
+   #elif _OSG
    this->setScale( osg::Vec3d( array[0], array[1], array[2]) );
-#elif _OPENSG
-#endif
+   #elif _OPENSG
+   #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( float* trans )
 {
-   std::vector< double > temp;
-   temp.push_back( trans[ 0 ] );
-   temp.push_back( trans[ 1 ] );
-   temp.push_back( trans[ 2 ] );
+   std::vector<double> temp;
+   temp.push_back( trans[0] );
+   temp.push_back( trans[1] );
+   temp.push_back( trans[2] );
+
    SetTranslationArray( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( float* rot )
 {
-   std::vector< double > temp;
-   temp.push_back( rot[ 0 ] );
-   temp.push_back( rot[ 1 ] );
-   temp.push_back( rot[ 2 ] );
+   std::vector<double> temp;
+   temp.push_back( rot[0] );
+   temp.push_back( rot[1] );
+   temp.push_back( rot[2] );
+
    SetRotationArray( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetScaleArray( float* scale )
 {
-   std::vector< double > temp;
-   temp.push_back( scale[ 0 ] );
-   temp.push_back( scale[ 1 ] );
-   temp.push_back( scale[ 2 ] );
+   std::vector<double> temp;
+   temp.push_back( scale[0] );
+   temp.push_back( scale[1] );
+   temp.push_back( scale[2] );
+
    SetScaleArray( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -476,15 +498,13 @@ void DCS::SetName( std::string name )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-int DCS::ReplaceChild( SceneNode* childToBeReplaced,
-                         SceneNode* newChild)
+int DCS::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
 #ifdef _OPENSG
    cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
 #elif _OSG
-   return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), 
-                       dynamic_cast< Node* >( newChild ) );
+   return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
 #endif
 }
