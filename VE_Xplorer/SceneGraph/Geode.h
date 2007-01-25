@@ -32,35 +32,68 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_DCS_H
-#define VE_DCS_H
-/*!\file DCS.h
-* DCS API
+#ifndef VE_GEODE_H
+#define VE_GEODE_H
+/*!\file Geode.h
+* Geode API
 */
 
-/*!\class VE_SceneGraph::DCS
+/*!\class VE_SceneGraph::Geode
 *
 */
+#include "VE_Xplorer/SceneGraph/SceneNode.h"
 
 #ifdef _PERFORMER
-class pfDCS;
+//#include <pf/>
 #elif _OSG
-#include <osg/PositionAttitudeTransform>
+#include <osg/Geode>
+#include <osg/ref_ptr>
 #elif _OPENSG
 #endif
+
+class vtkActor;
+
 namespace VE_SceneGraph
 {
 #ifdef _OSG
-class VE_SCENEGRAPH_EXPORTS DCS: public osg::PositionAttitudeTransform
+class VE_SCENEGRAPH_EXPORTS Geode: public osg::Geode, public SceneNode
 #elif _PERFORMER
-class VE_SCENEGRAPH_EXPORTS DCS: public pfDCS
+class VE_SCENEGRAPH_EXPORTS Geode: public pfDCS
 #endif
 {
 public:
-   DCS(){}
-   virtual ~DCS(){}
+   Geode( void );
+   ~Geode( void );
+   Geode( const Geode& );        
+   Geode& operator=( const Geode& );
+   
+   #ifdef _PERFORMER
+   Geode( const pfGeode& geode );
+   Geode& operator=( const pfGeode& geode );
+   pfNode* GetRawNode( void );
+   #elif _OSG
+   Geode( const osg::Geode& geode );
+   Geode& operator=( const osg::Geode& geode );
+   osg::Node* GetRawNode( void );
+   #elif _OPENSG
+   #endif
+
+   void TurnOnDebugOutput( int onOff = 0 ){ _vtkDebugLevel = onOff; }
+
+   //This function implements the respective translate vtkActorToGeode
+   void TranslateToGeode( vtkActor* actor );
 
 protected:
+   int _vtkDebugLevel;
+
+   #ifdef _PERFORMER
+   pfGeode* _geode;
+   #elif _OSG
+   osg::ref_ptr<osg::Geode> _geode;
+   #elif _OPENSG
+   #endif
+
 };
 }
-#endif
+
+#endif //VE_GEODE_H

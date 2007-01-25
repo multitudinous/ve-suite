@@ -30,17 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
+
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGeode.h>
 #include <Performer/pf/pfNode.h>
 #include "VE_Xplorer/SceneGraph/vtkActorToPF.h"
 #elif _OSG
+#include "VE_Xplorer/SceneGraph/vtkActorToOSG.h"
+
 #include <osg/Geode>
 #include <osg/Node>
 #include <osg/CopyOp>
-#include "VE_Xplorer/SceneGraph/vtkActorToOSG.h"
 #elif _OPENSG
 #endif
 
@@ -50,31 +53,37 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkDataSet.h>
 
+//C/C++ Libraries
 #include <iostream>
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
 using namespace VE_SceneGraph;
-cfdGeode::cfdGeode( void )
-:cfdNode()
+
+////////////////////////////////////////////////////////////////////////////////
+Geode::Geode( void )
+//:
+//Node()
 {
-#ifdef _PERFORMER
+   #ifdef _PERFORMER
    _geode = new pfGeode();
-#elif _OSG
+   #elif _OSG
    _geode = new osg::Geode();
-#elif _OPENSG
-#endif
+   #elif _OPENSG
+   #endif
+
    _vtkDebugLevel = 0;
-   SetCFDNodeType(CFD_GEODE);
+
+   SetVENodeType(VE_GEODE);
 }
 #ifdef _OSG
-////////////////////////////////////////////
-cfdGeode::cfdGeode(const osg::Geode& oGeode)
+////////////////////////////////////////////////////////////////////////////////
+Geode::Geode(const osg::Geode& oGeode)
 {
    _geode = new osg::Geode(oGeode,osg::CopyOp::DEEP_COPY_ALL);
    _vtkDebugLevel = 0;
-   SetCFDNodeType(CFD_GEODE);
+   SetVENodeType(VE_GEODE);
 }
-///////////////////////////////////////////////////////
-cfdGeode& cfdGeode::operator=(const osg::Geode& oGeode)
+////////////////////////////////////////////////////////////////////////////////
+Geode& Geode::operator=(const osg::Geode& oGeode)
 {
    if(_geode != &oGeode){
       if(_geode.valid()){
@@ -84,15 +93,15 @@ cfdGeode& cfdGeode::operator=(const osg::Geode& oGeode)
    return *this;
 }
 #elif _PERFORMER
-///////////////////////////////////
-cfdGeode::cfdGeode(const pfGeode& oGeode)
+////////////////////////////////////////////////////////////////////////////////
+Geode::Geode(const pfGeode& oGeode)
 {
    _geode = new pfGeode(oGeode);
    _vtkDebugLevel = 0;
-   SetCFDNodeType(CFD_GEODE);
+   SetNodeType(VE_GEODE);
 }
-////////////////////////////////////////////////////
-cfdGeode& cfdGeode::operator=(const pfGeode& oGeode)
+////////////////////////////////////////////////////////////////////////////////
+Geode& Geode::operator=(const pfGeode& oGeode)
 {
    if(_geode != &oGeode){
       //_geode = dynamic_cast<pfGeode*>(oGeode.clone(0));
@@ -101,9 +110,9 @@ cfdGeode& cfdGeode::operator=(const pfGeode& oGeode)
 }
 #elif _OPENSG
 #endif
-////////////////////////////////////////////
-cfdGeode::cfdGeode( const cfdGeode& input )
-:cfdNode(input)
+////////////////////////////////////////////////////////////////////////////////
+Geode::Geode( const Geode& input )
+//:Node(input)
 {
 #ifdef _PERFORMER
    this->_geode = input._geode;
@@ -113,10 +122,10 @@ cfdGeode::cfdGeode( const cfdGeode& input )
 #endif
    this->_vtkDebugLevel = input._vtkDebugLevel;
     
-   SetCFDNodeType(CFD_GEODE);
+   SetVENodeType(VE_GEODE);
 }
-//////////////////////////////////////////////////////
-cfdGeode& cfdGeode::operator=( const cfdGeode& input )
+////////////////////////////////////////////////////////////////////////////////
+Geode& Geode::operator=( const Geode& input )
 {
    if ( this != (&input) )
    {
@@ -128,39 +137,37 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 #elif _OPENSG
 #endif
       this->_vtkDebugLevel = input._vtkDebugLevel;
-      SetCFDNodeType(CFD_GEODE);
+      SetVENodeType(VE_GEODE);
    }
    return *this;
 }
-////////////////////////////////////////////////////
-/*bool cfdGeode::operator== ( cfdNode& node1 )
+////////////////////////////////////////////////////////////////////////////////
+/*bool Geode::operator== ( cfdNode& node1 )
 {
-   if ( _geode != dynamic_cast< cfdGeode& >( node1 )._geode )
+   if ( _geode != dynamic_cast< Geode& >( node1 )._geode )
    {
       return false;
    }
 
    return true;
 }*/
-///////////////////////////
-cfdGeode::~cfdGeode( void )
+////////////////////////////////////////////////////////////////////////////////
+Geode::~Geode( void )
 {
-   vprDEBUG(vesDBG,2) << "|\tdestructor for cfdGeode " 
+   vprDEBUG(vesDBG,2) << "|\tdestructor for Geode " 
                            << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    // Fix this
    //if ( _geode != NULL )
    pfDelete( _geode );
-   vprDEBUG(vesDBG,2) << "|\tAfter pfDelete : destructor for cfdGeode " 
+   vprDEBUG(vesDBG,2) << "|\tAfter pfDelete : destructor for Geode " 
                            << std::endl << vprDEBUG_FLUSH;
 #elif _OSG
 #elif _OPENSG
 #endif
 }
-
-
-//////////////////////////////////////////////////////
-void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
+////////////////////////////////////////////////////////////////////////////////
+void Geode::TranslateToGeode( vtkActor* actor )
 {
 #ifdef _PERFORMER
    VE_SceneGraph::vtkActorToPF( actor, this->_geode, _vtkDebugLevel );
@@ -171,9 +178,9 @@ void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
 }
 // Reimplement for other graphs
 #ifdef _PERFORMER
-pfNode* cfdGeode::GetRawNode( void )
+pfNode* Geode::GetRawNode( void )
 #elif _OSG
-osg::Node* cfdGeode::GetRawNode(void)
+osg::Node* Geode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
@@ -184,3 +191,4 @@ osg::Node* cfdGeode::GetRawNode(void)
 #elif _OPENSG
 #endif
 }
+////////////////////////////////////////////////////////////////////////////////
