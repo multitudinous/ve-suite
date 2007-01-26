@@ -845,6 +845,10 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
    ReDrawAll();
+   if(vistab)
+   {
+      vistab->ResetAllDatasetDependentCheckBoxes();
+   }
 }
 
 /////////////////////////////////////
@@ -2302,6 +2306,12 @@ void Network::New()
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
    Refresh();
+   
+   //reset the state of dataset check boxes on a new network load
+   if(vistab)
+   {
+      vistab->ResetAllDatasetDependentCheckBoxes();
+   }
 }
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork )
@@ -2323,6 +2333,7 @@ void Network::Load( std::string xmlNetwork )
    CreateNetwork( xmlNetwork );
    ::wxEndBusyCursor();
    delete _fileProgress;
+
 }
 ////////////////////////////////////////////////////////
 void Network::CreateNetwork( std::string xmlNetwork )

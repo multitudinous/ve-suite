@@ -448,6 +448,26 @@ void Vistab::SetCommInstance( VjObs_ptr veEngine )
 {
    xplorerPtr = VjObs::_duplicate( veEngine );
 }
+/////////////////////////////////////////////////
+void Vistab::ResetAllDatasetDependentCheckBoxes()
+{
+   if(wireFrameCB)
+   {
+      wireFrameCB->SetValue(false);
+   }
+   if(bboxCB)
+   {
+      bboxCB->SetValue(false);
+   }
+   if(axesCB)
+   {
+      axesCB->SetValue(false);
+   }
+   if(scalarBarCB)
+   {
+      scalarBarCB->SetValue(false);
+   }
+}
 ////////////////////////////////////////////////////////////
 void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 {

@@ -216,6 +216,10 @@ public:
    //TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
    VE_Conductor::GUI_Utilities::DualSlider* scalarRange;
 
+   ///Make sure all the dataset check boxes are unchecked.\n
+   ///This occurs when loading a new network
+   void ResetAllDatasetDependentCheckBoxes();
+
    wxToolBar*  itemToolBar3;
    wxComboBox* itemComboBox11;
    wxComboBox* itemComboBox12; 
