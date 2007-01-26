@@ -139,7 +139,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO"
 				IgnoreStandardIncludePath="false"
 				BasicRuntimeChecks="3"
@@ -174,7 +174,7 @@
 				OutputFile="$(OutDir)/WinClientd.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/WinClient.pdb"
 				SubSystem="2"
