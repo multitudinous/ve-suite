@@ -388,6 +388,35 @@
     </section>
   </section>
 
+  <section id="viewpoints_pane">
+    <title>Viewpoints Pane</title>
+
+    <para>If you want to store multiple viewpoints and switch back and forth
+    between them, use the Viewpoints Pane under the VE-Xplorer menu.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/viewLocations.jpg" />
+      </imageobject>
+    </mediaobject>
+
+    <para>The Viewpoints Pane starts without any viewpoints. As you add them
+    to the pane, they will appear in the pulldown menu. From there, just select
+    one to return to that viewpoint.</para>
+
+    <para>To add a viewpoint, position the camera just like you want it in the
+    viewpoint, then click Add <guibutton>New View Pt</guibutton>. The viewpoint
+    will be added to the pulldown menu.</para>
+
+    <para>You can delete view points by clicking the Delete button and selecting
+    which viewpoint you want to remove.</para>
+
+    <para>To move to a viewpoint, select it from the pulldown menu below
+    <guibutton>Move to a View Point</guibutton>. The camera will fly to that
+    viewpoint at the speed set under the <guibutton>Movement Speed
+    Control</guibutton>.</para>
+
+  </section>
   <section id="quitting_vesuite">
     <title>Quitting VE-Suite</title>
 
