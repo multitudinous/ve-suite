@@ -95,19 +95,19 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	while(count<bkpp.getNumComponents())
 	{
 		//Add id text
-		osg::ref_ptr<osg::Geode> textGeode = new osg::Geode();
-		osg::ref_ptr<osgText::Text> text = new  osgText::Text;
-		textGeode.get()->addDrawable(text.get());
-		text.get()->setColor(osg::Vec4(1.0, 1.0, 0.0, 1.0));
-		text.get()->setCharacterSize(6.0);
-		text.get()->setAlignment(osgText::Text::CENTER_CENTER);
-		text.get()->setText(bkpp.getBlockID(count));
-		textGeode.get()->setName(bkpp.getBlockID(count));
+		//osg::ref_ptr<osg::Geode> textGeode = new osg::Geode();
+		//osg::ref_ptr<osgText::Text> text = new  osgText::Text;
+		//textGeode.get()->addDrawable(text.get());
+		//text.get()->setColor(osg::Vec4(1.0, 1.0, 0.0, 1.0));
+		//text.get()->setCharacterSize(6.0);
+		//text.get()->setAlignment(osgText::Text::CENTER_CENTER);
+		//text.get()->setText(bkpp.getBlockID(count));
+		//textGeode.get()->setName(bkpp.getBlockID(count));
 
 		osg::ref_ptr<osg::AutoTransform> at = new osg::AutoTransform;
 		at.get()->setPosition(osg::Vec3(bkpp.getXCoord(count)*30, bkpp.getYCoord(count)*30, 15.0f));
 		at.get()->setAutoRotateMode(osg::AutoTransform::ROTATE_TO_SCREEN);
-		at.get()->addChild(textGeode.get());
+		//at.get()->addChild(textGeode.get());
 		loadedModels.get()->addChild(at.get());
 
 		//add 3d blocks
@@ -126,9 +126,15 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//set the blocks name
 		loadedModel.get()->setName(bkpp.getBlockID(count));
 		
+		//Scale up 3D comps
+		osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
+		scale.get()->addChild(loadedModel.get());
+		scale.get()->setScale(5.0f);
+
 		//move the block to its correct location
 		osg::ref_ptr<osg::MatrixTransform> mModelTrans = new osg::MatrixTransform();
-		mModelTrans.get()->addChild(loadedModel.get());
+		//mModelTrans.get()->addChild(loadedModel.get());
+		mModelTrans.get()->addChild(scale.get());
 		mModelTrans.get()->preMult(osg::Matrix::translate(bkpp.getXCoord(count)*30, bkpp.getYCoord(count)*30, 0.0));
 		mModelTrans.get()->setName(bkpp.getBlockID(count));
 		loadedModels.get()->addChild(mModelTrans.get());
@@ -192,19 +198,19 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		geode->addDrawable(linesGeom);
 
 		//Add id text
-		osg::Geode* textGeode = new osg::Geode();
-		osg::ref_ptr<osgText::Text> text = new  osgText::Text;
-		textGeode->addDrawable(text.get());
-		text.get()->setColor(osg::Vec4(1.0, 1.0, 0.0, 1.0));
-		text.get()->setCharacterSize(6.0);
-		text.get()->setAlignment(osgText::Text::CENTER_CENTER);
-		text.get()->setText(bkpp.getStreamId(streamCount));
-		textGeode->setName(bkpp.getStreamId(streamCount));
+		//osg::Geode* textGeode = new osg::Geode();
+		//osg::ref_ptr<osgText::Text> text = new  osgText::Text;
+		//textGeode->addDrawable(text.get());
+		//text.get()->setColor(osg::Vec4(1.0, 1.0, 0.0, 1.0));
+		//text.get()->setCharacterSize(6.0);
+		//text.get()->setAlignment(osgText::Text::CENTER_CENTER);
+		//text.get()->setText(bkpp.getStreamId(streamCount));
+		//textGeode->setName(bkpp.getStreamId(streamCount));
 
 		osg::AutoTransform* at = new osg::AutoTransform;
 		at->setPosition(osg::Vec3(bkpp.getStreamXCoord(streamCount, 0)*30.0, bkpp.getStreamYCoord(streamCount, 0)*30.0, 3.0f));
 		at->setAutoRotateMode(osg::AutoTransform::ROTATE_TO_SCREEN);
-		at->addChild(textGeode);
+		//at->addChild(textGeode);
 		loadedModels.get()->addChild(at);
 
 		streamCount++;
