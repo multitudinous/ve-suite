@@ -236,24 +236,24 @@ if not SConsAddons.Util.hasHelpFlag():
    aprVersion = '0.9'
    aprCommand = 'apr'
    apuCommand = 'apr-util'
-   apuLib = 'aprutil'
+   #apuLib = 'aprutil'
    if baseEnv.has_key('AprVersion'):
       aprVersion = baseEnv[ 'AprVersion' ]
       if baseEnv[ 'AprVersion' ] >= "1.0":
          aprCommand = 'apr-1'
          apuCommand = 'apr-util-1'
-         apuLib = 'aprutil-1'
+         #apuLib = 'aprutil-1'
 
    fgpApr = sca_util.FlagPollParser( aprCommand )
-   if not fgpApr.validate( baseEnv, "apr.h", aprCommand, aprVersion ):
+   if not fgpApr.validate( baseEnv, "apr.h", aprVersion ):
       Exit(1)
 
    fgpApu = sca_util.FlagPollParser( apuCommand )
-   if not fgpApu.validate( baseEnv, "apu.h", apuLib, aprVersion ):
+   if not fgpApu.validate( baseEnv, "apu.h", aprVersion ):
       Exit(1)
 
    fgpBullet = sca_util.FlagPollParser('bullet')
-   if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", "bulletdynamics", '0.1' ):
+   if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", '0.1' ):
       Exit(1)
 
    fgpTAO = sca_util.FlagPollParser('TAO')
@@ -261,7 +261,7 @@ if not SConsAddons.Util.hasHelpFlag():
       Exit(1)
 
    fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
-   if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", "vrj", '2.0' ):
+   if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", '2.0' ):
       Exit(1)
 
    # Try to save the options if possible
