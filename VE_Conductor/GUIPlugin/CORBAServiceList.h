@@ -38,11 +38,11 @@ CORBAServiceList API
 /*!\class VE_Conductor::CORBAServiceList
 * 
 */
-#include <vpr/Util/Singleton.h>
 #include <orbsvcs/CosNamingC.h>
 #include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/GUIPlugin/UI_i.h"
+#include <vpr/Util/Singleton.h>
 
 #include <vector>
 #include <string>
