@@ -257,7 +257,7 @@ if not SConsAddons.Util.hasHelpFlag():
       Exit(1)
 
    fgpTAO = sca_util.FlagPollParser('TAO')
-   if not fgpTAO.validate( baseEnv, "ace/ACE.h", "TAO", '1.5' ):
+   if not fgpTAO.validate( baseEnv, "ace/ACE.h", '1.5' ):
       Exit(1)
 
    fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
