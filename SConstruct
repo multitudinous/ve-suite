@@ -18,7 +18,7 @@ except:
 # LAST.
 local_fp_dir = pj(os.getcwd(), 'Tools', 'flagpoll') 
 os.environ['PATH'] += '%s%s' % (os.path.pathsep, local_fp_dir)
-sys.path.append(local_fp_dir)
+sys.path.insert(0,local_fp_dir)
 
 # Set FLAGPOLL_PATH to the local flagpoll if necessary.
 if not os.environ.has_key('FLAGPOLL_PATH'):
