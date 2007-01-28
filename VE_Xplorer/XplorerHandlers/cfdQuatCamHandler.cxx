@@ -108,7 +108,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( /*VE_SceneGraph::cfdDCS* worldDCS,
    //CreateObjects();
    quatCamDirName = "./";
 
-   quatCamFileName = ".stored_viewpts_flythroughs.vel";
+   quatCamFileName = "stored_viewpts_flythroughs.vel";
    
    _eventHandlers[std::string("QC_LOAD_STORED_POINTS")] = new VE_EVENTS::QuatCamLoadFileEventHandler();
    _eventHandlers[std::string("QC_CLEAR_QUAT_DATA")] = new VE_EVENTS::QuatCamClearDataEventHandler();
@@ -152,7 +152,7 @@ void cfdQuatCamHandler::WriteToFile(std::string fileName)
 	   return;
    }
 
-      boost::filesystem::path dir_path( quatCamDirName );
+      boost::filesystem::path dir_path( quatCamDirName,boost::filesystem::no_check );
       try
       {
          ( boost::filesystem::is_directory( dir_path ) );
@@ -233,7 +233,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
       return;
    }
    quatCamDirName = fileName;
-   boost::filesystem::path dir_path( quatCamDirName );
+   boost::filesystem::path dir_path( quatCamDirName,boost::filesystem::no_check  );
    try
    {
       ( boost::filesystem::is_directory( dir_path ) );

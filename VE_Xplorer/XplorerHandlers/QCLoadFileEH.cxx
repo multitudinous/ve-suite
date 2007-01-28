@@ -72,17 +72,18 @@ void QuatCamLoadFileEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase*
 /////////////////////////////////////////////////////////////////////////////////////   
 void QuatCamLoadFileEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
+   std::string fileName;
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
       VE_XML::DataValuePair* velFile = command->GetDataValuePair("View Locations file");      
-      std::string fileName;
       velFile->GetData(fileName);
       VE_Xplorer::cfdQuatCamHandler::instance()->LoadFromFile(fileName);
    }
    catch(...)
    {
       std::cout<<"Error!!"<<std::endl;
-      std::cout<<"QuatCamLoadFileEventHandler::_operateOnNode()"<<std::endl;
+	  std::cout<<"QuatCamLoadFileEventHandler"<<std::endl;
+	  std::cout<<"Couldn't load viewpoints file: "<<fileName<<std::endl;
    }
 }
