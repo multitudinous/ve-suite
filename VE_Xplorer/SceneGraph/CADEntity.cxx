@@ -6,11 +6,14 @@
 #include "VE_Xplorer/SceneGraph/ModelOccluder.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#if VE_PHYSICS
 
 #ifdef _PERFORMER
 #include <Performer/pr/pfFog.h>
 #elif _OSG
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+//#include <btBulletDynamicsCommon.h>
+#include <LinearMath/btVector3.h>
 
 #include <osg/Fog>
 #include <osg/Node>
@@ -241,4 +244,4 @@ void CADEntity::Update()
    //this->_node->SetColorOfGeometry( this->_node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+#endif

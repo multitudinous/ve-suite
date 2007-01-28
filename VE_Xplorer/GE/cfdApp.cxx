@@ -34,7 +34,7 @@
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-   #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 #endif
 #endif
 
@@ -72,32 +72,32 @@
 
 // Scene graph dependant headers
 #ifdef _PERFORMER
-   #include <Performer/pf.h>
-   #include <Performer/pf/pfGroup.h>
-   #include <Performer/pfdb/pfpfb.h>
-   #include "VE_Xplorer/cfdNotify.h"
+#include <Performer/pf.h>
+#include <Performer/pf/pfGroup.h>
+#include <Performer/pfdb/pfpfb.h>
+#include "VE_Xplorer/cfdNotify.h"
 #elif _OSG
-   #include <osg/Group>
-   #include <osg/FrameStamp>
-   #include <osg/MatrixTransform>
-   #include <osg/Matrix>
-   #include <osg/Referenced>
+#include <osg/Group>
+#include <osg/FrameStamp>
+#include <osg/MatrixTransform>
+#include <osg/Matrix>
+#include <osg/Referenced>
 
-   #include <osgDB/WriteFile>
+#include <osgDB/WriteFile>
 
-   #include <osgUtil/SceneView>
-   #include <osgUtil/UpdateVisitor>
+#include <osgUtil/SceneView>
+#include <osgUtil/UpdateVisitor>
 
-   #include <gmtl/Generate.h>
-   #include <gmtl/Coord.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Coord.h>
 #endif
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-   //#ifdef CFD_USE_SHADERS
-   #include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
-   using namespace VE_TextureBased;
-   //#endif
+//#ifdef CFD_USE_SHADERS
+#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
+using namespace VE_TextureBased;
+//#endif
 #endif
 #endif
 
@@ -157,23 +157,23 @@ void cfdApp::exit()
    cfdEnvironmentHandler::instance()->CleanUp();
    cfdSteadyStateVizHandler::instance()->CleanUp();
 
-   #ifdef _OSG
-      #ifdef VE_PATENTED
-         cfdTextureBasedVizHandler::instance()->CleanUp();
-      #endif
-   #endif
+#ifdef _OSG
+#ifdef VE_PATENTED
+   cfdTextureBasedVizHandler::instance()->CleanUp();
+#endif
+#endif
 
-   #ifdef _TAO
-      cfdExecutive::instance()->CleanUp();
-   #endif // _TAO
+#ifdef _TAO
+   cfdExecutive::instance()->CleanUp();
+#endif // _TAO
 
-   #ifdef _WEB_INTERFACE
-      runWebImageSaveThread=false;
-      //vpr::System::msleep( 1000 );  // one-second delay
-      delete writeWebImageFileThread;
-      if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
-         delete[] webImagePixelArray;   //delete the pixel array
-   #endif  //_WEB_INTERFACE
+#ifdef _WEB_INTERFACE
+   runWebImageSaveThread=false;
+   //vpr::System::msleep( 1000 );  // one-second delay
+   delete writeWebImageFileThread;
+   if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
+      delete[] webImagePixelArray;   //delete the pixel array
+#endif  //_WEB_INTERFACE
 }
 
 #ifdef _PERFORMER

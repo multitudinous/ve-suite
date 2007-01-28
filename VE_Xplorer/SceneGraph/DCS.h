@@ -55,6 +55,8 @@ class pfDCS;
 #include <vector>
 #include <string>
 
+class btTransform;
+
 namespace VE_SceneGraph
 {
 #ifdef _OSG
@@ -92,11 +94,19 @@ public:
    void InsertChild( int position, SceneNode* child );
    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
 
+   ///Get the Bullet transform for this node
+   btTransform* GetPhyiscsTransform( void );
+   
 protected:
    float translation[3];
    float scale[3];
    float rotation[3];
-
+   btTransform* bulletTransform;
+private:
+   ///Update the bullet matrix with the matrix from the osg node
+   /// the osg node gets set first and is then updated by the 
+   /// bullet physics simulator
+   void UpdatePhysicsTransform( void );   
 };
 }
 

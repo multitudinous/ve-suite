@@ -52,6 +52,8 @@
 #elif _OPENSG
 #endif
 
+#include <LinearMath/btTransform.h>
+
 //C/C++ Libraries
 #include <iostream>
 
@@ -83,30 +85,30 @@ DCS::DCS( void )
 
    SetScaleArray( temp );
 
-   SetVENodeType( VE_DCS );
+   bulletTransform = new btTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
 {
-   #ifdef _PERFORMER
-   #elif _OSG
-   #elif _OPENSG
-   #endif
+#ifdef _PERFORMER
+#elif _OSG
+#elif _OPENSG
+#endif
 
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
-   SetVENodeType( VE_DCS );
+
+   bulletTransform = new btTransform();
+   UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& input )
 {
-   #ifdef _PERFORMER
-   #elif _OSG 
-   #elif _OPENSG
-   #endif  
-
-   SetVENodeType( VE_DCS );
+#ifdef _PERFORMER
+#elif _OSG 
+#elif _OPENSG
+#endif  
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS& DCS::operator=( const DCS& input )
@@ -115,12 +117,10 @@ DCS& DCS::operator=( const DCS& input )
    {
       //parents input
       //cfdGroup::operator =( input );
-      #ifdef _PERFORMER
-      #elif _OSG
-      #elif _OPENSG
-      #endif
-
-      SetVENodeType( VE_DCS );
+#ifdef _PERFORMER
+#elif _OSG
+#elif _OPENSG
+#endif
    }
 
    return *this;
@@ -143,11 +143,13 @@ bool DCS::operator==( const DCS& node1 )
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS( void )
 {
-   //If neccesary
-   #ifdef _PERFORMER
-   #elif _OSG
-   #elif _OPENSG
-   #endif
+//If neccesary
+#ifdef _PERFORMER
+#elif _OSG
+#elif _OPENSG
+#endif
+
+   delete bulletTransform;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -207,19 +209,20 @@ float* DCS::GetScaleArray( void )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( std::vector<double> array )
 {
-   #ifdef _PERFORMER
+#ifdef _PERFORMER
    this->_dcs->setTrans( this->_translation[0], this->_translation[1], this->_translation[2] );
-   #elif _OSG           
+#elif _OSG           
    this->setPosition( osg::Vec3d( array[0], array[1], array[2]) );
-   #elif _OPENSG
-   #endif
+#elif _OPENSG
+#endif
+   UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( std::vector<double> array)
 {
-   #ifdef _PERFORMER
+#ifdef _PERFORMER
    this->_dcs->setRot(this->_rotation[0], this->_rotation[1], this->_rotation[2]);
-   #elif _OSG
+#elif _OSG
    osg::Vec3f pitch(1,0,0);
    osg::Vec3f roll(0,1,0);
    osg::Vec3f yaw(0,0,1);
@@ -231,18 +234,20 @@ void DCS::SetRotationArray( std::vector<double> array)
    osg::Quat quat;
    rotateMat.get( quat );
    this->setAttitude( quat );
-   #elif _OPENSG
-   #endif
+#elif _OPENSG
+#endif
+   UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetScaleArray( std::vector<double> array )
 {
-   #ifdef _PERFORMER
+#ifdef _PERFORMER
    this->_dcs->setScale( this->_scale[0], this->_scale[1], this->_scale[2] );
-   #elif _OSG
+#elif _OSG
    this->setScale( osg::Vec3d( array[0], array[1], array[2]) );
-   #elif _OPENSG
-   #endif
+#elif _OPENSG
+#endif
+   UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( float* trans )
@@ -368,6 +373,7 @@ void DCS::SetMat( Matrix44f& input )
    std::cerr << " ERROR: DCS::SetMat is NOT implemented " << std::endl;
    exit( 1 );
 #endif
+   UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationMatrix( Matrix44f& input )
@@ -426,6 +432,7 @@ void DCS::SetRotationMatrix( Matrix44f& input )
    std::cerr << " ERROR: DCS::SetRotationMatrix is NOT implemented " << std::endl;
    exit( 1 );
 #endif
+   UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 int DCS::RemoveChild( SceneNode* child )
@@ -507,4 +514,16 @@ int DCS::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 #elif _OSG
    return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
 #endif
+}
+////////////////////////////////////////////////////////////////////////////////
+btTransform* DCS::GetPhyiscsTransform( void )
+{
+   return bulletTransform;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::UpdatePhysicsTransform( void )
+{
+   // get matrix from osg node
+   // set it on bullet
+   //bulletTransform->setOpenGLMatrix( );
 }
