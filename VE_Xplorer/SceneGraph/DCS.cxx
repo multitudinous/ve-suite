@@ -523,7 +523,8 @@ btTransform* DCS::GetPhyiscsTransform( void )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::UpdatePhysicsTransform( void )
 {
-   // get matrix from osg node
-   // set it on bullet
-   //bulletTransform->setOpenGLMatrix( );
+   osg::Quat quat = this->getAttitude();
+   bulletTransform->setRotation( btQuaternion( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] ) );
+   osg::Vec3d trans = this->getPosition();
+   bulletTransform->setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
 }
