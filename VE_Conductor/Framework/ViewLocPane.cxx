@@ -115,11 +115,14 @@ ViewLocPane::ViewLocPane(  )
    
    flyThroughList.clear();
    
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
-   this->SetSize( dialogPosition );
+   //wxSize displaySize = ::wxGetDisplaySize();
+   //wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
+   //this->SetSize( dialogPosition );
 
    _buildPage();
+   GetSizer()->Fit(this);
+   GetSizer()->SetSizeHints(this);
+   Centre();
 
 }
 /////////////////////////////////
@@ -199,7 +202,7 @@ void ViewLocPane::_buildPage()
    
 
 //*******Setting up the widgets for making and naming a new view point
-   wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
   
    wxString choices[] = { _("Choose a View Point" )};
    //scrollWindow = new wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
@@ -211,62 +214,49 @@ void ViewLocPane::_buildPage()
 
    wxStaticBox* _allVPCtrlBox = new wxStaticBox(this, -1, _("View Point Controls"), wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
-	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, _("Name the new View Point"), wxDefaultPosition,wxDefaultSize,wxCAPTION);
+	//wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, _("Name the new View Point"), wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
    wxButton* loadViewLocationButton = new wxButton(this,VIEWLOC_LOAD_FILE, _("Load View Location File") );
 
    wxButton* _addnewviewptButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
    
-   wxTextCtrl* _newvwptNameCtrl = new wxTextCtrl(this, -1, wxT("Enter Name for new pt"));
+   //wxTextCtrl* _newvwptNameCtrl = new wxTextCtrl(this, -1, wxT("Enter Name for new pt"));
 
-   wxButton* _newvwptNameOKButton = new wxButton(this, VIEWLOC_ACCEPTNEWVPNAME_BUTTON, wxT("OK"));
+   //wxButton* _newvwptNameOKButton = new wxButton(this, VIEWLOC_ACCEPTNEWVPNAME_BUTTON, wxT("OK"));
 
-   wxButton* _newvwptNameCancelButton = new wxButton(this, VIEWLOC_CANCELNEWVPNAME_BUTTON, wxT("Cancel"));
+   //wxButton* _newvwptNameCancelButton = new wxButton(this, VIEWLOC_CANCELNEWVPNAME_BUTTON, wxT("Cancel"));
 
-   wxBoxSizer* _newVPNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
-   _newVPNameButtonsSizer->Add(_newvwptNameOKButton,1,wxALIGN_LEFT);
-   _newVPNameButtonsSizer->Add(_newvwptNameCancelButton,1,wxALIGN_RIGHT);
+   //wxBoxSizer* _newVPNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
+   //_newVPNameButtonsSizer->Add(_newvwptNameOKButton,1,wxALIGN_LEFT|wxEXPAND);
+   //_newVPNameButtonsSizer->Add(_newvwptNameCancelButton,1,wxALIGN_RIGHT|wxEXPAND);
 
-   wxStaticBoxSizer* _newVPNameCtrlGroup = new wxStaticBoxSizer(_newVPNameCtrlBox, wxVERTICAL);
-   _newVPNameCtrlGroup->Add(_newvwptNameCtrl,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _newVPNameCtrlGroup->Add(_newVPNameButtonsSizer,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   //wxStaticBoxSizer* _newVPNameCtrlGroup = new wxStaticBoxSizer(_newVPNameCtrlBox, wxVERTICAL);
+   //_newVPNameCtrlGroup->Add(_newvwptNameCtrl,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   //_newVPNameCtrlGroup->Add(_newVPNameButtonsSizer,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 //***************************************************************************
 
 //********Finishing off the view points controls
    wxStaticText* _removevwptLabel = new wxStaticText(this, -1, wxT("Delete View Points "));
-
    wxButton* _removeViewPointButton = new wxButton(this,REMOVE_VIEW_PT_BUTTON,wxT("Delete"));
-   /*_removevwptSel = new wxComboBox(this, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                 wxDefaultSize,1, 
-                                 choices, wxCB_READONLY);*/
-
    wxStaticText* _movetovwptLabel = new wxStaticText(this, -1, wxT("Move to a View Point "));
 
    _movetovwptSel = new wxComboBox(this, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                  wxDefaultSize,1, 
                                  choices, wxCB_READONLY);
 
-   wxStaticText* blank1 = new wxStaticText(this, -1, _("") ); //just a place holder
-   wxStaticText* blank2 = new wxStaticText(this, -1, _("") ); //just a place holder
-
-
    wxBoxSizer* _newVPControlsSizer = new wxBoxSizer(wxVERTICAL);
    _newVPControlsSizer->Add(loadViewLocationButton,1,wxALIGN_CENTER_HORIZONTAL);
    _newVPControlsSizer->Add(_addnewviewptButton,1,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_newVPNameCtrlGroup,3,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _newVPControlsSizer->Add(blank1,2,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_removevwptLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _newVPControlsSizer->Add(_removeViewPointButton,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _newVPControlsSizer->Add(blank2,2,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_movetovwptLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _newVPControlsSizer->Add(_movetovwptSel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   _newVPControlsSizer->Add(_removevwptLabel,2,wxALIGN_LEFT);
+   _newVPControlsSizer->Add(_removeViewPointButton,1,wxALIGN_CENTER_HORIZONTAL);
+   _newVPControlsSizer->Add(_movetovwptLabel,2,wxALIGN_LEFT);
+   _newVPControlsSizer->Add(_movetovwptSel,1,wxALIGN_CENTER_HORIZONTAL);
 
    wxStaticBoxSizer* _allVPCtrlsGroup = new wxStaticBoxSizer(_allVPCtrlBox, wxVERTICAL);
-   _allVPCtrlsGroup->Add(_newVPControlsSizer,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   _allVPCtrlsGroup->Add(_newVPControlsSizer,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
 //*******Throw in the Speed Control Slider
    wxStaticBox* _speedCtrlBox = new wxStaticBox(this, -1, _("Movement Speed Control"), wxDefaultPosition,wxDefaultSize,wxCAPTION); 
-
    wxStaticText* _speedctrlLabel = new wxStaticText(this, -1, wxT("Approximate Linear Speed in feet/second"));
 
    _speedCtrlSlider = new wxSlider(this, VIEWLOC_SPEED_CONTROL_SLIDER,10,0,100,
@@ -276,143 +266,40 @@ void ViewLocPane::_buildPage()
 
    wxStaticBoxSizer* _speedCtrlGroup = new wxStaticBoxSizer(_speedCtrlBox, wxVERTICAL);
    _speedCtrlGroup->Add(_speedctrlLabel,1,wxALIGN_CENTER_HORIZONTAL);
-   _speedCtrlGroup->Add(_speedCtrlSlider,2,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   _speedCtrlGroup->Add(_speedCtrlSlider,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
    wxBoxSizer* _allLeftSide = new wxBoxSizer(wxVERTICAL);
-   _allLeftSide->Add(_allVPCtrlsGroup,3,wxALIGN_CENTER_HORIZONTAL); 
-   _allLeftSide->Add(_speedCtrlGroup,1,wxALIGN_CENTER_HORIZONTAL);
+   _allLeftSide->Add(_allVPCtrlsGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND); 
+   _allLeftSide->Add(_speedCtrlGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
+   wxButton* _runactiveflyButton = new wxButton(this, VIEWLOC_RUNFLY_BUTTON, wxT("Start Active Flythrough"));
 
-//***************************************************************************
-
-
-
-//*******Building the Flythrough Controls
-/*this isn't working
-  wxStaticBox* _allFlyCtrlBox = new wxStaticBox(scrollWindow, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
-
-   //Start with the controls for setting up a new flythrough and naming it
-	wxStaticBox* _newFlyNameCtrlBox = new wxStaticBox(scrollWindow, -1, "Name the new Flythrough", wxDefaultPosition,wxDefaultSize,wxCAPTION);
-
-   wxButton* _addnewflythroughButton = new wxButton(scrollWindow, VIEWLOC_NEWFLY_BUTTON, wxT("Add New Flythrough"));
-   
-   wxTextCtrl* _newflythroughNameCtrl = new wxTextCtrl(scrollWindow, -1, wxT("Enter Name for new flythrough"));
-
-   wxButton* _newflythroughNameOKButton = new wxButton(scrollWindow, VIEWLOC_ACCEPTNEWFLYNAME_BUTTON, wxT("OK"));
-
-   wxButton* _newflythroughNameCancelButton = new wxButton(scrollWindow, VIEWLOC_CANCELNEWFLYNAME_BUTTON, wxT("Cancel"));
-
-   wxBoxSizer* _newFlyNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
-   _newFlyNameButtonsSizer->Add(_newflythroughNameOKButton,1,wxALIGN_LEFT);
-   _newFlyNameButtonsSizer->Add(_newflythroughNameCancelButton,1,wxALIGN_RIGHT);
-
-   wxStaticBoxSizer* _newFlyNameCtrlGroup = new wxStaticBoxSizer(_newFlyNameCtrlBox, wxVERTICAL);
-   _newFlyNameCtrlGroup->Add(_newflythroughNameCtrl,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _newFlyNameCtrlGroup->Add(_newFlyNameButtonsSizer,0,wxALIGN_CENTER_HORIZONTAL);
-
-   wxBoxSizer* _newFlySizer = new wxBoxSizer(wxVERTICAL);
-   _newFlySizer->Add(_addnewflythroughButton,1,wxALIGN_CENTER_HORIZONTAL);
-   _newFlySizer->Add(_newFlyNameCtrlGroup,2,wxALIGN_CENTER_HORIZONTAL);
-
-
-   //**********************************************
-
-   //The rest of the flythrough controls
-   /*wxStaticText* _activeflyLabel = new wxStaticText(scrollWindow, -1, wxT("Active Flythrough Selection"));
-
-   _activeflySel = new wxComboBox(scrollWindow, VIEWLOC_ACTIVEFLYSEL_COMBOBOX, wxT("Select Active Flythrough"),wxDefaultPosition, 
-                                  wxDefaultSize, 1, 
-                                  choices, wxCB_READONLY);
-
-   wxStaticText* _addvptoflyLabel = new wxStaticText(scrollWindow, -1, wxT("Add Viewpts at the end of Flythrough"));
-
-   _addvptoflySel = new wxComboBox(scrollWindow, VIEWLOC_ADDVPTOFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                   wxDefaultSize, 1, 
-                                   choices, wxCB_READONLY);
-
-   wxStaticText* _insertvpinflyLabel = new wxStaticText(scrollWindow, -1, wxT("Insert Viewpts within Flythrough"));
-
-   _insertvpinflySel = new wxComboBox(scrollWindow, VIEWLOC_INSERTVPINFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                      wxDefaultSize, 1, 
-                                      choices, wxCB_READONLY);
-
-   wxStaticText* _removevpfromflyLabel = new wxStaticText(scrollWindow, -1, wxT("Remove Viewpts from Flythrough"));
-
-   _removevpfromflySel = new wxComboBox(scrollWindow, VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                        wxDefaultSize, 1,
-                                        choices, wxCB_READONLY);
-
-   wxStaticText* _deleteflyLabel = new wxStaticText(scrollWindow, -1, wxT("Delete Entire Flythrough"));
-
-   _deleteflySel = new wxComboBox(scrollWindow, VIEWLOC_DELETEFLYSEL_COMBOBOX, wxT("Select a Flythrough"),wxDefaultPosition, 
-                                        wxDefaultSize, 1, 
-                                        choices, wxCB_READONLY);
-
-
-   _flybuilderListBox = new wxListBox(scrollWindow, VIEWLOC_FLYBUILDER_LISTBOX, wxDefaultPosition, wxDefaultSize,
-                                      1, choices,  
-                                       wxLB_HSCROLL|wxLB_NEEDED_SB, wxDefaultValidator, wxT("Active Flythrough Order"));    
-
-   wxStaticText* blank3 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank4 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank5 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank6 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-   wxStaticText* blank7 = new wxStaticText(scrollWindow, -1, ""); //just a place holder
-
-   wxBoxSizer* _flyModCtrlsSizer = new wxBoxSizer(wxVERTICAL);
-   _flyModCtrlsSizer->Add(_activeflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_activeflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(_flybuilderListBox,7,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank3,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_addvptoflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_addvptoflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank4,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_insertvpinflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_insertvpinflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank5,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_removevpfromflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_removevpfromflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank6,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_deleteflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_deleteflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank7,1,wxALIGN_LEFT|wxEXPAND);
-
-
-   wxButton* _runactiveflyButton = new wxButton(scrollWindow, VIEWLOC_RUNFLY_BUTTON, wxT("Start Active Flythrough"));
-
-   wxButton* _stopactiveflyButton = new wxButton(scrollWindow, VIEWLOC_STOPFLY_BUTTON, wxT("Stop Flythrough"));
+   wxButton* _stopactiveflyButton = new wxButton(this, VIEWLOC_STOPFLY_BUTTON, wxT("Stop Flythrough"));
 
    wxBoxSizer* _runStopFlyButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
    _runStopFlyButtonsSizer->Add(_runactiveflyButton,1,wxALIGN_LEFT);
    _runStopFlyButtonsSizer->Add(_stopactiveflyButton,1,wxALIGN_RIGHT);
 
-   wxBoxSizer* _allFlythroughCtrls = new wxBoxSizer(wxVERTICAL);
-   _allFlythroughCtrls->Add(_newFlySizer,1,wxALIGN_CENTER_HORIZONTAL);
-   _allFlythroughCtrls->Add(_flyModCtrlsSizer,4,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   wxBoxSizer* _allFlythroughCtrls = new wxBoxSizer(wxHORIZONTAL);
    _allFlythroughCtrls->Add(_runStopFlyButtonsSizer,1,wxALIGN_CENTER_HORIZONTAL);
 
-   wxStaticBoxSizer* _allFlyCtrlsGroup = new wxStaticBoxSizer(_allFlyCtrlBox, wxVERTICAL);
-   _allFlyCtrlsGroup->Add(_allFlythroughCtrls,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-
-*/
+   wxStaticBox* _allFlyCtrlBox = new wxStaticBox(this, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBoxSizer* _allFlyCtrlsGroup = new wxStaticBoxSizer(_allFlyCtrlBox, wxHORIZONTAL);
+   _allFlyCtrlsGroup->Add(_allFlythroughCtrls,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   _allLeftSide->Add(_allFlyCtrlsGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 //********Now Put the entire page together
    //the main group
    wxBoxSizer* viewlocPanelGroup = new wxBoxSizer(wxHORIZONTAL);
 
    //add the rows to the main panel
-   viewlocPanelGroup->Add(_allLeftSide,1,wxALIGN_CENTER_HORIZONTAL); 
-   //viewlocPanelGroup->Add(_allFlyCtrlsGroup,1,wxALIGN_CENTER_HORIZONTAL); 
-
-   //scrollWindow->SetSizer( viewlocPanelGroup ); 
-
-   //mainSizer->Add( scrollWindow,1,wxALIGN_LEFT|wxEXPAND);
+   viewlocPanelGroup->Add(_allLeftSide,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND); 
+   mainSizer->Add( viewlocPanelGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
  
    SetAutoLayout(true);
-   //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
-   SetSizer( viewlocPanelGroup );
+   SetSizer(mainSizer);
 
    //Complete Hack needed to get the page to refresh properly
-	// Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
+   // Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
    static bool test = false;
    int flag = 0;
    if ( test )
@@ -435,10 +322,10 @@ void ViewLocPane::_buildPage()
 	_resetSelections();
    //_activeflySel->SetSelection( 0 );
 
-   _newVPNameCtrlBox->Enable( false );
-   _newvwptNameCtrl->Enable( false );
-   _newvwptNameOKButton->Enable( false );
-   _newvwptNameCancelButton->Enable( false );
+//   _newVPNameCtrlBox->Enable( false );
+   //_newvwptNameCtrl->Enable( false );
+   //_newvwptNameOKButton->Enable( false );
+   //_newvwptNameCancelButton->Enable( false );
 
 /*   _newFlyNameCtrlBox->Enable( false );
    _newflythroughNameCtrl->Enable( false );
@@ -843,6 +730,10 @@ void ViewLocPane::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
 	      }
       }
    }*/
+   dataValueName = "RUN_ACTIVE_FLYTHROUGH";
+   commandInputs.push_back( 0 );
+   commandInputs.push_back( 0 );
+   SendCommandsToXplorer();
 }
 /////////////////////////////////////////////////////////////
 void ViewLocPane::_onStopFly(wxCommandEvent& WXUNUSED(event))
