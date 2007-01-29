@@ -333,3 +333,16 @@ std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
    //rv=true;
    return result; 
 }
+////////////////////////////////////////////////////////////////////////////////
+/*void DOMDocumentManager::ProcessIncludes( void )
+{
+   //Process the include tags from documents
+   //Does not matter whatorder includes are processed in
+   // look at cppdom for example of how to process include
+   // what have others done with xerces
+   // the read and write of include tags will be handled by the 
+   //individual xmlobjects like veNetwork, veModel
+   // for a document this manager may handle this for external includes
+   //The xml readerwirter would handle the write for the venetwork
+   //to process models seperately
+}*/
