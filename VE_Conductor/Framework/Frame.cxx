@@ -1115,12 +1115,13 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 	   commandWriter.WriteXMLDocument( nodes, status, "Command" );
 	   //Get results
 	   std::string nw_str = serviceList->Query( status );
+
 	   //Log(nw_str.c_str());
 	   // If there is nothing on the CE
 	   if ( !nw_str.empty() )
 	   {
 		   if(network->modules.empty())
-		   {
+		  { 
 			   network->Load( nw_str );
 			   Log("Simulation Opened.\n");
 		   }
