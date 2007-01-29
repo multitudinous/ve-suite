@@ -283,7 +283,7 @@ void ViewLocPane::_buildPage()
    wxBoxSizer* _allFlythroughCtrls = new wxBoxSizer(wxHORIZONTAL);
    _allFlythroughCtrls->Add(_runStopFlyButtonsSizer,1,wxALIGN_CENTER_HORIZONTAL);
 
-   wxStaticBox* _allFlyCtrlBox = new wxStaticBox(this, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBox* _allFlyCtrlBox = new wxStaticBox(this, -1, _("Flythrough Controls"), wxDefaultPosition,wxDefaultSize,wxCAPTION); 
    wxStaticBoxSizer* _allFlyCtrlsGroup = new wxStaticBoxSizer(_allFlyCtrlBox, wxHORIZONTAL);
    _allFlyCtrlsGroup->Add(_allFlythroughCtrls,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    _allLeftSide->Add(_allFlyCtrlsGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
