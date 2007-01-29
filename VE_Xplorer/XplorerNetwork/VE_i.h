@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_I_H_
 #define VE_I_H_
+
 /*!\file Body_UI_i.h
 Body_UI_i API
 */
