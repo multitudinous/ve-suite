@@ -54,7 +54,7 @@ SRCS=\
     
 			
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
-#EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
+#EXTRA_INCLUDES+= -I$(VJ_BASE_DIR)/include
 #EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
 EXTRA_LDFLAGS+= -g
 EXTRA_CXXFLAGS+= -g
@@ -71,7 +71,7 @@ DSO_PLUGIN_DEPS+= -lVE_OpenModuleLib
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
-
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vpr.mk
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
