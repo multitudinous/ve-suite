@@ -494,7 +494,7 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
 {
-   if( _activeVectorName.empty() )
+   if( _activeVectorName.empty() || _activeVectorName == "None" )
    {
       wxMessageBox( _("Select a vector"),_("Dataset Failure"), 
                      wxOK | wxICON_INFORMATION );
@@ -747,6 +747,7 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
    std::cout<<"udpateAvailableSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( dataType );
+   _none = new wxString("None",wxConvUTF8);
    if(currentSolution != _availableSolutions.end())
    {
       currentSolution->second.Clear();
@@ -754,7 +755,9 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
       {
          currentSolution->second.Add(wxString(names[i], wxConvUTF8));
       }
+//      _none = "None";
       _updateComboBoxNames("MESH_VECTORS",currentSolution->second);
+      _vectorSelection->InsertItems(1,_none,0); 
    }
    else
    {

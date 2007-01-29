@@ -229,6 +229,7 @@ public:
    wxSpinCtrlDbl* _maxSpinner;
    wxSlider* _minSlider;
    wxSlider* _maxSlider;
+   wxString* _none;
 
 
 protected:
