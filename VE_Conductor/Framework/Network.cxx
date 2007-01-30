@@ -2439,8 +2439,11 @@ void Network::CreateNetwork( std::string xmlNetwork )
       REI_Plugin* tempPlugin = 0;
       if ( cls == 0 )
       {
-         //Load the generic plugin for conductor
-         tempPlugin = new DefaultPlugin();
+		  //Load the generic plugin for conductor
+		  DefaultPlugin* iconSetter = 0;
+		  iconSetter = new DefaultPlugin();
+		  //iconSetter->SetImageIcon("AspenPlus2DIcons/Columns/columns_batchfrac_block.jpg");
+		  tempPlugin = iconSetter;
       }
       else
       {
