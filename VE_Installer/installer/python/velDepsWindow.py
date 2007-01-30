@@ -140,14 +140,19 @@ class DepsWindow(wx.Dialog):
 
     def AddNew(self, event):
         """User chooses a new dependency to add to the list."""
+        locationList = self.state.GetBase("Dependencies").GetNames()
+        if len(locationList) > 0:
+            defaultDirectory = locationList[ len(locationList) - 1 ]
+        else:
+            defaultDirectory = VELAUNCHER_DIR
         ##User chooses the directory.
         dlg = wx.DirDialog(None,
                            "Choose the dependency's directory:",
+                           defaultDirectory,
                            style=wx.DD_DEFAULT_STYLE)
         if dlg.ShowModal() == wx.ID_OK:
             location = dlg.GetPath()
             dlg.Destroy()
-            locationList = self.state.GetBase("Dependencies").GetNames()
             ##Return if this location's already listed.
             if location in locationList:
                 dlg = wx.MessageDialog(self,
