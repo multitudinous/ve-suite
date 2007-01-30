@@ -124,6 +124,7 @@ float CADEntity::getOpacity()
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::UpdateMatTransform()
 {
+   /*
    osg::Matrix matrix;
    osg::Quat quat;
 
@@ -141,6 +142,7 @@ void CADEntity::UpdateMatTransform()
 	}
 
    matTrans->setMatrix(matrix);
+   */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetFILEProperties( int color, int trans, float* stlColor )
