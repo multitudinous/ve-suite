@@ -57,6 +57,9 @@ public:
 
    virtual wxString GetDesc();
    //This returns the description of the module, This should be a short description
+   
+   void SetImageIcon(std::string);
+   //allows user to set the image to be displayed on the icon
 
 protected:
    wxBitmap* my_icon;
