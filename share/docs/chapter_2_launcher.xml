@@ -13,37 +13,71 @@
     one you need can still take some work. Here, we explain how to use the
     Launcher and provide an example of setting it up.</para>
   </section>
+  
+  <section id="starting_launcher">
+    <title>Starting the Launcher</title>
+    
+    <para>On the Windows install, VE-Launcher is an executable. Double-click on it
+    to start.</para>
+    
+    <para>On the Unix-based install, VE-Launcher is a python program. Go into
+    VE-Suite's /bin directory and run velauncher.py. From the command line, you can
+    enter the /bin directory and type "python velauncher.py" to run it.</para>
 
-  <section id="launcher_basics">
-    <title>The Basics</title>
+    <para>On the development versions for both Windows &amp; Unix-based, VE-Launcher is
+    a python program, just like on the Unix-based install. Run it in the same way as
+    on the Unix-based install.</para>
+  </section>
 
-    <para>VE-Launcher is started by double-clicking VE-Suite's desktop icon,
-    double-clicking the velauncher program in VE-Suite's folder, or typing
-    <code>python velauncher.py</code> into a Unix terminal. The first time you
-    run VE-Launcher, you will be asked to choose VE-Suite's Dependencies
-    folder. On Windows, this folder is named
-    VE_Suite.x.x.x_Dependencies.</para>
-
+  <section id="setup_launcher">
+    <title>Setting the Launcher's Dependencies</title>
+    
+    <para>Before you can run VE-Suite, you have to show VE-Launcher where the
+    dependencies it needs are. The method for this varies depending on whether
+    you're running VE-Suite on Windows or a Unix-based system, and is bypassed completely
+    in Dev mode.</para>
+    
+    <para><emphasis role="bold">Windows:</emphasis> VE-Launcher needs to find the
+    VE-Suite Dependencies directory you installed along with VE-Suite. The first time
+    you start it, the Launcher will ask you to choose the Dependencies directory for it.
+    This should be named VE_Suite.#.#_Dependencies. If you need to change your
+    Dependencies directory later, you can do so from the Options->Choose Dependencies
+    menu in VE-Launcher.</para>
+    
     <mediaobject>
       <imageobject>
         <imagedata fileref="veimages/launcherbasics1.jpg" />
       </imageobject>
     </mediaobject>
 
-    <para>On Unix, the Dependencies is actually a list of folders containing
-    VE-Suite's dependencies. Add any dependencies you need to the list and
-    choose VR-Juggler's folder. (Since VE-Suite needs special settings for
-    VR-Juggler, Juggler needs to be chosen apart from the other
-    dependencies.)</para>
+    <para><emphasis role="bold">Unix:</emphasis> VE-Launcher supports dependencies spread
+    across multiple directories. The first time you start it, the Launcher will ask you
+    to choose its Dependencies' directories.</para>
+    
+    <para>You need to specifically set the VR-Juggler directory; your other dependencies
+    should be added to the dependencies list. If you need to change your dependencies
+    later, you can do so from the Options->Choose Dependencies menu in VE-Launcher.</para>
 
     <mediaobject>
       <imageobject>
         <imagedata fileref="veimages/launcherbasics2.jpg" />
       </imageobject>
     </mediaobject>
+    
+    <para><emphasis role="bold">Dev Mode:</emphasis> VE-Launcher doesn't require
+    dependencies in Dev mode; it assumes you've already set the necessary environmental
+    variables.</para>
+    
+    <para>Once you've selected the dependencies, you will be brought to
+    VE-Launcher's main window.</para>
+  </section>
+  
+  <section id="launcher_basics">
+    <title>The Basics</title>
 
-    <para>Once VE-Launcher confirms that you have chosen the dependencies
-    folder, you will be shown the main window.</para>
+    <para>VE-Launcher's main window provides the basic choices you need to
+    make before you run VE-Suite. Here is a breakdown of what you can do from
+    here:</para>
 
     <mediaobject>
       <imageobject>

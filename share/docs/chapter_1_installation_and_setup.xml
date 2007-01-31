@@ -20,20 +20,21 @@
 
   <para>Installation of VE-Suite is fairly straightforward. Visit the <ulink
   url="http://www.vesuite.org/download.php">Downloads</ulink> section and
-  locate your operating system. Two installers, which guide you through the
-  process of selecting various options, are provided for Windows. One
-  installer, vesuite.x.x.x.exe, contains the core VE-Suite binaries and .dll
-  files, while vesuite_deps.x.x.x.exe contains the binaries and .dll files of
-  the dependencies for the current release of VE-Suite.</para>
+  locate your operating system.</para>
+  
+  <para><emphasis role="bold">Windows:</emphasis> Two installers, which guide
+  you through the process of selecting various options, are provided for
+  Windows. One installer, vesuite#.#.#_####.exe, contains the core VE-Suite
+  binaries and .dll files. The dependencies installer, vesuite_deps#.#.#.exe,
+  contains the binaries and .dll files of VE-Suite's dependencies, arranged into
+  include, bin, lib, and share subdirectories.</para>  
 
-  <para>On UNIX/Linux, two tar.gz files are provided for the core VE-Suite
-  files and its dependencies. In either case, extracting the files creates two
-  directory structures:</para>
-
-  <para><code> VE-Suite.x.x.x/</code></para>
-
-  <para><code> VE_Suite.x.x.x_Dependencies/</code></para>
-
+  <para><emphasis role="bold">UNIX:</emphasis> A tar.gz file of the current
+  release of VE-Suite is provided. You can extract the VE-Suite.#.#.# directory
+  from it. Instead of one central Dependencies folder, we provide the
+  dependencies' RPM files. Be sure to install each dependency you need before
+  you run VE-Suite.</para>
+  
   <section>
     <title>Windows Installation</title>
 
@@ -67,24 +68,21 @@
       <listitem>
         <para>Using GNU tar:</para>
 
-        <para><code>gtar xvzf vesuite_x.x.x_RHEL_4.tar.gz </code></para>
+        <para><code>gtar xvzf vesuite_#.#.#_RHEL_4.tar.gz </code></para>
 
-        <para><code>gtar xvzf vesuite_depsx.x.x_RHEL_4.tar.gz</code></para>
       </listitem>
 
       <listitem>
         <para>Using gzip:</para>
 
-        <para><code>gunzip &lt; vesuite_x.x.x_RHEL_4.tar.gz | tar xvf
+        <para><code>gunzip &lt; vesuite_#.#.#_RHEL_4.tar.gz | tar xvf
         -</code></para>
 
-        <para><code>gunzip &lt; vesuite_depsx.x.x_RHEL_4.tar.gz | tar xvf
-        -</code></para>
       </listitem>
     </itemizedlist>
 
-    <para><emphasis role="bold">NOTE</emphasis>: These examples use
-    vesuite_x.x.x as a general placeholder for any version of VE-Suite. Be
+    <para><emphasis role="bold">NOTE:</emphasis> These examples use
+    vesuite_#.#.# as a general placeholder for any version of VE-Suite. Be
     sure to change the version number to the specific version you are
     installing.</para>
   </section>
@@ -105,7 +103,7 @@
     <para>The Dependencies directory is the only variable you need to set
     manually. The first time you start VE-Launcher, you will be asked to find
     the Dependencies directory. On Windows, it is the
-    VE_Suite.x.x.x_Dependencies folder.</para>
+    VE_Suite.#.#.#_Dependencies folder.</para>
 
     <mediaobject>
       <imageobject>

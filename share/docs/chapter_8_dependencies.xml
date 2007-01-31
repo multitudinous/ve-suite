@@ -89,6 +89,60 @@
   url="http://wxpython.org/">wxPython</ulink> 2.6.3.3 if you're running it in
   Python.</para>
 
+  <section id="development_dependencies_guidelines">
+    <title>Development Dependency Guidelines</title>
+    
+    <para>To avoid dependencies problems during development, we have provided
+    guidelines for using dependencies with VE-Suite. These are the guidelines
+    the main VE-Suite development group follows; we suggest you do so as
+    well.</para>
+    
+    <para><emphasis role="bold">Windows:</emphasis></para>
+    
+    <orderedlist>
+      <listitem>
+        <para>The developer must either download all the installers for a
+	particular windows IDE and OS, or build all the dependencies
+	for VE-Suite themselves.</para>
+      </listitem>
+
+      <listitem>
+        <para>The VE-Suite development team will maintain certain installers
+	for all dependencies so that the external developers will have easier
+	access to the current development tools.</para>
+      </listitem>
+
+      <listitem>
+        <para>The development libraries will be kept in the native directory
+	structure for a respective library. This ensures that a developer is
+	able to swap libraries as necessary for research purposes without
+	having to change the build system.</para>
+      </listitem>
+    </orderedlist>
+
+    <para><emphasis role="bold">Linux:</emphasis></para>
+
+    <orderedlist>
+      <listitem>
+        <para>The developer must either download all of the dependencies' rpms,
+	use their platform's respective package management system, or build all
+	of the dependencies for VE-Suite themselves.</para>
+      </listitem>
+
+      <listitem>
+        <para>The VE-Suite development team will maintain rpm files
+	for all dependencies so that the external developers will have easier
+	access to the current development tools.</para>
+      </listitem>
+
+      <listitem>
+        <para>On Linux platforms the dependency directory structure will be
+	assumed to be include, bin, lib, and share as is the cast for most
+	libraries when the install target is used on a build system.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+  
   <section id="building_dependencies_on_windows">
     <title>Building Dependencies on Windows</title>
 
