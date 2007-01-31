@@ -40,6 +40,8 @@ VjObs_i API
 *
 */
 #include "VE_Open/skel/VjObsS.h"
+//do this to remove compile warning on linux platforms
+#undef _REENTRANT
 #include <vpr/Sync/Mutex.h>
 
 #include <cluster/ClusterManager.h>

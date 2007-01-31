@@ -152,7 +152,7 @@ wxString DefaultPlugin::GetDesc()
 /////////////////////////////////////////////////////////////////////////////
 void DefaultPlugin::SetImageIcon(std::string path)
 {
-	wxImage my_img(wxT(path.c_str()), wxBITMAP_TYPE_JPEG);
+	wxImage my_img(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
 	//icon_w = (int)my_img.GetWidth()*0.30f;
 	//icon_h = (int)my_img.GetHeight()*0.30f;
 	icon_h = 40;

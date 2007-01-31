@@ -95,7 +95,7 @@ public:
    ///Note that this method only works for writing to disk no to memory
    ///\param xmlFile The base XML document to write to.
    ///\param nodes The XML node to write. 
-   void XMLReaderWriter::WriteMultipleXMLDocuments( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+   void WriteMultipleXMLDocuments( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
                                                     std::string& xmlData );
    ///Set the Active DOMDocumentManager
    void SetDOMDocumentManager(VE_XML::DOMDocumentManager* ddManager);

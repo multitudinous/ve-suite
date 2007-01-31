@@ -41,6 +41,8 @@ Body_UI_i API
 */
 #include "VE_Open/skel/moduleS.h"
 #include "VE_Installer/include/VEConfig.h"
+//do this to remove compile warning on linux platforms
+#undef _REENTRANT
 #include <vpr/Sync/Mutex.h>
 
 #include <string>

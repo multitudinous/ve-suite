@@ -149,13 +149,13 @@ public:
    ///Get info packets data
    size_t GetNumberOfInformationPackets( void );
    ///Get the geometry for the model.
-  VE_XML::VE_CAD::CADNode* GetGeometry( void );
+   VE_XML::VE_CAD::CADNode* GetGeometry( void );
    ///Remove the i'th information packet for a model.
    ///\param i The i'th packet you are after.
    void RemoveInformationPacket( unsigned int i );
    ///Add a geometry node and return it
    /// if there is already geometry then the function will return that pointer
-  VE_XML::VE_CAD::CADNode* Model::AddGeometry( void );
+   VE_XML::VE_CAD::CADNode* AddGeometry( void );
    ///Delete the geometry for this model
    void DeleteGeometry( void );
    ///Set the vendor name on the model
