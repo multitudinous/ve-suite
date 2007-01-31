@@ -2442,7 +2442,8 @@ void Network::CreateNetwork( std::string xmlNetwork )
 		  //Load the generic plugin for conductor
 		  DefaultPlugin* iconSetter = 0;
 		  iconSetter = new DefaultPlugin();
-		  //iconSetter->SetImageIcon("AspenPlus2DIcons/Columns/columns_batchfrac_block.jpg");
+		  if(!model->GetIconFilename().empty())
+			  iconSetter->SetImageIcon("2DIcons/"+model->GetIconFilename()+".jpg");
 		  tempPlugin = iconSetter;
       }
       else
