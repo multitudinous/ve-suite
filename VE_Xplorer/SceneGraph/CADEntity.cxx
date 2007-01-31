@@ -2,6 +2,7 @@
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Node.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 #include "VE_Xplorer/SceneGraph/ModelOccluder.h"
 
@@ -12,12 +13,13 @@
 #include <Performer/pr/pfFog.h>
 #elif _OSG
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-//#include <btBulletDynamicsCommon.h>
-#include <LinearMath/btVector3.h>
+#include <btBulletDynamicsCommon.h>
 
 #include <osg/Fog>
 #include <osg/Node>
 #include <osg/Group>
+#include <osg/Geode>
+#include <osg/Geometry>
 #include <osg/MatrixTransform>
 #include <osg/TriangleIndexFunctor>
 
@@ -74,6 +76,76 @@ CADEntity::~CADEntity()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CADEntity::Initialize( float op_val )
+{
+   this->op = op_val;
+   setOpac( op_val );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::InitPhysics()
+{
+	;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::CreateBBMesh()
+{
+	
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::CreateExactMesh()
+{
+	osg::ref_ptr<osg::Geode> geode=new osg::Geode;
+	geode->asGroup()->addChild(node.get());
+
+	osg::TriangleIndexFunctor<TriIndexFunc> TIF;
+	osg::ref_ptr<osg::Vec3Array> vertex_array=new osg::Vec3Array;
+
+	for(int i=0;i<(int)geode->getDrawableList().size();i++){
+		geode->getDrawable(i)->accept(TIF);
+		vertex_array=dynamic_cast<osg::Vec3Array*>(geode->getDrawable(i)->asGeometry()->getVertexArray());
+		//vertex_array->insert(
+	}
+
+	btTriangleMesh* triMesh=new btTriangleMesh;
+   btVector3 v1,v2,v3;
+
+   for(int i=0;i<(int)TIF.triangleIndex.size()/3;i++){
+      v1.setX(vertex_array->at(TIF.triangleIndex.at(i*3)).x());
+      v1.setY(vertex_array->at(TIF.triangleIndex.at(i*3)).y());
+      v1.setZ(vertex_array->at(TIF.triangleIndex.at(i*3)).z());
+
+      v2.setX(vertex_array->at(TIF.triangleIndex.at(i*3+1)).x());
+      v2.setY(vertex_array->at(TIF.triangleIndex.at(i*3+1)).y());
+      v2.setZ(vertex_array->at(TIF.triangleIndex.at(i*3+1)).z());
+
+      v3.setX(vertex_array->at(TIF.triangleIndex.at(i*3+2)).x());
+      v3.setY(vertex_array->at(TIF.triangleIndex.at(i*3+2)).y());
+      v3.setZ(vertex_array->at(TIF.triangleIndex.at(i*3+2)).z());
+
+      triMesh->addTriangle(v1,v2,v3);
+   }
+   
+	//Remove old btCollisionShape* if it exists
+	if(rigid_body->getCollisionShape()){
+		delete rigid_body->getCollisionShape();
+	}
+
+   btCollisionShape* trimesh_shape=new btBvhTriangleMeshShape(triMesh);
+
+	//Add new btCollisionShape*
+   //rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(0.0f,DCS->GetPhysicsTransform(),trimesh_shape);
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::CreateFileMesh()
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::CreateCustomMesh()
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Node* CADEntity::GetNode()
 {
    return this->node.get();
@@ -102,8 +174,8 @@ std::string CADEntity::GetModuleName()
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::GetColorArray()
 {
-   vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " 
-                      <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  
+   vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[0]  << " : " 
+                      <<  this->_rgba[1]  <<  " : " << this->_rgba[2]  
                       << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,9 +194,9 @@ float CADEntity::getOpacity()
    return this->op;
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void CADEntity::UpdateMatTransform()
 {
-   /*
    osg::Matrix matrix;
    osg::Quat quat;
 
@@ -142,24 +214,17 @@ void CADEntity::UpdateMatTransform()
 	}
 
    matTrans->setMatrix(matrix);
-   */
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetFILEProperties( int color, int trans, float* stlColor )
 {
    this->color = color;
    this->_colorFlag = color;
    this->transparent = trans;
-   this->stlColor[ 0 ] = stlColor[ 0 ];
-   this->stlColor[ 1 ] = stlColor[ 1 ];
-   this->stlColor[ 2 ] = stlColor[ 2 ];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::Initialize( float op_val )
-{
-   this->op = op_val;
-   setOpac( op_val );
+   this->stlColor[0] = stlColor[0];
+   this->stlColor[1] = stlColor[1];
+   this->stlColor[2] = stlColor[2];
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::setOpac(float op_val)

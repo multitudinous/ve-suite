@@ -524,7 +524,7 @@ int DCS::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-btTransform* DCS::GetPhyiscsTransform( void )
+btTransform* DCS::GetPhysicsTransform( void )
 {
    return bulletTransform;
 }

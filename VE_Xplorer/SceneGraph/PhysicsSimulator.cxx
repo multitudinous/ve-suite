@@ -10,7 +10,10 @@
 
 #include "PhysicsSimulator.h"
 
-#if VE_PHYSICS
+//PhysicsSimulator only supports OpenSceneGraph
+#ifdef _OSG
+
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "btBulletDynamicsCommon.h"
 
@@ -18,6 +21,7 @@
 //#include "../Extras/AlternativeCollisionAlgorithms/BoxBoxCollisionAlgorithm.h"
 //#include "BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h"
 
+#include <osg/Geode>
 #include <osg/ShapeDrawable>
 
 using namespace VE_SceneGraph;
@@ -32,7 +36,7 @@ PhysicsSimulator::PhysicsSimulator()
 physics(true),
 shoot_speed(40.0f)
 {
-   //head.init("VJHead");
+   head.init("VJHead");
 
    this->InitPhysics();
 }
@@ -203,6 +207,27 @@ void PhysicsSimulator::ShootBox(const btVector3& destination)
 		btCollisionShape* box_shape=new btBoxShape(btVector3(1.0f,1.0f,1.0f));
 		btRigidBody* body=this->CreateRigidBody(mass,transform,box_shape);
 
+      //Create osg::Box to visually represent rigid body
+      osg::ref_ptr<osg::Geode> geode=new osg::Geode;
+
+      osg::ref_ptr<osg::Box> box=new osg::Box(osg::Vec3(0.0f,0.0f,0.0f),1.0f);
+      osg::ref_ptr<osg::TessellationHints> hints=new osg::TessellationHints;
+      osg::ref_ptr<osg::ShapeDrawable> sd=new osg::ShapeDrawable(box.get(),hints.get());
+
+      hints->setDetailRatio(1.0f);
+
+      sd->setColor(osg::Vec4(1.0f,0.0f,0.0f,0.4f));
+
+      osg::ref_ptr<osg::StateSet> stateset=new osg::StateSet;
+	   stateset->setMode(GL_BLEND,osg::StateAttribute::ON);
+	   stateset->setRenderingHint(osg::StateSet::OPAQUE_BIN);
+	   sd->setStateSet(stateset.get());
+
+      geode->addDrawable(sd.get());
+
+      //capsule_sequence->addChild(geode.get())
+
+
 		btVector3 lin_vel(destination[0]-position[0],destination[1]-position[1],destination[2]-position[2]);
 		lin_vel.normalize();
 		lin_vel*=shoot_speed;
@@ -258,4 +283,5 @@ btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif //VE_PHYSICS
+#endif //_OSG
+

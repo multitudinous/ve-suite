@@ -19,6 +19,7 @@ namespace osg
 #endif
 
 class btRigidBody;
+class btCollisionShape;
 
 namespace VE_SceneGraph
 {
@@ -29,6 +30,15 @@ public:
    ~CADEntity();
 
    void Initialize(float);
+	void InitPhysics();
+
+	//Different methods to create a physics mesh to represent the geometry
+	//******************************************//
+	void CreateBBMesh();				//Creates a mesh using the bounding box of the geometry, this occurs by default
+	void CreateExactMesh();			//Creates an exact mesh of the geometry
+	void CreateFileMesh();			//Creates a mesh from a different file than the one used for geometry
+	void CreateCustomMesh();		//Creates a user defined mesh; must be hard coded in plugin
+	//******************************************//
 
    VE_SceneGraph::DCS* GetDCS();
    VE_SceneGraph::Node* GetNode();
@@ -41,8 +51,6 @@ public:
    int GetColorFlag();
    float getOpacity();
 
-   void UpdateMatTransform();
-
    void SetFILEProperties(int,int,float*);
    void setOpac(float op_val);
    void setFog(double dist);
@@ -53,8 +61,8 @@ public:
    void SetColorFlag(int);
    void SetColorOfGeometry(VE_SceneGraph::Node*);
    void SetOpacity(float);
-   
-   void Update();
+
+	void Update();
 
    //void pfTravNodeMaterial(pfNode*, pfMaterial*, int);
    

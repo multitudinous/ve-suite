@@ -65,9 +65,9 @@ namespace VE_SceneGraph
 namespace VE_SceneGraph
 {
 #ifdef _OSG
-class VE_SCENEGRAPH_EXPORTS DCS: public osg::PositionAttitudeTransform, public SceneNode
+class VE_SCENEGRAPH_EXPORTS DCS : public osg::PositionAttitudeTransform, public SceneNode
 #elif _PERFORMER
-class VE_SCENEGRAPH_EXPORTS DCS: public pfDCS, SceneNode
+class VE_SCENEGRAPH_EXPORTS DCS : public pfDCS, SceneNode
 #endif
 {
 public:
@@ -126,7 +126,7 @@ public:
    ///Generic replace child function
    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
    ///Get the Bullet transform for this node
-   btTransform* GetPhyiscsTransform( void );
+   btTransform* GetPhysicsTransform( void );
    
 protected:
    float translation[3];///<The translation array
