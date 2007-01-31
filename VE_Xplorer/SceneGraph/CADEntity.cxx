@@ -103,7 +103,7 @@ void CADEntity::CreateExactMesh()
 	for(int i=0;i<(int)geode->getDrawableList().size();i++){
 		geode->getDrawable(i)->accept(TIF);
 		vertex_array=dynamic_cast<osg::Vec3Array*>(geode->getDrawable(i)->asGeometry()->getVertexArray());
-		//vertex_array->insert(
+		//vertex_array->
 	}
 
 	btTriangleMesh* triMesh=new btTriangleMesh;

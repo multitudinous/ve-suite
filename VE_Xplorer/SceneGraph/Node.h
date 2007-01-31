@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_NODE_H
-#define VE_NODE_H
+#ifndef NODE_H
+#define NODE_H
 /*!\file Node.h
 Node API
 */
@@ -40,20 +40,20 @@ Node API
 *
 */
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
-#include "VE_Installer/include/VEConfig.h"
 
 #ifdef _PERFORMER
 class pfNode;
 class pfLightModel;
 class pfFog;
 #elif _OSG
+#include <osg/Node>
+#include <osg/ref_ptr>
+
 namespace osg 
 { 
    class Fog; 
    class LightModel;
 }
-#include <osg/Node>
-#include <osg/ref_ptr>
 #elif _OPENSG
 #endif
 
@@ -66,12 +66,70 @@ class VE_SCENEGRAPH_EXPORTS Node: public pfNode
 #endif
 {
 public:   
-   Node( ){}
-   virtual ~Node( void ){}
+   Node();
+   //Copy constructor
+   Node( const Node& );
 
-   //equal operator
+   virtual ~Node( void );
+
+   //Equal operator
    Node& operator= ( const Node& );
+
+   //Set the name of the node
+   void SetName( std::string name );
+
+   //Toggle the display of this node on/off
+   //\param onOff Turn on/off rendering of this node\n
+   //Valid values are:\n
+   //ON == display this node\n
+   //OFF == hide this node\n
+   void ToggleDisplay( std::string onOff );
+
+   //Toggle the display of this node on/off
+   //\param onOff Turn on/off rendering of this node\n
+   void ToggleDisplay( bool onOff );
+
+   #ifdef _PERFORMER
+   virtual pfNode* GetRawNode( void );
+   #elif _OSG
+   virtual osg::Node* GetRawNode( void );
+   #elif _OPENSG
+   #endif
+
+   #ifdef _PERFORMER
+   void pfTravNodeMaterial( pfNode* );
+   void pfTravNodeFog( pfNode* node_1, pfFog* fog );
+   #elif _OSG
+   void TravNodeMaterial( osg::Node* );
+   void TravNodeFog( osg::Node* node_1, osg::Fog* fog );
+   #elif _OPENSG
+   #endif
+
+   void SetNodeProperties( int, float, float* );
+   void LoadFile( std::string,
+                  #ifdef _OSG
+                  bool isStream=false
+                  #endif
+                  );
+
+   Node* Clone( int );
+
 protected:
+   #ifdef _PERFORMER
+   pfNode* _node;
+   pfLightModel* lightModel;
+   #elif _OSG
+   osg::ref_ptr<osg::Node> _node;
+   osg::ref_ptr<osg::LightModel> lightModel;
+   #elif _OPENSG
+   #endif
+
+   float op;
+   float stlColor[3];
+   int color;
+   bool twosidedlighting;
+
 };
 }
-#endif
+
+#endif  //NODE_H

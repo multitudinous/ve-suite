@@ -56,9 +56,9 @@ class vtkActor;
 namespace VE_SceneGraph
 {
 #ifdef _OSG
-class VE_SCENEGRAPH_EXPORTS Geode: public osg::Geode, public SceneNode
+class VE_SCENEGRAPH_EXPORTS Geode : public osg::Geode, public SceneNode
 #elif _PERFORMER
-class VE_SCENEGRAPH_EXPORTS Geode: public pfDCS
+class VE_SCENEGRAPH_EXPORTS Geode : public pfDCS
 #endif
 {
 public:

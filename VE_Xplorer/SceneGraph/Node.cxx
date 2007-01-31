@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/Node.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/Switch.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -95,9 +95,9 @@
 
 namespace VE_SceneGraph{
 
-//////////////////
-cfdNode::cfdNode()
-:cfdSceneNode(CFD_NODE)
+////////////////////////////////////////////////////////////////////////////////
+Node::Node()
+:SceneNode(VE_NODE)
 {
    //biv--do we need to set type for scene node in here?
    //this->_group = new pfNode();
@@ -114,50 +114,53 @@ cfdNode::cfdNode()
 #elif _OPENSG
 #endif
 }
-/////////////////////////////////////////
-cfdNode::cfdNode( const cfdNode& input )
-:cfdSceneNode(input)
+////////////////////////////////////////////////////////////////////////////////
+Node::Node( const Node& input )
+:
+SceneNode( input )
 {
-#ifdef _PERFORMER
+   #ifdef _PERFORMER
    this->_node = input._node;
-#elif _OSG
-   if ( _node.valid() )
+   #elif _OSG
+   if( _node.valid() )
    {
       _node = input._node;
    }
-#elif _OPENSG
-#endif
+   #elif _OPENSG
+   #endif
 }
-
-////////////////////////////////////////////////////
-cfdNode& cfdNode::operator=( const cfdNode& input )
+////////////////////////////////////////////////////////////////////////////////
+Node& Node::operator=( const Node& input )
 {
-   if ( this != &input ){
-      //copy parent
-      cfdSceneNode::operator=(input);
-#ifdef _PERFORMER
+   if( this != &input ){
+      //Copy parent
+      SceneNode::operator=( input );
+
+      #ifdef _PERFORMER
       pfDelete( this->_node );
       this->_node = input._node;
-#elif _OSG
-      //recreate the node
+      #elif _OSG
+      //Recreate the node
       //_node->unref();
       _node = input._node;
-#elif _OPENSG
-#endif
+      #elif _OPENSG
+      #endif
+
       op = input.op;
       stlColor[0] = input.stlColor[0];
       stlColor[1] = input.stlColor[1];
       stlColor[2] = input.stlColor[2];
       color = input.color;
    }
+
    return *this;
 }
 
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // Code that can be used at a later date
 // there are issues to be reolved on wether == should be defined
 // as below 
-/*bool cfdNode::operator== ( const cfdNode& node1 ) const
+/*bool Node::operator== ( const Node& node1 ) const
 {
    if ( guid == node1.guid )
    {
@@ -168,15 +171,14 @@ cfdNode& cfdNode::operator=( const cfdNode& input )
       return false;
    }
 }*/
-
-/////////////////////////
-cfdNode::~cfdNode( void )
+////////////////////////////////////////////////////////////////////////////////
+Node::~Node( void )
 {
    // If neccesary
 #ifdef _PERFORMER
    if ( this->_node != NULL )
    {
-      vprDEBUG(vesDBG,3) << "destructor for cfdNode " 
+      vprDEBUG(vesDBG,3) << "destructor for Node " 
                               << std::endl << vprDEBUG_FLUSH;
       pfDelete( this->_node );
    }
@@ -187,13 +189,13 @@ cfdNode::~cfdNode( void )
 }
 // Reimplement for other graphs
 #ifdef _PERFORMER
-pfNode* cfdNode::GetRawNode( void )
+pfNode* Node::GetRawNode( void )
 #elif _OSG
-osg::Node* cfdNode::GetRawNode(void)
+osg::Node* Node::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   vprDEBUG(vesDBG,2) << "|\t\tcfdNode::GetRawNode" 
+   vprDEBUG(vesDBG,2) << "|\t\tNode::GetRawNode" 
                               << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    return _node;
@@ -202,22 +204,20 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 }
-//////////////////////////////////////
-///Set the name of the node         //
-//////////////////////////////////////
-void cfdNode::SetName(std::string name)
+////////////////////////////////////////////////////////////////////////////////
+void Node::SetName(std::string name)
 {
    if ( GetRawNode() )
       GetRawNode()->setName(name.c_str());
 }
-///////////////////////////////////////
-void cfdNode::ToggleDisplay(bool onOff)
+////////////////////////////////////////////////////////////////////////////////
+void Node::ToggleDisplay(bool onOff)
 {
    std::string value = (onOff==true)?"ON":"OFF";
    ToggleDisplay(value);
 }
-//////////////////////////////////////////////
-void cfdNode::ToggleDisplay(std::string onOff)
+////////////////////////////////////////////////////////////////////////////////
+void Node::ToggleDisplay(std::string onOff)
 {
    if ( !GetRawNode() )
       return;
@@ -239,10 +239,8 @@ void cfdNode::ToggleDisplay(std::string onOff)
 #endif
    }
 }
-///////////////////////////////////////////
-//load scene from file                   //
-///////////////////////////////////////////
-void cfdNode::LoadFile( std::string filename
+////////////////////////////////////////////////////////////////////////////////
+void Node::LoadFile( std::string filename
 #ifdef _OSG
                        ,bool isStream
 #endif
@@ -295,8 +293,8 @@ void cfdNode::LoadFile( std::string filename
       _node->setName(filename.c_str());
    }
 }
-////////////////////////////////////
-cfdNode* cfdNode::Clone( int level )
+////////////////////////////////////////////////////////////////////////////////
+Node* Node::Clone( int level )
 {
 #ifdef _PERFORMER
    std::cout << " Error:Clone !!! " << level << std::endl;
@@ -312,10 +310,8 @@ cfdNode* cfdNode::Clone( int level )
    return NULL;
 #endif
 }
-////////////////////////////////////////////
-//set the properties on the node          //
-////////////////////////////////////////////
-void cfdNode::SetNodeProperties(int color,
+////////////////////////////////////////////////////////////////////////////////
+void Node::SetNodeProperties(int color,
                              float trans, 
                              float* stlColor )
 {
@@ -334,7 +330,7 @@ void cfdNode::SetNodeProperties(int color,
 // It then changes the geostates of them all to have the same
 // given material.
 #ifdef _PERFORMER
-void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
+void Node::pfTravNodeMaterial( pfNode* node_1 )
 {
 #ifdef _DEBUG
    assert( node_1 != NULL && "bad pointer passed in" );
@@ -569,8 +565,8 @@ ushort *ilist=0;
 	   }
 }
 
-
-void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
+////////////////////////////////////////////////////////////////////////////////
+void Node::pfTravNodeFog( pfNode* node_1, pfFog* fog )
 {
 #ifdef _DEBUG
    assert( node_1 != NULL && "bad pointer passed in" );
@@ -631,8 +627,8 @@ void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
 	}
 }
 #elif _OSG
-///////////////////////////////////////////////
-void cfdNode::TravNodeMaterial(osg::Node* node)
+////////////////////////////////////////////////////////////////////////////////
+void Node::TravNodeMaterial(osg::Node* node)
 {
    if(!node)return;
 	int i  = 0;
@@ -755,8 +751,8 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
       }
    }
  }
- ///////////////////////////////////////////////////////////
- void cfdNode::TravNodeFog(osg::Node* node_1, osg::Fog* fog)
+ ////////////////////////////////////////////////////////////////////////////////
+ void Node::TravNodeFog(osg::Node* node_1, osg::Fog* fog)
  {
    if(!node_1)return;
 	int i  = 0;
@@ -814,4 +810,4 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
 #elif _OPENSG
 #endif
 }
-
+////////////////////////////////////////////////////////////////////////////////

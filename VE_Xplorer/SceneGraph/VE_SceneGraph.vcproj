@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(BULLET_HOME)\src&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_PATENTED;VE_SCENEGRAPH_LIBRARY;_OSG"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(BULLET_HOME)\src&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_PATENTED;VE_SCENEGRAPH_LIBRARY;_OSG;VE_PHYSICS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib gadget_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib gadget_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib"
 				OutputFile="$(OutDir)/VE_SceneGraph_osg_vep_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(BULLET_HOME)\out\debug8\libs&quot;"
@@ -187,6 +187,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\CADEntity.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdClone.cxx"
 				>
 			</File>
@@ -227,10 +231,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdSceneNode.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdSequence.cxx"
 				>
 			</File>
@@ -243,7 +243,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DCS.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\Geode.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\Group.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\Node.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\PhysicsSimulator.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneNode.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\Sequence.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\Switch.cxx"
 				>
 			</File>
 			<File
@@ -287,6 +315,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\CADEntity.h"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdClone.h"
 				>
 			</File>
@@ -327,6 +359,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cfdSceneNode.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdSceneNode.h"
 				>
 			</File>
@@ -347,7 +383,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\File.h"
+				RelativePath=".\Geode.h"
 				>
 			</File>
 			<File
@@ -360,6 +396,14 @@
 			</File>
 			<File
 				RelativePath=".\PhysicsSimulator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneNode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sequence.h"
 				>
 			</File>
 			<File

@@ -41,6 +41,7 @@ Group API
 /*!\class VE_SceneGraph::Group
 *
 */
+#include "VE_Xplorer/SceneGraph/SceneNode.h"
 
 #ifdef _PERFORMER
 #include <pf/pfGroup.h>;
@@ -51,16 +52,29 @@ Group API
 
 namespace VE_SceneGraph{
 #ifdef _OSG
-   class VE_SCENEGRAPH_EXPORTS Group: public osg::Group
+class VE_SCENEGRAPH_EXPORTS Group : public osg::Group, public SceneNode
 #elif _PERFORMER
-   class VE_SCENEGRAPH_EXPORTS Group: public pfGroup
+class VE_SCENEGRAPH_EXPORTS Group : public pfGroup
 #endif
-   {
-      public:
-         Group(){}
-         virtual ~Group(){}
+{
+public:
+   Group();
+   Group( const Group& );
 
-      protected:
-   };
+   virtual ~Group( void );
+
+   Group& operator=( const Group& );
+
+
+
+
+   //virtual Node* Clone( int );
+
+
+protected:
+
+
+};
 }
-#endif
+
+#endif //VE_GROUP_H

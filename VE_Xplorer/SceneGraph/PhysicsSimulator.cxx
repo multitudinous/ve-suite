@@ -33,7 +33,7 @@ vprSingletonImp(PhysicsSimulator);
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
 :
-physics(true),
+physics(false),
 shoot_speed(40.0f)
 {
    head.init("VJHead");
