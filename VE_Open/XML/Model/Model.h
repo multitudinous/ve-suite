@@ -162,7 +162,11 @@ public:
    void SetVendorName( std::string vendorName );
    ///Get the vendor name of the model
    std::string GetVendorName( void );
-
+   ///Add a model attribute
+   void SetModelAttribute( VE_XML::Command* modelAttribute );
+   ///Get model attributes
+   VE_XML::Command* GetModelAttribute( void );
+   
 protected:
    ///Internally update the data.
    ///\param tagName The tag name of this element.
@@ -184,9 +188,10 @@ private:
    ///The parameter block holds all the data the was formerly stored in the param file
    std::vector< VE_XML::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
    ///The CADNode contains the tree structure for the geometry
-  VE_XML::VE_CAD::CADAssembly* geometry;///<The classes hold the geometry for the model.
+   VE_XML::VE_CAD::CADAssembly* geometry;///<The classes hold the geometry for the model.
    ///The vendor name for the model
    std::string vendorUnit;///<The string that stores the unit name that this model maps to
+   VE_XML::Command* modelAttribute;///<The structure that stores all of the model attributes
 };
 }
 }

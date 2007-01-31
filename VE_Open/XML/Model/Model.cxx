@@ -59,6 +59,7 @@ Model::Model()
    SetObjectType("Model");
    SetObjectNamespace("Model");
    vendorUnit = '\0';
+   modelAttribute = 0;
 }
 ///////////////////////////////////
 Model::~Model()
@@ -90,7 +91,16 @@ Model::~Model()
    informationPackets.clear();
 
    if ( geometry )
+   {   
       delete geometry;
+      geometry = 0;
+   }
+   
+   if ( modelAttribute )
+   {
+      delete modelAttribute;
+      modelAttribute = 0;
+   }
 }
 ///////////////////////////////////////////
 Model::Model( const Model& input )
@@ -127,6 +137,12 @@ Model::Model( const Model& input )
    if ( input.geometry )
    {
       geometry = new CADAssembly( *(input.geometry) );
+   }
+
+   modelAttribute = 0;
+   if ( input.modelAttribute )
+   {
+      modelAttribute = new Command( *(input.modelAttribute) );
    }
 }
 /////////////////////////////////////////////////////
@@ -194,6 +210,15 @@ Model& Model::operator=( const Model& input)
             geometry = new CADAssembly();
          }
          *geometry = *(input.geometry);
+      }
+
+      if ( input.modelAttribute )
+      {
+         if ( !modelAttribute )
+         {
+            modelAttribute = new Command();
+         }
+         *modelAttribute = *(input.modelAttribute);
       }
    }
    return *this;
@@ -281,6 +306,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          iconLocation->SetObjectFromXMLData( dataValueStringName );
       }
 
+      //get the geometry nodes
       {
          if ( currentElement->getElementsByTagName( xercesString("geometry") )->getLength() > 0 )
          {
@@ -336,6 +362,21 @@ void Model::SetObjectFromXMLData(DOMNode* element)
             dataValueStringName = GetSubElement( currentElement, "informationPackets", i );
             informationPackets.push_back( new ParameterBlock(  ) );
             informationPackets.back()->SetObjectFromXMLData( dataValueStringName );
+         }
+      }
+
+      //get the model attribute nodes
+      {
+         if ( currentElement->getElementsByTagName( xercesString("modelAttributes") )->getLength() > 0 )
+         {
+            dataValueStringName = GetSubElement( currentElement, "modelAttributes", 0 );
+            if ( modelAttribute )
+            {
+               delete modelAttribute;
+               modelAttribute = 0;
+            }
+            modelAttribute = new Command();
+            modelAttribute->SetObjectFromXMLData( dataValueStringName );
          }
       }
    }   
@@ -620,7 +661,14 @@ void Model::_updateVEElement( std::string input )
    }
 
    if ( geometry )
+   {   
       SetSubElement( "geometry", geometry );   
+   }
+
+   if ( modelAttribute )
+   {
+      SetSubElement( "modelAttributes", modelAttribute );   
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetVendorName( std::string vendorName )
@@ -631,4 +679,14 @@ void Model::SetVendorName( std::string vendorName )
 std::string Model::GetVendorName( void )
 {
    return vendorUnit;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetModelAttribute( VE_XML::Command* modelAttribute )
+{
+   this->modelAttribute = modelAttribute;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::Command* Model::GetModelAttribute( void )
+{
+   return this->modelAttribute;
 }

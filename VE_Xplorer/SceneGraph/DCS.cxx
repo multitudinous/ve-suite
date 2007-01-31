@@ -86,6 +86,11 @@ DCS::DCS( void )
    SetScaleArray( temp );
 
    bulletTransform = new btTransform();
+   UpdatePhysicsTransform();
+   
+   udcb = new TransferPhysicsDataCallback();
+   this->setUpdateCallback( udcb );
+   udcb->SetbtTransform( bulletTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
@@ -94,13 +99,16 @@ DCS::DCS( float* scale, float* trans, float* rot )
 #elif _OSG
 #elif _OPENSG
 #endif
-
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
 
    bulletTransform = new btTransform();
    UpdatePhysicsTransform();
+
+   udcb = new TransferPhysicsDataCallback();
+   this->setUpdateCallback( udcb );
+   udcb->SetbtTransform( bulletTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& input )
@@ -528,3 +536,39 @@ void DCS::UpdatePhysicsTransform( void )
    osg::Vec3d trans = this->getPosition();
    bulletTransform->setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
 }
+#ifdef _OSG
+////////////////////////////////////////////
+//Constructor                             //
+////////////////////////////////////////////
+TransferPhysicsDataCallback::TransferPhysicsDataCallback()
+{
+   physicsTransform = 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+TransferPhysicsDataCallback::TransferPhysicsDataCallback( const TransferPhysicsDataCallback& input )
+:osg::Object( input ), osg::NodeCallback( input )
+{
+   physicsTransform = input.physicsTransform;
+}
+////////////////////////////////////////////////////////////////////////////////
+void TransferPhysicsDataCallback::SetbtTransform( btTransform* transform )
+{
+   physicsTransform = transform;
+}
+////////////////////////////////////////////////////////////////////////////////
+void TransferPhysicsDataCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
+{
+   osg::ref_ptr<osg::PositionAttitudeTransform> dcs = static_cast<osg::PositionAttitudeTransform*>(node);
+   
+   if ( dcs.valid() )
+   {
+      btQuaternion quat = physicsTransform->getRotation();
+      dcs->setAttitude( osg::Quat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] ) );
+   
+      btVector3 position = physicsTransform->getOrigin();
+      dcs->setPosition( osg::Vec3d( position[0], position[ 1 ], position[ 2 ] ) );
+
+      traverse(node,nv);
+   }
+}
+#endif
