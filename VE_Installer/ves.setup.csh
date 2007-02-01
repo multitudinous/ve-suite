@@ -45,3 +45,4 @@ setenv PATH ${VJ_BASE_DIR}/bin:/home/users/mccdo/svn_VE_Suite/VE_Suite/test_two/
 # Set JAVA_HOME for building docs.
 if ( ! $?JAVA_HOME ) then
    setenv JAVA_HOME /usr/java/jre1.5.0_04
+endif
