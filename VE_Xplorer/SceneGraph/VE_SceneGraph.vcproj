@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cfdSceneNode.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdSequence.cxx"
 				>
 			</File>
@@ -356,10 +360,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdRawNodeTraverser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdSceneNode.cxx"
 				>
 			</File>
 			<File
