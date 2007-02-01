@@ -34,7 +34,7 @@ public:
 	void CreateBBMesh();				//Creates a mesh using the bounding box of the geometry, this occurs by default
 	void CreateExactMesh();			//Creates an exact mesh of the geometry
 	void CreateFileMesh();			//Creates a mesh from a different file than the one used for geometry
-	void CreateCustomMesh();		//Creates a user defined mesh; must be hard coded in plugin
+	void CreateCustomMesh();		//Creates a user defined mesh; must be hard coded in plugin, useful for compound shapes
 	//******************************************//
 
    VE_SceneGraph::DCS* GetDCS();

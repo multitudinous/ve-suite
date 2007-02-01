@@ -69,6 +69,8 @@ CADEntity::CADEntity(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isSt
    //setup fog
    fog=new osg::Fog();
    #endif
+
+	this->InitPhysics();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
@@ -108,7 +110,27 @@ void CADEntity::SetFriction(float friction)
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::CreateBBMesh()
 {
-	
+	osg::ref_ptr<osg::Geode> geode=new osg::Geode;
+	geode->asGroup()->addChild(node.get());
+
+	osg::BoundingBox bb=geode->getBoundingBox();
+
+	//Delete old btCollisionShape*
+	if(collision_shape){
+		delete collision_shape;
+	}
+   
+	//Remove old btRigidBody* and delete it
+	if(rigid_body){
+		VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody(rigid_body);
+		delete rigid_body;
+	}
+
+	//Set new btRigidBody* and btCollisionObject*
+   collision_shape=new btBoxShape(btVector3((bb.xMax()-bb.xMin())*0.5f,
+														  (bb.yMax()-bb.yMin())*0.5f,
+														  (bb.zMax()-bb.zMin())*0.5f));
+   //rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(0.0f,DCS->GetPhysicsTransform(),trimesh_shape);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::CreateExactMesh()
@@ -162,12 +184,12 @@ void CADEntity::CreateExactMesh()
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::CreateFileMesh()
 {
-
+	//Implement later
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::CreateCustomMesh()
 {
-
+	//Implement later
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Node* CADEntity::GetNode()
