@@ -11,17 +11,14 @@
 #include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #ifdef _OSG
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
-   #if VE_PHYSICS
-      #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+#include <LinearMath/btVector3.h>
 
-      #include <LinearMath/btVector3.h>
-   #endif
-
-   #include <osg/Group>
-   #include <osg/BoundingSphere>
-   #include <osg/BoundingBox>
-   #include <osg/CameraNode>
+#include <osg/Group>
+#include <osg/BoundingSphere>
+#include <osg/BoundingBox>
+#include <osg/CameraNode>
 #endif
 
 const double OneEightyDivPI=57.29577951;
@@ -186,14 +183,10 @@ void Trackball::Mouse(int button,int state,int x,int y)
 		tb_prevPos[1]=(float)y/(float)tb_height;
 		tb_moving=true;
 
-
-      #if VE_PHYSICS
-         //If physics is enabled, shoot a box on right-mouse click
-         if(button==51 && VE_SceneGraph::PhysicsSimulator::instance()->GetPhysicsState()){
-
-            //VE_SceneGraph::PhysicsSimulator::instance()->ShootBox();
-         }
-      #endif
+      //If physics is enabled, shoot a box on right-mouse click
+      //if(button==51 && VE_SceneGraph::PhysicsSimulator::instance()->GetPhysicsState()){
+         //VE_SceneGraph::PhysicsSimulator::instance()->ShootBox();
+      //}
    }
 
    else if(state==0){
