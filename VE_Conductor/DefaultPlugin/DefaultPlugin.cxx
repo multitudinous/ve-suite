@@ -155,8 +155,10 @@ void DefaultPlugin::SetImageIcon(std::string path)
 	//wxImage* my_img = new wxImage();
 	//bool exists = my_img->LoadFile(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
 	std::ifstream exists(path.c_str());
-	if(exists.fail())
-		return;
+	if ( exists.fail() )
+	{	
+      return;
+   }
 	wxImage my_img(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
 	//icon_w = (int)my_img.GetWidth()*0.30f;
 	//icon_h = (int)my_img.GetHeight()*0.30f;
