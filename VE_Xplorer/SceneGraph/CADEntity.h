@@ -29,9 +29,6 @@ public:
    CADEntity(std::string,VE_SceneGraph::DCS*,bool isStream=false);
    ~CADEntity();
 
-   void Initialize(float);
-	void InitPhysics();
-
 	//Different methods to create a physics mesh to represent the geometry
 	//******************************************//
 	void CreateBBMesh();				//Creates a mesh using the bounding box of the geometry, this occurs by default
@@ -43,6 +40,9 @@ public:
    VE_SceneGraph::DCS* GetDCS();
    VE_SceneGraph::Node* GetNode();
    btRigidBody* GetRigidBody();
+
+	void SetMass(float mass);
+	void SetFriction(float friction);
 
    std::string GetFilename();
    std::string GetModuleName();
@@ -72,10 +72,14 @@ public:
    //std::vector<pfMaterial*> matList;
 
 private:
+	void Initialize(float);
+	void InitPhysics();
+
    //Group* _masterNode;
    osg::ref_ptr<VE_SceneGraph::Node> node;
    osg::ref_ptr<VE_SceneGraph::DCS> DCS;
    btRigidBody* rigid_body;
+	btCollisionShape* collision_shape;
 
    //pfMaterial *mat1, *mat0;
    int mat_count;

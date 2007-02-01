@@ -257,10 +257,10 @@ void PhysicsSimulator::SetShootSpeed(float speed)
 btRigidBody* PhysicsSimulator::CreateRigidBody(float mass,const btTransform& startTransform,btCollisionShape* shape)
 {
 	//RigidBody is dynamic if and only if mass is non zero, otherwise static
-	bool isDynamic=(mass!=0.f);
+	bool dynamic=(mass!=0.0f);
 
 	btVector3 localInertia(0,0,0);
-   if(isDynamic){
+   if(dynamic){
 		shape->calculateLocalInertia(mass,localInertia);
    }
 

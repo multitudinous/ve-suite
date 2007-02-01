@@ -73,7 +73,9 @@ CADEntity::CADEntity(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isSt
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
 {
-   ;
+	if(collision_shape){
+		delete collision_shape;	
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::Initialize( float op_val )
@@ -84,7 +86,24 @@ void CADEntity::Initialize( float op_val )
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics()
 {
-	;
+	//No friction by default
+	rigid_body->setFriction(0.0f);
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetMass(float mass)
+{
+	//btRigidBody* is dynamic if and only if mass is non zero, otherwise static
+	bool dynamic=(mass!=0.0f);
+
+	btVector3 localInertia(0,0,0);
+   if(dynamic){
+		collision_shape->calculateLocalInertia(mass,localInertia);
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetFriction(float friction)
+{
+	rigid_body->setFriction(friction);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::CreateBBMesh()
@@ -100,11 +119,11 @@ void CADEntity::CreateExactMesh()
 	osg::TriangleIndexFunctor<TriIndexFunc> TIF;
 	osg::ref_ptr<osg::Vec3Array> vertex_array=new osg::Vec3Array;
 
-	for(int i=0;i<(int)geode->getDrawableList().size();i++){
-		geode->getDrawable(i)->accept(TIF);
-		vertex_array=dynamic_cast<osg::Vec3Array*>(geode->getDrawable(i)->asGeometry()->getVertexArray());
-		//vertex_array->
-	}
+	//Need to look at this later
+	//for(int i=0;i<(int)geode->getDrawableList().size();i++){
+		geode->getDrawable(0)->accept(TIF);
+		vertex_array=dynamic_cast<osg::Vec3Array*>(geode->getDrawable(0)->asGeometry()->getVertexArray());
+	//}
 
 	btTriangleMesh* triMesh=new btTriangleMesh;
    btVector3 v1,v2,v3;
@@ -124,15 +143,20 @@ void CADEntity::CreateExactMesh()
 
       triMesh->addTriangle(v1,v2,v3);
    }
+
+	//Delete old btCollisionShape*
+	if(collision_shape){
+		delete collision_shape;
+	}
    
-	//Remove old btCollisionShape* if it exists
-	if(rigid_body->getCollisionShape()){
-		delete rigid_body->getCollisionShape();
+	//Remove old btRigidBody* and delete it
+	if(rigid_body){
+		VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody(rigid_body);
+		delete rigid_body;
 	}
 
-   btCollisionShape* trimesh_shape=new btBvhTriangleMeshShape(triMesh);
-
-	//Add new btCollisionShape*
+	//Set new btRigidBody* and btCollisionObject*
+   collision_shape=new btBvhTriangleMeshShape(triMesh);
    //rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(0.0f,DCS->GetPhysicsTransform(),trimesh_shape);
 }
 ////////////////////////////////////////////////////////////////////////////////
