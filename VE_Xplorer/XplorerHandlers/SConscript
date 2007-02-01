@@ -217,7 +217,7 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Open','XML','Model'),
                         pj('#', buildDir, 'VE_Open','XML','CAD')])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll vrjuggler bullet --libs --cflags')
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
