@@ -9,3 +9,4 @@ launcherBundle = ves_pkg.createFileBundle( 'share' )
 jconfFile = sca_util.getFilesRecursiveByExt( '.', ['.jconf'] )
 launcherBundle.addFiles( jconfFile )
    
+SConscript(dirs = "docs")

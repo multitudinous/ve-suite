@@ -174,9 +174,13 @@ class DepsWindow(wx.Dialog):
 
     def ChooseVJ(self, event):
         """User choose the VR-Juggler dependency."""
+	if self.state.GetSurface("JugglerDep") == None:
+	    jugglerDirStart = VELAUNCHER_DIR
+	else:
+	    jugglerDirStart = self.state.GetSurface("JugglerDep")
         dlg = wx.DirDialog(None,
                            "Choose VR-Juggler's directory:",
-                           self.displayVR.GetValue(),
+                           jugglerDirStart,
                            style=wx.DD_DEFAULT_STYLE)
         if dlg.ShowModal() == wx.ID_OK:
             location = dlg.GetPath()

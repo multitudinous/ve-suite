@@ -285,7 +285,18 @@ class LauncherWindow(wx.Frame):
                 if not legitDeps:
                     self.DependenciesChange("")
             self.dependencies = config.Read("DependenciesDir", ":::")
-
+	elif unix and not devMode:
+	    if len(self.state.GetSurface("Dependencies").GetNames()) == 0 \
+	       and self.state.GetSurface("JugglerDep") == None:
+                dlg = wx.MessageDialog(None,
+                                       "Welcome to VE Suite!\n" +
+                                       "Before you can begin, please select" +
+                                       " the Dependencies directories you" +
+				       " will be using.",
+                                       "Welcome to VE Suite", wx.OK)
+                dlg.ShowModal()
+                dlg.Destroy()
+                self.DependenciesChange("")
         ##Show the window.
         self.Show(True)
         ##ERROR CHECK: Is there a /bin folder in the launcher's directory?
