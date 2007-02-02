@@ -159,6 +159,7 @@ void DefaultPlugin::SetImageIcon(std::string path)
 	{	
       return;
    }
+   iconFilename = path;
 	wxImage my_img(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
 	//icon_w = (int)my_img.GetWidth()*0.30f;
 	//icon_h = (int)my_img.GetHeight()*0.30f;

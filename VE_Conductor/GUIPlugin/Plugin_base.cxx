@@ -92,6 +92,8 @@ REI_Plugin::REI_Plugin()
    inputsDialog = 0;
    resultsDialog = 0;
    portsDialog = 0;
+   
+   iconFilename = "DefaultPlugin";
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -504,7 +506,7 @@ Model* REI_Plugin::GetVEModel( void )
    
    veModel->SetModelName( ConvertUnicode( name.c_str() ) );
    veModel->SetModelID( mod_pack._id );
-   veModel->SetIconFilename( std::string( "iconFilename" ) );
+   veModel->SetIconFilename( iconFilename );
    veModel->GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >( pos.x, pos.y ) );
 
    {

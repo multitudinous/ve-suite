@@ -240,6 +240,8 @@ protected:
       return tempStr;
    }
    
+   std::string iconFilename;
+   
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
 };
 
