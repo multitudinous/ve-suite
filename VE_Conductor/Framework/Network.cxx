@@ -2444,7 +2444,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 		  iconSetter = new DefaultPlugin();
 		  if ( !model->GetIconFilename().empty() )
         {   
-           iconSetter->SetImageIcon("2DIcons/"+model->GetIconFilename()+".jpg");
+           iconSetter->SetImageIcon(model->GetIconFilename());
         }
 		  tempPlugin = iconSetter;
       }
