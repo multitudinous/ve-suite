@@ -48,6 +48,7 @@ class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public cfdGlobalBase
 {
 public:
    NetworkSystemView();
+   NetworkSystemView(std::string);
    NetworkSystemView( const NetworkSystemView& );
    
    virtual ~NetworkSystemView( void );
@@ -55,9 +56,9 @@ public:
    
    bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){return true;}
    void UpdateCommand( void ){;}
-   void SetNetwork( std::string network );
    osg::ref_ptr< osg::Group > DrawNetwork( void );
 private:
+	std::string network;
 };
 }
 #endif

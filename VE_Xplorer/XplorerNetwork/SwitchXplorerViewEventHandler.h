@@ -63,6 +63,10 @@ public:
    ///Constructor
    SwitchXplorerViewEventHandler();
 
+   ///Constructor to pass the network
+   //SwitchXplorerViewEventHandler(VE_XML::VE_Model::Network*);
+   SwitchXplorerViewEventHandler(std::string);
+
    ///Copy Constructor
    SwitchXplorerViewEventHandler(const SwitchXplorerViewEventHandler& rhs);
 

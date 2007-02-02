@@ -139,6 +139,7 @@ public:
    ///plugin for a specific command
    //bool RegisterEHForGEPlugin( std::string commandName, cfdVEBaseClass* baseClass );
    
+   std::string veNetwork;
 private:
    ///Laod data from CE
    void LoadDataFromCE( void );
@@ -179,6 +180,7 @@ private:
    std::map< int, std::map< std::string, cfdVEBaseClass* > > pluginEHMap;
    
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
+
 };
 }
 #endif

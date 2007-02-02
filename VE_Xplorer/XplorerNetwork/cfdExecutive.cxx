@@ -55,6 +55,7 @@
 #include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <sstream>
 
@@ -153,6 +154,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 
    _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::DeleteObjectFromNetworkEventHandler();
    _eventHandlers[std::string("CHANGE_XPLORER_VIEW")] = new VE_EVENTS::SwitchXplorerViewEventHandler();
+   //_eventHandlers[std::string("CHANGE_XPLORER_VIEW")] = new VE_EVENTS::SwitchXplorerViewEventHandler(veNetwork);
 }
 ///////////////////////////////////////////////////////////////////
 std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
@@ -217,6 +219,9 @@ void cfdExecutive::GetNetwork( void )
 {
    // Get buffer value from Body_UI implementation
    std::string temp( ui_i->GetNetworkString() );
+   std::ofstream output("xplorerNetwork.txt");
+   output<<temp<<std::endl;
+   output.close();
    const std::string network = temp;
    vprDEBUG(vesDBG,0) << "|\tNetwork String : " << network 
                           << std::endl << vprDEBUG_FLUSH;
@@ -237,6 +242,9 @@ void cfdExecutive::GetNetwork( void )
    // do this for models
    networkWriter.ReadXMLData( network, "Model", "veModel" );
    currentModels = networkWriter.GetLoadedXMLObjects();
+
+   //veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( currentModels.at( 0 ) );
+	veNetwork = network;
 
    // now lets create a list of them
    _id_map.clear();

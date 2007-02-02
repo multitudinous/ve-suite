@@ -31,6 +31,10 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/Model/Point.h"
+#include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/Link.h"
 #include "temp/bkpparser.h"
 #include <osgDB/ReadFile>
 #include <osgUtil/Optimizer>
@@ -42,6 +46,7 @@
 #include <osg/Vec4>
 #include <osg/AutoTransform>
 #include <osg/Group>
+#include "VE_Open/XML/Model/Model.h"
 
 using namespace VE_Xplorer;
 
@@ -49,6 +54,11 @@ using namespace VE_Xplorer;
 NetworkSystemView::NetworkSystemView()
 {
    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+NetworkSystemView::NetworkSystemView(std::string network)
+{
+	this->network = network;
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( const NetworkSystemView& input )
@@ -70,12 +80,7 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NetworkSystemView::SetNetwork( std::string network )
-{
-   ;
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
+/*osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 {
 	osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
 	
@@ -215,6 +220,91 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		streamCount++;
 		count = 0;
+	}
+	loadedModels.get()->addChild(geode);
+	return loadedModels.get();
+}*/
+
+////////////////////////////////////////////////////////
+//void Network::CreateNetwork( std::string xmlNetwork )
+osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
+{
+	osg::ref_ptr<osg::Group> loadedModels = new osg::Group(); 
+	osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
+	colorBlack->push_back(osg::Vec4(0.0f,0.0f,0.0f,1.0f));
+	osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
+	shared_normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
+	VE_XML::XMLReaderWriter networkWriter;
+	networkWriter.UseStandaloneDOMDocumentManager();
+
+	std::vector< VE_XML::XMLObject* > objectVector;
+
+
+
+	// do this for models
+	networkWriter.ReadXMLData( network, "Model", "veModel" );
+	objectVector = networkWriter.GetLoadedXMLObjects();
+
+	//_fileProgress->Update( 75, _("done create models") );
+	// now lets create a list of them
+	//int timeCalc = 25/objectVector.size();
+	for ( size_t i = 0; i < objectVector.size(); ++i )
+	{
+		//_fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
+		VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
+		std::cout<<"FILENAME: "<< model->GetIconFilename() <<std::endl;
+		VE_XML::VE_Model::Point * iconLocation = model->GetIconLocation();
+		std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
+		std::cout<<"X: "<< xyPair.first <<" Y: " << xyPair.second <<std::endl;
+
+		//add 3d blocks
+		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+model->GetIconFilename()+".obj");
+
+		//add red block id if block .ive file is not found
+		if(loadedModel.get() == NULL)
+			loadedModel = osgDB::readNodeFile("3DIcons/UnsupportedComponent.ive");
+
+		//set the blocks name
+		loadedModel.get()->setName(model->GetModelName());
+
+		//Scale up 3D comps
+		osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
+		scale.get()->addChild(loadedModel.get());
+		scale.get()->setScale(5.0f);
+
+		//move the block to its correct location
+		osg::ref_ptr<osg::MatrixTransform> mModelTrans = new osg::MatrixTransform();
+		mModelTrans.get()->addChild(scale.get());
+		//mModelTrans.get()->addChild(loadedModel.get());
+		mModelTrans.get()->preMult(osg::Matrix::translate(xyPair.first*3, xyPair.second*3, 0.0));
+		mModelTrans.get()->setName(model->GetModelName());
+		loadedModels.get()->addChild(mModelTrans.get());
+	}	
+	
+	//Streams	
+	networkWriter.ReadXMLData( network, "Model", "veNetwork" );
+	objectVector = networkWriter.GetLoadedXMLObjects();
+	VE_XML::VE_Model::Network* veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+	std::cout << veNetwork->GetNumberOfLinks() << std::endl;
+	osg::Geode* geode = new osg::Geode();
+	for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
+	{
+		size_t numberOfPoints = veNetwork->GetLink( i )->GetNumberOfLinkPoints();
+		osg::Vec3Array* vertices = new osg::Vec3Array(numberOfPoints);
+		osg::Geometry* linesGeom = new osg::Geometry();
+		std::cout<<"NP: "<< numberOfPoints<<std::endl;
+		for ( size_t j = 0; j < numberOfPoints; j++ )
+		{
+			std::pair< unsigned int, unsigned int > rawPoint = veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
+			std::cout << "X: " << rawPoint.first << " Y: " << rawPoint.second << std::endl;
+			(*vertices)[j].set(rawPoint.first, rawPoint.second, 0.0);
+		}
+		linesGeom->setVertexArray(vertices);
+		linesGeom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINE_STRIP, 0, numberOfPoints));		linesGeom->setColorBinding(osg::Geometry::BIND_OVERALL);
+		linesGeom->setNormalArray(shared_normals.get());
+		linesGeom->setNormalBinding(osg::Geometry::BIND_OVERALL);
+		linesGeom->setColorArray(colorBlack.get());
+		geode->addDrawable(linesGeom);
 	}
 	loadedModels.get()->addChild(geode);
 	return loadedModels.get();
