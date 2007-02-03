@@ -55,12 +55,12 @@ public:
 	std::string getBlockID(int);                                       //returns the filename of component
 	float getXCoord(int);                                              //returns the x coordinates of component
 	float getYCoord(int);                                              //returns the y coordinates of component
-	float BKPParser::getStreamXCoord(int streamIndex, int coordIndex); //returns X coord of one point of stream
-	float BKPParser::getStreamYCoord(int streamIndex, int coordIndex); //returns y coord of one point of stream
-	std::string BKPParser::getStreamId(int);                           //returns the stream's id
-	int BKPParser::getStreamType(int);                                 //returns the stream's type
-	int BKPParser::getNumStream();                                     //returns total number of the streams
-	int BKPParser::getStreamSize(int index);                           //returns the total number of points for a stream
+	float getStreamXCoord(int streamIndex, int coordIndex); //returns X coord of one point of stream
+	float getStreamYCoord(int streamIndex, int coordIndex); //returns y coord of one point of stream
+	std::string getStreamId(int);                           //returns the stream's id
+	int getStreamType(int);                                 //returns the stream's type
+	int getNumStream();                                     //returns total number of the streams
+	int getStreamSize(int index);                           //returns the total number of points for a stream
 };
 
 #endif

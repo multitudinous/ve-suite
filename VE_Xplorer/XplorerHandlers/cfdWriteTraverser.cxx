@@ -116,11 +116,11 @@ void cfdWriteTraverser::setCallback(int swapActivate)
 {
    if(swapActivate)
    {
-      _preFunc = _swapSequenceNodes;
+      //_preFunc = _swapSequenceNodes;
    }
    else
    {
-      _preFunc = _activateSequenceNodes;
+      //_preFunc = _activateSequenceNodes;
    }
 }
 ///////////////////////////////////////////////////
@@ -148,7 +148,7 @@ void cfdWriteTraverser::setOutputFileName(std::string outFile)
 //////////////////////////////////////////////////////////
 //turn on the sequence nodes for proper read back       //
 //////////////////////////////////////////////////////////
-void VE_Xplorer::_turnOnSequence(VE_SceneGraph::cfdNodeTraverser* cfdNT,
+/*void VE_Xplorer::_turnOnSequence(VE_SceneGraph::cfdNodeTraverser* cfdNT,
                    VE_SceneGraph::cfdNode* node)
 {
    if(node->GetCFDNodeType() == VE_SceneGraph::cfdSceneNode::CFD_SEQUENCE)
@@ -161,7 +161,7 @@ void VE_Xplorer::_turnOnSequence(VE_SceneGraph::cfdNodeTraverser* cfdNT,
 ///////////////////////////////////////////////////////////////////////////
 //swap the sequence nodes                                                //
 ///////////////////////////////////////////////////////////////////////////
-void VE_Xplorer::_swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
+void _swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
                                 VE_SceneGraph::cfdNode* node)
 {
    //need to implement using getRawNode calls!!
@@ -284,7 +284,7 @@ void VE_Xplorer::_activateSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
    }
    cfdWT->setTraversalStatus(VE_SceneGraph::cfdNodeTraverser::CONT);
    return;
-}
+}*/
 //////////////////////////////////////
 //write out the pfbFile             //
 //////////////////////////////////////

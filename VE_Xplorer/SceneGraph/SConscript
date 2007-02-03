@@ -66,6 +66,7 @@ vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 #ode_options.apply( lib_env )
 #opal_options.apply( lib_env )
+lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
 
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_SceneGraphLib%s' %(execOsgPatTag),

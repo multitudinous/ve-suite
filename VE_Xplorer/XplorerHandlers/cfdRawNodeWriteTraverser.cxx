@@ -57,7 +57,7 @@ cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser()
 {
    _fName.erase();// = 0;
    _toPfb = 0;
-   _preFunc = _swapSequenceNodes;
+   //_preFunc = _swapSequenceNodes;
 #ifdef _PERFORMER
    _sequenceIndex = 0;
 #endif
@@ -144,7 +144,7 @@ void cfdRawNodeWriteTraverser::setCallback(int swapActivate)
 {
    if(swapActivate)
    {
-      _preFunc = _swapSequenceNodes;
+      //_preFunc = _swapSequenceNodes;
    }
 #ifdef _PERFORMER
    else

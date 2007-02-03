@@ -42,6 +42,8 @@ cfdWriteTraverser API
 
 #include <vector>
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/cfdSequence.h"
 #ifdef _PERFORMER
 #include <Performer/pf/pfSequence.h>
 #include <Performer/pf/pfNode.h>
@@ -88,11 +90,10 @@ namespace VE_Xplorer
          //equal operator
          cfdWriteTraverser& operator=(const cfdWriteTraverser& rhs);
       protected:
-
-         friend void _swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* ,VE_SceneGraph::cfdNode* );
-         friend void _turnOnSequence(VE_SceneGraph::cfdNodeTraverser* ,VE_SceneGraph::cfdNode* );
-         friend void _activateSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
-                                        VE_SceneGraph::cfdNode* node);
+         //friend void _swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* ,VE_SceneGraph::cfdNode* );
+         //friend void _turnOnSequence(VE_SceneGraph::cfdNodeTraverser* ,VE_SceneGraph::cfdNode* );
+         //friend void _activateSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
+         //                               VE_SceneGraph::cfdNode* node);
          std::string _fName;
          int _toPfb;
 

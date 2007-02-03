@@ -50,7 +50,6 @@ sources = Split("""
    cfdVector.cxx 
    cfdVectors.cxx 
    cfdRawNodeWriteTraverser.cxx 
-   cfdWriteTraverser.cxx
    ActiveModelEventHandler.cxx
    AddVTKDataSetEventHandler.cxx
    AttributeEventHandler.cxx 
@@ -149,7 +148,6 @@ headers = Split("""
    cfdVector.h 
    cfdVectors.h 
    cfdRawNodeWriteTraverser.h 
-   cfdWriteTraverser.h
    ActiveModelEventHandler.h
    AddVTKDataSetEventHandler.h
    AttributeEventHandler.h 
@@ -223,6 +221,7 @@ osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 #ode_options.apply( lib_env )
 #opal_options.apply( lib_env )
+#lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_XplorerLib%s' %(execOsgPatTag),
                                                         lib_env,
