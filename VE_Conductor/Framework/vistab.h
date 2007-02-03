@@ -200,11 +200,11 @@ public:
    void SetTextureData(wxArrayString textureData,std::string type);
 
    ///Get active scalar name
-   std::string Vistab::GetActiveScalarName();
+   std::string GetActiveScalarName();
    ///Get active vector name
-   std::string Vistab::GetActiveVectorName();
+   std::string GetActiveVectorName();
    ///Get active dataset name
-   std::string Vistab::GetActiveDatasetName();
+   std::string GetActiveDatasetName();
 
    ///Get the scalar range sliders  
    VE_Conductor::GUI_Utilities::DualSlider* GetScalarRangeControls();
