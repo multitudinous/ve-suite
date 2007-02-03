@@ -6,9 +6,10 @@ PhysicsSimulator API
 /*!\class VE_SceneGraph::PhysicsSimulator
 * 
 */
+
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
-
+#if VE_PHYSICS
 //PhysicsSimulator only supports OpenSceneGraph
 #ifdef _OSG
 
@@ -68,6 +69,6 @@ namespace VE_SceneGraph
 }
 
 #endif //_OSG
-
+#endif //VE_PHYSICS
 #endif //PHYSICS_SIMULATOR_H
 

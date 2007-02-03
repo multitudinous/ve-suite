@@ -2,13 +2,13 @@
 //#define SHOW_NUM_DEEP_PENETRATIONS 1
 //#define USE_KINEMATIC_GROUND 1
 //#define USER_DEFINED_FRICTION_MODEL 1
-
+#if VE_PHYSICS
 #define USE_CUSTOM_NEAR_CALLBACK 1
 #define USE_SWEEP_AND_PRUNE 1
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 #define USE_MOTIONSTATE 1
 
-#include "PhysicsSimulator.h"
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
 //PhysicsSimulator only supports OpenSceneGraph
 #ifdef _OSG
@@ -284,4 +284,4 @@ btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
 ////////////////////////////////////////////////////////////////////////////////
 
 #endif //_OSG
-
+#endif //VE_PHYSICS
