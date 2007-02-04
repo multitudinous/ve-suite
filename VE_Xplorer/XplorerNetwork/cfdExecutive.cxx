@@ -219,9 +219,9 @@ void cfdExecutive::GetNetwork( void )
 {
    // Get buffer value from Body_UI implementation
    std::string temp( ui_i->GetNetworkString() );
-   std::ofstream output("xplorerNetwork.txt");
-   output<<temp<<std::endl;
-   output.close();
+   //std::ofstream output("xplorerNetwork.txt");
+   //output<<temp<<std::endl;
+   //output.close();
    const std::string network = temp;
    vprDEBUG(vesDBG,0) << "|\tNetwork String : " << network 
                           << std::endl << vprDEBUG_FLUSH;

@@ -71,16 +71,19 @@ class VE_SCENEGRAPH_EXPORTS DCS : public pfDCS, SceneNode
 #endif
 {
 public:
-   ///Copy constructor
+   ///Constructor
    DCS();
+protected:
    ///Destructor
    virtual ~DCS();
+public:
    ///Constructor to set user defined transform values
    DCS( float* scale, float* trans, float* rot );
    ///Copy constructor
-   DCS( const DCS& input );
-   ///Equal operator
-   DCS& operator=( const DCS& input );
+   /// Copy constructor using CopyOp to manage deep vs shallow copy.
+   DCS( const DCS&, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
+
+   META_Node( VE_SceneGraph, DCS );
 
    ///Get translation array pointer
    float* GetVETranslationArray( void );
@@ -139,7 +142,7 @@ private:
    /// bullet physics simulator
    void UpdatePhysicsTransform( void );
    
-   TransferPhysicsDataCallback* udcb;///<The callback to update the sg node with physics data
+   osg::ref_ptr< TransferPhysicsDataCallback > udcb;///<The callback to update the sg node with physics data
 };
 //This is the callback class configured to handle transfering physics data
 //back to the respective osg node

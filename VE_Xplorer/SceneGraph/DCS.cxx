@@ -89,7 +89,7 @@ DCS::DCS( void )
    UpdatePhysicsTransform();
    
    udcb = new TransferPhysicsDataCallback();
-   this->setUpdateCallback( udcb );
+   this->setUpdateCallback( udcb.get() );
    udcb->SetbtTransform( bulletTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -107,18 +107,46 @@ DCS::DCS( float* scale, float* trans, float* rot )
    UpdatePhysicsTransform();
 
    udcb = new TransferPhysicsDataCallback();
-   this->setUpdateCallback( udcb );
+   this->setUpdateCallback( udcb.get() );
    udcb->SetbtTransform( bulletTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
-DCS::DCS( const DCS& input )
+/*DCS::DCS( const DCS& input )
 {
 #ifdef _PERFORMER
 #elif _OSG 
 #elif _OPENSG
 #endif  
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
+DCS::DCS(const DCS& dcs,const osg::CopyOp& copyop):
+osg::PositionAttitudeTransform(dcs,copyop)
+{
+   for( unsigned int i = 0; i < 3; i++ )
+   {
+      translation[i] = dcs.translation[i];
+   }   
+   //SetTranslationArray( translation );
+   
+   for( unsigned int i = 0; i < 3; i++ )
+   {
+      scale[i] = dcs.scale[i];
+   }   
+   //SetRotationArray( scale );
+   
+   for( unsigned int i = 0; i < 3; i++ )
+   {
+      rotation[i] = dcs.rotation[i];
+   }   
+   //SetScaleArray( rotation );
+   
+   bulletTransform = new btTransform( *(dcs.bulletTransform) );   
+
+   udcb = new TransferPhysicsDataCallback();
+   this->setUpdateCallback( udcb.get() );
+   udcb->SetbtTransform( bulletTransform );
+}
+/*////////////////////////////////////////////////////////////////////////////////
 DCS& DCS::operator=( const DCS& input )
 {
    if( this != &input )
@@ -132,7 +160,7 @@ DCS& DCS::operator=( const DCS& input )
    }
 
    return *this;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 /*
 bool DCS::operator==( const DCS& node1 )
