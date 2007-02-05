@@ -66,6 +66,20 @@ SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler()
 {
    ;
 }
+////////////////////////////////////////////////////////////////////////////
+//Constructor with Network                                                //
+////////////////////////////////////////////////////////////////////////////
+//SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler(VE_XML::VE_Model::Network* network)
+//:VE_EVENTS::EventHandler()
+//{
+//   this->network = network;
+//}
+//SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler(std::string network)
+//:VE_EVENTS::EventHandler()
+//{
+//   this->network = network;
+//   std::cout<<this->network<<std::endl;
+//}
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler(const SwitchXplorerViewEventHandler& rhs)
 :VE_EVENTS::EventHandler(rhs)
@@ -112,7 +126,7 @@ void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
       int numChildren = tempMatrix->getNumChildren();
       tempMatrix->removeChildren( 0, numChildren );
 
-      NetworkSystemView networkLayout;     
+      NetworkSystemView networkLayout(cfdExecutive::instance()->veNetwork);     
       tempMatrix->addChild( networkLayout.DrawNetwork().get() );
    }
    else if ( viewData == "CHANGE_XPLORER_VIEW_CAD" )

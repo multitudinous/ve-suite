@@ -276,7 +276,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		osg::ref_ptr<osg::MatrixTransform> mModelTrans = new osg::MatrixTransform();
 		mModelTrans.get()->addChild(scale.get());
 		//mModelTrans.get()->addChild(loadedModel.get());
-		mModelTrans.get()->preMult(osg::Matrix::translate(xyPair.first*3, xyPair.second*3, 0.0));
+		mModelTrans.get()->preMult(osg::Matrix::translate(xyPair.first*1.02, xyPair.second*1.05, 0.0));
 		mModelTrans.get()->setName(model->GetModelName());
 		loadedModels.get()->addChild(mModelTrans.get());
 	}	
