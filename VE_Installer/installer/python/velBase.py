@@ -19,10 +19,10 @@ VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
 ##Fixes directory passed for velauncher to vesuite.
 if os.path.basename(VELAUNCHER_DIR) == "velauncher":
     VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
-DIRECTORY_DEFAULT = join(os.path.dirname(VELAUNCHER_DIR), "..",
+DIRECTORY_DEFAULT = join(os.path.dirname(VELAUNCHER_DIR),
                          "share", "exampleDatasets")
 ##Image settings.
-IMAGES_DIR = join(VELAUNCHER_DIR, "..", "share", "installerImages")
+IMAGES_DIR = join(os.path.dirname(VELAUNCHER_DIR), "share", "installerImages")
 if not os.path.isdir(IMAGES_DIR):
     IMAGES_DIR = join(VELAUNCHER_DIR, "installerImages")
 LOGO_LOCATION = join(IMAGES_DIR, "ve_logo.xpm")
