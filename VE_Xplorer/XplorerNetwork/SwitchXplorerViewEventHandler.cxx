@@ -107,8 +107,13 @@ void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    {
       cfdPfSceneManagement::instance()->SetActiveSwitchNode( 2 );
       cfdDCS* tempDCS = cfdPfSceneManagement::instance()->GetNetworkDCS();
-	  NetworkSystemView networkLayout;
-	  dynamic_cast< osg::MatrixTransform* >( tempDCS->GetRawNode() )->addChild( networkLayout.DrawNetwork().get() );
+      osg::MatrixTransform* tempMatrix = 
+         static_cast< osg::MatrixTransform* >( tempDCS->GetRawNode() );
+      int numChildren = tempMatrix->getNumChildren();
+      tempMatrix->removeChildren( 0, numChildren );
+
+      NetworkSystemView networkLayout;     
+      tempMatrix->addChild( networkLayout.DrawNetwork().get() );
    }
    else if ( viewData == "CHANGE_XPLORER_VIEW_CAD" )
    {

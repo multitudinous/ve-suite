@@ -306,6 +306,6 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		linesGeom->setColorArray(colorBlack.get());
 		geode->addDrawable(linesGeom);
 	}
-	loadedModels.get()->addChild(geode);
-	return loadedModels.get();
+	loadedModels->addChild(geode);
+	return loadedModels;
 }
