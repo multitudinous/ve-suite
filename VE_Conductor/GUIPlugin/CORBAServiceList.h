@@ -42,6 +42,7 @@ CORBAServiceList API
 #include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/GUIPlugin/UI_i.h"
+
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
 #include <vpr/Util/Singleton.h>

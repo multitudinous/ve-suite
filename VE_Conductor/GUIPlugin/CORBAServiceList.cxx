@@ -37,9 +37,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
-#include "VE_Conductor/GUIPlugin/UI_i.h"
 
-#include <orbsvcs/CosNamingC.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <ace/SString.h>
 #include <ace/SStringfwd.h>
