@@ -214,7 +214,7 @@ const XMLCh* XMLObject::VEStr::unicodeForm() const
    return fUnicodeForm;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
+DOMElement* XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
 {
    DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
    dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:boolean") );
@@ -223,18 +223,20 @@ void XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
    DOMText* dataValueString = _rootDocument->createTextNode( xercesString( boolValue ) );
    dataValueStringElement->appendChild( dataValueString );
    _veElement->appendChild( dataValueStringElement );
+   return dataValueStringElement;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetSubElement( std::string subElementTagName, std::string dataValue )
+DOMElement* XMLObject::SetSubElement( std::string subElementTagName, std::string dataValue )
 {
    DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
    dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:string") );
    DOMText* dataValueString = _rootDocument->createTextNode( xercesString( dataValue ) );
    dataValueStringElement->appendChild( dataValueString );
    _veElement->appendChild( dataValueStringElement );
+   return dataValueStringElement;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetSubElement( std::string subElementTagName, unsigned int dataValue )
+DOMElement* XMLObject::SetSubElement( std::string subElementTagName, unsigned int dataValue )
 {
    DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
    dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:unsignedInt") );
@@ -244,9 +246,10 @@ void XMLObject::SetSubElement( std::string subElementTagName, unsigned int dataV
 
    dataValueNumElement->appendChild( dataValueText );
    _veElement->appendChild( dataValueNumElement );
+   return dataValueNumElement;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetSubElement( std::string subElementTagName, long int dataValue )
+DOMElement* XMLObject::SetSubElement( std::string subElementTagName, long int dataValue )
 {
    DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
    dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:integer") );
@@ -256,9 +259,10 @@ void XMLObject::SetSubElement( std::string subElementTagName, long int dataValue
 
    dataValueNumElement->appendChild( dataValueText );
    _veElement->appendChild( dataValueNumElement );
+   return dataValueNumElement;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetSubElement( std::string subElementTagName, double dataValue )
+DOMElement* XMLObject::SetSubElement( std::string subElementTagName, double dataValue )
 {
    DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
    dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:double") );
@@ -268,6 +272,7 @@ void XMLObject::SetSubElement( std::string subElementTagName, double dataValue )
 
    dataValueNumElement->appendChild( dataValueText );
    _veElement->appendChild( dataValueNumElement );
+   return dataValueNumElement;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue )
@@ -312,6 +317,11 @@ void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseEle
    try
    {
       char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
+      if ( !fUnicodeForm )
+      {
+         return;
+      }
+      
       std::string value( fUnicodeForm );
       delete fUnicodeForm;
       if(value == "true")
@@ -320,7 +330,7 @@ void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseEle
       }
       else
       {
-        attribute = false;            
+         attribute = false;            
       }
    }
    catch(...)
@@ -335,14 +345,35 @@ void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseEle
 {
    try
    {
-      DOMText* rawText = dynamic_cast< DOMText* >( baseElement->getFirstChild() );
-      std::string tmp;
-
-      char* fUnicodeForm = XMLString::transcode( rawText->getData() );
-      tmp.assign( fUnicodeForm );
-      delete fUnicodeForm;
+      char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
+      if ( !fUnicodeForm )
+      {
+         return;
+      }
    
-      attribute = std::atoi( tmp.c_str() );
+      attribute = std::atoi( fUnicodeForm );
+      delete fUnicodeForm;
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid element!!"<<std::endl;
+      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
+   }
+}
+/////////////////////////////////////////////////////////////////////////////////////
+void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
+                              std::string attributeName, float& attribute)
+{
+   try
+   {
+      char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
+      if ( !fUnicodeForm )
+      {
+         return;
+      }
+      
+      attribute = std::atof( fUnicodeForm );
+      delete fUnicodeForm;
    }
    catch(...)
    {

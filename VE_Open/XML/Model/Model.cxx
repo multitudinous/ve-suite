@@ -60,6 +60,8 @@ Model::Model()
    SetObjectNamespace("Model");
    vendorUnit = '\0';
    modelAttribute = 0;
+   iconScale = 1.0f;
+   iconRotation = 0.0f;
 }
 ///////////////////////////////////
 Model::~Model()
@@ -293,6 +295,8 @@ void Model::SetObjectFromXMLData(DOMNode* element)
          {
             iconFileName = std::string( "no_icon" );
          }
+         GetAttribute( dataValueStringName, "iconScale", iconScale );  
+         GetAttribute( dataValueStringName, "iconRotation", iconRotation );           
       }
 
       {
@@ -643,8 +647,20 @@ void Model::_updateVEElement( std::string input )
    dirStringStream << uniqueModelID;
    SetAttribute( "ID", dirStringStream.str() );
    //SetSubElement( "ID", uniqueModelID );
-   SetSubElement( "icon", iconFileName );
+   DOMElement* iconElement = SetSubElement( "icon", iconFileName );
 
+   {
+      std::stringstream int2string;
+      int2string << iconScale;
+      iconElement->setAttribute( xercesString( "iconScale" ), xercesString( int2string.str().c_str() )  );
+   }
+
+   {
+      std::stringstream int2string;
+      int2string << iconRotation;
+      iconElement->setAttribute( xercesString( "iconRotation" ), xercesString( int2string.str().c_str() )  );      
+   }
+   
    for ( size_t i = 0; i < results.size(); ++i )
    {
       SetSubElement( "results", results.at( i ) );   
@@ -689,4 +705,24 @@ void Model::SetModelAttribute( VE_XML::Command* modelAttribute )
 VE_XML::Command* Model::GetModelAttribute( void )
 {
    return this->modelAttribute;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetIconRotation( float rotation )
+{
+   iconRotation = rotation;
+}
+////////////////////////////////////////////////////////////////////////////////
+float Model::GetIconRotation( void )
+{
+   return iconRotation;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetIconScale( float scale )
+{
+   iconScale = scale;
+}
+////////////////////////////////////////////////////////////////////////////////
+float Model::GetIconScale( void )
+{
+   return iconScale;
 }

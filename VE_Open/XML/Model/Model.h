@@ -107,7 +107,14 @@ public:
    unsigned int GetModelID( void );
    ///Get the icon file name
    std::string GetIconFilename( void );
-
+   ///Set the roation of the icon
+   void SetIconRotation( float rotation );
+   ///Get the icon rotation
+   float GetIconRotation( void );
+   ///Set the scale of the icon
+   void SetIconScale( float scale );
+   ///Get icon scale
+   float GetIconScale( void );
    ///Get point for the icon location
    Point* GetIconLocation( void );
    ///Get results data
@@ -192,6 +199,8 @@ private:
    ///The vendor name for the model
    std::string vendorUnit;///<The string that stores the unit name that this model maps to
    VE_XML::Command* modelAttribute;///<The structure that stores all of the model attributes
+   float iconScale;///<The icon scale to set the right size for conductor and xplorer
+   float iconRotation;///<The icon rotation for conductor and xplorer
 };
 }
 }

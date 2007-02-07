@@ -172,6 +172,12 @@ public:
    ///\param attribute The attribute to retrive.
    void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, unsigned int& attribute);
 
+   ///Get an float attribute by name
+   ///\param baseElement The element to extract it from
+   ///\param attributeName The name of the attribute
+   ///\param attribute The attribute to retrive.
+   void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, float& attribute);
+   
    ///utility functions for extracting subElement itemIndex from a complex element.
    ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
@@ -181,24 +187,23 @@ public:
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   void SetSubElement( std::string subElementTagName, bool dataValue );
-
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, bool dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   void SetSubElement( std::string subElementTagName, std::string dataValue );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, std::string dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   void SetSubElement( std::string subElementTagName, unsigned int dataValue );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, unsigned int dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   void SetSubElement( std::string subElementTagName, long int dataValue );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, long int dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   void SetSubElement( std::string subElementTagName, double dataValue );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, double dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
