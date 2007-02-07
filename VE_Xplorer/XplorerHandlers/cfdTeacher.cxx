@@ -44,7 +44,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandlers/cfdWriteTraverser.h"
 #include "VE_Xplorer/XplorerHandlers/cfdRawNodeWriteTraverser.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/XplorerHandlers/cfdScalarBarActor.h"
