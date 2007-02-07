@@ -57,9 +57,6 @@ ifeq ($(VE_PATENTED), TRUE)
    PATENTED_TAG=_vep
 endif
 
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.apr.mk
-
 # IRIX needs these flags
 ifeq (${CFDUNAME},IRIX64)
    EXTRA_CXXFLAGS+= -D_IRIX
@@ -92,9 +89,6 @@ EXTRA_LIBS+= -lVE_ModelLib
 EXTRA_LIBS+= -lVE_OpenModuleLib
 EXTRA_LIBS+= -lVE_ShaderLib
 EXTRA_LIBS+= -lVE_XplorerNetworkLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
-
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
-#include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
@@ -136,8 +130,11 @@ srcdir= .
 # turn off dependencies for idl stuff, make clean
 NO_DEPEND= YES
 
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/ext/vpr/dzr.vpr.mk
+include $(shell flagpoll vrjuggler --get-vrj-app-defs-file)
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.apr.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 
 
 ifeq ($(SCENE_GRAPH), OSG)
@@ -151,15 +148,13 @@ DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
-EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
+#EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
-LINKALL_ON= -all
-LINKALL_OFF=
+#LINKALL_ON= -all
+#LINKALL_OFF=
 
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
-
-CXX_GEN_DIR= .
 
 # -----------------------------------------------------------------------------
 # Application build targets.
