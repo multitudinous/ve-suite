@@ -26,7 +26,7 @@ void IconChooser::CreateGUIControls()
 	//WxChoice->SetSelection(-1);
 
     //Parse the directory structure
-    wxString directory ("F:/ASPENV21/2DIcons");
+    wxString directory( _("F:/ASPENV21/2DIcons") );
     wxString dirname;
     wxDir parentDir (directory);
     bool isParentTrue = parentDir.GetFirst(&dirname);
@@ -40,7 +40,7 @@ void IconChooser::CreateGUIControls()
         	WxNotebook->AddPage(WxNoteBookPage, dirname);
             
             wxString filename;
-            wxDir childDir (directory+"/"+dirname);
+            wxDir childDir (directory+ wxT("/")+dirname);
             bool isChildTrue = childDir.GetFirst(&filename);
             int hCount = 0;
             int vCount = 0;
@@ -52,13 +52,13 @@ void IconChooser::CreateGUIControls()
                 if(filename.compare(wxT(".svn")) != 0)
                 {
                     //construct iconPath and place it in the map along with its event id
-					filename = filename.RemoveLast(4);
-                    std::string iconPath = dirname+"/"+filename;
-                    iconPaths[buttonCount] = iconPath;
+                   filename = filename.RemoveLast(4);
+                    wxString iconPath = dirname+ wxString(_("/"))+filename;
+                    iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
                     
                     //create the image for the button and scale it
                     wxInitAllImageHandlers();
-                    wxImage jpeg (directory + "/" + iconPath + wxT(".jpg"));
+                    wxImage jpeg (directory + wxT("/") + iconPath + wxT(".jpg"));
                     jpeg = jpeg.Scale(50, 70);
                     
                     //place the button and its label on the current page
@@ -103,7 +103,7 @@ void IconChooser::WxButtonClick(wxCommandEvent& event)
     //wxString id;
     //id.Printf("%d", event.GetId());
 	//WxEdit->SetValue(id);
-	WxEdit->SetValue(iconPaths[event.GetId()]);
+	WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
 	thePlugin->SetImageIcon(iconPaths[event.GetId()]);
 }
 
