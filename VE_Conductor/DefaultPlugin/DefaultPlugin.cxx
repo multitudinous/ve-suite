@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h"
-#include "VE_Conductor/xpm/square.xpm"
 #include "VE_Open/XML/Model/Point.h"
 #include <iostream>
 
@@ -43,18 +42,18 @@ IMPLEMENT_DYNAMIC_CLASS(DefaultPlugin, REI_Plugin)
 DefaultPlugin::DefaultPlugin()
 :REI_Plugin()
 {
-   wxImage my_img( square_xpm );
-   icon_w = (int)my_img.GetWidth()*0.30f;
-   icon_h = (int)my_img.GetHeight()*0.30f;
+   //wxImage my_img( square_xpm );
+   //icon_w = (int)my_img.GetWidth()*0.30f;
+   //icon_h = (int)my_img.GetHeight()*0.30f;
 
-   my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+   //my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
    
-   n_pts = 4;
+   //n_pts = 4;
 
-   poly[0]=wxPoint(0,0);
-   poly[1]=wxPoint(icon_w,0);
-   poly[2]=wxPoint(icon_w,icon_h);
-   poly[3]=wxPoint(0,icon_h);
+   //poly[0]=wxPoint(0,0);
+   //poly[1]=wxPoint(icon_w,0);
+   //poly[2]=wxPoint(icon_w,icon_h);
+   //poly[3]=wxPoint(0,icon_h);
 
    height = 100;
    //RegistVar("height", &height );
@@ -120,11 +119,11 @@ double DefaultPlugin::GetVersion()
   return result;
 }
 /////////////////////////////////////////////////////////////////////////////
-void DefaultPlugin::DrawIcon(wxDC* dc)
-{
-  //Your implementation
-	dc->DrawBitmap(*my_icon,pos.x, pos.y);
-}
+//void DefaultPlugin::DrawIcon(wxDC* dc)
+//{
+//  //Your implementation
+//	dc->DrawBitmap(*my_icon,pos.x, pos.y);
+//}
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* DefaultPlugin::UI(wxWindow* parent)
 {
@@ -148,42 +147,4 @@ wxString DefaultPlugin::GetDesc()
   wxString result= _("DefaultPlugin for VE-Conductor"); //your description
 
   return result;
-}
-/////////////////////////////////////////////////////////////////////////////
-void DefaultPlugin::SetImageIcon(std::string path)
-{
-	//wxImage* my_img = new wxImage();
-	//bool exists = my_img->LoadFile(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
-	std::string fullPath = "2DIcons/" + path + ".jpg";
-	std::ifstream exists(fullPath.c_str());
-	if ( exists.fail() )
-	{	
-      return;
-   }
-   iconFilename = path;
-	wxImage my_img(wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
-	//icon_w = (int)my_img.GetWidth()*0.30f;
-	//icon_h = (int)my_img.GetHeight()*0.30f;
-	icon_h = 40;
-	icon_w = 40;
-	//for scaling the jpeg and keeping aspect ratio -> didnt help
-	//icon_w = 40 * my_img.GetWidth() / my_img.GetHeight();
-
-	delete my_icon;
-	my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
-	
-	n_pts = 4;
-
-	poly[0]=wxPoint(0,0);
-	poly[1]=wxPoint(icon_w,0);
-	poly[2]=wxPoint(icon_w,icon_h);
-	poly[3]=wxPoint(0,icon_h);
-
-	height = 100;
-	RegistVar("height", &height );
-
-	dlg = 0;
-	name = _("DefaultPlugin");
-	//delete my_img;
-	return;
 }
