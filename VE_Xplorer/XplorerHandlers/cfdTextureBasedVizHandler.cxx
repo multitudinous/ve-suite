@@ -55,7 +55,6 @@
 #include "VE_Xplorer/XplorerHandlers/TBUpdateSolutionEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdWriteTraverser.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
