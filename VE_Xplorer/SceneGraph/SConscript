@@ -38,7 +38,6 @@ headers = Split("""
     cfdGeode.h
     cfdGroup.h
     cfdNode.h
-    cfdNodeTraverser.h
     cfdPfSceneManagement.h
     cfdRawNodeTraverser.h
     cfdSceneNode.h
