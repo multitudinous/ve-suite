@@ -39,13 +39,13 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
 vtk_options.apply( env )
 osg_options.apply( env )
 xerces_options.apply( env )
-env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
 env.ParseConfig('flagpoll TAO \
                           ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                           TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
                           --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --get-vrj-ogl-libs --libs --cflags')
+env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
 #opal_options.apply( env )
 #ode_options.apply( env )
 #opal_options.apply( env )
