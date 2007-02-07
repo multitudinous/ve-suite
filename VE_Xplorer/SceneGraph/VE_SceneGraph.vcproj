@@ -195,10 +195,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdDCS.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdFILE.cxx"
 				>
 			</File>
@@ -324,10 +320,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdClone.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdDCS.h"
 				>
 			</File>
 			<File
