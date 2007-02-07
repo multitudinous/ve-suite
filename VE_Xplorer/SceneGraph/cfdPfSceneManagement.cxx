@@ -49,7 +49,7 @@
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/SceneGraph/DCS.h"
+//#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #ifndef WIN32
 #ifdef _PERFORMER

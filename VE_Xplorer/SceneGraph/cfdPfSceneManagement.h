@@ -43,7 +43,6 @@ cfdPfSceneManagement API
 */
 namespace VE_SceneGraph
 {
-	class DCS;
    class cfdDCS;
    class cfdGroup;
    class cfdSwitch;
@@ -56,6 +55,8 @@ namespace VE_SceneGraph
 #elif _OSG
 #include <osg/ref_ptr>
 #endif
+
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
