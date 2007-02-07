@@ -213,10 +213,6 @@ void cfdPfSceneManagement::_createLogo()
       _logoNode->SetTranslationArray(translation);
       _logoNode->SetScaleArray(scale);
 
-		VE_SceneGraph::cfdNode* node = new VE_SceneGraph::cfdNode();  
-		node->LoadFile( GetVESuite_Text().c_str(), true );
-		_logoNode->addChild(node->GetRawNode());
-
 		VE_SceneGraph::cfdNode* _textPart = new VE_SceneGraph::cfdNode();  
 		_textPart->LoadFile( GetVESuite_Text().c_str(), true );
 		_logoNode->addChild(_textPart->GetRawNode());
