@@ -560,9 +560,10 @@ btTransform* DCS::GetPhysicsTransform( void )
 void DCS::UpdatePhysicsTransform( void )
 {
    osg::Quat quat = this->getAttitude();
-   bulletTransform->setRotation( btQuaternion( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] ) );
+   //btQuaternion btQuat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
+   //bulletTransform->setRotation( btQuat );
    osg::Vec3d trans = this->getPosition();
-   bulletTransform->setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
+   //bulletTransform->setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
 }
 #ifdef _OSG
 ////////////////////////////////////////////

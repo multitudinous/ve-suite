@@ -204,5 +204,4 @@ private:
 };
 }
 }
-
 #endif// _VE_MODEL_H_
