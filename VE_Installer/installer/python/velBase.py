@@ -32,7 +32,7 @@ if windows:
     ##Change this if cluster.bat can't write to its directory.
     CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")
 else:
-    CLUSTER_FILE_PATH = join(VELAUNCHER_DIR, "cluster.tsh")
+    CLUSTER_FILE_PATH = join('/', 'var', 'tmp', "cluster.tsh")
 TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
 ##Config settings.
 CONFIG_FILE = "VE-Suite-Launcher"

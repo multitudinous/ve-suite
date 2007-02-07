@@ -152,8 +152,9 @@ class Launch:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
             self.WriteClusterScriptPost()
-            clusterFileName = "cluster.tsh"
-            clusterFilePath = os.path.join(VELAUNCHER_DIR, clusterFileName)
+##            clusterFileName = "cluster.tsh"
+##            clusterFilePath = os.path.join(CLUSTER_PATH, clusterFileName)
+            clusterFilePath = CLUSTER_FILE_PATH
             ##Write cluster script
             sourceFile = file(clusterFilePath, 'w')
             sourceFile.write(self.clusterScript)
