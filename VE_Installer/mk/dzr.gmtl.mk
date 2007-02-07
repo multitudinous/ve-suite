@@ -1,1 +1,1 @@
-EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include
+EXTRA_INCLUDES+= $(shell flagpoll gmtl --cflags) 

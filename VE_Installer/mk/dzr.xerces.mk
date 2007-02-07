@@ -1,4 +1,4 @@
-EXTRA_INCLUDES+= -I${XERCESCROOT}/include
-EXTRA_LIBS+= -L${XERCESCROOT}/lib -lxerces-c
+EXTRA_INCLUDES+= $(shell flagpoll xerces --cflags)
+EXTRA_LIBS+= $(shell flagpoll xerces --libs)
 
-DSO_PLUGIN_DEPS+= -L${XERCESCROOT}/lib -lxerces-c
+DSO_PLUGIN_DEPS+= $(shell flagpoll xerces --libs)
