@@ -12,7 +12,6 @@ sources = Split("""
     cfdGeode.cxx
     cfdGroup.cxx
     cfdNode.cxx
-    cfdNodeTraverser.cxx
     cfdPfSceneManagement.cxx
     cfdRawNodeTraverser.cxx
     cfdSceneNode.cxx
