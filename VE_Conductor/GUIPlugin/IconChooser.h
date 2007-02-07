@@ -1,7 +1,7 @@
 #ifndef ICONCHOOSER_H
 #define ICONCHOOSER_H
 
-#include "F:\suite\VE_Conductor\GUIPlugin\Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Installer/include/VEConfig.h"
 #include <wx/wx.h>
 #include <wx/frame.h>
