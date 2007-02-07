@@ -152,6 +152,9 @@ public:
    ///method to start a dialog to ask the user for a plugin name so that the 
    ///name can be defined at run time
    void SetPluginNameDialog( void );
+
+   //allows user to set the image to be displayed on the icon
+   void SetImageIcon(std::string);
    
    //To Get around the Memory allocation problem of windows dll
    //Add the calls for the size. So the main program can preallocate memory for it
@@ -225,6 +228,9 @@ protected:
    std::map<std::string, std::vector<long> * >        _int1D;
    std::map<std::string, std::vector<double> * >      _double1D;
    std::map<std::string, std::vector<std::string> * > _string1D;
+   
+   wxBitmap* my_icon;
+   int icon_w, icon_h;
 
    // Dynamic input and results dialogs as well as port dialogs
    //wxDialog* inputsDialog;

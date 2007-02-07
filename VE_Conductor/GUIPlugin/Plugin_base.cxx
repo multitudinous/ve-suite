@@ -49,7 +49,7 @@
 #include "VE_Open/XML/Command.h"
 
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
-
+#include "VE_Conductor/xpm/square.xpm"
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>
@@ -73,14 +73,26 @@ REI_Plugin::REI_Plugin()
    pos = wxPoint(0,0); //default position
   
    //default shape
-   n_pts=5;
-   poly = new wxPoint[n_pts];
+   //n_pts=5;
+   //poly = new wxPoint[n_pts];
   
-   poly[0]=wxPoint(0,20);
-   poly[1]=wxPoint(20,0);
-   poly[2]=wxPoint(40,20);
-   poly[3]=wxPoint(30, 40);
-   poly[4]=wxPoint(10,40);
+   //poly[0]=wxPoint(0,20);
+   //poly[1]=wxPoint(20,0);
+   //poly[2]=wxPoint(40,20);
+   //poly[3]=wxPoint(30, 40);
+   //poly[4]=wxPoint(10,40);
+
+   wxImage my_img( square_xpm );
+   icon_w = (int)my_img.GetWidth()*0.30f;
+   icon_h = (int)my_img.GetHeight()*0.30f;
+   my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+   
+   n_pts = 4;
+   poly = new wxPoint[n_pts];
+   poly[0]=wxPoint(0,0);
+   poly[1]=wxPoint(icon_w,0);
+   poly[2]=wxPoint(icon_w,icon_h);
+   poly[3]=wxPoint(0,icon_h);
   
    mod_pack._type = 1 ; //Module
    mod_pack._category = 1; // normal modules
@@ -306,10 +318,10 @@ void REI_Plugin::GetOPorts(PORT& oports)
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::DrawIcon(wxDC* dc)
 {
-  wxCoord xoff = pos.x;
-  wxCoord yoff = pos.y;
-  
-  dc->DrawPolygon(n_pts, poly, xoff, yoff);
+  //wxCoord xoff = pos.x;
+  //wxCoord yoff = pos.y;
+  //dc->DrawPolygon(n_pts, poly, xoff, yoff);
+	dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1159,4 +1171,35 @@ void REI_Plugin::SetPluginNameDialog( void )
 void REI_Plugin::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList )
 {
    this->serviceList = serviceList;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetImageIcon(std::string path)
+{
+	//wxImage* my_img = new wxImage();
+	//bool exists = my_img->LoadFile(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
+	std::string fullPath = "2DIcons/" + path + ".jpg";
+	std::ifstream exists(fullPath.c_str());
+	if ( exists.fail() )
+	{	
+      return;
+   }
+   iconFilename = path;
+	wxImage my_img(wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
+	//icon_w = (int)my_img.GetWidth()*0.30f;
+	//icon_h = (int)my_img.GetHeight()*0.30f;
+	int icon_h = 40;
+	int icon_w = 40;
+	//for scaling the jpeg and keeping aspect ratio -> didnt help
+	//icon_w = 40 * my_img.GetWidth() / my_img.GetHeight();
+
+	delete my_icon;
+	my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+	
+	n_pts = 4;
+
+	poly[0]=wxPoint(0,0);
+	poly[1]=wxPoint(icon_w,0);
+	poly[2]=wxPoint(icon_w,icon_h);
+	poly[3]=wxPoint(0,icon_h);
 }
