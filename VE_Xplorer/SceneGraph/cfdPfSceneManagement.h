@@ -43,6 +43,7 @@ cfdPfSceneManagement API
 */
 namespace VE_SceneGraph
 {
+	class DCS;
    class cfdDCS;
    class cfdGroup;
    class cfdSwitch;
@@ -53,6 +54,7 @@ namespace VE_SceneGraph
    class pfLightModel;
    class pfLightSource;
 #elif _OSG
+#include <osg/ref_ptr>
 #endif
 
 #include <vpr/Util/Singleton.h>
@@ -94,7 +96,7 @@ private:
    //std::string    param;
    std::string _param;
    cfdGroup* rootNode;
-   cfdDCS* _logoNode;
+	osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;
    cfdSwitch* _logoSwitch;///<Node to switch between the logo and the worldDCS
    cfdDCS* worldDCS;///<Node to control navigation
    cfdDCS* networkDCS;///<Node to hold a network view of the system under investigation

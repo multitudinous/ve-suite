@@ -49,6 +49,7 @@
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #ifndef WIN32
 #ifdef _PERFORMER
@@ -100,12 +101,16 @@ void cfdPfSceneManagement::CleanUp( void )
    {
       delete _textPart;
       _textPart = 0;
-   }  
-   if(_logoNode)
+   }
+	
+	/*
+   if(_logoNode.get())
    {
       delete _logoNode;
       _logoNode = 0;
    }
+	*/
+
    if(_movingPyramidsAssembly)
    {
       delete _movingPyramidsAssembly;
@@ -154,7 +159,7 @@ void cfdPfSceneManagement::InitScene( void )
    //create the switch for our logo
    _createLogo();
    _logoSwitch->AddChild( worldDCS );
-   _logoSwitch->AddChild( _logoNode );
+	dynamic_cast< osg::Switch* >(_logoSwitch->GetRawNode())->addChild( _logoNode.get() );
    _logoSwitch->AddChild( networkDCS );
    
    //Now lets put it on the main group node
@@ -202,14 +207,26 @@ void cfdPfSceneManagement::_createLogo()
    }
    if(!_logoNode)
    {
-      _logoNode = new cfdDCS();
+		_logoNode = new VE_SceneGraph::DCS();
       float translation[3] = {0,5,4};
       float scale[3] = {.02,.02,.02};
       _logoNode->SetTranslationArray(translation);
       _logoNode->SetScaleArray(scale);
 
-      _textPart = new VE_SceneGraph::cfdFILE(GetVESuite_Text(),_logoNode,true);
-      _movingPyramidsAssembly = new VE_SceneGraph::cfdFILE(GetVESuite_Triangles(),_logoNode,true);
+		VE_SceneGraph::cfdNode* node = new VE_SceneGraph::cfdNode();  
+		node->LoadFile( GetVESuite_Text().c_str(), true );
+		_logoNode->addChild(node->GetRawNode());
+
+		VE_SceneGraph::cfdNode* _textPart = new VE_SceneGraph::cfdNode();  
+		_textPart->LoadFile( GetVESuite_Text().c_str(), true );
+		_logoNode->addChild(_textPart->GetRawNode());
+
+		VE_SceneGraph::cfdNode* _movingPyramidsAssembly = new VE_SceneGraph::cfdNode();  
+		_movingPyramidsAssembly->LoadFile( GetVESuite_Triangles().c_str(), true );
+		_logoNode->addChild(_movingPyramidsAssembly->GetRawNode());
+
+      //_textPart = new VE_SceneGraph::cfdFILE(GetVESuite_Text(),_logoNode.get(),true);
+      //_movingPyramidsAssembly = new VE_SceneGraph::cfdFILE(GetVESuite_Triangles(),_logoNode.get(),true);
    }
 
 #elif _PERFORMER
