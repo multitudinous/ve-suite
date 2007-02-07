@@ -45,6 +45,7 @@
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/QueryInputsDlg.h"
+#include "VE_Conductor/GUIPlugin/IconChooser.h"
 #include "VE_Conductor/GUIPlugin/ParamsDlg.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
@@ -112,6 +113,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(SHOW_ASPEN_NAME, Network::OnShowAspenName)
    EVT_MENU(QUERY_INPUTS, Network::OnQueryInputs)
    EVT_MENU(QUERY_OUTPUTS, Network::OnQueryOutputs)
+   EVT_MENU(SHOW_ICON_CHOOSER, Network::OnShowIconChooser)
    EVT_MENU(GEOMETRY, Network::OnGeometry)
    EVT_MENU(DATASET, Network::OnDataSet)
    EVT_MENU(MODEL_INPUTS, Network::OnInputsWindow) /* EPRI TAG */
@@ -508,7 +510,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
 	pop_menu.Enable(SHOW_FINANCIAL, true);
    }
    
-   //Aspen Unit Name
+   //Aspen Menu
    wxMenu * aspen_menu = new wxMenu();
    aspen_menu->Append(SHOW_ASPEN_NAME, _("Aspen Name") );
    aspen_menu->Enable(SHOW_ASPEN_NAME, true);
@@ -517,6 +519,12 @@ void Network::OnMRightDown(wxMouseEvent& event)
    aspen_menu->Append(QUERY_OUTPUTS, _("Query Outputs") );
    aspen_menu->Enable(QUERY_OUTPUTS, true);
    pop_menu.Append( ASPEN_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
+
+   //Icon Menu
+   wxMenu * icon_menu = new wxMenu();
+   icon_menu->Append(SHOW_ICON_CHOOSER, _("Icon Chooser") );
+   icon_menu->Enable(SHOW_ICON_CHOOSER, true);
+   pop_menu.Append( ICON_MENU,   _("Icon"), icon_menu, _("Controls for icon images") );
 
    //if (p_frame->f_geometry)
    {
@@ -554,6 +562,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
    pop_menu.Enable(SHOW_RESULT, false);
    pop_menu.Enable(PARAVIEW, false);
    pop_menu.Enable(ASPEN_MENU, false);
+   pop_menu.Enable(ICON_MENU, false);
 
    pop_menu.Enable(SHOW_LINK_CONT, false);
 
@@ -580,6 +589,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
       if (modules[m_selMod].GetPlugin()->Has3Ddata())
          pop_menu.Enable(PARAVIEW, true);
 	  pop_menu.Enable(ASPEN_MENU, true);
+	  pop_menu.Enable(ICON_MENU, true);
    }
 
    action_point = event.GetLogicalPosition(dc);
@@ -2439,14 +2449,11 @@ void Network::CreateNetwork( std::string xmlNetwork )
       REI_Plugin* tempPlugin = 0;
       if ( cls == 0 )
       {
-		  //Load the generic plugin for conductor
-		  DefaultPlugin* iconSetter = 0;
-		  iconSetter = new DefaultPlugin();
+		  tempPlugin = new DefaultPlugin();
 		  if ( !model->GetIconFilename().empty() )
-        {   
-           iconSetter->SetImageIcon(model->GetIconFilename());
-        }
-		  tempPlugin = iconSetter;
+		  {   
+			  tempPlugin->SetImageIcon(model->GetIconFilename());
+		  }
       }
       else
       {
@@ -2599,6 +2606,16 @@ void  Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 	title << wxT("Aspen Name");
 	wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
 	wxMessageDialog(this, desc, title).ShowModal();
+}
+//////////////////////////////////////////////////////
+void  Network::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
+{
+	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
+	REI_Plugin * tempPlugin = modules[m_selMod].GetPlugin();
+    IconChooser * chooser = new IconChooser(NULL);
+	chooser->SetPlugin(tempPlugin);
+	chooser->ShowModal();
 }
 
 //////////////////////////////////////////////////////

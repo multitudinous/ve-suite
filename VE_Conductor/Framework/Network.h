@@ -104,6 +104,8 @@ public:
       QUERY_INPUTS,
       QUERY_OUTPUTS,
       ASPEN_ICON,
+      ICON_MENU,
+	  SHOW_ICON_CHOOSER,
       GEOMETRY,
       MODEL_INPUTS,
       MODEL_RESULTS,
@@ -162,6 +164,8 @@ public:
    void OnQueryInputModuleProperties(std::vector< std::string >, std::string);
    void OnQueryOutputModuleProperties(std::vector< std::string >, std::string);
    void OnQueryModuleProperties(std::vector< std::string > requestedInputs, std::string compName);
+
+   void OnShowIconChooser(wxCommandEvent &event);
 
    //Add to network fuctions
    void AddtoNetwork(REI_Plugin *new_mod, std::string cls_name);
