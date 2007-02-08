@@ -559,6 +559,33 @@ int DCS::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool DCS::SearchChild( VE_SceneGraph::SceneNode* searchChild )
+{
+#ifdef _OPENSG
+	
+#elif _OSG
+	return this->containsNode( dynamic_cast< osg::Node* >(searchChild) );
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Group* DCS::GetParent( unsigned int position )
+{
+#ifdef _OPENSG
+
+#elif _OSG
+	return this->getParent( position );
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Node* DCS::GetChild( unsigned int position )
+{
+#ifdef _OPENSG
+
+#elif _OSG
+	return this->getChild( position );
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
 btTransform* DCS::GetPhysicsTransform( void )
 {
    return bulletTransform;

@@ -41,6 +41,7 @@
 */
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Quat.h>
 
@@ -103,7 +104,6 @@ public:
    int GetNumChildren( void );
    ///Set the name of the node
    const std::string GetName( void );
-
    ///Set the translation array with a vector
    void SetTranslationArray( std::vector<double> array );
    ///Set the translation array
@@ -120,21 +120,36 @@ public:
    ///this function set all of the scale, translation, and rotation
    ///arrays with the incoming matrix
    void SetMat( gmtl::Matrix44f& input );
-   ///Set jsut the roation portion of this transform
+   ///Set just the roation portion of this transform
    ///with the 4x4 matrix
    ///\param input Matrix with pure rotations
    void SetRotationMatrix( gmtl::Matrix44f& input );
    ///Generic set name function
+	///\param
    void SetName( std::string name );
    ///Generic remove child function
+	///\param
    int RemoveChild( SceneNode* child );
    ///Generic add child function
+	///\param
    int AddChild( SceneNode* child );
    ///Generic insert child function
+	///\param
    void InsertChild( int position, SceneNode* child );
    ///Generic replace child function
+	///\param
    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
-   ///Get the Bullet transform for this node
+	///Generic search child function
+	///\param searchChild SceneNode* of child to be found
+	bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
+	///Generic find parent function
+	///\param position the position of the parent to be returned
+	osg::Group* GetParent( unsigned int position );
+	///Generic get child function
+	///\param position the position of the child to be returned
+	osg::Node* GetChild( unsigned int position );
+   
+	///Get the Bullet transform for this node
    btTransform* GetPhysicsTransform( void );
    //virtual bool computeLocalToWorldMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const;
    //virtual bool computeWorldToLocalMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const;
@@ -146,8 +161,8 @@ protected:
    btTransform* bulletTransform;///<The physics transform
 private:
    ///Update the bullet matrix with the matrix from the osg node
-   /// the osg node gets set first and is then updated by the 
-   /// bullet physics simulator
+   ///the osg node gets set first and is then updated by the 
+   ///bullet physics simulator
    void UpdatePhysicsTransform( void );
    
    //osg::ref_ptr< TransferPhysicsDataCallback > udcb;///<The callback to update the sg node with physics data
