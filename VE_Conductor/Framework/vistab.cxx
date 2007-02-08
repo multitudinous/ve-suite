@@ -715,7 +715,7 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
    ///clear out the scalar ranges from before
    _originalScalarRanges.clear();
 
-   std::cout<<"udpateAvailableScalarMeshSolutions"<<std::endl;
+   std::cout<<"updateAvailableScalarMeshSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( "MESH_SCALARS" );
    if(currentSolution != _availableSolutions.end())
@@ -728,7 +728,7 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
 
          currentSolution->second.Add(wxString(newScalars[i].scalarnames, wxConvUTF8));
       }
-      _updateComboBoxNames("MESH_SCALARS",currentSolution->second);
+      _updateComboBoxNames("MESH_SCALARS",currentSolution->second);      
    }
    else
    {
@@ -744,7 +744,7 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
       std::cout<<dataType<<" not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
       return;
    }
-   std::cout<<"udpateAvailableSolutions"<<std::endl;
+   std::cout<<"updateAvailableSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( dataType );
    _none = new wxString("None",wxConvUTF8);
@@ -795,6 +795,17 @@ void Vistab::_updateComboBoxNames(std::string dataType,
       }
    }
 
+   if( _activeScalarName.empty() )
+   {
+      _scalarSelection->SetSelection(0);
+      _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   }
+   else
+   {
+      _scalarSelection->SetSelection(scalarValue);
+      _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   }
+
    scalarSelect = false;
    vectorSelect = false;
 }
@@ -811,7 +822,7 @@ void Vistab::_OnSelectDataset(wxCommandEvent& WXUNUSED(event))
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
-{
+{ 
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
@@ -838,19 +849,12 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
          _minSlider->Enable(true);
          _maxSlider->Enable(true);
       }
-   //   scalarRange->SetMinimumSliderValue( 0 );
-   //   scalarRange->SetMaximumSliderValue( 100 );
+
       _minSlider->SetValue( 0 );
       _maxSlider->SetValue( 100 );
-
+      scalarValue = _scalarSelection->GetSelection();
+      
       scalarSelect = true;
-   }
-   else
-   {
-      _minSpinner->Enable(false);
-      _maxSpinner->Enable(false);
-      _minSlider->Enable(false);
-      _maxSlider->Enable(false);
    }
 }
 ///////////////////////////////////////////////////
@@ -968,6 +972,7 @@ void Vistab::_updateBaseInformation()
 //                    + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
    minimumValue = _activeScalarRange.at(0) 
                     + ((double)_minSlider->GetValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
+
    scalarMin->SetData("Scalar Min",minimumValue);
 
    _vistabBaseInformation.push_back(scalarMin);
@@ -1043,8 +1048,6 @@ void Vistab::_onMinSpinCtrl( wxScrollEvent& WXUNUSED(event) )
 {
 //   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
    double minValue = 0;
-
-
 
    if( _activeScalarName.empty() && _activeVectorName.empty() )
    {

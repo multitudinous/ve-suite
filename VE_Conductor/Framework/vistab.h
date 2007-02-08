@@ -231,7 +231,6 @@ public:
    wxSlider* _maxSlider;
    wxString* _none;
 
-
 protected:
    /*!\class ScalarRangeMinSliderCallback
     *Class that allows the user to do operations based on the min slider events
@@ -422,6 +421,8 @@ protected:
 
    bool scalarSelect;
    bool vectorSelect;
+
+   unsigned int scalarValue;
    
    std::string ConvertUnicode( const wxChar* data )
    {
