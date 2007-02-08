@@ -1911,10 +1911,10 @@ void Network::ReDrawAll()
   //  dc.SetBrush(*wxWHITE_BRUSH);
   //  CleanRect(box, dc); 
   dc.SetUserScale(userScale.first, userScale.second);
-  dc.SetBackground(*wxWHITE_BRUSH);
-  dc.Clear();
-  dc.SetPen(*wxBLACK_PEN);
-  dc.SetBrush(*wxWHITE_BRUSH);
+  //dc.SetBackground(*wxWHITE_BRUSH);
+  //dc.Clear();
+  //dc.SetPen(*wxBLACK_PEN);
+  //dc.SetBrush(*wxWHITE_BRUSH);
   
   ReDraw(dc);
 }
@@ -2452,7 +2452,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 		  tempPlugin = new DefaultPlugin();
 		  if ( !model->GetIconFilename().empty() )
 		  {   
-			  tempPlugin->SetImageIcon(model->GetIconFilename());
+			  tempPlugin->SetImageIcon(model->GetIconFilename(), model->GetIconRotation(), model->GetIconMirror(), model->GetIconScale());
 		  }
       }
       else

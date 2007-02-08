@@ -54,6 +54,8 @@
 #include <wx/dc.h>
 #include <wx/msgdlg.h>
 #include <wx/wx.h>
+#include <math.h>
+
 using namespace VE_XML::VE_Model;
 using namespace VE_XML;
 
@@ -1174,27 +1176,52 @@ void REI_Plugin::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList )
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetImageIcon(std::string path)
+void REI_Plugin::SetImageIcon(std::string path, float rotation, int mirror, float scale)
 {
 	//wxImage* my_img = new wxImage();
 	//bool exists = my_img->LoadFile(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
 	std::string fullPath = "2DIcons/" + path + ".jpg";
 	std::ifstream exists(fullPath.c_str());
+	double PI = 3.14159265;
 	if ( exists.fail() )
 	{	
       return;
    }
    iconFilename = path;
 	wxImage my_img(wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
-	//icon_w = (int)my_img.GetWidth()*0.30f;
-	//icon_h = (int)my_img.GetHeight()*0.30f;
-	int icon_h = 40;
-	int icon_w = 40;
-	//for scaling the jpeg and keeping aspect ratio -> didnt help
-	//icon_w = 40 * my_img.GetWidth() / my_img.GetHeight();
+	if(mirror > 0 && mirror < 3)
+	{
+		if(mirror == 1)
+			my_img = my_img.Mirror(true);
+		else
+			my_img = my_img.Mirror(false);
+	}
+	my_img = my_img.Rotate((rotation*PI)/180, wxPoint(0,0));
+
+	//Implement Scale - scale the images to where the longest length is 40
+	//while the smallest length is scaled accordingly
+	
+	if(my_img.GetWidth() > my_img.GetHeight())
+	{
+		icon_w = 40;
+		icon_h = 40 * my_img.GetHeight() / my_img.GetWidth();
+	}
+	else
+	{
+		icon_h = 40;
+		icon_w = 40 * my_img.GetWidth() / my_img.GetHeight();
+	}
+
+	//now scale it up or down according to the specified scale
+	icon_w = icon_w * scale;
+	icon_h = icon_h * scale;
+	
+	//int icon_h = 40;
+	//int icon_w = 40;
 
 	delete my_icon;
 	my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+	
 	
 	n_pts = 4;
 
