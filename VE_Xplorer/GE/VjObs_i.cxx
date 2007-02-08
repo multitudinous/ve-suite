@@ -60,11 +60,9 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 
 #ifdef _OSG
-#ifdef VE_PATENTED
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 #include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
 using namespace VE_TextureBased;
-#endif
 #endif
 
 #include <vpr/System.h>
@@ -153,14 +151,10 @@ void VjObs_i::InitCluster( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef _TAO
 VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
-#endif
 {
    VjObs::Model_var tempModel = 0;
    tempModel = new VjObs::Model();
@@ -296,14 +290,10 @@ VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
 }
 
 /////////////////////////////////////////////////////////////
-#ifdef _TAO
 VjObs::Models* VjObs_i::GetModels()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-VjObs::Models* VjObs_i::GetModels()
-#endif
 {
    this->CreateDatasetInfo();
    VjObs::Models* models_= new VjObs::Models(*_models);
@@ -458,15 +448,10 @@ void VjObs_i::CreateTeacherInfo( void )
 }
 
 /////////////////////////////////////////////////////////////
-
-#ifdef _TAO
 VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-VjObs::obj_pd* VjObs_i::getDouble1D(  const char* input )
-#endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    VjObs::obj_pd_var array1dData;
@@ -488,14 +473,10 @@ VjObs::obj_pd* VjObs_i::getDouble1D(  const char* input )
    return array1dData._retn();
 }
 
-#ifdef _TAO
 VjObs::double2DArray* VjObs_i::getDouble2D( const char* input )
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-VjObs::double2DArray* VjObs_i::getDouble2D(  const char* input )
-#endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    VjObs::double2DArray_var arrayData;
@@ -524,28 +505,20 @@ VjObs::double2DArray* VjObs_i::getDouble2D(  const char* input )
    return arrayData._retn();   
 }
 
-#ifdef _TAO
 VjObs::scalar_p* VjObs_i::get_teacher_name()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-VjObs::scalar_p* VjObs_i::get_teacher_name()
-#endif
 {
    CreateTeacherInfo();
    VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
    return teacher_name_._retn();
 }
 
-#ifdef _TAO
 CORBA::Long VjObs_i::getIsoValue()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-CORBA::Long VjObs_i::getIsoValue()
-#endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -554,14 +527,10 @@ CORBA::Long VjObs_i::getIsoValue()
    return cfdQuatCamHandler::instance()->getNumLocs();
 }
 
-#ifdef _TAO
 void VjObs_i::setSc(const CORBA::Long value)
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-void VjObs_i::setSc(CORBA::Long value)
-#endif
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -570,14 +539,10 @@ void VjObs_i::setSc(CORBA::Long value)
    _bufferArray->SetCommandValue( cfdCommandArray::CFD_SC, value );
 }
 
-#ifdef _TAO
 short VjObs_i::getPostdataState()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-CORBA::Short VjObs_i::getPostdataState()
-#endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -586,14 +551,10 @@ CORBA::Short VjObs_i::getPostdataState()
    return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
 }
 
-#ifdef _TAO
 short VjObs_i::getTimesteps()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-CORBA::Short VjObs_i::getTimesteps()
-#endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 2)
@@ -603,14 +564,10 @@ CORBA::Short VjObs_i::getTimesteps()
 
 // These functions are called from the java side
 // Need to figure out a better notation so that this all makes sense
-#ifdef _TAO
 short VjObs_i::get_teacher_num()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-CORBA::Short VjObs_i::get_teacher_num()
-#endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL,0) << "Returning num teacher'" << this->mTeacher->getNumberOfFiles()<< "' to caller\n"
@@ -668,7 +625,6 @@ void VjObs_i::GetCfdStateVariables( void )
          this->mStates->clusterXMLCommands.erase();
       }
 #ifdef _OSG
-#ifdef VE_PATENTED      
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
       {
          this->mStates->clusterFrameNumber   = cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->GetCurrentTransientTexture();   
@@ -677,7 +633,6 @@ void VjObs_i::GetCfdStateVariables( void )
       {
          this->mStates->clusterFrameNumber = 0;
       }
-#endif
 #endif
    }
 }
@@ -733,36 +688,26 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       }
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG
-#ifdef VE_PATENTED
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
       {
 	      cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
       }
 #endif
-#endif
    }
 }
 
-#ifdef _TAO
 short VjObs_i::GetNumberOfSounds()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-CORBA::Short VjObs_i::GetNumberOfSounds()
-#endif
 {
    return cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
 }
 
-#ifdef _TAO
 VjObs::scalar_p* VjObs_i::GetSoundNameArray()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-VjObs::scalar_p* VjObs_i::GetSoundNameArray()
-#endif
 {
    CORBA::ULong numberOfSounds = cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
 
@@ -793,39 +738,27 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
    return sound_names_._retn();
 }
 
-#ifdef _TAO
 void VjObs_i::SetClientInfoFlag( const short value )
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-void VjObs_i::SetClientInfoFlag( CORBA::Short value )
-#endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    this->mGetClientInfo = value;
 }
 
-#ifdef _TAO
 VjObs::obj_pd* VjObs_i::GetClientInfoData()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-VjObs::obj_pd* VjObs_i::GetClientInfoData()
-#endif
 {
    return clientInfoObserverDataArray._retn();    //check this
 }
 
-#ifdef _TAO
 void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
-#endif
 {
    //do
    //{
@@ -979,14 +912,10 @@ void VjObs_i::CreateCommandQueue( void )
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
 }
 
-#ifdef _TAO
 void VjObs_i::SetCommandString( const char* value)
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
-#else
-void VjObs_i::SetCommandString( const char* value)
-#endif
 {
    //When starting xplorer it is possible to connect and send a command before 
    // xplorer is ready to receive it

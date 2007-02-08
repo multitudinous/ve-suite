@@ -89,7 +89,6 @@ public:
    void SetClusterMode( bool clusterFlag );
    bool GetClusterMode( void );
    
-#ifdef _TAO   
    //VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
    VjObs::Models* GetModels() throw (CORBA::SystemException);
@@ -114,33 +113,6 @@ public:
    void SetClientInfoFlag( short ) throw (CORBA::SystemException);
    void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
    VjObs::obj_pd* GetClientInfoData() throw (CORBA::SystemException);
-#else   
-   VjObs::Models* GetModels();
-   //VjObs::scalar_p* get_geo_name();
-   VjObs::scalar_p* get_teacher_name();
-   //yang-REI : Change the design a little here
-   //The original code's idea to set shared flag. Using that flag to wait for
-   //the excution of the cfd::get_geo() and the cfd::get_scalar() to finish
-   //the cfd::get_geo() and the cfd::get_scalar() will set the flag to be
-   //false to break the while loop here.  This is unnecessary and caused
-   //synchronization problem.  Since the corba servant and the cfdApp are 
-   //the same object, this is equivalent to call a cfdApp member function and
-   //wait for it return, which is the basic behavior of function calls.  I
-   //reimplemented it with virtual functions, which will be overided in
-   //cfdApp. So they are actually direct function calls to the cfdApp.
-   //short get_geo_num();//{return this->get_geo_num();}; //*
-   short get_teacher_num();//{return this->get_teacher_num();}; //*
-   //char* get_perf();
-
-   CORBA::Short GetNumberOfSounds();
-   VjObs::scalar_p* GetSoundNameArray();
-   //short get_postdata(){ return NULL; }
-   //short get_timesteps(){ return NULL; }
-
-   void SetClientInfoFlag( CORBA::Short );
-   void SetClientInfoData( const VjObs::obj_pd &value );
-   VjObs::obj_pd* GetClientInfoData();
-#endif   
 
    void GetCfdStateVariables( void );
    cfdCommandArray* _cfdArray;
@@ -151,12 +123,6 @@ public:
 protected:
    void CreateCommandQueue( void );
 
-#ifdef _OSG
-   //cfdTextureBasedVizHandler* _tbvHandler;
-#endif
-   //VjObs::scalar_p_var scl_name;
-   //VjObs::scalar_p_var vec_name;
-   //VjObs::scalar_p_var geo_name;
    VjObs::scalar_p_var sound_names;
    VjObs::scalar_p_var teacher_name;
    VjObs::Models* _models;
@@ -167,7 +133,7 @@ protected:
    float time_since_start;
    float quatCamIncrement;
    long frameNumber;
-#ifdef _TAO   
+
    VjObs::obj_pd* getDouble1D( const char* input ) throw (CORBA::SystemException);
 
    VjObs::double2DArray* getDouble2D( const char* input ) throw (CORBA::SystemException);
@@ -182,7 +148,7 @@ protected:
    short getPostdataState( void ) throw (CORBA::SystemException);
 
    short getTimesteps( void ) throw (CORBA::SystemException);
-#endif
+
    vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
 
    // Buffer variables...always right
