@@ -62,6 +62,7 @@ Model::Model()
    modelAttribute = 0;
    iconScale = 1.0f;
    iconRotation = 0.0f;
+   iconMirror = 0;
 }
 ///////////////////////////////////
 Model::~Model()
@@ -296,7 +297,8 @@ void Model::SetObjectFromXMLData(DOMNode* element)
             iconFileName = std::string( "no_icon" );
          }
          GetAttribute( dataValueStringName, "iconScale", iconScale );  
-         GetAttribute( dataValueStringName, "iconRotation", iconRotation );           
+         GetAttribute( dataValueStringName, "iconRotation", iconRotation );    
+         GetAttribute( dataValueStringName, "iconMirror", iconMirror );          
       }
 
       {
@@ -660,6 +662,12 @@ void Model::_updateVEElement( std::string input )
       int2string << iconRotation;
       iconElement->setAttribute( xercesString( "iconRotation" ), xercesString( int2string.str().c_str() )  );      
    }
+
+   {
+      std::stringstream int2string;
+      int2string << iconMirror;
+      iconElement->setAttribute( xercesString( "iconMirror" ), xercesString( int2string.str().c_str() )  );      
+   }
    
    for ( size_t i = 0; i < results.size(); ++i )
    {
@@ -725,4 +733,14 @@ void Model::SetIconScale( float scale )
 float Model::GetIconScale( void )
 {
    return iconScale;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetIconMirror( int mirror )
+{
+   iconMirror = mirror;
+}
+////////////////////////////////////////////////////////////////////////////////
+int Model::GetIconMirror( void )
+{
+   return iconMirror;
 }

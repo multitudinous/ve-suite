@@ -115,6 +115,10 @@ public:
    void SetIconScale( float scale );
    ///Get icon scale
    float GetIconScale( void );
+   ///Set the mirroed attribute of the icon
+   void SetIconMirror( int mirror );
+   ///is the icon mirrored
+   int GetIconMirror( void );
    ///Get point for the icon location
    Point* GetIconLocation( void );
    ///Get results data
@@ -201,6 +205,7 @@ private:
    VE_XML::Command* modelAttribute;///<The structure that stores all of the model attributes
    float iconScale;///<The icon scale to set the right size for conductor and xplorer
    float iconRotation;///<The icon rotation for conductor and xplorer
+   int iconMirror;///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
 };
 }
 }
