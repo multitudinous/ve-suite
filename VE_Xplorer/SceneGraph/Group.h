@@ -66,7 +66,7 @@ public:
    META_Node( VE_SceneGraph, Group );
 
 protected:
-   virtual ~Group( void ){;}
+   virtual ~Group( void );
    
 public:
    ///Generic set name function
