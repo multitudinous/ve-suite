@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _VE_MODEL_H_
@@ -205,7 +203,7 @@ private:
    VE_XML::Command* modelAttribute;///<The structure that stores all of the model attributes
    float iconScale;///<The icon scale to set the right size for conductor and xplorer
    float iconRotation;///<The icon rotation for conductor and xplorer
-   int iconMirror;///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
+   unsigned int iconMirror;///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
 };
 }
 }
