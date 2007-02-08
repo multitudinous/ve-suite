@@ -49,89 +49,126 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Group::Group( const Group& input )
-//:
-//Node(input)
+Group::Group(const Group& group,const osg::CopyOp& copyop):
+osg::Group(group,copyop)
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Group& Group::operator=( const Group& input)
-{
-   /*
-   if ( this != &input )
-   {
-      //biv-- make sure to call the parent =
-      Node::operator =(input);
-
-      for ( unsigned int i = 0; i < childNodes.size(); i++ )
-      {
-         delete childNodes.at( i );
-      }
-      childNodes.clear();
-   
-      this->childNodes = input.childNodes;
-#ifdef _PERFORMER
-      pfDelete( this->_group );
-      this->_group = input._group;
-#elif _OSG
-      _group = input._group;
-#elif _OPENSG
-#endif
-      
-   }
-   */
-
-   return *this;
-   
-}
-////////////////////////////////////////////////////////////////////////////////
-/*bool Group::operator== ( Node& node1 )
-{
-   if ( _dcs != dynamic_cast< Group& >( node1 )._group )
-   {
-      return false;
-   }
-   else
-   {
-      return true;
-   }
-   return true;
-}*/
-////////////////////////////////////////////////////////////////////////////////
 Group::Group( void )
-//:Node()
 {
-      ;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Group::~Group( void )
 {
-   //If neccesary
-   #ifdef _PERFORMER
-   #elif _OSG
-   #elif _OPENSG
-   #endif
+   ;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-/*
-Node* Group::Clone( int )
+int Group::RemoveChild( SceneNode* child )
 {
-   // Need to fix this
-#ifdef _PERFORMER
-   std::cerr << " ERROR: Group::Clone is NOT implemented " << std::endl;
+#ifdef _OPENSG
+   cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
-   return NULL;
+   return -1;
 #elif _OSG
-   std::cerr << " ERROR: Group::Clone is NOT implemented " << std::endl;
-   exit( 1 );
-   return NULL;
-#elif _OPENSG
-   std::cerr << " ERROR: Group::Clone is NOT implemented " << std::endl;
-   exit( 1 );
-   return NULL;
+   return this->removeChild( dynamic_cast< Node* >( child ));
 #endif
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////
+int Group::AddChild( SceneNode* child )
+{
+#ifdef _OPENSG
+   cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
+   exit( 1 );
+   return -1;
+#elif _OSG
+   return this->addChild( dynamic_cast< Node* >( child ));
+#endif
+   
+}
+////////////////////////////////////////////////////////////////////////////////
+void Group::InsertChild( int position, SceneNode* child )
+{
+#ifdef _OPENSG
+   cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
+   exit( 1 );
+   return -1;
+#elif _OSG
+   this->insertChild( position, dynamic_cast< Node* >( child ));
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+int Group::GetNumChildren( void )
+{
+#ifdef _OPENSG
+   cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
+   exit( 1 );
+   return -1;
+#elif _OSG
+   return this->getNumChildren();
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::string Group::GetName( void )
+{
+#ifdef _OPENSG
+   return 0;
+#endif
+#ifdef _PERFORMER
+   return _Group->getName();
+#elif _OSG
+   return this->getName().data();
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+void Group::SetName( std::string name )
+{
+#ifdef _OPENSG
+   std::cerr << " ERROR: Group::SetName is NOT implemented " << std::endl;
+   exit( 1 );
+#endif
+#ifdef _PERFORMER
+   _Group->setName( name.c_str() );
+#elif _OSG
+   this->setName( name );
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+int Group::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
+{
+#ifdef _OPENSG
+   cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
+   exit( 1 );
+   return -1;
+#elif _OSG
+   return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Group::SearchChild( VE_SceneGraph::SceneNode* searchChild )
+{
+#ifdef _OPENSG
+	
+#elif _OSG
+	return this->containsNode( dynamic_cast< osg::Node* >(searchChild) );
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Group* Group::GetParent( unsigned int position )
+{
+#ifdef _OPENSG
+   
+#elif _OSG
+	return this->getParent( position );
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Node* Group::GetChild( unsigned int position )
+{
+#ifdef _OPENSG
+   
+#elif _OSG
+	return this->getChild( position );
+#endif
+}

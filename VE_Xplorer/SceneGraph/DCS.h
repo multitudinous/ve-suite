@@ -100,10 +100,6 @@ public:
    float* GetScaleArray( void );
    ///Get the transform in 4x4 form
    gmtl::Matrix44f GetMat( void );
-   ///Generic get number of children
-   int GetNumChildren( void );
-   ///Set the name of the node
-   const std::string GetName( void );
    ///Set the translation array with a vector
    void SetTranslationArray( std::vector<double> array );
    ///Set the translation array
@@ -148,7 +144,11 @@ public:
 	///Generic get child function
 	///\param position the position of the child to be returned
 	osg::Node* GetChild( unsigned int position );
-   
+   ///Generic get number of children
+   int GetNumChildren( void );
+   ///Set the name of the node
+   const std::string GetName( void );
+      
 	///Get the Bullet transform for this node
    btTransform* GetPhysicsTransform( void );
    //virtual bool computeLocalToWorldMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const;
