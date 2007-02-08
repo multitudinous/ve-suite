@@ -24,6 +24,8 @@ sources = Split("""
     Text.cxx
     ModelOccluder.cxx
     DCS.cxx
+    Switch.cxx
+    Group.cxx
     SceneNode.cxx
     CADEntity.cxx
     PhysicsSimulator.cxx
@@ -50,6 +52,8 @@ headers = Split("""
     Text.h
     ModelOccluder.h
     DCS.h
+    Group.h
+    Switch.h
     SceneNode.h
     CADEntity.h
     PhysicsSimulator.h
