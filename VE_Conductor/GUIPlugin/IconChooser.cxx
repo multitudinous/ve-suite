@@ -9,7 +9,7 @@ END_EVENT_TABLE()
 IconChooser::IconChooser(wxWindow *parent, std::string path,wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
-	directory = wxT(path.c_str());
+	directory = wxString(path.c_str(), wxConvUTF8);
 	CreateGUIControls();
 }
 
