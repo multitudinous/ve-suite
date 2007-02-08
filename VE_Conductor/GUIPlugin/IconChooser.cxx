@@ -6,9 +6,10 @@ BEGIN_EVENT_TABLE(IconChooser,wxDialog)
 	EVT_CLOSE(IconChooser::OnClose)
 END_EVENT_TABLE()
 
-IconChooser::IconChooser(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+IconChooser::IconChooser(wxWindow *parent, std::string path,wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
+	directory = wxT(path.c_str());
 	CreateGUIControls();
 }
 
@@ -26,7 +27,7 @@ void IconChooser::CreateGUIControls()
 	//WxChoice->SetSelection(-1);
 
     //Parse the directory structure
-    wxString directory( _("F:/ASPENV21/2DIcons") );
+    //wxString directory( _("F:/ASPENV21/2DIcons") );
     wxString dirname;
     wxDir parentDir (directory);
     bool isParentTrue = parentDir.GetFirst(&dirname);

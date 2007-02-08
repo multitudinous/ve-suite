@@ -21,7 +21,7 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxDialog
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		IconChooser(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("IconChooser"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE);
+		IconChooser(wxWindow *parent, std::string path, wxWindowID id = 1, const wxString &title = wxT("IconChooser"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE);
 		virtual ~IconChooser();
 		void WxButtonClick(wxCommandEvent& event);
 		//void AppendList(const char * input);
@@ -31,6 +31,7 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxDialog
 		std::map< int, std::string > iconPaths;
 		wxTextCtrl * WxEdit;
 		REI_Plugin * thePlugin;
+		wxString directory;
 		//wxChoice *WxChoice;
         //wxArrayString componentList;
 		
