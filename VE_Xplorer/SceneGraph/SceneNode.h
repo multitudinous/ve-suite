@@ -59,24 +59,23 @@ public:
    };
 
    SceneNode();
-   SceneNode( NodeType nt );
-   SceneNode( const SceneNode& );
+   //SceneNode( NodeType nt );
+   //SceneNode( const SceneNode& );
 
-   virtual ~SceneNode( void );
-   SceneNode& operator=( const SceneNode& );
+   virtual ~SceneNode( void ){;}
+   //SceneNode& operator=( const SceneNode& );
 
    //Get the internal node type
-   virtual NodeType GetVENodeType( void ){ return _nt; }
+   //virtual NodeType GetVENodeType( void ){ return _nt; }
 
    //Set internal node type
-   virtual void SetVENodeType( NodeType nt ){ _nt = nt; }
+   //virtual void SetVENodeType( NodeType nt ){ _nt = nt; }
 
 protected:
    //)ur scene graph specific nodes
-   int _numParents;
-   NodeType _nt;
+   //int _numParents;
+   //NodeType _nt;
 
 };
 }
-
 #endif

@@ -48,6 +48,7 @@
 class pfDCS;
 #elif _OSG
 #include <osg/PositionAttitudeTransform>
+#include <osg/Matrix>
 #elif _OPENSG
 #endif
 
@@ -57,6 +58,11 @@ class pfDCS;
 
 class btTransform;
 
+namespace osg
+{
+   //class Matrix;
+   class NodeVisitor;
+}
 namespace VE_SceneGraph
 {
    class TransferPhysicsDataCallback;
@@ -130,7 +136,9 @@ public:
    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
    ///Get the Bullet transform for this node
    btTransform* GetPhysicsTransform( void );
-   
+   //virtual bool computeLocalToWorldMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const;
+   //virtual bool computeWorldToLocalMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const;
+
 protected:
    float translation[3];///<The translation array
    float scale[3];///<The scale array
@@ -142,7 +150,7 @@ private:
    /// bullet physics simulator
    void UpdatePhysicsTransform( void );
    
-   osg::ref_ptr< TransferPhysicsDataCallback > udcb;///<The callback to update the sg node with physics data
+   //osg::ref_ptr< TransferPhysicsDataCallback > udcb;///<The callback to update the sg node with physics data
 };
 //This is the callback class configured to handle transfering physics data
 //back to the respective osg node

@@ -85,12 +85,12 @@ DCS::DCS( void )
 
    SetScaleArray( temp );
 
-   bulletTransform = new btTransform();
+   /*bulletTransform = new btTransform();
    UpdatePhysicsTransform();
    
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtTransform( bulletTransform );
+   udcb->SetbtTransform( bulletTransform );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
@@ -103,12 +103,12 @@ DCS::DCS( float* scale, float* trans, float* rot )
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
 
-   bulletTransform = new btTransform();
+   /*bulletTransform = new btTransform();
    UpdatePhysicsTransform();
 
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtTransform( bulletTransform );
+   udcb->SetbtTransform( bulletTransform );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*DCS::DCS( const DCS& input )
@@ -122,7 +122,7 @@ DCS::DCS( float* scale, float* trans, float* rot )
 DCS::DCS(const DCS& dcs,const osg::CopyOp& copyop):
 osg::PositionAttitudeTransform(dcs,copyop)
 {
-   for( unsigned int i = 0; i < 3; i++ )
+   /*for( unsigned int i = 0; i < 3; i++ )
    {
       translation[i] = dcs.translation[i];
    }   
@@ -144,7 +144,7 @@ osg::PositionAttitudeTransform(dcs,copyop)
 
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtTransform( bulletTransform );
+   udcb->SetbtTransform( bulletTransform );*/
 }
 /*////////////////////////////////////////////////////////////////////////////////
 DCS& DCS::operator=( const DCS& input )
@@ -185,7 +185,7 @@ DCS::~DCS( void )
 #elif _OPENSG
 #endif
 
-   delete bulletTransform;
+   //delete bulletTransform;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -209,6 +209,7 @@ float* DCS::GetVRJTranslationArray( void )
 float* DCS::GetVETranslationArray( void )
 {
    osg::Vec3d trans = this->getPosition();
+   //float translation[ 3 ];
    for( size_t i = 0; i < 3; i++ )
    {
       translation[i] = trans[i];
@@ -225,6 +226,7 @@ float* DCS::GetRotationArray( void )
    gmtl::Matrix44f _vjMatrix = gmtl::makeRot< gmtl::Matrix44f >( tempQuat );
    gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( _vjMatrix );
 
+   //float rotation[ 3 ];
    rotation[0] = gmtl::Math::rad2Deg( tempZXY[0] );
    rotation[1] = gmtl::Math::rad2Deg( tempZXY[1] );
    rotation[2] = gmtl::Math::rad2Deg( tempZXY[2] );
@@ -235,6 +237,7 @@ float* DCS::GetRotationArray( void )
 float* DCS::GetScaleArray( void )
 {
    osg::Vec3d tempScale = this->getScale();
+   //float scale[ 3 ];
    for ( size_t i = 0; i < 3; i++ )
    {
       scale[i] = tempScale[i];
@@ -264,12 +267,16 @@ void DCS::SetRotationArray( std::vector<double> array)
    osg::Vec3f yaw(0,0,1);
    //rph              
    osg::Matrixd rotateMat;
+   
+   //std::cout << array[0] << std::endl;
    rotateMat.makeRotate(osg::DegreesToRadians(array[2]),roll,
                         osg::DegreesToRadians(array[1]),pitch,
                         osg::DegreesToRadians(array[0]),yaw);
    osg::Quat quat;
    rotateMat.get( quat );
+   std::cout << quat[ 0 ] << " " << quat[ 1 ] << " " << quat[ 2 ] << " " << quat[ 3 ] << std::endl;
    this->setAttitude( quat );
+   this->setPivotPoint( osg::Vec3d( 0, 0, 0) );
 #elif _OPENSG
 #endif
    UpdatePhysicsTransform();
@@ -565,6 +572,16 @@ void DCS::UpdatePhysicsTransform( void )
    osg::Vec3d trans = this->getPosition();
    //bulletTransform->setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
 }
+////////////////////////////////////////////////////////////////////////////////
+/*bool DCS::computeLocalToWorldMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const
+{
+   return PositionAttitudeTransform::computeLocalToWorldMatrix( matrix, nv);
+}
+////////////////////////////////////////////////////////////////////////////////
+bool DCS::computeWorldToLocalMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const
+{
+   return PositionAttitudeTransform::computeWorldToLocalMatrix( matrix, nv);
+}*/
 #ifdef _OSG
 ////////////////////////////////////////////
 //Constructor                             //
