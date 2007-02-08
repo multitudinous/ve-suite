@@ -195,6 +195,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cfdDCS.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdFILE.cxx"
 				>
 			</File>
@@ -212,10 +216,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdNode.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdNodeTraverser.cxx"
 				>
 			</File>
 			<File
@@ -323,6 +323,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cfdDCS.h"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdFILE.h"
 				>
 			</File>
@@ -340,10 +344,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdNodeTraverser.h"
 				>
 			</File>
 			<File
