@@ -111,13 +111,12 @@
       </imageobject>
     </mediaobject>
 
-    <para>On Unix/Linux, the dependencies folder holds one folder for each
-    system supported. You need to choose your system's corresponding folder as
-    the Dependencies folder.</para>
+    <para>On Unix/Linux, multiple dependencies can be chosen. The only one
+    you need to specifically select is VR-Juggler's directory.</para>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/runtimeenv2.jpg" />
+        <imagedata fileref="veimages/launcherbasics2.jpg" />
       </imageobject>
     </mediaobject>
 

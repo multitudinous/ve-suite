@@ -26,7 +26,9 @@
 
     <para>On the development versions for both Windows &amp; Unix-based, VE-Launcher is
     a python program, just like on the Unix-based install. Run it in the same way as
-    on the Unix-based install.</para>
+    on the Unix-based install. In dev mode, VE-Launcher doesn't require you to set
+    dependencies &amp; it looks for stereo desktop config files in their build location,
+    not their install location.</para>
   </section>
 
   <section id="setup_launcher">
