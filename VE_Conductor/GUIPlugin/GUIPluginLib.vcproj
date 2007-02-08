@@ -324,7 +324,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\IconChooser.cpp"
+				RelativePath=".\IconChooser.cxx"
 				>
 			</File>
 			<File
