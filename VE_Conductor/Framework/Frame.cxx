@@ -1088,7 +1088,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 {
-   Log("Openning Simulation...\n");
+   Log("Opening Simulation...\n");
    wxFileName bkpFileName;
    wxTextEntryDialog newDataSetName(this, 
 	   wxString("Enter the prefix for *.bkp filename:", wxConvUTF8),
