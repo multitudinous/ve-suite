@@ -34,7 +34,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -228,8 +227,8 @@ void cfdAnimatedStreamlineCone::Update( void )
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
       temp->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
-      geodes.push_back( new VE_SceneGraph::cfdGeode() );
-      geodes.back()->TranslateTocfdGeode( temp );
+      geodes.push_back( new VE_SceneGraph::Geode() );
+      geodes.back()->TranslateToGeode( temp );
       temp->Delete();
      
       //Make geodes from each polydata

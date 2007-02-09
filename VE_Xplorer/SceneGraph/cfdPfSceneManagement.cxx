@@ -31,8 +31,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+
 #include "VE_Xplorer/SceneGraph/Text.h"
 #include "VE_Xplorer/SceneGraph/Triangles.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
+
 /// Performer libraries
 #ifdef _PERFORMER
 #include <Performer/pf/pfLightSource.h>
@@ -48,10 +51,6 @@
 #include <osg/PositionAttitudeTransform>
 #include <osg/MatrixTransform>
 #endif
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 
 #ifndef WIN32
 #ifdef _PERFORMER
@@ -64,26 +63,23 @@
 //#include <windows.h>
 #endif
 
-
+//C/C++ Libraries
 #include <iostream>
 #include <string>
 #include <istream>
 #include <sstream>
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 using namespace VE_SceneGraph;
+
 vprSingletonImp(cfdPfSceneManagement );
 
 cfdPfSceneManagement::cfdPfSceneManagement( void )
 {
    this->_param.erase();// = 0;
-   this->rootNode = 0;
-   this->worldDCS = 0;
-   _logoSwitch = 0;
-   //_logoNode = 0;
+
    _textPart = 0;
-   _movingPyramidsAssembly = 0; 
+   _movingPyramidsAssembly = 0;
+
 #ifdef _PERFORMER
    this->sunModel = 0;
    this->sun = 0;
@@ -143,41 +139,44 @@ void cfdPfSceneManagement::InitScene( void )
    this->sun->setVal(PFLS_INTENSITY, 1.0);
    this->sun->on();
 #endif
-   this->rootNode = new cfdGroup();
+
+	this->rootNode = new VE_SceneGraph::Group();
    this->rootNode->SetName( "Root Node" );
-   this->worldDCS = new cfdDCS();
+	this->worldDCS = new VE_SceneGraph::DCS();
    this->worldDCS->SetName( "World DCS" );
-   networkDCS  = new cfdDCS();
+	networkDCS  = new VE_SceneGraph::DCS();
    networkDCS->SetName( "Network DCS" );
 
    //create the switch for our logo
    _createLogo();
-   _logoSwitch->AddChild( worldDCS );
-	dynamic_cast< osg::Switch* >(_logoSwitch->GetRawNode())->addChild( _logoNode.get() );
-   _logoSwitch->AddChild( networkDCS );
+
+   _logoSwitch->AddChild( worldDCS.get() );
+	_logoSwitch->AddChild( _logoNode.get() );
+   _logoSwitch->AddChild( networkDCS.get() );
 
    //Now lets put it on the main group node
    //remember that the logo switch is right below the group node 
    //NOT the world dcs
-   rootNode->AddChild(_logoSwitch);
+   rootNode->AddChild( _logoSwitch.get() );
+
 #ifdef _PERFORMER
    ((pfGroup*)(this->rootNode->GetRawNode()))->addChild( this->sun );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdGroup* cfdPfSceneManagement::GetRootNode( void )
+VE_SceneGraph::Group* cfdPfSceneManagement::GetRootNode( void )
 {
-   return this->rootNode;
+   return this->rootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdDCS* cfdPfSceneManagement::GetWorldDCS( void )
+VE_SceneGraph::DCS* cfdPfSceneManagement::GetWorldDCS( void )
 {
-   return this->worldDCS;
+   return this->worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdDCS* cfdPfSceneManagement::GetNetworkDCS( void )
+VE_SceneGraph::DCS* cfdPfSceneManagement::GetNetworkDCS( void )
 {
-   return networkDCS;
+   return networkDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPfSceneManagement::ViewLogo(bool trueFalse)
@@ -197,7 +196,7 @@ void cfdPfSceneManagement::_createLogo()
 #ifdef _OSG
    if(!_logoSwitch)
    {
-      _logoSwitch = new VE_SceneGraph::cfdSwitch();   
+      _logoSwitch = new VE_SceneGraph::Switch();   
    }
    
    if ( !_logoNode.valid() )
@@ -208,18 +207,14 @@ void cfdPfSceneManagement::_createLogo()
       _logoNode->SetTranslationArray(translation);
       _logoNode->SetScaleArray(scale);
 
-		//VE_SceneGraph::cfdNode* 
-      _textPart = new VE_SceneGraph::cfdNode();  
-		_textPart->LoadFile( GetVESuite_Text(), true );
-		_logoNode->addChild( _textPart->GetRawNode() );
+		//VE_SceneGraph::CADEntity* 
+      //_textPart = new VE_SceneGraph::CADEntityHelper();  
 
-		//VE_SceneGraph::cfdNode* 
-      _movingPyramidsAssembly = new VE_SceneGraph::cfdNode();  
-		_movingPyramidsAssembly->LoadFile( GetVESuite_Triangles(), true );
-		_logoNode->addChild(_movingPyramidsAssembly->GetRawNode());
+		//VE_SceneGraph::CADEntity* 
+      //_movingPyramidsAssembly = new VE_SceneGraph::CADEntityHelper();  
 
-      //_textPart = new VE_SceneGraph::cfdFILE(GetVESuite_Text(),_logoNode.get(),true);
-      //_movingPyramidsAssembly = new VE_SceneGraph::cfdFILE(GetVESuite_Triangles(),_logoNode.get(),true);
+      _textPart = new VE_SceneGraph::CADEntity(GetVESuite_Text(),_logoNode.get(),true);
+      _movingPyramidsAssembly = new VE_SceneGraph::CADEntity(GetVESuite_Triangles(),_logoNode.get(),true);
    }
 
 #elif _PERFORMER

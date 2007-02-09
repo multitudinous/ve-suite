@@ -40,9 +40,17 @@ cfdReadParam API
 /*!\class VE_Xplorer::cfdReadParam
 * 
 */
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 #include <vector>
 #include <string>
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
 
 class vtkDataSet;
 
@@ -54,8 +62,8 @@ namespace VE_Xplorer
 
 namespace VE_SceneGraph
 {
+	class DCS;
    class fileInfo;
-   class cfdDCS;
 }
 
 namespace VE_Xplorer
@@ -127,11 +135,10 @@ public:
    float imageTrans[ 3 ];
    float imageRot[ 3 ];
 
-   VE_SceneGraph::cfdDCS* dashBoardDCS;
+	osg::ref_ptr< VE_SceneGraph::DCS > dashBoardDCS;
    std::string dashboardFilename;
 
-   static void read_pf_DCS_parameters( std::ifstream &inFile,
-               float*, float*, float* );
+   static void read_pf_DCS_parameters( std::ifstream &inFile, float*, float*, float* );
 
    static void SkipModuleBlock( std::ifstream &inFile, int );
 

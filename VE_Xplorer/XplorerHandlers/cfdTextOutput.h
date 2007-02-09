@@ -38,17 +38,21 @@ cfdTextOutput API
 /*!\class VE_Xplorer::cfdTextOutput
 * 
 */
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 #ifdef _PERFORMER
 #include <Performer/pf/pfText.h>
 #include <Performer/pr/pfString.h>
 #elif _OSG
+#include <osg/ref_ptr>
 #elif _OPENSG
 #endif
+
 #include <string>
+
 namespace VE_SceneGraph
 {
-   class cfdGeode;
-   class cfdDCS;
+   class DCS;
 }
 
 namespace VE_Xplorer
@@ -58,10 +62,10 @@ namespace VE_Xplorer
       public:
          cfdTextOutput();   //constructor
          ~cfdTextOutput();  //destructor
-         VE_SceneGraph::cfdDCS *add_text(std::string text_input);
+			VE_SceneGraph::DCS* add_text(std::string text_input);
     
       private:
-         VE_SceneGraph::cfdDCS*   dcs;
+         osg::ref_ptr< VE_SceneGraph::DCS > dcs;
    #ifdef _PERFORMER
          //pfFont *fnt;
          pfText *text;

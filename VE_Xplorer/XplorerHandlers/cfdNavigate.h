@@ -39,6 +39,7 @@ cfdNavigate API
 *   A class to track the wand location, object translation,
 and virtual cursor location in virtual environment.
 */
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
@@ -47,7 +48,7 @@ and virtual cursor location in virtual environment.
 
 namespace VE_SceneGraph
 {
-   class cfdDCS;
+   class DCS;
 }
 
 namespace VE_XML
@@ -56,6 +57,11 @@ namespace VE_XML
 }
 
 #include "VE_Installer/include/VEConfig.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
 
 namespace VE_Xplorer
 {
@@ -73,7 +79,7 @@ public:
    /*!
    Initialization of navigation objects: VR Juggler, wand, cursor, data set
    */
-   void Initialize( VE_SceneGraph::cfdDCS* );
+   void Initialize( VE_SceneGraph::DCS* );
    void SetDataValues( int, int );
    void updateNavigationFromGUI( void );
    //! Wand object
@@ -160,7 +166,7 @@ public:
    double * currentWandDirection;
    int cfdId;
    int cfdIso_value;
-   VE_SceneGraph::cfdDCS* worldDCS;
+   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;
 
    double worldTrans[ 3 ];
    float worldRot[ 3 ];

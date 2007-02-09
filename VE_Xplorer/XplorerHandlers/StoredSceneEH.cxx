@@ -34,7 +34,6 @@
 #include "VE_Xplorer/XplorerHandlers/StoredSceneEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
-
 #include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
 
 #include "VE_Open/XML/Command.h"

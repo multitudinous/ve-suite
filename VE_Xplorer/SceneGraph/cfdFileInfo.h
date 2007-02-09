@@ -37,9 +37,15 @@
 
 //#include <Performer/pf/pfDCS.h>
 #include "VE_Installer/include/VEConfig.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
+
 namespace VE_SceneGraph
 {
-   class cfdDCS;
+   class DCS;
 }
 
 namespace VE_SceneGraph
@@ -57,7 +63,7 @@ namespace VE_SceneGraph
          float stlColor[3];
          int color;
          int trans;
-         VE_SceneGraph::cfdDCS * dcs;
+			osg::ref_ptr< VE_SceneGraph::DCS > dcs;
    };
 }
 #endif

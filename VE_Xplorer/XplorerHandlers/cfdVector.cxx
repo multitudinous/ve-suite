@@ -38,7 +38,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
@@ -219,9 +218,9 @@ void cfdVector::Update( void )
 
    try
    {
-      VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
-      tempGeode->TranslateTocfdGeode( temp );
-      geodes.push_back( tempGeode ); 
+		osg::ref_ptr< VE_SceneGraph::Geode > tempGeode = new VE_SceneGraph::Geode();
+      tempGeode->TranslateToGeode( temp );
+      geodes.push_back( tempGeode.get() ); 
       this->updateFlag = true;
    }
    catch( std::bad_alloc )

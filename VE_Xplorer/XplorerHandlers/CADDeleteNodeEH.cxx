@@ -32,9 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADDeleteNodeEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
+
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include "VE_Xplorer/SceneGraph/Clone.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -86,7 +86,7 @@ void CADDeleteNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"---Deleting node---"<<std::endl;
-      VE_SceneGraph::cfdDCS* parentAssembly = 0;
+      VE_SceneGraph::DCS* parentAssembly = 0;
       parentAssembly = _activeModel->GetAssembly(parentID->GetDataString());
 
       //This assumes the part/assembly isn't there already

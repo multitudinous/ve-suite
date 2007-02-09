@@ -46,15 +46,10 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
-#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/GE/cfdVjObsWrapper.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
@@ -220,7 +215,7 @@ osg::Group* cfdApp::getScene()
 #ifdef _PERFORMER
    return (pfGroup*)(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode());
 #elif _OSG
-   return (osg::Group*)VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode();
+   return (osg::Group*)VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode();
 #endif
 }
 
@@ -453,7 +448,7 @@ void cfdApp::latePreFrame( void )
    {
       if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
       {
-         _tbvHandler->SetParentNode((VE_SceneGraph::cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
+			_tbvHandler->SetParentNode((VE_SceneGraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
          _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
          _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
          _tbvHandler->SetCurrentTime(this->_vjobsWrapper->GetSetAppTime(-1));
@@ -660,7 +655,7 @@ void cfdApp::draw()
                                     frustum[vrj::Frustum::VJ_NEAR],
                                     frustum[vrj::Frustum::VJ_FAR]);
 
-	//Allow trackball to grab frustum values to calculate FOVY
+	//Allow trackball to grab frustum values to calculate FOVy
 	cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_TOP],
 																		 frustum[vrj::Frustum::VJ_BOTTOM],
                                                        frustum[vrj::Frustum::VJ_NEAR]);

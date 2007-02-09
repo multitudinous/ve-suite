@@ -36,7 +36,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdRawNodeWriteTraverser.h"
 
@@ -141,16 +140,16 @@ void cfdPresetContour::Update( void )
    temp->GetProperty()->SetSpecularPower( 20.0f );
 //temp->GetMapper()->GetInput()->Print( std::cout );
 //temp->GetMapper()->Update();
-   //geodes.push_back( new VE_SceneGraph::cfdGeode() );
-   //geodes.back()->TranslateTocfdGeode( temp );
+   //geodes.push_back( new VE_SceneGraph::Geode() );
+   //geodes.back()->TranslateToGeode( temp );
    //temp->Delete();
    //this->updateFlag = true;
 
    try
    {
-      VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
-      tempGeode->TranslateTocfdGeode( temp );
-      geodes.push_back( tempGeode );
+		osg::ref_ptr< VE_SceneGraph::Geode > tempGeode = new VE_SceneGraph::Geode();
+      tempGeode->TranslateToGeode( temp );
+      geodes.push_back( tempGeode.get() );
       this->updateFlag = true;
    }
    catch( std::bad_alloc )

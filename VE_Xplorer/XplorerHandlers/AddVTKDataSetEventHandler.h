@@ -41,16 +41,20 @@
  * Class for adding vtk datasets.
  */
 #include <string>
+
 namespace VE_XML
 {
    class XMLObject;
 }
+
 namespace VE_Xplorer
 {
    class cfdModel;
    class cfdGlobalBase;
 }
+
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+
 namespace VE_EVENTS
 {
 class VE_XPLORER_EXPORTS AddVTKDataSetEventHandler: public EventHandler

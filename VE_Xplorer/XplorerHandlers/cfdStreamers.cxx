@@ -34,7 +34,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
+
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -283,9 +283,9 @@ aa Assign Normals NORMALS POINT_DATA
    //test to see if there is enough memory, if not, filters are deleted
    try
    {
-      VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
-      tempGeode->TranslateTocfdGeode( temp );
-      geodes.push_back( tempGeode ); 
+		osg::ref_ptr< VE_SceneGraph::Geode > tempGeode = new VE_SceneGraph::Geode();
+      tempGeode->TranslateToGeode( temp );
+      geodes.push_back( tempGeode.get() ); 
       this->updateFlag = true;
    }
    catch( std::bad_alloc )

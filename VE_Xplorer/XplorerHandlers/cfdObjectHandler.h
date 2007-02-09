@@ -58,6 +58,7 @@ namespace VE_Xplorer
 {
    class cfdNavigate;
 }
+
 namespace osg 
 {
   class Geode;
@@ -78,6 +79,7 @@ namespace IntersectVisitor
 {
   class HitList;
 }
+
 //! Navigation tracker
 /*!
   A class to track the wand location, object translation,

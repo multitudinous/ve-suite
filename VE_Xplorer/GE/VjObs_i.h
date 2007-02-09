@@ -40,15 +40,20 @@ VjObs_i API
 *
 */
 #include "VE_Open/skel/VjObsS.h"
+
 //do this to remove compile warning on linux platforms
 #undef _REENTRANT
+
 #include <vpr/Sync/Mutex.h>
 
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterNode.h>
+
 #include <plugins/ApplicationDataManager/UserData.h>
+
 #include <vpr/IO/SerializableObject.h>
+
 #include "VE_Xplorer/GE/cfdStateInfo.h"
 
 namespace VE_Xplorer
@@ -62,6 +67,7 @@ namespace VE_XML
    class DOMDocumentManager;
    class Command;
 }
+
 #include <vector>
 
 namespace VE_Xplorer

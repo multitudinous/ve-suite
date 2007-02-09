@@ -41,26 +41,27 @@ cfdPfSceneManagement API
 /*!\class VE_SceneGraph::cfdPfSceneManagement
 *
 */
-namespace VE_SceneGraph
-{
-   class cfdDCS;
-   class cfdGroup;
-   class cfdSwitch;
-   class cfdFILE;
-   class cfdNode;
-}
+#include <vpr/Util/Singleton.h>
+#include "VE_Installer/include/VEConfig.h"
+
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/Switch.h"
 
 #ifdef _PERFORMER
-   class pfLightModel;
-   class pfLightSource;
+class pfLightModel;
+class pfLightSource;
 #elif _OSG
 #include <osg/ref_ptr>
 #endif
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
-
-#include <vpr/Util/Singleton.h>
-#include "VE_Installer/include/VEConfig.h"
+namespace VE_SceneGraph
+{
+	class DCS;
+   class Group;
+   class Switch;
+	class CADEntity;
+}
 
 namespace VE_SceneGraph
 {
@@ -71,9 +72,9 @@ public:
    void CleanUp( void );
    void InitScene( void );
 
-   cfdGroup* GetRootNode( void );
-   cfdDCS*   GetWorldDCS( void );
-   cfdDCS*   GetNetworkDCS( void );
+	VE_SceneGraph::Group* GetRootNode( void );
+	VE_SceneGraph::DCS* GetWorldDCS( void );
+	VE_SceneGraph::DCS* GetNetworkDCS( void );
 
    ///Set the node on the switch node that is active
    ///\param activeNode node to activate
@@ -97,13 +98,13 @@ private:
 
    //std::string    param;
    std::string _param;
-   cfdGroup* rootNode;
+   osg::ref_ptr< VE_SceneGraph::Group > rootNode;
 	osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;
-   cfdSwitch* _logoSwitch;///<Node to switch between the logo and the worldDCS
-   cfdDCS* worldDCS;///<Node to control navigation
-   cfdDCS* networkDCS;///<Node to hold a network view of the system under investigation
-   VE_SceneGraph::cfdNode* _movingPyramidsAssembly;///<Logo Animated pyramids
-   VE_SceneGraph::cfdNode* _textPart;///<Logo Text
+   osg::ref_ptr< VE_SceneGraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
+	osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
+   osg::ref_ptr< VE_SceneGraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
+   VE_SceneGraph::CADEntity* _movingPyramidsAssembly;///<Logo Animated pyramids
+   VE_SceneGraph::CADEntity* _textPart;///<Logo Text
 
    #ifdef _PERFORMER
       pfLightModel*  sunModel;

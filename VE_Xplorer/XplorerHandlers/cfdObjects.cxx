@@ -33,11 +33,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
-#include "VE_Xplorer/SceneGraph/cfdSequence.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 
 // Juggler Includes
@@ -83,17 +79,20 @@ void cfdObjects::SetObjectType( int type )
    this->objectType = type;
 }
 
-std::vector< VE_SceneGraph::cfdGeode* > cfdObjects::GetGeodes( void )
+std::vector< VE_SceneGraph::Geode* > cfdObjects::GetGeodes( void )
 {
    return geodes;
 }
 
 void cfdObjects::ClearGeodes( void )
 {
+	/*
    for ( unsigned int i = 0; i < geodes.size(); ++i )
    {
       delete geodes.at( i );
    }
+	*/
+
    geodes.clear();
 }
 

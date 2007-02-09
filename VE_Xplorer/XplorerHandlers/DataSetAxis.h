@@ -38,17 +38,18 @@ DataSetAxis API
 /*!\class VE_Xplorer::DataSetAxis
 *   Renders an axis for a given dataset
 */
-#include <string>
-#include <vector>
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
+#include "VE_Xplorer/SceneGraph/Group.h"
 
 #include <osg/Geode>
 
+#include <string>
+#include <vector>
+
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdGeode;
-   class cfdGroup;
+   class Group;
 }
 
 namespace VE_Xplorer
@@ -78,7 +79,7 @@ public:
    /// Read parameter file
    void CreateAxis( void );
    /// Get the axis that was created
-   VE_SceneGraph::cfdGroup* GetAxis( void );
+   VE_SceneGraph::Group* GetAxis( void );
    ///Create the labels for the axes
    ///\param terxtIn The text for the axis
    ///\param x the x location for the label
@@ -93,7 +94,7 @@ private:
    std::string xAxisLabel;
    std::string yAxisLabel;
    std::string zAxisLabel;
-   VE_SceneGraph::cfdGroup* axisGroup;
+	osg::ref_ptr< VE_SceneGraph::Group > axisGroup;
 };
 }
 #endif

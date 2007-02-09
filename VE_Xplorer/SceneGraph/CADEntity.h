@@ -7,11 +7,16 @@
 #include "VE_Installer/include/VEConfig.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
+
+namespace VE_SceneGraph
+{
+	class CADEntityHelper;
+}
 
 #ifdef _PERFORMER
 class pfFog;
 #elif _OSG
+#include <osg/ref_ptr>
 namespace osg
 {
    class Fog;
@@ -27,7 +32,7 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
-   CADEntity(std::string,VE_SceneGraph::DCS*,bool isStream=false);
+	CADEntity(std::string,VE_SceneGraph::DCS* ,bool isStream=false);
    ~CADEntity();
 
 	//Different methods to create a physics mesh to represent the geometry
@@ -38,12 +43,13 @@ public:
 	void CreateCustomMesh();		//Creates a user defined mesh; must be hard coded in plugin, useful for compound shapes
 	//******************************************//
 
-   VE_SceneGraph::DCS* GetDCS();
+	VE_SceneGraph::DCS* GetDCS();
    VE_SceneGraph::CADEntityHelper* GetNode();
    btRigidBody* GetRigidBody();
 
-	void SetMass(float mass);
-	void SetFriction(float friction);
+	void SetMass(float m);
+	void SetFriction(float f);
+	void SetRestitution(float r);
 
    std::string GetFilename();
    std::string GetModuleName();
@@ -77,10 +83,14 @@ private:
 	void InitPhysics();
 
    //Group* _masterNode;
-   CADEntityHelper* node;
-   osg::ref_ptr<VE_SceneGraph::DCS> DCS;
+	VE_SceneGraph::CADEntityHelper* node;
+	osg::ref_ptr< VE_SceneGraph::DCS > dcs;
    btRigidBody* rigid_body;
 	btCollisionShape* collision_shape;
+
+	float mass;
+	float friction;
+	float restitution;
 
    //pfMaterial *mat1, *mat0;
    int mat_count;
@@ -102,9 +112,9 @@ private:
    std::string _moduleName;
 
 #ifdef _PERFORMER
-   pfFog* fog;
+      pfFog* fog;
 #elif _OSG
-   osg::ref_ptr< osg::Fog > fog;
+      osg::Fog* fog;
 #endif
 };
 }

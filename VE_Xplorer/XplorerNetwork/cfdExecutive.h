@@ -40,8 +40,11 @@ cfdExecutive API
 */
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
 #include "VE_Installer/include/VEConfig.h"
 #include <vpr/Util/Singleton.h>
+
+#include "VE_Xplorer/SceneGraph/Group.h"
 
 #include <map>
 #include <string>
@@ -49,8 +52,7 @@ cfdExecutive API
 
 namespace VE_SceneGraph
 {
-   class cfdDCS; 
-   class cfdGroup;
+   class Group;
 }
 
 namespace VE_Xplorer
@@ -149,7 +151,7 @@ private:
    cfdDashboard* _dashBoard;
    cfdInteractiveGeometry* _geometry;
    Body_UI_i* ui_i;
-   VE_SceneGraph::cfdGroup* _masterNode;
+   osg::ref_ptr< VE_SceneGraph::Group > _masterNode;
    std::vector< VE_XML::XMLObject* > currentModels;
 
    bool _doneWithCalculations;

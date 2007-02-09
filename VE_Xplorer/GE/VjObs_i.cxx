@@ -43,17 +43,13 @@
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-
-
-#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -677,7 +673,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       //std::cout << "slave: " << std::endl << matrix << std::endl;
       VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( matrix );
 
-      if ( cfdSteadyStateVizHandler::instance()->GetActiveAnimation() != NULL )
+      /*if ( cfdSteadyStateVizHandler::instance()->GetActiveAnimation() != NULL )
       {
          cfdTempAnimation* the_sequence = cfdSteadyStateVizHandler::instance()->GetActiveAnimation();
          if ( the_sequence != NULL )
@@ -685,7 +681,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
             the_sequence->SetCurrentFrame( (int)this->getTimesteps() );
             //std::cout << " cfdTimesteps in preframe : " << cfdTimesteps << std::endl;
          }
-      }
+      }*/
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )

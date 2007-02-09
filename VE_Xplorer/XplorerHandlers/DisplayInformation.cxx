@@ -1,9 +1,7 @@
 #include "VE_Xplorer/XplorerHandlers/DisplayInformation.h"
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Xplorer/XplorerHandlers/WCS.h"
 
@@ -16,6 +14,7 @@
 #include <sstream>
 
 using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::DisplayInformation()
@@ -23,35 +22,25 @@ DisplayInformation::DisplayInformation()
    framerate_flag=false;
    coord_sys_flag=false;
 
-   display_switch=new VE_SceneGraph::cfdSwitch;
+   display_switch=new VE_SceneGraph::Switch;
 
    this->InitFrameRateDisplay();
    this->InitCoordSysDisplay();
 
-   display_switch->AddChild(framerate);
-   display_switch->AddChild(coord_sys);
+   display_switch->AddChild(framerate.get());
+   display_switch->AddChild(coord_sys.get());
 }
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::~DisplayInformation()
 {
-   if(display_switch){
-      delete display_switch;
-   }
-
-   if(framerate){
-      delete framerate;
-   }
-
-   if(coord_sys){
-      delete coord_sys;
-   }
+	;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::InitFrameRateDisplay()
 {
-   framerate=new VE_SceneGraph::cfdDCS;
+   framerate=new VE_SceneGraph::DCS;
    /*
-   framerate_dcs=new VE_SceneGraph::cfdDCS;
+   framerate_dcs=new VE_SceneGraph::DCS;
    framerate_geode=new osg::Geode;
    framerate_text=new osgText::Text;
    framerate_font=osgText::readFontFile("../fonts/arial.ttf");
@@ -83,10 +72,10 @@ void DisplayInformation::InitFrameRateDisplay()
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::InitCoordSysDisplay()
 {
-   coord_sys=new VE_SceneGraph::cfdDCS;
+   coord_sys=new VE_SceneGraph::DCS;
 
    //The physical model for the world coordinate system display
-   VE_SceneGraph::cfdFILE* coord_sys_model=new VE_SceneGraph::cfdFILE(GetVESuite_WCS(),coord_sys,true);
+   VE_SceneGraph::CADEntity* coord_sys_model=new VE_SceneGraph::CADEntity(GetVESuite_WCS(),coord_sys.get(),true);
 
    osg::ref_ptr<osg::Projection> projection=new osg::Projection;
    projection->setMatrix(osg::Matrix::ortho(-1.2,10,-1.2,10,-2,2));

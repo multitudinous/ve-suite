@@ -35,8 +35,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdImage.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
@@ -77,7 +75,7 @@ cfdAnimatedImage::cfdAnimatedImage( std::string basename, int frames,
    }
 
    //this->_sequence = new cfdTempAnimation();
-   this->_dcs = new VE_SceneGraph::cfdDCS();
+   this->_dcs = new VE_SceneGraph::DCS();
 }
 
 cfdAnimatedImage::cfdAnimatedImage( std::string param )
@@ -111,14 +109,14 @@ cfdAnimatedImage::cfdAnimatedImage( std::string param )
       _images.push_back(im);
    }
 
-   this->_dcs = new VE_SceneGraph::cfdDCS();
+   this->_dcs = new VE_SceneGraph::DCS();
    this->_dcs->SetTranslationArray( imageTrans );
    this->_dcs->SetRotationArray( imageRot );
    this->_dcs->SetScaleArray( imageScale );
 
    //this->_sequence = new cfdTempAnimation();
    
-   // Inhereted function from cfdDCS
+   // Inhereted function from DCS
    //this->_dcs->AddChild( (cfdNode*)this->_sequence->GetSequence() );
 }
 
@@ -135,7 +133,7 @@ cfdAnimatedImage::~cfdAnimatedImage()
    {
       //this->_sequence->ClearSequence();
       //delete this->_sequence;
-      delete this->_dcs;
+      //delete this->_dcs;
    }
 }
 

@@ -35,7 +35,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/SceneGraph/cfdFileInfo.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"

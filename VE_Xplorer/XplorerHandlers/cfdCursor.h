@@ -39,11 +39,15 @@ cfdCursor API
 *  A class to build virtual cursors. Type of virtual
 *  cursor built are single point, arrow, and multiple points.
 */
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
+
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdGeode;
-   class cfdGroup;
+   class DCS;
+	class Group;
+   
 }
 
 class vtkGlyph3D;
@@ -57,6 +61,16 @@ class vtkPointSource;
 class vtkPlaneSource;
 class vtkLineSource;
 class vtkPolyDataSource;
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
+
+namespace VE_SceneGraph
+{
+	class Geode;
+}
 
 namespace VE_Xplorer
 {
@@ -76,7 +90,7 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdCursor : public cfdGlobalBase
 {
 public:
-   cfdCursor( vtkPolyData* , VE_SceneGraph::cfdDCS* , VE_SceneGraph::cfdGroup* );
+   cfdCursor( vtkPolyData* , VE_SceneGraph::DCS* , VE_SceneGraph::Group* );
    ~cfdCursor();
 
    // compare VjObs_i commandArray with its child's value
@@ -106,7 +120,7 @@ public:
    vtkPolyData* GetSourcePoints( void );
 
    // Return the dynamic coordinate system with pfGeode objects.
-   VE_SceneGraph::cfdDCS * GetcfdDCS();
+   VE_SceneGraph::DCS* GetDCS();
 
    ///Set/Get plane size.
    void SetPlaneSize( float size );
@@ -130,7 +144,7 @@ public:
    vtkCubeSource *getBox();
    float boxExtent;
 
-   void SetActiveDataSetDCS( VE_SceneGraph::cfdDCS* myDCS );
+   void SetActiveDataSetDCS( VE_SceneGraph::DCS* myDCS );
    void SetActiveDataSet( cfdDataSet* input );
 
    int GetCursorID( void );
@@ -200,12 +214,12 @@ private:
    double pos_c[3];
 
    // Performer dynamic coordinate systems with pre-loaded translated VTK objects.
-   VE_SceneGraph::cfdDCS *cursorDCS;
-   VE_SceneGraph::cfdDCS *cursorScaleDCS;
-   VE_SceneGraph::cfdDCS *worldDCS;
+   osg::ref_ptr< VE_SceneGraph::DCS > cursorDCS;
+   osg::ref_ptr< VE_SceneGraph::DCS > cursorScaleDCS;
+   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;
 
    // A Performer geometry node.
-   VE_SceneGraph::cfdGeode *cursorGeode;
+   osg::ref_ptr< VE_SceneGraph::Geode > cursorGeode;
 
    // Plane size;
    float pSize;
@@ -230,9 +244,9 @@ private:
    // last plane direction
    int last_cursor_type;
 
-   VE_SceneGraph::cfdDCS * activeDataSetDCS;
+   osg::ref_ptr< VE_SceneGraph::DCS > activeDataSetDCS;
 
-   VE_SceneGraph::cfdGroup* _rootNode;
+   osg::ref_ptr< VE_SceneGraph::Group > _rootNode;
    VE_Xplorer::cfdDataSet* _activeDataSet;
    int cursorId;
    float sphereRadius;

@@ -84,6 +84,7 @@ namespace VE_TextureBased
 
 #include "VE_Installer/include/VEConfig.h"
 #include <string>
+
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisualization{

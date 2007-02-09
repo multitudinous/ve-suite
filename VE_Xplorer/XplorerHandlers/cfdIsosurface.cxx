@@ -35,7 +35,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DataSetScalarBar.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
 //#include <vtkUnstructuredGrid.h>
@@ -171,8 +170,8 @@ void cfdIsosurface::Update()
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new VE_SceneGraph::cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( temp );
+   geodes.push_back( new VE_SceneGraph::Geode() );
+   geodes.back()->TranslateToGeode( temp );
    temp->Delete();
    lut->Delete();
    this->updateFlag = true;

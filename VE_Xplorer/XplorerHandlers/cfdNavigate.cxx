@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Open/XML/Command.h"
@@ -81,7 +80,7 @@ cfdNavigate::~cfdNavigate( )
 {
 }
 
-void cfdNavigate::Initialize( VE_SceneGraph::cfdDCS* worldDCS )
+void cfdNavigate::Initialize( VE_SceneGraph::DCS* worldDCS )
 {
    this->worldDCS = worldDCS;
    this->cursorLen = 2.0f;

@@ -47,7 +47,7 @@ ActiveModelEventHandler::ActiveModelEventHandler()
 :VE_EVENTS::EventHandler()
 {
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ActiveModelEventHandler::ActiveModelEventHandler(const ActiveModelEventHandler& rhs)
 :VE_EVENTS::EventHandler()
 {
@@ -58,7 +58,7 @@ ActiveModelEventHandler::ActiveModelEventHandler(const ActiveModelEventHandler& 
 ActiveModelEventHandler::~ActiveModelEventHandler()
 {
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ActiveModelEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
 {
 }
@@ -73,7 +73,7 @@ void ActiveModelEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    activeModelDVP->GetData( newModel );
    VE_Xplorer::cfdModelHandler::instance()->SetActiveModel( newModel );
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ActiveModelEventHandler& ActiveModelEventHandler::operator=(const ActiveModelEventHandler& rhs)
 {
    if(this != &rhs)
@@ -81,3 +81,4 @@ ActiveModelEventHandler& ActiveModelEventHandler::operator=(const ActiveModelEve
    }
    return *this;
 }
+////////////////////////////////////////////////////////////////////////////////

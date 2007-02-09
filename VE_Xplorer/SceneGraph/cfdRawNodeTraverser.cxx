@@ -32,11 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/SceneGraph/cfdRawNodeTraverser.h"
-#include <iostream>
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
@@ -46,7 +41,11 @@
 #elif _OSG
 #include <osg/Group>
 #endif
+
+#include <iostream>
+
 using namespace VE_SceneGraph;
+
 ////////////////////////////////////
 //Constructors                    //
 ////////////////////////////////////

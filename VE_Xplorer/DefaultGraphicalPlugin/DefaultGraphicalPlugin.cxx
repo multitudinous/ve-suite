@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+
 #include <iostream>
 
 using namespace VE_Xplorer;
@@ -50,7 +50,7 @@ DefaultGraphicalPlugin::~DefaultGraphicalPlugin( void )
    ;
 }
 
-void DefaultGraphicalPlugin::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
+void DefaultGraphicalPlugin::InitializeNode( VE_SceneGraph::DCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    //this->_param = "Plugins/hummer.param";

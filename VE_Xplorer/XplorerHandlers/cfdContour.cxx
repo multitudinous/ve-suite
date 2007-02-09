@@ -34,7 +34,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"    // needed for cursorType
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
@@ -182,15 +181,15 @@ void cfdContour::Update( void )
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   //geodes.push_back( new VE_SceneGraph::cfdGeode() );
-   //geodes.back()->TranslateTocfdGeode( temp );
+   //geodes.push_back( new VE_SceneGraph::Geode() );
+   //geodes.back()->TranslateToGeode( temp );
    //temp->Delete();
 
    try
    {
-      VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
-      tempGeode->TranslateTocfdGeode( temp );
-      geodes.push_back( tempGeode );
+		osg::ref_ptr< VE_SceneGraph::Geode > tempGeode = new VE_SceneGraph::Geode();
+      tempGeode->TranslateToGeode( temp );
+      geodes.push_back( tempGeode.get() );
       this->updateFlag = true;
    }
    catch( std::bad_alloc )

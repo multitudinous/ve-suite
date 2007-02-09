@@ -32,14 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
+#include "VE_Xplorer/SceneGraph/Clone.h"
 
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
@@ -148,7 +147,7 @@ void CADEventHandler::_setAttributesOnNode(CADNode* activeNode)
 void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
 {
    //set the transform
-   cfdDCS* transform = 0;
+   VE_SceneGraph::DCS* transform = 0;
    std::string nodeID = activeNode->GetID();
    if(activeNode->GetNodeType() == "Assembly")
    {
@@ -165,7 +164,7 @@ void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
       //std::cout<<"Setting transform on Clone: "<<nodeID<<std::endl;
       transform = _activeModel->GetClone(nodeID)->GetClonedGraph();
    }
-   if(transform)
+   if( transform )
    {
       transform->SetTranslationArray(activeNode->GetTransform()->GetTranslationArray()->GetArray() );
       transform->SetRotationArray(activeNode->GetTransform()->GetRotationArray()->GetArray() );
@@ -179,11 +178,11 @@ void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
 /////////////////////////////////////////////////////////////////////////
 void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 {
-   cfdDCS* parentAssembly = 0;
+   VE_SceneGraph::DCS* parentAssembly = 0;
    parentAssembly = _activeModel->GetAssembly(parentID);
 
    vprDEBUG( vesDBG, 1 ) << "|---Adding node---" << std::endl << vprDEBUG_FLUSH;
-   if(parentAssembly)
+   if( parentAssembly )
    {
       if(activeNode->GetNodeType() == "Assembly")
       {
@@ -211,13 +210,13 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             //std::cout<<"      Adding child: "<<newAssembly->GetChild(i)->GetNodeName()<<std::endl;
             _addNodeToNode(newAssembly->GetID(), newAssembly->GetChild(i));
          }
-         _activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
+			_activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
          //set the uuid on the osg node so that we can get back to vexml
          osg::Node::DescriptionList descriptorsList;
          descriptorsList.push_back( "VE_XML_ID" );
          descriptorsList.push_back( newAssembly->GetID() );
-         VE_SceneGraph::cfdNode* tempFile = _activeModel->GetAssembly(newAssembly->GetID());
-         tempFile->GetRawNode()->setDescriptions( descriptorsList );
+         VE_SceneGraph::DCS* tempFile = _activeModel->GetAssembly(newAssembly->GetID());
+         tempFile->setDescriptions( descriptorsList );
       }
       else if(activeNode->GetNodeType() == "Part")
       {
@@ -232,15 +231,15 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
                                     parentID
                                   );
 
-         VE_SceneGraph::cfdFILE* partNode = _activeModel->GetPart(newPart->GetID());
+         VE_SceneGraph::CADEntity* partNode = _activeModel->GetPart(newPart->GetID());
          partNode->GetNode()->SetName(newPart->GetNodeName());
          //set the uuid on the osg node so that we can get back to vexml
          osg::Node::DescriptionList descriptorsList;
          descriptorsList.push_back( "VE_XML_ID" );
          descriptorsList.push_back( newPart->GetID() );
-         partNode->GetNode()->GetRawNode()->setDescriptions( descriptorsList );
+         partNode->GetNode()->GetNode()->setDescriptions( descriptorsList );
          //set the visibility
-         partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
+			partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
 
          vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
          _setTransformOnNode(newPart);
@@ -261,13 +260,13 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          _setAttributesOnNode(clone);
          //std::cout<<"      ---Set Attributes---"<<std::endl;
          parentAssembly->AddChild(_activeModel->GetClone(clone->GetID())->GetClonedGraph());
-         _activeModel->GetClone(clone->GetID())->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
-         VE_SceneGraph::cfdNode* tempFile = _activeModel->GetClone(clone->GetID())->GetClonedGraph();
+			_activeModel->GetClone(clone->GetID())->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
+         VE_SceneGraph::DCS* tempFile = _activeModel->GetClone(clone->GetID())->GetClonedGraph();
          //set the uuid on the osg node so that we can get back to vexml
          osg::Node::DescriptionList descriptorsList;
          descriptorsList.push_back( "VE_XML_ID" );
          descriptorsList.push_back( clone->GetID() );
-         tempFile->GetRawNode()->setDescriptions( descriptorsList );
+         tempFile->setDescriptions( descriptorsList );
       }
    }
    else

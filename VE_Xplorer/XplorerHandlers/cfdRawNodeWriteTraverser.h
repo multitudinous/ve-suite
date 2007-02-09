@@ -41,9 +41,8 @@ cfdRawNodeWriteTraverser API
 /*!\class VE_Xplorer::cfdRawNodeWriteTraverser
 * 
 */
+#include "VE_Xplorer/SceneGraph/cfdRawNodeTraverser.h"
 
-#include <vector>
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
 #ifdef _PERFORMER
 #include <Performer/pf/pfSequence.h>
 #include <Performer/pf/pfNode.h>
@@ -52,7 +51,14 @@ cfdRawNodeWriteTraverser API
 #include <osg/Node>
 #elif _OPENSG
 #endif
-#include "VE_Xplorer/SceneGraph/cfdRawNodeTraverser.h"
+
+#include <vector>
+
+namespace VE_SceneGraph
+{
+	class CADEntityHelper;
+	class SceneNode;
+}
 
 ////////////////////////////////////////
 //This class writes out a performer   // 
@@ -87,7 +93,7 @@ namespace VE_Xplorer
          virtual void setPreNodeTraverseCallback(preNodeTraverseCallback func);
    
          //set the node to traverse
-         void setNode(VE_SceneGraph::cfdNode* root);
+         void setNode(VE_SceneGraph::SceneNode* root);
 
          //equal operator
          cfdRawNodeWriteTraverser& operator=(const cfdRawNodeWriteTraverser& rhs);

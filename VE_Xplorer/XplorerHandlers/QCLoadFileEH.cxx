@@ -33,7 +33,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/QCLoadFileEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
 
 #include "VE_Open/XML/Command.h"

@@ -8,8 +8,8 @@
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -48,7 +48,7 @@ void SelectionHandler::SelectObjects()
    
    hitList=intersectVisitor.getHitList(CreateLineSegment().get());
 
-   //selectedGeometry=NULL;
+   //selectedGeometry = NULL;
 
    if(hitList.empty()){
       vprDEBUG(vesDBG,1)<<"|\tcfdObjectHandler::ProcessHit No object selected"<<std::endl<<vprDEBUG_FLUSH;

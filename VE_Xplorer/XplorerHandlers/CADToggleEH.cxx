@@ -32,15 +32,17 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADToggleEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
+
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include "VE_Xplorer/SceneGraph/Clone.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADNode.h"
+
 #include <iostream>
+
 using namespace VE_EVENTS;
 using namespace VE_CAD;
 ////////////////////////////////////////////////////////////////////////////

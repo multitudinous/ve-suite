@@ -39,10 +39,11 @@ Clone API
 /*!\class VE_SceneGraph::Clone
 *
 */
-
 #include "VE_Xplorer/SceneGraph/DCS.h"
+
 namespace VE_SceneGraph
 {
+	class DCS;
    class SceneNode;
 }
 
@@ -57,19 +58,22 @@ class VE_SCENEGRAPH_EXPORTS Clone
 {
 public:
    Clone();
-   Clone( SceneNode* original );
-   ~Clone();
+   //Clone( SceneNode* original );
+	Clone( osg::Node* original );
+	~Clone();
 
-   void CloneNode( SceneNode* original );
+   //void CloneNode( SceneNode* original );
+	void CloneNode( osg::Node* original );
    void SetTranslationArray(float* translation);
    void SetRotationArray(float* rotation);
    void SetScaleArray(float* scale);
 
    //returns the cloned structure including the
    //transform
-   DCS* GetClonedGraph();
+	VE_SceneGraph::DCS* GetClonedGraph();
+
 protected:
-   osg::ref_ptr< DCS > cloneTransform;
+	osg::ref_ptr< VE_SceneGraph::DCS > cloneTransform;
 };
 }
 #endif //CLONE_H

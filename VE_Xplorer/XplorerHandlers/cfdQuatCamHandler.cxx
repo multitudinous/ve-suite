@@ -46,7 +46,6 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/OneDIntArray.h"
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <cmath>
@@ -73,12 +72,12 @@ vprSingletonImp( VE_Xplorer::cfdQuatCamHandler );
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-cfdQuatCamHandler::cfdQuatCamHandler( /*VE_SceneGraph::cfdDCS* worldDCS, 
+cfdQuatCamHandler::cfdQuatCamHandler( /*osg::ref_ptr< VE_SceneGraph::DCS > worldDCS, 
                                      cfdNavigate* nav, std::string param*/ )
 {
    flyThroughList.clear();
    thisQuatCam = NULL;
-   _worldDCS = NULL;
+   //_worldDCS = NULL;
    _nav = NULL;
    _param.empty();// = NULL;
    t = 0.0f;
@@ -90,7 +89,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( /*VE_SceneGraph::cfdDCS* worldDCS,
    cam_id = 0;
    activeFlyThrough = -1;
    
-   _worldDCS = 0;
+   //_worldDCS = 0;
    _nav = 0;
    _param = "";//param;
    completionTest.push_back( 0 );
@@ -121,7 +120,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( /*VE_SceneGraph::cfdDCS* worldDCS,
    }
 }
 ///////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::SetDCS(VE_SceneGraph::cfdDCS* worldDCS)
+void cfdQuatCamHandler::SetDCS(VE_SceneGraph::DCS* worldDCS)
 {
    _worldDCS = worldDCS;
 }
@@ -135,7 +134,7 @@ void cfdQuatCamHandler::CleanUp( void )
 {
    ///empty destrutor?
 }
-void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldDCS)
+void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::DCS* worldDCS)
 {
    Matrix44f vjm;
 
@@ -352,8 +351,7 @@ void cfdQuatCamHandler::ClearQuaternionData()
    }
 }
 //////////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,
-                                 cfdNavigate* nav )
+void cfdQuatCamHandler::Relocate( VE_SceneGraph::DCS* worldDCS, cfdNavigate* nav )
 {
    Matrix44f vjm;
 
@@ -471,7 +469,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
-         this->LoadData( this->_nav->worldTrans, _worldDCS );
+         this->LoadData( this->_nav->worldTrans, _worldDCS.get() );
          AddViewPtToFlyThrough(0,QuatCams.size()-1);
          this->WriteToFile( this->quatCamFileName );
          //this->LoadFromFile( this->quatCamFileName );
@@ -662,7 +660,7 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
 
       movementIntervalCalc = 1 / ( vecDistance / ( this->movementSpeed * ( frameTimer->getTiming() ) ) );
 
-      this->Relocate( this->_worldDCS, this->_nav);
+      this->Relocate( this->_worldDCS.get(), this->_nav);
           
    }
    frameTimer->reset();

@@ -39,12 +39,18 @@ DefaultGraphicalPlugin API
 /*!\class ::DefaultGraphicalPlugin
 *
 */
-
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
+
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
 
 namespace VE_SceneGraph
 {
-class cfdDCS;
+	class DCS;
 }
 
 class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public VE_Xplorer::cfdVEBaseClass 
@@ -53,7 +59,7 @@ public:
    DefaultGraphicalPlugin( void );
    virtual ~DefaultGraphicalPlugin( void );
 
-   virtual void InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS );
+	virtual void InitializeNode( VE_SceneGraph::DCS* veworldDCS );
 private:
 };
 

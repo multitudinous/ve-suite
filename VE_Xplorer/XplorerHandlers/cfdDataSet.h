@@ -40,10 +40,15 @@ cfdDataSet API
 * or properties for virtual environment interactive 
 * computation.
 */
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/Switch.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
 
 #ifdef USE_OMP
 #define MAX_DATA 20
 #endif
+
 #include <string>
 #include <map>
 #include <vector>
@@ -53,6 +58,7 @@ class vtkPolyData;
 class vtkUnstructuredGrid;
 class vtkUnstructuredGridReader;
 class vtkDataSet;
+
 namespace VE_Xplorer
 {
    class cfdPlanes;
@@ -62,18 +68,23 @@ namespace VE_Xplorer
 
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdGroup;
-   class cfdGeode;
-   class cfdSwitch;
-   class cfdTempAnimation;
+   class DCS;
+	class Group;
+	class Switch;
+   class Geode;
 }
 
 namespace VE_Util
 {
    class cfdVTKFileHandler;
 }
+
 #include "VE_Installer/include/VEConfig.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
 
 namespace VE_Xplorer
 {
@@ -210,13 +221,13 @@ namespace VE_Xplorer
          double * GetVectorMagRange();
 
          // get/set this dataset's DCS
-         VE_SceneGraph::cfdDCS * GetDCS();
-         void SetDCS( VE_SceneGraph::cfdDCS * );
+         VE_SceneGraph::DCS* GetDCS();
+         void SetDCS( VE_SceneGraph::DCS* );
 
-         VE_SceneGraph::cfdSwitch* GetSwitchNode( void );
+         VE_SceneGraph::Switch* GetSwitchNode( void );
 
-         VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
-         void SetAnimation( VE_SceneGraph::cfdTempAnimation* );
+         //VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
+         //void SetAnimation( VE_SceneGraph::cfdTempAnimation* );
 
          int IsPartOfTransientSeries();
          void SetAsPartOfTransientSeries();
@@ -300,13 +311,14 @@ private:
          std::vector< std::string > scalarName;
          std::vector< std::string > vectorName;
 
-         VE_SceneGraph::cfdDCS* dcs;
-         VE_SceneGraph::cfdGeode* bboxGeode;
-         VE_SceneGraph::cfdGeode* wireframeGeode;
-         VE_SceneGraph::cfdTempAnimation* animation;
-         VE_SceneGraph::cfdSwitch* switchNode;
-         VE_SceneGraph::cfdGroup* classic;
-         VE_SceneGraph::cfdGroup* textureBased; 
+         osg::ref_ptr< VE_SceneGraph::Geode > bboxGeode;
+         osg::ref_ptr< VE_SceneGraph::Geode > wireframeGeode;
+         //VE_SceneGraph::cfdTempAnimation* animation;
+
+			osg::ref_ptr< VE_SceneGraph::DCS > dcs;
+         osg::ref_ptr< VE_SceneGraph::Switch > switchNode;
+			osg::ref_ptr< VE_SceneGraph::Group > classic;
+         osg::ref_ptr< VE_SceneGraph::Group > textureBased; 
 
          VE_Xplorer::DataSetAxis* dataSetAxes;
          VE_Xplorer::DataSetScalarBar* dataSetScalarBar;

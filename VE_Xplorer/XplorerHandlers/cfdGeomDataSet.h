@@ -40,9 +40,10 @@ cfdGeomDataSet API
 /*!\class VE_Xplorer::cfdGeomDataSet
 * 
 */
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
-#include <vector>
 #include "VE_Xplorer/SceneGraph/cfdFileInfo.h"
+
 #ifdef _PERFORMER
 #include "Performer/pf/pfNode.h"
 #include "Performer/pf/pfDCS.h"
@@ -52,12 +53,20 @@ class pfMaterial;
 class pfLightModel;
 //class pfDCS;
 #elif _OSG
+#include <osg/ref_ptr>
+
 #include <osg/Node>
 #include <osg/MatrixTransform>
 #include <osg/Material>
 #endif
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
+
+#include <vector>
+
+namespace VE_SceneGraph
+{
+   class DCS;
+	class CADEntityHelper;
+}
 
 //! CFD shell model loader
 /*!
@@ -74,7 +83,7 @@ namespace VE_Xplorer
    class cfdGeomDataSet 
    {
       public:
-         cfdGeomDataSet(VE_SceneGraph::fileInfo *geomfile, VE_SceneGraph::cfdDCS *);
+			cfdGeomDataSet(VE_SceneGraph::fileInfo *geomfile, VE_SceneGraph::DCS* );
 
          cfdGeomDataSet( float, float [ 3 ], std::string );
          ~cfdGeomDataSet( );
@@ -93,13 +102,13 @@ namespace VE_Xplorer
       #ifdef _PERFORMER
          void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
       #elif _OSG
-         //void TravNodeMaterial(cfdNode*,osg::Material*,int);
+         //void TravNodeMaterial(CADEntityHelper*,osg::Material*,int);
       #endif
          //these need to renamed!!
-         VE_SceneGraph::cfdDCS* getpfDCS();
-         VE_SceneGraph::cfdNode* getpfNode();
-         VE_SceneGraph::cfdNode* node;
-         VE_SceneGraph::cfdDCS* DCS;
+         VE_SceneGraph::DCS* getpfDCS();
+         VE_SceneGraph::CADEntityHelper* getpfNode();
+         VE_SceneGraph::CADEntityHelper* node;
+         osg::ref_ptr< VE_SceneGraph::DCS > dcs;
 
       #ifdef _PERFORMER
          pfLightModel *matLight;

@@ -191,31 +191,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdClone.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdDCS.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdFILE.cxx"
+				RelativePath=".\CADEntityHelper.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\cfdFileInfo.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdGeode.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdGroup.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdNode.cxx"
 				>
 			</File>
 			<File
@@ -227,19 +207,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdSceneNode.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdSequence.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdSwitch.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdTempAnimation.cxx"
+				RelativePath=".\Clone.cxx"
 				>
 			</File>
 			<File
@@ -255,19 +223,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Node.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\PhysicsSimulator.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\SceneNode.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\Sequence.cxx"
 				>
 			</File>
 			<File
@@ -319,31 +279,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdClone.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdDCS.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdFILE.h"
+				RelativePath=".\CADEntityHelper.h"
 				>
 			</File>
 			<File
 				RelativePath=".\cfdFileInfo.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdGeode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdGroup.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdNode.h"
 				>
 			</File>
 			<File
@@ -355,19 +295,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdSceneNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdSequence.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdSwitch.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdTempAnimation.h"
+				RelativePath=".\Clone.h"
 				>
 			</File>
 			<File
@@ -383,19 +311,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Node.h"
-				>
-			</File>
-			<File
 				RelativePath=".\PhysicsSimulator.h"
 				>
 			</File>
 			<File
 				RelativePath=".\SceneNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sequence.h"
 				>
 			</File>
 			<File

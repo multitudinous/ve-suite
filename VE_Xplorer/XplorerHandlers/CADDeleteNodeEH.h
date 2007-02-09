@@ -38,18 +38,24 @@
 /*!\class CADDeleteNodeEventHandler
  * Class for removing CADNode from the current tree.
  */
+#include "VE_Installer/include/VEConfig.h"
+
+#include "VE_Xplorer/XplorerHandlers/CADEventHandler.h"
+
 namespace VE_XML
 {
    class XMLObject;
 }
+
 namespace VE_CAD
 {
    class CADNode;
 }
-#include "VE_Xplorer/XplorerHandlers/CADEventHandler.h"
-#include "VE_Installer/include/VEConfig.h"
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS CADDeleteNodeEventHandler: public CADEventHandler{
+
+namespace VE_EVENTS
+{
+class VE_XPLORER_EXPORTS CADDeleteNodeEventHandler: public CADEventHandler
+{
 public:
    ///Constructor
    CADDeleteNodeEventHandler();

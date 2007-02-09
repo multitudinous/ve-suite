@@ -33,19 +33,18 @@
 
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 #include "VE_Xplorer/XplorerHandlers/CADAddNodeEH.h"
 #include "VE_Xplorer/XplorerHandlers/AddVTKDataSetEventHandler.h"
+
+#include "VE_Xplorer/Utilities/fileIO.h"
 
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -84,15 +83,15 @@ cfdVEBaseClass::~cfdVEBaseClass( void )
    }
 }
 //////////////////////////////////////////////////////////////////      
-void cfdVEBaseClass::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
+void cfdVEBaseClass::InitializeNode( VE_SceneGraph::DCS* veworldDCS )
 {
-   //this->groupNode = new cfdGroup();
-   this->_dcs = new VE_SceneGraph::cfdDCS(); 
+   //this->groupNode = new VE_SceneGraph::Group();
+   this->_dcs = new VE_SceneGraph::DCS(); 
    this->_dcs->SetName("cfdVEBaseClass");
    //this->dataRepresentation = new cfdObjects();
    //this->geometryNode = new cfdModuleGeometry( groupNode );
    this->worldDCS = veworldDCS;
-   this->_model = new cfdModel( _dcs );
+   this->_model = new cfdModel( _dcs.get() );
    //this->_readParam = new cfdReadParam();
 }
 //////////////////////////////////////////////////////////////////      
@@ -101,13 +100,13 @@ void cfdVEBaseClass::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
 void cfdVEBaseClass::AddSelfToSG( void )
 {
    _onSceneGraph = true;
-   this->worldDCS->AddChild( this->_dcs );
+   this->worldDCS->AddChild( this->_dcs.get() );
 }
 //////////////////////////////////////////////////////////////////      
 void cfdVEBaseClass::RemoveSelfFromSG( void )
 {
    _onSceneGraph = false;
-   this->worldDCS->RemoveChild( this->_dcs );
+   this->worldDCS->RemoveChild( this->_dcs.get() );
 }
 //////////////////////////////////////////////////////////////////      
 // Change state information for geometric representation
@@ -385,9 +384,9 @@ void cfdVEBaseClass::CreateObjects( void )
    }
 }
 //////////////////////////////////////////////////////////////////   
-VE_SceneGraph::cfdDCS* cfdVEBaseClass::GetWorldDCS()
+VE_SceneGraph::DCS* cfdVEBaseClass::GetWorldDCS()
 {
-   return this->worldDCS;
+   return this->worldDCS.get();
 }
 //////////////////////////////////////////////////////////////////   
 void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::Model* tempModel )

@@ -1,13 +1,11 @@
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Geode.h"
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 #include "VE_Xplorer/SceneGraph/ModelOccluder.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
-#if VE_PHYSICS
 
 #ifdef _PERFORMER
 #include <Performer/pr/pfFog.h>
@@ -48,16 +46,20 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isStream)
+:
+mass(1.0f),
+friction(0.5f),
+restitution(0.0f)
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
-   this->DCS=new VE_SceneGraph::DCS();
+   this->dcs=new VE_SceneGraph::DCS();
    this->node=new VE_SceneGraph::CADEntityHelper();
 
    this->node->LoadFile(geomFile.c_str(),isStream);
    fileName.assign(geomFile);
-   this->DCS->AddChild( this->node->GetNode() );
-   worldDCS->AddChild( this->DCS.get() );
+	this->dcs->addChild( this->node->GetNode() );
+   worldDCS->AddChild( this->dcs.get() );
 
    #ifdef _PERFORMER
    fog = new pfFog();
@@ -65,6 +67,8 @@ CADEntity::CADEntity(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isSt
    //setup fog
    fog=new osg::Fog();
    #endif
+
+	collision_shape = NULL;
 
 	this->InitPhysics();
 }
@@ -74,7 +78,8 @@ CADEntity::~CADEntity()
 	if(collision_shape){
 		delete collision_shape;	
 	}
-   delete node;
+
+	delete node;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::Initialize( float op_val )
@@ -85,30 +90,47 @@ void CADEntity::Initialize( float op_val )
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics()
 {
-	//No friction by default
-	rigid_body->setFriction(0.0f);
+	this->CreateBBMesh();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetMass(float mass)
+void CADEntity::SetMass(float m)
 {
-	//btRigidBody* is dynamic if and only if mass is non zero, otherwise static
-	bool dynamic=(mass!=0.0f);
+	mass=m;
 
-	btVector3 localInertia(0,0,0);
-   if(dynamic){
-		collision_shape->calculateLocalInertia(mass,localInertia);
-   }
+	if(collision_shape){
+		//btRigidBody* is dynamic if and only if mass is non zero, otherwise static
+		bool dynamic=(mass!=0.0f);
+
+		btVector3 localInertia(0,0,0);
+		if(dynamic){
+			collision_shape->calculateLocalInertia(mass,localInertia);
+		}
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetFriction(float friction)
+void CADEntity::SetFriction(float f)
 {
-	rigid_body->setFriction(friction);
+	friction=f;
+
+	if(rigid_body){
+		rigid_body->setFriction(friction);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetRestitution(float r)
+{
+	restitution=r;
+
+	if(rigid_body){
+		rigid_body->setRestitution(restitution);
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::CreateBBMesh()
 {
+	/*
 	osg::ref_ptr<osg::Geode> geode=new osg::Geode;
-	geode->asGroup()->addChild(node.get());
+	geode->asGroup()->addChild(this->node->GetNode());
 
 	osg::BoundingBox bb=geode->getBoundingBox();
 
@@ -124,16 +146,18 @@ void CADEntity::CreateBBMesh()
 	}
 
 	//Set new btRigidBody* and btCollisionObject*
-   collision_shape=new btBoxShape(btVector3((bb.xMax()-bb.xMin())*0.5f,
-														  (bb.yMax()-bb.yMin())*0.5f,
-														  (bb.zMax()-bb.zMin())*0.5f));
-   //rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(0.0f,DCS->GetPhysicsTransform(),trimesh_shape);
+   this->collision_shape=new btBoxShape(btVector3((bb.xMax()-bb.xMin())*0.5f,
+																  (bb.yMax()-bb.yMin())*0.5f,
+																  (bb.zMax()-bb.zMin())*0.5f));
+   //this->rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(mass,dcs->GetPhysicsTransform(),collision_shape);
+	*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::CreateExactMesh()
 {
+	/*
 	osg::ref_ptr<osg::Geode> geode=new osg::Geode;
-	geode->asGroup()->addChild(node->GetNode() );
+	geode->asGroup()->addChild(node->GetNode());
 
 	osg::TriangleIndexFunctor<TriIndexFunc> TIF;
 	osg::ref_ptr<osg::Vec3Array> vertex_array=new osg::Vec3Array;
@@ -176,7 +200,8 @@ void CADEntity::CreateExactMesh()
 
 	//Set new btRigidBody* and btCollisionObject*
    collision_shape=new btBvhTriangleMeshShape(triMesh);
-   //rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(0.0f,DCS->GetPhysicsTransform(),trimesh_shape);
+   //rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(mass,dcs->GetPhysicsTransform(),collision_shape);
+	*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::CreateFileMesh()
@@ -191,23 +216,23 @@ void CADEntity::CreateCustomMesh()
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
 {
-   return this->CADEntityHelper;
+   return this->node;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* CADEntity::GetDCS()
 {
-   return this->DCS.get();
+   return this->dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 btRigidBody* CADEntity::GetRigidBody()
 {
-   return rigid_body;
+   return this->rigid_body;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntity::GetFilename()
 {
-   return fileName;
+   return this->fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntity::GetModuleName()
@@ -273,12 +298,12 @@ void CADEntity::SetFILEProperties( int color, int trans, float* stlColor )
 void CADEntity::setOpac(float op_val)
 {
    this->op = op_val;
-   this->node->SetNodeProperties( _colorFlag, op, stlColor );
+   //this->node->SetNodeProperties( _colorFlag, op, stlColor );
 
    #ifdef _PERFORMER
       this->node->pfTravNodeMaterial( this->node->GetRawNode() );
    #elif _OSG
-      node->TravNodeMaterial(node->GetNode());
+      //node->TravNodeMaterial(node->GetRawNode());
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -338,7 +363,7 @@ void CADEntity::Update()
                << "op : " << this->_opacityLevel << std::endl
                << "color : " << this->_colorFlag << std::endl;
    // Fix this later to call traverser function
-   this->_node->SetColorOfGeometry( this->_node->GetNode() );
+   //this->_node->SetColorOfGeometry( this->_node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-#endif
+

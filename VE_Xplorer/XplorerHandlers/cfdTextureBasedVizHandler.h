@@ -42,14 +42,16 @@ cfdTextureBasedVizHandler API
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+
 #include "VE_Xplorer/XplorerHandlers/TextureBasedEventHandler.h"
 
 #include <string>
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdGroup;
-   class cfdSwitch;
+   class DCS;
+	class Group;
 }
 
 namespace VE_Xplorer
@@ -65,6 +67,8 @@ namespace VE_Xplorer
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
+#include <osg/ref_ptr>
+
 namespace osgUtil { class SceneView; }
 
 namespace VE_TextureBased
@@ -87,8 +91,8 @@ namespace VE_TextureBased
          void CleanUp( void );
          void SetParameterFile(std::string paramFile);
          void SetCommandArray( VE_Xplorer::cfdCommandArray* cmdArray);
-         void SetWorldDCS( VE_SceneGraph::cfdDCS* dcs);
-         void SetParentNode( VE_SceneGraph::cfdGroup* parent);
+         void SetWorldDCS( VE_SceneGraph::DCS* dcs);
+         void SetParentNode( VE_SceneGraph::Group* parent);
          void SetNavigate( VE_Xplorer::cfdNavigate* navigate);
          void SetCursor( VE_Xplorer::cfdCursor* cursor);
          void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
@@ -167,7 +171,7 @@ namespace VE_TextureBased
          double _animationDelay;
          std::string _paramFile;
          VE_Xplorer::cfdCommandArray* _cmdArray;
-         VE_SceneGraph::cfdDCS* _worldDCS;
+         osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
          VE_Xplorer::cfdNavigate* _nav;
          VE_Xplorer::cfdCursor* _cursor;
          cfdTextureDataSet* _activeTDSet;
@@ -175,14 +179,14 @@ namespace VE_TextureBased
 
       //std::vector<cfdVolumeVisualization*> _volumeVisNodes;
          cfdVolumeVisualization* _activeVolumeVizNode;
-         VE_SceneGraph::cfdGroup* _parent;
+			osg::ref_ptr< VE_SceneGraph::Group > _parent;
          cfdPBufferManager* _pbm;
          osgUtil::SceneView* _sceneView;
          cfdVolumeVisNodeHandler* activeVisNodeHdlr;
          cfdScalarVolumeVisHandler* _svvh;
          cfdVectorVolumeVisHandler* _vvvh;
       
-      //cfdSwitch* _visOptionSwitch;
+      //osg::ref_ptr< VE_SceneGraph::Switch > _visOptionSwitch;
          float* _currentBBox;
          bool _cleared;
          bool _textureBaseSelected;

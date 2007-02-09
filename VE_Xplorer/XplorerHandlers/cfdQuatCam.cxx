@@ -33,7 +33,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCam.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #ifdef _PERFORMER
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <Performer/pf.h>
@@ -76,7 +75,7 @@ cfdQuatCam::cfdQuatCam(gmtl::Matrix44f& m, double* worldTrans)
 
 }
 
-void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::cfdDCS* worldDCS)
+void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::DCS* worldDCS)
 {
    for (int i=0; i<3; i++)
       vjVecLastTrans[i] = worldTrans[i];
@@ -120,7 +119,7 @@ void cfdQuatCam::UpdateTrans(cfdNavigate* nav)
    nav->worldTrans[2] = (double)vjVecCurrTrans[2];
 }
 
-void cfdQuatCam::UpdateRotation( VE_SceneGraph::cfdDCS* worldDCS)
+void cfdQuatCam::UpdateRotation( VE_SceneGraph::DCS* worldDCS)
 {
    Matrix44f temp;
    temp = makeRot<gmtl::Matrix44f>( CurPosQuat );

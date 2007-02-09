@@ -39,8 +39,9 @@ cfdQuatCam API
 /*!\class VE_Xplorer::cfdQuatCam
 * 
 */
-
 #include "VE_Installer/include/VEConfig.h"
+
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>
@@ -51,9 +52,14 @@ cfdQuatCam API
 #include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
 
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
+
 namespace VE_SceneGraph
 {
-   class cfdDCS;
+   class DCS;
 }
 
 namespace VE_Xplorer
@@ -72,7 +78,7 @@ namespace VE_Xplorer
          //Destructor
          ~cfdQuatCam(){;}
 
-         void SetCamPos( double*, VE_SceneGraph::cfdDCS* );
+         void SetCamPos( double*, VE_SceneGraph::DCS* );
 
          void MoveCam( float );
 
@@ -82,7 +88,7 @@ namespace VE_Xplorer
 
          void UpdateTrans( cfdNavigate* );
 
-         void UpdateRotation( VE_SceneGraph::cfdDCS* );
+         void UpdateRotation( VE_SceneGraph::DCS* );
 
          gmtl::Matrix44f GetMatrix( void );
 

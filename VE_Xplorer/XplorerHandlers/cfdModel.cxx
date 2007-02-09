@@ -31,16 +31,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
-#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
+
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
+#include "VE_Xplorer/SceneGraph/Clone.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
+
+#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
@@ -51,7 +48,6 @@
 #include "VE_Open/XML/CAD/CADCreator.h"
 
 #include "VE_Open/XML/Shader/ShaderCreator.h"
-
 
 #ifdef _OSG
 #include <osg/StateSet>
@@ -86,7 +82,8 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
 
-cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
+////////////////////////////////////////////////////////////////////////////////
+cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )
 {
    vprDEBUG(vesDBG,1) << "|\tNew cfdModel ! " 
                           << std::endl << vprDEBUG_FLUSH;
@@ -94,12 +91,12 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
    //this->actor = NULL;
    //ModelIndex = static_cast<ModelTypeIndex>(value);
    // Will fix this later so that each model has a dcs
-   //mModelDCS = new cfdDCS();
+   //mModelDCS = new VE_SceneGraph::DCS();
    _worldDCS = worldDCS;
-   mirrorNode = 0;
-   mirrorGroupNode = 0;
+   //mirrorNode = 0;
+   //mirrorGroupNode = 0;
 
-   this->animation = 0;
+   //this->animation = 0;
    this->activeDataSet = 0;
    mirrorDataFlag = false;
 #ifdef _OSG
@@ -108,27 +105,29 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
    _rootCADNode = 0;
    modelID = 10000000;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdModel::~cfdModel()
 {
    vprDEBUG(vesDBG,2) << "cfdModel destructor"
                           << std::endl << vprDEBUG_FLUSH;
 
-   for ( std::map<std::string,VE_SceneGraph::cfdFILE*>::iterator itr = _partList.begin();
+   for ( std::map<std::string,VE_SceneGraph::CADEntity*>::iterator itr = _partList.begin();
                                        itr != _partList.end(); itr++ )
    {
       delete itr->second;
    }
    _partList.clear();
-   for ( std::map<std::string,VE_SceneGraph::cfdDCS*>::iterator itr = _assemblyList.begin();
+
+	/*
+   for ( std::map< std::string, VE_SceneGraph::DCS* >::iterator itr = _assemblyList.begin();
                                        itr != _assemblyList.end(); itr++ )
    {
-      delete itr->second;
+      //delete itr->second;
    }
+	*/
    _assemblyList.clear();
 
-   for ( std::map<std::string,VE_SceneGraph::cfdClone*>::iterator itr = _cloneList.begin();
-                                       itr != _cloneList.end(); itr++ )
+   for ( std::map< std::string, VE_SceneGraph::Clone* >::iterator itr = _cloneList.begin(); itr != _cloneList.end(); itr++ )
    {
       delete itr->second;
    }
@@ -185,11 +184,13 @@ cfdModel::~cfdModel()
    }
    transientDataSets.clear();
 
+	/*
    if( animation )
    {
       delete animation;
       animation = 0;
    }
+	*/
 
 /*
    // The following block is broken
@@ -205,9 +206,9 @@ cfdModel::~cfdModel()
 */
    // Do we need to delete these
    // it should be tested  
- /*this->switchNode = new cfdSwitch();
-   this->classic = new cfdGroup();
-   this->textureBased = new cfdGroup();
+ /*this->switchNode = new VE_SceneGraph::Switch;
+   this->classic = new VE_SceneGraph::Group;
+   this->textureBased = new VE_SceneGraph::Group;
 */
 
    vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
@@ -218,7 +219,8 @@ cfdModel::~cfdModel()
       _rootCADNode = 0;
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
+/*
 VE_SceneGraph::cfdTempAnimation* cfdModel::GetAnimation()
 {
    if ( !animation )
@@ -227,24 +229,25 @@ VE_SceneGraph::cfdTempAnimation* cfdModel::GetAnimation()
    }
    return animation;
 }
-///////////////////////////////
+*/
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::PreFrameUpdate()
 {
    vprDEBUG(vesDBG,1) << "cfdModel::PreFrameUpdate " <<std::endl<< vprDEBUG_FLUSH;;
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateCfdDataSet( void )
 {
    mVTKDataSets.push_back( new cfdDataSet() );
 }
 
-/////////////////////////////////////////////////////////////
-void cfdModel::SetMirrorNode( VE_SceneGraph::cfdGroup* dataNode )
+////////////////////////////////////////////////////////////////////////////////
+void cfdModel::SetMirrorNode( VE_SceneGraph::Group* dataNode )
 {
    if ( !mirrorNode )
    {
-      mirrorNode = new VE_SceneGraph::cfdClone();
-      mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() ); 
+      mirrorNode = new VE_SceneGraph::Clone();
+		mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() ); 
       float rot[ 3 ];
       rot[ 0 ] = 180.0f;
       rot[ 1 ] = 0.0f;
@@ -256,7 +259,7 @@ void cfdModel::SetMirrorNode( VE_SceneGraph::cfdGroup* dataNode )
    {
       this->_worldDCS->RemoveChild( mirrorNode->GetClonedGraph() );
       delete mirrorNode;     
-      mirrorNode = new VE_SceneGraph::cfdClone( GetActiveDataSet()->GetDCS() );
+      mirrorNode = new VE_SceneGraph::Clone( GetActiveDataSet()->GetDCS() );
       float rot[ 3 ];
       rot[ 0 ] = 180.0f;
       rot[ 1 ] = 0.0f;
@@ -265,25 +268,25 @@ void cfdModel::SetMirrorNode( VE_SceneGraph::cfdGroup* dataNode )
       this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
    }
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdDataSet* cfdModel::GetActiveDataSet( void )
 {
    return activeDataSet;
 }
 
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::SetActiveDataSet( cfdDataSet* input )
 {
    activeDataSet = input;
 }
 #ifdef _OSG
 #ifdef VE_PATENTED
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateTextureDataSet()
 {
    mTextureDataSets.push_back(new cfdTextureDataSet());
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::AddDataSetToTextureDataSet(unsigned int index,
                                      std::string textureDescriptionFile)
 {
@@ -291,15 +294,10 @@ void cfdModel::AddDataSetToTextureDataSet(unsigned int index,
 }
 #endif
 #endif
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateGeomDataSet( std::string filename )
 {
-   mGeomDataSets.push_back( new cfdFILE( filename, _worldDCS ) );
-}
-
-void cfdModel::setModelNode( VE_SceneGraph::cfdNode *temp )
-{
-   std::cout<<" !!!!! cfdModel::setModelNode is doing nothing"<<std::endl;    
+   mGeomDataSets.push_back( new CADEntity( filename, _worldDCS.get() ) );
 }
 
 void cfdModel::setModelType( ModelTypeIndex type )
@@ -314,7 +312,7 @@ void cfdModel::setTrans( float t[3] )
    vprDEBUG(vesDBG,1) << "Trans x: " << t[0] << " y: "
       << t[1] << " z: " << t[2] << std::endl << vprDEBUG_FLUSH;
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::setTrans3( float x, float y, float z )
 {
    std::cout<<" !!!!! cfdModel::setTrans3 is doing nothing"<<std::endl;    
@@ -322,7 +320,7 @@ void cfdModel::setTrans3( float x, float y, float z )
    vprDEBUG(vesDBG,1) << "Trans x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::setScale( float x, float y, float z )
 {
    float temp[ 3 ];
@@ -334,7 +332,7 @@ void cfdModel::setScale( float x, float y, float z )
    vprDEBUG(vesDBG,1) << "Scale x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::setRot(float h, float p, float r)
 {
    float temp[ 3 ];
@@ -345,42 +343,42 @@ void cfdModel::setRot(float h, float p, float r)
    vprDEBUG(vesDBG,1) << "Rot h: " << h << " p: " 
       << p << " r: " << r << std::endl << vprDEBUG_FLUSH;
 }
-////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::setRotMat(double *rotate)
 {
    std::cout<<" !!!!! cfdModel::setRotMat is doing nothing"<<std::endl;    
 }
-////////////////////////////////
-VE_SceneGraph::cfdNode* cfdModel::GetCfdNode( )
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::CADEntityHelper* cfdModel::GetCfdNode( )
 {
    return this->mModelNode;
 }
-//////////////////////////////
-VE_SceneGraph::cfdDCS* cfdModel::GetCfdDCS( )
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* cfdModel::GetDCS( )
 {
-   return this->_worldDCS;
+   return this->_worldDCS.get();
 }
-///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdModel::GetMirrorDataFlag( void )
 {
    return mirrorDataFlag;
 }
-///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::SetMirrorDataFlag( bool input )
 {
    mirrorDataFlag = input;
 }
-///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int cfdModel::GetID( void )
 {
    return modelID;
 }
-///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::SetID( unsigned int id )
 {
    modelID = id;
 }
-///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::updateCurModel()
 {
    vprDEBUG(vesDBG, 1) << "cfdModel::UpdateCurModel..."
@@ -416,17 +414,17 @@ void cfdModel::updateCurModel()
       }
    }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::addVTKdataset(const std::string& vtkfilename)
 {
    std::cout<<" !!!!! cfdModel::addVTKdataset is doing nothing"<<std::endl;    
 }
-//////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::delVTKdataset()
 {
    std::cout<<" !!!!! cfdModel::delVTKdataset is doing nothing"<<std::endl;    
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::addGeomdataset(const std::string& geomfilename)
 {
    std::cout << "WARNING: doing nothing in cfdModel::addGeomdataset with \"" << geomfilename << "\""<< std::endl;
@@ -463,13 +461,13 @@ void cfdModel::addGeomdataset(const std::string& geomfilename)
       //this->mMoveOldGeomDataSets = false;
       //this->mMoveOldVTKDataSets = false;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::delGeomdataset(int DelIndex)
 {
    //delete (mGeomDataSets[DelIndex]);
    this->mGeomDataSets.erase(this->mGeomDataSets.begin() + DelIndex);
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
 {
    // Check and see if we have any datasets
@@ -497,7 +495,7 @@ unsigned int cfdModel::GetIndexOfDataSet( std::string dataSetName )
    return dataSetIndex;
 }
 #ifdef _OSG
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_TextureBased::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)
 {
    if(mTextureDataSets.empty())
@@ -507,23 +505,23 @@ VE_TextureBased::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int ind
       return mTextureDataSets.at(index);
    }
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::SetActiveTextureDataSet(VE_TextureBased::cfdTextureDataSet* tDS)
 {
    _activeTextureDataSet = tDS;
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_TextureBased::cfdTextureDataSet* cfdModel::GetActiveTextureDataSet()
 {
    return _activeTextureDataSet;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int cfdModel::GetNumberOfTextureDataSets()
 {
    return mTextureDataSets.size();
 }
 #endif
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
 {
    int key = -1;
@@ -538,13 +536,13 @@ int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
    
    return key;
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int cfdModel::GetNumberOfCfdDataSets( void )
 {
    return mVTKDataSets.size();
 }
-////////////////////////////////////////////////
-cfdFILE* cfdModel::GetGeomDataSet( int dataset )
+////////////////////////////////////////////////////////////////////////////////
+CADEntity* cfdModel::GetGeomDataSet( int dataset )
 {
    // Check and see if we have any datasets
    // if not return null
@@ -556,13 +554,13 @@ cfdFILE* cfdModel::GetGeomDataSet( int dataset )
    else
       return mGeomDataSets.at( dataset );
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int cfdModel::GetNumberOfGeomDataSets( void )
 {
    return mGeomDataSets.size();
 }
 
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // Dynamic Loading Data Start From Here
 void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex, float* scale, float* trans, float* rotate)
 {
@@ -621,12 +619,12 @@ void cfdModel::DynamicLoadingGeom(std::string surfacefilename, float* scale,
    this->GetGeomDataSet(-1)->setOpac(1.0f);
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 std::vector<vtkDataSet*> cfdModel::GetWaitingDataList()
 {
    return this->waitingdatalist;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::GetDataFromUnit(void* unused)
 {
 
@@ -778,14 +776,14 @@ void cfdModel::GetDataFromUnit(void* unused)
   }
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::ActiveLoadingThread()
 {
    vpr::ThreadMemberFunctor<cfdModel> *loadDataFunc;
    loadDataFunc = new vpr::ThreadMemberFunctor<cfdModel> (this, &cfdModel::GetDataFromUnit);
    this->loadDataTh = new vpr::Thread( loadDataFunc );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
 {
    std::ostringstream file_name;
@@ -830,47 +828,43 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
    return newStlName;
 }
 //Dynamic Loading Data End Here
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::SetRootCADNode(VE_XML::VE_CAD::CADNode* node)
 {
    _rootCADNode = node;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADNode* cfdModel::GetRootCADNode()
 {
    return _rootCADNode;
 }
-///////////////////////////////////////////////////////
-void cfdModel::CreateClone(std::string cloneID,
-                        std::string originalID,
-                        std::string originalType)
+////////////////////////////////////////////////////////////////////////////////
+void cfdModel::CreateClone( std::string cloneID, std::string originalID, std::string originalType )
 {
    if(originalType == std::string("Assembly"))
    {
-      _cloneList[cloneID] = new VE_SceneGraph::cfdClone(GetAssembly(originalID));
+      _cloneList[cloneID] = new VE_SceneGraph::Clone(GetAssembly(originalID));
    }
    else if(originalType == std::string("Part"))
    {
-      _cloneList[cloneID] = new VE_SceneGraph::cfdClone(GetPart(originalID)->GetNode());
+      _cloneList[cloneID] = new VE_SceneGraph::Clone( GetPart(originalID)->GetNode()->GetNode() );
    }
    
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateAssembly(std::string assemblyID)
 {
-   _assemblyList[assemblyID] = new VE_SceneGraph::cfdDCS();
+   _assemblyList[assemblyID] = new VE_SceneGraph::DCS();
 }
-//////////////////////////////////////////////
-void cfdModel::CreatePart(std::string fileName,
-                       std::string partID,
-                       std::string parentID)
+////////////////////////////////////////////////////////////////////////////////
+void cfdModel::CreatePart( std::string fileName, std::string partID, std::string parentID )
 {
-   _partList[partID] = new VE_SceneGraph::cfdFILE(fileName,_assemblyList[parentID]);
+   _partList[partID] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
+   //add key pointer to physics map for bullet rigid body
+   //add data pair for transform node
 }
-////////////////////////////////////////////////////////////////
-void cfdModel::SetActiveAttributeOnNode(std::string nodeID,
-                                       std::string nodeType,
-                                       std::string attributeName)
+////////////////////////////////////////////////////////////////////////////////
+void cfdModel::SetActiveAttributeOnNode(std::string nodeID, std::string nodeType, std::string attributeName )
 {
 #ifdef _OSG
    std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
@@ -892,20 +886,20 @@ void cfdModel::SetActiveAttributeOnNode(std::string nodeID,
             if(nodeType == "Assembly")
             {
                vprDEBUG(vesDBG,1) <<"|\tSetting Assembly attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetAssembly(nodeID)->GetRawNode()->setStateSet(foundAttribute->second.get());
+               GetAssembly(nodeID)->setStateSet(foundAttribute->second.get());
                return;
             }
             else if(nodeType == "Part")
             {
                vprDEBUG(vesDBG,1) <<"|\tSetting Part attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetPart(nodeID)->GetDCS()->GetRawNode()->setStateSet(foundAttribute->second.get());
+               GetPart(nodeID)->GetDCS()->setStateSet(foundAttribute->second.get());
                vprDEBUG(vesDBG,1) <<"|\tvalid: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
                return;
             }
             else if(nodeType == "Clone")
             {
                vprDEBUG(vesDBG,1) <<"|\tSetting Clone attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetClone(nodeID)->GetClonedGraph()->GetRawNode()->setStateSet(foundAttribute->second.get());
+               GetClone(nodeID)->GetClonedGraph()->setStateSet(foundAttribute->second.get());
                return;
             }
          }
@@ -919,7 +913,7 @@ void cfdModel::SetActiveAttributeOnNode(std::string nodeID,
    std::cout<<"cfdModel::SetActiveAttributeOnNode not implemented for Performer yet!!!"<<std::endl;
 #endif
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::MakeCADRootTransparent()
 {
    //check for the attribute
@@ -933,7 +927,7 @@ void cfdModel::MakeCADRootTransparent()
 
    try
    {
-      (*_assemblyList.begin()).second->GetRawNode()->setStateSet(attribute.get());
+      (*_assemblyList.begin()).second->setStateSet(attribute.get());
    }
    catch(...)
    {
@@ -943,7 +937,7 @@ void cfdModel::MakeCADRootTransparent()
 #endif
 
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::MakeCADRootOpaque()
 {
    if ( _assemblyList.empty() )
@@ -953,8 +947,8 @@ void cfdModel::MakeCADRootOpaque()
 #ifdef _OSG
    try
    {
-      if((*_assemblyList.begin()).second->GetRawNode()->getStateSet())
-         (*_assemblyList.begin()).second->GetRawNode()->getStateSet()->clear();
+      if((*_assemblyList.begin()).second->getStateSet())
+         (*_assemblyList.begin()).second->getStateSet()->clear();
    }
    catch(...)
    {
@@ -963,7 +957,7 @@ void cfdModel::MakeCADRootOpaque()
    }
 #endif
 }
-/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
                                        std::string attributeName)
 {
@@ -988,16 +982,16 @@ void cfdModel::RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
             if(nodeType == "Assembly")
             {
                //vprDEBUG(vesDBG,1) <<"|\tSetting Assembly attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetAssembly(nodeID)->GetRawNode()->getStateSet()->clear();
+               GetAssembly(nodeID)->getStateSet()->clear();
             }
             else if(nodeType == "Part")
             {
-               GetPart(nodeID)->GetDCS()->GetRawNode()->getStateSet()->clear();
+               GetPart(nodeID)->GetDCS()->getStateSet()->clear();
             }
             else if(nodeType == "Clone")
             {
                //vprDEBUG(vesDBG,1) <<"|\tSetting Clone attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetClone(nodeID)->GetClonedGraph()->GetRawNode()->getStateSet()->clear();
+               GetClone(nodeID)->GetClonedGraph()->getStateSet()->clear();
             }
             break;
          }
@@ -1011,7 +1005,7 @@ void cfdModel::RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
 
 #endif
 }
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::AddAttributeToNode(std::string nodeID,
                               VE_XML::VE_CAD::CADAttribute* newAttribute)
 {
@@ -1050,7 +1044,7 @@ void cfdModel::AddAttributeToNode(std::string nodeID,
    vprDEBUG(vesDBG,1) <<"|\tend cfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::UpdateMaterialMode(std::string nodeID,std::string attributeName,std::string type,std::string mode)
 {
 #ifdef _OSG
@@ -1085,7 +1079,7 @@ void cfdModel::UpdateMaterialMode(std::string nodeID,std::string attributeName,s
    }
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::UpdateMaterialComponent(std::string nodeID, std::string attributeName,
                                        std::string component,std::string face,std::vector<double> values)
 {
@@ -1125,25 +1119,25 @@ void cfdModel::UpdateMaterialComponent(std::string nodeID, std::string attribute
    }
 #endif
 }
-///////////////////////////////////////////////////////////
-VE_SceneGraph::cfdFILE* cfdModel::GetPart(std::string partID)
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::CADEntity* cfdModel::GetPart(std::string partID)
 {
    return _partList[partID];
 }
-/////////////////////////////////////////////////////////////////////
-VE_SceneGraph::cfdDCS* cfdModel::GetAssembly(std::string assemblyID)
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* cfdModel::GetAssembly(std::string assemblyID)
 {
    return _assemblyList[assemblyID];
 }
-/////////////////////////////////////////////////////////////////////
-VE_SceneGraph::cfdClone* cfdModel::GetClone(std::string cloneID)
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::Clone* cfdModel::GetClone(std::string cloneID)
 {
    return _cloneList[cloneID];
 }
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdModel::PartExists(std::string partID)
 {
-   std::map<std::string,VE_SceneGraph::cfdFILE*>::iterator foundPart;
+   std::map<std::string,VE_SceneGraph::CADEntity*>::iterator foundPart;
    foundPart = _partList.find(partID);
 
    if(foundPart != _partList.end())
@@ -1152,10 +1146,10 @@ bool cfdModel::PartExists(std::string partID)
    }
    return false;
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdModel::AssemblyExists(std::string assemblyID)
 {
-   std::map<std::string,VE_SceneGraph::cfdDCS*>::iterator foundAssembly;
+   std::map< std::string, VE_SceneGraph::DCS* >::iterator foundAssembly;
    foundAssembly = _assemblyList.find(assemblyID);
 
    if(foundAssembly != _assemblyList.end())
@@ -1164,15 +1158,17 @@ bool cfdModel::AssemblyExists(std::string assemblyID)
    }
    return false;
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool cfdModel::CloneExists(std::string cloneID)
 {
-   std::map<std::string,VE_SceneGraph::cfdClone*>::iterator foundClone;
-   foundClone = _cloneList.find(cloneID);
+   std::map< std::string, VE_SceneGraph::Clone* >::iterator foundClone;
+   foundClone = _cloneList.find( cloneID );
 
-   if(foundClone!= _cloneList.end())
+   if( foundClone != _cloneList.end() )
    {
       return true;
    }
+
    return false;
 }
+////////////////////////////////////////////////////////////////////////////////

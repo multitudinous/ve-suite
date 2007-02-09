@@ -33,7 +33,6 @@
 #include "VE_Xplorer/XplorerHandlers/CreateVisObjectEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 
@@ -61,9 +60,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTextOutput.h"
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Open/XML/XMLObject.h"
@@ -771,11 +768,11 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 
    //cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
 
-   cfdDCS* activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
+	osg::ref_ptr< VE_SceneGraph::DCS > activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
 
    // add active dataset DCS to scene graph if not already there...
    vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
-                        << activeDataSetDCS
+                        << activeDataSetDCS.get()
                         << std::endl << vprDEBUG_FLUSH;
    this->activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
    this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );

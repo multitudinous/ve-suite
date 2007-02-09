@@ -8,7 +8,6 @@
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #ifdef _OSG
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
@@ -238,7 +237,7 @@ void Trackball::ResetTransforms()
 void Trackball::FrameAll()
 {
    osg::ref_ptr<osg::Group> root=new osg::Group;
-   root->addChild(VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetRawNode());
+   root->addChild(VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS());
 
    tb_accuTransform=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 

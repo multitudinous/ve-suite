@@ -72,12 +72,8 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
-#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
+
 //This is WAY down here to fix compile errors on IRIX
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
 
@@ -93,10 +89,10 @@ using namespace VE_SceneGraph;
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {
    this->commandArray = 0;
-   this->_activeDataSetDCS = 0;
+   //this->_activeDataSetDCS = 0;
    this->_activeObject = 0;
    this->lastSource = 0;
-   this->_activeTempAnimation = 0;
+   //this->_activeTempAnimation = 0;
 
    this->computeActorsAndGeodes = false;
    this->actorsAreReady = false;
@@ -153,10 +149,12 @@ void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
    commandArray = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 VE_SceneGraph::cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
 {
    return this->_activeTempAnimation;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void cfdSteadyStateVizHandler::SetActiveVisObject( cfdObjects* tempObject )
 {
@@ -180,7 +178,7 @@ void cfdSteadyStateVizHandler::ClearVisObjects( void )
    std::multimap< int, cfdGraphicsObject* >::iterator pos;
    for ( pos = graphicsObjects.begin(); pos != graphicsObjects.end(); )
    {
-      pos->second->RemovecfdGeodeFromDCS();
+      pos->second->RemoveGeodeFromDCS();
       delete pos->second;
       graphicsObjects.erase( pos++ );
    }
@@ -241,9 +239,9 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
-            temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
+            temp->SetParentNode( dynamic_cast< VE_SceneGraph::Group* >(_activeObject->GetActiveDataSet()->GetDCS() ) );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
-            temp->SetWorldNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
+            temp->SetWorldNode( dynamic_cast< VE_SceneGraph::Group* >( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
             temp->SetGeodes( _activeObject->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
             
@@ -267,7 +265,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                // the parent node is unique becaue each dataset has a dcs
                if ( pos->second->GetParentNode() == temp->GetParentNode() )
                {
-                  pos->second->RemovecfdGeodeFromDCS();
+                  pos->second->RemoveGeodeFromDCS();
                   delete pos->second;
                   graphicsObjects.erase( pos++ );
                }
@@ -285,13 +283,13 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             vprDEBUG(vesDBG,2) << "|\tDone Creating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
 
-            if ( cfdModelHandler::instance()->GetActiveModel()->GetMirrorDataFlag() )
+            /*if ( cfdModelHandler::instance()->GetActiveModel()->GetMirrorDataFlag() )
             {
                // we mirror the dataset in two places
                // once here for data viz and once in modelhandler for geom
-               VE_SceneGraph::cfdGroup* temp = (VE_SceneGraph::cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
+               VE_SceneGraph::Group* temp = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
                cfdModelHandler::instance()->GetActiveModel()->SetMirrorNode( temp );
-            }
+            }*/
             this->_activeObject = NULL;
          }
          
@@ -309,7 +307,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    {
       this->useLastSource = (this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )== 0)?false:true;
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
+   /*else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
    {
       std::multimap< int, cfdGraphicsObject* >::iterator pos;
       for (pos=graphicsObjects.begin(); pos!=graphicsObjects.end(); ++pos )
@@ -320,7 +318,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                   commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
          }
       }
-   }
+   }*/
 }
 
 void cfdSteadyStateVizHandler::CreateActorThread( void * )

@@ -37,9 +37,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
-
 #include "VE_Open/XML/XMLObject.h"
 #include <iostream>
 

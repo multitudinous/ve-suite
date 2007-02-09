@@ -32,10 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdTextOutput.h"
 
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
+#include "VE_Xplorer/SceneGraph/Group.h"
 
 #include <string>
 #include <iostream>
@@ -63,7 +62,7 @@ cfdTextOutput::cfdTextOutput()
 
 cfdTextOutput::~cfdTextOutput()
 {
-   delete dcs;
+   //delete dcs;
 #ifdef _PERFORMER
    pfDelete(str);
    pfDelete(text);
@@ -72,20 +71,19 @@ cfdTextOutput::~cfdTextOutput()
 #endif
 } 
 
-VE_SceneGraph::cfdDCS *cfdTextOutput::add_text(std::string text_input)
+VE_SceneGraph::DCS* cfdTextOutput::add_text(std::string text_input)
 {
-   if ( dcs )
+   if ( dcs.valid() )
    {
-      VE_SceneGraph::cfdGroup* temp = (VE_SceneGraph::cfdGroup*)dcs->GetParent( 0 );
+		VE_SceneGraph::Group* temp = dynamic_cast< VE_SceneGraph::Group* >(dcs->GetParent( 0 ));
       if ( temp )
       {
-         temp->RemoveChild( dcs );
+         temp->RemoveChild( dcs.get() );
       }
-      delete dcs;
-      dcs = 0;
    }
-   dcs = new VE_SceneGraph::cfdDCS();
+   dcs = new VE_SceneGraph::DCS();
    dcs->SetName("Text_DCS");
+
 #ifdef _PERFORMER
    if ( str )
    {
@@ -128,6 +126,6 @@ VE_SceneGraph::cfdDCS *cfdTextOutput::add_text(std::string text_input)
 #elif _OSG
 #elif _OPENSG
 #endif
-   return dcs;
+   return dcs.get();
 }
 

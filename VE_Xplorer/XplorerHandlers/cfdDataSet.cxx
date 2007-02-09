@@ -41,16 +41,12 @@
 #include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
 #include "VE_Xplorer/XplorerHandlers/DataSetAxis.h"
 #include "VE_Xplorer/XplorerHandlers/DataSetScalarBar.h"
+
 #include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
 #include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
@@ -107,17 +103,15 @@ cfdDataSet::cfdDataSet( )
    // By default, the dataset is assumed to have no parent, that is,
    // use its own range to determine color mapping.
    this->parent = this;
-   this->dcs = NULL;
-   this->bboxGeode = 0;//new VE_SceneGraph::cfdGeode();
-   this->wireframeGeode = 0;//new VE_SceneGraph::cfdGeode();
-   this->switchNode = new VE_SceneGraph::cfdSwitch();
+   //this->dcs = NULL;
+   this->switchNode = new VE_SceneGraph::Switch();
    this->switchNode->SetName( "switch_for_data_viz" );
-   this->classic = new VE_SceneGraph::cfdGroup();
+   this->classic = new VE_SceneGraph::Group();
    this->classic->SetName( "classic" );
-   this->switchNode->AddChild( this->classic );
-   this->textureBased = new VE_SceneGraph::cfdGroup();
+   this->switchNode->AddChild( this->classic.get() );
+   this->textureBased = new VE_SceneGraph::Group();
    this->textureBased->SetName( "textureBased" );
-   this->switchNode->AddChild( this->textureBased );
+   this->switchNode->AddChild( this->textureBased.get() );
    this->switchNode->SetVal(0);
 
    this->partOfTransientSeries = 0;
@@ -130,7 +124,7 @@ cfdDataSet::cfdDataSet( )
    //this->intRange[1] =1000000;
    dataSetAxes = 0;
    dataSetScalarBar = 0;
-   this->animation = 0;
+   //this->animation = 0;
    _vtkFHndlr = 0;
 }
 
@@ -225,18 +219,6 @@ cfdDataSet::~cfdDataSet()
       delete _vtkFHndlr;
       _vtkFHndlr = 0;
       vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
-   }
-   
-   if ( bboxGeode )
-   {
-      delete bboxGeode;
-      bboxGeode = 0;
-   }
-   
-   if ( wireframeGeode )
-   {
-      delete wireframeGeode;
-      wireframeGeode = 0;
    }
 }
 
@@ -1650,28 +1632,29 @@ void cfdDataSet::SetDisplayedScalarRange( int index, double * range )
    //this->definedRange[ 1 ] = range[ 1 ];
 }
 
-VE_SceneGraph::cfdSwitch* cfdDataSet::GetSwitchNode()
+VE_SceneGraph::Switch* cfdDataSet::GetSwitchNode()
 {
    if ( !switchNode )
    {
-      switchNode = new VE_SceneGraph::cfdSwitch();
+      switchNode = new VE_SceneGraph::Switch();
    }
-   return switchNode;
+
+   return switchNode.get();
 }
 
 // get/set this dataset's DCS
-VE_SceneGraph::cfdDCS* cfdDataSet::GetDCS()
+VE_SceneGraph::DCS* cfdDataSet::GetDCS()
 {
    if ( dcs == NULL )
    {
-      dcs = new VE_SceneGraph::cfdDCS();
-      return this->dcs;
+      dcs = new VE_SceneGraph::DCS();
+      return this->dcs.get();
    }
    else
-      return this->dcs;
+      return this->dcs.get();
 }
 
-void cfdDataSet::SetDCS( VE_SceneGraph::cfdDCS* myDCS )
+void cfdDataSet::SetDCS( VE_SceneGraph::DCS* myDCS )
 {
    if ( dcs == NULL )
       this->dcs = myDCS;
@@ -1679,6 +1662,7 @@ void cfdDataSet::SetDCS( VE_SceneGraph::cfdDCS* myDCS )
       std::cerr << " ERROR: DCS is already set for this dataset " << std::endl;
 }
 
+/*
 VE_SceneGraph::cfdTempAnimation* cfdDataSet::GetAnimation( void )
 {
    return this->animation;
@@ -1688,6 +1672,7 @@ void cfdDataSet::SetAnimation( VE_SceneGraph::cfdTempAnimation* input )
 {
    this->animation = input;
 }
+*/
 
 int cfdDataSet::IsPartOfTransientSeries()
 {
@@ -1835,8 +1820,8 @@ void cfdDataSet::CreateBoundingBoxGeode( void )
    outline->SetMapper( mapOutline );
    outline->GetProperty()->SetColor(1,0,0);
    
-   bboxGeode = new cfdGeode();
-   bboxGeode->TranslateTocfdGeode( outline );
+	bboxGeode = new VE_SceneGraph::Geode();
+   bboxGeode->TranslateToGeode( outline );
    
    outlineData->Delete();
    mapOutline->Delete();
@@ -1862,8 +1847,8 @@ void cfdDataSet::CreateWireframeGeode( void )
    wireframeActor->GetProperty()->SetOpacity(0.7f);
    wireframeActor->GetProperty()->SetRepresentationToWireframe();
 
-   wireframeGeode = new cfdGeode();
-   wireframeGeode->TranslateTocfdGeode( wireframeActor );
+	wireframeGeode = new VE_SceneGraph::Geode();
+   wireframeGeode->TranslateToGeode( wireframeActor );
    
    //wireframe->Delete();
    poly->Delete();
@@ -1873,9 +1858,9 @@ void cfdDataSet::CreateWireframeGeode( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetBoundingBoxState( unsigned int state )
 {
-   if ( (state == 0) && bboxGeode )
+   if ( (state == 0) && bboxGeode.valid() )
    {
-      GetDCS()->RemoveChild( bboxGeode );
+      GetDCS()->RemoveChild( bboxGeode.get() );
    }
    else if ( state == 1 )
    {
@@ -1883,16 +1868,16 @@ void cfdDataSet::SetBoundingBoxState( unsigned int state )
       {
          CreateBoundingBoxGeode();
       }
-      GetDCS()->RemoveChild( bboxGeode );
-      GetDCS()->AddChild( bboxGeode );
+      GetDCS()->RemoveChild( bboxGeode.get() );
+      GetDCS()->AddChild( bboxGeode.get() );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDataSet::SetWireframeState( unsigned int state )
 {
-   if ( (state == 0) && wireframeGeode )
+   if ( (state == 0) && wireframeGeode.valid() )
    {
-      GetDCS()->RemoveChild( wireframeGeode );
+      GetDCS()->RemoveChild( wireframeGeode.get() );
    }
    else if ( state == 1 )
    {
@@ -1900,8 +1885,8 @@ void cfdDataSet::SetWireframeState( unsigned int state )
       {
          CreateWireframeGeode();
       }
-      GetDCS()->RemoveChild( wireframeGeode );
-      GetDCS()->AddChild( wireframeGeode );
+      GetDCS()->RemoveChild( wireframeGeode.get() );
+      GetDCS()->AddChild( wireframeGeode.get() );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

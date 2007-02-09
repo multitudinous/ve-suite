@@ -33,12 +33,9 @@
 #include "VE_Xplorer/XplorerHandlers/AddVTKDataSetEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Open/XML/XMLObject.h"
@@ -58,15 +55,15 @@
 #include <sstream>
 
 using namespace VE_EVENTS;
-////////////////////////////////////////////////////////////////////////////
-//Constructor                                                             //
-////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+//Constructor                                      //
+/////////////////////////////////////////////////////
 AddVTKDataSetEventHandler::AddVTKDataSetEventHandler()
 :VE_EVENTS::EventHandler()
 {
    _activeModel = 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 AddVTKDataSetEventHandler::AddVTKDataSetEventHandler(const AddVTKDataSetEventHandler& rhs)
 :VE_EVENTS::EventHandler(rhs)
 {
@@ -80,7 +77,7 @@ AddVTKDataSetEventHandler::~AddVTKDataSetEventHandler()
    ;
 }
 ///Equal operator
-//////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 AddVTKDataSetEventHandler& AddVTKDataSetEventHandler::operator=(const AddVTKDataSetEventHandler& rhs)
 {
    if(this != &rhs)
@@ -89,7 +86,7 @@ AddVTKDataSetEventHandler& AddVTKDataSetEventHandler::operator=(const AddVTKData
    }
    return *this;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AddVTKDataSetEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 {
    try
@@ -109,7 +106,7 @@ void AddVTKDataSetEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* m
       std::cout<<"Invalid object passed to AddVTKDataSetEventHandler::SetGlobalBaseObject!"<<std::endl;
    }
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
 {
    try
@@ -234,7 +231,7 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
       std::cerr << "|\tSomething bad happened in AddVTKDataSetEventHandler::Execute." << std::endl;
    }
 }
-//////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////   
 void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurfaceDir )
 {
    if ( precomputedSurfaceDir.empty() )// == NULL )
@@ -304,7 +301,7 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
       std::cout << "\nFound: " << dir_path.native_file_string() << "\n";    
    }
 }
-//////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////   
 void AddVTKDataSetEventHandler::Load3DTextureDirectories( std::string dirToLoad )
 {
 #ifdef _OSG
@@ -312,3 +309,4 @@ void AddVTKDataSetEventHandler::Load3DTextureDirectories( std::string dirToLoad 
 #endif
 #endif
 }
+////////////////////////////////////////////////////////////////////////////////

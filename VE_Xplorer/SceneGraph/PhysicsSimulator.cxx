@@ -2,11 +2,10 @@
 //#define SHOW_NUM_DEEP_PENETRATIONS 1
 //#define USE_KINEMATIC_GROUND 1
 //#define USER_DEFINED_FRICTION_MODEL 1
-#if VE_PHYSICS
+
 #define USE_CUSTOM_NEAR_CALLBACK 1
 #define USE_SWEEP_AND_PRUNE 1
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
-#define USE_MOTIONSTATE 1
 
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
@@ -14,6 +13,7 @@
 #ifdef _OSG
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #include "btBulletDynamicsCommon.h"
 
@@ -33,7 +33,7 @@ vprSingletonImp(PhysicsSimulator);
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
 :
-physics(false),
+idle(true),
 shoot_speed(40.0f)
 {
    head.init("VJHead");
@@ -142,7 +142,30 @@ void PhysicsSimulator::InitPhysics()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics(float dt)
 {
-   dynamics_world->stepSimulation(dt);
+	if (dynamics_world){
+
+		//during idle mode, just run 1 simulation step maximum
+		int maxSimSubSteps=idle ? 1 : 1;
+		if(idle){
+			dt=1.0/420.f;
+		}
+
+		int numSimSteps=dynamics_world->stepSimulation(dt,maxSimSubSteps);
+		if(!numSimSteps){
+				printf("Interpolated transforms\n");
+		}
+
+		else{
+			if(numSimSteps > maxSimSubSteps){
+				//detect dropping frames
+				printf("Dropped (%i) simulation steps out of %i\n",numSimSteps - maxSimSubSteps,numSimSteps);
+			}
+
+			else{
+				printf("Simulated (%i) steps\n",numSimSteps);
+			}
+		}
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ResetScene()
@@ -241,12 +264,12 @@ void PhysicsSimulator::ShootBox(const btVector3& destination)
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetPhysicsState(bool  state)
 {
-   physics=state;
+   idle=state;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool PhysicsSimulator::GetPhysicsState()
 {
-   return physics;
+   return idle;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetShootSpeed(float speed)
@@ -265,12 +288,8 @@ btRigidBody* PhysicsSimulator::CreateRigidBody(float mass,const btTransform& sta
    }
 
 	//Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-   #ifdef USE_MOTIONSTATE
-	   btDefaultMotionState* myMotionState=new btDefaultMotionState(startTransform);
-	   btRigidBody* body=new btRigidBody(mass,myMotionState,shape,localInertia);
-   #else
-	   btRigidBody* body=new btRigidBody(mass,startTransform,shape,localInertia);	
-   #endif //USE_MOTIONSTATE
+	btDefaultMotionState* myMotionState=new btDefaultMotionState(startTransform);
+	btRigidBody* body=new btRigidBody(mass,myMotionState,shape,localInertia);
 
 	dynamics_world->addRigidBody(body);
 	
@@ -284,4 +303,3 @@ btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
 ////////////////////////////////////////////////////////////////////////////////
 
 #endif //_OSG
-#endif //VE_PHYSICS

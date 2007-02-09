@@ -14,11 +14,18 @@ DisplayInformation API
 */
 #include "VE_Installer/include/VEConfig.h"
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Switch.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
+
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdSwitch;
-   class cfdFILE;
+   class DCS;
+	class Switch;
 }
 
 namespace osg
@@ -57,9 +64,9 @@ namespace VE_Xplorer
          //Initialize the world coordinate system display
          void InitCoordSysDisplay();
 
-         VE_SceneGraph::cfdSwitch* display_switch;
-         VE_SceneGraph::cfdDCS* framerate;
-         VE_SceneGraph::cfdDCS* coord_sys;
+         osg::ref_ptr< VE_SceneGraph::Switch > display_switch;
+			osg::ref_ptr< VE_SceneGraph::DCS > framerate;
+         osg::ref_ptr< VE_SceneGraph::DCS > coord_sys;
 
          bool framerate_flag;                //bool Frame Rate on/off
          bool coord_sys_flag;                //bool WCS on/off

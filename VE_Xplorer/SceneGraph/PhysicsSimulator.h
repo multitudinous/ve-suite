@@ -9,9 +9,10 @@ PhysicsSimulator API
 
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
-#if VE_PHYSICS
+
 //PhysicsSimulator only supports OpenSceneGraph
 #ifdef _OSG
+#include <osg/ref_ptr>
 
 #include <gadget/Type/PositionInterface.h>
 
@@ -52,7 +53,7 @@ namespace VE_SceneGraph
 
          void InitPhysics();
 
-         bool physics;
+         bool idle;
          float shoot_speed;
 
          gadget::PositionInterface head;
@@ -69,6 +70,6 @@ namespace VE_SceneGraph
 }
 
 #endif //_OSG
-#endif //VE_PHYSICS
+
 #endif //PHYSICS_SIMULATOR_H
 

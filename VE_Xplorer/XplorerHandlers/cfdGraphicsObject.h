@@ -38,13 +38,15 @@ cfdGraphicsObject API
 /*!\class VE_Xplorer::cfdGraphicsObject
 * 
 */
+#include "VE_Installer/include/VEConfig.h"
 
-#include <vector>
+#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
+
 namespace VE_SceneGraph
 {
-   class cfdGeode;
-   class cfdGroup;
-   class cfdTempAnimation;
+	class Group;
+   class Geode;
 }
 
 namespace VE_Xplorer
@@ -52,7 +54,12 @@ namespace VE_Xplorer
    class cfdModel;
 }
 
-#include "VE_Installer/include/VEConfig.h"
+#include <vector>
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
 
 namespace VE_Xplorer
 {
@@ -75,10 +82,10 @@ public:
    enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};
 
    // Set parent node to add "graphics node" to
-   void SetParentNode( VE_SceneGraph::cfdGroup* );
+   void SetParentNode( VE_SceneGraph::Group* );
 
    // node the parent node will be added to
-   void SetWorldNode( VE_SceneGraph::cfdGroup* );
+   void SetWorldNode( VE_SceneGraph::Group* );
 
    // set model pointer to be able to grab
    // transient info and the switch node
@@ -91,25 +98,26 @@ public:
    void SetTypeOfViz( VizType );
 
    // set geodes for classic and trans viz objects
-   void SetGeodes( std::vector< VE_SceneGraph::cfdGeode* > );
+   void SetGeodes( std::vector< VE_SceneGraph::Geode* > );
 
    // Return parent node for a this object
-   VE_SceneGraph::cfdGroup* GetParentNode( void );
+   VE_SceneGraph::Group* GetParentNode( void );
 
    // clear geodes vector and geode from memory and the graph
-   void RemovecfdGeodeFromDCS( void );
+   void RemoveGeodeFromDCS( void );
 
    // Return the animation so that we can change the speed of the animation
-   VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
+   //VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
+
 protected:
-   std::vector< VE_SceneGraph::cfdGeode* > geodes;
-   VE_SceneGraph::cfdGroup* parentNode;
-   VE_SceneGraph::cfdGroup* worldNode;
+	std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;
+	osg::ref_ptr< VE_SceneGraph::Group > parentNode;
+   osg::ref_ptr< VE_SceneGraph::Group > worldNode;
    VizType type;
 
    // used for animated particles and other ss 
    // animated features
-   VE_SceneGraph::cfdTempAnimation* animation;
+   //VE_SceneGraph::cfdTempAnimation* animation;
    VE_Xplorer::cfdModel* model;
 };
 }

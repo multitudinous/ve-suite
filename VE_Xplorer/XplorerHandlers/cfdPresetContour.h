@@ -41,7 +41,6 @@ cfdPresetContour API
 * selected. Update member function will update
 * the plane position and direction.
 */
-
 #include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
 
 class vtkCutter;
@@ -51,6 +50,7 @@ namespace VE_Xplorer
 {
    class cfdCuttingPlane;
 }
+
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdPresetContour : public cfdContourBase

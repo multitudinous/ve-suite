@@ -38,6 +38,7 @@ cfdImage API
 /*!\class VE_Xplorer::cfdImage
 * 
 */
+#include "VE_Installer/include/VEConfig.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
@@ -47,12 +48,13 @@ class vtkPlaneSource;
 class vtkPolyDataMapper;
 class vtkTexture;
 class vtkActor;
+
 namespace VE_Xplorer
 {
    class cfdCommandArray;
    class cfdReadParam;
 }
-#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdImage : public cfdObjects

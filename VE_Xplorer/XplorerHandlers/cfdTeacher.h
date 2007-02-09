@@ -38,8 +38,18 @@ cfdTeacher API
 /*!\class VE_Xplorer::cfdTeacher
 * 
 */
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 #include <vector>
 #include <string>
+
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
+
 namespace VE_Xplorer
 {
    class cfdWriteTraverser;
@@ -48,12 +58,9 @@ namespace VE_Xplorer
 
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdGroup;
-   class cfdNode;
+   class DCS;
+	class CADEntityHelper;
 }
-
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 //A reader that reads performer binary files
 namespace VE_Xplorer
@@ -61,7 +68,7 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdTeacher : public cfdGlobalBase
    {
       public:
-         cfdTeacher( std::string, VE_SceneGraph::cfdDCS* );
+         cfdTeacher( std::string, VE_SceneGraph::DCS* );
 
          ~cfdTeacher( );
 
@@ -70,10 +77,10 @@ namespace VE_Xplorer
 
          // in future, multi-threaded apps will make a copy of VjObs_i commandArray
          virtual void UpdateCommand();
-         void writePFBFile( VE_SceneGraph::cfdNode* graph,std::string fileName);
+			void writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName);
 
-         VE_SceneGraph::cfdDCS* GetcfdDCS( );
-         VE_SceneGraph::cfdNode* getpfNode( int );
+         VE_SceneGraph::DCS* GetDCS( );
+         VE_SceneGraph::CADEntityHelper* getpfNode( int );
          int getNumberOfFiles();
          std::string getFileName( int i );
 
@@ -86,9 +93,9 @@ namespace VE_Xplorer
          void RecordScene();
 
       private:
-         VE_SceneGraph::cfdDCS* DCS;
-         VE_SceneGraph::cfdDCS* _worldDCS;
-         std::vector< VE_SceneGraph::cfdNode* > node;  // array of nodes
+         osg::ref_ptr< VE_SceneGraph::DCS > dcs;
+         osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
+         std::vector< VE_SceneGraph::CADEntityHelper* > node;  // array of nodes
          int pfb_count;
 	      std::vector<std::string> pfbFileNames;
          std::string directory;

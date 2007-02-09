@@ -86,7 +86,7 @@ int Switch::RemoveChild( SceneNode* child )
    exit( 1 );
    return -1;
 #elif _OSG
-   return this->removeChild( dynamic_cast< Node* >( child ));
+	return this->removeChild( dynamic_cast< osg::Node* >( child ));
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////

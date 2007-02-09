@@ -36,7 +36,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include <vpr/Util/Singleton.h>
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <osg/Group>
@@ -64,7 +63,7 @@ cfdObjectHandler::cfdObjectHandler( )
 {
    this->digital.init("VJButton0");
    this->translateDigital.init("VJButton3");
-   selectedGeometry = 0;
+   //selectedGeometry = 0;
    this->rootNode = 0;    
    this->worldNode = 0;
    _active = false; 
@@ -85,11 +84,9 @@ void cfdObjectHandler::Initialize( cfdNavigate * navigatorReference )
       this->LastWandPosition[ i ] = 0;
    }
 
-   this->rootNode = 
-      VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()
-      ->GetRawNode();
+   this->rootNode = VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode();
  
-   this->worldNode = this->navigator->worldDCS->GetRawNode();
+   this->worldNode = this->navigator->worldDCS.get();
 
 }
 
@@ -132,7 +129,7 @@ void cfdObjectHandler::SelectObject()
 void cfdObjectHandler::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
 { 
    osgUtil::Hit objectHit;
-   this->selectedGeometry = NULL;
+   //this->selectedGeometry = NULL;
 
    if ( listOfHits.empty())
    {
@@ -200,7 +197,7 @@ void cfdObjectHandler::DrawLine(osg::Vec3f start, osg::Vec3f end)
     
    
    
-   this->rootNode->asGroup()->addChild(beamGeode);
+   this->rootNode->asGroup()->addChild( beamGeode );
      
    osg::Vec3Array* beamVertices = new osg::Vec3Array;
    beamVertices->push_back(osg::Vec3(start [ 0 ] - .1, start [ 1 ], 

@@ -13,11 +13,6 @@ namespace VE_XML
    class XMLObject;
 }
 
-namespace VE_SceneGraph
-{
-   class cfdDCS;
-}
-
 namespace VE_Xplorer
 {
    class cfdGlobalBase;

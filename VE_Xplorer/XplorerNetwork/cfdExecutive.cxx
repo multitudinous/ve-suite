@@ -30,8 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-
 #include "VE_Xplorer/XplorerNetwork/VE_i.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
@@ -97,9 +95,9 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
-   this->_masterNode = new VE_SceneGraph::cfdGroup();
+   this->_masterNode = new VE_SceneGraph::Group();
    this->_masterNode->SetName( "cfdExecutive_Node" );
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->_masterNode );
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->_masterNode.get() );
 
    av_modules = new cfdVEAvail_Modules();
 

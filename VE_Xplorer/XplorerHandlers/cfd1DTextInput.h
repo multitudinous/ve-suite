@@ -39,16 +39,25 @@ cfd1DTextInput API
 * 
 */
 #include <string>
+
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
+
 namespace VE_SceneGraph
 {
-   class cfdGeode;
+   class Geode;
 }
+
 class  vtkActor;
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 namespace VE_Xplorer
 {
-   class cfd1DTextInput : public VE_SceneGraph::cfdDCS
+   class cfd1DTextInput : public VE_SceneGraph::DCS
    {
       public:
 
@@ -56,7 +65,7 @@ namespace VE_Xplorer
 
          ~cfd1DTextInput( void );
 
-         VE_SceneGraph::cfdDCS* getpfDCS( void );
+         VE_SceneGraph::DCS* getpfDCS( void );
 
          void SetTransforms( float [ 3 ], float [ 3 ], float [ 3 ] );
 
@@ -70,8 +79,8 @@ namespace VE_Xplorer
    
          std::string text;
          vtkActor*   actor;
-         //cfdDCS*      DCS;
-         VE_SceneGraph::cfdGeode* geode;  
+         //DCS*      dcs;
+			osg::ref_ptr< VE_SceneGraph::Geode > geode;  
    };
 }
 #endif

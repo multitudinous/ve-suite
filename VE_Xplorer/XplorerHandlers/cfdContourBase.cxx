@@ -36,7 +36,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCuttingPlane.h"
 #include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
-
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include "VE_Open/XML/XMLObject.h"

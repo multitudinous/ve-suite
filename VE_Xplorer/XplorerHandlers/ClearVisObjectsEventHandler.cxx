@@ -48,8 +48,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-
 #include <iostream>
 
 using namespace VE_EVENTS;

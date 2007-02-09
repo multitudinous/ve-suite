@@ -72,6 +72,9 @@ public:
    void TurnOnDebugOutput( int onOff = 0 ){ _vtkDebugLevel = onOff; }
    ///This function implements the respective translate vtkActorToGeode
    void TranslateToGeode( vtkActor* actor );
+	///
+	///\param
+	osg::Group* GetParent( unsigned int position );
 
 protected:
    int _vtkDebugLevel;

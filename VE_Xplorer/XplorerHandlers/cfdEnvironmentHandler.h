@@ -137,13 +137,13 @@ public:
    void ResetBackgroundColorUpdateFlag();
   
    #ifdef _OSG
-      ///Accessor for DisplayInformation
-      DisplayInformation* GetDisplayInformation( void );
+   ///Accessor for DisplayInformation
+   DisplayInformation* GetDisplayInformation( void );
 
-      #ifdef VE_PATENTED 
-         void ActivateGeometryPicking( void );
-         void DeactivateGeometryPicking( void );
-      #endif //VE_PATENTED
+   #ifdef VE_PATENTED 
+   void ActivateGeometryPicking( void );
+   void DeactivateGeometryPicking( void );
+   #endif //VE_PATENTED
    #endif //_OSG 
 
 private:
@@ -153,12 +153,12 @@ private:
    cfdQuatCamHandler* _camHandler;
 
    #ifdef _OSG
-      DisplayInformation* display_information;
+   DisplayInformation* display_information;
 
-      #ifdef VE_PATENTED 
-         cfdObjectHandler* objectHandler;
-         bool _activeGeomPicking;
-      #endif // VE_PATENTED
+   #ifdef VE_PATENTED 
+   cfdObjectHandler* objectHandler;
+   bool _activeGeomPicking;
+   #endif // VE_PATENTED
    #endif //_OSG
 
    std::vector<float> _clearColor;///<The background color;

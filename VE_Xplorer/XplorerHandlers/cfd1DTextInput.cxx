@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/XplorerHandlers/cfd1DTextInput.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
@@ -44,10 +43,10 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-cfd1DTextInput::cfd1DTextInput( void ):cfdDCS()
+cfd1DTextInput::cfd1DTextInput( void ):DCS()
 {
-   this->geode = new VE_SceneGraph::cfdGeode();
-   ((VE_SceneGraph::cfdDCS*)this)->AddChild( this->geode );
+   this->geode = new VE_SceneGraph::Geode();
+	(( VE_SceneGraph::DCS* )this)->AddChild( this->geode.get() );
 
    // Do we need to initialize this->text here?
    // If this->text is required, it should probably be a constructor argument
@@ -59,9 +58,9 @@ cfd1DTextInput::~cfd1DTextInput( void )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-VE_SceneGraph::cfdDCS* cfd1DTextInput::getpfDCS( void )
+VE_SceneGraph::DCS* cfd1DTextInput::getpfDCS( void )
 {
-   return (VE_SceneGraph::cfdDCS*)this;
+   return (VE_SceneGraph::DCS*)this;
 }
 
 void cfd1DTextInput::SetFilename( std::string text )
@@ -96,7 +95,7 @@ void cfd1DTextInput::UpdateTextColor( double redColor, double greenColor, double
   color[ 2 ] = blueColor;
   this->actor->GetProperty()->SetColor( color );
 
-  this->geode->TranslateTocfdGeode( actor );
+  this->geode->TranslateToGeode( actor );
 
   actor->Delete();
   labelMapper->Delete();
@@ -121,7 +120,7 @@ void cfd1DTextInput::Update( void )
    color[ 1 ] = 1;
    actor->GetProperty()->SetColor( color );
 
-   this->geode->TranslateTocfdGeode( actor );
+   this->geode->TranslateToGeode( actor );
 
    actor->Delete();
    labelMapper->Delete();

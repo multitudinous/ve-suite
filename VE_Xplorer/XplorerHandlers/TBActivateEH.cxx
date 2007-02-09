@@ -36,9 +36,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
@@ -75,14 +72,14 @@ void TextureBasedActivateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLOb
       {
          //make the CAD transparent
          _activeModel->MakeCADRootTransparent();
-         if(_activeModel->GetCfdDCS()->SearchChild(_activeModel->GetActiveDataSet()->GetDCS())< 0)
+			if( !_activeModel->GetDCS()->SearchChild(_activeModel->GetActiveDataSet()->GetDCS()) )
          {
             vprDEBUG(vesDBG,1) << "|\t\tadding active switch node to worldDCS"
                              << std::endl << vprDEBUG_FLUSH;
-            _activeModel->GetCfdDCS()->AddChild( _activeModel->GetActiveDataSet()->GetDCS() );
+            _activeModel->GetDCS()->AddChild( _activeModel->GetActiveDataSet()->GetDCS() );
          }
-         VE_SceneGraph::cfdSwitch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
-         if (  _activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) < 0 )
+         VE_SceneGraph::Switch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
+         if ( !_activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
          {
             vprDEBUG(vesDBG,1) << "|\t\tadding active dcs node to worldDCS for classic ss "
                              << std::endl << vprDEBUG_FLUSH;

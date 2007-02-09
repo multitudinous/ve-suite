@@ -35,9 +35,7 @@
 
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdGeode;
-   class cfdGroup;
+   
 }
 
 class vtkGlyph3D;

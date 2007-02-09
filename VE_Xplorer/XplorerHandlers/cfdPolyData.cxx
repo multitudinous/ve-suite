@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdPolyData.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 
@@ -253,8 +252,8 @@ void cfdPolyData::Update()
 
    temp->SetMapper( this->map );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new VE_SceneGraph::cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( temp );
+   geodes.push_back( new VE_SceneGraph::Geode() );
+   geodes.back()->TranslateToGeode( temp );
    temp->Delete();
    this->updateFlag = true;
 }

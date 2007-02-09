@@ -38,6 +38,7 @@ cfdObjects API
 /*!\class VE_Xplorer::cfdObjects
 * 
 */
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 namespace VE_Xplorer
 {
@@ -48,12 +49,7 @@ namespace VE_Xplorer
 
 namespace VE_SceneGraph
 {
-   class cfdGeode;
-   class cfdDCS;
-   class cfdSequence;
-   class cfdNode;
-   class cfdTempAnimation;
-   class cfdGeode;
+	class Geode;
 }
 
 // VTK Classes
@@ -65,7 +61,6 @@ class vtkMaskPoints;
 #include <vector>
 #include <vpr/Sync/Mutex.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdObjects : public cfdGlobalBase
@@ -86,7 +81,7 @@ namespace VE_Xplorer
          // update the actor
          virtual void Update() = 0;
 
-         std::vector< VE_SceneGraph::cfdGeode* > GetGeodes( void );
+         std::vector< VE_SceneGraph::Geode* > GetGeodes( void );
          void ClearGeodes( void );
 
          void SetObjectType( int );
@@ -101,7 +96,7 @@ namespace VE_Xplorer
          void SetPreCalcFlag( int x ) { this->usePreCalcData = x; }
          void SetUpdateFlag( bool x ) { this->updateFlag = x; }
          bool GetUpdateFlag( void ) { return ( this->updateFlag ); }
-         void DeletecfdGeode( void );
+         void DeleteGeode( void );
 
          //void SetSequence( cfdTempAnimation* );
          //cfdTempAnimation* GetSequence( void );
@@ -129,7 +124,7 @@ namespace VE_Xplorer
          // used by vectors and intended for warped contours
          //static float vectorScale;
 
-         std::vector< VE_SceneGraph::cfdGeode* > geodes;
+         std::vector< VE_SceneGraph::Geode* > geodes;
          vtkPolyData* pointSource;
 
          bool updateFlag;

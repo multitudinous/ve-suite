@@ -41,22 +41,18 @@
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
+
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
+
+#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdVectorBase.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 #include "VE_Xplorer/XplorerHandlers/cfdScalarBarActor.h"
-#include "VE_Xplorer/SceneGraph/cfdTempAnimation.h"
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/CADTransformEH.h"
@@ -156,9 +152,7 @@ cfdModelHandler::cfdModelHandler( void )
 
 void cfdModelHandler::Initialize( std::string param )
 {
-   _param = param;
-   _readParam = new cfdReadParam();
-   CreateObjects();
+	;
 }
 
 void cfdModelHandler::CleanUp( void )
@@ -511,9 +505,10 @@ void cfdModelHandler::InitScene( void )
 
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
-   _scalarBar = new cfdScalarBarActor( _param, (VE_SceneGraph::cfdGroup*)VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetParent( 0 ) );
+	//This code is broken due to the get parent call
+	_scalarBar = new cfdScalarBarActor( _param, //dynamic_cast< VE_SceneGraph::Group* >
+												 VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode() );
    // Assumes active dataset isn't null
-   _scalarBar->SetActiveDataSet( activeDataset );
    _scalarBar->RefreshScalarBar();
 }
 
@@ -566,7 +561,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          vprDEBUG(vesDBG,0) << " Change Geometry in Scene Graph."
                           << std::endl << vprDEBUG_FLUSH;
 
-         VE_SceneGraph::cfdDCS* parent = NULL;
+         osg::ref_ptr< VE_SceneGraph::DCS > parent;
          for( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
          {
             int temp = 0;
@@ -575,10 +570,10 @@ void cfdModelHandler::PreFrameUpdate( void )
             // therefore we must find the parent besides worldDCS
             // because for search child we only search the immediate children
             // maybe come up with better functionality later
-            //if (  !strcmp( _activeModel->GetCfdDCS()->GetName().c_str(), "cfdVEBaseClass" ) )
-            if ( !_activeModel->GetCfdDCS()->GetName().compare( "cfdVEBaseClass" ) )
+            //if (  !strcmp( _activeModel->GetDCS()->GetName().c_str(), "cfdVEBaseClass" ) )
+            if ( !_activeModel->GetDCS()->GetName().compare( "cfdVEBaseClass" ) )
             {
-               parent = _activeModel->GetCfdDCS();
+               parent = _activeModel->GetDCS();
             }
             else
             {
@@ -593,12 +588,12 @@ void cfdModelHandler::PreFrameUpdate( void )
                << vprDEBUG_FLUSH;
 
             if ( ( this->_readParam->guiVal[ i ] == 1 ) && 
-               ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->GetDCS() ) == -1 ) )
+               ( !parent->SearchChild( _activeModel->GetGeomDataSet( i )->GetDCS() ) ) )
             {
                temp = parent->AddChild( _activeModel->GetGeomDataSet( i )->GetDCS() );
             }
             else if ( ( this->_readParam->guiVal[ i ] == 0 ) &&
-                     ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->GetDCS() ) != -1 ) )
+                     ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->GetDCS() ) ) )
             {
                temp = parent->RemoveChild( _activeModel->GetGeomDataSet( i )->GetDCS() );
             }
@@ -644,13 +639,13 @@ void cfdModelHandler::PreFrameUpdate( void )
                _modelList.at( j )->GetGeomDataSet( i )->setOpac( 1.0 );
          }
          
-         for( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++ )
+         /*for( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++ )
          {
             if ( _modelList.at( j )->GetCfdDataSet( i )->IsPartOfTransientSeries() )
             {
                _modelList.at( j )->GetCfdDataSet( i )->GetAnimation()->ClearSequence();
             }
-         }
+         }*/
          //may need to add the handling of texture data stuff here
       } 
    }
@@ -708,299 +703,6 @@ void cfdModelHandler::PreFrameUpdate( void )
 ///////////////////////////////////////////////
 // Used to initialize data for the simulation
 ///////////////////////////////////////////////
-void cfdModelHandler::CreateObjects( void )
-{  
-   int numObjects;
-   char text[ 256 ];
-   char textLine[ 256 ];
-#ifdef _OSG
-#ifdef VE_PATENTED
-   unsigned int nTextureDataSets = 0;
-#endif
-#endif
-   std::ifstream input;
-   input.open( this->_param.c_str() );
-   input >> numObjects; 
-   input.getline( text, 256 );   //skip past remainder of line
-
-   vprDEBUG(vesDBG,1) << " cfdModelHandler::Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
-   for( int i = 0; i < numObjects; i++ )
-   {
-      int id;
-      input >> id;
-      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
-      input.getline( text, 256 );   //skip past remainder of line
-      if ( id == 8 )
-      {
-         if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
-         // Assume only one model for now
-         // Flexibilty to have multiply models
-         _modelList.at( 0 )->CreateCfdDataSet();
-
-         vprDEBUG(vesDBG,0) << " ************************************* "
-                          << std::endl << vprDEBUG_FLUSH;
-
-         vprDEBUG(vesDBG,0) << " vtk DCS parameters:"
-                          << std::endl << vprDEBUG_FLUSH;
-
-         float scale[3], trans[3], rotate[3];   // pfDCS stuff
-         this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
-
-         // Pass in -1 to GetCfdDataSet to get the last dataset added
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
-
-         // get vtk data set name...
-         char vtk_filein[ 256 ];
-         input >> vtk_filein;
-         input.getline( textLine, 256 );   //skip past remainder of line
-            
-         // Set the name of the dcs so that we can track it later on
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetName( vtk_filein );
-
-         if ( fileIO::isFileReadable( vtk_filein ) ) 
-         {
-            vprDEBUG(vesDBG,0) << " vtk file = " << vtk_filein 
-                             << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
-                             << std::endl << vprDEBUG_FLUSH;
-            _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( vtk_filein );
-         }
-         else
-         {
-            std::cerr << "ERROR: unreadable vtk file = " << vtk_filein 
-                      << ".  You may need to correct your param file."
-                      << std::endl;
-            exit( 1 );
-         }
-
-         std::string precomputedDataSliceDir = _readParam->readDirName( input, "precomputedDataSliceDir" );
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( precomputedDataSliceDir );
-         //delete [] precomputedDataSliceDir;
-         precomputedDataSliceDir.erase();//precomputedDataSliceDir = NULL;
-
-         std::string precomputedSurfaceDir = _readParam->readDirName( input, "precomputedSurfaceDir" );
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
-         //delete [] precomputedSurfaceDir;
-         precomputedSurfaceDir.erase();//precomputedSurfaceDir = NULL;
-
-         this->LoadSurfaceFiles( _modelList.at( 0 )->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
-      }
-      else if ( id == 9 ) // if it is an geom file
-      {
-         if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
-
-         char fileName[100];
-         float stlColor[3];
-         int color;
-         int transFlag;
-
-         input >> transFlag;
-         input.getline( textLine, 256 );   //skip past remainder of line
-         vprDEBUG(vesDBG,0) << " geometry transparency flag = "
-                                 << transFlag
-                                 << std::endl << vprDEBUG_FLUSH;
-
-         // read color flag
-         input >> color;
-         vprDEBUG(vesDBG,0) << " stl color flag = " << color
-                          << std::endl << vprDEBUG_FLUSH;
-
-         // read color if color flag = 1
-         if( color == 1)
-         {
-            for(int i=0;i<3;i++)
-            {
-               input >> stlColor[ i ];
-            }
-            vprDEBUG(vesDBG,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
-                                    << stlColor[ 2 ]
-                                    << std::endl << vprDEBUG_FLUSH;
-         }
-         input.getline( textLine, 256 );   //skip past remainder of line
-
-         vprDEBUG(vesDBG,0) << " geometry DCS parameters:" 
-                          << std::endl << vprDEBUG_FLUSH;
-         float scale[3], trans[3], rotate[3];   // pfDCS stuff
-         this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
-
-         input >> fileName;
-         input.getline( textLine, 256 );   //skip past remainder of line
-
-         int test1 = fileIO::isFileReadable( fileName );
-         if ( test1 == 1 )
-         { 
-            vprDEBUG(vesDBG,0) << " geometry fileName = "
-                                    << fileName
-                                    << std::endl << vprDEBUG_FLUSH;
-         }
-         else
-         {
-            std::cerr << "ERROR: unreadable geometry file = " << fileName 
-                      << ".  You may need to correct your param file."
-                      << std::endl;
-            exit( 1 );
-         }
-
-         //std::cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << std::endl;
-         _modelList.at( 0 )->CreateGeomDataSet( fileName );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->GetDCS()->SetName( fileName );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );
-      }
-      else if ( id == 10 )
-      {
-         if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
-
-         float stlColor[3];
-         int color;
-         int transFlag;
-
-         float duration = 0.0f;
-         input >> duration;
-         input.getline( textLine, 256 );   //skip past remainder of line
-         VE_SceneGraph::cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
-         animation->SetDuration( duration );
-
-         // For the data we need to loop over all the datasets and set the appropriate data dir
-         _modelList.at( 0 )->CreateCfdDataSet();
-
-         vprDEBUG(vesDBG,0) << " ************************************* "
-                          << std::endl << vprDEBUG_FLUSH;
-
-         vprDEBUG(vesDBG,0) << " vtk DCS parameters:"
-                          << std::endl << vprDEBUG_FLUSH;
-
-         float scale[3], trans[3], rotate[3];   // pfDCS stuff
-         this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
-
-         // Pass in -1 to GetCfdDataSet to get the last dataset added
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
-
-         // get vtk data dir name...
-         char vtkDataDir[ 256 ];
-         input >> vtkDataDir;
-         input.getline( textLine, 256 );   //skip past remainder of line
-         
-         // TODO: what is purpose of this line?
-         fileIO::isDirWritable( vtkDataDir );
-         
-         // get vtk data dir name...
-         char vtkPreComputeDir[ 256 ];
-         input >> vtkPreComputeDir;
-         input.getline( textLine, 256 );   //skip past remainder of line
-         
-         // Now we need to loop over all the files in the vtk dataset dir
-         // and create n number of cfdDataSets
-         ReadNNumberOfDataSets( vtkDataDir, vtkPreComputeDir );
-
-         // For the geometry we need to loop over all the files and set the dcs appropriately
-         char geomDirName[ 100 ];
-         input >> geomDirName;
-         input.getline( textLine, 256 );   //skip past remainder of line
-
-         /*int test1 = fileIO::isFileReadable( geomDirName );
-         if ( test1 == 1 )
-         { 
-            vprDEBUG(vesDBG,0) << " geometry fileName = "
-                                    << geomDirName
-                                    << std::endl << vprDEBUG_FLUSH;
-         }
-         else
-         {
-            std::cerr << "ERROR: unreadable geometry file = " << geomDirName 
-                      << ".  You may need to correct your param file."
-                      << std::endl;
-            exit( 1 );
-         }*/
-
-         vprDEBUG(vesDBG,0) << " geometry DCS parameters:" 
-                          << std::endl << vprDEBUG_FLUSH;
-         this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
-
-         input >> transFlag;
-         vprDEBUG(vesDBG,0) << " geometry transparency flag = "
-                                 << transFlag
-                                 << std::endl << vprDEBUG_FLUSH;
-
-         // read color flag
-         input >> color;
-         vprDEBUG(vesDBG,0) << " stl color flag = " << color
-                          << std::endl << vprDEBUG_FLUSH;
-
-         // read color if color flag = 1
-         if( color == 1)
-         {
-            for(int i=0;i<3;i++)
-            {
-               input >> stlColor[ i ];
-            }
-            vprDEBUG(vesDBG,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
-                                    << stlColor[ 2 ]
-                                    << std::endl << vprDEBUG_FLUSH;
-         }
-         input.getline( textLine, 256 );   //skip past remainder of line
-
-         //std::cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << std::endl;
-         /*_modelList.at( 0 )->CreateGeomDataSet( geomDirName );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );*/
-
-         // For the geometry we need to loop over all the files and set the dcs appropriately
-      }
-      else if ( id == 15 )
-      {
-#ifdef _OSG
-#ifdef VE_PATENTED
-         vprDEBUG(vesDBG,0) << "Creating texture dataset." << std::endl << vprDEBUG_FLUSH;
-
-         if ( _modelList.empty() )
-         {
-            _modelList.push_back( new cfdModel( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
-         }
-   
-         //read the number of files that describe the texture
-         int numTextureDescriptionFiles = 0;
-         input >> numTextureDescriptionFiles;
-         input.getline(textLine,256);
-         char textureDescriptionFile[256];
-
-         _modelList.at(0)->CreateTextureDataSet();
-
-         for ( int i = 0; i < numTextureDescriptionFiles; ++i ) 
-         {
-             input>>textureDescriptionFile;
-             input.getline(textLine,256);
-             //this isn't right--we should have a pointer to the
-             //active/current model in the list. . .leaving for now
-             //since we only have one model
-             _modelList.at(0)->AddDataSetToTextureDataSet(nTextureDataSets,
-                                                textureDescriptionFile);
-         }
-         nTextureDataSets++;
-#endif
-#endif
-      }
-      else
-      {
-         // Skip past block
-         _readParam->ContinueRead( input, id );
-      }
-   }
-   
-}  
-
 void cfdModelHandler::LoadSurfaceFiles( std::string precomputedSurfaceDir )
 {
    if ( precomputedSurfaceDir.empty() )// == NULL )
@@ -1081,7 +783,7 @@ vtkPolyData* cfdModelHandler::GetArrow( void )
 {
    return this->arrow;
 }
-
+/*
 void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string preComputedDir )
 {
    std::vector< std::string > frameFileNames;
@@ -1107,7 +809,6 @@ void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string
    // count the files and record the name of each file
    while( (file = readdir(dir)) != NULL )
    {
-      //std::cout << file->d_name << " : " << /*file->ino_t << " : " << file->off_t << */std::endl;
       //assume all vtk files in this directory are part of the sequence
       if(strstr(file->d_name, ".vtk"))
       {
@@ -1130,7 +831,6 @@ void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string
    
    while( (file = readdir(dir)) != NULL )
    {
-      //std::cout << file->d_name << " : " << preComputedDir<< " : " << /*file->ino_t << " : " << file->off_t << */std::endl;
       //assume all vtk files in this directory are part of the sequence
       if(strstr(file->d_name, preComputedDir.c_str()))//if(file->d_name.find(preComputedDir))
       {
@@ -1339,7 +1039,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string
       exit( 1 );
    }
 
-   VE_SceneGraph::cfdDCS* baseTransientDCS = _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS();
+   osg::ref_ptr< VE_SceneGraph::DCS > baseTransientDCS = _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS();
    VE_SceneGraph::cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
    animation->SetNumberOfFrames( numFiles );
    animation->SetGroups();
@@ -1407,4 +1107,4 @@ void cfdModelHandler::ReadNNumberOfDataSets(  std::string directory, std::string
    file = 0;
 #endif
 }
-
+*/

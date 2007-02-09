@@ -37,9 +37,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-
 #include <osg/Node>
 #include <osg/Geode>
 #include <osg/Group>
@@ -68,7 +65,7 @@ DataSetScalarBar::DataSetScalarBar( void )
    //xAxisLabel = "X Axis";
    //yAxisLabel = "Y Axis";
    //zAxisLabel = "Z Axis";
-   scalarBarDCS = new cfdDCS();
+	scalarBarDCS = new VE_SceneGraph::DCS();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataSetScalarBar::~DataSetScalarBar()
@@ -92,7 +89,7 @@ void DataSetScalarBar::SetBoundingBox( double* inBBox )
 void DataSetScalarBar::AddScalarBarToGroup( void )
 {
    //Now add the labels
-   osg::MatrixTransform* tempDCS = dynamic_cast< osg::MatrixTransform* >( scalarBarDCS->GetRawNode() );
+	osg::ref_ptr< VE_SceneGraph::DCS > tempDCS = scalarBarDCS;
    size_t numChildren = tempDCS->getNumChildren();
    for ( size_t i = 0; i < numChildren; ++i )
    {
@@ -113,9 +110,9 @@ void DataSetScalarBar::AddScalarBarToGroup( void )
    scalarBarDCS->SetTranslationArray( trans );
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdDCS* DataSetScalarBar::GetScalarBar( void )
+VE_SceneGraph::DCS* DataSetScalarBar::GetScalarBar( void )
 {
-   return scalarBarDCS;
+   return scalarBarDCS.get();
 }
 //////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )

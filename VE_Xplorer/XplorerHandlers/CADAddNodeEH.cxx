@@ -32,9 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADAddNodeEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -91,7 +88,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::VE_CAD::CADPart* part = 0;
       VE_XML::VE_CAD::CADClone* clone = 0;
 
-      VE_SceneGraph::cfdDCS* parentAssembly = 0;
+		VE_SceneGraph::DCS* parentAssembly = 0;
 
       if(nodeType == "Assembly")
       {
@@ -126,9 +123,9 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       if(!parentAssembly)
       {
          //create the root
-         _activeModel->CreateAssembly(node->GetParent());
-         parentAssembly = _activeModel->GetAssembly(node->GetParent());
-         _activeModel->GetCfdDCS()->AddChild(parentAssembly);
+         _activeModel->CreateAssembly( node->GetParent() );
+         parentAssembly = _activeModel->GetAssembly( node->GetParent() );
+         _activeModel->GetDCS()->AddChild( parentAssembly );
       }
 
       if(nodeType == "Assembly")

@@ -36,7 +36,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 
 #include <vtkPlaneSource.h>
 #include <vtkBMPReader.h>
@@ -126,8 +125,8 @@ cfdImage::cfdImage( std::string param )
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
       temp->SetTexture( this->texture ); 
-      geodes.push_back( new VE_SceneGraph::cfdGeode() );
-      geodes.back()->TranslateTocfdGeode( temp );
+      geodes.push_back( new VE_SceneGraph::Geode() );
+      geodes.back()->TranslateToGeode( temp );
       temp->Delete();
 
       this->type = bmpOrientation;
@@ -216,8 +215,8 @@ cfdImage::cfdImage ( std::string filename, int resx, int resy, int dim, double *
       temp->GetProperty()->SetDiffuse(1.0);
       temp->GetProperty()->SetSpecular(1.0);
       temp->GetProperty()->SetInterpolationToPhong();
-      geodes.push_back( new VE_SceneGraph::cfdGeode() );
-      geodes.back()->TranslateTocfdGeode( temp );
+      geodes.push_back( new VE_SceneGraph::Geode() );
+      geodes.back()->TranslateToGeode( temp );
       temp->Delete();
 
      // Dim stuff

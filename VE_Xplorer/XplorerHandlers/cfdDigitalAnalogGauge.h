@@ -38,14 +38,20 @@ cfdDigitalAnalogGauge API
 /*!\class VE_Xplorer::cfdDigitalAnalogGauge
 * 
 */
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
+
 #include <utility>
 #include <string>
 
-namespace VE_SceneGraph{
-   class cfdGroup;
-   class cfdDCS;
-   class cfdGeode;
+namespace VE_SceneGraph
+{
+   class DCS;
+	class Group;
+   class Geode;
 }
+
 class vtkArrowSource;
 class vtkTransform;
 class vtkMatrix4x4;
@@ -53,14 +59,20 @@ class vtkTransformPolyDataFilter;
 class vtkPolyDataMapper;
 class vtkActor;
 class vtkVectorText;
+
 #include "VE_Installer/include/VEConfig.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
 
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdDigitalAnalogGauge
    {
       public:
-         cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup* );
+         cfdDigitalAnalogGauge( VE_SceneGraph::Group* );
          cfdDigitalAnalogGauge( const cfdDigitalAnalogGauge& g );
          ~cfdDigitalAnalogGauge( void );
 
@@ -86,7 +98,7 @@ namespace VE_Xplorer
       
          void UpdateDigitalText( double value );
 
-         VE_SceneGraph::cfdDCS * GetGaugeNode();
+			VE_SceneGraph::DCS* GetGaugeNode();
 
       private:
    
@@ -110,18 +122,18 @@ namespace VE_Xplorer
 	  void DefineMinMarkersActor();//angran
 	  void DefineMaxMarkersActor();//angran
 
-		VE_SceneGraph::cfdGroup* masterNode;
-		VE_SceneGraph::cfdDCS * gaugeDCS;
+		osg::ref_ptr< VE_SceneGraph::Group > masterNode;
+		osg::ref_ptr< VE_SceneGraph::DCS > gaugeDCS;
 
-		VE_SceneGraph::cfdGeode* circleGeode;
-		VE_SceneGraph::cfdGeode* movingArrowGeode;
-		VE_SceneGraph::cfdGeode* stationaryArrowGeode;
-		VE_SceneGraph::cfdGeode* labelGeode;
-		VE_SceneGraph::cfdGeode* text2Geode;
-		VE_SceneGraph::cfdGeode* digitalGeode;
-		VE_SceneGraph::cfdGeode* backgroundGeode;
-		VE_SceneGraph::cfdGeode* minMarkersGeode; //angran
-		VE_SceneGraph::cfdGeode* maxMarkersGeode; //angran
+		osg::ref_ptr< VE_SceneGraph::Geode > circleGeode;
+		osg::ref_ptr< VE_SceneGraph::Geode > movingArrowGeode;
+		osg::ref_ptr< VE_SceneGraph::Geode > stationaryArrowGeode;
+		osg::ref_ptr< VE_SceneGraph::Geode > labelGeode;
+		osg::ref_ptr< VE_SceneGraph::Geode > text2Geode;
+		osg::ref_ptr< VE_SceneGraph::Geode > digitalGeode;
+		osg::ref_ptr< VE_SceneGraph::Geode > backgroundGeode;
+		osg::ref_ptr< VE_SceneGraph::Geode > minMarkersGeode; //angran
+		osg::ref_ptr< VE_SceneGraph::Geode > maxMarkersGeode; //angran
 
       float itsX [ 3 ];
       vtkArrowSource * movingArrow;

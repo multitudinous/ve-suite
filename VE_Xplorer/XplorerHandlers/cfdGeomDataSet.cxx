@@ -32,14 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdGeomDataSet.h"
 
-#include "VE_Xplorer/SceneGraph/cfdFILEInfo.h"  
+#include "VE_Xplorer/SceneGraph/cfdFILEInfo.h"
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 
 #include <cassert>
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 //shouldn't have to declare these
-//should instead use the cfdNode types!!!
+//should instead use the CADEntityHelper types!!!
 #ifdef _PERFORMER
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfDCS.h>
@@ -60,13 +59,14 @@
 #include <vtkSTLReader.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
+
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 //cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, pfDCS *modelDCS  )
-cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, VE_SceneGraph::cfdDCS *modelDCS  )
+cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, VE_SceneGraph::DCS* modelDCS  )
 {
 #ifdef _PERFORMER
   mat0 = new pfMaterial();
@@ -75,7 +75,7 @@ cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, VE_SceneGraph::cfdDCS *model
    mat0 = new osg::Material();
    mat1 = new osg::Material();
 #endif
-  DCS  = new VE_SceneGraph::cfdDCS();
+  dcs = new VE_SceneGraph::DCS();
 
   vprDEBUG(vesDBG,1) << " File:1 " << geomFile->fileName
                          << std::endl << vprDEBUG_FLUSH;
@@ -85,8 +85,8 @@ cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, VE_SceneGraph::cfdDCS *model
   //node->flatten( 0 );
   node->LoadFile(geomFile->fileName);
 
-  DCS->AddChild( node );
-  modelDCS->AddChild( DCS );
+  dcs->addChild( node->GetNode() );
+  modelDCS->AddChild( dcs.get() );
   mat_count =0;
   transparent = geomFile->trans;
   color = geomFile->color; 
@@ -139,7 +139,7 @@ cfdGeomDataSet::cfdGeomDataSet( float opVal, float stlColor[3], std::string file
 //////////////////////////////////
 cfdGeomDataSet::~cfdGeomDataSet( )
 {
-   delete DCS;
+   //delete dcs;
    delete node;
    /*
    pfDelete( mat0 );
@@ -172,7 +172,7 @@ void cfdGeomDataSet::setTrans3( float x, float y, float z )
    trans[0] = x;
    trans[1] = y;
    trans[2] = z;
-   this->DCS->SetTranslationArray(trans);//SetTrans( x, y, z );
+   this->dcs->SetTranslationArray(trans);//SetTrans( x, y, z );
    vprDEBUG(vesDBG,1) << "Trans x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
@@ -184,7 +184,7 @@ void cfdGeomDataSet::setScl( float x, float y, float z )
    scale[1] = y;
    scale[2] = z;
    
-   this->DCS->SetScaleArray(scale);//>SetScale( x, y, z );
+   this->dcs->SetScaleArray(scale);//>SetScale( x, y, z );
    vprDEBUG(vesDBG,1) << "Scale x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
@@ -195,7 +195,7 @@ void cfdGeomDataSet::setRot(float h, float p, float r)
    rot[0] = h;
    rot[1] = p;
    rot[2] = r;
-   this->DCS->SetRotationArray(rot);//>SetRot(h,p,r);
+   this->dcs->SetRotationArray(rot);//>SetRot(h,p,r);
    vprDEBUG(vesDBG,1) << "Rot h: " << h << " p: " 
       << p << " r: " << r << std::endl << vprDEBUG_FLUSH;
 }
@@ -204,14 +204,14 @@ void cfdGeomDataSet::setRotMat(double *rotate)
 {
 }
 ////////////////////////////////////
-VE_SceneGraph::cfdNode *cfdGeomDataSet::getpfNode( )
+VE_SceneGraph::CADEntityHelper* cfdGeomDataSet::getpfNode( )
 {
    return this->node;
 }
 //////////////////////////////////
-VE_SceneGraph::cfdDCS *cfdGeomDataSet::getpfDCS( )
+VE_SceneGraph::DCS* cfdGeomDataSet::getpfDCS( )
 {
-   return this->DCS;
+   return this->dcs.get();
 }
 //////////////////////////////////
 float cfdGeomDataSet::getOpacity()

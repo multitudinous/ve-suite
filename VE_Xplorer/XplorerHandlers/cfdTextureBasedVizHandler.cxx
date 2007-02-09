@@ -63,9 +63,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 
-#include "VE_Xplorer/SceneGraph/cfdSwitch.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-
 #include "VE_Open/XML/Command.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
@@ -92,7 +89,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _appTime = 0.0;
    _paramFile = '\0';
    _cmdArray = 0;
-   _worldDCS = 0;
+   //_worldDCS = 0;
    _nav = 0;
    _cursor  = 0;
    _activeVolumeVizNode = 0;
@@ -131,19 +128,6 @@ void cfdTextureBasedVizHandler::CleanUp( void )
    {
       delete  _cmdArray;
       _cmdArray = 0;
-   }
-
-   if ( _worldDCS )
-   {
-      delete  _worldDCS;
-      _worldDCS = 0;
-   }
-
-
-   if ( _parent )
-   {
-      delete _parent;
-      _parent = 0;
    }
 
    if ( _currentBBox )
@@ -447,7 +431,7 @@ void cfdTextureBasedVizHandler::_updateGraph()
    if(_activeVolumeVizNode)
    {
 #ifdef _OSG
-      osg::ref_ptr<osg::Group> tParent = dynamic_cast<osg::Group*>(_parent->GetRawNode());
+      osg::ref_ptr<osg::Group> tParent = _parent.get();
       osg::ref_ptr<osg::Switch> tVV = _activeVolumeVizNode->GetVolumeVisNode();
       if(!tParent->containsNode(tVV.get()))
       {
@@ -459,13 +443,13 @@ void cfdTextureBasedVizHandler::_updateGraph()
 /////////////////////////////////////////
 void cfdTextureBasedVizHandler::ClearAll()
 {
-   if(_parent)
+   if(_parent.valid())
    {
       //need to remove the clip planes
       if(_activeVolumeVizNode)
       {
          _activeVolumeVizNode->ResetClipPlanes();
-         ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+			_parent->removeChild( _activeVolumeVizNode->GetVolumeVisNode().get() );
          _activeVolumeVizNode = 0;
       }
       _activeTM = 0;
@@ -636,13 +620,13 @@ void cfdTextureBasedVizHandler::SetCommandArray(cfdCommandArray* cmdArray)
    _cmdArray = cmdArray;
 }
 //////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetWorldDCS(VE_SceneGraph::cfdDCS* dcs)
+void cfdTextureBasedVizHandler::SetWorldDCS(VE_SceneGraph::DCS* dcs)
 {
    if(_worldDCS != dcs)
       _worldDCS = dcs;
 }
 ///////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetParentNode(VE_SceneGraph::cfdGroup* parent)
+void cfdTextureBasedVizHandler::SetParentNode(VE_SceneGraph::Group* parent)
 {
    if(_parent != parent)
       _parent = parent;

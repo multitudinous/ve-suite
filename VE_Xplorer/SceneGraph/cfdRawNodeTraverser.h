@@ -41,14 +41,14 @@ cfdRawNodeTraverser API
 /*!\class VE_SceneGraph::cfdRawNodeTraverser
 *
 */
-
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
+#include "VE_Installer/include/VEConfig.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
 #elif _OSG
 #include <osg/Node>
 #endif
+
 namespace VE_SceneGraph{
    class VE_SCENEGRAPH_EXPORTS cfdRawNodeTraverser
    {

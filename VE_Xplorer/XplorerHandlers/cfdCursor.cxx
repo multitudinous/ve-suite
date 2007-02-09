@@ -32,10 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
@@ -87,14 +84,13 @@ using namespace gmtl; //added by Gengxun
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS, 
-                   VE_SceneGraph::cfdGroup* rootNode )
+cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::DCS* worldDCS, VE_SceneGraph::Group* rootNode )
 {
    veCommand = 0;
    cursorId = NONE;
    this->arrow = arrow;
    this->worldDCS = worldDCS;
-   this->activeDataSetDCS = NULL;
+   //this->activeDataSetDCS = NULL;
    _rootNode = rootNode;
 
    // get scale factors of the worldDCS...
@@ -146,8 +142,8 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS,
    this->arrowActorS    = vtkActor::New();
    this->arrowGlyphS    = vtkGlyph3D::New();
 
-   this->cursorGeode = new VE_SceneGraph::cfdGeode();
-   this->cursorDCS = new VE_SceneGraph::cfdDCS();
+   this->cursorGeode = new VE_SceneGraph::Geode();
+   this->cursorDCS = new VE_SceneGraph::DCS();
    cursorDCS->SetName( "cfdCursor" );
    float tempArray[ 3 ];
    tempArray[ 0 ] = xscale;
@@ -156,8 +152,8 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS,
 
    this->cursorDCS->SetScaleArray( tempArray );
 
-   cursorScaleDCS = new VE_SceneGraph::cfdDCS();
-   cursorDCS->AddChild( cursorScaleDCS );
+   cursorScaleDCS = new VE_SceneGraph::DCS();
+   cursorDCS->AddChild( cursorScaleDCS.get() );
 
    this->pReso = 2;  // Set the number of x-y subdivisions in the plane
    this->last_pReso = this->pReso;
@@ -204,8 +200,8 @@ cfdCursor::~cfdCursor()
    //if ( this->cursorGeode != NULL )
    //   delete this->cursorGeode;
    
-   if ( cursorDCS != NULL )
-      delete this->cursorDCS;
+   //if ( cursorDCS != NULL )
+      //delete this->cursorDCS;
 }
 
 void cfdCursor::Initialize( double x[3], double v[3] )
@@ -226,8 +222,8 @@ void cfdCursor::Initialize( double x[3], double v[3] )
 
    this->BuildPlaneSource();
 
-   this->cursorGeode->TranslateTocfdGeode( this->sphereActor );
-   ((cfdDCS*)this->cursorDCS->GetChild( 0 ))->AddChild( this->cursorGeode );
+   this->cursorGeode->TranslateToGeode( this->sphereActor );
+	(( VE_SceneGraph::DCS* )this->cursorDCS->GetChild( 0 ))->AddChild( this->cursorGeode.get() );
 }
 
 int cfdCursor::GetCursorID( void )
@@ -347,7 +343,7 @@ void cfdCursor::UpdateSphere( void )
 {
    this->sphereSrc->SetCenter( 0.0f, 0.0f, 0.0f );
    this->sphereSrc->Update();
-   this->cursorGeode->TranslateTocfdGeode( this->sphereActor );
+   this->cursorGeode->TranslateToGeode( this->sphereActor );
 }
 
 void cfdCursor::UpdateArrowSource( void )
@@ -368,7 +364,7 @@ void cfdCursor::UpdateArrowSource( void )
    this->arrowPlaneS->SetNormal( this->dir );
    this->arrowPlaneS->Update();
 
-   this->cursorGeode->TranslateTocfdGeode( this->arrowActorS );
+   this->cursorGeode->TranslateToGeode( this->arrowActorS );
 }
 
 void cfdCursor::UpdateCube( void )
@@ -377,7 +373,7 @@ void cfdCursor::UpdateCube( void )
    vprDEBUG(vesDBG, 1) << " updating cube source "
                            << std::endl << vprDEBUG_FLUSH;
 
-   this->cursorGeode->TranslateTocfdGeode( this->cubeActor );
+   this->cursorGeode->TranslateToGeode( this->cubeActor );
 }
 
 void cfdCursor::UpdateLineSource( int direction )
@@ -411,7 +407,7 @@ void cfdCursor::UpdateLineSource( int direction )
    this->lineSphere->SetRadius( sphereRadius );
    this->lineSphere->Update();
 
-   this->cursorGeode->TranslateTocfdGeode( this->lineActor );
+   this->cursorGeode->TranslateToGeode( this->lineActor );
 }
 
 void cfdCursor::UpdatePlaneSource( int i )
@@ -455,7 +451,7 @@ void cfdCursor::UpdatePlaneSource( int i )
    this->planeSphereS->Update();
 
    this->planeSrc->Update();
-   this->cursorGeode->TranslateTocfdGeode( this->planeActorS );
+   this->cursorGeode->TranslateToGeode( this->planeActorS );
 }
 
 void cfdCursor::Update( double x[3], double v[3], double wx[3] )
@@ -538,10 +534,9 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
    this->SetTranslation();
 }
 
-
-VE_SceneGraph::cfdDCS* cfdCursor::GetcfdDCS()
+VE_SceneGraph::DCS* cfdCursor::GetDCS()
 {
-   return this->cursorDCS;
+   return this->cursorDCS.get();
 }
 
 //add for box cursor
@@ -720,7 +715,7 @@ void cfdCursor::SetTranslation( void )
    worldMat = this->worldDCS->GetMat();
 
    Matrix44f totalMat;
-   if ( this->activeDataSetDCS )
+   if ( this->activeDataSetDCS.valid() )
    {
       // apparently unused ...Matrix44f cursorDCSMat = this->cursorDCS->GetMat();
       float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
@@ -730,7 +725,8 @@ void cfdCursor::SetTranslation( void )
       combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
       combineScale[ 1 ] = dataDCSScale[ 1 ] * worldDCSScale[ 1 ];
       combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
-      ((cfdDCS*)this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
+
+		dynamic_cast< VE_SceneGraph::DCS* >(this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
       Matrix44f dataSetMatrix = this->activeDataSetDCS->GetMat();
 
       totalMat = worldMat * dataSetMatrix;
@@ -822,7 +818,7 @@ double* cfdCursor::ReturnLocalLocationVector( void )
    return this->localLocation;
 }
 
-void cfdCursor::SetActiveDataSetDCS( VE_SceneGraph::cfdDCS* myDCS )
+void cfdCursor::SetActiveDataSetDCS( VE_SceneGraph::DCS* myDCS )
 {
    this->activeDataSetDCS = myDCS;
 }
@@ -864,11 +860,11 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          {
             vprDEBUG(vesDBG,1) 
               << "removing cursor with cursor->GetpfDCS() = "
-              << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
+              << this->GetDCS() << std::endl << vprDEBUG_FLUSH;
 
             this->cursorId = NONE;
-            if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) >= 0 )
-               this->_rootNode->RemoveChild( this->GetcfdDCS() );
+            if ( this->_rootNode->SearchChild( this->GetDCS() ) )
+               this->_rootNode->RemoveChild( this->GetDCS() );
          }
          else
          {
@@ -901,16 +897,16 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 
             vprDEBUG(vesDBG,1) 
               << "adding cursor with cursor->GetpfDCS() = "
-              << this->GetcfdDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
+              << this->GetDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
 
             // if disconnected from scene graph, add
-            if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) < 0 )
+            if ( !this->_rootNode->SearchChild( this->GetDCS() ) )
             {
-               this->_rootNode->AddChild( this->GetcfdDCS() );
+               this->_rootNode->AddChild( this->GetDCS() );
 
                vprDEBUG(vesDBG,2) 
                   << "added cursor with cursor->GetpfDCS() = "
-                  << this->GetcfdDCS() << std::endl 
+                  << this->GetDCS() << std::endl 
                   << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
             }
          }
@@ -919,7 +915,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          {
             this->SetPlaneReso( (int)commandIds.at(1) ); 
 
-	         if ( this->activeDataSetDCS )
+	         if ( this->activeDataSetDCS.valid() )
 	         {
 		         float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
 		         float* worldDCSScale = this->worldDCS->GetScaleArray();
@@ -963,26 +959,26 @@ void cfdCursor::SetCursorType( int type )
    {
       vprDEBUG(vesDBG,1) 
         << "removing cursor with cursor->GetpfDCS() = "
-        << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
+        << this->GetDCS() << std::endl << vprDEBUG_FLUSH;
 
-      if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) >= 0 )
-         this->_rootNode->RemoveChild( this->GetcfdDCS() );
+      if ( this->_rootNode->SearchChild( this->GetDCS() ) )
+         this->_rootNode->RemoveChild( this->GetDCS() );
    }
    else
    {
 
       vprDEBUG(vesDBG,1) 
         << "adding cursor with cursor->GetpfDCS() = "
-        << this->GetcfdDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
+        << this->GetDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
 
       // if disconnected from scene graph, add
-      if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) < 0 )
+      if ( !this->_rootNode->SearchChild( this->GetDCS() ) )
       {
-         this->_rootNode->AddChild( this->GetcfdDCS() );
+         this->_rootNode->AddChild( this->GetDCS() );
 
          vprDEBUG(vesDBG,2) 
             << "added cursor with cursor->GetpfDCS() = "
-            << this->GetcfdDCS() << std::endl 
+            << this->GetDCS() << std::endl 
             << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
       }
    }

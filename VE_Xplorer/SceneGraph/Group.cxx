@@ -72,7 +72,7 @@ int Group::RemoveChild( SceneNode* child )
    exit( 1 );
    return -1;
 #elif _OSG
-   return this->removeChild( dynamic_cast< Node* >( child ));
+	return this->removeChild( dynamic_cast< osg::Node* >( child ));
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -172,3 +172,30 @@ osg::Node* Group::GetChild( unsigned int position )
 	return this->getChild( position );
 #endif
 }
+////////////////////////////////////////////////////////////////////////////////
+void Group::ToggleDisplay(bool onOff)
+{
+   std::string value = (onOff==true)?"ON":"OFF";
+   ToggleDisplay(value);
+}
+////////////////////////////////////////////////////////////////////////////////
+void Group::ToggleDisplay(std::string onOff)
+{
+   if(onOff == "ON")
+   {
+#ifdef _OSG
+      this->setNodeMask(1);
+#elif _OPENSG
+#elif _PERFORMER
+#endif
+   }
+   else if(onOff == "OFF")
+   {
+#ifdef _OSG
+      this->setNodeMask(0);
+#elif _OPENSG
+#elif _PERFORMER
+#endif
+   }
+}
+////////////////////////////////////////////////////////////////////////////////

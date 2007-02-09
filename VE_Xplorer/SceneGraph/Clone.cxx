@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
+
 #ifdef _OSG
 #include <osg/MatrixTransform>
 #include <osg/CopyOp>
@@ -39,31 +39,38 @@
 #elif _PERFORMER
 #elif _OPENSG
 #endif
+
 using namespace VE_SceneGraph;
-////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 Clone::Clone()
 {
    ;
 }
-/////////////////////////////////////
-Clone::Clone( SceneNode* original )
+////////////////////////////////////////////////////////////////////////////////
+/*Clone::Clone( SceneNode* original )
+{
+   CloneNode( original );
+}*/
+////////////////////////////////////////////////////////////////////////////////
+Clone::Clone( osg::Node* original )
 {
    CloneNode( original );
 }
-/////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Clone::~Clone()
 {
    ;
 }
-///////////////////////////////////////////
-void Clone::CloneNode( SceneNode* original )
+////////////////////////////////////////////////////////////////////////////////
+/*void Clone::CloneNode( SceneNode* original )
 {
    if ( !cloneTransform.valid() )
    {
-      cloneTransform = new DCS();
+		cloneTransform = new VE_SceneGraph::DCS();
    }
    
-   DCS* assemblyNode = dynamic_cast< DCS* >( original );
+	DCS* assemblyNode = dynamic_cast< VE_SceneGraph::DCS* >( original );
    if ( assemblyNode )
    {
       for ( int i =0; i < assemblyNode->GetNumChildren(); i++ )
@@ -75,9 +82,32 @@ void Clone::CloneNode( SceneNode* original )
    else
    {
       cloneTransform->addChild( dynamic_cast< osg::Node* >( original ) );
+  }
+}*/
+/////////////
+////////////////////////////////////////////////////////////////////////////////
+void Clone::CloneNode( osg::Node* original )
+{
+   if ( !cloneTransform.valid() )
+   {
+		cloneTransform = new VE_SceneGraph::DCS();
+   }
+   
+	osg::PositionAttitudeTransform* assemblyNode = dynamic_cast< osg::PositionAttitudeTransform* >( original );
+   if ( assemblyNode )
+   {
+      for ( unsigned int i =0; i < assemblyNode->getNumChildren(); i++ )
+      {
+         cloneTransform->addChild( assemblyNode->getChild( i ) );
+      }
+
+   }
+   else
+   {
+      cloneTransform->addChild( original );
    }
 }
-/////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 void Clone::SetTranslationArray( float* translation )
 {
    if ( cloneTransform.valid() )
@@ -85,7 +115,7 @@ void Clone::SetTranslationArray( float* translation )
       cloneTransform->SetTranslationArray( translation );
    }
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Clone::SetRotationArray( float* rotation )
 {
    if ( cloneTransform.valid() )
@@ -93,7 +123,7 @@ void Clone::SetRotationArray( float* rotation )
       cloneTransform->SetRotationArray(rotation);
    }
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Clone::SetScaleArray(float* scale)
 {
    if ( cloneTransform.valid() )
@@ -101,8 +131,8 @@ void Clone::SetScaleArray(float* scale)
       cloneTransform->SetScaleArray( scale );
    }
 }
-//////////////////////////////////
-DCS* Clone::GetClonedGraph()
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* Clone::GetClonedGraph()
 {
    if ( cloneTransform.valid() )
    {
@@ -110,3 +140,4 @@ DCS* Clone::GetClonedGraph()
    }
    return 0;
 }
+////////////////////////////////////////////////////////////////////////////////

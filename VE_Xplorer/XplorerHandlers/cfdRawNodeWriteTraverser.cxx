@@ -32,8 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/XplorerHandlers/cfdRawNodeWriteTraverser.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdSequence.h"
+
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
+#include "VE_Xplorer/SceneGraph/SceneNode.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
@@ -176,9 +177,9 @@ void cfdRawNodeWriteTraverser::setOutputFileName(std::string outFile)
    _fName.assign(outFile);//strcpy(_fName,outFile);
 }
 ////////////////////////////////////////////////////////////////////
-void cfdRawNodeWriteTraverser::setNode(VE_SceneGraph::cfdNode* root)
+void cfdRawNodeWriteTraverser::setNode(VE_SceneGraph::SceneNode* root)
 {
-   VE_SceneGraph::cfdRawNodeTraverser::setNode(root->GetRawNode(),true);
+	VE_SceneGraph::cfdRawNodeTraverser::setNode( dynamic_cast< osg::Node* >(root), true );
 }
 ///////////////////////////////////////////////////////////////////////////
 //swap the sequence nodes                                                //
@@ -194,8 +195,8 @@ void VE_Xplorer::_swapSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* cfdNT,
    //need to implement using getRawNode calls!!
 
    //Need to fix
-   VE_Xplorer::cfdRawNodeWriteTraverser* cfdWT = (VE_Xplorer::cfdRawNodeWriteTraverser*)cfdNT;
-#ifdef _PERFORMER
+   //VE_Xplorer::cfdRawNodeWriteTraverser* cfdWT = (VE_Xplorer::cfdRawNodeWriteTraverser*)cfdNT;
+/*#ifdef _PERFORMER
    if(node->getName()&&!strcmp(node->getName(),"cfdsequence")){
       VE_SceneGraph::cfdSequence* seq = dynamic_cast<VE_SceneGraph::cfdSequence*>(node);
       if(!seq)
@@ -266,8 +267,8 @@ void VE_Xplorer::_swapSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* cfdNT,
       //don't need to continue down 
       cfdWT->setTraversalStatus(VE_SceneGraph::cfdRawNodeTraverser::SKIP);
       return;
-   }
-   cfdWT->setTraversalStatus(VE_SceneGraph::cfdRawNodeTraverser::CONT);
+   }*/
+   //cfdWT->setTraversalStatus(VE_SceneGraph::cfdRawNodeTraverser::CONT);
    return;
 
 }

@@ -37,15 +37,15 @@
 #endif
 
 #include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
+
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
+#include "VE_Xplorer/SceneGraph/Clone.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdRawNodeWriteTraverser.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/XplorerHandlers/cfdScalarBarActor.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
@@ -54,6 +54,7 @@
 #include <sstream>
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/gmtl.h>
@@ -64,7 +65,8 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDCS )
+////////////////////////////////////////////////////////////////////////////////
+cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::DCS* worldDCS )
 {
    this->directory = specifiedDir;
 
@@ -73,14 +75,14 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
 
    // initialize in case the directory is not there...
    _cfdWT = NULL;
-   this->DCS = NULL;
-   this->_worldDCS = 0;
+   //this->dcs = NULL;
+   //this->_worldDCS = 0;
    pfb_count = 0;
    _cfdWT = NULL;
-   this->DCS = new VE_SceneGraph::cfdDCS();
-   this->DCS->SetName( "Teacher Node" );
+   this->dcs = new VE_SceneGraph::DCS();
+   this->dcs->SetName( "Teacher Node" );
    _worldDCS = worldDCS;
-   _worldDCS->AddChild( this->DCS );
+   _worldDCS->AddChild( this->dcs.get() );
 
    boost::filesystem::path dir_path( this->directory.c_str() );
 
@@ -136,45 +138,48 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
    vprDEBUG(vesDBG,1) << "Number of performer binaries: " << pfb_count
                           << std::endl << vprDEBUG_FLUSH;
 
-   //this->node = new VE_SceneGraph::cfdNode * [ this->numFiles ];
+   //this->node = new VE_SceneGraph::CADEntityHelper* [ this->numFiles ];
   
    for (int i=0; i<this->pfb_count; i++)
    {
-      this->node.push_back( new VE_SceneGraph::cfdNode() );
+      this->node.push_back( new VE_SceneGraph::CADEntityHelper() );
 	   this->node.back()->LoadFile( this->pfbFileNames[ i ] );
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::~cfdTeacher( )
 {
    int i;
    for ( i = 0; i < static_cast<int>(this->node.size()); i++)
    {  
-      this->DCS->RemoveChild( this->node[i] );
+      this->dcs->removeChild( this->node[i]->GetNode() );
+
       delete this->node[i];
    }
-   delete this->DCS;
+
+   //delete this->dcs;
+
    node.clear();
    
    vprDEBUG(vesDBG,1) << "exiting cfdTeacher destructor"
                           << std::endl << vprDEBUG_FLUSH;
 }
-
-VE_SceneGraph::cfdNode * cfdTeacher::getpfNode( int i )
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::CADEntityHelper* cfdTeacher::getpfNode( int i )
 {
    return this->node[i];
 }
-
-VE_SceneGraph::cfdDCS * cfdTeacher::GetcfdDCS()
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* cfdTeacher::GetDCS()
 {
-   return this->DCS;
+   return this->dcs.get();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int cfdTeacher::getNumberOfFiles()
 {
    return pfbFileNames.size();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 std::string cfdTeacher::getFileName( int i )
 {
    if ( i >= 0 && i < static_cast<int>(this->pfbFileNames.size()) )
@@ -186,7 +191,7 @@ std::string cfdTeacher::getFileName( int i )
       return NULL;
    }
 }
-//////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::RecordScene()
 { 
    //check if the path to STORED_FILES exists
@@ -219,7 +224,7 @@ void cfdTeacher::RecordScene()
                              << std::endl << vprDEBUG_FLUSH;
 
    // store the world DCS matrix..
-   if ( _worldDCS )
+   if ( _worldDCS.valid() )
    {
      /* gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
@@ -229,10 +234,11 @@ void cfdTeacher::RecordScene()
       // Make an identity matrix
       gmtl::identity( I );
       this->_worldDCS->SetMat( I );*/
-      VE_SceneGraph::cfdClone* graphToWrite = new VE_SceneGraph::cfdClone(_worldDCS);
+		VE_SceneGraph::Clone* graphToWrite = new VE_SceneGraph::Clone(_worldDCS.get());
 
-      writePFBFile(graphToWrite->GetClonedGraph()/*this->_worldDCS*/, pfb_filename );
-      delete graphToWrite;
+      writePFBFile( graphToWrite->GetClonedGraph() /*this->_worldDCS*/, pfb_filename );
+
+		delete graphToWrite;
       graphToWrite = 0;
       //this->_worldDCS->SetMat( m );
    }
@@ -241,7 +247,7 @@ void cfdTeacher::RecordScene()
       writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(), pfb_filename);
    }
 
-   this->node.push_back( new VE_SceneGraph::cfdNode() );
+   this->node.push_back( new VE_SceneGraph::CADEntityHelper() );
    this->node.back()->LoadFile( this->pfbFileNames.back() );
    // store the active geometry and viz objects as a pfb
    // (but not the sun, menu, laser, or text)
@@ -252,61 +258,61 @@ void cfdTeacher::RecordScene()
     // increment the counter and reset the id to -1...
     this->pfb_count ++;
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::LoadScene(unsigned int whichChild)
 {
-   if ( this->GetcfdDCS()->GetNumChildren() == 0 )
+   if ( this->GetDCS()->getNumChildren() == 0 )
    {
       vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: addChild" 
                          << std::endl << vprDEBUG_FLUSH;
             
-      this->GetcfdDCS()->AddChild( 
-         this->getpfNode( whichChild ) );
+      this->GetDCS()->addChild( this->getpfNode( whichChild )->GetNode() );
    }
    else
    {
       vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: replaceChild" 
                          << std::endl << vprDEBUG_FLUSH;
-      this->GetcfdDCS()->ReplaceChild( this->GetcfdDCS()->GetChild( 0 ), this->getpfNode( whichChild ) );
+      this->GetDCS()->replaceChild( this->GetDCS()->GetChild( 0 ), this->getpfNode( whichChild )->GetNode() );
    }
 }
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::ClearStoredScenes()
 {
    vprDEBUG(vesDBG,2) << " cfdTeacher::CheckCommandId : CLEAR_ALL or CLEAR_PFB_FILE "
                              << std::endl  << vprDEBUG_FLUSH;
-   if ( this->DCS != NULL )
+   if ( this->dcs != NULL )
    {
-      if ( this->GetcfdDCS()->GetNumChildren() > 0 )
+      if ( this->GetDCS()->getNumChildren() > 0 )
       {
-         this->GetcfdDCS()->RemoveChild( this->GetcfdDCS()->GetChild( 0 ) );
+         this->GetDCS()->removeChild( this->GetDCS()->GetChild( 0 ) );
       }
    }
 }
+////////////////////////////////////////////////////////////////////////////////
 bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_PFB_FILE )
    {
       vprDEBUG(vesDBG,1) << "LOAD_PFB_FILE: numChildren = " 
-         << this->GetcfdDCS()->GetNumChildren()
+         << this->GetDCS()->getNumChildren()
          << ", cfdTeacher_state = "
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      if ( this->GetcfdDCS()->GetNumChildren() == 0 )
+      if ( this->GetDCS()->getNumChildren() == 0 )
       {
          vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: addChild" 
                                 << std::endl << vprDEBUG_FLUSH;
             
-         this->GetcfdDCS()->AddChild( 
-            this->getpfNode( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) ) );
+         this->GetDCS()->addChild( 
+            this->getpfNode( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) )->GetNode() );
       }
       else
       {
          vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: replaceChild" 
                                 << std::endl << vprDEBUG_FLUSH;
          int child = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-         this->GetcfdDCS()->ReplaceChild( this->GetcfdDCS()->GetChild( 0 ), this->getpfNode( child ) );
+         this->GetDCS()->replaceChild( this->GetDCS()->GetChild( 0 ), this->getpfNode( child )->GetNode() );
       }
       return true;
    }
@@ -315,11 +321,11 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
    {      
       vprDEBUG(vesDBG,2) << " cfdTeacher::CheckCommandId : CLEAR_ALL or CLEAR_PFB_FILE "
                              << std::endl  << vprDEBUG_FLUSH;
-      if ( this->DCS != NULL )
+      if ( this->dcs != NULL )
       {
-         if ( this->GetcfdDCS()->GetNumChildren() > 0 )
+         if ( this->GetDCS()->getNumChildren() > 0 )
          {
-            this->GetcfdDCS()->RemoveChild( this->GetcfdDCS()->GetChild( 0 ) );
+            this->GetDCS()->removeChild( this->GetDCS()->GetChild( 0 ) );
          }
          return true;
       }
@@ -355,16 +361,13 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
                              << std::endl << vprDEBUG_FLUSH;
 
       
-
-
-
       // store the world DCS matrix..
-      if ( _worldDCS )
+      if ( _worldDCS.valid() )
       {
          
-         cfdGroup* tempGroup = new cfdGroup();
+			osg::ref_ptr< VE_SceneGraph::Group > tempGroup = new VE_SceneGraph::Group();
                   
-         //tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
+         //tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetDCS());
          
          gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
@@ -379,13 +382,13 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
          //this->_worldDCS->SetScaleArray( scaleUnity );
       
         
-         tempGroup->AddChild(_worldDCS);
-         writePFBFile(this->_worldDCS,(std::string)pfb_filename.c_str());
+         tempGroup->AddChild( _worldDCS.get() );
+         writePFBFile( this->_worldDCS.get(), (std::string)pfb_filename.c_str() );
 
 
-         tempGroup->RemoveChild(_worldDCS);
-         //tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetcfdDCS());
-         delete tempGroup;
+         tempGroup->RemoveChild( _worldDCS.get() );
+         //tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetDCS());
+
          /*float* scaleArray = this->_worldDCS->GetScaleArray();
          float tempScale = 1.0f / scaleArray[ 0 ];
          gmtl::Matrix44f scaleMat;
@@ -398,15 +401,13 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       }
       else
       {
-         writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(),
-                    (std::string)pfb_filename);
+         writePFBFile( VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(), (std::string)pfb_filename );
       }
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
       int store_int = 0;
 
-      vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << store_int
-                             << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << store_int << std::endl << vprDEBUG_FLUSH;
       
       // increment the counter and reset the id to -1...
       this->pfb_count ++;
@@ -415,14 +416,14 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 
    return false;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::UpdateCommand()
 {
    std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 // Need to fix later
-
-void cfdTeacher::writePFBFile( VE_SceneGraph::cfdNode* graph,std::string fileName)
+////////////////////////////////////////////////////////////////////////////////
+void cfdTeacher::writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName)
 {
    
    VE_Xplorer::cfdRawNodeWriteTraverser cfdWT(fileName);
@@ -453,4 +454,4 @@ void cfdTeacher::writePFBFile( VE_SceneGraph::cfdNode* graph,std::string fileNam
    _cfdWT->writePfbFile();
    */
 }
-
+////////////////////////////////////////////////////////////////////////////////

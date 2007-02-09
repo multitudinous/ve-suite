@@ -33,6 +33,8 @@
 #include "VE_Xplorer/SceneGraph/cfdFileInfo.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 using namespace VE_SceneGraph;
 
 fileInfo::fileInfo( )

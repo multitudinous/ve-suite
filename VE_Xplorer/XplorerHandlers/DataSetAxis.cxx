@@ -33,7 +33,6 @@
 #include "VE_Xplorer/XplorerHandlers/DataSetAxis.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 
 #include <osg/Node>
 #include <osg/Geode>
@@ -62,7 +61,7 @@ DataSetAxis::DataSetAxis( void )
    xAxisLabel = "X Axis";
    yAxisLabel = "Y Axis";
    zAxisLabel = "Z Axis";
-   axisGroup = new cfdGroup();
+	axisGroup = new VE_SceneGraph::Group();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataSetAxis::~DataSetAxis()
@@ -95,7 +94,7 @@ void DataSetAxis::SetAxisLabels( std::string xAxis,
 void DataSetAxis::CreateAxis( void )
 {
    //Now add the labels
-   osg::Group* tempGroup = dynamic_cast< osg::Group* >( axisGroup->GetRawNode() );
+   osg::Group* tempGroup = axisGroup.get() ;
    size_t numChildren = tempGroup->getNumChildren();
    for ( size_t i = 0; i < numChildren; ++i )
    {
@@ -112,9 +111,9 @@ void DataSetAxis::CreateAxis( void )
    tempGroup->addChild( CreateAxisLines().get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdGroup* DataSetAxis::GetAxis( void )
+VE_SceneGraph::Group* DataSetAxis::GetAxis( void )
 {
-   return axisGroup;
+   return axisGroup.get();
 }
 //////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr< osg::Geode > DataSetAxis::CreateAxisLines( void )

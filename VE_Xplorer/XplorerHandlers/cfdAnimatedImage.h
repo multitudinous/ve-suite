@@ -40,10 +40,17 @@ cfdAnimatedImage API
 */
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkGlyph3D;
 class vtkSphereSource;
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
 
 namespace VE_Xplorer
 {
@@ -54,7 +61,7 @@ namespace VE_Xplorer
 
 namespace VE_SceneGraph
 {
-   class cfdDCS;
+   class DCS;
 }
 
 namespace VE_Xplorer
@@ -84,7 +91,7 @@ namespace VE_Xplorer
          std::vector< cfdImage* > _images;
 
       private:
-         VE_SceneGraph::cfdDCS* _dcs;
+			osg::ref_ptr< VE_SceneGraph::DCS > _dcs;
          char basename[256];
          int frames;
          int ex_x, ex_y;

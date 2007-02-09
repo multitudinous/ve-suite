@@ -44,20 +44,20 @@ DataSetScalarBar API
 #include <iostream>
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 #include <osgSim/ScalarsToColors>
 #include <osgSim/ColorRange>
 #include <osgSim/ScalarBar>
 using namespace osgSim;
 using osgSim::ScalarBar;
 
-
+#include <osg/ref_ptr>
 #include <osg/Geode>
 
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdGeode;
-   class cfdGroup;
+   class DCS;
 }
 
 namespace VE_Xplorer
@@ -85,7 +85,7 @@ public:
    /// cleanup and add the scalar bar to the dcs
    void AddScalarBarToGroup( void );
    /// Get the scalar bar that was created
-   VE_SceneGraph::cfdDCS* GetScalarBar( void );
+	VE_SceneGraph::DCS* GetScalarBar( void );
    ///Create the osg scalar bar
    osg::ref_ptr< ScalarBar > CreateScalarBar( void );
    // Create a custom scalar printer
@@ -132,7 +132,7 @@ public:
    };
 
 private:
-   VE_SceneGraph::cfdDCS* scalarBarDCS;
+   osg::ref_ptr< VE_SceneGraph::DCS > scalarBarDCS;
    double bbox[ 6 ];
 };
 }

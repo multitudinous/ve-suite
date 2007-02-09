@@ -32,11 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADTransformEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/SceneGraph/cfdFILE.h"
 
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include "VE_Xplorer/SceneGraph/Clone.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -88,7 +86,7 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
       VE_XML::DataValuePair* newTransform = command->GetDataValuePair("Transform");
       
-      VE_SceneGraph::cfdDCS* transform = 0;
+		VE_SceneGraph::DCS* transform = 0;
       if(nodeType->GetDataString() == std::string("Part"))
       {
          if(_activeModel->PartExists(nodeID->GetDataString()))
@@ -110,7 +108,7 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
             transform = _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph();
          }
       }
-      if(transform)
+      if( transform )
       {
          VE_XML::Transform* rawTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());
          transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );

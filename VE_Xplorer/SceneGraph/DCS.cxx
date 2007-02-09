@@ -268,13 +268,11 @@ void DCS::SetRotationArray( std::vector<double> array)
    //rph              
    osg::Matrixd rotateMat;
    
-   //std::cout << array[0] << std::endl;
    rotateMat.makeRotate(osg::DegreesToRadians(array[2]),roll,
                         osg::DegreesToRadians(array[1]),pitch,
                         osg::DegreesToRadians(array[0]),yaw);
    osg::Quat quat;
    rotateMat.get( quat );
-   std::cout << quat[ 0 ] << " " << quat[ 1 ] << " " << quat[ 2 ] << " " << quat[ 3 ] << std::endl;
    this->setAttitude( quat );
    this->setPivotPoint( osg::Vec3d( 0, 0, 0) );
 #elif _OPENSG
@@ -485,7 +483,7 @@ int DCS::RemoveChild( SceneNode* child )
    exit( 1 );
    return -1;
 #elif _OSG
-   return this->removeChild( dynamic_cast< Node* >( child ));
+	return this->removeChild( dynamic_cast< osg::Node* >( child ));
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -589,6 +587,32 @@ osg::Node* DCS::GetChild( unsigned int position )
 btTransform* DCS::GetPhysicsTransform( void )
 {
    return bulletTransform;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::ToggleDisplay(bool onOff)
+{
+   std::string value = (onOff==true)?"ON":"OFF";
+   ToggleDisplay(value);
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::ToggleDisplay(std::string onOff)
+{      
+   if(onOff == "ON")
+   {
+#ifdef _OSG
+      this->setNodeMask(1);
+#elif _OPENSG
+#elif _PERFORMER
+#endif
+   }
+   else if(onOff == "OFF")
+   {
+#ifdef _OSG
+      this->setNodeMask(0);
+#elif _OPENSG
+#elif _PERFORMER
+#endif
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::UpdatePhysicsTransform( void )

@@ -59,7 +59,6 @@
 #include "VE_Xplorer/XplorerHandlers/Trackball.h"
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"

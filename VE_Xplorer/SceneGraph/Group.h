@@ -97,6 +97,12 @@ public:
    int GetNumChildren( void );
    ///Set the name of the node
    const std::string GetName( void );
+	///
+	///\param
+	void ToggleDisplay( std::string onOff );
+	///
+	///\param
+	void ToggleDisplay( bool onOff );
 };
 }
 

@@ -39,18 +39,27 @@ cfdScalarBarActor API
 * A rebuilt class from vtkScalarBarActor(2-D) for use in the
 * 3-D space.
 */
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/Geode.h"
+
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
 
 #include <string>
 #include <vector>
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
-//#include <string>
 
 namespace VE_SceneGraph
 {
-   class cfdDCS;
-   class cfdGeode;
-   class cfdGroup;
+   class DCS;
+	class Group;
+   class Geode;
 }
+
 class vtkLookupTable;
 class vtkVectorText;
 
@@ -66,7 +75,7 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdScalarBarActor : public cfdGlobalBase
    {
       public:
-         cfdScalarBarActor( std::string, VE_SceneGraph::cfdGroup* );
+         cfdScalarBarActor( std::string, VE_SceneGraph::Group* );
          ~cfdScalarBarActor();
 
    // compare VjObs_i commandArray with its child's value
@@ -122,7 +131,7 @@ namespace VE_Xplorer
    // Create the scalar bar and convert it into pfGeode
    void Execute();
 
-   VE_SceneGraph::cfdDCS * GetcfdDCS( void);
+	VE_SceneGraph::DCS* GetDCS( void);
 
 private:
    float itsX[3];
@@ -135,14 +144,14 @@ private:
    double range[2];
    float dScalar;
    float titleTextScale;
-   VE_SceneGraph::cfdGeode* pfaPolyActor;
-   VE_SceneGraph::cfdGeode* pftitleActor;
-   VE_SceneGraph::cfdGeode* pfLabelActor[5];
+	osg::ref_ptr< VE_SceneGraph::Geode > pfaPolyActor;
+   osg::ref_ptr< VE_SceneGraph::Geode > pftitleActor;
+   osg::ref_ptr< VE_SceneGraph::Geode > pfLabelActor[5];
    int numTextLabels;   // number of numerical labels on the scalar bar legend
-   VE_SceneGraph::cfdGeode* cubeAxesGeode;
+   osg::ref_ptr< VE_SceneGraph::Geode > cubeAxesGeode;
 
-   VE_SceneGraph::cfdDCS*  scalarBar;
-   VE_SceneGraph::cfdGroup* _rootNode;
+   osg::ref_ptr< VE_SceneGraph::DCS >  scalarBar;
+	osg::ref_ptr< VE_SceneGraph::Group > _rootNode;
    std::string _param;
    cfdDataSet* _activeDataSet;
    float scalarBarPos[ 3 ];

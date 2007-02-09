@@ -38,6 +38,9 @@ cfdSteadyStateVizHandler API
 /*!\class VE_Xplorer::cfdSteadyStateVizHandler
 * 
 */
+#include "VE_Installer/include/VEConfig.h"
+
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #include <vector>
 #include <map>
@@ -45,7 +48,11 @@ cfdSteadyStateVizHandler API
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Singleton.h>
 
-#include "VE_Installer/include/VEConfig.h"
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
+
 class vtkPolyData;
 
 namespace VE_Xplorer
@@ -78,8 +85,7 @@ namespace VE_Xplorer
 
 namespace VE_SceneGraph
 {
-   class cfdTempAnimation;
-   class cfdDCS;
+   class DCS;
 }
 
 namespace VE_XML
@@ -91,6 +97,7 @@ namespace VE_EVENTS
 {
    class EventHandler;
 }
+
 namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
@@ -136,7 +143,7 @@ public:
    
    // Helper functions
    void SetCommandArray( cfdCommandArray* );
-   VE_SceneGraph::cfdTempAnimation* GetActiveAnimation( void );
+   //VE_SceneGraph::cfdTempAnimation* GetActiveAnimation( void );
    bool TransientGeodesIsBusy();
 
 private:
@@ -171,9 +178,9 @@ private:
    cfdTextOutput*       textOutput;
    // Common objects for all functions
    cfdCommandArray*  commandArray;
-   VE_SceneGraph::cfdDCS*     _activeDataSetDCS;
+	osg::ref_ptr< VE_SceneGraph::DCS > _activeDataSetDCS;
    cfdObjects* _activeObject;
-   VE_SceneGraph::cfdTempAnimation* _activeTempAnimation;
+   //VE_SceneGraph::cfdTempAnimation* _activeTempAnimation;
 
    // Classes and variables for multithreading.
    vpr::Thread* vjTh[1];

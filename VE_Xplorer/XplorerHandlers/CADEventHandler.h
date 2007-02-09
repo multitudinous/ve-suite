@@ -40,6 +40,7 @@
  */
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+
 namespace VE_XML
 {
    class XMLObject;

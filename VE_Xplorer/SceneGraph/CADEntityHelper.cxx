@@ -34,10 +34,12 @@
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
 #include "VE_Xplorer/SceneGraph/Geode.h"
+
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <fstream>
+
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 //#include <cstdlib>
 
@@ -91,7 +93,6 @@
 #include <sstream>
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
-#include "VE_Xplorer/SceneGraph/cfdSequence.h"
 
 namespace VE_SceneGraph{
 
@@ -197,8 +198,6 @@ osg::Node* CADEntityHelper::GetNode(void)
 #elif _OPENSG
 #endif
 {
-   vprDEBUG(vesDBG,2) << "|\t\tNode::GetRawNode" 
-                              << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    return cadNode;
 #elif _OSG

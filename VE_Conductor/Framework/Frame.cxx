@@ -252,7 +252,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    GetConfig(NULL);
    
    CreateMenu();
-   //CreateTB();
+   CreateTB();
    CreateStatusBar();
    SetStatusText( _("VE-Conductor Status") );
 
@@ -794,7 +794,7 @@ void AppFrame::CreateMenu()
    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
    xplorerMenu->Append( XPLORER_DEVICES,    _("Device Mode"),        xplorerDeviceMenu,  _("Used to change device modes and properties") );
 	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
-   //xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),            xplorerDisplayMenu, _("Used to change display preferences") );
+   xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),            xplorerDisplayMenu, _("Used to change display preferences") );
    xplorerMenu->Append( XPLORER_VIEW,       _("View"),               xplorerViewMenu,    _("Used to change the view") );
    //add the view settings
    xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    xplorerView,        _("Used to change the view in xplorer") );

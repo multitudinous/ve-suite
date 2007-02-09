@@ -41,10 +41,6 @@ cfdApp API
 *
 */
 
-namespace VE_SceneGraph
-{
-   class cfdDCS;
-}
 
 namespace VE_Xplorer
 {

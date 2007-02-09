@@ -38,19 +38,16 @@ cfdModelHandler API
 /*!\class VE_Xplorer::cfdModelHandler
 * 
 */
-
 #include <vpr/Util/Singleton.h>
+
 #include <map>
 #include <utility>
-namespace VE_SceneGraph
-{
-   class cfdDCS;
-   class cfdGroup;
-}
+
 namespace VE_XML
 {
    class Command;
 }
+
 namespace VE_Xplorer
 {
    class cfdDataSet;
@@ -59,10 +56,12 @@ namespace VE_Xplorer
    class cfdReadParam;
    class cfdScalarBarActor;
 }
+
 namespace VE_EVENTS
 {
    class EventHandler;
 }
+
 #ifdef _OSG
 #ifdef VE_PATENTED
 namespace VE_TextureBased
@@ -100,7 +99,7 @@ public:
    void SetXMLCommand( VE_XML::Command* inputCommand );
    ///Returns the current xml command
    VE_XML::Command* GetXMLCommand( void );
-   void CreateObjects( void );      
+   //void CreateObjects( void );      
    void LoadSurfaceFiles( std::string );
    vtkPolyData* GetArrow( void );
    cfdModel* GetModel( int );

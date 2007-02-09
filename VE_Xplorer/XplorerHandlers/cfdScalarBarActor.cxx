@@ -34,9 +34,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
-#include "VE_Xplorer/SceneGraph/cfdGeode.h"
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
 
@@ -66,15 +63,14 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-cfdScalarBarActor::cfdScalarBarActor( std::string param, VE_SceneGraph::cfdGroup* rootNode )
+cfdScalarBarActor::cfdScalarBarActor( std::string param, VE_SceneGraph::Group* rootNode )
 {
-   vprDEBUG(vesDBG,2) << "constructing cfdScalarBarActor" 
-                          << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,2) << "constructing cfdScalarBarActor" << std::endl << vprDEBUG_FLUSH;
 
    _param = param;
    _rootNode = rootNode;
    _activeDataSet = 0;
-   cubeAxesGeode = 0;
+   //cubeAxesGeode = 0;
    _readParam = new cfdReadParam();
    // Initialize the all the variables
    this->SetPosition( -5.0f, 6.0f, 0.0f );
@@ -98,7 +94,7 @@ cfdScalarBarActor::cfdScalarBarActor( std::string param, VE_SceneGraph::cfdGroup
 
    this->titleScalar = vtkVectorText::New();
 
-   this->scalarBar = new VE_SceneGraph::cfdDCS();
+   this->scalarBar = new VE_SceneGraph::DCS();
 
    //this->CreateObjects();
 }
@@ -378,7 +374,7 @@ void cfdScalarBarActor::Execute()
    for ( i=0; i<this->numTextLabels; i++ )
    {
       labelScalar[i] = vtkVectorText::New();
-      this->pfLabelActor[i] = new VE_SceneGraph::cfdGeode();
+      this->pfLabelActor[i] = new VE_SceneGraph::Geode();
    }
    
    // creating the numerical labels on the scalar bar legend
@@ -444,8 +440,8 @@ void cfdScalarBarActor::Execute()
       labelMapper->SetInput( labelFilter->GetOutput() );
       labelActor->SetMapper( labelMapper );
 
-      this->pfLabelActor[i]->TranslateTocfdGeode( labelActor );
-      this->scalarBar->AddChild( this->pfLabelActor[i] );
+      this->pfLabelActor[i]->TranslateToGeode( labelActor );
+      this->scalarBar->AddChild( this->pfLabelActor[i].get() );
    }
 
    /*for ( i = 0; i < this->numTextLabels; i ++ )
@@ -454,13 +450,13 @@ void cfdScalarBarActor::Execute()
    }
    delete [] labelText;*/
 
-   this->pfaPolyActor = new VE_SceneGraph::cfdGeode();
-   this->pfaPolyActor->TranslateTocfdGeode(aPolyActor);
-   this->scalarBar->AddChild(this->pfaPolyActor); 
+   this->pfaPolyActor = new VE_SceneGraph::Geode();
+   this->pfaPolyActor->TranslateToGeode(aPolyActor);
+   this->scalarBar->AddChild( this->pfaPolyActor.get() ); 
 
-   this->pftitleActor = new VE_SceneGraph::cfdGeode();
-   this->pftitleActor->TranslateTocfdGeode( titleActor );
-   this->scalarBar->AddChild(this->pftitleActor); 
+   this->pftitleActor = new VE_SceneGraph::Geode();
+   this->pftitleActor->TranslateToGeode( titleActor );
+   this->scalarBar->AddChild( this->pftitleActor.get() ); 
 
    aPolyActor->Delete();
    titleTransform->Delete();
@@ -479,9 +475,9 @@ void cfdScalarBarActor::Execute()
    labelScalar = NULL;
 }
 
-VE_SceneGraph::cfdDCS* cfdScalarBarActor::GetcfdDCS(void )
+VE_SceneGraph::DCS* cfdScalarBarActor::GetDCS(void )
 {
-   return this->scalarBar;
+   return this->scalarBar.get();
 }
 
 bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
@@ -500,12 +496,12 @@ bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == 0 ) )
    {
       //std::cout << "trying to remove a scalar bar" << std::endl;
-      if ( this->scalarBar )
+      if ( this->scalarBar.valid() )
       {
-         this->_rootNode->RemoveChild( this->scalarBar );
-         //this->worldDCS->removeChild( this->scalarBarActor->getpfDCS() );
-         delete this->scalarBar;
-         this->scalarBar = NULL;
+			this->_rootNode->RemoveChild( this->scalarBar.get() );
+         //this->worldDCS->RemoveChild( this->scalarBarActor->getpfDCS() );
+         //delete this->scalarBar;
+         //this->scalarBar = NULL;
       }
    }
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR ) || 
@@ -527,12 +523,12 @@ void cfdScalarBarActor::RefreshScalarBar()
 {
    vprDEBUG(vesDBG,1) << " RefreshScalarBar " 
                           << std::endl << vprDEBUG_FLUSH;
-   if ( this->scalarBar )
+   if ( this->scalarBar.valid() )
    {
-      this->_rootNode->RemoveChild( this->scalarBar );
-      //this->worldDCS->removeChild( this->scalarBarActor->getpfDCS() );
-      delete this->scalarBar;
-      this->scalarBar = NULL;
+		this->_rootNode->RemoveChild( this->scalarBar.get() );
+      //this->worldDCS->RemoveChild( this->scalarBarActor->getpfDCS() );
+      //delete this->scalarBar;
+      //this->scalarBar = NULL;
    }
 
    if ( this->_activeDataSet == NULL ||
@@ -545,7 +541,7 @@ void cfdScalarBarActor::RefreshScalarBar()
 
    // Fix this. Don't think we need a DCS here. 
    // Could speed up the code a little bit.
-   this->scalarBar = new VE_SceneGraph::cfdDCS();
+   this->scalarBar = new VE_SceneGraph::DCS();
 
    // if the param file specified scalarBar settings, apply them here...
    if ( this->scalarBarH != 0.0 )
@@ -584,8 +580,8 @@ void cfdScalarBarActor::RefreshScalarBar()
 
    // give the scalarBar DCS a name so that it can be detected during a CLEAR_ALL
    this->scalarBar->SetName("Scalar Bar");
-   this->_rootNode->AddChild( this->scalarBar );
-   //this->worldDCS->addChild( this->scalarBarActor->getpfDCS() );
+   this->_rootNode->AddChild( this->scalarBar.get() );
+   //this->worldDCS->AddChild( this->scalarBarActor->getpfDCS() );
 
    // Test code for the cubeaxesactor
    /*vtkCamera* camera = vtkCamera::New();
@@ -615,8 +611,8 @@ void cfdScalarBarActor::RefreshScalarBar()
       delete cubeAxesGeode;
    }
 
-   cubeAxesGeode = new cfdGeode();
-   cubeAxesGeode->TranslateTocfdGeode( tempActor );
+   cubeAxesGeode = new VE_SceneGraph::Geode();
+   cubeAxesGeode->TranslateToGeode( tempActor );
    this->scalarBar->AddChild( cubeAxesGeode );*/
 }
 

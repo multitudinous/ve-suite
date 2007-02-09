@@ -39,6 +39,7 @@ cfdQuatCamHandler API
 /*!\class VE_Xplorer::cfdQuatCamHandler
 * 
 */
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>
@@ -54,7 +55,7 @@ cfdQuatCamHandler API
 
 namespace VE_SceneGraph
 {
-   class cfdDCS;
+   class DCS;
 }
 
 namespace VE_Xplorer
@@ -76,13 +77,18 @@ namespace VE_XML
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 
+#ifdef _OSG
+#include <osg/ref_ptr>
+#elif _PERFORMER
+#endif
+
 namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS cfdQuatCamHandler : public cfdGlobalBase
 {
 public:
    //Constructors
-   //cfdQuatCamHandler( VE_SceneGraph::cfdDCS*, cfdNavigate*, std::string );
+   //cfdQuatCamHandler( VE_SceneGraph::DCS* , cfdNavigate*, std::string );
 
    //Destructor
    //~cfdQuatCamHandler();
@@ -97,9 +103,9 @@ public:
 
    //void CreateObjects( void );
 
-   ///Set the cfdDCS 
-   ///\param newDCS The new cfdDCS
-   void SetDCS(VE_SceneGraph::cfdDCS* newDCS);
+   ///Set the DCS 
+   ///\param newDCS The new DCS
+   void SetDCS( VE_SceneGraph::DCS* newDCS );
 
    ///Set cfdNavigate
    ///\param nav The new cfdNavigate
@@ -111,13 +117,13 @@ public:
    ///Clear out all the saved quaternions
    void ClearQuaternionData();
 
-   void LoadData(double*, VE_SceneGraph::cfdDCS*);
+   void LoadData( double*, VE_SceneGraph::DCS* );
 
-   void WriteToFile(std::string);
+   void WriteToFile( std::string );
 
-   void LoadFromFile(std::string);
+   void LoadFromFile( std::string );
 
-   void Relocate(VE_SceneGraph::cfdDCS* worldDCS, cfdNavigate* nav); 
+   void Relocate( VE_SceneGraph::DCS* worldDCS, cfdNavigate* nav ); 
 
    void RemoveViewPt( void );
 
@@ -163,7 +169,7 @@ protected:
 
 private:
    cfdQuatCam* thisQuatCam;
-   VE_SceneGraph::cfdDCS* _worldDCS;
+   osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
    cfdNavigate* _nav;
    cfdReadParam* _readParam;
    std::string   _param;
@@ -197,7 +203,7 @@ private:
 
     // Required so that vpr::Singleton can instantiate this class.
    //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
-   cfdQuatCamHandler(/* VE_SceneGraph::cfdDCS* worldDCS,cfdNavigate* nav, std::string param */);
+   cfdQuatCamHandler(/* VE_SceneGraph::DCS* worldDCS,cfdNavigate* nav, std::string param */);
 
    ~cfdQuatCamHandler( void ){ ; }// Never gets called, don't implement
    vprSingletonHeader( cfdQuatCamHandler );
