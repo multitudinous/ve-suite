@@ -16,6 +16,7 @@ namespace osg
 {
    class Fog;
 }
+#include <osg/Fog>
 #endif
 
 class btRigidBody;
