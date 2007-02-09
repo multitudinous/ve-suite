@@ -17,8 +17,7 @@ except:
 # Add flagpoll from the source directory to the end of the path so it is found
 # LAST.
 local_fp_dir = pj(os.getcwd(), 'Tools', 'flagpoll') 
-os.environ['PATH'] += '%s%s' % (os.path.pathsep, local_fp_dir)
-sys.path.insert(0,local_fp_dir)
+os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
 
 # Set FLAGPOLL_PATH to the local flagpoll if necessary.
 if not os.environ.has_key('FLAGPOLL_PATH'):
