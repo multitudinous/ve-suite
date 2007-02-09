@@ -72,7 +72,7 @@ Geode::Geode( void )
 
    _vtkDebugLevel = 0;
 
-   SetVENodeType(VE_GEODE);
+   //SetVENodeType(VE_GEODE);
 }
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ Geode::Geode(const osg::Geode& oGeode)
 {
    _geode = new osg::Geode(oGeode,osg::CopyOp::DEEP_COPY_ALL);
    _vtkDebugLevel = 0;
-   SetVENodeType(VE_GEODE);
+   //SetVENodeType(VE_GEODE);
 }
 ////////////////////////////////////////////////////////////////////////////////
 Geode& Geode::operator=(const osg::Geode& oGeode)
@@ -122,7 +122,7 @@ Geode::Geode( const Geode& input )
 #endif
    this->_vtkDebugLevel = input._vtkDebugLevel;
     
-   SetVENodeType(VE_GEODE);
+   //SetVENodeType(VE_GEODE);
 }
 ////////////////////////////////////////////////////////////////////////////////
 Geode& Geode::operator=( const Geode& input )
@@ -137,7 +137,7 @@ Geode& Geode::operator=( const Geode& input )
 #elif _OPENSG
 #endif
       this->_vtkDebugLevel = input._vtkDebugLevel;
-      SetVENodeType(VE_GEODE);
+      //SetVENodeType(VE_GEODE);
    }
    return *this;
 }

@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/cfdGeode.h"
+#include "VE_Xplorer/SceneGraph/Utilities/PhongLoader.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGeode.h>
@@ -40,6 +41,7 @@
 #include <osg/Geode>
 #include <osg/Node>
 #include <osg/CopyOp>
+#include <osg/BlendFunc>
 #include "VE_Xplorer/SceneGraph/vtkActorToOSG.h"
 #elif _OPENSG
 #endif
@@ -166,6 +168,20 @@ void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
    VE_SceneGraph::vtkActorToPF( actor, this->_geode, _vtkDebugLevel );
 #elif _OSG
    VE_SceneGraph::vtkActorToOSG(actor, _geode,_vtkDebugLevel);
+   //Add phong shading to the geodes
+   /*osg::ref_ptr<osg::StateSet> geodeProperties = _geode->getOrCreateStateSet();
+   VE_SceneGraph::Utilities::PhongLoader phongShader;
+   phongShader.SetStateSet(geodeProperties.get());
+   phongShader.SyncShaderAndStateSet();
+
+   osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+   bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+   geodeProperties->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+   geodeProperties->setRenderBinDetails(99,std::string("DepthSortedBin"));
+   geodeProperties->setMode(GL_BLEND,osg::StateAttribute::ON);
+   geodeProperties->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+   _geode->setStateSet(geodeProperties.get());*/
+
 #elif _OPENSG
 #endif
 }

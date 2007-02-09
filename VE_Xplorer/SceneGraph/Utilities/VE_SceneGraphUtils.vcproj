@@ -192,6 +192,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PhongLoader.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ShaderHelper.cxx"
 				>
 			</File>
@@ -207,6 +211,10 @@
 			</File>
 			<File
 				RelativePath=".\MaterialHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PhongLoader.h"
 				>
 			</File>
 			<File

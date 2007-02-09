@@ -42,12 +42,13 @@
 
 #include "VE_Xplorer/SceneGraph/cfdNode.h"
 #include "VE_Xplorer/SceneGraph/cfdSceneNode.h"
+#include "VE_Xplorer/SceneGraph/Utilities/PhongLoader.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #ifdef _PERFORMER
 #include <Performer/pfdb/pfpfb.h>
 #elif _OSG
-
+#include <osg/BlendFunc>
 #include <osgDB/WriteFile>
 #endif
 using namespace VE_Xplorer;
@@ -196,6 +197,19 @@ void cfdGraphicsObject::SetGeodes( std::vector< VE_SceneGraph::cfdGeode* > input
    for ( unsigned int i = 0; i < input.size(); ++i )
    {
       this->geodes.push_back( new VE_SceneGraph::cfdGeode( *input.at( i ) ) );
+      //Add phong shading to the geodes
+      osg::ref_ptr<osg::StateSet> geodeProperties = geodes.at(i)->GetRawNode()->getOrCreateStateSet();
+   VE_SceneGraph::Utilities::PhongLoader phongShader;
+   phongShader.SetStateSet(geodeProperties.get());
+   phongShader.SyncShaderAndStateSet();
+
+   osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+   bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+   geodeProperties->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+   geodeProperties->setRenderBinDetails(99,std::string("DepthSortedBin"));
+   geodeProperties->setMode(GL_BLEND,osg::StateAttribute::ON);
+   geodeProperties->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+   //_geode->setStateSet(geodeProperties.get());
    }
 }
 

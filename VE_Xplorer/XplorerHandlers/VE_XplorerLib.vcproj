@@ -458,10 +458,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdWriteTraverser.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\ChangeBackgroundColorEventHandler.cxx"
 				>
 			</File>
@@ -972,10 +968,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdVectors.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdWriteTraverser.h"
 				>
 			</File>
 			<File

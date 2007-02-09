@@ -97,7 +97,7 @@ namespace VE_SceneGraph{
 
 ////////////////////////////////////////////////////////////////////////////////
 Node::Node()
-:SceneNode(VE_NODE)
+:SceneNode(/*VE_NODE*/)
 {
    //biv--do we need to set type for scene node in here?
    //this->_group = new pfNode();
