@@ -30,19 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef NODE_H
-#define NODE_H
-/*!\file Node.h
-Node API
+#ifndef CADEntityHelper_H
+#define CADEntityHelper_H
+/*!\file CADEntityHelper.h
+CADEntityHelper API
 */
 
-/*!\class VE_SceneGraph::Node
+/*!\class VE_SceneGraph::CADEntityHelper
 *
 */
-#include "VE_Xplorer/SceneGraph/SceneNode.h"
 
 #ifdef _PERFORMER
-class pfNode;
+class pfCADEntityHelper;
 class pfLightModel;
 class pfFog;
 #elif _OSG
@@ -59,49 +58,45 @@ namespace osg
 
 namespace VE_SceneGraph
 {
-#ifdef _OSG
-class VE_SCENEGRAPH_EXPORTS Node: public osg::Node, public SceneNode
-#else
-class VE_SCENEGRAPH_EXPORTS Node: public pfNode
-#endif
+class VE_SCENEGRAPH_EXPORTS CADEntityHelper
 {
 public:   
-   Node();
+   CADEntityHelper();
    //Copy constructor
-   Node( const Node& );
+   CADEntityHelper( const CADEntityHelper& );
 
-   virtual ~Node( void );
+   virtual ~CADEntityHelper( void );
 
    //Equal operator
-   Node& operator= ( const Node& );
+   CADEntityHelper& operator= ( const CADEntityHelper& );
 
-   //Set the name of the node
+   //Set the name of the CADEntityHelper
    void SetName( std::string name );
 
-   //Toggle the display of this node on/off
-   //\param onOff Turn on/off rendering of this node\n
+   //Toggle the display of this CADEntityHelper on/off
+   //\param onOff Turn on/off rendering of this CADEntityHelper\n
    //Valid values are:\n
-   //ON == display this node\n
-   //OFF == hide this node\n
+   //ON == display this CADEntityHelper\n
+   //OFF == hide this CADEntityHelper\n
    void ToggleDisplay( std::string onOff );
 
-   //Toggle the display of this node on/off
-   //\param onOff Turn on/off rendering of this node\n
+   //Toggle the display of this CADEntityHelper on/off
+   //\param onOff Turn on/off rendering of this CADEntityHelper\n
    void ToggleDisplay( bool onOff );
 
    #ifdef _PERFORMER
-   virtual pfNode* GetRawNode( void );
+   virtual pfNode* GetNode( void );
    #elif _OSG
-   virtual osg::Node* GetRawNode( void );
+   virtual osg::Node* GetNode( void );
    #elif _OPENSG
    #endif
 
    #ifdef _PERFORMER
    void pfTravNodeMaterial( pfNode* );
-   void pfTravNodeFog( pfNode* node_1, pfFog* fog );
+   void pfTravNodeFog( pfNode* Node_1, pfFog* fog );
    #elif _OSG
    void TravNodeMaterial( osg::Node* );
-   void TravNodeFog( osg::Node* node_1, osg::Fog* fog );
+   void TravNodeFog( osg::Node* Node_1, osg::Fog* fog );
    #elif _OPENSG
    #endif
 
@@ -112,14 +107,14 @@ public:
                   #endif
                   );
 
-   Node* Clone( int );
+   //Node* Clone( int );
 
 protected:
    #ifdef _PERFORMER
-   pfNode* _node;
+   pfNode* _Node;
    pfLightModel* lightModel;
    #elif _OSG
-   osg::ref_ptr<osg::Node> _node;
+   osg::ref_ptr<osg::Node> cadNode;
    osg::ref_ptr<osg::LightModel> lightModel;
    #elif _OPENSG
    #endif
@@ -132,4 +127,4 @@ protected:
 };
 }
 
-#endif  //NODE_H
+#endif  //CADEntityHelper_H

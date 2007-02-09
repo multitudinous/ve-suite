@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/Node.h"
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
 #include "VE_Xplorer/SceneGraph/Geode.h"
@@ -96,8 +96,7 @@
 namespace VE_SceneGraph{
 
 ////////////////////////////////////////////////////////////////////////////////
-Node::Node()
-:SceneNode(/*VE_NODE*/)
+CADEntityHelper::CADEntityHelper()
 {
    //biv--do we need to set type for scene node in here?
    //this->_group = new pfNode();
@@ -115,9 +114,7 @@ Node::Node()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-Node::Node( const Node& input )
-:
-SceneNode( input )
+CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 {
    #ifdef _PERFORMER
    this->_node = input._node;
@@ -126,15 +123,20 @@ SceneNode( input )
    {
       _node = input._node;
    }
-   #elif _OPENSG
-   #endif
+
+   op = input.op;
+   stlColor[0] = input.stlColor[0];
+   stlColor[1] = input.stlColor[1];
+   stlColor[2] = input.stlColor[2];
+   color = input.color;
+
+#elif _OPENSG
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-Node& Node::operator=( const Node& input )
+CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
 {
    if( this != &input ){
-      //Copy parent
-      SceneNode::operator=( input );
 
       #ifdef _PERFORMER
       pfDelete( this->_node );
@@ -172,7 +174,7 @@ Node& Node::operator=( const Node& input )
    }
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-Node::~Node( void )
+CADEntityHelper::~CADEntityHelper( void )
 {
    // If neccesary
 #ifdef _PERFORMER
@@ -189,9 +191,9 @@ Node::~Node( void )
 }
 // Reimplement for other graphs
 #ifdef _PERFORMER
-pfNode* Node::GetRawNode( void )
+pfNode* CADEntityHelper::GetNode( void )
 #elif _OSG
-osg::Node* Node::GetRawNode(void)
+osg::Node* CADEntityHelper::GetNode(void)
 #elif _OPENSG
 #endif
 {
@@ -205,27 +207,27 @@ osg::Node* Node::GetRawNode(void)
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Node::SetName(std::string name)
+void CADEntityHelper::SetName(std::string name)
 {
-   if ( GetRawNode() )
-      GetRawNode()->setName(name.c_str());
+   if ( GetNode() )
+      GetNode()->setName(name.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Node::ToggleDisplay(bool onOff)
+void CADEntityHelper::ToggleDisplay(bool onOff)
 {
    std::string value = (onOff==true)?"ON":"OFF";
    ToggleDisplay(value);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Node::ToggleDisplay(std::string onOff)
+void CADEntityHelper::ToggleDisplay(std::string onOff)
 {
-   if ( !GetRawNode() )
+   if ( !GetNode() )
       return;
       
    if(onOff == "ON")
    {
 #ifdef _OSG
-      GetRawNode()->setNodeMask(1);
+      GetNode()->setNodeMask(1);
 #elif _OPENSG
 #elif _PERFORMER
 #endif
@@ -233,14 +235,14 @@ void Node::ToggleDisplay(std::string onOff)
    else if(onOff == "OFF")
    {
 #ifdef _OSG
-      GetRawNode()->setNodeMask(0);
+      GetNode()->setNodeMask(0);
 #elif _OPENSG
 #elif _PERFORMER
 #endif
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Node::LoadFile( std::string filename
+void CADEntityHelper::LoadFile( std::string filename
 #ifdef _OSG
                        ,bool isStream
 #endif
@@ -294,7 +296,7 @@ void Node::LoadFile( std::string filename
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Node* Node::Clone( int level )
+/*CADEntityHelper* CADEntityHelper::Clone( int level )
 {
 #ifdef _PERFORMER
    std::cout << " Error:Clone !!! " << level << std::endl;
@@ -309,9 +311,9 @@ Node* Node::Clone( int level )
    exit( 1 );
    return NULL;
 #endif
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-void Node::SetNodeProperties(int color,
+void CADEntityHelper::SetNodeProperties(int color,
                              float trans, 
                              float* stlColor )
 {
@@ -330,7 +332,7 @@ void Node::SetNodeProperties(int color,
 // It then changes the geostates of them all to have the same
 // given material.
 #ifdef _PERFORMER
-void Node::pfTravNodeMaterial( pfNode* node_1 )
+void CADEntityHelper::pfTravNodeMaterial( pfNode* node_1 )
 {
 #ifdef _DEBUG
    assert( node_1 != NULL && "bad pointer passed in" );
@@ -628,7 +630,7 @@ void Node::pfTravNodeFog( pfNode* node_1, pfFog* fog )
 }
 #elif _OSG
 ////////////////////////////////////////////////////////////////////////////////
-void Node::TravNodeMaterial(osg::Node* node)
+void CADEntityHelper::TravNodeMaterial(osg::Node* node)
 {
    if(!node)return;
 	int i  = 0;
@@ -752,7 +754,7 @@ void Node::TravNodeMaterial(osg::Node* node)
    }
  }
  ////////////////////////////////////////////////////////////////////////////////
- void Node::TravNodeFog(osg::Node* node_1, osg::Fog* fog)
+ void CADEntityHelper::TravNodeFog(osg::Node* node_1, osg::Fog* fog)
  {
    if(!node_1)return;
 	int i  = 0;
