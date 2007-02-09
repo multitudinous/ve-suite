@@ -1,7 +1,7 @@
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Node.h"
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Geode.h"
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 #include "VE_Xplorer/SceneGraph/ModelOccluder.h"
@@ -52,20 +52,16 @@ CADEntity::CADEntity(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isSt
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
    this->DCS=new VE_SceneGraph::DCS();
-   this->node=new VE_SceneGraph::Node();
+   this->node=new VE_SceneGraph::CADEntityHelper();
 
-   //this->node->LoadFile(geomFile.c_str(),isStream);
+   this->node->LoadFile(geomFile.c_str(),isStream);
    fileName.assign(geomFile);
-   this->DCS->AddChild( this->node.get() );
+   this->DCS->AddChild( this->node->GetNode() );
    worldDCS->AddChild( this->DCS.get() );
 
    #ifdef _PERFORMER
    fog = new pfFog();
    #elif _OSG
-   //setup occluder node
-   //ModelOccluder occluder;
-   //dynamic_cast< osg::MatrixTransform* >( this->DCS->GetRawNode() )->
-   //            addChild( occluder.GetOccluderNode( node->GetRawNode() ).get() );
    //setup fog
    fog=new osg::Fog();
    #endif
@@ -78,6 +74,7 @@ CADEntity::~CADEntity()
 	if(collision_shape){
 		delete collision_shape;	
 	}
+   delete node;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::Initialize( float op_val )
@@ -136,7 +133,7 @@ void CADEntity::CreateBBMesh()
 void CADEntity::CreateExactMesh()
 {
 	osg::ref_ptr<osg::Geode> geode=new osg::Geode;
-	geode->asGroup()->addChild(node.get());
+	geode->asGroup()->addChild(node->GetNode() );
 
 	osg::TriangleIndexFunctor<TriIndexFunc> TIF;
 	osg::ref_ptr<osg::Vec3Array> vertex_array=new osg::Vec3Array;
@@ -192,9 +189,9 @@ void CADEntity::CreateCustomMesh()
 	//Implement later
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Node* CADEntity::GetNode()
+VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
 {
-   return this->node.get();
+   return this->CADEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* CADEntity::GetDCS()
@@ -276,12 +273,12 @@ void CADEntity::SetFILEProperties( int color, int trans, float* stlColor )
 void CADEntity::setOpac(float op_val)
 {
    this->op = op_val;
-   //this->node->SetNodeProperties( _colorFlag, op, stlColor );
+   this->node->SetNodeProperties( _colorFlag, op, stlColor );
 
    #ifdef _PERFORMER
       this->node->pfTravNodeMaterial( this->node->GetRawNode() );
    #elif _OSG
-      //node->TravNodeMaterial(node->GetRawNode());
+      node->TravNodeMaterial(node->GetNode());
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -334,19 +331,6 @@ void CADEntity::SetModuleName( std::string filename )
    this->_moduleName = filename;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetGeometryFilename( std::string filename )
-{
-   this->_filename = filename;
-   this->node = new VE_SceneGraph::Node();
-   //this->node->LoadFile( (char*)this->_filename.c_str() );
-   // Need to fix this
-   //this->AddChild( (SceneNode*)this->_node );
-   std::cout << "ModuleGeometry load geometry : " << _filename << std::endl;
-
-   // Need to fix this
-   //this->_masterNode->AddChild( this );   
-}
-////////////////////////////////////////////////////////////////////////////////
 void CADEntity::Update()
 {
    std::cout << "Update Filename : " << this->_filename << std::endl
@@ -354,7 +338,7 @@ void CADEntity::Update()
                << "op : " << this->_opacityLevel << std::endl
                << "color : " << this->_colorFlag << std::endl;
    // Fix this later to call traverser function
-   //this->_node->SetColorOfGeometry( this->_node );
+   this->_node->SetColorOfGeometry( this->_node->GetNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 #endif

@@ -7,7 +7,7 @@
 #include "VE_Installer/include/VEConfig.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Node.h"
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 
 #ifdef _PERFORMER
 class pfFog;
@@ -38,7 +38,7 @@ public:
 	//******************************************//
 
    VE_SceneGraph::DCS* GetDCS();
-   VE_SceneGraph::Node* GetNode();
+   VE_SceneGraph::CADEntityHelper* GetNode();
    btRigidBody* GetRigidBody();
 
 	void SetMass(float mass);
@@ -76,7 +76,7 @@ private:
 	void InitPhysics();
 
    //Group* _masterNode;
-   osg::ref_ptr<VE_SceneGraph::Node> node;
+   CADEntityHelper* node;
    osg::ref_ptr<VE_SceneGraph::DCS> DCS;
    btRigidBody* rigid_body;
 	btCollisionShape* collision_shape;
@@ -100,11 +100,11 @@ private:
    std::string _filename;
    std::string _moduleName;
 
-   #ifdef _PERFORMER
-      pfFog* fog;
-   #elif _OSG
-      osg::Fog* fog;
-   #endif
+#ifdef _PERFORMER
+   pfFog* fog;
+#elif _OSG
+   osg::ref_ptr< osg::Fog > fog;
+#endif
 };
 }
 

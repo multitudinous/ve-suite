@@ -28,6 +28,7 @@ sources = Split("""
     Group.cxx
     SceneNode.cxx
     CADEntity.cxx
+    CADEntityHelper.cxx
     PhysicsSimulator.cxx
 """)
 
@@ -56,6 +57,7 @@ headers = Split("""
     Switch.h
     SceneNode.h
     CADEntity.h
+    CADEntityHelper.h
     PhysicsSimulator.h
 """)
 
