@@ -59,7 +59,7 @@ public:
    void SetModuleName(std::string);
    void SetTransparencyFlag(bool);
    void SetColorFlag(int);
-   void SetColorOfGeometry(VE_SceneGraph::Node*);
+   //void SetColorOfGeometry(VE_SceneGraph::Node*);
    void SetOpacity(float);
 
 	void Update();

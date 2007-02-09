@@ -106,10 +106,10 @@ CADEntityHelper::CADEntityHelper()
    twosidedlighting = false;
 
 #ifdef _PERFORMER
-   this->_node = 0;
+   this->cadNode = 0;
    this->lightModel = 0;
 #elif _OSG
-   //_node = 0;//new osg::Node();
+   //cadNode = 0;//new osg::Node();
 #elif _OPENSG
 #endif
 }
@@ -117,11 +117,11 @@ CADEntityHelper::CADEntityHelper()
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 {
    #ifdef _PERFORMER
-   this->_node = input._node;
+   this->cadNode = input.cadNode;
    #elif _OSG
-   if( _node.valid() )
+   if( cadNode.valid() )
    {
-      _node = input._node;
+      cadNode = input.cadNode;
    }
 
    op = input.op;
@@ -139,12 +139,12 @@ CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
    if( this != &input ){
 
       #ifdef _PERFORMER
-      pfDelete( this->_node );
-      this->_node = input._node;
+      pfDelete( this->cadNode );
+      this->cadNode = input.cadNode;
       #elif _OSG
       //Recreate the node
-      //_node->unref();
-      _node = input._node;
+      //cadNode->unref();
+      cadNode = input.cadNode;
       #elif _OPENSG
       #endif
 
@@ -178,14 +178,14 @@ CADEntityHelper::~CADEntityHelper( void )
 {
    // If neccesary
 #ifdef _PERFORMER
-   if ( this->_node != NULL )
+   if ( this->cadNode != NULL )
    {
       vprDEBUG(vesDBG,3) << "destructor for Node " 
                               << std::endl << vprDEBUG_FLUSH;
-      pfDelete( this->_node );
+      pfDelete( this->cadNode );
    }
 #elif _OSG
-   //_node->unref();
+   //cadNode->unref();
 #elif _OPENSG
 #endif
 }
@@ -200,9 +200,9 @@ osg::Node* CADEntityHelper::GetNode(void)
    vprDEBUG(vesDBG,2) << "|\t\tNode::GetRawNode" 
                               << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
-   return _node;
+   return cadNode;
 #elif _OSG
-   return _node.get();
+   return cadNode.get();
 #elif _OPENSG
 #endif
 }
@@ -258,7 +258,7 @@ void CADEntityHelper::LoadFile( std::string filename
    }
 
 #ifdef _PERFORMER
-   this->_node = pfdLoadFile( filename.c_str() ); 
+   this->cadNode = pfdLoadFile( filename.c_str() ); 
    if ( twosidedlighting )
    {
       lightModel = new pfLightModel();
@@ -269,12 +269,12 @@ void CADEntityHelper::LoadFile( std::string filename
 #elif _OSG
    if(!isStream)
    {
-      _node = osgDB::readNodeFile(filename);
+      cadNode = osgDB::readNodeFile(filename);
    }
    else
    {
       std::istringstream textNodeStream(filename);
-      _node = osgDB::Registry::instance()->getReaderWriterForExtension("osg")->readNode(textNodeStream).getNode();
+      cadNode = osgDB::Registry::instance()->getReaderWriterForExtension("osg")->readNode(textNodeStream).getNode();
    }
    if ( twosidedlighting )
    {
@@ -288,11 +288,11 @@ void CADEntityHelper::LoadFile( std::string filename
    exit( 1 );
 #endif
 #ifdef _PERFORMER
-   if(_node){
+   if(cadNode){
 #elif _OSG
-   if(_node.valid()){
+   if(cadNode.valid()){
 #endif
-      _node->setName(filename.c_str());
+      cadNode->setName(filename.c_str());
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

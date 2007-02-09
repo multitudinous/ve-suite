@@ -41,7 +41,7 @@ CADEntityHelper API
 */
 
 #ifdef _PERFORMER
-class pfCADEntityHelper;
+class pfNode;
 class pfLightModel;
 class pfFog;
 #elif _OSG
@@ -55,6 +55,8 @@ namespace osg
 }
 #elif _OPENSG
 #endif
+
+#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_SceneGraph
 {

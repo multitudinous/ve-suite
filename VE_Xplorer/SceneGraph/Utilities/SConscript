@@ -8,12 +8,14 @@ sources = Split("""
     Attribute.cxx
     MaterialHelper.cxx
     ShaderHelper.cxx
+    PhongLoader.cxx
 """)
 
 headers = Split("""
     Attribute.h
     MaterialHelper.h
     ShaderHelper.h
+    PhongLoader.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
