@@ -60,134 +60,29 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Geode::Geode( void )
-//:
-//Node()
 {
-   #ifdef _PERFORMER
-   _geode = new pfGeode();
-   #elif _OSG
-   _geode = new osg::Geode();
-   #elif _OPENSG
-   #endif
-
    _vtkDebugLevel = 0;
-
-   //SetVENodeType(VE_GEODE);
 }
+////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
-////////////////////////////////////////////////////////////////////////////////
-Geode::Geode(const osg::Geode& oGeode)
+Geode::Geode(const Geode& geode,const osg::CopyOp& copyop):
+osg::Geode(geode,copyop)
 {
-   _geode = new osg::Geode(oGeode,osg::CopyOp::DEEP_COPY_ALL);
-   _vtkDebugLevel = 0;
-   //SetVENodeType(VE_GEODE);
+   ;
 }
-////////////////////////////////////////////////////////////////////////////////
-Geode& Geode::operator=(const osg::Geode& oGeode)
-{
-   if(_geode != &oGeode){
-      if(_geode.valid()){
-         _geode = dynamic_cast<osg::Geode*>(oGeode.clone(osg::CopyOp::DEEP_COPY_ALL));
-      }
-   }
-   return *this;
-}
-#elif _PERFORMER
-////////////////////////////////////////////////////////////////////////////////
-Geode::Geode(const pfGeode& oGeode)
-{
-   _geode = new pfGeode(oGeode);
-   _vtkDebugLevel = 0;
-   SetNodeType(VE_GEODE);
-}
-////////////////////////////////////////////////////////////////////////////////
-Geode& Geode::operator=(const pfGeode& oGeode)
-{
-   if(_geode != &oGeode){
-      //_geode = dynamic_cast<pfGeode*>(oGeode.clone(0));
-   }
-   return *this;
-}
-#elif _OPENSG
 #endif
-////////////////////////////////////////////////////////////////////////////////
-Geode::Geode( const Geode& input )
-//:Node(input)
-{
-#ifdef _PERFORMER
-   this->_geode = input._geode;
-#elif _OSG
-   _geode = new osg::Geode(*input._geode,osg::CopyOp::DEEP_COPY_ALL);
-#elif _OPENSG
-#endif
-   this->_vtkDebugLevel = input._vtkDebugLevel;
-    
-   //SetVENodeType(VE_GEODE);
-}
-////////////////////////////////////////////////////////////////////////////////
-Geode& Geode::operator=( const Geode& input )
-{
-   if ( this != (&input) )
-   {
-#ifdef _PERFORMER
-      pfDelete( _geode );
-      this->_geode = input._geode;
-#elif _OSG
-      _geode = input._geode;
-#elif _OPENSG
-#endif
-      this->_vtkDebugLevel = input._vtkDebugLevel;
-      //SetVENodeType(VE_GEODE);
-   }
-   return *this;
-}
-////////////////////////////////////////////////////////////////////////////////
-/*bool Geode::operator== ( cfdNode& node1 )
-{
-   if ( _geode != dynamic_cast< Geode& >( node1 )._geode )
-   {
-      return false;
-   }
-
-   return true;
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 Geode::~Geode( void )
 {
-   vprDEBUG(vesDBG,2) << "|\tdestructor for Geode " 
-                           << std::endl << vprDEBUG_FLUSH;
-#ifdef _PERFORMER
-   // Fix this
-   //if ( _geode != NULL )
-   pfDelete( _geode );
-   vprDEBUG(vesDBG,2) << "|\tAfter pfDelete : destructor for Geode " 
-                           << std::endl << vprDEBUG_FLUSH;
-#elif _OSG
-#elif _OPENSG
-#endif
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::TranslateToGeode( vtkActor* actor )
 {
 #ifdef _PERFORMER
-   VE_SceneGraph::vtkActorToPF( actor, this->_geode, _vtkDebugLevel );
+   VE_SceneGraph::vtkActorToPF( actor, this, _vtkDebugLevel );
 #elif _OSG
-   VE_SceneGraph::vtkActorToOSG(actor, _geode,_vtkDebugLevel);
-#elif _OPENSG
-#endif
-}
-// Reimplement for other graphs
-#ifdef _PERFORMER
-pfNode* Geode::GetRawNode( void )
-#elif _OSG
-osg::Node* Geode::GetRawNode(void)
-#elif _OPENSG
-#endif
-{
-#ifdef _PERFORMER
-   return _geode;
-#elif _OSG
-   return _geode.get();
+   VE_SceneGraph::vtkActorToOSG(actor, this, _vtkDebugLevel);
 #elif _OPENSG
 #endif
 }

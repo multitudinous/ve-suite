@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_GEODE_H
 #define VE_GEODE_H
@@ -44,7 +42,6 @@
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 
 #ifdef _PERFORMER
-//#include <pf/>
 #elif _OSG
 #include <osg/Geode>
 #include <osg/ref_ptr>
@@ -58,41 +55,26 @@ namespace VE_SceneGraph
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS Geode : public osg::Geode, public SceneNode
 #elif _PERFORMER
-class VE_SCENEGRAPH_EXPORTS Geode : public pfDCS
+class VE_SCENEGRAPH_EXPORTS Geode : public pfGeode, public SceneNode
 #endif
 {
 public:
+   ///Constructor
    Geode( void );
+protected:
    ~Geode( void );
-   Geode( const Geode& );        
-   Geode& operator=( const Geode& );
+public:
+   ///Copy constructors for osg
+   Geode( const Geode& geode, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
    
-   #ifdef _PERFORMER
-   Geode( const pfGeode& geode );
-   Geode& operator=( const pfGeode& geode );
-   pfNode* GetRawNode( void );
-   #elif _OSG
-   Geode( const osg::Geode& geode );
-   Geode& operator=( const osg::Geode& geode );
-   osg::Node* GetRawNode( void );
-   #elif _OPENSG
-   #endif
-
+   META_Node( VE_SceneGraph, Geode );
+   ///Turn vtkActorToXX on and off
    void TurnOnDebugOutput( int onOff = 0 ){ _vtkDebugLevel = onOff; }
-
-   //This function implements the respective translate vtkActorToGeode
+   ///This function implements the respective translate vtkActorToGeode
    void TranslateToGeode( vtkActor* actor );
 
 protected:
    int _vtkDebugLevel;
-
-   #ifdef _PERFORMER
-   pfGeode* _geode;
-   #elif _OSG
-   osg::ref_ptr<osg::Geode> _geode;
-   #elif _OPENSG
-   #endif
-
 };
 }
 
