@@ -1188,28 +1188,28 @@ void REI_Plugin::SetImageIcon(std::string path, float rotation, int mirror, floa
       return;
    }
    iconFilename = path;
-	wxImage my_img(wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
+	wxImage image(wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
 	if(mirror > 0 && mirror < 3)
 	{
 		if(mirror == 1)
-			my_img = my_img.Mirror(true);
+			image = image.Mirror(true);
 		else
-			my_img = my_img.Mirror(false);
+			image = image.Mirror(false);
 	}
-	my_img = my_img.Rotate((rotation*PI)/180, wxPoint(0,0));
+	image = image.Rotate((rotation*PI)/180, wxPoint(0,0));
 
 	//Implement Scale - scale the images to where the longest length is 40
 	//while the smallest length is scaled accordingly
 	
-	if(my_img.GetWidth() > my_img.GetHeight())
+	if(image.GetWidth() > image.GetHeight())
 	{
 		icon_w = 40;
-		icon_h = 40 * my_img.GetHeight() / my_img.GetWidth();
+		icon_h = 40 * image.GetHeight() / image.GetWidth();
 	}
 	else
 	{
 		icon_h = 40;
-		icon_w = 40 * my_img.GetWidth() / my_img.GetHeight();
+		icon_w = 40 * image.GetWidth() / image.GetHeight();
 	}
 
 	//now scale it up or down according to the specified scale
@@ -1220,7 +1220,7 @@ void REI_Plugin::SetImageIcon(std::string path, float rotation, int mirror, floa
 	//int icon_w = 40;
 
 	delete my_icon;
-	my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+	my_icon=new wxBitmap(image.Scale(icon_w, icon_h));
 	
 	
 	n_pts = 4;
