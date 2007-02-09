@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/cfdDCS.h"
-#include "VE_Xplorer/SceneGraph/cfdClone.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Clone.h"
 #ifdef _OSG
 #include <osg/MatrixTransform>
 #include <osg/CopyOp>
@@ -41,107 +41,72 @@
 #endif
 using namespace VE_SceneGraph;
 ////////////////////
-cfdClone::cfdClone()
-:cfdNode()
+Clone::Clone()
 {
-   _cloneTransform = 0;
-   //_originalNode = 0;
-   //_instanceNode = 0;
-   //implement later
-   /*_cloneMaterial = 0*/
+   ;
 }
 /////////////////////////////////////
-cfdClone::cfdClone(cfdNode* original)
-:cfdNode()
+Clone::Clone( SceneNode* original )
 {
-   _cloneTransform = 0;
-   //_originalNode = 0;
-   //_instanceNode = 0;
    CloneNode( original );
 }
 /////////////////////
-cfdClone::~cfdClone()
+Clone::~Clone()
 {
-   if(_cloneTransform){
-      delete _cloneTransform;
-      _cloneTransform = 0;
-   }
+   ;
 }
 ///////////////////////////////////////////
-void cfdClone::CloneNode(cfdNode* original)
+void Clone::CloneNode( SceneNode* original )
 {
-   if(!_cloneTransform){
-      _cloneTransform = new cfdDCS();
-   }
-   cfdDCS* assemblyNode = dynamic_cast<cfdDCS*>(original);
-   if(assemblyNode)
+   if ( !cloneTransform.valid() )
    {
-      for(int i =0; i < assemblyNode->GetNumChildren(); i ++)
+      cloneTransform = new DCS();
+   }
+   
+   DCS* assemblyNode = dynamic_cast< DCS* >( original );
+   if ( assemblyNode )
+   {
+      for ( int i =0; i < assemblyNode->GetNumChildren(); i++ )
       {
-         _cloneTransform->AddChild(assemblyNode->GetChild(i));
+         cloneTransform->addChild( assemblyNode->GetChild( i ) );
       }
 
    }
    else
    {
-      _cloneTransform->AddChild(original);
-   }
-/*#ifdef _OSG
-   _originalNode = original->GetRawNode();
-   _instanceNode = dynamic_cast<osg::Node*>(_originalNode->clone(osg::CopyOp::SHALLOW_COPY));
-   if(_instanceNode.valid())
-   {
-      unsigned int nChildren = _cloneTransform->GetNumChildren();
-      if(nChildren){
-         //should only be one child
-         _cloneTransform->RemoveChild(_cloneTransform->GetChild(0));
-      }
-      ((osg::MatrixTransform*)_cloneTransform->GetRawNode())->addChild(_instanceNode.get());
-   }
-#elif _PERFORMER
-#elif _OPENSG
-#endif*/
-}
-/////////////////////////////////////////////////
-void cfdClone::SetTranslationArray(float* translation)
-{
-   if(_cloneTransform)
-   {
-      _cloneTransform->SetTranslationArray(translation);
+      cloneTransform->addChild( dynamic_cast< osg::Node* >( original ) );
    }
 }
 /////////////////////////////////////////////////
-void cfdClone::SetRotationArray(float* rotation)
+void Clone::SetTranslationArray( float* translation )
 {
-   if(_cloneTransform)
+   if ( cloneTransform.valid() )
    {
-      _cloneTransform->SetRotationArray(rotation);
+      cloneTransform->SetTranslationArray( translation );
    }
 }
 /////////////////////////////////////////////////
-void cfdClone::SetScaleArray(float* scale)
+void Clone::SetRotationArray( float* rotation )
 {
-   if(_cloneTransform)
+   if ( cloneTransform.valid() )
    {
-      _cloneTransform->SetScaleArray(scale);
+      cloneTransform->SetRotationArray(rotation);
+   }
+}
+/////////////////////////////////////////////////
+void Clone::SetScaleArray(float* scale)
+{
+   if ( cloneTransform.valid() )
+   {
+      cloneTransform->SetScaleArray( scale );
    }
 }
 //////////////////////////////////
-cfdDCS* cfdClone::GetClonedGraph()
+DCS* Clone::GetClonedGraph()
 {
-   if(_cloneTransform)
+   if ( cloneTransform.valid() )
    {
-      return _cloneTransform;
+      return cloneTransform.get();
    }
    return 0;
 }
-   /*void SetMaterial(cfdMaterial* mat);
-     void SetDiffuse(float* color);    
-     void SetAmbient(float* color);    
-     void SetEmmision(float* color);    
-     void SetSpecular(float spec);    
-     void SetOpacity(float op);
-    */
-
-   //returns the cloned structure including the
-   //transform

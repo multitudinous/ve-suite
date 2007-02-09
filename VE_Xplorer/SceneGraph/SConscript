@@ -30,6 +30,7 @@ sources = Split("""
     CADEntity.cxx
     CADEntityHelper.cxx
     PhysicsSimulator.cxx
+    Clone.cxx
 """)
 
 
@@ -59,6 +60,7 @@ headers = Split("""
     CADEntity.h
     CADEntityHelper.h
     PhysicsSimulator.h
+    Clone.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)

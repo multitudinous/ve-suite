@@ -29,59 +29,47 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_CLONE_H
-#define CFD_CLONE_H
-/*!\file cfdClone.h
-cfdClone API
+#ifndef CLONE_H
+#define CLONE_H
+/*!\file Clone.h
+Clone API
 */
 
-/*!\class VE_SceneGraph::cfdClone
+/*!\class VE_SceneGraph::Clone
 *
 */
 
-#include "VE_Xplorer/SceneGraph/cfdNode.h"
-namespace VE_SceneGraph{
-   class cfdDCS;
+#include "VE_Xplorer/SceneGraph/DCS.h"
+namespace VE_SceneGraph
+{
+   class SceneNode;
 }
-//class cfdMaterial;
-namespace VE_SceneGraph{
-   class VE_SCENEGRAPH_EXPORTS cfdClone: public cfdNode
-   {
-      public:
-         cfdClone();
-         cfdClone(cfdNode* original);
-         virtual ~cfdClone();
 
-         void CloneNode(cfdNode* original);
-         void SetTranslationArray(float* translation);
-         void SetRotationArray(float* rotation);
-         void SetScaleArray(float* scale);
-         /*void SetMaterial(cfdMaterial* mat);
-         void SetDiffuse(float* color);    
-         void SetAmbient(float* color);    
-         void SetEmmision(float* color);    
-         void SetSpecular(float spec);    
-         void SetOpacity(float op);
-         */
-
-         //returns the cloned structure including the
-         //transform
-         cfdDCS* GetClonedGraph();
-      protected:
-         cfdDCS* _cloneTransform;
-/*#ifdef _OSG
-         osg::ref_ptr<osg::Node> _originalNode;
-         osg::ref_ptr<osg::Node> _instanceNode;
-#elif _PERFORMER
-        pfNode* _originalNode;
-         pfNode* _instanceNode;
-#elif _OPENSG
-#endif*/
-      //implement later
-      /*cfdMaterial* _cloneMaterial*/
-   };
+namespace osg
+{
+   class Node;
 }
-#endif //CFD_CLONE_H
+
+namespace VE_SceneGraph
+{
+class VE_SCENEGRAPH_EXPORTS Clone
+{
+public:
+   Clone();
+   Clone( SceneNode* original );
+   ~Clone();
+
+   void CloneNode( SceneNode* original );
+   void SetTranslationArray(float* translation);
+   void SetRotationArray(float* rotation);
+   void SetScaleArray(float* scale);
+
+   //returns the cloned structure including the
+   //transform
+   DCS* GetClonedGraph();
+protected:
+   osg::ref_ptr< DCS > cloneTransform;
+};
+}
+#endif //CLONE_H
