@@ -39,8 +39,8 @@ cfdVEBaseClass API
 /*!\class ::cfdVEBaseClass
 *
 */
-#include "VE_Xplorer/Scenegraph/DCS.h"
-#include "VE_Xplorer/Scenegraph/Group.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
 
 #include <string>
 #include <vector>
