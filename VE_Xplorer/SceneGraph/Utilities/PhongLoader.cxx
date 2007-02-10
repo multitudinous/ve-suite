@@ -125,12 +125,12 @@ std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
    fragShader->AddUniform(dmaterial); 
    fragShader->AddUniform(smaterial); 
    fragShader->AddUniform(specularValues); 
-   VE_XML::VE_Shader::Program* glslProgram = new VE_XML::VE_Shader::Program();
-   glslProgram->SetProgramName("Phong Shader");
-   glslProgram->SetVertexShader(vertShader);
-   glslProgram->SetFragmentShader(fragShader);
+   VE_XML::VE_Shader::Program glslProgram;// = new VE_XML::VE_Shader::Program();
+   glslProgram.SetProgramName("Phong Shader");
+   glslProgram.SetVertexShader(vertShader);
+   glslProgram.SetFragmentShader(fragShader);
 
-   LoadGLSLProgram(glslProgram);
+   LoadGLSLProgram(&glslProgram);
 #elif _PERFORMER
 #endif
 }
