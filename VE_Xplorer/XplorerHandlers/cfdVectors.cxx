@@ -187,7 +187,7 @@ std::cout << " vectors update " << this->xyz << " " << this->GetActiveDataSet()-
    {
 		osg::ref_ptr< VE_SceneGraph::Geode > tempGeode = new VE_SceneGraph::Geode();
       tempGeode->TranslateToGeode( temp );
-      geodes.push_back( tempGeode.get() ); 
+      geodes.push_back( tempGeode ); 
       this->updateFlag = true;
    }
    catch( std::bad_alloc )

@@ -49,8 +49,8 @@ using namespace VE_SceneGraph;
 // constructor
 cfdGraphicsObject::cfdGraphicsObject( void )
 {
-   //parentNode = 0;
-   //worldNode = 0;
+   parentNode = 0;
+   worldNode = 0;
    type = OTHER;
    //animation = 0;
    model = 0;
@@ -80,13 +80,13 @@ cfdGraphicsObject& cfdGraphicsObject::operator=( const cfdGraphicsObject& input 
 }
 
 // Set parent node to add "graphics node" to
-void cfdGraphicsObject::SetParentNode( VE_SceneGraph::Group* input )
+void cfdGraphicsObject::SetParentNode( VE_SceneGraph::DCS* input )
 {
    this->parentNode = input;
 }
 
 // node the parent node will be added to
-void cfdGraphicsObject::SetWorldNode( VE_SceneGraph::Group* input )
+void cfdGraphicsObject::SetWorldNode( VE_SceneGraph::DCS* input )
 {
    this->worldNode = input;
 }
@@ -104,11 +104,11 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
    if ( this->type == CLASSIC )
    {
       // is parent on graph
-      if ( !this->worldNode->SearchChild( parentNode.get() ) )
+      if ( !this->worldNode->SearchChild( parentNode ) )
       {
          vprDEBUG(vesDBG,1) << "|\t\tadding active switch node to worldDCS"
                              << std::endl << vprDEBUG_FLUSH;
-         this->worldNode->AddChild( parentNode.get() );
+         this->worldNode->AddChild( parentNode );
       }
 
       // is it transient, classic, or animated class
@@ -188,11 +188,13 @@ void cfdGraphicsObject::SetTypeOfViz( VizType x )
 }
 
 // set actor for classic and trans viz objects
-void cfdGraphicsObject::SetGeodes( std::vector< VE_SceneGraph::Geode* > input )
+void cfdGraphicsObject::SetGeodes( std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > input )
 {
    for ( unsigned int i = 0; i < input.size(); ++i )
    {
+      //std::cout << "1 " << input.at( i ).get() << std::endl;
       this->geodes.push_back( new VE_SceneGraph::Geode( *input.at( i ) ) );
+      //std::cout << input.at( i ).get() << std::endl;
       //Add phong shading to the geodes
       osg::ref_ptr<osg::StateSet> geodeProperties = geodes.at(i)->getOrCreateStateSet();
 		VE_SceneGraph::Utilities::PhongLoader phongShader;
@@ -210,9 +212,9 @@ void cfdGraphicsObject::SetGeodes( std::vector< VE_SceneGraph::Geode* > input )
 }
 
 // Return parent node for a this object
-VE_SceneGraph::Group* cfdGraphicsObject::GetParentNode( void )
+VE_SceneGraph::DCS* cfdGraphicsObject::GetParentNode( void )
 {
-   return this->parentNode.get();
+   return this->parentNode;
 }
 
 // Return parent node for a this object

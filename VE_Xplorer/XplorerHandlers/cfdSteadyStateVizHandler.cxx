@@ -239,23 +239,12 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
-            temp->SetParentNode( dynamic_cast< VE_SceneGraph::Group* >(_activeObject->GetActiveDataSet()->GetDCS() ) );
+            temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
-            temp->SetWorldNode( dynamic_cast< VE_SceneGraph::Group* >( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
+            temp->SetWorldNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
             temp->SetGeodes( _activeObject->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
             
-/*   VE_Xplorer::cfdRawNodeWriteTraverser cfdWT("test.osg");
-
-   //set the graph
-   cfdWT.setNode( this->dataList[ i ]->GetGeodes().at(0) );
-
-   //set the "swapping" callback
-   cfdWT.setCallback(1);
-
-   //write out the file
-   cfdWT.writeFile();
-*/
             // search map for other object types with the same type as this one
             std::multimap< int, cfdGraphicsObject* >::iterator pos;
             for ( pos = graphicsObjects.lower_bound( _activeObject->GetObjectType() ); 

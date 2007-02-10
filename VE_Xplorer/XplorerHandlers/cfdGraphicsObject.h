@@ -42,11 +42,13 @@ cfdGraphicsObject API
 
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Geode.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 namespace VE_SceneGraph
 {
 	class Group;
    class Geode;
+   ///class DCS;
 }
 
 namespace VE_Xplorer
@@ -82,10 +84,10 @@ public:
    enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};
 
    // Set parent node to add "graphics node" to
-   void SetParentNode( VE_SceneGraph::Group* );
+   void SetParentNode( VE_SceneGraph::DCS* );
 
    // node the parent node will be added to
-   void SetWorldNode( VE_SceneGraph::Group* );
+   void SetWorldNode( VE_SceneGraph::DCS* );
 
    // set model pointer to be able to grab
    // transient info and the switch node
@@ -98,10 +100,10 @@ public:
    void SetTypeOfViz( VizType );
 
    // set geodes for classic and trans viz objects
-   void SetGeodes( std::vector< VE_SceneGraph::Geode* > );
+   void SetGeodes( std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > );
 
    // Return parent node for a this object
-   VE_SceneGraph::Group* GetParentNode( void );
+   VE_SceneGraph::DCS* GetParentNode( void );
 
    // clear geodes vector and geode from memory and the graph
    void RemoveGeodeFromDCS( void );
@@ -111,8 +113,8 @@ public:
 
 protected:
 	std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;
-	osg::ref_ptr< VE_SceneGraph::Group > parentNode;
-   osg::ref_ptr< VE_SceneGraph::Group > worldNode;
+	VE_SceneGraph::DCS* parentNode;
+   VE_SceneGraph::DCS* worldNode;
    VizType type;
 
    // used for animated particles and other ss 

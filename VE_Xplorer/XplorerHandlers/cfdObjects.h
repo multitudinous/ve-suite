@@ -40,6 +40,8 @@ cfdObjects API
 */
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
+#include "VE_Xplorer/SceneGraph/Geode.h"
+
 namespace VE_Xplorer
 {
    class cfdDataSet;
@@ -47,10 +49,10 @@ namespace VE_Xplorer
    class cfdCommandArray;
 }
 
-namespace VE_SceneGraph
+/*namespace VE_SceneGraph
 {
 	class Geode;
-}
+}*/
 
 // VTK Classes
 class vtkPolyData;
@@ -81,7 +83,7 @@ namespace VE_Xplorer
          // update the actor
          virtual void Update() = 0;
 
-         std::vector< VE_SceneGraph::Geode* > GetGeodes( void );
+         std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > GetGeodes( void );
          void ClearGeodes( void );
 
          void SetObjectType( int );
@@ -124,7 +126,7 @@ namespace VE_Xplorer
          // used by vectors and intended for warped contours
          //static float vectorScale;
 
-         std::vector< VE_SceneGraph::Geode* > geodes;
+         std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;
          vtkPolyData* pointSource;
 
          bool updateFlag;

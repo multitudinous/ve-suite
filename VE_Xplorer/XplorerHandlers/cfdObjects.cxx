@@ -79,7 +79,7 @@ void cfdObjects::SetObjectType( int type )
    this->objectType = type;
 }
 
-std::vector< VE_SceneGraph::Geode* > cfdObjects::GetGeodes( void )
+std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > cfdObjects::GetGeodes( void )
 {
    return geodes;
 }
