@@ -200,14 +200,6 @@ void cfdGraphicsObject::SetGeodes( std::vector< osg::ref_ptr< VE_SceneGraph::Geo
 		VE_SceneGraph::Utilities::PhongLoader phongShader;
 		phongShader.SetStateSet(geodeProperties.get());
 		phongShader.SyncShaderAndStateSet();
-
-		osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
-		bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-		geodeProperties->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-		geodeProperties->setRenderBinDetails(99,std::string("DepthSortedBin"));
-		geodeProperties->setMode(GL_BLEND,osg::StateAttribute::ON);
-		geodeProperties->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
-		//_geode->setStateSet(geodeProperties.get());
    }
 }
 
