@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VE_UNIFORM_H_
 #define _VE_UNIFORM_H_
@@ -51,9 +49,12 @@
  * Contains classes that describe GLSL shaders and programs.
  */
 
-namespace VE_XML{
-namespace VE_Shader{
-class VE_SHADER_EXPORTS Uniform : public VE_XML::XMLObject{
+namespace VE_XML
+{
+namespace VE_Shader
+{
+class VE_SHADER_EXPORTS Uniform : public VE_XML::XMLObject
+{
 public:
    ///Constructor
    Uniform();
@@ -131,6 +132,14 @@ protected:
    std::vector<float> _values;///<The value of the uniform
    unsigned int _textureUnit;///<Optional texture unit if the data is a sampler.
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::Uniform* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 #endif //_VE_UNIFORM_H_

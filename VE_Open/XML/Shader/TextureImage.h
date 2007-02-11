@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_TEXTURE_IMAGE_H
 #define VE_TEXTURE_IMAGE_H
@@ -162,6 +160,14 @@ protected:
    VE_XML::Command _textureDescription;///<Data package containing the information about the texture map.
    
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::TextureImage* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 #endif//VE_TEXTURE_IMAGE_H

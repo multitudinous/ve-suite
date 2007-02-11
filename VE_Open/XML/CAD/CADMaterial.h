@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CAD_MATERIAL_H
 #define CAD_MATERIAL_H
@@ -186,6 +184,14 @@ protected:
    std::string _face;///< Face that this material is applied to.
    double _opacity;///<Opacity value
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADMaterial* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 #endif //CAD_MATERIAL_H

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CAD_PART_H_
 #define _CAD_PART_H_
@@ -86,6 +84,14 @@ protected:
    
    std::string _cadFileName; ///<The name of the CAD file on disk
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADPart* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 #endif// _CAD_PART_H_

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _XML_VE_TRANSFORM_H_
@@ -127,5 +125,13 @@ protected:
    FloatArray* scaleArray;///<The FloatArray holding scale information.
    FloatArray* rotationArray;///<The FloatArray holding rotation information.
 };
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, Transform* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
+}
 }
 #endif// _XML_VE_TRANSFORM_H_

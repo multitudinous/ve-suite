@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CAD_ASSEMBLY_H_
 #define _CAD_ASSEMBLY_H_
@@ -112,6 +110,14 @@ protected:
    typedef std::vector<VE_XML::VE_CAD::CADNode*> ChildList; 
    ChildList _children; ///<A list of the children
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADAssembly* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 #endif// _CAD_ASSEMBLY_H_

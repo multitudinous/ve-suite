@@ -29,8 +29,6 @@
  * Id:            $Id: CADNodeAnimation.h 4905 2006-07-09 03:04:36Z mccdo $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CAD_NODE_ANIMATION_H
 #define CAD_NODE_ANIMATION_H
@@ -126,6 +124,14 @@ protected:
    bool _hasHeader;///<Flag specifying header lines in file
    unsigned int _numberOfHeaderLines;///<The number of line in the header
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADNodeAnimation* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 #endif// CAD_NODE_ANIMATION_H

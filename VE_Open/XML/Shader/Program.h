@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_PROGRAM_H
 #define VE_PROGRAM_H
@@ -109,11 +107,13 @@ protected:
    VE_Shader::Shader* _fragmentShader;///< The fragment shader.
 };
 }
-/*template<>
-inline void XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::Program* val)
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::Program* val)
 {
    val->SetOwnerDocument( _rootDocument );
-   _veElement->appendChild( val->GetXMLData( subElementTagName ) );
-}*/
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
+}
 }
 #endif //VE_PROGRAM_H

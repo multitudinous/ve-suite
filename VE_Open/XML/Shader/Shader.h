@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_SHADER_H
 #define VE_SHADER_H
@@ -49,7 +47,8 @@
  * Class that stores an data and information neccessary to create a glsl shader.
  */
 
-namespace VE_XML{
+namespace VE_XML
+{
 namespace VE_Shader
 {
    class TextureImage;
@@ -57,9 +56,12 @@ namespace VE_Shader
 }
 }
 
-namespace VE_XML{
-namespace VE_Shader{
-class VE_SHADER_EXPORTS Shader:public VE_XML::XMLObject{
+namespace VE_XML
+{
+namespace VE_Shader
+{
+class VE_SHADER_EXPORTS Shader:public VE_XML::XMLObject
+{
 public:
    ///Constructor
    Shader();
@@ -143,6 +145,14 @@ protected:
    std::vector<Uniform> _uniformList;///<The list of uniforms.
 
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::Shader* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 #endif//VE_SHADER_H

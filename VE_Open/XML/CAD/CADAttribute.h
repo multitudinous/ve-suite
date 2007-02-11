@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CAD_ATTRIBUTE_H_
 #define _CAD_ATTRIBUTE_H_
@@ -123,6 +121,14 @@ protected:
    VE_XML::VE_CAD::CADMaterial* _material; ///< Material for this node.
    VE_XML::VE_Shader::Program* _glslProgram;///<The glsl program.
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADAttribute* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 #endif// _CAD_ATTRIBUTE_H_

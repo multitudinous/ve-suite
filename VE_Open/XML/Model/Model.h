@@ -206,5 +206,13 @@ private:
    unsigned int iconMirror;///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
 };
 }
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_Model::Model* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
+}
 }
 #endif// _VE_MODEL_H_

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _VE_LINK_H_
@@ -106,6 +104,14 @@ private:
    std::pair< VE_XML::DataValuePair*, VE_XML::DataValuePair* > moduleInfo;///<The classes hold the fromPort in first and the toPort in second.
    std::pair< long int, long int > portInfo;///<The classes hold the fromPort in first and the toPort in second.
 };
+}
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_Model::Link* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
 }
 }
 

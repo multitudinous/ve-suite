@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _XML_VE_COMMAND_H_
@@ -115,11 +113,13 @@ protected:
    std::vector< VE_XML::DataValuePair* > _dataValuePairs;///<The list of DataValuePair s in this command.  
    std::map< std::string, VE_XML::DataValuePair* > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
 };
-/*template<>
-inline void XMLObject::SetSubElement(const std::string subElementTagName, Command* val)
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, Command* val)
 {
    val->SetOwnerDocument( _rootDocument );
-   _veElement->appendChild( val->GetXMLData( subElementTagName ) );
-}*/
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
+}
 }
 #endif// _XML_VE_COMMAND_H_

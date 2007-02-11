@@ -256,5 +256,13 @@ protected:
   
    VE_XML::XMLObject* _veXMLObject;///<Raw XMLObject.
 };
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, DataValuePair* val)
+{
+   val->SetOwnerDocument( _rootDocument );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
+}
 }
 #endif// _VE_DATA_VALUE_PAIR_H_
