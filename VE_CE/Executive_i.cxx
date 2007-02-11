@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Network/string_ops.h"
 #include "VE_CE/Executive_i.h"
@@ -475,7 +473,7 @@ void Body_Executive_i::SetNetwork (
    //_module_powers.clear();
    //_thermal_input.clear();
    std::string strNetwork( network );
-   //delete network;
+   //std::cout << strNetwork << std::endl;
    if ( _network->parse( strNetwork ) )
    {
       _mutex.release();
