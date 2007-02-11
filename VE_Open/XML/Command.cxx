@@ -176,7 +176,6 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
          //we can have as many dvpairs as we want so get them all and populate the list
          DOMElement* dataValuePairIn = 0;
          unsigned int nDVPairsIn = subElements->getLength();
-
          if( nDVPairsIn && _nDataValuePairs)
          {  
             //clear out old dvpairs

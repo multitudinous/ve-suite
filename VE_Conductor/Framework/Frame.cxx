@@ -1008,6 +1008,10 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       path = vesFileName.GetFullName();
       std::string tempDir = ConvertUnicode( directory.c_str() );
       
+      if ( tempDir.empty() )
+      {
+         tempDir = "./";
+      }
       //Send Command to change xplorer working dir
       // Create the command and data value pairs
       VE_XML::DataValuePair* dataValuePair = 

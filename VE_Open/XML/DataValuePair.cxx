@@ -346,13 +346,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
          //get variables by tags
          DOMNodeList* subElements = 0;
          DOMElement* dataElement = 0;
-         //DOMElement* typeNode = GetSubElement(currentElement,std::string("dataType"),0);
-         //if(typeNode)
-         //{
-         //   _dataType = ExtractDataStringFromSimpleElement( typeNode );
-         //}
 
-         //if(_dataType == "XMLOBJECT")
          if ( currentElement->getElementsByTagName(xercesString("genericObject"))->getLength() )
          {
             try

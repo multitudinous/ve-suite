@@ -41,6 +41,7 @@
 #include <string>
 #include <typeinfo>
 #include <sstream>
+#include <iomanip>
 
 #include "VE_Installer/include/VEConfig.h"
 /*!\file XMLObject.h
@@ -190,7 +191,6 @@ public:
             return;
          }
       
-         //attribute = std::atof( fUnicodeForm );
          std::stringstream float2string( fUnicodeForm );
          float2string >> attribute;
          delete fUnicodeForm;
@@ -442,6 +442,30 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
       {
          attribute = false;            
       }
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid element!!"<<std::endl;
+      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
+   }
+}
+///Special method for a string
+template<>
+inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
+                          const std::string attributeName, std::string& attribute)
+{
+   try
+   {
+      char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
+      if ( !fUnicodeForm )
+      {
+         return;
+      }
+      
+      std::stringstream float2string( fUnicodeForm );
+      float2string.str( fUnicodeForm );
+      attribute = float2string.str();
+      delete fUnicodeForm;
    }
    catch(...)
    {
