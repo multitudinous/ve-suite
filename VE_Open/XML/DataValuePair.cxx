@@ -211,47 +211,9 @@ void DataValuePair::SetData(std::string dataName,VE_XML::XMLObject* vexmlObject)
    }
 }
 ///////////////////////////////////////
-void DataValuePair::_updateDataName()
-{
-   DOMElement* dataNameElement = _rootDocument->createElement(xercesString("dataName"));
-   DOMText* dataName = _rootDocument->createTextNode(xercesString(_dataName.c_str()));
-   dataNameElement->appendChild(dataName);
-   _veElement->appendChild(dataNameElement);
-}
-//////////////////////////////////////////////
-void DataValuePair::_updateDataValueNumber()
-{
-   DOMElement* dataValueNumElement = _rootDocument->createElement(xercesString("dataValue"));
-   dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:float") );
-   std::stringstream float2string;
-   float2string<<_dataValue;
-   DOMText* dataValue = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
-
-   dataValueNumElement->appendChild(dataValue);
-   _veElement->appendChild(dataValueNumElement);
-}
-//////////////////////////////////////////////
-void DataValuePair::_updateDataValueString()
-{
-   // xs:float
-   // xs:string
-   // xs:integer
-   // xs:unsignedInt
-   DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString("dataValue") );
-   dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:string") );
-   DOMText* dataValueString = _rootDocument->createTextNode( xercesString(_dataString.c_str()) );
-   dataValueStringElement->appendChild( dataValueString );
-   _veElement->appendChild( dataValueStringElement );
-}
-///////////////////////////////////////
 void DataValuePair::_updateVEElement( std::string input )
 {
    //fill in datavalue pairs, via xerces, according to schema
-   //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
-
-   //we know there are only 2 children so set it now
-   //_nChildren = 2;
-
    //Add code here to update the specific sub elements
    SetAttribute( "dataName", _dataName );
    SetAttribute( "id", uuid );
@@ -259,7 +221,6 @@ void DataValuePair::_updateVEElement( std::string input )
    //update the value held in the pair
    if ( _dataType == std::string("FLOAT") )
    {
-      //_updateDataValueNumber();
       SetSubElement( "dataValue", _dataValue );
    }
    else if( _dataType == std::string("UNSIGNED INT") )
@@ -272,12 +233,12 @@ void DataValuePair::_updateVEElement( std::string input )
    }
    else if(_dataType == std::string("STRING"))
    {
-      //_updateDataValueString();
       SetSubElement( "dataValue", _dataString );
    }
    else if(_dataType == std::string("XMLOBJECT"))
    {
-      SetSubElement( "genericObject" , _veXMLObject, "objectType", _veXMLObject->GetObjectType() );
+      DOMElement* genericElement = SetSubElement( "genericObject" , _veXMLObject );
+      SetAttribute( "objectType", _veXMLObject->GetObjectType(), genericElement );
    }
 }
 ///////////////////////////////////////////////////

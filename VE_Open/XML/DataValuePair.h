@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _XML_VE_DATA_VALUE_PAIR_H_
@@ -246,14 +244,6 @@ protected:
    ///\param baseElement The element to extract the XMLObject from.
    ///\param objectType The XMLObject::_objectType to extract
    virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,std::string objectType);
-
-   ///Internally update the data name.
-   void _updateDataName();
-   ///Internally update the data value number.
-   void _updateDataValueNumber();
-
-   ///Internally update the data value string.
-   void _updateDataValueString();
 
    std::string _dataType;///<The data type.
    std::string _dataName;///<The data name.

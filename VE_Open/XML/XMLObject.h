@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _VE_XML_OBJECT_H_
@@ -156,6 +154,7 @@ public:
    }
    
    ///Get a string attribute by name
+   ///\param baseElement The element to extract it from
    ///\param attributeName The name of the attribute
    ///\param attribute The attribute to retrive.
    void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, std::string& attribute);
@@ -187,57 +186,50 @@ public:
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, bool dataValue );
+   //XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, bool dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, std::string dataValue );
+   //XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, std::string dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, unsigned int dataValue );
+   //XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, unsigned int dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, long int dataValue );
+   //XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, long int dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, double dataValue );
+   //XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( std::string subElementTagName, double dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
-   void SetSubElement( std::string subElementTagName, XMLObject* dataValue );
+   //void SetSubElement( std::string subElementTagName, XMLObject* dataValue );
    ///utility functions for creating subElements for _veElement.
    ///\param subElementTagName The subelement tagname to extract from baseElement.
    ///\param dataValue The data to be stored.
    ///\param attribName The name of the atrribute to be set
    ///\param attrib The attribute value
-   void SetSubElement( std::string subElementTagName, XMLObject* dataValue, 
-                        std::string attribName, std::string attrib );
    ///playing with templates
-   /*template<class T>
-   inline void SetSubElement(const std::string subElementTagName, T val)
+   template<class T>
+   inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement(const std::string subElementTagName, T val)
    {
-      std::type_info tempInfo = typeid( val );
-      std::string xmlTag = tempInfo.name();
-      if ( typeid( bool ) == tempInfo )
-      { 
-         xmlTag = "xs:boolean";
-      }
-      else if ( typeid( double ) == tempInfo )
+      std::string xmlTag("xs:undefined");
+      if ( typeid( double ) == typeid( val ) )
       {
          xmlTag = "xs:double";
       }
-      else if ( typeid( std::string ) == tempInfo )
+      else if ( typeid( std::string ) == typeid( val ) )
       {
          xmlTag = "xs:string";
       }
-      else if ( typeid( unsigned int ) == tempInfo )
+      else if ( typeid( unsigned int ) == typeid( val ) )
       {
          xmlTag = "xs:unsignedInt";
       }
-      else if ( typeid( long int ) == tempInfo )
+      else if ( typeid( long int ) == typeid( val ) )
       {
          xmlTag = "xs:integer";
       }
@@ -248,28 +240,36 @@ public:
                                          xercesString( xmlTag.c_str() ) );
       std::stringstream float2string;
       float2string << val;
+
       XERCES_CPP_NAMESPACE_QUALIFIER DOMText* dataValueText = 
                         _rootDocument->createTextNode( 
                                     xercesString( float2string.str().c_str() ) );
       
       dataValueNumElement->appendChild( dataValueText );
-      _veElement->appendChild( dataValueNumElement );         
-   }*/
+      _veElement->appendChild( dataValueNumElement );
+      return dataValueNumElement;
+   }
+
+   ///utility functions for creating attribute on _veElement by default
+   ///\param attirbuteName The name of the atrribute to be set
+   ///\param attribute The attribute value
+   ///\param element The element to add an attribute to
+   void SetAttribute( std::string attirbuteName, std::string attribute, 
+                      XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
 
    ///utility functions for creating attribute on _veElement.
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
-   void SetAttribute(std::string attirbuteName,std::string attribute);
+   ///\param element The element to add an attribute to
+   void SetAttribute( std::string attirbuteName,unsigned int attribute, 
+                      XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
 
    ///utility functions for creating attribute on _veElement.
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
-   void SetAttribute(std::string attirbuteName,unsigned int attribute);
-
-   ///utility functions for creating attribute on _veElement.
-   ///\param attirbuteName The name of the atrribute to be set
-   ///\param attribute The attribute value
-   void SetAttribute(std::string attirbuteName,bool attribute);
+   ///\param element The element to add an attribute to
+   void SetAttribute( std::string attirbuteName,bool attribute, 
+                      XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
    ///Method to set id object
    ///\param idVar new id
    void SetID( unsigned int idVar );
@@ -333,12 +333,31 @@ protected:
 private:
    unsigned int _nChildren;///<The number of childern for this element.
 };
-/*template<>
-inline void XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::XMLObject* val)
+///This is the special case for any xmlobject
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::XMLObject* val)
 {
    val->SetOwnerDocument( _rootDocument );
-   _veElement->appendChild( val->GetXMLData( subElementTagName ) );
-}*/
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   _veElement->appendChild( childElement );
+   return childElement;
+}
+///Special case for bools
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, bool val)
+{
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
+   dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:boolean") );
+   std::string boolValue("true");
+   if ( !val )
+   {
+      boolValue = "false";
+   }
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMText* dataValueString = _rootDocument->createTextNode( xercesString( boolValue ) );
+   dataValueStringElement->appendChild( dataValueString );
+   _veElement->appendChild( dataValueStringElement );
+   return dataValueStringElement;
+}
 ///this is for the special case where bools are stored as strings in 
 ///the elements because 0 or 1 is not stored
 template<>

@@ -113,7 +113,10 @@ Model::Model( const Model& input )
    uniqueModelID = input.uniqueModelID;
    iconFileName = input.iconFileName;
    vendorUnit = input.vendorUnit;
-
+   iconScale = input.iconScale;
+   iconRotation = input.iconRotation;
+   iconMirror = input.iconMirror;
+   
    for ( size_t i = 0; i < input.ports.size(); ++i )
    {
       ports.push_back( new Port( *(input.ports.at( i )) ) );
@@ -159,7 +162,10 @@ Model& Model::operator=( const Model& input)
       uniqueModelID = input.uniqueModelID;
       iconFileName = input.iconFileName;
       vendorUnit = input.vendorUnit;
-
+      iconScale = input.iconScale;
+      iconRotation = input.iconRotation;
+      iconMirror = input.iconMirror;
+      
       for ( size_t i = 0; i < ports.size(); ++i )
       {
          delete ports.at( i );

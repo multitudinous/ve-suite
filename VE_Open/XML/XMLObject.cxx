@@ -214,7 +214,7 @@ const XMLCh* XMLObject::VEStr::unicodeForm() const
    return fUnicodeForm;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DOMElement* XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
+/*DOMElement* XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
 {
    DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
    dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:boolean") );
@@ -279,37 +279,51 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
 {
    dataValue->SetOwnerDocument( _rootDocument );
    _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
+}*/
+/////////////////////////////////////////////////////////////////////////////
+void XMLObject::SetAttribute(std::string attirbuteName,std::string attribute, DOMElement* element)
+{
+   if ( element == 0 )
+   {
+      element = _veElement;
+   }
+   element->setAttribute( xercesString( attirbuteName ), xercesString( attribute ) );
 }
 /////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetAttribute(std::string attirbuteName,std::string attribute)
+void XMLObject::SetAttribute(std::string attirbuteName,unsigned int attribute, DOMElement* element)
 {
-   _veElement->setAttribute( xercesString( attirbuteName ), xercesString( attribute ) );
-}
-/////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetAttribute(std::string attirbuteName,unsigned int attribute)
-{
+   if ( element == 0 )
+   {
+      element = _veElement;
+   }
    std::stringstream int2string;
    int2string << attribute;
-   _veElement->setAttribute( xercesString( attirbuteName ), xercesString( int2string.str().c_str() )  );
+   element->setAttribute( xercesString( attirbuteName ), xercesString( int2string.str().c_str() )  );
 }
 /////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetAttribute(std::string attirbuteName,bool attribute)
+void XMLObject::SetAttribute(std::string attirbuteName,bool attribute,  DOMElement* element)
 {
+   if ( element == 0 )
+   {
+      element = _veElement;
+   }
    std::string bool2String("false");
 
-   if(attribute)
+   if ( attribute )
+   {   
       bool2String ="true";
-   _veElement->setAttribute( xercesString( attirbuteName ), xercesString( bool2String.c_str() )  );
+   }
+   element->setAttribute( xercesString( attirbuteName ), xercesString( bool2String.c_str() )  );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue,
+/*void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue,
                               std::string attribName, std::string attrib )
 {
    dataValue->SetOwnerDocument( _rootDocument );
    DOMElement* xmlObjectElement = dataValue->GetXMLData( subElementTagName );
    xmlObjectElement->setAttribute( xercesString( attribName ), xercesString( attrib ) );
    _veElement->appendChild( xmlObjectElement );
-}
+}*/
 //////////////////////////////////////////////////////////////////////////////////////
 void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, 
                              std::string attributeName, bool& attribute)

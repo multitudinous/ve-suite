@@ -169,10 +169,13 @@ void ParameterBlock::_updateVEElement( std::string input )
    //Add code here to update the specific sub elements
    SetSubElement( "blockID", _id );
    SetSubElement( "blockName", paramName );
-   SetSubElement( "transform", _dcs, "objectType", _dcs->GetObjectType() );
+   DOMElement* tempElement;
+   tempElement = SetSubElement( "transform", _dcs );
+   SetAttribute( "objectType", _dcs->GetObjectType(), tempElement );
    for ( size_t i = 0; i < _properties.size(); ++i )
    {
-      SetSubElement( "properties", _properties.at( i ), "objectType", _properties.at( i )->GetObjectType() );
+      tempElement = SetSubElement( "properties", _properties.at( i ) );
+      SetAttribute( "objectType", _properties.at( i )->GetObjectType(), tempElement );
    }
 }
 //////////////////////////////////////
