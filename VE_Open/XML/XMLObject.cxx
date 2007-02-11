@@ -281,7 +281,7 @@ void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataVal
    _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
 }*/
 /////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetAttribute(std::string attirbuteName,std::string attribute, DOMElement* element)
+/*void XMLObject::SetAttribute(std::string attirbuteName,std::string attribute, DOMElement* element)
 {
    if ( element == 0 )
    {
@@ -314,7 +314,7 @@ void XMLObject::SetAttribute(std::string attirbuteName,bool attribute,  DOMEleme
       bool2String ="true";
    }
    element->setAttribute( xercesString( attirbuteName ), xercesString( bool2String.c_str() )  );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 /*void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue,
                               std::string attribName, std::string attrib )
@@ -325,7 +325,7 @@ void XMLObject::SetAttribute(std::string attirbuteName,bool attribute,  DOMEleme
    _veElement->appendChild( xmlObjectElement );
 }*/
 //////////////////////////////////////////////////////////////////////////////////////
-void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, 
+/*void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, 
                              std::string attributeName, bool& attribute)
 {
    try
@@ -410,7 +410,7 @@ void XMLObject::GetAttribute( DOMElement* baseElement, std::string attributeName
       std::cout<<"Invalid element!!"<<std::endl;
       std::cout<<"XMLObject::GetAttribute()"<<std::endl;
    }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DOMElement* XMLObject::GetSubElement(DOMElement* baseElement,std::string subElementTagName,unsigned int itemIndex)
 {

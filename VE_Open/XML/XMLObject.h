@@ -126,7 +126,7 @@ public:
    ///\param element Element to extract long integer from.
    //long int ExtractLongIntegerDataNumberFromSimpleElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element);
 
-   ///Usage is unsigned int data = ExtractFromSimpleElement< unsigned int >( element );
+   ///Usage is: unsigned int data = ExtractFromSimpleElement< unsigned int >( element );
    ///Not sure how to document this
    template<class T>
    inline T ExtractFromSimpleElement(const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
@@ -157,25 +157,50 @@ public:
    ///\param baseElement The element to extract it from
    ///\param attributeName The name of the attribute
    ///\param attribute The attribute to retrive.
-   void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, std::string& attribute);
+   //void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, std::string& attribute);
 
    ///Get a bool attribute by name
    ///\param baseElement The element to extract it from
    ///\param attributeName The name of the attribute
    ///\param attribute The attribute to retrive.
-   void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, bool& attribute);
+   //void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, bool& attribute);
 
    ///Get an unsigned int attribute by name
    ///\param baseElement The element to extract it from
    ///\param attributeName The name of the attribute
    ///\param attribute The attribute to retrive.
-   void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, unsigned int& attribute);
+   //void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, unsigned int& attribute);
 
-   ///Get an float attribute by name
+   ///Get an attribute by name
    ///\param baseElement The element to extract it from
    ///\param attributeName The name of the attribute
    ///\param attribute The attribute to retrive.
-   void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, float& attribute);
+   //void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string attributeName, float& attribute);
+   //void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
+   //                              std::string attributeName, float& attribute)
+   template<class T>
+   inline void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
+                             const std::string attributeName, T& attribute)
+   {
+      try
+      {
+         char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
+         if ( !fUnicodeForm )
+         {
+            return;
+         }
+      
+         //attribute = std::atof( fUnicodeForm );
+         std::stringstream float2string( fUnicodeForm );
+         float2string >> attribute;
+         delete fUnicodeForm;
+      }
+      catch(...)
+      {
+         std::cout<<"Invalid element!!"<<std::endl;
+         std::cout<<"XMLObject::GetAttribute()"<<std::endl;
+      }
+   }
    
    ///utility functions for extracting subElement itemIndex from a complex element.
    ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
@@ -254,22 +279,40 @@ public:
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
    ///\param element The element to add an attribute to
-   void SetAttribute( std::string attirbuteName, std::string attribute, 
-                      XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
+   //void SetAttribute( std::string attirbuteName, std::string attribute, 
+   //                   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
 
    ///utility functions for creating attribute on _veElement.
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
    ///\param element The element to add an attribute to
-   void SetAttribute( std::string attirbuteName,unsigned int attribute, 
-                      XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
+   //void SetAttribute( std::string attirbuteName,unsigned int attribute, 
+   //                   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
 
    ///utility functions for creating attribute on _veElement.
    ///\param attirbuteName The name of the atrribute to be set
    ///\param attribute The attribute value
    ///\param element The element to add an attribute to
-   void SetAttribute( std::string attirbuteName,bool attribute, 
-                      XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
+   //void SetAttribute( std::string attirbuteName,bool attribute, 
+   //                   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0);
+
+   ///utility functions for creating attribute on _veElement by default
+   ///\param attirbuteName The name of the atrribute to be set
+   ///\param attribute The attribute value
+   ///\param element The element to add an attribute to
+   template<class T>
+   inline void SetAttribute( const std::string attirbuteName, T attribute, 
+                             XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element = 0)
+   {
+      if ( element == 0 )
+      {
+         element = _veElement;
+      }
+      std::stringstream int2string;
+      int2string << attribute;
+      element->setAttribute( xercesString( attirbuteName ), xercesString( int2string.str().c_str() )  );
+   }
+   
    ///Method to set id object
    ///\param idVar new id
    void SetID( unsigned int idVar );
@@ -357,6 +400,54 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    dataValueStringElement->appendChild( dataValueString );
    _veElement->appendChild( dataValueStringElement );
    return dataValueStringElement;
+}
+///Another special case for bools
+template<>
+inline void XMLObject::SetAttribute( const std::string attirbuteName, bool attribute, 
+                          XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element)
+{
+   if ( element == 0 )
+   {
+      element = _veElement;
+   }
+
+   std::string bool2String("false");
+   
+   if ( attribute )
+   {   
+      bool2String ="true";
+   }
+   element->setAttribute( xercesString( attirbuteName ), xercesString( bool2String.c_str() )  );
+}
+///Yet another special case for bools
+template<>
+inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
+                          const std::string attributeName, bool& attribute)
+{
+   try
+   {
+      char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
+      if ( !fUnicodeForm )
+      {
+         return;
+      }
+      
+      std::string value( fUnicodeForm );
+      delete fUnicodeForm;
+      if(value == "true")
+      {
+         attribute = true;
+      }
+      else
+      {
+         attribute = false;            
+      }
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid element!!"<<std::endl;
+      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
+   }
 }
 ///this is for the special case where bools are stored as strings in 
 ///the elements because 0 or 1 is not stored
