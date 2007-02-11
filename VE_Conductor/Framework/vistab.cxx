@@ -120,7 +120,7 @@ Vistab::Vistab(VjObs::Model_var activeModel )
 
    scalarSelect = false;
    vectorSelect = false;
-
+   scalarValue = 0;
    _availableSolutions["MESH_SCALARS"].Add( _("") ); 
    _availableSolutions["MESH_VECTORS"].Add( _("") ); 
    _availableSolutions["TEXTURE_SCALARS"].Add( _("") );  
@@ -130,7 +130,7 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
-
+   
    _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
 }
 ///////////////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
 
    scalarSelect = false;
    vectorSelect = false;
-
+   scalarValue = 0;
    _availableSolutions["MESH_SCALARS"].Add( _("") ); 
    _availableSolutions["MESH_VECTORS"].Add( _("") ); 
    _availableSolutions["TEXTURE_SCALARS"].Add( _("") );  
@@ -178,6 +178,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    SetSize( _vistabPosition.x,_vistabPosition.y,
             _vistabPosition.width,wxDefaultCoord,
             wxSIZE_AUTO );
+   
    //wxSize tempRect = GetSize();
    
    //_minSpinner->Enable(false);
@@ -1356,8 +1357,9 @@ void Vistab::InitialScalarVector()
    if( !_scalarSelection->IsEmpty() )
    {
       _scalarSelection->SetSelection(0);
-      _scalarSelection->GetStringSelection();
-      _activeScalarName.assign(GetActiveScalarName());
+      _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+      //_scalarSelection->GetStringSelection();
+      //_activeScalarName.assign(GetActiveScalarName());
 
       //_scalarSelection->UpdateWindowUI();
       //_scalarSelection->SetString(0);
