@@ -216,9 +216,8 @@ void viewWhatsInFile( std::string vtkFilename, const float shrinkFactor )
 {
    //std::cout << "viewWhatsInFile" << std::endl;
    //
-   // "1" means print info to screen
-   vtkDataSet * dataset = readVtkThing( vtkFilename, 1 );
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet* dataset = dynamic_cast<vtkDataSet*>(readVtkThing( vtkFilename, 1 ));
    if ( dataset->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
    {
       // let the user pick the active scalar
@@ -402,9 +401,8 @@ vtkActor * getActorFromFile( std::string vtkFilename )
    }
    else
       extension.erase();//delete [] extension;
-
-   vtkDataSet * dataset = readVtkThing( vtkFilename, 1 ); // "1" means print info to screen
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet* dataset = dynamic_cast<vtkDataSet*>(readVtkThing( vtkFilename, 1 ));
    if ( dataset->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
    {
       std::cout << "IsFileUnstructuredGrid" << std::endl;

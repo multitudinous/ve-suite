@@ -60,9 +60,8 @@ int main( int argc, char *argv[] )
                                    "create a mini flowdata.vtk file from",
                                    inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
-
-   vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
-   if ( ! dataset->IsA("vtkUnstructuredGrid") )
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));   if ( ! dataset->IsA("vtkUnstructuredGrid") )
    { 
       std::cerr << "ERROR: This function requires an unstructured grid" << std::endl;
       //delete [] inFileName;   inFileName = NULL;

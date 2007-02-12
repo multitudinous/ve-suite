@@ -52,8 +52,8 @@ int main( int argc, char *argv[] )
    fileIO::processCommandLineArgs( argc, argv, "move field to point data arrays in", inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
 
-   vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
 /*
    std::cout << "\nback in main..." << std::endl;
    std::cout << "dataset->IsA(\"vtkDataSet\") =          " << dataset->IsA("vtkDataSet") << std::endl;

@@ -87,9 +87,12 @@ int main( int argc, char *argv[] )
         outFileName = fileIO::getWritableFile( "outFile.vtk" );
     }
 
-   vtkDataSet * dataset1 = readVtkThing( inFileName1, 1 ); // "1" means print info to screen
-   vtkDataSet * dataset2 = readVtkThing( inFileName2, 1 ); // "1" means print info to screen
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet* dataset1 = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName1, 1 ));
+   
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet* dataset2 = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName2, 1 ));
+   
     // Transform the geometry 
     int B_trans;
     float rotX = 0.0, rotY = 0.0, rotZ = 0.0;

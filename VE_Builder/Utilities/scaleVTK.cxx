@@ -59,8 +59,8 @@ int main( int argc, char *argv[] )
    if ( ! inFileName.c_str() ) return 1;
    int arg = 3;
 
-   vtkDataSet * dataset = readVtkThing( inFileName, printInfoToScreen );
-
+      ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, printInfoToScreen ));
    if ( printInfoToScreen )
    {
       std::cout << "\nback in main..." << std::endl; 

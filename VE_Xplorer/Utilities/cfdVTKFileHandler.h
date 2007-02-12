@@ -99,11 +99,11 @@ protected:
    void _getXMLRGrid();
    ///Read XML Polydata
    void  _getXMLPolyData();
-#ifdef VTK_CVS
+//#ifdef VTK_CVS
    ///Read MultiGroup data
    ///\param isMultiBlock Determines if the data is MultiBlock or Hierachical
    void _getXMLMultiGroupDataSet(bool isMultiBlock=true);
-#endif
+//#endif
    ///Reader function to open an vtkImageData file
    void GetXMLImageData( void );
    ///Read old style(non-XML) vtk file

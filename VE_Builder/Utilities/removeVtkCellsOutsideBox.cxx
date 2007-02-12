@@ -243,8 +243,8 @@ int main( int argc, char *argv[] )
                                    inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
 
-   // read the data set ("1" means print info to screen)
-   vtkDataSet * dataset = readVtkThing( inFileName, 1 );
+   //This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
 
    int limitOption;
    double x_min, x_max, y_min, y_max, z_min, z_max;

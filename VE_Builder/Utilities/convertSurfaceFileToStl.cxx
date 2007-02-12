@@ -52,9 +52,8 @@ int main( int argc, char *argv[] )
    outFileName.assign( "surface.stl" );//strcpy( outFileName, "surface.stl" );  //default name
    fileIO::processCommandLineArgs( argc, argv, "convert geometry to STL format in", inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
-
-   vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
    // convert to vtkPolyData    
    vtkGeometryFilter *cFilter = vtkGeometryFilter::New();
       cFilter->SetInput( dataset );

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_TEXTURE_BASED_LIBRARY;_OSG;VE_PATENTED;BOOST_ALL_DYN_LINK"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib VE_UtilLib_d.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkHybrid_d.lib vtkImaging_d.lib vtkIO_d.lib vtkParallel_d.lib vtkRendering_d.lib opengl32.lib VE_UtilLib_d.lib"
 				OutputFile="$(OutDir)/VE_TextureBased_osg_vep_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"

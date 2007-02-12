@@ -66,8 +66,10 @@ int main( int argc, char *argv[] )
    std::cout<<"CFD dataset :"<<argv[1]<<std::endl;
    std::cout<<"PIV dataset :"<<argv[2]<<std::endl;
    //read in the CFD and PIV datasets
-   vtkDataSet* datasetCFD = readVtkThing( argv[1], 0 );
-   vtkDataSet* datasetPIV = readVtkThing( argv[2], 0 );
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * datasetCFD = dynamic_cast<vtkDataSet*>(readVtkThing( argv[1], 0 ));
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * datasetPIV = dynamic_cast<vtkDataSet*>(readVtkThing( argv[2], 0 ));
    
    int numArraysCFD, numArraysPIV;   
    int numVerticesPIV;

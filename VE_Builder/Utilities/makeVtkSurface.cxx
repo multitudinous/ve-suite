@@ -94,9 +94,8 @@ int main( int argc, char *argv[] )
    fileIO::processCommandLineArgs( argc, argv, 
                   "make a surface from the data in", inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
-
-   vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
    std::cout << "\nEnter (0) to wrap the entire solution space in a surface, or"
         << "\n      (1) to extract a particular isosurface: " << std::endl;
    int extractIsosurface = fileIO::getIntegerBetween( 0, 1 );

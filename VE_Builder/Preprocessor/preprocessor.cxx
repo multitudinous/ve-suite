@@ -373,8 +373,9 @@ int main( int argc, char *argv[] )
    std::cout << "Reading vtk data file \"" << postFname << "\"" << std::endl;
    int number = fileIO::extractIntegerBeforeExtension( postFname );
    //std::cout << "number = " << number << std::endl;
-   vtkDataSet* dataSet = readVtkThing( postFname );
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet* dataSet = dynamic_cast<vtkDataSet*>(readVtkThing( postFname, 0 ));
+   
 #ifdef _MPI
    MPI_Bcast(&number,1,MPI_INT,0,MPI_COMM_WORLD);
    MPI_Bcast(&multiPlaneOption,1,MPI_INT,0,MPI_COMM_WORLD);

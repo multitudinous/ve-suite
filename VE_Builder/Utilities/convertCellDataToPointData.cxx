@@ -56,8 +56,8 @@ int main( int argc, char *argv[] )
    if ( ! inFileName.c_str() ) return 1;
 
    int printInfoToScreen = 0; // "1" means print info to screen
-   vtkDataSet * dataset = readVtkThing( inFileName, printInfoToScreen );
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
    int numArrays = dataset->GetCellData()->GetNumberOfArrays();
    if ( numArrays > 0 )
    {

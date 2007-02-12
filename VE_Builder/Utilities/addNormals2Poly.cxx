@@ -50,8 +50,9 @@ int main( int argc, char *argv[] )
    fileIO::processCommandLineArgs( argc, argv, "add normals to", inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
 
-   vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet* dataset= dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
+   
    // convert vtkUnstructuredGrid to vtkPolyData    
    vtkGeometryFilter *gFilter = vtkGeometryFilter::New();
       gFilter->SetInput( dataset );

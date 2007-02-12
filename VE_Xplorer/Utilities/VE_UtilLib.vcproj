@@ -139,7 +139,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk-5.0&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;"
+				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;"
 				PreprocessorDefinitions="_DEBUG;VE_UTIL_LIBRARY;VTK44;WIN32;_WIN32;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;BOOST_ALL_DYN_LINK"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -164,7 +164,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib comctl32.lib ws2_32.lib"
+				AdditionalDependencies="vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib comctl32.lib ws2_32.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_UtilLib_d.dll"
 				LinkIncremental="1"

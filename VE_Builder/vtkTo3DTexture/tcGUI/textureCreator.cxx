@@ -451,7 +451,8 @@ bool VTKDataToTexture::createDataSetFromFile(const std::string filename)
    wxString msg = wxString("Reading Dataset: ", wxConvUTF8) + wxString(filename.c_str(), wxConvUTF8);
    _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
    //_confirmFileType(filename);
-   vtkDataSet* tmpDSet = VE_Util::readVtkThing(filename);
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet* tmpDSet = dynamic_cast<vtkDataSet*>(VE_Util::readVtkThing( filename, 0 ));
    int dataObjectType = tmpDSet->GetDataObjectType();
    if ( dataObjectType == VTK_POLY_DATA )
    {
@@ -709,7 +710,7 @@ void VTKDataToTexture::_createValidityTexture()
 	   
 	   //set i, j, and k based on the l values
 	   i = l % nX;
-      j = (i==0)?((jInit==nY-1)?jInit=0:++jInit):jInit;//(l / nX);
+      j = j = (l / nX) % nY;//(i==0)?((jInit==nY-1)?jInit=0:++jInit):jInit;
 	   k = (l/*-i-j*nX*/)/(nX*nY);
 
       pt[2] = bbox[4] + k*delta[2];

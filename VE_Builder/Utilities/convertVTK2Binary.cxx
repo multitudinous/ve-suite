@@ -52,9 +52,8 @@ int main( int argc, char *argv[] )
    fileIO::processCommandLineArgs( argc, argv, "convert ascii", 
                                    inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
-
-   vtkDataSet * dataset = readVtkThing( inFileName, printInfoToScreen );
-
+   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
+   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
    if ( printInfoToScreen )
    {
       std::cout << "\nback in main..." << std::endl; 

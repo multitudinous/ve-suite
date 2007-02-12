@@ -33,7 +33,6 @@
 #include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
 #include <vtkDataSet.h>
 #include <vtkDataObject.h>
-#include <vtkGenericDataObjectReader.h>
 #include <vtkXMLFileReadTester.h>
 #include <vtkXMLUnstructuredGridReader.h>
 #include <vtkXMLStructuredGridReader.h>
@@ -56,13 +55,14 @@
 #include <iostream>
 #include <vtkUnstructuredGridReader.h>
 
-#ifdef VTK_CVS
+//#ifdef VTK_CVS
 #include <vtkXMLMultiGroupDataReader.h>
 #include <vtkXMLHierarchicalDataReader.h>
 #include <vtkXMLMultiBlockDataReader.h>
 #include <vtkHierarchicalDataSet.h>
 #include <vtkMultiBlockDataSet.h>
-#endif
+#include <vtkGenericDataObjectReader.h>
+//#endif
 #include <fstream>
 
 using namespace VE_Util;
@@ -236,7 +236,7 @@ void cfdVTKFileHandler::_readClassicVTKFile()
       genericReader->Delete();
    }
 }
-#ifdef VTK_CVS
+//#ifdef VTK_CVS
 /////////////////////////////////////////////////
 void cfdVTKFileHandler::_getXMLMultiGroupDataSet(bool isMultiBlock)
 {
@@ -256,7 +256,7 @@ void cfdVTKFileHandler::_getXMLMultiGroupDataSet(bool isMultiBlock)
    _dataSet->DeepCopy(mgdReader->GetOutput());
    mgdReader->Delete();
 }
-#endif
+//#endif
 //////////////////////////////////////
 void cfdVTKFileHandler::_getXMLUGrid()
 {
