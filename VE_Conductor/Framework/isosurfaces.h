@@ -41,6 +41,7 @@
 */
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
+
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
 XERCES_CPP_NAMESPACE_USE
@@ -55,6 +56,8 @@ class wxCheckBox;
 class wxSlider;
 class wxButton;
 class wxStaticBox;
+class Vistab;
+class Network;
 
 #define ID_DIALOG 10000
 #define SYMBOL_ISOSURFACES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -84,7 +87,8 @@ public:
       PRECOMPUTED_ISO_CHK,
       ISOSURFACE_PLANE_SLIDER,
       ADD_ISOSURFACE_BUTTON,
-      ADVANCED_ISOSURFACE_BUTTON
+      ADVANCED_ISOSURFACE_BUTTON,
+      ISOSURFACE_SPINCTRL
    };
 
     void SendCommandsToXplorer( void );
@@ -108,7 +112,6 @@ public:
     ///\param activeScalarName The active scalar name
     void SetActiveScalar(std::string activeScalarName);
 
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -118,14 +121,22 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
+    /// Retrieves active scalar range
+    void SetScalarRange( std::string, std::vector<double> );
+
+    /// Initialize scalar data
+    void InitializeScalarData(std::string activeScalarName);
+
 protected:
    std::string _colorByScalarName;///<The name of the scalar to color by.
    std::string _activeScalar;///The scalar that is active on the vistab
+   std::vector<double> _scalarRange;///The scalar range that is active on vistab
    wxArrayString _scalarNames;///<The available scalars.
    wxCheckBox* _useNearestPreComputedCheckBox;
    wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
    wxButton* _advancedButton;///<Display the color by scalar dialog
    wxButton* _computeButton;///<Compute the iso-surface
+   wxSpinCtrlDbl* _isoSpinner;///<Display real scalar value
    
    void _onIsosurface( wxCommandEvent& event );
 
@@ -140,6 +151,13 @@ protected:
 
    ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
    void _onAdvanced(wxCommandEvent& event);
+
+   ///wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINNER
+   void _onSpinner(wxScrollEvent& WXUNUSED(event));
+
+   double tempSliderScalar;///temporary value updated by slider
+   double tempSpinnerScalar;///temporary value updated by spinctrl
+   std::string tempScalarName;///contains current scalar name
 
    std::string ConvertUnicode( const wxChar* data )
    {

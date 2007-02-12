@@ -34,8 +34,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/isosurfaces.h"
 #include "VE_Conductor/Framework/vistab.h"
+#include "VE_Conductor/Framework/Network.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Builder/Utilities/gui/spinctld.h"
+
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
@@ -48,6 +51,7 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <iostream>
+#include <vector>
 ///////////////////////////
 BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
 ////@begin Isosurfaces event table entries
@@ -56,6 +60,7 @@ BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
    EVT_SLIDER           (ISOSURFACE_PLANE_SLIDER,     Isosurfaces::_onIsosurfacePlane)
    EVT_BUTTON           (ADD_ISOSURFACE_BUTTON,       Isosurfaces::_onAddIsosurface)
    EVT_BUTTON           (ADVANCED_ISOSURFACE_BUTTON,  Isosurfaces::_onAdvanced)
+   EVT_COMMAND_SCROLL   (ISOSURFACE_SPINCTRL,         Isosurfaces::_onSpinner)
 ////@end Isosurfaces event table entries
 END_EVENT_TABLE()
 Isosurfaces::Isosurfaces( )
@@ -73,6 +78,8 @@ Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id,
    int tempH = displaySize.GetHeight()-480;
    wxRect dialogPosition( displaySize.GetWidth()-427, displaySize.GetHeight()-tempH, 427, tempH );
    this->SetSize( dialogPosition );
+
+//   tempScalarName = "jared";
 }
 //////////////////////////////////////////////////////////
 bool Isosurfaces::Create( wxWindow* parent, wxWindowID id, 
@@ -84,6 +91,7 @@ bool Isosurfaces::Create( wxWindow* parent, wxWindowID id,
    _isoSurfaceSlider = 0;
    _advancedButton = 0;
    _computeButton = 0;
+   _isoSpinner = 0;
 
    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
    wxDialog::Create( parent, id, caption, pos, size, style );
@@ -115,8 +123,16 @@ void Isosurfaces::CreateControls()
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Isosurface"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText6, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
+    wxBoxSizer* isoSizer = new wxBoxSizer(wxHORIZONTAL);
+
+    _isoSpinner = new wxSpinCtrlDbl( *itemDialog1, ISOSURFACE_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
+
     _isoSurfaceSlider = new wxSlider( itemDialog1, ISOSURFACE_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(_isoSurfaceSlider, 0, wxGROW|wxALL, 5);
+//    itemStaticBoxSizer3->Add(_isoSurfaceSlider, 0, wxGROW|wxALL, 5);
+
+    isoSizer->Add(_isoSpinner, 0, wxALIGN_LEFT|wxTOP|wxLEFT|wxRIGHT, 5 );
+    isoSizer->Add(_isoSurfaceSlider, 1, wxGROW|wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM|wxEXPAND, 5);
+    itemStaticBoxSizer3->Add(isoSizer);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -144,6 +160,31 @@ void Isosurfaces::SetAvailableScalars(wxArrayString scalarNames)
       _scalarNames.Add(scalarNames[i]);
    }
 }
+////////////////////////////////////////////////////////////////
+void Isosurfaces::SetScalarRange(std::string activeScalar, std::vector<double> scalarRange)
+{
+   _scalarRange = scalarRange;
+
+   if( _scalarRange.at(1) == _scalarRange.at(0) )
+   {
+      _isoSurfaceSlider->SetValue( 0 );  
+      _isoSpinner->SetValue( _scalarRange.at(0) );
+      _isoSurfaceSlider->Enable(false);
+      _isoSpinner->Enable(false);
+   }
+   else
+   {
+      _isoSurfaceSlider->Enable(true);
+      _isoSpinner->Enable(true);
+   }
+   
+   if( tempScalarName.compare(_activeScalar) )
+   {
+      tempScalarName = _activeScalar;
+      _isoSpinner->SetValue( _scalarRange.at(0) );
+      _isoSurfaceSlider->SetValue(0);
+   }
+} 
 ////////////////////////////////
 bool Isosurfaces::ShowToolTips()
 {
@@ -174,6 +215,8 @@ void Isosurfaces::_onPrecomputedIsosurface( wxCommandEvent& WXUNUSED(event) )
 /////////////////////////////////////////////////////////////
 void Isosurfaces::_onIsosurfacePlane( wxCommandEvent& WXUNUSED(event) )
 {
+   tempSliderScalar = _scalarRange.at(0) + ( _scalarRange.at(1) - _scalarRange.at(0) ) / 100 * _isoSurfaceSlider->GetValue();
+   _isoSpinner->SetValue( tempSliderScalar );
 }
 ///////////////////////////////////////////////////////////
 void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
@@ -188,6 +231,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
    VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
    colorByScalar->SetData("Color By Scalar",_colorByScalarName);
    newCommand->AddDataValuePair(colorByScalar);
+//std::cout<<"ADVANCED"<<_colorByScalarName<<std::endl;
 
    VE_XML::DataValuePair* nearestPrecomputed = new VE_XML::DataValuePair();
    nearestPrecomputed->SetDataName("Use Nearest Precomputed");
@@ -254,4 +298,19 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
       _colorByScalarName = ConvertUnicode( scalarSelector.GetStringSelection() );
    }
 }
-
+//////////////////////////////////////////////////////
+void Isosurfaces::_onSpinner( wxScrollEvent& WXUNUSED(event) )
+{
+   tempSpinnerScalar =  ( ( _isoSpinner->GetValue() - _scalarRange.at(0) ) / ( _scalarRange.at(1) - _scalarRange.at(0) ) * 100);
+   _isoSurfaceSlider->SetValue( tempSpinnerScalar );
+}
+//////////////////////////////////////////////////////
+void Isosurfaces::InitializeScalarData( std::string activeScalar )
+{
+   if( tempScalarName.compare(_activeScalar) )
+   {
+      tempScalarName = _activeScalar;
+      _isoSpinner->SetValue( _scalarRange.at(0) );
+      _isoSurfaceSlider->SetValue(0);
+   }
+}

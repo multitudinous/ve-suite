@@ -557,6 +557,9 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
    isosurface->SetSize(_vistabPosition);
    isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
    isosurface->SetActiveScalar(_activeScalarName);
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
+   isosurface->SetScalarRange( _activeScalarName, _activeScalarRange );
+//   isosurface->InitializeScalarData( _activeScalarName );
    isosurface->ShowModal();
    //_activeScalarName.erase();
 }
