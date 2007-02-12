@@ -45,6 +45,7 @@
 #include <vtkDataArray.h>
 
 #include <VE_Xplorer/Utilities/cfdVTKFileHandler.h>
+#include <vtkMultiBlockDataSet.h>
 
 #include <iostream>
 #include <iomanip>
@@ -91,7 +92,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
    if ( tempArray->GetNumberOfItems() == 0 )
    {
       //necessary for ensight files that do not have timesteps
-      int numberOfOutputs = reader->GetNumberOfOutputs();
+      /*int numberOfOutputs = reader->GetNumberOfOutputs();
       vtkAppendFilter* appendFilter = vtkAppendFilter::New();
       for ( int i = 0; i < numberOfOutputs; ++i )
       {
@@ -117,12 +118,16 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
          outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
          dataConvertCellToPoint->Delete();
       }
-      else
+      else*/
       {
-         outputDataset->DeepCopy(tmpDSet);
+         if ( !outputDataset )
+         {
+            outputDataset = vtkUnstructuredGrid::New();
+         }
+         outputDataset->DeepCopy(reader->GetOutput());
       }
       outputDataset->Update();
-      tmpDSet->Delete();
+      //tmpDSet->Delete();
       AddScalarsFromVectors( outputDataset );
    }
    else
@@ -138,21 +143,21 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
             reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
             //reader->Update();
             // used for multiple part ensight files
-            int numberOfOutputs = reader->GetNumberOfOutputs();
+            /*int numberOfOutputs = reader->GetNumberOfOutputs();
             vtkAppendFilter* appendFilter = vtkAppendFilter::New();
             for ( int i = 0; i < numberOfOutputs; ++i )
             {
                appendFilter->AddInput( reader->GetOutput( i ) );
             }
-            appendFilter->Update();
+            appendFilter->Update();*/
             
             if ( !outputDataset )
             {
                outputDataset = vtkUnstructuredGrid::New();
             }
             //vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-            outputDataset->DeepCopy( appendFilter->GetOutput() );
-            appendFilter->Delete();
+            outputDataset->DeepCopy( reader->GetOutput() );
+            //appendFilter->Delete();
             
             //get the info about the data in the data set
             if ( outputDataset->GetPointData()->GetNumberOfArrays() == 0 )
