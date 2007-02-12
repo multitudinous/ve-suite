@@ -132,6 +132,10 @@ public:
    /// Retrieves icon resources
    wxIcon GetIconResource( const wxString& name );
 
+   /// Retrieves active scalar
+   void SetActiveScalar(std::string activeScalarName);
+
+
    /// Should we show tooltips?
    static bool ShowToolTips();
 protected:
@@ -168,6 +172,7 @@ protected:
    void _onAdvanced( wxCommandEvent& event );
 
    std::string _dataType;///<Scalar or vector data
+   std::string _activeScalar;///Active scalar name
 
    wxRadioBox*    _directionRBox;
    //wxRadioBox*    _contourTypeRBox;
