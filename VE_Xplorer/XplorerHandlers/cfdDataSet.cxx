@@ -642,7 +642,8 @@ void cfdDataSet::LoadData()
       _vtkFHndlr = new cfdVTKFileHandler();
    }
    //_vtkFHndlr->SetInputFileName(fileName);
-   this->dataSet = _vtkFHndlr->GetDataSetFromFile(fileName);
+   ///This will need to be changed to handle mutliblockdatasets!!!!!!
+   this->dataSet = dynamic_cast<vtkDataSet*>(_vtkFHndlr->GetDataSetFromFile(fileName));
    this->numPtDataArrays = this->dataSet->GetPointData()
                                         ->GetNumberOfArrays();
    vprDEBUG(vesDBG,1) << "\tnumPtDataArrays = " << this->numPtDataArrays

@@ -32,6 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
 #include <vtkDataSet.h>
+#include <vtkDataObject.h>
+#include <vtkGenericDataObjectReader.h>
 #include <vtkXMLFileReadTester.h>
 #include <vtkXMLUnstructuredGridReader.h>
 #include <vtkXMLStructuredGridReader.h>
@@ -40,6 +42,7 @@
 #include <vtkImageData.h>
 #include <vtkPolyDataReader.h>
 #include <vtkDataSetReader.h>
+#include <vtkDataReader.h>
 #include <vtkStructuredGrid.h>
 #include <vtkRectilinearGrid.h>
 #include <vtkUnstructuredGrid.h>
@@ -52,6 +55,14 @@
 #include <vtkPolyDataWriter.h>
 #include <iostream>
 #include <vtkUnstructuredGridReader.h>
+
+#ifdef VTK_CVS
+#include <vtkXMLMultiGroupDataReader.h>
+#include <vtkXMLHierarchicalDataReader.h>
+#include <vtkXMLMultiBlockDataReader.h>
+#include <vtkHierarchicalDataSet.h>
+#include <vtkMultiBlockDataSet.h>
+#endif
 #include <fstream>
 
 using namespace VE_Util;
@@ -64,8 +75,6 @@ cfdVTKFileHandler::cfdVTKFileHandler()
    _outFileType = CFD_XML;
    _outFileMode = CFD_BINARY;
 
-   //_inFileName = 0;
-   //_outFileName = 0;
    _xmlTester = 0;   
    _dataSet = 0;
 }
@@ -125,7 +134,7 @@ void cfdVTKFileHandler::SetOutputFileName(std::string oFile)
    _outFileName = oFile;
 }
 ////////////////////////////////////////////////////////////////////
-vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
+vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
 {
    std::cout<<"Loading: "<<vtkFileName<<std::endl;
    if ( vtkFileName.empty() )
@@ -166,6 +175,18 @@ vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
       {
          GetXMLImageData();
       }
+#ifdef VTK_CVS
+	  else if ( !strcmp( _xmlTester->GetFileDataType(), "MultiBlockDataSet" ) )
+      {
+		  std::cout<<"MultiBlockDataset!!"<<std::endl;
+		  _getXMLMultiGroupDataSet();
+      }
+
+	  else if ( !strcmp( _xmlTester->GetFileDataType(), "vtkHierarchicalDataSet" ) )
+      {
+		  _getXMLMultiGroupDataSet(false);	     
+	  }
+#endif
    }
    else
    {
@@ -180,59 +201,64 @@ void cfdVTKFileHandler::_readClassicVTKFile()
    if(!_inFileName.c_str())
       return;
 
-   vtkDataSetReader *genericReader = vtkDataSetReader::New();
+   vtkGenericDataObjectReader* genericReader = vtkGenericDataObjectReader::New();
    genericReader->SetFileName( _inFileName.c_str() );
-   _dataSet = genericReader->GetOutput();
    genericReader->Update();
-   if (!_dataSet)
+   
    {
-      std::cout << "vtkDataSetReader failed, dataset not recognized." << std::endl;
-      genericReader->Delete();
-      _dataSet = 0;
-   }
-   else
-   {
-      int dataObjectType = genericReader->GetOutput()->GetDataObjectType();
-      if ( dataObjectType == VTK_UNSTRUCTURED_GRID )
+      if ( genericReader->IsFileUnstructuredGrid())
       {
          std::cout<<"Unstructured Grid..."<<std::endl;
          _dataSet = vtkUnstructuredGrid::New();
-         _dataSet->DeepCopy( genericReader->GetUnstructuredGridOutput() );
-         genericReader->Delete();
-      }
-      else if ( dataObjectType == VTK_STRUCTURED_GRID )
+	  }
+	  else if ( genericReader->IsFileStructuredGrid())
       {
          std::cout<<"Structured Grid..."<<std::endl;
-         // Because of a vtk BUG involving structured grid deep copy,
-         // the follow code is not working...
-         /*_dataSet = vtkStructuredGrid::New();
-         _dataSet->DeepCopy( genericReader->GetUnstructuredGridOutput() );
-         genericReader->Delete();
-         */
-	      _dataSet = genericReader->GetStructuredGridOutput();
-      }
-      else if ( dataObjectType == VTK_RECTILINEAR_GRID )
+         _dataSet = vtkStructuredGrid::New();
+	  }
+	  else if ( genericReader->IsFileRectilinearGrid())
       {
          std::cout<<"Rectilinear Grid..."<<std::endl;
          _dataSet = vtkRectilinearGrid::New();
-         _dataSet->ShallowCopy( genericReader->GetRectilinearGridOutput() );
-         genericReader->Delete();
       }
-      else if ( dataObjectType == VTK_POLY_DATA )
+	  else if ( genericReader->IsFilePolyData())
       {
          std::cout<<"PolyData..."<<std::endl;
          _dataSet = vtkPolyData::New();
-         _dataSet->ShallowCopy( genericReader->GetPolyDataOutput() );
-         genericReader->Delete();
       }
-      else
+	  else
       {
          std::cerr <<"\nERROR - Unable to read this vtk file format"
                    << std::endl;
          return ;
       }
+	  _dataSet->DeepCopy( genericReader->GetOutput());
+      genericReader->Delete();
    }
 }
+#ifdef VTK_CVS
+/////////////////////////////////////////////////
+void cfdVTKFileHandler::_getXMLMultiGroupDataSet(bool isMultiBlock)
+{
+   vtkXMLMultiGroupDataReader* mgdReader = 0;
+   if(isMultiBlock)
+   {
+	   mgdReader = vtkXMLMultiBlockDataReader::New();
+	   _dataSet = vtkMultiBlockDataSet::New();
+   }
+   else
+   {
+	   mgdReader= vtkXMLHierarchicalDataReader::New();
+	   _dataSet = vtkHierarchicalDataSet::New();
+   }
+   mgdReader->CanReadFile(_inFileName.c_str());
+   mgdReader->SetFileName(_inFileName.c_str());
+   mgdReader->Update();
+   _dataSet->DeepCopy(mgdReader->GetOutput());
+   _dataSet->Update();
+   mgdReader->Delete();
+}
+#endif
 //////////////////////////////////////
 void cfdVTKFileHandler::_getXMLUGrid()
 {
@@ -291,7 +317,7 @@ void cfdVTKFileHandler::GetXMLImageData( void )
    std::cout<<"Finished Reading image data..."<<std::endl;
 }
 /////////////////////////////////////////////////////////////////////////////////
-bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,std::string outFileName)
+bool cfdVTKFileHandler::WriteDataSet(vtkDataObject* dataSet,std::string outFileName)
 {
    if( outFileName.empty() )
       return false;
@@ -323,7 +349,7 @@ bool cfdVTKFileHandler::WriteDataSet(vtkDataSet* dataSet,std::string outFileName
    return false;
 }
 ////////////////////////////////////////////////////////////////////////
-void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataSet * vtkThing, 
+void cfdVTKFileHandler::_writeClassicVTKFile( vtkDataObject * vtkThing, 
                             std::string vtkFilename, int binaryFlag)
 {
     if ( vtkThing == NULL )

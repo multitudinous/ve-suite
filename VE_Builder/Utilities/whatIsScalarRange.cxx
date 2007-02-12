@@ -39,11 +39,14 @@
 #include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
 
 #include <vtkDataSet.h>
+#include <vtkDataObject.h>
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
-
+#ifdef VTK_CVS
+#include <vtkMultiGroupDataSet.h>
+#endif
 using namespace VE_Util;
-
+void ProcessScalarRangeInfo(vtkDataObject* dataSet);
 int main( int argc, char *argv[] )
 {    
    // If the command line contains an input vtk file name, then use it.
@@ -55,14 +58,51 @@ int main( int argc, char *argv[] )
    }
    else  // then get filename from user...
    {
-      char tempText[ 100 ]; 
-      strcpy( tempText, "the file to compute scalar/vector range" );
+      //char tempText[ 100 ]; 
+	  std::string tempText("the file to compute scalar/vector range");
+	  //strcpy( tempText, "the file to compute scalar/vector range" );
       inFileName = fileIO::getReadableFileFromDefault( tempText, "inFile.vtk" );
    }
 
    // read the data set ("1" means print info to screen)
-   vtkDataSet * dataset = readVtkThing( inFileName, 1 );
-   
+   ///This will need to be changed to handle multiblock datasets
+   vtkDataObject* dataObject = readVtkThing( inFileName, 1 );
+#ifdef VTK_CVS
+   if(dataObject->IsA("vtkMultiGroupDataSet"))
+   {
+	  try
+	  {
+	     vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>(dataObject);
+		 unsigned int nGroups = mgd->GetNumberOfGroups();
+		 unsigned int nDatasetsInGroup = 0;
+		 for(unsigned int i = 0; i < nGroups; i++)
+		 {
+			 std::cout<<"Group: "<<i<<std::endl;
+			 nDatasetsInGroup = mgd->GetNumberOfDataSets(i);
+			 for(unsigned int j = 0; j < nDatasetsInGroup; j++)
+			 {
+				 std::cout<<"Dataset: "<<j<<std::endl;
+			    ProcessScalarRangeInfo(mgd->GetDataSet(i,j));
+			 }
+		 }
+	  }
+	  catch(...)
+	  {
+		  std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
+	  }
+   }
+   else
+#endif
+   {
+	   ProcessScalarRangeInfo(dataObject);
+   }
+   dataObject->Delete();
+   return 0;
+}
+////////////////////////////////////////////////////////////////////
+void ProcessScalarRangeInfo(vtkDataObject* dataObject)
+{
+   vtkDataSet* dataset = dynamic_cast<vtkDataSet*>(dataObject);
    int numArrays = dataset->GetPointData()->GetNumberOfArrays();
    double minMax[ 2 ];
    for ( int i = 0; i < numArrays; i++ )
@@ -97,10 +137,5 @@ int main( int argc, char *argv[] )
       }
    }
    std::cout << std::endl;
-
-   dataset->Delete();
-   //delete [] inFileName;   inFileName = NULL;
-
-   return 0;
 }
 

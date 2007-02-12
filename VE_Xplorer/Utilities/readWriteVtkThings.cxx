@@ -36,7 +36,9 @@
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 #include <vtkDataSet.h>
+#include <vtkDataObject.h>
 #include <vtkDataSetReader.h>
+#include <vtkInformationStringKey.h>
 //#include <vtkPointData.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataWriter.h>
@@ -48,57 +50,82 @@
 #include <vtkUnstructuredGridWriter.h>
 #include <vtkXMLUnstructuredGridReader.h>
 #include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
+#ifdef VTK_CVS
+#include <vtkMultiGroupDataSet.h>
+#endif
 
 using namespace VE_Util;
-
-void VE_Util::printWhatItIs( vtkDataSet * dataSet )
+///////////////////////////////////////////////////////////////
+void VE_Util::printWhatItIs( vtkDataObject * dataSet )
 {
    if ( dataSet == NULL )
    {
       std::cout << "\tdataSet == NULL" << std::endl;
       return;
    }
-   if ( dataSet->IsA("vtkDataSet") )          
-      std::cout << "\tIsA(\"vtkDataSet\")" << std::endl;
-   if ( dataSet->IsA("vtkPointSet") )         
-      std::cout << "\tIsA(\"vtkPointSet\")" << std::endl;
-   if ( dataSet->IsA("vtkUnstructuredGrid") ) 
-      std::cout << "\tIsA(\"vtkUnstructuredGrid\")" << std::endl;
-   if ( dataSet->IsA("vtkStructuredGrid") )   
-      std::cout << "\tIsA(\"vtkStructuredGrid\")"<< std::endl;
-   if ( dataSet->IsA("vtkPolyData") )         
-      std::cout << "\tIsA(\"vtkPolyData\")"<< std::endl;
-   if ( dataSet->IsA("vtkRectilinearGrid") )  
-      std::cout << "\tIsA(\"vtkRectilinearGrid\")" << std::endl;
-   //std::cout << "GetDataObjectType() = " << dataSet->GetDataObjectType() << std::endl;
+   std::cout<<dataSet->GetClassName()<<std::endl;
 }
-
-void VE_Util::printBounds( double bounds[6] )
+///////////////////////////////////////////////////////
+void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
 {
+   double bounds[6];
    std::cout << "Geometry bounding box information..." << std::endl;
+#ifdef VTK_CVS
+   if(dataObject->IsA("vtkMultiGroupDataSet"))
+   {
+	  try
+	  {
+	     vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>(dataObject);
+		 unsigned int nGroups = mgd->GetNumberOfGroups();
+		 unsigned int nDatasetsInGroup = 0;
+		 for(unsigned int i = 0; i < nGroups; i++)
+		 {
+			 std::cout<<"Group: "<<i<<std::endl;
+			 nDatasetsInGroup = mgd->GetNumberOfDataSets(i);
+			 for(unsigned int j = 0; j < nDatasetsInGroup; j++)
+			 {
+				 std::cout<<"Dataset: "<<j<<std::endl;
+				 dynamic_cast<vtkDataSet*>(mgd->GetDataSet(i,j))->GetBounds(bounds);
+			 }
+		 }
+	  }
+	  catch(...)
+	  {
+		  std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
+	  }
+   }
+   else
+#endif
+   {
+      dynamic_cast<vtkDataSet*>(dataObject)->GetBounds(bounds);
+	   //ProcessScalarRangeInfo(dataObject);
+   }
+   //dataObject->Delete();
+	/*
+   std::cout << "Geometry bounding box information..." << std::endl;*/
    std::cout << "\tx-min = \t" << bounds[0]
              << "\tx-max = \t" << bounds[1] << std::endl;
    std::cout << "\ty-min = \t" << bounds[2] 
              << "\ty-max = \t" << bounds[3] << std::endl;
    std::cout << "\tz-min = \t" << bounds[4] 
              << "\tz-max = \t" << bounds[5] << std::endl;
+			 
 }
-
-vtkDataSet * VE_Util::readVtkThing( std::string vtkFilename, int printFlag )
+/////////////////////////////////////////////////////////////////////////////
+vtkDataObject* VE_Util::readVtkThing( std::string vtkFilename, int printFlag )
 {
    cfdVTKFileHandler fileReader;
-   vtkDataSet* temp = fileReader.GetDataSetFromFile(vtkFilename);
+   vtkDataObject* temp = fileReader.GetDataSetFromFile(vtkFilename);
+   temp->Update();
    if ( printFlag )
    {
-      double bounds[6];
-      temp->GetBounds( bounds );
-      printBounds( bounds );
+	  printBounds( temp );
       VE_Util::printWhatItIs( temp );
    }
    return temp;
 }
 
-bool VE_Util::writeVtkThing( vtkDataSet * vtkThing, std::string vtkFilename, int binaryFlag )
+bool VE_Util::writeVtkThing( vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
 {
    cfdVTKFileHandler fileWriter;
    if(!binaryFlag) 

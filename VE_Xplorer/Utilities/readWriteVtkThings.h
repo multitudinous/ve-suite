@@ -36,16 +36,17 @@
 #define OPENVTKTHING_H
 
 class vtkDataSet;
+class vtkDataObject;
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Util
 {
-   VE_UTIL_EXPORTS void printWhatItIs( vtkDataSet * readerOutput );
+   VE_UTIL_EXPORTS void printWhatItIs( vtkDataObject* readerOutput );
 
-   VE_UTIL_EXPORTS vtkDataSet* readVtkThing( std::string vtkFilename, int printFlag = 0 );  //default is not to print information
+   VE_UTIL_EXPORTS vtkDataObject* readVtkThing( std::string vtkFilename, int printFlag = 0 );  //default is not to print information
 
-   VE_UTIL_EXPORTS bool writeVtkThing( vtkDataSet * vtkThing, std::string vtkFilename, int binaryFlag = 0 );// default is to print ascii file
+   VE_UTIL_EXPORTS bool writeVtkThing( vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag = 0 );// default is to print ascii file
 
-   VE_UTIL_EXPORTS void printBounds( double bounds[6] );
+   VE_UTIL_EXPORTS void printBounds( vtkDataObject* dataObject);//double bounds[6] );
 }
 #endif
