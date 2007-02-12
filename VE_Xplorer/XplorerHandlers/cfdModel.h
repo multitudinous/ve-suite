@@ -131,159 +131,144 @@ namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
 {
-   public:
-      cfdModel( VE_SceneGraph::DCS* );
-      ~cfdModel();
-  
-      ///PreFrame callback to update the model based on commands from
-      ///VE-Conductor
-      void PreFrameUpdate(); 
-      ///compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){return false;} 
+public:
+   cfdModel( VE_SceneGraph::DCS* );
+   ~cfdModel();
 
-      ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand() {}
+   ///PreFrame callback to update the model based on commands from
+   ///VE-Conductor
+   void PreFrameUpdate(); 
+   ///compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){return false;} 
 
-      void setModelNode( VE_SceneGraph::CADEntityHelper * );
-      void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
-         
-      void setTrans3( float x, float y, float z );
-      void setTrans( float trans[3] );
-      void setScale( float x,float y, float z );
-      void setRot(float,float,float);
-      void setRotMat(double *);
+   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand() {}
 
-      void updateCurModel();//handling the add or delete the vtkdateset or geomdataset
-      void addVTKdataset(const std::string&);
-      void delVTKdataset();
-      void addGeomdataset(const std::string &filename);
-      void delGeomdataset(int);
-      bool GetMirrorDataFlag( void );
-      void SetMirrorDataFlag( bool );
-      void SetMirrorNode( VE_SceneGraph::Group* );
+   void setModelNode( VE_SceneGraph::CADEntityHelper * );
+   void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
+   bool GetMirrorDataFlag( void );
+   void SetMirrorDataFlag( bool );
+   void SetMirrorNode( VE_SceneGraph::Group* );
+
+   VE_Xplorer::cfdDataSet* GetCfdDataSet( int );
+   unsigned int GetIndexOfDataSet( std::string dataSetName );
+   unsigned int GetNumberOfCfdDataSets( void );
+   std::string GetCfdDataSetFileName( int );
+   void CreateCfdDataSet( void );
+   int GetKeyForCfdDataSet( cfdDataSet* );
+   VE_Xplorer::cfdDataSet* GetActiveDataSet( void );
+   void SetActiveDataSet( VE_Xplorer::cfdDataSet* );
+
+   VE_SceneGraph::CADEntity* GetGeomDataSet( int );
+   unsigned int GetNumberOfGeomDataSets( void );
+   std::string GetGeomFileName( int );
+   void CreateGeomDataSet( std::string );
    
-      VE_Xplorer::cfdDataSet* GetCfdDataSet( int );
-      unsigned int GetIndexOfDataSet( std::string dataSetName );
-      unsigned int GetNumberOfCfdDataSets( void );
-      std::string GetCfdDataSetFileName( int );
-      void CreateCfdDataSet( void );
-      int GetKeyForCfdDataSet( cfdDataSet* );
-      VE_Xplorer::cfdDataSet* GetActiveDataSet( void );
-      void SetActiveDataSet( VE_Xplorer::cfdDataSet* );
+   ///Set the root CADNode
+   ///\param node The rootCADNode
+   void SetRootCADNode(VE_XML::VE_CAD::CADNode* node);
+   ///\param CAD goes transparent when dataset vis is active
+   void MakeCADRootTransparent();
 
-      VE_SceneGraph::CADEntity* GetGeomDataSet( int );
-      unsigned int GetNumberOfGeomDataSets( void );
-      std::string GetGeomFileName( int );
-      void CreateGeomDataSet( std::string );
-      
-      ///Set the root CADNode
-      ///\param node The rootCADNode
-      void SetRootCADNode(VE_XML::VE_CAD::CADNode* node);
-      ///\param CAD goes transparent when dataset vis is active
-      void MakeCADRootTransparent();
+   ///\param CAD return to default state on clear all
+   void MakeCADRootOpaque();
 
-      ///\param CAD return to default state on clear all
-      void MakeCADRootOpaque();
+   ///Add a new attribute to a node
+   ///\param nodeID The ID of the node to add Attribute to.
+   ///\param nodeType The node type.
+   ///\param The CADAttribute to add to the node.
+   void AddAttributeToNode(std::string nodeID,
+                        VE_XML::VE_CAD::CADAttribute* newAttribute);
+   ///Add a new attribute to a node
+   ///\param nodeID The ID of the node to add Attribute to.
+   ///\param nodeType The node type.
+   ///\param neAttribute The name of the CADAttribute to remove from the node.
+   void RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
+                                std::string newAttribute);
+   ///Add a new attribute to a node
+   ///\param nodeID The ID of the node to add Attribute to.
+   ///\param nodeType The node type.
+   ///\param attributeName The name of the CADAttribute to activate on the CADNode.
+   void SetActiveAttributeOnNode(std::string nodeID,
+                                 std::string nodeType,
+                                 std::string attributeName);
+   ///Create a new assembly
+   void CreateAssembly(std::string assemblyID);
+   
+   ///Create a new clone
+   void CreateClone(std::string cloneID,
+                    std::string originalID,
+                    std::string orignalType);
 
-      ///Add a new attribute to a node
-      ///\param nodeID The ID of the node to add Attribute to.
-      ///\param nodeType The node type.
-      ///\param The CADAttribute to add to the node.
-      void AddAttributeToNode(std::string nodeID,
-                           VE_XML::VE_CAD::CADAttribute* newAttribute);
-	   ///Add a new attribute to a node
-      ///\param nodeID The ID of the node to add Attribute to.
-      ///\param nodeType The node type.
-      ///\param neAttribute The name of the CADAttribute to remove from the node.
-      void RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
-                                   std::string newAttribute);
-      ///Add a new attribute to a node
-      ///\param nodeID The ID of the node to add Attribute to.
-      ///\param nodeType The node type.
-      ///\param attributeName The name of the CADAttribute to activate on the CADNode.
-      void SetActiveAttributeOnNode(std::string nodeID,
-                                    std::string nodeType,
-                                    std::string attributeName);
-      ///Create a new assembly
-      void CreateAssembly(std::string assemblyID);
-      
-      ///Create a new clone
-      void CreateClone(std::string cloneID,
-                       std::string originalID,
-                       std::string orignalType);
+   ///Create a new part
+   void CreatePart(std::string fileName,
+                   std::string partID,
+                   std::string parentID);
 
-      ///Create a new part
-      void CreatePart(std::string fileName,
-                      std::string partID,
-                      std::string parentID);
+   ///Get a specified CADAttribute for a specified CADNode
+   ///\param nodeID The CADNode  
+   ///\param attributeName The name of the CADAttribute to find.
+   ///\param component The name of the CADMaterial component to update.
+   ///\param face The face to apply the update to.
+   ///\param values The new values.
+   void UpdateMaterialComponent(std::string nodeID,std::string attributeName,std::string component,
+                                 std::string face,std::vector<double> values);
 
-      ///Get a specified CADAttribute for a specified CADNode
-      ///\param nodeID The CADNode  
-      ///\param attributeName The name of the CADAttribute to find.
-      ///\param component The name of the CADMaterial component to update.
-      ///\param face The face to apply the update to.
-      ///\param values The new values.
-      void UpdateMaterialComponent(std::string nodeID,std::string attributeName,std::string component,
-                                    std::string face,std::vector<double> values);
+   ///Get a specified CADAttribute for a specified CADNode
+   ///\param nodeID The CADNode  
+   ///\param attributeName The name of the CADAttribute to find.
+   ///\param type The type of mode to update.
+   ///\param mode The new mode.
+   void UpdateMaterialMode(std::string nodeID,std::string attributeName,std::string type,std::string mode);
 
-      ///Get a specified CADAttribute for a specified CADNode
-      ///\param nodeID The CADNode  
-      ///\param attributeName The name of the CADAttribute to find.
-      ///\param type The type of mode to update.
-      ///\param mode The new mode.
-      void UpdateMaterialMode(std::string nodeID,std::string attributeName,std::string type,std::string mode);
+   ///Get a specific part. 
+   ///\param partID The ID of the part to search form
+   VE_SceneGraph::CADEntity* GetPart(std::string partID);
 
-      ///Get a specific part. 
-      ///\param partID The ID of the part to search form
-      VE_SceneGraph::CADEntity* GetPart(std::string partID);
+   ///Get a specific assembly. 
+   ///\param assemblyID The ID of the assembly to search form
+   VE_SceneGraph::DCS* GetAssembly(std::string assemblyID);
 
-      ///Get a specific assembly. 
-      ///\param assemblyID The ID of the assembly to search form
-      VE_SceneGraph::DCS* GetAssembly(std::string assemblyID);
+   ///Get a specific assembly. 
+   ///\param assemblyID The ID of the assembly to search form
+   VE_SceneGraph::Clone* GetClone(std::string cloneID);
 
-      ///Get a specific assembly. 
-      ///\param assemblyID The ID of the assembly to search form
-      VE_SceneGraph::Clone* GetClone(std::string cloneID);
+   ///\param cloneID The part ID to search for.
+   bool CloneExists(std::string clone);
 
-      ///\param cloneID The part ID to search for.
-      bool CloneExists(std::string clone);
+   ///\param partID The part ID to search for.
+   bool PartExists(std::string partID);
 
-      ///\param partID The part ID to search for.
-      bool PartExists(std::string partID);
+   ///\param assemblyID The assembly ID to search for.
+   bool AssemblyExists(std::string assemblyID);
 
-      ///\param assemblyID The assembly ID to search for.
-      bool AssemblyExists(std::string assemblyID);
+   ///Get the node for the cfd data set
+   VE_SceneGraph::CADEntityHelper* GetCfdNode( void );
 
-      ///Get the node for the cfd data set
-      VE_SceneGraph::CADEntityHelper* GetCfdNode( void );
+   ///Get the dcs for the cfd data set
+   VE_SceneGraph::DCS* GetDCS( void );
 
-      ///Get the dcs for the cfd data set
-      VE_SceneGraph::DCS* GetDCS( void );
+   ///Set the id for this model
+   ///\param id the id of the model to be set
+   void SetID( unsigned int id );
 
-      ///Set the id for this model
-      ///\param id the id of the model to be set
-      void SetID( unsigned int id );
+   ///Get the id for this model
+   unsigned int GetID( void );
 
-      ///Get the id for this model
-      unsigned int GetID( void );
-
-      //////////////////////////
-      //texture based interface
+   //////////////////////////
+   //texture based interface
 #ifdef _OSG
-      void SetActiveTextureDataSet( VE_TextureBased::cfdTextureDataSet* tDS);
+   void SetActiveTextureDataSet( VE_TextureBased::cfdTextureDataSet* tDS);
 #ifdef VE_PATENTED
-	  void CreateTextureDataSet();
-      void AddDataSetToTextureDataSet(unsigned int index,
-                            std::string textureDescriptionFile);
+  void CreateTextureDataSet();
+   void AddDataSetToTextureDataSet(unsigned int index,
+                         std::string textureDescriptionFile);
 #endif
-      unsigned int GetNumberOfTextureDataSets();
-      VE_TextureBased::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
-      VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet();
+   unsigned int GetNumberOfTextureDataSets();
+   VE_TextureBased::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
+   VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet();
 #endif
-      ///////////////////////////////////////////////////
-
-      //VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
-      std::map<int,VE_Xplorer::cfdDataSet*> transientDataSets;
+   ///////////////////////////////////////////////////
 
 //Dynamically load data from unit
 public:   
@@ -294,57 +279,54 @@ public:
    void DynamicLoadingGeom(std::string, float*, float*, float*, float*, int, int);
    void AddVTKDataSet(vtkDataSet* );
    std::vector<vtkDataSet* >GetWaitingDataList();
- 
 
    ///The current graph
    VE_XML::VE_CAD::CADNode* GetRootCADNode();
-   
-      private:
-         vpr::Thread *loadDataTh;
-         vpr::Mutex mValueLock;
-         std::vector<vtkDataSet* > waitingdatalist; 
-         std::string currentsurfacefilename;
-         bool mirrorDataFlag;
 
-      private:
-         //VE_SceneGraph::cfdTempAnimation* animation;
-         osg::ref_ptr< VE_SceneGraph::Switch > switchNode;
-			osg::ref_ptr< VE_SceneGraph::Group > classic;
-         osg::ref_ptr< VE_SceneGraph::Group > textureBased;
-         typedef std::vector< VE_SceneGraph::CADEntity* > GeometoryDataSetList;
-         GeometoryDataSetList mGeomDataSets;
-         typedef std::vector< VE_Xplorer::cfdDataSet* > VTKDataSetList;
-         VTKDataSetList mVTKDataSets;
+private:
+   vpr::Thread *loadDataTh;
+   vpr::Mutex mValueLock;
+   std::vector<vtkDataSet* > waitingdatalist; 
+   std::string currentsurfacefilename;
+   bool mirrorDataFlag;
 
-         std::map< std::string, VE_SceneGraph::CADEntity* > _partList;///<A list of the current parts.
-         std::map< std::string, VE_SceneGraph::DCS* > _assemblyList;///A list of the current assemblies.
-         std::map< std::string, VE_SceneGraph::Clone* > _cloneList;///A list of clones.
-         //std::map< btRigidBody*, VE_SceneGraph::DCS* > physicsTransformMap;
+private:
+   //VE_SceneGraph::cfdTempAnimation* animation;
+   osg::ref_ptr< VE_SceneGraph::Switch > switchNode;
+   osg::ref_ptr< VE_SceneGraph::Group > classic;
+   osg::ref_ptr< VE_SceneGraph::Group > textureBased;
+   typedef std::vector< VE_SceneGraph::CADEntity* > GeometoryDataSetList;
+   GeometoryDataSetList mGeomDataSets;
+   typedef std::vector< VE_Xplorer::cfdDataSet* > VTKDataSetList;
+   VTKDataSetList mVTKDataSets;
 
-      #ifdef _OSG
-         typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;
-         TextureDataSetList mTextureDataSets;
-         VE_TextureBased::cfdTextureDataSet* _activeTextureDataSet;
-      #endif
+   std::map< std::string, VE_SceneGraph::CADEntity* > _partList;///<A list of the current parts.
+   std::map< std::string, VE_SceneGraph::DCS* > _assemblyList;///A list of the current assemblies.
+   std::map< std::string, VE_SceneGraph::Clone* > _cloneList;///A list of clones.
+   //std::map< btRigidBody*, VE_SceneGraph::DCS* > physicsTransformMap;
 
-         osg::ref_ptr< VE_SceneGraph::DCS > mModelDCS;
-         osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
-         VE_SceneGraph::CADEntityHelper* mModelNode;
-         VE_SceneGraph::fileInfo* mGeomFileInfo;
-         VE_SceneGraph::fileInfo* mVTKFileInfo;
-         cfdDataSet* activeDataSet;
-         VE_SceneGraph::Clone* mirrorNode;
-         osg::ref_ptr< VE_SceneGraph::Group > mirrorGroupNode;
-   
-         //the information for following three variables should be transfered from cfdApp
-         ModelTypeIndex mModelType;
-         Operation2Model mActiveOperation2Model;
-   
-         bool mUpdateModelFlag;
-         bool mMoveOldGeomDataSets;
-         bool mMoveOldVTKDataSets;   
+#ifdef _OSG
+   typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;
+   TextureDataSetList mTextureDataSets;
+   VE_TextureBased::cfdTextureDataSet* _activeTextureDataSet;
+#endif
 
-         VE_XML::VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
+   osg::ref_ptr< VE_SceneGraph::DCS > mModelDCS;
+   osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
+   VE_SceneGraph::CADEntityHelper* mModelNode;
+   cfdDataSet* activeDataSet;
+   VE_SceneGraph::Clone* mirrorNode;
+   osg::ref_ptr< VE_SceneGraph::Group > mirrorGroupNode;
+
+   //the information for following three variables should be transfered from cfdApp
+   ModelTypeIndex mModelType;
+   Operation2Model mActiveOperation2Model;
+
+   bool mUpdateModelFlag;
+   bool mMoveOldGeomDataSets;
+   bool mMoveOldVTKDataSets;   
+
+   VE_XML::VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
    unsigned int modelID;
 #ifdef _OSG
          std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.

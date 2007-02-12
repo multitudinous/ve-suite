@@ -882,7 +882,7 @@ void VjObs_i::CreateCommandQueue( void )
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 0 );
 
-   for ( iter = cfdModelHandler::instance()->GetActiveModel()->transientDataSets.begin(); 
+   /*for ( iter = cfdModelHandler::instance()->GetActiveModel()->transientDataSets.begin(); 
          iter != cfdModelHandler::instance()->GetActiveModel()->transientDataSets.end(); ++iter)
    { 
       // Set the active datasets
@@ -901,7 +901,7 @@ void VjObs_i::CreateCommandQueue( void )
       commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, newId );
       commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, newIsoValue );
       commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, newPreState );
-   }
+   }*/
 
    commandQueue.push_back( new cfdCommandArray() );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
