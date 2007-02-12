@@ -116,7 +116,6 @@ vtkDataObject* VE_Util::readVtkThing( std::string vtkFilename, int printFlag )
 {
    cfdVTKFileHandler fileReader;
    vtkDataObject* temp = fileReader.GetDataSetFromFile(vtkFilename);
-   temp->Update();
    if ( printFlag )
    {
 	  printBounds( temp );

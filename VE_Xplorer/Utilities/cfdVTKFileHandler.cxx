@@ -251,11 +251,9 @@ void cfdVTKFileHandler::_getXMLMultiGroupDataSet(bool isMultiBlock)
 	   mgdReader= vtkXMLHierarchicalDataReader::New();
 	   _dataSet = vtkHierarchicalDataSet::New();
    }
-   mgdReader->CanReadFile(_inFileName.c_str());
    mgdReader->SetFileName(_inFileName.c_str());
    mgdReader->Update();
    _dataSet->DeepCopy(mgdReader->GetOutput());
-   _dataSet->Update();
    mgdReader->Delete();
 }
 #endif
