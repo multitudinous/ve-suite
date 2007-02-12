@@ -95,7 +95,7 @@ void StateInfo::SetObjectFromXMLData(DOMNode* xmlInput)
    }
 
    //get variables by tags
-   DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("command"));
+   DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("Command"));
 
    //we can have as many dvpairs as we want so get them all and populate the list
    DOMElement* cmdsIn = 0;
@@ -115,6 +115,7 @@ void StateInfo::SetObjectFromXMLData(DOMNode* xmlInput)
       DOMElement* vecmdIn = dynamic_cast<DOMElement*>(subElements->item(i));
       if(vecmdIn)
       {
+std::cout<<"Found state info commands"<<std::endl;
          VE_XML::Command* Command = new VE_XML::Command();
          Command->SetObjectFromXMLData(vecmdIn);
          Command->SetOwnerDocument(_rootDocument);
@@ -140,4 +141,26 @@ VE_XML::Command* StateInfo::GetState(std::string name)
 VE_XML::Command* StateInfo::GetState(unsigned int index)
 {
    return _stateInfo.at(index);
+}
+///////////////////////////////////////////////////// 
+StateInfo::StateInfo( const StateInfo& input)
+:XMLObject(input)
+{
+   for(size_t i = 0; i < input._stateInfo.size(); i++)
+   {
+      _stateInfo.push_back(input._stateInfo.at(i));
+   }
+}
+/////////////////////////////////////////////////////////
+StateInfo& StateInfo::operator= ( const StateInfo& input)
+{
+   if( this != &input )
+   {
+      _stateInfo.clear();
+      for(size_t i = 0; i < input._stateInfo.size(); i++)
+      {
+         _stateInfo.push_back(input._stateInfo.at(i));
+      }
+   }
+   return *this;
 }

@@ -57,6 +57,10 @@ class VE_XML_EXPORTS StateInfo : public XMLObject{
 public:
    ///Constructor 
    StateInfo();
+   ///Copy Constructor
+   StateInfo( const StateInfo& );
+   ///equal operator
+   StateInfo& operator= ( const StateInfo& );
    ///Destructor
    virtual ~StateInfo();
    

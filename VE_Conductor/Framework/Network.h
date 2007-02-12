@@ -61,10 +61,11 @@ class GlobalParamDialog;
 class wxProgressDialog;
 namespace VE_XML
 {
-namespace VE_Model
-{
-   class Network;
-}
+   namespace VE_Model
+   {
+      class Network;
+      class User;
+   }
 }
 
 class Vistab;
@@ -297,7 +298,8 @@ private:
    /// first = x unit
    /// second = y unit
    std::pair< unsigned int, unsigned int > numUnit;
-
+   ///Color vector
+   std::vector<double> backgroundColor;
    ///ptr to send data back to explorer
    VjObs_var xplorerPtr;
    ///Used to operate on cad data in a plugin

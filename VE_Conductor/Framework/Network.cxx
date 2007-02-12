@@ -2263,7 +2263,7 @@ std::string Network::Save( std::string fileName )
 
    //Write out the veUser info for the local user
    VE_XML::User userInfo;
-   userInfo.SetUserId( "mccdo" );
+   userInfo.SetUserId( "jaredabo" );
    userInfo.SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
    // Create the color state
    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
@@ -2477,6 +2477,33 @@ void Network::CreateNetwork( std::string xmlNetwork )
 //std::cout << " reveiw : " << std::endl
 //      << num << " : "<< model->GetModelName() << " : " << bbox.x << " : " << bbox.y << std::endl;
    }
+
+   networkWriter.ReadXMLData( xmlNetwork, "XML", "User" );
+   objectVector = networkWriter.GetLoadedXMLObjects();
+   if ( !objectVector.empty() )
+   {
+      backgroundColor.clear();
+      VE_XML::Command* colorCommand = 0;
+      VE_XML::User* userColor = dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
+      colorCommand = userColor->GetUserStateInfo()->GetState( "CHANGE_BACKGROUND_COLOR" );
+      colorCommand->GetDataValuePair( "Background Color" )->GetData( backgroundColor );
+   }
+   else
+   {
+      backgroundColor.clear();
+      backgroundColor.push_back( 0.0f );
+      backgroundColor.push_back( 0.0f );
+      backgroundColor.push_back( 0.0f );
+      backgroundColor.push_back( 1.0f );
+   }
+   // Create the command and data value pairs
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
+   dataValuePair->SetData(std::string("Background Color"),backgroundColor);
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
+   veCommand->AddDataValuePair(dataValuePair);
+
+   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    /*
    // do this for tags
    DOMNodeList* subElements = doc->getDocumentElement()->getElementsByTagName( xercesString("veTag") );
