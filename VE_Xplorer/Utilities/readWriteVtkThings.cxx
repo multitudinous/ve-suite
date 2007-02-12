@@ -50,9 +50,7 @@
 #include <vtkUnstructuredGridWriter.h>
 #include <vtkXMLUnstructuredGridReader.h>
 #include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
-//#ifdef VTK_CVS
 #include <vtkMultiGroupDataSet.h>
-//#endif
 
 using namespace VE_Util;
 ///////////////////////////////////////////////////////////////
@@ -70,7 +68,6 @@ void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
 {
    double bounds[6];
    std::cout << "Geometry bounding box information..." << std::endl;
-//#ifdef VTK_CVS
    if(dataObject->IsA("vtkMultiGroupDataSet"))
    {
 	  try
@@ -95,7 +92,6 @@ void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
 	  }
    }
    else
-//#endif
    {
       dynamic_cast<vtkDataSet*>(dataObject)->GetBounds(bounds);
    }
@@ -121,7 +117,7 @@ vtkDataObject* VE_Util::readVtkThing( std::string vtkFilename, int printFlag )
    }
    return temp;
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////
 bool VE_Util::writeVtkThing( vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
 {
    cfdVTKFileHandler fileWriter;

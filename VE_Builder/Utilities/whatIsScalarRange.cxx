@@ -42,9 +42,9 @@
 #include <vtkDataObject.h>
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
-#ifdef VTK_CVS
+
 #include <vtkMultiGroupDataSet.h>
-#endif
+
 using namespace VE_Util;
 void ProcessScalarRangeInfo(vtkDataObject* dataSet);
 int main( int argc, char *argv[] )
@@ -67,16 +67,16 @@ int main( int argc, char *argv[] )
    // read the data set ("1" means print info to screen)
    ///This will need to be changed to handle multiblock datasets
    vtkDataObject* dataObject = readVtkThing( inFileName, 1 );
-#ifdef VTK_CVS
+
    if(dataObject->IsA("vtkMultiGroupDataSet"))
    {
 	  try
 	  {
 	     vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>(dataObject);
-		 unsigned int nGroups = mgd->GetNumberOfGroups();
-		 unsigned int nDatasetsInGroup = 0;
-		 for(unsigned int i = 0; i < nGroups; i++)
-		 {
+		  unsigned int nGroups = mgd->GetNumberOfGroups();
+		  unsigned int nDatasetsInGroup = 0;
+		  for(unsigned int i = 0; i < nGroups; i++)
+		  {
 			 std::cout<<"Group: "<<i<<std::endl;
 			 nDatasetsInGroup = mgd->GetNumberOfDataSets(i);
 			 for(unsigned int j = 0; j < nDatasetsInGroup; j++)
@@ -84,15 +84,14 @@ int main( int argc, char *argv[] )
 				 std::cout<<"Dataset: "<<j<<std::endl;
 			    ProcessScalarRangeInfo(mgd->GetDataSet(i,j));
 			 }
-		 }
-	  }
+        }
+     }
 	  catch(...)
 	  {
 		  std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
 	  }
    }
    else
-#endif
    {
 	   ProcessScalarRangeInfo(dataObject);
    }

@@ -55,14 +55,13 @@
 #include <iostream>
 #include <vtkUnstructuredGridReader.h>
 
-//#ifdef VTK_CVS
 #include <vtkXMLMultiGroupDataReader.h>
 #include <vtkXMLHierarchicalDataReader.h>
 #include <vtkXMLMultiBlockDataReader.h>
 #include <vtkHierarchicalDataSet.h>
 #include <vtkMultiBlockDataSet.h>
 #include <vtkGenericDataObjectReader.h>
-//#endif
+#include <vtkGenericDataObjectWriter.h>
 #include <fstream>
 
 using namespace VE_Util;
@@ -175,7 +174,6 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
       {
          GetXMLImageData();
       }
-#ifdef VTK_CVS
 	  else if ( !strcmp( _xmlTester->GetFileDataType(), "MultiBlockDataSet" ) )
       {
 		  std::cout<<"MultiBlockDataset!!"<<std::endl;
@@ -186,7 +184,6 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
       {
 		  _getXMLMultiGroupDataSet(false);	     
 	  }
-#endif
    }
    else
    {
@@ -236,7 +233,6 @@ void cfdVTKFileHandler::_readClassicVTKFile()
       genericReader->Delete();
    }
 }
-//#ifdef VTK_CVS
 /////////////////////////////////////////////////
 void cfdVTKFileHandler::_getXMLMultiGroupDataSet(bool isMultiBlock)
 {
@@ -256,7 +252,6 @@ void cfdVTKFileHandler::_getXMLMultiGroupDataSet(bool isMultiBlock)
    _dataSet->DeepCopy(mgdReader->GetOutput());
    mgdReader->Delete();
 }
-//#endif
 //////////////////////////////////////
 void cfdVTKFileHandler::_getXMLUGrid()
 {
@@ -319,31 +314,18 @@ bool cfdVTKFileHandler::WriteDataSet(vtkDataObject* dataSet,std::string outFileN
 {
    if( outFileName.empty() )
       return false;
+   vtkGenericDataObjectWriter* dataObjectWriter = vtkGenericDataObjectWriter::New();
+   dataObjectWriter->SetFileName(outFileName.c_str());
+   dataObjectWriter->SetInput(dataSet);
+   if ( _outFileMode == CFD_ASCII )
+      dataObjectWriter->SetFileType(VTK_ASCII);
 
-   if ( _outFileType == CFD_XML )
+   if(dataObjectWriter->Write())
    {
-      vtkXMLDataSetWriter* xmlWriter = vtkXMLDataSetWriter::New();
-      xmlWriter->SetFileName(outFileName.c_str());
-      xmlWriter->SetInput(dataSet);
-      if ( _outFileMode == CFD_ASCII )
-         xmlWriter->SetDataModeToAscii();
-      
-      if ( xmlWriter->Write())
-      {
-         xmlWriter->Delete();
-         return true;
-      }
-      else
-      {
-         xmlWriter->Delete();
-         return false;
-      }
-   }
-   else
-   {
-      _writeClassicVTKFile(dataSet,outFileName,_outFileMode);
+      dataObjectWriter->Delete();
       return true;
    }
+   dataObjectWriter->Delete();
    return false;
 }
 ////////////////////////////////////////////////////////////////////////
