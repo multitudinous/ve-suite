@@ -500,18 +500,22 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED(event) )
    try
    {
       dynamic_cast<Vistab*>(GetParent())->SendUpdatedSettingsToXplorer(newCommand);
+
    }
    catch(...)
    {
-      {
-         wxMessageBox( _("Invalid Parent"), _("Communication Failure"), 
-            wxOK | wxICON_INFORMATION );
-         if(newCommand)
-         {
-            delete newCommand;
-            newCommand = 0;
-         }
-      }
+      wxMessageBox( _("Invalid Parent"), _("Communication Failure"), 
+         wxOK | wxICON_INFORMATION );
+   }
+
+   if(newCommand)
+   {
+      delete newCommand;
+      newCommand = 0;
    }
 }
-
+///////////////////////////////////////////////////////////
+void Contours::SetActiveScalar(std::string activeScalar)
+{
+   _activeScalar = activeScalar;
+}
