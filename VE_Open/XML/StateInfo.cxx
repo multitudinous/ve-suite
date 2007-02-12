@@ -115,7 +115,6 @@ void StateInfo::SetObjectFromXMLData(DOMNode* xmlInput)
       DOMElement* vecmdIn = dynamic_cast<DOMElement*>(subElements->item(i));
       if(vecmdIn)
       {
-std::cout<<"Found state info commands"<<std::endl;
          VE_XML::Command* Command = new VE_XML::Command();
          Command->SetObjectFromXMLData(vecmdIn);
          Command->SetOwnerDocument(_rootDocument);
