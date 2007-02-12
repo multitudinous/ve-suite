@@ -73,7 +73,7 @@ void EnSightTranslator::EnSightPreTranslateCbk::Preprocess(int argc,char** argv,
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDataset,
+void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDataset,
 		                                     VE_Builder::cfdTranslatorToVTK* toVTK )
 {
    VE_Builder::EnSightTranslator* EnSightToVTK =
@@ -199,7 +199,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataSet*& outputDatas
    reader->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnSightTranslator::EnSightTranslateCbk::AddScalarsFromVectors( vtkDataSet*& outputDataset )
+void EnSightTranslator::EnSightTranslateCbk::AddScalarsFromVectors( vtkDataObject*& outputDataset )
 {
    //this portion is to grab scalar data out of the vectors and rewrite it back
    //into the VTK file

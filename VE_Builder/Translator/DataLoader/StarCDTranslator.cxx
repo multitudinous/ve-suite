@@ -61,7 +61,7 @@ void StarCDTranslator::StarCDPreTranslateCbk::Preprocess(int argc,char** argv,
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StarCDTranslator::StarCDTranslateCbk::Translate(vtkDataSet*& outputDataset,
+void StarCDTranslator::StarCDTranslateCbk::Translate(vtkDataObject*& outputDataset,
 		                                     VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    VE_Builder::StarCDTranslator* starCDToVTK =

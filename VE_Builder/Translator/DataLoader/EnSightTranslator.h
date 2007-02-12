@@ -55,11 +55,11 @@ public:
       //ouputDataset should be populated              //
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
-      virtual void Translate(vtkDataSet*& outputDataset,
+      virtual void Translate(vtkDataObject*& outputDataset,
 		                     cfdTranslatorToVTK* toVTK);
       ///This creates additional scalars from vector components
       ///\param outputDataset Dataset to be used and modified
-      void AddScalarsFromVectors( vtkDataSet*& outputDataset );
+      void AddScalarsFromVectors( vtkDataObject*& outputDataset );
    };
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS EnSightPreTranslateCbk: 

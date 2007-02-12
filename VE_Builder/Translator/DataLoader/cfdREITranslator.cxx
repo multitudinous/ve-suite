@@ -63,7 +63,7 @@ cfdREITranslator::~cfdREITranslator()
 {
 }
 /////////////////////////////////////////
-void cfdREITranslator::REITranslatorCbk::Translate(vtkDataSet*& outputDataset,
+void cfdREITranslator::REITranslatorCbk::Translate(vtkDataObject*& outputDataset,
 		                                           VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    VE_Builder::cfdREITranslator* reiTranslator =

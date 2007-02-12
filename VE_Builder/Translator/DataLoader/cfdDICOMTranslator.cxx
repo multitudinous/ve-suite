@@ -56,7 +56,7 @@ cfdDICOMTranslator::~cfdDICOMTranslator()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDICOMTranslator::DICOMTranslateCbk::Translate(vtkDataSet*& outputDataset,
+void cfdDICOMTranslator::DICOMTranslateCbk::Translate(vtkDataObject*& outputDataset,
 		                                           VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    VE_Builder::cfdDICOMTranslator* dicomToVTK =

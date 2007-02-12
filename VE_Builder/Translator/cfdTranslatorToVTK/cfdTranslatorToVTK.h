@@ -36,7 +36,8 @@
 #include <vector>
 
 
-class vtkDataSet;
+//class vtkDataSet;
+class vtkDataObject;
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Builder
 {
@@ -91,7 +92,7 @@ public:
       //ouputDataset should be populated              //
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
-      virtual void Translate(vtkDataSet*& outputDataset,
+      virtual void Translate(vtkDataObject*& outputDataset,
 		             VE_Builder::cfdTranslatorToVTK* toVTK) = 0;
    protected:
    };
@@ -143,7 +144,7 @@ public:
    unsigned int GetNumberOfFoundFiles();
    std::string GetFile( unsigned int fileNumber );
 
-   vtkDataSet* GetVTKFile( unsigned int whichFile );
+   vtkDataObject* GetVTKFile( unsigned int whichFile );
 
    void SetIsTransient();
 protected:
@@ -166,7 +167,7 @@ protected:
    PostTranslateCallback* _postTCbk;
    TranslateCallback* _translateCbk;
 
-   vtkDataSet* _outputDataset;
+   vtkDataObject* _outputDataset;
 
    bool isTransient;
 };

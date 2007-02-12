@@ -61,7 +61,7 @@ void MFIXTranslator::MFIXPreTranslateCbk::Preprocess(int argc,char** argv,
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataSet*& outputDataset,
+void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
 		                                     VE_Builder::cfdTranslatorToVTK* toVTK )
 {
    VE_Builder::MFIXTranslator* MFIXToVTK =

@@ -144,7 +144,7 @@ std::string plot3dReader::Plot3DPreTranslateCbk::GetQFilename( void )
    return qFilename;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataSet*& outputDataset,
+void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
                                                         VE_Builder::cfdTranslatorToVTK* toVTK )
 {
    VE_Builder::plot3dReader* plot3DToVTK =

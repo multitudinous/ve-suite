@@ -36,7 +36,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include <vtkDataSet.h>
+#include <vtkDataObject.h>
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 using namespace VE_Builder;
@@ -179,7 +179,7 @@ void cfdTranslatorToVTK::SetIsTransient()
 {
    isTransient = true;
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
 {
    //this may be modified later to handle multiple files
@@ -273,8 +273,8 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
       return false;
    }
 }
-//////////////////////////////////////////////////////////
-vtkDataSet* cfdTranslatorToVTK::GetVTKFile( unsigned int fileNum )
+////////////////////////////////////////////////////////////////////////////////////
+vtkDataObject* cfdTranslatorToVTK::GetVTKFile( unsigned int fileNum )
 {
    if ( _outputDataset )
    {

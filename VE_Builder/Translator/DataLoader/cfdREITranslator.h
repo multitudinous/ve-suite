@@ -57,7 +57,7 @@ public:
       //ouputDataset should be populated              //
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
-      virtual void Translate(vtkDataSet*& outputDataset,
+      virtual void Translate(vtkDataObject*& outputDataset,
 		                     cfdTranslatorToVTK* toVTK);
       int debug;
    protected:

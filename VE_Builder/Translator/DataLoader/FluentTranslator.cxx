@@ -65,7 +65,7 @@ void FluentTranslator::FluentPreTranslateCbk::Preprocess(int argc,char** argv,
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset,
+void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputDataset,
 		                                     VE_Builder::cfdTranslatorToVTK* toVTK )
 {
    VE_Builder::FluentTranslator* FluentToVTK =

@@ -46,7 +46,7 @@
 #include <string>
 #include <map>
 
-class vtkDataSet;
+class vtkDataObject;
 
 namespace VE_Builder
 {
@@ -77,7 +77,7 @@ public:
 
    ///Get the vtkDataSet for the data that was passed in
    ///\param inputData The file name of the data to be loaded.
-   vtkDataSet* GetVTKDataSet( int argc, char** argv );
+   vtkDataObject* GetVTKDataSet( int argc, char** argv );
 
 private:
    std::string inputDataName;///<The name of the data file.

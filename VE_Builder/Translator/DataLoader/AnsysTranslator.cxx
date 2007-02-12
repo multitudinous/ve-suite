@@ -59,7 +59,7 @@ void AnsysTranslator::AnsysPreTranslateCbk::Preprocess(int argc,char** argv,
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AnsysTranslator::AnsysTranslateCbk::Translate(vtkDataSet*& outputDataset,
+void AnsysTranslator::AnsysTranslateCbk::Translate(vtkDataObject*& outputDataset,
 		                                     VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    VE_Builder::AnsysTranslator* ansysTransVTK =

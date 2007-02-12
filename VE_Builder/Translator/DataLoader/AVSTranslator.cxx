@@ -61,7 +61,7 @@ void AVSTranslator::AVSPreTranslateCbk::Preprocess(int argc,char** argv,
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AVSTranslator::AVSTranslateCbk::Translate(vtkDataSet*& outputDataset,
+void AVSTranslator::AVSTranslateCbk::Translate(vtkDataObject*& outputDataset,
 		                                     VE_Builder::cfdTranslatorToVTK* toVTK)
 {
    VE_Builder::AVSTranslator* AVSToVTK =

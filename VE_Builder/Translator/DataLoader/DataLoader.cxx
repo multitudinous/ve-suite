@@ -42,7 +42,7 @@
 #include "VE_Builder/Translator/DataLoader/AnsysTranslator.h"
 
 #include "VE_Xplorer/Utilities/fileIO.h"
-
+#include <vtkDataObject.h>
 #include <iostream>
 
 using namespace VE_Builder;
@@ -94,7 +94,7 @@ DataLoader& DataLoader::operator=( const DataLoader& input)
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////
-vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
+vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
 {
    //Data processing loop
    std::string fileExtension = VE_Util::fileIO::getExtension( inputDataName );
@@ -136,7 +136,7 @@ vtkDataSet* DataLoader::GetVTKDataSet( int argc, char** argv )
       activeLoader->AddFoundFile( inputDataName );
    }
    activeLoader->TranslateToVTK( argc, argv );
-   vtkDataSet* tempDataset = activeLoader->GetVTKFile( 0 );
+   vtkDataObject* tempDataset = activeLoader->GetVTKFile( 0 );
    return tempDataset;
 }
 ///////////////////////////////////////////////////////////////////////////
