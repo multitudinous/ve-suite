@@ -32,10 +32,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Builder/Translator/DataLoader/FluentTranslator.h"
 #include <vtkDataSet.h>
+#include <vtkDataObject.h>
 #include <vtkFLUENTReader.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
+
+#include <vtkMultiBlockDataSet.h>
+#include <vtkXMLMultiGroupDataWriter.h>
 
 #include <iostream>
 
@@ -80,7 +84,11 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
       tmpDSet->DeepCopy( reader->GetOutput()*/ //);
 
       //get the info about the data in the data set
-      if ( reader->GetOutput()->GetPointData()->GetNumberOfArrays() == 0 )
+      //reader->GetOutput()
+      //GetNumberOfGroups ()
+      //GetNumberOfDataSets( );
+      //GetDataSet( ) 
+      /*if ( dynamic_cast< vtkDataSet* >( reader->GetOutput()->GetDataSet( 0, 0 ) )->GetPointData()->GetNumberOfArrays() == 0 )
       {
          //std::cout<<"Warning!!!"<<std::endl;
          //std::cout<<"No point data found!"<<std::endl;
@@ -94,20 +102,25 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataSet*& outputDataset
          reader->Delete();
          dataConvertCellToPoint->Delete();
       }
-      else
+      else*/
       {
          outputDataset->DeepCopy(reader->GetOutput());
          reader->Delete();
       }
       outputDataset->Update();
       
+      /*vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
+      writer->SetInput( reader->GetOutput() );
+      writer->SetWriteMetaFile( 1 );
+      writer->SetFileName( "test_multigrou.vtu" );
+      writer->Write();*/
       //tmpDSet->Delete();
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FluentTranslator::DisplayHelp( void )
 {
-   std::cout << "|\Fluent Translator Usage:" << std::endl
+   std::cout << "|\tFluent Translator Usage:" << std::endl
                << "\t -singleFile <filename_to_load> -o <output_dir> "
                << "-outFileName <output_filename> -loader cas -w file" << std::endl;
 }

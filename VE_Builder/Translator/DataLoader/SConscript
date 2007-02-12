@@ -17,6 +17,8 @@ sources = Split("""
     starReader.cxx
     AnsysTranslator.cxx
     ansysReader.cxx
+    FluentTranslator.cxx
+    MFIXTranslator.cxx
 """)
 
 headers = Split("""
@@ -32,6 +34,8 @@ headers = Split("""
     starReader.h
     AnsysTranslator.h
     ansysReader.h
+    FluentTranslator.h
+    MFIXTranslator.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
@@ -41,12 +45,6 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities'),
                           pj('#', buildDir, 'VE_Builder','Translator','cfdTranslatorToVTK') ],
                LIBS = ['VE_UtilLib', 'TranslatorToVTKLib'])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-#if os.getenv('FLUENT_MFIX') == 'TRUE':
-#    sources.Append('FluentTranslator.cxx')
-#    sources.Append('MFIXTranslator.cxx')
-#    headers.Append('FluentTranslator.h')
-#    headers.Append('MFIXTranslator.h')
-#    lib_env.Append(CXXFLAGS = ['-DFLUENT_MFIX'])
 
 vtk_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":

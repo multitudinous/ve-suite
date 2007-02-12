@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _ENSIGHT_TRANSLATOR_H_
 #define _ENSIGHT_TRANSLATOR_H_
