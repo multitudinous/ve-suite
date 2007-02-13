@@ -52,25 +52,6 @@
     for business model investigation or training. VE-Suite is used in a diverse
     set of engineering applications to allow engineers and other project
     stakeholders to gain insight into complex engineering problems.</para>
-
-    <para>VE-Suite's open source framework includes distributed
-    computing, platform independence, extensibility for component models,
-    support for a hierarchy of component models, and comprehensive graphics
-    capabilities, including support for immersive facilities.</para>
-
-    <para>VE-Suite is a software package built upon <ulink
-    url="http://www.vrjuggler.org">VRJuggler</ulink>, <ulink
-    url="www.openscenegraph.org"><ulink
-    url="http://www.openscenegraph.org/">Open Scene Graph</ulink></ulink>,
-    <ulink url="http://www.vtk.org/">Kitware’s Visualization ToolKit
-    (VTK)</ulink>, CORBA compliant libraries (<ulink
-    url="http://www.cs.wustl.edu/%7Eschmidt/TAO.html">ACE/TAO</ulink>), and
-    <ulink url="http://www.wxwidgets.org/">wxWidgets</ulink>. Initially
-    developed as a CFD visualization package, VE-Suite has matured into a
-    software toolset that enhances engineers' decision-making capabilities. By
-    integrating computational results from multiple disciplines into a common
-    framework, VE-Suite helps engineers analyze problems and make more
-    complete solutions.</para>
   </preface>
 
   <part>

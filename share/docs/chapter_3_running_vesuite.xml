@@ -415,6 +415,15 @@
     <guibutton>Move to a View Point</guibutton>. The camera will fly to that
     viewpoint at the speed set under the <guibutton>Movement Speed
     Control</guibutton>.</para>
+    
+    <para>You can also cycle the viewpoints through a flythrough. Click on the
+    <guibutton>Start Active Flythrough</guibutton> button to begin a flythrough
+    between each viewpoint in successive order. The flythrough will start at the
+    first viewpoint, then hit each successive viewpoint, going at the speed
+    specified by the <guibutton>Movement Speed Control</guibutton>. When it
+    reaches the last viewpoint, it will go back to the first one and repeat the
+    flythrough. To stop the flythrough at any time, click the <guibutton>Stop
+    Flythrough</guibutton> button.</para>
 
   </section>
   <section id="quitting_vesuite">
