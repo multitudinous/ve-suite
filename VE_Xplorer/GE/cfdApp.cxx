@@ -583,7 +583,9 @@ void cfdApp::contextPreDraw( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::draw()
 {
-   //glClear(GL_DEPTH_BUFFER_BIT);
+#ifndef _SGL
+   glClear(GL_DEPTH_BUFFER_BIT);
+#endif
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    // Users have reported problems with OpenGL reporting stack underflow
    // problems when the texture attribute bit is pushed here, so we push all
