@@ -5,7 +5,7 @@ import SConsAddons.Util as sca_util
 
 Import('ves_pkg')
 
-launcherBundle = ves_pkg.createFileBundle( 'share' )
+launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 jconfFile = sca_util.getFilesRecursiveByExt( '.', ['.jconf'] )
 launcherBundle.addFiles( jconfFile )
    

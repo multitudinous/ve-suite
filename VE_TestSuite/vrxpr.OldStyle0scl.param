@@ -1,8 +1,0 @@
-1
-8                    // Object type 8: data set
-   1 1 1             // Scale values
-   0 0 0             // Translation values
-   0 0 0             // Rotation values (Z-X-Y format)
-   ./OldStyleNoScalar.vtk   // data set name
-   ./POST_DATA1      // precomputed data slice directory
-   ./SURFACE1        // precomputed surface directory contains Surface.vtk

@@ -132,7 +132,7 @@ case "$CFDHOSTTYPE" in
    export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/bullet-install/lib/pkgconfig
 
    #setenv JDK_HOME /usr/java
-   export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk/install
+   export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk-cvs/install
    export TAO_HOME=/Volumes/data/VE_Suite_Deps/ACE_TAO/install
    #export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install
    export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/build-darwin/instlinks

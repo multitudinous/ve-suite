@@ -1,0 +1,19 @@
+##sets up jconf files for stereo_desktop
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg')
+
+launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite','examples','simple') )
+vtiFile = sca_util.getFilesRecursiveByExt( '.', ['.vti'] )
+vtkFile = sca_util.getFilesRecursiveByExt( '.', ['.vtk'] )
+vtuFile = sca_util.getFilesRecursiveByExt( '.', ['.vtu'] )
+veaFile = sca_util.getFilesRecursiveByExt( '.', ['.vea'] )
+stlFile = sca_util.getFilesRecursiveByExt( '.', ['.stl'] )
+launcherBundle.addFiles( vtiFile )
+launcherBundle.addFiles( vtkFile )
+launcherBundle.addFiles( vtuFile )
+launcherBundle.addFiles( veaFile )
+launcherBundle.addFiles( stlFile )
+launcherBundle.addFiles( [pj('STORED_FILES','file19.txt'),'Torus.obj'] )
