@@ -442,7 +442,8 @@ int main( int argc, char *argv[] )
 #else
             contOutput->writeMultiPlanes( dataSet, 
                                           xCut, yCut, zCut,
-                                          multiPlaneOption, number );
+                                          multiPlaneOption, 0 );
+                                          //multiPlaneOption, number );number was always == to 0 previously
 #endif
          }
          else
@@ -450,7 +451,8 @@ int main( int argc, char *argv[] )
             multiPlaneVtkOutput * contOutput = new multiPlaneVtkOutput( postDataDir );
             contOutput->readParamFileandWriteMultiPlanes( 
                                         dataSet, paramFile, 
-                                        multiPlaneOption, number );
+                                        multiPlaneOption, 0 );
+                                        //multiPlaneOption, number );number was always == to 0 previously
          }
       }
       //delete [] postDataDir;
