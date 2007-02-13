@@ -11,9 +11,9 @@ JCONF_BASE_PATH = VELAUNCHER_DIR
 if os.path.basename(JCONF_BASE_PATH) == "bin":
     JCONF_BASE_PATH = os.path.dirname(JCONF_BASE_PATH)
 ##Set default Jconf files.
-DEFAULT_JCONF = join(JCONF_BASE_PATH, "share", "stereo_desktop", "desktop.jconf")
+DEFAULT_JCONF = join(JCONF_BASE_PATH, "share", "vesuite", "stereo_desktop", "desktop.jconf")
 DEFAULT_DEV_JCONF = join(JCONF_BASE_PATH, "..", "..", "share",
-                        "vesuite", "stereo_desktop", "desktop.jconf")
+                        "stereo_desktop", "desktop.jconf")
 MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization",
              "Shell", "Custom"]
 MODE_DICT = {"Desktop": {"Conductor": True,
