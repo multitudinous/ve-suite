@@ -142,7 +142,7 @@ vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.0", True, True,
                          'vtkIO','vtkexpat','vtkFiltering','vtkRendering', 
                          'vtkParallel','vtkpng','vtktiff','vtksys','vtkjpeg', 
                          'vtkexoIIc','vtkftgl','vtkfreetype','vtkDICOMParser', 
-                         'vtkzlib','vtkNetCDF'])
+                         'vtkzlib','vtkNetCDF','verdict'])
 opts.AddOption( vtk_options )
 osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
                         ['osgText', 'osgProducer', 'Producer', 'osgText',
