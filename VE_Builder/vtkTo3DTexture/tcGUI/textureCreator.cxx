@@ -710,7 +710,7 @@ void VTKDataToTexture::_createValidityTexture()
 	   
 	   //set i, j, and k based on the l values
 	   i = l % nX;
-      j = j = (l / nX) % nY;//(i==0)?((jInit==nY-1)?jInit=0:++jInit):jInit;
+      j = (l / nX) % nY;//(i==0)?((jInit==nY-1)?jInit=0:++jInit):jInit;
 	   k = (l/*-i-j*nX*/)/(nX*nY);
 
       pt[2] = bbox[4] + k*delta[2];
