@@ -46,6 +46,7 @@
 
 #include <VE_Xplorer/Utilities/cfdVTKFileHandler.h>
 #include <vtkMultiBlockDataSet.h>
+#include <vtkDataObject.h>
 
 #include <iostream>
 #include <iomanip>
@@ -128,7 +129,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
       }
       outputDataset->Update();
       //tmpDSet->Delete();
-      AddScalarsFromVectors( outputDataset );
+      //AddScalarsFromVectors( outputDataset );
    }
    else
    {
@@ -160,7 +161,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             //appendFilter->Delete();
             
             //get the info about the data in the data set
-            if ( outputDataset->GetPointData()->GetNumberOfArrays() == 0 )
+            /*if ( outputDataset->GetPointData()->GetNumberOfArrays() == 0 )
             {
                vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
                dataConvertCellToPoint->SetInput(outputDataset);
@@ -172,10 +173,10 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             else
             {
                //outputDataset->DeepCopy(tmpDSet);
-            }
+            }*/
             outputDataset->Update();
             //tmpDSet->Delete();
-            AddScalarsFromVectors( outputDataset );
+            //AddScalarsFromVectors( outputDataset );
             
             if ( j > 0 )
             {
@@ -199,7 +200,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
    reader->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnSightTranslator::EnSightTranslateCbk::AddScalarsFromVectors( vtkDataObject*& outputDataset )
+/*void EnSightTranslator::EnSightTranslateCbk::AddScalarsFromVectors( vtkDataObject*& outputDataset )
 {
    //this portion is to grab scalar data out of the vectors and rewrite it back
    //into the VTK file
@@ -281,7 +282,7 @@ void EnSightTranslator::EnSightTranslateCbk::AddScalarsFromVectors( vtkDataObjec
          scalarsFromVector = NULL;
       }  //end if loop
    } //end for loop
-} 
+} */
 ////////////////////////////////////////////////////////////////////////////////
 void EnSightTranslator::DisplayHelp( void )
 {
