@@ -13,7 +13,7 @@ if os.path.basename(JCONF_BASE_PATH) == "bin":
 ##Set default Jconf files.
 DEFAULT_JCONF = join(JCONF_BASE_PATH, "share", "stereo_desktop", "desktop.jconf")
 DEFAULT_DEV_JCONF = join(JCONF_BASE_PATH, "..", "..", "share",
-                        "vesutie", "stereo_desktop", "desktop.jconf")
+                        "vesuite", "stereo_desktop", "desktop.jconf")
 MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization",
              "Shell", "Custom"]
 MODE_DICT = {"Desktop": {"Conductor": True,
