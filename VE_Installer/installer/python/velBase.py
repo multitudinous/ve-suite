@@ -172,21 +172,18 @@ def usage():
     print """
 LEGAL ARGUMENTS FOR VELAUNCHER.PY
 <none>: Start the velauncher GUI.
---dev: If passed alone, starts the velauncher GUI in developer mode.
+-d, --dev: If passed alone, starts the velauncher GUI in developer mode.
 If passed with other options, sets the launch environment to developer mode.
 
 -c, --conductor: Launch VE Conductor.
 -n, --nameserver: Launch VE NameServer.
--x <xplorer type>, --xplorer=<xplorer type>: Launch VE Xplorer in
-<xplorer type> mode. You can choose OSG, OSG-VEP, or OSG-VEPC.
-
+-x, --xplorer: Launch VE Xplorer.
 -s, --shell: Launches a subshell with the VE-Suite environmental
-variables set. Overrides -c, -n, and -x.
--b <builder dir>, --builder=<builder dir>: Launches a subshell
-with the VE-Suite environmental variables set, including a path
-to the VE-Builder directory. Overrides -c, -n, -x and -s.
+variables set, including the VE-Builder directory.
 
 -k, --desktop: Set VE Conductor and VE Xplorer to Desktop mode.
+-l, --cluster: Run VE-Suite in Cluster mode.
+
 -j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's
 Juggler configuration.
 -w <dir>, --dir=<dir>: Set the Working directory to <dir>.
@@ -195,5 +192,7 @@ Juggler configuration.
 -t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.
 -p <port>, --port=<port>: Set TAOPORT to <port>.
 -e <dir>, --dep=<dir>: Set the Dependencies directory to <dir>.
--m <name>, --master=<name>: Set VEXMASTER to <name>."""
+-m <name>, --master=<name>: Set VEXMASTER to <name>.
+
+-q, --quick: Immediately runs VE-Suite with its last settings."""
     return

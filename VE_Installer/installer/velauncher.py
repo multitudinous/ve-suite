@@ -864,11 +864,11 @@ class LauncherWindow(wx.Frame):
 arguments = sys.argv[1:]
 try:
     opts, args = getopt.getopt(arguments,
-                               "cnx:kj:t:p:w:e:m:sb:f:v:q",
-                               ["conductor", "nameserver", "xplorer=",
+                               "cnxkj:t:p:w:m:dsf:v:q",
+                               ["conductor", "nameserver", "xplorer",
                                 "desktop", "jconf=", "taomachine=", "port=",
-                                "dir=", "dep=", "master=", "dev", "shell",
-                                "builder=", "file=", "ves=", "quick"])
+                                "dir=", "master=", "dev", "shell",
+                                "file=", "ves=", "quick"])
 except getopt.GetoptError:
     usage()
     sys.exit(2)
@@ -899,6 +899,8 @@ if len(opts) == 0 or (len(opts) == 1 and devMode):
 ##Command line boot
 ##Takes arguments passed, uses defaults for the rest, launches immediately.
 else:
+    app = wx.PySimpleApp()
+    app.MainLoop()
     CommandLine(opts, args)
 
 

@@ -17,25 +17,39 @@ class CommandLine:
     def __init__(self, opts, arguments):
         ##Set up default vars.
         self.state = CoveredConfig()
-        LoadConfig(DEFAULT_CONFIG, self.state)
-        self.state.CommandLineMode()
-        if ("--dev", "") in opts:
+        LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
+        self.state.ChangeMode(MODE_LIST[self.state.GetSurface("Mode")])
+
+##        testDict = self.state.GetSurface() ##TESTER
+##        for var in testDict: ##TESTER
+##            print var, testDict[var] ##TESTER
+        if not (("--quick", "") in opts or ("-q", "") in opts):
+            self.state.CommandLineMode()
+        if ("--dev", "") in opts or ("-d", "") in opts:
             devMode = True
             self.state.DevMode()
         else:
             devMode = False
+##        print "---------" ##TESTER
+##        testDict = self.state.GetSurface() ##TESTER
+##        for var in testDict: ##TESTER
+##            print var, testDict[var] ##TESTER
         ##Set vars from the command line.
+##        for opt, arg in opts:
+##            if opt in ('-g', "--config"):
+##                try:
+##                    LoadConfig(arg, self.state)                    
+##                except:
+##                    
         for opt, arg in opts:
             if opt in ('-c', "--conductor"):
                 self.state.Edit("Conductor", True)
             elif opt in ('-n', "--nameserver"):
                 self.state.Edit("NameServer", True)
-            elif opt in ('-x', "--xplorer="):
+            elif opt in ('-x', "--xplorer"):
                 self.state.Edit("Xplorer", True)
-                if arg in XPLORER_TYPE_LIST:
-                    self.state.Edit("XplorerType", arg)
-                else:
-                    self.state.Edit("XplorerType", DEFAULT_SOLO_XPLORER)
+            elif opt in ('-s', "--shell"):
+                self.state.Edit("Shell", True)
             elif opt in ('-k', "--desktop"):
                 self.state.Edit("DesktopMode", True)
             elif opt in ('-j', "--jconf="):
@@ -46,25 +60,17 @@ class CommandLine:
                 self.state.Edit("TaoPort", arg)
             elif opt in ('-w', "--dir="):
                 self.state.Edit("Directory", arg)
-            elif opt in ('-e', "--dep="):
-                self.state.Edit("DependenciesDir", arg)
             elif opt in ('-m', "--master="):
                 self.state.Edit("ClusterMaster", arg)
-            elif opt in ('-s', "--shell"):
-                self.state.Edit("Shell", True)
-                self.state.Cover("Conductor", False)
-                self.state.Cover("Xplorer", False)
-                self.state.Cover("NameServer", False)
-            elif opt in ('-b', "--builder="):
-                self.state.Edit("Shell", True)
-                self.state.Edit("BuilderDir", arg)
-                self.state.Cover("Conductor", False)
-                self.state.Cover("Xplorer", False)
-                self.state.Cover("NameServer", False)
-            elif opt in ('-f', "--file"):
+            elif opt in ('-f', "--file="):
                 self.state.InterpretArgument(arg)
-            elif opt in ('-v', "--ves="):
-                self.state.VesArgument(arg)
+        print "---------" ##TESTER
+        testDict = self.state.GetLaunchSurface() ##TESTER
+        for var in testDict: ##TESTER
+            print var, testDict[var] ##TESTER
+            ## NOTE:
+            ## These are now invalid:
+            ## -b, -e, -x=, -v
             ## NOTE:
             ## ('-q', '--quick'): Quick Mode
             ## Tells VE-Launcher to immediately start up with
