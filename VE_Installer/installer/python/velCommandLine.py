@@ -64,10 +64,10 @@ class CommandLine:
                 self.state.Edit("ClusterMaster", arg)
             elif opt in ('-f', "--file="):
                 self.state.InterpretArgument(arg)
-        print "---------" ##TESTER
-        testDict = self.state.GetLaunchSurface() ##TESTER
-        for var in testDict: ##TESTER
-            print var, testDict[var] ##TESTER
+##        print "---------" ##TESTER
+##        testDict = self.state.GetLaunchSurface() ##TESTER
+##        for var in testDict: ##TESTER
+##            print var, testDict[var] ##TESTER
             ## NOTE:
             ## These are now invalid:
             ## -b, -e, -x=, -v
