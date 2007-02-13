@@ -78,7 +78,7 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
 
       if ( !outputDataset )
       {
-         outputDataset = vtkUnstructuredGrid::New();
+         outputDataset = vtkMultiBlockDataSet::New();
       }
       /*vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
       tmpDSet->DeepCopy( reader->GetOutput()*/ //);
