@@ -62,6 +62,7 @@
 #include <vtkMultiBlockDataSet.h>
 #include <vtkGenericDataObjectReader.h>
 #include <vtkGenericDataObjectWriter.h>
+#include <vtkXMLMultiGroupDataWriter.h>
 #include <fstream>
 
 using namespace VE_Util;
@@ -314,18 +315,37 @@ bool cfdVTKFileHandler::WriteDataSet(vtkDataObject* dataSet,std::string outFileN
 {
    if( outFileName.empty() )
       return false;
-   vtkGenericDataObjectWriter* dataObjectWriter = vtkGenericDataObjectWriter::New();
-   dataObjectWriter->SetFileName(outFileName.c_str());
-   dataObjectWriter->SetInput(dataSet);
-   if ( _outFileMode == CFD_ASCII )
-      dataObjectWriter->SetFileType(VTK_ASCII);
-
-   if(dataObjectWriter->Write())
+   if(dataSet->IsA("vtkMultiGroupDataSet"))
    {
-      dataObjectWriter->Delete();
-      return true;
+      vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
+      writer->SetFileName(outFileName.c_str());
+      writer->SetInput(dataSet);
+      if ( _outFileMode == CFD_ASCII )
+         writer->SetDataModeToAscii();
+      if(writer->Write())
+      {
+         writer->Delete();
+         return true;
+      }
+      writer->Delete();
+      return false;
    }
-   dataObjectWriter->Delete();
+   else
+   {
+      vtkXMLDataSetWriter* writer = vtkXMLDataSetWriter::New();
+      writer->SetFileName(outFileName.c_str());
+      writer->SetInput(dataSet);
+      if ( _outFileMode == CFD_ASCII )
+         writer->SetDataModeToAscii();
+
+      if(writer->Write())
+      {
+         writer->Delete();
+         return true;
+      }
+      writer->Delete();
+      return false;
+   }
    return false;
 }
 ////////////////////////////////////////////////////////////////////////
