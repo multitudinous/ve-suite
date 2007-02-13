@@ -371,7 +371,7 @@ int main( int argc, char *argv[] )
 
    // Reading flowdata for further processes
    std::cout << "Reading vtk data file \"" << postFname << "\"" << std::endl;
-   int number = fileIO::extractIntegerBeforeExtension( postFname );
+   //int number = fileIO::extractIntegerBeforeExtension( postFname );
    //std::cout << "number = " << number << std::endl;
    ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
    vtkDataSet* dataSet = dynamic_cast<vtkDataSet*>(readVtkThing( postFname, 0 ));

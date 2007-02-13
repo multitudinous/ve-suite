@@ -68,14 +68,14 @@ public:
    static void readToFileEnd( FILE *inputFile );
    static void StripTrailingSpaces( std::string line );
    static std::string StripLeadingSpaces( std::string line );
-   static int extractIntegerBeforeExtension( std::string filename );
+   //static int extractIntegerBeforeExtension( std::string filename );
    static void IdentifyTagAssignValue(std::string TagName, std::string TagValue);
    static void getTagAndValue(std::string textline, std::string& TagName,  std::string& TagValue);
 
    static int getIntegerBetween( const int min, const int max );
 
-   static int ExtractIntegerFromString( std::string filename );
-   static int ExtractIntegerBeforeExtension( std::string filename );
+   //static int ExtractIntegerFromString( std::string filename );
+   //static int ExtractIntegerBeforeExtension( std::string filename );
    static std::vector<std::string> GetFilesInDirectory(std::string dir, std::string extension);
    static std::string ExtractBaseFileNameFromFullPath(std::string fileName);
    static std::string ExtractRelativeDirectoryFromFullPath(std::string fullPath);

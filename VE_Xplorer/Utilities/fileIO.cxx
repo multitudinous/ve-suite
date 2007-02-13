@@ -361,52 +361,11 @@ std::string fileIO::StripLeadingSpaces( std::string line )
    return shortLine;
 }
 
-int fileIO::extractIntegerBeforeExtension( std::string filename )
+/*int fileIO::extractIntegerBeforeExtension( std::string filename )
 {
-   /*std::string changeable_filname(filename);
-   // last token will be the extension
-   // secondLastToken will be the integer counter
-   char lastToken[100], secondLastToken[100];
-   lastToken[0] = '\0';
-   secondLastToken[0] = '\0';
-
-   char excludes[] = "-_.";   // define the allowable separators 
-   char * pch = strtok( changeable_filename, excludes );
-
-   while ( pch != NULL )
-   {
-      strcpy( secondLastToken, lastToken );
-      strcpy( lastToken, pch );
-      pch = strtok( NULL, excludes );
-   }
-
-   delete [] changeable_filename;*/
+  
    return 0;//atoi(secondLastToken);
-}
-
-int fileIO::ExtractIntegerFromString( std::string filename )
-{
-   char * changeable_filename = new char [ strlen( filename.c_str() )+1 ];
-   strcpy( changeable_filename, filename.c_str() );
-
-   // last token will be the extension
-   // secondLastToken will be the integer counter
-   char lastToken[100], secondLastToken[100];
-   lastToken[0] = '\0';
-   secondLastToken[0] = '\0';
-
-   char excludes[] = "-_.";   // define the allowable separators 
-   char * pch = strtok( changeable_filename, excludes );
-
-   while ( pch != NULL )
-   {
-      strcpy( secondLastToken, lastToken );
-      strcpy( lastToken, pch );
-      pch = strtok( NULL, excludes );
-   }
-   delete [] changeable_filename;
-   return atoi(lastToken);
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void fileIO::getTagAndValue(std::string textline, std::string& TagName, std::string& TagValue)
 {
