@@ -108,7 +108,7 @@ Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp; DestDir: {app}\installerImages; DestName: velauncher_banner.bmp
 Source: {#VEHOME}\VE_Xplorer/dualhead_configs/*.jconf; DestDir: {app}/share/dualhead_configs/; Components: nameserver; Flags: ignoreversion recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\simple.ves; DestDir: {app}\share\exampleDatasets\simple; Components: examples; Flags: overwritereadonly replacesameversion
+Source: {#VEHOME}\VE_TestSuite\simple.ves; DestDir: {app}\share\exampleDatasets\simple; Components: examples; Flags: overwritereadonly replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\clusterTemplate.txt; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\share\installerImages; DestName: ve_logo.xpm
