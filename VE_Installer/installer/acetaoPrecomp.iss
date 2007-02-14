@@ -20,7 +20,7 @@ AllowNoIcons=true
 OutputDir={#VEHOME}\VE_Installer\installer
 OutputBaseFilename=acetao{#ACETAOVERSION}-precompile_{#MSVCVERSION}
 Compression=lzma
-SolidCompression=yes
+SolidCompression=true
 WindowVisible=true
 WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
 BackColor=clBlack
@@ -31,6 +31,7 @@ AllowRootDirectory=true
 WizardImageBackColor=clGray
 SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 EnableDirDoesntExistWarning=true
+ShowLanguageDialog=yes
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
@@ -38,7 +39,7 @@ Name: eng; MessagesFile: compiler:Default.isl
 Source: {#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly createallsubdirs
 Source: {#ACETAOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#ACETAOHOME}\TAO\Naming_Service.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\; Flags: ignoreversion createallsubdirs recursesubdirs
+Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\
 Source: {#ACETAOHOME}\ace\*.h; DestDir: {app}\ace; Flags: recursesubdirs createallsubdirs uninsremovereadonly
 Source: {#ACETAOHOME}\tao\*.h; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly
 Source: {#ACETAOHOME}\ace\*.inl; DestDir: {app}\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly
