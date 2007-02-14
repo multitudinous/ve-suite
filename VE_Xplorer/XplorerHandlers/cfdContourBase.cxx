@@ -57,6 +57,8 @@
 #include <vtkCutter.h>
 #include <vtkPlane.h>
 
+#include <vtkMultiGroupPolyDataMapper.h>
+
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
@@ -78,8 +80,8 @@ cfdContourBase::cfdContourBase()
    strip = vtkStripper::New();
    cutter = vtkCutter::New();
 
-   mapper = vtkPolyDataMapper::New();
-   //this->mapper->SetInput( this->filter->GetOutput() );
+   //mapper = vtkPolyDataMapper::New();
+   mapper = vtkMultiGroupPolyDataMapper::New();
    mapper->SetColorModeToMapScalars();
    mapper->ImmediateModeRenderingOn();
    normals = vtkPolyDataNormals::New();
@@ -177,8 +179,6 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       //normals->ComputeCellNormalsOn();
       normals->FlipNormalsOn();
       normals->Update();
-      mapper->SetInput( normals->GetOutput() );
-      mapper->ImmediateModeRenderingOn(); 
    }
    else if ( this->fillType == 1 )  // banded contours
    {
@@ -197,8 +197,6 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       normals->ComputePointNormalsOn();
       //normals->ComputeCellNormalsOn();
       normals->FlipNormalsOn();
-      this->mapper->SetInput( normals->GetOutput() );
-      mapper->ImmediateModeRenderingOn();
    }
    else if ( this->fillType == 2 )  // contourlines
    {
@@ -214,9 +212,9 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       normals->ComputePointNormalsOn();
       //normals->ComputeCellNormalsOn();
       normals->FlipNormalsOn();
-      this->mapper->SetInput( this->normals->GetOutput() );
-      mapper->ImmediateModeRenderingOn();    
    }
+   mapper->SetInputConnection( normals->GetOutputPort() );
+   mapper->ImmediateModeRenderingOn();    
 }
 
 bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )

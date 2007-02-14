@@ -39,6 +39,7 @@
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
@@ -110,7 +111,7 @@ void cfdContours::Update( void )
       catch( std::bad_alloc )
       {
          mapper->Delete();
-         mapper = vtkPolyDataMapper::New();
+         mapper = vtkMultiGroupPolyDataMapper::New();
 
          vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdContours" 
                               << std::endl << vprDEBUG_FLUSH;

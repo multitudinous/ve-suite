@@ -44,6 +44,7 @@
 #include <vtkCutter.h>
 #include <vtkWarpVector.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 
 // the following is for the PD stuff...
 #include <vtkActor.h>
@@ -167,7 +168,7 @@ void cfdPresetMomentum::Update( void )
    catch( std::bad_alloc )
    {
       mapper->Delete();
-      mapper = vtkPolyDataMapper::New();
+      mapper = vtkMultiGroupPolyDataMapper::New();
 
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdPresetMomentum " 
                            << std::endl << vprDEBUG_FLUSH;

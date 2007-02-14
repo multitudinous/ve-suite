@@ -45,6 +45,7 @@
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkPolyData.h>
 
 // the following is for the PD stuff...
@@ -155,7 +156,7 @@ void cfdPresetContour::Update( void )
    catch( std::bad_alloc )
    {
       mapper->Delete();
-      mapper = vtkPolyDataMapper::New();
+      mapper = vtkMultiGroupPolyDataMapper::New();
 
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdPresetContour" 
                            << std::endl << vprDEBUG_FLUSH;

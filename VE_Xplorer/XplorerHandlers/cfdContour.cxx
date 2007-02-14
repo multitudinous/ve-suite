@@ -42,7 +42,7 @@
 #include <vtkPolyDataMapper.h>   // for inherited contourBase member mapper
 #include <vtkActor.h>
 #include <vtkProperty.h>
-
+#include <vtkMultiGroupPolyDataMapper.h>
 #ifdef USE_OMP
 #include <vtkAppendPolyData.h>
 #endif
@@ -195,7 +195,7 @@ void cfdContour::Update( void )
    catch( std::bad_alloc )
    {
       mapper->Delete();
-      mapper = vtkPolyDataMapper::New();
+      mapper = vtkMultiGroupPolyDataMapper::New();
 
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdContour" 
                            << std::endl << vprDEBUG_FLUSH;

@@ -39,6 +39,7 @@
 #include <vtkPolyData.h>
 #include <vtkWarpVector.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
@@ -124,7 +125,7 @@ void cfdMomentums::Update( void )
       catch( std::bad_alloc )
       {
          mapper->Delete();
-         mapper = vtkPolyDataMapper::New();
+         mapper = vtkMultiGroupPolyDataMapper::New();
 
          vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdMomentums " 
                               << std::endl << vprDEBUG_FLUSH;

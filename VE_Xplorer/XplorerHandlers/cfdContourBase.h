@@ -42,6 +42,7 @@ cfdContourBase API
 
 class vtkPolyData;
 class vtkPolyDataMapper;
+class vtkMultiGroupPolyDataMapper;
 class vtkGeometryFilter;
 class vtkContourFilter;
 class vtkBandedPolyDataContourFilter;
@@ -81,7 +82,8 @@ public:
    void CreatePlane();
 
 protected:
-   vtkPolyDataMapper*   mapper;
+   //vtkPolyDataMapper*   mapper;
+   vtkMultiGroupPolyDataMapper* mapper;
    //vtkGeometryFilter*   filter;
    vtkContourFilter*    cfilter;
    vtkBandedPolyDataContourFilter* bfilter;
