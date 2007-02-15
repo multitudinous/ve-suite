@@ -65,6 +65,7 @@ using namespace VE_SceneGraph;
 DCS::DCS( void )
 {
    float temp[3];
+   btBody = 0;
    for( unsigned int i = 0; i < 3; i++ )
    {
       temp[i] = 0.0f;
@@ -86,7 +87,7 @@ DCS::DCS( void )
 
    SetScaleArray( temp );
 
-   btBody = 0;
+   
    UpdatePhysicsTransform();
    
    udcb = new TransferPhysicsDataCallback();
