@@ -232,11 +232,11 @@ Vistab::~Vistab()
       _tbTools->Destroy();
       _tbTools = 0;
    }
-   /*if(scalarContour)
+   if(scalarContour)
    {
       scalarContour->Destroy();
       scalarContour = 0;
-   }*/
+   }
     if(vectorContour)
    {
       vectorContour->Destroy();
