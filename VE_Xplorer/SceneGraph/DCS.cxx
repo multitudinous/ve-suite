@@ -64,31 +64,26 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( void )
 {
-   float temp[3];
    btBody = 0;
+
+   float temp[3];
    for( unsigned int i = 0; i < 3; i++ )
    {
       temp[i] = 0.0f;
    }
-
    SetTranslationArray( temp );
 
    for( unsigned int i = 0; i < 3; i++ )
    {
       temp[i] = 0.0f;
    }
-
    SetRotationArray( temp );
 
    for( unsigned int i = 0; i < 3; i++ )
    {
       temp[i] = 1.0f;
    }
-
    SetScaleArray( temp );
-
-   
-   UpdatePhysicsTransform();
    
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
@@ -97,16 +92,11 @@ DCS::DCS( void )
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
 {
-#ifdef _PERFORMER
-#elif _OSG
-#elif _OPENSG
-#endif
+   btBody = 0;
+
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
-
-   btBody = 0;
-   UpdatePhysicsTransform();
 
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
