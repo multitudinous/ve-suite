@@ -165,58 +165,36 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    SetActiveModel(activeModel);
    Create(parent, id, caption, pos, wxDefaultSize, style);
    _commandName = "VISUALIZATION_TAB";
-   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
-   _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
-   _activeScalarRange = _originalScalarRanges[_activeScalarName];
-
+   
    if(_nDatasetsInActiveModel)
    {
       _setActiveDataset(0);
    }
    _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
-   //_vistabPosition.height =  _vistabPosition.height + 20;
    SetSize( _vistabPosition.x,_vistabPosition.y,
             _vistabPosition.width,wxDefaultCoord,
             wxSIZE_AUTO );
-   
-   //wxSize tempRect = GetSize();
-   
-   //_minSpinner->Enable(false);
-   //_minSlider->Enable(false);
-   //_maxSpinner->Enable(false);
-   //_maxSlider->Enable(false);
-   //std::cout << tempRect.GetWidth() << " " << tempRect.GetHeight() << std::endl;
+   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
-////@begin Vistab member initialisation
-   itemToolBar3 = 0;
-   itemComboBox11 = 0;
-   itemComboBox12 = 0;
-   itemListBox13 = 0; 
-   itemListBox15 = 0;
-   _minSpinner = 0;
-   _maxSpinner = 0;
-   /*vector = 0;
-   contour = 0;
-   streamline = 0;
-   isosurface = 0;
-   _tbTools = 0;*/
-   scalarRange = 0;
-////@end Vistab member initialisation
+  itemToolBar3 = 0;
+  itemComboBox11 = 0;
+  itemComboBox12 = 0;
+  itemListBox13 = 0; 
+  itemListBox15 = 0;
+  _minSpinner = 0;
+  _maxSpinner = 0;
 
-////@begin Vistab creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
-    wxDialog::Create( parent, id, caption, pos, wxDefaultSize, style );
+  scalarRange = 0;
+  SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+  wxDialog::Create( parent, id, caption, pos, wxDefaultSize, style );
 
-    CreateControls();
-    //GetSizer()->Fit(this);
-    //GetSizer()->SetSizeHints(this);
-    //Centre();
-//    GetSizer()->SetDimension(427, 20, 427, 400);
-////@end Vistab creation
-    return true;
+  CreateControls();
+  return true;
 }
 /////////////////
 Vistab::~Vistab()
