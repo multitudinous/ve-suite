@@ -69,6 +69,9 @@ namespace VE_SceneGraph
    class TransferPhysicsDataCallback;
 }
 
+class btRigidBody;
+
+
 namespace VE_SceneGraph
 {
 #ifdef _OSG
@@ -148,30 +151,29 @@ public:
    int GetNumChildren( void );
    ///Set the name of the node
    const std::string GetName( void );
-	///
-	///\param
+	///Toggle the display of this node
+	///\param onOff Toggle the display of this node
 	void ToggleDisplay( std::string onOff );
-	///
-	///\param
+	///Toggle the display of this node
+	///\param onOff Toggle the display of this node
 	void ToggleDisplay( bool onOff );
-      
-	///Get the Bullet transform for this node
-   btTransform* GetPhysicsTransform( void );
-   //virtual bool computeLocalToWorldMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const;
-   //virtual bool computeWorldToLocalMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const;
-
+   ///Set the Bullet rigid body for this node
+   ///typically is set from CADEntity
+   void SetbtRigidBody( btRigidBody* rigidBody );
+   
 protected:
    float translation[3];///<The translation array
    float scale[3];///<The scale array
    float rotation[3];///<The rotation array
-   btTransform* bulletTransform;///<The physics transform
+   //btTransform* bulletTransform;///<The physics transform
+   btRigidBody* btBody;///<The rigid body to access the respective btTransform
 private:
    ///Update the bullet matrix with the matrix from the osg node
    ///the osg node gets set first and is then updated by the 
    ///bullet physics simulator
    void UpdatePhysicsTransform( void );
    
-   //osg::ref_ptr< TransferPhysicsDataCallback > udcb;///<The callback to update the sg node with physics data
+   osg::ref_ptr< TransferPhysicsDataCallback > udcb;///<The callback to update the sg node with physics data
 };
 //This is the callback class configured to handle transfering physics data
 //back to the respective osg node
@@ -185,13 +187,13 @@ public:
    virtual ~TransferPhysicsDataCallback(){;}
    ///Copy constructor
    TransferPhysicsDataCallback( const TransferPhysicsDataCallback& );
-   ///Set the bullet transform for this callback
-   ///\param transform bullet transform
-   void SetbtTransform( btTransform* transform );
+   ///Set the bullet rigid for this callback
+   ///\param transform bullet rigid body
+   void SetbtRigidBody( btRigidBody* transform );
    ///operator required by osg
    virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 protected:
-   btTransform* physicsTransform;///<Pointer to thebullet transform
+   btRigidBody* btBody;///<Pointer to the bullet body
 };
 #elif _OPENSG
 #endif

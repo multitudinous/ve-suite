@@ -53,6 +53,7 @@
 #endif
 
 #include <LinearMath/btTransform.h>
+#include <BulletDynamics/Dynamics/btRigidBody.h>
 
 //C/C++ Libraries
 #include <iostream>
@@ -85,12 +86,12 @@ DCS::DCS( void )
 
    SetScaleArray( temp );
 
-   /*bulletTransform = new btTransform();
+   btBody = 0;
    UpdatePhysicsTransform();
    
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtTransform( bulletTransform );*/
+   udcb->SetbtRigidBody( btBody );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
@@ -103,89 +104,27 @@ DCS::DCS( float* scale, float* trans, float* rot )
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
 
-   /*bulletTransform = new btTransform();
+   btBody = 0;
    UpdatePhysicsTransform();
 
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtTransform( bulletTransform );*/
+   udcb->SetbtRigidBody( btBody );
 }
-////////////////////////////////////////////////////////////////////////////////
-/*DCS::DCS( const DCS& input )
-{
-#ifdef _PERFORMER
-#elif _OSG 
-#elif _OPENSG
-#endif  
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS(const DCS& dcs,const osg::CopyOp& copyop):
 osg::PositionAttitudeTransform(dcs,copyop)
 {
-   /*for( unsigned int i = 0; i < 3; i++ )
-   {
-      translation[i] = dcs.translation[i];
-   }   
-   //SetTranslationArray( translation );
+   btBody = 0;
    
-   for( unsigned int i = 0; i < 3; i++ )
-   {
-      scale[i] = dcs.scale[i];
-   }   
-   //SetRotationArray( scale );
-   
-   for( unsigned int i = 0; i < 3; i++ )
-   {
-      rotation[i] = dcs.rotation[i];
-   }   
-   //SetScaleArray( rotation );
-   
-   bulletTransform = new btTransform( *(dcs.bulletTransform) );   
-
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtTransform( bulletTransform );*/
+   udcb->SetbtRigidBody( btBody );
 }
-/*////////////////////////////////////////////////////////////////////////////////
-DCS& DCS::operator=( const DCS& input )
-{
-   if( this != &input )
-   {
-      //parents input
-      //cfdGroup::operator =( input );
-#ifdef _PERFORMER
-#elif _OSG
-#elif _OPENSG
-#endif
-   }
-
-   return *this;
-}*/
-////////////////////////////////////////////////////////////////////////////////
-/*
-bool DCS::operator==( const DCS& node1 )
-{
-   if( _dcs != node1._dcs )
-   {
-      return false;
-   }
-
-   else
-   {
-      return true;
-   }
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS( void )
 {
-//If neccesary
-#ifdef _PERFORMER
-#elif _OSG
-#elif _OPENSG
-#endif
-
-   //delete bulletTransform;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -209,7 +148,6 @@ float* DCS::GetVRJTranslationArray( void )
 float* DCS::GetVETranslationArray( void )
 {
    osg::Vec3d trans = this->getPosition();
-   //float translation[ 3 ];
    for( size_t i = 0; i < 3; i++ )
    {
       translation[i] = trans[i];
@@ -226,7 +164,6 @@ float* DCS::GetRotationArray( void )
    gmtl::Matrix44f _vjMatrix = gmtl::makeRot< gmtl::Matrix44f >( tempQuat );
    gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( _vjMatrix );
 
-   //float rotation[ 3 ];
    rotation[0] = gmtl::Math::rad2Deg( tempZXY[0] );
    rotation[1] = gmtl::Math::rad2Deg( tempZXY[1] );
    rotation[2] = gmtl::Math::rad2Deg( tempZXY[2] );
@@ -237,7 +174,6 @@ float* DCS::GetRotationArray( void )
 float* DCS::GetScaleArray( void )
 {
    osg::Vec3d tempScale = this->getScale();
-   //float scale[ 3 ];
    for ( size_t i = 0; i < 3; i++ )
    {
       scale[i] = tempScale[i];
@@ -584,11 +520,6 @@ osg::Node* DCS::GetChild( unsigned int position )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-btTransform* DCS::GetPhysicsTransform( void )
-{
-   return bulletTransform;
-}
-////////////////////////////////////////////////////////////////////////////////
 void DCS::ToggleDisplay(bool onOff)
 {
    std::string value = (onOff==true)?"ON":"OFF";
@@ -617,55 +548,62 @@ void DCS::ToggleDisplay(std::string onOff)
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::UpdatePhysicsTransform( void )
 {
+   if ( !btBody )
+   {
+      return;
+   }
+   
    osg::Quat quat = this->getAttitude();
-   //btQuaternion btQuat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
-   //bulletTransform->setRotation( btQuat );
    osg::Vec3d trans = this->getPosition();
-   //bulletTransform->setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
+
+   btTransform bulletTransform;
+   bulletTransform = btBody->getWorldTransform();
+   
+   btQuaternion btQuat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
+   bulletTransform.setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
+   bulletTransform.setRotation( btQuat );
+   
+   btBody->setWorldTransform( bulletTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*bool DCS::computeLocalToWorldMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const
+void DCS::SetbtRigidBody( btRigidBody* rigidBody )
 {
-   return PositionAttitudeTransform::computeLocalToWorldMatrix( matrix, nv);
+   btBody = rigidBody;
+   udcb->SetbtRigidBody( btBody );
 }
-////////////////////////////////////////////////////////////////////////////////
-bool DCS::computeWorldToLocalMatrix(osg::Matrix& matrix,osg::NodeVisitor* nv) const
-{
-   return PositionAttitudeTransform::computeWorldToLocalMatrix( matrix, nv);
-}*/
 #ifdef _OSG
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
 TransferPhysicsDataCallback::TransferPhysicsDataCallback()
 {
-   physicsTransform = 0;
+   btBody = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 TransferPhysicsDataCallback::TransferPhysicsDataCallback( const TransferPhysicsDataCallback& input )
 :osg::Object( input ), osg::NodeCallback( input )
 {
-   physicsTransform = input.physicsTransform;
+   btBody = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TransferPhysicsDataCallback::SetbtTransform( btTransform* transform )
+void TransferPhysicsDataCallback::SetbtRigidBody( btRigidBody* transform )
 {
-   physicsTransform = transform;
+   btBody = transform;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TransferPhysicsDataCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
    osg::ref_ptr<osg::PositionAttitudeTransform> dcs = static_cast<osg::PositionAttitudeTransform*>(node);
    
-   if ( dcs.valid() )
+   if ( dcs.valid() && btBody )
    {
-      btQuaternion quat = physicsTransform->getRotation();
+      btQuaternion quat = btBody->getWorldTransform().getRotation();
       dcs->setAttitude( osg::Quat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] ) );
    
-      btVector3 position = physicsTransform->getOrigin();
+      btVector3 position = btBody->getWorldTransform().getOrigin();
       dcs->setPosition( osg::Vec3d( position[0], position[ 1 ], position[ 2 ] ) );
-
-      traverse(node,nv);
    }
+   
+   traverse(node,nv);
 }
 #endif
