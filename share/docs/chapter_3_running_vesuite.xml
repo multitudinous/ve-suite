@@ -407,9 +407,14 @@
     <para>To add a viewpoint, position the camera just like you want it in the
     viewpoint, then click Add <guibutton>New View Pt</guibutton>. The viewpoint
     will be added to the pulldown menu.</para>
+    
+    <para>You can delete view points by clicking the <guibutton>Delete</guibutton>
+    button and selecting which viewpoint you want to remove.</para>
 
-    <para>You can delete view points by clicking the Delete button and selecting
-    which viewpoint you want to remove.</para>
+    <para>Once you add a viewpoint, the "stored_viewpts_flythroughs.vel" file
+    in your working directory is updated. It is automatically updated whenever
+    you add or delete a viewpoint. You can restore your saved viewpoints later
+    by clicking the <guibutton>Load View Location File</guibutton> button.</para>
 
     <para>To move to a viewpoint, select it from the pulldown menu below
     <guibutton>Move to a View Point</guibutton>. The camera will fly to that
