@@ -31,25 +31,30 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
+
 #include "VE_Open/XML/CAD/CADNode.h" 
 #include "VE_Open/XML/CAD/CADPart.h" 
 #include "VE_Open/XML/CAD/CADAssembly.h" 
 #include "VE_Open/XML/CAD/CADClone.h"
-#include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/CAD/CADNodeTraverser.h"
 
 #include <wx/imaglist.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+
 #include "VE_Conductor/xpm/icon1.xpm"
 #include "VE_Conductor/xpm/icon2.xpm"
 #include "VE_Conductor/xpm/icon3.xpm"
 #include "VE_Conductor/xpm/icon4.xpm"
 #include "VE_Conductor/xpm/icon5.xpm"
+#include "VE_Conductor/xpm/cad_tree_selected.xpm"
+#include "VE_Conductor/xpm/cad_tree_unselected.xpm"
 
 #include <string>
+
 using namespace VE_XML::VE_CAD;
 using namespace VE_Conductor::GUI_Utilities;
+
 //////////////////////////////////////////
 ///Constructor                          //
 //////////////////////////////////////////
@@ -60,13 +65,14 @@ CADTreeBuilder::CADTreeBuilder(CADNode* root,int id ,wxWindow* parent)
    _treeCtrlCreator = new TreeGraphPreCallback();
    _parentPopper = new TreeGraphPostCallback();
 
-     
    _treeCtrl =  new wxTreeCtrl(_parentWindow,id,wxDefaultPosition,wxDefaultSize,
-                            wxTR_HAS_BUTTONS|
-                            wxTR_EDIT_LABELS|
-                            wxTR_HAS_BUTTONS|
-                            wxTR_HAS_VARIABLE_ROW_HEIGHT|wxTR_DEFAULT_STYLE|wxVSCROLL);
+										 wxTR_HAS_BUTTONS|
+										 wxTR_EDIT_LABELS|
+										 wxTR_HAS_BUTTONS|
+										 wxTR_HAS_VARIABLE_ROW_HEIGHT|wxTR_DEFAULT_STYLE|wxVSCROLL);
+
    _createImageList();
+
    SetPreNodeTraverseCallback(_treeCtrlCreator);
    SetPostNodeTraverseCallback(_parentPopper);
 }
@@ -90,11 +96,13 @@ CADTreeBuilder::~CADTreeBuilder()
       delete _treeCtrlCreator;
       _treeCtrlCreator = 0;
    }
+
    if(_parentPopper)
    {
       delete _parentPopper;
       _parentPopper = 0;
    }
+
    _nodeList.clear();
 }
 ////////////////////////////////////////////////
@@ -106,6 +114,7 @@ wxTreeCtrl* CADTreeBuilder::GetWXTreeCtrl()
    {
       return _treeCtrl;
    }
+
    return 0;
 }
 ////////////////////////////////////////////////////
@@ -195,9 +204,7 @@ CADNode* CADTreeBuilder::GetCADNode(std::string name)
     }
  }
 //////////////////////////////////////////////////////////////////////////////////////////
-void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder,
-		                                    CADNode* node,
-		                                    void* currentParent)
+void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder, CADNode* node, void* currentParent)
 {
    CADTreeBuilder* treeGraph = dynamic_cast<CADTreeBuilder*>(treeBuilder);
    if(!treeGraph)
@@ -261,9 +268,9 @@ void CADTreeBuilder::_createImageList()
     wxIcon icons[5];
     icons[0] = wxIcon(icon1_xpm);
     icons[1] = wxIcon(icon2_xpm);
-    icons[2] = wxIcon(icon3_xpm);
+    icons[2] = wxIcon(cad_tree_unselected_xpm);
     icons[3] = wxIcon(icon4_xpm);
-    icons[4] = wxIcon(icon5_xpm);
+    icons[4] = wxIcon(cad_tree_selected_xpm);
 
     int sizeOrig = icons[0].GetWidth();
     for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
@@ -281,14 +288,16 @@ void CADTreeBuilder::_createImageList()
     _treeCtrl->AssignImageList(images);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-void CADTreeBuilder::TreeGraphPostCallback::Apply(CADNodeTraverser* treeBuilder,
-		                                    CADNode* node,
-		                                    void* currentParent)
+void CADTreeBuilder::TreeGraphPostCallback::Apply( CADNodeTraverser* treeBuilder, CADNode* node, void* currentParent )
 {
    CADTreeBuilder* treeGraph = dynamic_cast<CADTreeBuilder*>(treeBuilder);
-   if(!treeGraph)
+
+   if( !treeGraph )
+	{
       return;
-   if(node->GetNodeType() == std::string("Assembly"))
+	}
+
+   if( node->GetNodeType() == std::string("Assembly") )
    {
       treeGraph->PopCurrentParent();
    }
