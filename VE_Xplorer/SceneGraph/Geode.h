@@ -62,7 +62,7 @@ public:
    ///Constructor
    Geode( void );
 protected:
-   ~Geode( void );
+   virtual ~Geode( void );
 public:
    ///Copy constructors for osg
    Geode( const Geode& geode, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
