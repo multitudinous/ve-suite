@@ -47,6 +47,7 @@
 #include <osg/AutoTransform>
 #include <osg/Group>
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Xplorer/SceneGraph/TextTexture.h"
 
 using namespace VE_Xplorer;
 
@@ -226,7 +227,6 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
 }*/
 
 ////////////////////////////////////////////////////////
-//void Network::CreateNetwork( std::string xmlNetwork )
 osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 {
 	osg::ref_ptr<osg::Group> loadedModels = new osg::Group(); 
@@ -239,15 +239,11 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 	std::vector< VE_XML::XMLObject* > objectVector;
 
-
-
 	// do this for models
 	networkWriter.ReadXMLData( network, "Model", "veModel" );
 	objectVector = networkWriter.GetLoadedXMLObjects();
 
-	//_fileProgress->Update( 75, _("done create models") );
 	// now lets create a list of them
-	//int timeCalc = 25/objectVector.size();
 	for ( size_t i = 0; i < objectVector.size(); ++i )
 	{
 		//_fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
@@ -259,6 +255,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		//add 3d blocks
 		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+model->GetIconFilename()+".obj");
+		osg::ref_ptr<VE_SceneGraph::TextTexture> text = new VE_SceneGraph::TextTexture();
+		text->UpdateText(model->GetModelName());
 
 		//add red block id if block .ive file is not found
 		if(loadedModel.get() == NULL)
@@ -267,16 +265,39 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//set the blocks name
 		loadedModel.get()->setName(model->GetModelName());
 
-		//Scale up 3D comps
+		//Rotate the 3d comps 90 degrees around X axis
+		osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
+		rotatedComp.get()->addChild(loadedModel.get());
+		rotatedComp.get()->setRotation(osg::Quat(osg::DegreesToRadians(90.0), osg::Vec3d(1.0, 0.0, 0.0)));
+
+		//move the text to the -y
+		//osg::ref_ptr<osg::MatrixTransform> textTrans = new osg::MatrixTransform();
+		//textTrans.get()->addChild(text.get());
+		//textTrans->preMult(osg::Matrix::translate(0.0, -loadedModel.get()->getBound().radius(), 0.0));
+
+		//move the text to the -y
+		osg::ref_ptr<osg::AutoTransform> textTrans = new osg::AutoTransform();
+		textTrans.get()->addChild(text.get());
+		textTrans.get()->setPosition(osg::Vec3d(0.0, -loadedModel.get()->getBound().radius(), 0.0));
+
+		//Scale up 3D comps & text
 		osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
-		scale.get()->addChild(loadedModel.get());
+		scale.get()->addChild(rotatedComp.get());
+		scale.get()->addChild(textTrans.get());
 		scale.get()->setScale(5.0f);
 
-		//move the block to its correct location
-		osg::ref_ptr<osg::MatrixTransform> mModelTrans = new osg::MatrixTransform();
+		//translate to comp with name to correct location
+		//osg::ref_ptr<osg::MatrixTransform> mModelTrans = new osg::MatrixTransform();
+		//mModelTrans.get()->addChild(scale.get());
+		////mModelTrans.get()->addChild(loadedModel.get());
+		//mModelTrans.get()->preMult(osg::Matrix::translate(xyPair.first*1.02, xyPair.second*1.05, 0.0));
+		//mModelTrans.get()->setName(model->GetModelName());
+		//loadedModels.get()->addChild(mModelTrans.get());
+		
+		//translate to comp with name to correct location
+		osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
 		mModelTrans.get()->addChild(scale.get());
-		//mModelTrans.get()->addChild(loadedModel.get());
-		mModelTrans.get()->preMult(osg::Matrix::translate(xyPair.first*1.02, xyPair.second*1.05, 0.0));
+		mModelTrans.get()->setPosition(osg::Vec3d(xyPair.first*1.02, xyPair.second*1.05, 0.0));
 		mModelTrans.get()->setName(model->GetModelName());
 		loadedModels.get()->addChild(mModelTrans.get());
 	}	
