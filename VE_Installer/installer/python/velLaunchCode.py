@@ -599,7 +599,8 @@ class Launch:
             lib = "lib"
             ##Update the library path
             libList= [os.path.join(str(os.getenv("VJ_BASE_DIR")), lib),
-                      os.path.join(VELAUNCHER_DIR)]
+                      os.path.join(VELAUNCHER_DIR),
+                      os.path.join(VELAUNCHER_DIR, '..', lib)]
             ##Outdated paths.
             ##libList += [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
             ##            os.path.join(VELAUNCHER_DIR, "bin")]

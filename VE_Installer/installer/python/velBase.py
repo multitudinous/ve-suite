@@ -20,7 +20,7 @@ VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
 if os.path.basename(VELAUNCHER_DIR) == "velauncher":
     VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
 DIRECTORY_DEFAULT = join(os.path.dirname(VELAUNCHER_DIR),
-                         "share", "vesuite", "exampleDatasets")
+                         "share", "vesuite", "examples")
 ##Image settings.
 IMAGES_DIR = join(os.path.dirname(VELAUNCHER_DIR), "bin", "installerImages")
 if not os.path.isdir(IMAGES_DIR):
