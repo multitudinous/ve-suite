@@ -197,7 +197,6 @@ LEGAL OPTIONS FOR VELAUNCHER:
 
 -l <boolean>, --cluster=<boolean>: Set whether VE-Suite runs
                                    in Cluster mode.
--m <name>, --master=<name>: Set VEXMASTER to <name>.
 
 PROGRAM-LAUNCHING OPTIONS:
 If any of these are used, only the VE-Suite programs specified with options

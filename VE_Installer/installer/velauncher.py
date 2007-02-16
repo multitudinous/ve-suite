@@ -99,7 +99,7 @@ class LauncherWindow(wx.Frame):
 
         if previousState:
             self.state = previousState
-	else:
+        else:
             ##Prepare data storage
             self.state = CoveredConfig()
             ##Restore config values from last time.
@@ -291,14 +291,14 @@ class LauncherWindow(wx.Frame):
                 if not legitDeps:
                     self.DependenciesChange("")
             self.dependencies = config.Read("DependenciesDir", ":::")
-	elif unix and not devMode:
-	    if len(self.state.GetSurface("Dependencies").GetNames()) == 0 \
-	       and self.state.GetSurface("JugglerDep") == None:
+        elif unix and not devMode:
+            if len(self.state.GetSurface("Dependencies").GetNames()) == 0 \
+               and self.state.GetSurface("JugglerDep") == None:
                 dlg = wx.MessageDialog(None,
                                        "Welcome to VE Suite!\n" +
                                        "Before you can begin, please select" +
                                        " the Dependencies directories you" +
-				                       " will be using.",
+                                                       " will be using.",
                                        "Welcome to VE Suite", wx.OK)
                 dlg.ShowModal()
                 dlg.Destroy()
@@ -877,19 +877,19 @@ arguments = sys.argv[1:]
 
 VALID_ARGUMENTS = {'c' : "conductor",
                    'n' : "nameserver",
-		   'x' : "xplorer",
-		   'l:' : "cluster=",
+                   'x' : "xplorer",
+                   'l:' : "cluster=",
 ##                   'k' : "desktop",
-		   'j:' : "jconf=",
-		   't:' : "taomachine=",
-		   'p:' : "port=",
-		   'w:' : "dir=",
-		   'm:' : "master=",
-		   'd' : "dev",
-		   's' : "shell",
-		   'q' : "quick",
-		   'b' : "debug",
-		   'g:' : "config="}
+                   'j:' : "jconf=",
+                   't:' : "taomachine=",
+                   'p:' : "port=",
+                   'w:' : "dir=",
+##                   'm:' : "master=",
+                   'd' : "dev",
+                   's' : "shell",
+                   'q' : "quick",
+                   'b' : "debug",
+                   'g:' : "config="}
 shortArgs = ""
 longArgs = []
 for arg in VALID_ARGUMENTS:
@@ -908,7 +908,7 @@ previousState = CoveredConfig()
 LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
 
 ##Check if dev mode's on
-if ("--dev", "") in opts:
+if ("--dev", "") or ("-d", "") in opts:
     ##Run VE-Suite in dev mode? Turned to True if --dev passed.
     devMode = True
     ##Change Desktop mode's jconf for dev mode.

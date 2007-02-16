@@ -76,8 +76,8 @@ class CommandLine:
                 self.state.Cover("TaoPort", arg, layer = COMMAND_LINE_LAYER)
             elif opt in ('-w', "--dir="):
                 self.state.Cover("Directory", arg, layer = COMMAND_LINE_LAYER)
-            elif opt in ('-m', "--master="):
-                self.state.Cover("ClusterMaster", arg, layer = COMMAND_LINE_LAYER)
+##            elif opt in ('-m', "--master="):
+##                self.state.Cover("ClusterMaster", arg, layer = COMMAND_LINE_LAYER)
             elif opt in ('-b', "--debug"):
                 self.state.Cover("Debug", True, layer = COMMAND_LINE_LAYER)
         ##Grab the first argument passed as the file to load.
