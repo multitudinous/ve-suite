@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Takes VE-Suite settings input and launches chosen VE-Suite programs.
 
---v1.0.2 coded by Jeff Groves
+--v1.0.4 coded by Jeff Groves
 This module creates a launcher window so the user can choose which
 parts of VE-Suite to launch:
 -Name Server
@@ -90,18 +90,21 @@ class LauncherWindow(wx.Frame):
         Launch([event])
         OnClose([event])        
     """
-    def __init__(self, parent, ID, title, arguments):
+    def __init__(self, parent, ID, title, arguments, previousState = None):
         """Builds the launcher's window and loads the last configuration."""
         wx.Frame.__init__(self, parent, -1, title,
                           style = wx.DEFAULT_FRAME_STYLE &
                           ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
                           wx.MAXIMIZE_BOX))
 
-        ##Prepare data storage
-        self.state = CoveredConfig()
+        if previousState:
+            self.state = previousState
+	else:
+            ##Prepare data storage
+            self.state = CoveredConfig()
+            ##Restore config values from last time.
+            LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
         self.launch = False
-        ##Restore config values from last time.
-        LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
         ##Prepare the panel.
         panel = wx.Panel(self)
         ##Prepare the logo.
@@ -168,11 +171,14 @@ class LauncherWindow(wx.Frame):
         menu = wx.Menu()
         menu.Append(520, "Choose De&pendencies\tCtrl+P")
         if not unix:
-            menu.Append(521, "Choose &Builder Folder\tCtrl+B")
+            menu.Append(521, "Choose &Builder Folder")
         menu.Append(522, "VE-Suite Debu&g Level\tCtrl+G")
-        self.menuDebugLaunch = wx.MenuItem(menu, 524, "D&ebug Launch\tCtrl+E",
+        self.menuDebugLaunch = wx.MenuItem(menu, 524, "D&ebug Launch",
                                            kind = wx.ITEM_CHECK)
+        self.autoRunVes = wx.MenuItem(menu, 525, "&Auto-Run VES Files",
+                                      kind = wx.ITEM_CHECK)
         menu.AppendItem(self.menuDebugLaunch)
+        menu.AppendItem(self.autoRunVes)
         menu.Append(523, "&Cluster Wait Times\tCtrl+C")
         menuBar.Append(menu, "&Options")
         self.SetMenuBar(menuBar)
@@ -195,6 +201,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OpenFile, id = 500)
         self.Bind(wx.EVT_MENU, self.CloseFiles, id = 501)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 524)
+        self.Bind(wx.EVT_MENU, self.UpdateData, id = 525)
         
         ##Layout format settings
         ##Create the overall layout box
@@ -253,18 +260,17 @@ class LauncherWindow(wx.Frame):
         ##Set tool tip popup delay to 2 seconds.
         wx.ToolTip.SetDelay(2000)
         
-        ##Set arguments for passed .ves & script files.
-        if arguments:
-            self.state.InterpretArgument(arguments[0])
-##        for arg in arguments:
-##            if arg[-4:] == '.ves':
-##                self.state.VesArgument(arg)
-##            else:
-##                self.state.ScriptArgument(arg)
         ##Set arguments for developer mode.
         if devMode:
             self.state.DevMode()
+        ##Set arguments for passed .ves & script files.
+        if arguments:
+            self.state.InterpretArgument(arguments[0])
         self.React()
+        ##Check for auto-run ves file.
+##        if arguments and self.state.getSurface("AutoRunVes") \
+##           and self.state.getSurface("VESFile"):
+##            self.Launch()
         ##Check the dependencies.
         if windows and not devMode:
             dependenciesDir = config.Read("DependenciesDir", ":::")
@@ -292,7 +298,7 @@ class LauncherWindow(wx.Frame):
                                        "Welcome to VE Suite!\n" +
                                        "Before you can begin, please select" +
                                        " the Dependencies directories you" +
-				       " will be using.",
+				                       " will be using.",
                                        "Welcome to VE Suite", wx.OK)
                 dlg.ShowModal()
                 dlg.Destroy()
@@ -423,6 +429,9 @@ class LauncherWindow(wx.Frame):
         ##Launch Debug Mode
         if self.menuDebugLaunch.IsEnabled():
             self.state.Edit("Debug", self.menuDebugLaunch.IsChecked())
+        ##Auto-Run Ves Files Mode
+        if self.autoRunVes.IsEnabled():
+            self.state.Edit("AutoRunVes", self.autoRunVes.IsChecked())
         ##React, then Update Display
         if react:
             self.React()
@@ -491,6 +500,9 @@ class LauncherWindow(wx.Frame):
         ##Debug Launch menu.
         self.menuDebugLaunch.Enable(self.state.IsEnabled("Debug"))
         self.menuDebugLaunch.Check(self.state.GetSurface("Debug"))
+        ##AutoRun Ves menu.
+        self.autoRunVes.Enable(self.state.IsEnabled("AutoRunVes"))
+        self.autoRunVes.Check(self.state.GetSurface("AutoRunVes"))
         ##Loaded file name. Under work.
 ##        if self.state.GetSurface("VESFile"):
 ##            self.fileTypeText.SetLabel("VES File:")
@@ -862,16 +874,38 @@ class LauncherWindow(wx.Frame):
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.
 arguments = sys.argv[1:]
+
+VALID_ARGUMENTS = {'c' : "conductor",
+                   'n' : "nameserver",
+		   'x' : "xplorer",
+		   'l:' : "cluster=",
+##                   'k' : "desktop",
+		   'j:' : "jconf=",
+		   't:' : "taomachine=",
+		   'p:' : "port=",
+		   'w:' : "dir=",
+		   'm:' : "master=",
+		   'd' : "dev",
+		   's' : "shell",
+		   'q' : "quick",
+		   'b' : "debug",
+		   'g:' : "config="}
+shortArgs = ""
+longArgs = []
+for arg in VALID_ARGUMENTS:
+    shortArgs = shortArgs + arg
+    longArgs.append(VALID_ARGUMENTS[arg])
 try:
-    opts, args = getopt.getopt(arguments,
-                               "cnxkj:t:p:w:m:dsf:v:q",
-                               ["conductor", "nameserver", "xplorer",
-                                "desktop", "jconf=", "taomachine=", "port=",
-                                "dir=", "master=", "dev", "shell",
-                                "file=", "ves=", "quick"])
+    opts, args = getopt.getopt(arguments, shortArgs, longArgs)
 except getopt.GetoptError:
     usage()
     sys.exit(2)
+
+##Prepare previous config
+##Prepare data storage
+previousState = CoveredConfig()
+##Restore config values from last time.
+LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
 
 ##Check if dev mode's on
 if ("--dev", "") in opts:
@@ -889,10 +923,11 @@ else:
     devMode = False
 
 ##Window boot
-if len(opts) == 0 or (len(opts) == 1 and devMode):
+if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
+   (len(opts) == 0 or (len(opts) == 1 and devMode)):
     ##Launch the application
     app = wx.PySimpleApp()
-    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args)
+    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
     app.MainLoop()
     ##Delete the config link to avoid memory leakage.
     del config
@@ -901,6 +936,6 @@ if len(opts) == 0 or (len(opts) == 1 and devMode):
 else:
     app = wx.PySimpleApp()
     app.MainLoop()
-    CommandLine(opts, args)
+    CommandLine(opts, args, previousState)
 
 

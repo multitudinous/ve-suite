@@ -14,56 +14,75 @@ import velArguments
 
 class CommandLine:
     """Launches VE Suite using arguments from the command line."""
-    def __init__(self, opts, arguments):
-        ##Set up default vars.
-        self.state = CoveredConfig()
-        LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
+    def __init__(self, opts, arguments, previousState = None):
+        if previousState:
+            self.state = previousState
+        else:
+            ##Set up default vars.
+            self.state = CoveredConfig()
+            LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
         self.state.ChangeMode(MODE_LIST[self.state.GetSurface("Mode")])
 
 ##        testDict = self.state.GetSurface() ##TESTER
 ##        for var in testDict: ##TESTER
 ##            print var, testDict[var] ##TESTER
-        if not (("--quick", "") in opts or ("-q", "") in opts):
+
+        commandLineActivators = ('-c', "--conductor", '-n', "--nameserver",
+                                 '-x', "--xplorer", '-s', "--shell")
+        setCommandLineMode = False
+        devMode = False
+        for opt, arg in opts:
+            ##print opt, arg ##TESTER
+            if opt in ('-g', "--config="):
+                try:
+                    LoadConfig(arg, self.state)
+                    self.state.ChangeMode(MODE_LIST[self.state.GetSurface("Mode")])
+                except NonexistantConfigError, error:
+                    print "ERROR: Config '%s' doesn't exist. Aborting launch." % error.value
+                    sys.exit(2)
+            elif opt in ('-d', "--dev"):
+                devMode = True
+                self.state.DevMode()
+            elif opt in commandLineActivators:
+                setCommandLineMode = True
+        if setCommandLineMode:
             self.state.CommandLineMode()
-        if ("--dev", "") in opts or ("-d", "") in opts:
-            devMode = True
-            self.state.DevMode()
-        else:
-            devMode = False
+
+
 ##        print "---------" ##TESTER
 ##        testDict = self.state.GetSurface() ##TESTER
 ##        for var in testDict: ##TESTER
 ##            print var, testDict[var] ##TESTER
+
         ##Set vars from the command line.
-##        for opt, arg in opts:
-##            if opt in ('-g', "--config"):
-##                try:
-##                    LoadConfig(arg, self.state)                    
-##                except:
-##                    
         for opt, arg in opts:
             if opt in ('-c', "--conductor"):
-                self.state.Edit("Conductor", True)
+                self.state.Cover("Conductor", True, layer = COMMAND_LINE_LAYER)
             elif opt in ('-n', "--nameserver"):
-                self.state.Edit("NameServer", True)
+                self.state.Cover("NameServer", True, layer = COMMAND_LINE_LAYER)
             elif opt in ('-x', "--xplorer"):
-                self.state.Edit("Xplorer", True)
+                self.state.Cover("Xplorer", True, layer = COMMAND_LINE_LAYER)
+            elif opt in ('-l', "--cluster="):
+                self.state.Cover("XplorerType", self.xplorerType(arg), layer = COMMAND_LINE_LAYER)
             elif opt in ('-s', "--shell"):
-                self.state.Edit("Shell", True)
-            elif opt in ('-k', "--desktop"):
-                self.state.Edit("DesktopMode", True)
+                self.state.Cover("Shell", True, layer = COMMAND_LINE_LAYER)
+##            elif opt in ('-k', "--desktop"):
+##                self.state.Cover("DesktopMode", True, layer = COMMAND_LINE_LAYER)
             elif opt in ('-j', "--jconf="):
-                self.state.Edit("JconfDict", {"Default": arg})
+                self.state.Cover("JconfDict", {"Default": arg}, layer = COMMAND_LINE_LAYER)
             elif opt in ('-t', "--taomachine="):
-                self.state.Edit("TaoMachine", arg)
+                self.state.Cover("TaoMachine", arg, layer = COMMAND_LINE_LAYER)
             elif opt in ('-p', "--port="):
-                self.state.Edit("TaoPort", arg)
+                self.state.Cover("TaoPort", arg, layer = COMMAND_LINE_LAYER)
             elif opt in ('-w', "--dir="):
-                self.state.Edit("Directory", arg)
+                self.state.Cover("Directory", arg, layer = COMMAND_LINE_LAYER)
             elif opt in ('-m', "--master="):
-                self.state.Edit("ClusterMaster", arg)
-            elif opt in ('-f', "--file="):
-                self.state.InterpretArgument(arg)
+                self.state.Cover("ClusterMaster", arg, layer = COMMAND_LINE_LAYER)
+            elif opt in ('-b', "--debug"):
+                self.state.Cover("Debug", True, layer = COMMAND_LINE_LAYER)
+        ##Grab the first argument passed as the file to load.
+        if len(arguments) > 0:
+            self.state.InterpretArgument(arguments[0])
 ##        print "---------" ##TESTER
 ##        testDict = self.state.GetLaunchSurface() ##TESTER
 ##        for var in testDict: ##TESTER
@@ -94,12 +113,26 @@ class CommandLine:
         ##Launch the shell here, if needed.
         if self.state.GetSurface("Shell") == True:
             velShell.Start(self.state.GetSurface("ShellScript"))
-##            if windows:
-##                os.system("""start "%s" cmd""" % BUILDER_SHELL_NAME)
-##            elif unix:
-##                print "VE-Suite subshell started."
-##                print "Type exit to return to your previous" + \
-##                      " shell once you're done."
-##                os.execl(UNIX_SHELL, "")
-##            else:
-##                print "SHELL ERROR! This OS isn't supported."
+
+
+    def xplorerType(self, inputArg):
+        """Converts true/false input into a cluster/non-cluster XplorerType."""
+        clusterMode = self.boolReader(inputArg)
+        if clusterMode:
+            return "OSG-VEPC"
+        else:
+            return "OSG-VEP"
+
+
+    def boolReader(self, inputArg, default = False):
+        """Converts user input into a True/False input."""
+        yesInputs = ["true", "t", "yes", "y", "on"]
+        noInputs = ["false", "f", "no", "n", "off"]
+        ##Convert to lower-case for comparison
+        inputArg = inputArg.lower()
+        if inputArg in yesInputs:
+            return True
+        elif inputArg in noInputs:
+            return False
+        else:
+            return default

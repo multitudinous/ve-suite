@@ -33,8 +33,10 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "User",
                  "FileDir"]
     if saveLastConfig:
+        ##Variables that only the main config stores.
         strWrites.append("Directory")
         strWrites.append("Debug")
+        strWrites.append("AutoRunVes")
         strWrites.append("JugglerDep")
         state.GetBase("RecentFiles").WriteConfig() ##Has config.DeleteGroup
         state.GetBase("Dependencies").WriteConfig() ##Ditto.
@@ -68,8 +70,10 @@ def LoadConfig(name, state, loadLastConfig = False):
     loadLastConfig -- Is it loading the default configuration?"""
     ##Set config
     config = wx.Config.Get()
-    config.SetPath('..')
-    config.SetPath(name)
+    path = '../%s' % name
+    if not config.HasGroup(path):
+        raise NonexistantConfigError(name)
+    config.SetPath(path)
     ##Set the configs read in.
     strReads = ["ClusterMaster",
                 "DependenciesDir",
@@ -91,6 +95,7 @@ def LoadConfig(name, state, loadLastConfig = False):
     if loadLastConfig:
         strReads.append("Directory")
         boolReads.append("Debug")
+        boolReads.append("AutoRunVes")
         strReads.append("JugglerDep")
         if not EnvVarEmpty("VJ_BASE_DIR"):
             state.Cover("JugglerDep", os.getenv("VJ_BASE_DIR"), layer = DEV_LAYER)

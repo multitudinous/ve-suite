@@ -20,9 +20,9 @@ VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
 if os.path.basename(VELAUNCHER_DIR) == "velauncher":
     VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
 DIRECTORY_DEFAULT = join(os.path.dirname(VELAUNCHER_DIR),
-                         "share", "exampleDatasets")
+                         "share", "vesuite", "exampleDatasets")
 ##Image settings.
-IMAGES_DIR = join(os.path.dirname(VELAUNCHER_DIR), "share", "installerImages")
+IMAGES_DIR = join(os.path.dirname(VELAUNCHER_DIR), "bin", "installerImages")
 if not os.path.isdir(IMAGES_DIR):
     IMAGES_DIR = join(VELAUNCHER_DIR, "installerImages")
 LOGO_LOCATION = join(IMAGES_DIR, "ve_logo.xpm")
@@ -71,11 +71,11 @@ NULL_SPACE = (0, 0)
 ##Covers for the CoveredConfig.
 ##Higher-numbered covers "cover up" lower-numbered covers.
 UNAVAILABLE_LAYER = 0
-DEV_LAYER = UNAVAILABLE_LAYER + 1
-VES_LAYER = DEV_LAYER + 1
-SCRIPT_LAYER = VES_LAYER + 1
-MODE_LAYER = SCRIPT_LAYER + 1
-TOTAL_LAYERS = MODE_LAYER + 1
+SETTINGS_LAYER = UNAVAILABLE_LAYER + 1
+FILE_LAYER = SETTINGS_LAYER + 1
+MODE_LAYER = FILE_LAYER + 1
+COMMAND_LINE_LAYER = MODE_LAYER + 1
+TOTAL_LAYERS = COMMAND_LINE_LAYER + 1
 
 def CFDHostType():
     ##Set CFDHOSTNAME
@@ -150,6 +150,13 @@ class QuitLaunchError(Exception):
     def __str__(self):
         return repr(self.value)
 
+class NonexistantConfigError(Exception):
+    """Defines error raised if VE-Launcher config 'value' doesn't exist."""
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 def Style(window):
     """The uniform style of each window in VE Launcher."""
     ##Set the background color.
@@ -170,29 +177,36 @@ def EnvVarEmpty(var):
 def usage():
     """Prints a list of acceptable arguments for command line velauncher.py."""
     print """
-LEGAL ARGUMENTS FOR VELAUNCHER.PY
+LEGAL OPTIONS FOR VELAUNCHER:
 <none>: Start the velauncher GUI.
+<file>: Passes a .ves or shell file to velauncher. Will automatically run it
+        if the Auto-Run Passes File menu choice is checked.
 -d, --dev: If passed alone, starts the velauncher GUI in developer mode.
-If passed with other options, sets the launch environment to developer mode.
+           If passed with other options, sets the launch environment to
+           developer mode.
+-q, --quick: Immediately runs VE-Suite with its last settings.
+-g <config>, --config=<config>: Immediately runs VE-Suite using the named
+                                VE-Launcher configuration.
 
+-w <dir>, --dir=<dir>: Set the Working directory to <dir>.
+-t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.
+-p <port>, --port=<port>: Set TAOPORT to <port>.
+-j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's
+                                   Juggler configuration.
+-b, --debug: Debug VE-Launcher's launch sequence.
+
+-l <boolean>, --cluster=<boolean>: Set whether VE-Suite runs
+                                   in Cluster mode.
+-m <name>, --master=<name>: Set VEXMASTER to <name>.
+
+PROGRAM-LAUNCHING OPTIONS:
+If any of these are used, only the VE-Suite programs specified with options
+will launch, despite previous settings.
+(Example: If you pass "-c -x", only Conductor and Xplorer will launch.)
 -c, --conductor: Launch VE Conductor.
 -n, --nameserver: Launch VE NameServer.
 -x, --xplorer: Launch VE Xplorer.
 -s, --shell: Launches a subshell with the VE-Suite environmental
-variables set, including the VE-Builder directory.
-
--k, --desktop: Set VE Conductor and VE Xplorer to Desktop mode.
--l, --cluster: Run VE-Suite in Cluster mode.
-
--j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's
-Juggler configuration.
--w <dir>, --dir=<dir>: Set the Working directory to <dir>.
--v <file>, --ves=<file>: Sets the VES file to pass in. Overrides -w.
-
--t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.
--p <port>, --port=<port>: Set TAOPORT to <port>.
--e <dir>, --dep=<dir>: Set the Dependencies directory to <dir>.
--m <name>, --master=<name>: Set VEXMASTER to <name>.
-
--q, --quick: Immediately runs VE-Suite with its last settings."""
+             variables set, including the VE-Builder directory.
+"""
     return

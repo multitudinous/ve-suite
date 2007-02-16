@@ -43,26 +43,25 @@ class CoveredConfig(CoveredState):
 
     def DevMode(self):
         """Applies developer mode to the launcher."""
-        self.Cover("DependenciesDir", None, layer = DEV_LAYER)
-        self.Cover("BuilderDir", None, layer = DEV_LAYER)
-        self.Cover("BuilderShell", False, layer = DEV_LAYER)
-        self.Cover("DevMode", True, layer = DEV_LAYER)
+        for var in DEV_CONFIG:
+            self.Cover(var, DEV_CONFIG[var], layer = SETTINGS_LAYER)
 
     def CommandLineMode(self):
         """Applies changes to base for Command Line mode."""
         for var in COMMAND_CONFIG:
-            self.Edit(var, COMMAND_CONFIG[var])
+            self.Cover(var, COMMAND_CONFIG[var], layer = COMMAND_LINE_LAYER)
 
     def InterpretArgument(self, argument):
+        """Takes a filename argument, removes other loaded files, loads argument."""
+        vesFile = None
+	scriptFile = None
         if argument:
-##            self.Edit("FileDir", os.path.dirname(os.path.abspath(argument)))
             if argument[-4:] == '.ves':
-                self.SetVesFile(argument)
+                vesFile = argument
             else:
-                self.SetScript(argument)
-        else:
-            self.SetVesFile(None)
-            self.SetScript(None)
+                scriptFile = argument
+        self.SetVesFile(vesFile)
+	self.SetScript(scriptFile)
         return
 
     def SetVesFile(self, vesFile):
@@ -75,7 +74,7 @@ class CoveredConfig(CoveredState):
             ##Ensure only one file loaded at a time.
             self.SetScript(None)
         else:
-            self.UncoverAll(VES_LAYER)
+##            self.UncoverAll(VES_LAYER)
             self.Edit("VESFile", None)
         self.ChangeMode(MODE_LIST[self.GetSurface("Mode")])
         return
@@ -88,14 +87,14 @@ class CoveredConfig(CoveredState):
 ##                       layer = SCRIPT_LAYER)
             self.Edit("Directory", os.path.dirname(os.path.abspath(scriptFile)))
             self.Edit("ShellScript", scriptFile)
-            self.Cover("Shell", True, layer = SCRIPT_LAYER)
-            self.Cover("BuilderDir", None, layer = SCRIPT_LAYER)
-            self.Cover("BuilderShell", False, layer = DEV_LAYER)
-            self.Cover("Mode", 4, layer = SCRIPT_LAYER)
+            self.Cover("Shell", True, layer = FILE_LAYER)
+            self.Cover("BuilderDir", None, layer = FILE_LAYER)
+            self.Cover("BuilderShell", False, layer = FILE_LAYER)
+            self.Cover("Mode", 4, layer = FILE_LAYER)
             ##Ensure only one file loaded at a time.
             self.SetVesFile(None)
         else:
-            self.UncoverAll(SCRIPT_LAYER)
+            self.UncoverAll(FILE_LAYER)
             self.Edit("ShellScript", None)
         self.ChangeMode(MODE_LIST[self.GetSurface("Mode")])
         return
