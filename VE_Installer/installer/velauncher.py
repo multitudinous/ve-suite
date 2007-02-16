@@ -147,7 +147,7 @@ class LauncherWindow(wx.Frame):
         ##Build Launch button.
         self.bLaunch = wx.Button(panel, -1, "Launch VE Suite")
         self.bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
-                                      " close the Launcher."))
+                                           " close the Launcher."))
         ##Build menu bar
         menuBar = wx.MenuBar()
         menu = wx.Menu()
@@ -175,7 +175,7 @@ class LauncherWindow(wx.Frame):
         menu.Append(522, "VE-Suite Debu&g Level\tCtrl+G")
         self.menuDebugLaunch = wx.MenuItem(menu, 524, "D&ebug Launch",
                                            kind = wx.ITEM_CHECK)
-        self.autoRunVes = wx.MenuItem(menu, 525, "&Auto-Run VES Files",
+        self.autoRunVes = wx.MenuItem(menu, 525, "&Auto-Run Passed Files",
                                       kind = wx.ITEM_CHECK)
         menu.AppendItem(self.menuDebugLaunch)
         menu.AppendItem(self.autoRunVes)
@@ -908,7 +908,7 @@ previousState = CoveredConfig()
 LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
 
 ##Check if dev mode's on
-if ("--dev", "") or ("-d", "") in opts:
+if ("--dev", "") in opts or ("-d", "") in opts:
     ##Run VE-Suite in dev mode? Turned to True if --dev passed.
     devMode = True
     ##Change Desktop mode's jconf for dev mode.
