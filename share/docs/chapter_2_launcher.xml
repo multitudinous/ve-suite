@@ -146,9 +146,12 @@
     the Mode Settings button. Once you finish choosing the settings, click
     <guibutton>Launch VE-Suite</guibutton> to close VE-Launcher and start
     VE-Suite.</para>
+  </section>
 
-    <para>As of 1.0.2, the main window has a menu bar with the following
-    menus:</para>
+  <section id="launcher_menus">
+    <title>Launcher Menus</title>
+    <para>The launcher's main window has a menu bar with
+    the following menus:</para>
 
     <itemizedlist>
       <listitem>
@@ -156,16 +159,22 @@
 
         <itemizedlist>
           <listitem>
-            <para>Open...: Pick a .ves or script shell file for launch.</para>
+            <para><emphasis role="bold">Open...:</emphasis> Pick a .ves or
+            script shell file for launch.</para>
           </listitem>
 
           <listitem>
-            <para>Close Files: Remove any .ves or script shell files from the
-            launch.</para>
+            <para><emphasis role="bold">Open Recent File:</emphasis> Pick a
+            recently-launcher .ves or script shell file for launch.</para>
           </listitem>
 
           <listitem>
-            <para>Quit.</para>
+            <para><emphasis role="bold">Close Files:</emphasis> Remove any .ves
+            or script shell files from the launch.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Quit:</emphasis> Quit VE-Launcher.</para>
           </listitem>
         </itemizedlist>
       </listitem>
@@ -175,15 +184,18 @@
 
         <itemizedlist>
           <listitem>
-            <para>Load: Load a previously-saved configuration.</para>
+            <para><emphasis role="bold">Load:</emphasis> Load a
+            previously-saved configuration.</para>
           </listitem>
 
           <listitem>
-            <para>Save: Save the current configuration.</para>
+            <para><emphasis role="bold">Save:</emphasis> Save the current
+            configuration.</para>
           </listitem>
 
           <listitem>
-            <para>Delete: Delete a previously-saved configuration.</para>
+            <para><emphasis role="bold">Delete:</emphasis> Delete a
+            previously-saved configuration.</para>
           </listitem>
         </itemizedlist>
       </listitem>
@@ -201,22 +213,32 @@
 
         <itemizedlist>
           <listitem>
-            <para>Choose Dependencies: Change the Dependencies
-            directory.</para>
+            <para><emphasis role="bold">Choose Dependencies:</emphasis> Change
+            the Dependencies.</para>
           </listitem>
 
           <listitem>
-            <para>Choose Builder Folder: Change the Builder directory.</para>
+            <para><emphasis role="bold">Choose Builder Folder:</emphasis> Change
+            the Builder directory. (Windows only)</para>
           </listitem>
 
           <listitem>
-            <para>Debug Level: Choose the debug levels passed to
-            VE-Suite.</para>
+            <para><emphasis role="bold">VE-Suite Debug Level:</emphasis> Choose
+            the VPR and OSG debug levels passed to VE-Suite.</para>
           </listitem>
 
           <listitem>
-            <para>Cluster Wait Times: Customize the time VE-Suite waits
-            between starting the master node and its slaves.</para>
+            <para><emphasis role="bold">Debug Launch:</emphasis> If selected,
+            VE-Suite prints the environment variables set for launch. (Printing
+            not available on the Windows .exe.) If you're running a cluster on
+            Windows, it also forces the cluster program consoles to stay open
+            if they encounter errors.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Cluster Wait Times:</emphasis> Customize
+            the time VE-Suite waits between starting the master node and its
+            slaves.</para>
           </listitem>
         </itemizedlist>
       </listitem>
