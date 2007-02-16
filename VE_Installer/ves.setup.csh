@@ -6,11 +6,7 @@
 setenv OSG_THREAD_SAFE_REF_UNREF 1
    
 # These are used to build VE-Suite
-if ( ! $?FLAGPOLL_PATH ) then
-   setenv FLAGPOLL_PATH /home/vr/Applications/TSVEG/Libraries/Release/Opt/VRJuggler-2.0.1-branch/Linux-RHEL4/lib/flagpoll
-else
-   setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:/home/vr/Applications/TSVEG/Libraries/Release/Opt/VRJuggler-2.0.1-branch/Linux-RHEL4/lib/flagpoll
-endif
+setenv FLAGPOLL_PATH /home/vr/Applications/TSVEG/Libraries/Release/Opt/VRJuggler-2.0.1-branch/Linux-RHEL4/lib/flagpoll
 setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:/home/vr/Applications/TSVEG/Libraries/Release/Opt/cppdom-0.6.6/Linux-RHEL4/lib/flagpoll
 setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:/home/vr/Applications/TSVEG/Libraries/Release/Opt/GMTL-0.4.12/Linux-RHEL4/share/pkgconfig
 setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:/home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-TAO-5.5/Linux-RHEL_4/lib/pkgconfig
@@ -40,9 +36,3 @@ setenv OSG_FILE_PATH ${OSG_HOME}/share/OpenSceneGraph-Data
 setenv PATH ${TAO_HOME}/bin:${PATH}
 setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
 setenv PATH ${VJ_BASE_DIR}/bin:/home/users/mccdo/svn_VE_Suite/VE_Suite/test_two/bin:${PATH}
-
-
-# Set JAVA_HOME for building docs.
-if ( ! $?JAVA_HOME ) then
-   setenv JAVA_HOME /usr/java/jre1.5.0_04
-endif
