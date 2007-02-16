@@ -60,15 +60,14 @@ BEGIN_EVENT_TABLE(Avail_Modules, wxTreeCtrl)
 END_EVENT_TABLE()
    
 Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
-  : wxTreeCtrl(parent, id, pos, size, style), network(0)
+:
+wxTreeCtrl(parent, id, pos, size, style), network(0)
 {
   
   int image1 = TreeCtrlIcon_Folder;
   int image2 = TreeCtrlIcon_FolderSelected;
   CreateImageList();
-  rootId = AddRoot(wxT("Available Modules"),
-				image1, image2,
-				NULL);
+  rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
   SetItemImage(rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
   SetItemFont(rootId, *wxITALIC_FONT);
   pl_loader = new PluginLoader();
@@ -82,48 +81,46 @@ Avail_Modules::~Avail_Modules()
 
 void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
 {
-  std::vector<wxString> lnames;
-  wxTreeItemIdValue cookie;
-  wxString plname = plugin->GetConductorName();
-  wxTreeItemId id, lastid;
-  int image1, image2, image3, image4;
-  int i, lsize;
+	std::vector<wxString> lnames;
+	wxTreeItemIdValue cookie;
+	wxString plname = plugin->GetConductorName();
+	wxTreeItemId id, lastid;
+	int image1, image2, image3, image4;
+	int i, lsize;
 
-  getLeveledName(plname, lnames);
-  image1 = TreeCtrlIcon_Folder;
-  image2 = TreeCtrlIcon_FolderSelected;
-  image3 = TreeCtrlIcon_File;
-  image4 = TreeCtrlIcon_FileSelected;
+	getLeveledName(plname, lnames);
+	image1 = TreeCtrlIcon_Folder;
+	image2 = TreeCtrlIcon_FolderSelected;
+	image3 = TreeCtrlIcon_File;
+	image4 = TreeCtrlIcon_FileSelected;
 
-  id = rootId;
-  lsize = lnames.size();
-  for (i=0; i<(lsize-1); i++)
-    {
-      lastid=id;
+	id = rootId;
+	lsize = lnames.size();
+
+	for (i=0; i<(lsize-1); i++){
+		lastid=id;
       id = GetFirstChild(id, cookie);
-      while (1)
-	{
+      
+		while (1)
+		{
 	  
-	  if (id<=0)
-	    {
-	      id=AppendItem(lastid,lnames[i],
-			 image1, image2,
-			 NULL);
-	      SetItemImage(id, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
-	      SetItemFont(id, *wxITALIC_FONT);
-	      break;
-	    }
-	  	  
-	  if (GetItemText(id)==lnames[i])
-	    break;
-	  
-	  id= GetNextChild(lastid, cookie);
+			if (id<=0)
+			{
+				id=AppendItem( lastid,lnames[i], image1, image2, NULL );
+				SetItemImage(id, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
+				SetItemFont(id, *wxITALIC_FONT);
+				break;
+			}
+			  	  
+			if(GetItemText(id)==lnames[i])
+				 break;
+			  
+			  id= GetNextChild(lastid, cookie);
+		}
 	}
-    }
    
    id = AppendItem(id, lnames[i], image3, image4,  new ReiTreeItemData(plugin, clsi));
    SetItemBold(id);
-  
 }
 
 void Avail_Modules::OnItemRightClick(wxTreeEvent& event)

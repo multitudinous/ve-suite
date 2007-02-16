@@ -49,27 +49,28 @@ void DisplayEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
    VE_XML::DataValuePair* DVP;
    unsigned int value;
-   
-   if(command->GetDataValuePair("FrameRateID")){
+
+   if(command->GetDataValuePair("FrameRateID"))
+	{
       DVP=command->GetDataValuePair("FrameRateID");
       DVP->GetData(value);
-
+   
       VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag(value);
-      VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->FrameRateEvent();
    }
 
-   else if(command->GetDataValuePair("CoordSysID")){
+   else if(command->GetDataValuePair("CoordSysID"))
+	{
       DVP=command->GetDataValuePair("CoordSysID");
       DVP->GetData(value);
-
+   
       VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag(value);
-      VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->CoordSysEvent(); 
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 DisplayEventHandler& DisplayEventHandler::operator=(const DisplayEventHandler& rhs)
 {
-   if(this!=&rhs){
+   if(this!=&rhs)
+	{
       VE_EVENTS::EventHandler::operator=(rhs);
    }
 

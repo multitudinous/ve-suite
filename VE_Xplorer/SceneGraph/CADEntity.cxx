@@ -75,7 +75,8 @@ restitution(0.0f)
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
 {
-	if(collision_shape){
+	if(collision_shape)
+	{
 		delete collision_shape;	
 	}
 

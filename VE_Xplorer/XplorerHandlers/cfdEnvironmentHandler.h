@@ -128,6 +128,9 @@ public:
    unsigned int GetWindowWidth( void );
    unsigned int GetWindowHeight( void );
 
+	void SetFrameRate( float value );
+	float GetFrameRate();
+
 	void PostFrameUpdate();
 
    ///Check if the background color has changed
@@ -188,9 +191,11 @@ private:
 	float _frustumBottom;
 	float _frustumNear;
 
+	float framerate;
+
    bool _updateBackgroundColor;        ///<The flag for updating the background color in xplorer
    
-   std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
+   std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;///<The event handler for commands.
 };
 }
 

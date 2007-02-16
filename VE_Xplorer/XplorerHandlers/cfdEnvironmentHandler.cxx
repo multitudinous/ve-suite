@@ -450,6 +450,8 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
+
+	display_information->LatePreFrame();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
@@ -475,11 +477,26 @@ unsigned int cfdEnvironmentHandler::GetWindowHeight()
    return _windowHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::SetFrameRate( float value )
+{
+	framerate = value;
+}
+////////////////////////////////////////////////////////////////////////////////
+float cfdEnvironmentHandler::GetFrameRate()
+{
+	return framerate;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball
    VE_Xplorer::DeviceHandler::instance()->GetTrackball()->Reshape(_windowWidth,_windowHeight);
 	VE_Xplorer::DeviceHandler::instance()->GetTrackball()->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
+
+	if( !display_information->GetProjectionFlag() )
+	{
+		display_information->SetDisplayPositions( _windowWidth, _windowHeight );
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void cfdEnvironmentHandler::CreateObjects( void )

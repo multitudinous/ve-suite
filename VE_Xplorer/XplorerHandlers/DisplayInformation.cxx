@@ -1,14 +1,17 @@
 #include "VE_Xplorer/XplorerHandlers/DisplayInformation.h"
 
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 
 #include "VE_Xplorer/XplorerHandlers/WCS.h"
 
 #include <osg/Geode>
+#include <osg/Geometry>
 #include <osg/Projection>
-
-#include <osgText/Text>
+#include <osg/MatrixTransform>
 
 //C/C++ libraries
 #include <sstream>
@@ -19,106 +22,187 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::DisplayInformation()
 {
-   framerate_flag=false;
-   coord_sys_flag=false;
+   framerate_flag = false;
+   wcs_flag = false;
+	projection_flag = false;
 
-   display_switch=new VE_SceneGraph::Switch;
+   display_switch = new VE_SceneGraph::Switch;
+	VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( display_switch.get() );
 
-   this->InitFrameRateDisplay();
-   this->InitCoordSysDisplay();
+	framerate = new osg::CameraNode;
+	wcs = new osg::CameraNode;
 
-   display_switch->AddChild(framerate.get());
-   display_switch->AddChild(coord_sys.get());
+	framerate_text = new osgText::Text;
+	wcs_x_text = new osgText::Text;
+	wcs_y_text = new osgText::Text;
+	wcs_z_text = new osgText::Text;
+
+	//The physical model for the world coordinate system display
+	osg::ref_ptr< VE_SceneGraph::DCS > dcs = new VE_SceneGraph::DCS();
+	wcs_model = new VE_SceneGraph::CADEntity( GetVESuite_WCS(), dcs.get(), true );
+
+	display_switch->addChild( framerate.get() );
+	display_switch->addChild( wcs.get() );
+
+	display_switch->setChildValue( framerate.get(), false );
+	display_switch->setChildValue( wcs.get(), false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::~DisplayInformation()
 {
-	;
+	if( wcs_model )
+	{
+		delete wcs_model;
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::InitFrameRateDisplay()
 {
-   framerate=new VE_SceneGraph::DCS;
-   /*
-   framerate_dcs=new VE_SceneGraph::DCS;
-   framerate_geode=new osg::Geode;
-   framerate_text=new osgText::Text;
-   framerate_font=osgText::readFontFile("../fonts/arial.ttf");
-   
-   framerate_text->setFont(framerate_font.get());
-   framerate_text->setColor(osg::Vec4f(1.0f,1.0f,1.0f,1.0f));
-   framerate_text->setCharacterSize(10.0f);
-   //framerate_text->setRotation(osg::Quat(90.0f,osg::X_AXIS));
-   framerate_text->setAlignment(osgText::Text::RIGHT_BASE_LINE);
-   framerate_text->setFontResolution(40,40);
+	osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    
+	std::string framerate_font( "fonts/arial.ttf" );
 
-   framerate_geode->addDrawable(framerate_text.get());
+   //Turn lighting off for the text and disable depth test to ensure its always ontop
+	osg::ref_ptr< osg::StateSet > stateset = geode->getOrCreateStateSet();
+   //stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
 
-   int windowWidth=VE_Xplorer::cfdEnvironmentHandler::instance()->GetWindowWidth();
-   int windowHeight=VE_Xplorer::cfdEnvironmentHandler::instance()->GetWindowHeight();
+	{
+      geode->addDrawable( framerate_text.get() );
+      framerate_text->setFont( framerate_font );
+		framerate_text->setAxisAlignment(osgText::Text::SCREEN);
+	}
 
-   float position[3];
-   position[0]=0;
-   position[1]=10;
-   position[2]=20;
+   //Set the view matrix    
+   framerate->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+   framerate->setViewMatrix( osg::Matrix::identity() );
 
-   //framerate_text->setPosition(osg::Vec3(0.0f,10.0f,0.0f));
-   framerate_dcs->SetTranslationArray(position);
+   //Only clear the depth buffer
+   framerate->setClearMask( GL_DEPTH_BUFFER_BIT );
 
-   dynamic_cast<osg::Group*>(framerate_dcs->GetRawNode())->addChild(framerate_geode.get());
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->AddChild(framerate_dcs);
-   */
+   //Draw subgraph after main camera view
+   framerate->setRenderOrder( osg::CameraNode::POST_RENDER );
+
+   framerate->addChild( geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::InitCoordSysDisplay()
 {
-   coord_sys=new VE_SceneGraph::DCS;
+	osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    
+	std::string wcs_font( "fonts/arial.ttf" );
 
-   //The physical model for the world coordinate system display
-   VE_SceneGraph::CADEntity* coord_sys_model=new VE_SceneGraph::CADEntity(GetVESuite_WCS(),coord_sys.get(),true);
+   //Turn lighting off for the text and disable depth test to ensure its always ontop
+	osg::ref_ptr< osg::StateSet > stateset = geode->getOrCreateStateSet();
+   stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
-   osg::ref_ptr<osg::Projection> projection=new osg::Projection;
-   projection->setMatrix(osg::Matrix::ortho(-1.2,10,-1.2,10,-2,2));
-   projection->setCullingActive(false);
+   {
+		geode->addDrawable( wcs_x_text.get() );
+		geode->addDrawable( wcs_y_text.get() );
+		geode->addDrawable( wcs_z_text.get() );
 
-   //wcs_stateset=new osg::StateSet(;)
-   //wcs_display->GetRawNode()->setStateSet(wcs_stateset.get());
+      wcs_x_text->setFont( wcs_font );
+      wcs_x_text->setText( "x" );
+		wcs_x_text->setAxisAlignment( osgText::Text::SCREEN );
 
-   //Disable depth testing so wcs is drawn regardless of depth values of geometry already drawn
-   //wcs_stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+		wcs_y_text->setFont( wcs_font );
+      wcs_y_text->setText( "y" );
+		wcs_y_text->setAxisAlignment( osgText::Text::SCREEN );
+
+		wcs_z_text->setFont( wcs_font );
+      wcs_z_text->setText( "z" );
+		wcs_z_text->setAxisAlignment( osgText::Text::SCREEN );
+	}
+
+   //Set the view matrix    
+   wcs->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+   wcs->setViewMatrix( osg::Matrix::identity() );
+
+   //Only clear the depth buffer
+   wcs->setClearMask( GL_DEPTH_BUFFER_BIT );
+
+   //Draw subgraph after main camera view
+   wcs->setRenderOrder( osg::CameraNode::POST_RENDER );
+
+	wcs->addChild( wcs_model->GetDCS() );
+   wcs->addChild( geode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayInformation::LatePreFrameUpdate()
+void DisplayInformation::LatePreFrame()
 {
-   /*
-   if(this->GetDisplayFrameRate()==true){
-      std::stringstream ss(std::stringstream::in|std::stringstream::out);
-      //ss<<framerate;
-      ss<<" fps";
-      framerate_text->setText(ss.str());
-   }
+	if( framerate_flag )
+	{
+		std::stringstream ss;
+		ss << VE_Xplorer::cfdEnvironmentHandler::instance()->GetFrameRate();
+		ss << " fps";
 
+		framerate_text->setText( ss.str() );
+	}
 
-   */
-}
-////////////////////////////////////////////////////////////////////////////////
-void DisplayInformation::FrameRateEvent()
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void DisplayInformation::CoordSysEvent()
-{
-
+	if( wcs_flag )
+	{
+		osg::Quat temp = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->getAttitude();
+		osg::Quat quat( temp.x(), temp.z(), -temp.y(), temp.w() );
+		wcs_model->GetDCS()->setAttitude( quat );
+		wcs_x_text->setRotation( quat );
+		wcs_y_text->setRotation( quat );
+		wcs_z_text->setRotation( quat );
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetFrameRateFlag(bool val)
 {
-   framerate_flag=val;
+   framerate_flag = val;
+
+	if( val )
+	{
+		display_switch->setChildValue( framerate.get(), true );
+	}
+
+	else
+	{
+		display_switch->setChildValue( framerate.get(), false );
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetCoordSysFlag(bool val)
 {
-   coord_sys_flag=val;
+   wcs_flag = val;
+
+	if( val )
+	{
+		display_switch->setChildValue( wcs.get(), true );
+	}
+
+	else
+	{
+		display_switch->setChildValue( wcs.get(), false );
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int height )
+{
+	if( width < 10000 )
+	{
+		//Set the projection matrix
+		framerate->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
+		wcs->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
+
+		framerate_text->setPosition( osg::Vec3( width-100, 10, 0 ) );
+		wcs_x_text->setPosition( osg::Vec3( 125, height-75, 0 ) );
+		wcs_y_text->setPosition( osg::Vec3( 75, height-25, 0 ) );
+		wcs_z_text->setPosition( osg::Vec3( 75, height-75, 125  ) );
+
+		wcs_model->GetDCS()->setPosition( osg::Vec3( 75, height-75, 0 ) );
+
+		this->InitFrameRateDisplay();
+		this->InitCoordSysDisplay();
+
+		projection_flag = true;
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+bool DisplayInformation::GetProjectionFlag()
+{
+	return projection_flag;
 }
 ////////////////////////////////////////////////////////////////////////////////

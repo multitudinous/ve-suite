@@ -1736,12 +1736,14 @@ void AppFrame::DisplaySelection( wxCommandEvent& event )
 
    unsigned int value;
 
-   if(event.GetId() == FRAME_RATE){
+   if(event.GetId() == FRAME_RATE)
+	{
       value=xplorerDisplayMenu->IsChecked(FRAME_RATE);
       DVP->SetData(std::string("FrameRateID"),value);
    }
 
-   else if(event.GetId() == COORDINATE_SYSTEM){
+   else if(event.GetId() == COORDINATE_SYSTEM)
+	{
       value=xplorerDisplayMenu->IsChecked(COORDINATE_SYSTEM);
       DVP->SetData(std::string("CoordSysID"),value);
    }

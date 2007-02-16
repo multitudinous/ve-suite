@@ -14,25 +14,18 @@ DisplayInformation API
 */
 #include "VE_Installer/include/VEConfig.h"
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
 
 #ifdef _OSG
 #include <osg/ref_ptr>
-#elif _PERFORMER
+#include <osg/CameraNode>
+#include <osgText/Text>
 #endif
 
 namespace VE_SceneGraph
 {
-   class DCS;
 	class Switch;
-}
-
-namespace osg
-{
-   class Projection;
-   class MatrixTransform;
-   class Geode;
+	class CADEntity;
 }
 
 namespace VE_Xplorer
@@ -43,33 +36,35 @@ namespace VE_Xplorer
          DisplayInformation();
          ~DisplayInformation();
 
-         void LatePreFrameUpdate();
+         void LatePreFrame();
 
-         //Appropriate display based on input from DisplayEventHandler
-         void FrameRateEvent();
-         void CoordSysEvent();
+         ///Set the display flags
+         void SetFrameRateFlag( bool val );
+         void SetCoordSysFlag( bool val );
 
-         //Set the display flags
-         void SetFrameRateFlag(bool val);
-         void SetCoordSysFlag(bool val);
+			void SetDisplayPositions( unsigned int width, unsigned int height );
+
+			bool GetProjectionFlag();
 
       private:
-         void InitializeProjection();
-
-         void InitializeTransformation();
-
-         //Initialize the framerate display
+         ///Initialize the framerate display
          void InitFrameRateDisplay();
 
-         //Initialize the world coordinate system display
+         ///Initialize the world coordinate system display
          void InitCoordSysDisplay();
 
-         osg::ref_ptr< VE_SceneGraph::Switch > display_switch;
-			osg::ref_ptr< VE_SceneGraph::DCS > framerate;
-         osg::ref_ptr< VE_SceneGraph::DCS > coord_sys;
-
          bool framerate_flag;                //bool Frame Rate on/off
-         bool coord_sys_flag;                //bool WCS on/off
+         bool wcs_flag;								//bool WCS on/off
+			bool projection_flag;					//bool projection has been set
+
+			osg::ref_ptr< VE_SceneGraph::Switch > display_switch;
+			osg::ref_ptr< osg::CameraNode > framerate;
+			osg::ref_ptr< osg::CameraNode > wcs;
+			osg::ref_ptr< osgText::Text > framerate_text;
+			osg::ref_ptr< osgText::Text > wcs_x_text;
+			osg::ref_ptr< osgText::Text > wcs_y_text;
+			osg::ref_ptr< osgText::Text > wcs_z_text;
+			VE_SceneGraph::CADEntity* wcs_model;
    };
 }
 

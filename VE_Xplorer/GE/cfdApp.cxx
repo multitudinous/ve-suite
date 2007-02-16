@@ -426,6 +426,8 @@ void cfdApp::latePreFrame( void )
          {
             float framerate;
             framerate=_frameNumber-lastFrame;
+				VE_Xplorer::cfdEnvironmentHandler::instance()->SetFrameRate( framerate );
+
             lastTime=this->_vjobsWrapper->GetSetAppTime(-1);
             lastFrame=_frameNumber;
          }
