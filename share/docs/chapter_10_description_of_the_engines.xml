@@ -21,6 +21,12 @@
     two-dimensional UI (VE-Conductor) are described in the following
     sections.</para>
 
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/conductorTri.jpg" />
+      </imageobject>
+    </mediaobject>
+
     <section id="conductor_multiplatform_support">
       <title>Multi-Platform Support</title>
 
@@ -146,6 +152,12 @@
     relationship to models. Each of these is described in detail in the
     following sections.</para>
 
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/compengTri.jpg" />
+      </imageobject>
+    </mediaobject>
+
     <section id="vece_plant_configuration">
       <title>Plant Configuration</title>
 
@@ -252,5 +264,11 @@
     engine is controlled by the network string that is created by the GUI.
     This represents a significant capability since the graphical engine has no
     a priori knowledge of the system under interrogation.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="veimages/xplorerTri.jpg" />
+      </imageobject>
+    </mediaobject>
   </section>
 </chapter>
