@@ -499,10 +499,11 @@ class Launch:
         ##change only if you are using your own build
         if windows:
             vjDir = os.path.join(os.getenv("VE_DEPS_DIR"))
+            self.EnvFill("VJ_BASE_DIR", vjDir)
 ##            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"), JUGGLER_FOLDER)
         else:
             vjDir = self.settings["JugglerDep"]
-        self.EnvFill("VJ_BASE_DIR", vjDir)
+            self.EnvFill("VJ_BASE_DIR", vjDir, not self.settings["DevMode"])
         ##self.EnvFill("VJ_DEPS_DIR", os.path.join(os.getenv("VE_DEPS_DIR"),
         ##                                         JUGGLER_FOLDER))
 
