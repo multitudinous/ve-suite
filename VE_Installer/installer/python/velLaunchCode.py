@@ -327,6 +327,7 @@ class Launch:
             ##self.clusterScript += "/usr/X11R6/bin/xset -display :0.0 -dpms s "+\
             ##                      "reset s off\n"
             self.WriteToClusterScript("PYTHONPATH")
+            self.WriteToClusterScript("DISPLAY")
         else:
             self.clusterScript = "ERROR: Unsupported OS type."
         return
