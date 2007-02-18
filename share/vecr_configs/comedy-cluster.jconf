@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="comedy config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <cluster_manager name="Cluster Configuration" version="2">
+         <plugin_path>${VJ_BASE_DIR}/lib/gadgeteer/plugins/</plugin_path>
+         <plugin>ApplicationDataManager</plugin>
+         <plugin>RIMPlugin</plugin>
+         <!--plugin>StartBarrierPlugin</plugin-->
+         <plugin>SwapLockTCPPlugin</plugin>
+         <cluster_node>Node(abbott)</cluster_node>
+         <cluster_node>Node(costello)</cluster_node>
+      </cluster_manager>
+      <application_data name="ApplicationData" version="1">
+         <guid>15c09c99-ed6d-4994-bbac-83587d4400d1</guid>
+         <hostname>doug-mccorkles-computer.local</hostname>
+      </application_data>
+      <!--start_barrier_plugin name="StartBarrierPlugin" version="1">
+         <start_master>Node(abbott)</start_master>
+      </start_barrier_plugin-->
+      <swap_lock_tcp_plugin name="SwapLockTCPPlugin" version="1">
+         <sync_server>Node(abbott)</sync_server>
+         <listen_port>6204</listen_port>
+      </swap_lock_tcp_plugin>
+   </elements>
+</configuration>
+
