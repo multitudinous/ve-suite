@@ -621,8 +621,9 @@ void VjObs_i::GetCfdStateVariables( void )
    }
 
    vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetCfdStateVariables Node Local " 
-      << mStates.isLocal() << " " << vpr::System::getHostname() 
-      << std::endl << vprDEBUG_FLUSH;
+                           << mStates.isLocal() << " " 
+                           << vpr::System::getHostname() 
+                           << std::endl << vprDEBUG_FLUSH;
    //Do for only the master
    if ( !mStates.isLocal() )
    {
@@ -675,7 +676,7 @@ void VjObs_i::GetCfdStateVariables( void )
 void VjObs_i::GetUpdateClusterStateVariables( void )
 {
    vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Cluster Mode " 
-   << isCluster << std::endl << vprDEBUG_FLUSH;
+                           << isCluster << std::endl << vprDEBUG_FLUSH;
    if ( !isCluster )
    {
       return;
@@ -696,8 +697,9 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    }
 
    vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local " 
-      << mStates.isLocal() << " " << vpr::System::getHostname() 
-      << std::endl << vprDEBUG_FLUSH;
+                           << mStates.isLocal() << " " 
+                           << vpr::System::getHostname() 
+                           << std::endl << vprDEBUG_FLUSH;
    
    if ( mStates.isLocal() )
    {
