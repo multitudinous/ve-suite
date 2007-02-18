@@ -293,7 +293,8 @@ class LauncherWindow(wx.Frame):
             self.dependencies = config.Read("DependenciesDir", ":::")
         elif unix and not devMode:
             if len(self.state.GetSurface("Dependencies").GetNames()) == 0 \
-               and self.state.GetSurface("JugglerDep") == None:
+               and self.state.GetSurface("JugglerDep") == None and \
+               os.getenv("VJ_BASE_DIR") == None:
                 dlg = wx.MessageDialog(None,
                                        "Welcome to VE Suite!\n" +
                                        "Before you can begin, please select" +
