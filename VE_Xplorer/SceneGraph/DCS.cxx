@@ -87,7 +87,7 @@ DCS::DCS( void )
    
    //Why does this compile????
    //Because it is defined in PositionAttitudeTransform
-   _scale[ 0 ] = 0;
+   _scale[ 0 ] = 1;
    
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );

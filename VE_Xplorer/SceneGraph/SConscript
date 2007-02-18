@@ -32,6 +32,7 @@ sources = Split("""
     PhysicsSimulator.cxx
     Clone.cxx
     Geode.cxx
+    TextTexture.cxx
 """)
 
 
@@ -63,6 +64,7 @@ headers = Split("""
     PhysicsSimulator.h
     Clone.h
     Geode.h
+    TextTexture.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
