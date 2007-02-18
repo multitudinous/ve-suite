@@ -138,12 +138,42 @@ bool VjObs_i::GetClusterMode( void )
 ////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::InitCluster( void )
 {
-   if ( isCluster )
+   if ( !isCluster )
    {
-      // Cluster Stuff
-      vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
-      this->mStates.init(new_guid);
+      return;
    }
+
+   // Cluster Stuff
+   vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
+   this->mStates.init(new_guid);
+
+   //Initialize cluster variables
+   this->mStates->clusterIso_value = 0.0f;
+   this->mStates->clusterSc = 0.0f;
+   this->mStates->clusterMin = 0.0f;
+   this->mStates->clusterMax = 0.0f;
+   this->mStates->clusterId = 0.0f;
+   this->mStates->clusterGeo_state = 0.0f;
+   this->mStates->clusterPostdata_state = 0.0f;
+   this->mStates->clusterPre_state = false;
+   this->mStates->clusterTimesteps = 0.0f;
+   this->mStates->clusterTeacher_state = 0.0f; 
+   this->mStates->clusterClientInfoFlag = 0; 
+   this->mStates->currentFrame = 0;; // the index of the current frame
+   this->mStates->clusterTime_since_start = 0;
+   this->mStates->clusterFrameNumber = 0.0f;
+   this->mStates->clusterQuatCamIncrement = 0.0f;
+   
+   for(int i=0;i<16;i++)
+   {
+      this->mStates->clusterMatrix[i] = 0.0f;
+   }
+   this->mStates->clusterMatrix[0] = 1.0f;
+   this->mStates->clusterMatrix[5] = 1.0f;
+   this->mStates->clusterMatrix[10] = 1.0f;
+   this->mStates->clusterMatrix[15] = 1.0f;
+   
+   this->mStates->clusterXMLCommands.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -582,64 +612,75 @@ void VjObs_i::GetCfdStateVariables( void )
       cfdShort_data_array[ i ] = mShort_data_array[ i ];
    } 
 
-
+   
+   vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetCfdStateVariables Cluster Mode " 
+                           << isCluster << std::endl << vprDEBUG_FLUSH;
    if ( !isCluster )
    {
       return;
    }
 
-   if ( mStates.isLocal() )
+   vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetCfdStateVariables Node Local " 
+      << mStates.isLocal() << " " << vpr::System::getHostname() 
+      << std::endl << vprDEBUG_FLUSH;
+   //Do for only the master
+   if ( !mStates.isLocal() )
    {
-      this->mStates->clusterIso_value        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      this->mStates->clusterSc               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
-      this->mStates->clusterMin              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
-      this->mStates->clusterMax              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
-      this->mStates->clusterId               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
-      this->mStates->clusterGeo_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
-      this->mStates->clusterPostdata_state   = _bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
-      this->mStates->clusterPre_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
-      this->mStates->clusterTimesteps        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
-      this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
-      this->mStates->clusterTime_since_start = time_since_start;
-
-      gmtl::Matrix44f matrix=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
-
-      //std::cout << "master: " << std::endl << matrix << std::endl;
-      for(int i=0;i<16;i++){
-         this->mStates->clusterMatrix[i]=matrix.mData[i];
-      }
-
-      if ( !commandStringQueue.empty() )
-      {
-         std::vector< std::string >::iterator iter;
-         iter = commandStringQueue.begin();
-         this->mStates->clusterXMLCommands      = (*iter);
-         commandStringQueue.erase( iter );
-      }
-      else
-      {
-         this->mStates->clusterXMLCommands.erase();
-      }
-#ifdef _OSG
-      if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
-      {
-         this->mStates->clusterFrameNumber   = cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->GetCurrentTransientTexture();   
-      }
-      else
-      {
-         this->mStates->clusterFrameNumber = 0;
-      }
-#endif
+      return;
    }
+
+   this->mStates->clusterIso_value        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+   this->mStates->clusterSc               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
+   this->mStates->clusterMin              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
+   this->mStates->clusterMax              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
+   this->mStates->clusterId               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
+   this->mStates->clusterGeo_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
+   this->mStates->clusterPostdata_state   = _bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
+   this->mStates->clusterPre_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
+   this->mStates->clusterTimesteps        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
+   this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
+   this->mStates->clusterTime_since_start = time_since_start;
+
+   gmtl::Matrix44f matrix=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+
+   //std::cout << "master: " << std::endl << matrix << std::endl;
+   for(int i=0;i<16;i++)
+   {
+      this->mStates->clusterMatrix[i]=matrix.mData[i];
+   }
+
+   if ( !commandStringQueue.empty() )
+   {
+      std::vector< std::string >::iterator iter;
+      iter = commandStringQueue.begin();
+      this->mStates->clusterXMLCommands      = (*iter);
+      commandStringQueue.erase( iter );
+   }
+   else
+   {
+      this->mStates->clusterXMLCommands.erase();
+   }
+#ifdef _OSG
+   if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
+   {
+      this->mStates->clusterFrameNumber   = cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->GetCurrentTransientTexture();   
+   }
+   else
+   {
+      this->mStates->clusterFrameNumber = 0;
+   }
+#endif
 }
 
 void VjObs_i::GetUpdateClusterStateVariables( void )
 {
+   vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Cluster Mode " 
+   << isCluster << std::endl << vprDEBUG_FLUSH;
    if ( !isCluster )
    {
       return;
    }
-
+   
    {
       vpr::Guard<vpr::Mutex> val_guard(mValueLock);
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
@@ -654,17 +695,25 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
    }
 
-   if ( !mStates.isLocal() )
+   vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local " 
+      << mStates.isLocal() << " " << vpr::System::getHostname() 
+      << std::endl << vprDEBUG_FLUSH;
+   
+   if ( mStates.isLocal() )
    {
-      if ( this->mStates->clusterXMLCommands.size() > 0 )
-         SetCommandString( this->mStates->clusterXMLCommands.c_str() );
+      return;
    }
+
+   //Do for all the slaves
+   if ( this->mStates->clusterXMLCommands.size() > 0 )
+   {  
+      SetCommandString( this->mStates->clusterXMLCommands.c_str() );  
+   }
+
    //sync up the frames on all nodes in the
    //cluster
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-
-   if ( !mStates.isLocal() )
    {
+      vpr::Guard<vpr::Mutex> val_guard(mValueLock);
       gmtl::Matrix44f matrix;
 
       for(int i=0;i<16;i++){
@@ -686,7 +735,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 #ifdef _OSG
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
       {
-	      cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
+         cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
       }
 #endif
    }
