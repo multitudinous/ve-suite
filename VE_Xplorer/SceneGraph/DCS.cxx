@@ -64,7 +64,7 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( void )
 {
-   btBody = 0;
+   mBtBody = 0;
 
    float temp[3];
    for( unsigned int i = 0; i < 3; i++ )
@@ -85,14 +85,18 @@ DCS::DCS( void )
    }
    SetScaleArray( temp );
    
+   //Why does this compile????
+   //Because it is defined in PositionAttitudeTransform
+   _scale[ 0 ] = 0;
+   
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtRigidBody( btBody );
+   udcb->SetbtRigidBody( mBtBody );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( float* scale, float* trans, float* rot )
 {
-   btBody = 0;
+   mBtBody = 0;
 
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
@@ -100,17 +104,17 @@ DCS::DCS( float* scale, float* trans, float* rot )
 
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtRigidBody( btBody );
+   udcb->SetbtRigidBody( mBtBody );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS(const DCS& dcs,const osg::CopyOp& copyop):
 osg::PositionAttitudeTransform(dcs,copyop)
 {
-   btBody = 0;
+   mBtBody = 0;
    
    udcb = new TransferPhysicsDataCallback();
    this->setUpdateCallback( udcb.get() );
-   udcb->SetbtRigidBody( btBody );
+   udcb->SetbtRigidBody( mBtBody );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS( void )
@@ -141,10 +145,10 @@ float* DCS::GetVETranslationArray( void )
    osg::Vec3d trans = this->getPosition();
    for( size_t i = 0; i < 3; i++ )
    {
-      translation[i] = trans[i];
+      mTranslation[i] = trans[i];
    }
 
-   return translation;
+   return mTranslation;
 }
 ////////////////////////////////////////////////////////////////////////////////
 float* DCS::GetRotationArray( void )
@@ -155,11 +159,11 @@ float* DCS::GetRotationArray( void )
    gmtl::Matrix44f _vjMatrix = gmtl::makeRot< gmtl::Matrix44f >( tempQuat );
    gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( _vjMatrix );
 
-   rotation[0] = gmtl::Math::rad2Deg( tempZXY[0] );
-   rotation[1] = gmtl::Math::rad2Deg( tempZXY[1] );
-   rotation[2] = gmtl::Math::rad2Deg( tempZXY[2] );
+   mRotation[0] = gmtl::Math::rad2Deg( tempZXY[0] );
+   mRotation[1] = gmtl::Math::rad2Deg( tempZXY[1] );
+   mRotation[2] = gmtl::Math::rad2Deg( tempZXY[2] );
    
-   return rotation;
+   return mRotation;
 }
 ////////////////////////////////////////////////////////////////////////////////
 float* DCS::GetScaleArray( void )
@@ -167,10 +171,10 @@ float* DCS::GetScaleArray( void )
    osg::Vec3d tempScale = this->getScale();
    for ( size_t i = 0; i < 3; i++ )
    {
-      scale[i] = tempScale[i];
+      mScale[i] = tempScale[i];
    }
 
-   return scale;
+   return mScale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( std::vector<double> array )
@@ -210,7 +214,7 @@ void DCS::SetRotationArray( std::vector<double> array)
 void DCS::SetScaleArray( std::vector<double> array )
 {
 #ifdef _PERFORMER
-   this->_dcs->setScale( this->_scale[0], this->_scale[1], this->_scale[2] );
+   this->_dcs->setScale( array[0], array[1], array[2] );
 #elif _OSG
    this->setScale( osg::Vec3d( array[0], array[1], array[2]) );
 #elif _OPENSG
@@ -255,19 +259,19 @@ Matrix44f DCS::GetMat( void )
    this->_dcs->getMat( temp );
    _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
-   osg::Matrixd scale = osg::Matrixd::scale(this->getScale());
-   osg::Matrixd translation = osg::Matrixd::translate(this->getPosition());
-   osg::Matrixd inverseTranslation = 
+   osg::Matrixd scaleMat = osg::Matrixd::scale(this->getScale());
+   osg::Matrixd translationMat = osg::Matrixd::translate(this->getPosition());
+   osg::Matrixd inverseTranslationMat = 
                      osg::Matrixd::translate(-this->getPosition()[0],
                                              -this->getPosition()[1],
                                              -this->getPosition()[2]);
-   scale = inverseTranslation*scale*translation;
+   scaleMat = inverseTranslationMat*scaleMat*translationMat;
    
    osg::Matrixd rotateMat;   
    rotateMat.makeRotate( this->getAttitude() );
-   rotateMat = inverseTranslation*rotateMat*translation;
+   rotateMat = inverseTranslationMat*rotateMat*translationMat;
    
-   osg::Matrixf osgMat = translation*scale*rotateMat;
+   osg::Matrixf osgMat = translationMat*scaleMat*rotateMat;
    gmtl::Matrix44f _vjMatrix;
    if( osgMat.valid() )
    {
@@ -289,24 +293,6 @@ Matrix44f DCS::GetMat( void )
 void DCS::SetMat( Matrix44f& input )
 {
 #ifdef _PERFORMER
-   pfMatrix temp = vrj::GetPfMatrix( input );
-   this->_dcs->setMat( temp );
-   
-   // Set rotation
-   pfCoord* coord = new pfCoord();
-
-   temp.getOrthoCoord( coord );
-   _rotation[ 0 ] = coord->hpr[ 0 ];
-   _rotation[ 1 ] = coord->hpr[ 1 ];
-   _rotation[ 2 ] = coord->hpr[ 2 ];
-
-   _translation[ 0 ] = coord->xyz[ 0 ];
-   _translation[ 1 ] = coord->xyz[ 1 ];
-   _translation[ 2 ] = coord->xyz[ 2 ];
-
-   // Warning we don't set scale here for pf
-   // Add functionality to get scale from pfmatrix
-   // by taking the length of each of the column vectors
 #elif _OSG
    gmtl::Vec3f scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
    gmtl::Vec3f scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
@@ -317,18 +303,13 @@ void DCS::SetMat( Matrix44f& input )
    gmtl::Matrix44f unScaleInput = tempScaleMat * input;
 
    // Set scale values
-   _scale[ 0 ] = gmtl::length( scaleXVec );
-   _scale[ 1 ] = gmtl::length( scaleYVec );
-   _scale[ 2 ] = gmtl::length( scaleZVec );
-   this->setScale( osg::Vec3d( _scale[ 0 ], _scale[ 1 ], _scale[ 2 ] ) );
+   this->setScale( osg::Vec3d( gmtl::length( scaleXVec ), 
+                               gmtl::length( scaleYVec ), 
+                               gmtl::length( scaleZVec ) ) );
 
    // set rotation values
    gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
-   gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
-   //_rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
-   //_rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
-   //_rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
-
+   //gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
    osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
    this->setAttitude( quat );
 
@@ -390,10 +371,6 @@ void DCS::SetRotationMatrix( Matrix44f& input )
 
    // Create the quat for rotataion
    gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
-   gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
-   //_rotation[ 0 ] = gmtl::Math::rad2Deg( tempZXY[ 0 ] );
-   //_rotation[ 1 ] = gmtl::Math::rad2Deg( tempZXY[ 1 ] );
-   //_rotation[ 2 ] = gmtl::Math::rad2Deg( tempZXY[ 2 ] );
    osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
    this->setAttitude ( quat );
 #elif _OPENSG
@@ -539,7 +516,7 @@ void DCS::ToggleDisplay(std::string onOff)
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::UpdatePhysicsTransform( void )
 {
-   if ( !btBody )
+   if ( !mBtBody )
    {
       return;
    }
@@ -548,19 +525,19 @@ void DCS::UpdatePhysicsTransform( void )
    osg::Vec3d trans = this->getPosition();
 
    btTransform bulletTransform;
-   bulletTransform = btBody->getWorldTransform();
+   bulletTransform = mBtBody->getWorldTransform();
    
    btQuaternion btQuat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
    bulletTransform.setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
    bulletTransform.setRotation( btQuat );
    
-   btBody->setWorldTransform( bulletTransform );
+   mBtBody->setWorldTransform( bulletTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetbtRigidBody( btRigidBody* rigidBody )
 {
-   btBody = rigidBody;
-   udcb->SetbtRigidBody( btBody );
+   mBtBody = rigidBody;
+   udcb->SetbtRigidBody( mBtBody );
 }
 #ifdef _OSG
 ////////////////////////////////////////////

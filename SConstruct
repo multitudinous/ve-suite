@@ -133,6 +133,16 @@ builders = {
 
 ################################################################################
 options_cache = 'options.cache.' + buildUUID
+##check and see if user wants to use custom options file
+if ARGUMENTS.has_key("options_file"):
+   opt_file = ARGUMENTS["options_file"]
+   if os.path.exists(opt_file):
+      print "Reading options from: %s" % str(opt_file)
+      options_cache = opt_file
+   else:
+      print "Options file '%s' not found.. will continue with default '%s'" % \
+      (opt_file, options_cache)
+
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
@@ -152,22 +162,16 @@ opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
-#opal_options = SConsAddons.Options.OPAL.OPAL("opal","0.2", False, True)
-#opts.AddOption( opal_options )
-#ode_options = SConsAddons.Options.ODE. ODE("ode","0.4", False, True)
-#opts.AddOption( ode_options )
 wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
 opts.AddOption( wxwidgets_options )
 opts.Add('prefix', 'Installation prefix', '/usr/local')
-##opts.Add('libdir', 'Library installation directory under <prefix>')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticOnly', 'If not "no" then build only static library', 'no')
 opts.Add('MakeDist', 'If true, make the distribution packages as part of the build', 'no')
 opts.Add('Patented', 'If true, make the patented version of VE-Suite', 'yes')
 opts.Add('tao', 'If true, use TAO in the build', 'yes')
-## do not need this one since we build cluster and non cluster by default now
-##opts.Add('cluster', 'If true, build the cluster version of VE-Xplorer', 'no')
 opts.Add('buildLog', 'Provide a file name for the build log if you would like a log', '')
+opts.Add('options_file', 'Provide a file name for the options caches', '')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
 Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options')#,'ode_options','opal_options')
@@ -263,12 +267,14 @@ if not SConsAddons.Util.hasHelpFlag():
    if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", '2.0' ):
       Exit(1)
 
-   # Try to save the options if possible
+   ## Try to save the options if possible and if the user did
+   ## not specify an options file
    try:                                   
-      opts.Save(options_cache, baseEnv)
+      if not ARGUMENTS.has_key("options_file"):
+         opts.Save(options_cache, baseEnv)
    except LookupError, le:
       pass
-   
+
    ## read the builder options after they have been added to the env
    ##base_bldr.readOptions( baseEnv )
    ##base_bldr = base_bldr.clone()

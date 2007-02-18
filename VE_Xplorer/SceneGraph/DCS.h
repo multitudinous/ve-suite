@@ -162,11 +162,11 @@ public:
    void SetbtRigidBody( btRigidBody* rigidBody );
    
 protected:
-   float translation[3];///<The translation array
-   float scale[3];///<The scale array
-   float rotation[3];///<The rotation array
+   float mTranslation[3];///<The translation array
+   float mScale[3];///<The scale array
+   float mRotation[3];///<The rotation array
    //btTransform* bulletTransform;///<The physics transform
-   btRigidBody* btBody;///<The rigid body to access the respective btTransform
+   btRigidBody* mBtBody;///<The rigid body to access the respective btTransform
 private:
    ///Update the bullet matrix with the matrix from the osg node
    ///the osg node gets set first and is then updated by the 
