@@ -370,6 +370,8 @@ void cfdEnvironmentHandler::InitScene( void )
    #ifdef _OSG
       std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
       this->display_information = new VE_Xplorer::DisplayInformation;
+		std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
+		this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -495,11 +497,6 @@ void cfdEnvironmentHandler::PostFrameUpdate()
 	//Update the values in trackball
    VE_Xplorer::DeviceHandler::instance()->GetTrackball()->Reshape(_windowWidth,_windowHeight);
 	VE_Xplorer::DeviceHandler::instance()->GetTrackball()->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
-
-	if( !display_information->GetProjectionFlag() )
-	{
-		display_information->SetDisplayPositions( _windowWidth, _windowHeight );
-	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void cfdEnvironmentHandler::CreateObjects( void )

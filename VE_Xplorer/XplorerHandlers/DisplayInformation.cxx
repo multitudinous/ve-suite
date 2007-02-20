@@ -22,8 +22,6 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::DisplayInformation()
 {
-	projection_flag = false;
-
    display_switch = new VE_SceneGraph::Switch;
 	VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( display_switch.get() );
 
@@ -125,10 +123,65 @@ void DisplayInformation::InitCoordSysDisplay()
 
 	wcs->addChild( wcs_model->GetDCS() );
 	wcs_model->GetDCS()->addChild( geode.get() );
-   //wcs->addChild( geode.get() );
 
-	//osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
-	//wcs->setStateSet( stateset.get() );
+	/*
+	char phong_vertex[]=
+   "varying vec3 eyePos; \n"
+   "varying vec3 lightPos; \n"
+   "varying vec3 normal; \n"
+	"varying vec4 color; \n"
+
+   "void main() \n"
+   "{ \n"
+         "gl_Position=ftransform(); \n"
+   
+         "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
+         "lightPos=gl_LightSource[1].position.xyz; \n"
+         "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
+			"color=gl_Color; \n"
+   "} \n";
+   
+	char phong_fragment[]=
+   "varying vec3 eyePos; \n"
+   "varying vec3 lightPos; \n"
+   "varying vec3 normal; \n"
+	"varying vec4 color; \n"
+
+   "void main() \n"
+   "{ \n"   
+         "vec3 N=normalize(normal); \n"
+         "vec3 L=normalize(lightPos); \n"
+         "float NDotL=max(dot(N,L),0.0); \n"
+   
+         "vec3 V=normalize(eyePos); \n"
+         "vec3 R=reflect(V,N); \n"
+         "float RDotL=max(dot(R,L),0.0); \n"
+
+			"vec3 ambient=vec3(0.36862f,0.36842f,0.36842f); \n"
+			"vec3 diffuse=vec3(0.88627f,0.88500f,0.88500f); \n"
+			"vec3 specular=vec3(0.49019f,0.48872f,0.4887f); \n"
+
+			"vec3 TotalAmbient=ambient*ambient*color.rgb; \n"
+         "vec3 TotalDiffuse=diffuse*diffuse*color.rgb*NDotL; \n"
+         "vec3 TotalSpecular=specular*specular*color.rgb*pow(RDotL,50.0f); \n"
+  
+         "vec3 FinalColor=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
+
+         "gl_FragColor=vec4(FinalColor.rgb,color.a); \n"
+   "} \n";
+
+	osg::ref_ptr<osg::StateSet> stateset = new osg::StateSet;
+   osg::ref_ptr<osg::Program> program=new osg::Program;
+
+	osg::ref_ptr<osg::Shader> vertex_shader=new osg::Shader(osg::Shader::VERTEX,phong_vertex);
+   program->addShader(vertex_shader.get());
+
+   osg::ref_ptr<osg::Shader> fragment_shader=new osg::Shader(osg::Shader::FRAGMENT,phong_fragment);
+   program->addShader(fragment_shader.get());
+
+   stateset->setAttribute(program.get());
+	wcs_model->GetDCS()->setStateSet( stateset.get() );
+	*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::LatePreFrame()
@@ -148,9 +201,6 @@ void DisplayInformation::LatePreFrame()
 		osg::Quat quat( temp.x(), temp.z(), -temp.y(), temp.w() );
 
 		wcs_model->GetDCS()->setAttitude( quat );
-		//wcs_x_text->setRotation( quat );
-		//wcs_y_text->setRotation( quat );
-		//wcs_z_text->setRotation( quat );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,8 +240,7 @@ void DisplayInformation::SetTextColor( std::vector< double > color )
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int height )
 {
-	if( width < 10000 )
-	{
+
 		//Set the projection matrix
 		framerate->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
 		wcs->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
@@ -206,12 +255,6 @@ void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int h
 		this->InitFrameRateDisplay();
 		this->InitCoordSysDisplay();
 
-		projection_flag = true;
-	}
-}
-////////////////////////////////////////////////////////////////////////////////
-bool DisplayInformation::GetProjectionFlag()
-{
-	return projection_flag;
+
 }
 ////////////////////////////////////////////////////////////////////////////////

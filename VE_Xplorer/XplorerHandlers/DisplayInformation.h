@@ -43,16 +43,12 @@ namespace VE_Xplorer
 
 			void SetDisplayPositions( unsigned int width, unsigned int height );
 
-			bool GetProjectionFlag();
-
       private:
          ///Initialize the framerate display
          void InitFrameRateDisplay();
 
          ///Initialize the world coordinate system display
          void InitCoordSysDisplay();
-
-			bool projection_flag;					//bool projection has been set
 
 			osg::ref_ptr< VE_SceneGraph::Switch > display_switch;
 

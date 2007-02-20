@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_DISPLAY_SETTINGS
 #define CFD_DISPLAY_SETTINGS
@@ -39,6 +37,8 @@ namespace jccl
    class Configuration;
 }
 #include <jccl/Config/ConfigElement.h>
+
+#include <utility>
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 /*!\file cfdDisplaySettings.h
@@ -69,17 +69,21 @@ public:
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand() { ; }
+
+	std::pair< int, int > GetScreenResolution( void );
    
 private:
    ///This function removes/adds elements to the current display system in
    /// vrjuggler. This can be extended to much more with juggler's rtrc code.
    ///\param remove flag to add/remove elements from an active configuration
    ///\param elements vector of elements to add/remove from an active configuration
-   void ChangeDisplayElements( bool remove, 
-                               jccl::ConfigElementPtr elements );
+   void ChangeDisplayElements( bool remove, jccl::ConfigElementPtr elements );
    
    ///<A vector that contains current configurations
    jccl::Configuration* configuration;
+
+	int xSize;
+	int ySize;
 };
 }
 #endif

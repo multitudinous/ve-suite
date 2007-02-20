@@ -43,6 +43,9 @@ using namespace VE_Xplorer;
 cfdDisplaySettings::cfdDisplaySettings( void ) 
 { 
    configuration = 0;
+
+	xSize = 0;
+	ySize = 0;
 }
 //////////////////////////////////////////////////////////////////////////
 bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray )
@@ -114,15 +117,18 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
          //Process the resolution
          VE_XML::DataValuePair* desktopData = veCommand->GetDataValuePair( "desktop_width" );
          // 2/3 the width
-         int xSize = static_cast< int >( desktopData->GetDataValue() * 0.667f ); 
+         xSize = static_cast< int >( desktopData->GetDataValue() * 0.667f ); 
          elements.at(i)->setProperty(  "size", 0, xSize );
          desktopData = veCommand->GetDataValuePair( "desktop_height" );
          // 50 for the menu bar height
 #ifdef WIN32
-         int ySize = static_cast< int >( desktopData->GetDataValue() - 160 ); 
+         ySize = static_cast< int >( desktopData->GetDataValue() - 160 ); 
 #else
-         int ySize = static_cast< int >( desktopData->GetDataValue() - 195 );
+         ySize = static_cast< int >( desktopData->GetDataValue() - 195 );
 #endif
+
+			
+
          elements.at(i)->setProperty(  "size", 1, ySize );
          elements.at(i)->setProperty(  "origin", 0, 0 );
          elements.at(i)->setProperty(  "origin", 1, 0 );
@@ -169,6 +175,11 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
    }
    veCommand = 0;
    return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::pair< int, int > cfdDisplaySettings::GetScreenResolution( void )
+{
+	return std::pair< int, int >( xSize, ySize );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDisplaySettings::ChangeDisplayElements( bool remove, 
