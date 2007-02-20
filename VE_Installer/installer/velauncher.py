@@ -175,7 +175,7 @@ class LauncherWindow(wx.Frame):
         menu.Append(522, "VE-Suite Debu&g Level\tCtrl+G")
         self.menuDebugLaunch = wx.MenuItem(menu, 524, "D&ebug Launch",
                                            kind = wx.ITEM_CHECK)
-        self.autoRunVes = wx.MenuItem(menu, 525, "&Auto-Run Passed Files",
+        self.autoRunVes = wx.MenuItem(menu, 525, "&Auto-Launch Passed Files",
                                       kind = wx.ITEM_CHECK)
         menu.AppendItem(self.menuDebugLaunch)
         menu.AppendItem(self.autoRunVes)
