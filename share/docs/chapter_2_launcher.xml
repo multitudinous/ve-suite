@@ -228,11 +228,18 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Debug Launch:</emphasis> If selected,
+            <para><emphasis role="bold">Debug Launch:</emphasis> If checked,
             VE-Suite prints the environment variables set for launch. (Printing
             not available on the Windows .exe.) If you're running a cluster on
             Windows, it also forces the cluster program consoles to stay open
             if they encounter errors.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Auto-Launch Passed Files:</emphasis>
+            If checked, files passed as arguments to VE-Launcher are instantly
+            launched. If unchecked, files passed as arguments are opened in
+            VE-Launcher for the user to manually launch.</para>
           </listitem>
 
           <listitem>
