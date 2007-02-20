@@ -97,22 +97,25 @@ void DisplayInformation::InitCoordSysDisplay()
       wcs_x_text->setText( "x" );
 		wcs_x_text->setCharacterSize( 20 );
 		wcs_x_text->setAxisAlignment( osgText::Text::SCREEN );
+		wcs_x_text->setAlignment( osgText::Text::CENTER_CENTER );
 
 		wcs_y_text->setFont( wcs_font );
       wcs_y_text->setText( "y" );
 		wcs_y_text->setCharacterSize( 20 );
 		wcs_y_text->setAxisAlignment( osgText::Text::SCREEN );
+		wcs_y_text->setAlignment( osgText::Text::CENTER_CENTER );
 
 		wcs_z_text->setFont( wcs_font );
       wcs_z_text->setText( "z" );
 		wcs_z_text->setCharacterSize( 20 );
 		wcs_z_text->setAxisAlignment( osgText::Text::SCREEN );
+		wcs_z_text->setAlignment( osgText::Text::CENTER_CENTER );
 	}
 
 	//Set the view matrix    
    wcs->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 
-	wcs->setViewMatrix( osg::Matrix::translate( osg::Vec3( 0.0, 0.0, -13.0 ) ) );
+	wcs->setViewMatrix( osg::Matrix::translate( osg::Vec3( 0.0, 0.0, -45.0 ) ) );
 
    //Only clear the depth buffer
    wcs->setClearMask( GL_DEPTH_BUFFER_BIT );
@@ -121,7 +124,8 @@ void DisplayInformation::InitCoordSysDisplay()
    wcs->setRenderOrder( osg::CameraNode::POST_RENDER );
 
 	wcs->addChild( wcs_model->GetDCS() );
-   wcs->addChild( geode.get() );
+	wcs_model->GetDCS()->addChild( geode.get() );
+   //wcs->addChild( geode.get() );
 
 	//osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
 	//wcs->setStateSet( stateset.get() );
@@ -193,9 +197,9 @@ void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int h
 		wcs->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
 
 		framerate_text->setPosition( osg::Vec3( width-100, 10, 0 ) );
-		wcs_x_text->setPosition( osg::Vec3( 125, height-75, 0 ) );
-		wcs_y_text->setPosition( osg::Vec3( 75, height-25, 0 ) );
-		wcs_z_text->setPosition( osg::Vec3( 75, height-75, 125  ) );
+		wcs_x_text->setPosition( osg::Vec3( 50, 0, 0 ) );
+		wcs_y_text->setPosition( osg::Vec3( 0, 50, 0 ) );
+		wcs_z_text->setPosition( osg::Vec3( 0, 0, 50 ) );
 
 		wcs_model->GetDCS()->setPosition( osg::Vec3( 75, height-75, 0 ) );
 

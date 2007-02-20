@@ -55,12 +55,15 @@ namespace VE_Xplorer
 			bool projection_flag;					//bool projection has been set
 
 			osg::ref_ptr< VE_SceneGraph::Switch > display_switch;
+
 			osg::ref_ptr< osg::CameraNode > framerate;
 			osg::ref_ptr< osg::CameraNode > wcs;
+
 			osg::ref_ptr< osgText::Text > framerate_text;
 			osg::ref_ptr< osgText::Text > wcs_x_text;
 			osg::ref_ptr< osgText::Text > wcs_y_text;
 			osg::ref_ptr< osgText::Text > wcs_z_text;
+
 			VE_SceneGraph::CADEntity* wcs_model;
    };
 }
