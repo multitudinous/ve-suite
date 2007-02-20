@@ -22,8 +22,6 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::DisplayInformation()
 {
-   framerate_flag = false;
-   wcs_flag = false;
 	projection_flag = false;
 
    display_switch = new VE_SceneGraph::Switch;
@@ -64,12 +62,11 @@ void DisplayInformation::InitFrameRateDisplay()
 
    //Turn lighting off for the text and disable depth test to ensure its always ontop
 	osg::ref_ptr< osg::StateSet > stateset = geode->getOrCreateStateSet();
-   //stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+   stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
 
 	{
       geode->addDrawable( framerate_text.get() );
       framerate_text->setFont( framerate_font );
-		framerate_text->setAxisAlignment(osgText::Text::SCREEN);
 	}
 
    //Set the view matrix    
@@ -91,10 +88,6 @@ void DisplayInformation::InitCoordSysDisplay()
     
 	std::string wcs_font( "fonts/arial.ttf" );
 
-   //Turn lighting off for the text and disable depth test to ensure its always ontop
-	osg::ref_ptr< osg::StateSet > stateset = geode->getOrCreateStateSet();
-   stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-
    {
 		geode->addDrawable( wcs_x_text.get() );
 		geode->addDrawable( wcs_y_text.get() );
@@ -102,20 +95,24 @@ void DisplayInformation::InitCoordSysDisplay()
 
       wcs_x_text->setFont( wcs_font );
       wcs_x_text->setText( "x" );
+		wcs_x_text->setCharacterSize( 20 );
 		wcs_x_text->setAxisAlignment( osgText::Text::SCREEN );
 
 		wcs_y_text->setFont( wcs_font );
       wcs_y_text->setText( "y" );
+		wcs_y_text->setCharacterSize( 20 );
 		wcs_y_text->setAxisAlignment( osgText::Text::SCREEN );
 
 		wcs_z_text->setFont( wcs_font );
       wcs_z_text->setText( "z" );
+		wcs_z_text->setCharacterSize( 20 );
 		wcs_z_text->setAxisAlignment( osgText::Text::SCREEN );
 	}
 
-   //Set the view matrix    
+	//Set the view matrix    
    wcs->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
-   wcs->setViewMatrix( osg::Matrix::identity() );
+
+	wcs->setViewMatrix( osg::Matrix::translate( osg::Vec3( 0.0, 0.0, -13.0 ) ) );
 
    //Only clear the depth buffer
    wcs->setClearMask( GL_DEPTH_BUFFER_BIT );
@@ -125,11 +122,14 @@ void DisplayInformation::InitCoordSysDisplay()
 
 	wcs->addChild( wcs_model->GetDCS() );
    wcs->addChild( geode.get() );
+
+	//osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
+	//wcs->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::LatePreFrame()
 {
-	if( framerate_flag )
+	if( display_switch->getChildValue( framerate.get() ) )
 	{
 		std::stringstream ss;
 		ss << VE_Xplorer::cfdEnvironmentHandler::instance()->GetFrameRate();
@@ -138,21 +138,20 @@ void DisplayInformation::LatePreFrame()
 		framerate_text->setText( ss.str() );
 	}
 
-	if( wcs_flag )
+	if( display_switch->getChildValue( wcs.get() ) )
 	{
 		osg::Quat temp = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->getAttitude();
 		osg::Quat quat( temp.x(), temp.z(), -temp.y(), temp.w() );
+
 		wcs_model->GetDCS()->setAttitude( quat );
-		wcs_x_text->setRotation( quat );
-		wcs_y_text->setRotation( quat );
-		wcs_z_text->setRotation( quat );
+		//wcs_x_text->setRotation( quat );
+		//wcs_y_text->setRotation( quat );
+		//wcs_z_text->setRotation( quat );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetFrameRateFlag(bool val)
 {
-   framerate_flag = val;
-
 	if( val )
 	{
 		display_switch->setChildValue( framerate.get(), true );
@@ -166,8 +165,6 @@ void DisplayInformation::SetFrameRateFlag(bool val)
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetCoordSysFlag(bool val)
 {
-   wcs_flag = val;
-
 	if( val )
 	{
 		display_switch->setChildValue( wcs.get(), true );
@@ -177,6 +174,14 @@ void DisplayInformation::SetCoordSysFlag(bool val)
 	{
 		display_switch->setChildValue( wcs.get(), false );
 	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void DisplayInformation::SetTextColor( std::vector< double > color )
+{
+	framerate_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+	wcs_x_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+	wcs_y_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+	wcs_z_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int height )

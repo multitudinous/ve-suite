@@ -10,6 +10,15 @@ Device API
 
 #include "VE_Installer/include/VEConfig.h"
 
+#ifdef _OSG
+#include <osg/ref_ptr>
+
+namespace osg
+{
+	class LineSegment;
+}
+#endif
+
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS Device
@@ -17,6 +26,12 @@ namespace VE_Xplorer
       public:
          Device();
          virtual ~Device(){;}
+
+			//virtual void UpdateNavigation() = 0;
+			
+			//virtual void UpdateSelection() = 0;
+
+			//virtual osg::ref_ptr< osg::LineSegment > GetLineSegment() = 0;
 
 
       private:

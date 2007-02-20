@@ -23,7 +23,7 @@ namespace VE_Xplorer
          SelectionHandler();
          ~SelectionHandler();
 
-         virtual osg::ref_ptr<osg::LineSegment> CreateLineSegment()=0;
+         virtual osg::ref_ptr< osg::LineSegment > CreateLineSegment() = 0;
 
          void ActivateSelection();
          void DeactivateSelection();

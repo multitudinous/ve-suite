@@ -227,6 +227,9 @@ void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
    {
       _clearColor.push_back(static_cast<float>(color.at(i)));
    }
+	
+	this->display_information->SetTextColor( color );
+
    _updateBackgroundColor = true;
 }
 ////////////////////////////////////////////////////////////////////////////////

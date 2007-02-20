@@ -1,9 +1,3 @@
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//Don't implement this class; it is handled through cfdEnvironmentHandler
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-#ifdef _OSG
-
 #ifndef DISPLAY_INFORMATION_H
 #define DISPLAY_INFORMATION_H
 /*!\file DisplayInformation.h
@@ -21,6 +15,9 @@ DisplayInformation API
 #include <osg/CameraNode>
 #include <osgText/Text>
 #endif
+
+//C/C++ Libraries
+#include <vector>
 
 namespace VE_SceneGraph
 {
@@ -42,6 +39,8 @@ namespace VE_Xplorer
          void SetFrameRateFlag( bool val );
          void SetCoordSysFlag( bool val );
 
+			void SetTextColor( std::vector< double > color );
+
 			void SetDisplayPositions( unsigned int width, unsigned int height );
 
 			bool GetProjectionFlag();
@@ -53,8 +52,6 @@ namespace VE_Xplorer
          ///Initialize the world coordinate system display
          void InitCoordSysDisplay();
 
-         bool framerate_flag;                //bool Frame Rate on/off
-         bool wcs_flag;								//bool WCS on/off
 			bool projection_flag;					//bool projection has been set
 
 			osg::ref_ptr< VE_SceneGraph::Switch > display_switch;
@@ -69,5 +66,3 @@ namespace VE_Xplorer
 }
 
 #endif //DISPLAY_INFORMATION
-
-#endif //_OSG
