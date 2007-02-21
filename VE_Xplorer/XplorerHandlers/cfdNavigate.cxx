@@ -74,6 +74,7 @@ cfdNavigate::cfdNavigate( )
    flyThrough[3].init("Path_4");
 
    command = 0;
+   rotationFlag = 1;
 }
 
 cfdNavigate::~cfdNavigate( )
