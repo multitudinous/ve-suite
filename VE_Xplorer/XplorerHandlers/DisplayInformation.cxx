@@ -12,6 +12,8 @@
 #include <osg/Geometry>
 #include <osg/Projection>
 #include <osg/MatrixTransform>
+#include <osg/Light>
+#include <osg/LightSource>
 
 //C/C++ libraries
 #include <sstream>
@@ -65,6 +67,8 @@ void DisplayInformation::InitFrameRateDisplay()
 	{
       geode->addDrawable( framerate_text.get() );
       framerate_text->setFont( framerate_font );
+		framerate_text->setAxisAlignment( osgText::Text::SCREEN );
+		framerate_text->setAlignment( osgText::Text::RIGHT_BOTTOM );
 	}
 
    //Set the view matrix    
@@ -124,64 +128,28 @@ void DisplayInformation::InitCoordSysDisplay()
 	wcs->addChild( wcs_model->GetDCS() );
 	wcs_model->GetDCS()->addChild( geode.get() );
 
-	/*
-	char phong_vertex[]=
-   "varying vec3 eyePos; \n"
-   "varying vec3 lightPos; \n"
-   "varying vec3 normal; \n"
-	"varying vec4 color; \n"
+	osg::ref_ptr< osg::StateSet > rootStateSet = new osg::StateSet;
+   wcs->setStateSet(rootStateSet.get());
+	rootStateSet->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+	
 
-   "void main() \n"
-   "{ \n"
-         "gl_Position=ftransform(); \n"
-   
-         "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
-         "lightPos=gl_LightSource[1].position.xyz; \n"
-         "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
-			"color=gl_Color; \n"
-   "} \n";
-   
-	char phong_fragment[]=
-   "varying vec3 eyePos; \n"
-   "varying vec3 lightPos; \n"
-   "varying vec3 normal; \n"
-	"varying vec4 color; \n"
+	// create a spot light.
+	osg::ref_ptr< osg::Light > myLight1 = new osg::Light;
+   myLight1->setLightNum(2);
+   myLight1->setPosition(osg::Vec4(0,100,0,1.0f));
+   myLight1->setAmbient(osg::Vec4(1.0f,0.0f,0.0f,1.0f));
+   myLight1->setDiffuse(osg::Vec4(1.0f,0.0f,0.0f,1.0f));
+   //myLight1->setSpotCutoff(20.0f);
+   //myLight1->setSpotExponent(50.0f);
+   //myLight1->setDirection(osg::Vec3(1.0f,1.0f,-1.0f));
 
-   "void main() \n"
-   "{ \n"   
-         "vec3 N=normalize(normal); \n"
-         "vec3 L=normalize(lightPos); \n"
-         "float NDotL=max(dot(N,L),0.0); \n"
-   
-         "vec3 V=normalize(eyePos); \n"
-         "vec3 R=reflect(V,N); \n"
-         "float RDotL=max(dot(R,L),0.0); \n"
+	osg::ref_ptr< osg::LightSource > lightS1 = new osg::LightSource;    
+   lightS1->setLight( myLight1.get() );
+   lightS1->setLocalStateSetModes(osg::StateAttribute::ON); 
 
-			"vec3 ambient=vec3(0.36862f,0.36842f,0.36842f); \n"
-			"vec3 diffuse=vec3(0.88627f,0.88500f,0.88500f); \n"
-			"vec3 specular=vec3(0.49019f,0.48872f,0.4887f); \n"
+   lightS1->setStateSetModes(*rootStateSet.get(),osg::StateAttribute::ON);
 
-			"vec3 TotalAmbient=ambient*ambient*color.rgb; \n"
-         "vec3 TotalDiffuse=diffuse*diffuse*color.rgb*NDotL; \n"
-         "vec3 TotalSpecular=specular*specular*color.rgb*pow(RDotL,50.0f); \n"
-  
-         "vec3 FinalColor=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
-
-         "gl_FragColor=vec4(FinalColor.rgb,color.a); \n"
-   "} \n";
-
-	osg::ref_ptr<osg::StateSet> stateset = new osg::StateSet;
-   osg::ref_ptr<osg::Program> program=new osg::Program;
-
-	osg::ref_ptr<osg::Shader> vertex_shader=new osg::Shader(osg::Shader::VERTEX,phong_vertex);
-   program->addShader(vertex_shader.get());
-
-   osg::ref_ptr<osg::Shader> fragment_shader=new osg::Shader(osg::Shader::FRAGMENT,phong_fragment);
-   program->addShader(fragment_shader.get());
-
-   stateset->setAttribute(program.get());
-	wcs_model->GetDCS()->setStateSet( stateset.get() );
-	*/
+	wcs->addChild( lightS1.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::LatePreFrame()
@@ -245,10 +213,10 @@ void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int h
 		framerate->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
 		wcs->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
 
-		framerate_text->setPosition( osg::Vec3( width-100, 10, 0 ) );
+		framerate_text->setPosition( osg::Vec3( width-15, 10, 0 ) );
 		wcs_x_text->setPosition( osg::Vec3( 50, 0, 0 ) );
-		wcs_y_text->setPosition( osg::Vec3( 0, 50, 0 ) );
-		wcs_z_text->setPosition( osg::Vec3( 0, 0, 50 ) );
+		wcs_y_text->setPosition( osg::Vec3( 0, 0, -50 ) );
+		wcs_z_text->setPosition( osg::Vec3( 0, 50, 0 ) );
 
 		wcs_model->GetDCS()->setPosition( osg::Vec3( 75, height-75, 0 ) );
 
