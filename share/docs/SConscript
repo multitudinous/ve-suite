@@ -26,12 +26,16 @@ foTool = "FOP"
 fopVersion = "0.20.5"
 xsltTool = "Saxon" ##NOTE: Xalan.sh missing from VRAC intranet.
 imgPath = "../"
-chunkDirectory = "$SOURCE-multipage" ##Doublecheck later.
+chunkDirectory = "${SOURCE.abspath}-multipage" ##Doublecheck later.
 passedEnvVars = "JAVA_HOME=$JAVA_HOME" + \
                 " DOCBOOK_XSL=$XSL_DIR DOCBOOK_ROOT=$DOCBOOK_ROOT" + \
                 " SAXON_DIR=$SAXON_DIR XALAN_DIR=$XALAN_DIR" + \
                 " DOCBOOK_XSL_VERSION=$DOCBOOK_XSL_VERSION" + \
                 " SAXON_VERSION=$SAXON_VERSION"
+
+##Base parameters.
+baseParams = {"use.extensions": "1",
+              "callouts.extension": "1"}
 
 ##Set parameters for the foTool.
 if foTool == "FOP":
@@ -71,7 +75,7 @@ derivedVariables = {"BATIK_ROOT": "$DOCBOOK_ROOT/batik-$BATIK_VERSION",
 appPaths = {"FOP": "sh $DOCBOOK_ROOT/fop-$FOP_VERSION/%s" %(fopScript),
             "HTML2TXT": "html2text",
             "HTML2TXTOPTS": "-ascii -nobs -style pretty -width 76 -rcfile html2text.rc",
-            "HTML2TXTFILE": "file:$SOURCE", ##NEED?
+            "HTML2TXTFILE": "file:${SOURCE.abspath}", ##NEED?
             "JADE": "openjade -V tex-backend",
             "JADEPROC": "$DOCBOOK_ROOT/jadeproc.pl",
             "JADETEX": "$TEX_BINDIR/jadetex",
@@ -99,7 +103,9 @@ xslPaths = {"DOCBOOK_XSL": "$DOCBOOK_ROOT/docbook-xsl-$DOCBOOK_XSL_VERSION",
 ##HTML parameters.
 htmlParams = {"html.stylesheet": "base_style.css",
               "img.src.path": imgPath}
-htmlChunkParams = {"base.dir": "${TARGET.dir}/"}
+htmlChunkParams = {"base.dir": "${SOURCE.filebase}-multipage/"}
+##Note: base.dir is related to htmlChunkTargets directory.
+##Make sure they match up.
 
 ##Helper methods.
 def extraParamsCall(paramType, executable = xsltTool):
@@ -154,8 +160,8 @@ srcs = Split("""
    vesuite
 """)
 
-##Build resolveSrcs & foSrcs lists, then rebuild srcs list.
-baseDir = pj('#', 'share', 'docs')
+relativeDir = pj('share', 'docs')
+baseDir = pj('#', relativeDir)
 resolvedSrcs = map(lambda s: pj(baseDir, "%s.tmp" %(s)), srcs)
 foedSrcs = map(lambda s: pj(baseDir, "%s.fo" %(s)), srcs)
 htmlTargets = map(lambda s: pj(baseDir, "%s/%s.html" %(s,s)), srcs)
@@ -179,27 +185,32 @@ else: ##Saxon
 
 ##Builder for making *.xml into the resolved *.tmp.
 ##(Replaces reference links with the docs linked.)
-xmlAction = 'xmllint --xinclude $SOURCE > $TARGET'
+xmlAction = 'xmllint --xinclude ${SOURCE.abspath} > ${TARGET.abspath}'
 xmlResolveBuilder = Builder(action = xmlAction, single_source = True,
-                            suffix = ".tmp")
+                            suffix = ".tmp", chdir = relativeDir)
 
-##foAction = '$(ENV) $(XALAN) -in $SOURCE -xsl $(FO_XSL) -out $*/$TARGET -foParams -extraFoParams'
-foAction = '%s %s %s $SOURCE -xsl $FO_XSL %s $TARGET %s %s' % (passedEnvVars, toolCall, inArg, outArg, writeParams(foParams), extraParamsCall("FO"))
-foBuilder = Builder(action = foAction, single_source = True, suffix = ".fo")
+##foAction = '$(ENV) $(XALAN) -in ${SOURCE.abspath} -xsl $(FO_XSL) -out $*/${TARGET.abspath} -foParams -extraFoParams'
+foAction = '%s %s %s ${SOURCE.abspath} -xsl $FO_XSL %s ${TARGET.abspath} %s %s %s' % (passedEnvVars, toolCall, inArg, outArg, writeParams(baseParams), writeParams(foParams), extraParamsCall("FO"))
+foBuilder = Builder(action = foAction, single_source = True, suffix = ".fo",
+                    chdir = relativeDir)
 
-htmlAction = '%s %s %s $SOURCE -xsl $HTML_XSL %s $TARGET %s %s' % (passedEnvVars, toolCall, inArg, outArg, writeParams(htmlParams), extraParamsCall("HTML"))
-htmlBuilder = Builder(action = htmlAction, single_source = True, suffix = ".html")
+htmlAction = '%s %s %s ${SOURCE.abspath} -xsl $HTML_XSL %s ${TARGET.abspath} %s %s %s' % (passedEnvVars, toolCall, inArg, outArg, writeParams(baseParams), writeParams(htmlParams), extraParamsCall("HTML"))
+htmlBuilder = Builder(action = htmlAction, single_source = True,
+                      suffix = ".html", chdir = relativeDir)
 
-htmlChunkAction = '%s %s %s $SOURCE -xsl $CHUNK_HTML_XSL %s $TARGET %s %s %s' % (passedEnvVars, toolCall, inArg, outArg, writeParams(htmlParams), extraParamsCall("HTML"), writeParams(htmlChunkParams))
-htmlChunkBuilder = Builder(action = htmlChunkAction, single_source = True, suffix = ".html")
+htmlChunkAction = '%s %s %s ${SOURCE.abspath} -xsl $CHUNK_HTML_XSL %s ${TARGET.abspath} %s %s %s %s' % (passedEnvVars, toolCall, inArg, outArg, writeParams(baseParams), writeParams(htmlParams), extraParamsCall("HTML"), writeParams(htmlChunkParams))
+htmlChunkBuilder = Builder(action = htmlChunkAction, single_source = True,
+                           suffix = ".html", chdir = relativeDir)
 
 ##FOP only
-textAction = '$HTML2TXT $HTML2TXTOPTS $EXTRA_HTML2TXTOPTS file:$SOURCE > $TARGET'
-textBuilder = Builder(action = textAction, single_source = True, suffix = ".txt")
+textAction = '$HTML2TXT $HTML2TXTOPTS $EXTRA_HTML2TXTOPTS file:${SOURCE.abspath} > ${TARGET.abspath}'
+textBuilder = Builder(action = textAction, single_source = True,
+                      suffix = ".txt", chdir = relativeDir)
 
 ##FOP only
-pdfAction = '$FOP $SOURCE $TARGET'
-pdfBuilder = Builder(action = pdfAction, single_source = True, suffix = ".pdf")
+pdfAction = '$FOP ${SOURCE.abspath} ${TARGET.abspath}'
+pdfBuilder = Builder(action = pdfAction, single_source = True, suffix = ".pdf",
+                     chdir = relativeDir)
 
 env.Append(BUILDERS = {'xmlResolve': xmlResolveBuilder,
                        'fo': foBuilder,
@@ -221,3 +232,9 @@ env.html(target = htmlTargets, source = resolvedSrcs)
 env.htmlChunk(target = htmlChunkTargets, source = resolvedSrcs)
 env.text(target = textTargets, source = htmlTargets)
 env.pdf(target = pdfTargets, source = foedSrcs)
+
+##Extra cleaning
+for chunkTarget in htmlChunkTargets:
+	##Works, but need to specify them all. Modified ls *.html cmd?
+	print os.path.dirname(chunkTarget) ##TESTER
+	Clean(chunkTarget, os.path.dirname(chunkTarget))

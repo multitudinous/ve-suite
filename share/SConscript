@@ -8,5 +8,3 @@ Import('ves_pkg')
 launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 jconfFile = sca_util.getFilesRecursiveByExt( '.', ['.jconf'] )
 launcherBundle.addFiles( jconfFile )
-   
-#SConscript(dirs = "docs")
