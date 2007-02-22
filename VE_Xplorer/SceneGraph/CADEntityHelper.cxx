@@ -742,7 +742,7 @@ void CADEntityHelper::TravNodeMaterial(osg::Node* node)
          this->TravNodeMaterial(((osg::LOD*)node)->getChild(i)) ;
            
       }
-   }else if(!strcmp(node->className(),"MatrixTransform")){
+   }else if(!strcmp(node->className(),"PositionAttitudeTransform")){
        num = ((osg::MatrixTransform*)node)->getNumChildren();
       vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
