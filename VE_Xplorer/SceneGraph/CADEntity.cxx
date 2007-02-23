@@ -15,11 +15,17 @@
 
 #include <osg/Fog>
 #include <osg/Node>
+//#include <osg/NodeVisitor>
 #include <osg/Group>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
 #include <osg/TriangleIndexFunctor>
+
+//C/C++ libraries
+#include <cassert>
+
+using namespace VE_SceneGraph;
 
 class TriIndexFunc
 {
@@ -27,25 +33,110 @@ public:
    TriIndexFunc(){;}
    ~TriIndexFunc(){;}
 
-   void inline operator()(unsigned int pos1,unsigned int pos2,unsigned int pos3)
+   void inline operator()( unsigned int pos1, unsigned int pos2, unsigned int pos3 )
    {
-      triangleIndex.push_back(pos1);
-      triangleIndex.push_back(pos2);
-      triangleIndex.push_back(pos3);
+      triangleIndex.push_back( pos1 );
+      triangleIndex.push_back( pos2 );
+      triangleIndex.push_back( pos3 );
    }
 
-   std::vector<osg::Vec3> vertexIndex;
-   std::vector<unsigned int> triangleIndex;
+   std::vector< unsigned int > triangleIndex;
 };
 #endif
 
-//C/C++ libraries
-#include <cassert>
+class Mesh : public osg::NodeVisitor
+{
+public:
+	Mesh( osg::Node* osg_node )
+	:
+	NodeVisitor( TRAVERSE_ALL_CHILDREN )
+	{
+		triMesh = new btTriangleMesh;
 
-using namespace VE_SceneGraph;
+		osg_node->accept( *this );
+		this->CreateBBMesh();
+		this->CreateExactMesh();
+	}
+
+	~Mesh()
+	{
+		if( collision_shape_bb )
+		{
+			delete collision_shape_bb;
+		}
+
+		if (collision_shape_exact )
+		{
+			delete collision_shape_exact;
+		}
+	}
+
+	virtual void apply( osg::Geode& geode )
+	{ 
+		bb.expandBy( geode.getBoundingBox() );
+
+		osg::TriangleIndexFunctor< TriIndexFunc > TIF;
+		osg::ref_ptr< osg::Vec3Array > vertex_array;
+
+		for( unsigned int i = 0; i < geode.getNumDrawables(); i++ )
+		{
+			geode.getDrawable( i )->accept( TIF );
+			vertex_array = dynamic_cast< osg::Vec3Array* >( geode.getDrawable( i )->asGeometry()->getVertexArray() );
+
+			btVector3 v1, v2, v3;
+
+			for( unsigned int i = 0; i < TIF.triangleIndex.size()/3; i++ )
+			{
+				triMesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( i*3  ) ).x(),
+															vertex_array->at( TIF.triangleIndex.at( i*3  ) ).y(),
+															vertex_array->at( TIF.triangleIndex.at( i*3  ) ).z() ),
+											 btVector3( vertex_array->at( TIF.triangleIndex.at( i*3+1) ).x(),
+															vertex_array->at( TIF.triangleIndex.at( i*3+1) ).y(),
+															vertex_array->at( TIF.triangleIndex.at( i*3+1) ).z() ),
+											 btVector3( vertex_array->at( TIF.triangleIndex.at( i*3+2) ).x(),
+															vertex_array->at( TIF.triangleIndex.at( i*3+2) ).y(),
+															vertex_array->at( TIF.triangleIndex.at( i*3+2) ).z() ) );
+				std::cout<< vertex_array->at( TIF.triangleIndex.at( i*3 ) ).x()<<std::endl;
+			}
+
+		}
+
+	}
+
+	void CreateBBMesh()
+	{
+		
+		collision_shape_bb = new btBoxShape( btVector3( (bb.xMax()-bb.xMin())*0.5f,
+																		(bb.yMax()-bb.yMin())*0.5f,
+																		(bb.zMax()-bb.zMin())*0.5f ) );
+	}
+
+	void CreateExactMesh()
+	{
+
+		collision_shape_exact = new btBvhTriangleMeshShape( triMesh );
+	}
+
+	btCollisionShape* GetBBMesh()
+	{
+		return collision_shape_bb;
+	}
+
+	btCollisionShape* GetExactMesh()
+	{
+		return collision_shape_exact;
+	}
+
+private:
+	osg::BoundingBox bb;
+	btTriangleMesh* triMesh;
+
+	btCollisionShape* collision_shape_bb;
+	btCollisionShape* collision_shape_exact;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity(std::string geomFile,VE_SceneGraph::DCS* worldDCS,bool isStream)
+CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream )
 :
 mass(1.0f),
 friction(0.5f),
@@ -56,8 +147,8 @@ restitution(0.0f)
    this->dcs=new VE_SceneGraph::DCS();
    this->node=new VE_SceneGraph::CADEntityHelper();
 
-   this->node->LoadFile(geomFile.c_str(),isStream);
-   fileName.assign(geomFile);
+   this->node->LoadFile( geomFile.c_str(),isStream );
+   fileName.assign( geomFile );
 	this->dcs->addChild( this->node->GetNode() );
    worldDCS->AddChild( this->dcs.get() );
 
@@ -68,18 +159,11 @@ restitution(0.0f)
    fog=new osg::Fog();
    #endif
 
-	collision_shape = NULL;
-
 	this->InitPhysics();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
 {
-	if(collision_shape)
-	{
-		delete collision_shape;	
-	}
-
 	delete node;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,25 +175,37 @@ void CADEntity::Initialize( float op_val )
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics()
 {
-	this->CreateBBMesh();
+	osg::ref_ptr< Mesh > mesh = new Mesh( this->node->GetNode() );
+
+	collision_shape = mesh->GetBBMesh();
+
+	btTransform transform;
+	transform.setIdentity();
+	this->rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
+	this->rigid_body->setFriction( this->friction );
+	this->rigid_body->setRestitution( this->restitution );
+
+	dcs->SetbtRigidBody( rigid_body );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetMass(float m)
+void CADEntity::SetMass( float m )
 {
-	mass=m;
+	mass = m;
 
-	if(collision_shape){
+	if( collision_shape )
+	{
 		//btRigidBody* is dynamic if and only if mass is non zero, otherwise static
-		bool dynamic=(mass!=0.0f);
+		bool dynamic = (mass != 0.0f);
 
-		btVector3 localInertia(0,0,0);
-		if(dynamic){
-			collision_shape->calculateLocalInertia(mass,localInertia);
+		btVector3 localInertia( 0, 0, 0 );
+		if(dynamic)
+		{
+			collision_shape->calculateLocalInertia( mass, localInertia );
 		}
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetFriction(float f)
+void CADEntity::SetFriction( float f )
 {
 	friction=f;
 
@@ -118,101 +214,14 @@ void CADEntity::SetFriction(float f)
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetRestitution(float r)
+void CADEntity::SetRestitution( float r )
 {
-	restitution=r;
+	restitution = r;
 
-	if(rigid_body){
-		rigid_body->setRestitution(restitution);
+	if( rigid_body )
+	{
+		rigid_body->setRestitution( restitution );
 	}
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::CreateBBMesh()
-{
-	/*
-	osg::ref_ptr<osg::Geode> geode=new osg::Geode;
-	geode->asGroup()->addChild(this->node->GetNode());
-
-	osg::BoundingBox bb=geode->getBoundingBox();
-
-	//Delete old btCollisionShape*
-	if(collision_shape){
-		delete collision_shape;
-	}
-   
-	//Remove old btRigidBody* and delete it
-	if(rigid_body){
-		VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody(rigid_body);
-		delete rigid_body;
-	}
-
-	//Set new btRigidBody* and btCollisionObject*
-   this->collision_shape=new btBoxShape(btVector3((bb.xMax()-bb.xMin())*0.5f,
-																  (bb.yMax()-bb.yMin())*0.5f,
-																  (bb.zMax()-bb.zMin())*0.5f));
-   //this->rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(mass,dcs->GetPhysicsTransform(),collision_shape);
-	*/
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::CreateExactMesh()
-{
-	/*
-	osg::ref_ptr<osg::Geode> geode=new osg::Geode;
-	geode->asGroup()->addChild(node->GetNode());
-
-	osg::TriangleIndexFunctor<TriIndexFunc> TIF;
-	osg::ref_ptr<osg::Vec3Array> vertex_array=new osg::Vec3Array;
-
-	//Need to look at this later
-	//for(int i=0;i<(int)geode->getDrawableList().size();i++){
-		geode->getDrawable(0)->accept(TIF);
-		vertex_array=dynamic_cast<osg::Vec3Array*>(geode->getDrawable(0)->asGeometry()->getVertexArray());
-	//}
-
-	btTriangleMesh* triMesh=new btTriangleMesh;
-   btVector3 v1,v2,v3;
-
-   for(int i=0;i<(int)TIF.triangleIndex.size()/3;i++){
-      v1.setX(vertex_array->at(TIF.triangleIndex.at(i*3)).x());
-      v1.setY(vertex_array->at(TIF.triangleIndex.at(i*3)).y());
-      v1.setZ(vertex_array->at(TIF.triangleIndex.at(i*3)).z());
-
-      v2.setX(vertex_array->at(TIF.triangleIndex.at(i*3+1)).x());
-      v2.setY(vertex_array->at(TIF.triangleIndex.at(i*3+1)).y());
-      v2.setZ(vertex_array->at(TIF.triangleIndex.at(i*3+1)).z());
-
-      v3.setX(vertex_array->at(TIF.triangleIndex.at(i*3+2)).x());
-      v3.setY(vertex_array->at(TIF.triangleIndex.at(i*3+2)).y());
-      v3.setZ(vertex_array->at(TIF.triangleIndex.at(i*3+2)).z());
-
-      triMesh->addTriangle(v1,v2,v3);
-   }
-
-	//Delete old btCollisionShape*
-	if(collision_shape){
-		delete collision_shape;
-	}
-   
-	//Remove old btRigidBody* and delete it
-	if(rigid_body){
-		VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody(rigid_body);
-		delete rigid_body;
-	}
-
-	//Set new btRigidBody* and btCollisionObject*
-   collision_shape=new btBvhTriangleMeshShape(triMesh);
-   //rigid_body=VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody(mass,dcs->GetPhysicsTransform(),collision_shape);
-	*/
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::CreateFileMesh()
-{
-	//Implement later
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::CreateCustomMesh()
-{
-	//Implement later
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
@@ -308,7 +317,7 @@ void CADEntity::setOpac(float op_val)
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::setFog(double dist)
+void CADEntity::setFog( double dist )
 {
    #ifdef _PERFORMER
       fog->setColor( 0.6f, 0.6f, 0.6f);
@@ -328,9 +337,9 @@ void CADEntity::setFog(double dist)
 }
 ////////////////////////////////////////////////////////////////////////////////
 /// Functions taken from module geometry for future merging
-void CADEntity::SetRGBAColorArray(double* color)
+void CADEntity::SetRGBAColorArray( double* color )
 {
-   for(int i=0;i<4;i++)
+   for( int i = 0; i < 4; i++ )
    {
       this->_rgba[i] = color[i];
    }

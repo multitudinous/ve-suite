@@ -61,13 +61,6 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
 
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Draw/OGL/GlContextData.h>
-#include <vrj/Draw/OGL/GlWindow.h>
-
-#include <osgUtil/SceneView>
-#include <osgUtil/UpdateVisitor>
-
 #ifdef _TAO
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
 #endif //_TAO

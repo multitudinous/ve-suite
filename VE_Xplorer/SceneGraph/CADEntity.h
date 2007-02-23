@@ -13,9 +13,7 @@ namespace VE_SceneGraph
 	class CADEntityHelper;
 }
 
-#ifdef _PERFORMER
-class pfFog;
-#elif _OSG
+#ifdef _OSG
 #include <osg/ref_ptr>
 namespace osg
 {
@@ -32,24 +30,16 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
-	CADEntity(std::string,VE_SceneGraph::DCS* ,bool isStream=false);
+	CADEntity( std::string, VE_SceneGraph::DCS* , bool isStream = false );
    ~CADEntity();
-
-	//Different methods to create a physics mesh to represent the geometry
-	//******************************************//
-	void CreateBBMesh();				//Creates a mesh using the bounding box of the geometry, this occurs by default
-	void CreateExactMesh();			//Creates an exact mesh of the geometry
-	void CreateFileMesh();			//Creates a mesh from a different file than the one used for geometry
-	void CreateCustomMesh();		//Creates a user defined mesh; must be hard coded in plugin, useful for compound shapes
-	//******************************************//
 
 	VE_SceneGraph::DCS* GetDCS();
    VE_SceneGraph::CADEntityHelper* GetNode();
    btRigidBody* GetRigidBody();
 
-	void SetMass(float m);
-	void SetFriction(float f);
-	void SetRestitution(float r);
+	void SetMass( float m );
+	void SetFriction( float f );
+	void SetRestitution( float r );
 
    std::string GetFilename();
    std::string GetModuleName();
@@ -58,28 +48,21 @@ public:
    int GetColorFlag();
    float getOpacity();
 
-   void SetFILEProperties(int,int,float*);
-   void setOpac(float op_val);
-   void setFog(double dist);
-   void SetRGBAColorArray(double*);
-   void SetGeometryFilename(std::string);
-   void SetModuleName(std::string);
-   void SetTransparencyFlag(bool);
-   void SetColorFlag(int);
-   //void SetColorOfGeometry(VE_SceneGraph::Node*);
-   void SetOpacity(float);
+   void SetFILEProperties( int, int, float* );
+   void setOpac( float op_val );
+   void setFog( double dist );
+   void SetRGBAColorArray( double* );
+   void SetGeometryFilename( std::string );
+   void SetModuleName( std::string );
+   void SetTransparencyFlag( bool );
+   void SetColorFlag( int );
+   //void SetColorOfGeometry( VE_SceneGraph::Node* );
+   void SetOpacity( float );
 
 	void Update();
 
-   //void pfTravNodeMaterial(pfNode*, pfMaterial*, int);
-   
-   //pfLightModel *matLight;
-   //pfMaterial *fmaterial;
-   //pfMaterial *bmaterial;
-   //std::vector<pfMaterial*> matList;
-
 private:
-	void Initialize(float);
+	void Initialize( float );
 	void InitPhysics();
 
    //Group* _masterNode;
@@ -92,7 +75,6 @@ private:
 	float friction;
 	float restitution;
 
-   //pfMaterial *mat1, *mat0;
    int mat_count;
    int color;
    int transparent;
@@ -111,13 +93,12 @@ private:
    std::string _filename;
    std::string _moduleName;
 
-#ifdef _PERFORMER
-      pfFog* fog;
-#elif _OSG
-      osg::Fog* fog;
+#ifdef _OSG
+   osg::Fog* fog;
 #endif
+
 };
+
 }
 
 #endif //CAD_ENTITY_H
-

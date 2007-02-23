@@ -131,7 +131,7 @@ public:
    ///This is our gl draw function
    virtual void draw();
    ///Configure the scene view on a per context basis
-   virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
+   virtual void configSceneView( osgUtil::SceneView* newSceneViewer );
    ///after the preframe calls but still have a vaild context
    virtual void contextPreDraw( void );
 

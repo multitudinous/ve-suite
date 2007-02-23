@@ -122,7 +122,7 @@ void DisplayInformation::InitCoordSysDisplay()
 	//Set the view matrix    
 	wcs->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 
-	wcs->setViewMatrix( osg::Matrix::translate( osg::Vec3( 0.0, 0.0, -45.0 ) ) );
+	wcs->setViewMatrix( osg::Matrix::translate( osg::Vec3( 0.0, 0.0, -40.0 ) ) );
 
    //Only clear the depth buffer
    wcs->setClearMask( GL_DEPTH_BUFFER_BIT );
@@ -182,10 +182,21 @@ void DisplayInformation::SetCoordSysFlag( bool val )
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetTextColor( std::vector< double > color )
 {
-	framerate_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
-	wcs_x_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
-	wcs_y_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
-	wcs_z_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+	if( ( color[0] + color[1] + color[2] ) > 1.1 && ( color[0] + color[1] + color[2] ) < 2.0 )
+	{
+		framerate_text->setColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+		wcs_x_text->setColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+		wcs_y_text->setColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+		wcs_z_text->setColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );;
+	}
+
+	else
+	{
+		framerate_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+		wcs_x_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+		wcs_y_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+		wcs_z_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int height )
