@@ -42,7 +42,7 @@
 
 
 #include <osg/State>
-#include <osgUtil/SceneView>
+//#include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
 #include "VE_Xplorer/XplorerHandlers/TBTransientDurationUpdateEH.h"

@@ -61,12 +61,13 @@ void DisplayInformation::InitFrameRateDisplay()
 	std::string framerate_font( "fonts/arial.ttf" );
 
    //Turn lighting off for the text and disable depth test to ensure its always ontop
-	osg::ref_ptr< osg::StateSet > stateset = geode->getOrCreateStateSet();
-   stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+	osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
+	//framerate->setStateSet( stateset.get() );
 
 	{
       geode->addDrawable( framerate_text.get() );
       framerate_text->setFont( framerate_font );
+		framerate_text->setCharacterSize( 20 );
 		framerate_text->setAxisAlignment( osgText::Text::SCREEN );
 		framerate_text->setAlignment( osgText::Text::RIGHT_BOTTOM );
 	}
@@ -90,6 +91,10 @@ void DisplayInformation::InitCoordSysDisplay()
     
 	std::string wcs_font( "fonts/arial.ttf" );
 
+	//Turn lighting off for the text and disable depth test to ensure its always ontop
+	osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
+	//wcs->setStateSet( stateset.get() );
+
    {
 		geode->addDrawable( wcs_x_text.get() );
 		geode->addDrawable( wcs_y_text.get() );
@@ -97,25 +102,25 @@ void DisplayInformation::InitCoordSysDisplay()
 
       wcs_x_text->setFont( wcs_font );
       wcs_x_text->setText( "x" );
-		wcs_x_text->setCharacterSize( 20 );
+		wcs_x_text->setCharacterSize( 15 );
 		wcs_x_text->setAxisAlignment( osgText::Text::SCREEN );
 		wcs_x_text->setAlignment( osgText::Text::CENTER_CENTER );
 
 		wcs_y_text->setFont( wcs_font );
       wcs_y_text->setText( "y" );
-		wcs_y_text->setCharacterSize( 20 );
+		wcs_y_text->setCharacterSize( 15 );
 		wcs_y_text->setAxisAlignment( osgText::Text::SCREEN );
 		wcs_y_text->setAlignment( osgText::Text::CENTER_CENTER );
 
 		wcs_z_text->setFont( wcs_font );
       wcs_z_text->setText( "z" );
-		wcs_z_text->setCharacterSize( 20 );
+		wcs_z_text->setCharacterSize( 15 );
 		wcs_z_text->setAxisAlignment( osgText::Text::SCREEN );
 		wcs_z_text->setAlignment( osgText::Text::CENTER_CENTER );
 	}
 
 	//Set the view matrix    
-   wcs->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+	wcs->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 
 	wcs->setViewMatrix( osg::Matrix::translate( osg::Vec3( 0.0, 0.0, -45.0 ) ) );
 
@@ -127,29 +132,6 @@ void DisplayInformation::InitCoordSysDisplay()
 
 	wcs->addChild( wcs_model->GetDCS() );
 	wcs_model->GetDCS()->addChild( geode.get() );
-
-	osg::ref_ptr< osg::StateSet > rootStateSet = new osg::StateSet;
-   wcs->setStateSet(rootStateSet.get());
-	rootStateSet->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-	
-
-	// create a spot light.
-	osg::ref_ptr< osg::Light > myLight1 = new osg::Light;
-   myLight1->setLightNum(2);
-   myLight1->setPosition(osg::Vec4(0,100,0,1.0f));
-   myLight1->setAmbient(osg::Vec4(1.0f,0.0f,0.0f,1.0f));
-   myLight1->setDiffuse(osg::Vec4(1.0f,0.0f,0.0f,1.0f));
-   //myLight1->setSpotCutoff(20.0f);
-   //myLight1->setSpotExponent(50.0f);
-   //myLight1->setDirection(osg::Vec3(1.0f,1.0f,-1.0f));
-
-	osg::ref_ptr< osg::LightSource > lightS1 = new osg::LightSource;    
-   lightS1->setLight( myLight1.get() );
-   lightS1->setLocalStateSetModes(osg::StateAttribute::ON); 
-
-   lightS1->setStateSetModes(*rootStateSet.get(),osg::StateAttribute::ON);
-
-	wcs->addChild( lightS1.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::LatePreFrame()
@@ -172,7 +154,7 @@ void DisplayInformation::LatePreFrame()
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayInformation::SetFrameRateFlag(bool val)
+void DisplayInformation::SetFrameRateFlag( bool val )
 {
 	if( val )
 	{
@@ -185,7 +167,7 @@ void DisplayInformation::SetFrameRateFlag(bool val)
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayInformation::SetCoordSysFlag(bool val)
+void DisplayInformation::SetCoordSysFlag( bool val )
 {
 	if( val )
 	{
@@ -208,21 +190,19 @@ void DisplayInformation::SetTextColor( std::vector< double > color )
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int height )
 {
-
 		//Set the projection matrix
 		framerate->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
 		wcs->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
 
-		framerate_text->setPosition( osg::Vec3( width-15, 10, 0 ) );
+		framerate_text->setPosition( osg::Vec3( width-10, 5, 0 ) );
 		wcs_x_text->setPosition( osg::Vec3( 50, 0, 0 ) );
 		wcs_y_text->setPosition( osg::Vec3( 0, 0, -50 ) );
 		wcs_z_text->setPosition( osg::Vec3( 0, 50, 0 ) );
 
-		wcs_model->GetDCS()->setPosition( osg::Vec3( 75, height-75, 0 ) );
-
+		wcs_model->GetDCS()->setScale( osg::Vec3( 0.8, 0.8, 0.8 ) );
+		wcs_model->GetDCS()->setPosition( osg::Vec3( 50, height-50, 0 ) );
+		
 		this->InitFrameRateDisplay();
 		this->InitCoordSysDisplay();
-
-
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -69,7 +69,7 @@ namespace VE_Xplorer
 #elif _OSG 
 #include <osg/ref_ptr>
 
-namespace osgUtil { class SceneView; }
+//namespace osgUtil { class SceneView; }
 
 namespace VE_TextureBased
 {
@@ -177,11 +177,11 @@ namespace VE_TextureBased
          cfdTextureDataSet* _activeTDSet;
          cfdTextureManager* _activeTM;
 
-      //std::vector<cfdVolumeVisualization*> _volumeVisNodes;
+			//std::vector<cfdVolumeVisualization*> _volumeVisNodes;
          cfdVolumeVisualization* _activeVolumeVizNode;
 			osg::ref_ptr< VE_SceneGraph::Group > _parent;
          cfdPBufferManager* _pbm;
-         osgUtil::SceneView* _sceneView;
+         //osgUtil::SceneView* _sceneView;
          cfdVolumeVisNodeHandler* activeVisNodeHdlr;
          cfdScalarVolumeVisHandler* _svvh;
          cfdVectorVolumeVisHandler* _vvvh;
