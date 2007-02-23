@@ -252,7 +252,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    GetConfig(NULL);
    
    CreateMenu();
-   CreateTB();
+   //CreateTB();
    CreateStatusBar();
    SetStatusText( _("VE-Conductor Status") );
 
