@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.0.3"
-#define MyAppVerName "VE_Suite.1.0.3"
+#define MyAppName "VE_Suite"
+#define MyAppVerName "VE_Suite 1.0.4"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
@@ -22,7 +22,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName=C:\{#MyAppName}
+DefaultDirName=C:\{#MyAppName}_{#VEVERSION}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=true
 OutputDir={#VEHOME}\VE_Installer\installer
@@ -55,13 +55,14 @@ Name: vexplorer; Description: VE-Xplorer; Types: full
 Name: veconductor; Description: VE-Conductor (GUI); Types: full
 Name: vebuildenv; Description: Headers and Libs; Types: full
 Name: examples; Description: Example datasets; Types: full
+Name: buildertools; Description: VE-Suite Utilities; Types: full
 [Registry]
 Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdeletekeyifempty
 Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Components: " examples vebuildenv veconductor vexplorer nameserver"; Tasks: " desktopVELauncherIcon"; Flags: uninsdeletekeyifempty
 Root: HKCR; SubKey: .ves; ValueType: string; ValueData: VESNetworkfile; Flags: uninsdeletekey createvalueifdoesntexist
 Root: HKCR; SubKey: VESNetworkfile; ValueType: string; ValueData: VE-Suite Network file; Flags: uninsdeletekey
 Root: HKCR; SubKey: VESNetworkfile\shell\open\command; ValueType: string; ValueData: """{app}\bin\velauncher.exe"" ""%1"""; Flags: uninsdeletevalue
-Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\share\installerImages\VE_icon.ico; Flags: uninsdeletevalue; Components: ; Tasks: 
+Root: HKCR; Subkey: VESNetworkfile\DefaultIcon; ValueType: string; ValueData: {app}\bin\installerImages\VE_icon.ico; Flags: uninsdeletevalue; Components: ; Tasks: 
 Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher; ValueType: string; ValueData: Open with &VE-Launcher
 Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: string; ValueData: """{app}\bin\velauncher.exe"" ""%1"""; Flags: createvalueifdoesntexist uninsdeletekey
 [Tasks]
@@ -96,27 +97,29 @@ Source: {#VEHOME}\VE_Open\skel\*; DestDir: {app}\include\VE_Open\skel; Attribs: 
 Source: {#VEHOME}\VE_Installer\include\VEConfig.h; DestDir: {app}\include\VE_Installer\include; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-Source: {#VEHOME}\VE_Xplorer/stereo_desktop/*.jconf; DestDir: {app}\share\vesuite\stereo_desktop; Components: nameserver; Flags: ignoreversion recursesubdirs
+Source: {#VEHOME}/share/*.jconf; DestDir: {app}\share\vesuite\; Components: nameserver; Flags: recursesubdirs createallsubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 Source: {#VEHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-Source: {#JUGGLERINSTHOME}\lib\ms*.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
-Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
+;Source: {#JUGGLERINSTHOME}\lib\ms*.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
+;Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Builder\*.h; DestDir: {app}\include\VE_Builder; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion overwritereadonly
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp; DestDir: {app}\bin\installerImages; DestName: velauncher_banner.bmp
-Source: {#VEHOME}\VE_Xplorer/dualhead_configs/*.jconf; DestDir: {app}/share/vesuite\dualhead_configs/; Components: nameserver; Flags: ignoreversion recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_TestSuite\simple.ves; DestDir: {app}\share\vesuite\exampleDatasets\simple; Components: examples; Flags: overwritereadonly replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\clusterTemplate.txt; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; DestName: ve_logo.xpm
+Source: {#VEHOME}\share\fonts\*.ttf; DestDir: {app}\share\vesuite\fonts; Flags: recursesubdirs createallsubdirs
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\share\vesuite\installerImages\VE_icon.ico
-Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\share\vesuite\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
+Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\VE_icon.ico
+Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
 
 ;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\VE_icon.ico
 ;Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
+[Run]
+Filename: {#VEHOME}\VE_Installer\installer\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; WorkingDir: {tmp}; Description: Install VE-BuilderTools; StatusMsg: Installing VE-BuilderTools {#VEVERSION}_{#SVNVERSION}; Flags: postinstall; Components: buildertools; Tasks: 

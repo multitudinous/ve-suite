@@ -12,7 +12,7 @@ VE-Suite_1.0*
 This windows installer places components of VE-Suite on your computer.
 Five optional components are available from this installer:
 
-Name Server -- Communications Engine
+VE-CE -- Communications Engine
 VE-Xplorer -- Graphics Engine
 VE-Conductor -- Graphical User Interface
 VE-Launcher -- Launches specific components of VE-Suite.

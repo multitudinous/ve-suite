@@ -498,9 +498,9 @@ class Launch:
         ##These are setup for using VE-Suite dependency install's location
         ##change only if you are using your own build
         if windows:
-            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"))
+##            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"))
+            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"), JUGGLER_FOLDER)
             self.EnvFill("VJ_BASE_DIR", vjDir)
-##            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"), JUGGLER_FOLDER)
         elif self.settings["JugglerDep"] != "None":
             vjDir = self.settings["JugglerDep"]
             self.EnvFill("VJ_BASE_DIR", vjDir, not self.settings["DevMode"])

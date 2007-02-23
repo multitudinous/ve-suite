@@ -14,7 +14,7 @@ UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
 ##Cluster variables.
 CLUSTER_ENABLED = True
 ##File/Folder settings.
-JUGGLER_FOLDER = "vrJuggler2.0.1"
+JUGGLER_FOLDER = "VRJuggler2.0.3-1"
 VELAUNCHER_DIR  = sys.path[0] ##The directory velauncher.py is in.
 ##Fixes directory passed for velauncher to vesuite.
 if os.path.basename(VELAUNCHER_DIR) == "velauncher":
