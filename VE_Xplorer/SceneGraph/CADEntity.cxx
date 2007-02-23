@@ -96,7 +96,6 @@ public:
 											 btVector3( vertex_array->at( TIF.triangleIndex.at( i*3+2) ).x(),
 															vertex_array->at( TIF.triangleIndex.at( i*3+2) ).y(),
 															vertex_array->at( TIF.triangleIndex.at( i*3+2) ).z() ) );
-				std::cout<< vertex_array->at( TIF.triangleIndex.at( i*3 ) ).x()<<std::endl;
 			}
 
 		}
@@ -158,8 +157,6 @@ restitution(0.0f)
    //setup fog
    fog=new osg::Fog();
    #endif
-
-	this->InitPhysics();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
