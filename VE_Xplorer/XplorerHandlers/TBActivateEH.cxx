@@ -74,14 +74,14 @@ void TextureBasedActivateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLOb
          _activeModel->MakeCADRootTransparent();
 			if( !_activeModel->GetDCS()->SearchChild(_activeModel->GetActiveDataSet()->GetDCS()) )
          {
-            vprDEBUG(vesDBG,1) << "|\t\tadding active switch node to worldDCS"
+            vprDEBUG(vesDBG,2) << "|\t\tadding active switch node to worldDCS"
                              << std::endl << vprDEBUG_FLUSH;
             _activeModel->GetDCS()->AddChild( _activeModel->GetActiveDataSet()->GetDCS() );
          }
          VE_SceneGraph::Switch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
          if ( !_activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
          {
-            vprDEBUG(vesDBG,1) << "|\t\tadding active dcs node to worldDCS for classic ss "
+            vprDEBUG(vesDBG,2) << "|\t\tadding active dcs node to worldDCS for classic ss "
                              << std::endl << vprDEBUG_FLUSH;
              _activeModel->GetActiveDataSet()->GetDCS()->AddChild( temp );
          }

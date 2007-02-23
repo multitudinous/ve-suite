@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkHybrid_d.lib vtkImaging_d.lib vtkIO_d.lib vtkParallel_d.lib vtkRendering_d.lib opengl32.lib VE_UtilLib_d.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vtkCommon_d.lib vtkFiltering_d.lib vtkHybrid_d.lib vtkImaging_d.lib vtkIO_d.lib vtkParallel_d.lib vtkRendering_d.lib opengl32.lib VE_UtilLib_d.lib"
 				OutputFile="$(OutDir)/VE_TextureBased_osg_vep_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
@@ -144,7 +144,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osg.lib osgDB.lib osgUtil.lib vpr.lib vrj.lib vrj_ogl.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib VE_UtilLib.lib"
+				AdditionalDependencies="osg.lib osgDB.lib osgUtil.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib VE_UtilLib.lib"
 				OutputFile="$(OutDir)/VE_TextureBased_osg_vep.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
@@ -152,7 +152,7 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/VE_TextureBased.lib"
+				ImportLibrary="$(OutDir)/VE_TextureBased_osg_vep.lib"
 				TargetMachine="1"
 			/>
 			<Tool

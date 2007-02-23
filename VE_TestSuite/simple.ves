@@ -60,15 +60,11 @@
       </properties>
       <properties id="9a96837e-722f-b847-ade6-eccdc9d1619b">
         <dataName>VTK_TEXTURE_DIR_PATH</dataName>
-        <dataValue type="xs:string">texture-based/scalars/200_to_1000</dataValue>
+        <dataValue type="xs:string">simpleScalars/scalars/200_to_1000</dataValue>
       </properties>
       <properties id="2c3aa880-6cb0-b541-a758-d9cbfb398a2e">
         <dataName>VTK_TEXTURE_DIR_PATH</dataName>
-        <dataValue type="xs:string">texture-based/scalars/first-scalar</dataValue>
-      </properties>
-      <properties id="b24898ca-1bfc-e94b-8a6f-3d1d071f677d">
-        <dataName>VTK_TEXTURE_DIR_PATH</dataName>
-        <dataValue type="xs:string">texture-based/scalars/fourth_param_is_a_scalar</dataValue>
+        <dataValue type="xs:string">simpleScalars/scalars/first-scalar</dataValue>
       </properties>
     </informationPackets>
     <geometry id="5593f230-9f76-3449-acca-41bdeb92bc7a">

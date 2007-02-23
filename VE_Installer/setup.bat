@@ -3,8 +3,8 @@ REM Edit this file to reflect your local environment for VE_Suite
 set VE_SUITE_HOME=C:\devEnv\VE_Suite_1.0
 set VE_INSTALL_DIR=C:\devEnv\VE_Suite_1.0
 
-set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\VRJuggler2.0.2-1
-set VJ_DEPS_DIR=C:\devEnv\VES.1.0-Deps\VRJuggler2.0.2-1
+set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\VRJuggler2.0.3-1
+set VJ_DEPS_DIR=C:\devEnv\VES.1.0-Deps\VRJuggler2.0.3-1
 REM set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80
 REM set VJ_DEPS_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80-deps
 REM set VTK_HOME=C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8
@@ -15,9 +15,11 @@ set WX_HOME=C:\devEnv\VES.1.0-deps\wxWidgets-2.8.0
 set WX_ROOT=C:\devEnv\VES.1.0-Deps\wxWidgets-2.8.0
 set JAVA_HOME=C:\j2sdk1.4.2_06
 set ACE_ROOT=C:\devEnv\VES.1.0-Deps\ACE_wrappers
+REM set ACE_ROOT=C:\ACETAO_5.5.1_Pre-Compile_vc8.0
 set TAO_ROOT=%ACE_ROOT%\TAO
 set XERCESCROOT=C:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0
 set BULLET_HOME=C:\devEnv\VES.1.0-Deps\bullet_svn
+REM set BULLET_HOME=C:\Bullet_Pre-Compile_2.42
 REM set OSGHOME=C:\OSG_1.2_Pre-Compile_vc8.0
 REM PRODUCER_HOME=%OSGHOME%
 REM OPENTHREADS_HOME=%OSGHOME%

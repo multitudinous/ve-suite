@@ -519,7 +519,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          currentEventHandler = _eventHandlers.find( tbvizCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )
          {
-            vprDEBUG(vesDBG,0) << "|\tExecuting: "<< tbvizCommand->GetCommandName() 
+            vprDEBUG(vesDBG,2) << "|\tExecuting: "<< tbvizCommand->GetCommandName() 
                                  << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tbvizCommand );
